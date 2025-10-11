@@ -10,7 +10,7 @@
   "icon": "perimeterx_official.png",
   "description": "Behavioral-based bot detection with real-time risk scoring",
   "detection": {
-    "cookies": [
+    "cookie": [
       {
         "name": "_px2",
         "confidence": 95,
@@ -32,7 +32,7 @@
         "description": "PerimeterX visitor ID"
       }
     ],
-    "headers": [
+    "header": [
       {
         "name": "X-PX-Authorization",
         "confidence": 100,
@@ -44,7 +44,7 @@
         "description": "Original token header"
       }
     ],
-    "urls": [
+    "url": [
       {
         "pattern": "collector-*.perimeterx.net",
         "confidence": 100,
@@ -76,6 +76,34 @@
         "content": "_pxAction",
         "confidence": 90
       }
+    ],
+    "dom": [],
+    "window": [
+      {
+        "path": "_pxAppId",
+        "condition": "typeof string",
+        "confidence": 100,
+        "description": "PerimeterX application ID"
+      },
+      {
+        "path": "pxInit",
+        "condition": "typeof function",
+        "confidence": 95,
+        "description": "PerimeterX initialization function"
+      },
+      {
+        "path": "_pxAction",
+        "condition": "typeof string",
+        "confidence": 90,
+        "description": "PerimeterX action identifier"
+      }
     ]
+  },
+  "_searchStrings": {
+    "cookie": "_px2 PerimeterX tracking cookie v2 _px3 PerimeterX tracking cookie v3 _pxhd PerimeterX header data _pxvid PerimeterX visitor ID",
+    "header": "X-PX-Authorization PerimeterX authorization header X-PX-Original-Token Original token header",
+    "url": "collector-*.perimeterx.net Data collector endpoint /api/v*/collector Collector API endpoint px.js PerimeterX JavaScript",
+    "content": "window._pxAppId PerimeterX application ID pxInit PerimeterX initialization function _pxAction",
+    "window": "_pxAppId typeof string PerimeterX application ID pxInit typeof function PerimeterX initialization function _pxAction typeof string PerimeterX action identifier"
   }
 }

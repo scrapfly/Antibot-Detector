@@ -10,7 +10,7 @@
   "icon": "datadome_official.png",
   "description": "Real-time bot protection with machine learning-based detection",
   "detection": {
-    "cookies": [
+    "cookie": [
       {
         "name": "datadome",
         "confidence": 100,
@@ -18,12 +18,18 @@
       },
       {
         "name": "dd_s",
-        "confidence": 85,
-        "description": "Session tracking"
+        "confidence": 70,
+        "description": "Session tracking (unconfirmed)"
       }
     ],
-    "headers": [],
-    "urls": [
+    "header": [
+      {
+        "name": "x-datadome-cid",
+        "confidence": 100,
+        "description": "DataDome client ID header"
+      }
+    ],
+    "url": [
       {
         "pattern": "datadome.co",
         "confidence": 95
@@ -32,11 +38,6 @@
         "pattern": "/captcha-challenge",
         "confidence": 100,
         "description": "Captcha challenge endpoint"
-      },
-      {
-        "pattern": "dd.js",
-        "confidence": 90,
-        "description": "DataDome JavaScript"
       }
     ],
     "content": [
@@ -53,6 +54,28 @@
         "content": "dd_tags",
         "confidence": 85
       }
+    ],
+    "dom": [],
+    "window": [
+      {
+        "path": "DD_RUM",
+        "condition": "typeof object",
+        "confidence": 95,
+        "description": "DataDome Real User Monitoring object"
+      },
+      {
+        "path": "dataDomeOptions",
+        "condition": "typeof object",
+        "confidence": 95,
+        "description": "DataDome configuration object"
+      }
     ]
+  },
+  "_searchStrings": {
+    "cookie": "datadome Main DataDome tracking cookie dd_s Session tracking (unconfirmed)",
+    "header": "x-datadome-cid DataDome client ID header",
+    "url": "datadome.co /captcha-challenge Captcha challenge endpoint",
+    "content": "window.DD_RUM Real User Monitoring dataDomeOptions dd_tags",
+    "window": "DD_RUM typeof object DataDome Real User Monitoring object dataDomeOptions typeof object DataDome configuration object"
   }
 }

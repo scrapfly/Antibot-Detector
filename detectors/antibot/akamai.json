@@ -10,7 +10,7 @@
   "icon": "akamai_official.png",
   "description": "Enterprise-grade bot management solution providing real-time detection and mitigation",
   "detection": {
-    "cookies": [
+    "cookie": [
       {
         "name": "_abck",
         "confidence": 100,
@@ -47,7 +47,7 @@
         "description": "Machine identification"
       }
     ],
-    "headers": [
+    "header": [
       {
         "name": "x-akamai-session-info",
         "confidence": 90,
@@ -57,14 +57,9 @@
         "name": "akamai-origin-hop",
         "confidence": 85,
         "description": "Akamai CDN hop header"
-      },
-      {
-        "name": "asdasdas",
-        "confidence": 100,
-        "description": "Test header for Akamai detection"
       }
     ],
-    "urls": [
+    "url": [
       {
         "pattern": "/akam/",
         "confidence": 85,
@@ -126,6 +121,28 @@
         "confidence": 95,
         "description": "Element with Akamai data attribute"
       }
+    ],
+    "window": [
+      {
+        "path": "bmak",
+        "condition": "typeof object",
+        "confidence": 95,
+        "description": "Akamai Bot Manager main object (bmak)"
+      },
+      {
+        "path": "bmak.sensor_data",
+        "condition": "!== undefined",
+        "confidence": 90,
+        "description": "Akamai sensor data collection"
+      }
     ]
+  },
+  "_searchStrings": {
+    "cookie": "_abck Akamai Bot Manager tracking cookie (anti-bot required) ak_bmsc Bot Manager session cookie (pixel challenge required) sbsd SB-SD challenge cookie (required for sensor bypass) sbsd_o Akamai challenge cookie (required for advanced protection) bm_sz Browser sensor data bm_sv Server validation cookie bm_mi Machine identification",
+    "header": "x-akamai-session-info Akamai session header akamai-origin-hop Akamai CDN hop header",
+    "url": "/akam/ Akamai Bot Manager endpoint /.well-known/sbsd/ SB-SD challenge endpoint (SBSD required)",
+    "content": "ak_bmsc _abck bmak. Bot Manager API namespace sensor_data bazadebezolkohpepadr Pixel challenge HTML variable g=_\\[\\d+\\] Pixel script variable pattern var _=\\[ Pixel array declaration",
+    "dom": "#akam-sensor Akamai sensor container .bm-sensor-container Bot Manager sensor container [data-akamai] Element with Akamai data attribute",
+    "window": "bmak typeof object Akamai Bot Manager main object (bmak) bmak.sensor_data !== undefined Akamai sensor data collection"
   }
 }

@@ -1,8 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "Scrapfly - Security Detection",
+  "name": "Scrapfly",
   "version": "1.0.0",
   "description": "Detect CAPTCHAs, anti-bot systems, and fingerprinting technologies on websites",
+
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
 
   "permissions": [
     "storage",
@@ -27,8 +31,15 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["Modules/ConfidenceManager.js", "Modules/DetectionEngineManager.js", "content.js"],
-      "run_at": "document_idle",
+      "js": ["content-main-world.js"],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": false
+    },
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["utils/debug.js", "utils/utils.js", "modules/storage-manager.js", "modules/confidence-manager.js", "modules/detection-engine-manager.js", "sections/settings/settings.js", "content.js"],
+      "run_at": "document_start",
       "all_frames": false
     }
   ],
@@ -54,8 +65,9 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "Modules/NotificationManager.css",
-        "detectors/*/*"
+        "modules/notification-manager.css",
+        "detectors/*/*",
+        "sections/settings/default-settings.json"
       ],
       "matches": ["<all_urls>"]
     }

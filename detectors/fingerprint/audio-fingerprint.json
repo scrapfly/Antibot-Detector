@@ -1,0 +1,43 @@
+{
+  "id": "audio-fingerprint",
+  "name": "Audio Fingerprint",
+  "category": "Fingerprint",
+  "color": "#7c3aed",
+  "confidence": 100,
+  "lastUpdated": "2024-01-15",
+  "version": "1.0.0",
+  "website": "https://webaudio.github.io/web-audio-api/",
+  "icon": "custom.png",
+  "description": "Web Audio API-based device and system fingerprinting",
+  "detection": {
+    "js_hooks": [
+      {
+        "target": "AudioBuffer.prototype.getChannelData",
+        "description": "Reads audio channel data for fingerprinting",
+        "enabled": true,
+        "confidence": 95
+      },
+      {
+        "target": "AnalyserNode.prototype.getFloatFrequencyData",
+        "description": "Analyzes audio frequency data",
+        "enabled": true,
+        "confidence": 90
+      },
+      {
+        "target": "BaseAudioContext.prototype.createOscillator",
+        "description": "Creates audio oscillator for signal generation",
+        "enabled": true,
+        "confidence": 85
+      },
+      {
+        "target": "AudioNode.prototype.connect",
+        "description": "Connects audio nodes for fingerprinting chain",
+        "enabled": false,
+        "confidence": 70
+      }
+    ]
+  },
+  "_searchStrings": {
+    "js_hooks": "AudioBuffer.prototype.getChannelData Reads audio channel data for fingerprinting AnalyserNode.prototype.getFloatFrequencyData Analyzes audio frequency data BaseAudioContext.prototype.createOscillator Creates audio oscillator for signal generation AudioNode.prototype.connect Connects audio nodes for fingerprinting chain"
+  }
+}

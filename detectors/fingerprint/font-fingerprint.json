@@ -1,0 +1,32 @@
+{
+  "id": "font-fingerprint",
+  "name": "Font Fingerprint",
+  "category": "Fingerprint",
+  "icon": "custom.png",
+  "color": "#f59e0b",
+  "detection": {
+    "js_hooks": [
+      {
+        "target": "CanvasRenderingContext2D.prototype.measureText",
+        "description": "Measures text dimensions to detect installed fonts",
+        "enabled": true,
+        "confidence": 90
+      },
+      {
+        "target": "Document.prototype.fonts",
+        "description": "Accesses FontFaceSet for font enumeration",
+        "enabled": true,
+        "confidence": 85
+      },
+      {
+        "target": "TextMetrics.prototype.width",
+        "description": "Reads text width for font fingerprinting",
+        "enabled": true,
+        "confidence": 85
+      }
+    ]
+  },
+  "_searchStrings": {
+    "js_hooks": "CanvasRenderingContext2D.prototype.measureText Measures text dimensions to detect installed fonts Document.prototype.fonts Accesses FontFaceSet for font enumeration TextMetrics.prototype.width Reads text width for font fingerprinting"
+  }
+}

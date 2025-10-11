@@ -5,12 +5,15 @@
         "akamai",
         "cloudflare",
         "aws-waf",
+        "botguard",
         "f5",
         "datadome",
         "incapsula",
         "perimeterx",
+        "shapesecurity",
         "sucuri",
         "reblaze"
+
     ]
 },
 "captcha": {
@@ -25,18 +28,31 @@
 "fingerprint": {
     "colour": "#8D33FF",
     "detectors":[
-        "audio-fingerprinting",
-        "canvas-fingerprinting",
-        "font-fingerprinting",
-        "webgl-fingerprinting",
-        "webrtc-fingerprinting"
+        "audio-fingerprint",
+        "canvas-fingerprint",
+        "crypto-fingerprint",
+        "font-fingerprint",
+        "media-fingerprint",
+        "navigator-fingerprint",
+        "performance-fingerprint",
+        "screen-fingerprint",
+        "webgl-fingerprint",
+        "webrtc-fingerprint"
     ]
 },
 "tags":{
-    "DOM": {"colour": "#8D33FF"},
-    "HEADERS": {"colour": "#FF33A8"},
-    "COOKIES": {"colour": "#FFC133"},
-    "CONTENT": {"colour": "#33FFF3"},
-    "URLS": {"colour": "#00BCD4"}
+    "dom": {"colour": "#8D33FF"},
+    "header": {"colour": "#FF33A8"},
+    "cookie": {"colour": "#FFC133"},
+    "content": {"colour": "#33FFF3"},
+    "url": {"colour": "#00BCD4"},
+    "js_hooks": {"colour": "#00E5FF"},
+    "window": {"colour": "#4CAF50"},
+    "css": {"colour": "#E91E63"}
+},
+"badge": {
+    "low": {"colour": "#4CAF50"},
+    "medium": {"colour": "#FFA500"},
+    "high": {"colour": "#FF4444"}
 }
 }

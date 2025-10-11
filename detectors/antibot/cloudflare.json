@@ -10,7 +10,7 @@
   "icon": "cloudflare_official.png",
   "description": "AI-powered bot detection and mitigation with global CDN integration",
   "detection": {
-    "cookies": [
+    "cookie": [
       {
         "name": "__cf_bm",
         "confidence": 95,
@@ -20,70 +20,22 @@
         "name": "cf_clearance",
         "confidence": 100,
         "description": "Challenge clearance cookie"
-      },
-      {
-        "name": "__cfruid",
-        "confidence": 80,
-        "description": "Rate limiting cookie"
-      },
-      {
-        "name": "cf_chl_2",
-        "confidence": 90,
-        "description": "Challenge version 2"
-      },
-      {
-        "name": "cf_chl_prog",
-        "confidence": 85,
-        "description": "Challenge progress tracking"
       }
     ],
-    "headers": [
-      {
-        "name": "Server",
-        "value": "cloudflare",
-        "confidence": 90
-      },
-      {
-        "name": "CF-Ray",
-        "confidence": 95,
-        "description": "Request tracking ID"
-      },
-      {
-        "name": "CF-Cache-Status",
-        "confidence": 85
-      },
-      {
-        "name": "CF-Challenge",
-        "confidence": 100,
-        "description": "Active challenge header"
-      }
+    "header": [
     ],
-    "urls": [
+    "url": [
       {
-        "pattern": "/cdn-cgi/",
+        "pattern": "cdn-cgi/challenge-platform/h/g/orchestrate/chl_page/",
         "confidence": 90,
         "description": "Cloudflare CDN endpoint"
       },
       {
-        "pattern": "cf-browser-verification",
-        "confidence": 100
-      },
-      {
-        "pattern": "/cdn-cgi/challenge-platform/",
-        "confidence": 95,
-        "description": "Challenge platform endpoint"
-      },
-      {
         "pattern": "challenges.cloudflare.com",
-        "confidence": 100,
-        "description": "Turnstile endpoint"
+        "confidence": 100
       }
     ],
     "content": [
-      {
-        "content": "window._cf_chl_opt",
-        "confidence": 95
-      },
       {
         "content": "cf-browser-verification",
         "confidence": 100
@@ -97,6 +49,27 @@
         "content": "__cf_chl_ctx",
         "confidence": 90
       }
+    ],
+    "window": [
+      {
+        "path": "_cf_chl_opt",
+        "condition": "typeof object",
+        "confidence": 95,
+        "description": "Cloudflare challenge options object"
+      },
+      {
+        "path": "turnstile",
+        "condition": "typeof object",
+        "confidence": 95,
+        "description": "Cloudflare Turnstile CAPTCHA object"
+      }
     ]
+  },
+  "_searchStrings": {
+    "cookie": "__cf_bm Bot management cookie cf_clearance Challenge clearance cookie __cfruid Rate limiting cookie cf_chl_2 Challenge version 2 cf_chl_prog Challenge progress tracking",
+    "header": "Server cloudflare CF-Ray Request tracking ID CF-Cache-Status CF-Challenge Active challenge header",
+    "url": "/cdn-cgi/ Cloudflare CDN endpoint cf-browser-verification /cdn-cgi/challenge-platform/ Challenge platform endpoint challenges.cloudflare.com Turnstile endpoint",
+    "content": "window._cf_chl_opt cf-browser-verification turnstile.render Turnstile CAPTCHA __cf_chl_ctx",
+    "window": "_cf_chl_opt typeof object Cloudflare challenge options object _cf_chl_ctx typeof object Cloudflare challenge context turnstile typeof object Cloudflare Turnstile CAPTCHA object cf_turnstile_callback typeof function Turnstile callback function"
   }
 }

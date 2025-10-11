@@ -1,0 +1,49 @@
+{
+  "id": "botguard",
+  "name": "Google BotGuard",
+  "category": "Anti-Bot",
+  "color": "#4285F4",
+  "confidence": 100,
+  "lastUpdated": "2025-01-08 00:00:00",
+  "version": "1.0.0",
+  "website": "https://developers.google.com/recaptcha",
+  "icon": "google_official.png",
+  "description": "Google's proprietary bot detection system used in reCAPTCHA, YouTube, and other Google services",
+  "detection": {
+    "cookie": [
+      {
+        "name": "__Secure-.*",
+        "nameRegex": true,
+        "confidence": 85,
+        "description": "BotGuard secure cookie pattern (various implementations)"
+      },
+      {
+        "name": "__Secure-[0-9]PSID",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "Google session ID with BotGuard protection"
+      },
+      {
+        "name": "__Secure-[0-9]PAPISID",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "Google API session ID with BotGuard"
+      }
+    ],
+    "header": [],
+    "url": [
+
+    ],
+    "content": [
+    ],
+    "window": [
+    ],
+    "dom": []
+  },
+  "_searchStrings": {
+    "cookie": "__Secure-.* BotGuard secure cookie pattern (various implementations) __Secure-random BotGuard random token cookie __Secure-[0-9]PSID Google session ID with BotGuard protection __Secure-[0-9]PAPISID Google API session ID with BotGuard",
+    "url": "google.com/recaptcha/ reCAPTCHA endpoint (uses BotGuard) /botguard/ BotGuard script path bg.*\\.js BotGuard script naming pattern",
+    "content": "botguard BotGuard namespace or reference bg.invoke BotGuard invocation method _bgv BotGuard version variable bg.snapshot BotGuard snapshot function",
+    "window": "botguard typeof object BotGuard global object bg typeof object BotGuard abbreviated namespace _bgv exists BotGuard version variable"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "id": "media-fingerprint",
+  "name": "Media Fingerprint",
+  "category": "Fingerprint",
+  "color": "#7c3aed",
+  "confidence": 100,
+  "lastUpdated": "2025-01-15",
+  "version": "1.0.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/API/Media_Capabilities_API",
+  "icon": "custom.png",
+  "description": "Media device, battery, voice synthesis, and plugin/mimetype enumeration fingerprinting",
+  "detection": {
+    "js_hooks": [
+      {
+        "target": "Navigator.prototype.getBattery",
+        "description": "Accesses battery information for hardware fingerprinting",
+        "enabled": true,
+        "confidence": 95
+      },
+      {
+        "target": "BatteryManager.prototype.level",
+        "description": "Reads battery level percentage",
+        "enabled": true,
+        "confidence": 90
+      },
+      {
+        "target": "window.speechSynthesis",
+        "description": "Enumerates available voice options",
+        "enabled": true,
+        "confidence": 90
+      },
+      {
+        "target": "MimeTypeArray.prototype.length",
+        "description": "Counts supported MIME types",
+        "enabled": true,
+        "confidence": 85
+      },
+      {
+        "target": "MimeType.prototype.description",
+        "description": "Reads MIME type descriptions",
+        "enabled": false,
+        "confidence": 75
+      },
+      {
+        "target": "PluginArray.prototype.length",
+        "description": "Counts installed browser plugins",
+        "enabled": true,
+        "confidence": 85
+      },
+      {
+        "target": "Plugin.prototype.description",
+        "description": "Reads plugin descriptions",
+        "enabled": false,
+        "confidence": 75
+      },
+      {
+        "target": "HTMLMediaElement.prototype.canPlayType",
+        "description": "Detects supported media codecs",
+        "enabled": true,
+        "confidence": 90
+      }
+    ]
+  },
+  "_searchStrings": {
+    "js_hooks": "Navigator.prototype.getBattery Accesses battery information for hardware fingerprinting BatteryManager.prototype.level Reads battery level percentage window.speechSynthesis Enumerates available voice options MimeTypeArray.prototype.length Counts supported MIME types MimeType.prototype.description Reads MIME type descriptions PluginArray.prototype.length Counts installed browser plugins Plugin.prototype.description Reads plugin descriptions HTMLMediaElement.prototype.canPlayType Detects supported media codecs"
+  }
+}

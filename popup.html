@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scrapfly</title>
   <link rel="stylesheet" href="popup.css">
-  <link rel="stylesheet" href="Sections/Detection/detection.css">
-  <link rel="stylesheet" href="Sections/History/history.css">
-  <link rel="stylesheet" href="Sections/Rules/rules.css">
-  <link rel="stylesheet" href="Sections/Advanced/advanced.css">
-  <link rel="stylesheet" href="Sections/Settings/settings.css">
+  <link rel="stylesheet" href="sections/detection/detection.css">
+  <link rel="stylesheet" href="sections/history/history.css">
+  <link rel="stylesheet" href="sections/rules/rules.css">
+  <link rel="stylesheet" href="sections/advanced/advanced.css">
+  <link rel="stylesheet" href="sections/settings/settings.css">
 </head>
 <body>
   <div id="app">
@@ -19,6 +19,7 @@
           <img src="icons/icon32.png" alt="Scrapfly Robot" width="32" height="32" class="logo-icon">
           <div class="logo-text">
             <span id="appBrand">Scrapfly</span>
+            <span id="appVersion" class="app-version"></span>
             <div id="currentTabInfo" class="current-tab-info" style="display: none;">
               <img id="currentTabFavicon" class="tab-favicon" src="" alt="">
               <span id="currentTabUrl"></span>
@@ -101,23 +102,34 @@
   </div>
 
   <!-- Scripts -->
-  <script src="Modules/CategoryManager.js"></script>
-  <script src="Modules/DetectorManager.js"></script>
-  <script src="Modules/ConfidenceManager.js"></script>
-  <script src="Modules/DetectionEngineManager.js"></script>
-  <script src="Modules/PaginationManager.js"></script>
-  <script src="Modules/ColorManager.js"></script>
-  <script src="Modules/SearchManager.js"></script>
-  <script src="Modules/NotificationManager.js"></script>
-  <script src="Sections/Detection/Detection.js"></script>
-  <script src="Sections/History/History.js"></script>
-  <script src="Sections/Rules/Rules.js"></script>
-  <script src="Sections/Advanced/Modules/ReCaptcha/Libs/pbf.js"></script>
-  <script src="Sections/Advanced/Modules/ReCaptcha/Libs/message.browser.js"></script>
-  <script src="Sections/Advanced/Modules/ReCaptcha/ReCaptchaAdvanced.js"></script>
-  <script src="Sections/Advanced/Modules/Akamai/AkamaiAdvanced.js"></script>
-  <script src="Sections/Advanced/Advanced.js"></script>
-  <script src="Sections/Settings/Settings.js"></script>
+  <script src="utils/debug.js"></script>
+  <script src="utils/utils.js"></script>
+  <script src="modules/storage-manager.js"></script>
+  <script src="modules/category-manager.js"></script>
+  <script src="modules/detector-manager.js"></script>
+  <script src="modules/confidence-manager.js"></script>
+  <script src="modules/detection-engine-manager.js"></script>
+  <script src="modules/pagination-manager.js"></script>
+  <script src="modules/color-manager.js"></script>
+  <script src="modules/search-manager.js"></script>
+  <script src="modules/notification-manager.js"></script>
+  <script src="sections/detection/detection.js"></script>
+  <script src="sections/history/history.js"></script>
+  <script src="sections/rules/rules.js"></script>
+  <!-- Base template system for Advanced modules -->
+  <script src="sections/advanced/base-interceptor-helpers.js"></script>
+  <script src="sections/advanced/advanced-utils.js"></script>
+  <script src="sections/advanced/base-advanced-module.js"></script>
+  <!-- Advanced module implementations -->
+  <script src="sections/advanced/modules/recaptcha/libs/pbf.js"></script>
+  <script src="sections/advanced/modules/recaptcha/libs/message.browser.js"></script>
+  <script src="sections/advanced/modules/recaptcha/recaptcha-advanced.js"></script>
+  <script src="sections/advanced/modules/akamai/akamai-advanced.js"></script>
+  <script src="sections/advanced/modules/imperva/imperva-advanced.js"></script>
+  <script src="sections/advanced/modules/shapesecurity/shapesecurity-advanced.js"></script>
+  <script src="sections/advanced/modules/awswaf/awswaf-advanced.js"></script>
+  <script src="sections/advanced/advanced.js"></script>
+  <script src="sections/settings/settings.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

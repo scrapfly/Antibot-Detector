@@ -10,7 +10,7 @@
   "icon": "reblaze_official.png",
   "description": "Reblaze cloud-based web security platform with bot management",
   "detection": {
-    "cookies": [
+    "cookie": [
       {
         "name": "rbzid",
         "confidence": 95,
@@ -27,20 +27,14 @@
         "description": "Reblaze prefix cookies"
       }
     ],
-    "headers": [
-      {
-        "name": "Server",
-        "value": "Reblaze",
-        "confidence": 95,
-        "description": "Reblaze server header"
-      },
+    "header": [
       {
         "name": "X-Reblaze-*",
         "confidence": 90,
         "description": "Reblaze specific headers"
       }
     ],
-    "urls": [
+    "url": [
       {
         "pattern": "reblaze",
         "confidence": 80,
@@ -59,5 +53,11 @@
         "description": "Reblaze reference"
       }
     ]
+  },
+  "_searchStrings": {
+    "cookie": "rbzid Reblaze visitor ID rbzsessionid Reblaze session identifier rbz* Reblaze prefix cookies",
+    "header": "Server Reblaze Reblaze server header X-Reblaze-* Reblaze specific headers",
+    "url": "reblaze Reblaze reference in URLs",
+    "content": "rbzid Reblaze ID in scripts reblaze Reblaze reference"
   }
 }

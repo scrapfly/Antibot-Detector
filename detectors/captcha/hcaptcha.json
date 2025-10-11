@@ -10,7 +10,7 @@
   "icon": "hcaptcha_official.png",
   "description": "Privacy-focused CAPTCHA service that rewards websites",
   "detection": {
-    "urls": [
+    "url": [
       {
         "pattern": "hcaptcha.com",
         "confidence": 100,
@@ -61,6 +61,32 @@
         "selector": "iframe[src*='hcaptcha.com']",
         "confidence": 95
       }
+    ],
+    "window": [
+      {
+        "path": "hcaptcha",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "hCaptcha main object"
+      },
+      {
+        "path": "hcaptcha.render",
+        "condition": "typeof function",
+        "confidence": 95,
+        "description": "hCaptcha render function"
+      },
+      {
+        "path": "hcaptcha.execute",
+        "condition": "typeof function",
+        "confidence": 90,
+        "description": "hCaptcha execute function"
+      }
     ]
+  },
+  "_searchStrings": {
+    "url": "hcaptcha.com hCaptcha domain /checksiteconfig Site configuration check /getcaptcha Captcha retrieval endpoint",
+    "content": "hcaptcha hCaptcha object h-captcha hCaptcha container class hcaptcha.render hcaptcha.execute",
+    "dom": ".h-captcha hCaptcha container [data-hcaptcha-sitekey] iframe[src*='hcaptcha.com']",
+    "window": "hcaptcha typeof object hCaptcha main object hcaptcha.render typeof function hCaptcha render function hcaptcha.execute typeof function hCaptcha execute function"
   }
 }

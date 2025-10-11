@@ -10,7 +10,7 @@
   "icon": "sucuri_official.png",
   "description": "Sucuri Website Security Platform with WAF and bot protection",
   "detection": {
-    "cookies": [
+    "cookie": [
       {
         "name": "sucuri_cloudproxy",
         "confidence": 95,
@@ -22,7 +22,7 @@
         "description": "Sucuri prefix cookies"
       }
     ],
-    "headers": [
+    "header": [
       {
         "name": "X-Sucuri-ID",
         "confidence": 95,
@@ -45,7 +45,7 @@
         "description": "Sucuri block indicator"
       }
     ],
-    "urls": [
+    "url": [
       {
         "pattern": "sucuri.net",
         "confidence": 90,
@@ -66,5 +66,12 @@
         "description": "Sucuri meta tags"
       }
     ]
+  },
+  "_searchStrings": {
+    "cookie": "sucuri_cloudproxy Sucuri CloudProxy cookie sucuri-* Sucuri prefix cookies",
+    "header": "X-Sucuri-ID Sucuri request identifier X-Sucuri-Cache Sucuri cache status Server Sucuri Sucuri server header X-Sucuri-Block Sucuri block indicator",
+    "url": "sucuri.net Sucuri domain in resources",
+    "content": "sucuri Sucuri reference in scripts",
+    "dom": "meta[name*='sucuri'] Sucuri meta tags"
   }
 }

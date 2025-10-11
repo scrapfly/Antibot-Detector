@@ -10,7 +10,7 @@
   "icon": "geetest_official.png",
   "description": "AI-powered behavioral CAPTCHA with slide verification",
   "detection": {
-    "cookies": [
+    "cookie": [
       {
         "name": "geetest_*",
         "confidence": 95,
@@ -22,7 +22,7 @@
         "description": "GeeTest tracking cookies"
       }
     ],
-    "headers": [
+    "header": [
       {
         "name": "X-Geetest-Challenge",
         "confidence": 100,
@@ -34,7 +34,7 @@
         "description": "GeeTest validation header"
       }
     ],
-    "urls": [
+    "url": [
       {
         "pattern": "api.geetest.com",
         "confidence": 100,
@@ -101,6 +101,34 @@
         "confidence": 90,
         "description": "Common GeeTest container ID"
       }
+    ],
+    "window": [
+      {
+        "path": "initGeetest",
+        "condition": "typeof function",
+        "confidence": 100,
+        "description": "GeeTest initialization function"
+      },
+      {
+        "path": "geetest",
+        "condition": "typeof object",
+        "confidence": 95,
+        "description": "GeeTest main object"
+      },
+      {
+        "path": "getGeetest",
+        "condition": "typeof function",
+        "confidence": 90,
+        "description": "GeeTest getter function"
+      }
     ]
+  },
+  "_searchStrings": {
+    "cookie": "geetest_* GeeTest session cookies gt_* GeeTest tracking cookies",
+    "header": "X-Geetest-Challenge GeeTest challenge header X-Geetest-Validate GeeTest validation header",
+    "url": "api.geetest.com GeeTest API endpoint static.geetest.com GeeTest static resources /gettype.php GeeTest type endpoint /get.php GeeTest challenge endpoint /validate.php GeeTest validation endpoint gt.js GeeTest JavaScript library",
+    "content": "window.initGeetest GeeTest initialization function geetest getGeetest geetestUtils",
+    "dom": "[class*='geetest_'] GeeTest CSS classes [data-geetest] GeeTest data attributes #geetest-captcha Common GeeTest container ID",
+    "window": "initGeetest typeof function GeeTest initialization function geetest typeof object GeeTest main object getGeetest typeof function GeeTest getter function"
   }
 }

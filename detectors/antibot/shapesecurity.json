@@ -1,0 +1,89 @@
+{
+  "id": "shapesecurity",
+  "name": "Shape Security",
+  "category": "Anti-Bot",
+  "color": "#FF6B35",
+  "confidence": 100,
+  "lastUpdated": "2024-10-06",
+  "version": "1.1.0",
+  "website": "https://www.shapesecurity.com/products/bot-manager",
+  "icon": "shape_security_official.png",
+  "description": "Enterprise-grade bot management solution providing real-time detection and mitigation",
+  "detection": {
+    "cookie": [],
+    "header": [
+      {
+        "name": "x-[a-z0-9]{8}-a",
+        "nameRegex": true,
+        "confidence": 100,
+        "description": "Shape Security dynamic header pattern (suffix -a)"
+      },
+      {
+        "name": "x-[a-z0-9]{8}-b",
+        "nameRegex": true,
+        "confidence": 95,
+        "description": "Shape Security dynamic header pattern (suffix -b)"
+      },
+      {
+        "name": "x-[a-z0-9]{8}-c",
+        "nameRegex": true,
+        "confidence": 95,
+        "description": "Shape Security dynamic header pattern (suffix -c)"
+      },
+      {
+        "name": "x-[a-z0-9]{8}-d",
+        "nameRegex": true,
+        "confidence": 95,
+        "description": "Shape Security dynamic header pattern (suffix -d)"
+      },
+      {
+        "name": "x-[a-z0-9]{8}-f",
+        "nameRegex": true,
+        "confidence": 95,
+        "description": "Shape Security dynamic header pattern (suffix -f)"
+      },
+      {
+        "name": "x-[a-z0-9]{8}-z",
+        "nameRegex": true,
+        "confidence": 95,
+        "description": "Shape Security dynamic header pattern (suffix -z)"
+      }
+    ],
+    "url": [
+      {
+        "pattern": "\\?seed=[A-Za-z0-9_\\-]+",
+        "nameRegex": true,
+        "confidence": 95,
+        "description": "Shape Security seed parameter (primary indicator)"
+      },
+      {
+        "pattern": "&seed=[A-Za-z0-9_\\-]+",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "Shape Security seed parameter (not first query param)"
+      }
+    ],
+    "content": [
+      {
+        "content": "shapesecurity",
+        "confidence": 90,
+        "description": "Shape Security namespace"
+      }
+    ],
+    "dom": [],
+    "window": [
+      {
+        "path": "__xr_bmobdb",
+        "condition": "typeof function",
+        "confidence": 95,
+        "description": "Shape Security browser monitoring database"
+      }
+    ]
+  },
+  "_searchStrings": {
+    "header": "x-[a-z0-9]{8}-a Shape Security dynamic header pattern (suffix -a) x-[a-z0-9]{8}-b Shape Security dynamic header pattern (suffix -b) x-[a-z0-9]{8}-c Shape Security dynamic header pattern (suffix -c) x-[a-z0-9]{8}-d Shape Security dynamic header pattern (suffix -d) x-[a-z0-9]{8}-f Shape Security dynamic header pattern (suffix -f) x-[a-z0-9]{8}-z Shape Security dynamic header pattern (suffix -z)",
+    "url": "\\?seed=[A-Za-z0-9_\\-]+ Shape Security seed parameter (primary indicator) &seed=[A-Za-z0-9_\\-]+ Shape Security seed parameter (not first query param)",
+    "content": "shapesecurity Shape Security namespace",
+    "window": "__xr_bmobdb typeof object Shape Security browser monitoring database"
+  }
+}

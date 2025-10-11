@@ -10,16 +10,42 @@
   "icon": "f5_official.png",
   "description": "F5 BIG-IP Application Security Manager (ASM) - Web application firewall and bot protection",
   "detection": {
-    "cookies": [
+    "cookie": [
       {
-        "name": "TS*",
-        "confidence": 85,
-        "description": "F5 BIG-IP session cookies"
+        "name": "^TS[a-zA-Z0-9]+$",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "F5 BIG-IP session persistence cookies"
+      },
+      {
+        "name": "^BIGipServer.*",
+        "nameRegex": true,
+        "confidence": 95,
+        "description": "F5 BIG-IP load balancer cookies"
       }
     ],
-    "headers": [],
-    "urls": [],
-    "content": []
+    "header": [
+      {
+        "name": "X-WA-Info",
+        "confidence": 90,
+        "description": "F5 WebAccelerator header"
+      }
+    ],
+    "url": [],
+    "content": [
+      {
+        "content": "f5_cspm",
+        "confidence": 90,
+        "description": "F5 Client-Side Protection & Mitigation"
+      },
+      {
+        "content": "F5_ST",
+        "confidence": 85,
+        "description": "F5 Session Tracking variable"
+      }
+    ],
+    "dom": [],
+    "window": []
   },
   "notes": {
     "detection_tips": [
@@ -28,5 +54,10 @@
       "F5 ASM often modifies response headers",
       "Look for encoded values in cookies starting with 'TS'"
     ]
+  },
+  "_searchStrings": {
+    "cookie": "^TS[a-zA-Z0-9]+$ F5 BIG-IP session persistence cookies ^BIGipServer.* F5 BIG-IP load balancer cookies",
+    "header": "X-WA-Info F5 WebAccelerator header",
+    "content": "f5_cspm F5 Client-Side Protection & Mitigation F5_ST F5 Session Tracking variable"
   }
 }

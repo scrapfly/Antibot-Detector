@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "settings": {
+    "general": {
+      "notificationsEnabled": true,
+      "debugMode": false
+    },
+    "detection": {
+      "cacheDuration": 12,
+      "cacheUnit": "hours",
+      "cacheScope": "path",
+      "blacklistedDomains": []
+    },
+    "jsApi": {
+      "enableJsApi": false
+    },
+    "webhook": {
+      "enableWebhook": false,
+      "webhookOnCache": false,
+      "webhookMethod": "POST",
+      "webhookUrl": "",
+      "webhookContentType": "application/json",
+      "webhookPayload": "{\"url\": \"<SITEURL>\", \"detections\": <DETECTIONS>, \"timestamp\": \"<TIMESTAMP>\", \"count\": <DETECTION_COUNT>}"
+    },
+    "history": {
+      "historyLimit": 100,
+      "autoClearDays": 30,
+      "exportFormat": "json",
+      "includeTimestamps": true,
+      "historyBypassCache": false
+    },
+    "duplicatePrevention": {
+      "preventDuplicates": false,
+      "duplicateScope": "full_url",
+      "duplicateDuration": 1,
+      "duplicateUnit": "hours"
+    }
+  }
+}

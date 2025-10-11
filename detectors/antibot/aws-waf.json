@@ -10,7 +10,7 @@
   "icon": "aws_official.png",
   "description": "Amazon Web Services Web Application Firewall with bot control",
   "detection": {
-    "cookies": [
+    "cookie": [
       {
         "name": "aws-waf-token",
         "confidence": 95,
@@ -22,8 +22,8 @@
         "description": "AWS WAF cookies"
       }
     ],
-    "headers": [],
-    "urls": [
+    "header": [],
+    "url": [
       {
         "pattern": "/challenge.js",
         "confidence": 80,
@@ -46,6 +46,39 @@
         "confidence": 85,
         "description": "AWS WAF reference"
       }
+    ],
+    "dom": [],
+    "window": [
+      {
+        "path": "awsWafCaptchaKey",
+        "condition": "typeof string",
+        "confidence": 95,
+        "description": "AWS WAF CAPTCHA encryption key"
+      },
+      {
+        "path": "awsWafCaptchaIv",
+        "condition": "typeof string",
+        "confidence": 95,
+        "description": "AWS WAF CAPTCHA initialization vector"
+      },
+      {
+        "path": "awsWafCaptchaContext",
+        "condition": "typeof string",
+        "confidence": 95,
+        "description": "AWS WAF CAPTCHA context data"
+      },
+      {
+        "path": "gokuProps",
+        "condition": "typeof object",
+        "confidence": 90,
+        "description": "AWS WAF Goku properties object"
+      }
     ]
+  },
+  "_searchStrings": {
+    "cookie": "aws-waf-token AWS WAF session token awswaf* AWS WAF cookies",
+    "url": "/challenge.js AWS WAF challenge script awswaf AWS WAF in URL",
+    "content": "challenge.js AWS WAF challenge script awswaf AWS WAF reference",
+    "window": "awsWafCaptchaKey typeof string AWS WAF CAPTCHA encryption key awsWafCaptchaIv typeof string AWS WAF CAPTCHA initialization vector awsWafCaptchaContext typeof string AWS WAF CAPTCHA context data gokuProps typeof object AWS WAF Goku properties object"
   }
 }

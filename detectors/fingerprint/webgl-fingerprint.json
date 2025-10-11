@@ -1,0 +1,61 @@
+{
+  "id": "webgl-fingerprint",
+  "name": "WebGL Fingerprint",
+  "category": "Fingerprint",
+  "color": "#7c3aed",
+  "confidence": 100,
+  "lastUpdated": "2024-01-15",
+  "version": "1.0.0",
+  "website": "https://en.wikipedia.org/wiki/WebGL",
+  "icon": "custom.png",
+  "description": "WebGL-based graphics hardware and driver fingerprinting",
+  "detection": {
+    "js_hooks": [
+      {
+        "target": "WebGLRenderingContext.prototype.getParameter",
+        "description": "Retrieves WebGL parameters for hardware fingerprinting",
+        "enabled": true,
+        "confidence": 95
+      },
+      {
+        "target": "WebGLRenderingContext.prototype.getSupportedExtensions",
+        "description": "Lists supported WebGL extensions",
+        "enabled": true,
+        "confidence": 90
+      },
+      {
+        "target": "WebGLRenderingContext.prototype.getExtension",
+        "description": "Gets specific WebGL extension for fingerprinting",
+        "enabled": true,
+        "confidence": 85
+      },
+      {
+        "target": "WebGL2RenderingContext.prototype.getParameter",
+        "description": "Retrieves WebGL2 parameters",
+        "enabled": true,
+        "confidence": 95
+      },
+      {
+        "target": "WebGLRenderingContext.prototype.bufferData",
+        "description": "Uploads buffer data for WebGL fingerprinting",
+        "enabled": false,
+        "confidence": 75
+      },
+      {
+        "target": "WebGL2RenderingContext.prototype.bufferData",
+        "description": "Uploads buffer data for WebGL2 fingerprinting",
+        "enabled": false,
+        "confidence": 75
+      },
+      {
+        "target": "WebGL2RenderingContext.prototype.readPixels",
+        "description": "Reads pixel data from WebGL2 framebuffer",
+        "enabled": true,
+        "confidence": 90
+      }
+    ]
+  },
+  "_searchStrings": {
+    "js_hooks": "WebGLRenderingContext.prototype.getParameter Retrieves WebGL parameters for hardware fingerprinting WebGLRenderingContext.prototype.getSupportedExtensions Lists supported WebGL extensions WebGLRenderingContext.prototype.getExtension Gets specific WebGL extension for fingerprinting WebGL2RenderingContext.prototype.getParameter Retrieves WebGL2 parameters WebGLRenderingContext.prototype.bufferData Uploads buffer data for WebGL fingerprinting WebGL2RenderingContext.prototype.bufferData Uploads buffer data for WebGL2 fingerprinting WebGL2RenderingContext.prototype.readPixels Reads pixel data from WebGL2 framebuffer"
+  }
+}

@@ -76,6 +76,14 @@ body {
   color: var(--text-primary);
 }
 
+.app-version {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+}
+
 .current-tab-info {
   display: flex;
   align-items: center;
@@ -248,6 +256,25 @@ body {
   padding: 40px;
   gap: 16px;
   color: var(--text-muted);
+}
+
+.loading-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.loading-main {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.loading-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  opacity: 0.8;
 }
 
 .spinner {

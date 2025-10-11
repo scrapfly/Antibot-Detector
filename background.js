@@ -5,45 +5,436 @@
 
 // Import scripts for service worker
 importScripts(
-    './Utils/utils.js',
-    './Modules/CategoryManager.js',
-    './Modules/DetectorManager.js',
-    './Modules/ConfidenceManager.js',
-    './Modules/DetectionEngineManager.js',
-    './Modules/NotificationManager.js',
-    './Sections/History/History.js',
-    './Sections/Advanced/Modules/ReCaptcha/Libs/pbf.js',
-    './Sections/Advanced/Modules/ReCaptcha/Libs/message.browser.js',
-    './Sections/Advanced/Modules/ReCaptcha/ReCaptchaInterceptor.js',
-    './Sections/Advanced/Modules/Akamai/AkamaiInterceptor.js',
-    './Sections/Advanced/Modules/Akamai/AkamaiAdvanced.js'
+    './utils/debug.js',
+    './utils/utils.js',
+    './modules/storage-manager.js', // OPTIMIZATION Phase 1: Shared storage patterns
+    './modules/category-manager.js',
+    './modules/detector-manager.js',
+    './modules/confidence-manager.js',
+    './modules/detection-engine-manager.js',
+    './modules/notification-manager.js',
+    './sections/history/history.js',
+    './sections/settings/settings.js',
+    // Base helpers for interceptors (service worker context)
+    './sections/advanced/base-interceptor-helpers.js',
+    // Advanced module interceptors (service worker only - UI modules are in popup.html)
+    './sections/advanced/modules/recaptcha/libs/pbf.js',
+    './sections/advanced/modules/recaptcha/libs/message.browser.js',
+    './sections/advanced/modules/recaptcha/recaptcha-interceptor.js',
+    './sections/advanced/modules/akamai/akamai-interceptor.js',
+    './sections/advanced/modules/imperva/imperva-interceptor.js',
+    './sections/advanced/modules/shapesecurity/shapesecurity-interceptor.js',
+    './sections/advanced/modules/awswaf/awswaf-interceptor.js'
+    // Note: SessionManager and DetectionSession removed - using simple Map instead
 );
 
 console.log('Scrapfly Background Script: Initializing...');
 
-// Storage for headers per tab
-const headersStore = new Map();
-const captureState = new Map();
-const akamaiCaptureState = new Map();
-
-// Initialize Akamai interceptor with the capture state Map
-// Delay initialization slightly to ensure scripts are loaded
-setTimeout(() => {
-    if (typeof akamaiInitializeInterceptor === 'function') {
-        akamaiInitializeInterceptor(akamaiCaptureState);
-        console.log('[AKAMAI-CAPTURE] Interceptor initialized with capture state Map');
-    } else {
-        console.error('[Akamai] akamaiInitializeInterceptor function not found');
+// OPTIMIZATION 4.1: Batched storage writer to reduce I/O overhead
+class BatchedStorageWriter {
+    constructor(batchWindow = 100) {
+        this.batchWindow = batchWindow; // milliseconds
+        this.pendingWrites = new Map(); // key -> value
+        this.writeTimeout = null;
     }
-}, 100);
+
+    /**
+     * Schedule a write operation (batched)
+     * @param {string} key - Storage key
+     * @param {any} value - Value to write
+     */
+    write(key, value) {
+        this.pendingWrites.set(key, value);
+
+        // Schedule flush if not already scheduled
+        if (!this.writeTimeout) {
+            this.writeTimeout = setTimeout(() => this.flush(), this.batchWindow);
+        }
+    }
+
+    /**
+     * Flush all pending writes to storage
+     */
+    async flush() {
+        if (this.pendingWrites.size === 0) return;
+
+        // Get all pending writes
+        const writes = Object.fromEntries(this.pendingWrites);
+        this.pendingWrites.clear();
+        this.writeTimeout = null;
+
+        // Write to storage in one operation
+        try {
+            await chrome.storage.local.set(writes);
+            console.log(`[BatchedStorage] Flushed ${Object.keys(writes).length} keys to storage`);
+        } catch (error) {
+            console.error('[BatchedStorage] Failed to flush writes:', error);
+        }
+    }
+
+    /**
+     * Force immediate flush (for critical writes)
+     */
+    async forceFlush() {
+        if (this.writeTimeout) {
+            clearTimeout(this.writeTimeout);
+            this.writeTimeout = null;
+        }
+        await this.flush();
+    }
+}
+
+// OPTIMIZED 3.3: Lazy Map with TTL cleanup
+// OPTIMIZATION Phase 9A.1: Added maxSize limit with LRU eviction
+class TTLMap extends Map {
+    constructor(ttlMs = 300000, maxSize = 500) { // 5 min default, 500 entries max
+        super();
+        this.ttlMs = ttlMs;
+        this.maxSize = maxSize;
+        this.timers = new Map();
+        this.accessOrder = []; // Track insertion order for LRU eviction
+    }
+
+    set(key, value) {
+        // OPTIMIZATION Phase 9A.1 FIX: Check size AFTER removing old entry (prevents race condition)
+        if (this.has(key)) {
+            // Updating existing key - remove from accessOrder first
+            const idx = this.accessOrder.indexOf(key);
+            if (idx > -1) this.accessOrder.splice(idx, 1);
+            clearTimeout(this.timers.get(key));
+        } else if (this.size >= this.maxSize) {
+            // Adding new key and at capacity - evict oldest
+            this._evictOldest();
+        }
+
+        // Set new timer for auto-cleanup
+        const timer = setTimeout(() => {
+            super.delete(key);
+            this.timers.delete(key);
+            // Remove from access order
+            const idx = this.accessOrder.indexOf(key);
+            if (idx > -1) this.accessOrder.splice(idx, 1);
+        }, this.ttlMs);
+
+        this.timers.set(key, timer);
+        this.accessOrder.push(key); // Track insertion order
+        return super.set(key, value);
+    }
+
+    _evictOldest() {
+        if (this.accessOrder.length === 0) return;
+        const oldest = this.accessOrder.shift(); // Remove oldest
+        if (this.timers.has(oldest)) {
+            clearTimeout(this.timers.get(oldest));
+            this.timers.delete(oldest);
+        }
+        super.delete(oldest);
+        console.log(`[TTLMap] Evicted oldest entry (size: ${this.size}/${this.maxSize})`);
+    }
+
+    delete(key) {
+        if (this.timers.has(key)) {
+            clearTimeout(this.timers.get(key));
+            this.timers.delete(key);
+        }
+        // Remove from access order
+        const idx = this.accessOrder.indexOf(key);
+        if (idx > -1) this.accessOrder.splice(idx, 1);
+        return super.delete(key);
+    }
+
+    clear() {
+        for (const timer of this.timers.values()) {
+            clearTimeout(timer);
+        }
+        this.timers.clear();
+        this.accessOrder = [];
+        return super.clear();
+    }
+}
+
+// Storage for headers per tab
+// OPTIMIZED 3.3: Use TTL-based auto-cleanup (5 min expiry)
+const headersStore = new TTLMap(300000);
+
+// OPTIMIZATION Phase B.3: Convert capture state maps to TTLMap to prevent memory leaks
+// 30 min TTL matches Advanced history expiration, 100 max entries prevents unbounded growth
+const reCaptchaCaptureState = new TTLMap(1800000, 100); // 30 min, max 100 captures
+const akamaiCaptureState = new TTLMap(1800000, 100); // 30 min, max 100 captures
+const impervaCaptureState = new TTLMap(1800000, 100); // 30 min, max 100 captures
+
+// OPTIMIZED 3.1: Interceptors initialized lazily on first message (not here)
+
+// OPTIMIZATION 4.1: Batched storage writer (100ms batch window)
+const batchedStorage = new BatchedStorageWriter(100);
 
 // Initialize managers on extension startup
 let detectorManager = null;
 let categoryManager = null;
 let detectionEngine = null;
 
-// Track recent detection requests to prevent duplicates
-const recentDetectionRequests = new Map(); // tabId -> timestamp
+// OPTIMIZATION Phase B.3: Convert tracking maps to TTLMap to prevent memory leaks
+// Track recent detection requests to prevent duplicates (5 min TTL, max 200 entries)
+const recentDetectionRequests = new TTLMap(300000, 200); // 5 min, prevents spam
+
+// Track active detections (10 min TTL, max 50 entries - tabs currently running detection with ⏳ badge)
+const activeDetections = new TTLMap(600000, 50); // 10 min, max 50 concurrent
+
+// Track interrupted detections (5 min TTL, max 50 entries - tabs where user switched away mid-detection)
+const interruptedDetections = new TTLMap(300000, 50); // 5 min, auto-cleanup
+
+// Track currently active tab to detect interruptions
+let currentActiveTab = null; // tabId of currently active tab
+
+// OPTIMIZED 3.2: TTL-based detection state tracking (5 min auto-cleanup)
+// OPTIMIZATION Phase 9A.8: Add max 50 concurrent detections limit
+const detectionStates = new TTLMap(300000, 50); // tabId -> {url, hooksData: [], mainData: [], hooksComplete: false, mainComplete: false}
+
+// OPTIMIZATION Phase 10.5: Debounce finalization checks to prevent redundant work
+const finalizationDebounce = new Map(); // tabId -> timeout
+
+/**
+ * Helper functions for detection state management
+ */
+
+/**
+ * OPTIMIZATION Phase 10.2: Generate unique key for match deduplication
+ * @param {Object} match - Match object with type and identifying fields
+ * @returns {string} Unique key for the match
+ */
+function generateMatchKey(match) {
+    const matchType = (match.type || '').toLowerCase();
+
+    // Generate key based on match type and identifying fields
+    switch (matchType) {
+        case 'cookie':
+            return `cookie:${match.name}:${match.value}`;
+
+        case 'header':
+            return `header:${match.name}:${match.value}`;
+
+        case 'content':
+        case 'script':
+            return `${matchType}:${match.pattern || match.content}`;
+
+        case 'url':
+            return `url:${match.pattern || match.value}`;
+
+        case 'dom':
+            return `dom:${match.selector || match.pattern}`;
+
+        case 'window':
+            return `window:${match.pattern}`;
+
+        case 'js_hooks':
+            return `js_hooks:${match.pattern}`;
+
+        case 'css':
+            return `css:${match.selector || match.pattern}`;
+
+        default:
+            return `${matchType}:${match.pattern || match.value || ''}`;
+    }
+}
+
+function getOrCreateDetectionState(tabId, url) {
+    if (!detectionStates.has(tabId)) {
+        detectionStates.set(tabId, {
+            url: url,
+            hooksData: new Map(), // detectorId -> detector object
+            mainData: [],
+            hooksComplete: false,
+            mainComplete: false,
+            windowPropertiesComplete: false,
+            startTime: Date.now()
+        });
+        console.log(`[DetectionState] Created state for tab ${tabId}`);
+    }
+    return detectionStates.get(tabId);
+}
+
+function checkAndFinalizeDetection(tabId) {
+    const state = detectionStates.get(tabId);
+    if (!state) return;
+
+    // OPTIMIZATION Phase 10.5: Debounce finalization checks (10ms window)
+    // Prevents redundant work when multiple completion signals arrive rapidly
+    if (finalizationDebounce.has(tabId)) {
+        clearTimeout(finalizationDebounce.get(tabId));
+    }
+
+    const timeout = setTimeout(() => {
+        // Re-check state in case it was deleted during debounce
+        const currentState = detectionStates.get(tabId);
+        if (!currentState) {
+            finalizationDebounce.delete(tabId);
+            return;
+        }
+
+        console.log(`[DetectionState] Checking finalization for tab ${tabId}:`, {
+            hooksComplete: currentState.hooksComplete,
+            mainComplete: currentState.mainComplete,
+            windowPropertiesComplete: currentState.windowPropertiesComplete,
+            hooksCount: currentState.hooksData.size,
+            mainCount: currentState.mainData.length
+        });
+
+        // Only finalize when ALL THREE are complete
+        if (currentState.hooksComplete && currentState.mainComplete && currentState.windowPropertiesComplete) {
+            console.log(`[DetectionState] ✅ All detection methods complete - finalizing tab ${tabId}`);
+            finalizeDetection(tabId, currentState);
+        } else {
+            console.log(`[DetectionState] ⏳ Waiting... hooks=${currentState.hooksComplete}, main=${currentState.mainComplete}, windowProps=${currentState.windowPropertiesComplete}`);
+        }
+
+        finalizationDebounce.delete(tabId);
+    }, 10);
+
+    finalizationDebounce.set(tabId, timeout);
+}
+
+async function finalizeDetection(tabId, state) {
+    console.log(`[DetectionState] ========== FINALIZING TAB ${tabId} ==========`);
+
+    // Safety check: Don't finalize if detection was interrupted
+    if (state.interrupted || interruptedDetections.has(tabId)) {
+        console.log(`[DetectionState] ⚠️ Tab ${tabId} is interrupted - aborting finalization`);
+        return;
+    }
+
+    // DEBUG: Log what we're merging
+    console.log(`[DetectionState] 📊 Merging data:`);
+    console.log(`[DetectionState]   - JS Hooks: ${state.hooksData.size} detectors`);
+    console.log(`[DetectionState]   - Main detections: ${state.mainData.length} detectors`);
+
+    // DEBUG: List hooks data details
+    if (state.hooksData.size > 0) {
+        console.log(`[DetectionState] 🎯 JS Hooks details:`);
+        for (const [id, data] of state.hooksData.entries()) {
+            console.log(`[DetectionState]   - ${id}: ${data.detector?.name} (${data.matches?.length || 0} matches)`);
+            if (data.matches) {
+                data.matches.forEach(m => console.log(`[DetectionState]     * ${m.type}: ${m.pattern}`));
+            }
+        }
+    }
+
+    // DEBUG: List main data details
+    if (state.mainData.length > 0) {
+        console.log(`[DetectionState] 📋 Main detections details:`);
+        for (const data of state.mainData) {
+            const id = data.detector?.id || data.id;
+            const name = data.detector?.name || 'Unknown';
+            console.log(`[DetectionState]   - ${id}: ${name} (${data.matches?.length || 0} matches)`);
+            if (data.matches) {
+                data.matches.forEach(m => console.log(`[DetectionState]     * ${m.type}: ${m.pattern || m.value || m.name}`));
+            }
+        }
+    }
+
+    // Merge hooks and main detection
+    const mergedDetections = new Map();
+
+    // Add hooks data
+    for (const [detectorId, detector] of state.hooksData.entries()) {
+        mergedDetections.set(detectorId, detector);
+    }
+
+    // Add main detection data (merge if detector already exists from hooks)
+    for (const detector of state.mainData) {
+        const detectorId = detector.detector?.id || detector.id;
+        if (mergedDetections.has(detectorId)) {
+            // Merge: combine matches and detection methods
+            const existing = mergedDetections.get(detectorId);
+            existing.matches = [...existing.matches, ...(detector.matches || [])];
+
+            // Safely merge detectionMethods arrays
+            const existingMethods = existing.detectionMethods || [];
+            const newMethods = detector.detectionMethods || [];
+            existing.detectionMethods = [...new Set([...existingMethods, ...newMethods])];
+        } else {
+            // Ensure detector has detectionMethods array
+            if (!detector.detectionMethods) {
+                detector.detectionMethods = [];
+            }
+            mergedDetections.set(detectorId, detector);
+        }
+    }
+
+    const finalResults = Array.from(mergedDetections.values());
+    console.log(`[DetectionState] ✅ Merged results: ${finalResults.length} detectors`);
+
+    // DEBUG: Show what's in final results
+    console.log(`[DetectionState] 📦 Final results summary:`);
+    for (const result of finalResults) {
+        const methods = (result.detectionMethods || []).join(', ') || 'none';
+        const matchTypes = [...new Set((result.matches || []).map(m => m.type))].join(', ') || 'none';
+        console.log(`[DetectionState]   - ${result.detector?.name}: methods=[${methods}] matches=[${matchTypes}] count=${result.matches?.length || 0}`);
+    }
+
+    // Store to cache
+    const pageData = {
+        url: state.url,
+        hostname: Utils.getHostnameFromUrl(state.url),
+        favicon: Utils.getFaviconUrl(state.url)
+    };
+
+    await DetectionEngineManager.storeDetection(state.url, pageData, finalResults);
+
+    // Update badge with appropriate color
+    const detectionCount = finalResults.length;
+    if (detectionCount > 0) {
+        // Check if URL is blacklisted before setting badge
+        const isBlacklisted = await Settings.isUrlBlacklisted(state.url);
+
+        if (!isBlacklisted) {
+            // Load badge colors from CategoryManager
+            const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
+
+            const count = detectionCount.toString();
+            const color = detectionCount >= 5 ? badgeColors.high :
+                         detectionCount >= 3 ? badgeColors.medium :
+                         badgeColors.low;
+
+            chrome.action.setBadgeText({ text: count, tabId: tabId });
+            chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId });
+        } else {
+            // Clear badge if blacklisted
+            chrome.action.setBadgeText({ text: '', tabId: tabId });
+        }
+    } else {
+        // Clear badge if no detections
+        chrome.action.setBadgeText({ text: '', tabId: tabId });
+    }
+
+    // Notify popup
+    chrome.runtime.sendMessage({
+        type: 'NEW_DETECTION_DATA',
+        tabId: tabId,
+        url: state.url,
+        detectionResults: finalResults
+    }).catch((error) => {
+        // Expected: Popup may not be open
+        console.log(`[Detection] Popup not open, message not sent:`, error.message);
+    });
+
+    // Remove from active detections (detection completed successfully)
+    if (activeDetections.has(tabId)) {
+        const activeInfo = activeDetections.get(tabId);
+        const duration = Date.now() - activeInfo.startTime;
+        console.log(`[Detection] ✅ Completed detection for tab ${tabId} in ${duration}ms, removing from active tracking`);
+        activeDetections.delete(tabId);
+    }
+
+    // Also remove from interrupted detections if it was marked (user came back to tab)
+    if (interruptedDetections.has(tabId)) {
+        console.log(`[Detection] Removing tab ${tabId} from interrupted list (detection completed)`);
+        interruptedDetections.delete(tabId);
+    }
+
+    // OPTIMIZED 3.2: State is auto-cleaned by TTL, but we can delete eagerly
+    detectionStates.delete(tabId);
+    console.log(`[DetectionState] ✅ Tab ${tabId} finalized and cleaned up`);
+}
 
 /**
  * Unified initialization method
@@ -79,11 +470,34 @@ async function initialize(reason = 'startup', previousVersion = null) {
         console.log('Background: Detector system initialized successfully');
         console.log(`Background: Loaded ${detectorManager.getDetectorCount()} detectors`);
 
-        // Clear any leftover badges
+        // Check if extension is enabled/disabled and set badges accordingly
+        const result = await chrome.storage.local.get(['scrapfly_enabled']);
+        const isEnabled = result.scrapfly_enabled !== false; // Default to true
         const tabs = await chrome.tabs.query({});
-        for (const tab of tabs) {
-            chrome.action.setBadgeText({ text: '', tabId: tab.id }).catch(() => {});
+
+        if (!isEnabled) {
+            // Extension is disabled - set X badge with amber color for all tabs
+            console.log('Background: Extension is disabled - setting disabled badges');
+            for (const tab of tabs) {
+                chrome.action.setBadgeText({ text: '✕', tabId: tab.id }).catch((error) => {
+                    console.log(`[Init] Failed to set disabled badge for tab ${tab.id}:`, error.message);
+                });
+                chrome.action.setBadgeBackgroundColor({ color: '#f59e0b', tabId: tab.id }).catch((error) => {
+                    console.log(`[Init] Failed to set badge color for tab ${tab.id}:`, error.message);
+                });
+            }
+        } else {
+            // Extension is enabled - clear any leftover badges
+            console.log('Background: Extension is enabled - clearing leftover badges');
+            for (const tab of tabs) {
+                chrome.action.setBadgeText({ text: '', tabId: tab.id }).catch((error) => {
+                    console.log(`[Init] Failed to clear badge for tab ${tab.id}:`, error.message);
+                });
+            }
         }
+
+        // Initialize all services (listeners, interceptors, etc.)
+        initializeServices();
 
         console.log('✅ Detector system ready');
         console.log('===========================================');
@@ -108,6 +522,16 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 chrome.runtime.onStartup.addListener(async () => {
     await initialize('startup');
 });
+
+// Also initialize immediately when service worker starts/restarts
+// This handles the case where the service worker is awakened from idle
+(async () => {
+    // Check if we need to initialize (service worker may have been restarted)
+    if (!detectorManager || !detectorManager.initialized) {
+        console.log('Background: Service worker started/restarted, initializing...');
+        await initialize('startup');
+    }
+})();
 
 /**
  * Ensure DetectorManager is initialized (lazy initialization)
@@ -136,6 +560,7 @@ async function ensureDetectorManagerInitialized() {
 
 /**
  * Capture HTTP headers for all requests
+ * OPTIMIZED 3.3: TTL-based auto-cleanup (headers expire after 5 min)
  */
 function setupHeaderCapture() {
     console.log('Scrapfly Background: Setting up header capture...');
@@ -152,7 +577,7 @@ function setupHeaderCapture() {
                     headers[header.name.toLowerCase()] = header.value;
                 });
 
-                // Store headers for this tab
+                // OPTIMIZED 3.3: TTL auto-cleanup - no manual cleanup needed
                 headersStore.set(details.tabId, {
                     url: details.url,
                     headers: headers,
@@ -168,6 +593,22 @@ function setupHeaderCapture() {
 }
 
 /**
+ * Enrich page data with tab information
+ * @param {object} pageData - Page data from content script
+ * @param {object} tab - Tab object from sender
+ * @returns {object} Enriched page data
+ */
+function enrichPageDataWithTabInfo(pageData, tab) {
+    return {
+        ...pageData,
+        tabId: tab.id,
+        tabUrl: tab.url,
+        tabTitle: tab.title,
+        favicon: tab.favIconUrl
+    };
+}
+
+/**
  * Process detection data from content script
  * @param {object} message - Message from content script
  * @param {object} sender - Sender information
@@ -178,11 +619,40 @@ async function processDetectionData(message, sender) {
         return;
     }
 
+    // Check if extension is enabled
+    try {
+        const result = await chrome.storage.local.get(['scrapfly_enabled']);
+        if (result.scrapfly_enabled === false) {
+            console.log('Scrapfly Background: Extension is disabled, skipping detection');
+            return;
+        }
+    } catch (error) {
+        console.error('Failed to check enabled state:', error);
+    }
+
     const tabId = sender.tab.id;
-    const pageData = message.data;
-    const pageUrl = pageData.url;
+    const pageData = enrichPageDataWithTabInfo(message.data, sender.tab);
 
     console.log(`Scrapfly Background: Processing detection data from tab ${tabId} (cache miss)`);
+
+    // Show loading indicator in badge and track as active detection
+    try {
+        chrome.action.setBadgeText({ text: '⏳', tabId: tabId });
+        chrome.action.setBadgeBackgroundColor({ color: '#4A90E2', tabId: tabId }); // Blue color for loading
+
+        // Create AbortController to allow cancellation if tab switch occurs
+        const abortController = new AbortController();
+
+        // Track this tab as having an active detection in progress
+        activeDetections.set(tabId, {
+            url: pageData.url,
+            startTime: Date.now(),
+            abortController: abortController
+        });
+        console.log(`[Detection] ⏳ Started detection for tab ${tabId}, tracking as active with abort controller`);
+    } catch (error) {
+        console.error('Failed to set loading badge:', error);
+    }
 
     // Add headers if available
     if (headersStore.has(tabId)) {
@@ -193,16 +663,10 @@ async function processDetectionData(message, sender) {
             pageData.headers = headerData.headers;
             console.log(`Scrapfly Background: Added ${Object.keys(headerData.headers).length} headers to detection data`);
 
+            // OPTIMIZED 3.3: Eager delete (TTL will clean up anyway, but we can help)
             headersStore.delete(tabId);
-            console.log(`Scrapfly Background: Cleaned up headers for tab ${tabId} after use`);
         }
     }
-
-    // Add tab information
-    pageData.tabId = tabId;
-    pageData.tabUrl = sender.tab.url;
-    pageData.tabTitle = sender.tab.title;
-    pageData.favicon = sender.tab.favIconUrl;
 
     // Run detection analysis immediately
     console.log('🚀 Background: Starting detection analysis...');
@@ -219,37 +683,119 @@ async function processDetectionData(message, sender) {
         }
         // Set detectors from detector manager
         detectionEngine.setDetectors(detectorManager.getAllDetectors());
-        // Run detection
-        detectionResults = detectionEngine.detectOnPage(pageData);
-        console.log(`🎯 Scrapfly Background: Detected ${detectionResults.length} security systems on tab ${tabId}`);
 
-        // Store detection results immediately
-        await DetectionEngineManager.storeDetection(pageUrl, pageData, detectionResults);
+        // Run detection with timeout (increased to 30s to handle slower pages)
+        try {
+            const startTime = Date.now();
+            console.log(`[processDetectionData] 🚀 Starting main detection with 30s timeout for tab ${tabId}...`);
+            console.log(`[processDetectionData] 📊 Page data stats:`, {
+                cookies: pageData.cookies?.length || 0,
+                scripts: pageData.scripts?.length || 0,
+                headers: Object.keys(pageData.headers || {}).length,
+                dom: pageData.dom?.length || 0,
+                url: pageData.url
+            });
 
-        // Update badge with detection count
-        if (detectionResults.length > 0) {
-            const count = detectionResults.length.toString();
-            const color = detectionResults.length >= 5 ? '#FF4444' :
-                         detectionResults.length >= 3 ? '#FFA500' :
-                         '#4CAF50';
+            const detectionPromise = Promise.resolve(detectionEngine.detectOnPage(pageData));
+            const timeoutPromise = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('Detection timeout after 30 seconds')), 30000)
+            );
+            detectionResults = await Promise.race([detectionPromise, timeoutPromise]);
 
-            chrome.action.setBadgeText({
-                text: count,
-                tabId: tabId
-            });
-            chrome.action.setBadgeBackgroundColor({
-                color: color,
-                tabId: tabId
-            });
-        } else {
-            // Clear badge if no detections
-            chrome.action.setBadgeText({
-                text: '',
-                tabId: tabId
-            });
+            const elapsed = Date.now() - startTime;
+            console.log(`[processDetectionData] ✅ Main detection completed in ${elapsed}ms: ${detectionResults.length} detectors found`);
+
+            // Log what was detected
+            if (detectionResults.length > 0) {
+                detectionResults.forEach(det => {
+                    const methods = det.matches?.map(m => m.type).filter((v, i, a) => a.indexOf(v) === i) || [];
+                    console.log(`[processDetectionData]   - ${det.detector?.name}: ${methods.join(', ')} (${det.matches?.length || 0} matches)`);
+                });
+            }
+        } catch (error) {
+            const errorType = error.message.includes('timeout') ? 'TIMEOUT' : 'ERROR';
+            console.error(`[processDetectionData] ❌ Main detection ${errorType} for tab ${tabId}:`, error.message);
+            console.error(`[processDetectionData] ❌ Stack:`, error.stack);
+            console.error(`[processDetectionData] ⚠️ Continuing with empty results - only window props and hooks will be preserved`);
+            detectionResults = []; // Continue with empty results - JS hooks and window props will still be preserved
         }
 
-        // Save detection results to history
+        console.log(`🎯 Scrapfly Background: Detected ${detectionResults.length} security systems via main detection`);
+
+        // Check if detection was aborted (tab switch occurred)
+        const detectionInfo = activeDetections.get(tabId);
+        if (detectionInfo && detectionInfo.abortController.signal.aborted) {
+            console.log(`[Detection] ⚠️ Detection for tab ${tabId} was aborted - skipping result storage`);
+            return; // Don't store results or finalize
+        }
+
+        // Also check if tab is marked as interrupted
+        if (interruptedDetections.has(tabId)) {
+            console.log(`[Detection] ⚠️ Detection for tab ${tabId} is interrupted - skipping result storage`);
+            return; // Don't store results or finalize
+        }
+
+        // Store main detection and check if ready to finalize
+        const state = getOrCreateDetectionState(tabId, pageData.url);
+
+        // Merge with existing mainData (window properties may have been added already)
+        // Instead of replacing, merge detections by detectorId
+        const existingDetections = new Map();
+        for (const existing of state.mainData) {
+            const id = existing.detector?.id || existing.id;
+            if (id) existingDetections.set(id, existing);
+        }
+
+        // Add/merge main detection results
+        for (const newDetection of detectionResults) {
+            const id = newDetection.detector?.id || newDetection.id;
+            if (id && existingDetections.has(id)) {
+                // Merge: combine matches, but check for duplicates by category
+                const existing = existingDetections.get(id);
+                const existingMatches = existing.matches || [];
+                const newMatches = newDetection.matches || [];
+
+                // OPTIMIZATION Phase 10.2: Use Set for O(1) deduplication instead of O(n) Array.some()
+                // Build lookup set from existing matches for fast duplicate detection
+                const matchKeys = new Set();
+                for (const match of existingMatches) {
+                    matchKeys.add(generateMatchKey(match));
+                }
+
+                // Add new matches if not duplicate
+                for (const newMatch of newMatches) {
+                    const key = generateMatchKey(newMatch);
+                    if (!matchKeys.has(key)) {
+                        existingMatches.push(newMatch);
+                        matchKeys.add(key);
+                    }
+                }
+
+                existing.matches = existingMatches;
+
+                // Update confidence to highest
+                existing.confidence = Math.max(existing.confidence || 0, newDetection.confidence || 0);
+
+                // Merge detectionMethods
+                const existingMethods = existing.detectionMethods || [];
+                const newMethods = newDetection.detectionMethods || [];
+                existing.detectionMethods = [...new Set([...existingMethods, ...newMethods])];
+            } else {
+                // New detector, add it
+                existingDetections.set(id, newDetection);
+            }
+        }
+
+        // Update state.mainData with merged results
+        state.mainData = Array.from(existingDetections.values());
+        state.mainComplete = true;
+
+        console.log(`[processDetectionData] ✅ Main detection complete: ${detectionResults.length} detectors`);
+
+        // Check if both hooks and main detection are done
+        checkAndFinalizeDetection(tabId);
+
+        // Save detection results to history (still happens here for immediate history update)
         if (detectionResults.length > 0) {
             await History.saveDetectionToHistory(tabId, pageData, detectionResults, chrome);
         }
@@ -273,9 +819,15 @@ async function processDetectionData(message, sender) {
         tabId: tabId,
         url: pageData.url,
         detectionResults: detectionResults
-    }).catch(() => {
-        // Popup might not be open, ignore error
+    }).catch((error) => {
+        // Expected: Popup might not be open
+        console.log(`[Detection] Popup not open, message not sent:`, error.message);
     });
+
+    // Send webhook if enabled
+    if (detectionResults.length > 0) {
+        await Settings.sendWebhookIfEnabled(pageData, detectionResults);
+    }
 }
 
 
@@ -302,77 +854,76 @@ async function getCurrentTabDetectionData() {
 
 /**
  * Setup message listeners
+ * OPTIMIZED 3.4: Message handlers organized for better performance
  */
 function setupMessageListeners() {
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        // OPTIMIZED 3.4: Early validation to skip invalid messages quickly
+        if (!request || !request.type) {
+            sendResponse({ status: 'error', error: 'Invalid message' });
+            return false;
+        }
+
         // Reduced logging - comment out for less spam
         // console.log('Scrapfly Background: Received message:', request.type);
 
         switch (request.type) {
+            case 'DEBUG_LOG':
+                // Centralized logging - display all logs in service worker console
+                if (request.context && request.level && request.args) {
+                    const timestamp = new Date(request.timestamp).toISOString().split('T')[1].slice(0, -1);
+                    const prefix = `[${timestamp}] [${request.context}]`;
+
+                    // Parse JSON strings back to objects for better console display
+                    const parsedArgs = request.args.map(arg => {
+                        if (typeof arg === 'string' && (arg.startsWith('{') || arg.startsWith('['))) {
+                            try {
+                                return JSON.parse(arg);
+                            } catch (e) {
+                                return arg;
+                            }
+                        }
+                        return arg;
+                    });
+
+                    // Use appropriate console method
+                    switch (request.level) {
+                        case 'log': console.log(prefix, ...parsedArgs); break;
+                        case 'info': console.info(prefix, ...parsedArgs); break;
+                        case 'debug': console.debug(prefix, ...parsedArgs); break;
+                        case 'warn': console.warn(prefix, ...parsedArgs); break;
+                        case 'error': console.error(prefix, ...parsedArgs); break;
+                        case 'trace': console.trace(prefix, ...parsedArgs); break;
+                        case 'group': console.group(prefix, ...parsedArgs); break;
+                        case 'groupEnd': console.groupEnd(); break;
+                        case 'groupCollapsed': console.groupCollapsed(prefix, ...parsedArgs); break;
+                        case 'table': console.table(...parsedArgs); break;
+                        case 'time': console.time(...parsedArgs); break;
+                        case 'timeEnd': console.timeEnd(...parsedArgs); break;
+                        default: console.log(prefix, ...parsedArgs);
+                    }
+                }
+                break;
+
             case 'PING':
                 // Simple ping for connection test
                 sendResponse({ status: 'pong', timestamp: Date.now() });
                 break;
 
             case 'PAGE_LOAD_NOTIFICATION':
-                // Page load notification - check cache first (optimization)
+                // Delegate to DetectionEngineManager handler
                 (async () => {
-                    const pageUrl = request.url;
-                    const tabId = sender.tab?.id;
+                    // Ensure detector manager is initialized before processing
+                    await ensureDetectorManagerInitialized();
 
-                    if (!tabId) {
-                        console.error('Scrapfly Background: No tab ID in PAGE_LOAD_NOTIFICATION');
-                        return;
-                    }
-
-                    // Reduced logging - only log important events
-                    // console.log(`Scrapfly Background: Page load notification from tab ${tabId}: ${pageUrl}`);
-
-                    // Skip if we recently ran detection for this tab
-                    if (Utils.shouldSkipDetection(tabId, 1500, recentDetectionRequests)) { // Shorter threshold for page load notifications
-                        console.log(`Scrapfly Background: Skipping duplicate page load notification for tab ${tabId}`);
-                        return;
-                    }
-
-                    // Check cache first (optimization - avoid expensive data collection)
-                    const storedData = await DetectionEngineManager.getStoredDetection(pageUrl);
-                    if (storedData) {
-                        console.log(`Scrapfly Background: ✅ Cache hit for ${pageUrl}`);
-
-                        // Update badge with cached detection count
-                        if (storedData.detectionCount > 0) {
-                            const count = storedData.detectionCount.toString();
-                            const color = storedData.detectionCount >= 5 ? '#FF4444' :
-                                         storedData.detectionCount >= 3 ? '#FFA500' :
-                                         '#4CAF50';
-
-                            chrome.action.setBadgeText({ text: count, tabId: tabId });
-                            chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId });
-                        } else {
-                            chrome.action.setBadgeText({ text: '', tabId: tabId });
-                        }
-
-                        // Notify popup if it's open
-                        chrome.runtime.sendMessage({
-                            type: 'NEW_DETECTION_DATA',
-                            tabId: tabId,
-                            url: pageUrl,
-                            detectionResults: storedData.detectionResults,
-                            fromStorage: true
-                        }).catch(() => {});
-
-                        // Cache hit - no need to collect data
-                        return;
-                    }
-
-                    // Cache miss - request data collection from content script
-                    console.log(`Scrapfly Background: ⚠️ Cache miss for ${pageUrl} - requesting data collection`);
-                    chrome.tabs.sendMessage(tabId, { type: 'REQUEST_PAGE_DATA' }, (response) => {
-                        if (chrome.runtime.lastError) {
-                            console.log('Scrapfly Background: Content script not ready for data collection');
-                        } else {
-                            console.log('Scrapfly Background: Data collection requested');
-                        }
+                    await DetectionEngineManager.handlePageLoadNotification(request, sender, {
+                        chrome,
+                        Settings,
+                        CategoryManager,
+                        History,
+                        Utils,
+                        categoryManager,
+                        recentDetectionRequests
                     });
                 })();
                 break;
@@ -417,6 +968,14 @@ function setupMessageListeners() {
                 (async () => {
                     try {
                         console.log('Scrapfly Background: Reloading detectors from storage...');
+
+                        // CRITICAL: Clear all optimization caches when rules change
+                        // This ensures pattern changes are immediately reflected
+                        if (typeof DetectionEngineManager !== 'undefined' && DetectionEngineManager.patternCache) {
+                            console.log('Scrapfly Background: Clearing PatternCache (rules changed)');
+                            DetectionEngineManager.patternCache.clear();
+                        }
+
                         detectorManager.initialized = false;
                         await detectorManager.initialize();
                         console.log('Scrapfly Background: Detectors reloaded successfully');
@@ -429,105 +988,92 @@ function setupMessageListeners() {
                 return true; // Will respond asynchronously
                 break;
 
-            case 'REQUEST_DETECTION':
-                // Request to run detection on a specific tab
-                const tabId = request.tabId;
-                if (tabId) {
-                    // Always try to inject scripts first to ensure they're loaded
-                    // This handles both initial load and extension reload scenarios
-                    (async () => {
-                        try {
-                            // Get the specific tab info
-                            const tab = await chrome.tabs.get(tabId);
+            case 'GET_DETECTORS':
+                // Content script requesting all detectors (for hook installation at document_start)
+                (async () => {
+                    try {
+                        console.log('[Background] GET_DETECTORS request received');
 
-                            // Check if it's a valid URL for content scripts
-                            if (!tab || !tab.url ||
-                                tab.url.startsWith('chrome://') ||
-                                tab.url.startsWith('chrome-extension://') ||
-                                tab.url.startsWith('edge://') ||
-                                tab.url.startsWith('about:') ||
-                                tab.url.startsWith('chrome-devtools://')) {
-                                sendResponse({ status: 'error', error: 'Invalid URL for detection' });
-                                return;
-                            }
+                        // Ensure DetectorManager is fully initialized with retry logic
+                        let retries = 5;
+                        while (retries > 0) {
+                            await ensureDetectorManagerInitialized();
 
-                            // Skip if we recently ran detection for this tab
-                            if (Utils.shouldSkipDetection(tabId, 2000, recentDetectionRequests)) {
-                                sendResponse({ status: 'skipped', reason: 'Recent detection exists' });
-                                return;
-                            }
+                            // Check if detectors are actually loaded (not just initialized flag)
+                            const allDetectors = detectorManager.getAllDetectors();
+                            const hasDetectors = allDetectors && Object.keys(allDetectors).length > 0;
 
-                            // Try to ping the content script first
-                            let scriptExists = false;
-                            try {
-                                await new Promise((resolve) => {
-                                    chrome.tabs.sendMessage(tabId, { type: 'GET_DETECTION_STATUS' }, (response) => {
-                                        if (!chrome.runtime.lastError && response && response.status === 'active') {
-                                            scriptExists = true;
-                                        }
-                                        resolve();
-                                    });
+                            if (hasDetectors) {
+                                console.log(`[Background] Detectors loaded successfully`);
+
+                                sendResponse({
+                                    detectors: allDetectors
                                 });
-                            } catch (e) {
-                                // Ignore ping errors
+                                return;
                             }
 
-                            // If script doesn't exist or doesn't respond, inject it
-                            if (!scriptExists) {
-                                console.log('Scrapfly Background: Content script not found, injecting...');
-
-                                try {
-                                    // Check if scripts are already injected to avoid duplicates
-                                    const [result] = await chrome.scripting.executeScript({
-                                        target: { tabId: tabId },
-                                        func: () => typeof window.DetectionEngineManager !== 'undefined'
-                                    });
-
-                                    if (!result.result) {
-                                        // Inject DetectionEngineManager first
-                                        await chrome.scripting.executeScript({
-                                            target: { tabId: tabId },
-                                            files: ['Modules/DetectionEngineManager.js']
-                                        });
-                                        console.log('Scrapfly Background: Injected DetectionEngineManager');
-                                    }
-
-                                    // Always inject content script (it has its own duplicate prevention)
-                                    await chrome.scripting.executeScript({
-                                        target: { tabId: tabId },
-                                        files: ['content.js']
-                                    });
-                                    console.log('Scrapfly Background: Injected content script');
-
-                                    // Wait for scripts to initialize
-                                    await new Promise(resolve => setTimeout(resolve, 500));
-                                } catch (injectionError) {
-                                    console.error('Scrapfly Background: Failed to inject scripts:', injectionError);
-                                    sendResponse({ status: 'error', error: `Script injection failed: ${injectionError.message}` });
-                                    return;
-                                }
+                            // Detectors not loaded yet, wait and retry
+                            console.log(`[Background] Detectors not loaded yet, retrying... (${retries} attempts left)`);
+                            retries--;
+                            if (retries > 0) {
+                                await new Promise(resolve => setTimeout(resolve, 100)); // Wait 100ms before retry
                             }
-
-                            // Now send the detection request
-                            chrome.tabs.sendMessage(tabId, { type: 'RUN_DETECTION' }, (response) => {
-                                if (chrome.runtime.lastError) {
-                                    console.error('Scrapfly Background: Failed to trigger detection:', chrome.runtime.lastError);
-                                    sendResponse({ status: 'error', error: chrome.runtime.lastError.message });
-                                } else {
-                                    // Reduced logging - comment out for less spam
-                                    // console.log('Scrapfly Background: Detection triggered successfully');
-                                    sendResponse({ status: 'requested', response: response });
-                                }
-                            });
-                        } catch (error) {
-                            console.error('Scrapfly Background: Error in REQUEST_DETECTION:', error);
-                            sendResponse({ status: 'error', error: error.message });
                         }
-                    })();
-                    return true; // Will respond asynchronously
-                } else {
-                    sendResponse({ status: 'error', error: 'No tab ID provided' });
-                }
+
+                        // Failed to load detectors after retries
+                        console.error('[Background] Failed to load detectors after retries');
+                        sendResponse({ detectors: {} });
+                    } catch (error) {
+                        console.error('[Background] Error getting detectors:', error);
+                        sendResponse({ detectors: {} });
+                    }
+                })();
+                return true; // Async response
+                break;
+
+            case 'CATEGORY_COLORS_UPDATED':
+                // Reload CategoryManager when colors are updated
+                (async () => {
+                    try {
+                        console.log('Scrapfly Background: Category colors updated, reloading CategoryManager...');
+                        if (categoryManager) {
+                            await categoryManager.loadFromStorage();
+                            console.log('Scrapfly Background: CategoryManager reloaded with new colors');
+                        }
+                        sendResponse({ status: 'reloaded' });
+                    } catch (error) {
+                        console.error('Scrapfly Background: Error reloading CategoryManager:', error);
+                        sendResponse({ status: 'error', error: error.message });
+                    }
+                })();
+                return true; // Will respond asynchronously
+                break;
+
+            case 'SETTINGS_UPDATED':
+                // Delegate to Settings handler
+                (async () => {
+                    await Settings.handleSettingsUpdated({
+                        chrome,
+                        CategoryManager,
+                        categoryManager
+                    }, sendResponse);
+                })();
+                return true; // Will respond asynchronously
+                break;
+
+            case 'REQUEST_DETECTION':
+                // Delegate to DetectionEngineManager handler
+                (async () => {
+                    // Ensure detector manager is initialized before processing
+                    await ensureDetectorManagerInitialized();
+
+                    return await DetectionEngineManager.handleRequestDetection(request, sendResponse, {
+                        chrome,
+                        Utils,
+                        recentDetectionRequests
+                    });
+                })();
+                return true; // Will respond asynchronously
                 break;
 
             case 'CLEAR_DETECTION_DATA':
@@ -544,306 +1090,352 @@ function setupMessageListeners() {
                 break;
 
             case 'CLEAR_DETECTION_CACHE':
-                // Clear cached detection for specific URL
+                // Delegate to DetectionEngineManager handler
                 (async () => {
-                    try {
-                        const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY]);
-                        const storage = result[DetectionEngineManager.STORAGE_KEY] || {};
-                        const urlHash = Utils.hashUrl(request.url);
-
-                        if (storage[urlHash]) {
-                            delete storage[urlHash];
-                            await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: storage });
-                            console.log(`Cleared cache for ${request.url}`);
-                            sendResponse({ status: 'cleared' });
-                        } else {
-                            sendResponse({ status: 'not_found' });
-                        }
-                    } catch (error) {
-                        console.error('Error clearing cache:', error);
-                        sendResponse({ status: 'error', error: error.message });
-                    }
+                    await DetectionEngineManager.handleClearDetectionCache(request, sendResponse);
                 })();
                 return true; // Async response
 
-            case 'RECAPTCHA_START_CAPTURE':
+            case 'JS_HOOK_DETECTION':
+                // DEPRECATED: Individual hooks no longer used - batching is preferred
+                // Keeping for backward compatibility during transition
+                console.warn('[Background] Individual JS_HOOK_DETECTION received (should be batched)');
+                return false;
+
+            case 'JS_HOOK_DETECTION_BATCH':
+                // OPTIMIZED 3.4: Handle batched JS hook detections (from content.js optimization 2.4)
                 (async () => {
                     try {
-                        reCaptchaInitializeInterceptor(captureState);
-                        const result = await reCaptchaStartCapture(request.tabId);
-                        sendResponse(result);
-                    } catch (error) {
-                        console.error('[reCAPTCHA] Error in RECAPTCHA_START_CAPTURE:', error);
-                        sendResponse({ status: 'error', error: error.message });
-                    }
-                })();
-                return true; // Async response
-                break;
-
-            case 'RECAPTCHA_STOP_CAPTURE':
-                (async () => {
-                    const tabIdStop = request.tabId;
-                    const stateStop = captureState.get(tabIdStop);
-                    if (stateStop) {
-                        if (stateStop.captureInterval) {
-                            clearInterval(stateStop.captureInterval);
-                        }
-                        if (stateStop.captureTimeout) {
-                            console.log('[reCAPTCHA] Clearing 60s timeout (manual stop)');
-                            clearTimeout(stateStop.captureTimeout);
+                        if (!sender.tab || !sender.tab.id) {
+                            console.error('[Background] No tab info for JS hook batch');
+                            return;
                         }
 
-                        // Process captured data
-                        const capturedResults = await processCaptureData(stateStop);
-                        console.log('Manual stop - Captured results:', capturedResults);
+                        const tabId = sender.tab.id;
+                        const detections = request.detections || [];
 
-                    stateStop.results = capturedResults;
-                    stateStop.isCapturing = false;
-                    captureState.set(tabIdStop, stateStop);
+                        if (detections.length === 0) return;
 
-                    stopRecaptchaInterception();
+                        console.log(`[Background] 🎯 JS Hook batch from tab ${tabId}: ${detections.length} hooks`);
 
-                    // Save to advanced history
-                    if (capturedResults.length > 0) {
-                        History.saveCaptureToHistory(tabIdStop, capturedResults, chrome).catch(err => {
-                            console.error('Failed to save capture to history:', err);
+                        // DEBUG: Log each hook detection
+                        console.log(`[Background] 📋 JS Hooks details:`);
+                        detections.forEach(hookData => {
+                            const det = hookData.detection;
+                            console.log(`[Background]   - ${det.detectorName} (${det.detectorId}): ${det.hook.target}`);
                         });
-                    }
 
-                    // Clear advanced selection after manual stop
-                    chrome.storage.local.remove('scrapfly_advanced_selected');
-                    console.log('[reCAPTCHA] Cleared advanced selection after manual stop');
+                        // Ensure DetectorManager is initialized once
+                        await ensureDetectorManagerInitialized();
 
-                    // Notify popup to clear UI
-                    chrome.runtime.sendMessage({ type: 'CAPTURE_COMPLETED' }).catch(() => {
-                        // Popup might not be open, ignore error
-                    });
+                        // Get URL from first detection (all should be same page)
+                        const url = detections[0].url;
+                        const state = getOrCreateDetectionState(tabId, url);
 
-                    // Show success notification
-                    chrome.scripting.executeScript({
-                        target: { tabId: tabIdStop },
-                        func: (resultsCount) => {
-                            // Aggressive cleanup
-                            const allNotifs = document.querySelectorAll('[id^="scrapfly-capture-notification"]');
-                            allNotifs.forEach(n => {
-                                n.style.animation = 'none';
-                                n.remove();
-                            });
-                            const oldStyles = document.querySelectorAll('style[data-scrapfly-notification]');
-                            oldStyles.forEach(s => s.remove());
-                            if (window.scrapflyTimerInterval) {
-                                clearInterval(window.scrapflyTimerInterval);
-                                window.scrapflyTimerInterval = null;
+                        // Process all detections in batch
+                        for (const hookData of detections) {
+                            const detection = hookData.detection;
+                            const detectorId = detection.detectorId;
+                            const normalizedCategory = detection.category ? detection.category.toLowerCase() : 'fingerprint';
+
+                            // Look up full detector definition (cached by DetectorManager)
+                            let fullDetector = detectorManager.getDetector(normalizedCategory, detectorId);
+                            if (!fullDetector) {
+                                fullDetector = detectorManager.findDetectorById(detectorId);
+                            }
+                            if (!fullDetector) {
+                                console.warn(`[Background] Detector ${detectorId} not found, skipping`);
+                                continue;
                             }
 
-                            requestAnimationFrame(() => {
-                                setTimeout(() => {
-                                    const notif = document.createElement('div');
-                                    notif.id = `scrapfly-capture-notification-${Date.now()}`;
-                                    notif.style.cssText = `
-                                        position: fixed !important;
-                                        top: 20px !important;
-                                        right: 20px !important;
-                                        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
-                                        color: white !important;
-                                        padding: 20px 24px !important;
-                                        border-radius: 12px !important;
-                                        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
-                                        z-index: 2147483647 !important;
-                                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-                                        font-size: 14px !important;
-                                        min-width: 320px !important;
-                                    `;
+                            // Add or update detector in state
+                            if (!state.hooksData.has(detectorId)) {
+                                state.hooksData.set(detectorId, {
+                                    detector: {
+                                        id: fullDetector.id || detectorId,
+                                        name: fullDetector.name || detection.detectorName || 'Unknown',
+                                        icon: fullDetector.icon,
+                                        color: fullDetector.color
+                                    },
+                                    category: normalizedCategory,
+                                    confidence: 0,
+                                    detectionMethods: ['js_hooks'],
+                                    matches: []
+                                });
+                            }
 
-                                    const styleTag = document.createElement('style');
-                                    styleTag.setAttribute('data-scrapfly-notification', 'true');
-                                    styleTag.textContent = `
-                                        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-                                        @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(400px); opacity: 0; } }
-                                    `;
-                                    document.head.appendChild(styleTag);
+                            // Add hook match (check for duplicates first)
+                            const detector = state.hooksData.get(detectorId);
+                            const newMatch = {
+                                type: 'js_hooks',
+                                pattern: detection.hook.target,
+                                value: detection.hook.target.split('.').pop(),
+                                confidence: detection.hook.confidence,
+                                description: detection.hook.description
+                            };
 
-                                    const hasResults = resultsCount > 0;
-                                    notif.innerHTML = `
-                                        <div style="font-weight: 600; font-size: 16px; margin-bottom: 8px;">
-                                            ✅ Capture ${hasResults ? 'Successful' : 'Completed'}
-                                        </div>
-                                        <div style="opacity: 0.9;">
-                                            ${hasResults ? `${resultsCount} request${resultsCount !== 1 ? 's' : ''} captured and decoded` : 'No reCAPTCHA requests captured'}
-                                        </div>
-                                    `;
-                                    notif.style.animation = 'slideIn 0.3s ease-out';
-                                    document.body.appendChild(notif);
+                            // Only add if this exact pattern doesn't already exist
+                            const isDuplicate = detector.matches.some(m => m.pattern === newMatch.pattern);
+                            if (!isDuplicate) {
+                                detector.matches.push(newMatch);
+                            }
 
-                                    setTimeout(() => {
-                                        notif.style.animation = 'slideOut 0.3s ease-in';
-                                        setTimeout(() => notif.remove(), 300);
-                                    }, 5000);
-                                }, 100);
+                            // Update overall confidence (use highest confidence from all matches)
+                            detector.confidence = Math.max(...detector.matches.map(m => m.confidence || 0));
+                        }
+
+                        console.log(`[Background] ✅ Processed ${detections.length} hooks in batch for tab ${tabId}`);
+
+                    } catch (error) {
+                        console.error('[Background] ❌ ERROR handling JS hook batch:', error);
+                    }
+                })();
+                return false; // No response needed for batches
+
+            case 'WINDOW_DETECTIONS':
+                // Handle window detections from MAIN world
+                (async () => {
+                    try {
+                        if (!sender.tab || !sender.tab.id) {
+                            console.error('[Background] No tab info for window detections');
+                            return;
+                        }
+
+                        const tabId = sender.tab.id;
+                        const url = sender.tab.url;
+                        const { detections, executionTime } = request;
+
+                        // Validate detections array
+                        if (!Array.isArray(detections)) {
+                            console.error('[Background] ❌ Invalid detections format:', typeof detections);
+                            return;
+                        }
+
+                        console.log(`[Background] 🔍 Window property detections from tab ${tabId}: ${detections.length} properties in ${executionTime}ms`);
+
+                        // DEBUG: Log each window property detection
+                        if (detections.length > 0) {
+                            console.log(`[Background] 📋 Window property details:`);
+                            detections.forEach(det => {
+                                console.log(`[Background]   - ${det.detectorName} (${det.detectorId}): window.${det.property.path}`);
                             });
-                        },
-                        args: [capturedResults.length]
-                    }).catch(err => {
-                        console.error('[reCAPTCHA] ❌ Failed to show stop notification:', err);
-                        console.error('[reCAPTCHA] Error details:', err.message, err.stack);
-
-                        // Fallback to system notification when in-page injection fails
-                        chrome.notifications.create({
-                            type: 'basic',
-                            iconUrl: chrome.runtime.getURL('icons/icon128.png'),
-                            title: 'Capture ' + (capturedResults.length > 0 ? 'Successful' : 'Completed'),
-                            message: capturedResults.length > 0
-                                ? `${capturedResults.length} reCAPTCHA request${capturedResults.length !== 1 ? 's' : ''} captured and decoded`
-                                : 'No reCAPTCHA requests were captured',
-                            priority: 2
-                        });
-                    });
-
-                        // Delete capture state completely to prevent stale data
-                        captureState.delete(tabIdStop);
-
-                        sendResponse({ status: 'stopped', results: capturedResults, resultsCount: capturedResults.length });
-                    } else {
-                        sendResponse({ status: 'not_capturing' });
-                    }
-                })();
-                return true; // Async response
-                break;
-
-            case 'RECAPTCHA_GET_CAPTURE_STATE':
-                const tabIdGet = request.tabId;
-                const stateGet = captureState.get(tabIdGet);
-                sendResponse({
-                    isCapturing: stateGet?.isCapturing || false,
-                    step: stateGet?.step || 0
-                });
-                break;
-
-            case 'RECAPTCHA_GET_CAPTURE_RESULTS':
-                const tabIdResults = request.tabId;
-                const stateResults = captureState.get(tabIdResults);
-                if (stateResults && stateResults.results) {
-                    sendResponse({
-                        success: true,
-                        results: stateResults.results,
-                        timestamp: stateResults.startTime
-                    });
-                } else {
-                    sendResponse({
-                        success: false,
-                        results: [],
-                        message: 'No capture results available'
-                    });
-                }
-                break;
-
-            case 'AKAMAI_START_CAPTURE':
-                (async () => {
-                    try {
-                        // Interceptor is already initialized at startup, but check just in case
-                        if (!akamaiCaptureState) {
-                            throw new Error('Akamai capture state not initialized');
+                        } else {
+                            console.log(`[Background] ⚠️ No window properties detected (none matched conditions)`);
                         }
 
-                        // Get current tab URL
-                        const tab = await chrome.tabs.get(request.tabId);
-                        if (!tab || !tab.url) {
-                            throw new Error('Unable to get tab URL');
+                        // Get or create detection state
+                        const state = getOrCreateDetectionState(tabId, url);
+
+                        // Validate state
+                        if (!state) {
+                            console.error('[Background] ❌ Failed to get/create detection state for tab', tabId);
+                            return;
                         }
 
-                        const result = akamaiStartCapture(request.tabId, tab.url);
-                        sendResponse(result);
-                    } catch (error) {
-                        console.error('[Akamai] Error starting capture:', error);
-                        sendResponse({ status: 'error', error: error.message });
-                    }
-                })();
-                return true; // Async response
-                break;
-
-            case 'AKAMAI_STOP_CAPTURE':
-                (async () => {
-                    try {
-                        const result = akamaiStopCapture(request.tabId);
-                        await AkamaiAdvanced.handleStopCapture(request.tabId, result);
-                        sendResponse(result);
-                    } catch (error) {
-                        console.error('[Akamai] Error stopping capture:', error);
-                        sendResponse({ status: 'error', error: error.message });
-                    }
-                })();
-                return true; // Async response
-                break;
-
-            case 'AKAMAI_GET_CAPTURE_STATE':
-                try {
-                    // Ensure interceptor is initialized
-                    if (typeof akamaiInitializeInterceptor === 'function' && akamaiCaptureState) {
-                        akamaiInitializeInterceptor(akamaiCaptureState);
-                    }
-
-                    const state = akamaiGetCaptureState(request.tabId);
-                    sendResponse(state);
-                } catch (error) {
-                    console.error('[Akamai] Error getting capture state:', error);
-                    sendResponse({ status: 'error', error: error.message });
-                }
-                break;
-
-            case 'AKAMAI_CAPTURE_COMPLETED':
-                (async () => {
-                    console.log('[AKAMAI-CAPTURE] ========== CAPTURE_COMPLETED START ==========');
-                    console.log('[AKAMAI-CAPTURE] Message received from:', request);
-                    try {
-                        const { tabId, data: interceptorData } = request;
-                        await AkamaiAdvanced.handleCaptureCompleted(tabId, interceptorData);
-
-                        // Stop capture
-                        console.log('[AKAMAI-CAPTURE] Stopping capture for tab:', tabId);
-                        if (typeof akamaiStopCapture === 'function') {
-                            akamaiStopCapture(tabId);
-                            console.log('[AKAMAI-CAPTURE] ✓ Capture stopped successfully');
+                        // Initialize mainData array if it doesn't exist
+                        if (!Array.isArray(state.mainData)) {
+                            console.log('[Background] Initializing mainData array for tab', tabId);
+                            state.mainData = [];
                         }
 
-                        console.log('[AKAMAI-CAPTURE] ========== CAPTURE_COMPLETED END (SUCCESS) ===========');
+                        // Process each window property detection
+                        for (const detection of detections) {
+                            if (!detection || !detection.detectorId) {
+                                console.warn('[Background] ⚠️ Skipping invalid detection:', detection);
+                                continue;
+                            }
+
+                            // Find or create the detector entry in mainData
+                            let detectionObj = state.mainData.find(d => d && (d.detector?.id === detection.detectorId || d.id === detection.detectorId));
+                            if (!detectionObj) {
+                                // Get full detector metadata from DetectorManager
+                                // Normalize category name (e.g., "Anti-Bot" -> "antibot")
+                                const categoryKey = detection.category.toLowerCase().replace(/[^a-z0-9]/g, '');
+                                const fullDetector = detectorManager.getDetector(categoryKey, detection.detectorId);
+
+                                // Create detection object with nested structure matching detectOnPage() output
+                                detectionObj = {
+                                    detected: true,
+                                    confidence: detection.property.confidence,
+                                    matches: [],
+                                    detectionMethods: [],
+                                    category: detection.category,
+                                    detector: {
+                                        id: detection.detectorId,
+                                        name: detection.detectorName,
+                                        icon: fullDetector?.icon,
+                                        color: fullDetector?.color
+                                    }
+                                };
+                                state.mainData.push(detectionObj);
+                            }
+
+                            // Add window property match
+                            const newMatch = {
+                                type: 'window',
+                                pattern: detection.property.path,
+                                confidence: detection.property.confidence,
+                                description: detection.property.description,
+                                actualType: detection.property.actualType,
+                                condition: detection.property.condition
+                            };
+
+                            // Check for duplicates
+                            const isDuplicate = detectionObj.matches.some(m =>
+                                m.type === 'window' && m.pattern === newMatch.pattern
+                            );
+
+                            if (!isDuplicate) {
+                                detectionObj.matches.push(newMatch);
+                                // Update detectionMethods to include window
+                                if (!detectionObj.detectionMethods) {
+                                    detectionObj.detectionMethods = [];
+                                }
+                                if (!detectionObj.detectionMethods.includes('window')) {
+                                    detectionObj.detectionMethods.push('window');
+                                }
+                                console.log(`[Background] ✅ Added window property: ${detection.property.path} for ${detection.detectorName}`);
+                            }
+
+                            // Update overall confidence
+                            detectionObj.confidence = Math.max(...detectionObj.matches.map(m => m.confidence || 0));
+                        }
+
+                        console.log(`[Background] ✅ Processed ${detections.length} window properties for tab ${tabId}`);
+
+                        // Note: windowPropertiesComplete will be marked by WINDOW_PROPS_COMPLETE signal
+                        // This allows multiple checks to complete before finalization
+
                     } catch (error) {
-                        console.error('[AKAMAI-CAPTURE] ❌ Error in capture completion handler:', error);
-                        console.error('[AKAMAI-CAPTURE] Error stack:', error.stack);
-                        console.log('[AKAMAI-CAPTURE] ========== CAPTURE_COMPLETED END (ERROR) ==========');
+                        console.error('[Background] ❌ ERROR handling window property detections:', error);
                     }
                 })();
-                break;
+                return false; // No response needed
 
-            case 'AKAMAI_EXTRACT_SENSOR':
+            case 'WINDOW_PROPS_COMPLETE':
+                // Window properties collection complete - mark session and potentially finalize
                 (async () => {
-                    console.log('[AKAMAI-EXTRACT] ========== EXTRACT SENSOR START ==========');
                     try {
-                        await AkamaiAdvanced.handleExtractSensor(request.tabId);
-                        sendResponse({
-                            status: 'success',
-                            message: 'Extraction mode enabled. Page will reload.'
-                        });
-                    } catch (error) {
-                        console.error('[AKAMAI-EXTRACT] ❌ Error:', error);
-                        sendResponse({ status: 'error', error: error.message });
-                    }
-                })();
-                return true; // Async response
-                break;
+                        if (!sender.tab || !sender.tab.id) {
+                            console.error('[Background] No tab info for window props complete');
+                            return;
+                        }
 
-            case 'AKAMAI_EXTRACTION_COMPLETED':
-                (async () => {
-                    console.log('[AKAMAI-EXTRACT] ========== EXTRACTION COMPLETED ==========');
-                    try {
-                        const { tabId, extractedData } = request;
-                        await AkamaiAdvanced.handleExtractionCompleted(tabId, extractedData);
+                        const tabId = sender.tab.id;
+                        const url = request.url;
+
+                        console.log(`[Background] Window properties complete signal from tab ${tabId}`);
+
+                        // Mark window properties as complete
+                        const state = getOrCreateDetectionState(tabId, url);
+                        state.windowPropertiesComplete = true;
+
+                        console.log(`[Background] ✅ Window properties marked complete`);
+
+                        // Check if hooks, main detection, and window properties are all done
+                        checkAndFinalizeDetection(tabId);
+
                         sendResponse({ status: 'success' });
                     } catch (error) {
-                        console.error('[AKAMAI-EXTRACT] ❌ Error:', error);
+                        console.error('[Background] ❌ ERROR handling window props complete:', error);
                         sendResponse({ status: 'error', error: error.message });
                     }
                 })();
                 return true; // Async response
+
+            case 'JS_HOOKS_COMPLETE':
+                // JS hooks collection complete - mark session and potentially finalize
+                (async () => {
+                    try {
+                        if (!sender.tab || !sender.tab.id) {
+                            console.error('[Background] No tab info for JS hooks complete');
+                            return;
+                        }
+
+                        const tabId = sender.tab.id;
+                        const url = request.url;
+
+                        console.log(`[Background] JS hooks complete signal from tab ${tabId}`);
+
+                        // Mark hooks as complete
+                        const state = getOrCreateDetectionState(tabId, url);
+                        state.hooksComplete = true;
+
+                        console.log(`[Background] ✅ Hooks marked complete`);
+
+                        // Check if both hooks and main detection are done
+                        checkAndFinalizeDetection(tabId);
+
+                        sendResponse({ status: 'success' });
+                    } catch (error) {
+                        console.error('[Background] ❌ ERROR handling JS hooks complete:', error);
+                        sendResponse({ status: 'error', error: error.message });
+                    }
+                })();
+                return true; // Async response
+
+            // OPTIMIZED 3.1: Lazy interceptor initialization
+            // reCAPTCHA messages - delegate to reCaptchaHandleMessage
+            case 'RECAPTCHA_START_CAPTURE':
+            case 'RECAPTCHA_STOP_CAPTURE':
+            case 'RECAPTCHA_GET_CAPTURE_STATE':
+            case 'RECAPTCHA_GET_CAPTURE_RESULTS':
+                // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)
+                if (typeof reCaptchaHandleMessage === 'function') {
+                    return reCaptchaHandleMessage(request, sendResponse, reCaptchaCaptureState);
+                }
+                break;
+
+            // Akamai messages - delegate to akamaiHandleMessage
+            case 'AKAMAI_START_CAPTURE':
+            case 'AKAMAI_STOP_CAPTURE':
+            case 'AKAMAI_GET_CAPTURE_STATE':
+            case 'AKAMAI_CAPTURE_COMPLETED':
+            case 'AKAMAI_EXTRACT_SENSOR':
+            case 'AKAMAI_EXTRACTION_COMPLETED':
+                // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)
+                if (typeof akamaiHandleMessage === 'function') {
+                    return akamaiHandleMessage(request, sendResponse);
+                }
+                break;
+
+            // Imperva messages - delegate to impervaHandleMessage
+            case 'IMPERVA_START_CAPTURE':
+            case 'IMPERVA_STOP_CAPTURE':
+            case 'IMPERVA_EXTRACT_SCRIPTS':
+            case 'IMPERVA_GET_CAPTURE_STATE':
+            case 'IMPERVA_CAPTURE_COMPLETED':
+                // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)
+                if (typeof impervaHandleMessage === 'function') {
+                    return impervaHandleMessage(request, sendResponse);
+                }
+                break;
+
+            // Shape Security messages - delegate to shapeSecurityHandleMessage
+            case 'SHAPESECURITY_START_CAPTURE':
+            case 'SHAPESECURITY_STOP_CAPTURE':
+            case 'SHAPESECURITY_GET_CAPTURE_STATE':
+            case 'SHAPESECURITY_CHECK_HEADERS':
+            case 'SHAPESECURITY_CHECK_COOKIES':
+            case 'SHAPESECURITY_CHECK_VERSION':
+            case 'SHAPESECURITY_ANALYZE_SCRIPTS':
+            case 'SHAPESECURITY_START_EXTRACTION':
+            case 'SHAPESECURITY_EXTRACTION_COMPLETED':
+                // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)
+                if (typeof shapeSecurityHandleMessage === 'function') {
+                    return shapeSecurityHandleMessage(request, sendResponse);
+                }
+                break;
+
+            // AWS WAF messages - delegate to handleAwsWafMessage
+            case 'AWSWAF_START_CAPTURE':
+            case 'AWSWAF_STOP_CAPTURE':
+            case 'AWSWAF_GET_STATE':
+            case 'AWSWAF_START_ANALYSIS':
+                // OPTIMIZED 3.1: Interceptor loaded via importScripts, no initialization needed
+                if (typeof handleAwsWafMessage === 'function') {
+                    return handleAwsWafMessage(request, sender, sendResponse);
+                }
                 break;
 
             default:
@@ -865,13 +1457,13 @@ function setupTabListeners() {
         headersStore.delete(tabId);
 
         // Clear capture state if tab is closed during capture
-        const captureStateForTab = captureState.get(tabId);
+        const captureStateForTab = reCaptchaCaptureState.get(tabId);
         if (captureStateForTab) {
             console.log(`Scrapfly Background: Tab ${tabId} closed during capture, cleaning up`);
             if (captureStateForTab.captureInterval) {
                 clearInterval(captureStateForTab.captureInterval);
             }
-            captureState.delete(tabId);
+            reCaptchaCaptureState.delete(tabId);
             stopRecaptchaInterception();
         }
 
@@ -879,8 +1471,9 @@ function setupTabListeners() {
         chrome.action.setBadgeText({
             text: '',
             tabId: tabId
-        }).catch(() => {
-            // Tab might already be closed, ignore error
+        }).catch((error) => {
+            // Expected: Tab might already be closed
+            console.log(`[Cleanup] Failed to clear badge for removed tab ${tabId}:`, error.message);
         });
     });
 
@@ -896,46 +1489,104 @@ function setupTabListeners() {
             akamaiHandleCaptureTabUpdate(tabId, changeInfo, tab);
         }
 
-        // REMOVED: Automatic RUN_DETECTION on tab complete
-        // This was causing cache to be bypassed on every page load
-        // The PAGE_LOAD_NOTIFICATION from content script already handles this properly with cache checking
-        //
-        // if (changeInfo.status === 'complete' && tab.url && !tab.url.startsWith('chrome://')) {
-        //     // Reduced logging - comment out for less spam
-        //     // console.log(`Scrapfly Background: Tab ${tabId} updated, requesting detection`);
-        //
-        //     // Small delay to ensure content script is ready
-        //     setTimeout(() => {
-        //         chrome.tabs.sendMessage(tabId, { type: 'RUN_DETECTION' }, (response) => {
-        //             if (chrome.runtime.lastError) {
-        //                 // Content script might not be loaded yet
-        //                 console.log('Scrapfly Background: Content script not ready on tab', tabId);
-        //             }
-        //         });
-        //     }, 500);
-        // }
+        // Handle Imperva capture updates - only monitors active captures
+        if (typeof impervaHandleCaptureTabUpdate === 'function') {
+            impervaHandleCaptureTabUpdate(tabId, changeInfo, tab);
+        }
+
+        // Handle AWS WAF capture updates - only monitors active captures
+        if (typeof awsWafHandleCaptureTabUpdate === 'function') {
+            awsWafHandleCaptureTabUpdate(tabId, changeInfo, tab);
+        }
+
+        // Handle AWS WAF analysis updates
+        if (typeof awsWafHandleAnalysisTabUpdate === 'function') {
+            awsWafHandleAnalysisTabUpdate(tabId, changeInfo, tab);
+        }
     });
 
-    // Run detection when active tab changes
+    // Run detection when active tab changes - detect interruptions and delegate to DetectionEngineManager
     chrome.tabs.onActivated.addListener(async (activeInfo) => {
-        // Reduced logging - comment out for less spam
-        // console.log(`Scrapfly Background: Tab ${activeInfo.tabId} activated`);
+        console.log(`[TabSwitch] Tab activated: ${activeInfo.tabId}, previous: ${currentActiveTab}`);
 
-        // Check if we already have stored detection data for this tab's URL
-        const detectionData = await DetectionEngineManager.getDetectionData(activeInfo.tabId);
-        if (!detectionData) {
-            // The content script will handle detection via PAGE_LOAD_NOTIFICATION when tab gains focus
-            // We don't need to force RUN_DETECTION here as it bypasses cache checks
-            // The focus event listener in content.js will trigger notifyPageLoad() which properly checks cache
-            console.log('Scrapfly Background: No cached data for activated tab, waiting for content script notification');
+        // Check if previous tab had an active detection that was interrupted
+        if (currentActiveTab !== null && activeDetections.has(currentActiveTab)) {
+            const previousTabId = currentActiveTab;
+            const activeInfo = activeDetections.get(previousTabId);
+
+            console.log(`[TabSwitch] ⚠️ Tab ${previousTabId} had active detection in progress - INTERRUPTED`);
+
+            // Abort the detection process
+            if (activeInfo.abortController) {
+                activeInfo.abortController.abort();
+                console.log(`[TabSwitch] 🛑 Aborted detection for tab ${previousTabId}`);
+            }
+
+            // Mark as interrupted
+            interruptedDetections.set(previousTabId, {
+                url: activeInfo.url,
+                interruptedAt: Date.now(),
+                startTime: activeInfo.startTime
+            });
+
+            // Remove from active detections
+            activeDetections.delete(previousTabId);
+
+            // Set red X badge to indicate interrupted detection
+            try {
+                await chrome.action.setBadgeText({ text: '✕', tabId: previousTabId });
+                await chrome.action.setBadgeBackgroundColor({ color: '#ef4444', tabId: previousTabId }); // Red color
+                console.log(`[TabSwitch] ✕ Set interrupted badge for tab ${previousTabId}`);
+            } catch (error) {
+                console.error(`[TabSwitch] Failed to set interrupted badge for tab ${previousTabId}:`, error);
+            }
+
+            // Store interrupted flag in detection cache
+            try {
+                const detectionState = detectionStates.get(previousTabId);
+                if (detectionState) {
+                    detectionState.interrupted = true;
+                    detectionState.error = 'detection_interrupted';
+                    console.log(`[TabSwitch] Marked detection state as interrupted for tab ${previousTabId}`);
+                }
+            } catch (error) {
+                console.error(`[TabSwitch] Failed to mark detection as interrupted:`, error);
+            }
+
+            // Notify popup if it's open (for the previous tab that was interrupted)
+            try {
+                chrome.runtime.sendMessage({
+                    type: 'DETECTION_INTERRUPTED',
+                    tabId: previousTabId,
+                    url: activeInfo.url
+                }).catch((error) => {
+                    // Expected: Popup might not be open
+                    console.log(`[TabSwitch] Popup not open, interruption message not sent:`, error.message);
+                });
+            } catch (error) {
+                console.error(`[TabSwitch] Failed to send interruption message to popup:`, error);
+            }
         }
+
+        // Update current active tab
+        currentActiveTab = activeInfo.tabId;
+
+        // Delegate to DetectionEngineManager for normal tab activation handling
+        await DetectionEngineManager.handleTabActivation(activeInfo, {
+            chrome,
+            Settings,
+            CategoryManager,
+            categoryManager,
+            interruptedDetections // Pass interrupted detections map
+        });
     });
 }
 
 /**
- * Initialize background script
+ * Initialize background script services
+ * This is called after detector manager initialization
  */
-function initialize() {
+function initializeServices() {
     console.log('Scrapfly Background: Initializing services...');
 
     // Setup all listeners and services
@@ -943,11 +1594,8 @@ function initialize() {
     setupMessageListeners();
     setupTabListeners();
 
-    // Run cleanup every 5 minutes to check for expired detections (each detection has 12-hour expiry)
-    setInterval(() => DetectionEngineManager.cleanExpiredDetections(), 5 * 60 * 1000);
-
-    console.log('Scrapfly Background: Initialization complete');
+    console.log('Scrapfly Background: Services initialization complete');
 }
 
-// Initialize when the script loads
-initialize();
+// OPTIMIZED 3.2: Removed separate cleanup interval - TTL handles auto-cleanup now
+// Detection states and headers automatically expire after 5 minutes

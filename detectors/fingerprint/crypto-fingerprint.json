@@ -1,0 +1,31 @@
+{
+  "id": "crypto-fingerprint",
+  "name": "Crypto Fingerprint",
+  "category": "Fingerprint",
+  "color": "#7c3aed",
+  "confidence": 100,
+  "lastUpdated": "2025-01-15",
+  "version": "1.0.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API",
+  "icon": "custom.png",
+  "description": "Web Crypto API usage detection for random number generation and cryptographic operations",
+  "detection": {
+    "js_hooks": [
+      {
+        "target": "Crypto.prototype.getRandomValues",
+        "description": "Generates cryptographically secure random values",
+        "enabled": true,
+        "confidence": 95
+      },
+      {
+        "target": "SubtleCrypto.prototype.digest",
+        "description": "Computes cryptographic hashes (SHA-256, etc.)",
+        "enabled": true,
+        "confidence": 90
+      }
+    ]
+  },
+  "_searchStrings": {
+    "js_hooks": "Crypto.prototype.getRandomValues Generates cryptographically secure random values SubtleCrypto.prototype.digest Computes cryptographic hashes (SHA-256, etc.)"
+  }
+}

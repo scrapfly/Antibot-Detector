@@ -1,0 +1,67 @@
+{
+  "id": "navigator-fingerprint",
+  "name": "Navigator Fingerprint",
+  "category": "Fingerprint",
+  "color": "#7c3aed",
+  "confidence": 100,
+  "lastUpdated": "2025-01-15",
+  "version": "1.0.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator",
+  "icon": "custom.png",
+  "description": "Browser navigator object fingerprinting to identify user agent, platform, language, and hardware details",
+  "detection": {
+    "js_hooks": [
+      {
+        "target": "Navigator.prototype.userAgent",
+        "description": "Reads browser user agent string",
+        "enabled": true,
+        "confidence": 90
+      },
+      {
+        "target": "Navigator.prototype.platform",
+        "description": "Reads operating system platform",
+        "enabled": true,
+        "confidence": 85
+      },
+      {
+        "target": "Navigator.prototype.webdriver",
+        "description": "Detects automated browsing (Selenium, Puppeteer)",
+        "enabled": true,
+        "confidence": 95
+      },
+      {
+        "target": "Navigator.prototype.product",
+        "description": "Reads browser product name",
+        "enabled": false,
+        "confidence": 70
+      },
+      {
+        "target": "Navigator.prototype.languages",
+        "description": "Reads browser language preferences",
+        "enabled": true,
+        "confidence": 85
+      },
+      {
+        "target": "Navigator.prototype.hardwareConcurrency",
+        "description": "Reads CPU core count",
+        "enabled": true,
+        "confidence": 90
+      },
+      {
+        "target": "Navigator.prototype.deviceMemory",
+        "description": "Reads device memory (RAM) in GB",
+        "enabled": true,
+        "confidence": 90
+      },
+      {
+        "target": "NavigatorUAData.prototype.getHighEntropyValues",
+        "description": "Reads high entropy user agent client hints",
+        "enabled": true,
+        "confidence": 95
+      }
+    ]
+  },
+  "_searchStrings": {
+    "js_hooks": "Navigator.prototype.userAgent Reads browser user agent string Navigator.prototype.platform Reads operating system platform Navigator.prototype.webdriver Detects automated browsing (Selenium, Puppeteer) Navigator.prototype.product Reads browser product name Navigator.prototype.languages Reads browser language preferences Navigator.prototype.hardwareConcurrency Reads CPU core count Navigator.prototype.deviceMemory Reads device memory (RAM) in GB NavigatorUAData.prototype.getHighEntropyValues Reads high entropy user agent client hints"
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "id": "performance-fingerprint",
+  "name": "Performance Fingerprint",
+  "category": "Fingerprint",
+  "color": "#7c3aed",
+  "confidence": 100,
+  "lastUpdated": "2025-01-15",
+  "version": "1.0.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/API/Performance",
+  "icon": "custom.png",
+  "description": "Performance timing and resource measurement fingerprinting for device and network profiling",
+  "detection": {
+    "js_hooks": [
+      {
+        "target": "Performance.prototype.now",
+        "description": "Reads high-resolution timestamps for timing analysis",
+        "enabled": true,
+        "confidence": 95
+      },
+      {
+        "target": "Performance.prototype.timing",
+        "description": "Accesses navigation timing data",
+        "enabled": true,
+        "confidence": 90
+      },
+      {
+        "target": "Performance.prototype.memory",
+        "description": "Reads memory usage statistics",
+        "enabled": true,
+        "confidence": 100
+      },
+      {
+        "target": "Performance.prototype.getEntriesByType",
+        "description": "Retrieves performance entries by type",
+        "enabled": true,
+        "confidence": 85
+      },
+      {
+        "target": "PerformanceEntry.prototype.startTime",
+        "description": "Reads performance entry start time",
+        "enabled": false,
+        "confidence": 75
+      },
+      {
+        "target": "PerformanceResourceTiming.prototype.connectEnd",
+        "description": "Reads connection timing for network fingerprinting",
+        "enabled": false,
+        "confidence": 80
+      },
+      {
+        "target": "PerformanceResourceTiming.prototype.connectStart",
+        "description": "Reads connection start time",
+        "enabled": false,
+        "confidence": 80
+      },
+      {
+        "target": "PerformanceResourceTiming.prototype.decodedBodySize",
+        "description": "Reads decoded resource size",
+        "enabled": false,
+        "confidence": 75
+      },
+      {
+        "target": "PerformanceResourceTiming.prototype.domainLookupEnd",
+        "description": "Reads domain lookup end time",
+        "enabled": false,
+        "confidence": 75
+      },
+      {
+        "target": "PerformanceResourceTiming.prototype.domainLookupStart",
+        "description": "Reads domain lookup start time",
+        "enabled": false,
+        "confidence": 75
+      },
+      {
+        "target": "PerformanceResourceTiming.prototype.responseEnd",
+        "description": "Reads response end time",
+        "enabled": false,
+        "confidence": 75
+      },
+      {
+        "target": "PerformanceResourceTiming.prototype.secureConnectionStart",
+        "description": "Reads TLS handshake start time",
+        "enabled": false,
+        "confidence": 80
+      },
+      {
+        "target": "PerformanceResourceTiming.prototype.transferSize",
+        "description": "Reads transfer size including headers",
+        "enabled": false,
+        "confidence": 75
+      },
+      {
+        "target": "PerformanceTiming.prototype.navigationStart",
+        "description": "Reads navigation start timestamp",
+        "enabled": false,
+        "confidence": 75
+      }
+    ]
+  },
+  "_searchStrings": {
+    "js_hooks": "Performance.prototype.now Reads high-resolution timestamps for timing analysis Performance.prototype.timing Accesses navigation timing data Performance.prototype.memory Reads memory usage statistics Performance.prototype.getEntriesByType Retrieves performance entries by type PerformanceEntry.prototype.startTime Reads performance entry start time PerformanceResourceTiming.prototype.connectEnd Reads connection timing for network fingerprinting PerformanceResourceTiming.prototype.connectStart Reads connection start time PerformanceResourceTiming.prototype.decodedBodySize Reads decoded resource size PerformanceResourceTiming.prototype.domainLookupEnd Reads domain lookup end time PerformanceResourceTiming.prototype.domainLookupStart Reads domain lookup start time PerformanceResourceTiming.prototype.responseEnd Reads response end time PerformanceResourceTiming.prototype.secureConnectionStart Reads TLS handshake start time PerformanceResourceTiming.prototype.transferSize Reads transfer size including headers PerformanceTiming.prototype.navigationStart Reads navigation start timestamp"
+  }
+}

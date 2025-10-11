@@ -10,25 +10,40 @@
   "icon": "imperva_official.png",
   "description": "Web application firewall with advanced bot protection",
   "detection": {
-    "cookies": [
+    "cookie": [
       {
-        "name": "incap_ses_*",
+        "name": "incap_ses_",
+        "nameRegex": false,
         "confidence": 100,
         "description": "Incapsula session cookies"
       },
       {
-        "name": "visid_incap_*",
+        "name": "visid_incap_",
+        "nameRegex": false,
         "confidence": 95,
         "description": "Visitor ID cookie"
       },
       {
-        "name": "nlbi_*",
+        "name": "nlbi_",
+        "nameRegex": false,
         "confidence": 90,
         "description": "Load balancer identifier"
+      },
+      {
+        "name": "reese84",
+        "nameRegex": false,
+        "confidence": 100,
+        "description": "Reese84 bot detection cookie"
+      },
+      {
+        "name": "utmvc",
+        "nameRegex": false,
+        "confidence": 95,
+        "description": "UTMVC tracking cookie"
       }
     ],
-    "headers": [],
-    "urls": [
+    "header": [],
+    "url": [
       {
         "pattern": "incapsula.com",
         "confidence": 95,
@@ -50,6 +65,21 @@
         "content": "incapsula",
         "confidence": 90
       }
+    ],
+    "dom": [],
+    "window": [
+      {
+        "path": "_Incapsula",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "Incapsula protection object"
+      }
     ]
+  },
+  "_searchStrings": {
+    "cookie": "incap_ses_ Incapsula session cookies visid_incap_ Visitor ID cookie nlbi_ Load balancer identifier reese84 Reese84 bot detection cookie utmvc UTMVC tracking cookie",
+    "url": "incapsula.com Incapsula domain resources /_Incapsula_Resource Incapsula resource endpoint",
+    "content": "_Incapsula Incapsula global object incapsula",
+    "window": "_Incapsula typeof object Incapsula protection object"
   }
 }

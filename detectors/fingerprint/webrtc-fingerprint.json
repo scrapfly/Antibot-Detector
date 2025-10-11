@@ -1,0 +1,44 @@
+{
+  "id": "webrtc-fingerprint",
+  "name": "WebRTC Fingerprint",
+  "category": "Fingerprint",
+  "icon": "custom.png",
+  "color": "#f59e0b",
+  "detection": {
+    "js_hooks": [
+      {
+        "target": "RTCPeerConnection.prototype.createDataChannel",
+        "description": "Creates WebRTC data channel for IP leak fingerprinting",
+        "enabled": true,
+        "confidence": 95
+      },
+      {
+        "target": "MediaDevices.prototype.enumerateDevices",
+        "description": "Enumerates media devices for hardware fingerprinting",
+        "enabled": true,
+        "confidence": 95
+      },
+      {
+        "target": "RTCPeerConnection.prototype.createOffer",
+        "description": "Creates SDP offer revealing local IPs",
+        "enabled": true,
+        "confidence": 90
+      },
+      {
+        "target": "RTCIceCandidate.prototype.address",
+        "description": "Reads ICE candidate address for IP sniffing",
+        "enabled": true,
+        "confidence": 95
+      },
+      {
+        "target": "RTCPeerConnection.prototype.onicecandidate",
+        "description": "Monitors ICE candidate events for IP leakage",
+        "enabled": false,
+        "confidence": 80
+      }
+    ]
+  },
+  "_searchStrings": {
+    "js_hooks": "RTCPeerConnection.prototype.createDataChannel Creates WebRTC data channel for IP leak fingerprinting MediaDevices.prototype.enumerateDevices Enumerates media devices for hardware fingerprinting RTCPeerConnection.prototype.createOffer Creates SDP offer revealing local IPs RTCIceCandidate.prototype.address Reads ICE candidate address for IP sniffing RTCPeerConnection.prototype.onicecandidate Monitors ICE candidate events for IP leakage"
+  }
+}

@@ -1,0 +1,142 @@
+<!-- Detection Tab Template -->
+  <div id="loadingState" class="loading-state" style="display: flex;">
+    <div class="spinner"></div>
+    <div class="loading-text">
+      <span class="loading-main">Analyzing page...</span>
+      <span class="loading-sub">Collecting fingerprinting & anti-bot detection data</span>
+    </div>
+  </div>
+
+  <div id="blacklistWarning" class="blacklist-warning-state" style="display: none;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" opacity="0.7">
+      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+      <line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="2"/>
+    </svg>
+    <h3>Detection disabled for this domain</h3>
+    <p id="blacklistDomain" class="blacklist-domain-text"></p>
+    <button id="removeFromBlacklistBtn" class="remove-blacklist-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/>
+      </svg>
+      Remove from Blacklist
+    </button>
+    <p class="blacklist-hint">Or go to Settings → Detection → Blacklisted Domains to manage.</p>
+  </div>
+
+  <div id="emptyState" class="empty-state" style="display: none;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" opacity="0.5">
+      <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" fill="none"/>
+    </svg>
+    <h3>No security systems detected</h3>
+    <p>This page appears to be free of bot protection systems.</p>
+  </div>
+
+  <div id="detectionResults" class="detection-results" style="display: none;">
+    <div id="detectionOverview" class="detection-overview" style="display: none;">
+      <div class="url-display-line">
+        <div class="url-display-container">
+          <img id="siteFavicon" class="site-favicon" src="" alt="">
+          <span id="siteUrl" class="site-url" title=""></span>
+        </div>
+      </div>
+      <div class="stats-line">
+        <div class="stat-inline detections-count" title="Detections">
+          <div class="stat-icon-inline">🔍</div>
+          <div class="stat-content-inline">
+            <div class="stat-label-inline">DETECTIONS</div>
+            <div class="stat-value-inline" id="detectionsCount">0</div>
+          </div>
+        </div>
+
+        <div class="stat-inline overall-confidence" title="Confidence">
+          <div class="stat-icon-inline">🎯</div>
+          <div class="stat-content-inline">
+            <div class="stat-label-inline">CONFIDENCE</div>
+            <div class="stat-value-inline" id="overallConfidence">0%</div>
+          </div>
+        </div>
+
+        <div class="stat-inline difficulty-level" title="Difficulty">
+          <div class="stat-icon-inline" id="difficultyIcon">🛡️</div>
+          <div class="stat-content-inline">
+            <div class="stat-label-inline">DIFFICULTY</div>
+            <div class="stat-value-inline" id="difficultyLevel">Low</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cache-expiry-line">
+        <div class="stat-inline cache-scope-stat" title="Cache Scope">
+          <div class="stat-icon-inline">🔍</div>
+          <div class="stat-content-inline">
+            <div class="stat-label-inline">CACHE SCOPE</div>
+            <div class="stat-value-inline" id="cacheScope">Domain</div>
+          </div>
+        </div>
+        <div class="stat-inline cache-expiry-stat" title="Cache Expiration">
+          <div class="stat-icon-inline">⏱️</div>
+          <div class="stat-content-inline">
+            <div class="stat-label-inline">CACHE EXPIRATION</div>
+            <div class="stat-value-inline" id="cacheExpiry">-</div>
+          </div>
+        </div>
+        <button id="clearCacheBtn" class="clear-cache-btn-inline" title="Clear cached detection">
+          <svg width="14" height="14" viewBox="0 0 24 24">
+            <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
+          </svg>
+          Clear Cache
+        </button>
+      </div>
+    </div>
+
+    <div class="search-container">
+      <input type="text" id="detectionSearch" class="search-input" placeholder="Search by name, category, method, or any detail...">
+    </div>
+
+    <div id="resultsList" class="results-list"></div>
+
+    <div id="detectionPagination" class="pagination">
+      <div class="pagination-info">Showing 1-10 of 0</div>
+      <div class="pagination-controls">
+        <button class="pagination-btn pagination-btn-prev" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/>
+          </svg>
+        </button>
+        <div class="page-numbers"></div>
+        <button class="pagination-btn pagination-btn-next" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="disabledState" class="disabled-state" style="display: none;">
+    <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="10" stroke="#f59e0b" stroke-width="2" fill="none"/>
+      <path d="M12 8v4M12 16h.01" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+      <line x1="4" y1="4" x2="20" y2="20" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+    <h3 style="color: #f59e0b;">Detection Disabled</h3>
+    <p>Security detection is currently turned off.</p>
+    <p style="margin-top: 8px; color: var(--text-secondary); font-size: 0.9em;">Toggle the switch at the top to enable detection.</p>
+  </div>
+
+  <div id="interruptedState" class="interrupted-state" style="display: none;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="10" stroke="#ef4444" stroke-width="2" fill="none"/>
+      <line x1="8" y1="8" x2="16" y2="16" stroke="#ef4444" stroke-width="2"/>
+      <line x1="16" y1="8" x2="8" y2="16" stroke="#ef4444" stroke-width="2"/>
+    </svg>
+    <h3 style="color: #ef4444;">Detection Interrupted</h3>
+    <p>Detection was incomplete because you switched tabs.</p>
+    <p style="margin-top: 8px; color: var(--text-secondary); font-size: 0.9em;">Please reload the page to run a fresh detection.</p>
+    <button id="reloadPageBtn" class="reload-page-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24">
+        <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" fill="currentColor"/>
+      </svg>
+      Reload Page
+    </button>
+  </div>

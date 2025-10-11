@@ -10,7 +10,7 @@
   "icon": "recaptcha_official.png",
   "description": "Google's CAPTCHA service for protecting websites from spam and abuse",
   "detection": {
-    "urls": [
+    "url": [
       {
         "pattern": "recaptcha/api",
         "confidence": 100,
@@ -73,6 +73,38 @@
         "confidence": 90,
         "description": "reCAPTCHA iframe"
       }
+    ],
+    "window": [
+      {
+        "path": "grecaptcha",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "Google reCAPTCHA main object"
+      },
+      {
+        "path": "grecaptcha.ready",
+        "condition": "typeof function",
+        "confidence": 95,
+        "description": "reCAPTCHA ready function"
+      },
+      {
+        "path": "grecaptcha.execute",
+        "condition": "typeof function",
+        "confidence": 95,
+        "description": "reCAPTCHA execute function"
+      },
+      {
+        "path": "___grecaptcha_cfg",
+        "condition": "typeof object",
+        "confidence": 90,
+        "description": "reCAPTCHA configuration object"
+      }
     ]
+  },
+  "_searchStrings": {
+    "url": "recaptcha/api reCAPTCHA API endpoint gstatic.com/recaptcha Static resources google.com/recaptcha recaptcha.net Alternative domain",
+    "content": "grecaptcha Global reCAPTCHA object recaptcha g-recaptcha reCAPTCHA container class grecaptcha.execute v3 execution grecaptcha.render v2 rendering",
+    "dom": ".g-recaptcha reCAPTCHA container [data-sitekey] Site key attribute iframe[src*='recaptcha'] reCAPTCHA iframe",
+    "window": "grecaptcha typeof object Google reCAPTCHA main object grecaptcha.ready typeof function reCAPTCHA ready function grecaptcha.execute typeof function reCAPTCHA execute function ___grecaptcha_cfg typeof object reCAPTCHA configuration object"
   }
 }

@@ -7,196 +7,100 @@
 var detectionEngine = detectionEngine || null;
 var hasCleanedUp = hasCleanedUp || false;
 var contextCheckInterval = contextCheckInterval || null;
+var jsApiReady = jsApiReady || false;
+var contextCheckFailures = contextCheckFailures || 0;
+
+/**
+ * Install JS Hooks early (at document_start)
+ * Delegates to DetectionEngineManager.installHooksOrchestrator()
+ */
+async function installJSHooks() {
+    return DetectionEngineManager.installHooksOrchestrator(window, chrome);
+}
 
 /**
  * Check if extension context is still valid
- * More robust check with error handling
+ * Delegates to Utils.isExtensionContextValid()
  */
 function isExtensionContextValid() {
-    try {
-        // Check if chrome.runtime exists and has an id
-        if (chrome && chrome.runtime && chrome.runtime.id) {
-            // Additional check - try to get the extension URL to verify it's really valid
-            const url = chrome.runtime.getURL('');
-            if (url && url.startsWith('chrome-extension://')) {
-                return true;
-            }
-        }
-        return false;
-    } catch (error) {
-        // If we get an error accessing chrome.runtime, context is invalid
-        // But only log if it's not a common transient error
-        if (!error.message.includes('Cannot read properties of undefined')) {
-            console.warn('Scrapfly Content Script: Error checking extension context:', error.message);
-        }
+    if (typeof Utils === 'undefined') {
+        console.warn('Scrapfly Content Script: Utils not loaded yet');
         return false;
     }
+    return Utils.isExtensionContextValid();
 }
 
 /**
  * Clean up when extension context is invalidated
+ * Delegates to Utils.cleanupOrphanedScript()
  */
 function cleanupOrphanedScript() {
-    if (hasCleanedUp) return;
-    hasCleanedUp = true;
-
-    console.warn('Scrapfly Content Script: Cleaning up orphaned content script');
-
-    // Clear the context check interval immediately
-    if (contextCheckInterval) {
-        clearInterval(contextCheckInterval);
-        contextCheckInterval = null;
+    if (typeof Utils === 'undefined') {
+        console.warn('Scrapfly Content Script: Utils not loaded, skipping cleanup');
+        return;
     }
+    return Utils.cleanupOrphanedScript({
+        hasCleanedUp: hasCleanedUp,
+        contextCheckInterval: contextCheckInterval,
+        notifyPageLoad: notifyPageLoad,
+        detectionEngine: detectionEngine
+    });
+}
 
-    // Remove all event listeners to prevent memory leaks
-    document.removeEventListener('DOMContentLoaded', notifyPageLoad);
-    document.removeEventListener('visibilitychange', notifyPageLoad);
-    window.removeEventListener('focus', notifyPageLoad);
+/**
+ * Dispatch JS API event to page window
+ * Delegates to Settings.dispatchJsApiEvent()
+ */
+async function dispatchJsApiEvent(eventName, data = {}) {
+    return Settings.dispatchJsApiEvent(eventName, data);
+}
 
-    // Clear detection engine data
-    if (detectionEngine) {
-        detectionEngine.clearDetectionData();
+/**
+ * Dispatch ready event
+ * Delegates to Settings.dispatchReadyEvent()
+ */
+async function dispatchReadyEvent() {
+    const dispatched = await Settings.dispatchReadyEvent();
+    if (dispatched) {
+        jsApiReady = true;
     }
-
-    console.log('Scrapfly Content Script: Cleanup complete - script is now inactive');
 }
 
 /**
  * Notify background about page load (cache check first)
+ * Delegates to Utils.notifyPageLoad()
  */
 async function notifyPageLoad() {
-    console.log('Scrapfly Content Script: Notifying page load...');
-
-    // Check if extension context is still valid
-    if (!isExtensionContextValid()) {
-        console.warn('Scrapfly Content Script: Extension context invalidated');
-        cleanupOrphanedScript();
+    if (typeof Utils === 'undefined') {
+        console.warn('Scrapfly Content Script: Utils not loaded, skipping page load notification');
         return;
     }
-
-    // Check if extension is enabled
-    try {
-        const result = await chrome.storage.local.get(['scrapfly_enabled']);
-        if (result.scrapfly_enabled === false) {
-            console.log('Scrapfly Content Script: Extension is disabled, skipping notification');
-            return;
-        }
-    } catch (error) {
-        if (error.message && error.message.includes('Extension context invalidated')) {
-            console.warn('Scrapfly Content Script: Extension was reloaded, content script is orphaned');
-            cleanupOrphanedScript();
-            return;
-        }
-        console.error('Scrapfly Content Script: Error checking enabled state:', error);
-    }
-
-    // Check if we should notify (avoid too frequent notifications)
-    if (!detectionEngine.shouldRunDetection(2000)) {
-        console.log('Scrapfly Content Script: Skipping notification (too soon after last detection)');
-        return;
-    }
-
-    // Send page load notification with just URL (cache check in background)
-    try {
-        chrome.runtime.sendMessage({
-            type: 'PAGE_LOAD_NOTIFICATION',
-            url: window.location.href,
-            timestamp: Date.now()
-        }, (response) => {
-            if (chrome.runtime.lastError) {
-                if (chrome.runtime.lastError.message &&
-                    chrome.runtime.lastError.message.includes('Extension context invalidated')) {
-                    console.warn('Scrapfly Content Script: Extension was reloaded');
-                    cleanupOrphanedScript();
-                }
-            } else {
-                console.log('Scrapfly Content Script: Page load notification sent');
-            }
-        });
-    } catch (error) {
-        if (error.message && error.message.includes('Extension context invalidated')) {
-            cleanupOrphanedScript();
-        }
-    }
+    return Utils.notifyPageLoad({
+        detectionEngine: detectionEngine,
+        isExtensionContextValid: isExtensionContextValid,
+        cleanupOrphanedScript: cleanupOrphanedScript
+    });
 }
 
 /**
  * Collect page data and send to background (called when cache miss)
+ * Delegates to Utils.collectAndSendData()
  */
 async function collectAndSendData() {
-    console.log('Scrapfly Content Script: Collecting and sending page data...');
-
-    // Check if extension context is still valid
-    if (!isExtensionContextValid()) {
-        console.warn('Scrapfly Content Script: Extension context invalidated');
-        cleanupOrphanedScript();
+    if (typeof Utils === 'undefined') {
+        console.warn('Scrapfly Content Script: Utils not loaded, skipping data collection');
         return;
     }
-
-    try {
-        // Collect page data (async - fetches external resources)
-        const pageData = await detectionEngine.collectPageData();
-
-        console.log('📤 Content Script: Sending pageData:', {
-            hasPageHTML: !!pageData.pageHTML,
-            pageHTMLLength: pageData.pageHTML?.length || 0,
-            contentCount: pageData.content?.length || 0,
-            externalContentCount: pageData.externalContent?.length || 0,
-            cookiesCount: pageData.cookies?.length || 0,
-            domCount: pageData.dom?.length || 0
-        });
-
-        // Check again before sending
-        if (!isExtensionContextValid()) {
-            console.warn('Scrapfly Content Script: Extension context lost before sending data');
-            cleanupOrphanedScript();
-            return;
-        }
-
-        // Send data to background script
-        try {
-            chrome.runtime.sendMessage({
-                type: 'DETECTION_DATA',
-                data: pageData,
-                tabId: null, // Will be filled by background script
-                timestamp: Date.now()
-            }, (response) => {
-                // Check for errors
-                if (chrome.runtime.lastError) {
-                    // Check if it's a context invalidation
-                    if (chrome.runtime.lastError.message &&
-                        chrome.runtime.lastError.message.includes('Extension context invalidated')) {
-                        console.warn('Scrapfly Content Script: Extension was reloaded during detection');
-                        cleanupOrphanedScript();
-                    } else {
-                        console.error('Scrapfly Content Script: Error sending detection data:', chrome.runtime.lastError);
-                    }
-                } else {
-                    console.log('Scrapfly Content Script: Detection data sent successfully', response);
-                }
-            });
-        } catch (sendError) {
-            // Catch synchronous errors when trying to send message
-            if (sendError.message && sendError.message.includes('Extension context invalidated')) {
-                console.warn('Scrapfly Content Script: Extension context invalidated, cannot send data');
-                cleanupOrphanedScript();
-            } else {
-                console.error('Scrapfly Content Script: Failed to send message:', sendError);
-            }
-        }
-    } catch (error) {
-        // Check if it's a context invalidation error
-        if (error.message && error.message.includes('Extension context invalidated')) {
-            console.warn('Scrapfly Content Script: Extension context invalidated during detection');
-            cleanupOrphanedScript();
-        } else {
-            console.error('Scrapfly Content Script: Error during detection:', error);
-        }
-    }
+    return Utils.collectAndSendData({
+        detectionEngine: detectionEngine,
+        isExtensionContextValid: isExtensionContextValid,
+        cleanupOrphanedScript: cleanupOrphanedScript
+    });
 }
 
 /**
  * Setup detection triggers
+ * OPTIMIZED 2.3: Consolidated event listeners with debouncing
  */
 function setupDetectionTriggers() {
     console.log('Scrapfly Content Script: Setting up detection triggers...');
@@ -209,40 +113,61 @@ function setupDetectionTriggers() {
         setTimeout(notifyPageLoad, 100);
     }
 
-    // Notify when tab becomes visible
-    document.addEventListener('visibilitychange', () => {
+    // OPTIMIZED: Single consolidated visibility handler (replaces separate visibility + focus listeners)
+    let visibilityTimeout = null;
+    const handleVisibilityChange = () => {
         if (!document.hidden && !hasCleanedUp) {
-            console.log('Scrapfly Content Script: Tab became visible, notifying...');
-            notifyPageLoad();
+            // Debounce: clear existing timeout
+            if (visibilityTimeout) clearTimeout(visibilityTimeout);
+            visibilityTimeout = setTimeout(() => {
+                console.log('Scrapfly Content Script: Tab became visible/focused, notifying...');
+                notifyPageLoad();
+                visibilityTimeout = null;
+            }, 100); // Small debounce to prevent rapid fire
         }
-    });
+    };
 
-    // Notify on focus (tab switch)
-    window.addEventListener('focus', () => {
-        if (!hasCleanedUp) {
-            console.log('Scrapfly Content Script: Window focused, notifying...');
-            notifyPageLoad();
-        }
-    });
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleVisibilityChange);
 
-    // Monitor for client-side navigation (SPA)
+    // OPTIMIZED: Debounced URL change detection for SPAs
     let lastUrl = location.href;
+    let urlChangeTimeout = null;
     const observer = new MutationObserver(() => {
         if (hasCleanedUp) return;
 
         const currentUrl = location.href;
         if (currentUrl !== lastUrl) {
             lastUrl = currentUrl;
-            console.log('Scrapfly Content Script: URL changed, notifying...');
-            setTimeout(notifyPageLoad, 500); // Wait for new content to load
+
+            // Debounce URL changes (prevent rapid notifications)
+            if (urlChangeTimeout) clearTimeout(urlChangeTimeout);
+            urlChangeTimeout = setTimeout(() => {
+                console.log('Scrapfly Content Script: URL changed, notifying...');
+                notifyPageLoad();
+                urlChangeTimeout = null;
+            }, 500);
         }
     });
 
-    // Start observing URL changes
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
+    // Start observing URL changes (wait for body to exist since we run at document_start)
+    if (document.body) {
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    } else {
+        // Wait for body to be available
+        const checkBody = setInterval(() => {
+            if (document.body) {
+                clearInterval(checkBody);
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+        }, 10);
+    }
 
     // Listen for messages from background script
     if (isExtensionContextValid()) {
@@ -270,6 +195,27 @@ function setupDetectionTriggers() {
                     lastDetection: detectionEngine ? detectionEngine.lastDetectionTime : null,
                     hasData: detectionEngine ? detectionEngine.detectionData !== null : false
                 });
+            } else if (request.type === 'DETECTION_COMPLETE') {
+                // Detection completed - dispatch JS API event
+                (async () => {
+                    await dispatchJsApiEvent('onScrapflyDetection', {
+                        url: request.url || window.location.href,
+                        detections: request.detections || [],
+                        detectionCount: request.detectionCount || 0,
+                        timestamp: request.timestamp || new Date().toISOString()
+                    });
+                })();
+                sendResponse({ status: 'event_dispatched' });
+            } else if (request.type === 'DETECTION_ERROR') {
+                // Detection error - dispatch JS API error event
+                (async () => {
+                    await dispatchJsApiEvent('onScrapflyError', {
+                        url: request.url || window.location.href,
+                        error: request.error || 'Unknown error',
+                        timestamp: request.timestamp || new Date().toISOString()
+                    });
+                })();
+                sendResponse({ status: 'error_event_dispatched' });
             } else if (request.type === 'UPDATE_CAPTURE_STEP') {
                 const notif = document.getElementById('scrapfly-capture-notification');
                 if (notif) {
@@ -292,6 +238,15 @@ function setupDetectionTriggers() {
                     `;
                 }
                 sendResponse({ status: 'updated' });
+            } else if (request.type === 'CACHE_HIT_DISABLE_MONITORING') {
+                // Cache hit - disable hooks and window properties monitoring
+                console.log('[Content Script] Cache hit detected, disabling hooks/window properties monitoring');
+                window.postMessage({
+                    type: 'DISABLE_MONITORING',
+                    reason: 'cache_hit',
+                    url: request.url
+                }, '*');
+                sendResponse({ status: 'disabled' });
             }
 
             // Return true to indicate async response
@@ -304,53 +259,45 @@ function setupDetectionTriggers() {
 
 /**
  * Perform context validation
+ * Delegates to Utils.performContextCheck()
  */
-let contextCheckFailures = 0;
 function performContextCheck() {
-    if (hasCleanedUp) {
-        // Already cleaned up, clear interval
-        if (contextCheckInterval) {
-            clearInterval(contextCheckInterval);
-            contextCheckInterval = null;
-        }
+    if (typeof Utils === 'undefined') {
+        console.warn('Scrapfly Content Script: Utils not loaded, skipping context check');
         return;
     }
-
-    if (!isExtensionContextValid()) {
-        contextCheckFailures++;
-
-        // Only cleanup after 2 consecutive failures (grace period for transient issues)
-        if (contextCheckFailures >= 2) {
-            console.warn('Scrapfly Content Script: Extension context lost after multiple checks');
-            cleanupOrphanedScript();
-
-            // Clear the interval
-            if (contextCheckInterval) {
-                clearInterval(contextCheckInterval);
-                contextCheckInterval = null;
-            }
-        } else {
-            console.log('Scrapfly Content Script: Context check failed, will retry...');
-        }
-    } else {
-        // Reset failure counter on successful check
-        contextCheckFailures = 0;
-    }
+    return Utils.performContextCheck(
+        {
+            hasCleanedUp: hasCleanedUp,
+            contextCheckInterval: contextCheckInterval,
+            contextCheckFailures: contextCheckFailures
+        },
+        cleanupOrphanedScript
+    );
 }
 
 /**
  * Initialize content script
  */
-function initialize() {
+async function initialize() {
     console.log('Scrapfly Content Script: Initializing on', window.location.href);
 
     // Don't run on extension pages or chrome:// URLs
-    if (window.location.protocol === 'chrome-extension:' ||
-        window.location.protocol === 'chrome:' ||
-        window.location.protocol === 'edge:' ||
-        window.location.protocol === 'about:') {
+    if (!Utils.isValidContentScriptUrl(window.location.href)) {
         console.log('Scrapfly Content Script: Skipping initialization on browser page');
         return;
+    }
+
+    // Check if extension is enabled
+    try {
+        const result = await chrome.storage.local.get(['scrapfly_enabled']);
+        if (result.scrapfly_enabled === false) {
+            console.log('Scrapfly Content Script: Extension is disabled, skipping initialization');
+            return;
+        }
+    } catch (error) {
+        console.error('Scrapfly Content Script: Failed to check enabled state:', error);
+        // Continue with initialization on error (fail-safe)
     }
 
     // Initialize the detection engine
@@ -358,11 +305,17 @@ function initialize() {
         detectionEngine = new DetectionEngineManager();
     }
 
-    // Check for context validity periodically (less frequently to reduce overhead)
-    contextCheckInterval = setInterval(performContextCheck, 60000); // Check every 60 seconds
+    // Note: JS hooks are installed by install-hooks.js at document_start (before this script runs)
+
+    // OPTIMIZED 2.5: Removed periodic context check interval
+    // Context validity is now checked on-demand during actual operations (message sending, etc.)
+    // This eliminates constant CPU wake-ups every 60 seconds
 
     // Setup all detection triggers
     setupDetectionTriggers();
+
+    // Dispatch JS API ready event
+    dispatchReadyEvent();
 
     // Notify background that content script is ready (only if context is valid)
     if (isExtensionContextValid()) {
@@ -396,12 +349,62 @@ function initialize() {
     }
 }
 
+/**
+ * Wait for Utils to load before initializing
+ */
+function waitForUtilsAndInitialize() {
+    if (typeof Utils !== 'undefined') {
+        console.log('Scrapfly Content Script: Utils loaded, initializing...');
+        initialize();
+    } else {
+        console.log('Scrapfly Content Script: Waiting for Utils to load...');
+        setTimeout(waitForUtilsAndInitialize, 50);
+    }
+}
+
+// Don't clear cache here - let PAGE_LOAD_NOTIFICATION handle it
+// Clearing cache immediately causes race conditions where JS hooks
+// fire before regular detection runs, creating incomplete entries
+
+// Create hook batcher using DetectionEngineManager
+const hookBatcher = DetectionEngineManager.createHookBatcher(chrome);
+
+// Listen for JS Hook detections from MAIN world script
+// Delegate to DetectionEngineManager.handleHookMessage()
+window.addEventListener('message', (event) => {
+    DetectionEngineManager.handleHookMessage(event, chrome, hookBatcher);
+});
+
+// Install hooks IMMEDIATELY (document_start) - don't wait for Utils
+// This must run before page scripts to intercept API calls
+// Wrapped in async IIFE to check enabled state first
+(async function() {
+    if (window.__scrapflyHooksInstalled) {
+        return; // Already installed
+    }
+
+    // Check if extension is enabled before installing hooks
+    try {
+        const result = await chrome.storage.local.get(['scrapfly_enabled']);
+        if (result.scrapfly_enabled === false) {
+            console.log('Scrapfly Content Script: Extension is disabled, skipping hook installation');
+            return;
+        }
+    } catch (error) {
+        console.error('Scrapfly Content Script: Failed to check enabled state for hooks:', error);
+        // Continue with hook installation on error (fail-safe)
+    }
+
+    window.__scrapflyHooksInstalled = true;
+    installJSHooks();
+})();
+
 // Check if script is already initialized to prevent duplicates
 // Only the initialization call is wrapped, not the function definitions
 if (window.__scrapflyContentScriptInitialized) {
-    console.log('Scrapfly Content Script: Already initialized, skipping duplicate');
+    // Already initialized, silently skip
 } else {
     window.__scrapflyContentScriptInitialized = true;
-    console.log('Scrapfly Content Script: Starting initialization...');
-    initialize();
+    // Wait for Utils to load before initializing
+    waitForUtilsAndInitialize();
 }
