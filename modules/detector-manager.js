@@ -10,30 +10,72 @@ class DetectorManager {
      * and saving them to Chrome storage
      */
     async initialize() {
-        if (this.initialized) return;
+        if (this.initialized) {
+            console.log('[DetectorManager] Already initialized, skipping');
+            return;
+        }
+
+        console.log('[DetectorManager] 🚀 Starting initialization...');
+        const initStartTime = Date.now();
 
         try {
             // Initialize CategoryManager if not already done
+            console.log('[DetectorManager] Step 1: Initializing CategoryManager...');
             if (!this.categoryManager.initialized) {
                 await this.categoryManager.initialize();
+                console.log(`[DetectorManager] ✅ CategoryManager initialized with ${Object.keys(this.categoryManager.categories || {}).length} categories`);
+            } else {
+                console.log(`[DetectorManager] ✅ CategoryManager already initialized`);
             }
 
             // First, try to load from storage
+            console.log('[DetectorManager] Step 2: Attempting to load from storage...');
+            const storageLoadStart = Date.now();
             const storageLoaded = await this.loadFromStorage();
+            const storageLoadTime = Date.now() - storageLoadStart;
+
+            console.log(`[DetectorManager] Storage load result: ${storageLoaded} (took ${storageLoadTime}ms)`);
+            console.log(`[DetectorManager] Current detector count: ${this.getDetectorCount()}`);
 
             // Only load from JSON files if storage is empty
             if (!storageLoaded || Object.keys(this.detectors).length === 0) {
-                console.log('No detectors in storage, loading from JSON files...');
+                console.warn('[DetectorManager] ⚠️ No detectors in storage, loading from JSON files...');
+                console.log('[DetectorManager] Step 3: Loading detectors from JSON index...');
+
+                const jsonLoadStart = Date.now();
                 await this.loadDetectorsFromIndex();
+                const jsonLoadTime = Date.now() - jsonLoadStart;
+
+                console.log(`[DetectorManager] ✅ JSON load complete (took ${jsonLoadTime}ms)`);
+                console.log(`[DetectorManager] Loaded ${this.getDetectorCount()} detectors total`);
+
+                console.log('[DetectorManager] Step 4: Saving to storage...');
+                const saveStart = Date.now();
                 await this.saveDetectorsToStorage();
+                const saveTime = Date.now() - saveStart;
+                console.log(`[DetectorManager] ✅ Save complete (took ${saveTime}ms)`);
             } else {
-                console.log('Loaded detectors from storage, preserving custom settings');
+                console.log('[DetectorManager] ✅ Loaded detectors from storage, preserving custom settings');
+                console.log(`[DetectorManager] 📊 Categories: ${Object.keys(this.detectors).join(', ')}`);
+                console.log(`[DetectorManager] 📊 Detectors per category:`,
+                    Object.entries(this.detectors).map(([cat, dets]) =>
+                        `${cat}=${Object.keys(dets).length}`
+                    ).join(', ')
+                );
             }
 
             this.initialized = true;
-            console.log('DetectorManager initialized successfully');
+            const totalTime = Date.now() - initStartTime;
+            console.log(`[DetectorManager] ✅✅✅ Initialization COMPLETE in ${totalTime}ms with ${this.getDetectorCount()} detectors`);
         } catch (error) {
-            console.error('Failed to initialize DetectorManager:', error);
+            const totalTime = Date.now() - initStartTime;
+            console.error(`[DetectorManager] ❌❌❌ Failed to initialize after ${totalTime}ms:`, error);
+            console.error('[DetectorManager] ❌ Error stack:', error.stack);
+            console.error('[DetectorManager] ❌ Current state:', {
+                initialized: this.initialized,
+                detectorCount: this.getDetectorCount(),
+                categories: Object.keys(this.detectors)
+            });
             throw error;
         }
     }

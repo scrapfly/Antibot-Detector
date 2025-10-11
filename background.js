@@ -465,10 +465,26 @@ async function initialize(reason = 'startup', previousVersion = null) {
         detectorManager = new DetectorManager(categoryManager);
 
         // Initialize the detector manager (loads from storage or JSON files)
+        const initStartTime = Date.now();
         await detectorManager.initialize();
+        const initDuration = Date.now() - initStartTime;
 
-        console.log('Background: Detector system initialized successfully');
-        console.log(`Background: Loaded ${detectorManager.getDetectorCount()} detectors`);
+        // Storage health check - verify detectors were loaded correctly
+        const detectorCount = detectorManager.getDetectorCount();
+        const hasDetectors = detectorCount > 0;
+
+        if (!hasDetectors) {
+            console.error('❌ CRITICAL: Detector system initialized but no detectors were loaded!');
+            console.error('❌ This will cause content scripts to fail. Possible causes:');
+            console.error('   1. Storage is empty or corrupted');
+            console.error('   2. JSON files are missing or have errors');
+            console.error('   3. File paths changed but extension not reloaded');
+            console.error('❌ RECOMMENDATION: Remove and re-add the extension, then refresh all tabs');
+        } else {
+            console.log(`✅ Background: Detector system initialized successfully in ${initDuration}ms`);
+            console.log(`✅ Background: Loaded ${detectorCount} detectors`);
+            console.log(`✅ Background: Storage health check PASSED`);
+        }
 
         // Check if extension is enabled/disabled and set badges accordingly
         const result = await chrome.storage.local.get(['scrapfly_enabled']);
@@ -992,10 +1008,13 @@ function setupMessageListeners() {
                 // Content script requesting all detectors (for hook installation at document_start)
                 (async () => {
                     try {
+                        const startTime = Date.now();
                         console.log('[Background] GET_DETECTORS request received');
 
                         // Ensure DetectorManager is fully initialized with retry logic
-                        let retries = 5;
+                        // IMPROVED: Increased from 5→10 retries and 100ms→200ms delays (500ms→2000ms total)
+                        // This handles slower JSON file loading during service worker startup
+                        let retries = 10;
                         while (retries > 0) {
                             await ensureDetectorManagerInitialized();
 
@@ -1004,7 +1023,12 @@ function setupMessageListeners() {
                             const hasDetectors = allDetectors && Object.keys(allDetectors).length > 0;
 
                             if (hasDetectors) {
-                                console.log(`[Background] Detectors loaded successfully`);
+                                const elapsed = Date.now() - startTime;
+                                const detectorCount = Object.values(allDetectors).reduce((sum, cat) =>
+                                    sum + Object.keys(cat).length, 0
+                                );
+                                console.log(`[Background] ✅ Detectors loaded successfully in ${elapsed}ms`);
+                                console.log(`[Background] 📊 Sending ${detectorCount} detectors across ${Object.keys(allDetectors).length} categories`);
 
                                 sendResponse({
                                     detectors: allDetectors
@@ -1013,18 +1037,37 @@ function setupMessageListeners() {
                             }
 
                             // Detectors not loaded yet, wait and retry
-                            console.log(`[Background] Detectors not loaded yet, retrying... (${retries} attempts left)`);
+                            console.warn(`[Background] ⚠️ Detectors not loaded yet, retrying... (${retries} attempts left)`);
+
+                            // Diagnostic info on why detectors might not be ready
+                            if (retries === 10) {
+                                console.log('[Background] 🔍 Diagnostic: DetectorManager state:', {
+                                    exists: !!detectorManager,
+                                    initialized: detectorManager?.initialized,
+                                    detectorCount: detectorManager ? Object.keys(detectorManager.detectors || {}).length : 0
+                                });
+                            }
+
                             retries--;
                             if (retries > 0) {
-                                await new Promise(resolve => setTimeout(resolve, 100)); // Wait 100ms before retry
+                                await new Promise(resolve => setTimeout(resolve, 200)); // Wait 200ms before retry
                             }
                         }
 
                         // Failed to load detectors after retries
-                        console.error('[Background] Failed to load detectors after retries');
+                        const elapsed = Date.now() - startTime;
+                        console.error(`[Background] ❌ Failed to load detectors after ${elapsed}ms (10 retries)`);
+                        console.error('[Background] ❌ Diagnostic: Final state:', {
+                            detectorManagerExists: !!detectorManager,
+                            initialized: detectorManager?.initialized,
+                            categoriesCount: detectorManager ? Object.keys(detectorManager.detectors || {}).length : 0,
+                            categoryManagerExists: !!categoryManager
+                        });
+                        console.error('[Background] ⚠️ Content script will receive empty config - extension may not work correctly');
                         sendResponse({ detectors: {} });
                     } catch (error) {
-                        console.error('[Background] Error getting detectors:', error);
+                        console.error('[Background] ❌ Error getting detectors:', error);
+                        console.error('[Background] ❌ Stack trace:', error.stack);
                         sendResponse({ detectors: {} });
                     }
                 })();
