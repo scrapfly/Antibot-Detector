@@ -100,11 +100,5 @@
         "description": "reCAPTCHA configuration object"
       }
     ]
-  },
-  "_searchStrings": {
-    "url": "recaptcha/api reCAPTCHA API endpoint gstatic.com/recaptcha Static resources google.com/recaptcha recaptcha.net Alternative domain",
-    "content": "grecaptcha Global reCAPTCHA object recaptcha g-recaptcha reCAPTCHA container class grecaptcha.execute v3 execution grecaptcha.render v2 rendering",
-    "dom": ".g-recaptcha reCAPTCHA container [data-sitekey] Site key attribute iframe[src*='recaptcha'] reCAPTCHA iframe",
-    "window": "grecaptcha typeof object Google reCAPTCHA main object grecaptcha.ready typeof function reCAPTCHA ready function grecaptcha.execute typeof function reCAPTCHA execute function ___grecaptcha_cfg typeof object reCAPTCHA configuration object"
   }
 }

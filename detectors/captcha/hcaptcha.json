@@ -82,11 +82,5 @@
         "description": "hCaptcha execute function"
       }
     ]
-  },
-  "_searchStrings": {
-    "url": "hcaptcha.com hCaptcha domain /checksiteconfig Site configuration check /getcaptcha Captcha retrieval endpoint",
-    "content": "hcaptcha hCaptcha object h-captcha hCaptcha container class hcaptcha.render hcaptcha.execute",
-    "dom": ".h-captcha hCaptcha container [data-hcaptcha-sitekey] iframe[src*='hcaptcha.com']",
-    "window": "hcaptcha typeof object hCaptcha main object hcaptcha.render typeof function hCaptcha render function hcaptcha.execute typeof function hCaptcha execute function"
   }
 }

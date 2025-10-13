@@ -126,9 +126,12 @@ class Detection {
     this.updateStats(detections);
 
     // Filter items if search query exists
-    const itemsToShow = this.searchQuery
+    let itemsToShow = this.searchQuery
       ? this.getFilteredResults()
       : detections;
+
+    // Sort items by category priority before displaying
+    itemsToShow = this.sortDetectionsByCategory(itemsToShow);
 
     // Use pagination to display results
     if (this.paginationManager) {
@@ -611,7 +614,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
   getFilteredResults() {
     if (!this.searchQuery) return this.currentResults;
 
-    return this.currentResults.filter(detection => {
+    const filtered = this.currentResults.filter(detection => {
       const name = (detection.detector?.name || detection.detector || '').toLowerCase();
       const category = (detection.category || '').toLowerCase();
       const description = (detection.detector?.description || '').toLowerCase();
@@ -619,6 +622,42 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
       return name.includes(this.searchQuery) ||
              category.includes(this.searchQuery) ||
              description.includes(this.searchQuery);
+    });
+
+    // Sort filtered results by category priority
+    return this.sortDetectionsByCategory(filtered);
+  }
+
+  /**
+   * Sort detections by category priority
+   * Priority: Anti-Bot > CAPTCHA > Fingerprint
+   * Within same category, sort by confidence (highest first)
+   * @param {Array} detections - Detection results
+   * @returns {Array} Sorted detections
+   */
+  sortDetectionsByCategory(detections) {
+    const categoryPriority = {
+      'antibot': 1,
+      'anti-bot': 1,
+      'captcha': 2,
+      'fingerprint': 3,
+      'fingerprinting': 3
+    };
+
+    return [...detections].sort((a, b) => {
+      const categoryA = (a.category || '').toLowerCase();
+      const categoryB = (b.category || '').toLowerCase();
+
+      const priorityA = categoryPriority[categoryA] || 999;
+      const priorityB = categoryPriority[categoryB] || 999;
+
+      // Sort by priority (lower number = higher priority)
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB;
+      }
+
+      // If same category, sort by confidence (higher first)
+      return (b.confidence || 0) - (a.confidence || 0);
     });
   }
 
@@ -824,6 +863,160 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
       clearCacheBtn.addEventListener('click', () => {
         this.clearCache();
       });
+    }
+  }
+
+  // ============================================================================
+  // Static Methods (Background & Popup Context)
+  // ============================================================================
+
+  /**
+   * Request detection data for current tab
+   * @param {object} context - {detection, Utils, processDetectionDataCallback}
+   */
+  static async requestCurrentTabDetection(context) {
+    const { detection, Utils, processDetectionDataCallback } = context;
+
+    try {
+      detection.showLoadingState();
+
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (!tab) {
+        console.error('Detection: No active tab found');
+        detection.showEmptyState();
+        return;
+      }
+
+      // Check if extension is enabled
+      const result = await chrome.storage.local.get(['scrapfly_enabled']);
+      if (result.scrapfly_enabled === false) {
+        console.log('Detection: Extension is disabled');
+        detection.showDisabledState();
+        return;
+      }
+
+      // Check if URL is blacklisted
+      if (await Utils.isUrlBlacklisted(tab.url)) {
+        console.log('Detection: URL is blacklisted');
+        detection.showEmptyState();
+        return;
+      }
+
+      // Request detection data from background
+      chrome.runtime.sendMessage(
+        { type: 'GET_DETECTION_DATA', tabId: tab.id },
+        async (response) => {
+          if (chrome.runtime.lastError) {
+            console.error('Detection: Error getting detection data:', chrome.runtime.lastError);
+            detection.showEmptyState();
+            return;
+          }
+
+          if (response && response.data) {
+            console.log('Detection: Received detection data from background');
+            await processDetectionDataCallback(response.data);
+          } else {
+            console.log('Detection: No detection data available');
+            detection.showEmptyState();
+          }
+        }
+      );
+    } catch (error) {
+      console.error('Detection: Failed to request detection:', error);
+      detection.showEmptyState();
+    }
+  }
+
+  /**
+   * Request fresh detection for specific tab
+   * @param {object} context - {detection, tabId, requestCurrentTabDetectionCallback}
+   */
+  static requestFreshDetection(context) {
+    const { detection, tabId, requestCurrentTabDetectionCallback } = context;
+
+    console.log('Detection: Requesting fresh detection for tab', tabId);
+    detection.showLoadingState();
+
+    chrome.runtime.sendMessage(
+      { type: 'REQUEST_DETECTION', tabId: tabId },
+      (response) => {
+        if (chrome.runtime.lastError) {
+          console.error('Detection: Error requesting fresh detection:', chrome.runtime.lastError);
+          detection.hideLoadingState();
+          detection.showEmptyState();
+          return;
+        }
+
+        console.log('Detection: Fresh detection requested, waiting for completion...');
+        // Wait for detection to complete, then request the data
+        setTimeout(() => {
+          console.log('Detection: Fetching fresh detection results...');
+          requestCurrentTabDetectionCallback();
+        }, 2000);
+      }
+    );
+  }
+
+  /**
+   * Process detection data from background
+   * @param {object} context - {detection, detectionEngine, detectorManager, history}
+   * @param {object} detectionData - Detection data from background
+   */
+  static async processDetectionData(context, detectionData) {
+    const { detection, detectionEngine, detectorManager, history } = context;
+
+    try {
+      if (!detectionData) {
+        console.warn('Detection: No detection data provided');
+        detection.showEmptyState();
+        return;
+      }
+
+      console.log('Detection: Processing detection data:', detectionData);
+
+      // Set detectors and run detection
+      detectionEngine.setDetectors(detectorManager.getAllDetectors());
+
+      let detections = [];
+
+      // Check if we have pre-processed detection results
+      if (detectionData.detectionResults) {
+        console.log('Detection: Using pre-processed results from background');
+        detections = detectionData.detectionResults;
+      } else if (detectionData.pageData) {
+        console.log('Detection: Running detection on raw page data');
+        detections = detectionEngine.detectOnPage(detectionData.pageData);
+      } else {
+        console.warn('Detection: No valid data format in detectionData');
+        detection.showEmptyState();
+        return;
+      }
+
+      console.log(`Detection: Found ${detections.length} security systems`);
+
+      // Display results with metadata
+      // Construct cacheMetadata from available fields
+      const cacheMetadata = detectionData.expiry ? {
+        expiry: detectionData.expiry,
+        url: detectionData.url,
+        timestamp: detectionData.timestamp,
+        favicon: detectionData.favicon
+      } : null;
+
+      await detection.displayResults(detections, {
+        fromStorage: detectionData.fromStorage || false,
+        cacheMetadata: cacheMetadata
+      });
+
+      // Update history if we have detections
+      if (detections.length > 0 && history && typeof history.loadHistory === 'function') {
+        console.log('Detection: Updating history');
+        await history.loadHistory();
+      }
+    } catch (error) {
+      console.error('Detection: Failed to process detection data:', error);
+      console.error('Detection: Stack trace:', error.stack);
+      detection.showEmptyState();
     }
   }
 }

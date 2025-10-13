@@ -363,9 +363,10 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             // Show result modal
             if (response && response.version) {
                 console.log('[ShapeSecurity] Version detected:', response.version);
+                NotificationHelper.success(AdvancedUtils.notifications.checkVersion.success('Shape Security', response.version.toUpperCase()));
                 this.showVersionModal(response.version);
             } else {
-                NotificationHelper.error('No version detected');
+                NotificationHelper.warning(AdvancedUtils.notifications.checkVersion.none('Shape Security'));
             }
 
         } catch (error) {
@@ -485,14 +486,79 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             // Get cookies directly without reload (like AWS WAF/Akamai)
             const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
             console.log('[ShapeSecurity] Total cookies found:', cookies.length);
+            console.log('[ShapeSecurity] URL:', this.tabInfo.url);
 
-            // Find Shape Security cookie (8-character name with |1|0| pattern in value)
-            const shapeCookie = cookies.find(c =>
-                c.name.length === 8 && // Shape Security cookies have exactly 8 characters
-                c.value && c.value.includes('|1|0|') // Contains Shape Security pattern
-            );
+            // DEBUG: Log all cookies with details
+            console.log('[ShapeSecurity] ===== ALL COOKIES =====');
+            cookies.forEach((cookie, index) => {
+                console.log(`[ShapeSecurity] Cookie ${index + 1}:`, {
+                    name: cookie.name,
+                    nameLength: cookie.name.length,
+                    domain: cookie.domain,
+                    path: cookie.path,
+                    secure: cookie.secure,
+                    httpOnly: cookie.httpOnly,
+                    valueSnippet: cookie.value ? cookie.value.substring(0, 50) + (cookie.value.length > 50 ? '...' : '') : '(empty)'
+                });
+            });
 
-            console.log('[ShapeSecurity] Shape Security cookie found:', !!shapeCookie);
+            // DEBUG: Log matching criteria
+            console.log('[ShapeSecurity] ===== MATCHING CRITERIA =====');
+            console.log('[ShapeSecurity] Looking for cookies with:');
+            console.log('[ShapeSecurity]   - Name length: exactly 8 characters');
+            console.log('[ShapeSecurity]   - Value pattern: contains "|1|0|" or "|1|1|"');
+
+            // Find Shape Security cookie (8-character name with |1|0| or |1|1| pattern in value)
+            console.log('[ShapeSecurity] ===== EVALUATING COOKIES =====');
+            let shapeCookie = null;
+
+            for (let i = 0; i < cookies.length; i++) {
+                const c = cookies[i];
+                const nameMatches = c.name.length === 8;
+                const valueMatches = c.value && (c.value.includes('|1|0|') || c.value.includes('|1|1|'));
+
+                console.log(`[ShapeSecurity] Cookie ${i + 1}: "${c.name}"`);
+                console.log(`[ShapeSecurity]   ├─ Name length: ${c.name.length} ${nameMatches ? '✅' : '❌'} (need: 8)`);
+                console.log(`[ShapeSecurity]   ├─ Value contains |1|0| or |1|1|: ${valueMatches ? '✅' : '❌'}`);
+
+                if (nameMatches && valueMatches) {
+                    console.log(`[ShapeSecurity]   └─ MATCH! ✅ This is a Shape Security cookie`);
+                    shapeCookie = c;
+                    break; // Found match, stop searching
+                } else {
+                    console.log(`[ShapeSecurity]   └─ Not a match ${nameMatches ? '(name OK but value pattern missing)' : '(name length wrong)'}`);
+                }
+            }
+
+            // DEBUG: Log final result
+            console.log('[ShapeSecurity] ===== RESULT =====');
+            if (shapeCookie) {
+                console.log('[ShapeSecurity] ✅ Shape Security cookie found!');
+                console.log('[ShapeSecurity] Cookie details:', {
+                    name: shapeCookie.name,
+                    domain: shapeCookie.domain,
+                    path: shapeCookie.path,
+                    secure: shapeCookie.secure,
+                    httpOnly: shapeCookie.httpOnly,
+                    valueLength: shapeCookie.value.length,
+                    valueSnippet: shapeCookie.value.substring(0, 100) + (shapeCookie.value.length > 100 ? '...' : ''),
+                    fullValue: shapeCookie.value
+                });
+            } else {
+                console.log('[ShapeSecurity] ❌ No Shape Security cookie found');
+                console.log('[ShapeSecurity] Possible reasons:');
+                console.log('[ShapeSecurity]   - No cookies with 8-character names');
+                console.log('[ShapeSecurity]   - No cookies with |1|0| or |1|1| pattern in value');
+                console.log('[ShapeSecurity]   - Shape Security not active on this page');
+            }
+            console.log('[ShapeSecurity] ========== END CHECK COOKIES ==========');
+
+            // Show notification
+            if (shapeCookie) {
+                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(1, 1));
+            } else {
+                NotificationHelper.info(AdvancedUtils.notifications.checkCookies.none('Shape Security'));
+            }
 
             // Display modal with cookie details immediately
             this.displayCookieResults(shapeCookie);
@@ -701,7 +767,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                 console.log('[SHAPESECURITY-EXTRACT] ✓ Page reload initiated');
 
                 // Show success notification
-                NotificationHelper.success('Extraction mode enabled. Page reloading...');
+                NotificationHelper.info(AdvancedUtils.notifications.analyzeScripts.start('Shape Security'));
             } else {
                 throw new Error(response?.error || 'Failed to enable extraction mode');
             }

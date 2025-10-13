@@ -24,8 +24,5 @@
         "confidence": 90
       }
     ]
-  },
-  "_searchStrings": {
-    "js_hooks": "Crypto.prototype.getRandomValues Generates cryptographically secure random values SubtleCrypto.prototype.digest Computes cryptographic hashes (SHA-256, etc.)"
   }
 }

@@ -54,10 +54,5 @@
       "F5 ASM often modifies response headers",
       "Look for encoded values in cookies starting with 'TS'"
     ]
-  },
-  "_searchStrings": {
-    "cookie": "^TS[a-zA-Z0-9]+$ F5 BIG-IP session persistence cookies ^BIGipServer.* F5 BIG-IP load balancer cookies",
-    "header": "X-WA-Info F5 WebAccelerator header",
-    "content": "f5_cspm F5 Client-Side Protection & Mitigation F5_ST F5 Session Tracking variable"
   }
 }

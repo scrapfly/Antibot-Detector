@@ -1,0 +1,39 @@
+{
+  "id": "aliexpress",
+  "name": "AliExpress CAPTCHA",
+  "category": "CAPTCHA",
+  "color": "#FF6A00",
+  "confidence": 100,
+  "lastUpdated": "2025-01-11",
+  "version": "1.0.0",
+  "website": "https://www.aliexpress.com/",
+  "icon": "custom.png",
+  "description": "AliExpress security challenge page with x5sec verification",
+  "detection": {
+    "url": [
+      {
+        "pattern": "punish?x5secdata",
+        "confidence": 100,
+        "description": "AliExpress security challenge URL"
+      },
+      {
+        "pattern": "punish\\?x5secdata",
+        "regex": true,
+        "confidence": 100,
+        "description": "AliExpress x5sec verification"
+      }
+    ],
+    "content": [
+      {
+        "content": "x5secdata",
+        "confidence": 90,
+        "description": "x5sec data parameter"
+      },
+      {
+        "content": "aliexpress.com/punish",
+        "confidence": 95,
+        "description": "AliExpress punish endpoint"
+      }
+    ]
+  }
+}

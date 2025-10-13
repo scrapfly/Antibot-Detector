@@ -39,11 +39,5 @@
     "window": [
     ],
     "dom": []
-  },
-  "_searchStrings": {
-    "cookie": "__Secure-.* BotGuard secure cookie pattern (various implementations) __Secure-random BotGuard random token cookie __Secure-[0-9]PSID Google session ID with BotGuard protection __Secure-[0-9]PAPISID Google API session ID with BotGuard",
-    "url": "google.com/recaptcha/ reCAPTCHA endpoint (uses BotGuard) /botguard/ BotGuard script path bg.*\\.js BotGuard script naming pattern",
-    "content": "botguard BotGuard namespace or reference bg.invoke BotGuard invocation method _bgv BotGuard version variable bg.snapshot BotGuard snapshot function",
-    "window": "botguard typeof object BotGuard global object bg typeof object BotGuard abbreviated namespace _bgv exists BotGuard version variable"
   }
 }

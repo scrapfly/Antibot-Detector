@@ -270,6 +270,14 @@ class ImpervaAdvanced extends BaseAdvancedModule {
 
             console.log('[IMPERVA] Protection Level:', protectionLevel);
 
+            // Show notification
+            const foundCount = cookies.length;
+            if (foundCount > 0) {
+                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(foundCount, 7));
+            } else {
+                NotificationHelper.info(AdvancedUtils.notifications.checkCookies.none('Imperva'));
+            }
+
             this.displayCookiesModal(cookies, { hasReese84, hasUtmvc, incapSes, nlbi, visid }, protectionLevel);
         } catch (error) {
             console.error('[IMPERVA] Failed to check cookies:', error);
@@ -343,7 +351,7 @@ class ImpervaAdvanced extends BaseAdvancedModule {
                 console.log('[IMPERVA-EXTRACT] ✓ Page reload initiated');
 
                 // Show success notification
-                NotificationHelper.success('Extraction mode enabled. Page reloaded.');
+                NotificationHelper.info(AdvancedUtils.notifications.analyzeScripts.start('Imperva'));
             } else {
                 console.error('[IMPERVA-EXTRACT] ❌ Invalid response from background');
                 console.error('[IMPERVA-EXTRACT] Expected: { status: "success" }');
@@ -1017,7 +1025,8 @@ public static string GenerateUtmvcScriptPath()
         }
 
         // Show success notification
-        NotificationHelper.success('Extraction results displayed!');
+        const scriptCount = (scripts || []).length;
+        NotificationHelper.success(AdvancedUtils.notifications.analyzeScripts.success(scriptCount));
     }
 
     /**

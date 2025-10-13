@@ -36,8 +36,5 @@
         "confidence": 70
       }
     ]
-  },
-  "_searchStrings": {
-    "js_hooks": "AudioBuffer.prototype.getChannelData Reads audio channel data for fingerprinting AnalyserNode.prototype.getFloatFrequencyData Analyzes audio frequency data BaseAudioContext.prototype.createOscillator Creates audio oscillator for signal generation AudioNode.prototype.connect Connects audio nodes for fingerprinting chain"
   }
 }

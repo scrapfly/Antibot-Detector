@@ -2126,7 +2126,10 @@ class DetectionEngineManager {
             if (result.scrapfly_enabled === false) {
                 console.log('Scrapfly Background: Extension is disabled, skipping page load detection');
                 // Clear badge if extension is disabled
-                chrome.action.setBadgeText({ text: '', tabId: tabId });
+                chrome.action.setBadgeText({ text: '', tabId: tabId }).catch((error) => {
+                    // Expected: Tab might be closed
+                    console.log(`[PageLoad] Failed to clear badge (disabled) for tab ${tabId}:`, error.message);
+                });
                 return;
             }
         } catch (error) {
@@ -2149,7 +2152,7 @@ class DetectionEngineManager {
             console.log(`Scrapfly Background: ✅ Cache hit for ${pageUrl} (${storedData.detectionCount} detectors)`);
 
             // Check if URL is blacklisted before setting badge
-            const isBlacklisted = await Settings.isUrlBlacklisted(pageUrl);
+            const isBlacklisted = await Utils.isUrlBlacklisted(pageUrl);
 
             // Update badge with cached detection count
             if (!isBlacklisted && storedData.detectionCount > 0) {
@@ -2161,11 +2164,20 @@ class DetectionEngineManager {
                              storedData.detectionCount >= 3 ? badgeColors.medium :
                              badgeColors.low;
 
-                chrome.action.setBadgeText({ text: count, tabId: tabId });
-                chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId });
+                chrome.action.setBadgeText({ text: count, tabId: tabId }).catch((error) => {
+                    // Expected: Tab might be closed
+                    console.log(`[PageLoad] Failed to set badge text (cached) for tab ${tabId}:`, error.message);
+                });
+                chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId }).catch((error) => {
+                    // Expected: Tab might be closed
+                    console.log(`[PageLoad] Failed to set badge color (cached) for tab ${tabId}:`, error.message);
+                });
             } else {
                 // Clear badge if no detections or if blacklisted
-                chrome.action.setBadgeText({ text: '', tabId: tabId });
+                chrome.action.setBadgeText({ text: '', tabId: tabId }).catch((error) => {
+                    // Expected: Tab might be closed
+                    console.log(`[PageLoad] Failed to clear badge (no detections/blacklisted) for tab ${tabId}:`, error.message);
+                });
             }
 
             // Notify popup if it's open
@@ -2413,7 +2425,7 @@ class DetectionEngineManager {
             const storedData = await DetectionEngineManager.getStoredDetection(tab.url);
             if (storedData) {
                 // Restore badge from cached data
-                const isBlacklisted = await Settings.isUrlBlacklisted(tab.url);
+                const isBlacklisted = await Utils.isUrlBlacklisted(tab.url);
 
                 if (!isBlacklisted && storedData.detectionCount > 0) {
                     const badgeColors = await CategoryManager.getBadgeColors(categoryManager);

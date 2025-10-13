@@ -256,11 +256,9 @@
 
     // Handle disable monitoring command (cache hit)
     if (data && data.type === 'DISABLE_MONITORING') {
-      if (debugMode) {
-        console.log('[MAIN WORLD] 🛑 DISABLE_MONITORING received - cache hit, stopping all monitoring');
-        console.log('[MAIN WORLD]   Reason:', data.reason);
-        console.log('[MAIN WORLD]   URL:', data.url);
-      }
+      sendLog('log', '[MAIN WORLD] 🛑 DISABLE_MONITORING received - cache hit, stopping all monitoring');
+      sendLog('log', '[MAIN WORLD]   Reason:', data.reason);
+      sendLog('log', '[MAIN WORLD]   URL:', data.url);
 
       // Disable hooks monitoring
       hooksEnabled = false;
@@ -273,9 +271,7 @@
       // Uninstall any installed hooks to reduce overhead
       uninstallAllRemainingHooks();
 
-      if (debugMode) {
-        console.log('[MAIN WORLD] ✅ All monitoring disabled successfully (cache hit)');
-      }
+      sendLog('log', '[MAIN WORLD] ✅ All monitoring disabled successfully (cache hit)');
     }
   });
 
@@ -284,22 +280,18 @@
     // Set debugMode first, before any logging
     debugMode = event.detail?.debugMode || false; // Receive debug mode from ISOLATED world
 
-    if (debugMode) {
-      console.log('[MAIN WORLD] 🎯 scrapfly-install-hooks event received!', {
-        hasDetail: !!event.detail,
-        hookDefinitionsCount: event.detail?.hookDefinitions?.length,
-        windowPropertiesCount: event.detail?.windowProperties?.length,
-        debugMode: debugMode
-      });
-    }
+    sendLog('log', '[MAIN WORLD] 🎯 scrapfly-install-hooks event received!', {
+      hasDetail: !!event.detail,
+      hookDefinitionsCount: event.detail?.hookDefinitions?.length,
+      windowPropertiesCount: event.detail?.windowProperties?.length,
+      debugMode: debugMode
+    });
 
     const hookDefinitions = event.detail?.hookDefinitions || [];
     const windowProperties = event.detail?.windowProperties || [];
 
     sendLog('log', `[Hooks MAIN] Received ${hookDefinitions.length} detectors and ${windowProperties.length} window property checks`);
-    if (debugMode) {
-      console.log('[MAIN WORLD] 📋 Window properties to check:', windowProperties.map(p => p.path));
-    }
+    sendLog('log', '[MAIN WORLD] 📋 Window properties to check:', windowProperties.map(p => p.path));
 
     // Check window properties once when page is fully loaded
     if (windowProperties.length > 0) {

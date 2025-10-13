@@ -10,7 +10,16 @@
   "icon": "shape_security_official.png",
   "description": "Enterprise-grade bot management solution providing real-time detection and mitigation",
   "detection": {
-    "cookie": [],
+    "cookie": [
+      {
+        "name": "[A-Za-z0-9]{8}",
+        "value": "\\|1\\|[01]\\|",
+        "nameRegex": true,
+        "valueRegex": true,
+        "confidence": 95,
+        "description": "Shape Security cookie (8-character name with |1|0| or |1|1| pattern in value)"
+      }
+    ],
     "header": [
       {
         "name": "x-[a-z0-9]{8}-a",
@@ -79,11 +88,5 @@
         "description": "Shape Security browser monitoring database"
       }
     ]
-  },
-  "_searchStrings": {
-    "header": "x-[a-z0-9]{8}-a Shape Security dynamic header pattern (suffix -a) x-[a-z0-9]{8}-b Shape Security dynamic header pattern (suffix -b) x-[a-z0-9]{8}-c Shape Security dynamic header pattern (suffix -c) x-[a-z0-9]{8}-d Shape Security dynamic header pattern (suffix -d) x-[a-z0-9]{8}-f Shape Security dynamic header pattern (suffix -f) x-[a-z0-9]{8}-z Shape Security dynamic header pattern (suffix -z)",
-    "url": "\\?seed=[A-Za-z0-9_\\-]+ Shape Security seed parameter (primary indicator) &seed=[A-Za-z0-9_\\-]+ Shape Security seed parameter (not first query param)",
-    "content": "shapesecurity Shape Security namespace",
-    "window": "__xr_bmobdb typeof object Shape Security browser monitoring database"
   }
 }

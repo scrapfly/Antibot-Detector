@@ -3,6 +3,7 @@ class Rules {
     this.detectorManager = detectorManager;
     this.categoryManager = detectorManager.getCategoryManager();
     this.initialized = false;
+    this.eventListenersSetup = false;
     this.paginationManager = null;
     this.colorManager = null;
     this.searchManager = null;
@@ -195,6 +196,12 @@ class Rules {
    * Setup method settings modal event listeners
    */
   setupMethodSettingsModal() {
+    // Prevent duplicate event listener registration
+    if (this.eventListenersSetup) {
+      return;
+    }
+    this.eventListenersSetup = true;
+
     const modal = document.querySelector('#methodSettingsModal');
     const closeBtn = document.querySelector('#closeMethodSettings');
     const cancelBtn = document.querySelector('#cancelMethodSettings');

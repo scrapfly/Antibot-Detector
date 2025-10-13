@@ -53,11 +53,5 @@
         "description": "Reblaze reference"
       }
     ]
-  },
-  "_searchStrings": {
-    "cookie": "rbzid Reblaze visitor ID rbzsessionid Reblaze session identifier rbz* Reblaze prefix cookies",
-    "header": "Server Reblaze Reblaze server header X-Reblaze-* Reblaze specific headers",
-    "url": "reblaze Reblaze reference in URLs",
-    "content": "rbzid Reblaze ID in scripts reblaze Reblaze reference"
   }
 }

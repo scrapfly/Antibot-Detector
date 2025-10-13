@@ -25,8 +25,5 @@
         "confidence": 85
       }
     ]
-  },
-  "_searchStrings": {
-    "js_hooks": "CanvasRenderingContext2D.prototype.measureText Measures text dimensions to detect installed fonts Document.prototype.fonts Accesses FontFaceSet for font enumeration TextMetrics.prototype.width Reads text width for font fingerprinting"
   }
 }

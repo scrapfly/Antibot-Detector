@@ -496,7 +496,7 @@ class Utils {
     if (cleanup.hasCleanedUp) return false;
     cleanup.hasCleanedUp = true;
 
-    console.warn('Cleaning up orphaned content script');
+    console.log('Cleaning up orphaned content script');
 
     // Clear the context check interval immediately
     if (cleanup.contextCheckInterval) {
@@ -568,7 +568,7 @@ class Utils {
 
     // Check if extension context is still valid
     if (!isExtensionContextValid()) {
-      console.warn('Scrapfly Content Script: Extension context invalidated');
+      console.log('Scrapfly Content Script: Extension context invalidated');
       cleanupOrphanedScript();
       return;
     }
@@ -582,7 +582,7 @@ class Utils {
       }
     } catch (error) {
       if (error.message && error.message.includes('Extension context invalidated')) {
-        console.warn('Scrapfly Content Script: Extension was reloaded, content script is orphaned');
+        console.log('Scrapfly Content Script: Extension was reloaded, content script is orphaned');
         cleanupOrphanedScript();
         return;
       }
@@ -631,7 +631,7 @@ class Utils {
 
     // Check if extension context is still valid
     if (!isExtensionContextValid()) {
-      console.warn('Scrapfly Content Script: Extension context invalidated');
+      console.log('Scrapfly Content Script: Extension context invalidated');
       cleanupOrphanedScript();
       return;
     }
@@ -661,7 +661,7 @@ class Utils {
 
       // Check again before sending
       if (!isExtensionContextValid()) {
-        console.warn('Scrapfly Content Script: Extension context lost before sending data');
+        console.log('Scrapfly Content Script: Extension context lost before sending data');
         cleanupOrphanedScript();
         return;
       }
@@ -679,7 +679,7 @@ class Utils {
             // Check if it's a context invalidation
             if (chrome.runtime.lastError.message &&
               chrome.runtime.lastError.message.includes('Extension context invalidated')) {
-              console.warn('Scrapfly Content Script: Extension was reloaded during detection');
+              console.log('Scrapfly Content Script: Extension was reloaded during detection');
               cleanupOrphanedScript();
             } else {
               console.error('Scrapfly Content Script: Error sending detection data:', chrome.runtime.lastError);
@@ -691,7 +691,7 @@ class Utils {
       } catch (sendError) {
         // Catch synchronous errors when trying to send message
         if (sendError.message && sendError.message.includes('Extension context invalidated')) {
-          console.warn('Scrapfly Content Script: Extension context invalidated, cannot send data');
+          console.log('Scrapfly Content Script: Extension context invalidated, cannot send data');
           cleanupOrphanedScript();
         } else {
           console.error('Scrapfly Content Script: Failed to send message:', sendError);
@@ -700,7 +700,7 @@ class Utils {
     } catch (error) {
       // Check if it's a context invalidation error
       if (error.message && error.message.includes('Extension context invalidated')) {
-        console.warn('Scrapfly Content Script: Extension context invalidated during detection');
+        console.log('Scrapfly Content Script: Extension context invalidated during detection');
         cleanupOrphanedScript();
       } else {
         console.error('Scrapfly Content Script: Error during detection:', error);

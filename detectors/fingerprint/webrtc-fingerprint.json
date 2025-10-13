@@ -37,8 +37,5 @@
         "confidence": 80
       }
     ]
-  },
-  "_searchStrings": {
-    "js_hooks": "RTCPeerConnection.prototype.createDataChannel Creates WebRTC data channel for IP leak fingerprinting MediaDevices.prototype.enumerateDevices Enumerates media devices for hardware fingerprinting RTCPeerConnection.prototype.createOffer Creates SDP offer revealing local IPs RTCIceCandidate.prototype.address Reads ICE candidate address for IP sniffing RTCPeerConnection.prototype.onicecandidate Monitors ICE candidate events for IP leakage"
   }
 }

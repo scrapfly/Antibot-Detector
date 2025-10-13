@@ -687,27 +687,49 @@ async function handleShapeSecurityCheckCookies(message, sender, sendResponse) {
             ['responseHeaders', 'extraHeaders']
         );
 
-        // Set up navigation completion listener
+        // Track captured cookie across page loads
+        let capturedCookie = null;
+
+        // Set up navigation completion listener with immediate + delayed checks
         const navigationListener = (details) => {
             if (details.tabId === tabId && details.frameId === 0) {
                 console.log('[ShapeSecurity] Page navigation completed');
 
-                // Wait a bit for all requests to complete
+                // Immediate check (catch challenge page before redirect)
+                if (foundCookie && !capturedCookie) {
+                    console.log('[ShapeSecurity] Cookie found immediately, saving...');
+                    capturedCookie = foundCookie;
+                }
+
+                // Check again after 3 seconds (catch cookies set later)
                 setTimeout(() => {
+                    if (foundCookie && !capturedCookie) {
+                        console.log('[ShapeSecurity] Cookie found after 3 seconds, saving...');
+                        capturedCookie = foundCookie;
+                    }
+                }, 3000);
+
+                // Finalize after 5 seconds
+                setTimeout(() => {
+                    console.log('[ShapeSecurity] Finalizing cookie check...');
+
                     // Remove header listener
                     chrome.webRequest.onResponseStarted.removeListener(headerListener);
+
+                    // Use best result (prioritize captured cookie)
+                    const finalCookie = capturedCookie || foundCookie;
 
                     // Send result to popup
                     chrome.runtime.sendMessage({
                         type: 'SHAPESECURITY_COOKIE_RESULT',
-                        cookie: foundCookie
+                        cookie: finalCookie
                     });
 
                     // Clean up navigation listener
                     chrome.webNavigation.onCompleted.removeListener(navigationListener);
 
-                    console.log('[ShapeSecurity] Cookie check completed, result:', foundCookie);
-                }, 2000);
+                    console.log('[ShapeSecurity] Cookie check completed, result:', finalCookie);
+                }, 5000);
             }
         };
 
@@ -887,6 +909,7 @@ function interceptShapeSecurityRequest(details) {
 
 /**
  * Start extraction mode - reload page and capture all script URLs
+ * Uses immediate injection + accumulation to catch intermediate challenge pages
  */
 function handleShapeSecurityStartExtraction(message, sender, sendResponse) {
     const tabId = message.tabId;
@@ -901,13 +924,16 @@ function handleShapeSecurityStartExtraction(message, sender, sendResponse) {
         allScripts: []
     });
 
+    // Track captured results across page loads
+    let capturedScripts = null;
+
     // Set up webNavigation listener to inject script after page reload
     const navigationListener = (details) => {
         if (details.tabId === tabId && details.frameId === 0) {
-            console.log('[ShapeSecurity-EXTRACT] Page loaded, injecting script...');
+            console.log('[ShapeSecurity-EXTRACT] Page loaded, injecting script immediately...');
 
-            // Inject script to collect all scripts
-            setTimeout(async () => {
+            // Function to collect scripts
+            const collectScripts = async () => {
                 try {
                     const [result] = await chrome.scripting.executeScript({
                         target: { tabId: tabId },
@@ -935,21 +961,49 @@ function handleShapeSecurityStartExtraction(message, sender, sendResponse) {
                         }
                     });
 
-                    console.log('[ShapeSecurity-EXTRACT] Collected scripts:', result.result);
+                    const scripts = result.result || [];
+                    console.log('[ShapeSecurity-EXTRACT] Collected', scripts.length, 'scripts');
 
-                    // Send extraction completed message
-                    await handleShapeSecurityExtractionCompleted({
-                        tabId: tabId,
-                        scripts: result.result || []
-                    }, null, () => {});
+                    // Accumulate scripts (keep best result)
+                    if (scripts.length > 0) {
+                        console.log('[ShapeSecurity-EXTRACT] Found scripts! Saving to capturedScripts...');
+                        capturedScripts = scripts;
+                    }
+
+                    return scripts;
 
                 } catch (error) {
                     console.error('[ShapeSecurity-EXTRACT] Failed to inject script:', error);
+                    return [];
                 }
+            };
+
+            // Inject immediately (catch challenge page before redirect)
+            collectScripts();
+
+            // Also inject after 3 seconds (catch late-loading scripts)
+            setTimeout(() => {
+                console.log('[ShapeSecurity-EXTRACT] Secondary check after 3 seconds...');
+                collectScripts();
+            }, 3000);
+
+            // After 5 seconds, finalize results
+            setTimeout(async () => {
+                console.log('[ShapeSecurity-EXTRACT] Finalizing results...');
+
+                const finalScripts = capturedScripts || [];
+                console.log('[ShapeSecurity-EXTRACT] Final collected scripts:', finalScripts);
+
+                // Send extraction completed message
+                await handleShapeSecurityExtractionCompleted({
+                    tabId: tabId,
+                    scripts: finalScripts
+                }, null, () => {});
 
                 // Remove listener
                 chrome.webNavigation.onCompleted.removeListener(navigationListener);
-            }, 1000); // Wait 1 second for page to fully load
+                console.log('[ShapeSecurity-EXTRACT] Extraction complete, listener removed');
+            }, 5000);
         }
     };
 

@@ -432,6 +432,54 @@ const AdvancedUtils = {
             second: '2-digit'
         };
         return new Date(timestamp).toLocaleString(undefined, { ...defaults, ...options });
+    },
+
+    /**
+     * Standardized notification messages for advanced modules
+     * Provides consistent messaging across all advanced modules
+     */
+    notifications: {
+        /**
+         * Module loaded notification
+         * @param {string} moduleName - Name of the module (e.g., "Shape Security")
+         * @returns {string} Notification message
+         */
+        moduleLoaded: (moduleName) => `✓ Loaded ${moduleName} tools`,
+
+        /**
+         * Check cookies operation notifications
+         */
+        checkCookies: {
+            start: (moduleName) => `🍪 Checking ${moduleName} cookies...`,
+            success: (count, total) => `✓ Found ${count}/${total} cookies`,
+            none: (moduleName) => `No ${moduleName} cookies found`
+        },
+
+        /**
+         * Analyze/Extract scripts operation notifications
+         */
+        analyzeScripts: {
+            start: (moduleName) => `🔍 Analyzing ${moduleName} scripts... Page will reload`,
+            success: (count) => `✓ Found ${count} script${count !== 1 ? 's' : ''}`,
+            none: (moduleName) => `No ${moduleName} scripts found`
+        },
+
+        /**
+         * Start/Stop capturing operation notifications
+         */
+        capturing: {
+            start: (moduleName) => `🎬 Started capturing ${moduleName} data`,
+            stop: (moduleName) => `⏹️ Stopped capturing ${moduleName} data`,
+            alreadyActive: () => `⚠️ Capturing already active`
+        },
+
+        /**
+         * Check version operation notifications
+         */
+        checkVersion: {
+            success: (moduleName, version) => `✓ Detected ${moduleName} version: ${version}`,
+            none: (moduleName) => `No ${moduleName} version detected`
+        }
     }
 };
 

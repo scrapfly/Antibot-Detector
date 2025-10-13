@@ -96,8 +96,5 @@
         "confidence": 75
       }
     ]
-  },
-  "_searchStrings": {
-    "js_hooks": "Performance.prototype.now Reads high-resolution timestamps for timing analysis Performance.prototype.timing Accesses navigation timing data Performance.prototype.memory Reads memory usage statistics Performance.prototype.getEntriesByType Retrieves performance entries by type PerformanceEntry.prototype.startTime Reads performance entry start time PerformanceResourceTiming.prototype.connectEnd Reads connection timing for network fingerprinting PerformanceResourceTiming.prototype.connectStart Reads connection start time PerformanceResourceTiming.prototype.decodedBodySize Reads decoded resource size PerformanceResourceTiming.prototype.domainLookupEnd Reads domain lookup end time PerformanceResourceTiming.prototype.domainLookupStart Reads domain lookup start time PerformanceResourceTiming.prototype.responseEnd Reads response end time PerformanceResourceTiming.prototype.secureConnectionStart Reads TLS handshake start time PerformanceResourceTiming.prototype.transferSize Reads transfer size including headers PerformanceTiming.prototype.navigationStart Reads navigation start timestamp"
   }
 }

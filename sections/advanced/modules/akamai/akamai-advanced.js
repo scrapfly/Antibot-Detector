@@ -91,6 +91,14 @@ class AkamaiAdvanced extends BaseAdvancedModule {
             console.log('[Akamai Debug] 🛡️ Protection Level:', protectionLevel);
             console.log('[Akamai Debug] ========================================');
 
+            // Show notification
+            const foundCount = foundCookies.length;
+            if (foundCount > 0) {
+                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(foundCount, 7));
+            } else {
+                NotificationHelper.info(AdvancedUtils.notifications.checkCookies.none('Akamai'));
+            }
+
             this.displayCookiesModal(foundCookies, akamaiCookies);
         } catch (error) {
             console.error('Failed to check Akamai cookies:', error);

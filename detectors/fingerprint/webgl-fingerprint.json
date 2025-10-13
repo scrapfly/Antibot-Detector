@@ -54,8 +54,5 @@
         "confidence": 90
       }
     ]
-  },
-  "_searchStrings": {
-    "js_hooks": "WebGLRenderingContext.prototype.getParameter Retrieves WebGL parameters for hardware fingerprinting WebGLRenderingContext.prototype.getSupportedExtensions Lists supported WebGL extensions WebGLRenderingContext.prototype.getExtension Gets specific WebGL extension for fingerprinting WebGL2RenderingContext.prototype.getParameter Retrieves WebGL2 parameters WebGLRenderingContext.prototype.bufferData Uploads buffer data for WebGL fingerprinting WebGL2RenderingContext.prototype.bufferData Uploads buffer data for WebGL2 fingerprinting WebGL2RenderingContext.prototype.readPixels Reads pixel data from WebGL2 framebuffer"
   }
 }

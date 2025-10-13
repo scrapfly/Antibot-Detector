@@ -173,6 +173,10 @@ let detectorManager = null;
 let categoryManager = null;
 let detectionEngine = null;
 
+// Initialization guard to prevent concurrent initializations (race condition fix)
+let initializationInProgress = false;
+let initializationPromise = null;
+
 // OPTIMIZATION Phase B.3: Convert tracking maps to TTLMap to prevent memory leaks
 // Track recent detection requests to prevent duplicates (5 min TTL, max 200 entries)
 const recentDetectionRequests = new TTLMap(300000, 200); // 5 min, prevents spam
@@ -238,6 +242,31 @@ function generateMatchKey(match) {
 }
 
 function getOrCreateDetectionState(tabId, url) {
+    const existingState = detectionStates.get(tabId);
+
+    // If state exists but URL differs, abort old detection and create fresh state
+    if (existingState && existingState.url !== url) {
+        console.log(`[DetectionState] ⚠️ URL changed for tab ${tabId}: ${existingState.url} → ${url}`);
+
+        // Abort old detection if it's in progress
+        if (activeDetections.has(tabId)) {
+            const activeInfo = activeDetections.get(tabId);
+            if (activeInfo.abortController) {
+                activeInfo.abortController.abort();
+                console.log(`[DetectionState] 🛑 Aborted old detection for tab ${tabId} (URL changed)`);
+            }
+            activeDetections.delete(tabId);
+        }
+
+        // Mark old state as interrupted
+        existingState.interrupted = true;
+        existingState.error = 'url_changed';
+
+        // Clear old state
+        detectionStates.delete(tabId);
+        console.log(`[DetectionState] Cleared old state for tab ${tabId} (URL changed)`);
+    }
+
     if (!detectionStates.has(tabId)) {
         detectionStates.set(tabId, {
             url: url,
@@ -384,7 +413,7 @@ async function finalizeDetection(tabId, state) {
     const detectionCount = finalResults.length;
     if (detectionCount > 0) {
         // Check if URL is blacklisted before setting badge
-        const isBlacklisted = await Settings.isUrlBlacklisted(state.url);
+        const isBlacklisted = await Utils.isUrlBlacklisted(state.url);
 
         if (!isBlacklisted) {
             // Load badge colors from CategoryManager
@@ -395,15 +424,27 @@ async function finalizeDetection(tabId, state) {
                          detectionCount >= 3 ? badgeColors.medium :
                          badgeColors.low;
 
-            chrome.action.setBadgeText({ text: count, tabId: tabId });
-            chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId });
+            chrome.action.setBadgeText({ text: count, tabId: tabId }).catch((error) => {
+                // Expected: Tab might be closed
+                console.log(`[Finalize] Failed to set badge text for tab ${tabId}:`, error.message);
+            });
+            chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId }).catch((error) => {
+                // Expected: Tab might be closed
+                console.log(`[Finalize] Failed to set badge color for tab ${tabId}:`, error.message);
+            });
         } else {
             // Clear badge if blacklisted
-            chrome.action.setBadgeText({ text: '', tabId: tabId });
+            chrome.action.setBadgeText({ text: '', tabId: tabId }).catch((error) => {
+                // Expected: Tab might be closed
+                console.log(`[Finalize] Failed to clear badge (blacklisted) for tab ${tabId}:`, error.message);
+            });
         }
     } else {
         // Clear badge if no detections
-        chrome.action.setBadgeText({ text: '', tabId: tabId });
+        chrome.action.setBadgeText({ text: '', tabId: tabId }).catch((error) => {
+            // Expected: Tab might be closed
+            console.log(`[Finalize] Failed to clear badge (no detections) for tab ${tabId}:`, error.message);
+        });
     }
 
     // Notify popup
@@ -443,7 +484,21 @@ async function finalizeDetection(tabId, state) {
  * @param {string} previousVersion - Previous version if update
  */
 async function initialize(reason = 'startup', previousVersion = null) {
-    try {
+    // RACE CONDITION FIX: Prevent concurrent initializations
+    // During extension updates, both onInstalled and IIFE can fire simultaneously
+    if (initializationInProgress && initializationPromise) {
+        console.log(`[Initialize] Already in progress (${reason}), waiting for completion...`);
+        const result = await initializationPromise;
+        console.log(`[Initialize] Reusing completed initialization for ${reason}`);
+        return result;
+    }
+
+    // Set guard flag and create promise for this initialization
+    initializationInProgress = true;
+
+    // Create the initialization promise
+    initializationPromise = (async () => {
+        try {
         console.log('===========================================');
         console.log(`Scrapfly Extension: ${reason.toUpperCase()}`);
         console.log('===========================================');
@@ -470,8 +525,31 @@ async function initialize(reason = 'startup', previousVersion = null) {
         const initDuration = Date.now() - initStartTime;
 
         // Storage health check - verify detectors were loaded correctly
-        const detectorCount = detectorManager.getDetectorCount();
-        const hasDetectors = detectorCount > 0;
+        let detectorCount = detectorManager.getDetectorCount();
+        let hasDetectors = detectorCount > 0;
+
+        // BUGFIX: Add retry logic if detectors haven't loaded yet (timing issue)
+        // This handles cases where service worker starts before JSON files are fully loaded
+        if (!hasDetectors) {
+            console.warn('[Initialize] No detectors loaded yet, retrying with delays...');
+            const maxRetries = 10; // 10 retries * 500ms = 5 seconds max wait
+            let retries = maxRetries;
+
+            while (retries > 0 && !hasDetectors) {
+                await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms
+                detectorCount = detectorManager.getDetectorCount();
+                hasDetectors = detectorCount > 0;
+
+                if (hasDetectors) {
+                    console.log(`[Initialize] ✅ Detectors loaded after retry (${maxRetries - retries + 1} attempts)`);
+                    break;
+                }
+
+                retries--;
+                const attemptsLeft = retries;
+                console.log(`[Initialize] ⏳ Still waiting for detectors... (${attemptsLeft} attempts left)`);
+            }
+        }
 
         if (!hasDetectors) {
             console.error('❌ CRITICAL: Detector system initialized but no detectors were loaded!');
@@ -518,13 +596,25 @@ async function initialize(reason = 'startup', previousVersion = null) {
         console.log('✅ Detector system ready');
         console.log('===========================================');
 
+        // Clear guard flag on success
+        initializationInProgress = false;
         return true;
-    } catch (error) {
-        console.error('Background: Failed to initialize detector system:', error);
-        console.error('Background: Error stack:', error.stack);
-        console.log('===========================================');
-        return false;
-    }
+        } catch (error) {
+            console.error('Background: Failed to initialize detector system:', error);
+            console.error('Background: Error stack:', error.stack);
+            console.log('===========================================');
+
+            // Clear guard flag on error
+            initializationInProgress = false;
+            return false;
+        } finally {
+            // Clear promise reference when done (success or failure)
+            initializationPromise = null;
+        }
+    })();
+
+    // Await and return the result
+    return await initializationPromise;
 }
 
 // Listen for extension installation or update
@@ -568,6 +658,58 @@ async function ensureDetectorManagerInitialized() {
         console.log('Background: DetectorManager initialized successfully');
     }
     return detectorManager;
+}
+
+/**
+ * Wait for detectors to be fully loaded with progress updates
+ * @param {number} maxWaitMs - Maximum time to wait (default 10000ms)
+ * @returns {Promise<boolean>} True if loaded, false if timeout
+ */
+async function waitForDetectorsLoaded(maxWaitMs = 10000) {
+    const startTime = Date.now();
+    let attempts = 0;
+    const checkInterval = 100; // Check every 100ms
+
+    console.log(`[waitForDetectorsLoaded] Waiting up to ${maxWaitMs}ms for detectors to load...`);
+
+    while (Date.now() - startTime < maxWaitMs) {
+        attempts++;
+
+        // Check if detector manager is initialized AND has detectors
+        if (detectorManager?.initialized) {
+            const count = detectorManager.getDetectorCount();
+            if (count > 0) {
+                const elapsed = Date.now() - startTime;
+                console.log(`[waitForDetectorsLoaded] ✅ Detectors ready after ${elapsed}ms (${attempts} attempts, ${count} detectors)`);
+                return true;
+            }
+        }
+
+        // Show progress every second
+        if (attempts % 10 === 0) {
+            const elapsed = Date.now() - startTime;
+            console.log(`[waitForDetectorsLoaded] ⏳ Still waiting... (${elapsed}ms elapsed, attempt ${attempts})`);
+
+            // Log current state for debugging
+            if (detectorManager) {
+                console.log(`[waitForDetectorsLoaded] Current state: initialized=${detectorManager.initialized}, count=${detectorManager.getDetectorCount()}`);
+            } else {
+                console.log(`[waitForDetectorsLoaded] DetectorManager not yet created`);
+            }
+        }
+
+        await new Promise(resolve => setTimeout(resolve, checkInterval));
+    }
+
+    // Timeout reached
+    const elapsed = Date.now() - startTime;
+    console.error(`[waitForDetectorsLoaded] ❌ Timeout after ${elapsed}ms (${attempts} attempts)`);
+    console.error(`[waitForDetectorsLoaded] Final state:`, {
+        detectorManagerExists: !!detectorManager,
+        initialized: detectorManager?.initialized,
+        detectorCount: detectorManager?.getDetectorCount() || 0
+    });
+    return false;
 }
 
 
@@ -653,8 +795,14 @@ async function processDetectionData(message, sender) {
 
     // Show loading indicator in badge and track as active detection
     try {
-        chrome.action.setBadgeText({ text: '⏳', tabId: tabId });
-        chrome.action.setBadgeBackgroundColor({ color: '#4A90E2', tabId: tabId }); // Blue color for loading
+        chrome.action.setBadgeText({ text: '⏳', tabId: tabId }).catch((error) => {
+            // Expected: Tab might be closed
+            console.log(`[Detection] Failed to set loading badge text for tab ${tabId}:`, error.message);
+        });
+        chrome.action.setBadgeBackgroundColor({ color: '#4A90E2', tabId: tabId }).catch((error) => {
+            // Expected: Tab might be closed
+            console.log(`[Detection] Failed to set loading badge color for tab ${tabId}:`, error.message);
+        });
 
         // Create AbortController to allow cancellation if tab switch occurs
         const abortController = new AbortController();
@@ -753,6 +901,12 @@ async function processDetectionData(message, sender) {
 
         // Store main detection and check if ready to finalize
         const state = getOrCreateDetectionState(tabId, pageData.url);
+
+        // URL validation: Ensure URL hasn't changed during detection
+        if (state.url !== pageData.url) {
+            console.log(`[Detection] ⚠️ URL changed during detection for tab ${tabId}: ${pageData.url} → ${state.url} - skipping result storage`);
+            return; // Don't store results for the wrong URL
+        }
 
         // Merge with existing mainData (window properties may have been added already)
         // Instead of replacing, merge detections by detectorId
@@ -1012,9 +1166,11 @@ function setupMessageListeners() {
                         console.log('[Background] GET_DETECTORS request received');
 
                         // Ensure DetectorManager is fully initialized with retry logic
-                        // IMPROVED: Increased from 5→10 retries and 100ms→200ms delays (500ms→2000ms total)
+                        // IMPROVED: Increased from 10→20 retries and 200ms→300ms delays (2s→6s total)
                         // This handles slower JSON file loading during service worker startup
-                        let retries = 10;
+                        let retries = 20;
+                        const maxRetries = retries;
+
                         while (retries > 0) {
                             await ensureDetectorManagerInitialized();
 
@@ -1027,7 +1183,8 @@ function setupMessageListeners() {
                                 const detectorCount = Object.values(allDetectors).reduce((sum, cat) =>
                                     sum + Object.keys(cat).length, 0
                                 );
-                                console.log(`[Background] ✅ Detectors loaded successfully in ${elapsed}ms`);
+                                const attempts = maxRetries - retries + 1;
+                                console.log(`[Background] ✅ Detectors loaded successfully in ${elapsed}ms (${attempts} attempts)`);
                                 console.log(`[Background] 📊 Sending ${detectorCount} detectors across ${Object.keys(allDetectors).length} categories`);
 
                                 sendResponse({
@@ -1037,33 +1194,53 @@ function setupMessageListeners() {
                             }
 
                             // Detectors not loaded yet, wait and retry
-                            console.warn(`[Background] ⚠️ Detectors not loaded yet, retrying... (${retries} attempts left)`);
+                            const attemptsLeft = retries - 1;
+                            const elapsedSoFar = Date.now() - startTime;
+                            console.warn(`[Background] ⚠️ Detectors not loaded yet (${elapsedSoFar}ms elapsed), retrying... (${attemptsLeft} attempts left)`);
 
                             // Diagnostic info on why detectors might not be ready
-                            if (retries === 10) {
-                                console.log('[Background] 🔍 Diagnostic: DetectorManager state:', {
+                            if (retries === maxRetries) {
+                                console.log('[Background] 🔍 Initial diagnostic: DetectorManager state:', {
                                     exists: !!detectorManager,
                                     initialized: detectorManager?.initialized,
-                                    detectorCount: detectorManager ? Object.keys(detectorManager.detectors || {}).length : 0
+                                    detectorCount: detectorManager ? Object.keys(detectorManager.detectors || {}).length : 0,
+                                    categoryManagerExists: !!categoryManager
                                 });
+                            }
+
+                            // Show progress every 5 attempts
+                            if ((maxRetries - retries) % 5 === 0 && retries < maxRetries) {
+                                const progress = Math.round(((maxRetries - retries) / maxRetries) * 100);
+                                console.log(`[Background] ⏳ Progress: ${progress}% (waiting for JSON files to load...)`);
                             }
 
                             retries--;
                             if (retries > 0) {
-                                await new Promise(resolve => setTimeout(resolve, 200)); // Wait 200ms before retry
+                                await new Promise(resolve => setTimeout(resolve, 300)); // Wait 300ms before retry
                             }
                         }
 
                         // Failed to load detectors after retries
                         const elapsed = Date.now() - startTime;
-                        console.error(`[Background] ❌ Failed to load detectors after ${elapsed}ms (10 retries)`);
-                        console.error('[Background] ❌ Diagnostic: Final state:', {
+                        console.error(`[Background] ❌ Failed to load detectors after ${elapsed}ms (${maxRetries} retries)`);
+                        console.error('[Background] ❌ Final diagnostic:', {
                             detectorManagerExists: !!detectorManager,
                             initialized: detectorManager?.initialized,
                             categoriesCount: detectorManager ? Object.keys(detectorManager.detectors || {}).length : 0,
-                            categoryManagerExists: !!categoryManager
+                            categoryManagerExists: !!categoryManager,
+                            categoryManagerInitialized: categoryManager?.initialized
                         });
+
+                        // Check if categories were loaded but not detectors
+                        if (categoryManager?.initialized && categoryManager.categories) {
+                            console.error('[Background] ❌ Categories loaded but detectors empty - JSON loading issue');
+                            console.error('[Background] ❌ Available categories:', Object.keys(categoryManager.categories));
+                        } else {
+                            console.error('[Background] ❌ CategoryManager not initialized - initialization issue');
+                        }
+
                         console.error('[Background] ⚠️ Content script will receive empty config - extension may not work correctly');
+                        console.error('[Background] 💡 Recommendation: Reload extension and refresh all tabs');
                         sendResponse({ detectors: {} });
                     } catch (error) {
                         console.error('[Background] ❌ Error getting detectors:', error);
@@ -1175,6 +1352,12 @@ function setupMessageListeners() {
                         const url = detections[0].url;
                         const state = getOrCreateDetectionState(tabId, url);
 
+                        // URL validation: Ensure URL hasn't changed during detection
+                        if (state.url !== url) {
+                            console.log(`[Background] ⚠️ URL changed during JS hooks for tab ${tabId}: ${url} → ${state.url} - skipping hooks`);
+                            return; // Don't store hooks for the wrong URL
+                        }
+
                         // Process all detections in batch
                         for (const hookData of detections) {
                             const detection = hookData.detection;
@@ -1275,6 +1458,12 @@ function setupMessageListeners() {
                             return;
                         }
 
+                        // URL validation: Ensure URL hasn't changed during detection
+                        if (state.url !== url) {
+                            console.log(`[Background] ⚠️ URL changed during window props for tab ${tabId}: ${url} → ${state.url} - skipping window props`);
+                            return; // Don't store window props for the wrong URL
+                        }
+
                         // Initialize mainData array if it doesn't exist
                         if (!Array.isArray(state.mainData)) {
                             console.log('[Background] Initializing mainData array for tab', tabId);
@@ -1371,6 +1560,14 @@ function setupMessageListeners() {
 
                         // Mark window properties as complete
                         const state = getOrCreateDetectionState(tabId, url);
+
+                        // URL validation: Ensure URL hasn't changed
+                        if (state.url !== url) {
+                            console.log(`[Background] ⚠️ URL changed, ignoring window props complete for tab ${tabId}: ${url} → ${state.url}`);
+                            sendResponse({ status: 'url_changed' });
+                            return;
+                        }
+
                         state.windowPropertiesComplete = true;
 
                         console.log(`[Background] ✅ Window properties marked complete`);
@@ -1402,6 +1599,14 @@ function setupMessageListeners() {
 
                         // Mark hooks as complete
                         const state = getOrCreateDetectionState(tabId, url);
+
+                        // URL validation: Ensure URL hasn't changed
+                        if (state.url !== url) {
+                            console.log(`[Background] ⚠️ URL changed, ignoring JS hooks complete for tab ${tabId}: ${url} → ${state.url}`);
+                            sendResponse({ status: 'url_changed' });
+                            return;
+                        }
+
                         state.hooksComplete = true;
 
                         console.log(`[Background] ✅ Hooks marked complete`);
@@ -1522,6 +1727,44 @@ function setupTabListeners() {
 
     // Run detection when tab is updated
     chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+        // Detect URL changes within the same tab (same-tab navigation)
+        if (changeInfo.url) {
+            const newUrl = changeInfo.url;
+            console.log(`[TabUpdate] URL change detected for tab ${tabId}: ${newUrl}`);
+
+            // Check if there's an active detection for this tab
+            if (activeDetections.has(tabId)) {
+                const activeInfo = activeDetections.get(tabId);
+                const oldUrl = activeInfo.url;
+
+                console.log(`[TabUpdate] ⚠️ Tab ${tabId} had active detection for ${oldUrl} - ABORTING (navigated to ${newUrl})`);
+
+                // Abort the detection process
+                if (activeInfo.abortController) {
+                    activeInfo.abortController.abort();
+                    console.log(`[TabUpdate] 🛑 Aborted detection for tab ${tabId} (URL changed)`);
+                }
+
+                // Remove from active detections
+                activeDetections.delete(tabId);
+
+                // Mark detection state as interrupted (if it exists)
+                const detectionState = detectionStates.get(tabId);
+                if (detectionState && detectionState.url === oldUrl) {
+                    detectionState.interrupted = true;
+                    detectionState.error = 'url_changed';
+                    console.log(`[TabUpdate] Marked detection state as interrupted for tab ${tabId}`);
+                }
+
+                // Clear badge (new page will set its own badge when detection completes)
+                chrome.action.setBadgeText({ text: '', tabId: tabId }).catch((error) => {
+                    console.log(`[TabUpdate] Failed to clear badge for tab ${tabId}:`, error.message);
+                });
+            }
+
+            // Note: Detection state will be cleared by getOrCreateDetectionState when new detection starts
+        }
+
         // Handle reCAPTCHA capture updates - only monitors active captures
         if (typeof reCaptchaHandleCaptureTabUpdate === 'function') {
             reCaptchaHandleCaptureTabUpdate(tabId, changeInfo, tab, chrome);

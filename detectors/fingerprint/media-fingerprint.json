@@ -60,8 +60,5 @@
         "confidence": 90
       }
     ]
-  },
-  "_searchStrings": {
-    "js_hooks": "Navigator.prototype.getBattery Accesses battery information for hardware fingerprinting BatteryManager.prototype.level Reads battery level percentage window.speechSynthesis Enumerates available voice options MimeTypeArray.prototype.length Counts supported MIME types MimeType.prototype.description Reads MIME type descriptions PluginArray.prototype.length Counts installed browser plugins Plugin.prototype.description Reads plugin descriptions HTMLMediaElement.prototype.canPlayType Detects supported media codecs"
   }
 }

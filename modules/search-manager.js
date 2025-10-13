@@ -315,32 +315,29 @@ class SearchManager {
       // Deep clone the entire item to avoid any mutations
       const enhanced = JSON.parse(JSON.stringify(item));
 
-      // Use pre-computed _searchStrings if available (from JSON), otherwise generate them
+      // Always generate search strings dynamically from actual detector data
+      // This ensures search results are always accurate, even when rules are edited
       if (enhanced.detector && enhanced.detector.detection) {
-        // If _searchStrings already exists (pre-computed in JSON), use it
-        if (!enhanced.detector._searchStrings) {
-          // Otherwise, generate search strings dynamically
-          enhanced.detector._searchStrings = {};
+        enhanced.detector._searchStrings = {};
 
-          for (const [methodType, methods] of Object.entries(enhanced.detector.detection)) {
-            if (Array.isArray(methods)) {
-              // Create searchable strings from method arrays
-              const methodStrings = methods.map(m => {
-                if (typeof m === 'string') return m;
-                if (typeof m === 'object') {
-                  return Object.values(m).filter(v => typeof v === 'string').join(' ');
-                }
-                return '';
-              }).filter(s => s).join(' ');
-
-              // Store in the search strings property
-              if (methodStrings) {
-                enhanced.detector._searchStrings[methodType] = methodStrings;
+        for (const [methodType, methods] of Object.entries(enhanced.detector.detection)) {
+          if (Array.isArray(methods)) {
+            // Create searchable strings from method arrays
+            const methodStrings = methods.map(m => {
+              if (typeof m === 'string') return m;
+              if (typeof m === 'object') {
+                return Object.values(m).filter(v => typeof v === 'string').join(' ');
               }
-            } else if (typeof methods === 'string') {
-              // If it's already a string (corrupted data), use it for search
-              enhanced.detector._searchStrings[methodType] = methods;
+              return '';
+            }).filter(s => s).join(' ');
+
+            // Store in the search strings property
+            if (methodStrings) {
+              enhanced.detector._searchStrings[methodType] = methodStrings;
             }
+          } else if (typeof methods === 'string') {
+            // If it's already a string (corrupted data), use it for search
+            enhanced.detector._searchStrings[methodType] = methods;
           }
         }
       }

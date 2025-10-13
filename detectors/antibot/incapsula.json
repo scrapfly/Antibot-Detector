@@ -75,11 +75,5 @@
         "description": "Incapsula protection object"
       }
     ]
-  },
-  "_searchStrings": {
-    "cookie": "incap_ses_ Incapsula session cookies visid_incap_ Visitor ID cookie nlbi_ Load balancer identifier reese84 Reese84 bot detection cookie utmvc UTMVC tracking cookie",
-    "url": "incapsula.com Incapsula domain resources /_Incapsula_Resource Incapsula resource endpoint",
-    "content": "_Incapsula Incapsula global object incapsula",
-    "window": "_Incapsula typeof object Incapsula protection object"
   }
 }

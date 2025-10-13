@@ -22,7 +22,8 @@
         "hcaptcha",
         "recaptcha",
         "geetest",
-        "funcaptcha"
+        "funcaptcha",
+        "aliexpress"
     ]
 },
 "fingerprint": {

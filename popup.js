@@ -9,7 +9,8 @@ class ScrapflyPopup {
     this.detection = new Detection(this.detectorManager, this.detectionEngine);
     this.history = new History(this.detectorManager);
     this.rules = new Rules(this.detectorManager);
-    this.advanced = new Advanced(this.detectorManager, this.detection);
+    // Lazy initialize Advanced to avoid race condition on fast systems
+    this.advanced = typeof Advanced !== 'undefined' ? new Advanced(this.detectorManager, this.detection) : null;
     this.settings = new Settings(this.categoryManager);
   }
 
@@ -68,7 +69,9 @@ class ScrapflyPopup {
       this.detection.initialized = false;
       this.history.initialized = false;
       this.rules.initialized = false;
-      this.advanced.initialized = false;
+      if (this.advanced) {
+        this.advanced.initialized = false;
+      }
 
       console.log('Section initialization complete (lazy loading enabled)');
     } catch (error) {
@@ -427,14 +430,22 @@ class ScrapflyPopup {
         break;
       case 'advanced':
         console.log('Loading advanced tab...');
+        // Create Advanced instance if it wasn't available during constructor (race condition fix)
+        if (!this.advanced && typeof Advanced !== 'undefined') {
+          console.log('Advanced: Creating instance (delayed due to script loading)');
+          this.advanced = new Advanced(this.detectorManager, this.detection);
+          this.advanced.initialized = false;
+        }
         // Lazy initialize if needed
-        if (!this.advanced.initialized) {
+        if (this.advanced && !this.advanced.initialized) {
           console.log('Advanced: First access - initializing...');
           this.advanced.initialize().then(() => {
             this.advanced.displayAdvancedTools();
           });
-        } else {
+        } else if (this.advanced) {
           this.advanced.displayAdvancedTools();
+        } else {
+          console.error('Advanced: Class not loaded yet');
         }
         break;
       default:

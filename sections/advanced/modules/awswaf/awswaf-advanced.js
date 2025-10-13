@@ -14,6 +14,9 @@ console.log('[AwsWafAdvanced] Loading... Dependencies check:', {
 class AwsWafAdvanced extends BaseAdvancedModule {
     constructor(detection, tabInfo) {
         super(detection, tabInfo, 'awswaf');
+
+        // Check for pending analysis results when module is created
+        this.checkPendingAnalysisResults();
     }
 
     /**
@@ -26,6 +29,10 @@ class AwsWafAdvanced extends BaseAdvancedModule {
                     <div class="tool-btn-icon" style="font-size: 32px;">🍪</div>
                     <div class="tool-btn-label" style="font-size: 13px; color: var(--text-primary); font-weight: 500;">Check Cookies</div>
                 </button>
+                <button class="awswaf-tool-btn" id="awswafAnalyzeScripts" style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+                    <div class="tool-btn-icon" style="font-size: 32px;">🔍</div>
+                    <div class="tool-btn-label" style="font-size: 13px; color: var(--text-primary); font-weight: 500;">Analyze Scripts</div>
+                </button>
             </div>
         `;
     }
@@ -37,10 +44,16 @@ class AwsWafAdvanced extends BaseAdvancedModule {
         console.log('[AwsWaf] Setting up tool listeners...');
 
         const checkCookiesBtn = document.querySelector('#awswafCheckCookies');
+        const analyzeScriptsBtn = document.querySelector('#awswafAnalyzeScripts');
 
         if (checkCookiesBtn) {
             checkCookiesBtn.addEventListener('click', () => this.checkCookies());
             console.log('[AwsWaf] Added listener to Check Cookies button');
+        }
+
+        if (analyzeScriptsBtn) {
+            analyzeScriptsBtn.addEventListener('click', () => this.analyzeScripts());
+            console.log('[AwsWaf] Added listener to Analyze Scripts button');
         }
     }
 
@@ -48,23 +61,43 @@ class AwsWafAdvanced extends BaseAdvancedModule {
      * Check if there are pending analysis results to display
      */
     async checkPendingAnalysisResults() {
+        console.log('[AwsWaf] ========== CHECKING PENDING RESULTS ==========');
+        console.log('[AwsWaf] Current tab ID:', this.tabInfo?.id);
+
         try {
             const result = await chrome.storage.local.get('scrapfly_awswaf_analysis_pending');
+            console.log('[AwsWaf] Storage result:', result);
+
             if (result.scrapfly_awswaf_analysis_pending) {
                 const pending = result.scrapfly_awswaf_analysis_pending;
+                console.log('[AwsWaf] Found pending data:', pending);
 
                 // Check if results are for current tab and not too old (5 minutes)
                 const isCurrentTab = pending.tabId === this.tabInfo.id;
                 const age = Date.now() - pending.timestamp;
                 const isRecent = age < 5 * 60 * 1000; // 5 minutes
 
+                console.log('[AwsWaf] Validation:', {
+                    isCurrentTab,
+                    pendingTabId: pending.tabId,
+                    currentTabId: this.tabInfo.id,
+                    age: age + 'ms',
+                    isRecent
+                });
+
                 if (isCurrentTab && isRecent) {
-                    console.log('[AwsWaf] Found pending analysis results, displaying modal...');
+                    console.log('[AwsWaf] ✓ Validation passed, displaying modal...');
+                    console.log('[AwsWaf] Modal data:', pending.data);
                     this.displayAnalysisModal(pending.data);
 
                     // Clear the pending results
                     await chrome.storage.local.remove('scrapfly_awswaf_analysis_pending');
+                    console.log('[AwsWaf] Pending results cleared from storage');
+                } else {
+                    console.log('[AwsWaf] ✗ Validation failed, not displaying modal');
                 }
+            } else {
+                console.log('[AwsWaf] No pending results found in storage');
             }
         } catch (error) {
             console.error('[AwsWaf] Error checking pending results:', error);
@@ -86,6 +119,13 @@ class AwsWafAdvanced extends BaseAdvancedModule {
 
             const awsWafToken = cookies.find(c => c.name === 'aws-waf-token');
             console.log('[AwsWaf] aws-waf-token found:', !!awsWafToken);
+
+            // Show notification
+            if (awsWafToken) {
+                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(1, 1));
+            } else {
+                NotificationHelper.info(AdvancedUtils.notifications.checkCookies.none('AWS WAF'));
+            }
 
             // Display modal with cookie details
             this.displayCookiesModal(awsWafToken);
@@ -191,7 +231,8 @@ class AwsWafAdvanced extends BaseAdvancedModule {
     }
 
     /**
-     * Analyze AWS WAF scripts on the page (with reload to capture network requests)
+     * Analyze AWS WAF scripts on the page (Shape Security + Akamai pattern)
+     * Deletes aws-waf-token cookie, reloads page, then analyzes scripts
      */
     async analyzeScripts() {
         console.log('[AwsWaf] ========== ANALYZE SCRIPTS ==========');
@@ -200,7 +241,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
                 throw new Error('Tab information not available');
             }
 
-            // Set up listener for analysis results
+            // Setup listener for analysis results (like Shape Security)
             const analysisListener = (message) => {
                 if (message.type === 'AWSWAF_ANALYSIS_RESULT') {
                     console.log('[AwsWaf] Analysis result received:', message.data);
@@ -211,18 +252,46 @@ class AwsWafAdvanced extends BaseAdvancedModule {
 
             chrome.runtime.onMessage.addListener(analysisListener);
 
-            // Send message to background to start analysis
+            // Send message to background to start analysis mode (sets up webNavigation listener)
             const response = await AdvancedUtils.sendMessage({
                 type: 'AWSWAF_START_ANALYSIS',
                 tabId: this.tabInfo.id,
                 url: this.tabInfo.url
             });
 
-            if (response && response.status === 'started') {
-                NotificationHelper.info('Starting AWS WAF analysis... Page will reload');
+            console.log('[AwsWaf] Analysis mode response:', response);
 
-                // Reload page after a short delay
+            if (response && response.status === 'started') {
+                // Show notification about cookie deletion and reload
+                NotificationHelper.info('Deleting aws-waf-token cookie... Page will reload');
+
+                // Delete aws-waf-token cookie before reload to trigger challenge/captcha scripts (like Akamai)
                 setTimeout(async () => {
+                    try {
+                        // Get all aws-waf-token cookies for this URL
+                        const cookies = await chrome.cookies.getAll({
+                            url: this.tabInfo.url,
+                            name: 'aws-waf-token'
+                        });
+
+                        console.log('[AwsWaf] Found aws-waf-token cookies to delete:', cookies.length);
+
+                        // Delete each cookie (may have multiple for different domains/paths)
+                        for (const cookie of cookies) {
+                            await chrome.cookies.remove({
+                                url: this.tabInfo.url,
+                                name: cookie.name
+                            });
+                            console.log('[AwsWaf] Deleted cookie:', cookie.name, 'domain:', cookie.domain);
+                        }
+
+                        console.log('[AwsWaf] Cookie deletion complete, reloading page...');
+                    } catch (cookieError) {
+                        console.error('[AwsWaf] Failed to delete cookies:', cookieError);
+                    }
+
+                    // Reload page to trigger challenge.js or captcha.js
+                    // Background's webNavigation listener will capture scripts after reload
                     await chrome.tabs.reload(this.tabInfo.id);
                 }, 500);
             } else {
@@ -248,6 +317,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
         // Add safety checks for undefined data
         const scripts = data?.scripts || [];
         const challengeScripts = data?.challengeScripts || [];
+        const captchaScripts = data?.captchaScripts || [];
         const apiScripts = data?.apiScripts || [];
         const problemUrls = data?.problemUrls || [];
 
@@ -267,6 +337,10 @@ class AwsWafAdvanced extends BaseAdvancedModule {
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                         <span style="color: var(--text-secondary); font-size: 13px;">Challenge Scripts:</span>
                         <span style="color: var(--text-primary); font-weight: 500;">${challengeScripts.length}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--text-secondary); font-size: 13px;">Captcha Scripts:</span>
+                        <span style="color: var(--text-primary); font-weight: 500;">${captchaScripts.length}</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                         <span style="color: var(--text-secondary); font-size: 13px;">API Scripts:</span>

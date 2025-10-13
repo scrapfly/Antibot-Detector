@@ -48,7 +48,12 @@ class CategoryManager {
      */
     async loadCategoriesFromIndex() {
         try {
-            const response = await fetch(chrome.runtime.getURL('detectors/index.json'));
+            const indexUrl = chrome.runtime.getURL('detectors/index.json');
+            console.log('[CategoryManager] 🔍 Loading index.json from:', indexUrl);
+
+            const response = await fetch(indexUrl);
+            console.log('[CategoryManager] 🔍 Fetch response:', response.status, response.statusText);
+
             if (!response.ok) {
                 throw new Error(`Failed to load index.json: ${response.statusText}`);
             }
@@ -56,7 +61,16 @@ class CategoryManager {
             const indexData = await response.json();
             this.categories = indexData;
 
-            console.log('Loaded categories from index:', Object.keys(this.categories));
+            console.log('[CategoryManager] ✅ Loaded categories from index:', Object.keys(this.categories));
+
+            // DIAGNOSTIC: Show what was loaded for each category
+            for (const [categoryName, categoryData] of Object.entries(this.categories)) {
+                if (categoryData && typeof categoryData === 'object' && categoryData.detectors) {
+                    console.log(`[CategoryManager] 🔍   - ${categoryName}: ${categoryData.detectors.length} detectors`);
+                } else {
+                    console.log(`[CategoryManager] 🔍   - ${categoryName}: special section (not detector category)`);
+                }
+            }
 
             // Debug: Check if badge colors were loaded
             if (this.categories.badge) {
@@ -66,7 +80,8 @@ class CategoryManager {
             }
 
         } catch (error) {
-            console.error('Failed to load detectors index:', error);
+            console.error('[CategoryManager] ❌ Failed to load detectors index:', error);
+            console.error('[CategoryManager] ❌ Error stack:', error.stack);
             throw error;
         }
     }

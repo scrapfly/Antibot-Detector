@@ -122,13 +122,5 @@
         "description": "GeeTest getter function"
       }
     ]
-  },
-  "_searchStrings": {
-    "cookie": "geetest_* GeeTest session cookies gt_* GeeTest tracking cookies",
-    "header": "X-Geetest-Challenge GeeTest challenge header X-Geetest-Validate GeeTest validation header",
-    "url": "api.geetest.com GeeTest API endpoint static.geetest.com GeeTest static resources /gettype.php GeeTest type endpoint /get.php GeeTest challenge endpoint /validate.php GeeTest validation endpoint gt.js GeeTest JavaScript library",
-    "content": "window.initGeetest GeeTest initialization function geetest getGeetest geetestUtils",
-    "dom": "[class*='geetest_'] GeeTest CSS classes [data-geetest] GeeTest data attributes #geetest-captcha Common GeeTest container ID",
-    "window": "initGeetest typeof function GeeTest initialization function geetest typeof object GeeTest main object getGeetest typeof function GeeTest getter function"
   }
 }

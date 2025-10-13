@@ -98,12 +98,5 @@
         "description": "PerimeterX action identifier"
       }
     ]
-  },
-  "_searchStrings": {
-    "cookie": "_px2 PerimeterX tracking cookie v2 _px3 PerimeterX tracking cookie v3 _pxhd PerimeterX header data _pxvid PerimeterX visitor ID",
-    "header": "X-PX-Authorization PerimeterX authorization header X-PX-Original-Token Original token header",
-    "url": "collector-*.perimeterx.net Data collector endpoint /api/v*/collector Collector API endpoint px.js PerimeterX JavaScript",
-    "content": "window._pxAppId PerimeterX application ID pxInit PerimeterX initialization function _pxAction",
-    "window": "_pxAppId typeof string PerimeterX application ID pxInit typeof function PerimeterX initialization function _pxAction typeof string PerimeterX action identifier"
   }
 }

@@ -38,7 +38,8 @@ class DetectorManager {
             console.log(`[DetectorManager] Current detector count: ${this.getDetectorCount()}`);
 
             // Only load from JSON files if storage is empty
-            if (!storageLoaded || Object.keys(this.detectors).length === 0) {
+            // BUGFIX: Check actual detector count, not category count
+            if (!storageLoaded || this.getDetectorCount() === 0) {
                 console.warn('[DetectorManager] ⚠️ No detectors in storage, loading from JSON files...');
                 console.log('[DetectorManager] Step 3: Loading detectors from JSON index...');
 
@@ -89,12 +90,34 @@ class DetectorManager {
         const loadPromises = [];
         const categories = this.categoryManager.getAllCategories();
 
+        // DIAGNOSTIC: Check what categories were loaded
+        console.log('[DetectorManager] ========== LOAD DETECTORS FROM INDEX ==========');
+        console.log('[DetectorManager] 🔍 Categories object:', JSON.stringify(Object.keys(categories)));
+        console.log('[DetectorManager] 🔍 Total categories:', Object.keys(categories).length);
+
+        let totalDetectorsToLoad = 0;
+        let loadedDetectorsCount = 0;
+
+        // Count total detectors to load for progress tracking
         for (const [categoryName, categoryData] of Object.entries(categories)) {
-            console.log(`Loading detectors for category: ${categoryName}`);
+            console.log(`[DetectorManager] 🔍 Examining category "${categoryName}":`, typeof categoryData);
+
+            if (categoryData.detectors && Array.isArray(categoryData.detectors)) {
+                console.log(`[DetectorManager] 🔍   - Has ${categoryData.detectors.length} detectors: [${categoryData.detectors.join(', ')}]`);
+                totalDetectorsToLoad += categoryData.detectors.length;
+            } else {
+                console.log(`[DetectorManager] 🔍   - No detectors array (type: ${typeof categoryData}, keys: ${Object.keys(categoryData).join(', ')})`);
+            }
+        }
+
+        console.log(`[DetectorManager] Starting to load ${totalDetectorsToLoad} detector files...`);
+
+        for (const [categoryName, categoryData] of Object.entries(categories)) {
+            console.log(`[DetectorManager] Category: ${categoryName}`);
 
             // Skip entries that don't have a detectors array (like "tags")
             if (!categoryData.detectors || !Array.isArray(categoryData.detectors)) {
-                console.log(`Skipping ${categoryName} - not a detector category`);
+                console.log(`[DetectorManager] Skipping ${categoryName} - not a detector category`);
                 continue;
             }
 
@@ -103,15 +126,59 @@ class DetectorManager {
             }
 
             for (const detectorName of categoryData.detectors) {
-                const promise = this.loadDetectorFile(categoryName, detectorName);
+                const promise = this.loadDetectorFile(categoryName, detectorName)
+                    .then(() => {
+                        loadedDetectorsCount++;
+                        // Show progress every 5 detectors
+                        if (loadedDetectorsCount % 5 === 0 || loadedDetectorsCount === totalDetectorsToLoad) {
+                            const progress = Math.round((loadedDetectorsCount / totalDetectorsToLoad) * 100);
+                            console.log(`[DetectorManager] ⏳ Progress: ${progress}% (${loadedDetectorsCount}/${totalDetectorsToLoad} files loaded)`);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error(`[DetectorManager] ❌ Failed to load ${categoryName}/${detectorName}:`, error.message);
+                    });
                 loadPromises.push(promise);
             }
         }
 
-        await Promise.all(loadPromises);
-        console.log('Finished loading all detectors');
-        console.log('Total detectors loaded:', this.getDetectorCount());
-        console.log('Detectors by category:', Object.keys(this.detectors).map(cat => `${cat}: ${Object.keys(this.detectors[cat]).length}`));
+        console.log(`[DetectorManager] Waiting for ${loadPromises.length} detector files to load...`);
+        const results = await Promise.allSettled(loadPromises);
+
+        // DIAGNOSTIC: Check load results
+        const successful = results.filter(r => r.status === 'fulfilled').length;
+        const failed = results.filter(r => r.status === 'rejected').length;
+        console.log(`[DetectorManager] 🔍 Load results: ${successful} successful, ${failed} failed`);
+
+        if (failed > 0) {
+            const failedResults = results.filter(r => r.status === 'rejected');
+            failedResults.forEach((result, idx) => {
+                console.error(`[DetectorManager] ❌ Failed detector ${idx + 1}:`, result.reason);
+            });
+        }
+
+        const finalCount = this.getDetectorCount();
+        console.log(`[DetectorManager] ✅ Finished loading: ${finalCount}/${totalDetectorsToLoad} detectors loaded`);
+        console.log('[DetectorManager] 📊 Detectors by category:',
+            Object.keys(this.detectors).map(cat => `${cat}: ${Object.keys(this.detectors[cat]).length}`).join(', ')
+        );
+
+        // DIAGNOSTIC: Show what's actually in this.detectors
+        console.log('[DetectorManager] 🔍 Final state - detector keys:', Object.keys(this.detectors));
+        for (const [cat, dets] of Object.entries(this.detectors)) {
+            console.log(`[DetectorManager] 🔍   - ${cat}: ${Object.keys(dets).length} detectors (${Object.keys(dets).join(', ')})`);
+        }
+
+        // Validation: Ensure at least some detectors loaded
+        if (finalCount === 0) {
+            console.error('[DetectorManager] ❌ CRITICAL: finalCount is 0 after loading!');
+            console.error('[DetectorManager] ❌ this.detectors:', JSON.stringify(this.detectors, null, 2));
+            throw new Error('No detectors were loaded - all JSON files may be missing or corrupt');
+        }
+
+        if (finalCount < totalDetectorsToLoad * 0.5) {
+            console.warn(`[DetectorManager] ⚠️ Only ${finalCount}/${totalDetectorsToLoad} detectors loaded - some files may be missing`);
+        }
     }
 
     /**
@@ -244,53 +311,80 @@ class DetectorManager {
     }
 
     /**
-     * Load a single detector file
+     * Load a single detector file with timeout
      * @param {string} categoryName - Category name (antibot, captcha, fingerprint)
      * @param {string} detectorName - Detector name (cloudflare, hcaptcha, etc.)
      */
     async loadDetectorFile(categoryName, detectorName) {
+        const FETCH_TIMEOUT = 5000; // 5 second timeout per file
+
         try {
             const detectorPath = `detectors/${categoryName}/${detectorName}.json`;
-            console.log(`Loading detector: ${detectorPath}`);
 
-            const response = await fetch(chrome.runtime.getURL(detectorPath));
+            // Create fetch with timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
 
-            if (!response.ok) {
-                console.warn(`Detector file not found: ${detectorPath} (${response.status})`);
-                return;
+            try {
+                const response = await fetch(chrome.runtime.getURL(detectorPath), {
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    console.warn(`[DetectorManager] Detector file not found: ${detectorPath} (${response.status})`);
+                    return;
+                }
+
+                const detectorData = await response.json();
+
+                // Validate detector data structure
+                if (!detectorData.id || !detectorData.name) {
+                    console.error(`[DetectorManager] Invalid detector data in ${detectorPath}: missing id or name`);
+                    return;
+                }
+
+                // Default enabled to true if not specified
+                if (detectorData.enabled === undefined) {
+                    detectorData.enabled = true;
+                }
+
+                // Update lastUpdated to include time if it doesn't already
+                if (detectorData.lastUpdated && !detectorData.lastUpdated.includes(':')) {
+                    // Old format (YYYY-MM-DD), add default time
+                    detectorData.lastUpdated = `${detectorData.lastUpdated} 00:00:00`;
+                }
+
+                // OPTIMIZATION Phase 9A.6: Clean old patterns before recompiling (detector reload)
+                if (this.detectors[categoryName]?.[detectorName]) {
+                    this.cleanPrecompiledPatterns(this.detectors[categoryName][detectorName]);
+                }
+
+                // OPTIMIZATION: Pre-compile all regex patterns for this detector
+                this.precompileDetectorPatterns(detectorData);
+
+                this.detectors[categoryName][detectorName] = detectorData;
+
+                // Log JS Hooks if present (reduced verbosity)
+                if (detectorData.detection?.javascript_hooks) {
+                    const hookCount = detectorData.detection.javascript_hooks.length;
+                    console.log(`[DetectorManager] ✅ ${categoryName}/${detectorName} loaded with ${hookCount} JS hooks`);
+                }
+
+            } catch (fetchError) {
+                clearTimeout(timeoutId);
+
+                if (fetchError.name === 'AbortError') {
+                    console.error(`[DetectorManager] ⏱️ Timeout loading ${detectorPath} (exceeded ${FETCH_TIMEOUT}ms)`);
+                } else {
+                    throw fetchError;
+                }
             }
-
-            const detectorData = await response.json();
-            // Default enabled to true if not specified
-            if (detectorData.enabled === undefined) {
-                detectorData.enabled = true;
-            }
-            // Update lastUpdated to include time if it doesn't already
-            if (detectorData.lastUpdated && !detectorData.lastUpdated.includes(':')) {
-                // Old format (YYYY-MM-DD), add default time
-                detectorData.lastUpdated = `${detectorData.lastUpdated} 00:00:00`;
-            }
-
-            // OPTIMIZATION Phase 9A.6: Clean old patterns before recompiling (detector reload)
-            if (this.detectors[categoryName]?.[detectorName]) {
-                this.cleanPrecompiledPatterns(this.detectors[categoryName][detectorName]);
-            }
-
-            // OPTIMIZATION: Pre-compile all regex patterns for this detector
-            this.precompileDetectorPatterns(detectorData);
-
-            this.detectors[categoryName][detectorName] = detectorData;
-
-            // Log JS Hooks if present
-            if (detectorData.detection?.javascript_hooks) {
-                console.log(`✅ [JS HOOKS] ${categoryName}/${detectorName} has ${detectorData.detection.javascript_hooks.length} JS hooks:`,
-                    detectorData.detection.javascript_hooks.map(h => `${h.target} (enabled: ${h.enabled})`));
-            }
-
-            console.log(`Successfully loaded detector: ${categoryName}/${detectorName}`);
 
         } catch (error) {
-            console.error(`Failed to load detector ${categoryName}/${detectorName}:`, error);
+            console.error(`[DetectorManager] ❌ Failed to load detector ${categoryName}/${detectorName}:`, error.message);
+            throw error; // Re-throw to be caught by Promise.allSettled
         }
     }
 
@@ -394,6 +488,13 @@ class DetectorManager {
             if (detectorsData) {
                 this.detectors = detectorsData.detectors || {};
 
+                // BUGFIX: Validate that detectors actually loaded (not just empty object)
+                const detectorCount = this.getDetectorCount();
+                if (detectorCount === 0) {
+                    console.warn('[DetectorManager] Storage has scrapfly_detectors but detector count is 0 - treating as empty');
+                    return false; // Force reload from JSON
+                }
+
                 // Check for corrupted data
                 let hasCorruption = false;
                 for (const [category, categoryDetectors] of Object.entries(this.detectors)) {
@@ -419,7 +520,7 @@ class DetectorManager {
                     return true;
                 }
 
-                console.log('Loaded detectors from storage with custom settings');
+                console.log(`Loaded ${detectorCount} detectors from storage with custom settings`);
                 return true;
             }
 

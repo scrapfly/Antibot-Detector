@@ -82,3 +82,42 @@ notes.txt
 todo.txt
 Claude.md
 /.lh
+
+# Screenshots and test images (keep official icons)
+screenshots/
+test-images/
+*.screenshot.png
+test-*.png
+
+# Archive and compressed files
+*.rar
+*.7z
+*.tar
+*.gz
+
+# Coverage reports
+coverage/
+*.coverage
+.nyc_output/
+
+# Package manager files (if added in future)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Secrets and API keys
+secrets/
+*.key
+*.secret
+api-keys.json
+credentials.json
+
+# Draft and work-in-progress files
+draft/
+drafts/
+WIP/
+*.draft.*
+
+# Debug dumps
+*.dmp
+*.dump

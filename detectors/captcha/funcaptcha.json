@@ -113,13 +113,5 @@
         "description": "Arkose setup enforcement function"
       }
     ]
-  },
-  "_searchStrings": {
-    "cookie": "_arkose_* Arkose Labs session cookies arkose_token FunCaptcha token cookie",
-    "header": "X-Arkose-Challenge Arkose challenge header X-Arkose-Token Arkose token header",
-    "url": "client-api.arkoselabs.com Arkose Labs API endpoint api.funcaptcha.com Legacy FunCaptcha API /fc/api/nojs/ FunCaptcha no-JS API /enforcement.*.js Arkose enforcement script",
-    "content": "window.arkoseCallback Arkose callback function ArkoseEnforce Arkose enforcement object funcaptcha setupEnforcement",
-    "dom": "[data-arkose] Arkose data attribute .arkose-labs Arkose CSS class #FunCaptcha FunCaptcha container ID",
-    "window": "ArkoseEnforce typeof object Arkose enforcement object arkoseCallback typeof function Arkose callback function setupEnforcement typeof function Arkose setup enforcement function"
   }
 }

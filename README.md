@@ -23,6 +23,14 @@ Scrapfly Security Detection is a Manifest V3 Chrome extension that helps securit
 - **Anti-bot systems**: Cloudflare, Akamai, DataDome, PerimeterX, Shape Security, AWS WAF, and more
 - **Fingerprinting techniques**: Canvas, WebGL, Audio, Font, WebRTC, and other browser fingerprinting methods
 
+### 🆕 What's New
+
+**Intermediate Challenge Page Handling** (Latest Update)
+- AWS WAF and Shape Security now capture data from intermediate challenge pages before redirect
+- Immediate injection strategy: Captures scripts/cookies at 0s, 3s, finalizes at 5s
+- Solves the issue where challenge pages redirect too quickly for traditional detection
+- Example: Binance AWS WAF challenge page → Captures `challenge.js` → Redirects → Data preserved ✓
+
 ## ✨ Features
 
 ### 🔍 **Multi-Layer Detection System**
@@ -38,6 +46,7 @@ Scrapfly Security Detection is a Manifest V3 Chrome extension that helps securit
 - **Real-time Detection**: Live detection results with confidence scores
 - **Detection History**: Track detected systems across browsing sessions
 - **Advanced Capture Tools**: Specialized tools for reCAPTCHA, Akamai, Imperva, Shape Security, and AWS WAF
+- **Intermediate Page Handling**: Automatically captures data from challenge pages before redirect (AWS WAF, Shape Security)
 - **Rules Editor**: Customize and manage detection rules
 - **Settings Panel**: Configure cache duration, history limits, and URL blacklists
 
@@ -66,7 +75,7 @@ Scrapfly Security Detection is a Manifest V3 Chrome extension that helps securit
 1. **Download the Extension**
    ```bash
    git clone https://github.com/diegopzz/Antibot-Detector.git
-   cd scrapfly-security-detection/core
+   cd Antibot-Detector/core
    ```
 
 2. **Load in Chrome**
@@ -91,29 +100,24 @@ Scrapfly Security Detection is a Manifest V3 Chrome extension that helps securit
 
 ### Advanced Capture Tools
 
-#### reCAPTCHA Capture
-- **Start Capture**: Monitor reCAPTCHA requests
-- **Extracts**: Site key, action, version, protobuf data
-- **Auto-stop**: Completes when both anchor and challenge are captured
+#### reCAPTCHA
+- Start Capture
 
-#### Akamai Sensor Data
-- **Capture Mode**: Records Akamai sensor_data from POST requests
-- **Extract Mode**: Deletes cookies and reloads to capture fresh sensor data
-- **Decodes**: Akamai version and sensor data format
+#### Akamai
+- Start Capture
+- Extract Sensor Data
 
-#### Imperva/Incapsula
-- **Cookie Monitoring**: Tracks reese84, utmvc, incap_ses cookies
-- **Protection Level**: Identifies protection level changes
+#### Imperva
+- Start Capture
 
 #### Shape Security
-- **Header Analysis**: Detects dynamic x-* headers with 8-char random strings
-- **Script Analysis**: Finds and analyzes scripts with seed parameters
-- **URL Extraction**: Captures init and vendor URLs
+- Check Headers
+- Analyze Scripts
+- Start Capturing
 
 #### AWS WAF
-- **Challenge Detection**: Monitors 405/202 status codes
-- **Token Analysis**: Extracts aws-waf-token cookie
-- **Page Variables**: Captures challenge.js, jsapi.js, API keys, and context
+- Check Cookies
+- Analyze Scripts
 
 ### Rules Editor
 
@@ -235,8 +239,8 @@ core/
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/scrapfly-security-detection.git
-cd scrapfly-security-detection/core
+git clone https://github.com/diegopzz/Antibot-Detector.git
+cd Antibot-Detector/core
 
 # Load extension in Chrome
 # 1. Go to chrome://extensions/
@@ -346,8 +350,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📮 Contact
 
-- **GitHub Issues**: [Report bugs or request features](https://github.com/yourusername/scrapfly-security-detection/issues)
-- **Discussions**: [Ask questions or share ideas](https://github.com/yourusername/scrapfly-security-detection/discussions)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/diegopzz/Antibot-Detector/issues)
+- **Discussions**: [Ask questions or share ideas](https://github.com/diegopzz/Antibot-Detector/discussions)
 
 ---
 

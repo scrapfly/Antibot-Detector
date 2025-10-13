@@ -12,6 +12,24 @@ class Advanced {
       displayName: 'Akamai Bot Manager Tools',
       icon: '🔷'
     },
+    'shapesecurity': {
+      name: 'ShapeSecurityAdvanced',
+      file: 'shapesecurity/shapesecurity-advanced.js',
+      displayName: 'Shape Security Tools',
+      icon: '🔶'
+    },
+    'incapsula': {
+      name: 'ImpervaAdvanced',
+      file: 'imperva/imperva-advanced.js',
+      displayName: 'Imperva/Incapsula Tools',
+      icon: '🔷'
+    },
+    'aws-waf': {
+      name: 'AwsWafAdvanced',
+      file: 'awswaf/awswaf-advanced.js',
+      displayName: 'AWS WAF Tools',
+      icon: '🟠'
+    },
   };
 
   constructor(detectorManager, detectionSection) {
@@ -397,7 +415,12 @@ class Advanced {
         await moduleInstance.renderCapturedDataSection();
       }
 
-      NotificationHelper.success(`Loaded ${detection.detector?.name || detectorId} tools`);
+      // Check for pending analysis results (AWS WAF analyze scripts)
+      if (moduleInstance.checkPendingAnalysisResults) {
+        await moduleInstance.checkPendingAnalysisResults();
+      }
+
+      NotificationHelper.success(AdvancedUtils.notifications.moduleLoaded(detection.detector?.name || detectorId));
     }
   }
 

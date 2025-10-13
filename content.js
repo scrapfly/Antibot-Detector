@@ -9,6 +9,7 @@ var hasCleanedUp = hasCleanedUp || false;
 var contextCheckInterval = contextCheckInterval || null;
 var jsApiReady = jsApiReady || false;
 var contextCheckFailures = contextCheckFailures || 0;
+var monitoringDisabled = monitoringDisabled || false; // Track if monitoring has been disabled after cache hit
 
 /**
  * Install JS Hooks early (at document_start)
@@ -99,6 +100,12 @@ async function collectAndSendData() {
 }
 
 /**
+ * Visibility/focus handler - stored globally so it can be removed after cache hit
+ */
+var visibilityTimeout = visibilityTimeout || null;
+var handleVisibilityChange = handleVisibilityChange || null;
+
+/**
  * Setup detection triggers
  * OPTIMIZED 2.3: Consolidated event listeners with debouncing
  */
@@ -114,21 +121,23 @@ function setupDetectionTriggers() {
     }
 
     // OPTIMIZED: Single consolidated visibility handler (replaces separate visibility + focus listeners)
-    let visibilityTimeout = null;
-    const handleVisibilityChange = () => {
-        if (!document.hidden && !hasCleanedUp) {
-            // Debounce: clear existing timeout
-            if (visibilityTimeout) clearTimeout(visibilityTimeout);
-            visibilityTimeout = setTimeout(() => {
-                console.log('Scrapfly Content Script: Tab became visible/focused, notifying...');
-                notifyPageLoad();
-                visibilityTimeout = null;
-            }, 100); // Small debounce to prevent rapid fire
-        }
-    };
+    // Only attach if not already disabled from cache hit
+    if (!monitoringDisabled) {
+        handleVisibilityChange = () => {
+            if (!document.hidden && !hasCleanedUp && !monitoringDisabled) {
+                // Debounce: clear existing timeout
+                if (visibilityTimeout) clearTimeout(visibilityTimeout);
+                visibilityTimeout = setTimeout(() => {
+                    console.log('Scrapfly Content Script: Tab became visible/focused, notifying...');
+                    notifyPageLoad();
+                    visibilityTimeout = null;
+                }, 100); // Small debounce to prevent rapid fire
+            }
+        };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('focus', handleVisibilityChange);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('focus', handleVisibilityChange);
+    }
 
     // OPTIMIZED: Debounced URL change detection for SPAs
     let lastUrl = location.href;
@@ -174,7 +183,7 @@ function setupDetectionTriggers() {
         chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // Check if context is still valid
             if (!isExtensionContextValid()) {
-                console.warn('Scrapfly Content Script: Extension context invalidated, cannot respond to message');
+                console.log('Scrapfly Content Script: Extension context invalidated, cannot respond to message');
                 return false;
             }
 
@@ -240,7 +249,22 @@ function setupDetectionTriggers() {
                 sendResponse({ status: 'updated' });
             } else if (request.type === 'CACHE_HIT_DISABLE_MONITORING') {
                 // Cache hit - disable hooks and window properties monitoring
-                console.log('[Content Script] Cache hit detected, disabling hooks/window properties monitoring');
+                monitoringDisabled = true;
+
+                // Remove visibility/focus listeners to prevent repeated triggering
+                if (handleVisibilityChange) {
+                    document.removeEventListener('visibilitychange', handleVisibilityChange);
+                    window.removeEventListener('focus', handleVisibilityChange);
+                    handleVisibilityChange = null;
+                }
+
+                // Clear any pending timeout
+                if (visibilityTimeout) {
+                    clearTimeout(visibilityTimeout);
+                    visibilityTimeout = null;
+                }
+
+                // Notify MAIN world to disable monitoring
                 window.postMessage({
                     type: 'DISABLE_MONITORING',
                     reason: 'cache_hit',
@@ -303,6 +327,30 @@ async function initialize() {
     // Initialize the detection engine
     if (!detectionEngine) {
         detectionEngine = new DetectionEngineManager();
+    }
+
+    // Load detectors from background for smart data collection (Phase C.1 optimization)
+    try {
+        console.log('Scrapfly Content Script: Requesting detectors from background...');
+        const detectorsResponse = await chrome.runtime.sendMessage({ type: 'GET_DETECTORS' });
+
+        if (detectorsResponse && detectorsResponse.detectors) {
+            // Count total detectors received
+            const detectorCount = Object.values(detectorsResponse.detectors)
+                .reduce((sum, category) => sum + Object.keys(category).length, 0);
+
+            console.log(`Scrapfly Content Script: Received ${detectorCount} detectors from background`);
+
+            // Set detectors in detection engine to enable smart data collection
+            detectionEngine.setDetectors(detectorsResponse.detectors);
+
+            console.log('[C.1] ✅ Detectors loaded - smart data collection enabled');
+        } else {
+            console.warn('[C.1] ⚠️ No detectors returned from background, will collect all data types');
+        }
+    } catch (error) {
+        console.error('Scrapfly Content Script: Failed to load detectors:', error);
+        console.warn('[C.1] ⚠️ Will collect all data types as fallback');
     }
 
     // Note: JS hooks are installed by install-hooks.js at document_start (before this script runs)

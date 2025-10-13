@@ -64,12 +64,5 @@
         "description": "Cloudflare Turnstile CAPTCHA object"
       }
     ]
-  },
-  "_searchStrings": {
-    "cookie": "__cf_bm Bot management cookie cf_clearance Challenge clearance cookie __cfruid Rate limiting cookie cf_chl_2 Challenge version 2 cf_chl_prog Challenge progress tracking",
-    "header": "Server cloudflare CF-Ray Request tracking ID CF-Cache-Status CF-Challenge Active challenge header",
-    "url": "/cdn-cgi/ Cloudflare CDN endpoint cf-browser-verification /cdn-cgi/challenge-platform/ Challenge platform endpoint challenges.cloudflare.com Turnstile endpoint",
-    "content": "window._cf_chl_opt cf-browser-verification turnstile.render Turnstile CAPTCHA __cf_chl_ctx",
-    "window": "_cf_chl_opt typeof object Cloudflare challenge options object _cf_chl_ctx typeof object Cloudflare challenge context turnstile typeof object Cloudflare Turnstile CAPTCHA object cf_turnstile_callback typeof function Turnstile callback function"
   }
 }

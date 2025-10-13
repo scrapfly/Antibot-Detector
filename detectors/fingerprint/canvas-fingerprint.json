@@ -42,8 +42,5 @@
         "confidence": 90
       }
     ]
-  },
-  "_searchStrings": {
-    "js_hooks": "HTMLCanvasElement.prototype.toDataURL Converts canvas to data URL for fingerprinting CanvasRenderingContext2D.prototype.getImageData Extracts pixel data from canvas HTMLCanvasElement.prototype.toBlob Converts canvas to blob for fingerprinting CanvasRenderingContext2D.prototype.measureText Measures text dimensions for font fingerprinting OffscreenCanvas.prototype.getContext Creates offscreen canvas context for hidden fingerprinting"
   }
 }

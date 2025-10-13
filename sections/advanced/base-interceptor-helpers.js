@@ -691,13 +691,15 @@ async function showNotification(tabId, options = {}) {
                             right: 20px !important;
                             background: ${gradient} !important;
                             color: white !important;
-                            padding: 20px 24px !important;
-                            border-radius: 12px !important;
-                            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+                            padding: 12px 16px !important;
+                            border-radius: 8px !important;
+                            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
                             z-index: 2147483647 !important;
                             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-                            font-size: 14px !important;
-                            min-width: 320px !important;
+                            font-size: 13px !important;
+                            min-width: 260px !important;
+                            cursor: pointer !important;
+                            transition: transform 0.2s, opacity 0.2s !important;
                         `;
 
                         const styleTag = document.createElement('style');
@@ -709,17 +711,34 @@ async function showNotification(tabId, options = {}) {
                         document.head.appendChild(styleTag);
 
                         notif.innerHTML = `
-                            <div style="font-weight: 600; font-size: 16px; margin-bottom: 8px;">
+                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 6px;">
                                 ${title}
                             </div>
-                            <div style="opacity: 0.9;">
+                            <div style="opacity: 0.9; font-size: 13px;">
                                 ${message}
                             </div>
                         `;
                         notif.style.animation = 'slideIn 0.3s ease-out';
                         document.body.appendChild(notif);
 
-                        setTimeout(() => {
+                        // Add hover effect
+                        notif.addEventListener('mouseenter', () => {
+                            notif.style.transform = 'scale(1.02)';
+                        });
+                        notif.addEventListener('mouseleave', () => {
+                            notif.style.transform = 'scale(1)';
+                        });
+
+                        // Manual dismiss on click
+                        const dismissNotif = () => {
+                            notif.style.animation = 'slideOut 0.3s ease-in';
+                            setTimeout(() => notif.remove(), 300);
+                            if (autoRemoveTimer) clearTimeout(autoRemoveTimer);
+                        };
+                        notif.addEventListener('click', dismissNotif);
+
+                        // Auto-dismiss after duration
+                        const autoRemoveTimer = setTimeout(() => {
                             notif.style.animation = 'slideOut 0.3s ease-in';
                             setTimeout(() => notif.remove(), 300);
                         }, duration);

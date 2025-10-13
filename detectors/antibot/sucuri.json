@@ -66,12 +66,5 @@
         "description": "Sucuri meta tags"
       }
     ]
-  },
-  "_searchStrings": {
-    "cookie": "sucuri_cloudproxy Sucuri CloudProxy cookie sucuri-* Sucuri prefix cookies",
-    "header": "X-Sucuri-ID Sucuri request identifier X-Sucuri-Cache Sucuri cache status Server Sucuri Sucuri server header X-Sucuri-Block Sucuri block indicator",
-    "url": "sucuri.net Sucuri domain in resources",
-    "content": "sucuri Sucuri reference in scripts",
-    "dom": "meta[name*='sucuri'] Sucuri meta tags"
   }
 }

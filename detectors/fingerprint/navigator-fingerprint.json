@@ -60,8 +60,5 @@
         "confidence": 95
       }
     ]
-  },
-  "_searchStrings": {
-    "js_hooks": "Navigator.prototype.userAgent Reads browser user agent string Navigator.prototype.platform Reads operating system platform Navigator.prototype.webdriver Detects automated browsing (Selenium, Puppeteer) Navigator.prototype.product Reads browser product name Navigator.prototype.languages Reads browser language preferences Navigator.prototype.hardwareConcurrency Reads CPU core count Navigator.prototype.deviceMemory Reads device memory (RAM) in GB NavigatorUAData.prototype.getHighEntropyValues Reads high entropy user agent client hints"
   }
 }
