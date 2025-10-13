@@ -19,9 +19,9 @@
   border: 1px solid var(--border);
   border-radius: 12px;
   width: 90%;
-  max-width: 700px;
+  max-width: 400px;
   height: auto;
-  max-height: 90vh;
+  max-height: 700px;
   overflow: hidden;
   box-shadow: 0 20px 40px var(--shadow);
   display: flex;

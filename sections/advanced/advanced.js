@@ -551,12 +551,6 @@ class Advanced {
       analyzeBypassBtn.addEventListener('click', () => this.analyzeBypassTechniques());
     }
 
-    // Reload detectors button
-    const reloadDetectorsBtn = document.querySelector('#reloadDetectors');
-    if (reloadDetectorsBtn) {
-      reloadDetectorsBtn.addEventListener('click', () => this.reloadDetectorsFromJSON());
-    }
-
     // Clear results button
     const clearResultsBtn = document.querySelector('#clearResults');
     if (clearResultsBtn) {
@@ -938,56 +932,6 @@ class Advanced {
   async initialize() {
     await this.loadHTML();
     console.log('Advanced section initialized');
-  }
-
-  /**
-   * Reload detectors from JSON files (fixes corrupted data)
-   */
-  async reloadDetectorsFromJSON() {
-    const reloadBtn = document.querySelector('#reloadDetectors');
-
-    if (reloadBtn) {
-      const originalText = reloadBtn.textContent;
-      reloadBtn.textContent = 'Reloading...';
-      reloadBtn.disabled = true;
-    }
-
-    try {
-      // Use NotificationHelper to show loading message
-      const loader = NotificationHelper.loading('Reloading detectors from JSON files...');
-
-      // Call the reloadFromJSON method from DetectorManager
-      const success = await this.detectorManager.reloadFromJSON();
-
-      // Close the loader
-      loader.close();
-
-      if (success) {
-        NotificationHelper.success('Detectors reloaded successfully from JSON files');
-
-        // Refresh the Rules section if it's visible
-        const rulesTab = document.querySelector('#rulesTab');
-        if (rulesTab && rulesTab.style.display !== 'none') {
-          // If Rules section exists, refresh it
-          if (window.popup && window.popup.rules) {
-            await window.popup.rules.displayRules();
-          }
-        }
-
-        // Re-render advanced interface
-        this.displayAdvancedTools();
-      } else {
-        NotificationHelper.error('Failed to reload detectors from JSON files');
-      }
-    } catch (error) {
-      console.error('Error reloading detectors:', error);
-      NotificationHelper.error('Error: ' + error.message);
-    } finally {
-      if (reloadBtn) {
-        reloadBtn.textContent = 'Reload from JSON';
-        reloadBtn.disabled = false;
-      }
-    }
   }
 
   /**

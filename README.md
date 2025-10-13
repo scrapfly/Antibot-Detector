@@ -5,11 +5,8 @@
 ![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)
 ![Manifest V3](https://img.shields.io/badge/Manifest-V3-green?style=for-the-badge)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
 
-**A powerful browser extension for detecting CAPTCHAs, anti-bot systems, and fingerprinting technologies on websites**
-
-[Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Architecture](#-architecture) • [Development](#-development) • [Contributing](#-contributing)
+**A powerful browser extension for detecting CAPTCHAs, anti-bot systems and fingerprinting technologies on websites**
 
 </div>
 
@@ -22,14 +19,25 @@ Scrapfly Security Detection is a Manifest V3 Chrome extension that helps securit
 - **CAPTCHAs**: reCAPTCHA, hCaptcha, FunCaptcha, GeeTest
 - **Anti-bot systems**: Cloudflare, Akamai, DataDome, PerimeterX, Shape Security, AWS WAF, and more
 - **Fingerprinting techniques**: Canvas, WebGL, Audio, Font, WebRTC, and other browser fingerprinting methods
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/905a0e70-98d6-492d-a8ef-0f769b5f262b" width="406" />
+</p>
+<p align="center">
+<img src="https://github.com/user-attachments/assets/5ec8a24a-3fd4-4359-b71b-0427b11d65ff" width="406" />
+  </p>
+<p align="center">
+    <img src="https://github.com/user-attachments/assets/978b844f-2c97-4aed-a086-30ac9f5dac91" width="406" />
+  <img src="https://github.com/user-attachments/assets/a45b01df-aa35-4b60-be6c-7f6d9713adbe" width="406" />
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/2d473f6d-b035-4dd9-8ce6-94d014563c45" width="406" />
+  <img src="https://github.com/user-attachments/assets/1cfb3a94-7bee-4081-9eb8-a143437b30c9" width="406" />
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/4c4f8449-c831-494a-a5b4-fff61eabed1d" width="406" />
+  <img src="https://github.com/user-attachments/assets/985a34af-e29b-4f47-bd48-5c70fa0816fe" width="406" />
+</p>
 
-### 🆕 What's New
-
-**Intermediate Challenge Page Handling** (Latest Update)
-- AWS WAF and Shape Security now capture data from intermediate challenge pages before redirect
-- Immediate injection strategy: Captures scripts/cookies at 0s, 3s, finalizes at 5s
-- Solves the issue where challenge pages redirect too quickly for traditional detection
-- Example: Binance AWS WAF challenge page → Captures `challenge.js` → Redirects → Data preserved ✓
 
 ## ✨ Features
 
@@ -102,12 +110,17 @@ Scrapfly Security Detection is a Manifest V3 Chrome extension that helps securit
 
 #### reCAPTCHA
 - Start Capture
-
+- Obtain Selector
+- Extract SiteKey
+- ReCaptcha CallBack
+  
 #### Akamai
 - Start Capture
 - Extract Sensor Data
 
 #### Imperva
+- Check Cookies
+- Analyze Scripts
 - Start Capture
 
 #### Shape Security
@@ -266,20 +279,32 @@ cd Antibot-Detector/core
    {
      "id": "my-detector",
      "name": "My Detector",
-     "displayName": "My Security System",
-     "category": "antibot",
+     "category": "Anti-Bot",
+     "color": "#3B82F6",
      "confidence": 85,
+     "lastUpdated": "2025-01-15",
+     "version": "1.0.0",
+     "icon": "my-detector.png",
+     "description": "My custom security system detector",
      "detection": {
-       "cookies": [
+       "cookie": [
          {
-           "name": { "pattern": "__my_cookie" },
-           "confidence": 90
+           "name": "__my_cookie",
+           "confidence": 90,
+           "description": "Main tracking cookie"
          }
        ],
        "content": [
          {
-           "pattern": "my-security-script.js",
-           "confidence": 80
+           "content": "my-security-script.js",
+           "confidence": 80,
+           "description": "Security script identifier"
+         }
+       ],
+       "url": [
+         {
+           "pattern": "/security/challenge",
+           "confidence": 85
          }
        ]
      }
@@ -338,27 +363,29 @@ Open an issue with:
 - Proposed solution
 - Alternative approaches considered
 
-## 📝 License
+## 📜 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **Non-Profit Open Software License 3.0 (NPOSL-3.0)**.
 
-## 🙏 Acknowledgments
+Copyright (c) 2025 Scrapfly
 
-- **Scrapfly Team**: For inspiration and anti-bot research
-- **Chrome Extension Community**: For Manifest V3 migration guides
-- **Security Researchers**: For anti-bot system documentation
+### Key Terms
 
-## 📮 Contact
+- ✅ **Free to use** for personal and non-profit purposes
+- ✅ **Modify and distribute** with attribution
+- ✅ **Create derivative works** under the same license
+- ✅ **Patent protection** for contributors
+- ❌ **Commercial use requires** separate licensing
 
-- **GitHub Issues**: [Report bugs or request features](https://github.com/diegopzz/Antibot-Detector/issues)
-- **Discussions**: [Ask questions or share ideas](https://github.com/diegopzz/Antibot-Detector/discussions)
+### Full License
+
+See the [LICENSE](LICENSE) file for complete terms and conditions.
 
 ---
 
 <div align="center">
 
-**Made with ❤️ by Security Enthusiasts**
 
-⭐ Star this repo if you find it useful!
+![License](https://img.shields.io/badge/License-NPOSL--3.0-blue?style=for-the-badge)
 
 </div>

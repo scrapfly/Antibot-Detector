@@ -73,8 +73,10 @@
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
-  margin-top: 12px;
-  margin-bottom: 20px;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 12px;
+  margin-right: 12px;
 }
 
 .captcha-tools-header {

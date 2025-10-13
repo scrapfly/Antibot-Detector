@@ -67,6 +67,7 @@
   flex-direction: column;
   gap: 2px;
   padding-top: 1px;
+  flex: 1;
 }
 
 .results-header {
@@ -318,10 +319,9 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 550px;
   overflow-y: auto;
   padding-right: 4px;
-  padding-bottom: 8px;
+  padding-bottom: 0;
 }
 
 .results-list::-webkit-scrollbar {
@@ -796,7 +796,8 @@
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: 8px;
-  margin-top: 16px;
+  margin-top: auto;
+  margin-bottom: 16px;
 }
 
 .pagination-info {
