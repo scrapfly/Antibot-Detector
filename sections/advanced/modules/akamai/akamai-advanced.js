@@ -2991,7 +2991,7 @@ func main() {
                 ${data.abckCookie ? `
                 <div class="advanced-modal-info-row">
                     <span class="advanced-modal-info-label">ABCK Level</span>
-                    <span class="advanced-modal-info-value ${abckLevelClass}" data-copy="${abckLevel}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${abckLevel}', this, {notificationMessage: 'Value copied'});">${abckLevel}</span>
+                    <span class="advanced-modal-info-value ${abckLevelClass} advanced-modal-code-block" data-copy="${abckLevel}" style="cursor: pointer;" title="Click to copy">${abckLevel}</span>
                 </div>
                 ` : ''}
             </div>
@@ -2999,7 +2999,7 @@ func main() {
             ${data.akamaiVersion ? `
             <div class="advanced-modal-section">
                 <label class="advanced-modal-label">Akamai Version</label>
-                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.akamaiVersion)}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.akamaiVersion)}', this, {notificationMessage: 'Value copied'});">${AdvancedUtils.escapeHtml(data.akamaiVersion)}</div>
+                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.akamaiVersion)}" style="cursor: pointer;" title="Click to copy">${AdvancedUtils.escapeHtml(data.akamaiVersion)}</div>
             </div>
             ` : ''}
 

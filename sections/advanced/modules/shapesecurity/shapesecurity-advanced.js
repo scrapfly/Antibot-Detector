@@ -219,14 +219,14 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
         return `
             <div class="advanced-modal-section">
                 <label class="advanced-modal-label">Shape Security Version</label>
-                <div class="advanced-modal-code-block" data-copy="${version.toUpperCase()}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${version.toUpperCase()}', this, {notificationMessage: 'Value copied'});">${version.toUpperCase()}</div>
+                <div class="advanced-modal-code-block" data-copy="${version.toUpperCase()}" style="cursor: pointer;" title="Click to copy">${version.toUpperCase()}</div>
             </div>
 
             ${headerPatterns.length > 0 ? `
             <div class="advanced-modal-section">
                 <label class="advanced-modal-label">Header Pattern${headerPatterns.length > 1 ? 's' : ''}</label>
                 ${headerPatterns.map(pattern => `
-                    <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(pattern)}" style="cursor: pointer; margin-bottom: 8px;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(pattern)}', this, {notificationMessage: 'Value copied'});">${AdvancedUtils.escapeHtml(pattern)}</div>
+                    <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(pattern)}" style="cursor: pointer; margin-bottom: 8px;" title="Click to copy">${AdvancedUtils.escapeHtml(pattern)}</div>
                 `).join('')}
             </div>
             ` : ''}
@@ -234,7 +234,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             ${cookie ? `
             <div class="advanced-modal-section">
                 <label class="advanced-modal-label">Shape Cookie</label>
-                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(cookie.name)}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(cookie.name)}', this, {notificationMessage: 'Value copied'});">${AdvancedUtils.escapeHtml(cookie.name)}</div>
+                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(cookie.name)}" style="cursor: pointer;" title="Click to copy">${AdvancedUtils.escapeHtml(cookie.name)}</div>
             </div>
             ` : ''}
 

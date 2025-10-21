@@ -549,10 +549,20 @@ class BaseAdvancedModule {
         container.appendChild(body);
         overlay.appendChild(container);
 
-        // Close modal when clicking overlay background
+        // Close modal when clicking overlay background, handle code block copying
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) {
                 overlay.remove();
+            }
+
+            // Handle click-to-copy for code blocks
+            const codeBlock = e.target.closest('.advanced-modal-code-block');
+            if (codeBlock && codeBlock.dataset.copy) {
+                e.stopPropagation();
+                const valueToCopy = codeBlock.dataset.copy;
+                AdvancedUtils.copyToClipboard(valueToCopy, codeBlock, {
+                    notificationMessage: 'Value copied'
+                });
             }
         });
 
