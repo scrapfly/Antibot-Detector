@@ -694,28 +694,9 @@ async function showNotification(tabId, options = {}) {
 
     const notifGradient = gradient || gradients[type] || gradients.info;
 
-    // Create SVG logo as data URL (Scrapfly network logo)
-    const logoSvg = `data:image/svg+xml;base64,${btoa(`
-        <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="128" cy="32" r="12" fill="white"/>
-            <circle cx="192" cy="64" r="12" fill="white"/>
-            <circle cx="224" cy="128" r="12" fill="white"/>
-            <circle cx="192" cy="192" r="12" fill="white"/>
-            <circle cx="128" cy="224" r="12" fill="white"/>
-            <circle cx="64" cy="192" r="12" fill="white"/>
-            <circle cx="32" cy="128" r="12" fill="white"/>
-            <circle cx="64" cy="64" r="12" fill="white"/>
-            <circle cx="128" cy="128" r="16" fill="white"/>
-            <line x1="128" y1="44" x2="128" y2="112" stroke="white" stroke-width="6"/>
-            <line x1="128" y1="144" x2="128" y2="212" stroke="white" stroke-width="6"/>
-            <line x1="204" y1="128" x2="144" y2="128" stroke="white" stroke-width="6"/>
-            <line x1="112" y1="128" x2="52" y2="128" stroke="white" stroke-width="6"/>
-            <line x1="188" y1="76" x2="140" y2="116" stroke="white" stroke-width="6"/>
-            <line x1="116" y1="140" x2="68" y2="180" stroke="white" stroke-width="6"/>
-            <line x1="68" y1="76" x2="116" y2="116" stroke="white" stroke-width="6"/>
-            <line x1="140" y1="140" x2="188" y2="180" stroke="white" stroke-width="6"/>
-        </svg>
-    `)}`;
+    // Create SVG logo as data URL (Scrapfly network logo) - simplified for reliability
+    const svgString = '<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><circle cx="128" cy="32" r="12" fill="white"/><circle cx="192" cy="64" r="12" fill="white"/><circle cx="224" cy="128" r="12" fill="white"/><circle cx="192" cy="192" r="12" fill="white"/><circle cx="128" cy="224" r="12" fill="white"/><circle cx="64" cy="192" r="12" fill="white"/><circle cx="32" cy="128" r="12" fill="white"/><circle cx="64" cy="64" r="12" fill="white"/><circle cx="128" cy="128" r="16" fill="white"/><line x1="128" y1="44" x2="128" y2="112" stroke="white" stroke-width="6"/><line x1="128" y1="144" x2="128" y2="212" stroke="white" stroke-width="6"/><line x1="204" y1="128" x2="144" y2="128" stroke="white" stroke-width="6"/><line x1="112" y1="128" x2="52" y2="128" stroke="white" stroke-width="6"/><line x1="188" y1="76" x2="140" y2="116" stroke="white" stroke-width="6"/><line x1="116" y1="140" x2="68" y2="180" stroke="white" stroke-width="6"/><line x1="68" y1="76" x2="116" y2="116" stroke="white" stroke-width="6"/><line x1="140" y1="140" x2="188" y2="180" stroke="white" stroke-width="6"/></svg>';
+    const logoSvg = `data:image/svg+xml;base64,${btoa(svgString)}`;
 
     try {
         await chrome.scripting.executeScript({
