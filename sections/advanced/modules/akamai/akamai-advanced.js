@@ -2601,65 +2601,10 @@ func main() {
                 console.log('[AKAMAI-EXTRACT] ✓ Extraction mode enabled successfully');
                 console.log('[AKAMAI-EXTRACT] Step 6: Preparing to reload page...');
 
-                // Show notification in page
-                await chrome.scripting.executeScript({
-                    target: { tabId: tab.id },
-                    func: () => {
-                        // Remove existing notifications
-                        const existing = document.getElementById('akamai-extract-notification');
-                        if (existing) existing.remove();
-
-                        const notif = document.createElement('div');
-                        notif.id = 'akamai-extract-notification';
-                        notif.style.cssText = `
-                            position: fixed;
-                            top: 20px;
-                            right: 20px;
-                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                            color: white;
-                            padding: 20px 24px;
-                            border-radius: 12px;
-                            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-                            z-index: 999999;
-                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                            min-width: 320px;
-                            animation: slideIn 0.3s ease-out;
-                        `;
-
-                        const styleTag = document.createElement('style');
-                        styleTag.textContent = `
-                            @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-                        `;
-                        document.head.appendChild(styleTag);
-
-                        notif.innerHTML = `
-                            <div style="font-weight: 600; font-size: 16px; margin-bottom: 8px;">
-                                📊 Extracting Sensor Information
-                            </div>
-                            <div style="opacity: 0.9; font-size: 14px;">
-                                Page will reload to capture sensor data...
-                            </div>
-                        `;
-
-                        document.body.appendChild(notif);
-
-                        // Auto-remove after 3 seconds
-                        setTimeout(() => {
-                            if (notif && notif.parentNode) {
-                                notif.remove();
-                            }
-                        }, 3000);
-                    }
-                });
-
-                // Wait a bit for notification to show, then reload
-                console.log('[AKAMAI-EXTRACT] Step 7: Waiting 500ms before reload...');
-                setTimeout(async () => {
-                    console.log('[AKAMAI-EXTRACT] Step 8: Reloading tab...');
-                    await chrome.tabs.reload(tab.id);
-                    console.log('[AKAMAI-EXTRACT] ✓ Tab reload initiated');
-                }, 500);
-
+                // Reload page to capture sensor data
+                console.log('[AKAMAI-EXTRACT] Step 7: Reloading tab to capture sensor data...');
+                await chrome.tabs.reload(tab.id);
+                console.log('[AKAMAI-EXTRACT] ✓ Tab reload initiated');
                 console.log('[AKAMAI-EXTRACT] Waiting for sensor data capture...');
             } else {
                 console.error('[AKAMAI-EXTRACT] ❌ Failed response from background:', response);
@@ -2846,7 +2791,7 @@ func main() {
         }
 
         // Close handlers
-        modal.querySelectorAll('.modal-close').forEach(btn => {
+        modal.querySelectorAll('.advanced-modal-close-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 modal.style.opacity = '0';
                 setTimeout(() => modal.remove(), 300);
