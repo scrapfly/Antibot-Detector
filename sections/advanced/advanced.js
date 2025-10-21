@@ -50,6 +50,9 @@ class Advanced {
   async displayAdvancedTools() {
     console.log('Advanced.displayAdvancedTools called');
 
+    // Clean expired captures when displaying advanced tools
+    await this.cleanExpiredCaptureData();
+
     const noAdvancedState = document.querySelector('#noAdvancedState');
     const advancedContent = document.querySelector('#advancedContent');
 
@@ -558,6 +561,60 @@ class Advanced {
   }
 
   /**
+   * Clean expired captures from history (30 minute expiry)
+   * Automatically removes captures that have passed their expiration time
+   */
+  async cleanExpiredCaptureData() {
+    try {
+      const result = await chrome.storage.local.get('scrapfly_advanced_history');
+      let allHistory = result.scrapfly_advanced_history || {};
+
+      if (!allHistory || Object.keys(allHistory).length === 0) {
+        return; // No data to clean
+      }
+
+      const now = Date.now();
+      let hadExpiredData = false;
+
+      // Clean each module's history
+      Object.entries(allHistory).forEach(([moduleId, moduleHistory]) => {
+        if (Array.isArray(moduleHistory)) {
+          const originalLength = moduleHistory.length;
+
+          // Filter out expired items
+          allHistory[moduleId] = moduleHistory.filter(capture => {
+            // Keep items without expiry or that haven't expired yet
+            if (!capture.expiresAt) {
+              return true; // Keep items without expiry
+            }
+            const isExpired = capture.expiresAt <= now;
+            if (isExpired) {
+              hadExpiredData = true;
+            }
+            return !isExpired;
+          });
+
+          // Log cleanup if items were removed
+          if (allHistory[moduleId].length < originalLength) {
+            const removedCount = originalLength - allHistory[moduleId].length;
+            console.log(`[Advanced] Cleaned ${removedCount} expired captures from ${moduleId}`);
+          }
+        }
+      });
+
+      // Save cleaned history if any items were removed
+      if (hadExpiredData) {
+        await chrome.storage.local.set({
+          scrapfly_advanced_history: allHistory
+        });
+        console.log('[Advanced] ✓ Expired capture data cleaned and saved');
+      }
+    } catch (error) {
+      console.error('[Advanced] Error cleaning expired captures:', error);
+    }
+  }
+
+  /**
    * Render unified capture history from all modules with filters and search
    */
   async renderUnifiedCaptureHistory() {
@@ -577,6 +634,9 @@ class Advanced {
     }
 
     try {
+      // Clean expired captures before rendering
+      await this.cleanExpiredCaptureData();
+
       // Get current site
       const currentSite = await this.getCurrentSite();
 
@@ -1469,6 +1529,10 @@ class Advanced {
    */
   async loadSelectedDetectionTools() {
     console.log('[Advanced] loadSelectedDetectionTools called');
+
+    // Clean expired captures when loading tools
+    await this.cleanExpiredCaptureData();
+
     const selector = document.querySelector('#detectionSelector');
     const panel = document.querySelector('#detectionToolsPanel');
 
