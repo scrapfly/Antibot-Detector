@@ -2144,15 +2144,13 @@ func main() {
         const btn = document.querySelector('#akamaiStartCapture');
         if (!btn) return;
 
-        const icon = btn.querySelector('.tool-btn-icon');
         const label = btn.querySelector('.tool-btn-label');
+        if (!label) return;
 
         if (isCapturing) {
-            icon.textContent = '⏹️';
             label.textContent = 'Stop Capturing';
             btn.style.background = 'var(--danger)';
         } else {
-            icon.textContent = '🎬';
             label.textContent = 'Start Capturing';
             btn.style.background = '';
         }
@@ -2662,8 +2660,6 @@ func main() {
                     console.log('[AKAMAI-EXTRACT] ✓ Tab reload initiated');
                 }, 500);
 
-                NotificationHelper.info('Extracting sensor information...');
-                console.log('[AKAMAI-EXTRACT] ✓ Notification shown');
                 console.log('[AKAMAI-EXTRACT] Waiting for sensor data capture...');
             } else {
                 console.error('[AKAMAI-EXTRACT] ❌ Failed response from background:', response);
