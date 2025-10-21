@@ -666,68 +666,55 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
         const hasScriptCallbacks = scriptCallbacks.length > 0;
 
         modal.innerHTML = `
-            <div class="recaptcha-modal" style="background: var(--bg-secondary, #2a2a2a); border-radius: 8px; padding: 20px; max-width: 600px; width: 90%; max-height: 85vh; overflow-y: auto;">
-                <div class="recaptcha-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; color: var(--text-primary, #fff); display: flex; align-items: center; gap: 8px;">
-                        <span>📡</span> reCAPTCHA Callbacks
-                    </h3>
+            <div class="recaptcha-modal" style="background: var(--bg-secondary, #2a2a2a); border-radius: 8px; padding: 24px; max-width: 650px; width: 95%; max-height: 85vh; overflow-y: auto;">
+                <div class="recaptcha-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h3 style="margin: 0; color: var(--text-primary, #fff); font-size: 16px; font-weight: 600;">reCAPTCHA Callbacks</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
-                <div class="recaptcha-modal-content" style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="recaptcha-modal-content" style="display: flex; flex-direction: column; gap: 24px;">
 
                     ${hasClients ? `
                     <!-- reCAPTCHA Clients Section -->
                     <div class="clients-section">
-                        <h4 style="margin: 0 0 12px 0; color: var(--text-primary, #fff); font-size: 14px; display: flex; align-items: center; gap: 6px;">
-                            <span>🎯</span> reCAPTCHA Clients (from ___grecaptcha_cfg)
-                        </h4>
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <h4 style="margin: 0 0 16px 0; color: var(--text-primary, #fff); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent);">reCAPTCHA Clients</h4>
+                        <div style="display: flex; flex-direction: column; gap: 14px;">
                             ${clients.map(client => `
-                                <div class="client-card" style="background: var(--bg-tertiary, #1a1a1a); border-radius: 6px; padding: 14px; border-left: 3px solid ${client.version === 'V3' ? '#8b5cf6' : '#3b82f6'};">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                        <div style="display: flex; align-items: center; gap: 8px;">
-                                            <span style="background: ${client.version === 'V3' ? '#8b5cf6' : '#3b82f6'}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                                <div class="client-card" style="background: var(--bg-tertiary, #1a1a1a); border-radius: 6px; padding: 16px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <span style="background: ${client.version === 'V3' ? '#8b5cf6' : '#3b82f6'}; color: white; padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: 700;">
                                                 ${client.version}
                                             </span>
-                                            <span style="color: var(--text-secondary, #aaa); font-size: 12px;">Client ID: ${client.id}</span>
+                                            <span style="color: var(--text-secondary); font-size: 12px;">Client ID: ${client.id}</span>
                                         </div>
                                     </div>
 
                                     ${client.sitekey ? `
-                                    <div style="margin-bottom: 8px;">
-                                        <div style="font-size: 11px; color: var(--text-secondary, #aaa); margin-bottom: 4px;">SiteKey:</div>
-                                        <div style="display: flex; align-items: center; gap: 8px;">
-                                            <code style="color: var(--text-primary, #fff); font-size: 11px; font-family: monospace; flex: 1; overflow-x: auto;">${client.sitekey}</code>
-                                            <button class="copy-btn" data-copy="${client.sitekey}" style="padding: 4px 10px; background: var(--primary, #667eea); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; flex-shrink: 0;">📋</button>
-                                        </div>
+                                    <div style="margin-bottom: 12px;">
+                                        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">SiteKey</div>
+                                        <code class="callback-value-clickable" data-copy="${client.sitekey}" style="color: var(--success, #4ade80); font-size: 12px; font-family: monospace; background: var(--bg-primary); padding: 8px 10px; border-radius: 4px; display: block; overflow-x: auto; border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; transition: all 0.2s; user-select: text;">${client.sitekey}</code>
                                     </div>
                                     ` : ''}
 
                                     ${client.callback ? `
-                                    <div style="margin-bottom: 8px;">
-                                        <div style="font-size: 11px; color: var(--text-secondary, #aaa); margin-bottom: 4px;">Callback Function:</div>
-                                        <div style="display: flex; align-items: center; gap: 8px;">
-                                            <code style="color: var(--success, #4ade80); font-size: 12px; font-family: monospace; font-weight: 600; flex: 1;">${client.callback}</code>
-                                            <button class="copy-btn" data-copy="${client.callback}" style="padding: 4px 10px; background: var(--primary, #667eea); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; flex-shrink: 0;">📋</button>
-                                        </div>
+                                    <div style="margin-bottom: 12px;">
+                                        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">Callback Function</div>
+                                        <code class="callback-value-clickable" data-copy="${client.callback}" style="color: var(--success, #4ade80); font-size: 12px; font-family: monospace; background: var(--bg-primary); padding: 8px 10px; border-radius: 4px; display: block; border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; transition: all 0.2s; user-select: text;">${client.callback}</code>
                                     </div>
 
-                                    <div style="margin-bottom: 8px;">
-                                        <div style="font-size: 11px; color: var(--text-secondary, #aaa); margin-bottom: 4px;">Callback Path (for programmatic access):</div>
-                                        <div style="display: flex; align-items: center; gap: 8px;">
-                                            <code style="color: var(--text-muted, #666); font-size: 10px; font-family: monospace; flex: 1; overflow-x: auto; white-space: nowrap;">${client.callbackPath}</code>
-                                            <button class="copy-btn" data-copy="${client.callbackPath}" style="padding: 4px 10px; background: var(--primary, #667eea); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; flex-shrink: 0;">📋</button>
-                                        </div>
+                                    <div style="margin-bottom: 12px;">
+                                        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">Callback Path</div>
+                                        <code class="callback-value-clickable" data-copy="${client.callbackPath}" style="color: var(--text-secondary); font-size: 11px; font-family: monospace; background: var(--bg-primary); padding: 8px 10px; border-radius: 4px; display: block; overflow-x: auto; white-space: nowrap; border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; transition: all 0.2s; user-select: text;">${client.callbackPath}</code>
                                     </div>
                                     ` : `
-                                    <div style="padding: 8px; background: var(--bg-secondary, #2a2a2a); border-radius: 4px; font-size: 12px; color: var(--text-secondary, #aaa);">
-                                        ⚠️ No callback defined for this client
+                                    <div style="padding: 10px; background: var(--bg-secondary); border-radius: 4px; font-size: 12px; color: var(--text-secondary);">
+                                        No callback defined
                                     </div>
                                     `}
 
                                     ${client.pageurl ? `
-                                    <div style="margin-top: 8px; font-size: 10px; color: var(--text-muted, #666);">
-                                        📄 ${client.pageurl}
+                                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.05); font-size: 11px; color: var(--text-secondary);">
+                                        ${client.pageurl}
                                     </div>
                                     ` : ''}
                                 </div>
@@ -739,15 +726,10 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
                     ${hasDomCallbacks ? `
                     <!-- DOM Callbacks Section -->
                     <div class="dom-callbacks-section">
-                        <h4 style="margin: 0 0 12px 0; color: var(--text-primary, #fff); font-size: 14px; display: flex; align-items: center; gap: 6px;">
-                            <span>🏷️</span> DOM Callbacks (from data-callback attributes)
-                        </h4>
-                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <h4 style="margin: 0 0 16px 0; color: var(--text-primary, #fff); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent);">DOM Callbacks</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
                             ${domCallbacks.map(cb => `
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--bg-tertiary, #1a1a1a); border-radius: 4px;">
-                                    <code style="color: var(--success, #4ade80); font-family: monospace; font-size: 13px; flex: 1;">${cb}</code>
-                                    <button class="copy-btn" data-copy="${cb}" style="margin-left: 12px; padding: 4px 10px; background: var(--primary, #667eea); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px;">📋</button>
-                                </div>
+                                <code class="callback-value-clickable" data-copy="${cb}" style="color: var(--success, #4ade80); font-family: monospace; font-size: 12px; padding: 12px; background: var(--bg-tertiary, #1a1a1a); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); display: block; overflow-x: auto; cursor: pointer; transition: all 0.2s; user-select: text;">${cb}</code>
                             `).join('')}
                         </div>
                     </div>
@@ -756,15 +738,10 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
                     ${hasScriptCallbacks ? `
                     <!-- Script Callbacks Section -->
                     <div class="script-callbacks-section">
-                        <h4 style="margin: 0 0 12px 0; color: var(--text-primary, #fff); font-size: 14px; display: flex; align-items: center; gap: 6px;">
-                            <span>📜</span> Script Callbacks (from grecaptcha.render calls)
-                        </h4>
-                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <h4 style="margin: 0 0 16px 0; color: var(--text-primary, #fff); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent);">Script Callbacks</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
                             ${scriptCallbacks.map(cb => `
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--bg-tertiary, #1a1a1a); border-radius: 4px;">
-                                    <code style="color: var(--success, #4ade80); font-family: monospace; font-size: 13px; flex: 1;">${cb}</code>
-                                    <button class="copy-btn" data-copy="${cb}" style="margin-left: 12px; padding: 4px 10px; background: var(--primary, #667eea); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px;">📋</button>
-                                </div>
+                                <code class="callback-value-clickable" data-copy="${cb}" style="color: var(--success, #4ade80); font-family: monospace; font-size: 12px; padding: 12px; background: var(--bg-tertiary, #1a1a1a); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); display: block; overflow-x: auto; cursor: pointer; transition: all 0.2s; user-select: text;">${cb}</code>
                             `).join('')}
                         </div>
                     </div>
@@ -777,15 +754,24 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
         console.log('[ReCAPTCHA] Appending callback modal to body');
         document.body.appendChild(modal);
 
-        modal.querySelectorAll('.copy-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const text = btn.dataset.copy;
+        // Add click-to-copy for all callback values
+        modal.querySelectorAll('.callback-value-clickable').forEach(element => {
+            element.addEventListener('click', () => {
+                const text = element.dataset.copy;
                 if (!text) {
                     return;
                 }
-                AdvancedUtils.copyToClipboard(text, btn, {
+                AdvancedUtils.copyToClipboard(text, element, {
                     notificationMessage: 'Copied to clipboard!'
                 });
+            });
+
+            // Add hover effect
+            element.addEventListener('mouseenter', () => {
+                element.style.background = 'rgba(255, 255, 255, 0.08)';
+            });
+            element.addEventListener('mouseleave', () => {
+                element.style.background = 'var(--bg-primary)';
             });
         });
 
