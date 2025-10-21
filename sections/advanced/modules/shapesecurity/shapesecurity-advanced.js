@@ -347,7 +347,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                     <h3 style="margin: 0; font-size: 16px; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
                         <span style="font-size: 20px;">🟠</span> Shape Security Version
                     </h3>
-                    <button class="modal-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); padding: 0; width: 24px; height: 24px; line-height: 1;">×</button>
+                    <button class="advanced-modal-close-btn">×</button>
                 </div>
 
                 <!-- Version Info -->
@@ -409,7 +409,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
         });
 
         // Close button handler
-        modal.querySelectorAll('.modal-close').forEach(btn => {
+        modal.querySelectorAll('.advanced-modal-close-btn').forEach(btn => {
             btn.addEventListener('click', () => modal.remove());
         });
 
@@ -573,7 +573,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🍪 Shape Security Cookies</h3>
-                    <button class="modal-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); padding: 0; width: 24px; height: 24px;">×</button>
+                    <button class="advanced-modal-close-btn">×</button>
                 </div>
 
                 <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 16px;">
@@ -610,7 +610,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
         document.body.appendChild(modal);
 
         // Close button handlers
-        modal.querySelectorAll('.modal-close').forEach(btn => {
+        modal.querySelectorAll('.advanced-modal-close-btn').forEach(btn => {
             btn.addEventListener('click', () => modal.remove());
         });
 
@@ -736,7 +736,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                     <h3 style="margin: 0; font-size: 16px; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
                         <span style="font-size: 20px;">🟠</span> Shape Security Analysis
                     </h3>
-                    <button class="modal-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); padding: 0; width: 24px; height: 24px; line-height: 1;">×</button>
+                    <button class="advanced-modal-close-btn">×</button>
                 </div>
 
                 <!-- Summary Stats -->
@@ -818,7 +818,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
         setTimeout(() => modal.style.opacity = '1', 10);
 
         // Close button
-        modal.querySelector('.modal-close').addEventListener('click', () => {
+        modal.querySelector('.advanced-modal-close-btn').addEventListener('click', () => {
             modal.style.opacity = '0';
             setTimeout(() => modal.remove(), 200);
         });
@@ -898,7 +898,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 700px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🔍 Shape Security Scripts Analysis</h3>
-                    <button class="modal-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); padding: 0; width: 24px; height: 24px;">×</button>
+                    <button class="advanced-modal-close-btn">×</button>
                 </div>
 
                 <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 16px;">
@@ -991,7 +991,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
         };
 
         // Close button
-        modal.querySelector('.modal-close').addEventListener('click', closeModal);
+        modal.querySelector('.advanced-modal-close-btn').addEventListener('click', closeModal);
         modal.querySelector('.modal-close-btn').addEventListener('click', closeModal);
 
         // Close on background click
@@ -1091,7 +1091,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 900px; max-height: 90vh; overflow: hidden; width: 95%; display: flex; flex-direction: column;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-shrink: 0;">
                     <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">📜 Script Parsing Code Generator</h3>
-                    <button class="modal-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); padding: 0; width: 24px; height: 24px;">×</button>
+                    <button class="advanced-modal-close-btn">×</button>
                 </div>
 
                 <!-- Export Options -->
@@ -1159,7 +1159,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
         setTimeout(() => exportModal.style.opacity = '1', 10);
 
         // Close handlers
-        exportModal.querySelectorAll('.modal-close').forEach(btn => {
+        exportModal.querySelectorAll('.advanced-modal-close-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 exportModal.style.opacity = '0';
                 setTimeout(() => exportModal.remove(), 200);

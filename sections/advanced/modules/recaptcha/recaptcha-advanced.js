@@ -520,7 +520,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
             <div class="recaptcha-modal" style="background: var(--bg-secondary, #2a2a2a); border-radius: 8px; padding: 24px; max-width: 600px; width: 95%;">
                 <div class="recaptcha-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h3 style="margin: 0; color: var(--text-primary, #fff); font-size: 16px;">Extracted SiteKey</h3>
-                    <button class="recaptcha-modal-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary, #aaa);">×</button>
+                    <button class="advanced-modal-close-btn">×</button>
                 </div>
                 <div class="recaptcha-modal-content">
                     <div class="sitekey-display" style="display: flex; flex-direction: column; gap: 14px;">
@@ -547,7 +547,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
             });
         }
 
-        const closeBtn = modal.querySelector('.recaptcha-modal-close');
+        const closeBtn = modal.querySelector('.advanced-modal-close-btn');
         if (closeBtn) {
             closeBtn.addEventListener('click', () => modal.remove());
         }
@@ -588,7 +588,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
             <div class="recaptcha-modal" style="background: var(--bg-secondary, #2a2a2a); border-radius: 8px; padding: 20px; max-width: 500px; width: 90%;">
                 <div class="recaptcha-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <h3 style="margin: 0; color: var(--text-primary, #fff);">📋 Version Detection</h3>
-                    <button class="recaptcha-modal-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary, #aaa);">×</button>
+                    <button class="advanced-modal-close-btn">×</button>
                 </div>
                 <div class="recaptcha-modal-content">
                     <div class="version-info" style="margin-bottom: 16px;">
@@ -623,7 +623,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
         console.log('[ReCAPTCHA] Appending version modal to body');
         document.body.appendChild(modal);
 
-        const closeBtn = modal.querySelector('.recaptcha-modal-close');
+        const closeBtn = modal.querySelector('.advanced-modal-close-btn');
         if (closeBtn) {
             closeBtn.addEventListener('click', () => modal.remove());
         }
@@ -671,7 +671,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
                     <h3 style="margin: 0; color: var(--text-primary, #fff); display: flex; align-items: center; gap: 8px;">
                         <span>📡</span> reCAPTCHA Callbacks
                     </h3>
-                    <button class="recaptcha-modal-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary, #aaa);">×</button>
+                    <button class="advanced-modal-close-btn">×</button>
                 </div>
                 <div class="recaptcha-modal-content" style="display: flex; flex-direction: column; gap: 20px;">
 
@@ -789,7 +789,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
             });
         });
 
-        const closeBtn = modal.querySelector('.recaptcha-modal-close');
+        const closeBtn = modal.querySelector('.advanced-modal-close-btn');
         if (closeBtn) {
             closeBtn.addEventListener('click', () => modal.remove());
         }

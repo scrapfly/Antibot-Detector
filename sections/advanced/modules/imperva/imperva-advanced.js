@@ -889,7 +889,7 @@ public static string GenerateUtmvcScriptPath()
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 700px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">📊 Imperva Analysis</h3>
-                    <button class="modal-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); padding: 0; width: 24px; height: 24px;">×</button>
+                    <button class="advanced-modal-close-btn">×</button>
                 </div>
 
                 <!-- Summary Stats -->
@@ -987,7 +987,7 @@ public static string GenerateUtmvcScriptPath()
         });
 
         // Event listeners
-        modal.querySelectorAll('.modal-close').forEach(btn => {
+        modal.querySelectorAll('.advanced-modal-close-btn').forEach(btn => {
             btn.addEventListener('click', () => modal.remove());
         });
 
@@ -1037,7 +1037,7 @@ public static string GenerateUtmvcScriptPath()
                         <span style="font-size: 18px;">📜</span>
                         <h3 style="margin: 0; font-size: 16px; color: var(--text-primary); font-weight: 600;">Script Parsing Code Generator</h3>
                     </div>
-                    <button class="modal-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); padding: 0; width: 24px; height: 24px; line-height: 1;">×</button>
+                    <button class="advanced-modal-close-btn">×</button>
                 </div>
 
                 <!-- Export Options -->
@@ -1123,7 +1123,7 @@ public static string GenerateUtmvcScriptPath()
         setTimeout(() => modal.style.opacity = '1', 10);
 
         // Event listeners
-        modal.querySelectorAll('.modal-close').forEach(btn => {
+        modal.querySelectorAll('.advanced-modal-close-btn').forEach(btn => {
             btn.addEventListener('click', () => modal.remove());
         });
 
@@ -1225,7 +1225,7 @@ public static string GenerateUtmvcScriptPath()
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🍪 Imperva Cookies</h3>
-                    <button class="modal-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); padding: 0; width: 24px; height: 24px;">×</button>
+                    <button class="advanced-modal-close-btn">×</button>
                 </div>
 
                 <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 16px;">
@@ -1292,7 +1292,7 @@ public static string GenerateUtmvcScriptPath()
             });
         });
 
-        modal.querySelectorAll('.modal-close').forEach(btn => {
+        modal.querySelectorAll('.advanced-modal-close-btn').forEach(btn => {
             btn.addEventListener('click', () => modal.remove());
         });
 

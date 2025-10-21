@@ -109,7 +109,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🍪 AWS WAF Cookies</h3>
-                    <button class="modal-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); padding: 0; width: 24px; height: 24px;">×</button>
+                    <button class="advanced-modal-close-btn">×</button>
                 </div>
 
                 <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 16px;">
@@ -168,7 +168,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
             });
         });
 
-        modal.querySelectorAll('.modal-close').forEach(btn => {
+        modal.querySelectorAll('.advanced-modal-close-btn').forEach(btn => {
             btn.addEventListener('click', () => modal.remove());
         });
 
@@ -274,7 +274,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🔍 AWS WAF Scripts Analysis</h3>
-                    <button class="modal-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); padding: 0; width: 24px; height: 24px;">×</button>
+                    <button class="advanced-modal-close-btn">×</button>
                 </div>
 
                 <!-- Summary Stats -->
@@ -351,7 +351,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
         });
 
         // Event handlers
-        modal.querySelectorAll('.modal-close').forEach(btn => {
+        modal.querySelectorAll('.advanced-modal-close-btn').forEach(btn => {
             btn.addEventListener('click', () => modal.remove());
         });
 
