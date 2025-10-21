@@ -2247,6 +2247,8 @@
 
 /* Modal Container - The actual modal box */
 .advanced-modal-container {
+  display: flex;
+  flex-direction: column;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -2346,9 +2348,10 @@
 
 /* Modal Body */
 .advanced-modal-body {
+  flex: 1;
   padding: 20px;
-  max-height: calc(85vh - 80px);
   overflow-y: auto;
+  min-height: 0;
 }
 
 .advanced-modal-body::-webkit-scrollbar {
