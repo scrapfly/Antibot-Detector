@@ -1143,11 +1143,6 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                     <!-- Copy Button -->
                     <button class="copy-parsing-code advanced-modal-copy-btn" style="position: absolute; top: 8px; right: 8px; z-index: 10; padding: 4px 10px; font-size: 11px;">Copy Code</button>
                 </div>
-
-                <!-- Close Button -->
-                <div style="text-align: center; margin-top: 16px; flex-shrink: 0;">
-                    <button class="modal-close" style="width: 100%; padding: 10px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); cursor: pointer; font-size: 13px;">Close</button>
-                </div>
             </div>
         `;
 

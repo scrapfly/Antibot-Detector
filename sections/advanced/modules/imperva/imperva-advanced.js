@@ -1120,9 +1120,6 @@ public static string GenerateUtmvcScriptPath()
                     <span style="font-size: 14px;">ℹ️</span>
                     <span style="font-size: 11px; color: var(--text-secondary); line-height: 1.4;">Browser console code for intercepting and parsing Imperva scripts</span>
                 </div>
-
-                <!-- Close Button -->
-                <button class="modal-close" style="width: 100%; padding: 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 4px; color: var(--text-primary); cursor: pointer; font-size: 13px; font-weight: 500;">Close</button>
             </div>
         `;
 
