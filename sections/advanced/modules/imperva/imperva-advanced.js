@@ -49,6 +49,15 @@ class ImpervaAdvanced extends BaseAdvancedModule {
         chrome.runtime.onMessage.addListener(this.extractionListener);
     }
 
+    /**
+     * Override: Show capture start notification with Scrapfly branding
+     */
+    async afterCaptureStart(response) {
+        if (response && (response.status === 'started' || response.status === 'already_capturing')) {
+            await AdvancedUtils.showCaptureStartNotification('Imperva');
+        }
+    }
+
     // ========================================================================
     // REQUIRED OVERRIDES
     // ========================================================================

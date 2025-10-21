@@ -2290,13 +2290,13 @@ func main() {
     }
 
     /**
-     * Hook: Show simple in-page notification after capture starts
+     * Hook: Show capture start notification with Scrapfly branding
      * Override from BaseAdvancedModule
      */
     async afterCaptureStart(response) {
-        // Show simple notification matching Imperva's style
-        // Notification is now handled by the interceptor using BaseInterceptorHelpers
-        // No need for custom DOM notification here
+        if (response && (response.status === 'started' || response.status === 'already_capturing')) {
+            await AdvancedUtils.showCaptureStartNotification('Akamai');
+        }
     }
 
     /**

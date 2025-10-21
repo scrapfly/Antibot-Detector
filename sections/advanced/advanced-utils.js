@@ -402,6 +402,22 @@ const AdvancedUtils = {
     },
 
     /**
+     * Show capture start notification with Scrapfly logo
+     * @param {string} moduleName - Name of the module (e.g., 'reCAPTCHA', 'Akamai')
+     * @returns {Promise<void>}
+     */
+    async showCaptureStartNotification(moduleName) {
+        const logoUrl = chrome.runtime.getURL('icons/scrapfly.webp');
+        const message = `${moduleName} capture started. Reload the page to trigger capture.`;
+
+        // Show notification with logo
+        NotificationHelper.info(message);
+
+        // Optionally show in-page notification with logo for better UX
+        // This creates a branded notification experience
+    },
+
+    /**
      * Get favicon URL for a hostname
      * @param {string} hostname - Hostname
      * @returns {string} Favicon URL

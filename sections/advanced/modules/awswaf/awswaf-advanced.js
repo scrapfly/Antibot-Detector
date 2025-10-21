@@ -18,6 +18,15 @@ class AwsWafAdvanced extends BaseAdvancedModule {
     }
 
     /**
+     * Override: Show capture start notification with Scrapfly branding
+     */
+    async afterCaptureStart(response) {
+        if (response && (response.status === 'started' || response.status === 'already_capturing')) {
+            await AdvancedUtils.showCaptureStartNotification('AWS WAF');
+        }
+    }
+
+    /**
      * Render AWS WAF-specific tools
      */
     renderTools() {

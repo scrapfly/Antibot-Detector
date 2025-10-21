@@ -10,6 +10,15 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
     }
 
     /**
+     * Override: Show capture start notification with Scrapfly branding
+     */
+    async afterCaptureStart(response) {
+        if (response && (response.status === 'started' || response.status === 'already_capturing')) {
+            await AdvancedUtils.showCaptureStartNotification('reCAPTCHA');
+        }
+    }
+
+    /**
      * Render reCAPTCHA-specific tools
      */
     renderTools() {
