@@ -972,8 +972,8 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                 `}
 
                 <div class="modal-button-group">
-                    <button class="export-code-btn modal-export-code-btn" style="margin-bottom: 0; flex: 1;">Export Code</button>
-                    <button class="copy-all-scripts modal-action-btn">Copy All URLs</button>
+                    <button class="export-code-btn advanced-modal-action-btn" style="margin-bottom: 0; flex: 1;">Export Code</button>
+                    <button class="copy-all-scripts advanced-modal-action-btn">Copy All URLs</button>
                 </div>
             </div>
         `;

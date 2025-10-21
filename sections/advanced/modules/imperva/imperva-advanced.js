@@ -952,7 +952,7 @@ public static string GenerateUtmvcScriptPath()
 
                 ${hasScriptPaths ? `
                     <!-- Export Code Button -->
-                    <button class="export-code-btn modal-export-code-btn">
+                    <button class="export-code-btn advanced-modal-action-btn" style="width: 100%; margin-bottom: 20px;">
                         <span>💻</span>
                         <span>Export Code</span>
                     </button>

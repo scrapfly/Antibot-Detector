@@ -2733,7 +2733,7 @@ func main() {
                 <div style="text-align: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);">
                     <button
                         id="copyAllDataBtn"
-                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; padding: 10px 24px; font-size: 14px; cursor: pointer; font-weight: 500;"
+                        class="advanced-modal-action-btn"
                     >
                         Copy All Data as JSON
                     </button>
@@ -3473,11 +3473,11 @@ func main() {
 
                 <!-- Action Buttons -->
                 <div style="display: flex; gap: 8px;">
-                    <button class="copy-akamai-data" style="flex: 1; padding: 8px; background: var(--accent); color: white; border: none; border-radius: 6px; font-size: 12px; cursor: pointer;" data-copy="${this.escapeHtml(JSON.stringify(captureData))}">
+                    <button class="copy-akamai-data advanced-modal-action-btn" style="flex: 1;" data-copy="${this.escapeHtml(JSON.stringify(captureData))}">
                         Copy All Data
                     </button>
                     ${captureData.sensorData ? `
-                        <button class="copy-sensor-data" style="flex: 1; padding: 8px; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 6px; font-size: 12px; cursor: pointer;" data-copy="${this.escapeHtml(captureData.sensorData)}">
+                        <button class="copy-sensor-data advanced-modal-action-btn" style="flex: 1;" data-copy="${this.escapeHtml(captureData.sensorData)}">
                             Copy Sensor Data
                         </button>
                     ` : ''}
