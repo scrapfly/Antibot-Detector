@@ -7,7 +7,7 @@
   "lastUpdated": "2024-10-21",
   "version": "1.0.0",
   "website": "https://cloud.tencent.com/product/tci",
-  "icon": "qcloud_official.png",
+  "icon": "default_detector.png",
   "description": "Tencent Cloud Captcha service for bot detection",
   "detection": {
     "url": [

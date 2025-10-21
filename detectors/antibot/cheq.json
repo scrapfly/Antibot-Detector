@@ -7,7 +7,7 @@
   "lastUpdated": "2024-10-21",
   "version": "1.0.0",
   "website": "https://cheq.ai/",
-  "icon": "cheq_official.png",
+  "icon": "default_detector.png",
   "description": "Cheq bot detection and prevention with light obfuscation",
   "detection": {
     "content": [

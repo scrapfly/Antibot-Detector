@@ -7,7 +7,7 @@
   "lastUpdated": "2024-10-21",
   "version": "1.0.0",
   "website": "https://ocule.io/",
-  "icon": "ocule_official.png",
+  "icon": "default_detector.png",
   "description": "Ocule bot detection with advanced obfuscation and VM-based protection",
   "detection": {
     "content": [

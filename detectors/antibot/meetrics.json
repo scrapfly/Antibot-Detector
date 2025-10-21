@@ -7,7 +7,7 @@
   "lastUpdated": "2024-10-21",
   "version": "1.0.0",
   "website": "https://www.meetrics.com/en/",
-  "icon": "meetrics_official.png",
+  "icon": "default_detector.png",
   "description": "Meetrics user authenticity verification through behavior analysis and device fingerprinting",
   "detection": {
     "content": [

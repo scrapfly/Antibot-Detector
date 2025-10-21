@@ -7,7 +7,7 @@
   "lastUpdated": "2024-10-21",
   "version": "1.0.0",
   "website": "https://www.threatmetrix.com/",
-  "icon": "threatmetrix_official.png",
+  "icon": "default_detector.png",
   "description": "LexisNexis ThreatMetrix fingerprinting service for fraud prevention and device identification",
   "detection": {
     "content": [
