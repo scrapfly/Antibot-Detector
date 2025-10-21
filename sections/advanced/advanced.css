@@ -2618,79 +2618,83 @@
 /* Filters Bar with Modern Design - Single Line Layout */
 .capture-filters-bar {
   display: flex;
-  gap: 8px;
-  padding: 6px 10px;
-  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  gap: 10px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
   margin-bottom: 6px;
   width: 100%;
   max-width: 800px;
-  flex-wrap: nowrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  overflow-x: auto;
+  flex-wrap: wrap;
+  box-shadow: none;
+  overflow-x: visible;
+  align-items: stretch;
 }
 
 .capture-filter-group {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  flex: 0 0 auto;
+  gap: 4px;
+  flex: 1;
   min-width: 0;
+  justify-content: flex-end;
 }
 
 .filter-label {
   display: flex;
   align-items: center;
-  gap: 3px;
-  font-size: 8px;
+  gap: 4px;
+  font-size: 9px;
   font-weight: 700;
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
 }
 
 .filter-label svg {
   opacity: 0.7;
   flex-shrink: 0;
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
 }
 
 .capture-filter-select {
-  padding: 4px 6px;
-  background: var(--bg-primary);
-  border: 1.5px solid var(--border);
-  border-radius: 5px;
-  color: var(--text-primary);
-  font-size: 10px;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  background: rgba(148, 163, 184, 0.18);
+  border: 1px solid rgba(148, 163, 184, 0.32);
+  border-radius: 6px;
+  color: #d1d5db;
+  font-size: 11px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24'%3E%3Cpath fill='%23667eea' d='M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23b4b4b4' d='M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 5px center;
-  padding-right: 20px;
+  background-position: right 10px center;
+  padding-right: 32px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  max-width: 200px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  min-width: 150px;
 }
 
 .capture-filter-select:hover {
-  border-color: var(--accent);
-  background-color: var(--bg-secondary);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  background: rgba(148, 163, 184, 0.28);
+  color: #f8fafc;
+  border-color: rgba(148, 163, 184, 0.45);
+  transform: none;
 }
 
 .capture-filter-select:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15), 0 2px 6px rgba(0, 0, 0, 0.12);
-  transform: translateY(-1px);
+  background: rgba(148, 163, 184, 0.28);
+  color: #f8fafc;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  transform: none;
 }
 
 /* Search Container */
