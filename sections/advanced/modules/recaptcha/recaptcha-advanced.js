@@ -794,7 +794,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
 function ${cb}(token) {
   console.log('reCAPTCHA token:', token);
 
-  // Send token to your backend
+  // NOTE: Endpoint and method may vary - change to match your backend
   fetch('/verify-captcha', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -804,7 +804,6 @@ function ${cb}(token) {
   .then(data => {
     if (data.success) {
       console.log('Verification successful!');
-      // Proceed with your action
     }
   });
 }</code>
@@ -824,7 +823,7 @@ function ${cb}(token) {
 function ${cb}(token) {
   console.log('reCAPTCHA token:', token);
 
-  // Send token to your backend
+  // NOTE: Endpoint and method may vary - change to match your backend
   fetch('/verify-captcha', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -834,7 +833,6 @@ function ${cb}(token) {
   .then(data => {
     if (data.success) {
       console.log('Verification successful!');
-      // Proceed with your action
     }
   });
 }</code>
