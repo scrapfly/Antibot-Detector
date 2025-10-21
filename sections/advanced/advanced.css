@@ -2371,6 +2371,13 @@
   word-break: break-all;
   overflow-x: auto;
   border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+.advanced-modal-code-block:hover {
+  background: var(--bg-secondary);
+  border-color: var(--accent);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.2);
 }
 
 /* Info Row - Two column layout for label:value pairs */
