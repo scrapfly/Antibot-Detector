@@ -20,22 +20,17 @@ Scrapfly Security Detection is a Manifest V3 Chrome extension that helps securit
 - **Anti-bot systems**: Cloudflare, Akamai, DataDome, PerimeterX, Shape Security, AWS WAF, and more
 - **Fingerprinting techniques**: Canvas, WebGL, Audio, Font, WebRTC, and other browser fingerprinting methods
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/905a0e70-98d6-492d-a8ef-0f769b5f262b" width="406" />
+  <img width="400" height="580" alt="image" src="https://github.com/user-attachments/assets/443a7892-808b-42d8-b572-8dd76729924d" />
+/>
 </p>
 <p align="center">
 <img src="https://github.com/user-attachments/assets/5ec8a24a-3fd4-4359-b71b-0427b11d65ff" width="406" />
+  <img width="400" height="580" alt="image" src="https://github.com/user-attachments/assets/03d97eb8-2312-4121-acfd-ce8883dd720b" />
   </p>
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/978b844f-2c97-4aed-a086-30ac9f5dac91" width="406" />
-  <img src="https://github.com/user-attachments/assets/a45b01df-aa35-4b60-be6c-7f6d9713adbe" width="406" />
-</p>
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/2d473f6d-b035-4dd9-8ce6-94d014563c45" width="406" />
-  <img src="https://github.com/user-attachments/assets/1cfb3a94-7bee-4081-9eb8-a143437b30c9" width="406" />
-</p>
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/4c4f8449-c831-494a-a5b4-fff61eabed1d" width="406" />
-  <img src="https://github.com/user-attachments/assets/985a34af-e29b-4f47-bd48-5c70fa0816fe" width="406" />
+ <img width="400" height="580" alt="image" src="https://github.com/user-attachments/assets/f6ce23ad-bd03-40f8-b66a-d9f2952ac778" />
+<img width="400" height="580" alt="image" src="https://github.com/user-attachments/assets/9904f6b9-1cf2-43bb-862c-389475b1531c" />
+
 </p>
 
 
