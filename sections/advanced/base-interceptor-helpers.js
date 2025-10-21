@@ -688,7 +688,8 @@ async function showNotification(tabId, options = {}) {
         info: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         success: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
         error: 'linear-gradient(135deg, #eb3349 0%, #f45c43 100%)',
-        warning: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+        warning: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+        capture: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
     };
 
     const notifGradient = gradient || gradients[type] || gradients.info;
@@ -737,11 +738,20 @@ async function showNotification(tabId, options = {}) {
                         document.head.appendChild(styleTag);
 
                         notif.innerHTML = `
-                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 6px;">
-                                ${title}
-                            </div>
-                            <div style="opacity: 0.9; font-size: 13px;">
-                                ${message}
+                            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                                <div style="flex-shrink: 0; width: 20px; height: 20px; margin-top: 2px;">
+                                    <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                                    </svg>
+                                </div>
+                                <div style="flex: 1; min-width: 0;">
+                                    <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px; line-height: 1.2;">
+                                        ${title}
+                                    </div>
+                                    <div style="opacity: 0.95; font-size: 12px; line-height: 1.4;">
+                                        ${message}
+                                    </div>
+                                </div>
                             </div>
                         `;
                         notif.style.animation = 'slideIn 0.3s ease-out';

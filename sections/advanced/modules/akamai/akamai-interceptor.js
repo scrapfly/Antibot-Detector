@@ -70,9 +70,9 @@ function akamaiStartCapture(tabId, captureUrl) {
     // Show standardized in-page notification
     if (showNotification) {
         showNotification(tabId, {
-            type: 'info',
-            title: '🎯 Akamai Capture Active',
-            message: '🔄 Please reload the page to start monitoring',
+            type: 'capture',
+            title: 'Akamai Capture Active',
+            message: 'Reload the page to capture sensor data and request details',
             duration: 60000
         }).catch(err => {
             console.error('[AKAMAI-CAPTURE] Failed to show notification:', err);

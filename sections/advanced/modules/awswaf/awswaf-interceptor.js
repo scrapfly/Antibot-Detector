@@ -108,7 +108,7 @@ function awsWafStartCapture(tabId, url) {
   // Show standardized in-page notification
   if (showNotification) {
     showNotification(tabId, {
-      type: 'info',
+      type: 'capture',
       title: '🎯 AWS WAF Capture Active',
       message: '🔄 Please reload the page to start monitoring',
       duration: 60000

@@ -85,9 +85,9 @@ async function reCaptchaStartCapture(tabId) {
         // Show in-page notification using helper
         if (showNotification) {
             await showNotification(tabId, {
-                type: 'info',
-                title: '🎯 reCAPTCHA Capture Active',
-                message: '🔄 Please reload the page, then solve any reCAPTCHA that appears',
+                type: 'capture',
+                title: 'reCAPTCHA Capture Active',
+                message: 'Reload the page and solve any reCAPTCHA to capture its data',
                 duration: 60000
             }).catch(err => {
                 console.error('[reCAPTCHA] Failed to show notification:', err);

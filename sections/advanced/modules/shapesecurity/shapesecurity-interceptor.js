@@ -191,7 +191,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
     // Show in-page notification
     if (showNotification) {
         await showNotification(tabId, {
-            type: 'info',
+            type: 'capture',
             title: '🎯 Shape Security Capture Active',
             message: '🔄 Please reload the page to start monitoring',
             duration: 60000

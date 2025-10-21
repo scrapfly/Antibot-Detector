@@ -75,7 +75,7 @@ function impervaStartCapture(tabId, captureUrl) {
     // Show in-page notification
     if (showNotification) {
         showNotification(tabId, {
-            type: 'info',
+            type: 'capture',
             title: '🎯 Imperva Capture Active',
             message: '🔄 Please reload the page to start monitoring',
             duration: 60000 // Show for 60 seconds (until auto-stop)
