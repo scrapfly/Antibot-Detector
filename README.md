@@ -22,7 +22,6 @@ Scrapfly Security Detection is a Manifest V3 Chrome extension that helps securit
 <p align="center">
   <img width="400" height="580" alt="image" src="https://github.com/user-attachments/assets/443a7892-808b-42d8-b572-8dd76729924d" />
     <img width="400" height="580" alt="image" src="https://github.com/user-attachments/assets/03d97eb8-2312-4121-acfd-ce8883dd720b" />
-/>
 </p>
 <p align="center">
  <img width="400" height="580" alt="image" src="https://github.com/user-attachments/assets/f6ce23ad-bd03-40f8-b66a-d9f2952ac778" />
