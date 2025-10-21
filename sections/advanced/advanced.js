@@ -1305,10 +1305,15 @@ class Advanced {
    * @param {object} captureData - Capture data object (full capture with id, timestamp, url, data, expiresAt)
    */
   showCaptureDetailsModal(moduleInstance, captureData) {
-    // Extract the actual capture data from the capture object
-    // captureData has structure: { id, timestamp, url, data, expiresAt }
-    // We need just the 'data' property for rendering
-    const actualCaptureData = captureData.data || captureData;
+    // Transform capture data to match module renderCaptureDetailsContent expectations
+    // Storage format: { id, timestamp, url, data, expiresAt }
+    // Module expects: { timestamp, url, captureData, ... }
+    const transformedCaptureData = {
+      timestamp: captureData.timestamp,
+      url: captureData.url,
+      captureData: captureData.data || {},
+      ...captureData  // Include all other properties for module-specific use
+    };
 
     // Create modal HTML
     const modalHtml = `
@@ -1319,7 +1324,7 @@ class Advanced {
             <button class="close-btn" id="closeCaptureDetailsModal">&times;</button>
           </div>
           <div class="capture-details-content" id="captureDetailsContent">
-            ${moduleInstance.renderCaptureDetailsContent(actualCaptureData)}
+            ${moduleInstance.renderCaptureDetailsContent(transformedCaptureData)}
           </div>
         </div>
       </div>

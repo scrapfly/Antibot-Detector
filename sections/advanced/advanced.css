@@ -1493,12 +1493,12 @@
 /* Capture Card - Compact Design */
 .capture-card {
   background: var(--bg-tertiary);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: 8px;
   padding: 8px;
   padding-top: 11px; /* Extra space for blue accent bar */
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
@@ -1516,8 +1516,15 @@
 }
 
 .capture-card:hover {
-  border-color: var(--accent);
+  border-color: #3b82f6;
   background: var(--bg-secondary);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+  transform: translateY(-2px);
+}
+
+.capture-card:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.15);
 }
 
 /* Card Top Section */
