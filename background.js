@@ -506,6 +506,7 @@ function getOrCreateDetectionState(tabId, url) {
     if (!detectionStates.has(tabId)) {
         detectionStates.set(tabId, {
             url: url,
+            tabTitle: null, // Will be set by processDetectionData
             hooksData: new Map(), // detectorId -> detector object
             mainData: [],
             // NEW: Granular method tracking (7 methods total)
@@ -928,7 +929,7 @@ async function finalizeDetection(tabId, state) {
             const pageData = {
                 url: state.url,
                 hostname: Utils.getHostnameFromUrl(state.url),
-                title: 'Unknown',
+                tabTitle: state.tabTitle,
                 favicon: Utils.getFaviconUrl(state.url)
             };
 
@@ -1401,10 +1402,18 @@ async function processDetectionData(message, sender) {
         // Store main detection and check if ready to finalize
         console.log(`%c[processDetectionData] 🔄 Getting/Creating detection state for tab ${tabId}`, 'color: #ff9800; font-weight: bold;');
         const state = getOrCreateDetectionState(tabId, pageData.url);
+
+        // Store tabTitle in state for use when saving to history
+        if (!state.tabTitle && pageData.tabTitle) {
+            state.tabTitle = pageData.tabTitle;
+            console.log(`[processDetectionData] Stored tabTitle in state: "${state.tabTitle}"`);
+        }
+
         console.log(`[processDetectionData] Current state before storing:`, {
             completedMethods: Array.from(state.completedMethods || []),
             completedCount: state.completedMethods?.size || 0,
-            url: state.url
+            url: state.url,
+            tabTitle: state.tabTitle
         });
 
         // URL validation: Ensure URL hasn't changed during detection

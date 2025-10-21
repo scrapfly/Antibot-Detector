@@ -693,11 +693,12 @@ async function showNotification(tabId, options = {}) {
     };
 
     const notifGradient = gradient || gradients[type] || gradients.info;
+    const iconUrl = chrome.runtime.getURL('icons/scrapfly.webp');
 
     try {
         await chrome.scripting.executeScript({
             target: { tabId: tabId },
-            func: (title, message, gradient, duration) => {
+            func: (title, message, gradient, duration, iconUrl) => {
                 // Cleanup old notifications
                 const allNotifs = document.querySelectorAll('[id^="scrapfly-capture-notification"]');
                 allNotifs.forEach(n => n.remove());
@@ -739,10 +740,8 @@ async function showNotification(tabId, options = {}) {
 
                         notif.innerHTML = `
                             <div style="display: flex; align-items: flex-start; gap: 10px;">
-                                <div style="flex-shrink: 0; width: 20px; height: 20px; margin-top: 2px;">
-                                    <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-                                    </svg>
+                                <div style="flex-shrink: 0; width: 20px; height: 20px; margin-top: 2px; background-size: contain; background-repeat: no-repeat; background-position: center;">
+                                    <img src="${iconUrl}" alt="Scrapfly" style="width: 100%; height: 100%; object-fit: contain; filter: brightness(0) invert(1);" />
                                 </div>
                                 <div style="flex: 1; min-width: 0;">
                                     <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px; line-height: 1.2;">
@@ -781,7 +780,7 @@ async function showNotification(tabId, options = {}) {
                     }, 100);
                 });
             },
-            args: [title, message, notifGradient, duration]
+            args: [title, message, notifGradient, duration, iconUrl]
         });
     } catch (err) {
         console.error('[BaseInterceptor] Failed to show notification:', err);
