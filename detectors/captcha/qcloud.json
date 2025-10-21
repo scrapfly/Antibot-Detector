@@ -1,0 +1,89 @@
+{
+  "id": "qcloud",
+  "name": "QCloud Captcha",
+  "category": "CAPTCHA",
+  "color": "#1890FF",
+  "confidence": 100,
+  "lastUpdated": "2024-10-21",
+  "version": "1.0.0",
+  "website": "https://cloud.tencent.com/product/tci",
+  "icon": "qcloud_official.png",
+  "description": "Tencent Cloud Captcha service for bot detection",
+  "detection": {
+    "url": [
+      {
+        "pattern": "turing.captcha.qcloud.com",
+        "confidence": 100,
+        "description": "QCloud Captcha main domain"
+      },
+      {
+        "pattern": "turing.captcha.gtimg.com",
+        "confidence": 100,
+        "description": "QCloud Captcha CDN domain (Tencent image server)"
+      },
+      {
+        "pattern": "tdc.js",
+        "confidence": 95,
+        "description": "QCloud Captcha JavaScript library"
+      }
+    ],
+    "content": [
+      {
+        "content": "TencentCaptcha",
+        "confidence": 100,
+        "description": "QCloud Captcha main object"
+      },
+      {
+        "content": "qcloud.captcha",
+        "confidence": 95,
+        "description": "QCloud Captcha reference"
+      },
+      {
+        "content": "captcha_ticket",
+        "confidence": 90,
+        "description": "QCloud Captcha ticket parameter"
+      },
+      {
+        "content": "turing.captcha",
+        "confidence": 100,
+        "description": "Turing Captcha reference"
+      }
+    ],
+    "dom": [
+      {
+        "selector": "#tencent_captcha",
+        "confidence": 95,
+        "description": "QCloud Captcha container element"
+      },
+      {
+        "selector": ".tencent-captcha",
+        "confidence": 90,
+        "description": "QCloud Captcha container class"
+      },
+      {
+        "selector": "iframe[src*='turing.captcha.qcloud.com']",
+        "confidence": 100,
+        "description": "QCloud Captcha iframe"
+      },
+      {
+        "selector": "iframe[src*='turing.captcha.gtimg.com']",
+        "confidence": 100,
+        "description": "QCloud Captcha CDN iframe"
+      }
+    ],
+    "window": [
+      {
+        "path": "TencentCaptcha",
+        "condition": "typeof function",
+        "confidence": 100,
+        "description": "QCloud Captcha constructor"
+      },
+      {
+        "path": "window.TencentCaptcha",
+        "condition": "typeof function",
+        "confidence": 100,
+        "description": "Window-level QCloud Captcha"
+      }
+    ]
+  }
+}
