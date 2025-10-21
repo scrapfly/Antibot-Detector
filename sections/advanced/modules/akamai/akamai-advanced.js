@@ -1133,7 +1133,7 @@ func main() {
 
 
                 <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
-                    <button class="export-scripts-btn" style="width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <button class="export-scripts-btn modal-export-code-btn">
                         <span>📤</span>
                         Export Code
                     </button>

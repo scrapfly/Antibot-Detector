@@ -2538,6 +2538,76 @@
   background: var(--accent-hover);
 }
 
+/* Modal Action Buttons - Match History Design */
+.modal-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.modal-action-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.modal-action-btn:active {
+  transform: translateY(0);
+}
+
+/* Export Code Button - Full Width Variant */
+.modal-export-code-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-bottom: 12px;
+}
+
+.modal-export-code-btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.modal-export-code-btn:active {
+  transform: translateY(0);
+}
+
+/* Copy/Action Buttons in Flexbox Layout */
+.modal-button-group {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--bg-tertiary);
+}
+
+.modal-button-group .modal-action-btn {
+  flex: 1;
+}
+
 /* Responsive Design */
 @media (max-width: 500px) {
   .advanced-modal-container {
