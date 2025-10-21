@@ -292,9 +292,6 @@
             <p style="margin: 8px 0 0 0; font-size: 12px; line-height: 1.5; color: rgba(255, 255, 255, 0.7);">
               Monitors API calls to detect fingerprinting techniques. When a page script calls methods like <code>canvas.toDataURL()</code>, <code>navigator.webdriver</code>, or <code>RTCPeerConnection.createOffer()</code>, hooks intercept these calls and detect which anti-bot or fingerprinting system is being used.
             </p>
-            <p style="margin: 8px 0 0 0; font-size: 12px; line-height: 1.5; color: rgba(255, 255, 255, 0.7);">
-              <strong>Note:</strong> Hooks only fire if the page actually calls those APIs. If a page caches results (like CreepJS does with Canvas fingerprints), some hooks won't fire on normal reloads. Use hard reload (Ctrl+F5) to bypass cache and detect all hooks.
-            </p>
           </div>
 
           <div class="setting-group">
