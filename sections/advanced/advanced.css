@@ -3106,6 +3106,27 @@
   background: var(--bg-secondary);
 }
 
+.capture-details-header .close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.capture-details-header .close-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
 .capture-details-title {
   margin: 0;
   font-size: 16px;

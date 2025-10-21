@@ -952,6 +952,9 @@ function ${cb}(token) {
         const siteUrl = (data.siteUrl || capture.url || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         const timestamp = new Date(capture.timestamp).toLocaleString();
 
+        // Transform version display: v2 -> reCAPTCHA v2, v3 -> reCAPTCHA v3
+        const versionDisplay = data.version ? `reCAPTCHA ${data.version}` : null;
+
         // Build features list (only show true/yes features)
         let features = [];
         if (data.isEnterprise) features.push('Enterprise');
@@ -963,16 +966,16 @@ function ${cb}(token) {
             <div style="display: flex; flex-direction: column; gap: 14px;">
                 <!-- Primary Info Card -->
                 <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-                    ${data.version ? `
+                    ${versionDisplay ? `
                     <div>
                         <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">Version</div>
-                        <div style="color: #4ade80; font-family: monospace; font-size: 12px; font-weight: 600;">${AdvancedUtils.escapeHtml(data.version)}</div>
+                        <div style="color: #4ade80; font-family: monospace; font-size: 12px; font-weight: 600; cursor: pointer; padding: 6px; background: rgba(255, 255, 255, 0.02); border-radius: 4px; transition: all 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.05)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.02)'" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.version)}', this, {notificationMessage: 'Version copied'});" title="Click to copy">${AdvancedUtils.escapeHtml(versionDisplay)}</div>
                     </div>
                     ` : ''}
                     ${data.action ? `
                     <div>
                         <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">Action</div>
-                        <div style="color: #4ade80; font-family: monospace; font-size: 12px; font-weight: 600; cursor: pointer;" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.action)}', this, {notificationMessage: 'Action copied'});" title="Click to copy">${AdvancedUtils.escapeHtml(data.action)}</div>
+                        <div style="color: #4ade80; font-family: monospace; font-size: 12px; cursor: pointer; padding: 6px; background: rgba(255, 255, 255, 0.02); border-radius: 4px; transition: all 0.2s; word-break: break-all;" onmouseover="this.style.background='rgba(255, 255, 255, 0.05)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.02)'" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.action)}', this, {notificationMessage: 'Action copied'});" title="Click to copy">${AdvancedUtils.escapeHtml(data.action)}</div>
                     </div>
                     ` : ''}
                 </div>
@@ -981,7 +984,7 @@ function ${cb}(token) {
                 ${data.siteKey ? `
                 <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
                     <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">Site Key</div>
-                    <div style="color: #4ade80; font-family: monospace; font-size: 12px; word-break: break-all; cursor: pointer; padding: 8px; background: rgba(255, 255, 255, 0.03); border-radius: 4px;" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.siteKey)}', this, {notificationMessage: 'Site Key copied'});" title="Click to copy">${AdvancedUtils.escapeHtml(data.siteKey)}</div>
+                    <div style="color: #4ade80; font-family: monospace; font-size: 12px; word-break: break-all; cursor: pointer; padding: 8px; background: rgba(255, 255, 255, 0.02); border-radius: 4px; transition: all 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.05)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.02)'" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.siteKey)}', this, {notificationMessage: 'Site Key copied'});" title="Click to copy">${AdvancedUtils.escapeHtml(data.siteKey)}</div>
                 </div>
                 ` : ''}
 
@@ -991,13 +994,13 @@ function ${cb}(token) {
                     ${data.apiDomain ? `
                     <div>
                         <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">API Domain</div>
-                        <div style="color: #4ade80; font-family: monospace; font-size: 12px; cursor: pointer;" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.apiDomain)}', this, {notificationMessage: 'API Domain copied'});" title="Click to copy">${AdvancedUtils.escapeHtml(data.apiDomain)}</div>
+                        <div style="color: #4ade80; font-family: monospace; font-size: 12px; cursor: pointer; padding: 6px; background: rgba(255, 255, 255, 0.02); border-radius: 4px; transition: all 0.2s; word-break: break-all;" onmouseover="this.style.background='rgba(255, 255, 255, 0.05)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.02)'" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.apiDomain)}', this, {notificationMessage: 'API Domain copied'});" title="Click to copy">${AdvancedUtils.escapeHtml(data.apiDomain)}</div>
                     </div>
                     ` : ''}
                     ${data.requiredCookie ? `
                     <div>
                         <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">Required Cookie</div>
-                        <div style="color: #4ade80; font-family: monospace; font-size: 12px; cursor: pointer; word-break: break-all;" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.requiredCookie)}', this, {notificationMessage: 'Cookie copied'});" title="Click to copy">${AdvancedUtils.escapeHtml(data.requiredCookie)}</div>
+                        <div style="color: #4ade80; font-family: monospace; font-size: 12px; cursor: pointer; padding: 6px; background: rgba(255, 255, 255, 0.02); border-radius: 4px; transition: all 0.2s; word-break: break-all;" onmouseover="this.style.background='rgba(255, 255, 255, 0.05)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.02)'" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.requiredCookie)}', this, {notificationMessage: 'Cookie copied'});" title="Click to copy">${AdvancedUtils.escapeHtml(data.requiredCookie)}</div>
                     </div>
                     ` : ''}
                 </div>
@@ -1016,7 +1019,7 @@ function ${cb}(token) {
                 <!-- Site URL Card -->
                 <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
                     <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">Site URL</div>
-                    <div style="color: #60a5fa; font-size: 12px; word-break: break-all; cursor: pointer; padding: 8px; background: rgba(255, 255, 255, 0.03); border-radius: 4px;" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${siteUrl}', this, {notificationMessage: 'URL copied'});" title="Click to copy">${siteUrl}</div>
+                    <div style="color: #60a5fa; font-size: 12px; word-break: break-all; cursor: pointer; padding: 8px; background: rgba(255, 255, 255, 0.02); border-radius: 4px; transition: all 0.2s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.05)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.02)'" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${siteUrl}', this, {notificationMessage: 'URL copied'});" title="Click to copy">${siteUrl}</div>
                 </div>
 
                 <!-- Metadata Card -->

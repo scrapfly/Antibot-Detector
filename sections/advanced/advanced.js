@@ -1328,10 +1328,10 @@ class Advanced {
       <div class="capture-details-modal" id="captureDetailsModal">
         <div class="capture-details-container">
           <div class="capture-details-header">
-            <h3>Capture Details</h3>
+            <h3 style="margin: 0; color: var(--text-primary); font-size: 16px; font-weight: 600;">Capture Details</h3>
             <button class="close-btn" id="closeCaptureDetailsModal">&times;</button>
           </div>
-          <div class="capture-details-content" id="captureDetailsContent">
+          <div class="capture-details-content" id="captureDetailsContent" style="padding: 20px; max-height: calc(85vh - 140px); overflow-y: auto;">
             ${moduleInstance.renderCaptureDetailsContent(transformedCaptureData)}
           </div>
         </div>
