@@ -452,13 +452,8 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
             console.log('[IMPERVA-CAPTURE] All captures stopped - listener removed');
         }
 
-        // Clear advanced selection
-        console.log('[IMPERVA-CAPTURE] Step 8: Clearing advanced selection...');
-        chrome.storage.local.remove('scrapfly_advanced_selected');
-        console.log('[IMPERVA-CAPTURE] ✓ Advanced selection cleared');
-
         // Notify popup (if open)
-        console.log('[IMPERVA-CAPTURE] Step 9: Notifying popup (if open)...');
+        console.log('[IMPERVA-CAPTURE] Step 8: Notifying popup (if open)...');
         chrome.runtime.sendMessage({
             type: 'IMPERVA_CAPTURE_COMPLETED',
             captureData: newCapture

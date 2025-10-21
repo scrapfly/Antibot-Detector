@@ -278,13 +278,8 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
             console.log('[AKAMAI-CAPTURE] All captures stopped - listener removed');
         }
 
-        // Clear advanced selection
-        console.log('[AKAMAI-CAPTURE] Step 8: Clearing advanced selection...');
-        chrome.storage.local.remove('scrapfly_advanced_selected');
-        console.log('[AKAMAI-CAPTURE] ✓ Advanced selection cleared');
-
         // Notify popup to update UI with captured data (if open)
-        console.log('[AKAMAI-CAPTURE] Step 9: Notifying popup (if open)...');
+        console.log('[AKAMAI-CAPTURE] Step 8: Notifying popup (if open)...');
         chrome.runtime.sendMessage({
             type: 'AKAMAI_CAPTURE_COMPLETED',
             captureData: {

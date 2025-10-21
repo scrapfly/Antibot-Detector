@@ -3156,10 +3156,6 @@ func main() {
             });
             console.log('[Akamai] ✅ Capture saved to unified history as JSON string:', newCapture.id);
 
-            // Clear advanced selection
-            await chrome.storage.local.remove('scrapfly_advanced_selected');
-            console.log('[Akamai] Cleared advanced selection');
-
             // Notify popup to refresh UI
             chrome.runtime.sendMessage({ type: 'CAPTURE_COMPLETED' }).catch(() => {});
 

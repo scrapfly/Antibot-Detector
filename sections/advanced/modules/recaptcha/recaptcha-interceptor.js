@@ -176,9 +176,6 @@ async function reCaptchaStartCapture(tabId) {
 
                 stopRecaptchaInterception();
 
-                // Clear advanced selection after capture completes
-                chrome.storage.local.remove('scrapfly_advanced_selected');
-
                 // Notify popup to clear UI
                 chrome.runtime.sendMessage({ type: 'CAPTURE_COMPLETED' }).catch(() => {});
 
@@ -351,9 +348,6 @@ function handleRecaptchaRequest(details) {
                             console.error('[reCAPTCHA] Failed to save to history:', err);
                         }
                     }
-
-                    // Clear advanced selection
-                    chrome.storage.local.remove('scrapfly_advanced_selected');
 
                     // Notify popup
                     chrome.runtime.sendMessage({ type: 'CAPTURE_COMPLETED' }).catch(() => {});
@@ -568,10 +562,6 @@ async function reCaptchaStopCapture(tabId) {
                 console.error('[reCAPTCHA] Failed to save to history:', err);
             }
         }
-
-        // Clear advanced selection after manual stop
-        chrome.storage.local.remove('scrapfly_advanced_selected');
-        console.log('[reCAPTCHA] Cleared advanced selection after manual stop');
 
         // Notify popup to clear UI
         chrome.runtime.sendMessage({ type: 'CAPTURE_COMPLETED' }).catch(() => {

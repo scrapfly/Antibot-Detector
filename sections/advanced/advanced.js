@@ -1571,16 +1571,6 @@ class Advanced {
       this.selectedDetection = detectorId;
       this.currentModuleInstance = moduleInstance;
 
-      const currentHostname = this.currentTab ? new URL(this.currentTab.url).hostname : null;
-
-      await chrome.storage.local.set({
-        'scrapfly_advanced_selected': {
-          detectorId: detectorId,
-          timestamp: Date.now(),
-          hostname: currentHostname
-        }
-      });
-
       // Check for pending analysis results (AWS WAF analyze scripts)
       if (moduleInstance.checkPendingAnalysisResults) {
         await moduleInstance.checkPendingAnalysisResults();
@@ -1638,52 +1628,14 @@ class Advanced {
     if (explanation) {
       explanation.style.display = 'block';
     }
-
-    chrome.storage.local.remove('scrapfly_advanced_selected');
   }
 
   /**
    * Restore previously selected detection after popup reopens
+   * Note: Selection is no longer persisted - user must reselect each time
    */
   async restoreSelectedDetection() {
-    try {
-      const result = await chrome.storage.local.get('scrapfly_advanced_selected');
-      if (!result.scrapfly_advanced_selected) return;
-
-      const { detectorId, timestamp, hostname } = result.scrapfly_advanced_selected;
-
-      const currentHostname = this.currentTab ? new URL(this.currentTab.url).hostname : null;
-
-      if (Date.now() - timestamp > 3 * 60 * 1000 || hostname !== currentHostname) {
-        chrome.storage.local.remove('scrapfly_advanced_selected');
-        this.clearDetectionToolsPanel();
-        return;
-      }
-
-      const selector = document.querySelector('#detectionSelector');
-      if (!selector) return;
-
-      const option = selector.querySelector(`[data-detector-id="${detectorId}"]`);
-      if (!option) return;
-
-      const display = selector.querySelector('.selector-display');
-      const iconHtml = option.querySelector('.detection-icon, .detection-icon-placeholder')?.outerHTML || '';
-      const name = option.querySelector('.detection-name')?.textContent || '';
-
-      if (display) {
-        display.innerHTML = `${iconHtml}<span class="selected-name">${name}</span>`;
-        display.setAttribute('data-selected', detectorId);
-      }
-
-      const loadBtn = document.querySelector('#loadDetectionTools');
-      if (loadBtn) {
-        loadBtn.disabled = false;
-      }
-
-      // Don't auto-load tools - user must click "Load Tools" button
-    } catch (error) {
-      console.error('Error restoring selected detection:', error);
-    }
+    // Selection persistence removed - each popup open starts fresh
   }
 
   /**
