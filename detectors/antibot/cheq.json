@@ -7,7 +7,7 @@
   "lastUpdated": "2024-10-21",
   "version": "1.0.0",
   "website": "https://cheq.ai/",
-  "icon": "default_detector.png",
+  "icon": "custom.png",
   "description": "Cheq bot detection and prevention with light obfuscation",
   "detection": {
     "content": [
@@ -15,11 +15,6 @@
         "content": "CheqSdk",
         "confidence": 100,
         "description": "Cheq SDK main object"
-      },
-      {
-        "content": "clicktrue_",
-        "confidence": 95,
-        "description": "Cheq clicktrue invocation"
       },
       {
         "content": "\"CHEQ\"",

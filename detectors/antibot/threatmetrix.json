@@ -7,20 +7,10 @@
   "lastUpdated": "2024-10-21",
   "version": "1.0.0",
   "website": "https://www.threatmetrix.com/",
-  "icon": "default_detector.png",
+  "icon": "custom.png",
   "description": "LexisNexis ThreatMetrix fingerprinting service for fraud prevention and device identification",
   "detection": {
     "content": [
-      {
-        "content": "this.getFPParams",
-        "confidence": 100,
-        "description": "ThreatMetrix fingerprint parameters function"
-      },
-      {
-        "content": "navigator.storage.estimate",
-        "confidence": 90,
-        "description": "Storage API estimation for fingerprinting"
-      },
       {
         "content": "ThreatMetrix",
         "confidence": 95,
@@ -28,11 +18,6 @@
       }
     ],
     "url": [
-      {
-        "pattern": "src.ebay",
-        "confidence": 85,
-        "description": "eBay ThreatMetrix deployment"
-      },
       {
         "pattern": "fp/check.js",
         "confidence": 95,
