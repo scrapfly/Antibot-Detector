@@ -1032,8 +1032,19 @@ class Advanced {
         return;
       }
 
-      if (moduleInstance.renderCaptureDetailsContent) {
-        this.showCaptureDetailsModal(moduleInstance, captureData);
+      if (moduleInstance.renderCaptureDetailsContent && moduleInstance.displayCaptureDetailsModal) {
+        // Transform capture data to match module expectations
+        // Storage format: { id, timestamp, url, data, expiresAt }
+        // Module expects: { timestamp, url, captureData, ... }
+        const transformedCaptureData = {
+          timestamp: captureData.timestamp,
+          url: captureData.url,
+          captureData: captureData.data || {},
+          ...captureData  // Include all other properties for module-specific use
+        };
+
+        const detailsContent = moduleInstance.renderCaptureDetailsContent(transformedCaptureData);
+        moduleInstance.displayCaptureDetailsModal(captureData.id, detailsContent);
       } else {
         NotificationHelper.info('Details view not available for this module');
       }
@@ -1384,73 +1395,6 @@ class Advanced {
     });
   }
 
-  /**
-   * Show capture details in a modal
-   * @param {object} moduleInstance - Module instance with renderCaptureDetailsContent method
-   * @param {object} captureData - Capture data object (full capture with id, timestamp, url, data, expiresAt)
-   */
-  showCaptureDetailsModal(moduleInstance, captureData) {
-    // Transform capture data to match module renderCaptureDetailsContent expectations
-    // Storage format: { id, timestamp, url, data, expiresAt }
-    // Module expects: { timestamp, url, captureData, ... }
-    const transformedCaptureData = {
-      timestamp: captureData.timestamp,
-      url: captureData.url,
-      captureData: captureData.data || {},
-      ...captureData  // Include all other properties for module-specific use
-    };
-
-    // Create modal HTML
-    const modalHtml = `
-      <div class="capture-details-modal" id="captureDetailsModal">
-        <div class="capture-details-container">
-          <div class="capture-details-header">
-            <h3 style="margin: 0; color: var(--text-primary); font-size: 16px; font-weight: 600;">Capture Details</h3>
-            <button class="close-btn" id="closeCaptureDetailsModal">&times;</button>
-          </div>
-          <div class="capture-details-content" id="captureDetailsContent" style="padding: 20px; max-height: calc(85vh - 140px); overflow-y: auto;">
-            ${moduleInstance.renderCaptureDetailsContent(transformedCaptureData)}
-          </div>
-        </div>
-      </div>
-    `;
-
-    // Remove existing modal if any
-    const existingModal = document.querySelector('#captureDetailsModal');
-    if (existingModal) {
-      existingModal.remove();
-    }
-
-    // Add modal to body
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-
-    // Add close listener
-    const closeBtn = document.querySelector('#closeCaptureDetailsModal');
-    const modal = document.querySelector('#captureDetailsModal');
-
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => {
-        modal.remove();
-      });
-    }
-
-    if (modal) {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          modal.remove();
-        }
-      });
-    }
-
-    // ESC key to close
-    const escHandler = (e) => {
-      if (e.key === 'Escape') {
-        modal.remove();
-        document.removeEventListener('keydown', escHandler);
-      }
-    };
-    document.addEventListener('keydown', escHandler);
-  }
 
   /**
    * Get module display name from module ID
