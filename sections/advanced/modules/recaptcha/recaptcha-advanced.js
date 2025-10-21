@@ -435,34 +435,43 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
         console.log('[ReCAPTCHA] displaySelectorModal called with:', result);
         const modal = document.createElement('div');
         modal.className = 'advanced-modal-overlay';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.2s;
+        `;
 
         modal.innerHTML = `
-            <div class="advanced-modal-container">
-                <div class="advanced-modal-header">
-                    <h3 class="advanced-modal-title">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"/>
-                        </svg>
-                        Selector Detection
-                    </h3>
+            <div class="advanced-modal-container" style="background: var(--bg-secondary, #2a2a2a); border-radius: 8px; padding: 24px; max-width: 600px; width: 95%;">
+                <div class="advanced-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h3 style="margin: 0; color: var(--text-primary, #fff); font-size: 16px; font-weight: 600;">Selector Detection</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
                 <div class="advanced-modal-body">
                     ${result.success ? `
-                        <div class="advanced-modal-section">
-                            <div class="advanced-modal-label advanced-modal-success">✅ Method</div>
-                            <div class="advanced-modal-value">${result.method}</div>
+                        <div class="advanced-modal-section" style="margin-bottom: 20px;">
+                            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">Method</div>
+                            <div style="color: var(--text-primary, #fff); font-size: 13px; padding: 10px; background: var(--bg-tertiary, #1a1a1a); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1);">${result.method}</div>
                         </div>
                         ${result.selector ? `
                             <div class="advanced-modal-section">
-                                <div class="advanced-modal-label advanced-modal-success">Selector</div>
-                                <code class="advanced-modal-code-block">${result.selector}</code>
+                                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">Selector</div>
+                                <code class="clickable-copy-value" data-copy="${result.selector}" style="display: block; background: var(--bg-tertiary, #1a1a1a); padding: 14px; border-radius: 6px; color: var(--success, #4ade80); font-family: monospace; word-break: break-all; font-size: 13px; line-height: 1.5; cursor: pointer; transition: all 0.2s; user-select: text; border: 1px solid rgba(255, 255, 255, 0.1);">${result.selector}</code>
                             </div>
                         ` : ''}
                     ` : `
                         <div class="advanced-modal-section">
-                            <div class="advanced-modal-label advanced-modal-error">❌ Error</div>
-                            <div class="advanced-modal-value advanced-modal-error">${result.error}</div>
+                            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">Error</div>
+                            <div style="color: var(--error, #ef4444); font-size: 13px; padding: 10px; background: var(--bg-tertiary, #1a1a1a); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1);">${result.error}</div>
                         </div>
                     `}
                 </div>
@@ -471,7 +480,27 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
 
         console.log('[ReCAPTCHA] Appending modal to body');
         document.body.appendChild(modal);
-        console.log('[ReCAPTCHA] Modal appended, setting up close handlers');
+
+        // Add click-to-copy for selector value
+        modal.querySelectorAll('.clickable-copy-value').forEach(element => {
+            element.addEventListener('click', () => {
+                const text = element.dataset.copy;
+                if (!text) {
+                    return;
+                }
+                AdvancedUtils.copyToClipboard(text, element, {
+                    notificationMessage: 'Selector copied to clipboard!'
+                });
+            });
+
+            // Add hover effect
+            element.addEventListener('mouseenter', () => {
+                element.style.background = 'rgba(255, 255, 255, 0.08)';
+            });
+            element.addEventListener('mouseleave', () => {
+                element.style.background = 'var(--bg-tertiary)';
+            });
+        });
 
         const closeBtn = modal.querySelector('.advanced-modal-close-btn');
         if (closeBtn) {
@@ -524,8 +553,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
                 </div>
                 <div class="recaptcha-modal-content">
                     <div class="sitekey-display" style="display: flex; flex-direction: column; gap: 14px;">
-                        <code class="sitekey-code" style="display: block; background: var(--bg-tertiary, #1a1a1a); padding: 14px; border-radius: 6px; color: var(--success, #4ade80); font-family: monospace; word-break: break-all; font-size: 13px; line-height: 1.5;">${sitekey}</code>
-                        <button class="sitekey-copy-btn" data-copy="${sitekey}">Copy</button>
+                        <code class="sitekey-code clickable-copy-value" data-copy="${sitekey}" style="display: block; background: var(--bg-tertiary, #1a1a1a); padding: 14px; border-radius: 6px; color: var(--success, #4ade80); font-family: monospace; word-break: break-all; font-size: 13px; line-height: 1.5; cursor: pointer; transition: all 0.2s; user-select: text;">${sitekey}</code>
                     </div>
                 </div>
             </div>
@@ -534,18 +562,26 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
         console.log('[ReCAPTCHA] Appending sitekey modal to body');
         document.body.appendChild(modal);
 
-        const copyBtn = modal.querySelector('.sitekey-copy-btn');
-        if (copyBtn) {
-            copyBtn.addEventListener('click', () => {
-                const value = copyBtn.dataset.copy;
-                if (!value) {
+        // Add click-to-copy for sitekey value
+        modal.querySelectorAll('.clickable-copy-value').forEach(element => {
+            element.addEventListener('click', () => {
+                const text = element.dataset.copy;
+                if (!text) {
                     return;
                 }
-                AdvancedUtils.copyToClipboard(value, copyBtn, {
-                    notificationMessage: 'SiteKey copied!'
+                AdvancedUtils.copyToClipboard(text, element, {
+                    notificationMessage: 'SiteKey copied to clipboard!'
                 });
             });
-        }
+
+            // Add hover effect
+            element.addEventListener('mouseenter', () => {
+                element.style.background = 'rgba(255, 255, 255, 0.08)';
+            });
+            element.addEventListener('mouseleave', () => {
+                element.style.background = 'var(--bg-tertiary)';
+            });
+        });
 
         const closeBtn = modal.querySelector('.advanced-modal-close-btn');
         if (closeBtn) {
@@ -744,6 +780,66 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
                                 <code class="callback-value-clickable" data-copy="${cb}" style="color: var(--success, #4ade80); font-family: monospace; font-size: 12px; padding: 12px; background: var(--bg-tertiary, #1a1a1a); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); display: block; overflow-x: auto; cursor: pointer; transition: all 0.2s; user-select: text;">${cb}</code>
                             `).join('')}
                         </div>
+                    </div>
+                    ` : ''}
+
+                    ${hasDomCallbacks ? `
+                    <!-- DOM Callbacks Usage Examples -->
+                    <div class="usage-examples-section" style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 24px;">
+                        <h4 style="margin: 0 0 16px 0; color: var(--text-primary, #fff); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent);">Callback Usage Examples</h4>
+                        ${domCallbacks.map(cb => `
+                        <div style="margin-bottom: 16px;">
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">Using callback: <code style="background: var(--bg-tertiary); padding: 2px 6px; border-radius: 3px; color: var(--success)">${cb}</code></div>
+                            <code style="color: var(--success, #4ade80); font-family: monospace; font-size: 11px; padding: 12px; background: var(--bg-primary); border-radius: 4px; display: block; overflow-x: auto; border: 1px solid rgba(255, 255, 255, 0.05); line-height: 1.6; white-space: pre-wrap; word-break: break-word;">// When reCAPTCHA loads, this callback is called
+function ${cb}(token) {
+  console.log('reCAPTCHA token:', token);
+
+  // Send token to your backend
+  fetch('/verify-captcha', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: token })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      console.log('Verification successful!');
+      // Proceed with your action
+    }
+  });
+}</code>
+                        </div>
+                        `).join('')}
+                    </div>
+                    ` : ''}
+
+                    ${hasScriptCallbacks && !hasDomCallbacks ? `
+                    <!-- Script Callbacks Usage Examples -->
+                    <div class="usage-examples-section" style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 24px;">
+                        <h4 style="margin: 0 0 16px 0; color: var(--text-primary, #fff); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent);">Callback Usage Examples</h4>
+                        ${scriptCallbacks.map(cb => `
+                        <div style="margin-bottom: 16px;">
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">Using callback: <code style="background: var(--bg-tertiary); padding: 2px 6px; border-radius: 3px; color: var(--success)">${cb}</code></div>
+                            <code style="color: var(--success, #4ade80); font-family: monospace; font-size: 11px; padding: 12px; background: var(--bg-primary); border-radius: 4px; display: block; overflow-x: auto; border: 1px solid rgba(255, 255, 255, 0.05); line-height: 1.6; white-space: pre-wrap; word-break: break-word;">// When reCAPTCHA completes, this callback is invoked
+function ${cb}(token) {
+  console.log('reCAPTCHA token:', token);
+
+  // Send token to your backend
+  fetch('/verify-captcha', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: token })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      console.log('Verification successful!');
+      // Proceed with your action
+    }
+  });
+}</code>
+                        </div>
+                        `).join('')}
                     </div>
                     ` : ''}
 
