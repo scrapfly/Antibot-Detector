@@ -694,13 +694,10 @@ async function showNotification(tabId, options = {}) {
 
     const notifGradient = gradient || gradients[type] || gradients.info;
 
-    // Scrapfly logo SVG (network hub design)
-    const logoSvg = '<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><circle cx="128" cy="32" r="12" fill="white"/><circle cx="192" cy="64" r="12" fill="white"/><circle cx="224" cy="128" r="12" fill="white"/><circle cx="192" cy="192" r="12" fill="white"/><circle cx="128" cy="224" r="12" fill="white"/><circle cx="64" cy="192" r="12" fill="white"/><circle cx="32" cy="128" r="12" fill="white"/><circle cx="64" cy="64" r="12" fill="white"/><circle cx="128" cy="128" r="16" fill="white"/><line x1="128" y1="44" x2="128" y2="112" stroke="white" stroke-width="6"/><line x1="128" y1="144" x2="128" y2="212" stroke="white" stroke-width="6"/><line x1="204" y1="128" x2="144" y2="128" stroke="white" stroke-width="6"/><line x1="112" y1="128" x2="52" y2="128" stroke="white" stroke-width="6"/><line x1="188" y1="76" x2="140" y2="116" stroke="white" stroke-width="6"/><line x1="116" y1="140" x2="68" y2="180" stroke="white" stroke-width="6"/><line x1="68" y1="76" x2="116" y2="116" stroke="white" stroke-width="6"/><line x1="140" y1="140" x2="188" y2="180" stroke="white" stroke-width="6"/></svg>';
-
     try {
         await chrome.scripting.executeScript({
             target: { tabId: tabId },
-            func: (title, message, gradient, duration, logoSvg) => {
+            func: (title, message, gradient, duration) => {
                 // Cleanup old notifications
                 const allNotifs = document.querySelectorAll('[id^="scrapfly-capture-notification"]');
                 allNotifs.forEach(n => n.remove());
@@ -737,14 +734,14 @@ async function showNotification(tabId, options = {}) {
                         styleTag.textContent = `
                             @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
                             @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(400px); opacity: 0; } }
+                            .scrapfly-notif-icon { display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; flex-shrink: 0; }
+                            .scrapfly-notif-icon::before { content: '●'; color: white; font-size: 10px; }
                         `;
                         document.head.appendChild(styleTag);
 
                         notif.innerHTML = `
                             <div style="display: flex; align-items: flex-start; gap: 10px;">
-                                <div style="flex-shrink: 0; width: 20px; height: 20px; margin-top: 2px;">
-                                    ${logoSvg}
-                                </div>
+                                <div class="scrapfly-notif-icon"></div>
                                 <div style="flex: 1; min-width: 0;">
                                     <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px; line-height: 1.2;">
                                         ${title}
@@ -782,7 +779,7 @@ async function showNotification(tabId, options = {}) {
                     }, 100);
                 });
             },
-            args: [title, message, notifGradient, duration, logoSvg]
+            args: [title, message, notifGradient, duration]
         });
     } catch (err) {
         console.error('[BaseInterceptor] Failed to show notification:', err);
