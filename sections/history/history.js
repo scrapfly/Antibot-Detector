@@ -1294,7 +1294,7 @@ class History {
         id: `detection_${Date.now()}_${tabId}`,
         url: pageData.url,
         hostname: pageData.hostname,
-        title: pageData.title || 'Untitled',
+        title: pageData.tabTitle || pageData.title || 'Untitled',
         favicon: pageData.favicon,
         timestamp: Date.now(),
         detections: detectionResults,
