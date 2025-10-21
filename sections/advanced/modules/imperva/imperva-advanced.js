@@ -1270,10 +1270,6 @@ public static string GenerateUtmvcScriptPath()
                         `).join('')}
                     </div>
                 `}
-
-                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
-                    <button class="modal-close" style="width: 100%; padding: 10px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); cursor: pointer; font-size: 13px;">Close</button>
-                </div>
             </div>
         `;
 
