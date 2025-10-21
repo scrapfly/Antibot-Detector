@@ -971,9 +971,9 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                     ` : ''}
                 `}
 
-                <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--bg-tertiary); display: flex; gap: 8px;">
-                    <button class="export-code-btn" style="flex: 1; background: #1976D2; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">Export Code</button>
-                    <button class="copy-all-scripts" style="flex: 1; padding: 10px;">Copy All URLs</button>
+                <div class="modal-button-group">
+                    <button class="export-code-btn modal-export-code-btn" style="margin-bottom: 0; flex: 1;">Export Code</button>
+                    <button class="copy-all-scripts modal-action-btn">Copy All URLs</button>
                 </div>
             </div>
         `;
@@ -1141,7 +1141,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                     </div>
 
                     <!-- Copy Button -->
-                    <button class="copy-parsing-code" style="position: absolute; top: 8px; right: 8px; z-index: 10;">Copy Code</button>
+                    <button class="copy-parsing-code advanced-modal-copy-btn" style="position: absolute; top: 8px; right: 8px; z-index: 10; padding: 4px 10px; font-size: 11px;">Copy Code</button>
                 </div>
 
                 <!-- Close Button -->

@@ -952,7 +952,7 @@ public static string GenerateUtmvcScriptPath()
 
                 ${hasScriptPaths ? `
                     <!-- Export Code Button -->
-                    <button class="export-code-btn" style="width: 100%; padding: 12px; background: #1976D2; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s;">
+                    <button class="export-code-btn modal-export-code-btn">
                         <span>💻</span>
                         <span>Export Code</span>
                     </button>
@@ -1080,37 +1080,37 @@ public static string GenerateUtmvcScriptPath()
                     <div class="code-content" data-lang="javascript" style="display: block;">
                         <div style="position: relative;">
                             <pre style="background: #1E1E1E; padding: 16px; border-radius: 4px; overflow-x: auto; margin: 0; max-height: 400px;"><code style="color: #D4D4D4; font-family: 'Consolas', 'Monaco', 'Courier New', monospace; font-size: 11px; line-height: 1.5;">${this.escapeHtml(parsingCodes.javascript)}</code></pre>
-                            <button class="copy-code-btn" data-lang="javascript" style="position: absolute; top: 10px; right: 10px;">Copy Code</button>
+                            <button class="copy-code-btn advanced-modal-copy-btn" data-lang="javascript" style="position: absolute; top: 10px; right: 10px; padding: 4px 10px; font-size: 11px;">Copy Code</button>
                         </div>
                     </div>
                     <div class="code-content" data-lang="python" style="display: none;">
                         <div style="position: relative;">
                             <pre style="background: #1E1E1E; padding: 16px; border-radius: 4px; overflow-x: auto; margin: 0; max-height: 400px;"><code style="color: #D4D4D4; font-family: 'Consolas', 'Monaco', 'Courier New', monospace; font-size: 11px; line-height: 1.5;">${this.escapeHtml(parsingCodes.python)}</code></pre>
-                            <button class="copy-code-btn" data-lang="python" style="position: absolute; top: 10px; right: 10px;">Copy Code</button>
+                            <button class="copy-code-btn advanced-modal-copy-btn" data-lang="python" style="position: absolute; top: 10px; right: 10px;">Copy Code</button>
                         </div>
                     </div>
                     <div class="code-content" data-lang="nodejs" style="display: none;">
                         <div style="position: relative;">
                             <pre style="background: #1E1E1E; padding: 16px; border-radius: 4px; overflow-x: auto; margin: 0; max-height: 400px;"><code style="color: #D4D4D4; font-family: 'Consolas', 'Monaco', 'Courier New', monospace; font-size: 11px; line-height: 1.5;">${this.escapeHtml(parsingCodes.javascript)}</code></pre>
-                            <button class="copy-code-btn" data-lang="nodejs" style="position: absolute; top: 10px; right: 10px;">Copy Code</button>
+                            <button class="copy-code-btn advanced-modal-copy-btn" data-lang="nodejs" style="position: absolute; top: 10px; right: 10px;">Copy Code</button>
                         </div>
                     </div>
                     <div class="code-content" data-lang="php" style="display: none;">
                         <div style="position: relative;">
                             <pre style="background: #1E1E1E; padding: 16px; border-radius: 4px; overflow-x: auto; margin: 0; max-height: 400px;"><code style="color: #D4D4D4; font-family: 'Consolas', 'Monaco', 'Courier New', monospace; font-size: 11px; line-height: 1.5;">${this.escapeHtml(parsingCodes.php)}</code></pre>
-                            <button class="copy-code-btn" data-lang="php" style="position: absolute; top: 10px; right: 10px;">Copy Code</button>
+                            <button class="copy-code-btn advanced-modal-copy-btn" data-lang="php" style="position: absolute; top: 10px; right: 10px;">Copy Code</button>
                         </div>
                     </div>
                     <div class="code-content" data-lang="csharp" style="display: none;">
                         <div style="position: relative;">
                             <pre style="background: #1E1E1E; padding: 16px; border-radius: 4px; overflow-x: auto; margin: 0; max-height: 400px;"><code style="color: #D4D4D4; font-family: 'Consolas', 'Monaco', 'Courier New', monospace; font-size: 11px; line-height: 1.5;">${this.escapeHtml(parsingCodes.csharp)}</code></pre>
-                            <button class="copy-code-btn" data-lang="csharp" style="position: absolute; top: 10px; right: 10px;">Copy Code</button>
+                            <button class="copy-code-btn advanced-modal-copy-btn" data-lang="csharp" style="position: absolute; top: 10px; right: 10px;">Copy Code</button>
                         </div>
                     </div>
                     <div class="code-content" data-lang="go" style="display: none;">
                         <div style="position: relative;">
                             <pre style="background: #1E1E1E; padding: 16px; border-radius: 4px; overflow-x: auto; margin: 0; max-height: 400px;"><code style="color: #D4D4D4; font-family: 'Consolas', 'Monaco', 'Courier New', monospace; font-size: 11px; line-height: 1.5;">${this.escapeHtml(parsingCodes.go)}</code></pre>
-                            <button class="copy-code-btn" data-lang="go" style="position: absolute; top: 10px; right: 10px;">Copy Code</button>
+                            <button class="copy-code-btn advanced-modal-copy-btn" data-lang="go" style="position: absolute; top: 10px; right: 10px;">Copy Code</button>
                         </div>
                     </div>
                 </div>
