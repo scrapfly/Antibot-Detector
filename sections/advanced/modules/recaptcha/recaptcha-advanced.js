@@ -525,7 +525,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
                 <div class="recaptcha-modal-content">
                     <div class="sitekey-display" style="display: flex; flex-direction: column; gap: 12px;">
                         <code class="sitekey-code" style="display: block; background: var(--bg-tertiary, #1a1a1a); padding: 12px; border-radius: 4px; color: var(--success, #4ade80); font-family: monospace; word-break: break-all;">${sitekey}</code>
-                        <button class="copy-btn" data-copy="${sitekey}" style="padding: 8px 16px; background: var(--primary, #667eea); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">📋 Copy</button>
+                        <button class="sitekey-copy-btn" data-copy="${sitekey}">📋 Copy</button>
                     </div>
                 </div>
             </div>

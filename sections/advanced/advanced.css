@@ -1186,21 +1186,33 @@
   word-break: break-all;
 }
 
+/* Copy button styling - matches History section design */
 .sitekey-copy-btn {
   width: 100%;
-  padding: 10px;
-  background: var(--accent);
-  border: none;
-  border-radius: 6px;
-  color: white;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 7px;
+  color: var(--text-secondary);
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .sitekey-copy-btn:hover {
-  background: #2563eb;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  transform: scale(1.02);
+}
+
+.sitekey-copy-btn:active {
+  transform: scale(0.98);
 }
 
 /* Version Info Modal */
