@@ -381,10 +381,6 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                     </div>
                 </div>
 
-                <!-- Close Button -->
-                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
-                    <button class="modal-close" style="width: 100%; padding: 10px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); cursor: pointer; font-size: 13px;">Close</button>
-                </div>
             </div>
         `;
 
@@ -546,7 +542,6 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                 <div class="details-grid">
                     ${headersList || '<div class="detail-empty">No dynamic headers found</div>'}
                 </div>
-                <button class="detail-action-btn close-modal-btn" style="margin-top: 16px; width: 100%;">Close</button>
             </div>
         `;
 
@@ -609,10 +604,6 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                         <div style="font-size: 14px;">No Shape Security cookies found</div>
                     </div>
                 `}
-
-                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
-                    <button class="modal-close" style="width: 100%; padding: 10px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); cursor: pointer; font-size: 13px;">Close</button>
-                </div>
             </div>
         `;
 
@@ -983,7 +974,6 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                 <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--bg-tertiary); display: flex; gap: 8px;">
                     <button class="export-code-btn" style="flex: 1; background: #1976D2; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">Export Code</button>
                     <button class="copy-all-scripts" style="flex: 1; padding: 10px;">Copy All URLs</button>
-                    <button class="modal-close-btn" style="flex: 1; background: var(--bg-tertiary); color: var(--text-primary); border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">Close</button>
                 </div>
             </div>
         `;
@@ -1001,7 +991,6 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
 
         // Close button
         modal.querySelector('.advanced-modal-close-btn').addEventListener('click', closeModal);
-        modal.querySelector('.modal-close-btn').addEventListener('click', closeModal);
 
         // Close on background click
         modal.addEventListener('click', (e) => {

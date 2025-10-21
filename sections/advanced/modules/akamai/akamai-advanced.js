@@ -1133,11 +1133,10 @@ func main() {
 
 
                 <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
-                    <button class="export-scripts-btn" style="width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <button class="export-scripts-btn" style="width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px;">
                         <span>📤</span>
                         Export Code
                     </button>
-                    <button class="modal-close" style="width: 100%; padding: 10px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); cursor: pointer; font-size: 13px;">Close</button>
                 </div>
             </div>
         `;
@@ -1307,11 +1306,6 @@ func main() {
 
                     <!-- Copy Button -->
                     <button class="copy-parsing-code" style="position: absolute; top: 8px; right: 8px; z-index: 10;">Copy Code</button>
-                </div>
-
-                <!-- Close Button -->
-                <div style="text-align: center; margin-top: 16px; flex-shrink: 0;">
-                    <button class="modal-close" style="width: 100%; padding: 10px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); cursor: pointer; font-size: 13px;">Close</button>
                 </div>
             </div>
         `;
