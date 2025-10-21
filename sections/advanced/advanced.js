@@ -1150,12 +1150,89 @@ class Advanced {
   }
 
   /**
+   * Show warning confirmation modal
+   * @param {string} message - Confirmation message
+   * @param {string} title - Modal title
+   * @returns {Promise<boolean>} True if confirmed, false if cancelled
+   */
+  showWarningConfirmation(message, title = 'Mensaje de la extensión Scrapfly') {
+    return new Promise((resolve) => {
+      // Create modal HTML
+      const modalHtml = `
+        <div class="confirmation-modal-overlay" id="confirmationModalOverlay">
+          <div class="confirmation-modal">
+            <div class="confirmation-modal-header">
+              <div class="confirmation-modal-icon">⚠️</div>
+              <h3 class="confirmation-modal-title">${title}</h3>
+            </div>
+            <div class="confirmation-modal-content">
+              <p class="confirmation-modal-message">${message}</p>
+            </div>
+            <div class="confirmation-modal-footer">
+              <button class="confirmation-modal-btn confirmation-modal-btn-cancel" id="confirmCancelBtn">
+                Cancelar
+              </button>
+              <button class="confirmation-modal-btn confirmation-modal-btn-danger" id="confirmAcceptBtn">
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Add modal to document
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+      const overlay = document.getElementById('confirmationModalOverlay');
+      const cancelBtn = document.getElementById('confirmCancelBtn');
+      const acceptBtn = document.getElementById('confirmAcceptBtn');
+
+      // Handle cancel
+      const handleCancel = () => {
+        overlay.remove();
+        resolve(false);
+      };
+
+      // Handle accept
+      const handleAccept = () => {
+        overlay.remove();
+        resolve(true);
+      };
+
+      // Click handlers
+      cancelBtn.addEventListener('click', handleCancel);
+      acceptBtn.addEventListener('click', handleAccept);
+
+      // Click on overlay background to cancel
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          handleCancel();
+        }
+      });
+
+      // ESC key to cancel
+      const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+          document.removeEventListener('keydown', handleEscape);
+          handleCancel();
+        }
+      };
+      document.addEventListener('keydown', handleEscape);
+
+      // Focus accept button
+      setTimeout(() => acceptBtn.focus(), 0);
+    });
+  }
+
+  /**
    * Clear all captures
    */
   async clearAllCaptures() {
     try {
-      // Show confirmation
-      const confirmed = confirm('Are you sure you want to delete all captures? This cannot be undone.');
+      // Show warning confirmation modal
+      const confirmed = await this.showWarningConfirmation(
+        'Are you sure you want to delete all captures? This cannot be undone.'
+      );
       if (!confirmed) return;
 
       await chrome.storage.local.set({ scrapfly_advanced_history: {} });
