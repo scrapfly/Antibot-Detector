@@ -2531,6 +2531,7 @@ func main() {
      */
     async extractSensorInformation() {
         console.log('[AKAMAI-EXTRACT] ========== STARTING EXTRACTION ==========');
+        NotificationHelper.info('Extracting sensor information...');
         try {
             console.log('[AKAMAI-EXTRACT] Step 1: Getting current tab...');
 
