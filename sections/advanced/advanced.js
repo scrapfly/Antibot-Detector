@@ -924,6 +924,14 @@ class Advanced {
       const moduleId = card.getAttribute('data-module-id');
       const captureId = card.getAttribute('data-capture-id');
 
+      // Main card click - opens modal when clicking anywhere on the card
+      card.addEventListener('click', (e) => {
+        // Don't trigger if clicking on action buttons
+        if (!e.target.closest('.capture-action-btn')) {
+          this.viewCaptureDetails(moduleId, captureId);
+        }
+      });
+
       if (viewBtn) {
         viewBtn.addEventListener('click', (e) => {
           e.stopPropagation();
