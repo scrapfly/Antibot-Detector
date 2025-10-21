@@ -516,7 +516,6 @@ class BaseAdvancedModule {
         // Create container
         const container = document.createElement('div');
         container.className = 'advanced-modal-container';
-        container.onclick = (e) => e.stopPropagation();
 
         // Create header
         const header = document.createElement('div');
@@ -549,12 +548,8 @@ class BaseAdvancedModule {
         container.appendChild(body);
         overlay.appendChild(container);
 
-        // Close modal when clicking overlay background, handle code block copying
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                overlay.remove();
-            }
-
+        // Handle click-to-copy for code blocks and stop propagation for container clicks
+        container.addEventListener('click', (e) => {
             // Handle click-to-copy for code blocks
             const codeBlock = e.target.closest('.advanced-modal-code-block');
             if (codeBlock && codeBlock.dataset.copy) {
@@ -563,6 +558,17 @@ class BaseAdvancedModule {
                 AdvancedUtils.copyToClipboard(valueToCopy, codeBlock, {
                     notificationMessage: 'Value copied'
                 });
+                return;
+            }
+
+            // Stop propagation for all container clicks (prevents overlay background close)
+            e.stopPropagation();
+        });
+
+        // Close modal when clicking overlay background
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.remove();
             }
         });
 
