@@ -1,0 +1,83 @@
+{
+  "id": "cheq",
+  "name": "Cheq",
+  "category": "ANTIBOT",
+  "color": "#FF5C7C",
+  "confidence": 95,
+  "lastUpdated": "2024-10-21",
+  "version": "1.0.0",
+  "website": "https://cheq.ai/",
+  "icon": "cheq_official.png",
+  "description": "Cheq bot detection and prevention with light obfuscation",
+  "detection": {
+    "content": [
+      {
+        "content": "CheqSdk",
+        "confidence": 100,
+        "description": "Cheq SDK main object"
+      },
+      {
+        "content": "clicktrue_",
+        "confidence": 95,
+        "description": "Cheq clicktrue invocation"
+      },
+      {
+        "content": "\"CHEQ\"",
+        "confidence": 100,
+        "description": "Cheq identifier string"
+      },
+      {
+        "content": "cheq_invalidUsers",
+        "confidence": 95,
+        "description": "Cheq invalid user detection"
+      },
+      {
+        "content": "cheq",
+        "confidence": 85,
+        "description": "Cheq reference"
+      }
+    ],
+    "url": [
+      {
+        "pattern": "clicktrue_invocation.js",
+        "confidence": 100,
+        "description": "Cheq clicktrue invocation script"
+      },
+      {
+        "pattern": "cheqzone.com",
+        "confidence": 100,
+        "description": "Cheq zone domain"
+      },
+      {
+        "pattern": "ob.cheqzone.com",
+        "confidence": 100,
+        "description": "Cheq obfuscation server"
+      },
+      {
+        "pattern": "cheq.ai",
+        "confidence": 95,
+        "description": "Cheq main domain"
+      }
+    ],
+    "window": [
+      {
+        "path": "CheqSdk",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "Cheq SDK object"
+      },
+      {
+        "path": "window.CheqSdk",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "Window-level Cheq SDK"
+      },
+      {
+        "path": "cheq_invalidUsers",
+        "condition": "typeof function",
+        "confidence": 95,
+        "description": "Cheq invalid users checker"
+      }
+    ]
+  }
+}

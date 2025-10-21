@@ -1,0 +1,62 @@
+{
+  "id": "threatmetrix",
+  "name": "ThreatMetrix",
+  "category": "ANTIBOT",
+  "color": "#FF6B35",
+  "confidence": 95,
+  "lastUpdated": "2024-10-21",
+  "version": "1.0.0",
+  "website": "https://www.threatmetrix.com/",
+  "icon": "threatmetrix_official.png",
+  "description": "LexisNexis ThreatMetrix fingerprinting service for fraud prevention and device identification",
+  "detection": {
+    "content": [
+      {
+        "content": "this.getFPParams",
+        "confidence": 100,
+        "description": "ThreatMetrix fingerprint parameters function"
+      },
+      {
+        "content": "navigator.storage.estimate",
+        "confidence": 90,
+        "description": "Storage API estimation for fingerprinting"
+      },
+      {
+        "content": "ThreatMetrix",
+        "confidence": 95,
+        "description": "ThreatMetrix reference"
+      }
+    ],
+    "url": [
+      {
+        "pattern": "src.ebay",
+        "confidence": 85,
+        "description": "eBay ThreatMetrix deployment"
+      },
+      {
+        "pattern": "fp/check.js",
+        "confidence": 95,
+        "description": "ThreatMetrix fingerprint check endpoint"
+      },
+      {
+        "pattern": "org_id=",
+        "confidence": 85,
+        "description": "ThreatMetrix organization ID parameter"
+      }
+    ],
+    "window": [
+      {
+        "path": "BNQL",
+        "condition": "typeof object",
+        "confidence": 90,
+        "description": "ThreatMetrix analytics object"
+      },
+      {
+        "path": "BNQL.Config",
+        "condition": "typeof object",
+        "confidence": 95,
+        "description": "ThreatMetrix configuration"
+      }
+    ]
+  }
+}

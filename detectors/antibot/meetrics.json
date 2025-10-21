@@ -1,0 +1,62 @@
+{
+  "id": "meetrics",
+  "name": "Meetrics Check",
+  "category": "ANTIBOT",
+  "color": "#FF6B9D",
+  "confidence": 95,
+  "lastUpdated": "2024-10-21",
+  "version": "1.0.0",
+  "website": "https://www.meetrics.com/en/",
+  "icon": "meetrics_official.png",
+  "description": "Meetrics user authenticity verification through behavior analysis and device fingerprinting",
+  "detection": {
+    "content": [
+      {
+        "content": "meetricsGlobal",
+        "confidence": 100,
+        "description": "Meetrics global object"
+      },
+      {
+        "content": "suspicious_mouse_movement",
+        "confidence": 95,
+        "description": "Meetrics mouse behavior detection"
+      },
+      {
+        "content": "meetrics",
+        "confidence": 85,
+        "description": "Meetrics reference"
+      }
+    ],
+    "url": [
+      {
+        "pattern": "mxcdn.net/bb-mx/serve/mtrcs",
+        "confidence": 100,
+        "description": "Meetrics CDN script"
+      },
+      {
+        "pattern": "mtrcs_",
+        "confidence": 95,
+        "description": "Meetrics script identifier"
+      },
+      {
+        "pattern": "meetrics.com",
+        "confidence": 90,
+        "description": "Meetrics domain"
+      }
+    ],
+    "window": [
+      {
+        "path": "meetricsGlobal",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "Meetrics global configuration"
+      },
+      {
+        "path": "window.meetricsGlobal",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "Window-level Meetrics object"
+      }
+    ]
+  }
+}

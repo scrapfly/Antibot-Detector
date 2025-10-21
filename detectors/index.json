@@ -12,7 +12,11 @@
         "perimeterx",
         "shapesecurity",
         "sucuri",
-        "reblaze"
+        "reblaze",
+        "threatmetrix",
+        "meetrics",
+        "ocule",
+        "cheq"
 
     ]
 },

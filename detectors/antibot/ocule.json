@@ -1,0 +1,77 @@
+{
+  "id": "ocule",
+  "name": "Ocule",
+  "category": "ANTIBOT",
+  "color": "#FFA630",
+  "confidence": 85,
+  "lastUpdated": "2024-10-21",
+  "version": "1.0.0",
+  "website": "https://ocule.io/",
+  "icon": "ocule_official.png",
+  "description": "Ocule bot detection with advanced obfuscation and VM-based protection",
+  "detection": {
+    "content": [
+      {
+        "content": "Object.keys",
+        "confidence": 60,
+        "description": "JavaScript Object method (generic indicator)"
+      },
+      {
+        "content": "document.head",
+        "confidence": 60,
+        "description": "Document head reference (generic indicator)"
+      },
+      {
+        "content": "Object.prototype.__defineSetter__.call",
+        "confidence": 80,
+        "description": "Property definition interception"
+      },
+      {
+        "content": "String.prototype.repeat",
+        "confidence": 70,
+        "description": "String repeat method"
+      },
+      {
+        "content": "decodeURIComponent",
+        "confidence": 65,
+        "description": "URI decoding function"
+      },
+      {
+        "content": "String.fromCharCode",
+        "confidence": 70,
+        "description": "Character code conversion"
+      }
+    ],
+    "url": [
+      {
+        "pattern": "proxy.ocule.co.uk/script.js",
+        "confidence": 100,
+        "description": "Ocule proxy script delivery"
+      },
+      {
+        "pattern": "ocule.co.uk",
+        "confidence": 95,
+        "description": "Ocule domain"
+      },
+      {
+        "pattern": "ocule",
+        "confidence": 75,
+        "description": "Ocule reference in URL"
+      }
+    ],
+    "window": [
+      {
+        "path": "Ocule",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "Ocule main object"
+      },
+      {
+        "path": "window.Ocule",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "Window-level Ocule object"
+      }
+    ]
+  }
+}
