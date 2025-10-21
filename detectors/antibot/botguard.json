@@ -7,7 +7,6 @@
   "lastUpdated": "2025-01-08 00:00:00",
   "version": "1.0.0",
   "website": "https://developers.google.com/recaptcha",
-  "icon": "google_official.png",
   "description": "Google's proprietary bot detection system used in reCAPTCHA, YouTube, and other Google services",
   "detection": {
     "cookie": [

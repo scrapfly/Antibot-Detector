@@ -163,8 +163,8 @@
                   <span class="setting-description">Color for fingerprint detectors</span>
                 </label>
                 <div class="color-picker-container">
-                  <input type="color" id="colorFingerprint" class="color-field" value="#8D33FF">
-                  <span class="color-hex-display" id="hexFingerprint">#8D33FF</span>
+                  <input type="color" id="colorFingerprint" class="color-field" value="#2196F3">
+                  <span class="color-hex-display" id="hexFingerprint">#2196F3</span>
                 </div>
               </div>
             </div>
@@ -175,12 +175,12 @@
 
               <div class="setting-group">
                 <label class="setting-label">
-                  <span>DOM</span>
+                  <span>Dom</span>
                   <span class="setting-description">Color for DOM detection methods</span>
                 </label>
                 <div class="color-picker-container">
-                  <input type="color" id="colorTagDOM" class="color-field" value="#8D33FF">
-                  <span class="color-hex-display" id="hexTagDOM">#8D33FF</span>
+                  <input type="color" id="colorTagDOM" class="color-field" value="#2196F3">
+                  <span class="color-hex-display" id="hexTagDOM">#2196F3</span>
                 </div>
               </div>
 
@@ -224,7 +224,7 @@
 
               <div class="setting-group">
                 <label class="setting-label">
-                  <span>URLs</span>
+                  <span>Urls</span>
                   <span class="setting-description">Color for URL detection methods</span>
                 </label>
                 <div class="color-picker-container">
@@ -235,7 +235,7 @@
 
               <div class="setting-group">
                 <label class="setting-label">
-                  <span>JS Hooks</span>
+                  <span>Js Hooks</span>
                   <span class="setting-description">Color for JavaScript hook detection methods</span>
                 </label>
                 <div class="color-picker-container">
@@ -286,6 +286,17 @@
         <div class="settings-section">
           <h3>Detection Configuration</h3>
 
+          <!-- JS Hooks Helper -->
+          <div class="api-info-box" style="margin-bottom: 24px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3);">
+            <div class="api-info-title" style="color: #3b82f6;">🪝 JavaScript Hooks Detection</div>
+            <p style="margin: 8px 0 0 0; font-size: 12px; line-height: 1.5; color: rgba(255, 255, 255, 0.7);">
+              Monitors API calls to detect fingerprinting techniques. When a page script calls methods like <code>canvas.toDataURL()</code>, <code>navigator.webdriver</code>, or <code>RTCPeerConnection.createOffer()</code>, hooks intercept these calls and detect which anti-bot or fingerprinting system is being used.
+            </p>
+            <p style="margin: 8px 0 0 0; font-size: 12px; line-height: 1.5; color: rgba(255, 255, 255, 0.7);">
+              <strong>Note:</strong> Hooks only fire if the page actually calls those APIs. If a page caches results (like CreepJS does with Canvas fingerprints), some hooks won't fire on normal reloads. Use hard reload (Ctrl+F5) to bypass cache and detect all hooks.
+            </p>
+          </div>
+
           <div class="setting-group">
             <label class="setting-label">
               <span>Detection Cache Duration</span>
@@ -301,12 +312,12 @@
             </div>
           </div>
 
-          <div class="setting-group">
+          <div class="setting-group setting-group--stacked">
             <label class="setting-label">
               <span>Detection Cache Scope</span>
               <span class="setting-description">How to identify cached detection results</span>
             </label>
-            <select id="cacheScope" class="input-field">
+            <select id="cacheScope" class="input-field" style="width: 100%;">
               <option value="domain">Domain - Same domain (example.com)</option>
               <option value="path">Path - Domain + path (ignores query params)</option>
               <option value="full">Full URL - Exact URL match</option>
@@ -473,6 +484,17 @@
               <span class="setting-description">Maximum number of entries to keep (0 for unlimited)</span>
             </label>
             <input type="number" id="historyLimit" class="input-field" min="0" max="1000" value="100">
+          </div>
+
+          <div class="setting-group" style="flex-direction: column; align-items: flex-start;">
+            <label class="setting-label" style="margin-bottom: 8px;">
+              <span>History Limit Behavior</span>
+              <span class="setting-description">What happens when history limit is reached</span>
+            </label>
+            <select id="historyBehavior" class="select-field" style="width: 100%;">
+              <option value="rolling">Rolling Window - Keep Most Recent</option>
+              <option value="stop_at_limit">Stop at Limit - Preserve First N</option>
+            </select>
           </div>
 
           <div class="setting-group">

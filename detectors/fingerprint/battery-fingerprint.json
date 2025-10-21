@@ -1,0 +1,54 @@
+{
+  "id": "battery-fingerprint",
+  "name": "Battery API Fingerprint",
+  "category": "Fingerprint",
+  "color": "#10b981",
+  "confidence": 90,
+  "lastUpdated": "2025-01-21",
+  "version": "1.0.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API",
+  "icon": "custom.png",
+  "description": "Battery Status API used for device fingerprinting via battery level and charging state",
+  "detection": {
+    "js_hooks": [
+      {
+        "target": "Navigator.prototype.getBattery",
+        "description": "Gets battery status object for fingerprinting",
+        "enabled": true,
+        "confidence": 95
+      },
+      {
+        "target": "BatteryManager.prototype.addEventListener",
+        "description": "Listens to battery status changes",
+        "enabled": true,
+        "confidence": 90
+      }
+    ],
+    "window_properties": [
+      {
+        "path": "navigator.getBattery",
+        "description": "Battery Status API access point",
+        "condition": "typeof function"
+      },
+      {
+        "path": "navigator.battery",
+        "description": "Deprecated battery property",
+        "condition": "typeof object"
+      }
+    ],
+    "content": [
+      {
+        "value": "getBattery",
+        "scope": "scripts",
+        "description": "Battery API usage in scripts",
+        "confidence": 85
+      },
+      {
+        "value": "batteryManager",
+        "scope": "scripts",
+        "description": "Battery manager references",
+        "confidence": 80
+      }
+    ]
+  }
+}

@@ -14,9 +14,7 @@ console.log('[AwsWafAdvanced] Loading... Dependencies check:', {
 class AwsWafAdvanced extends BaseAdvancedModule {
     constructor(detection, tabInfo) {
         super(detection, tabInfo, 'awswaf');
-
-        // Check for pending analysis results when module is created
-        this.checkPendingAnalysisResults();
+        // Analysis results are received via message only (no storage fallback)
     }
 
     /**
@@ -24,14 +22,23 @@ class AwsWafAdvanced extends BaseAdvancedModule {
      */
     renderTools() {
         return `
-            <div class="awswaf-tools-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
-                <button class="awswaf-tool-btn" id="awswafCheckCookies" style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s;">
-                    <div class="tool-btn-icon" style="font-size: 32px;">🍪</div>
-                    <div class="tool-btn-label" style="font-size: 13px; color: var(--text-primary); font-weight: 500;">Check Cookies</div>
+            <div class="recaptcha-tools-grid">
+                <button class="recaptcha-tool-btn" id="awswafCheckCookies">
+                    <div class="tool-icon-container tool-icon-green">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A9,9 0 0,0 21,12A9,9 0 0,0 12,3M9,8A1.5,1.5 0 0,1 10.5,9.5A1.5,1.5 0 0,1 9,11A1.5,1.5 0 0,1 7.5,9.5A1.5,1.5 0 0,1 9,8M16.5,9.5A1.5,1.5 0 0,1 15,11A1.5,1.5 0 0,1 13.5,9.5A1.5,1.5 0 0,1 15,8A1.5,1.5 0 0,1 16.5,9.5M9,15A1.5,1.5 0 0,1 10.5,16.5A1.5,1.5 0 0,1 9,18A1.5,1.5 0 0,1 7.5,16.5A1.5,1.5 0 0,1 9,15M15,14A1.5,1.5 0 0,1 16.5,15.5A1.5,1.5 0 0,1 15,17A1.5,1.5 0 0,1 13.5,15.5A1.5,1.5 0 0,1 15,14Z"/>
+                        </svg>
+                    </div>
+                    <div class="tool-btn-label">Check Cookies</div>
                 </button>
-                <button class="awswaf-tool-btn" id="awswafAnalyzeScripts" style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s;">
-                    <div class="tool-btn-icon" style="font-size: 32px;">🔍</div>
-                    <div class="tool-btn-label" style="font-size: 13px; color: var(--text-primary); font-weight: 500;">Analyze Scripts</div>
+
+                <button class="recaptcha-tool-btn" id="awswafAnalyzeScripts">
+                    <div class="tool-icon-container tool-icon-blue">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+                        </svg>
+                    </div>
+                    <div class="tool-btn-label">Analyze Scripts</div>
                 </button>
             </div>
         `;
@@ -54,53 +61,6 @@ class AwsWafAdvanced extends BaseAdvancedModule {
         if (analyzeScriptsBtn) {
             analyzeScriptsBtn.addEventListener('click', () => this.analyzeScripts());
             console.log('[AwsWaf] Added listener to Analyze Scripts button');
-        }
-    }
-
-    /**
-     * Check if there are pending analysis results to display
-     */
-    async checkPendingAnalysisResults() {
-        console.log('[AwsWaf] ========== CHECKING PENDING RESULTS ==========');
-        console.log('[AwsWaf] Current tab ID:', this.tabInfo?.id);
-
-        try {
-            const result = await chrome.storage.local.get('scrapfly_awswaf_analysis_pending');
-            console.log('[AwsWaf] Storage result:', result);
-
-            if (result.scrapfly_awswaf_analysis_pending) {
-                const pending = result.scrapfly_awswaf_analysis_pending;
-                console.log('[AwsWaf] Found pending data:', pending);
-
-                // Check if results are for current tab and not too old (5 minutes)
-                const isCurrentTab = pending.tabId === this.tabInfo.id;
-                const age = Date.now() - pending.timestamp;
-                const isRecent = age < 5 * 60 * 1000; // 5 minutes
-
-                console.log('[AwsWaf] Validation:', {
-                    isCurrentTab,
-                    pendingTabId: pending.tabId,
-                    currentTabId: this.tabInfo.id,
-                    age: age + 'ms',
-                    isRecent
-                });
-
-                if (isCurrentTab && isRecent) {
-                    console.log('[AwsWaf] ✓ Validation passed, displaying modal...');
-                    console.log('[AwsWaf] Modal data:', pending.data);
-                    this.displayAnalysisModal(pending.data);
-
-                    // Clear the pending results
-                    await chrome.storage.local.remove('scrapfly_awswaf_analysis_pending');
-                    console.log('[AwsWaf] Pending results cleared from storage');
-                } else {
-                    console.log('[AwsWaf] ✗ Validation failed, not displaying modal');
-                }
-            } else {
-                console.log('[AwsWaf] No pending results found in storage');
-            }
-        } catch (error) {
-            console.error('[AwsWaf] Error checking pending results:', error);
         }
     }
 
@@ -196,26 +156,15 @@ class AwsWafAdvanced extends BaseAdvancedModule {
                 element.style.background = '';
             });
 
-            element.addEventListener('click', async (e) => {
+            element.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const textToCopy = element.getAttribute('data-copy');
-                const originalText = element.textContent;
-
-                try {
-                    await navigator.clipboard.writeText(textToCopy);
-                    element.textContent = '✓ Copied!';
-                    element.style.background = 'var(--success)';
-                    element.style.color = 'white';
-
-                    setTimeout(() => {
-                        element.textContent = originalText;
-                        element.style.background = '';
-                        element.style.color = '';
-                    }, 1500);
-                } catch (error) {
-                    console.error('[AwsWaf] Copy failed:', error);
-                    NotificationHelper.error('Failed to copy to clipboard');
+                if (!textToCopy) {
+                    return;
                 }
+                AdvancedUtils.copyToClipboard(textToCopy, element, {
+                    notificationMessage: 'Value copied'
+                });
             });
         });
 
@@ -389,26 +338,15 @@ class AwsWafAdvanced extends BaseAdvancedModule {
                 element.style.background = '';
             });
 
-            element.addEventListener('click', async (e) => {
+            element.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const textToCopy = element.getAttribute('data-copy');
-                const originalText = element.textContent;
-
-                try {
-                    await navigator.clipboard.writeText(textToCopy);
-                    element.textContent = '✓ Copied!';
-                    element.style.background = 'var(--success)';
-                    element.style.color = 'white';
-
-                    setTimeout(() => {
-                        element.textContent = originalText;
-                        element.style.background = '';
-                        element.style.color = '';
-                    }, 1500);
-                } catch (error) {
-                    console.error('[AwsWaf] Copy failed:', error);
-                    NotificationHelper.error('Failed to copy to clipboard');
+                if (!textToCopy) {
+                    return;
                 }
+                AdvancedUtils.copyToClipboard(textToCopy, element, {
+                    notificationMessage: 'Value copied'
+                });
             });
         });
 
@@ -422,6 +360,85 @@ class AwsWafAdvanced extends BaseAdvancedModule {
         });
 
         setTimeout(() => modal.style.opacity = '1', 10);
+    }
+
+    /**
+     * Render capture details content for modal
+     * @param {object} capture - Capture history item
+     * @returns {string} HTML content for modal
+     */
+    renderCaptureDetailsContent(capture) {
+        if (!capture || !capture.captureData) {
+            return '<div class="advanced-modal-section"><span class="advanced-modal-error">No capture data available</span></div>';
+        }
+
+        // Handle nested data structure from AWS WAF interceptor
+        const captureData = capture.captureData;
+        const data = captureData.data || captureData;
+        const flags = captureData.flags || {};
+        const url = (data.websiteURL || capture.url || 'N/A').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const timestamp = new Date(captureData.timestamp || capture.timestamp).toLocaleString();
+
+        return `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Website URL</label>
+                <div class="advanced-modal-code-block" style="word-break: break-all;">${url}</div>
+            </div>
+
+            ${data.awsChallengeJS || data.awsApiJs || data.awsProblemUrl ? `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">AWS WAF Scripts</label>
+                ${data.awsChallengeJS ? `
+                <div style="margin-bottom: 8px;">
+                    <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Challenge Script</div>
+                    <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.awsChallengeJS)}" style="cursor: pointer; word-break: break-all;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.awsChallengeJS)}', this, {notificationMessage: 'URL copied'});">${AdvancedUtils.escapeHtml(data.awsChallengeJS)}</div>
+                </div>
+                ` : ''}
+                ${data.awsApiJs ? `
+                <div style="margin-bottom: 8px;">
+                    <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">API Script (jsapi.js)</div>
+                    <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.awsApiJs)}" style="cursor: pointer; word-break: break-all;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.awsApiJs)}', this, {notificationMessage: 'URL copied'});">${AdvancedUtils.escapeHtml(data.awsApiJs)}</div>
+                </div>
+                ` : ''}
+                ${data.awsProblemUrl ? `
+                <div style="margin-bottom: 8px;">
+                    <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Problem Endpoint</div>
+                    <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.awsProblemUrl)}" style="cursor: pointer; word-break: break-all;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.awsProblemUrl)}', this, {notificationMessage: 'URL copied'});">${AdvancedUtils.escapeHtml(data.awsProblemUrl)}</div>
+                </div>
+                ` : ''}
+            </div>
+            ` : ''}
+
+            ${data.awsApiKey ? `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">API Key</label>
+                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.awsApiKey)}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.awsApiKey)}', this, {notificationMessage: 'API Key copied'});">${AdvancedUtils.escapeHtml(data.awsApiKey)}</div>
+            </div>
+            ` : ''}
+
+            ${data.awsExistingToken ? `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">AWS WAF Token</label>
+                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.awsExistingToken)}" style="cursor: pointer; word-break: break-all;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.awsExistingToken)}', this, {notificationMessage: 'Token copied'});">${data.awsExistingToken.substring(0, 60)}${data.awsExistingToken.length > 60 ? '...' : ''}</div>
+            </div>
+            ` : ''}
+
+            ${flags.hasStatus405 || flags.hasChallengeEndpoint || flags.hasProblemEndpoint ? `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Detection Indicators</label>
+                ${flags.hasStatus405 ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">Status 405</span><span class="advanced-modal-info-value">⚠️ Detected</span></div>' : ''}
+                ${flags.hasChallengeEndpoint ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">Challenge Endpoint</span><span class="advanced-modal-info-value">✅ Found</span></div>' : ''}
+                ${flags.hasProblemEndpoint ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">Problem Endpoint</span><span class="advanced-modal-info-value">✅ Found</span></div>' : ''}
+            </div>
+            ` : ''}
+
+            <div class="advanced-modal-section">
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">Captured</span>
+                    <span class="advanced-modal-info-value">${timestamp}</span>
+                </div>
+            </div>
+        `;
     }
 }
 

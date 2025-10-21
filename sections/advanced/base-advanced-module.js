@@ -269,14 +269,20 @@ class BaseAdvancedModule {
             <div class="capture-history-section">
                 <div class="section-header">
                     <div class="header-left">
-                        <span class="header-icon">📜</span>
+                        <div class="tool-icon-container tool-icon-purple" style="width: 32px; height: 32px; border-radius: 8px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                                <path d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3Z"/>
+                            </svg>
+                        </div>
                         <h3>Captured Data</h3>
                     </div>
                     <div class="header-right">
                         <span class="history-count">${history.length} capture${history.length !== 1 ? 's' : ''}</span>
                         ${history.length > 0 ? `
                             <button class="clear-history-btn" id="clear${this.moduleName.charAt(0).toUpperCase() + this.moduleName.slice(1)}History" title="Clear all captured data">
-                                <span>🗑️</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+                                </svg>
                             </button>
                         ` : ''}
                     </div>
@@ -313,10 +319,23 @@ class BaseAdvancedModule {
      */
     renderEmptyCaptureState() {
         return `
-            <div class="empty-capture-state" style="padding: 32px 16px; text-align: center; opacity: 0.7;">
-                <div style="font-size: 48px; margin-bottom: 12px;">📭</div>
-                <div style="font-size: 14px; font-weight: 500; margin-bottom: 8px;">No captures yet</div>
-                <div style="font-size: 12px; opacity: 0.8;">Click "Start Capturing" above to capture ${this.moduleName} data</div>
+            <div class="empty-capture-state">
+                <div class="empty-capture-card">
+                    <div class="empty-capture-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <path d="M20 6H4C2.89 6 2 6.89 2 8V16C2 17.11 2.89 18 4 18H9V20H7V22H17V20H15V18H20C21.11 18 22 17.11 22 16V8C22 6.89 21.11 6 20 6M20 16H4V8H20V16Z"
+                                  stroke="url(#emptyGradient)" stroke-width="1.5" fill="rgba(139,92,246,0.15)"/>
+                            <defs>
+                                <linearGradient id="emptyGradient" x1="4" y1="6" x2="20" y2="18" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0" stop-color="#8b5cf6"/>
+                                    <stop offset="1" stop-color="#a78bfa"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <h4 class="empty-capture-title">No captures yet</h4>
+                    <p class="empty-capture-text">Click "Start Capturing" above to begin capturing ${this.moduleName} data</p>
+                </div>
             </div>
         `;
     }
@@ -458,66 +477,135 @@ class BaseAdvancedModule {
     }
 
     /**
-     * Toggle capture details display
-     * Can be overridden for module-specific detail rendering
+     * Render capture details content for modal
+     * Override in child classes for module-specific content
+     * IMPORTANT: Child classes must properly escape user data to prevent XSS
+     * @param {object} capture - Capture data object
+     * @returns {string} HTML for modal body content
+     */
+    renderCaptureDetailsContent(capture) {
+        // Default implementation - shows basic capture info
+        const url = (capture.url || 'N/A').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const timestamp = new Date(capture.timestamp).toLocaleString();
+
+        return `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">URL</label>
+                <div class="advanced-modal-code-block">${url}</div>
+            </div>
+            <div class="advanced-modal-section">
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">Captured</span>
+                    <span class="advanced-modal-info-value">${timestamp}</span>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * Display capture details in a modal
+     * @param {string} captureId - Capture ID
+     * @param {string} detailsContent - HTML content for modal body (must be pre-sanitized)
+     */
+    displayCaptureDetailsModal(captureId, detailsContent) {
+        // Create modal overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'advanced-modal-overlay';
+        overlay.style.opacity = '0';
+
+        // Create container
+        const container = document.createElement('div');
+        container.className = 'advanced-modal-container';
+        container.onclick = (e) => e.stopPropagation();
+
+        // Create header
+        const header = document.createElement('div');
+        header.className = 'advanced-modal-header';
+
+        const title = document.createElement('h3');
+        title.className = 'advanced-modal-title';
+        title.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3Z"/>
+            </svg>
+            Capture Details
+        `;
+
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'advanced-modal-close-btn';
+        closeBtn.textContent = '×';
+        closeBtn.onclick = () => overlay.remove();
+
+        header.appendChild(title);
+        header.appendChild(closeBtn);
+
+        // Create body
+        const body = document.createElement('div');
+        body.className = 'advanced-modal-body';
+        body.innerHTML = detailsContent; // Pre-sanitized by renderCaptureDetailsContent()
+
+        // Assemble modal
+        container.appendChild(header);
+        container.appendChild(body);
+        overlay.appendChild(container);
+
+        // Close modal when clicking overlay background
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.remove();
+            }
+        });
+
+        // Add to document
+        document.body.appendChild(overlay);
+
+        // Trigger fade-in animation
+        requestAnimationFrame(() => {
+            overlay.style.opacity = '1';
+        });
+    }
+
+    /**
+     * Toggle capture details display - now shows modal instead of inline expansion
      * @param {string} captureId - Capture ID
      */
     async toggleCaptureDetails(captureId) {
-        const captureCard = document.querySelector(`.capture-card[data-capture-id="${captureId}"]`);
-        if (!captureCard) return;
-
-        const existingDetails = captureCard.querySelector('.history-item-details');
-        if (existingDetails) {
-            existingDetails.remove();
-            captureCard.classList.remove('expanded');
-            return;
-        }
-
         // Load full capture data
         const history = await this.loadCaptureHistory();
         const capture = history.find(item => (item.id || item.timestamp.toString()) === captureId);
         if (!capture) return;
 
-        // Default detail rendering - override for module-specific details
-        const detailsHtml = `
-            <div class="history-item-details">
-                <div class="details-grid">
-                    <div class="detail-row">
-                        <span class="detail-label">URL:</span>
-                        <span class="detail-value">${capture.url}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Captured:</span>
-                        <span class="detail-value">${new Date(capture.timestamp).toLocaleString()}</span>
-                    </div>
-                </div>
-                <div class="details-actions">
-                    <button class="detail-action-btn copy-all-btn" data-capture-id="${captureId}">
-                        📄 Copy All Data
-                    </button>
-                </div>
+        // Render modal content (child classes can override renderCaptureDetailsContent)
+        let modalContent = this.renderCaptureDetailsContent(capture);
+
+        // Add "Copy All Data" button
+        modalContent += `
+            <div class="advanced-modal-section" style="margin-top: 16px;">
+                <button class="advanced-modal-btn-primary" id="copyAllCaptureData" style="width: 100%;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/>
+                    </svg>
+                    Copy All Data
+                </button>
             </div>
         `;
 
-        captureCard.insertAdjacentHTML('beforeend', detailsHtml);
-        captureCard.classList.add('expanded');
+        // Display modal
+        this.displayCaptureDetailsModal(captureId, modalContent);
 
-        // Setup copy button
-        const copyAllBtn = captureCard.querySelector('.copy-all-btn');
-        if (copyAllBtn) {
-            copyAllBtn.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                try {
-                    await navigator.clipboard.writeText(JSON.stringify(capture.captureData, null, 2));
-                    copyAllBtn.textContent = '✅ Copied!';
-                    setTimeout(() => {
-                        copyAllBtn.textContent = '📄 Copy All Data';
-                    }, 2000);
-                } catch (error) {
-                    console.error('Failed to copy:', error);
-                }
-            });
-        }
+        // Setup copy button listener
+        setTimeout(() => {
+            const copyBtn = document.querySelector('#copyAllCaptureData');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const payload = JSON.stringify(capture.captureData, null, 2);
+                    AdvancedUtils.copyToClipboard(payload, copyBtn, {
+                        notificationMessage: 'Capture data copied'
+                    });
+                });
+            }
+        }, 100);
     }
 
     /**
@@ -552,17 +640,44 @@ class BaseAdvancedModule {
 
         try {
             const result = await chrome.storage.local.get(['scrapfly_advanced_history']);
-            let history = result.scrapfly_advanced_history || { items: [] };
+            let history = result.scrapfly_advanced_history || {};
 
             // Handle legacy string format
             if (typeof history === 'string') {
                 history = JSON.parse(history);
             }
 
-            // Remove only this module's captures
-            const items = (history.items || []).filter(item => item.type !== this.moduleName);
+            // MIGRATION: Convert old { items: [] } format if needed
+            if (history.items && Array.isArray(history.items)) {
+                console.log(`[${this.moduleName}] Migrating old storage format during clear`);
+                const migratedHistory = {};
+
+                // Group items by type, excluding current module
+                for (const item of history.items) {
+                    if (!item.type || item.type === this.moduleName) continue;
+
+                    const moduleId = item.type;
+                    if (!migratedHistory[moduleId]) {
+                        migratedHistory[moduleId] = [];
+                    }
+
+                    migratedHistory[moduleId].push({
+                        id: item.id || `${moduleId}_${item.timestamp}`,
+                        timestamp: item.timestamp,
+                        url: item.url,
+                        data: item.captureData || item.data,
+                        expiresAt: item.expiresAt
+                    });
+                }
+
+                history = migratedHistory;
+            } else {
+                // NEW format: just delete this module's array
+                delete history[this.moduleName];
+            }
+
             await chrome.storage.local.set({
-                scrapfly_advanced_history: { items: items, lastUpdated: Date.now() }
+                scrapfly_advanced_history: history
             });
 
             await this.renderCapturedDataSection();

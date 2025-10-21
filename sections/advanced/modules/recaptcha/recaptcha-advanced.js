@@ -16,22 +16,38 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
         return `
             <div class="recaptcha-tools-grid">
                 <button class="recaptcha-tool-btn" id="recaptchaClick">
-                    <div class="tool-btn-icon">👆</div>
+                    <div class="tool-icon-container tool-icon-blue">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/>
+                        </svg>
+                    </div>
                     <div class="tool-btn-label">Obtain selector</div>
                 </button>
 
                 <button class="recaptcha-tool-btn" id="recaptchaExtract">
-                    <div class="tool-btn-icon">🔑</div>
+                    <div class="tool-icon-container tool-icon-green">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
+                        </svg>
+                    </div>
                     <div class="tool-btn-label">Extract SiteKey</div>
                 </button>
 
                 <button class="recaptcha-tool-btn" id="recaptchaCallback">
-                    <div class="tool-btn-icon">📡</div>
+                    <div class="tool-icon-container tool-icon-purple">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M17.45,15.18L22,7.31V19L17.45,15.18M1,3.24L3.77,6L5.55,7.78L16.78,19C16.84,19 16.89,19.05 16.95,19.06L19,21.07L20.59,19.48L2.59,1.48L1,3.24M8,8.97L8.02,5H17.64L15.27,9.45L8,8.97M12.65,12.74L18.13,18.23L15.76,22H8L10.14,17.94L12.65,12.74Z"/>
+                        </svg>
+                    </div>
                     <div class="tool-btn-label">reCAPTCHA callback</div>
                 </button>
 
                 <button class="recaptcha-tool-btn" id="recaptchaStartCapture">
-                    <div class="tool-btn-icon">🎬</div>
+                    <div class="tool-icon-container tool-icon-red">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M12,20A7,7 0 0,1 5,13A7,7 0 0,1 12,6A7,7 0 0,1 19,13A7,7 0 0,1 12,20M12,4A9,9 0 0,0 3,13A9,9 0 0,0 12,22A9,9 0 0,0 21,13A9,9 0 0,0 12,4M12,8A5,5 0 0,0 7,13A5,5 0 0,0 12,18A5,5 0 0,0 17,13A5,5 0 0,0 12,8M12,10.5A2.5,2.5 0 0,1 14.5,13A2.5,2.5 0 0,1 12,15.5A2.5,2.5 0 0,1 9.5,13A2.5,2.5 0 0,1 12,10.5Z"/>
+                        </svg>
+                    </div>
                     <div class="tool-btn-label">Start Capturing</div>
                 </button>
             </div>
@@ -418,44 +434,35 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
     displaySelectorModal(result) {
         console.log('[ReCAPTCHA] displaySelectorModal called with:', result);
         const modal = document.createElement('div');
-        modal.className = 'recaptcha-modal-overlay';
-        modal.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            opacity: 0;
-            transition: opacity 0.2s;
-        `;
+        modal.className = 'advanced-modal-overlay';
 
         modal.innerHTML = `
-            <div class="recaptcha-modal" style="background: var(--bg-secondary, #2a2a2a); border-radius: 8px; padding: 20px; max-width: 500px; width: 90%;">
-                <div class="recaptcha-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; color: var(--text-primary, #fff);">🎯 Selector Detection</h3>
-                    <button class="recaptcha-modal-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary, #aaa);">×</button>
+            <div class="advanced-modal-container">
+                <div class="advanced-modal-header">
+                    <h3 class="advanced-modal-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"/>
+                        </svg>
+                        Selector Detection
+                    </h3>
+                    <button class="advanced-modal-close-btn">×</button>
                 </div>
-                <div class="recaptcha-modal-content">
+                <div class="advanced-modal-body">
                     ${result.success ? `
-                        <div class="result-success" style="margin-bottom: 12px;">
-                            <div class="result-label" style="font-weight: 600; margin-bottom: 4px; color: var(--text-primary, #fff);">✅ Method:</div>
-                            <div class="result-value" style="color: var(--text-secondary, #aaa);">${result.method}</div>
+                        <div class="advanced-modal-section">
+                            <div class="advanced-modal-label advanced-modal-success">✅ Method</div>
+                            <div class="advanced-modal-value">${result.method}</div>
                         </div>
                         ${result.selector ? `
-                            <div class="result-success">
-                                <div class="result-label" style="font-weight: 600; margin-bottom: 4px; color: var(--text-primary, #fff);">🎯 Selector:</div>
-                                <code class="result-code" style="display: block; background: var(--bg-tertiary, #1a1a1a); padding: 8px; border-radius: 4px; color: var(--success, #4ade80); font-family: monospace;">${result.selector}</code>
+                            <div class="advanced-modal-section">
+                                <div class="advanced-modal-label advanced-modal-success">Selector</div>
+                                <code class="advanced-modal-code-block">${result.selector}</code>
                             </div>
                         ` : ''}
                     ` : `
-                        <div class="result-error">
-                            <div class="result-label" style="font-weight: 600; margin-bottom: 4px; color: var(--text-primary, #fff);">❌ Error:</div>
-                            <div class="result-value" style="color: var(--danger, #f87171);">${result.error}</div>
+                        <div class="advanced-modal-section">
+                            <div class="advanced-modal-label advanced-modal-error">❌ Error</div>
+                            <div class="advanced-modal-value advanced-modal-error">${result.error}</div>
                         </div>
                     `}
                 </div>
@@ -466,7 +473,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
         document.body.appendChild(modal);
         console.log('[ReCAPTCHA] Modal appended, setting up close handlers');
 
-        const closeBtn = modal.querySelector('.recaptcha-modal-close');
+        const closeBtn = modal.querySelector('.advanced-modal-close-btn');
         if (closeBtn) {
             closeBtn.addEventListener('click', () => {
                 console.log('[ReCAPTCHA] Close button clicked');
@@ -529,9 +536,14 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
 
         const copyBtn = modal.querySelector('.copy-btn');
         if (copyBtn) {
-            copyBtn.addEventListener('click', (e) => {
-                navigator.clipboard.writeText(e.target.dataset.copy);
-                NotificationHelper.success('SiteKey copied!');
+            copyBtn.addEventListener('click', () => {
+                const value = copyBtn.dataset.copy;
+                if (!value) {
+                    return;
+                }
+                AdvancedUtils.copyToClipboard(value, copyBtn, {
+                    notificationMessage: 'SiteKey copied!'
+                });
             });
         }
 
@@ -766,12 +778,13 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
         document.body.appendChild(modal);
 
         modal.querySelectorAll('.copy-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const text = e.target.dataset.copy;
-                navigator.clipboard.writeText(text).then(() => {
-                    NotificationHelper.success('Copied to clipboard!');
-                }).catch(() => {
-                    NotificationHelper.error('Failed to copy');
+            btn.addEventListener('click', () => {
+                const text = btn.dataset.copy;
+                if (!text) {
+                    return;
+                }
+                AdvancedUtils.copyToClipboard(text, btn, {
+                    notificationMessage: 'Copied to clipboard!'
                 });
             });
         });
@@ -837,153 +850,92 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
     }
 
     /**
-     * Override toggleCaptureDetails to show reCAPTCHA-specific fields
-     * @param {string} captureId - The capture ID to toggle
+     * Override renderCaptureDetailsContent to show reCAPTCHA-specific fields in modal
+     * @param {object} capture - Capture data object
+     * @returns {string} HTML for modal body content
      */
-    async toggleCaptureDetails(captureId) {
-        const captureCard = document.querySelector(`.capture-card[data-capture-id="${captureId}"]`);
-        if (!captureCard) return;
-
-        const existingDetails = captureCard.querySelector('.history-item-details');
-        if (existingDetails) {
-            existingDetails.remove();
-            captureCard.classList.remove('expanded');
-            return;
+    renderCaptureDetailsContent(capture) {
+        if (!capture || !capture.captureData) {
+            return '<div class="advanced-modal-section"><span class="advanced-modal-error">No capture data available</span></div>';
         }
 
-        // Load full capture data
-        const history = await this.loadCaptureHistory();
-        const capture = history.find(item => (item.id || item.timestamp.toString()) === captureId);
-        if (!capture || !capture.captureData) return;
-
         const data = capture.captureData;
+        const siteUrl = (data.siteUrl || capture.url || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const timestamp = new Date(capture.timestamp).toLocaleString();
 
-        // Build details HTML with only non-empty reCAPTCHA fields
-        const detailsHtml = `
-            <div class="history-item-details">
-                <div class="details-grid">
-                    ${data.version ? `
-                    <div class="detail-row">
-                        <span class="detail-label">Version:</span>
-                        <span class="detail-value copy-value" data-copy="${AdvancedUtils.escapeHtml(data.version)}" style="cursor: pointer; padding: 2px 4px; border-radius: 3px; transition: background 0.2s;" title="Click to copy">${data.version}</span>
-                    </div>
-                    ` : ''}
-                    ${data.siteKey ? `
-                    <div class="detail-row">
-                        <span class="detail-label">Site Key:</span>
-                        <span class="detail-value copy-value" data-copy="${AdvancedUtils.escapeHtml(data.siteKey)}" style="cursor: pointer; padding: 2px 4px; border-radius: 3px; transition: background 0.2s;" title="Click to copy">${data.siteKey}</span>
-                    </div>
-                    ` : ''}
-                    ${data.action ? `
-                    <div class="detail-row">
-                        <span class="detail-label">Action:</span>
-                        <span class="detail-value copy-value" data-copy="${AdvancedUtils.escapeHtml(data.action)}" style="cursor: pointer; padding: 2px 4px; border-radius: 3px; transition: background 0.2s;" title="Click to copy">${data.action}</span>
-                    </div>
-                    ` : ''}
-                    ${data.isEnterprise ? `
-                    <div class="detail-row">
-                        <span class="detail-label">Enterprise:</span>
-                        <span class="detail-value">Yes</span>
-                    </div>
-                    ` : ''}
-                    ${data.isInvisible ? `
-                    <div class="detail-row">
-                        <span class="detail-label">Invisible:</span>
-                        <span class="detail-value">Yes</span>
-                    </div>
-                    ` : ''}
-                    ${data.isSRequired ? `
-                    <div class="detail-row">
-                        <span class="detail-label">S Parameter:</span>
-                        <span class="detail-value">Required</span>
-                    </div>
-                    ` : ''}
-                    ${data.apiDomain ? `
-                    <div class="detail-row">
-                        <span class="detail-label">API Domain:</span>
-                        <span class="detail-value copy-value" data-copy="${AdvancedUtils.escapeHtml(data.apiDomain)}" style="cursor: pointer; padding: 2px 4px; border-radius: 3px; transition: background 0.2s;" title="Click to copy">${data.apiDomain}</span>
-                    </div>
-                    ` : ''}
-                    ${data.hasSession ? `
-                    <div class="detail-row">
-                        <span class="detail-label">Has Session:</span>
-                        <span class="detail-value">Yes</span>
-                    </div>
-                    ` : ''}
-                    ${data.requiredCookie ? `
-                    <div class="detail-row">
-                        <span class="detail-label">Required Cookie:</span>
-                        <span class="detail-value copy-value" data-copy="${AdvancedUtils.escapeHtml(data.requiredCookie)}" style="cursor: pointer; padding: 2px 4px; border-radius: 3px; transition: background 0.2s;" title="Click to copy">${data.requiredCookie}</span>
-                    </div>
-                    ` : ''}
-                    <div class="detail-row">
-                        <span class="detail-label">Site URL:</span>
-                        <span class="detail-value copy-value" data-copy="${AdvancedUtils.escapeHtml(data.siteUrl || capture.url)}" style="cursor: pointer; padding: 2px 4px; border-radius: 3px; transition: background 0.2s;" title="Click to copy">${data.siteUrl || capture.url}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Captured:</span>
-                        <span class="detail-value">${new Date(capture.timestamp).toLocaleString()}</span>
-                    </div>
+        return `
+            ${data.version ? `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Version</label>
+                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.version)}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.version)}', this, {notificationMessage: 'Value copied'});">${AdvancedUtils.escapeHtml(data.version)}</div>
+            </div>
+            ` : ''}
+
+            ${data.siteKey ? `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Site Key</label>
+                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.siteKey)}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.siteKey)}', this, {notificationMessage: 'Value copied'});">${AdvancedUtils.escapeHtml(data.siteKey)}</div>
+            </div>
+            ` : ''}
+
+            ${data.action ? `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Action</label>
+                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.action)}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.action)}', this, {notificationMessage: 'Value copied'});">${AdvancedUtils.escapeHtml(data.action)}</div>
+            </div>
+            ` : ''}
+
+            ${data.apiDomain ? `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">API Domain</label>
+                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.apiDomain)}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.apiDomain)}', this, {notificationMessage: 'Value copied'});">${AdvancedUtils.escapeHtml(data.apiDomain)}</div>
+            </div>
+            ` : ''}
+
+            ${data.requiredCookie ? `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Required Cookie</label>
+                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.requiredCookie)}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.requiredCookie)}', this, {notificationMessage: 'Value copied'});">${AdvancedUtils.escapeHtml(data.requiredCookie)}</div>
+            </div>
+            ` : ''}
+
+            <div class="advanced-modal-section">
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">Enterprise</span>
+                    <span class="advanced-modal-info-value">${data.isEnterprise ? 'Yes' : 'No'}</span>
                 </div>
-                <div class="details-actions">
-                    <button class="detail-action-btn copy-all-btn" data-capture-id="${captureId}">
-                        📄 Copy All Data
-                    </button>
+                ${data.version === 'v2' ? `
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">Invisible</span>
+                    <span class="advanced-modal-info-value">${data.isInvisible ? 'Yes' : 'No'}</span>
+                </div>
+                ` : ''}
+                ${data.isSRequired ? `
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">S Parameter</span>
+                    <span class="advanced-modal-info-value">Required</span>
+                </div>
+                ` : ''}
+                ${data.hasSession ? `
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">Has Session</span>
+                    <span class="advanced-modal-info-value">Yes</span>
+                </div>
+                ` : ''}
+            </div>
+
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Site URL</label>
+                <div class="advanced-modal-code-block" data-copy="${siteUrl}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${siteUrl}', this, {notificationMessage: 'Value copied'});">${siteUrl}</div>
+            </div>
+
+            <div class="advanced-modal-section">
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">Captured</span>
+                    <span class="advanced-modal-info-value">${timestamp}</span>
                 </div>
             </div>
         `;
-
-        captureCard.insertAdjacentHTML('beforeend', detailsHtml);
-        captureCard.classList.add('expanded');
-
-        // Add click-to-copy functionality
-        captureCard.querySelectorAll('.copy-value').forEach(element => {
-            element.addEventListener('mouseenter', () => {
-                element.style.background = 'rgba(255, 255, 255, 0.1)';
-            });
-
-            element.addEventListener('mouseleave', () => {
-                element.style.background = '';
-            });
-
-            element.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                const textToCopy = element.getAttribute('data-copy');
-                const originalText = element.textContent;
-
-                try {
-                    await navigator.clipboard.writeText(textToCopy);
-                    element.textContent = '✓ Copied!';
-                    element.style.background = 'var(--success)';
-                    element.style.color = 'white';
-
-                    setTimeout(() => {
-                        element.textContent = originalText;
-                        element.style.background = '';
-                        element.style.color = '';
-                    }, 1500);
-                } catch (error) {
-                    console.error('[ReCaptcha] Copy failed:', error);
-                }
-            });
-        });
-
-        // Setup copy button
-        const copyAllBtn = captureCard.querySelector('.copy-all-btn');
-        if (copyAllBtn) {
-            copyAllBtn.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                try {
-                    await navigator.clipboard.writeText(JSON.stringify(capture.captureData, null, 2));
-                    copyAllBtn.textContent = '✅ Copied!';
-                    setTimeout(() => {
-                        copyAllBtn.textContent = '📄 Copy All Data';
-                    }, 2000);
-                } catch (error) {
-                    console.error('Failed to copy:', error);
-                }
-            });
-        }
     }
 }
 

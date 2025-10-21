@@ -27,7 +27,7 @@
     ]
 },
 "fingerprint": {
-    "colour": "#8D33FF",
+    "colour": "#2196F3",
     "detectors":[
         "audio-fingerprint",
         "canvas-fingerprint",
@@ -42,7 +42,7 @@
     ]
 },
 "tags":{
-    "dom": {"colour": "#8D33FF"},
+    "dom": {"colour": "#2196F3"},
     "header": {"colour": "#FF33A8"},
     "cookie": {"colour": "#FFC133"},
     "content": {"colour": "#33FFF3"},

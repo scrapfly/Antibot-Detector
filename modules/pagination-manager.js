@@ -54,7 +54,7 @@ class PaginationManager {
    * @param {number} page - Page number to go to
    */
   goToPage(page) {
-    const totalPages = this.getTotalPages();
+    const totalPages = Math.max(this.getTotalPages(), 1);
     if (page >= 1 && page <= totalPages) {
       this.currentPage = page;
       this.render();
@@ -108,7 +108,7 @@ class PaginationManager {
       if (totalItems === 0) {
         paginationInfo.textContent = 'No items to display';
       } else {
-        paginationInfo.textContent = `Showing ${startItem}-${endItem} of ${totalItems} - Page ${this.currentPage}`;
+        paginationInfo.innerHTML = `Showing <span class="pagination-count">${startItem}-${endItem}</span> <span class="static-label">of</span> <span class="pagination-count">${totalItems}</span>`;
       }
     }
 
@@ -128,7 +128,8 @@ class PaginationManager {
       });
     }
 
-    // Show/hide pagination based on whether there are items
+    // Show/hide pagination based on whether pagination is needed
+    // Hide only if no items
     if (this.filteredItems.length === 0) {
       container.style.display = 'none';
     } else {

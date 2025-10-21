@@ -1,6 +1,80 @@
 /**
- * Content script for Scrapfly Security Detection Extension
+ * Content Script (ISOLATED World)
  * Collects page data and sends it for analysis
+ *
+ * ============================================================================
+ * DETECTION SYSTEM - PHASE 3 & 4: BATCHING & COMPLETION
+ * ============================================================================
+ *
+ * This file implements Phase 3 & 4 of the detection flow:
+ *
+ * Phase 3: Batching & Deduplication (10-50ms batches)
+ * ────────────────────────────────────────────────────
+ * 1. Listens for postMessage() events from MAIN world (content-main-world.js)
+ * 2. Each event contains a hook detection: detectorId, detectorName, target API
+ * 3. Adds to hookBatcher queue
+ * 4. Deduplicates by "detectorId:target" key:
+ *    - Same detector firing on same API multiple times = 1 entry
+ *    - Different detector on same API = separate entries (no collision!)
+ * 5. Sends batches to background.js via chrome.runtime.sendMessage()
+ *
+ * Example deduplication:
+ * ───────────────────
+ * Input (from MAIN world):
+ *   1. performance-fingerprint:Performance.prototype.now
+ *   2. performance-fingerprint:Performance.prototype.now (REPEAT - ignored)
+ *   3. performance-fingerprint:Performance.prototype.memory
+ *   4. inline-hook-performance-prototype-now:Performance.prototype.now (NEW ID)
+ *
+ * After dedup:
+ *   - performance-fingerprint:Performance.prototype.now (kept 1st, ignored 2nd repeat)
+ *   - performance-fingerprint:Performance.prototype.memory (kept - different target)
+ *   - inline-hook-performance-prototype-now:Performance.prototype.now (kept - different ID!)
+ *
+ * Result: 3 entries sent, 1 duplicate removed
+ *
+ * Phase 4: Completion Tracking (Entire duration)
+ * ──────────────────────────────────────────────
+ * 1. Content-main-world.js schedules 2-second completion timeout
+ * 2. On each hook detection (new or duplicate), timeout resets to 2 seconds
+ * 3. Completes when 2 seconds pass with NO hook activity (any type)
+ * 4. Sends JS_HOOKS_COMPLETE signal to background.js with timing data
+ *
+ * Why this works:
+ * ───────────────
+ * - Simple, proven system: "No activity for 2 seconds = detection complete"
+ * - Resets on ANY hook detection (even duplicates) - ensures completion
+ * - Never gets stuck (always completes after 2s of silence)
+ * - Deduplication still happens (at MAIN world and batching layer)
+ *
+ * ============================================================================
+ * CRITICAL TIMING CONSTRAINTS
+ * ============================================================================
+ *
+ * document_start (0ms)
+ *   ↓
+ *   ├─ content-main-world.js loads (MAIN world)
+ *   ├─ content.js loads (ISOLATED world)
+ *   └─ 18 inline hooks install synchronously
+ *
+ * ~30ms: First page script executes
+ *   ├─ Hooks already installed ✓
+ *   └─ Can't save native API references (they're hooked!)
+ *
+ * ~5-500ms: Hook detections flow in
+ *   ├─ Batched every 10-50ms (adaptive)
+ *   ├─ Each batch deduplicated
+ *   └─ Sent to background
+ *
+ * ~500-8000ms: Lazy-loaded scripts execute
+ *   ├─ More hook detections possible
+ *   ├─ Completion tracker monitoring
+ *   └─ Settles when no new detectors for 1.5s
+ *
+ * <8000ms: Detection complete
+ *   └─ background.js logs final stats
+ *
+ * ============================================================================
  */
 
 // Global variables - use var to allow redeclaration during extension reloads
@@ -49,6 +123,28 @@ function cleanupOrphanedScript() {
 }
 
 /**
+ * Safely send message to background with context check
+ * @param {Object} message - Message to send
+ * @returns {Promise} Response or null if context invalid
+ */
+async function safeSendMessage(message) {
+    if (!isExtensionContextValid()) {
+        console.log('Context invalid, skipping message:', message.type);
+        return null;
+    }
+    
+    try {
+        return await chrome.runtime.sendMessage(message);
+    } catch (error) {
+        if (error.message?.includes('Extension context invalidated')) {
+            cleanupOrphanedScript();
+            return null;
+        }
+        throw error;
+    }
+}
+
+/**
  * Dispatch JS API event to page window
  * Delegates to Settings.dispatchJsApiEvent()
  */
@@ -70,8 +166,9 @@ async function dispatchReadyEvent() {
 /**
  * Notify background about page load (cache check first)
  * Delegates to Utils.notifyPageLoad()
+ * @param {string} triggerSource - What triggered this notification (page_load, visibility_change, url_change, manual)
  */
-async function notifyPageLoad() {
+async function notifyPageLoad(triggerSource = 'page_load') {
     if (typeof Utils === 'undefined') {
         console.warn('Scrapfly Content Script: Utils not loaded, skipping page load notification');
         return;
@@ -79,7 +176,8 @@ async function notifyPageLoad() {
     return Utils.notifyPageLoad({
         detectionEngine: detectionEngine,
         isExtensionContextValid: isExtensionContextValid,
-        cleanupOrphanedScript: cleanupOrphanedScript
+        cleanupOrphanedScript: cleanupOrphanedScript,
+        triggerSource: triggerSource
     });
 }
 
@@ -88,10 +186,12 @@ async function notifyPageLoad() {
  * Delegates to Utils.collectAndSendData()
  */
 async function collectAndSendData() {
+    console.log('[DEBUG] collectAndSendData() called');
     if (typeof Utils === 'undefined') {
-        console.warn('Scrapfly Content Script: Utils not loaded, skipping data collection');
+        console.warn('[DEBUG] Utils not loaded, skipping data collection');
         return;
     }
+    console.log('[DEBUG] Calling Utils.collectAndSendData()...');
     return Utils.collectAndSendData({
         detectionEngine: detectionEngine,
         isExtensionContextValid: isExtensionContextValid,
@@ -104,6 +204,7 @@ async function collectAndSendData() {
  */
 var visibilityTimeout = visibilityTimeout || null;
 var handleVisibilityChange = handleVisibilityChange || null;
+var popupOpenTime = popupOpenTime || 0; // Track when popup was opened
 
 /**
  * Setup detection triggers
@@ -112,12 +213,17 @@ var handleVisibilityChange = handleVisibilityChange || null;
 function setupDetectionTriggers() {
     console.log('Scrapfly Content Script: Setting up detection triggers...');
 
-    // Notify page load (background checks cache first)
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', notifyPageLoad);
-    } else {
-        // DOM is already loaded, notify immediately
+    // Notify page load AFTER all resources load (background checks cache first)
+    // Use 'load' event instead of 'DOMContentLoaded' to ensure async scripts (like reCAPTCHA) are loaded
+    if (document.readyState === 'complete') {
+        // Page already fully loaded, notify immediately
         setTimeout(notifyPageLoad, 100);
+    } else {
+        // Wait for all external resources to load
+        window.addEventListener('load', () => {
+            // Add small delay to ensure scripts have executed
+            setTimeout(notifyPageLoad, 200);
+        }, { once: true });
     }
 
     // OPTIMIZED: Single consolidated visibility handler (replaces separate visibility + focus listeners)
@@ -125,13 +231,20 @@ function setupDetectionTriggers() {
     if (!monitoringDisabled) {
         handleVisibilityChange = () => {
             if (!document.hidden && !hasCleanedUp && !monitoringDisabled) {
+                // Skip if popup was recently opened (within 3 seconds)
+                const timeSincePopup = Date.now() - popupOpenTime;
+                if (popupOpenTime > 0 && timeSincePopup < 3000) {
+                    console.log(`Scrapfly Content Script: Skipping visibility change (popup opened ${timeSincePopup}ms ago)`);
+                    return;
+                }
+
                 // Debounce: clear existing timeout
                 if (visibilityTimeout) clearTimeout(visibilityTimeout);
                 visibilityTimeout = setTimeout(() => {
-                    console.log('Scrapfly Content Script: Tab became visible/focused, notifying...');
-                    notifyPageLoad();
+                    console.log('Scrapfly Content Script: Tab became visible/focused, notifying with visibility_change trigger...');
+                    notifyPageLoad('visibility_change');
                     visibilityTimeout = null;
-                }, 100); // Small debounce to prevent rapid fire
+                }, 500); // Increased debounce to 500ms to prevent rapid fire when opening popup
             }
         };
 
@@ -152,8 +265,8 @@ function setupDetectionTriggers() {
             // Debounce URL changes (prevent rapid notifications)
             if (urlChangeTimeout) clearTimeout(urlChangeTimeout);
             urlChangeTimeout = setTimeout(() => {
-                console.log('Scrapfly Content Script: URL changed, notifying...');
-                notifyPageLoad();
+                console.log('Scrapfly Content Script: URL changed, notifying with url_change trigger...');
+                notifyPageLoad('url_change');
                 urlChangeTimeout = null;
             }, 500);
         }
@@ -191,11 +304,50 @@ function setupDetectionTriggers() {
 
             if (request.type === 'REQUEST_PAGE_DATA') {
                 // Background requests data collection (cache miss)
-                collectAndSendData();
+                console.log('[DEBUG] REQUEST_PAGE_DATA message received - starting collection');
+                console.log('Scrapfly Content Script: ✅ REQUEST_PAGE_DATA received - starting collection');
+
+                // BULLETPROOF: Ensure Utils is loaded before calling collectAndSendData
+                if (typeof Utils === 'undefined') {
+                    console.log('[DEBUG] Utils not loaded yet, will retry in 500ms');
+                    console.error('Scrapfly Content Script: ❌ Utils not loaded yet, waiting and retrying...');
+                    // Retry after Utils loads
+                    setTimeout(() => {
+                        if (typeof Utils !== 'undefined') {
+                            console.log('[DEBUG] Utils now loaded, calling collectAndSendData()');
+                            console.log('Scrapfly Content Script: Utils now loaded, collecting data...');
+                            collectAndSendData();
+                        } else {
+                            console.error('[DEBUG] Utils still not loaded after retry, collection failed');
+                            console.error('Scrapfly Content Script: ❌ Utils still not loaded, collection failed');
+                        }
+                    }, 500);
+                } else {
+                    console.log('[DEBUG] Utils already loaded, calling collectAndSendData() immediately');
+                    collectAndSendData();
+                }
+
                 sendResponse({ status: 'collecting_data' });
             } else if (request.type === 'RUN_DETECTION') {
                 // Manual detection request from popup (force bypass cache)
-                collectAndSendData();
+                console.log('Scrapfly Content Script: ✅ RUN_DETECTION received - starting manual detection');
+
+                // BULLETPROOF: Ensure Utils is loaded before calling collectAndSendData
+                if (typeof Utils === 'undefined') {
+                    console.error('Scrapfly Content Script: ❌ Utils not loaded yet, waiting and retrying...');
+                    // Retry after Utils loads
+                    setTimeout(() => {
+                        if (typeof Utils !== 'undefined') {
+                            console.log('Scrapfly Content Script: Utils now loaded, collecting data...');
+                            collectAndSendData();
+                        } else {
+                            console.error('Scrapfly Content Script: ❌ Utils still not loaded, detection failed');
+                        }
+                    }, 500);
+                } else {
+                    collectAndSendData();
+                }
+
                 sendResponse({ status: 'detection_started' });
             } else if (request.type === 'GET_DETECTION_STATUS') {
                 // Return current detection status
@@ -247,6 +399,11 @@ function setupDetectionTriggers() {
                     `;
                 }
                 sendResponse({ status: 'updated' });
+            } else if (request.type === 'POPUP_OPENED') {
+                // Popup was opened - record timestamp to prevent visibility-triggered detections
+                popupOpenTime = Date.now();
+                console.log('Scrapfly Content Script: Popup opened, disabling visibility detection for 3 seconds');
+                sendResponse({ status: 'acknowledged' });
             } else if (request.type === 'CACHE_HIT_DISABLE_MONITORING') {
                 // Cache hit - disable hooks and window properties monitoring
                 monitoringDisabled = true;
@@ -306,6 +463,13 @@ function performContextCheck() {
 async function initialize() {
     console.log('Scrapfly Content Script: Initializing on', window.location.href);
 
+    // CHECK CONTEXT FIRST - before any operations
+    if (!isExtensionContextValid()) {
+        console.log('Scrapfly Content Script: Extension context not valid, cleaning up');
+        cleanupOrphanedScript();
+        return; // Exit early
+    }
+
     // Don't run on extension pages or chrome:// URLs
     if (!Utils.isValidContentScriptUrl(window.location.href)) {
         console.log('Scrapfly Content Script: Skipping initialization on browser page');
@@ -330,27 +494,82 @@ async function initialize() {
     }
 
     // Load detectors from background for smart data collection (Phase C.1 optimization)
-    try {
-        console.log('Scrapfly Content Script: Requesting detectors from background...');
-        const detectorsResponse = await chrome.runtime.sendMessage({ type: 'GET_DETECTORS' });
+    // Add retry logic to handle cases where background script isn't ready yet
+    let detectorsLoaded = false;
+    let retryCount = 0;
+    // OPTIMIZATION QUICK WIN #4: Reduce detector loading retries from 5 to 3 with exponential backoff
+    // This saves 1-3s on cold start while still allowing reasonable retry window
+    const maxRetries = 3;
+    let retryDelay = 500; // Start with 500ms, exponential backoff to 1s
 
-        if (detectorsResponse && detectorsResponse.detectors) {
-            // Count total detectors received
-            const detectorCount = Object.values(detectorsResponse.detectors)
-                .reduce((sum, category) => sum + Object.keys(category).length, 0);
-
-            console.log(`Scrapfly Content Script: Received ${detectorCount} detectors from background`);
-
-            // Set detectors in detection engine to enable smart data collection
-            detectionEngine.setDetectors(detectorsResponse.detectors);
-
-            console.log('[C.1] ✅ Detectors loaded - smart data collection enabled');
-        } else {
-            console.warn('[C.1] ⚠️ No detectors returned from background, will collect all data types');
+    while (!detectorsLoaded && retryCount < maxRetries) {
+        // CHECK CONTEXT BEFORE EACH ATTEMPT
+        if (!isExtensionContextValid()) {
+            console.log('Extension context lost during detector loading');
+            cleanupOrphanedScript();
+            return; // Exit initialization
         }
-    } catch (error) {
-        console.error('Scrapfly Content Script: Failed to load detectors:', error);
-        console.warn('[C.1] ⚠️ Will collect all data types as fallback');
+
+        try {
+            const detectorsResponse = await safeSendMessage({ type: 'GET_DETECTORS' });
+
+            if (!detectorsResponse) {
+                // Context invalid, already handled by safeSendMessage
+                return;
+            }
+
+            if (detectorsResponse && detectorsResponse.detectors) {
+                // Count total detectors received
+                const detectorCount = Object.values(detectorsResponse.detectors)
+                    .reduce((sum, category) => sum + Object.keys(category).length, 0);
+
+                if (detectorCount > 0) {
+                    // FIX: Only log success, not every attempt
+                    console.log(`[C.1] ✅ Detectors loaded - smart data collection enabled (${detectorCount} detectors)`);
+
+                    // Set detectors in detection engine to enable smart data collection
+                    detectionEngine.setDetectors(detectorsResponse.detectors);
+
+                    detectorsLoaded = true;
+                } else {
+                    retryCount++;
+
+                    if (retryCount < maxRetries) {
+                        // FIX: Silent retry - only log if final failure
+                        await new Promise(resolve => setTimeout(resolve, retryDelay));
+                        // Exponential backoff: 500ms → 1000ms
+                        retryDelay = Math.min(retryDelay * 2, 1000);
+                    }
+                }
+            } else {
+                retryCount++;
+
+                if (retryCount < maxRetries) {
+                    // FIX: Silent retry - only log if final failure
+                    await new Promise(resolve => setTimeout(resolve, retryDelay));
+                    // Exponential backoff: 500ms → 1000ms
+                    retryDelay = Math.min(retryDelay * 2, 1000);
+                }
+            }
+        } catch (error) {
+            // Only log non-context errors
+            if (!error.message?.includes('Extension context invalidated')) {
+                retryCount++;
+
+                if (retryCount < maxRetries) {
+                    // FIX: Silent retry - only log if final failure
+                    await new Promise(resolve => setTimeout(resolve, retryDelay));
+                    // Exponential backoff: 500ms → 1000ms
+                    retryDelay = Math.min(retryDelay * 2, 1000);
+                }
+            } else {
+                return; // Context invalid, stop trying
+            }
+        }
+    }
+
+    if (!detectorsLoaded) {
+        console.warn('[C.1] ⚠️ Failed to load detectors after all retries, will collect all data types as fallback');
     }
 
     // Note: JS hooks are installed by install-hooks.js at document_start (before this script runs)
@@ -420,31 +639,101 @@ const hookBatcher = DetectionEngineManager.createHookBatcher(chrome);
 // Listen for JS Hook detections from MAIN world script
 // Delegate to DetectionEngineManager.handleHookMessage()
 window.addEventListener('message', (event) => {
+    if (event.data?.type === 'JS_HOOK_DETECTION') {
+        console.log(`%c[CHECK THIS] [CONTENT] JS_HOOK_DETECTION received: ${event.data.detection?.detectorName}`, 'color: #0099ff; font-weight: bold;');
+        event.stopImmediatePropagation?.();
+    }
+    
+    // FIX: Listen for JS hooks completion signal from MAIN world
+    if (event.data?.type === 'JS_HOOKS_COMPLETE') {
+        console.log(`%c[Content] JS_HOOKS_COMPLETE received from MAIN world, forwarding to background`, 'color: #00cc00; font-weight: bold;');
+        console.log(`[Content] Hook stats:`, {
+            totalDetections: event.data.totalDetections,
+            uniqueHooks: event.data.uniqueHooks,
+            completionTime: event.data.completionTime,
+            reason: event.data.completionReason
+        });
+        chrome.runtime.sendMessage({
+            type: 'JS_HOOKS_COMPLETE',
+            url: event.data.url,
+            timestamp: event.data.timestamp,
+            totalDetections: event.data.totalDetections,
+            uniqueHooks: event.data.uniqueHooks,
+            completionReason: event.data.completionReason,
+            completionTime: event.data.completionTime,
+            uninstallStats: event.data.uninstallStats
+        }).catch((error) => {
+            console.error('[Content] Failed to send JS_HOOKS_COMPLETE to background:', error.message);
+        });
+    }
+    
+    // FIX: Listen for window properties completion signal from MAIN world
+    if (event.data?.type === 'WINDOW_PROPS_COMPLETE') {
+        console.log(`%c[Content] WINDOW_PROPS_COMPLETE received from MAIN world, forwarding to background`, 'color: #00cc00; font-weight: bold;');
+        console.log(`[Content] Window props stats:`, {
+            detectedCount: event.data.detectedCount,
+            totalChecked: event.data.totalChecked,
+            elapsedMs: event.data.elapsedMs,
+            reason: event.data.reason
+        });
+        chrome.runtime.sendMessage({
+            type: 'WINDOW_PROPS_COMPLETE',
+            url: event.data.url,
+            timestamp: event.data.timestamp,
+            detectedCount: event.data.detectedCount,
+            totalChecked: event.data.totalChecked,
+            elapsedMs: event.data.elapsedMs,
+            reason: event.data.reason
+        }).catch((error) => {
+            console.error('[Content] Failed to send WINDOW_PROPS_COMPLETE to background:', error.message);
+        });
+    }
+    
     DetectionEngineManager.handleHookMessage(event, chrome, hookBatcher);
 });
 
 // Install hooks IMMEDIATELY (document_start) - don't wait for Utils
 // This must run before page scripts to intercept API calls
-// Wrapped in async IIFE to check enabled state first
-(async function() {
+// CRITICAL: NO ASYNC OPERATIONS BEFORE installJSHooks() to prevent race conditions
+// Page scripts can execute during async delays and save native API references, bypassing hooks
+(function() {
     if (window.__scrapflyHooksInstalled) {
         return; // Already installed
     }
 
-    // Check if extension is enabled before installing hooks
-    try {
-        const result = await chrome.storage.local.get(['scrapfly_enabled']);
-        if (result.scrapfly_enabled === false) {
-            console.log('Scrapfly Content Script: Extension is disabled, skipping hook installation');
-            return;
-        }
-    } catch (error) {
-        console.error('Scrapfly Content Script: Failed to check enabled state for hooks:', error);
-        // Continue with hook installation on error (fail-safe)
+    // CHECK CONTEXT BEFORE INSTALLING HOOKS (synchronous check)
+    if (!chrome?.runtime?.id) {
+        console.log('Extension context not available, skipping hook installation');
+        return;
     }
 
+    // CRITICAL FIX: Install hooks IMMEDIATELY without any async storage checks
+    // The cache check and enabled state check will happen AFTER hooks are installed
+    // This guarantees hooks install before any page scripts execute
     window.__scrapflyHooksInstalled = true;
     installJSHooks();
+
+    const triggerHookStart = () => {
+        window.postMessage({
+            type: 'SCRAPFLY_PAGE_READY'
+        }, '*');
+    };
+
+    if (document.readyState === 'complete') {
+        triggerHookStart();
+    } else {
+        window.addEventListener('load', triggerHookStart, { once: true });
+        if (document.readyState === 'interactive') {
+            window.addEventListener('DOMContentLoaded', triggerHookStart, { once: true });
+        } else {
+            const readyStateInterval = setInterval(() => {
+                if (document.readyState === 'complete') {
+                    clearInterval(readyStateInterval);
+                    triggerHookStart();
+                }
+            }, 100);
+        }
+    }
 })();
 
 // Check if script is already initialized to prevent duplicates

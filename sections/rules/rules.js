@@ -176,6 +176,44 @@ class Rules {
       saveBtn.addEventListener('click', () => this.saveRule());
     }
 
+    // JS hooks helper tooltip
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('.method-help-btn[data-method-help="js_hooks"]');
+      if (button) {
+        const existing = document.querySelector('.method-help-tooltip');
+        if (existing) existing.remove();
+
+        const tooltip = document.createElement('div');
+        tooltip.className = 'method-help-tooltip';
+        tooltip.innerHTML = `
+          <strong>JavaScript Hooks Detection</strong>
+          <p>Hooks watch APIs like <code>canvas.toDataURL()</code>, <code>navigator.webdriver</code>, or <code>RTCPeerConnection.createOffer()</code>. When a page calls them, Scrapfly records which anti-bot or fingerprinting system is active.</p>
+          <p><strong>Tip:</strong> Hooks only fire if those APIs run. Some sites cache results, so use a hard reload (Ctrl+F5) to trigger them again.</p>
+        `;
+
+        const section = button.closest('.method-section');
+        section.style.position = 'relative';
+        section.appendChild(tooltip);
+
+        const buttonRect = button.getBoundingClientRect();
+        const sectionRect = section.getBoundingClientRect();
+        const offsetTop = buttonRect.bottom - sectionRect.top + 8;
+        const offsetLeft = Math.min(buttonRect.left - sectionRect.left - 140, sectionRect.width - 320 - 12);
+
+        tooltip.style.top = `${offsetTop}px`;
+        tooltip.style.left = `${Math.max(offsetLeft, 12)}px`;
+
+        const removeTooltip = (e) => {
+          if (!tooltip.contains(e.target) && e.target !== button) {
+            tooltip.remove();
+            document.removeEventListener('click', removeTooltip, true);
+          }
+        };
+
+        document.addEventListener('click', removeTooltip, true);
+      }
+    });
+
     // Change Icon button
     const changeIconBtn = document.querySelector('.change-icon-btn');
     if (changeIconBtn) {
@@ -457,6 +495,17 @@ class Rules {
         }
       }
 
+      // Handle condition helper button clicks (for WINDOW method)
+      if (e.target.closest('.condition-helper-btn')) {
+        e.stopPropagation();
+        const button = e.target.closest('.condition-helper-btn');
+        const inputIndex = button.dataset.inputIndex;
+        const methodItem = button.closest('.method-item');
+        if (methodItem) {
+          this.openConditionHelperModal(methodItem, inputIndex);
+        }
+      }
+
       // Handle template clicks
       if (e.target.closest('.dom-template')) {
         e.stopPropagation();
@@ -531,6 +580,124 @@ class Rules {
       document.body.style.overflow = '';
       this.currentDomMethodItem = null;
     }
+  }
+
+  /**
+   * Open condition helper modal for WINDOW method
+   * @param {HTMLElement} methodItem - The method item element
+   * @param {string} inputIndex - Index of the input field
+   */
+  openConditionHelperModal(methodItem, inputIndex) {
+    // Store reference to current method item
+    this.currentConditionMethodItem = methodItem;
+
+    // Condition examples for WINDOW method
+    const conditionExamples = [
+      { value: 'exists', description: 'Checks if property exists' },
+      { value: 'typeof object', description: 'Property is an object' },
+      { value: 'typeof function', description: 'Property is a function' },
+      { value: 'typeof string', description: 'Property is a string' },
+      { value: 'typeof number', description: 'Property is a number' },
+      { value: 'typeof boolean', description: 'Property is a boolean' },
+      { value: 'not undefined', description: 'Property is not undefined' },
+      { value: 'not null', description: 'Property is not null' },
+      { value: 'truthy', description: 'Property has a truthy value' },
+      { value: 'falsy', description: 'Property has a falsy value' }
+    ];
+
+    // Create modal using DOM methods
+    const modalContainer = document.createElement('div');
+    modalContainer.classList.add('condition-helper-modal-container');
+
+    const modal = document.createElement('div');
+    modal.className = 'condition-helper-modal';
+    modal.style.cssText = 'display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(4px);';
+
+    const content = document.createElement('div');
+    content.className = 'condition-helper-content';
+    content.style.cssText = 'background: var(--bg-primary); border-radius: 12px; padding: 24px; max-width: 500px; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.5);';
+
+    const title = document.createElement('h3');
+    title.textContent = 'Window Condition Examples';
+    title.style.cssText = 'margin: 0 0 16px 0; font-size: 16px; color: var(--text-primary);';
+
+    const description = document.createElement('p');
+    description.textContent = 'Click on an example to use it:';
+    description.style.cssText = 'margin: 0 0 16px 0; font-size: 12px; color: var(--text-secondary);';
+
+    const examplesContainer = document.createElement('div');
+    examplesContainer.className = 'condition-examples';
+    examplesContainer.style.cssText = 'display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;';
+
+    // Create example elements
+    conditionExamples.forEach(example => {
+      const exampleDiv = document.createElement('div');
+      exampleDiv.className = 'condition-example';
+      exampleDiv.dataset.value = example.value;
+      exampleDiv.style.cssText = 'cursor: pointer; padding: 10px 12px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; transition: all 0.2s;';
+
+      const valueDiv = document.createElement('div');
+      valueDiv.textContent = example.value;
+      valueDiv.style.cssText = 'font-size: 12px; font-weight: 600; color: var(--accent); margin-bottom: 2px; font-family: Monaco, Courier New, monospace;';
+
+      const descDiv = document.createElement('div');
+      descDiv.textContent = example.description;
+      descDiv.style.cssText = 'font-size: 11px; color: var(--text-muted);';
+
+      exampleDiv.appendChild(valueDiv);
+      exampleDiv.appendChild(descDiv);
+      examplesContainer.appendChild(exampleDiv);
+
+      // Add hover and click handlers
+      exampleDiv.addEventListener('mouseenter', () => {
+        exampleDiv.style.borderColor = 'var(--accent)';
+        exampleDiv.style.background = 'var(--bg-tertiary)';
+        exampleDiv.style.transform = 'translateX(4px)';
+      });
+      exampleDiv.addEventListener('mouseleave', () => {
+        exampleDiv.style.borderColor = 'var(--border)';
+        exampleDiv.style.background = 'var(--bg-secondary)';
+        exampleDiv.style.transform = 'translateX(0)';
+      });
+      exampleDiv.addEventListener('click', () => {
+        const conditionValue = exampleDiv.dataset.value;
+        if (this.currentConditionMethodItem) {
+          const valueInput = this.currentConditionMethodItem.querySelector('.method-input.method-value');
+          if (valueInput) {
+            valueInput.value = conditionValue;
+          }
+        }
+        document.body.removeChild(modalContainer);
+        this.currentConditionMethodItem = null;
+      });
+    });
+
+    const closeBtn = document.createElement('button');
+    closeBtn.id = 'closeConditionHelper';
+    closeBtn.textContent = 'Close';
+    closeBtn.style.cssText = 'width: 100%; padding: 10px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;';
+    closeBtn.addEventListener('click', () => {
+      document.body.removeChild(modalContainer);
+      this.currentConditionMethodItem = null;
+    });
+
+    // Assemble modal
+    content.appendChild(title);
+    content.appendChild(description);
+    content.appendChild(examplesContainer);
+    content.appendChild(closeBtn);
+    modal.appendChild(content);
+    modalContainer.appendChild(modal);
+
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        document.body.removeChild(modalContainer);
+        this.currentConditionMethodItem = null;
+      }
+    });
+
+    document.body.appendChild(modalContainer);
   }
 
   /**
@@ -707,7 +874,6 @@ class Rules {
   openIconPicker() {
     // List of available icons
     const availableIcons = [
-      'custom.png',
       'akamai_official.png',
       'aws_official.png',
       'cloudflare_official.png',
@@ -723,24 +889,38 @@ class Rules {
       'sucuri_official.png'
     ];
 
-    // Create modal HTML
+    // Create modal HTML with Default option first, then Custom, then others
+    const scrapflyIcon = chrome.runtime.getURL('icons/scrapfly.webp');
     const modalHtml = `
-      <div class="icon-picker-modal" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
-        <div class="icon-picker-content" style="background: var(--bg-primary); border-radius: 8px; padding: 20px; max-width: 500px; max-height: 80vh; overflow-y: auto;">
-          <h3 style="margin: 0 0 16px 0; font-size: 16px;">Choose Icon</h3>
-          <div class="icon-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px;">
-            ${availableIcons.map(icon => `
-              <div class="icon-option" data-icon="${icon}" style="cursor: pointer; padding: 12px; border: 2px solid var(--border); border-radius: 6px; text-align: center; transition: all 0.2s;">
-                <img src="${chrome.runtime.getURL('detectors/icons/' + icon)}" style="width: 48px; height: 48px; object-fit: contain; margin-bottom: 4px;" />
-                <div style="font-size: 9px; color: var(--text-muted); word-break: break-word;">${icon.replace('_official.png', '').replace('.png', '')}</div>
-              </div>
-            `).join('')}
-          </div>
-          <div style="border-top: 1px solid var(--border); padding-top: 16px; margin-top: 16px;">
-            <button id="uploadCustomIcon" style="width: 100%; padding: 10px; background: var(--accent); color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 8px;">
-              Upload Custom Icon
+      <div class="icon-picker-modal" style="display:flex;position:fixed;inset:0;background:rgba(10,10,10,0.65);backdrop-filter:blur(2px);z-index:10000;align-items:center;justify-content:center;padding:32px;">
+        <div class="icon-picker-content" style="display:flex;flex-direction:column;position:relative;background:var(--bg-elevated,var(--bg-primary));border-radius:16px;padding:28px;width:clamp(520px,60vw,700px);max-height:90vh;box-shadow:0 24px 60px rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.05);box-sizing:border-box;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:16px;">
+            <div style="flex:1;">
+              <h3 style="margin:0;font-size:18px;font-weight:700;letter-spacing:0.3px;">Choose Icon</h3>
+              <p style="margin:6px 0 0;font-size:12px;color:var(--text-muted);">Select an icon below or upload your own custom image.</p>
+            </div>
+            <button class="icon-picker-close" aria-label="Close icon picker" style="width:34px;height:34px;border:1px solid rgba(255,255,255,0.08);border-radius:8px;background:rgba(255,255,255,0.04);color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;font-size:18px;line-height:1;">
+              ✕
             </button>
-            <button id="cancelIconPicker" style="width: 100%; padding: 10px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
+          </div>
+          <div style="position:relative;flex:1 1 auto;overflow:auto;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);">
+            <div class="icon-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:12px;padding:16px 16px 32px;max-height:clamp(280px,55vh,420px);box-sizing:border-box;">
+              ${[
+                { icon: 'default', label: 'Default', image: scrapflyIcon, special: true, className: 'icon-option icon-option-default icon-option-special', imgSize: 48 },
+                ...availableIcons.map(icon => ({ icon, label: icon.replace('_official.png', '').replace('.png', ''), image: chrome.runtime.getURL('detectors/icons/' + icon), special: false, className: 'icon-option', imgSize: 42 }))
+              ].map(({ icon, label, image, special, className, imgSize }) => `
+                <div class="${className}" data-icon="${icon}" style="cursor:pointer;padding:10px;border:2px solid ${special ? 'var(--accent)' : 'rgba(255,255,255,0.06)'};border-radius:10px;text-align:center;transition:transform 0.18s ease,border-color 0.18s ease,background 0.18s ease;background:${special ? 'linear-gradient(135deg, rgba(59,130,246,0.18) 0%, rgba(59,130,246,0.28) 100%)' : 'rgba(255,255,255,0.02)'};">
+                  <img src="${image}" style="width:${imgSize}px;height:${imgSize}px;object-fit:contain;margin-bottom:6px;" />
+                  <div style="font-size:9px;color:var(--text-muted);word-break:break-word;text-transform:capitalize;">${label}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:22px;">
+            <button id="uploadCustomIcon" style="flex:1;padding:12px 16px;background:linear-gradient(135deg,rgba(59,130,246,0.34) 0%,rgba(59,130,246,0.62) 100%);color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+              <span style="font-size:18px;">⬆</span> Upload Custom Icon
+            </button>
+            <button id="cancelIconPicker" style="padding:12px 18px;background:rgba(255,255,255,0.05);color:var(--text-muted);border:1px solid rgba(255,255,255,0.08);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;">
               Cancel
             </button>
           </div>
@@ -753,21 +933,36 @@ class Rules {
     modalContainer.innerHTML = modalHtml;
     document.body.appendChild(modalContainer);
 
-    // Add hover effects
+    // Add hover effects and click handlers
     const iconOptions = modalContainer.querySelectorAll('.icon-option');
     iconOptions.forEach(option => {
+      const isDefault = option.classList.contains('icon-option-default');
+      const isSpecial = isDefault;
+
       option.addEventListener('mouseenter', () => {
         option.style.borderColor = 'var(--accent)';
-        option.style.background = 'var(--bg-secondary)';
+        if (!isSpecial) {
+          option.style.background = 'rgba(255,255,255,0.05)';
+        }
       });
       option.addEventListener('mouseleave', () => {
-        option.style.borderColor = 'var(--border)';
-        option.style.background = 'transparent';
+        option.style.borderColor = isSpecial ? 'var(--accent)' : 'rgba(255,255,255,0.06)';
+        if (!isSpecial) {
+          option.style.background = 'rgba(255,255,255,0.02)';
+        }
       });
       option.addEventListener('click', () => {
         const iconName = option.dataset.icon;
-        this.selectIcon(iconName);
-        document.body.removeChild(modalContainer);
+
+        if (iconName === 'default') {
+          // Handle default icon - set to null or 'default'
+          this.selectIcon('default');
+          document.body.removeChild(modalContainer);
+        } else {
+          // Handle regular icon selection
+          this.selectIcon(iconName);
+          document.body.removeChild(modalContainer);
+        }
       });
     });
 
@@ -791,6 +986,12 @@ class Rules {
         document.body.removeChild(modalContainer);
       }
     });
+
+    // Close button
+    const closeBtn = modalContainer.querySelector('.icon-picker-close');
+    closeBtn?.addEventListener('click', () => {
+        document.body.removeChild(modalContainer);
+      });
   }
 
   /**
@@ -800,12 +1001,22 @@ class Rules {
     // Update current icon display in modal
     const currentIcon = document.querySelector('#currentDetectorIcon');
     if (currentIcon) {
-      currentIcon.src = chrome.runtime.getURL('detectors/icons/' + iconName);
+      if (iconName === 'default') {
+        // Use Scrapfly icon for default
+        currentIcon.src = chrome.runtime.getURL('icons/scrapfly.webp');
+      } else {
+        currentIcon.src = chrome.runtime.getURL('detectors/icons/' + iconName);
+      }
     }
 
     // Store the icon in the detector
     if (this.currentEditDetector) {
-      this.currentEditDetector.detector.icon = iconName;
+      if (iconName === 'default') {
+        // Set icon to 'default' or remove it entirely
+        this.currentEditDetector.detector.icon = 'default';
+      } else {
+        this.currentEditDetector.detector.icon = iconName;
+      }
       // Remove custom icon if one was set
       delete this.currentEditDetector.detector.customIcon;
       delete this.currentEditDetector.customIcon;
@@ -990,27 +1201,52 @@ class Rules {
     }
 
     if (iconImg) {
+      // Default Scrapfly icon fallback
+      const scrapflyIcon = chrome.runtime.getURL('icons/scrapfly.webp');
+
+      // Set error handler to fallback to Scrapfly icon
+      iconImg.onerror = () => {
+        iconImg.src = scrapflyIcon;
+      };
+
       // Check for custom icon first
       if (detector.customIcon) {
         iconImg.src = detector.customIcon;
+      } else if (!detector.icon || detector.icon === 'default') {
+        // Use Scrapfly icon for default or when no icon is set
+        iconImg.src = scrapflyIcon;
       } else if (detector.icon) {
         // Handle different icon types
         if (detector.icon.startsWith('http') || detector.icon.startsWith('/')) {
           iconImg.src = detector.icon;
-        } else if (detector.icon.includes('.png') || detector.icon.includes('.jpg') || detector.icon.includes('.svg')) {
-          iconImg.src = chrome.runtime.getURL(`detectors/icons/${detector.icon}`);
         } else {
-          // It's an emoji or text, create a data URL
-          const canvas = document.createElement('canvas');
-          canvas.width = 32;
-          canvas.height = 32;
-          const ctx = canvas.getContext('2d');
-          ctx.font = '20px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(detector.icon, 16, 16);
-          iconImg.src = canvas.toDataURL();
+          const normalizedIcon = detector.icon.trim().toLowerCase();
+
+          // Treat legacy placeholders as default Scrapfly icon
+          const legacyDefaults = ['custom.png', 'custom', 'placeholder.png', 'placeholder'];
+          if (legacyDefaults.includes(normalizedIcon)) {
+            iconImg.src = scrapflyIcon;
+            // Normalize icon value so it persists as default when saved
+            detector.icon = 'default';
+            this.currentEditDetector.detector.icon = 'default';
+          } else if (normalizedIcon.endsWith('.png') || normalizedIcon.endsWith('.jpg') || normalizedIcon.endsWith('.jpeg') || normalizedIcon.endsWith('.svg') || normalizedIcon.endsWith('.webp')) {
+            iconImg.src = chrome.runtime.getURL(`detectors/icons/${detector.icon}`);
+          } else {
+            // It's an emoji or text, create a data URL
+            const canvas = document.createElement('canvas');
+            canvas.width = 32;
+            canvas.height = 32;
+            const ctx = canvas.getContext('2d');
+            ctx.font = '20px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(detector.icon, 16, 16);
+            iconImg.src = canvas.toDataURL();
+          }
         }
+      } else {
+        // No icon specified, use Scrapfly icon
+        iconImg.src = scrapflyIcon;
       }
     }
 
@@ -1056,7 +1292,7 @@ class Rules {
     let methodsHtml = '';
 
     // Define all possible method types (matching detector data structure)
-    const allMethodTypes = ['urls', 'headers', 'cookies', 'content', 'dom'];
+    const allMethodTypes = ['url', 'header', 'cookie', 'content', 'dom', 'js_hooks', 'window', 'css'];
     // Support legacy 'scripts' type (maps to 'content')
     const legacyTypes = { 'scripts': 'content' };
 
@@ -1071,17 +1307,27 @@ class Rules {
       // Show section even if empty
       const displayName = methodType === 'content' ? 'CONTENT' :
                          methodType === 'dom' ? 'DOM' :
-                        methodType === 'urls' ? 'URL' :
-                        methodType.toUpperCase();
+                         methodType === 'url' ? 'URL' :
+                         methodType === 'header' ? 'HEADER' :
+                         methodType === 'cookie' ? 'COOKIE' :
+                         methodType === 'js_hooks' ? 'JS HOOKS' :
+                         methodType === 'window' ? 'WINDOW' :
+                         methodType === 'css' ? 'CSS' :
+                         methodType.toUpperCase();
 
       // Get color from CategoryManager
       const tagColor = this.detectorManager.categoryManager.getTagColor(methodType);
       const backgroundColor = (tagColor && tagColor !== '#666666') ? tagColor : '#666666';
 
+      const hooksHelper = methodType === 'js_hooks' ? `
+            <button class="method-help-btn" type="button" data-method-help="js_hooks" title="What are JS hooks?">?</button>
+          ` : '';
+
       methodsHtml += `
         <div class="method-section">
           <div class="method-header">
             <div class="method-title" style="background: ${backgroundColor}; color: white; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; display: inline-block;">${displayName}</div>
+            ${hooksHelper}
           </div>
           <div class="method-items">
       `;
@@ -1094,14 +1340,23 @@ class Rules {
             let value = '';
 
             // Different method types have different structures
-            if (methodType === 'headers' || methodType === 'cookies') {
+            if (methodType === 'header' || methodType === 'cookie') {
               name = method.name || '';
               value = method.value || '';
-            } else if (methodType === 'urls' || methodType === 'content') {
+            } else if (methodType === 'url' || methodType === 'content') {
               name = method.pattern || method.content || '';
               value = method.description || '';
             } else if (methodType === 'dom') {
               name = method.selector || '';
+              value = method.description || '';
+            } else if (methodType === 'js_hooks') {
+              name = method.target || '';
+              value = method.description || '';
+            } else if (methodType === 'window') {
+              name = method.path || '';
+              value = method.condition || '';
+            } else if (methodType === 'css') {
+              name = method.selector || method.property || '';
               value = method.description || '';
             }
 
@@ -1121,13 +1376,19 @@ class Rules {
               return;
             }
 
-            const singleInputTypes = ['urls', 'url', 'content', 'dom'];
+            // SIMPLIFICATION: js_hooks only needs target, no regex options
+            // window is now single input - condition defaults to "exists" if not provided
+            const singleInputTypes = ['url', 'content', 'dom', 'js_hooks', 'css', 'window'];
             const isSingleInput = singleInputTypes.includes(methodType);
 
             let inputPlaceholder = 'Name';
+            let valuePlaceholder = 'Value (optional)';
             if (methodType === 'dom') inputPlaceholder = 'CSS Selector (e.g., .class, #id, [attr])';
             else if (methodType === 'content') inputPlaceholder = 'Text/Word to search';
-            else if (methodType === 'urls' || methodType === 'url') inputPlaceholder = 'URL Pattern';
+            else if (methodType === 'url') inputPlaceholder = 'URL Pattern';
+            else if (methodType === 'js_hooks') inputPlaceholder = 'JS Hook Target (e.g., navigator.webdriver)';
+            else if (methodType === 'window') inputPlaceholder = 'Window Path (e.g., grecaptcha, _cf_chl_opt)';
+            else if (methodType === 'css') inputPlaceholder = 'CSS Selector or Property';
 
             // Check if any non-default settings are enabled
             // Don't consider imported confidence values as custom settings, only user-modified pattern options
@@ -1156,16 +1417,19 @@ class Rules {
                     ${methodType === 'dom' ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="${index}">?</button>` : ''}
                     ${!isSingleInput ? `
                     <div class="input-with-indicators">
-                      <input type="text" class="method-input method-value" placeholder="Value (optional)" value="${value}" data-method-key="${methodType}" data-item-index="${index}">
+                      <input type="text" class="method-input method-value" placeholder="${valuePlaceholder}" value="${value}" data-method-key="${methodType}" data-item-index="${index}">
                       <div class="input-indicators" data-for="value-${methodType}-${index}"></div>
                     </div>
                     ` : ''}
+                    ${methodType === 'js_hooks' ? '' : ''}
                   </div>
+                  ${methodType !== 'js_hooks' ? `
                   <button class="method-action-btn settings ${hasCustomSettings ? 'has-custom-settings' : ''}" title="Settings">
                     <svg width="12" height="12" viewBox="0 0 24 24">
                       <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
                     </svg>
                   </button>
+                  ` : ''}
                   <button class="method-action-btn delete" title="Delete">
                     <svg width="12" height="12" viewBox="0 0 24 24">
                       <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
@@ -1232,10 +1496,14 @@ class Rules {
   addNewMethodItem(button) {
     const methodSection = button.closest('.method-section');
     const methodItems = methodSection.querySelector('.method-items');
-    const methodKey = methodSection.querySelector('.method-title').textContent.toLowerCase();
+    let methodKey = methodSection.querySelector('.method-title').textContent.toLowerCase();
+
+    // Map display name to internal key
+    if (methodKey === 'js hooks') methodKey = 'js_hooks';
+
     const itemIndex = `new-${Date.now()}`;
 
-    const singleInputTypes = ['urls', 'url', 'content', 'dom'];
+    const singleInputTypes = ['urls', 'url', 'content', 'dom', 'js_hooks', 'css', 'window'];
     const isSingleInput = singleInputTypes.includes(methodKey);
     const isDom = methodKey === 'dom';
 
@@ -1243,6 +1511,9 @@ class Rules {
     if (methodKey === 'dom') inputPlaceholder = 'CSS Selector (e.g., .class, #id, [attr])';
     else if (methodKey === 'content') inputPlaceholder = 'Text/Word to search';
     else if (methodKey === 'urls' || methodKey === 'url') inputPlaceholder = 'URL Pattern';
+    else if (methodKey === 'js_hooks') inputPlaceholder = 'JS Hook Target (e.g., navigator.webdriver)';
+    else if (methodKey === 'window') inputPlaceholder = 'Window Path (e.g., grecaptcha, _cf_chl_opt)';
+    else if (methodKey === 'css') inputPlaceholder = 'CSS Selector or Property';
 
     const newMethodHtml = `
       <div class="method-item"
@@ -1426,9 +1697,10 @@ class Rules {
 
         // Map display titles to detector data keys
         let methodType = methodTitle;
-        if (methodTitle === 'url') {
-          methodType = 'urls';
+        if (methodTitle === 'js hooks') {
+          methodType = 'js_hooks';
         }
+        // All other types already match the JSON structure (singular)
 
         const methods = [];
         const methodItems = section.querySelectorAll('.method-item');
@@ -1448,19 +1720,13 @@ class Rules {
             };
 
             // Structure data based on method type
-            if (methodType === 'headers' || methodType === 'cookies') {
+            if (methodType === 'header' || methodType === 'cookie') {
               methodData.name = nameInput.value;
               if (valueInput?.value) {
                 methodData.value = valueInput.value;
               }
-              if (hasValue && !hasName) {
-                // Description only
-                methodData.description = valueInput.value;
-              } else if (hasValue) {
-                methodData.description = valueInput.value;
-              }
-            } else if (methodType === 'urls' || methodType === 'content') {
-              if (methodType === 'urls') {
+            } else if (methodType === 'url' || methodType === 'content') {
+              if (methodType === 'url') {
                 methodData.pattern = nameInput.value;
               } else {
                 methodData.content = nameInput.value;
@@ -1469,6 +1735,20 @@ class Rules {
                 methodData.description = valueInput.value;
               }
             } else if (methodType === 'dom') {
+              methodData.selector = nameInput.value;
+              if (valueInput?.value) {
+                methodData.description = valueInput.value;
+              }
+            } else if (methodType === 'js_hooks') {
+              methodData.target = nameInput.value;
+              if (valueInput?.value) {
+                methodData.description = valueInput.value;
+              }
+            } else if (methodType === 'window') {
+              methodData.path = nameInput.value;
+              // Default condition to "exists" if not provided
+              methodData.condition = valueInput?.value || 'exists';
+            } else if (methodType === 'css') {
               methodData.selector = nameInput.value;
               if (valueInput?.value) {
                 methodData.description = valueInput.value;
@@ -1675,6 +1955,12 @@ class Rules {
     // Sort detectors:
     // 1. Enabled detectors first, disabled last
     // 2. Within each group, sort by lastUpdated (newest first)
+    const categoryPriority = {
+      antibot: 0,
+      captcha: 1,
+      fingerprint: 2
+    };
+
     this.allDetectors.sort((a, b) => {
       // First, sort by enabled status (enabled first)
       const aEnabled = a.detector.enabled !== false;
@@ -1684,9 +1970,24 @@ class Rules {
       }
 
       // Then sort by lastUpdated (newest first)
-      const aDate = a.detector.lastUpdated || '1900-01-01';
-      const bDate = b.detector.lastUpdated || '1900-01-01';
-      return bDate.localeCompare(aDate);
+      const aTimestamp = this.getSortTimestamp(a.detector.lastUpdated);
+      const bTimestamp = this.getSortTimestamp(b.detector.lastUpdated);
+
+      if (aTimestamp !== bTimestamp) {
+        return bTimestamp - aTimestamp;
+      }
+
+      // When dates are equal, prioritize by category order: antibot → captcha → fingerprint
+      const aPriority = categoryPriority[a.category] ?? 99;
+      const bPriority = categoryPriority[b.category] ?? 99;
+      if (aPriority !== bPriority) {
+        return aPriority - bPriority;
+      }
+
+      // Final fallback: alphabetical by display name
+      const aName = (a.detector.displayName || a.detectorName || '').toLowerCase();
+      const bName = (b.detector.displayName || b.detectorName || '').toLowerCase();
+      return aName.localeCompare(bName);
     });
 
     this.filteredDetectors = [...this.allDetectors];
@@ -1715,17 +2016,7 @@ class Rules {
       // Get detection methods from detector data
       const detectionMethods = this.getDetectionMethods(detector);
 
-      // Format last updated with date and time
-      let lastUpdated = detector.lastUpdated || 'Unknown';
-      if (lastUpdated !== 'Unknown') {
-        // If it's already in the format we want (YYYY-MM-DD HH:MM:SS), use it
-        // Otherwise, try to parse and format it
-        if (!lastUpdated.includes(':')) {
-          // Old format (YYYY-MM-DD), add current time
-          const now = new Date();
-          lastUpdated = `${lastUpdated} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-        }
-      }
+      const formattedLastUpdated = this.formatLastUpdated(detector.lastUpdated);
 
       // Get category method badges with dynamic colors
       const categoryMethod = this.getCategoryMethod(category);
@@ -1777,7 +2068,10 @@ class Rules {
               ${detectionMethods}
             </div>
             <div class="scripts-info">
-              <span>Last Updated: ${lastUpdated}</span>
+              <div class="last-updated">
+                <span class="last-updated-label">Last updated</span>
+                <span class="last-updated-value">${formattedLastUpdated}</span>
+              </div>
               <label class="toggle-switch-small" onclick="event.stopPropagation();">
                 <input type="checkbox" class="detector-toggle"
                        data-detector="${detectorName}"
@@ -1866,6 +2160,86 @@ class Rules {
         });
       }
     });
+  }
+
+  /**
+   * Format detector last updated timestamp into friendly text
+   * @param {string|number} rawTimestamp
+   * @returns {string}
+   */
+  formatLastUpdated(rawTimestamp) {
+    if (!rawTimestamp) {
+      return 'Unknown';
+    }
+
+    // Handle numeric timestamps directly
+    if (typeof rawTimestamp === 'number') {
+      const numericDate = new Date(rawTimestamp);
+      if (!Number.isNaN(numericDate.getTime())) {
+        return this.formatDateForDisplay(numericDate);
+      }
+    }
+
+    if (typeof rawTimestamp === 'string') {
+      let normalized = rawTimestamp.trim();
+
+      // Support legacy format "YYYY-MM-DD" by adding midnight time
+      if (/^\d{4}-\d{2}-\d{2}$/.test(normalized)) {
+        normalized = `${normalized}T00:00:00`;
+      }
+
+      // Replace space separator with T for ISO compatibility
+      if (normalized.includes(' ') && !normalized.includes('T')) {
+        normalized = normalized.replace(' ', 'T');
+      }
+
+      const parsedDate = new Date(normalized);
+      if (!Number.isNaN(parsedDate.getTime())) {
+        return this.formatDateForDisplay(parsedDate);
+      }
+    }
+
+    return String(rawTimestamp);
+  }
+
+  formatDateForDisplay(date) {
+    const options = {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    };
+    return date.toLocaleString(undefined, options);
+  }
+
+  getSortTimestamp(rawTimestamp) {
+    if (!rawTimestamp) {
+      return 0;
+    }
+
+    if (typeof rawTimestamp === 'number') {
+      return rawTimestamp;
+    }
+
+    if (typeof rawTimestamp === 'string') {
+      let normalized = rawTimestamp.trim();
+
+      if (/^\d{4}-\d{2}-\d{2}$/.test(normalized)) {
+        normalized = `${normalized}T00:00:00`;
+      }
+
+      if (normalized.includes(' ') && !normalized.includes('T')) {
+        normalized = normalized.replace(' ', 'T');
+      }
+
+      const parsed = new Date(normalized);
+      if (!Number.isNaN(parsed.getTime())) {
+        return parsed.getTime();
+      }
+    }
+
+    return 0;
   }
 
   /**
@@ -1966,33 +2340,42 @@ class Rules {
   }
 
   /**
-   * Get detector icon from detector data or fallback to category icon
+   * Get detector icon from detector data or fallback to Scrapfly icon
    * @param {object} detector - Detector object
    * @returns {string} Icon string (emoji or URL)
    */
   getDetectorIcon(detector) {
+    // Default Scrapfly icon fallback
+    const scrapflyIcon = chrome.runtime.getURL('icons/scrapfly.webp');
+
     // Check for custom uploaded icon first
     if (detector.customIcon) {
-      return `<img src="${detector.customIcon}" alt="Icon" class="detector-icon-img">`;
+      return `<img src="${detector.customIcon}" alt="Icon" class="detector-icon-img" onerror="this.src='${scrapflyIcon}'">`;
     }
 
     // Try to get real icon from detector data
     if (detector.icon) {
+      if (detector.icon.toLowerCase && detector.icon.toLowerCase() === 'default') {
+        return `<img src="${scrapflyIcon}" alt="Scrapfly Icon" class="detector-icon-img">`;
+      }
+      // If icon is "custom.png" or "custom", use scrapfly icon directly
+      if (detector.icon === 'custom.png' || detector.icon === 'custom') {
+        return `<img src="${scrapflyIcon}" alt="Scrapfly Icon" class="detector-icon-img">`;
+      }
       // If it's a URL, return as image
       if (detector.icon.startsWith('http') || detector.icon.startsWith('/')) {
-        return `<img src="${detector.icon}" alt="Icon" class="detector-icon-img">`;
+        return `<img src="${detector.icon}" alt="Icon" class="detector-icon-img" onerror="this.src='${scrapflyIcon}'">`;
       }
       // If it's a filename, construct the path to the detectors/icons folder
-      if (detector.icon.includes('.png') || detector.icon.includes('.jpg') || detector.icon.includes('.svg')) {
-        return `<img src="detectors/icons/${detector.icon}" alt="${detector.displayName || detector.name} Icon" class="detector-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <span class="detector-icon-fallback" style="display: none;">${this.getCategoryIcon(detector.category || 'unknown')}</span>`;
+      if (detector.icon.includes('.png') || detector.icon.includes('.jpg') || detector.icon.includes('.svg') || detector.icon.includes('.webp')) {
+        return `<img src="detectors/icons/${detector.icon}" alt="${detector.displayName || detector.name} Icon" class="detector-icon-img" onerror="this.src='${scrapflyIcon}'">`;
       }
       // Otherwise return as emoji or text
       return detector.icon;
     }
 
-    // Fallback to category-based icons
-    return this.getCategoryIcon(detector.category || 'unknown');
+    // Fallback to Scrapfly default icon
+    return `<img src="${scrapflyIcon}" alt="Scrapfly Icon" class="detector-icon-img">`;
   }
 
   /**
@@ -2187,7 +2570,7 @@ class Rules {
       name: 'New Detector',
       displayName: 'New Detector',
       category: 'antibot',
-      icon: '🔍',
+      icon: 'default',
       color: '#3b82f6',
       description: 'Custom detector',
       lastUpdated: timestamp,

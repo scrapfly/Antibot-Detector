@@ -60,17 +60,29 @@ class ImpervaAdvanced extends BaseAdvancedModule {
         return `
             <div class="recaptcha-tools-grid">
                 <button class="recaptcha-tool-btn" id="impervaCheckCookies">
-                    <div class="tool-btn-icon">🍪</div>
+                    <div class="tool-icon-container tool-icon-green">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A9,9 0 0,0 21,12A9,9 0 0,0 12,3M9,8A1.5,1.5 0 0,1 10.5,9.5A1.5,1.5 0 0,1 9,11A1.5,1.5 0 0,1 7.5,9.5A1.5,1.5 0 0,1 9,8M16.5,9.5A1.5,1.5 0 0,1 15,11A1.5,1.5 0 0,1 13.5,9.5A1.5,1.5 0 0,1 15,8A1.5,1.5 0 0,1 16.5,9.5M9,15A1.5,1.5 0 0,1 10.5,16.5A1.5,1.5 0 0,1 9,18A1.5,1.5 0 0,1 7.5,16.5A1.5,1.5 0 0,1 9,15M15,14A1.5,1.5 0 0,1 16.5,15.5A1.5,1.5 0 0,1 15,17A1.5,1.5 0 0,1 13.5,15.5A1.5,1.5 0 0,1 15,14Z"/>
+                        </svg>
+                    </div>
                     <div class="tool-btn-label">Check Cookies</div>
                 </button>
 
                 <button class="recaptcha-tool-btn" id="impervaStartCapture">
-                    <div class="tool-btn-icon">🎬</div>
+                    <div class="tool-icon-container tool-icon-red">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/>
+                        </svg>
+                    </div>
                     <div class="tool-btn-label">Start Capturing</div>
                 </button>
 
                 <button class="recaptcha-tool-btn" id="impervaAnalyzeScripts">
-                    <div class="tool-btn-icon">🔍</div>
+                    <div class="tool-icon-container tool-icon-blue">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+                        </svg>
+                    </div>
                     <div class="tool-btn-label">Analyze Scripts</div>
                 </button>
             </div>
@@ -132,97 +144,85 @@ class ImpervaAdvanced extends BaseAdvancedModule {
     }
 
     /**
-     * Override toggleCaptureDetails for Imperva-specific detail view
+     * Override renderCaptureDetailsContent to show Imperva-specific fields in modal
+     * @param {object} capture - Capture data object
+     * @returns {string} HTML for modal body content
      */
-    async toggleCaptureDetails(captureId) {
-        const captureCard = document.querySelector(`.capture-card[data-capture-id="${captureId}"]`);
-        if (!captureCard) return;
-
-        const existingDetails = captureCard.querySelector('.history-item-details');
-        if (existingDetails) {
-            existingDetails.remove();
-            captureCard.classList.remove('expanded');
-            return;
+    renderCaptureDetailsContent(capture) {
+        if (!capture || !capture.captureData) {
+            return '<div class="advanced-modal-section"><span class="advanced-modal-error">No capture data available</span></div>';
         }
 
-        const history = await this.loadCaptureHistory();
-        const capture = history.find(item => (item.id || item.timestamp) == captureId);
-        if (!capture) return;
+        const data = capture.captureData;
+        const timestamp = new Date(capture.timestamp).toLocaleString();
+        const incapSesCount = (data.incapSesCookies || []).length;
+        const nlbiCount = (data.nlbiCookies || []).length;
+        const visidCount = (data.visidCookies || []).length;
+        const resourceUrlsCount = (data.incapResourceUrls || []).length;
+        const interrogationUrlsCount = (data.interrogationUrls || []).length;
 
-        const { captureData } = capture;
-
-        const detailsHtml = `
-            <div class="history-item-details">
-                <div class="details-grid">
-                    ${captureData.requiresReese84 ? `
-                        <div class="detail-row">
-                            <span class="detail-label">reese84:</span>
-                            <span class="detail-value">✅ Found</span>
-                        </div>
-                    ` : ''}
-                    ${captureData.requiresUtmvc ? `
-                        <div class="detail-row">
-                            <span class="detail-label">utmvc:</span>
-                            <span class="detail-value">✅ Found</span>
-                        </div>
-                    ` : ''}
-                    ${(captureData.incapSesCookies || []).length > 0 ? `
-                        <div class="detail-row">
-                            <span class="detail-label">incap_ses:</span>
-                            <span class="detail-value">${captureData.incapSesCookies.length} cookie(s)</span>
-                        </div>
-                    ` : ''}
-                    ${(captureData.nlbiCookies || []).length > 0 ? `
-                        <div class="detail-row">
-                            <span class="detail-label">nlbi:</span>
-                            <span class="detail-value">${captureData.nlbiCookies.length} cookie(s)</span>
-                        </div>
-                    ` : ''}
-                    ${(captureData.visidCookies || []).length > 0 ? `
-                        <div class="detail-row">
-                            <span class="detail-label">visid_incap:</span>
-                            <span class="detail-value">${captureData.visidCookies.length} cookie(s)</span>
-                        </div>
-                    ` : ''}
-                    ${(captureData.incapResourceUrls || []).length > 0 ? `
-                        <div class="detail-row">
-                            <span class="detail-label">Resource URLs:</span>
-                            <span class="detail-value">${captureData.incapResourceUrls.length}</span>
-                        </div>
-                    ` : ''}
-                    ${(captureData.interrogationUrls || []).length > 0 ? `
-                        <div class="detail-row">
-                            <span class="detail-label">Interrogation URLs:</span>
-                            <span class="detail-value">${captureData.interrogationUrls.length}</span>
-                        </div>
-                    ` : ''}
+        return `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Security Components</label>
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">reese84</span>
+                    <span class="advanced-modal-info-value">${data.requiresReese84 ? '✅ Found' : '❌ Not found'}</span>
                 </div>
-                <div class="details-actions">
-                    <button class="detail-action-btn copy-all-btn" data-capture-id="${captureId}">
-                        📄 Copy All Data
-                    </button>
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">utmvc</span>
+                    <span class="advanced-modal-info-value">${data.requiresUtmvc ? '✅ Found' : '❌ Not found'}</span>
+                </div>
+            </div>
+
+            ${incapSesCount > 0 || nlbiCount > 0 || visidCount > 0 ? `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Session Cookies</label>
+                ${incapSesCount > 0 ? `
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">incap_ses</span>
+                    <span class="advanced-modal-info-value">${incapSesCount} cookie(s)</span>
+                </div>
+                ` : ''}
+                ${nlbiCount > 0 ? `
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">nlbi</span>
+                    <span class="advanced-modal-info-value">${nlbiCount} cookie(s)</span>
+                </div>
+                ` : ''}
+                ${visidCount > 0 ? `
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">visid_incap</span>
+                    <span class="advanced-modal-info-value">${visidCount} cookie(s)</span>
+                </div>
+                ` : ''}
+            </div>
+            ` : ''}
+
+            ${resourceUrlsCount > 0 || interrogationUrlsCount > 0 ? `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Resource Detection</label>
+                ${resourceUrlsCount > 0 ? `
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">Resource URLs</span>
+                    <span class="advanced-modal-info-value">${resourceUrlsCount}</span>
+                </div>
+                ` : ''}
+                ${interrogationUrlsCount > 0 ? `
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">Interrogation URLs</span>
+                    <span class="advanced-modal-info-value">${interrogationUrlsCount}</span>
+                </div>
+                ` : ''}
+            </div>
+            ` : ''}
+
+            <div class="advanced-modal-section">
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">Captured</span>
+                    <span class="advanced-modal-info-value">${timestamp}</span>
                 </div>
             </div>
         `;
-
-        captureCard.insertAdjacentHTML('beforeend', detailsHtml);
-        captureCard.classList.add('expanded');
-
-        const copyAllBtn = captureCard.querySelector('.copy-all-btn');
-        if (copyAllBtn) {
-            copyAllBtn.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                try {
-                    await navigator.clipboard.writeText(JSON.stringify(captureData, null, 2));
-                    copyAllBtn.textContent = '✅ Copied!';
-                    setTimeout(() => {
-                        copyAllBtn.textContent = '📄 Copy All Data';
-                    }, 2000);
-                } catch (error) {
-                    console.error('Failed to copy:', error);
-                }
-            });
-        }
     }
 
     // ========================================================================
@@ -974,26 +974,15 @@ public static string GenerateUtmvcScriptPath()
                 element.style.background = '';
             });
 
-            element.addEventListener('click', async (e) => {
+            element.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const textToCopy = element.getAttribute('data-copy');
-                const originalText = element.textContent;
-
-                try {
-                    await navigator.clipboard.writeText(textToCopy);
-                    element.textContent = '✓ Copied!';
-                    element.style.background = 'var(--success)';
-                    element.style.color = 'white';
-
-                    setTimeout(() => {
-                        element.textContent = originalText;
-                        element.style.background = '';
-                        element.style.color = '';
-                    }, 1500);
-                } catch (error) {
-                    console.error('[IMPERVA] Copy failed:', error);
-                    NotificationHelper.error('Failed to copy to clipboard');
+                if (!textToCopy) {
+                    return;
                 }
+                AdvancedUtils.copyToClipboard(textToCopy, element, {
+                    notificationMessage: 'Value copied'
+                });
             });
         });
 
@@ -1199,24 +1188,17 @@ public static string GenerateUtmvcScriptPath()
             btn.addEventListener('click', () => {
                 const lang = btn.getAttribute('data-lang');
 
-                // Map language to the correct code
                 let code;
                 if (lang === 'nodejs') {
-                    code = parsingCodes.javascript; // Node.js uses JavaScript
+                    code = parsingCodes.javascript;
                 } else if (parsingCodes[lang]) {
                     code = parsingCodes[lang];
                 } else {
-                    code = parsingCodes.javascript; // Fallback
+                    code = parsingCodes.javascript;
                 }
 
-                navigator.clipboard.writeText(code).then(() => {
-                    const originalText = btn.textContent;
-                    btn.textContent = '✓ Copied!';
-                    btn.style.background = '#4CAF50';
-                    setTimeout(() => {
-                        btn.textContent = originalText;
-                        btn.style.background = '#1976D2';
-                    }, 2000);
+                AdvancedUtils.copyToClipboard(code, btn, {
+                    notificationMessage: 'Code copied'
                 });
             });
         });
@@ -1298,26 +1280,15 @@ public static string GenerateUtmvcScriptPath()
                 element.style.background = '';
             });
 
-            element.addEventListener('click', async (e) => {
+            element.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const textToCopy = element.getAttribute('data-copy');
-                const originalText = element.textContent;
-
-                try {
-                    await navigator.clipboard.writeText(textToCopy);
-                    element.textContent = '✓ Copied!';
-                    element.style.background = 'var(--success)';
-                    element.style.color = 'white';
-
-                    setTimeout(() => {
-                        element.textContent = originalText;
-                        element.style.background = '';
-                        element.style.color = '';
-                    }, 1500);
-                } catch (error) {
-                    console.error('[IMPERVA] Copy failed:', error);
-                    NotificationHelper.error('Failed to copy to clipboard');
+                if (!textToCopy) {
+                    return;
                 }
+                AdvancedUtils.copyToClipboard(textToCopy, element, {
+                    notificationMessage: 'Value copied'
+                });
             });
         });
 

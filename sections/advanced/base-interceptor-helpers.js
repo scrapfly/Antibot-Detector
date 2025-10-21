@@ -550,37 +550,63 @@ async function saveToHistory(tabId, captureData, options = {}) {
 
         // Load existing history
         const result = await chrome.storage.local.get(['scrapfly_advanced_history']);
-        let history = result.scrapfly_advanced_history || { items: [], lastUpdated: Date.now() };
+        let history = result.scrapfly_advanced_history || {};
+
+        // MIGRATION: Convert old { items: [] } format to new { moduleId: [] } format
+        if (history.items && Array.isArray(history.items)) {
+            console.log('[BaseInterceptor] Migrating old storage format to new format');
+            const migratedHistory = {};
+
+            // Group items by type (moduleId)
+            for (const item of history.items) {
+                if (!item.type) continue;
+
+                const moduleId = item.type;
+                if (!migratedHistory[moduleId]) {
+                    migratedHistory[moduleId] = [];
+                }
+
+                // Convert to new format
+                migratedHistory[moduleId].push({
+                    id: item.id || `${moduleId}_${item.timestamp}`,
+                    timestamp: item.timestamp,
+                    url: item.url,
+                    data: item.captureData || item.data,
+                    expiresAt: item.expiresAt
+                });
+            }
+
+            history = migratedHistory;
+            console.log('[BaseInterceptor] Migration complete:', Object.keys(history));
+        }
 
         // Handle legacy string format
         if (typeof history === 'string') {
             history = JSON.parse(history);
         }
-        if (!history.items) {
-            history = { items: [], lastUpdated: Date.now() };
+
+        // Ensure moduleId array exists
+        if (!history[type]) {
+            history[type] = [];
         }
 
-        // Create new capture
+        // Create new capture (NEW format)
         const newCapture = {
             id: `${type}_${Date.now()}`,
-            type: type,
-            captureData: captureData,
             timestamp: Date.now(),
-            hostname: captureHostname,
             url: tab.url,
-            title: tab.title || captureHostname,
+            data: captureData,
             expiresAt: Date.now() + (expiryMinutes * 60 * 1000)
         };
 
-        // Remove expired items
+        // Remove expired items from this module
         const now = Date.now();
-        history.items = history.items.filter(item => {
+        history[type] = history[type].filter(item => {
             return !item.expiresAt || item.expiresAt > now;
         });
 
         // Add new capture to beginning
-        history.items.unshift(newCapture);
-        history.lastUpdated = Date.now();
+        history[type].unshift(newCapture);
 
         // Save to storage
         await chrome.storage.local.set({

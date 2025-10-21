@@ -149,7 +149,44 @@ class ScrapflyPopup {
                     return;
                   }
 
-                  if (response && response.data) {
+                  if (!response) {
+                    this.detection.showInterruptedState();
+                    return;
+                  }
+
+                  if (response.status === 'pending') {
+                    console.log('Popup: Detection still running after enabling, showing analyzing state');
+                    this.detection.showAnalyzingState();
+                    return;
+                  }
+
+                  if (response.status === 'interrupted') {
+                    console.log('Popup: Detection interrupted, prompting reload');
+                    this.detection.showInterruptedState();
+                    return;
+                  }
+
+                  if (response.status === 'error') {
+                    console.error('Popup: Error retrieving detection data after enabling:', response.error);
+                    this.detection.showInterruptedState();
+                    return;
+                  }
+
+                  const badgeText = await Detection.getBadgeText(tabs[0].id);
+                  const badgeTrimmed = badgeText ? badgeText.trim() : '';
+                  if (badgeTrimmed === '⏳') {
+                    console.log('Popup: Badge still indicates loading, showing analyzing state');
+                    this.detection.showAnalyzingState();
+                    return;
+                  }
+
+                  if (badgeTrimmed === '?' || badgeTrimmed === '✕') {
+                    console.log('Popup: Badge indicates interruption, showing reload state');
+                    this.detection.showInterruptedState();
+                    return;
+                  }
+
+                  if (response.data) {
                     // Cache exists, display it
                     console.log('Popup: Found cached data, displaying');
                     await this.processDetectionData(response.data);
@@ -178,10 +215,115 @@ class ScrapflyPopup {
   }
 
   /**
+   * Check detection status before requesting
+   * Prevents interference with active detections
+   */
+  async checkAndRequestDetection() {
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (!tab) return;
+
+      // First, check if detection is already in progress
+      chrome.runtime.sendMessage(
+        { type: 'GET_DETECTION_DATA', tabId: tab.id },
+        async (response) => {
+          if (chrome.runtime.lastError) {
+            console.error('Popup: Error checking detection status:', chrome.runtime.lastError);
+            this.requestCurrentTabDetection();
+            return;
+          }
+
+          // If detection is pending, we just need to show the current progress
+          // without triggering a new request
+          if (response && response.status === 'pending') {
+            console.log('Popup: Detection already in progress, showing current progress');
+            // The GET_DETECTION_DATA already provides progress info
+            // Detection.requestCurrentTabDetection will handle showing the analyzing state
+          }
+
+          // Always call requestCurrentTabDetection, it now has safeguards
+          // to prevent duplicate requests
+          this.requestCurrentTabDetection();
+        }
+      );
+    } catch (error) {
+      console.error('Popup: Error in checkAndRequestDetection:', error);
+      this.requestCurrentTabDetection();
+    }
+  }
+
+  /**
+   * Check and display existing detection data without triggering fresh detection
+   * FIX: Fetches completed/cached data only, never sends REQUEST_DETECTION
+   */
+  async checkAndDisplayExistingDetection() {
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (!tab) return;
+
+      // Check if extension is enabled
+      const result = await chrome.storage.local.get(['scrapfly_enabled']);
+      if (result.scrapfly_enabled === false) {
+        console.log('Popup: Extension is disabled');
+        this.detection.showDisabledState();
+        return;
+      }
+
+      // Check if URL is blacklisted
+      if (await Utils.isUrlBlacklisted(tab.url)) {
+        console.log('Popup: URL is blacklisted');
+        const url = new URL(tab.url);
+        this.detection.showBlacklistState(url.hostname);
+        return;
+      }
+
+      // Get existing detection data (cache or completed detection)
+      chrome.runtime.sendMessage(
+        { type: 'GET_DETECTION_DATA', tabId: tab.id },
+        async (response) => {
+          if (chrome.runtime.lastError) {
+            console.log('Popup: No detection data available yet');
+            this.detection.showEmptyState();
+            return;
+          }
+
+          if (response && response.data) {
+            // Display existing detection data
+            console.log('Popup: Displaying existing detection data');
+            await this.processDetectionData(response.data);
+          } else {
+            // No data available
+            console.log('Popup: No detection data found, showing empty state');
+            this.detection.showEmptyState();
+          }
+        }
+      );
+    } catch (error) {
+      console.error('Popup: Error in checkAndDisplayExistingDetection:', error);
+      this.detection.showEmptyState();
+    }
+  }
+
+  /**
    * Request detection data for the current tab
    * Delegates to Detection.requestCurrentTabDetection()
    */
   async requestCurrentTabDetection() {
+    // Notify content script that popup is open (to prevent visibility-triggered detections)
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tab) {
+        chrome.tabs.sendMessage(tab.id, {
+          type: 'POPUP_OPENED',
+          timestamp: Date.now()
+        }).catch(() => {
+          // Content script might not be ready, that's okay
+        });
+      }
+    } catch (error) {
+      // Ignore errors - not critical
+    }
+
     await Detection.requestCurrentTabDetection({
       detection: this.detection,
       Utils: Utils,
@@ -225,10 +367,40 @@ class ScrapflyPopup {
         case 'NEW_DETECTION_DATA':
           // New detection data available
           console.log('Popup: New detection data available for tab:', request.tabId);
-          // If we're on the detection tab, refresh the data
-          if (this.currentTab === 'detection') {
-            this.requestCurrentTabDetection();
-          }
+          
+          // Check if message is for current active tab
+          chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+            if (!tabs[0] || tabs[0].id !== request.tabId) {
+              console.log('Popup: NEW_DETECTION_DATA for different tab, ignoring');
+              return;
+            }
+            
+            // If we're on detection tab, process results directly from message
+            if (this.currentTab === 'detection') {
+              console.log('Popup: Processing NEW_DETECTION_DATA directly from message');
+              
+              // Use detection results from message directly (avoids race condition with reload button)
+              if (request.detectionResults && Array.isArray(request.detectionResults)) {
+                // Process the results that came with the message
+                await this.processDetectionData({
+                  detectionResults: request.detectionResults,
+                  detectionCount: request.detectionResults.length,
+                  url: request.url,
+                  fromStorage: false, // Fresh detection
+                  cacheMetadata: {
+                    url: request.url,
+                    timestamp: Date.now()
+                  }
+                });
+                console.log('Popup: Detection results processed successfully from NEW_DETECTION_DATA message');
+              } else {
+                // Fallback: No results in message, fetch from storage
+                console.log('Popup: No results in NEW_DETECTION_DATA, fetching from storage');
+                this.requestCurrentTabDetection();
+              }
+            }
+          });
+          
           // Always refresh history when new detection data is available
           if (this.history && typeof this.history.displayHistory === 'function') {
             this.history.displayHistory();
@@ -269,7 +441,44 @@ class ScrapflyPopup {
                         return;
                       }
 
-                      if (response && response.data) {
+                      if (!response) {
+                        this.detection.showInterruptedState();
+                        return;
+                      }
+
+                      if (response.status === 'pending') {
+                        console.log('Popup: Detection still running after toggle event');
+                        this.detection.showAnalyzingState();
+                        return;
+                      }
+
+                      if (response.status === 'interrupted') {
+                        console.log('Popup: Detection interrupted, prompting reload');
+                        this.detection.showInterruptedState();
+                        return;
+                      }
+
+                      if (response.status === 'error') {
+                        console.error('Popup: Error retrieving detection data after toggle event:', response.error);
+                        this.detection.showInterruptedState();
+                        return;
+                      }
+
+                      const badgeText = await Detection.getBadgeText(tabs[0].id);
+                      const badgeTrimmed = badgeText ? badgeText.trim() : '';
+                      if (badgeTrimmed === '⏳') {
+                        console.log('Popup: Badge still indicates loading after toggle event');
+                        this.detection.showAnalyzingState();
+                        return;
+                      }
+
+                      if (badgeTrimmed === '?' || badgeTrimmed === '✕') {
+                        console.log('Popup: Badge indicates interruption after toggle event');
+                        this.detection.showInterruptedState();
+                        return;
+                      }
+
+                      if (response.data) {
                         // Cache exists, display it
                         console.log('Popup: Found cached data, displaying');
                         await this.processDetectionData(response.data);
@@ -299,7 +508,7 @@ class ScrapflyPopup {
     });
   }
 
-  switchTab(tabName) {
+  async switchTab(tabName) {
     console.log('=== SWITCHING TO TAB:', tabName, '===');
 
     // Cleanup previous section's event listeners before switching
@@ -377,25 +586,32 @@ class ScrapflyPopup {
         if (!this.detection.initialized) {
           console.log('Detection: First access - initializing...');
           this.detection.initialize().then(async () => {
-            // Check if extension is enabled before loading detection
-            const result = await chrome.storage.local.get(['scrapfly_enabled']);
-            if (result.scrapfly_enabled === false) {
-              console.log('Detection: Extension is disabled, showing disabled state');
-              this.detection.showDisabledState();
-            } else {
-              this.requestCurrentTabDetection();
-            }
+            // FIX: Display existing detection data (cache or completed) without triggering fresh detection
+            await this.checkAndDisplayExistingDetection();
           });
         } else {
-          // Check if extension is enabled before loading detection
-          chrome.storage.local.get(['scrapfly_enabled'], (result) => {
-            if (result.scrapfly_enabled === false) {
-              console.log('Detection: Extension is disabled, showing disabled state');
-              this.detection.showDisabledState();
-            } else {
-              this.requestCurrentTabDetection();
+          // FIX: Even if initialized, ensure HTML is loaded before displaying data
+          // This prevents click handlers from being attached to non-existent DOM elements
+          if (!this.detection.htmlLoaded) {
+            console.log('Detection: HTML not loaded yet, loading...');
+            await this.detection.loadHTML();
+          }
+
+          // Re-attach event listeners after tab switch (for modal, buttons, etc.)
+          console.log('Detection: Re-attaching event listeners...');
+          this.detection.setupEventListeners();
+
+          // Re-render current results to ensure click handlers are attached to cards
+          if (this.detection.currentResults && this.detection.currentResults.length > 0) {
+            console.log('Detection: Re-rendering results to attach click handlers...');
+            // This will re-render the cards and attach the click handlers
+            if (this.detection.paginationManager) {
+              this.detection.paginationManager.setItems(this.detection.currentResults);
             }
-          });
+          }
+
+          // FIX: Display existing detection data on subsequent visits
+          await this.checkAndDisplayExistingDetection();
         }
         break;
       case 'history':
@@ -461,4 +677,7 @@ class ScrapflyPopup {
 document.addEventListener('DOMContentLoaded', () => {
   const popup = new ScrapflyPopup();
   popup.initialize();
+
+  // Expose categoryManager globally for settings to access
+  window.categoryManager = popup.categoryManager;
 });

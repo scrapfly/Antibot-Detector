@@ -1,0 +1,60 @@
+{
+  "id": "usb-fingerprint",
+  "name": "USB API Fingerprint",
+  "category": "Fingerprint",
+  "color": "#6366f1",
+  "confidence": 85,
+  "lastUpdated": "2025-01-21",
+  "version": "1.0.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/API/USB_API",
+  "icon": "custom.png",
+  "description": "WebUSB API access for detecting connected USB devices and device enumeration",
+  "detection": {
+    "js_hooks": [
+      {
+        "target": "USB.getDevices",
+        "description": "Gets list of connected USB devices",
+        "enabled": true,
+        "confidence": 95
+      },
+      {
+        "target": "USB.requestDevice",
+        "description": "Requests user to select USB device",
+        "enabled": true,
+        "confidence": 95
+      }
+    ],
+    "window_properties": [
+      {
+        "path": "navigator.usb",
+        "description": "WebUSB API access point",
+        "condition": "typeof object"
+      },
+      {
+        "path": "navigator.usb.getDevices",
+        "description": "USB device enumeration method",
+        "condition": "typeof function"
+      }
+    ],
+    "content": [
+      {
+        "value": "navigator.usb",
+        "scope": "scripts",
+        "description": "WebUSB API usage",
+        "confidence": 90
+      },
+      {
+        "value": "getDevices",
+        "scope": "scripts",
+        "description": "USB device enumeration",
+        "confidence": 85
+      },
+      {
+        "value": "requestDevice",
+        "scope": "scripts",
+        "description": "USB device request in scripts",
+        "confidence": 85
+      }
+    ]
+  }
+}

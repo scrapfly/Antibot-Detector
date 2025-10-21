@@ -1,32 +1,44 @@
 <!-- Rules Tab Template -->
   <div class="rules-header">
-    <!-- Search Bar -->
-    <div class="search-container">
-      <input type="text" id="rulesSearch" class="search-input" placeholder="Search detectors by name or pattern...">
-    </div>
-
     <!-- Action Buttons -->
     <div class="action-buttons">
       <button id="importRulesBtn" class="import-btn-small" title="Import">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,11L16,15H13.5V18H10.5V15H8L12,11Z"/>
+        </svg>
         Import
       </button>
       <input type="file" id="importRulesFile" accept=".json" style="display: none;">
       <button id="exportRulesBtn" class="export-btn-small" title="Export">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z"/>
+        </svg>
         Export
       </button>
       <button id="clearRulesBtn" class="clear-btn-small" title="Clear All Rules">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+        </svg>
         Clear
       </button>
       <button id="addDetectorBtn" class="add-btn" title="Add New Detector">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+        </svg>
         Add
       </button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+      <input type="text" id="rulesSearch" class="search-input" placeholder="Search detectors by name or pattern...">
     </div>
   </div>
 
   <div id="rulesList" class="rules-list"></div>
 
   <div id="rulesPagination" class="pagination" style="display: none;">
-    <div class="pagination-info">Showing 1-10 of 0</div>
+    <div class="pagination-info">No items to display</div>
     <div class="pagination-controls">
       <button class="pagination-btn pagination-btn-prev" disabled>
         <svg width="16" height="16" viewBox="0 0 24 24">
@@ -83,7 +95,6 @@
                 <option value="antibot">Anti-Bot</option>
                 <option value="captcha">CAPTCHA</option>
                 <option value="fingerprint">Fingerprint</option>
-                <option value="waf">WAF</option>
               </select>
             </div>
             <div class="detector-field">

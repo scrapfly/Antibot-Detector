@@ -177,6 +177,8 @@ class Utils {
           break;
       }
 
+      console.log(`[DEBUG hashUrl] Input: ${url.substring(0, 50)}... | Scope: ${scope} | Normalized: ${normalizedUrl}`);
+
       hash = 0;
       for (let i = 0; i < normalizedUrl.length; i++) {
         const char = normalizedUrl.charCodeAt(i);
@@ -184,6 +186,7 @@ class Utils {
         hash = hash & hash; // Convert to 32-bit integer
       }
     } catch (e) {
+      console.log(`[DEBUG hashUrl] URL parse error: ${e.message} - falling back to original URL`);
       // Fallback to original URL if parsing fails
       hash = 0;
       for (let i = 0; i < url.length; i++) {
@@ -194,6 +197,8 @@ class Utils {
     }
 
     const hashString = Math.abs(hash).toString(36);
+
+    console.log(`[DEBUG hashUrl] Calculated hash: ${hashString}`);
 
     // OPTIMIZATION Phase 1: LRU cache automatically handles eviction
     Utils.urlHashCache.set(cacheKey, hashString);
@@ -226,11 +231,16 @@ class Utils {
     try {
       const result = await chrome.storage.local.get(['scrapfly_settings']);
       if (result.scrapfly_settings) {
-        const settings = typeof result.scrapfly_settings === 'string'
+        const parsed = typeof result.scrapfly_settings === 'string'
           ? JSON.parse(result.scrapfly_settings)
           : result.scrapfly_settings;
 
-        Utils.settingsCache = settings.settings || settings;
+        // FIX: Consistent with getSettings() - always use nested settings if it exists
+        if (parsed && parsed.settings) {
+          Utils.settingsCache = parsed.settings;
+        } else {
+          Utils.settingsCache = parsed || {};
+        }
         Utils.settingsCacheTime = now;
 
         return Utils.settingsCache;
@@ -250,6 +260,12 @@ class Utils {
     Utils.settingsCache = null;
     Utils.settingsCacheTime = 0;
     console.log('[Utils] Settings cache invalidated - next access will reload from storage');
+  }
+
+  static handleSettingsUpdated(message) {
+    if (message && message.type === 'SETTINGS_UPDATED') {
+      Utils.invalidateSettingsCache();
+    }
   }
 
   /**
@@ -344,34 +360,35 @@ class Utils {
   }
 
   /**
-   * Compress large text data using simple RLE-like compression
-   * OPTIMIZATION: Only compresses data > 50KB to avoid overhead
-   * @param {string} text - Text to compress
-   * @returns {object} { compressed: boolean, data: string }
+   * Process large text data - NO truncation
+   * OPTIMIZATION: Send full HTML without truncation to avoid missed detections
+   * Chrome's message passing supports up to 64MB, so truncation is unnecessary
+   * @param {string} text - Text to process
+   * @returns {object} { compressed: false, truncated: false, data: string }
    */
   static compressText(text) {
-    // Don't compress small payloads (overhead not worth it)
-    if (!text || text.length < 50000) {
-      return { compressed: false, data: text };
+    // Handle empty or undefined text
+    if (!text || text.length === 0) {
+      return { compressed: false, truncated: false, data: text || '' };
     }
 
     try {
-      // Simple truncation for very large HTML (> 500KB)
-      // Most detection patterns are in the first portion of the page
-      if (text.length > 500000) {
-        const truncated = text.substring(0, 500000);
-        return {
-          compressed: true,
-          data: truncated,
-          originalLength: text.length,
-          truncated: true
-        };
-      }
-
-      return { compressed: false, data: text };
+      // FIX: No truncation - send full HTML
+      // Chrome message limit is 64MB, typical pages are 100KB-1MB
+      // Truncation was causing missed detections for patterns in 2nd half of HTML
+      // Send everything untruncated to ensure complete detection coverage
+      return {
+        compressed: false,
+        truncated: false,
+        data: text  // Always send full HTML, never truncate
+      };
     } catch (e) {
-      // Compression failed, return original
-      return { compressed: false, data: text };
+      console.error('[Compression] Error processing text:', e);
+      return {
+        compressed: false,
+        truncated: false,
+        data: text
+      };
     }
   }
 
@@ -498,25 +515,40 @@ class Utils {
 
     console.log('Cleaning up orphaned content script');
 
-    // Clear the context check interval immediately
+    // Clear ALL intervals and timeouts
     if (cleanup.contextCheckInterval) {
       clearInterval(cleanup.contextCheckInterval);
       cleanup.contextCheckInterval = null;
     }
 
-    // Remove all event listeners to prevent memory leaks
+    // Remove ALL event listeners to prevent memory leaks
     if (cleanup.notifyPageLoad) {
       document.removeEventListener('DOMContentLoaded', cleanup.notifyPageLoad);
       document.removeEventListener('visibilitychange', cleanup.notifyPageLoad);
       window.removeEventListener('focus', cleanup.notifyPageLoad);
+      window.removeEventListener('beforeunload', cleanup.notifyPageLoad);
+      window.removeEventListener('hashchange', cleanup.notifyPageLoad);
+      window.removeEventListener('popstate', cleanup.notifyPageLoad);
+    }
+
+    // Remove message listener for hooks
+    if (cleanup.hookMessageHandler) {
+      window.removeEventListener('message', cleanup.hookMessageHandler);
     }
 
     // Clear detection engine data
     if (cleanup.detectionEngine) {
       cleanup.detectionEngine.clearDetectionData();
+      cleanup.detectionEngine = null;
     }
 
-    console.log('Cleanup complete - script is now inactive');
+    // Clear global flags
+    if (typeof window !== 'undefined') {
+      window.__scrapflyContentScriptInitialized = false;
+      window.__scrapflyHooksInstalled = false;
+    }
+
+    console.log('Cleanup complete - orphaned script removed');
     return true;
   }
 
@@ -559,12 +591,12 @@ class Utils {
 
   /**
    * Notify background about page load (cache check first)
-   * @param {Object} context - Context object with detectionEngine, isExtensionContextValid, cleanupOrphanedScript
+   * @param {Object} context - Context object with detectionEngine, isExtensionContextValid, cleanupOrphanedScript, triggerSource
    */
   static async notifyPageLoad(context) {
-    const { detectionEngine, isExtensionContextValid, cleanupOrphanedScript } = context;
+    const { detectionEngine, isExtensionContextValid, cleanupOrphanedScript, triggerSource = 'page_load' } = context;
 
-    console.log('Scrapfly Content Script: Notifying page load...');
+    console.log(`Scrapfly Content Script: Notifying page load (trigger: ${triggerSource})...`);
 
     // Check if extension context is still valid
     if (!isExtensionContextValid()) {
@@ -589,9 +621,15 @@ class Utils {
       console.error('Scrapfly Content Script: Error checking enabled state:', error);
     }
 
+    // Use different debounce times based on trigger source
+    // visibility_change needs longer debounce to avoid triggering when opening popup
+    const debounceTime = triggerSource === 'visibility_change' ? 10000 : // 10 seconds for visibility
+                        triggerSource === 'url_change' ? 2000 :      // 2 seconds for URL change
+                        2000;                                         // 2 seconds default
+
     // Check if we should notify (avoid too frequent notifications)
-    if (!detectionEngine.shouldRunDetection(2000)) {
-      console.log('Scrapfly Content Script: Skipping notification (too soon after last detection)');
+    if (!detectionEngine.shouldRunDetection(debounceTime)) {
+      console.log(`Scrapfly Content Script: Skipping notification (too soon after last detection, need ${debounceTime}ms gap)`);
       return;
     }
 
@@ -600,7 +638,8 @@ class Utils {
       chrome.runtime.sendMessage({
         type: 'PAGE_LOAD_NOTIFICATION',
         url: window.location.href,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        triggerSource: triggerSource
       }, (response) => {
         if (chrome.runtime.lastError) {
           if (chrome.runtime.lastError.message &&
@@ -676,13 +715,21 @@ class Utils {
         }, (response) => {
           // Check for errors
           if (chrome.runtime.lastError) {
+            const errorMsg = chrome.runtime.lastError.message || '';
+
             // Check if it's a context invalidation
-            if (chrome.runtime.lastError.message &&
-              chrome.runtime.lastError.message.includes('Extension context invalidated')) {
+            if (errorMsg.includes('Extension context invalidated')) {
               console.log('Scrapfly Content Script: Extension was reloaded during detection');
               cleanupOrphanedScript();
-            } else {
-              console.error('Scrapfly Content Script: Error sending detection data:', chrome.runtime.lastError);
+            }
+            // Service worker not available - don't log as error (expected on reload)
+            else if (errorMsg.includes('Could not establish connection') ||
+                     errorMsg.includes('Receiving end does not exist')) {
+              console.debug('Scrapfly Content Script: Service worker not available (expected on reload)');
+            }
+            // Other errors - log as warning not error
+            else {
+              console.warn('Scrapfly Content Script: Error sending detection data:', chrome.runtime.lastError);
             }
           } else {
             console.log('Scrapfly Content Script: Detection data sent successfully', response);
@@ -690,11 +737,19 @@ class Utils {
         });
       } catch (sendError) {
         // Catch synchronous errors when trying to send message
-        if (sendError.message && sendError.message.includes('Extension context invalidated')) {
+        const errorMsg = sendError.message || '';
+
+        if (errorMsg.includes('Extension context invalidated')) {
           console.log('Scrapfly Content Script: Extension context invalidated, cannot send data');
           cleanupOrphanedScript();
-        } else {
-          console.error('Scrapfly Content Script: Failed to send message:', sendError);
+        }
+        // Service worker not available - don't log as error (expected on reload)
+        else if (errorMsg.includes('Could not establish connection') ||
+                 errorMsg.includes('Receiving end does not exist')) {
+          console.debug('Scrapfly Content Script: Service worker not available');
+        }
+        else {
+          console.warn('Scrapfly Content Script: Failed to send message:', sendError);
         }
       }
     } catch (error) {
@@ -768,12 +823,18 @@ class Utils {
       const result = await chrome.storage.local.get(['scrapfly_settings']);
       if (result.scrapfly_settings) {
         // Handle both string (legacy) and object formats
-        const settings = typeof result.scrapfly_settings === 'string'
+        const parsed = typeof result.scrapfly_settings === 'string'
           ? JSON.parse(result.scrapfly_settings)
           : result.scrapfly_settings;
 
-        // Handle nested structure (settings.settings or flat structure)
-        return settings.settings || settings;
+        // FIX: Always return the nested settings object if it exists
+        // This ensures consistent structure regardless of how it was saved
+        if (parsed && parsed.settings) {
+          return parsed.settings;
+        }
+
+        // Fallback for flat structure (legacy)
+        return parsed || {};
       }
     } catch (error) {
       console.error('Failed to load settings:', error);
@@ -791,9 +852,15 @@ class Utils {
     const settings = await this.getSettings();
     return {
       historyLimit: settings.historyLimit ?? 100,
+      historyBehavior: settings.historyBehavior || 'rolling',
       autoClearDays: settings.autoClearDays ?? 30,
       exportFormat: settings.exportFormat || 'json',
-      includeTimestamps: settings.includeTimestamps !== false
+      includeTimestamps: settings.includeTimestamps !== false,
+      historyBypassCache: settings.historyBypassCache ?? false,
+      preventDuplicates: settings.preventDuplicates ?? false,
+      duplicateScope: settings.duplicateScope || 'full_url',
+      duplicateDuration: settings.duplicateDuration ?? 1,
+      duplicateUnit: settings.duplicateUnit || 'hours'
     };
   }
 
@@ -807,7 +874,9 @@ class Utils {
 
     try {
       const settings = await this.getSettings();
-      const blacklist = settings.blacklistedDomains || [];
+      // FIX: Check both flat and nested paths for backwards compatibility
+      // Blacklist is stored at settings.detection.blacklistedDomains (nested structure)
+      const blacklist = settings.blacklistedDomains || settings.detection?.blacklistedDomains || [];
 
       // Extract hostname for comparison
       const hostname = this.getHostnameFromUrl(url);
@@ -849,17 +918,27 @@ class Utils {
   static async getCacheScope() {
     try {
       const settings = await this.getSettings();
-      const scope = settings.cacheScope || 'domain'; // Default to 'domain' for backward compatibility
+
+      // FIX: Add detailed logging to debug settings structure issues
+      const scope = settings.cacheScope || settings.detection?.cacheScope || 'domain';
+
+      console.log('[getCacheScope] Settings structure:', {
+        hasCacheScope: !!settings.cacheScope,
+        cacheScope: settings.cacheScope,
+        hasDetection: !!settings.detection,
+        detectionCacheScope: settings.detection?.cacheScope,
+        finalScope: scope
+      });
 
       // Validate scope value
       if (!['domain', 'path', 'full'].includes(scope)) {
-        console.warn(`Invalid cache scope: ${scope}, defaulting to 'domain'`);
+        console.warn(`[getCacheScope] Invalid cache scope: ${scope}, defaulting to 'domain'`);
         return 'domain';
       }
 
       return scope;
     } catch (error) {
-      console.error('Error getting cache scope:', error);
+      console.error('[getCacheScope] Error getting cache scope:', error);
       return 'domain'; // Default to domain scope on error
     }
   }
@@ -1105,31 +1184,99 @@ class Utils {
   }
 
   /**
-   * Copy text to clipboard
+   * Copy text to clipboard with optional visual feedback
    * @param {string} text - Text to copy
-   * @returns {Promise<boolean>} True if successful
+   * @param {object} options - Feedback options
+   * @param {HTMLElement|null} options.element - Element to show inline feedback on
+   * @param {boolean} [options.notify=true] - Display toast notification on success
+   * @param {string} [options.notificationMessage='Copied to clipboard'] - Success toast message
+   * @param {string} [options.inlineMessage='✓ Copied!'] - Temporary inline message
+   * @param {number} [options.revertDelay=1600] - Delay before inline message reverts (ms)
+   * @returns {Promise<boolean>} True if copy succeeded
    */
-  static async copyToClipboard(text) {
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(text);
-        return true;
-      }
+  static async copyToClipboard(text, {
+    element = null,
+    notify = true,
+    notificationMessage = 'Copied to clipboard',
+    inlineMessage = '✓ Copied!',
+    revertDelay = 1600
+  } = {}) {
+    let success = false;
 
-      // Fallback for older browsers
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.select();
-      const success = document.execCommand('copy');
-      document.body.removeChild(textarea);
-      return success;
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        success = true;
+      } else if (typeof document !== 'undefined') {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        success = document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
     } catch (error) {
       console.error('Failed to copy to clipboard:', error);
+      success = false;
+    }
+
+    if (!success) {
+      if (notify && typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.error === 'function') {
+        NotificationHelper.error('Failed to copy to clipboard');
+      }
       return false;
     }
+
+    if (notify && typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.success === 'function') {
+      NotificationHelper.success(notificationMessage);
+    }
+
+    if (element && typeof document !== 'undefined') {
+      const isInput = element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement;
+      const originalValue = isInput ? element.value : element.textContent;
+      const originalHtml = !isInput ? element.innerHTML : null;
+
+      element.dataset.copyOriginal = originalValue ?? '';
+      if (!isInput && originalHtml !== null && originalHtml !== undefined) {
+        element.dataset.copyOriginalHtml = originalHtml;
+      }
+
+      if (isInput) {
+        element.value = inlineMessage;
+      } else {
+        element.textContent = inlineMessage;
+      }
+
+      element.classList.add('copy-feedback-active');
+
+      window.setTimeout(() => {
+        if (!element.dataset) {
+          return;
+        }
+
+        const original = element.dataset.copyOriginal;
+        const originalInnerHtml = element.dataset.copyOriginalHtml;
+        if (isInput) {
+          if (original !== undefined) {
+            element.value = original;
+          }
+        } else if (originalInnerHtml !== undefined) {
+          element.innerHTML = originalInnerHtml;
+        } else if (original !== undefined) {
+          element.textContent = original;
+        }
+
+        element.classList.remove('copy-feedback-active');
+        delete element.dataset.copyOriginal;
+        if (element.dataset.copyOriginalHtml !== undefined) {
+          delete element.dataset.copyOriginalHtml;
+        }
+      }, revertDelay);
+    }
+
+    return true;
   }
 }
 

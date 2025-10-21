@@ -461,6 +461,8 @@ class DetectorManager {
      */
     async loadFromStorage() {
         try {
+            console.log('[DetectorManager] 🔍 DIAGNOSTIC: Starting loadFromStorage()...');
+
             // OPTIMIZATION Phase 1: Batch load all required storage keys using StorageManager
             const loadedData = await StorageManager.batchLoadStorage([
                 {
@@ -475,28 +477,75 @@ class DetectorManager {
                 }
             ]);
 
+            console.log('[DetectorManager] 🔍 DIAGNOSTIC: Loaded data keys:', Object.keys(loadedData));
+
             // Process categories first (DetectorManager needs CategoryManager initialized)
             const categoriesData = loadedData['scrapfly_categories'];
             if (categoriesData) {
+                const categoryCount = Object.keys(categoriesData.categories || {}).length;
+                console.log('[DetectorManager] 🔍 DIAGNOSTIC: Categories data structure:', {
+                    hasCategories: !!categoriesData.categories,
+                    categoryCount: categoryCount,
+                    categoryNames: Object.keys(categoriesData.categories || {})
+                });
                 this.categoryManager.categories = categoriesData.categories;
-                this.categoryManager.initialized = Object.keys(categoriesData.categories || {}).length > 0;
+                this.categoryManager.initialized = categoryCount > 0;
                 console.log('[StorageManager] Categories loaded from batched data');
+            } else {
+                console.warn('[DetectorManager] ⚠️ DIAGNOSTIC: No categories data found in storage');
             }
 
             // Process detectors
             const detectorsData = loadedData['scrapfly_detectors'];
+            console.log('[DetectorManager] 🔍 DIAGNOSTIC: Detectors data exists:', !!detectorsData);
+
             if (detectorsData) {
+                // Log the raw storage data structure
+                console.log('[DetectorManager] 🔍 DIAGNOSTIC: Raw detectorsData structure:', {
+                    hasDetectorsProperty: !!detectorsData.detectors,
+                    detectorsDataType: typeof detectorsData.detectors,
+                    detectorsDataKeys: detectorsData.detectors ? Object.keys(detectorsData.detectors) : [],
+                    hasTimestamp: !!detectorsData.timestamp,
+                    timestamp: detectorsData.timestamp
+                });
+
+                // Validate storage data structure
+                if (!detectorsData.detectors || typeof detectorsData.detectors !== 'object') {
+                    console.error('[DetectorManager] ❌ DIAGNOSTIC: Invalid storage format - detectors property is missing or wrong type');
+                    console.error('[DetectorManager] ❌ DIAGNOSTIC: detectorsData:', detectorsData);
+                    return false;
+                }
+
                 this.detectors = detectorsData.detectors || {};
+
+                // Log what was assigned
+                console.log('[DetectorManager] 🔍 DIAGNOSTIC: After assignment, this.detectors:', {
+                    type: typeof this.detectors,
+                    categories: Object.keys(this.detectors),
+                    isObject: this.detectors && typeof this.detectors === 'object'
+                });
+
+                // Log detector count per category
+                for (const [category, categoryDetectors] of Object.entries(this.detectors)) {
+                    const detectorNames = Object.keys(categoryDetectors || {});
+                    console.log(`[DetectorManager] 🔍 DIAGNOSTIC: Category "${category}": ${detectorNames.length} detectors [${detectorNames.slice(0, 3).join(', ')}${detectorNames.length > 3 ? '...' : ''}]`);
+                }
 
                 // BUGFIX: Validate that detectors actually loaded (not just empty object)
                 const detectorCount = this.getDetectorCount();
+                console.log('[DetectorManager] 🔍 DIAGNOSTIC: Total detector count via getDetectorCount():', detectorCount);
+
                 if (detectorCount === 0) {
-                    console.warn('[DetectorManager] Storage has scrapfly_detectors but detector count is 0 - treating as empty');
+                    console.warn('[DetectorManager] ⚠️ DIAGNOSTIC: Storage has scrapfly_detectors but detector count is 0 - treating as empty');
+                    console.warn('[DetectorManager] ⚠️ DIAGNOSTIC: this.detectors contents:', JSON.stringify(this.detectors, null, 2));
                     return false; // Force reload from JSON
                 }
 
                 // Check for corrupted data
+                console.log('[DetectorManager] 🔍 DIAGNOSTIC: Checking for data corruption...');
                 let hasCorruption = false;
+                let corruptedDetectors = [];
+
                 for (const [category, categoryDetectors] of Object.entries(this.detectors)) {
                     for (const [detectorName, detector] of Object.entries(categoryDetectors)) {
                         if (detector.detection) {
@@ -504,7 +553,8 @@ class DetectorManager {
                             for (const [methodType, methodData] of Object.entries(detector.detection)) {
                                 if (typeof methodData === 'string') {
                                     hasCorruption = true;
-                                    console.warn(`Corrupted detection data found for ${detectorName}.${methodType}`);
+                                    corruptedDetectors.push(`${detectorName}.${methodType}`);
+                                    console.warn(`[DetectorManager] ⚠️ DIAGNOSTIC: Corrupted detection data found for ${detectorName}.${methodType}`);
                                     break;
                                 }
                             }
@@ -512,22 +562,31 @@ class DetectorManager {
                     }
                 }
 
+                console.log('[DetectorManager] 🔍 DIAGNOSTIC: Corruption check complete:', {
+                    hasCorruption,
+                    corruptedCount: corruptedDetectors.length,
+                    corruptedDetectors: corruptedDetectors.slice(0, 5) // Show first 5
+                });
+
                 // If corrupted, reload from JSON files
                 if (hasCorruption) {
-                    console.log('Corrupted detection data found, reloading from JSON files...');
+                    console.log('[DetectorManager] ⚠️ DIAGNOSTIC: Corrupted detection data found, reloading from JSON files...');
                     await this.loadDetectorsFromIndex();
                     await this.saveDetectorsToStorage();
+                    console.log('[DetectorManager] ✅ DIAGNOSTIC: Reloaded from JSON and saved to storage');
                     return true;
                 }
 
-                console.log(`Loaded ${detectorCount} detectors from storage with custom settings`);
+                console.log(`[DetectorManager] ✅ DIAGNOSTIC: Successfully loaded ${detectorCount} detectors from storage with custom settings`);
                 return true;
             }
 
+            console.warn('[DetectorManager] ⚠️ DIAGNOSTIC: No detectors data found in storage');
             return false;
 
         } catch (error) {
-            console.error('Failed to load from storage:', error);
+            console.error('[DetectorManager] ❌ DIAGNOSTIC: Failed to load from storage:', error);
+            console.error('[DetectorManager] ❌ DIAGNOSTIC: Error stack:', error.stack);
             return false;
         }
     }

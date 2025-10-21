@@ -196,7 +196,6 @@ class AkamaiAdvanced extends BaseAdvancedModule {
 
         // Click-to-copy handlers
         modal.querySelectorAll('.copy-value').forEach(element => {
-            // Hover effect
             element.addEventListener('mouseenter', () => {
                 element.style.background = 'rgba(255, 255, 255, 0.1)';
             });
@@ -204,25 +203,15 @@ class AkamaiAdvanced extends BaseAdvancedModule {
                 element.style.background = '';
             });
 
-            // Click to copy
-            element.addEventListener('click', async (e) => {
+            element.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const textToCopy = element.getAttribute('data-copy');
-                try {
-                    await navigator.clipboard.writeText(textToCopy);
-                    const originalText = element.textContent;
-                    element.textContent = '✓ Copied!';
-                    element.style.background = 'var(--success)';
-                    element.style.color = 'white';
-                    setTimeout(() => {
-                        element.textContent = originalText;
-                        element.style.background = '';
-                        element.style.color = '';
-                    }, 1500);
-                } catch (error) {
-                    console.error('[Akamai] Copy failed:', error);
-                    NotificationHelper.error('Failed to copy to clipboard');
+                if (!textToCopy) {
+                    return;
                 }
+                AdvancedUtils.copyToClipboard(textToCopy, element, {
+                    notificationMessage: 'Value copied'
+                });
             });
         });
 
@@ -2912,22 +2901,38 @@ func main() {
         return `
             <div class="recaptcha-tools-grid">
                 <button class="recaptcha-tool-btn" id="akamaiCheckCookies">
-                    <div class="tool-btn-icon">🍪</div>
+                    <div class="tool-icon-container tool-icon-green">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A9,9 0 0,0 21,12A9,9 0 0,0 12,3M9,8A1.5,1.5 0 0,1 10.5,9.5A1.5,1.5 0 0,1 9,11A1.5,1.5 0 0,1 7.5,9.5A1.5,1.5 0 0,1 9,8M16.5,9.5A1.5,1.5 0 0,1 15,11A1.5,1.5 0 0,1 13.5,9.5A1.5,1.5 0 0,1 15,8A1.5,1.5 0 0,1 16.5,9.5M9,15A1.5,1.5 0 0,1 10.5,16.5A1.5,1.5 0 0,1 9,18A1.5,1.5 0 0,1 7.5,16.5A1.5,1.5 0 0,1 9,15M15,14A1.5,1.5 0 0,1 16.5,15.5A1.5,1.5 0 0,1 15,17A1.5,1.5 0 0,1 13.5,15.5A1.5,1.5 0 0,1 15,14Z"/>
+                        </svg>
+                    </div>
                     <div class="tool-btn-label">Check Cookies</div>
                 </button>
 
                 <button class="recaptcha-tool-btn" id="akamaiAnalyzeContent">
-                    <div class="tool-btn-icon">🔗</div>
+                    <div class="tool-icon-container tool-icon-blue">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M14.6,16.6L19.2,12L14.6,7.4L16,6L22,12L16,18L14.6,16.6M9.4,16.6L4.8,12L9.4,7.4L8,6L2,12L8,18L9.4,16.6Z"/>
+                        </svg>
+                    </div>
                     <div class="tool-btn-label">Analyze Scripts</div>
                 </button>
 
                 <button class="recaptcha-tool-btn" id="akamaiStartCapture">
-                    <div class="tool-btn-icon">🎬</div>
+                    <div class="tool-icon-container tool-icon-red">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/>
+                        </svg>
+                    </div>
                     <div class="tool-btn-label">Start Capturing</div>
                 </button>
 
                 <button class="recaptcha-tool-btn" id="akamaiExtractSensor">
-                    <div class="tool-btn-icon">📊</div>
+                    <div class="tool-icon-container tool-icon-purple">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M22,21H2V3H4V19H6V10H10V19H12V6H16V19H18V14H22V21Z"/>
+                        </svg>
+                    </div>
                     <div class="tool-btn-label">Extract Sensor Information</div>
                 </button>
             </div>
@@ -3030,121 +3035,58 @@ func main() {
      * Toggle Akamai-specific capture details
      * Override from BaseAdvancedModule
      */
-    async toggleCaptureDetails(captureId) {
-        const captureCard = document.querySelector(`.capture-card[data-capture-id="${captureId}"]`);
-        if (!captureCard) return;
-
-        const existingDetails = captureCard.querySelector('.history-item-details');
-        if (existingDetails) {
-            existingDetails.remove();
-            captureCard.classList.remove('expanded');
-            return;
+    /**
+     * Override renderCaptureDetailsContent to show Akamai-specific fields in modal
+     * @param {object} capture - Capture data object
+     * @returns {string} HTML for modal body content
+     */
+    renderCaptureDetailsContent(capture) {
+        if (!capture || !capture.captureData) {
+            return '<div class="advanced-modal-section"><span class="advanced-modal-error">No capture data available</span></div>';
         }
 
-        const history = await this.loadCaptureHistory();
-        const capture = history.find(item => item.id === captureId);
-        if (!capture) return;
+        const data = capture.captureData;
+        const timestamp = new Date(capture.timestamp).toLocaleString();
+        const abckLevel = data.abckCookieLevel === 'easy' ? 'Easy' : 'Standard';
+        const abckLevelClass = data.abckCookieLevel === 'easy' ? 'advanced-modal-success' : '';
 
-        const { captureData } = capture;
-
-        const detailsHtml = `
-            <div class="history-item-details">
-                <div class="details-grid">
-                    ${captureData.abckCookie ? `
-                        <div class="detail-row">
-                            <span class="detail-label">ABCK:</span>
-                            <span class="detail-value">✅</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">ABCK Level:</span>
-                            <span class="detail-value copy-value" data-copy="${captureData.abckCookieLevel === 'easy' ? 'Easy' : 'Standard'}" style="color: ${captureData.abckCookieLevel === 'easy' ? 'var(--success)' : 'var(--text-primary)'}; cursor: pointer; padding: 2px 4px; border-radius: 3px; transition: background 0.2s;" title="Click to copy">${captureData.abckCookieLevel === 'easy' ? 'Easy' : 'Standard'}</span>
-                        </div>
-                    ` : `
-                        <div class="detail-row">
-                            <span class="detail-label">ABCK:</span>
-                            <span class="detail-value">❌ Not found</span>
-                        </div>
-                    `}
-                    ${captureData.akamaiVersion ? `
-                        <div class="detail-row">
-                            <span class="detail-label">Version:</span>
-                            <span class="detail-value copy-value" data-copy="${AdvancedUtils.escapeHtml(captureData.akamaiVersion)}" style="color: var(--info); cursor: pointer; padding: 2px 4px; border-radius: 3px; transition: background 0.2s;" title="Click to copy">${captureData.akamaiVersion}</span>
-                        </div>
-                    ` : ''}
-                    ${captureData.requiresSbsd ? `
-                        <div class="detail-row">
-                            <span class="detail-label">SBSD Challenge:</span>
-                            <span class="detail-value">⚠️ Required</span>
-                        </div>
-                    ` : ''}
-                    ${captureData.requiresSecCpt ? `
-                        <div class="detail-row">
-                            <span class="detail-label">sec_cpt Challenge:</span>
-                            <span class="detail-value">⚠️ Required</span>
-                        </div>
-                    ` : ''}
-                    ${captureData.requiresPixel ? `
-                        <div class="detail-row">
-                            <span class="detail-label">Pixel Challenge:</span>
-                            <span class="detail-value">⚠️ Required</span>
-                        </div>
-                    ` : ''}
+        return `
+            <div class="advanced-modal-section">
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">ABCK Cookie</span>
+                    <span class="advanced-modal-info-value">${data.abckCookie ? '✅ Found' : '❌ Not found'}</span>
                 </div>
-                <div class="details-actions">
-                    <button class="detail-action-btn copy-all-btn" data-capture-id="${captureId}">
-                        📄 Copy All Data
-                    </button>
+                ${data.abckCookie ? `
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">ABCK Level</span>
+                    <span class="advanced-modal-info-value ${abckLevelClass}" data-copy="${abckLevel}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${abckLevel}', this, {notificationMessage: 'Value copied'});">${abckLevel}</span>
+                </div>
+                ` : ''}
+            </div>
+
+            ${data.akamaiVersion ? `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Akamai Version</label>
+                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.akamaiVersion)}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.akamaiVersion)}', this, {notificationMessage: 'Value copied'});">${AdvancedUtils.escapeHtml(data.akamaiVersion)}</div>
+            </div>
+            ` : ''}
+
+            ${data.requiresSbsd || data.requiresSecCpt || data.requiresPixel ? `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Challenge Requirements</label>
+                ${data.requiresSbsd ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">SBSD Challenge</span><span class="advanced-modal-info-value">⚠️ Required</span></div>' : ''}
+                ${data.requiresSecCpt ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">sec_cpt Challenge</span><span class="advanced-modal-info-value">⚠️ Required</span></div>' : ''}
+                ${data.requiresPixel ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">Pixel Challenge</span><span class="advanced-modal-info-value">⚠️ Required</span></div>' : ''}
+            </div>
+            ` : ''}
+
+            <div class="advanced-modal-section">
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">Captured</span>
+                    <span class="advanced-modal-info-value">${timestamp}</span>
                 </div>
             </div>
         `;
-
-        captureCard.insertAdjacentHTML('beforeend', detailsHtml);
-        captureCard.classList.add('expanded');
-
-        // Add click-to-copy functionality
-        captureCard.querySelectorAll('.copy-value').forEach(element => {
-            element.addEventListener('mouseenter', () => {
-                element.style.background = 'rgba(255, 255, 255, 0.1)';
-            });
-
-            element.addEventListener('mouseleave', () => {
-                element.style.background = '';
-            });
-
-            element.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                const textToCopy = element.getAttribute('data-copy');
-                const originalText = element.textContent;
-
-                try {
-                    await navigator.clipboard.writeText(textToCopy);
-                    element.textContent = '✓ Copied!';
-                    element.style.background = 'var(--success)';
-                    element.style.color = 'white';
-
-                    setTimeout(() => {
-                        element.textContent = originalText;
-                        element.style.background = '';
-                        element.style.color = '';
-                    }, 1500);
-                } catch (error) {
-                    console.error('[Akamai] Copy failed:', error);
-                }
-            });
-        });
-
-        const copyAllBtn = captureCard.querySelector('.copy-all-btn');
-        if (copyAllBtn) {
-            copyAllBtn.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                const jsonData = JSON.stringify(captureData, null, 2);
-                await navigator.clipboard.writeText(jsonData);
-                copyAllBtn.textContent = '✅ Copied!';
-                setTimeout(() => {
-                    copyAllBtn.textContent = '📄 Copy All Data';
-                }, 2000);
-            });
-        }
     }
 
     /**
@@ -3259,8 +3201,19 @@ func main() {
 
             history.items.unshift(newCapture);
 
-            if (history.items.length > 100) {
-                history.items = history.items.slice(0, 100);
+            try {
+                const settings = await Utils.getHistorySettings();
+                const historyLimit = Number.isFinite(parseInt(settings.historyLimit, 10))
+                    ? parseInt(settings.historyLimit, 10)
+                    : 100;
+                if (historyLimit > 0 && history.items.length > historyLimit) {
+                    history.items = history.items.slice(0, historyLimit);
+                }
+            } catch (error) {
+                console.error('[Akamai] Failed to load history settings; using default limit', error);
+                if (history.items.length > 100) {
+                    history.items = history.items.slice(0, 100);
+                }
             }
 
             history.lastUpdated = Date.now();

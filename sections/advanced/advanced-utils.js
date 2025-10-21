@@ -258,11 +258,11 @@ const AdvancedUtils = {
                         </div>
                     </div>
 
-                    <div style="background: var(--bg-primary); padding: 16px 28px; display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid var(--border);">
-                        <button class="modal-cancel" style="padding: 10px 24px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 7px; color: var(--text-primary); cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; min-width: 90px;">
+                    <div style="background: var(--bg-primary); padding: 20px; display: flex; flex-direction: row; gap: 12px; border-top: 1px solid var(--border);">
+                        <button class="modal-cancel" style="padding: 12px 24px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; flex: 1;">
                             ${cancelText}
                         </button>
-                        <button class="modal-confirm" style="padding: 10px 24px; background: ${gradient}; border: none; border-radius: 7px; color: white; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.2); min-width: 90px;">
+                        <button class="modal-confirm modal-confirm-${confirmClass}" style="padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; flex: 1;">
                             ${confirmText}
                         </button>
                     </div>
@@ -278,14 +278,42 @@ const AdvancedUtils = {
             const confirmBtn = modal.querySelector('.modal-confirm');
             const cancelBtn = modal.querySelector('.modal-cancel');
 
+            // Set confirm button background and text colors based on type
+            const confirmBgColors = {
+                danger: 'rgba(239, 68, 68, 0.2)',    // Transparent red matching .clear-btn
+                primary: '#2563EB',                   // Blue matching "Import" button
+                success: '#10B981'                    // Green for success actions
+            };
+            const confirmBgColorHover = {
+                danger: 'rgba(239, 68, 68, 0.32)',    // More opaque red on hover
+                primary: '#1D4ED8',                   // Darker blue on hover
+                success: '#059669'                    // Darker green on hover
+            };
+            const confirmTextColors = {
+                danger: '#fca5a5',     // Light red text for danger
+                primary: '#ffffff',    // White text for primary
+                success: '#ffffff'     // White text for success
+            };
+            const confirmTextColorHover = {
+                danger: '#fecaca',     // Lighter red text on hover
+                primary: '#ffffff',    // White text for primary
+                success: '#ffffff'     // White text for success
+            };
+
+            // Apply initial styles
+            confirmBtn.style.background = confirmBgColors[confirmClass] || confirmBgColors.primary;
+            confirmBtn.style.color = confirmTextColors[confirmClass] || confirmTextColors.primary;
+
             // Hover effects
             confirmBtn.addEventListener('mouseenter', () => {
+                confirmBtn.style.background = confirmBgColorHover[confirmClass] || confirmBgColorHover.primary;
+                confirmBtn.style.color = confirmTextColorHover[confirmClass] || confirmTextColorHover.primary;
                 confirmBtn.style.transform = 'translateY(-1px)';
-                confirmBtn.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
             });
             confirmBtn.addEventListener('mouseleave', () => {
+                confirmBtn.style.background = confirmBgColors[confirmClass] || confirmBgColors.primary;
+                confirmBtn.style.color = confirmTextColors[confirmClass] || confirmTextColors.primary;
                 confirmBtn.style.transform = 'translateY(0)';
-                confirmBtn.style.boxShadow = 'none';
             });
 
             cancelBtn.addEventListener('mouseenter', () => {
@@ -341,26 +369,14 @@ const AdvancedUtils = {
      * @param {HTMLElement} button - Optional button element for feedback
      * @returns {Promise<boolean>} True if successful
      */
-    async copyToClipboard(text, button = null) {
-        try {
-            await navigator.clipboard.writeText(text);
-
-            if (button) {
-                const originalText = button.textContent;
-                button.textContent = '✅ Copied!';
-                button.disabled = true;
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.disabled = false;
-                }, 2000);
-            }
-
-            return true;
-        } catch (error) {
-            console.error('[AdvancedUtils] Failed to copy to clipboard:', error);
-            NotificationHelper.error('Failed to copy to clipboard');
-            return false;
-        }
+    async copyToClipboard(text, button = null, options = {}) {
+        return Utils.copyToClipboard(text, {
+            element: button,
+            notificationMessage: options.notificationMessage || 'Copied to clipboard',
+            inlineMessage: options.inlineMessage || '✓ Copied!',
+            revertDelay: options.revertDelay || 1600,
+            notify: options.notify !== undefined ? options.notify : true
+        });
     },
 
     /**

@@ -222,9 +222,6 @@ class CategoryManager {
                 return '🧩';
             case 'fingerprint':
                 return '👆';
-            case 'waf':
-            case 'firewall':
-                return '🔥';
             default:
                 return '🔍';
         }
@@ -243,8 +240,6 @@ class CategoryManager {
                 return 'CAPTCHA';
             case 'fingerprint':
                 return 'Fingerprint';
-            case 'waf':
-                return 'Web Application Firewall';
             default:
                 return categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
         }
@@ -264,9 +259,6 @@ class CategoryManager {
                 return 'captcha';
             case 'fingerprint':
                 return 'fingerprint';
-            case 'waf':
-            case 'firewall':
-                return 'waf';
             default:
                 return 'primary';
         }

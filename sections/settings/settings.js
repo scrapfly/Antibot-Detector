@@ -1,13 +1,62 @@
 class Settings {
   constructor() {
     this.settings = {
+      // General
       notificationsEnabled: true,
       debugMode: false,
       autoDetectionEnabled: true,
       historyLimit: 100,
-      confidenceThreshold: 70
+      confidenceThreshold: 70,
+
+      // Badge Colors
+      colorBadgeLow: '#4CAF50',
+      colorBadgeMedium: '#FFA500',
+      colorBadgeHigh: '#FF4444',
+
+      // Category Colors
+      colorAntibot: '#FF5733',
+      colorCaptcha: '#33C3FF',
+      colorFingerprint: '#2196F3',
+
+      // Tag Colors
+      colorTagDOM: '#2196F3',
+      colorTagHeaders: '#FF33A8',
+      colorTagCookies: '#FFC133',
+      colorTagContent: '#33FFF3',
+      colorTagURLs: '#00BCD4',
+      colorTagJSHooks: '#00E5FF',
+      colorTagWindow: '#4CAF50',
+      colorTagCSS: '#E91E63',
+
+      // Detection Settings
+      cacheDuration: 12,
+      cacheUnit: 'hours',
+      cacheScope: 'domain',
+      blacklist: [],
+      enableJsApi: false,
+
+      // Webhook Settings
+      enableWebhook: false,
+      webhookOnCache: false,
+      webhookUrl: '',
+      webhookMethod: 'POST',
+      webhookContentType: 'application/json',
+      webhookPayload: '{"url": "<SITEURL>", "detections": <DETECTIONS>, "timestamp": "<TIMESTAMP>", "count": <DETECTION_COUNT>}',
+
+      // History Settings
+      historyBehavior: 'rolling',
+      autoClearDays: 30,
+      exportFormat: 'json',
+      includeTimestamps: true,
+      historyBypassCache: false,
+      preventDuplicates: false,
+      duplicateScope: 'full_url',
+      duplicateDuration: 1,
+      duplicateUnit: 'hours'
     };
     this.isModalVisible = false;
+    this.currentColorPage = 1;
+    this.totalColorPages = 5;
   }
 
   /**
@@ -67,14 +116,49 @@ class Settings {
       const result = await chrome.storage.local.get(['scrapfly_settings']);
 
       if (result.scrapfly_settings) {
-        const savedSettings = JSON.parse(result.scrapfly_settings);
-        // Extract the nested "settings" property from the saved data
-        // Fallback to savedSettings for legacy data without nested structure
-        this.settings = { ...this.settings, ...(savedSettings.settings || savedSettings) };
+        const savedData = typeof result.scrapfly_settings === 'string'
+          ? JSON.parse(result.scrapfly_settings)
+          : result.scrapfly_settings;
+
+        // FIX: Properly extract settings from nested structure
+        const loadedSettings = savedData.settings || savedData;
+
+        // Merge loaded settings with defaults (preserves any missing fields)
+        this.settings = { ...this.settings, ...loadedSettings };
+
+        // FIX: Flatten nested detection settings to match constructor's flat structure
+        if (this.settings.detection) {
+          // Flatten cache settings from detection object
+          if (this.settings.detection.cacheDuration !== undefined) {
+            this.settings.cacheDuration = this.settings.detection.cacheDuration;
+          }
+          if (this.settings.detection.cacheUnit !== undefined) {
+            this.settings.cacheUnit = this.settings.detection.cacheUnit;
+          }
+          if (this.settings.detection.cacheScope !== undefined) {
+            this.settings.cacheScope = this.settings.detection.cacheScope;
+          }
+
+          // Flatten blacklistedDomains to blacklist for internal use
+          if (this.settings.detection.blacklistedDomains) {
+            this.settings.blacklist = this.settings.detection.blacklistedDomains;
+          }
+        }
+
+        // Flatten JS API settings
+        if (this.settings.jsApi && this.settings.jsApi.enableJsApi !== undefined) {
+          this.settings.enableJsApi = this.settings.jsApi.enableJsApi;
+        }
+
+        console.log('[loadSettings] Loaded settings:', {
+          flatCacheScope: this.settings.cacheScope, // Should have the value now
+          hasDetection: !!this.settings.detection,
+          detectionCacheScope: this.settings.detection?.cacheScope, // Original nested value
+          fullSettings: this.settings
+        });
       }
 
       this.updateSettingsUI();
-      console.log('Settings loaded:', this.settings);
 
     } catch (error) {
       console.error('Failed to load settings:', error);
@@ -86,16 +170,79 @@ class Settings {
    */
   async saveSettings() {
     try {
+      // Create a copy of settings and restructure to nested format matching default-settings.json
+      const settingsToSave = { ...this.settings };
+
+      // Ensure detection object exists
+      if (!settingsToSave.detection) {
+        settingsToSave.detection = {};
+      }
+
+      // FIX: Move detection-related settings into detection object to match default-settings.json structure
+      if (settingsToSave.cacheDuration !== undefined) {
+        settingsToSave.detection.cacheDuration = settingsToSave.cacheDuration;
+        delete settingsToSave.cacheDuration;
+      }
+      if (settingsToSave.cacheUnit !== undefined) {
+        settingsToSave.detection.cacheUnit = settingsToSave.cacheUnit;
+        delete settingsToSave.cacheUnit;
+      }
+      if (settingsToSave.cacheScope !== undefined) {
+        settingsToSave.detection.cacheScope = settingsToSave.cacheScope;
+        delete settingsToSave.cacheScope;
+      }
+
+      // Map flat blacklist to nested detection.blacklistedDomains
+      if (settingsToSave.blacklist) {
+        settingsToSave.detection.blacklistedDomains = settingsToSave.blacklist;
+        delete settingsToSave.blacklist;
+      }
+
+      // Ensure jsApi object exists and move flag inside it
+      if (!settingsToSave.jsApi) {
+        settingsToSave.jsApi = {};
+      }
+      if (settingsToSave.enableJsApi !== undefined) {
+        settingsToSave.jsApi.enableJsApi = settingsToSave.enableJsApi;
+        delete settingsToSave.enableJsApi;
+      }
+
+      // FIX: Include version field for consistency with default-settings.json
       const settingsData = {
+        version: "1.0.0",
         timestamp: new Date().toISOString(),
-        settings: this.settings
+        settings: settingsToSave
       };
+
+      // FIX: Log what we're about to save (now properly nested)
+      console.log('[saveSettings] About to save to storage:', {
+        flatCacheScope: settingsToSave.cacheScope, // Should be undefined now
+        hasDetection: !!settingsToSave.detection,
+        detectionCacheScope: settingsToSave.detection?.cacheScope, // Should have the value
+        detectionCacheDuration: settingsToSave.detection?.cacheDuration,
+        detectionCacheUnit: settingsToSave.detection?.cacheUnit,
+        fullSettingsData: settingsData
+      });
 
       await chrome.storage.local.set({
         'scrapfly_settings': JSON.stringify(settingsData, null, 2)
       });
 
-      console.log('Settings saved:', this.settings);
+      // FIX: Verify what was actually saved (should be nested now)
+      const verification = await chrome.storage.local.get(['scrapfly_settings']);
+      const savedParsed = JSON.parse(verification.scrapfly_settings);
+      console.log('[saveSettings] Verified saved data:', {
+        flatCacheScope: savedParsed.settings?.cacheScope, // Should be undefined
+        hasDetection: !!savedParsed.settings?.detection,
+        detectionCacheScope: savedParsed.settings?.detection?.cacheScope // Should have the value
+      });
+
+      // FIX: Always invalidate cache when saving settings
+      if (typeof Utils !== 'undefined' && typeof Utils.invalidateSettingsCache === 'function') {
+        Utils.invalidateSettingsCache();
+        console.log('[Settings] Cache invalidated after save');
+      }
+
       NotificationHelper.success('Settings saved successfully!');
 
     } catch (error) {
@@ -108,35 +255,215 @@ class Settings {
    * Update settings UI with current values
    */
   updateSettingsUI() {
-    const notificationsToggle = document.querySelector('#notificationsEnabled');
-    const debugModeToggle = document.querySelector('#debugModeGeneral');
-    const autoDetectionToggle = document.querySelector('#autoDetectionEnabled');
-    const historyLimitInput = document.querySelector('#historyLimit');
-    const confidenceSlider = document.querySelector('#confidenceThreshold');
+    // General Settings
+    this.setInputValue('#notificationsEnabled', this.settings.notificationsEnabled, 'checkbox');
+    this.setInputValue('#debugModeGeneral', this.settings.debugMode, 'checkbox');
+    this.setInputValue('#autoDetectionEnabled', this.settings.autoDetectionEnabled, 'checkbox');
+    this.setInputValue('#historyLimit', this.settings.historyLimit);
+    this.setInputValue('#confidenceThreshold', this.settings.confidenceThreshold);
+
     const confidenceValue = document.querySelector('#confidenceValue');
-
-    if (notificationsToggle) {
-      notificationsToggle.checked = this.settings.notificationsEnabled;
-    }
-
-    if (debugModeToggle) {
-      debugModeToggle.checked = this.settings.debugMode;
-    }
-
-    if (autoDetectionToggle) {
-      autoDetectionToggle.checked = this.settings.autoDetectionEnabled;
-    }
-
-    if (historyLimitInput) {
-      historyLimitInput.value = this.settings.historyLimit;
-    }
-
-    if (confidenceSlider) {
-      confidenceSlider.value = this.settings.confidenceThreshold;
-    }
-
     if (confidenceValue) {
       confidenceValue.textContent = `${this.settings.confidenceThreshold}%`;
+    }
+
+    // Badge Colors
+    this.setColorInput('#colorBadgeLow', this.settings.colorBadgeLow);
+    this.setColorInput('#colorBadgeMedium', this.settings.colorBadgeMedium);
+    this.setColorInput('#colorBadgeHigh', this.settings.colorBadgeHigh);
+
+    // Category Colors
+    this.setColorInput('#colorAntibot', this.settings.colorAntibot);
+    this.setColorInput('#colorCaptcha', this.settings.colorCaptcha);
+    this.setColorInput('#colorFingerprint', this.settings.colorFingerprint);
+
+    // Tag Colors
+    this.setColorInput('#colorTagDOM', this.settings.colorTagDOM);
+    this.setColorInput('#colorTagHeaders', this.settings.colorTagHeaders);
+    this.setColorInput('#colorTagCookies', this.settings.colorTagCookies);
+    this.setColorInput('#colorTagContent', this.settings.colorTagContent);
+    this.setColorInput('#colorTagURLs', this.settings.colorTagURLs);
+    this.setColorInput('#colorTagJSHooks', this.settings.colorTagJSHooks);
+    this.setColorInput('#colorTagWindow', this.settings.colorTagWindow);
+    this.setColorInput('#colorTagCSS', this.settings.colorTagCSS);
+
+    // Detection Settings
+    this.setInputValue('#cacheDuration', this.settings.cacheDuration);
+    this.setInputValue('#cacheUnit', this.settings.cacheUnit);
+    this.setInputValue('#cacheScope', this.settings.cacheScope);
+    this.setInputValue('#enableJsApi', this.settings.enableJsApi, 'checkbox');
+
+    // Webhook Settings
+    this.setInputValue('#enableWebhook', this.settings.enableWebhook, 'checkbox');
+    this.setInputValue('#webhookOnCache', this.settings.webhookOnCache, 'checkbox');
+    this.setInputValue('#webhookUrl', this.settings.webhookUrl);
+    this.setInputValue('#webhookMethod', this.settings.webhookMethod);
+    this.setInputValue('#webhookContentType', this.settings.webhookContentType);
+    this.setInputValue('#webhookPayload', this.settings.webhookPayload);
+
+    // History Settings
+    this.setInputValue('#historyBehavior', this.settings.historyBehavior);
+    this.setInputValue('#autoClearDays', this.settings.autoClearDays);
+    this.setInputValue('#exportFormat', this.settings.exportFormat);
+    this.setInputValue('#includeTimestamps', this.settings.includeTimestamps, 'checkbox');
+    this.setInputValue('#historyBypassCache', this.settings.historyBypassCache, 'checkbox');
+    this.setInputValue('#preventDuplicates', this.settings.preventDuplicates, 'checkbox');
+    this.setInputValue('#duplicateScope', this.settings.duplicateScope);
+    this.setInputValue('#duplicateDuration', this.settings.duplicateDuration);
+    this.setInputValue('#duplicateUnit', this.settings.duplicateUnit);
+
+    // Update blacklist display
+    this.updateBlacklistDisplay();
+
+    // Update color pagination
+    this.updateColorPagination();
+
+    // Update duplicate prevention visibility
+    this.toggleDuplicateSettings();
+  }
+
+  /**
+   * Helper to set input value
+   */
+  setInputValue(selector, value, type = 'value') {
+    // FIX: Check for multiple elements when setting cacheScope
+    if (selector === '#cacheScope') {
+      const allMatches = document.querySelectorAll(selector);
+      console.log('[setInputValue] ======== SET CACHE SCOPE DEBUG ========');
+      console.log('[setInputValue] Total elements matching selector:', allMatches.length);
+      console.log('[setInputValue] All matching elements:', Array.from(allMatches).map(el => ({
+        tagName: el.tagName,
+        id: el.id,
+        currentValue: el.value,
+        hasOptions: !!el.options,
+        className: el.className
+      })));
+      console.log('[setInputValue] Attempting to set value to:', value);
+    }
+
+    const input = document.querySelector(selector);
+    if (!input) {
+      // FIX: Suppress warnings for known optional settings that don't have UI elements
+      const optionalSelectors = ['#autoDetectionEnabled', '#confidenceThreshold'];
+      if (!optionalSelectors.includes(selector)) {
+        console.warn(`[setInputValue] Element not found: ${selector}`);
+      }
+      return;
+    }
+
+    if (type === 'checkbox') {
+      input.checked = value;
+    } else {
+      input.value = value;
+    }
+
+    // FIX: Verify what was actually set
+    if (selector === '#cacheScope') {
+      console.log('[setInputValue] After setting value:');
+      console.log('[setInputValue] Element tagName:', input.tagName);
+      console.log('[setInputValue] Element className:', input.className);
+      console.log('[setInputValue] Requested value:', value);
+      console.log('[setInputValue] Actual value:', input.value);
+      console.log('[setInputValue] Has options:', !!input.options);
+      if (input.options) {
+        console.log('[setInputValue] Options:', Array.from(input.options).map(o => ({ value: o.value, text: o.text, selected: o.selected })));
+      }
+      console.log('[setInputValue] ====================================');
+    }
+  }
+
+  /**
+   * Helper to set color input and hex display
+   */
+  setColorInput(selector, color) {
+    const input = document.querySelector(selector);
+    if (input) {
+      input.value = color;
+
+      // Update hex display
+      const hexDisplay = document.querySelector(selector.replace('color', 'hex'));
+      if (hexDisplay) {
+        hexDisplay.textContent = color.toUpperCase();
+      }
+    }
+  }
+
+  /**
+   * Update blacklist display using safe DOM methods
+   */
+  updateBlacklistDisplay() {
+    const container = document.querySelector('#blacklistContainer');
+    if (!container) return;
+
+    // Clear existing content
+    container.textContent = '';
+
+    if (!this.settings.blacklist || this.settings.blacklist.length === 0) {
+      const emptyMsg = document.createElement('div');
+      emptyMsg.style.color = 'var(--text-muted)';
+      emptyMsg.style.fontSize = '12px';
+      emptyMsg.style.padding = '8px';
+      emptyMsg.textContent = 'No blacklisted domains';
+      container.appendChild(emptyMsg);
+      return;
+    }
+
+    // Create blacklist items
+    this.settings.blacklist.forEach(domain => {
+      const item = document.createElement('div');
+      item.className = 'blacklist-item';
+      item.style.display = 'flex';
+      item.style.alignItems = 'center';
+      item.style.justifyContent = 'space-between';
+      item.style.padding = '6px 8px';
+      item.style.background = 'var(--bg-tertiary)';
+      item.style.borderRadius = '4px';
+      item.style.marginBottom = '4px';
+
+      const domainSpan = document.createElement('span');
+      domainSpan.style.fontSize = '12px';
+      domainSpan.style.color = 'var(--text-primary)';
+      domainSpan.style.fontFamily = 'monospace';
+      domainSpan.textContent = domain;
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-blacklist';
+      removeBtn.style.background = 'transparent';
+      removeBtn.style.border = 'none';
+      removeBtn.style.color = 'var(--danger)';
+      removeBtn.style.cursor = 'pointer';
+      removeBtn.style.padding = '2px 4px';
+      removeBtn.style.borderRadius = '3px';
+      removeBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/></svg>';
+      removeBtn.addEventListener('click', () => this.removeFromBlacklist(domain));
+
+      item.appendChild(domainSpan);
+      item.appendChild(removeBtn);
+      container.appendChild(item);
+    });
+  }
+
+  /**
+   * Remove domain from blacklist
+   */
+  removeFromBlacklist(domain) {
+    this.settings.blacklist = this.settings.blacklist.filter(d => d !== domain);
+    this.updateBlacklistDisplay();
+  }
+
+  /**
+   * Toggle duplicate settings container visibility
+   */
+  toggleDuplicateSettings() {
+    const preventDuplicatesCheckbox = document.querySelector('#preventDuplicates');
+    const container = document.querySelector('#duplicateSettingsContainer');
+
+    if (!container || !preventDuplicatesCheckbox) return;
+
+    if (preventDuplicatesCheckbox.checked) {
+      container.style.display = 'block';
+    } else {
+      container.style.display = 'none';
     }
   }
 
@@ -144,19 +471,107 @@ class Settings {
    * Get current settings from UI inputs
    */
   getSettingsFromUI() {
-    const notificationsToggle = document.querySelector('#notificationsEnabled');
-    const debugModeToggle = document.querySelector('#debugModeGeneral');
-    const autoDetectionToggle = document.querySelector('#autoDetectionEnabled');
-    const historyLimitInput = document.querySelector('#historyLimit');
-    const confidenceSlider = document.querySelector('#confidenceThreshold');
-
     return {
-      notificationsEnabled: notificationsToggle?.checked ?? this.settings.notificationsEnabled,
-      debugMode: debugModeToggle?.checked ?? this.settings.debugMode,
-      autoDetectionEnabled: autoDetectionToggle?.checked ?? this.settings.autoDetectionEnabled,
-      historyLimit: parseInt(historyLimitInput?.value ?? this.settings.historyLimit),
-      confidenceThreshold: parseInt(confidenceSlider?.value ?? this.settings.confidenceThreshold)
+      // General Settings
+      notificationsEnabled: this.getInputValue('#notificationsEnabled', 'checkbox') ?? this.settings.notificationsEnabled,
+      debugMode: this.getInputValue('#debugModeGeneral', 'checkbox') ?? this.settings.debugMode,
+      autoDetectionEnabled: this.getInputValue('#autoDetectionEnabled', 'checkbox') ?? this.settings.autoDetectionEnabled,
+      historyLimit: this.normalizeHistoryLimit(this.getInputValue('#historyLimit')),
+      confidenceThreshold: parseInt(this.getInputValue('#confidenceThreshold') ?? this.settings.confidenceThreshold),
+
+      // Badge Colors
+      colorBadgeLow: this.getInputValue('#colorBadgeLow') ?? this.settings.colorBadgeLow,
+      colorBadgeMedium: this.getInputValue('#colorBadgeMedium') ?? this.settings.colorBadgeMedium,
+      colorBadgeHigh: this.getInputValue('#colorBadgeHigh') ?? this.settings.colorBadgeHigh,
+
+      // Category Colors
+      colorAntibot: this.getInputValue('#colorAntibot') ?? this.settings.colorAntibot,
+      colorCaptcha: this.getInputValue('#colorCaptcha') ?? this.settings.colorCaptcha,
+      colorFingerprint: this.getInputValue('#colorFingerprint') ?? this.settings.colorFingerprint,
+
+      // Tag Colors
+      colorTagDOM: this.getInputValue('#colorTagDOM') ?? this.settings.colorTagDOM,
+      colorTagHeaders: this.getInputValue('#colorTagHeaders') ?? this.settings.colorTagHeaders,
+      colorTagCookies: this.getInputValue('#colorTagCookies') ?? this.settings.colorTagCookies,
+      colorTagContent: this.getInputValue('#colorTagContent') ?? this.settings.colorTagContent,
+      colorTagURLs: this.getInputValue('#colorTagURLs') ?? this.settings.colorTagURLs,
+      colorTagJSHooks: this.getInputValue('#colorTagJSHooks') ?? this.settings.colorTagJSHooks,
+      colorTagWindow: this.getInputValue('#colorTagWindow') ?? this.settings.colorTagWindow,
+      colorTagCSS: this.getInputValue('#colorTagCSS') ?? this.settings.colorTagCSS,
+
+      // Detection Settings
+      cacheDuration: parseInt(this.getInputValue('#cacheDuration') ?? this.settings.cacheDuration),
+      cacheUnit: this.getInputValue('#cacheUnit') ?? this.settings.cacheUnit,
+      cacheScope: this.getInputValue('#cacheScope') ?? this.settings.cacheScope,
+      blacklist: this.settings.blacklist, // Managed separately
+      enableJsApi: this.getInputValue('#enableJsApi', 'checkbox') ?? this.settings.enableJsApi,
+
+      // Webhook Settings
+      enableWebhook: this.getInputValue('#enableWebhook', 'checkbox') ?? this.settings.enableWebhook,
+      webhookOnCache: this.getInputValue('#webhookOnCache', 'checkbox') ?? this.settings.webhookOnCache,
+      webhookUrl: this.getInputValue('#webhookUrl') ?? this.settings.webhookUrl,
+      webhookMethod: this.getInputValue('#webhookMethod') ?? this.settings.webhookMethod,
+      webhookContentType: this.getInputValue('#webhookContentType') ?? this.settings.webhookContentType,
+      webhookPayload: this.getInputValue('#webhookPayload') ?? this.settings.webhookPayload,
+
+      // History Settings
+      historyBehavior: this.getInputValue('#historyBehavior') ?? this.settings.historyBehavior,
+      autoClearDays: parseInt(this.getInputValue('#autoClearDays') ?? this.settings.autoClearDays),
+      exportFormat: this.getInputValue('#exportFormat') ?? this.settings.exportFormat,
+      includeTimestamps: this.getInputValue('#includeTimestamps', 'checkbox') ?? this.settings.includeTimestamps,
+      historyBypassCache: this.getInputValue('#historyBypassCache', 'checkbox') ?? this.settings.historyBypassCache,
+      preventDuplicates: this.getInputValue('#preventDuplicates', 'checkbox') ?? this.settings.preventDuplicates,
+      duplicateScope: this.getInputValue('#duplicateScope') ?? this.settings.duplicateScope,
+      duplicateDuration: parseInt(this.getInputValue('#duplicateDuration') ?? this.settings.duplicateDuration),
+      duplicateUnit: this.getInputValue('#duplicateUnit') ?? this.settings.duplicateUnit
     };
+  }
+
+  /**
+   * Helper to get input value
+   */
+  getInputValue(selector, type = 'value') {
+    // FIX: Check for multiple elements with same ID (this would be a DOM error)
+    if (selector === '#cacheScope') {
+      const allMatches = document.querySelectorAll(selector);
+      console.log('[getInputValue] ======== CACHE SCOPE DEBUG ========');
+      console.log('[getInputValue] Total elements matching selector:', allMatches.length);
+      console.log('[getInputValue] All matching elements:', Array.from(allMatches).map(el => ({
+        tagName: el.tagName,
+        id: el.id,
+        value: el.value,
+        hasOptions: !!el.options,
+        className: el.className
+      })));
+    }
+
+    const input = document.querySelector(selector);
+    if (!input) {
+      console.warn(`[getInputValue] Element not found: ${selector}`);
+      return null;
+    }
+
+    const value = type === 'checkbox' ? input.checked : input.value;
+
+    // FIX: Enhanced debug logging for cacheScope specifically
+    if (selector === '#cacheScope') {
+      console.log('[getInputValue] Using FIRST matched element (querySelector):');
+      console.log('[getInputValue] Element tagName:', input.tagName);
+      console.log('[getInputValue] Element id:', input.id);
+      console.log('[getInputValue] Element className:', input.className);
+      console.log('[getInputValue] Element value property:', input.value);
+      console.log('[getInputValue] Has options property:', !!input.options);
+      if (input.options) {
+        console.log('[getInputValue] Selected index:', input.selectedIndex);
+        console.log('[getInputValue] Selected option:', input.options?.[input.selectedIndex]);
+        console.log('[getInputValue] Selected option value:', input.options?.[input.selectedIndex]?.value);
+        console.log('[getInputValue] All options:', Array.from(input.options).map(o => ({ value: o.value, text: o.text, selected: o.selected })));
+      }
+      console.log('[getInputValue] Final returned value:', value);
+      console.log('[getInputValue] ====================================');
+    }
+
+    return value;
   }
 
   /**
@@ -167,8 +582,10 @@ class Settings {
   validateSettings(settings) {
     const errors = [];
 
-    if (settings.historyLimit < 10 || settings.historyLimit > 1000) {
-      errors.push('History limit must be between 10 and 1000');
+    if (settings.historyLimit < 10 && settings.historyLimit !== 0) {
+      errors.push('History limit must be 0 for unlimited or between 10 and 1000');
+    } else if (settings.historyLimit > 1000) {
+      errors.push('History limit must be 0 for unlimited or between 10 and 1000');
     }
 
     if (settings.confidenceThreshold < 0 || settings.confidenceThreshold > 100) {
@@ -179,6 +596,15 @@ class Settings {
       isValid: errors.length === 0,
       errors
     };
+  }
+
+  normalizeHistoryLimit(rawValue) {
+    const parsed = parseInt(rawValue ?? this.settings.historyLimit, 10);
+    if (Number.isFinite(parsed)) {
+      if (parsed === 0) return 0;
+      return Math.min(Math.max(parsed, 10), 1000);
+    }
+    return this.settings.historyLimit;
   }
 
   /**
@@ -194,11 +620,60 @@ class Settings {
     });
 
     if (confirmed) {
+      // Reset to all default values from constructor
       this.settings = {
+        // General
         notificationsEnabled: true,
+        debugMode: false,
         autoDetectionEnabled: true,
         historyLimit: 100,
-        confidenceThreshold: 70
+        confidenceThreshold: 70,
+
+        // Badge Colors
+        colorBadgeLow: '#4CAF50',
+        colorBadgeMedium: '#FFA500',
+        colorBadgeHigh: '#FF4444',
+
+        // Category Colors
+        colorAntibot: '#FF5733',
+        colorCaptcha: '#33C3FF',
+        colorFingerprint: '#2196F3',
+
+        // Tag Colors
+        colorTagDOM: '#2196F3',
+        colorTagHeaders: '#FF33A8',
+        colorTagCookies: '#FFC133',
+        colorTagContent: '#33FFF3',
+        colorTagURLs: '#00BCD4',
+        colorTagJSHooks: '#00E5FF',
+        colorTagWindow: '#4CAF50',
+        colorTagCSS: '#E91E63',
+
+        // Detection Settings
+        cacheDuration: 12,
+        cacheUnit: 'hours',
+        cacheScope: 'domain',
+        blacklist: [],
+        enableJsApi: false,
+
+        // Webhook Settings
+        enableWebhook: false,
+        webhookOnCache: false,
+        webhookUrl: '',
+        webhookMethod: 'POST',
+        webhookContentType: 'application/json',
+        webhookPayload: '{"url": "<SITEURL>", "detections": <DETECTIONS>, "timestamp": "<TIMESTAMP>", "count": <DETECTION_COUNT>}',
+
+        // History Settings
+        historyBehavior: 'rolling',
+        autoClearDays: 30,
+        exportFormat: 'json',
+        includeTimestamps: true,
+        historyBypassCache: false,
+        preventDuplicates: false,
+        duplicateScope: 'full_url',
+        duplicateDuration: 1,
+        duplicateUnit: 'hours'
       };
 
       this.updateSettingsUI();
@@ -387,7 +862,140 @@ class Settings {
         this.hideSettings();
       }
     });
+
+    // Color input listeners (update hex displays)
+    this.setupColorInputListeners();
+
+    // Color pagination listeners
+    this.setupColorPaginationListeners();
+
+    // Add current domain button
+    const addCurrentDomainBtn = document.querySelector('#addCurrentDomainBtn');
+    if (addCurrentDomainBtn) {
+      addCurrentDomainBtn.addEventListener('click', () => this.addCurrentDomainToBlacklist());
+    }
+
+
+    // Duplicate prevention toggle
+    const preventDuplicatesCheckbox = document.querySelector('#preventDuplicates');
+    if (preventDuplicatesCheckbox) {
+      preventDuplicatesCheckbox.addEventListener('change', () => this.toggleDuplicateSettings());
+    }
   }
+
+  /**
+   * Setup color input listeners to update hex displays
+   */
+  setupColorInputListeners() {
+    const colorInputs = document.querySelectorAll('.color-field');
+    colorInputs.forEach(input => {
+      input.addEventListener('input', (e) => {
+        const color = e.target.value;
+        const hexDisplayId = e.target.id.replace('color', 'hex');
+        const hexDisplay = document.querySelector(`#${hexDisplayId}`);
+        if (hexDisplay) {
+          hexDisplay.textContent = color.toUpperCase();
+        }
+      });
+    });
+  }
+
+  /**
+   * Setup color pagination listeners
+   */
+  setupColorPaginationListeners() {
+    const prevBtn = document.querySelector('#colorPrevBtn');
+    const nextBtn = document.querySelector('#colorNextBtn');
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => this.changeColorPage(-1));
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => this.changeColorPage(1));
+    }
+  }
+
+  /**
+   * Change color pagination page
+   */
+  changeColorPage(direction) {
+    const newPage = this.currentColorPage + direction;
+
+    if (newPage < 1 || newPage > this.totalColorPages) {
+      return;
+    }
+
+    this.currentColorPage = newPage;
+    this.updateColorPagination();
+  }
+
+  /**
+   * Update color pagination display
+   */
+  updateColorPagination() {
+    // Update page number display
+    const pageNum = document.querySelector('#colorPageNum');
+    if (pageNum) {
+      pageNum.textContent = this.currentColorPage;
+    }
+
+    // Show/hide pages
+    const allPages = document.querySelectorAll('.color-page');
+    allPages.forEach(page => {
+      const pageNumber = parseInt(page.getAttribute('data-page'));
+      page.style.display = pageNumber === this.currentColorPage ? 'block' : 'none';
+    });
+
+    // Update button states
+    const prevBtn = document.querySelector('#colorPrevBtn');
+    const nextBtn = document.querySelector('#colorNextBtn');
+
+    if (prevBtn) {
+      prevBtn.disabled = this.currentColorPage === 1;
+    }
+
+    if (nextBtn) {
+      nextBtn.disabled = this.currentColorPage === this.totalColorPages;
+    }
+  }
+
+  /**
+   * Add current domain to blacklist
+   */
+  async addCurrentDomainToBlacklist() {
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+      if (!tab || !tab.url) {
+        NotificationHelper.error('Unable to get current page URL');
+        return;
+      }
+
+      const url = new URL(tab.url);
+      const domain = url.hostname;
+
+      if (!domain) {
+        NotificationHelper.error('Invalid domain');
+        return;
+      }
+
+      if (this.settings.blacklist.includes(domain)) {
+        NotificationHelper.info(`Domain "${domain}" is already blacklisted`);
+        return;
+      }
+
+      this.settings.blacklist.push(domain);
+      this.updateBlacklistDisplay();
+      NotificationHelper.success(`Added "${domain}" to blacklist`);
+
+    } catch (error) {
+      console.error('Failed to add current domain:', error);
+      NotificationHelper.error('Failed to add domain: ' + error.message);
+    }
+  }
+
+  setCacheScopeFromCurrentPage() {}
 
   /**
    * Handle save settings button click
@@ -395,6 +1003,14 @@ class Settings {
   async handleSaveSettings() {
     try {
       const newSettings = this.getSettingsFromUI();
+
+      // FIX: Add detailed logging to debug cacheScope persistence
+      console.log('[handleSaveSettings] Gathered settings from UI:', {
+        cacheScope: newSettings.cacheScope,
+        cacheDuration: newSettings.cacheDuration,
+        cacheUnit: newSettings.cacheUnit
+      });
+
       const validation = this.validateSettings(newSettings);
 
       if (!validation.isValid) {
@@ -403,7 +1019,27 @@ class Settings {
       }
 
       this.settings = newSettings;
+
+      console.log('[handleSaveSettings] Updated this.settings:', {
+        cacheScope: this.settings.cacheScope,
+        cacheDuration: this.settings.cacheDuration,
+        cacheUnit: this.settings.cacheUnit
+      });
+
       await this.saveSettings();
+
+      console.log('[handleSaveSettings] Settings saved to storage');
+
+      // Sync colors to CategoryManager
+      await this.syncColorsToCategoryManager();
+
+      // Notify background to reload CategoryManager
+      chrome.runtime.sendMessage({
+        type: 'SETTINGS_UPDATED'
+      }).catch(() => {
+        // Background might not be ready, that's ok
+        console.log('Background not ready for SETTINGS_UPDATED message');
+      });
 
       // Close modal after successful save
       this.hideSettings();
@@ -411,6 +1047,86 @@ class Settings {
     } catch (error) {
       console.error('Failed to handle save settings:', error);
       NotificationHelper.error('Failed to save settings: ' + error.message);
+    }
+  }
+
+  /**
+   * Sync colors from settings to CategoryManager
+   */
+  async syncColorsToCategoryManager() {
+    try {
+      // Check if CategoryManager is available globally (popup context)
+      if (typeof window.categoryManager === 'undefined' || !window.categoryManager) {
+        console.warn('CategoryManager not available, cannot sync colors');
+        return;
+      }
+
+      const categoryManager = window.categoryManager;
+
+      // Update category colors (use lowercase names to match index.json)
+      const categoryMap = {
+        'antibot': 'colorAntibot',
+        'captcha': 'colorCaptcha',
+        'fingerprint': 'colorFingerprint'
+      };
+
+      for (const [categoryName, settingsKey] of Object.entries(categoryMap)) {
+        const color = this.settings[settingsKey];
+        if (color) {
+          categoryManager.updateCategoryColor(categoryName, color);
+          console.log(`Updated ${categoryName} color to ${color}`);
+        }
+      }
+
+      // Update badge colors
+      const badgeLevels = ['low', 'medium', 'high'];
+      const badgeMap = {
+        'low': 'colorBadgeLow',
+        'medium': 'colorBadgeMedium',
+        'high': 'colorBadgeHigh'
+      };
+
+      for (const [level, settingsKey] of Object.entries(badgeMap)) {
+        const color = this.settings[settingsKey];
+        if (color) {
+          categoryManager.updateBadgeColor(level, color);
+          console.log(`Updated badge ${level} color to ${color}`);
+        }
+      }
+
+      // Update tag colors
+      const tagMap = {
+        'dom': 'colorTagDOM',
+        'header': 'colorTagHeaders',
+        'cookie': 'colorTagCookies',
+        'content': 'colorTagContent',
+        'url': 'colorTagURLs',
+        'js_hooks': 'colorTagJSHooks',
+        'window': 'colorTagWindow',
+        'css': 'colorTagCSS'
+      };
+
+      const tags = categoryManager.categories.tags || {};
+      for (const [tagName, settingsKey] of Object.entries(tagMap)) {
+        const color = this.settings[settingsKey];
+        if (color && tags[tagName]) {
+          // Update tag color (tags[tagName] might be string or object)
+          if (typeof tags[tagName] === 'object') {
+            tags[tagName].colour = color;
+          } else {
+            tags[tagName] = { colour: color };
+          }
+          console.log(`Updated tag ${tagName} color to ${color}`);
+        }
+      }
+
+      // Save updated CategoryManager to storage
+      await categoryManager.saveToStorage();
+      console.log('Synced colors to CategoryManager and saved to storage');
+
+    } catch (error) {
+      console.error('Failed to sync colors to CategoryManager:', error);
+      // Don't throw - settings are still saved even if color sync fails
     }
   }
 
@@ -614,7 +1330,8 @@ class Settings {
     try {
       // Check if JS API is enabled in settings
       const settings = await Utils.getSettings();
-      if (!settings.jsApiEnabled) {
+      const jsApiEnabled = settings.enableJsApi ?? settings.jsApi?.enableJsApi ?? false;
+      if (!jsApiEnabled) {
         console.log(`Scrapfly JS API: Disabled in settings, skipping ${eventName} event`);
         return false;
       }
@@ -647,6 +1364,12 @@ class Settings {
   static async dispatchReadyEvent() {
     try {
       const settings = await Utils.getSettings();
+      const jsApiEnabled = settings.enableJsApi ?? settings.jsApi?.enableJsApi ?? false;
+
+      if (!jsApiEnabled) {
+        console.log('Scrapfly JS API: Disabled in settings, skipping ready event');
+        return false;
+      }
 
       return Settings.dispatchJsApiEvent('ready', {
         enabled: settings.autoDetectionEnabled !== false,

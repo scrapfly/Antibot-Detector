@@ -1,0 +1,55 @@
+{
+  "id": "gamepads-fingerprint",
+  "name": "Gamepads API Fingerprint",
+  "category": "Fingerprint",
+  "color": "#ef4444",
+  "confidence": 80,
+  "lastUpdated": "2025-01-21",
+  "version": "1.0.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API",
+  "icon": "custom.png",
+  "description": "Gamepads API for detecting connected input devices and device capabilities",
+  "detection": {
+    "js_hooks": [
+      {
+        "target": "Navigator.prototype.getGamepads",
+        "description": "Gets connected gamepad devices",
+        "enabled": true,
+        "confidence": 95
+      },
+      {
+        "target": "Window.prototype.addEventListener",
+        "description": "Listens for gamepad connection events",
+        "enabled": true,
+        "confidence": 75
+      }
+    ],
+    "window_properties": [
+      {
+        "path": "navigator.getGamepads",
+        "description": "Gamepads API access point",
+        "condition": "typeof function"
+      }
+    ],
+    "content": [
+      {
+        "value": "getGamepads",
+        "scope": "scripts",
+        "description": "Gamepad detection in scripts",
+        "confidence": 90
+      },
+      {
+        "value": "gamepadconnected",
+        "scope": "scripts",
+        "description": "Gamepad connection event listeners",
+        "confidence": 85
+      },
+      {
+        "value": "Gamepad",
+        "scope": "scripts",
+        "description": "Gamepad interface usage",
+        "confidence": 80
+      }
+    ]
+  }
+}

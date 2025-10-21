@@ -82,7 +82,10 @@
 }
 
 .notification-close:hover {
-  color: #ffffff;
+  background: var(--danger);
+  border-color: var(--danger);
+  color: white;
+  transform: scale(1.05);
 }
 
 /* Progress Bar */
@@ -228,28 +231,28 @@
 .notification-confirm-buttons {
   display: flex;
   gap: 12px;
-  justify-content: center;
+  justify-content: stretch;
 }
 
 .notification-btn {
-  padding: 10px 20px;
+  padding: 11px 24px;
   border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
-  min-width: 100px;
+  flex: 1;
 }
 
 .notification-btn-cancel {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(61, 61, 61, 1);
+  color: #ffffff;
+  border: 1px solid rgba(64, 64, 64, 1);
 }
 
 .notification-btn-cancel:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(45, 45, 45, 1);
   color: #ffffff;
 }
 
@@ -271,12 +274,16 @@
 }
 
 .notification-btn-danger {
-  background: #ef4444;
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.35);
 }
 
 .notification-btn-danger:hover {
-  background: #dc2626;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.32);
+  color: #fecaca;
+  border-color: rgba(239, 68, 68, 0.45);
+  transform: translateY(-1px);
 }
 
 .notification-confirm-warning .notification-confirm-icon {
@@ -285,11 +292,15 @@
 }
 
 .notification-btn-warning {
-  background: #f59e0b;
+  background: #F59E0B;
+  color: #ffffff;
+  border: none;
 }
 
 .notification-btn-warning:hover {
-  background: #d97706;
+  background: #D97706;
+  color: #ffffff;
+  transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
 }
 

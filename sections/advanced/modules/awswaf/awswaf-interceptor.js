@@ -548,40 +548,27 @@ function awsWafStartAnalysis(tabId, url) {
 
         console.log('[AwsWaf-Analysis] Final captured results:', finalResults);
 
-        // Save results to storage for popup to retrieve
+        // Prepare analysis data (message-only, no storage)
         const analysisData = {
-          tabId: tabId,
-          timestamp: Date.now(),
-          data: {
-            scripts: finalResults.allScripts,
-            scriptCount: finalResults.allScripts.length,
-            challengeScripts: finalResults.challengeScripts,
-            captchaScripts: finalResults.captchaScripts,
-            apiScripts: finalResults.apiScripts,
-            problemUrls: finalResults.problemUrls
-          }
+          scripts: finalResults.allScripts,
+          scriptCount: finalResults.allScripts.length,
+          challengeScripts: finalResults.challengeScripts,
+          captchaScripts: finalResults.captchaScripts,
+          apiScripts: finalResults.apiScripts,
+          problemUrls: finalResults.problemUrls
         };
 
-        console.log('[AwsWaf-Analysis] Saving final analysis data:', analysisData);
+        console.log('[AwsWaf-Analysis] Prepared analysis data:', analysisData);
 
-        await chrome.storage.local.set({
-          'scrapfly_awswaf_analysis_pending': analysisData
-        });
-        console.log('[AwsWaf-Analysis] ✓ Results saved to storage successfully');
-
-        // Verify the save
-        const verification = await chrome.storage.local.get('scrapfly_awswaf_analysis_pending');
-        console.log('[AwsWaf-Analysis] Verification - data in storage:', verification);
-
-        // Also try to send message in case popup is still open
+        // Send message to popup if it's open (no storage fallback)
         try {
           await chrome.runtime.sendMessage({
             type: 'AWSWAF_ANALYSIS_RESULT',
-            data: analysisData.data
+            data: analysisData
           });
-          console.log('[AwsWaf-Analysis] Result sent to popup');
+          console.log('[AwsWaf-Analysis] ✓ Results sent to popup');
         } catch (error) {
-          console.log('[AwsWaf-Analysis] Popup not available (expected during reload)');
+          console.log('[AwsWaf-Analysis] Popup not available - results discarded (user can re-run analysis)');
         }
 
         // Remove listener after final save

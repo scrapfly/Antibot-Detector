@@ -1,0 +1,66 @@
+{
+  "id": "storage-fingerprint",
+  "name": "Web Storage Fingerprint",
+  "category": "Fingerprint",
+  "color": "#14b8a6",
+  "confidence": 86,
+  "lastUpdated": "2025-01-21",
+  "version": "1.0.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API",
+  "icon": "custom.png",
+  "description": "Web Storage API (localStorage/sessionStorage) detection for persistent fingerprinting",
+  "detection": {
+    "js_hooks": [
+      {
+        "target": "Storage.prototype.setItem",
+        "description": "Stores data in localStorage/sessionStorage",
+        "enabled": true,
+        "confidence": 95
+      },
+      {
+        "target": "Storage.prototype.getItem",
+        "description": "Retrieves stored data",
+        "enabled": true,
+        "confidence": 90
+      },
+      {
+        "target": "Storage.prototype.clear",
+        "description": "Clears all stored data",
+        "enabled": true,
+        "confidence": 85
+      }
+    ],
+    "window_properties": [
+      {
+        "path": "localStorage",
+        "description": "Persistent local storage",
+        "condition": "typeof object"
+      },
+      {
+        "path": "sessionStorage",
+        "description": "Session storage",
+        "condition": "typeof object"
+      }
+    ],
+    "content": [
+      {
+        "value": "localStorage.setItem",
+        "scope": "scripts",
+        "description": "Local storage usage for fingerprinting",
+        "confidence": 90
+      },
+      {
+        "value": "sessionStorage",
+        "scope": "scripts",
+        "description": "Session storage access",
+        "confidence": 85
+      },
+      {
+        "value": "Storage.prototype",
+        "scope": "scripts",
+        "description": "Storage API usage",
+        "confidence": 80
+      }
+    ]
+  }
+}

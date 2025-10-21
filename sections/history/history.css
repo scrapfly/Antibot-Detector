@@ -1,97 +1,184 @@
 /* History Section Specific Styles */
 
-/* History Header */
-.history-header {
+/* Ensure History tab fills parent and uses consistent height */
+#historyTab {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
+  flex-direction: column;
+  height: 100%;
 }
 
-.history-header .header-actions {
+/* Override tab padding to maintain 580px height */
+#historyTab.tab-content {
+  padding-top: 0;
+}
+
+/* History Header */
+.history-header {
+  flex-shrink: 0;
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.history-header .action-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
   width: 100%;
+  margin: 6px 0 0;
 }
 
 .history-header .search-container {
-  flex: 1;
-  margin: 0;
+  position: relative;
+  width: 100%;
 }
 
-.export-btn,
-.import-btn {
-  display: flex;
+.history-header .search-input {
+  width: 100%;
+  padding: 14px;
+  font-size: 13px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all 0.2s;
+}
+
+.history-header .search-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.history-header .action-buttons button {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 12px;
-  background: var(--accent);
-  border: none;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
+  height: 32px;
+  border-radius: 6px;
   font-size: 11px;
-  font-weight: 500;
-  transition: all 0.2s;
-  white-space: nowrap;
-  height: 30px;
-  min-width: 60px;
-  box-sizing: border-box;
-}
-
-.export-btn:hover,
-.import-btn:hover {
-  background: #2563eb;
-}
-
-.clear-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 12px;
-  background: var(--danger);
-  border: none;
-  border-radius: 4px;
-  color: white;
+  font-weight: 600;
+  border: 1px solid var(--border);
   cursor: pointer;
-  font-size: 11px;
-  font-weight: 500;
-  transition: all 0.2s;
-  white-space: nowrap;
-  height: 30px;
-  min-width: 60px;
-  box-sizing: border-box;
-}
-
-.clear-btn:hover {
-  background: #dc2626;
+  transition: all 0.2s ease;
+  padding: 0 12px;
 }
 
 /* History List */
 .history-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  flex: 1;
+  gap: 12px;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  min-height: 0;
+  padding-bottom: 4px;
 }
 
 /* Pagination */
 .pagination {
-  margin-top: auto;
-  margin-bottom: 16px;
-}
-
-.history-item {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 12px;
+  margin-top: 6px;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+#historyTab .pagination {
+  margin-top: 2px;
+  padding: 5px 8px;
+}
+.pagination-info {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.page-input {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.page-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--bg-primary);
+}
+
+.total-pages {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.pagination-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.history-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 12px 20px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.history-item:last-child {
+  margin-bottom: 0;
 }
 
 /* Hover effect removed to avoid blue background
@@ -120,17 +207,18 @@
   align-items: center;
   gap: 6px;
   flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .history-item-action-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  width: 26px;
+  height: 26px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 7px;
   color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s;
@@ -140,7 +228,7 @@
 .history-item-action-btn:hover {
   background: var(--accent);
   border-color: var(--accent);
-  color: white;
+  color: #ffffff;
   transform: scale(1.05);
 }
 
@@ -153,11 +241,21 @@
   border-color: var(--danger);
 }
 
+.history-timestamp {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  font-size: 11px;
+  color: var(--accent);
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
 .history-header-info {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
+  gap: 5px;
+  margin-bottom: 2px;
 }
 
 .history-favicon {
@@ -168,7 +266,7 @@
 }
 
 .history-url {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   flex: 1;
   overflow: hidden;
@@ -177,10 +275,10 @@
 }
 
 .history-title {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 8px;
+  margin-bottom: 3px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -188,31 +286,54 @@
 
 .history-detections {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 4px;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
-.history-timestamp {
+.history-detection-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  padding: 4px 10px;
+  border-radius: 999px;
   font-size: 11px;
-  color: var(--text-secondary);
-  flex-shrink: 0;
-  opacity: 0.8;
+  font-weight: 700;
+  border: 1px solid transparent;
+  letter-spacing: 0.35px;
+  cursor: default;
   white-space: nowrap;
 }
 
 .history-detection-tag {
-  padding: 2px 6px;
-  border-radius: 12px;
-  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 9px;
   font-weight: 600;
-  border: 1px solid;
+  border: 1px solid transparent;
+  max-width: none;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: none;
+  outline: none;
 }
 
-.history-detection-tag.more-detections {
-  background: var(--accent);
-  color: white;
-  border-color: var(--accent);
+.history-detection-extra {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--text-primary);
+}
+
+.history-detection-placeholder {
+  background: var(--bg-tertiary);
+  border-color: var(--border);
+  color: var(--text-secondary);
 }
 
 /* History Detail Modal */
@@ -318,8 +439,10 @@
 }
 
 .history-modal-close:hover {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
+  background: var(--danger);
+  border-color: var(--danger);
+  color: white;
+  transform: scale(1.05);
 }
 
 .history-modal-meta {
@@ -421,12 +544,12 @@
 }
 
 .history-modal-detection-card.has-methods .history-modal-detection-header:hover {
-  background: rgba(33, 150, 243, 0.08);
+  background: none;
 }
 
 .history-modal-detection-card.has-methods:hover {
-  border-color: rgba(33, 150, 243, 0.3);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: rgba(59, 130, 246, 0.35);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 }
 
 .history-modal-detection-header {
@@ -520,6 +643,7 @@
   border: 1px solid var(--border);
   border-radius: 6px;
   transition: all 0.15s;
+  cursor: pointer;
 }
 
 .history-modal-method-item:hover {
@@ -547,6 +671,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.4;
+}
+
+.history-modal-method-item.copy-feedback {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.45);
+}
+
+.history-modal-method-item.copy-feedback .history-modal-method-value {
+  color: #34d399;
 }
 
 .history-modal-method-confidence {

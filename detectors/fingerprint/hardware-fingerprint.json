@@ -1,0 +1,65 @@
+{
+  "id": "hardware-fingerprint",
+  "name": "Hardware Fingerprint",
+  "category": "Fingerprint",
+  "color": "#ec4899",
+  "confidence": 93,
+  "lastUpdated": "2025-01-21",
+  "version": "1.0.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/API/navigator/hardwareConcurrency",
+  "icon": "custom.png",
+  "description": "Hardware capabilities detection including CPU cores, memory, and device specifications",
+  "detection": {
+    "js_hooks": [
+      {
+        "target": "Navigator.prototype.hardwareConcurrency",
+        "description": "Gets number of CPU cores",
+        "enabled": true,
+        "confidence": 95
+      },
+      {
+        "target": "Navigator.prototype.deviceMemory",
+        "description": "Gets device memory in GB",
+        "enabled": true,
+        "confidence": 95
+      }
+    ],
+    "window_properties": [
+      {
+        "path": "navigator.hardwareConcurrency",
+        "description": "CPU core count",
+        "condition": "> 0"
+      },
+      {
+        "path": "navigator.deviceMemory",
+        "description": "Device RAM in gigabytes",
+        "condition": "> 0"
+      },
+      {
+        "path": "navigator.maxTouchPoints",
+        "description": "Maximum touch points supported",
+        "condition": ">= 0"
+      }
+    ],
+    "content": [
+      {
+        "value": "hardwareConcurrency",
+        "scope": "scripts",
+        "description": "CPU detection for device fingerprinting",
+        "confidence": 90
+      },
+      {
+        "value": "deviceMemory",
+        "scope": "scripts",
+        "description": "Memory detection in scripts",
+        "confidence": 90
+      },
+      {
+        "value": "maxTouchPoints",
+        "scope": "scripts",
+        "description": "Touch capabilities detection",
+        "confidence": 85
+      }
+    ]
+  }
+}

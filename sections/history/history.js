@@ -5,6 +5,7 @@ class History {
     this.searchQuery = '';
     this.initialized = false;
     this.paginationManager = null;
+    this.historyLimit = 0; // 0 = unlimited (matches settings default)
   }
 
   /**
@@ -17,6 +18,8 @@ class History {
     if (!this.initialized) {
       await this.initialize();
     }
+
+    await this.refreshHistoryLimit();
 
     try {
       await this.loadHistoryFromStorage();
@@ -37,6 +40,9 @@ class History {
       if (result.scrapfly_history) {
         const historyData = JSON.parse(result.scrapfly_history);
         this.historyItems = historyData.items || [];
+        if (this.historyLimit > 0 && this.historyItems.length > this.historyLimit) {
+          this.historyItems = this.historyItems.slice(0, this.historyLimit);
+        }
         console.log('Loaded history items:', this.historyItems.length);
       } else {
         this.historyItems = [];
@@ -88,9 +94,9 @@ class History {
     // Add to beginning of array (newest first)
     this.historyItems.unshift(historyItem);
 
-    // Keep only last 100 items to prevent storage bloat
-    if (this.historyItems.length > 100) {
-      this.historyItems = this.historyItems.slice(0, 100);
+    // Apply configured history limit (0 = unlimited)
+    if (this.historyLimit > 0 && this.historyItems.length > this.historyLimit) {
+      this.historyItems = this.historyItems.slice(0, this.historyLimit);
     }
 
     await this.saveHistoryToStorage();
@@ -236,12 +242,13 @@ class History {
     });
 
     if (detections.length > maxTags) {
-      // Get remaining detection names for tooltip
-      const remainingNames = detections.slice(maxTags).map(d =>
-        d.detector?.name || d.detector || 'Unknown'
-      ).join(', ');
+      const hiddenDetections = detections.slice(maxTags);
+      const hiddenSummary = hiddenDetections
+        .map(d => d.detector?.name || d.detector || 'Unknown')
+        .join(', ');
+      const tooltipAttr = hiddenSummary ? ` title="${hiddenSummary}"` : '';
 
-      tagsHtml += `<span class="history-detection-tag more-detections" title="${remainingNames}">+${detections.length - maxTags} more</span>`;
+      tagsHtml += `<span class="history-detection-tag more-detections"${tooltipAttr}>+${hiddenDetections.length}</span>`;
     }
 
     return tagsHtml;
@@ -398,6 +405,9 @@ class History {
 
     // Setup copy and export handlers
     this.setupModalActionHandlers(historyItem);
+
+    // Setup copy handlers for individual method items
+    this.setupMethodCopyHandlers();
   }
 
   /**
@@ -649,8 +659,14 @@ class History {
       if (confidence >= 90) confidenceClass = 'confidence-high';
       else if (confidence >= 70) confidenceClass = 'confidence-medium';
 
+      const copyPayload = JSON.stringify({
+        rawValue: displayValue,
+        methodType,
+        confidence
+      });
+
       return `
-        <div class="history-modal-method-item">
+        <div class="history-modal-method-item" data-copy-payload="${encodeURIComponent(copyPayload)}" title="Click to copy">
           <span class="history-modal-method-badge" style="background: ${tagColor}; color: white;">${methodType}</span>
           <span class="history-modal-method-value">${displayValue}</span>
           <span class="history-modal-method-confidence ${confidenceClass}">${confidence}%</span>
@@ -694,6 +710,54 @@ class History {
         const card = header.closest('.history-modal-detection-card');
         card.classList.toggle('expanded');
       });
+    });
+  }
+
+  /**
+   * Setup per-method copy handlers inside modal
+   */
+  setupMethodCopyHandlers() {
+    const methodItems = document.querySelectorAll('.history-modal-method-item[data-copy-payload]');
+    if (!methodItems.length) {
+      return;
+    }
+
+    methodItems.forEach((item) => {
+      const payloadEncoded = item.getAttribute('data-copy-payload');
+      if (!payloadEncoded) {
+        return;
+      }
+
+      let payload = null;
+      try {
+        payload = JSON.parse(decodeURIComponent(payloadEncoded));
+      } catch (error) {
+        console.warn('History: Failed to parse method copy payload', error);
+      }
+
+      const handleCopy = (event) => {
+        event.stopPropagation();
+        const value = payload?.rawValue || '';
+        if (!value) {
+          return;
+        }
+
+        const textToCopy = `[${payload.methodType || 'METHOD'}] ${value}`;
+        Utils.copyToClipboard(textToCopy, {
+          element: item,
+          notificationMessage: 'Method value copied',
+          inlineMessage: '✓ Copied!'
+        });
+
+        item.classList.add('copy-feedback');
+        setTimeout(() => item.classList.remove('copy-feedback'), 800);
+      };
+
+      item.addEventListener('click', handleCopy);
+      const valueNode = item.querySelector('.history-modal-method-value');
+      if (valueNode) {
+        valueNode.addEventListener('click', handleCopy);
+      }
     });
   }
 
@@ -792,15 +856,16 @@ class History {
         // Sort by timestamp (newest first)
         this.historyItems.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-        // Keep only last 100 items
-        if (this.historyItems.length > 100) {
-          this.historyItems = this.historyItems.slice(0, 100);
+        if (this.historyLimit > 0 && this.historyItems.length > this.historyLimit) {
+          this.historyItems = this.historyItems.slice(0, this.historyLimit);
         }
 
         NotificationHelper.success(`Merged ${newItems.length} new history items`);
       } else {
         // Replace existing history
-        this.historyItems = data.items.slice(0, 100); // Keep max 100 items
+        this.historyItems = this.historyLimit > 0
+          ? data.items.slice(0, this.historyLimit)
+          : data.items;
         NotificationHelper.success(`Replaced history with ${this.historyItems.length} items`);
       }
 
@@ -819,11 +884,49 @@ class History {
    */
   async initialize() {
     if (!this.initialized) {
+      try {
+        await this.refreshHistoryLimit();
+      } catch (error) {
+        console.error('History: Failed to read history limit from settings, defaulting to 0 (unlimited)', error);
+        this.historyLimit = 0; // 0 = unlimited
+      }
+
       await this.loadHTML();
       this.setupPagination();
       this.setupEventListeners();
+      this.registerSettingsListener();
       this.initialized = true;
     }
+  }
+
+  async refreshHistoryLimit() {
+    try {
+      const settings = await Utils.getHistorySettings();
+      const parsedLimit = parseInt(settings.historyLimit, 10);
+      const newLimit = Number.isFinite(parsedLimit) && parsedLimit >= 0 ? parsedLimit : 0; // 0 = unlimited
+
+      if (newLimit !== this.historyLimit) {
+        console.log(`History: Updating history limit from ${this.historyLimit} to ${newLimit}`);
+        this.historyLimit = newLimit;
+      }
+    } catch (error) {
+      console.error('History: Failed to refresh history limit, keeping current value', error);
+    }
+  }
+
+  registerSettingsListener() {
+    chrome.runtime.onMessage.addListener((message) => {
+      if (!message || message.type !== 'SETTINGS_UPDATED') {
+        return;
+      }
+
+      this.refreshHistoryLimit()
+        .then(() => this.loadHistoryFromStorage())
+        .then(() => this.renderHistory())
+        .catch(error => {
+          console.error('History: Failed to refresh after settings update', error);
+        });
+    });
   }
 
   /**
@@ -986,9 +1089,13 @@ class History {
         history.unshift(historyEntry);
       });
 
-      // Limit history to 100 items
-      if (history.length > 100) {
-        history = history.slice(0, 100);
+      const settings = await Utils.getHistorySettings();
+      const historyLimit = Number.isFinite(parseInt(settings.historyLimit, 10))
+        ? parseInt(settings.historyLimit, 10)
+        : 0; // 0 = unlimited
+
+      if (historyLimit > 0 && history.length > historyLimit) {
+        history = history.slice(0, historyLimit);
       }
 
       // Save back to storage
@@ -1007,6 +1114,122 @@ class History {
       console.error('History: Error saving capture to history:', error);
       console.error('History: Error stack:', error.stack);
       return false;
+    }
+  }
+
+  /**
+   * Check if detection should be saved to history based on duplicate prevention settings
+   * @param {string} url - URL to check
+   * @param {Object} settings - History settings from Utils.getHistorySettings()
+   * @param {Object} chrome - Chrome API object
+   * @returns {Promise<boolean>} True if should save, false if duplicate
+   */
+  static async shouldSaveToHistory(url, settings, chrome) {
+    try {
+      // If duplicate prevention is disabled, always save
+      if (!settings.preventDuplicates) {
+        return true;
+      }
+
+      // Get existing history
+      const result = await chrome.storage.local.get(['scrapfly_history']);
+      let history = [];
+
+      if (result.scrapfly_history) {
+        if (typeof result.scrapfly_history === 'string') {
+          try {
+            const parsed = JSON.parse(result.scrapfly_history);
+            history = parsed.items || [];
+          } catch (parseError) {
+            console.error('History: Error parsing history JSON for duplicate check:', parseError);
+            return true; // On error, allow save
+          }
+        } else if (Array.isArray(result.scrapfly_history)) {
+          history = result.scrapfly_history;
+        } else if (result.scrapfly_history.items) {
+          history = result.scrapfly_history.items || [];
+        }
+      }
+
+      if (!Array.isArray(history) || history.length === 0) {
+        return true; // No history, always save
+      }
+
+      // Parse duplicate duration
+      const durationMs = Utils.convertToMilliseconds(
+        settings.duplicateDuration || 1,
+        settings.duplicateUnit || 'hours'
+      );
+
+      const now = Date.now();
+      const cutoffTime = now - durationMs;
+
+      // Normalize URL based on scope
+      let normalizedUrl = url;
+      try {
+        const urlObj = new URL(url);
+        switch (settings.duplicateScope) {
+          case 'domain':
+            // Domain only: https://example.com
+            normalizedUrl = urlObj.hostname;
+            break;
+          case 'path':
+            // Domain + path: https://example.com/path
+            normalizedUrl = urlObj.origin + urlObj.pathname;
+            break;
+          case 'full_url':
+          default:
+            // Full URL with query params: https://example.com/path?foo=bar
+            normalizedUrl = url;
+        }
+      } catch (error) {
+        console.warn('History: Failed to parse URL for duplicate check:', error);
+        return true; // On error, allow save
+      }
+
+      // Check for duplicates within time window
+      const isDuplicate = history.some(item => {
+        // Check if entry is within time window
+        const itemTimestamp = typeof item.timestamp === 'string'
+          ? new Date(item.timestamp).getTime()
+          : item.timestamp;
+
+        if (itemTimestamp < cutoffTime) {
+          return false; // Too old, not a duplicate
+        }
+
+        // Normalize historical URL based on scope
+        let itemNormalizedUrl = item.url;
+        try {
+          const itemUrlObj = new URL(item.url);
+          switch (settings.duplicateScope) {
+            case 'domain':
+              itemNormalizedUrl = itemUrlObj.hostname;
+              break;
+            case 'path':
+              itemNormalizedUrl = itemUrlObj.origin + itemUrlObj.pathname;
+              break;
+            case 'full_url':
+            default:
+              itemNormalizedUrl = item.url;
+          }
+        } catch (error) {
+          // If URL parsing fails, fall back to exact match
+          itemNormalizedUrl = item.url;
+        }
+
+        return itemNormalizedUrl === normalizedUrl;
+      });
+
+      if (isDuplicate) {
+        console.log(`History: Skipping duplicate URL within ${settings.duplicateDuration} ${settings.duplicateUnit} (scope: ${settings.duplicateScope}): ${normalizedUrl}`);
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('History: Error checking for duplicates:', error);
+      return true; // On error, allow save
     }
   }
 
@@ -1054,6 +1277,18 @@ class History {
         history = [];
       }
 
+      const settings = await Utils.getHistorySettings();
+      const historyLimit = Number.isFinite(parseInt(settings.historyLimit, 10))
+        ? parseInt(settings.historyLimit, 10)
+        : 0; // 0 = unlimited
+      const historyBehavior = settings.historyBehavior || 'rolling';
+
+      // Check if we should stop at limit
+      if (historyBehavior === 'stop_at_limit' && historyLimit > 0 && history.length >= historyLimit) {
+        console.log(`History: Limit reached (${historyLimit}), not saving new detection (behavior: stop_at_limit)`);
+        return false;
+      }
+
       // Create history entry
       const historyEntry = {
         id: `detection_${Date.now()}_${tabId}`,
@@ -1070,9 +1305,9 @@ class History {
       // Add to history (newest first)
       history.unshift(historyEntry);
 
-      // Limit history to 100 items
-      if (history.length > 100) {
-        history = history.slice(0, 100);
+      // Apply rolling window limit (remove oldest items)
+      if (historyLimit > 0 && history.length > historyLimit) {
+        history = history.slice(0, historyLimit);
       }
 
       // Save back to storage in the format History.js expects

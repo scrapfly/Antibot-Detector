@@ -1,9 +1,12 @@
 <!-- Detection Tab Template -->
   <div id="loadingState" class="loading-state" style="display: flex;">
-    <div class="spinner"></div>
-    <div class="loading-text">
-      <span class="loading-main">Analyzing page...</span>
-      <span class="loading-sub">Collecting fingerprinting & anti-bot detection data</span>
+    <div class="loading-content">
+      <div class="loading-spinner">
+        <svg class="spinner-svg" viewBox="0 0 50 50">
+          <circle class="spinner-circle" cx="25" cy="25" r="20"></circle>
+        </svg>
+      </div>
+      <h2 class="loading-text">Analyzing Page</h2>
     </div>
   </div>
 
@@ -23,12 +26,19 @@
     <p class="blacklist-hint">Or go to Settings → Detection → Blacklisted Domains to manage.</p>
   </div>
 
-  <div id="emptyState" class="empty-state" style="display: none;">
-    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" opacity="0.5">
-      <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" fill="none"/>
-    </svg>
-    <h3>No security systems detected</h3>
-    <p>This page appears to be free of bot protection systems.</p>
+  <div id="emptyState" class="empty-state empty-state--centered detection-empty-state" style="display: none;">
+    <div class="empty-state-card empty-state-card--text-only">
+      <div class="empty-state-icon-badge">
+        <img src="icons/icon48.png" alt="Scrapfly" class="empty-state-logo-icon">
+      </div>
+      <h3 class="empty-state-title">Nothing Detected</h3>
+      <p class="empty-state-subtext">This page is clean / cache was cleared or requires reload.</p>
+      <div class="empty-state-footer">
+        <span class="empty-state-badge-item">✓ No CAPTCHAs</span>
+        <span class="empty-state-badge-item">✓ No Anti-Bot</span>
+        <span class="empty-state-badge-item">✓ No Fingerprinting</span>
+      </div>
+    </div>
   </div>
 
   <div id="detectionResults" class="detection-results" style="display: none;">
@@ -67,24 +77,34 @@
 
       <div class="cache-expiry-line">
         <div class="stat-inline cache-scope-stat" title="Cache Scope">
-          <div class="stat-icon-inline">🔍</div>
+          <div class="stat-icon-inline">🌐</div>
           <div class="stat-content-inline">
             <div class="stat-label-inline">CACHE SCOPE</div>
-            <div class="stat-value-inline" id="cacheScope">Domain</div>
+            <div class="stat-value-inline" id="cacheScopeDisplay">Domain</div>
           </div>
         </div>
         <div class="stat-inline cache-expiry-stat" title="Cache Expiration">
-          <div class="stat-icon-inline">⏱️</div>
+          <div class="stat-icon-inline">⏰</div>
           <div class="stat-content-inline">
             <div class="stat-label-inline">CACHE EXPIRATION</div>
             <div class="stat-value-inline" id="cacheExpiry">-</div>
           </div>
         </div>
-        <button id="clearCacheBtn" class="clear-cache-btn-inline" title="Clear cached detection">
+      </div>
+
+      <div class="action-buttons-row">
+        <button id="clearCacheBtn" class="detection-action-btn">
           <svg width="14" height="14" viewBox="0 0 24 24">
             <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
           </svg>
-          Clear Cache
+          <span>Clear Cache</span>
+        </button>
+        <button id="addToBlacklistBtn" class="detection-action-btn" title="Add this domain to blacklist">
+          <svg width="14" height="14" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+            <line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          Blacklist
         </button>
       </div>
     </div>
@@ -113,30 +133,83 @@
     </div>
   </div>
 
-  <div id="disabledState" class="disabled-state" style="display: none;">
-    <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="10" stroke="#f59e0b" stroke-width="2" fill="none"/>
-      <path d="M12 8v4M12 16h.01" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
-      <line x1="4" y1="4" x2="20" y2="20" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
-    </svg>
-    <h3 style="color: #f59e0b;">Detection Disabled</h3>
-    <p>Security detection is currently turned off.</p>
-    <p style="margin-top: 8px; color: var(--text-secondary); font-size: 0.9em;">Toggle the switch at the top to enable detection.</p>
+  <div id="disabledState" class="empty-state empty-state--centered" style="display: none;">
+    <div class="disabled-card">
+      <div class="disabled-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="#f59e0b" stroke-width="2" fill="none"/>
+          <path d="M12 8v4M12 16h.01" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+          <line x1="4" y1="4" x2="20" y2="20" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3 class="disabled-title">Detection Disabled</h3>
+      <p class="disabled-description">Security detection is currently turned off.</p>
+      <p class="disabled-action">Toggle the switch at the top to enable detection.</p>
+    </div>
   </div>
 
-  <div id="interruptedState" class="interrupted-state" style="display: none;">
-    <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="10" stroke="#ef4444" stroke-width="2" fill="none"/>
-      <line x1="8" y1="8" x2="16" y2="16" stroke="#ef4444" stroke-width="2"/>
-      <line x1="16" y1="8" x2="8" y2="16" stroke="#ef4444" stroke-width="2"/>
-    </svg>
-    <h3 style="color: #ef4444;">Detection Interrupted</h3>
-    <p>Detection was incomplete because you switched tabs.</p>
-    <p style="margin-top: 8px; color: var(--text-secondary); font-size: 0.9em;">Please reload the page to run a fresh detection.</p>
-    <button id="reloadPageBtn" class="reload-page-btn">
-      <svg width="16" height="16" viewBox="0 0 24 24">
-        <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" fill="currentColor"/>
-      </svg>
-      Reload Page
-    </button>
+  <div id="interruptedState" class="empty-state empty-state--centered" style="display: none;">
+    <div class="interrupted-card">
+      <div class="interrupted-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="#ef4444" stroke-width="2" fill="none"/>
+          <line x1="8" y1="8" x2="16" y2="16" stroke="#ef4444" stroke-width="2"/>
+          <line x1="16" y1="8" x2="8" y2="16" stroke="#ef4444" stroke-width="2"/>
+        </svg>
+      </div>
+      <h3 class="interrupted-title">Detection Interrupted</h3>
+      <p class="interrupted-description">Detection was incomplete because you switched tabs.</p>
+      <p class="interrupted-action">Please reload the page to run a fresh detection.</p>
+    </div>
+  </div>
+
+  <!-- Detection Detail Modal -->
+  <div id="detectionDetailModal" class="detection-modal">
+    <div class="detection-modal-overlay"></div>
+    <div class="detection-modal-container">
+      <div class="detection-modal-header">
+        <div class="detection-modal-title-group">
+          <div class="detection-modal-icon" id="detectionModalIcon"></div>
+          <div class="detection-modal-title-info">
+            <h3 id="detectionModalName">Detection Name</h3>
+            <div id="detectionModalCategories" class="detection-modal-categories"></div>
+          </div>
+        </div>
+        <button id="closeDetectionModal" class="detection-modal-close" title="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+      <div class="detection-modal-content">
+        <div class="detection-modal-meta">
+          <div class="detection-modal-meta-item">
+            <span class="meta-label">Confidence</span>
+            <span id="detectionModalConfidence" class="meta-value">0%</span>
+          </div>
+          <div class="detection-modal-meta-item">
+            <span class="meta-label">Difficulty</span>
+            <span id="detectionModalDifficulty" class="meta-value">Low</span>
+          </div>
+          <div class="detection-modal-meta-item">
+            <span class="meta-label">Matches Found</span>
+            <span id="detectionModalDetections" class="meta-value">0</span>
+          </div>
+        </div>
+        <div class="detection-modal-section">
+          <div class="detection-modal-section-header">
+            <h4>Description</h4>
+          </div>
+          <p id="detectionModalDescription" class="detection-modal-description">No description available.</p>
+        </div>
+        <div class="detection-modal-section">
+          <div class="detection-modal-section-header">
+            <h4>Detection Methods</h4>
+          </div>
+          <div id="detectionModalMethods" class="detection-modal-methods-list">
+            <span class="badge">No methods detected</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>

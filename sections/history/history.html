@@ -1,32 +1,46 @@
 <!-- History Tab Template -->
   <div class="history-header">
-    <div class="header-actions">
-      <div class="search-container">
-        <input type="text" id="historySearch" class="search-input" placeholder="Search by URL, detector name or category...">
-      </div>
-      <button id="exportHistoryBtn" class="export-btn" title="Export history">
-        Export
-      </button>
-      <button id="importHistoryBtn" class="import-btn" title="Import history">
+    <div class="action-buttons">
+      <button id="importHistoryBtn" class="import-btn-small" title="Import history">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,11L16,15H13.5V18H10.5V15H8L12,11Z"/>
+        </svg>
         Import
       </button>
       <input type="file" id="importHistoryFile" accept=".json" style="display: none;">
-      <button id="clearHistoryBtn" class="clear-btn" title="Clear history">
+      <button id="exportHistoryBtn" class="export-btn-small" title="Export history">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z"/>
+        </svg>
+        Export
+      </button>
+      <button id="clearHistoryBtn" class="clear-btn-small" title="Clear history">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+        </svg>
         Clear
       </button>
+    </div>
+    <div class="search-container">
+      <input type="text" id="historySearch" class="search-input" placeholder="Search by URL, detector name or category...">
     </div>
   </div>
   <div id="historyList" class="history-list"></div>
 
   <div id="historyPagination" class="pagination">
-    <div class="pagination-info">Showing 1-10 of 0</div>
+    <div class="pagination-info">No items to display</div>
     <div class="pagination-controls">
       <button class="pagination-btn pagination-btn-prev" disabled>
         <svg width="16" height="16" viewBox="0 0 24 24">
           <path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/>
         </svg>
       </button>
-      <div class="page-numbers"></div>
+      <div class="page-info">
+        <span>Page</span>
+        <input type="text" class="page-input" value="1" />
+        <span>of</span>
+        <span class="total-pages">1</span>
+      </div>
       <button class="pagination-btn pagination-btn-next" disabled>
         <svg width="16" height="16" viewBox="0 0 24 24">
           <path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/>

@@ -18,12 +18,6 @@
         "confidence": 95
       },
       {
-        "target": "BatteryManager.prototype.level",
-        "description": "Reads battery level percentage",
-        "enabled": true,
-        "confidence": 90
-      },
-      {
         "target": "window.speechSynthesis",
         "description": "Enumerates available voice options",
         "enabled": true,

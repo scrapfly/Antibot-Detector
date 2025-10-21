@@ -61,22 +61,38 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
         return `
             <div class="recaptcha-tools-grid">
                 <button class="recaptcha-tool-btn" id="shapesecurityCheckVersion">
-                    <div class="tool-btn-icon">🔢</div>
+                    <div class="tool-icon-container tool-icon-purple">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M5.5,7A1.5,1.5 0 0,1 4,5.5A1.5,1.5 0 0,1 5.5,4A1.5,1.5 0 0,1 7,5.5A1.5,1.5 0 0,1 5.5,7M21.41,11.58L12.41,2.58C12.05,2.22 11.55,2 11,2H4C2.89,2 2,2.89 2,4V11C2,11.55 2.22,12.05 2.59,12.41L11.58,21.41C11.95,21.77 12.45,22 13,22C13.55,22 14.05,21.77 14.41,21.41L21.41,14.41C21.77,14.05 22,13.55 22,13C22,12.45 21.77,11.95 21.41,11.58Z"/>
+                        </svg>
+                    </div>
                     <div class="tool-btn-label">Check Version</div>
                 </button>
 
                 <button class="recaptcha-tool-btn" id="shapesecurityCheckCookies">
-                    <div class="tool-btn-icon">🍪</div>
+                    <div class="tool-icon-container tool-icon-green">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A9,9 0 0,0 21,12A9,9 0 0,0 12,3M9,8A1.5,1.5 0 0,1 10.5,9.5A1.5,1.5 0 0,1 9,11A1.5,1.5 0 0,1 7.5,9.5A1.5,1.5 0 0,1 9,8M16.5,9.5A1.5,1.5 0 0,1 15,11A1.5,1.5 0 0,1 13.5,9.5A1.5,1.5 0 0,1 15,8A1.5,1.5 0 0,1 16.5,9.5M9,15A1.5,1.5 0 0,1 10.5,16.5A1.5,1.5 0 0,1 9,18A1.5,1.5 0 0,1 7.5,16.5A1.5,1.5 0 0,1 9,15M15,14A1.5,1.5 0 0,1 16.5,15.5A1.5,1.5 0 0,1 15,17A1.5,1.5 0 0,1 13.5,15.5A1.5,1.5 0 0,1 15,14Z"/>
+                        </svg>
+                    </div>
                     <div class="tool-btn-label">Check Cookies</div>
                 </button>
 
                 <button class="recaptcha-tool-btn" id="shapesecurityStartCapture">
-                    <div class="tool-btn-icon">🎬</div>
+                    <div class="tool-icon-container tool-icon-red">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/>
+                        </svg>
+                    </div>
                     <div class="tool-btn-label">Start Capturing</div>
                 </button>
 
                 <button class="recaptcha-tool-btn" id="shapesecurityAnalyzeScripts">
-                    <div class="tool-btn-icon">🔍</div>
+                    <div class="tool-icon-container tool-icon-blue">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                            <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+                        </svg>
+                    </div>
                     <div class="tool-btn-label">Analyze Scripts</div>
                 </button>
             </div>
@@ -165,33 +181,25 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
     }
 
     /**
-     * Override toggleCaptureDetails for Shape Security specific detail view
+     * Override renderCaptureDetailsContent to show Shape Security specific fields in modal
+     * @param {object} capture - Capture data object
+     * @returns {string} HTML for modal body content
      */
-    async toggleCaptureDetails(captureId) {
-        const captureCard = document.querySelector(`.capture-card[data-capture-id="${captureId}"]`);
-        if (!captureCard) return;
-
-        const existingDetails = captureCard.querySelector('.history-item-details');
-        if (existingDetails) {
-            existingDetails.remove();
-            captureCard.classList.remove('expanded');
-            return;
+    renderCaptureDetailsContent(capture) {
+        if (!capture || !capture.captureData) {
+            return '<div class="advanced-modal-section"><span class="advanced-modal-error">No capture data available</span></div>';
         }
 
-        const history = await this.loadCaptureHistory();
-        const capture = history.find(item => (item.id || item.timestamp) == captureId);
-        if (!capture) return;
-
-        const captureData = capture.captureData || {};
-        const headers = captureData.headers || [];
-        const cookie = captureData.cookie || null;
-        const version = captureData.version || 'v2'; // Get version, default to v2
+        const data = capture.captureData;
+        const headers = data.headers || [];
+        const cookie = data.cookie || null;
+        const version = data.version || 'v2';
+        const timestamp = new Date(capture.timestamp).toLocaleString();
 
         // Extract unique header patterns (extract middle 8 characters)
         // e.g., "X-DQ7Hy5L1-z" -> "DQ7Hy5L1"
         const headerPatterns = [...new Set(headers.map(h => {
             const name = h.name;
-            // If it matches Shape Security pattern (X-[8chars]-[letter]), extract 8 chars
             const match = name.match(/^X-([A-Za-z0-9]{8})-[a-z]$/i);
             if (match) {
                 return match[1]; // Return the 8 character pattern
@@ -199,87 +207,35 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             return name;
         }))];
 
-        let detailsHtml = `
-            <div class="history-item-details">
-                <div style="margin-bottom: 12px;">
-                    <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">🔢 Shape Security Version</div>
-                    <div class="copy-value" data-copy="${version.toUpperCase()}" style="font-family: monospace; font-size: 12px; color: var(--text-primary); cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s; display: inline-block;" title="Click to copy">${version.toUpperCase()}</div>
-                </div>
-                ${headerPatterns.length > 0 ? `
-                    <div style="margin-bottom: 12px;">
-                        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">📡 Header Pattern${headerPatterns.length > 1 ? 's' : ''}</div>
-                        ${headerPatterns.map(pattern => `
-                            <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(pattern)}" style="font-family: monospace; font-size: 12px; color: var(--text-primary); margin-bottom: 6px; cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s; display: inline-block;" title="Click to copy">
-                                ${AdvancedUtils.escapeHtml(pattern)}
-                            </div>
-                        `).join('')}
-                    </div>
-                ` : ''}
-                ${cookie ? `
-                    <div style="margin-bottom: 12px;">
-                        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">🍪 Shape Cookie</div>
-                        <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(cookie.name)}" style="font-family: monospace; font-size: 12px; color: var(--text-primary); cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s; display: inline-block;" title="Click to copy">${AdvancedUtils.escapeHtml(cookie.name)}</div>
-                    </div>
-                ` : ''}
-                <div class="details-actions">
-                    <button class="detail-action-btn copy-all-btn" data-capture-id="${captureId}">
-                        📄 Copy All Data
-                    </button>
+        return `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Shape Security Version</label>
+                <div class="advanced-modal-code-block" data-copy="${version.toUpperCase()}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${version.toUpperCase()}', this, {notificationMessage: 'Value copied'});">${version.toUpperCase()}</div>
+            </div>
+
+            ${headerPatterns.length > 0 ? `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Header Pattern${headerPatterns.length > 1 ? 's' : ''}</label>
+                ${headerPatterns.map(pattern => `
+                    <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(pattern)}" style="cursor: pointer; margin-bottom: 8px;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(pattern)}', this, {notificationMessage: 'Value copied'});">${AdvancedUtils.escapeHtml(pattern)}</div>
+                `).join('')}
+            </div>
+            ` : ''}
+
+            ${cookie ? `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Shape Cookie</label>
+                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(cookie.name)}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(cookie.name)}', this, {notificationMessage: 'Value copied'});">${AdvancedUtils.escapeHtml(cookie.name)}</div>
+            </div>
+            ` : ''}
+
+            <div class="advanced-modal-section">
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">Captured</span>
+                    <span class="advanced-modal-info-value">${timestamp}</span>
                 </div>
             </div>
         `;
-
-        captureCard.insertAdjacentHTML('beforeend', detailsHtml);
-        captureCard.classList.add('expanded');
-
-        // Add click-to-copy functionality
-        captureCard.querySelectorAll('.copy-value').forEach(element => {
-            element.addEventListener('mouseenter', () => {
-                element.style.background = 'rgba(255, 255, 255, 0.1)';
-            });
-
-            element.addEventListener('mouseleave', () => {
-                element.style.background = '';
-            });
-
-            element.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                const textToCopy = element.getAttribute('data-copy');
-                const originalText = element.textContent.trim();
-
-                try {
-                    await navigator.clipboard.writeText(textToCopy);
-                    element.textContent = '✓ Copied!';
-                    element.style.background = 'var(--success)';
-                    element.style.color = 'white';
-
-                    setTimeout(() => {
-                        element.textContent = originalText;
-                        element.style.background = '';
-                        element.style.color = '';
-                    }, 1500);
-                } catch (error) {
-                    console.error('[ShapeSecurity] Copy failed:', error);
-                }
-            });
-        });
-
-        // Setup copy all button
-        const copyAllBtn = captureCard.querySelector('.copy-all-btn');
-        if (copyAllBtn) {
-            copyAllBtn.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                try {
-                    await navigator.clipboard.writeText(JSON.stringify(captureData, null, 2));
-                    copyAllBtn.textContent = '✅ Copied!';
-                    setTimeout(() => {
-                        copyAllBtn.textContent = '📄 Copy All Data';
-                    }, 2000);
-                } catch (error) {
-                    console.error('Failed to copy:', error);
-                }
-            });
-        }
     }
 
     // ========================================================================
@@ -440,26 +396,15 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                 element.style.background = '';
             });
 
-            element.addEventListener('click', async (e) => {
+            element.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const textToCopy = element.getAttribute('data-copy');
-                const originalText = element.textContent.trim();
-
-                try {
-                    await navigator.clipboard.writeText(textToCopy);
-                    element.textContent = '✓ Copied!';
-                    element.style.background = 'var(--success)';
-                    element.style.color = 'white';
-
-                    setTimeout(() => {
-                        element.textContent = originalText;
-                        element.style.background = '';
-                        element.style.color = '';
-                    }, 1500);
-                } catch (error) {
-                    console.error('[ShapeSecurity] Copy failed:', error);
-                    NotificationHelper.error('Failed to copy to clipboard');
+                if (!textToCopy) {
+                    return;
                 }
+                AdvancedUtils.copyToClipboard(textToCopy, element, {
+                    notificationMessage: 'Value copied'
+                });
             });
         });
 
@@ -684,24 +629,15 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             });
 
             // Click to copy
-            element.addEventListener('click', async (e) => {
+            element.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const textToCopy = element.getAttribute('data-copy');
-                try {
-                    await navigator.clipboard.writeText(textToCopy);
-                    const originalText = element.textContent;
-                    element.textContent = '✓ Copied!';
-                    element.style.background = 'var(--success)';
-                    element.style.color = 'white';
-                    setTimeout(() => {
-                        element.textContent = originalText;
-                        element.style.background = '';
-                        element.style.color = '';
-                    }, 1500);
-                } catch (error) {
-                    console.error('[ShapeSecurity] Copy failed:', error);
-                    NotificationHelper.error('Failed to copy to clipboard');
+                if (!textToCopy) {
+                    return;
                 }
+                AdvancedUtils.copyToClipboard(textToCopy, element, {
+                    notificationMessage: 'Value copied'
+                });
             });
         });
     }
@@ -1065,62 +1001,38 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
 
         // Copy individual script URL buttons
         modal.querySelectorAll('.copy-script-url').forEach(btn => {
-            btn.addEventListener('click', async () => {
+            btn.addEventListener('click', () => {
                 const url = btn.getAttribute('data-url');
-                try {
-                    await navigator.clipboard.writeText(url);
-                    const originalText = btn.textContent;
-                    btn.textContent = '✓ Copied!';
-                    btn.style.background = 'var(--success)';
-                    setTimeout(() => {
-                        btn.textContent = originalText;
-                        btn.style.background = 'var(--bg-primary)';
-                    }, 2000);
-                } catch (error) {
-                    console.error('Copy failed:', error);
-                    NotificationHelper.error('Failed to copy URL');
+                if (!url) {
+                    return;
                 }
+                AdvancedUtils.copyToClipboard(url, btn, {
+                    notificationMessage: 'URL copied'
+                });
             });
         });
 
         // Copy seed buttons
         modal.querySelectorAll('.copy-seed').forEach(btn => {
-            btn.addEventListener('click', async () => {
+            btn.addEventListener('click', () => {
                 const seed = btn.getAttribute('data-seed');
-                try {
-                    await navigator.clipboard.writeText(seed);
-                    const originalText = btn.textContent;
-                    btn.textContent = '✓ Copied!';
-                    btn.style.background = '#4CAF50';
-                    setTimeout(() => {
-                        btn.textContent = originalText;
-                        btn.style.background = 'var(--success)';
-                    }, 2000);
-                } catch (error) {
-                    console.error('Copy failed:', error);
-                    NotificationHelper.error('Failed to copy seed');
+                if (!seed) {
+                    return;
                 }
+                AdvancedUtils.copyToClipboard(seed, btn, {
+                    notificationMessage: 'Seed copied'
+                });
             });
         });
 
         // Copy all URLs button
         const copyAllBtn = modal.querySelector('.copy-all-scripts');
         if (copyAllBtn) {
-            copyAllBtn.addEventListener('click', async () => {
+            copyAllBtn.addEventListener('click', () => {
                 const allUrls = scripts.map(s => s.url).join('\n');
-                try {
-                    await navigator.clipboard.writeText(allUrls);
-                    const originalText = copyAllBtn.textContent;
-                    copyAllBtn.textContent = '✓ Copied All!';
-                    copyAllBtn.style.background = '#4CAF50';
-                    setTimeout(() => {
-                        copyAllBtn.textContent = originalText;
-                        copyAllBtn.style.background = 'var(--info)';
-                    }, 2000);
-                } catch (error) {
-                    console.error('Copy failed:', error);
-                    NotificationHelper.error('Failed to copy URLs');
-                }
+                AdvancedUtils.copyToClipboard(allUrls, copyAllBtn, {
+                    notificationMessage: 'All URLs copied'
+                });
             });
         }
 
@@ -1318,20 +1230,13 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
         const copyBtn = exportModal.querySelector('.copy-parsing-code');
         if (copyBtn) {
             copyBtn.addEventListener('click', () => {
-                // Get currently visible textarea
                 const visibleContainer = exportModal.querySelector('.code-container[style*="display: flex"]') ||
                                         exportModal.querySelector('.code-container[data-lang="javascript"]');
                 const textarea = visibleContainer?.querySelector('textarea');
 
                 if (textarea) {
-                    navigator.clipboard.writeText(textarea.value).then(() => {
-                        const originalText = copyBtn.textContent;
-                        copyBtn.textContent = '✓ Copied!';
-                        copyBtn.style.background = '#4CAF50';
-                        setTimeout(() => {
-                            copyBtn.textContent = originalText;
-                            copyBtn.style.background = 'var(--accent)';
-                        }, 2000);
+                    AdvancedUtils.copyToClipboard(textarea.value, copyBtn, {
+                        notificationMessage: 'Code copied'
                     });
                 }
             });
