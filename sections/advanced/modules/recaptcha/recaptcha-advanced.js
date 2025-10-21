@@ -952,76 +952,76 @@ function ${cb}(token) {
         const siteUrl = (data.siteUrl || capture.url || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         const timestamp = new Date(capture.timestamp).toLocaleString();
 
+        // Build features list (only show true/yes features)
+        let features = [];
+        if (data.isEnterprise) features.push('Enterprise');
+        if (data.isInvisible) features.push('Invisible');
+        if (data.isSRequired) features.push('S Parameter Required');
+        if (data.hasSession) features.push('Has Session');
+
         return `
-            ${data.version ? `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">Version</label>
-                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.version)}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.version)}', this, {notificationMessage: 'Value copied'});">${AdvancedUtils.escapeHtml(data.version)}</div>
-            </div>
-            ` : ''}
-
-            ${data.siteKey ? `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">Site Key</label>
-                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.siteKey)}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.siteKey)}', this, {notificationMessage: 'Value copied'});">${AdvancedUtils.escapeHtml(data.siteKey)}</div>
-            </div>
-            ` : ''}
-
-            ${data.action ? `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">Action</label>
-                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.action)}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.action)}', this, {notificationMessage: 'Value copied'});">${AdvancedUtils.escapeHtml(data.action)}</div>
-            </div>
-            ` : ''}
-
-            ${data.apiDomain ? `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">API Domain</label>
-                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.apiDomain)}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.apiDomain)}', this, {notificationMessage: 'Value copied'});">${AdvancedUtils.escapeHtml(data.apiDomain)}</div>
-            </div>
-            ` : ''}
-
-            ${data.requiredCookie ? `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">Required Cookie</label>
-                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.requiredCookie)}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.requiredCookie)}', this, {notificationMessage: 'Value copied'});">${AdvancedUtils.escapeHtml(data.requiredCookie)}</div>
-            </div>
-            ` : ''}
-
-            <div class="advanced-modal-section">
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">Enterprise</span>
-                    <span class="advanced-modal-info-value">${data.isEnterprise ? 'Yes' : 'No'}</span>
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+                <!-- Primary Info Card -->
+                <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    ${data.version ? `
+                    <div>
+                        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">Version</div>
+                        <div style="color: #4ade80; font-family: monospace; font-size: 12px; font-weight: 600;">${AdvancedUtils.escapeHtml(data.version)}</div>
+                    </div>
+                    ` : ''}
+                    ${data.action ? `
+                    <div>
+                        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">Action</div>
+                        <div style="color: #4ade80; font-family: monospace; font-size: 12px; font-weight: 600; cursor: pointer;" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.action)}', this, {notificationMessage: 'Action copied'});" title="Click to copy">${AdvancedUtils.escapeHtml(data.action)}</div>
+                    </div>
+                    ` : ''}
                 </div>
-                ${data.version === 'v2' ? `
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">Invisible</span>
-                    <span class="advanced-modal-info-value">${data.isInvisible ? 'Yes' : 'No'}</span>
+
+                <!-- Site Key Card -->
+                ${data.siteKey ? `
+                <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
+                    <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">Site Key</div>
+                    <div style="color: #4ade80; font-family: monospace; font-size: 12px; word-break: break-all; cursor: pointer; padding: 8px; background: rgba(255, 255, 255, 0.03); border-radius: 4px;" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.siteKey)}', this, {notificationMessage: 'Site Key copied'});" title="Click to copy">${AdvancedUtils.escapeHtml(data.siteKey)}</div>
                 </div>
                 ` : ''}
-                ${data.isSRequired ? `
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">S Parameter</span>
-                    <span class="advanced-modal-info-value">Required</span>
+
+                <!-- API Domain & Cookie Card -->
+                ${data.apiDomain || data.requiredCookie ? `
+                <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px; display: grid; grid-template-columns: ${data.apiDomain && data.requiredCookie ? '1fr 1fr' : '1fr'}; gap: 14px;">
+                    ${data.apiDomain ? `
+                    <div>
+                        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">API Domain</div>
+                        <div style="color: #4ade80; font-family: monospace; font-size: 12px; cursor: pointer;" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.apiDomain)}', this, {notificationMessage: 'API Domain copied'});" title="Click to copy">${AdvancedUtils.escapeHtml(data.apiDomain)}</div>
+                    </div>
+                    ` : ''}
+                    ${data.requiredCookie ? `
+                    <div>
+                        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">Required Cookie</div>
+                        <div style="color: #4ade80; font-family: monospace; font-size: 12px; cursor: pointer; word-break: break-all;" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${AdvancedUtils.escapeHtml(data.requiredCookie)}', this, {notificationMessage: 'Cookie copied'});" title="Click to copy">${AdvancedUtils.escapeHtml(data.requiredCookie)}</div>
+                    </div>
+                    ` : ''}
                 </div>
                 ` : ''}
-                ${data.hasSession ? `
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">Has Session</span>
-                    <span class="advanced-modal-info-value">Yes</span>
+
+                <!-- Features Card (only if features exist) -->
+                ${features.length > 0 ? `
+                <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
+                    <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 10px;">Features Detected</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        ${features.map(f => `<span style="background: rgba(74, 222, 128, 0.15); color: #4ade80; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600;">${f}</span>`).join('')}
+                    </div>
                 </div>
                 ` : ''}
-            </div>
 
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">Site URL</label>
-                <div class="advanced-modal-code-block" data-copy="${siteUrl}" style="cursor: pointer;" title="Click to copy" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${siteUrl}', this, {notificationMessage: 'Value copied'});">${siteUrl}</div>
-            </div>
+                <!-- Site URL Card -->
+                <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
+                    <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">Site URL</div>
+                    <div style="color: #60a5fa; font-size: 12px; word-break: break-all; cursor: pointer; padding: 8px; background: rgba(255, 255, 255, 0.03); border-radius: 4px;" onclick="event.stopPropagation(); AdvancedUtils.copyToClipboard('${siteUrl}', this, {notificationMessage: 'URL copied'});" title="Click to copy">${siteUrl}</div>
+                </div>
 
-            <div class="advanced-modal-section">
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">Captured</span>
-                    <span class="advanced-modal-info-value">${timestamp}</span>
+                <!-- Metadata Card -->
+                <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 14px;">
+                    <div style="font-size: 10px; color: var(--text-secondary);">Captured: <span style="color: var(--text-primary); font-weight: 600;">${timestamp}</span></div>
                 </div>
             </div>
         `;
