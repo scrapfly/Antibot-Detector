@@ -2697,6 +2697,26 @@
   transform: none;
 }
 
+/* Select options styling */
+.capture-filter-select option {
+  background: #2a2a2a;
+  color: #d1d5db;
+  padding: 8px 12px;
+  margin: 4px 0;
+}
+
+.capture-filter-select option:checked {
+  background: #3b82f6;
+  background-image: linear-gradient(#3b82f6, #3b82f6);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.capture-filter-select option:hover {
+  background: #404040;
+  color: #f8fafc;
+}
+
 /* Search Container */
 .capture-search-container {
   width: 100%;
