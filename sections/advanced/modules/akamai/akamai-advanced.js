@@ -1143,7 +1143,7 @@ func main() {
 
         document.body.appendChild(modal);
 
-        modal.querySelectorAll('.modal-close').forEach(btn => {
+        modal.querySelectorAll('.advanced-modal-close-btn').forEach(btn => {
             btn.addEventListener('click', () => modal.remove());
         });
 
@@ -1313,7 +1313,7 @@ func main() {
         document.body.appendChild(modal);
 
         // Close handlers
-        modal.querySelectorAll('.modal-close').forEach(btn => {
+        modal.querySelectorAll('.advanced-modal-close-btn').forEach(btn => {
             btn.addEventListener('click', () => modal.remove());
         });
 
