@@ -517,15 +517,15 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
         `;
 
         modal.innerHTML = `
-            <div class="recaptcha-modal" style="background: var(--bg-secondary, #2a2a2a); border-radius: 8px; padding: 20px; max-width: 500px; width: 90%;">
-                <div class="recaptcha-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; color: var(--text-primary, #fff);">🔑 Extracted SiteKey</h3>
+            <div class="recaptcha-modal" style="background: var(--bg-secondary, #2a2a2a); border-radius: 8px; padding: 24px; max-width: 600px; width: 95%;">
+                <div class="recaptcha-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin: 0; color: var(--text-primary, #fff); font-size: 16px;">Extracted SiteKey</h3>
                     <button class="recaptcha-modal-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary, #aaa);">×</button>
                 </div>
                 <div class="recaptcha-modal-content">
-                    <div class="sitekey-display" style="display: flex; flex-direction: column; gap: 12px;">
-                        <code class="sitekey-code" style="display: block; background: var(--bg-tertiary, #1a1a1a); padding: 12px; border-radius: 4px; color: var(--success, #4ade80); font-family: monospace; word-break: break-all;">${sitekey}</code>
-                        <button class="sitekey-copy-btn" data-copy="${sitekey}">📋 Copy</button>
+                    <div class="sitekey-display" style="display: flex; flex-direction: column; gap: 14px;">
+                        <code class="sitekey-code" style="display: block; background: var(--bg-tertiary, #1a1a1a); padding: 14px; border-radius: 6px; color: var(--success, #4ade80); font-family: monospace; word-break: break-all; font-size: 13px; line-height: 1.5;">${sitekey}</code>
+                        <button class="sitekey-copy-btn" data-copy="${sitekey}">Copy</button>
                     </div>
                 </div>
             </div>
@@ -534,7 +534,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
         console.log('[ReCAPTCHA] Appending sitekey modal to body');
         document.body.appendChild(modal);
 
-        const copyBtn = modal.querySelector('.copy-btn');
+        const copyBtn = modal.querySelector('.sitekey-copy-btn');
         if (copyBtn) {
             copyBtn.addEventListener('click', () => {
                 const value = copyBtn.dataset.copy;

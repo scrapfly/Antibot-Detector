@@ -1186,10 +1186,14 @@
   word-break: break-all;
 }
 
-/* Copy button styling - matches History section design */
-.sitekey-copy-btn {
-  width: 100%;
-  padding: 10px 16px;
+/* Universal copy button styling - matches History section design */
+.universal-copy-btn,
+.sitekey-copy-btn,
+.copy-parsing-code,
+.copy-code-btn,
+.copy-script-url,
+.copy-seed,
+.copy-all-scripts {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 7px;
@@ -1201,17 +1205,44 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+.sitekey-copy-btn {
+  width: 100%;
+  padding: 10px 16px;
   gap: 8px;
 }
 
-.sitekey-copy-btn:hover {
+.universal-copy-btn,
+.copy-parsing-code,
+.copy-code-btn,
+.copy-script-url,
+.copy-seed,
+.copy-all-scripts {
+  padding: 8px 16px;
+  gap: 6px;
+}
+
+.universal-copy-btn:hover,
+.sitekey-copy-btn:hover,
+.copy-parsing-code:hover,
+.copy-code-btn:hover,
+.copy-script-url:hover,
+.copy-seed:hover,
+.copy-all-scripts:hover {
   background: var(--accent);
   border-color: var(--accent);
   color: #ffffff;
   transform: scale(1.02);
 }
 
-.sitekey-copy-btn:active {
+.universal-copy-btn:active,
+.sitekey-copy-btn:active,
+.copy-parsing-code:active,
+.copy-code-btn:active,
+.copy-script-url:active,
+.copy-seed:active,
+.copy-all-scripts:active {
   transform: scale(0.98);
 }
 

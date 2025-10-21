@@ -1310,7 +1310,7 @@ func main() {
                     </div>
 
                     <!-- Copy Button -->
-                    <button class="copy-parsing-code" style="position: absolute; top: 8px; right: 8px; background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; z-index: 10;">Copy Code</button>
+                    <button class="copy-parsing-code" style="position: absolute; top: 8px; right: 8px; z-index: 10;">Copy Code</button>
                 </div>
 
                 <!-- Close Button -->

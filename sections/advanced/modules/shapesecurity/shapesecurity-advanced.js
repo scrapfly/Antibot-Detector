@@ -935,14 +935,14 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                                             <div style="font-size: 12px; color: var(--text-secondary); word-break: break-all; flex: 1; font-family: monospace;">
                                                 ${AdvancedUtils.escapeHtml(script.url)}
                                             </div>
-                                            <button class="copy-script-url" data-url="${AdvancedUtils.escapeHtml(script.url)}" style="background: var(--bg-primary); border: none; color: var(--text-primary); padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-left: 8px; flex-shrink: 0;">📋 Copy</button>
+                                            <button class="copy-script-url" data-url="${AdvancedUtils.escapeHtml(script.url)}" style="margin-left: 8px; flex-shrink: 0;">Copy</button>
                                         </div>
                                         ${script.seed ? `
                                             <div style="background: var(--bg-primary); padding: 8px; border-radius: 4px; margin-top: 8px;">
                                                 <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">Seed Parameter:</div>
                                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                                     <code style="font-size: 11px; color: var(--success); word-break: break-all; flex: 1;">${AdvancedUtils.truncate(script.seed, 100)}</code>
-                                                    <button class="copy-seed" data-seed="${AdvancedUtils.escapeHtml(script.seed)}" style="background: var(--success); border: none; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-left: 8px; flex-shrink: 0;">📋 Copy Seed</button>
+                                                    <button class="copy-seed" data-seed="${AdvancedUtils.escapeHtml(script.seed)}" style="margin-left: 8px; flex-shrink: 0;">Copy Seed</button>
                                                 </div>
                                             </div>
                                         ` : ''}
@@ -963,7 +963,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                                         <div style="font-size: 12px; color: var(--text-secondary); word-break: break-all; flex: 1; font-family: monospace;">
                                             ${AdvancedUtils.escapeHtml(script.url)}
                                         </div>
-                                        <button class="copy-script-url" data-url="${AdvancedUtils.escapeHtml(script.url)}" style="background: var(--bg-primary); border: none; color: var(--text-primary); padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-left: 8px; flex-shrink: 0;">📋</button>
+                                        <button class="copy-script-url" data-url="${AdvancedUtils.escapeHtml(script.url)}" style="margin-left: 8px; flex-shrink: 0;">Copy</button>
                                     </div>
                                 `).join('')}
                             </div>
@@ -972,8 +972,8 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                 `}
 
                 <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--bg-tertiary); display: flex; gap: 8px;">
-                    <button class="export-code-btn" style="flex: 1; background: #1976D2; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">📜 Export Code</button>
-                    <button class="copy-all-scripts" style="flex: 1; background: var(--info); color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">📄 Copy All URLs</button>
+                    <button class="export-code-btn" style="flex: 1; background: #1976D2; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">Export Code</button>
+                    <button class="copy-all-scripts" style="flex: 1; padding: 10px;">Copy All URLs</button>
                     <button class="modal-close-btn" style="flex: 1; background: var(--bg-tertiary); color: var(--text-primary); border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">Close</button>
                 </div>
             </div>
@@ -1143,7 +1143,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                     </div>
 
                     <!-- Copy Button -->
-                    <button class="copy-parsing-code" style="position: absolute; top: 8px; right: 8px; background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; z-index: 10;">Copy Code</button>
+                    <button class="copy-parsing-code" style="position: absolute; top: 8px; right: 8px; z-index: 10;">Copy Code</button>
                 </div>
 
                 <!-- Close Button -->
