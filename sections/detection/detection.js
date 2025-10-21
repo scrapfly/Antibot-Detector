@@ -901,12 +901,13 @@ class Detection {
 
       const url = tabs[0].url;
 
-      // Send message to background to clear cache AND disable detection for a moment
+      // OPTION 1: Clean cache clear with automatic silent re-detection
+      // Send message to background to clear cache (NO hold period)
       await chrome.runtime.sendMessage({
         type: 'CLEAR_DETECTION_CACHE',
         url: url,
-        tabId: tabs[0].id,
-        holdDetectionForMs: 3000 // Prevent auto-detection for 3 seconds after clear
+        tabId: tabs[0].id
+        // Removed: holdDetectionForMs (we'll trigger background detection instead)
       });
 
       // Update button to show success
@@ -919,10 +920,9 @@ class Detection {
 
       NotificationHelper.success('Cache cleared');
 
-      // Set badge to X to indicate no detections
+      // Set badge to empty (no text) to indicate clean slate
       try {
-        await chrome.action.setBadgeText({ text: '✕', tabId: tabs[0].id });
-        await chrome.action.setBadgeBackgroundColor({ color: '#6c757d', tabId: tabs[0].id }); // Gray color
+        await chrome.action.setBadgeText({ text: '', tabId: tabs[0].id });
       } catch (error) {
         if (this.debugMode) console.warn('Could not set badge:', error);
       }
@@ -935,6 +935,22 @@ class Detection {
 
       // Show "Nothing Detected" page immediately after cache clear
       this.showEmptyState();
+
+      // OPTION 1: After 1.5 seconds, trigger silent background re-detection
+      // This runs detection without badge updates or progress indicators
+      // If detection finds something, it will update the UI
+      // If nothing found, empty state stays
+      setTimeout(() => {
+        console.log('[Detection] 🔄 Triggering silent background re-detection after cache clear');
+        chrome.runtime.sendMessage({
+          type: 'REQUEST_DETECTION',
+          tabId: tabs[0].id,
+          silent: true  // Flag to skip badge updates and progress indicators
+        }).catch(error => {
+          // Silent failure - background detection may have already completed
+          if (this.debugMode) console.log('[Detection] Background re-detection triggered');
+        });
+      }, 1500);
     } catch (error) {
       if (this.debugMode) console.error('Failed to clear cache:', error);
       NotificationHelper.error('Failed to clear cache');

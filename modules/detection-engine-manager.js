@@ -2241,30 +2241,8 @@ class DetectionEngineManager {
             return;
         }
 
-        // CRITICAL FIX: Check if tab is in cache clear hold period
-        // This prevents auto-detection immediately after user clears cache
-        // Prevents the "14% progress instead of empty state" issue
-        try {
-            const holdResult = await chrome.storage.local.get(['scrapfly_tab_cache_clear_hold']);
-            const tabCacheClearHold = holdResult['scrapfly_tab_cache_clear_hold'] || {};
-            const holdUntil = tabCacheClearHold[tabId];
-
-            if (holdUntil && Date.now() < holdUntil) {
-                const remainingMs = holdUntil - Date.now();
-                console.log(`[DEBUG] Tab ${tabId} is in cache clear hold period (${remainingMs}ms remaining), skipping detection`);
-                console.log(`[DEBUG] Hold period will expire at: ${new Date(holdUntil).toISOString()}, current time: ${new Date(Date.now()).toISOString()}`);
-                // Keep the X badge while holding
-                chrome.action.setBadgeText({ text: '✕', tabId: tabId }).catch(() => {});
-                return;
-            } else if (holdUntil) {
-                // Hold period expired, clean it up
-                console.log(`[DEBUG] Hold period for tab ${tabId} has expired, cleaning up`);
-                delete tabCacheClearHold[tabId];
-                await chrome.storage.local.set({ 'scrapfly_tab_cache_clear_hold': tabCacheClearHold });
-            }
-        } catch (error) {
-            console.error('[DEBUG] Error checking cache clear hold:', error);
-        }
+        // OPTION 1: Removed hold period logic
+        // Now using silent background detection instead for better UX
 
         // Check cache first (optimization - avoid expensive data collection)
         console.log(`[DEBUG] Checking cache for ${pageUrl}...`);
@@ -2426,7 +2404,7 @@ class DetectionEngineManager {
      */
     static async handleClearDetectionCache(request, sendResponse, manuallyClearedCaches = null) {
         try {
-            console.log(`[DEBUG] CLEAR_DETECTION_CACHE received for URL: ${request.url}, tabId: ${request.tabId}, holdFor: ${request.holdDetectionForMs}ms`);
+            console.log(`[DEBUG] CLEAR_DETECTION_CACHE received for URL: ${request.url}, tabId: ${request.tabId}`);
 
             // Use Utils.getCacheScope() to properly load settings with correct default ('domain')
             // This ensures hash calculation matches storage/retrieval operations
@@ -2449,17 +2427,9 @@ class DetectionEngineManager {
                     console.log(`[DEBUG] Marked ${urlHash} as manually cleared`);
                 }
 
-                // CRITICAL FIX: Track tab cache clear to prevent auto-detection immediately after
-                // This prevents the "14% progress" issue when user returns to tab after cache clear
-                if (request.tabId && request.holdDetectionForMs) {
-                    // FIX: Get existing hold periods first, then add/update this tab
-                    const holdResult = await chrome.storage.local.get(['scrapfly_tab_cache_clear_hold']);
-                    const tabCacheClearHold = holdResult['scrapfly_tab_cache_clear_hold'] || {};
-                    tabCacheClearHold[request.tabId] = Date.now() + request.holdDetectionForMs;
-                    await chrome.storage.local.set({ 'scrapfly_tab_cache_clear_hold': tabCacheClearHold });
-                    const expireTime = new Date(Date.now() + request.holdDetectionForMs);
-                    console.log(`[DEBUG] ✅ Tab ${request.tabId} held until ${expireTime.toISOString()} (${request.holdDetectionForMs}ms)`);
-                }
+                // OPTION 1: Removed hold period logic
+                // Instead of holding, we let the popup trigger silent background detection
+                // This provides better UX: immediate empty state → clean badge → silent re-detect
 
                 sendResponse({ status: 'cleared', urlHash });
             } else {
@@ -2518,12 +2488,19 @@ class DetectionEngineManager {
                 return true;
             }
 
-            // Show loading indicator in badge
-            try {
-                chrome.action.setBadgeText({ text: '⏳', tabId: tabId });
-                chrome.action.setBadgeBackgroundColor({ color: '#4A90E2', tabId: tabId }); // Blue color for loading
-            } catch (error) {
-                console.error('Failed to set loading badge:', error);
+            // OPTION 1: Silent mode (for background re-detection after cache clear)
+            const isSilent = request.silent === true;
+
+            if (isSilent) {
+                console.log(`[REQUEST_DETECTION] 🔄 Silent background detection for tab ${tabId}`);
+            } else {
+                // Show loading indicator in badge (only for non-silent detections)
+                try {
+                    chrome.action.setBadgeText({ text: '⏳', tabId: tabId });
+                    chrome.action.setBadgeBackgroundColor({ color: '#4A90E2', tabId: tabId }); // Blue color for loading
+                } catch (error) {
+                    console.error('Failed to set loading badge:', error);
+                }
             }
 
             // Try to ping the content script first
@@ -2588,8 +2565,11 @@ class DetectionEngineManager {
                 }
             }
 
-            // Now send the detection request
-            chrome.tabs.sendMessage(tabId, { type: 'RUN_DETECTION' }, (response) => {
+            // Now send the detection request (pass silent flag to content script)
+            chrome.tabs.sendMessage(tabId, {
+                type: 'RUN_DETECTION',
+                silent: isSilent  // Flag for silent background detection
+            }, (response) => {
                 if (chrome.runtime.lastError) {
                     console.error('Scrapfly Background: Failed to trigger detection:', chrome.runtime.lastError.message);
                     sendResponse({ status: 'error', error: chrome.runtime.lastError.message });
