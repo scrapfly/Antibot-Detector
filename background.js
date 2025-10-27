@@ -721,22 +721,40 @@ function checkAndFinalizeDetection(tabId) {
             sendProgressUpdate(tabId, 'complete', currentState.completedMethods || new Set(), totalMethods);
             finalizeDetection(tabId, currentState);
         } else {
-            const percent = Math.round((completedCount / totalMethods) * 100);
-            console.warn(`%c[⏳ NOT READY] Only ${completedCount}/${totalMethods} methods complete (${percent}%) - waiting for main methods`, 'color: #f44336; font-weight: bold;');
-            console.warn(`[⏳ NOT READY]   Completed: ${completedMethods.join(', ')}`);
-            console.warn(`[⏳ NOT READY]   Missing: ${missingMethods.join(', ')}`);
-            console.warn(`[⏳ NOT READY]   Main methods complete: ${mainMethodsComplete}`);
+            // Check if this detection is using cached data
+            if (currentState.usedCache) {
+                // Using cache is normal - don't show warnings
+                console.log(`%c[✅ Using Cache] Detection complete from cached data - no further checks needed`, 'color: #4caf50; font-weight: bold;');
+                finalizationDebounce.delete(tabId);
+                return;
+            }
 
-            // Log which signals we're waiting for
-            if (!currentState.windowPropertiesComplete) {
-                console.warn(`%c[⏳ WAITING FOR] ⚠️ windowProperties signal (WINDOW_PROPS_COMPLETE) - will proceed without it`, 'color: #ff9800; font-weight: bold;');
-            }
-            if (!currentState.mainComplete) {
-                console.warn(`[⏳ WAITING FOR] ❌ mainComplete signal (processDetectionData finished) - REQUIRED`);
-            }
-            if (!currentState.hooksComplete) {
-                console.warn(`[⏳ WAITING FOR] ⚠️ hooksComplete signal (JS_HOOKS_COMPLETE) - will proceed without it`, 'color: #ff9800; font-weight: bold;');
-            }
+            // Only show warnings if debug mode is enabled
+            (async () => {
+                try {
+                    const settings = await Utils.getSettings(chrome);
+                    if (settings?.debugMode) {
+                        const percent = Math.round((completedCount / totalMethods) * 100);
+                        console.warn(`%c[⏳ NOT READY] Only ${completedCount}/${totalMethods} methods complete (${percent}%) - waiting for main methods`, 'color: #f44336; font-weight: bold;');
+                        console.warn(`[⏳ NOT READY]   Completed: ${completedMethods.join(', ')}`);
+                        console.warn(`[⏳ NOT READY]   Missing: ${missingMethods.join(', ')}`);
+                        console.warn(`[⏳ NOT READY]   Main methods complete: ${mainMethodsComplete}`);
+
+                        // Log which signals we're waiting for
+                        if (!currentState.windowPropertiesComplete) {
+                            console.warn(`%c[⏳ WAITING FOR] ⚠️ windowProperties signal (WINDOW_PROPS_COMPLETE) - will proceed without it`, 'color: #ff9800; font-weight: bold;');
+                        }
+                        if (!currentState.mainComplete) {
+                            console.warn(`[⏳ WAITING FOR] ❌ mainComplete signal (processDetectionData finished) - REQUIRED`);
+                        }
+                        if (!currentState.hooksComplete) {
+                            console.warn(`[⏳ WAITING FOR] ⚠️ hooksComplete signal (JS_HOOKS_COMPLETE) - will proceed without it`, 'color: #ff9800; font-weight: bold;');
+                        }
+                    }
+                } catch (error) {
+                    // Failed to get settings, skip logging
+                }
+            })();
         }
 
         finalizationDebounce.delete(tabId);
@@ -2295,6 +2313,14 @@ function setupMessageListeners() {
                             const cachedData = await DetectionEngineManager.getStoredDetection(url);
                             if (cachedData) {
                                 console.log(`[Background] ✅ JS Hooks - Cache hit detected - discarding ${detections.length} hooks (not needed)`);
+
+                                // Mark this detection as using cache to suppress misleading warning logs
+                                const state = detectionStates.get(tabId);
+                                if (state) {
+                                    state.usedCache = true;
+                                    console.log(`[Background] 💾 Marked tab ${tabId} as using cached data`);
+                                }
+
                                 batchProcessingFlags.set(tabId, false);
                                 console.log(`[🔒 Batch Flag] ✅ SET to FALSE (cache hit) for tab ${tabId}`);
                                 return; // Don't process hooks - we have cached results
@@ -2443,6 +2469,14 @@ function setupMessageListeners() {
                         const cachedData = await DetectionEngineManager.getStoredDetection(url);
                         if (cachedData) {
                             console.log(`[Background] ✅ Window Properties - Cache hit detected - discarding ${detections.length} properties (not needed)`);
+
+                            // Mark this detection as using cache to suppress misleading warning logs
+                            const state = detectionStates.get(tabId);
+                            if (state) {
+                                state.usedCache = true;
+                                console.log(`[Background] 💾 Marked tab ${tabId} as using cached data`);
+                            }
+
                             return; // Don't process window properties - we have cached results
                         }
 
