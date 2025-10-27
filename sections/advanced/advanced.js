@@ -30,6 +30,42 @@ class Advanced {
       displayName: 'AWS WAF Tools',
       icon: '🟠'
     },
+    'geetest': {
+      name: 'GeetestAdvanced',
+      file: 'geetest/geetest-advanced.js',
+      displayName: 'GeeTest Tools',
+      icon: '🟣'
+    },
+    'datadome': {
+      name: 'DataDomeAdvanced',
+      file: 'datadome/datadome-advanced.js',
+      displayName: 'DataDome Tools',
+      icon: '🟢'
+    },
+    'cloudflare': {
+      name: 'CloudflareAdvanced',
+      file: 'cloudflare/cloudflare-advanced.js',
+      displayName: 'Cloudflare Tools',
+      icon: '🟠'
+    },
+    'turnstile': {
+      name: 'TurnstileAdvanced',
+      file: 'turnstile/turnstile-advanced.js',
+      displayName: 'Turnstile Tools',
+      icon: '🔵'
+    },
+    'hcaptcha': {
+      name: 'HCaptchaAdvanced',
+      file: 'hcaptcha/hcaptcha-advanced.js',
+      displayName: 'hCaptcha Tools',
+      icon: '🔷'
+    },
+    'funcaptcha': {
+      name: 'FunCaptchaAdvanced',
+      file: 'funcaptcha/funcaptcha-advanced.js',
+      displayName: 'FunCaptcha Tools',
+      icon: '🟣'
+    },
   };
 
   constructor(detectorManager, detectionSection) {
@@ -89,7 +125,7 @@ class Advanced {
     if (this.captureCompletionListener) return; // Already setup
 
     this.captureCompletionListener = async (message) => {
-      if (message.type === 'AKAMAI_CAPTURE_COMPLETED' || message.type === 'RECAPTCHA_CAPTURE_COMPLETED') {
+      if (message.type === 'AKAMAI_CAPTURE_COMPLETED' || message.type === 'RECAPTCHA_CAPTURE_COMPLETED' || message.type === 'HCAPTCHA_CAPTURE_COMPLETED' || message.type === 'CLOUDFLARE_CAPTURE_COMPLETED') {
         console.log('[Advanced] Capture completed, updating captured data display');
 
         // Don't clear the tools panel, just update the captured data section
@@ -112,10 +148,33 @@ class Advanced {
             }
           }
 
+          // Update capture button state for hCaptcha
+          if (message.type === 'HCAPTCHA_CAPTURE_COMPLETED') {
+            const captureBtn = document.querySelector('#hcaptchaStartCapture');
+            if (captureBtn) {
+              captureBtn.classList.remove('capturing');
+              captureBtn.querySelector('.tool-btn-label').textContent = 'Start Capturing';
+            }
+          }
+
+          // Update capture button state for Cloudflare
+          if (message.type === 'CLOUDFLARE_CAPTURE_COMPLETED') {
+            const captureBtn = document.querySelector('#cloudflareStartCapture');
+            if (captureBtn) {
+              captureBtn.classList.remove('capturing');
+              captureBtn.querySelector('.tool-btn-label').textContent = 'Start Capturing';
+            }
+          }
+
           // Update capture count badge
           await this.updateCaptureCountBadge();
 
-          // If on captures tab, refresh the unified history
+          // Refresh the active module's capture history display immediately
+          if (this.activeModule && typeof this.activeModule.renderCapturedDataSection === 'function') {
+            await this.activeModule.renderCapturedDataSection();
+          }
+
+          // If on captures tab, also refresh the unified history
           const capturesPanel = document.querySelector('#capturesPanel');
           if (capturesPanel && capturesPanel.classList.contains('active')) {
             await this.renderUnifiedCaptureHistory();
@@ -217,7 +276,13 @@ class Advanced {
             console.log('[Advanced] ℹ️  Background returned empty array');
           }
         } else if (response) {
-          console.warn('[Advanced] ⚠️  Unexpected response format:', response);
+          console.warn('[Advanced] ⚠️  Unexpected response format:', {
+            hasDetectionResults: !!response.detectionResults,
+            isArray: Array.isArray(response.detectionResults),
+            responseKeys: Object.keys(response),
+            status: response.status,
+            type: typeof response
+          });
         }
       } catch (error) {
         console.error('[Advanced] Error in background fetch attempt', retryCount + 1, ':', error);
