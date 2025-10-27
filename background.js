@@ -2359,8 +2359,7 @@ function setupMessageListeners() {
                         // Ensure DetectorManager is initialized once
                         await ensureDetectorManagerInitialized();
 
-                        // URL is already extracted above for cache check
-                        const state = getOrCreateDetectionState(tabId, url);
+                        // State already created above for cache check (line 2315)
 
                         // OPTIMIZATION: Record batch arrival time for deterministic finalization
                         state.lastHookBatchTime = Date.now();
@@ -2493,9 +2492,7 @@ function setupMessageListeners() {
                             console.log(`[Background] ⚠️ No window properties detected (none matched conditions)`);
                         }
 
-                        // Get or create detection state
-                        const state = getOrCreateDetectionState(tabId, url);
-
+                        // State already created above for cache check (line 2470)
                         // Validate state
                         if (!state) {
                             console.error('[Background] ❌ Failed to get/create detection state for tab', tabId);
