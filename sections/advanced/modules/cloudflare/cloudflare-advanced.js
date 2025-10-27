@@ -27,40 +27,33 @@ class CloudflareAdvanced extends BaseAdvancedModule {
             const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
             const cfClearanceCookie = cookies.find(c => c.name === 'cf_clearance');
 
-            // Track cf_clearance status for use in afterCaptureStart
+            // Track cf_clearance status for notification
             this.hasCfClearance = !!cfClearanceCookie;
 
             if (!cfClearanceCookie) {
-                console.log('[CloudflareAdvanced] No cf_clearance cookie found - Turnstile-only detected');
+                console.log('[CloudflareAdvanced] ✓ No cf_clearance - Turnstile detected');
             } else {
-                console.log('[CloudflareAdvanced] cf_clearance cookie found - Challenge detected');
+                console.log('[CloudflareAdvanced] ✓ cf_clearance exists - Challenge + Turnstile detected');
             }
 
-            // Always return true to proceed with normal capture flow
+            // Always proceed - interceptor will handle capture
             return true;
         } catch (error) {
             console.error('[CloudflareAdvanced] Error checking cf_clearance:', error);
             this.hasCfClearance = undefined;
-            // On error, proceed with normal capture
             return true;
         }
     }
 
     async afterCaptureStart(response) {
         if (response && (response.status === 'started' || response.status === 'already_capturing')) {
-            // Show context-aware notification based on cf_clearance status
+            // Show notification and close popup
             if (this.hasCfClearance === false) {
-                // No cf_clearance = Turnstile-only
-                console.log('[CloudflareAdvanced] Showing Turnstile-only notification');
                 NotificationHelper.success('Turnstile Detected - Reload page to capture');
             } else if (this.hasCfClearance === true) {
-                // Has cf_clearance = Challenge detected
-                console.log('[CloudflareAdvanced] Showing Challenge notification');
-                NotificationHelper.info('Challenge Detected - Reload page to capture');
+                NotificationHelper.success('Challenge + Turnstile Detected - Reload page to capture');
             } else {
-                // Unknown status, show default
-                console.log('[CloudflareAdvanced] Showing default notification');
-                await AdvancedUtils.showCaptureStartNotification('Cloudflare');
+                NotificationHelper.info('Capturing... Reload page to detect');
             }
 
             // Close popup after notification is shown
