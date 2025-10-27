@@ -171,9 +171,29 @@ function setupCloudflareInterceptor() {
 
         const url = details.url;
 
-        // Check for Turnstile parameters (cdata/cAction)
+        // Check for Turnstile parameters (cdata/cAction) OR Turnstile API detection
         if (/turnstile|cdata|cAction/i.test(url)) {
             console.log('[Cloudflare-Capture] ✓ Turnstile URL matched!');
+
+            // PROACTIVE: If we haven't extracted sitekey yet and this is a Turnstile request, try extracting from DOM
+            if (!state.sitekey && /turnstile/i.test(url)) {
+                console.log('[Cloudflare-Capture] 🔑 Proactively extracting sitekey from DOM (Turnstile detected)');
+                try {
+                    const sitekeysResult = await chrome.tabs.sendMessage(details.tabId, {
+                        type: 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM'
+                    });
+                    console.log('[Cloudflare-Capture] 📥 Response received:', sitekeysResult);
+
+                    if (sitekeysResult?.sitekey) {
+                        state.sitekey = sitekeysResult.sitekey;
+                        console.log('[Cloudflare-Capture] ✅ Sitekey extracted proactively from DOM:', state.sitekey);
+                    } else {
+                        console.log('[Cloudflare-Capture] ⚠️ Response had no sitekey:', sitekeysResult);
+                    }
+                } catch (error) {
+                    console.log('[Cloudflare-Capture] ❌ Could not extract sitekey from DOM:', error.message);
+                }
+            }
 
             const urlObj = new URL(url);
             const cdata = urlObj.searchParams.get('cdata');
