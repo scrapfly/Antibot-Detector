@@ -3032,6 +3032,10 @@
   background: linear-gradient(135deg, #FF9900 0%, #FFAD33 100%);
 }
 
+.capture-module-badge.cloudflare {
+  background: linear-gradient(135deg, #F38020 0%, #FAAD3F 100%);
+}
+
 .capture-site-badge {
   padding: 4px 10px;
   background: rgba(102, 126, 234, 0.15);

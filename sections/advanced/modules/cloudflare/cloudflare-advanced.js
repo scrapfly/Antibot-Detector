@@ -521,11 +521,13 @@ class CloudflareAdvanced extends BaseAdvancedModule {
                         <div style="font-size: 14px; font-weight: 600; color: ${data?.hasCaction ? '#4ade80' : 'var(--text-secondary)'};">${data?.hasCaction ? '✓ Found' : '✗ Not Found'}</div>
                     </div>
 
-                    <!-- cf_clearance Cookie -->
+                    ${(type === 'Challenge' || type === 'Challenge + Turnstile') ? `
+                    <!-- cf_clearance Cookie (only show for Challenge) -->
                     <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; border: 1px solid ${data?.hasCfClearance ? '#4ade80' : 'rgba(255,255,255,0.1)'};">
                         <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">cf_clearance</div>
                         <div style="font-size: 14px; font-weight: 600; color: ${data?.hasCfClearance ? '#4ade80' : 'var(--text-secondary)'};">${data?.hasCfClearance ? '✓ Present' : '✗ Missing'}</div>
                     </div>
+                    ` : ''}`
 
                     <!-- Callback Required -->
                     <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; border: 1px solid ${data?.hasCallback ? '#4ade80' : 'rgba(255,255,255,0.1)'};">
