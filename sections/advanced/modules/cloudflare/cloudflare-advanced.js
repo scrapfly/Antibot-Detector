@@ -296,14 +296,17 @@ class CloudflareAdvanced extends BaseAdvancedModule {
             chrome.webRequest.onBeforeRequest.removeListener(requestListener);
 
             // Determine type
+            // Challenge = cf_clearance OR challenge URLs detected
+            // Turnstile = cdata OR cAction parameters
+            const isChallenge = hasCfClearance || networkData.hasChallenge;
+            const isTurnstile = networkData.hasCdata || networkData.hasCaction || sitekey;
+
             let type = 'Unknown';
-            if (hasCfClearance && (networkData.hasChallenge || networkData.hasCdata)) {
+            if (isChallenge && isTurnstile) {
                 type = 'Challenge + Turnstile';
-            } else if (hasCfClearance) {
+            } else if (isChallenge) {
                 type = 'Challenge';
-            } else if (networkData.hasCdata || networkData.hasCaction) {
-                type = 'Turnstile';
-            } else if (sitekey) {
+            } else if (isTurnstile) {
                 type = 'Turnstile';
             }
 
