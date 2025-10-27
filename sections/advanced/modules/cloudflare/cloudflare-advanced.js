@@ -979,7 +979,9 @@ function fetchCloudflareScripts() {
 fetchCloudflareScripts();
 ?>`,
 
-            'C#': () => `using System;
+            'C#': () => {
+                const scriptLines = urls.map(u => `        "${u}"`).join(',\n');
+                return `using System;
 using System.Net.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -988,7 +990,7 @@ class CloudflareScripts
 {
     private static readonly string[] Scripts = new string[]
     {
-${urls.map(u => `        "${u}"`).join(',\n')}
+${scriptLines}
     };
 
     static void Main()
@@ -1014,9 +1016,12 @@ ${urls.map(u => `        "${u}"`).join(',\n')}
             }
         }
     }
-}`,
+}`;
+            },
 
-            'Go': () => `package main
+            'Go': () => {
+                const scriptLines = urls.map(u => `	"${u}"`).join(',\n');
+                return `package main
 
 import (
 	"fmt"
@@ -1025,7 +1030,7 @@ import (
 )
 
 var cloudflareScripts = []string{
-${urls.map(u => `	"${u}"`).join(',\n')}
+${scriptLines}
 }
 
 func main() {
@@ -1048,7 +1053,8 @@ func fetchCloudflareScripts() {
 		fmt.Printf("Fetched: %s\\n", url)
 		_ = body
 	}
-}`
+}`;
+            }
         };
 
         return templates[language] ? templates[language]() : 'Code generation not available';
