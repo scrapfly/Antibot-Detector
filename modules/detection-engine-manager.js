@@ -2431,6 +2431,19 @@ class DetectionEngineManager {
                 // Instead of holding, we let the popup trigger silent background detection
                 // This provides better UX: immediate empty state → clean badge → silent re-detect
 
+                // NEW: Notify content script to clear sessionStorage cache flag
+                if (request.tabId) {
+                    try {
+                        await chrome.tabs.sendMessage(request.tabId, {
+                            type: 'CLEAR_SESSION_CACHE'
+                        });
+                        console.log(`[DEBUG] Notified content script to clear sessionStorage for tab ${request.tabId}`);
+                    } catch (e) {
+                        // Content script might not be loaded, continue normally
+                        console.log(`[DEBUG] Could not notify content script: ${e.message}`);
+                    }
+                }
+
                 sendResponse({ status: 'cleared', urlHash });
             } else {
                 console.log(`[DEBUG] ⚠️  Cache entry not found for ${urlHash}`);

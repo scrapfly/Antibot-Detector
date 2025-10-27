@@ -307,6 +307,15 @@ function setupDetectionTriggers() {
                 console.log('[DEBUG] REQUEST_PAGE_DATA message received - starting collection');
                 console.log('Scrapfly Content Script: ✅ REQUEST_PAGE_DATA received - starting collection');
 
+                // Clear sessionStorage cache flag since background detected a cache miss
+                try {
+                    const cacheKey = `scrapfly_cache_${window.location.hostname}`;
+                    sessionStorage.removeItem(cacheKey);
+                    console.log('[Cache Invalidation] Cleared sessionStorage cache flag due to REQUEST_PAGE_DATA (cache miss)');
+                } catch (e) {
+                    // SessionStorage might not be available, continue normally
+                }
+
                 // BULLETPROOF: Ensure Utils is loaded before calling collectAndSendData
                 if (typeof Utils === 'undefined') {
                     console.log('[DEBUG] Utils not loaded yet, will retry in 500ms');
@@ -331,6 +340,15 @@ function setupDetectionTriggers() {
             } else if (request.type === 'RUN_DETECTION') {
                 // Manual detection request from popup (force bypass cache)
                 console.log('Scrapfly Content Script: ✅ RUN_DETECTION received - starting manual detection');
+
+                // Clear sessionStorage cache flag since this is manual detection (bypasses cache)
+                try {
+                    const cacheKey = `scrapfly_cache_${window.location.hostname}`;
+                    sessionStorage.removeItem(cacheKey);
+                    console.log('[Cache Invalidation] Cleared sessionStorage cache flag for manual detection');
+                } catch (e) {
+                    // SessionStorage might not be available, continue normally
+                }
 
                 // BULLETPROOF: Ensure Utils is loaded before calling collectAndSendData
                 if (typeof Utils === 'undefined') {
@@ -428,6 +446,49 @@ function setupDetectionTriggers() {
                     url: request.url
                 }, '*');
                 sendResponse({ status: 'disabled' });
+            } else if (request.type === 'CLEAR_SESSION_CACHE') {
+                // Clear sessionStorage cache flag when cache is manually cleared
+                try {
+                    const cacheKey = `scrapfly_cache_${window.location.hostname}`;
+                    sessionStorage.removeItem(cacheKey);
+                    console.log('[Cache Invalidation] Cleared sessionStorage cache flag due to manual cache clear');
+                    sendResponse({ status: 'cleared' });
+                } catch (e) {
+                    console.log('[Cache Invalidation] Could not clear sessionStorage:', e.message);
+                    sendResponse({ status: 'error', error: e.message });
+                }
+            } else if (request.type === 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM') {
+                // Extract sitekey from cf-turnstile element
+                console.log('[Content] 📥 CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM message received');
+
+                try {
+                    // First, log what elements exist
+                    const allDataElements = document.querySelectorAll('[data-sitekey]');
+                    console.log('[Content] 🔍 Found', allDataElements.length, 'elements with [data-sitekey]');
+
+                    // Find the element
+                    const element = document.querySelector('[data-sitekey]');
+                    console.log('[Content] Element found:', !!element);
+
+                    if (element) {
+                        console.log('[Content] Element tag:', element.tagName);
+                        console.log('[Content] Element classes:', element.className);
+                    }
+
+                    const sitekey = element?.getAttribute('data-sitekey') || null;
+
+                    console.log('[Content] ✅ Extracted sitekey from DOM:', sitekey ? sitekey.substring(0, 20) + '...' : 'null');
+
+                    sendResponse({
+                        sitekey: sitekey
+                    });
+                } catch (error) {
+                    console.error('[Content] ❌ Error extracting sitekey:', error);
+                    sendResponse({
+                        sitekey: null,
+                        error: error.message
+                    });
+                }
             }
 
             // Return true to indicate async response
@@ -578,6 +639,66 @@ async function initialize() {
     // Context validity is now checked on-demand during actual operations (message sending, etc.)
     // This eliminates constant CPU wake-ups every 60 seconds
 
+    // NEW OPTIMIZATION: Early cache check - skip all detection work if cached
+    console.log('[Cache Early Check] Checking cache before starting detection work...');
+    try {
+        const cacheCheckResponse = await chrome.runtime.sendMessage({
+            type: 'CHECK_CACHE_EARLY',
+            url: window.location.href
+        });
+
+        if (cacheCheckResponse?.cacheHit) {
+            console.log('[Cache Early Check] ✅ CACHE HIT - skipping all detection work');
+            console.log('[Cache Early Check] Returning cached detections immediately');
+
+            // Set flag to prevent hook installation
+            window.__scrapflyCacheHitEarlyExit = true;
+
+            // NEW OPTIMIZATION: Store cache status in sessionStorage for synchronous check on next page load
+            try {
+                const cacheKey = `scrapfly_cache_${window.location.hostname}`;
+                const cacheData = {
+                    timestamp: Date.now(),
+                    detectionCount: cacheCheckResponse.detectionData?.detectionCount || 0,
+                    url: window.location.href
+                };
+                sessionStorage.setItem(cacheKey, JSON.stringify(cacheData));
+                console.log('[Cache Early Check] ✅ Saved cache status to sessionStorage for future synchronous checks');
+            } catch (e) {
+                // SessionStorage might not be available, continue normally
+                console.log('[Cache Early Check] Could not save to sessionStorage:', e.message);
+            }
+
+            // Notify background about early cache exit AND send cached detection data
+            // This ensures the badge is updated with detection count immediately
+            chrome.runtime.sendMessage({
+                type: 'CACHE_HIT_EARLY_EXIT',
+                url: window.location.href,
+                detectionData: cacheCheckResponse.detectionData  // Include cached data for badge update
+            }).catch(err => {
+                console.log('[Cache Early Check] Note: Background message failed (popup may not be open)');
+            });
+
+            // Exit initialization - don't setup triggers, don't install anything
+            console.log('[Cache Early Check] Content script initialization complete (cache hit path)');
+            return;
+        } else {
+            console.log('[Cache Early Check] ❌ CACHE MISS - proceeding with full detection');
+
+            // Clear any stale sessionStorage cache flag since we have a cache miss
+            try {
+                const cacheKey = `scrapfly_cache_${window.location.hostname}`;
+                sessionStorage.removeItem(cacheKey);
+                console.log('[Cache Early Check] Cleared sessionStorage cache flag due to cache miss');
+            } catch (e) {
+                // SessionStorage might not be available, continue normally
+            }
+        }
+    } catch (error) {
+        console.error('[Cache Early Check] Error during cache check, proceeding with detection:', error.message);
+        // If cache check fails, proceed with normal detection (safe fallback)
+    }
+
     // Setup all detection triggers
     setupDetectionTriggers();
 
@@ -640,19 +761,25 @@ const hookBatcher = DetectionEngineManager.createHookBatcher(chrome);
 // Delegate to DetectionEngineManager.handleHookMessage()
 window.addEventListener('message', (event) => {
     if (event.data?.type === 'JS_HOOK_DETECTION') {
-        console.log(`%c[CHECK THIS] [CONTENT] JS_HOOK_DETECTION received: ${event.data.detection?.detectorName}`, 'color: #0099ff; font-weight: bold;');
         event.stopImmediatePropagation?.();
     }
-    
+
+    // FIX: Forward debug logs from MAIN world to background service worker
+    if (event.data?.type === 'SCRAPFLY_DEBUG_LOG') {
+        chrome.runtime.sendMessage({
+            type: 'SCRAPFLY_DEBUG_LOG',
+            level: event.data.level,
+            message: event.data.message,
+            source: event.data.source,
+            timestamp: event.data.timestamp
+        }).catch(() => {
+            // Silently fail if background isn't available
+        });
+        return;
+    }
+
     // FIX: Listen for JS hooks completion signal from MAIN world
     if (event.data?.type === 'JS_HOOKS_COMPLETE') {
-        console.log(`%c[Content] JS_HOOKS_COMPLETE received from MAIN world, forwarding to background`, 'color: #00cc00; font-weight: bold;');
-        console.log(`[Content] Hook stats:`, {
-            totalDetections: event.data.totalDetections,
-            uniqueHooks: event.data.uniqueHooks,
-            completionTime: event.data.completionTime,
-            reason: event.data.completionReason
-        });
         chrome.runtime.sendMessage({
             type: 'JS_HOOKS_COMPLETE',
             url: event.data.url,
@@ -662,20 +789,13 @@ window.addEventListener('message', (event) => {
             completionReason: event.data.completionReason,
             completionTime: event.data.completionTime,
             uninstallStats: event.data.uninstallStats
-        }).catch((error) => {
-            console.error('[Content] Failed to send JS_HOOKS_COMPLETE to background:', error.message);
+        }).catch(() => {
+            // Silently fail if background isn't available
         });
     }
-    
+
     // FIX: Listen for window properties completion signal from MAIN world
     if (event.data?.type === 'WINDOW_PROPS_COMPLETE') {
-        console.log(`%c[Content] WINDOW_PROPS_COMPLETE received from MAIN world, forwarding to background`, 'color: #00cc00; font-weight: bold;');
-        console.log(`[Content] Window props stats:`, {
-            detectedCount: event.data.detectedCount,
-            totalChecked: event.data.totalChecked,
-            elapsedMs: event.data.elapsedMs,
-            reason: event.data.reason
-        });
         chrome.runtime.sendMessage({
             type: 'WINDOW_PROPS_COMPLETE',
             url: event.data.url,
@@ -684,11 +804,11 @@ window.addEventListener('message', (event) => {
             totalChecked: event.data.totalChecked,
             elapsedMs: event.data.elapsedMs,
             reason: event.data.reason
-        }).catch((error) => {
-            console.error('[Content] Failed to send WINDOW_PROPS_COMPLETE to background:', error.message);
+        }).catch(() => {
+            // Silently fail if background isn't available
         });
     }
-    
+
     DetectionEngineManager.handleHookMessage(event, chrome, hookBatcher);
 });
 
@@ -703,8 +823,50 @@ window.addEventListener('message', (event) => {
 
     // CHECK CONTEXT BEFORE INSTALLING HOOKS (synchronous check)
     if (!chrome?.runtime?.id) {
-        console.log('Extension context not available, skipping hook installation');
         return;
+    }
+
+    // NEW OPTIMIZATION: Check sessionStorage for cache hit flag (synchronous)
+    // This flag is set when a cache hit is detected in a previous page load
+    try {
+        const cacheKey = `scrapfly_cache_${window.location.hostname}`;
+        const cachedData = sessionStorage.getItem(cacheKey);
+
+        if (cachedData) {
+            // Cache hit detected from previous check - skip hook installation entirely
+            const cacheInfo = JSON.parse(cachedData);
+            const cacheAge = Date.now() - cacheInfo.timestamp;
+
+            // Cache is valid for 12 hours (same as detection cache)
+            if (cacheAge < 12 * 60 * 60 * 1000) {
+                console.log('[CACHE OPTIMIZATION] ✅ Synchronous cache hit - SKIPPING hook installation');
+                console.log(`[CACHE OPTIMIZATION] Cache age: ${Math.round(cacheAge / 60000)} minutes`);
+                window.__scrapflyHooksInstalled = true; // Prevent future attempts
+                window.__scrapflyCacheHitEarlyExit = true; // Set flag for other checks
+
+                // Still trigger page ready for window property checks to exit early
+                const triggerHookStart = () => {
+                    window.postMessage({
+                        type: 'SCRAPFLY_PAGE_READY'
+                    }, '*');
+                };
+
+                if (document.readyState === 'complete') {
+                    triggerHookStart();
+                } else {
+                    window.addEventListener('load', triggerHookStart, { once: true });
+                }
+
+                return; // EXIT - no hooks installed!
+            } else {
+                // Cache expired, clear it
+                console.log('[CACHE OPTIMIZATION] Cache expired, removing sessionStorage entry');
+                sessionStorage.removeItem(cacheKey);
+            }
+        }
+    } catch (e) {
+        // SessionStorage might not be available or accessible, continue normally
+        console.log('[CACHE OPTIMIZATION] SessionStorage check failed:', e.message);
     }
 
     // CRITICAL FIX: Install hooks IMMEDIATELY without any async storage checks
