@@ -24,7 +24,13 @@ importScripts(
     './sections/advanced/modules/akamai/akamai-interceptor.js',
     './sections/advanced/modules/imperva/imperva-interceptor.js',
     './sections/advanced/modules/shapesecurity/shapesecurity-interceptor.js',
-    './sections/advanced/modules/awswaf/awswaf-interceptor.js'
+    './sections/advanced/modules/awswaf/awswaf-interceptor.js',
+    './sections/advanced/modules/geetest/geetest-interceptor.js',
+    './sections/advanced/modules/datadome/datadome-interceptor.js',
+    './sections/advanced/modules/cloudflare/cloudflare-interceptor.js',
+    './sections/advanced/modules/turnstile/turnstile-interceptor.js',
+    './sections/advanced/modules/hcaptcha/hcaptcha-interceptor.js',
+    './sections/advanced/modules/funcaptcha/funcaptcha-interceptor.js'
     // Note: SessionManager and DetectionSession removed - using simple Map instead
 );
 
@@ -1711,6 +1717,27 @@ function setupMessageListeners() {
                 }
                 break;
 
+            case 'SCRAPFLY_DEBUG_LOG':
+                // Debug logs from content scripts (only output when debug mode is enabled)
+                (async () => {
+                    try {
+                        const settings = await Utils.getSettings(chrome);
+                        if (settings?.debugMode) {
+                            const timestamp = new Date(request.timestamp).toISOString().split('T')[1].slice(0, -1);
+                            const prefix = `[${timestamp}] [${request.source || 'hooks'}]`;
+                            switch (request.level) {
+                                case 'log': console.log(prefix, request.message); break;
+                                case 'warn': console.warn(prefix, request.message); break;
+                                case 'error': console.error(prefix, request.message); break;
+                                default: console.log(prefix, request.message);
+                            }
+                        }
+                    } catch (e) {
+                        // Silently fail if settings can't be read
+                    }
+                })();
+                break;
+
             case 'PING':
                 // Simple ping for connection test
                 sendResponse({ status: 'pong', timestamp: Date.now() });
@@ -2084,6 +2111,88 @@ function setupMessageListeners() {
 
                         // ALWAYS send response even on error
                         sendResponse({ detectors: {} });
+                    }
+                })();
+                return true; // Will respond asynchronously
+                break;
+
+            case 'CHECK_CACHE_EARLY':
+                // NEW OPTIMIZATION: Check cache before content script does any detection work
+                (async () => {
+                    try {
+                        const { url } = request;
+                        console.log('[Background] [Early Cache] Checking cache for:', url);
+
+                        // Use existing getStoredDetection function to check for cached data
+                        const cachedData = await DetectionEngineManager.getStoredDetection(url);
+
+                        if (cachedData) {
+                            console.log('[Background] ✅ [Early Cache] HIT - returning cached data');
+                            sendResponse({
+                                cacheHit: true,
+                                detectionData: cachedData
+                            });
+                        } else {
+                            console.log('[Background] ❌ [Early Cache] MISS - detection needed');
+                            sendResponse({
+                                cacheHit: false
+                            });
+                        }
+                    } catch (error) {
+                        console.error('[Background] [Early Cache] Error checking cache:', error);
+                        sendResponse({
+                            cacheHit: false,
+                            error: error.message
+                        });
+                    }
+                })();
+                return true; // Will respond asynchronously
+                break;
+
+            case 'CACHE_HIT_EARLY_EXIT':
+                // Notification that content script detected cache hit and exited early
+                (async () => {
+                    try {
+                        const { url, detectionData } = request;
+                        const tabId = sender.tab?.id;
+
+                        console.log('[Background] [Early Cache] Content script exited early due to cache hit for:', url);
+
+                        // Update badge with cached detection count immediately
+                        if (detectionData && tabId) {
+                            const detectionCount = detectionData.detectionCount || 0;
+
+                            if (detectionCount > 0) {
+                                // Use same color scheme as normal detection flow
+                                const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
+                                const count = detectionCount.toString();
+                                const color = detectionCount >= 5 ? badgeColors.high :
+                                             detectionCount >= 3 ? badgeColors.medium :
+                                             badgeColors.low;
+
+                                chrome.action.setBadgeText({
+                                    text: count,
+                                    tabId: tabId
+                                });
+                                chrome.action.setBadgeBackgroundColor({
+                                    color: color,
+                                    tabId: tabId
+                                });
+                                console.log(`[Background] [Early Cache] ✅ Badge updated: ${detectionCount} detections from cache`);
+                            } else {
+                                // No detections - clear badge (consistent with normal flow)
+                                chrome.action.setBadgeText({
+                                    text: '',
+                                    tabId: tabId
+                                });
+                                console.log('[Background] [Early Cache] Badge cleared: no detections');
+                            }
+                        }
+
+                        sendResponse({ status: 'acknowledged' });
+                    } catch (error) {
+                        console.error('[Background] [Early Cache] Error updating badge:', error);
+                        sendResponse({ status: 'error', error: error.message });
                     }
                 })();
                 return true; // Will respond asynchronously
@@ -2630,6 +2739,8 @@ function setupMessageListeners() {
             case 'AKAMAI_CAPTURE_COMPLETED':
             case 'AKAMAI_EXTRACT_SENSOR':
             case 'AKAMAI_EXTRACTION_COMPLETED':
+            case 'AKAMAI_SHOW_ANALYZING_NOTIFICATION':
+            case 'AKAMAI_SHOW_EXTRACTING_NOTIFICATION':
                 // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)
                 if (typeof akamaiHandleMessage === 'function') {
                     return akamaiHandleMessage(request, sendResponse);
@@ -2642,6 +2753,7 @@ function setupMessageListeners() {
             case 'IMPERVA_EXTRACT_SCRIPTS':
             case 'IMPERVA_GET_CAPTURE_STATE':
             case 'IMPERVA_CAPTURE_COMPLETED':
+            case 'IMPERVA_SHOW_ANALYZING_NOTIFICATION':
                 // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)
                 if (typeof impervaHandleMessage === 'function') {
                     return impervaHandleMessage(request, sendResponse);
@@ -2657,6 +2769,7 @@ function setupMessageListeners() {
             case 'SHAPESECURITY_CHECK_VERSION':
             case 'SHAPESECURITY_ANALYZE_SCRIPTS':
             case 'SHAPESECURITY_START_EXTRACTION':
+            case 'SHAPESECURITY_SHOW_ANALYZING_NOTIFICATION':
             case 'SHAPESECURITY_EXTRACTION_COMPLETED':
                 // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)
                 if (typeof shapeSecurityHandleMessage === 'function') {
@@ -2669,9 +2782,69 @@ function setupMessageListeners() {
             case 'AWSWAF_STOP_CAPTURE':
             case 'AWSWAF_GET_STATE':
             case 'AWSWAF_START_ANALYSIS':
+            case 'AWSWAF_SHOW_ANALYZING_NOTIFICATION':
                 // OPTIMIZED 3.1: Interceptor loaded via importScripts, no initialization needed
                 if (typeof handleAwsWafMessage === 'function') {
                     return handleAwsWafMessage(request, sender, sendResponse);
+                }
+                break;
+
+            // Geetest messages - delegate to geetestHandleMessage (simplified - no capture)
+            case 'GEETEST_CHECK_VERSION':
+            case 'GEETEST_ANALYZE_SCRIPTS':
+                // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)
+                if (typeof geetestHandleMessage === 'function') {
+                    return geetestHandleMessage(request, sender, sendResponse);
+                }
+                break;
+
+            // DataDome messages - delegate to handleDataDomeMessage
+            case 'DATADOME_START_ANALYSIS':
+            case 'DATADOME_SHOW_ANALYZING_NOTIFICATION':
+                // OPTIMIZED 3.1: Interceptor loaded via importScripts, no initialization needed
+                if (typeof handleDataDomeMessage === 'function') {
+                    return handleDataDomeMessage(request, sender, sendResponse);
+                }
+                break;
+
+            // Cloudflare messages
+            case 'CLOUDFLARE_START_ANALYSIS':
+            case 'CLOUDFLARE_SHOW_ANALYZING_NOTIFICATION':
+            case 'CLOUDFLARE_CHECK_VERSION':
+            case 'CLOUDFLARE_START_CAPTURE':
+            case 'CLOUDFLARE_STOP_CAPTURE':
+            case 'CLOUDFLARE_GET_CAPTURE_STATE':
+                if (typeof handleCloudflareMessage === 'function') {
+                    return handleCloudflareMessage(request, sender, sendResponse);
+                }
+                break;
+
+            // Turnstile messages
+            case 'TURNSTILE_START_ANALYSIS':
+            case 'TURNSTILE_SHOW_ANALYZING_NOTIFICATION':
+                if (typeof handleTurnstileMessage === 'function') {
+                    return handleTurnstileMessage(request, sender, sendResponse);
+                }
+                break;
+
+            // hCaptcha messages
+            case 'HCAPTCHA_START_ANALYSIS':
+            case 'HCAPTCHA_SHOW_ANALYZING_NOTIFICATION':
+            case 'HCAPTCHA_CHECK_VERSION':
+            case 'HCAPTCHA_START_CAPTURE':
+            case 'HCAPTCHA_STOP_CAPTURE':
+            case 'HCAPTCHA_GET_CAPTURE_STATE':
+            case 'HCAPTCHA_CAPTURE_COMPLETED':
+                if (typeof handleHCaptchaMessage === 'function') {
+                    return handleHCaptchaMessage(request, sender, sendResponse);
+                }
+                break;
+
+            // FunCaptcha messages
+            case 'FUNCAPTCHA_START_ANALYSIS':
+            case 'FUNCAPTCHA_SHOW_ANALYZING_NOTIFICATION':
+                if (typeof handleFunCaptchaMessage === 'function') {
+                    return handleFunCaptchaMessage(request, sender, sendResponse);
                 }
                 break;
 
