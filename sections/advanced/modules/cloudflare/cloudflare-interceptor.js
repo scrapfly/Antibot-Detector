@@ -158,6 +158,49 @@ async function checkCfClearanceCookie(tabId) {
     }
 }
 
+/**
+ * Retry sitekey extraction with exponential backoff
+ */
+async function scheduleCloudflareRetry(tabId, state) {
+    // Try again after 500ms
+    setTimeout(async () => {
+        if (state.sitekey) return; // Already got it
+
+        try {
+            console.log('[Cloudflare-Capture] 🔄 Retrying sitekey extraction...');
+            const retryResult = await chrome.tabs.sendMessage(tabId, {
+                type: 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM'
+            });
+
+            if (retryResult?.sitekey) {
+                console.log('[Cloudflare-Capture] ✅ Sitekey extracted on retry:', retryResult.sitekey);
+                state.sitekey = retryResult.sitekey;
+                state.hasTurnstile = true;
+            } else {
+                console.log('[Cloudflare-Capture] ⚠️ Still no sitekey on retry, trying again in 500ms...');
+                // Try one more time after another delay
+                setTimeout(async () => {
+                    if (state.sitekey) return;
+                    try {
+                        const secondRetry = await chrome.tabs.sendMessage(tabId, {
+                            type: 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM'
+                        });
+                        if (secondRetry?.sitekey) {
+                            console.log('[Cloudflare-Capture] ✅ Sitekey extracted on 2nd retry:', secondRetry.sitekey);
+                            state.sitekey = secondRetry.sitekey;
+                            state.hasTurnstile = true;
+                        }
+                    } catch (e) {
+                        console.log('[Cloudflare-Capture] 2nd retry failed:', e.message);
+                    }
+                }, 500);
+            }
+        } catch (error) {
+            console.log('[Cloudflare-Capture] Retry failed:', error.message);
+        }
+    }, 500);
+}
+
 function setupCloudflareInterceptor() {
     console.log('[Cloudflare-Capture] Setting up global request interceptor');
 
@@ -178,20 +221,32 @@ function setupCloudflareInterceptor() {
             // PROACTIVE: If we haven't extracted sitekey yet and this is a Turnstile request, try extracting from DOM
             if (!state.sitekey && /turnstile/i.test(url)) {
                 console.log('[Cloudflare-Capture] 🔑 Proactively extracting sitekey from DOM (Turnstile detected)');
-                try {
-                    const sitekeysResult = await chrome.tabs.sendMessage(details.tabId, {
-                        type: 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM'
-                    });
-                    console.log('[Cloudflare-Capture] 📥 Response received:', sitekeysResult);
 
-                    if (sitekeysResult?.sitekey) {
-                        state.sitekey = sitekeysResult.sitekey;
-                        console.log('[Cloudflare-Capture] ✅ Sitekey extracted proactively from DOM:', state.sitekey);
-                    } else {
-                        console.log('[Cloudflare-Capture] ⚠️ Response had no sitekey:', sitekeysResult);
+                // Use a flag to prevent multiple simultaneous extraction attempts
+                if (!state.extractionAttempted) {
+                    state.extractionAttempted = true;
+
+                    // Try immediate extraction
+                    try {
+                        const sitekeysResult = await chrome.tabs.sendMessage(details.tabId, {
+                            type: 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM'
+                        });
+                        console.log('[Cloudflare-Capture] 📥 Response received:', sitekeysResult);
+
+                        if (sitekeysResult?.sitekey) {
+                            state.sitekey = sitekeysResult.sitekey;
+                            state.hasTurnstile = true;
+                            console.log('[Cloudflare-Capture] ✅ Sitekey extracted proactively from DOM:', state.sitekey);
+                        } else {
+                            console.log('[Cloudflare-Capture] ⚠️ No sitekey found on first attempt, will retry...');
+                            // Schedule retry - DOM might not be ready yet
+                            scheduleCloudflareRetry(details.tabId, state);
+                        }
+                    } catch (error) {
+                        console.log('[Cloudflare-Capture] ⚠️ First extraction failed, will retry:', error.message);
+                        // Schedule retry - content script might not be ready yet
+                        scheduleCloudflareRetry(details.tabId, state);
                     }
-                } catch (error) {
-                    console.log('[Cloudflare-Capture] ❌ Could not extract sitekey from DOM:', error.message);
                 }
             }
 
