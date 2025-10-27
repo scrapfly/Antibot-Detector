@@ -160,28 +160,30 @@ async function checkCfClearanceCookie(tabId) {
 
 /**
  * Retry sitekey extraction with exponential backoff
+ * Uses longer delays because content script may still be initializing
  */
 async function scheduleCloudflareRetry(tabId, state) {
-    // Try again after 500ms
+    // Try again after 800ms - content script should be initialized by then
     setTimeout(async () => {
         if (state.sitekey) return; // Already got it
 
         try {
-            console.log('[Cloudflare-Capture] 🔄 Retrying sitekey extraction...');
+            console.log('[Cloudflare-Capture] 🔄 Retrying sitekey extraction (attempt 1 after 800ms)...');
             const retryResult = await chrome.tabs.sendMessage(tabId, {
                 type: 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM'
             });
 
             if (retryResult?.sitekey) {
-                console.log('[Cloudflare-Capture] ✅ Sitekey extracted on retry:', retryResult.sitekey);
+                console.log('[Cloudflare-Capture] ✅ Sitekey extracted on 1st retry:', retryResult.sitekey);
                 state.sitekey = retryResult.sitekey;
                 state.hasTurnstile = true;
             } else {
-                console.log('[Cloudflare-Capture] ⚠️ Still no sitekey on retry, trying again in 500ms...');
-                // Try one more time after another delay
+                console.log('[Cloudflare-Capture] ⚠️ Still no sitekey on 1st retry, trying again in 1s...');
+                // Try one more time after longer delay
                 setTimeout(async () => {
                     if (state.sitekey) return;
                     try {
+                        console.log('[Cloudflare-Capture] 🔄 Retrying sitekey extraction (attempt 2 after 1800ms total)...');
                         const secondRetry = await chrome.tabs.sendMessage(tabId, {
                             type: 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM'
                         });
@@ -189,16 +191,18 @@ async function scheduleCloudflareRetry(tabId, state) {
                             console.log('[Cloudflare-Capture] ✅ Sitekey extracted on 2nd retry:', secondRetry.sitekey);
                             state.sitekey = secondRetry.sitekey;
                             state.hasTurnstile = true;
+                        } else {
+                            console.log('[Cloudflare-Capture] ⚠️ Still no sitekey on 2nd retry - will wait for manual trigger');
                         }
                     } catch (e) {
                         console.log('[Cloudflare-Capture] 2nd retry failed:', e.message);
                     }
-                }, 500);
+                }, 1000);
             }
         } catch (error) {
-            console.log('[Cloudflare-Capture] Retry failed:', error.message);
+            console.log('[Cloudflare-Capture] 1st retry failed:', error.message);
         }
-    }, 500);
+    }, 800);
 }
 
 function setupCloudflareInterceptor() {
