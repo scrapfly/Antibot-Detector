@@ -725,6 +725,10 @@ function checkAndFinalizeDetection(tabId) {
             if (currentState.usedCache) {
                 // Using cache is normal - don't show warnings
                 console.log(`%c[✅ Using Cache] Detection complete from cached data - no further checks needed`, 'color: #4caf50; font-weight: bold;');
+
+                // Mark as finalized to prevent retry logic from firing
+                currentState.finalized = true;
+
                 finalizationDebounce.delete(tabId);
                 return;
             }
