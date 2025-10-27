@@ -173,10 +173,31 @@ function setupCloudflareInterceptor() {
             // Skip if we've already processed a Turnstile request
             if (state.hasTurnstile) return;
 
-            console.log('[Cloudflare-Capture] ✓ Turnstile detected! Checking cookie...');
+            console.log('[Cloudflare-Capture] ✓ Turnstile detected! Extracting sitekey and checking cookie...');
             state.hasTurnstile = true;
             if (!state.detectionMethods.includes('turnstile-api')) {
                 state.detectionMethods.push('turnstile-api');
+            }
+
+            // Extract sitekey from DOM (optional, best effort)
+            try {
+                console.log('[Cloudflare-Capture] 🔑 Attempting to extract sitekey from DOM...');
+                const sitekeysResult = await chrome.tabs.sendMessage(details.tabId, {
+                    type: 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM'
+                });
+
+                if (sitekeysResult?.sitekey) {
+                    state.sitekey = sitekeysResult.sitekey;
+                    console.log('[Cloudflare-Capture] ✅ Sitekey extracted:', state.sitekey.substring(0, 20) + '...');
+                    if (!state.detectionMethods.includes('sitekey')) {
+                        state.detectionMethods.push('sitekey');
+                    }
+                } else {
+                    console.log('[Cloudflare-Capture] ⚠️ No sitekey found in DOM');
+                }
+            } catch (error) {
+                console.log('[Cloudflare-Capture] ℹ️ Could not extract sitekey:', error.message);
+                // Sitekey extraction is optional - continue anyway
             }
 
             // Single cookie check to determine type
@@ -205,6 +226,7 @@ function setupCloudflareInterceptor() {
 
                 console.log('[Cloudflare-Capture] 💾 Saving capture data');
                 handleCloudflareCaptureCompleted(details.tabId, {
+                    sitekey: state.sitekey || null,
                     siteURL: state.siteURL,
                     type: state.type,
                     detectionMethods: state.detectionMethods,
@@ -219,6 +241,7 @@ function setupCloudflareInterceptor() {
                 chrome.webRequest.onBeforeRequest.removeListener(cloudflareInterceptionListener);
 
                 handleCloudflareCaptureCompleted(details.tabId, {
+                    sitekey: state.sitekey || null,
                     siteURL: state.siteURL,
                     type: state.type,
                     detectionMethods: state.detectionMethods,
