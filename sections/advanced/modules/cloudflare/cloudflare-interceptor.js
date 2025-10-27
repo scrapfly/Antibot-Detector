@@ -179,26 +179,60 @@ function setupCloudflareInterceptor() {
                 state.detectionMethods.push('turnstile-api');
             }
 
-            // Extract sitekey from DOM (optional, best effort)
-            try {
-                console.log('[Cloudflare-Capture] 🔑 Attempting to extract sitekey from DOM...');
-                const sitekeysResult = await chrome.tabs.sendMessage(details.tabId, {
-                    type: 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM'
-                });
+            // Extract sitekey from DOM (optional, with retry for timing issues)
+            (async () => {
+                let sitekeyFound = false;
 
-                if (sitekeysResult?.sitekey) {
-                    state.sitekey = sitekeysResult.sitekey;
-                    console.log('[Cloudflare-Capture] ✅ Sitekey extracted:', state.sitekey.substring(0, 20) + '...');
-                    if (!state.detectionMethods.includes('sitekey')) {
-                        state.detectionMethods.push('sitekey');
+                // Try immediately
+                try {
+                    console.log('[Cloudflare-Capture] 🔑 Attempting to extract sitekey from DOM...');
+                    const sitekeysResult = await chrome.tabs.sendMessage(details.tabId, {
+                        type: 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM'
+                    });
+
+                    if (sitekeysResult?.sitekey) {
+                        state.sitekey = sitekeysResult.sitekey;
+                        sitekeyFound = true;
+                        console.log('[Cloudflare-Capture] ✅ Sitekey extracted (attempt 1):', state.sitekey.substring(0, 20) + '...');
+                        if (!state.detectionMethods.includes('sitekey')) {
+                            state.detectionMethods.push('sitekey');
+                        }
+                    } else {
+                        console.log('[Cloudflare-Capture] ⚠️ No sitekey found in DOM (attempt 1)');
                     }
-                } else {
-                    console.log('[Cloudflare-Capture] ⚠️ No sitekey found in DOM');
+                } catch (error) {
+                    console.log('[Cloudflare-Capture] ℹ️ First attempt failed:', error.message);
                 }
-            } catch (error) {
-                console.log('[Cloudflare-Capture] ℹ️ Could not extract sitekey:', error.message);
-                // Sitekey extraction is optional - continue anyway
-            }
+
+                // Retry after 300ms if first attempt failed
+                if (!sitekeyFound) {
+                    setTimeout(async () => {
+                        // Check if we already got it from somewhere else
+                        if (state.sitekey) {
+                            console.log('[Cloudflare-Capture] ℹ️ Sitekey already extracted');
+                            return;
+                        }
+
+                        try {
+                            console.log('[Cloudflare-Capture] 🔄 Retrying sitekey extraction (attempt 2)...');
+                            const retryResult = await chrome.tabs.sendMessage(details.tabId, {
+                                type: 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM'
+                            });
+
+                            if (retryResult?.sitekey) {
+                                state.sitekey = retryResult.sitekey;
+                                console.log('[Cloudflare-Capture] ✅ Sitekey extracted (attempt 2):', state.sitekey.substring(0, 20) + '...');
+                                if (!state.detectionMethods.includes('sitekey')) {
+                                    state.detectionMethods.push('sitekey');
+                                }
+                            }
+                        } catch (retryError) {
+                            console.log('[Cloudflare-Capture] ℹ️ Retry failed:', retryError.message);
+                            // Sitekey extraction is optional - this is fine
+                        }
+                    }, 300);
+                }
+            })();
 
             // Single cookie check to determine type
             try {
