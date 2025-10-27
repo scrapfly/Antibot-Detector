@@ -28,7 +28,9 @@
         "geetest",
         "qcloud",
         "funcaptcha",
-        "aliexpress"
+        "aliexpress",
+        "friendlycaptcha",
+        "captchaeu"
     ]
 },
 "fingerprint": {

@@ -1017,6 +1017,30 @@ function impervaHandleMessage(request, sendResponse) {
             console.log('[IMPERVA-CAPTURE] Capture completed message received (UI notification only)');
             return false; // Sync response
 
+        case 'IMPERVA_SHOW_ANALYZING_NOTIFICATION':
+            // Show analyzing notification for script extraction
+            (async () => {
+                try {
+                    if (typeof showNotification === 'function') {
+                        console.log('[IMPERVA] Showing analyzing notification...');
+                        await showNotification(request.tabId, {
+                            type: 'loading',
+                            title: '🔍 Extracting Imperva Scripts',
+                            message: 'Monitoring for challenge and solution data...',
+                            duration: 10000
+                        });
+                        console.log('[IMPERVA] Notification shown successfully');
+                    } else {
+                        console.log('[IMPERVA] showNotification function not available');
+                    }
+                    sendResponse({ status: 'success' });
+                } catch (error) {
+                    console.error('[IMPERVA] Error showing notification:', error);
+                    sendResponse({ status: 'error', error: error.message });
+                }
+            })();
+            return true; // Async response
+
         default:
             return false; // Not handled by this module
     }

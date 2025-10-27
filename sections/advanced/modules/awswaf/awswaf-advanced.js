@@ -240,6 +240,13 @@ class AwsWafAdvanced extends BaseAdvancedModule {
                         }
 
                         console.log('[AwsWaf] Cookie deletion complete, reloading page...');
+
+                        // Send message to show analyzing notification right before reload
+                        await AdvancedUtils.sendMessage({
+                            type: 'AWSWAF_SHOW_ANALYZING_NOTIFICATION',
+                            tabId: this.tabInfo.id
+                        });
+
                     } catch (cookieError) {
                         console.error('[AwsWaf] Failed to delete cookies:', cookieError);
                     }
@@ -259,7 +266,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
     }
 
     /**
-     * Display script analysis results in modal
+     * Display script analysis results in modal (simplified - only challenge.js and captcha.js)
      */
     displayAnalysisModal(data) {
         console.log('[AwsWaf] Displaying analysis modal with data:', data);
@@ -268,60 +275,64 @@ class AwsWafAdvanced extends BaseAdvancedModule {
         modal.className = 'tool-modal';
         modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
 
-        // Add safety checks for undefined data
+        // Simplified - just a flat array of scripts
         const scripts = data?.scripts || [];
-        const challengeScripts = data?.challengeScripts || [];
-        const captchaScripts = data?.captchaScripts || [];
-        const apiScripts = data?.apiScripts || [];
-        const problemUrls = data?.problemUrls || [];
 
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🔍 AWS WAF Scripts Analysis</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🔍 AWS WAF Scripts (${scripts.length})</h3>
                     <button class="advanced-modal-close-btn">×</button>
-                </div>
-
-                <!-- Summary Stats -->
-                <div style="background: var(--bg-tertiary); border-radius: 6px; padding: 12px; margin-bottom: 16px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">Total Scripts:</span>
-                        <span style="color: var(--text-primary); font-weight: 500;">${scripts.length}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">Challenge Scripts:</span>
-                        <span style="color: var(--text-primary); font-weight: 500;">${challengeScripts.length}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">Captcha Scripts:</span>
-                        <span style="color: var(--text-primary); font-weight: 500;">${captchaScripts.length}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">API Scripts:</span>
-                        <span style="color: var(--text-primary); font-weight: 500;">${apiScripts.length}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">Problem URLs:</span>
-                        <span style="color: var(--text-primary); font-weight: 500;">${problemUrls.length}</span>
-                    </div>
                 </div>
 
                 ${scripts.length === 0 ? `
                     <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
                         <div style="font-size: 48px; margin-bottom: 12px;">🔍</div>
-                        <div style="font-size: 14px;">No AWS WAF scripts found</div>
+                        <div style="font-size: 14px; color: var(--text-secondary);">No AWS WAF scripts found</div>
+                        <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">Delete aws-waf-token cookie and reload to trigger challenge</div>
                     </div>
                 ` : `
                     <!-- Scripts List -->
                     <div style="display: flex; flex-direction: column; gap: 12px;">
-                        ${scripts.map(script => `
-                            <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <span style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase;">${script.type}</span>
+                        ${scripts.map((script, idx) => {
+                            // Type label and color
+                            let typeLabel, typeColor;
+                            if (script.type === 'challenge') {
+                                typeLabel = 'Challenge';
+                                typeColor = '#ef4444';
+                            } else if (script.type === 'captcha') {
+                                typeLabel = 'Captcha';
+                                typeColor = '#8b5cf6';
+                            } else if (script.type === 'awswaf') {
+                                typeLabel = 'AWS WAF';
+                                typeColor = '#f59e0b';
+                            } else {
+                                typeLabel = script.type;
+                                typeColor = '#667eea';
+                            }
+
+                            return `
+                            <div style="background: var(--bg-tertiary); padding: 14px; border-radius: 8px; border: 1px solid var(--border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span style="font-size: 12px; color: var(--text-secondary); font-weight: 600;">Script ${idx + 1}</span>
+                                        <span style="background: ${typeColor}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600;">${typeLabel}</span>
+                                    </div>
                                 </div>
-                                <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(script.url)}" style="font-size: 11px; color: var(--text-primary); word-break: break-all; font-family: monospace; background: var(--bg-primary); padding: 8px; border-radius: 4px; cursor: pointer; transition: background 0.2s;" title="Click to copy URL">${script.url}</div>
+
+                                <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 6px; font-weight: 600;">URL</div>
+                                <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(script.url)}" style="font-size: 11px; color: var(--text-primary); word-break: break-all; font-family: monospace; background: var(--bg-primary); padding: 10px; border-radius: 4px; cursor: pointer; transition: all 0.2s; border: 1px solid var(--border);" title="Click to copy URL">${AdvancedUtils.escapeHtml(script.url)}</div>
                             </div>
-                        `).join('')}
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- Export Code Button -->
+                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+                        <button class="modal-export-code-btn" style="width: 100%; background: var(--accent); color: white; border: none; border-radius: 6px; padding: 12px; font-size: 13px; cursor: pointer; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                            <span style="font-size: 16px;">📤</span>
+                            Export Code
+                        </button>
                     </div>
                 `}
             </div>
@@ -360,7 +371,506 @@ class AwsWafAdvanced extends BaseAdvancedModule {
             if (e.target === modal) modal.remove();
         });
 
+        // Export Code button handler
+        const exportBtn = modal.querySelector('.modal-export-code-btn');
+        if (exportBtn) {
+            exportBtn.addEventListener('click', () => {
+                this.displayExportCodeModal(scripts);
+            });
+        }
+
         setTimeout(() => modal.style.opacity = '1', 10);
+    }
+
+    /**
+     * Display export code modal with multi-language code generation
+     * @param {Array} scripts - Array of script objects with url and type
+     */
+    displayExportCodeModal(scripts) {
+        const modal = document.createElement('div');
+        modal.className = 'tool-modal';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10001; opacity: 0; transition: opacity 0.2s;';
+
+        const parsingCodes = this.generateAwsWafParsingCode(scripts);
+
+        modal.innerHTML = `
+            <div style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 900px; max-height: 90vh; overflow: hidden; width: 95%; display: flex; flex-direction: column;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-shrink: 0;">
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">📜 AWS WAF Script Fetching Code</h3>
+                    <button class="advanced-modal-close-btn">×</button>
+                </div>
+
+                <!-- Language Tabs -->
+                <div style="display: flex; gap: 4px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; flex-shrink: 0; flex-wrap: wrap;">
+                    <button class="lang-tab active" data-lang="javascript" style="padding: 6px 12px; border: none; background: var(--accent); color: white; border-radius: 4px; cursor: pointer; font-size: 11px;">JavaScript</button>
+                    <button class="lang-tab" data-lang="python" style="padding: 6px 12px; border: none; background: var(--bg-secondary); color: var(--text-primary); border-radius: 4px; cursor: pointer; font-size: 11px;">Python</button>
+                    <button class="lang-tab" data-lang="nodejs" style="padding: 6px 12px; border: none; background: var(--bg-secondary); color: var(--text-primary); border-radius: 4px; cursor: pointer; font-size: 11px;">Node.js</button>
+                    <button class="lang-tab" data-lang="php" style="padding: 6px 12px; border: none; background: var(--bg-secondary); color: var(--text-primary); border-radius: 4px; cursor: pointer; font-size: 11px;">PHP</button>
+                    <button class="lang-tab" data-lang="csharp" style="padding: 6px 12px; border: none; background: var(--bg-secondary); color: var(--text-primary); border-radius: 4px; cursor: pointer; font-size: 11px;">C#</button>
+                    <button class="lang-tab" data-lang="go" style="padding: 6px 12px; border: none; background: var(--bg-secondary); color: var(--text-primary); border-radius: 4px; cursor: pointer; font-size: 11px;">Go</button>
+                </div>
+
+                <!-- Code Areas -->
+                <div style="position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column;">
+                    <div class="code-container" data-lang="javascript" style="display: flex; flex-direction: column; height: 100%;">
+                        <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.javascript}</textarea>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">🌐 Browser console code for fetching AWS WAF scripts</div>
+                    </div>
+
+                    <div class="code-container" data-lang="python" style="display: none; flex-direction: column; height: 100%;">
+                        <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.python}</textarea>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">🐍 Python script with requests library</div>
+                    </div>
+
+                    <div class="code-container" data-lang="nodejs" style="display: none; flex-direction: column; height: 100%;">
+                        <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.nodejs}</textarea>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">📦 Node.js script with axios</div>
+                    </div>
+
+                    <div class="code-container" data-lang="php" style="display: none; flex-direction: column; height: 100%;">
+                        <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.php}</textarea>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">🐘 PHP script with cURL</div>
+                    </div>
+
+                    <div class="code-container" data-lang="csharp" style="display: none; flex-direction: column; height: 100%;">
+                        <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.csharp}</textarea>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">🔷 C# with HttpClient</div>
+                    </div>
+
+                    <div class="code-container" data-lang="go" style="display: none; flex-direction: column; height: 100%;">
+                        <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.go}</textarea>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">🔵 Go with net/http</div>
+                    </div>
+                </div>
+
+                <!-- Copy Button -->
+                <div style="margin-top: 12px; flex-shrink: 0;">
+                    <button class="copy-code-btn" style="width: 100%; background: var(--accent); color: white; border: none; border-radius: 6px; padding: 10px; font-size: 12px; cursor: pointer; font-weight: 500;">
+                        Copy Code
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        // Language tab handlers
+        const langTabs = modal.querySelectorAll('.lang-tab');
+        const codeContainers = modal.querySelectorAll('.code-container');
+
+        langTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetLang = tab.getAttribute('data-lang');
+
+                // Update tab styles
+                langTabs.forEach(t => {
+                    t.style.background = 'var(--bg-secondary)';
+                    t.style.color = 'var(--text-primary)';
+                });
+                tab.style.background = 'var(--accent)';
+                tab.style.color = 'white';
+
+                // Show/hide code containers
+                codeContainers.forEach(container => {
+                    const containerLang = container.getAttribute('data-lang');
+                    container.style.display = containerLang === targetLang ? 'flex' : 'none';
+                });
+            });
+        });
+
+        // Copy code button handler
+        const copyBtn = modal.querySelector('.copy-code-btn');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => {
+                const visibleContainer = modal.querySelector('.code-container:not([style*="display: none"])') || modal.querySelector('.code-container[data-lang="javascript"]');
+                const textarea = visibleContainer?.querySelector('.parsing-code-area');
+
+                if (textarea) {
+                    textarea.select();
+                    document.execCommand('copy');
+
+                    // Show feedback
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = '✓ Copied!';
+                    copyBtn.style.background = 'var(--success)';
+
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                        copyBtn.style.background = 'var(--accent)';
+                    }, 2000);
+                }
+            });
+        }
+
+        // Close handlers
+        modal.querySelector('.advanced-modal-close-btn').addEventListener('click', () => modal.remove());
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.remove();
+        });
+
+        setTimeout(() => modal.style.opacity = '1', 10);
+    }
+
+    /**
+     * Generate AWS WAF script fetching code for multiple languages
+     * @param {Array} scripts - Array of script objects with url and type
+     * @returns {Object} Code snippets for each language
+     */
+    generateAwsWafParsingCode(scripts) {
+        // Organize scripts by type
+        const challengeScripts = scripts.filter(s => s.type === 'challenge').map(s => s.url);
+        const captchaScripts = scripts.filter(s => s.type === 'captcha').map(s => s.url);
+        const awswafScripts = scripts.filter(s => s.type === 'awswaf').map(s => s.url);
+
+        const allUrls = scripts.map(s => s.url);
+
+        return {
+            javascript: `// AWS WAF Script Fetcher - JavaScript
+// Fetch all AWS WAF scripts: ${scripts.length} total
+
+async function fetchAwsWafScripts() {
+    const urls = ${JSON.stringify(allUrls, null, 4)};
+
+    const results = [];
+
+    for (const url of urls) {
+        try {
+            const response = await fetch(url);
+            const content = await response.text();
+
+            results.push({
+                url: url,
+                success: true,
+                content: content,
+                size: content.length
+            });
+
+            console.log(\`✓ Fetched: \${url}\`);
+        } catch (error) {
+            results.push({
+                url: url,
+                success: false,
+                error: error.message
+            });
+
+            console.error(\`✗ Failed: \${url}\`, error);
+        }
+    }
+
+    return results;
+}
+
+// Execute and display results
+fetchAwsWafScripts().then(results => {
+    console.log('=== AWS WAF Scripts Fetched ===');
+    console.log(\`Total: \${results.length}\`);
+    console.log(\`Success: \${results.filter(r => r.success).length}\`);
+    console.log(\`Failed: \${results.filter(r => !r.success).length}\`);
+    console.log('Results:', results);
+});`,
+
+            python: `# AWS WAF Script Fetcher - Python
+# Fetch all AWS WAF scripts: ${scripts.length} total
+
+import requests
+
+def fetch_awswaf_scripts():
+    urls = ${JSON.stringify(allUrls, null, 4)}
+
+    results = []
+
+    for url in urls:
+        try:
+            response = requests.get(url, timeout=10)
+            response.raise_for_status()
+
+            results.append({
+                'url': url,
+                'success': True,
+                'content': response.text,
+                'size': len(response.text),
+                'status_code': response.status_code
+            })
+
+            print(f"✓ Fetched: {url}")
+        except Exception as error:
+            results.append({
+                'url': url,
+                'success': False,
+                'error': str(error)
+            })
+
+            print(f"✗ Failed: {url} - {error}")
+
+    return results
+
+if __name__ == '__main__':
+    results = fetch_awswaf_scripts()
+
+    print('\\n=== AWS WAF Scripts Fetched ===')
+    print(f'Total: {len(results)}')
+    print(f'Success: {len([r for r in results if r["success"]])}')
+    print(f'Failed: {len([r for r in results if not r["success"]])}')`,
+
+            nodejs: `// AWS WAF Script Fetcher - Node.js
+// Fetch all AWS WAF scripts: ${scripts.length} total
+
+const axios = require('axios');
+
+async function fetchAwsWafScripts() {
+    const urls = ${JSON.stringify(allUrls, null, 4)};
+
+    const results = [];
+
+    for (const url of urls) {
+        try {
+            const response = await axios.get(url, { timeout: 10000 });
+
+            results.push({
+                url: url,
+                success: true,
+                content: response.data,
+                size: response.data.length,
+                statusCode: response.status
+            });
+
+            console.log(\`✓ Fetched: \${url}\`);
+        } catch (error) {
+            results.push({
+                url: url,
+                success: false,
+                error: error.message
+            });
+
+            console.error(\`✗ Failed: \${url}\`, error.message);
+        }
+    }
+
+    return results;
+}
+
+// Execute and display results
+fetchAwsWafScripts().then(results => {
+    console.log('\\n=== AWS WAF Scripts Fetched ===');
+    console.log(\`Total: \${results.length}\`);
+    console.log(\`Success: \${results.filter(r => r.success).length}\`);
+    console.log(\`Failed: \${results.filter(r => !r.success).length}\`);
+}).catch(console.error);`,
+
+            php: `<?php
+// AWS WAF Script Fetcher - PHP
+// Fetch all AWS WAF scripts: ${scripts.length} total
+
+function fetch_awswaf_scripts() {
+    $urls = ${JSON.stringify(allUrls, null, 4)};
+
+    $results = [];
+
+    foreach ($urls as $url) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+        $content = curl_exec($ch);
+        $error = curl_error($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        curl_close($ch);
+
+        if ($content !== false && $httpCode === 200) {
+            $results[] = [
+                'url' => $url,
+                'success' => true,
+                'content' => $content,
+                'size' => strlen($content),
+                'status_code' => $httpCode
+            ];
+
+            echo "✓ Fetched: $url\\n";
+        } else {
+            $results[] = [
+                'url' => $url,
+                'success' => false,
+                'error' => $error ?: "HTTP $httpCode"
+            ];
+
+            echo "✗ Failed: $url - " . ($error ?: "HTTP $httpCode") . "\\n";
+        }
+    }
+
+    return $results;
+}
+
+$results = fetch_awswaf_scripts();
+
+echo "\\n=== AWS WAF Scripts Fetched ===\\n";
+echo "Total: " . count($results) . "\\n";
+echo "Success: " . count(array_filter($results, fn($r) => $r['success'])) . "\\n";
+echo "Failed: " . count(array_filter($results, fn($r) => !$r['success'])) . "\\n";
+?>`,
+
+            csharp: `// AWS WAF Script Fetcher - C#
+// Fetch all AWS WAF scripts: ${scripts.length} total
+
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
+
+class AwsWafScriptFetcher
+{
+    private static readonly HttpClient client = new HttpClient();
+
+    static async Task Main(string[] args)
+    {
+        var urls = new List<string> ${JSON.stringify(allUrls, null, 12).replace(/"/g, '"')};
+
+        var results = await FetchAwsWafScripts(urls);
+
+        Console.WriteLine("\\n=== AWS WAF Scripts Fetched ===");
+        Console.WriteLine($"Total: {results.Count}");
+        Console.WriteLine($"Success: {results.Count(r => r.Success)}");
+        Console.WriteLine($"Failed: {results.Count(r => !r.Success)}");
+    }
+
+    static async Task<List<ScriptResult>> FetchAwsWafScripts(List<string> urls)
+    {
+        var results = new List<ScriptResult>();
+
+        foreach (var url in urls)
+        {
+            try
+            {
+                var response = await client.GetAsync(url);
+                var content = await response.Content.ReadAsStringAsync();
+
+                results.Add(new ScriptResult
+                {
+                    Url = url,
+                    Success = true,
+                    Content = content,
+                    Size = content.Length,
+                    StatusCode = (int)response.StatusCode
+                });
+
+                Console.WriteLine($"✓ Fetched: {url}");
+            }
+            catch (Exception ex)
+            {
+                results.Add(new ScriptResult
+                {
+                    Url = url,
+                    Success = false,
+                    Error = ex.Message
+                });
+
+                Console.WriteLine($"✗ Failed: {url} - {ex.Message}");
+            }
+        }
+
+        return results;
+    }
+}
+
+class ScriptResult
+{
+    public string Url { get; set; }
+    public bool Success { get; set; }
+    public string Content { get; set; }
+    public int Size { get; set; }
+    public int StatusCode { get; set; }
+    public string Error { get; set; }
+}`,
+
+            go: `// AWS WAF Script Fetcher - Go
+// Fetch all AWS WAF scripts: ${scripts.length} total
+
+package main
+
+import (
+    "fmt"
+    "io/ioutil"
+    "net/http"
+    "time"
+)
+
+type ScriptResult struct {
+    URL        string
+    Success    bool
+    Content    string
+    Size       int
+    StatusCode int
+    Error      string
+}
+
+func fetchAwsWafScripts() []ScriptResult {
+    urls := []string${JSON.stringify(allUrls, null, 8)}
+
+    client := &http.Client{
+        Timeout: 10 * time.Second,
+    }
+
+    var results []ScriptResult
+
+    for _, url := range urls {
+        resp, err := client.Get(url)
+
+        if err != nil {
+            results = append(results, ScriptResult{
+                URL:     url,
+                Success: false,
+                Error:   err.Error(),
+            })
+            fmt.Printf("✗ Failed: %s - %s\\n", url, err.Error())
+            continue
+        }
+
+        defer resp.Body.Close()
+        body, err := ioutil.ReadAll(resp.Body)
+
+        if err != nil {
+            results = append(results, ScriptResult{
+                URL:     url,
+                Success: false,
+                Error:   err.Error(),
+            })
+            fmt.Printf("✗ Failed: %s - %s\\n", url, err.Error())
+            continue
+        }
+
+        results = append(results, ScriptResult{
+            URL:        url,
+            Success:    true,
+            Content:    string(body),
+            Size:       len(body),
+            StatusCode: resp.StatusCode,
+        })
+
+        fmt.Printf("✓ Fetched: %s\\n", url)
+    }
+
+    return results
+}
+
+func main() {
+    results := fetchAwsWafScripts()
+
+    successCount := 0
+    for _, r := range results {
+        if r.Success {
+            successCount++
+        }
+    }
+
+    fmt.Println("\\n=== AWS WAF Scripts Fetched ===")
+    fmt.Printf("Total: %d\\n", len(results))
+    fmt.Printf("Success: %d\\n", successCount)
+    fmt.Printf("Failed: %d\\n", len(results)-successCount)
+}`
+        };
     }
 
     /**

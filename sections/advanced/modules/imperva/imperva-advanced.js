@@ -353,7 +353,15 @@ class ImpervaAdvanced extends BaseAdvancedModule {
 
             if (response && response.status === 'success') {
                 console.log('[IMPERVA-EXTRACT] ✓ Extraction mode enabled successfully');
-                console.log('[IMPERVA-EXTRACT] Step 4: Reloading page...');
+                console.log('[IMPERVA-EXTRACT] Step 4: Showing analyzing notification...');
+
+                // Send message to background to show analyzing notification BEFORE reload
+                await this.sendMessage({
+                    type: 'IMPERVA_SHOW_ANALYZING_NOTIFICATION',
+                    tabId: tab.id
+                });
+
+                console.log('[IMPERVA-EXTRACT] Step 5: Reloading page...');
 
                 // Reload the page to trigger Imperva scripts
                 await chrome.tabs.reload(tab.id);

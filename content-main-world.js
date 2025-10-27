@@ -12,12 +12,8 @@
 (function() {
   'use strict';
 
-  // VERSION CHECK: Log immediately to verify correct file is loaded
-  console.log('%c[MAIN WORLD] 🔧 VERSION: 2.1.0-HARD-TIMEOUT loaded', 'color: #00ff00; font-weight: bold; font-size: 14px;');
-
-  // CRITICAL TIMING: Log when this script first executes
+  // VERSION CHECK: Send to background script for debug logging
   const SCRIPT_LOAD_TIME = performance.now();
-  console.log(`%c[MAIN WORLD] ⏱️ Script loaded at ${SCRIPT_LOAD_TIME.toFixed(2)}ms (DOMHighResTimeStamp)`, 'color: #00ff00; font-weight: bold;');
 
   let debugMode = false; // Will be set by ISOLATED world
 
@@ -149,33 +145,29 @@
   // Track inline hook detections separately
   const inlineHookDetections = new Map(); // target -> detection info
 
-  // Helper to log directly to page DevTools console
-  // OPTIMIZATION: Dynamic debug mode controlled by settings
-  // Early return when disabled - zero overhead (no function calls)
-  // Set from settings.json "debugMode" configuration
+  // Helper to send logs to service worker (only when debug enabled)
+  // OPTIMIZATION: Early return when disabled - zero overhead
+  // Logs are only sent to background/service-worker, not to page console
   const sendLog = function(level, ...args) {
     // Early return for zero overhead when debug disabled
     if (!debugMode) return;
 
     try {
-      // Log directly to page console (visible in DevTools)
+      // Send to background service worker for debug output
       const prefix = '[MAIN_WORLD] [Hooks]';
-      switch(level) {
-        case 'log':
-          console.log(prefix, ...args);
-          break;
-        case 'info':
-          console.info(prefix, ...args);
-          break;
-        case 'warn':
-          console.warn(prefix, ...args);
-          break;
-        case 'error':
-          console.error(prefix, ...args);
-          break;
-        default:
-          console.log(prefix, ...args);
-      }
+      const message = [prefix, ...args].map(arg => {
+        if (typeof arg === 'string') return arg;
+        if (typeof arg === 'object') return JSON.stringify(arg);
+        return String(arg);
+      }).join(' ');
+
+      window.postMessage({
+        type: 'SCRAPFLY_DEBUG_LOG',
+        level: level,
+        message: message,
+        source: 'content-main-world',
+        timestamp: Date.now()
+      }, '*');
     } catch (e) {
       // Silently fail
     }
@@ -409,8 +401,6 @@
     let installed = 0;
     let failed = 0;
 
-    console.log(`%c[INLINE HOOKS] 🚀 Installing ${CRITICAL_INLINE_HOOKS.length} critical hooks SYNCHRONOUSLY...`, 'color: #00ff00; font-weight: bold;');
-
     for (const hook of CRITICAL_INLINE_HOOKS) {
       try {
         const parts = hook.target.split('.');
@@ -445,14 +435,11 @@
               timestamp: Date.now(),
               type: 'inline_hook'
             });
-            console.log(`%c[INLINE HOOK] ✅ FIRED: ${hook.target}`, 'color: #00ff00;');
 
             // CRITICAL FIX: Report inline hook detection to content script (ISOLATED world)
             // This ensures inline hooks are tracked by the debug system
             const detectorId = 'inline-hook-' + hook.target.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
             const detectorName = 'Inline Hook: ' + hook.target.split('.').pop();
-
-            console.log(`%c[CHECK THIS] [INLINE HOOK MESSAGE] Sending to background: ${hook.target}`, 'color: #ff00ff; font-weight: bold;');
 
             try {
               window.postMessage({
@@ -470,9 +457,8 @@
                 },
                 url: window.location.href
               }, '*');
-              console.log(`%c[CHECK THIS] [INLINE HOOK MESSAGE] ✅ Sent: ${detectorId}`, 'color: #00ff00; font-weight: bold;');
             } catch (e) {
-              console.error(`%c[CHECK THIS] [INLINE HOOK MESSAGE] ❌ Failed to send: ${e.message}`, 'color: #ff0000; font-weight: bold;');
+              // Silently fail
             }
           }
         };
@@ -528,14 +514,10 @@
         }
       } catch (e) {
         failed++;
-        console.error(`[INLINE HOOKS] Failed to install ${hook.target}:`, e.message);
       }
     }
 
     const elapsed = performance.now() - startTime;
-    console.log(`%c[INLINE HOOKS] ✅ Installed ${installed}/${CRITICAL_INLINE_HOOKS.length} hooks in ${elapsed.toFixed(2)}ms (${failed} failed)`, 'color: #00ff00; font-weight: bold; font-size: 14px;');
-    console.log(`%c[INLINE HOOKS] ⏱️ Installation completed at ${(SCRIPT_LOAD_TIME + elapsed).toFixed(2)}ms from page start`, 'color: #ff6600; font-weight: bold;');
-
     return installed;
   }
 
@@ -589,10 +571,15 @@
 
   // Wait for hook configuration from ISOLATED world
   window.addEventListener('scrapfly-install-hooks', (event) => {
-    // CRITICAL TIMING: Log when event is received
+    // NEW OPTIMIZATION: Check if cache hit early exit flag is set
+    if (window.__scrapflyCacheHitEarlyExit) {
+      // Cache hit was detected before this event - skip hook installation entirely
+      console.log('[content-main-world] Cache hit early exit detected - skipping hook installation');
+      return;
+    }
+
+    // CRITICAL TIMING: Record when event is received
     const eventReceivedTime = performance.now();
-    const delayFromScriptLoad = eventReceivedTime - SCRIPT_LOAD_TIME;
-    console.log(`%c[MAIN WORLD] ⏱️ Hook config event received at ${eventReceivedTime.toFixed(2)}ms (delay: ${delayFromScriptLoad.toFixed(2)}ms)`, 'color: #ff6600; font-weight: bold;');
 
     // Set debugMode first, before any logging
     debugMode = event.detail?.debugMode || false; // Receive debug mode from ISOLATED world
@@ -1120,11 +1107,8 @@
       }
     }
 
-    // CRITICAL TIMING: Log when hook installation completes
+    // CRITICAL TIMING: Record when hook installation completes
     const hooksInstalledTime = performance.now();
-    const totalInstallTime = hooksInstalledTime - eventReceivedTime;
-    console.log(`%c[MAIN WORLD] ⏱️ Hooks installed at ${hooksInstalledTime.toFixed(2)}ms (install time: ${totalInstallTime.toFixed(2)}ms)`, 'color: #00ff00; font-weight: bold;');
-    console.log(`%c[MAIN WORLD] ⏱️ TOTAL DELAY from script load: ${(hooksInstalledTime - SCRIPT_LOAD_TIME).toFixed(2)}ms`, 'color: #ff0000; font-weight: bold; font-size: 16px;');
 
     sendLog('log', `[Hooks MAIN] 📊 Installation complete: ${successCount} hooks installed, ${failCount} failures, ${installed.size} total hook targets`);
     if (installed.size) {

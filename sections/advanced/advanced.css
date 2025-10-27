@@ -520,6 +520,11 @@
   border-color: rgba(239, 68, 68, 0.5);
 }
 
+.tool-icon-orange {
+  background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+  border-color: rgba(249, 115, 22, 0.5);
+}
+
 .recaptcha-tool-btn:hover .tool-icon-container {
   transform: scale(1.08);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -535,6 +540,61 @@
 
 @media (max-width: 400px) {
   .recaptcha-tools-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* GeeTest Tools Grid */
+.geetest-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.geetest-tool-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 90px;
+}
+
+.geetest-tool-btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--text-muted);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.geetest-tool-btn:active {
+  transform: translateY(0);
+}
+
+.geetest-tool-btn.capturing {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+.geetest-tool-btn.capturing .tool-btn-label {
+  color: white;
+}
+
+.geetest-tool-btn.capturing .tool-icon-container {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+@media (max-width: 400px) {
+  .geetest-tools-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -2243,6 +2303,10 @@
   z-index: 10000;
   opacity: 0;
   transition: opacity 0.2s ease;
+}
+
+.advanced-modal-overlay.show {
+  opacity: 1;
 }
 
 /* Modal Container - The actual modal box */

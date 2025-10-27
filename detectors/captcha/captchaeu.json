@@ -1,0 +1,79 @@
+{
+  "id": "captchaeu",
+  "name": "Captcha.eu",
+  "category": "CAPTCHA",
+  "color": "#4285F4",
+  "confidence": 95,
+  "lastUpdated": "2024-10-21",
+  "version": "1.0.0",
+  "website": "https://captcha.eu/",
+  "icon": "custom.png",
+  "description": "European GDPR-compliant CAPTCHA service with invisible protection and widget modes",
+  "detection": {
+    "url": [
+      {
+        "pattern": "captcha.eu",
+        "confidence": 100,
+        "description": "Captcha.eu domain"
+      },
+      {
+        "pattern": "/api/captcha",
+        "confidence": 95,
+        "description": "Captcha.eu API endpoint"
+      },
+      {
+        "pattern": "captchaeu",
+        "confidence": 90,
+        "description": "Captcha.eu reference in URL"
+      }
+    ],
+    "content": [
+      {
+        "content": "CaptchaEU",
+        "confidence": 100,
+        "description": "Captcha.eu main object"
+      },
+      {
+        "content": "captchaeu",
+        "confidence": 95,
+        "description": "Captcha.eu reference"
+      },
+      {
+        "content": "captcha.eu/widget",
+        "confidence": 90,
+        "description": "Captcha.eu widget reference"
+      }
+    ],
+    "dom": [
+      {
+        "selector": ".captchaeu-widget",
+        "confidence": 95,
+        "description": "Captcha.eu widget container"
+      },
+      {
+        "selector": "iframe[src*='captcha.eu']",
+        "confidence": 100,
+        "description": "Captcha.eu iframe"
+      },
+      {
+        "selector": "div[data-captchaeu-sitekey]",
+        "confidence": 95,
+        "description": "Captcha.eu widget with sitekey"
+      }
+    ],
+    "window": [
+      {
+        "path": "CaptchaEU",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "Captcha.eu main object"
+      },
+      {
+        "path": "CaptchaEU.render",
+        "condition": "typeof function",
+        "confidence": 90,
+        "description": "Captcha.eu render function"
+      }
+    ]
+  }
+}

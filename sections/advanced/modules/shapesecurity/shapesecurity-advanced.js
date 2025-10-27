@@ -696,7 +696,15 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
 
             if (response && response.status === 'success') {
                 console.log('[SHAPESECURITY-EXTRACT] ✓ Extraction mode enabled successfully');
-                console.log('[SHAPESECURITY-EXTRACT] Step 5: Reloading page...');
+                console.log('[SHAPESECURITY-EXTRACT] Step 5: Showing analyzing notification...');
+
+                // Show analyzing notification before reload
+                await AdvancedUtils.sendMessage({
+                    type: 'SHAPESECURITY_SHOW_ANALYZING_NOTIFICATION',
+                    tabId: tab.id
+                });
+
+                console.log('[SHAPESECURITY-EXTRACT] Step 6: Reloading page...');
 
                 // Reload the page to trigger Shape Security scripts
                 await chrome.tabs.reload(tab.id);

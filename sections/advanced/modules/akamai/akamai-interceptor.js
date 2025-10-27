@@ -389,6 +389,24 @@ async function akamaiStartExtraction(tabId) {
         await chrome.tabs.reload(tabId);
         console.log('[AKAMAI-EXTRACT] ✓ Page reload initiated');
 
+        // Show analyzing notification while waiting for sensor data
+        try {
+            if (typeof showNotification === 'function') {
+                console.log('[AKAMAI-EXTRACT] Showing analyzing notification...');
+                await showNotification(tabId, {
+                    type: 'loading',
+                    title: '🔍 Extracting Akamai Sensor Data',
+                    message: 'Waiting for sensor information to be captured...',
+                    duration: 30000 // Longer duration since extraction can take time
+                });
+                console.log('[AKAMAI-EXTRACT] Notification shown successfully');
+            } else {
+                console.log('[AKAMAI-EXTRACT] showNotification function not available');
+            }
+        } catch (error) {
+            console.error('[AKAMAI-EXTRACT] Error showing notification:', error);
+        }
+
         console.log('[AKAMAI-EXTRACT] ========== WAITING FOR SENSOR DATA ==========');
 
         return { status: 'started' };
@@ -883,6 +901,54 @@ function akamaiHandleMessage(request, sendResponse) {
                     sendResponse({ status: 'success' });
                 } catch (error) {
                     console.error('[AKAMAI-EXTRACT] Error handling extraction completion:', error);
+                    sendResponse({ status: 'error', error: error.message });
+                }
+            })();
+            return true; // Async response
+
+        case 'AKAMAI_SHOW_ANALYZING_NOTIFICATION':
+            // Show analyzing notification for content analysis
+            (async () => {
+                try {
+                    if (typeof showNotification === 'function') {
+                        console.log('[AKAMAI] Showing analyzing notification...');
+                        await showNotification(request.tabId, {
+                            type: 'loading',
+                            title: '🔍 Analyzing Akamai Content',
+                            message: 'Scanning page for scripts and patterns...',
+                            duration: 10000
+                        });
+                        console.log('[AKAMAI] Notification shown successfully');
+                    } else {
+                        console.log('[AKAMAI] showNotification function not available');
+                    }
+                    sendResponse({ status: 'success' });
+                } catch (error) {
+                    console.error('[AKAMAI] Error showing notification:', error);
+                    sendResponse({ status: 'error', error: error.message });
+                }
+            })();
+            return true; // Async response
+
+        case 'AKAMAI_SHOW_EXTRACTING_NOTIFICATION':
+            // Show extracting notification for sensor extraction
+            (async () => {
+                try {
+                    if (typeof showNotification === 'function') {
+                        console.log('[AKAMAI] Showing extracting sensor notification...');
+                        await showNotification(request.tabId, {
+                            type: 'loading',
+                            title: '🔍 Extracting Sensor Data',
+                            message: 'Capturing Akamai sensor information...',
+                            duration: 15000 // Longer duration to persist through reload
+                        });
+                        console.log('[AKAMAI] Notification shown successfully');
+                    } else {
+                        console.log('[AKAMAI] showNotification function not available');
+                    }
+                    sendResponse({ status: 'success' });
+                } catch (error) {
+                    console.error('[AKAMAI] Error showing notification:', error);
                     sendResponse({ status: 'error', error: error.message });
                 }
             })();

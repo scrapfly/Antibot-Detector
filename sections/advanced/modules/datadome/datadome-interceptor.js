@@ -1,0 +1,163 @@
+/**
+ * DataDome Script Interceptor
+ * Captures DataDome script URLs from network requests
+ */
+
+// Guard to prevent redeclaration during extension reloads
+if (typeof datadomeInterceptionListener !== 'undefined') {
+  console.log('[DataDome] Interceptor already loaded, skipping redeclaration');
+} else {
+
+// Destructure helpers from BaseInterceptorHelpers (use var to avoid redeclaration errors)
+var showNotification = self.BaseInterceptorHelpers?.showNotification;
+
+// ============================================================================
+// State Management
+// ============================================================================
+
+var datadomeInterceptionListener = null;
+var datadomeStatusListener = null;
+
+// ============================================================================
+// Message Handler
+// ============================================================================
+
+/**
+ * Handle DataDome messages from popup
+ */
+function handleDataDomeMessage(request, sender, sendResponse) {
+    const { type } = request;
+
+    switch (type) {
+        case 'DATADOME_START_ANALYSIS':
+            const analysisResult = datadomeStartAnalysis(request.tabId, request.url);
+            sendResponse(analysisResult);
+            return false; // sync response
+
+        case 'DATADOME_SHOW_ANALYZING_NOTIFICATION':
+            // Show analyzing notification (called right before page reload)
+            (async () => {
+                try {
+                    if (typeof showNotification === 'function') {
+                        console.log('[DataDome] Showing analyzing notification before reload...');
+                        await showNotification(request.tabId, {
+                            type: 'loading',
+                            title: '🔍 Analyzing DataDome Scripts',
+                            message: 'Please wait while we collect script URLs...',
+                            duration: 15000 // Longer duration to persist through reload
+                        });
+                        console.log('[DataDome] Pre-reload notification shown successfully');
+                    } else {
+                        console.log('[DataDome] showNotification function not available');
+                    }
+                    sendResponse({ status: 'success' });
+                } catch (error) {
+                    console.error('[DataDome] Error showing notification:', error);
+                    sendResponse({ status: 'error', error: error.message });
+                }
+            })();
+            return true; // Async response
+
+        default:
+            return false;
+    }
+}
+
+// ============================================================================
+// Analysis Mode - Page Reload + Script Injection
+// ============================================================================
+
+/**
+ * Start analysis mode - intercept network requests during page reload
+ * @param {number} tabId - Tab ID
+ * @param {string} url - URL of the tab
+ * @returns {Object} Status response
+ */
+function datadomeStartAnalysis(tabId, url) {
+    console.log('[DataDome-Analysis] Starting analysis mode for tab:', tabId);
+
+    // Track captured URLs from network requests
+    const capturedUrls = new Set();
+
+    // Setup network request listener to capture all URLs during reload
+    const requestListener = (details) => {
+        if (details.tabId !== tabId) return;
+
+        const requestUrl = details.url;
+
+        // Check if URL contains DataDome tags.js
+        if (requestUrl.includes('/tags.js')) {
+            console.log('[DataDome-Analysis] Network - Found tags.js:', requestUrl);
+            capturedUrls.add(JSON.stringify({ url: requestUrl, type: 'tags' }));
+        }
+    };
+
+    // Setup navigation listener to finalize results after page loads
+    const navigationListener = async (details) => {
+        if (details.tabId === tabId && details.frameId === 0) {
+            console.log('[DataDome-Analysis] Page loaded, waiting for all requests to complete...');
+
+            // Note: Notification is shown before page reload via DATADOME_SHOW_ANALYZING_NOTIFICATION
+            // No need to show it again here
+
+            // Wait 5 seconds after page load to ensure all network requests are captured
+            setTimeout(async () => {
+                console.log('[DataDome-Analysis] ========== FINALIZING RESULTS ==========');
+
+                // Convert Set to array of objects
+                const finalResults = Array.from(capturedUrls).map(jsonStr => {
+                    const obj = JSON.parse(jsonStr);
+                    return { ...obj, source: 'network' };
+                });
+
+                console.log('[DataDome-Analysis] Final captured URLs:', finalResults);
+
+                // Prepare analysis data
+                const analysisData = {
+                    scripts: finalResults,
+                    scriptCount: finalResults.length
+                };
+
+                console.log('[DataDome-Analysis] Prepared analysis data:', analysisData);
+
+                // Remove listeners
+                chrome.webRequest.onBeforeRequest.removeListener(requestListener);
+                chrome.webNavigation.onCompleted.removeListener(navigationListener);
+                console.log('[DataDome-Analysis] Listeners removed');
+
+                // Send message to popup if it's open
+                try {
+                    await chrome.runtime.sendMessage({
+                        type: 'DATADOME_ANALYSIS_RESULT',
+                        data: analysisData
+                    });
+                    console.log('[DataDome-Analysis] ✓ Results sent to popup');
+                } catch (error) {
+                    console.log('[DataDome-Analysis] Popup not available - results discarded');
+                }
+            }, 5000);
+        }
+    };
+
+    // Register network request listener (intercept all requests)
+    chrome.webRequest.onBeforeRequest.addListener(
+        requestListener,
+        { urls: ['<all_urls>'], tabId: tabId },
+        []
+    );
+
+    // Register navigation listener
+    chrome.webNavigation.onCompleted.addListener(navigationListener);
+
+    console.log('[DataDome-Analysis] Network listener added, ready for page reload');
+
+    return { status: 'started' };
+}
+
+// ============================================================================
+// Exports
+// ============================================================================
+
+console.log('[DataDome] Interceptor loaded successfully');
+
+} // End of guard

@@ -689,7 +689,8 @@ async function showNotification(tabId, options = {}) {
         success: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
         error: 'linear-gradient(135deg, #eb3349 0%, #f45c43 100%)',
         warning: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-        capture: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
+        capture: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+        loading: 'linear-gradient(135deg, #f59e0b 0%, #fb923c 100%)' // Orange gradient for analyzing/loading states
     };
 
     const notifGradient = gradient || gradients[type] || gradients.info;
@@ -697,7 +698,7 @@ async function showNotification(tabId, options = {}) {
     try {
         await chrome.scripting.executeScript({
             target: { tabId: tabId },
-            func: (title, message, gradient, duration) => {
+            func: (title, message, gradient, duration, type) => {
                 // Cleanup old notifications
                 const allNotifs = document.querySelectorAll('[id^="scrapfly-capture-notification"]');
                 allNotifs.forEach(n => n.remove());
@@ -734,14 +735,19 @@ async function showNotification(tabId, options = {}) {
                         styleTag.textContent = `
                             @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
                             @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(400px); opacity: 0; } }
+                            @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
                             .scrapfly-notif-icon { display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; flex-shrink: 0; }
                             .scrapfly-notif-icon::before { content: '●'; color: white; font-size: 10px; }
+                            .scrapfly-notif-loading .scrapfly-notif-icon::before { content: '⚙️'; animation: spin 1s linear infinite; }
                         `;
                         document.head.appendChild(styleTag);
 
+                        // Add loading class if type is loading
+                        const iconClass = type === 'loading' ? 'scrapfly-notif-icon scrapfly-notif-loading' : 'scrapfly-notif-icon';
+
                         notif.innerHTML = `
                             <div style="display: flex; align-items: flex-start; gap: 10px;">
-                                <div class="scrapfly-notif-icon"></div>
+                                <div class="${iconClass}"></div>
                                 <div style="flex: 1; min-width: 0;">
                                     <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px; line-height: 1.2;">
                                         ${title}
@@ -779,7 +785,7 @@ async function showNotification(tabId, options = {}) {
                     }, 100);
                 });
             },
-            args: [title, message, notifGradient, duration]
+            args: [title, message, notifGradient, duration, type]
         });
     } catch (err) {
         console.error('[BaseInterceptor] Failed to show notification:', err);

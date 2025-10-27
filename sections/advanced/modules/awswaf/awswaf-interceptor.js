@@ -376,6 +376,30 @@ function handleAwsWafMessage(message, sender, sendResponse) {
       sendResponse(analysisResult);
       return false; // sync response
 
+    case 'AWSWAF_SHOW_ANALYZING_NOTIFICATION':
+      // Show analyzing notification (called right before page reload)
+      (async () => {
+        try {
+          if (typeof showNotification === 'function') {
+            console.log('[AwsWaf] Showing analyzing notification before reload...');
+            await showNotification(message.tabId, {
+              type: 'loading',
+              title: '🔍 Analyzing AWS WAF Scripts',
+              message: 'Please wait while we collect script URLs...',
+              duration: 15000 // Longer duration to persist through reload
+            });
+            console.log('[AwsWaf] Pre-reload notification shown successfully');
+          } else {
+            console.log('[AwsWaf] showNotification function not available');
+          }
+          sendResponse({ status: 'success' });
+        } catch (error) {
+          console.error('[AwsWaf] Error showing notification:', error);
+          sendResponse({ status: 'error', error: error.message });
+        }
+      })();
+      return true; // Async response
+
     default:
       return false;
   }
@@ -386,7 +410,7 @@ function handleAwsWafMessage(message, sender, sendResponse) {
 // ============================================================================
 
 /**
- * Start analysis mode - setup webNavigation listener to capture scripts after reload
+ * Start analysis mode - intercept network requests during page reload
  * @param {number} tabId - Tab ID
  * @param {string} url - URL of the tab
  * @returns {Object} Status response
@@ -394,173 +418,62 @@ function handleAwsWafMessage(message, sender, sendResponse) {
 function awsWafStartAnalysis(tabId, url) {
   console.log('[AwsWaf-Analysis] Starting analysis mode for tab:', tabId);
 
-  // Track if we've captured results
-  let capturedResults = null;
+  // Track captured URLs from network requests
+  const capturedUrls = new Set();
 
-  // Setup webNavigation listener to inject script after page reload
-  const navigationListener = (details) => {
+  // Setup network request listener to capture all URLs during reload
+  const requestListener = (details) => {
+    if (details.tabId !== tabId) return;
+
+    const requestUrl = details.url;
+
+    // Check if URL contains what we're looking for
+    if (requestUrl.includes('/challenge.js')) {
+      console.log('[AwsWaf-Analysis] Network - Found challenge.js:', requestUrl);
+      capturedUrls.add(JSON.stringify({ url: requestUrl, type: 'challenge' }));
+    } else if (requestUrl.includes('/captcha.js')) {
+      console.log('[AwsWaf-Analysis] Network - Found captcha.js:', requestUrl);
+      capturedUrls.add(JSON.stringify({ url: requestUrl, type: 'captcha' }));
+    } else if (requestUrl.includes('awswaf.com')) {
+      console.log('[AwsWaf-Analysis] Network - Found awswaf.com URL:', requestUrl);
+      capturedUrls.add(JSON.stringify({ url: requestUrl, type: 'awswaf' }));
+    }
+  };
+
+  // Setup navigation listener to finalize results after page loads
+  const navigationListener = async (details) => {
     if (details.tabId === tabId && details.frameId === 0) {
-      console.log('[AwsWaf-Analysis] Page loaded, injecting script immediately...');
+      console.log('[AwsWaf-Analysis] Page loaded, waiting for all requests to complete...');
 
-      // Inject script IMMEDIATELY to catch challenge page before redirect
-      const injectAndCapture = async () => {
-        try {
-          const [result] = await chrome.scripting.executeScript({
-            target: { tabId: tabId },
-            func: () => {
-              const scripts = {
-                challengeScripts: [],
-                captchaScripts: [],
-                apiScripts: [],
-                problemUrls: [],
-                allScripts: []
-              };
+      // Note: Notification is shown before page reload via AWSWAF_SHOW_ANALYZING_NOTIFICATION
+      // No need to show it again here
 
-              console.log('[AwsWaf-Analysis] Starting script collection...');
-
-              // Check DOM for script tags
-              const domScripts = document.querySelectorAll('script[src]');
-              console.log('[AwsWaf-Analysis] Found', domScripts.length, 'script tags in DOM');
-
-              // Log ALL script URLs first
-              console.log('[AwsWaf-Analysis] === ALL DOM SCRIPTS ===');
-              domScripts.forEach((script, index) => {
-                console.log(`[AwsWaf-Analysis] DOM Script ${index + 1}:`, script.src);
-              });
-              console.log('[AwsWaf-Analysis] === END ALL DOM SCRIPTS ===');
-
-              domScripts.forEach(script => {
-                const src = script.src;
-
-                if (src.includes('challenge.js')) {
-                  console.log('[AwsWaf-Analysis] DOM - Found challenge.js:', src);
-                  scripts.challengeScripts.push({ url: src, type: 'challenge' });
-                  scripts.allScripts.push({ url: src, type: 'challenge' });
-                }
-                if (src.includes('captcha.js')) {
-                  console.log('[AwsWaf-Analysis] DOM - Found captcha.js:', src);
-                  scripts.captchaScripts.push({ url: src, type: 'captcha' });
-                  scripts.allScripts.push({ url: src, type: 'captcha' });
-                }
-                if (src.includes('jsapi.js')) {
-                  console.log('[AwsWaf-Analysis] DOM - Found jsapi.js:', src);
-                  scripts.apiScripts.push({ url: src, type: 'api' });
-                  scripts.allScripts.push({ url: src, type: 'api' });
-                }
-                if (src.includes('/problem')) {
-                  console.log('[AwsWaf-Analysis] DOM - Found /problem:', src);
-                  scripts.problemUrls.push({ url: src, type: 'problem' });
-                  scripts.allScripts.push({ url: src, type: 'problem' });
-                }
-              });
-
-              // Check performance API for network requests
-              const resources = performance.getEntriesByType('resource');
-              console.log('[AwsWaf-Analysis] Found', resources.length, 'resources in Performance API');
-
-              // Log ALL resource URLs (filter to only show scripts)
-              console.log('[AwsWaf-Analysis] === ALL PERFORMANCE API SCRIPTS ===');
-              resources.forEach((resource, index) => {
-                if (resource.initiatorType === 'script' || resource.name.endsWith('.js')) {
-                  console.log(`[AwsWaf-Analysis] Performance Script ${index + 1}:`, resource.name);
-                }
-              });
-              console.log('[AwsWaf-Analysis] === END ALL PERFORMANCE API SCRIPTS ===');
-
-              resources.forEach(resource => {
-                const url = resource.name;
-
-                if (url.includes('challenge.js') && !scripts.allScripts.some(s => s.url === url)) {
-                  console.log('[AwsWaf-Analysis] Performance API - Found challenge.js:', url);
-                  scripts.challengeScripts.push({ url, type: 'challenge' });
-                  scripts.allScripts.push({ url, type: 'challenge' });
-                }
-                if (url.includes('captcha.js') && !scripts.allScripts.some(s => s.url === url)) {
-                  console.log('[AwsWaf-Analysis] Performance API - Found captcha.js:', url);
-                  scripts.captchaScripts.push({ url, type: 'captcha' });
-                  scripts.allScripts.push({ url, type: 'captcha' });
-                }
-                if (url.includes('jsapi.js') && !scripts.allScripts.some(s => s.url === url)) {
-                  console.log('[AwsWaf-Analysis] Performance API - Found jsapi.js:', url);
-                  scripts.apiScripts.push({ url, type: 'api' });
-                  scripts.allScripts.push({ url, type: 'api' });
-                }
-                if (url.includes('/problem') && !scripts.allScripts.some(s => s.url === url)) {
-                  console.log('[AwsWaf-Analysis] Performance API - Found /problem:', url);
-                  scripts.problemUrls.push({ url, type: 'problem' });
-                  scripts.allScripts.push({ url, type: 'problem' });
-                }
-              });
-
-              console.log('[AwsWaf-Analysis] Collection complete:', {
-                total: scripts.allScripts.length,
-                challenge: scripts.challengeScripts.length,
-                captcha: scripts.captchaScripts.length,
-                api: scripts.apiScripts.length,
-                problem: scripts.problemUrls.length
-              });
-
-              return scripts;
-            }
-          });
-
-          const resultData = result.result || {
-            challengeScripts: [],
-            captchaScripts: [],
-            apiScripts: [],
-            problemUrls: [],
-            allScripts: []
-          };
-
-          console.log('[AwsWaf-Analysis] Analysis results:', resultData);
-
-          // Accumulate results (keep the best result across page loads)
-          if (resultData.allScripts.length > 0) {
-            console.log('[AwsWaf-Analysis] Found scripts! Saving to capturedResults...');
-            capturedResults = resultData;
-          }
-
-        } catch (error) {
-          console.error('[AwsWaf-Analysis] Failed to inject script:', error);
-        }
-      };
-
-      // Inject immediately (don't wait - need to catch challenge page)
-      injectAndCapture();
-
-      // Also inject after 3 seconds in case scripts load late
-      setTimeout(() => {
-        console.log('[AwsWaf-Analysis] Secondary check after 3 seconds...');
-        injectAndCapture();
-      }, 3000);
-
-      // After 5 seconds, save final results and cleanup
+      // Wait 5 seconds after page load to ensure all network requests are captured
       setTimeout(async () => {
         console.log('[AwsWaf-Analysis] ========== FINALIZING RESULTS ==========');
 
-        const finalResults = capturedResults || {
-          challengeScripts: [],
-          captchaScripts: [],
-          apiScripts: [],
-          problemUrls: [],
-          allScripts: []
-        };
+        // Convert Set to array of objects
+        const finalResults = Array.from(capturedUrls).map(jsonStr => {
+          const obj = JSON.parse(jsonStr);
+          return { ...obj, source: 'network' };
+        });
 
-        console.log('[AwsWaf-Analysis] Final captured results:', finalResults);
+        console.log('[AwsWaf-Analysis] Final captured URLs:', finalResults);
 
-        // Prepare analysis data (message-only, no storage)
+        // Prepare analysis data
         const analysisData = {
-          scripts: finalResults.allScripts,
-          scriptCount: finalResults.allScripts.length,
-          challengeScripts: finalResults.challengeScripts,
-          captchaScripts: finalResults.captchaScripts,
-          apiScripts: finalResults.apiScripts,
-          problemUrls: finalResults.problemUrls
+          scripts: finalResults,
+          scriptCount: finalResults.length
         };
 
         console.log('[AwsWaf-Analysis] Prepared analysis data:', analysisData);
 
-        // Send message to popup if it's open (no storage fallback)
+        // Remove listeners
+        chrome.webRequest.onBeforeRequest.removeListener(requestListener);
+        chrome.webNavigation.onCompleted.removeListener(navigationListener);
+        console.log('[AwsWaf-Analysis] Listeners removed');
+
+        // Send message to popup if it's open
         try {
           await chrome.runtime.sendMessage({
             type: 'AWSWAF_ANALYSIS_RESULT',
@@ -568,18 +481,23 @@ function awsWafStartAnalysis(tabId, url) {
           });
           console.log('[AwsWaf-Analysis] ✓ Results sent to popup');
         } catch (error) {
-          console.log('[AwsWaf-Analysis] Popup not available - results discarded (user can re-run analysis)');
+          console.log('[AwsWaf-Analysis] Popup not available - results discarded');
         }
-
-        // Remove listener after final save
-        chrome.webNavigation.onCompleted.removeListener(navigationListener);
-        console.log('[AwsWaf-Analysis] Analysis complete, listener removed');
       }, 5000);
     }
   };
 
+  // Register network request listener (intercept all requests)
+  chrome.webRequest.onBeforeRequest.addListener(
+    requestListener,
+    { urls: ['<all_urls>'], tabId: tabId },
+    []
+  );
+
+  // Register navigation listener
   chrome.webNavigation.onCompleted.addListener(navigationListener);
-  console.log('[AwsWaf-Analysis] Navigation listener added, ready for page reload');
+
+  console.log('[AwsWaf-Analysis] Network listener added, ready for page reload');
 
   return { status: 'started' };
 }

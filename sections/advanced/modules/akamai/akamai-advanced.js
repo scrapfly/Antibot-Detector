@@ -225,6 +225,12 @@ class AkamaiAdvanced extends BaseAdvancedModule {
 
             NotificationHelper.info('Reloading page to analyze Akamai data...');
 
+            // Send message to background to show analyzing notification BEFORE reload
+            await this.sendMessage({
+                type: 'AKAMAI_SHOW_ANALYZING_NOTIFICATION',
+                tabId: this.tabInfo.id
+            });
+
             // Reload the page
             await chrome.tabs.reload(this.tabInfo.id);
 
@@ -2600,9 +2606,14 @@ func main() {
 
             if (response && response.status === 'success') {
                 console.log('[AKAMAI-EXTRACT] ✓ Extraction mode enabled successfully');
-                console.log('[AKAMAI-EXTRACT] Step 6: Preparing to reload page...');
+                console.log('[AKAMAI-EXTRACT] Step 6: Showing extracting notification...');
 
-                // Reload page to capture sensor data
+                // Show extracting notification before reload
+                await AdvancedUtils.sendMessage({
+                    type: 'AKAMAI_SHOW_EXTRACTING_NOTIFICATION',
+                    tabId: tab.id
+                });
+
                 console.log('[AKAMAI-EXTRACT] Step 7: Reloading tab to capture sensor data...');
                 await chrome.tabs.reload(tab.id);
                 console.log('[AKAMAI-EXTRACT] ✓ Tab reload initiated');

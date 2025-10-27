@@ -50,6 +50,30 @@ function shapeSecurityHandleMessage(request, sendResponse) {
             handleShapeSecurityStartExtraction(request, null, sendResponse);
             return false; // Sync response
 
+        case 'SHAPESECURITY_SHOW_ANALYZING_NOTIFICATION':
+            // Show analyzing notification (called right before page reload)
+            (async () => {
+                try {
+                    if (typeof showNotification === 'function') {
+                        console.log('[ShapeSecurity] Showing analyzing notification before reload...');
+                        await showNotification(request.tabId, {
+                            type: 'loading',
+                            title: '🔍 Extracting Shape Security Scripts',
+                            message: 'Please wait while we collect script URLs...',
+                            duration: 15000 // Longer duration to persist through reload
+                        });
+                        console.log('[ShapeSecurity] Pre-reload notification shown successfully');
+                    } else {
+                        console.log('[ShapeSecurity] showNotification function not available');
+                    }
+                    sendResponse({ status: 'success' });
+                } catch (error) {
+                    console.error('[ShapeSecurity] Error showing notification:', error);
+                    sendResponse({ status: 'error', error: error.message });
+                }
+            })();
+            return true; // Async response
+
         case 'SHAPESECURITY_EXTRACTION_COMPLETED':
             handleShapeSecurityExtractionCompleted(request, null, sendResponse);
             return true;
@@ -928,9 +952,12 @@ function handleShapeSecurityStartExtraction(message, sender, sendResponse) {
     let capturedScripts = null;
 
     // Set up webNavigation listener to inject script after page reload
-    const navigationListener = (details) => {
+    const navigationListener = async (details) => {
         if (details.tabId === tabId && details.frameId === 0) {
             console.log('[ShapeSecurity-EXTRACT] Page loaded, injecting script immediately...');
+
+            // Note: Notification is shown before page reload via SHAPESECURITY_SHOW_ANALYZING_NOTIFICATION
+            // No need to show it again here
 
             // Function to collect scripts
             const collectScripts = async () => {

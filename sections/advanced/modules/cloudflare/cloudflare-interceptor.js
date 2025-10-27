@@ -158,194 +158,136 @@ async function checkCfClearanceCookie(tabId) {
     }
 }
 
-function setupCloudflareInterceptor() {
-    console.log('[Cloudflare-Capture] Setting up global request interceptor');
+/**
+ * Extract sitekey from DOM and return it
+ * @param {number} tabId - Tab ID
+ * @returns {Promise<string|null>} - Sitekey or null
+ */
+async function extractSitekeyFromDOM(tabId) {
+    try {
+        console.log('[Cloudflare-Capture] 🔑 Attempting to extract sitekey from DOM...');
+        const result = await chrome.tabs.sendMessage(tabId, {
+            type: 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM'
+        });
 
-    cloudflareInterceptionListener = async (details) => {
-        // Check if this tab is being captured
-        const state = cloudflareCaptureState.get(details.tabId);
-        if (!state) return;
+        if (result?.sitekey) {
+            console.log('[Cloudflare-Capture] ✅ Sitekey extracted:', result.sitekey.substring(0, 20) + '...');
+            return result.sitekey;
+        } else {
+            console.log('[Cloudflare-Capture] ⚠️ No sitekey found in DOM');
+            return null;
+        }
+    } catch (error) {
+        console.log('[Cloudflare-Capture] ℹ️ Sitekey extraction failed:', error.message);
+        return null;
+    }
+}
 
-        const url = details.url;
+function cloudflareStartCapture(tabId, captureUrl) {
+    console.log('[Cloudflare-Capture] Starting capture for tab:', tabId);
 
-        // Detect Turnstile (any Turnstile URL means Turnstile exists)
-        if (/turnstile/i.test(url)) {
-            // Skip if we've already processed a Turnstile request
-            if (state.hasTurnstile) return;
+    // Initialize capture state
+    cloudflareCaptureState.set(tabId, {
+        active: true,
+        timestamp: Date.now(),
+        sitekey: null,
+        siteURL: captureUrl,
+        type: null,
+        detectionMethods: []
+    });
 
-            console.log('[Cloudflare-Capture] ✓ Turnstile detected! Extracting sitekey and checking cookie...');
-            state.hasTurnstile = true;
-            if (!state.detectionMethods.includes('turnstile-api')) {
-                state.detectionMethods.push('turnstile-api');
+    // Set up navigation listeners for page load notifications
+    const navigationStartListener = (details) => {
+        if (details.tabId === tabId && details.frameId === 0) {
+            console.log('[Cloudflare-Capture] Page navigation started, showing loading notification...');
+            if (showNotification) {
+                showNotification(tabId, {
+                    type: 'warning',
+                    title: '⚠️ Page Loading',
+                    message: 'Please wait for the page to fully load...',
+                    duration: 5000
+                }).catch(err => {
+                    console.error('[Cloudflare-Capture] Failed to show loading notification:', err);
+                });
+            }
+        }
+    };
+
+    const pageLoadCompleteListener = async (details) => {
+        if (details.tabId === tabId && details.frameId === 0) {
+            console.log('[Cloudflare-Capture] Page fully loaded, extracting data...');
+
+            // Clean up listeners
+            chrome.webNavigation.onCommitted.removeListener(navigationStartListener);
+            chrome.webNavigation.onCompleted.removeListener(pageLoadCompleteListener);
+
+            // Get capture state
+            const state = cloudflareCaptureState.get(tabId);
+            if (!state) {
+                console.log('[Cloudflare-Capture] ⚠️ Capture state lost, skipping extraction');
+                return;
             }
 
-            // Extract sitekey from DOM (optional, with retry for timing issues)
-            (async () => {
-                let sitekeyFound = false;
+            // Stop the timeout if it exists
+            if (state.timeout) {
+                clearTimeout(state.timeout);
+            }
 
-                // Try immediately
-                try {
-                    console.log('[Cloudflare-Capture] 🔑 Attempting to extract sitekey from DOM...');
-                    const sitekeysResult = await chrome.tabs.sendMessage(details.tabId, {
-                        type: 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM'
-                    });
+            // Extract sitekey from DOM
+            const sitekey = await extractSitekeyFromDOM(tabId);
+            if (sitekey) {
+                state.sitekey = sitekey;
+                state.detectionMethods.push('sitekey');
+            }
 
-                    if (sitekeysResult?.sitekey) {
-                        state.sitekey = sitekeysResult.sitekey;
-                        sitekeyFound = true;
-                        console.log('[Cloudflare-Capture] ✅ Sitekey extracted (attempt 1):', state.sitekey.substring(0, 20) + '...');
-                        if (!state.detectionMethods.includes('sitekey')) {
-                            state.detectionMethods.push('sitekey');
-                        }
-                    } else {
-                        console.log('[Cloudflare-Capture] ⚠️ No sitekey found in DOM (attempt 1)');
-                    }
-                } catch (error) {
-                    console.log('[Cloudflare-Capture] ℹ️ First attempt failed:', error.message);
-                }
-
-                // Retry after 300ms if first attempt failed
-                if (!sitekeyFound) {
-                    setTimeout(async () => {
-                        // Check if we already got it from somewhere else
-                        if (state.sitekey) {
-                            console.log('[Cloudflare-Capture] ℹ️ Sitekey already extracted');
-                            return;
-                        }
-
-                        try {
-                            console.log('[Cloudflare-Capture] 🔄 Retrying sitekey extraction (attempt 2)...');
-                            const retryResult = await chrome.tabs.sendMessage(details.tabId, {
-                                type: 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM'
-                            });
-
-                            if (retryResult?.sitekey) {
-                                state.sitekey = retryResult.sitekey;
-                                console.log('[Cloudflare-Capture] ✅ Sitekey extracted (attempt 2):', state.sitekey.substring(0, 20) + '...');
-                                if (!state.detectionMethods.includes('sitekey')) {
-                                    state.detectionMethods.push('sitekey');
-                                }
-                            }
-                        } catch (retryError) {
-                            console.log('[Cloudflare-Capture] ℹ️ Retry failed:', retryError.message);
-                            // Sitekey extraction is optional - this is fine
-                        }
-                    }, 300);
-                }
-            })();
-
-            // Single cookie check to determine type
+            // Check cf_clearance cookie
             try {
                 const cookies = await chrome.cookies.getAll({ url: state.siteURL });
                 const hasCfClearance = cookies.some(c => c.name === 'cf_clearance');
 
                 console.log('[Cloudflare-Capture] 🍪 cf_clearance cookie present:', hasCfClearance);
 
-                // Set type based on cookie presence
                 if (hasCfClearance) {
-                    // Challenge completed AND Turnstile exists
                     state.type = 'Challenge + Turnstile';
                     state.detectionMethods.push('cf_clearance-cookie');
                     console.log('[Cloudflare-Capture] 🏷️ Type: Challenge + Turnstile');
                 } else {
-                    // Pure Turnstile (no challenge)
                     state.type = 'Turnstile';
                     console.log('[Cloudflare-Capture] 🏷️ Type: Turnstile');
                 }
-
-                // Auto-stop immediately - we have what we need
-                console.log('[Cloudflare-Capture] 🛑 AUTO-STOP TRIGGERED');
-                if (state.timeout) clearTimeout(state.timeout);
-                chrome.webRequest.onBeforeRequest.removeListener(cloudflareInterceptionListener);
-
-                console.log('[Cloudflare-Capture] 💾 Saving capture data');
-                handleCloudflareCaptureCompleted(details.tabId, {
-                    sitekey: state.sitekey || null,
-                    siteURL: state.siteURL,
-                    type: state.type,
-                    detectionMethods: state.detectionMethods,
-                    timestamp: state.timestamp
-                });
             } catch (error) {
                 console.error('[Cloudflare-Capture] ❌ Error checking cookies:', error);
                 state.type = 'Turnstile'; // Default to Turnstile if cookie check fails
-
-                // Auto-stop anyway
-                if (state.timeout) clearTimeout(state.timeout);
-                chrome.webRequest.onBeforeRequest.removeListener(cloudflareInterceptionListener);
-
-                handleCloudflareCaptureCompleted(details.tabId, {
-                    sitekey: state.sitekey || null,
-                    siteURL: state.siteURL,
-                    type: state.type,
-                    detectionMethods: state.detectionMethods,
-                    timestamp: state.timestamp
-                });
             }
+
+            // Save capture data
+            console.log('[Cloudflare-Capture] 💾 Saving capture data');
+            await handleCloudflareCaptureCompleted(tabId, {
+                sitekey: state.sitekey || null,
+                siteURL: state.siteURL,
+                type: state.type,
+                detectionMethods: state.detectionMethods,
+                timestamp: state.timestamp
+            });
         }
     };
 
-    // Add the listener once
-    chrome.webRequest.onBeforeRequest.addListener(
-        cloudflareInterceptionListener,
-        { urls: ['<all_urls>'] },
-        []
-    );
-    console.log('[Cloudflare-Capture] Global interceptor listener added');
-}
+    // Add navigation listeners
+    chrome.webNavigation.onCommitted.addListener(navigationStartListener);
+    chrome.webNavigation.onCompleted.addListener(pageLoadCompleteListener);
 
-function cloudflareStartCapture(tabId, captureUrl) {
-    console.log('[Cloudflare-Capture] Starting capture for tab:', tabId);
-
-    // Setup global interceptor if not already done
-    if (!cloudflareInterceptionListener) {
-        setupCloudflareInterceptor();
-    }
-
-    // Initialize capture state
-    cloudflareCaptureState.set(tabId, {
-        active: true,
-        timestamp: Date.now(),
-        cdata: null,
-        cAction: null,
-        sitekey: null,
-        siteURL: captureUrl,
-        type: null,
-        hasTurnstile: false,
-        hasChallenge: false,
-        hasCfClearanceCookie: false,
-        detectionMethods: []
-    });
-
-    // Auto-stop after 60 seconds - check if data was captured
+    // Auto-stop after 60 seconds - stop listening if page doesn't load
     const state = cloudflareCaptureState.get(tabId);
     const timeout = setTimeout(() => {
         const currentState = cloudflareCaptureState.get(tabId);
         if (currentState) {
-            // Check if we captured anything meaningful
-            const hasData = currentState.hasTurnstile || currentState.hasCfClearanceCookie || currentState.hasChallenge;
-
-            if (hasData) {
-                // Save whatever was captured
-                console.log('[Cloudflare-Capture] Timeout - saving captured data');
-                handleCloudflareCaptureCompleted(tabId, {
-                    cdata: currentState.cdata,
-                    cAction: currentState.cAction,
-                    sitekey: currentState.sitekey,
-                    siteURL: currentState.siteURL,
-                    type: currentState.type || 'Unknown',
-                    detectionMethods: currentState.detectionMethods,
-                    timestamp: currentState.timestamp
-                });
-            } else {
-                // No data captured - just clean up silently
-                cloudflareCaptureState.delete(tabId);
-                console.log('[Cloudflare-Capture] Timeout - no data captured, stopping silently');
-            }
+            console.log('[Cloudflare-Capture] Timeout - page didn\'t load within 60 seconds, stopping');
+            chrome.webNavigation.onCommitted.removeListener(navigationStartListener);
+            chrome.webNavigation.onCompleted.removeListener(pageLoadCompleteListener);
+            cloudflareCaptureState.delete(tabId);
         }
     }, 60000);
 
-    // Store timeout for reference
     if (state) {
         state.timeout = timeout;
     }

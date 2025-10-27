@@ -1,0 +1,89 @@
+{
+  "id": "friendlycaptcha",
+  "name": "Friendly Captcha",
+  "category": "CAPTCHA",
+  "color": "#00D084",
+  "confidence": 95,
+  "lastUpdated": "2024-10-21",
+  "version": "1.0.0",
+  "website": "https://friendlycaptcha.com/",
+  "icon": "custom.png",
+  "description": "Privacy-first GDPR-compliant CAPTCHA service with no cookies or tracking",
+  "detection": {
+    "url": [
+      {
+        "pattern": "friendlycaptcha.com",
+        "confidence": 100,
+        "description": "Friendly Captcha domain"
+      },
+      {
+        "pattern": "/api/v1/puzzle",
+        "confidence": 95,
+        "description": "Friendly Captcha puzzle endpoint"
+      },
+      {
+        "pattern": "friendly-js.pages.dev",
+        "confidence": 95,
+        "description": "Friendly Captcha script delivery"
+      }
+    ],
+    "content": [
+      {
+        "content": "frc-captcha",
+        "confidence": 100,
+        "description": "Friendly Captcha container class"
+      },
+      {
+        "content": "friendlyChallenge",
+        "confidence": 95,
+        "description": "Friendly Captcha JavaScript object"
+      },
+      {
+        "content": "friendly-challenge",
+        "confidence": 95,
+        "description": "Friendly Captcha element identifier"
+      },
+      {
+        "content": "FriendlyCaptcha",
+        "confidence": 90,
+        "description": "Friendly Captcha constructor reference"
+      }
+    ],
+    "dom": [
+      {
+        "selector": ".frc-captcha",
+        "confidence": 100,
+        "description": "Friendly Captcha container"
+      },
+      {
+        "selector": "div[data-sitekey]",
+        "confidence": 85,
+        "description": "Friendly Captcha widget with sitekey"
+      },
+      {
+        "selector": "iframe[src*='friendlycaptcha.com']",
+        "confidence": 95,
+        "description": "Friendly Captcha iframe"
+      },
+      {
+        "selector": "script[src*='friendlycaptcha']",
+        "confidence": 95,
+        "description": "Friendly Captcha script tag"
+      }
+    ],
+    "window": [
+      {
+        "path": "friendlyChallenge",
+        "condition": "typeof object",
+        "confidence": 95,
+        "description": "Friendly Captcha main object"
+      },
+      {
+        "path": "friendlyChallenge.render",
+        "condition": "typeof function",
+        "confidence": 90,
+        "description": "Friendly Captcha render function"
+      }
+    ]
+  }
+}
