@@ -2307,24 +2307,25 @@ function setupMessageListeners() {
 
                         if (detections.length === 0) return;
 
-                        // CACHE CHECK: If cache exists for this URL, skip processing hooks entirely
+                        // Extract URL for cache check
                         const url = detections[0]?.url;
-                        if (url) {
-                            const cachedData = await DetectionEngineManager.getStoredDetection(url);
-                            if (cachedData) {
-                                console.log(`[Background] ✅ JS Hooks - Cache hit detected - discarding ${detections.length} hooks (not needed)`);
+                        if (!url) return;
 
-                                // Mark this detection as using cache to suppress misleading warning logs
-                                const state = detectionStates.get(tabId);
-                                if (state) {
-                                    state.usedCache = true;
-                                    console.log(`[Background] 💾 Marked tab ${tabId} as using cached data`);
-                                }
+                        // Create state BEFORE cache check so we can set usedCache flag
+                        const state = getOrCreateDetectionState(tabId, url);
 
-                                batchProcessingFlags.set(tabId, false);
-                                console.log(`[🔒 Batch Flag] ✅ SET to FALSE (cache hit) for tab ${tabId}`);
-                                return; // Don't process hooks - we have cached results
-                            }
+                        // CACHE CHECK: If cache exists for this URL, skip processing hooks entirely
+                        const cachedData = await DetectionEngineManager.getStoredDetection(url);
+                        if (cachedData) {
+                            console.log(`[Background] ✅ JS Hooks - Cache hit detected - discarding ${detections.length} hooks (not needed)`);
+
+                            // Mark this detection as using cache to suppress misleading warning logs
+                            state.usedCache = true;
+                            console.log(`[Background] 💾 Marked tab ${tabId} as using cached data`);
+
+                            batchProcessingFlags.set(tabId, false);
+                            console.log(`[🔒 Batch Flag] ✅ SET to FALSE (cache hit) for tab ${tabId}`);
+                            return; // Don't process hooks - we have cached results
                         }
 
                         // FIX: Mark batch processing as active to prevent finalization race conditions
@@ -2465,17 +2466,17 @@ function setupMessageListeners() {
                             return;
                         }
 
+                        // Create state BEFORE cache check so we can set usedCache flag
+                        const state = getOrCreateDetectionState(tabId, url);
+
                         // CACHE CHECK: If cache exists for this URL, skip processing window properties entirely
                         const cachedData = await DetectionEngineManager.getStoredDetection(url);
                         if (cachedData) {
                             console.log(`[Background] ✅ Window Properties - Cache hit detected - discarding ${detections.length} properties (not needed)`);
 
                             // Mark this detection as using cache to suppress misleading warning logs
-                            const state = detectionStates.get(tabId);
-                            if (state) {
-                                state.usedCache = true;
-                                console.log(`[Background] 💾 Marked tab ${tabId} as using cached data`);
-                            }
+                            state.usedCache = true;
+                            console.log(`[Background] 💾 Marked tab ${tabId} as using cached data`);
 
                             return; // Don't process window properties - we have cached results
                         }
