@@ -27,25 +27,20 @@ class CloudflareAdvanced extends BaseAdvancedModule {
             const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
             const cfClearanceCookie = cookies.find(c => c.name === 'cf_clearance');
 
-            // If NO cf_clearance, it's 100% Turnstile-only - show success immediately
+            // Track cf_clearance status for use in afterCaptureStart
+            this.hasCfClearance = !!cfClearanceCookie;
+
             if (!cfClearanceCookie) {
-                console.log('[CloudflareAdvanced] No cf_clearance cookie found - showing success notification');
-                await AdvancedUtils.showCaptureStartNotification('Cloudflare');
-
-                // Close popup after notification is shown
-                setTimeout(() => {
-                    window.close();
-                }, 800);
-
-                // Return false to cancel the normal capture flow
-                return false;
+                console.log('[CloudflareAdvanced] No cf_clearance cookie found - Turnstile-only detected');
+            } else {
+                console.log('[CloudflareAdvanced] cf_clearance cookie found - Challenge detected');
             }
 
-            // If cf_clearance exists, proceed with normal capture
-            console.log('[CloudflareAdvanced] cf_clearance cookie found - proceeding with normal capture');
+            // Always return true to proceed with normal capture flow
             return true;
         } catch (error) {
             console.error('[CloudflareAdvanced] Error checking cf_clearance:', error);
+            this.hasCfClearance = undefined;
             // On error, proceed with normal capture
             return true;
         }
@@ -53,7 +48,20 @@ class CloudflareAdvanced extends BaseAdvancedModule {
 
     async afterCaptureStart(response) {
         if (response && (response.status === 'started' || response.status === 'already_capturing')) {
-            await AdvancedUtils.showCaptureStartNotification('Cloudflare');
+            // Show context-aware notification based on cf_clearance status
+            if (this.hasCfClearance === false) {
+                // No cf_clearance = Turnstile-only
+                console.log('[CloudflareAdvanced] Showing Turnstile-only notification');
+                NotificationHelper.success('Turnstile Detected - Reload page to capture');
+            } else if (this.hasCfClearance === true) {
+                // Has cf_clearance = Challenge detected
+                console.log('[CloudflareAdvanced] Showing Challenge notification');
+                NotificationHelper.info('Challenge Detected - Reload page to capture');
+            } else {
+                // Unknown status, show default
+                console.log('[CloudflareAdvanced] Showing default notification');
+                await AdvancedUtils.showCaptureStartNotification('Cloudflare');
+            }
 
             // Close popup after notification is shown
             setTimeout(() => {
