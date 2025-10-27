@@ -2847,9 +2847,6 @@ function setupMessageListeners() {
             case 'CLOUDFLARE_START_ANALYSIS':
             case 'CLOUDFLARE_SHOW_ANALYZING_NOTIFICATION':
             case 'CLOUDFLARE_CHECK_VERSION':
-            case 'CLOUDFLARE_START_CAPTURE':
-            case 'CLOUDFLARE_STOP_CAPTURE':
-            case 'CLOUDFLARE_GET_CAPTURE_STATE':
                 if (typeof handleCloudflareMessage === 'function') {
                     return handleCloudflareMessage(request, sender, sendResponse);
                 }

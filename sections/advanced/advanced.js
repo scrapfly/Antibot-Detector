@@ -125,7 +125,7 @@ class Advanced {
     if (this.captureCompletionListener) return; // Already setup
 
     this.captureCompletionListener = async (message) => {
-      if (message.type === 'AKAMAI_CAPTURE_COMPLETED' || message.type === 'RECAPTCHA_CAPTURE_COMPLETED' || message.type === 'HCAPTCHA_CAPTURE_COMPLETED' || message.type === 'CLOUDFLARE_CAPTURE_COMPLETED') {
+      if (message.type === 'AKAMAI_CAPTURE_COMPLETED' || message.type === 'RECAPTCHA_CAPTURE_COMPLETED' || message.type === 'HCAPTCHA_CAPTURE_COMPLETED') {
         console.log('[Advanced] Capture completed, updating captured data display');
 
         // Don't clear the tools panel, just update the captured data section
@@ -151,15 +151,6 @@ class Advanced {
           // Update capture button state for hCaptcha
           if (message.type === 'HCAPTCHA_CAPTURE_COMPLETED') {
             const captureBtn = document.querySelector('#hcaptchaStartCapture');
-            if (captureBtn) {
-              captureBtn.classList.remove('capturing');
-              captureBtn.querySelector('.tool-btn-label').textContent = 'Start Capturing';
-            }
-          }
-
-          // Update capture button state for Cloudflare
-          if (message.type === 'CLOUDFLARE_CAPTURE_COMPLETED') {
-            const captureBtn = document.querySelector('#cloudflareStartCapture');
             if (captureBtn) {
               captureBtn.classList.remove('capturing');
               captureBtn.querySelector('.tool-btn-label').textContent = 'Start Capturing';
