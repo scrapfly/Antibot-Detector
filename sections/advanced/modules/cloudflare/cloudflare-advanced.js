@@ -16,53 +16,6 @@ class CloudflareAdvanced extends BaseAdvancedModule {
         super(detection, tabInfo, 'cloudflare');
     }
 
-    async beforeCapture() {
-        console.log('[CloudflareAdvanced] beforeCapture hook - checking cf_clearance cookie');
-        try {
-            if (!this.tabInfo || !this.tabInfo.url) {
-                throw new Error('Tab information not available');
-            }
-
-            // Check if cf_clearance cookie exists
-            const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
-            const cfClearanceCookie = cookies.find(c => c.name === 'cf_clearance');
-
-            // Track cf_clearance status for notification
-            this.hasCfClearance = !!cfClearanceCookie;
-
-            if (!cfClearanceCookie) {
-                console.log('[CloudflareAdvanced] ✓ No cf_clearance - Turnstile detected');
-            } else {
-                console.log('[CloudflareAdvanced] ✓ cf_clearance exists - Challenge + Turnstile detected');
-            }
-
-            // Always proceed - interceptor will handle capture
-            return true;
-        } catch (error) {
-            console.error('[CloudflareAdvanced] Error checking cf_clearance:', error);
-            this.hasCfClearance = undefined;
-            return true;
-        }
-    }
-
-    async afterCaptureStart(response) {
-        if (response && (response.status === 'started' || response.status === 'already_capturing')) {
-            // Show notification and close popup
-            if (this.hasCfClearance === false) {
-                NotificationHelper.success('Turnstile Detected - Reload page to capture');
-            } else if (this.hasCfClearance === true) {
-                NotificationHelper.success('Challenge + Turnstile Detected - Reload page to capture');
-            } else {
-                NotificationHelper.info('Capturing... Reload page to detect');
-            }
-
-            // Close popup after notification is shown
-            setTimeout(() => {
-                window.close();
-            }, 800);
-        }
-    }
-
     renderTools() {
         return `
             <div class="recaptcha-tools-grid">
@@ -93,15 +46,6 @@ class CloudflareAdvanced extends BaseAdvancedModule {
                     <div class="tool-btn-label">Extract Site Key</div>
                 </button>
 
-                <button class="recaptcha-tool-btn" id="cloudflareStartCapture">
-                    <div class="tool-icon-container tool-icon-red">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                            <path d="M12,4C6.48,4 2,8.48 2,14C2,19.52 6.48,24 12,24C17.52,24 22,19.52 22,14C22,8.48 17.52,4 12,4M12,22C7.58,22 4,18.42 4,14C4,9.58 7.58,6 12,6C16.42,6 20,9.58 20,14C20,18.42 16.42,22 12,22M13.5,13H16L12,16.96L8,13H10.5V9H13.5V13Z"/>
-                        </svg>
-                    </div>
-                    <div class="tool-btn-label">Start Capturing</div>
-                </button>
-
                 <button class="recaptcha-tool-btn" id="cloudflareAnalyzeScripts">
                     <div class="tool-icon-container tool-icon-blue">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
@@ -120,7 +64,6 @@ class CloudflareAdvanced extends BaseAdvancedModule {
         const checkVersionBtn = document.querySelector('#cloudflareCheckVersion');
         const checkCookiesBtn = document.querySelector('#cloudflareCheckCookies');
         const extractSiteKeyBtn = document.querySelector('#cloudflareExtractSiteKey');
-        const startCaptureBtn = document.querySelector('#cloudflareStartCapture');
         const analyzeScriptsBtn = document.querySelector('#cloudflareAnalyzeScripts');
 
         if (checkVersionBtn) {
@@ -136,11 +79,6 @@ class CloudflareAdvanced extends BaseAdvancedModule {
         if (extractSiteKeyBtn) {
             extractSiteKeyBtn.addEventListener('click', () => this.extractSiteKey());
             console.log('[Cloudflare] Added listener to Extract Site Key button');
-        }
-
-        if (startCaptureBtn) {
-            startCaptureBtn.addEventListener('click', () => this.startCapturing());
-            console.log('[Cloudflare] Added listener to Start Capturing button');
         }
 
         if (analyzeScriptsBtn) {
@@ -277,34 +215,109 @@ class CloudflareAdvanced extends BaseAdvancedModule {
     async checkVersion() {
         console.log('[Cloudflare] ========== CHECK VERSION ==========');
         try {
-            if (!this.tabInfo || !this.tabInfo.url) {
+            if (!this.tabInfo || !this.tabInfo.url || !this.tabInfo.id) {
                 throw new Error('Tab information not available');
             }
 
-            // Quick cookie check first
+            // Show analyzing notification
+            NotificationHelper.info('Analyzing Cloudflare configuration...');
+
+            // Check cf_clearance cookie first
             const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
             const hasCfClearance = cookies.some(c => c.name === 'cf_clearance');
 
-            // If cf_clearance exists, it's Challenge - show immediately
-            if (hasCfClearance) {
-                console.log('[Cloudflare] cf_clearance cookie found - Challenge detected');
-                this.displayVersionModal({
-                    type: 'Challenge',
-                    hasTurnstile: false,
-                    hasChallenge: true,
-                    detectionMethods: ['cf_clearance-cookie']
-                });
-                return;
+            // Extract sitekey from DOM
+            const sitekeyResult = await chrome.scripting.executeScript({
+                target: { tabId: this.tabInfo.id },
+                world: 'MAIN',
+                func: () => {
+                    // Look for Turnstile sitekey
+                    const elem = document.querySelector('[data-sitekey]');
+                    if (elem) {
+                        const sitekey = elem.getAttribute('data-sitekey');
+                        const hasCallback = elem.hasAttribute('data-callback');
+                        return { sitekey, hasCallback };
+                    }
+
+                    // Search in scripts as fallback
+                    const scripts = Array.from(document.querySelectorAll('script'));
+                    for (const script of scripts) {
+                        const match = script.textContent.match(/sitekey[':"\s]+['"]?([a-zA-Z0-9_\-]{20,})['"]?/);
+                        if (match) {
+                            return { sitekey: match[1], hasCallback: false };
+                        }
+                    }
+
+                    return { sitekey: null, hasCallback: false };
+                }
+            });
+
+            const sitekey = sitekeyResult?.[0]?.result?.sitekey || null;
+            const hasCallback = sitekeyResult?.[0]?.result?.hasCallback || false;
+
+            console.log('[Cloudflare] Extracted data:', { sitekey: sitekey?.substring(0, 20) + '...', hasCallback });
+
+            // Monitor network requests briefly to detect cdata/cAction
+            const networkData = {
+                hasCdata: false,
+                hasCaction: false,
+                hasChallenge: false
+            };
+
+            const requestListener = (details) => {
+                if (details.tabId !== this.tabInfo.id) return;
+                const url = details.url;
+
+                // Check for Turnstile with cdata/cAction
+                if (/turnstile/i.test(url)) {
+                    if (url.includes('cdata') || url.includes('cAction')) {
+                        if (url.includes('cdata')) networkData.hasCdata = true;
+                        if (url.includes('cAction')) networkData.hasCaction = true;
+                    }
+                }
+
+                // Check for Cloudflare Challenge
+                if (/cdn-cgi\/challenge-platform|challenges\.cloudflare\.com/.test(url)) {
+                    networkData.hasChallenge = true;
+                }
+            };
+
+            // Add network listener
+            chrome.webRequest.onBeforeRequest.addListener(
+                requestListener,
+                { urls: ['<all_urls>'] },
+                []
+            );
+
+            // Wait a brief moment for network requests to be captured
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // Remove listener
+            chrome.webRequest.onBeforeRequest.removeListener(requestListener);
+
+            // Determine type
+            let type = 'Unknown';
+            if (hasCfClearance && (networkData.hasChallenge || networkData.hasCdata)) {
+                type = 'Challenge + Turnstile';
+            } else if (hasCfClearance) {
+                type = 'Challenge';
+            } else if (networkData.hasCdata || networkData.hasCaction) {
+                type = 'Turnstile';
+            } else if (sitekey) {
+                type = 'Turnstile';
             }
 
-            // No cf_clearance - it's Turnstile, show immediately
-            console.log('[Cloudflare] No cf_clearance cookie - Turnstile detected');
+            // Display comprehensive modal
             this.displayVersionModal({
-                type: 'Turnstile',
-                hasTurnstile: true,
-                hasChallenge: false,
-                detectionMethods: []
+                type,
+                sitekey,
+                hasCdata: networkData.hasCdata,
+                hasCaction: networkData.hasCaction,
+                hasCallback,
+                hasCfClearance,
+                hasChallenge: networkData.hasChallenge
             });
+
         } catch (error) {
             console.error('[Cloudflare] Failed to check version:', error);
             NotificationHelper.error('Failed to check version: ' + error.message);
@@ -471,32 +484,85 @@ class CloudflareAdvanced extends BaseAdvancedModule {
             typeColor = '#9333EA';
         }
 
+        const sitekey = data?.sitekey || null;
+
         modal.innerHTML = `
-            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Cloudflare Type Detection</h3>
+            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 650px; max-height: 90vh; overflow-y: auto; width: 95%;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin: 0; font-size: 18px; color: var(--text-primary); font-weight: 600;">Cloudflare Detection</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 
-                <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 6px; margin-bottom: 16px; text-align: center;">
-                    <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">Detected Type</div>
-                    <div style="background: linear-gradient(135deg, ${typeColor} 0%, ${typeColor}dd 100%); color: white; padding: 12px 16px; border-radius: 6px; font-weight: 500; font-size: 16px;">${type}</div>
+                <!-- Detected Type -->
+                <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.1);">
+                    <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 10px;">Type</div>
+                    <div style="background: linear-gradient(135deg, ${typeColor} 0%, ${typeColor}dd 100%); color: white; padding: 12px 16px; border-radius: 6px; font-weight: 600; font-size: 16px; display: inline-block;">${type}</div>
                 </div>
 
-                <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                        <span style="font-weight: 500; color: var(--text-primary);">Detection Methods</span>
+                <!-- Site Key -->
+                ${sitekey ? `
+                <div style="background: var(--bg-tertiary); padding: 14px; border-radius: 8px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.1);">
+                    <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">Site Key</div>
+                    <div class="copy-sitekey" data-copy="${sitekey}" style="font-family: monospace; font-size: 12px; color: #4ade80; background: var(--bg-primary); padding: 12px; border-radius: 6px; word-break: break-all; cursor: pointer; transition: all 0.2s; user-select: text;" title="Click to copy">${sitekey}</div>
+                </div>
+                ` : ''}
+
+                <!-- Detection Details Grid -->
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px;">
+                    <!-- cdata Parameter -->
+                    <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; border: 1px solid ${data?.hasCdata ? '#4ade80' : 'rgba(255,255,255,0.1)'};">
+                        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">cdata Parameter</div>
+                        <div style="font-size: 14px; font-weight: 600; color: ${data?.hasCdata ? '#4ade80' : 'var(--text-secondary)'};">${data?.hasCdata ? '✓ Found' : '✗ Not Found'}</div>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                        ${data.detectionMethods?.length > 0 ? data.detectionMethods.map(method => `
-                            <div style="background: var(--bg-primary); padding: 8px; border-radius: 4px; font-size: 12px; color: var(--text-secondary);">✓ ${method}</div>
-                        `).join('') : '<div style="color: var(--text-secondary); font-size: 12px;">No detection methods found</div>'}
+
+                    <!-- cAction Parameter -->
+                    <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; border: 1px solid ${data?.hasCaction ? '#4ade80' : 'rgba(255,255,255,0.1)'};">
+                        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">cAction Parameter</div>
+                        <div style="font-size: 14px; font-weight: 600; color: ${data?.hasCaction ? '#4ade80' : 'var(--text-secondary)'};">${data?.hasCaction ? '✓ Found' : '✗ Not Found'}</div>
+                    </div>
+
+                    <!-- cf_clearance Cookie -->
+                    <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; border: 1px solid ${data?.hasCfClearance ? '#4ade80' : 'rgba(255,255,255,0.1)'};">
+                        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">cf_clearance</div>
+                        <div style="font-size: 14px; font-weight: 600; color: ${data?.hasCfClearance ? '#4ade80' : 'var(--text-secondary)'};">${data?.hasCfClearance ? '✓ Present' : '✗ Missing'}</div>
+                    </div>
+
+                    <!-- Callback Required -->
+                    <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; border: 1px solid ${data?.hasCallback ? '#4ade80' : 'rgba(255,255,255,0.1)'};">
+                        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">Callback Required</div>
+                        <div style="font-size: 14px; font-weight: 600; color: ${data?.hasCallback ? '#4ade80' : 'var(--text-secondary)'};">${data?.hasCallback ? '✓ Yes' : '✗ No'}</div>
                     </div>
                 </div>
+
+                <!-- Challenge Detected -->
+                ${data?.hasChallenge ? `
+                <div style="background: rgba(249, 115, 22, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(249, 115, 22, 0.3); margin-bottom: 16px;">
+                    <div style="font-size: 11px; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">Alert</div>
+                    <div style="font-size: 13px; color: #fca5a5;">Cloudflare Challenge Platform detected in network requests</div>
+                </div>
+                ` : ''}
             </div>
         `;
 
         document.body.appendChild(modal);
+
+        // Add copy-to-clipboard for sitekey
+        const copyBtn = modal.querySelector('.copy-sitekey');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const text = copyBtn.getAttribute('data-copy');
+                AdvancedUtils.copyToClipboard(text, copyBtn, { notificationMessage: 'Site Key copied' });
+            });
+
+            // Hover effect
+            copyBtn.addEventListener('mouseenter', () => {
+                copyBtn.style.background = 'rgba(74, 222, 128, 0.15)';
+            });
+            copyBtn.addEventListener('mouseleave', () => {
+                copyBtn.style.background = 'var(--bg-primary)';
+            });
+        }
 
         const closeBtn = modal.querySelector('.advanced-modal-close-btn');
         if (closeBtn) {
