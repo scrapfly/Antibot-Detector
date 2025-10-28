@@ -7,13 +7,10 @@
  * Pattern: POST to https://*/fc/*/public_key/*
  */
 
-if (typeof funcaptchaInterceptionListener !== 'undefined') {
-    console.log('[FunCaptcha] Interceptor already loaded');
-} else {
-
-var funcaptchaInterceptionListener = null;
-var funcaptchaCaptureStateRef = null;
-var funcaptchaNavigationListeners = new Map();
+// Guard against re-initialization (use var for service worker reload compatibility)
+var funcaptchaInterceptionListener = funcaptchaInterceptionListener || null;
+var funcaptchaCaptureStateRef = funcaptchaCaptureStateRef || null;
+var funcaptchaNavigationListeners = funcaptchaNavigationListeners || new Map();
 
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
 var saveToHistory = self.BaseInterceptorHelpers?.saveToHistory;
@@ -357,4 +354,3 @@ function funcaptchaStartAnalysis(tabId, url) {
 }
 
 console.log('[FunCaptcha] Interceptor loaded');
-}
