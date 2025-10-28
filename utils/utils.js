@@ -605,21 +605,8 @@ class Utils {
       return;
     }
 
-    // Check if extension is enabled
-    try {
-      const result = await chrome.storage.local.get(['scrapfly_enabled']);
-      if (result.scrapfly_enabled === false) {
-        console.log('Scrapfly Content Script: Extension is disabled, skipping notification');
-        return;
-      }
-    } catch (error) {
-      if (error.message && error.message.includes('Extension context invalidated')) {
-        console.log('Scrapfly Content Script: Extension was reloaded, content script is orphaned');
-        cleanupOrphanedScript();
-        return;
-      }
-      console.error('Scrapfly Content Script: Error checking enabled state:', error);
-    }
+    // Let the background script handle the disabled state check
+    // This ensures the badge is properly updated even when extension is disabled
 
     // Use different debounce times based on trigger source
     // visibility_change needs longer debounce to avoid triggering when opening popup
