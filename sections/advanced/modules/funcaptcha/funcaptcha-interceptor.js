@@ -16,10 +16,6 @@ var showNotification = self.BaseInterceptorHelpers?.showNotification;
 var saveToHistory = self.BaseInterceptorHelpers?.saveToHistory;
 var cleanupNotifications = self.BaseInterceptorHelpers?.cleanupNotifications;
 
-if (typeof funcaptchaInterceptionListener !== 'undefined' && funcaptchaInterceptionListener !== null) {
-    console.log('[FunCaptcha] Interceptor already loaded');
-} else {
-
 /**
  * Initialize interceptor with reference to capture state Map
  */
@@ -358,5 +354,3 @@ function funcaptchaStartAnalysis(tabId, url) {
 }
 
 console.log('[FunCaptcha] Interceptor loaded');
-
-}  // End of initialization guard
