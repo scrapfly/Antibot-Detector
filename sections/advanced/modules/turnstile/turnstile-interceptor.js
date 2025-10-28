@@ -2,9 +2,8 @@
  * Turnstile Script Interceptor
  */
 
-if (typeof turnstileInterceptionListener !== 'undefined') {
-  console.log('[Turnstile] Interceptor already loaded');
-} else {
+// Guard against re-initialization (use var for service worker reload compatibility)
+var turnstileInterceptionListener = turnstileInterceptionListener || null;
 
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
 
@@ -76,4 +75,3 @@ function turnstileStartAnalysis(tabId, url) {
 }
 
 console.log('[Turnstile] Interceptor loaded');
-}

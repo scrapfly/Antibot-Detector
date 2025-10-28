@@ -3,10 +3,9 @@
  * Captures AWS WAF parameters from network requests and page context
  */
 
-// Guard to prevent redeclaration during extension reloads
-if (typeof awsWafInterceptionListener !== 'undefined') {
-  console.log('[AwsWaf] Interceptor already loaded, skipping redeclaration');
-} else {
+// Guard against re-initialization (use var for service worker reload compatibility)
+var awsWafInterceptionListener = awsWafInterceptionListener || null;
+var awsWafStatusListener = awsWafStatusListener || null;
 
 // Destructure helpers from BaseInterceptorHelpers (use var to avoid redeclaration errors)
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
@@ -14,9 +13,6 @@ var showNotification = self.BaseInterceptorHelpers?.showNotification;
 // ============================================================================
 // State Management
 // ============================================================================
-
-var awsWafInterceptionListener = null;
-var awsWafStatusListener = null;
 var awsWafCaptureStateRef = {
   isCapturing: false,
   tabId: null,
@@ -507,5 +503,3 @@ function awsWafStartAnalysis(tabId, url) {
 // ============================================================================
 
 console.log('[AwsWaf] Interceptor loaded successfully');
-
-} // End of guard

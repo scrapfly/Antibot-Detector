@@ -3,9 +3,8 @@
  * Handles hCaptcha request interception, version checking, and data capture
  */
 
-if (typeof hcaptchaInterceptionListener !== 'undefined') {
-    console.log('[hCaptcha] Interceptor already loaded');
-} else {
+// Guard against re-initialization (use var for service worker reload compatibility)
+var hcaptchaInterceptionListener = hcaptchaInterceptionListener || null;
 
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
 var saveToHistory = self.BaseInterceptorHelpers?.saveToHistory;
@@ -541,4 +540,3 @@ function hcaptchaStartAnalysis(tabId, url) {
 }
 
 console.log('[hCaptcha] Interceptor loaded');
-}

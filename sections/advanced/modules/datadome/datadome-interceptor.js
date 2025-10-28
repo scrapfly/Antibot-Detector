@@ -3,10 +3,9 @@
  * Captures DataDome script URLs from network requests
  */
 
-// Guard to prevent redeclaration during extension reloads
-if (typeof datadomeInterceptionListener !== 'undefined') {
-  console.log('[DataDome] Interceptor already loaded, skipping redeclaration');
-} else {
+// Guard against re-initialization (use var for service worker reload compatibility)
+var datadomeInterceptionListener = datadomeInterceptionListener || null;
+var datadomeStatusListener = datadomeStatusListener || null;
 
 // Destructure helpers from BaseInterceptorHelpers (use var to avoid redeclaration errors)
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
@@ -14,9 +13,6 @@ var showNotification = self.BaseInterceptorHelpers?.showNotification;
 // ============================================================================
 // State Management
 // ============================================================================
-
-var datadomeInterceptionListener = null;
-var datadomeStatusListener = null;
 
 // ============================================================================
 // Message Handler
@@ -159,5 +155,3 @@ function datadomeStartAnalysis(tabId, url) {
 // ============================================================================
 
 console.log('[DataDome] Interceptor loaded successfully');
-
-} // End of guard
