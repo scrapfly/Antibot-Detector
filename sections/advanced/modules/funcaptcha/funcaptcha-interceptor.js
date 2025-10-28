@@ -7,11 +7,6 @@
  * Pattern: POST to https://*/fc/*/public_key/*
  */
 
-// Guard against re-initialization
-if (typeof funcaptchaInterceptionListener !== 'undefined') {
-    console.log('[FunCaptcha] Interceptor already loaded');
-} else {
-
 // Guard against re-initialization (use var for service worker reload compatibility)
 var funcaptchaInterceptionListener = funcaptchaInterceptionListener || null;
 var funcaptchaCaptureStateRef = funcaptchaCaptureStateRef || null;
@@ -20,6 +15,10 @@ var funcaptchaNavigationListeners = funcaptchaNavigationListeners || new Map();
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
 var saveToHistory = self.BaseInterceptorHelpers?.saveToHistory;
 var cleanupNotifications = self.BaseInterceptorHelpers?.cleanupNotifications;
+
+if (typeof funcaptchaInterceptionListener !== 'undefined' && funcaptchaInterceptionListener !== null) {
+    console.log('[FunCaptcha] Interceptor already loaded');
+} else {
 
 /**
  * Initialize interceptor with reference to capture state Map
