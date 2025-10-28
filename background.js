@@ -379,6 +379,7 @@ const headersStore = new TTLMap(300000);
 const reCaptchaCaptureState = new TTLMap(1800000, 100); // 30 min, max 100 captures
 const akamaiCaptureState = new TTLMap(1800000, 100); // 30 min, max 100 captures
 const impervaCaptureState = new TTLMap(1800000, 100); // 30 min, max 100 captures
+const funcaptchaCaptureState = new TTLMap(1800000, 100); // 30 min, max 100 captures
 
 // OPTIMIZED 3.1: Interceptors initialized lazily on first message (not here)
 
@@ -2884,6 +2885,7 @@ function setupMessageListeners() {
             case 'FUNCAPTCHA_GET_CAPTURE_STATE':
             case 'FUNCAPTCHA_CAPTURE_COMPLETED':
                 if (typeof handleFunCaptchaMessage === 'function') {
+                    request.captureState = funcaptchaCaptureState;
                     return handleFunCaptchaMessage(request, sender, sendResponse);
                 }
                 break;
@@ -2921,6 +2923,16 @@ function setupTabListeners() {
             }
             reCaptchaCaptureState.delete(tabId);
             stopRecaptchaInterception();
+        }
+
+        // Clear FunCaptcha capture state if tab is closed during capture
+        if (funcaptchaCaptureState.has(tabId)) {
+            console.log(`Scrapfly Background: Tab ${tabId} closed during FunCaptcha capture, cleaning up`);
+            const funcState = funcaptchaCaptureState.get(tabId);
+            if (funcState && funcState.timeout) {
+                clearTimeout(funcState.timeout);
+            }
+            funcaptchaCaptureState.delete(tabId);
         }
 
         // Clear the badge for this tab
