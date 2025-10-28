@@ -4,7 +4,7 @@
  * Intercepts FunCaptcha API requests to extract public key, website URL,
  * BDA (Browser Data Array), and other challenge parameters.
  *
- * Pattern: POST to https://*/fc/*/public_key/*
+
  */
 
 // Guard against re-initialization (use var for service worker reload compatibility)
@@ -64,7 +64,7 @@ async function funcaptchaStartCapture(tabId) {
             await showNotification(tabId, {
                 type: 'loading',
                 title: '🔴 FunCaptcha Capture Active',
-                message: 'Please wait for page load, then trigger FunCaptcha challenge',
+                message: 'Please reload the page to trigger FunCaptcha challenge (60s timeout)',
                 duration: 60000
             });
         } catch (error) {
