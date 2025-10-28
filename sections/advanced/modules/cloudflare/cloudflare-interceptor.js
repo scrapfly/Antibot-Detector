@@ -3,15 +3,12 @@
  * Captures both Turnstile and Cloudflare Challenge data
  */
 
-if (typeof cloudflareInterceptionListener !== 'undefined') {
-  console.log('[Cloudflare] Interceptor already loaded, skipping redeclaration');
-} else {
+// Guard against re-initialization (use var for service worker reload compatibility)
+var cloudflareInterceptionListener = cloudflareInterceptionListener || null;
+var cloudflareStatusListener = cloudflareStatusListener || null;
 
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
 var saveToHistory = self.BaseInterceptorHelpers?.saveToHistory;
-
-var cloudflareInterceptionListener = null;
-var cloudflareStatusListener = null;
 
 function handleCloudflareMessage(request, sender, sendResponse) {
     const { type } = request;
@@ -211,5 +208,3 @@ function cloudflareStartAnalysis(tabId, url) {
 }
 
 console.log('[Cloudflare] Interceptor loaded successfully');
-
-}
