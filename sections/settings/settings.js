@@ -502,8 +502,9 @@ class Settings {
   /**
    * Handle enable/disable toggle change
    * @param {boolean} enabled - New enabled state
+   * @param {object} context - Optional context with DetectionEngineManager, CategoryManager, categoryManager
    */
-  static async handleEnableToggle(enabled) {
+  static async handleEnableToggle(enabled, context = null) {
     try {
       await chrome.storage.local.set({ scrapfly_enabled: enabled });
       console.log('Extension enabled state updated:', enabled);
@@ -520,10 +521,35 @@ class Settings {
       const tabs = await chrome.tabs.query({});
       for (const tab of tabs) {
         if (enabled) {
-          chrome.action.setBadgeText({ text: '', tabId: tab.id }).catch((error) => {
-            // Expected: Tab might be closed
-            console.log(`[Settings] Failed to clear badge for tab ${tab.id}:`, error.message);
-          });
+          // When enabling, check for cached detection data
+          if (context && context.DetectionEngineManager && context.CategoryManager && context.categoryManager) {
+            const storedData = await context.DetectionEngineManager.getStoredDetection(tab.url);
+            if (storedData && storedData.detectionCount > 0) {
+              // Restore badge from cached data
+              const badgeColors = await context.CategoryManager.getBadgeColors(context.categoryManager);
+              const count = storedData.detectionCount.toString();
+              const color = storedData.detectionCount >= 5 ? badgeColors.high :
+                           storedData.detectionCount >= 3 ? badgeColors.medium :
+                           badgeColors.low;
+
+              chrome.action.setBadgeText({ text: count, tabId: tab.id }).catch((error) => {
+                console.log(`[Settings] Failed to set badge for tab ${tab.id}:`, error.message);
+              });
+              chrome.action.setBadgeBackgroundColor({ color: color, tabId: tab.id }).catch((error) => {
+                console.log(`[Settings] Failed to set badge color for tab ${tab.id}:`, error.message);
+              });
+            } else {
+              // No cached detections, clear badge
+              chrome.action.setBadgeText({ text: '', tabId: tab.id }).catch((error) => {
+                console.log(`[Settings] Failed to clear badge for tab ${tab.id}:`, error.message);
+              });
+            }
+          } else {
+            // Fallback: just clear badge if dependencies not provided
+            chrome.action.setBadgeText({ text: '', tabId: tab.id }).catch((error) => {
+              console.log(`[Settings] Failed to clear badge for tab ${tab.id}:`, error.message);
+            });
+          }
         } else {
           chrome.action.setBadgeText({ text: '✕', tabId: tab.id }).catch((error) => {
             // Expected: Tab might be closed

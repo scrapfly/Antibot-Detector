@@ -1797,6 +1797,29 @@ function setupMessageListeners() {
                 })();
                 break;
 
+            case 'EXTENSION_TOGGLE_CHANGED':
+                // Handle extension enable/disable toggle with cached detection badge restoration
+                (async () => {
+                    try {
+                        const enabled = request.enabled;
+                        console.log(`[Background] Extension toggle changed to: ${enabled ? 'ENABLED' : 'DISABLED'}`);
+
+                        // Call Settings.handleEnableToggle with dependencies for badge restoration
+                        await Settings.handleEnableToggle(enabled, {
+                            DetectionEngineManager,
+                            CategoryManager,
+                            categoryManager
+                        });
+
+                        sendResponse({ status: 'success' });
+                    } catch (error) {
+                        console.error('[Background] Error handling toggle change:', error);
+                        sendResponse({ status: 'error', error: error.message });
+                    }
+                })();
+                return true; // Async response
+                break;
+
             case 'DETECTION_DATA':
                 // Process detection data from content script
                 console.log('[DEBUG] DETECTION_DATA message received!');
