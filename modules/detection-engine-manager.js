@@ -2270,10 +2270,12 @@ class DetectionEngineManager {
             const result = await chrome.storage.local.get(['scrapfly_enabled']);
             if (result.scrapfly_enabled === false) {
                 console.log('Scrapfly Background: Extension is disabled, skipping page load detection');
-                // Clear badge if extension is disabled
-                chrome.action.setBadgeText({ text: '', tabId: tabId }).catch((error) => {
-                    // Expected: Tab might be closed
-                    console.log(`[PageLoad] Failed to clear badge (disabled) for tab ${tabId}:`, error.message);
+                // Set orange X badge to indicate extension is disabled
+                chrome.action.setBadgeText({ text: '✕', tabId: tabId }).catch((error) => {
+                    console.log(`[PageLoad] Failed to set disabled badge for tab ${tabId}:`, error.message);
+                });
+                chrome.action.setBadgeBackgroundColor({ color: '#f59e0b', tabId: tabId }).catch((error) => {
+                    console.log(`[PageLoad] Failed to set badge color for tab ${tabId}:`, error.message);
                 });
                 return;
             }
