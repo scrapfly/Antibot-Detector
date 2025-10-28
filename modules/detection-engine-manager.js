@@ -1441,11 +1441,13 @@ class DetectionEngineManager {
                 };
 
                 // Check main page URL
-                if (this.matchPattern(url, urlPattern.pattern, matchOptions)) {
+                const urlMatch = this.matchPatternWithCapture(url, urlPattern.pattern, matchOptions);
+                if (urlMatch) {
                     matches.push({
                         type: 'url',
                         pattern: urlPattern.pattern,
-                        value: url,
+                        value: urlMatch,  // Store the actual matched substring
+                        fullUrl: url,     // Store full URL for reference
                         confidence: urlPattern.confidence,
                         description: urlPattern.description
                     });
@@ -1455,14 +1457,16 @@ class DetectionEngineManager {
                 if (content && content.length > 0) {
                     for (const script of content) {
                         const scriptSrc = script.src || '';
-                        if (scriptSrc && this.matchPattern(scriptSrc, urlPattern.pattern, matchOptions)) {
+                        const scriptMatch = this.matchPatternWithCapture(scriptSrc, urlPattern.pattern, matchOptions);
+                        if (scriptMatch) {
                             // Check if we already have this pattern to avoid duplicates
                             const alreadyAdded = matches.some(m => m.type === 'url' && m.pattern === urlPattern.pattern);
                             if (!alreadyAdded) {
                                 matches.push({
                                     type: 'url',
                                     pattern: urlPattern.pattern,
-                                    value: scriptSrc,
+                                    value: scriptMatch,  // Store actual matched substring
+                                    fullUrl: scriptSrc,  // Store full script URL for reference
                                     confidence: urlPattern.confidence,
                                     description: urlPattern.description
                                 });
@@ -1974,6 +1978,55 @@ class DetectionEngineManager {
     }
 
     /**
+     * Match pattern and capture the actual matched substring (not just true/false)
+     * Used to display what was actually found, not the search pattern
+     * @param {string} text - Text to search in
+     * @param {string} pattern - Pattern to match
+     * @param {object} options - Match options {regex, wholeWord, caseSensitive}
+     * @returns {string|null} - The actual matched substring, or null if no match
+     */
+    matchPatternWithCapture(text, pattern, options = {}) {
+        const {
+            regex = false,
+            wholeWord = false,
+            caseSensitive = false
+        } = options;
+
+        if (!text || !pattern) return null;
+
+        try {
+            const textToSearch = caseSensitive ? text : text.toLowerCase();
+            const patternToMatch = caseSensitive ? pattern : pattern.toLowerCase();
+
+            if (regex) {
+                // Regex matching - find the actual matched substring
+                const flags = caseSensitive ? 'g' : 'gi';
+                const compiledRegex = new RegExp(patternToMatch, flags);
+                const match = compiledRegex.exec(text);
+                return match ? match[0] : null;
+            }
+            else if (wholeWord) {
+                // Whole word matching
+                const escapedPattern = this.escapeRegExp(patternToMatch);
+                const wordBoundaryRegex = new RegExp(`\\b${escapedPattern}\\b`, caseSensitive ? 'g' : 'gi');
+                const match = wordBoundaryRegex.exec(text);
+                return match ? match[0] : null;
+            }
+            else {
+                // Simple substring matching - return the actual substring from original text
+                const index = textToSearch.indexOf(patternToMatch);
+                if (index !== -1) {
+                    return text.substring(index, index + pattern.length);
+                }
+            }
+        } catch (error) {
+            console.warn('[matchPatternWithCapture] Error matching pattern:', error);
+        }
+
+        return null;
+    }
+
+    /**
      * Escape special regex characters for literal matching
      * @param {string} string - String to escape
      * @returns {string} - Escaped string
@@ -2105,8 +2158,9 @@ class DetectionEngineManager {
                     confidence: detection.confidence,
                     matches: detection.matches?.map(m => ({
                         type: m.type,
-                        value: m.pattern || m.name || m.selector || m.value,
-                        confidence: m.confidence
+                        value: m.value || m.pattern || m.name || m.selector,
+                        confidence: m.confidence,
+                        fullUrl: m.fullUrl  // Preserve full URL for URL-type detections
                     })) || []
                 };
 

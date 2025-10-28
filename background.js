@@ -825,7 +825,7 @@ async function finalizeDetection(tabId, state) {
             const name = data.detector?.name || 'Unknown';
             console.log(`[DetectionState]   - ${id}: ${name} (${data.matches?.length || 0} matches)`);
             if (data.matches) {
-                data.matches.forEach(m => console.log(`[DetectionState]     * ${m.type}: ${m.pattern || m.value || m.name}`));
+                data.matches.forEach(m => console.log(`[DetectionState]     * ${m.type}: ${m.value || m.pattern || m.name}`));
             }
         }
     }

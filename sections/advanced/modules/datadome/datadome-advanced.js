@@ -207,30 +207,13 @@ class DataDomeAdvanced extends BaseAdvancedModule {
             console.log('[DataDome] Analysis mode response:', response);
 
             if (response && response.status === 'started') {
-                // Show notification about cookie deletion and reload
-                NotificationHelper.info('Deleting datadome cookie... Page will reload');
+                // Show notification about reload
+                NotificationHelper.info('Analyzing DataDome scripts... Page will reload');
 
-                // Delete datadome cookie before reload to trigger DataDome challenge
+                // Reload page to capture DataDome scripts (keep existing cookie)
                 setTimeout(async () => {
                     try {
-                        // Get all datadome cookies for this URL
-                        const cookies = await chrome.cookies.getAll({
-                            url: this.tabInfo.url,
-                            name: 'datadome'
-                        });
-
-                        console.log('[DataDome] Found datadome cookies to delete:', cookies.length);
-
-                        // Delete each cookie (may have multiple for different domains/paths)
-                        for (const cookie of cookies) {
-                            await chrome.cookies.remove({
-                                url: this.tabInfo.url,
-                                name: cookie.name
-                            });
-                            console.log('[DataDome] Deleted cookie:', cookie.name, 'domain:', cookie.domain);
-                        }
-
-                        console.log('[DataDome] Cookie deletion complete, reloading page...');
+                        console.log('[DataDome] Reloading page to capture scripts (keeping datadome cookie)...');
 
                         // Send message to show analyzing notification right before reload
                         await AdvancedUtils.sendMessage({
@@ -238,12 +221,12 @@ class DataDomeAdvanced extends BaseAdvancedModule {
                             tabId: this.tabInfo.id
                         });
 
-                    } catch (cookieError) {
-                        console.error('[DataDome] Failed to delete cookies:', cookieError);
+                    } catch (error) {
+                        console.error('[DataDome] Error showing analyzing notification:', error);
                     }
 
-                    // Reload page to trigger DataDome scripts
-                    // Background's webNavigation listener will capture scripts after reload
+                    // Reload page - Background's webNavigation listener will capture scripts
+                    // DataDome cookie is preserved, no deletion occurs
                     await chrome.tabs.reload(this.tabInfo.id);
                 }, 500);
             } else {

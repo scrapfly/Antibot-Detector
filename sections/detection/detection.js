@@ -1390,8 +1390,8 @@ class Detection {
 
         case 'url':
         case 'urls':
-          // Show: actual matched URL (not the regex pattern)
-          displayValue = match.value || match.pattern || 'unknown';
+          // Show: full URL inline (like cookie format)
+          displayValue = match.fullUrl || match.value || match.pattern || 'unknown';
           copyValue = displayValue;
           break;
 
@@ -2363,6 +2363,42 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
       if (detectionData.detectionResults) {
         if (this.debugMode) console.log('Detection: Using pre-processed results from background');
         detections = detectionData.detectionResults;
+
+        // MIGRATION: Handle old cached data format
+        // Old format stored full URL in 'value', new format stores matched substring
+        detections = detections.map(detection => {
+          if (detection.matches) {
+            detection.matches = detection.matches.map(match => {
+              if (match.type === 'url' || match.type === 'urls') {
+                // Case 1: No value field at all
+                if (!match.value) {
+                  return { ...match, value: match.fullUrl || match.pattern };
+                }
+                // Case 2: Value contains full URL (old format: https://...)
+                // Need to extract matched part from full URL using pattern
+                else if (match.value.includes('://') && match.pattern) {
+                  try {
+                    // Try to extract the matched substring from the full URL
+                    const regex = new RegExp(match.pattern, 'gi');
+                    const extracted = regex.exec(match.value);
+                    if (extracted && extracted[0]) {
+                      return { ...match, value: extracted[0], fullUrl: match.value };
+                    }
+                  } catch (e) {
+                    // If regex fails, keep the full URL
+                    console.warn('[Migration] Failed to extract match from URL:', e);
+                  }
+                }
+              }
+              // For non-URL matches without value field
+              else if (!match.value && match.pattern) {
+                return { ...match, value: match.pattern };
+              }
+              return match;
+            });
+          }
+          return detection;
+        });
       } else if (detectionData.pageData) {
         if (this.debugMode) console.log('Detection: Running detection on raw page data');
         detections = detectionEngine.detectOnPage(detectionData.pageData);

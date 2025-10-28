@@ -429,10 +429,24 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
         // ✅ Save to history using helper - replaces ~55 lines of manual code!
         console.log('[IMPERVA-CAPTURE] Step 4: Saving to history using helper...');
         const newCapture = await saveToHistory(tabId, captureData, {
-            type: 'imperva',
+            type: 'incapsula',
             expiryMinutes: 30
         });
         console.log('[IMPERVA-CAPTURE] ✅ Successfully saved capture to history:', newCapture.id);
+
+        // ✅ Show success notification
+        if (typeof showNotification === 'function') {
+            try {
+                await showNotification(tabId, {
+                    type: 'success',
+                    title: '✅ Imperva Capture Complete',
+                    message: 'Sensor data captured successfully',
+                    duration: 3000
+                });
+            } catch (error) {
+                console.log('[IMPERVA-CAPTURE] Notification error:', error.message);
+            }
+        }
 
         // Clean up capture state
         console.log('[IMPERVA-CAPTURE] Step 7: Cleaning up capture state for tab:', tabId);

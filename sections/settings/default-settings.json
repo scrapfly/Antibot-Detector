@@ -8,7 +8,7 @@
     "detection": {
       "cacheDuration": 12,
       "cacheUnit": "hours",
-      "cacheScope": "domain",
+      "cacheScope": "full",
       "blacklistedDomains": [],
       "enhancedDetection": {
         "enabled": true,

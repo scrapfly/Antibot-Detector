@@ -163,8 +163,8 @@
                   <span class="setting-description">Color for fingerprint detectors</span>
                 </label>
                 <div class="color-picker-container">
-                  <input type="color" id="colorFingerprint" class="color-field" value="#2196F3">
-                  <span class="color-hex-display" id="hexFingerprint">#2196F3</span>
+                  <input type="color" id="colorFingerprint" class="color-field" value="#8D33FF">
+                  <span class="color-hex-display" id="hexFingerprint">#8D33FF</span>
                 </div>
               </div>
             </div>
@@ -175,12 +175,12 @@
 
               <div class="setting-group">
                 <label class="setting-label">
-                  <span>Dom</span>
+                  <span>DOM</span>
                   <span class="setting-description">Color for DOM detection methods</span>
                 </label>
                 <div class="color-picker-container">
-                  <input type="color" id="colorTagDOM" class="color-field" value="#2196F3">
-                  <span class="color-hex-display" id="hexTagDOM">#2196F3</span>
+                  <input type="color" id="colorTagDOM" class="color-field" value="#8D33FF">
+                  <span class="color-hex-display" id="hexTagDOM">#8D33FF</span>
                 </div>
               </div>
 
@@ -224,7 +224,7 @@
 
               <div class="setting-group">
                 <label class="setting-label">
-                  <span>Urls</span>
+                  <span>URLs</span>
                   <span class="setting-description">Color for URL detection methods</span>
                 </label>
                 <div class="color-picker-container">
@@ -235,7 +235,7 @@
 
               <div class="setting-group">
                 <label class="setting-label">
-                  <span>Js Hooks</span>
+                  <span>JS Hooks</span>
                   <span class="setting-description">Color for JavaScript hook detection methods</span>
                 </label>
                 <div class="color-picker-container">
@@ -301,12 +301,12 @@
             </div>
           </div>
 
-          <div class="setting-group setting-group--stacked">
+          <div class="setting-group">
             <label class="setting-label">
               <span>Detection Cache Scope</span>
               <span class="setting-description">How to identify cached detection results</span>
             </label>
-            <select id="cacheScope" class="input-field" style="width: 100%;">
+            <select id="cacheScope" class="input-field">
               <option value="domain">Domain - Same domain (example.com)</option>
               <option value="path">Path - Domain + path (ignores query params)</option>
               <option value="full">Full URL - Exact URL match</option>
@@ -475,17 +475,6 @@
             <input type="number" id="historyLimit" class="input-field" min="0" max="1000" value="100">
           </div>
 
-          <div class="setting-group" style="flex-direction: column; align-items: flex-start;">
-            <label class="setting-label" style="margin-bottom: 8px;">
-              <span>History Limit Behavior</span>
-              <span class="setting-description">What happens when history limit is reached</span>
-            </label>
-            <select id="historyBehavior" class="select-field" style="width: 100%;">
-              <option value="rolling">Rolling Window - Keep Most Recent</option>
-              <option value="stop_at_limit">Stop at Limit - Preserve First N</option>
-            </select>
-          </div>
-
           <div class="setting-group">
             <label class="setting-label">
               <span>Auto Clear</span>
@@ -636,6 +625,19 @@
                 <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M10,19L12,15H10V11H14V15H12L14,19H10Z" fill="currentColor"/>
               </svg>
               Export History
+            </button>
+          </div>
+
+          <div class="setting-group">
+            <label class="setting-label">
+              <span>Reload Detectors from JSON</span>
+              <span class="setting-description">Sync detector storage with JSON files (fixes missing detectors)</span>
+            </label>
+            <button id="reloadDetectorsBtn" class="action-btn action-btn-warning">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" fill="currentColor"/>
+              </svg>
+              Reload from JSON
             </button>
           </div>
         </div>
