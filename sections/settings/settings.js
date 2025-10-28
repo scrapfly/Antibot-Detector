@@ -1,19 +1,80 @@
 class Settings {
   constructor() {
+    // Initialize with complete nested structure and defaults
     this.settings = {
+      // Basic toggles
       notificationsEnabled: true,
       debugMode: false,
       autoDetectionEnabled: true,
-      historyLimit: 100,
       confidenceThreshold: 70,
-      // Nested detection settings
+
+      // Badge Colors
+      badgeColors: {
+        low: '#4CAF50',    // Green
+        medium: '#FFA500', // Orange
+        high: '#FF4444'    // Red
+      },
+
+      // Category Colors
+      categoryColors: {
+        antibot: '#FF5733',
+        captcha: '#33C3FF',
+        fingerprint: '#8D33FF'
+      },
+
+      // Tag Colors
+      tagColors: {
+        dom: '#8D33FF',
+        headers: '#FF33A8',
+        cookies: '#FFC133',
+        content: '#33FFF3',
+        urls: '#00BCD4',
+        jsHooks: '#00E5FF',
+        window: '#4CAF50',
+        css: '#E91E63'
+      },
+
+      // Detection settings
       detection: {
         cacheDuration: 12,
         cacheUnit: 'hours',
         cacheScope: 'full',
         blacklistedDomains: []
+      },
+
+      // JS API Settings
+      jsApi: {
+        enableJsApi: false
+      },
+
+      // Webhook Settings
+      webhook: {
+        enableWebhook: false,
+        webhookOnCache: false,
+        webhookMethod: 'POST',
+        webhookUrl: '',
+        webhookContentType: 'application/json',
+        webhookPayload: ''
+      },
+
+      // History Settings
+      history: {
+        historyLimit: 0,  // 0 = unlimited
+        autoClearDays: 30,
+        exportFormat: 'json',
+        includeTimestamps: true,
+        historyBypassCache: false
+      },
+
+      // Duplicate Prevention Settings
+      duplicatePrevention: {
+        preventDuplicates: false,
+        duplicateScope: 'full_url',
+        duplicateDuration: 1,
+        duplicateUnit: 'hours'
       }
     };
+
     this.isModalVisible = false;
   }
 
@@ -145,54 +206,163 @@ class Settings {
    * Update settings UI with current values
    */
   updateSettingsUI() {
-    // General tab
+    // ========== GENERAL TAB ==========
+    // Basic toggles
     const notificationsToggle = document.querySelector('#notificationsEnabled');
+    if (notificationsToggle) {
+      notificationsToggle.checked = this.settings.notificationsEnabled ?? true;
+    }
+
     const debugModeToggle = document.querySelector('#debugModeGeneral');
+    if (debugModeToggle) {
+      debugModeToggle.checked = this.settings.debugMode ?? false;
+    }
+
+    // Badge Colors
+    if (this.settings.badgeColors) {
+      const colorBadgeLow = document.querySelector('#colorBadgeLow');
+      if (colorBadgeLow) colorBadgeLow.value = this.settings.badgeColors.low || '#4CAF50';
+
+      const colorBadgeMedium = document.querySelector('#colorBadgeMedium');
+      if (colorBadgeMedium) colorBadgeMedium.value = this.settings.badgeColors.medium || '#FFA500';
+
+      const colorBadgeHigh = document.querySelector('#colorBadgeHigh');
+      if (colorBadgeHigh) colorBadgeHigh.value = this.settings.badgeColors.high || '#FF4444';
+    }
+
+    // Category Colors
+    if (this.settings.categoryColors) {
+      const colorAntibot = document.querySelector('#colorAntibot');
+      if (colorAntibot) colorAntibot.value = this.settings.categoryColors.antibot || '#FF5733';
+
+      const colorCaptcha = document.querySelector('#colorCaptcha');
+      if (colorCaptcha) colorCaptcha.value = this.settings.categoryColors.captcha || '#33C3FF';
+
+      const colorFingerprint = document.querySelector('#colorFingerprint');
+      if (colorFingerprint) colorFingerprint.value = this.settings.categoryColors.fingerprint || '#8D33FF';
+    }
+
+    // Tag Colors
+    if (this.settings.tagColors) {
+      const colorTagDOM = document.querySelector('#colorTagDOM');
+      if (colorTagDOM) colorTagDOM.value = this.settings.tagColors.dom || '#8D33FF';
+
+      const colorTagHeaders = document.querySelector('#colorTagHeaders');
+      if (colorTagHeaders) colorTagHeaders.value = this.settings.tagColors.headers || '#FF33A8';
+
+      const colorTagCookies = document.querySelector('#colorTagCookies');
+      if (colorTagCookies) colorTagCookies.value = this.settings.tagColors.cookies || '#FFC133';
+
+      const colorTagContent = document.querySelector('#colorTagContent');
+      if (colorTagContent) colorTagContent.value = this.settings.tagColors.content || '#33FFF3';
+
+      const colorTagURLs = document.querySelector('#colorTagURLs');
+      if (colorTagURLs) colorTagURLs.value = this.settings.tagColors.urls || '#00BCD4';
+
+      const colorTagJSHooks = document.querySelector('#colorTagJSHooks');
+      if (colorTagJSHooks) colorTagJSHooks.value = this.settings.tagColors.jsHooks || '#00E5FF';
+
+      const colorTagWindow = document.querySelector('#colorTagWindow');
+      if (colorTagWindow) colorTagWindow.value = this.settings.tagColors.window || '#4CAF50';
+
+      const colorTagCSS = document.querySelector('#colorTagCSS');
+      if (colorTagCSS) colorTagCSS.value = this.settings.tagColors.css || '#E91E63';
+    }
+
+    // ========== DETECTION TAB ==========
+    if (this.settings.detection) {
+      const cacheScopeSelect = document.querySelector('#cacheScope');
+      if (cacheScopeSelect) {
+        cacheScopeSelect.value = this.settings.detection.cacheScope || 'full';
+        console.log('Cache scope loaded:', this.settings.detection.cacheScope);
+      }
+
+      const cacheDurationInput = document.querySelector('#cacheDuration');
+      if (cacheDurationInput) {
+        cacheDurationInput.value = this.settings.detection.cacheDuration || 12;
+      }
+
+      const cacheUnitSelect = document.querySelector('#cacheUnit');
+      if (cacheUnitSelect) {
+        cacheUnitSelect.value = this.settings.detection.cacheUnit || 'hours';
+      }
+    }
+
+    // JS API Settings
+    if (this.settings.jsApi) {
+      const enableJsApi = document.querySelector('#enableJsApi');
+      if (enableJsApi) {
+        enableJsApi.checked = this.settings.jsApi.enableJsApi ?? false;
+      }
+    }
+
+    // Webhook Settings
+    if (this.settings.webhook) {
+      const enableWebhook = document.querySelector('#enableWebhook');
+      if (enableWebhook) enableWebhook.checked = this.settings.webhook.enableWebhook ?? false;
+
+      const webhookOnCache = document.querySelector('#webhookOnCache');
+      if (webhookOnCache) webhookOnCache.checked = this.settings.webhook.webhookOnCache ?? false;
+
+      const webhookMethod = document.querySelector('#webhookMethod');
+      if (webhookMethod) webhookMethod.value = this.settings.webhook.webhookMethod || 'POST';
+
+      const webhookUrl = document.querySelector('#webhookUrl');
+      if (webhookUrl) webhookUrl.value = this.settings.webhook.webhookUrl || '';
+
+      const webhookContentType = document.querySelector('#webhookContentType');
+      if (webhookContentType) webhookContentType.value = this.settings.webhook.webhookContentType || 'application/json';
+
+      const webhookPayload = document.querySelector('#webhookPayload');
+      if (webhookPayload) webhookPayload.value = this.settings.webhook.webhookPayload || '';
+    }
+
+    // ========== HISTORY TAB ==========
+    if (this.settings.history) {
+      const historyLimitInput = document.querySelector('#historyLimit');
+      if (historyLimitInput) historyLimitInput.value = this.settings.history.historyLimit ?? 0;
+
+      const autoClearDays = document.querySelector('#autoClearDays');
+      if (autoClearDays) autoClearDays.value = this.settings.history.autoClearDays ?? 30;
+
+      const exportFormat = document.querySelector('#exportFormat');
+      if (exportFormat) exportFormat.value = this.settings.history.exportFormat || 'json';
+
+      const includeTimestamps = document.querySelector('#includeTimestamps');
+      if (includeTimestamps) includeTimestamps.checked = this.settings.history.includeTimestamps ?? true;
+
+      const historyBypassCache = document.querySelector('#historyBypassCache');
+      if (historyBypassCache) historyBypassCache.checked = this.settings.history.historyBypassCache ?? false;
+    }
+
+    // Duplicate Prevention Settings
+    if (this.settings.duplicatePrevention) {
+      const preventDuplicates = document.querySelector('#preventDuplicates');
+      if (preventDuplicates) preventDuplicates.checked = this.settings.duplicatePrevention.preventDuplicates ?? false;
+
+      const duplicateScope = document.querySelector('#duplicateScope');
+      if (duplicateScope) duplicateScope.value = this.settings.duplicatePrevention.duplicateScope || 'full_url';
+
+      const duplicateDuration = document.querySelector('#duplicateDuration');
+      if (duplicateDuration) duplicateDuration.value = this.settings.duplicatePrevention.duplicateDuration ?? 1;
+
+      const duplicateUnit = document.querySelector('#duplicateUnit');
+      if (duplicateUnit) duplicateUnit.value = this.settings.duplicatePrevention.duplicateUnit || 'hours';
+    }
+
+    // Legacy fields that might still be around
     const autoDetectionToggle = document.querySelector('#autoDetectionEnabled');
-    const historyLimitInput = document.querySelector('#historyLimit');
+    if (autoDetectionToggle) {
+      autoDetectionToggle.checked = this.settings.autoDetectionEnabled ?? true;
+    }
+
     const confidenceSlider = document.querySelector('#confidenceThreshold');
     const confidenceValue = document.querySelector('#confidenceValue');
-
-    if (notificationsToggle) {
-      notificationsToggle.checked = this.settings.notificationsEnabled;
-    }
-
-    if (debugModeToggle) {
-      debugModeToggle.checked = this.settings.debugMode;
-    }
-
-    if (autoDetectionToggle) {
-      autoDetectionToggle.checked = this.settings.autoDetectionEnabled;
-    }
-
-    if (historyLimitInput) {
-      historyLimitInput.value = this.settings.historyLimit;
-    }
-
     if (confidenceSlider) {
-      confidenceSlider.value = this.settings.confidenceThreshold;
+      confidenceSlider.value = this.settings.confidenceThreshold ?? 70;
     }
-
     if (confidenceValue) {
-      confidenceValue.textContent = `${this.settings.confidenceThreshold}%`;
-    }
-
-    // Detection tab - cache scope settings
-    const cacheScopeSelect = document.querySelector('#cacheScope');
-    const cacheDurationInput = document.querySelector('#cacheDuration');
-    const cacheUnitSelect = document.querySelector('#cacheUnit');
-
-    if (cacheScopeSelect && this.settings.detection?.cacheScope) {
-      cacheScopeSelect.value = this.settings.detection.cacheScope;
-      console.log('Cache scope loaded:', this.settings.detection.cacheScope);
-    }
-
-    if (cacheDurationInput && this.settings.detection?.cacheDuration) {
-      cacheDurationInput.value = this.settings.detection.cacheDuration;
-    }
-
-    if (cacheUnitSelect && this.settings.detection?.cacheUnit) {
-      cacheUnitSelect.value = this.settings.detection.cacheUnit;
+      confidenceValue.textContent = `${this.settings.confidenceThreshold ?? 70}%`;
     }
   }
 
@@ -200,35 +370,85 @@ class Settings {
    * Get current settings from UI inputs
    */
   getSettingsFromUI() {
-    // General tab
+    const settings = {};
+
+    // ========== GENERAL TAB ==========
+    // Basic toggles
     const notificationsToggle = document.querySelector('#notificationsEnabled');
     const debugModeToggle = document.querySelector('#debugModeGeneral');
-    const autoDetectionToggle = document.querySelector('#autoDetectionEnabled');
-    const historyLimitInput = document.querySelector('#historyLimit');
-    const confidenceSlider = document.querySelector('#confidenceThreshold');
+    settings.notificationsEnabled = notificationsToggle?.checked ?? this.settings.notificationsEnabled ?? true;
+    settings.debugMode = debugModeToggle?.checked ?? this.settings.debugMode ?? false;
 
-    // Detection tab - cache scope settings
-    const cacheScopeSelect = document.querySelector('#cacheScope');
-    const cacheDurationInput = document.querySelector('#cacheDuration');
-    const cacheUnitSelect = document.querySelector('#cacheUnit');
-
-    const settings = {
-      notificationsEnabled: notificationsToggle?.checked ?? this.settings.notificationsEnabled,
-      debugMode: debugModeToggle?.checked ?? this.settings.debugMode,
-      autoDetectionEnabled: autoDetectionToggle?.checked ?? this.settings.autoDetectionEnabled,
-      historyLimit: parseInt(historyLimitInput?.value ?? this.settings.historyLimit),
-      confidenceThreshold: parseInt(confidenceSlider?.value ?? this.settings.confidenceThreshold)
+    // Badge Colors
+    settings.badgeColors = {
+      low: document.querySelector('#colorBadgeLow')?.value ?? this.settings.badgeColors?.low ?? '#4CAF50',
+      medium: document.querySelector('#colorBadgeMedium')?.value ?? this.settings.badgeColors?.medium ?? '#FFA500',
+      high: document.querySelector('#colorBadgeHigh')?.value ?? this.settings.badgeColors?.high ?? '#FF4444'
     };
 
-    // Add detection settings if they exist in form
-    if (cacheScopeSelect || cacheDurationInput || cacheUnitSelect) {
-      settings.detection = {
-        ...(this.settings.detection || {}),
-        cacheScope: cacheScopeSelect?.value ?? this.settings.detection?.cacheScope ?? 'domain',
-        cacheDuration: parseInt(cacheDurationInput?.value ?? this.settings.detection?.cacheDuration ?? 12),
-        cacheUnit: cacheUnitSelect?.value ?? this.settings.detection?.cacheUnit ?? 'hours'
-      };
-    }
+    // Category Colors
+    settings.categoryColors = {
+      antibot: document.querySelector('#colorAntibot')?.value ?? this.settings.categoryColors?.antibot ?? '#FF5733',
+      captcha: document.querySelector('#colorCaptcha')?.value ?? this.settings.categoryColors?.captcha ?? '#33C3FF',
+      fingerprint: document.querySelector('#colorFingerprint')?.value ?? this.settings.categoryColors?.fingerprint ?? '#8D33FF'
+    };
+
+    // Tag Colors
+    settings.tagColors = {
+      dom: document.querySelector('#colorTagDOM')?.value ?? this.settings.tagColors?.dom ?? '#8D33FF',
+      headers: document.querySelector('#colorTagHeaders')?.value ?? this.settings.tagColors?.headers ?? '#FF33A8',
+      cookies: document.querySelector('#colorTagCookies')?.value ?? this.settings.tagColors?.cookies ?? '#FFC133',
+      content: document.querySelector('#colorTagContent')?.value ?? this.settings.tagColors?.content ?? '#33FFF3',
+      urls: document.querySelector('#colorTagURLs')?.value ?? this.settings.tagColors?.urls ?? '#00BCD4',
+      jsHooks: document.querySelector('#colorTagJSHooks')?.value ?? this.settings.tagColors?.jsHooks ?? '#00E5FF',
+      window: document.querySelector('#colorTagWindow')?.value ?? this.settings.tagColors?.window ?? '#4CAF50',
+      css: document.querySelector('#colorTagCSS')?.value ?? this.settings.tagColors?.css ?? '#E91E63'
+    };
+
+    // ========== DETECTION TAB ==========
+    settings.detection = {
+      cacheDuration: parseInt(document.querySelector('#cacheDuration')?.value ?? this.settings.detection?.cacheDuration ?? 12),
+      cacheUnit: document.querySelector('#cacheUnit')?.value ?? this.settings.detection?.cacheUnit ?? 'hours',
+      cacheScope: document.querySelector('#cacheScope')?.value ?? this.settings.detection?.cacheScope ?? 'full',
+      blacklistedDomains: this.settings.detection?.blacklistedDomains || [] // This is managed separately by the blacklist UI
+    };
+
+    // JS API Settings
+    settings.jsApi = {
+      enableJsApi: document.querySelector('#enableJsApi')?.checked ?? this.settings.jsApi?.enableJsApi ?? false
+    };
+
+    // Webhook Settings
+    settings.webhook = {
+      enableWebhook: document.querySelector('#enableWebhook')?.checked ?? this.settings.webhook?.enableWebhook ?? false,
+      webhookOnCache: document.querySelector('#webhookOnCache')?.checked ?? this.settings.webhook?.webhookOnCache ?? false,
+      webhookMethod: document.querySelector('#webhookMethod')?.value ?? this.settings.webhook?.webhookMethod ?? 'POST',
+      webhookUrl: document.querySelector('#webhookUrl')?.value ?? this.settings.webhook?.webhookUrl ?? '',
+      webhookContentType: document.querySelector('#webhookContentType')?.value ?? this.settings.webhook?.webhookContentType ?? 'application/json',
+      webhookPayload: document.querySelector('#webhookPayload')?.value ?? this.settings.webhook?.webhookPayload ?? ''
+    };
+
+    // ========== HISTORY TAB ==========
+    settings.history = {
+      historyLimit: parseInt(document.querySelector('#historyLimit')?.value ?? this.settings.history?.historyLimit ?? 0),
+      autoClearDays: parseInt(document.querySelector('#autoClearDays')?.value ?? this.settings.history?.autoClearDays ?? 30),
+      exportFormat: document.querySelector('#exportFormat')?.value ?? this.settings.history?.exportFormat ?? 'json',
+      includeTimestamps: document.querySelector('#includeTimestamps')?.checked ?? this.settings.history?.includeTimestamps ?? true,
+      historyBypassCache: document.querySelector('#historyBypassCache')?.checked ?? this.settings.history?.historyBypassCache ?? false
+    };
+
+    // Duplicate Prevention Settings
+    settings.duplicatePrevention = {
+      preventDuplicates: document.querySelector('#preventDuplicates')?.checked ?? this.settings.duplicatePrevention?.preventDuplicates ?? false,
+      duplicateScope: document.querySelector('#duplicateScope')?.value ?? this.settings.duplicatePrevention?.duplicateScope ?? 'full_url',
+      duplicateDuration: parseInt(document.querySelector('#duplicateDuration')?.value ?? this.settings.duplicatePrevention?.duplicateDuration ?? 1),
+      duplicateUnit: document.querySelector('#duplicateUnit')?.value ?? this.settings.duplicatePrevention?.duplicateUnit ?? 'hours'
+    };
+
+    // Keep any other existing settings that might not be in the form
+    // (autoDetectionEnabled, confidenceThreshold are not in the current form)
+    settings.autoDetectionEnabled = this.settings.autoDetectionEnabled ?? true;
+    settings.confidenceThreshold = this.settings.confidenceThreshold ?? 70;
 
     return settings;
   }
@@ -241,12 +461,39 @@ class Settings {
   validateSettings(settings) {
     const errors = [];
 
-    if (settings.historyLimit < 10 || settings.historyLimit > 1000) {
-      errors.push('History limit must be between 10 and 1000');
+    // Validate history limit (can be 0 for unlimited)
+    if (settings.history && settings.history.historyLimit !== undefined) {
+      if (settings.history.historyLimit < 0 || settings.history.historyLimit > 10000) {
+        errors.push('History limit must be between 0 (unlimited) and 10000');
+      }
     }
 
-    if (settings.confidenceThreshold < 0 || settings.confidenceThreshold > 100) {
-      errors.push('Confidence threshold must be between 0 and 100');
+    // Validate confidence threshold
+    if (settings.confidenceThreshold !== undefined) {
+      if (settings.confidenceThreshold < 0 || settings.confidenceThreshold > 100) {
+        errors.push('Confidence threshold must be between 0 and 100');
+      }
+    }
+
+    // Validate cache duration
+    if (settings.detection && settings.detection.cacheDuration !== undefined) {
+      if (settings.detection.cacheDuration < 1 || settings.detection.cacheDuration > 9999) {
+        errors.push('Cache duration must be between 1 and 9999');
+      }
+    }
+
+    // Validate auto clear days
+    if (settings.history && settings.history.autoClearDays !== undefined) {
+      if (settings.history.autoClearDays < 0 || settings.history.autoClearDays > 365) {
+        errors.push('Auto clear days must be between 0 and 365');
+      }
+    }
+
+    // Validate duplicate duration
+    if (settings.duplicatePrevention && settings.duplicatePrevention.duplicateDuration !== undefined) {
+      if (settings.duplicatePrevention.duplicateDuration < 1 || settings.duplicatePrevention.duplicateDuration > 999) {
+        errors.push('Duplicate duration must be between 1 and 999');
+      }
     }
 
     return {
