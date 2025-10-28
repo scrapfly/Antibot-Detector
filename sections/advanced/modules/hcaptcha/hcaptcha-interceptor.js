@@ -474,6 +474,24 @@ function handleHCaptchaMessage(request, sender, sendResponse) {
             })();
             return true; // Async response
 
+        case 'HCAPTCHA_SHOW_VERSION_NOTIFICATION':
+            (async () => {
+                try {
+                    if (typeof showNotification === 'function') {
+                        await showNotification(request.tabId, {
+                            type: 'loading',
+                            title: '🔍 Checking hCaptcha Version',
+                            message: 'Please wait while we analyze the page...',
+                            duration: 15000
+                        });
+                    }
+                    sendResponse({ status: 'success' });
+                } catch (error) {
+                    sendResponse({ status: 'error', error: error.message });
+                }
+            })();
+            return true; // Async response
+
         case 'HCAPTCHA_CAPTURE_COMPLETED':
             // NOTE: Capture processing is now handled directly in hcaptcha-interceptor.js
             // This message is only for notifying the popup UI to refresh

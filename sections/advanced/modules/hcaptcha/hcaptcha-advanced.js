@@ -91,10 +91,14 @@ class HCaptchaAdvanced extends BaseAdvancedModule {
             if (response && response.status === 'started') {
                 NotificationHelper.info('Checking hCaptcha version... Page will reload');
 
+                // Send page notification before reload
+                await AdvancedUtils.sendMessage({
+                    type: 'HCAPTCHA_SHOW_VERSION_NOTIFICATION',
+                    tabId: this.tabInfo.id
+                });
+
                 // Wait briefly then reload the page to trigger hCaptcha loading
-                setTimeout(async () => {
-                    await chrome.tabs.reload(this.tabInfo.id);
-                }, 500);
+                await chrome.tabs.reload(this.tabInfo.id);
 
                 // Timeout after 15 seconds
                 setTimeout(() => {

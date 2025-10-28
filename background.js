@@ -2828,6 +2828,8 @@ function setupMessageListeners() {
             // Geetest messages - delegate to geetestHandleMessage (simplified - no capture)
             case 'GEETEST_CHECK_VERSION':
             case 'GEETEST_ANALYZE_SCRIPTS':
+            case 'GEETEST_SHOW_VERSION_NOTIFICATION':
+            case 'GEETEST_SHOW_ANALYZING_NOTIFICATION':
                 // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)
                 if (typeof geetestHandleMessage === 'function') {
                     return geetestHandleMessage(request, sender, sendResponse);
@@ -2863,6 +2865,7 @@ function setupMessageListeners() {
             // hCaptcha messages
             case 'HCAPTCHA_START_ANALYSIS':
             case 'HCAPTCHA_SHOW_ANALYZING_NOTIFICATION':
+            case 'HCAPTCHA_SHOW_VERSION_NOTIFICATION':
             case 'HCAPTCHA_CHECK_VERSION':
             case 'HCAPTCHA_START_CAPTURE':
             case 'HCAPTCHA_STOP_CAPTURE':

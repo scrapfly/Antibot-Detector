@@ -4,6 +4,7 @@ class History {
     this.historyItems = [];
     this.searchQuery = '';
     this.initialized = false;
+    this.listenersAttached = false;
     this.paginationManager = null;
     this.historyLimit = 0; // 0 = unlimited (matches settings default)
   }
@@ -962,6 +963,10 @@ class History {
    * Setup event listeners after HTML is loaded
    */
   setupEventListeners() {
+    // Guard against duplicate listener attachment
+    if (this.listenersAttached) return;
+    this.listenersAttached = true;
+
     // Setup search functionality
     const searchInput = document.querySelector('#historySearch');
     if (searchInput) {
