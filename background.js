@@ -2879,6 +2879,10 @@ function setupMessageListeners() {
             // FunCaptcha messages
             case 'FUNCAPTCHA_START_ANALYSIS':
             case 'FUNCAPTCHA_SHOW_ANALYZING_NOTIFICATION':
+            case 'FUNCAPTCHA_START_CAPTURE':
+            case 'FUNCAPTCHA_STOP_CAPTURE':
+            case 'FUNCAPTCHA_GET_CAPTURE_STATE':
+            case 'FUNCAPTCHA_CAPTURE_COMPLETED':
                 if (typeof handleFunCaptchaMessage === 'function') {
                     return handleFunCaptchaMessage(request, sender, sendResponse);
                 }
