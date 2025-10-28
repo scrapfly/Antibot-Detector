@@ -2667,6 +2667,15 @@ class DetectionEngineManager {
             const tab = await chrome.tabs.get(activeInfo.tabId);
             if (!tab?.url) return;
 
+            // PRIORITY 0: Check if extension is disabled - takes precedence over everything
+            const result = await chrome.storage.local.get(['scrapfly_enabled']);
+            if (result.scrapfly_enabled === false) {
+                console.log(`[TabActivation] Extension is disabled - setting orange X badge for tab ${activeInfo.tabId}`);
+                await chrome.action.setBadgeText({ text: '✕', tabId: activeInfo.tabId });
+                await chrome.action.setBadgeBackgroundColor({ color: '#f59e0b', tabId: activeInfo.tabId });
+                return; // Don't check cache or apply any other badge logic
+            }
+
             // PRIORITY 1: Check if this tab has an interrupted detection
             if (interruptedDetections && interruptedDetections.has(activeInfo.tabId)) {
                 console.log(`[TabActivation] Tab ${activeInfo.tabId} has interrupted detection - restoring red X badge`);
