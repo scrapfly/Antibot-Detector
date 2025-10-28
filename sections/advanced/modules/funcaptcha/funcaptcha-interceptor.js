@@ -7,6 +7,11 @@
  * Pattern: POST to https://*/fc/*/public_key/*
  */
 
+// Guard against re-initialization
+if (typeof funcaptchaInterceptionListener !== 'undefined') {
+    console.log('[FunCaptcha] Interceptor already loaded');
+} else {
+
 // Guard against re-initialization (use var for service worker reload compatibility)
 var funcaptchaInterceptionListener = funcaptchaInterceptionListener || null;
 var funcaptchaCaptureStateRef = funcaptchaCaptureStateRef || null;
@@ -354,3 +359,5 @@ function funcaptchaStartAnalysis(tabId, url) {
 }
 
 console.log('[FunCaptcha] Interceptor loaded');
+
+}  // End of initialization guard
