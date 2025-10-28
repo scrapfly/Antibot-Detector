@@ -12,6 +12,7 @@ var funcaptchaInterceptionListener = funcaptchaInterceptionListener || null;
 var funcaptchaCaptureStateRef = funcaptchaCaptureStateRef || null;
 var funcaptchaNavigationListeners = funcaptchaNavigationListeners || new Map();
 
+// Destructure helpers from BaseInterceptorHelpers (use var to avoid redeclaration errors)
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
 var saveToHistory = self.BaseInterceptorHelpers?.saveToHistory;
 var cleanupNotifications = self.BaseInterceptorHelpers?.cleanupNotifications;
@@ -20,7 +21,10 @@ var cleanupNotifications = self.BaseInterceptorHelpers?.cleanupNotifications;
  * Initialize interceptor with reference to capture state Map
  */
 function funcaptchaInitializeInterceptor(captureState) {
-    if (funcaptchaCaptureStateRef) return;
+    if (funcaptchaCaptureStateRef) {
+        console.log('[FunCaptcha] Interceptor already initialized, skipping');
+        return;
+    }
     funcaptchaCaptureStateRef = captureState;
     console.log('[FunCaptcha] Interceptor initialized with capture state');
 }
@@ -55,13 +59,17 @@ async function funcaptchaStartCapture(tabId) {
     startFuncaptchaInterception(tabId);
 
     // Show page notification
-    if (showNotification) {
-        await showNotification(tabId, {
-            type: 'loading',
-            title: '🔴 FunCaptcha Capture Active',
-            message: 'Please wait for page load, then trigger FunCaptcha challenge',
-            duration: 60000
-        }).catch(() => {});
+    if (typeof showNotification === 'function') {
+        try {
+            await showNotification(tabId, {
+                type: 'loading',
+                title: '🔴 FunCaptcha Capture Active',
+                message: 'Please wait for page load, then trigger FunCaptcha challenge',
+                duration: 60000
+            });
+        } catch (error) {
+            console.log('[FunCaptcha] Notification error:', error.message);
+        }
     }
 
     // Setup 60-second timeout
@@ -73,7 +81,7 @@ async function funcaptchaStartCapture(tabId) {
     const navListener = (details) => {
         if (details.tabId === tabId && details.frameId === 0) {
             console.log('[FunCaptcha] Page navigation detected, updating notification');
-            if (showNotification) {
+            if (typeof showNotification === 'function') {
                 showNotification(tabId, {
                     type: 'info',
                     title: '⏳ Page Loading',
@@ -99,13 +107,16 @@ function startFuncaptchaInterception(tabId) {
         handleFuncaptchaRequest(details, tabId);
     };
 
-    chrome.webRequest.onBeforeRequest.addListener(
-        funcaptchaInterceptionListener,
-        { urls: ['*://*/fc/*/public_key/*'] },
-        ['requestBody']
-    );
-
-    console.log('[FunCaptcha] Network interception started');
+    try {
+        chrome.webRequest.onBeforeRequest.addListener(
+            funcaptchaInterceptionListener,
+            { urls: ['*://*/fc/*/public_key/*'] },
+            ['requestBody']
+        );
+        console.log('[FunCaptcha] Network interception started');
+    } catch (error) {
+        console.error('[FunCaptcha] Failed to add network listener:', error.message);
+    }
 }
 
 /**
@@ -121,6 +132,7 @@ function handleFuncaptchaRequest(details, tabId) {
 
         // Extract POST body
         if (!details.requestBody || !details.requestBody.raw) {
+            console.log('[FunCaptcha] No request body found');
             return;
         }
 
@@ -158,7 +170,7 @@ function handleFuncaptchaRequest(details, tabId) {
         }, 100);
 
     } catch (error) {
-        console.error('[FunCaptcha] Error handling request:', error);
+        console.error('[FunCaptcha] Error handling request:', error.message);
     }
 }
 
@@ -181,46 +193,60 @@ async function funcaptchaStopCapture(tabId, reason = 'manual') {
 
     // Remove network interceptor
     if (funcaptchaInterceptionListener) {
-        chrome.webRequest.onBeforeRequest.removeListener(funcaptchaInterceptionListener);
+        try {
+            chrome.webRequest.onBeforeRequest.removeListener(funcaptchaInterceptionListener);
+        } catch (error) {
+            console.log('[FunCaptcha] Error removing network listener:', error.message);
+        }
     }
 
     // Remove navigation listener
     const navListener = funcaptchaNavigationListeners.get(tabId);
     if (navListener) {
-        chrome.webNavigation.onCommitted.removeListener(navListener);
-        funcaptchaNavigationListeners.delete(tabId);
+        try {
+            chrome.webNavigation.onCommitted.removeListener(navListener);
+            funcaptchaNavigationListeners.delete(tabId);
+        } catch (error) {
+            console.log('[FunCaptcha] Error removing navigation listener:', error.message);
+        }
     }
 
     // Show completion notification
-    if (showNotification) {
-        if (reason === 'captured' && state.capturedData.length > 0) {
-            await showNotification(tabId, {
-                type: 'success',
-                title: '✅ FunCaptcha Captured Successfully',
-                message: `Captured ${state.capturedData.length} challenge(s)`,
-                duration: 5000
-            }).catch(() => {});
-        } else if (reason === 'timeout') {
-            await showNotification(tabId, {
-                type: 'warning',
-                title: '⏱️ Capture Timeout',
-                message: 'No FunCaptcha challenge detected (60s timeout)',
-                duration: 5000
-            }).catch(() => {});
+    if (typeof showNotification === 'function') {
+        try {
+            if (reason === 'captured' && state.capturedData.length > 0) {
+                await showNotification(tabId, {
+                    type: 'success',
+                    title: '✅ FunCaptcha Captured Successfully',
+                    message: `Captured ${state.capturedData.length} challenge(s)`,
+                    duration: 5000
+                });
+            } else if (reason === 'timeout') {
+                await showNotification(tabId, {
+                    type: 'warning',
+                    title: '⏱️ Capture Timeout',
+                    message: 'No FunCaptcha challenge detected (60s timeout)',
+                    duration: 5000
+                });
+            }
+        } catch (error) {
+            console.log('[FunCaptcha] Notification error:', error.message);
         }
     }
 
     // Save all captured data to history
     const results = [];
-    for (const captureData of state.capturedData) {
-        try {
-            await saveToHistory(tabId, captureData, {
-                type: 'funcaptcha',
-                expiryMinutes: 30
-            });
-            results.push(captureData);
-        } catch (error) {
-            console.error('[FunCaptcha] Error saving to history:', error);
+    if (typeof saveToHistory === 'function') {
+        for (const captureData of state.capturedData) {
+            try {
+                await saveToHistory(tabId, captureData, {
+                    type: 'funcaptcha',
+                    expiryMinutes: 30
+                });
+                results.push(captureData);
+            } catch (error) {
+                console.error('[FunCaptcha] Error saving to history:', error.message);
+            }
         }
     }
 
@@ -237,7 +263,7 @@ async function funcaptchaStopCapture(tabId, reason = 'manual') {
             reason: reason
         });
     } catch (error) {
-        console.log('[FunCaptcha] Error sending completion message:', error);
+        console.log('[FunCaptcha] Error sending completion message:', error.message);
     }
 
     return { status: 'stopped', results: results };
@@ -326,29 +352,48 @@ function funcaptchaStartAnalysis(tabId, url) {
         if (details.tabId === tabId && details.frameId === 0) {
             setTimeout(async () => {
                 const finalResults = Array.from(capturedUrls).map(jsonStr => {
-                    const obj = JSON.parse(jsonStr);
-                    return { ...obj, source: 'network' };
-                });
+                    try {
+                        const obj = JSON.parse(jsonStr);
+                        return { ...obj, source: 'network' };
+                    } catch (error) {
+                        return null;
+                    }
+                }).filter(item => item !== null);
 
-                chrome.webRequest.onBeforeRequest.removeListener(requestListener);
-                chrome.webNavigation.onCompleted.removeListener(navigationListener);
+                try {
+                    chrome.webRequest.onBeforeRequest.removeListener(requestListener);
+                } catch (error) {
+                    console.log('[FunCaptcha] Error removing request listener:', error.message);
+                }
+
+                try {
+                    chrome.webNavigation.onCompleted.removeListener(navigationListener);
+                } catch (error) {
+                    console.log('[FunCaptcha] Error removing navigation listener:', error.message);
+                }
 
                 try {
                     await chrome.runtime.sendMessage({
                         type: 'FUNCAPTCHA_ANALYSIS_RESULT',
                         data: { scripts: finalResults, scriptCount: finalResults.length }
                     });
-                } catch (error) {}
+                } catch (error) {
+                    console.log('[FunCaptcha] Analysis result send error:', error.message);
+                }
             }, 5000);
         }
     };
 
-    chrome.webRequest.onBeforeRequest.addListener(
-        requestListener,
-        { urls: ['<all_urls>'] },
-        []
-    );
-    chrome.webNavigation.onCompleted.addListener(navigationListener);
+    try {
+        chrome.webRequest.onBeforeRequest.addListener(
+            requestListener,
+            { urls: ['<all_urls>'] },
+            []
+        );
+        chrome.webNavigation.onCompleted.addListener(navigationListener);
+    } catch (error) {
+        console.error('[FunCaptcha] Error setting up analysis listeners:', error.message);
+    }
 
     return { status: 'started' };
 }
