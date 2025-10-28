@@ -5,7 +5,14 @@ class Settings {
       debugMode: false,
       autoDetectionEnabled: true,
       historyLimit: 100,
-      confidenceThreshold: 70
+      confidenceThreshold: 70,
+      // Nested detection settings
+      detection: {
+        cacheDuration: 12,
+        cacheUnit: 'hours',
+        cacheScope: 'full',
+        blacklistedDomains: []
+      }
     };
     this.isModalVisible = false;
   }
@@ -70,7 +77,13 @@ class Settings {
         const savedSettings = JSON.parse(result.scrapfly_settings);
         // Extract the nested "settings" property from the saved data
         // Fallback to savedSettings for legacy data without nested structure
-        this.settings = { ...this.settings, ...(savedSettings.settings || savedSettings) };
+        const loadedSettings = savedSettings.settings || savedSettings;
+
+        // Properly merge nested settings structure
+        if (typeof loadedSettings === 'object' && loadedSettings !== null) {
+          // Deep merge: preserve nested structure for detection, history, etc.
+          this.settings = this.deepMerge(this.settings, loadedSettings);
+        }
       }
 
       this.updateSettingsUI();
@@ -79,6 +92,30 @@ class Settings {
     } catch (error) {
       console.error('Failed to load settings:', error);
     }
+  }
+
+  /**
+   * Deep merge two objects, preserving nested structure
+   * @param {object} target - Target object to merge into
+   * @param {object} source - Source object to merge from
+   * @returns {object} Merged object
+   */
+  deepMerge(target, source) {
+    const result = { ...target };
+
+    for (const key in source) {
+      if (source.hasOwnProperty(key)) {
+        if (typeof source[key] === 'object' && source[key] !== null && !Array.isArray(source[key])) {
+          // Recursively merge nested objects
+          result[key] = this.deepMerge(result[key] || {}, source[key]);
+        } else {
+          // Copy primitive values and arrays
+          result[key] = source[key];
+        }
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -108,6 +145,7 @@ class Settings {
    * Update settings UI with current values
    */
   updateSettingsUI() {
+    // General tab
     const notificationsToggle = document.querySelector('#notificationsEnabled');
     const debugModeToggle = document.querySelector('#debugModeGeneral');
     const autoDetectionToggle = document.querySelector('#autoDetectionEnabled');
@@ -138,25 +176,61 @@ class Settings {
     if (confidenceValue) {
       confidenceValue.textContent = `${this.settings.confidenceThreshold}%`;
     }
+
+    // Detection tab - cache scope settings
+    const cacheScopeSelect = document.querySelector('#cacheScope');
+    const cacheDurationInput = document.querySelector('#cacheDuration');
+    const cacheUnitSelect = document.querySelector('#cacheUnit');
+
+    if (cacheScopeSelect && this.settings.detection?.cacheScope) {
+      cacheScopeSelect.value = this.settings.detection.cacheScope;
+      console.log('Cache scope loaded:', this.settings.detection.cacheScope);
+    }
+
+    if (cacheDurationInput && this.settings.detection?.cacheDuration) {
+      cacheDurationInput.value = this.settings.detection.cacheDuration;
+    }
+
+    if (cacheUnitSelect && this.settings.detection?.cacheUnit) {
+      cacheUnitSelect.value = this.settings.detection.cacheUnit;
+    }
   }
 
   /**
    * Get current settings from UI inputs
    */
   getSettingsFromUI() {
+    // General tab
     const notificationsToggle = document.querySelector('#notificationsEnabled');
     const debugModeToggle = document.querySelector('#debugModeGeneral');
     const autoDetectionToggle = document.querySelector('#autoDetectionEnabled');
     const historyLimitInput = document.querySelector('#historyLimit');
     const confidenceSlider = document.querySelector('#confidenceThreshold');
 
-    return {
+    // Detection tab - cache scope settings
+    const cacheScopeSelect = document.querySelector('#cacheScope');
+    const cacheDurationInput = document.querySelector('#cacheDuration');
+    const cacheUnitSelect = document.querySelector('#cacheUnit');
+
+    const settings = {
       notificationsEnabled: notificationsToggle?.checked ?? this.settings.notificationsEnabled,
       debugMode: debugModeToggle?.checked ?? this.settings.debugMode,
       autoDetectionEnabled: autoDetectionToggle?.checked ?? this.settings.autoDetectionEnabled,
       historyLimit: parseInt(historyLimitInput?.value ?? this.settings.historyLimit),
       confidenceThreshold: parseInt(confidenceSlider?.value ?? this.settings.confidenceThreshold)
     };
+
+    // Add detection settings if they exist in form
+    if (cacheScopeSelect || cacheDurationInput || cacheUnitSelect) {
+      settings.detection = {
+        ...(this.settings.detection || {}),
+        cacheScope: cacheScopeSelect?.value ?? this.settings.detection?.cacheScope ?? 'domain',
+        cacheDuration: parseInt(cacheDurationInput?.value ?? this.settings.detection?.cacheDuration ?? 12),
+        cacheUnit: cacheUnitSelect?.value ?? this.settings.detection?.cacheUnit ?? 'hours'
+      };
+    }
+
+    return settings;
   }
 
   /**
@@ -402,7 +476,10 @@ class Settings {
         return;
       }
 
-      this.settings = newSettings;
+      // Merge new settings with existing settings to preserve nested structure
+      this.settings = this.deepMerge(this.settings, newSettings);
+      console.log('Settings merged:', this.settings);
+
       await this.saveSettings();
 
       // Close modal after successful save
