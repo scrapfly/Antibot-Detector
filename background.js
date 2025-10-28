@@ -2945,7 +2945,25 @@ function setupTabListeners() {
     });
 
     // Run detection when tab is updated
-    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+        // Check if extension is disabled when page starts loading
+        if (changeInfo.status === 'loading') {
+            try {
+                const result = await chrome.storage.local.get(['scrapfly_enabled']);
+                if (result.scrapfly_enabled === false) {
+                    console.log(`[TabUpdate] Extension is disabled - setting orange X badge for tab ${tabId}`);
+                    chrome.action.setBadgeText({ text: '✕', tabId: tabId }).catch((error) => {
+                        console.log(`[TabUpdate] Failed to set disabled badge for tab ${tabId}:`, error.message);
+                    });
+                    chrome.action.setBadgeBackgroundColor({ color: '#f59e0b', tabId: tabId }).catch((error) => {
+                        console.log(`[TabUpdate] Failed to set badge color for tab ${tabId}:`, error.message);
+                    });
+                }
+            } catch (error) {
+                console.error('[TabUpdate] Error checking enabled state:', error);
+            }
+        }
+
         // Detect URL changes within the same tab (same-tab navigation)
         if (changeInfo.url) {
             const newUrl = changeInfo.url;
