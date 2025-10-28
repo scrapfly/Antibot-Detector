@@ -98,9 +98,10 @@ class CloudflareAdvanced extends BaseAdvancedModule {
             const cfUnderscoreBmCookie = cookies.find(c => c.name === '__cf_bm');
             const cfBmCookie = cookies.find(c => c.name === 'cf_bm');
             const cfClearanceCookie = cookies.find(c => c.name === 'cf_clearance');
+            const cfuvIdCookie = cookies.find(c => c.name === '_cfuvid');
 
-            const foundCookies = [cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie].filter(Boolean).length;
-            const totalCookies = 3;
+            const foundCookies = [cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie, cfuvIdCookie].filter(Boolean).length;
+            const totalCookies = 4;
 
             if (foundCookies > 0) {
                 NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(foundCookies, totalCookies));
@@ -108,19 +109,19 @@ class CloudflareAdvanced extends BaseAdvancedModule {
                 NotificationHelper.info(AdvancedUtils.notifications.checkCookies.none('Cloudflare'));
             }
 
-            this.displayCookiesModal(cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie);
+            this.displayCookiesModal(cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie, cfuvIdCookie);
         } catch (error) {
             console.error('[Cloudflare] Failed to check cookies:', error);
             NotificationHelper.error('Failed to check cookies: ' + error.message);
         }
     }
 
-    displayCookiesModal(cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie) {
+    displayCookiesModal(cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie, cfuvIdCookie) {
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
         modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
 
-        const foundCount = [cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie].filter(Boolean).length;
+        const foundCount = [cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie, cfuvIdCookie].filter(Boolean).length;
 
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
@@ -132,7 +133,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
                 <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 16px;">
                     <div style="display: flex; justify-content: space-between;">
                         <span style="color: var(--text-secondary); font-size: 13px;">Cookies Found:</span>
-                        <span style="color: var(--text-primary); font-weight: 500;">${foundCount}/3</span>
+                        <span style="color: var(--text-primary); font-weight: 500;">${foundCount}/4</span>
                     </div>
                 </div>
 
@@ -179,6 +180,20 @@ class CloudflareAdvanced extends BaseAdvancedModule {
                         </div>
                     ` : ''}
 
+                    ${cfuvIdCookie ? `
+                        <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <div class="copy-value" data-copy="_cfuvid" style="font-weight: 500; color: var(--text-primary); font-family: monospace; cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="Click to copy">_cfuvid</div>
+                                <div style="display: flex; gap: 6px;">
+                                    ${cfuvIdCookie.secure ? '<span style="font-size: 10px; background: var(--success); color: white; padding: 2px 6px; border-radius: 3px;">SECURE</span>' : ''}
+                                    ${cfuvIdCookie.httpOnly ? '<span style="font-size: 10px; background: var(--bg-primary); color: var(--text-primary); padding: 2px 6px; border-radius: 3px;">HTTP</span>' : ''}
+                                </div>
+                            </div>
+                            <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(cfuvIdCookie.value)}" style="font-size: 11px; color: var(--text-secondary); word-break: break-all; font-family: monospace; background: var(--bg-primary); padding: 8px; border-radius: 4px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s;" title="Click to copy">${cfuvIdCookie.value.substring(0, 60)}${cfuvIdCookie.value.length > 60 ? '...' : ''}</div>
+                            <div style="font-size: 11px; color: var(--text-muted);">Domain: ${cfuvIdCookie.domain}</div>
+                        </div>
+                    ` : ''}
+
                     ${foundCount === 0 ? `
                         <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
                             <div style="font-size: 48px; margin-bottom: 12px;">🔍</div>
@@ -219,107 +234,17 @@ class CloudflareAdvanced extends BaseAdvancedModule {
                 throw new Error('Tab information not available');
             }
 
-            // Show analyzing notification
-            NotificationHelper.info('Analyzing Cloudflare configuration...');
+            // Show popup notification
+            NotificationHelper.info('Checking Cloudflare version... Page will reload');
 
-            // Check cf_clearance cookie first
-            const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
-            const hasCfClearance = cookies.some(c => c.name === 'cf_clearance');
-
-            // Extract sitekey from DOM
-            const sitekeyResult = await chrome.scripting.executeScript({
-                target: { tabId: this.tabInfo.id },
-                world: 'MAIN',
-                func: () => {
-                    // Look for Turnstile sitekey
-                    const elem = document.querySelector('[data-sitekey]');
-                    if (elem) {
-                        const sitekey = elem.getAttribute('data-sitekey');
-                        const hasCallback = elem.hasAttribute('data-callback');
-                        return { sitekey, hasCallback };
-                    }
-
-                    // Search in scripts as fallback
-                    const scripts = Array.from(document.querySelectorAll('script'));
-                    for (const script of scripts) {
-                        const match = script.textContent.match(/sitekey[':"\s]+['"]?([a-zA-Z0-9_\-]{20,})['"]?/);
-                        if (match) {
-                            return { sitekey: match[1], hasCallback: false };
-                        }
-                    }
-
-                    return { sitekey: null, hasCallback: false };
-                }
+            // Send page notification before reload
+            await AdvancedUtils.sendMessage({
+                type: 'CLOUDFLARE_SHOW_ANALYZING_NOTIFICATION',
+                tabId: this.tabInfo.id
             });
 
-            const sitekey = sitekeyResult?.[0]?.result?.sitekey || null;
-            const hasCallback = sitekeyResult?.[0]?.result?.hasCallback || false;
-
-            console.log('[Cloudflare] Extracted data:', { sitekey: sitekey?.substring(0, 20) + '...', hasCallback });
-
-            // Monitor network requests briefly to detect cdata/cAction
-            const networkData = {
-                hasCdata: false,
-                hasCaction: false,
-                hasChallenge: false
-            };
-
-            const requestListener = (details) => {
-                if (details.tabId !== this.tabInfo.id) return;
-                const url = details.url;
-
-                // Check for Turnstile with cdata/cAction
-                if (/turnstile/i.test(url)) {
-                    if (url.includes('cdata') || url.includes('cAction')) {
-                        if (url.includes('cdata')) networkData.hasCdata = true;
-                        if (url.includes('cAction')) networkData.hasCaction = true;
-                    }
-                }
-
-                // Check for Cloudflare Challenge
-                if (/cdn-cgi\/challenge-platform|challenges\.cloudflare\.com/.test(url)) {
-                    networkData.hasChallenge = true;
-                }
-            };
-
-            // Add network listener
-            chrome.webRequest.onBeforeRequest.addListener(
-                requestListener,
-                { urls: ['<all_urls>'] },
-                []
-            );
-
-            // Wait a brief moment for network requests to be captured
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // Remove listener
-            chrome.webRequest.onBeforeRequest.removeListener(requestListener);
-
-            // Determine type
-            // Challenge = cf_clearance OR challenge URLs detected
-            // Turnstile = cdata OR cAction parameters
-            const isChallenge = hasCfClearance || networkData.hasChallenge;
-            const isTurnstile = networkData.hasCdata || networkData.hasCaction || sitekey;
-
-            let type = 'Unknown';
-            if (isChallenge && isTurnstile) {
-                type = 'Challenge + Turnstile';
-            } else if (isChallenge) {
-                type = 'Challenge';
-            } else if (isTurnstile) {
-                type = 'Turnstile';
-            }
-
-            // Display comprehensive modal
-            this.displayVersionModal({
-                type,
-                sitekey,
-                hasCdata: networkData.hasCdata,
-                hasCaction: networkData.hasCaction,
-                hasCallback,
-                hasCfClearance,
-                hasChallenge: networkData.hasChallenge
-            });
+            // Reload page to trigger fresh Cloudflare analysis
+            await chrome.tabs.reload(this.tabInfo.id);
 
         } catch (error) {
             console.error('[Cloudflare] Failed to check version:', error);
