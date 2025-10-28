@@ -2885,8 +2885,7 @@ function setupMessageListeners() {
             case 'FUNCAPTCHA_GET_CAPTURE_STATE':
             case 'FUNCAPTCHA_CAPTURE_COMPLETED':
                 if (typeof handleFunCaptchaMessage === 'function') {
-                    request.captureState = funcaptchaCaptureState;
-                    return handleFunCaptchaMessage(request, sender, sendResponse);
+                    return handleFunCaptchaMessage(request, sendResponse, funcaptchaCaptureState);
                 }
                 break;
 

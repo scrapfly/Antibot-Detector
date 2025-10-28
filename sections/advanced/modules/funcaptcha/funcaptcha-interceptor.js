@@ -261,12 +261,12 @@ function funcaptchaGetCaptureState(tabId) {
 /**
  * Main message handler
  */
-function handleFunCaptchaMessage(request, sender, sendResponse) {
+function handleFunCaptchaMessage(request, sendResponse, captureState) {
     const { type } = request;
 
     switch (type) {
         case 'FUNCAPTCHA_START_CAPTURE':
-            funcaptchaInitializeInterceptor(request.captureState);
+            funcaptchaInitializeInterceptor(captureState);
             funcaptchaStartCapture(request.tabId)
                 .then(result => sendResponse(result))
                 .catch(error => sendResponse({ status: 'error', error: error.message }));
