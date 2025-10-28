@@ -137,49 +137,62 @@ class FunCaptchaAdvanced extends BaseAdvancedModule {
             isBlobRequired = false,
             apiDomain = 'N/A'
         } = data;
+        const timestamp = AdvancedUtils.formatTimestamp(data.timestamp);
 
         return `
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
-                <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
-                    <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 6px;">PUBLIC KEY</div>
-                    <div class="copy-value" data-copy="${publicKey}" style="font-family: monospace; font-size: 11px; color: var(--text-primary); word-break: break-all; cursor: pointer; padding: 6px; background: var(--bg-primary); border-radius: 3px; transition: background 0.2s;" title="Click to copy">${publicKey.substring(0, 30)}${publicKey.length > 30 ? '...' : ''}</div>
-                </div>
+            <!-- Public Key Section -->
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Public Key</label>
+                <div class="advanced-modal-code-block" data-copy="${publicKey}" style="word-break: break-all;">${publicKey}</div>
+            </div>
 
-                <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
-                    <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 6px;">API DOMAIN</div>
-                    <div class="copy-value" data-copy="${apiDomain}" style="font-family: monospace; font-size: 11px; color: var(--text-primary); cursor: pointer; padding: 6px; background: var(--bg-primary); border-radius: 3px; transition: background 0.2s;" title="Click to copy">${apiDomain}</div>
-                </div>
+            <!-- API Domain Section -->
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">API Domain</label>
+                <div class="advanced-modal-code-block" data-copy="${apiDomain}">${apiDomain}</div>
+            </div>
 
-                <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; grid-column: 1 / -1;">
-                    <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 6px;">WEBSITE URL</div>
-                    <div class="copy-value" data-copy="${websiteUrl}" style="font-family: monospace; font-size: 11px; color: var(--text-primary); word-break: break-all; cursor: pointer; padding: 6px; background: var(--bg-primary); border-radius: 3px; transition: background 0.2s;" title="Click to copy">${websiteUrl}</div>
-                </div>
+            <!-- Website URL Section -->
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Website URL</label>
+                <div class="advanced-modal-code-block" data-copy="${websiteUrl}" style="word-break: break-all;">${websiteUrl}</div>
+            </div>
 
-                <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; grid-column: 1 / -1;">
-                    <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 6px;">USER AGENT</div>
-                    <div class="copy-value" data-copy="${userAgent}" style="font-family: monospace; font-size: 11px; color: var(--text-primary); word-break: break-all; cursor: pointer; padding: 6px; background: var(--bg-primary); border-radius: 3px; transition: background 0.2s;" title="Click to copy">${userAgent.substring(0, 80)}${userAgent.length > 80 ? '...' : ''}</div>
-                </div>
+            <!-- User Agent Section -->
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">User Agent</label>
+                <div class="advanced-modal-code-block" data-copy="${userAgent}" style="word-break: break-all;">${userAgent}</div>
+            </div>
 
-                ${bda ? `
-                    <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; grid-column: 1 / -1;">
-                        <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 6px;">BDA (Browser Data Array)</div>
-                        <div class="copy-value" data-copy="${bda}" style="font-family: monospace; font-size: 11px; color: var(--text-primary); word-break: break-all; cursor: pointer; padding: 6px; background: var(--bg-primary); border-radius: 3px; transition: background 0.2s;" title="Click to copy">${bda.substring(0, 100)}${bda.length > 100 ? '...' : ''}</div>
+            ${bda ? `
+            <!-- BDA Section -->
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">BDA (Browser Data Array)</label>
+                <div class="advanced-modal-code-block" data-copy="${bda}" style="word-break: break-all;">${bda}</div>
+            </div>
+            ` : ''}
+
+            ${isBlobRequired ? `
+            <!-- Blob Data Section -->
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">Blob Data${blob ? '' : ' (Not Captured)'}</label>
+                ${blob ? `
+                    <div class="advanced-modal-code-block" data-copy="${blob}" style="word-break: break-all;">${blob}</div>
+                ` : `
+                    <div class="advanced-modal-info-row">
+                        <span class="advanced-modal-info-label">Status</span>
+                        <span class="advanced-modal-info-value">Not captured</span>
                     </div>
-                ` : ''}
+                `}
+            </div>
+            ` : ''}
 
-                ${isBlobRequired ? `
-                    <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; grid-column: 1 / -1;">
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                            <span style="color: var(--text-secondary); font-size: 12px;">BLOB DATA</span>
-                            <span style="background: linear-gradient(135deg, #F97316 0%, #FB923C 100%); color: white; padding: 2px 6px; border-radius: 2px; font-size: 10px; font-weight: 500;">REQUIRED</span>
-                        </div>
-                        ${blob ? `
-                            <div class="copy-value" data-copy="${blob}" style="font-family: monospace; font-size: 11px; color: var(--text-primary); word-break: break-all; cursor: pointer; padding: 6px; background: var(--bg-primary); border-radius: 3px; transition: background 0.2s;" title="Click to copy">${blob.substring(0, 100)}${blob.length > 100 ? '...' : ''}</div>
-                        ` : `
-                            <div style="color: var(--text-secondary); font-size: 11px; padding: 6px; background: var(--bg-primary); border-radius: 3px;">Not captured</div>
-                        `}
-                    </div>
-                ` : ''}
+            <!-- Timestamp Section -->
+            <div class="advanced-modal-section" style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">Captured</span>
+                    <span class="advanced-modal-info-value">${timestamp}</span>
+                </div>
             </div>
         `;
     }
