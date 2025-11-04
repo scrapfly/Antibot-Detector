@@ -3,7 +3,6 @@
   "name": "Battery API Fingerprint",
   "category": "Fingerprint",
   "color": "#10b981",
-  "confidence": 90,
   "lastUpdated": "2025-01-21",
   "version": "1.0.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API",
@@ -12,19 +11,19 @@
   "detection": {
     "js_hooks": [
       {
-        "target": "Navigator.prototype.getBattery",
         "description": "Gets battery status object for fingerprinting",
         "enabled": true,
-        "confidence": 95
+        "confidence": 95,
+        "target": "Navigator.prototype.getBattery"
       },
       {
-        "target": "BatteryManager.prototype.addEventListener",
         "description": "Listens to battery status changes",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "BatteryManager.prototype.addEventListener"
       }
     ],
-    "window_properties": [
+    "window": [
       {
         "path": "navigator.getBattery",
         "description": "Battery Status API access point",
@@ -38,16 +37,22 @@
     ],
     "content": [
       {
-        "value": "getBattery",
+        "text": "getBattery",
         "scope": "scripts",
         "description": "Battery API usage in scripts",
-        "confidence": 85
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "value": "batteryManager",
+        "text": "batteryManager",
         "scope": "scripts",
         "description": "Battery manager references",
-        "confidence": 80
+        "confidence": 80,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ]
   }

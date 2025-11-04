@@ -3,7 +3,6 @@
   "name": "Cheq",
   "category": "ANTIBOT",
   "color": "#FF5C7C",
-  "confidence": 95,
   "lastUpdated": "2024-10-21",
   "version": "1.0.0",
   "website": "https://cheq.ai/",
@@ -12,46 +11,74 @@
   "detection": {
     "content": [
       {
-        "content": "CheqSdk",
         "confidence": 100,
-        "description": "Cheq SDK main object"
+        "description": "Cheq SDK main object",
+        "text": "CheqSdk",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "\"CHEQ\"",
         "confidence": 100,
-        "description": "Cheq identifier string"
+        "description": "Cheq identifier string",
+        "text": "\"CHEQ\"",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "cheq_invalidUsers",
         "confidence": 95,
-        "description": "Cheq invalid user detection"
+        "description": "Cheq invalid user detection",
+        "text": "cheq_invalidUsers",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "cheq",
         "confidence": 85,
-        "description": "Cheq reference"
+        "description": "Cheq reference",
+        "text": "cheq",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ],
     "url": [
       {
-        "pattern": "clicktrue_invocation.js",
         "confidence": 100,
-        "description": "Cheq clicktrue invocation script"
+        "description": "Cheq clicktrue invocation script",
+        "text": "clicktrue_invocation.js",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "cheqzone.com",
         "confidence": 100,
-        "description": "Cheq zone domain"
+        "description": "Cheq zone domain",
+        "text": "cheqzone.com",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "ob.cheqzone.com",
         "confidence": 100,
-        "description": "Cheq obfuscation server"
+        "description": "Cheq obfuscation server",
+        "text": "ob.cheqzone.com",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "cheq.ai",
         "confidence": 95,
-        "description": "Cheq main domain"
+        "description": "Cheq main domain",
+        "text": "cheq.ai",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       }
     ],
     "window": [

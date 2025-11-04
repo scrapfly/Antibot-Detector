@@ -3,7 +3,6 @@
   "name": "DataDome",
   "category": "Anti-Bot",
   "color": "#22C55E",
-  "confidence": 100,
   "lastUpdated": "2024-01-15",
   "version": "1.0.0",
   "website": "https://datadome.co/",
@@ -14,22 +13,37 @@
       {
         "name": "datadome",
         "confidence": 100,
-        "description": "Main DataDome tracking cookie"
+        "description": "Main DataDome tracking cookie",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       }
     ],
     "header": [
       {
         "name": "x-datadome-cid",
         "confidence": 100,
-        "description": "DataDome client ID header"
+        "description": "DataDome client ID header",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
       }
     ],
-    "url": [
-    ],
-    "content": [
-    ],
+    "url": [],
+    "content": [],
     "dom": [],
-    "window": [
-    ]
+    "window": []
   }
 }

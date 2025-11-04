@@ -100,3 +100,21 @@
       </div>
     </div>
   </div>
+
+  <!-- Overflow Detections Modal -->
+  <div id="overflowDetectionsModal" class="history-modal" style="display: none;">
+    <div class="history-modal-overlay"></div>
+    <div class="history-modal-container">
+      <div class="history-modal-header">
+        <h3 id="overflowModalTitle">Hidden Detections</h3>
+        <button id="overflowModalClose" class="history-modal-close" title="Close">
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+      <div id="overflowModalContent" class="history-modal-content">
+        <!-- Detection cards rendered dynamically -->
+      </div>
+    </div>
+  </div>

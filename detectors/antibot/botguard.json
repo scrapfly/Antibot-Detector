@@ -3,7 +3,6 @@
   "name": "Google BotGuard",
   "category": "Anti-Bot",
   "color": "#4285F4",
-  "confidence": 100,
   "lastUpdated": "2025-01-08 00:00:00",
   "version": "1.0.0",
   "website": "https://developers.google.com/recaptcha",
@@ -14,29 +13,49 @@
         "name": "__Secure-.*",
         "nameRegex": true,
         "confidence": 85,
-        "description": "BotGuard secure cookie pattern (various implementations)"
+        "description": "BotGuard secure cookie pattern (various implementations)",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       },
       {
         "name": "__Secure-[0-9]PSID",
         "nameRegex": true,
         "confidence": 90,
-        "description": "Google session ID with BotGuard protection"
+        "description": "Google session ID with BotGuard protection",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       },
       {
         "name": "__Secure-[0-9]PAPISID",
         "nameRegex": true,
         "confidence": 90,
-        "description": "Google API session ID with BotGuard"
+        "description": "Google API session ID with BotGuard",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       }
     ],
     "header": [],
-    "url": [
-
-    ],
-    "content": [
-    ],
-    "window": [
-    ],
+    "url": [],
+    "content": [],
+    "window": [],
     "dom": []
   }
 }

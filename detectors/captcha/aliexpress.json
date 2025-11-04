@@ -3,7 +3,6 @@
   "name": "AliExpress CAPTCHA",
   "category": "CAPTCHA",
   "color": "#FF6A00",
-  "confidence": 100,
   "lastUpdated": "2025-01-11",
   "version": "1.0.0",
   "website": "https://www.aliexpress.com/",
@@ -12,27 +11,40 @@
   "detection": {
     "url": [
       {
-        "pattern": "punish?x5secdata",
         "confidence": 100,
-        "description": "AliExpress security challenge URL"
+        "description": "AliExpress security challenge URL",
+        "text": "punish?x5secdata",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "punish\\?x5secdata",
-        "regex": true,
         "confidence": 100,
-        "description": "AliExpress x5sec verification"
+        "description": "AliExpress x5sec verification",
+        "text": "punish\\?x5secdata",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       }
     ],
     "content": [
       {
-        "content": "x5secdata",
         "confidence": 90,
-        "description": "x5sec data parameter"
+        "description": "x5sec data parameter",
+        "text": "x5secdata",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "aliexpress.com/punish",
         "confidence": 95,
-        "description": "AliExpress punish endpoint"
+        "description": "AliExpress punish endpoint",
+        "text": "aliexpress.com/punish",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ]
   }

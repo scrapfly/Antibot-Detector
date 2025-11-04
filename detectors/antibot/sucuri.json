@@ -3,7 +3,6 @@
   "name": "Sucuri WAF",
   "category": "Anti-Bot",
   "color": "#8BC34A",
-  "confidence": 100,
   "lastUpdated": "2024-01-15",
   "version": "1.0.0",
   "website": "https://sucuri.net/",
@@ -14,56 +13,119 @@
       {
         "name": "sucuri_cloudproxy",
         "confidence": 95,
-        "description": "Sucuri CloudProxy cookie"
+        "description": "Sucuri CloudProxy cookie",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       },
       {
         "name": "sucuri-*",
         "confidence": 90,
-        "description": "Sucuri prefix cookies"
+        "description": "Sucuri prefix cookies",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       }
     ],
     "header": [
       {
         "name": "X-Sucuri-ID",
         "confidence": 95,
-        "description": "Sucuri request identifier"
+        "description": "Sucuri request identifier",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
       },
       {
         "name": "X-Sucuri-Cache",
         "confidence": 90,
-        "description": "Sucuri cache status"
+        "description": "Sucuri cache status",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
       },
       {
         "name": "Server",
         "value": "Sucuri",
         "confidence": 95,
-        "description": "Sucuri server header"
+        "description": "Sucuri server header",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
       },
       {
         "name": "X-Sucuri-Block",
         "confidence": 100,
-        "description": "Sucuri block indicator"
+        "description": "Sucuri block indicator",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
       }
     ],
     "url": [
       {
-        "pattern": "sucuri.net",
         "confidence": 90,
-        "description": "Sucuri domain in resources"
+        "description": "Sucuri domain in resources",
+        "text": "sucuri.net",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       }
     ],
     "content": [
       {
-        "content": "sucuri",
         "confidence": 85,
-        "description": "Sucuri reference in scripts"
+        "description": "Sucuri reference in scripts",
+        "text": "sucuri",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ],
     "dom": [
       {
         "selector": "meta[name*='sucuri']",
         "confidence": 85,
-        "description": "Sucuri meta tags"
+        "description": "Sucuri meta tags",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       }
     ]
   }

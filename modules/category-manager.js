@@ -33,6 +33,9 @@ class CategoryManager {
                 console.log('[BADGE-COLOUR] CategoryManager: ✅ Loaded existing data from storage (preserving custom colors)');
             }
 
+            // Sync colors from Settings (user customizations take precedence)
+            await this.syncColorsFromSettings();
+
             this.initialized = true;
             console.log('[BADGE-COLOUR] CategoryManager: Initialized successfully');
         } catch (error) {
@@ -181,12 +184,48 @@ class CategoryManager {
 
     /**
      * Get color for a specific category
+     * Returns the color from CategoryManager's stored data
      * @param {string} categoryName - Category name
      * @returns {string} Category color hex value or default
      */
     getCategoryColor(categoryName) {
         const categoryInfo = this.categories[categoryName];
         return categoryInfo?.colour || '#3b82f6';
+    }
+
+    /**
+     * Sync category colors from Settings
+     * This should be called after Settings saves category colors
+     * @returns {Promise<boolean>} True if colors were synced successfully
+     */
+    async syncColorsFromSettings() {
+        try {
+            // Read colors from Settings
+            const result = await chrome.storage.local.get('scrapfly_settings');
+            if (result.scrapfly_settings) {
+                const settingsData = JSON.parse(result.scrapfly_settings);
+                const categoryColors = settingsData?.settings?.categoryColors;
+
+                if (categoryColors) {
+                    // Update colors in CategoryManager's categories
+                    for (const [categoryName, color] of Object.entries(categoryColors)) {
+                        if (this.categories[categoryName]) {
+                            this.categories[categoryName].colour = color;
+                            console.log(`[CategoryManager] Synced ${categoryName} color to:`, color);
+                        }
+                    }
+
+                    // Save updated categories to storage
+                    await this.saveToStorage();
+                    console.log('[CategoryManager] ✅ Colors synced from Settings successfully');
+                    return true;
+                }
+            }
+            return false;
+        } catch (error) {
+            console.error('[CategoryManager] Failed to sync colors from Settings:', error);
+            return false;
+        }
     }
 
     /**

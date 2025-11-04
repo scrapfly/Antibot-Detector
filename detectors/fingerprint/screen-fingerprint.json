@@ -3,7 +3,6 @@
   "name": "Screen Fingerprint",
   "category": "Fingerprint",
   "color": "#7c3aed",
-  "confidence": 100,
   "lastUpdated": "2025-01-15",
   "version": "1.0.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Screen",
@@ -12,40 +11,40 @@
   "detection": {
     "js_hooks": [
       {
-        "target": "Screen.prototype.width",
         "description": "Reads screen width for display fingerprinting",
         "enabled": true,
-        "confidence": 85
+        "confidence": 85,
+        "target": "Screen.prototype.width"
       },
       {
-        "target": "Screen.prototype.height",
         "description": "Reads screen height for display fingerprinting",
         "enabled": true,
-        "confidence": 85
+        "confidence": 85,
+        "target": "Screen.prototype.height"
       },
       {
-        "target": "Screen.prototype.availHeight",
         "description": "Reads available screen height",
         "enabled": true,
-        "confidence": 80
+        "confidence": 80,
+        "target": "Screen.prototype.availHeight"
       },
       {
-        "target": "Screen.prototype.colorDepth",
         "description": "Reads screen color depth",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "Screen.prototype.colorDepth"
       },
       {
-        "target": "window.innerHeight",
         "description": "Reads window inner height",
         "enabled": false,
-        "confidence": 70
+        "confidence": 70,
+        "target": "window.innerHeight"
       },
       {
-        "target": "window.devicePixelRatio",
         "description": "Reads device pixel ratio for high-DPI detection",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "window.devicePixelRatio"
       }
     ]
   }

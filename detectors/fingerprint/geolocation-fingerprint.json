@@ -3,7 +3,6 @@
   "name": "Geolocation Fingerprint",
   "category": "Fingerprint",
   "color": "#3b82f6",
-  "confidence": 88,
   "lastUpdated": "2025-01-21",
   "version": "1.0.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API",
@@ -12,19 +11,19 @@
   "detection": {
     "js_hooks": [
       {
-        "target": "Geolocation.prototype.getCurrentPosition",
         "description": "Gets current user location",
         "enabled": true,
-        "confidence": 95
+        "confidence": 95,
+        "target": "Geolocation.prototype.getCurrentPosition"
       },
       {
-        "target": "Geolocation.prototype.watchPosition",
         "description": "Watches user location continuously",
         "enabled": true,
-        "confidence": 95
+        "confidence": 95,
+        "target": "Geolocation.prototype.watchPosition"
       }
     ],
-    "window_properties": [
+    "window": [
       {
         "path": "navigator.geolocation",
         "description": "Geolocation API access point",
@@ -38,22 +37,31 @@
     ],
     "content": [
       {
-        "value": "navigator.geolocation",
+        "text": "navigator.geolocation",
         "scope": "scripts",
         "description": "Geolocation API usage",
-        "confidence": 90
+        "confidence": 90,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "value": "getCurrentPosition",
+        "text": "getCurrentPosition",
         "scope": "scripts",
         "description": "Location acquisition in scripts",
-        "confidence": 90
+        "confidence": 90,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "value": "watchPosition",
+        "text": "watchPosition",
         "scope": "scripts",
         "description": "Continuous location tracking",
-        "confidence": 85
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ]
   }

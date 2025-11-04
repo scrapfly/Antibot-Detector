@@ -8,17 +8,13 @@
     "detection": {
       "cacheDuration": 12,
       "cacheUnit": "hours",
-      "cacheScope": "full",
+      "cacheScope": "path",
       "blacklistedDomains": [],
       "enhancedDetection": {
         "enabled": true,
         "windowPropertiesMode": "standard",
-        "hooksTimeoutMs": 5000,
-        "useEventDrivenChecks": false,
-        "useFinalIdleCheck": false,
-        "maxDetectionWindowMs": 5000,
-        "keepHooksInstalled": true,
-        "_comment": "FIX: JS hooks now start monitoring at document_start (not page ready) for 100% reliability. Window properties now use polling (200ms interval) until settled (3 checks with no new detections) instead of fixed retry intervals."
+        "maxDetectionWindowMs": 10000,
+        "keepHooksInstalled": false
       }
     },
     "jsApi": {

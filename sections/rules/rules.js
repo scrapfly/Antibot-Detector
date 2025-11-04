@@ -126,10 +126,7 @@ class Rules {
     this.colorManager.initialize({
       onColorSelect: (color) => {
         console.log('Color selected:', color);
-        // Handle color selection
-        if (this.currentEditDetector) {
-          this.currentEditDetector.detector.color = color;
-        }
+        // Note: Colors are managed by CategoryManager in Settings, not stored per detector
       },
       onColorChange: (color) => {
         console.log('Color changed:', color);
@@ -176,41 +173,13 @@ class Rules {
       saveBtn.addEventListener('click', () => this.saveRule());
     }
 
-    // JS hooks helper tooltip
+    // Method helper modal for all detection types
     document.addEventListener('click', (event) => {
-      const button = event.target.closest('.method-help-btn[data-method-help="js_hooks"]');
+      const button = event.target.closest('.method-help-btn[data-method-help]');
       if (button) {
-        const existing = document.querySelector('.method-help-tooltip');
-        if (existing) existing.remove();
-
-        const tooltip = document.createElement('div');
-        tooltip.className = 'method-help-tooltip';
-        tooltip.innerHTML = `
-          <strong>JavaScript Hooks Detection</strong>
-          <p>Hooks watch APIs like <code>canvas.toDataURL()</code>, <code>navigator.webdriver</code>, or <code>RTCPeerConnection.createOffer()</code>. When a page calls them, Scrapfly records which anti-bot or fingerprinting system is active.</p>
-          <p><strong>Tip:</strong> Hooks only fire if those APIs run. Some sites cache results, so use a hard reload (Ctrl+F5) to trigger them again.</p>
-        `;
-
-        const section = button.closest('.method-section');
-        section.style.position = 'relative';
-        section.appendChild(tooltip);
-
-        const buttonRect = button.getBoundingClientRect();
-        const sectionRect = section.getBoundingClientRect();
-        const offsetTop = buttonRect.bottom - sectionRect.top + 8;
-        const offsetLeft = Math.min(buttonRect.left - sectionRect.left - 140, sectionRect.width - 320 - 12);
-
-        tooltip.style.top = `${offsetTop}px`;
-        tooltip.style.left = `${Math.max(offsetLeft, 12)}px`;
-
-        const removeTooltip = (e) => {
-          if (!tooltip.contains(e.target) && e.target !== button) {
-            tooltip.remove();
-            document.removeEventListener('click', removeTooltip, true);
-          }
-        };
-
-        document.addEventListener('click', removeTooltip, true);
+        event.stopPropagation();
+        const methodType = button.dataset.methodHelp;
+        this.openMethodHelpModal(methodType);
       }
     });
 
@@ -226,8 +195,25 @@ class Rules {
     // Setup DOM helper modal
     this.setupDomHelperModal();
 
+    // Setup Window helper modal
+    this.setupWindowHelperModal();
+
     // Setup Regex helper modal
     this.setupRegexHelperModal();
+
+    // Setup Whole Word helper modal
+    this.setupWholeWordHelperModal();
+
+    // Setup Case Sensitive helper modal
+    this.setupCaseSensitiveHelperModal();
+
+    // Setup explanation modals
+    this.setupRegexExplanationModal();
+    this.setupWholeWordExplanationModal();
+    this.setupCaseSensitiveExplanationModal();
+
+    // Setup method help modal
+    this.setupMethodHelpModal();
   }
 
   /**
@@ -331,8 +317,11 @@ class Rules {
     const valueWholeword = methodItem.dataset.valueWholeword === 'true';
     const valueCase = methodItem.dataset.valueCase === 'true';
     const checkScripts = methodItem.dataset.checkScripts === 'true'; // Default: false (entire page)
-    const checkClasses = methodItem.dataset.checkClasses === 'true'; // Default: false (entire page)
-    const checkValues = methodItem.dataset.checkValues === 'true'; // Default: false (entire page)
+
+    // Load scope settings from data attributes
+    const nameScope = methodItem.dataset.nameScope || (methodKey === 'header' || methodKey === 'cookie' ? (methodKey === 'header' ? 'response' : 'request') : '');
+    const valueScope = methodItem.dataset.valueScope || (methodKey === 'header' || methodKey === 'cookie' ? (methodKey === 'header' ? 'response' : 'request') : '');
+    const textScope = methodItem.dataset.textScope || 'all_resources';
 
     // Set values in modal
     const confidenceSlider = document.querySelector('#confidenceSlider');
@@ -354,17 +343,36 @@ class Rules {
     setCheckbox('valueWholeWord', valueWholeword);
     setCheckbox('valueCaseSensitive', valueCase);
     setCheckbox('checkScripts', checkScripts);
-    setCheckbox('checkClasses', checkClasses);
-    setCheckbox('checkValues', checkValues);
 
-    // Show/hide Content Search Scope section based on method type
+    // Set scope dropdowns
+    const nameScopeSelect = document.querySelector('#nameScope');
+    const valueScopeSelect = document.querySelector('#valueScope');
+    const textScopeSelect = document.querySelector('#textScope');
+
+    if (nameScopeSelect) nameScopeSelect.value = nameScope;
+    if (valueScopeSelect) valueScopeSelect.value = valueScope;
+    if (textScopeSelect) textScopeSelect.value = textScope;
+
+    // Show/hide scope settings groups based on method type
     const contentScopeGroup = document.querySelector('#contentScopeGroup');
+    const headerCookieScopeGroup = document.querySelector('#headerCookieScopeGroup');
+    const urlScopeGroup = document.querySelector('#urlScopeGroup');
+
+    const isHeaderOrCookie = methodKey === 'header' || methodKey === 'cookie';
+    const isUrl = methodKey === 'url';
+
     if (contentScopeGroup) {
       contentScopeGroup.style.display = isContentMethod ? 'block' : 'none';
     }
+    if (headerCookieScopeGroup) {
+      headerCookieScopeGroup.style.display = isHeaderOrCookie ? 'block' : 'none';
+    }
+    if (urlScopeGroup) {
+      urlScopeGroup.style.display = isUrl ? 'block' : 'none';
+    }
 
     // Determine if this is a single-input type (no value field)
-    const singleInputTypes = ['urls', 'url', 'content', 'dom'];
+    const singleInputTypes = ['urls', 'url', 'content', 'dom', 'js_hooks', 'window', 'payload'];
     const isSingleInput = singleInputTypes.includes(methodKey);
 
     // Update field titles based on method type
@@ -378,6 +386,12 @@ class Rules {
         patternOptionsTitle.textContent = 'Text/Word Matching';
       } else if (methodKey === 'dom') {
         patternOptionsTitle.textContent = 'DOM Selector Matching';
+      } else if (methodKey === 'payload') {
+        patternOptionsTitle.textContent = 'Payload Text Matching';
+      } else if (methodKey === 'js_hooks') {
+        patternOptionsTitle.textContent = 'JS Hook Target Matching';
+      } else if (methodKey === 'window') {
+        patternOptionsTitle.textContent = 'Window Path Matching';
       } else {
         patternOptionsTitle.textContent = 'Name Field Matching';
       }
@@ -456,6 +470,109 @@ class Rules {
   }
 
   /**
+   * Escape HTML special characters
+   * @param {string} str - String to escape
+   * @returns {string} Escaped string
+   */
+  escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  /**
+   * Generate DOM selector templates based on keyword
+   * @param {string} keyword - The keyword to generate templates for
+   * @returns {Array} Array of selector templates
+   */
+  generateDomTemplates(keyword) {
+    if (!keyword || keyword.trim() === '') return [];
+
+    // Store original keyword for display and create CSS-safe version
+    const originalKeyword = keyword;
+    const cssKeyword = keyword.replace(/\s+/g, '-').toLowerCase();
+
+    const templates = [
+      // Basic selectors (use CSS-safe keyword for selector, original for display)
+      { selector: `.${cssKeyword}`, label: `Class selector for "${originalKeyword}"` },
+      { selector: `#${cssKeyword}`, label: `ID selector for "${originalKeyword}"` },
+      { selector: `[data-${cssKeyword}]`, label: `Data attribute for "${originalKeyword}"` },
+      { selector: `[class*='${originalKeyword}']`, label: `Classes containing "${originalKeyword}"` },
+      { selector: `[id*='${originalKeyword}']`, label: `IDs containing "${originalKeyword}"` },
+      { selector: `iframe[src*='${originalKeyword}']`, label: `Iframes with "${originalKeyword}" in URL` },
+      { selector: `[title*='${originalKeyword}']`, label: `Elements with "${originalKeyword}" in title` },
+      { selector: `[alt*='${originalKeyword}']`, label: `Elements with "${originalKeyword}" in alt text` }
+    ];
+
+    // Only show element selector if it's a valid HTML tag name
+    if (!keyword.includes(' ') && !keyword.includes('-')) {
+      templates.splice(5, 0,
+        { selector: `${cssKeyword}`, label: `${originalKeyword} HTML tag` },
+        { selector: `[${cssKeyword}]`, label: `Elements with ${originalKeyword} attribute` }
+      );
+    }
+
+    // For compound words, also generate variations
+    if (cssKeyword.includes('-') || cssKeyword.includes('_')) {
+      const camelCase = cssKeyword.replace(/[-_]([a-z])/g, (g) => g[1].toUpperCase());
+      templates.push(
+        { selector: `.${camelCase}`, label: `Class selector for "${camelCase}" (camelCase)` }
+      );
+    }
+
+    return templates;
+  }
+
+  /**
+   * Display DOM selector suggestions in the modal
+   * @param {string} keyword - The keyword to search for
+   */
+  displayDomSuggestions(keyword) {
+    const suggestionsContainer = document.querySelector('#domSuggestions');
+    const customInput = document.querySelector('#domCustomInput');
+
+    if (!suggestionsContainer) return;
+
+    // Clear existing suggestions
+    suggestionsContainer.innerHTML = '';
+
+    if (!keyword || keyword.trim() === '') {
+      // Show empty state message
+      suggestionsContainer.innerHTML = `
+        <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">
+          Start typing above to see suggestions...
+        </div>
+      `;
+      return;
+    }
+
+    // Generate dynamic templates based on keyword
+    const templates = this.generateDomTemplates(keyword);
+
+    // Build HTML for all suggestions
+    let suggestionsHTML = '';
+
+    templates.forEach(template => {
+      const escapedSelector = this.escapeHtml(template.selector);
+      const escapedLabel = this.escapeHtml(template.label);
+      suggestionsHTML += `
+        <div class="dom-suggestion" data-selector="${escapedSelector}">
+          <div class="dom-suggestion-selector">${escapedSelector}</div>
+          <div class="dom-suggestion-label">${escapedLabel}</div>
+        </div>
+      `;
+    });
+
+    // Set all suggestions at once
+    suggestionsContainer.innerHTML = suggestionsHTML;
+
+    // Update custom input placeholder
+    if (customInput) {
+      customInput.placeholder = `Or enter custom selector for "${keyword}"...`;
+    }
+  }
+
+  /**
    * Setup DOM helper modal event listeners
    */
   setupDomHelperModal() {
@@ -465,6 +582,7 @@ class Rules {
     const useBtn = document.querySelector('#useDomSelector');
     const backdrop = modal?.querySelector('.rule-modal-backdrop');
     const customInput = document.querySelector('#domCustomInput');
+    const keywordInput = document.querySelector('#domKeywordInput');
 
     // Close modal events
     if (closeBtn) {
@@ -482,6 +600,17 @@ class Rules {
       useBtn.addEventListener('click', () => this.useDomSelector());
     }
 
+    // Keyword input for filtering suggestions
+    if (keywordInput) {
+      keywordInput.addEventListener('input', (e) => {
+        const keyword = e.target.value.trim();
+        this.displayDomSuggestions(keyword);
+
+        // Update step indicators
+        this.updateDomHelperSteps(keyword.length > 0 ? 2 : 1);
+      });
+    }
+
     // Setup click handlers for DOM helper button and templates (using event delegation)
     document.addEventListener('click', (e) => {
       // Handle DOM helper button clicks
@@ -492,6 +621,17 @@ class Rules {
         const methodItem = button.closest('.method-item');
         if (methodItem) {
           this.openDomHelperModal(methodItem, inputIndex);
+        }
+      }
+
+      // Handle Window helper button clicks
+      if (e.target.closest('.window-helper-btn')) {
+        e.stopPropagation();
+        const button = e.target.closest('.window-helper-btn');
+        const inputIndex = button.dataset.inputIndex;
+        const methodItem = button.closest('.method-item');
+        if (methodItem) {
+          this.openWindowHelperModal(methodItem, inputIndex);
         }
       }
 
@@ -506,17 +646,37 @@ class Rules {
         }
       }
 
-      // Handle template clicks
-      if (e.target.closest('.dom-template')) {
+      // Handle template/suggestion clicks
+      if (e.target.closest('.dom-template, .dom-suggestion')) {
         e.stopPropagation();
-        const template = e.target.closest('.dom-template');
-        const templateCode = template.querySelector('.template-code')?.textContent;
-        if (templateCode && customInput) {
-          customInput.value = templateCode;
+        const suggestion = e.target.closest('.dom-template, .dom-suggestion');
+        const selector = suggestion.dataset.selector || suggestion.querySelector('.template-code')?.textContent;
+        const customInput = document.querySelector('#domCustomInput');
+        if (selector && customInput) {
+          customInput.value = selector;
           customInput.focus();
         }
       }
     });
+  }
+
+  /**
+   * Update DOM helper step indicators
+   * @param {number} activeStep - The active step number (1 or 2)
+   */
+  updateDomHelperSteps(activeStep) {
+    const step1 = document.querySelector('#domStep1');
+    const step2 = document.querySelector('#domStep2');
+
+    if (step1 && step2) {
+      if (activeStep === 1) {
+        step1.classList.add('active');
+        step2.classList.remove('active');
+      } else if (activeStep === 2) {
+        step1.classList.remove('active');
+        step2.classList.add('active');
+      }
+    }
   }
 
   /**
@@ -540,6 +700,19 @@ class Rules {
     if (customInput) {
       customInput.value = currentValue;
     }
+
+    // Clear keyword input and show initial suggestions
+    const keywordInput = document.querySelector('#domKeywordInput');
+    if (keywordInput) {
+      keywordInput.value = '';
+      keywordInput.focus();
+    }
+
+    // Display initial suggestions (empty keyword shows all examples)
+    this.displayDomSuggestions('');
+
+    // Reset step indicators to step 1
+    this.updateDomHelperSteps(1);
 
     // Show modal
     modal.style.display = 'flex';
@@ -701,6 +874,198 @@ class Rules {
   }
 
   /**
+   * Setup Window Properties helper modal event listeners
+   */
+  setupWindowHelperModal() {
+    const modal = document.querySelector('#windowHelperModal');
+    const closeBtn = document.querySelector('#closeWindowHelper');
+    const cancelBtn = document.querySelector('#cancelWindowHelper');
+    const useBtn = document.querySelector('#useWindowProperty');
+    const backdrop = modal?.querySelector('.rule-modal-backdrop');
+    const keywordInput = document.querySelector('#windowKeywordInput');
+
+    // Close modal events
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => this.closeWindowHelperModal());
+    }
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', () => this.closeWindowHelperModal());
+    }
+    if (backdrop) {
+      backdrop.addEventListener('click', () => this.closeWindowHelperModal());
+    }
+
+    // Use property button
+    if (useBtn) {
+      useBtn.addEventListener('click', () => this.useWindowProperty());
+    }
+
+    // Keyword input for filtering suggestions
+    if (keywordInput) {
+      keywordInput.addEventListener('input', (e) => {
+        const keyword = e.target.value.trim();
+        this.displayWindowSuggestions(keyword);
+        this.updateWindowHelperSteps(keyword.length > 0 ? 2 : 1);
+      });
+    }
+
+    // Setup click handlers for suggestions (using event delegation)
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.window-suggestion')) {
+        e.stopPropagation();
+        const suggestion = e.target.closest('.window-suggestion');
+        const property = suggestion.dataset.property;
+        const customInput = document.querySelector('#windowCustomInput');
+        if (property && customInput) {
+          customInput.value = property;
+          customInput.focus();
+        }
+      }
+    });
+  }
+
+  /**
+   * Update Window helper step indicators
+   */
+  updateWindowHelperSteps(activeStep) {
+    const step1 = document.querySelector('#windowStep1');
+    const step2 = document.querySelector('#windowStep2');
+
+    if (step1 && step2) {
+      if (activeStep === 1) {
+        step1.classList.add('active');
+        step2.classList.remove('active');
+      } else if (activeStep === 2) {
+        step1.classList.remove('active');
+        step2.classList.add('active');
+      }
+    }
+  }
+
+  /**
+   * Generate window property suggestions based on keyword
+   */
+  generateWindowTemplates(keyword) {
+    if (!keyword || keyword.trim() === '') return [];
+
+    const cssKeyword = keyword.replace(/\s+/g, '-').toLowerCase();
+
+    const templates = [
+      { property: cssKeyword, label: `Property "${keyword}"` },
+      { property: `window.${cssKeyword}`, label: `window.${cssKeyword}` },
+      { property: `navigator.${cssKeyword}`, label: `navigator.${cssKeyword}` },
+      { property: `document.${cssKeyword}`, label: `document.${cssKeyword}` },
+      { property: `globalThis.${cssKeyword}`, label: `globalThis.${cssKeyword}` }
+    ];
+
+    return templates;
+  }
+
+  /**
+   * Display window property suggestions
+   */
+  displayWindowSuggestions(keyword) {
+    const suggestionsContainer = document.querySelector('#windowSuggestions');
+    if (!suggestionsContainer) return;
+
+    suggestionsContainer.innerHTML = '';
+
+    if (!keyword || keyword.trim() === '') {
+      suggestionsContainer.innerHTML = `
+        <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">
+          Start typing above to see suggestions...
+        </div>
+      `;
+      return;
+    }
+
+    const templates = this.generateWindowTemplates(keyword);
+
+    templates.forEach(template => {
+      const suggestionDiv = document.createElement('div');
+      suggestionDiv.className = 'window-suggestion';
+      suggestionDiv.dataset.property = template.property;
+      suggestionDiv.style.cssText = 'padding: 10px 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s;';
+      suggestionDiv.innerHTML = `
+        <div style="font-family: 'Monaco', 'Courier New', monospace; font-size: 12px; color: var(--accent); font-weight: 500;">${this.escapeHtml(template.property)}</div>
+        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">${template.label}</div>
+      `;
+      suggestionDiv.addEventListener('mouseenter', () => {
+        suggestionDiv.style.background = 'var(--bg-secondary)';
+      });
+      suggestionDiv.addEventListener('mouseleave', () => {
+        suggestionDiv.style.background = 'var(--bg-tertiary)';
+      });
+      suggestionsContainer.appendChild(suggestionDiv);
+    });
+  }
+
+  /**
+   * Open Window helper modal
+   */
+  openWindowHelperModal(methodItem, inputIndex) {
+    const modal = document.querySelector('#windowHelperModal');
+    if (!modal) return;
+
+    this.currentWindowMethodItem = methodItem;
+
+    const nameInput = methodItem.querySelector('.method-input.method-name');
+    const currentValue = nameInput?.value || '';
+
+    const customInput = document.querySelector('#windowCustomInput');
+    if (customInput) {
+      customInput.value = currentValue;
+    }
+
+    const keywordInput = document.querySelector('#windowKeywordInput');
+    if (keywordInput) {
+      keywordInput.value = '';
+      keywordInput.focus();
+    }
+
+    this.displayWindowSuggestions('');
+    this.updateWindowHelperSteps(1);
+
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  /**
+   * Use selected window property
+   */
+  useWindowProperty() {
+    const customInput = document.querySelector('#windowCustomInput');
+    const property = customInput?.value.trim();
+
+    if (!property) {
+      alert('Please select or enter a property');
+      return;
+    }
+
+    if (this.currentWindowMethodItem) {
+      const nameInput = this.currentWindowMethodItem.querySelector('.method-input.method-name');
+      if (nameInput) {
+        nameInput.value = property;
+        this.updateMethodIndicators(this.currentWindowMethodItem);
+      }
+    }
+
+    this.closeWindowHelperModal();
+  }
+
+  /**
+   * Close Window helper modal
+   */
+  closeWindowHelperModal() {
+    const modal = document.querySelector('#windowHelperModal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+      this.currentWindowMethodItem = null;
+    }
+  }
+
+  /**
    * Setup Regex helper modal event listeners
    */
   setupRegexHelperModal() {
@@ -708,6 +1073,7 @@ class Rules {
     const closeBtn = document.querySelector('#closeRegexHelper');
     const closeFooterBtn = document.querySelector('#closeRegexHelperBtn');
     const backdrop = modal?.querySelector('.rule-modal-backdrop');
+    const keywordInput = document.querySelector('#regexKeywordInput');
 
     // Close modal events
     if (closeBtn) {
@@ -718,6 +1084,25 @@ class Rules {
     }
     if (backdrop) {
       backdrop.addEventListener('click', () => this.closeRegexHelperModal());
+    }
+
+    // Setup keyword input for step 1 (filtering patterns)
+    if (keywordInput) {
+      keywordInput.addEventListener('input', (e) => {
+        const keyword = e.target.value.toLowerCase().trim();
+        this.filterRegexPatterns(keyword);
+      });
+
+      // Also handle Enter key to move to next step or select first pattern
+      keywordInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const firstPattern = document.querySelector('.regex-pattern');
+          if (firstPattern) {
+            firstPattern.click();
+          }
+        }
+      });
     }
 
     // Setup click handlers for regex helper button and patterns
@@ -758,6 +1143,68 @@ class Rules {
   }
 
   /**
+   * Get predefined regex patterns with keywords for filtering
+   */
+  getRegexPatterns() {
+    return [
+      { pattern: '^test', keywords: ['start', 'begins', 'starts', 'prefix'], description: 'Starts with "test"' },
+      { pattern: 'test$', keywords: ['end', 'ends', 'suffix'], description: 'Ends with "test"' },
+      { pattern: '.*test.*', keywords: ['contains', 'anywhere', 'includes'], description: 'Contains "test" anywhere' },
+      { pattern: '\\btest\\b', keywords: ['word', 'whole', 'boundary', 'exact'], description: 'Whole word match' },
+      { pattern: '^[0-9]+$', keywords: ['digit', 'number', 'numeric', 'integer'], description: 'Only digits' },
+      { pattern: '^[a-zA-Z]+$', keywords: ['letter', 'alpha', 'alphabetic'], description: 'Only letters' },
+      { pattern: '^[a-zA-Z0-9_]+$', keywords: ['alphanumeric', 'word char', 'identifier'], description: 'Alphanumeric and underscore' },
+      { pattern: '^[a-z]+$', keywords: ['lowercase', 'lower case', 'lower'], description: 'Only lowercase letters' },
+      { pattern: '^[A-Z]+$', keywords: ['uppercase', 'upper case', 'upper'], description: 'Only uppercase letters' },
+      { pattern: '^\\w+@\\w+\\.\\w+$', keywords: ['email', 'mail', '@'], description: 'Basic email pattern' },
+      { pattern: '^https?://', keywords: ['url', 'http', 'link', 'web'], description: 'Starts with http/https' },
+      { pattern: '(cloudflare|datadome|akamai)', keywords: ['or', 'alternative', 'multiple', 'either'], description: 'Multiple options (OR)' },
+      { pattern: '[0-9]{1,3}\\.[0-9]{1,3}', keywords: ['ip', 'address', 'version'], description: 'IP address pattern' },
+      { pattern: '^.{5,}$', keywords: ['length', 'min', 'minimum', 'characters'], description: 'At least 5 characters' },
+      { pattern: '(test|test2|test3)', keywords: ['list', 'options', 'choices', 'variants'], description: 'Match one of several options' }
+    ];
+  }
+
+  /**
+   * Generate dynamic regex patterns based on user input
+   */
+  generateDynamicRegexPatterns(input) {
+    const escaped = input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return [
+      { pattern: `^${escaped}`, description: `Starts with "${input}"` },
+      { pattern: `${escaped}$`, description: `Ends with "${input}"` },
+      { pattern: `.*${escaped}.*`, description: `Contains "${input}" anywhere` },
+      { pattern: `\\b${escaped}\\b`, description: `Whole word match "${input}"` },
+      { pattern: `(${escaped}|alternative)`, description: `"${input}" OR another option` },
+      { pattern: `^${escaped}.+$`, description: `Starts with "${input}" + more characters` }
+    ];
+  }
+
+  /**
+   * Filter regex patterns based on user input - generates dynamic patterns
+   */
+  filterRegexPatterns(keyword) {
+    const suggestionsContainer = document.querySelector('#regexSuggestions');
+    if (!suggestionsContainer) return;
+
+    // If no keyword, show placeholder
+    if (!keyword) {
+      suggestionsContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">Start typing above to see suggestions...</div>';
+      return;
+    }
+
+    // Generate patterns dynamically from user input
+    const patterns = this.generateDynamicRegexPatterns(keyword);
+
+    suggestionsContainer.innerHTML = patterns.map(p => `
+      <div class="regex-pattern" data-pattern="${p.pattern}">
+        <div class="template-code">${p.pattern}</div>
+        <div class="template-description">${p.description}</div>
+      </div>
+    `).join('');
+  }
+
+  /**
    * Open Regex helper modal
    */
   openRegexHelperModal() {
@@ -770,37 +1217,21 @@ class Rules {
       this.updateMethodIndicators(this.currentMethodItem);
     }
 
-    // Get current input value from the method item (if available from currentMethodItem)
-    let userInput = '';
-    if (this.currentMethodItem) {
-      const nameInput = this.currentMethodItem.querySelector('.method-input.method-name');
-      userInput = nameInput?.value.trim() || '';
+    // Reset keyword input and show all patterns
+    const keywordInput = document.querySelector('#regexKeywordInput');
+    if (keywordInput) {
+      keywordInput.value = '';
+      keywordInput.focus();
     }
 
-    // Show/hide user input preview and generate suggestions
-    const userInputPreview = document.querySelector('#userInputPreview');
-    const currentInputText = document.querySelector('#currentInputText');
-    const suggestedPatterns = document.querySelector('#suggestedPatterns');
-    const suggestedPatternsContainer = document.querySelector('#suggestedPatternsContainer');
+    // Display all patterns initially
+    this.filterRegexPatterns('');
 
-    if (userInput && userInputPreview && currentInputText && suggestedPatterns && suggestedPatternsContainer) {
-      // Show user's input
-      userInputPreview.style.display = 'block';
-      currentInputText.textContent = userInput;
-
-      // Generate suggested patterns
-      const suggestions = this.generateRegexSuggestions(userInput);
-      suggestedPatternsContainer.innerHTML = suggestions.map(s => `
-        <div class="regex-pattern" data-pattern="${s.pattern}">
-          <div class="template-code">${s.pattern}</div>
-          <div class="template-description">${s.description}</div>
-        </div>
-      `).join('');
-      suggestedPatterns.style.display = 'block';
-    } else {
-      if (userInputPreview) userInputPreview.style.display = 'none';
-      if (suggestedPatterns) suggestedPatterns.style.display = 'none';
-    }
+    // Update step indicators - focus on step 1
+    const step1 = document.querySelector('#regexStep1');
+    const step2 = document.querySelector('#regexStep2');
+    if (step1) step1.classList.add('active');
+    if (step2) step2.classList.remove('active');
 
     // Show modal
     modal.style.display = 'flex';
@@ -862,6 +1293,590 @@ class Rules {
    */
   closeRegexHelperModal() {
     const modal = document.querySelector('#regexHelperModal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  /**
+   * Get predefined whole word matching patterns
+   */
+  getWholeWordPatterns() {
+    return [
+      { name: '_abck', examples: [{ text: '_abck', match: true, reason: 'Exact word, surrounded by boundaries' }, { text: 'test_abck', match: false, reason: 'Connected to "test", not isolated' }, { text: '_abckMore', match: false, reason: 'Connected to "More", not isolated' }] },
+      { name: 'cf_clearance', examples: [{ text: 'cf_clearance', match: true, reason: 'Exact word, surrounded by boundaries' }, { text: '_cf_clearance', match: false, reason: 'Connected with underscore' }, { text: 'cf_clearance=value', match: true, reason: 'Separated by equals sign' }] },
+      { name: 'Akamai', examples: [{ text: 'Akamai', match: true, reason: 'Exact word' }, { text: 'AkamaiTest', match: false, reason: 'Connected to other text' }, { text: 'test Akamai server', match: true, reason: 'Separated by spaces' }] },
+      { name: 'grecaptcha', examples: [{ text: 'grecaptcha', match: true, reason: 'Exact word' }, { text: 'grecaptchaCallback', match: false, reason: 'Part of longer name' }, { text: 'window.grecaptcha', match: true, reason: 'Preceded by dot' }] }
+    ];
+  }
+
+  /**
+   * Generate dynamic whole word examples based on user input
+   */
+  generateWholeWordExamples(input) {
+    return [
+      { text: input, match: true, reason: 'Exact word, surrounded by boundaries' },
+      { text: `test${input}`, match: false, reason: 'Connected to "test", not isolated' },
+      { text: `${input}More`, match: false, reason: 'Connected to "More", not isolated' },
+      { text: `test ${input} more`, match: true, reason: 'Separated by spaces (word boundaries)' }
+    ];
+  }
+
+  /**
+   * Filter whole word patterns based on input - generates dynamic examples
+   */
+  filterWholeWordPatterns(keyword) {
+    const examplesContainer = document.querySelector('#wholeWordExamples');
+    if (!examplesContainer) return;
+
+    // If no keyword, show placeholder
+    if (!keyword) {
+      examplesContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">Start typing above to see examples...</div>';
+      return;
+    }
+
+    // Generate examples dynamically from user input
+    const examples = this.generateWholeWordExamples(keyword);
+
+    examplesContainer.innerHTML = `
+      <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 6px;">
+        <div style="font-weight: 600; color: #10b981; margin-bottom: 8px;">Pattern: ${keyword}</div>
+        <table style="font-size: 10px; width: 100%; border-collapse: collapse;">
+          <tr style="background: var(--bg-tertiary);">
+            <td style="padding: 6px; border: 1px solid var(--border);">Text</td>
+            <td style="padding: 6px; border: 1px solid var(--border);">Match?</td>
+            <td style="padding: 6px; border: 1px solid var(--border);">Reason</td>
+          </tr>
+          ${examples.map(e => `
+            <tr>
+              <td style="padding: 6px; border: 1px solid var(--border); color: var(--accent); font-family: monospace;">${e.text}</td>
+              <td style="padding: 6px; border: 1px solid var(--border); color: ${e.match ? '#10b981' : '#ef4444'};">${e.match ? '✓ Match' : '✗ No match'}</td>
+              <td style="padding: 6px; border: 1px solid var(--border);">${e.reason}</td>
+            </tr>
+          `).join('')}
+        </table>
+      </div>
+    `;
+  }
+
+  /**
+   * Setup Whole Word helper modal event listeners
+   */
+  setupWholeWordHelperModal() {
+    const modal = document.querySelector('#wholeWordHelperModal');
+    const helpBtn = document.querySelector('#wholeWordHelperBtn');
+    const closeBtn = document.querySelector('#closeWholeWordHelper');
+    const closeFooterBtn = document.querySelector('#closeWholeWordHelperBtn');
+    const backdrop = modal?.querySelector('.rule-modal-backdrop');
+    const keywordInput = document.querySelector('#wholeWordKeywordInput');
+
+    // Open modal when help button is clicked
+    if (helpBtn) {
+      helpBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openWholeWordHelperModal();
+      });
+    }
+
+    // Close modal events
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => this.closeWholeWordHelperModal());
+    }
+    if (closeFooterBtn) {
+      closeFooterBtn.addEventListener('click', () => this.closeWholeWordHelperModal());
+    }
+    if (backdrop) {
+      backdrop.addEventListener('click', () => this.closeWholeWordHelperModal());
+    }
+
+    // Setup keyword input for filtering
+    if (keywordInput) {
+      keywordInput.addEventListener('input', (e) => {
+        const keyword = e.target.value.toLowerCase().trim();
+        this.filterWholeWordPatterns(keyword);
+      });
+    }
+  }
+
+  /**
+   * Open Whole Word helper modal
+   */
+  openWholeWordHelperModal() {
+    const modal = document.querySelector('#wholeWordHelperModal');
+    if (!modal) return;
+
+    // Reset keyword input and show all patterns
+    const keywordInput = document.querySelector('#wholeWordKeywordInput');
+    if (keywordInput) {
+      keywordInput.value = '';
+      keywordInput.focus();
+    }
+
+    // Display all patterns initially
+    this.filterWholeWordPatterns('');
+
+    // Update step indicators
+    const step1 = document.querySelector('#wholeWordStep1');
+    const step2 = document.querySelector('#wholeWordStep2');
+    if (step1) step1.classList.add('active');
+    if (step2) step2.classList.remove('active');
+
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  /**
+   * Close Whole Word helper modal
+   */
+  closeWholeWordHelperModal() {
+    const modal = document.querySelector('#wholeWordHelperModal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  /**
+   * Get predefined case sensitivity patterns
+   */
+  getCaseSensitivePatterns() {
+    return [
+      { name: 'Akamai', examples: [{ text: 'Akamai', sensitive: true, insensitive: true }, { text: 'akamai', sensitive: false, insensitive: true }, { text: 'AKAMAI', sensitive: false, insensitive: true }] },
+      { name: '_abck', examples: [{ text: '_abck', sensitive: true, insensitive: true }, { text: '_Abck', sensitive: false, insensitive: true }, { text: '_ABCK', sensitive: false, insensitive: true }] },
+      { name: 'DataDome', examples: [{ text: 'DataDome', sensitive: true, insensitive: true }, { text: 'datadome', sensitive: false, insensitive: true }, { text: 'DATADOME', sensitive: false, insensitive: true }] },
+      { name: 'cf_clearance', examples: [{ text: 'cf_clearance', sensitive: true, insensitive: true }, { text: 'CF_CLEARANCE', sensitive: false, insensitive: true }, { text: 'Cf_Clearance', sensitive: false, insensitive: true }] }
+    ];
+  }
+
+  /**
+   * Generate dynamic case sensitivity examples based on user input
+   */
+  generateCaseSensitiveExamples(input) {
+    const variations = [
+      { text: input, sensitive: true, insensitive: true }  // Original (always matches both)
+    ];
+
+    // Add lowercase version if different
+    const lower = input.toLowerCase();
+    if (lower !== input) {
+      variations.push({ text: lower, sensitive: false, insensitive: true });
+    }
+
+    // Add uppercase version if different
+    const upper = input.toUpperCase();
+    if (upper !== input && upper !== lower) {
+      variations.push({ text: upper, sensitive: false, insensitive: true });
+    }
+
+    // Add capitalized version if different from all above
+    const capitalized = input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
+    if (capitalized !== input && capitalized !== lower && capitalized !== upper) {
+      variations.push({ text: capitalized, sensitive: false, insensitive: true });
+    }
+
+    return variations;
+  }
+
+  /**
+   * Filter case sensitive patterns based on input - generates dynamic examples
+   */
+  filterCaseSensitivePatterns(keyword) {
+    const examplesContainer = document.querySelector('#caseSensitiveExamples');
+    if (!examplesContainer) return;
+
+    // If no keyword, show placeholder
+    if (!keyword) {
+      examplesContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">Start typing above to see examples...</div>';
+      return;
+    }
+
+    // Generate examples dynamically from user input
+    const examples = this.generateCaseSensitiveExamples(keyword);
+
+    examplesContainer.innerHTML = `
+      <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 6px;">
+        <div style="font-weight: 600; color: #ef4444; margin-bottom: 8px;">Pattern: ${keyword}</div>
+        <table style="font-size: 10px; width: 100%; border-collapse: collapse;">
+          <tr style="background: var(--bg-tertiary);">
+            <td style="padding: 6px; border: 1px solid var(--border); font-weight: 600;">Text Found</td>
+            <td style="padding: 6px; border: 1px solid var(--border); font-weight: 600;">Case Sensitive</td>
+            <td style="padding: 6px; border: 1px solid var(--border); font-weight: 600;">Case Insensitive</td>
+          </tr>
+          ${examples.map(e => `
+            <tr>
+              <td style="padding: 6px; border: 1px solid var(--border); color: var(--accent); font-family: monospace;">${e.text}</td>
+              <td style="padding: 6px; border: 1px solid var(--border); color: ${e.sensitive ? '#10b981' : '#ef4444'};">${e.sensitive ? '✓ Match' : '✗ No match'}</td>
+              <td style="padding: 6px; border: 1px solid var(--border); color: ${e.insensitive ? '#10b981' : '#ef4444'};">${e.insensitive ? '✓ Match' : '✗ No match'}</td>
+            </tr>
+          `).join('')}
+        </table>
+      </div>
+    `;
+  }
+
+  /**
+   * Setup Case Sensitive helper modal event listeners
+   */
+  setupCaseSensitiveHelperModal() {
+    const modal = document.querySelector('#caseSensitiveHelperModal');
+    const helpBtn = document.querySelector('#caseSensitiveHelperBtn');
+    const closeBtn = document.querySelector('#closeCaseSensitiveHelper');
+    const closeFooterBtn = document.querySelector('#closeCaseSensitiveHelperBtn');
+    const backdrop = modal?.querySelector('.rule-modal-backdrop');
+    const keywordInput = document.querySelector('#caseSensitiveKeywordInput');
+
+    // Open modal when help button is clicked
+    if (helpBtn) {
+      helpBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openCaseSensitiveHelperModal();
+      });
+    }
+
+    // Close modal events
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => this.closeCaseSensitiveHelperModal());
+    }
+    if (closeFooterBtn) {
+      closeFooterBtn.addEventListener('click', () => this.closeCaseSensitiveHelperModal());
+    }
+    if (backdrop) {
+      backdrop.addEventListener('click', () => this.closeCaseSensitiveHelperModal());
+    }
+
+    // Setup keyword input for filtering
+    if (keywordInput) {
+      keywordInput.addEventListener('input', (e) => {
+        const keyword = e.target.value.toLowerCase().trim();
+        this.filterCaseSensitivePatterns(keyword);
+      });
+    }
+  }
+
+  /**
+   * Open Case Sensitive helper modal
+   */
+  openCaseSensitiveHelperModal() {
+    const modal = document.querySelector('#caseSensitiveHelperModal');
+    if (!modal) return;
+
+    // Reset keyword input and show all patterns
+    const keywordInput = document.querySelector('#caseSensitiveKeywordInput');
+    if (keywordInput) {
+      keywordInput.value = '';
+      keywordInput.focus();
+    }
+
+    // Display all patterns initially
+    this.filterCaseSensitivePatterns('');
+
+    // Update step indicators
+    const step1 = document.querySelector('#caseSensitiveStep1');
+    const step2 = document.querySelector('#caseSensitiveStep2');
+    if (step1) step1.classList.add('active');
+    if (step2) step2.classList.remove('active');
+
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  /**
+   * Close Case Sensitive helper modal
+   */
+  closeCaseSensitiveHelperModal() {
+    const modal = document.querySelector('#caseSensitiveHelperModal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  /**
+   * Setup Regex explanation modal event listeners
+   */
+  setupRegexExplanationModal() {
+    const modal = document.querySelector('#regexExplanationModal');
+    const explanationBtn = document.querySelector('#regexExplanationBtn');
+    const explanationBtnValue = document.querySelector('#regexExplanationBtnValue');
+    const closeBtn = document.querySelector('#closeRegexExplanation');
+    const backdrop = modal?.querySelector('.rule-modal-backdrop');
+
+    // Open modal when explanation button is clicked (Name field)
+    if (explanationBtn) {
+      explanationBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openRegexExplanationModal();
+      });
+    }
+
+    // Open modal when explanation button is clicked (Value field)
+    if (explanationBtnValue) {
+      explanationBtnValue.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openRegexExplanationModal();
+      });
+    }
+
+    // Close modal events
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => this.closeRegexExplanationModal());
+    }
+    if (backdrop) {
+      backdrop.addEventListener('click', () => this.closeRegexExplanationModal());
+    }
+  }
+
+  /**
+   * Open Regex explanation modal
+   */
+  openRegexExplanationModal() {
+    const modal = document.querySelector('#regexExplanationModal');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  /**
+   * Close Regex explanation modal
+   */
+  closeRegexExplanationModal() {
+    const modal = document.querySelector('#regexExplanationModal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  /**
+   * Setup Whole Word explanation modal event listeners
+   */
+  setupWholeWordExplanationModal() {
+    const modal = document.querySelector('#wholeWordExplanationModal');
+    const explanationBtn = document.querySelector('#wholeWordExplanationBtn');
+    const explanationBtnValue = document.querySelector('#wholeWordExplanationBtnValue');
+    const closeBtn = document.querySelector('#closeWholeWordExplanation');
+    const backdrop = modal?.querySelector('.rule-modal-backdrop');
+
+    // Open modal when explanation button is clicked (Name field)
+    if (explanationBtn) {
+      explanationBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openWholeWordExplanationModal();
+      });
+    }
+
+    // Open modal when explanation button is clicked (Value field)
+    if (explanationBtnValue) {
+      explanationBtnValue.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openWholeWordExplanationModal();
+      });
+    }
+
+    // Close modal events
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => this.closeWholeWordExplanationModal());
+    }
+    if (backdrop) {
+      backdrop.addEventListener('click', () => this.closeWholeWordExplanationModal());
+    }
+  }
+
+  /**
+   * Open Whole Word explanation modal
+   */
+  openWholeWordExplanationModal() {
+    const modal = document.querySelector('#wholeWordExplanationModal');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  /**
+   * Close Whole Word explanation modal
+   */
+  closeWholeWordExplanationModal() {
+    const modal = document.querySelector('#wholeWordExplanationModal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  /**
+   * Setup Case Sensitive explanation modal event listeners
+   */
+  setupCaseSensitiveExplanationModal() {
+    const modal = document.querySelector('#caseSensitiveExplanationModal');
+    const explanationBtn = document.querySelector('#caseSensitiveExplanationBtn');
+    const explanationBtnValue = document.querySelector('#caseSensitiveExplanationBtnValue');
+    const closeBtn = document.querySelector('#closeCaseSensitiveExplanation');
+    const backdrop = modal?.querySelector('.rule-modal-backdrop');
+
+    // Open modal when explanation button is clicked (Name field)
+    if (explanationBtn) {
+      explanationBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openCaseSensitiveExplanationModal();
+      });
+    }
+
+    // Open modal when explanation button is clicked (Value field)
+    if (explanationBtnValue) {
+      explanationBtnValue.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openCaseSensitiveExplanationModal();
+      });
+    }
+
+    // Close modal events
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => this.closeCaseSensitiveExplanationModal());
+    }
+    if (backdrop) {
+      backdrop.addEventListener('click', () => this.closeCaseSensitiveExplanationModal());
+    }
+  }
+
+  /**
+   * Open Case Sensitive explanation modal
+   */
+  openCaseSensitiveExplanationModal() {
+    const modal = document.querySelector('#caseSensitiveExplanationModal');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  /**
+   * Close Case Sensitive explanation modal
+   */
+  closeCaseSensitiveExplanationModal() {
+    const modal = document.querySelector('#caseSensitiveExplanationModal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  /**
+   * Setup method help modal event listeners
+   */
+  setupMethodHelpModal() {
+    const modal = document.querySelector('#methodHelpModal');
+    const closeBtn = document.querySelector('#closeMethodHelp');
+    const backdrop = modal?.querySelector('.rule-modal-backdrop');
+
+    // Close modal events
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => this.closeMethodHelpModal());
+    }
+    if (backdrop) {
+      backdrop.addEventListener('click', () => this.closeMethodHelpModal());
+    }
+  }
+
+  /**
+   * Get help content for detection method types
+   */
+  getMethodHelpContent(methodType) {
+    const helpContent = {
+      'js_hooks': {
+        title: 'JavaScript Hooks Detection',
+        description: 'Hooks intercept browser API calls like <code>canvas.toDataURL()</code>, <code>navigator.webdriver</code>, or <code>RTCPeerConnection.createOffer()</code>. When a page calls these APIs, the hook records which anti-bot or fingerprinting system is active.',
+        warning: 'Hooks only fire when the APIs are actually called by page scripts. Some sites cache fingerprint results, so use a hard reload (Ctrl+F5) to trigger detection again.',
+        tip: 'Specify the full API path (e.g., <code>HTMLCanvasElement.prototype.toDataURL</code>).'
+      },
+      'window': {
+        title: 'Window Properties Detection',
+        description: 'Detects JavaScript objects and properties added to the <code>window</code> object by anti-bot scripts. Checks for specific paths like <code>_cf_chl_opt</code> (Cloudflare), <code>grecaptcha</code> (reCAPTCHA), or <code>dataDomeOptions</code> (DataDome).',
+        warning: 'Window properties must exist at page load time. If scripts create properties asynchronously, detection may fail.',
+        tip: 'Use dot notation for nested properties (e.g., <code>navigator.webdriver</code> or <code>window._pxAppId</code>).'
+      },
+      'url': {
+        title: 'URL Pattern Detection',
+        description: 'Matches URLs of loaded resources (scripts, images, stylesheets, XHR requests). Detects CDN URLs, API endpoints, and third-party domains used by anti-bot services.',
+        warning: 'URL detection triggers on any matching resource. Use specific patterns to avoid false positives.',
+        tip: 'Enable "Regex" for flexible pattern matching (e.g., <code>cdn\\.example\\.com/.*\\.js</code>). Use "Whole Word" to match exact domains.'
+      },
+      'header': {
+        title: 'HTTP Header Detection',
+        description: 'Detects HTTP request and response headers set by anti-bot systems. Examples: <code>cf-ray</code> (Cloudflare), <code>x-datadome-headers</code> (DataDome), <code>x-akamai-*</code> (Akamai).',
+        warning: 'Only response headers are visible to the extension. Request headers sent by the browser cannot be detected.',
+        tip: 'Use Name/Value pairs for precise matching. Enable "Regex" on name to match header families (e.g., <code>x-akamai-.*</code>).'
+      },
+      'cookie': {
+        title: 'Cookie Detection',
+        description: 'Detects cookies set by anti-bot and fingerprinting systems. Examples: <code>__cf_bm</code> (Cloudflare), <code>_abck</code> (Akamai), <code>datadome</code> (DataDome).',
+        warning: 'HttpOnly cookies are not accessible to JavaScript and cannot be detected. Secure cookies require HTTPS.',
+        tip: 'Use Name/Value pairs: leave Value empty to match any cookie with that name. Enable "Regex" on name to match cookie families (e.g., <code>_px.*</code>).'
+      },
+      'content': {
+        title: 'Page Content Detection',
+        description: 'Searches for text patterns in page HTML, inline scripts, and loaded JavaScript files. Detects obfuscated code, specific function names, or unique strings used by anti-bot scripts.',
+        warning: 'Content detection can be slow on large pages. Use specific patterns and enable "Whole Word" to reduce false positives.',
+        tip: 'Search in "Scripts Only" scope for better performance. Use "Regex" for complex patterns (e.g., <code>function\\s+botDetect</code>).'
+      },
+      'dom': {
+        title: 'DOM Selector Detection',
+        description: 'Detects HTML elements using CSS selectors. Finds CAPTCHA containers, challenge pages, bot detection widgets, and invisible tracking elements.',
+        warning: 'DOM detection requires elements to exist in the page. Dynamically created elements may not be detected immediately.',
+        tip: 'Use specific selectors like <code>#captcha-container</code> or <code>.g-recaptcha</code>. Attribute selectors work too: <code>[data-sitekey]</code>.'
+      },
+      'payload': {
+        title: 'Request Payload Detection',
+        description: 'Monitors all HTTP POST/PUT/PATCH requests including main frame navigations, API calls (fetch/XHR), and background requests. Detects patterns in request payloads to identify anti-bot telemetry, form submissions, and sensor data.',
+        warning: 'Payload detection can generate many matches on data-heavy sites. Use specific patterns and enable "Case Sensitive" for accurate matching to reduce false positives.',
+        tip: 'Look for unique parameter names or obfuscated payload structures (e.g., <code>sensor_data</code>, <code>challenge_token</code>). Enable "Regex" for flexible pattern matching of JSON structures.'
+      }
+    };
+
+    const content = helpContent[methodType];
+    if (!content) {
+      return {
+        title: 'Detection Method',
+        html: `<p>No help content available for this method type.</p>`
+      };
+    }
+
+    return {
+      title: content.title,
+      html: `
+        <p>${content.description}</p>
+        ${content.warning ? `<p style="color: #fbbf24; margin-top: 12px;"><strong>⚠️ Warning:</strong> ${content.warning}</p>` : ''}
+        ${content.tip ? `<p style="color: #60a5fa; margin-top: 12px;"><strong>💡 Tip:</strong> ${content.tip}</p>` : ''}
+      `
+    };
+  }
+
+  /**
+   * Open method help modal
+   */
+  openMethodHelpModal(methodType) {
+    const modal = document.querySelector('#methodHelpModal');
+    const title = document.querySelector('#methodHelpTitle');
+    const content = document.querySelector('#methodHelpContent');
+
+    if (!modal || !title || !content) return;
+
+    // Get help content
+    const helpData = this.getMethodHelpContent(methodType);
+
+    // Update modal title and content
+    title.textContent = helpData.title;
+    content.innerHTML = helpData.html;
+
+    // Show modal
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  /**
+   * Close method help modal
+   */
+  closeMethodHelpModal() {
+    const modal = document.querySelector('#methodHelpModal');
     if (modal) {
       modal.style.display = 'none';
       document.body.style.overflow = '';
@@ -1079,8 +2094,11 @@ class Rules {
     const valueWholeWord = document.querySelector('#valueWholeWord')?.checked || false;
     const valueCaseSensitive = document.querySelector('#valueCaseSensitive')?.checked || false;
     const checkScripts = document.querySelector('#checkScripts')?.checked || false; // Default: false (entire page)
-    const checkClasses = document.querySelector('#checkClasses')?.checked || false; // Default: false (entire page)
-    const checkValues = document.querySelector('#checkValues')?.checked || false; // Default: false (entire page)
+
+    // Get scope values from modal
+    const nameScope = document.querySelector('#nameScope')?.value || '';
+    const valueScope = document.querySelector('#valueScope')?.value || '';
+    const textScope = document.querySelector('#textScope')?.value || 'all_resources';
 
     // Save to data attributes
     this.currentMethodItem.dataset.confidence = confidence;
@@ -1091,8 +2109,9 @@ class Rules {
     this.currentMethodItem.dataset.valueWholeword = valueWholeWord;
     this.currentMethodItem.dataset.valueCase = valueCaseSensitive;
     this.currentMethodItem.dataset.checkScripts = checkScripts;
-    this.currentMethodItem.dataset.checkClasses = checkClasses;
-    this.currentMethodItem.dataset.checkValues = checkValues;
+    this.currentMethodItem.dataset.nameScope = nameScope;
+    this.currentMethodItem.dataset.valueScope = valueScope;
+    this.currentMethodItem.dataset.textScope = textScope;
 
     // Add visual indicator if settings are configured
     const settingsBtn = this.currentMethodItem.querySelector('.method-action-btn.settings');
@@ -1103,7 +2122,7 @@ class Rules {
       // Don't consider confidence alone as a custom setting for the visual indicator
       const hasCustomSettings = nameRegex || nameWholeWord || nameCaseSensitive ||
         valueRegex || valueWholeWord || valueCaseSensitive ||
-        (methodType === 'content' && (checkScripts === true || checkClasses === true || checkValues === true))
+        (methodType === 'content' && checkScripts === true)
 
       if (hasCustomSettings) {
         settingsBtn.classList.add('has-custom-settings');
@@ -1250,10 +2269,11 @@ class Rules {
       }
     }
 
-    // Set badge color using ColorManager
-    if (this.colorManager) {
-      const colorToSet = detector.color || '#3b82f6'; // Default to blue if no color
-      console.log('Loading detector color:', detector.name, 'Color:', colorToSet);
+    // Set badge color using CategoryManager (colors come from Settings, not detector objects)
+    if (this.colorManager && this.categoryManager) {
+      const category = this.currentEditDetector?.category || 'antibot';
+      const colorToSet = this.categoryManager.getCategoryColor(category) || '#3b82f6'; // Default to blue if no color
+      console.log('Loading category color:', detector.name, 'Category:', category, 'Color:', colorToSet);
       this.colorManager.setColor(colorToSet);
 
       // If it's a custom color, make sure it's stored on the rainbow picker
@@ -1292,7 +2312,7 @@ class Rules {
     let methodsHtml = '';
 
     // Define all possible method types (matching detector data structure)
-    const allMethodTypes = ['url', 'header', 'cookie', 'content', 'dom', 'js_hooks', 'window', 'css'];
+    const allMethodTypes = ['url', 'header', 'cookie', 'content', 'dom', 'js_hooks', 'window', 'payload'];
     // Support legacy 'scripts' type (maps to 'content')
     const legacyTypes = { 'scripts': 'content' };
 
@@ -1312,22 +2332,33 @@ class Rules {
                          methodType === 'cookie' ? 'COOKIE' :
                          methodType === 'js_hooks' ? 'JS HOOKS' :
                          methodType === 'window' ? 'WINDOW' :
-                         methodType === 'css' ? 'CSS' :
+                         methodType === 'payload' ? 'PAYLOAD' :
                          methodType.toUpperCase();
 
       // Get color from CategoryManager
       const tagColor = this.detectorManager.categoryManager.getTagColor(methodType);
       const backgroundColor = (tagColor && tagColor !== '#666666') ? tagColor : '#666666';
 
-      const hooksHelper = methodType === 'js_hooks' ? `
-            <button class="method-help-btn" type="button" data-method-help="js_hooks" title="What are JS hooks?">?</button>
-          ` : '';
+      // Add help button for all method types
+      const helpButtonTitle = methodType === 'js_hooks' ? 'What are JS hooks?' :
+                             methodType === 'window' ? 'What are Window properties?' :
+                             methodType === 'url' ? 'What is URL detection?' :
+                             methodType === 'header' ? 'What is Header detection?' :
+                             methodType === 'cookie' ? 'What is Cookie detection?' :
+                             methodType === 'content' ? 'What is Content detection?' :
+                             methodType === 'dom' ? 'What is DOM detection?' :
+                             methodType === 'payload' ? 'What is Payload detection?' :
+                             'What is this detection method?';
+
+      const methodHelper = `
+            <button class="method-help-btn" type="button" data-method-help="${methodType}" title="${helpButtonTitle}">?</button>
+          `;
 
       methodsHtml += `
         <div class="method-section">
           <div class="method-header">
             <div class="method-title" style="background: ${backgroundColor}; color: white; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; display: inline-block;">${displayName}</div>
-            ${hooksHelper}
+            ${methodHelper}
           </div>
           <div class="method-items">
       `;
@@ -1343,8 +2374,9 @@ class Rules {
             if (methodType === 'header' || methodType === 'cookie') {
               name = method.name || '';
               value = method.value || '';
-            } else if (methodType === 'url' || methodType === 'content') {
-              name = method.pattern || method.content || '';
+            } else if (methodType === 'url' || methodType === 'content' || methodType === 'payload') {
+              // Backward compatibility: content detection used to use 'value' instead of 'text'
+              name = method.text || method.value || '';
               value = method.description || '';
             } else if (methodType === 'dom') {
               name = method.selector || '';
@@ -1355,21 +2387,48 @@ class Rules {
             } else if (methodType === 'window') {
               name = method.path || '';
               value = method.condition || '';
-            } else if (methodType === 'css') {
-              name = method.selector || method.property || '';
-              value = method.description || '';
             }
 
             const confidence = method.confidence || 100;
-            const nameRegex = method.nameRegex || method.regex || false;
-            const nameWholeWord = method.nameWholeWord || method.wholeWord || false;
-            const nameCaseSensitive = method.nameCaseSensitive || method.caseSensitive || false;
-            const valueRegex = method.valueRegex || false;
-            const valueWholeWord = method.valueWholeWord || false;
-            const valueCaseSensitive = method.valueCaseSensitive || false;
+
+            // Pattern options based on method type
+            let nameRegex = false, nameWholeWord = false, nameCaseSensitive = false;
+            let valueRegex = false, valueWholeWord = false, valueCaseSensitive = false;
+
+            if (methodType === 'header' || methodType === 'cookie') {
+              nameRegex = method.nameRegex || false;
+              nameWholeWord = method.nameWholeWord || false;
+              nameCaseSensitive = method.nameCaseSensitive || false;
+              valueRegex = method.valueRegex || false;
+              valueWholeWord = method.valueWholeWord || false;
+              valueCaseSensitive = method.valueCaseSensitive || false;
+            } else if (methodType === 'url' || methodType === 'content' || methodType === 'payload') {
+              nameRegex = method.textRegex || false;
+              nameWholeWord = method.textWholeWord || false;
+              nameCaseSensitive = method.textCaseSensitive || false;
+            } else if (methodType === 'dom') {
+              nameRegex = method.selectorRegex || false;
+              nameWholeWord = method.selectorWholeWord || false;
+              nameCaseSensitive = method.selectorCaseSensitive || false;
+            }
+            // Note: window and js_hooks have NO pattern options
+
             const checkScripts = method.checkScripts || false;
-            const checkClasses = method.checkClasses || false;
-            const checkValues = method.checkValues || false;
+
+            // Load scope settings from JSON
+            let nameScope = '';
+            let valueScope = '';
+            let textScope = 'all_resources';
+
+            if (methodType === 'header') {
+              nameScope = method.nameScope || 'response';
+              valueScope = method.valueScope || 'response';
+            } else if (methodType === 'cookie') {
+              nameScope = method.nameScope || 'request';
+              valueScope = method.valueScope || 'request';
+            } else if (methodType === 'url') {
+              textScope = method.textScope || 'all_resources';
+            }
 
             // Skip completely empty method items
             if (!name && !value) {
@@ -1378,7 +2437,7 @@ class Rules {
 
             // SIMPLIFICATION: js_hooks only needs target, no regex options
             // window is now single input - condition defaults to "exists" if not provided
-            const singleInputTypes = ['url', 'content', 'dom', 'js_hooks', 'css', 'window'];
+            const singleInputTypes = ['url', 'content', 'dom', 'js_hooks', 'window', 'payload'];
             const isSingleInput = singleInputTypes.includes(methodType);
 
             let inputPlaceholder = 'Name';
@@ -1388,13 +2447,17 @@ class Rules {
             else if (methodType === 'url') inputPlaceholder = 'URL Pattern';
             else if (methodType === 'js_hooks') inputPlaceholder = 'JS Hook Target (e.g., navigator.webdriver)';
             else if (methodType === 'window') inputPlaceholder = 'Window Path (e.g., grecaptcha, _cf_chl_opt)';
-            else if (methodType === 'css') inputPlaceholder = 'CSS Selector or Property';
+            else if (methodType === 'cookie') {
+              inputPlaceholder = 'Cookie Name (e.g., __cf_bm, session_id)';
+              valuePlaceholder = 'Cookie Value Pattern (optional)';
+            }
+            else if (methodType === 'payload') inputPlaceholder = 'Text (e.g., sensor_data, challenge_token)';
 
             // Check if any non-default settings are enabled
             // Don't consider imported confidence values as custom settings, only user-modified pattern options
             const hasCustomSettings = nameRegex || nameWholeWord || nameCaseSensitive ||
                                       valueRegex || valueWholeWord || valueCaseSensitive ||
-                                      (methodType === 'content' && (checkScripts === true || checkClasses === true || checkValues === true));
+                                      (methodType === 'content' && checkScripts === true);
 
             methodsHtml += `
               <div class="method-item"
@@ -1406,8 +2469,9 @@ class Rules {
                 data-value-wholeword="${valueWholeWord}"
                 data-value-case="${valueCaseSensitive}"
                 data-check-scripts="${checkScripts}"
-                data-check-classes="${checkClasses}"
-                data-check-values="${checkValues}">
+                data-name-scope="${nameScope}"
+                data-value-scope="${valueScope}"
+                data-text-scope="${textScope}">
                 <div class="method-item-row">
                   <div class="method-item-inputs">
                     <div class="input-with-indicators">
@@ -1415,6 +2479,7 @@ class Rules {
                       <div class="input-indicators" data-for="name-${methodType}-${index}"></div>
                     </div>
                     ${methodType === 'dom' ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="${index}">?</button>` : ''}
+                    ${methodType === 'window' ? `<button class="window-helper-btn" title="Window Property Examples" data-input-index="${index}">?</button>` : ''}
                     ${!isSingleInput ? `
                     <div class="input-with-indicators">
                       <input type="text" class="method-input method-value" placeholder="${valuePlaceholder}" value="${value}" data-method-key="${methodType}" data-item-index="${index}">
@@ -1423,7 +2488,7 @@ class Rules {
                     ` : ''}
                     ${methodType === 'js_hooks' ? '' : ''}
                   </div>
-                  ${methodType !== 'js_hooks' ? `
+                  ${methodType !== 'js_hooks' && methodType !== 'window' ? `
                   <button class="method-action-btn settings ${hasCustomSettings ? 'has-custom-settings' : ''}" title="Settings">
                     <svg width="12" height="12" viewBox="0 0 24 24">
                       <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
@@ -1503,7 +2568,7 @@ class Rules {
 
     const itemIndex = `new-${Date.now()}`;
 
-    const singleInputTypes = ['urls', 'url', 'content', 'dom', 'js_hooks', 'css', 'window'];
+    const singleInputTypes = ['urls', 'url', 'content', 'dom', 'js_hooks', 'window', 'payload'];
     const isSingleInput = singleInputTypes.includes(methodKey);
     const isDom = methodKey === 'dom';
 
@@ -1513,7 +2578,7 @@ class Rules {
     else if (methodKey === 'urls' || methodKey === 'url') inputPlaceholder = 'URL Pattern';
     else if (methodKey === 'js_hooks') inputPlaceholder = 'JS Hook Target (e.g., navigator.webdriver)';
     else if (methodKey === 'window') inputPlaceholder = 'Window Path (e.g., grecaptcha, _cf_chl_opt)';
-    else if (methodKey === 'css') inputPlaceholder = 'CSS Selector or Property';
+    else if (methodKey === 'payload') inputPlaceholder = 'Text (e.g., sensor_data, challenge_token)';
 
     const newMethodHtml = `
       <div class="method-item"
@@ -1538,11 +2603,13 @@ class Rules {
             </div>
             ` : ''}
           </div>
+          ${methodKey !== 'js_hooks' && methodKey !== 'window' ? `
           <button class="method-action-btn settings" title="Settings">
             <svg width="12" height="12" viewBox="0 0 24 24">
               <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
             </svg>
           </button>
+          ` : ''}
           <button class="method-action-btn delete" title="Delete">
             <svg width="12" height="12" viewBox="0 0 24 24">
               <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
@@ -1672,12 +2739,8 @@ class Rules {
       this.currentEditDetector.category = categorySelect.value;
     }
 
-    // Get the selected color from ColorManager and save it
-    if (this.colorManager) {
-      const selectedColor = this.colorManager.getColor();
-      this.currentEditDetector.detector.color = selectedColor;
-      console.log('Saving detector with color:', selectedColor);
-    }
+    // Colors are managed by CategoryManager in Settings, not stored per detector
+    // No need to save color property to detector object anymore
 
     // Save custom icon if one was selected
     if (this.currentEditDetector.customIcon) {
@@ -1709,11 +2772,11 @@ class Rules {
           const nameInput = item.querySelector('.method-name');
           const valueInput = item.querySelector('.method-value');
 
-          // Only include items that have at least name OR value (skip completely empty ones)
+          // Only include items that have the primary field (nameInput)
+          // The secondary field (valueInput) is optional (description/condition)
           const hasName = nameInput && nameInput.value.trim();
-          const hasValue = valueInput && valueInput.value.trim();
 
-          if (hasName || hasValue) {
+          if (hasName) {
             // Create method data based on the type
             let methodData = {
               confidence: parseInt(item.dataset.confidence || '100'),
@@ -1725,12 +2788,8 @@ class Rules {
               if (valueInput?.value) {
                 methodData.value = valueInput.value;
               }
-            } else if (methodType === 'url' || methodType === 'content') {
-              if (methodType === 'url') {
-                methodData.pattern = nameInput.value;
-              } else {
-                methodData.content = nameInput.value;
-              }
+            } else if (methodType === 'url' || methodType === 'content' || methodType === 'payload') {
+              methodData.text = nameInput.value;
               if (valueInput?.value) {
                 methodData.description = valueInput.value;
               }
@@ -1748,41 +2807,41 @@ class Rules {
               methodData.path = nameInput.value;
               // Default condition to "exists" if not provided
               methodData.condition = valueInput?.value || 'exists';
-            } else if (methodType === 'css') {
-              methodData.selector = nameInput.value;
-              if (valueInput?.value) {
-                methodData.description = valueInput.value;
-              }
             }
 
-            // Add optional settings if they're not default
-            if (item.dataset.nameRegex === 'true') {
-              methodData.nameRegex = true;
+            // Add optional pattern settings based on method type
+            // Note: window and js_hooks do NOT support pattern options
+            if (methodType === 'header' || methodType === 'cookie') {
+              if (item.dataset.nameRegex === 'true') methodData.nameRegex = true;
+              if (item.dataset.nameWholeword === 'true') methodData.nameWholeWord = true;
+              if (item.dataset.nameCase === 'true') methodData.nameCaseSensitive = true;
+              if (item.dataset.valueRegex === 'true') methodData.valueRegex = true;
+              if (item.dataset.valueWholeword === 'true') methodData.valueWholeWord = true;
+              if (item.dataset.valueCase === 'true') methodData.valueCaseSensitive = true;
+            } else if (methodType === 'url' || methodType === 'content' || methodType === 'payload') {
+              if (item.dataset.nameRegex === 'true') methodData.textRegex = true;
+              if (item.dataset.nameWholeword === 'true') methodData.textWholeWord = true;
+              if (item.dataset.nameCase === 'true') methodData.textCaseSensitive = true;
+            } else if (methodType === 'dom') {
+              if (item.dataset.nameRegex === 'true') methodData.selectorRegex = true;
+              if (item.dataset.nameWholeword === 'true') methodData.selectorWholeWord = true;
+              if (item.dataset.nameCase === 'true') methodData.selectorCaseSensitive = true;
             }
-            if (item.dataset.nameWholeword === 'true') {
-              methodData.nameWholeWord = true;
-            }
-            if (item.dataset.nameCase === 'true') {
-              methodData.nameCaseSensitive = true;
-            }
-            if (item.dataset.valueRegex === 'true') {
-              methodData.valueRegex = true;
-            }
-            if (item.dataset.valueWholeword === 'true') {
-              methodData.valueWholeWord = true;
-            }
-            if (item.dataset.valueCase === 'true') {
-              methodData.valueCaseSensitive = true;
-            }
+            // window and js_hooks: No pattern options at all
             // Content scope settings (only save if enabled - restricts search)
             if (item.dataset.checkScripts === 'true') {
               methodData.checkScripts = true;
             }
-            if (item.dataset.checkClasses === 'true') {
-              methodData.checkClasses = true;
-            }
-            if (item.dataset.checkValues === 'true') {
-              methodData.checkValues = true;
+
+            // Save scope settings based on method type
+            if (methodType === 'header') {
+              methodData.nameScope = item.dataset.nameScope || 'response';
+              methodData.valueScope = item.dataset.valueScope || 'response';
+            } else if (methodType === 'cookie') {
+              methodData.nameScope = item.dataset.nameScope || 'request';
+              methodData.valueScope = item.dataset.valueScope || 'request';
+            } else if (methodType === 'url') {
+              methodData.textScope = item.dataset.textScope || 'all_resources';
             }
 
             methods.push(methodData);
@@ -1849,13 +2908,11 @@ class Rules {
       if (categoryDetectors && categoryDetectors[this.currentEditDetector.detectorName]) {
         const updatedDetector = {
           ...this.currentEditDetector.detector,
-          color: this.currentEditDetector.detector.color,
           customIcon: this.currentEditDetector.detector.customIcon,
           lastUpdated: timestamp
         };
         categoryDetectors[this.currentEditDetector.detectorName] = updatedDetector;
 
-        console.log('Updating detector in storage with color:', updatedDetector.color);
         console.log('Updated lastUpdated timestamp to:', updatedDetector.lastUpdated);
 
         // Save to storage
@@ -2016,7 +3073,7 @@ class Rules {
       // Get detection methods from detector data
       const detectionMethods = this.getDetectionMethods(detector);
 
-      const formattedLastUpdated = this.formatLastUpdated(detector.lastUpdated);
+      const formattedLastUpdated = this.formatLastUpdated(detector.lastUpdated, detector.version);
 
       // Get category method badges with dynamic colors
       const categoryMethod = this.getCategoryMethod(category);
@@ -2024,15 +3081,8 @@ class Rules {
       // Create category badge with dynamic color from storage
       const categoryBadge = `<span class="method-tag" style="background: ${categoryColor}; color: white;">${categoryMethod}</span>`;
 
-      // Create the detector badge with custom color if available
-      let detectorBadge = '';
-      if (detector.color) {
-        console.log(`Rendering detector ${detector.displayName} with custom color: ${detector.color}`);
-        detectorBadge = `<span class="method-tag" style="background: ${detector.color}; color: white;">${detector.displayName}</span>`;
-      } else {
-        console.log(`Rendering detector ${detector.displayName} with default color (no custom color set)`);
-        detectorBadge = `<span class="method-tag secondary">${detector.displayName}</span>`;
-      }
+      // Create the detector badge with category color
+      const detectorBadge = `<span class="method-tag" style="background: ${categoryColor}; color: white;">${detector.displayName}</span>`;
 
       const topBadges = `${categoryBadge}${detectorBadge}`;
 
@@ -2069,7 +3119,6 @@ class Rules {
             </div>
             <div class="scripts-info">
               <div class="last-updated">
-                <span class="last-updated-label">Last updated</span>
                 <span class="last-updated-value">${formattedLastUpdated}</span>
               </div>
               <label class="toggle-switch-small" onclick="event.stopPropagation();">
@@ -2167,16 +3216,56 @@ class Rules {
    * @param {string|number} rawTimestamp
    * @returns {string}
    */
-  formatLastUpdated(rawTimestamp) {
+  getRelativeTime(date) {
+    const now = new Date();
+    const diffMs = now - date;
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+    const diffWeeks = Math.floor(diffDays / 7);
+    const diffMonths = Math.floor(diffDays / 30);
+    const diffYears = Math.floor(diffDays / 365);
+
+    if (diffSeconds < 60) {
+      return 'just now';
+    } else if (diffMinutes < 60) {
+      return diffMinutes === 1 ? '1 minute ago' : `${diffMinutes} minutes ago`;
+    } else if (diffHours < 24) {
+      return diffHours === 1 ? '1h ago' : `${diffHours}h ago`;
+    } else if (diffDays < 7) {
+      return diffDays === 1 ? '1 day ago' : `${diffDays} days ago`;
+    } else if (diffWeeks < 4) {
+      return diffWeeks === 1 ? '1 week ago' : `${diffWeeks} weeks ago`;
+    } else if (diffMonths < 12) {
+      return diffMonths === 1 ? '1 month ago' : `${diffMonths} months ago`;
+    } else {
+      return diffYears === 1 ? '1 year ago' : `${diffYears} years ago`;
+    }
+  }
+
+  formatCompactDate(date) {
+    const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${day} ${month} ${year}, ${hours}:${minutes}`;
+  }
+
+  formatLastUpdated(rawTimestamp, version) {
     if (!rawTimestamp) {
       return 'Unknown';
     }
+
+    let parsedDate = null;
 
     // Handle numeric timestamps directly
     if (typeof rawTimestamp === 'number') {
       const numericDate = new Date(rawTimestamp);
       if (!Number.isNaN(numericDate.getTime())) {
-        return this.formatDateForDisplay(numericDate);
+        parsedDate = numericDate;
       }
     }
 
@@ -2193,13 +3282,22 @@ class Rules {
         normalized = normalized.replace(' ', 'T');
       }
 
-      const parsedDate = new Date(normalized);
-      if (!Number.isNaN(parsedDate.getTime())) {
-        return this.formatDateForDisplay(parsedDate);
+      const dateObj = new Date(normalized);
+      if (!Number.isNaN(dateObj.getTime())) {
+        parsedDate = dateObj;
       }
     }
 
-    return String(rawTimestamp);
+    if (!parsedDate) {
+      return String(rawTimestamp);
+    }
+
+    // Format: "relative time (absolute time) | version"
+    const relativeTime = this.getRelativeTime(parsedDate);
+    const compactDate = this.formatCompactDate(parsedDate);
+    const versionPart = version ? ` | ${version}` : '';
+
+    return `${relativeTime} (${compactDate})${versionPart}`;
   }
 
   formatDateForDisplay(date) {
@@ -2263,10 +3361,12 @@ class Rules {
     if (detectionMethods && Array.isArray(detectionMethods)) {
       detectionMethods.forEach((method) => {
         const methodStr = typeof method === 'string' ? method : method.name || method.type || 'Unknown';
-        const methodName = methodStr.toUpperCase();
 
-        // Get dynamic color from CategoryManager tags
-        const tagColor = this.categoryManager.getTagColor(methodName);
+        // Get dynamic color from CategoryManager tags using original methodStr (preserve underscores)
+        const tagColor = this.categoryManager.getTagColor(methodStr);
+
+        // Format the name for display only (replace underscores and uppercase)
+        const methodName = methodStr.replace(/_/g, ' ').toUpperCase();
 
         if (tagColor && tagColor !== '#666666') {
           // Use dynamic color with transparent background

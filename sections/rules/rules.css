@@ -259,6 +259,13 @@
 }
 
 
+/* Detector Scripts Container */
+.detector-scripts {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
 /* Detection Method Tags - Synced with Detection section solid style */
 .detection-methods {
   display: flex;
@@ -395,6 +402,7 @@
   width: 44px;
   height: 22px;
   flex-shrink: 0;
+  margin-top: -4px;
 }
 
 .toggle-switch-small input {
@@ -439,9 +447,10 @@
 .scripts-info {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-top: 8px;
   padding-top: 8px;
+  padding-bottom: 2px;
   border-top: 1px solid var(--border);
 }
 
@@ -1678,6 +1687,29 @@
   transform: translateY(-1px);
 }
 
+/* Window Helper Button */
+.window-helper-btn {
+  padding: 4px 8px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: 4px;
+  margin-top: 0;
+  height: 26px;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.window-helper-btn:hover {
+  background: var(--accent-hover, #2563eb);
+  transform: translateY(-1px);
+}
+
 /* Condition Helper Button (for WINDOW methods) */
 .condition-helper-btn {
   padding: 4px 8px;
@@ -1703,25 +1735,92 @@
 
 /* Regex Helper Button */
 .regex-helper-btn {
-  padding: 2px 8px;
+  padding: 2px 6px;
   background: var(--accent);
   color: white;
   border: none;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 3px;
+  font-size: 11px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
-  min-width: 22px;
-  height: 22px;
-  display: flex;
+  transition: all 0.2s ease;
+  min-width: 20px;
+  height: 20px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  vertical-align: middle;
 }
 
 .regex-helper-btn:hover {
   background: var(--accent-hover, #2563eb);
-  transform: scale(1.1);
+  transform: scale(1.15);
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.regex-helper-btn:active {
+  transform: scale(0.95);
+}
+
+/* Pattern Helper Buttons (Whole Word, Case Sensitive) */
+.pattern-helper-btn {
+  padding: 2px 6px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.pattern-helper-btn:hover {
+  background: var(--accent-hover, #2563eb);
+  transform: scale(1.15);
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.pattern-helper-btn:active {
+  transform: scale(0.95);
+}
+
+/* Explanation Helper Buttons (Info icons) */
+.explanation-helper-btn {
+  padding: 2px 6px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.explanation-helper-btn:hover {
+  background: #059669;
+  transform: scale(1.15);
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+}
+
+.explanation-helper-btn:active {
+  transform: scale(0.95);
 }
 
 /* Regex Pattern Items */
@@ -1753,14 +1852,284 @@
 
 /* DOM Helper Modal */
 #domHelperModal .rule-modal-content {
-  max-width: 500px;
+  max-width: 600px;
 }
 
+/* Step Indicators */
+.dom-helper-steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.dom-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  z-index: 2;
+}
+
+.dom-step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-muted);
+  transition: all 0.3s;
+}
+
+.dom-step.active .dom-step-number {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.dom-step-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.dom-step.active .dom-step-label {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Step Progress Line */
+.dom-helper-steps::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 25%;
+  right: 25%;
+  height: 2px;
+  background: var(--border);
+}
+
+/* Keyword Input Section */
+#domKeywordInput {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-primary);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 14px;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+
+#domKeywordInput:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+#domKeywordInput::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* Window Properties Keyword Input */
+#windowKeywordInput {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-primary);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 14px;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+
+#windowKeywordInput:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+#windowKeywordInput::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* Regex Keyword Input */
+#regexKeywordInput {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-primary);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 14px;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+
+#regexKeywordInput:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+#regexKeywordInput::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* Whole Word Keyword Input */
+#wholeWordKeywordInput {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-primary);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 14px;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+
+#wholeWordKeywordInput:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+#wholeWordKeywordInput::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* Case Sensitive Keyword Input */
+#caseSensitiveKeywordInput {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-primary);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 14px;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+
+#caseSensitiveKeywordInput:focus {
+  outline: none;
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+#caseSensitiveKeywordInput::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* Suggestions Container */
 .dom-templates {
   display: grid;
   grid-template-columns: 1fr;
   gap: 8px;
   margin-bottom: 16px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.dom-templates::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dom-templates::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+}
+
+.dom-templates::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.dom-templates::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Suggestion Items */
+.dom-suggestion {
+  padding: 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dom-suggestion:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  transform: translateX(4px);
+}
+
+.dom-suggestion-selector {
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  word-break: break-all;
+}
+
+.dom-suggestion:hover .dom-suggestion-selector {
+  color: white;
+}
+
+.dom-suggestion-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.dom-suggestion:hover .dom-suggestion-label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Category Headers in Suggestions */
+.dom-category-header {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  padding: 8px 0 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+/* Custom Input Section */
+.dom-custom-section {
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  margin-top: 16px;
+}
+
+.dom-custom-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  display: block;
 }
 
 .dom-template {
@@ -2023,4 +2392,33 @@
   background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+/* Scope Select Dropdowns */
+.scope-select {
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 150px;
+}
+
+.scope-select:hover {
+  border-color: var(--accent);
+}
+
+.scope-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.scope-select option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 8px;
 }

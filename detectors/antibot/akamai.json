@@ -3,7 +3,6 @@
   "name": "Akamai Bot Manager",
   "category": "Anti-Bot",
   "color": "#FF6B35",
-  "confidence": 100,
   "lastUpdated": "2024-01-15",
   "version": "1.0.0",
   "website": "https://www.akamai.com/products/bot-manager",
@@ -14,112 +13,231 @@
       {
         "name": "_abck",
         "confidence": 100,
-        "description": "Akamai Bot Manager tracking cookie (anti-bot required)"
+        "description": "Akamai Bot Manager tracking cookie (anti-bot required)",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       },
       {
         "name": "ak_bmsc",
         "confidence": 90,
-        "description": "Bot Manager session cookie (pixel challenge required)"
+        "description": "Bot Manager session cookie (pixel challenge required)",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       },
       {
         "name": "sbsd",
         "confidence": 95,
-        "description": "SB-SD challenge cookie (required for sensor bypass)"
+        "description": "SB-SD challenge cookie (required for sensor bypass)",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       },
       {
         "name": "sbsd_o",
         "confidence": 95,
-        "description": "Akamai challenge cookie (required for advanced protection)"
+        "description": "Akamai challenge cookie (required for advanced protection)",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       },
       {
         "name": "bm_sz",
         "confidence": 80,
-        "description": "Browser sensor data"
+        "description": "Browser sensor data",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       },
       {
         "name": "bm_sv",
         "confidence": 75,
-        "description": "Server validation cookie"
+        "description": "Server validation cookie",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       },
       {
         "name": "bm_mi",
         "confidence": 70,
-        "description": "Machine identification"
+        "description": "Machine identification",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       }
     ],
     "header": [
       {
         "name": "x-akamai-session-info",
         "confidence": 90,
-        "description": "Akamai session header"
+        "description": "Akamai session header",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
       },
       {
         "name": "akamai-origin-hop",
         "confidence": 85,
-        "description": "Akamai CDN hop header"
+        "description": "Akamai CDN hop header",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
       }
     ],
     "url": [
       {
-        "pattern": "/akam/",
         "confidence": 85,
-        "description": "Akamai Bot Manager endpoint"
+        "description": "Akamai Bot Manager endpoint",
+        "text": "/akam/",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "/.well-known/sbsd/",
         "confidence": 95,
-        "description": "SB-SD challenge endpoint (SBSD required)"
+        "description": "SB-SD challenge endpoint (SBSD required)",
+        "text": "/.well-known/sbsd/",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       }
     ],
     "content": [
       {
-        "content": "ak_bmsc",
-        "confidence": 80
+        "confidence": 80,
+        "text": "ak_bmsc",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "_abck",
-        "confidence": 85
-      },
-      {
-        "content": "bmak.",
-        "confidence": 90,
-        "description": "Bot Manager API namespace"
-      },
-      {
-        "content": "sensor_data",
-        "confidence": 85
-      },
-      {
-        "content": "bazadebezolkohpepadr",
-        "confidence": 95,
-        "description": "Pixel challenge HTML variable"
-      },
-      {
-        "content": "g=_\\[\\d+\\]",
-        "confidence": 90,
-        "description": "Pixel script variable pattern"
-      },
-      {
-        "content": "var _=\\[",
         "confidence": 85,
-        "description": "Pixel array declaration"
+        "text": "_abck",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 90,
+        "description": "Bot Manager API namespace",
+        "text": "bmak.",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 85,
+        "text": "sensor_data",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 95,
+        "description": "Pixel challenge HTML variable",
+        "text": "bazadebezolkohpepadr",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 90,
+        "description": "Pixel script variable pattern",
+        "text": "g=_\\[\\d+\\]",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 85,
+        "description": "Pixel array declaration",
+        "text": "var _=\\[",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ],
     "dom": [
       {
         "selector": "#akam-sensor",
         "confidence": 90,
-        "description": "Akamai sensor container"
+        "description": "Akamai sensor container",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       },
       {
         "selector": ".bm-sensor-container",
         "confidence": 85,
-        "description": "Bot Manager sensor container"
+        "description": "Bot Manager sensor container",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       },
       {
         "selector": "[data-akamai]",
         "confidence": 95,
-        "description": "Element with Akamai data attribute"
+        "description": "Element with Akamai data attribute",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       }
     ],
     "window": [
@@ -134,6 +252,16 @@
         "condition": "!== undefined",
         "confidence": 90,
         "description": "Akamai sensor data collection"
+      }
+    ],
+    "payload": [
+      {
+        "text": "sensor_data",
+        "confidence": 95,
+        "description": "Akamai sensor data in request payload",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": false
       }
     ]
   }

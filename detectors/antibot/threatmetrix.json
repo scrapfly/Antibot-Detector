@@ -3,7 +3,6 @@
   "name": "ThreatMetrix",
   "category": "ANTIBOT",
   "color": "#FF6B35",
-  "confidence": 95,
   "lastUpdated": "2024-10-21",
   "version": "1.0.0",
   "website": "https://www.threatmetrix.com/",
@@ -12,21 +11,32 @@
   "detection": {
     "content": [
       {
-        "content": "ThreatMetrix",
         "confidence": 95,
-        "description": "ThreatMetrix reference"
+        "description": "ThreatMetrix reference",
+        "text": "ThreatMetrix",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ],
     "url": [
       {
-        "pattern": "fp/check.js",
         "confidence": 95,
-        "description": "ThreatMetrix fingerprint check endpoint"
+        "description": "ThreatMetrix fingerprint check endpoint",
+        "text": "fp/check.js",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "org_id=",
         "confidence": 85,
-        "description": "ThreatMetrix organization ID parameter"
+        "description": "ThreatMetrix organization ID parameter",
+        "text": "org_id=",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       }
     ],
     "window": [

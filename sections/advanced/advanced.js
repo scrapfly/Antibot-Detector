@@ -109,7 +109,27 @@ class Advanced {
     // Setup message listener for capture completion
     this.setupCaptureCompletionListener();
 
-    // Show advanced tools
+    // Check if we have available detection modules
+    const detectionTools = await this.getDetectionModules();
+
+    if (detectionTools.length > 0) {
+      // We have detections - show tools interface automatically
+      await this.showToolsInterface();
+    } else {
+      // No compatible detections - show empty state
+      if (noAdvancedState) noAdvancedState.style.display = 'flex';
+      if (advancedContent) advancedContent.style.display = 'none';
+    }
+  }
+
+  /**
+   * Transition from landing page to tools interface
+   */
+  async showToolsInterface() {
+    const noAdvancedState = document.querySelector('#noAdvancedState');
+    const advancedContent = document.querySelector('#advancedContent');
+
+    // Hide landing page, show tools
     if (noAdvancedState) noAdvancedState.style.display = 'none';
     if (advancedContent) {
       advancedContent.style.display = 'flex';

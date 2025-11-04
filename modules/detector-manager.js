@@ -194,20 +194,20 @@ class DetectorManager {
         // Pre-compile content patterns
         if (detection.content && Array.isArray(detection.content)) {
             detection.content.forEach(pattern => {
-                if (pattern.nameRegex || pattern.regex) {
+                if (pattern.textRegex || pattern.regex) {
                     try {
-                        const flags = pattern.nameCaseSensitive || pattern.caseSensitive ? 'g' : 'gi';
-                        pattern._compiledRegex = new RegExp(pattern.content, flags);
+                        const flags = pattern.textCaseSensitive || pattern.caseSensitive ? 'g' : 'gi';
+                        pattern._compiledRegex = new RegExp(pattern.text, flags);
                     } catch (e) {
-                        console.warn(`Failed to precompile content pattern: ${pattern.content}`, e);
+                        console.warn(`Failed to precompile content pattern: ${pattern.text}`, e);
                     }
-                } else if (pattern.nameWholeWord || pattern.wholeWord) {
+                } else if (pattern.textWholeWord || pattern.wholeWord) {
                     try {
-                        const escapedPattern = pattern.content.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                        const flags = pattern.nameCaseSensitive || pattern.caseSensitive ? 'g' : 'gi';
+                        const escapedPattern = pattern.text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                        const flags = pattern.textCaseSensitive || pattern.caseSensitive ? 'g' : 'gi';
                         pattern._compiledRegex = new RegExp(`\\b${escapedPattern}\\b`, flags);
                     } catch (e) {
-                        console.warn(`Failed to precompile word boundary pattern: ${pattern.content}`, e);
+                        console.warn(`Failed to precompile word boundary pattern: ${pattern.text}`, e);
                     }
                 }
             });
@@ -216,12 +216,12 @@ class DetectorManager {
         // Pre-compile URL patterns
         if (detection.urls && Array.isArray(detection.urls)) {
             detection.urls.forEach(pattern => {
-                if (pattern.nameRegex || pattern.regex) {
+                if (pattern.textRegex || pattern.regex) {
                     try {
-                        const flags = pattern.nameCaseSensitive || pattern.caseSensitive ? 'g' : 'gi';
-                        pattern._compiledRegex = new RegExp(pattern.pattern, flags);
+                        const flags = pattern.textCaseSensitive || pattern.caseSensitive ? 'g' : 'gi';
+                        pattern._compiledRegex = new RegExp(pattern.text, flags);
                     } catch (e) {
-                        console.warn(`Failed to precompile URL pattern: ${pattern.pattern}`, e);
+                        console.warn(`Failed to precompile URL pattern: ${pattern.text}`, e);
                     }
                 }
             });

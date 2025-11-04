@@ -625,53 +625,129 @@
     sendLog('log', `[Hooks MAIN] Received ${hookDefinitions.length} detectors and ${windowProperties.length} window property checks`);
     sendLog('log', '[MAIN WORLD] 📋 Window properties to check:', windowProperties.map(p => p.path));
 
-    // Check window properties with retry mechanism
+    // Check window properties with polling mechanism
     if (windowProperties.length > 0) {
       sendLog('log', `[Window Props] ⏳ Waiting for page load to check ${windowProperties.length} properties...`);
 
       // Track detections for reporting
       let detectedCount = 0;
+      const detectedPropertyPaths = new Set(); // Track which properties we've already detected
       const scheduledTimeouts = []; // Track setTimeout IDs for cleanup
+      let pollIntervalId = null; // Track polling interval
       let performanceObserver = null; // Track PerformanceObserver for cleanup
 
-      // HARD TIMEOUT: Single check at page ready, then wait 10 seconds
-      const checkPropertiesWithHardTimeout = () => {
+      // POLLING: Check every 200ms until settled (3 consecutive checks with no new detections)
+      const checkPropertiesWithPolling = () => {
         const startTime = Date.now();
+        const POLL_INTERVAL_MS = 200; // Check every 200ms
+        const MAX_WINDOW_MS = enhancedSettings?.maxDetectionWindowMs || 5000; // Default 5 seconds
+        const SETTLED_CHECKS_REQUIRED = 10; // Number of consecutive checks with no new detections to consider settled (10 checks * 200ms = 2 seconds)
 
-        sendLog('log', `[Window Props] 🔍 Starting window property check (10s hard timeout)`);
+        let checksWithoutNewDetections = 0;
+        let pollCount = 0;
 
-        // Check all properties immediately
-        checkWindowPropertiesCore(windowProperties, (newDetections) => {
-          detectedCount += newDetections.length;
-        });
+        sendLog('log', `[Window Props] 🔍 Starting window property polling (${POLL_INTERVAL_MS}ms interval, ${MAX_WINDOW_MS}ms max window)`);
 
-        sendLog('log', `[Window Props] ✅ Initial check complete: ${detectedCount}/${windowProperties.length} properties detected`);
-
-        // Schedule hard timeout completion
-        const timeoutId = setTimeout(() => {
+        // Polling function
+        const pollProperties = () => {
+          pollCount++;
           const elapsed = Date.now() - startTime;
 
-          sendLog('log', `[Window Props] 🏁 Hard timeout reached after ${elapsed}ms`);
-          sendLog('log', `[Window Props] 📊 Final: ${detectedCount}/${windowProperties.length} properties detected`);
+          // Check if max window exceeded
+          if (elapsed >= MAX_WINDOW_MS) {
+            sendLog('log', `[Window Props] ⏱️ Max detection window (${MAX_WINDOW_MS}ms) reached`);
+            sendLog('log', `[Window Props] 📊 Final: ${detectedCount}/${windowProperties.length} properties detected after ${pollCount} polls`);
 
-          window.postMessage({
-            type: 'WINDOW_PROPS_COMPLETE',
-            url: window.location.href,
-            timestamp: Date.now(),
-            detectedCount: detectedCount,
-            totalChecked: windowProperties.length,
-            elapsedMs: elapsed,
-            reason: 'hard_timeout'
-          }, '*');
+            window.postMessage({
+              type: 'WINDOW_PROPS_COMPLETE',
+              url: window.location.href,
+              timestamp: Date.now(),
+              detectedCount: detectedCount,
+              totalChecked: windowProperties.length,
+              elapsedMs: elapsed,
+              reason: 'max_window_reached'
+            }, '*');
 
-          cleanupEnhancedDetection();
-        }, HOOKS_HARD_TIMEOUT_MS); // Use same 10s timeout as hooks
+            cleanupEnhancedDetection();
+            return;
+          }
 
-        scheduledTimeouts.push(timeoutId);
+          // Check all properties
+          let newDetectionsThisPoll = 0;
+          checkWindowPropertiesCore(windowProperties, (newDetections) => {
+            // Only count truly new detections
+            newDetections.forEach(detection => {
+              const propertyPath = detection.path;
+              if (!detectedPropertyPaths.has(propertyPath)) {
+                detectedPropertyPaths.add(propertyPath);
+                detectedCount++;
+                newDetectionsThisPoll++;
+              }
+            });
+          });
+
+          if (newDetectionsThisPoll > 0) {
+            sendLog('log', `[Window Props] ✅ Poll #${pollCount}: Found ${newDetectionsThisPoll} new properties (total: ${detectedCount}/${windowProperties.length})`);
+            checksWithoutNewDetections = 0; // Reset counter
+          } else {
+            checksWithoutNewDetections++;
+            if (checksWithoutNewDetections === 1) {
+              sendLog('log', `[Window Props] 🔁 Poll #${pollCount}: No new detections (${checksWithoutNewDetections}/${SETTLED_CHECKS_REQUIRED} to settle)`);
+            }
+          }
+
+          // Check if settled (3 consecutive checks with no new detections)
+          if (checksWithoutNewDetections >= SETTLED_CHECKS_REQUIRED) {
+            sendLog('log', `[Window Props] 🏁 Settled after ${pollCount} polls (${SETTLED_CHECKS_REQUIRED} consecutive checks with no new detections)`);
+            sendLog('log', `[Window Props] 📊 Final: ${detectedCount}/${windowProperties.length} properties detected in ${elapsed}ms`);
+
+            window.postMessage({
+              type: 'WINDOW_PROPS_COMPLETE',
+              url: window.location.href,
+              timestamp: Date.now(),
+              detectedCount: detectedCount,
+              totalChecked: windowProperties.length,
+              elapsedMs: elapsed,
+              reason: 'settled'
+            }, '*');
+
+            cleanupEnhancedDetection();
+            return;
+          }
+
+          // All properties detected?
+          if (detectedCount >= windowProperties.length) {
+            sendLog('log', `[Window Props] ✅ All ${windowProperties.length} properties detected after ${pollCount} polls in ${elapsed}ms`);
+
+            window.postMessage({
+              type: 'WINDOW_PROPS_COMPLETE',
+              url: window.location.href,
+              timestamp: Date.now(),
+              detectedCount: detectedCount,
+              totalChecked: windowProperties.length,
+              elapsedMs: elapsed,
+              reason: 'all_detected'
+            }, '*');
+
+            cleanupEnhancedDetection();
+            return;
+          }
+        };
+
+        // Start polling
+        pollProperties(); // Run first check immediately
+        pollIntervalId = setInterval(pollProperties, POLL_INTERVAL_MS);
       };
 
       // Cleanup function to free resources
       const cleanupEnhancedDetection = () => {
+        // Clear polling interval
+        if (pollIntervalId) {
+          clearInterval(pollIntervalId);
+          pollIntervalId = null;
+          sendLog('log', '[Window Props] 🧹 Polling interval cleared');
+        }
+
         // Clear any pending timeouts
         scheduledTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
         scheduledTimeouts.length = 0;
@@ -689,8 +765,8 @@
       };
 
       const startWindowChecks = () => {
-        sendLog('log', '[Window Props] 🔍 Starting window property check after page ready');
-        checkPropertiesWithHardTimeout();
+        sendLog('log', '[Window Props] 🔍 Starting window property polling after page ready');
+        checkPropertiesWithPolling();
       };
 
       if (document.readyState === 'complete' || pageReadySignalReceived) {

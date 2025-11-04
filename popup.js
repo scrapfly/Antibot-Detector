@@ -277,6 +277,16 @@ class ScrapflyPopup {
         return;
       }
 
+      // CRITICAL FIX: Check if cache was just cleared to prevent zombie data
+      const clearedTime = sessionStorage.getItem('scrapfly_just_cleared_cache');
+      const recentlyCleared = clearedTime && (Date.now() - parseInt(clearedTime)) < 5000; // 5 second window
+
+      if (recentlyCleared) {
+        console.log('[Popup] Cache recently cleared - showing empty state, not fetching data');
+        this.detection.showEmptyState();
+        return;
+      }
+
       // Get existing detection data (cache or completed detection)
       chrome.runtime.sendMessage(
         { type: 'GET_DETECTION_DATA', tabId: tab.id },
@@ -287,12 +297,16 @@ class ScrapflyPopup {
             return;
           }
 
-          if (response && response.data) {
+          // Check for pending status BEFORE checking for data
+          if (response && response.status === 'pending') {
+            console.log('Popup: Detection is pending, showing analyzing state');
+            this.detection.showAnalyzingState();
+          } else if (response && response.data) {
             // Display existing detection data
             console.log('Popup: Displaying existing detection data');
             await this.processDetectionData(response.data);
           } else {
-            // No data available
+            // No data available (includes recently cleared cache)
             console.log('Popup: No detection data found, showing empty state');
             this.detection.showEmptyState();
           }
@@ -601,17 +615,25 @@ class ScrapflyPopup {
           console.log('Detection: Re-attaching event listeners...');
           this.detection.setupEventListeners();
 
-          // Re-render current results to ensure click handlers are attached to cards
-          if (this.detection.currentResults && this.detection.currentResults.length > 0) {
-            console.log('Detection: Re-rendering results to attach click handlers...');
-            // This will re-render the cards and attach the click handlers
-            if (this.detection.paginationManager) {
-              this.detection.paginationManager.setItems(this.detection.currentResults);
+          // FIX: Check if cache was cleared while tab was hidden
+          if (this.detection.cacheCleared) {
+            console.log('Detection: Cache was cleared while tab was hidden - showing empty state');
+            this.detection.cacheCleared = false;
+            this.detection.currentResults = [];
+            this.detection.showEmptyState();
+          } else {
+            // Re-render current results to ensure click handlers are attached to cards
+            if (this.detection.currentResults && this.detection.currentResults.length > 0) {
+              console.log('Detection: Re-rendering results to attach click handlers...');
+              // This will re-render the cards and attach the click handlers
+              if (this.detection.paginationManager) {
+                this.detection.paginationManager.setItems(this.detection.currentResults);
+              }
             }
-          }
 
-          // FIX: Display existing detection data on subsequent visits
-          await this.checkAndDisplayExistingDetection();
+            // FIX: Display existing detection data on subsequent visits
+            await this.checkAndDisplayExistingDetection();
+          }
         }
         break;
       case 'history':

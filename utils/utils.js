@@ -262,6 +262,30 @@ class Utils {
     console.log('[Utils] Settings cache invalidated - next access will reload from storage');
   }
 
+  /**
+   * Clear detection cache from storage (e.g., when cache scope changes)
+   */
+  static async clearDetectionCache() {
+    try {
+      await chrome.storage.local.remove('scrapfly_detection_storage');
+      console.log('[Utils] Detection cache cleared from storage');
+      return true;
+    } catch (error) {
+      console.error('[Utils] Error clearing detection cache:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Clear in-memory URL hash cache
+   */
+  static clearUrlHashCache() {
+    if (Utils.urlHashCache) {
+      Utils.urlHashCache.clear();
+      console.log('[Utils] URL hash cache cleared (in-memory)');
+    }
+  }
+
   static handleSettingsUpdated(message) {
     if (message && message.type === 'SETTINGS_UPDATED') {
       Utils.invalidateSettingsCache();
@@ -907,7 +931,7 @@ class Utils {
       const settings = await this.getSettings();
 
       // FIX: Add detailed logging to debug settings structure issues
-      const scope = settings.cacheScope || settings.detection?.cacheScope || 'domain';
+      const scope = settings.cacheScope || settings.detection?.cacheScope || 'path';
 
       console.log('[getCacheScope] Settings structure:', {
         hasCacheScope: !!settings.cacheScope,
@@ -919,8 +943,8 @@ class Utils {
 
       // Validate scope value
       if (!['domain', 'path', 'full'].includes(scope)) {
-        console.warn(`[getCacheScope] Invalid cache scope: ${scope}, defaulting to 'domain'`);
-        return 'domain';
+        console.warn(`[getCacheScope] Invalid cache scope: ${scope}, defaulting to 'path'`);
+        return 'path';
       }
 
       return scope;

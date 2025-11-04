@@ -3,7 +3,6 @@
   "name": "Navigator Fingerprint",
   "category": "Fingerprint",
   "color": "#7c3aed",
-  "confidence": 100,
   "lastUpdated": "2025-01-15",
   "version": "1.0.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator",
@@ -12,52 +11,52 @@
   "detection": {
     "js_hooks": [
       {
-        "target": "Navigator.prototype.userAgent",
         "description": "Reads browser user agent string",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "Navigator.prototype.userAgent"
       },
       {
-        "target": "Navigator.prototype.platform",
         "description": "Reads operating system platform",
         "enabled": true,
-        "confidence": 85
+        "confidence": 85,
+        "target": "Navigator.prototype.platform"
       },
       {
-        "target": "Navigator.prototype.webdriver",
         "description": "Detects automated browsing (Selenium, Puppeteer)",
         "enabled": true,
-        "confidence": 95
+        "confidence": 95,
+        "target": "Navigator.prototype.webdriver"
       },
       {
-        "target": "Navigator.prototype.product",
         "description": "Reads browser product name",
         "enabled": false,
-        "confidence": 70
+        "confidence": 70,
+        "target": "Navigator.prototype.product"
       },
       {
-        "target": "Navigator.prototype.languages",
         "description": "Reads browser language preferences",
         "enabled": true,
-        "confidence": 85
+        "confidence": 85,
+        "target": "Navigator.prototype.languages"
       },
       {
-        "target": "Navigator.prototype.hardwareConcurrency",
         "description": "Reads CPU core count",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "Navigator.prototype.hardwareConcurrency"
       },
       {
-        "target": "Navigator.prototype.deviceMemory",
         "description": "Reads device memory (RAM) in GB",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "Navigator.prototype.deviceMemory"
       },
       {
-        "target": "NavigatorUAData.prototype.getHighEntropyValues",
         "description": "Reads high entropy user agent client hints",
         "enabled": true,
-        "confidence": 95
+        "confidence": 95,
+        "target": "NavigatorUAData.prototype.getHighEntropyValues"
       }
     ]
   }

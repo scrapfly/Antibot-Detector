@@ -6,6 +6,7 @@
 // Import scripts for service worker
 importScripts(
     './utils/debug.js',
+    './utils/log-collector.js',
     './utils/utils.js',
     './modules/storage-manager.js', // OPTIMIZATION Phase 1: Shared storage patterns
     './modules/category-manager.js',
@@ -372,7 +373,10 @@ class TTLMap extends Map {
 
 // Storage for headers per tab
 // OPTIMIZED 3.3: Use TTL-based auto-cleanup (5 min expiry)
-const headersStore = new TTLMap(300000);
+const headersStore = new TTLMap(300000); // Response headers
+const requestHeadersStore = new TTLMap(300000); // Request headers
+const responseCookiesStore = new TTLMap(300000); // Response cookies (from Set-Cookie)
+const payloadStore = new TTLMap(300000); // Request payloads (POST/PUT/PATCH bodies)
 
 // OPTIMIZATION Phase B.3: Convert capture state maps to TTLMap to prevent memory leaks
 // 30 min TTL matches Advanced history expiration, 100 max entries prevents unbounded growth
@@ -418,6 +422,12 @@ const manuallyClearedCaches = new Set(); // Set of URL hashes that were manually
 // OPTIMIZED 3.2: TTL-based detection state tracking (5 min auto-cleanup)
 // OPTIMIZATION Phase 9A.8: Add max 50 concurrent detections limit
 const detectionStates = new TTLMap(300000, 50); // tabId -> {url, hooksData: [], mainData: [], hooksComplete: false, mainComplete: false}
+
+// Track tabs that have cache hits to skip unnecessary capture work (payload, headers, etc)
+const tabsUsingCache = new Set();
+
+// CRITICAL FIX: Track tabs where cache was recently cleared to prevent zombie data
+const recentlyClearedTabs = new Set();
 
 // OPTIMIZATION Phase 10.5: Debounce finalization checks to prevent redundant work
 const finalizationDebounce = new Map(); // tabId -> timeout
@@ -555,7 +565,6 @@ function sendProgressUpdate(tabId, methodName, completedMethods, totalMethods = 
         // const badgeText = `${totalPercent}%`;
         // chrome.action.setBadgeText({ text: badgeText, tabId: tabId });
 
-        const totalPercent = Math.round((completedMethods.size / totalMethods) * 100);
         const message = `Checked ${methodName}`;
 
         // DON'T update badge - only send progress to popup for UI purposes
@@ -567,8 +576,6 @@ function sendProgressUpdate(tabId, methodName, completedMethods, totalMethods = 
             tabId: tabId,
             progress: {
                 method: methodName,
-                methodPercent: Math.round((1 / totalMethods) * 100),
-                totalPercent: totalPercent,
                 completedMethods: Array.from(completedMethods),
                 message: message
             }
@@ -576,7 +583,7 @@ function sendProgressUpdate(tabId, methodName, completedMethods, totalMethods = 
             // Silently fail - popup might not be open
         });
 
-        console.log(`%c[Progress] Tab ${tabId}: ${message} (${completedMethods.size}/${totalMethods} = ${totalPercent}%)`, 'color: #2196F3;');
+        console.log(`%c[Progress] Tab ${tabId}: ${message} (${completedMethods.size}/${totalMethods} methods complete)`, 'color: #2196F3;');
     } catch (e) {
         console.error('[Progress] Error sending update:', e);
     }
@@ -992,6 +999,38 @@ async function finalizeDetection(tabId, state) {
 
     // OPTIMIZED 3.2: State is auto-cleaned by TTL, but we can delete eagerly
     detectionStates.delete(tabId);
+
+    // Clean up payloads after detection completes (they were stored for this detection)
+    if (payloadStore.has(tabId)) {
+        const payloadCount = payloadStore.get(tabId)?.length || 0;
+        payloadStore.delete(tabId);
+        console.log(`[DetectionState] 🧹 Cleaned up ${payloadCount} payloads for tab ${tabId}`);
+    }
+
+    // Clean up headers after detection completes (free up memory like payloads)
+    if (headersStore.has(tabId)) {
+        headersStore.delete(tabId);
+        console.log(`[DetectionState] 🧹 Cleaned up response headers for tab ${tabId}`);
+    }
+
+    if (requestHeadersStore.has(tabId)) {
+        requestHeadersStore.delete(tabId);
+        console.log(`[DetectionState] 🧹 Cleaned up request headers for tab ${tabId}`);
+    }
+
+    // Clean up cookies after detection completes
+    if (responseCookiesStore.has(tabId)) {
+        const cookieCount = responseCookiesStore.get(tabId)?.cookies?.length || 0;
+        responseCookiesStore.delete(tabId);
+        console.log(`[DetectionState] 🧹 Cleaned up ${cookieCount} response cookies for tab ${tabId}`);
+    }
+
+    // Clear cache tracking for this tab (if it was marked as using cache)
+    if (tabsUsingCache.has(tabId)) {
+        tabsUsingCache.delete(tabId);
+        console.log(`[DetectionState] 🧹 Cleared cache tracking for tab ${tabId}`);
+    }
+
     console.log(`[DetectionState] ✅ Tab ${tabId} finalized and cleaned up`);
 }
 
@@ -1244,13 +1283,32 @@ function setupHeaderCapture() {
     // Listen for response headers
     chrome.webRequest.onHeadersReceived.addListener(
         (details) => {
+            // Skip header capture if tab has cache hit
+            if (tabsUsingCache.has(details.tabId)) {
+                return; // Skip all header capture for cached tabs
+            }
+
             // Only capture headers for main frame requests
             if (details.type === 'main_frame' && details.responseHeaders) {
                 const headers = {};
+                const responseCookies = [];
 
                 // Convert headers array to object for easier access
+                // Also extract Set-Cookie headers for response cookie detection
                 details.responseHeaders.forEach(header => {
-                    headers[header.name.toLowerCase()] = header.value;
+                    const headerName = header.name.toLowerCase();
+                    headers[headerName] = header.value;
+
+                    // Parse Set-Cookie headers for response cookies
+                    if (headerName === 'set-cookie') {
+                        const cookieParts = header.value.split(';')[0].split('=');
+                        if (cookieParts.length >= 2) {
+                            responseCookies.push({
+                                name: cookieParts[0].trim(),
+                                value: cookieParts.slice(1).join('=').trim()
+                            });
+                        }
+                    }
                 });
 
                 // OPTIMIZED 3.3: TTL auto-cleanup - no manual cleanup needed
@@ -1260,11 +1318,125 @@ function setupHeaderCapture() {
                     timestamp: Date.now()
                 });
 
+                // Store response cookies if any were found
+                if (responseCookies.length > 0) {
+                    responseCookiesStore.set(details.tabId, {
+                        url: details.url,
+                        cookies: responseCookies,
+                        timestamp: Date.now()
+                    });
+                    console.log(`Scrapfly Background: Captured ${responseCookies.length} response cookies for tab ${details.tabId}`);
+                }
+
                 console.log(`Scrapfly Background: Captured ${Object.keys(headers).length} headers for tab ${details.tabId}`);
             }
         },
         { urls: ["<all_urls>"] },
         ["responseHeaders"]
+    );
+
+    // Listen for request headers
+    chrome.webRequest.onBeforeSendHeaders.addListener(
+        (details) => {
+            // Skip header capture if tab has cache hit
+            if (tabsUsingCache.has(details.tabId)) {
+                return; // Skip all header capture for cached tabs
+            }
+
+            // Only capture headers for main frame requests
+            if (details.type === 'main_frame' && details.requestHeaders) {
+                const headers = {};
+
+                // Convert headers array to object for easier access
+                details.requestHeaders.forEach(header => {
+                    headers[header.name.toLowerCase()] = header.value;
+                });
+
+                // Store request headers
+                requestHeadersStore.set(details.tabId, {
+                    url: details.url,
+                    headers: headers,
+                    timestamp: Date.now()
+                });
+
+                console.log(`Scrapfly Background: Captured ${Object.keys(headers).length} request headers for tab ${details.tabId}`);
+            }
+        },
+        { urls: ["<all_urls>"] },
+        ["requestHeaders"]
+    );
+
+    // Listen for request payloads (POST/PUT/PATCH/DELETE bodies)
+    chrome.webRequest.onBeforeRequest.addListener(
+        (details) => {
+            // Skip payload capture if tab has cache hit
+            if (tabsUsingCache.has(details.tabId)) {
+                return; // Skip all payload capture for cached tabs
+            }
+
+            // Capture ALL requests with bodies (not just main_frame)
+            if (details.requestBody) {
+                const method = details.method || 'GET';
+
+                // Only store payloads for methods that typically have bodies
+                if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+                    let payloadData = null;
+                    let payloadType = 'unknown';
+
+                    // Check if we have form data
+                    if (details.requestBody.formData) {
+                        payloadData = details.requestBody.formData;
+                        payloadType = 'formData';
+                    }
+                    // Check if we have raw data
+                    else if (details.requestBody.raw && details.requestBody.raw.length > 0) {
+                        // Combine all raw chunks
+                        const rawData = details.requestBody.raw.map(item => {
+                            if (item.bytes) {
+                                // Convert ArrayBuffer to string
+                                try {
+                                    const decoder = new TextDecoder('utf-8');
+                                    return decoder.decode(item.bytes);
+                                } catch (e) {
+                                    // If decoding fails, store as base64
+                                    return btoa(String.fromCharCode(...new Uint8Array(item.bytes)));
+                                }
+                            }
+                            return '';
+                        }).join('');
+
+                        payloadData = rawData;
+                        payloadType = 'raw';
+                    }
+
+                    // Store payload if we found data - store ALL payloads in an array
+                    if (payloadData) {
+                        // Get existing payloads array or create new one
+                        let payloads = payloadStore.get(details.tabId) || [];
+
+                        // Add new payload to array
+                        payloads.push({
+                            url: details.url,
+                            method: method,
+                            payload: payloadData,
+                            type: payloadType,
+                            timestamp: Date.now()
+                        });
+
+                        // Store the updated array (keep max 50 payloads to prevent memory issues)
+                        if (payloads.length > 50) {
+                            payloads.shift(); // Remove oldest if too many
+                        }
+
+                        payloadStore.set(details.tabId, payloads);
+
+                        console.log(`Scrapfly Background: Captured ${payloadType} payload for ${method} ${details.type} request on tab ${details.tabId} - ${details.url} (Total: ${payloads.length})`);
+                    }
+                }
+            }
+        },
+        { urls: ["<all_urls>"] },
+        ["requestBody"]
     );
 }
 
@@ -1311,9 +1483,9 @@ async function processDetectionData(message, sender) {
 
     console.log(`Scrapfly Background: Processing detection data from tab ${tabId} (cache miss)`);
 
-    // Show progress indicator in badge and track as active detection (FIX: show 0% instead of ⏳)
+    // Show progress indicator in badge and track as active detection
     try {
-        chrome.action.setBadgeText({ text: '0%', tabId: tabId }).catch((error) => {
+        chrome.action.setBadgeText({ text: '⏳', tabId: tabId }).catch((error) => {
             // Expected: Tab might be closed
             console.log(`[Detection] Failed to set progress badge text for tab ${tabId}:`, error.message);
         });
@@ -1336,19 +1508,91 @@ async function processDetectionData(message, sender) {
         console.error('Failed to set loading badge:', error);
     }
 
-    // Add headers if available
+    // Add response headers if available (backward compatibility - keep as pageData.headers)
     if (headersStore.has(tabId)) {
         const headerData = headersStore.get(tabId);
 
         // Only use headers if they're from the same URL (or close enough)
         if (headerData.url.includes(pageData.hostname)) {
-            pageData.headers = headerData.headers;
-            console.log(`Scrapfly Background: Added ${Object.keys(headerData.headers).length} headers to detection data`);
+            pageData.headers = headerData.headers; // Response headers (backward compatibility)
+            pageData.responseHeaders = headerData.headers; // Also store explicitly as responseHeaders
+            console.log(`Scrapfly Background: Added ${Object.keys(headerData.headers).length} response headers to detection data`);
 
             // OPTIMIZED 3.3: Eager delete (TTL will clean up anyway, but we can help)
             headersStore.delete(tabId);
         }
     }
+
+    // Add request headers if available
+    if (requestHeadersStore.has(tabId)) {
+        const requestHeaderData = requestHeadersStore.get(tabId);
+
+        if (requestHeaderData.url.includes(pageData.hostname)) {
+            pageData.requestHeaders = requestHeaderData.headers;
+            console.log(`Scrapfly Background: Added ${Object.keys(requestHeaderData.headers).length} request headers to detection data`);
+
+            requestHeadersStore.delete(tabId);
+        }
+    }
+
+    // Add response cookies if available (from Set-Cookie headers)
+    if (responseCookiesStore.has(tabId)) {
+        const responseCookieData = responseCookiesStore.get(tabId);
+
+        if (responseCookieData.url.includes(pageData.hostname)) {
+            pageData.responseCookies = responseCookieData.cookies;
+            console.log(`Scrapfly Background: Added ${responseCookieData.cookies.length} response cookies to detection data`);
+
+            responseCookiesStore.delete(tabId);
+        }
+    }
+
+    // Add request payloads if available (POST/PUT/PATCH bodies)
+    // Now handles ARRAY of payloads per tab
+    if (payloadStore.has(tabId)) {
+        const payloadsArray = payloadStore.get(tabId);
+        const pageHost = pageData.hostname || '';
+        const rootDomain = pageHost.split('.').slice(-2).join('.');  // Get root domain (e.g., zalando.es)
+
+        // Check ALL payloads in the array
+        const relevantPayloads = [];
+
+        for (const payloadData of payloadsArray) {
+            try {
+                // More lenient hostname matching - check if same root domain or related
+                const payloadHost = new URL(payloadData.url).hostname;
+
+                // Match if: same host, or payload is to a subdomain, or contains root domain
+                if (payloadHost === pageHost ||
+                    payloadHost.includes(rootDomain) ||
+                    payloadData.url.includes('/akam/') ||  // Always include Akamai endpoints
+                    payloadData.url.includes('sensor')) {  // Always include sensor data
+
+                    relevantPayloads.push({
+                        method: payloadData.method,
+                        url: payloadData.url,
+                        data: payloadData.payload,
+                        type: payloadData.type
+                    });
+
+                    console.log(`Scrapfly Background: Found relevant payload: ${payloadData.type} (${payloadData.method}) - ${payloadData.url}`);
+                }
+            } catch (e) {
+                console.error('Error processing payload:', e);
+            }
+        }
+
+        // Pass ALL relevant payloads for detection (not just one)
+        if (relevantPayloads.length > 0) {
+            pageData.payloads = relevantPayloads; // Note: changed from 'payload' to 'payloads' (plural)
+            console.log(`Scrapfly Background: Added ${relevantPayloads.length} payloads to detection data`);
+
+            // Don't delete yet - will delete after detection completes
+            // payloadStore.delete(tabId);
+        }
+    }
+
+    // Note: Request cookies are already in pageData.cookies (from document.cookie in content script)
 
     // Run detection analysis immediately
     console.log('🚀 Background: Starting detection analysis...');
@@ -1880,18 +2124,24 @@ function setupMessageListeners() {
                             // FIX: If no cached data but detection state exists with expiry, construct response from state
                             // This handles the case where detection just completed and storage write is still pending
                             if (!data) {
-                                const state = detectionStates.get(tabId);
-                                if (state && state.expiry && state.mainData && state.mainData.length > 0) {
-                                    console.log(`[GET_DETECTION_DATA] Using fresh detection state with expiry for tab ${tabId}`);
-                                    data = {
-                                        detectionResults: state.mainData,
-                                        timestamp: state.timestamp,
-                                        expiry: state.expiry,
-                                        url: state.url,
-                                        favicon: state.favicon,
-                                        fromStorage: false,
-                                        processed: true
-                                    };
+                                // CRITICAL FIX: Don't return zombie data from detectionStates if cache was recently cleared
+                                if (recentlyClearedTabs.has(tabId)) {
+                                    console.log(`[GET_DETECTION_DATA] Tab ${tabId} recently cleared - blocking zombie data from detectionStates`);
+                                    // Don't return stale data - let popup show empty state
+                                } else {
+                                    const state = detectionStates.get(tabId);
+                                    if (state && state.expiry && state.mainData && state.mainData.length > 0) {
+                                        console.log(`[GET_DETECTION_DATA] Using fresh detection state with expiry for tab ${tabId}`);
+                                        data = {
+                                            detectionResults: state.mainData,
+                                            timestamp: state.timestamp,
+                                            expiry: state.expiry,
+                                            url: state.url,
+                                            favicon: state.favicon,
+                                            fromStorage: false,
+                                            processed: true
+                                        };
+                                    }
                                 }
                             }
                             
@@ -1907,9 +2157,13 @@ function setupMessageListeners() {
 
                             // Only check interrupted/pending status if NO cached data exists
                             if (!data) {
-                                // FIX: If tab is marked interrupted but still has active detection, treat as pending
-                                // This handles race conditions where popup opens during analysis
-                                if (activeDetections.has(tabId)) {
+                                // CRITICAL FIX: If cache was recently cleared, don't show pending/analyzing state
+                                if (recentlyClearedTabs.has(tabId)) {
+                                    console.log(`[GET_DETECTION_DATA] Tab ${tabId} recently cleared - returning empty state, not pending`);
+                                    status = 'ok';  // Return ok with no data to show empty state
+                                } else if (activeDetections.has(tabId)) {
+                                    // FIX: If tab is marked interrupted but still has active detection, treat as pending
+                                    // This handles race conditions where popup opens during analysis
                                     status = 'pending';
                                 } else if (interruptedDetections.has(tabId)) {
                                     status = 'interrupted';
@@ -2025,6 +2279,22 @@ function setupMessageListeners() {
                         sendResponse({ status: 'reloaded', detectorCount: detectorManager.getDetectorCount() });
                     } catch (error) {
                         console.error('Scrapfly Background: Error reloading detectors:', error);
+                        sendResponse({ status: 'error', error: error.message });
+                    }
+                })();
+                return true; // Will respond asynchronously
+                break;
+
+            case 'SYNC_CATEGORY_COLORS':
+                // Sync category colors from Settings to CategoryManager
+                (async () => {
+                    try {
+                        console.log('Scrapfly Background: Syncing category colors from Settings...');
+                        const synced = await detectorManager.categoryManager.syncColorsFromSettings();
+                        console.log('Scrapfly Background: Category colors synced:', synced);
+                        sendResponse({ status: 'synced', success: synced });
+                    } catch (error) {
+                        console.error('Scrapfly Background: Error syncing category colors:', error);
                         sendResponse({ status: 'error', error: error.message });
                     }
                 })();
@@ -2174,12 +2444,21 @@ function setupMessageListeners() {
 
                         if (cachedData) {
                             console.log('[Background] ✅ [Early Cache] HIT - returning cached data');
+                            // Mark this tab as using cache to skip unnecessary capture work
+                            if (sender.tab?.id) {
+                                tabsUsingCache.add(sender.tab.id);
+                                console.log(`[Background] [Early Cache] Marked tab ${sender.tab.id} as using cache`);
+                            }
                             sendResponse({
                                 cacheHit: true,
                                 detectionData: cachedData
                             });
                         } else {
                             console.log('[Background] ❌ [Early Cache] MISS - detection needed');
+                            // Clear cache status for this tab (if it was previously cached)
+                            if (sender.tab?.id) {
+                                tabsUsingCache.delete(sender.tab.id);
+                            }
                             sendResponse({
                                 cacheHit: false
                             });
@@ -2274,6 +2553,30 @@ function setupMessageListeners() {
                 return true; // Will respond asynchronously
                 break;
 
+            case 'CACHE_SCOPE_CHANGED':
+                // Clear in-memory URL hash cache when cache scope changes
+                console.log('[Background] Cache scope changed - clearing URL hash cache');
+                Utils.clearUrlHashCache();
+
+                // Update badge for current tab to gray X
+                (async () => {
+                    try {
+                        const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+                        if (tabs && tabs[0]) {
+                            await chrome.action.setBadgeText({ text: '✕', tabId: tabs[0].id });
+                            await chrome.action.setBadgeBackgroundColor({ color: '#6b7280', tabId: tabs[0].id });
+                            console.log('[Background] Badge updated to gray X for current tab after cache scope change');
+                        }
+                    } catch (error) {
+                        console.error('[Background] Error updating badge on cache scope change:', error);
+                    }
+                })();
+
+                if (sendResponse) {
+                    sendResponse({ success: true });
+                }
+                break;
+
             case 'REQUEST_DETECTION':
                 // FIX: Send initial progress update with correct parameters
                 if (request.tabId) {
@@ -2299,10 +2602,16 @@ function setupMessageListeners() {
                 if (request.tabId) {
                     detectionDataStore.delete(request.tabId);
                     headersStore.delete(request.tabId);
+                    requestHeadersStore.delete(request.tabId);
+                    responseCookiesStore.delete(request.tabId);
+                    payloadStore.delete(request.tabId);
                 } else {
                     // Clear all
                     detectionDataStore.clear();
                     headersStore.clear();
+                    requestHeadersStore.clear();
+                    responseCookiesStore.clear();
+                    payloadStore.clear();
                 }
                 sendResponse({ status: 'cleared' });
                 break;
@@ -2310,7 +2619,52 @@ function setupMessageListeners() {
             case 'CLEAR_DETECTION_CACHE':
                 // Delegate to DetectionEngineManager handler
                 (async () => {
+                    // Clear chrome.storage cache
                     await DetectionEngineManager.handleClearDetectionCache(request, sendResponse, manuallyClearedCaches);
+
+                    // CRITICAL FIX: Also clear in-memory caches to prevent zombie data
+                    if (request.tabId) {
+                        // Clear detection states (the main culprit of zombie data)
+                        if (detectionStates.has(request.tabId)) {
+                            detectionStates.delete(request.tabId);
+                            console.log(`[Background] 🧹 Cleared detectionStates for tab ${request.tabId}`);
+                        }
+
+                        // Clear active detection tracking
+                        if (activeDetections.has(request.tabId)) {
+                            activeDetections.delete(request.tabId);
+                            console.log(`[Background] 🧹 Cleared activeDetections for tab ${request.tabId}`);
+                        }
+
+                        // Clear other related stores
+                        detectionDataStore.delete(request.tabId);
+                        headersStore.delete(request.tabId);
+                        requestHeadersStore.delete(request.tabId);
+                        responseCookiesStore.delete(request.tabId);
+                        payloadStore.delete(request.tabId);
+                        tabsUsingCache.delete(request.tabId);
+
+                        // Track this tab as recently cleared (prevent data resurrection for 5 seconds)
+                        recentlyClearedTabs.add(request.tabId);
+                        setTimeout(() => {
+                            recentlyClearedTabs.delete(request.tabId);
+                            console.log(`[Background] 🔓 Tab ${request.tabId} removed from recently cleared list`);
+                        }, 5000);
+
+                        // CRITICAL FIX: Update badge to show no detection
+                        try {
+                            await chrome.action.setBadgeText({ text: '✕', tabId: request.tabId });
+                            await chrome.action.setBadgeBackgroundColor({
+                                color: '#6B7280', // gray-500
+                                tabId: request.tabId
+                            });
+                            console.log(`[Background] 🔖 Badge set to ✕ for tab ${request.tabId}`);
+                        } catch (badgeError) {
+                            console.warn(`[Background] Could not update badge for tab ${request.tabId}:`, badgeError);
+                        }
+
+                        console.log(`[Background] ✅ Complete cache clear for tab ${request.tabId} - all memory and storage cleared`);
+                    }
                 })();
                 return true; // Async response
 
@@ -2331,6 +2685,13 @@ function setupMessageListeners() {
                         }
 
                         tabId = sender.tab.id;
+
+                        // OPTIMIZATION: Early exit if tab is using cache
+                        if (tabsUsingCache.has(tabId)) {
+                            console.log(`[Background] ✅ JS Hooks - Tab ${tabId} using cache - discarding hooks immediately`);
+                            return; // Skip all processing for cached tabs
+                        }
+
                         const detections = request.detections || [];
 
                         if (detections.length === 0) return;
@@ -2484,6 +2845,13 @@ function setupMessageListeners() {
                         }
 
                         const tabId = sender.tab.id;
+
+                        // OPTIMIZATION: Early exit if tab is using cache
+                        if (tabsUsingCache.has(tabId)) {
+                            console.log(`[Background] ✅ Window Detections - Tab ${tabId} using cache - discarding properties immediately`);
+                            return; // Skip all processing for cached tabs
+                        }
+
                         const url = sender.tab.url;
                         const { detections, executionTime } = request;
 
@@ -2624,6 +2992,14 @@ function setupMessageListeners() {
                         }
 
                         const tabId = sender.tab.id;
+
+                        // OPTIMIZATION: Early exit if tab is using cache
+                        if (tabsUsingCache.has(tabId)) {
+                            console.log(`[Background] ✅ Window Props - Tab ${tabId} using cache - discarding signal`);
+                            sendResponse({ status: 'cached', message: 'Tab using cached detection' });
+                            return; // Skip all processing for cached tabs
+                        }
+
                         const url = request.url;
 
                         console.log(`%c[🎯 WINDOW_PROPS_COMPLETE] Signal RECEIVED from tab ${tabId}`, 'color: #00cc00; font-weight: bold; font-size: 14px;');
@@ -2912,6 +3288,79 @@ function setupMessageListeners() {
                 }
                 break;
 
+            // Log Collector messages
+            case 'LOG_COLLECTOR_ENABLE':
+                if (typeof logCollector !== 'undefined') {
+                    logCollector.enable();
+                    console.log('[LogCollector] Log collection enabled via settings');
+                }
+                sendResponse({ status: 'success' });
+                break;
+
+            case 'LOG_COLLECTOR_DISABLE':
+                if (typeof logCollector !== 'undefined') {
+                    logCollector.disable();
+                    console.log('[LogCollector] Log collection disabled via settings');
+                }
+                sendResponse({ status: 'success' });
+                break;
+
+            case 'LOG_COLLECTOR_CLEAR':
+                if (typeof logCollector !== 'undefined') {
+                    logCollector.clear();
+                    console.log('[LogCollector] Logs cleared');
+                    sendResponse({ status: 'success' });
+                } else {
+                    sendResponse({ status: 'error', message: 'LogCollector not available' });
+                }
+                break;
+
+            case 'LOG_COLLECTOR_EXPORT_JSON':
+                if (typeof logCollector !== 'undefined') {
+                    const jsonFilename = logCollector.exportAsJSON();
+                    console.log('[LogCollector] Exported logs as JSON:', jsonFilename);
+                    sendResponse({ status: 'success', filename: jsonFilename });
+                } else {
+                    sendResponse({ status: 'error', message: 'LogCollector not available' });
+                }
+                break;
+
+            case 'LOG_COLLECTOR_EXPORT_TEXT':
+                if (typeof logCollector !== 'undefined') {
+                    const textFilename = logCollector.exportAsText();
+                    console.log('[LogCollector] Exported logs as text:', textFilename);
+                    sendResponse({ status: 'success', filename: textFilename });
+                } else {
+                    sendResponse({ status: 'error', message: 'LogCollector not available' });
+                }
+                break;
+
+            case 'LOG_COLLECTOR_GET_COUNT':
+                if (typeof logCollector !== 'undefined') {
+                    // getLogCount is async, so handle it with Promise
+                    logCollector.getLogCount().then((count) => {
+                        sendResponse({ status: 'success', count: count });
+                    }).catch((error) => {
+                        console.error('[LogCollector] Error getting log count:', error);
+                        sendResponse({ status: 'error', message: 'Failed to get log count', count: 0 });
+                    });
+                    return true; // Indicate async response
+                } else {
+                    sendResponse({ status: 'error', message: 'LogCollector not available', count: 0 });
+                }
+                break;
+
+            case 'LOG_COLLECTOR_SET_MAX_LOGS':
+                if (typeof logCollector !== 'undefined') {
+                    const maxLogs = request.maxLogs;
+                    logCollector.setMaxLogs(maxLogs);
+                    console.log('[LogCollector] Max logs set to:', maxLogs);
+                    sendResponse({ status: 'success', maxLogs: maxLogs });
+                } else {
+                    sendResponse({ status: 'error', message: 'LogCollector not available' });
+                }
+                break;
+
             default:
                 console.log('Scrapfly Background: Unknown message type:', request.type);
                 sendResponse({ status: 'unknown' });
@@ -2927,8 +3376,17 @@ function setupMessageListeners() {
 function setupTabListeners() {
     // Clear data when tab is closed
     chrome.tabs.onRemoved.addListener((tabId) => {
-        console.log(`Scrapfly Background: Tab ${tabId} closed, clearing headers`);
+        console.log(`Scrapfly Background: Tab ${tabId} closed, clearing headers, cookies, and payloads`);
         headersStore.delete(tabId);
+        requestHeadersStore.delete(tabId);
+        responseCookiesStore.delete(tabId);
+        payloadStore.delete(tabId);
+
+        // Clear cache tracking for this tab
+        if (tabsUsingCache.has(tabId)) {
+            tabsUsingCache.delete(tabId);
+            console.log(`[TabCleanup] Removed tab ${tabId} from cache tracking`);
+        }
 
         // Clear detection state tracking
         detectionStates.delete(tabId);
@@ -2971,6 +3429,12 @@ function setupTabListeners() {
     chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         // Check if extension is disabled when page starts loading
         if (changeInfo.status === 'loading') {
+            // Clear cache tracking on new navigation
+            if (tabsUsingCache.has(tabId)) {
+                tabsUsingCache.delete(tabId);
+                console.log(`[TabUpdate] Cleared cache tracking for tab ${tabId} on new navigation`);
+            }
+
             try {
                 const result = await chrome.storage.local.get(['scrapfly_enabled']);
                 if (result.scrapfly_enabled === false) {
@@ -3137,6 +3601,3 @@ function initializeServices() {
 
     console.log('Scrapfly Background: Services initialization complete');
 }
-
-// OPTIMIZED 3.2: Removed separate cleanup interval - TTL handles auto-cleanup now
-// Detection states and headers automatically expire after 5 minutes

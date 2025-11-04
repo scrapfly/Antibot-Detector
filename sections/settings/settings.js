@@ -6,7 +6,8 @@ class Settings {
       notificationsEnabled: true,
       debugMode: false,
       autoDetectionEnabled: true,
-      confidenceThreshold: 70,
+      logCollectorEnabled: false,
+      logCollectorMaxLogs: 5000,
 
       // Badge Colors
       badgeColors: {
@@ -31,14 +32,14 @@ class Settings {
         urls: '#00BCD4',
         jsHooks: '#00E5FF',
         window: '#4CAF50',
-        css: '#E91E63'
+        payload: '#9C27B0'
       },
 
       // Detection settings
       detection: {
         cacheDuration: 12,
         cacheUnit: 'hours',
-        cacheScope: 'full',
+        cacheScope: 'path',
         blacklistedDomains: []
       },
 
@@ -184,6 +185,19 @@ class Settings {
    */
   async saveSettings() {
     try {
+      // Get old cache scope before saving (to detect changes)
+      let oldCacheScope = null;
+      try {
+        const result = await chrome.storage.local.get(['scrapfly_settings']);
+        if (result.scrapfly_settings) {
+          const savedSettings = JSON.parse(result.scrapfly_settings);
+          const loadedSettings = savedSettings.settings || savedSettings;
+          oldCacheScope = loadedSettings.cacheScope || loadedSettings.detection?.cacheScope || 'path';
+        }
+      } catch (error) {
+        console.warn('Could not read old cache scope:', error);
+      }
+
       const settingsData = {
         timestamp: new Date().toISOString(),
         settings: this.settings
@@ -194,7 +208,47 @@ class Settings {
       });
 
       console.log('Settings saved:', this.settings);
-      NotificationHelper.success('Settings saved successfully!');
+
+      // Check if cache scope changed
+      const newCacheScope = this.settings.cacheScope || this.settings.detection?.cacheScope || 'path';
+      const cacheScopeChanged = oldCacheScope && oldCacheScope !== newCacheScope;
+
+      if (cacheScopeChanged) {
+        console.log(`[Settings] Cache scope changed from "${oldCacheScope}" to "${newCacheScope}" - clearing detection cache`);
+
+        // Clear detection cache from storage
+        await Utils.clearDetectionCache();
+
+        // Clear in-memory URL hash cache in popup context
+        Utils.clearUrlHashCache();
+
+        // Notify background worker to clear its cache
+        chrome.runtime.sendMessage({ type: 'CACHE_SCOPE_CHANGED' }, (response) => {
+          if (chrome.runtime.lastError) {
+            console.warn('Failed to notify background of cache scope change:', chrome.runtime.lastError.message);
+          }
+        });
+
+        // Notify Detection tab to clear results
+        chrome.runtime.sendMessage({ type: 'DETECTION_CLEAR_CACHE' }, (response) => {
+          if (chrome.runtime.lastError) {
+            console.warn('Failed to notify Detection tab:', chrome.runtime.lastError.message);
+          }
+        });
+
+        NotificationHelper.success('Settings saved! Cache cleared due to scope change.');
+      } else {
+        NotificationHelper.success('Settings saved successfully!');
+      }
+
+      // Notify background script to sync category colors
+      chrome.runtime.sendMessage({ type: 'SYNC_CATEGORY_COLORS' }, (response) => {
+        if (chrome.runtime.lastError) {
+          console.warn('Failed to sync category colors:', chrome.runtime.lastError.message);
+        } else {
+          console.log('Category colors synced:', response);
+        }
+      });
 
     } catch (error) {
       console.error('Failed to save settings:', error);
@@ -216,6 +270,40 @@ class Settings {
     const debugModeToggle = document.querySelector('#debugModeGeneral');
     if (debugModeToggle) {
       debugModeToggle.checked = this.settings.debugMode ?? false;
+    }
+
+    // Log Collector (only visible if debug mode is enabled)
+    const logCollectorSection = document.querySelector('#logCollectorSection');
+    if (logCollectorSection) {
+      logCollectorSection.style.display = (this.settings.debugMode ?? false) ? 'block' : 'none';
+    }
+
+    const logCollectorToggle = document.querySelector('#logCollectorEnabled');
+    if (logCollectorToggle) {
+      logCollectorToggle.checked = this.settings.logCollectorEnabled ?? false;
+    }
+
+    // Show log collector controls if enabled
+    const logCollectorControls = document.querySelector('#logCollectorControls');
+    if (logCollectorControls) {
+      logCollectorControls.style.display = (this.settings.logCollectorEnabled ?? false) ? 'block' : 'none';
+    }
+
+    // Load max logs setting
+    const logCollectorMaxLogsInput = document.querySelector('#logCollectorMaxLogs');
+    if (logCollectorMaxLogsInput) {
+      logCollectorMaxLogsInput.value = this.settings.logCollectorMaxLogs ?? 5000;
+    }
+
+    // Update the max logs display
+    const logCountMax = document.querySelector('#logCountMax');
+    if (logCountMax) {
+      logCountMax.textContent = this.settings.logCollectorMaxLogs ?? 5000;
+    }
+
+    // If Log Collector is already enabled, start updating the log count immediately
+    if (this.settings.logCollectorEnabled ?? false) {
+      this.startLogCountUpdate();
     }
 
     // Badge Colors
@@ -265,8 +353,8 @@ class Settings {
       const colorTagWindow = document.querySelector('#colorTagWindow');
       if (colorTagWindow) colorTagWindow.value = this.settings.tagColors.window || '#4CAF50';
 
-      const colorTagCSS = document.querySelector('#colorTagCSS');
-      if (colorTagCSS) colorTagCSS.value = this.settings.tagColors.css || '#E91E63';
+      const colorTagPayload = document.querySelector('#colorTagPayload');
+      if (colorTagPayload) colorTagPayload.value = this.settings.tagColors.payload || '#9C27B0';
     }
 
     // ========== DETECTION TAB ==========
@@ -376,8 +464,12 @@ class Settings {
     // Basic toggles
     const notificationsToggle = document.querySelector('#notificationsEnabled');
     const debugModeToggle = document.querySelector('#debugModeGeneral');
+    const logCollectorToggle = document.querySelector('#logCollectorEnabled');
+    const logCollectorMaxLogsInput = document.querySelector('#logCollectorMaxLogs');
     settings.notificationsEnabled = notificationsToggle?.checked ?? this.settings.notificationsEnabled ?? true;
     settings.debugMode = debugModeToggle?.checked ?? this.settings.debugMode ?? false;
+    settings.logCollectorEnabled = logCollectorToggle?.checked ?? this.settings.logCollectorEnabled ?? false;
+    settings.logCollectorMaxLogs = parseInt(logCollectorMaxLogsInput?.value ?? this.settings.logCollectorMaxLogs ?? 5000);
 
     // Badge Colors
     settings.badgeColors = {
@@ -402,7 +494,7 @@ class Settings {
       urls: document.querySelector('#colorTagURLs')?.value ?? this.settings.tagColors?.urls ?? '#00BCD4',
       jsHooks: document.querySelector('#colorTagJSHooks')?.value ?? this.settings.tagColors?.jsHooks ?? '#00E5FF',
       window: document.querySelector('#colorTagWindow')?.value ?? this.settings.tagColors?.window ?? '#4CAF50',
-      css: document.querySelector('#colorTagCSS')?.value ?? this.settings.tagColors?.css ?? '#E91E63'
+      payload: document.querySelector('#colorTagPayload')?.value ?? this.settings.tagColors?.payload ?? '#9C27B0'
     };
 
     // ========== DETECTION TAB ==========
@@ -683,6 +775,105 @@ class Settings {
       });
     }
 
+    // Debug Mode toggle - show/hide Log Collector section
+    const debugModeToggle = document.querySelector('#debugModeGeneral');
+    if (debugModeToggle) {
+      debugModeToggle.addEventListener('change', (e) => {
+        const logCollectorSection = document.querySelector('#logCollectorSection');
+        if (logCollectorSection) {
+          logCollectorSection.style.display = e.target.checked ? 'block' : 'none';
+        }
+      });
+    }
+
+    // Log Collector toggle - show/hide controls and enable/disable collection
+    const logCollectorToggle = document.querySelector('#logCollectorEnabled');
+    if (logCollectorToggle) {
+      logCollectorToggle.addEventListener('change', (e) => {
+        const logCollectorControls = document.querySelector('#logCollectorControls');
+        if (logCollectorControls) {
+          logCollectorControls.style.display = e.target.checked ? 'block' : 'none';
+        }
+
+        // Send message to background to enable/disable log collection
+        if (e.target.checked) {
+          chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_ENABLE' }).catch(() => {
+            console.log('Failed to enable log collection');
+          });
+          // Start updating log count
+          this.startLogCountUpdate();
+        } else {
+          chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_DISABLE' }).catch(() => {
+            console.log('Failed to disable log collection');
+          });
+          // Stop updating log count
+          this.stopLogCountUpdate();
+        }
+      });
+    }
+
+    // Log Collector action buttons
+    const exportLogsJsonBtn = document.querySelector('#exportLogsJsonBtn');
+    if (exportLogsJsonBtn) {
+      exportLogsJsonBtn.addEventListener('click', () => {
+        chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_EXPORT_JSON' }).catch(() => {
+          NotificationHelper.error('Failed to export logs');
+        });
+      });
+    }
+
+    const exportLogsTextBtn = document.querySelector('#exportLogsTextBtn');
+    if (exportLogsTextBtn) {
+      exportLogsTextBtn.addEventListener('click', () => {
+        chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_EXPORT_TEXT' }).catch(() => {
+          NotificationHelper.error('Failed to export logs');
+        });
+      });
+    }
+
+    const clearLogsBtn = document.querySelector('#clearLogsBtn');
+    if (clearLogsBtn) {
+      clearLogsBtn.addEventListener('click', async () => {
+        const confirmed = await NotificationHelper.confirm({
+          title: 'Clear Logs',
+          message: 'Are you sure you want to clear all collected logs? This action cannot be undone.',
+          type: 'warning',
+          confirmText: 'Clear',
+          cancelText: 'Cancel'
+        });
+
+        if (confirmed) {
+          chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_CLEAR' }).then(() => {
+            // Update log count to 0
+            const logCountValue = document.querySelector('#logCountValue');
+            if (logCountValue) {
+              logCountValue.textContent = '0';
+            }
+            NotificationHelper.success('Logs cleared successfully');
+          }).catch(() => {
+            NotificationHelper.error('Failed to clear logs');
+          });
+        }
+      });
+    }
+
+    // Max Logs input listener - send to background when changed
+    const logCollectorMaxLogsInput = document.querySelector('#logCollectorMaxLogs');
+    if (logCollectorMaxLogsInput) {
+      logCollectorMaxLogsInput.addEventListener('change', (e) => {
+        const maxLogs = parseInt(e.target.value || 5000);
+        // Update the display
+        const logCountMax = document.querySelector('#logCountMax');
+        if (logCountMax) {
+          logCountMax.textContent = maxLogs;
+        }
+        // Send to background to update LogCollector
+        chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_SET_MAX_LOGS', maxLogs: maxLogs }).catch(() => {
+          console.log('Failed to set max logs');
+        });
+      });
+    }
+
     // Tab navigation
     const tabButtons = document.querySelectorAll('.settings-tab-btn');
     tabButtons.forEach(button => {
@@ -708,6 +899,103 @@ class Settings {
         this.hideSettings();
       }
     });
+
+    // Setup color pagination controls
+    this.setupColorPagination();
+  }
+
+  /**
+   * Start updating log count every 2 seconds
+   */
+  startLogCountUpdate() {
+    if (this.logCountUpdateInterval) {
+      clearInterval(this.logCountUpdateInterval);
+    }
+
+    // Update immediately
+    this.updateLogCount();
+
+    // Then update every 2 seconds
+    this.logCountUpdateInterval = setInterval(() => {
+      this.updateLogCount();
+    }, 2000);
+  }
+
+  /**
+   * Stop updating log count
+   */
+  stopLogCountUpdate() {
+    if (this.logCountUpdateInterval) {
+      clearInterval(this.logCountUpdateInterval);
+      this.logCountUpdateInterval = null;
+    }
+  }
+
+  /**
+   * Get current log count and update UI
+   */
+  updateLogCount() {
+    chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_GET_COUNT' }).then((response) => {
+      if (response && typeof response.count === 'number') {
+        const logCountValue = document.querySelector('#logCountValue');
+        if (logCountValue) {
+          logCountValue.textContent = response.count;
+        }
+      }
+    }).catch(() => {
+      // Silently ignore errors
+    });
+  }
+
+  /**
+   * Setup color pagination controls
+   */
+  setupColorPagination() {
+    const prevBtn = document.querySelector('#colorPrevBtn');
+    const nextBtn = document.querySelector('#colorNextBtn');
+    const pageNum = document.querySelector('#colorPageNum');
+    const totalPages = document.querySelector('#colorTotalPages');
+    const pages = document.querySelectorAll('.color-page');
+
+    if (!prevBtn || !nextBtn || !pageNum || !totalPages || pages.length === 0) {
+      return;
+    }
+
+    let currentPage = 1;
+    const total = pages.length;
+
+    const updatePagination = () => {
+      // Update page display
+      pageNum.textContent = currentPage;
+
+      // Show/hide pages
+      pages.forEach((page, index) => {
+        page.style.display = (index + 1) === currentPage ? 'block' : 'none';
+      });
+
+      // Enable/disable buttons
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === total;
+    };
+
+    // Previous button
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        updatePagination();
+      }
+    });
+
+    // Next button
+    nextBtn.addEventListener('click', () => {
+      if (currentPage < total) {
+        currentPage++;
+        updatePagination();
+      }
+    });
+
+    // Initialize
+    updatePagination();
   }
 
   /**

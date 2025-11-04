@@ -3,7 +3,6 @@
   "name": "Web Storage Fingerprint",
   "category": "Fingerprint",
   "color": "#14b8a6",
-  "confidence": 86,
   "lastUpdated": "2025-01-21",
   "version": "1.0.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API",
@@ -12,25 +11,25 @@
   "detection": {
     "js_hooks": [
       {
-        "target": "Storage.prototype.setItem",
         "description": "Stores data in localStorage/sessionStorage",
         "enabled": true,
-        "confidence": 95
+        "confidence": 95,
+        "target": "Storage.prototype.setItem"
       },
       {
-        "target": "Storage.prototype.getItem",
         "description": "Retrieves stored data",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "Storage.prototype.getItem"
       },
       {
-        "target": "Storage.prototype.clear",
         "description": "Clears all stored data",
         "enabled": true,
-        "confidence": 85
+        "confidence": 85,
+        "target": "Storage.prototype.clear"
       }
     ],
-    "window_properties": [
+    "window": [
       {
         "path": "localStorage",
         "description": "Persistent local storage",
@@ -44,22 +43,31 @@
     ],
     "content": [
       {
-        "value": "localStorage.setItem",
+        "text": "localStorage.setItem",
         "scope": "scripts",
         "description": "Local storage usage for fingerprinting",
-        "confidence": 90
+        "confidence": 90,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "value": "sessionStorage",
+        "text": "sessionStorage",
         "scope": "scripts",
         "description": "Session storage access",
-        "confidence": 85
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "value": "Storage.prototype",
+        "text": "Storage.prototype",
         "scope": "scripts",
         "description": "Storage API usage",
-        "confidence": 80
+        "confidence": 80,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ]
   }

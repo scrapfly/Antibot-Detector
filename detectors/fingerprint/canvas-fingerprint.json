@@ -3,7 +3,6 @@
   "name": "Canvas Fingerprint",
   "category": "Fingerprint",
   "color": "#7c3aed",
-  "confidence": 100,
   "lastUpdated": "2024-01-15",
   "version": "1.0.0",
   "website": "https://en.wikipedia.org/wiki/Canvas_fingerprinting",
@@ -12,34 +11,34 @@
   "detection": {
     "js_hooks": [
       {
-        "target": "HTMLCanvasElement.prototype.toDataURL",
         "description": "Converts canvas to data URL for fingerprinting",
         "enabled": true,
-        "confidence": 95
+        "confidence": 95,
+        "target": "HTMLCanvasElement.prototype.toDataURL"
       },
       {
-        "target": "CanvasRenderingContext2D.prototype.getImageData",
         "description": "Extracts pixel data from canvas",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "CanvasRenderingContext2D.prototype.getImageData"
       },
       {
-        "target": "HTMLCanvasElement.prototype.toBlob",
         "description": "Converts canvas to blob for fingerprinting",
         "enabled": true,
-        "confidence": 85
+        "confidence": 85,
+        "target": "HTMLCanvasElement.prototype.toBlob"
       },
       {
-        "target": "CanvasRenderingContext2D.prototype.measureText",
         "description": "Measures text dimensions for font fingerprinting",
         "enabled": true,
-        "confidence": 85
+        "confidence": 85,
+        "target": "CanvasRenderingContext2D.prototype.measureText"
       },
       {
-        "target": "OffscreenCanvas.prototype.getContext",
         "description": "Creates offscreen canvas context for hidden fingerprinting",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "OffscreenCanvas.prototype.getContext"
       }
     ]
   }

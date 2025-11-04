@@ -3,7 +3,6 @@
   "name": "Incapsula (Imperva)",
   "category": "Anti-Bot",
   "color": "#00ACC1",
-  "confidence": 100,
   "lastUpdated": "2024-01-15",
   "version": "1.0.0",
   "website": "https://www.imperva.com/products/web-application-firewall-waf/",
@@ -15,55 +14,109 @@
         "name": "incap_ses_",
         "nameRegex": false,
         "confidence": 100,
-        "description": "Incapsula session cookies"
+        "description": "Incapsula session cookies",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       },
       {
         "name": "visid_incap_",
         "nameRegex": false,
         "confidence": 95,
-        "description": "Visitor ID cookie"
+        "description": "Visitor ID cookie",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       },
       {
         "name": "nlbi_",
         "nameRegex": false,
         "confidence": 90,
-        "description": "Load balancer identifier"
+        "description": "Load balancer identifier",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       },
       {
         "name": "reese84",
         "nameRegex": false,
         "confidence": 100,
-        "description": "Reese84 bot detection cookie"
+        "description": "Reese84 bot detection cookie",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       },
       {
         "name": "utmvc",
         "nameRegex": false,
         "confidence": 95,
-        "description": "UTMVC tracking cookie"
+        "description": "UTMVC tracking cookie",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       }
     ],
     "header": [],
     "url": [
       {
-        "pattern": "incapsula.com",
         "confidence": 95,
-        "description": "Incapsula domain resources"
+        "description": "Incapsula domain resources",
+        "text": "incapsula.com",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "/_Incapsula_Resource",
         "confidence": 100,
-        "description": "Incapsula resource endpoint"
+        "description": "Incapsula resource endpoint",
+        "text": "/_Incapsula_Resource",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       }
     ],
     "content": [
       {
-        "content": "_Incapsula",
         "confidence": 100,
-        "description": "Incapsula global object"
+        "description": "Incapsula global object",
+        "text": "_Incapsula",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "incapsula",
-        "confidence": 90
+        "confidence": 90,
+        "text": "incapsula",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ],
     "dom": [],

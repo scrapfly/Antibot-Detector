@@ -3,7 +3,6 @@
   "name": "F5 BIG-IP ASM",
   "category": "Anti-Bot",
   "color": "#E53935",
-  "confidence": 100,
   "lastUpdated": "2024-01-15",
   "version": "1.0.0",
   "website": "https://www.f5.com/",
@@ -15,33 +14,64 @@
         "name": "^TS[a-zA-Z0-9]+$",
         "nameRegex": true,
         "confidence": 90,
-        "description": "F5 BIG-IP session persistence cookies"
+        "description": "F5 BIG-IP session persistence cookies",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       },
       {
         "name": "^BIGipServer.*",
         "nameRegex": true,
         "confidence": 95,
-        "description": "F5 BIG-IP load balancer cookies"
+        "description": "F5 BIG-IP load balancer cookies",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       }
     ],
     "header": [
       {
         "name": "X-WA-Info",
         "confidence": 90,
-        "description": "F5 WebAccelerator header"
+        "description": "F5 WebAccelerator header",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
       }
     ],
     "url": [],
     "content": [
       {
-        "content": "f5_cspm",
         "confidence": 90,
-        "description": "F5 Client-Side Protection & Mitigation"
+        "description": "F5 Client-Side Protection & Mitigation",
+        "text": "f5_cspm",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "F5_ST",
         "confidence": 85,
-        "description": "F5 Session Tracking variable"
+        "description": "F5 Session Tracking variable",
+        "text": "F5_ST",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ],
     "dom": [],

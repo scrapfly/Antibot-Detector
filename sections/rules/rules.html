@@ -247,25 +247,54 @@
                 <span class="toggle-slider"></span>
               </label>
             </div>
+          </div>
+        </div>
+
+        <!-- Header/Cookie Scope Settings (for HEADER and COOKIE detection only) -->
+        <div class="settings-group" id="headerCookieScopeGroup">
+          <h3 class="settings-group-title" id="scopeGroupTitle">Scope Settings</h3>
+          <p style="font-size: 10px; color: var(--text-muted); margin: 0 0 12px 0;">Configure where to check for matches (request/response/both)</p>
+          <div class="settings-options">
             <div class="setting-option">
               <div class="option-content">
-                <span class="setting-label">Only check class attributes</span>
-                <p style="font-size: 10px; color: var(--text-muted); margin: 4px 0 0 0;">Restrict search to class="..." attributes only</p>
+                <span class="setting-label" id="nameScopeLabel">Name Scope</span>
+                <p style="font-size: 10px; color: var(--text-muted); margin: 4px 0 0 0;">Where to check for name/field matches</p>
               </div>
-              <label class="toggle-switch" for="checkClasses">
-                <input type="checkbox" id="checkClasses" class="toggle-input">
-                <span class="toggle-slider"></span>
-              </label>
+              <select id="nameScope" class="scope-select">
+                <option value="request">Request</option>
+                <option value="response">Response</option>
+                <option value="both">Both</option>
+              </select>
             </div>
             <div class="setting-option">
               <div class="option-content">
-                <span class="setting-label">Only check value/data attributes</span>
-                <p style="font-size: 10px; color: var(--text-muted); margin: 4px 0 0 0;">Restrict search to value="...", data-*="..." attributes only</p>
+                <span class="setting-label">Value Scope</span>
+                <p style="font-size: 10px; color: var(--text-muted); margin: 4px 0 0 0;">Where to check for value matches</p>
               </div>
-              <label class="toggle-switch" for="checkValues">
-                <input type="checkbox" id="checkValues" class="toggle-input">
-                <span class="toggle-slider"></span>
-              </label>
+              <select id="valueScope" class="scope-select">
+                <option value="request">Request</option>
+                <option value="response">Response</option>
+                <option value="both">Both</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- URL Scope Settings (for URL detection only) -->
+        <div class="settings-group" id="urlScopeGroup">
+          <h3 class="settings-group-title">URL Scope Settings</h3>
+          <p style="font-size: 10px; color: var(--text-muted); margin: 0 0 12px 0;">Configure which URLs to check</p>
+          <div class="settings-options">
+            <div class="setting-option">
+              <div class="option-content">
+                <span class="setting-label">URL Scope</span>
+                <p style="font-size: 10px; color: var(--text-muted); margin: 4px 0 0 0;">Which URLs to search for matches</p>
+              </div>
+              <select id="textScope" class="scope-select">
+                <option value="page_only">Page</option>
+                <option value="page_and_scripts">Scripts</option>
+                <option value="all_resources">Both (default)</option>
+              </select>
             </div>
           </div>
         </div>
@@ -278,8 +307,9 @@
             <div class="setting-option">
               <div class="option-content">
                 <div style="display: flex; align-items: center; gap: 8px;">
-                  <span class="setting-label">Enable Regular Expression</span>
-                  <button id="regexHelperBtn" class="regex-helper-btn" title="Regex Helper">?</button>
+                  <span class="setting-label">Regular Expression (Regex)</span>
+                  <button id="regexHelperBtn" class="regex-helper-btn" title="Regex Pattern Helper">?</button>
+                  <button id="regexExplanationBtn" class="explanation-helper-btn" title="What is Regex?">ℹ</button>
                 </div>
                 <div class="option-examples" id="nameRegexExamples">
                   <span class="example-match">✓ Matches:</span> _ab.*, _abck$, ^bm_
@@ -294,7 +324,11 @@
             </div>
             <div class="setting-option">
               <div class="option-content">
-                <span class="setting-label">Match Whole Word Only</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="setting-label">Whole Word</span>
+                  <button id="wholeWordHelperBtn" class="pattern-helper-btn" title="Whole Word Helper">?</button>
+                  <button id="wholeWordExplanationBtn" class="explanation-helper-btn" title="What is Whole Word?">ℹ</button>
+                </div>
                 <div class="option-examples" id="nameWholeWordExamples">
                   <span class="example-match">✓ Matches:</span> _abck (alone)
                   <span class="example-separator">|</span>
@@ -308,7 +342,11 @@
             </div>
             <div class="setting-option">
               <div class="option-content">
-                <span class="setting-label">Case Sensitive</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="setting-label">Case Sensitive</span>
+                  <button id="caseSensitiveHelperBtn" class="pattern-helper-btn" title="Case Sensitive Helper">?</button>
+                  <button id="caseSensitiveExplanationBtn" class="explanation-helper-btn" title="What is Case Sensitive?">ℹ</button>
+                </div>
                 <div class="option-examples" id="nameCaseExamples">
                   <span class="example-match">✓ Matches:</span> Test (exact case)
                   <span class="example-separator">|</span>
@@ -331,8 +369,9 @@
             <div class="setting-option">
               <div class="option-content">
                 <div style="display: flex; align-items: center; gap: 8px;">
-                  <span class="setting-label">Enable Regular Expression</span>
-                  <button id="regexHelperBtnValue" class="regex-helper-btn" title="Regex Helper">?</button>
+                  <span class="setting-label">Regular Expression (Regex)</span>
+                  <button id="regexHelperBtnValue" class="regex-helper-btn" title="Regex Pattern Helper">?</button>
+                  <button id="regexExplanationBtnValue" class="explanation-helper-btn" title="What is Regex?">ℹ</button>
                 </div>
               </div>
               <label class="toggle-switch" for="valueRegex">
@@ -342,7 +381,11 @@
             </div>
             <div class="setting-option">
               <div class="option-content">
-                <span class="setting-label">Match Whole Word Only</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="setting-label">Whole Word</span>
+                  <button id="wholeWordHelperBtnValue" class="pattern-helper-btn" title="Whole Word Helper">?</button>
+                  <button id="wholeWordExplanationBtnValue" class="explanation-helper-btn" title="What is Whole Word?">ℹ</button>
+                </div>
               </div>
               <label class="toggle-switch" for="valueWholeWord">
                 <input type="checkbox" id="valueWholeWord" class="toggle-input">
@@ -351,7 +394,11 @@
             </div>
             <div class="setting-option">
               <div class="option-content">
-                <span class="setting-label">Case Sensitive</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="setting-label">Case Sensitive</span>
+                  <button id="caseSensitiveHelperBtnValue" class="pattern-helper-btn" title="Case Sensitive Helper">?</button>
+                  <button id="caseSensitiveExplanationBtnValue" class="explanation-helper-btn" title="What is Case Sensitive?">ℹ</button>
+                </div>
               </div>
               <label class="toggle-switch" for="valueCaseSensitive">
                 <input type="checkbox" id="valueCaseSensitive" class="toggle-input">
@@ -383,92 +430,63 @@
       </div>
 
       <div class="rule-modal-body">
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
-          Click a template below to use it, or customize the pattern in the input field.
-        </p>
-
-        <div class="dom-templates">
-          <!-- Class Selector -->
-          <div class="dom-template">
-            <div class="template-code">.{name}</div>
-            <div class="template-description">Class Selector - Example: .g-recaptcha, .h-captcha</div>
+        <!-- Step Indicators -->
+        <div class="dom-helper-steps">
+          <div class="dom-step active" id="domStep1">
+            <div class="dom-step-number">1</div>
+            <div class="dom-step-label">Enter Keyword</div>
           </div>
-
-          <!-- ID Selector -->
-          <div class="dom-template">
-            <div class="template-code">#{name}</div>
-            <div class="template-description">ID Selector - Example: #cf-wrapper, #captcha-container</div>
-          </div>
-
-          <!-- Attribute Selector -->
-          <div class="dom-template">
-            <div class="template-code">[data-{name}]</div>
-            <div class="template-description">Attribute Selector - Example: [data-sitekey], [data-callback]</div>
-          </div>
-
-          <!-- Attribute Contains -->
-          <div class="dom-template">
-            <div class="template-code">[class*='{name}']</div>
-            <div class="template-description">Class Contains - Example: [class*='recaptcha']</div>
-          </div>
-
-          <!-- IFrame with src -->
-          <div class="dom-template">
-            <div class="template-code">iframe[src*='{name}']</div>
-            <div class="template-description">IFrame with URL - Example: iframe[src*='recaptcha']</div>
-          </div>
-
-          <!-- Tag Element -->
-          <div class="dom-template">
-            <div class="template-code">{name}</div>
-            <div class="template-description">HTML Tag - Example: canvas, iframe, video</div>
-          </div>
-
-          <!-- Divider for reCAPTCHA specific -->
-          <div style="margin: 16px 0; border-top: 1px solid var(--border); padding-top: 16px;">
-            <div style="font-weight: 600; font-size: 11px; margin-bottom: 12px; color: var(--text-secondary);">reCAPTCHA Specific Selectors:</div>
-          </div>
-
-          <!-- reCAPTCHA Container -->
-          <div class="dom-template">
-            <div class="template-code">.g-recaptcha</div>
-            <div class="template-description">reCAPTCHA V2 Container - Main reCAPTCHA div element</div>
-          </div>
-
-          <!-- reCAPTCHA IFrame by Title -->
-          <div class="dom-template">
-            <div class="template-code">iframe[title*="reCAPTCHA"]</div>
-            <div class="template-description">reCAPTCHA IFrame - Matches any reCAPTCHA iframe</div>
-          </div>
-
-          <!-- reCAPTCHA IFrame by Src -->
-          <div class="dom-template">
-            <div class="template-code">iframe[src*="google.com/recaptcha"]</div>
-            <div class="template-description">reCAPTCHA IFrame by URL - Google reCAPTCHA iframe</div>
-          </div>
-
-          <!-- reCAPTCHA Checkbox -->
-          <div class="dom-template">
-            <div class="template-code">.recaptcha-checkbox</div>
-            <div class="template-description">reCAPTCHA Checkbox - V2 checkbox element</div>
-          </div>
-
-          <!-- reCAPTCHA Anchor -->
-          <div class="dom-template">
-            <div class="template-code">#recaptcha-anchor</div>
-            <div class="template-description">reCAPTCHA Anchor - Clickable anchor element (inside iframe)</div>
-          </div>
-
-          <!-- reCAPTCHA Data Attribute -->
-          <div class="dom-template">
-            <div class="template-code">[data-sitekey]</div>
-            <div class="template-description">reCAPTCHA Site Key - Element with sitekey attribute</div>
+          <div class="dom-step" id="domStep2">
+            <div class="dom-step-number">2</div>
+            <div class="dom-step-label">Choose Selector</div>
           </div>
         </div>
 
-        <div style="margin-top: 16px;">
-          <div style="font-weight: 600; font-size: 11px; margin-bottom: 8px; color: var(--text-secondary);">Custom Input:</div>
-          <input type="text" id="domCustomInput" class="dom-custom-input" placeholder="Enter custom selector or click template above...">
+        <!-- Step 1: Keyword Input -->
+        <div class="dom-step-content">
+          <h4 style="margin-top: 0; color: var(--text-primary); font-size: 14px; font-weight: 600;">
+            What are you looking for?
+          </h4>
+          <input type="text" id="domKeywordInput"
+                 placeholder="Type a keyword (e.g., recaptcha, cloudflare, button, canvas)"
+                 autocomplete="off">
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
+            Type what element you want to select, then we'll show relevant selector suggestions.
+          </p>
+        </div>
+
+        <!-- Step 2: Suggestions -->
+        <div class="dom-suggestions-section" style="margin-top: 20px;">
+          <h4 style="color: var(--text-primary); font-size: 14px; font-weight: 600; margin-bottom: 12px;">
+            Suggested Selectors
+          </h4>
+          <div id="domSuggestions" class="dom-templates">
+            <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">
+              Start typing above to see suggestions...
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Selector Input -->
+        <div class="dom-custom-section">
+          <label class="dom-custom-label">
+            Selected selector (you can edit this):
+          </label>
+          <input type="text" id="domCustomInput"
+                 placeholder="Your selector will appear here"
+                 class="dom-custom-input"
+                 autocomplete="off">
+          <div style="background: rgba(59,130,246,0.08); border-left: 3px solid var(--accent); padding: 10px; border-radius: 4px; margin-top: 8px;">
+            <p style="font-size: 11px; color: var(--text-primary); margin: 0 0 6px 0; font-weight: 500;">
+              💡 <strong>Selector patterns you can use:</strong>
+            </p>
+            <p style="font-size: 10px; color: var(--text-muted); margin: 0; line-height: 1.6;">
+              Class selector: <code style="background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 3px; color: #93c5fd;">.name</code><br>
+              ID selector: <code style="background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 3px; color: #93c5fd;">#name</code><br>
+              Data attribute: <code style="background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 3px; color: #93c5fd;">[data-name]</code><br>
+              Or use <code style="background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 3px; color: #93c5fd;">[name]</code> as placeholder to customize later
+            </p>
+          </div>
         </div>
       </div>
 
@@ -479,7 +497,88 @@
     </div>
   </div>
 
-  <!-- Regex Helper Modal -->
+  <!-- Window Properties Helper Modal -->
+  <div id="windowHelperModal" class="rule-modal" style="display: none;">
+    <div class="rule-modal-backdrop"></div>
+    <div class="rule-modal-content" style="max-width: 600px;">
+      <div class="rule-modal-header">
+        <h2>Window Properties Helper</h2>
+        <button id="closeWindowHelper" class="rule-modal-close">
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="rule-modal-body">
+        <!-- Step Indicators -->
+        <div class="dom-helper-steps">
+          <div class="dom-step active" id="windowStep1">
+            <div class="dom-step-number">1</div>
+            <div class="dom-step-label">Enter Keyword</div>
+          </div>
+          <div class="dom-step" id="windowStep2">
+            <div class="dom-step-number">2</div>
+            <div class="dom-step-label">Choose Property</div>
+          </div>
+        </div>
+
+        <!-- Step 1: Keyword Input -->
+        <div class="dom-step-content">
+          <h4 style="margin-top: 0; color: var(--text-primary); font-size: 14px; font-weight: 600;">
+            What property are you looking for?
+          </h4>
+          <input type="text" id="windowKeywordInput"
+                 placeholder="Type a keyword (e.g., chrome, webkit, eval, Function)"
+                 autocomplete="off">
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
+            Type what global/window property you want to detect, then we'll show relevant suggestions.
+          </p>
+        </div>
+
+        <!-- Step 2: Suggestions -->
+        <div class="dom-suggestions-section" style="margin-top: 20px;">
+          <h4 style="color: var(--text-primary); font-size: 14px; font-weight: 600; margin-bottom: 12px;">
+            Suggested Properties
+          </h4>
+          <div id="windowSuggestions" class="dom-templates">
+            <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">
+              Start typing above to see suggestions...
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Property Input -->
+        <div class="dom-custom-section">
+          <label class="dom-custom-label">
+            Selected property (you can edit this):
+          </label>
+          <input type="text" id="windowCustomInput"
+                 placeholder="Your property path will appear here"
+                 class="dom-custom-input"
+                 autocomplete="off">
+          <div style="background: rgba(59,130,246,0.08); border-left: 3px solid var(--accent); padding: 10px; border-radius: 4px; margin-top: 8px;">
+            <p style="font-size: 11px; color: var(--text-primary); margin: 0 0 6px 0; font-weight: 500;">
+              💡 <strong>Property patterns you can use:</strong>
+            </p>
+            <p style="font-size: 10px; color: var(--text-muted); margin: 0; line-height: 1.6;">
+              Global property: <code style="background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 3px; color: #93c5fd;">property</code><br>
+              Window property: <code style="background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 3px; color: #93c5fd;">window.property</code><br>
+              Navigator property: <code style="background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 3px; color: #93c5fd;">navigator.property</code><br>
+              Document property: <code style="background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 3px; color: #93c5fd;">document.property</code>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-modal-footer">
+        <button id="cancelWindowHelper" class="rule-btn rule-btn-cancel">Cancel</button>
+        <button id="useWindowProperty" class="rule-btn rule-btn-save">Use Property</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Regex Helper Modal (2-Step) -->
   <div id="regexHelperModal" class="rule-modal" style="display: none;">
     <div class="rule-modal-backdrop"></div>
     <div class="rule-modal-content" style="max-width: 600px;">
@@ -493,81 +592,40 @@
       </div>
 
       <div class="rule-modal-body">
-        <!-- User's Input Preview -->
-        <div id="userInputPreview" style="display: none; margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border);">
-          <div style="font-weight: 600; font-size: 11px; margin-bottom: 8px; color: var(--text-primary);">Your Input:</div>
-          <div style="font-family: 'Monaco', 'Courier New', monospace; font-size: 13px; color: var(--accent); padding: 8px; background: var(--bg-primary); border-radius: 4px;" id="currentInputText"></div>
+        <!-- Step Indicators -->
+        <div class="dom-helper-steps">
+          <div class="dom-step active" id="regexStep1">
+            <div class="dom-step-number">1</div>
+            <div class="dom-step-label">What do you need?</div>
+          </div>
+          <div class="dom-step" id="regexStep2">
+            <div class="dom-step-number">2</div>
+            <div class="dom-step-label">Choose Pattern</div>
+          </div>
         </div>
 
-        <!-- Suggested patterns based on input -->
-        <div id="suggestedPatterns" style="display: none; margin-bottom: 16px;">
-          <div style="font-weight: 600; font-size: 12px; margin-bottom: 12px; color: var(--text-primary);">Suggested Patterns for Your Input:</div>
-          <div class="dom-templates" id="suggestedPatternsContainer"></div>
+        <!-- Step 1: Keyword Input -->
+        <div class="dom-step-content">
+          <h4 style="margin-top: 0; color: var(--text-primary); font-size: 14px; font-weight: 600;">
+            What pattern do you need?
+          </h4>
+          <input type="text" id="regexKeywordInput"
+                 placeholder="e.g., starts with, ends with, digits, contains, any text"
+                 autocomplete="off">
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
+            Type what you want to match, then we'll show relevant regex patterns.
+          </p>
         </div>
 
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
-          Common regex patterns. Click to use.
-        </p>
-
-        <div class="dom-templates">
-          <!-- Any characters -->
-          <div class="regex-pattern" data-pattern=".*">
-            <div class="template-code">.*</div>
-            <div class="template-description">Any characters (zero or more)</div>
-          </div>
-
-          <!-- Starts with -->
-          <div class="regex-pattern" data-pattern="^text">
-            <div class="template-code">^text</div>
-            <div class="template-description">Starts with "text"</div>
-          </div>
-
-          <!-- Ends with -->
-          <div class="regex-pattern" data-pattern="text$">
-            <div class="template-code">text$</div>
-            <div class="template-description">Ends with "text"</div>
-          </div>
-
-          <!-- Contains -->
-          <div class="regex-pattern" data-pattern=".*text.*">
-            <div class="template-code">.*text.*</div>
-            <div class="template-description">Contains "text" anywhere</div>
-          </div>
-
-          <!-- OR operator -->
-          <div class="regex-pattern" data-pattern="(abc|xyz)">
-            <div class="template-code">(abc|xyz)</div>
-            <div class="template-description">Matches "abc" OR "xyz"</div>
-          </div>
-
-          <!-- Digits -->
-          <div class="regex-pattern" data-pattern="\d+">
-            <div class="template-code">\d+</div>
-            <div class="template-description">One or more digits (0-9)</div>
-          </div>
-
-          <!-- Specific length -->
-          <div class="regex-pattern" data-pattern="\d{10}">
-            <div class="template-code">\d{10}</div>
-            <div class="template-description">Exactly 10 digits</div>
-          </div>
-
-          <!-- Alphanumeric -->
-          <div class="regex-pattern" data-pattern="[a-zA-Z0-9]+">
-            <div class="template-code">[a-zA-Z0-9]+</div>
-            <div class="template-description">Letters and numbers</div>
-          </div>
-
-          <!-- Optional -->
-          <div class="regex-pattern" data-pattern="text?">
-            <div class="template-code">text?</div>
-            <div class="template-description">Last character optional</div>
-          </div>
-
-          <!-- Word boundary -->
-          <div class="regex-pattern" data-pattern="\bword\b">
-            <div class="template-code">\bword\b</div>
-            <div class="template-description">Exact word match</div>
+        <!-- Step 2: Suggestions -->
+        <div class="dom-suggestions-section" style="margin-top: 20px;">
+          <h4 style="color: var(--text-primary); font-size: 14px; font-weight: 600; margin-bottom: 12px;">
+            Suggested Patterns
+          </h4>
+          <div id="regexSuggestions" class="dom-templates">
+            <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">
+              Start typing above to see suggestions...
+            </div>
           </div>
         </div>
 
@@ -588,9 +646,192 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Regex Explanation Modal (What is Regex?) -->
+  <div id="regexExplanationModal" class="rule-modal" style="display: none;">
+    <div class="rule-modal-backdrop"></div>
+    <div class="rule-modal-content" style="max-width: 600px;">
+      <div class="rule-modal-header">
+        <h2>What is Regular Expression?</h2>
+        <button id="closeRegexExplanation" class="rule-modal-close">
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="rule-modal-body">
+        <p style="font-size: 12px; color: var(--text-muted); margin: 0 0 16px 0;">
+          A regular expression (regex) is a powerful pattern matching tool that lets you search for complex text patterns instead of just exact matches.
+        </p>
+
+        <h3 style="margin: 0 0 12px 0; color: var(--text-primary); font-size: 13px; font-weight: 600;">Basic Examples:</h3>
+        <div style="margin-bottom: 16px;">
+          <div style="margin-bottom: 10px;">
+            <div style="font-family: 'Monaco', 'Courier New', monospace; font-size: 11px; color: var(--accent); margin-bottom: 4px;">^_ab</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Starts with "_ab" (the ^ means beginning)</div>
+          </div>
+          <div style="margin-bottom: 10px;">
+            <div style="font-family: 'Monaco', 'Courier New', monospace; font-size: 11px; color: var(--accent); margin-bottom: 4px;">ck$</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Ends with "ck" (the $ means end)</div>
+          </div>
+          <div style="margin-bottom: 10px;">
+            <div style="font-family: 'Monaco', 'Courier New', monospace; font-size: 11px; color: var(--accent); margin-bottom: 4px;">.*token.*</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Contains "token" anywhere (the .* means any characters)</div>
+          </div>
+          <div>
+            <div style="font-family: 'Monaco', 'Courier New', monospace; font-size: 11px; color: var(--accent); margin-bottom: 4px;">(akamai|datadome)</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Matches "akamai" OR "datadome" (the | means OR)</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 16px; padding: 12px; background: rgba(59,130,246,0.08); border-left: 3px solid var(--accent); border-radius: 4px;">
+          <p style="font-size: 11px; color: var(--text-primary); margin: 0 0 6px 0; font-weight: 500;">When to use Regex:</p>
+          <ul style="font-size: 10px; color: var(--text-muted); margin: 0; padding-left: 20px;">
+            <li>Matching patterns that start or end with specific text</li>
+            <li>Finding multiple variations (using OR: |)</li>
+            <li>Matching numbers or specific character types</li>
+            <li>Complex matching rules</li>
+          </ul>
+        </div>
+
+        <div style="padding: 12px; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border);">
+          <p style="font-size: 10px; color: var(--text-muted); margin: 0;"><strong>💡 Tip:</strong> If you just need to match exact text, you don't need regex - use "Match Whole Word Only" instead. Regex is for complex patterns.</p>
+        </div>
+      </div>
 
       <div class="rule-modal-footer">
-        <button id="closeRegexHelperBtn" class="rule-btn rule-btn-cancel">Close</button>
+        <button id="closeRegexExplanationBtn" class="rule-btn rule-btn-cancel">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Whole Word Explanation Modal -->
+  <div id="wholeWordExplanationModal" class="rule-modal" style="display: none;">
+    <div class="rule-modal-backdrop"></div>
+    <div class="rule-modal-content" style="max-width: 600px;">
+      <div class="rule-modal-header">
+        <h2>What is "Match Whole Word Only"?</h2>
+        <button id="closeWholeWordExplanation" class="rule-modal-close">
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="rule-modal-body">
+        <p style="font-size: 12px; color: var(--text-muted); margin: 0 0 16px 0;">
+          "Whole Word Only" means the pattern must be a complete word surrounded by boundaries (spaces, punctuation, start/end of text). It prevents partial matches.
+        </p>
+
+        <h3 style="margin: 0 0 12px 0; color: var(--text-primary); font-size: 13px; font-weight: 600;">Example with Cookie Name "_abck":</h3>
+        <div style="margin-bottom: 16px;">
+          <table style="font-size: 11px; width: 100%; border-collapse: collapse;">
+            <tr style="background: var(--bg-secondary);">
+              <td style="padding: 8px; border: 1px solid var(--border);">Text Found</td>
+              <td style="padding: 8px; border: 1px solid var(--border);">Matches?</td>
+              <td style="padding: 8px; border: 1px solid var(--border);">Reason</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid var(--border);">_abck</td>
+              <td style="padding: 8px; border: 1px solid var(--border); color: #10b981;">✓ Yes</td>
+              <td style="padding: 8px; border: 1px solid var(--border);">Exact match, surrounded by boundaries</td>
+            </tr>
+            <tr style="background: var(--bg-secondary);">
+              <td style="padding: 8px; border: 1px solid var(--border);">test_abck</td>
+              <td style="padding: 8px; border: 1px solid var(--border); color: #ef4444;">✗ No</td>
+              <td style="padding: 8px; border: 1px solid var(--border);">Connected to "test", not a complete word</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid var(--border);">_abckMore</td>
+              <td style="padding: 8px; border: 1px solid var(--border); color: #ef4444;">✗ No</td>
+              <td style="padding: 8px; border: 1px solid var(--border);">Connected to "More", not complete word</td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="margin-bottom: 16px; padding: 12px; background: rgba(16,185,129,0.08); border-left: 3px solid #10b981; border-radius: 4px;">
+          <p style="font-size: 11px; color: var(--text-primary); margin: 0 0 6px 0; font-weight: 500;">Best for matching:</p>
+          <ul style="font-size: 10px; color: var(--text-muted); margin: 0; padding-left: 20px;">
+            <li>Exact cookie names</li>
+            <li>Specific header names</li>
+            <li>Complete class or function names</li>
+          </ul>
+        </div>
+
+        <div style="padding: 12px; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border);">
+          <p style="font-size: 10px; color: var(--text-muted); margin: 0;"><strong>💡 Tip:</strong> Without this option, searching for "_abck" might match "_abckMore", "_abckValue", and other variations.</p>
+        </div>
+      </div>
+
+      <div class="rule-modal-footer">
+        <button id="closeWholeWordExplanationBtn" class="rule-btn rule-btn-cancel">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Case Sensitive Explanation Modal -->
+  <div id="caseSensitiveExplanationModal" class="rule-modal" style="display: none;">
+    <div class="rule-modal-backdrop"></div>
+    <div class="rule-modal-content" style="max-width: 600px;">
+      <div class="rule-modal-header">
+        <h2>What is "Case Sensitive"?</h2>
+        <button id="closeCaseSensitiveExplanation" class="rule-modal-close">
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="rule-modal-body">
+        <p style="font-size: 12px; color: var(--text-muted); margin: 0 0 16px 0;">
+          "Case Sensitive" means uppercase (A, B, C...) and lowercase (a, b, c...) letters are treated as different. When disabled, it ignores case differences.
+        </p>
+
+        <h3 style="margin: 0 0 12px 0; color: var(--text-primary); font-size: 13px; font-weight: 600;">Example with Cookie Name "Akamai":</h3>
+        <div style="margin-bottom: 16px;">
+          <table style="font-size: 11px; width: 100%; border-collapse: collapse;">
+            <tr style="background: var(--bg-secondary);">
+              <td style="padding: 8px; border: 1px solid var(--border);">Text Found</td>
+              <td style="padding: 8px; border: 1px solid var(--border);">With Case Sensitive</td>
+              <td style="padding: 8px; border: 1px solid var(--border);">Without Case Sensitive</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid var(--border);">Akamai</td>
+              <td style="padding: 8px; border: 1px solid var(--border); color: #10b981;">✓ Match</td>
+              <td style="padding: 8px; border: 1px solid var(--border); color: #10b981;">✓ Match</td>
+            </tr>
+            <tr style="background: var(--bg-secondary);">
+              <td style="padding: 8px; border: 1px solid var(--border);">akamai</td>
+              <td style="padding: 8px; border: 1px solid var(--border); color: #ef4444;">✗ No match</td>
+              <td style="padding: 8px; border: 1px solid var(--border); color: #10b981;">✓ Match</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid var(--border);">AKAMAI</td>
+              <td style="padding: 8px; border: 1px solid var(--border); color: #ef4444;">✗ No match</td>
+              <td style="padding: 8px; border: 1px solid var(--border); color: #10b981;">✓ Match</td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="margin-bottom: 16px; padding: 12px; background: rgba(239,68,68,0.08); border-left: 3px solid #ef4444; border-radius: 4px;">
+          <p style="font-size: 11px; color: var(--text-primary); margin: 0 0 6px 0; font-weight: 500;">Best for detecting:</p>
+          <ul style="font-size: 10px; color: var(--text-muted); margin: 0; padding-left: 20px;">
+            <li>Specific browser headers (often case-sensitive)</li>
+            <li>Cookie names with exact capitalization</li>
+            <li>JavaScript property names</li>
+          </ul>
+        </div>
+
+        <div style="padding: 12px; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border);">
+          <p style="font-size: 10px; color: var(--text-muted); margin: 0;"><strong>⚠️ Important:</strong> Most browser headers and cookies ARE case-sensitive, so enable this option for accurate detection.</p>
+        </div>
+      </div>
+
+      <div class="rule-modal-footer">
+        <button id="closeCaseSensitiveExplanationBtn" class="rule-btn rule-btn-cancel">Close</button>
       </div>
     </div>
   </div>
@@ -846,6 +1087,143 @@
       <div class="rule-modal-footer">
         <button id="networkRequestSave" class="rule-btn rule-btn-primary">Save</button>
         <button id="networkRequestCancel" class="rule-btn rule-btn-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Method Help Modal -->
+  <div id="methodHelpModal" class="rule-modal" style="display: none;">
+    <div class="rule-modal-backdrop"></div>
+    <div class="rule-modal-content" style="max-width: 600px;">
+      <div class="rule-modal-header">
+        <h2 id="methodHelpTitle">Help & Documentation</h2>
+        <button id="closeMethodHelp" class="rule-modal-close">
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="rule-modal-body" id="methodHelpContent" style="line-height: 1.6;">
+        <!-- Help content will be dynamically inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Whole Word Helper Modal (2-Step) -->
+  <div id="wholeWordHelperModal" class="rule-modal" style="display: none;">
+    <div class="rule-modal-backdrop"></div>
+    <div class="rule-modal-content" style="max-width: 600px;">
+      <div class="rule-modal-header">
+        <h2>Whole Word Matcher</h2>
+        <button id="closeWholeWordHelper" class="rule-modal-close">
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="rule-modal-body">
+        <!-- Step Indicators -->
+        <div class="dom-helper-steps">
+          <div class="dom-step active" id="wholeWordStep1">
+            <div class="dom-step-number">1</div>
+            <div class="dom-step-label">What do you need?</div>
+          </div>
+          <div class="dom-step" id="wholeWordStep2">
+            <div class="dom-step-number">2</div>
+            <div class="dom-step-label">View Examples</div>
+          </div>
+        </div>
+
+        <!-- Step 1: Keyword Input -->
+        <div class="dom-step-content">
+          <h4 style="margin-top: 0; color: var(--text-primary); font-size: 14px; font-weight: 600;">
+            What pattern do you want to match?
+          </h4>
+          <input type="text" id="wholeWordKeywordInput"
+                 placeholder="e.g., cookie name, header name, exact match"
+                 autocomplete="off">
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
+            Type your pattern name, and we'll show you how whole word matching works with examples.
+          </p>
+        </div>
+
+        <!-- Step 2: Examples -->
+        <div class="dom-suggestions-section" style="margin-top: 20px;">
+          <h4 style="color: var(--text-primary); font-size: 14px; font-weight: 600; margin-bottom: 12px;">
+            How It Works
+          </h4>
+          <div id="wholeWordExamples" class="dom-templates">
+            <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">
+              Start typing above to see examples...
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border);">
+          <p style="font-size: 11px; color: var(--text-primary); margin: 0 0 6px 0; font-weight: 600;">About Whole Word:</p>
+          <p style="font-size: 10px; color: var(--text-muted); margin: 0;">Matches only when the text is surrounded by word boundaries (spaces, punctuation, start/end of text). Prevents partial matches.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Case Sensitive Helper Modal (2-Step) -->
+  <div id="caseSensitiveHelperModal" class="rule-modal" style="display: none;">
+    <div class="rule-modal-backdrop"></div>
+    <div class="rule-modal-content" style="max-width: 600px;">
+      <div class="rule-modal-header">
+        <h2>Case Sensitive Matcher</h2>
+        <button id="closeCaseSensitiveHelper" class="rule-modal-close">
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="rule-modal-body">
+        <!-- Step Indicators -->
+        <div class="dom-helper-steps">
+          <div class="dom-step active" id="caseSensitiveStep1">
+            <div class="dom-step-number">1</div>
+            <div class="dom-step-label">What do you need?</div>
+          </div>
+          <div class="dom-step" id="caseSensitiveStep2">
+            <div class="dom-step-number">2</div>
+            <div class="dom-step-label">View Examples</div>
+          </div>
+        </div>
+
+        <!-- Step 1: Keyword Input -->
+        <div class="dom-step-content">
+          <h4 style="margin-top: 0; color: var(--text-primary); font-size: 14px; font-weight: 600;">
+            What pattern are you matching?
+          </h4>
+          <input type="text" id="caseSensitiveKeywordInput"
+                 placeholder="e.g., cookie name, header, class name"
+                 autocomplete="off">
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
+            Type your pattern, and we'll show how case sensitivity affects matching.
+          </p>
+        </div>
+
+        <!-- Step 2: Examples -->
+        <div class="dom-suggestions-section" style="margin-top: 20px;">
+          <h4 style="color: var(--text-primary); font-size: 14px; font-weight: 600; margin-bottom: 12px;">
+            Case Sensitivity Examples
+          </h4>
+          <div id="caseSensitiveExamples" class="dom-templates">
+            <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">
+              Start typing above to see examples...
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border);">
+          <p style="font-size: 11px; color: var(--text-primary); margin: 0 0 6px 0; font-weight: 600;">About Case Sensitivity:</p>
+          <p style="font-size: 10px; color: var(--text-muted); margin: 0;">When enabled, "Test", "test", and "TEST" are treated as different. When disabled, they all match.</p>
+        </div>
       </div>
     </div>
   </div>

@@ -3,7 +3,6 @@
   "name": "QCloud Captcha",
   "category": "CAPTCHA",
   "color": "#1890FF",
-  "confidence": 100,
   "lastUpdated": "2024-10-21",
   "version": "1.0.0",
   "website": "https://cloud.tencent.com/product/tci",
@@ -12,63 +11,99 @@
   "detection": {
     "url": [
       {
-        "pattern": "turing.captcha.qcloud.com",
         "confidence": 100,
-        "description": "QCloud Captcha main domain"
+        "description": "QCloud Captcha main domain",
+        "text": "turing.captcha.qcloud.com",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "turing.captcha.gtimg.com",
         "confidence": 100,
-        "description": "QCloud Captcha CDN domain (Tencent image server)"
+        "description": "QCloud Captcha CDN domain (Tencent image server)",
+        "text": "turing.captcha.gtimg.com",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "tdc.js",
         "confidence": 95,
-        "description": "QCloud Captcha JavaScript library"
+        "description": "QCloud Captcha JavaScript library",
+        "text": "tdc.js",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       }
     ],
     "content": [
       {
-        "content": "TencentCaptcha",
         "confidence": 100,
-        "description": "QCloud Captcha main object"
+        "description": "QCloud Captcha main object",
+        "text": "TencentCaptcha",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "qcloud.captcha",
         "confidence": 95,
-        "description": "QCloud Captcha reference"
+        "description": "QCloud Captcha reference",
+        "text": "qcloud.captcha",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "captcha_ticket",
         "confidence": 90,
-        "description": "QCloud Captcha ticket parameter"
+        "description": "QCloud Captcha ticket parameter",
+        "text": "captcha_ticket",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "turing.captcha",
         "confidence": 100,
-        "description": "Turing Captcha reference"
+        "description": "Turing Captcha reference",
+        "text": "turing.captcha",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ],
     "dom": [
       {
         "selector": "#tencent_captcha",
         "confidence": 95,
-        "description": "QCloud Captcha container element"
+        "description": "QCloud Captcha container element",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       },
       {
         "selector": ".tencent-captcha",
         "confidence": 90,
-        "description": "QCloud Captcha container class"
+        "description": "QCloud Captcha container class",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       },
       {
         "selector": "iframe[src*='turing.captcha.qcloud.com']",
         "confidence": 100,
-        "description": "QCloud Captcha iframe"
+        "description": "QCloud Captcha iframe",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       },
       {
         "selector": "iframe[src*='turing.captcha.gtimg.com']",
         "confidence": 100,
-        "description": "QCloud Captcha CDN iframe"
+        "description": "QCloud Captcha CDN iframe",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       }
     ],
     "window": [

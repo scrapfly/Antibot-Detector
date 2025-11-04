@@ -3,7 +3,6 @@
   "name": "Meetrics Check",
   "category": "ANTIBOT",
   "color": "#FF6B9D",
-  "confidence": 95,
   "lastUpdated": "2024-10-21",
   "version": "1.0.0",
   "website": "https://www.meetrics.com/en/",
@@ -12,36 +11,57 @@
   "detection": {
     "content": [
       {
-        "content": "meetricsGlobal",
         "confidence": 100,
-        "description": "Meetrics global object"
+        "description": "Meetrics global object",
+        "text": "meetricsGlobal",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "suspicious_mouse_movement",
         "confidence": 95,
-        "description": "Meetrics mouse behavior detection"
+        "description": "Meetrics mouse behavior detection",
+        "text": "suspicious_mouse_movement",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "meetrics",
         "confidence": 85,
-        "description": "Meetrics reference"
+        "description": "Meetrics reference",
+        "text": "meetrics",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ],
     "url": [
       {
-        "pattern": "mxcdn.net/bb-mx/serve/mtrcs",
         "confidence": 100,
-        "description": "Meetrics CDN script"
+        "description": "Meetrics CDN script",
+        "text": "mxcdn.net/bb-mx/serve/mtrcs",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "mtrcs_",
         "confidence": 95,
-        "description": "Meetrics script identifier"
+        "description": "Meetrics script identifier",
+        "text": "mtrcs_",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "meetrics.com",
         "confidence": 90,
-        "description": "Meetrics domain"
+        "description": "Meetrics domain",
+        "text": "meetrics.com",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       }
     ],
     "window": [

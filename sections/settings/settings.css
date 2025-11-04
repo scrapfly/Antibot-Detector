@@ -166,6 +166,36 @@
   max-width: 100%;
 }
 
+/* Creator Footer */
+.creator-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--bg-secondary);
+}
+
+.creator-footer a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.creator-footer a:hover {
+  color: var(--accent);
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
 .modal-footer {
   display: flex;
   align-items: center;

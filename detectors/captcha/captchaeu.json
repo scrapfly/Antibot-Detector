@@ -3,7 +3,6 @@
   "name": "Captcha.eu",
   "category": "CAPTCHA",
   "color": "#4285F4",
-  "confidence": 95,
   "lastUpdated": "2024-10-21",
   "version": "1.0.0",
   "website": "https://captcha.eu/",
@@ -12,53 +11,83 @@
   "detection": {
     "url": [
       {
-        "pattern": "captcha.eu",
         "confidence": 100,
-        "description": "Captcha.eu domain"
+        "description": "Captcha.eu domain",
+        "text": "captcha.eu",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "/api/captcha",
         "confidence": 95,
-        "description": "Captcha.eu API endpoint"
+        "description": "Captcha.eu API endpoint",
+        "text": "/api/captcha",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "captchaeu",
         "confidence": 90,
-        "description": "Captcha.eu reference in URL"
+        "description": "Captcha.eu reference in URL",
+        "text": "captchaeu",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       }
     ],
     "content": [
       {
-        "content": "CaptchaEU",
         "confidence": 100,
-        "description": "Captcha.eu main object"
+        "description": "Captcha.eu main object",
+        "text": "CaptchaEU",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "captchaeu",
         "confidence": 95,
-        "description": "Captcha.eu reference"
+        "description": "Captcha.eu reference",
+        "text": "captchaeu",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "captcha.eu/widget",
         "confidence": 90,
-        "description": "Captcha.eu widget reference"
+        "description": "Captcha.eu widget reference",
+        "text": "captcha.eu/widget",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ],
     "dom": [
       {
         "selector": ".captchaeu-widget",
         "confidence": 95,
-        "description": "Captcha.eu widget container"
+        "description": "Captcha.eu widget container",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       },
       {
         "selector": "iframe[src*='captcha.eu']",
         "confidence": 100,
-        "description": "Captcha.eu iframe"
+        "description": "Captcha.eu iframe",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       },
       {
         "selector": "div[data-captchaeu-sitekey]",
         "confidence": 95,
-        "description": "Captcha.eu widget with sitekey"
+        "description": "Captcha.eu widget with sitekey",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       }
     ],
     "window": [

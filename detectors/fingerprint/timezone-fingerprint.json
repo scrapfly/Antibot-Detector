@@ -3,7 +3,6 @@
   "name": "Timezone/Intl Fingerprint",
   "category": "Fingerprint",
   "color": "#06b6d4",
-  "confidence": 92,
   "lastUpdated": "2025-01-21",
   "version": "1.0.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl",
@@ -12,25 +11,25 @@
   "detection": {
     "js_hooks": [
       {
-        "target": "Intl.DateTimeFormat.prototype.resolvedOptions",
         "description": "Gets timezone and locale information",
         "enabled": true,
-        "confidence": 95
+        "confidence": 95,
+        "target": "Intl.DateTimeFormat.prototype.resolvedOptions"
       },
       {
-        "target": "Intl.DateTimeFormat",
         "description": "Creates date formatter for timezone detection",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "Intl.DateTimeFormat"
       },
       {
-        "target": "Intl.Collator.prototype.compare",
         "description": "Compares strings based on locale",
         "enabled": true,
-        "confidence": 85
+        "confidence": 85,
+        "target": "Intl.Collator.prototype.compare"
       }
     ],
-    "window_properties": [
+    "window": [
       {
         "path": "Intl",
         "description": "Internationalization API",
@@ -44,16 +43,22 @@
     ],
     "content": [
       {
-        "value": "Intl.DateTimeFormat",
+        "text": "Intl.DateTimeFormat",
         "scope": "scripts",
         "description": "Timezone detection via Intl",
-        "confidence": 85
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "value": "resolvedOptions",
+        "text": "resolvedOptions",
         "scope": "scripts",
         "description": "Getting locale and timezone info",
-        "confidence": 90
+        "confidence": 90,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ]
   }

@@ -3,7 +3,6 @@
   "name": "Hardware Fingerprint",
   "category": "Fingerprint",
   "color": "#ec4899",
-  "confidence": 93,
   "lastUpdated": "2025-01-21",
   "version": "1.0.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/navigator/hardwareConcurrency",
@@ -12,19 +11,19 @@
   "detection": {
     "js_hooks": [
       {
-        "target": "Navigator.prototype.hardwareConcurrency",
         "description": "Gets number of CPU cores",
         "enabled": true,
-        "confidence": 95
+        "confidence": 95,
+        "target": "Navigator.prototype.hardwareConcurrency"
       },
       {
-        "target": "Navigator.prototype.deviceMemory",
         "description": "Gets device memory in GB",
         "enabled": true,
-        "confidence": 95
+        "confidence": 95,
+        "target": "Navigator.prototype.deviceMemory"
       }
     ],
-    "window_properties": [
+    "window": [
       {
         "path": "navigator.hardwareConcurrency",
         "description": "CPU core count",
@@ -43,22 +42,31 @@
     ],
     "content": [
       {
-        "value": "hardwareConcurrency",
+        "text": "hardwareConcurrency",
         "scope": "scripts",
         "description": "CPU detection for device fingerprinting",
-        "confidence": 90
+        "confidence": 90,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "value": "deviceMemory",
+        "text": "deviceMemory",
         "scope": "scripts",
         "description": "Memory detection in scripts",
-        "confidence": 90
+        "confidence": 90,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "value": "maxTouchPoints",
+        "text": "maxTouchPoints",
         "scope": "scripts",
         "description": "Touch capabilities detection",
-        "confidence": 85
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ]
   }

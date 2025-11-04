@@ -164,7 +164,7 @@ class History {
             </div>
             <div class="history-title" title="${item.title || 'Untitled'}">${item.title || 'Untitled'}</div>
             <div class="history-detections">
-              ${this.renderHistoryDetections(item.detections || [])}
+              ${this.renderHistoryDetections(item.detections || [], item.id)}
             </div>
           </div>
           <div class="history-item-right">
@@ -195,6 +195,7 @@ class History {
 
     // Add click handlers for history items
     this.setupHistoryItemHandlers();
+    this.setupOverflowBadgeHandlers();
   }
 
   /**
@@ -202,7 +203,7 @@ class History {
    * @param {Array} detections - Array of detections
    * @returns {string} HTML string for detection tags
    */
-  renderHistoryDetections(detections) {
+  renderHistoryDetections(detections, itemId) {
     if (!detections || detections.length === 0) {
       return '<span class="history-detection-tag">No detections</span>';
     }
@@ -249,10 +250,88 @@ class History {
         .join(', ');
       const tooltipAttr = hiddenSummary ? ` title="${hiddenSummary}"` : '';
 
-      tagsHtml += `<span class="history-detection-tag more-detections"${tooltipAttr}>+${hiddenDetections.length}</span>`;
+      tagsHtml += `<span class="history-detection-tag more-detections" data-history-item-id="${itemId}"${tooltipAttr}>+${hiddenDetections.length}</span>`;
     }
 
     return tagsHtml;
+  }
+
+  /**
+   * Setup click handlers for overflow badges
+   */
+  setupOverflowBadgeHandlers() {
+    const badges = document.querySelectorAll('.more-detections');
+    badges.forEach(badge => {
+      badge.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent history item card click
+        const historyItemId = badge.dataset.historyItemId;
+        const item = this.historyItems.find(h => h.id === historyItemId);
+        if (item) {
+          this.showOverflowDetectionsModal(item);
+        }
+      });
+    });
+  }
+
+  /**
+   * Show overflow detections modal with hidden detection details
+   * @param {object} historyItem - History item object
+   */
+  showOverflowDetectionsModal(historyItem) {
+    const modal = document.querySelector('#overflowDetectionsModal');
+    const title = document.querySelector('#overflowModalTitle');
+    const content = document.querySelector('#overflowModalContent');
+
+    if (!modal || !title || !content) return;
+
+    const maxTags = 2;
+    const hiddenDetections = historyItem.detections.slice(maxTags);
+
+    // Update title
+    const count = hiddenDetections.length;
+    title.textContent = `${count} Hidden Detection${count > 1 ? 's' : ''}`;
+
+    // Render detection cards
+    content.innerHTML = this.renderDetectionDetails(hiddenDetections);
+
+    // Show modal
+    modal.style.display = 'flex';
+
+    // Setup close handlers
+    this.setupOverflowModalCloseHandlers();
+  }
+
+  /**
+   * Setup close handlers for overflow modal
+   */
+  setupOverflowModalCloseHandlers() {
+    const modal = document.querySelector('#overflowDetectionsModal');
+    const closeBtn = document.querySelector('#overflowModalClose');
+    const overlay = modal?.querySelector('.history-modal-overlay');
+
+    const closeModal = () => {
+      if (modal) modal.style.display = 'none';
+    };
+
+    if (closeBtn) {
+      closeBtn.onclick = (e) => {
+        e.stopPropagation();
+        closeModal();
+      };
+    }
+
+    if (overlay) {
+      overlay.onclick = closeModal;
+    }
+
+    // ESC key handler
+    const escHandler = (e) => {
+      if (e.key === 'Escape' && modal?.style.display === 'flex') {
+        closeModal();
+      }
+    };
+
+    document.addEventListener('keydown', escHandler);
   }
 
   /**
@@ -467,7 +546,7 @@ class History {
       if (detection.matches && detection.matches.length > 0) {
         text += `   Detection Methods:\n`;
         detection.matches.forEach(match => {
-          const methodType = (match.type || 'unknown').toUpperCase();
+          const methodType = (match.type || 'unknown').replace(/_/g, ' ').toUpperCase();
           const value = match.pattern || match.value || match.name || match.selector || 'unknown';
           text += `     - ${methodType}: ${value} (${match.confidence || 0}%)\n`;
         });
@@ -619,7 +698,7 @@ class History {
     }
 
     return matches.map(match => {
-      const methodType = (match.type || 'unknown').toUpperCase();
+      const methodType = (match.type || 'unknown').replace(/_/g, ' ').toUpperCase();
       const confidence = match.confidence || 0;
 
       // Determine display value based on method type

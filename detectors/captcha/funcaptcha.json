@@ -3,7 +3,6 @@
   "name": "FunCaptcha (Arkose Labs)",
   "category": "CAPTCHA",
   "color": "#9C27B0",
-  "confidence": 100,
   "lastUpdated": "2024-01-15",
   "version": "1.0.0",
   "website": "https://www.arkoselabs.com/",
@@ -14,83 +13,156 @@
       {
         "name": "_arkose_*",
         "confidence": 95,
-        "description": "Arkose Labs session cookies"
+        "description": "Arkose Labs session cookies",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       },
       {
         "name": "arkose_token",
         "confidence": 100,
-        "description": "FunCaptcha token cookie"
+        "description": "FunCaptcha token cookie",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       }
     ],
     "header": [
       {
         "name": "X-Arkose-Challenge",
         "confidence": 100,
-        "description": "Arkose challenge header"
+        "description": "Arkose challenge header",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
       },
       {
         "name": "X-Arkose-Token",
         "confidence": 95,
-        "description": "Arkose token header"
+        "description": "Arkose token header",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
       }
     ],
     "url": [
       {
-        "pattern": "client-api.arkoselabs.com",
         "confidence": 100,
-        "description": "Arkose Labs API endpoint"
+        "description": "Arkose Labs API endpoint",
+        "text": "client-api.arkoselabs.com",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "api.funcaptcha.com",
         "confidence": 100,
-        "description": "Legacy FunCaptcha API"
+        "description": "Legacy FunCaptcha API",
+        "text": "api.funcaptcha.com",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "/fc/api/nojs/",
         "confidence": 95,
-        "description": "FunCaptcha no-JS API"
+        "description": "FunCaptcha no-JS API",
+        "text": "/fc/api/nojs/",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "/enforcement.*.js",
         "confidence": 90,
-        "description": "Arkose enforcement script"
+        "description": "Arkose enforcement script",
+        "text": "/enforcement.*.js",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       }
     ],
     "content": [
       {
-        "content": "window.arkoseCallback",
         "confidence": 100,
-        "description": "Arkose callback function"
+        "description": "Arkose callback function",
+        "text": "window.arkoseCallback",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "ArkoseEnforce",
         "confidence": 95,
-        "description": "Arkose enforcement object"
+        "description": "Arkose enforcement object",
+        "text": "ArkoseEnforce",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "funcaptcha",
-        "confidence": 90
+        "confidence": 90,
+        "text": "funcaptcha",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "setupEnforcement",
-        "confidence": 85
+        "confidence": 85,
+        "text": "setupEnforcement",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ],
     "dom": [
       {
         "selector": "[data-arkose]",
         "confidence": 100,
-        "description": "Arkose data attribute"
+        "description": "Arkose data attribute",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       },
       {
         "selector": ".arkose-labs",
         "confidence": 95,
-        "description": "Arkose CSS class"
+        "description": "Arkose CSS class",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       },
       {
         "selector": "#FunCaptcha",
         "confidence": 90,
-        "description": "FunCaptcha container ID"
+        "description": "FunCaptcha container ID",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       }
     ],
     "window": [

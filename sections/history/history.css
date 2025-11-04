@@ -324,6 +324,24 @@
   outline: none;
 }
 
+.history-detection-tag.more-detections {
+  background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+  color: white;
+  border-color: #8b5cf6;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.history-detection-tag.more-detections:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 12px rgba(139, 92, 246, 0.5);
+}
+
+.history-detection-tag.more-detections:active {
+  transform: scale(0.98);
+}
+
 .history-detection-extra {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.16);

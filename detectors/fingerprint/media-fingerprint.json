@@ -3,7 +3,6 @@
   "name": "Media Fingerprint",
   "category": "Fingerprint",
   "color": "#7c3aed",
-  "confidence": 100,
   "lastUpdated": "2025-01-15",
   "version": "1.0.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Media_Capabilities_API",
@@ -12,46 +11,46 @@
   "detection": {
     "js_hooks": [
       {
-        "target": "Navigator.prototype.getBattery",
         "description": "Accesses battery information for hardware fingerprinting",
         "enabled": true,
-        "confidence": 95
+        "confidence": 95,
+        "target": "Navigator.prototype.getBattery"
       },
       {
-        "target": "window.speechSynthesis",
         "description": "Enumerates available voice options",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "window.speechSynthesis"
       },
       {
-        "target": "MimeTypeArray.prototype.length",
         "description": "Counts supported MIME types",
         "enabled": true,
-        "confidence": 85
+        "confidence": 85,
+        "target": "MimeTypeArray.prototype.length"
       },
       {
-        "target": "MimeType.prototype.description",
         "description": "Reads MIME type descriptions",
         "enabled": false,
-        "confidence": 75
+        "confidence": 75,
+        "target": "MimeType.prototype.description"
       },
       {
-        "target": "PluginArray.prototype.length",
         "description": "Counts installed browser plugins",
         "enabled": true,
-        "confidence": 85
+        "confidence": 85,
+        "target": "PluginArray.prototype.length"
       },
       {
-        "target": "Plugin.prototype.description",
         "description": "Reads plugin descriptions",
         "enabled": false,
-        "confidence": 75
+        "confidence": 75,
+        "target": "Plugin.prototype.description"
       },
       {
-        "target": "HTMLMediaElement.prototype.canPlayType",
         "description": "Detects supported media codecs",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "HTMLMediaElement.prototype.canPlayType"
       }
     ]
   }

@@ -21,6 +21,7 @@ class Detection {
     this.isRequestingDetection = false; // FIX: Track if we're already requesting detection
     this.isShowingAnalyzing = false; // FIX: Track if analyzing state is already showing
     this.isShowingResults = false; // FIX: Track if displaying results to prevent message listeners from overriding
+    this.cacheCleared = false; // FIX: Track if cache was cleared while tab was hidden - refresh when tab becomes visible
   }
 
   /**
@@ -35,7 +36,7 @@ class Detection {
     return {
       text: badgeText,
       trimmed: trimmed,
-      isLoading: trimmed === '⏳' || trimmed.endsWith('%'), // FIX: Include percentage badges as loading
+      isLoading: trimmed === '⏳',
       isInterrupted: trimmed === '?' || trimmed === '✕',
       isError: trimmed === '✕',
       isQuestion: trimmed === '?',
@@ -172,9 +173,8 @@ class Detection {
 
   startAnalysisProgress() {
     const stepsContainer = document.querySelector('#analysisStepsList');
-    const percentElement = document.querySelector('#analysisProgressPercent');
 
-    if (!stepsContainer || !percentElement) {
+    if (!stepsContainer) {
       return;
     }
 
@@ -182,8 +182,6 @@ class Detection {
     this.clearLoadingTimeout(); // Clear any existing timeout
     this.analysisStepIndex = 0;
     this.updateAnalysisStepStates();
-    // FIXED: Don't reset to 0% - let DETECTION_PROGRESS messages update the percentage
-    // The percentage should come from real backend progress, not be reset to 0% on UI init
 
     // Set timeout for stuck detection
     this.loadingTimeout = setTimeout(() => {
@@ -244,26 +242,16 @@ class Detection {
   }
 
   updateAnalysisPercent(forceValue = null) {
-    const percentElement = document.querySelector('#analysisProgressPercent');
-    const orbPercentElement = document.querySelector('#loadingOrbPercent');
     const progressBarFill = document.querySelector('#progressBarFill');
 
-    if (!percentElement && !orbPercentElement && !progressBarFill) {
+    if (!progressBarFill) {
       return;
     }
 
     if (typeof forceValue === 'number') {
       const clamped = Math.max(0, Math.min(100, Math.round(forceValue)));
 
-      // Update percentage text elements
-      if (percentElement) {
-        percentElement.textContent = `${clamped}%`;
-      }
-      if (orbPercentElement) {
-        orbPercentElement.textContent = `${clamped}%`;
-      }
-
-      // Update progress bar fill
+      // Update progress bar fill (visual only, no percentage text)
       if (progressBarFill) {
         progressBarFill.style.width = `${clamped}%`;
       }
@@ -274,12 +262,6 @@ class Detection {
     // FIX: Use real progress updates only - don't auto-calculate
     // This function should only be called with forceValue now
     // If called without forceValue, just return (don't override real progress)
-    if (!percentElement && !orbPercentElement && !progressBarFill) {
-      return;
-    }
-
-    // Don't recalculate - wait for real progress updates from background
-    // console.warn('[Detection] updateAnalysisPercent called without forceValue - ignoring (use real progress)');
   }
 
   stopAnalysisProgress({ markComplete = false } = {}) {
@@ -303,18 +285,7 @@ class Detection {
 
     const { method, totalPercent, completedMethods, message } = progress;
 
-    // Update total percentage in all locations
-    const orbPercent = document.querySelector('#loadingOrbPercent');
-    if (orbPercent) {
-      orbPercent.textContent = `${totalPercent}%`;
-    }
-
-    const analysisPercent = document.querySelector('#analysisProgressPercent');
-    if (analysisPercent) {
-      analysisPercent.textContent = `${totalPercent}%`;
-    }
-
-    // Update progress bar fill
+    // Update progress bar fill (visual only, no percentage text)
     const progressBarFill = document.querySelector('#progressBarFill');
     if (progressBarFill) {
       progressBarFill.style.width = `${totalPercent}%`;
@@ -466,10 +437,6 @@ class Detection {
     this.isShowingAnalyzing = false; // Reset flag when hiding analyzing state
     const loadingState = document.querySelector('#loadingState');
     if (loadingState) loadingState.style.display = 'none';
-    const orbPercentElement = document.querySelector('#loadingOrbPercent');
-    if (orbPercentElement) {
-      orbPercentElement.textContent = '100%';
-    }
   }
 
   /**
@@ -626,6 +593,9 @@ class Detection {
     // Badge is now handled by background script for real-time updates
     const totalDetections = detections.length;
 
+    // DISABLED: Toast notification for detections (per user request)
+    // Keeping the code commented in case it needs to be re-enabled
+    /*
     // Show toast notification ONLY for fresh detections (not when opening popup with cached data)
     if (totalDetections > 0 && options.fromStorage === false) {
       const now = Date.now();
@@ -643,6 +613,7 @@ class Detection {
         this.lastNotificationTime = now;
       }
     }
+    */
 
     // Show results container
     if (detectionResults) detectionResults.style.display = 'flex';
@@ -834,7 +805,7 @@ class Detection {
           'path': 'Path',
           'full': 'Full URL'
         };
-        cacheScopeDisplay.textContent = scopeDisplayNames[this.cacheMetadata.cacheScope] || 'Domain';
+        cacheScopeDisplay.textContent = scopeDisplayNames[this.cacheMetadata.cacheScope] || 'Path';
       } else {
         // Fallback: read current setting from storage
         chrome.storage.local.get(['scrapfly_settings'], (result) => {
@@ -843,14 +814,14 @@ class Detection {
               ? JSON.parse(result.scrapfly_settings)
               : result.scrapfly_settings;
             const actualSettings = settings.settings || settings;
-            const cacheScope = actualSettings.cacheScope || actualSettings.detection?.cacheScope || 'domain';
+            const cacheScope = actualSettings.cacheScope || actualSettings.detection?.cacheScope || 'path';
 
             const scopeDisplayNames = {
               'domain': 'Domain',
               'path': 'Path',
               'full': 'Full URL'
             };
-            cacheScopeDisplay.textContent = scopeDisplayNames[cacheScope] || 'Domain';
+            cacheScopeDisplay.textContent = scopeDisplayNames[cacheScope] || 'Path';
           }
         });
       }
@@ -920,9 +891,13 @@ class Detection {
 
       NotificationHelper.success('Cache cleared');
 
-      // Set badge to empty (no text) to indicate clean slate
+      // Set badge to "✕" with gray background to indicate no detection
       try {
-        await chrome.action.setBadgeText({ text: '', tabId: tabs[0].id });
+        await chrome.action.setBadgeText({ text: '✕', tabId: tabs[0].id });
+        await chrome.action.setBadgeBackgroundColor({
+          color: '#6B7280', // gray-500
+          tabId: tabs[0].id
+        });
       } catch (error) {
         if (this.debugMode) console.warn('Could not set badge:', error);
       }
@@ -933,11 +908,16 @@ class Detection {
       // Clear current results immediately
       this.currentResults = [];
 
+      // Set flag to prevent auto-refresh from NEW_DETECTION_DATA
+      // Store in sessionStorage to persist across popup close/reopen
+      this.justClearedCache = true;
+      sessionStorage.setItem('scrapfly_just_cleared_cache', Date.now().toString());
+
       // Show "Nothing Detected" page immediately after cache clear
       this.showEmptyState();
 
-      // OPTION 1: After 1.5 seconds, trigger silent background re-detection
-      // This runs detection without badge updates or progress indicators
+      // OPTION 1: After 5.5 seconds, trigger silent background re-detection
+      // This runs after the 5-second cache clear window to prevent race conditions
       // If detection finds something, it will update the UI
       // If nothing found, empty state stays
       setTimeout(() => {
@@ -950,7 +930,7 @@ class Detection {
           // Silent failure - background detection may have already completed
           if (this.debugMode) console.log('[Detection] Background re-detection triggered');
         });
-      }, 1500);
+      }, 5500);
     } catch (error) {
       if (this.debugMode) console.error('Failed to clear cache:', error);
       NotificationHelper.error('Failed to clear cache');
@@ -1324,7 +1304,7 @@ class Detection {
       methodTypes.forEach(type => {
         const typeName = type.toLowerCase();
         const methodName = typeName.replace(/_/g, ' ').toUpperCase();
-        const tagColor = this.detectorManager.categoryManager.getTagColor(methodName);
+        const tagColor = this.detectorManager.categoryManager.getTagColor(typeName);
 
         if (tagColor && tagColor !== '#666666') {
           // Use dynamic color from storage with transparent background
@@ -1944,22 +1924,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
             if (tabs[0]) {
               try {
                 const badgeText = await chrome.action.getBadgeText({ tabId: tabs[0].id });
-
-                // If badge shows percentage (e.g., "66%"), parse and apply to popup
-                if (badgeText && badgeText.endsWith('%')) {
-                  const percent = parseInt(badgeText);
-                  if (!isNaN(percent) && percent > 0) {
-                    if (this.debugMode) console.log(`[Detection] Syncing popup with badge: ${percent}%`);
-                    this.updateAnalysisPercent(percent);
-
-                    // Also update phase highlighting based on percentage
-                    if (percent >= 66) {
-                      this.highlightPhase('hooks');
-                    } else if (percent >= 33) {
-                      this.highlightPhase('main');
-                    }
-                  }
-                }
+                // Badge percentage sync removed - no longer showing percentages in badge
               } catch (error) {
                 if (this.debugMode) console.warn('[Detection] Could not read badge text:', error);
               }
@@ -2059,6 +2024,24 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
       if (message.type === 'NEW_DETECTION_DATA') {
         if (this.debugMode) console.log('[Detection] Received detection completion for tab:', message.tabId);
 
+        // Guard: Don't auto-refresh if we just cleared cache and are showing empty state
+        // Check both the instance flag and sessionStorage
+        const clearedTime = sessionStorage.getItem('scrapfly_just_cleared_cache');
+        const recentlyCleared = clearedTime && (Date.now() - parseInt(clearedTime)) < 5000; // 5 second window
+
+        if (this.justClearedCache || recentlyCleared) {
+          console.log('[Detection] Ignoring NEW_DETECTION_DATA - showing empty state after cache clear');
+          // Reset the flag after 5.5 seconds to allow future updates (after re-detection starts)
+          if (!this.clearCacheResetTimer) {
+            this.clearCacheResetTimer = setTimeout(() => {
+              this.justClearedCache = false;
+              sessionStorage.removeItem('scrapfly_just_cleared_cache');
+              this.clearCacheResetTimer = null;
+            }, 5500);
+          }
+          return;
+        }
+
         // Clear loading timeout and stop progress animation
         this.clearLoadingTimeout();
         this.stopAnalysisProgress({ markComplete: true });
@@ -2096,6 +2079,42 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
             );
           }
         });
+      }
+
+      // Listen for cache scope changes from Settings
+      if (message.type === 'DETECTION_CLEAR_CACHE') {
+        (async () => {
+          console.log('[Detection] Cache scope changed - clearing current results');
+
+          // Mark cache as cleared so Detection tab will refresh when it becomes visible
+          this.cacheCleared = true;
+
+          // Clear current results
+          this.currentResults = [];
+
+          // Show empty state (if Detection tab is currently visible)
+          this.showEmptyState();
+
+          // Set badge to gray X (matching clearCache() behavior)
+          try {
+            const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+            if (tabs[0]) {
+              await chrome.action.setBadgeText({ text: '✕', tabId: tabs[0].id });
+              await chrome.action.setBadgeBackgroundColor({
+                color: '#6B7280', // gray-500
+                tabId: tabs[0].id
+              });
+            }
+          } catch (error) {
+            if (this.debugMode) console.warn('[Detection] Could not set badge:', error);
+          }
+
+          if (sendResponse) {
+            sendResponse({ success: true });
+          }
+        })();
+
+        return true; // Keep message channel open for async response
       }
     });
 
@@ -2207,14 +2226,6 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
             if (response.progress && response.progress.completedMethods) {
               const lastMethod = response.progress.method || response.progress.completedMethods[response.progress.completedMethods.length - 1];
               detection.updateMethodStatus(lastMethod, response.progress.completedMethods);
-
-              // Also update the percentage if provided
-              if (response.progress.totalPercent) {
-                const percentElement = document.querySelector('#analysisProgressPercent');
-                if (percentElement) {
-                  percentElement.textContent = `${Math.round(response.progress.totalPercent)}%`;
-                }
-              }
             }
 
             return;
@@ -2416,7 +2427,8 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
         expiry: detectionData.expiry,
         url: detectionData.url,
         timestamp: detectionData.timestamp,
-        favicon: detectionData.favicon
+        favicon: detectionData.favicon,
+        cacheScope: detectionData.cacheScope
       } : null;
 
       await detection.displayResults(detections, {

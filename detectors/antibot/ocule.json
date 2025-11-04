@@ -3,30 +3,40 @@
   "name": "Ocule",
   "category": "ANTIBOT",
   "color": "#FFA630",
-  "confidence": 85,
   "lastUpdated": "2024-10-21",
   "version": "1.0.0",
   "website": "https://ocule.io/",
   "icon": "custom.png",
   "description": "Ocule bot detection with advanced obfuscation and VM-based protection",
   "detection": {
-    "content": [
-    ],
+    "content": [],
     "url": [
       {
-        "pattern": "proxy.ocule.co.uk/script.js",
         "confidence": 100,
-        "description": "Ocule proxy script delivery"
+        "description": "Ocule proxy script delivery",
+        "text": "proxy.ocule.co.uk/script.js",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "ocule.co.uk",
         "confidence": 95,
-        "description": "Ocule domain"
+        "description": "Ocule domain",
+        "text": "ocule.co.uk",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "ocule",
         "confidence": 75,
-        "description": "Ocule reference in URL"
+        "description": "Ocule reference in URL",
+        "text": "ocule",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       }
     ],
     "window": [

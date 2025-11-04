@@ -176,7 +176,7 @@ class DetectionEngineManager {
         const result = {
             name: detector.name || fallbackName,
             icon: detector.icon,
-            color: detector.color,
+            // Note: color is not stored here - it's looked up from CategoryManager based on category
             id: detector.id || fallbackId,
             description: detector.description
         };
@@ -208,10 +208,10 @@ class DetectionEngineManager {
             hooksTimeoutMs: enhancedDetectionSettings?.hooksTimeoutMs || 5000,
             useEventDrivenChecks: enhancedDetectionSettings?.useEventDrivenChecks !== false,
             useFinalIdleCheck: enhancedDetectionSettings?.useFinalIdleCheck !== false,
-            // FIX: Revert to original 5000ms (from JSON default-settings.json line 19)
-            // DO NOT use aggressive 5s timeout - this was causing 5 vs 10 detection inconsistency
+            // FIX: Use 10000ms as specified in default-settings.json line 19
+            // This matches the intended 10-second detection window
             // Always read from default-settings.json, never hardcode
-            maxDetectionWindowMs: enhancedDetectionSettings?.maxDetectionWindowMs || 5000,
+            maxDetectionWindowMs: enhancedDetectionSettings?.maxDetectionWindowMs || 10000,
             keepHooksInstalled: enhancedDetectionSettings?.keepHooksInstalled || false
         };
     }
@@ -574,8 +574,7 @@ class DetectionEngineManager {
                 if (contentPatterns && Array.isArray(contentPatterns)) {
                     // If any pattern has checkScripts or no restrictions (searches all content)
                     for (const pattern of contentPatterns) {
-                        if (pattern.checkScripts === true ||
-                            (!pattern.checkScripts && !pattern.checkClasses && !pattern.checkValues)) {
+                        if (pattern.checkScripts === true || !pattern.checkScripts) {
                             return true;
                         }
                     }
@@ -1121,7 +1120,7 @@ class DetectionEngineManager {
 
   function reportHookDetection(detectorId, detectorName, category, hook) {
     if (!hooksEnabled) return;
-    const detectionKey = \`\${detectorId}:\${hook.target}\`;
+    const detectionKey = \`\${detectorId}:\${hook.hook}\`;
     if (triggeredHooks.has(detectionKey)) return;
     triggeredHooks.add(detectionKey);
 
@@ -1132,7 +1131,7 @@ class DetectionEngineManager {
         detectorName,
         category,
         hook: {
-          target: hook.target,
+          target: hook.hook,
           confidence: hook.confidence,
           description: hook.description
         },
@@ -1146,7 +1145,7 @@ class DetectionEngineManager {
 
   function installHook(detectorId, detectorName, category, hook) {
     try {
-      const parts = hook.target.split('.');
+      const parts = hook.hook.split('.');
       if (parts.length < 2) return;
 
       let obj = window;
@@ -1221,7 +1220,7 @@ class DetectionEngineManager {
         });
       }
     } catch (error) {
-      console.error(\`[Fingerprint Hook] Failed to install \${hook.target}:\`, error);
+      console.error(\`[Fingerprint Hook] Failed to install \${hook.hook}:\`, error);
     }
   }
 
@@ -1255,7 +1254,7 @@ class DetectionEngineManager {
         }
 
         const detections = [];
-        const { url = '', content = [], dom = [], cookies = [], headers = {}, pageHTML = '', externalContent = [], jsHooks = [] } = pageData;
+        const { url = '', content = [], dom = [], cookies = [], headers = {}, pageHTML = '', externalContent = [], jsHooks = [], payload, payloads } = pageData;
         const startTime = Date.now();
 
         // Get CSS rules
@@ -1308,7 +1307,7 @@ class DetectionEngineManager {
         const EARLY_EXIT_COUNT = 5; // Stop after 5 high-confidence detections
 
         for (const { category, detectorName, detector } of detectorPriorities) {
-            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, pageHTML, externalContent, cssRules });
+            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, pageHTML, externalContent, cssRules, payload, payloads });
             if (detection.detected) {
                 console.log(`    ✅ DETECTED: ${detectorName} (confidence: ${detection.confidence}%)`);
                 const detectionObj = {
@@ -1435,17 +1434,20 @@ class DetectionEngineManager {
         if (detector.detection?.url) {
             for (const urlPattern of detector.detection.url) {
                 const matchOptions = {
-                    regex: urlPattern.nameRegex === true,
-                    wholeWord: urlPattern.nameWholeWord === true,
-                    caseSensitive: urlPattern.nameCaseSensitive === true
+                    regex: urlPattern.textRegex === true,
+                    wholeWord: urlPattern.textWholeWord === true,
+                    caseSensitive: urlPattern.textCaseSensitive === true
                 };
 
-                // Check main page URL
-                const urlMatch = this.matchPatternWithCapture(url, urlPattern.pattern, matchOptions);
+                // Get textScope (default to 'page_and_scripts')
+                const textScope = urlPattern.textScope || 'page_and_scripts';
+
+                // Check main page URL (always checked unless scope is explicitly scripts-only)
+                const urlMatch = this.matchPatternWithCapture(url, urlPattern.text, matchOptions);
                 if (urlMatch) {
                     matches.push({
                         type: 'url',
-                        pattern: urlPattern.pattern,
+                        pattern: urlPattern.text,
                         value: urlMatch,  // Store the actual matched substring
                         fullUrl: url,     // Store full URL for reference
                         confidence: urlPattern.confidence,
@@ -1453,23 +1455,49 @@ class DetectionEngineManager {
                     });
                 }
 
-                // Also check all script src URLs
-                if (content && content.length > 0) {
+                // Check script src URLs if scope is 'page_and_scripts' or 'all_resources'
+                if ((textScope === 'page_and_scripts' || textScope === 'all_resources') && content && content.length > 0) {
                     for (const script of content) {
                         const scriptSrc = script.src || '';
-                        const scriptMatch = this.matchPatternWithCapture(scriptSrc, urlPattern.pattern, matchOptions);
-                        if (scriptMatch) {
-                            // Check if we already have this pattern to avoid duplicates
-                            const alreadyAdded = matches.some(m => m.type === 'url' && m.pattern === urlPattern.pattern);
-                            if (!alreadyAdded) {
-                                matches.push({
-                                    type: 'url',
-                                    pattern: urlPattern.pattern,
-                                    value: scriptMatch,  // Store actual matched substring
-                                    fullUrl: scriptSrc,  // Store full script URL for reference
-                                    confidence: urlPattern.confidence,
-                                    description: urlPattern.description
-                                });
+                        if (scriptSrc) {
+                            const scriptMatch = this.matchPatternWithCapture(scriptSrc, urlPattern.text, matchOptions);
+                            if (scriptMatch) {
+                                // Check if we already have this pattern to avoid duplicates
+                                const alreadyAdded = matches.some(m => m.type === 'url' && m.pattern === urlPattern.text);
+                                if (!alreadyAdded) {
+                                    matches.push({
+                                        type: 'url',
+                                        pattern: urlPattern.text,
+                                        value: scriptMatch,  // Store actual matched substring
+                                        fullUrl: scriptSrc,  // Store full script URL for reference
+                                        confidence: urlPattern.confidence,
+                                        description: urlPattern.description
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Check all external resource URLs if scope is 'all_resources'
+                if (textScope === 'all_resources' && externalContent && externalContent.length > 0) {
+                    for (const resource of externalContent) {
+                        const resourceUrl = resource.url || '';
+                        if (resourceUrl) {
+                            const resourceMatch = this.matchPatternWithCapture(resourceUrl, urlPattern.text, matchOptions);
+                            if (resourceMatch) {
+                                // Check if we already have this pattern to avoid duplicates
+                                const alreadyAdded = matches.some(m => m.type === 'url' && m.pattern === urlPattern.text);
+                                if (!alreadyAdded) {
+                                    matches.push({
+                                        type: 'url',
+                                        pattern: urlPattern.text,
+                                        value: resourceMatch,  // Store actual matched substring
+                                        fullUrl: resourceUrl,  // Store full resource URL for reference
+                                        confidence: urlPattern.confidence,
+                                        description: urlPattern.description
+                                    });
+                                }
                             }
                         }
                     }
@@ -1481,38 +1509,33 @@ class DetectionEngineManager {
         const contentPatterns = detector.detection?.content;
         console.log(`[Content Detection] ${detector.name}: contentPatterns=${!!contentPatterns}, count=${contentPatterns?.length || 0}, hasPageHTML=${!!pageHTML}, pageHTMLLength=${pageHTML?.length || 0}`);
 
-        // OPTIMIZATION Phase 10.9: Pre-compile attribute regex patterns once (15-20% faster)
-        const classRegex = /class="([^"]*)"/gi;
-        const valueRegex = /(?:value|data-[^=]*)="([^"]*)"/gi;
-
         if (contentPatterns && pageHTML) {
             console.log(`[Content Detection] ${detector.name}: Starting check of ${contentPatterns.length} patterns`);
             for (const contentPattern of contentPatterns) {
-                console.log(`[Content Detection] ${detector.name}: Pattern="${contentPattern.content}", regex=${contentPattern.nameRegex}, wholeWord=${contentPattern.nameWholeWord}, caseSensitive=${contentPattern.nameCaseSensitive}`);
+                // Backward compatibility: content patterns used to use 'value' instead of 'text'
+                const patternText = contentPattern.text || contentPattern.value || '';
+                console.log(`[Content Detection] ${detector.name}: Pattern="${patternText}", regex=${contentPattern.textRegex}, wholeWord=${contentPattern.textWholeWord}, caseSensitive=${contentPattern.textCaseSensitive}`);
 
                 const matchOptions = {
-                    regex: contentPattern.nameRegex === true,
-                    wholeWord: contentPattern.nameWholeWord === true,
-                    caseSensitive: contentPattern.nameCaseSensitive === true
+                    regex: contentPattern.textRegex === true,
+                    wholeWord: contentPattern.textWholeWord === true,
+                    caseSensitive: contentPattern.textCaseSensitive === true
                 };
 
                 // Determine where to search based on settings
-                // If checkScripts, checkClasses, or checkValues is explicitly set to true, restrict search
-                // If all are false or undefined, search entire page (default)
+                // If checkScripts is explicitly set to true, restrict search to scripts only
+                // If false or undefined, search entire page (default)
                 const checkScripts = contentPattern.checkScripts === true;
-                const checkClasses = contentPattern.checkClasses === true;
-                const checkValues = contentPattern.checkValues === true;
-                const hasRestriction = checkScripts || checkClasses || checkValues;
 
-                console.log(`[Content Detection] ${detector.name}: checkScripts=${checkScripts}, checkClasses=${checkClasses}, checkValues=${checkValues}, hasRestriction=${hasRestriction}`);
+                console.log(`[Content Detection] ${detector.name}: checkScripts=${checkScripts}`);
 
                 let found = false;
                 let foundIn = '';
 
-                if (!hasRestriction) {
+                if (!checkScripts) {
                     // No restrictions = check entire page HTML + external content (default behavior)
-                    console.log(`[Content Detection] ${detector.name}: Searching entire page HTML for "${contentPattern.content}"`);
-                    if (this.matchPattern(pageHTML, contentPattern.content, matchOptions)) {
+                    console.log(`[Content Detection] ${detector.name}: Searching entire page HTML for "${patternText}"`);
+                    if (this.matchPattern(pageHTML, patternText, matchOptions)) {
                         found = true;
                         foundIn = 'page content';
                         console.log(`[Content Detection] ${detector.name}: ✓ MATCH FOUND in page content!`);
@@ -1522,7 +1545,7 @@ class DetectionEngineManager {
                     if (!found && pageData.externalContent && pageData.externalContent.length > 0) {
                         console.log(`[Content Detection] ${detector.name}: Searching ${pageData.externalContent.length} external resources`);
                         for (const resource of pageData.externalContent) {
-                            if (this.matchPattern(resource.content, contentPattern.content, matchOptions)) {
+                            if (this.matchPattern(resource.content, patternText, matchOptions)) {
                                 found = true;
                                 foundIn = resource.url;
                                 console.log(`[Content Detection] ${detector.name}: ✓ MATCH FOUND in external resource: ${resource.url}`);
@@ -1535,39 +1558,13 @@ class DetectionEngineManager {
                         console.log(`[Content Detection] ${detector.name}: ✗ No match in page content or external resources`);
                     }
                 } else {
-                    // Check only specific areas that are enabled
-                    if (checkScripts && content.length > 0) {
+                    // Check only scripts
+                    if (content.length > 0) {
                         for (const script of content) {
                             const scriptContent = script.content || script.src || '';
-                            if (this.matchPattern(scriptContent, contentPattern.content, matchOptions)) {
+                            if (this.matchPattern(scriptContent, patternText, matchOptions)) {
                                 found = true;
                                 foundIn = script.src || 'inline script';
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!found && checkClasses) {
-                        // OPTIMIZATION Phase 10.9: Reset and reuse pre-compiled regex
-                        classRegex.lastIndex = 0;
-                        let match;
-                        while ((match = classRegex.exec(pageHTML)) !== null) {
-                            if (this.matchPattern(match[1], contentPattern.content, matchOptions)) {
-                                found = true;
-                                foundIn = 'class attribute';
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!found && checkValues) {
-                        // OPTIMIZATION Phase 10.9: Reset and reuse pre-compiled regex
-                        valueRegex.lastIndex = 0;
-                        let match;
-                        while ((match = valueRegex.exec(pageHTML)) !== null) {
-                            if (this.matchPattern(match[1], contentPattern.content, matchOptions)) {
-                                found = true;
-                                foundIn = 'attribute value';
                                 break;
                             }
                         }
@@ -1578,13 +1575,13 @@ class DetectionEngineManager {
                     console.log(`[Content Detection] ${detector.name}: Adding match! confidence=${contentPattern.confidence}, foundIn=${foundIn}`);
                     matches.push({
                         type: 'content',
-                        pattern: contentPattern.content,
-                        value: foundIn || 'Found in page content',
+                        pattern: patternText,
+                        value: patternText, // Show the matched pattern itself
                         confidence: contentPattern.confidence,
                         description: contentPattern.description
                     });
                 } else {
-                    console.log(`[Content Detection] ${detector.name}: Pattern not found: "${contentPattern.content}"`);
+                    console.log(`[Content Detection] ${detector.name}: Pattern not found: "${patternText}"`);
                 }
             }
         } else {
@@ -1597,9 +1594,12 @@ class DetectionEngineManager {
         }
 
         // Check cookies patterns
-        if (detector.detection?.cookie && cookies.length > 0) {
-            console.log(`[Cookie Detection] Checking ${detector.detection.cookie.length} cookie patterns against ${cookies.length} cookies`);
-            console.log('[Cookie Detection] Available cookies:', cookies.map(c => c.name).join(', '));
+        if (detector.detection?.cookie && (cookies.length > 0 || (pageData.responseCookies && pageData.responseCookies.length > 0))) {
+            console.log(`[Cookie Detection] Checking ${detector.detection.cookie.length} cookie patterns`);
+            console.log('[Cookie Detection] Request cookies:', cookies.map(c => c.name).join(', '));
+            if (pageData.responseCookies) {
+                console.log('[Cookie Detection] Response cookies:', pageData.responseCookies.map(c => c.name).join(', '));
+            }
 
             // OPTIMIZATION Phase 10.6: Track matched cookies and filter before searching
             const matchedCookieNames = new Set();
@@ -1619,10 +1619,29 @@ class DetectionEngineManager {
                     caseSensitive: cookiePattern.valueCaseSensitive === true
                 };
 
+                // Get scope settings (default to 'request' for backward compatibility)
+                const nameScope = cookiePattern.nameScope || 'request';
+                const valueScope = cookiePattern.valueScope || 'request';
+
+                // Build cookies array based on scope
+                const getCookiesByScope = (scope) => {
+                    if (scope === 'request') {
+                        return cookies; // Request cookies from document.cookie
+                    } else if (scope === 'response') {
+                        return pageData.responseCookies || [];
+                    } else { // 'both'
+                        return [...cookies, ...(pageData.responseCookies || [])];
+                    }
+                };
+
+                const cookiesForName = getCookiesByScope(nameScope);
+                const cookiesForValue = getCookiesByScope(valueScope);
+
                 console.log(`[Cookie Detection] Name match options:`, nameMatchOptions);
+                console.log(`[Cookie Detection] Searching in ${cookiesForName.length} cookies for name (scope: ${nameScope})`);
 
                 // OPTIMIZATION Phase 10.6: Filter out matched cookies before searching (O(n) instead of O(n²))
-                const unmatchedCookies = cookies.filter(c => !matchedCookieNames.has(c.name));
+                const unmatchedCookies = cookiesForName.filter(c => !matchedCookieNames.has(c.name));
 
                 const matchingCookie = unmatchedCookies.find(cookie => {
                     // Match by name using matchPattern helper
@@ -1631,11 +1650,16 @@ class DetectionEngineManager {
                         console.log(`[Cookie Detection] Testing "${cookie.name}" against pattern "${cookiePattern.name}": ${matched}`);
 
                         if (matched) {
-                            // If value pattern specified, check it too
+                            // If value pattern specified, check it in valueScope cookies
                             if (cookiePattern.value) {
-                                const valueMatched = this.matchPattern(cookie.value || '', cookiePattern.value, valueMatchOptions);
-                                console.log(`[Cookie Detection] Value match result: ${valueMatched}`);
-                                return valueMatched;
+                                // Find cookie with same name in value scope
+                                const cookieInValueScope = cookiesForValue.find(c => c.name === cookie.name);
+                                if (cookieInValueScope) {
+                                    const valueMatched = this.matchPattern(cookieInValueScope.value || '', cookiePattern.value, valueMatchOptions);
+                                    console.log(`[Cookie Detection] Value match result: ${valueMatched}`);
+                                    return valueMatched;
+                                }
+                                return false;
                             }
                             return true;
                         }
@@ -1660,7 +1684,7 @@ class DetectionEngineManager {
         }
 
         // Check headers patterns
-        if (detector.detection?.header && Object.keys(headers).length > 0) {
+        if (detector.detection?.header && (Object.keys(headers).length > 0 || (pageData.requestHeaders && Object.keys(pageData.requestHeaders).length > 0))) {
             for (const headerPattern of detector.detection.header) {
                 const nameMatchOptions = {
                     regex: headerPattern.nameRegex === true,
@@ -1674,16 +1698,36 @@ class DetectionEngineManager {
                     caseSensitive: headerPattern.valueCaseSensitive === true
                 };
 
-                // Loop through all headers to find matches (supports regex)
-                for (const [headerName, headerValue] of Object.entries(headers)) {
+                // Get scope settings (default to 'response' for backward compatibility)
+                const nameScope = headerPattern.nameScope || 'response';
+                const valueScope = headerPattern.valueScope || 'response';
+
+                // Build headers object based on scope
+                const getHeadersByScope = (scope) => {
+                    if (scope === 'request') {
+                        return pageData.requestHeaders || {};
+                    } else if (scope === 'response') {
+                        return headers; // responseHeaders
+                    } else { // 'both'
+                        return { ...(pageData.requestHeaders || {}), ...headers };
+                    }
+                };
+
+                const headersForName = getHeadersByScope(nameScope);
+                const headersForValue = getHeadersByScope(valueScope);
+
+                // Loop through headers for name matching
+                for (const [headerName, headerValue] of Object.entries(headersForName)) {
                     if (headerPattern.name && this.matchPattern(headerName, headerPattern.name, nameMatchOptions)) {
-                        // If value pattern specified, check it too
+                        // If value pattern specified, check it in valueScope headers
                         if (headerPattern.value) {
-                            if (this.matchPattern(headerValue, headerPattern.value, valueMatchOptions)) {
+                            // Check if this header also exists in value scope
+                            const valueToCheck = headersForValue[headerName];
+                            if (valueToCheck && this.matchPattern(valueToCheck, headerPattern.value, valueMatchOptions)) {
                                 matches.push({
                                     type: 'header',
                                     name: headerPattern.name,
-                                    value: `${headerName}: ${headerValue}`,
+                                    value: `${headerName}: ${valueToCheck}`,
                                     confidence: headerPattern.confidence || 80,
                                     description: headerPattern.description
                                 });
@@ -1701,6 +1745,164 @@ class DetectionEngineManager {
                             break; // Found a match, no need to check more headers
                         }
                     }
+                }
+            }
+        }
+
+        // Check payload patterns - handle both single payload and multiple payloads array
+        // First check if we have multiple payloads (new format)
+        if (detector.detection?.payload && pageData.payloads && Array.isArray(pageData.payloads)) {
+            console.log(`[Payload Detection] Checking ${detector.detection.payload.length} patterns against ${pageData.payloads.length} payloads`);
+
+            // Track which patterns have already matched to prevent duplicates
+            const matchedPatterns = new Set();
+
+            // Check each payload in the array
+            for (const payloadItem of pageData.payloads) {
+                for (const payloadPattern of detector.detection.payload) {
+                    // Skip if this pattern already matched in a previous payload
+                    if (matchedPatterns.has(payloadPattern.text)) {
+                        continue;
+                    }
+                    // Match options for pattern matching
+                    const matchOptions = {
+                        regex: payloadPattern.textRegex === true,
+                        wholeWord: payloadPattern.textWholeWord === true,
+                        caseSensitive: payloadPattern.textCaseSensitive === true
+                    };
+
+                    let payloadData = payloadItem.data;
+
+                    // Convert payload to searchable string based on type
+                    if (payloadItem.type === 'formData' && typeof payloadData === 'object') {
+                        // Convert form data object to string for searching
+                        payloadData = JSON.stringify(payloadData);
+                    } else if (typeof payloadData === 'object') {
+                        // Convert any other object to JSON string
+                        try {
+                            payloadData = JSON.stringify(payloadData);
+                        } catch (e) {
+                            payloadData = String(payloadData);
+                        }
+                    }
+
+                    // Check if pattern matches in payload data
+                    if (this.matchPattern(payloadData, payloadPattern.text, matchOptions)) {
+                        // Extract the matched portion from the payload
+                        let matchedValue = '';
+                        const searchStr = payloadData.toString();
+                        const patternStr = payloadPattern.text.toLowerCase();
+                        const searchLower = searchStr.toLowerCase();
+
+                        // Find the pattern and extract surrounding context
+                        const matchIndex = searchLower.indexOf(patternStr);
+                        if (matchIndex !== -1) {
+                            // Extract up to 100 chars around the match for context
+                            const start = Math.max(0, matchIndex - 20);
+                            const end = Math.min(searchStr.length, matchIndex + patternStr.length + 60);
+                            matchedValue = searchStr.substring(start, end);
+
+                            // Clean up and truncate if too long
+                            if (matchedValue.length > 80) {
+                                matchedValue = matchedValue.substring(0, 80) + '...';
+                            }
+
+                            // If it starts mid-string, add ellipsis
+                            if (start > 0) {
+                                matchedValue = '...' + matchedValue;
+                            }
+                        } else {
+                            // Fallback to showing just the pattern found
+                            matchedValue = `${payloadPattern.text} found`;
+                        }
+
+                        matches.push({
+                            type: 'payload',
+                            pattern: payloadPattern.text,
+                            value: matchedValue,
+                            confidence: payloadPattern.confidence || 80,
+                            description: payloadPattern.description || 'Payload pattern detected'
+                        });
+
+                        // Mark this pattern as matched to prevent duplicates
+                        matchedPatterns.add(payloadPattern.text);
+
+                        console.log(`[Payload Detection] ✓ Match found for pattern "${payloadPattern.text}" in ${payloadItem.url}`);
+                        console.log(`[Payload Detection] Matched value: "${matchedValue}"`);
+                        break; // Found match, no need to check this pattern again
+                    }
+                }
+            }
+        }
+        // Fallback to single payload for backward compatibility
+        else if (detector.detection?.payload && pageData.payload) {
+            console.log(`[Payload Detection] Checking ${detector.detection.payload.length} payload patterns`);
+            console.log(`[Payload Detection] Method: ${pageData.payload.method}, Type: ${pageData.payload.type}`);
+
+            for (const payloadPattern of detector.detection.payload) {
+                // Match options for pattern matching
+                const matchOptions = {
+                    regex: payloadPattern.textRegex === true,
+                    wholeWord: payloadPattern.textWholeWord === true,
+                    caseSensitive: payloadPattern.textCaseSensitive === true
+                };
+
+                let payloadData = pageData.payload.data;
+
+                // Convert payload to searchable string based on type
+                if (pageData.payload.type === 'formData' && typeof payloadData === 'object') {
+                    // Convert form data object to string for searching
+                    payloadData = JSON.stringify(payloadData);
+                } else if (typeof payloadData === 'object') {
+                    // Convert any other object to JSON string
+                    try {
+                        payloadData = JSON.stringify(payloadData);
+                    } catch (e) {
+                        payloadData = String(payloadData);
+                    }
+                }
+
+                // Check if pattern matches in payload data
+                if (this.matchPattern(payloadData, payloadPattern.text, matchOptions)) {
+                    // Extract the matched portion from the payload
+                    let matchedValue = '';
+                    const searchStr = payloadData.toString();
+                    const patternStr = payloadPattern.text.toLowerCase();
+                    const searchLower = searchStr.toLowerCase();
+
+                    // Find the pattern and extract surrounding context
+                    const matchIndex = searchLower.indexOf(patternStr);
+                    if (matchIndex !== -1) {
+                        // Extract up to 100 chars around the match for context
+                        const start = Math.max(0, matchIndex - 20);
+                        const end = Math.min(searchStr.length, matchIndex + patternStr.length + 60);
+                        matchedValue = searchStr.substring(start, end);
+
+                        // Clean up and truncate if too long
+                        if (matchedValue.length > 80) {
+                            matchedValue = matchedValue.substring(0, 80) + '...';
+                        }
+
+                        // If it starts mid-string, add ellipsis
+                        if (start > 0) {
+                            matchedValue = '...' + matchedValue;
+                        }
+                    } else {
+                        // Fallback to showing just the pattern found
+                        matchedValue = `${payloadPattern.text} found`;
+                    }
+
+                    matches.push({
+                        type: 'payload',
+                        pattern: payloadPattern.text,
+                        value: matchedValue,
+                        confidence: payloadPattern.confidence || 80,
+                        description: payloadPattern.description || 'Payload pattern detected'
+                    });
+                    console.log(`[Payload Detection] ✓ Match found for pattern "${payloadPattern.text}"`);
+                    console.log(`[Payload Detection] Matched value: "${matchedValue}"`);
+                } else {
+                    console.log(`[Payload Detection] ✗ No match for pattern "${payloadPattern.text}"`);
                 }
             }
         }
@@ -1906,7 +2108,7 @@ class DetectionEngineManager {
                 id: detector.id,
                 name: detector.name,
                 category: detector.category,
-                color: detector.color,
+                // Note: color is not stored here - it's looked up from CategoryManager based on category
                 icon: detector.icon,
                 description: detector.description
             }
@@ -2107,7 +2309,8 @@ class DetectionEngineManager {
                     storageExpiry: storedData.expiry,
                     fromStorage: true,
                     processed: true,
-                    url: storedData.url
+                    url: storedData.url,
+                    cacheScope: storedData.cacheScope
                 };
             }
         } catch (error) {
@@ -3061,14 +3264,14 @@ class DetectionEngineManager {
             }
 
             // OPTIMIZATION: Deduplicate hooks before sending (prevents duplicate detector entries)
-            // Count occurrences by detector:target combination (actual dedup key)
-            const dedupeKeyCounts = new Map(); // "detectorId:target" -> count
+            // Count occurrences by detector:hook combination (actual dedup key)
+            const dedupeKeyCounts = new Map(); // "detectorId:hook" -> count
             for (const hookData of hookBatch) {
                 const key = `${hookData.detection.detectorId}:${hookData.detection.hook.target}`;
                 dedupeKeyCounts.set(key, (dedupeKeyCounts.get(key) || 0) + 1);
             }
 
-            // Deduplicate: keep only first occurrence of each detector:target combination
+            // Deduplicate: keep only first occurrence of each detector:hook combination
             const uniqueHooks = new Map();
             for (const hookData of hookBatch) {
                 const key = `${hookData.detection.detectorId}:${hookData.detection.hook.target}`;
@@ -3081,10 +3284,10 @@ class DetectionEngineManager {
             const removedCount = hookBatch.length - deduplicatedHooks.length;
 
             console.log(`%c[CHECK THIS] [BATCH FLUSH] Before dedup: ${hookBatch.length} hook firings`, 'color: #ff6600; font-weight: bold;');
-            console.log(`%c[CHECK THIS] [BATCH FLUSH] After dedup: ${deduplicatedHooks.length} unique detector:target combinations`, 'color: #ff6600; font-weight: bold;');
+            console.log(`%c[CHECK THIS] [BATCH FLUSH] After dedup: ${deduplicatedHooks.length} unique detector:hook combinations`, 'color: #ff6600; font-weight: bold;');
             console.log(`%c[CHECK THIS] [BATCH FLUSH] Removed: ${removedCount} duplicate firings`, 'color: #ffaa00; font-weight: bold;');
 
-            // Show dedup breakdown by detector:target combination
+            // Show dedup breakdown by detector:hook combination
             if (removedCount > 0) {
                 console.log(`%c[CHECK THIS] [BATCH FLUSH] Dedup Details:`, 'color: #ff6600; font-weight: bold;');
                 dedupeKeyCounts.forEach((count, key) => {

@@ -1,107 +1,93 @@
 {
-  "id": "perimeterx",
-  "name": "PerimeterX",
+  "id": "kasada",
+  "name": "Kasada",
   "category": "Anti-Bot",
-  "color": "#DC2626",
-  "lastUpdated": "2024-01-15",
+  "color": "#6366F1",
+  "lastUpdated": "2024-10-29",
   "version": "1.0.0",
-  "website": "https://www.perimeterx.com/",
-  "icon": "perimeterx_official.png",
-  "description": "Behavioral-based bot detection with real-time risk scoring",
+  "website": "https://www.kasada.io/",
+  "icon": "custom.png",
+  "description": "Advanced bot detection and mitigation platform using behavioral analysis and threat intelligence",
   "detection": {
     "cookie": [
       {
-        "name": "_px2",
+        "name": "kas.js",
         "confidence": 95,
-        "description": "PerimeterX tracking cookie v2",
+        "description": "Kasada JavaScript challenge cookie",
         "nameRegex": false,
         "nameWholeWord": false,
         "nameCaseSensitive": false,
-        "value": "",
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
+        "value": "",
         "nameScope": "request",
         "valueScope": "request"
       },
       {
-        "name": "_px3",
-        "confidence": 100,
-        "description": "PerimeterX tracking cookie v3",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "request",
-        "valueScope": "request"
-      },
-      {
-        "name": "_pxhd",
+        "name": "kas_challenge",
         "confidence": 90,
-        "description": "PerimeterX header data",
+        "description": "Kasada challenge identification cookie",
         "nameRegex": false,
         "nameWholeWord": false,
         "nameCaseSensitive": false,
-        "value": "",
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
+        "value": "",
         "nameScope": "request",
         "valueScope": "request"
       },
       {
-        "name": "_pxvid",
+        "name": "_kas",
+        "nameRegex": true,
         "confidence": 85,
-        "description": "PerimeterX visitor ID",
-        "nameRegex": false,
+        "description": "Kasada tracking cookie",
         "nameWholeWord": false,
         "nameCaseSensitive": false,
-        "value": "",
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
+        "value": "",
         "nameScope": "request",
         "valueScope": "request"
       }
     ],
     "header": [
       {
-        "name": "X-PX-Authorization",
-        "confidence": 100,
-        "description": "PerimeterX authorization header",
+        "name": "x-kasada",
+        "confidence": 90,
+        "description": "Kasada header identifier",
         "nameRegex": false,
         "nameWholeWord": false,
         "nameCaseSensitive": false,
-        "value": "",
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
+        "value": "",
         "nameScope": "response",
         "valueScope": "response"
       },
       {
-        "name": "X-PX-Original-Token",
-        "confidence": 95,
-        "description": "Original token header",
+        "name": "x-kasada-challenge",
+        "confidence": 85,
+        "description": "Kasada challenge header",
         "nameRegex": false,
         "nameWholeWord": false,
         "nameCaseSensitive": false,
-        "value": "",
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
+        "value": "",
         "nameScope": "response",
         "valueScope": "response"
       }
     ],
     "url": [
       {
-        "confidence": 100,
-        "description": "Data collector endpoint",
-        "text": "collector-*.perimeterx.net",
+        "confidence": 90,
+        "description": "Kasada endpoint",
+        "text": "/kasada",
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
@@ -109,8 +95,8 @@
       },
       {
         "confidence": 95,
-        "description": "Collector API endpoint",
-        "text": "/api/v*/collector",
+        "description": "Kasada JavaScript file",
+        "text": "kasada\\.js",
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
@@ -118,8 +104,9 @@
       },
       {
         "confidence": 90,
-        "description": "PerimeterX JavaScript",
-        "text": "px.js",
+        "description": "Kasada fingerprinting script (GoDaddy pattern)",
+        "scope": "scriptUrls",
+        "text": "/[0-9a-f-]{36}/[0-9a-f-]{36}/p\\.js",
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
@@ -128,48 +115,67 @@
     ],
     "content": [
       {
-        "confidence": 100,
-        "description": "PerimeterX application ID",
-        "text": "window._pxAppId",
+        "value": "kasada",
+        "confidence": 85,
+        "description": "Kasada namespace reference",
+        "checkScripts": false,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
       },
       {
-        "confidence": 95,
-        "description": "PerimeterX initialization function",
-        "text": "pxInit",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
+        "value": "__kasada",
         "confidence": 90,
-        "text": "_pxAction",
+        "description": "Kasada global object",
+        "checkScripts": false,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "value": "kas_challenge",
+        "confidence": 85,
+        "description": "Kasada challenge identifier",
+        "checkScripts": false,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
       }
     ],
-    "dom": [],
+    "dom": [
+      {
+        "selector": "[data-kasada]",
+        "confidence": 90,
+        "description": "Element with Kasada data attribute",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
+      },
+      {
+        "selector": ".kasada-challenge",
+        "confidence": 85,
+        "description": "Kasada challenge container",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
+      }
+    ],
     "window": [
       {
-        "path": "_pxAppId",
-        "condition": "typeof string",
-        "confidence": 100,
-        "description": "PerimeterX application ID"
-      },
-      {
-        "path": "pxInit",
-        "condition": "typeof function",
+        "path": "__kasada",
         "confidence": 95,
-        "description": "PerimeterX initialization function"
+        "description": "Kasada global object"
       },
       {
-        "path": "_pxAction",
-        "condition": "typeof string",
+        "path": "kas",
         "confidence": 90,
-        "description": "PerimeterX action identifier"
+        "description": "Kasada API namespace"
+      },
+      {
+        "path": "__kasada.version",
+        "condition": "!== undefined",
+        "confidence": 95,
+        "description": "Kasada version identifier"
       }
     ]
   }

@@ -3,7 +3,6 @@
   "name": "USB API Fingerprint",
   "category": "Fingerprint",
   "color": "#6366f1",
-  "confidence": 85,
   "lastUpdated": "2025-01-21",
   "version": "1.0.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/USB_API",
@@ -12,19 +11,19 @@
   "detection": {
     "js_hooks": [
       {
-        "target": "USB.getDevices",
         "description": "Gets list of connected USB devices",
         "enabled": true,
-        "confidence": 95
+        "confidence": 95,
+        "target": "USB.getDevices"
       },
       {
-        "target": "USB.requestDevice",
         "description": "Requests user to select USB device",
         "enabled": true,
-        "confidence": 95
+        "confidence": 95,
+        "target": "USB.requestDevice"
       }
     ],
-    "window_properties": [
+    "window": [
       {
         "path": "navigator.usb",
         "description": "WebUSB API access point",
@@ -38,22 +37,31 @@
     ],
     "content": [
       {
-        "value": "navigator.usb",
+        "text": "navigator.usb",
         "scope": "scripts",
         "description": "WebUSB API usage",
-        "confidence": 90
+        "confidence": 90,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "value": "getDevices",
+        "text": "getDevices",
         "scope": "scripts",
         "description": "USB device enumeration",
-        "confidence": 85
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "value": "requestDevice",
+        "text": "requestDevice",
         "scope": "scripts",
         "description": "USB device request in scripts",
-        "confidence": 85
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ]
   }

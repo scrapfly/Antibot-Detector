@@ -3,7 +3,6 @@
   "name": "Performance Fingerprint",
   "category": "Fingerprint",
   "color": "#7c3aed",
-  "confidence": 100,
   "lastUpdated": "2025-01-15",
   "version": "1.0.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Performance",
@@ -12,88 +11,88 @@
   "detection": {
     "js_hooks": [
       {
-        "target": "Performance.prototype.now",
         "description": "Reads high-resolution timestamps for timing analysis",
         "enabled": true,
-        "confidence": 95
+        "confidence": 95,
+        "target": "Performance.prototype.now"
       },
       {
-        "target": "Performance.prototype.timing",
         "description": "Accesses navigation timing data",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "Performance.prototype.timing"
       },
       {
-        "target": "Performance.prototype.memory",
         "description": "Reads memory usage statistics",
         "enabled": true,
-        "confidence": 100
+        "confidence": 100,
+        "target": "Performance.prototype.memory"
       },
       {
-        "target": "Performance.prototype.getEntriesByType",
         "description": "Retrieves performance entries by type",
         "enabled": true,
-        "confidence": 85
+        "confidence": 85,
+        "target": "Performance.prototype.getEntriesByType"
       },
       {
-        "target": "PerformanceEntry.prototype.startTime",
         "description": "Reads performance entry start time",
         "enabled": false,
-        "confidence": 75
+        "confidence": 75,
+        "target": "PerformanceEntry.prototype.startTime"
       },
       {
-        "target": "PerformanceResourceTiming.prototype.connectEnd",
         "description": "Reads connection timing for network fingerprinting",
         "enabled": false,
-        "confidence": 80
+        "confidence": 80,
+        "target": "PerformanceResourceTiming.prototype.connectEnd"
       },
       {
-        "target": "PerformanceResourceTiming.prototype.connectStart",
         "description": "Reads connection start time",
         "enabled": false,
-        "confidence": 80
+        "confidence": 80,
+        "target": "PerformanceResourceTiming.prototype.connectStart"
       },
       {
-        "target": "PerformanceResourceTiming.prototype.decodedBodySize",
         "description": "Reads decoded resource size",
         "enabled": false,
-        "confidence": 75
+        "confidence": 75,
+        "target": "PerformanceResourceTiming.prototype.decodedBodySize"
       },
       {
-        "target": "PerformanceResourceTiming.prototype.domainLookupEnd",
         "description": "Reads domain lookup end time",
         "enabled": false,
-        "confidence": 75
+        "confidence": 75,
+        "target": "PerformanceResourceTiming.prototype.domainLookupEnd"
       },
       {
-        "target": "PerformanceResourceTiming.prototype.domainLookupStart",
         "description": "Reads domain lookup start time",
         "enabled": false,
-        "confidence": 75
+        "confidence": 75,
+        "target": "PerformanceResourceTiming.prototype.domainLookupStart"
       },
       {
-        "target": "PerformanceResourceTiming.prototype.responseEnd",
         "description": "Reads response end time",
         "enabled": false,
-        "confidence": 75
+        "confidence": 75,
+        "target": "PerformanceResourceTiming.prototype.responseEnd"
       },
       {
-        "target": "PerformanceResourceTiming.prototype.secureConnectionStart",
         "description": "Reads TLS handshake start time",
         "enabled": false,
-        "confidence": 80
+        "confidence": 80,
+        "target": "PerformanceResourceTiming.prototype.secureConnectionStart"
       },
       {
-        "target": "PerformanceResourceTiming.prototype.transferSize",
         "description": "Reads transfer size including headers",
         "enabled": false,
-        "confidence": 75
+        "confidence": 75,
+        "target": "PerformanceResourceTiming.prototype.transferSize"
       },
       {
-        "target": "PerformanceTiming.prototype.navigationStart",
         "description": "Reads navigation start timestamp",
         "enabled": false,
-        "confidence": 75
+        "confidence": 75,
+        "target": "PerformanceTiming.prototype.navigationStart"
       }
     ]
   }

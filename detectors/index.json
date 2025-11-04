@@ -37,13 +37,24 @@
     "colour": "#2196F3",
     "detectors":[
         "audio-fingerprint",
+        "battery-fingerprint",
         "canvas-fingerprint",
+        "clipboard-fingerprint",
         "crypto-fingerprint",
+        "css-fingerprint",
         "font-fingerprint",
+        "gamepads-fingerprint",
+        "geolocation-fingerprint",
+        "hardware-fingerprint",
+        "indexeddb-fingerprint",
         "media-fingerprint",
         "navigator-fingerprint",
+        "orientation-fingerprint",
         "performance-fingerprint",
         "screen-fingerprint",
+        "storage-fingerprint",
+        "timezone-fingerprint",
+        "usb-fingerprint",
         "webgl-fingerprint",
         "webrtc-fingerprint"
     ]
@@ -56,7 +67,7 @@
     "url": {"colour": "#00BCD4"},
     "js_hooks": {"colour": "#00E5FF"},
     "window": {"colour": "#4CAF50"},
-    "css": {"colour": "#E91E63"}
+    "payload": {"colour": "#9C27B0"}
 },
 "badge": {
     "low": {"colour": "#4CAF50"},

@@ -19,6 +19,13 @@ const originalConsole = {
   timeEnd: console.timeEnd.bind(console)
 };
 
+// Expose original console on global object for LogCollector to access
+if (typeof self !== 'undefined') {
+  self.__scrapflyOriginalConsole = originalConsole;
+} else if (typeof window !== 'undefined') {
+  window.__scrapflyOriginalConsole = originalConsole;
+}
+
 // Create debug state manager
 const DebugState = {
   enabled: false,
@@ -284,6 +291,17 @@ var DebugMode = {
 
   forceError: function(...args) {
     originalConsole.error(...args);
+  },
+
+  enableLogCollection: function() {
+    // Called by LogCollector to signal that logs should always pass through
+    // LogCollector will intercept console methods itself
+    originalConsole.log('[DebugMode] Log collection enabled');
+  },
+
+  disableLogCollection: function() {
+    // Called by LogCollector to signal that log collection is stopping
+    originalConsole.log('[DebugMode] Log collection disabled');
   }
 };
 

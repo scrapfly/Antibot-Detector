@@ -3,7 +3,6 @@
   "name": "Google reCAPTCHA",
   "category": "CAPTCHA",
   "color": "#4285F4",
-  "confidence": 100,
   "lastUpdated": "2024-01-15",
   "version": "1.0.0",
   "website": "https://www.google.com/recaptcha/",
@@ -12,66 +11,106 @@
   "detection": {
     "url": [
       {
-        "pattern": "recaptcha/api",
+        "text": "recaptcha/api",
         "confidence": 100,
-        "description": "reCAPTCHA API endpoint"
+        "description": "reCAPTCHA API endpoint",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "gstatic.com/recaptcha",
+        "text": "gstatic.com/recaptcha",
         "confidence": 95,
-        "description": "Static resources"
+        "description": "Static resources",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "google.com/recaptcha",
-        "confidence": 100
+        "text": "google.com/recaptcha",
+        "confidence": 100,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "recaptcha.net",
+        "text": "recaptcha.net",
         "confidence": 95,
-        "description": "Alternative domain"
+        "description": "Alternative domain",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       }
     ],
     "content": [
       {
-        "content": "grecaptcha",
+        "text": "grecaptcha",
         "confidence": 100,
-        "description": "Global reCAPTCHA object"
+        "description": "Global reCAPTCHA object",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "recaptcha",
-        "confidence": 85
+        "text": "recaptcha",
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "g-recaptcha",
+        "text": "g-recaptcha",
         "confidence": 90,
-        "description": "reCAPTCHA container class"
+        "description": "reCAPTCHA container class",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "grecaptcha.execute",
+        "text": "grecaptcha.execute",
         "confidence": 95,
-        "description": "v3 execution"
+        "description": "v3 execution",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "grecaptcha.render",
+        "text": "grecaptcha.render",
         "confidence": 90,
-        "description": "v2 rendering"
+        "description": "v2 rendering",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ],
     "dom": [
       {
         "selector": ".g-recaptcha",
         "confidence": 95,
-        "description": "reCAPTCHA container"
+        "description": "reCAPTCHA container",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       },
       {
         "selector": "[data-sitekey]",
         "confidence": 85,
-        "description": "Site key attribute"
+        "description": "Site key attribute",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       },
       {
         "selector": "iframe[src*='recaptcha']",
         "confidence": 90,
-        "description": "reCAPTCHA iframe"
+        "description": "reCAPTCHA iframe",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       }
     ],
     "window": [

@@ -3,7 +3,6 @@
   "name": "Cloudflare Bot Management",
   "category": "Anti-Bot",
   "color": "#F97316",
-  "confidence": 100,
   "lastUpdated": "2024-01-15",
   "version": "1.0.0",
   "website": "https://www.cloudflare.com/products/bot-management/",
@@ -14,40 +13,74 @@
       {
         "name": "__cf_bm",
         "confidence": 95,
-        "description": "Bot management cookie"
+        "description": "Bot management cookie",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       },
       {
         "name": "cf_clearance",
         "confidence": 100,
-        "description": "Challenge clearance cookie"
+        "description": "Challenge clearance cookie",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       }
     ],
-    "header": [
-    ],
+    "header": [],
     "url": [
       {
-        "pattern": "cdn-cgi/challenge-platform/h/g/orchestrate/chl_page/",
         "confidence": 90,
-        "description": "Cloudflare CDN endpoint"
+        "description": "Cloudflare CDN endpoint",
+        "text": "cdn-cgi/challenge-platform/h/g/orchestrate/chl_page/",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "challenges.cloudflare.com",
-        "confidence": 100
+        "confidence": 100,
+        "text": "challenges.cloudflare.com",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       }
     ],
     "content": [
       {
-        "content": "cf-browser-verification",
-        "confidence": 100
-      },
-      {
-        "content": "turnstile.render",
         "confidence": 100,
-        "description": "Turnstile CAPTCHA"
+        "text": "cf-browser-verification",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "__cf_chl_ctx",
-        "confidence": 90
+        "confidence": 100,
+        "description": "Turnstile CAPTCHA",
+        "text": "turnstile.render",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 90,
+        "text": "__cf_chl_ctx",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ],
     "window": [

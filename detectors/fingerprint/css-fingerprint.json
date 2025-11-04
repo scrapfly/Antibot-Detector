@@ -3,7 +3,6 @@
   "name": "CSS Fingerprint",
   "category": "Fingerprint",
   "color": "#0ea5e9",
-  "confidence": 85,
   "lastUpdated": "2025-01-21",
   "version": "1.0.0",
   "website": "https://en.wikipedia.org/wiki/CSS_fingerprinting",
@@ -12,19 +11,19 @@
   "detection": {
     "js_hooks": [
       {
-        "target": "Window.prototype.getComputedStyle",
         "description": "Retrieves computed CSS styles for fingerprinting",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "Window.prototype.getComputedStyle"
       },
       {
-        "target": "CSSStyleDeclaration.prototype.getPropertyValue",
         "description": "Gets CSS property values for feature detection",
         "enabled": true,
-        "confidence": 85
+        "confidence": 85,
+        "target": "CSSStyleDeclaration.prototype.getPropertyValue"
       }
     ],
-    "window_properties": [
+    "window": [
       {
         "path": "CSS.supports",
         "description": "CSS.supports() method for CSS feature detection",
@@ -36,13 +35,19 @@
         "value": "CSS.supports(",
         "scope": "scripts",
         "description": "CSS feature detection in scripts",
-        "confidence": 80
+        "confidence": 80,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
         "value": "getComputedStyle",
         "scope": "scripts",
         "description": "Computing element styles for fingerprinting",
-        "confidence": 75
+        "confidence": 75,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ]
   }

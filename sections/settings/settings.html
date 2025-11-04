@@ -68,6 +68,61 @@
               <span class="slider"></span>
             </label>
           </div>
+
+          <!-- Log Collector Section (Only visible when Debug Mode is enabled) -->
+          <div id="logCollectorSection" style="display: none; padding-top: 16px; border-top: 1px solid var(--border); margin-top: 16px;">
+            <div class="setting-group">
+              <label class="setting-label">
+                <span>Log Collector</span>
+                <span class="setting-description">Collect and export all debug logs from the service worker</span>
+              </label>
+              <label class="switch">
+                <input type="checkbox" id="logCollectorEnabled">
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div id="logCollectorControls" style="display: none; padding: 12px; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border); margin-top: 8px;">
+              <!-- Max Logs Setting -->
+              <div class="setting-group" style="margin-bottom: 12px;">
+                <label class="setting-label">
+                  <span>Max Logs</span>
+                  <span class="setting-description">Maximum number of logs to store (100-10000)</span>
+                </label>
+                <input type="number" id="logCollectorMaxLogs" min="100" max="10000" step="100" value="5000" style="padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-primary); color: var(--text-primary); width: 100%; box-sizing: border-box;">
+              </div>
+
+              <!-- Log Count Display -->
+              <div style="margin-bottom: 12px; padding: 10px; background: var(--bg-primary); border-radius: 6px; border: 1px solid var(--border);">
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Logs Collected:</div>
+                <div style="font-size: 16px; font-weight: 600; color: var(--text-primary);">
+                  <span id="logCountValue">0</span> / <span id="logCountMax">5000</span>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div style="display: flex; gap: 8px; flex-direction: column;">
+                <button id="exportLogsJsonBtn" class="action-btn" style="width: 100%;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" style="margin-right: 6px;">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z" fill="currentColor"/>
+                  </svg>
+                  Export as JSON
+                </button>
+                <button id="exportLogsTextBtn" class="action-btn" style="width: 100%;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" style="margin-right: 6px;">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M8,15.5H16V17H8V15.5M8,11.5H16V13H8V11.5Z" fill="currentColor"/>
+                  </svg>
+                  Export as Text
+                </button>
+                <button id="clearLogsBtn" class="action-btn" style="width: 100%; background-color: #ef4444; color: white;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" style="margin-right: 6px;">
+                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
+                  </svg>
+                  Clear Logs
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Badge Colors Section -->
@@ -120,7 +175,7 @@
               </svg>
             </button>
             <span class="color-page-info">
-              <span id="colorPageNum">1</span> / <span id="colorTotalPages">5</span>
+              <span id="colorPageNum">1</span> / <span id="colorTotalPages">4</span>
             </span>
             <button id="colorNextBtn" class="pagination-btn">
               <svg width="14" height="14" viewBox="0 0 24 24">
@@ -251,8 +306,8 @@
 
               <div class="setting-group">
                 <label class="setting-label">
-                  <span>Window Properties</span>
-                  <span class="setting-description">Color for window property detection</span>
+                  <span>Windows</span>
+                  <span class="setting-description">Color for window detection</span>
                 </label>
                 <div class="color-picker-container">
                   <input type="color" id="colorTagWindow" class="color-field" value="#4CAF50">
@@ -260,23 +315,19 @@
                 </div>
               </div>
 
-            </div>
-
-            <!-- Page 5: Tag Colors (Part 4) -->
-            <div class="color-page" data-page="5" style="display: none;">
-              <h4 class="color-section-title">Tag Colors (Part 4)</h4>
-
               <div class="setting-group">
                 <label class="setting-label">
-                  <span>CSS</span>
-                  <span class="setting-description">Color for CSS rules detection</span>
+                  <span>Payload</span>
+                  <span class="setting-description">Color for payload detection</span>
                 </label>
                 <div class="color-picker-container">
-                  <input type="color" id="colorTagCSS" class="color-field" value="#E91E63">
-                  <span class="color-hex-display" id="hexTagCSS">#E91E63</span>
+                  <input type="color" id="colorTagPayload" class="color-field" value="#9C27B0">
+                  <span class="color-hex-display" id="hexTagPayload">#9C27B0</span>
                 </div>
               </div>
+
             </div>
+
           </div>
         </div>
       </div>
@@ -301,12 +352,12 @@
             </div>
           </div>
 
-          <div class="setting-group">
-            <label class="setting-label">
+          <div class="setting-group" style="flex-direction: column; align-items: flex-start;">
+            <label class="setting-label" style="margin-bottom: 8px;">
               <span>Detection Cache Scope</span>
               <span class="setting-description">How to identify cached detection results</span>
             </label>
-            <select id="cacheScope" class="input-field">
+            <select id="cacheScope" class="input-field" style="width: 100%;">
               <option value="domain">Domain - Same domain (example.com)</option>
               <option value="path">Path - Domain + path (ignores query params)</option>
               <option value="full">Full URL - Exact URL match</option>
@@ -627,21 +678,14 @@
               Export History
             </button>
           </div>
-
-          <div class="setting-group">
-            <label class="setting-label">
-              <span>Reload Detectors from JSON</span>
-              <span class="setting-description">Sync detector storage with JSON files (fixes missing detectors)</span>
-            </label>
-            <button id="reloadDetectorsBtn" class="action-btn action-btn-warning">
-              <svg width="16" height="16" viewBox="0 0 24 24">
-                <path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" fill="currentColor"/>
-              </svg>
-              Reload from JSON
-            </button>
-          </div>
         </div>
       </div>
+    </div>
+
+    <!-- Creator Footer -->
+    <div class="creator-footer">
+      <span>CREATOR: </span>
+      <a href="https://github.com/diegopzz" target="_blank" rel="noopener noreferrer">diegopzz</a>
     </div>
 
     <div class="modal-footer">

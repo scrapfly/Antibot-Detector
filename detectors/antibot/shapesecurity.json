@@ -3,7 +3,6 @@
   "name": "Shape Security",
   "category": "Anti-Bot",
   "color": "#FF6B35",
-  "confidence": 100,
   "lastUpdated": "2024-10-06",
   "version": "1.1.0",
   "website": "https://www.shapesecurity.com/products/bot-manager",
@@ -17,7 +16,13 @@
         "nameRegex": true,
         "valueRegex": true,
         "confidence": 95,
-        "description": "Shape Security cookie (8-character name with |1|0| or |1|1| pattern in value)"
+        "description": "Shape Security cookie (8-character name with |1|0| or |1|1| pattern in value)",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "request",
+        "valueScope": "request"
       }
     ],
     "header": [
@@ -25,58 +30,115 @@
         "name": "x-[a-z0-9]{8}-a",
         "nameRegex": true,
         "confidence": 100,
-        "description": "Shape Security dynamic header pattern (suffix -a)"
+        "description": "Shape Security dynamic header pattern (suffix -a)",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
       },
       {
         "name": "x-[a-z0-9]{8}-b",
         "nameRegex": true,
         "confidence": 95,
-        "description": "Shape Security dynamic header pattern (suffix -b)"
+        "description": "Shape Security dynamic header pattern (suffix -b)",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
       },
       {
         "name": "x-[a-z0-9]{8}-c",
         "nameRegex": true,
         "confidence": 95,
-        "description": "Shape Security dynamic header pattern (suffix -c)"
+        "description": "Shape Security dynamic header pattern (suffix -c)",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
       },
       {
         "name": "x-[a-z0-9]{8}-d",
         "nameRegex": true,
         "confidence": 95,
-        "description": "Shape Security dynamic header pattern (suffix -d)"
+        "description": "Shape Security dynamic header pattern (suffix -d)",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
       },
       {
         "name": "x-[a-z0-9]{8}-f",
         "nameRegex": true,
         "confidence": 95,
-        "description": "Shape Security dynamic header pattern (suffix -f)"
+        "description": "Shape Security dynamic header pattern (suffix -f)",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
       },
       {
         "name": "x-[a-z0-9]{8}-z",
         "nameRegex": true,
         "confidence": 95,
-        "description": "Shape Security dynamic header pattern (suffix -z)"
+        "description": "Shape Security dynamic header pattern (suffix -z)",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
       }
     ],
     "url": [
       {
-        "pattern": "\\?seed=[A-Za-z0-9_\\-]+",
-        "nameRegex": true,
         "confidence": 95,
-        "description": "Shape Security seed parameter (primary indicator)"
+        "description": "Shape Security seed parameter (primary indicator)",
+        "text": "\\?seed=[A-Za-z0-9_\\-]+",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "&seed=[A-Za-z0-9_\\-]+",
-        "nameRegex": true,
         "confidence": 90,
-        "description": "Shape Security seed parameter (not first query param)"
+        "description": "Shape Security seed parameter (not first query param)",
+        "text": "&seed=[A-Za-z0-9_\\-]+",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       }
     ],
     "content": [
       {
-        "content": "shapesecurity",
         "confidence": 90,
-        "description": "Shape Security namespace"
+        "description": "Shape Security namespace",
+        "text": "shapesecurity",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ],
     "dom": [],

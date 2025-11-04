@@ -3,7 +3,6 @@
   "name": "Audio Fingerprint",
   "category": "Fingerprint",
   "color": "#7c3aed",
-  "confidence": 100,
   "lastUpdated": "2024-01-15",
   "version": "1.0.0",
   "website": "https://webaudio.github.io/web-audio-api/",
@@ -12,28 +11,28 @@
   "detection": {
     "js_hooks": [
       {
-        "target": "AudioBuffer.prototype.getChannelData",
         "description": "Reads audio channel data for fingerprinting",
         "enabled": true,
-        "confidence": 95
+        "confidence": 95,
+        "target": "AudioBuffer.prototype.getChannelData"
       },
       {
-        "target": "AnalyserNode.prototype.getFloatFrequencyData",
         "description": "Analyzes audio frequency data",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "AnalyserNode.prototype.getFloatFrequencyData"
       },
       {
-        "target": "BaseAudioContext.prototype.createOscillator",
         "description": "Creates audio oscillator for signal generation",
         "enabled": true,
-        "confidence": 85
+        "confidence": 85,
+        "target": "BaseAudioContext.prototype.createOscillator"
       },
       {
-        "target": "AudioNode.prototype.connect",
         "description": "Connects audio nodes for fingerprinting chain",
         "enabled": false,
-        "confidence": 70
+        "confidence": 70,
+        "target": "AudioNode.prototype.connect"
       }
     ]
   }

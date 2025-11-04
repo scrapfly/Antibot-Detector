@@ -3,7 +3,6 @@
   "name": "Friendly Captcha",
   "category": "CAPTCHA",
   "color": "#00D084",
-  "confidence": 95,
   "lastUpdated": "2024-10-21",
   "version": "1.0.0",
   "website": "https://friendlycaptcha.com/",
@@ -12,63 +11,99 @@
   "detection": {
     "url": [
       {
-        "pattern": "friendlycaptcha.com",
         "confidence": 100,
-        "description": "Friendly Captcha domain"
+        "description": "Friendly Captcha domain",
+        "text": "friendlycaptcha.com",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "/api/v1/puzzle",
         "confidence": 95,
-        "description": "Friendly Captcha puzzle endpoint"
+        "description": "Friendly Captcha puzzle endpoint",
+        "text": "/api/v1/puzzle",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       },
       {
-        "pattern": "friendly-js.pages.dev",
         "confidence": 95,
-        "description": "Friendly Captcha script delivery"
+        "description": "Friendly Captcha script delivery",
+        "text": "friendly-js.pages.dev",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "page_and_scripts"
       }
     ],
     "content": [
       {
-        "content": "frc-captcha",
         "confidence": 100,
-        "description": "Friendly Captcha container class"
+        "description": "Friendly Captcha container class",
+        "text": "frc-captcha",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "friendlyChallenge",
         "confidence": 95,
-        "description": "Friendly Captcha JavaScript object"
+        "description": "Friendly Captcha JavaScript object",
+        "text": "friendlyChallenge",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "friendly-challenge",
         "confidence": 95,
-        "description": "Friendly Captcha element identifier"
+        "description": "Friendly Captcha element identifier",
+        "text": "friendly-challenge",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "content": "FriendlyCaptcha",
         "confidence": 90,
-        "description": "Friendly Captcha constructor reference"
+        "description": "Friendly Captcha constructor reference",
+        "text": "FriendlyCaptcha",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ],
     "dom": [
       {
         "selector": ".frc-captcha",
         "confidence": 100,
-        "description": "Friendly Captcha container"
+        "description": "Friendly Captcha container",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       },
       {
         "selector": "div[data-sitekey]",
         "confidence": 85,
-        "description": "Friendly Captcha widget with sitekey"
+        "description": "Friendly Captcha widget with sitekey",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       },
       {
         "selector": "iframe[src*='friendlycaptcha.com']",
         "confidence": 95,
-        "description": "Friendly Captcha iframe"
+        "description": "Friendly Captcha iframe",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       },
       {
         "selector": "script[src*='friendlycaptcha']",
         "confidence": 95,
-        "description": "Friendly Captcha script tag"
+        "description": "Friendly Captcha script tag",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
       }
     ],
     "window": [

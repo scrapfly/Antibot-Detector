@@ -3,7 +3,6 @@
   "name": "Device Orientation Fingerprint",
   "category": "Fingerprint",
   "color": "#f97316",
-  "confidence": 82,
   "lastUpdated": "2025-01-21",
   "version": "1.0.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent",
@@ -12,25 +11,25 @@
   "detection": {
     "js_hooks": [
       {
-        "target": "DeviceOrientationEvent",
         "description": "Detects device orientation events",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "DeviceOrientationEvent"
       },
       {
-        "target": "DeviceMotionEvent",
         "description": "Detects device motion/acceleration events",
         "enabled": true,
-        "confidence": 90
+        "confidence": 90,
+        "target": "DeviceMotionEvent"
       },
       {
-        "target": "Window.prototype.addEventListener",
         "description": "Adds listeners for device sensors",
         "enabled": true,
-        "confidence": 70
+        "confidence": 70,
+        "target": "Window.prototype.addEventListener"
       }
     ],
-    "window_properties": [
+    "window": [
       {
         "path": "DeviceOrientationEvent",
         "description": "Device orientation sensor API",
@@ -44,22 +43,31 @@
     ],
     "content": [
       {
-        "value": "deviceorientation",
+        "text": "deviceorientation",
         "scope": "scripts",
         "description": "Device orientation event listeners",
-        "confidence": 85
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "value": "devicemotion",
+        "text": "devicemotion",
         "scope": "scripts",
         "description": "Device motion event listeners",
-        "confidence": 85
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       },
       {
-        "value": "DeviceOrientationEvent",
+        "text": "DeviceOrientationEvent",
         "scope": "scripts",
         "description": "Device orientation API usage",
-        "confidence": 80
+        "confidence": 80,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ]
   }
