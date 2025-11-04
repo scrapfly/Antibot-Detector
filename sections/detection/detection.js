@@ -28,16 +28,24 @@ class Detection {
    * OPTIMIZATION QUICK WIN #5: Extract badge status helper
    * Consolidates 6+ duplicate badge checking logic blocks into single helper
    * Returns object with status and additional metadata for easier state management
+   * FIX: Now distinguishes between cleared cache (gray ✕) and interrupted detection (other ✕)
    */
   static async getBadgeStatus(tabId) {
     const badgeText = await Detection.getBadgeText(tabId);
+    const badgeColor = await Detection.getBadgeBackgroundColor(tabId);
     const trimmed = badgeText ? badgeText.trim() : '';
+
+    // Determine if this is a cleared cache badge (gray) or interrupted detection badge (other colors)
+    const isCleared = trimmed === '✕' && (badgeColor === '#6B7280' || badgeColor === '#6b7280');
+    const isInterrupted = (trimmed === '?' || trimmed === '✕') && !isCleared;
 
     return {
       text: badgeText,
       trimmed: trimmed,
+      color: badgeColor,
       isLoading: trimmed === '⏳',
-      isInterrupted: trimmed === '?' || trimmed === '✕',
+      isCleared: isCleared,        // FIX: New flag for cache cleared state
+      isInterrupted: isInterrupted,
       isError: trimmed === '✕',
       isQuestion: trimmed === '?',
       isEmpty: trimmed === ''
@@ -2279,6 +2287,13 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
             return;
           }
 
+          // FIX: Check if cache was cleared (gray ✕ badge) - show empty state
+          if (badgeStatus.isCleared) {
+            if (this.debugMode) console.log('Detection: Badge indicates cache cleared, showing empty state');
+            detection.showEmptyState();
+            return;
+          }
+
           // FIX: Only show interrupted if we DON'T have valid data
           // Badge might be stale after extension reload or tab return
           if (badgeStatus.isInterrupted && (!response || !response.data)) {
@@ -2462,6 +2477,36 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
       });
     } catch (error) {
       if (this.debugMode) console.error('Detection: Unexpected error reading badge text:', error);
+      return '';
+    }
+  }
+
+  /**
+   * FIX: Get badge background color to distinguish cache cleared from interrupted
+   * Cache cleared uses gray (#6b7280), interrupted uses other colors
+   */
+  static async getBadgeBackgroundColor(tabId) {
+    try {
+      return await new Promise((resolve) => {
+        chrome.action.getBadgeBackgroundColor({ tabId }, (colorInfo) => {
+          if (chrome.runtime.lastError) {
+            if (this.debugMode) console.warn('Detection: Failed to read badge color:', chrome.runtime.lastError.message);
+            resolve('');
+            return;
+          }
+          // colorInfo is {r, g, b, a}, convert to hex
+          if (colorInfo && typeof colorInfo === 'object') {
+            const r = colorInfo.r.toString(16).padStart(2, '0');
+            const g = colorInfo.g.toString(16).padStart(2, '0');
+            const b = colorInfo.b.toString(16).padStart(2, '0');
+            resolve(`#${r}${g}${b}`.toUpperCase());
+          } else {
+            resolve('');
+          }
+        });
+      });
+    } catch (error) {
+      if (this.debugMode) console.error('Detection: Unexpected error reading badge color:', error);
       return '';
     }
   }

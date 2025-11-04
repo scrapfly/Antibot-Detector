@@ -2564,7 +2564,7 @@ function setupMessageListeners() {
                         const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
                         if (tabs && tabs[0]) {
                             await chrome.action.setBadgeText({ text: '✕', tabId: tabs[0].id });
-                            await chrome.action.setBadgeBackgroundColor({ color: '#6b7280', tabId: tabs[0].id });
+                            await chrome.action.setBadgeBackgroundColor({ color: '#6B7280', tabId: tabs[0].id });
                             console.log('[Background] Badge updated to gray X for current tab after cache scope change');
                         }
                     } catch (error) {

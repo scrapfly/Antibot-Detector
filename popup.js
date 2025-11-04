@@ -180,6 +180,16 @@ class ScrapflyPopup {
                     return;
                   }
 
+                  // FIX: Check if badge is gray ✕ (cache cleared) vs other ✕ (interrupted)
+                  if (badgeTrimmed === '✕') {
+                    const badgeColor = await Detection.getBadgeBackgroundColor(tabs[0].id);
+                    if (badgeColor === '#6B7280' || badgeColor === '#6b7280') {
+                      console.log('Popup: Badge indicates cache cleared, showing empty state');
+                      this.detection.showEmptyState();
+                      return;
+                    }
+                  }
+
                   if (badgeTrimmed === '?' || badgeTrimmed === '✕') {
                     console.log('Popup: Badge indicates interruption, showing reload state');
                     this.detection.showInterruptedState();
@@ -484,6 +494,16 @@ class ScrapflyPopup {
                         console.log('Popup: Badge still indicates loading after toggle event');
                         this.detection.showAnalyzingState();
                         return;
+                      }
+
+                      // FIX: Check if badge is gray ✕ (cache cleared) vs other ✕ (interrupted)
+                      if (badgeTrimmed === '✕') {
+                        const badgeColor = await Detection.getBadgeBackgroundColor(tabs[0].id);
+                        if (badgeColor === '#6B7280' || badgeColor === '#6b7280') {
+                          console.log('Popup: Badge indicates cache cleared after toggle event, showing empty state');
+                          this.detection.showEmptyState();
+                          return;
+                        }
                       }
 
                       if (badgeTrimmed === '?' || badgeTrimmed === '✕') {
