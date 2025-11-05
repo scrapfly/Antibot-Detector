@@ -999,11 +999,12 @@
     function createStealthWrapper(original, callback, explicitContext, isGetter = false) {
       const wrapper = function(...args) {
         callback();
-        // FIX: Always use natural 'this' binding for browser APIs
-        // explicitContext is only used as fallback when this is undefined/null
-        // This prevents "Illegal invocation" errors when hooks are called
-        const context = this ?? explicitContext;
-        return Reflect.apply(original, context, args);
+        // FIX: Use natural 'this' binding for prototype methods
+        // For methods like getBattery(), enumerateDevices(), etc., 'this' must be the actual instance
+        // explicitContext is ONLY used for special cases where we need to validate the context type
+        // (like addEventListener where we check if context is Window/Document/etc for event filtering)
+        // For most hooks, explicitContext is null and we rely entirely on natural binding
+        return Reflect.apply(original, this, args);
       };
 
       // Apply stealth properties in one batch
