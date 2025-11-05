@@ -294,11 +294,82 @@ class History {
     // Render detection cards
     content.innerHTML = this.renderDetectionDetails(hiddenDetections);
 
+    // FIX: Attach click handlers to expand/collapse detection cards
+    this.attachOverflowModalClickHandlers();
+
     // Show modal
     modal.style.display = 'flex';
 
     // Setup close handlers
     this.setupOverflowModalCloseHandlers();
+  }
+
+  /**
+   * Attach click handlers to detection cards in overflow modal
+   */
+  attachOverflowModalClickHandlers() {
+    const cards = document.querySelectorAll('#overflowModalContent .history-modal-detection-card.has-methods');
+
+    cards.forEach(card => {
+      const header = card.querySelector('.history-modal-detection-header');
+      const methods = card.querySelector('.history-modal-detection-methods');
+      const expandIcon = card.querySelector('.history-modal-expand-icon');
+
+      if (header && methods) {
+        // Toggle expand/collapse on header click
+        header.style.cursor = 'pointer';
+        header.addEventListener('click', () => {
+          const isExpanded = card.classList.contains('expanded');
+
+          if (isExpanded) {
+            card.classList.remove('expanded');
+            methods.style.display = 'none';
+            if (expandIcon) expandIcon.textContent = '▼';
+          } else {
+            card.classList.add('expanded');
+            methods.style.display = 'block';
+            if (expandIcon) expandIcon.textContent = '▲';
+          }
+        });
+
+        // Initially hide methods
+        methods.style.display = 'none';
+      }
+    });
+  }
+
+  /**
+   * Attach click handlers to detection cards in detail modal
+   */
+  attachDetailModalClickHandlers() {
+    const cards = document.querySelectorAll('#historyModalContent .history-modal-detection-card.has-methods');
+
+    cards.forEach(card => {
+      const header = card.querySelector('.history-modal-detection-header');
+      const methods = card.querySelector('.history-modal-detection-methods');
+      const expandIcon = card.querySelector('.history-modal-expand-icon');
+
+      if (header && methods) {
+        // Toggle expand/collapse on header click
+        header.style.cursor = 'pointer';
+        header.addEventListener('click', () => {
+          const isExpanded = card.classList.contains('expanded');
+
+          if (isExpanded) {
+            card.classList.remove('expanded');
+            methods.style.display = 'none';
+            if (expandIcon) expandIcon.textContent = '▼';
+          } else {
+            card.classList.add('expanded');
+            methods.style.display = 'block';
+            if (expandIcon) expandIcon.textContent = '▲';
+          }
+        });
+
+        // Initially hide methods
+        methods.style.display = 'none';
+      }
+    });
   }
 
   /**
@@ -475,6 +546,9 @@ class History {
     if (content) {
       content.innerHTML = this.renderDetectionDetails(historyItem.detections || []);
     }
+
+    // FIX: Attach click handlers to expand/collapse detection cards
+    this.attachDetailModalClickHandlers();
 
     // Show modal
     modal.style.display = 'flex';
