@@ -2097,6 +2097,10 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
           // Mark cache as cleared so Detection tab will refresh when it becomes visible
           this.cacheCleared = true;
 
+          // FIX: Set sessionStorage flag for consistency with Clear Cache button
+          // Ensures checkAndDisplayExistingDetection() knows cache was just cleared
+          sessionStorage.setItem('scrapfly_just_cleared_cache', Date.now().toString());
+
           // Clear current results
           this.currentResults = [];
 

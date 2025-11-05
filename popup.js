@@ -279,6 +279,14 @@ class ScrapflyPopup {
         return;
       }
 
+      // FIX: Check if cache was cleared by scope change while tab was not visible
+      // This ensures we show empty state even if sessionStorage flag expires
+      if (this.detection.cacheCleared) {
+        console.log('[Popup] Cache cleared flag set - showing empty state');
+        this.detection.showEmptyState();
+        return;
+      }
+
       // Check if URL is blacklisted
       if (await Utils.isUrlBlacklisted(tab.url)) {
         console.log('Popup: URL is blacklisted');
