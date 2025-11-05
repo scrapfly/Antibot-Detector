@@ -22,8 +22,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "request",
-        "valueScope": "request"
+        "nameScope": "both",
+        "valueScope": "both"
       },
       {
         "name": "ak_bmsc",
@@ -36,8 +36,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "request",
-        "valueScope": "request"
+        "nameScope": "both",
+        "valueScope": "both"
       },
       {
         "name": "sbsd",
@@ -50,8 +50,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "request",
-        "valueScope": "request"
+        "nameScope": "both",
+        "valueScope": "both"
       },
       {
         "name": "sbsd_o",
@@ -64,8 +64,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "request",
-        "valueScope": "request"
+        "nameScope": "both",
+        "valueScope": "both"
       },
       {
         "name": "bm_sz",
@@ -78,8 +78,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "request",
-        "valueScope": "request"
+        "nameScope": "both",
+        "valueScope": "both"
       },
       {
         "name": "bm_sv",
@@ -92,8 +92,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "request",
-        "valueScope": "request"
+        "nameScope": "both",
+        "valueScope": "both"
       },
       {
         "name": "bm_mi",
@@ -106,8 +106,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "request",
-        "valueScope": "request"
+        "nameScope": "both",
+        "valueScope": "both"
       }
     ],
     "header": [

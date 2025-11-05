@@ -22,8 +22,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "request",
-        "valueScope": "request"
+        "nameScope": "both",
+        "valueScope": "both"
       },
       {
         "name": "rbzsessionid",
@@ -36,8 +36,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "request",
-        "valueScope": "request"
+        "nameScope": "both",
+        "valueScope": "both"
       },
       {
         "name": "rbz*",
@@ -50,8 +50,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "request",
-        "valueScope": "request"
+        "nameScope": "both",
+        "valueScope": "both"
       }
     ],
     "header": [

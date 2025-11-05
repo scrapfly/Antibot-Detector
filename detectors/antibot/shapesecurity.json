@@ -22,8 +22,8 @@
         "nameCaseSensitive": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "request",
-        "valueScope": "request"
+        "nameScope": "both",
+        "valueScope": "both"
       }
     ],
     "header": [

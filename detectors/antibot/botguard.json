@@ -21,8 +21,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "request",
-        "valueScope": "request"
+        "nameScope": "both",
+        "valueScope": "both"
       },
       {
         "name": "__Secure-[0-9]PSID",
@@ -35,8 +35,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "request",
-        "valueScope": "request"
+        "nameScope": "both",
+        "valueScope": "both"
       },
       {
         "name": "__Secure-[0-9]PAPISID",
@@ -49,8 +49,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "request",
-        "valueScope": "request"
+        "nameScope": "both",
+        "valueScope": "both"
       }
     ],
     "header": [],
