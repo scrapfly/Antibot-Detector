@@ -1171,13 +1171,13 @@
 }
 
 .method-input.method-name {
-  flex: 0 1 40%;
-  max-width: 100px;
+  flex: 0 1 35%;
+  max-width: 85px;
 }
 
 .method-input.method-value {
-  flex: 0 1 40%;
-  max-width: 100px;
+  flex: 0 1 35%;
+  max-width: 85px;
 }
 
 .method-input::placeholder {
