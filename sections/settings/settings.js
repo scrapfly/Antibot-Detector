@@ -30,7 +30,7 @@ class Settings {
         cookies: '#FFC133',
         content: '#33FFF3',
         urls: '#00BCD4',
-        jsHooks: '#00E5FF',
+        js_hooks: '#00E5FF',
         window: '#4CAF50',
         payload: '#9C27B0'
       },
@@ -348,7 +348,7 @@ class Settings {
       if (colorTagURLs) colorTagURLs.value = this.settings.tagColors.urls || '#00BCD4';
 
       const colorTagJSHooks = document.querySelector('#colorTagJSHooks');
-      if (colorTagJSHooks) colorTagJSHooks.value = this.settings.tagColors.jsHooks || '#00E5FF';
+      if (colorTagJSHooks) colorTagJSHooks.value = this.settings.tagColors.js_hooks || '#00E5FF';
 
       const colorTagWindow = document.querySelector('#colorTagWindow');
       if (colorTagWindow) colorTagWindow.value = this.settings.tagColors.window || '#4CAF50';
@@ -492,7 +492,7 @@ class Settings {
       cookies: document.querySelector('#colorTagCookies')?.value ?? this.settings.tagColors?.cookies ?? '#FFC133',
       content: document.querySelector('#colorTagContent')?.value ?? this.settings.tagColors?.content ?? '#33FFF3',
       urls: document.querySelector('#colorTagURLs')?.value ?? this.settings.tagColors?.urls ?? '#00BCD4',
-      jsHooks: document.querySelector('#colorTagJSHooks')?.value ?? this.settings.tagColors?.jsHooks ?? '#00E5FF',
+      js_hooks: document.querySelector('#colorTagJSHooks')?.value ?? this.settings.tagColors?.js_hooks ?? '#00E5FF',
       window: document.querySelector('#colorTagWindow')?.value ?? this.settings.tagColors?.window ?? '#4CAF50',
       payload: document.querySelector('#colorTagPayload')?.value ?? this.settings.tagColors?.payload ?? '#9C27B0'
     };
