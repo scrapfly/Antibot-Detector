@@ -214,29 +214,26 @@ class Settings {
       const cacheScopeChanged = oldCacheScope && oldCacheScope !== newCacheScope;
 
       if (cacheScopeChanged) {
-        console.log(`[Settings] Cache scope changed from "${oldCacheScope}" to "${newCacheScope}" - clearing detection cache`);
-
-        // Clear detection cache from storage
-        await Utils.clearDetectionCache();
+        console.log(`[Settings] Cache scope changed from "${oldCacheScope}" to "${newCacheScope}" - preserving cache data, invalidating current view`);
 
         // Clear in-memory URL hash cache in popup context
         Utils.clearUrlHashCache();
 
-        // Notify background worker to clear its cache
+        // Notify background worker to clear its in-memory cache
         chrome.runtime.sendMessage({ type: 'CACHE_SCOPE_CHANGED' }, (response) => {
           if (chrome.runtime.lastError) {
             console.warn('Failed to notify background of cache scope change:', chrome.runtime.lastError.message);
           }
         });
 
-        // Notify Detection tab to clear results
+        // Notify Detection tab to clear current results display
         chrome.runtime.sendMessage({ type: 'DETECTION_CLEAR_CACHE' }, (response) => {
           if (chrome.runtime.lastError) {
             console.warn('Failed to notify Detection tab:', chrome.runtime.lastError.message);
           }
         });
 
-        NotificationHelper.success('Settings saved! Cache cleared due to scope change.');
+        NotificationHelper.success('Settings saved! Cache scope changed.');
       } else {
         NotificationHelper.success('Settings saved successfully!');
       }
