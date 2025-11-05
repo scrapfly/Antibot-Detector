@@ -120,7 +120,7 @@
         "textRegex": true,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "page_and_scripts"
+        "textScope": "both"
       },
       {
         "confidence": 90,
@@ -129,7 +129,7 @@
         "textRegex": true,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "page_and_scripts"
+        "textScope": "both"
       }
     ],
     "content": [

@@ -49,7 +49,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "page_and_scripts"
+        "textScope": "both"
       },
       {
         "confidence": 85,
@@ -58,7 +58,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "page_and_scripts"
+        "textScope": "both"
       },
       {
         "confidence": 90,
@@ -67,7 +67,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "page_and_scripts"
+        "textScope": "both"
       },
       {
         "confidence": 90,
@@ -76,7 +76,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "page_and_scripts"
+        "textScope": "both"
       },
       {
         "confidence": 90,
@@ -85,7 +85,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "page_and_scripts"
+        "textScope": "both"
       }
     ],
     "content": [

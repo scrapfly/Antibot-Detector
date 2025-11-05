@@ -18,7 +18,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "page_and_scripts"
+        "textScope": "both"
       },
       {
         "text": "gstatic.com/recaptcha",
@@ -27,7 +27,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "page_and_scripts"
+        "textScope": "both"
       },
       {
         "text": "google.com/recaptcha",
@@ -35,7 +35,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "page_and_scripts"
+        "textScope": "both"
       },
       {
         "text": "recaptcha.net",
@@ -44,7 +44,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "page_and_scripts"
+        "textScope": "both"
       }
     ],
     "content": [
