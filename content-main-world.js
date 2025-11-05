@@ -1162,8 +1162,12 @@
     let successCount = 0;
     let failCount = 0;
     const failed = [];
+    const expectedFailed = []; // Expected failures (APIs not available in all contexts)
     const installed = new Map(); // target -> { detectors: Set, fallbackContext }
     const failureReasons = {}; // target -> reason array
+
+    // APIs that are not always available (browser-specific, requires HTTPS, needs permissions, etc.)
+    const EXPECTED_UNAVAILABLE = ['USB.getDevices', 'USB.requestDevice', 'DeviceOrientationEvent', 'DeviceMotionEvent', 'BatteryManager'];
 
     for (const detector of hookDefinitions) {
       for (const hook of detector.hooks) {
@@ -1184,16 +1188,17 @@
             installed.set(hook.target, entry);
           } else {
             failCount++;
-            failed.push(hook.target);
+            const isExpectedFailure = EXPECTED_UNAVAILABLE.some(ef => hook.target.includes(ef));
+
+            if (isExpectedFailure) {
+              expectedFailed.push(hook.target);
+              sendLog('log', `[Hooks DEBUG] ⚠️ EXPECTED: ${hook.target} not available (${detector.name}) - API not present in this context`);
+            } else {
+              failed.push(hook.target);
+              sendLog('warn', `[Hooks DEBUG] ❌ FAILED: ${hook.target} (${detector.name}) - returned false`);
+            }
+
             failureReasons[hook.target] = (failureReasons[hook.target] || []).concat('installHook returned false');
-
-            // FIX: Downgrade log level for expected failures (APIs that don't exist on most pages)
-            const expectedFailures = ['USB.getDevices', 'USB.requestDevice', 'DeviceOrientationEvent', 'DeviceMotionEvent', 'BatteryManager'];
-            const isExpectedFailure = expectedFailures.some(ef => hook.target.includes(ef));
-            const logLevel = isExpectedFailure ? 'log' : 'warn';
-            const icon = isExpectedFailure ? '⚠️' : '❌';
-
-            sendLog(logLevel, `[Hooks DEBUG] ${icon} FAILED: ${hook.target} (${detector.name}) - returned false`);
           }
         } catch (e) {
           failCount++;
@@ -1207,15 +1212,23 @@
     // CRITICAL TIMING: Record when hook installation completes
     const hooksInstalledTime = performance.now();
 
-    sendLog('log', `[Hooks MAIN] 📊 Installation complete: ${successCount} hooks installed, ${failCount} failures, ${installed.size} total hook targets`);
+    sendLog('log', `[Hooks MAIN] 📊 Installation complete: ${successCount} hooks installed, ${failCount} failures (${expectedFailed.length} expected), ${installed.size} total hook targets`);
     if (installed.size) {
       sendLog('log', `[Hooks DEBUG] Active hooks: ${Array.from(installed.entries()).map(([target, meta]) => `${target} (detectors: ${Array.from(meta.detectors).join(', ')})`).join('; ')}`);
     }
 
-    if (failCount > 0) {
-      sendLog('warn', `[Hooks MAIN] ⚠️ Failed to install (${failCount}): ${failed.join(', ')}`);
+    // Report unexpected failures as warnings, expected failures as info
+    if (failed.length > 0) {
+      sendLog('warn', `[Hooks MAIN] ❌ Unexpected failures (${failed.length}): ${failed.join(', ')}`);
       sendLog('warn', `[Hooks DEBUG] Failure details:`, failureReasons);
-    } else {
+    }
+
+    if (expectedFailed.length > 0) {
+      sendLog('log', `[Hooks MAIN] ℹ️ Expected unavailable APIs (${expectedFailed.length}): ${expectedFailed.join(', ')}`);
+      sendLog('log', `[Hooks MAIN] ℹ️ These APIs are browser/context-specific (WebUSB requires HTTPS + Chrome, Battery API deprecated, sensors require permission)`);
+    }
+
+    if (failCount === 0) {
       sendLog('log', `[Hooks MAIN] ✅ All hooks installed successfully!`);
     }
     sendLog('log', `[Hooks MAIN] ⏳ Waiting for page to trigger fingerprinting APIs (10s hard timeout)...`);
