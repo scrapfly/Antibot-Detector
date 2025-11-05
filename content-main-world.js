@@ -999,8 +999,10 @@
     function createStealthWrapper(original, callback, explicitContext, isGetter = false) {
       const wrapper = function(...args) {
         callback();
-        // Use explicit context if provided, otherwise use natural 'this'
-        const context = explicitContext || this;
+        // FIX: Always use natural 'this' binding for browser APIs
+        // explicitContext is only used as fallback when this is undefined/null
+        // This prevents "Illegal invocation" errors when hooks are called
+        const context = this ?? explicitContext;
         return Reflect.apply(original, context, args);
       };
 
