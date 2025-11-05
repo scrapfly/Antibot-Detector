@@ -22,8 +22,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
         "name": "visid_incap_",
@@ -36,8 +36,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
         "name": "nlbi_",
@@ -50,8 +50,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
         "name": "reese84",
@@ -64,8 +64,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
         "name": "utmvc",
@@ -78,8 +78,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       }
     ],
     "header": [],
@@ -91,7 +91,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "both"
+        "textScope": "all"
       },
       {
         "confidence": 100,
@@ -100,7 +100,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "both"
+        "textScope": "all"
       }
     ],
     "content": [

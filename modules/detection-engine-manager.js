@@ -1432,6 +1432,18 @@ class DetectionEngineManager {
         const matches = [];
 
         if (detector.detection?.url) {
+            // Helper function to extract pathname from URL
+            const extractPathname = (urlString) => {
+                try {
+                    const urlObj = new URL(urlString);
+                    return urlObj.pathname;
+                } catch (e) {
+                    // If URL parsing fails, return the original string
+                    // (might be a relative path or malformed URL)
+                    return urlString;
+                }
+            };
+
             for (const urlPattern of detector.detection.url) {
                 const matchOptions = {
                     regex: urlPattern.textRegex === true,
@@ -1439,12 +1451,16 @@ class DetectionEngineManager {
                     caseSensitive: urlPattern.textCaseSensitive === true
                 };
 
-                // Get textScope (default to 'page_and_scripts')
-                const textScope = urlPattern.textScope || 'page_and_scripts';
+                // Get textScope (default to 'all')
+                const textScope = urlPattern.textScope || 'all';
 
                 // Check main page URL (always checked unless scope is explicitly scripts-only)
-                const urlMatch = this.matchPatternWithCapture(url, urlPattern.text, matchOptions);
+                // Extract pathname before matching for more accurate pattern matching
+                const urlPathname = extractPathname(url);
+                console.log(`[URL Detection] ${detector.name}: Testing pattern "${urlPattern.text}" against pathname "${urlPathname}"`);
+                const urlMatch = this.matchPatternWithCapture(urlPathname, urlPattern.text, matchOptions);
                 if (urlMatch) {
+                    console.log(`[URL Detection] ${detector.name}: ✅ MATCHED! Value: "${urlMatch}"`);
                     matches.push({
                         type: 'url',
                         pattern: urlPattern.text,
@@ -1453,14 +1469,17 @@ class DetectionEngineManager {
                         confidence: urlPattern.confidence,
                         description: urlPattern.description
                     });
+                } else {
+                    console.log(`[URL Detection] ${detector.name}: ❌ No match`);
                 }
 
-                // Check script src URLs if scope is 'page_and_scripts' or 'all_resources'
-                if ((textScope === 'page_and_scripts' || textScope === 'all_resources') && content && content.length > 0) {
+                // Check script src URLs if scope is 'page_and_scripts' or 'all'
+                if ((textScope === 'page_and_scripts' || textScope === 'all') && content && content.length > 0) {
                     for (const script of content) {
                         const scriptSrc = script.src || '';
                         if (scriptSrc) {
-                            const scriptMatch = this.matchPatternWithCapture(scriptSrc, urlPattern.text, matchOptions);
+                            const scriptPathname = extractPathname(scriptSrc);
+                            const scriptMatch = this.matchPatternWithCapture(scriptPathname, urlPattern.text, matchOptions);
                             if (scriptMatch) {
                                 // Check if we already have this pattern to avoid duplicates
                                 const alreadyAdded = matches.some(m => m.type === 'url' && m.pattern === urlPattern.text);
@@ -1479,12 +1498,13 @@ class DetectionEngineManager {
                     }
                 }
 
-                // Check all external resource URLs if scope is 'all_resources'
-                if (textScope === 'all_resources' && externalContent && externalContent.length > 0) {
+                // Check all external resource URLs if scope is 'all'
+                if (textScope === 'all' && externalContent && externalContent.length > 0) {
                     for (const resource of externalContent) {
                         const resourceUrl = resource.url || '';
                         if (resourceUrl) {
-                            const resourceMatch = this.matchPatternWithCapture(resourceUrl, urlPattern.text, matchOptions);
+                            const resourcePathname = extractPathname(resourceUrl);
+                            const resourceMatch = this.matchPatternWithCapture(resourcePathname, urlPattern.text, matchOptions);
                             if (resourceMatch) {
                                 // Check if we already have this pattern to avoid duplicates
                                 const alreadyAdded = matches.some(m => m.type === 'url' && m.pattern === urlPattern.text);
@@ -1498,6 +1518,32 @@ class DetectionEngineManager {
                                         description: urlPattern.description
                                     });
                                 }
+                            }
+                        }
+                    }
+                }
+
+                // Check ALL network request URLs if scope is 'all' (NEW: captures XHR, fetch, etc.)
+                if (textScope === 'all' && pageData.networkUrls && pageData.networkUrls.length > 0) {
+                    console.log(`[URL Detection] ${detector.name}: Checking ${pageData.networkUrls.length} network request URLs`);
+                    for (const networkUrl of pageData.networkUrls) {
+                        const networkPathname = extractPathname(networkUrl.url);
+                        const networkMatch = this.matchPatternWithCapture(networkPathname, urlPattern.text, matchOptions);
+                        if (networkMatch) {
+                            // Check if we already have this pattern to avoid duplicates
+                            const alreadyAdded = matches.some(m => m.type === 'url' && m.pattern === urlPattern.text);
+                            if (!alreadyAdded) {
+                                console.log(`[URL Detection] ${detector.name}: ✅ Network URL MATCHED! URL: ${networkUrl.url}, Type: ${networkUrl.type}, Method: ${networkUrl.method}`);
+                                matches.push({
+                                    type: 'url',
+                                    pattern: urlPattern.text,
+                                    value: networkMatch,  // Store actual matched substring
+                                    fullUrl: networkUrl.url,  // Store full network URL
+                                    resourceType: networkUrl.type,  // XHR, fetch, script, etc.
+                                    method: networkUrl.method,  // GET, POST, etc.
+                                    confidence: urlPattern.confidence,
+                                    description: urlPattern.description
+                                });
                             }
                         }
                     }
@@ -1629,8 +1675,11 @@ class DetectionEngineManager {
                         return cookies; // Request cookies from document.cookie
                     } else if (scope === 'response') {
                         return pageData.responseCookies || [];
-                    } else { // 'both'
+                    } else if (scope === 'all') {
                         return [...cookies, ...(pageData.responseCookies || [])];
+                    } else {
+                        // Default fallback (shouldn't happen)
+                        return cookies;
                     }
                 };
 
@@ -1708,8 +1757,11 @@ class DetectionEngineManager {
                         return pageData.requestHeaders || {};
                     } else if (scope === 'response') {
                         return headers; // responseHeaders
-                    } else { // 'both'
+                    } else if (scope === 'all') {
                         return { ...(pageData.requestHeaders || {}), ...headers };
+                    } else {
+                        // Default fallback (shouldn't happen)
+                        return headers;
                     }
                 };
 
@@ -2259,6 +2311,13 @@ class DetectionEngineManager {
             const stored = storage[urlHash];
 
             if (stored) {
+                // Validate cache scope matches current settings
+                if (stored.cacheScope && stored.cacheScope !== cacheScope) {
+                    console.log(`[getStoredDetection] ⚠️ Cache scope mismatch: stored with '${stored.cacheScope}', current is '${cacheScope}' - treating as cache miss`);
+                    // Don't delete yet - let it expire naturally or get overwritten
+                    return null; // Treat as cache miss
+                }
+
                 // Check if stored detection is expired
                 if (Date.now() < stored.expiry) {
                     console.log(`Scrapfly Background: ✅ Found stored detection for ${url} (expires in ${Math.round((stored.expiry - Date.now()) / 1000 / 60)} minutes)`);
@@ -2298,7 +2357,7 @@ class DetectionEngineManager {
             if (storedData) {
                 console.log('getDetectionData: ===== SENDING TO POPUP =====');
                 console.log('getDetectionData: Detection count:', storedData.detectionResults?.length || 0);
-                console.log('getDetectionData: Detector names:', storedData.detectionResults?.map(d => d.name || d.id || 'NO NAME') || []);
+                console.log('getDetectionData: Detector names:', storedData.detectionResults?.map(d => d.detector?.name || d.name || 'NO NAME') || []);
                 console.log('getDetectionData: Detector IDs:', storedData.detectionResults?.map(d => d.detector?.id || 'NO ID') || []);
                 console.log('getDetectionData: Sample detector full object:', storedData.detectionResults?.[0]);
                 return {
@@ -3400,7 +3459,7 @@ class DetectionEngineManager {
 
         // OPTIMIZED: Adaptive batch hook detections
         if (data && data.type === 'JS_HOOK_DETECTION') {
-            console.log(`%c[CHECK THIS] [handleHookMessage] Adding to batch: ${data.detection?.detectorName} (ID: ${data.detection?.detectorId})`, 'color: #9900ff; font-weight: bold;');
+            // Debug log removed - already logged in service worker via message
             hookBatcher.addHook({
                 detection: data.detection,
                 url: data.url,
@@ -3435,9 +3494,7 @@ class DetectionEngineManager {
 
         // Check if this is window properties completion signal
         if (data && data.type === 'WINDOW_PROPS_COMPLETE') {
-            console.log(`[Content Script] ========== WINDOW PROPERTIES COMPLETE SIGNAL ==========`);
-            console.log(`[Content Script] URL: ${data.url}`);
-            console.log(`[Content Script] Detected count: ${data.detectedCount}`);
+            // Debug logs removed - already logged in service worker via message
 
             // Use async function with retry logic (same as JS hooks)
             (async () => {
@@ -3475,10 +3532,7 @@ class DetectionEngineManager {
 
         // Check if this is a JS hooks completion signal
         if (data && data.type === 'JS_HOOKS_COMPLETE') {
-            console.log(`[Content Script] ========== JS HOOKS COMPLETE SIGNAL ==========`);
-            console.log(`[Content Script] URL: ${data.url}`);
-            console.log(`[Content Script] Total detections: ${data.totalDetections}`);
-            console.log(`[Content Script] Unique hooks: ${data.uniqueHooks}`);
+            // Debug logs removed - already logged in service worker via message
 
             // OPTIMIZATION Phase 10.1: Wait for flush to complete before sending completion
             // This prevents race condition where background receives completion before all hook data

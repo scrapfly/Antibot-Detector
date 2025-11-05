@@ -279,10 +279,12 @@ class ScrapflyPopup {
         return;
       }
 
-      // FIX: Check if cache was cleared by scope change while tab was not visible
-      // This ensures we show empty state even if sessionStorage flag expires
-      if (this.detection.cacheCleared) {
-        console.log('[Popup] Cache cleared flag set - showing empty state');
+      // Check if cache was recently cleared (use sessionStorage as source of truth)
+      const clearedTime = sessionStorage.getItem('scrapfly_just_cleared_cache');
+      const recentlyCleared = clearedTime && (Date.now() - parseInt(clearedTime)) < 10000; // 10 second window
+
+      if (recentlyCleared) {
+        console.log('[Popup] Cache recently cleared - showing empty state, not fetching data');
         this.detection.showEmptyState();
         return;
       }
@@ -292,16 +294,6 @@ class ScrapflyPopup {
         console.log('Popup: URL is blacklisted');
         const url = new URL(tab.url);
         this.detection.showBlacklistState(url.hostname);
-        return;
-      }
-
-      // CRITICAL FIX: Check if cache was just cleared to prevent zombie data
-      const clearedTime = sessionStorage.getItem('scrapfly_just_cleared_cache');
-      const recentlyCleared = clearedTime && (Date.now() - parseInt(clearedTime)) < 5000; // 5 second window
-
-      if (recentlyCleared) {
-        console.log('[Popup] Cache recently cleared - showing empty state, not fetching data');
-        this.detection.showEmptyState();
         return;
       }
 
@@ -317,6 +309,16 @@ class ScrapflyPopup {
 
           // Check for pending status BEFORE checking for data
           if (response && response.status === 'pending') {
+            // Guard: Don't show analyzing if cache was just cleared
+            const clearedTime = sessionStorage.getItem('scrapfly_just_cleared_cache');
+            const recentlyCleared = clearedTime && (Date.now() - parseInt(clearedTime)) < 5000;
+
+            if (recentlyCleared) {
+              console.log('Popup: Cache recently cleared - showing empty state instead of analyzing');
+              this.detection.showEmptyState();
+              return;
+            }
+
             console.log('Popup: Detection is pending, showing analyzing state');
             this.detection.showAnalyzingState();
           } else if (response && response.data) {
@@ -728,6 +730,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const popup = new ScrapflyPopup();
   popup.initialize();
 
-  // Expose categoryManager globally for settings to access
+  // Expose popup instance and categoryManager globally
+  window.popupInstance = popup;
   window.categoryManager = popup.categoryManager;
 });

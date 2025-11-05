@@ -358,7 +358,7 @@ class Settings {
     if (this.settings.detection) {
       const cacheScopeSelect = document.querySelector('#cacheScope');
       if (cacheScopeSelect) {
-        cacheScopeSelect.value = this.settings.detection.cacheScope || 'full';
+        cacheScopeSelect.value = this.settings.detection.cacheScope || 'path';
         console.log('Cache scope loaded:', this.settings.detection.cacheScope);
       }
 
@@ -498,7 +498,7 @@ class Settings {
     settings.detection = {
       cacheDuration: parseInt(document.querySelector('#cacheDuration')?.value ?? this.settings.detection?.cacheDuration ?? 12),
       cacheUnit: document.querySelector('#cacheUnit')?.value ?? this.settings.detection?.cacheUnit ?? 'hours',
-      cacheScope: document.querySelector('#cacheScope')?.value ?? this.settings.detection?.cacheScope ?? 'full',
+      cacheScope: document.querySelector('#cacheScope')?.value ?? this.settings.detection?.cacheScope ?? 'path',
       blacklistedDomains: this.settings.detection?.blacklistedDomains || [] // This is managed separately by the blacklist UI
     };
 
@@ -1126,40 +1126,38 @@ class Settings {
         // Ignore if popup not open
       });
 
-      // Update all tab badges
-      const tabs = await chrome.tabs.query({});
-      for (const tab of tabs) {
-        if (enabled) {
-          // When enabling, check for cached detection data
-          if (context && context.DetectionEngineManager && context.CategoryManager && context.categoryManager) {
-            const storedData = await context.DetectionEngineManager.getStoredDetection(tab.url);
-            if (storedData && storedData.detectionCount > 0) {
-              // Restore badge from cached data
-              const badgeColors = await context.CategoryManager.getBadgeColors(context.categoryManager);
-              const count = storedData.detectionCount.toString();
-              const color = storedData.detectionCount >= 5 ? badgeColors.high :
-                           storedData.detectionCount >= 3 ? badgeColors.medium :
-                           badgeColors.low;
+      // Update badges efficiently
+      if (enabled) {
+        // When enabling, only update the currently active tab from cache
+        // Other tabs will update naturally when user navigates to them
+        const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (activeTab && context && context.DetectionEngineManager && context.CategoryManager && context.categoryManager) {
+          const storedData = await context.DetectionEngineManager.getStoredDetection(activeTab.url);
+          if (storedData && storedData.detectionCount > 0) {
+            // Restore badge from cached data for active tab only
+            const badgeColors = await context.CategoryManager.getBadgeColors(context.categoryManager);
+            const count = storedData.detectionCount.toString();
+            const color = storedData.detectionCount >= 5 ? badgeColors.high :
+                         storedData.detectionCount >= 3 ? badgeColors.medium :
+                         badgeColors.low;
 
-              chrome.action.setBadgeText({ text: count, tabId: tab.id }).catch((error) => {
-                console.log(`[Settings] Failed to set badge for tab ${tab.id}:`, error.message);
-              });
-              chrome.action.setBadgeBackgroundColor({ color: color, tabId: tab.id }).catch((error) => {
-                console.log(`[Settings] Failed to set badge color for tab ${tab.id}:`, error.message);
-              });
-            } else {
-              // No cached detections, clear badge
-              chrome.action.setBadgeText({ text: '', tabId: tab.id }).catch((error) => {
-                console.log(`[Settings] Failed to clear badge for tab ${tab.id}:`, error.message);
-              });
-            }
+            chrome.action.setBadgeText({ text: count, tabId: activeTab.id }).catch((error) => {
+              console.log(`[Settings] Failed to set badge for active tab ${activeTab.id}:`, error.message);
+            });
+            chrome.action.setBadgeBackgroundColor({ color: color, tabId: activeTab.id }).catch((error) => {
+              console.log(`[Settings] Failed to set badge color for active tab ${activeTab.id}:`, error.message);
+            });
           } else {
-            // Fallback: just clear badge if dependencies not provided
-            chrome.action.setBadgeText({ text: '', tabId: tab.id }).catch((error) => {
-              console.log(`[Settings] Failed to clear badge for tab ${tab.id}:`, error.message);
+            // No cached detections, clear badge
+            chrome.action.setBadgeText({ text: '', tabId: activeTab.id }).catch((error) => {
+              console.log(`[Settings] Failed to clear badge for active tab ${activeTab.id}:`, error.message);
             });
           }
-        } else {
+        }
+      } else {
+        // When disabling, set X badge for all tabs
+        const tabs = await chrome.tabs.query({});
+        for (const tab of tabs) {
           chrome.action.setBadgeText({ text: '✕', tabId: tab.id }).catch((error) => {
             // Expected: Tab might be closed
             console.log(`[Settings] Failed to set disabled badge for tab ${tab.id}:`, error.message);

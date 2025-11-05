@@ -574,7 +574,8 @@
     // NEW OPTIMIZATION: Check if cache hit early exit flag is set
     if (window.__scrapflyCacheHitEarlyExit) {
       // Cache hit was detected before this event - skip hook installation entirely
-      console.log('[content-main-world] Cache hit early exit detected - skipping hook installation');
+      // Note: debugMode hasn't been set yet, so we can't check it here
+      // This log will be suppressed by debug.js if debug mode is disabled
       return;
     }
 

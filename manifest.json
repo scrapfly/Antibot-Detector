@@ -16,7 +16,8 @@
     "webNavigation",
     "webRequest",
     "cookies",
-    "notifications"
+    "notifications",
+    "downloads"
   ],
 
   "host_permissions": [

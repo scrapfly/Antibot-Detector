@@ -950,7 +950,7 @@ class Utils {
       return scope;
     } catch (error) {
       console.error('[getCacheScope] Error getting cache scope:', error);
-      return 'domain'; // Default to domain scope on error
+      return 'path'; // Default to path scope on error
     }
   }
 
@@ -1288,6 +1288,33 @@ class Utils {
     }
 
     return true;
+  }
+
+  /**
+   * Debug logging that always forwards to service worker console
+   * Never outputs to webpage console to avoid clutter
+   * @param {...any} args - Arguments to log
+   */
+  static debugLog(...args) {
+    // Never log to local console in content scripts
+    // Always forward to service worker for centralized logging
+
+    try {
+      // Only forward if we have chrome.runtime available
+      if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.sendMessage) {
+        chrome.runtime.sendMessage({
+          type: 'DEBUG_LOG',
+          context: 'CONTENT_SCRIPT',
+          method: 'log',
+          args: args,
+          timestamp: Date.now()
+        }).catch(() => {
+          // Silently fail if background not available
+        });
+      }
+    } catch (e) {
+      // Silently fail to avoid breaking execution
+    }
   }
 }
 

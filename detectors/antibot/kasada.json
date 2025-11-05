@@ -22,8 +22,8 @@
         "valueWholeWord": false,
         "valueCaseSensitive": false,
         "value": "",
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
         "name": "kas_challenge",
@@ -36,8 +36,8 @@
         "valueWholeWord": false,
         "valueCaseSensitive": false,
         "value": "",
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
         "name": "_kas",
@@ -50,8 +50,8 @@
         "valueWholeWord": false,
         "valueCaseSensitive": false,
         "value": "",
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       }
     ],
     "header": [
@@ -92,7 +92,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "both"
+        "textScope": "all"
       },
       {
         "confidence": 95,
@@ -101,7 +101,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "both"
+        "textScope": "all"
       },
       {
         "confidence": 90,
@@ -111,7 +111,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "both"
+        "textScope": "all"
       }
     ],
     "content": [

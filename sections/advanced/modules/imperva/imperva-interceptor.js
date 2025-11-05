@@ -814,45 +814,54 @@ chrome.webRequest.onBeforeRequest.addListener(
 
             console.log('[IMPERVA-ANALYZE] 🧪 Intercepting POST for analysis:', details.url);
 
-            let filter;
-            try {
-                filter = chrome.webRequest.filterResponseData(details.requestId);
-            } catch (error) {
-                console.error('[IMPERVA-ANALYZE] Unable to create response filter:', error);
-                upsertImpervaAnalysisRecord(details.tabId, details.requestId, {
-                    url: details.url,
-                    method: details.method,
-                    error: 'filterResponseData_failed'
-                });
-                return;
+            // Record start
+            upsertImpervaAnalysisRecord(details.tabId, details.requestId, {
+                url: details.url,
+                method: details.method,
+                startedAt: Date.now(),
+                matchesReese84: /reese84/i.test(details.url)
+            });
+
+            // Reconstruct POST body from requestBody
+            let bodyData = null;
+            if (details.requestBody && details.requestBody.raw) {
+                try {
+                    const chunks = details.requestBody.raw.map(chunk => {
+                        return new Uint8Array(chunk.bytes);
+                    });
+
+                    // Concatenate all chunks
+                    const totalLength = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+                    const combined = new Uint8Array(totalLength);
+                    let offset = 0;
+                    for (const chunk of chunks) {
+                        combined.set(chunk, offset);
+                        offset += chunk.length;
+                    }
+                    bodyData = combined;
+                } catch (error) {
+                    console.error('[IMPERVA-ANALYZE] Error reconstructing POST body:', error);
+                }
             }
 
-            const decoder = new TextDecoder('utf-8');
-            let collected = '';
-            let truncated = false;
-
-            filter.ondata = (event) => {
-                try {
-                    if (!truncated && collected.length < 20000) {
-                        collected += decoder.decode(event.data, { stream: true });
-                        if (collected.length > 20000) {
-                            collected = collected.slice(0, 20000);
-                            truncated = true;
-                        }
-                    }
-                } catch (error) {
-                    console.error('[IMPERVA-ANALYZE] Error decoding response chunk:', error);
-                }
-
-                filter.write(event.data);
+            // Simple fetch to read response
+            const fetchOptions = {
+                method: 'POST',
+                mode: 'cors',
+                credentials: 'include'
             };
 
-            filter.onstop = () => {
-                try {
-                    if (!truncated && collected.length < 20000) {
-                        collected += decoder.decode();
-                    }
+            if (bodyData) {
+                fetchOptions.body = bodyData;
+            }
 
+            fetch(details.url, fetchOptions)
+                .then(response => response.text())
+                .then(responseText => {
+                    console.log('[IMPERVA-ANALYZE] ✅ Received response, length:', responseText.length);
+
+                    const truncated = responseText.length > 20000;
+                    const collected = truncated ? responseText.slice(0, 20000) : responseText;
                     const lowered = collected.toLowerCase();
                     const containsToken = lowered.includes('"token"') || lowered.includes('token');
 
@@ -865,38 +874,21 @@ chrome.webRequest.onBeforeRequest.addListener(
                         matchesReese84: /reese84/i.test(details.url),
                         completedAt: Date.now()
                     });
-                } catch (error) {
-                    console.error('[IMPERVA-ANALYZE] Error finalizing response filter:', error);
-                }
-
-                try {
-                    filter.disconnect();
-                } catch (disconnectError) {
-                    console.warn('[IMPERVA-ANALYZE] Error disconnecting response filter:', disconnectError);
-                }
-            };
-
-            filter.onerror = (event) => {
-                console.error('[IMPERVA-ANALYZE] Response filter error:', event.error);
-                try {
-                    filter.disconnect();
-                } catch (disconnectError) {
-                    console.warn('[IMPERVA-ANALYZE] Error disconnecting after filter error:', disconnectError);
-                }
-            };
-
-            upsertImpervaAnalysisRecord(details.tabId, details.requestId, {
-                url: details.url,
-                method: details.method,
-                startedAt: Date.now(),
-                matchesReese84: /reese84/i.test(details.url)
-            });
+                })
+                .catch(error => {
+                    console.error('[IMPERVA-ANALYZE] Fetch error:', error);
+                    upsertImpervaAnalysisRecord(details.tabId, details.requestId, {
+                        url: details.url,
+                        method: details.method,
+                        error: 'fetch_failed: ' + error.message
+                    });
+                });
         } catch (error) {
             console.error('[IMPERVA-ANALYZE] Error in onBeforeRequest:', error);
         }
     },
     { urls: ["<all_urls>"], types: ["xmlhttprequest", "other", "script"] },
-    ["blocking"]
+    ["requestBody"]
 );
 
 chrome.webRequest.onCompleted.addListener(

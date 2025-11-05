@@ -22,6 +22,203 @@ class Detection {
     this.isShowingAnalyzing = false; // FIX: Track if analyzing state is already showing
     this.isShowingResults = false; // FIX: Track if displaying results to prevent message listeners from overriding
     this.cacheCleared = false; // FIX: Track if cache was cleared while tab was hidden - refresh when tab becomes visible
+
+    // Setup message listeners immediately (before initialization) so they work even if tab not accessed yet
+    this.setupMessageListeners();
+  }
+
+  /**
+   * Setup message listeners for background script communication
+   * Called from constructor to ensure listeners are active even before tab initialization
+   */
+  setupMessageListeners() {
+    // FIX: Listen for tab URL changes while popup is open
+    // When user navigates, transition to analyzing state to show live progress
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+      if (changeInfo.status === 'loading' && changeInfo.url) {
+        if (this.debugMode) console.log('[Detection] Tab navigated to:', changeInfo.url);
+        // Check if detection is starting (badge will show %)
+        chrome.action.getBadgeText({ tabId }, (badgeText) => {
+          if (badgeText && badgeText.endsWith('%')) {
+            // Detection started - transition to analyzing state
+            if (this.debugMode) console.log('[Detection] Navigation detected, badge shows progress, transitioning to analyzing state');
+            // FIX: Don't override if already showing results
+            if (!this.wasInterrupted && !this.isShowingResults) {
+              this.showAnalyzingState();
+            }
+          }
+        });
+      }
+    });
+
+    // FIX: Listen for real-time detection progress from background
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.type === 'DETECTION_PROGRESS') {
+        if (this.debugMode) console.log('[Detection] Received progress update:', message.progress);
+
+        // CRITICAL: If popup is not in analyzing state, transition to it
+        // This handles case where popup is open showing old results when new detection starts
+        // FIX: Don't override if already showing results (cached detection)
+        const loadingState = document.querySelector('#loadingState');
+        if (!loadingState || loadingState.style.display === 'none') {
+          if (this.debugMode) console.log('[Detection] Progress received but not in analyzing state - transitioning now');
+          if (!this.wasInterrupted && !this.isShowingResults) {
+            this.showAnalyzingState();
+          }
+        }
+
+        this.updateRealProgress(message.progress);
+      }
+
+      // FIX: Listen for detection completion from background
+      if (message.type === 'NEW_DETECTION_DATA') {
+        if (this.debugMode) console.log('[Detection] Received detection completion for tab:', message.tabId);
+
+        // Guard: Don't auto-refresh if we just cleared cache and are showing empty state
+        // Check both the instance flag and sessionStorage
+        const clearedTime = sessionStorage.getItem('scrapfly_just_cleared_cache');
+        const recentlyCleared = clearedTime && (Date.now() - parseInt(clearedTime)) < 5000; // 5 second window
+
+        if (this.justClearedCache || recentlyCleared) {
+          console.log('[Detection] Ignoring NEW_DETECTION_DATA - showing empty state after cache clear');
+          // Reset the flag after 5.5 seconds to allow future updates (after re-detection starts)
+          if (!this.clearCacheResetTimer) {
+            this.clearCacheResetTimer = setTimeout(() => {
+              this.justClearedCache = false;
+              sessionStorage.removeItem('scrapfly_just_cleared_cache');
+              this.clearCacheResetTimer = null;
+            }, 5500);
+          }
+          return;
+        }
+
+        // Clear loading timeout and stop progress animation
+        this.clearLoadingTimeout();
+        this.stopAnalysisProgress({ markComplete: true });
+
+        // Request the completed detection data and display it
+        chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+          if (tabs[0] && tabs[0].id === message.tabId) {
+            if (this.debugMode) console.log('[Detection] Fetching completed detection data...');
+
+            chrome.runtime.sendMessage(
+              { type: 'GET_DETECTION_DATA', tabId: message.tabId },
+              async (response) => {
+                if (chrome.runtime.lastError) {
+                  console.error('[Detection] Error fetching completed data:', chrome.runtime.lastError);
+                  this.showEmptyState();
+                  return;
+                }
+
+                if (response && response.data) {
+                  // Process and display the completed detection
+                  await Detection.processDetectionData(
+                    {
+                      detection: this,
+                      detectionEngine: this.detectionEngine,
+                      detectorManager: this.detectorManager,
+                      history: this.history
+                    },
+                    response.data
+                  );
+                } else {
+                  if (this.debugMode) console.warn('[Detection] No data in completion response');
+                  this.showEmptyState();
+                }
+              }
+            );
+          }
+        });
+      }
+
+      // Listen for cache scope changes from Settings
+      if (message.type === 'DETECTION_CLEAR_CACHE') {
+        (async () => {
+          console.log('[Detection] Cache scope changed - checking for cached data with new scope');
+
+          // Clear current results display
+          this.currentResults = [];
+
+          // Clear pagination
+          if (this.paginationManager) {
+            this.paginationManager.setItems([]);
+          }
+
+          // Clear result cards from DOM
+          const detectionResults = document.querySelector('#detectionResults');
+          if (detectionResults) {
+            detectionResults.innerHTML = '';
+          }
+
+          // Set the sessionStorage flag to prevent auto-detection on popup reopen
+          // (Treat cache scope change like explicit cache clear for protection)
+          sessionStorage.setItem('scrapfly_just_cleared_cache', Date.now().toString());
+
+          // Set flags to prevent auto-detection
+          this.justClearedCache = true;
+          this.cacheCleared = true;
+
+          // Update cache info display to reflect new cache scope from settings
+          this.updateCacheInfo();
+
+          // Check if there's cached detection data for the new scope
+          try {
+            const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+            if (!tabs[0]) return;
+
+            // Request detection data with new cache scope
+            chrome.runtime.sendMessage(
+              { type: 'GET_DETECTION_DATA', tabId: tabs[0].id },
+              async (response) => {
+                if (chrome.runtime.lastError) {
+                  console.log('[Detection] No cached data for new scope - showing empty state');
+                  this.showEmptyState();
+                  // Set badge to gray X
+                  await chrome.action.setBadgeText({ text: '✕', tabId: tabs[0].id });
+                  await chrome.action.setBadgeBackgroundColor({
+                    color: '#6B7280', // gray-500
+                    tabId: tabs[0].id
+                  });
+                  return;
+                }
+
+                if (response && response.data) {
+                  // Found cached data for new scope - display it
+                  console.log('[Detection] Found cached data for new scope - displaying');
+
+                  // Use ScrapflyPopup's processDetectionData to display results
+                  if (window.popupInstance) {
+                    await window.popupInstance.processDetectionData(response.data);
+                  } else {
+                    // Fallback: display directly
+                    await this.displayResults(response.data.detections);
+                  }
+                } else {
+                  // No cached data for new scope - show empty state
+                  console.log('[Detection] No cached data for new scope - showing empty state');
+                  this.showEmptyState();
+                  // Set badge to gray X
+                  await chrome.action.setBadgeText({ text: '✕', tabId: tabs[0].id });
+                  await chrome.action.setBadgeBackgroundColor({
+                    color: '#6B7280', // gray-500
+                    tabId: tabs[0].id
+                  });
+                }
+              }
+            );
+          } catch (error) {
+            if (this.debugMode) console.warn('[Detection] Error checking for cached data:', error);
+            this.showEmptyState();
+          }
+
+          if (sendResponse) {
+            sendResponse({ success: true });
+          }
+        })();
+
+        return true; // Keep message channel open for async response
+      }
+    });
   }
 
   /**
@@ -954,22 +1151,6 @@ class Detection {
 
       // Show "Nothing Detected" page immediately after cache clear
       this.showEmptyState();
-
-      // OPTION 1: After 5.5 seconds, trigger silent background re-detection
-      // This runs after the 5-second cache clear window to prevent race conditions
-      // If detection finds something, it will update the UI
-      // If nothing found, empty state stays
-      setTimeout(() => {
-        console.log('[Detection] 🔄 Triggering silent background re-detection after cache clear');
-        chrome.runtime.sendMessage({
-          type: 'REQUEST_DETECTION',
-          tabId: tabs[0].id,
-          silent: true  // Flag to skip badge updates and progress indicators
-        }).catch(error => {
-          // Silent failure - background detection may have already completed
-          if (this.debugMode) console.log('[Detection] Background re-detection triggered');
-        });
-      }, 5500);
     } catch (error) {
       if (this.debugMode) console.error('Failed to clear cache:', error);
       NotificationHelper.error('Failed to clear cache');
@@ -2021,162 +2202,8 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
       });
     }
 
-    // FIX: Listen for tab URL changes while popup is open
-    // When user navigates, transition to analyzing state to show live progress
-    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-      if (changeInfo.status === 'loading' && changeInfo.url) {
-        if (this.debugMode) console.log('[Detection] Tab navigated to:', changeInfo.url);
-        // Check if detection is starting (badge will show %)
-        chrome.action.getBadgeText({ tabId }, (badgeText) => {
-          if (badgeText && badgeText.endsWith('%')) {
-            // Detection started - transition to analyzing state
-            if (this.debugMode) console.log('[Detection] Navigation detected, badge shows progress, transitioning to analyzing state');
-            // FIX: Don't override if already showing results
-            if (!this.wasInterrupted && !this.isShowingResults) {
-              this.showAnalyzingState();
-            }
-          }
-        });
-      }
-    });
-
-    // FIX: Listen for real-time detection progress from background
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      if (message.type === 'DETECTION_PROGRESS') {
-        if (this.debugMode) console.log('[Detection] Received progress update:', message.progress);
-
-        // CRITICAL: If popup is not in analyzing state, transition to it
-        // This handles case where popup is open showing old results when new detection starts
-        // FIX: Don't override if already showing results (cached detection)
-        const loadingState = document.querySelector('#loadingState');
-        if (!loadingState || loadingState.style.display === 'none') {
-          if (this.debugMode) console.log('[Detection] Progress received but not in analyzing state - transitioning now');
-          if (!this.wasInterrupted && !this.isShowingResults) {
-            this.showAnalyzingState();
-          }
-        }
-
-        this.updateRealProgress(message.progress);
-      }
-
-      // FIX: Listen for detection completion from background
-      if (message.type === 'NEW_DETECTION_DATA') {
-        if (this.debugMode) console.log('[Detection] Received detection completion for tab:', message.tabId);
-
-        // Guard: Don't auto-refresh if we just cleared cache and are showing empty state
-        // Check both the instance flag and sessionStorage
-        const clearedTime = sessionStorage.getItem('scrapfly_just_cleared_cache');
-        const recentlyCleared = clearedTime && (Date.now() - parseInt(clearedTime)) < 5000; // 5 second window
-
-        if (this.justClearedCache || recentlyCleared) {
-          console.log('[Detection] Ignoring NEW_DETECTION_DATA - showing empty state after cache clear');
-          // Reset the flag after 5.5 seconds to allow future updates (after re-detection starts)
-          if (!this.clearCacheResetTimer) {
-            this.clearCacheResetTimer = setTimeout(() => {
-              this.justClearedCache = false;
-              sessionStorage.removeItem('scrapfly_just_cleared_cache');
-              this.clearCacheResetTimer = null;
-            }, 5500);
-          }
-          return;
-        }
-
-        // Clear loading timeout and stop progress animation
-        this.clearLoadingTimeout();
-        this.stopAnalysisProgress({ markComplete: true });
-
-        // Request the completed detection data and display it
-        chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-          if (tabs[0] && tabs[0].id === message.tabId) {
-            if (this.debugMode) console.log('[Detection] Fetching completed detection data...');
-            
-            chrome.runtime.sendMessage(
-              { type: 'GET_DETECTION_DATA', tabId: message.tabId },
-              async (response) => {
-                if (chrome.runtime.lastError) {
-                  console.error('[Detection] Error fetching completed data:', chrome.runtime.lastError);
-                  this.showEmptyState();
-                  return;
-                }
-
-                if (response && response.data) {
-                  // Process and display the completed detection
-                  await Detection.processDetectionData(
-                    {
-                      detection: this,
-                      detectionEngine: this.detectionEngine,
-                      detectorManager: this.detectorManager,
-                      history: this.history
-                    },
-                    response.data
-                  );
-                } else {
-                  if (this.debugMode) console.warn('[Detection] No data in completion response');
-                  this.showEmptyState();
-                }
-              }
-            );
-          }
-        });
-      }
-
-      // Listen for cache scope changes from Settings
-      if (message.type === 'DETECTION_CLEAR_CACHE') {
-        (async () => {
-          console.log('[Detection] Cache scope changed - clearing current results');
-
-          // FIX: Set BOTH flags to ensure empty state persists
-          // justClearedCache: Blocks NEW_DETECTION_DATA messages for 5 seconds
-          // cacheCleared: Longer-term flag checked when popup becomes visible
-          this.justClearedCache = true;
-          this.cacheCleared = true;
-
-          // FIX: Set sessionStorage flag for consistency with Clear Cache button
-          // Ensures checkAndDisplayExistingDetection() knows cache was just cleared
-          sessionStorage.setItem('scrapfly_just_cleared_cache', Date.now().toString());
-
-          // Clear current results
-          this.currentResults = [];
-
-          // FIX: Force clear pagination to prevent stale data from persisting
-          if (this.paginationManager) {
-            this.paginationManager.setItems([]);
-          }
-
-          // FIX: Explicitly clear result cards from DOM
-          const detectionResults = document.querySelector('#detectionResults');
-          if (detectionResults) {
-            detectionResults.innerHTML = '';
-          }
-
-          // Show empty state (if Detection tab is currently visible)
-          this.showEmptyState();
-
-          // FIX: Update cache info display to reflect new cache scope from settings
-          this.updateCacheInfo();
-
-          // Set badge to gray X (matching clearCache() behavior)
-          try {
-            const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (tabs[0]) {
-              await chrome.action.setBadgeText({ text: '✕', tabId: tabs[0].id });
-              await chrome.action.setBadgeBackgroundColor({
-                color: '#6B7280', // gray-500
-                tabId: tabs[0].id
-              });
-            }
-          } catch (error) {
-            if (this.debugMode) console.warn('[Detection] Could not set badge:', error);
-          }
-
-          if (sendResponse) {
-            sendResponse({ success: true });
-          }
-        })();
-
-        return true; // Keep message channel open for async response
-      }
-    });
+    // NOTE: Message listeners are now set up in setupMessageListeners() called from constructor
+    // This ensures they're active even before tab initialization
 
     this.initializeModalElements();
   }

@@ -8,12 +8,12 @@
     "detection": {
       "cacheDuration": 12,
       "cacheUnit": "hours",
-      "cacheScope": "domain",
+      "cacheScope": "path",
       "blacklistedDomains": [],
       "enhancedDetection": {
         "enabled": true,
         "windowPropertiesMode": "standard",
-        "maxDetectionWindowMs": 10000,
+        "maxDetectionWindowMs": 20000,
         "keepHooksInstalled": false
       }
     },

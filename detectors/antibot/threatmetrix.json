@@ -28,7 +28,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "both"
+        "textScope": "all"
       },
       {
         "confidence": 85,
@@ -37,7 +37,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "both"
+        "textScope": "all"
       }
     ],
     "window": [

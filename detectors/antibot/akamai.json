@@ -22,8 +22,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
         "name": "ak_bmsc",
@@ -36,8 +36,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
         "name": "sbsd",
@@ -50,8 +50,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
         "name": "sbsd_o",
@@ -64,8 +64,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
         "name": "bm_sz",
@@ -78,8 +78,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
         "name": "bm_sv",
@@ -92,8 +92,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
         "name": "bm_mi",
@@ -106,8 +106,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       }
     ],
     "header": [
@@ -120,7 +120,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "both"
+        "textScope": "all"
       },
       {
         "confidence": 95,
@@ -129,7 +129,16 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "both"
+        "textScope": "all"
+      },
+      {
+        "confidence": 90,
+        "description": "Akamai random path challenge (multiple encoded segments)",
+        "text": "/([a-zA-Z0-9]{2,15}/){5,}[a-zA-Z0-9]{2,15}$",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": true,
+        "textScope": "all"
       }
     ],
     "content": [
@@ -185,33 +194,17 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
+      },
+      {
+        "confidence": 95,
+        "description": "SB-SD challenge endpoint reference in code",
+        "text": "/.well-known/sbsd/",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
       }
     ],
     "dom": [
-      {
-        "selector": "#akam-sensor",
-        "confidence": 90,
-        "description": "Akamai sensor container",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
-      },
-      {
-        "selector": ".bm-sensor-container",
-        "confidence": 85,
-        "description": "Bot Manager sensor container",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
-      },
-      {
-        "selector": "[data-akamai]",
-        "confidence": 95,
-        "description": "Element with Akamai data attribute",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
-      }
     ],
     "window": [
       {
@@ -219,12 +212,6 @@
         "condition": "typeof object",
         "confidence": 95,
         "description": "Akamai Bot Manager main object (bmak)"
-      },
-      {
-        "path": "bmak.sensor_data",
-        "condition": "!== undefined",
-        "confidence": 90,
-        "description": "Akamai sensor data collection"
       }
     ],
     "payload": [

@@ -959,11 +959,12 @@ public static string GenerateUtmvcScriptPath()
                 ` : ''}
 
                 ${hasScriptPaths ? `
-                    <!-- Export Code Button -->
-                    <button class="export-code-btn advanced-modal-action-btn" style="width: 100%; margin-bottom: 20px;">
-                        <span>💻</span>
-                        <span>Export Code</span>
-                    </button>
+                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+                        <button class="export-code-btn modal-export-code-btn">
+                            <span>📤</span>
+                            Export Code
+                        </button>
+                    </div>
                 ` : ''}
 
                 ${impervaScripts.length === 0 ? `
@@ -1016,14 +1017,6 @@ public static string GenerateUtmvcScriptPath()
         if (parsingCodes) {
             const exportBtn = modal.querySelector('.export-code-btn');
             if (exportBtn) {
-                // Hover effect
-                exportBtn.addEventListener('mouseenter', () => {
-                    exportBtn.style.background = '#1565C0';
-                });
-                exportBtn.addEventListener('mouseleave', () => {
-                    exportBtn.style.background = '#1976D2';
-                });
-
                 exportBtn.addEventListener('click', () => {
                     this.displayExportCodeModal(parsingCodes, scriptPaths, extractedData);
                 });

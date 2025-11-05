@@ -318,18 +318,24 @@ class LogCollector {
             logs: this.logs
         };
 
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
+        const jsonString = JSON.stringify(data, null, 2);
         const filename = `scrapfly-logs-${Date.now()}.json`;
 
-        // Download file
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        // Use chrome.downloads API (works in Service Worker context)
+        // Convert to data URL for chrome.downloads
+        const dataUrl = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonString);
+
+        chrome.downloads.download({
+            url: dataUrl,
+            filename: filename,
+            saveAs: false  // Don't prompt, use default download location
+        }, (downloadId) => {
+            if (chrome.runtime.lastError) {
+                console.error('[LogCollector] Download error:', chrome.runtime.lastError);
+            } else {
+                console.log('[LogCollector] Download started with ID:', downloadId);
+            }
+        });
 
         return filename;
     }
@@ -360,17 +366,23 @@ class LogCollector {
         });
 
         const text = header + lines.join('\n');
-        const blob = new Blob([text], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
         const filename = `scrapfly-logs-${Date.now()}.txt`;
 
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        // Use chrome.downloads API (works in Service Worker context)
+        // Convert to data URL for chrome.downloads
+        const dataUrl = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
+
+        chrome.downloads.download({
+            url: dataUrl,
+            filename: filename,
+            saveAs: false  // Don't prompt, use default download location
+        }, (downloadId) => {
+            if (chrome.runtime.lastError) {
+                console.error('[LogCollector] Download error:', chrome.runtime.lastError);
+            } else {
+                console.log('[LogCollector] Download started with ID:', downloadId);
+            }
+        });
 
         return filename;
     }
@@ -456,7 +468,7 @@ class LogCollector {
      * If current logs exceed new max, keeps the newest logs
      */
     setMaxLogs(newMax) {
-        if (typeof newMax !== 'number' || newMax < 100 || newMax > 10000) {
+        if (typeof newMax !== 'number' || newMax < 100 || newMax > 100000) {
             console.error('[LogCollector] Invalid max logs value:', newMax);
             return;
         }

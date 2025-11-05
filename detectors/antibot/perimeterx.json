@@ -22,8 +22,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
         "name": "_px3",
@@ -36,8 +36,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
         "name": "_pxhd",
@@ -50,8 +50,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
         "name": "_pxvid",
@@ -64,8 +64,8 @@
         "valueRegex": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       }
     ],
     "header": [
@@ -106,7 +106,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "both"
+        "textScope": "all"
       },
       {
         "confidence": 95,
@@ -115,7 +115,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "both"
+        "textScope": "all"
       },
       {
         "confidence": 90,
@@ -124,7 +124,7 @@
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "both"
+        "textScope": "all"
       }
     ],
     "content": [

@@ -22,8 +22,8 @@
         "nameCaseSensitive": false,
         "valueWholeWord": false,
         "valueCaseSensitive": false,
-        "nameScope": "both",
-        "valueScope": "both"
+        "nameScope": "all",
+        "valueScope": "all"
       }
     ],
     "header": [
@@ -120,7 +120,7 @@
         "textRegex": true,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "both"
+        "textScope": "all"
       },
       {
         "confidence": 90,
@@ -129,7 +129,7 @@
         "textRegex": true,
         "textWholeWord": false,
         "textCaseSensitive": false,
-        "textScope": "both"
+        "textScope": "all"
       }
     ],
     "content": [

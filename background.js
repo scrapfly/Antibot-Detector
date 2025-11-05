@@ -37,55 +37,6 @@ importScripts(
 
 console.log('Scrapfly Background Script: Initializing...');
 
-// ========== DEBUG: Hook Detection Tracker ==========
-// ============================================================================
-// DETECTION SYSTEM - PHASE 5: FINAL STATISTICS & LOGGING
-// ============================================================================
-//
-// Purpose:
-// ────────
-// Receives hook batches and completion signals from content script.
-// Tracks which detectors fired and logs final statistics.
-// Provides transparency into detection process for debugging.
-//
-// How It Works:
-// ─────────────
-// 1. JS_HOOK_DETECTION_BATCH arrives from content.js
-//    - Contains deduplicated hooks (detectorId:target pairs)
-//    - Each hook logged with [HOOK FIRED] tag for stats
-//
-// 2. JS_HOOKS_COMPLETE arrives from content.js
-//    - Signals completion with timing data
-//    - totalTime: How long detection took
-//    - completionMethod: "settled" or "timeout"
-//
-// 3. DEBUG_HOOK_DETECTION tracks:
-//    - hooksFired: Map of "detectorId:target" → {timestamp, detector, type}
-//    - inlineHooksFired: Set of inline hooks that fired
-//    - dynamicHooksFired: Set of dynamic hooks that fired
-//    - stats: Final counts and detection rate
-//
-// Output:
-// ───────
-// Final statistics display:
-//   [CHECK THIS] 🎯 FINAL DETECTION RESULTS:
-//   [CHECK THIS]    Total Unique Detectors: 11
-//   [CHECK THIS]    (NOTE: Detectors may fire multiple times, but counted once)
-//   [CHECK THIS] 📦 BREAKDOWN:
-//   [CHECK THIS]    Inline: 1/25 (installed)
-//   [CHECK THIS]    Dynamic: 10/8 (installed)
-//   [CHECK THIS] 📈 DETECTION RATE: 33.3%
-//   [CHECK THIS] ✅ COMPLETION: Settled (no new detectors for 1.5s) in 4156ms
-//
-// Why This Works:
-// ───────────────
-// - Service worker receives ALL hook batches from content script
-// - Each batch is already deduplicated (no collisions!)
-// - Maps "detectorId:target" keys back to original detector names for display
-// - Tracks completion method and timing for transparency
-// - Compares with previous run to show consistency
-//
-// ============================================================================
 
 // Comprehensive logging to diagnose inconsistent hook detection
 const DEBUG_HOOK_DETECTION = {
@@ -377,6 +328,7 @@ const headersStore = new TTLMap(300000); // Response headers
 const requestHeadersStore = new TTLMap(300000); // Request headers
 const responseCookiesStore = new TTLMap(300000); // Response cookies (from Set-Cookie)
 const payloadStore = new TTLMap(300000); // Request payloads (POST/PUT/PATCH bodies)
+const networkUrlsStore = new TTLMap(300000); // All network request URLs (for URL pattern detection)
 
 // OPTIMIZATION Phase B.3: Convert capture state maps to TTLMap to prevent memory leaks
 // 30 min TTL matches Advanced history expiration, 100 max entries prevents unbounded growth
@@ -1007,6 +959,13 @@ async function finalizeDetection(tabId, state) {
         console.log(`[DetectionState] 🧹 Cleaned up ${payloadCount} payloads for tab ${tabId}`);
     }
 
+    // Clean up network URLs after detection completes
+    if (networkUrlsStore.has(tabId)) {
+        const urlCount = networkUrlsStore.get(tabId)?.length || 0;
+        networkUrlsStore.delete(tabId);
+        console.log(`[DetectionState] 🧹 Cleaned up ${urlCount} network URLs for tab ${tabId}`);
+    }
+
     // Clean up headers after detection completes (free up memory like payloads)
     if (headersStore.has(tabId)) {
         headersStore.delete(tabId);
@@ -1438,6 +1397,37 @@ function setupHeaderCapture() {
         { urls: ["<all_urls>"] },
         ["requestBody"]
     );
+
+    // Capture ALL network request URLs for URL pattern detection
+    // This allows detecting anti-bot systems that use specific URL patterns (e.g., Akamai /akam/, /sbsd/)
+    chrome.webRequest.onBeforeRequest.addListener(
+        (details) => {
+            // Skip if cache hit
+            if (tabsUsingCache.has(details.tabId)) return;
+
+            // Skip invalid tab IDs
+            if (details.tabId < 0) return;
+
+            // Capture ALL request URLs (GET, POST, XHR, script, etc.)
+            let networkUrls = networkUrlsStore.get(details.tabId) || [];
+
+            networkUrls.push({
+                url: details.url,
+                type: details.type,        // 'main_frame', 'sub_frame', 'script', 'xhr', 'fetch', etc.
+                method: details.method,     // 'GET', 'POST', etc.
+                timestamp: Date.now()
+            });
+
+            // Keep max 100 URLs per tab to prevent memory issues
+            if (networkUrls.length > 100) {
+                networkUrls.shift(); // Remove oldest
+            }
+
+            networkUrlsStore.set(details.tabId, networkUrls);
+        },
+        { urls: ["<all_urls>"] }
+        // No extraInfoSpec needed - we only need URL, type, method
+    );
 }
 
 /**
@@ -1589,6 +1579,34 @@ async function processDetectionData(message, sender) {
 
             // Don't delete yet - will delete after detection completes
             // payloadStore.delete(tabId);
+        }
+    }
+
+    // Add network request URLs if available (for URL pattern detection)
+    if (networkUrlsStore.has(tabId)) {
+        const networkUrlsArray = networkUrlsStore.get(tabId);
+        const pageHost = pageData.hostname || '';
+        const rootDomain = pageHost.split('.').slice(-2).join('.');  // Get root domain (e.g., zalando.es)
+
+        // Filter for relevant URLs (same domain or subdomains)
+        const relevantUrls = networkUrlsArray.filter(urlData => {
+            try {
+                const urlHost = new URL(urlData.url).hostname;
+                // Match if: same host, or subdomain, or contains root domain, or special anti-bot paths
+                return urlHost === pageHost ||
+                       urlHost.includes(rootDomain) ||
+                       urlData.url.includes('/akam/') ||  // Always include Akamai
+                       urlData.url.includes('/.well-known/sbsd/') ||  // Always include SBSD
+                       urlData.url.includes('sensor') ||  // Sensor endpoints
+                       urlData.url.includes('challenge');  // Challenge endpoints
+            } catch (e) {
+                return false;
+            }
+        });
+
+        if (relevantUrls.length > 0) {
+            pageData.networkUrls = relevantUrls;
+            console.log(`Scrapfly Background: Added ${relevantUrls.length} network URLs to detection data`);
         }
     }
 
@@ -2558,23 +2576,59 @@ function setupMessageListeners() {
                 console.log('[Background] Cache scope changed - clearing URL hash cache');
                 Utils.clearUrlHashCache();
 
-                // Update badge for current tab to gray X
+                // Update badge for current tab based on cached data with new scope
                 (async () => {
                     try {
                         const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
                         if (tabs && tabs[0]) {
-                            await chrome.action.setBadgeText({ text: '✕', tabId: tabs[0].id });
-                            await chrome.action.setBadgeBackgroundColor({ color: '#6B7280', tabId: tabs[0].id });
-                            console.log('[Background] Badge updated to gray X for current tab after cache scope change');
+                            const tab = tabs[0];
+
+                            // Check for cached data with new scope
+                            const storedData = await DetectionEngineManager.getStoredDetection(tab.url);
+
+                            // Add to recentlyClearedTabs to prevent auto-detection on popup reopen
+                            // (Treat cache scope change like explicit cache clear for protection)
+                            recentlyClearedTabs.add(tab.id);
+
+                            // FIX: Clear stale activeDetections state to prevent false "pending" status
+                            // This ensures GET_DETECTION_DATA doesn't return status='pending' for old detections
+                            activeDetections.delete(tab.id);
+                            console.log(`[Background] Cleared activeDetections for tab ${tab.id} (cache scope changed)`);
+
+                            setTimeout(() => recentlyClearedTabs.delete(tab.id), 10000);
+                            console.log(`[Background] Added tab ${tab.id} to recentlyClearedTabs for 10 seconds`);
+
+                            if (storedData && storedData.detectionCount > 0) {
+                                // Update badge with cached count and color
+                                const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
+                                const count = storedData.detectionCount.toString();
+                                const color = storedData.detectionCount >= 5 ? badgeColors.high :
+                                             storedData.detectionCount >= 3 ? badgeColors.medium :
+                                             badgeColors.low;
+
+                                await chrome.action.setBadgeText({ text: count, tabId: tab.id });
+                                await chrome.action.setBadgeBackgroundColor({ color: color, tabId: tab.id });
+                                console.log(`[Background] Badge updated with cached data: ${count} detections (scope change)`);
+                            } else {
+                                // No cached data with new scope - show gray X
+                                await chrome.action.setBadgeText({ text: '✕', tabId: tab.id });
+                                await chrome.action.setBadgeBackgroundColor({ color: '#6B7280', tabId: tab.id });
+                                console.log('[Background] Badge updated to gray X - no cached data with new scope');
+                            }
+                        }
+
+                        if (sendResponse) {
+                            sendResponse({ success: true });
                         }
                     } catch (error) {
                         console.error('[Background] Error updating badge on cache scope change:', error);
+                        if (sendResponse) {
+                            sendResponse({ success: false, error: error.message });
+                        }
                     }
                 })();
 
-                if (sendResponse) {
-                    sendResponse({ success: true });
-                }
+                return true; // Async response
                 break;
 
             case 'REQUEST_DETECTION':
@@ -2600,18 +2654,18 @@ function setupMessageListeners() {
             case 'CLEAR_DETECTION_DATA':
                 // Clear detection data for a tab
                 if (request.tabId) {
-                    detectionDataStore.delete(request.tabId);
                     headersStore.delete(request.tabId);
                     requestHeadersStore.delete(request.tabId);
                     responseCookiesStore.delete(request.tabId);
                     payloadStore.delete(request.tabId);
+                    networkUrlsStore.delete(request.tabId);
                 } else {
                     // Clear all
-                    detectionDataStore.clear();
                     headersStore.clear();
                     requestHeadersStore.clear();
                     responseCookiesStore.clear();
                     payloadStore.clear();
+                    networkUrlsStore.clear();
                 }
                 sendResponse({ status: 'cleared' });
                 break;
@@ -2637,11 +2691,11 @@ function setupMessageListeners() {
                         }
 
                         // Clear other related stores
-                        detectionDataStore.delete(request.tabId);
                         headersStore.delete(request.tabId);
                         requestHeadersStore.delete(request.tabId);
                         responseCookiesStore.delete(request.tabId);
                         payloadStore.delete(request.tabId);
+                        networkUrlsStore.delete(request.tabId);
                         tabsUsingCache.delete(request.tabId);
 
                         // Track this tab as recently cleared (prevent data resurrection for 5 seconds)
@@ -3313,7 +3367,7 @@ function setupMessageListeners() {
                 } else {
                     sendResponse({ status: 'error', message: 'LogCollector not available' });
                 }
-                break;
+                return true; // Keep message channel open for response
 
             case 'LOG_COLLECTOR_EXPORT_JSON':
                 if (typeof logCollector !== 'undefined') {
@@ -3323,7 +3377,7 @@ function setupMessageListeners() {
                 } else {
                     sendResponse({ status: 'error', message: 'LogCollector not available' });
                 }
-                break;
+                return true; // Keep message channel open for response
 
             case 'LOG_COLLECTOR_EXPORT_TEXT':
                 if (typeof logCollector !== 'undefined') {
@@ -3333,7 +3387,7 @@ function setupMessageListeners() {
                 } else {
                     sendResponse({ status: 'error', message: 'LogCollector not available' });
                 }
-                break;
+                return true; // Keep message channel open for response
 
             case 'LOG_COLLECTOR_GET_COUNT':
                 if (typeof logCollector !== 'undefined') {
@@ -3376,11 +3430,12 @@ function setupMessageListeners() {
 function setupTabListeners() {
     // Clear data when tab is closed
     chrome.tabs.onRemoved.addListener((tabId) => {
-        console.log(`Scrapfly Background: Tab ${tabId} closed, clearing headers, cookies, and payloads`);
+        console.log(`Scrapfly Background: Tab ${tabId} closed, clearing headers, cookies, payloads, and network URLs`);
         headersStore.delete(tabId);
         requestHeadersStore.delete(tabId);
         responseCookiesStore.delete(tabId);
         payloadStore.delete(tabId);
+        networkUrlsStore.delete(tabId);
 
         // Clear cache tracking for this tab
         if (tabsUsingCache.has(tabId)) {
@@ -3413,6 +3468,59 @@ function setupTabListeners() {
                 clearTimeout(funcState.timeout);
             }
             funcaptchaCaptureState.delete(tabId);
+        }
+
+        // Clear hCaptcha capture state if tab is closed during capture
+        if (typeof hcaptchaCaptureState !== 'undefined' && hcaptchaCaptureState.has(tabId)) {
+            console.log(`Scrapfly Background: Tab ${tabId} closed during hCaptcha capture, cleaning up`);
+            const hcaptchaState = hcaptchaCaptureState.get(tabId);
+            if (hcaptchaState && hcaptchaState.timeout) {
+                clearTimeout(hcaptchaState.timeout);
+            }
+            hcaptchaCaptureState.delete(tabId);
+        }
+
+        // Clear Akamai capture state if tab is closed during capture
+        if (akamaiCaptureState.has(tabId)) {
+            console.log(`Scrapfly Background: Tab ${tabId} closed during Akamai capture, cleaning up`);
+            const akamaiState = akamaiCaptureState.get(tabId);
+            if (akamaiState && akamaiState.timeout) {
+                clearTimeout(akamaiState.timeout);
+            }
+            akamaiCaptureState.delete(tabId);
+        }
+
+        // Clear Imperva capture state if tab is closed during capture
+        if (impervaCaptureState.has(tabId)) {
+            console.log(`Scrapfly Background: Tab ${tabId} closed during Imperva capture, cleaning up`);
+            const impervaState = impervaCaptureState.get(tabId);
+            if (impervaState && impervaState.timeout) {
+                clearTimeout(impervaState.timeout);
+            }
+            impervaCaptureState.delete(tabId);
+        }
+
+        // Clear Shape Security capture state if tab is closed during capture
+        if (typeof shapesecurityCaptureState !== 'undefined' && shapesecurityCaptureState.has(tabId)) {
+            console.log(`Scrapfly Background: Tab ${tabId} closed during Shape Security capture, cleaning up`);
+            const shapeState = shapesecurityCaptureState.get(tabId);
+            if (shapeState && shapeState.timeout) {
+                clearTimeout(shapeState.timeout);
+            }
+            shapesecurityCaptureState.delete(tabId);
+        }
+
+        // Clear AWS WAF capture state if tab is closed during capture
+        if (typeof awsWafCaptureStateRef !== 'undefined' && awsWafCaptureStateRef.isCapturing && awsWafCaptureStateRef.tabId === tabId) {
+            console.log(`Scrapfly Background: Tab ${tabId} closed during AWS WAF capture, cleaning up`);
+            if (awsWafCaptureStateRef.timeout) {
+                clearTimeout(awsWafCaptureStateRef.timeout);
+            }
+            // Reset AWS WAF state object
+            awsWafCaptureStateRef.isCapturing = false;
+            awsWafCaptureStateRef.tabId = null;
+            awsWafCaptureStateRef.url = null;
+            awsWafCaptureStateRef.capturedData = {};
         }
 
         // Clear the badge for this tab

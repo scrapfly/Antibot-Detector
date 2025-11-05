@@ -31,6 +31,10 @@ class CategoryManager {
                 console.log('[BADGE-COLOUR] CategoryManager: Saved initial data to storage');
             } else {
                 console.log('[BADGE-COLOUR] CategoryManager: ✅ Loaded existing data from storage (preserving custom colors)');
+
+                // IMPORTANT: Merge any new tags from index.json that aren't in storage
+                // This ensures new detection methods (like js_hooks) get their colors even if storage is old
+                await this.mergeNewTagsFromIndex();
             }
 
             // Sync colors from Settings (user customizations take precedence)
@@ -86,6 +90,49 @@ class CategoryManager {
             console.error('[CategoryManager] ❌ Failed to load detectors index:', error);
             console.error('[CategoryManager] ❌ Error stack:', error.stack);
             throw error;
+        }
+    }
+
+    /**
+     * Merge new tags from index.json into storage data
+     * This ensures new detection methods added to index.json are available even with old storage data
+     */
+    async mergeNewTagsFromIndex() {
+        try {
+            const indexUrl = chrome.runtime.getURL('detectors/index.json');
+            const response = await fetch(indexUrl);
+
+            if (!response.ok) {
+                console.warn('[CategoryManager] Failed to fetch index.json for tag merging:', response.statusText);
+                return;
+            }
+
+            const indexData = await response.json();
+
+            // Merge tags from index.json that aren't in storage
+            if (indexData.tags) {
+                if (!this.categories.tags) {
+                    this.categories.tags = {};
+                }
+
+                let mergedCount = 0;
+                for (const [tagName, tagData] of Object.entries(indexData.tags)) {
+                    if (!this.categories.tags[tagName]) {
+                        this.categories.tags[tagName] = tagData;
+                        mergedCount++;
+                        console.log(`[CategoryManager] ✅ Merged new tag from index.json: ${tagName} → ${tagData.colour}`);
+                    }
+                }
+
+                if (mergedCount > 0) {
+                    console.log(`[CategoryManager] Merged ${mergedCount} new tags from index.json`);
+                    await this.saveToStorage();
+                } else {
+                    console.log('[CategoryManager] No new tags to merge from index.json');
+                }
+            }
+        } catch (error) {
+            console.warn('[CategoryManager] Failed to merge new tags from index.json:', error);
         }
     }
 

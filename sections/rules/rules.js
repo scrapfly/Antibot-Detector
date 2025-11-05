@@ -321,7 +321,7 @@ class Rules {
     // Load scope settings from data attributes
     const nameScope = methodItem.dataset.nameScope || (methodKey === 'header' || methodKey === 'cookie' ? (methodKey === 'header' ? 'response' : 'request') : '');
     const valueScope = methodItem.dataset.valueScope || (methodKey === 'header' || methodKey === 'cookie' ? (methodKey === 'header' ? 'response' : 'request') : '');
-    const textScope = methodItem.dataset.textScope || 'all_resources';
+    const textScope = methodItem.dataset.textScope || 'all';
 
     // Set values in modal
     const confidenceSlider = document.querySelector('#confidenceSlider');
@@ -2126,7 +2126,7 @@ class Rules {
     // Get scope values from modal
     const nameScope = document.querySelector('#nameScope')?.value || '';
     const valueScope = document.querySelector('#valueScope')?.value || '';
-    const textScope = document.querySelector('#textScope')?.value || 'all_resources';
+    const textScope = document.querySelector('#textScope')?.value || 'all';
 
     // Save to data attributes
     this.currentMethodItem.dataset.confidence = confidence;
@@ -2446,7 +2446,7 @@ class Rules {
             // Load scope settings from JSON
             let nameScope = '';
             let valueScope = '';
-            let textScope = 'all_resources';
+            let textScope = 'all';
 
             if (methodType === 'header') {
               nameScope = method.nameScope || 'response';
@@ -2455,7 +2455,7 @@ class Rules {
               nameScope = method.nameScope || 'request';
               valueScope = method.valueScope || 'request';
             } else if (methodType === 'url') {
-              textScope = method.textScope || 'all_resources';
+              textScope = method.textScope || 'all';
             }
 
             // Skip completely empty method items
@@ -2878,7 +2878,7 @@ class Rules {
               methodData.nameScope = item.dataset.nameScope || 'request';
               methodData.valueScope = item.dataset.valueScope || 'request';
             } else if (methodType === 'url') {
-              methodData.textScope = item.dataset.textScope || 'all_resources';
+              methodData.textScope = item.dataset.textScope || 'all';
             }
 
             methods.push(methodData);

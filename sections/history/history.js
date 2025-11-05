@@ -772,7 +772,8 @@ class History {
     }
 
     return matches.map(match => {
-      const methodType = (match.type || 'unknown').replace(/_/g, ' ').toUpperCase();
+      const originalType = match.type || 'unknown';
+      const methodType = originalType.replace(/_/g, ' ').toUpperCase();
       const confidence = match.confidence || 0;
 
       // Determine display value based on method type
@@ -802,10 +803,10 @@ class History {
           displayValue = match.pattern || match.name || match.value || match.selector || 'unknown';
       }
 
-      // Get tag color
+      // Get tag color (use originalType to preserve underscores for lookup)
       let tagColor = '#666666';
       if (this.detectorManager?.categoryManager) {
-        tagColor = this.detectorManager.categoryManager.getTagColor(methodType) || '#666666';
+        tagColor = this.detectorManager.categoryManager.getTagColor(originalType.toLowerCase()) || '#666666';
       }
 
       // Confidence class
