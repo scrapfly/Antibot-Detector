@@ -2104,6 +2104,17 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
           // Clear current results
           this.currentResults = [];
 
+          // FIX: Force clear pagination to prevent stale data from persisting
+          if (this.paginationManager) {
+            this.paginationManager.setItems([]);
+          }
+
+          // FIX: Explicitly clear result cards from DOM
+          const detectionResults = document.querySelector('#detectionResults');
+          if (detectionResults) {
+            detectionResults.innerHTML = '';
+          }
+
           // Show empty state (if Detection tab is currently visible)
           this.showEmptyState();
 

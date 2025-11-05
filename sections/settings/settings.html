@@ -329,22 +329,18 @@
             </div>
 
           </div>
-        </div>
-      </div>
 
-      <!-- Detection Settings Tab -->
-      <div class="settings-tab-content" data-tab-content="detection">
-        <div class="settings-section">
-          <h3>Detection Configuration</h3>
+          <!-- Detection Configuration (moved from Detection tab) -->
+          <h3 style="margin-top: 32px; padding-top: 32px; border-top: 2px solid var(--border); font-size: 18px;">Detection Configuration</h3>
 
           <div class="setting-group">
             <label class="setting-label">
-              <span>Detection Cache Duration</span>
-              <span class="setting-description">How long to cache detection results</span>
+              <span style="font-size: 15px;">Detection Cache Duration</span>
+              <span class="setting-description" style="font-size: 13px;">How long to cache detection results</span>
             </label>
-            <div style="display: flex; gap: 8px; width: 100%;">
-              <input type="number" id="cacheDuration" class="input-field" min="1" value="12" style="flex: 1;">
-              <select id="cacheUnit" class="input-field" style="flex: 1;">
+            <div style="display: flex; gap: 10px; width: 100%;">
+              <input type="number" id="cacheDuration" class="input-field" min="1" value="12" style="flex: 1; font-size: 15px; padding: 10px;">
+              <select id="cacheUnit" class="input-field" style="flex: 1; font-size: 15px; padding: 10px;">
                 <option value="minutes">Minutes</option>
                 <option value="hours" selected>Hours</option>
                 <option value="days">Days</option>
@@ -353,11 +349,11 @@
           </div>
 
           <div class="setting-group" style="flex-direction: column; align-items: flex-start;">
-            <label class="setting-label" style="margin-bottom: 8px;">
-              <span>Detection Cache Scope</span>
-              <span class="setting-description">How to identify cached detection results</span>
+            <label class="setting-label" style="margin-bottom: 10px;">
+              <span style="font-size: 15px;">Detection Cache Scope</span>
+              <span class="setting-description" style="font-size: 13px;">How to identify cached detection results</span>
             </label>
-            <select id="cacheScope" class="input-field" style="width: 100%;">
+            <select id="cacheScope" class="input-field" style="width: 100%; font-size: 15px; padding: 10px;">
               <option value="domain">Domain - Same domain (example.com)</option>
               <option value="path">Path - Domain + path (ignores query params)</option>
               <option value="full">Full URL - Exact URL match</option>
@@ -365,13 +361,13 @@
           </div>
 
           <div class="setting-group" style="flex-direction: column; align-items: flex-start;">
-            <label class="setting-label" style="margin-bottom: 8px;">
-              <span>Blacklisted Domains</span>
-              <span class="setting-description">Domains to skip detection completely</span>
+            <label class="setting-label" style="margin-bottom: 10px;">
+              <span style="font-size: 15px;">Blacklisted Domains</span>
+              <span class="setting-description" style="font-size: 13px;">Domains to skip detection completely</span>
             </label>
-            <div style="display: flex; gap: 8px; width: 100%; margin-bottom: 8px;">
-              <button id="addCurrentDomainBtn" class="action-btn" style="flex: 1;">
-                <svg width="14" height="14" viewBox="0 0 24 24">
+            <div style="display: flex; gap: 8px; width: 100%; margin-bottom: 10px;">
+              <button id="addCurrentDomainBtn" class="action-btn" style="flex: 1; font-size: 14px; padding: 10px;">
+                <svg width="16" height="16" viewBox="0 0 24 24">
                   <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
                 </svg>
                 Add Current Page
@@ -383,16 +379,16 @@
           </div>
 
           <!-- JS API Events Section -->
-          <div class="setting-group" style="flex-direction: column; align-items: flex-start; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
-            <label class="setting-label" style="margin-bottom: 12px;">
-              <span>JS API Events</span>
-              <span class="setting-description">Allow websites to listen for extension detection events</span>
+          <div class="setting-group" style="flex-direction: column; align-items: flex-start; margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--border);">
+            <label class="setting-label" style="margin-bottom: 14px;">
+              <span style="font-size: 15px;">JS API Events</span>
+              <span class="setting-description" style="font-size: 13px;">Allow websites to listen for extension detection events</span>
             </label>
 
             <div class="setting-group">
               <label class="setting-label">
-                <span>Enable JS API Events</span>
-                <span class="setting-description">Dispatch custom events to page window</span>
+                <span style="font-size: 14px;">Enable JS API Events</span>
+                <span class="setting-description" style="font-size: 12px;">Dispatch custom events to page window</span>
               </label>
               <label class="switch">
                 <input type="checkbox" id="enableJsApi">
@@ -425,16 +421,16 @@
           </div>
 
           <!-- Webhook Integration Section -->
-          <div class="setting-group" style="flex-direction: column; align-items: flex-start; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
-            <label class="setting-label" style="margin-bottom: 12px;">
-              <span>Webhook Integration</span>
-              <span class="setting-description">Send detection results to external APIs</span>
+          <div class="setting-group" style="flex-direction: column; align-items: flex-start; margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--border);">
+            <label class="setting-label" style="margin-bottom: 14px;">
+              <span style="font-size: 15px;">Webhook Integration</span>
+              <span class="setting-description" style="font-size: 13px;">Send detection results to external APIs</span>
             </label>
 
             <div class="setting-group">
               <label class="setting-label">
-                <span>Enable Webhook</span>
-                <span class="setting-description">Send HTTP requests on detection</span>
+                <span style="font-size: 14px;">Enable Webhook</span>
+                <span class="setting-description" style="font-size: 12px;">Send HTTP requests on detection</span>
               </label>
               <label class="switch">
                 <input type="checkbox" id="enableWebhook">
@@ -444,8 +440,8 @@
 
             <div class="setting-group" id="webhookOnCacheGroup" style="display: none;">
               <label class="setting-label">
-                <span>Send on Every Page Load</span>
-                <span class="setting-description">Send webhook even when using cached detection data</span>
+                <span style="font-size: 14px;">Send on Every Page Load</span>
+                <span class="setting-description" style="font-size: 12px;">Send webhook even when using cached detection data</span>
               </label>
               <label class="switch">
                 <input type="checkbox" id="webhookOnCache">
@@ -456,9 +452,9 @@
             <div id="webhookSettings" class="webhook-settings-container">
               <div class="setting-group">
                 <label class="setting-label">
-                  <span>HTTP Method</span>
+                  <span style="font-size: 14px;">HTTP Method</span>
                 </label>
-                <select id="webhookMethod" class="input-field">
+                <select id="webhookMethod" class="input-field" style="font-size: 14px; padding: 10px;">
                   <option value="GET">GET</option>
                   <option value="POST" selected>POST</option>
                   <option value="PUT">PUT</option>
@@ -467,10 +463,10 @@
 
               <div class="setting-group" style="flex-direction: column; align-items: flex-start;">
                 <label class="setting-label">
-                  <span>Webhook URL</span>
-                  <span class="setting-description" id="webhookUrlDescription">Complete endpoint URL (https://api.example.com/webhook)</span>
+                  <span style="font-size: 14px;">Webhook URL</span>
+                  <span class="setting-description" id="webhookUrlDescription" style="font-size: 12px;">Complete endpoint URL (https://api.example.com/webhook)</span>
                 </label>
-                <input type="url" id="webhookUrl" class="input-field" placeholder="https://api.example.com/webhook" style="width: 100%;">
+                <input type="url" id="webhookUrl" class="input-field" placeholder="https://api.example.com/webhook" style="width: 100%; font-size: 14px; padding: 10px;">
                 <div class="webhook-url-hint" id="webhookUrlHint" style="display: none;">
                   <strong>Available variables:</strong>
                   <code>&lt;SITEURL&gt;</code>, <code>&lt;HOSTNAME&gt;</code>, <code>&lt;TIMESTAMP&gt;</code>, <code>&lt;DETECTION_COUNT&gt;</code>, <code>&lt;CATEGORIES&gt;</code>
@@ -482,10 +478,10 @@
 
               <div class="setting-group" id="webhookContentTypeGroup">
                 <label class="setting-label">
-                  <span>Content-Type</span>
-                  <span class="setting-description">Request content type for POST/PUT</span>
+                  <span style="font-size: 14px;">Content-Type</span>
+                  <span class="setting-description" style="font-size: 12px;">Request content type for POST/PUT</span>
                 </label>
-                <select id="webhookContentType" class="input-field">
+                <select id="webhookContentType" class="input-field" style="font-size: 14px; padding: 10px;">
                   <option value="application/json" selected>application/json</option>
                   <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
                   <option value="text/plain">text/plain</option>
@@ -494,15 +490,15 @@
 
               <div class="setting-group" id="webhookPayloadGroup" style="flex-direction: column; align-items: flex-start;">
                 <label class="setting-label">
-                  <span>Payload Template</span>
-                  <span class="setting-description">Use variables: &lt;SITEURL&gt;, &lt;DETECTIONS&gt;, &lt;TIMESTAMP&gt;, &lt;DETECTION_COUNT&gt;, &lt;HOSTNAME&gt;, &lt;CATEGORIES&gt;</span>
+                  <span style="font-size: 14px;">Payload Template</span>
+                  <span class="setting-description" style="font-size: 12px;">Use variables: &lt;SITEURL&gt;, &lt;DETECTIONS&gt;, &lt;TIMESTAMP&gt;, &lt;DETECTION_COUNT&gt;, &lt;HOSTNAME&gt;, &lt;CATEGORIES&gt;</span>
                 </label>
-                <textarea id="webhookPayload" class="input-field" rows="6" style="width: 100%; font-family: monospace; font-size: 12px;" placeholder='{"url": "<SITEURL>", "detections": <DETECTIONS>, "timestamp": "<TIMESTAMP>", "count": <DETECTION_COUNT>}'></textarea>
+                <textarea id="webhookPayload" class="input-field" rows="6" style="width: 100%; font-family: monospace; font-size: 13px; padding: 10px;" placeholder='{"url": "<SITEURL>", "detections": <DETECTIONS>, "timestamp": "<TIMESTAMP>", "count": <DETECTION_COUNT>}'></textarea>
               </div>
 
               <div style="display: flex; gap: 8px; margin-top: 8px;">
-                <button id="testWebhookBtn" class="action-btn" style="flex: 1;">
-                  <svg width="14" height="14" viewBox="0 0 24 24">
+                <button id="testWebhookBtn" class="action-btn" style="flex: 1; font-size: 14px; padding: 10px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24">
                     <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" fill="currentColor"/>
                   </svg>
                   Test Webhook
@@ -680,12 +676,6 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Creator Footer -->
-    <div class="creator-footer">
-      <span>CREATOR: </span>
-      <a href="https://github.com/diegopzz" target="_blank" rel="noopener noreferrer">diegopzz</a>
     </div>
 
     <div class="modal-footer">
