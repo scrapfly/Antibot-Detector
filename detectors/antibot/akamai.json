@@ -1,6 +1,7 @@
 {
   "id": "akamai",
   "name": "Akamai Bot Manager",
+  "enabled": true,
   "category": "Anti-Bot",
   "color": "#FF6B35",
   "lastUpdated": "2024-01-15",
@@ -110,34 +111,6 @@
       }
     ],
     "header": [
-      {
-        "name": "x-akamai-session-info",
-        "confidence": 90,
-        "description": "Akamai session header",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      },
-      {
-        "name": "akamai-origin-hop",
-        "confidence": 85,
-        "description": "Akamai CDN hop header",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      }
     ],
     "url": [
       {

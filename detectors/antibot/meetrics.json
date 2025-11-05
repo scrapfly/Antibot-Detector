@@ -1,6 +1,7 @@
 {
   "id": "meetrics",
   "name": "Meetrics Check",
+  "enabled": true,
   "category": "ANTIBOT",
   "color": "#FF6B9D",
   "lastUpdated": "2024-10-21",

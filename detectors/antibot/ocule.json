@@ -1,6 +1,7 @@
 {
   "id": "ocule",
   "name": "Ocule",
+  "enabled": true,
   "category": "ANTIBOT",
   "color": "#FFA630",
   "lastUpdated": "2024-10-21",

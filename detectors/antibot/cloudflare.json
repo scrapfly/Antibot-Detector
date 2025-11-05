@@ -1,6 +1,7 @@
 {
   "id": "cloudflare",
   "name": "Cloudflare Bot Management",
+  "enabled": true,
   "category": "Anti-Bot",
   "color": "#F97316",
   "lastUpdated": "2024-01-15",

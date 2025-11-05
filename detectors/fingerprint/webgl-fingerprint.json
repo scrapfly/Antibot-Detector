@@ -1,6 +1,7 @@
 {
   "id": "webgl-fingerprint",
   "name": "WebGL Fingerprint",
+  "enabled": true,
   "category": "Fingerprint",
   "color": "#7c3aed",
   "lastUpdated": "2024-01-15",

@@ -1,6 +1,7 @@
 {
   "id": "aliexpress",
   "name": "AliExpress CAPTCHA",
+  "enabled": true,
   "category": "CAPTCHA",
   "color": "#FF6A00",
   "lastUpdated": "2025-01-11",

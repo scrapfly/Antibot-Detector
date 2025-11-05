@@ -1,6 +1,7 @@
 {
   "id": "friendlycaptcha",
   "name": "Friendly Captcha",
+  "enabled": true,
   "category": "CAPTCHA",
   "color": "#00D084",
   "lastUpdated": "2024-10-21",

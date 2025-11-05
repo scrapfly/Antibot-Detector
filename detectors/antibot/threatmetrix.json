@@ -1,6 +1,7 @@
 {
   "id": "threatmetrix",
   "name": "ThreatMetrix",
+  "enabled": true,
   "category": "ANTIBOT",
   "color": "#FF6B35",
   "lastUpdated": "2024-10-21",

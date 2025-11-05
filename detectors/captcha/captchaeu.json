@@ -1,6 +1,7 @@
 {
   "id": "captchaeu",
   "name": "Captcha.eu",
+  "enabled": true,
   "category": "CAPTCHA",
   "color": "#4285F4",
   "lastUpdated": "2024-10-21",

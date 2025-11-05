@@ -1,6 +1,7 @@
 {
   "id": "gamepads-fingerprint",
   "name": "Gamepads API Fingerprint",
+  "enabled": true,
   "category": "Fingerprint",
   "color": "#ef4444",
   "lastUpdated": "2025-01-21",

@@ -1,6 +1,7 @@
 {
   "id": "performance-fingerprint",
   "name": "Performance Fingerprint",
+  "enabled": true,
   "category": "Fingerprint",
   "color": "#7c3aed",
   "lastUpdated": "2025-01-15",

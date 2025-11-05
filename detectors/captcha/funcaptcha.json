@@ -1,6 +1,7 @@
 {
   "id": "funcaptcha",
   "name": "FunCaptcha (Arkose Labs)",
+  "enabled": true,
   "category": "CAPTCHA",
   "color": "#9C27B0",
   "lastUpdated": "2024-01-15",

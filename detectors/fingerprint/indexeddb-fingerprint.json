@@ -1,6 +1,7 @@
 {
   "id": "indexeddb-fingerprint",
   "name": "IndexedDB Fingerprint",
+  "enabled": true,
   "category": "Fingerprint",
   "color": "#8b5cf6",
   "lastUpdated": "2025-01-21",

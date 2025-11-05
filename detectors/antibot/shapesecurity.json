@@ -1,6 +1,7 @@
 {
   "id": "shapesecurity",
   "name": "Shape Security",
+  "enabled": true,
   "category": "Anti-Bot",
   "color": "#FF6B35",
   "lastUpdated": "2024-10-06",

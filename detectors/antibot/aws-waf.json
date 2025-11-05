@@ -1,6 +1,7 @@
 {
   "id": "aws-waf",
   "name": "AWS WAF",
+  "enabled": true,
   "category": "Anti-Bot",
   "color": "#FF9900",
   "lastUpdated": "2024-01-15",

@@ -1,6 +1,7 @@
 {
   "id": "recaptcha",
   "name": "Google reCAPTCHA",
+  "enabled": true,
   "category": "CAPTCHA",
   "color": "#4285F4",
   "lastUpdated": "2024-01-15",

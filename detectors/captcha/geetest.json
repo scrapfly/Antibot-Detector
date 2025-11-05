@@ -1,6 +1,7 @@
 {
   "id": "geetest",
   "name": "GeeTest",
+  "enabled": true,
   "category": "CAPTCHA",
   "color": "#5E35B1",
   "lastUpdated": "2024-01-15",

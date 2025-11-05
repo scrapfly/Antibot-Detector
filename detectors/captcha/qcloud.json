@@ -1,6 +1,7 @@
 {
   "id": "qcloud",
   "name": "QCloud Captcha",
+  "enabled": true,
   "category": "CAPTCHA",
   "color": "#1890FF",
   "lastUpdated": "2024-10-21",

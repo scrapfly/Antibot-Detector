@@ -1,6 +1,7 @@
 {
   "id": "cheq",
   "name": "Cheq",
+  "enabled": true,
   "category": "ANTIBOT",
   "color": "#FF5C7C",
   "lastUpdated": "2024-10-21",

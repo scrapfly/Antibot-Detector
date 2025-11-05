@@ -1,6 +1,7 @@
 {
   "id": "datadome",
   "name": "DataDome",
+  "enabled": true,
   "category": "Anti-Bot",
   "color": "#22C55E",
   "lastUpdated": "2024-01-15",

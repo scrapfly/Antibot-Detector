@@ -1,6 +1,7 @@
 {
   "id": "f5",
   "name": "F5 BIG-IP ASM",
+  "enabled": true,
   "category": "Anti-Bot",
   "color": "#E53935",
   "lastUpdated": "2024-01-15",

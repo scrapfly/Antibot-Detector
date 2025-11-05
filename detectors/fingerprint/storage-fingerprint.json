@@ -1,6 +1,7 @@
 {
   "id": "storage-fingerprint",
   "name": "Web Storage Fingerprint",
+  "enabled": true,
   "category": "Fingerprint",
   "color": "#14b8a6",
   "lastUpdated": "2025-01-21",

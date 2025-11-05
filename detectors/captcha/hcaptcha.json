@@ -1,6 +1,7 @@
 {
   "id": "hcaptcha",
   "name": "hCaptcha",
+  "enabled": true,
   "category": "CAPTCHA",
   "color": "#0074BF",
   "lastUpdated": "2024-01-15",

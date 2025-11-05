@@ -1,6 +1,7 @@
 {
   "id": "kasada",
   "name": "Kasada",
+  "enabled": true,
   "category": "Anti-Bot",
   "color": "#6366F1",
   "lastUpdated": "2024-10-29",

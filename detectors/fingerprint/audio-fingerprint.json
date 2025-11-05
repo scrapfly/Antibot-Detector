@@ -1,6 +1,7 @@
 {
   "id": "audio-fingerprint",
   "name": "Audio Fingerprint",
+  "enabled": true,
   "category": "Fingerprint",
   "color": "#7c3aed",
   "lastUpdated": "2024-01-15",

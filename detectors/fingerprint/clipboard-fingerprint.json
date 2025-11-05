@@ -1,6 +1,7 @@
 {
   "id": "clipboard-fingerprint",
   "name": "Clipboard API Fingerprint",
+  "enabled": true,
   "category": "Fingerprint",
   "color": "#f59e0b",
   "lastUpdated": "2025-01-21",
