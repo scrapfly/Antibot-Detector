@@ -429,6 +429,11 @@
 
         // Create lightweight detection callback
         const reportInlineDetection = () => {
+          // FIX: Early exit if cache hit detected - don't waste CPU on hook reporting
+          if (window.__scrapflyCacheHitEarlyExit) {
+            return; // Cache hit - skip all hook reporting
+          }
+
           if (!inlineHookDetections.has(hook.target)) {
             inlineHookDetections.set(hook.target, {
               target: hook.target,
@@ -921,6 +926,11 @@
     }
 
     function reportHookDetection(detectorId, detectorName, category, hook) {
+      // FIX: Early exit if cache hit detected - don't waste CPU on hook reporting
+      if (window.__scrapflyCacheHitEarlyExit) {
+        return; // Cache hit - skip all hook reporting
+      }
+
       // FIX: Removed buffering - monitoring is always enabled from document_start
       const detectionKey = `${detectorId}:${hook.target}`;
       const isDuplicate = triggeredHooks.has(detectionKey);

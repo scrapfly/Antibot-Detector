@@ -1333,6 +1333,12 @@ function setupHeaderCapture() {
                 return; // Skip all payload capture for cached tabs
             }
 
+            // FIX: Skip payload capture if no detection is actively running for this tab
+            // Only capture when detection is in progress, not for all background tabs
+            if (!activeDetections.has(details.tabId)) {
+                return; // No active detection - skip capture
+            }
+
             // Capture ALL requests with bodies (not just main_frame)
             if (details.requestBody) {
                 const method = details.method || 'GET';
@@ -1404,6 +1410,9 @@ function setupHeaderCapture() {
         (details) => {
             // Skip if cache hit
             if (tabsUsingCache.has(details.tabId)) return;
+
+            // FIX: Skip URL capture if no detection is actively running for this tab
+            if (!activeDetections.has(details.tabId)) return;
 
             // Skip invalid tab IDs
             if (details.tabId < 0) return;
