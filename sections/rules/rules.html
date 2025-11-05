@@ -521,6 +521,10 @@
             <div class="dom-step-number">2</div>
             <div class="dom-step-label">Choose Property</div>
           </div>
+          <div class="dom-step" id="windowStep3">
+            <div class="dom-step-number">3</div>
+            <div class="dom-step-label">Select Condition</div>
+          </div>
         </div>
 
         <!-- Step 1: Keyword Input -->
@@ -569,11 +573,58 @@
             </p>
           </div>
         </div>
+
+        <!-- Step 3: Condition Selection -->
+        <div id="windowConditionSection" class="dom-custom-section" style="display: none; margin-top: 20px;">
+          <h4 style="color: var(--text-primary); font-size: 14px; font-weight: 600; margin-bottom: 12px;">
+            Select Condition Type
+          </h4>
+          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">
+            Choose how to check if the property exists:
+          </p>
+          <div id="windowConditionOptions" style="display: flex; flex-direction: column; gap: 8px;">
+            <label class="window-condition-option" style="display: flex; align-items: center; padding: 10px; background: var(--bg-tertiary); border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;">
+              <input type="radio" name="windowCondition" value="typeof object" style="margin-right: 10px;">
+              <div>
+                <div style="font-size: 13px; color: var(--text-primary); font-weight: 500;">typeof object</div>
+                <div style="font-size: 10px; color: var(--text-muted);">Check if property is an object</div>
+              </div>
+            </label>
+            <label class="window-condition-option" style="display: flex; align-items: center; padding: 10px; background: var(--bg-tertiary); border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;">
+              <input type="radio" name="windowCondition" value="typeof function" style="margin-right: 10px;">
+              <div>
+                <div style="font-size: 13px; color: var(--text-primary); font-weight: 500;">typeof function</div>
+                <div style="font-size: 10px; color: var(--text-muted);">Check if property is a function</div>
+              </div>
+            </label>
+            <label class="window-condition-option" style="display: flex; align-items: center; padding: 10px; background: var(--bg-tertiary); border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;">
+              <input type="radio" name="windowCondition" value="typeof string" style="margin-right: 10px;">
+              <div>
+                <div style="font-size: 13px; color: var(--text-primary); font-weight: 500;">typeof string</div>
+                <div style="font-size: 10px; color: var(--text-muted);">Check if property is a string</div>
+              </div>
+            </label>
+            <label class="window-condition-option" style="display: flex; align-items: center; padding: 10px; background: var(--bg-tertiary); border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;">
+              <input type="radio" name="windowCondition" value="typeof boolean" style="margin-right: 10px;">
+              <div>
+                <div style="font-size: 13px; color: var(--text-primary); font-weight: 500;">typeof boolean</div>
+                <div style="font-size: 10px; color: var(--text-muted);">Check if property is a boolean</div>
+              </div>
+            </label>
+            <label class="window-condition-option" style="display: flex; align-items: center; padding: 10px; background: var(--bg-tertiary); border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;">
+              <input type="radio" name="windowCondition" value="exists" checked style="margin-right: 10px;">
+              <div>
+                <div style="font-size: 13px; color: var(--text-primary); font-weight: 500;">exists</div>
+                <div style="font-size: 10px; color: var(--text-muted);">Just check if property exists (default)</div>
+              </div>
+            </label>
+          </div>
+        </div>
       </div>
 
       <div class="rule-modal-footer">
         <button id="cancelWindowHelper" class="rule-btn rule-btn-cancel">Cancel</button>
-        <button id="useWindowProperty" class="rule-btn rule-btn-save">Use Property</button>
+        <button id="useWindowProperty" class="rule-btn rule-btn-save">Next</button>
       </div>
     </div>
   </div>

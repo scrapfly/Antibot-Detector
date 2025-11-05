@@ -2422,3 +2422,14 @@
   color: var(--text-primary);
   padding: 8px;
 }
+
+/* Window condition option styles */
+.window-condition-option:hover {
+  background: var(--bg-secondary) !important;
+  border-color: var(--accent) !important;
+}
+
+.window-condition-option:has(input:checked) {
+  background: rgba(59, 130, 246, 0.1) !important;
+  border-color: var(--accent) !important;
+}

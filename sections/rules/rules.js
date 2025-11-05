@@ -930,14 +930,24 @@ class Rules {
   updateWindowHelperSteps(activeStep) {
     const step1 = document.querySelector('#windowStep1');
     const step2 = document.querySelector('#windowStep2');
+    const step3 = document.querySelector('#windowStep3');
+    const conditionSection = document.querySelector('#windowConditionSection');
+    const useBtn = document.querySelector('#useWindowProperty');
 
-    if (step1 && step2) {
-      if (activeStep === 1) {
-        step1.classList.add('active');
-        step2.classList.remove('active');
-      } else if (activeStep === 2) {
-        step1.classList.remove('active');
-        step2.classList.add('active');
+    if (step1 && step2 && step3) {
+      // Update step indicators
+      step1.classList.toggle('active', activeStep === 1);
+      step2.classList.toggle('active', activeStep === 2);
+      step3.classList.toggle('active', activeStep === 3);
+
+      // Show/hide condition section
+      if (conditionSection) {
+        conditionSection.style.display = activeStep === 3 ? 'block' : 'none';
+      }
+
+      // Update button text
+      if (useBtn) {
+        useBtn.textContent = activeStep === 3 ? 'Use Property' : 'Next';
       }
     }
   }
@@ -1036,18 +1046,36 @@ class Rules {
   useWindowProperty() {
     const customInput = document.querySelector('#windowCustomInput');
     const property = customInput?.value.trim();
+    const step3 = document.querySelector('#windowStep3');
+    const isOnStep3 = step3?.classList.contains('active');
 
     if (!property) {
       alert('Please select or enter a property');
       return;
     }
 
+    // If we're not on step 3 yet, move to step 3 (condition selection)
+    if (!isOnStep3) {
+      this.updateWindowHelperSteps(3);
+      return;
+    }
+
+    // We're on step 3, now apply both property and condition
+    const conditionRadio = document.querySelector('input[name="windowCondition"]:checked');
+    const condition = conditionRadio?.value || 'exists';
+
     if (this.currentWindowMethodItem) {
       const nameInput = this.currentWindowMethodItem.querySelector('.method-input.method-name');
+      const valueInput = this.currentWindowMethodItem.querySelector('.method-input.method-value');
+
       if (nameInput) {
         nameInput.value = property;
-        this.updateMethodIndicators(this.currentWindowMethodItem);
       }
+      if (valueInput) {
+        valueInput.value = condition;
+      }
+
+      this.updateMethodIndicators(this.currentWindowMethodItem);
     }
 
     this.closeWindowHelperModal();
