@@ -656,6 +656,37 @@ class Detection {
 
     // Update cache info
     this.updateCacheInfo();
+
+    // FIX: Update badge when displaying cached results
+    // The background script only updates badge during active detection, not when returning cached data
+    // So we need to update it here when displayResults() is called with cached detections
+    try {
+      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tabs && tabs[0]) {
+        const detectionCount = detections.length;
+
+        // Get badge colors from CategoryManager
+        const badgeColors = await CategoryManager.getBadgeColors();
+
+        // Calculate badge color based on detection count
+        const count = detectionCount.toString();
+        const color = detectionCount >= 5 ? badgeColors.high :
+                     detectionCount >= 3 ? badgeColors.medium :
+                     badgeColors.low;
+
+        // Update badge text and color
+        await chrome.action.setBadgeText({ text: count, tabId: tabs[0].id });
+        await chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabs[0].id });
+
+        if (this.debugMode) {
+          console.log(`[Detection] Badge updated to ${count} with color ${color}`);
+        }
+      }
+    } catch (error) {
+      if (this.debugMode) {
+        console.warn('[Detection] Could not update badge:', error);
+      }
+    }
   }
 
   /**
