@@ -2118,6 +2118,9 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
           // Show empty state (if Detection tab is currently visible)
           this.showEmptyState();
 
+          // FIX: Update cache info display to reflect new cache scope from settings
+          this.updateCacheInfo();
+
           // Set badge to gray X (matching clearCache() behavior)
           try {
             const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
