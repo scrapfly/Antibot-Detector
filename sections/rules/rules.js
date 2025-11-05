@@ -2436,8 +2436,8 @@ class Rules {
             }
 
             // SIMPLIFICATION: js_hooks only needs target, no regex options
-            // window is now single input - condition defaults to "exists" if not provided
-            const singleInputTypes = ['url', 'content', 'dom', 'js_hooks', 'window', 'payload'];
+            // window now has dual inputs: path (required) + condition (optional, defaults to "exists")
+            const singleInputTypes = ['url', 'content', 'dom', 'js_hooks', 'payload'];
             const isSingleInput = singleInputTypes.includes(methodType);
 
             let inputPlaceholder = 'Name';
@@ -2446,7 +2446,10 @@ class Rules {
             else if (methodType === 'content') inputPlaceholder = 'Text/Word to search';
             else if (methodType === 'url') inputPlaceholder = 'URL Pattern';
             else if (methodType === 'js_hooks') inputPlaceholder = 'JS Hook Target (e.g., navigator.webdriver)';
-            else if (methodType === 'window') inputPlaceholder = 'Window Path (e.g., grecaptcha, _cf_chl_opt)';
+            else if (methodType === 'window') {
+              inputPlaceholder = 'Window Path (e.g., grecaptcha, _cf_chl_opt)';
+              valuePlaceholder = 'Condition (e.g., typeof object, typeof function)';
+            }
             else if (methodType === 'cookie') {
               inputPlaceholder = 'Cookie Name (e.g., __cf_bm, session_id)';
               valuePlaceholder = 'Cookie Value Pattern (optional)';
@@ -2568,16 +2571,21 @@ class Rules {
 
     const itemIndex = `new-${Date.now()}`;
 
-    const singleInputTypes = ['urls', 'url', 'content', 'dom', 'js_hooks', 'window', 'payload'];
+    const singleInputTypes = ['urls', 'url', 'content', 'dom', 'js_hooks', 'payload'];
     const isSingleInput = singleInputTypes.includes(methodKey);
     const isDom = methodKey === 'dom';
+    const isWindow = methodKey === 'window';
 
     let inputPlaceholder = 'Name';
+    let valuePlaceholder = 'Value (optional)';
     if (methodKey === 'dom') inputPlaceholder = 'CSS Selector (e.g., .class, #id, [attr])';
     else if (methodKey === 'content') inputPlaceholder = 'Text/Word to search';
     else if (methodKey === 'urls' || methodKey === 'url') inputPlaceholder = 'URL Pattern';
     else if (methodKey === 'js_hooks') inputPlaceholder = 'JS Hook Target (e.g., navigator.webdriver)';
-    else if (methodKey === 'window') inputPlaceholder = 'Window Path (e.g., grecaptcha, _cf_chl_opt)';
+    else if (methodKey === 'window') {
+      inputPlaceholder = 'Window Path (e.g., grecaptcha, _cf_chl_opt)';
+      valuePlaceholder = 'Condition (e.g., typeof object, typeof function)';
+    }
     else if (methodKey === 'payload') inputPlaceholder = 'Text (e.g., sensor_data, challenge_token)';
 
     const newMethodHtml = `
@@ -2596,9 +2604,10 @@ class Rules {
               <div class="input-indicators" data-for="name-${methodKey}-${itemIndex}"></div>
             </div>
             ${isDom ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="${itemIndex}">?</button>` : ''}
-            ${!isSingleInput ? `
+            ${isWindow ? `<button class="window-helper-btn" title="Window Property Examples" data-input-index="${itemIndex}">?</button>` : ''}
+            ${!isSingleInput || isWindow ? `
             <div class="input-with-indicators">
-              <input type="text" class="method-input method-value" placeholder="Value (optional)" value="" data-method-key="${methodKey}" data-item-index="${itemIndex}">
+              <input type="text" class="method-input method-value" placeholder="${valuePlaceholder}" value="" data-method-key="${methodKey}" data-item-index="${itemIndex}">
               <div class="input-indicators" data-for="value-${methodKey}-${itemIndex}"></div>
             </div>
             ` : ''}
