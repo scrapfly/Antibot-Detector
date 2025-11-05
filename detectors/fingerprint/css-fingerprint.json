@@ -12,8 +12,8 @@
   "detection": {
     "js_hooks": [
       {
-        "description": "Retrieves computed CSS styles for fingerprinting",
-        "enabled": true,
+        "description": "Retrieves computed CSS styles for fingerprinting (disabled - getComputedStyle is on window object, not Window.prototype)",
+        "enabled": false,
         "confidence": 90,
         "target": "Window.prototype.getComputedStyle"
       },

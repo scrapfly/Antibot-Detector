@@ -21,7 +21,8 @@
         "description": "Listens for gamepad connection events",
         "enabled": true,
         "confidence": 75,
-        "target": "Window.prototype.addEventListener"
+        "target": "EventTarget.prototype.addEventListener",
+        "windowPath": "Window"
       }
     ],
     "window": [

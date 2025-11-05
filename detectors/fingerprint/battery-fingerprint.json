@@ -21,7 +21,8 @@
         "description": "Listens to battery status changes",
         "enabled": true,
         "confidence": 90,
-        "target": "BatteryManager.prototype.addEventListener"
+        "target": "EventTarget.prototype.addEventListener",
+        "windowPath": "BatteryManager"
       }
     ],
     "window": [

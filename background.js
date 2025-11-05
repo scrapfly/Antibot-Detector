@@ -597,7 +597,8 @@ function checkAndFinalizeDetection(tabId) {
     // OPTIMIZATION MEDIUM-TERM #2: Debounce finalization checks (250ms window)
     // Prevents redundant work when multiple completion signals arrive rapidly
     // Increased from 10ms to 100ms to reduce timer spam and CPU overhead
-    // Now 250ms for hook batch processing
+    // FIX: Increased from 250ms to 600ms to allow window properties (200ms polling) and JS hooks more time
+    // 600ms = 3 polling cycles for window properties, gives hooks time to fire on initial page scripts
     if (finalizationDebounce.has(tabId)) {
         console.log(`[⏸️ Finalize Check] Already debounced for tab ${tabId}, clearing old timeout...`);
         clearTimeout(finalizationDebounce.get(tabId));
@@ -675,7 +676,17 @@ function checkAndFinalizeDetection(tabId) {
             console.log(`%c[✅ FINALIZE NOW] ${methodType} detection methods complete (required: ${REQUIRED_METHODS})!`, 'color: #4caf50; font-weight: bold; font-size: 14px;');
             console.log(`[✅ FINALIZE NOW]   Methods: ${completedMethods.join(', ')}`);
             if (missingMethods.length > 0) {
-                console.log(`[✅ FINALIZE NOW]   Proceeding without: ${missingMethods.join(', ')} (signals likely lost)`);
+                // FIX: Only log "signals likely lost" if methods have actually timed out
+                // Window properties poll for up to 5000ms, JS hooks up to 3000ms
+                const elapsed = Date.now() - currentState.startTime;
+                const MAX_WINDOW_TIMEOUT = 5000; // Max time for window properties polling
+                const reallyLost = elapsed > MAX_WINDOW_TIMEOUT;
+
+                if (reallyLost) {
+                    console.log(`[✅ FINALIZE NOW]   Proceeding without: ${missingMethods.join(', ')} (timed out after ${elapsed}ms)`);
+                } else {
+                    console.log(`[✅ FINALIZE NOW]   Proceeding without: ${missingMethods.join(', ')} (still pending, ${elapsed}ms elapsed)`);
+                }
             }
             // Send final update - use actual completed count for accurate badge
             sendProgressUpdate(tabId, 'complete', currentState.completedMethods || new Set(), totalMethods);
@@ -722,7 +733,7 @@ function checkAndFinalizeDetection(tabId) {
         }
 
         finalizationDebounce.delete(tabId);
-    }, 250); // OPTIMIZATION MEDIUM-TERM #2: Increased from 10ms to 100ms, now 250ms for hook batch processing
+    }, 600); // FIX: Increased from 250ms to 600ms to allow window properties polling (200ms * 3 cycles) and JS hooks time to complete
 
     finalizationDebounce.set(tabId, timeout);
 }

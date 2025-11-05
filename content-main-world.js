@@ -1183,7 +1183,14 @@
             failCount++;
             failed.push(hook.target);
             failureReasons[hook.target] = (failureReasons[hook.target] || []).concat('installHook returned false');
-            sendLog('warn', `[Hooks DEBUG] ❌ FAILED: ${hook.target} (${detector.name}) - returned false`);
+
+            // FIX: Downgrade log level for expected failures (APIs that don't exist on most pages)
+            const expectedFailures = ['USB.getDevices', 'USB.requestDevice', 'DeviceOrientationEvent', 'DeviceMotionEvent', 'BatteryManager'];
+            const isExpectedFailure = expectedFailures.some(ef => hook.target.includes(ef));
+            const logLevel = isExpectedFailure ? 'log' : 'warn';
+            const icon = isExpectedFailure ? '⚠️' : '❌';
+
+            sendLog(logLevel, `[Hooks DEBUG] ${icon} FAILED: ${hook.target} (${detector.name}) - returned false`);
           }
         } catch (e) {
           failCount++;
