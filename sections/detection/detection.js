@@ -2125,7 +2125,10 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
         (async () => {
           console.log('[Detection] Cache scope changed - clearing current results');
 
-          // Mark cache as cleared so Detection tab will refresh when it becomes visible
+          // FIX: Set BOTH flags to ensure empty state persists
+          // justClearedCache: Blocks NEW_DETECTION_DATA messages for 5 seconds
+          // cacheCleared: Longer-term flag checked when popup becomes visible
+          this.justClearedCache = true;
           this.cacheCleared = true;
 
           // FIX: Set sessionStorage flag for consistency with Clear Cache button
