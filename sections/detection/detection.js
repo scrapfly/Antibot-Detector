@@ -281,13 +281,6 @@ class Detection {
         status: 'pending'
       },
       {
-        emoji: '🎨',
-        title: 'CSS',
-        description: 'Analyzing CSS rules',
-        method: 'css',
-        status: 'pending'
-      },
-      {
         emoji: '🪝',
         title: 'JS Hooks',
         description: 'Monitoring JavaScript API calls',

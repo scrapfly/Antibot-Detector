@@ -289,7 +289,7 @@ class DetectionEngineManager {
             url: false, // Always true - URLs are cheap to check
             window: false,
             js_hooks: false,
-            css: false
+            payload: false
         };
 
         // Always check URLs (cheap and universal)
@@ -300,7 +300,7 @@ class DetectionEngineManager {
             console.warn('[C.1] No detectors loaded, will collect all data types');
             const fullMethods = {
                 cookie: true, header: true, content: true, dom: true,
-                url: true, window: true, js_hooks: true, css: true
+                url: true, window: true, js_hooks: true, payload: true
             };
             // Cache even the fallback case
             this.analyzedMethodsCache = fullMethods;
@@ -320,7 +320,7 @@ class DetectionEngineManager {
                 if (detection.url && detection.url.length > 0) usedMethods.url = true;
                 if (detection.window && detection.window.length > 0) usedMethods.window = true;
                 if (detection.js_hooks && detection.js_hooks.length > 0) usedMethods.js_hooks = true;
-                if (detection.css && detection.css.length > 0) usedMethods.css = true;
+                if (detection.payload && detection.payload.length > 0) usedMethods.payload = true;
             }
         }
 
@@ -442,8 +442,7 @@ class DetectionEngineManager {
             // Helper methods bound to DetectionEngineManager instance
             _extractCookies: () => this.extractCookies(),
             _extractScriptElements: () => this.extractScriptElements(),
-            _extractDOM: () => this.extractDOM(),
-            _collectCSSRules: () => this.collectCSSRules()
+            _extractDOM: () => this.extractDOM()
         };
 
         // OPTIMIZATION Phase C.1: Only create getters for detection methods that are actually used
@@ -504,25 +503,6 @@ class DetectionEngineManager {
             });
         } else {
             console.log('[C.1] ⏭️ Skipped DOM getter - no detector uses DOM detection');
-        }
-
-        if (usedMethods.css) {
-            Object.defineProperty(pageData, 'cssRules', {
-                get() {
-                    if (cachedCSSRules === null) {
-                        const start = Date.now();
-                        cachedCSSRules = this._collectCSSRules();
-                        console.log(`[C.1: Lazy CSS] Collected ${cachedCSSRules.length} CSS rules in ${Date.now() - start}ms`);
-                    }
-                    return cachedCSSRules;
-                },
-                set(value) {
-                    cachedCSSRules = value;
-                },
-                enumerable: true
-            });
-        } else {
-            console.log('[C.1] ⏭️ Skipped CSS getter - no detector uses CSS detection');
         }
 
         // Always include pageHTML if content detection is used (needed for content patterns)
@@ -614,80 +594,6 @@ class DetectionEngineManager {
 
         console.log(`DetectionEngineManager: Found ${cookies.length} cookies`);
         return cookies;
-    }
-
-    /**
-     * Collect CSS rules and computed styles
-     * @returns {Array} Array of CSS rule objects
-     */
-    collectCSSRules() {
-        const cssRules = [];
-
-        try {
-            // Check for suspicious CSS properties that might indicate fingerprinting
-            const testElement = document.createElement('div');
-            document.body.appendChild(testElement);
-
-            const computedStyle = window.getComputedStyle(testElement);
-
-            // Common fingerprinting CSS properties
-            const suspiciousProperties = [
-                'font-family',
-                'font-size',
-                'line-height',
-                'letter-spacing',
-                'word-spacing',
-                'text-rendering',
-                '-webkit-font-smoothing',
-                '-moz-osx-font-smoothing'
-            ];
-
-            for (const property of suspiciousProperties) {
-                const value = computedStyle.getPropertyValue(property);
-                if (value) {
-                    cssRules.push({
-                        type: 'computed',
-                        property: property,
-                        value: value
-                    });
-                }
-            }
-
-            document.body.removeChild(testElement);
-
-            // Check stylesheets for specific patterns
-            for (const stylesheet of document.styleSheets) {
-                try {
-                    // Skip cross-origin stylesheets
-                    if (!stylesheet.cssRules && !stylesheet.rules) continue;
-
-                    const rules = stylesheet.cssRules || stylesheet.rules;
-                    for (let i = 0; i < Math.min(rules.length, 100); i++) { // Limit to first 100 rules
-                        const rule = rules[i];
-                        if (rule.cssText) {
-                            // Look for canvas or WebGL related rules
-                            if (rule.cssText.includes('canvas') ||
-                                rule.cssText.includes('webgl') ||
-                                rule.cssText.includes('fingerprint')) {
-                                cssRules.push({
-                                    type: 'rule',
-                                    selector: rule.selectorText || '',
-                                    text: rule.cssText.substring(0, 200)
-                                });
-                            }
-                        }
-                    }
-                } catch (e) {
-                    // Expected: Cross-origin access errors
-                    console.log('[CSS] Skipped cross-origin stylesheet:', e.message);
-                }
-            }
-        } catch (error) {
-            console.warn('DetectionEngineManager: Failed to collect CSS rules:', error);
-        }
-
-        console.log(`DetectionEngineManager: Collected ${cssRules.length} CSS rules/styles`);
-        return cssRules;
     }
 
     /**
@@ -1254,14 +1160,8 @@ class DetectionEngineManager {
         }
 
         const detections = [];
-        const { url = '', content = [], dom = [], cookies = [], headers = {}, pageHTML = '', externalContent = [], jsHooks = [], payload, payloads } = pageData;
+        const { url = '', content = [], dom = [], cookies = [], headers = {}, pageHTML = '', externalContent = [], jsHooks = [], payload, payloads, networkUrls = [] } = pageData;
         const startTime = Date.now();
-
-        // Get CSS rules
-        let cssRules = [];
-        if (pageData.cssRules) {
-            cssRules = pageData.cssRules;
-        }
 
         console.log('📊 Page Data Summary:', {
             url: url,
@@ -1270,8 +1170,7 @@ class DetectionEngineManager {
             cookiesCount: cookies.length,
             headersCount: Object.keys(headers).length,
             pageHTMLLength: pageHTML.length,
-            externalContentCount: externalContent.length,
-            cssRulesCount: cssRules.length
+            externalContentCount: externalContent.length
         });
 
         console.log('🔍 Cookies:', cookies);
@@ -1307,7 +1206,7 @@ class DetectionEngineManager {
         const EARLY_EXIT_COUNT = 5; // Stop after 5 high-confidence detections
 
         for (const { category, detectorName, detector } of detectorPriorities) {
-            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, pageHTML, externalContent, cssRules, payload, payloads });
+            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, pageHTML, externalContent, payload, payloads, networkUrls });
             if (detection.detected) {
                 console.log(`    ✅ DETECTED: ${detectorName} (confidence: ${detection.confidence}%)`);
                 const detectionObj = {
@@ -2055,86 +1954,6 @@ class DetectionEngineManager {
                         confidence: domPattern.confidence || 85,
                         description: domPattern.description
                     });
-                }
-            }
-        }
-
-        // Check CSS rules patterns
-        if (detector.detection?.css && pageData.cssRules) {
-            const rules = pageData.cssRules;
-            if (rules && rules.length > 0) {
-                console.log(`[CSS Detection] ${detector.name}: Checking ${detector.detection.css.length} patterns against ${rules.length} CSS rules`);
-
-                for (const cssPattern of detector.detection.css) {
-                    const propertyMatchOptions = {
-                        regex: cssPattern.propertyRegex === true,
-                        wholeWord: cssPattern.propertyWholeWord === true,
-                        caseSensitive: cssPattern.propertyCaseSensitive === true
-                    };
-
-                    const valueMatchOptions = {
-                        regex: cssPattern.valueRegex === true,
-                        wholeWord: cssPattern.valueWholeWord === true,
-                        caseSensitive: cssPattern.valueCaseSensitive === true
-                    };
-
-                    const selectorMatchOptions = {
-                        regex: cssPattern.selectorRegex === true,
-                        wholeWord: cssPattern.selectorWholeWord === true,
-                        caseSensitive: cssPattern.selectorCaseSensitive === true
-                    };
-
-                    // Check for matching CSS rule
-                    const matchingRule = rules.find(rule => {
-                        // Check type if specified (computed, rule)
-                        if (cssPattern.type && rule.type !== cssPattern.type) {
-                            return false;
-                        }
-
-                        // Match property name (for computed styles)
-                        if (cssPattern.property && rule.property) {
-                            if (!this.matchPattern(rule.property, cssPattern.property, propertyMatchOptions)) {
-                                return false;
-                            }
-                        }
-
-                        // Match value
-                        if (cssPattern.value && rule.value) {
-                            if (!this.matchPattern(rule.value, cssPattern.value, valueMatchOptions)) {
-                                return false;
-                            }
-                        }
-
-                        // Match selector (for CSS rules)
-                        if (cssPattern.selector && rule.selector) {
-                            if (!this.matchPattern(rule.selector, cssPattern.selector, selectorMatchOptions)) {
-                                return false;
-                            }
-                        }
-
-                        // Match text content (for CSS rules)
-                        if (cssPattern.text && rule.text) {
-                            if (!this.matchPattern(rule.text, cssPattern.text, valueMatchOptions)) {
-                                return false;
-                            }
-                        }
-
-                        return true;
-                    });
-
-                    if (matchingRule) {
-                        const displayValue = matchingRule.type === 'computed'
-                            ? `${matchingRule.property}: ${matchingRule.value}`
-                            : `${matchingRule.selector} { ${(matchingRule.text || '').substring(0, 50)}... }`;
-
-                        matches.push({
-                            type: 'css',
-                            pattern: cssPattern.property || cssPattern.selector || cssPattern.value,
-                            value: displayValue,
-                            confidence: cssPattern.confidence || 80,
-                            description: cssPattern.description || 'CSS rule detected'
-                        });
-                    }
                 }
             }
         }
