@@ -43,11 +43,15 @@ class Rules {
   }
 
   /**
-   * Setup pagination manager (disabled - using scroll instead)
+   * Setup pagination manager
    */
   setupPagination() {
-    // Pagination disabled for Rules tab - using scroll instead
-    // No pagination controls needed - all items rendered with scroll
+    this.paginationManager = new PaginationManager('rulesPagination', {
+      itemsPerPage: 2,
+      onPageChange: (page, items) => {
+        this.renderDetectorsPage(items);
+      }
+    });
   }
 
   /**
@@ -3177,8 +3181,10 @@ class Rules {
 
     this.filteredDetectors = [...this.allDetectors];
 
-    // Render all detectors (no pagination - using scroll)
-    this.renderDetectorsPage(this.filteredDetectors);
+    // Setup pagination with all detectors
+    if (this.paginationManager) {
+      this.paginationManager.setItems(this.filteredDetectors);
+    }
   }
 
   /**
@@ -3859,8 +3865,10 @@ class Rules {
       }
     }
 
-    // Render all filtered results (no pagination - using scroll)
-    this.renderDetectorsPage(this.filteredDetectors);
+    // Update pagination with filtered results
+    if (this.paginationManager) {
+      this.paginationManager.setItems(this.filteredDetectors);
+    }
   }
 }
 
