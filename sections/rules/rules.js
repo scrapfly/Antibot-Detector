@@ -43,15 +43,15 @@ class Rules {
   }
 
   /**
-   * Setup pagination manager
+   * Setup pagination manager (disabled - using scroll instead)
    */
   setupPagination() {
-    this.paginationManager = new PaginationManager('rulesPagination', {
-      itemsPerPage: 2,
-      onPageChange: (page, items) => {
-        this.renderDetectorsPage(items);
-      }
-    });
+    // Pagination disabled for Rules tab - using scroll instead
+    // Hide pagination controls
+    const paginationEl = document.querySelector('#rulesPagination');
+    if (paginationEl) {
+      paginationEl.style.display = 'none';
+    }
   }
 
   /**
@@ -3181,10 +3181,8 @@ class Rules {
 
     this.filteredDetectors = [...this.allDetectors];
 
-    // Setup pagination with all detectors
-    if (this.paginationManager) {
-      this.paginationManager.setItems(this.filteredDetectors);
-    }
+    // Render all detectors (no pagination - using scroll)
+    this.renderDetectorsPage(this.filteredDetectors);
   }
 
   /**
@@ -3865,10 +3863,8 @@ class Rules {
       }
     }
 
-    // Update pagination with filtered results
-    if (this.paginationManager) {
-      this.paginationManager.setItems(this.filteredDetectors);
-    }
+    // Render all filtered results (no pagination - using scroll)
+    this.renderDetectorsPage(this.filteredDetectors);
   }
 }
 
