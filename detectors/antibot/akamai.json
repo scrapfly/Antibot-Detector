@@ -134,7 +134,7 @@
       {
         "confidence": 90,
         "description": "Akamai random path challenge (multiple encoded segments)",
-        "text": "/([a-zA-Z0-9_-]{2,15}/){5,}[a-zA-Z0-9_-]{2,15}$",
+        "text": "/([a-zA-Z0-9_-]{2,30}/){4,}[a-zA-Z0-9_-]{2,30}$",
         "textRegex": true,
         "textWholeWord": false,
         "textCaseSensitive": true,

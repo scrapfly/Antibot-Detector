@@ -1571,40 +1571,28 @@ async function processDetectionData(message, sender) {
     // Now handles ARRAY of payloads per tab
     if (payloadStore.has(tabId)) {
         const payloadsArray = payloadStore.get(tabId);
-        const pageHost = pageData.hostname || '';
-        const rootDomain = pageHost.split('.').slice(-2).join('.');  // Get root domain (e.g., zalando.es)
 
-        // Check ALL payloads in the array
+        // Pass all payloads to detection engine (no filtering)
         const relevantPayloads = [];
 
         for (const payloadData of payloadsArray) {
             try {
-                // More lenient hostname matching - check if same root domain or related
-                const payloadHost = new URL(payloadData.url).hostname;
+                relevantPayloads.push({
+                    method: payloadData.method,
+                    url: payloadData.url,
+                    data: payloadData.payload,
+                    type: payloadData.type
+                });
 
-                // Match if: same host, or payload is to a subdomain, or contains root domain
-                if (payloadHost === pageHost ||
-                    payloadHost.includes(rootDomain) ||
-                    payloadData.url.includes('/akam/') ||  // Always include Akamai endpoints
-                    payloadData.url.includes('sensor')) {  // Always include sensor data
-
-                    relevantPayloads.push({
-                        method: payloadData.method,
-                        url: payloadData.url,
-                        data: payloadData.payload,
-                        type: payloadData.type
-                    });
-
-                    console.log(`Scrapfly Background: Found relevant payload: ${payloadData.type} (${payloadData.method}) - ${payloadData.url}`);
-                }
+                console.log(`Scrapfly Background: Found payload: ${payloadData.type} (${payloadData.method}) - ${payloadData.url}`);
             } catch (e) {
                 console.error('Error processing payload:', e);
             }
         }
 
-        // Pass ALL relevant payloads for detection (not just one)
+        // Pass all payloads for detection
         if (relevantPayloads.length > 0) {
-            pageData.payloads = relevantPayloads; // Note: changed from 'payload' to 'payloads' (plural)
+            pageData.payloads = relevantPayloads;
             console.log(`Scrapfly Background: Added ${relevantPayloads.length} payloads to detection data`);
 
             // Don't delete yet - will delete after detection completes
@@ -1622,29 +1610,13 @@ async function processDetectionData(message, sender) {
             console.log(`  ${index + 1}. ${urlObj.url} | Type: ${urlObj.type} | Method: ${urlObj.method}`);
         });
 
-        const pageHost = pageData.hostname || '';
-        const rootDomain = pageHost.split('.').slice(-2).join('.');  // Get root domain (e.g., zalando.es)
-
-        // Filter for relevant URLs (same domain or subdomains)
-        const relevantUrls = networkUrlsArray.filter(urlData => {
-            try {
-                const urlHost = new URL(urlData.url).hostname;
-                // Match if: same host, or subdomain, or contains root domain, or special anti-bot paths
-                return urlHost === pageHost ||
-                       urlHost.includes(rootDomain) ||
-                       urlData.url.includes('/akam/') ||  // Always include Akamai
-                       urlData.url.includes('/.well-known/sbsd/') ||  // Always include SBSD
-                       urlData.url.includes('sensor') ||  // Sensor endpoints
-                       urlData.url.includes('challenge');  // Challenge endpoints
-            } catch (e) {
-                return false;
-            }
-        });
+        // No filtering - pass all URLs to detection engine
+        const relevantUrls = networkUrlsArray;
 
         if (relevantUrls.length > 0) {
             pageData.networkUrls = relevantUrls;
-            console.log(`[Network URLs] ✅ After filtering: ${relevantUrls.length}/${networkUrlsArray.length} URLs passed the relevance filter`);
-            console.log(`[Network URLs] 🎯 Filtered URLs that will be used in detection:`);
+            console.log(`[Network URLs] ✅ Passing all ${relevantUrls.length} URLs to detection engine (no filtering)`);
+            console.log(`[Network URLs] 🎯 URLs that will be used in detection:`);
             relevantUrls.forEach((urlObj, index) => {
                 console.log(`  ${index + 1}. ${urlObj.url} | Type: ${urlObj.type} | Method: ${urlObj.method}`);
             });
