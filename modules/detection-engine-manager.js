@@ -1703,16 +1703,22 @@ class DetectionEngineManager {
         // Check payload patterns - handle both single payload and multiple payloads array
         // First check if we have multiple payloads (new format)
         if (detector.detection?.payload && pageData.payloads && Array.isArray(pageData.payloads)) {
-            console.log(`[Payload Detection] Checking ${detector.detection.payload.length} patterns against ${pageData.payloads.length} payloads`);
+            console.log(`[Payload Detection] 🔍 Checking ${detector.detection.payload.length} patterns against ${pageData.payloads.length} payloads for ${detector.name}`);
 
             // Track which patterns have already matched to prevent duplicates
             const matchedPatterns = new Set();
 
             // Check each payload in the array
             for (const payloadItem of pageData.payloads) {
+                console.log(`[Payload Detection] 📦 Checking payload: ${payloadItem.method} ${payloadItem.url}`);
+                console.log(`[Payload Detection] 📦 Payload type: ${payloadItem.type}, data length: ${typeof payloadItem.data === 'string' ? payloadItem.data.length : 'N/A'}`);
+
                 for (const payloadPattern of detector.detection.payload) {
+                    console.log(`[Payload Detection] 🔎 Testing pattern: "${payloadPattern.text}" (description: ${payloadPattern.description || 'N/A'})`);
+
                     // Skip if this pattern already matched in a previous payload
                     if (matchedPatterns.has(payloadPattern.text)) {
+                        console.log(`[Payload Detection] ⏭️ Skipping - pattern already matched`);
                         continue;
                     }
                     // Match options for pattern matching
@@ -1721,20 +1727,24 @@ class DetectionEngineManager {
                         wholeWord: payloadPattern.textWholeWord === true,
                         caseSensitive: payloadPattern.textCaseSensitive === true
                     };
+                    console.log(`[Payload Detection] ⚙️ Match options: regex=${matchOptions.regex}, wholeWord=${matchOptions.wholeWord}, caseSensitive=${matchOptions.caseSensitive}`);
 
                     // NEW: Check HTTP method constraint
                     if (payloadPattern.methods && Array.isArray(payloadPattern.methods) && payloadPattern.methods.length > 0) {
+                        console.log(`[Payload Detection] 🔍 Checking HTTP method: pattern requires [${payloadPattern.methods.join(', ')}], got ${payloadItem.method}`);
                         const methodAllowed = payloadPattern.methods.some(m =>
                             m.toUpperCase() === payloadItem.method.toUpperCase()
                         );
                         if (!methodAllowed) {
-                            console.log(`[Payload Detection] ✗ Method mismatch: pattern requires ${payloadPattern.methods.join('|')}, got ${payloadItem.method} for ${payloadItem.url}`);
+                            console.log(`[Payload Detection] ✗ Method mismatch - skipping pattern`);
                             continue; // Skip this pattern
                         }
+                        console.log(`[Payload Detection] ✅ Method matched`);
                     }
 
                     // NEW: Check URL pattern constraint
                     if (payloadPattern.urlPattern && payloadPattern.urlPattern.trim() !== '') {
+                        console.log(`[Payload Detection] 🔍 Checking URL pattern: "${payloadPattern.urlPattern}" (regex: ${payloadPattern.urlRegex}, caseSensitive: ${payloadPattern.urlCaseSensitive})`);
                         const urlMatchOptions = {
                             regex: payloadPattern.urlRegex === true,
                             wholeWord: payloadPattern.urlWholeWord === true,
@@ -1743,9 +1753,10 @@ class DetectionEngineManager {
 
                         const urlMatched = this.matchPattern(payloadItem.url, payloadPattern.urlPattern, urlMatchOptions);
                         if (!urlMatched) {
-                            console.log(`[Payload Detection] ✗ URL mismatch: pattern "${payloadPattern.urlPattern}" not found in ${payloadItem.url}`);
+                            console.log(`[Payload Detection] ✗ URL mismatch - pattern not found in URL`);
                             continue; // Skip this pattern
                         }
+                        console.log(`[Payload Detection] ✅ URL matched`);
                     }
 
                     let payloadData = payloadItem.data;
@@ -1754,17 +1765,24 @@ class DetectionEngineManager {
                     if (payloadItem.type === 'formData' && typeof payloadData === 'object') {
                         // Convert form data object to string for searching
                         payloadData = JSON.stringify(payloadData);
+                        console.log(`[Payload Detection] 📝 Payload is FormData, converted to JSON: ${payloadData.substring(0, 200)}...`);
                     } else if (typeof payloadData === 'object') {
                         // Convert any other object to JSON string
                         try {
                             payloadData = JSON.stringify(payloadData);
+                            console.log(`[Payload Detection] 📝 Payload is object, converted to JSON: ${payloadData.substring(0, 200)}...`);
                         } catch (e) {
                             payloadData = String(payloadData);
+                            console.log(`[Payload Detection] 📝 Payload object conversion failed, using String: ${payloadData.substring(0, 200)}...`);
                         }
+                    } else {
+                        console.log(`[Payload Detection] 📝 Payload data preview: ${typeof payloadData === 'string' ? payloadData.substring(0, 200) + '...' : payloadData}`);
                     }
 
+                    console.log(`[Payload Detection] 🔍 Checking if pattern "${payloadPattern.text}" exists in payload data...`);
                     // Check if pattern matches in payload data
                     if (this.matchPattern(payloadData, payloadPattern.text, matchOptions)) {
+                        console.log(`[Payload Detection] ✅ Pattern "${payloadPattern.text}" MATCHED in payload data!`);
                         // Extract the matched portion from the payload
                         let matchedValue = '';
                         const searchStr = payloadData.toString();
@@ -1807,6 +1825,8 @@ class DetectionEngineManager {
                         console.log(`[Payload Detection] ✓ Match found for pattern "${payloadPattern.text}" in ${payloadItem.url}`);
                         console.log(`[Payload Detection] Matched value: "${matchedValue}"`);
                         break; // Found match, no need to check this pattern again
+                    } else {
+                        console.log(`[Payload Detection] ✗ Pattern "${payloadPattern.text}" NOT found in payload data`);
                     }
                 }
             }
