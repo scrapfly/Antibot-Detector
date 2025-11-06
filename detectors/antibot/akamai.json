@@ -259,11 +259,11 @@
       {
         "text": "body",
         "confidence": 98,
-        "description": "Akamai SBSD body payload to random hex endpoint",
+        "description": "Akamai SBSD body payload to random endpoint",
         "textRegex": false,
         "textWholeWord": true,
         "textCaseSensitive": false,
-        "urlPattern": "/.well-known/sbsd/[a-f0-9]{6}$",
+        "urlPattern": "/.well-known/sbsd/[a-zA-Z0-9_-]+$",
         "urlRegex": true,
         "urlCaseSensitive": false,
         "methods": ["POST"]
