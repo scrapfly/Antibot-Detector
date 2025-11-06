@@ -299,6 +299,70 @@
           </div>
         </div>
 
+        <!-- Payload Request Constraints (for PAYLOAD detection only) -->
+        <div class="settings-group" id="payloadScopeGroup" style="display: none;">
+          <h3 class="settings-group-title">Request Constraints</h3>
+          <p style="font-size: 10px; color: var(--text-muted); margin: 0 0 12px 0;">
+            Configure URL and HTTP method filters for payload matching
+          </p>
+          <div class="settings-options">
+            <!-- URL Pattern Field -->
+            <div class="setting-option" style="display: flex; flex-direction: column; gap: 8px; border: none; padding: 0 0 12px 0;">
+              <label class="setting-label" style="margin-bottom: 0;">URL Pattern (optional)</label>
+              <input
+                type="text"
+                id="payloadUrlPattern"
+                class="scope-select"
+                placeholder="/api/verify or challenge.php"
+                style="width: 100%; min-width: auto; font-family: 'Monaco', 'Courier New', monospace;"
+              >
+              <p style="font-size: 10px; color: var(--text-muted); margin: 0;">
+                Leave empty to match any URL. Examples: <code>/api/verify</code>, <code>challenge</code>
+              </p>
+            </div>
+
+            <!-- URL Regex Toggle -->
+            <div class="setting-option">
+              <div class="option-content">
+                <span class="setting-label">URL Regular Expression (Regex)</span>
+                <p style="font-size: 10px; color: var(--text-muted); margin: 4px 0 0 0;">
+                  Treat URL pattern as regex (e.g., <code>/api/(verify|check)</code>)
+                </p>
+              </div>
+              <label class="toggle-switch" for="payloadUrlRegex">
+                <input type="checkbox" id="payloadUrlRegex" class="toggle-input">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <!-- HTTP Methods Checkboxes -->
+            <div class="setting-option" style="display: flex; flex-direction: column; gap: 8px; border: none; padding: 12px 0 0 0;">
+              <label class="setting-label">HTTP Methods (select to filter)</label>
+              <p style="font-size: 10px; color: var(--text-muted); margin: 0 0 8px 0;">
+                If none selected, all methods are matched
+              </p>
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px; background: var(--bg-tertiary); border-radius: 4px; transition: all 0.2s;">
+                  <input type="checkbox" id="payloadMethodPost" value="POST" style="cursor: pointer;">
+                  <span style="font-size: 12px; color: var(--text-primary);">POST</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px; background: var(--bg-tertiary); border-radius: 4px;">
+                  <input type="checkbox" id="payloadMethodPut" value="PUT" style="cursor: pointer;">
+                  <span style="font-size: 12px; color: var(--text-primary);">PUT</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px; background: var(--bg-tertiary); border-radius: 4px;">
+                  <input type="checkbox" id="payloadMethodPatch" value="PATCH" style="cursor: pointer;">
+                  <span style="font-size: 12px; color: var(--text-primary);">PATCH</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px; background: var(--bg-tertiary); border-radius: 4px;">
+                  <input type="checkbox" id="payloadMethodDelete" value="DELETE" style="cursor: pointer;">
+                  <span style="font-size: 12px; color: var(--text-primary);">DELETE</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Pattern Matching Settings (simplified) -->
         <div class="settings-group">
           <h3 class="settings-group-title" id="patternOptionsTitle">Pattern Matching Options</h3>

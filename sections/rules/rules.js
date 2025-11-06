@@ -353,13 +353,36 @@ class Rules {
     if (valueScopeSelect) valueScopeSelect.value = valueScope;
     if (textScopeSelect) textScopeSelect.value = textScope;
 
+    // Load payload-specific settings from data attributes
+    const payloadUrlPattern = methodItem.dataset.payloadUrlPattern || '';
+    const payloadUrlRegex = methodItem.dataset.payloadUrlRegex === 'true';
+    const payloadMethods = methodItem.dataset.payloadMethods || ''; // Comma-separated: "POST,PUT"
+
+    // Set payload URL pattern input
+    const payloadUrlInput = document.querySelector('#payloadUrlPattern');
+    if (payloadUrlInput) payloadUrlInput.value = payloadUrlPattern;
+
+    // Set payload URL regex checkbox
+    setCheckbox('payloadUrlRegex', payloadUrlRegex);
+
+    // Set payload HTTP method checkboxes
+    const methodsArray = payloadMethods ? payloadMethods.split(',') : [];
+    ['Post', 'Put', 'Patch', 'Delete'].forEach(method => {
+      const checkbox = document.querySelector(`#payloadMethod${method}`);
+      if (checkbox) {
+        checkbox.checked = methodsArray.includes(method.toUpperCase());
+      }
+    });
+
     // Show/hide scope settings groups based on method type
     const contentScopeGroup = document.querySelector('#contentScopeGroup');
     const headerCookieScopeGroup = document.querySelector('#headerCookieScopeGroup');
     const urlScopeGroup = document.querySelector('#urlScopeGroup');
+    const payloadScopeGroup = document.querySelector('#payloadScopeGroup');
 
     const isHeaderOrCookie = methodKey === 'header' || methodKey === 'cookie';
     const isUrl = methodKey === 'url';
+    const isPayload = methodKey === 'payload';
 
     if (contentScopeGroup) {
       contentScopeGroup.style.display = isContentMethod ? 'block' : 'none';
@@ -369,6 +392,9 @@ class Rules {
     }
     if (urlScopeGroup) {
       urlScopeGroup.style.display = isUrl ? 'block' : 'none';
+    }
+    if (payloadScopeGroup) {
+      payloadScopeGroup.style.display = isPayload ? 'block' : 'none';
     }
 
     // Determine if this is a single-input type (no value field)
@@ -2128,6 +2154,20 @@ class Rules {
     const valueScope = document.querySelector('#valueScope')?.value || '';
     const textScope = document.querySelector('#textScope')?.value || 'all';
 
+    // Get payload-specific values from modal
+    const payloadUrlPattern = document.querySelector('#payloadUrlPattern')?.value || '';
+    const payloadUrlRegex = document.querySelector('#payloadUrlRegex')?.checked || false;
+
+    // Get selected HTTP methods
+    const selectedMethods = [];
+    ['Post', 'Put', 'Patch', 'Delete'].forEach(method => {
+      const checkbox = document.querySelector(`#payloadMethod${method}`);
+      if (checkbox && checkbox.checked) {
+        selectedMethods.push(method.toUpperCase());
+      }
+    });
+    const payloadMethods = selectedMethods.join(',');
+
     // Save to data attributes
     this.currentMethodItem.dataset.confidence = confidence;
     this.currentMethodItem.dataset.nameRegex = nameRegex;
@@ -2140,6 +2180,9 @@ class Rules {
     this.currentMethodItem.dataset.nameScope = nameScope;
     this.currentMethodItem.dataset.valueScope = valueScope;
     this.currentMethodItem.dataset.textScope = textScope;
+    this.currentMethodItem.dataset.payloadUrlPattern = payloadUrlPattern;
+    this.currentMethodItem.dataset.payloadUrlRegex = payloadUrlRegex;
+    this.currentMethodItem.dataset.payloadMethods = payloadMethods;
 
     // Add visual indicator if settings are configured
     const settingsBtn = this.currentMethodItem.querySelector('.method-action-btn.settings');

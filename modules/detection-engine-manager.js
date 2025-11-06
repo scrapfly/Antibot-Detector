@@ -1722,6 +1722,32 @@ class DetectionEngineManager {
                         caseSensitive: payloadPattern.textCaseSensitive === true
                     };
 
+                    // NEW: Check HTTP method constraint
+                    if (payloadPattern.methods && Array.isArray(payloadPattern.methods) && payloadPattern.methods.length > 0) {
+                        const methodAllowed = payloadPattern.methods.some(m =>
+                            m.toUpperCase() === payloadItem.method.toUpperCase()
+                        );
+                        if (!methodAllowed) {
+                            console.log(`[Payload Detection] ✗ Method mismatch: pattern requires ${payloadPattern.methods.join('|')}, got ${payloadItem.method} for ${payloadItem.url}`);
+                            continue; // Skip this pattern
+                        }
+                    }
+
+                    // NEW: Check URL pattern constraint
+                    if (payloadPattern.urlPattern && payloadPattern.urlPattern.trim() !== '') {
+                        const urlMatchOptions = {
+                            regex: payloadPattern.urlRegex === true,
+                            wholeWord: payloadPattern.urlWholeWord === true,
+                            caseSensitive: payloadPattern.urlCaseSensitive === true
+                        };
+
+                        const urlMatched = this.matchPattern(payloadItem.url, payloadPattern.urlPattern, urlMatchOptions);
+                        if (!urlMatched) {
+                            console.log(`[Payload Detection] ✗ URL mismatch: pattern "${payloadPattern.urlPattern}" not found in ${payloadItem.url}`);
+                            continue; // Skip this pattern
+                        }
+                    }
+
                     let payloadData = payloadItem.data;
 
                     // Convert payload to searchable string based on type
@@ -1797,6 +1823,32 @@ class DetectionEngineManager {
                     wholeWord: payloadPattern.textWholeWord === true,
                     caseSensitive: payloadPattern.textCaseSensitive === true
                 };
+
+                // NEW: Check HTTP method constraint
+                if (payloadPattern.methods && Array.isArray(payloadPattern.methods) && payloadPattern.methods.length > 0) {
+                    const methodAllowed = payloadPattern.methods.some(m =>
+                        m.toUpperCase() === pageData.payload.method.toUpperCase()
+                    );
+                    if (!methodAllowed) {
+                        console.log(`[Payload Detection] ✗ Method mismatch: pattern requires ${payloadPattern.methods.join('|')}, got ${pageData.payload.method}`);
+                        continue; // Skip this pattern
+                    }
+                }
+
+                // NEW: Check URL pattern constraint
+                if (payloadPattern.urlPattern && payloadPattern.urlPattern.trim() !== '') {
+                    const urlMatchOptions = {
+                        regex: payloadPattern.urlRegex === true,
+                        wholeWord: payloadPattern.urlWholeWord === true,
+                        caseSensitive: payloadPattern.urlCaseSensitive === true
+                    };
+
+                    const urlMatched = this.matchPattern(pageData.payload.url, payloadPattern.urlPattern, urlMatchOptions);
+                    if (!urlMatched) {
+                        console.log(`[Payload Detection] ✗ URL mismatch: pattern "${payloadPattern.urlPattern}" not found in ${pageData.payload.url}`);
+                        continue; // Skip this pattern
+                    }
+                }
 
                 let payloadData = pageData.payload.data;
 
