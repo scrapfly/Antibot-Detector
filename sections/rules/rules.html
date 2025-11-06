@@ -338,25 +338,41 @@
             <!-- HTTP Methods Checkboxes -->
             <div class="setting-option" style="display: flex; flex-direction: column; gap: 8px; border: none; padding: 12px 0 0 0;">
               <label class="setting-label">HTTP Methods (select to filter)</label>
-              <p style="font-size: 10px; color: var(--text-muted); margin: 0 0 8px 0;">
+              <p style="font-size: 10px; color: var(--text-muted); margin: 0 0 12px 0;">
                 If none selected, all methods are matched
               </p>
-              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px; background: var(--bg-tertiary); border-radius: 4px; transition: all 0.2s;">
-                  <input type="checkbox" id="payloadMethodPost" value="POST" style="cursor: pointer;">
-                  <span style="font-size: 12px; color: var(--text-primary);">POST</span>
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                <!-- POST -->
+                <label class="http-method-badge" data-method="POST">
+                  <input type="checkbox" id="payloadMethodPost" value="POST">
+                  <span class="method-badge-content">
+                    <span class="method-icon">●</span>
+                    <span class="method-text">POST</span>
+                  </span>
                 </label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px; background: var(--bg-tertiary); border-radius: 4px;">
-                  <input type="checkbox" id="payloadMethodPut" value="PUT" style="cursor: pointer;">
-                  <span style="font-size: 12px; color: var(--text-primary);">PUT</span>
+                <!-- PUT -->
+                <label class="http-method-badge" data-method="PUT">
+                  <input type="checkbox" id="payloadMethodPut" value="PUT">
+                  <span class="method-badge-content">
+                    <span class="method-icon">●</span>
+                    <span class="method-text">PUT</span>
+                  </span>
                 </label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px; background: var(--bg-tertiary); border-radius: 4px;">
-                  <input type="checkbox" id="payloadMethodPatch" value="PATCH" style="cursor: pointer;">
-                  <span style="font-size: 12px; color: var(--text-primary);">PATCH</span>
+                <!-- PATCH -->
+                <label class="http-method-badge" data-method="PATCH">
+                  <input type="checkbox" id="payloadMethodPatch" value="PATCH">
+                  <span class="method-badge-content">
+                    <span class="method-icon">●</span>
+                    <span class="method-text">PATCH</span>
+                  </span>
                 </label>
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px; background: var(--bg-tertiary); border-radius: 4px;">
-                  <input type="checkbox" id="payloadMethodDelete" value="DELETE" style="cursor: pointer;">
-                  <span style="font-size: 12px; color: var(--text-primary);">DELETE</span>
+                <!-- DELETE -->
+                <label class="http-method-badge" data-method="DELETE">
+                  <input type="checkbox" id="payloadMethodDelete" value="DELETE">
+                  <span class="method-badge-content">
+                    <span class="method-icon">●</span>
+                    <span class="method-text">DELETE</span>
+                  </span>
                 </label>
               </div>
             </div>

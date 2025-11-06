@@ -2433,3 +2433,144 @@
   background: rgba(59, 130, 246, 0.1) !important;
   border-color: var(--accent) !important;
 }
+
+/* HTTP Method Badges - Beautiful Badge-Style Checkboxes */
+.http-method-badge {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 10px 12px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.http-method-badge input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.method-badge-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.25s;
+}
+
+.method-icon {
+  font-size: 8px;
+  opacity: 0.5;
+  transition: all 0.25s;
+}
+
+.method-text {
+  letter-spacing: 0.5px;
+}
+
+/* Hover State */
+.http-method-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* POST - Green */
+.http-method-badge[data-method="POST"]:hover {
+  border-color: rgba(34, 197, 94, 0.5);
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.http-method-badge[data-method="POST"]:has(input:checked) {
+  border-color: #22c55e;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.08) 100%);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+.http-method-badge[data-method="POST"]:has(input:checked) .method-badge-content {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.http-method-badge[data-method="POST"]:has(input:checked) .method-icon {
+  opacity: 1;
+  color: #22c55e;
+}
+
+/* PUT - Blue */
+.http-method-badge[data-method="PUT"]:hover {
+  border-color: rgba(59, 130, 246, 0.5);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.http-method-badge[data-method="PUT"]:has(input:checked) {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.http-method-badge[data-method="PUT"]:has(input:checked) .method-badge-content {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.http-method-badge[data-method="PUT"]:has(input:checked) .method-icon {
+  opacity: 1;
+  color: #3b82f6;
+}
+
+/* PATCH - Orange */
+.http-method-badge[data-method="PATCH"]:hover {
+  border-color: rgba(249, 115, 22, 0.5);
+  background: rgba(249, 115, 22, 0.05);
+}
+
+.http-method-badge[data-method="PATCH"]:has(input:checked) {
+  border-color: #f97316;
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.15) 0%, rgba(249, 115, 22, 0.08) 100%);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.http-method-badge[data-method="PATCH"]:has(input:checked) .method-badge-content {
+  color: #f97316;
+  font-weight: 600;
+}
+
+.http-method-badge[data-method="PATCH"]:has(input:checked) .method-icon {
+  opacity: 1;
+  color: #f97316;
+}
+
+/* DELETE - Red */
+.http-method-badge[data-method="DELETE"]:hover {
+  border-color: rgba(239, 68, 68, 0.5);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.http-method-badge[data-method="DELETE"]:has(input:checked) {
+  border-color: #ef4444;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.08) 100%);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.http-method-badge[data-method="DELETE"]:has(input:checked) .method-badge-content {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.http-method-badge[data-method="DELETE"]:has(input:checked) .method-icon {
+  opacity: 1;
+  color: #ef4444;
+}
+
+/* Active (Click) State */
+.http-method-badge:active {
+  transform: scale(0.97);
+}
