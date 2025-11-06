@@ -424,9 +424,6 @@ function generateMatchKey(match) {
         case 'js_hooks':
             return `js_hooks:${match.pattern}`;
 
-        case 'css':
-            return `css:${match.selector || match.pattern}`;
-
         default:
             return `${matchType}:${match.pattern || match.value || ''}`;
     }
@@ -480,7 +477,7 @@ function getOrCreateDetectionState(tabId, url) {
             mainData: [],
             // NEW: Granular method tracking (7 methods total)
             completedMethods: new Set(), // Track which methods have completed
-            methodOrder: ['cookies', 'headers', 'url', 'dom', 'css', 'jsHooks', 'windowProperties'],
+            methodOrder: ['cookies', 'headers', 'url', 'dom', 'jsHooks', 'windowProperties', 'payload'],
             // Keep old flags for backward compatibility
             hooksComplete: false,
             mainComplete: false,
@@ -495,9 +492,9 @@ function getOrCreateDetectionState(tabId, url) {
 
 /**
  * GRANULAR PROGRESS: Send method-specific progress updates
- * Each method completion contributes ~14% (100% / 7 methods)
+ * Each method completion contributes ~12.5% (100% / 8 methods)
  */
-function sendProgressUpdate(tabId, methodName, completedMethods, totalMethods = 7, options = {}) {
+function sendProgressUpdate(tabId, methodName, completedMethods, totalMethods = 8, options = {}) {
     try {
         // FIX: Don't override badge if detection is already finalized
         // Check if this tab is still in active detection state
@@ -551,6 +548,13 @@ function markMethodComplete(tabId, methodName) {
         return;
     }
 
+    // VALIDATION: Only allow valid method names from the official methodOrder
+    const validMethods = state.methodOrder || ['cookies', 'headers', 'url', 'dom', 'jsHooks', 'windowProperties', 'payload'];
+    if (!validMethods.includes(methodName)) {
+        console.warn(`[markMethodComplete] ⚠️ Rejecting invalid method name: "${methodName}" (valid methods: ${validMethods.join(', ')})`);
+        return;
+    }
+
     const wasPreviouslyComplete = state.completedMethods.has(methodName);
     state.completedMethods.add(methodName);
 
@@ -560,7 +564,7 @@ function markMethodComplete(tabId, methodName) {
     console.log(`[Method Complete] State info:`, {
         totalMethods: 7,
         completedCount: state.completedMethods.size,
-        missingMethods: Array.from(new Set(['cookies', 'headers', 'url', 'dom', 'css', 'jsHooks', 'windowProperties'])).filter(m => !state.completedMethods.has(m)),
+        missingMethods: Array.from(new Set(['cookies', 'headers', 'url', 'dom', 'jsHooks', 'windowProperties', 'payload'])).filter(m => !state.completedMethods.has(m)),
         wasDuplicate: wasPreviouslyComplete,
         finalized: state.finalized,
         mainComplete: state.mainComplete,
@@ -616,7 +620,7 @@ function checkAndFinalizeDetection(tabId) {
         const completedMethods = Array.from(currentState.completedMethods || []);
         const completedCount = completedMethods.length;
         const totalMethods = 7;
-        const methodOrder = ['cookies', 'headers', 'url', 'dom', 'css', 'jsHooks', 'windowProperties'];
+        const methodOrder = ['cookies', 'headers', 'url', 'dom', 'jsHooks', 'windowProperties', 'payload'];
         const missingMethods = methodOrder.filter(m => !currentState.completedMethods.has(m));
 
         console.log(`%c[🔍 Finalize Execute] Checking finalization state (debounce time reached)`, 'color: #2196F3; font-weight: bold;');
@@ -660,7 +664,7 @@ function checkAndFinalizeDetection(tabId) {
         // Instead of waiting for all 7 methods, finalize when we have the main methods (5)
         // This prevents getting stuck waiting for jsHooks and windowProperties signals
         const REQUIRED_METHODS = 5; // Reduced from 7 to exclude jsHooks and windowProperties
-        const mainMethodsComplete = ['cookies', 'headers', 'url', 'dom', 'css'].every(m => currentState.completedMethods.has(m));
+        const mainMethodsComplete = ['cookies', 'headers', 'url', 'dom', 'payload'].every(m => currentState.completedMethods.has(m));
 
         // Check if we should finalize
         const shouldFinalize =
@@ -1146,6 +1150,10 @@ async function initialize(reason = 'startup', previousVersion = null) {
 
 // Listen for extension installation or update
 chrome.runtime.onInstalled.addListener(async (details) => {
+    // Clear all detection states on extension reload/update to prevent stale data
+    detectionStates.clear();
+    console.log('[Extension Reload] Cleared all detection states');
+
     if (details.reason === 'install' || details.reason === 'update') {
         await initialize(details.reason, details.previousVersion);
     }
@@ -1444,6 +1452,9 @@ function setupHeaderCapture() {
             }
 
             networkUrlsStore.set(details.tabId, networkUrls);
+
+            // LOG: Show each captured URL
+            console.log(`[WebRequest] 🌐 Captured URL #${networkUrls.length}: ${details.url} | Type: ${details.type} | Method: ${details.method} | TabId: ${details.tabId}`);
         },
         { urls: ["<all_urls>"] }
         // No extraInfoSpec needed - we only need URL, type, method
@@ -1605,6 +1616,13 @@ async function processDetectionData(message, sender) {
     // Add network request URLs if available (for URL pattern detection)
     if (networkUrlsStore.has(tabId)) {
         const networkUrlsArray = networkUrlsStore.get(tabId);
+
+        // LOG: Show all URLs in store before filtering
+        console.log(`[Network URLs] 📦 Found ${networkUrlsArray.length} URLs in store for tab ${tabId}:`);
+        networkUrlsArray.forEach((urlObj, index) => {
+            console.log(`  ${index + 1}. ${urlObj.url} | Type: ${urlObj.type} | Method: ${urlObj.method}`);
+        });
+
         const pageHost = pageData.hostname || '';
         const rootDomain = pageHost.split('.').slice(-2).join('.');  // Get root domain (e.g., zalando.es)
 
@@ -1626,7 +1644,13 @@ async function processDetectionData(message, sender) {
 
         if (relevantUrls.length > 0) {
             pageData.networkUrls = relevantUrls;
-            console.log(`Scrapfly Background: Added ${relevantUrls.length} network URLs to detection data`);
+            console.log(`[Network URLs] ✅ After filtering: ${relevantUrls.length}/${networkUrlsArray.length} URLs passed the relevance filter`);
+            console.log(`[Network URLs] 🎯 Filtered URLs that will be used in detection:`);
+            relevantUrls.forEach((urlObj, index) => {
+                console.log(`  ${index + 1}. ${urlObj.url} | Type: ${urlObj.type} | Method: ${urlObj.method}`);
+            });
+        } else {
+            console.log(`[Network URLs] ⚠️ No URLs passed the relevance filter! (Total in store: ${networkUrlsArray.length})`);
         }
     }
 
@@ -1657,8 +1681,20 @@ async function processDetectionData(message, sender) {
                 scripts: pageData.scripts?.length || 0,
                 headers: Object.keys(pageData.headers || {}).length,
                 dom: pageData.dom?.length || 0,
-                url: pageData.url
+                url: pageData.url,
+                networkUrls: pageData.networkUrls?.length || 0,
+                payloads: pageData.payloads?.length || 0
             });
+
+            // LOG: Show all network URLs being passed to detection
+            if (pageData.networkUrls && pageData.networkUrls.length > 0) {
+                console.log(`[Network URLs] ✅ Passing ${pageData.networkUrls.length} URLs to detection engine:`);
+                pageData.networkUrls.forEach((urlObj, index) => {
+                    console.log(`  ${index + 1}. ${urlObj.url} | Type: ${urlObj.type} | Method: ${urlObj.method}`);
+                });
+            } else {
+                console.log(`[Network URLs] ⚠️ No network URLs available for detection!`);
+            }
 
             const detectionPromise = Promise.resolve(detectionEngine.detectOnPage(pageData));
             const timeoutPromise = new Promise((_, reject) =>
@@ -1673,7 +1709,7 @@ async function processDetectionData(message, sender) {
             // Mark each method complete as it finishes detection
             // FIX: Use markMethodComplete to properly track progress and trigger finalization
             console.log(`%c[processDetectionData] 📊 MARKING MAIN METHODS COMPLETE for tab ${tabId}`, 'color: #2196F3; font-weight: bold; font-size: 14px;');
-            const mainMethods = ['cookies', 'headers', 'url', 'dom', 'css'];
+            const mainMethods = ['cookies', 'headers', 'url', 'dom', 'payload'];
             for (const method of mainMethods) {
                 console.log(`[processDetectionData] Marking ${method} complete...`);
                 markMethodComplete(tabId, method);
@@ -1859,7 +1895,7 @@ async function processDetectionData(message, sender) {
             }
 
             // Check if main detection has completed
-            const mainMethodsComplete = ['cookies', 'headers', 'url', 'dom', 'css'].every(m => currentState.completedMethods.has(m));
+            const mainMethodsComplete = ['cookies', 'headers', 'url', 'dom'].every(m => currentState.completedMethods.has(m));
 
             if (!mainMethodsComplete) {
                 console.warn(`%c[⏱️ 5s SAFETY] Main detection hasn't completed yet - waiting...`, 'color: #ff9800; font-weight: bold;');
