@@ -245,7 +245,7 @@
         "methods": ["POST"]
       },
       {
-        "text": "sensor_data",
+        "text": "body",
         "confidence": 100,
         "description": "Akamai sensor data POST to known SBSD endpoint",
         "textRegex": false,
@@ -264,6 +264,18 @@
         "textWholeWord": true,
         "textCaseSensitive": false,
         "urlPattern": "/.well-known/sbsd/[a-f0-9]{6}$",
+        "urlRegex": true,
+        "urlCaseSensitive": false,
+        "methods": ["POST"]
+      },
+      {
+        "text": "jsv=",
+        "confidence": 95,
+        "description": "Akamai pixel challenge fingerprinting payload",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "urlPattern": "/akam/\\d+/pixel_[a-f0-9]+$",
         "urlRegex": true,
         "urlCaseSensitive": false,
         "methods": ["POST"]
