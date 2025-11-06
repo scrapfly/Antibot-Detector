@@ -1352,11 +1352,8 @@ function setupHeaderCapture() {
                 return; // Skip all payload capture for cached tabs
             }
 
-            // FIX: Skip payload capture if no detection is actively running for this tab
-            // Only capture when detection is in progress, not for all background tabs
-            if (!activeDetections.has(details.tabId)) {
-                return; // No active detection - skip capture
-            }
+            // Capture ALL payloads immediately, regardless of detection state
+            // Detection will check payloadStore later when it runs
 
             // Capture ALL requests with bodies (not just main_frame)
             if (details.requestBody) {
