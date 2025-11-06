@@ -1779,9 +1779,21 @@ class DetectionEngineManager {
                         console.log(`[Payload Detection] 📝 Payload data preview: ${typeof payloadData === 'string' ? payloadData.substring(0, 200) + '...' : payloadData}`);
                     }
 
-                    console.log(`[Payload Detection] 🔍 Checking if pattern "${payloadPattern.text}" exists in payload data...`);
+                    // Show full payload string for debugging
+                    const fullPayloadStr = typeof payloadData === 'string' ? payloadData : String(payloadData);
+                    console.log(`[Payload Detection] 📊 Payload string length: ${fullPayloadStr.length} characters`);
+                    console.log(`[Payload Detection] 📊 First 1000 chars: ${fullPayloadStr.substring(0, 1000)}`);
+
+                    // Simple check first
+                    const simpleCheck = fullPayloadStr.includes(payloadPattern.text);
+                    console.log(`[Payload Detection] 🔍 Simple includes() check for "${payloadPattern.text}": ${simpleCheck}`);
+
+                    console.log(`[Payload Detection] 🔍 Now calling matchPattern() with options: regex=${matchOptions.regex}, wholeWord=${matchOptions.wholeWord}, caseSensitive=${matchOptions.caseSensitive}`);
                     // Check if pattern matches in payload data
-                    if (this.matchPattern(payloadData, payloadPattern.text, matchOptions)) {
+                    const matchResult = this.matchPattern(payloadData, payloadPattern.text, matchOptions);
+                    console.log(`[Payload Detection] 🔍 matchPattern() returned: ${matchResult}`);
+
+                    if (matchResult) {
                         console.log(`[Payload Detection] ✅ Pattern "${payloadPattern.text}" MATCHED in payload data!`);
                         // Extract the matched portion from the payload
                         let matchedValue = '';
@@ -2073,11 +2085,23 @@ class DetectionEngineManager {
             caseSensitive = false
         } = options;
 
-        if (!text || !pattern) return false;
+        // DEBUG: Log function entry with parameters
+        const enableDebug = pattern === 'body' || pattern === 'jsv=' || pattern === 'sensor_data'; // Only debug specific patterns
+        if (enableDebug) {
+            console.log(`[matchPattern] 🔍 ENTRY: pattern="${pattern}"`);
+            console.log(`[matchPattern] 📊 Text length: ${text?.length || 0} chars`);
+            console.log(`[matchPattern] ⚙️ Options: regex=${regex}, wholeWord=${wholeWord}, caseSensitive=${caseSensitive}`);
+        }
+
+        if (!text || !pattern) {
+            if (enableDebug) console.log(`[matchPattern] ❌ EXIT: text or pattern is empty`);
+            return false;
+        }
 
         // OPTIMIZATION: Check result cache first (5-minute TTL)
         const cached = DetectionEngineManager.patternCache.getCachedMatch(text, pattern, options);
         if (cached.found) {
+            if (enableDebug) console.log(`[matchPattern] 💾 Cache hit! Result: ${cached.result}`);
             return cached.result;
         }
 
@@ -2085,14 +2109,22 @@ class DetectionEngineManager {
         const textToSearch = caseSensitive ? text : text.toLowerCase();
         const patternToMatch = caseSensitive ? pattern : pattern.toLowerCase();
 
+        if (enableDebug) {
+            console.log(`[matchPattern] 🔄 After case processing:`);
+            console.log(`[matchPattern]    Pattern to match: "${patternToMatch}"`);
+            console.log(`[matchPattern]    Text preview (first 200): ${textToSearch.substring(0, 200)}`);
+        }
+
         let result = false;
 
         // Regex matching - use cached compiled pattern
         if (regex) {
+            if (enableDebug) console.log(`[matchPattern] 🔧 Mode: REGEX matching`);
             const compiledRegex = DetectionEngineManager.patternCache.getCompiledPattern(patternToMatch, { regex: true, caseSensitive });
             if (compiledRegex) {
                 try {
                     result = compiledRegex.test(textToSearch);
+                    if (enableDebug) console.log(`[matchPattern] 🎯 Regex test result: ${result}`);
                 } catch (e) {
                     console.warn('Invalid regex pattern:', patternToMatch, e);
                     result = false;
@@ -2101,24 +2133,37 @@ class DetectionEngineManager {
         }
         // Whole word matching - use cached compiled pattern
         else if (wholeWord) {
+            if (enableDebug) console.log(`[matchPattern] 🔧 Mode: WHOLE WORD matching`);
             const compiledRegex = DetectionEngineManager.patternCache.getCompiledPattern(patternToMatch, { wholeWord: true, caseSensitive });
             if (compiledRegex) {
                 result = compiledRegex.test(textToSearch);
+                if (enableDebug) console.log(`[matchPattern] 🎯 Whole word test result: ${result}`);
             } else {
                 // Fallback to direct matching if compilation failed
                 const escapedPattern = this.escapeRegExp(patternToMatch);
                 const wordBoundaryRegex = new RegExp(`\\b${escapedPattern}\\b`, caseSensitive ? 'g' : 'gi');
                 result = wordBoundaryRegex.test(textToSearch);
+                if (enableDebug) console.log(`[matchPattern] 🎯 Whole word fallback test result: ${result}`);
             }
         }
         // Simple includes matching (fastest - no regex needed)
         else {
+            if (enableDebug) console.log(`[matchPattern] 🔧 Mode: SIMPLE includes() matching`);
             result = textToSearch.includes(patternToMatch);
+            if (enableDebug) {
+                console.log(`[matchPattern] 🎯 includes() test result: ${result}`);
+                if (result) {
+                    const index = textToSearch.indexOf(patternToMatch);
+                    console.log(`[matchPattern] 📍 Found at index: ${index}`);
+                    console.log(`[matchPattern] 📍 Context: "${textToSearch.substring(Math.max(0, index - 20), index + patternToMatch.length + 20)}"`);
+                }
+            }
         }
 
         // OPTIMIZATION: Cache the result for 5 minutes
         DetectionEngineManager.patternCache.cacheMatch(text, pattern, options, result);
 
+        if (enableDebug) console.log(`[matchPattern] ✅ EXIT: Returning ${result}`);
         return result;
     }
 

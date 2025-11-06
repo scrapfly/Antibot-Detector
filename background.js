@@ -1584,14 +1584,23 @@ async function processDetectionData(message, sender) {
 
                 console.log(`[Payload Store] Found payload: ${payloadData.type} (${payloadData.method}) - ${payloadData.url}`);
 
-                // DEBUG: Show payload preview
+                // DEBUG: Show full payload data for debugging
                 if (payloadData.type === 'formData') {
-                    console.log(`[Payload Store] FormData keys: ${Object.keys(payloadData.payload).join(', ')}`);
+                    console.log(`[Payload Store] 📝 FormData keys (${Object.keys(payloadData.payload).length}): ${Object.keys(payloadData.payload).join(', ')}`);
+                    console.log(`[Payload Store] 📝 FormData full object:`, payloadData.payload);
                 } else {
-                    const preview = typeof payloadData.payload === 'string'
-                        ? payloadData.payload.substring(0, 200)
-                        : JSON.stringify(payloadData.payload).substring(0, 200);
-                    console.log(`[Payload Store] Payload preview: ${preview}...`);
+                    const payloadStr = typeof payloadData.payload === 'string'
+                        ? payloadData.payload
+                        : JSON.stringify(payloadData.payload);
+                    console.log(`[Payload Store] 📝 Payload data type: ${typeof payloadData.payload}`);
+                    console.log(`[Payload Store] 📝 Payload length: ${payloadStr.length} characters`);
+                    console.log(`[Payload Store] 📝 Payload preview (first 500 chars): ${payloadStr.substring(0, 500)}...`);
+
+                    // Check for specific patterns
+                    const hasJsv = payloadStr.includes('jsv=');
+                    const hasBody = payloadStr.includes('body');
+                    const hasSensorData = payloadStr.includes('sensor_data');
+                    console.log(`[Payload Store] 🔍 Pattern check: jsv=${hasJsv}, body=${hasBody}, sensor_data=${hasSensorData}`);
                 }
             } catch (e) {
                 console.error('Error processing payload:', e);
