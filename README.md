@@ -38,7 +38,6 @@ Scrapfly Security Detection is a Manifest V3 Chrome extension that helps securit
 - **Network Monitoring**: Analyzes cookies, headers, and URLs
 - **JavaScript Hooks**: Intercepts fingerprinting API calls (Canvas, WebGL, Audio, etc.)
 - **Window Properties**: Checks for anti-bot objects in the global scope
-- **CSS Detection**: Identifies protection-specific stylesheets
 
 ### 🎨 **Modern UI**
 
@@ -127,7 +126,7 @@ Scrapfly Security Detection is a Manifest V3 Chrome extension that helps securit
 
 1. **Browse Detectors**: View all detection rules by category
 2. **Edit Rules**: Modify detection patterns, confidence scores, and settings
-3. **Add Methods**: Create new detection methods (Cookie, Header, URL, Content, DOM, Window, JS Hooks, CSS)
+3. **Add Methods**: Create new detection methods (Cookie, Header, URL, Content, DOM, Window, JS Hooks)
 4. **Pattern Options**: Configure regex, whole-word, and case-sensitive matching
 5. **Import/Export**: Share rules via JSON files
 
