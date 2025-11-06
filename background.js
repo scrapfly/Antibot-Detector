@@ -2834,11 +2834,8 @@ function setupMessageListeners() {
                         // CACHE CHECK: If cache exists for this URL, skip processing hooks entirely
                         const cachedData = await DetectionEngineManager.getStoredDetection(url);
                         if (cachedData) {
-                            console.log(`[Background] ✅ JS Hooks - Cache hit detected - discarding ${detections.length} hooks (not needed)`);
-
                             // Mark this detection as using cache to suppress misleading warning logs
                             state.usedCache = true;
-                            console.log(`[Background] 💾 Marked tab ${tabId} as using cached data`);
 
                             batchProcessingFlags.set(tabId, false);
                             console.log(`[🔒 Batch Flag] ✅ SET to FALSE (cache hit) for tab ${tabId}`);
@@ -2995,11 +2992,8 @@ function setupMessageListeners() {
                         // CACHE CHECK: If cache exists for this URL, skip processing window properties entirely
                         const cachedData = await DetectionEngineManager.getStoredDetection(url);
                         if (cachedData) {
-                            console.log(`[Background] ✅ Window Properties - Cache hit detected - discarding ${detections.length} properties (not needed)`);
-
                             // Mark this detection as using cache to suppress misleading warning logs
                             state.usedCache = true;
-                            console.log(`[Background] 💾 Marked tab ${tabId} as using cached data`);
 
                             return; // Don't process window properties - we have cached results
                         }
@@ -3611,12 +3605,6 @@ function setupTabListeners() {
     chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         // Check if extension is disabled when page starts loading
         if (changeInfo.status === 'loading') {
-            // Clear cache tracking on new navigation
-            if (tabsUsingCache.has(tabId)) {
-                tabsUsingCache.delete(tabId);
-                console.log(`[TabUpdate] Cleared cache tracking for tab ${tabId} on new navigation`);
-            }
-
             try {
                 const result = await chrome.storage.local.get(['scrapfly_enabled']);
                 if (result.scrapfly_enabled === false) {
@@ -3637,6 +3625,12 @@ function setupTabListeners() {
         if (changeInfo.url) {
             const newUrl = changeInfo.url;
             console.log(`[TabUpdate] URL change detected for tab ${tabId}: ${newUrl}`);
+
+            // Clear cache tracking ONLY on URL change (not on F5 refresh)
+            if (tabsUsingCache.has(tabId)) {
+                tabsUsingCache.delete(tabId);
+                console.log(`[TabUpdate] URL changed - cleared cache tracking for tab ${tabId}`);
+            }
 
             // Check if there's an active detection for this tab
             if (activeDetections.has(tabId)) {
