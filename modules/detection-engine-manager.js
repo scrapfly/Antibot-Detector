@@ -150,6 +150,9 @@ class DetectionEngineManager {
     // Shared pattern cache for all instances
     static patternCache = new PatternCache(500);
 
+    // Debug mode flag - set to true to enable verbose console logging
+    static DEBUG_MODE = false;
+
     constructor() {
         this.detectionData = null;
         this.lastDetectionTime = null;
@@ -1540,17 +1543,10 @@ class DetectionEngineManager {
 
         // Check cookies patterns
         if (detector.detection?.cookie && (cookies.length > 0 || (pageData.responseCookies && pageData.responseCookies.length > 0))) {
-            console.log(`[Cookie Detection] Checking ${detector.detection.cookie.length} cookie patterns`);
-            console.log('[Cookie Detection] Request cookies:', cookies.map(c => c.name).join(', '));
-            if (pageData.responseCookies) {
-                console.log('[Cookie Detection] Response cookies:', pageData.responseCookies.map(c => c.name).join(', '));
-            }
-
             // OPTIMIZATION Phase 10.6: Track matched cookies and filter before searching
             const matchedCookieNames = new Set();
 
             for (const cookiePattern of detector.detection.cookie) {
-                console.log(`[Cookie Detection] Pattern:`, cookiePattern);
 
                 const nameMatchOptions = {
                     regex: cookiePattern.nameRegex === true,
@@ -1585,9 +1581,6 @@ class DetectionEngineManager {
                 const cookiesForName = getCookiesByScope(nameScope);
                 const cookiesForValue = getCookiesByScope(valueScope);
 
-                console.log(`[Cookie Detection] Name match options:`, nameMatchOptions);
-                console.log(`[Cookie Detection] Searching in ${cookiesForName.length} cookies for name (scope: ${nameScope})`);
-
                 // OPTIMIZATION Phase 10.6: Filter out matched cookies before searching (O(n) instead of O(n²))
                 const unmatchedCookies = cookiesForName.filter(c => !matchedCookieNames.has(c.name));
 
@@ -1595,7 +1588,6 @@ class DetectionEngineManager {
                     // Match by name using matchPattern helper
                     if (cookiePattern.name && cookie.name) {
                         const matched = this.matchPattern(cookie.name, cookiePattern.name, nameMatchOptions);
-                        console.log(`[Cookie Detection] Testing "${cookie.name}" against pattern "${cookiePattern.name}": ${matched}`);
 
                         if (matched) {
                             // If value pattern specified, check it in valueScope cookies
@@ -1604,7 +1596,6 @@ class DetectionEngineManager {
                                 const cookieInValueScope = cookiesForValue.find(c => c.name === cookie.name);
                                 if (cookieInValueScope) {
                                     const valueMatched = this.matchPattern(cookieInValueScope.value || '', cookiePattern.value, valueMatchOptions);
-                                    console.log(`[Cookie Detection] Value match result: ${valueMatched}`);
                                     return valueMatched;
                                 }
                                 return false;
@@ -1616,7 +1607,6 @@ class DetectionEngineManager {
                 });
 
                 if (matchingCookie) {
-                    console.log(`[Cookie Detection] ✓ Match found: ${matchingCookie.name}`);
                     matchedCookieNames.add(matchingCookie.name); // Mark as matched
                     matches.push({
                         type: 'cookie',
@@ -1625,8 +1615,6 @@ class DetectionEngineManager {
                         confidence: cookiePattern.confidence || 80,
                         description: cookiePattern.description
                     });
-                } else {
-                    console.log(`[Cookie Detection] ✗ No match found for pattern "${cookiePattern.name}"`);
                 }
             }
         }
@@ -1703,24 +1691,16 @@ class DetectionEngineManager {
         // Check payload patterns - handle both single payload and multiple payloads array
         // First check if we have multiple payloads (new format)
         if (detector.detection?.payload && pageData.payloads && Array.isArray(pageData.payloads)) {
-            console.log(`[Payload Detection] 🔍 Checking ${detector.detection.payload.length} patterns against ${pageData.payloads.length} payloads for ${detector.name}`);
-
             // Track which patterns have already matched to prevent duplicates
             const matchedPatterns = new Set();
 
             // Check each payload in the array
             for (const payloadItem of pageData.payloads) {
-                console.log(`[Payload Detection] 📦 Checking payload: ${payloadItem.method} ${payloadItem.url}`);
-                console.log(`[Payload Detection] 📦 Payload type: ${payloadItem.type}, data length: ${typeof payloadItem.data === 'string' ? payloadItem.data.length : 'N/A'}`);
-
                 for (const payloadPattern of detector.detection.payload) {
-                    console.log(`[Payload Detection] 🔎 Testing pattern: "${payloadPattern.text}" (description: ${payloadPattern.description || 'N/A'})`);
-
                     // Skip if this exact pattern already matched in a previous payload
                     // Use description as key (unique per pattern) instead of text (can be duplicated)
                     const patternKey = payloadPattern.description || payloadPattern.text;
                     if (matchedPatterns.has(patternKey)) {
-                        console.log(`[Payload Detection] ⏭️ Skipping - pattern "${patternKey}" already matched`);
                         continue;
                     }
                     // Match options for pattern matching
@@ -1729,24 +1709,19 @@ class DetectionEngineManager {
                         wholeWord: payloadPattern.textWholeWord === true,
                         caseSensitive: payloadPattern.textCaseSensitive === true
                     };
-                    console.log(`[Payload Detection] ⚙️ Match options: regex=${matchOptions.regex}, wholeWord=${matchOptions.wholeWord}, caseSensitive=${matchOptions.caseSensitive}`);
 
                     // NEW: Check HTTP method constraint
                     if (payloadPattern.methods && Array.isArray(payloadPattern.methods) && payloadPattern.methods.length > 0) {
-                        console.log(`[Payload Detection] 🔍 Checking HTTP method: pattern requires [${payloadPattern.methods.join(', ')}], got ${payloadItem.method}`);
                         const methodAllowed = payloadPattern.methods.some(m =>
                             m.toUpperCase() === payloadItem.method.toUpperCase()
                         );
                         if (!methodAllowed) {
-                            console.log(`[Payload Detection] ✗ Method mismatch - skipping pattern`);
                             continue; // Skip this pattern
                         }
-                        console.log(`[Payload Detection] ✅ Method matched`);
                     }
 
                     // NEW: Check URL pattern constraint
                     if (payloadPattern.urlPattern && payloadPattern.urlPattern.trim() !== '') {
-                        console.log(`[Payload Detection] 🔍 Checking URL pattern: "${payloadPattern.urlPattern}" (regex: ${payloadPattern.urlRegex}, caseSensitive: ${payloadPattern.urlCaseSensitive})`);
                         const urlMatchOptions = {
                             regex: payloadPattern.urlRegex === true,
                             wholeWord: payloadPattern.urlWholeWord === true,
@@ -1755,10 +1730,8 @@ class DetectionEngineManager {
 
                         const urlMatched = this.matchPattern(payloadItem.url, payloadPattern.urlPattern, urlMatchOptions);
                         if (!urlMatched) {
-                            console.log(`[Payload Detection] ✗ URL mismatch - pattern not found in URL`);
                             continue; // Skip this pattern
                         }
-                        console.log(`[Payload Detection] ✅ URL matched`);
                     }
 
                     let payloadData = payloadItem.data;
@@ -1773,36 +1746,19 @@ class DetectionEngineManager {
                             return `${key}=${value}`;
                         }).join('&');
                         payloadData = params;
-                        console.log(`[Payload Detection] 📝 Payload is FormData, converted to URL-encoded: ${payloadData.substring(0, 200)}...`);
                     } else if (typeof payloadData === 'object') {
                         // Convert any other object to JSON string
                         try {
                             payloadData = JSON.stringify(payloadData);
-                            console.log(`[Payload Detection] 📝 Payload is object, converted to JSON: ${payloadData.substring(0, 200)}...`);
                         } catch (e) {
                             payloadData = String(payloadData);
-                            console.log(`[Payload Detection] 📝 Payload object conversion failed, using String: ${payloadData.substring(0, 200)}...`);
                         }
-                    } else {
-                        console.log(`[Payload Detection] 📝 Payload data preview: ${typeof payloadData === 'string' ? payloadData.substring(0, 200) + '...' : payloadData}`);
                     }
 
-                    // Show full payload string for debugging
-                    const fullPayloadStr = typeof payloadData === 'string' ? payloadData : String(payloadData);
-                    console.log(`[Payload Detection] 📊 Payload string length: ${fullPayloadStr.length} characters`);
-                    console.log(`[Payload Detection] 📊 First 1000 chars: ${fullPayloadStr.substring(0, 1000)}`);
-
-                    // Simple check first
-                    const simpleCheck = fullPayloadStr.includes(payloadPattern.text);
-                    console.log(`[Payload Detection] 🔍 Simple includes() check for "${payloadPattern.text}": ${simpleCheck}`);
-
-                    console.log(`[Payload Detection] 🔍 Now calling matchPattern() with options: regex=${matchOptions.regex}, wholeWord=${matchOptions.wholeWord}, caseSensitive=${matchOptions.caseSensitive}`);
                     // Check if pattern matches in payload data
                     const matchResult = this.matchPattern(payloadData, payloadPattern.text, matchOptions);
-                    console.log(`[Payload Detection] 🔍 matchPattern() returned: ${matchResult}`);
 
                     if (matchResult) {
-                        console.log(`[Payload Detection] ✅ Pattern "${payloadPattern.text}" MATCHED in payload data!`);
                         // Extract the matched portion from the payload
                         let matchedValue = '';
                         const searchStr = payloadData.toString();
@@ -1843,20 +1799,13 @@ class DetectionEngineManager {
                         // Use same key as check above (description or text)
                         matchedPatterns.add(patternKey);
 
-                        console.log(`[Payload Detection] ✓ Match found for pattern "${payloadPattern.text}" (${payloadPattern.description}) in ${payloadItem.url}`);
-                        console.log(`[Payload Detection] Matched value: "${matchedValue}"`);
                         break; // Found match, no need to check this pattern again
-                    } else {
-                        console.log(`[Payload Detection] ✗ Pattern "${payloadPattern.text}" NOT found in payload data`);
                     }
                 }
             }
         }
         // Fallback to single payload for backward compatibility
         else if (detector.detection?.payload && pageData.payload) {
-            console.log(`[Payload Detection] Checking ${detector.detection.payload.length} payload patterns`);
-            console.log(`[Payload Detection] Method: ${pageData.payload.method}, Type: ${pageData.payload.type}`);
-
             for (const payloadPattern of detector.detection.payload) {
                 // Match options for pattern matching
                 const matchOptions = {
@@ -1871,7 +1820,6 @@ class DetectionEngineManager {
                         m.toUpperCase() === pageData.payload.method.toUpperCase()
                     );
                     if (!methodAllowed) {
-                        console.log(`[Payload Detection] ✗ Method mismatch: pattern requires ${payloadPattern.methods.join('|')}, got ${pageData.payload.method}`);
                         continue; // Skip this pattern
                     }
                 }
@@ -1886,7 +1834,6 @@ class DetectionEngineManager {
 
                     const urlMatched = this.matchPattern(pageData.payload.url, payloadPattern.urlPattern, urlMatchOptions);
                     if (!urlMatched) {
-                        console.log(`[Payload Detection] ✗ URL mismatch: pattern "${payloadPattern.urlPattern}" not found in ${pageData.payload.url}`);
                         continue; // Skip this pattern
                     }
                 }
@@ -1947,17 +1894,12 @@ class DetectionEngineManager {
                         confidence: payloadPattern.confidence || 80,
                         description: payloadPattern.description || 'Payload pattern detected'
                     });
-                    console.log(`[Payload Detection] ✓ Match found for pattern "${payloadPattern.text}"`);
-                    console.log(`[Payload Detection] Matched value: "${matchedValue}"`);
-                } else {
-                    console.log(`[Payload Detection] ✗ No match for pattern "${payloadPattern.text}"`);
                 }
             }
         }
 
         // Check DOM patterns
         if (detector.detection?.dom && dom.length > 0) {
-            console.log(`[DOM Detection] ${detector.name}: Checking ${detector.detection.dom.length} DOM patterns against ${dom.length} elements`);
             for (const domPattern of detector.detection.dom) {
                 // Check if any DOM element matches the pattern
                 const matchingElement = dom.find(element => {
@@ -2098,23 +2040,13 @@ class DetectionEngineManager {
             caseSensitive = false
         } = options;
 
-        // DEBUG: Log function entry with parameters
-        const enableDebug = pattern === 'body' || pattern === 'jsv=' || pattern === 'sensor_data'; // Only debug specific patterns
-        if (enableDebug) {
-            console.log(`[matchPattern] 🔍 ENTRY: pattern="${pattern}"`);
-            console.log(`[matchPattern] 📊 Text length: ${text?.length || 0} chars`);
-            console.log(`[matchPattern] ⚙️ Options: regex=${regex}, wholeWord=${wholeWord}, caseSensitive=${caseSensitive}`);
-        }
-
         if (!text || !pattern) {
-            if (enableDebug) console.log(`[matchPattern] ❌ EXIT: text or pattern is empty`);
             return false;
         }
 
         // OPTIMIZATION: Check result cache first (5-minute TTL)
         const cached = DetectionEngineManager.patternCache.getCachedMatch(text, pattern, options);
         if (cached.found) {
-            if (enableDebug) console.log(`[matchPattern] 💾 Cache hit! Result: ${cached.result}`);
             return cached.result;
         }
 
@@ -2122,22 +2054,14 @@ class DetectionEngineManager {
         const textToSearch = caseSensitive ? text : text.toLowerCase();
         const patternToMatch = caseSensitive ? pattern : pattern.toLowerCase();
 
-        if (enableDebug) {
-            console.log(`[matchPattern] 🔄 After case processing:`);
-            console.log(`[matchPattern]    Pattern to match: "${patternToMatch}"`);
-            console.log(`[matchPattern]    Text preview (first 200): ${textToSearch.substring(0, 200)}`);
-        }
-
         let result = false;
 
         // Regex matching - use cached compiled pattern
         if (regex) {
-            if (enableDebug) console.log(`[matchPattern] 🔧 Mode: REGEX matching`);
             const compiledRegex = DetectionEngineManager.patternCache.getCompiledPattern(patternToMatch, { regex: true, caseSensitive });
             if (compiledRegex) {
                 try {
                     result = compiledRegex.test(textToSearch);
-                    if (enableDebug) console.log(`[matchPattern] 🎯 Regex test result: ${result}`);
                 } catch (e) {
                     console.warn('Invalid regex pattern:', patternToMatch, e);
                     result = false;
@@ -2146,37 +2070,23 @@ class DetectionEngineManager {
         }
         // Whole word matching - use cached compiled pattern
         else if (wholeWord) {
-            if (enableDebug) console.log(`[matchPattern] 🔧 Mode: WHOLE WORD matching`);
             const compiledRegex = DetectionEngineManager.patternCache.getCompiledPattern(patternToMatch, { wholeWord: true, caseSensitive });
             if (compiledRegex) {
                 result = compiledRegex.test(textToSearch);
-                if (enableDebug) console.log(`[matchPattern] 🎯 Whole word test result: ${result}`);
             } else {
                 // Fallback to direct matching if compilation failed
                 const escapedPattern = this.escapeRegExp(patternToMatch);
                 const wordBoundaryRegex = new RegExp(`\\b${escapedPattern}\\b`, caseSensitive ? 'g' : 'gi');
                 result = wordBoundaryRegex.test(textToSearch);
-                if (enableDebug) console.log(`[matchPattern] 🎯 Whole word fallback test result: ${result}`);
             }
         }
         // Simple includes matching (fastest - no regex needed)
         else {
-            if (enableDebug) console.log(`[matchPattern] 🔧 Mode: SIMPLE includes() matching`);
             result = textToSearch.includes(patternToMatch);
-            if (enableDebug) {
-                console.log(`[matchPattern] 🎯 includes() test result: ${result}`);
-                if (result) {
-                    const index = textToSearch.indexOf(patternToMatch);
-                    console.log(`[matchPattern] 📍 Found at index: ${index}`);
-                    console.log(`[matchPattern] 📍 Context: "${textToSearch.substring(Math.max(0, index - 20), index + patternToMatch.length + 20)}"`);
-                }
-            }
         }
 
         // OPTIMIZATION: Cache the result for 5 minutes
         DetectionEngineManager.patternCache.cacheMatch(text, pattern, options, result);
-
-        if (enableDebug) console.log(`[matchPattern] ✅ EXIT: Returning ${result}`);
         return result;
     }
 
@@ -3069,19 +2979,9 @@ class DetectionEngineManager {
             const hookDefinitions = [];
             const windowPropertyDefinitions = [];
 
-            // DEBUG: Log detector categories received
-            console.log('[Content Script] 🔍 Processing detector categories:', Object.keys(detectors));
-            console.log('[Content Script] 🔍 Total categories:', Object.keys(detectors).length);
-
             // Process all detector categories
             for (const [category, categoryDetectors] of Object.entries(detectors)) {
-                console.log(`[Content Script] 📂 Category "${category}":`, Object.keys(categoryDetectors || {}).length, 'detectors');
-
                 for (const [detectorId, detector] of Object.entries(categoryDetectors || {})) {
-                    // DEBUG: Log if detector has window_properties
-                    if (detector.detection?.window_properties) {
-                        console.log(`[Content Script] ✅ Detector "${detector.name}" (${detectorId}) has ${detector.detection.window_properties.length} window_properties`);
-                    }
 
                     // Collect JS hooks
                     if (detector.detection?.js_hooks && detector.detection.js_hooks.length > 0) {
@@ -3097,16 +2997,12 @@ class DetectionEngineManager {
                     // Support both "window" and "window_properties" field names for backward compatibility
                     const windowProps = detector.detection?.window || detector.detection?.window_properties;
                     if (windowProps && windowProps.length > 0) {
-                        console.log(`[Content Script] 🔎 Processing window properties for "${detector.name}":`, windowProps);
-
                         for (const prop of windowProps) {
                             // Skip disabled window properties (like JS hooks)
                             if (prop.enabled === false) {
-                                console.log(`[Content Script] ⏭️ Skipping disabled property: ${prop.path}`);
                                 continue;
                             }
 
-                            console.log(`[Content Script] ➕ Adding window property: ${prop.path} (${detector.name})`);
                             windowPropertyDefinitions.push({
                                 detectorId: detector.id || detectorId,
                                 detectorName: detector.name,
@@ -3121,24 +3017,25 @@ class DetectionEngineManager {
                 }
             }
 
-            console.log('[Content Script] 📊 Final window property count:', windowPropertyDefinitions.length);
-            console.log('[Content Script] 📊 Window properties list:', windowPropertyDefinitions.map(wp => `${wp.path} (${wp.detectorName})`));
-
             const debugMode = settingsData.debugMode || false;
 
             // ENHANCED DETECTION: Extract enhanced detection settings
             const enhancedDetectionSettings = settingsData.detection?.enhancedDetection;
             const enhancedSettings = DetectionEngineManager.buildEnhancedSettings(enhancedDetectionSettings);
 
-            console.log('[Enhanced Detection] Settings loaded:', enhancedSettings);
+            if (DetectionEngineManager.DEBUG_MODE) {
+                console.log('[Enhanced Detection] Settings loaded:', enhancedSettings);
+            }
 
             // IMPORTANT: Always send configuration to MAIN world, even if empty
             // This ensures MAIN world sends completion signals (JS_HOOKS_COMPLETE, WINDOW_PROPS_COMPLETE)
             // Otherwise background waits forever for these signals and detection never finalizes
-            if (hookDefinitions.length === 0 && windowPropertyDefinitions.length === 0) {
-                console.log('[Content Script] No JS hooks or window properties defined - sending empty config to MAIN world');
-            } else {
-                console.log(`[Content Script] Sending ${hookDefinitions.length} hook detectors and ${windowPropertyDefinitions.length} window properties to MAIN world (debug: ${debugMode}, enhanced: ${enhancedSettings.enabled})...`);
+            if (DetectionEngineManager.DEBUG_MODE) {
+                if (hookDefinitions.length === 0 && windowPropertyDefinitions.length === 0) {
+                    console.log('[Content Script] No JS hooks or window properties defined - sending empty config to MAIN world');
+                } else {
+                    console.log(`[Content Script] Sending ${hookDefinitions.length} hook detectors and ${windowPropertyDefinitions.length} window properties to MAIN world (debug: ${debugMode}, enhanced: ${enhancedSettings.enabled})...`);
+                }
             }
 
             // Send both hooks AND window properties to MAIN world via CustomEvent
@@ -3150,8 +3047,6 @@ class DetectionEngineManager {
                     enhancedSettings  // ENHANCED DETECTION: Pass settings to MAIN world
                 }
             }));
-
-            console.log('[Content Script] ✅ Hook configuration sent to MAIN world');
         } catch (error) {
             console.error('[Content Script] Failed to install hooks:', error);
         }
@@ -3253,11 +3148,11 @@ class DetectionEngineManager {
         function flushHookBatch() {
             if (hookBatch.length === 0) return;
 
-            console.log(`%c[CHECK THIS] [BATCH FLUSH] Batch contains ${hookBatch.length} hooks before dedup`, 'color: #ff6600; font-weight: bold;');
-
             // OPTIMIZATION Phase 10.4: Immediate flush on overflow to prevent memory leak
             if (hookBatch.length > HOOK_BATCH_EMERGENCY_SIZE) {
-                console.warn(`[Content Script] ⚠️ Hook batch overflow (${hookBatch.length} hooks), forcing immediate flush`);
+                if (DetectionEngineManager.DEBUG_MODE) {
+                    console.warn(`[Content Script] ⚠️ Hook batch overflow (${hookBatch.length} hooks), forcing immediate flush`);
+                }
                 // Clear existing timeout to prevent double flush
                 if (hookBatchTimeout) {
                     clearTimeout(hookBatchTimeout);
@@ -3289,34 +3184,12 @@ class DetectionEngineManager {
             }
 
             const deduplicatedHooks = Array.from(uniqueHooks.values());
-            const removedCount = hookBatch.length - deduplicatedHooks.length;
-
-            console.log(`%c[CHECK THIS] [BATCH FLUSH] Before dedup: ${hookBatch.length} hook firings`, 'color: #ff6600; font-weight: bold;');
-            console.log(`%c[CHECK THIS] [BATCH FLUSH] After dedup: ${deduplicatedHooks.length} unique detector:hook combinations`, 'color: #ff6600; font-weight: bold;');
-            console.log(`%c[CHECK THIS] [BATCH FLUSH] Removed: ${removedCount} duplicate firings`, 'color: #ffaa00; font-weight: bold;');
-
-            // Show dedup breakdown by detector:hook combination
-            if (removedCount > 0) {
-                console.log(`%c[CHECK THIS] [BATCH FLUSH] Dedup Details:`, 'color: #ff6600; font-weight: bold;');
-                dedupeKeyCounts.forEach((count, key) => {
-                    if (count > 1) {
-                        const hookData = deduplicatedHooks.find(h =>
-                            `${h.detection.detectorId}:${h.detection.hook.target}` === key
-                        );
-                        const detectorName = hookData ? hookData.detection.detectorName : key.split(':')[0];
-                        const target = hookData ? hookData.detection.hook.target : key.split(':')[1];
-                        console.log(`%c[CHECK THIS]    ${detectorName} → ${target}: (${count} firings, kept 1)`, 'color: #ffaa00;');
-                    }
-                });
-            }
 
             // Send batched detections
             chrome.runtime.sendMessage({
                 type: 'JS_HOOK_DETECTION_BATCH',
                 detections: deduplicatedHooks,
                 timestamp: Date.now()
-            }).then(() => {
-                console.log(`%c[CHECK THIS] [BATCH FLUSH] ✅ Sent ${deduplicatedHooks.length} hooks to background`, 'color: #00ff00; font-weight: bold;');
             }).catch((error) => {
                 const errorMsg = error?.message || '';
 
