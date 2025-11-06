@@ -1089,7 +1089,7 @@ class History {
    */
   setupPagination() {
     this.paginationManager = new PaginationManager('historyPagination', {
-      itemsPerPage: 3,
+      itemsPerPage: 20,
       onPageChange: (page, items) => {
         this.renderHistoryPage(items);
       }
