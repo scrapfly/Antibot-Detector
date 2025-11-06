@@ -268,6 +268,14 @@ class ScrapflyPopup {
    */
   async checkAndDisplayExistingDetection() {
     try {
+      // DEBOUNCE: Prevent spam from multiple rapid calls
+      const now = Date.now();
+      if (this.lastCheckTime && (now - this.lastCheckTime) < 1000) {
+        console.log('[Popup] Debouncing checkAndDisplayExistingDetection (called too soon after last check)');
+        return;
+      }
+      this.lastCheckTime = now;
+
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       if (!tab) return;
 
