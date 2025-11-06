@@ -2099,7 +2099,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
    */
   setupPagination() {
     this.paginationManager = new PaginationManager('detectionPagination', {
-      itemsPerPage: 2,
+      itemsPerPage: 10,
       onPageChange: (page, items) => {
         this.renderDetectionsPage(items);
       }
