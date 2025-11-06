@@ -47,11 +47,7 @@ class Rules {
    */
   setupPagination() {
     // Pagination disabled for Rules tab - using scroll instead
-    // Hide pagination controls
-    const paginationEl = document.querySelector('#rulesPagination');
-    if (paginationEl) {
-      paginationEl.style.display = 'none';
-    }
+    // No pagination controls needed - all items rendered with scroll
   }
 
   /**
