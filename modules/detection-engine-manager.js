@@ -2892,6 +2892,27 @@ class DetectionEngineManager {
             return;
         }
 
+        // Check if extension is disabled
+        try {
+            const result = await chrome.storage.local.get(['scrapfly_enabled']);
+            if (result.scrapfly_enabled === false) {
+                console.log('[Hooks] Extension is disabled - skipping hook installation');
+                // Send empty config to ensure completion signals
+                windowObj.dispatchEvent(new CustomEvent('scrapfly-install-hooks', {
+                    detail: {
+                        hookDefinitions: [],
+                        windowProperties: [],
+                        debugMode: false,
+                        enhancedSettings: DetectionEngineManager.buildEnhancedSettings({ enabled: false })
+                    }
+                }));
+                return;
+            }
+        } catch (error) {
+            console.warn('[Hooks] Failed to check enabled state, proceeding with installation:', error);
+            // Continue with installation if check fails (fail-open)
+        }
+
         try {
             console.log('[Content Script] Installing JS hooks...');
 

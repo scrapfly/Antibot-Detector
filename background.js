@@ -1260,7 +1260,13 @@ function setupHeaderCapture() {
 
     // Listen for response headers
     chrome.webRequest.onHeadersReceived.addListener(
-        (details) => {
+        async (details) => {
+            // Skip if extension is disabled
+            const result = await chrome.storage.local.get(['scrapfly_enabled']);
+            if (result.scrapfly_enabled === false) {
+                return;
+            }
+
             // Skip header capture if tab has cache hit
             if (tabsUsingCache.has(details.tabId)) {
                 return; // Skip all header capture for cached tabs
@@ -1315,7 +1321,13 @@ function setupHeaderCapture() {
 
     // Listen for request headers
     chrome.webRequest.onBeforeSendHeaders.addListener(
-        (details) => {
+        async (details) => {
+            // Skip if extension is disabled
+            const result = await chrome.storage.local.get(['scrapfly_enabled']);
+            if (result.scrapfly_enabled === false) {
+                return;
+            }
+
             // Skip header capture if tab has cache hit
             if (tabsUsingCache.has(details.tabId)) {
                 return; // Skip all header capture for cached tabs
@@ -1346,7 +1358,13 @@ function setupHeaderCapture() {
 
     // Listen for request payloads (POST/PUT/PATCH/DELETE bodies)
     chrome.webRequest.onBeforeRequest.addListener(
-        (details) => {
+        async (details) => {
+            // Skip if extension is disabled
+            const result = await chrome.storage.local.get(['scrapfly_enabled']);
+            if (result.scrapfly_enabled === false) {
+                return;
+            }
+
             // Skip payload capture if tab has cache hit
             if (tabsUsingCache.has(details.tabId)) {
                 return; // Skip all payload capture for cached tabs
@@ -1425,7 +1443,13 @@ function setupHeaderCapture() {
     // URLs are captured during the ENTIRE page lifecycle (not just during active detection)
     // because many anti-bot scripts load asynchronously 1-5+ seconds after initial page load
     chrome.webRequest.onBeforeRequest.addListener(
-        (details) => {
+        async (details) => {
+            // Skip if extension is disabled
+            const result = await chrome.storage.local.get(['scrapfly_enabled']);
+            if (result.scrapfly_enabled === false) {
+                return;
+            }
+
             // Skip if cache hit
             if (tabsUsingCache.has(details.tabId)) return;
 
