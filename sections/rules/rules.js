@@ -356,6 +356,7 @@ class Rules {
     // Load payload-specific settings from data attributes
     const payloadUrlPattern = methodItem.dataset.payloadUrlPattern || '';
     const payloadUrlRegex = methodItem.dataset.payloadUrlRegex === 'true';
+    const payloadUrlCaseSensitive = methodItem.dataset.payloadUrlCaseSensitive === 'true';
     const payloadMethods = methodItem.dataset.payloadMethods || ''; // Comma-separated: "POST,PUT"
 
     // Set payload URL pattern input
@@ -364,6 +365,9 @@ class Rules {
 
     // Set payload URL regex checkbox
     setCheckbox('payloadUrlRegex', payloadUrlRegex);
+
+    // Set payload URL case sensitive checkbox (if it exists)
+    setCheckbox('payloadUrlCaseSensitive', payloadUrlCaseSensitive);
 
     // Set payload HTTP method checkboxes
     const methodsArray = payloadMethods ? payloadMethods.split(',') : [];
@@ -2157,6 +2161,7 @@ class Rules {
     // Get payload-specific values from modal
     const payloadUrlPattern = document.querySelector('#payloadUrlPattern')?.value || '';
     const payloadUrlRegex = document.querySelector('#payloadUrlRegex')?.checked || false;
+    const payloadUrlCaseSensitive = document.querySelector('#payloadUrlCaseSensitive')?.checked || false;
 
     // Get selected HTTP methods
     const selectedMethods = [];
@@ -2182,6 +2187,7 @@ class Rules {
     this.currentMethodItem.dataset.textScope = textScope;
     this.currentMethodItem.dataset.payloadUrlPattern = payloadUrlPattern;
     this.currentMethodItem.dataset.payloadUrlRegex = payloadUrlRegex;
+    this.currentMethodItem.dataset.payloadUrlCaseSensitive = payloadUrlCaseSensitive;
     this.currentMethodItem.dataset.payloadMethods = payloadMethods;
 
     // Add visual indicator if settings are configured
@@ -2501,6 +2507,22 @@ class Rules {
               textScope = method.textScope || 'all';
             }
 
+            // Load payload-specific settings from JSON
+            let payloadUrlPattern = '';
+            let payloadUrlRegex = false;
+            let payloadUrlCaseSensitive = false;
+            let payloadMethods = '';
+
+            if (methodType === 'payload') {
+              payloadUrlPattern = method.urlPattern || '';
+              payloadUrlRegex = method.urlRegex || false;
+              payloadUrlCaseSensitive = method.urlCaseSensitive || false;
+              // Convert array of methods to comma-separated string
+              if (Array.isArray(method.methods) && method.methods.length > 0) {
+                payloadMethods = method.methods.join(',');
+              }
+            }
+
             // Skip completely empty method items
             if (!name && !value) {
               return;
@@ -2545,7 +2567,11 @@ class Rules {
                 data-check-scripts="${checkScripts}"
                 data-name-scope="${nameScope}"
                 data-value-scope="${valueScope}"
-                data-text-scope="${textScope}">
+                data-text-scope="${textScope}"
+                data-payload-url-pattern="${payloadUrlPattern}"
+                data-payload-url-regex="${payloadUrlRegex}"
+                data-payload-url-case-sensitive="${payloadUrlCaseSensitive}"
+                data-payload-methods="${payloadMethods}">
                 <div class="method-item-row">
                   <div class="method-item-inputs">
                     <div class="input-with-indicators">
@@ -2667,7 +2693,11 @@ class Rules {
         data-name-case="false"
         data-value-regex="false"
         data-value-wholeword="false"
-        data-value-case="false">
+        data-value-case="false"
+        data-payload-url-pattern=""
+        data-payload-url-regex="false"
+        data-payload-url-case-sensitive="false"
+        data-payload-methods="">
         <div class="method-item-row">
           <div class="method-item-inputs">
             <div class="input-with-indicators">
@@ -2922,6 +2952,28 @@ class Rules {
               methodData.valueScope = item.dataset.valueScope || 'request';
             } else if (methodType === 'url') {
               methodData.textScope = item.dataset.textScope || 'all';
+            }
+
+            // Save payload-specific settings
+            if (methodType === 'payload') {
+              // Only include if urlPattern is set
+              const urlPattern = item.dataset.payloadUrlPattern || '';
+              if (urlPattern) {
+                methodData.urlPattern = urlPattern;
+                // Only include urlRegex if true
+                if (item.dataset.payloadUrlRegex === 'true') {
+                  methodData.urlRegex = true;
+                }
+                // Only include urlCaseSensitive if true
+                if (item.dataset.payloadUrlCaseSensitive === 'true') {
+                  methodData.urlCaseSensitive = true;
+                }
+              }
+              // Only include methods if set
+              const methodsList = item.dataset.payloadMethods || '';
+              if (methodsList) {
+                methodData.methods = methodsList.split(',').filter(m => m.trim());
+              }
             }
 
             methods.push(methodData);
