@@ -1716,9 +1716,11 @@ class DetectionEngineManager {
                 for (const payloadPattern of detector.detection.payload) {
                     console.log(`[Payload Detection] 🔎 Testing pattern: "${payloadPattern.text}" (description: ${payloadPattern.description || 'N/A'})`);
 
-                    // Skip if this pattern already matched in a previous payload
-                    if (matchedPatterns.has(payloadPattern.text)) {
-                        console.log(`[Payload Detection] ⏭️ Skipping - pattern already matched`);
+                    // Skip if this exact pattern already matched in a previous payload
+                    // Use description as key (unique per pattern) instead of text (can be duplicated)
+                    const patternKey = payloadPattern.description || payloadPattern.text;
+                    if (matchedPatterns.has(patternKey)) {
+                        console.log(`[Payload Detection] ⏭️ Skipping - pattern "${patternKey}" already matched`);
                         continue;
                     }
                     // Match options for pattern matching
@@ -1763,9 +1765,15 @@ class DetectionEngineManager {
 
                     // Convert payload to searchable string based on type
                     if (payloadItem.type === 'formData' && typeof payloadData === 'object') {
-                        // Convert form data object to string for searching
-                        payloadData = JSON.stringify(payloadData);
-                        console.log(`[Payload Detection] 📝 Payload is FormData, converted to JSON: ${payloadData.substring(0, 200)}...`);
+                        // Convert FormData object to URL-encoded string format for proper pattern matching
+                        // Chrome's webRequest API returns FormData as {key: [value, value2, ...]}
+                        const params = Object.entries(payloadData).map(([key, values]) => {
+                            // Values are arrays, take first value (or all values if multiple)
+                            const value = Array.isArray(values) ? values.join(',') : values;
+                            return `${key}=${value}`;
+                        }).join('&');
+                        payloadData = params;
+                        console.log(`[Payload Detection] 📝 Payload is FormData, converted to URL-encoded: ${payloadData.substring(0, 200)}...`);
                     } else if (typeof payloadData === 'object') {
                         // Convert any other object to JSON string
                         try {
@@ -1832,9 +1840,10 @@ class DetectionEngineManager {
                         });
 
                         // Mark this pattern as matched to prevent duplicates
-                        matchedPatterns.add(payloadPattern.text);
+                        // Use same key as check above (description or text)
+                        matchedPatterns.add(patternKey);
 
-                        console.log(`[Payload Detection] ✓ Match found for pattern "${payloadPattern.text}" in ${payloadItem.url}`);
+                        console.log(`[Payload Detection] ✓ Match found for pattern "${payloadPattern.text}" (${payloadPattern.description}) in ${payloadItem.url}`);
                         console.log(`[Payload Detection] Matched value: "${matchedValue}"`);
                         break; // Found match, no need to check this pattern again
                     } else {
@@ -1886,8 +1895,12 @@ class DetectionEngineManager {
 
                 // Convert payload to searchable string based on type
                 if (pageData.payload.type === 'formData' && typeof payloadData === 'object') {
-                    // Convert form data object to string for searching
-                    payloadData = JSON.stringify(payloadData);
+                    // Convert FormData object to URL-encoded string format for proper pattern matching
+                    const params = Object.entries(payloadData).map(([key, values]) => {
+                        const value = Array.isArray(values) ? values.join(',') : values;
+                        return `${key}=${value}`;
+                    }).join('&');
+                    payloadData = params;
                 } else if (typeof payloadData === 'object') {
                     // Convert any other object to JSON string
                     try {
