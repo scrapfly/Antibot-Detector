@@ -1571,6 +1571,7 @@ async function processDetectionData(message, sender) {
     // Now handles ARRAY of payloads per tab
     if (payloadStore.has(tabId)) {
         const payloadsArray = payloadStore.get(tabId);
+        console.log(`[Payload Store] 📦 Found ${payloadsArray.length} captured payload(s) for tab ${tabId}`);
 
         // Pass all payloads to detection engine (no filtering)
         const relevantPayloads = [];
@@ -1584,7 +1585,17 @@ async function processDetectionData(message, sender) {
                     type: payloadData.type
                 });
 
-                console.log(`Scrapfly Background: Found payload: ${payloadData.type} (${payloadData.method}) - ${payloadData.url}`);
+                console.log(`[Payload Store] Found payload: ${payloadData.type} (${payloadData.method}) - ${payloadData.url}`);
+
+                // DEBUG: Show payload preview
+                if (payloadData.type === 'formData') {
+                    console.log(`[Payload Store] FormData keys: ${Object.keys(payloadData.payload).join(', ')}`);
+                } else {
+                    const preview = typeof payloadData.payload === 'string'
+                        ? payloadData.payload.substring(0, 200)
+                        : JSON.stringify(payloadData.payload).substring(0, 200);
+                    console.log(`[Payload Store] Payload preview: ${preview}...`);
+                }
             } catch (e) {
                 console.error('Error processing payload:', e);
             }
@@ -1593,11 +1604,17 @@ async function processDetectionData(message, sender) {
         // Pass all payloads for detection
         if (relevantPayloads.length > 0) {
             pageData.payloads = relevantPayloads;
-            console.log(`Scrapfly Background: Added ${relevantPayloads.length} payloads to detection data`);
+            console.log(`[Payload Store] ✅ Added ${relevantPayloads.length} payloads to detection data`);
 
             // Don't delete yet - will delete after detection completes
             // payloadStore.delete(tabId);
         }
+    } else {
+        console.log(`[Payload Store] ⚠️ No payloads captured for tab ${tabId}`);
+        console.log(`[Payload Store] Possible reasons:`);
+        console.log(`  1. No POST/PUT/PATCH requests were made`);
+        console.log(`  2. Requests fired BEFORE detection started (timing issue)`);
+        console.log(`  3. Detection result was loaded from cache (payloads not needed)`);
     }
 
     // Add network request URLs if available (for URL pattern detection)
