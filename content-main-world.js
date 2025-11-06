@@ -642,12 +642,12 @@
       let pollIntervalId = null; // Track polling interval
       let performanceObserver = null; // Track PerformanceObserver for cleanup
 
-      // POLLING: Check every 200ms until settled (3 consecutive checks with no new detections)
+      // POLLING: Check every 200ms until settled (no new detections for 5 seconds)
       const checkPropertiesWithPolling = () => {
         const startTime = Date.now();
         const POLL_INTERVAL_MS = 200; // Check every 200ms
         const MAX_WINDOW_MS = enhancedSettings?.maxDetectionWindowMs || 5000; // Default 5 seconds
-        const SETTLED_CHECKS_REQUIRED = 10; // Number of consecutive checks with no new detections to consider settled (10 checks * 200ms = 2 seconds)
+        const SETTLED_CHECKS_REQUIRED = 25; // Number of consecutive checks with no new detections to consider settled (25 checks * 200ms = 5 seconds)
 
         let checksWithoutNewDetections = 0;
         let pollCount = 0;
