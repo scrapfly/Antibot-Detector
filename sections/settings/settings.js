@@ -858,7 +858,12 @@ class Settings {
     const logCollectorMaxLogsInput = document.querySelector('#logCollectorMaxLogs');
     if (logCollectorMaxLogsInput) {
       logCollectorMaxLogsInput.addEventListener('change', (e) => {
-        const maxLogs = parseInt(e.target.value || 5000);
+        let maxLogs = parseInt(e.target.value || 5000);
+        // Clamp value between 100 and 100000
+        if (maxLogs < 100) maxLogs = 100;
+        if (maxLogs > 100000) maxLogs = 100000;
+        // Update the input field with clamped value
+        e.target.value = maxLogs;
         // Update the display
         const logCountMax = document.querySelector('#logCountMax');
         if (logCountMax) {
