@@ -1343,7 +1343,7 @@
   gap: 8px;
 }
 
-.page-numbers {
+.page-info {
   display: flex;
   align-items: center;
   gap: 6px;
