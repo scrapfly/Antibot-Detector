@@ -1425,13 +1425,12 @@ function setupHeaderCapture() {
 
     // Capture ALL network request URLs for URL pattern detection
     // This allows detecting anti-bot systems that use specific URL patterns (e.g., Akamai /akam/, /sbsd/)
+    // URLs are captured during the ENTIRE page lifecycle (not just during active detection)
+    // because many anti-bot scripts load asynchronously 1-5+ seconds after initial page load
     chrome.webRequest.onBeforeRequest.addListener(
         (details) => {
             // Skip if cache hit
             if (tabsUsingCache.has(details.tabId)) return;
-
-            // FIX: Skip URL capture if no detection is actively running for this tab
-            if (!activeDetections.has(details.tabId)) return;
 
             // Skip invalid tab IDs
             if (details.tabId < 0) return;
@@ -1446,8 +1445,8 @@ function setupHeaderCapture() {
                 timestamp: Date.now()
             });
 
-            // Keep max 100 URLs per tab to prevent memory issues
-            if (networkUrls.length > 100) {
+            // Keep max 200 URLs per tab to prevent memory issues
+            if (networkUrls.length > 200) {
                 networkUrls.shift(); // Remove oldest
             }
 
