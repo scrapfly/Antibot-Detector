@@ -2443,14 +2443,19 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
   static async processDetectionData(context, detectionData) {
     const { detection, detectionEngine, detectorManager, history } = context;
 
+    console.log('[DEBUG processDetectionData] Called with:', {
+      hasDetectionData: !!detectionData,
+      dataKeys: detectionData ? Object.keys(detectionData) : null,
+      hasDetectionResults: !!detectionData?.detectionResults,
+      detectionCount: detectionData?.detectionResults?.length
+    });
+
     try {
       if (!detectionData) {
-        if (this.debugMode) console.warn('Detection: No detection data provided');
+        console.log('[DEBUG processDetectionData] ❌ No detection data provided - showing empty state');
         detection.showEmptyState();
         return;
       }
-
-      if (this.debugMode) console.log('Detection: Processing detection data:', detectionData);
 
       // Set detectors and run detection
       detectionEngine.setDetectors(detectorManager.getAllDetectors());
@@ -2459,7 +2464,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
 
       // Check if we have pre-processed detection results
       if (detectionData.detectionResults) {
-        if (this.debugMode) console.log('Detection: Using pre-processed results from background');
+        console.log('[DEBUG processDetectionData] ✅ Using pre-processed results:', detectionData.detectionResults.length);
         detections = detectionData.detectionResults;
 
         // MIGRATION: Handle old cached data format
@@ -2506,7 +2511,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
         return;
       }
 
-      if (this.debugMode) console.log(`Detection: Found ${detections.length} security systems`);
+      console.log(`[DEBUG processDetectionData] ✅ Found ${detections.length} security systems, calling displayResults()`);
 
       // Display results with metadata
       // Construct cacheMetadata from available fields
@@ -2518,10 +2523,15 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
         cacheScope: detectionData.cacheScope
       } : null;
 
+      console.log('[DEBUG processDetectionData] Cache metadata:', cacheMetadata);
+      console.log('[DEBUG processDetectionData] From storage:', detectionData.fromStorage);
+
       await detection.displayResults(detections, {
         fromStorage: detectionData.fromStorage || false,
         cacheMetadata: cacheMetadata
       });
+
+      console.log('[DEBUG processDetectionData] ✅ displayResults() completed');
 
       // Update history if we have detections
       if (detections.length > 0 && history && typeof history.loadHistory === 'function') {

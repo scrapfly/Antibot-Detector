@@ -306,11 +306,20 @@ class ScrapflyPopup {
       }
 
       // Get existing detection data (cache or completed detection)
+      console.log(`[DEBUG checkAndDisplay] Sending GET_DETECTION_DATA for tab ${tab.id}, URL: ${tab.url}`);
       chrome.runtime.sendMessage(
         { type: 'GET_DETECTION_DATA', tabId: tab.id },
         async (response) => {
+          console.log('[DEBUG checkAndDisplay] GET_DETECTION_DATA response:', {
+            hasResponse: !!response,
+            status: response?.status,
+            hasData: !!response?.data,
+            dataKeys: response?.data ? Object.keys(response.data) : null,
+            detectionCount: response?.data?.detectionResults?.length
+          });
+
           if (chrome.runtime.lastError) {
-            console.log('Popup: No detection data available yet');
+            console.log('[DEBUG checkAndDisplay] Runtime error:', chrome.runtime.lastError);
             this.detection.showEmptyState();
             return;
           }
@@ -327,15 +336,23 @@ class ScrapflyPopup {
               return;
             }
 
-            console.log('Popup: Detection is pending, showing analyzing state');
+            console.log('[DEBUG checkAndDisplay] Detection is pending, showing analyzing state');
             this.detection.showAnalyzingState();
           } else if (response && response.data) {
             // Display existing detection data
-            console.log('Popup: Displaying existing detection data');
+            console.log('[DEBUG checkAndDisplay] ✅ Has data! Calling processDetectionData()');
+            console.log('[DEBUG checkAndDisplay] Data structure:', {
+              detectionResults: response.data.detectionResults?.length,
+              timestamp: response.data.timestamp,
+              fromStorage: response.data.fromStorage,
+              url: response.data.url
+            });
             await this.processDetectionData(response.data);
+            console.log('[DEBUG checkAndDisplay] ✅ processDetectionData() completed');
           } else {
             // No data available (includes recently cleared cache)
-            console.log('Popup: No detection data found, showing empty state');
+            console.log('[DEBUG checkAndDisplay] ❌ No data available, showing empty state');
+            console.log('[DEBUG checkAndDisplay] Response:', response);
             this.detection.showEmptyState();
           }
         }
