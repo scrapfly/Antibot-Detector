@@ -218,10 +218,34 @@
       {
         "text": "sensor_data",
         "confidence": 95,
-        "description": "Akamai sensor data in request payload",
+        "description": "Akamai sensor data in request payload (generic)",
         "textRegex": false,
         "textWholeWord": true,
         "textCaseSensitive": false
+      },
+      {
+        "text": "sensor_data",
+        "confidence": 98,
+        "description": "Akamai sensor data POST to random path challenge endpoint",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": false,
+        "urlPattern": "/([a-zA-Z0-9_-]{2,30}/){4,}[a-zA-Z0-9_-]{2,30}$",
+        "urlRegex": true,
+        "urlCaseSensitive": true,
+        "methods": ["POST"]
+      },
+      {
+        "text": "sensor_data",
+        "confidence": 100,
+        "description": "Akamai sensor data POST to known SBSD endpoint",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": false,
+        "urlPattern": "/.well-known/sbsd/",
+        "urlRegex": false,
+        "urlCaseSensitive": false,
+        "methods": ["POST"]
       }
     ]
   }
