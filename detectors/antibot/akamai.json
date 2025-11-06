@@ -139,6 +139,15 @@
         "textWholeWord": false,
         "textCaseSensitive": true,
         "textScope": "all"
+      },
+      {
+        "confidence": 90,
+        "description": "Akamai SBSD security endpoint",
+        "text": "_sec/sbsd/",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
       }
     ],
     "content": [
@@ -244,6 +253,18 @@
         "textCaseSensitive": false,
         "urlPattern": "/.well-known/sbsd/",
         "urlRegex": false,
+        "urlCaseSensitive": false,
+        "methods": ["POST"]
+      },
+      {
+        "text": "body",
+        "confidence": 98,
+        "description": "Akamai SBSD body payload to random hex endpoint",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": false,
+        "urlPattern": "/.well-known/sbsd/[a-f0-9]{6}$",
+        "urlRegex": true,
         "urlCaseSensitive": false,
         "methods": ["POST"]
       }
