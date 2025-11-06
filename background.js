@@ -999,11 +999,10 @@ async function finalizeDetection(tabId, state) {
         console.log(`[DetectionState] 🧹 Cleaned up ${cookieCount} response cookies for tab ${tabId}`);
     }
 
-    // Clear cache tracking for this tab (if it was marked as using cache)
-    if (tabsUsingCache.has(tabId)) {
-        tabsUsingCache.delete(tabId);
-        console.log(`[DetectionState] 🧹 Cleared cache tracking for tab ${tabId}`);
-    }
+    // NOTE: We don't clear tabsUsingCache here anymore!
+    // The flag persists across F5 refreshes to prevent race condition where
+    // webRequest fires before CHECK_CACHE_EARLY completes.
+    // The flag is only cleared when URL actually changes (see chrome.tabs.onUpdated handler)
 
     console.log(`[DetectionState] ✅ Tab ${tabId} finalized and cleaned up`);
 }
