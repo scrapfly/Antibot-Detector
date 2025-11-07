@@ -3302,6 +3302,12 @@ class DetectionEngineManager {
 
         // OPTIMIZED: Adaptive batch hook detections
         if (data && data.type === 'JS_HOOK_DETECTION') {
+            // Defensive check - shouldn't happen if MAIN world is working correctly
+            if (window.__scrapflyCacheHitEarlyExit) {
+                console.warn('[Content] Received hook detection despite cache hit flag - ignoring');
+                return true;
+            }
+
             // Debug log removed - already logged in service worker via message
             hookBatcher.addHook({
                 detection: data.detection,
@@ -3313,6 +3319,12 @@ class DetectionEngineManager {
 
         // Check if this is window property detections from MAIN world
         if (data && data.type === 'WINDOW_DETECTIONS') {
+            // Defensive check - shouldn't happen if MAIN world polling check is working correctly
+            if (window.__scrapflyCacheHitEarlyExit) {
+                console.warn('[Content] Received window detections despite cache hit flag - ignoring');
+                return true;
+            }
+
             console.log(`[Content Script] 🔍 Window detections received: ${data.detections.length} properties detected in ${data.executionTime}ms`);
 
             // Check if extension context is still valid
