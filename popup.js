@@ -16,8 +16,10 @@ class ScrapflyPopup {
 
   async initialize() {
     try {
-      // Test Logger in popup context
-      Logger.popup('✅ Logger initialized in POPUP context');
+      // Test Logger in popup context (with safety check)
+      if (typeof Logger !== 'undefined') {
+        Logger.popup('✅ Logger initialized in POPUP context');
+      }
 
       // Initialize notification manager using helper
       NotificationHelper.initialize();
