@@ -56,20 +56,15 @@ class ColorManager {
         const colorOption = e.target.closest('.color-option');
         if (!colorOption) return;
 
-        console.log('Color option clicked:', colorOption.id, colorOption.dataset.color);
-
         // Check if this is the rainbow picker
         if (colorOption.id === 'rainbowPicker') {
-          console.log('Opening advanced color picker');
           // If it has a custom color stored, set it as current before opening
           if (colorOption.dataset.customColor) {
-            console.log('Found custom color:', colorOption.dataset.customColor);
             this.currentColor = colorOption.dataset.customColor;
             // Parse the color for the picker
             const rgb = this.hexToRgb(this.currentColor);
             if (rgb) {
               this.selectedColor = rgb;
-              console.log('Set selected color to:', rgb);
             }
           }
           this.openAdvancedColorPicker();
@@ -90,8 +85,6 @@ class ColorManager {
    * @param {HTMLElement} colorOption - The color option element
    */
   selectPresetColor(color, colorOption) {
-    console.log('Setting color:', color);
-
     // Update selected state
     document.querySelectorAll('.color-option').forEach(option => {
       option.classList.remove('selected');
@@ -251,8 +244,6 @@ class ColorManager {
    * Initialize canvas-based advanced color picker
    */
   initializeAdvancedColorPicker() {
-    console.log('Initializing advanced color picker');
-
     const colorCanvas = document.querySelector('#colorCanvas');
     const hueCanvas = document.querySelector('#hueCanvas');
     const colorCursor = document.querySelector('#colorPickerCursor');
@@ -265,7 +256,7 @@ class ColorManager {
     const selectBtn = document.querySelector('#selectAdvancedColor');
 
     if (!colorCanvas || !hueCanvas) {
-      console.error('Canvas elements not found');
+      Logger.error('UI', 'Color picker canvas elements not found');
       return;
     }
 
@@ -273,7 +264,7 @@ class ColorManager {
     const hueCtx = hueCanvas.getContext('2d');
 
     if (!colorCtx || !hueCtx) {
-      console.error('Cannot get canvas contexts');
+      Logger.error('UI', 'Cannot get canvas contexts');
       return;
     }
 
@@ -284,7 +275,6 @@ class ColorManager {
 
     // Draw hue strip
     this.drawHueStrip(hueCtx);
-    console.log('Hue strip drawn on canvas');
 
     // Calculate HSV from current color to set initial hue and position
     const initialHsv = this.rgbToHsv(this.selectedColor.r, this.selectedColor.g, this.selectedColor.b);
@@ -292,7 +282,6 @@ class ColorManager {
 
     // Draw initial color canvas
     this.drawColorCanvas(colorCtx, this.currentHue);
-    console.log('Color canvas drawn with hue:', this.currentHue);
 
     // Update initial color display
     this.updateColorDisplay(this.selectedColor, colorPreview, rInput, gInput, bInput);
@@ -447,12 +436,9 @@ class ColorManager {
     cancelBtn?.addEventListener('click', () => this.closeAdvancedColorPicker());
     selectBtn?.addEventListener('click', () => {
       const hex = this.rgbToHex(this.selectedColor);
-      console.log('Applying color:', hex);
       this.applySelectedColor(hex);
       this.closeAdvancedColorPicker();
     });
-
-    console.log('Advanced color picker initialized successfully');
   }
 
   /**
@@ -460,7 +446,6 @@ class ColorManager {
    * @param {CanvasRenderingContext2D} ctx - The canvas context
    */
   drawHueStrip(ctx) {
-    console.log('Drawing hue strip');
     const gradient = ctx.createLinearGradient(0, 0, 0, 160); // Changed to 160
     gradient.addColorStop(0, '#ff0000');
     gradient.addColorStop(0.17, '#ff00ff');
@@ -480,8 +465,6 @@ class ColorManager {
    * @param {number} hue - The current hue value
    */
   drawColorCanvas(ctx, hue) {
-    console.log('Drawing color canvas for hue:', hue);
-
     // Clear canvas
     ctx.clearRect(0, 0, 240, 160); // Changed to 240x160
 
