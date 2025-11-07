@@ -7,9 +7,10 @@
   height: 100%;
 }
 
-/* Override tab padding to maintain 580px height */
+/* Override tab padding to maintain 580px height and remove bottom padding */
 #historyTab.tab-content {
   padding-top: 0;
+  padding-bottom: 0;
 }
 
 /* History Header */

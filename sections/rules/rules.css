@@ -7,6 +7,11 @@
   height: 100%;
 }
 
+/* Remove bottom padding so pagination sits at the very bottom */
+#rulesTab.tab-content {
+  padding-bottom: 0;
+}
+
 /* Rules Header Layout */
 .rules-header {
   display: flex;
