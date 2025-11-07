@@ -16,6 +16,9 @@ class ScrapflyPopup {
 
   async initialize() {
     try {
+      // Test Logger in popup context
+      Logger.popup('✅ Logger initialized in POPUP context');
+
       // Initialize notification manager using helper
       NotificationHelper.initialize();
       // Clear badge when popup is opened
