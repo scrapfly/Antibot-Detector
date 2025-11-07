@@ -5,6 +5,7 @@
 
 // Import scripts for service worker
 importScripts(
+    './modules/logger.js',
     './utils/debug.js',
     './utils/log-collector.js',
     './utils/utils.js',
@@ -36,6 +37,7 @@ importScripts(
 );
 
 console.log('Scrapfly Background Script: Initializing...');
+Logger.background('✅ Logger initialized in BACKGROUND context');
 
 
 // Comprehensive logging to diagnose inconsistent hook detection
@@ -2072,6 +2074,13 @@ function setupMessageListeners() {
                         case 'timeEnd': console.timeEnd(...parsedArgs); break;
                         default: console.log(prefix, ...parsedArgs);
                     }
+                }
+                break;
+
+            case 'LOG':
+                // Logger system - output logs from content scripts and main world
+                if (request.log) {
+                    Logger._outputToConsole(request.log);
                 }
                 break;
 
