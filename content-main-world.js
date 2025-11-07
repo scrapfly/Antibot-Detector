@@ -241,6 +241,12 @@
   function checkWindowPropertiesCore(propertyDefinitions, onDetection) {
     if (!propertyDefinitions || propertyDefinitions.length === 0) return [];
 
+    // Early exit on cache hit - skip all window property checks
+    if (window.__scrapflyCacheHitEarlyExit) {
+      sendLog('log', '[Window Props] ⏭️ Cache hit detected - skipping property checks');
+      return [];
+    }
+
     const detections = [];
     const startTime = performance.now();
 
@@ -644,6 +650,19 @@
 
       // POLLING: Check every 200ms until settled (no new detections for 10 seconds)
       const checkPropertiesWithPolling = () => {
+        // Check cache flag before starting polling
+        if (window.__scrapflyCacheHitEarlyExit) {
+          sendLog('log', '[Window Props] ⏭️ Cache hit detected - skipping window property checks');
+          window.postMessage({
+            type: 'WINDOW_PROPS_COMPLETE',
+            url: window.location.href,
+            timestamp: Date.now(),
+            detectedCount: 0,
+            reason: 'cache_hit'
+          }, '*');
+          return;
+        }
+
         const startTime = Date.now();
         const POLL_INTERVAL_MS = 200; // Check every 200ms
         const MAX_WINDOW_MS = enhancedSettings?.maxDetectionWindowMs || 5000; // Default 5 seconds
@@ -657,6 +676,21 @@
         // Polling function
         const pollProperties = () => {
           pollCount++;
+
+          // Check if cache hit was detected during polling
+          if (window.__scrapflyCacheHitEarlyExit) {
+            sendLog('log', '[Window Props] ⏭️ Cache hit detected mid-polling - stopping');
+            cleanupEnhancedDetection();
+            window.postMessage({
+              type: 'WINDOW_PROPS_COMPLETE',
+              url: window.location.href,
+              timestamp: Date.now(),
+              detectedCount: 0,
+              reason: 'cache_hit'
+            }, '*');
+            return;
+          }
+
           const elapsed = Date.now() - startTime;
 
           // Check if max window exceeded
