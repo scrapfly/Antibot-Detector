@@ -560,6 +560,9 @@
   // This must happen BEFORE any page scripts execute
   const inlineHooksInstalled = installCriticalHooksSynchronously();
 
+  // Test Logger in MAIN world context
+  Logger.hooks('✅ Logger initialized in MAIN WORLD context');
+
   // Listen for disable monitoring message from ISOLATED world (cache hit)
   window.addEventListener('message', (event) => {
     if (event.source !== window) return;
