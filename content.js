@@ -756,6 +756,17 @@ window.addEventListener('message', (event) => {
         return;
     }
 
+    // Forward centralized logs from MAIN world Logger to background
+    if (event.data?.type === 'SCRAPFLY_LOG') {
+        chrome.runtime.sendMessage({
+            type: 'LOG',
+            log: event.data.log
+        }).catch(() => {
+            // Silently fail if background isn't available
+        });
+        return;
+    }
+
     // FIX: Listen for JS hooks completion signal from MAIN world
     if (event.data?.type === 'JS_HOOKS_COMPLETE') {
         chrome.runtime.sendMessage({
@@ -852,6 +863,7 @@ window.addEventListener('message', (event) => {
     // This guarantees hooks install before any page scripts execute
     window.__scrapflyHooksInstalled = true;
     installJSHooks();
+    Logger.content('✅ Logger initialized in CONTENT (ISOLATED) context');
 
     const triggerHookStart = () => {
         window.postMessage({

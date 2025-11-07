@@ -39,7 +39,7 @@
     },
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["utils/debug.js", "utils/utils.js", "modules/storage-manager.js", "modules/confidence-manager.js", "modules/detection-engine-manager.js", "sections/settings/settings.js", "content.js"],
+      "js": ["modules/logger.js", "utils/debug.js", "utils/utils.js", "modules/storage-manager.js", "modules/confidence-manager.js", "modules/detection-engine-manager.js", "sections/settings/settings.js", "content.js"],
       "run_at": "document_start",
       "all_frames": false
     }
