@@ -1320,6 +1320,7 @@ async function processDetectionData(message, sender) {
 
         // Run detection with timeout (increased to 30s to handle slower pages)
         try {
+            const startTime = Date.now();
 
             // LOG: Show all network URLs being passed to detection
             if (pageData.networkUrls && pageData.networkUrls.length > 0) {
