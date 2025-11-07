@@ -32,7 +32,7 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["content-main-world.js"],
+      "js": ["modules/logger.js", "content-main-world.js"],
       "run_at": "document_start",
       "world": "MAIN",
       "all_frames": false
