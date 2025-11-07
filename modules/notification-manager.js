@@ -292,7 +292,7 @@ class NotificationManager {
         await chrome.action.setBadgeBackgroundColor({ color: colors[color] || colors.info });
       }
     } catch (error) {
-      console.error('Failed to set badge:', error);
+      Logger.error('BADGE', 'Failed to set badge', error);
     }
   }
 
@@ -305,7 +305,7 @@ class NotificationManager {
         await chrome.action.setBadgeText({ text: '' });
       }
     } catch (error) {
-      console.error('Failed to clear badge:', error);
+      Logger.error('BADGE', 'Failed to clear badge', error);
     }
   }
 
@@ -388,7 +388,6 @@ class NotificationManager {
     } = options;
 
     const typeLabel = type === 'recaptcha' ? 'reCAPTCHA' : type === 'akamai' ? 'Akamai' : type;
-    console.log(`[${typeLabel}] Showing ${variant} notification`);
 
     // Aggressive cleanup for stop/complete variants
     if (aggressiveCleanup) {
@@ -531,7 +530,6 @@ class NotificationManager {
     // Add to DOM
     const addNotification = () => {
       document.body.appendChild(notif);
-      console.log(`[${typeLabel}] Notification shown`);
 
       // Setup timer for progress variant
       if (variant === 'progress' && timeRemaining !== undefined) {
@@ -555,7 +553,6 @@ class NotificationManager {
           notif.style.animationFillMode = 'forwards';
           setTimeout(() => {
             notif.remove();
-            console.log(`[${typeLabel}] Notification removed`);
           }, 300);
         }, duration);
       }
@@ -591,7 +588,6 @@ const NotificationHelper = {
   invalidateCache() {
     this._notificationCache.value = null;
     this._notificationCache.timestamp = 0;
-    console.log('[NOTIFICATIONS] Cache invalidated');
   },
 
   /**
@@ -606,26 +602,18 @@ const NotificationHelper = {
       const cacheAge = now - this._notificationCache.timestamp;
 
       if (this._notificationCache.value !== null && cacheAge < this._notificationCache.ttl) {
-        console.log(`[NOTIFICATIONS] ✅ Using cached value (${cacheAge}ms old): ${this._notificationCache.value}`);
         return this._notificationCache.value;
       }
 
-      console.log('[NOTIFICATIONS] Cache miss or expired, fetching from storage...');
       const result = await chrome.storage.local.get(['scrapfly_settings']);
-      console.log('[NOTIFICATIONS] Storage result:', result);
 
       if (result.scrapfly_settings) {
         const settings = typeof result.scrapfly_settings === 'string'
           ? JSON.parse(result.scrapfly_settings)
           : result.scrapfly_settings;
-        console.log('[NOTIFICATIONS] Parsed settings:', settings);
 
         const actualSettings = settings.settings || settings;
-        console.log('[NOTIFICATIONS] Actual settings:', actualSettings);
-        console.log('[NOTIFICATIONS] notificationsEnabled value:', actualSettings.notificationsEnabled);
-
         const enabled = actualSettings.notificationsEnabled !== false;
-        console.log('[NOTIFICATIONS] Final result - enabled:', enabled);
 
         // Cache the result
         this._notificationCache.value = enabled;
@@ -633,7 +621,6 @@ const NotificationHelper = {
 
         return enabled;
       }
-      console.log('[NOTIFICATIONS] No settings found, defaulting to enabled');
 
       // Cache the default result
       this._notificationCache.value = true;
@@ -641,7 +628,7 @@ const NotificationHelper = {
 
       return true; // Default to enabled
     } catch (error) {
-      console.error('[NOTIFICATIONS] Failed to check notification settings:', error);
+      Logger.error('STORAGE', 'Failed to check notification settings', error);
       return true; // Default to enabled on error
     }
   },
@@ -662,15 +649,11 @@ const NotificationHelper = {
    */
   async success(message, options) {
     const enabled = await this.areNotificationsEnabled();
-    if (!enabled) {
-      console.log('✓ [Notification Disabled]', message);
-      return;
-    }
+    if (!enabled) return;
 
     if (notificationManager && typeof notificationManager.success === 'function') {
       return notificationManager.success(message, options);
     }
-    console.log('✓', message);
   },
 
   /**
@@ -689,15 +672,11 @@ const NotificationHelper = {
    */
   async info(message, options) {
     const enabled = await this.areNotificationsEnabled();
-    if (!enabled) {
-      console.log('ℹ [Notification Disabled]', message);
-      return;
-    }
+    if (!enabled) return;
 
     if (notificationManager && typeof notificationManager.info === 'function') {
       return notificationManager.info(message, options);
     }
-    console.log('ℹ', message);
   },
 
   /**
@@ -705,15 +684,11 @@ const NotificationHelper = {
    */
   async warning(message, options) {
     const enabled = await this.areNotificationsEnabled();
-    if (!enabled) {
-      console.warn('⚠ [Notification Disabled]', message);
-      return;
-    }
+    if (!enabled) return;
 
     if (notificationManager && typeof notificationManager.warning === 'function') {
       return notificationManager.warning(message, options);
     }
-    console.warn('⚠', message);
   },
 
   /**
@@ -723,7 +698,6 @@ const NotificationHelper = {
     if (notificationManager && typeof notificationManager.loading === 'function') {
       return notificationManager.loading(message);
     }
-    console.log('Loading...', message);
     return { close: () => {}, update: () => {} };
   },
 
@@ -761,6 +735,4 @@ if (typeof module !== 'undefined' && module.exports) {
 } else if (typeof window !== 'undefined') {
   window.NotificationManager = notificationManager;
   window.NotificationHelper = NotificationHelper;
-  // Debug log to verify loading
-  console.log('NotificationManager loaded and attached to window', window.NotificationManager);
 }
