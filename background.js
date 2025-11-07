@@ -36,7 +36,6 @@ importScripts(
     // Note: SessionManager and DetectionSession removed - using simple Map instead
 );
 
-console.log('Scrapfly Background Script: Initializing...');
 Logger.background('✅ Logger initialized in BACKGROUND context');
 
 
@@ -79,13 +78,6 @@ const DEBUG_HOOK_DETECTION = {
                 missedHooks: []
             }
         };
-
-        console.log(`\n[CHECK THIS] ${'='.repeat(80)}`);
-        console.log(`[CHECK THIS] 🔍 DETECTION RUN #${this.runNumber} STARTED`);
-        console.log(`[CHECK THIS]    Tab: ${tabId}`);
-        console.log(`[CHECK THIS]    URL: ${url}`);
-        console.log(`[CHECK THIS]    Time: ${new Date().toLocaleTimeString()}`);
-        console.log(`[CHECK THIS] ${'='.repeat(80)}\n`);
     },
 
     logTiming(event, value = null) {
@@ -93,9 +85,6 @@ const DEBUG_HOOK_DETECTION = {
 
         const elapsed = Date.now() - this.currentRun.startTime;
         this.currentRun.timings[event] = elapsed;
-
-        const valueStr = value !== null ? ` (${value})` : '';
-        console.log(`[CHECK THIS] [TIMING] ${event}: ${elapsed}ms${valueStr}`);
     },
 
     logHookFired(detectorId, target, detectorName, isInline) {
@@ -124,9 +113,6 @@ const DEBUG_HOOK_DETECTION = {
                 this.currentRun.timings.firstHookFired = elapsed;
             }
             this.currentRun.timings.lastHookFired = elapsed;
-
-            const type = isInline ? '[INLINE]' : '[DYNAMIC]';
-            console.log(`[CHECK THIS] [HOOK FIRED] ${type} ${detectorName} → ${target} at ${elapsed}ms (ID: ${detectorId})`);
         }
     },
 
@@ -139,65 +125,6 @@ const DEBUG_HOOK_DETECTION = {
         this.currentRun.stats.inlineHooksInstalled = inlineCount;
         this.currentRun.stats.dynamicHooksInstalled = dynamicCount;
         this.currentRun.stats.totalHooksFired = this.currentRun.hooksFired.size;
-
-        console.log(`\n[CHECK THIS] ${'-'.repeat(80)}`);
-        console.log(`[CHECK THIS] 📊 DETECTION RUN #${this.runNumber} STATISTICS`);
-        console.log(`[CHECK THIS] ${'-'.repeat(80)}`);
-        console.log(`[CHECK THIS] 🎯 FINAL DETECTION RESULTS:`);
-        console.log(`[CHECK THIS]    Total Unique Detectors: ${this.currentRun.stats.totalHooksFired}`);
-        console.log(`[CHECK THIS]    (NOTE: Detectors may fire multiple times, but counted once)`);
-        console.log(`[CHECK THIS]`);
-        console.log(`[CHECK THIS] 📦 BREAKDOWN:`);
-        console.log(`[CHECK THIS]    Inline: ${this.currentRun.inlineHooksFired.size}/${inlineCount} (installed)`);
-        console.log(`[CHECK THIS]    Dynamic: ${this.currentRun.dynamicHooksFired.size}/${dynamicCount} (installed)`);
-        console.log(`[CHECK THIS]`);
-        console.log(`[CHECK THIS] 📈 DETECTION RATE: ${((this.currentRun.stats.totalHooksFired / totalInstalled) * 100).toFixed(1)}%`);
-
-        // Display completion method and timing if available
-        if (this.currentRun.completionData) {
-            const method = this.currentRun.completionData.completionMethod;
-            const time = this.currentRun.completionData.totalTime;
-            const methodEmoji = method === 'settled' ? '✅' : '⏱️';
-            const methodLabel = method === 'settled' ? 'Settled (no new hooks for 2s)' : 'Hard timeout (10s max)';
-            console.log(`[CHECK THIS] ${methodEmoji} COMPLETION: ${methodLabel} in ${time}ms`);
-        }
-        console.log(`[CHECK THIS] ${'-'.repeat(80)}\n`);
-
-        // List hooks that fired
-        if (this.currentRun.hooksFired.size > 0) {
-            console.log(`[CHECK THIS] ✅ HOOKS THAT FIRED (${this.currentRun.hooksFired.size} unique detector:target combinations):`);
-            const sorted = Array.from(this.currentRun.hooksFired.entries())
-                .sort((a, b) => a[1].timestamp - b[1].timestamp);
-            sorted.forEach(([key, data]) => {
-                console.log(`[CHECK THIS]    ${data.type === 'inline' ? '📌' : '🔧'} ${data.detector} → ${data.target} (${data.timestamp}ms)`);
-            });
-            console.log('[CHECK THIS] ');
-        }
-
-        // Compare with previous run if available
-        if (this.previousRun) {
-            console.log(`[CHECK THIS] 🔄 COMPARISON WITH RUN #${this.previousRun.runNumber}`);
-            console.log(`[CHECK THIS]    Previous: ${this.previousRun.stats.totalHooksFired} hooks`);
-            console.log(`[CHECK THIS]    Current: ${this.currentRun.stats.totalHooksFired} hooks`);
-            console.log(`[CHECK THIS]    Change: ${this.currentRun.stats.totalHooksFired - this.previousRun.stats.totalHooksFired > 0 ? '+' : ''}${this.currentRun.stats.totalHooksFired - this.previousRun.stats.totalHooksFired}`);
-
-            // Find new hooks this run
-            const prevHooks = new Set(this.previousRun.hooksFired.keys());
-            const currHooks = new Set(this.currentRun.hooksFired.keys());
-
-            const newHooks = Array.from(currHooks).filter(h => !prevHooks.has(h));
-            const missingHooks = Array.from(prevHooks).filter(h => !currHooks.has(h));
-
-            if (newHooks.length > 0) {
-                console.log(`[CHECK THIS]    ➕ New this run: ${newHooks.join(', ')}`);
-            }
-            if (missingHooks.length > 0) {
-                console.log(`[CHECK THIS]    ➖ Missing this run: ${missingHooks.join(', ')}`);
-            }
-            console.log('[CHECK THIS] ');
-        }
-
-        console.log(`[CHECK THIS] ${'='.repeat(80)}\n`);
     }
 };
 
@@ -237,7 +164,6 @@ class BatchedStorageWriter {
         // Write to storage in one operation
         try {
             await chrome.storage.local.set(writes);
-            console.log(`[BatchedStorage] Flushed ${Object.keys(writes).length} keys to storage`);
         } catch (error) {
             console.error('[BatchedStorage] Failed to flush writes:', error);
         }
@@ -300,7 +226,6 @@ class TTLMap extends Map {
             this.timers.delete(oldest);
         }
         super.delete(oldest);
-        console.log(`[TTLMap] Evicted oldest entry (size: ${this.size}/${this.maxSize})`);
     }
 
     delete(key) {
@@ -434,30 +359,13 @@ function generateMatchKey(match) {
 function getOrCreateDetectionState(tabId, url) {
     const existingState = detectionStates.get(tabId);
 
-    // DEBUG: Log what's happening
-    if (existingState) {
-        console.log(`%c[DetectionState] 📊 EXISTING STATE found for tab ${tabId}`, 'color: #00cc00; font-weight: bold;');
-        console.log(`[DetectionState] Existing URL: ${existingState.url}`);
-        console.log(`[DetectionState] New URL: ${url}`);
-        console.log(`[DetectionState] URLs match: ${existingState.url === url}`);
-        console.log(`[DetectionState] Existing completed methods: [${Array.from(existingState.completedMethods || [])}]`);
-        console.log(`[DetectionState] Progress: ${existingState.completedMethods?.size || 0}/7 methods (${Math.round((existingState.completedMethods?.size || 0) / 7 * 100)}%)`);
-    } else {
-        console.log(`%c[DetectionState] 🆕 NO EXISTING STATE for tab ${tabId} - will create new`, 'color: #ff9800; font-weight: bold;');
-    }
-
     // If state exists but URL differs, abort old detection and create fresh state
     if (existingState && existingState.url !== url) {
-        console.log(`%c[DetectionState] ⚠️ URL MISMATCH - Creating fresh state!`, 'color: #f44336; font-weight: bold; font-size: 14px;');
-        console.log(`[DetectionState] Old: ${existingState.url}`);
-        console.log(`[DetectionState] New: ${url}`);
-
         // Abort old detection if it's in progress
         if (activeDetections.has(tabId)) {
             const activeInfo = activeDetections.get(tabId);
             if (activeInfo.abortController) {
                 activeInfo.abortController.abort();
-                console.log(`[DetectionState] 🛑 Aborted old detection for tab ${tabId} (URL changed)`);
             }
             activeDetections.delete(tabId);
         }
@@ -468,7 +376,6 @@ function getOrCreateDetectionState(tabId, url) {
 
         // Clear old state
         detectionStates.delete(tabId);
-        console.log(`[DetectionState] Cleared old state for tab ${tabId} (URL changed)`);
     }
 
     if (!detectionStates.has(tabId)) {
@@ -487,7 +394,6 @@ function getOrCreateDetectionState(tabId, url) {
             lastHookBatchTime: 0, // OPTIMIZATION: Track when last hook batch arrived for deterministic finalization
             startTime: Date.now()
         });
-        console.log(`[DetectionState] Created state for tab ${tabId} with 7 method tracking`);
     }
     return detectionStates.get(tabId);
 }
@@ -502,7 +408,6 @@ function sendProgressUpdate(tabId, methodName, completedMethods, totalMethods = 
         // Check if this tab is still in active detection state
         const state = detectionStates.get(tabId);
         if (!state || state.finalized) {
-            console.log(`[Progress] ⏭️  Skipping progress update for tab ${tabId} - detection already finalized`);
             return;
         }
 
@@ -533,8 +438,6 @@ function sendProgressUpdate(tabId, methodName, completedMethods, totalMethods = 
         }).catch(() => {
             // Silently fail - popup might not be open
         });
-
-        console.log(`%c[Progress] Tab ${tabId}: ${message} (${completedMethods.size}/${totalMethods} methods complete)`, 'color: #2196F3;');
     } catch (e) {
         console.error('[Progress] Error sending update:', e);
     }
@@ -557,23 +460,7 @@ function markMethodComplete(tabId, methodName) {
         return;
     }
 
-    const wasPreviouslyComplete = state.completedMethods.has(methodName);
     state.completedMethods.add(methodName);
-
-    console.log(`%c[Method Complete] ✅ ${methodName} marked complete (tab ${tabId})`, 'color: #00cc00; font-weight: bold;');
-    console.log(`[Method Complete] Methods completed: ${Array.from(state.completedMethods).join(', ')}`);
-    console.log(`[Method Complete] Progress: ${state.completedMethods.size}/7 methods`);
-    console.log(`[Method Complete] State info:`, {
-        totalMethods: 7,
-        completedCount: state.completedMethods.size,
-        missingMethods: Array.from(new Set(['cookies', 'headers', 'url', 'dom', 'jsHooks', 'windowProperties', 'payload'])).filter(m => !state.completedMethods.has(m)),
-        wasDuplicate: wasPreviouslyComplete,
-        finalized: state.finalized,
-        mainComplete: state.mainComplete,
-        windowPropertiesComplete: state.windowPropertiesComplete,
-        hooksComplete: state.hooksComplete
-    });
-
     sendProgressUpdate(tabId, methodName, state.completedMethods);
 }
 
@@ -587,15 +474,12 @@ function checkAndFinalizeDetection(tabId) {
     // SAFETY CHECK: Don't finalize if state was just created (within 500ms)
     // This prevents race conditions where navigation events trigger premature finalization
     if (state.startTime && (Date.now() - state.startTime < 500)) {
-        const age = Date.now() - state.startTime;
-        console.log(`[⏸️ Finalize Check] State too new (${age}ms < 500ms), skipping finalization check for tab ${tabId}`);
         return;
     }
 
     // FIX: Check if batches are actively processing - if so, defer finalization check
     const batchActive = batchProcessingFlags.get(tabId) === true;
     if (batchActive) {
-        console.log(`%c[⏸️ Finalize Check] ❌ BLOCKED: Batch processing active for tab ${tabId}`, 'color: #ff9800; font-weight: bold;');
         // Don't schedule anything, batch completion will trigger checkAndFinalizeDetection
         return;
     }
@@ -606,7 +490,6 @@ function checkAndFinalizeDetection(tabId) {
     // FIX: Increased from 250ms to 600ms to allow window properties (200ms polling) and JS hooks more time
     // 600ms = 3 polling cycles for window properties, gives hooks time to fire on initial page scripts
     if (finalizationDebounce.has(tabId)) {
-        console.log(`[⏸️ Finalize Check] Already debounced for tab ${tabId}, clearing old timeout...`);
         clearTimeout(finalizationDebounce.get(tabId));
     }
 
@@ -625,24 +508,8 @@ function checkAndFinalizeDetection(tabId) {
         const methodOrder = ['cookies', 'headers', 'url', 'dom', 'jsHooks', 'windowProperties', 'payload'];
         const missingMethods = methodOrder.filter(m => !currentState.completedMethods.has(m));
 
-        console.log(`%c[🔍 Finalize Execute] Checking finalization state (debounce time reached)`, 'color: #2196F3; font-weight: bold;');
-        console.log(`[🔍 Finalize Execute] Tab: ${tabId}`, {
-            completedMethods: completedMethods,
-            completedCount: `${completedCount}/7`,
-            missingMethods: missingMethods,
-            progress: `${Math.round((completedCount / 7) * 100)}%`,
-            hooksData: currentState.hooksData?.size || 0,
-            mainData: currentState.mainData?.length || 0,
-            batchProcessing: batchProcessingFlags.get(tabId),
-            finalized: currentState.finalized,
-            mainComplete: currentState.mainComplete,
-            windowPropertiesComplete: currentState.windowPropertiesComplete,
-            hooksComplete: currentState.hooksComplete
-        });
-
         // FIX: Double-check batch processing isn't active
         if (batchProcessingFlags.get(tabId) === true) {
-            console.log(`%c[🔍 Finalize Execute] ❌ BLOCKED: Batch processing resumed during execute - deferring`, 'color: #ff9800; font-weight: bold;');
             finalizationDebounce.delete(tabId);
             return;
         }
@@ -655,7 +522,6 @@ function checkAndFinalizeDetection(tabId) {
 
         if (currentState.lastHookBatchTime > 0 && timeSinceLastBatch < BATCH_SETTLE_TIME) {
             const remainingMs = BATCH_SETTLE_TIME - timeSinceLastBatch;
-            console.log(`%c[⏳ Batch Settling] Hook batches still arriving: ${timeSinceLastBatch}ms since last batch (need ${BATCH_SETTLE_TIME}ms, ${remainingMs}ms remaining)`, 'color: #ff9800;');
             // Reschedule check - don't clear, just set new one
             const newTimeout = setTimeout(() => checkAndFinalizeDetection(tabId), remainingMs);
             finalizationDebounce.set(tabId, newTimeout);
@@ -678,31 +544,12 @@ function checkAndFinalizeDetection(tabId) {
             (mainMethodsComplete && (currentState.mainData?.length > 0 || currentState.hooksData?.size > 0));
 
         if (shouldFinalize) {
-            const methodType = completedCount >= totalMethods ? "all 7" : `${completedCount}`;
-            console.log(`%c[✅ FINALIZE NOW] ${methodType} detection methods complete (required: ${REQUIRED_METHODS})!`, 'color: #4caf50; font-weight: bold; font-size: 14px;');
-            console.log(`[✅ FINALIZE NOW]   Methods: ${completedMethods.join(', ')}`);
-            if (missingMethods.length > 0) {
-                // FIX: Only log "signals likely lost" if methods have actually timed out
-                // Window properties poll for up to 5000ms, JS hooks up to 3000ms
-                const elapsed = Date.now() - currentState.startTime;
-                const MAX_WINDOW_TIMEOUT = 5000; // Max time for window properties polling
-                const reallyLost = elapsed > MAX_WINDOW_TIMEOUT;
-
-                if (reallyLost) {
-                    console.log(`[✅ FINALIZE NOW]   Proceeding without: ${missingMethods.join(', ')} (timed out after ${elapsed}ms)`);
-                } else {
-                    console.log(`[✅ FINALIZE NOW]   Proceeding without: ${missingMethods.join(', ')} (still pending, ${elapsed}ms elapsed)`);
-                }
-            }
             // Send final update - use actual completed count for accurate badge
             sendProgressUpdate(tabId, 'complete', currentState.completedMethods || new Set(), totalMethods);
             finalizeDetection(tabId, currentState);
         } else {
             // Check if this detection is using cached data
             if (currentState.usedCache) {
-                // Using cache is normal - don't show warnings
-                console.log(`%c[✅ Using Cache] Detection complete from cached data - no further checks needed`, 'color: #4caf50; font-weight: bold;');
-
                 // Mark as finalized to prevent retry logic from firing
                 currentState.finalized = true;
 
@@ -745,14 +592,11 @@ function checkAndFinalizeDetection(tabId) {
 }
 
 async function finalizeDetection(tabId, state) {
-    console.log(`[DetectionState] ========== FINALIZING TAB ${tabId} ==========`);
-
     // FIX: Mark this tab as finalized to prevent progress updates from overriding the final badge
     state.finalized = true;
 
     // Safety check: Don't finalize if detection was interrupted
     if (state.interrupted || interruptedDetections.has(tabId)) {
-        console.log(`[DetectionState] ⚠️ Tab ${tabId} is interrupted - aborting finalization`);
         return;
     }
 
@@ -762,48 +606,9 @@ async function finalizeDetection(tabId, state) {
     const hasHooksData = state.hooksData && state.hooksData.size > 0;
     const hasMainData = state.mainData && state.mainData.length > 0;
     const hasCompletedMethods = state.completedMethods && state.completedMethods.size > 0;
-    
+
     if (!hasHooksData && !hasMainData && !hasCompletedMethods) {
-        console.log(`[DetectionState] ⚠️ PREVENTING EMPTY FINALIZATION - no detection data AND no completed methods for tab ${tabId}`);
-        console.log(`[DetectionState]   Flags: hooks=${state.hooksComplete}, main=${state.mainComplete}, windowProps=${state.windowPropertiesComplete}`);
-        console.log(`[DetectionState]   Data: hooksSize=${state.hooksData?.size || 0}, mainSize=${state.mainData?.length || 0}`);
-        console.log(`[DetectionState]   Completed methods: ${Array.from(state.completedMethods || []).join(', ')}`);
-        console.log(`[DetectionState]   This likely indicates a race condition - detection not started yet`);
         return; // Don't finalize with empty data AND no completed methods
-    }
-    
-    // Log if we're finalizing with empty results (valid case - page has no detections)
-    if (!hasHooksData && !hasMainData && hasCompletedMethods) {
-        console.log(`[DetectionState] ℹ️ Finalizing with zero detections (all ${state.completedMethods.size} methods completed but found nothing)`);
-    }
-
-    // DEBUG: Log what we're merging
-    console.log(`[DetectionState] 📊 Merging data:`);
-    console.log(`[DetectionState]   - JS Hooks: ${state.hooksData.size} detectors`);
-    console.log(`[DetectionState]   - Main detections: ${state.mainData.length} detectors`);
-
-    // DEBUG: List hooks data details
-    if (state.hooksData.size > 0) {
-        console.log(`[DetectionState] 🎯 JS Hooks details:`);
-        for (const [id, data] of state.hooksData.entries()) {
-            console.log(`[DetectionState]   - ${id}: ${data.detector?.name} (${data.matches?.length || 0} matches)`);
-            if (data.matches) {
-                data.matches.forEach(m => console.log(`[DetectionState]     * ${m.type}: ${m.pattern}`));
-            }
-        }
-    }
-
-    // DEBUG: List main data details
-    if (state.mainData.length > 0) {
-        console.log(`[DetectionState] 📋 Main detections details:`);
-        for (const data of state.mainData) {
-            const id = data.detector?.id || data.id;
-            const name = data.detector?.name || 'Unknown';
-            console.log(`[DetectionState]   - ${id}: ${name} (${data.matches?.length || 0} matches)`);
-            if (data.matches) {
-                data.matches.forEach(m => console.log(`[DetectionState]     * ${m.type}: ${m.value || m.pattern || m.name}`));
-            }
-        }
     }
 
     // Merge hooks and main detection
@@ -836,15 +641,6 @@ async function finalizeDetection(tabId, state) {
     }
 
     const finalResults = Array.from(mergedDetections.values());
-    console.log(`[DetectionState] ✅ Merged results: ${finalResults.length} detectors`);
-
-    // DEBUG: Show what's in final results
-    console.log(`[DetectionState] 📦 Final results summary:`);
-    for (const result of finalResults) {
-        const methods = (result.detectionMethods || []).join(', ') || 'none';
-        const matchTypes = [...new Set((result.matches || []).map(m => m.type))].join(', ') || 'none';
-        console.log(`[DetectionState]   - ${result.detector?.name}: methods=[${methods}] matches=[${matchTypes}] count=${result.matches?.length || 0}`);
-    }
 
     // Store to cache
     const pageData = {
@@ -860,7 +656,6 @@ async function finalizeDetection(tabId, state) {
         state.expiry = storedDataWithExpiry.expiry;
         state.timestamp = storedDataWithExpiry.timestamp;
         state.favicon = storedDataWithExpiry.favicon;
-        console.log(`[Finalize] 📅 Cache expiry set: ${new Date(storedDataWithExpiry.expiry).toLocaleString()}`);
     }
 
     // Update badge with appropriate color
@@ -880,28 +675,16 @@ async function finalizeDetection(tabId, state) {
 
             // CHANGED: Make badge update synchronous to ensure it completes before popup checks
             try {
-                // Log before update
-                console.log(`[Finalize] 🔵 Updating badge from progress% to count "${count}" for tab ${tabId}...`);
-
                 await chrome.action.setBadgeText({ text: count, tabId: tabId });
                 await chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId });
-
-                // Verify the update succeeded
-                const verifyText = await chrome.action.getBadgeText({ tabId: tabId });
-                console.log(`[Finalize] ✅ Badge verified: updated to "${count}" (verify read: "${verifyText}") for tab ${tabId}`);
-
-                if (verifyText !== count) {
-                    console.error(`[Finalize] ⚠️ Badge mismatch! Set to "${count}" but reads as "${verifyText}"`);
-                }
             } catch (error) {
                 // Expected: Tab might be closed
-                console.error(`[Finalize] ❌ Failed to update badge for tab ${tabId}:`, error.message);
+                console.error(`[Finalize] Failed to update badge for tab ${tabId}:`, error.message);
             }
         } else {
             // Clear badge if blacklisted
             try {
                 await chrome.action.setBadgeText({ text: '', tabId: tabId });
-                console.log(`[Finalize] Badge cleared (blacklisted) for tab ${tabId}`);
             } catch (error) {
                 console.error(`[Finalize] Failed to clear badge (blacklisted):`, error.message);
             }
@@ -910,7 +693,6 @@ async function finalizeDetection(tabId, state) {
         // Clear badge if no detections
         try {
             await chrome.action.setBadgeText({ text: '', tabId: tabId });
-            console.log(`[Finalize] Badge cleared (no detections) for tab ${tabId}`);
         } catch (error) {
             console.error(`[Finalize] Failed to clear badge (no detections):`, error.message);
         }
@@ -922,9 +704,8 @@ async function finalizeDetection(tabId, state) {
         tabId: tabId,
         url: state.url,
         detectionResults: finalResults
-    }).catch((error) => {
+    }).catch(() => {
         // Expected: Popup may not be open
-        console.log(`[Detection] Popup not open, message not sent:`, error.message);
     });
 
     // FIX: Save merged results to history (includes both main detections AND hooks/fingerprints)
@@ -943,9 +724,6 @@ async function finalizeDetection(tabId, state) {
 
             if (shouldSave) {
                 await History.saveDetectionToHistory(tabId, pageData, finalResults, chrome);
-                console.log('[Finalize] ✅ Saved complete detection (including hooks/fingerprints) to history');
-            } else {
-                console.log('[Finalize] ⏭️  Skipped saving detection to history (duplicate prevention)');
             }
         } catch (error) {
             console.error('[Finalize] Error saving to history:', error);
@@ -954,15 +732,11 @@ async function finalizeDetection(tabId, state) {
 
     // Remove from active detections (detection completed successfully)
     if (activeDetections.has(tabId)) {
-        const activeInfo = activeDetections.get(tabId);
-        const duration = Date.now() - activeInfo.startTime;
-        console.log(`[Detection] ✅ Completed detection for tab ${tabId} in ${duration}ms, removing from active tracking`);
         activeDetections.delete(tabId);
     }
 
     // Also remove from interrupted detections if it was marked (user came back to tab)
     if (interruptedDetections.has(tabId)) {
-        console.log(`[Detection] Removing tab ${tabId} from interrupted list (detection completed)`);
         interruptedDetections.delete(tabId);
     }
 
@@ -971,42 +745,32 @@ async function finalizeDetection(tabId, state) {
 
     // Clean up payloads after detection completes (they were stored for this detection)
     if (payloadStore.has(tabId)) {
-        const payloadCount = payloadStore.get(tabId)?.length || 0;
         payloadStore.delete(tabId);
-        console.log(`[DetectionState] 🧹 Cleaned up ${payloadCount} payloads for tab ${tabId}`);
     }
 
     // Clean up network URLs after detection completes
     if (networkUrlsStore.has(tabId)) {
-        const urlCount = networkUrlsStore.get(tabId)?.length || 0;
         networkUrlsStore.delete(tabId);
-        console.log(`[DetectionState] 🧹 Cleaned up ${urlCount} network URLs for tab ${tabId}`);
     }
 
     // Clean up headers after detection completes (free up memory like payloads)
     if (headersStore.has(tabId)) {
         headersStore.delete(tabId);
-        console.log(`[DetectionState] 🧹 Cleaned up response headers for tab ${tabId}`);
     }
 
     if (requestHeadersStore.has(tabId)) {
         requestHeadersStore.delete(tabId);
-        console.log(`[DetectionState] 🧹 Cleaned up request headers for tab ${tabId}`);
     }
 
     // Clean up cookies after detection completes
     if (responseCookiesStore.has(tabId)) {
-        const cookieCount = responseCookiesStore.get(tabId)?.cookies?.length || 0;
         responseCookiesStore.delete(tabId);
-        console.log(`[DetectionState] 🧹 Cleaned up ${cookieCount} response cookies for tab ${tabId}`);
     }
 
     // NOTE: We don't clear tabsUsingCache here anymore!
     // The flag persists across F5 refreshes to prevent race condition where
     // webRequest fires before CHECK_CACHE_EARLY completes.
     // The flag is only cleared when URL actually changes (see chrome.tabs.onUpdated handler)
-
-    console.log(`[DetectionState] ✅ Tab ${tabId} finalized and cleaned up`);
 }
 
 /**
@@ -1019,9 +783,7 @@ async function initialize(reason = 'startup', previousVersion = null) {
     // RACE CONDITION FIX: Prevent concurrent initializations
     // During extension updates, both onInstalled and IIFE can fire simultaneously
     if (initializationInProgress && initializationPromise) {
-        console.log(`[Initialize] Already in progress (${reason}), waiting for completion...`);
         const result = await initializationPromise;
-        console.log(`[Initialize] Reusing completed initialization for ${reason}`);
         return result;
     }
 
@@ -1031,21 +793,6 @@ async function initialize(reason = 'startup', previousVersion = null) {
     // Create the initialization promise
     initializationPromise = (async () => {
         try {
-        console.log('===========================================');
-        console.log(`Scrapfly Extension: ${reason.toUpperCase()}`);
-        console.log('===========================================');
-
-        // Show reason-specific messages
-        if (reason === 'install') {
-            console.log('Welcome to Scrapfly Security Detection Extension!');
-        } else if (reason === 'update') {
-            console.log('Extension updated successfully!');
-            if (previousVersion) console.log('Previous version:', previousVersion);
-            console.log('⚠️  Note: Existing tabs may need to be refreshed for detection to work');
-            console.log('⚠️  This is normal during development when the extension is reloaded');
-        }
-
-        console.log('Background: Initializing detector system...');
 
         // Create CategoryManager and DetectorManager instances
         categoryManager = new CategoryManager();
@@ -1063,7 +810,6 @@ async function initialize(reason = 'startup', previousVersion = null) {
         // BUGFIX: Add retry logic if detectors haven't loaded yet (timing issue)
         // This handles cases where service worker starts before JSON files are fully loaded
         if (!hasDetectors) {
-            console.warn('[Initialize] No detectors loaded yet, retrying with delays...');
             const maxRetries = 10; // 10 retries * 500ms = 5 seconds max wait
             let retries = maxRetries;
 
@@ -1073,13 +819,10 @@ async function initialize(reason = 'startup', previousVersion = null) {
                 hasDetectors = detectorCount > 0;
 
                 if (hasDetectors) {
-                    console.log(`[Initialize] ✅ Detectors loaded after retry (${maxRetries - retries + 1} attempts)`);
                     break;
                 }
 
                 retries--;
-                const attemptsLeft = retries;
-                console.log(`[Initialize] ⏳ Still waiting for detectors... (${attemptsLeft} attempts left)`);
             }
         }
 
@@ -1090,10 +833,6 @@ async function initialize(reason = 'startup', previousVersion = null) {
             console.error('   2. JSON files are missing or have errors');
             console.error('   3. File paths changed but extension not reloaded');
             console.error('❌ RECOMMENDATION: Remove and re-add the extension, then refresh all tabs');
-        } else {
-            console.log(`✅ Background: Detector system initialized successfully in ${initDuration}ms`);
-            console.log(`✅ Background: Loaded ${detectorCount} detectors`);
-            console.log(`✅ Background: Storage health check PASSED`);
         }
 
         // Check if extension is enabled/disabled and set badges accordingly
@@ -1103,30 +842,19 @@ async function initialize(reason = 'startup', previousVersion = null) {
 
         if (!isEnabled) {
             // Extension is disabled - set X badge with amber color for all tabs
-            console.log('Background: Extension is disabled - setting disabled badges');
             for (const tab of tabs) {
-                chrome.action.setBadgeText({ text: '✕', tabId: tab.id }).catch((error) => {
-                    console.log(`[Init] Failed to set disabled badge for tab ${tab.id}:`, error.message);
-                });
-                chrome.action.setBadgeBackgroundColor({ color: '#f59e0b', tabId: tab.id }).catch((error) => {
-                    console.log(`[Init] Failed to set badge color for tab ${tab.id}:`, error.message);
-                });
+                chrome.action.setBadgeText({ text: '✕', tabId: tab.id }).catch(() => {});
+                chrome.action.setBadgeBackgroundColor({ color: '#f59e0b', tabId: tab.id }).catch(() => {});
             }
         } else {
             // Extension is enabled - clear any leftover badges
-            console.log('Background: Extension is enabled - clearing leftover badges');
             for (const tab of tabs) {
-                chrome.action.setBadgeText({ text: '', tabId: tab.id }).catch((error) => {
-                    console.log(`[Init] Failed to clear badge for tab ${tab.id}:`, error.message);
-                });
+                chrome.action.setBadgeText({ text: '', tabId: tab.id }).catch(() => {});
             }
         }
 
         // Initialize all services (listeners, interceptors, etc.)
         initializeServices();
-
-        console.log('✅ Detector system ready');
-        console.log('===========================================');
 
         // Clear guard flag on success
         initializationInProgress = false;
@@ -1134,7 +862,6 @@ async function initialize(reason = 'startup', previousVersion = null) {
         } catch (error) {
             console.error('Background: Failed to initialize detector system:', error);
             console.error('Background: Error stack:', error.stack);
-            console.log('===========================================');
 
             // Clear guard flag on error
             initializationInProgress = false;
@@ -1153,7 +880,6 @@ async function initialize(reason = 'startup', previousVersion = null) {
 chrome.runtime.onInstalled.addListener(async (details) => {
     // Clear all detection states on extension reload/update to prevent stale data
     detectionStates.clear();
-    console.log('[Extension Reload] Cleared all detection states');
 
     if (details.reason === 'install' || details.reason === 'update') {
         await initialize(details.reason, details.previousVersion);
@@ -1170,7 +896,6 @@ chrome.runtime.onStartup.addListener(async () => {
 (async () => {
     // Check if we need to initialize (service worker may have been restarted)
     if (!detectorManager || !detectorManager.initialized) {
-        console.log('Background: Service worker started/restarted, initializing...');
         await initialize('startup');
     }
 })();
@@ -1181,7 +906,6 @@ chrome.runtime.onStartup.addListener(async () => {
  */
 async function ensureDetectorManagerInitialized() {
     if (!detectorManager || !detectorManager.initialized) {
-        console.log('Background: DetectorManager not initialized, initializing now...');
         if (!categoryManager) {
             categoryManager = new CategoryManager();
         }
@@ -1191,7 +915,6 @@ async function ensureDetectorManagerInitialized() {
         if (!detectorManager.initialized) {
             await detectorManager.initialize();
         }
-        console.log('Background: DetectorManager initialized successfully');
     }
     return detectorManager;
 }
@@ -1203,34 +926,14 @@ async function ensureDetectorManagerInitialized() {
  */
 async function waitForDetectorsLoaded(maxWaitMs = 10000) {
     const startTime = Date.now();
-    let attempts = 0;
     const checkInterval = 100; // Check every 100ms
 
-    console.log(`[waitForDetectorsLoaded] Waiting up to ${maxWaitMs}ms for detectors to load...`);
-
     while (Date.now() - startTime < maxWaitMs) {
-        attempts++;
-
         // Check if detector manager is initialized AND has detectors
         if (detectorManager?.initialized) {
             const count = detectorManager.getDetectorCount();
             if (count > 0) {
-                const elapsed = Date.now() - startTime;
-                console.log(`[waitForDetectorsLoaded] ✅ Detectors ready after ${elapsed}ms (${attempts} attempts, ${count} detectors)`);
                 return true;
-            }
-        }
-
-        // Show progress every second
-        if (attempts % 10 === 0) {
-            const elapsed = Date.now() - startTime;
-            console.log(`[waitForDetectorsLoaded] ⏳ Still waiting... (${elapsed}ms elapsed, attempt ${attempts})`);
-
-            // Log current state for debugging
-            if (detectorManager) {
-                console.log(`[waitForDetectorsLoaded] Current state: initialized=${detectorManager.initialized}, count=${detectorManager.getDetectorCount()}`);
-            } else {
-                console.log(`[waitForDetectorsLoaded] DetectorManager not yet created`);
             }
         }
 
@@ -1238,13 +941,7 @@ async function waitForDetectorsLoaded(maxWaitMs = 10000) {
     }
 
     // Timeout reached
-    const elapsed = Date.now() - startTime;
-    console.error(`[waitForDetectorsLoaded] ❌ Timeout after ${elapsed}ms (${attempts} attempts)`);
-    console.error(`[waitForDetectorsLoaded] Final state:`, {
-        detectorManagerExists: !!detectorManager,
-        initialized: detectorManager?.initialized,
-        detectorCount: detectorManager?.getDetectorCount() || 0
-    });
+    console.error(`[waitForDetectorsLoaded] Timeout after ${Date.now() - startTime}ms`);
     return false;
 }
 
@@ -1257,8 +954,6 @@ async function waitForDetectorsLoaded(maxWaitMs = 10000) {
  * OPTIMIZED 3.3: TTL-based auto-cleanup (headers expire after 5 min)
  */
 function setupHeaderCapture() {
-    console.log('Scrapfly Background: Setting up header capture...');
-
     // Listen for response headers
     chrome.webRequest.onHeadersReceived.addListener(
         async (details) => {
@@ -1310,10 +1005,7 @@ function setupHeaderCapture() {
                         cookies: responseCookies,
                         timestamp: Date.now()
                     });
-                    console.log(`Scrapfly Background: Captured ${responseCookies.length} response cookies for tab ${details.tabId}`);
                 }
-
-                console.log(`Scrapfly Background: Captured ${Object.keys(headers).length} headers for tab ${details.tabId}`);
             }
         },
         { urls: ["<all_urls>"] },
@@ -1349,8 +1041,6 @@ function setupHeaderCapture() {
                     headers: headers,
                     timestamp: Date.now()
                 });
-
-                console.log(`Scrapfly Background: Captured ${Object.keys(headers).length} request headers for tab ${details.tabId}`);
             }
         },
         { urls: ["<all_urls>"] },
@@ -1429,8 +1119,6 @@ function setupHeaderCapture() {
                         }
 
                         payloadStore.set(details.tabId, payloads);
-
-                        console.log(`Scrapfly Background: Captured ${payloadType} payload for ${method} ${details.type} request on tab ${details.tabId} - ${details.url} (Total: ${payloads.length})`);
                     }
                 }
             }
@@ -1473,9 +1161,6 @@ function setupHeaderCapture() {
             }
 
             networkUrlsStore.set(details.tabId, networkUrls);
-
-            // LOG: Show each captured URL
-            console.log(`[WebRequest] 🌐 Captured URL #${networkUrls.length}: ${details.url} | Type: ${details.type} | Method: ${details.method} | TabId: ${details.tabId}`);
         },
         { urls: ["<all_urls>"] }
         // No extraInfoSpec needed - we only need URL, type, method
@@ -1513,7 +1198,6 @@ async function processDetectionData(message, sender) {
     try {
         const result = await chrome.storage.local.get(['scrapfly_enabled']);
         if (result.scrapfly_enabled === false) {
-            console.log('Scrapfly Background: Extension is disabled, skipping detection');
             return;
         }
     } catch (error) {
@@ -1523,18 +1207,10 @@ async function processDetectionData(message, sender) {
     const tabId = sender.tab.id;
     const pageData = enrichPageDataWithTabInfo(message.data, sender.tab);
 
-    console.log(`Scrapfly Background: Processing detection data from tab ${tabId} (cache miss)`);
-
     // Show progress indicator in badge and track as active detection
     try {
-        chrome.action.setBadgeText({ text: '⏳', tabId: tabId }).catch((error) => {
-            // Expected: Tab might be closed
-            console.log(`[Detection] Failed to set progress badge text for tab ${tabId}:`, error.message);
-        });
-        chrome.action.setBadgeBackgroundColor({ color: '#2196F3', tabId: tabId }).catch((error) => {
-            // Expected: Tab might be closed
-            console.log(`[Detection] Failed to set progress badge color for tab ${tabId}:`, error.message);
-        });
+        chrome.action.setBadgeText({ text: '⏳', tabId: tabId }).catch(() => {});
+        chrome.action.setBadgeBackgroundColor({ color: '#2196F3', tabId: tabId }).catch(() => {});
 
         // Create AbortController to allow cancellation if tab switch occurs
         const abortController = new AbortController();
@@ -1545,7 +1221,6 @@ async function processDetectionData(message, sender) {
             startTime: Date.now(),
             abortController: abortController
         });
-        console.log(`[Detection] ⏳ Started detection for tab ${tabId}, tracking as active with abort controller`);
     } catch (error) {
         console.error('Failed to set loading badge:', error);
     }
@@ -1558,7 +1233,6 @@ async function processDetectionData(message, sender) {
         if (headerData.url.includes(pageData.hostname)) {
             pageData.headers = headerData.headers; // Response headers (backward compatibility)
             pageData.responseHeaders = headerData.headers; // Also store explicitly as responseHeaders
-            console.log(`Scrapfly Background: Added ${Object.keys(headerData.headers).length} response headers to detection data`);
 
             // OPTIMIZED 3.3: Eager delete (TTL will clean up anyway, but we can help)
             headersStore.delete(tabId);
@@ -1571,7 +1245,6 @@ async function processDetectionData(message, sender) {
 
         if (requestHeaderData.url.includes(pageData.hostname)) {
             pageData.requestHeaders = requestHeaderData.headers;
-            console.log(`Scrapfly Background: Added ${Object.keys(requestHeaderData.headers).length} request headers to detection data`);
 
             requestHeadersStore.delete(tabId);
         }
@@ -1583,7 +1256,6 @@ async function processDetectionData(message, sender) {
 
         if (responseCookieData.url.includes(pageData.hostname)) {
             pageData.responseCookies = responseCookieData.cookies;
-            console.log(`Scrapfly Background: Added ${responseCookieData.cookies.length} response cookies to detection data`);
 
             responseCookiesStore.delete(tabId);
         }
@@ -1593,7 +1265,6 @@ async function processDetectionData(message, sender) {
     // Now handles ARRAY of payloads per tab
     if (payloadStore.has(tabId)) {
         const payloadsArray = payloadStore.get(tabId);
-        console.log(`[Payload Store] 📦 Found ${payloadsArray.length} captured payload(s) for tab ${tabId}`);
 
         // Pass all payloads to detection engine (no filtering)
         const relevantPayloads = [];
@@ -1606,27 +1277,6 @@ async function processDetectionData(message, sender) {
                     data: payloadData.payload,
                     type: payloadData.type
                 });
-
-                console.log(`[Payload Store] Found payload: ${payloadData.type} (${payloadData.method}) - ${payloadData.url}`);
-
-                // DEBUG: Show full payload data for debugging
-                if (payloadData.type === 'formData') {
-                    console.log(`[Payload Store] 📝 FormData keys (${Object.keys(payloadData.payload).length}): ${Object.keys(payloadData.payload).join(', ')}`);
-                    console.log(`[Payload Store] 📝 FormData full object:`, payloadData.payload);
-                } else {
-                    const payloadStr = typeof payloadData.payload === 'string'
-                        ? payloadData.payload
-                        : JSON.stringify(payloadData.payload);
-                    console.log(`[Payload Store] 📝 Payload data type: ${typeof payloadData.payload}`);
-                    console.log(`[Payload Store] 📝 Payload length: ${payloadStr.length} characters`);
-                    console.log(`[Payload Store] 📝 Payload preview (first 500 chars): ${payloadStr.substring(0, 500)}...`);
-
-                    // Check for specific patterns
-                    const hasJsv = payloadStr.includes('jsv=');
-                    const hasBody = payloadStr.includes('body');
-                    const hasSensorData = payloadStr.includes('sensor_data');
-                    console.log(`[Payload Store] 🔍 Pattern check: jsv=${hasJsv}, body=${hasBody}, sensor_data=${hasSensorData}`);
-                }
             } catch (e) {
                 console.error('Error processing payload:', e);
             }
@@ -1635,55 +1285,32 @@ async function processDetectionData(message, sender) {
         // Pass all payloads for detection
         if (relevantPayloads.length > 0) {
             pageData.payloads = relevantPayloads;
-            console.log(`[Payload Store] ✅ Added ${relevantPayloads.length} payloads to detection data`);
 
             // Don't delete yet - will delete after detection completes
             // payloadStore.delete(tabId);
         }
-    } else {
-        console.log(`[Payload Store] ⚠️ No payloads captured for tab ${tabId}`);
-        console.log(`[Payload Store] Possible reasons:`);
-        console.log(`  1. No POST/PUT/PATCH requests were made`);
-        console.log(`  2. Requests fired BEFORE detection started (timing issue)`);
-        console.log(`  3. Detection result was loaded from cache (payloads not needed)`);
     }
 
     // Add network request URLs if available (for URL pattern detection)
     if (networkUrlsStore.has(tabId)) {
         const networkUrlsArray = networkUrlsStore.get(tabId);
 
-        // LOG: Show all URLs in store before filtering
-        console.log(`[Network URLs] 📦 Found ${networkUrlsArray.length} URLs in store for tab ${tabId}:`);
-        networkUrlsArray.forEach((urlObj, index) => {
-            console.log(`  ${index + 1}. ${urlObj.url} | Type: ${urlObj.type} | Method: ${urlObj.method}`);
-        });
-
         // No filtering - pass all URLs to detection engine
         const relevantUrls = networkUrlsArray;
 
         if (relevantUrls.length > 0) {
             pageData.networkUrls = relevantUrls;
-            console.log(`[Network URLs] ✅ Passing all ${relevantUrls.length} URLs to detection engine (no filtering)`);
-            console.log(`[Network URLs] 🎯 URLs that will be used in detection:`);
-            relevantUrls.forEach((urlObj, index) => {
-                console.log(`  ${index + 1}. ${urlObj.url} | Type: ${urlObj.type} | Method: ${urlObj.method}`);
-            });
-        } else {
-            console.log(`[Network URLs] ⚠️ No URLs passed the relevance filter! (Total in store: ${networkUrlsArray.length})`);
         }
     }
 
     // Note: Request cookies are already in pageData.cookies (from document.cookie in content script)
 
     // Run detection analysis immediately
-    console.log('🚀 Background: Starting detection analysis...');
-
     let detectionResults = [];
     try {
         // Ensure DetectorManager is initialized (handles service worker restarts)
         await ensureDetectorManagerInitialized();
 
-        console.log('✅ Running detection on page data...');
         // Create detection engine if not exists
         if (!detectionEngine) {
             detectionEngine = new DetectionEngineManager();
@@ -1693,17 +1320,6 @@ async function processDetectionData(message, sender) {
 
         // Run detection with timeout (increased to 30s to handle slower pages)
         try {
-            const startTime = Date.now();
-            console.log(`[processDetectionData] 🚀 Starting main detection with 30s timeout for tab ${tabId}...`);
-            console.log(`[processDetectionData] 📊 Page data stats:`, {
-                cookies: pageData.cookies?.length || 0,
-                scripts: pageData.scripts?.length || 0,
-                headers: Object.keys(pageData.headers || {}).length,
-                dom: pageData.dom?.length || 0,
-                url: pageData.url,
-                networkUrls: pageData.networkUrls?.length || 0,
-                payloads: pageData.payloads?.length || 0
-            });
 
             // LOG: Show all network URLs being passed to detection
             if (pageData.networkUrls && pageData.networkUrls.length > 0) {
