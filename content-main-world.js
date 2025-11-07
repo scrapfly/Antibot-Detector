@@ -532,6 +532,30 @@
     return installed;
   }
 
+  // Check sessionStorage for cache hit flag BEFORE installing hooks (synchronous check)
+  // This flag is set by ISOLATED world when cache hit is detected
+  try {
+    const cacheKey = `scrapfly_cache_${window.location.hostname}`;
+    const cachedData = sessionStorage.getItem(cacheKey);
+
+    if (cachedData) {
+      const cacheInfo = JSON.parse(cachedData);
+      const cacheAge = Date.now() - cacheInfo.timestamp;
+
+      // Cache is valid for 12 hours (same as detection cache)
+      if (cacheAge < 12 * 60 * 60 * 1000) {
+        sendLog('log', '[MAIN WORLD] ⏭️ Synchronous cache hit detected - setting flag to prevent hook reporting');
+        window.__scrapflyCacheHitEarlyExit = true;
+      } else {
+        // Cache expired, clear it
+        sessionStorage.removeItem(cacheKey);
+      }
+    }
+  } catch (e) {
+    // SessionStorage might not be available, continue normally
+    sendLog('warn', '[MAIN WORLD] SessionStorage cache check failed:', e.message);
+  }
+
   // CRITICAL: Install inline hooks IMMEDIATELY (synchronously)
   // This must happen BEFORE any page scripts execute
   const inlineHooksInstalled = installCriticalHooksSynchronously();
@@ -554,6 +578,13 @@
           }
         }
       }
+      return;
+    }
+
+    // Handle cache hit notification from ISOLATED world
+    if (data && data.type === 'SCRAPFLY_CACHE_HIT') {
+      sendLog('log', '[MAIN WORLD] ⏭️ Cache hit notification received - setting flag to stop hook reporting');
+      window.__scrapflyCacheHitEarlyExit = true;
       return;
     }
 

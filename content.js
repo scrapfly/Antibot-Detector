@@ -628,8 +628,15 @@ async function initialize() {
             Utils.debugLog('[Cache Early Check] ✅ CACHE HIT - skipping all detection work');
             Utils.debugLog('[Cache Early Check] Returning cached detections immediately');
 
-            // Set flag to prevent hook installation
+            // Set flag to prevent hook installation (ISOLATED world)
             window.__scrapflyCacheHitEarlyExit = true;
+
+            // CRITICAL: Notify MAIN world about cache hit so hooks stop firing
+            // MAIN world has separate window object, needs its own flag
+            window.postMessage({
+                type: 'SCRAPFLY_CACHE_HIT',
+                timestamp: Date.now()
+            }, '*');
 
             // NEW OPTIMIZATION: Store cache status in sessionStorage for synchronous check on next page load
             try {
