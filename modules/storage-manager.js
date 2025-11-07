@@ -54,7 +54,7 @@ class StorageManager {
 
             // Perform migration if needed (save with new key, remove old key)
             if (needsMigration && legacyKey) {
-                console.log(`[StorageManager] Migrating from ${legacyKey} → ${primaryKey}`);
+                Logger.storage('Migrating storage key', { from: legacyKey, to: primaryKey });
                 await chrome.storage.local.set({
                     [primaryKey]: rawData
                 });
@@ -69,7 +69,7 @@ class StorageManager {
             return parsedData;
 
         } catch (error) {
-            console.error(`[StorageManager] Failed to load from storage (${primaryKey}):`, error);
+            Logger.error('STORAGE', `Failed to load from storage (${primaryKey})`, error);
             return null;
         }
     }
@@ -159,7 +159,7 @@ class StorageManager {
                 const removals = [];
 
                 for (const migration of migrationsNeeded) {
-                    console.log(`[StorageManager] Batch migration: ${migration.from} → ${migration.to}`);
+                    Logger.storage('Migrating storage key', { from: migration.from, to: migration.to });
                     updates[migration.to] = migration.data;
                     removals.push(migration.from);
                 }
@@ -168,11 +168,11 @@ class StorageManager {
                 await chrome.storage.local.remove(removals);
             }
 
-            console.log(`[StorageManager] Batch loaded ${keyConfigs.length} storage keys in one call`);
+            Logger.storage('Batch loaded storage keys', { count: keyConfigs.length });
             return loadedData;
 
         } catch (error) {
-            console.error('[StorageManager] Failed to batch load from storage:', error);
+            Logger.error('STORAGE', 'Failed to batch load from storage', error);
             return {};
         }
     }
@@ -233,11 +233,11 @@ class StorageManager {
                 [key]: stringified
             });
 
-            console.log(`[StorageManager] Saved to storage: ${key}`);
+            Logger.storage('Saved to storage', { key });
             return true;
 
         } catch (error) {
-            console.error(`[StorageManager] Failed to save to storage (${key}):`, error);
+            Logger.error('STORAGE', `Failed to save to storage (${key})`, error);
             return false;
         }
     }
@@ -256,10 +256,10 @@ class StorageManager {
         try {
             const keyArray = Array.isArray(keys) ? keys : [keys];
             await chrome.storage.local.remove(keyArray);
-            console.log(`[StorageManager] Cleared storage keys:`, keyArray);
+            Logger.storage('Cleared storage keys', { keys: keyArray });
             return true;
         } catch (error) {
-            console.error('[StorageManager] Failed to clear storage:', error);
+            Logger.error('STORAGE', 'Failed to clear storage', error);
             return false;
         }
     }
@@ -280,7 +280,7 @@ class StorageManager {
             }
             return null;
         } catch (error) {
-            console.error('[StorageManager] Failed to get storage stats:', error);
+            Logger.error('STORAGE', 'Failed to get storage stats', error);
             return null;
         }
     }
