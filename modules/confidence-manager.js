@@ -107,7 +107,7 @@ class ConfidenceManager {
     if (['max', 'average', 'weighted'].includes(method)) {
       this.calculationMethod = method;
     } else {
-      console.warn(`ConfidenceManager: Invalid method "${method}", keeping "${this.calculationMethod}"`);
+      Logger.warn('ERROR', `Invalid confidence calculation method "${method}", keeping "${this.calculationMethod}"`);
     }
   }
 

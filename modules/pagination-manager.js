@@ -82,7 +82,7 @@ class PaginationManager {
   render() {
     const container = document.querySelector(`#${this.containerId}`);
     if (!container) {
-      console.error(`Pagination container #${this.containerId} not found`);
+      Logger.error('UI', `Pagination container #${this.containerId} not found`);
       return;
     }
 
