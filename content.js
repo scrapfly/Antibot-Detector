@@ -870,7 +870,11 @@ window.addEventListener('message', (event) => {
     // This guarantees hooks install before any page scripts execute
     window.__scrapflyHooksInstalled = true;
     installJSHooks();
-    Logger.content('✅ Logger initialized in CONTENT (ISOLATED) context');
+
+    // Test Logger (with safety check)
+    if (typeof Logger !== 'undefined') {
+        Logger.content('✅ Logger initialized in CONTENT (ISOLATED) context');
+    }
 
     const triggerHookStart = () => {
         window.postMessage({
