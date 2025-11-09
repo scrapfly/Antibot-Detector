@@ -297,6 +297,9 @@ class History {
     // FIX: Attach click handlers to expand/collapse detection cards
     this.attachOverflowModalClickHandlers();
 
+    // Enable click-to-copy for method badges
+    this.setupMethodCopyHandlers();
+
     // Show modal
     modal.style.display = 'flex';
 
