@@ -17,6 +17,14 @@
 
   let debugMode = false; // Will be set by ISOLATED world
 
+  // Global error handler: Prevent hook errors from breaking page
+  window.addEventListener('error', (event) => {
+    if (event.filename && event.filename.includes('content-main-world')) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }, true);
+
   /**
    * ============================================================================
    * DETECTION SYSTEM ARCHITECTURE
@@ -478,7 +486,11 @@
         if (hook.type === 'getter' && originalDescriptor.get) {
           const originalGet = originalDescriptor.get;
           const wrappedGet = function() {
-            reportInlineDetection();
+            try {
+              reportInlineDetection();
+            } catch (e) {
+              // Silently fail - detection error shouldn't break page API
+            }
             return Reflect.apply(originalGet, this, arguments);
           };
 
@@ -493,7 +505,11 @@
         } else if (hook.type === 'method' && typeof originalDescriptor.value === 'function') {
           const originalMethod = originalDescriptor.value;
           const wrappedMethod = function(...args) {
-            reportInlineDetection();
+            try {
+              reportInlineDetection();
+            } catch (e) {
+              // Silently fail - detection error shouldn't break page API
+            }
             return Reflect.apply(originalMethod, this, args);
           };
 
@@ -561,7 +577,13 @@
   const inlineHooksInstalled = installCriticalHooksSynchronously();
 
   // Test Logger in MAIN world context
-  Logger.hooks('✅ Logger initialized in MAIN WORLD context');
+  try {
+    if (typeof Logger !== 'undefined') {
+      Logger.hooks('✅ Logger initialized in MAIN WORLD context');
+    }
+  } catch (e) {
+    // Silently fail - logging is not critical for hook functionality
+  }
 
   // Listen for disable monitoring message from ISOLATED world (cache hit)
   window.addEventListener('message', (event) => {
@@ -1066,7 +1088,11 @@
     // FIXED: Preserves proper 'this' context to avoid "Illegal invocation" errors
     function createStealthWrapper(original, callback, explicitContext, isGetter = false) {
       const wrapper = function(...args) {
-        callback();
+        try {
+          callback();
+        } catch (e) {
+          // Silently fail - detection error shouldn't break page API
+        }
         // FIX: Use natural 'this' binding for prototype methods
         // For methods like getBattery(), enumerateDevices(), etc., 'this' must be the actual instance
         // explicitContext is ONLY used for special cases where we need to validate the context type
