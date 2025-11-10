@@ -184,13 +184,10 @@ class DetectionEngineManager {
             description: detector.description
         };
 
-        // DEBUG: Log if ID is missing
         if (!result.id) {
-            console.warn('[buildDetectorInfo] ⚠️ MISSING ID:', {
+            Logger.warn('DETECTOR', 'Detector missing ID', {
                 detectorName: result.name,
-                detectorId: detector.id,
-                fallbackId,
-                detectorKeys: Object.keys(detector).slice(0, 5)
+                fallbackId
             });
         }
 
@@ -232,12 +229,6 @@ class DetectionEngineManager {
                     : result.scrapfly_settings;
                 const actualSettings = settings.settings || settings;
 
-                console.log('[CACHE] Raw settings object:', {
-                    cacheDuration: actualSettings.cacheDuration,
-                    cacheUnit: actualSettings.cacheUnit,
-                    cacheHours: actualSettings.cacheHours
-                });
-
                 // Support both old (cacheHours) and new (cacheDuration + cacheUnit) formats
                 let expiryMs;
                 if (actualSettings.cacheDuration !== undefined && actualSettings.cacheUnit) {
@@ -251,22 +242,18 @@ class DetectionEngineManager {
                         days: duration * 24 * 60 * 60 * 1000
                     };
 
-                    expiryMs = conversions[unit] || (duration * 60 * 60 * 1000); // Default to hours
-                    console.log(`[CACHE] Using cache duration: ${duration} ${unit} (${expiryMs}ms)`);
+                    expiryMs = conversions[unit] || (duration * 60 * 60 * 1000);
                 } else {
                     // Fallback to old cacheHours format
                     const cacheHours = actualSettings.cacheHours || DetectionEngineManager.DEFAULT_EXPIRY_HOURS;
                     expiryMs = cacheHours * 60 * 60 * 1000;
-                    console.log(`[CACHE] Using legacy cache duration: ${cacheHours} hours (${expiryMs}ms)`);
                 }
 
                 return expiryMs;
             }
-            const defaultMs = DetectionEngineManager.DEFAULT_EXPIRY_HOURS * 60 * 60 * 1000;
-            console.log(`[CACHE] No settings found, using default: ${DetectionEngineManager.DEFAULT_EXPIRY_HOURS} hours`);
-            return defaultMs;
+            return DetectionEngineManager.DEFAULT_EXPIRY_HOURS * 60 * 60 * 1000;
         } catch (error) {
-            console.error('[CACHE] Error reading cache duration from settings:', error);
+            Logger.error('CACHE', 'Error reading cache duration from settings', error);
             return DetectionEngineManager.DEFAULT_EXPIRY_HOURS * 60 * 60 * 1000;
         }
     }
@@ -300,12 +287,10 @@ class DetectionEngineManager {
 
         // Scan all detectors to see which methods they use
         if (!this.detectors) {
-            console.warn('[C.1] No detectors loaded, will collect all data types');
             const fullMethods = {
                 cookie: true, header: true, content: true, dom: true,
                 url: true, window: true, js_hooks: true, payload: true
             };
-            // Cache even the fallback case
             this.analyzedMethodsCache = fullMethods;
             this.analyzedMethodsCacheTime = now;
             return fullMethods;
@@ -331,7 +316,6 @@ class DetectionEngineManager {
         this.analyzedMethodsCache = usedMethods;
         this.analyzedMethodsCacheTime = now;
 
-        console.log('[C.1] Detection methods analysis:', usedMethods);
         return usedMethods;
     }
 
@@ -341,9 +325,6 @@ class DetectionEngineManager {
      * @returns {Promise<object>} Complete page data for detection analysis
      */
     async collectPageData() {
-        console.log('DetectionEngineManager: Collecting page data...');
-        const startTime = Date.now();
-
         // OPTIMIZATION Phase C.1: Analyze which detection methods are used
         const usedMethods = this.analyzeUsedMethods();
 
@@ -351,31 +332,18 @@ class DetectionEngineManager {
         const needsExternal = this.needsExternalContent();
 
         // OPTIMIZATION QUICK WIN #3: Skip external content by default
-        // Only fetch external content if we have no local detections yet
-        // This saves 2-10s per page load in the common case where quick checks find detections
         let externalContent = [];
         if (needsExternal) {
-            // First, run quick checks (cookies, headers, url, dom, css) to see if we find anything
-            // If we do, skip the expensive external content fetch
-            console.log('[QUICK WIN #3] Analyzing page for quick detections before external fetch...');
-
-            // This will be populated after initial detection runs
-            // If we find high-confidence detections early, we'll skip external content
             let skipExternalFetch = false;
 
-            if (skipExternalFetch) {
-                console.log('[QUICK WIN #3] Found local detections, skipping external content fetch (saved 2-10s)');
-            } else if (needsExternal) {
-                console.log('[8E: Incremental] External content needed, fetching...');
+            if (!skipExternalFetch && needsExternal) {
                 try {
                     externalContent = await this.extractExternalContent();
                 } catch (error) {
-                    console.error('DetectionEngineManager: Error fetching external content:', error);
+                    Logger.error('DETECTION', 'Error fetching external content', error);
                     externalContent = [];
                 }
             }
-        } else {
-            console.log('[8E: Incremental] Skipping external content fetch (not needed by any detector)');
         }
 
         // Extract favicon with multiple fallback strategies
@@ -416,10 +384,9 @@ class DetectionEngineManager {
             const currentHooks = hookData[window.location.href];
             if (currentHooks && currentHooks.hooks) {
                 jsHooks = currentHooks.hooks;
-                console.log(`[JS Hooks] Found ${jsHooks.length} hook detections for this page`);
             }
         } catch (error) {
-            console.error('[JS Hooks] Error loading hook detections:', error);
+            Logger.error('HOOKS', 'Error loading hook detections', error);
         }
 
         // OPTIMIZATION 8A + 8E + C.1: Smart lazy data collection
@@ -455,9 +422,7 @@ class DetectionEngineManager {
             Object.defineProperty(pageData, 'cookies', {
                 get() {
                     if (cachedCookies === null) {
-                        const start = Date.now();
                         cachedCookies = this._extractCookies();
-                        console.log(`[C.1: Lazy Cookies] Extracted ${cachedCookies.length} cookies in ${Date.now() - start}ms`);
                     }
                     return cachedCookies;
                 },
@@ -466,17 +431,13 @@ class DetectionEngineManager {
                 },
                 enumerable: true
             });
-        } else {
-            console.log('[C.1] ⏭️ Skipped cookies getter - no detector uses cookie detection');
         }
 
         if (usedMethods.content) {
             Object.defineProperty(pageData, 'content', {
                 get() {
                     if (cachedContent === null) {
-                        const start = Date.now();
                         cachedContent = this._extractScriptElements();
-                        console.log(`[C.1: Lazy Content] Extracted ${cachedContent.length} scripts in ${Date.now() - start}ms`);
                     }
                     return cachedContent;
                 },
@@ -485,17 +446,13 @@ class DetectionEngineManager {
                 },
                 enumerable: true
             });
-        } else {
-            console.log('[C.1] ⏭️ Skipped content getter - no detector uses content detection');
         }
 
         if (usedMethods.dom) {
             Object.defineProperty(pageData, 'dom', {
                 get() {
                     if (cachedDOM === null) {
-                        const start = Date.now();
                         cachedDOM = this._extractDOM();
-                        console.log(`[C.1: Lazy DOM] Extracted ${cachedDOM.length} elements in ${Date.now() - start}ms`);
                     }
                     return cachedDOM;
                 },
@@ -504,17 +461,14 @@ class DetectionEngineManager {
                 },
                 enumerable: true
             });
-        } else {
-            console.log('[C.1] ⏭️ Skipped DOM getter - no detector uses DOM detection');
         }
 
-        // Always include pageHTML if content detection is used (needed for content patterns)
+        // Always include pageHTML if content detection is used
         if (usedMethods.content) {
             Object.defineProperty(pageData, 'pageHTML', {
                 get() {
                     if (cachedPageHTML === null) {
                         cachedPageHTML = document.body ? document.body.innerHTML : '';
-                        console.log(`[C.1: Lazy HTML] Extracted pageHTML on first access (${cachedPageHTML.length} bytes)`);
                     }
                     return cachedPageHTML;
                 },
@@ -523,19 +477,10 @@ class DetectionEngineManager {
                 },
                 enumerable: true
             });
-        } else {
-            console.log('[C.1] ⏭️ Skipped pageHTML getter - content detection not used');
         }
 
         this.detectionData = pageData;
         this.lastDetectionTime = Date.now();
-
-        const collectionTime = Date.now() - startTime;
-        const skippedMethods = Object.entries(usedMethods).filter(([k, v]) => !v).map(([k]) => k);
-        console.log(`[C.1: Smart Collection] Data collected in ${collectionTime}ms`);
-        if (skippedMethods.length > 0) {
-            console.log(`[C.1: Smart Collection] ⚡ Skipped ${skippedMethods.length} unused methods: ${skippedMethods.join(', ')}`);
-        }
 
         return pageData;
     }
@@ -595,7 +540,19 @@ class DetectionEngineManager {
             });
         }
 
-        console.log(`DetectionEngineManager: Found ${cookies.length} cookies`);
+        // Debug logging: Print all collected cookies
+        Logger.debug('DETECTION', '🪤 All collected cookies:', {
+            count: cookies.length,
+            cookies: cookies.map(c => `${c.name}=${c.value.substring(0, 30)}...`)
+        });
+
+        // Debug: Print detailed cookie info
+        if (cookies.length > 0) {
+            Logger.debug('DETECTION', '📋 Detailed cookies:', {
+                list: cookies
+            });
+        }
+
         return cookies;
     }
 
@@ -631,7 +588,6 @@ class DetectionEngineManager {
             }
         });
 
-        console.log(`DetectionEngineManager: Found ${scripts.length} script elements`);
         return scripts;
     }
 
@@ -645,24 +601,19 @@ class DetectionEngineManager {
         // Get all script sources
         const scriptElements = document.querySelectorAll('script[src]');
         const scriptUrls = Array.from(scriptElements).map(s => s.src).filter(Boolean);
-        console.log(`📦 extractExternalContent: Found ${scriptUrls.length} external scripts:`, scriptUrls);
 
         // Get all CSS links
         const linkElements = document.querySelectorAll('link[rel="stylesheet"]');
         const cssUrls = Array.from(linkElements).map(l => l.href).filter(Boolean);
-        console.log(`📦 extractExternalContent: Found ${cssUrls.length} CSS files:`, cssUrls);
 
         // Combine all URLs
         const allUrls = [...scriptUrls, ...cssUrls];
-
-        console.log(`📦 extractExternalContent: Total ${allUrls.length} external resources to fetch`);
 
         // OPTIMIZATION Phase 10.7: Limit concurrent fetches and add size constraints
         const CONCURRENCY_LIMIT = 6; // Match browser connection limit
         const MAX_CONTENT_SIZE = 5 * 1024 * 1024; // 5MB limit per file
         const FETCH_TIMEOUT = 5000; // 5s timeout per fetch
 
-        const startTime = Date.now();
         const results = [];
 
         // Fetch in batches to control concurrency
@@ -680,7 +631,6 @@ class DetectionEngineManager {
                         // Check content length before fetching
                         const contentLength = parseInt(response.headers.get('content-length'), 10);
                         if (contentLength && contentLength > MAX_CONTENT_SIZE) {
-                            console.log(`📦 ✗ Skipping large file: ${url} (${(contentLength / 1024 / 1024).toFixed(2)} MB)`);
                             return null;
                         }
 
@@ -688,7 +638,6 @@ class DetectionEngineManager {
 
                         // Secondary size check after fetching
                         if (content.length > MAX_CONTENT_SIZE) {
-                            console.log(`📦 ✗ Truncating large content: ${url} (${(content.length / 1024 / 1024).toFixed(2)} MB)`);
                             return {
                                 url: url,
                                 type: url.endsWith('.css') ? 'css' : 'javascript',
@@ -705,11 +654,9 @@ class DetectionEngineManager {
                             size: content.length
                         };
                     }
-                    return null; // Failed HTTP response
+                    return null;
                 })
                 .catch(error => {
-                    // CORS, network error, or timeout - return null
-                    console.log(`📦 ✗ Error fetching: ${url} (${error.message})`);
                     return null;
                 })
             );
@@ -725,10 +672,6 @@ class DetectionEngineManager {
         const resources = results
             .filter(result => result.status === 'fulfilled' && result.value !== null)
             .map(result => result.value);
-
-        const fetchTime = Date.now() - startTime;
-        console.log(`📦 extractExternalContent: Successfully fetched ${resources.length}/${allUrls.length} resources in ${fetchTime}ms`);
-        console.log(`📦 Total content size: ${resources.reduce((sum, r) => sum + r.size, 0)} bytes`);
 
         return resources;
     }
@@ -766,7 +709,6 @@ class DetectionEngineManager {
             }
         );
 
-        const startTime = Date.now();
         let nodeCount = 0;
 
         while (walker.nextNode()) {
@@ -869,9 +811,6 @@ class DetectionEngineManager {
                 count: canvasCount
             });
         }
-
-        const extractTime = Date.now() - startTime;
-        console.log(`[8C: DOM Batching] Walked ${nodeCount} nodes in ${extractTime}ms, collected ${domData.length} elements`);
 
         return domData;
     }
@@ -977,8 +916,6 @@ class DetectionEngineManager {
 
         // Store for reuse
         this.precomputedPriorities = priorities;
-
-        console.log(`[Phase 1 Optimization] Pre-computed priorities for ${priorities.length} detectors`);
     }
 
     /**
@@ -1087,7 +1024,6 @@ class DetectionEngineManager {
           Object.defineProperty(stealthGetter, 'toString', {value: function toString() {return originalGetter.toString.call(originalGetter);}, writable: true, enumerable: false, configurable: true});
         } catch (e) {
           // Expected: Some properties may not be configurable
-          console.log('[Hook] Failed to define stealth getter properties:', e.message);
         }
 
         Object.defineProperty(obj, propertyName, {
@@ -1118,7 +1054,6 @@ class DetectionEngineManager {
           if (original.prototype) Object.setPrototypeOf(wrapper, Object.getPrototypeOf(original));
         } catch (e) {
           // Expected: Some properties may not be configurable
-          console.log('[Hook] Failed to define wrapper properties:', e.message);
         }
 
         Object.defineProperty(obj, propertyName, {
@@ -1129,7 +1064,7 @@ class DetectionEngineManager {
         });
       }
     } catch (error) {
-      console.error(\`[Fingerprint Hook] Failed to install \${hook.hook}:\`, error);
+      // Hook installation failed - silently skip
     }
   }
 
@@ -1155,53 +1090,21 @@ class DetectionEngineManager {
      * @returns {array} Array of detection results
      */
     async detectOnPage(pageData = {}) {
-        console.log('🔍 DetectionEngineManager.detectOnPage called');
-
         if (!this.detectors) {
-            console.error('❌ Detectors not set!');
+            Logger.error('DETECTION', 'Detectors not set - call setDetectors() first');
             throw new Error('Detectors not set. Call setDetectors() first.');
         }
 
         const detections = [];
         const { url = '', content = [], dom = [], cookies = [], headers = {}, pageHTML = '', externalContent = [], jsHooks = [], payload, payloads, networkUrls = [] } = pageData;
-        const startTime = Date.now();
-
-        console.log('📊 Page Data Summary:', {
-            url: url,
-            contentCount: content.length,
-            domCount: dom.length,
-            cookiesCount: cookies.length,
-            headersCount: Object.keys(headers).length,
-            pageHTMLLength: pageHTML.length,
-            externalContentCount: externalContent.length
-        });
-
-        console.log('🔍 Cookies:', cookies);
-        console.log('🔍 Content sample:', content.slice(0, 3));
-
-        const categoriesCount = Object.keys(this.detectors).length;
-        console.log(`📦 Processing ${categoriesCount} categories...`);
-        console.log('📋 All detectors loaded:', Object.entries(this.detectors).map(([cat, dets]) =>
-            `${cat}: [${Object.keys(dets).join(', ')}]`
-        ).join(' | '));
-
-        // OPTIMIZATION Phase 1: Use pre-computed priorities (saves 50-100ms per detection)
-        // Priority levels:
-        // 1. Fast checks first: cookies (1-2ms), URLs (1-2ms), headers (1-2ms)
-        // 2. Medium checks: content patterns (10-50ms)
-        // 3. Slow checks: DOM selectors (20-100ms)
-        // This reduces avg detection time by 40-60%
 
         let detectorPriorities = this.precomputedPriorities || [];
 
-        // Fallback: If priorities not pre-computed, compute them now (shouldn't happen in normal flow)
+        // Fallback: If priorities not pre-computed, compute them now
         if (detectorPriorities.length === 0) {
-            console.warn('[Phase 1 Optimization] Pre-computed priorities missing - falling back to runtime calculation');
             this._precomputePriorities();
             detectorPriorities = this.precomputedPriorities || [];
         }
-
-        console.log(`🚀 Running ${detectorPriorities.length} detectors (using pre-computed priorities)`);
 
         // Track high-confidence detections for potential early exit
         let highConfidenceCount = 0;
@@ -1211,33 +1114,28 @@ class DetectionEngineManager {
         for (const { category, detectorName, detector } of detectorPriorities) {
             const detection = this.runDetector(detector, { url, content, dom, cookies, headers, pageHTML, externalContent, payload, payloads, networkUrls });
             if (detection.detected) {
-                console.log(`    ✅ DETECTED: ${detectorName} (confidence: ${detection.confidence}%)`);
                 const detectionObj = {
                     ...detection,
                     category,
                     detector: DetectionEngineManager.buildDetectorInfo(detector, detectorName, detectorName)
                 };
 
-                // DEBUG: Verify detector.id is present
                 if (!detectionObj.detector?.id) {
-                    console.error(`[detectOnPage] ❌ CRITICAL: Detection created without detector.id for ${detectorName}:`, {
-                        hasDetector: !!detectionObj.detector,
-                        detectorId: detectionObj.detector?.id,
-                        detectorName: detectionObj.detector?.name
+                    Logger.error('DETECTION', 'Detection created without detector ID', {
+                        detectorName,
+                        hasDetector: !!detectionObj.detector
                     });
                 }
 
                 detections.push(detectionObj);
 
-                // OPTIMIZATION: Track high-confidence detections
+                // Track high-confidence detections
                 if (detection.confidence >= HIGH_CONFIDENCE_THRESHOLD) {
                     highConfidenceCount++;
                 }
 
-                // OPTIMIZATION: Early exit after finding multiple high-confidence detections
-                // This saves processing time on pages with clear security systems
+                // Early exit after finding multiple high-confidence detections
                 if (highConfidenceCount >= EARLY_EXIT_COUNT) {
-                    console.log(`⚡ Early exit: Found ${highConfidenceCount} high-confidence detections`);
                     break;
                 }
             }
@@ -1245,11 +1143,7 @@ class DetectionEngineManager {
 
         // Process JS Hook detections from MAIN world
         if (jsHooks && jsHooks.length > 0) {
-            console.log(`[JS Hooks] Processing ${jsHooks.length} hook detections`);
-
-            // OPTIMIZATION Phase 10.10: Build detector lookup table once (O(n) instead of O(n×m))
-            // Before: For 100 hooks × 3 categories = 300 iterations
-            // After: Build lookup once + 100 lookups = ~110 operations (50-70% faster)
+            // OPTIMIZATION Phase 10.10: Build detector lookup table once
             const detectorLookup = new Map();
             for (const [category, categoryDetectors] of Object.entries(this.detectors)) {
                 for (const [detectorId, detector] of Object.entries(categoryDetectors)) {
@@ -1258,13 +1152,10 @@ class DetectionEngineManager {
             }
 
             for (const hookData of jsHooks) {
-                // O(1) lookup instead of nested loop
                 const found = detectorLookup.get(hookData.detectorId);
 
                 if (found) {
                     const { category, detector } = found;
-
-                    // Check if this detector was already detected via other methods
                     const existingDetection = detections.find(d => d.detector.id === hookData.detectorId);
 
                     if (existingDetection) {
@@ -1277,7 +1168,6 @@ class DetectionEngineManager {
                             description: hookData.description || 'JavaScript API hook'
                         });
 
-                        // Update detectionMethods to include js_hooks
                         if (!existingDetection.detectionMethods) {
                             existingDetection.detectionMethods = [];
                         }
@@ -1289,8 +1179,6 @@ class DetectionEngineManager {
                         existingDetection.confidence = this.confidenceManager
                             ? this.confidenceManager.calculateConfidence(existingDetection.matches)
                             : Math.max(...existingDetection.matches.map(m => m.confidence || 0), 0);
-
-                        console.log(`[JS Hooks] Added hook to existing detection: ${detector.name}`);
                     } else {
                         // Create new detection for this hook
                         detections.push({
@@ -1307,17 +1195,9 @@ class DetectionEngineManager {
                             category,
                             detector: DetectionEngineManager.buildDetectorInfo(detector, hookData.detectorName, hookData.detectorId)
                         });
-
-                        console.log(`[JS Hooks] Created new detection: ${detector.name}`);
                     }
                 }
             }
-        }
-
-        const detectionTime = Date.now() - startTime;
-        console.log(`🎯 Total detections found: ${detections.length} in ${detectionTime}ms`);
-        if (detections.length > 0) {
-            console.log('Detections:', detections.map(d => d.detector.name));
         }
 
         return detections;
@@ -1356,23 +1236,18 @@ class DetectionEngineManager {
                 // Get textScope (default to 'all')
                 const textScope = urlPattern.textScope || 'all';
 
-                // Check main page URL (always checked unless scope is explicitly scripts-only)
-                // Extract pathname before matching for more accurate pattern matching
+                // Check main page URL
                 const urlPathname = extractPathname(url);
-                console.log(`[URL Detection] ${detector.name}: Testing pattern "${urlPattern.text}" against pathname "${urlPathname}"`);
                 const urlMatch = this.matchPatternWithCapture(urlPathname, urlPattern.text, matchOptions);
                 if (urlMatch) {
-                    console.log(`[URL Detection] ${detector.name}: ✅ MATCHED! Value: "${urlMatch}"`);
                     matches.push({
                         type: 'url',
                         pattern: urlPattern.text,
-                        value: urlMatch,  // Store the actual matched substring
-                        fullUrl: url,     // Store full URL for reference
+                        value: urlMatch,
+                        fullUrl: url,
                         confidence: urlPattern.confidence,
                         description: urlPattern.description
                     });
-                } else {
-                    console.log(`[URL Detection] ${detector.name}: ❌ No match`);
                 }
 
                 // Check script src URLs if scope is 'page_and_scripts' or 'all'
@@ -1425,24 +1300,21 @@ class DetectionEngineManager {
                     }
                 }
 
-                // Check ALL network request URLs if scope is 'all' (NEW: captures XHR, fetch, etc.)
+                // Check ALL network request URLs if scope is 'all'
                 if (textScope === 'all' && pageData.networkUrls && pageData.networkUrls.length > 0) {
-                    console.log(`[URL Detection] ${detector.name}: Checking ${pageData.networkUrls.length} network request URLs`);
                     for (const networkUrl of pageData.networkUrls) {
                         const networkPathname = extractPathname(networkUrl.url);
                         const networkMatch = this.matchPatternWithCapture(networkPathname, urlPattern.text, matchOptions);
                         if (networkMatch) {
-                            // Check if we already have this pattern to avoid duplicates
                             const alreadyAdded = matches.some(m => m.type === 'url' && m.pattern === urlPattern.text);
                             if (!alreadyAdded) {
-                                console.log(`[URL Detection] ${detector.name}: ✅ Network URL MATCHED! URL: ${networkUrl.url}, Type: ${networkUrl.type}, Method: ${networkUrl.method}`);
                                 matches.push({
                                     type: 'url',
                                     pattern: urlPattern.text,
-                                    value: networkMatch,  // Store actual matched substring
-                                    fullUrl: networkUrl.url,  // Store full network URL
-                                    resourceType: networkUrl.type,  // XHR, fetch, script, etc.
-                                    method: networkUrl.method,  // GET, POST, etc.
+                                    value: networkMatch,
+                                    fullUrl: networkUrl.url,
+                                    resourceType: networkUrl.type,
+                                    method: networkUrl.method,
                                     confidence: urlPattern.confidence,
                                     description: urlPattern.description
                                 });
@@ -1455,14 +1327,10 @@ class DetectionEngineManager {
 
         // Check content patterns
         const contentPatterns = detector.detection?.content;
-        console.log(`[Content Detection] ${detector.name}: contentPatterns=${!!contentPatterns}, count=${contentPatterns?.length || 0}, hasPageHTML=${!!pageHTML}, pageHTMLLength=${pageHTML?.length || 0}`);
 
         if (contentPatterns && pageHTML) {
-            console.log(`[Content Detection] ${detector.name}: Starting check of ${contentPatterns.length} patterns`);
             for (const contentPattern of contentPatterns) {
-                // Backward compatibility: content patterns used to use 'value' instead of 'text'
                 const patternText = contentPattern.text || contentPattern.value || '';
-                console.log(`[Content Detection] ${detector.name}: Pattern="${patternText}", regex=${contentPattern.textRegex}, wholeWord=${contentPattern.textWholeWord}, caseSensitive=${contentPattern.textCaseSensitive}`);
 
                 const matchOptions = {
                     regex: contentPattern.textRegex === true,
@@ -1470,49 +1338,29 @@ class DetectionEngineManager {
                     caseSensitive: contentPattern.textCaseSensitive === true
                 };
 
-                // Determine where to search based on settings
-                // If checkScripts is explicitly set to true, restrict search to scripts only
-                // If false or undefined, search entire page (default)
                 const checkScripts = contentPattern.checkScripts === true;
 
-                console.log(`[Content Detection] ${detector.name}: checkScripts=${checkScripts}`);
-
                 let found = false;
-                let foundIn = '';
 
                 if (!checkScripts) {
-                    // No restrictions = check entire page HTML + external content (default behavior)
-                    console.log(`[Content Detection] ${detector.name}: Searching entire page HTML for "${patternText}"`);
                     if (this.matchPattern(pageHTML, patternText, matchOptions)) {
                         found = true;
-                        foundIn = 'page content';
-                        console.log(`[Content Detection] ${detector.name}: ✓ MATCH FOUND in page content!`);
                     }
 
-                    // Also search external fetched content
                     if (!found && pageData.externalContent && pageData.externalContent.length > 0) {
-                        console.log(`[Content Detection] ${detector.name}: Searching ${pageData.externalContent.length} external resources`);
                         for (const resource of pageData.externalContent) {
                             if (this.matchPattern(resource.content, patternText, matchOptions)) {
                                 found = true;
-                                foundIn = resource.url;
-                                console.log(`[Content Detection] ${detector.name}: ✓ MATCH FOUND in external resource: ${resource.url}`);
                                 break;
                             }
                         }
                     }
-
-                    if (!found) {
-                        console.log(`[Content Detection] ${detector.name}: ✗ No match in page content or external resources`);
-                    }
                 } else {
-                    // Check only scripts
                     if (content.length > 0) {
                         for (const script of content) {
                             const scriptContent = script.content || script.src || '';
                             if (this.matchPattern(scriptContent, patternText, matchOptions)) {
                                 found = true;
-                                foundIn = script.src || 'inline script';
                                 break;
                             }
                         }
@@ -1520,29 +1368,26 @@ class DetectionEngineManager {
                 }
 
                 if (found) {
-                    console.log(`[Content Detection] ${detector.name}: Adding match! confidence=${contentPattern.confidence}, foundIn=${foundIn}`);
                     matches.push({
                         type: 'content',
                         pattern: patternText,
-                        value: patternText, // Show the matched pattern itself
+                        value: patternText,
                         confidence: contentPattern.confidence,
                         description: contentPattern.description
                     });
-                } else {
-                    console.log(`[Content Detection] ${detector.name}: Pattern not found: "${patternText}"`);
                 }
-            }
-        } else {
-            if (!contentPatterns) {
-                console.log(`[Content Detection] ${detector.name}: No content patterns defined`);
-            }
-            if (!pageHTML) {
-                console.log(`[Content Detection] ${detector.name}: No pageHTML provided!`);
             }
         }
 
         // Check cookies patterns
         if (detector.detection?.cookie && (cookies.length > 0 || (pageData.responseCookies && pageData.responseCookies.length > 0))) {
+            // Debug logging: Show cookies being matched
+            Logger.debug('DETECTION', `🔍 Matching cookies for detector: ${detector.id}`, {
+                requestCookies: cookies.map(c => c.name),
+                responseCookies: pageData.responseCookies?.map(c => c.name) || [],
+                patterns: detector.detection.cookie.map(p => p.name)
+            });
+
             // OPTIMIZATION Phase 10.6: Track matched cookies and filter before searching
             const matchedCookieNames = new Set();
 
@@ -1608,6 +1453,14 @@ class DetectionEngineManager {
 
                 if (matchingCookie) {
                     matchedCookieNames.add(matchingCookie.name); // Mark as matched
+
+                    // Debug logging: Show which cookie matched
+                    Logger.debug('DETECTION', `✅ Cookie match found for ${detector.id}`, {
+                        pattern: cookiePattern.name,
+                        matchedCookie: matchingCookie.name,
+                        confidence: cookiePattern.confidence || 80
+                    });
+
                     matches.push({
                         type: 'cookie',
                         name: matchingCookie.name,
@@ -2063,7 +1916,6 @@ class DetectionEngineManager {
                 try {
                     result = compiledRegex.test(textToSearch);
                 } catch (e) {
-                    console.warn('Invalid regex pattern:', patternToMatch, e);
                     result = false;
                 }
             }
@@ -2133,7 +1985,7 @@ class DetectionEngineManager {
                 }
             }
         } catch (error) {
-            console.warn('[matchPatternWithCapture] Error matching pattern:', error);
+            // Pattern matching failed - silently return null
         }
 
         return null;
@@ -2158,42 +2010,33 @@ class DetectionEngineManager {
             // FIX: Use Utils.getCacheScope() which properly loads settings with 'domain' as default
             const cacheScope = await Utils.getCacheScope();
 
-            console.log(`[DEBUG getStoredDetection] 🔍 Cache lookup for URL: ${url}, Scope: ${cacheScope}`);
-
             const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY]);
             const storage = result[DetectionEngineManager.STORAGE_KEY] || {};
             const urlHash = Utils.hashUrl(url, cacheScope);
-
-            console.log(`[DEBUG getStoredDetection] Calculated hash: ${urlHash}`);
-            console.log(`[DEBUG getStoredDetection] Available cache keys: ${Object.keys(storage).slice(0, 5).join(', ')}${Object.keys(storage).length > 5 ? '...' : ''}`);
 
             const stored = storage[urlHash];
 
             if (stored) {
                 // Validate cache scope matches current settings
                 if (stored.cacheScope && stored.cacheScope !== cacheScope) {
-                    console.log(`[getStoredDetection] ⚠️ Cache scope mismatch: stored with '${stored.cacheScope}', current is '${cacheScope}' - treating as cache miss`);
-                    // Don't delete yet - let it expire naturally or get overwritten
-                    return null; // Treat as cache miss
+                    Logger.warn('CACHE', 'Cache scope mismatch - treating as miss', {
+                        stored: stored.cacheScope,
+                        current: cacheScope
+                    });
+                    return null;
                 }
 
                 // Check if stored detection is expired
                 if (Date.now() < stored.expiry) {
-                    console.log(`Scrapfly Background: ✅ Found stored detection for ${url} (expires in ${Math.round((stored.expiry - Date.now()) / 1000 / 60)} minutes)`);
-                    console.log(`[DEBUG getStoredDetection] Cache hit confirmed - returning ${stored.detectionCount} detectors`);
                     return stored;
                 } else {
-                    console.log(`Scrapfly Background: Stored detection expired for ${url}`);
-                    console.log(`[DEBUG getStoredDetection] Cache expired (was valid for ${stored.cacheDuration}${stored.cacheUnit})`);
                     // Remove expired entry
                     delete storage[urlHash];
                     await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: storage });
                 }
-            } else {
-                console.log(`[DEBUG getStoredDetection] ❌ Cache MISS - No entry found for hash: ${urlHash}`);
             }
         } catch (error) {
-            console.error('Scrapfly Background: Error reading stored detections:', error);
+            Logger.error('CACHE', 'Error reading stored detections', error);
         }
         return null;
     }
@@ -2214,11 +2057,6 @@ class DetectionEngineManager {
             // Check storage
             const storedData = await DetectionEngineManager.getStoredDetection(tab.url);
             if (storedData) {
-                console.log('getDetectionData: ===== SENDING TO POPUP =====');
-                console.log('getDetectionData: Detection count:', storedData.detectionResults?.length || 0);
-                console.log('getDetectionData: Detector names:', storedData.detectionResults?.map(d => d.detector?.name || d.name || 'NO NAME') || []);
-                console.log('getDetectionData: Detector IDs:', storedData.detectionResults?.map(d => d.detector?.id || 'NO ID') || []);
-                console.log('getDetectionData: Sample detector full object:', storedData.detectionResults?.[0]);
                 return {
                     data: storedData,
                     detectionResults: storedData.detectionResults || [],
@@ -2232,7 +2070,7 @@ class DetectionEngineManager {
                 };
             }
         } catch (error) {
-            console.error('getDetectionData: Error:', error);
+            Logger.error('DETECTION', 'Error getting detection data', error);
         }
 
         return null;
@@ -2245,11 +2083,6 @@ class DetectionEngineManager {
      * @param {array} detectionResults - Detection results
      */
     static async storeDetection(url, pageData, detectionResults) {
-        console.log('[storeDetection] 💾 ========== STORING DETECTION ==========');
-        console.log('[storeDetection] URL:', url);
-        console.log('[storeDetection] detectionResults count:', detectionResults.length);
-        console.log('[storeDetection] detectionResults IDs:', detectionResults.map(d => d.id));
-
         try {
             // FIX: Use Utils.getCacheScope() which properly loads settings with 'domain' as default
             const cacheScope = await Utils.getCacheScope();
@@ -2258,13 +2091,9 @@ class DetectionEngineManager {
             const storage = result[DetectionEngineManager.STORAGE_KEY] || {};
             const urlHash = Utils.hashUrl(url, cacheScope);
 
-            console.log(`[DEBUG storeDetection] 💾 Cache settings - Scope: ${cacheScope}, Hash: ${urlHash}`);
-            console.log(`[DEBUG storeDetection] Storing at key: ${urlHash}`);
-
             // OPTIMIZATION: Compress detectionResults to essential fields only
             // Strip detector metadata (version, website, etc.) but keep description and structure
             // This reduces storage size by 70-80% while preserving user-visible info
-            console.log('[storeDetection] Compressing detection results...');
             const compressedResults = detectionResults.map((detection, index) => {
                 const compressed = {
                     id: detection.id,
@@ -2285,11 +2114,12 @@ class DetectionEngineManager {
                     })) || []
                 };
 
-                // DEBUG: Verify ID is preserved
+                // Verify ID is preserved
                 if (!compressed.detector.id) {
-                    console.warn(`[storeDetection] ⚠️ WARNING: Detection ${index} ${compressed.detector.name} missing detector.id!`);
-                } else {
-                    console.log(`[storeDetection] ✅ Detection ${index}: ${compressed.detector.name} [ID: ${compressed.detector.id}] (${compressed.matches.length} matches)`);
+                    Logger.warn('DETECTION', 'Detection missing detector ID', {
+                        index,
+                        name: compressed.detector.name
+                    });
                 }
                 return compressed;
             });
@@ -2320,14 +2150,10 @@ class DetectionEngineManager {
 
             await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: storage });
 
-            console.log(`[storeDetection] ✅ STORED: ${detectionResults.length} detections`);
-            console.log(`[storeDetection]   - URL hash: ${urlHash}`);
-            console.log(`[storeDetection] ========== STORAGE COMPLETE ==========`);
-            
             // Return the stored data with expiry for immediate use
             return storedData;
         } catch (error) {
-            console.error('[storeDetection] ❌ Error storing detection:', error);
+            Logger.error('STORAGE', 'Error storing detection', error);
             return null;
         }
     }
@@ -2349,7 +2175,6 @@ class DetectionEngineManager {
                 const detection = storage[urlHash];
                 // Check if this specific detection has expired based on its own expiry time
                 if (detection.expiry && detection.expiry < now) {
-                    console.log(`[DetectionEngineManager] Removing expired detection for ${detection.url} (expired ${Math.floor((now - detection.expiry) / 60000)} minutes ago)`);
                     delete storage[urlHash];
                     cleanedCount++;
                 }
@@ -2357,10 +2182,9 @@ class DetectionEngineManager {
 
             if (cleanedCount > 0) {
                 await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: storage });
-                console.log(`[DetectionEngineManager] Cleaned ${cleanedCount} expired detection entries`);
             }
         } catch (error) {
-            console.error('[DetectionEngineManager] Error cleaning expired detections:', error);
+            Logger.error('CACHE', 'Error cleaning expired detections', error);
         }
     }
 
@@ -2376,45 +2200,31 @@ class DetectionEngineManager {
 
         const pageUrl = request.url;
         const tabId = sender.tab?.id;
-        const triggerSource = request.triggerSource || 'unknown';
 
         if (!tabId) {
-            console.error('Scrapfly Background: No tab ID in PAGE_LOAD_NOTIFICATION');
+            Logger.error('BACKGROUND', 'No tab ID in PAGE_LOAD_NOTIFICATION');
             return;
         }
-
-        // Log the trigger source for debugging
-        console.log(`[handlePageLoadNotification] 📍 Detection trigger: ${triggerSource} for tab ${tabId}`)
 
         // Check if extension is enabled
         try {
             const result = await chrome.storage.local.get(['scrapfly_enabled']);
             if (result.scrapfly_enabled === false) {
-                console.log('Scrapfly Background: Extension is disabled, skipping page load detection');
                 // Set orange X badge to indicate extension is disabled
-                chrome.action.setBadgeText({ text: '✕', tabId: tabId }).catch((error) => {
-                    console.log(`[PageLoad] Failed to set disabled badge for tab ${tabId}:`, error.message);
-                });
-                chrome.action.setBadgeBackgroundColor({ color: '#f59e0b', tabId: tabId }).catch((error) => {
-                    console.log(`[PageLoad] Failed to set badge color for tab ${tabId}:`, error.message);
-                });
+                chrome.action.setBadgeText({ text: '✕', tabId: tabId }).catch(() => {});
+                chrome.action.setBadgeBackgroundColor({ color: '#f59e0b', tabId: tabId }).catch(() => {});
                 return;
             }
         } catch (error) {
-            console.error('Failed to check enabled state:', error);
+            Logger.error('BACKGROUND', 'Failed to check enabled state', error);
         }
 
         // FIX: Check if URL is blacklisted BEFORE cache check (prevents detection from running)
         const isBlacklisted = await Utils.isUrlBlacklisted(pageUrl);
         if (isBlacklisted) {
-            console.log(`[handlePageLoadNotification] ⛔ URL is blacklisted, skipping detection: ${pageUrl}`);
             // Show orange X badge for blacklisted domains
-            chrome.action.setBadgeText({ text: '✕', tabId: tabId }).catch((error) => {
-                console.log(`[PageLoad] Failed to set blacklist badge for tab ${tabId}:`, error.message);
-            });
-            chrome.action.setBadgeBackgroundColor({ color: '#FF8C00', tabId: tabId }).catch((error) => {
-                console.log(`[PageLoad] Failed to set badge color (blacklisted) for tab ${tabId}:`, error.message);
-            });
+            chrome.action.setBadgeText({ text: '✕', tabId: tabId }).catch(() => {});
+            chrome.action.setBadgeBackgroundColor({ color: '#FF8C00', tabId: tabId }).catch(() => {});
             return;
         }
 
@@ -2422,21 +2232,10 @@ class DetectionEngineManager {
         // Now using silent background detection instead for better UX
 
         // Check cache first (optimization - avoid expensive data collection)
-        console.log(`[DEBUG] Checking cache for ${pageUrl}...`);
         const storedData = await DetectionEngineManager.getStoredDetection(pageUrl);
-
-        console.log(`[handlePageLoadNotification] 🔍 CACHE CHECK for ${pageUrl}:`, {
-            triggerSource,
-            cacheExists: !!storedData,
-            detectionCount: storedData?.detectionCount,
-            detectorIds: storedData?.detectionResults?.map(d => d.id)
-        });
 
         if (storedData) {
             // Cache hit - use stored data
-            console.log(`[handlePageLoadNotification] ✅ CACHE HIT - Using cached data`);
-            console.log(`Scrapfly Background: ✅ Cache hit for ${pageUrl} (${storedData.detectionCount} detectors)`);
-
             // Check if URL is blacklisted before setting badge
             const isBlacklisted = await Utils.isUrlBlacklisted(pageUrl);
 
@@ -2450,20 +2249,11 @@ class DetectionEngineManager {
                              storedData.detectionCount >= 3 ? badgeColors.medium :
                              badgeColors.low;
 
-                chrome.action.setBadgeText({ text: count, tabId: tabId }).catch((error) => {
-                    // Expected: Tab might be closed
-                    console.log(`[PageLoad] Failed to set badge text (cached) for tab ${tabId}:`, error.message);
-                });
-                chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId }).catch((error) => {
-                    // Expected: Tab might be closed
-                    console.log(`[PageLoad] Failed to set badge color (cached) for tab ${tabId}:`, error.message);
-                });
+                chrome.action.setBadgeText({ text: count, tabId: tabId }).catch(() => {});
+                chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId }).catch(() => {});
             } else {
                 // Clear badge if no detections or if blacklisted
-                chrome.action.setBadgeText({ text: '', tabId: tabId }).catch((error) => {
-                    // Expected: Tab might be closed
-                    console.log(`[PageLoad] Failed to clear badge (no detections/blacklisted) for tab ${tabId}:`, error.message);
-                });
+                chrome.action.setBadgeText({ text: '', tabId: tabId }).catch(() => {});
             }
 
             // Notify popup if it's open
@@ -2473,27 +2263,19 @@ class DetectionEngineManager {
                 url: pageUrl,
                 detectionResults: storedData.detectionResults,
                 fromStorage: true
-            }).catch((error) => {
-                // Expected: Popup may not be open
-                console.log('[PageLoad] Popup not open, cached data not sent:', error.message);
-            });
+            }).catch(() => {});
 
             // Notify content script to disable hooks/window properties monitoring (cache hit)
             chrome.tabs.sendMessage(tabId, {
                 type: 'CACHE_HIT_DISABLE_MONITORING',
                 url: pageUrl
-            }).catch((error) => {
-                // Content script might not be ready yet, that's okay
-                console.log('[handlePageLoadNotification] Content script not ready for disable message:', error.message);
-            });
+            }).catch(() => {});
 
             // Check if we should save to history on cache hit
             const historySettings = await Utils.getHistorySettings();
             const shouldSaveOnCacheHit = historySettings.historyBypassCache === true;
 
             if (shouldSaveOnCacheHit && storedData.detectionResults && storedData.detectionResults.length > 0) {
-                console.log('[handlePageLoadNotification] historyBypassCache enabled - checking if should save cached detection to history');
-
                 // Check duplicate prevention before saving
                 const shouldSave = await History.shouldSaveToHistory(pageUrl, historySettings, chrome);
 
@@ -2509,10 +2291,7 @@ class DetectionEngineManager {
                         };
 
                         await History.saveDetectionToHistory(tabId, pageData, storedData.detectionResults, chrome);
-                        console.log('[handlePageLoadNotification] ✅ Saved cached detection to history');
                     }
-                } else {
-                    console.log('[handlePageLoadNotification] ⏭️  Skipped saving cached detection (duplicate prevention)');
                 }
             }
 
@@ -2522,7 +2301,6 @@ class DetectionEngineManager {
 
         // Cache miss - skip if we recently ran detection for this tab
         if (Utils.shouldSkipDetection(tabId, 1500, recentDetectionRequests)) {
-            console.log(`Scrapfly Background: Skipping duplicate detection request for tab ${tabId}`);
             return;
         }
 
@@ -2531,12 +2309,10 @@ class DetectionEngineManager {
             chrome.action.setBadgeText({ text: '⏳', tabId: tabId });
             chrome.action.setBadgeBackgroundColor({ color: '#4A90E2', tabId: tabId }); // Blue color for loading
         } catch (error) {
-            console.error('Failed to set loading badge:', error);
+            Logger.error('BADGE', 'Failed to set loading badge', error);
         }
 
         // Request data collection from content script
-        console.log(`[DEBUG] Cache miss detected for ${pageUrl}, sending REQUEST_PAGE_DATA to content script`);
-        console.log(`Scrapfly Background: ⚠️ Cache miss for ${pageUrl} (trigger: ${triggerSource}) - requesting fresh detection`);
 
         // BULLETPROOF: Retry sending REQUEST_PAGE_DATA if content script not ready
         let retryCount = 0;
@@ -2544,27 +2320,22 @@ class DetectionEngineManager {
         const retryDelay = 200; // ms between retries
 
         const sendDataRequest = () => {
-            console.log(`[DEBUG] Sending REQUEST_PAGE_DATA to content script on tab ${tabId} (attempt ${retryCount + 1})`);
-            chrome.tabs.sendMessage(tabId, { type: 'REQUEST_PAGE_DATA' }, (response) => {
+            chrome.tabs.sendMessage(tabId, { type: 'REQUEST_PAGE_DATA' }, () => {
                 if (chrome.runtime.lastError) {
                     const errorMsg = chrome.runtime.lastError?.message || '';
-                    console.log(`[DEBUG] REQUEST_PAGE_DATA response error: ${errorMsg}`);
 
                     // Retry if content script not ready yet
                     if ((errorMsg.includes('Could not establish connection') ||
                          errorMsg.includes('Receiving end does not exist') ||
                          errorMsg.includes('No receiving end')) && retryCount < maxRetries) {
                         retryCount++;
-                        console.log(`[DEBUG] Content script not ready (attempt ${retryCount}/${maxRetries}), retrying in ${retryDelay}ms...`);
-                        console.log(`Scrapfly Background: Content script not ready (attempt ${retryCount}/${maxRetries}), retrying in ${retryDelay}ms...`);
                         setTimeout(sendDataRequest, retryDelay);
                     } else {
-                        console.warn(`[DEBUG] ❌ Failed to send data collection request after ${retryCount} retries: ${errorMsg}`);
-                        console.warn(`Scrapfly Background: ❌ Failed to send data collection request after ${retryCount} retries:`, chrome.runtime.lastError);
+                        Logger.warn('CONTENT', 'Failed to send data collection request', {
+                            retries: retryCount,
+                            error: errorMsg
+                        });
                     }
-                } else {
-                    console.log(`[DEBUG] ✅ REQUEST_PAGE_DATA sent successfully, response:`, response);
-                    console.log('Scrapfly Background: ✅ Data collection requested successfully');
                 }
             });
         };
@@ -2581,8 +2352,6 @@ class DetectionEngineManager {
      */
     static async handleClearDetectionCache(request, sendResponse, manuallyClearedCaches = null) {
         try {
-            console.log(`[DEBUG] CLEAR_DETECTION_CACHE received for URL: ${request.url}, tabId: ${request.tabId}`);
-
             // Use Utils.getCacheScope() to properly load settings with correct default ('domain')
             // This ensures hash calculation matches storage/retrieval operations
             const cacheScope = await Utils.getCacheScope();
@@ -2591,17 +2360,13 @@ class DetectionEngineManager {
             const storage = result[DetectionEngineManager.STORAGE_KEY] || {};
             const urlHash = Utils.hashUrl(request.url, cacheScope);
 
-            console.log(`[DEBUG] Cache scope: ${cacheScope}, urlHash: ${urlHash}, exists: ${!!storage[urlHash]}`);
-
             if (storage[urlHash]) {
                 delete storage[urlHash];
                 await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: storage });
-                console.log(`[DEBUG] ✅ Cache entry deleted for ${request.url}`);
 
                 // Track this URL as manually cleared
                 if (manuallyClearedCaches) {
                     manuallyClearedCaches.add(urlHash);
-                    console.log(`[DEBUG] Marked ${urlHash} as manually cleared`);
                 }
 
                 // OPTION 1: Removed hold period logic
@@ -2614,20 +2379,17 @@ class DetectionEngineManager {
                         await chrome.tabs.sendMessage(request.tabId, {
                             type: 'CLEAR_SESSION_CACHE'
                         });
-                        console.log(`[DEBUG] Notified content script to clear sessionStorage for tab ${request.tabId}`);
                     } catch (e) {
                         // Content script might not be loaded, continue normally
-                        console.log(`[DEBUG] Could not notify content script: ${e.message}`);
                     }
                 }
 
                 sendResponse({ status: 'cleared', urlHash });
             } else {
-                console.log(`[DEBUG] ⚠️  Cache entry not found for ${urlHash}`);
                 sendResponse({ status: 'not_found' });
             }
         } catch (error) {
-            console.error(`[DEBUG] Error clearing cache:`, error);
+            Logger.error('CACHE', 'Error clearing cache', error);
             sendResponse({ status: 'error', error: error.message });
         }
 
@@ -2654,12 +2416,11 @@ class DetectionEngineManager {
         try {
             const result = await chrome.storage.local.get(['scrapfly_enabled']);
             if (result.scrapfly_enabled === false) {
-                console.log('Scrapfly Background: Extension is disabled, skipping manual detection request');
                 sendResponse({ status: 'error', error: 'Extension is disabled' });
                 return true;
             }
         } catch (error) {
-            console.error('Failed to check enabled state:', error);
+            Logger.error('BACKGROUND', 'Failed to check enabled state', error);
         }
 
         try {
@@ -2681,15 +2442,13 @@ class DetectionEngineManager {
             // OPTION 1: Silent mode (for background re-detection after cache clear)
             const isSilent = request.silent === true;
 
-            if (isSilent) {
-                console.log(`[REQUEST_DETECTION] 🔄 Silent background detection for tab ${tabId}`);
-            } else {
+            if (!isSilent) {
                 // Show loading indicator in badge (only for non-silent detections)
                 try {
                     chrome.action.setBadgeText({ text: '⏳', tabId: tabId });
                     chrome.action.setBadgeBackgroundColor({ color: '#4A90E2', tabId: tabId }); // Blue color for loading
                 } catch (error) {
-                    console.error('Failed to set loading badge:', error);
+                    Logger.error('BADGE', 'Failed to set loading badge', error);
                 }
             }
 
@@ -2706,12 +2465,10 @@ class DetectionEngineManager {
                 });
             } catch (e) {
                 // Expected: Content script may not be ready
-                console.log('[REQUEST_DETECTION] Content script ping failed:', e.message);
             }
 
             // If script doesn't exist or doesn't respond, inject it
             if (!scriptExists) {
-                console.log('Scrapfly Background: Content script not found, injecting...');
 
                 try {
                     // Check if scripts are already injected to avoid duplicates
@@ -2736,7 +2493,6 @@ class DetectionEngineManager {
                                 files: [file]
                             });
                         }
-                        console.log('Scrapfly Background: Injected all dependencies');
                     }
 
                     // Always inject content script (it has its own duplicate prevention)
@@ -2744,12 +2500,11 @@ class DetectionEngineManager {
                         target: { tabId: tabId },
                         files: ['content.js']
                     });
-                    console.log('Scrapfly Background: Injected content script');
 
                     // Wait for scripts to initialize (longer wait for Utils to load)
                     await new Promise(resolve => setTimeout(resolve, 1000));
                 } catch (injectionError) {
-                    console.error('Scrapfly Background: Failed to inject scripts:', injectionError);
+                    Logger.error('CONTENT', 'Failed to inject scripts', injectionError);
                     sendResponse({ status: 'error', error: `Script injection failed: ${injectionError.message}` });
                     return true;
                 }
@@ -2761,14 +2516,14 @@ class DetectionEngineManager {
                 silent: isSilent  // Flag for silent background detection
             }, (response) => {
                 if (chrome.runtime.lastError) {
-                    console.error('Scrapfly Background: Failed to trigger detection:', chrome.runtime.lastError.message);
+                    Logger.error('CONTENT', 'Failed to trigger detection', new Error(chrome.runtime.lastError.message));
                     sendResponse({ status: 'error', error: chrome.runtime.lastError.message });
                 } else {
                     sendResponse({ status: 'requested', response: response });
                 }
             });
         } catch (error) {
-            console.error('Scrapfly Background: Error in REQUEST_DETECTION:', error);
+            Logger.error('DETECTION', 'Error in REQUEST_DETECTION', error);
             sendResponse({ status: 'error', error: error.message });
         }
 
@@ -2791,7 +2546,6 @@ class DetectionEngineManager {
             // PRIORITY 0: Check if extension is disabled - takes precedence over everything
             const result = await chrome.storage.local.get(['scrapfly_enabled']);
             if (result.scrapfly_enabled === false) {
-                console.log(`[TabActivation] Extension is disabled - setting orange X badge for tab ${activeInfo.tabId}`);
                 await chrome.action.setBadgeText({ text: '✕', tabId: activeInfo.tabId });
                 await chrome.action.setBadgeBackgroundColor({ color: '#f59e0b', tabId: activeInfo.tabId });
                 return; // Don't check cache or apply any other badge logic
@@ -2799,7 +2553,6 @@ class DetectionEngineManager {
 
             // PRIORITY 1: Check if this tab has an interrupted detection
             if (interruptedDetections && interruptedDetections.has(activeInfo.tabId)) {
-                console.log(`[TabActivation] Tab ${activeInfo.tabId} has interrupted detection - restoring red X badge`);
                 await chrome.action.setBadgeText({ text: '✕', tabId: activeInfo.tabId });
                 await chrome.action.setBadgeBackgroundColor({ color: '#ef4444', tabId: activeInfo.tabId }); // Red color
                 return; // Don't overwrite with normal badge
@@ -2809,14 +2562,12 @@ class DetectionEngineManager {
             // If detection is in progress or completing, the detection flow owns the badge
             // Don't interfere - prevents flickering X badge when user switches tabs mid-detection
             if (activeDetections && activeDetections.has(activeInfo.tabId)) {
-                console.log(`[TabActivation] 🔄 Detection active on tab ${activeInfo.tabId} - preserving current badge (don't interfere)`);
                 return; // Don't touch the badge - let detection flow manage it
             }
 
             // PRIORITY 1.75: Check if URL is blacklisted
             const isBlacklisted = await Utils.isUrlBlacklisted(tab.url);
             if (isBlacklisted) {
-                console.log(`[TabActivation] ⛔ Tab ${activeInfo.tabId} is blacklisted - showing orange X badge`);
                 await chrome.action.setBadgeText({ text: '✕', tabId: activeInfo.tabId });
                 await chrome.action.setBadgeBackgroundColor({ color: '#FF8C00', tabId: activeInfo.tabId }); // Orange color
                 return; // Don't check cache or show normal badge
@@ -2846,26 +2597,23 @@ class DetectionEngineManager {
                     const cacheScope = await Utils.getCacheScope();
                     const urlHash = Utils.hashUrl(tab.url, cacheScope);
                     const wasManuallyCleared = manuallyClearedCaches && manuallyClearedCaches.has(urlHash);
-                    
+
                     if (wasManuallyCleared) {
                         // Show gray X for manually cleared cache
                         await chrome.action.setBadgeText({ text: '✕', tabId: activeInfo.tabId });
                         await chrome.action.setBadgeBackgroundColor({ color: '#6c757d', tabId: activeInfo.tabId });
-                        console.log(`[TabActivation] ✕ Cache was manually cleared for tab ${activeInfo.tabId} - showing gray X`);
                     } else {
                         // Show red X to indicate reload needed
                         await chrome.action.setBadgeText({ text: '✕', tabId: activeInfo.tabId });
                         await chrome.action.setBadgeBackgroundColor({ color: '#ef4444', tabId: activeInfo.tabId });
-                        console.log(`[TabActivation] ✕ No cached data for tab ${activeInfo.tabId} - showing reload indicator`);
                     }
                 } else {
                     // Invalid URL (chrome://, about:, etc.) - clear badge
                     await chrome.action.setBadgeText({ text: '', tabId: activeInfo.tabId });
-                    console.log(`[TabActivation] Invalid URL for tab ${activeInfo.tabId} - clearing badge`);
                 }
             }
         } catch (error) {
-            console.error('Error updating badge on tab activation:', error);
+            Logger.error('TAB', 'Error updating badge on tab activation', error);
         }
     }
 
