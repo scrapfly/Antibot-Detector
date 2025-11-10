@@ -11,10 +11,10 @@
   "detection": {
     "cookie": [
       {
-        "name": "__Secure-.*",
+        "name": "_+Secure-.*",
         "nameRegex": true,
         "confidence": 85,
-        "description": "BotGuard secure cookie pattern (various implementations)",
+        "description": "BotGuard secure cookie pattern - matches _Secure- or __Secure- prefixes",
         "nameWholeWord": false,
         "nameCaseSensitive": false,
         "value": "",
@@ -25,10 +25,10 @@
         "valueScope": "all"
       },
       {
-        "name": "__Secure-[0-9]PSID",
+        "name": "_+Secure-[0-9I]?PSID.*",
         "nameRegex": true,
         "confidence": 90,
-        "description": "Google session ID with BotGuard protection",
+        "description": "Google session ID variants (PSID, PSIDCC, PSIDDRTS, PSIDTS) with optional digit/I prefix",
         "nameWholeWord": false,
         "nameCaseSensitive": false,
         "value": "",
@@ -39,10 +39,10 @@
         "valueScope": "all"
       },
       {
-        "name": "__Secure-[0-9]PAPISID",
+        "name": "_+Secure-[0-9I]?PAPISID.*",
         "nameRegex": true,
         "confidence": 90,
-        "description": "Google API session ID with BotGuard",
+        "description": "Google API session ID variants with optional digit/I prefix",
         "nameWholeWord": false,
         "nameCaseSensitive": false,
         "value": "",
