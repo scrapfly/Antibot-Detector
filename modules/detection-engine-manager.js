@@ -595,7 +595,11 @@ class DetectionEngineManager {
             });
         }
 
-        console.log(`DetectionEngineManager: Found ${cookies.length} cookies`);
+        // Log all collected cookies - visible in Service Worker console
+        Logger.cache(`🪤 Collected ${cookies.length} cookies from page`, {
+            cookies: cookies.map(c => c.name)
+        });
+
         return cookies;
     }
 
@@ -1543,6 +1547,12 @@ class DetectionEngineManager {
 
         // Check cookies patterns
         if (detector.detection?.cookie && (cookies.length > 0 || (pageData.responseCookies && pageData.responseCookies.length > 0))) {
+            // Log cookies being matched for this detector
+            Logger.cache(`🔍 Matching ${detector.id} against ${cookies.length} cookies`, {
+                requestCookies: cookies.map(c => c.name),
+                patterns: detector.detection.cookie.map(p => p.name)
+            });
+
             // OPTIMIZATION Phase 10.6: Track matched cookies and filter before searching
             const matchedCookieNames = new Set();
 
@@ -1608,6 +1618,10 @@ class DetectionEngineManager {
 
                 if (matchingCookie) {
                     matchedCookieNames.add(matchingCookie.name); // Mark as matched
+
+                    // Log successful match
+                    Logger.cache(`✅ ${detector.id}: Pattern '${cookiePattern.name}' matched cookie '${matchingCookie.name}'`);
+
                     matches.push({
                         type: 'cookie',
                         name: matchingCookie.name,
