@@ -1167,14 +1167,21 @@ class DetectionEngineManager {
         }
 
         const detections = [];
-        const { url = '', content = [], dom = [], cookies = [], headers = {}, pageHTML = '', externalContent = [], jsHooks = [], payload, payloads, networkUrls = [] } = pageData;
+        const { url = '', content = [], dom = [], cookies = [], headers = {}, pageHTML = '', externalContent = [], jsHooks = [], payload, payloads, networkUrls = [], allCookies = [] } = pageData;
+
+        // ENHANCEMENT: Use allCookies (from chrome.cookies API) if available, includes HttpOnly cookies
+        // Fallback to cookies from document.cookie for backward compatibility
+        const cookiesToMatch = allCookies.length > 0 ? allCookies : cookies;
+
         const startTime = Date.now();
 
         console.log('📊 Page Data Summary:', {
             url: url,
             contentCount: content.length,
             domCount: dom.length,
-            cookiesCount: cookies.length,
+            documentCookies: cookies.length,
+            allCookies: allCookies.length,
+            cookiesForMatching: cookiesToMatch.length,
             headersCount: Object.keys(headers).length,
             pageHTMLLength: pageHTML.length,
             externalContentCount: externalContent.length
@@ -1546,10 +1553,11 @@ class DetectionEngineManager {
         }
 
         // Check cookies patterns
-        if (detector.detection?.cookie && (cookies.length > 0 || (pageData.responseCookies && pageData.responseCookies.length > 0))) {
+        if (detector.detection?.cookie && (cookiesToMatch.length > 0 || (pageData.responseCookies && pageData.responseCookies.length > 0))) {
             // Log cookies being matched for this detector
-            Logger.cache(`🔍 Matching ${detector.id} against ${cookies.length} cookies`, {
-                requestCookies: cookies.map(c => c.name),
+            const sourceLabel = allCookies.length > 0 ? '✅ (via chrome.cookies)' : '📋 (document.cookie)';
+            Logger.cache(`🔍 Matching ${detector.id} against ${cookiesToMatch.length} cookies ${sourceLabel}`, {
+                cookies: cookiesToMatch.map(c => c.name),
                 patterns: detector.detection.cookie.map(p => p.name)
             });
 
@@ -1577,14 +1585,21 @@ class DetectionEngineManager {
                 // Build cookies array based on scope
                 const getCookiesByScope = (scope) => {
                     if (scope === 'request') {
-                        return cookies; // Request cookies from document.cookie
+                        // Use enhanced allCookies if available (from chrome.cookies API)
+                        return allCookies.length > 0 ? allCookies : cookies;
                     } else if (scope === 'response') {
                         return pageData.responseCookies || [];
                     } else if (scope === 'all') {
-                        return [...cookies, ...(pageData.responseCookies || [])];
+                        // Merge all available cookie sources
+                        // allCookies includes HttpOnly, Secure, and all domain cookies
+                        if (allCookies.length > 0) {
+                            return [...allCookies, ...(pageData.responseCookies || [])];
+                        } else {
+                            return [...cookies, ...(pageData.responseCookies || [])];
+                        }
                     } else {
                         // Default fallback (shouldn't happen)
-                        return cookies;
+                        return allCookies.length > 0 ? allCookies : cookies;
                     }
                 };
 

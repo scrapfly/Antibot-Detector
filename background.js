@@ -1305,6 +1305,36 @@ async function processDetectionData(message, sender) {
 
     // Note: Request cookies are already in pageData.cookies (from document.cookie in content script)
 
+    // ENHANCEMENT: Collect ALL cookies via chrome.cookies API (includes HttpOnly cookies)
+    // This supplements document.cookie which cannot access HttpOnly, Secure, or domain-specific cookies
+    try {
+        const allCookies = await chrome.cookies.getAll({ url: pageData.url });
+
+        // Convert to same format as extractCookies() from content script
+        pageData.allCookies = allCookies.map(cookie => ({
+            name: cookie.name,
+            value: cookie.value.substring(0, 100), // Match performance limit
+            domain: cookie.domain,
+            httpOnly: cookie.httpOnly,
+            secure: cookie.secure,
+            sameSite: cookie.sameSite
+        }));
+
+        // Log enhancement details
+        if (typeof Logger !== 'undefined') {
+            Logger.cache(`🪤 Enhanced cookie collection via chrome.cookies API`, {
+                documentCookies: pageData.cookies?.length || 0,
+                allCookies: pageData.allCookies.length,
+                httpOnlyCount: pageData.allCookies.filter(c => c.httpOnly).length,
+                secureCount: pageData.allCookies.filter(c => c.secure).length
+            });
+        }
+    } catch (error) {
+        if (typeof Logger !== 'undefined') {
+            Logger.error('CACHE', '❌ Failed to get cookies via chrome.cookies API', error);
+        }
+    }
+
     // Run detection analysis immediately
     let detectionResults = [];
     try {
