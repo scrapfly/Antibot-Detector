@@ -1222,7 +1222,7 @@ class DetectionEngineManager {
         const EARLY_EXIT_COUNT = 5; // Stop after 5 high-confidence detections
 
         for (const { category, detectorName, detector } of detectorPriorities) {
-            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, pageHTML, externalContent, payload, payloads, networkUrls });
+            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, pageHTML, externalContent, payload, payloads, networkUrls, allCookies, responseCookies });
             if (detection.detected) {
                 console.log(`    ✅ DETECTED: ${detectorName} (confidence: ${detection.confidence}%)`);
                 const detectionObj = {
@@ -1343,8 +1343,11 @@ class DetectionEngineManager {
      * @returns {object} Detection result with confidence and matches
      */
     runDetector(detector, pageData) {
-        const { url, content, dom, cookies = [], headers = {}, pageHTML = '', externalContent = [] } = pageData;
+        const { url, content, dom, cookies = [], headers = {}, pageHTML = '', externalContent = [], allCookies = [], responseCookies = [] } = pageData;
         const matches = [];
+
+        // ENHANCEMENT: Use allCookies (from chrome.cookies API) if available, includes HttpOnly cookies
+        const cookiesToMatch = allCookies.length > 0 ? allCookies : cookies;
 
         if (detector.detection?.url) {
             // Helper function to extract pathname from URL
@@ -1555,7 +1558,7 @@ class DetectionEngineManager {
         }
 
         // Check cookies patterns
-        if (detector.detection?.cookie && (cookiesToMatch.length > 0 || (pageData.responseCookies && pageData.responseCookies.length > 0))) {
+        if (detector.detection?.cookie && (cookiesToMatch.length > 0 || (responseCookies && responseCookies.length > 0))) {
             // Log cookies being matched for this detector
             if (typeof Logger !== 'undefined') {
                 const sourceLabel = allCookies.length > 0 ? '✅ (via chrome.cookies)' : '📋 (document.cookie)';
@@ -1592,14 +1595,14 @@ class DetectionEngineManager {
                         // Use enhanced allCookies if available (from chrome.cookies API)
                         return allCookies.length > 0 ? allCookies : cookies;
                     } else if (scope === 'response') {
-                        return pageData.responseCookies || [];
+                        return responseCookies || [];
                     } else if (scope === 'all') {
                         // Merge all available cookie sources
                         // allCookies includes HttpOnly, Secure, and all domain cookies
                         if (allCookies.length > 0) {
-                            return [...allCookies, ...(pageData.responseCookies || [])];
+                            return [...allCookies, ...(responseCookies || [])];
                         } else {
-                            return [...cookies, ...(pageData.responseCookies || [])];
+                            return [...cookies, ...(responseCookies || [])];
                         }
                     } else {
                         // Default fallback (shouldn't happen)
