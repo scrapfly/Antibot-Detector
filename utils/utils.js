@@ -102,8 +102,6 @@ class URLHashCache {
       this.cache.delete(key);
       this.accessSet.delete(key); // Keep set in sync
     }
-
-    console.log(`[URLHashCache] Evicted ${keysToEvict.length} LRU entries (${this.cache.size}/${this.maxSize} remaining)`);
   }
 
   /**
@@ -177,8 +175,6 @@ class Utils {
           break;
       }
 
-      console.log(`[DEBUG hashUrl] Input: ${url.substring(0, 50)}... | Scope: ${scope} | Normalized: ${normalizedUrl}`);
-
       hash = 0;
       for (let i = 0; i < normalizedUrl.length; i++) {
         const char = normalizedUrl.charCodeAt(i);
@@ -186,7 +182,6 @@ class Utils {
         hash = hash & hash; // Convert to 32-bit integer
       }
     } catch (e) {
-      console.log(`[DEBUG hashUrl] URL parse error: ${e.message} - falling back to original URL`);
       // Fallback to original URL if parsing fails
       hash = 0;
       for (let i = 0; i < url.length; i++) {
@@ -197,8 +192,6 @@ class Utils {
     }
 
     const hashString = Math.abs(hash).toString(36);
-
-    console.log(`[DEBUG hashUrl] Calculated hash: ${hashString}`);
 
     // OPTIMIZATION Phase 1: LRU cache automatically handles eviction
     Utils.urlHashCache.set(cacheKey, hashString);
@@ -254,12 +247,10 @@ class Utils {
 
   /**
    * Invalidate settings cache (call when settings are updated)
-   * OPTIMIZATION Phase 9A.7: Added logging for debugging
    */
   static invalidateSettingsCache() {
     Utils.settingsCache = null;
     Utils.settingsCacheTime = 0;
-    console.log('[Utils] Settings cache invalidated - next access will reload from storage');
   }
 
   /**
@@ -268,7 +259,6 @@ class Utils {
   static async clearDetectionCache() {
     try {
       await chrome.storage.local.remove('scrapfly_detection_storage');
-      console.log('[Utils] Detection cache cleared from storage');
       return true;
     } catch (error) {
       console.error('[Utils] Error clearing detection cache:', error);
@@ -282,7 +272,6 @@ class Utils {
   static clearUrlHashCache() {
     if (Utils.urlHashCache) {
       Utils.urlHashCache.clear();
-      console.log('[Utils] URL hash cache cleared (in-memory)');
     }
   }
 
@@ -302,17 +291,11 @@ class Utils {
     // Clean expired entries every 5 minutes
     Utils._jsonCacheCleanupTimer = setInterval(() => {
       const now = Date.now();
-      let cleaned = 0;
 
       for (const [key, cached] of Utils.parsedObjectCache.entries()) {
         if (now - cached.timestamp >= Utils.JSON_CACHE_TTL) {
           Utils.parsedObjectCache.delete(key);
-          cleaned++;
         }
-      }
-
-      if (cleaned > 0) {
-        console.log(`[JSON Cache] Cleaned ${cleaned} expired entries (${Utils.parsedObjectCache.size} remaining)`);
       }
     }, 300000); // 5 minutes
   }
@@ -447,7 +430,6 @@ class Utils {
     const now = Date.now();
 
     if (lastRequest && (now - lastRequest) < threshold) {
-      console.log(`Scrapfly Background: Skipping duplicate detection for tab ${tabId} (last request ${now - lastRequest}ms ago)`);
       return true;
     }
 
@@ -537,8 +519,6 @@ class Utils {
     if (cleanup.hasCleanedUp) return false;
     cleanup.hasCleanedUp = true;
 
-    console.log('Cleaning up orphaned content script');
-
     // Clear ALL intervals and timeouts
     if (cleanup.contextCheckInterval) {
       clearInterval(cleanup.contextCheckInterval);
@@ -572,7 +552,6 @@ class Utils {
       window.__scrapflyHooksInstalled = false;
     }
 
-    console.log('Cleanup complete - orphaned script removed');
     return true;
   }
 
@@ -604,8 +583,6 @@ class Utils {
           clearInterval(state.contextCheckInterval);
           state.contextCheckInterval = null;
         }
-      } else {
-        console.log('Scrapfly Content Script: Context check failed, will retry...');
       }
     } else {
       // Reset failure counter on successful check
@@ -620,11 +597,8 @@ class Utils {
   static async notifyPageLoad(context) {
     const { detectionEngine, isExtensionContextValid, cleanupOrphanedScript, triggerSource = 'page_load' } = context;
 
-    console.log(`Scrapfly Content Script: Notifying page load (trigger: ${triggerSource})...`);
-
     // Check if extension context is still valid
     if (!isExtensionContextValid()) {
-      console.log('Scrapfly Content Script: Extension context invalidated');
       cleanupOrphanedScript();
       return;
     }
@@ -640,7 +614,6 @@ class Utils {
 
     // Check if we should notify (avoid too frequent notifications)
     if (!detectionEngine.shouldRunDetection(debounceTime)) {
-      console.log(`Scrapfly Content Script: Skipping notification (too soon after last detection, need ${debounceTime}ms gap)`);
       return;
     }
 
@@ -658,8 +631,6 @@ class Utils {
             console.warn('Scrapfly Content Script: Extension was reloaded');
             cleanupOrphanedScript();
           }
-        } else {
-          console.log('Scrapfly Content Script: Page load notification sent');
         }
       });
     } catch (error) {
@@ -677,11 +648,8 @@ class Utils {
   static async collectAndSendData(context) {
     const { detectionEngine, isExtensionContextValid, cleanupOrphanedScript } = context;
 
-    console.log('Scrapfly Content Script: Collecting and sending page data...');
-
     // Check if extension context is still valid
     if (!isExtensionContextValid()) {
-      console.log('Scrapfly Content Script: Extension context invalidated');
       cleanupOrphanedScript();
       return;
     }
@@ -690,28 +658,32 @@ class Utils {
       // Collect page data (async - fetches external resources)
       const pageData = await detectionEngine.collectPageData();
 
-      // OPTIMIZATION: Compress large pageHTML to reduce message size
-      const originalHTMLLength = pageData.pageHTML?.length || 0;
-      const compressedHTML = Utils.compressText(pageData.pageHTML);
-      pageData.pageHTML = compressedHTML.data;
-      pageData._htmlCompressed = compressedHTML.compressed;
-      pageData._htmlTruncated = compressedHTML.truncated;
+      // CRITICAL: Ensure all getters are evaluated and converted to plain values
+      // This prevents "Could not serialize message" errors from lazy getters
+      const plainPageData = {
+        url: pageData.url,
+        cookies: pageData.cookies,          // Triggers lazy getter evaluation
+        content: pageData.content,          // Triggers lazy getter evaluation
+        dom: pageData.dom,                  // Triggers lazy getter evaluation
+        headers: pageData.headers,
+        jsHooks: pageData.jsHooks,
+        payload: pageData.payload,
+        payloads: pageData.payloads,
+        networkUrls: pageData.networkUrls,
+        externalContent: pageData.externalContent,
+        responseCookies: pageData.responseCookies,
+        requestHeaders: pageData.requestHeaders,
+        pageHTML: pageData.pageHTML         // Will be compressed below
+      };
 
-      console.log('📤 Content Script: Sending pageData:', {
-        hasPageHTML: !!pageData.pageHTML,
-        pageHTMLLength: pageData.pageHTML?.length || 0,
-        originalHTMLLength: originalHTMLLength,
-        compressed: pageData._htmlCompressed,
-        truncated: pageData._htmlTruncated,
-        contentCount: pageData.content?.length || 0,
-        externalContentCount: pageData.externalContent?.length || 0,
-        cookiesCount: pageData.cookies?.length || 0,
-        domCount: pageData.dom?.length || 0
-      });
+      // OPTIMIZATION: Compress large pageHTML to reduce message size
+      const compressedHTML = Utils.compressText(plainPageData.pageHTML);
+      plainPageData.pageHTML = compressedHTML.data;
+      plainPageData._htmlCompressed = compressedHTML.compressed;
+      plainPageData._htmlTruncated = compressedHTML.truncated;
 
       // Check again before sending
       if (!isExtensionContextValid()) {
-        console.log('Scrapfly Content Script: Extension context lost before sending data');
         cleanupOrphanedScript();
         return;
       }
@@ -720,7 +692,7 @@ class Utils {
       try {
         chrome.runtime.sendMessage({
           type: 'DETECTION_DATA',
-          data: pageData,
+          data: plainPageData,
           tabId: null, // Will be filled by background script
           timestamp: Date.now()
         }, (response) => {
@@ -730,20 +702,17 @@ class Utils {
 
             // Check if it's a context invalidation
             if (errorMsg.includes('Extension context invalidated')) {
-              console.log('Scrapfly Content Script: Extension was reloaded during detection');
               cleanupOrphanedScript();
             }
-            // Service worker not available - don't log as error (expected on reload)
+            // Service worker not available - expected on reload, no action needed
             else if (errorMsg.includes('Could not establish connection') ||
                      errorMsg.includes('Receiving end does not exist')) {
-              console.debug('Scrapfly Content Script: Service worker not available (expected on reload)');
+              // Silent - expected during reload
             }
             // Other errors - log as warning not error
             else {
               console.warn('Scrapfly Content Script: Error sending detection data:', chrome.runtime.lastError);
             }
-          } else {
-            console.log('Scrapfly Content Script: Detection data sent successfully', response);
           }
         });
       } catch (sendError) {
@@ -751,13 +720,12 @@ class Utils {
         const errorMsg = sendError.message || '';
 
         if (errorMsg.includes('Extension context invalidated')) {
-          console.log('Scrapfly Content Script: Extension context invalidated, cannot send data');
           cleanupOrphanedScript();
         }
-        // Service worker not available - don't log as error (expected on reload)
+        // Service worker not available - expected on reload, no action needed
         else if (errorMsg.includes('Could not establish connection') ||
                  errorMsg.includes('Receiving end does not exist')) {
-          console.debug('Scrapfly Content Script: Service worker not available');
+          // Silent - expected during reload
         }
         else {
           console.warn('Scrapfly Content Script: Failed to send message:', sendError);
@@ -766,7 +734,6 @@ class Utils {
     } catch (error) {
       // Check if it's a context invalidation error
       if (error.message && error.message.includes('Extension context invalidated')) {
-        console.log('Scrapfly Content Script: Extension context invalidated during detection');
         cleanupOrphanedScript();
       } else {
         console.error('Scrapfly Content Script: Error during detection:', error);
@@ -930,16 +897,7 @@ class Utils {
     try {
       const settings = await this.getSettings();
 
-      // FIX: Add detailed logging to debug settings structure issues
       const scope = settings.cacheScope || settings.detection?.cacheScope || 'path';
-
-      console.log('[getCacheScope] Settings structure:', {
-        hasCacheScope: !!settings.cacheScope,
-        cacheScope: settings.cacheScope,
-        hasDetection: !!settings.detection,
-        detectionCacheScope: settings.detection?.cacheScope,
-        finalScope: scope
-      });
 
       // Validate scope value
       if (!['domain', 'path', 'full'].includes(scope)) {
