@@ -6,7 +6,6 @@ What's New in v2.0
 - **Complete `console.*` → `Logger.*` migration**
 - 1,659 calls across 38 files (100% coverage)
 - Implement centralized Logger system with context-aware routing (background / content / main world)
-- 100% `CLAUDE.md` compliance – professional, unified logging infrastructure
 
 ### ⚡ Performance & Cache Optimizations
 - Change default cache scope from `path` to `domain` (more efficient caching)
@@ -33,7 +32,6 @@ What's New in v2.0
 ### UI/UX Improvements
 - Enable **click-to-copy** for method badges in Hidden Detections modal
 - Enhance HTTP method badges with modern design
-- Increase Detection tab pagination: 2 → **10 items per page**
 - Increase History tab pagination: 3 → **20 items per page**
 - Add 3-step Window Properties Helper with condition selection
 - Add creator credits to Settings sections
