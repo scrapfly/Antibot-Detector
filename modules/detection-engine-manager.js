@@ -165,7 +165,7 @@ class DetectionEngineManager {
         // Invalidate cache when detectors change (setDetectors)
         this.analyzedMethodsCache = null;
         this.analyzedMethodsCacheTime = 0;
-        this.ANALYSIS_CACHE_TTL = 60000; // Cache for 1 minute
+        this.ANALYSIS_CACHE_TTL = 300000; // Cache for 5 minutes (detectors rarely change)
     }
 
     /**
@@ -278,7 +278,7 @@ class DetectionEngineManager {
      */
     analyzeUsedMethods() {
         // OPTIMIZATION QUICK WIN #8: Cache analyzeUsedMethods results
-        // Check if cache is still valid (TTL: 1 minute)
+        // Check if cache is still valid (TTL: 5 minutes, invalidated when detectors change)
         const now = Date.now();
         if (this.analyzedMethodsCache && (now - this.analyzedMethodsCacheTime) < this.ANALYSIS_CACHE_TTL) {
             return this.analyzedMethodsCache;
@@ -327,7 +327,7 @@ class DetectionEngineManager {
             }
         }
 
-        // Cache the result for 1 minute
+        // Cache the result for 5 minutes (automatically invalidated when detectors change)
         this.analyzedMethodsCache = usedMethods;
         this.analyzedMethodsCacheTime = now;
 
@@ -1010,6 +1010,9 @@ class DetectionEngineManager {
      */
     setDetectors(detectors) {
         this.detectors = detectors;
+        // Clear analysis cache when detectors change (force re-analysis on next call)
+        this.analyzedMethodsCache = null;
+        this.analyzedMethodsCacheTime = 0;
         // Pre-compute detector priorities immediately
         this._precomputePriorities();
     }
