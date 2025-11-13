@@ -1,5 +1,5 @@
-## v1.9
-🎉 What's New in v1.9
+## v2.0
+🎉 What's New in v2.0
 ### 🔄 Major Refactor: Complete Logger System Migration
 - **Complete console.* to Logger.* migration** - 1,659 calls across 38 files (100% coverage)
 - Implement centralized Logger system with context-aware routing (background/content/main world)
