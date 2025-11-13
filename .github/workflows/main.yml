@@ -1,0 +1,144 @@
+name: Build and Release Antibot-Detector
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. v1.3.0)'
+        required: true
+        type: string
+      release_title:
+        description: 'Release title (e.g. Antibot-Detector v1.3.0 - Stealth Update)'
+        required: false
+        type: string
+      release_notes:
+        description: 'Release description (Markdown supported)'
+        required: false
+        type: string
+        default: |
+          ## What's Changed
+          - Add your bullet points here
+          - 
+
+          ## Installation
+          ```
+          # Download ZIP from Releases
+          # Unzip and load as unpacked extension in Chrome (chrome://extensions/)
+          ```
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      TAG_NAME: ${{ steps.set_tag.outputs.TAG_NAME }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve tag name
+        id: resolve_tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "TAG_NAME=${{ inputs.version }}" >> $GITHUB_ENV
+          else
+            echo "TAG_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
+          fi
+
+      - name: Set output TAG_NAME
+        id: set_tag
+        run: echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_OUTPUT
+
+      - name: Create and push tag if missing
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          if ! git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git tag "$TAG_NAME"
+            git push origin "$TAG_NAME"
+          else
+            echo "Tag $TAG_NAME already exists."
+          fi
+
+      - name: Create artifact directory
+        run: mkdir -p artifact
+
+      - name: Package extension
+        run: |
+          cd core
+          zip -r "../artifact/antibot-detector-${TAG_NAME}.zip" .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: antibot-detector
+          path: artifact/antibot-detector-${{ env.TAG_NAME }}.zip
+          if-no-files-found: error
+          retention-days: 30
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set TAG_NAME
+        run: echo "TAG_NAME=${{ needs.build.outputs.TAG_NAME }}" >> $GITHUB_ENV
+
+      - name: Download artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: antibot-detector
+
+      - name: Generate auto changelog (only on tag push)
+        id: changelog
+        if: github.event_name == 'push'
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 ${{ github.ref_name }}^ 2>/dev/null || echo "")
+          echo "## What's Changed in ${{ env.TAG_NAME }}" > /tmp/CHANGELOG.md
+          if [ -n "$PREV_TAG" ]; then
+            echo "_Changes since [$PREV_TAG](https://github.com/scrapfly/Antibot-Detector/compare/$PREV_TAG...${{ env.TAG_NAME }})_" >> /tmp/CHANGELOG.md
+            git log $PREV_TAG..HEAD --pretty=format:"- %h %s" --no-merges --reverse >> /tmp/CHANGELOG.md || echo "- No new commits." >> /tmp/CHANGELOG.md
+          else
+            echo "- Initial release." >> /tmp/CHANGELOG.md
+          fi
+          echo >> /tmp/CHANGELOG.md
+          echo "## Installation" >> /tmp/CHANGELOG.md
+          echo '```' >> /tmp/CHANGELOG.md
+          echo '# Download from Releases → Load as unpacked extension in Chrome' >> /tmp/CHANGELOG.md
+          echo '```' >> /tmp/CHANGELOG.md
+
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          cat /tmp/CHANGELOG.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          name: >-
+            ${{ 
+              github.event.inputs.release_title 
+              || format('Antibot-Detector {0}', env.TAG_NAME) 
+            }}
+          body: |
+            ${{ 
+              github.event.inputs.release_notes 
+              || steps.changelog.outputs.body 
+              || 'No release notes provided.' 
+            }}
+          files: |
+            antibot-detector-${{ env.TAG_NAME }}.zip
+          draft: false
+          prerelease: false
+          overwrite_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
