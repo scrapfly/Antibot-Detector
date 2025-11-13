@@ -39,7 +39,7 @@ class Settings {
       detection: {
         cacheDuration: 12,
         cacheUnit: 'hours',
-        cacheScope: 'path',
+        cacheScope: 'domain',
         blacklistedDomains: []
       },
 
@@ -192,7 +192,7 @@ class Settings {
         if (result.scrapfly_settings) {
           const savedSettings = JSON.parse(result.scrapfly_settings);
           const loadedSettings = savedSettings.settings || savedSettings;
-          oldCacheScope = loadedSettings.cacheScope || loadedSettings.detection?.cacheScope || 'path';
+          oldCacheScope = loadedSettings.cacheScope || loadedSettings.detection?.cacheScope || 'domain';
         }
       } catch (error) {
         console.warn('Could not read old cache scope:', error);
@@ -210,7 +210,7 @@ class Settings {
       console.log('Settings saved:', this.settings);
 
       // Check if cache scope changed
-      const newCacheScope = this.settings.cacheScope || this.settings.detection?.cacheScope || 'path';
+      const newCacheScope = this.settings.cacheScope || this.settings.detection?.cacheScope || 'domain';
       const cacheScopeChanged = oldCacheScope && oldCacheScope !== newCacheScope;
 
       if (cacheScopeChanged) {
@@ -358,7 +358,7 @@ class Settings {
     if (this.settings.detection) {
       const cacheScopeSelect = document.querySelector('#cacheScope');
       if (cacheScopeSelect) {
-        cacheScopeSelect.value = this.settings.detection.cacheScope || 'path';
+        cacheScopeSelect.value = this.settings.detection.cacheScope || 'domain';
         console.log('Cache scope loaded:', this.settings.detection.cacheScope);
       }
 

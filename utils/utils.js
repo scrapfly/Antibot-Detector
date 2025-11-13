@@ -838,12 +838,12 @@ class Utils {
     try {
       const settings = await this.getSettings();
 
-      const scope = settings.cacheScope || settings.detection?.cacheScope || 'path';
+      const scope = settings.cacheScope || settings.detection?.cacheScope || 'domain';
 
       // Validate scope value
       if (!['domain', 'path', 'full'].includes(scope)) {
-        console.warn(`[getCacheScope] Invalid cache scope: ${scope}, defaulting to 'path'`);
-        return 'path';
+        console.warn(`[getCacheScope] Invalid cache scope: ${scope}, defaulting to 'domain'`);
+        return 'domain';
       }
 
       return scope;
