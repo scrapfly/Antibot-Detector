@@ -150,9 +150,6 @@ class DetectionEngineManager {
     // Shared pattern cache for all instances
     static patternCache = new PatternCache(500);
 
-    // Debug mode flag - set to true to enable verbose console logging
-    static DEBUG_MODE = false;
-
     constructor() {
         this.detectionData = null;
         this.lastDetectionTime = null;
@@ -3160,19 +3157,15 @@ class DetectionEngineManager {
             const enhancedDetectionSettings = settingsData.detection?.enhancedDetection;
             const enhancedSettings = DetectionEngineManager.buildEnhancedSettings(enhancedDetectionSettings);
 
-            if (DetectionEngineManager.DEBUG_MODE) {
-                console.log('[Enhanced Detection] Settings loaded:', enhancedSettings);
-            }
+            Logger.debug('DETECTION', '[Enhanced Detection] Settings loaded', enhancedSettings);
 
             // IMPORTANT: Always send configuration to MAIN world, even if empty
             // This ensures MAIN world sends completion signals (JS_HOOKS_COMPLETE, WINDOW_PROPS_COMPLETE)
             // Otherwise background waits forever for these signals and detection never finalizes
-            if (DetectionEngineManager.DEBUG_MODE) {
-                if (hookDefinitions.length === 0 && windowPropertyDefinitions.length === 0) {
-                    console.log('[Content Script] No JS hooks or window properties defined - sending empty config to MAIN world');
-                } else {
-                    console.log(`[Content Script] Sending ${hookDefinitions.length} hook detectors and ${windowPropertyDefinitions.length} window properties to MAIN world (debug: ${debugMode}, enhanced: ${enhancedSettings.enabled})...`);
-                }
+            if (hookDefinitions.length === 0 && windowPropertyDefinitions.length === 0) {
+                Logger.debug('HOOKS', 'No JS hooks or window properties defined - sending empty config to MAIN world');
+            } else {
+                Logger.debug('HOOKS', `Sending ${hookDefinitions.length} hook detectors and ${windowPropertyDefinitions.length} window properties to MAIN world`, { debugMode, enhanced: enhancedSettings.enabled });
             }
 
             // Send both hooks AND window properties to MAIN world via CustomEvent
@@ -3287,9 +3280,7 @@ class DetectionEngineManager {
 
             // OPTIMIZATION Phase 10.4: Immediate flush on overflow to prevent memory leak
             if (hookBatch.length > HOOK_BATCH_EMERGENCY_SIZE) {
-                if (DetectionEngineManager.DEBUG_MODE) {
-                    console.warn(`[Content Script] ⚠️ Hook batch overflow (${hookBatch.length} hooks), forcing immediate flush`);
-                }
+                Logger.warn('HOOKS', `⚠️ Hook batch overflow (${hookBatch.length} hooks), forcing immediate flush`);
                 // Clear existing timeout to prevent double flush
                 if (hookBatchTimeout) {
                     clearTimeout(hookBatchTimeout);

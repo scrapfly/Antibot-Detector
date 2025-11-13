@@ -111,7 +111,9 @@ function isExtensionContextValid() {
  */
 function cleanupOrphanedScript() {
     if (typeof Utils === 'undefined') {
-        console.warn('Scrapfly Content Script: Utils not loaded, skipping cleanup');
+        if (typeof Logger !== 'undefined') {
+            Logger.warn('CONTENT', 'Utils not loaded, skipping cleanup');
+        }
         return;
     }
     return Utils.cleanupOrphanedScript({
@@ -170,7 +172,9 @@ async function dispatchReadyEvent() {
  */
 async function notifyPageLoad(triggerSource = 'page_load') {
     if (typeof Utils === 'undefined') {
-        console.warn('Scrapfly Content Script: Utils not loaded, skipping page load notification');
+        if (typeof Logger !== 'undefined') {
+            Logger.warn('CONTENT', 'Utils not loaded, skipping page load notification');
+        }
         return;
     }
     return Utils.notifyPageLoad({
@@ -188,7 +192,9 @@ async function notifyPageLoad(triggerSource = 'page_load') {
 async function collectAndSendData() {
     Logger.debug('CONTENT', 'collectAndSendData() called');
     if (typeof Utils === 'undefined') {
-        console.warn('[DEBUG] Utils not loaded, skipping data collection');
+        if (typeof Logger !== 'undefined') {
+            Logger.debug('CONTENT', 'Utils not loaded, skipping data collection');
+        }
         return;
     }
     Logger.debug('CONTENT', 'Calling Utils.collectAndSendData()...');
@@ -288,15 +294,15 @@ function setupDetectionTriggers() {
                 // BULLETPROOF: Ensure Utils is loaded before calling collectAndSendData
                 if (typeof Utils === 'undefined') {
                     Logger.debug('CONTENT', 'Utils not loaded yet, will retry in 500ms');
-                    console.error('Scrapfly Content Script: ❌ Utils not loaded yet, waiting and retrying...');
+                    Logger.error('CONTENT', '❌ Utils not loaded yet, waiting and retrying...');
                     // Retry after Utils loads
                     setTimeout(() => {
                         if (typeof Utils !== 'undefined') {
                             Logger.content('Utils now loaded, collecting data...');
                             collectAndSendData();
                         } else {
-                            console.error('[DEBUG] Utils still not loaded after retry, collection failed');
-                            console.error('Scrapfly Content Script: ❌ Utils still not loaded, collection failed');
+                            Logger.debug('CONTENT', 'Utils still not loaded after retry, collection failed');
+                            Logger.error('CONTENT', '❌ Utils still not loaded, collection failed');
                         }
                     }, 500);
                 } else {
@@ -320,14 +326,14 @@ function setupDetectionTriggers() {
 
                 // BULLETPROOF: Ensure Utils is loaded before calling collectAndSendData
                 if (typeof Utils === 'undefined') {
-                    console.error('Scrapfly Content Script: ❌ Utils not loaded yet, waiting and retrying...');
+                    Logger.error('CONTENT', '❌ Utils not loaded yet, waiting and retrying...');
                     // Retry after Utils loads
                     setTimeout(() => {
                         if (typeof Utils !== 'undefined') {
                             Logger.content('Utils now loaded, collecting data...');
                             collectAndSendData();
                         } else {
-                            console.error('Scrapfly Content Script: ❌ Utils still not loaded, detection failed');
+                            Logger.error('CONTENT', '❌ Utils still not loaded, detection failed');
                         }
                     }, 500);
                 } else {
@@ -428,7 +434,7 @@ function setupDetectionTriggers() {
                         sitekey: sitekey
                     });
                 } catch (error) {
-                    console.error('[Content] ❌ Error extracting sitekey:', error);
+                    Logger.error('CONTENT', '❌ Error extracting sitekey', error);
                     sendResponse({
                         sitekey: null,
                         error: error.message
@@ -450,7 +456,9 @@ function setupDetectionTriggers() {
  */
 function performContextCheck() {
     if (typeof Utils === 'undefined') {
-        console.warn('Scrapfly Content Script: Utils not loaded, skipping context check');
+        if (typeof Logger !== 'undefined') {
+            Logger.warn('CONTENT', 'Utils not loaded, skipping context check');
+        }
         return;
     }
     return Utils.performContextCheck(
@@ -490,7 +498,7 @@ async function initialize() {
             return;
         }
     } catch (error) {
-        console.error('Scrapfly Content Script: Failed to check enabled state:', error);
+        Logger.error('CONTENT', 'Failed to check enabled state', error);
         // Continue with initialization on error (fail-safe)
     }
 
@@ -575,7 +583,7 @@ async function initialize() {
     }
 
     if (!detectorsLoaded) {
-        console.warn('[C.1] ⚠️ Failed to load detectors after all retries, will collect all data types as fallback');
+        Logger.warn('CONTENT', '⚠️ Failed to load detectors after all retries, will collect all data types as fallback');
     }
 
     // Note: JS hooks are installed by install-hooks.js at document_start (before this script runs)
@@ -646,7 +654,7 @@ async function initialize() {
             }
         }
     } catch (error) {
-        console.error('[Cache Early Check] Error during cache check, proceeding with detection:', error.message);
+        Logger.error('CACHE', 'Error during cache check, proceeding with detection', error);
         // If cache check fails, proceed with normal detection (safe fallback)
     }
 
@@ -666,10 +674,10 @@ async function initialize() {
                 if (chrome.runtime.lastError) {
                     if (chrome.runtime.lastError.message &&
                         chrome.runtime.lastError.message.includes('Extension context invalidated')) {
-                        console.warn('Scrapfly Content Script: Extension was reloaded before initialization completed');
+                        Logger.warn('CONTENT', 'Extension was reloaded before initialization completed');
                         // Don't cleanup immediately, might be temporary
                     } else {
-                        console.error('Scrapfly Content Script: Failed to notify background:', chrome.runtime.lastError);
+                        Logger.error('CONTENT', 'Failed to notify background', chrome.runtime.lastError);
                     }
                 } else {
                     Logger.content('Successfully notified background of readiness');
@@ -677,14 +685,14 @@ async function initialize() {
             });
         } catch (error) {
             if (error.message && error.message.includes('Extension context invalidated')) {
-                console.warn('Scrapfly Content Script: Extension context invalidated during initialization');
+                Logger.warn('CONTENT', 'Extension context invalidated during initialization');
                 // Don't cleanup immediately, might be temporary
             } else {
-                console.error('Scrapfly Content Script: Error notifying background:', error);
+                Logger.error('CONTENT', 'Error notifying background', error);
             }
         }
     } else {
-        console.warn('Scrapfly Content Script: Extension context not available at initialization');
+        Logger.warn('CONTENT', 'Extension context not available at initialization');
     }
 }
 
