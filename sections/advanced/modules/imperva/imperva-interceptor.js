@@ -17,11 +17,11 @@ var showNotification = self.BaseInterceptorHelpers?.showNotification;
  */
 function impervaInitializeInterceptor(captureState) {
     if (impervaCaptureStateRef) {
-        console.log('[IMPERVA-CAPTURE] Interceptor already initialized, skipping');
+        Logger.network('[IMPERVA-CAPTURE] Interceptor already initialized, skipping');
         return;
     }
     impervaCaptureStateRef = captureState;
-    console.log('[IMPERVA-CAPTURE] Interceptor initialized with captureState');
+    Logger.network('[IMPERVA-CAPTURE] Interceptor initialized with captureState');
 }
 
 /**
@@ -31,14 +31,14 @@ function impervaInitializeInterceptor(captureState) {
  * @returns {object} Status object
  */
 function impervaStartCapture(tabId, captureUrl) {
-    console.log('[IMPERVA-CAPTURE] ========== START CAPTURE ==========');
-    console.log('[IMPERVA-CAPTURE] 🎯 Tab ID:', tabId);
-    console.log('[IMPERVA-CAPTURE] 📍 Capture URL:', captureUrl);
-    console.log('[IMPERVA-CAPTURE] ⏱️ Started at:', new Date().toISOString());
-    console.log('[IMPERVA-CAPTURE] ⏰ Auto-stop in: 60 seconds');
-    console.log('[IMPERVA-CAPTURE] 🎧 Listening for: Imperva cookies and endpoints');
-    console.log('[IMPERVA-CAPTURE] ⚠️ Waiting for page reload before capturing');
-    console.log('[IMPERVA-CAPTURE] ========================================');
+    Logger.network('[IMPERVA-CAPTURE] ========== START CAPTURE ==========');
+    Logger.network('[IMPERVA-CAPTURE] 🎯 Tab ID:', tabId);
+    Logger.network('[IMPERVA-CAPTURE] 📍 Capture URL:', captureUrl);
+    Logger.network('[IMPERVA-CAPTURE] ⏱️ Started at:', new Date().toISOString());
+    Logger.network('[IMPERVA-CAPTURE] ⏰ Auto-stop in: 60 seconds');
+    Logger.network('[IMPERVA-CAPTURE] 🎧 Listening for: Imperva cookies and endpoints');
+    Logger.network('[IMPERVA-CAPTURE] ⚠️ Waiting for page reload before capturing');
+    Logger.network('[IMPERVA-CAPTURE] ========================================');
 
     if (!impervaInterceptionListener) {
         setupImpervaInterceptor();
@@ -68,7 +68,7 @@ function impervaStartCapture(tabId, captureUrl) {
     // Auto-stop after 60 seconds
     const state = impervaCaptureStateRef.get(tabId);
     state.timeout = setTimeout(() => {
-        console.log(`[IMPERVA-CAPTURE] ⏰ Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
+        Logger.network(`[IMPERVA-CAPTURE] ⏰ Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
         impervaStopCapture(tabId);
     }, 60000);
 
@@ -80,7 +80,7 @@ function impervaStartCapture(tabId, captureUrl) {
             message: '🔄 Please reload the page to start monitoring',
             duration: 60000 // Show for 60 seconds (until auto-stop)
         }).catch(err => {
-            console.error('[IMPERVA-CAPTURE] Failed to show notification:', err);
+            Logger.error('NETWORK', '[IMPERVA-CAPTURE] Failed to show notification:', err);
         });
     }
 
@@ -94,12 +94,12 @@ function impervaStartCapture(tabId, captureUrl) {
  * @returns {object} Status object
  */
 function impervaStartExtraction(tabId, url) {
-    console.log('[IMPERVA-EXTRACT] ========== START EXTRACTION ==========');
-    console.log('[IMPERVA-EXTRACT] 🎯 Tab ID:', tabId);
-    console.log('[IMPERVA-EXTRACT] 📍 URL:', url);
-    console.log('[IMPERVA-EXTRACT] ⏱️ Started at:', new Date().toISOString());
-    console.log('[IMPERVA-EXTRACT] 🎧 Monitoring POST requests for: old_token, performance, solution');
-    console.log('[IMPERVA-EXTRACT] ========================================');
+    Logger.network('[IMPERVA-EXTRACT] ========== START EXTRACTION ==========');
+    Logger.network('[IMPERVA-EXTRACT] 🎯 Tab ID:', tabId);
+    Logger.network('[IMPERVA-EXTRACT] 📍 URL:', url);
+    Logger.network('[IMPERVA-EXTRACT] ⏱️ Started at:', new Date().toISOString());
+    Logger.network('[IMPERVA-EXTRACT] 🎧 Monitoring POST requests for: old_token, performance, solution');
+    Logger.network('[IMPERVA-EXTRACT] ========================================');
 
     if (!impervaInterceptionListener) {
         setupImpervaInterceptor();
@@ -129,7 +129,7 @@ function impervaStartExtraction(tabId, url) {
     // Auto-stop after 60 seconds
     const state = impervaCaptureStateRef.get(tabId);
     state.timeout = setTimeout(() => {
-        console.log(`[IMPERVA-EXTRACT] ⏰ Auto-stopping extraction for tab ${tabId} (60s timeout reached)`);
+        Logger.network(`[IMPERVA-EXTRACT] ⏰ Auto-stopping extraction for tab ${tabId} (60s timeout reached)`);
         impervaStopCapture(tabId);
     }, 60000);
 
@@ -142,20 +142,20 @@ function impervaStartExtraction(tabId, url) {
  * @returns {object} Status and results
  */
 function impervaStopCapture(tabId) {
-    console.log('[IMPERVA-CAPTURE] ========== STOP CAPTURE ==========');
-    console.log('[IMPERVA-CAPTURE] 🎯 Tab ID:', tabId);
+    Logger.network('[IMPERVA-CAPTURE] ========== STOP CAPTURE ==========');
+    Logger.network('[IMPERVA-CAPTURE] 🎯 Tab ID:', tabId);
 
     const state = impervaCaptureStateRef.get(tabId);
     if (state) {
-        console.log('[IMPERVA-CAPTURE] 📊 Capture Results:');
-        console.log('[IMPERVA-CAPTURE]   reese84 found:', state.foundCookies.reese84);
-        console.log('[IMPERVA-CAPTURE]   utmvc found:', state.foundCookies.utmvc);
-        console.log('[IMPERVA-CAPTURE]   incap_ses found:', state.foundCookies.incapSes.length);
-        console.log('[IMPERVA-CAPTURE]   nlbi found:', state.foundCookies.nlbi.length);
-        console.log('[IMPERVA-CAPTURE]   visid_incap found:', state.foundCookies.visid.length);
-        console.log('[IMPERVA-CAPTURE]   incapResource URLs:', state.incapResourceUrls.length);
-        console.log('[IMPERVA-CAPTURE]   interrogation URLs:', state.interrogationUrls.length);
-        console.log('[IMPERVA-CAPTURE]   duration:', ((Date.now() - state.timestamp) / 1000).toFixed(2) + 's');
+        Logger.network('[IMPERVA-CAPTURE] 📊 Capture Results:');
+        Logger.network('[IMPERVA-CAPTURE]   reese84 found:', state.foundCookies.reese84);
+        Logger.network('[IMPERVA-CAPTURE]   utmvc found:', state.foundCookies.utmvc);
+        Logger.network('[IMPERVA-CAPTURE]   incap_ses found:', state.foundCookies.incapSes.length);
+        Logger.network('[IMPERVA-CAPTURE]   nlbi found:', state.foundCookies.nlbi.length);
+        Logger.network('[IMPERVA-CAPTURE]   visid_incap found:', state.foundCookies.visid.length);
+        Logger.network('[IMPERVA-CAPTURE]   incapResource URLs:', state.incapResourceUrls.length);
+        Logger.network('[IMPERVA-CAPTURE]   interrogation URLs:', state.interrogationUrls.length);
+        Logger.network('[IMPERVA-CAPTURE]   duration:', ((Date.now() - state.timestamp) / 1000).toFixed(2) + 's');
 
         // Show standardized success notification
         if (showNotification && state) {
@@ -168,7 +168,7 @@ function impervaStopCapture(tabId) {
                 message: `Imperva data captured (${capturedItems} items)`,
                 duration: 5000
             }).catch(err => {
-                console.error('[IMPERVA-CAPTURE] Failed to show notification:', err);
+                Logger.error('NETWORK', '[IMPERVA-CAPTURE] Failed to show notification:', err);
             });
         }
 
@@ -177,17 +177,17 @@ function impervaStopCapture(tabId) {
         }
         impervaCaptureStateRef.delete(tabId);
     } else {
-        console.log('[IMPERVA-CAPTURE] ⚠️ No capture state found for tab');
+        Logger.network('[IMPERVA-CAPTURE] ⚠️ No capture state found for tab');
     }
 
     // If no more active captures, remove listener
     if (impervaCaptureStateRef.size === 0 && impervaInterceptionListener) {
         chrome.webRequest.onBeforeRequest.removeListener(impervaInterceptionListener);
         impervaInterceptionListener = null;
-        console.log('[IMPERVA-CAPTURE] 🔌 Removed request interceptor (no active captures)');
+        Logger.network('[IMPERVA-CAPTURE] 🔌 Removed request interceptor (no active captures)');
     }
 
-    console.log('[IMPERVA-CAPTURE] ========================================');
+    Logger.network('[IMPERVA-CAPTURE] ========================================');
 
     return { status: 'stopped', results: state };
 }
@@ -199,7 +199,7 @@ function impervaStopCapture(tabId) {
  */
 function impervaGetCaptureState(tabId) {
     if (!impervaCaptureStateRef) {
-        console.log('[IMPERVA-CAPTURE] CaptureStateRef is null, returning default state');
+        Logger.network('[IMPERVA-CAPTURE] CaptureStateRef is null, returning default state');
         return {
             isCapturing: false,
             state: null
@@ -207,7 +207,7 @@ function impervaGetCaptureState(tabId) {
     }
 
     if (typeof impervaCaptureStateRef.get !== 'function') {
-        console.error('[IMPERVA-CAPTURE] CaptureStateRef is not a Map:', typeof impervaCaptureStateRef);
+        Logger.error('NETWORK', '[IMPERVA-CAPTURE] CaptureStateRef is not a Map:', typeof impervaCaptureStateRef);
         return {
             isCapturing: false,
             state: null
@@ -243,9 +243,9 @@ function impervaHandleCaptureTabUpdate(tabId, changeInfo, tab) {
             const newBase = `${newUrl.origin}${newUrl.pathname}`;
 
             if (oldBase !== newBase) {
-                console.log('[IMPERVA-CAPTURE] URL changed (navigation detected), clearing capture state for tab:', tabId);
-                console.log('[IMPERVA-CAPTURE] Old URL:', oldBase);
-                console.log('[IMPERVA-CAPTURE] New URL:', newBase);
+                Logger.network('[IMPERVA-CAPTURE] URL changed (navigation detected), clearing capture state for tab:', tabId);
+                Logger.network('[IMPERVA-CAPTURE] Old URL:', oldBase);
+                Logger.network('[IMPERVA-CAPTURE] New URL:', newBase);
                 if (state.timeout) {
                     clearTimeout(state.timeout);
                 }
@@ -254,18 +254,18 @@ function impervaHandleCaptureTabUpdate(tabId, changeInfo, tab) {
                 if (impervaCaptureStateRef.size === 0 && impervaInterceptionListener) {
                     chrome.webRequest.onBeforeRequest.removeListener(impervaInterceptionListener);
                     impervaInterceptionListener = null;
-                    console.log('[IMPERVA-CAPTURE] Removed request interceptor (no active captures)');
+                    Logger.network('[IMPERVA-CAPTURE] Removed request interceptor (no active captures)');
                 }
                 return;
             }
         } catch (error) {
-            console.error('[IMPERVA-CAPTURE] Error comparing URLs:', error);
+            Logger.error('NETWORK', '[IMPERVA-CAPTURE] Error comparing URLs:', error);
         }
     }
 
     // When page finishes loading after reload, mark as ready to capture
     if (changeInfo.status === 'complete' && state.waitingForReload) {
-        console.log('[IMPERVA-CAPTURE] Page reload detected! Ready to capture data');
+        Logger.network('[IMPERVA-CAPTURE] Page reload detected! Ready to capture data');
         state.waitingForReload = false;
         state.reloadDetectedAt = Date.now();
         impervaCaptureStateRef.set(tabId, state);
@@ -297,35 +297,35 @@ async function checkImpervaCookies(tabId, url) {
         // Check for reese84
         const hasReese84 = cookies.some(c => c.name === 'reese84');
         if (hasReese84) {
-            console.log('[IMPERVA-CAPTURE] ✅ Found reese84 cookie');
+            Logger.network('[IMPERVA-CAPTURE] ✅ Found reese84 cookie');
             state.foundCookies.reese84 = true;
         }
 
         // Check for utmvc
         const hasUtmvc = cookies.some(c => c.name === 'utmvc');
         if (hasUtmvc) {
-            console.log('[IMPERVA-CAPTURE] ✅ Found utmvc cookie');
+            Logger.network('[IMPERVA-CAPTURE] ✅ Found utmvc cookie');
             state.foundCookies.utmvc = true;
         }
 
         // Check for incap_ses_* cookies (dynamic numbers)
         const incapSesCookies = cookies.filter(c => /^incap_ses_\d+_\d+$/.test(c.name));
         if (incapSesCookies.length > 0) {
-            console.log('[IMPERVA-CAPTURE] ✅ Found', incapSesCookies.length, 'incap_ses cookies');
+            Logger.network('[IMPERVA-CAPTURE] ✅ Found', incapSesCookies.length, 'incap_ses cookies');
             state.foundCookies.incapSes = incapSesCookies.map(c => c.name);
         }
 
         // Check for nlbi_* cookies
         const nlbiCookies = cookies.filter(c => /^nlbi_\d+/.test(c.name));
         if (nlbiCookies.length > 0) {
-            console.log('[IMPERVA-CAPTURE] ✅ Found', nlbiCookies.length, 'nlbi cookies');
+            Logger.network('[IMPERVA-CAPTURE] ✅ Found', nlbiCookies.length, 'nlbi cookies');
             state.foundCookies.nlbi = nlbiCookies.map(c => c.name);
         }
 
         // Check for visid_incap_* cookies
         const visidCookies = cookies.filter(c => /^visid_incap_\d+/.test(c.name));
         if (visidCookies.length > 0) {
-            console.log('[IMPERVA-CAPTURE] ✅ Found', visidCookies.length, 'visid_incap cookies');
+            Logger.network('[IMPERVA-CAPTURE] ✅ Found', visidCookies.length, 'visid_incap cookies');
             state.foundCookies.visid = visidCookies.map(c => c.name);
         }
 
@@ -334,7 +334,7 @@ async function checkImpervaCookies(tabId, url) {
         // If we have data, check if we should auto-complete
         checkAndCompleteCapture(tabId);
     } catch (error) {
-        console.error('[IMPERVA-CAPTURE] Error checking cookies:', error);
+        Logger.error('NETWORK', '[IMPERVA-CAPTURE] Error checking cookies:', error);
     }
 }
 
@@ -355,7 +355,7 @@ function checkAndCompleteCapture(tabId) {
         setTimeout(() => {
             const currentState = impervaCaptureStateRef.get(tabId);
             if (currentState && !currentState.completed) {
-                console.log('[IMPERVA-CAPTURE] Auto-completing capture (data collected)');
+                Logger.network('[IMPERVA-CAPTURE] Auto-completing capture (data collected)');
                 currentState.completed = true;
                 handleImpervaCaptureCompleted(tabId, currentState);
             }
@@ -369,20 +369,20 @@ function checkAndCompleteCapture(tabId) {
  * @param {object} interceptorData - Captured data
  */
 async function handleImpervaCaptureCompleted(tabId, interceptorData) {
-    console.log('[IMPERVA-CAPTURE] ========== HANDLING CAPTURE COMPLETION ==========');
+    Logger.network('[IMPERVA-CAPTURE] ========== HANDLING CAPTURE COMPLETION ==========');
 
     try {
         // Get tab info
-        console.log('[IMPERVA-CAPTURE] Step 1: Getting tab info...');
+        Logger.network('[IMPERVA-CAPTURE] Step 1: Getting tab info...');
         const tab = await chrome.tabs.get(tabId);
         if (!tab || !tab.url) {
-            console.error('[IMPERVA-CAPTURE] ❌ Tab not found or no URL');
+            Logger.error('NETWORK', '[IMPERVA-CAPTURE] ❌ Tab not found or no URL');
             return;
         }
-        console.log('[IMPERVA-CAPTURE] ✓ Tab info retrieved:', { url: tab.url, title: tab.title });
+        Logger.network('[IMPERVA-CAPTURE] ✓ Tab info retrieved:', { url: tab.url, title: tab.title });
 
         // Get cookies one final time using helper
-        console.log('[IMPERVA-CAPTURE] Step 2: Getting cookies for URL:', tab.url);
+        Logger.network('[IMPERVA-CAPTURE] Step 2: Getting cookies for URL:', tab.url);
         // ✅ Use checkCookies helper
         const cookies = await checkCookies(tab.url, [
             { name: { pattern: 'reese84' }, returnValue: false },
@@ -391,7 +391,7 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
             { name: { pattern: 'nlbi_\\d+', regex: true }, returnValue: false },
             { name: { pattern: 'visid_incap_\\d+', regex: true }, returnValue: false }
         ]);
-        console.log('[IMPERVA-CAPTURE] Total Imperva cookies found:', cookies.length);
+        Logger.network('[IMPERVA-CAPTURE] Total Imperva cookies found:', cookies.length);
 
         const hasReese84 = cookies.some(c => c.name === 'reese84');
         const hasUtmvc = cookies.some(c => c.name === 'utmvc');
@@ -399,7 +399,7 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
         const nlbiCookies = cookies.filter(c => /^nlbi_\d+/.test(c.name));
         const visidCookies = cookies.filter(c => /^visid_incap_\d+/.test(c.name));
 
-        console.log('[IMPERVA-CAPTURE] Cookie status:', {
+        Logger.network('[IMPERVA-CAPTURE] Cookie status:', {
             hasReese84: hasReese84,
             hasUtmvc: hasUtmvc,
             incapSesCookies: incapSesCookies.map(c => c.name),
@@ -408,7 +408,7 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
         });
 
         // Create capture data
-        console.log('[IMPERVA-CAPTURE] Step 3: Creating capture data object...');
+        Logger.network('[IMPERVA-CAPTURE] Step 3: Creating capture data object...');
         const captureData = {
             type: 'imperva',
             // Cookie requirements
@@ -424,15 +424,15 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
             siteUrl: tab.url,
             timestamp: Date.now()
         };
-        console.log('[IMPERVA-CAPTURE] ✓ Capture data created successfully');
+        Logger.network('[IMPERVA-CAPTURE] ✓ Capture data created successfully');
 
         // ✅ Save to history using helper - replaces ~55 lines of manual code!
-        console.log('[IMPERVA-CAPTURE] Step 4: Saving to history using helper...');
+        Logger.network('[IMPERVA-CAPTURE] Step 4: Saving to history using helper...');
         const newCapture = await saveToHistory(tabId, captureData, {
             type: 'incapsula',
             expiryMinutes: 30
         });
-        console.log('[IMPERVA-CAPTURE] ✅ Successfully saved capture to history:', newCapture.id);
+        Logger.network('[IMPERVA-CAPTURE] ✅ Successfully saved capture to history:', newCapture.id);
 
         // ✅ Show success notification
         if (typeof showNotification === 'function') {
@@ -444,41 +444,41 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
                     duration: 3000
                 });
             } catch (error) {
-                console.log('[IMPERVA-CAPTURE] Notification error:', error.message);
+                Logger.network('[IMPERVA-CAPTURE] Notification error:', error.message);
             }
         }
 
         // Clean up capture state
-        console.log('[IMPERVA-CAPTURE] Step 7: Cleaning up capture state for tab:', tabId);
+        Logger.network('[IMPERVA-CAPTURE] Step 7: Cleaning up capture state for tab:', tabId);
         if (impervaCaptureStateRef && impervaCaptureStateRef.has(tabId)) {
             const state = impervaCaptureStateRef.get(tabId);
             if (state && state.timeout) {
                 clearTimeout(state.timeout);
             }
             impervaCaptureStateRef.delete(tabId);
-            console.log('[IMPERVA-CAPTURE] ✓ Capture state cleared');
+            Logger.network('[IMPERVA-CAPTURE] ✓ Capture state cleared');
         }
 
         // If no more active captures, remove listener
         if (impervaCaptureStateRef && impervaCaptureStateRef.size === 0 && impervaInterceptionListener) {
             chrome.webRequest.onBeforeRequest.removeListener(impervaInterceptionListener);
             impervaInterceptionListener = null;
-            console.log('[IMPERVA-CAPTURE] All captures stopped - listener removed');
+            Logger.network('[IMPERVA-CAPTURE] All captures stopped - listener removed');
         }
 
         // Notify popup (if open)
-        console.log('[IMPERVA-CAPTURE] Step 8: Notifying popup (if open)...');
+        Logger.network('[IMPERVA-CAPTURE] Step 8: Notifying popup (if open)...');
         chrome.runtime.sendMessage({
             type: 'IMPERVA_CAPTURE_COMPLETED',
             captureData: newCapture
         }).catch(() => {
-            console.log('[IMPERVA-CAPTURE] ℹ️ Popup not open, message not sent (this is normal)');
+            Logger.network('[IMPERVA-CAPTURE] ℹ️ Popup not open, message not sent (this is normal)');
         });
 
-        console.log('[IMPERVA-CAPTURE] ========== CAPTURE COMPLETED SUCCESSFULLY ==========');
+        Logger.network('[IMPERVA-CAPTURE] ========== CAPTURE COMPLETED SUCCESSFULLY ==========');
     } catch (error) {
-        console.error('[IMPERVA-CAPTURE] ❌ Error handling capture completion:', error);
-        console.error('[IMPERVA-CAPTURE] Error stack:', error.stack);
+        Logger.error('NETWORK', '[IMPERVA-CAPTURE] ❌ Error handling capture completion:', error);
+        Logger.error('NETWORK', '[IMPERVA-CAPTURE] Error stack:', error.stack);
 
         // Clean up on error
         if (impervaCaptureStateRef && impervaCaptureStateRef.has(tabId)) {
@@ -493,14 +493,14 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
  * @param {object} extractionState - Extraction state with captured data
  */
 async function handleImpervaExtractionCompleted(tabId, extractionState) {
-    console.log('[IMPERVA-EXTRACT] ========== EXTRACTION COMPLETED ==========');
-    console.log('[IMPERVA-EXTRACT] Tab ID:', tabId);
+    Logger.network('[IMPERVA-EXTRACT] ========== EXTRACTION COMPLETED ==========');
+    Logger.network('[IMPERVA-EXTRACT] Tab ID:', tabId);
 
     try {
         // Get tab info
         const tab = await chrome.tabs.get(tabId);
         if (!tab || !tab.url) {
-            console.error('[IMPERVA-EXTRACT] ❌ Tab not found or no URL');
+            Logger.error('NETWORK', '[IMPERVA-EXTRACT] ❌ Tab not found or no URL');
             return;
         }
 
@@ -533,7 +533,7 @@ async function handleImpervaExtractionCompleted(tabId, extractionState) {
             hostname: new URL(tab.url).hostname
         };
 
-        console.log('[IMPERVA-EXTRACT] Extraction results:', {
+        Logger.network('[IMPERVA-EXTRACT] Extraction results:', {
             challengeUrls: extractedData.challengeUrls.length,
             payloads: extractedData.payloads.length,
             scriptUrls: extractedData.scriptUrls.length,
@@ -545,7 +545,7 @@ async function handleImpervaExtractionCompleted(tabId, extractionState) {
             type: 'IMPERVA_EXTRACTION_COMPLETED',
             extractedData: extractedData
         }).catch(err => {
-            console.log('[IMPERVA-EXTRACT] ℹ️ Popup not open (this is normal):', err.message);
+            Logger.network('[IMPERVA-EXTRACT] ℹ️ Popup not open (this is normal):', err.message);
         });
 
         // Clean up extraction state
@@ -554,10 +554,10 @@ async function handleImpervaExtractionCompleted(tabId, extractionState) {
         }
         impervaCaptureStateRef.delete(tabId);
 
-        console.log('[IMPERVA-EXTRACT] ========== EXTRACTION COMPLETED SUCCESSFULLY ==========');
+        Logger.network('[IMPERVA-EXTRACT] ========== EXTRACTION COMPLETED SUCCESSFULLY ==========');
     } catch (error) {
-        console.error('[IMPERVA-EXTRACT] ❌ Error handling extraction completion:', error);
-        console.error('[IMPERVA-EXTRACT] Error stack:', error.stack);
+        Logger.error('NETWORK', '[IMPERVA-EXTRACT] ❌ Error handling extraction completion:', error);
+        Logger.error('NETWORK', '[IMPERVA-EXTRACT] Error stack:', error.stack);
 
         // Clean up on error
         if (impervaCaptureStateRef && impervaCaptureStateRef.has(tabId)) {
@@ -570,7 +570,7 @@ async function handleImpervaExtractionCompleted(tabId, extractionState) {
  * Setup network request interceptor for Imperva endpoints
  */
 function setupImpervaInterceptor() {
-    console.log('[IMPERVA-CAPTURE] Setting up request interceptor');
+    Logger.network('[IMPERVA-CAPTURE] Setting up request interceptor');
 
     impervaInterceptionListener = (details) => {
         const state = impervaCaptureStateRef.get(details.tabId);
@@ -595,14 +595,14 @@ function setupImpervaInterceptor() {
 
         // Check for _Incapsula_Resource pattern
         if (urlCheck.found && urlCheck.matches.some(u => u.includes('_Incapsula_Resource') || u.includes('_incapsula_resource'))) {
-            console.log('[IMPERVA-CAPTURE] 🔍 Incapsula Resource URL detected:', originalUrl);
+            Logger.network('[IMPERVA-CAPTURE] 🔍 Incapsula Resource URL detected:', originalUrl);
             state.incapResourceUrls.push(originalUrl);
             impervaCaptureStateRef.set(details.tabId, state);
         }
 
         // Check for interrogation URLs
         if (urlCheck.found && urlCheck.matches.some(u => u.includes('interrogation'))) {
-            console.log('[IMPERVA-CAPTURE] 🔍 Interrogation URL detected:', originalUrl);
+            Logger.network('[IMPERVA-CAPTURE] 🔍 Interrogation URL detected:', originalUrl);
             state.interrogationUrls.push(originalUrl);
             impervaCaptureStateRef.set(details.tabId, state);
         }
@@ -620,7 +620,7 @@ function setupImpervaInterceptor() {
                 }
 
                 if (rawBody && rawBody.toLowerCase().includes('interrogation')) {
-                    console.log('[IMPERVA-CAPTURE] 🔍 Interrogation URL detected:', originalUrl);
+                    Logger.network('[IMPERVA-CAPTURE] 🔍 Interrogation URL detected:', originalUrl);
                     state.interrogationUrls.push(originalUrl);
                     impervaCaptureStateRef.set(details.tabId, state);
                 }
@@ -633,10 +633,10 @@ function setupImpervaInterceptor() {
                     const foundKeywords = keywords.filter(kw => rawBodyLower.includes(kw));
 
                     if (foundKeywords.length > 0) {
-                        console.log('[IMPERVA-EXTRACT] 🎯 Challenge/Solution data found!');
-                        console.log('[IMPERVA-EXTRACT] Keywords found:', foundKeywords);
-                        console.log('[IMPERVA-EXTRACT] URL:', originalUrl);
-                        console.log('[IMPERVA-EXTRACT] Payload preview:', rawBody.substring(0, 200));
+                        Logger.network('[IMPERVA-EXTRACT] 🎯 Challenge/Solution data found!');
+                        Logger.network('[IMPERVA-EXTRACT] Keywords found:', foundKeywords);
+                        Logger.network('[IMPERVA-EXTRACT] URL:', originalUrl);
+                        Logger.network('[IMPERVA-EXTRACT] Payload preview:', rawBody.substring(0, 200));
 
                         // Initialize extractedData if not exists
                         if (!state.extractedData) {
@@ -665,7 +665,7 @@ function setupImpervaInterceptor() {
                         impervaCaptureStateRef.set(details.tabId, state);
 
                         // Auto-complete extraction when we have challenge data
-                        console.log('[IMPERVA-EXTRACT] ✅ Challenge data captured, completing extraction...');
+                        Logger.network('[IMPERVA-EXTRACT] ✅ Challenge data captured, completing extraction...');
                         setTimeout(() => {
                             const currentState = impervaCaptureStateRef.get(details.tabId);
                             if (currentState && currentState.extractMode) {
@@ -675,7 +675,7 @@ function setupImpervaInterceptor() {
                     }
                 }
             } catch (error) {
-                console.error('[IMPERVA-CAPTURE] Error processing request body:', error);
+                Logger.error('NETWORK', '[IMPERVA-CAPTURE] Error processing request body:', error);
             }
         }
 
@@ -696,7 +696,7 @@ function setupImpervaInterceptor() {
             if (details.type === 'script' || details.type === 'xmlhttprequest' || urlCheck.found) {
                 // Avoid duplicates
                 if (!state.extractedData.scriptUrls.includes(originalUrl)) {
-                    console.log('[IMPERVA-EXTRACT] 📜 Tracking script URL:', originalUrl);
+                    Logger.network('[IMPERVA-EXTRACT] 📜 Tracking script URL:', originalUrl);
                     state.extractedData.scriptUrls.push(originalUrl);
                     impervaCaptureStateRef.set(details.tabId, state);
                 }
@@ -714,7 +714,7 @@ function setupImpervaInterceptor() {
         ["requestBody"]
     );
 
-    console.log('[IMPERVA-CAPTURE] ✅ Request interceptor ready');
+    Logger.network('[IMPERVA-CAPTURE] ✅ Request interceptor ready');
 }
 
 // ========== ANALYSIS MODE (DISABLED - Requires webRequestBlocking) ==========
@@ -729,7 +729,7 @@ function getImpervaAnalysisState(tabId) {
 }
 
 function impervaStartAnalysis(tabId, url) {
-    console.log('[IMPERVA-ANALYZE] Starting analysis for tab:', tabId, 'URL:', url);
+    Logger.network('[IMPERVA-ANALYZE] Starting analysis for tab:', tabId, 'URL:', url);
 
     impervaAnalysisState.set(tabId, {
         tabId,
@@ -739,12 +739,12 @@ function impervaStartAnalysis(tabId, url) {
         requests: new Map()
     });
 
-    console.log('[IMPERVA-ANALYZE] Analysis mode enabled for tab:', tabId);
+    Logger.network('[IMPERVA-ANALYZE] Analysis mode enabled for tab:', tabId);
     return { status: 'success' };
 }
 
 function impervaStopAnalysis(tabId) {
-    console.log('[IMPERVA-ANALYZE] Stopping analysis for tab:', tabId);
+    Logger.network('[IMPERVA-ANALYZE] Stopping analysis for tab:', tabId);
     const state = impervaAnalysisState.get(tabId) || null;
     if (state) {
         state.stoppedAt = Date.now();
@@ -764,7 +764,7 @@ function notifyImpervaAnalysisUpdate(tabId) {
             detectedUrls: state.detectedUrls
         }).catch(() => {});
     } catch (error) {
-        console.error('[IMPERVA-ANALYZE] Failed to send analysis update:', error);
+        Logger.error('NETWORK', '[IMPERVA-ANALYZE] Failed to send analysis update:', error);
     }
 }
 
@@ -812,7 +812,7 @@ chrome.webRequest.onBeforeRequest.addListener(
             if (details.method !== 'POST') return;
             if (!isImpervaRelevantUrl(details.url)) return;
 
-            console.log('[IMPERVA-ANALYZE] 🧪 Intercepting POST for analysis:', details.url);
+            Logger.network('[IMPERVA-ANALYZE] 🧪 Intercepting POST for analysis:', details.url);
 
             // Record start
             upsertImpervaAnalysisRecord(details.tabId, details.requestId, {
@@ -840,7 +840,7 @@ chrome.webRequest.onBeforeRequest.addListener(
                     }
                     bodyData = combined;
                 } catch (error) {
-                    console.error('[IMPERVA-ANALYZE] Error reconstructing POST body:', error);
+                    Logger.error('NETWORK', '[IMPERVA-ANALYZE] Error reconstructing POST body:', error);
                 }
             }
 
@@ -858,7 +858,7 @@ chrome.webRequest.onBeforeRequest.addListener(
             fetch(details.url, fetchOptions)
                 .then(response => response.text())
                 .then(responseText => {
-                    console.log('[IMPERVA-ANALYZE] ✅ Received response, length:', responseText.length);
+                    Logger.network('[IMPERVA-ANALYZE] ✅ Received response, length:', responseText.length);
 
                     const truncated = responseText.length > 20000;
                     const collected = truncated ? responseText.slice(0, 20000) : responseText;
@@ -876,7 +876,7 @@ chrome.webRequest.onBeforeRequest.addListener(
                     });
                 })
                 .catch(error => {
-                    console.error('[IMPERVA-ANALYZE] Fetch error:', error);
+                    Logger.error('NETWORK', '[IMPERVA-ANALYZE] Fetch error:', error);
                     upsertImpervaAnalysisRecord(details.tabId, details.requestId, {
                         url: details.url,
                         method: details.method,
@@ -884,7 +884,7 @@ chrome.webRequest.onBeforeRequest.addListener(
                     });
                 });
         } catch (error) {
-            console.error('[IMPERVA-ANALYZE] Error in onBeforeRequest:', error);
+            Logger.error('NETWORK', '[IMPERVA-ANALYZE] Error in onBeforeRequest:', error);
         }
     },
     { urls: ["<all_urls>"], types: ["xmlhttprequest", "other", "script"] },
@@ -908,7 +908,7 @@ chrome.webRequest.onCompleted.addListener(
                 completedAt: Date.now()
             });
         } catch (error) {
-            console.error('[IMPERVA-ANALYZE] Error in onCompleted:', error);
+            Logger.error('NETWORK', '[IMPERVA-ANALYZE] Error in onCompleted:', error);
         }
     },
     { urls: ["<all_urls>"] }
@@ -929,7 +929,7 @@ chrome.webRequest.onErrorOccurred.addListener(
                 completedAt: Date.now()
             });
         } catch (error) {
-            console.error('[IMPERVA-ANALYZE] Error in onErrorOccurred:', error);
+            Logger.error('NETWORK', '[IMPERVA-ANALYZE] Error in onErrorOccurred:', error);
         }
     },
     { urls: ["<all_urls>"] }
@@ -966,7 +966,7 @@ function impervaHandleMessage(request, sendResponse) {
                     const result = impervaStartCapture(request.tabId, tab.url);
                     sendResponse(result);
                 } catch (error) {
-                    console.error('[Imperva] Error starting capture:', error);
+                    Logger.error('NETWORK', '[Imperva] Error starting capture:', error);
                     sendResponse({ status: 'error', error: error.message });
                 }
             })();
@@ -977,7 +977,7 @@ function impervaHandleMessage(request, sendResponse) {
                 const result = impervaStopCapture(request.tabId);
                 sendResponse(result);
             } catch (error) {
-                console.error('[Imperva] Error stopping capture:', error);
+                Logger.error('NETWORK', '[Imperva] Error stopping capture:', error);
                 sendResponse({ status: 'error', error: error.message });
             }
             return false; // Sync response (no async needed)
@@ -995,7 +995,7 @@ function impervaHandleMessage(request, sendResponse) {
                     impervaStartExtraction(request.tabId, tab.url);
                     sendResponse({ status: 'success', message: 'Extraction mode enabled' });
                 } catch (error) {
-                    console.error('[IMPERVA-EXTRACT] Error starting extraction:', error);
+                    Logger.error('NETWORK', '[IMPERVA-EXTRACT] Error starting extraction:', error);
                     sendResponse({ status: 'error', error: error.message });
                 }
             })();
@@ -1011,7 +1011,7 @@ function impervaHandleMessage(request, sendResponse) {
                 const state = impervaGetCaptureState(request.tabId);
                 sendResponse(state);
             } catch (error) {
-                console.error('[Imperva] Error getting capture state:', error);
+                Logger.error('NETWORK', '[Imperva] Error getting capture state:', error);
                 sendResponse({ status: 'error', error: error.message });
             }
             return false; // Sync response
@@ -1020,7 +1020,7 @@ function impervaHandleMessage(request, sendResponse) {
             // NOTE: Capture processing is now handled directly in ImpervaInterceptor.js
             // This message is only for notifying the popup UI to refresh
             // The actual data processing and storage happens in handleImpervaCaptureCompleted()
-            console.log('[IMPERVA-CAPTURE] Capture completed message received (UI notification only)');
+            Logger.network('[IMPERVA-CAPTURE] Capture completed message received (UI notification only)');
             return false; // Sync response
 
         case 'IMPERVA_SHOW_ANALYZING_NOTIFICATION':
@@ -1028,20 +1028,20 @@ function impervaHandleMessage(request, sendResponse) {
             (async () => {
                 try {
                     if (typeof showNotification === 'function') {
-                        console.log('[IMPERVA] Showing analyzing notification...');
+                        Logger.network('[IMPERVA] Showing analyzing notification...');
                         await showNotification(request.tabId, {
                             type: 'loading',
                             title: '🔍 Extracting Imperva Scripts',
                             message: 'Monitoring for challenge and solution data...',
                             duration: 10000
                         });
-                        console.log('[IMPERVA] Notification shown successfully');
+                        Logger.network('[IMPERVA] Notification shown successfully');
                     } else {
-                        console.log('[IMPERVA] showNotification function not available');
+                        Logger.network('[IMPERVA] showNotification function not available');
                     }
                     sendResponse({ status: 'success' });
                 } catch (error) {
-                    console.error('[IMPERVA] Error showing notification:', error);
+                    Logger.error('NETWORK', '[IMPERVA] Error showing notification:', error);
                     sendResponse({ status: 'error', error: error.message });
                 }
             })();

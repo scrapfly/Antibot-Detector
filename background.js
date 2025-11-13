@@ -165,7 +165,7 @@ class BatchedStorageWriter {
         try {
             await chrome.storage.local.set(writes);
         } catch (error) {
-            console.error('[BatchedStorage] Failed to flush writes:', error);
+            Logger.error('STORAGE', '[BatchedStorage] Failed to flush writes:', error);
         }
     }
 
@@ -434,7 +434,7 @@ function sendProgressUpdate(tabId, methodName, completedMethods, totalMethods = 
             // Silently fail - popup might not be open
         });
     } catch (e) {
-        console.error('[Progress] Error sending update:', e);
+        Logger.error('DETECTION', '[Progress] Error sending update:', e);
     }
 }
 
@@ -444,14 +444,14 @@ function sendProgressUpdate(tabId, methodName, completedMethods, totalMethods = 
 function markMethodComplete(tabId, methodName) {
     const state = detectionStates.get(tabId);
     if (!state) {
-        console.warn(`[markMethodComplete] ❌ No detection state for tab ${tabId}, cannot mark ${methodName} complete`);
+        Logger.warn('BACKGROUND', `[markMethodComplete] ❌ No detection state for tab ${tabId}, cannot mark ${methodName} complete`);
         return;
     }
 
     // VALIDATION: Only allow valid method names from the official methodOrder
     const validMethods = state.methodOrder || ['cookies', 'headers', 'url', 'dom', 'jsHooks', 'windowProperties', 'payload'];
     if (!validMethods.includes(methodName)) {
-        console.warn(`[markMethodComplete] ⚠️ Rejecting invalid method name: "${methodName}" (valid methods: ${validMethods.join(', ')})`);
+        Logger.warn('BACKGROUND', `[markMethodComplete] ⚠️ Rejecting invalid method name: "${methodName}" (valid methods: ${validMethods.join(', ')})`);
         return;
     }
 
@@ -462,7 +462,7 @@ function markMethodComplete(tabId, methodName) {
 function checkAndFinalizeDetection(tabId) {
     const state = detectionStates.get(tabId);
     if (!state) {
-        console.warn(`[⏸️ Finalize Check] No state for tab ${tabId}, aborting`);
+        Logger.warn('BACKGROUND', `[⏸️ Finalize Check] No state for tab ${tabId}, aborting`);
         return;
     }
 
@@ -492,7 +492,7 @@ function checkAndFinalizeDetection(tabId) {
         // Re-check state in case it was deleted during debounce
         const currentState = detectionStates.get(tabId);
         if (!currentState) {
-            console.warn(`[🔍 Finalize Execute] No state found for tab ${tabId} after debounce, aborting`);
+            Logger.warn('BACKGROUND', `[🔍 Finalize Execute] No state found for tab ${tabId} after debounce, aborting`);
             finalizationDebounce.delete(tabId);
             return;
         }
@@ -558,20 +558,20 @@ function checkAndFinalizeDetection(tabId) {
                     const settings = await Utils.getSettings(chrome);
                     if (settings?.debugMode) {
                         const percent = Math.round((completedCount / totalMethods) * 100);
-                        console.warn(`%c[⏳ NOT READY] Only ${completedCount}/${totalMethods} methods complete (${percent}%) - waiting for main methods`, 'color: #f44336; font-weight: bold;');
-                        console.warn(`[⏳ NOT READY]   Completed: ${completedMethods.join(', ')}`);
-                        console.warn(`[⏳ NOT READY]   Missing: ${missingMethods.join(', ')}`);
-                        console.warn(`[⏳ NOT READY]   Main methods complete: ${mainMethodsComplete}`);
+                        Logger.warn('BACKGROUND', `%c[⏳ NOT READY] Only ${completedCount}/${totalMethods} methods complete (${percent}%) - waiting for main methods`, 'color: #f44336; font-weight: bold;');
+                        Logger.warn('BACKGROUND', `[⏳ NOT READY]   Completed: ${completedMethods.join(', ')}`);
+                        Logger.warn('BACKGROUND', `[⏳ NOT READY]   Missing: ${missingMethods.join(', ')}`);
+                        Logger.warn('BACKGROUND', `[⏳ NOT READY]   Main methods complete: ${mainMethodsComplete}`);
 
                         // Log which signals we're waiting for
                         if (!currentState.windowPropertiesComplete) {
-                            console.warn(`%c[⏳ WAITING FOR] ⚠️ windowProperties signal (WINDOW_PROPS_COMPLETE) - will proceed without it`, 'color: #ff9800; font-weight: bold;');
+                            Logger.warn('BACKGROUND', `%c[⏳ WAITING FOR] ⚠️ windowProperties signal (WINDOW_PROPS_COMPLETE) - will proceed without it`, 'color: #ff9800; font-weight: bold;');
                         }
                         if (!currentState.mainComplete) {
-                            console.warn(`[⏳ WAITING FOR] ❌ mainComplete signal (processDetectionData finished) - REQUIRED`);
+                            Logger.warn('BACKGROUND', `[⏳ WAITING FOR] ❌ mainComplete signal (processDetectionData finished) - REQUIRED`);
                         }
                         if (!currentState.hooksComplete) {
-                            console.warn(`[⏳ WAITING FOR] ⚠️ hooksComplete signal (JS_HOOKS_COMPLETE) - will proceed without it`, 'color: #ff9800; font-weight: bold;');
+                            Logger.warn('BACKGROUND', `[⏳ WAITING FOR] ⚠️ hooksComplete signal (JS_HOOKS_COMPLETE) - will proceed without it`, 'color: #ff9800; font-weight: bold;');
                         }
                     }
                 } catch (error) {
@@ -674,14 +674,14 @@ async function finalizeDetection(tabId, state) {
                 await chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId });
             } catch (error) {
                 // Expected: Tab might be closed
-                console.error(`[Finalize] Failed to update badge for tab ${tabId}:`, error.message);
+                Logger.error('BACKGROUND', `[Finalize] Failed to update badge for tab ${tabId}:`, error.message);
             }
         } else {
             // Clear badge if blacklisted
             try {
                 await chrome.action.setBadgeText({ text: '', tabId: tabId });
             } catch (error) {
-                console.error(`[Finalize] Failed to clear badge (blacklisted):`, error.message);
+                Logger.error('BACKGROUND', `[Finalize] Failed to clear badge (blacklisted):`, error.message);
             }
         }
     } else {
@@ -689,7 +689,7 @@ async function finalizeDetection(tabId, state) {
         try {
             await chrome.action.setBadgeText({ text: '', tabId: tabId });
         } catch (error) {
-            console.error(`[Finalize] Failed to clear badge (no detections):`, error.message);
+            Logger.error('BACKGROUND', `[Finalize] Failed to clear badge (no detections):`, error.message);
         }
     }
 
@@ -721,7 +721,7 @@ async function finalizeDetection(tabId, state) {
                 await History.saveDetectionToHistory(tabId, pageData, finalResults, chrome);
             }
         } catch (error) {
-            console.error('[Finalize] Error saving to history:', error);
+            Logger.error('DETECTION', '[Finalize] Error saving to history:', error);
         }
     }
 
@@ -822,12 +822,12 @@ async function initialize(reason = 'startup', previousVersion = null) {
         }
 
         if (!hasDetectors) {
-            console.error('❌ CRITICAL: Detector system initialized but no detectors were loaded!');
-            console.error('❌ This will cause content scripts to fail. Possible causes:');
-            console.error('   1. Storage is empty or corrupted');
-            console.error('   2. JSON files are missing or have errors');
-            console.error('   3. File paths changed but extension not reloaded');
-            console.error('❌ RECOMMENDATION: Remove and re-add the extension, then refresh all tabs');
+            Logger.error('BACKGROUND', '❌ CRITICAL: Detector system initialized but no detectors were loaded!');
+            Logger.error('BACKGROUND', '❌ This will cause content scripts to fail. Possible causes:');
+            Logger.error('BACKGROUND', '   1. Storage is empty or corrupted');
+            Logger.error('BACKGROUND', '   2. JSON files are missing or have errors');
+            Logger.error('BACKGROUND', '   3. File paths changed but extension not reloaded');
+            Logger.error('BACKGROUND', '❌ RECOMMENDATION: Remove and re-add the extension, then refresh all tabs');
         }
 
         // Check if extension is enabled/disabled and set badges accordingly
@@ -855,8 +855,8 @@ async function initialize(reason = 'startup', previousVersion = null) {
         initializationInProgress = false;
         return true;
         } catch (error) {
-            console.error('Background: Failed to initialize detector system:', error);
-            console.error('Background: Error stack:', error.stack);
+            Logger.error('BACKGROUND', 'Background: Failed to initialize detector system:', error);
+            Logger.error('BACKGROUND', 'Background: Error stack:', error.stack);
 
             // Clear guard flag on error
             initializationInProgress = false;
@@ -936,7 +936,7 @@ async function waitForDetectorsLoaded(maxWaitMs = 10000) {
     }
 
     // Timeout reached
-    console.error(`[waitForDetectorsLoaded] Timeout after ${Date.now() - startTime}ms`);
+    Logger.error('BACKGROUND', `[waitForDetectorsLoaded] Timeout after ${Date.now() - startTime}ms`);
     return false;
 }
 
@@ -1185,7 +1185,7 @@ function enrichPageDataWithTabInfo(pageData, tab) {
  */
 async function processDetectionData(message, sender) {
     if (!sender.tab || !sender.tab.id) {
-        console.error('Scrapfly Background: No tab information in sender');
+        Logger.error('BACKGROUND', 'Scrapfly Background: No tab information in sender');
         return;
     }
 
@@ -1196,7 +1196,7 @@ async function processDetectionData(message, sender) {
             return;
         }
     } catch (error) {
-        console.error('Failed to check enabled state:', error);
+        Logger.error('BACKGROUND', 'Failed to check enabled state:', error);
     }
 
     const tabId = sender.tab.id;
@@ -1217,7 +1217,7 @@ async function processDetectionData(message, sender) {
             abortController: abortController
         });
     } catch (error) {
-        console.error('Failed to set loading badge:', error);
+        Logger.error('BACKGROUND', 'Failed to set loading badge:', error);
     }
 
     // Add response headers if available (backward compatibility - keep as pageData.headers)
@@ -1273,7 +1273,7 @@ async function processDetectionData(message, sender) {
                     type: payloadData.type
                 });
             } catch (e) {
-                console.error('Error processing payload:', e);
+                Logger.error('BACKGROUND', 'Error processing payload:', e);
             }
         }
 
@@ -1349,12 +1349,12 @@ async function processDetectionData(message, sender) {
 
             // LOG: Show all network URLs being passed to detection
             if (pageData.networkUrls && pageData.networkUrls.length > 0) {
-                console.log(`[Network URLs] ✅ Passing ${pageData.networkUrls.length} URLs to detection engine:`);
+                Logger.background(`[Network URLs] ✅ Passing ${pageData.networkUrls.length} URLs to detection engine:`);
                 pageData.networkUrls.forEach((urlObj, index) => {
-                    console.log(`  ${index + 1}. ${urlObj.url} | Type: ${urlObj.type} | Method: ${urlObj.method}`);
+                    Logger.background(`  ${index + 1}. ${urlObj.url} | Type: ${urlObj.type} | Method: ${urlObj.method}`);
                 });
             } else {
-                console.log(`[Network URLs] ⚠️ No network URLs available for detection!`);
+                Logger.background(`[Network URLs] ⚠️ No network URLs available for detection!`);
             }
 
             const detectionPromise = Promise.resolve(detectionEngine.detectOnPage(pageData));
@@ -1364,60 +1364,60 @@ async function processDetectionData(message, sender) {
             detectionResults = await Promise.race([detectionPromise, timeoutPromise]);
 
             const elapsed = Date.now() - startTime;
-            console.log(`[processDetectionData] ✅ Main detection completed in ${elapsed}ms: ${detectionResults.length} detectors found`);
+            Logger.background(`[processDetectionData] ✅ Main detection completed in ${elapsed}ms: ${detectionResults.length} detectors found`);
 
             // GRANULAR PROGRESS: Send incremental updates for main detection methods
             // Mark each method complete as it finishes detection
             // FIX: Use markMethodComplete to properly track progress and trigger finalization
-            console.log(`%c[processDetectionData] 📊 MARKING MAIN METHODS COMPLETE for tab ${tabId}`, 'color: #2196F3; font-weight: bold; font-size: 14px;');
+            Logger.background(`%c[processDetectionData] 📊 MARKING MAIN METHODS COMPLETE for tab ${tabId}`, 'color: #2196F3; font-weight: bold; font-size: 14px;');
             const mainMethods = ['cookies', 'headers', 'url', 'dom', 'payload'];
             for (const method of mainMethods) {
-                console.log(`[processDetectionData] Marking ${method} complete...`);
+                Logger.background(`[processDetectionData] Marking ${method} complete...`);
                 markMethodComplete(tabId, method);
             }
-            console.log(`%c[processDetectionData] ✅ All main methods marked complete`, 'color: #4caf50; font-weight: bold;');
+            Logger.background(`%c[processDetectionData] ✅ All main methods marked complete`, 'color: #4caf50; font-weight: bold;');
 
             // Log what was detected
             if (detectionResults.length > 0) {
                 detectionResults.forEach(det => {
                     const methods = det.matches?.map(m => m.type).filter((v, i, a) => a.indexOf(v) === i) || [];
-                    console.log(`[processDetectionData]   - ${det.detector?.name}: ${methods.join(', ')} (${det.matches?.length || 0} matches)`);
+                    Logger.background(`[processDetectionData]   - ${det.detector?.name}: ${methods.join(', ')} (${det.matches?.length || 0} matches)`);
                 });
             }
         } catch (error) {
             const errorType = error.message.includes('timeout') ? 'TIMEOUT' : 'ERROR';
-            console.error(`[processDetectionData] ❌ Main detection ${errorType} for tab ${tabId}:`, error.message);
-            console.error(`[processDetectionData] ❌ Stack:`, error.stack);
-            console.error(`[processDetectionData] ⚠️ Continuing with empty results - only window props and hooks will be preserved`);
+            Logger.error('BACKGROUND', `[processDetectionData] ❌ Main detection ${errorType} for tab ${tabId}:`, error.message);
+            Logger.error('BACKGROUND', `[processDetectionData] ❌ Stack:`, error.stack);
+            Logger.error('BACKGROUND', `[processDetectionData] ⚠️ Continuing with empty results - only window props and hooks will be preserved`);
             detectionResults = []; // Continue with empty results - JS hooks and window props will still be preserved
         }
 
-        console.log(`🎯 Scrapfly Background: Detected ${detectionResults.length} security systems via main detection`);
+        Logger.background(`🎯 Scrapfly Background: Detected ${detectionResults.length} security systems via main detection`);
 
         // Check if detection was aborted (tab switch occurred)
         const detectionInfo = activeDetections.get(tabId);
         if (detectionInfo && detectionInfo.abortController.signal.aborted) {
-            console.log(`[Detection] ⚠️ Detection for tab ${tabId} was aborted - skipping result storage`);
+            Logger.background(`[Detection] ⚠️ Detection for tab ${tabId} was aborted - skipping result storage`);
             return; // Don't store results or finalize
         }
 
         // Also check if tab is marked as interrupted
         if (interruptedDetections.has(tabId)) {
-            console.log(`[Detection] ⚠️ Detection for tab ${tabId} is interrupted - skipping result storage`);
+            Logger.background(`[Detection] ⚠️ Detection for tab ${tabId} is interrupted - skipping result storage`);
             return; // Don't store results or finalize
         }
 
         // Store main detection and check if ready to finalize
-        console.log(`%c[processDetectionData] 🔄 Getting/Creating detection state for tab ${tabId}`, 'color: #ff9800; font-weight: bold;');
+        Logger.background(`%c[processDetectionData] 🔄 Getting/Creating detection state for tab ${tabId}`, 'color: #ff9800; font-weight: bold;');
         const state = getOrCreateDetectionState(tabId, pageData.url);
 
         // Store tabTitle in state for use when saving to history
         if (!state.tabTitle && pageData.tabTitle) {
             state.tabTitle = pageData.tabTitle;
-            console.log(`[processDetectionData] Stored tabTitle in state: "${state.tabTitle}"`);
+            Logger.background(`[processDetectionData] Stored tabTitle in state: "${state.tabTitle}"`);
         }
 
-        console.log(`[processDetectionData] Current state before storing:`, {
+        Logger.background(`[processDetectionData] Current state before storing:`, {
             completedMethods: Array.from(state.completedMethods || []),
             completedCount: state.completedMethods?.size || 0,
             url: state.url,
@@ -1426,7 +1426,7 @@ async function processDetectionData(message, sender) {
 
         // URL validation: Ensure URL hasn't changed during detection
         if (state.url !== pageData.url) {
-            console.log(`[Detection] ⚠️ URL changed during detection for tab ${tabId}: ${pageData.url} → ${state.url} - skipping result storage`);
+            Logger.background(`[Detection] ⚠️ URL changed during detection for tab ${tabId}: ${pageData.url} → ${state.url} - skipping result storage`);
             return; // Don't store results for the wrong URL
         }
 
@@ -1482,7 +1482,7 @@ async function processDetectionData(message, sender) {
         state.mainData = Array.from(existingDetections.values());
         state.mainComplete = true;
 
-        console.log(`[processDetectionData] ✅ Main detection complete: ${detectionResults.length} detectors`);
+        Logger.background(`[processDetectionData] ✅ Main detection complete: ${detectionResults.length} detectors`);
 
         // CRITICAL FIX: Update badge immediately when detection completes
         // This is the ONLY place badge should be updated to the final count
@@ -1524,19 +1524,19 @@ async function processDetectionData(message, sender) {
                                  detectionCount >= 3 ? badgeColors.medium :
                                  badgeColors.low;
 
-                    console.log(`%c[processDetectionData] 🔵 UPDATING BADGE TO FINAL COUNT: "${count}"`, 'color: #2196F3; font-weight: bold; font-size: 14px;');
-                    console.log(`[processDetectionData] Detection count: ${detectionCount} (hooks: ${state.hooksData.size}, main: ${state.mainData.length})`);
+                    Logger.background(`%c[processDetectionData] 🔵 UPDATING BADGE TO FINAL COUNT: "${count}"`, 'color: #2196F3; font-weight: bold; font-size: 14px;');
+                    Logger.background(`[processDetectionData] Detection count: ${detectionCount} (hooks: ${state.hooksData.size}, main: ${state.mainData.length})`);
 
                     await chrome.action.setBadgeText({ text: count, tabId: tabId });
                     await chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId });
 
-                    console.log(`%c[processDetectionData] ✅ Badge set to FINAL COUNT "${count}" - NO MORE PERCENTAGE UPDATES!`, 'color: #4caf50; font-weight: bold; font-size: 14px;');
+                    Logger.background(`%c[processDetectionData] ✅ Badge set to FINAL COUNT "${count}" - NO MORE PERCENTAGE UPDATES!`, 'color: #4caf50; font-weight: bold; font-size: 14px;');
                 } else {
-                    console.log(`%c[processDetectionData] ℹ️ No detections found - badge will be cleared`, 'color: #ff9800; font-weight: bold;');
+                    Logger.background(`%c[processDetectionData] ℹ️ No detections found - badge will be cleared`, 'color: #ff9800; font-weight: bold;');
                     await chrome.action.setBadgeText({ text: '', tabId: tabId });
                 }
             } catch (error) {
-                console.error('[processDetectionData] Error updating badge:', error);
+                Logger.error('DETECTION', '[processDetectionData] Error updating badge:', error);
             }
         })();
 
@@ -1546,12 +1546,12 @@ async function processDetectionData(message, sender) {
         setTimeout(async () => {
             const currentState = detectionStates.get(tabId);
             if (!currentState) {
-                console.log(`[⏱️ 5s Safety Timeout] Tab ${tabId} state already cleaned up`);
+                Logger.background(`[⏱️ 5s Safety Timeout] Tab ${tabId} state already cleaned up`);
                 return;
             }
 
             if (currentState.finalized) {
-                console.log(`[⏱️ 5s Safety Timeout] Tab ${tabId} already finalized, no action needed`);
+                Logger.background(`[⏱️ 5s Safety Timeout] Tab ${tabId} already finalized, no action needed`);
                 return;
             }
 
@@ -1559,8 +1559,8 @@ async function processDetectionData(message, sender) {
             const mainMethodsComplete = ['cookies', 'headers', 'url', 'dom'].every(m => currentState.completedMethods.has(m));
 
             if (!mainMethodsComplete) {
-                console.warn(`%c[⏱️ 5s SAFETY] Main detection hasn't completed yet - waiting...`, 'color: #ff9800; font-weight: bold;');
-                console.warn(`[⏱️ 5s SAFETY] Completed methods: [${Array.from(currentState.completedMethods)}]`);
+                Logger.warn('BACKGROUND', `%c[⏱️ 5s SAFETY] Main detection hasn't completed yet - waiting...`, 'color: #ff9800; font-weight: bold;');
+                Logger.warn('BACKGROUND', `[⏱️ 5s SAFETY] Completed methods: [${Array.from(currentState.completedMethods)}]`);
                 // Don't force methods if main detection is still running
                 // Main detection will mark them complete when it finishes
                 return;
@@ -1570,14 +1570,14 @@ async function processDetectionData(message, sender) {
             let forcedMethods = [];
 
             if (!currentState.windowPropertiesComplete) {
-                console.warn(`%c[⏱️ 5s SAFETY] Main complete, forcing windowProperties completion (signal lost)`, 'color: #ff9800; font-weight: bold;');
+                Logger.warn('BACKGROUND', `%c[⏱️ 5s SAFETY] Main complete, forcing windowProperties completion (signal lost)`, 'color: #ff9800; font-weight: bold;');
                 markMethodComplete(tabId, 'windowProperties');
                 currentState.windowPropertiesComplete = true;
                 forcedMethods.push('windowProperties');
             }
 
             if (!currentState.hooksComplete) {
-                console.warn(`%c[⏱️ 5s SAFETY] Main complete, forcing jsHooks completion (signal lost)`, 'color: #ff9800; font-weight: bold;');
+                Logger.warn('BACKGROUND', `%c[⏱️ 5s SAFETY] Main complete, forcing jsHooks completion (signal lost)`, 'color: #ff9800; font-weight: bold;');
                 markMethodComplete(tabId, 'jsHooks');
                 currentState.hooksComplete = true;
                 forcedMethods.push('jsHooks');
@@ -1586,20 +1586,20 @@ async function processDetectionData(message, sender) {
             // CRITICAL FIX: Check if detection data is ALREADY stored
             const storedData = await DetectionEngineManager.getStoredDetection(currentState.url);
             if (storedData) {
-                console.log(`%c[⏱️ 5s SAFETY TIMEOUT] ✅ Detection data already stored for tab ${tabId}!`, 'color: #4caf50; font-weight: bold;');
-                console.log(`[⏱️ 5s SAFETY] Found ${storedData.detectionResults?.length || 0} detectors - finalizing immediately`);
+                Logger.background(`%c[⏱️ 5s SAFETY TIMEOUT] ✅ Detection data already stored for tab ${tabId}!`, 'color: #4caf50; font-weight: bold;');
+                Logger.background(`[⏱️ 5s SAFETY] Found ${storedData.detectionResults?.length || 0} detectors - finalizing immediately`);
 
                 // Finalize immediately
                 await finalizeDetection(tabId, currentState);
-                console.log(`%c[⏱️ 5s SAFETY] ✅ Finalization complete, badge updated to count`, 'color: #4caf50; font-weight: bold;');
+                Logger.background(`%c[⏱️ 5s SAFETY] ✅ Finalization complete, badge updated to count`, 'color: #4caf50; font-weight: bold;');
                 return;
             }
 
             // If we forced any methods, trigger finalization
             if (forcedMethods.length > 0) {
-                console.warn(`%c[⏱️ 5s SAFETY TIMEOUT TRIGGERED]`, 'color: #ff9800; font-weight: bold; font-size: 14px;');
-                console.warn(`[⏱️ 5s SAFETY] Forced completion of: ${forcedMethods.join(', ')}`);
-                console.warn(`[⏱️ 5s SAFETY] Current state:`, {
+                Logger.warn('BACKGROUND', `%c[⏱️ 5s SAFETY TIMEOUT TRIGGERED]`, 'color: #ff9800; font-weight: bold; font-size: 14px;');
+                Logger.warn('BACKGROUND', `[⏱️ 5s SAFETY] Forced completion of: ${forcedMethods.join(', ')}`);
+                Logger.warn('BACKGROUND', `[⏱️ 5s SAFETY] Current state:`, {
                     windowPropertiesComplete: currentState.windowPropertiesComplete,
                     mainComplete: currentState.mainComplete,
                     hooksComplete: currentState.hooksComplete,
@@ -1609,7 +1609,7 @@ async function processDetectionData(message, sender) {
 
                 // Trigger finalization check
                 checkAndFinalizeDetection(tabId);
-                console.log(`%c[⏱️ 5s SAFETY] ✅ Forced finalization triggered`, 'color: #ff9800; font-weight: bold;');
+                Logger.background(`%c[⏱️ 5s SAFETY] ✅ Forced finalization triggered`, 'color: #ff9800; font-weight: bold;');
             }
         }, 5000); // 5 seconds - give main detection time to complete
 
@@ -1619,12 +1619,12 @@ async function processDetectionData(message, sender) {
         // FIX: Removed early history save - history is now saved ONLY in finalizeDetection()
         // This prevents duplicate saves and ensures history contains complete data (including hooks)
         // Early save here would miss JS hooks which arrive later via batching
-        console.log('[processDetectionData] ⏭️  Skipping early history save - will save complete data during finalization');
+        Logger.detection('[processDetectionData] ⏭️  Skipping early history save - will save complete data during finalization');
     } catch (error) {
-        console.error('Scrapfly Background: Error running detection:', error);
+        Logger.error('BACKGROUND', 'Scrapfly Background: Error running detection:', error);
     }
 
-    console.log(`Scrapfly Background: Processed detection data for tab ${tabId}`, {
+    Logger.background(`Scrapfly Background: Processed detection data for tab ${tabId}`, {
         url: pageData.url,
         cookies: pageData.cookies.length,
         content: pageData.content?.length || 0,
@@ -1660,7 +1660,7 @@ async function getCurrentTabDetectionData() {
             return await DetectionEngineManager.getDetectionData(tab.id);
         }
     } catch (error) {
-        console.error('Scrapfly Background: Error getting current tab:', error);
+        Logger.error('BACKGROUND', 'Scrapfly Background: Error getting current tab:', error);
     }
     return null;
 }
@@ -1679,7 +1679,7 @@ function setupMessageListeners() {
         }
 
         // Reduced logging - comment out for less spam
-        // console.log('Scrapfly Background: Received message:', request.type);
+        // Logger.background('Scrapfly Background: Received message:', request.type);
 
         switch (request.type) {
             case 'DEBUG_LOG':
@@ -1702,11 +1702,11 @@ function setupMessageListeners() {
 
                     // Use appropriate console method
                     switch (request.level) {
-                        case 'log': console.log(prefix, ...parsedArgs); break;
+                        case 'log': Logger.background(prefix, ...parsedArgs); break;
                         case 'info': console.info(prefix, ...parsedArgs); break;
                         case 'debug': console.debug(prefix, ...parsedArgs); break;
-                        case 'warn': console.warn(prefix, ...parsedArgs); break;
-                        case 'error': console.error(prefix, ...parsedArgs); break;
+                        case 'warn': Logger.warn('BACKGROUND', prefix, ...parsedArgs); break;
+                        case 'error': Logger.error('BACKGROUND', prefix, ...parsedArgs); break;
                         case 'trace': console.trace(prefix, ...parsedArgs); break;
                         case 'group': console.group(prefix, ...parsedArgs); break;
                         case 'groupEnd': console.groupEnd(); break;
@@ -1714,7 +1714,7 @@ function setupMessageListeners() {
                         case 'table': console.table(...parsedArgs); break;
                         case 'time': console.time(...parsedArgs); break;
                         case 'timeEnd': console.timeEnd(...parsedArgs); break;
-                        default: console.log(prefix, ...parsedArgs);
+                        default: Logger.background(prefix, ...parsedArgs);
                     }
                 }
                 break;
@@ -1735,10 +1735,10 @@ function setupMessageListeners() {
                             const timestamp = new Date(request.timestamp).toISOString().split('T')[1].slice(0, -1);
                             const prefix = `[${timestamp}] [${request.source || 'hooks'}]`;
                             switch (request.level) {
-                                case 'log': console.log(prefix, request.message); break;
-                                case 'warn': console.warn(prefix, request.message); break;
-                                case 'error': console.error(prefix, request.message); break;
-                                default: console.log(prefix, request.message);
+                                case 'log': Logger.background(prefix, request.message); break;
+                                case 'warn': Logger.warn('BACKGROUND', prefix, request.message); break;
+                                case 'error': Logger.error('BACKGROUND', prefix, request.message); break;
+                                default: Logger.background(prefix, request.message);
                             }
                         }
                     } catch (e) {
@@ -1761,7 +1761,7 @@ function setupMessageListeners() {
                 // FIX: Clear interrupted state on new page load (prevents false "interrupted" messages)
                 if (sender.tab?.id) {
                     if (interruptedDetections.has(sender.tab.id)) {
-                        console.log(`[Background] Clearing interrupted state for tab ${sender.tab.id} (new page load)`);
+                        Logger.background(`[Background] Clearing interrupted state for tab ${sender.tab.id} (new page load)`);
                         interruptedDetections.delete(sender.tab.id);
                     }
                 }
@@ -1788,7 +1788,7 @@ function setupMessageListeners() {
                 (async () => {
                     try {
                         const enabled = request.enabled;
-                        console.log(`[Background] Extension toggle changed to: ${enabled ? 'ENABLED' : 'DISABLED'}`);
+                        Logger.background(`[Background] Extension toggle changed to: ${enabled ? 'ENABLED' : 'DISABLED'}`);
 
                         // Call Settings.handleEnableToggle with dependencies for badge restoration
                         await Settings.handleEnableToggle(enabled, {
@@ -1799,7 +1799,7 @@ function setupMessageListeners() {
 
                         sendResponse({ status: 'success' });
                     } catch (error) {
-                        console.error('[Background] Error handling toggle change:', error);
+                        Logger.error('BACKGROUND', '[Background] Error handling toggle change:', error);
                         sendResponse({ status: 'error', error: error.message });
                     }
                 })();
@@ -1808,11 +1808,11 @@ function setupMessageListeners() {
 
             case 'DETECTION_DATA':
                 // Process detection data from content script
-                console.log('[DEBUG] DETECTION_DATA message received!');
-                console.log('[DEBUG] Sender tab ID:', sender.tab?.id);
-                console.log('[DEBUG] Request keys:', Object.keys(request));
+                Logger.debug('BACKGROUND', '[DEBUG] DETECTION_DATA message received!');
+                Logger.debug('BACKGROUND', '[DEBUG] Sender tab ID:', sender.tab?.id);
+                Logger.debug('BACKGROUND', '[DEBUG] Request keys:', Object.keys(request));
                 const pageData = request.data;
-                console.log('[DEBUG] Request data available:', {
+                Logger.debug('BACKGROUND', '[DEBUG] Request data available:', {
                     hasData: !!pageData,
                     dataKeys: pageData ? Object.keys(pageData) : null,
                     hasCookies: pageData?.cookies ? pageData.cookies.length : 0,
@@ -1822,18 +1822,18 @@ function setupMessageListeners() {
                     url: pageData?.url
                 });
                 try {
-                    console.log('[DEBUG] Calling processDetectionData...');
+                    Logger.debug('BACKGROUND', '[DEBUG] Calling processDetectionData...');
                     processDetectionData(request, sender);
-                    console.log('[DEBUG] processDetectionData completed successfully');
+                    Logger.debug('BACKGROUND', '[DEBUG] processDetectionData completed successfully');
                 } catch (error) {
-                    console.error('[DEBUG] ERROR in processDetectionData:', error);
+                    Logger.error('BACKGROUND', '[DEBUG] ERROR in processDetectionData:', error);
                 }
                 sendResponse({ status: 'received', tabId: sender.tab?.id });
                 break;
 
             case 'CONTENT_SCRIPT_READY':
                 // Content script is ready
-                console.log(`Scrapfly Background: Content script ready on ${request.url}`);
+                Logger.background(`Scrapfly Background: Content script ready on ${request.url}`);
                 sendResponse({ status: 'acknowledged' });
                 break;
 
@@ -1851,7 +1851,7 @@ function setupMessageListeners() {
                             // FIX: Layer 2 - If popup is querying the current active tab and it's marked as interrupted,
                             // clear the interrupted state because user is viewing this tab right now
                             if (tabId === currentActiveTab && interruptedDetections.has(tabId)) {
-                                console.log(`[GET_DETECTION_DATA] Clearing interrupted state for current tab ${tabId} (user viewing popup)`);
+                                Logger.background(`[GET_DETECTION_DATA] Clearing interrupted state for current tab ${tabId} (user viewing popup)`);
                                 interruptedDetections.delete(tabId);
                                 try {
                                     await chrome.action.setBadgeText({ text: '', tabId });
@@ -1868,12 +1868,12 @@ function setupMessageListeners() {
                             if (!data) {
                                 // CRITICAL FIX: Don't return zombie data from detectionStates if cache was recently cleared
                                 if (recentlyClearedTabs.has(tabId)) {
-                                    console.log(`[GET_DETECTION_DATA] Tab ${tabId} recently cleared - blocking zombie data from detectionStates`);
+                                    Logger.background(`[GET_DETECTION_DATA] Tab ${tabId} recently cleared - blocking zombie data from detectionStates`);
                                     // Don't return stale data - let popup show empty state
                                 } else {
                                     const state = detectionStates.get(tabId);
                                     if (state && state.expiry && state.mainData && state.mainData.length > 0) {
-                                        console.log(`[GET_DETECTION_DATA] Using fresh detection state with expiry for tab ${tabId}`);
+                                        Logger.background(`[GET_DETECTION_DATA] Using fresh detection state with expiry for tab ${tabId}`);
                                         data = {
                                             detectionResults: state.mainData,
                                             timestamp: state.timestamp,
@@ -1888,12 +1888,12 @@ function setupMessageListeners() {
                             }
                             
                             // Reduced logging - comment out for less spam
-                            // console.log(`Scrapfly Background: Sending detection data for tab ${tabId}:`, data ? 'Data available' : 'No data');
+                            // Logger.background(`Scrapfly Background: Sending detection data for tab ${tabId}:`, data ? 'Data available' : 'No data');
 
                             // FIX: Layer 3 - If we have cached data and tab is marked as interrupted, clear it
                             // (Tab was interrupted but detection actually completed before interruption occurred)
                             if (data && interruptedDetections.has(tabId)) {
-                                console.log(`[GET_DETECTION_DATA] Clearing interrupted state for tab ${tabId} (has cached completed data)`);
+                                Logger.background(`[GET_DETECTION_DATA] Clearing interrupted state for tab ${tabId} (has cached completed data)`);
                                 interruptedDetections.delete(tabId);
                             }
 
@@ -1901,7 +1901,7 @@ function setupMessageListeners() {
                             if (!data) {
                                 // CRITICAL FIX: If cache was recently cleared, don't show pending/analyzing state
                                 if (recentlyClearedTabs.has(tabId)) {
-                                    console.log(`[GET_DETECTION_DATA] Tab ${tabId} recently cleared - returning empty state, not pending`);
+                                    Logger.background(`[GET_DETECTION_DATA] Tab ${tabId} recently cleared - returning empty state, not pending`);
                                     status = 'ok';  // Return ok with no data to show empty state
                                 } else if (activeDetections.has(tabId)) {
                                     // FIX: If tab is marked interrupted but still has active detection, treat as pending
@@ -1920,7 +1920,7 @@ function setupMessageListeners() {
                                         }
                                         // Removed '✕' and '?' checks - interrupted state is tracked in interruptedDetections map
                                     } catch (badgeError) {
-                                        console.log(`[GET_DETECTION_DATA] Failed to read badge text for tab ${tabId}:`, badgeError.message);
+                                        Logger.background(`[GET_DETECTION_DATA] Failed to read badge text for tab ${tabId}:`, badgeError.message);
                                     }
                                 }
                             }
@@ -1932,7 +1932,7 @@ function setupMessageListeners() {
                                 // FIX: Layer 2 - If popup is querying the current active tab and it's marked as interrupted,
                                 // clear the interrupted state because user is viewing this tab right now
                                 if (interruptedDetections.has(activeTab.id)) {
-                                    console.log(`[GET_DETECTION_DATA] Clearing interrupted state for current tab ${activeTab.id} (user viewing popup)`);
+                                    Logger.background(`[GET_DETECTION_DATA] Clearing interrupted state for current tab ${activeTab.id} (user viewing popup)`);
                                     interruptedDetections.delete(activeTab.id);
                                     try {
                                         await chrome.action.setBadgeText({ text: '', tabId: activeTab.id });
@@ -1944,12 +1944,12 @@ function setupMessageListeners() {
                                 // Try to get cached data first
                                 data = await getCurrentTabDetectionData();
                                 // Reduced logging - comment out for less spam
-                                // console.log('Scrapfly Background: Sending detection data for current tab:', data ? 'Data available' : 'No data');
+                                // Logger.background('Scrapfly Background: Sending detection data for current tab:', data ? 'Data available' : 'No data');
 
                                 // FIX: Layer 3 - If we have cached data and tab is marked as interrupted, clear it
                                 // (Tab was interrupted but detection actually completed before interruption occurred)
                                 if (data && interruptedDetections.has(activeTab.id)) {
-                                    console.log(`[GET_DETECTION_DATA] Clearing interrupted state for active tab ${activeTab.id} (has cached completed data)`);
+                                    Logger.background(`[GET_DETECTION_DATA] Clearing interrupted state for active tab ${activeTab.id} (has cached completed data)`);
                                     interruptedDetections.delete(activeTab.id);
                                 }
 
@@ -1972,7 +1972,7 @@ function setupMessageListeners() {
                                             }
                                             // Removed '✕' and '?' checks - interrupted state is tracked in interruptedDetections map
                                         } catch (badgeError) {
-                                            console.log('[GET_DETECTION_DATA] Failed to read badge text for active tab:', badgeError.message);
+                                            Logger.detection('[GET_DETECTION_DATA] Failed to read badge text for active tab:', badgeError.message);
                                         }
                                     }
                                 }
@@ -1995,7 +1995,7 @@ function setupMessageListeners() {
                             }
                         });
                     } catch (error) {
-                        console.error('Scrapfly Background: Error in GET_DETECTION_DATA:', error);
+                        Logger.error('BACKGROUND', 'Scrapfly Background: Error in GET_DETECTION_DATA:', error);
                         sendResponse({ data: null, status: 'error', error: error.message });
                     }
                 })();
@@ -2006,21 +2006,21 @@ function setupMessageListeners() {
                 // Reload detectors from storage (after adding/updating/deleting)
                 (async () => {
                     try {
-                        console.log('Scrapfly Background: Reloading detectors from storage...');
+                        Logger.background('Scrapfly Background: Reloading detectors from storage...');
 
                         // CRITICAL: Clear all optimization caches when rules change
                         // This ensures pattern changes are immediately reflected
                         if (typeof DetectionEngineManager !== 'undefined' && DetectionEngineManager.patternCache) {
-                            console.log('Scrapfly Background: Clearing PatternCache (rules changed)');
+                            Logger.background('Scrapfly Background: Clearing PatternCache (rules changed)');
                             DetectionEngineManager.patternCache.clear();
                         }
 
                         detectorManager.initialized = false;
                         await detectorManager.initialize();
-                        console.log('Scrapfly Background: Detectors reloaded successfully');
+                        Logger.background('Scrapfly Background: Detectors reloaded successfully');
                         sendResponse({ status: 'reloaded', detectorCount: detectorManager.getDetectorCount() });
                     } catch (error) {
-                        console.error('Scrapfly Background: Error reloading detectors:', error);
+                        Logger.error('BACKGROUND', 'Scrapfly Background: Error reloading detectors:', error);
                         sendResponse({ status: 'error', error: error.message });
                     }
                 })();
@@ -2031,12 +2031,12 @@ function setupMessageListeners() {
                 // Sync category colors from Settings to CategoryManager
                 (async () => {
                     try {
-                        console.log('Scrapfly Background: Syncing category colors from Settings...');
+                        Logger.background('Scrapfly Background: Syncing category colors from Settings...');
                         const synced = await detectorManager.categoryManager.syncColorsFromSettings();
-                        console.log('Scrapfly Background: Category colors synced:', synced);
+                        Logger.background('Scrapfly Background: Category colors synced:', synced);
                         sendResponse({ status: 'synced', success: synced });
                     } catch (error) {
-                        console.error('Scrapfly Background: Error syncing category colors:', error);
+                        Logger.error('BACKGROUND', 'Scrapfly Background: Error syncing category colors:', error);
                         sendResponse({ status: 'error', error: error.message });
                     }
                 })();
@@ -2048,7 +2048,7 @@ function setupMessageListeners() {
                 (async () => {
                     try {
                         const startTime = Date.now();
-                        console.log('[Background] GET_DETECTORS request received');
+                        Logger.background('[Background] GET_DETECTORS request received');
 
                         // Ensure DetectorManager is fully initialized with retry logic
                         // IMPROVED: Increased from 10→20 retries and 200ms→300ms delays (2s→6s total)
@@ -2069,8 +2069,8 @@ function setupMessageListeners() {
                                     sum + Object.keys(cat).length, 0
                                 );
                                 const attempts = maxRetries - retries + 1;
-                                console.log(`[Background] ✅ Detectors loaded successfully in ${elapsed}ms (${attempts} attempts)`);
-                                console.log(`[Background] 📊 Sending ${detectorCount} detectors across ${Object.keys(allDetectors).length} categories`);
+                                Logger.background(`[Background] ✅ Detectors loaded successfully in ${elapsed}ms (${attempts} attempts)`);
+                                Logger.background(`[Background] 📊 Sending ${detectorCount} detectors across ${Object.keys(allDetectors).length} categories`);
 
                                 sendResponse({
                                     detectors: allDetectors
@@ -2081,11 +2081,11 @@ function setupMessageListeners() {
                             // Detectors not loaded yet, wait and retry
                             const attemptsLeft = retries - 1;
                             const elapsedSoFar = Date.now() - startTime;
-                            console.warn(`[Background] ⚠️ Detectors not loaded yet (${elapsedSoFar}ms elapsed), retrying... (${attemptsLeft} attempts left)`);
+                            Logger.warn('BACKGROUND', `[Background] ⚠️ Detectors not loaded yet (${elapsedSoFar}ms elapsed), retrying... (${attemptsLeft} attempts left)`);
 
                             // Diagnostic info on why detectors might not be ready
                             if (retries === maxRetries) {
-                                console.log('[Background] 🔍 Initial diagnostic: DetectorManager state:', {
+                                Logger.background('[Background] 🔍 Initial diagnostic: DetectorManager state:', {
                                     exists: !!detectorManager,
                                     initialized: detectorManager?.initialized,
                                     detectorCount: detectorManager ? Object.keys(detectorManager.detectors || {}).length : 0,
@@ -2094,7 +2094,7 @@ function setupMessageListeners() {
 
                                 // Check raw storage to compare with detectorManager state
                                 chrome.storage.local.get(['scrapfly_detectors', 'scrapfly_categories'], (rawStorage) => {
-                                    console.log('[Background] 🔍 DIAGNOSTIC: Raw chrome.storage.local contents:', {
+                                    Logger.background('[Background] 🔍 DIAGNOSTIC: Raw chrome.storage.local contents:', {
                                         hasDetectorsKey: !!rawStorage.scrapfly_detectors,
                                         hasCategoriesKey: !!rawStorage.scrapfly_categories,
                                         detectorsTimestamp: rawStorage.scrapfly_detectors?.timestamp,
@@ -2105,23 +2105,23 @@ function setupMessageListeners() {
                                     // Show sample of what's in storage
                                     if (rawStorage.scrapfly_detectors?.detectors) {
                                         const detectorCategories = Object.keys(rawStorage.scrapfly_detectors.detectors);
-                                        console.log('[Background] 🔍 DIAGNOSTIC: Storage detector categories:', detectorCategories);
+                                        Logger.background('[Background] 🔍 DIAGNOSTIC: Storage detector categories:', detectorCategories);
 
                                         // Show count per category from storage
                                         for (const cat of detectorCategories) {
                                             const detectorNames = Object.keys(rawStorage.scrapfly_detectors.detectors[cat] || {});
-                                            console.log(`[Background] 🔍 DIAGNOSTIC: Storage category "${cat}": ${detectorNames.length} detectors`);
+                                            Logger.background(`[Background] 🔍 DIAGNOSTIC: Storage category "${cat}": ${detectorNames.length} detectors`);
                                         }
                                     }
 
                                     // Compare with detectorManager state
                                     if (detectorManager?.detectors) {
                                         const managerCategories = Object.keys(detectorManager.detectors);
-                                        console.log('[Background] 🔍 DIAGNOSTIC: DetectorManager.detectors categories:', managerCategories);
+                                        Logger.background('[Background] 🔍 DIAGNOSTIC: DetectorManager.detectors categories:', managerCategories);
 
                                         if (managerCategories.length === 0 && rawStorage.scrapfly_detectors?.detectors) {
-                                            console.error('[Background] ❌ DIAGNOSTIC: MISMATCH! Storage has detectors but detectorManager.detectors is empty');
-                                            console.error('[Background] ❌ DIAGNOSTIC: This indicates loadFromStorage() failed to populate detectorManager.detectors');
+                                            Logger.error('BACKGROUND', '[Background] ❌ DIAGNOSTIC: MISMATCH! Storage has detectors but detectorManager.detectors is empty');
+                                            Logger.error('BACKGROUND', '[Background] ❌ DIAGNOSTIC: This indicates loadFromStorage() failed to populate detectorManager.detectors');
                                         }
                                     }
                                 });
@@ -2130,7 +2130,7 @@ function setupMessageListeners() {
                             // Show progress every 5 attempts
                             if ((maxRetries - retries) % 5 === 0 && retries < maxRetries) {
                                 const progress = Math.round(((maxRetries - retries) / maxRetries) * 100);
-                                console.log(`[Background] ⏳ Progress: ${progress}% (waiting for JSON files to load...)`);
+                                Logger.background(`[Background] ⏳ Progress: ${progress}% (waiting for JSON files to load...)`);
                             }
 
                             retries--;
@@ -2141,8 +2141,8 @@ function setupMessageListeners() {
 
                         // Failed to load detectors after retries
                         const elapsed = Date.now() - startTime;
-                        console.error(`[Background] ❌ Failed to load detectors after ${elapsed}ms (${maxRetries} retries)`);
-                        console.error('[Background] ❌ Final diagnostic:', {
+                        Logger.error('BACKGROUND', `[Background] ❌ Failed to load detectors after ${elapsed}ms (${maxRetries} retries)`);
+                        Logger.error('BACKGROUND', '[Background] ❌ Final diagnostic:', {
                             detectorManagerExists: !!detectorManager,
                             initialized: detectorManager?.initialized,
                             categoriesCount: detectorManager ? Object.keys(detectorManager.detectors || {}).length : 0,
@@ -2152,20 +2152,20 @@ function setupMessageListeners() {
 
                         // Check if categories were loaded but not detectors
                         if (categoryManager?.initialized && categoryManager.categories) {
-                            console.error('[Background] ❌ Categories loaded but detectors empty - JSON loading issue');
-                            console.error('[Background] ❌ Available categories:', Object.keys(categoryManager.categories));
+                            Logger.error('BACKGROUND', '[Background] ❌ Categories loaded but detectors empty - JSON loading issue');
+                            Logger.error('BACKGROUND', '[Background] ❌ Available categories:', Object.keys(categoryManager.categories));
                         } else {
-                            console.error('[Background] ❌ CategoryManager not initialized - initialization issue');
+                            Logger.error('BACKGROUND', '[Background] ❌ CategoryManager not initialized - initialization issue');
                         }
 
-                        console.error('[Background] ⚠️ Content script will receive empty config - extension may not work correctly');
-                        console.error('[Background] 💡 Recommendation: Reload extension and refresh all tabs');
+                        Logger.error('BACKGROUND', '[Background] ⚠️ Content script will receive empty config - extension may not work correctly');
+                        Logger.error('BACKGROUND', '[Background] 💡 Recommendation: Reload extension and refresh all tabs');
 
                         // ALWAYS send response even on failure
                         sendResponse({ detectors: {} });
                     } catch (error) {
-                        console.error('[Background] ❌ Error getting detectors:', error);
-                        console.error('[Background] ❌ Stack trace:', error.stack);
+                        Logger.error('BACKGROUND', '[Background] ❌ Error getting detectors:', error);
+                        Logger.error('BACKGROUND', '[Background] ❌ Stack trace:', error.stack);
 
                         // ALWAYS send response even on error
                         sendResponse({ detectors: {} });
@@ -2179,24 +2179,24 @@ function setupMessageListeners() {
                 (async () => {
                     try {
                         const { url } = request;
-                        console.log('[Background] [Early Cache] Checking cache for:', url);
+                        Logger.background('[Background] [Early Cache] Checking cache for:', url);
 
                         // Use existing getStoredDetection function to check for cached data
                         const cachedData = await DetectionEngineManager.getStoredDetection(url);
 
                         if (cachedData) {
-                            console.log('[Background] ✅ [Early Cache] HIT - returning cached data');
+                            Logger.background('[Background] ✅ [Early Cache] HIT - returning cached data');
                             // Mark this tab as using cache to skip unnecessary capture work
                             if (sender.tab?.id) {
                                 tabsUsingCache.add(sender.tab.id);
-                                console.log(`[Background] [Early Cache] Marked tab ${sender.tab.id} as using cache`);
+                                Logger.background(`[Background] [Early Cache] Marked tab ${sender.tab.id} as using cache`);
                             }
                             sendResponse({
                                 cacheHit: true,
                                 detectionData: cachedData
                             });
                         } else {
-                            console.log('[Background] ❌ [Early Cache] MISS - detection needed');
+                            Logger.background('[Background] ❌ [Early Cache] MISS - detection needed');
                             // Clear cache status for this tab (if it was previously cached)
                             if (sender.tab?.id) {
                                 tabsUsingCache.delete(sender.tab.id);
@@ -2206,7 +2206,7 @@ function setupMessageListeners() {
                             });
                         }
                     } catch (error) {
-                        console.error('[Background] [Early Cache] Error checking cache:', error);
+                        Logger.error('BACKGROUND', '[Background] [Early Cache] Error checking cache:', error);
                         sendResponse({
                             cacheHit: false,
                             error: error.message
@@ -2223,7 +2223,7 @@ function setupMessageListeners() {
                         const { url, detectionData } = request;
                         const tabId = sender.tab?.id;
 
-                        console.log('[Background] [Early Cache] Content script exited early due to cache hit for:', url);
+                        Logger.background('[Background] [Early Cache] Content script exited early due to cache hit for:', url);
 
                         // Update badge with cached detection count immediately
                         if (detectionData && tabId) {
@@ -2245,20 +2245,20 @@ function setupMessageListeners() {
                                     color: color,
                                     tabId: tabId
                                 });
-                                console.log(`[Background] [Early Cache] ✅ Badge updated: ${detectionCount} detections from cache`);
+                                Logger.background(`[Background] [Early Cache] ✅ Badge updated: ${detectionCount} detections from cache`);
                             } else {
                                 // No detections - clear badge (consistent with normal flow)
                                 chrome.action.setBadgeText({
                                     text: '',
                                     tabId: tabId
                                 });
-                                console.log('[Background] [Early Cache] Badge cleared: no detections');
+                                Logger.background('[Background] [Early Cache] Badge cleared: no detections');
                             }
                         }
 
                         sendResponse({ status: 'acknowledged' });
                     } catch (error) {
-                        console.error('[Background] [Early Cache] Error updating badge:', error);
+                        Logger.error('BACKGROUND', '[Background] [Early Cache] Error updating badge:', error);
                         sendResponse({ status: 'error', error: error.message });
                     }
                 })();
@@ -2269,14 +2269,14 @@ function setupMessageListeners() {
                 // Reload CategoryManager when colors are updated
                 (async () => {
                     try {
-                        console.log('Scrapfly Background: Category colors updated, reloading CategoryManager...');
+                        Logger.background('Scrapfly Background: Category colors updated, reloading CategoryManager...');
                         if (categoryManager) {
                             await categoryManager.loadFromStorage();
-                            console.log('Scrapfly Background: CategoryManager reloaded with new colors');
+                            Logger.background('Scrapfly Background: CategoryManager reloaded with new colors');
                         }
                         sendResponse({ status: 'reloaded' });
                     } catch (error) {
-                        console.error('Scrapfly Background: Error reloading CategoryManager:', error);
+                        Logger.error('BACKGROUND', 'Scrapfly Background: Error reloading CategoryManager:', error);
                         sendResponse({ status: 'error', error: error.message });
                     }
                 })();
@@ -2297,7 +2297,7 @@ function setupMessageListeners() {
 
             case 'CACHE_SCOPE_CHANGED':
                 // Clear in-memory URL hash cache when cache scope changes
-                console.log('[Background] Cache scope changed - clearing URL hash cache');
+                Logger.background('[Background] Cache scope changed - clearing URL hash cache');
                 Utils.clearUrlHashCache();
 
                 // Update badge for current tab based on cached data with new scope
@@ -2317,10 +2317,10 @@ function setupMessageListeners() {
                             // FIX: Clear stale activeDetections state to prevent false "pending" status
                             // This ensures GET_DETECTION_DATA doesn't return status='pending' for old detections
                             activeDetections.delete(tab.id);
-                            console.log(`[Background] Cleared activeDetections for tab ${tab.id} (cache scope changed)`);
+                            Logger.background(`[Background] Cleared activeDetections for tab ${tab.id} (cache scope changed)`);
 
                             setTimeout(() => recentlyClearedTabs.delete(tab.id), 10000);
-                            console.log(`[Background] Added tab ${tab.id} to recentlyClearedTabs for 10 seconds`);
+                            Logger.background(`[Background] Added tab ${tab.id} to recentlyClearedTabs for 10 seconds`);
 
                             if (storedData && storedData.detectionCount > 0) {
                                 // Update badge with cached count and color
@@ -2332,12 +2332,12 @@ function setupMessageListeners() {
 
                                 await chrome.action.setBadgeText({ text: count, tabId: tab.id });
                                 await chrome.action.setBadgeBackgroundColor({ color: color, tabId: tab.id });
-                                console.log(`[Background] Badge updated with cached data: ${count} detections (scope change)`);
+                                Logger.background(`[Background] Badge updated with cached data: ${count} detections (scope change)`);
                             } else {
                                 // No cached data with new scope - show gray X
                                 await chrome.action.setBadgeText({ text: '✕', tabId: tab.id });
                                 await chrome.action.setBadgeBackgroundColor({ color: '#6B7280', tabId: tab.id });
-                                console.log('[Background] Badge updated to gray X - no cached data with new scope');
+                                Logger.background('[Background] Badge updated to gray X - no cached data with new scope');
                             }
                         }
 
@@ -2345,7 +2345,7 @@ function setupMessageListeners() {
                             sendResponse({ success: true });
                         }
                     } catch (error) {
-                        console.error('[Background] Error updating badge on cache scope change:', error);
+                        Logger.error('BACKGROUND', '[Background] Error updating badge on cache scope change:', error);
                         if (sendResponse) {
                             sendResponse({ success: false, error: error.message });
                         }
@@ -2405,13 +2405,13 @@ function setupMessageListeners() {
                         // Clear detection states (the main culprit of zombie data)
                         if (detectionStates.has(request.tabId)) {
                             detectionStates.delete(request.tabId);
-                            console.log(`[Background] 🧹 Cleared detectionStates for tab ${request.tabId}`);
+                            Logger.background(`[Background] 🧹 Cleared detectionStates for tab ${request.tabId}`);
                         }
 
                         // Clear active detection tracking
                         if (activeDetections.has(request.tabId)) {
                             activeDetections.delete(request.tabId);
-                            console.log(`[Background] 🧹 Cleared activeDetections for tab ${request.tabId}`);
+                            Logger.background(`[Background] 🧹 Cleared activeDetections for tab ${request.tabId}`);
                         }
 
                         // Clear other related stores
@@ -2426,7 +2426,7 @@ function setupMessageListeners() {
                         recentlyClearedTabs.add(request.tabId);
                         setTimeout(() => {
                             recentlyClearedTabs.delete(request.tabId);
-                            console.log(`[Background] 🔓 Tab ${request.tabId} removed from recently cleared list`);
+                            Logger.background(`[Background] 🔓 Tab ${request.tabId} removed from recently cleared list`);
                         }, 5000);
 
                         // CRITICAL FIX: Update badge to show no detection
@@ -2436,12 +2436,12 @@ function setupMessageListeners() {
                                 color: '#6B7280', // gray-500
                                 tabId: request.tabId
                             });
-                            console.log(`[Background] 🔖 Badge set to ✕ for tab ${request.tabId}`);
+                            Logger.background(`[Background] 🔖 Badge set to ✕ for tab ${request.tabId}`);
                         } catch (badgeError) {
-                            console.warn(`[Background] Could not update badge for tab ${request.tabId}:`, badgeError);
+                            Logger.warn('BACKGROUND', `[Background] Could not update badge for tab ${request.tabId}:`, badgeError);
                         }
 
-                        console.log(`[Background] ✅ Complete cache clear for tab ${request.tabId} - all memory and storage cleared`);
+                        Logger.background(`[Background] ✅ Complete cache clear for tab ${request.tabId} - all memory and storage cleared`);
                     }
                 })();
                 return true; // Async response
@@ -2449,7 +2449,7 @@ function setupMessageListeners() {
             case 'JS_HOOK_DETECTION':
                 // DEPRECATED: Individual hooks no longer used - batching is preferred
                 // Keeping for backward compatibility during transition
-                console.warn('[Background] Individual JS_HOOK_DETECTION received (should be batched)');
+                Logger.warn('BACKGROUND', '[Background] Individual JS_HOOK_DETECTION received (should be batched)');
                 return false;
 
             case 'JS_HOOK_DETECTION_BATCH':
@@ -2458,7 +2458,7 @@ function setupMessageListeners() {
                     let tabId;  // FIX: Declare outside try block for finally access
                     try {
                         if (!sender.tab || !sender.tab.id) {
-                            console.error('[Background] No tab info for JS hook batch');
+                            Logger.error('BACKGROUND', '[Background] No tab info for JS hook batch');
                             return;
                         }
 
@@ -2466,7 +2466,7 @@ function setupMessageListeners() {
 
                         // OPTIMIZATION: Early exit if tab is using cache
                         if (tabsUsingCache.has(tabId)) {
-                            console.log(`[Background] ✅ JS Hooks - Tab ${tabId} using cache - discarding hooks immediately`);
+                            Logger.background(`[Background] ✅ JS Hooks - Tab ${tabId} using cache - discarding hooks immediately`);
                             return; // Skip all processing for cached tabs
                         }
 
@@ -2488,21 +2488,21 @@ function setupMessageListeners() {
                             state.usedCache = true;
 
                             batchProcessingFlags.set(tabId, false);
-                            console.log(`[🔒 Batch Flag] ✅ SET to FALSE (cache hit) for tab ${tabId}`);
+                            Logger.background(`[🔒 Batch Flag] ✅ SET to FALSE (cache hit) for tab ${tabId}`);
                             return; // Don't process hooks - we have cached results
                         }
 
                         // FIX: Mark batch processing as active to prevent finalization race conditions
                         const previousFlag = batchProcessingFlags.get(tabId);
                         batchProcessingFlags.set(tabId, true);
-                        console.log(`%c[🔒 Batch Flag] 🔴 SET to TRUE (batch start) for tab ${tabId}`, 'color: #f44336; font-weight: bold;');
-                        console.log(`[🔒 Batch Flag] Previous value: ${previousFlag}, New value: true`);
-                        console.log(`[🔒 Batch Flag] This BLOCKS finalization until set to FALSE`);
+                        Logger.background(`%c[🔒 Batch Flag] 🔴 SET to TRUE (batch start) for tab ${tabId}`, 'color: #f44336; font-weight: bold;');
+                        Logger.background(`[🔒 Batch Flag] Previous value: ${previousFlag}, New value: true`);
+                        Logger.background(`[🔒 Batch Flag] This BLOCKS finalization until set to FALSE`);
 
-                        console.log(`[Background] 🎯 JS Hook batch from tab ${tabId}: ${detections.length} hooks`);
+                        Logger.background(`[Background] 🎯 JS Hook batch from tab ${tabId}: ${detections.length} hooks`);
 
                         // DEBUG: Log each hook detection
-                        console.log(`[Background] 📋 JS Hooks details:`);
+                        Logger.background(`[Background] 📋 JS Hooks details:`);
                         detections.forEach(hookData => {
                             const det = hookData.detection;
 
@@ -2510,7 +2510,7 @@ function setupMessageListeners() {
                             // Check if this is an inline hook (detector ID starts with 'inline-hook-')
                             const isInlineHook = det.detectorId && det.detectorId.startsWith('inline-hook-');
 
-                            console.log(`[Background]   - ${det.detectorName} (ID: ${det.detectorId}) [${isInlineHook ? 'INLINE' : 'DYNAMIC'}]: ${det.hook.target}`);
+                            Logger.background(`[Background]   - ${det.detectorName} (ID: ${det.detectorId}) [${isInlineHook ? 'INLINE' : 'DYNAMIC'}]: ${det.hook.target}`);
 
                             DEBUG_HOOK_DETECTION.logHookFired(
                                 det.detectorId,
@@ -2530,7 +2530,7 @@ function setupMessageListeners() {
 
                         // URL validation: Ensure URL hasn't changed during detection
                         if (state.url !== url) {
-                            console.log(`[Background] ⚠️ URL changed during JS hooks for tab ${tabId}: ${url} → ${state.url} - skipping hooks`);
+                            Logger.background(`[Background] ⚠️ URL changed during JS hooks for tab ${tabId}: ${url} → ${state.url} - skipping hooks`);
                             return; // Don't store hooks for the wrong URL
                         }
 
@@ -2546,7 +2546,7 @@ function setupMessageListeners() {
                                 fullDetector = detectorManager.findDetectorById(detectorId);
                             }
                             if (!fullDetector) {
-                                console.warn(`[Background] Detector ${detectorId} not found, skipping`);
+                                Logger.warn('BACKGROUND', `[Background] Detector ${detectorId} not found, skipping`);
                                 continue;
                             }
 
@@ -2587,21 +2587,21 @@ function setupMessageListeners() {
                             detector.confidence = Math.max(...detector.matches.map(m => m.confidence || 0));
                         }
 
-                        console.log(`[Background] ✅ Processed ${detections.length} hooks in batch for tab ${tabId}`);
+                        Logger.background(`[Background] ✅ Processed ${detections.length} hooks in batch for tab ${tabId}`);
 
                     } catch (error) {
-                        console.error('[Background] ❌ ERROR handling JS hook batch:', error);
+                        Logger.error('BACKGROUND', '[Background] ❌ ERROR handling JS hook batch:', error);
                     } finally {
                         // FIX: Mark batch processing as complete (with safety guard)
                         if (tabId) {
                             const wasActive = batchProcessingFlags.get(tabId);
                             batchProcessingFlags.set(tabId, false);
-                            console.log(`%c[🔒 Batch Flag] 🟢 SET to FALSE (batch complete) for tab ${tabId}`, 'color: #4caf50; font-weight: bold;');
-                            console.log(`[🔒 Batch Flag] Was active: ${wasActive}, Now: false`);
-                            console.log(`[🔒 Batch Flag] Batch processing complete - NOW allowing finalization`);
+                            Logger.background(`%c[🔒 Batch Flag] 🟢 SET to FALSE (batch complete) for tab ${tabId}`, 'color: #4caf50; font-weight: bold;');
+                            Logger.background(`[🔒 Batch Flag] Was active: ${wasActive}, Now: false`);
+                            Logger.background(`[🔒 Batch Flag] Batch processing complete - NOW allowing finalization`);
                             // Trigger finalization check in case it was deferred
                             // NOTE: During late arrival phase, this won't finalize until buffer expires
-                            console.log(`[🔒 Batch Flag] Calling checkAndFinalizeDetection after batch complete...`);
+                            Logger.background(`[🔒 Batch Flag] Calling checkAndFinalizeDetection after batch complete...`);
                             checkAndFinalizeDetection(tabId);
                         }
                     }
@@ -2615,7 +2615,7 @@ function setupMessageListeners() {
                 (async () => {
                     try {
                         if (!sender.tab || !sender.tab.id) {
-                            console.error('[Background] No tab info for window detections');
+                            Logger.error('BACKGROUND', '[Background] No tab info for window detections');
                             return;
                         }
 
@@ -2623,7 +2623,7 @@ function setupMessageListeners() {
 
                         // OPTIMIZATION: Early exit if tab is using cache
                         if (tabsUsingCache.has(tabId)) {
-                            console.log(`[Background] ✅ Window Detections - Tab ${tabId} using cache - discarding properties immediately`);
+                            Logger.background(`[Background] ✅ Window Detections - Tab ${tabId} using cache - discarding properties immediately`);
                             return; // Skip all processing for cached tabs
                         }
 
@@ -2632,7 +2632,7 @@ function setupMessageListeners() {
 
                         // Validate detections array
                         if (!Array.isArray(detections)) {
-                            console.error('[Background] ❌ Invalid detections format:', typeof detections);
+                            Logger.error('BACKGROUND', '[Background] ❌ Invalid detections format:', typeof detections);
                             return;
                         }
 
@@ -2648,41 +2648,41 @@ function setupMessageListeners() {
                             return; // Don't process window properties - we have cached results
                         }
 
-                        console.log(`[Background] 🔍 Window property detections from tab ${tabId}: ${detections.length} properties in ${executionTime}ms`);
+                        Logger.background(`[Background] 🔍 Window property detections from tab ${tabId}: ${detections.length} properties in ${executionTime}ms`);
 
                         // DEBUG: Log each window property detection
                         if (detections.length > 0) {
-                            console.log(`[Background] 📋 Window property details:`);
+                            Logger.background(`[Background] 📋 Window property details:`);
                             detections.forEach(det => {
-                                console.log(`[Background]   - ${det.detectorName} (${det.detectorId}): window.${det.property.path}`);
+                                Logger.background(`[Background]   - ${det.detectorName} (${det.detectorId}): window.${det.property.path}`);
                             });
                         } else {
-                            console.log(`[Background] ⚠️ No window properties detected (none matched conditions)`);
+                            Logger.background(`[Background] ⚠️ No window properties detected (none matched conditions)`);
                         }
 
                         // State already created above for cache check (line 2470)
                         // Validate state
                         if (!state) {
-                            console.error('[Background] ❌ Failed to get/create detection state for tab', tabId);
+                            Logger.error('BACKGROUND', '[Background] ❌ Failed to get/create detection state for tab', tabId);
                             return;
                         }
 
                         // URL validation: Ensure URL hasn't changed during detection
                         if (state.url !== url) {
-                            console.log(`[Background] ⚠️ URL changed during window props for tab ${tabId}: ${url} → ${state.url} - skipping window props`);
+                            Logger.background(`[Background] ⚠️ URL changed during window props for tab ${tabId}: ${url} → ${state.url} - skipping window props`);
                             return; // Don't store window props for the wrong URL
                         }
 
                         // Initialize mainData array if it doesn't exist
                         if (!Array.isArray(state.mainData)) {
-                            console.log('[Background] Initializing mainData array for tab', tabId);
+                            Logger.background('[Background] Initializing mainData array for tab', tabId);
                             state.mainData = [];
                         }
 
                         // Process each window property detection
                         for (const detection of detections) {
                             if (!detection || !detection.detectorId) {
-                                console.warn('[Background] ⚠️ Skipping invalid detection:', detection);
+                                Logger.warn('BACKGROUND', '[Background] ⚠️ Skipping invalid detection:', detection);
                                 continue;
                             }
 
@@ -2736,20 +2736,20 @@ function setupMessageListeners() {
                                 if (!detectionObj.detectionMethods.includes('window')) {
                                     detectionObj.detectionMethods.push('window');
                                 }
-                                console.log(`[Background] ✅ Added window property: ${detection.property.path} for ${detection.detectorName}`);
+                                Logger.background(`[Background] ✅ Added window property: ${detection.property.path} for ${detection.detectorName}`);
                             }
 
                             // Update overall confidence
                             detectionObj.confidence = Math.max(...detectionObj.matches.map(m => m.confidence || 0));
                         }
 
-                        console.log(`[Background] ✅ Processed ${detections.length} window properties for tab ${tabId}`);
+                        Logger.background(`[Background] ✅ Processed ${detections.length} window properties for tab ${tabId}`);
 
                         // Note: windowPropertiesComplete will be marked by WINDOW_PROPS_COMPLETE signal
                         // This allows multiple checks to complete before finalization
 
                     } catch (error) {
-                        console.error('[Background] ❌ ERROR handling window property detections:', error);
+                        Logger.error('BACKGROUND', '[Background] ❌ ERROR handling window property detections:', error);
                     }
                 })();
                 return false; // No response needed
@@ -2759,7 +2759,7 @@ function setupMessageListeners() {
                 (async () => {
                     try {
                         if (!sender.tab || !sender.tab.id) {
-                            console.error('[Background] No tab info for window props complete');
+                            Logger.error('BACKGROUND', '[Background] No tab info for window props complete');
                             return;
                         }
 
@@ -2767,15 +2767,15 @@ function setupMessageListeners() {
 
                         // OPTIMIZATION: Early exit if tab is using cache
                         if (tabsUsingCache.has(tabId)) {
-                            console.log(`[Background] ✅ Window Props - Tab ${tabId} using cache - discarding signal`);
+                            Logger.background(`[Background] ✅ Window Props - Tab ${tabId} using cache - discarding signal`);
                             sendResponse({ status: 'cached', message: 'Tab using cached detection' });
                             return; // Skip all processing for cached tabs
                         }
 
                         const url = request.url;
 
-                        console.log(`%c[🎯 WINDOW_PROPS_COMPLETE] Signal RECEIVED from tab ${tabId}`, 'color: #00cc00; font-weight: bold; font-size: 14px;');
-                        console.log(`[🎯 WINDOW_PROPS_COMPLETE] Window props stats:`, {
+                        Logger.background(`%c[🎯 WINDOW_PROPS_COMPLETE] Signal RECEIVED from tab ${tabId}`, 'color: #00cc00; font-weight: bold; font-size: 14px;');
+                        Logger.background(`[🎯 WINDOW_PROPS_COMPLETE] Window props stats:`, {
                             detectedCount: request.detectedCount,
                             totalChecked: request.totalChecked,
                             elapsedMs: request.elapsedMs,
@@ -2800,12 +2800,12 @@ function setupMessageListeners() {
                         const normalizedRequestUrl = normalizeUrl(url);
 
                         if (normalizedStateUrl !== normalizedRequestUrl) {
-                            console.warn(`%c[🎯 WINDOW_PROPS_COMPLETE] ❌ URL MISMATCH - IGNORING SIGNAL for tab ${tabId}`, 'color: #f44336; font-weight: bold;');
-                            console.warn(`[🎯 WINDOW_PROPS_COMPLETE]   State URL: ${state.url}`);
-                            console.warn(`[🎯 WINDOW_PROPS_COMPLETE]   Request URL: ${url}`);
-                            console.warn(`[🎯 WINDOW_PROPS_COMPLETE]   Normalized state: ${normalizedStateUrl}`);
-                            console.warn(`[🎯 WINDOW_PROPS_COMPLETE]   Normalized request: ${normalizedRequestUrl}`);
-                            console.warn(`[🎯 WINDOW_PROPS_COMPLETE] ⚠️ This will cause 86% hang - signal will never be processed!`);
+                            Logger.warn('BACKGROUND', `%c[🎯 WINDOW_PROPS_COMPLETE] ❌ URL MISMATCH - IGNORING SIGNAL for tab ${tabId}`, 'color: #f44336; font-weight: bold;');
+                            Logger.warn('BACKGROUND', `[🎯 WINDOW_PROPS_COMPLETE]   State URL: ${state.url}`);
+                            Logger.warn('BACKGROUND', `[🎯 WINDOW_PROPS_COMPLETE]   Request URL: ${url}`);
+                            Logger.warn('BACKGROUND', `[🎯 WINDOW_PROPS_COMPLETE]   Normalized state: ${normalizedStateUrl}`);
+                            Logger.warn('BACKGROUND', `[🎯 WINDOW_PROPS_COMPLETE]   Normalized request: ${normalizedRequestUrl}`);
+                            Logger.warn('BACKGROUND', `[🎯 WINDOW_PROPS_COMPLETE] ⚠️ This will cause 86% hang - signal will never be processed!`);
                             sendResponse({ status: 'url_changed' });
                             return;
                         }
@@ -2819,7 +2819,7 @@ function setupMessageListeners() {
 
                         state.windowPropertiesComplete = true;
 
-                        console.log(`[🎯 WINDOW_PROPS_COMPLETE] State flags:`, {
+                        Logger.background(`[🎯 WINDOW_PROPS_COMPLETE] State flags:`, {
                             before: beforeState,
                             after: {
                                 windowPropertiesComplete: state.windowPropertiesComplete,
@@ -2831,14 +2831,14 @@ function setupMessageListeners() {
                         // GRANULAR PROGRESS: Mark window properties method complete
                         markMethodComplete(tabId, 'windowProperties');
 
-                        console.log(`%c[🎯 WINDOW_PROPS_COMPLETE] ✅ Window properties marked complete - calling finalization check`, 'color: #4caf50; font-weight: bold;');
+                        Logger.background(`%c[🎯 WINDOW_PROPS_COMPLETE] ✅ Window properties marked complete - calling finalization check`, 'color: #4caf50; font-weight: bold;');
 
                         // Check if all methods are done
                         checkAndFinalizeDetection(tabId);
 
                         sendResponse({ status: 'success' });
                     } catch (error) {
-                        console.error('[🎯 WINDOW_PROPS_COMPLETE] ❌ ERROR handling window props complete:', error);
+                        Logger.error('BACKGROUND', '[🎯 WINDOW_PROPS_COMPLETE] ❌ ERROR handling window props complete:', error);
                         sendResponse({ status: 'error', error: error.message });
                     }
                 })();
@@ -2849,15 +2849,15 @@ function setupMessageListeners() {
                 (async () => {
                     try {
                         if (!sender.tab || !sender.tab.id) {
-                            console.error('[Background] No tab info for JS hooks complete');
+                            Logger.error('BACKGROUND', '[Background] No tab info for JS hooks complete');
                             return;
                         }
 
                         const tabId = sender.tab.id;
                         const url = request.url;
 
-                        console.log(`%c[Background] 🎯 JS_HOOKS_COMPLETE received from tab ${tabId}`, 'color: #00cc00; font-weight: bold;');
-                        console.log(`[Background] Hook stats:`, {
+                        Logger.background(`%c[Background] 🎯 JS_HOOKS_COMPLETE received from tab ${tabId}`, 'color: #00cc00; font-weight: bold;');
+                        Logger.background(`[Background] Hook stats:`, {
                             totalDetections: request.totalDetections,
                             uniqueHooks: request.uniqueHooks,
                             completionTime: request.completionTime,
@@ -2882,11 +2882,11 @@ function setupMessageListeners() {
                         const normalizedRequestUrl = normalizeUrl(url);
 
                         if (normalizedStateUrl !== normalizedRequestUrl) {
-                            console.warn(`[Background] ⚠️ URL mismatch - ignoring JS hooks complete for tab ${tabId}`);
-                            console.warn(`[Background]   State URL: ${state.url}`);
-                            console.warn(`[Background]   Request URL: ${url}`);
-                            console.warn(`[Background]   Normalized state: ${normalizedStateUrl}`);
-                            console.warn(`[Background]   Normalized request: ${normalizedRequestUrl}`);
+                            Logger.warn('BACKGROUND', `[Background] ⚠️ URL mismatch - ignoring JS hooks complete for tab ${tabId}`);
+                            Logger.warn('BACKGROUND', `[Background]   State URL: ${state.url}`);
+                            Logger.warn('BACKGROUND', `[Background]   Request URL: ${url}`);
+                            Logger.warn('BACKGROUND', `[Background]   Normalized state: ${normalizedStateUrl}`);
+                            Logger.warn('BACKGROUND', `[Background]   Normalized request: ${normalizedRequestUrl}`);
                             sendResponse({ status: 'url_changed' });
                             return;
                         }
@@ -2896,9 +2896,9 @@ function setupMessageListeners() {
                         // GRANULAR PROGRESS: Mark JS hooks method complete
                         markMethodComplete(tabId, 'jsHooks');
 
-                        console.log(`[Background] ✅ Hooks marked complete`);
-                        console.log(`[Background] Current completion status: ${state.completedMethods.size}/7 methods`);
-                        console.log(`[Background] Completed methods: ${Array.from(state.completedMethods).join(', ')}`);
+                        Logger.background(`[Background] ✅ Hooks marked complete`);
+                        Logger.background(`[Background] Current completion status: ${state.completedMethods.size}/7 methods`);
+                        Logger.background(`[Background] Completed methods: ${Array.from(state.completedMethods).join(', ')}`);
 
                         // DEBUG TRACKER: Log completion statistics
                         // Count hooks: inline (from inline hook system) + dynamic (from hooksData)
@@ -2915,14 +2915,14 @@ function setupMessageListeners() {
                         setTimeout(() => {
                             const currentState = detectionStates.get(tabId);
                             if (currentState && !currentState.finalized && currentState.completedMethods.has('jsHooks')) {
-                                console.warn(`[Background] 🔄 Retry: JS hooks complete but detection not finalized, forcing check`);
+                                Logger.warn('BACKGROUND', `[Background] 🔄 Retry: JS hooks complete but detection not finalized, forcing check`);
                                 checkAndFinalizeDetection(tabId);
                             }
                         }, 1000);
 
                         sendResponse({ status: 'success' });
                     } catch (error) {
-                        console.error('[Background] ❌ ERROR handling JS hooks complete:', error);
+                        Logger.error('BACKGROUND', '[Background] ❌ ERROR handling JS hooks complete:', error);
                         sendResponse({ status: 'error', error: error.message });
                     }
                 })();
@@ -3064,7 +3064,7 @@ function setupMessageListeners() {
             case 'LOG_COLLECTOR_ENABLE':
                 if (typeof logCollector !== 'undefined') {
                     logCollector.enable();
-                    console.log('[LogCollector] Log collection enabled via settings');
+                    Logger.storage('[LogCollector] Log collection enabled via settings');
                 }
                 sendResponse({ status: 'success' });
                 break;
@@ -3072,7 +3072,7 @@ function setupMessageListeners() {
             case 'LOG_COLLECTOR_DISABLE':
                 if (typeof logCollector !== 'undefined') {
                     logCollector.disable();
-                    console.log('[LogCollector] Log collection disabled via settings');
+                    Logger.storage('[LogCollector] Log collection disabled via settings');
                 }
                 sendResponse({ status: 'success' });
                 break;
@@ -3080,7 +3080,7 @@ function setupMessageListeners() {
             case 'LOG_COLLECTOR_CLEAR':
                 if (typeof logCollector !== 'undefined') {
                     logCollector.clear();
-                    console.log('[LogCollector] Logs cleared');
+                    Logger.storage('[LogCollector] Logs cleared');
                     sendResponse({ status: 'success' });
                 } else {
                     sendResponse({ status: 'error', message: 'LogCollector not available' });
@@ -3090,7 +3090,7 @@ function setupMessageListeners() {
             case 'LOG_COLLECTOR_EXPORT_JSON':
                 if (typeof logCollector !== 'undefined') {
                     const jsonFilename = logCollector.exportAsJSON();
-                    console.log('[LogCollector] Exported logs as JSON:', jsonFilename);
+                    Logger.storage('[LogCollector] Exported logs as JSON:', jsonFilename);
                     sendResponse({ status: 'success', filename: jsonFilename });
                 } else {
                     sendResponse({ status: 'error', message: 'LogCollector not available' });
@@ -3100,7 +3100,7 @@ function setupMessageListeners() {
             case 'LOG_COLLECTOR_EXPORT_TEXT':
                 if (typeof logCollector !== 'undefined') {
                     const textFilename = logCollector.exportAsText();
-                    console.log('[LogCollector] Exported logs as text:', textFilename);
+                    Logger.storage('[LogCollector] Exported logs as text:', textFilename);
                     sendResponse({ status: 'success', filename: textFilename });
                 } else {
                     sendResponse({ status: 'error', message: 'LogCollector not available' });
@@ -3113,7 +3113,7 @@ function setupMessageListeners() {
                     logCollector.getLogCount().then((count) => {
                         sendResponse({ status: 'success', count: count });
                     }).catch((error) => {
-                        console.error('[LogCollector] Error getting log count:', error);
+                        Logger.error('STORAGE', '[LogCollector] Error getting log count:', error);
                         sendResponse({ status: 'error', message: 'Failed to get log count', count: 0 });
                     });
                     return true; // Indicate async response
@@ -3126,7 +3126,7 @@ function setupMessageListeners() {
                 if (typeof logCollector !== 'undefined') {
                     const maxLogs = request.maxLogs;
                     logCollector.setMaxLogs(maxLogs);
-                    console.log('[LogCollector] Max logs set to:', maxLogs);
+                    Logger.storage('[LogCollector] Max logs set to:', maxLogs);
                     sendResponse({ status: 'success', maxLogs: maxLogs });
                 } else {
                     sendResponse({ status: 'error', message: 'LogCollector not available' });
@@ -3134,7 +3134,7 @@ function setupMessageListeners() {
                 break;
 
             default:
-                console.log('Scrapfly Background: Unknown message type:', request.type);
+                Logger.background('Scrapfly Background: Unknown message type:', request.type);
                 sendResponse({ status: 'unknown' });
         }
 
@@ -3148,7 +3148,7 @@ function setupMessageListeners() {
 function setupTabListeners() {
     // Clear data when tab is closed
     chrome.tabs.onRemoved.addListener((tabId) => {
-        console.log(`Scrapfly Background: Tab ${tabId} closed, clearing headers, cookies, payloads, and network URLs`);
+        Logger.background(`Scrapfly Background: Tab ${tabId} closed, clearing headers, cookies, payloads, and network URLs`);
         headersStore.delete(tabId);
         requestHeadersStore.delete(tabId);
         responseCookiesStore.delete(tabId);
@@ -3158,7 +3158,7 @@ function setupTabListeners() {
         // Clear cache tracking for this tab
         if (tabsUsingCache.has(tabId)) {
             tabsUsingCache.delete(tabId);
-            console.log(`[TabCleanup] Removed tab ${tabId} from cache tracking`);
+            Logger.background(`[TabCleanup] Removed tab ${tabId} from cache tracking`);
         }
 
         // Clear detection state tracking
@@ -3170,7 +3170,7 @@ function setupTabListeners() {
         // Clear capture state if tab is closed during capture
         const captureStateForTab = reCaptchaCaptureState.get(tabId);
         if (captureStateForTab) {
-            console.log(`Scrapfly Background: Tab ${tabId} closed during capture, cleaning up`);
+            Logger.background(`Scrapfly Background: Tab ${tabId} closed during capture, cleaning up`);
             if (captureStateForTab.captureInterval) {
                 clearInterval(captureStateForTab.captureInterval);
             }
@@ -3180,7 +3180,7 @@ function setupTabListeners() {
 
         // Clear FunCaptcha capture state if tab is closed during capture
         if (funcaptchaCaptureState.has(tabId)) {
-            console.log(`Scrapfly Background: Tab ${tabId} closed during FunCaptcha capture, cleaning up`);
+            Logger.background(`Scrapfly Background: Tab ${tabId} closed during FunCaptcha capture, cleaning up`);
             const funcState = funcaptchaCaptureState.get(tabId);
             if (funcState && funcState.timeout) {
                 clearTimeout(funcState.timeout);
@@ -3190,7 +3190,7 @@ function setupTabListeners() {
 
         // Clear hCaptcha capture state if tab is closed during capture
         if (typeof hcaptchaCaptureState !== 'undefined' && hcaptchaCaptureState.has(tabId)) {
-            console.log(`Scrapfly Background: Tab ${tabId} closed during hCaptcha capture, cleaning up`);
+            Logger.background(`Scrapfly Background: Tab ${tabId} closed during hCaptcha capture, cleaning up`);
             const hcaptchaState = hcaptchaCaptureState.get(tabId);
             if (hcaptchaState && hcaptchaState.timeout) {
                 clearTimeout(hcaptchaState.timeout);
@@ -3200,7 +3200,7 @@ function setupTabListeners() {
 
         // Clear Akamai capture state if tab is closed during capture
         if (akamaiCaptureState.has(tabId)) {
-            console.log(`Scrapfly Background: Tab ${tabId} closed during Akamai capture, cleaning up`);
+            Logger.background(`Scrapfly Background: Tab ${tabId} closed during Akamai capture, cleaning up`);
             const akamaiState = akamaiCaptureState.get(tabId);
             if (akamaiState && akamaiState.timeout) {
                 clearTimeout(akamaiState.timeout);
@@ -3210,7 +3210,7 @@ function setupTabListeners() {
 
         // Clear Imperva capture state if tab is closed during capture
         if (impervaCaptureState.has(tabId)) {
-            console.log(`Scrapfly Background: Tab ${tabId} closed during Imperva capture, cleaning up`);
+            Logger.background(`Scrapfly Background: Tab ${tabId} closed during Imperva capture, cleaning up`);
             const impervaState = impervaCaptureState.get(tabId);
             if (impervaState && impervaState.timeout) {
                 clearTimeout(impervaState.timeout);
@@ -3220,7 +3220,7 @@ function setupTabListeners() {
 
         // Clear Shape Security capture state if tab is closed during capture
         if (typeof shapesecurityCaptureState !== 'undefined' && shapesecurityCaptureState.has(tabId)) {
-            console.log(`Scrapfly Background: Tab ${tabId} closed during Shape Security capture, cleaning up`);
+            Logger.background(`Scrapfly Background: Tab ${tabId} closed during Shape Security capture, cleaning up`);
             const shapeState = shapesecurityCaptureState.get(tabId);
             if (shapeState && shapeState.timeout) {
                 clearTimeout(shapeState.timeout);
@@ -3230,7 +3230,7 @@ function setupTabListeners() {
 
         // Clear AWS WAF capture state if tab is closed during capture
         if (typeof awsWafCaptureStateRef !== 'undefined' && awsWafCaptureStateRef.isCapturing && awsWafCaptureStateRef.tabId === tabId) {
-            console.log(`Scrapfly Background: Tab ${tabId} closed during AWS WAF capture, cleaning up`);
+            Logger.background(`Scrapfly Background: Tab ${tabId} closed during AWS WAF capture, cleaning up`);
             if (awsWafCaptureStateRef.timeout) {
                 clearTimeout(awsWafCaptureStateRef.timeout);
             }
@@ -3247,7 +3247,7 @@ function setupTabListeners() {
             tabId: tabId
         }).catch((error) => {
             // Expected: Tab might already be closed
-            console.log(`[Cleanup] Failed to clear badge for removed tab ${tabId}:`, error.message);
+            Logger.background(`[Cleanup] Failed to clear badge for removed tab ${tabId}:`, error.message);
         });
     });
 
@@ -3258,28 +3258,28 @@ function setupTabListeners() {
             try {
                 const result = await chrome.storage.local.get(['scrapfly_enabled']);
                 if (result.scrapfly_enabled === false) {
-                    console.log(`[TabUpdate] Extension is disabled - setting orange X badge for tab ${tabId}`);
+                    Logger.background(`[TabUpdate] Extension is disabled - setting orange X badge for tab ${tabId}`);
                     chrome.action.setBadgeText({ text: '✕', tabId: tabId }).catch((error) => {
-                        console.log(`[TabUpdate] Failed to set disabled badge for tab ${tabId}:`, error.message);
+                        Logger.background(`[TabUpdate] Failed to set disabled badge for tab ${tabId}:`, error.message);
                     });
                     chrome.action.setBadgeBackgroundColor({ color: '#f59e0b', tabId: tabId }).catch((error) => {
-                        console.log(`[TabUpdate] Failed to set badge color for tab ${tabId}:`, error.message);
+                        Logger.background(`[TabUpdate] Failed to set badge color for tab ${tabId}:`, error.message);
                     });
                 }
             } catch (error) {
-                console.error('[TabUpdate] Error checking enabled state:', error);
+                Logger.error('TAB', '[TabUpdate] Error checking enabled state:', error);
             }
         }
 
         // Detect URL changes within the same tab (same-tab navigation)
         if (changeInfo.url) {
             const newUrl = changeInfo.url;
-            console.log(`[TabUpdate] URL change detected for tab ${tabId}: ${newUrl}`);
+            Logger.background(`[TabUpdate] URL change detected for tab ${tabId}: ${newUrl}`);
 
             // Clear cache tracking ONLY on URL change (not on F5 refresh)
             if (tabsUsingCache.has(tabId)) {
                 tabsUsingCache.delete(tabId);
-                console.log(`[TabUpdate] URL changed - cleared cache tracking for tab ${tabId}`);
+                Logger.background(`[TabUpdate] URL changed - cleared cache tracking for tab ${tabId}`);
             }
 
             // Check if there's an active detection for this tab
@@ -3287,12 +3287,12 @@ function setupTabListeners() {
                 const activeInfo = activeDetections.get(tabId);
                 const oldUrl = activeInfo.url;
 
-                console.log(`[TabUpdate] ⚠️ Tab ${tabId} had active detection for ${oldUrl} - ABORTING (navigated to ${newUrl})`);
+                Logger.background(`[TabUpdate] ⚠️ Tab ${tabId} had active detection for ${oldUrl} - ABORTING (navigated to ${newUrl})`);
 
                 // Abort the detection process
                 if (activeInfo.abortController) {
                     activeInfo.abortController.abort();
-                    console.log(`[TabUpdate] 🛑 Aborted detection for tab ${tabId} (URL changed)`);
+                    Logger.background(`[TabUpdate] 🛑 Aborted detection for tab ${tabId} (URL changed)`);
                 }
 
                 // Remove from active detections
@@ -3303,12 +3303,12 @@ function setupTabListeners() {
                 if (detectionState && detectionState.url === oldUrl) {
                     detectionState.interrupted = true;
                     detectionState.error = 'url_changed';
-                    console.log(`[TabUpdate] Marked detection state as interrupted for tab ${tabId}`);
+                    Logger.background(`[TabUpdate] Marked detection state as interrupted for tab ${tabId}`);
                 }
 
                 // Clear badge (new page will set its own badge when detection completes)
                 chrome.action.setBadgeText({ text: '', tabId: tabId }).catch((error) => {
-                    console.log(`[TabUpdate] Failed to clear badge for tab ${tabId}:`, error.message);
+                    Logger.background(`[TabUpdate] Failed to clear badge for tab ${tabId}:`, error.message);
                 });
             }
 
@@ -3346,11 +3346,11 @@ function setupTabListeners() {
         const newTabId = activeInfo.tabId;
         const now = Date.now();
         
-        console.log(`[TabSwitch] Tab activated: ${newTabId}, previous: ${currentActiveTab}`);
+        Logger.background(`[TabSwitch] Tab activated: ${newTabId}, previous: ${currentActiveTab}`);
 
         // Check if user is returning to a previously interrupted tab - clear interrupted state
         if (interruptedDetections.has(newTabId)) {
-            console.log(`[TabSwitch] ✅ User returned to tab ${newTabId} - clearing any stale interrupted state`);
+            Logger.background(`[TabSwitch] ✅ User returned to tab ${newTabId} - clearing any stale interrupted state`);
             interruptedDetections.delete(newTabId);
             // Don't modify badge here - let popup query get fresh data and update badge appropriately
         }
@@ -3365,13 +3365,13 @@ function setupTabListeners() {
                 const newTab = await chrome.tabs.get(newTabId);
                 // Skip interruption if new tab is not a valid content tab
                 if (!newTab || !newTab.url || newTab.url.startsWith('chrome://') || newTab.url.startsWith('chrome-extension://')) {
-                    console.log(`[TabSwitch] ℹ️ New tab ${newTabId} is not a valid content tab (url: ${newTab?.url || 'none'}) - skipping interruption`);
+                    Logger.background(`[TabSwitch] ℹ️ New tab ${newTabId} is not a valid content tab (url: ${newTab?.url || 'none'}) - skipping interruption`);
                     // Update current active tab and continue without interrupting
                     currentActiveTab = newTabId;
                     return;
                 }
             } catch (error) {
-                console.log(`[TabSwitch] Failed to validate new tab ${newTabId}:`, error.message);
+                Logger.background(`[TabSwitch] Failed to validate new tab ${newTabId}:`, error.message);
                 // On error, assume it's invalid and skip interruption
                 currentActiveTab = newTabId;
                 return;
@@ -3384,9 +3384,9 @@ function setupTabListeners() {
             // Chrome tabs continue executing even when not focused
             // Detection will complete naturally and cache results
             if (focusDuration < TAB_SWITCH_DEBOUNCE_MS) {
-                console.log(`[TabSwitch] ⚡ Tab ${previousTabId} was focused for only ${focusDuration}ms - rapid switch detected`);
+                Logger.background(`[TabSwitch] ⚡ Tab ${previousTabId} was focused for only ${focusDuration}ms - rapid switch detected`);
             } else {
-                console.log(`[TabSwitch] ℹ️ Tab ${previousTabId} detection will continue in background (user switched tabs)`);
+                Logger.background(`[TabSwitch] ℹ️ Tab ${previousTabId} detection will continue in background (user switched tabs)`);
                 // Don't abort, don't interrupt - just let it complete naturally
                 // Detection will cache results when finished
             }
@@ -3418,12 +3418,12 @@ function setupTabListeners() {
  * This is called after detector manager initialization
  */
 function initializeServices() {
-    console.log('Scrapfly Background: Initializing services...');
+    Logger.background('Scrapfly Background: Initializing services...');
 
     // Setup all listeners and services
     setupHeaderCapture();
     setupMessageListeners();
     setupTabListeners();
 
-    console.log('Scrapfly Background: Services initialization complete');
+    Logger.background('Scrapfly Background: Services initialization complete');
 }
