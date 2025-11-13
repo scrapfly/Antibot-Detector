@@ -275,12 +275,6 @@ class Utils {
     }
   }
 
-  static handleSettingsUpdated(message) {
-    if (message && message.type === 'SETTINGS_UPDATED') {
-      Utils.invalidateSettingsCache();
-    }
-  }
-
   /**
    * OPTIMIZATION Phase 9A.4: Start periodic cleanup of expired JSON cache entries
    * @private
@@ -364,57 +358,6 @@ class Utils {
       console.error('JSON stringify error:', error);
       return null;
     }
-  }
-
-  /**
-   * Process large text data - NO truncation
-   * OPTIMIZATION: Send full HTML without truncation to avoid missed detections
-   * Chrome's message passing supports up to 64MB, so truncation is unnecessary
-   * @param {string} text - Text to process
-   * @returns {object} { compressed: false, truncated: false, data: string }
-   */
-  static compressText(text) {
-    // Handle empty or undefined text
-    if (!text || text.length === 0) {
-      return { compressed: false, truncated: false, data: text || '' };
-    }
-
-    try {
-      // FIX: No truncation - send full HTML
-      // Chrome message limit is 64MB, typical pages are 100KB-1MB
-      // Truncation was causing missed detections for patterns in 2nd half of HTML
-      // Send everything untruncated to ensure complete detection coverage
-      return {
-        compressed: false,
-        truncated: false,
-        data: text  // Always send full HTML, never truncate
-      };
-    } catch (e) {
-      console.error('[Compression] Error processing text:', e);
-      return {
-        compressed: false,
-        truncated: false,
-        data: text
-      };
-    }
-  }
-
-  /**
-   * Decompress text data
-   * @param {object} compressed - Compressed data object
-   * @returns {string} Decompressed text
-   */
-  static decompressText(compressed) {
-    if (!compressed.compressed) {
-      return compressed.data;
-    }
-
-    // If it was truncated, return as-is (can't restore)
-    if (compressed.truncated) {
-      return compressed.data;
-    }
-
-    return compressed.data;
   }
 
   /**
@@ -663,6 +606,7 @@ class Utils {
       const plainPageData = {
         url: pageData.url,
         cookies: pageData.cookies,          // Triggers lazy getter evaluation
+        storageCookies: pageData.storageCookies,  // NEW: Storage cookies (localStorage + sessionStorage)
         content: pageData.content,          // Triggers lazy getter evaluation
         dom: pageData.dom,                  // Triggers lazy getter evaluation
         headers: pageData.headers,
@@ -673,14 +617,11 @@ class Utils {
         externalContent: pageData.externalContent,
         responseCookies: pageData.responseCookies,
         requestHeaders: pageData.requestHeaders,
-        pageHTML: pageData.pageHTML         // Will be compressed below
+        pageHTML: pageData.pageHTML         // Full HTML sent uncompressed
       };
 
-      // OPTIMIZATION: Compress large pageHTML to reduce message size
-      const compressedHTML = Utils.compressText(plainPageData.pageHTML);
-      plainPageData.pageHTML = compressedHTML.data;
-      plainPageData._htmlCompressed = compressedHTML.compressed;
-      plainPageData._htmlTruncated = compressedHTML.truncated;
+      // NOTE: Compression disabled - Chrome message limit is 64MB, typical pages are 100KB-1MB
+      // Sending full HTML ensures complete detection coverage without missed patterns
 
       // Check again before sending
       if (!isExtensionContextValid()) {
@@ -1248,32 +1189,6 @@ class Utils {
     return true;
   }
 
-  /**
-   * Debug logging that always forwards to service worker console
-   * Never outputs to webpage console to avoid clutter
-   * @param {...any} args - Arguments to log
-   */
-  static debugLog(...args) {
-    // Never log to local console in content scripts
-    // Always forward to service worker for centralized logging
-
-    try {
-      // Only forward if we have chrome.runtime available
-      if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.sendMessage) {
-        chrome.runtime.sendMessage({
-          type: 'DEBUG_LOG',
-          context: 'CONTENT_SCRIPT',
-          method: 'log',
-          args: args,
-          timestamp: Date.now()
-        }).catch(() => {
-          // Silently fail if background not available
-        });
-      }
-    } catch (e) {
-      // Silently fail to avoid breaking execution
-    }
-  }
 }
 
 // Export for use in other scripts

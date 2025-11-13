@@ -276,7 +276,7 @@ body {
   flex-direction: column;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
+  overflow: visible;
   padding: 0;
   background: var(--bg-primary);
 }
@@ -287,7 +287,10 @@ body {
   flex: 1 1 auto;
   min-height: 0;
   padding: 2px 12px 0 12px;
+  padding-bottom: 12px;
   background: var(--bg-primary);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .tab-content.active {
@@ -523,50 +526,52 @@ body {
 .results-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .detection-item {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 16px;
+  padding: 18px 20px;
+  padding-bottom: 50px;
+  overflow: visible;
 }
 
 .detection-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .detection-info {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .detection-icon {
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
 }
 
 .detection-details h4 {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .detection-category {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-muted);
 }
 
 .confidence-badge {
-  padding: 4px 8px;
+  padding: 6px 12px;
   border-radius: 12px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -575,34 +580,39 @@ body {
 .confidence-low { background: var(--danger); color: white; }
 
 .detection-matches {
-  margin-top: 8px;
+  margin-top: 10px;
+  padding-bottom: 20px;
 }
 
 .detection-matches p {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-muted);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .matches-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 8px;
+  row-gap: 12px;
+  margin-bottom: 0;
 }
 
 .match-tag {
-  padding: 2px 6px;
+  padding: 5px 10px;
   background: var(--bg-tertiary);
   border-radius: 12px;
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 600;
   color: var(--text-secondary);
 }
 
 .more-matches {
-  padding: 2px 6px;
+  padding: 5px 10px;
   background: var(--accent);
   border-radius: 12px;
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 600;
   color: white;
 }
 

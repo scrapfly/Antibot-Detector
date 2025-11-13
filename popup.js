@@ -40,9 +40,6 @@ class ScrapflyPopup {
       // Check if already initialized to avoid duplicate initialization
       if (!this.detectorManager.initialized) {
         await this.detectorManager.initialize();
-        console.log('Popup: DetectorManager initialized');
-      } else {
-        console.log('Popup: DetectorManager already initialized');
       }
 
       // Then initialize all sections (lazy loading enabled)
@@ -68,7 +65,6 @@ class ScrapflyPopup {
       // OPTIMIZATION Phase A.3: Only initialize Settings (always needed for toggle)
       // Other sections will be lazy-loaded on first access
       await this.settings.initialize();
-      console.log('Settings section initialized (eager)');
 
       // Mark other sections as NOT initialized - they'll load on-demand
       this.detection.initialized = false;
@@ -77,8 +73,6 @@ class ScrapflyPopup {
       if (this.advanced) {
         this.advanced.initialized = false;
       }
-
-      console.log('Section initialization complete (lazy loading enabled)');
     } catch (error) {
       console.error('Failed to initialize sections:', error);
     }
@@ -96,16 +90,13 @@ class ScrapflyPopup {
     // Main enable/disable toggle
     const enableToggle = document.querySelector('#enableToggle');
     if (enableToggle) {
-      console.log('Popup: Enable toggle element found:', enableToggle);
       // Load saved state or default to enabled
       this.loadToggleState();
 
       // Handle toggle changes
       enableToggle.addEventListener('change', (e) => {
-        console.log('Popup: Toggle changed to:', e.target.checked);
         this.handleEnableToggle(e.target.checked);
       });
-      console.log('Popup: Toggle event listener attached');
     } else {
       console.error('Popup: Enable toggle element NOT found (#enableToggle)');
     }
@@ -134,15 +125,12 @@ class ScrapflyPopup {
    */
   async handleEnableToggle(enabled) {
     try {
-      console.log(`Popup: Handling toggle change to ${enabled ? 'ENABLED' : 'DISABLED'}`);
       await Settings.handleEnableToggle(enabled);
-      console.log('Popup: Toggle change handled successfully');
 
       // Immediately update Detection tab if it's currently visible
       if (this.currentTab === 'detection') {
         if (enabled) {
           // Extension enabled - try to load from cache first
-          console.log('Popup: Extension enabled - checking for cached data');
           chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0]) {
               chrome.runtime.sendMessage(
@@ -160,13 +148,11 @@ class ScrapflyPopup {
                   }
 
                   if (response.status === 'pending') {
-                    console.log('Popup: Detection still running after enabling, showing analyzing state');
                     this.detection.showAnalyzingState();
                     return;
                   }
 
                   if (response.status === 'interrupted') {
-                    console.log('Popup: Detection interrupted, prompting reload');
                     this.detection.showInterruptedState();
                     return;
                   }
@@ -180,7 +166,6 @@ class ScrapflyPopup {
                   const badgeText = await Detection.getBadgeText(tabs[0].id);
                   const badgeTrimmed = badgeText ? badgeText.trim() : '';
                   if (badgeTrimmed === '⏳') {
-                    console.log('Popup: Badge still indicates loading, showing analyzing state');
                     this.detection.showAnalyzingState();
                     return;
                   }
@@ -189,25 +174,21 @@ class ScrapflyPopup {
                   if (badgeTrimmed === '✕') {
                     const badgeColor = await Detection.getBadgeBackgroundColor(tabs[0].id);
                     if (badgeColor === '#6B7280' || badgeColor === '#6b7280') {
-                      console.log('Popup: Badge indicates cache cleared, showing empty state');
                       this.detection.showEmptyState();
                       return;
                     }
                   }
 
                   if (badgeTrimmed === '?' || badgeTrimmed === '✕') {
-                    console.log('Popup: Badge indicates interruption, showing reload state');
                     this.detection.showInterruptedState();
                     return;
                   }
 
                   if (response.data) {
                     // Cache exists, display it
-                    console.log('Popup: Found cached data, displaying');
                     await this.processDetectionData(response.data);
                   } else {
                     // No cache, show interrupted state (tells user to reload)
-                    console.log('Popup: No cached data, showing interrupted state');
                     this.detection.showInterruptedState();
                   }
                 }
@@ -216,7 +197,6 @@ class ScrapflyPopup {
           });
         } else {
           // Extension disabled - show disabled state immediately
-          console.log('Popup: Extension disabled - showing disabled state');
           this.detection.showDisabledState();
         }
       }
@@ -248,14 +228,6 @@ class ScrapflyPopup {
             return;
           }
 
-          // If detection is pending, we just need to show the current progress
-          // without triggering a new request
-          if (response && response.status === 'pending') {
-            console.log('Popup: Detection already in progress, showing current progress');
-            // The GET_DETECTION_DATA already provides progress info
-            // Detection.requestCurrentTabDetection will handle showing the analyzing state
-          }
-
           // Always call requestCurrentTabDetection, it now has safeguards
           // to prevent duplicate requests
           this.requestCurrentTabDetection();
@@ -276,7 +248,6 @@ class ScrapflyPopup {
       // DEBOUNCE: Prevent spam from multiple rapid calls
       const now = Date.now();
       if (this.lastCheckTime && (now - this.lastCheckTime) < 1000) {
-        console.log('[Popup] Debouncing checkAndDisplayExistingDetection (called too soon after last check)');
         return;
       }
       this.lastCheckTime = now;
@@ -287,7 +258,6 @@ class ScrapflyPopup {
       // Check if extension is enabled
       const result = await chrome.storage.local.get(['scrapfly_enabled']);
       if (result.scrapfly_enabled === false) {
-        console.log('Popup: Extension is disabled');
         this.detection.showDisabledState();
         return;
       }
@@ -297,34 +267,22 @@ class ScrapflyPopup {
       const recentlyCleared = clearedTime && (Date.now() - parseInt(clearedTime)) < 10000; // 10 second window
 
       if (recentlyCleared) {
-        console.log('[Popup] Cache recently cleared - showing empty state, not fetching data');
         this.detection.showEmptyState();
         return;
       }
 
       // Check if URL is blacklisted
       if (await Utils.isUrlBlacklisted(tab.url)) {
-        console.log('Popup: URL is blacklisted');
         const url = new URL(tab.url);
         this.detection.showBlacklistState(url.hostname);
         return;
       }
 
       // Get existing detection data (cache or completed detection)
-      console.log(`[DEBUG checkAndDisplay] Sending GET_DETECTION_DATA for tab ${tab.id}, URL: ${tab.url}`);
       chrome.runtime.sendMessage(
         { type: 'GET_DETECTION_DATA', tabId: tab.id },
         async (response) => {
-          console.log('[DEBUG checkAndDisplay] GET_DETECTION_DATA response:', {
-            hasResponse: !!response,
-            status: response?.status,
-            hasData: !!response?.data,
-            dataKeys: response?.data ? Object.keys(response.data) : null,
-            detectionCount: response?.data?.detectionResults?.length
-          });
-
           if (chrome.runtime.lastError) {
-            console.log('[DEBUG checkAndDisplay] Runtime error:', chrome.runtime.lastError);
             this.detection.showEmptyState();
             return;
           }
@@ -336,28 +294,16 @@ class ScrapflyPopup {
             const recentlyCleared = clearedTime && (Date.now() - parseInt(clearedTime)) < 5000;
 
             if (recentlyCleared) {
-              console.log('Popup: Cache recently cleared - showing empty state instead of analyzing');
               this.detection.showEmptyState();
               return;
             }
 
-            console.log('[DEBUG checkAndDisplay] Detection is pending, showing analyzing state');
             this.detection.showAnalyzingState();
           } else if (response && response.data) {
             // Display existing detection data
-            console.log('[DEBUG checkAndDisplay] ✅ Has data! Calling processDetectionData()');
-            console.log('[DEBUG checkAndDisplay] Data structure:', {
-              detectionResults: response.data.detectionResults?.length,
-              timestamp: response.data.timestamp,
-              fromStorage: response.data.fromStorage,
-              url: response.data.url
-            });
             await this.processDetectionData(response.data);
-            console.log('[DEBUG checkAndDisplay] ✅ processDetectionData() completed');
           } else {
             // No data available (includes recently cleared cache)
-            console.log('[DEBUG checkAndDisplay] ❌ No data available, showing empty state');
-            console.log('[DEBUG checkAndDisplay] Response:', response);
             this.detection.showEmptyState();
           }
         }
@@ -425,24 +371,17 @@ class ScrapflyPopup {
    */
   setupMessageHandlers() {
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      console.log('Popup: Received message:', request.type);
-
       switch (request.type) {
         case 'NEW_DETECTION_DATA':
           // New detection data available
-          console.log('Popup: New detection data available for tab:', request.tabId);
-          
           // Check if message is for current active tab
           chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
             if (!tabs[0] || tabs[0].id !== request.tabId) {
-              console.log('Popup: NEW_DETECTION_DATA for different tab, ignoring');
               return;
             }
-            
+
             // If we're on detection tab, process results directly from message
             if (this.currentTab === 'detection') {
-              console.log('Popup: Processing NEW_DETECTION_DATA directly from message');
-              
               // Use detection results from message directly (avoids race condition with reload button)
               if (request.detectionResults && Array.isArray(request.detectionResults)) {
                 // Process the results that came with the message
@@ -456,10 +395,8 @@ class ScrapflyPopup {
                     timestamp: Date.now()
                   }
                 });
-                console.log('Popup: Detection results processed successfully from NEW_DETECTION_DATA message');
               } else {
                 // Fallback: No results in message, fetch from storage
-                console.log('Popup: No results in NEW_DETECTION_DATA, fetching from storage');
                 this.requestCurrentTabDetection();
               }
             }
@@ -473,7 +410,6 @@ class ScrapflyPopup {
 
         case 'CATEGORY_COLORS_UPDATED':
           // Category colors were updated in settings
-          console.log('Popup: Category colors updated, refreshing Rules section');
           // Reload categories from storage
           this.categoryManager.loadFromStorage().then(() => {
             // Refresh Rules section display
@@ -489,11 +425,9 @@ class ScrapflyPopup {
 
         case 'EXTENSION_TOGGLE_CHANGED':
           // Extension was enabled or disabled
-          console.log('Popup: Extension toggle changed - enabled:', request.enabled);
           if (this.currentTab === 'detection') {
             if (request.enabled) {
               // Extension enabled - try to load from cache first
-              console.log('Popup: Extension enabled - checking for cached data');
               chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 if (tabs[0]) {
                   chrome.runtime.sendMessage(
@@ -511,13 +445,11 @@ class ScrapflyPopup {
                       }
 
                       if (response.status === 'pending') {
-                        console.log('Popup: Detection still running after toggle event');
                         this.detection.showAnalyzingState();
                         return;
                       }
 
                       if (response.status === 'interrupted') {
-                        console.log('Popup: Detection interrupted, prompting reload');
                         this.detection.showInterruptedState();
                         return;
                       }
@@ -531,7 +463,6 @@ class ScrapflyPopup {
                       const badgeText = await Detection.getBadgeText(tabs[0].id);
                       const badgeTrimmed = badgeText ? badgeText.trim() : '';
                       if (badgeTrimmed === '⏳') {
-                        console.log('Popup: Badge still indicates loading after toggle event');
                         this.detection.showAnalyzingState();
                         return;
                       }
@@ -540,25 +471,21 @@ class ScrapflyPopup {
                       if (badgeTrimmed === '✕') {
                         const badgeColor = await Detection.getBadgeBackgroundColor(tabs[0].id);
                         if (badgeColor === '#6B7280' || badgeColor === '#6b7280') {
-                          console.log('Popup: Badge indicates cache cleared after toggle event, showing empty state');
                           this.detection.showEmptyState();
                           return;
                         }
                       }
 
                       if (badgeTrimmed === '?' || badgeTrimmed === '✕') {
-                        console.log('Popup: Badge indicates interruption after toggle event');
                         this.detection.showInterruptedState();
                         return;
                       }
 
                       if (response.data) {
                         // Cache exists, display it
-                        console.log('Popup: Found cached data, displaying');
                         await this.processDetectionData(response.data);
                       } else {
                         // No cache, show interrupted state (tells user to reload)
-                        console.log('Popup: No cached data, showing interrupted state');
                         this.detection.showInterruptedState();
                       }
                     }
@@ -567,14 +494,28 @@ class ScrapflyPopup {
               });
             } else {
               // Extension disabled - show disabled state immediately
-              console.log('Popup: Extension disabled - showing disabled state');
               this.detection.showDisabledState();
             }
           }
           break;
 
+        // Internal messages between content scripts and background (silently ignore)
+        case 'WINDOW_DETECTIONS':
+        case 'WINDOW_PROPS_COMPLETE':
+        case 'SCRAPFLY_DEBUG_LOG':
+        case 'DEBUG_LOG':
+        case 'LOG':
+        case 'JS_HOOK_DETECTION_BATCH':
+        case 'JS_HOOKS_COMPLETE':
+          // These are internal messages not meant for popup - ignore silently
+          return false;
+
+        case 'DETECTION_PROGRESS':
+          // Progress updates are handled by sections/detection/detection.js directly
+          return false;
+
         default:
-          console.log('Popup: Unknown message type:', request.type);
+          console.warn('Popup: Unknown message type:', request.type);
       }
 
       sendResponse({ status: 'received' });
@@ -583,12 +524,8 @@ class ScrapflyPopup {
   }
 
   async switchTab(tabName) {
-    console.log('=== SWITCHING TO TAB:', tabName, '===');
-
     // Cleanup previous section's event listeners before switching
     if (this.currentTab && this.currentTab !== tabName) {
-      console.log('Cleaning up previous tab:', this.currentTab);
-
       // Call cleanup on the previous section if it has the method
       const sectionMap = {
         'detection': this.detection,
@@ -602,7 +539,6 @@ class ScrapflyPopup {
       if (previousSection && typeof previousSection.cleanup === 'function') {
         try {
           previousSection.cleanup();
-          console.log(`Cleaned up ${this.currentTab} section`);
         } catch (error) {
           console.error(`Error cleaning up ${this.currentTab} section:`, error);
         }
@@ -619,24 +555,19 @@ class ScrapflyPopup {
     const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
     if (activeBtn) {
       activeBtn.classList.add('active');
-      console.log('Active button updated:', activeBtn);
     }
 
-    // Show/hide tab contents - be VERY explicit
+    // Show/hide tab contents
     const allTabs = document.querySelectorAll('.tab-content');
-    console.log('Found tabs:', Array.from(allTabs).map(t => ({ id: t.id, display: t.style.display, class: t.className })));
 
     allTabs.forEach(content => {
       content.style.display = 'none';
       content.style.visibility = 'hidden';
       content.classList.remove('active');
-      console.log('HIDING tab:', content.id);
     });
 
     const targetId = `${tabName}Tab`;
     const activeContent = document.querySelector(`#${targetId}`);
-    console.log('Looking for tab content with id:', targetId);
-    console.log('Found active content element:', activeContent);
 
     if (activeContent) {
       activeContent.style.display = 'block';
@@ -645,20 +576,16 @@ class ScrapflyPopup {
       activeContent.style.height = 'auto';
       activeContent.style.overflow = 'visible';
       activeContent.classList.add('active');
-      console.log('SHOWING tab content:', activeContent.id);
     } else {
       console.error('Could not find tab content for:', tabName);
-      console.log('Available tabs:', Array.from(allTabs).map(t => t.id));
     }
 
     // OPTIMIZATION Phase A.3: Lazy-load sections on first access
     // Handle section-specific logic when tabs are clicked
     switch (tabName) {
       case 'detection':
-        console.log('Loading detection tab...');
         // Lazy initialize if needed
         if (!this.detection.initialized) {
-          console.log('Detection: First access - initializing...');
           this.detection.initialize().then(async () => {
             // FIX: Display existing detection data (cache or completed) without triggering fresh detection
             await this.checkAndDisplayExistingDetection();
@@ -667,24 +594,20 @@ class ScrapflyPopup {
           // FIX: Even if initialized, ensure HTML is loaded before displaying data
           // This prevents click handlers from being attached to non-existent DOM elements
           if (!this.detection.htmlLoaded) {
-            console.log('Detection: HTML not loaded yet, loading...');
             await this.detection.loadHTML();
           }
 
           // Re-attach event listeners after tab switch (for modal, buttons, etc.)
-          console.log('Detection: Re-attaching event listeners...');
           this.detection.setupEventListeners();
 
           // FIX: Check if cache was cleared while tab was hidden
           if (this.detection.cacheCleared) {
-            console.log('Detection: Cache was cleared while tab was hidden - showing empty state');
             this.detection.cacheCleared = false;
             this.detection.currentResults = [];
             this.detection.showEmptyState();
           } else {
             // Re-render current results to ensure click handlers are attached to cards
             if (this.detection.currentResults && this.detection.currentResults.length > 0) {
-              console.log('Detection: Re-rendering results to attach click handlers...');
               // This will re-render the cards and attach the click handlers
               if (this.detection.paginationManager) {
                 this.detection.paginationManager.setItems(this.detection.currentResults);
@@ -697,46 +620,37 @@ class ScrapflyPopup {
         }
         break;
       case 'history':
-        console.log('Loading history tab...');
         // Lazy initialize if needed
         if (!this.history.initialized) {
-          console.log('History: First access - initializing...');
           this.history.initialize().then(() => {
             this.history.displayHistory();
           });
         } else {
           // Re-attach event listeners after cleanup (search, clear button, etc.)
-          console.log('History: Re-attaching event listeners...');
           this.history.setupEventListeners();
           this.history.displayHistory();
         }
         break;
       case 'rules':
-        console.log('Loading rules tab...');
         // Lazy initialize if needed
         if (!this.rules.initialized) {
-          console.log('Rules: First access - initializing...');
           this.rules.initialize().then(() => {
             this.rules.displayRules();
           });
         } else {
           // Re-attach event listeners after cleanup (search, buttons, etc.)
-          console.log('Rules: Re-attaching event listeners...');
           this.rules.setupEventListeners();
           this.rules.displayRules();
         }
         break;
       case 'advanced':
-        console.log('Loading advanced tab...');
         // Create Advanced instance if it wasn't available during constructor (race condition fix)
         if (!this.advanced && typeof Advanced !== 'undefined') {
-          console.log('Advanced: Creating instance (delayed due to script loading)');
           this.advanced = new Advanced(this.detectorManager, this.detection);
           this.advanced.initialized = false;
         }
         // Lazy initialize if needed
         if (this.advanced && !this.advanced.initialized) {
-          console.log('Advanced: First access - initializing...');
           this.advanced.initialize().then(() => {
             this.advanced.displayAdvancedTools();
           });
@@ -746,11 +660,7 @@ class ScrapflyPopup {
           console.error('Advanced: Class not loaded yet');
         }
         break;
-      default:
-        console.log('Unknown tab:', tabName);
     }
-
-    console.log('=== TAB SWITCH COMPLETE ===');
   }
 
 }

@@ -42,9 +42,6 @@ class LogCollector {
                         // Restore logs
                         if (result[this.storageKey] && Array.isArray(result[this.storageKey])) {
                             this.logs = result[this.storageKey];
-                            if (this.logs.length > 0) {
-                                console.log(`[LogCollector] Restored ${this.logs.length} logs from storage`);
-                            }
                         }
 
                         // Restore max logs setting
@@ -69,7 +66,6 @@ class LogCollector {
                         if (wasEnabled) {
                             this.enabled = true;
                             this.interceptConsoleMethods();
-                            console.log('[LogCollector] Restored enabled state - resuming log collection');
                         }
                     } catch (e) {
                         console.error('[LogCollector] Failed to restore from storage:', e);
@@ -116,7 +112,6 @@ class LogCollector {
      */
     enable() {
         if (this.enabled) {
-            console.warn('[LogCollector] Already enabled');
             return;
         }
 
@@ -139,8 +134,6 @@ class LogCollector {
                 console.error('[LogCollector] Failed to persist enabled state:', e);
             }
         }
-
-        console.log('[LogCollector] Log collection enabled - storing last', this.maxLogs, 'logs');
     }
 
     /**
@@ -148,7 +141,6 @@ class LogCollector {
      */
     disable() {
         if (!this.enabled) {
-            console.warn('[LogCollector] Already disabled');
             return;
         }
 
@@ -163,8 +155,6 @@ class LogCollector {
                 console.error('[LogCollector] Failed to persist disabled state:', e);
             }
         }
-
-        console.log('[LogCollector] Log collection disabled -', this.logs.length, 'logs captured');
 
         // CRITICAL: Tell debug.js to stop allowing logs through (if debugMode is also off)
         if (typeof DebugMode !== 'undefined' && typeof DebugMode.disableLogCollection === 'function') {
@@ -332,8 +322,6 @@ class LogCollector {
         }, (downloadId) => {
             if (chrome.runtime.lastError) {
                 console.error('[LogCollector] Download error:', chrome.runtime.lastError);
-            } else {
-                console.log('[LogCollector] Download started with ID:', downloadId);
             }
         });
 
@@ -379,8 +367,6 @@ class LogCollector {
         }, (downloadId) => {
             if (chrome.runtime.lastError) {
                 console.error('[LogCollector] Download error:', chrome.runtime.lastError);
-            } else {
-                console.log('[LogCollector] Download started with ID:', downloadId);
             }
         });
 
@@ -449,7 +435,6 @@ class LogCollector {
                 console.error('[LogCollector] Failed to clear storage:', e);
             }
         }
-        console.log('[LogCollector] Logs cleared');
     }
 
     /**
@@ -479,7 +464,6 @@ class LogCollector {
         if (this.logs.length > newMax) {
             const removed = this.logs.length - newMax;
             this.logs = this.logs.slice(removed); // Keep newest logs
-            console.log(`[LogCollector] Trimmed ${removed} old logs to fit new max of ${newMax}`);
         }
 
         // Save updated max logs setting
@@ -490,8 +474,6 @@ class LogCollector {
                 console.error('[LogCollector] Failed to save max logs setting:', e);
             }
         }
-
-        console.log('[LogCollector] Max logs set to:', newMax);
     }
 
     /**

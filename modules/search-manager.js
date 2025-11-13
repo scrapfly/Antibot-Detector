@@ -331,13 +331,21 @@ class SearchManager {
               return '';
             }).filter(s => s).join(' ');
 
-            // Store in the search strings property
+            // NEW: Add method type keyword to search strings (e.g., "COOKIE", "HEADER", "DOM")
+            // This allows users to search by detection method type
+            const methodTypeKeyword = methodType.toUpperCase();
+
+            // Store in the search strings property with method type prefix
             if (methodStrings) {
-              enhanced.detector._searchStrings[methodType] = methodStrings;
+              enhanced.detector._searchStrings[methodType] = `${methodTypeKeyword} ${methodStrings}`;
+            } else if (methods.length > 0) {
+              // Even if no pattern strings, still add the method type keyword
+              enhanced.detector._searchStrings[methodType] = methodTypeKeyword;
             }
           } else if (typeof methods === 'string') {
-            // If it's already a string (corrupted data), use it for search
-            enhanced.detector._searchStrings[methodType] = methods;
+            // If it's already a string (corrupted data), use it for search with method type
+            const methodTypeKeyword = methodType.toUpperCase();
+            enhanced.detector._searchStrings[methodType] = `${methodTypeKeyword} ${methods}`;
           }
         }
       }

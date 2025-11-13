@@ -18,20 +18,14 @@ class CategoryManager {
         if (this.initialized) return;
 
         try {
-            console.log('[BADGE-COLOUR] CategoryManager: Starting initialization...');
-
             // TRY STORAGE FIRST - preserve custom colors!
             const storageLoaded = await this.loadFromStorage();
 
             if (!storageLoaded) {
                 // Only load from index.json if storage is empty (first run)
-                console.log('[BADGE-COLOUR] CategoryManager: No data in storage, loading from index.json...');
                 await this.loadCategoriesFromIndex();
                 await this.saveToStorage();
-                console.log('[BADGE-COLOUR] CategoryManager: Saved initial data to storage');
             } else {
-                console.log('[BADGE-COLOUR] CategoryManager: ✅ Loaded existing data from storage (preserving custom colors)');
-
                 // IMPORTANT: Merge any new tags from index.json that aren't in storage
                 // This ensures new detection methods (like js_hooks) get their colors even if storage is old
                 await this.mergeNewTagsFromIndex();
@@ -41,10 +35,8 @@ class CategoryManager {
             await this.syncColorsFromSettings();
 
             this.initialized = true;
-            console.log('[BADGE-COLOUR] CategoryManager: Initialized successfully');
         } catch (error) {
-            console.error('[BADGE-COLOUR] CategoryManager: Failed to initialize:', error);
-            console.error('[BADGE-COLOUR] CategoryManager: Error stack:', error.stack);
+            Logger.error('DETECTOR', 'CategoryManager failed to initialize', error);
             throw error;
         }
     }
@@ -56,10 +48,7 @@ class CategoryManager {
     async loadCategoriesFromIndex() {
         try {
             const indexUrl = chrome.runtime.getURL('detectors/index.json');
-            console.log('[CategoryManager] 🔍 Loading index.json from:', indexUrl);
-
             const response = await fetch(indexUrl);
-            console.log('[CategoryManager] 🔍 Fetch response:', response.status, response.statusText);
 
             if (!response.ok) {
                 throw new Error(`Failed to load index.json: ${response.statusText}`);
@@ -68,27 +57,13 @@ class CategoryManager {
             const indexData = await response.json();
             this.categories = indexData;
 
-            console.log('[CategoryManager] ✅ Loaded categories from index:', Object.keys(this.categories));
-
-            // DIAGNOSTIC: Show what was loaded for each category
-            for (const [categoryName, categoryData] of Object.entries(this.categories)) {
-                if (categoryData && typeof categoryData === 'object' && categoryData.detectors) {
-                    console.log(`[CategoryManager] 🔍   - ${categoryName}: ${categoryData.detectors.length} detectors`);
-                } else {
-                    console.log(`[CategoryManager] 🔍   - ${categoryName}: special section (not detector category)`);
-                }
-            }
-
-            // Debug: Check if badge colors were loaded
-            if (this.categories.badge) {
-                console.log('[BADGE-COLOUR] ✅ Loaded from index.json:', this.categories.badge);
-            } else {
-                console.warn('[BADGE-COLOUR] ⚠️ No badge section found in index.json!');
+            // Warn if badge colors missing
+            if (!this.categories.badge) {
+                Logger.warn('DETECTOR', 'No badge section found in index.json');
             }
 
         } catch (error) {
-            console.error('[CategoryManager] ❌ Failed to load detectors index:', error);
-            console.error('[CategoryManager] ❌ Error stack:', error.stack);
+            Logger.error('DETECTOR', 'Failed to load detectors index', error);
             throw error;
         }
     }
@@ -102,10 +77,7 @@ class CategoryManager {
             const indexUrl = chrome.runtime.getURL('detectors/index.json');
             const response = await fetch(indexUrl);
 
-            if (!response.ok) {
-                console.warn('[CategoryManager] Failed to fetch index.json for tag merging:', response.statusText);
-                return;
-            }
+            if (!response.ok) return;
 
             const indexData = await response.json();
 
@@ -120,19 +92,15 @@ class CategoryManager {
                     if (!this.categories.tags[tagName]) {
                         this.categories.tags[tagName] = tagData;
                         mergedCount++;
-                        console.log(`[CategoryManager] ✅ Merged new tag from index.json: ${tagName} → ${tagData.colour}`);
                     }
                 }
 
                 if (mergedCount > 0) {
-                    console.log(`[CategoryManager] Merged ${mergedCount} new tags from index.json`);
                     await this.saveToStorage();
-                } else {
-                    console.log('[CategoryManager] No new tags to merge from index.json');
                 }
             }
         } catch (error) {
-            console.warn('[CategoryManager] Failed to merge new tags from index.json:', error);
+            // Silently fail - not critical
         }
     }
 
@@ -151,20 +119,11 @@ class CategoryManager {
                 countProperty: null // totalCategories already included in data
             });
 
-            if (success) {
-                console.log(`Saved ${Object.keys(this.categories).length} categories to storage as scrapfly_categories`);
-
-                // Debug: Log badge colors being saved
-                if (this.categories.badge) {
-                    console.log('[BADGE-COLOUR] ✅ Saved to storage:', JSON.stringify(this.categories.badge, null, 2));
-                } else {
-                    console.warn('[BADGE-COLOUR] ⚠️ No badge colors in categories object during save!');
-                }
-            } else {
+            if (!success) {
                 throw new Error('StorageManager.saveToStorage returned false');
             }
         } catch (error) {
-            console.error('Failed to save categories to storage:', error);
+            Logger.error('DETECTOR', 'Failed to save categories to storage', error);
             throw error;
         }
     }
@@ -184,22 +143,13 @@ class CategoryManager {
 
             if (categoriesData) {
                 this.categories = categoriesData.categories;
-                console.log('[BADGE-COLOUR] Loaded categories from storage');
-
-                // Debug: Check badge colors
-                if (this.categories.badge) {
-                    console.log('[BADGE-COLOUR] ✅ Badge colors in loaded data:', JSON.stringify(this.categories.badge, null, 2));
-                } else {
-                    console.warn('[BADGE-COLOUR] ⚠️ No badge colors found in loaded data!');
-                }
-
                 this.initialized = Object.keys(this.categories).length > 0;
                 return true;
             }
 
             return false;
         } catch (error) {
-            console.error('[BADGE-COLOUR] Failed to load categories from storage:', error);
+            Logger.error('DETECTOR', 'Failed to load categories from storage', error);
             return false;
         }
     }
@@ -258,19 +208,17 @@ class CategoryManager {
                     for (const [categoryName, color] of Object.entries(categoryColors)) {
                         if (this.categories[categoryName]) {
                             this.categories[categoryName].colour = color;
-                            console.log(`[CategoryManager] Synced ${categoryName} color to:`, color);
                         }
                     }
 
                     // Save updated categories to storage
                     await this.saveToStorage();
-                    console.log('[CategoryManager] ✅ Colors synced from Settings successfully');
                     return true;
                 }
             }
             return false;
         } catch (error) {
-            console.error('[CategoryManager] Failed to sync colors from Settings:', error);
+            Logger.error('DETECTOR', 'Failed to sync colors from Settings', error);
             return false;
         }
     }
@@ -419,7 +367,6 @@ class CategoryManager {
             color = defaults[normalizedLevel] || '#4CAF50';
         }
 
-        console.log(`[BADGE-COLOUR] getBadgeColor('${level}') → ${color}`);
         return color;
     }
 
@@ -433,12 +380,11 @@ class CategoryManager {
         const normalizedLevel = level.toLowerCase();
 
         if (!['low', 'medium', 'high'].includes(normalizedLevel)) {
-            console.error(`[BADGE-COLOUR] Invalid badge level: ${level}. Must be 'low', 'medium', or 'high'`);
+            Logger.error('BADGE', 'Invalid badge level - must be low, medium, or high', { level });
             return false;
         }
 
         if (!this.categories.badge) {
-            console.log('[BADGE-COLOUR] Initializing badge colors object');
             this.categories.badge = {
                 low: { colour: '#4CAF50' },
                 medium: { colour: '#FFA500' },
@@ -446,30 +392,7 @@ class CategoryManager {
             };
         }
 
-        const oldColor = this.categories.badge[normalizedLevel]?.colour;
         this.categories.badge[normalizedLevel] = { colour: color };
-        console.log(`[BADGE-COLOUR] Updated ${normalizedLevel}: ${oldColor} → ${color}`);
-        return true;
-    }
-
-    /**
-     * Add a new category (runtime only, not persisted to index.json)
-     * @param {string} categoryName - Category name
-     * @param {object} categoryData - Category configuration
-     */
-    addCategory(categoryName, categoryData) {
-        if (this.hasCategory(categoryName)) {
-            console.warn(`Category ${categoryName} already exists`);
-            return false;
-        }
-
-        this.categories[categoryName] = {
-            colour: categoryData.colour || '#3b82f6',
-            detectors: categoryData.detectors || [],
-            ...categoryData
-        };
-
-        console.log(`Added category: ${categoryName}`);
         return true;
     }
 
@@ -480,54 +403,11 @@ class CategoryManager {
      */
     updateCategoryColor(categoryName, color) {
         if (!this.hasCategory(categoryName)) {
-            console.error(`Category ${categoryName} not found`);
             return false;
         }
 
         this.categories[categoryName].colour = color;
-        console.log(`Updated ${categoryName} color to ${color}`);
         return true;
-    }
-
-    /**
-     * Add detector to category
-     * @param {string} categoryName - Category name
-     * @param {string} detectorName - Detector name to add
-     */
-    addDetectorToCategory(categoryName, detectorName) {
-        if (!this.hasCategory(categoryName)) {
-            console.error(`Category ${categoryName} not found`);
-            return false;
-        }
-
-        if (!this.categories[categoryName].detectors.includes(detectorName)) {
-            this.categories[categoryName].detectors.push(detectorName);
-            console.log(`Added detector ${detectorName} to category ${categoryName}`);
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Remove detector from category
-     * @param {string} categoryName - Category name
-     * @param {string} detectorName - Detector name to remove
-     */
-    removeDetectorFromCategory(categoryName, detectorName) {
-        if (!this.hasCategory(categoryName)) {
-            console.error(`Category ${categoryName} not found`);
-            return false;
-        }
-
-        const index = this.categories[categoryName].detectors.indexOf(detectorName);
-        if (index > -1) {
-            this.categories[categoryName].detectors.splice(index, 1);
-            console.log(`Removed detector ${detectorName} from category ${categoryName}`);
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -558,9 +438,8 @@ class CategoryManager {
         try {
             // Remove both old and new keys
             await StorageManager.clearStorage(['scrapfly_categories', 'scrapfly_categories.json']);
-            console.log('Cleared category storage');
         } catch (error) {
-            console.error('Failed to clear category storage:', error);
+            Logger.error('STORAGE', 'Failed to clear category storage', error);
         }
     }
 
@@ -599,10 +478,9 @@ class CategoryManager {
         try {
             const imported = JSON.parse(jsonString);
             this.categories = imported;
-            console.log('Successfully imported categories');
             return true;
         } catch (error) {
-            console.error('Failed to import categories:', error);
+            Logger.error('DETECTOR', 'Failed to import categories', error);
             return false;
         }
     }
@@ -646,7 +524,7 @@ class CategoryManager {
                 high: '#FF4444'
             };
         } catch (error) {
-            console.error('Error getting badge colors:', error);
+            Logger.error('BADGE', 'Error getting badge colors', error);
             // Fallback defaults
             return {
                 low: '#4CAF50',

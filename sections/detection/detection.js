@@ -1504,19 +1504,21 @@ class Detection {
       badges.push(`<span class="badge" style="background: ${categoryColor}; color: white;">${categoryName}</span>`);
     }
 
-    // Add detection method badges based on actual matches
+    // Add detection method badges based on actual matches (with counts)
     if (detection.matches && detection.matches.length > 0) {
-      const methodTypes = new Set();
+      // Count matches per type instead of just collecting unique types
+      const methodCounts = new Map();
       detection.matches.forEach(match => {
         if (match.type) {
-          methodTypes.add(match.type);
+          methodCounts.set(match.type, (methodCounts.get(match.type) || 0) + 1);
         }
       });
 
-      // Convert method types to badges with dynamic colors from CategoryManager
-      methodTypes.forEach(type => {
+      // Convert method types to badges with counts and dynamic colors from CategoryManager
+      methodCounts.forEach((count, type) => {
         const typeName = type.toLowerCase();
         const methodName = typeName.replace(/_/g, ' ').toUpperCase();
+        const displayText = count > 1 ? `${methodName} (${count})` : methodName;
         const tagColor = this.detectorManager.categoryManager.getTagColor(typeName);
 
         if (tagColor && tagColor !== '#666666') {
@@ -1524,11 +1526,11 @@ class Detection {
           const r = parseInt(tagColor.slice(1, 3), 16);
           const g = parseInt(tagColor.slice(3, 5), 16);
           const b = parseInt(tagColor.slice(5, 7), 16);
-          badges.push(`<span class="badge" style="background: rgba(${r}, ${g}, ${b}, 0.15); color: ${tagColor}; border: 1px solid rgba(${r}, ${g}, ${b}, 0.3);">${methodName}</span>`);
+          badges.push(`<span class="badge" style="background: rgba(${r}, ${g}, ${b}, 0.15); color: ${tagColor}; border: 1px solid rgba(${r}, ${g}, ${b}, 0.3);">${displayText}</span>`);
         } else {
           // Fallback to CSS class (use typeName for CSS class)
           const methodClass = `badge-${typeName}`;
-          badges.push(`<span class="badge ${methodClass}">${methodName}</span>`);
+          badges.push(`<span class="badge ${methodClass}">${displayText}</span>`);
         }
       });
     }
@@ -2099,7 +2101,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
    */
   setupPagination() {
     this.paginationManager = new PaginationManager('detectionPagination', {
-      itemsPerPage: 10,
+      itemsPerPage: 2,
       onPageChange: (page, items) => {
         this.renderDetectionsPage(items);
       }

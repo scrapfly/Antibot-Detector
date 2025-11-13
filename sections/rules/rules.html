@@ -31,7 +31,7 @@
 
     <!-- Search Bar -->
     <div class="search-container">
-      <input type="text" id="rulesSearch" class="search-input" placeholder="Search detectors by name or pattern...">
+      <input type="text" id="rulesSearch" class="search-input" placeholder="Search by name, pattern, or method (COOKIE, HEADER, DOM, URL, CONTENT, PAYLOAD, JS_HOOKS, WINDOW)...">
     </div>
   </div>
 
@@ -258,22 +258,24 @@
             <div class="setting-option">
               <div class="option-content">
                 <span class="setting-label" id="nameScopeLabel">Name Scope</span>
-                <p style="font-size: 10px; color: var(--text-muted); margin: 4px 0 0 0;">Where to check for name/field matches</p>
+                <p style="font-size: 10px; color: var(--text-muted); margin: 4px 0 0 0;">Where to check for name/field matches (Storage = localStorage/sessionStorage)</p>
               </div>
               <select id="nameScope" class="scope-select">
                 <option value="request">Request</option>
                 <option value="response">Response</option>
+                <option value="storage">Storage</option>
                 <option value="all">All</option>
               </select>
             </div>
             <div class="setting-option">
               <div class="option-content">
                 <span class="setting-label">Value Scope</span>
-                <p style="font-size: 10px; color: var(--text-muted); margin: 4px 0 0 0;">Where to check for value matches</p>
+                <p style="font-size: 10px; color: var(--text-muted); margin: 4px 0 0 0;">Where to check for value matches (Storage = localStorage/sessionStorage)</p>
               </div>
               <select id="valueScope" class="scope-select">
                 <option value="request">Request</option>
                 <option value="response">Response</option>
+                <option value="storage">Storage</option>
                 <option value="all">All</option>
               </select>
             </div>

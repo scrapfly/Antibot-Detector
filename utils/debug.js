@@ -65,10 +65,6 @@ if (typeof chrome !== 'undefined' && chrome.storage) {
             // Ignore sessionStorage errors
           }
         }
-
-        if (DebugState.enabled) {
-          originalConsole.log('[DebugMode] Debug mode is ENABLED');
-        }
       } catch (e) {
         originalConsole.error('[DebugMode] Failed to parse settings:', e);
       }
@@ -107,12 +103,6 @@ if (typeof chrome !== 'undefined' && chrome.storage) {
               } catch (e) {
                 // Ignore sessionStorage errors
               }
-            }
-
-            if (DebugState.enabled) {
-              originalConsole.log('[DebugMode] Debug mode is now ENABLED');
-            } else {
-              originalConsole.log('[DebugMode] Debug mode is now DISABLED');
             }
           }
         } catch (e) {
@@ -273,11 +263,9 @@ console.error = function(...args) {
 var DebugMode = {
   enable: function() {
     DebugState.enabled = true;
-    originalConsole.log('[DebugMode] Debug mode manually ENABLED');
   },
 
   disable: function() {
-    originalConsole.log('[DebugMode] Debug mode manually DISABLED');
     DebugState.enabled = false;
   },
 
@@ -291,17 +279,6 @@ var DebugMode = {
 
   forceError: function(...args) {
     originalConsole.error(...args);
-  },
-
-  enableLogCollection: function() {
-    // Called by LogCollector to signal that logs should always pass through
-    // LogCollector will intercept console methods itself
-    originalConsole.log('[DebugMode] Log collection enabled');
-  },
-
-  disableLogCollection: function() {
-    // Called by LogCollector to signal that log collection is stopping
-    originalConsole.log('[DebugMode] Log collection disabled');
   }
 };
 

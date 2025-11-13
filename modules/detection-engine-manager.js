@@ -444,12 +444,15 @@ class DetectionEngineManager {
 
             // Helper methods bound to DetectionEngineManager instance
             _extractCookies: () => this.extractCookies(),
+            _extractStorageCookies: () => this.extractStorageCookies(),
             _extractScriptElements: () => this.extractScriptElements(),
             _extractDOM: () => this.extractDOM()
         };
 
         // OPTIMIZATION Phase C.1: Only create getters for detection methods that are actually used
         // This prevents unnecessary data extraction when detectors don't need specific data types
+
+        let cachedStorageCookies = null;
 
         if (usedMethods.cookie) {
             Object.defineProperty(pageData, 'cookies', {
@@ -463,6 +466,22 @@ class DetectionEngineManager {
                 },
                 set(value) {
                     cachedCookies = value;
+                },
+                enumerable: true
+            });
+
+            // NEW: Add storageCookies getter (localStorage + sessionStorage)
+            Object.defineProperty(pageData, 'storageCookies', {
+                get() {
+                    if (cachedStorageCookies === null) {
+                        const start = Date.now();
+                        cachedStorageCookies = this._extractStorageCookies();
+                        console.log(`[C.1: Lazy Storage] Extracted ${cachedStorageCookies.length} storage items in ${Date.now() - start}ms`);
+                    }
+                    return cachedStorageCookies;
+                },
+                set(value) {
+                    cachedStorageCookies = value;
                 },
                 enumerable: true
             });
@@ -603,6 +622,65 @@ class DetectionEngineManager {
         }
 
         return cookies;
+    }
+
+    /**
+     * Extract storage cookies from localStorage and sessionStorage
+     * These are often used for authentication tokens, session IDs, and tracking
+     * @returns {array} Array of storage cookie objects
+     */
+    extractStorageCookies() {
+        const storageCookies = [];
+
+        try {
+            // Extract from localStorage
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+
+                if (key && value) {
+                    storageCookies.push({
+                        name: key,
+                        value: value.substring(0, 100), // Limit value length for performance
+                        domain: window.location.hostname,
+                        source: 'localStorage'
+                    });
+                }
+            }
+        } catch (error) {
+            // localStorage might not be available (privacy mode, etc.)
+            console.warn('[Storage Cookies] Cannot access localStorage:', error.message);
+        }
+
+        try {
+            // Extract from sessionStorage
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                const value = sessionStorage.getItem(key);
+
+                if (key && value) {
+                    storageCookies.push({
+                        name: key,
+                        value: value.substring(0, 100), // Limit value length for performance
+                        domain: window.location.hostname,
+                        source: 'sessionStorage'
+                    });
+                }
+            }
+        } catch (error) {
+            // sessionStorage might not be available (privacy mode, etc.)
+            console.warn('[Storage Cookies] Cannot access sessionStorage:', error.message);
+        }
+
+        // Log all collected storage cookies - visible in Service Worker console
+        if (typeof Logger !== 'undefined') {
+            Logger.cache(`💾 Collected ${storageCookies.length} storage items from page`, {
+                localStorage: storageCookies.filter(c => c.source === 'localStorage').map(c => c.name),
+                sessionStorage: storageCookies.filter(c => c.source === 'sessionStorage').map(c => c.name)
+            });
+        }
+
+        return storageCookies;
     }
 
     /**
@@ -1169,7 +1247,7 @@ class DetectionEngineManager {
         }
 
         const detections = [];
-        const { url = '', content = [], dom = [], cookies = [], headers = {}, pageHTML = '', externalContent = [], jsHooks = [], payload, payloads, networkUrls = [], allCookies = [] } = pageData;
+        const { url = '', content = [], dom = [], cookies = [], headers = {}, pageHTML = '', externalContent = [], jsHooks = [], payload, payloads, networkUrls = [], allCookies = [], responseCookies = [], storageCookies = [] } = pageData;
 
         // ENHANCEMENT: Use allCookies (from chrome.cookies API) if available, includes HttpOnly cookies
         // Fallback to cookies from document.cookie for backward compatibility
@@ -1222,7 +1300,7 @@ class DetectionEngineManager {
         const EARLY_EXIT_COUNT = 5; // Stop after 5 high-confidence detections
 
         for (const { category, detectorName, detector } of detectorPriorities) {
-            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, pageHTML, externalContent, payload, payloads, networkUrls, allCookies, responseCookies });
+            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, pageHTML, externalContent, payload, payloads, networkUrls, allCookies, responseCookies, storageCookies });
             if (detection.detected) {
                 console.log(`    ✅ DETECTED: ${detectorName} (confidence: ${detection.confidence}%)`);
                 const detectionObj = {
@@ -1343,24 +1421,13 @@ class DetectionEngineManager {
      * @returns {object} Detection result with confidence and matches
      */
     runDetector(detector, pageData) {
-        const { url, content, dom, cookies = [], headers = {}, pageHTML = '', externalContent = [], allCookies = [], responseCookies = [] } = pageData;
+        const { url, content, dom, cookies = [], headers = {}, pageHTML = '', externalContent = [], allCookies = [], responseCookies = [], storageCookies = [] } = pageData;
         const matches = [];
 
         // ENHANCEMENT: Use allCookies (from chrome.cookies API) if available, includes HttpOnly cookies
         const cookiesToMatch = allCookies.length > 0 ? allCookies : cookies;
 
         if (detector.detection?.url) {
-            // Helper function to extract pathname from URL
-            const extractPathname = (urlString) => {
-                try {
-                    const urlObj = new URL(urlString);
-                    return urlObj.pathname;
-                } catch (e) {
-                    // If URL parsing fails, return the original string
-                    // (might be a relative path or malformed URL)
-                    return urlString;
-                }
-            };
 
             for (const urlPattern of detector.detection.url) {
                 const matchOptions = {
@@ -1373,10 +1440,9 @@ class DetectionEngineManager {
                 const textScope = urlPattern.textScope || 'all';
 
                 // Check main page URL (always checked unless scope is explicitly scripts-only)
-                // Extract pathname before matching for more accurate pattern matching
-                const urlPathname = extractPathname(url);
-                console.log(`[URL Detection] ${detector.name}: Testing pattern "${urlPattern.text}" against pathname "${urlPathname}"`);
-                const urlMatch = this.matchPatternWithCapture(urlPathname, urlPattern.text, matchOptions);
+                // Match against full URL including query parameters for "contains" matching
+                console.log(`[URL Detection] ${detector.name}: Testing pattern "${urlPattern.text}" against URL "${url}"`);
+                const urlMatch = this.matchPatternWithCapture(url, urlPattern.text, matchOptions);
                 if (urlMatch) {
                     console.log(`[URL Detection] ${detector.name}: ✅ MATCHED! Value: "${urlMatch}"`);
                     matches.push({
@@ -1396,8 +1462,8 @@ class DetectionEngineManager {
                     for (const script of content) {
                         const scriptSrc = script.src || '';
                         if (scriptSrc) {
-                            const scriptPathname = extractPathname(scriptSrc);
-                            const scriptMatch = this.matchPatternWithCapture(scriptPathname, urlPattern.text, matchOptions);
+                            // Match against full script URL including query parameters
+                            const scriptMatch = this.matchPatternWithCapture(scriptSrc, urlPattern.text, matchOptions);
                             if (scriptMatch) {
                                 // Check if we already have this pattern to avoid duplicates
                                 const alreadyAdded = matches.some(m => m.type === 'url' && m.pattern === urlPattern.text);
@@ -1421,8 +1487,8 @@ class DetectionEngineManager {
                     for (const resource of externalContent) {
                         const resourceUrl = resource.url || '';
                         if (resourceUrl) {
-                            const resourcePathname = extractPathname(resourceUrl);
-                            const resourceMatch = this.matchPatternWithCapture(resourcePathname, urlPattern.text, matchOptions);
+                            // Match against full resource URL including query parameters
+                            const resourceMatch = this.matchPatternWithCapture(resourceUrl, urlPattern.text, matchOptions);
                             if (resourceMatch) {
                                 // Check if we already have this pattern to avoid duplicates
                                 const alreadyAdded = matches.some(m => m.type === 'url' && m.pattern === urlPattern.text);
@@ -1445,8 +1511,8 @@ class DetectionEngineManager {
                 if (textScope === 'all' && pageData.networkUrls && pageData.networkUrls.length > 0) {
                     console.log(`[URL Detection] ${detector.name}: Checking ${pageData.networkUrls.length} network request URLs`);
                     for (const networkUrl of pageData.networkUrls) {
-                        const networkPathname = extractPathname(networkUrl.url);
-                        const networkMatch = this.matchPatternWithCapture(networkPathname, urlPattern.text, matchOptions);
+                        // Match against full network request URL including query parameters
+                        const networkMatch = this.matchPatternWithCapture(networkUrl.url, urlPattern.text, matchOptions);
                         if (networkMatch) {
                             // Check if we already have this pattern to avoid duplicates
                             const alreadyAdded = matches.some(m => m.type === 'url' && m.pattern === urlPattern.text);
@@ -1596,13 +1662,17 @@ class DetectionEngineManager {
                         return allCookies.length > 0 ? allCookies : cookies;
                     } else if (scope === 'response') {
                         return responseCookies || [];
+                    } else if (scope === 'storage') {
+                        // NEW: Return storage cookies (localStorage + sessionStorage)
+                        return storageCookies || [];
                     } else if (scope === 'all') {
                         // Merge all available cookie sources
                         // allCookies includes HttpOnly, Secure, and all domain cookies
+                        // NEW: Also includes storage cookies
                         if (allCookies.length > 0) {
-                            return [...allCookies, ...(responseCookies || [])];
+                            return [...allCookies, ...(responseCookies || []), ...(storageCookies || [])];
                         } else {
-                            return [...cookies, ...(responseCookies || [])];
+                            return [...cookies, ...(responseCookies || []), ...(storageCookies || [])];
                         }
                     } else {
                         // Default fallback (shouldn't happen)
@@ -1616,7 +1686,8 @@ class DetectionEngineManager {
                 // OPTIMIZATION Phase 10.6: Filter out matched cookies before searching (O(n) instead of O(n²))
                 const unmatchedCookies = cookiesForName.filter(c => !matchedCookieNames.has(c.name));
 
-                const matchingCookie = unmatchedCookies.find(cookie => {
+                // FIX: Use .filter() instead of .find() to get ALL matching cookies, not just the first one
+                const matchingCookies = unmatchedCookies.filter(cookie => {
                     // Match by name using matchPattern helper
                     if (cookiePattern.name && cookie.name) {
                         const matched = this.matchPattern(cookie.name, cookiePattern.name, nameMatchOptions);
@@ -1638,7 +1709,8 @@ class DetectionEngineManager {
                     return false;
                 });
 
-                if (matchingCookie) {
+                // Add all matching cookies to results
+                for (const matchingCookie of matchingCookies) {
                     matchedCookieNames.add(matchingCookie.name); // Mark as matched
 
                     // Log successful match
@@ -1693,7 +1765,7 @@ class DetectionEngineManager {
                 const headersForName = getHeadersByScope(nameScope);
                 const headersForValue = getHeadersByScope(valueScope);
 
-                // Loop through headers for name matching
+                // FIX: Loop through ALL headers and match all of them (removed break statements)
                 for (const [headerName, headerValue] of Object.entries(headersForName)) {
                     if (headerPattern.name && this.matchPattern(headerName, headerPattern.name, nameMatchOptions)) {
                         // If value pattern specified, check it in valueScope headers
@@ -1708,7 +1780,7 @@ class DetectionEngineManager {
                                     confidence: headerPattern.confidence || 80,
                                     description: headerPattern.description
                                 });
-                                break; // Found a match, no need to check more headers
+                                // Continue checking for more matching headers
                             }
                         } else {
                             // Just check for header name match
@@ -1719,7 +1791,7 @@ class DetectionEngineManager {
                                 confidence: headerPattern.confidence || 80,
                                 description: headerPattern.description
                             });
-                            break; // Found a match, no need to check more headers
+                            // Continue checking for more matching headers
                         }
                     }
                 }
@@ -1758,7 +1830,7 @@ class DetectionEngineManager {
                         }
                     }
 
-                    // NEW: Check URL pattern constraint
+                    // NEW: Check URL pattern constraint (match against full URL including query parameters)
                     if (payloadPattern.urlPattern && payloadPattern.urlPattern.trim() !== '') {
                         const urlMatchOptions = {
                             regex: payloadPattern.urlRegex === true,
@@ -1766,6 +1838,7 @@ class DetectionEngineManager {
                             caseSensitive: payloadPattern.urlCaseSensitive === true
                         };
 
+                        // Match against full URL (includes query parameters for "contains" matching)
                         const urlMatched = this.matchPattern(payloadItem.url, payloadPattern.urlPattern, urlMatchOptions);
                         if (!urlMatched) {
                             continue; // Skip this pattern
@@ -1862,7 +1935,7 @@ class DetectionEngineManager {
                     }
                 }
 
-                // NEW: Check URL pattern constraint
+                // NEW: Check URL pattern constraint (match against full URL including query parameters)
                 if (payloadPattern.urlPattern && payloadPattern.urlPattern.trim() !== '') {
                     const urlMatchOptions = {
                         regex: payloadPattern.urlRegex === true,
@@ -1870,6 +1943,7 @@ class DetectionEngineManager {
                         caseSensitive: payloadPattern.urlCaseSensitive === true
                     };
 
+                    // Match against full URL (includes query parameters for "contains" matching)
                     const urlMatched = this.matchPattern(pageData.payload.url, payloadPattern.urlPattern, urlMatchOptions);
                     if (!urlMatched) {
                         continue; // Skip this pattern
@@ -1939,8 +2013,8 @@ class DetectionEngineManager {
         // Check DOM patterns
         if (detector.detection?.dom && dom.length > 0) {
             for (const domPattern of detector.detection.dom) {
-                // Check if any DOM element matches the pattern
-                const matchingElement = dom.find(element => {
+                // FIX: Use .filter() to get ALL matching DOM elements, not just the first one
+                const matchingElements = dom.filter(element => {
                     // The DOM data from content script contains various properties
                     // We need to match the selector pattern against the element data
 
@@ -2021,7 +2095,8 @@ class DetectionEngineManager {
                     return false;
                 });
 
-                if (matchingElement) {
+                // Add all matching DOM elements to results
+                for (const matchingElement of matchingElements) {
                     const elementText = matchingElement.text || matchingElement.textContent || matchingElement.innerText || '';
                     const truncatedText = elementText.length > 50 ? elementText.substring(0, 50) + '...' : elementText;
                     matches.push({

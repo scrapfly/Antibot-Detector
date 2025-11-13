@@ -576,15 +576,6 @@
   // This must happen BEFORE any page scripts execute
   const inlineHooksInstalled = installCriticalHooksSynchronously();
 
-  // Test Logger in MAIN world context
-  try {
-    if (typeof Logger !== 'undefined') {
-      Logger.hooks('✅ Logger initialized in MAIN WORLD context');
-    }
-  } catch (e) {
-    // Silently fail - logging is not critical for hook functionality
-  }
-
   // Listen for disable monitoring message from ISOLATED world (cache hit)
   window.addEventListener('message', (event) => {
     if (event.source !== window) return;
