@@ -326,8 +326,11 @@ class ScrapflyPopup {
         chrome.tabs.sendMessage(tab.id, {
           type: 'POPUP_OPENED',
           timestamp: Date.now()
-        }).catch(() => {
+        }).catch((error) => {
           // Content script might not be ready, that's okay
+          if (typeof Logger !== 'undefined') {
+            Logger.debug('POPUP', 'Could not notify content script of popup open', { error: error.message });
+          }
         });
       }
     } catch (error) {

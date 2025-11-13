@@ -97,7 +97,9 @@ async function installJSHooks() {
  */
 function isExtensionContextValid() {
     if (typeof Utils === 'undefined') {
-        console.warn('Scrapfly Content Script: Utils not loaded yet');
+        if (typeof Logger !== 'undefined') {
+            Logger.warn('CONTENT', 'Utils not loaded yet');
+        }
         return false;
     }
     return Utils.isExtensionContextValid();
@@ -383,27 +385,9 @@ function setupDetectionTriggers() {
                     `;
                 }
                 sendResponse({ status: 'updated' });
-            } else if (request.type === 'POPUP_OPENED') {
-                // Popup was opened - record timestamp to prevent visibility-triggered detections
-                popupOpenTime = Date.now();
-                Logger.content('Popup opened, disabling visibility detection for 3 seconds');
-                sendResponse({ status: 'acknowledged' });
             } else if (request.type === 'CACHE_HIT_DISABLE_MONITORING') {
                 // Cache hit - disable hooks and window properties monitoring
                 monitoringDisabled = true;
-
-                // Remove visibility/focus listeners to prevent repeated triggering
-                if (handleVisibilityChange) {
-                    document.removeEventListener('visibilitychange', handleVisibilityChange);
-                    window.removeEventListener('focus', handleVisibilityChange);
-                    handleVisibilityChange = null;
-                }
-
-                // Clear any pending timeout
-                if (visibilityTimeout) {
-                    clearTimeout(visibilityTimeout);
-                    visibilityTimeout = null;
-                }
 
                 // Notify MAIN world to disable monitoring
                 window.postMessage({

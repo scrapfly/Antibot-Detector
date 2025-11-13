@@ -388,29 +388,6 @@ class Detection {
 
     // FIX: Removed simulated progress animation - we use real progress updates from background now
     // The real progress is sent via DETECTION_PROGRESS messages which are more accurate
-    // Keeping the old animation would conflict with real updates and cause incorrect percentages
-    //
-    // const totalSteps = this.analysisSteps.length;
-    // if (totalSteps <= 1) {
-    //   return;
-    // }
-    //
-    // this.analysisProgressInterval = setInterval(() => {
-    //   const containerExists = document.body.contains(stepsContainer);
-    //   if (!containerExists) {
-    //     this.stopAnalysisProgress();
-    //     return;
-    //   }
-    //
-    //   if (this.analysisStepIndex < totalSteps - 1) {
-    //     this.analysisStepIndex += 1;
-    //     this.updateAnalysisStepStates();
-    //     this.updateAnalysisPercent();
-    //   } else {
-    //     this.updateAnalysisPercent(95);
-    //     this.stopAnalysisProgress();
-    //   }
-    // }, 1500);
   }
 
   updateAnalysisStepStates(forceComplete = false) {

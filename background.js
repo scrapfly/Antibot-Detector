@@ -415,11 +415,6 @@ function sendProgressUpdate(tabId, methodName, completedMethods, totalMethods = 
         // This was causing the "stuck at 29%" issue.
         // The badge should only show the final count after detection completes.
         // Percentages are confusing and get stuck when methods complete out of order.
-        //
-        // const methodPercent = Math.round((1 / totalMethods) * 100);
-        // const totalPercent = Math.round((completedMethods.size / totalMethods) * 100);
-        // const badgeText = `${totalPercent}%`;
-        // chrome.action.setBadgeText({ text: badgeText, tabId: tabId });
 
         const message = `Checked ${methodName}`;
 
