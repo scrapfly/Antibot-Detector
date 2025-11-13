@@ -47,20 +47,32 @@ jobs:
             echo "TAG_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
           fi
 
+      - name: Validate and echo TAG_NAME
+        run: |
+          if [ -z "$TAG_NAME" ]; then
+            echo "❌ Error: TAG_NAME is empty. For manual runs, ensure 'version' input is filled (e.g., v1.8)."
+            exit 1
+          fi
+          echo "✅ Using TAG_NAME: $TAG_NAME"
+
       - name: Set output TAG_NAME
         id: set_tag
         run: echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_OUTPUT
 
       - name: Create and push tag if missing
         if: github.event_name == 'workflow_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if ! git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
+            git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
             git tag "$TAG_NAME"
             git push origin "$TAG_NAME"
+            echo "✅ Created and pushed tag: $TAG_NAME"
           else
-            echo "Tag $TAG_NAME already exists."
+            echo "ℹ️ Tag $TAG_NAME already exists."
           fi
 
       - name: Create artifact directory
