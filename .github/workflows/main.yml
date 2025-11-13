@@ -7,26 +7,24 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version (e.g. v1.3.0)'
+        description: 'Release version (e.g. v1.8)'
         required: true
         type: string
       release_title:
-        description: 'Release title (e.g. Antibot-Detector v1.3.0 - Stealth Update)'
+        description: 'Release title (optional; defaults to Antibot-Detector - vX.Y.Z)'
         required: false
         type: string
       release_notes:
-        description: 'Release description (Markdown supported)'
+        description: 'Release description (Markdown; optional; defaults to auto-changelog from commits)'
         required: false
         type: string
         default: |
           ## What's Changed
-          - Add your bullet points here
-          - 
+          - (Auto-generated from commits below)
 
           ## Installation
           ```
-          # Download ZIP from Releases
-          # Unzip and load as unpacked extension in Chrome (chrome://extensions/)
+          # Download ZIP → Unzip → Load unpacked in Chrome (chrome://extensions/)
           ```
 
 jobs:
@@ -127,7 +125,7 @@ jobs:
           name: >-
             ${{ 
               github.event.inputs.release_title 
-              || format('Antibot-Detector {0}', env.TAG_NAME) 
+              || format('Antibot-Detector - {0}', env.TAG_NAME) 
             }}
           body: |
             ${{ 
