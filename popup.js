@@ -52,7 +52,7 @@ class ScrapflyPopup {
       await this.loadAndApplyDefaultTab();
 
     } catch (error) {
-      console.error('Failed to initialize popup:', error);
+      Logger.error('UI', 'Failed to initialize popup:', error);
     }
   }
 
@@ -74,7 +74,7 @@ class ScrapflyPopup {
         this.advanced.initialized = false;
       }
     } catch (error) {
-      console.error('Failed to initialize sections:', error);
+      Logger.error('UI', 'Failed to initialize sections:', error);
     }
   }
 
@@ -98,7 +98,7 @@ class ScrapflyPopup {
         this.handleEnableToggle(e.target.checked);
       });
     } else {
-      console.error('Popup: Enable toggle element NOT found (#enableToggle)');
+      Logger.error('UI', 'Popup: Enable toggle element NOT found (#enableToggle)');
     }
   }
 
@@ -137,7 +137,7 @@ class ScrapflyPopup {
                 { type: 'GET_DETECTION_DATA', tabId: tabs[0].id },
                 async (response) => {
                   if (chrome.runtime.lastError) {
-                    console.error('Popup: Error getting cached data:', chrome.runtime.lastError);
+                    Logger.error('UI', 'Popup: Error getting cached data:', chrome.runtime.lastError);
                     this.detection.showInterruptedState();
                     return;
                   }
@@ -158,7 +158,7 @@ class ScrapflyPopup {
                   }
 
                   if (response.status === 'error') {
-                    console.error('Popup: Error retrieving detection data after enabling:', response.error);
+                    Logger.error('UI', 'Popup: Error retrieving detection data after enabling:', response.error);
                     this.detection.showInterruptedState();
                     return;
                   }
@@ -201,7 +201,7 @@ class ScrapflyPopup {
         }
       }
     } catch (error) {
-      console.error('Popup: Error handling toggle change:', error);
+      Logger.error('UI', 'Popup: Error handling toggle change:', error);
       // Show error to user
       if (typeof NotificationHelper !== 'undefined') {
         NotificationHelper.error(`Failed to ${enabled ? 'enable' : 'disable'} extension: ${error.message}`);
@@ -223,7 +223,7 @@ class ScrapflyPopup {
         { type: 'GET_DETECTION_DATA', tabId: tab.id },
         async (response) => {
           if (chrome.runtime.lastError) {
-            console.error('Popup: Error checking detection status:', chrome.runtime.lastError);
+            Logger.error('UI', 'Popup: Error checking detection status:', chrome.runtime.lastError);
             this.requestCurrentTabDetection();
             return;
           }
@@ -234,7 +234,7 @@ class ScrapflyPopup {
         }
       );
     } catch (error) {
-      console.error('Popup: Error in checkAndRequestDetection:', error);
+      Logger.error('UI', 'Popup: Error in checkAndRequestDetection:', error);
       this.requestCurrentTabDetection();
     }
   }
@@ -309,7 +309,7 @@ class ScrapflyPopup {
         }
       );
     } catch (error) {
-      console.error('Popup: Error in checkAndDisplayExistingDetection:', error);
+      Logger.error('UI', 'Popup: Error in checkAndDisplayExistingDetection:', error);
       this.detection.showEmptyState();
     }
   }
@@ -437,7 +437,7 @@ class ScrapflyPopup {
                     { type: 'GET_DETECTION_DATA', tabId: tabs[0].id },
                     async (response) => {
                       if (chrome.runtime.lastError) {
-                        console.error('Popup: Error getting cached data:', chrome.runtime.lastError);
+                        Logger.error('UI', 'Popup: Error getting cached data:', chrome.runtime.lastError);
                         this.detection.showInterruptedState();
                         return;
                       }
@@ -458,7 +458,7 @@ class ScrapflyPopup {
                       }
 
                       if (response.status === 'error') {
-                        console.error('Popup: Error retrieving detection data after toggle event:', response.error);
+                        Logger.error('UI', 'Popup: Error retrieving detection data after toggle event:', response.error);
                         this.detection.showInterruptedState();
                         return;
                       }
@@ -518,7 +518,7 @@ class ScrapflyPopup {
           return false;
 
         default:
-          console.warn('Popup: Unknown message type:', request.type);
+          Logger.warn('UI', 'Popup: Unknown message type:', request.type);
       }
 
       sendResponse({ status: 'received' });
@@ -543,7 +543,7 @@ class ScrapflyPopup {
         try {
           previousSection.cleanup();
         } catch (error) {
-          console.error(`Error cleaning up ${this.currentTab} section:`, error);
+          Logger.error('UI', `Error cleaning up ${this.currentTab} section:`, error);
         }
       }
     }
@@ -580,7 +580,7 @@ class ScrapflyPopup {
       activeContent.style.overflow = 'visible';
       activeContent.classList.add('active');
     } else {
-      console.error('Could not find tab content for:', tabName);
+      Logger.error('UI', 'Could not find tab content for:', tabName);
     }
 
     // OPTIMIZATION Phase A.3: Lazy-load sections on first access
@@ -660,7 +660,7 @@ class ScrapflyPopup {
         } else if (this.advanced) {
           this.advanced.displayAdvancedTools();
         } else {
-          console.error('Advanced: Class not loaded yet');
+          Logger.error('UI', 'Advanced: Class not loaded yet');
         }
         break;
     }

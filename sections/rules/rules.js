@@ -38,7 +38,7 @@ class Rules {
         rulesTab.innerHTML = html;
       }
     } catch (error) {
-      console.error('Failed to load rules HTML:', error);
+      Logger.error('UI', 'Failed to load rules HTML:', error);
     }
   }
 
@@ -125,11 +125,11 @@ class Rules {
     this.colorManager = new ColorManager();
     this.colorManager.initialize({
       onColorSelect: (color) => {
-        console.log('Color selected:', color);
+        Logger.ui('Color selected:', color);
         // Note: Colors are managed by CategoryManager in Settings, not stored per detector
       },
       onColorChange: (color) => {
-        console.log('Color changed:', color);
+        Logger.ui('Color changed:', color);
       }
     });
   }
@@ -144,7 +144,7 @@ class Rules {
         searchOperator: 'AND'
       });
     } else {
-      console.warn('SearchManager not loaded');
+      Logger.warn('UI', 'SearchManager not loaded');
     }
   }
 
@@ -2292,7 +2292,7 @@ class Rules {
     if (categorySelect) {
       // Use the category from currentEditDetector or detector object
       const category = this.currentEditDetector?.category || detector.category || 'antibot';
-      console.log('Setting category:', category); // Debug log
+      Logger.ui('Setting category:', category); // Debug log
       categorySelect.value = category;
     }
 
@@ -2350,7 +2350,7 @@ class Rules {
     if (this.colorManager && this.categoryManager) {
       const category = this.currentEditDetector?.category || 'antibot';
       const colorToSet = this.categoryManager.getCategoryColor(category) || '#3b82f6'; // Default to blue if no color
-      console.log('Loading category color:', detector.name, 'Category:', category, 'Color:', colorToSet);
+      Logger.ui('Loading category color:', detector.name, 'Category:', category, 'Color:', colorToSet);
       this.colorManager.setColor(colorToSet);
 
       // If it's a custom color, make sure it's stored on the rainbow picker
@@ -2988,11 +2988,11 @@ class Rules {
       // Update the detector's detection methods
       if (Object.keys(detectionMethods).length > 0) {
         this.currentEditDetector.detector.detection = detectionMethods;
-        console.log('Updated detection methods:', detectionMethods);
+        Logger.ui('Updated detection methods:', detectionMethods);
       }
     }
 
-    console.log('Saving rule for:', this.currentEditDetector.detector.displayName);
+    Logger.ui('Saving rule for:', this.currentEditDetector.detector.displayName);
 
     // Generate timestamp for lastUpdated
     const now = new Date();
@@ -3021,10 +3021,10 @@ class Rules {
         this.currentEditDetector.detector
       ).then(success => {
         if (success) {
-          console.log('New detector added successfully');
+          Logger.ui('New detector added successfully');
           // Reload detectors in background script
           chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
-            console.log('Detectors reloaded in background:', response);
+            Logger.ui('Detectors reloaded in background:', response);
           });
           this.displayRules();
         }
@@ -3045,17 +3045,17 @@ class Rules {
         };
         categoryDetectors[this.currentEditDetector.detectorName] = updatedDetector;
 
-        console.log('Updated lastUpdated timestamp to:', updatedDetector.lastUpdated);
+        Logger.ui('Updated lastUpdated timestamp to:', updatedDetector.lastUpdated);
 
         // Save to storage
         this.detectorManager.saveDetectorsToStorage().then(() => {
-          console.log('Detector saved to storage successfully');
+          Logger.ui('Detector saved to storage successfully');
           // Reload detectors in background script
           chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
-            console.log('Detectors reloaded in background:', response);
+            Logger.ui('Detectors reloaded in background:', response);
           });
         }).catch(error => {
-          console.error('Failed to save detector:', error);
+          Logger.error('UI', 'Failed to save detector:', error);
         });
       }
     }
@@ -3079,7 +3079,7 @@ class Rules {
    * Display rules (main entry point)
    */
   async displayRules() {
-    console.log('displayRules called');
+    Logger.ui('displayRules called');
 
     // Ensure HTML is loaded
     if (!this.initialized) {
@@ -3090,11 +3090,11 @@ class Rules {
     const detectorsEmpty = document.querySelector('#detectorsEmpty');
 
     if (!rulesList) {
-      console.error('Rules list element not found - HTML may not be loaded yet');
+      Logger.error('UI', 'Rules list element not found - HTML may not be loaded yet');
       return;
     }
 
-    console.log('Rules list found:', rulesList);
+    Logger.ui('Rules list found:', rulesList);
 
     const detectors = this.detectorManager.getAllDetectors();
 
@@ -3692,7 +3692,7 @@ class Rules {
         // Save to storage
         await this.detectorManager.saveDetectorsToStorage();
 
-        console.log(`Detector ${detectorName} ${enabled ? 'enabled' : 'disabled'}`);
+        Logger.ui(`Detector ${detectorName} ${enabled ? 'enabled' : 'disabled'}`);
 
         // Update the visual appearance immediately
         const detectorCard = document.querySelector(`[data-detector-id="${detectorName}"][data-category="${category}"]`);
@@ -3705,7 +3705,7 @@ class Rules {
         }
       }
     } catch (error) {
-      console.error('Failed to update detector enabled state:', error);
+      Logger.error('UI', 'Failed to update detector enabled state:', error);
     }
   }
 
@@ -3766,7 +3766,7 @@ class Rules {
 
         // Reload detectors in background script
         chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
-          console.log('Detectors reloaded in background after delete:', response);
+          Logger.ui('Detectors reloaded in background after delete:', response);
         });
 
         NotificationHelper.success(`Deleted "${displayName}"`);
@@ -3777,7 +3777,7 @@ class Rules {
         NotificationHelper.error('Detector not found');
       }
     } catch (error) {
-      console.error('Failed to delete detector:', error);
+      Logger.error('UI', 'Failed to delete detector:', error);
       NotificationHelper.error('Failed to delete detector');
     }
   }

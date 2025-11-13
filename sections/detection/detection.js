@@ -36,12 +36,12 @@ class Detection {
     // When user navigates, transition to analyzing state to show live progress
     chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       if (changeInfo.status === 'loading' && changeInfo.url) {
-        if (this.debugMode) console.log('[Detection] Tab navigated to:', changeInfo.url);
+        if (this.debugMode) Logger.ui('[Detection] Tab navigated to:', changeInfo.url);
         // Check if detection is starting (badge will show %)
         chrome.action.getBadgeText({ tabId }, (badgeText) => {
           if (badgeText && badgeText.endsWith('%')) {
             // Detection started - transition to analyzing state
-            if (this.debugMode) console.log('[Detection] Navigation detected, badge shows progress, transitioning to analyzing state');
+            if (this.debugMode) Logger.ui('[Detection] Navigation detected, badge shows progress, transitioning to analyzing state');
             // FIX: Don't override if already showing results
             if (!this.wasInterrupted && !this.isShowingResults) {
               this.showAnalyzingState();
@@ -54,14 +54,14 @@ class Detection {
     // FIX: Listen for real-time detection progress from background
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type === 'DETECTION_PROGRESS') {
-        if (this.debugMode) console.log('[Detection] Received progress update:', message.progress);
+        if (this.debugMode) Logger.ui('[Detection] Received progress update:', message.progress);
 
         // CRITICAL: If popup is not in analyzing state, transition to it
         // This handles case where popup is open showing old results when new detection starts
         // FIX: Don't override if already showing results (cached detection)
         const loadingState = document.querySelector('#loadingState');
         if (!loadingState || loadingState.style.display === 'none') {
-          if (this.debugMode) console.log('[Detection] Progress received but not in analyzing state - transitioning now');
+          if (this.debugMode) Logger.ui('[Detection] Progress received but not in analyzing state - transitioning now');
           if (!this.wasInterrupted && !this.isShowingResults) {
             this.showAnalyzingState();
           }
@@ -72,7 +72,7 @@ class Detection {
 
       // FIX: Listen for detection completion from background
       if (message.type === 'NEW_DETECTION_DATA') {
-        if (this.debugMode) console.log('[Detection] Received detection completion for tab:', message.tabId);
+        if (this.debugMode) Logger.ui('[Detection] Received detection completion for tab:', message.tabId);
 
         // Guard: Don't auto-refresh if we just cleared cache and are showing empty state
         // Check both the instance flag and sessionStorage
@@ -80,7 +80,7 @@ class Detection {
         const recentlyCleared = clearedTime && (Date.now() - parseInt(clearedTime)) < 5000; // 5 second window
 
         if (this.justClearedCache || recentlyCleared) {
-          console.log('[Detection] Ignoring NEW_DETECTION_DATA - showing empty state after cache clear');
+          Logger.ui('[Detection] Ignoring NEW_DETECTION_DATA - showing empty state after cache clear');
           // Reset the flag after 5.5 seconds to allow future updates (after re-detection starts)
           if (!this.clearCacheResetTimer) {
             this.clearCacheResetTimer = setTimeout(() => {
@@ -99,13 +99,13 @@ class Detection {
         // Request the completed detection data and display it
         chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
           if (tabs[0] && tabs[0].id === message.tabId) {
-            if (this.debugMode) console.log('[Detection] Fetching completed detection data...');
+            if (this.debugMode) Logger.ui('[Detection] Fetching completed detection data...');
 
             chrome.runtime.sendMessage(
               { type: 'GET_DETECTION_DATA', tabId: message.tabId },
               async (response) => {
                 if (chrome.runtime.lastError) {
-                  console.error('[Detection] Error fetching completed data:', chrome.runtime.lastError);
+                  Logger.error('UI', '[Detection] Error fetching completed data:', chrome.runtime.lastError);
                   this.showEmptyState();
                   return;
                 }
@@ -122,7 +122,7 @@ class Detection {
                     response.data
                   );
                 } else {
-                  if (this.debugMode) console.warn('[Detection] No data in completion response');
+                  if (this.debugMode) Logger.warn('UI', '[Detection] No data in completion response');
                   this.showEmptyState();
                 }
               }
@@ -134,7 +134,7 @@ class Detection {
       // Listen for cache scope changes from Settings
       if (message.type === 'DETECTION_CLEAR_CACHE') {
         (async () => {
-          console.log('[Detection] Cache scope changed - checking for cached data with new scope');
+          Logger.ui('[Detection] Cache scope changed - checking for cached data with new scope');
 
           // Clear current results display
           this.currentResults = [];
@@ -171,7 +171,7 @@ class Detection {
               { type: 'GET_DETECTION_DATA', tabId: tabs[0].id },
               async (response) => {
                 if (chrome.runtime.lastError) {
-                  console.log('[Detection] No cached data for new scope - showing empty state');
+                  Logger.ui('[Detection] No cached data for new scope - showing empty state');
                   this.showEmptyState();
                   // Set badge to gray X
                   await chrome.action.setBadgeText({ text: '✕', tabId: tabs[0].id });
@@ -184,7 +184,7 @@ class Detection {
 
                 if (response && response.data) {
                   // Found cached data for new scope - display it
-                  console.log('[Detection] Found cached data for new scope - displaying');
+                  Logger.ui('[Detection] Found cached data for new scope - displaying');
 
                   // Use ScrapflyPopup's processDetectionData to display results
                   if (window.popupInstance) {
@@ -195,7 +195,7 @@ class Detection {
                   }
                 } else {
                   // No cached data for new scope - show empty state
-                  console.log('[Detection] No cached data for new scope - showing empty state');
+                  Logger.ui('[Detection] No cached data for new scope - showing empty state');
                   this.showEmptyState();
                   // Set badge to gray X
                   await chrome.action.setBadgeText({ text: '✕', tabId: tabs[0].id });
@@ -207,7 +207,7 @@ class Detection {
               }
             );
           } catch (error) {
-            if (this.debugMode) console.warn('[Detection] Error checking for cached data:', error);
+            if (this.debugMode) Logger.warn('UI', '[Detection] Error checking for cached data:', error);
             this.showEmptyState();
           }
 
@@ -539,7 +539,7 @@ class Detection {
    * Handle loading timeout - check for results before showing interrupted state
    */
   handleLoadingTimeout() {
-    if (this.debugMode) console.log('[Detection] Loading timeout reached - checking if detection completed');
+    if (this.debugMode) Logger.ui('[Detection] Loading timeout reached - checking if detection completed');
 
     // Clear any existing intervals
     this.stopAnalysisProgress();
@@ -561,14 +561,14 @@ class Detection {
             { type: 'GET_DETECTION_DATA', tabId: tabs[0].id },
             async (response) => {
               if (chrome.runtime.lastError) {
-                if (this.debugMode) console.warn('[Detection] Error checking for results:', chrome.runtime.lastError);
+                if (this.debugMode) Logger.warn('UI', '[Detection] Error checking for results:', chrome.runtime.lastError);
                 this.showInterruptedState();
                 return;
               }
 
               if (response?.data?.detectionResults?.length > 0) {
                 // Detection completed! Show results instead of interrupted state
-                if (this.debugMode) console.log('[Detection] Timeout but results exist - showing results instead of interrupted state');
+                if (this.debugMode) Logger.ui('[Detection] Timeout but results exist - showing results instead of interrupted state');
                 await Detection.processDetectionData(
                   {
                     detection: this,
@@ -580,7 +580,7 @@ class Detection {
                 );
               } else {
                 // Truly stuck - show interrupted state
-                if (this.debugMode) console.log('[Detection] Timeout with no results - showing interrupted state');
+                if (this.debugMode) Logger.ui('[Detection] Timeout with no results - showing interrupted state');
                 this.showInterruptedState();
               }
             }
@@ -622,7 +622,7 @@ class Detection {
     // FIX: Prevent re-showing analyzing state if already showing
     // This prevents UI flicker when popup opens during active detection
     if (this.isShowingAnalyzing) {
-      if (this.debugMode) console.log('Detection: Already showing analyzing state, skipping re-render');
+      if (this.debugMode) Logger.ui('Detection: Already showing analyzing state, skipping re-render');
       return;
     }
 
@@ -731,7 +731,7 @@ class Detection {
    * @param {Object} options - Display options (fromCache, cacheExpiry)
    */
   async displayResults(detections = [], options = {}) {
-    if (this.debugMode) console.log('Detection.displayResults called with:', detections, options);
+    if (this.debugMode) Logger.ui('Detection.displayResults called with:', detections, options);
 
     // Ensure HTML is loaded
     if (!this.initialized) {
@@ -743,7 +743,7 @@ class Detection {
     this.currentResults = detections;
     this.displayOptions = options;
     this.cacheMetadata = options.cacheMetadata || null;
-    console.log('[DEBUG Detection] ✅ currentResults stored:', this.currentResults.length, 'detections');
+    Logger.ui('[DEBUG Detection] ✅ currentResults stored:', this.currentResults.length, 'detections');
 
     // FIX: Clear the loading timeout when results arrive
     // This prevents the "Cleaned" modal from appearing after detection completes
@@ -846,12 +846,12 @@ class Detection {
         await chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabs[0].id });
 
         if (this.debugMode) {
-          console.log(`[Detection] Badge updated to ${count} with color ${color}`);
+          Logger.ui(`[Detection] Badge updated to ${count} with color ${color}`);
         }
       }
     } catch (error) {
       if (this.debugMode) {
-        console.warn('[Detection] Could not update badge:', error);
+        Logger.warn('UI', '[Detection] Could not update badge:', error);
       }
     }
   }
@@ -1105,7 +1105,7 @@ class Detection {
           tabId: tabs[0].id
         });
       } catch (error) {
-        if (this.debugMode) console.warn('Could not set badge:', error);
+        if (this.debugMode) Logger.warn('UI', 'Could not set badge:', error);
       }
 
       // Remove debug mode flag from sessionStorage
@@ -1122,7 +1122,7 @@ class Detection {
       // Show "Nothing Detected" page immediately after cache clear
       this.showEmptyState();
     } catch (error) {
-      if (this.debugMode) console.error('Failed to clear cache:', error);
+      if (this.debugMode) Logger.error('UI', 'Failed to clear cache:', error);
       NotificationHelper.error('Failed to clear cache');
 
       // Restore button on error
@@ -1189,7 +1189,7 @@ class Detection {
         try {
           settings = JSON.parse(settings);
         } catch (e) {
-          if (this.debugMode) console.error('Failed to parse settings JSON:', e);
+          if (this.debugMode) Logger.error('UI', 'Failed to parse settings JSON:', e);
           settings = {};
         }
       }
@@ -1231,7 +1231,7 @@ class Detection {
       // Show blacklist warning state
       this.showBlacklistState(domain);
     } catch (error) {
-      if (this.debugMode) console.error('Failed to add to blacklist:', error);
+      if (this.debugMode) Logger.error('UI', 'Failed to add to blacklist:', error);
       NotificationHelper.error('Failed to add to blacklist: ' + error.message);
     }
   }
@@ -1268,10 +1268,10 @@ class Detection {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0]) {
         chrome.action.setBadgeText({ text: '✕', tabId: tabs[0].id }).catch((error) => {
-          if (this.debugMode) console.log('Failed to set blacklist badge:', error.message);
+          if (this.debugMode) Logger.ui('Failed to set blacklist badge:', error.message);
         });
         chrome.action.setBadgeBackgroundColor({ color: '#FF8C00', tabId: tabs[0].id }).catch((error) => {
-          if (this.debugMode) console.log('Failed to set badge color:', error.message);
+          if (this.debugMode) Logger.ui('Failed to set badge color:', error.message);
         });
       }
     });
@@ -1292,7 +1292,7 @@ class Detection {
         try {
           settings = JSON.parse(settings);
         } catch (e) {
-          if (this.debugMode) console.error('Failed to parse settings JSON:', e);
+          if (this.debugMode) Logger.error('UI', 'Failed to parse settings JSON:', e);
           settings = {};
         }
       }
@@ -1331,7 +1331,7 @@ class Detection {
             { type: 'GET_DETECTION_DATA', tabId: tab.id },
             async (response) => {
               if (chrome.runtime.lastError) {
-                if (this.debugMode) console.error('Detection: Error getting cached data:', chrome.runtime.lastError);
+                if (this.debugMode) Logger.error('UI', 'Detection: Error getting cached data:', chrome.runtime.lastError);
                 // Fall back to fresh detection
                 this.refreshAnalysis();
                 return;
@@ -1339,7 +1339,7 @@ class Detection {
 
               if (response && response.data) {
                 // We have cached data - use it immediately (badge will show count, not %)
-                if (this.debugMode) console.log('Detection: Using cached data after blacklist removal');
+                if (this.debugMode) Logger.ui('Detection: Using cached data after blacklist removal');
                 this.detectionEngine.setDetectors(this.detectorManager.getAllDetectors());
                 const detections = this.detectionEngine.detectOnPage(response.data);
                 this.displayResults(detections);
@@ -1347,19 +1347,19 @@ class Detection {
                 // Update badge to show detection count immediately (not percentage)
                 if (detections.length > 0) {
                   chrome.action.setBadgeText({ text: detections.length.toString(), tabId: tab.id }).catch((error) => {
-                    if (this.debugMode) console.log('Failed to update badge after blacklist removal:', error.message);
+                    if (this.debugMode) Logger.ui('Failed to update badge after blacklist removal:', error.message);
                   });
                   // Set appropriate color based on count
                   const color = detections.length >= 5 ? '#ef4444' : // red for high
                                detections.length >= 3 ? '#f59e0b' : // orange for medium
                                '#22c55e'; // green for low
                   chrome.action.setBadgeBackgroundColor({ color: color, tabId: tab.id }).catch((error) => {
-                    if (this.debugMode) console.log('Failed to set badge color:', error.message);
+                    if (this.debugMode) Logger.ui('Failed to set badge color:', error.message);
                   });
                 }
               } else {
                 // No cached data available - request fresh detection
-                if (this.debugMode) console.log('Detection: No cached data, requesting fresh detection');
+                if (this.debugMode) Logger.ui('Detection: No cached data, requesting fresh detection');
                 this.refreshAnalysis();
               }
             }
@@ -1367,7 +1367,7 @@ class Detection {
         }
       }
     } catch (error) {
-      if (this.debugMode) console.error('Failed to remove from blacklist:', error);
+      if (this.debugMode) Logger.error('UI', 'Failed to remove from blacklist:', error);
       NotificationHelper.error('Failed to remove from blacklist: ' + error.message);
     }
   }
@@ -1377,13 +1377,13 @@ class Detection {
    * @param {Array} detections - Detection items for current page
    */
   renderDetectionsPage(detections) {
-    console.log(`[renderDetectionsPage] Called with ${detections?.length || 0} detections`);
+    Logger.ui(`[renderDetectionsPage] Called with ${detections?.length || 0} detections`);
     const resultsList = document.querySelector('#resultsList');
     if (!resultsList) {
-      console.error('[renderDetectionsPage] resultsList not found!');
+      Logger.error('UI', '[renderDetectionsPage] resultsList not found!');
       return;
     }
-    console.log('[renderDetectionsPage] resultsList found, rendering...');
+    Logger.ui('[renderDetectionsPage] resultsList found, rendering...');
 
     const totalItems = this.paginationManager?.filteredItems?.length ?? detections.length;
     const shouldUseExpandedLayout = totalItems === 2;
@@ -1437,18 +1437,18 @@ class Detection {
 
     // Add click handlers for expandable cards
     const cards = document.querySelectorAll('.detection-card');
-    console.log(`[renderDetectionsPage] Found ${cards.length} detection cards`);
+    Logger.ui(`[renderDetectionsPage] Found ${cards.length} detection cards`);
 
     cards.forEach(card => {
       card.addEventListener('click', (e) => {
-        console.log('[renderDetectionsPage] Card clicked');
+        Logger.ui('[renderDetectionsPage] Card clicked');
         if (e.target.closest('.copy-btn')) {
           return;
         }
 
         const indexAttr = card.getAttribute('data-detection-index');
         const parsedIndex = parseInt(indexAttr, 10);
-        console.log('[renderDetectionsPage] Opening modal for index', parsedIndex);
+        Logger.ui('[renderDetectionsPage] Opening modal for index', parsedIndex);
         if (!Number.isNaN(parsedIndex)) {
           this.openDetectionModal(parsedIndex);
         }
@@ -1923,7 +1923,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
    * Refresh analysis by re-running detection on current page
    */
   async refreshAnalysis() {
-    if (this.debugMode) console.log('Refreshing detection analysis...');
+    if (this.debugMode) Logger.ui('Refreshing detection analysis...');
 
     try {
       this.showAnalyzingState();
@@ -1939,13 +1939,13 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
         { type: 'REQUEST_DETECTION', tabId: tab.id },
         (response) => {
           if (chrome.runtime.lastError) {
-            if (this.debugMode) console.error('Detection: Error requesting fresh detection:', chrome.runtime.lastError);
+            if (this.debugMode) Logger.error('UI', 'Detection: Error requesting fresh detection:', chrome.runtime.lastError);
             this.hideLoadingState();
             this.showEmptyState();
             return;
           }
 
-          if (this.debugMode) console.log('Detection: Fresh detection requested:', response);
+          if (this.debugMode) Logger.ui('Detection: Fresh detection requested:', response);
 
           // Wait a moment for detection to complete, then request the data
           setTimeout(() => {
@@ -1953,7 +1953,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
               { type: 'GET_DETECTION_DATA', tabId: tab.id },
               async (dataResponse) => {
                 if (chrome.runtime.lastError) {
-                  if (this.debugMode) console.error('Detection: Error getting detection data:', chrome.runtime.lastError);
+                  if (this.debugMode) Logger.error('UI', 'Detection: Error getting detection data:', chrome.runtime.lastError);
                   this.hideLoadingState();
                   this.showEmptyState();
                   return;
@@ -1963,12 +1963,12 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
                   // Run detection using DetectionEngineManager on real data
                   this.detectionEngine.setDetectors(this.detectorManager.getAllDetectors());
                   const detections = this.detectionEngine.detectOnPage(dataResponse.data);
-                  if (this.debugMode) console.log(`Detection: Found ${detections.length} detections after refresh`);
+                  if (this.debugMode) Logger.ui(`Detection: Found ${detections.length} detections after refresh`);
 
                   // Display results
                   this.displayResults(detections);
                 } else {
-                  if (this.debugMode) console.log('Detection: No data received after refresh');
+                  if (this.debugMode) Logger.ui('Detection: No data received after refresh');
                   this.hideLoadingState();
                   this.showEmptyState();
                 }
@@ -1979,7 +1979,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
       );
 
     } catch (error) {
-      if (this.debugMode) console.error('Failed to refresh analysis:', error);
+      if (this.debugMode) Logger.error('UI', 'Failed to refresh analysis:', error);
       this.hideLoadingState();
       this.showEmptyState();
     }
@@ -2118,14 +2118,14 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
                 const badgeText = await chrome.action.getBadgeText({ tabId: tabs[0].id });
                 // Badge percentage sync removed - no longer showing percentages in badge
               } catch (error) {
-                if (this.debugMode) console.warn('[Detection] Could not read badge text:', error);
+                if (this.debugMode) Logger.warn('UI', '[Detection] Could not read badge text:', error);
               }
             }
           });
         }
       }
     } catch (error) {
-      if (this.debugMode) console.error('Failed to load detection HTML:', error);
+      if (this.debugMode) Logger.error('UI', 'Failed to load detection HTML:', error);
     }
   }
 
@@ -2194,7 +2194,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
     // FIX: Prevent duplicate requests when popup opens during active detection
     // Check if we're already requesting detection data to avoid interference
     if (detection.isRequestingDetection) {
-      if (detection.debugMode) console.log('Detection: Already requesting detection, skipping duplicate request');
+      if (detection.debugMode) Logger.ui('Detection: Already requesting detection, skipping duplicate request');
       return;
     }
 
@@ -2207,7 +2207,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
 
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       if (!tab) {
-        if (this.debugMode) console.error('Detection: No active tab found');
+        if (this.debugMode) Logger.error('UI', 'Detection: No active tab found');
         detection.showEmptyState();
         detection.isRequestingDetection = false;
         return;
@@ -2216,7 +2216,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
       // Check if extension is enabled
       const result = await chrome.storage.local.get(['scrapfly_enabled']);
       if (result.scrapfly_enabled === false) {
-        if (this.debugMode) console.log('Detection: Extension is disabled');
+        if (this.debugMode) Logger.ui('Detection: Extension is disabled');
         detection.showDisabledState();
         detection.isRequestingDetection = false;
         return;
@@ -2224,7 +2224,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
 
       // Check if URL is blacklisted
       if (await Utils.isUrlBlacklisted(tab.url)) {
-        if (this.debugMode) console.log('Detection: URL is blacklisted');
+        if (this.debugMode) Logger.ui('Detection: URL is blacklisted');
         const url = new URL(tab.url);
         detection.showBlacklistState(url.hostname);
         detection.isRequestingDetection = false;
@@ -2239,7 +2239,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
           detection.isRequestingDetection = false;
 
           if (chrome.runtime.lastError) {
-            if (this.debugMode) console.error('Detection: Error getting detection data:', chrome.runtime.lastError);
+            if (this.debugMode) Logger.error('UI', 'Detection: Error getting detection data:', chrome.runtime.lastError);
             detection.showEmptyState();
             return;
           }
@@ -2248,23 +2248,23 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
           // Badge check below will determine the correct state (analyzing, cached data, etc.)
           // Only show empty state if we explicitly get a response with no data
           if (!response) {
-            if (this.debugMode) console.log('Detection: No response yet, continuing to badge check...');
+            if (this.debugMode) Logger.ui('Detection: No response yet, continuing to badge check...');
             // Don't return - let badge check handle state
           }
 
           if (response && response.status === 'pending') {
-            if (this.debugMode) console.log('Detection: Detection still running - checking if cached data exists first');
+            if (this.debugMode) Logger.ui('Detection: Detection still running - checking if cached data exists first');
 
             // FIX: Check if cached data exists even though detection is pending
             // This handles race condition where detection completed but status still says pending
             if (response.data && response.data.detectionResults?.length > 0) {
-              if (this.debugMode) console.log('Detection: Found cached results despite pending status - displaying');
+              if (this.debugMode) Logger.ui('Detection: Found cached results despite pending status - displaying');
               await processDetectionDataCallback(response.data);
               return;
             }
 
             // No cached data, truly still running - show analyzing state
-            if (this.debugMode) console.log('Detection: No cached data, showing analyzing state');
+            if (this.debugMode) Logger.ui('Detection: No cached data, showing analyzing state');
 
             // FIX: Only show analyzing state if we're not already showing it
             // This prevents UI flicker and state resets when popup opens during detection
@@ -2273,7 +2273,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
             } else {
               // If already showing analyzing state, just ensure progress steps are visible
               // This handles the case where popup reopens during detection
-              if (detection.debugMode) console.log('Detection: Already showing analyzing, updating progress only');
+              if (detection.debugMode) Logger.ui('Detection: Already showing analyzing, updating progress only');
               if (!detection.analysisSteps || detection.analysisSteps.length === 0) {
                 detection.analysisSteps = detection.createAnalysisSteps();
                 detection.renderAnalysisSteps();
@@ -2291,13 +2291,13 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
           }
 
           if (response && response.status === 'interrupted') {
-            if (this.debugMode) console.log('Detection: Detection was interrupted, prompting reload');
+            if (this.debugMode) Logger.ui('Detection: Detection was interrupted, prompting reload');
             detection.showInterruptedState();
             return;
           }
 
           if (response && response.status === 'error') {
-            if (this.debugMode) console.error('Detection: Background reported error fetching detection data:', response.error);
+            if (this.debugMode) Logger.error('UI', 'Detection: Background reported error fetching detection data:', response.error);
             detection.showEmptyState();
             return;
           }
@@ -2306,7 +2306,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
           const badgeStatus = await Detection.getBadgeStatus(tab.id);
 
           if (badgeStatus.isLoading) {
-            if (this.debugMode) console.log('Detection: Badge shows hourglass - checking if cache exists before showing loading');
+            if (this.debugMode) Logger.ui('Detection: Badge shows hourglass - checking if cache exists before showing loading');
 
             // Badge shows loading - but check cache first in case detection completed
             // and we're in a race condition where badge wasn't updated yet
@@ -2314,7 +2314,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
               { type: 'GET_DETECTION_DATA', tabId: tab.id },
               async (response) => {
                 if (chrome.runtime.lastError) {
-                  if (this.debugMode) console.error('Detection: Error checking cache:', chrome.runtime.lastError);
+                  if (this.debugMode) Logger.error('UI', 'Detection: Error checking cache:', chrome.runtime.lastError);
                   if (!detection.wasInterrupted) {
                     detection.showAnalyzingState();
                   }
@@ -2328,7 +2328,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
                   await processDetectionDataCallback(response.data);
                 } else {
                   // No cache yet, truly still loading
-                  if (this.debugMode) console.log('Detection: No cache found, showing analyzing state');
+                  if (this.debugMode) Logger.ui('Detection: No cache found, showing analyzing state');
                   if (!detection.wasInterrupted) {
                     detection.showAnalyzingState();
                   }
@@ -2340,7 +2340,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
 
           // FIX: Check if cache was cleared (gray ✕ badge) - show empty state
           if (badgeStatus.isCleared) {
-            if (this.debugMode) console.log('Detection: Badge indicates cache cleared, showing empty state');
+            if (this.debugMode) Logger.ui('Detection: Badge indicates cache cleared, showing empty state');
             detection.showEmptyState();
             return;
           }
@@ -2348,7 +2348,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
           // FIX: Only show interrupted if we DON'T have valid data
           // Badge might be stale after extension reload or tab return
           if (badgeStatus.isInterrupted && (!response || !response.data)) {
-            if (this.debugMode) console.log('Detection: Badge indicates interruption with no data, showing reload state');
+            if (this.debugMode) Logger.ui('Detection: Badge indicates interruption with no data, showing reload state');
             detection.showInterruptedState();
             return;
           }
@@ -2367,19 +2367,19 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
             // Don't switch to empty state while detection is in progress
             const currentBadgeStatus = await Detection.getBadgeStatus(tab.id);
             if (currentBadgeStatus.isLoading) {
-              if (this.debugMode) console.log('Detection: No data yet but detection in progress, keeping analyzing state');
+              if (this.debugMode) Logger.ui('Detection: No data yet but detection in progress, keeping analyzing state');
               if (!detection.isShowingAnalyzing) {
                 detection.showAnalyzingState();
               }
             } else {
-              if (this.debugMode) console.log('Detection: No detection data available');
+              if (this.debugMode) Logger.ui('Detection: No detection data available');
               detection.showEmptyState();
             }
           }
         }
       );
     } catch (error) {
-      if (this.debugMode) console.error('Detection: Failed to request detection:', error);
+      if (this.debugMode) Logger.error('UI', 'Detection: Failed to request detection:', error);
       detection.showEmptyState();
     }
   }
@@ -2391,23 +2391,23 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
   static requestFreshDetection(context) {
     const { detection, tabId, requestCurrentTabDetectionCallback } = context;
 
-    if (this.debugMode) console.log('Detection: Requesting fresh detection for tab', tabId);
+    if (this.debugMode) Logger.ui('Detection: Requesting fresh detection for tab', tabId);
     detection.showAnalyzingState();
 
     chrome.runtime.sendMessage(
       { type: 'REQUEST_DETECTION', tabId: tabId },
       (response) => {
         if (chrome.runtime.lastError) {
-          if (this.debugMode) console.error('Detection: Error requesting fresh detection:', chrome.runtime.lastError);
+          if (this.debugMode) Logger.error('UI', 'Detection: Error requesting fresh detection:', chrome.runtime.lastError);
           detection.hideLoadingState();
           detection.showEmptyState();
           return;
         }
 
-        if (this.debugMode) console.log('Detection: Fresh detection requested, waiting for completion...');
+        if (this.debugMode) Logger.ui('Detection: Fresh detection requested, waiting for completion...');
         // Wait for detection to complete, then request the data
         setTimeout(() => {
-          if (this.debugMode) console.log('Detection: Fetching fresh detection results...');
+          if (this.debugMode) Logger.ui('Detection: Fetching fresh detection results...');
           requestCurrentTabDetectionCallback();
         }, 2000);
       }
@@ -2422,7 +2422,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
   static async processDetectionData(context, detectionData) {
     const { detection, detectionEngine, detectorManager, history } = context;
 
-    console.log('[DEBUG processDetectionData] Called with:', {
+    Logger.ui('[DEBUG processDetectionData] Called with:', {
       hasDetectionData: !!detectionData,
       dataKeys: detectionData ? Object.keys(detectionData) : null,
       hasDetectionResults: !!detectionData?.detectionResults,
@@ -2431,7 +2431,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
 
     try {
       if (!detectionData) {
-        console.log('[DEBUG processDetectionData] ❌ No detection data provided - showing empty state');
+        Logger.ui('[DEBUG processDetectionData] ❌ No detection data provided - showing empty state');
         detection.showEmptyState();
         return;
       }
@@ -2443,7 +2443,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
 
       // Check if we have pre-processed detection results
       if (detectionData.detectionResults) {
-        console.log('[DEBUG processDetectionData] ✅ Using pre-processed results:', detectionData.detectionResults.length);
+        Logger.ui('[DEBUG processDetectionData] ✅ Using pre-processed results:', detectionData.detectionResults.length);
         detections = detectionData.detectionResults;
 
         // MIGRATION: Handle old cached data format
@@ -2468,7 +2468,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
                     }
                   } catch (e) {
                     // If regex fails, keep the full URL
-                    console.warn('[Migration] Failed to extract match from URL:', e);
+                    Logger.warn('UI', '[Migration] Failed to extract match from URL:', e);
                   }
                 }
               }
@@ -2482,15 +2482,15 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
           return detection;
         });
       } else if (detectionData.pageData) {
-        if (this.debugMode) console.log('Detection: Running detection on raw page data');
+        if (this.debugMode) Logger.ui('Detection: Running detection on raw page data');
         detections = detectionEngine.detectOnPage(detectionData.pageData);
       } else {
-        if (this.debugMode) console.warn('Detection: No valid data format in detectionData');
+        if (this.debugMode) Logger.warn('UI', 'Detection: No valid data format in detectionData');
         detection.showEmptyState();
         return;
       }
 
-      console.log(`[DEBUG processDetectionData] ✅ Found ${detections.length} security systems, calling displayResults()`);
+      Logger.ui(`[DEBUG processDetectionData] ✅ Found ${detections.length} security systems, calling displayResults()`);
 
       // Display results with metadata
       // Construct cacheMetadata from available fields
@@ -2502,24 +2502,24 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
         cacheScope: detectionData.cacheScope
       } : null;
 
-      console.log('[DEBUG processDetectionData] Cache metadata:', cacheMetadata);
-      console.log('[DEBUG processDetectionData] From storage:', detectionData.fromStorage);
+      Logger.ui('[DEBUG processDetectionData] Cache metadata:', cacheMetadata);
+      Logger.ui('[DEBUG processDetectionData] From storage:', detectionData.fromStorage);
 
       await detection.displayResults(detections, {
         fromStorage: detectionData.fromStorage || false,
         cacheMetadata: cacheMetadata
       });
 
-      console.log('[DEBUG processDetectionData] ✅ displayResults() completed');
+      Logger.ui('[DEBUG processDetectionData] ✅ displayResults() completed');
 
       // Update history if we have detections
       if (detections.length > 0 && history && typeof history.loadHistory === 'function') {
-        if (this.debugMode) console.log('Detection: Updating history');
+        if (this.debugMode) Logger.ui('Detection: Updating history');
         await history.loadHistory();
       }
     } catch (error) {
-      if (this.debugMode) console.error('Detection: Failed to process detection data:', error);
-      if (this.debugMode) console.error('Detection: Stack trace:', error.stack);
+      if (this.debugMode) Logger.error('UI', 'Detection: Failed to process detection data:', error);
+      if (this.debugMode) Logger.error('UI', 'Detection: Stack trace:', error.stack);
       detection.showEmptyState();
     }
   }
@@ -2529,7 +2529,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
       return await new Promise((resolve) => {
         chrome.action.getBadgeText({ tabId }, (text) => {
           if (chrome.runtime.lastError) {
-            if (this.debugMode) console.warn('Detection: Failed to read badge text:', chrome.runtime.lastError.message);
+            if (this.debugMode) Logger.warn('UI', 'Detection: Failed to read badge text:', chrome.runtime.lastError.message);
             resolve('');
             return;
           }
@@ -2537,7 +2537,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
         });
       });
     } catch (error) {
-      if (this.debugMode) console.error('Detection: Unexpected error reading badge text:', error);
+      if (this.debugMode) Logger.error('UI', 'Detection: Unexpected error reading badge text:', error);
       return '';
     }
   }
@@ -2551,7 +2551,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
       return await new Promise((resolve) => {
         chrome.action.getBadgeBackgroundColor({ tabId }, (colorInfo) => {
           if (chrome.runtime.lastError) {
-            if (this.debugMode) console.warn('Detection: Failed to read badge color:', chrome.runtime.lastError.message);
+            if (this.debugMode) Logger.warn('UI', 'Detection: Failed to read badge color:', chrome.runtime.lastError.message);
             resolve('');
             return;
           }
@@ -2567,7 +2567,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
         });
       });
     } catch (error) {
-      if (this.debugMode) console.error('Detection: Unexpected error reading badge color:', error);
+      if (this.debugMode) Logger.error('UI', 'Detection: Unexpected error reading badge color:', error);
       return '';
     }
   }

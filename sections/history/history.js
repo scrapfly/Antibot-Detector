@@ -13,7 +13,7 @@ class History {
    * Display history items from storage
    */
   async displayHistory() {
-    console.log('History.displayHistory called');
+    Logger.ui('History.displayHistory called');
 
     // Ensure HTML is loaded
     if (!this.initialized) {
@@ -26,7 +26,7 @@ class History {
       await this.loadHistoryFromStorage();
       this.renderHistory();
     } catch (error) {
-      console.error('Failed to display history:', error);
+      Logger.error('UI', 'Failed to display history:', error);
       this.showEmptyState();
     }
   }
@@ -44,12 +44,12 @@ class History {
         if (this.historyLimit > 0 && this.historyItems.length > this.historyLimit) {
           this.historyItems = this.historyItems.slice(0, this.historyLimit);
         }
-        console.log('Loaded history items:', this.historyItems.length);
+        Logger.ui('Loaded history items:', this.historyItems.length);
       } else {
         this.historyItems = [];
       }
     } catch (error) {
-      console.error('Failed to load history from storage:', error);
+      Logger.error('UI', 'Failed to load history from storage:', error);
       this.historyItems = [];
     }
   }
@@ -68,9 +68,9 @@ class History {
         'scrapfly_history': JSON.stringify(historyData, null, 2)
       });
 
-      console.log('History saved to storage');
+      Logger.ui('History saved to storage');
     } catch (error) {
-      console.error('Failed to save history to storage:', error);
+      Logger.error('UI', 'Failed to save history to storage:', error);
     }
   }
 
@@ -101,7 +101,7 @@ class History {
     }
 
     await this.saveHistoryToStorage();
-    console.log('Added history item:', historyItem);
+    Logger.ui('Added history item:', historyItem);
   }
 
   /**
@@ -141,7 +141,7 @@ class History {
   renderHistoryPage(items) {
     const historyList = document.querySelector('#historyList');
     if (!historyList) {
-      console.error('History list element not found');
+      Logger.error('UI', 'History list element not found');
       return;
     }
 
@@ -429,10 +429,10 @@ class History {
       this.historyItems = [];
       await chrome.storage.local.remove(['scrapfly_history']);
       this.showEmptyState();
-      console.log('History cleared');
+      Logger.ui('History cleared');
       NotificationHelper.success('History cleared successfully');
     } catch (error) {
-      console.error('Failed to clear history:', error);
+      Logger.error('UI', 'Failed to clear history:', error);
       NotificationHelper.error('Failed to clear history: ' + error.message);
     }
   }
@@ -509,11 +509,11 @@ class History {
    * @param {object} historyItem - History item object
    */
   showHistoryItemDetails(historyItem) {
-    console.log('Showing details for history item:', historyItem);
+    Logger.ui('Showing details for history item:', historyItem);
 
     const modal = document.querySelector('#historyDetailModal');
     if (!modal) {
-      console.error('History detail modal not found');
+      Logger.error('UI', 'History detail modal not found');
       return;
     }
 
@@ -594,7 +594,7 @@ class History {
       await navigator.clipboard.writeText(detailsText);
       NotificationHelper.success('History item copied to clipboard');
     } catch (error) {
-      console.error('Failed to copy:', error);
+      Logger.error('UI', 'Failed to copy:', error);
       NotificationHelper.error('Failed to copy to clipboard');
     }
   }
@@ -696,10 +696,10 @@ class History {
         this.renderHistory();
 
         NotificationHelper.success('History item deleted');
-        console.log('History: Item deleted successfully');
+        Logger.ui('History: Item deleted successfully');
       }
     } catch (error) {
-      console.error('Failed to delete history item:', error);
+      Logger.error('UI', 'Failed to delete history item:', error);
       NotificationHelper.error('Failed to delete history item');
     }
   }
@@ -890,7 +890,7 @@ class History {
       try {
         payload = JSON.parse(decodeURIComponent(payloadEncoded));
       } catch (error) {
-        console.warn('History: Failed to parse method copy payload', error);
+        Logger.warn('UI', 'History: Failed to parse method copy payload', error);
       }
 
       const handleCopy = (event) => {
@@ -1045,7 +1045,7 @@ class History {
       try {
         await this.refreshHistoryLimit();
       } catch (error) {
-        console.error('History: Failed to read history limit from settings, defaulting to 0 (unlimited)', error);
+        Logger.error('UI', 'History: Failed to read history limit from settings, defaulting to 0 (unlimited)', error);
         this.historyLimit = 0; // 0 = unlimited
       }
 
@@ -1064,11 +1064,11 @@ class History {
       const newLimit = Number.isFinite(parsedLimit) && parsedLimit >= 0 ? parsedLimit : 0; // 0 = unlimited
 
       if (newLimit !== this.historyLimit) {
-        console.log(`History: Updating history limit from ${this.historyLimit} to ${newLimit}`);
+        Logger.ui(`History: Updating history limit from ${this.historyLimit} to ${newLimit}`);
         this.historyLimit = newLimit;
       }
     } catch (error) {
-      console.error('History: Failed to refresh history limit, keeping current value', error);
+      Logger.error('UI', 'History: Failed to refresh history limit, keeping current value', error);
     }
   }
 
@@ -1082,7 +1082,7 @@ class History {
         .then(() => this.loadHistoryFromStorage())
         .then(() => this.renderHistory())
         .catch(error => {
-          console.error('History: Failed to refresh after settings update', error);
+          Logger.error('UI', 'History: Failed to refresh after settings update', error);
         });
     });
   }
@@ -1112,7 +1112,7 @@ class History {
         historyTab.innerHTML = html;
       }
     } catch (error) {
-      console.error('Failed to load history HTML:', error);
+      Logger.error('UI', 'Failed to load history HTML:', error);
     }
   }
 
@@ -1175,14 +1175,14 @@ class History {
   static async saveCaptureToHistory(tabId, captureResults, chrome) {
     try {
       if (!captureResults || captureResults.length === 0) {
-        console.log('History: No capture results to save to history');
+        Logger.ui('History: No capture results to save to history');
         return false;
       }
 
       // Get tab information
       const tab = await chrome.tabs.get(tabId);
       if (!tab || !tab.url) {
-        console.warn('History: Cannot save capture - no tab URL');
+        Logger.warn('UI', 'History: Cannot save capture - no tab URL');
         return false;
       }
 
@@ -1195,9 +1195,9 @@ class History {
           try {
             const parsed = JSON.parse(result.scrapfly_advanced_history);
             history = parsed.items || [];
-            console.log('History: Parsed advanced history from JSON string format');
+            Logger.ui('History: Parsed advanced history from JSON string format');
           } catch (parseError) {
-            console.error('History: Error parsing advanced history JSON:', parseError);
+            Logger.error('UI', 'History: Error parsing advanced history JSON:', parseError);
             history = [];
           }
         } else if (Array.isArray(result.scrapfly_advanced_history)) {
@@ -1208,7 +1208,7 @@ class History {
       }
 
       if (!Array.isArray(history)) {
-        console.warn('History: Advanced history is not an array, resetting');
+        Logger.warn('UI', 'History: Advanced history is not an array, resetting');
         history = [];
       }
 
@@ -1222,8 +1222,8 @@ class History {
       captureResults.forEach((captureData, index) => {
         const expiresAt = now + expirationTime;
         const expiresAtDate = new Date(expiresAt);
-        console.log(`[Capture History] Saving capture ${index + 1} - will expire at: ${expiresAtDate.toLocaleTimeString()}`);
-        console.log(`[Capture History] Session Mode: ${captureData.hasSession ? 'Enabled' : 'Disabled'}, Required Cookie: ${captureData.requiredCookie || 'None'}`);
+        Logger.ui(`[Capture History] Saving capture ${index + 1} - will expire at: ${expiresAtDate.toLocaleTimeString()}`);
+        Logger.ui(`[Capture History] Session Mode: ${captureData.hasSession ? 'Enabled' : 'Disabled'}, Required Cookie: ${captureData.requiredCookie || 'None'}`);
 
         const historyEntry = {
           id: `capture_${now}_${tabId}_${index}`,
@@ -1270,11 +1270,11 @@ class History {
         scrapfly_advanced_history: JSON.stringify(historyData, null, 2)
       });
 
-      console.log(`History: Saved ${captureResults.length} capture(s) to advanced history for ${tab.url}`);
+      Logger.ui(`History: Saved ${captureResults.length} capture(s) to advanced history for ${tab.url}`);
       return true;
     } catch (error) {
-      console.error('History: Error saving capture to history:', error);
-      console.error('History: Error stack:', error.stack);
+      Logger.error('UI', 'History: Error saving capture to history:', error);
+      Logger.error('UI', 'History: Error stack:', error.stack);
       return false;
     }
   }
@@ -1303,7 +1303,7 @@ class History {
             const parsed = JSON.parse(result.scrapfly_history);
             history = parsed.items || [];
           } catch (parseError) {
-            console.error('History: Error parsing history JSON for duplicate check:', parseError);
+            Logger.error('UI', 'History: Error parsing history JSON for duplicate check:', parseError);
             return true; // On error, allow save
           }
         } else if (Array.isArray(result.scrapfly_history)) {
@@ -1345,7 +1345,7 @@ class History {
             normalizedUrl = url;
         }
       } catch (error) {
-        console.warn('History: Failed to parse URL for duplicate check:', error);
+        Logger.warn('UI', 'History: Failed to parse URL for duplicate check:', error);
         return true; // On error, allow save
       }
 
@@ -1384,13 +1384,13 @@ class History {
       });
 
       if (isDuplicate) {
-        console.log(`History: Skipping duplicate URL within ${settings.duplicateDuration} ${settings.duplicateUnit} (scope: ${settings.duplicateScope}): ${normalizedUrl}`);
+        Logger.ui(`History: Skipping duplicate URL within ${settings.duplicateDuration} ${settings.duplicateUnit} (scope: ${settings.duplicateScope}): ${normalizedUrl}`);
         return false;
       }
 
       return true;
     } catch (error) {
-      console.error('History: Error checking for duplicates:', error);
+      Logger.error('UI', 'History: Error checking for duplicates:', error);
       return true; // On error, allow save
     }
   }
@@ -1416,9 +1416,9 @@ class History {
           try {
             const parsed = JSON.parse(result.scrapfly_history);
             history = parsed.items || [];
-            console.log('History: Parsed history from JSON string format');
+            Logger.ui('History: Parsed history from JSON string format');
           } catch (parseError) {
-            console.error('History: Error parsing history JSON:', parseError);
+            Logger.error('UI', 'History: Error parsing history JSON:', parseError);
             history = [];
           }
         } else if (Array.isArray(result.scrapfly_history)) {
@@ -1428,14 +1428,14 @@ class History {
           // Object with items array
           history = result.scrapfly_history.items || [];
         } else {
-          console.warn('History: Unknown history format, starting fresh');
+          Logger.warn('UI', 'History: Unknown history format, starting fresh');
           history = [];
         }
       }
 
       // Ensure history is an array
       if (!Array.isArray(history)) {
-        console.warn('History: History is not an array, resetting');
+        Logger.warn('UI', 'History: History is not an array, resetting');
         history = [];
       }
 
@@ -1447,7 +1447,7 @@ class History {
 
       // Check if we should stop at limit
       if (historyBehavior === 'stop_at_limit' && historyLimit > 0 && history.length >= historyLimit) {
-        console.log(`History: Limit reached (${historyLimit}), not saving new detection (behavior: stop_at_limit)`);
+        Logger.ui(`History: Limit reached (${historyLimit}), not saving new detection (behavior: stop_at_limit)`);
         return false;
       }
 
@@ -1482,11 +1482,11 @@ class History {
         scrapfly_history: JSON.stringify(historyData, null, 2)
       });
 
-      console.log(`History: Saved detection to history for ${pageData.url}`);
+      Logger.ui(`History: Saved detection to history for ${pageData.url}`);
       return true;
     } catch (error) {
-      console.error('History: Error saving to history:', error);
-      console.error('History: Error stack:', error.stack);
+      Logger.error('UI', 'History: Error saving to history:', error);
+      Logger.error('UI', 'History: Error stack:', error.stack);
       return false;
     }
   }

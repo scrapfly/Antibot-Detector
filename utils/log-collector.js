@@ -68,7 +68,7 @@ class LogCollector {
                             this.interceptConsoleMethods();
                         }
                     } catch (e) {
-                        console.error('[LogCollector] Failed to restore from storage:', e);
+                        Logger.error('UTIL', '[LogCollector] Failed to restore from storage:', e);
                         this.logs = [];
                         this.enabled = false;
                     }
@@ -78,7 +78,7 @@ class LogCollector {
                 });
             } catch (e) {
                 // Storage API not available
-                console.error('[LogCollector] Failed to initialize from storage:', e);
+                Logger.error('UTIL', '[LogCollector] Failed to initialize from storage:', e);
                 this.initialized = true;
                 resolve();
             }
@@ -102,7 +102,7 @@ class LogCollector {
             try {
                 chrome.storage.local.set({ [this.storageKey]: this.logs });
             } catch (e) {
-                console.error('[LogCollector] Failed to save logs to storage:', e);
+                Logger.error('UTIL', '[LogCollector] Failed to save logs to storage:', e);
             }
         }, 2000);
     }
@@ -131,7 +131,7 @@ class LogCollector {
             try {
                 chrome.storage.local.set({ [this.enabledStateKey]: true });
             } catch (e) {
-                console.error('[LogCollector] Failed to persist enabled state:', e);
+                Logger.error('UTIL', '[LogCollector] Failed to persist enabled state:', e);
             }
         }
     }
@@ -152,7 +152,7 @@ class LogCollector {
             try {
                 chrome.storage.local.set({ [this.enabledStateKey]: false });
             } catch (e) {
-                console.error('[LogCollector] Failed to persist disabled state:', e);
+                Logger.error('UTIL', '[LogCollector] Failed to persist disabled state:', e);
             }
         }
 
@@ -321,7 +321,7 @@ class LogCollector {
             saveAs: false  // Don't prompt, use default download location
         }, (downloadId) => {
             if (chrome.runtime.lastError) {
-                console.error('[LogCollector] Download error:', chrome.runtime.lastError);
+                Logger.error('UTIL', '[LogCollector] Download error:', chrome.runtime.lastError);
             }
         });
 
@@ -366,7 +366,7 @@ class LogCollector {
             saveAs: false  // Don't prompt, use default download location
         }, (downloadId) => {
             if (chrome.runtime.lastError) {
-                console.error('[LogCollector] Download error:', chrome.runtime.lastError);
+                Logger.error('UTIL', '[LogCollector] Download error:', chrome.runtime.lastError);
             }
         });
 
@@ -412,7 +412,7 @@ class LogCollector {
                 count: this.logs.length
             };
         } catch (error) {
-            console.error('[LogCollector] Failed to copy to clipboard:', error);
+            Logger.error('UTIL', '[LogCollector] Failed to copy to clipboard:', error);
             return {
                 success: false,
                 message: `Failed to copy: ${error.message}`,
@@ -432,7 +432,7 @@ class LogCollector {
             try {
                 chrome.storage.local.set({ [this.storageKey]: [] });
             } catch (e) {
-                console.error('[LogCollector] Failed to clear storage:', e);
+                Logger.error('UTIL', '[LogCollector] Failed to clear storage:', e);
             }
         }
     }
@@ -454,7 +454,7 @@ class LogCollector {
      */
     setMaxLogs(newMax) {
         if (typeof newMax !== 'number' || newMax < 100 || newMax > 100000) {
-            console.error('[LogCollector] Invalid max logs value:', newMax);
+            Logger.error('UTIL', '[LogCollector] Invalid max logs value:', newMax);
             return;
         }
 
@@ -471,7 +471,7 @@ class LogCollector {
             try {
                 chrome.storage.local.set({ scrapfly_log_collector_max: newMax });
             } catch (e) {
-                console.error('[LogCollector] Failed to save max logs setting:', e);
+                Logger.error('UTIL', '[LogCollector] Failed to save max logs setting:', e);
             }
         }
     }
@@ -510,9 +510,9 @@ const logCollector = new LogCollector(5000); // Store last 5000 logs
 if (typeof self !== 'undefined' && typeof importScripts === 'function') {
     // Service worker context
     self.logCollector = logCollector;
-    console.log('[LogCollector] Loaded and attached to self (service worker)');
+    Logger.debug('UTIL', '[LogCollector] Loaded and attached to self (service worker)');
 } else if (typeof window !== 'undefined') {
     // Window context (popup, content script)
     window.LogCollector = logCollector;
-    console.log('[LogCollector] Loaded and attached to window');
+    Logger.debug('UTIL', '[LogCollector] Loaded and attached to window');
 }

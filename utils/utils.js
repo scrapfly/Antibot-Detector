@@ -239,7 +239,7 @@ class Utils {
         return Utils.settingsCache;
       }
     } catch (error) {
-      console.error('Failed to load settings:', error);
+      Logger.error('UTIL', 'Failed to load settings:', error);
     }
 
     return {};
@@ -261,7 +261,7 @@ class Utils {
       await chrome.storage.local.remove('scrapfly_detection_storage');
       return true;
     } catch (error) {
-      console.error('[Utils] Error clearing detection cache:', error);
+      Logger.error('UTIL', '[Utils] Error clearing detection cache:', error);
       return false;
     }
   }
@@ -341,7 +341,7 @@ class Utils {
 
       return parsed;
     } catch (error) {
-      console.error('JSON parse error:', error);
+      Logger.error('UTIL', 'JSON parse error:', error);
       return null;
     }
   }
@@ -355,7 +355,7 @@ class Utils {
     try {
       return JSON.stringify(obj);
     } catch (error) {
-      console.error('JSON stringify error:', error);
+      Logger.error('UTIL', 'JSON stringify error:', error);
       return null;
     }
   }
@@ -443,7 +443,7 @@ class Utils {
       // If we get an error accessing chrome.runtime, context is invalid
       // Use console.error which is always allowed
       if (!error.message.includes('Cannot read properties of undefined')) {
-        console.error('Extension context check error:', error.message);
+        Logger.error('UTIL', 'Extension context check error:', error.message);
       }
       return false;
     }
@@ -518,7 +518,7 @@ class Utils {
 
       // Only cleanup after 2 consecutive failures (grace period for transient issues)
       if (state.contextCheckFailures >= 2) {
-        console.warn('Scrapfly Content Script: Extension context lost after multiple checks');
+        Logger.warn('UTIL', 'Scrapfly Content Script: Extension context lost after multiple checks');
         cleanupOrphanedScript();
 
         // Clear the interval
@@ -571,7 +571,7 @@ class Utils {
         if (chrome.runtime.lastError) {
           if (chrome.runtime.lastError.message &&
             chrome.runtime.lastError.message.includes('Extension context invalidated')) {
-            console.warn('Scrapfly Content Script: Extension was reloaded');
+            Logger.warn('UTIL', 'Scrapfly Content Script: Extension was reloaded');
             cleanupOrphanedScript();
           }
         }
@@ -652,7 +652,7 @@ class Utils {
             }
             // Other errors - log as warning not error
             else {
-              console.warn('Scrapfly Content Script: Error sending detection data:', chrome.runtime.lastError);
+              Logger.warn('UTIL', 'Scrapfly Content Script: Error sending detection data:', chrome.runtime.lastError);
             }
           }
         });
@@ -669,7 +669,7 @@ class Utils {
           // Silent - expected during reload
         }
         else {
-          console.warn('Scrapfly Content Script: Failed to send message:', sendError);
+          Logger.warn('UTIL', 'Scrapfly Content Script: Failed to send message:', sendError);
         }
       }
     } catch (error) {
@@ -677,7 +677,7 @@ class Utils {
       if (error.message && error.message.includes('Extension context invalidated')) {
         cleanupOrphanedScript();
       } else {
-        console.error('Scrapfly Content Script: Error during detection:', error);
+        Logger.error('UTIL', 'Scrapfly Content Script: Error during detection:', error);
       }
     }
   }
@@ -723,7 +723,7 @@ class Utils {
         hash: urlObj.hash
       };
     } catch (error) {
-      console.error('Failed to parse URL:', error);
+      Logger.error('UTIL', 'Failed to parse URL:', error);
       return null;
     }
   }
@@ -756,7 +756,7 @@ class Utils {
         return parsed || {};
       }
     } catch (error) {
-      console.error('Failed to load settings:', error);
+      Logger.error('UTIL', 'Failed to load settings:', error);
     }
 
     // Return empty object as fallback (safe default)
@@ -803,7 +803,7 @@ class Utils {
       // Check if hostname is in blacklist
       return blacklist.includes(hostname);
     } catch (error) {
-      console.error('Error checking blacklist:', error);
+      Logger.error('UTIL', 'Error checking blacklist:', error);
       return false;
     }
   }
@@ -825,7 +825,7 @@ class Utils {
       const cacheHours = settings.cacheHours || 12; // Default 12 hours
       return cacheHours * 60 * 60 * 1000;
     } catch (error) {
-      console.error('Error getting cache duration:', error);
+      Logger.error('UTIL', 'Error getting cache duration:', error);
       return 12 * 60 * 60 * 1000; // Default 12 hours
     }
   }
@@ -842,13 +842,13 @@ class Utils {
 
       // Validate scope value
       if (!['domain', 'path', 'full'].includes(scope)) {
-        console.warn(`[getCacheScope] Invalid cache scope: ${scope}, defaulting to 'domain'`);
+        Logger.warn('UTIL', `[getCacheScope] Invalid cache scope: ${scope}, defaulting to 'domain'`);
         return 'domain';
       }
 
       return scope;
     } catch (error) {
-      console.error('[getCacheScope] Error getting cache scope:', error);
+      Logger.error('UTIL', '[getCacheScope] Error getting cache scope:', error);
       return 'path'; // Default to path scope on error
     }
   }
@@ -1013,7 +1013,7 @@ class Utils {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Failed to download file:', error);
+      Logger.error('UTIL', 'Failed to download file:', error);
     }
   }
 
@@ -1128,7 +1128,7 @@ class Utils {
         document.body.removeChild(textarea);
       }
     } catch (error) {
-      console.error('Failed to copy to clipboard:', error);
+      Logger.error('UTIL', 'Failed to copy to clipboard:', error);
       success = false;
     }
 

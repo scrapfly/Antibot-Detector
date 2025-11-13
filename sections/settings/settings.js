@@ -149,10 +149,10 @@ class Settings {
       }
 
       this.updateSettingsUI();
-      console.log('Settings loaded:', this.settings);
+      Logger.ui('Settings loaded:', this.settings);
 
     } catch (error) {
-      console.error('Failed to load settings:', error);
+      Logger.error('UI', 'Failed to load settings:', error);
     }
   }
 
@@ -195,7 +195,7 @@ class Settings {
           oldCacheScope = loadedSettings.cacheScope || loadedSettings.detection?.cacheScope || 'domain';
         }
       } catch (error) {
-        console.warn('Could not read old cache scope:', error);
+        Logger.warn('UI', 'Could not read old cache scope:', error);
       }
 
       const settingsData = {
@@ -207,14 +207,14 @@ class Settings {
         'scrapfly_settings': JSON.stringify(settingsData, null, 2)
       });
 
-      console.log('Settings saved:', this.settings);
+      Logger.ui('Settings saved:', this.settings);
 
       // Check if cache scope changed
       const newCacheScope = this.settings.cacheScope || this.settings.detection?.cacheScope || 'domain';
       const cacheScopeChanged = oldCacheScope && oldCacheScope !== newCacheScope;
 
       if (cacheScopeChanged) {
-        console.log(`[Settings] Cache scope changed from "${oldCacheScope}" to "${newCacheScope}" - preserving cache data, invalidating current view`);
+        Logger.ui(`[Settings] Cache scope changed from "${oldCacheScope}" to "${newCacheScope}" - preserving cache data, invalidating current view`);
 
         // Clear in-memory URL hash cache in popup context
         Utils.clearUrlHashCache();
@@ -222,14 +222,14 @@ class Settings {
         // Notify background worker to clear its in-memory cache
         chrome.runtime.sendMessage({ type: 'CACHE_SCOPE_CHANGED' }, (response) => {
           if (chrome.runtime.lastError) {
-            console.warn('Failed to notify background of cache scope change:', chrome.runtime.lastError.message);
+            Logger.warn('UI', 'Failed to notify background of cache scope change:', chrome.runtime.lastError.message);
           }
         });
 
         // Notify Detection tab to clear current results display
         chrome.runtime.sendMessage({ type: 'DETECTION_CLEAR_CACHE' }, (response) => {
           if (chrome.runtime.lastError) {
-            console.warn('Failed to notify Detection tab:', chrome.runtime.lastError.message);
+            Logger.warn('UI', 'Failed to notify Detection tab:', chrome.runtime.lastError.message);
           }
         });
 
@@ -241,14 +241,14 @@ class Settings {
       // Notify background script to sync category colors
       chrome.runtime.sendMessage({ type: 'SYNC_CATEGORY_COLORS' }, (response) => {
         if (chrome.runtime.lastError) {
-          console.warn('Failed to sync category colors:', chrome.runtime.lastError.message);
+          Logger.warn('UI', 'Failed to sync category colors:', chrome.runtime.lastError.message);
         } else {
-          console.log('Category colors synced:', response);
+          Logger.ui('Category colors synced:', response);
         }
       });
 
     } catch (error) {
-      console.error('Failed to save settings:', error);
+      Logger.error('UI', 'Failed to save settings:', error);
       NotificationHelper.error('Failed to save settings: ' + error.message);
     }
   }
@@ -359,7 +359,7 @@ class Settings {
       const cacheScopeSelect = document.querySelector('#cacheScope');
       if (cacheScopeSelect) {
         cacheScopeSelect.value = this.settings.detection.cacheScope || 'domain';
-        console.log('Cache scope loaded:', this.settings.detection.cacheScope);
+        Logger.ui('Cache scope loaded:', this.settings.detection.cacheScope);
       }
 
       const cacheDurationInput = document.querySelector('#cacheDuration');
@@ -640,7 +640,7 @@ class Settings {
         }, 2000);
 
       } catch (error) {
-        console.error('Failed to clear data:', error);
+        Logger.error('UI', 'Failed to clear data:', error);
         NotificationHelper.error('Failed to clear data: ' + error.message);
       }
     }
@@ -795,13 +795,13 @@ class Settings {
         // Send message to background to enable/disable log collection
         if (e.target.checked) {
           chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_ENABLE' }).catch(() => {
-            console.log('Failed to enable log collection');
+            Logger.ui('Failed to enable log collection');
           });
           // Start updating log count
           this.startLogCountUpdate();
         } else {
           chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_DISABLE' }).catch(() => {
-            console.log('Failed to disable log collection');
+            Logger.ui('Failed to disable log collection');
           });
           // Stop updating log count
           this.stopLogCountUpdate();
@@ -871,7 +871,7 @@ class Settings {
         }
         // Send to background to update LogCollector
         chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_SET_MAX_LOGS', maxLogs: maxLogs }).catch(() => {
-          console.log('Failed to set max logs');
+          Logger.ui('Failed to set max logs');
         });
       });
     }
@@ -1015,7 +1015,7 @@ class Settings {
 
       // Merge new settings with existing settings to preserve nested structure
       this.settings = this.deepMerge(this.settings, newSettings);
-      console.log('Settings merged:', this.settings);
+      Logger.ui('Settings merged:', this.settings);
 
       await this.saveSettings();
 
@@ -1023,7 +1023,7 @@ class Settings {
       this.hideSettings();
 
     } catch (error) {
-      console.error('Failed to handle save settings:', error);
+      Logger.error('UI', 'Failed to handle save settings:', error);
       NotificationHelper.error('Failed to save settings: ' + error.message);
     }
   }
@@ -1052,11 +1052,11 @@ class Settings {
    * Initialize settings section
    */
   async initialize() {
-    console.log('Settings section initializing...');
+    Logger.ui('Settings section initializing...');
     await this.loadHTML();
     this.setupEventListeners();
     await this.loadSettings();
-    console.log('Settings section initialized');
+    Logger.ui('Settings section initialized');
   }
 
   /**
@@ -1072,7 +1072,7 @@ class Settings {
         settingsModal.innerHTML = html;
       }
     } catch (error) {
-      console.error('Failed to load settings HTML:', error);
+      Logger.error('UI', 'Failed to load settings HTML:', error);
     }
   }
 
@@ -1091,9 +1091,9 @@ class Settings {
       const result = await chrome.storage.local.get(['scrapfly_enabled']);
       const isEnabled = result.scrapfly_enabled !== false; // Default to true
       toggle.checked = isEnabled;
-      console.log('Toggle state loaded:', isEnabled);
+      Logger.ui('Toggle state loaded:', isEnabled);
     } catch (error) {
-      console.error('Failed to load toggle state:', error);
+      Logger.error('UI', 'Failed to load toggle state:', error);
       toggle.checked = true; // Default to enabled on error
     }
   }
@@ -1108,7 +1108,7 @@ class Settings {
       const defaultTab = settings.defaultTab || 'detection';
       switchTabCallback(defaultTab);
     } catch (error) {
-      console.error('Failed to load default tab:', error);
+      Logger.error('UI', 'Failed to load default tab:', error);
       switchTabCallback('detection'); // Fallback to detection tab
     }
   }
@@ -1121,7 +1121,7 @@ class Settings {
   static async handleEnableToggle(enabled, context = null) {
     try {
       await chrome.storage.local.set({ scrapfly_enabled: enabled });
-      console.log('Extension enabled state updated:', enabled);
+      Logger.ui('Extension enabled state updated:', enabled);
 
       // Broadcast to all contexts
       chrome.runtime.sendMessage({
@@ -1147,15 +1147,15 @@ class Settings {
                          badgeColors.low;
 
             chrome.action.setBadgeText({ text: count, tabId: activeTab.id }).catch((error) => {
-              console.log(`[Settings] Failed to set badge for active tab ${activeTab.id}:`, error.message);
+              Logger.ui(`[Settings] Failed to set badge for active tab ${activeTab.id}:`, error.message);
             });
             chrome.action.setBadgeBackgroundColor({ color: color, tabId: activeTab.id }).catch((error) => {
-              console.log(`[Settings] Failed to set badge color for active tab ${activeTab.id}:`, error.message);
+              Logger.ui(`[Settings] Failed to set badge color for active tab ${activeTab.id}:`, error.message);
             });
           } else {
             // No cached detections, clear badge
             chrome.action.setBadgeText({ text: '', tabId: activeTab.id }).catch((error) => {
-              console.log(`[Settings] Failed to clear badge for active tab ${activeTab.id}:`, error.message);
+              Logger.ui(`[Settings] Failed to clear badge for active tab ${activeTab.id}:`, error.message);
             });
           }
         }
@@ -1165,16 +1165,16 @@ class Settings {
         for (const tab of tabs) {
           chrome.action.setBadgeText({ text: '✕', tabId: tab.id }).catch((error) => {
             // Expected: Tab might be closed
-            console.log(`[Settings] Failed to set disabled badge for tab ${tab.id}:`, error.message);
+            Logger.ui(`[Settings] Failed to set disabled badge for tab ${tab.id}:`, error.message);
           });
           chrome.action.setBadgeBackgroundColor({ color: '#f59e0b', tabId: tab.id }).catch((error) => {
             // Expected: Tab might be closed
-            console.log(`[Settings] Failed to set badge color for tab ${tab.id}:`, error.message);
+            Logger.ui(`[Settings] Failed to set badge color for tab ${tab.id}:`, error.message);
           });
         }
       }
     } catch (error) {
-      console.error('Failed to handle toggle:', error);
+      Logger.error('UI', 'Failed to handle toggle:', error);
       throw error;
     }
   }
@@ -1198,7 +1198,7 @@ class Settings {
 
       sendResponse({ status: 'success' });
     } catch (error) {
-      console.error('Failed to handle settings update:', error);
+      Logger.error('UI', 'Failed to handle settings update:', error);
       sendResponse({ status: 'error', error: error.message });
     }
   }
@@ -1227,9 +1227,9 @@ class Settings {
         })
       });
 
-      console.log('Webhook sent successfully');
+      Logger.ui('Webhook sent successfully');
     } catch (error) {
-      console.error('Failed to send webhook:', error);
+      Logger.error('UI', 'Failed to send webhook:', error);
     }
   }
 
@@ -1253,7 +1253,7 @@ class Settings {
       // Check if JS API is enabled in settings
       const settings = await Utils.getSettings();
       if (!settings.jsApiEnabled) {
-        console.log(`Scrapfly JS API: Disabled in settings, skipping ${eventName} event`);
+        Logger.ui(`Scrapfly JS API: Disabled in settings, skipping ${eventName} event`);
         return false;
       }
 
@@ -1269,11 +1269,11 @@ class Settings {
       });
 
       window.dispatchEvent(event);
-      console.log(`Scrapfly JS API: Dispatched ${eventName} event`, data);
+      Logger.ui(`Scrapfly JS API: Dispatched ${eventName} event`, data);
       return true;
 
     } catch (error) {
-      console.error(`Scrapfly JS API: Failed to dispatch ${eventName} event:`, error);
+      Logger.error('UI', `Scrapfly JS API: Failed to dispatch ${eventName} event:`, error);
       return false;
     }
   }
@@ -1293,7 +1293,7 @@ class Settings {
       });
 
     } catch (error) {
-      console.error('Scrapfly JS API: Failed to dispatch ready event:', error);
+      Logger.error('UI', 'Scrapfly JS API: Failed to dispatch ready event:', error);
       return false;
     }
   }
