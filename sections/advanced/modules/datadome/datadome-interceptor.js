@@ -35,20 +35,20 @@ function handleDataDomeMessage(request, sender, sendResponse) {
             (async () => {
                 try {
                     if (typeof showNotification === 'function') {
-                        console.log('[DataDome] Showing analyzing notification before reload...');
+                        Logger.network('[DataDome] Showing analyzing notification before reload...');
                         await showNotification(request.tabId, {
                             type: 'loading',
                             title: '🔍 Analyzing DataDome Scripts',
                             message: 'Please wait while we collect script URLs...',
                             duration: 15000 // Longer duration to persist through reload
                         });
-                        console.log('[DataDome] Pre-reload notification shown successfully');
+                        Logger.network('[DataDome] Pre-reload notification shown successfully');
                     } else {
-                        console.log('[DataDome] showNotification function not available');
+                        Logger.network('[DataDome] showNotification function not available');
                     }
                     sendResponse({ status: 'success' });
                 } catch (error) {
-                    console.error('[DataDome] Error showing notification:', error);
+                    Logger.error('NETWORK', '[DataDome] Error showing notification:', error);
                     sendResponse({ status: 'error', error: error.message });
                 }
             })();
@@ -70,7 +70,7 @@ function handleDataDomeMessage(request, sender, sendResponse) {
  * @returns {Object} Status response
  */
 function datadomeStartAnalysis(tabId, url) {
-    console.log('[DataDome-Analysis] Starting analysis mode for tab:', tabId);
+    Logger.network('[DataDome-Analysis] Starting analysis mode for tab:', tabId);
 
     // Track captured URLs from network requests
     const capturedUrls = new Set();
@@ -83,7 +83,7 @@ function datadomeStartAnalysis(tabId, url) {
 
         // Check if URL contains DataDome tags.js
         if (requestUrl.includes('/tags.js')) {
-            console.log('[DataDome-Analysis] Network - Found tags.js:', requestUrl);
+            Logger.network('[DataDome-Analysis] Network - Found tags.js:', requestUrl);
             capturedUrls.add(JSON.stringify({ url: requestUrl, type: 'tags' }));
         }
     };
@@ -91,14 +91,14 @@ function datadomeStartAnalysis(tabId, url) {
     // Setup navigation listener to finalize results after page loads
     const navigationListener = async (details) => {
         if (details.tabId === tabId && details.frameId === 0) {
-            console.log('[DataDome-Analysis] Page loaded, waiting for all requests to complete...');
+            Logger.network('[DataDome-Analysis] Page loaded, waiting for all requests to complete...');
 
             // Note: Notification is shown before page reload via DATADOME_SHOW_ANALYZING_NOTIFICATION
             // No need to show it again here
 
             // Wait 5 seconds after page load to ensure all network requests are captured
             setTimeout(async () => {
-                console.log('[DataDome-Analysis] ========== FINALIZING RESULTS ==========');
+                Logger.network('[DataDome-Analysis] ========== FINALIZING RESULTS ==========');
 
                 // Convert Set to array of objects
                 const finalResults = Array.from(capturedUrls).map(jsonStr => {
@@ -106,7 +106,7 @@ function datadomeStartAnalysis(tabId, url) {
                     return { ...obj, source: 'network' };
                 });
 
-                console.log('[DataDome-Analysis] Final captured URLs:', finalResults);
+                Logger.network('[DataDome-Analysis] Final captured URLs:', finalResults);
 
                 // Prepare analysis data
                 const analysisData = {
@@ -114,12 +114,12 @@ function datadomeStartAnalysis(tabId, url) {
                     scriptCount: finalResults.length
                 };
 
-                console.log('[DataDome-Analysis] Prepared analysis data:', analysisData);
+                Logger.network('[DataDome-Analysis] Prepared analysis data:', analysisData);
 
                 // Remove listeners
                 chrome.webRequest.onBeforeRequest.removeListener(requestListener);
                 chrome.webNavigation.onCompleted.removeListener(navigationListener);
-                console.log('[DataDome-Analysis] Listeners removed');
+                Logger.network('[DataDome-Analysis] Listeners removed');
 
                 // Send message to popup if it's open
                 try {
@@ -127,9 +127,9 @@ function datadomeStartAnalysis(tabId, url) {
                         type: 'DATADOME_ANALYSIS_RESULT',
                         data: analysisData
                     });
-                    console.log('[DataDome-Analysis] ✓ Results sent to popup');
+                    Logger.network('[DataDome-Analysis] ✓ Results sent to popup');
                 } catch (error) {
-                    console.log('[DataDome-Analysis] Popup not available - results discarded');
+                    Logger.network('[DataDome-Analysis] Popup not available - results discarded');
                 }
             }, 5000);
         }
@@ -145,7 +145,7 @@ function datadomeStartAnalysis(tabId, url) {
     // Register navigation listener
     chrome.webNavigation.onCompleted.addListener(navigationListener);
 
-    console.log('[DataDome-Analysis] Network listener added, ready for page reload');
+    Logger.network('[DataDome-Analysis] Network listener added, ready for page reload');
 
     return { status: 'started' };
 }
@@ -154,4 +154,4 @@ function datadomeStartAnalysis(tabId, url) {
 // Exports
 // ============================================================================
 
-console.log('[DataDome] Interceptor loaded successfully');
+Logger.network('[DataDome] Interceptor loaded successfully');

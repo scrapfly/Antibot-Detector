@@ -5,7 +5,7 @@
  * Includes tools for checking cookies and capturing DataDome scripts.
  */
 
-console.log('[DataDomeAdvanced] Loading... Dependencies check:', {
+Logger.network('[DataDomeAdvanced] Loading... Dependencies check:', {
     BaseAdvancedModule: typeof BaseAdvancedModule,
     NotificationHelper: typeof NotificationHelper,
     AdvancedUtils: typeof AdvancedUtils
@@ -57,19 +57,19 @@ class DataDomeAdvanced extends BaseAdvancedModule {
      * Setup tool-specific event listeners
      */
     setupToolListeners() {
-        console.log('[DataDome] Setting up tool listeners...');
+        Logger.network('[DataDome] Setting up tool listeners...');
 
         const checkCookiesBtn = document.querySelector('#datadomeCheckCookies');
         const analyzeScriptsBtn = document.querySelector('#datadomeAnalyzeScripts');
 
         if (checkCookiesBtn) {
             checkCookiesBtn.addEventListener('click', () => this.checkCookies());
-            console.log('[DataDome] Added listener to Check Cookies button');
+            Logger.network('[DataDome] Added listener to Check Cookies button');
         }
 
         if (analyzeScriptsBtn) {
             analyzeScriptsBtn.addEventListener('click', () => this.analyzeScripts());
-            console.log('[DataDome] Added listener to Analyze Scripts button');
+            Logger.network('[DataDome] Added listener to Analyze Scripts button');
         }
     }
 
@@ -77,17 +77,17 @@ class DataDomeAdvanced extends BaseAdvancedModule {
      * Check DataDome cookies without reload
      */
     async checkCookies() {
-        console.log('[DataDome] ========== CHECK COOKIES ==========');
+        Logger.network('[DataDome] ========== CHECK COOKIES ==========');
         try {
             if (!this.tabInfo || !this.tabInfo.url) {
                 throw new Error('Tab information not available');
             }
 
             const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
-            console.log('[DataDome] Total cookies found:', cookies.length);
+            Logger.network('[DataDome] Total cookies found:', cookies.length);
 
             const dataDomeCookie = cookies.find(c => c.name === 'datadome');
-            console.log('[DataDome] datadome cookie found:', !!dataDomeCookie);
+            Logger.network('[DataDome] datadome cookie found:', !!dataDomeCookie);
 
             // Show notification
             if (dataDomeCookie) {
@@ -99,7 +99,7 @@ class DataDomeAdvanced extends BaseAdvancedModule {
             // Display modal with cookie details
             this.displayCookiesModal(dataDomeCookie);
         } catch (error) {
-            console.error('[DataDome] Failed to check cookies:', error);
+            Logger.error('NETWORK', '[DataDome] Failed to check cookies:', error);
             NotificationHelper.error('Failed to check cookies: ' + error.message);
         }
     }
@@ -180,7 +180,7 @@ class DataDomeAdvanced extends BaseAdvancedModule {
      * Deletes datadome cookie, reloads page, then analyzes scripts
      */
     async analyzeScripts() {
-        console.log('[DataDome] ========== ANALYZE SCRIPTS ==========');
+        Logger.network('[DataDome] ========== ANALYZE SCRIPTS ==========');
         try {
             if (!this.tabInfo || !this.tabInfo.id) {
                 throw new Error('Tab information not available');
@@ -189,7 +189,7 @@ class DataDomeAdvanced extends BaseAdvancedModule {
             // Setup listener for analysis results
             const analysisListener = (message) => {
                 if (message.type === 'DATADOME_ANALYSIS_RESULT') {
-                    console.log('[DataDome] Analysis result received:', message.data);
+                    Logger.network('[DataDome] Analysis result received:', message.data);
                     this.displayAnalysisModal(message.data);
                     chrome.runtime.onMessage.removeListener(analysisListener);
                 }
@@ -204,7 +204,7 @@ class DataDomeAdvanced extends BaseAdvancedModule {
                 url: this.tabInfo.url
             });
 
-            console.log('[DataDome] Analysis mode response:', response);
+            Logger.network('[DataDome] Analysis mode response:', response);
 
             if (response && response.status === 'started') {
                 // Show notification about reload
@@ -213,7 +213,7 @@ class DataDomeAdvanced extends BaseAdvancedModule {
                 // Reload page to capture DataDome scripts (keep existing cookie)
                 setTimeout(async () => {
                     try {
-                        console.log('[DataDome] Reloading page to capture scripts (keeping datadome cookie)...');
+                        Logger.network('[DataDome] Reloading page to capture scripts (keeping datadome cookie)...');
 
                         // Send message to show analyzing notification right before reload
                         await AdvancedUtils.sendMessage({
@@ -222,7 +222,7 @@ class DataDomeAdvanced extends BaseAdvancedModule {
                         });
 
                     } catch (error) {
-                        console.error('[DataDome] Error showing analyzing notification:', error);
+                        Logger.error('NETWORK', '[DataDome] Error showing analyzing notification:', error);
                     }
 
                     // Reload page - Background's webNavigation listener will capture scripts
@@ -234,7 +234,7 @@ class DataDomeAdvanced extends BaseAdvancedModule {
                 NotificationHelper.error('Failed to start analysis');
             }
         } catch (error) {
-            console.error('[DataDome] Failed to analyze scripts:', error);
+            Logger.error('NETWORK', '[DataDome] Failed to analyze scripts:', error);
             NotificationHelper.error('Failed to analyze scripts: ' + error.message);
         }
     }
@@ -243,7 +243,7 @@ class DataDomeAdvanced extends BaseAdvancedModule {
      * Display script analysis results in modal
      */
     displayAnalysisModal(data) {
-        console.log('[DataDome] Displaying analysis modal with data:', data);
+        Logger.network('[DataDome] Displaying analysis modal with data:', data);
 
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
@@ -313,24 +313,24 @@ class DataDomeAdvanced extends BaseAdvancedModule {
                 e.stopPropagation();
 
                 if (scripts.length === 0) {
-                    console.error('[DataDome] No scripts to export!');
+                    Logger.error('NETWORK', '[DataDome] No scripts to export!');
                     NotificationHelper.warning('No scripts available to export');
                     return;
                 }
 
-                console.log('[DataDome] Calling displayExportCodeModal...');
+                Logger.network('[DataDome] Calling displayExportCodeModal...');
                 try {
                     this.displayExportCodeModal(scripts);
-                    console.log('[DataDome] displayExportCodeModal called successfully');
+                    Logger.network('[DataDome] displayExportCodeModal called successfully');
                 } catch (error) {
-                    console.error('[DataDome] Error calling displayExportCodeModal:', error);
+                    Logger.error('NETWORK', '[DataDome] Error calling displayExportCodeModal:', error);
                     NotificationHelper.error('Failed to open export modal: ' + error.message);
                 }
             });
-            console.log('[DataDome] Click listener added successfully');
+            Logger.network('[DataDome] Click listener added successfully');
         } else {
-            console.error('[DataDome] ❌ Export code button not found in modal!');
-            console.error('[DataDome] Modal HTML:', modal.innerHTML.substring(0, 500));
+            Logger.error('NETWORK', '[DataDome] ❌ Export code button not found in modal!');
+            Logger.error('NETWORK', '[DataDome] Modal HTML:', modal.innerHTML.substring(0, 500));
         }
 
         setTimeout(() => modal.style.opacity = '1', 10);
@@ -432,11 +432,11 @@ const datadomeScripts = ${JSON.stringify(urls, null, 2)};
 
 // Process each script URL
 datadomeScripts.forEach((url, index) => {
-    console.log(\`Script \${index + 1}: \${url}\`);
+    Logger.network(\`Script \${index + 1}: \${url}\`);
 
     // Parse the URL to extract script identifier
     const scriptId = url.split('/').pop();
-    console.log(\`  Script ID: \${scriptId}\`);
+    Logger.network(\`  Script ID: \${scriptId}\`);
 });
 
 // Make requests to each script
@@ -445,9 +445,9 @@ async function fetchDataDomeScripts() {
         try {
             const response = await fetch(url);
             const scriptContent = await response.text();
-            console.log(\`Fetched: \${url}\`);
+            Logger.network(\`Fetched: \${url}\`);
         } catch (error) {
-            console.error(\`Failed to fetch: \${url}\`, error);
+            Logger.error('NETWORK', \`Failed to fetch: \${url}\`, error);
         }
     }
 }
@@ -487,11 +487,11 @@ const datadomeScripts = ${JSON.stringify(urls, null, 2)};
 
 // Process each script URL
 datadomeScripts.forEach((url, index) => {
-    console.log(\`Script \${index + 1}: \${url}\`);
+    Logger.network(\`Script \${index + 1}: \${url}\`);
 
     // Parse the URL to extract script identifier
     const scriptId = url.split('/').pop();
-    console.log(\`  Script ID: \${scriptId}\`);
+    Logger.network(\`  Script ID: \${scriptId}\`);
 });
 
 // Fetch each script
@@ -499,11 +499,11 @@ async function fetchDataDomeScripts() {
     for (const url of datadomeScripts) {
         try {
             const response = await axios.get(url);
-            console.log(\`Fetched: \${url}\`);
+            Logger.network(\`Fetched: \${url}\`);
             // Process script content
             // const content = response.data;
         } catch (error) {
-            console.error(\`Failed to fetch: \${url}\`, error.message);
+            Logger.error('NETWORK', \`Failed to fetch: \${url}\`, error.message);
         }
     }
 }
@@ -656,4 +656,4 @@ if (typeof module !== 'undefined' && module.exports) {
     window.DataDomeAdvanced = DataDomeAdvanced;
 }
 
-console.log('[DataDomeAdvanced] Loaded successfully');
+Logger.network('[DataDomeAdvanced] Loaded successfully');

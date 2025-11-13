@@ -45,7 +45,7 @@ function matchPattern(value, pattern, options = {}) {
             const re = new RegExp(testPattern, flags);
             return re.test(testValue);
         } catch (error) {
-            console.error('[BaseInterceptor] Invalid regex pattern:', pattern, error);
+            Logger.error('UI', '[BaseInterceptor] Invalid regex pattern:', pattern, error);
             return false;
         }
     }
@@ -58,7 +58,7 @@ function matchPattern(value, pattern, options = {}) {
             const re = new RegExp(wordBoundaryPattern, flags);
             return re.test(testValue);
         } catch (error) {
-            console.error('[BaseInterceptor] Invalid whole word pattern:', pattern, error);
+            Logger.error('UI', '[BaseInterceptor] Invalid whole word pattern:', pattern, error);
             return false;
         }
     }
@@ -81,7 +81,7 @@ function matchPattern(value, pattern, options = {}) {
  */
 async function checkCookies(tabUrl, config) {
     if (!tabUrl) {
-        console.warn('[BaseInterceptor] checkCookies: No URL provided');
+        Logger.warn('UI', '[BaseInterceptor] checkCookies: No URL provided');
         return [];
     }
 
@@ -151,7 +151,7 @@ async function checkCookies(tabUrl, config) {
  */
 function checkHeaders(details, config) {
     if (!details || !details.responseHeaders) {
-        console.warn('[BaseInterceptor] checkHeaders: No headers in details');
+        Logger.warn('UI', '[BaseInterceptor] checkHeaders: No headers in details');
         return [];
     }
 
@@ -285,7 +285,7 @@ function checkUrls(urls, config = {}) {
                             // Merge params (last match wins for duplicate keys)
                             Object.assign(result.params, params);
                         } catch (e) {
-                            console.warn('[BaseInterceptor] Failed to parse URL for params:', url, e);
+                            Logger.warn('UI', '[BaseInterceptor] Failed to parse URL for params:', url, e);
                         }
                     }
 
@@ -296,14 +296,14 @@ function checkUrls(urls, config = {}) {
                             const fullPath = urlObj.pathname + urlObj.search + urlObj.hash;
                             result.paths.push(fullPath);
                         } catch (e) {
-                            console.warn('[BaseInterceptor] Failed to parse URL for path:', url, e);
+                            Logger.warn('UI', '[BaseInterceptor] Failed to parse URL for path:', url, e);
                         }
                     }
                 }
             }
         }
     } catch (error) {
-        console.error('[BaseInterceptor] Error checking URLs:', error);
+        Logger.error('UI', '[BaseInterceptor] Error checking URLs:', error);
     }
 
     return result;
@@ -369,7 +369,7 @@ function checkPayload(requestBody, config = {}) {
             try {
                 parsedBody = JSON.parse(rawBody);
             } catch (e) {
-                console.warn('[BaseInterceptor] Failed to parse JSON body');
+                Logger.warn('UI', '[BaseInterceptor] Failed to parse JSON body');
             }
         } else if (extractFormat === 'urlencoded' || (extractFormat === 'auto' && rawBody.includes('='))) {
             try {
@@ -379,7 +379,7 @@ function checkPayload(requestBody, config = {}) {
                     parsedBody[key] = value;
                 }
             } catch (e) {
-                console.warn('[BaseInterceptor] Failed to parse URL-encoded body');
+                Logger.warn('UI', '[BaseInterceptor] Failed to parse URL-encoded body');
             }
         }
 
@@ -436,7 +436,7 @@ function checkPayload(requestBody, config = {}) {
         }
 
     } catch (error) {
-        console.error('[BaseInterceptor] Error checking payload:', error);
+        Logger.error('UI', '[BaseInterceptor] Error checking payload:', error);
     }
 
     return result;
@@ -494,7 +494,7 @@ function checkContent(content, config = {}) {
                         const matches = [...content.matchAll(re)];
                         result.matches.push(...matches.map(m => m[0]));
                     } catch (e) {
-                        console.warn('[BaseInterceptor] Regex matchAll failed:', e);
+                        Logger.warn('UI', '[BaseInterceptor] Regex matchAll failed:', e);
                     }
                 } else if (returnMatches) {
                     result.matches.push(pattern);
@@ -510,7 +510,7 @@ function checkContent(content, config = {}) {
         }
 
     } catch (error) {
-        console.error('[BaseInterceptor] Error checking content:', error);
+        Logger.error('UI', '[BaseInterceptor] Error checking content:', error);
     }
 
     return result;
@@ -554,7 +554,7 @@ async function saveToHistory(tabId, captureData, options = {}) {
 
         // MIGRATION: Convert old { items: [] } format to new { moduleId: [] } format
         if (history.items && Array.isArray(history.items)) {
-            console.log('[BaseInterceptor] Migrating old storage format to new format');
+            Logger.ui('[BaseInterceptor] Migrating old storage format to new format');
             const migratedHistory = {};
 
             // Group items by type (moduleId)
@@ -577,7 +577,7 @@ async function saveToHistory(tabId, captureData, options = {}) {
             }
 
             history = migratedHistory;
-            console.log('[BaseInterceptor] Migration complete:', Object.keys(history));
+            Logger.ui('[BaseInterceptor] Migration complete:', Object.keys(history));
         }
 
         // Handle legacy string format
@@ -613,11 +613,11 @@ async function saveToHistory(tabId, captureData, options = {}) {
             scrapfly_advanced_history: history
         });
 
-        console.log(`[BaseInterceptor] Saved ${type} capture to history:`, newCapture.id);
+        Logger.ui(`[BaseInterceptor] Saved ${type} capture to history:`, newCapture.id);
         return newCapture;
 
     } catch (error) {
-        console.error('[BaseInterceptor] Error saving to history:', error);
+        Logger.error('UI', '[BaseInterceptor] Error saving to history:', error);
         throw error;
     }
 }
@@ -653,7 +653,7 @@ async function loadHistory(type, hostname = null) {
         return items;
 
     } catch (error) {
-        console.error('[BaseInterceptor] Error loading history:', error);
+        Logger.error('UI', '[BaseInterceptor] Error loading history:', error);
         return [];
     }
 }
@@ -788,7 +788,7 @@ async function showNotification(tabId, options = {}) {
             args: [title, message, notifGradient, duration, type]
         });
     } catch (err) {
-        console.error('[BaseInterceptor] Failed to show notification:', err);
+        Logger.error('UI', '[BaseInterceptor] Failed to show notification:', err);
         // Fallback to system notification
         chrome.notifications.create({
             type: 'basic',
@@ -821,7 +821,7 @@ function detectVersion(data, pattern, prefix = '') {
             return prefix ? `${prefix}${match[1]}` : match[1];
         }
     } catch (error) {
-        console.error('[BaseInterceptor] Error detecting version:', error);
+        Logger.error('UI', '[BaseInterceptor] Error detecting version:', error);
     }
 
     return null;
@@ -850,5 +850,5 @@ if (globalContext) {
         detectVersion
     };
 
-    console.log('[BaseInterceptorHelpers] ✓ Loaded in context:', typeof window !== 'undefined' ? 'popup' : 'service-worker');
+    Logger.ui('[BaseInterceptorHelpers] ✓ Loaded in context:', typeof window !== 'undefined' ? 'popup' : 'service-worker');
 }

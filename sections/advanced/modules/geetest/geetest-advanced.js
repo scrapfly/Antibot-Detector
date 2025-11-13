@@ -5,8 +5,8 @@
  */
 
 // IMMEDIATE DEBUG - This should appear in console if file loads
-console.log('%c[GEETEST DEBUG] Script file is loading NOW!', 'color: #ff00ff; font-weight: bold; font-size: 14px;');
-console.log('[GEETEST DEBUG] BaseAdvancedModule available?', typeof BaseAdvancedModule);
+Logger.network('%c[GEETEST DEBUG] Script file is loading NOW!', 'color: #ff00ff; font-weight: bold; font-size: 14px;');
+Logger.network('[GEETEST DEBUG] BaseAdvancedModule available?', typeof BaseAdvancedModule);
 
 class GeetestAdvanced extends BaseAdvancedModule {
     constructor(detection, tabInfo) {
@@ -322,10 +322,10 @@ if (match) {
     const productMatch = configText.match(/product\\s*:\\s*["']([^"']+)["']/);
     const product = productMatch ? productMatch[1] : null;
 
-    console.log('Geetest V4 captchaId:', captchaId);
-    console.log('Product:', product);
+    Logger.network('Geetest V4 captchaId:', captchaId);
+    Logger.network('Product:', product);
 } else {
-    console.log('No Geetest V4 found');
+    Logger.network('No Geetest V4 found');
 }` : `// Geetest V3 - Extract gt and challenge from script
 // Search for initGeetest call and extract parameters
 
@@ -346,10 +346,10 @@ if (match) {
     const challengeMatch = configText.match(/challenge\\s*:\\s*["']([^"']+)["']/);
     const challenge = challengeMatch ? challengeMatch[1] : null;
 
-    console.log('Geetest V3 gt:', gt);
-    console.log('Geetest V3 challenge:', challenge);
+    Logger.network('Geetest V3 gt:', gt);
+    Logger.network('Geetest V3 challenge:', challenge);
 } else {
-    console.log('No Geetest V3 found');
+    Logger.network('No Geetest V3 found');
 }`;
 
         // Copy to clipboard
@@ -363,5 +363,5 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = GeetestAdvanced;
 } else if (typeof window !== 'undefined') {
     window.GeetestAdvanced = GeetestAdvanced;
-    console.log('[GeetestAdvanced] ✓ Loaded and exported to window.GeetestAdvanced');
+    Logger.network('[GeetestAdvanced] ✓ Loaded and exported to window.GeetestAdvanced');
 }

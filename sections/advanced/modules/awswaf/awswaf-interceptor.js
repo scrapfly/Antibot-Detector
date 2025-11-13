@@ -40,14 +40,14 @@ var awsWafCaptureStateRef = {
  * Initialize AWS WAF interceptor on extension load
  */
 function awsWafInitializeInterceptor() {
-  console.log('[AwsWaf] Initializing interceptor');
+  Logger.network('[AwsWaf] Initializing interceptor');
 
   // Cleanup any existing listeners
   if (awsWafInterceptionListener) {
     try {
       chrome.webRequest.onBeforeRequest.removeListener(awsWafInterceptionListener);
     } catch (e) {
-      console.log('[AwsWaf] No existing request listener to remove');
+      Logger.network('[AwsWaf] No existing request listener to remove');
     }
   }
 
@@ -55,14 +55,14 @@ function awsWafInitializeInterceptor() {
     try {
       chrome.webRequest.onCompleted.removeListener(awsWafStatusListener);
     } catch (e) {
-      console.log('[AwsWaf] No existing status listener to remove');
+      Logger.network('[AwsWaf] No existing status listener to remove');
     }
   }
 
   awsWafInterceptionListener = null;
   awsWafStatusListener = null;
 
-  console.log('[AwsWaf] Interceptor initialized');
+  Logger.network('[AwsWaf] Interceptor initialized');
 }
 
 // ============================================================================
@@ -75,7 +75,7 @@ function awsWafInitializeInterceptor() {
  * @param {string} url - URL of the tab
  */
 function awsWafStartCapture(tabId, url) {
-  console.log('[AwsWaf] Starting capture for tab:', tabId, 'url:', url);
+  Logger.network('[AwsWaf] Starting capture for tab:', tabId, 'url:', url);
 
   // Stop any existing capture
   awsWafStopCapture();
@@ -109,11 +109,11 @@ function awsWafStartCapture(tabId, url) {
       message: '🔄 Please reload the page to start monitoring',
       duration: 60000
     }).catch(err => {
-      console.error('[AwsWaf] Failed to show notification:', err);
+      Logger.error('NETWORK', '[AwsWaf] Failed to show notification:', err);
     });
   }
 
-  console.log('[AwsWaf] Capture started');
+  Logger.network('[AwsWaf] Capture started');
 
   return {
     status: 'started',
@@ -126,14 +126,14 @@ function awsWafStartCapture(tabId, url) {
  * Stop capturing AWS WAF data
  */
 function awsWafStopCapture() {
-  console.log('[AwsWaf] Stopping capture');
+  Logger.network('[AwsWaf] Stopping capture');
 
   // Remove listeners
   if (awsWafInterceptionListener) {
     try {
       chrome.webRequest.onBeforeRequest.removeListener(awsWafInterceptionListener);
     } catch (e) {
-      console.log('[AwsWaf] Error removing request listener:', e);
+      Logger.network('[AwsWaf] Error removing request listener:', e);
     }
   }
 
@@ -141,7 +141,7 @@ function awsWafStopCapture() {
     try {
       chrome.webRequest.onCompleted.removeListener(awsWafStatusListener);
     } catch (e) {
-      console.log('[AwsWaf] Error removing status listener:', e);
+      Logger.network('[AwsWaf] Error removing status listener:', e);
     }
   }
 
@@ -153,7 +153,7 @@ function awsWafStopCapture() {
   awsWafCaptureStateRef.tabId = null;
   awsWafCaptureStateRef.url = null;
 
-  console.log('[AwsWaf] Capture stopped');
+  Logger.network('[AwsWaf] Capture stopped');
 }
 
 // ============================================================================
@@ -165,7 +165,7 @@ function awsWafStopCapture() {
  * @param {number} tabId - Tab ID to monitor
  */
 function setupAwsWafInterceptor(tabId) {
-  console.log('[AwsWaf] Setting up interceptor for tab:', tabId);
+  Logger.network('[AwsWaf] Setting up interceptor for tab:', tabId);
 
   // Request listener - Monitor URLs
   awsWafInterceptionListener = (details) => {
@@ -173,23 +173,23 @@ function setupAwsWafInterceptor(tabId) {
     if (!awsWafCaptureStateRef.isCapturing) return;
 
     const url = details.url;
-    console.log('[AwsWaf] Intercepted request:', url);
+    Logger.network('[AwsWaf] Intercepted request:', url);
 
     // Check for jsapi.js
     if (url.includes('jsapi.js')) {
-      console.log('[AwsWaf] Found jsapi.js:', url);
+      Logger.network('[AwsWaf] Found jsapi.js:', url);
       awsWafCaptureStateRef.capturedData.awsApiJs = url;
     }
 
     // Check for challenge.js
     if (url.includes('challenge.js')) {
-      console.log('[AwsWaf] Found challenge.js:', url);
+      Logger.network('[AwsWaf] Found challenge.js:', url);
       awsWafCaptureStateRef.capturedData.awsChallengeJS = url;
     }
 
     // Check for /problem endpoint
     if (url.includes('/problem')) {
-      console.log('[AwsWaf] Found problem endpoint:', url);
+      Logger.network('[AwsWaf] Found problem endpoint:', url);
       awsWafCaptureStateRef.capturedData.awsProblemUrl = url;
       awsWafCaptureStateRef.detectionFlags.hasProblemEndpoint = true;
 
@@ -198,11 +198,11 @@ function setupAwsWafInterceptor(tabId) {
         const urlObj = new URL(url);
         const apiKey = urlObj.searchParams.get('api_key');
         if (apiKey) {
-          console.log('[AwsWaf] Extracted api_key:', apiKey);
+          Logger.network('[AwsWaf] Extracted api_key:', apiKey);
           awsWafCaptureStateRef.capturedData.awsApiKey = apiKey;
         }
       } catch (e) {
-        console.error('[AwsWaf] Error parsing problem URL:', e);
+        Logger.error('NETWORK', '[AwsWaf] Error parsing problem URL:', e);
       }
     }
   };
@@ -215,17 +215,17 @@ function setupAwsWafInterceptor(tabId) {
     const url = details.url;
     const statusCode = details.statusCode;
 
-    console.log('[AwsWaf] Response status:', statusCode, 'for URL:', url);
+    Logger.network('[AwsWaf] Response status:', statusCode, 'for URL:', url);
 
     // Check for status 405 - AWS Captcha indicator
     if (statusCode === 405) {
-      console.log('[AwsWaf] Detected status 405 - AWS Captcha');
+      Logger.network('[AwsWaf] Detected status 405 - AWS Captcha');
       awsWafCaptureStateRef.detectionFlags.hasStatus405 = true;
     }
 
     // Check for status 202 with /challenge endpoint
     if (statusCode === 202 && url.includes('/challenge')) {
-      console.log('[AwsWaf] Detected status 202 with /challenge - Challenge endpoint');
+      Logger.network('[AwsWaf] Detected status 202 with /challenge - Challenge endpoint');
       awsWafCaptureStateRef.detectionFlags.hasChallengeEndpoint = true;
     }
   };
@@ -243,7 +243,7 @@ function setupAwsWafInterceptor(tabId) {
     []
   );
 
-  console.log('[AwsWaf] Interceptor setup complete');
+  Logger.network('[AwsWaf] Interceptor setup complete');
 }
 
 // ============================================================================
@@ -256,22 +256,22 @@ function setupAwsWafInterceptor(tabId) {
  * @returns {Promise<string|null>} Cookie value or null
  */
 async function awsWafReadCookie(url) {
-  console.log('[AwsWaf] Reading aws-waf-token cookie for:', url);
+  Logger.network('[AwsWaf] Reading aws-waf-token cookie for:', url);
 
   try {
     const cookies = await chrome.cookies.getAll({ url: url });
     const awsWafToken = cookies.find(c => c.name === 'aws-waf-token');
 
     if (awsWafToken) {
-      console.log('[AwsWaf] Found aws-waf-token cookie:', awsWafToken.value);
+      Logger.network('[AwsWaf] Found aws-waf-token cookie:', awsWafToken.value);
       return awsWafToken.value;
     }
 
-    console.log('[AwsWaf] No aws-waf-token cookie found');
+    Logger.network('[AwsWaf] No aws-waf-token cookie found');
     return null;
 
   } catch (error) {
-    console.error('[AwsWaf] Error reading cookie:', error);
+    Logger.error('NETWORK', '[AwsWaf] Error reading cookie:', error);
     return null;
   }
 }
@@ -286,9 +286,9 @@ async function awsWafReadCookie(url) {
  * @param {number} tabId - Tab ID
  */
 async function handleAwsWafCaptureCompleted(tabId) {
-  console.log('[AwsWaf] ========== CAPTURE COMPLETED ==========');
-  console.log('[AwsWaf] Captured data:', awsWafCaptureStateRef.capturedData);
-  console.log('[AwsWaf] Detection flags:', awsWafCaptureStateRef.detectionFlags);
+  Logger.network('[AwsWaf] ========== CAPTURE COMPLETED ==========');
+  Logger.network('[AwsWaf] Captured data:', awsWafCaptureStateRef.capturedData);
+  Logger.network('[AwsWaf] Detection flags:', awsWafCaptureStateRef.detectionFlags);
 
   // Prepare history entry
   const historyEntry = {
@@ -301,9 +301,9 @@ async function handleAwsWafCaptureCompleted(tabId) {
   // Save to history
   try {
     await saveToHistory('awswaf', historyEntry);
-    console.log('[AwsWaf] Saved to history');
+    Logger.network('[AwsWaf] Saved to history');
   } catch (error) {
-    console.error('[AwsWaf] Error saving to history:', error);
+    Logger.error('NETWORK', '[AwsWaf] Error saving to history:', error);
   }
 
   // Show standardized success notification
@@ -315,7 +315,7 @@ async function handleAwsWafCaptureCompleted(tabId) {
       message: `AWS WAF data captured (${capturedCount} items)`,
       duration: 5000
     }).catch(err => {
-      console.error('[AwsWaf] Failed to show notification:', err);
+      Logger.error('NETWORK', '[AwsWaf] Failed to show notification:', err);
     });
   }
 
@@ -330,7 +330,7 @@ async function handleAwsWafCaptureCompleted(tabId) {
       data: historyEntry
     });
   } catch (error) {
-    console.log('[AwsWaf] Popup not open, capture completed silently');
+    Logger.network('[AwsWaf] Popup not open, capture completed silently');
   }
 }
 
@@ -346,7 +346,7 @@ async function handleAwsWafCaptureCompleted(tabId) {
  * @returns {boolean} True if async response
  */
 function handleAwsWafMessage(message, sender, sendResponse) {
-  console.log('[AwsWaf] Received message:', message.type);
+  Logger.network('[AwsWaf] Received message:', message.type);
 
   switch (message.type) {
     case 'AWSWAF_START_CAPTURE':
@@ -377,20 +377,20 @@ function handleAwsWafMessage(message, sender, sendResponse) {
       (async () => {
         try {
           if (typeof showNotification === 'function') {
-            console.log('[AwsWaf] Showing analyzing notification before reload...');
+            Logger.network('[AwsWaf] Showing analyzing notification before reload...');
             await showNotification(message.tabId, {
               type: 'loading',
               title: '🔍 Analyzing AWS WAF Scripts',
               message: 'Please wait while we collect script URLs...',
               duration: 15000 // Longer duration to persist through reload
             });
-            console.log('[AwsWaf] Pre-reload notification shown successfully');
+            Logger.network('[AwsWaf] Pre-reload notification shown successfully');
           } else {
-            console.log('[AwsWaf] showNotification function not available');
+            Logger.network('[AwsWaf] showNotification function not available');
           }
           sendResponse({ status: 'success' });
         } catch (error) {
-          console.error('[AwsWaf] Error showing notification:', error);
+          Logger.error('NETWORK', '[AwsWaf] Error showing notification:', error);
           sendResponse({ status: 'error', error: error.message });
         }
       })();
@@ -412,7 +412,7 @@ function handleAwsWafMessage(message, sender, sendResponse) {
  * @returns {Object} Status response
  */
 function awsWafStartAnalysis(tabId, url) {
-  console.log('[AwsWaf-Analysis] Starting analysis mode for tab:', tabId);
+  Logger.network('[AwsWaf-Analysis] Starting analysis mode for tab:', tabId);
 
   // Track captured URLs from network requests
   const capturedUrls = new Set();
@@ -425,13 +425,13 @@ function awsWafStartAnalysis(tabId, url) {
 
     // Check if URL contains what we're looking for
     if (requestUrl.includes('/challenge.js')) {
-      console.log('[AwsWaf-Analysis] Network - Found challenge.js:', requestUrl);
+      Logger.network('[AwsWaf-Analysis] Network - Found challenge.js:', requestUrl);
       capturedUrls.add(JSON.stringify({ url: requestUrl, type: 'challenge' }));
     } else if (requestUrl.includes('/captcha.js')) {
-      console.log('[AwsWaf-Analysis] Network - Found captcha.js:', requestUrl);
+      Logger.network('[AwsWaf-Analysis] Network - Found captcha.js:', requestUrl);
       capturedUrls.add(JSON.stringify({ url: requestUrl, type: 'captcha' }));
     } else if (requestUrl.includes('awswaf.com')) {
-      console.log('[AwsWaf-Analysis] Network - Found awswaf.com URL:', requestUrl);
+      Logger.network('[AwsWaf-Analysis] Network - Found awswaf.com URL:', requestUrl);
       capturedUrls.add(JSON.stringify({ url: requestUrl, type: 'awswaf' }));
     }
   };
@@ -439,14 +439,14 @@ function awsWafStartAnalysis(tabId, url) {
   // Setup navigation listener to finalize results after page loads
   const navigationListener = async (details) => {
     if (details.tabId === tabId && details.frameId === 0) {
-      console.log('[AwsWaf-Analysis] Page loaded, waiting for all requests to complete...');
+      Logger.network('[AwsWaf-Analysis] Page loaded, waiting for all requests to complete...');
 
       // Note: Notification is shown before page reload via AWSWAF_SHOW_ANALYZING_NOTIFICATION
       // No need to show it again here
 
       // Wait 5 seconds after page load to ensure all network requests are captured
       setTimeout(async () => {
-        console.log('[AwsWaf-Analysis] ========== FINALIZING RESULTS ==========');
+        Logger.network('[AwsWaf-Analysis] ========== FINALIZING RESULTS ==========');
 
         // Convert Set to array of objects
         const finalResults = Array.from(capturedUrls).map(jsonStr => {
@@ -454,7 +454,7 @@ function awsWafStartAnalysis(tabId, url) {
           return { ...obj, source: 'network' };
         });
 
-        console.log('[AwsWaf-Analysis] Final captured URLs:', finalResults);
+        Logger.network('[AwsWaf-Analysis] Final captured URLs:', finalResults);
 
         // Prepare analysis data
         const analysisData = {
@@ -462,12 +462,12 @@ function awsWafStartAnalysis(tabId, url) {
           scriptCount: finalResults.length
         };
 
-        console.log('[AwsWaf-Analysis] Prepared analysis data:', analysisData);
+        Logger.network('[AwsWaf-Analysis] Prepared analysis data:', analysisData);
 
         // Remove listeners
         chrome.webRequest.onBeforeRequest.removeListener(requestListener);
         chrome.webNavigation.onCompleted.removeListener(navigationListener);
-        console.log('[AwsWaf-Analysis] Listeners removed');
+        Logger.network('[AwsWaf-Analysis] Listeners removed');
 
         // Send message to popup if it's open
         try {
@@ -475,9 +475,9 @@ function awsWafStartAnalysis(tabId, url) {
             type: 'AWSWAF_ANALYSIS_RESULT',
             data: analysisData
           });
-          console.log('[AwsWaf-Analysis] ✓ Results sent to popup');
+          Logger.network('[AwsWaf-Analysis] ✓ Results sent to popup');
         } catch (error) {
-          console.log('[AwsWaf-Analysis] Popup not available - results discarded');
+          Logger.network('[AwsWaf-Analysis] Popup not available - results discarded');
         }
       }, 5000);
     }
@@ -493,7 +493,7 @@ function awsWafStartAnalysis(tabId, url) {
   // Register navigation listener
   chrome.webNavigation.onCompleted.addListener(navigationListener);
 
-  console.log('[AwsWaf-Analysis] Network listener added, ready for page reload');
+  Logger.network('[AwsWaf-Analysis] Network listener added, ready for page reload');
 
   return { status: 'started' };
 }
@@ -502,4 +502,4 @@ function awsWafStartAnalysis(tabId, url) {
 // Exports
 // ============================================================================
 
-console.log('[AwsWaf] Interceptor loaded successfully');
+Logger.network('[AwsWaf] Interceptor loaded successfully');

@@ -5,7 +5,7 @@
  * Similar structure to Imperva module with capture and analysis features
  */
 
-console.log('[ShapeSecurityAdvanced] Loading... Dependencies check:', {
+Logger.network('[ShapeSecurityAdvanced] Loading... Dependencies check:', {
     BaseAdvancedModule: typeof BaseAdvancedModule,
     NotificationHelper: typeof NotificationHelper,
     PaginationManager: typeof PaginationManager
@@ -39,10 +39,10 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
 
         this.extractionListener = (message) => {
             if (message.type === 'SHAPESECURITY_EXTRACTION_COMPLETED') {
-                console.log('[SHAPESECURITY-EXTRACT] Extraction completed message received:', message);
+                Logger.network('[SHAPESECURITY-EXTRACT] Extraction completed message received:', message);
                 this.displayExtractionResults(message.extractedData);
             } else if (message.type === 'SHAPESECURITY_COOKIE_RESULT') {
-                console.log('[SHAPESECURITY-COOKIE] Cookie check result received:', message);
+                Logger.network('[SHAPESECURITY-COOKIE] Cookie check result received:', message);
                 this.displayCookieResults(message.cookie);
             }
         };
@@ -114,11 +114,11 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
     setupToolListeners() {
         // Prevent duplicate listener setup
         if (this.listenersSetup) {
-            console.log('[ShapeSecurity] Listeners already setup, skipping...');
+            Logger.network('[ShapeSecurity] Listeners already setup, skipping...');
             return;
         }
 
-        console.log('[ShapeSecurity] Setting up tool listeners...');
+        Logger.network('[ShapeSecurity] Setting up tool listeners...');
         this.listenersSetup = true;
 
         const actions = [
@@ -132,7 +132,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             const btn = document.querySelector(`#${id}`);
             if (btn) {
                 btn.addEventListener('click', method);
-                console.log(`[ShapeSecurity] Listener added for: ${id}`);
+                Logger.network(`[ShapeSecurity] Listener added for: ${id}`);
             }
         });
     }
@@ -288,7 +288,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                 NotificationHelper.warning('No Shape Security headers detected');
             }
         } catch (error) {
-            console.error('[ShapeSecurity] Check headers error:', error);
+            Logger.error('NETWORK', '[ShapeSecurity] Check headers error:', error);
             NotificationHelper.error('Failed to check headers: ' + error.message);
         }
     }
@@ -301,7 +301,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
      */
     async checkVersion() {
         try {
-            console.log('[ShapeSecurity] Check version button clicked');
+            Logger.network('[ShapeSecurity] Check version button clicked');
 
             // Get current tab
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -311,14 +311,14 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             }
 
             // Request version check from background
-            console.log('[ShapeSecurity] Sending SHAPESECURITY_CHECK_VERSION message');
+            Logger.network('[ShapeSecurity] Sending SHAPESECURITY_CHECK_VERSION message');
             const response = await this.sendMessage({
                 type: 'SHAPESECURITY_CHECK_VERSION',
                 tabId: tab.id,
                 url: tab.url
             });
 
-            console.log('[ShapeSecurity] Response:', response);
+            Logger.network('[ShapeSecurity] Response:', response);
 
             if (response && response.error) {
                 NotificationHelper.error('Error: ' + response.error);
@@ -327,7 +327,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
 
             // Show result modal
             if (response && response.version) {
-                console.log('[ShapeSecurity] Version detected:', response.version);
+                Logger.network('[ShapeSecurity] Version detected:', response.version);
                 NotificationHelper.success(AdvancedUtils.notifications.checkVersion.success('Shape Security', response.version.toUpperCase()));
                 this.showVersionModal(response.version);
             } else {
@@ -335,7 +335,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             }
 
         } catch (error) {
-            console.error('[ShapeSecurity] Check version error:', error);
+            Logger.error('NETWORK', '[ShapeSecurity] Check version error:', error);
             NotificationHelper.error('Failed to check version: ' + error.message);
         }
     }
@@ -427,7 +427,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
     }
 
     async checkCookies() {
-        console.log('[ShapeSecurity] ========== CHECK COOKIES ==========');
+        Logger.network('[ShapeSecurity] ========== CHECK COOKIES ==========');
         try {
             if (!this.tabInfo || !this.tabInfo.url) {
                 throw new Error('Tab information not available');
@@ -435,13 +435,13 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
 
             // Get cookies directly without reload (like AWS WAF/Akamai)
             const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
-            console.log('[ShapeSecurity] Total cookies found:', cookies.length);
-            console.log('[ShapeSecurity] URL:', this.tabInfo.url);
+            Logger.network('[ShapeSecurity] Total cookies found:', cookies.length);
+            Logger.network('[ShapeSecurity] URL:', this.tabInfo.url);
 
             // DEBUG: Log all cookies with details
-            console.log('[ShapeSecurity] ===== ALL COOKIES =====');
+            Logger.network('[ShapeSecurity] ===== ALL COOKIES =====');
             cookies.forEach((cookie, index) => {
-                console.log(`[ShapeSecurity] Cookie ${index + 1}:`, {
+                Logger.network(`[ShapeSecurity] Cookie ${index + 1}:`, {
                     name: cookie.name,
                     nameLength: cookie.name.length,
                     domain: cookie.domain,
@@ -453,13 +453,13 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             });
 
             // DEBUG: Log matching criteria
-            console.log('[ShapeSecurity] ===== MATCHING CRITERIA =====');
-            console.log('[ShapeSecurity] Looking for cookies with:');
-            console.log('[ShapeSecurity]   - Name length: exactly 8 characters');
-            console.log('[ShapeSecurity]   - Value pattern: contains "|1|0|" or "|1|1|"');
+            Logger.network('[ShapeSecurity] ===== MATCHING CRITERIA =====');
+            Logger.network('[ShapeSecurity] Looking for cookies with:');
+            Logger.network('[ShapeSecurity]   - Name length: exactly 8 characters');
+            Logger.network('[ShapeSecurity]   - Value pattern: contains "|1|0|" or "|1|1|"');
 
             // Find Shape Security cookie (8-character name with |1|0| or |1|1| pattern in value)
-            console.log('[ShapeSecurity] ===== EVALUATING COOKIES =====');
+            Logger.network('[ShapeSecurity] ===== EVALUATING COOKIES =====');
             let shapeCookie = null;
 
             for (let i = 0; i < cookies.length; i++) {
@@ -467,24 +467,24 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                 const nameMatches = c.name.length === 8;
                 const valueMatches = c.value && (c.value.includes('|1|0|') || c.value.includes('|1|1|'));
 
-                console.log(`[ShapeSecurity] Cookie ${i + 1}: "${c.name}"`);
-                console.log(`[ShapeSecurity]   ├─ Name length: ${c.name.length} ${nameMatches ? '✅' : '❌'} (need: 8)`);
-                console.log(`[ShapeSecurity]   ├─ Value contains |1|0| or |1|1|: ${valueMatches ? '✅' : '❌'}`);
+                Logger.network(`[ShapeSecurity] Cookie ${i + 1}: "${c.name}"`);
+                Logger.network(`[ShapeSecurity]   ├─ Name length: ${c.name.length} ${nameMatches ? '✅' : '❌'} (need: 8)`);
+                Logger.network(`[ShapeSecurity]   ├─ Value contains |1|0| or |1|1|: ${valueMatches ? '✅' : '❌'}`);
 
                 if (nameMatches && valueMatches) {
-                    console.log(`[ShapeSecurity]   └─ MATCH! ✅ This is a Shape Security cookie`);
+                    Logger.network(`[ShapeSecurity]   └─ MATCH! ✅ This is a Shape Security cookie`);
                     shapeCookie = c;
                     break; // Found match, stop searching
                 } else {
-                    console.log(`[ShapeSecurity]   └─ Not a match ${nameMatches ? '(name OK but value pattern missing)' : '(name length wrong)'}`);
+                    Logger.network(`[ShapeSecurity]   └─ Not a match ${nameMatches ? '(name OK but value pattern missing)' : '(name length wrong)'}`);
                 }
             }
 
             // DEBUG: Log final result
-            console.log('[ShapeSecurity] ===== RESULT =====');
+            Logger.network('[ShapeSecurity] ===== RESULT =====');
             if (shapeCookie) {
-                console.log('[ShapeSecurity] ✅ Shape Security cookie found!');
-                console.log('[ShapeSecurity] Cookie details:', {
+                Logger.network('[ShapeSecurity] ✅ Shape Security cookie found!');
+                Logger.network('[ShapeSecurity] Cookie details:', {
                     name: shapeCookie.name,
                     domain: shapeCookie.domain,
                     path: shapeCookie.path,
@@ -495,13 +495,13 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                     fullValue: shapeCookie.value
                 });
             } else {
-                console.log('[ShapeSecurity] ❌ No Shape Security cookie found');
-                console.log('[ShapeSecurity] Possible reasons:');
-                console.log('[ShapeSecurity]   - No cookies with 8-character names');
-                console.log('[ShapeSecurity]   - No cookies with |1|0| or |1|1| pattern in value');
-                console.log('[ShapeSecurity]   - Shape Security not active on this page');
+                Logger.network('[ShapeSecurity] ❌ No Shape Security cookie found');
+                Logger.network('[ShapeSecurity] Possible reasons:');
+                Logger.network('[ShapeSecurity]   - No cookies with 8-character names');
+                Logger.network('[ShapeSecurity]   - No cookies with |1|0| or |1|1| pattern in value');
+                Logger.network('[ShapeSecurity]   - Shape Security not active on this page');
             }
-            console.log('[ShapeSecurity] ========== END CHECK COOKIES ==========');
+            Logger.network('[ShapeSecurity] ========== END CHECK COOKIES ==========');
 
             // Show notification
             if (shapeCookie) {
@@ -514,7 +514,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             this.displayCookieResults(shapeCookie);
 
         } catch (error) {
-            console.error('[ShapeSecurity] Check cookies error:', error);
+            Logger.error('NETWORK', '[ShapeSecurity] Check cookies error:', error);
             NotificationHelper.error('Failed to check cookies: ' + error.message);
         }
     }
@@ -646,57 +646,57 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
      * Extract and analyze Shape Security scripts - Reload page and capture URLs
      */
     async extractScripts() {
-        console.log('[SHAPESECURITY-EXTRACT] ========== STARTING EXTRACTION ==========');
+        Logger.network('[SHAPESECURITY-EXTRACT] ========== STARTING EXTRACTION ==========');
         try {
-            console.log('[SHAPESECURITY-EXTRACT] Step 1: Getting current tab...');
+            Logger.network('[SHAPESECURITY-EXTRACT] Step 1: Getting current tab...');
 
             // Get current tab
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
             if (!tab) {
-                console.error('[SHAPESECURITY-EXTRACT] ❌ No active tab found');
+                Logger.error('NETWORK', '[SHAPESECURITY-EXTRACT] ❌ No active tab found');
                 throw new Error('No active tab found');
             }
 
-            console.log('[SHAPESECURITY-EXTRACT] ✓ Tab found:', { id: tab.id, url: tab.url, title: tab.title });
+            Logger.network('[SHAPESECURITY-EXTRACT] ✓ Tab found:', { id: tab.id, url: tab.url, title: tab.title });
 
             // Store extraction mode flag
-            console.log('[SHAPESECURITY-EXTRACT] Step 2: Setting up extraction mode...');
+            Logger.network('[SHAPESECURITY-EXTRACT] Step 2: Setting up extraction mode...');
             this.isExtracting = true;
 
             // Set up listener for extraction result
-            console.log('[SHAPESECURITY-EXTRACT] Step 3: Adding listener for extraction result...');
+            Logger.network('[SHAPESECURITY-EXTRACT] Step 3: Adding listener for extraction result...');
             const extractionListener = (message) => {
-                console.log('[SHAPESECURITY-EXTRACT] Received message:', message.type);
+                Logger.network('[SHAPESECURITY-EXTRACT] Received message:', message.type);
                 if (message.type === 'SHAPESECURITY_EXTRACTION_RESULT') {
-                    console.log('[SHAPESECURITY-EXTRACT] ✅ EXTRACTION RESULT RECEIVED!');
-                    console.log('[SHAPESECURITY-EXTRACT] Extracted data:', message.extractedData);
+                    Logger.network('[SHAPESECURITY-EXTRACT] ✅ EXTRACTION RESULT RECEIVED!');
+                    Logger.network('[SHAPESECURITY-EXTRACT] Extracted data:', message.extractedData);
 
                     // Display the script data
-                    console.log('[SHAPESECURITY-EXTRACT] Step: Displaying script data modal...');
+                    Logger.network('[SHAPESECURITY-EXTRACT] Step: Displaying script data modal...');
                     this.displayScriptDataModal(message.extractedData);
 
                     // Clean up
-                    console.log('[SHAPESECURITY-EXTRACT] Step: Cleaning up...');
+                    Logger.network('[SHAPESECURITY-EXTRACT] Step: Cleaning up...');
                     this.isExtracting = false;
                     chrome.runtime.onMessage.removeListener(extractionListener);
-                    console.log('[SHAPESECURITY-EXTRACT] ========== EXTRACTION COMPLETE ==========');
+                    Logger.network('[SHAPESECURITY-EXTRACT] ========== EXTRACTION COMPLETE ==========');
                 }
             };
 
             chrome.runtime.onMessage.addListener(extractionListener);
-            console.log('[SHAPESECURITY-EXTRACT] ✓ Listener added');
+            Logger.network('[SHAPESECURITY-EXTRACT] ✓ Listener added');
 
             // Send message to start extraction mode
-            console.log('[SHAPESECURITY-EXTRACT] Step 4: Sending message to background to start extraction...');
+            Logger.network('[SHAPESECURITY-EXTRACT] Step 4: Sending message to background to start extraction...');
             const response = await this.sendMessage({
                 type: 'SHAPESECURITY_START_EXTRACTION',
                 tabId: tab.id
             });
-            console.log('[SHAPESECURITY-EXTRACT] Background response:', response);
+            Logger.network('[SHAPESECURITY-EXTRACT] Background response:', response);
 
             if (response && response.status === 'success') {
-                console.log('[SHAPESECURITY-EXTRACT] ✓ Extraction mode enabled successfully');
-                console.log('[SHAPESECURITY-EXTRACT] Step 5: Showing analyzing notification...');
+                Logger.network('[SHAPESECURITY-EXTRACT] ✓ Extraction mode enabled successfully');
+                Logger.network('[SHAPESECURITY-EXTRACT] Step 5: Showing analyzing notification...');
 
                 // Show analyzing notification before reload
                 await AdvancedUtils.sendMessage({
@@ -704,11 +704,11 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                     tabId: tab.id
                 });
 
-                console.log('[SHAPESECURITY-EXTRACT] Step 6: Reloading page...');
+                Logger.network('[SHAPESECURITY-EXTRACT] Step 6: Reloading page...');
 
                 // Reload the page to trigger Shape Security scripts
                 await chrome.tabs.reload(tab.id);
-                console.log('[SHAPESECURITY-EXTRACT] ✓ Page reload initiated');
+                Logger.network('[SHAPESECURITY-EXTRACT] ✓ Page reload initiated');
 
                 // Show success notification
                 NotificationHelper.info(AdvancedUtils.notifications.analyzeScripts.start('Shape Security'));
@@ -716,10 +716,10 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                 throw new Error(response?.error || 'Failed to enable extraction mode');
             }
 
-            console.log('[SHAPESECURITY-EXTRACT] ========== EXTRACTION STARTED ==========');
+            Logger.network('[SHAPESECURITY-EXTRACT] ========== EXTRACTION STARTED ==========');
         } catch (error) {
-            console.error('[SHAPESECURITY-EXTRACT] ❌ Failed to start extraction:', error);
-            console.error('[SHAPESECURITY-EXTRACT] Error stack:', error.stack);
+            Logger.error('NETWORK', '[SHAPESECURITY-EXTRACT] ❌ Failed to start extraction:', error);
+            Logger.error('NETWORK', '[SHAPESECURITY-EXTRACT] Error stack:', error.stack);
             NotificationHelper.error('Failed to start extraction: ' + error.message);
         }
     }
@@ -841,22 +841,22 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
 
         // Export code button
         const exportCodeBtn = modal.querySelector('#exportCodeBtn');
-        console.log('[ShapeSecurity] Export button lookup result:', {
+        Logger.network('[ShapeSecurity] Export button lookup result:', {
             found: !!exportCodeBtn,
             element: exportCodeBtn,
             modalAppended: document.body.contains(modal)
         });
 
         if (exportCodeBtn) {
-            console.log('[ShapeSecurity] Adding click listener to Export Code button');
+            Logger.network('[ShapeSecurity] Adding click listener to Export Code button');
             exportCodeBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('[ShapeSecurity] ========== EXPORT CODE CLICKED ==========');
-                console.log('[ShapeSecurity] Data available:');
-                console.log('  - allScripts:', allScripts);
-                console.log('  - initJsScripts:', initJsScripts);
-                console.log('  - seedScripts:', seedScripts);
+                Logger.network('[ShapeSecurity] ========== EXPORT CODE CLICKED ==========');
+                Logger.network('[ShapeSecurity] Data available:');
+                Logger.network('  - allScripts:', allScripts);
+                Logger.network('  - initJsScripts:', initJsScripts);
+                Logger.network('  - seedScripts:', seedScripts);
 
                 // Build scripts array from URLs
                 const scripts = (allScripts || []).map(url => ({
@@ -866,27 +866,27 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                     seed: url.includes('seed=') ? url.match(/seed=([A-Za-z0-9_\-]+)/)?.[1] : null
                 }));
 
-                console.log('[ShapeSecurity] Built scripts array:', scripts);
+                Logger.network('[ShapeSecurity] Built scripts array:', scripts);
 
                 if (scripts.length === 0) {
-                    console.error('[ShapeSecurity] No scripts to export!');
+                    Logger.error('NETWORK', '[ShapeSecurity] No scripts to export!');
                     NotificationHelper.warning('No scripts available to export');
                     return;
                 }
 
-                console.log('[ShapeSecurity] Calling displayExportCodeModal...');
+                Logger.network('[ShapeSecurity] Calling displayExportCodeModal...');
                 try {
                     this.displayExportCodeModal(scripts);
-                    console.log('[ShapeSecurity] displayExportCodeModal called successfully');
+                    Logger.network('[ShapeSecurity] displayExportCodeModal called successfully');
                 } catch (error) {
-                    console.error('[ShapeSecurity] Error calling displayExportCodeModal:', error);
+                    Logger.error('NETWORK', '[ShapeSecurity] Error calling displayExportCodeModal:', error);
                     NotificationHelper.error('Failed to open export modal: ' + error.message);
                 }
             });
-            console.log('[ShapeSecurity] Click listener added successfully');
+            Logger.network('[ShapeSecurity] Click listener added successfully');
         } else {
-            console.error('[ShapeSecurity] ❌ Export code button not found in modal!');
-            console.error('[ShapeSecurity] Modal HTML:', modal.innerHTML.substring(0, 500));
+            Logger.error('NETWORK', '[ShapeSecurity] ❌ Export code button not found in modal!');
+            Logger.error('NETWORK', '[ShapeSecurity] Modal HTML:', modal.innerHTML.substring(0, 500));
         }
     }
 
@@ -1267,11 +1267,11 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
 
         // OPTIMIZATION: Return cached templates if available
         if (ShapeSecurityAdvanced.codeTemplateCache.has(cacheKey)) {
-            console.log('[ShapeSecurityAdvanced] Using cached code templates');
+            Logger.network('[ShapeSecurityAdvanced] Using cached code templates');
             return ShapeSecurityAdvanced.codeTemplateCache.get(cacheKey);
         }
 
-        console.log('[ShapeSecurityAdvanced] Generating new code templates (not cached)');
+        Logger.network('[ShapeSecurityAdvanced] Generating new code templates (not cached)');
 
         const initScripts = scripts.filter(s => s.isInitJs);
         const vendor2Scripts = scripts.filter(s => s.url.includes('vendor2.js'));
@@ -1319,7 +1319,7 @@ function extractSeedParameter(url) {
 // Example usage:
 const scriptUrl = '${sampleSeedUrl}';
 const seed = extractSeedParameter(scriptUrl);
-console.log('Extracted seed:', seed);
+Logger.network('Extracted seed:', seed);
 ` : ''}
 
 ${hasInitJs ? `
@@ -1339,7 +1339,7 @@ function findInitJsScripts(html) {
 // Example usage:
 const htmlContent = document.documentElement.outerHTML;
 const initScripts = findInitJsScripts(htmlContent);
-console.log('Found init.js scripts:', initScripts);
+Logger.network('Found init.js scripts:', initScripts);
 ` : ''}
 
 // Find all Shape Security scripts
@@ -1367,7 +1367,7 @@ function findShapeSecurityScripts(html) {
 
 // Extract all Shape Security data
 const allScripts = findShapeSecurityScripts(document.documentElement.outerHTML);
-console.log('All Shape Security scripts:', allScripts);`,
+Logger.network('All Shape Security scripts:', allScripts);`,
 
             python: `# Python - Shape Security Script URL Parser
 import re
@@ -1434,7 +1434,7 @@ function extractSeedParameter(url) {
 // Example usage:
 const scriptUrl = '${sampleSeedUrl}';
 const seed = extractSeedParameter(scriptUrl);
-console.log('Extracted seed:', seed);
+Logger.network('Extracted seed:', seed);
 ` : ''}
 
 ${hasInitJs ? `
@@ -1478,7 +1478,7 @@ function findShapeSecurityScripts(html) {
 // Example with JSDOM:
 // const dom = new JSDOM(htmlContent);
 // const allScripts = findShapeSecurityScripts(dom.serialize());
-// console.log('All Shape Security scripts:', allScripts);`,
+// Logger.network('All Shape Security scripts:', allScripts);`,
 
             php: `<?php
 // PHP - Shape Security Script URL Parser
@@ -1647,7 +1647,7 @@ func FindShapeSecurityScripts(html string) []string {
      * Display extraction results
      */
     displayExtractionResults(extractedData) {
-        console.log('[ShapeSecurity] Displaying extraction results:', extractedData);
+        Logger.network('[ShapeSecurity] Displaying extraction results:', extractedData);
         NotificationHelper.success('Shape Security data extracted successfully!');
 
         // Refresh the capture history to show new data
@@ -1660,5 +1660,5 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = ShapeSecurityAdvanced;
 } else if (typeof window !== 'undefined') {
     window.ShapeSecurityAdvanced = ShapeSecurityAdvanced;
-    console.log('[ShapeSecurityAdvanced] ✓ Loaded and exported to window.ShapeSecurityAdvanced');
+    Logger.network('[ShapeSecurityAdvanced] ✓ Loaded and exported to window.ShapeSecurityAdvanced');
 }

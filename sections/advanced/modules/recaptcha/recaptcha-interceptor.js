@@ -12,11 +12,11 @@ var showNotification = self.BaseInterceptorHelpers?.showNotification;
 
 function reCaptchaInitializeInterceptor(captureState) {
     if (reCaptchaCaptureStateRef) {
-        console.log('[reCAPTCHA] Interceptor already initialized, skipping');
+        Logger.network('[reCAPTCHA] Interceptor already initialized, skipping');
         return;
     }
     reCaptchaCaptureStateRef = captureState;
-    console.log('[reCAPTCHA] Interceptor initialized with captureState');
+    Logger.network('[reCAPTCHA] Interceptor initialized with captureState');
 }
 
 /**
@@ -26,18 +26,18 @@ function reCaptchaInitializeInterceptor(captureState) {
  */
 async function reCaptchaStartCapture(tabId) {
     try {
-        console.log('[reCAPTCHA] RECAPTCHA_START_CAPTURE received for tab:', tabId);
+        Logger.network('[reCAPTCHA] RECAPTCHA_START_CAPTURE received for tab:', tabId);
 
         // Check if actively capturing (not just if state exists)
         const existingState = reCaptchaCaptureStateRef.get(tabId);
         if (existingState && existingState.isCapturing) {
-            console.log('[reCAPTCHA] Already actively capturing for this tab');
+            Logger.network('[reCAPTCHA] Already actively capturing for this tab');
             return { status: 'already_capturing' };
         }
 
         // Clean up old state if exists but not capturing
         if (existingState) {
-            console.log('[reCAPTCHA] Cleaning up stale state from previous capture');
+            Logger.network('[reCAPTCHA] Cleaning up stale state from previous capture');
             reCaptchaCaptureStateRef.delete(tabId);
         }
 
@@ -53,7 +53,7 @@ async function reCaptchaStartCapture(tabId) {
             ]);
 
             hasV2Cookie = cookies.length > 0;
-            console.log(`[reCAPTCHA] v2 cookie detection: ${hasV2Cookie ? 'FOUND' : 'NOT FOUND'}`);
+            Logger.network(`[reCAPTCHA] v2 cookie detection: ${hasV2Cookie ? 'FOUND' : 'NOT FOUND'}`);
 
             reCaptchaCaptureStateRef.set(tabId, {
                 step: 1,
@@ -67,7 +67,7 @@ async function reCaptchaStartCapture(tabId) {
                 captureUrl: tab.url
             });
         } catch (err) {
-            console.error('Failed to get tab info or cookies:', err);
+            Logger.error('NETWORK', 'Failed to get tab info or cookies:', err);
             reCaptchaCaptureStateRef.set(tabId, {
                 step: 1,
                 startTime: Date.now(),
@@ -90,14 +90,14 @@ async function reCaptchaStartCapture(tabId) {
                 message: 'Reload the page and solve any reCAPTCHA to capture its data',
                 duration: 60000
             }).catch(err => {
-                console.error('[reCAPTCHA] Failed to show notification:', err);
+                Logger.error('NETWORK', '[reCAPTCHA] Failed to show notification:', err);
             });
         }
 
         // Set up navigation listeners to show loading warning and then ready notification
         const navigationListener = (details) => {
             if (details.tabId === tabId && details.frameId === 0) {
-                console.log('[reCAPTCHA] Page navigation started, showing loading warning...');
+                Logger.network('[reCAPTCHA] Page navigation started, showing loading warning...');
                 if (showNotification) {
                     showNotification(tabId, {
                         type: 'warning',
@@ -105,7 +105,7 @@ async function reCaptchaStartCapture(tabId) {
                         message: 'Please wait for the page to fully load...',
                         duration: 5000
                     }).catch(err => {
-                        console.error('[reCAPTCHA] Failed to show loading warning:', err);
+                        Logger.error('NETWORK', '[reCAPTCHA] Failed to show loading warning:', err);
                     });
                 }
             }
@@ -113,7 +113,7 @@ async function reCaptchaStartCapture(tabId) {
 
         const loadCompleteListener = (details) => {
             if (details.tabId === tabId && details.frameId === 0) {
-                console.log('[reCAPTCHA] Page fully loaded');
+                Logger.network('[reCAPTCHA] Page fully loaded');
 
                 // Check if capture is still active and not already completed
                 const currentState = reCaptchaCaptureStateRef.get(tabId);
@@ -131,11 +131,11 @@ async function reCaptchaStartCapture(tabId) {
                                 message: '🧩 Now solve the reCAPTCHA challenge to capture data',
                                 duration: 5000
                             }).catch(err => {
-                                console.error('[reCAPTCHA] Failed to show ready notification:', err);
+                                Logger.error('NETWORK', '[reCAPTCHA] Failed to show ready notification:', err);
                             });
                         }
                     } else {
-                        console.log('[reCAPTCHA] Skipping "Page Loaded" notification - capture already has data or is not active');
+                        Logger.network('[reCAPTCHA] Skipping "Page Loaded" notification - capture already has data or is not active');
                     }
                 }, 1000);
 
@@ -157,7 +157,7 @@ async function reCaptchaStartCapture(tabId) {
                 }
 
                 const capturedResults = await processCaptureData(captureState);
-                console.log('[reCAPTCHA] Auto-stop - Captured results:', capturedResults);
+                Logger.network('[reCAPTCHA] Auto-stop - Captured results:', capturedResults);
 
                 captureState.results = capturedResults;
                 captureState.isCapturing = false;
@@ -172,7 +172,7 @@ async function reCaptchaStartCapture(tabId) {
 
                 // Delete state completely to prevent blocking next capture
                 reCaptchaCaptureStateRef.delete(tabId);
-                console.log('[reCAPTCHA] Deleted capture state after 60s timeout');
+                Logger.network('[reCAPTCHA] Deleted capture state after 60s timeout');
 
                 stopRecaptchaInterception();
 
@@ -186,7 +186,7 @@ async function reCaptchaStartCapture(tabId) {
                         title: '✅ Capture Completed',
                         message: `${capturedResults.length} request${capturedResults.length !== 1 ? 's' : ''} captured and decoded`,
                         duration: 5000
-                    }).catch(err => console.error('[reCAPTCHA] Failed to show completion notification:', err));
+                    }).catch(err => Logger.error('NETWORK', '[reCAPTCHA] Failed to show completion notification:', err));
                 }
             }
         }, 60000);
@@ -202,14 +202,14 @@ async function reCaptchaStartCapture(tabId) {
 
         return { status: 'started' };
     } catch (error) {
-        console.error('[reCAPTCHA] Error in startCapture:', error);
+        Logger.error('NETWORK', '[reCAPTCHA] Error in startCapture:', error);
         return { status: 'error', error: error.message };
     }
 }
 
 function handleRecaptchaRequest(details) {
     const captureState = reCaptchaCaptureStateRef;
-    console.log('[reCAPTCHA] Request intercepted:', {
+    Logger.network('[reCAPTCHA] Request intercepted:', {
         url: details.url,
         tabId: details.tabId,
         method: details.method,
@@ -228,7 +228,7 @@ function handleRecaptchaRequest(details) {
     const isReload = /\/recaptcha\/(api2|enterprise)\/(reload|userverify)/.test(details.url);
 
     if (isAnchor) {
-        console.log('[reCAPTCHA] ✅ ANCHOR request detected');
+        Logger.network('[reCAPTCHA] ✅ ANCHOR request detected');
 
         const siteKey = url.searchParams.get('k');
         const size = url.searchParams.get('size');
@@ -251,7 +251,7 @@ function handleRecaptchaRequest(details) {
         };
 
         captureState.set(details.tabId, state);
-        console.log('[reCAPTCHA] ✅ Anchor data stored');
+        Logger.network('[reCAPTCHA] ✅ Anchor data stored');
 
         // Update notification to Step 2
         chrome.tabs.sendMessage(details.tabId, {
@@ -261,7 +261,7 @@ function handleRecaptchaRequest(details) {
         }).catch(() => {});
 
     } else if (isReload) {
-        console.log('[reCAPTCHA] ✅ RELOAD/USERVERIFY request detected');
+        Logger.network('[reCAPTCHA] ✅ RELOAD/USERVERIFY request detected');
 
         const siteKeyFromUrl = url.searchParams.get('k');
 
@@ -280,14 +280,14 @@ function handleRecaptchaRequest(details) {
             });
 
             captureState.set(details.tabId, state);
-            console.log('[reCAPTCHA] ✅ Reload data captured, total:', state.reloadData.length);
+            Logger.network('[reCAPTCHA] ✅ Reload data captured, total:', state.reloadData.length);
 
             const hasAnchor = Object.keys(state.anchorData || {}).length > 0;
             const hasReload = state.reloadData.length > 0;
 
             // Auto-stop when both anchor and reload are captured
             if (hasAnchor && hasReload) {
-                console.log('[reCAPTCHA] ✅ Both anchor and reload captured - triggering auto-stop');
+                Logger.network('[reCAPTCHA] ✅ Both anchor and reload captured - triggering auto-stop');
 
                 setTimeout(async () => {
                     const finalState = captureState.get(details.tabId);
@@ -302,7 +302,7 @@ function handleRecaptchaRequest(details) {
 
                     // Process captured data
                     const results = await processCaptureData(finalState);
-                    console.log('[reCAPTCHA] ✅ Processing complete. Results:', results.length);
+                    Logger.network('[reCAPTCHA] ✅ Processing complete. Results:', results.length);
 
                     // Update state
                     finalState.isCapturing = false;
@@ -343,9 +343,9 @@ function handleRecaptchaRequest(details) {
                                 });
                             }
 
-                            console.log('[reCAPTCHA] ✅ Saved to history using helper');
+                            Logger.network('[reCAPTCHA] ✅ Saved to history using helper');
                         } catch (err) {
-                            console.error('[reCAPTCHA] Failed to save to history:', err);
+                            Logger.error('NETWORK', '[reCAPTCHA] Failed to save to history:', err);
                         }
                     }
 
@@ -359,7 +359,7 @@ function handleRecaptchaRequest(details) {
                             title: '✅ Capture Completed',
                             message: `${results.length} reCAPTCHA request${results.length !== 1 ? 's' : ''} captured and decoded`,
                             duration: 3000
-                        }).catch(err => console.error('[reCAPTCHA] Failed to show notification:', err));
+                        }).catch(err => Logger.error('NETWORK', '[reCAPTCHA] Failed to show notification:', err));
                     }
                 }, 100);
             }
@@ -369,11 +369,11 @@ function handleRecaptchaRequest(details) {
 
 function startRecaptchaInterception() {
     if (recaptchaInterceptionListener) {
-        console.log('[reCAPTCHA] ⚠️ Interception already active');
+        Logger.network('[reCAPTCHA] ⚠️ Interception already active');
         return;
     }
 
-    console.log('[reCAPTCHA] 🚀 Starting request interception...');
+    Logger.network('[reCAPTCHA] 🚀 Starting request interception...');
 
     recaptchaInterceptionListener = (details) => handleRecaptchaRequest(details);
 
@@ -383,29 +383,29 @@ function startRecaptchaInterception() {
         ["requestBody"]
     );
 
-    console.log('[reCAPTCHA] ✅ Interception active');
+    Logger.network('[reCAPTCHA] ✅ Interception active');
 }
 
 function stopRecaptchaInterception() {
     if (recaptchaInterceptionListener) {
-        console.log('[reCAPTCHA] 🛑 Stopping request interception...');
+        Logger.network('[reCAPTCHA] 🛑 Stopping request interception...');
         chrome.webRequest.onBeforeRequest.removeListener(recaptchaInterceptionListener);
         recaptchaInterceptionListener = null;
-        console.log('[reCAPTCHA] ✅ Interception stopped');
+        Logger.network('[reCAPTCHA] ✅ Interception stopped');
     }
 }
 
 async function processCaptureData(state) {
-    console.log('[reCAPTCHA] Processing capture data...');
+    Logger.network('[reCAPTCHA] Processing capture data...');
 
     const results = [];
 
     if (!state.reloadData || state.reloadData.length === 0) {
-        console.warn('[reCAPTCHA] ⚠️ No reload data captured');
+        Logger.warn('NETWORK', '[reCAPTCHA] ⚠️ No reload data captured');
         return results;
     }
 
-    console.log(`[reCAPTCHA] Processing ${state.reloadData.length} reload requests...`);
+    Logger.network(`[reCAPTCHA] Processing ${state.reloadData.length} reload requests...`);
 
     for (let index = 0; index < state.reloadData.length; index++) {
         const reloadItem = state.reloadData[index];
@@ -414,7 +414,7 @@ async function processCaptureData(state) {
             const pbf = new Pbf(array);
             const message = Message.read(pbf);
 
-            console.log('[reCAPTCHA] 📋 Decoded protobuf message');
+            Logger.network('[reCAPTCHA] 📋 Decoded protobuf message');
 
             // Get siteKey from URL
             const siteKey = reloadItem.siteKey;
@@ -431,7 +431,7 @@ async function processCaptureData(state) {
             let requiredCookie = null;
             if (hasSession) {
                 requiredCookie = 'recaptcha-ca-t';
-                console.log('[reCAPTCHA] 🍪 Cookie required: recaptcha-ca-t (v3 session mode)');
+                Logger.network('[reCAPTCHA] 🍪 Cookie required: recaptcha-ca-t (v3 session mode)');
             }
 
             if (siteKey && state.anchorData[siteKey]) {
@@ -483,14 +483,14 @@ async function processCaptureData(state) {
                 };
 
                 results.push(result);
-                console.log(`[reCAPTCHA] ✅ Result #${index + 1} processed`);
+                Logger.network(`[reCAPTCHA] ✅ Result #${index + 1} processed`);
             }
         } catch (error) {
-            console.error(`[reCAPTCHA] ❌ Error decoding request #${index + 1}:`, error);
+            Logger.error('NETWORK', `[reCAPTCHA] ❌ Error decoding request #${index + 1}:`, error);
         }
     }
 
-    console.log(`[reCAPTCHA] Processing complete. Total results: ${results.length}`);
+    Logger.network(`[reCAPTCHA] Processing complete. Total results: ${results.length}`);
     return results;
 }
 
@@ -501,11 +501,11 @@ async function processCaptureData(state) {
  */
 async function reCaptchaStopCapture(tabId) {
     try {
-        console.log('[reCAPTCHA] RECAPTCHA_STOP_CAPTURE received for tab:', tabId);
+        Logger.network('[reCAPTCHA] RECAPTCHA_STOP_CAPTURE received for tab:', tabId);
 
         const stateStop = reCaptchaCaptureStateRef.get(tabId);
         if (!stateStop) {
-            console.log('[reCAPTCHA] No capture state found for tab:', tabId);
+            Logger.network('[reCAPTCHA] No capture state found for tab:', tabId);
             return { status: 'not_capturing', results: [], resultsCount: 0 };
         }
 
@@ -514,13 +514,13 @@ async function reCaptchaStopCapture(tabId) {
             clearInterval(stateStop.captureInterval);
         }
         if (stateStop.captureTimeout) {
-            console.log('[reCAPTCHA] Clearing 60s timeout (manual stop)');
+            Logger.network('[reCAPTCHA] Clearing 60s timeout (manual stop)');
             clearTimeout(stateStop.captureTimeout);
         }
 
         // Process captured data
         const capturedResults = await processCaptureData(stateStop);
-        console.log('[reCAPTCHA] Manual stop - Captured results:', capturedResults);
+        Logger.network('[reCAPTCHA] Manual stop - Captured results:', capturedResults);
 
         stateStop.results = capturedResults;
         stateStop.isCapturing = false;
@@ -557,9 +557,9 @@ async function reCaptchaStopCapture(tabId) {
                     });
                 }
 
-                console.log('[reCAPTCHA] ✅ Saved to history using helper');
+                Logger.network('[reCAPTCHA] ✅ Saved to history using helper');
             } catch (err) {
-                console.error('[reCAPTCHA] Failed to save to history:', err);
+                Logger.error('NETWORK', '[reCAPTCHA] Failed to save to history:', err);
             }
         }
 
@@ -578,8 +578,8 @@ async function reCaptchaStopCapture(tabId) {
                     : 'No reCAPTCHA requests captured',
                 duration: 5000
             }).catch(err => {
-                console.error('[reCAPTCHA] ❌ Failed to show stop notification:', err);
-                console.error('[reCAPTCHA] Error details:', err.message, err.stack);
+                Logger.error('NETWORK', '[reCAPTCHA] ❌ Failed to show stop notification:', err);
+                Logger.error('NETWORK', '[reCAPTCHA] Error details:', err.message, err.stack);
             });
         }
 
@@ -588,7 +588,7 @@ async function reCaptchaStopCapture(tabId) {
 
         return { status: 'stopped', results: capturedResults, resultsCount: capturedResults.length };
     } catch (error) {
-        console.error('[reCAPTCHA] Error in stopCapture:', error);
+        Logger.error('NETWORK', '[reCAPTCHA] Error in stopCapture:', error);
         return { status: 'error', error: error.message, results: [], resultsCount: 0 };
     }
 }
@@ -604,7 +604,7 @@ function reCaptchaHandleCaptureTabUpdate(tabId, changeInfo, tab, chrome) {
 
     // If URL changed (user navigated away), clear capture state
     if (changeInfo.url && state.captureUrl && changeInfo.url !== state.captureUrl) {
-        console.log('[reCAPTCHA] URL changed, clearing capture state for tab:', tabId);
+        Logger.network('[reCAPTCHA] URL changed, clearing capture state for tab:', tabId);
         if (state.captureInterval) {
             clearInterval(state.captureInterval);
         }
@@ -625,7 +625,7 @@ function reCaptchaHandleCaptureTabUpdate(tabId, changeInfo, tab, chrome) {
                 title: '🎯 reCAPTCHA Capture - Step 2',
                 message: 'Now trigger or click the reCAPTCHA',
                 duration: 60000 - (Date.now() - state.startTime)
-            }).catch(err => console.error('[reCAPTCHA] Failed to show Step 2 notification:', err));
+            }).catch(err => Logger.error('NETWORK', '[reCAPTCHA] Failed to show Step 2 notification:', err));
         }
     }
 }
@@ -645,7 +645,7 @@ function reCaptchaHandleMessage(request, sendResponse, captureState) {
             reCaptchaStartCapture(request.tabId)
                 .then(result => sendResponse(result))
                 .catch(error => {
-                    console.error('[reCAPTCHA] Error in START_CAPTURE:', error);
+                    Logger.error('NETWORK', '[reCAPTCHA] Error in START_CAPTURE:', error);
                     sendResponse({ status: 'error', error: error.message });
                 });
             return true; // Async response
@@ -656,7 +656,7 @@ function reCaptchaHandleMessage(request, sendResponse, captureState) {
             reCaptchaStopCapture(request.tabId)
                 .then(result => sendResponse(result))
                 .catch(error => {
-                    console.error('[reCAPTCHA] Error in STOP_CAPTURE:', error);
+                    Logger.error('NETWORK', '[reCAPTCHA] Error in STOP_CAPTURE:', error);
                     sendResponse({ status: 'error', error: error.message });
                 });
             return true; // Async response

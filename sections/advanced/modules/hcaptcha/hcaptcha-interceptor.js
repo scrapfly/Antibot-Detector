@@ -21,15 +21,15 @@ const activeVersionChecks = {};
  * Stores results and auto-stops after 60 seconds
  */
 function hcaptchaStartCapture(tabId, captureUrl) {
-    console.log('[hCaptcha-Capture] ========== START CAPTURE ==========');
-    console.log('[hCaptcha-Capture] 🎯 Tab ID:', tabId);
-    console.log('[hCaptcha-Capture] 📍 Capture URL:', captureUrl);
-    console.log('[hCaptcha-Capture] ⏱️ Started at:', new Date().toISOString());
-    console.log('[hCaptcha-Capture] ⏰ Auto-stop in: 60 seconds');
-    console.log('[hCaptcha-Capture] ⚠️ Waiting for page reload before capturing');
+    Logger.network('[hCaptcha-Capture] ========== START CAPTURE ==========');
+    Logger.network('[hCaptcha-Capture] 🎯 Tab ID:', tabId);
+    Logger.network('[hCaptcha-Capture] 📍 Capture URL:', captureUrl);
+    Logger.network('[hCaptcha-Capture] ⏱️ Started at:', new Date().toISOString());
+    Logger.network('[hCaptcha-Capture] ⏰ Auto-stop in: 60 seconds');
+    Logger.network('[hCaptcha-Capture] ⚠️ Waiting for page reload before capturing');
 
     if (hcaptchaCaptureState.has(tabId)) {
-        console.log('[hCaptcha-Capture] Already capturing for this tab');
+        Logger.network('[hCaptcha-Capture] Already capturing for this tab');
         return { status: 'already_capturing' };
     }
 
@@ -54,17 +54,17 @@ function hcaptchaStartCapture(tabId, captureUrl) {
 
         // checksiteconfig API - extract version, site key, website URL
         if (/checksiteconfig/gm.test(url)) {
-            console.log('[hCaptcha-Capture] ========== CHECKSITECONFIG DETECTED ==========');
-            console.log('[hCaptcha-Capture] Full URL:', url);
-            console.log('[hCaptcha-Capture] Request ID:', details.requestId);
-            console.log('[hCaptcha-Capture] Tab ID:', details.tabId);
+            Logger.network('[hCaptcha-Capture] ========== CHECKSITECONFIG DETECTED ==========');
+            Logger.network('[hCaptcha-Capture] Full URL:', url);
+            Logger.network('[hCaptcha-Capture] Request ID:', details.requestId);
+            Logger.network('[hCaptcha-Capture] Tab ID:', details.tabId);
 
             try {
                 const urlObj = new URL(url);
                 state.version = state.version || urlObj.searchParams.get('v') || null;
                 state.websiteURL = state.websiteURL || urlObj.searchParams.get('host') || null;
                 state.websiteKey = state.websiteKey || urlObj.searchParams.get('sitekey') || null;
-                console.log('[hCaptcha-Capture] Extracted - Version:', state.version, 'SiteKey:', state.websiteKey);
+                Logger.network('[hCaptcha-Capture] Extracted - Version:', state.version, 'SiteKey:', state.websiteKey);
 
                 // Mark that we're waiting for checksiteconfig response
                 state.waitingForChecksiteconfig = true;
@@ -73,13 +73,13 @@ function hcaptchaStartCapture(tabId, captureUrl) {
                 fetch(url)
                     .then(response => response.json())
                     .then(data => {
-                        console.log('[hCaptcha-Capture] checksiteconfig response:', data);
+                        Logger.network('[hCaptcha-Capture] checksiteconfig response:', data);
                         if (data.features && Object.keys(data.features).length > 0) {
                             state.isEnterprise = true;
                             if (!state.detectionMethods.includes('checksiteconfig-features')) {
                                 state.detectionMethods.push('checksiteconfig-features');
                             }
-                            console.log('[hCaptcha-Capture] ✅ Enterprise detected via checksiteconfig features');
+                            Logger.network('[hCaptcha-Capture] ✅ Enterprise detected via checksiteconfig features');
                         }
 
                         // Mark fetch as complete
@@ -87,8 +87,8 @@ function hcaptchaStartCapture(tabId, captureUrl) {
 
                         // Check if we should complete capture now
                         if (state.version && state.websiteKey) {
-                            console.log('[hCaptcha-Capture] ✅ All required data captured (after checksiteconfig fetch)!');
-                            console.log('[hCaptcha-Capture] Auto-stopping capture (data complete)');
+                            Logger.network('[hCaptcha-Capture] ✅ All required data captured (after checksiteconfig fetch)!');
+                            Logger.network('[hCaptcha-Capture] Auto-stopping capture (data complete)');
 
                             // Clear timeout since we got the data
                             if (state.timeout) {
@@ -110,11 +110,11 @@ function hcaptchaStartCapture(tabId, captureUrl) {
                         }
                     })
                     .catch(err => {
-                        console.warn('[hCaptcha-Capture] Fetch error:', err);
+                        Logger.warn('NETWORK', '[hCaptcha-Capture] Fetch error:', err);
                         state.waitingForChecksiteconfig = false;
                     });
             } catch (e) {
-                console.error('[hCaptcha-Capture] URL parse error:', e);
+                Logger.error('NETWORK', '[hCaptcha-Capture] URL parse error:', e);
             }
         }
 
@@ -127,7 +127,7 @@ function hcaptchaStartCapture(tabId, captureUrl) {
                     if (!state.detectionMethods.includes('api-param-' + param)) {
                         state.detectionMethods.push('api-param-' + param);
                     }
-                    console.log('[hCaptcha-Capture] Enterprise detected via api.js parameter:', param);
+                    Logger.network('[hCaptcha-Capture] Enterprise detected via api.js parameter:', param);
                     break;
                 }
             }
@@ -140,15 +140,15 @@ function hcaptchaStartCapture(tabId, captureUrl) {
                 if (!state.detectionMethods.includes('rqdata')) {
                     state.detectionMethods.push('rqdata');
                 }
-                console.log('[hCaptcha-Capture] Enterprise detected via rqdata parameter');
+                Logger.network('[hCaptcha-Capture] Enterprise detected via rqdata parameter');
             }
         }
 
         // Check if we have all required data to complete capture
         // Don't complete if we're still waiting for checksiteconfig response
         if (state.version && state.websiteKey && !state.waitingForChecksiteconfig) {
-            console.log('[hCaptcha-Capture] ✅ All required data captured!');
-            console.log('[hCaptcha-Capture] Auto-stopping capture (data complete)');
+            Logger.network('[hCaptcha-Capture] ✅ All required data captured!');
+            Logger.network('[hCaptcha-Capture] Auto-stopping capture (data complete)');
 
             // Clear timeout since we got the data
             if (state.timeout) {
@@ -185,7 +185,7 @@ function hcaptchaStartCapture(tabId, captureUrl) {
 
     // Auto-stop after 60 seconds
     const timeout = setTimeout(() => {
-        console.log(`[hCaptcha-Capture] ⏰ Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
+        Logger.network(`[hCaptcha-Capture] ⏰ Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
         hcaptchaStopCapture(tabId);
     }, 60000);
 
@@ -201,7 +201,7 @@ function hcaptchaStartCapture(tabId, captureUrl) {
             message: '🔄 Please reload the page to start monitoring',
             duration: 60000
         }).catch(err => {
-            console.error('[hCaptcha-Capture] Failed to show notification:', err);
+            Logger.error('NETWORK', '[hCaptcha-Capture] Failed to show notification:', err);
         });
     }
 
@@ -213,17 +213,17 @@ function hcaptchaStartCapture(tabId, captureUrl) {
  * Called when all required data is captured
  */
 async function handleHCaptchaCaptureCompleted(tabId, captureData) {
-    console.log('[hCaptcha-Capture] ========== HANDLING CAPTURE COMPLETION ==========');
+    Logger.network('[hCaptcha-Capture] ========== HANDLING CAPTURE COMPLETION ==========');
 
     try {
         // Get tab info
         const tab = await chrome.tabs.get(tabId);
         if (!tab || !tab.url) {
-            console.error('[hCaptcha-Capture] ❌ Tab not found or no URL');
+            Logger.error('NETWORK', '[hCaptcha-Capture] ❌ Tab not found or no URL');
             return;
         }
 
-        console.log('[hCaptcha-Capture] ✓ Tab info retrieved:', { url: tab.url, title: tab.title });
+        Logger.network('[hCaptcha-Capture] ✓ Tab info retrieved:', { url: tab.url, title: tab.title });
 
         // Save to history with 30-minute expiry
         if (saveToHistory) {
@@ -236,14 +236,14 @@ async function handleHCaptchaCaptureCompleted(tabId, captureData) {
             };
 
             await saveToHistory(tabId, historyData, { type: 'hcaptcha', expiryMinutes: 30 });
-            console.log('[hCaptcha-Capture] ✅ Data saved to history');
+            Logger.network('[hCaptcha-Capture] ✅ Data saved to history');
         }
 
         // Clean up capture state
         hcaptchaCaptureState.delete(tabId);
 
         // Notify popup to update UI (if open)
-        console.log('[hCaptcha-Capture] Notifying popup (if open)...');
+        Logger.network('[hCaptcha-Capture] Notifying popup (if open)...');
         chrome.runtime.sendMessage({
             type: 'HCAPTCHA_CAPTURE_COMPLETED',
             captureData: {
@@ -252,11 +252,11 @@ async function handleHCaptchaCaptureCompleted(tabId, captureData) {
                 timestamp: Date.now()
             }
         }).catch((err) => {
-            console.log('[hCaptcha-Capture] ℹ️ Popup not open, message not sent (this is normal)');
+            Logger.network('[hCaptcha-Capture] ℹ️ Popup not open, message not sent (this is normal)');
         });
 
         // Show success notification in page
-        console.log('[hCaptcha-Capture] Showing success notification...');
+        Logger.network('[hCaptcha-Capture] Showing success notification...');
         if (showNotification) {
             await showNotification(tabId, {
                 type: 'success',
@@ -264,13 +264,13 @@ async function handleHCaptchaCaptureCompleted(tabId, captureData) {
                 message: 'hCaptcha data captured successfully',
                 duration: 5000
             }).catch(err => {
-                console.error('[hCaptcha-Capture] Failed to show notification:', err);
+                Logger.error('NETWORK', '[hCaptcha-Capture] Failed to show notification:', err);
             });
         }
 
-        console.log('[hCaptcha-Capture] ========== CAPTURE COMPLETED SUCCESSFULLY ==========');
+        Logger.network('[hCaptcha-Capture] ========== CAPTURE COMPLETED SUCCESSFULLY ==========');
     } catch (error) {
-        console.error('[hCaptcha-Capture] ❌ Error handling capture completion:', error);
+        Logger.error('NETWORK', '[hCaptcha-Capture] ❌ Error handling capture completion:', error);
     }
 }
 
@@ -278,12 +278,12 @@ async function handleHCaptchaCaptureCompleted(tabId, captureData) {
  * Stop capturing for a specific tab and save results to history
  */
 function hcaptchaStopCapture(tabId) {
-    console.log('[hCaptcha-Capture] ========== STOP CAPTURE ==========');
-    console.log('[hCaptcha-Capture] 🎯 Tab ID:', tabId);
+    Logger.network('[hCaptcha-Capture] ========== STOP CAPTURE ==========');
+    Logger.network('[hCaptcha-Capture] 🎯 Tab ID:', tabId);
 
     const state = hcaptchaCaptureState.get(tabId);
     if (!state) {
-        console.log('[hCaptcha-Capture] No capture state for this tab');
+        Logger.network('[hCaptcha-Capture] No capture state for this tab');
         return { status: 'not_capturing' };
     }
 
@@ -296,15 +296,15 @@ function hcaptchaStopCapture(tabId) {
     }
 
     // Log capture results
-    console.log('[hCaptcha-Capture] 📊 Capture Results:');
-    console.log('[hCaptcha-Capture] Version:', state.version);
-    console.log('[hCaptcha-Capture] Enterprise:', state.isEnterprise);
-    console.log('[hCaptcha-Capture] Site Key:', state.websiteKey);
-    console.log('[hCaptcha-Capture] Website URL:', state.websiteURL);
+    Logger.network('[hCaptcha-Capture] 📊 Capture Results:');
+    Logger.network('[hCaptcha-Capture] Version:', state.version);
+    Logger.network('[hCaptcha-Capture] Enterprise:', state.isEnterprise);
+    Logger.network('[hCaptcha-Capture] Site Key:', state.websiteKey);
+    Logger.network('[hCaptcha-Capture] Website URL:', state.websiteURL);
 
     // Clean up state
     hcaptchaCaptureState.delete(tabId);
-    console.log('[hCaptcha-Capture] ========================================');
+    Logger.network('[hCaptcha-Capture] ========================================');
 
     return { status: 'stopped' };
 }
@@ -333,7 +333,7 @@ function hcaptchaGetCaptureState(tabId) {
  * Handle hCaptcha version check (quick check without full capture)
  */
 function hcaptchaCheckVersion(tabId) {
-    console.log('[hCaptcha] Starting version check for tabId:', tabId);
+    Logger.network('[hCaptcha] Starting version check for tabId:', tabId);
 
     return new Promise((resolve) => {
         const detectedData = {
@@ -352,39 +352,39 @@ function hcaptchaCheckVersion(tabId) {
 
             // Log all hcaptcha-related URLs for debugging
             if (url.includes('hcaptcha')) {
-                console.log('[hCaptcha] Detected hCaptcha URL:', url);
+                Logger.network('[hCaptcha] Detected hCaptcha URL:', url);
             }
 
             // checksiteconfig API - extract version and site key
             if (/checksiteconfig/gm.test(url)) {
-                console.log('[hCaptcha] ========== CHECKSITECONFIG DETECTED ==========');
-                console.log('[hCaptcha] Full URL:', url);
-                console.log('[hCaptcha] Request ID:', details.requestId);
-                console.log('[hCaptcha] Tab ID:', details.tabId);
+                Logger.network('[hCaptcha] ========== CHECKSITECONFIG DETECTED ==========');
+                Logger.network('[hCaptcha] Full URL:', url);
+                Logger.network('[hCaptcha] Request ID:', details.requestId);
+                Logger.network('[hCaptcha] Tab ID:', details.tabId);
 
                 try {
                     const urlObj = new URL(url);
                     detectedData.version = urlObj.searchParams.get('v') || '';
                     detectedData.websiteURL = urlObj.searchParams.get('host') || '';
                     detectedData.websiteKey = urlObj.searchParams.get('sitekey') || '';
-                    console.log('[hCaptcha] Extracted - Version:', detectedData.version, 'SiteKey:', detectedData.websiteKey);
+                    Logger.network('[hCaptcha] Extracted - Version:', detectedData.version, 'SiteKey:', detectedData.websiteKey);
 
                     // Simple fetch to read response and check for Enterprise mode
                     fetch(url)
                         .then(response => response.json())
                         .then(data => {
-                            console.log('[hCaptcha] checksiteconfig response:', data);
+                            Logger.network('[hCaptcha] checksiteconfig response:', data);
                             if (data.features && Object.keys(data.features).length > 0) {
                                 detectedData.isEnterprise = true;
                                 if (!detectedData.detectionMethods.includes('checksiteconfig-features')) {
                                     detectedData.detectionMethods.push('checksiteconfig-features');
                                 }
-                                console.log('[hCaptcha] ✅ Enterprise detected via checksiteconfig features');
+                                Logger.network('[hCaptcha] ✅ Enterprise detected via checksiteconfig features');
                             }
                         })
-                        .catch(err => console.warn('[hCaptcha] Fetch error:', err));
+                        .catch(err => Logger.warn('NETWORK', '[hCaptcha] Fetch error:', err));
                 } catch (e) {
-                    console.error('[hCaptcha] URL parse error:', e);
+                    Logger.error('NETWORK', '[hCaptcha] URL parse error:', e);
                 }
             }
 
@@ -397,7 +397,7 @@ function hcaptchaCheckVersion(tabId) {
                         if (!detectedData.detectionMethods.includes('api-param-' + param)) {
                             detectedData.detectionMethods.push('api-param-' + param);
                         }
-                        console.log('[hCaptcha] Enterprise detected via api.js parameter:', param);
+                        Logger.network('[hCaptcha] Enterprise detected via api.js parameter:', param);
                         break;
                     }
                 }
@@ -410,7 +410,7 @@ function hcaptchaCheckVersion(tabId) {
                     if (!detectedData.detectionMethods.includes('rqdata')) {
                         detectedData.detectionMethods.push('rqdata');
                     }
-                    console.log('[hCaptcha] Enterprise detected via rqdata parameter');
+                    Logger.network('[hCaptcha] Enterprise detected via rqdata parameter');
                 }
             }
         };
@@ -446,12 +446,12 @@ function hcaptchaCheckVersion(tabId) {
         }, 15000);
 
         resolve({ status: 'started' });
-        console.log('[hCaptcha] Listeners added, waiting for network requests...');
+        Logger.network('[hCaptcha] Listeners added, waiting for network requests...');
     });
 }
 
 function completeVersionCheck(tabId, requestListener, navigationListener, detectedData) {
-    console.log('[hCaptcha] Version check complete:', detectedData);
+    Logger.network('[hCaptcha] Version check complete:', detectedData);
 
     // Clean up listeners
     chrome.webRequest.onBeforeRequest.removeListener(requestListener);
@@ -469,10 +469,10 @@ function completeVersionCheck(tabId, requestListener, navigationListener, detect
             type: 'HCAPTCHA_VERSION_RESULT',
             data: detectedData
         }).catch(error => {
-            console.error('[hCaptcha] Error sending version result:', error);
+            Logger.error('NETWORK', '[hCaptcha] Error sending version result:', error);
         });
     } catch (error) {
-        console.error('[hCaptcha] Failed to send message:', error);
+        Logger.error('NETWORK', '[hCaptcha] Failed to send message:', error);
     }
 }
 
@@ -481,7 +481,7 @@ function completeVersionCheck(tabId, requestListener, navigationListener, detect
  */
 function handleHCaptchaMessage(request, sender, sendResponse) {
     const { type } = request;
-    console.log('[hCaptcha] Message received:', type);
+    Logger.network('[hCaptcha] Message received:', type);
 
     switch (type) {
         case 'HCAPTCHA_START_CAPTURE':
@@ -490,7 +490,7 @@ function handleHCaptchaMessage(request, sender, sendResponse) {
                     const result = await Promise.resolve(hcaptchaStartCapture(request.tabId, request.url));
                     sendResponse(result);
                 } catch (error) {
-                    console.error('[hCaptcha] Start capture error:', error);
+                    Logger.error('NETWORK', '[hCaptcha] Start capture error:', error);
                     sendResponse({ status: 'error', error: error.message });
                 }
             })();
@@ -501,7 +501,7 @@ function handleHCaptchaMessage(request, sender, sendResponse) {
                 const result = hcaptchaStopCapture(request.tabId);
                 sendResponse(result);
             } catch (error) {
-                console.error('[hCaptcha] Stop capture error:', error);
+                Logger.error('NETWORK', '[hCaptcha] Stop capture error:', error);
                 sendResponse({ status: 'error', error: error.message });
             }
             return false; // Sync response
@@ -511,7 +511,7 @@ function handleHCaptchaMessage(request, sender, sendResponse) {
                 const state = hcaptchaGetCaptureState(request.tabId);
                 sendResponse(state);
             } catch (error) {
-                console.error('[hCaptcha] Get capture state error:', error);
+                Logger.error('NETWORK', '[hCaptcha] Get capture state error:', error);
                 sendResponse({ status: 'error', error: error.message });
             }
             return false; // Sync response
@@ -519,12 +519,12 @@ function handleHCaptchaMessage(request, sender, sendResponse) {
         case 'HCAPTCHA_CHECK_VERSION':
             (async () => {
                 try {
-                    console.log('[hCaptcha] Checking version for tabId:', request.tabId);
+                    Logger.network('[hCaptcha] Checking version for tabId:', request.tabId);
                     const result = await hcaptchaCheckVersion(request.tabId);
-                    console.log('[hCaptcha] Sending version result:', result);
+                    Logger.network('[hCaptcha] Sending version result:', result);
                     sendResponse(result);
                 } catch (error) {
-                    console.error('[hCaptcha] Version check error:', error);
+                    Logger.error('NETWORK', '[hCaptcha] Version check error:', error);
                     sendResponse({ status: 'error', error: error.message });
                 }
             })();
@@ -573,7 +573,7 @@ function handleHCaptchaMessage(request, sender, sendResponse) {
         case 'HCAPTCHA_CAPTURE_COMPLETED':
             // NOTE: Capture processing is now handled directly in hcaptcha-interceptor.js
             // This message is only for notifying the popup UI to refresh
-            console.log('[hCaptcha-Capture] Capture completed message received (UI notification only)');
+            Logger.network('[hCaptcha-Capture] Capture completed message received (UI notification only)');
             return false; // Sync response
 
         default:
@@ -618,4 +618,4 @@ function hcaptchaStartAnalysis(tabId, url) {
     return { status: 'started' };
 }
 
-console.log('[hCaptcha] Interceptor loaded');
+Logger.network('[hCaptcha] Interceptor loaded');

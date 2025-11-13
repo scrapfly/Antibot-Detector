@@ -3,7 +3,7 @@
  * Handles Shape Security request interception and data extraction in service worker context
  */
 
-console.log('[ShapeSecurityInterceptor] Loading...');
+Logger.network('[ShapeSecurityInterceptor] Loading...');
 
 // Shape Security capture state
 var shapesecurityCaptureState = shapesecurityCaptureState || new Map();
@@ -55,20 +55,20 @@ function shapeSecurityHandleMessage(request, sendResponse) {
             (async () => {
                 try {
                     if (typeof showNotification === 'function') {
-                        console.log('[ShapeSecurity] Showing analyzing notification before reload...');
+                        Logger.network('[ShapeSecurity] Showing analyzing notification before reload...');
                         await showNotification(request.tabId, {
                             type: 'loading',
                             title: '🔍 Extracting Shape Security Scripts',
                             message: 'Please wait while we collect script URLs...',
                             duration: 15000 // Longer duration to persist through reload
                         });
-                        console.log('[ShapeSecurity] Pre-reload notification shown successfully');
+                        Logger.network('[ShapeSecurity] Pre-reload notification shown successfully');
                     } else {
-                        console.log('[ShapeSecurity] showNotification function not available');
+                        Logger.network('[ShapeSecurity] showNotification function not available');
                     }
                     sendResponse({ status: 'success' });
                 } catch (error) {
-                    console.error('[ShapeSecurity] Error showing notification:', error);
+                    Logger.error('NETWORK', '[ShapeSecurity] Error showing notification:', error);
                     sendResponse({ status: 'error', error: error.message });
                 }
             })();
@@ -93,10 +93,10 @@ function shapeSecurityHandleMessage(request, sendResponse) {
  */
 async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
     const tabId = message.tabId;
-    console.log('[ShapeSecurity] Start capture requested for tab:', tabId);
+    Logger.network('[ShapeSecurity] Start capture requested for tab:', tabId);
 
     if (shapesecurityCaptureState.has(tabId)) {
-        console.log('[ShapeSecurity] Already capturing for this tab');
+        Logger.network('[ShapeSecurity] Already capturing for this tab');
         sendResponse({ status: 'already_capturing' });
         return;
     }
@@ -136,20 +136,20 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                                         name: cookieName,
                                         value: valueMatch ? valueMatch[1] : ''
                                     };
-                                    console.log('[ShapeSecurity] Captured cookie:', cookieName);
+                                    Logger.network('[ShapeSecurity] Captured cookie:', cookieName);
 
                                     // Auto-stop based on version:
                                     // V1: Only needs cookie (no headers)
                                     // V2: Needs both cookie AND headers
                                     // unknown: Version detection still running, don't auto-stop yet
                                     if (captureState.version === 'v1') {
-                                        console.log('[ShapeSecurity] V1 detected - cookie captured, auto-stopping...');
+                                        Logger.network('[ShapeSecurity] V1 detected - cookie captured, auto-stopping...');
                                         autoStopCapture(tabId, 'complete');
                                     } else if (captureState.version === 'v2' && captureState.headers.length > 0) {
-                                        console.log('[ShapeSecurity] V2 detected - both cookie and headers captured! Auto-stopping...');
+                                        Logger.network('[ShapeSecurity] V2 detected - both cookie and headers captured! Auto-stopping...');
                                         autoStopCapture(tabId, 'complete');
                                     } else if (captureState.version === 'unknown') {
-                                        console.log('[ShapeSecurity] Cookie captured, but version still being detected...');
+                                        Logger.network('[ShapeSecurity] Cookie captured, but version still being detected...');
                                     }
                                 }
                             }
@@ -179,16 +179,16 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                                 value: header.value,
                                 timestamp: Date.now()
                             });
-                            console.log('[ShapeSecurity] Captured header:', header.name);
+                            Logger.network('[ShapeSecurity] Captured header:', header.name);
 
                             // Auto-stop based on version (only V2 needs headers):
                             // V1: Headers not required, won't auto-stop here
                             // V2: Needs both cookie AND headers
                             if (captureState.version === 'v2' && captureState.cookie && captureState.headers.length > 0) {
-                                console.log('[ShapeSecurity] V2 - both cookie and headers captured! Auto-stopping...');
+                                Logger.network('[ShapeSecurity] V2 - both cookie and headers captured! Auto-stopping...');
                                 autoStopCapture(tabId, 'complete');
                             } else if (captureState.version === 'v1') {
-                                console.log('[ShapeSecurity] V1 - headers captured but not required for V1');
+                                Logger.network('[ShapeSecurity] V1 - headers captured but not required for V1');
                             }
                         }
                     }
@@ -210,7 +210,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
         ['requestHeaders', 'extraHeaders']
     );
 
-    console.log('[ShapeSecurity] Capture started for tab:', tabId);
+    Logger.network('[ShapeSecurity] Capture started for tab:', tabId);
 
     // Show in-page notification
     if (showNotification) {
@@ -220,14 +220,14 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
             message: '🔄 Please reload the page to start monitoring',
             duration: 60000
         }).catch(err => {
-            console.error('[ShapeSecurity] Failed to show notification:', err);
+            Logger.error('NETWORK', '[ShapeSecurity] Failed to show notification:', err);
         });
     }
 
     // Set up listener for page reload to show loading warning first
     const navigationListener = (details) => {
         if (details.tabId === tabId && details.frameId === 0) {
-            console.log('[ShapeSecurity] Page navigation started, showing loading warning...');
+            Logger.network('[ShapeSecurity] Page navigation started, showing loading warning...');
 
             // Show loading warning immediately
             if (showNotification) {
@@ -237,7 +237,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                     message: 'Please wait for the page to fully load before performing actions...',
                     duration: 5000
                 }).catch(err => {
-                    console.error('[ShapeSecurity] Failed to show loading warning:', err);
+                    Logger.error('NETWORK', '[ShapeSecurity] Failed to show loading warning:', err);
                 });
             }
         }
@@ -246,7 +246,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
     // Set up listener for when page is fully loaded
     const loadCompleteListener = (details) => {
         if (details.tabId === tabId && details.frameId === 0) {
-            console.log('[ShapeSecurity] Page fully loaded, detecting version...');
+            Logger.network('[ShapeSecurity] Page fully loaded, detecting version...');
 
             // Check window.__xr_bmobdb directly in page context
             setTimeout(async () => {
@@ -265,24 +265,24 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                         const exists = result && result.result;
                         const version = exists ? 'v1' : 'v2';
 
-                        console.log('[ShapeSecurity] window.__xr_bmobdb exists:', exists);
-                        console.log('[ShapeSecurity] Detected version:', version);
+                        Logger.network('[ShapeSecurity] window.__xr_bmobdb exists:', exists);
+                        Logger.network('[ShapeSecurity] Detected version:', version);
 
                         captureState.version = version;
                         shapesecurityCaptureState.set(tabId, captureState);
 
                         // Auto-stop based on version
                         if (version === 'v1' && captureState.cookie) {
-                            console.log('[ShapeSecurity] V1 + cookie captured! Auto-stopping...');
+                            Logger.network('[ShapeSecurity] V1 + cookie captured! Auto-stopping...');
                             autoStopCapture(tabId, 'complete');
                             return;
                         } else if (version === 'v2' && captureState.cookie && captureState.headers.length > 0) {
-                            console.log('[ShapeSecurity] V2 + both captured! Auto-stopping...');
+                            Logger.network('[ShapeSecurity] V2 + both captured! Auto-stopping...');
                             autoStopCapture(tabId, 'complete');
                             return;
                         }
                     } catch (error) {
-                        console.error('[ShapeSecurity] Error detecting version:', error);
+                        Logger.error('NETWORK', '[ShapeSecurity] Error detecting version:', error);
                         captureState.version = 'v2'; // Default to V2 on error
                         shapesecurityCaptureState.set(tabId, captureState);
                     }
@@ -293,7 +293,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                 const version = currentState?.version || 'v2';
 
                 if (showNotification) {
-                    console.log(`[ShapeSecurity] Showing notification for version: ${version}`);
+                    Logger.network(`[ShapeSecurity] Showing notification for version: ${version}`);
 
                     // Show notification with timer using chrome.scripting
                     try {
@@ -372,7 +372,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                             }
                         });
                     } catch (err) {
-                        console.error('[ShapeSecurity] Failed to show monitoring notification with timer:', err);
+                        Logger.error('NETWORK', '[ShapeSecurity] Failed to show monitoring notification with timer:', err);
                     }
                 }
             }, 5000); // Wait 5 seconds for version detection
@@ -411,11 +411,11 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
  * @param {string} reason - Reason for auto-stop ('complete' or 'timeout')
  */
 async function autoStopCapture(tabId, reason = 'complete') {
-    console.log(`[ShapeSecurity] Auto-stopping capture for tab ${tabId}, reason: ${reason}`);
+    Logger.network(`[ShapeSecurity] Auto-stopping capture for tab ${tabId}, reason: ${reason}`);
 
     const captureState = shapesecurityCaptureState.get(tabId);
     if (!captureState) {
-        console.log('[ShapeSecurity] No active capture state found');
+        Logger.network('[ShapeSecurity] No active capture state found');
         return;
     }
 
@@ -455,7 +455,7 @@ async function autoStopCapture(tabId, reason = 'complete') {
             }
         });
     } catch (err) {
-        console.error('[ShapeSecurity] Failed to clear timer:', err);
+        Logger.error('NETWORK', '[ShapeSecurity] Failed to clear timer:', err);
     }
 
     // Save captured data to history
@@ -466,11 +466,11 @@ async function autoStopCapture(tabId, reason = 'complete') {
         duration: Date.now() - captureState.startTime
     };
 
-    console.log('[ShapeSecurity] Captured data:', capturedData);
+    Logger.network('[ShapeSecurity] Captured data:', capturedData);
 
     try {
         await BaseInterceptorHelpers.saveToHistory(tabId, capturedData, { type: 'shapesecurity', expiryMinutes: 30 });
-        console.log('[ShapeSecurity] Capture data saved to history');
+        Logger.network('[ShapeSecurity] Capture data saved to history');
 
         // Delete capture state
         shapesecurityCaptureState.delete(tabId);
@@ -499,11 +499,11 @@ async function autoStopCapture(tabId, reason = 'complete') {
                 message: message,
                 duration: 5000
             }).catch(err => {
-                console.error('[ShapeSecurity] Failed to show completion notification:', err);
+                Logger.error('NETWORK', '[ShapeSecurity] Failed to show completion notification:', err);
             });
         }
     } catch (error) {
-        console.error('[ShapeSecurity] Failed to save capture data:', error);
+        Logger.error('NETWORK', '[ShapeSecurity] Failed to save capture data:', error);
     }
 }
 
@@ -512,11 +512,11 @@ async function autoStopCapture(tabId, reason = 'complete') {
  */
 function handleShapeSecurityStopCapture(message, sender, sendResponse) {
     const tabId = message.tabId;
-    console.log('[ShapeSecurity] Stop capture requested for tab:', tabId);
+    Logger.network('[ShapeSecurity] Stop capture requested for tab:', tabId);
 
     const captureState = shapesecurityCaptureState.get(tabId);
     if (!captureState) {
-        console.log('[ShapeSecurity] No active capture for this tab');
+        Logger.network('[ShapeSecurity] No active capture for this tab');
         sendResponse({ status: 'not_capturing' });
         return;
     }
@@ -537,11 +537,11 @@ function handleShapeSecurityStopCapture(message, sender, sendResponse) {
         duration: Date.now() - captureState.startTime
     };
 
-    console.log('[ShapeSecurity] Captured data:', capturedData);
+    Logger.network('[ShapeSecurity] Captured data:', capturedData);
 
     BaseInterceptorHelpers.saveToHistory(tabId, capturedData, { type: 'shapesecurity', expiryMinutes: 30 })
         .then(async () => {
-            console.log('[ShapeSecurity] Capture data saved to history');
+            Logger.network('[ShapeSecurity] Capture data saved to history');
             shapesecurityCaptureState.delete(tabId);
 
             // Show completion notification
@@ -555,14 +555,14 @@ function handleShapeSecurityStopCapture(message, sender, sendResponse) {
                     message: `Captured: ${cookieCount} cookie, ${headerCount} headers`,
                     duration: 5000
                 }).catch(err => {
-                    console.error('[ShapeSecurity] Failed to show completion notification:', err);
+                    Logger.error('NETWORK', '[ShapeSecurity] Failed to show completion notification:', err);
                 });
             }
 
             sendResponse({ status: 'stopped', data: capturedData });
         })
         .catch(error => {
-            console.error('[ShapeSecurity] Failed to save capture data:', error);
+            Logger.error('NETWORK', '[ShapeSecurity] Failed to save capture data:', error);
             sendResponse({ status: 'error', error: error.message });
         });
 
@@ -587,7 +587,7 @@ function handleShapeSecurityGetCaptureState(message, sender, sendResponse) {
  */
 async function handleShapeSecurityCheckHeaders(message, sender, sendResponse) {
     const tabId = message.tabId;
-    console.log('[ShapeSecurity] Check headers requested for tab:', tabId);
+    Logger.network('[ShapeSecurity] Check headers requested for tab:', tabId);
 
     try {
         // Inject script to get response headers
@@ -603,7 +603,7 @@ async function handleShapeSecurityCheckHeaders(message, sender, sendResponse) {
                     if (resource.name.includes('seed=') || resource.name.includes('X-')) {
                         // Note: We can't actually get response headers from performance API
                         // This is a limitation of the browser
-                        console.log('Shape Security resource found:', resource.name);
+                        Logger.network('Shape Security resource found:', resource.name);
                     }
                 });
 
@@ -624,7 +624,7 @@ async function handleShapeSecurityCheckHeaders(message, sender, sendResponse) {
         });
 
     } catch (error) {
-        console.error('[ShapeSecurity] Check headers error:', error);
+        Logger.error('NETWORK', '[ShapeSecurity] Check headers error:', error);
         sendResponse({ status: 'error', error: error.message });
     }
 
@@ -638,7 +638,7 @@ async function handleShapeSecurityCheckHeaders(message, sender, sendResponse) {
 async function handleShapeSecurityCheckCookies(message, sender, sendResponse) {
     const tabId = message.tabId;
     const url = message.url;
-    console.log('[ShapeSecurity] Check cookies requested for tab:', tabId);
+    Logger.network('[ShapeSecurity] Check cookies requested for tab:', tabId);
 
     try {
         // Get domain from URL
@@ -647,7 +647,7 @@ async function handleShapeSecurityCheckCookies(message, sender, sendResponse) {
 
         // Get all cookies for this domain and delete Shape Security ones
         const allCookies = await chrome.cookies.getAll({ domain: domain });
-        console.log('[ShapeSecurity] Found existing cookies:', allCookies);
+        Logger.network('[ShapeSecurity] Found existing cookies:', allCookies);
 
         const cookiePattern = /^[a-zA-Z0-9]{8}$/;
         const deletedCookies = [];
@@ -660,23 +660,23 @@ async function handleShapeSecurityCheckCookies(message, sender, sendResponse) {
                     name: cookie.name
                 });
                 deletedCookies.push(cookie.name);
-                console.log('[ShapeSecurity] Deleted cookie:', cookie.name);
+                Logger.network('[ShapeSecurity] Deleted cookie:', cookie.name);
             }
         }
 
-        console.log('[ShapeSecurity] Deleted cookies:', deletedCookies);
+        Logger.network('[ShapeSecurity] Deleted cookies:', deletedCookies);
 
         // Set up header listener to intercept Set-Cookie headers
         let foundCookie = null;
         const headerListener = (details) => {
             if (details.tabId === tabId && details.responseHeaders) {
-                console.log('[ShapeSecurity] Checking response headers for URL:', details.url);
+                Logger.network('[ShapeSecurity] Checking response headers for URL:', details.url);
 
                 // Look for Set-Cookie headers
                 for (const header of details.responseHeaders) {
                     if (header.name.toLowerCase() === 'set-cookie') {
                         const cookieHeader = header.value;
-                        console.log('[ShapeSecurity] Found Set-Cookie:', cookieHeader);
+                        Logger.network('[ShapeSecurity] Found Set-Cookie:', cookieHeader);
 
                         // Parse cookie name
                         const nameMatch = cookieHeader.match(/^([^=]+)=/);
@@ -695,7 +695,7 @@ async function handleShapeSecurityCheckCookies(message, sender, sendResponse) {
                                         value: valueMatch ? valueMatch[1] : '',
                                         setCookie: cookieHeader
                                     };
-                                    console.log('[ShapeSecurity] ✓ Found Shape Security cookie:', foundCookie);
+                                    Logger.network('[ShapeSecurity] ✓ Found Shape Security cookie:', foundCookie);
                                 }
                             }
                         }
@@ -717,25 +717,25 @@ async function handleShapeSecurityCheckCookies(message, sender, sendResponse) {
         // Set up navigation completion listener with immediate + delayed checks
         const navigationListener = (details) => {
             if (details.tabId === tabId && details.frameId === 0) {
-                console.log('[ShapeSecurity] Page navigation completed');
+                Logger.network('[ShapeSecurity] Page navigation completed');
 
                 // Immediate check (catch challenge page before redirect)
                 if (foundCookie && !capturedCookie) {
-                    console.log('[ShapeSecurity] Cookie found immediately, saving...');
+                    Logger.network('[ShapeSecurity] Cookie found immediately, saving...');
                     capturedCookie = foundCookie;
                 }
 
                 // Check again after 3 seconds (catch cookies set later)
                 setTimeout(() => {
                     if (foundCookie && !capturedCookie) {
-                        console.log('[ShapeSecurity] Cookie found after 3 seconds, saving...');
+                        Logger.network('[ShapeSecurity] Cookie found after 3 seconds, saving...');
                         capturedCookie = foundCookie;
                     }
                 }, 3000);
 
                 // Finalize after 5 seconds
                 setTimeout(() => {
-                    console.log('[ShapeSecurity] Finalizing cookie check...');
+                    Logger.network('[ShapeSecurity] Finalizing cookie check...');
 
                     // Remove header listener
                     chrome.webRequest.onResponseStarted.removeListener(headerListener);
@@ -752,7 +752,7 @@ async function handleShapeSecurityCheckCookies(message, sender, sendResponse) {
                     // Clean up navigation listener
                     chrome.webNavigation.onCompleted.removeListener(navigationListener);
 
-                    console.log('[ShapeSecurity] Cookie check completed, result:', finalCookie);
+                    Logger.network('[ShapeSecurity] Cookie check completed, result:', finalCookie);
                 }, 5000);
             }
         };
@@ -766,7 +766,7 @@ async function handleShapeSecurityCheckCookies(message, sender, sendResponse) {
         sendResponse({ success: true, deletedCookies: deletedCookies });
 
     } catch (error) {
-        console.error('[ShapeSecurity] Check cookies error:', error);
+        Logger.error('NETWORK', '[ShapeSecurity] Check cookies error:', error);
         sendResponse({ success: false, error: error.message });
     }
 
@@ -778,7 +778,7 @@ async function handleShapeSecurityCheckCookies(message, sender, sendResponse) {
  */
 async function handleShapeSecurityAnalyzeScripts(message, sender, sendResponse) {
     const tabId = message.tabId;
-    console.log('[ShapeSecurity] Analyze scripts requested for tab:', tabId);
+    Logger.network('[ShapeSecurity] Analyze scripts requested for tab:', tabId);
 
     try {
         // Inject script to find Shape Security scripts
@@ -829,7 +829,7 @@ async function handleShapeSecurityAnalyzeScripts(message, sender, sendResponse) 
         });
 
     } catch (error) {
-        console.error('[ShapeSecurity] Analyze scripts error:', error);
+        Logger.error('NETWORK', '[ShapeSecurity] Analyze scripts error:', error);
         sendResponse({ status: 'error', error: error.message });
     }
 
@@ -845,7 +845,7 @@ async function handleShapeSecurityAnalyzeScripts(message, sender, sendResponse) 
  */
 async function handleShapeSecurityCheckVersion(message, sender, sendResponse) {
     const tabId = message.tabId;
-    console.log('[ShapeSecurity] Check version requested for tab:', tabId);
+    Logger.network('[ShapeSecurity] Check version requested for tab:', tabId);
 
     try {
         // Check window.__xr_bmobdb directly in page context (no reload needed)
@@ -859,23 +859,23 @@ async function handleShapeSecurityCheckVersion(message, sender, sendResponse) {
             }
         });
 
-        console.log('[ShapeSecurity] Check result:', result);
+        Logger.network('[ShapeSecurity] Check result:', result);
 
         if (result && result.result) {
             const checkResult = result.result;
             const version = checkResult.exists ? 'v1' : 'v2';
 
-            console.log('[ShapeSecurity] Detected version:', version);
+            Logger.network('[ShapeSecurity] Detected version:', version);
 
             // Return result directly
             sendResponse({ version: version, exists: checkResult.exists, type: checkResult.type });
         } else {
             // Default to V2 if check failed
-            console.log('[ShapeSecurity] Check failed, defaulting to V2');
+            Logger.network('[ShapeSecurity] Check failed, defaulting to V2');
             sendResponse({ version: 'v2', exists: false });
         }
     } catch (error) {
-        console.error('[ShapeSecurity] Error checking version:', error);
+        Logger.error('NETWORK', '[ShapeSecurity] Error checking version:', error);
         sendResponse({ error: error.message });
     }
 
@@ -901,7 +901,7 @@ function interceptShapeSecurityRequest(details) {
                         seed: seedMatch[1],
                         timestamp: Date.now()
                     });
-                    console.log('[ShapeSecurity] Captured seed parameter:', seedMatch[1]);
+                    Logger.network('[ShapeSecurity] Captured seed parameter:', seedMatch[1]);
                 }
             }
 
@@ -915,7 +915,7 @@ function interceptShapeSecurityRequest(details) {
                             value: header.value,
                             timestamp: Date.now()
                         });
-                        console.log('[ShapeSecurity] Captured dynamic header:', header.name);
+                        Logger.network('[ShapeSecurity] Captured dynamic header:', header.name);
                     }
                 });
             }
@@ -937,7 +937,7 @@ function interceptShapeSecurityRequest(details) {
  */
 function handleShapeSecurityStartExtraction(message, sender, sendResponse) {
     const tabId = message.tabId;
-    console.log('[ShapeSecurity-EXTRACT] Start extraction requested for tab:', tabId);
+    Logger.network('[ShapeSecurity-EXTRACT] Start extraction requested for tab:', tabId);
 
     // Enable extraction mode
     shapeSecurityExtractionState.set(tabId, {
@@ -954,7 +954,7 @@ function handleShapeSecurityStartExtraction(message, sender, sendResponse) {
     // Set up webNavigation listener to inject script after page reload
     const navigationListener = async (details) => {
         if (details.tabId === tabId && details.frameId === 0) {
-            console.log('[ShapeSecurity-EXTRACT] Page loaded, injecting script immediately...');
+            Logger.network('[ShapeSecurity-EXTRACT] Page loaded, injecting script immediately...');
 
             // Note: Notification is shown before page reload via SHAPESECURITY_SHOW_ANALYZING_NOTIFICATION
             // No need to show it again here
@@ -989,18 +989,18 @@ function handleShapeSecurityStartExtraction(message, sender, sendResponse) {
                     });
 
                     const scripts = result.result || [];
-                    console.log('[ShapeSecurity-EXTRACT] Collected', scripts.length, 'scripts');
+                    Logger.network('[ShapeSecurity-EXTRACT] Collected', scripts.length, 'scripts');
 
                     // Accumulate scripts (keep best result)
                     if (scripts.length > 0) {
-                        console.log('[ShapeSecurity-EXTRACT] Found scripts! Saving to capturedScripts...');
+                        Logger.network('[ShapeSecurity-EXTRACT] Found scripts! Saving to capturedScripts...');
                         capturedScripts = scripts;
                     }
 
                     return scripts;
 
                 } catch (error) {
-                    console.error('[ShapeSecurity-EXTRACT] Failed to inject script:', error);
+                    Logger.error('NETWORK', '[ShapeSecurity-EXTRACT] Failed to inject script:', error);
                     return [];
                 }
             };
@@ -1010,16 +1010,16 @@ function handleShapeSecurityStartExtraction(message, sender, sendResponse) {
 
             // Also inject after 3 seconds (catch late-loading scripts)
             setTimeout(() => {
-                console.log('[ShapeSecurity-EXTRACT] Secondary check after 3 seconds...');
+                Logger.network('[ShapeSecurity-EXTRACT] Secondary check after 3 seconds...');
                 collectScripts();
             }, 3000);
 
             // After 5 seconds, finalize results
             setTimeout(async () => {
-                console.log('[ShapeSecurity-EXTRACT] Finalizing results...');
+                Logger.network('[ShapeSecurity-EXTRACT] Finalizing results...');
 
                 const finalScripts = capturedScripts || [];
-                console.log('[ShapeSecurity-EXTRACT] Final collected scripts:', finalScripts);
+                Logger.network('[ShapeSecurity-EXTRACT] Final collected scripts:', finalScripts);
 
                 // Send extraction completed message
                 await handleShapeSecurityExtractionCompleted({
@@ -1029,15 +1029,15 @@ function handleShapeSecurityStartExtraction(message, sender, sendResponse) {
 
                 // Remove listener
                 chrome.webNavigation.onCompleted.removeListener(navigationListener);
-                console.log('[ShapeSecurity-EXTRACT] Extraction complete, listener removed');
+                Logger.network('[ShapeSecurity-EXTRACT] Extraction complete, listener removed');
             }, 5000);
         }
     };
 
     chrome.webNavigation.onCompleted.addListener(navigationListener);
-    console.log('[ShapeSecurity-EXTRACT] Navigation listener added');
+    Logger.network('[ShapeSecurity-EXTRACT] Navigation listener added');
 
-    console.log('[ShapeSecurity-EXTRACT] Extraction mode enabled for tab:', tabId);
+    Logger.network('[ShapeSecurity-EXTRACT] Extraction mode enabled for tab:', tabId);
     sendResponse({ status: 'success' });
 }
 
@@ -1046,18 +1046,18 @@ function handleShapeSecurityStartExtraction(message, sender, sendResponse) {
  */
 async function handleShapeSecurityExtractionCompleted(message, sender, sendResponse) {
     const tabId = message.tabId;
-    console.log('[ShapeSecurity-EXTRACT] Extraction completed for tab:', tabId);
+    Logger.network('[ShapeSecurity-EXTRACT] Extraction completed for tab:', tabId);
 
     const state = shapeSecurityExtractionState.get(tabId);
     if (!state) {
-        console.log('[ShapeSecurity-EXTRACT] No extraction state found');
+        Logger.network('[ShapeSecurity-EXTRACT] No extraction state found');
         sendResponse({ status: 'error', error: 'No extraction state' });
         return;
     }
 
     // Analyze the captured scripts from message
     const scripts = message.scripts || [];
-    console.log('[ShapeSecurity-EXTRACT] Analyzing', scripts.length, 'scripts');
+    Logger.network('[ShapeSecurity-EXTRACT] Analyzing', scripts.length, 'scripts');
 
     const initJsUrls = [];
     const seedUrls = [];
@@ -1100,7 +1100,7 @@ async function handleShapeSecurityExtractionCompleted(message, sender, sendRespo
         timestamp: Date.now()
     };
 
-    console.log('[ShapeSecurity-EXTRACT] Extracted data:', extractedData);
+    Logger.network('[ShapeSecurity-EXTRACT] Extracted data:', extractedData);
 
     // Send result to popup
     try {
@@ -1108,16 +1108,16 @@ async function handleShapeSecurityExtractionCompleted(message, sender, sendRespo
             type: 'SHAPESECURITY_EXTRACTION_RESULT',
             extractedData: extractedData
         });
-        console.log('[ShapeSecurity-EXTRACT] Result sent to popup');
+        Logger.network('[ShapeSecurity-EXTRACT] Result sent to popup');
     } catch (error) {
-        console.log('[ShapeSecurity-EXTRACT] Popup not available:', error.message);
+        Logger.network('[ShapeSecurity-EXTRACT] Popup not available:', error.message);
     }
 
     // Clean up extraction state
     shapeSecurityExtractionState.delete(tabId);
-    console.log('[ShapeSecurity-EXTRACT] Extraction state cleaned up');
+    Logger.network('[ShapeSecurity-EXTRACT] Extraction state cleaned up');
 
     sendResponse({ status: 'success' });
 }
 
-console.log('[ShapeSecurityInterceptor] ✓ Loaded');
+Logger.network('[ShapeSecurityInterceptor] ✓ Loaded');

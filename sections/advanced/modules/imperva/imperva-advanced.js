@@ -13,7 +13,7 @@
  * - Utility methods (getTimeAgo, etc.)
  */
 
-console.log('[ImpervaAdvanced] Loading... Dependencies check:', {
+Logger.network('[ImpervaAdvanced] Loading... Dependencies check:', {
     BaseAdvancedModule: typeof BaseAdvancedModule,
     NotificationHelper: typeof NotificationHelper,
     PaginationManager: typeof PaginationManager
@@ -41,7 +41,7 @@ class ImpervaAdvanced extends BaseAdvancedModule {
 
         this.extractionListener = (message) => {
             if (message.type === 'IMPERVA_EXTRACTION_COMPLETED') {
-                console.log('[IMPERVA-EXTRACT] Extraction completed message received:', message);
+                Logger.network('[IMPERVA-EXTRACT] Extraction completed message received:', message);
                 this.displayExtractionResults(message.extractedData);
             }
         };
@@ -259,7 +259,7 @@ class ImpervaAdvanced extends BaseAdvancedModule {
                 ]
             );
 
-            console.log('[IMPERVA] Cookies found:', cookies.length);
+            Logger.network('[IMPERVA] Cookies found:', cookies.length);
 
             // Determine protection level
             const hasReese84 = cookies.some(c => c.name === 'reese84');
@@ -277,7 +277,7 @@ class ImpervaAdvanced extends BaseAdvancedModule {
                 protectionLevel = 'Basic (Session)';
             }
 
-            console.log('[IMPERVA] Protection Level:', protectionLevel);
+            Logger.network('[IMPERVA] Protection Level:', protectionLevel);
 
             // Show notification
             const foundCount = cookies.length;
@@ -289,7 +289,7 @@ class ImpervaAdvanced extends BaseAdvancedModule {
 
             this.displayCookiesModal(cookies, { hasReese84, hasUtmvc, incapSes, nlbi, visid }, protectionLevel);
         } catch (error) {
-            console.error('[IMPERVA] Failed to check cookies:', error);
+            Logger.error('NETWORK', '[IMPERVA] Failed to check cookies:', error);
             NotificationHelper.error('Failed to check cookies: ' + error.message);
         }
     }
@@ -298,21 +298,21 @@ class ImpervaAdvanced extends BaseAdvancedModule {
      * Extract Scripts - Delete cookies and capture challenge/solution data
      */
     async extractScripts() {
-        console.log('[IMPERVA-EXTRACT] ========== STARTING EXTRACTION ==========');
+        Logger.network('[IMPERVA-EXTRACT] ========== STARTING EXTRACTION ==========');
         try {
-            console.log('[IMPERVA-EXTRACT] Step 1: Getting current tab...');
+            Logger.network('[IMPERVA-EXTRACT] Step 1: Getting current tab...');
 
             // Get current tab
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
             if (!tab) {
-                console.error('[IMPERVA-EXTRACT] ❌ No active tab found');
+                Logger.error('NETWORK', '[IMPERVA-EXTRACT] ❌ No active tab found');
                 throw new Error('No active tab found');
             }
 
-            console.log('[IMPERVA-EXTRACT] ✓ Tab found:', { id: tab.id, url: tab.url, title: tab.title });
+            Logger.network('[IMPERVA-EXTRACT] ✓ Tab found:', { id: tab.id, url: tab.url, title: tab.title });
 
             // Delete Imperva-related cookies to force regeneration
-            console.log('[IMPERVA-EXTRACT] Step 2: Deleting Imperva cookies...');
+            Logger.network('[IMPERVA-EXTRACT] Step 2: Deleting Imperva cookies...');
             const cookiesToDelete = ['reese84', 'utmvc', 'incap_ses', 'nlbi', 'visid_incap'];
             let deletedCount = 0;
 
@@ -330,30 +330,30 @@ class ImpervaAdvanced extends BaseAdvancedModule {
                             url: tab.url,
                             name: cookie.name
                         });
-                        console.log(`[IMPERVA-EXTRACT] ✓ Deleted cookie: ${cookie.name}`);
+                        Logger.network(`[IMPERVA-EXTRACT] ✓ Deleted cookie: ${cookie.name}`);
                         deletedCount++;
                     }
                 } catch (err) {
-                    console.log(`[IMPERVA-EXTRACT] ⚠️ Could not delete cookie ${cookieName}:`, err.message);
+                    Logger.network(`[IMPERVA-EXTRACT] ⚠️ Could not delete cookie ${cookieName}:`, err.message);
                 }
             }
 
-            console.log(`[IMPERVA-EXTRACT] ✓ Deleted ${deletedCount} cookies total`);
+            Logger.network(`[IMPERVA-EXTRACT] ✓ Deleted ${deletedCount} cookies total`);
 
             // Send message to start extraction mode
-            console.log('[IMPERVA-EXTRACT] Step 3: Sending message to background to start extraction...');
+            Logger.network('[IMPERVA-EXTRACT] Step 3: Sending message to background to start extraction...');
             const response = await chrome.runtime.sendMessage({
                 type: 'IMPERVA_EXTRACT_SCRIPTS',
                 tabId: tab.id
             });
-            console.log('[IMPERVA-EXTRACT] Background response received:', response);
-            console.log('[IMPERVA-EXTRACT] Response type:', typeof response);
-            console.log('[IMPERVA-EXTRACT] Response status:', response?.status);
-            console.log('[IMPERVA-EXTRACT] Response error:', response?.error);
+            Logger.network('[IMPERVA-EXTRACT] Background response received:', response);
+            Logger.network('[IMPERVA-EXTRACT] Response type:', typeof response);
+            Logger.network('[IMPERVA-EXTRACT] Response status:', response?.status);
+            Logger.network('[IMPERVA-EXTRACT] Response error:', response?.error);
 
             if (response && response.status === 'success') {
-                console.log('[IMPERVA-EXTRACT] ✓ Extraction mode enabled successfully');
-                console.log('[IMPERVA-EXTRACT] Step 4: Showing analyzing notification...');
+                Logger.network('[IMPERVA-EXTRACT] ✓ Extraction mode enabled successfully');
+                Logger.network('[IMPERVA-EXTRACT] Step 4: Showing analyzing notification...');
 
                 // Send message to background to show analyzing notification BEFORE reload
                 await this.sendMessage({
@@ -361,25 +361,25 @@ class ImpervaAdvanced extends BaseAdvancedModule {
                     tabId: tab.id
                 });
 
-                console.log('[IMPERVA-EXTRACT] Step 5: Reloading page...');
+                Logger.network('[IMPERVA-EXTRACT] Step 5: Reloading page...');
 
                 // Reload the page to trigger Imperva scripts
                 await chrome.tabs.reload(tab.id);
-                console.log('[IMPERVA-EXTRACT] ✓ Page reload initiated');
+                Logger.network('[IMPERVA-EXTRACT] ✓ Page reload initiated');
 
                 // Show success notification
                 NotificationHelper.info(AdvancedUtils.notifications.analyzeScripts.start('Imperva'));
             } else {
-                console.error('[IMPERVA-EXTRACT] ❌ Invalid response from background');
-                console.error('[IMPERVA-EXTRACT] Expected: { status: "success" }');
-                console.error('[IMPERVA-EXTRACT] Received:', JSON.stringify(response));
+                Logger.error('NETWORK', '[IMPERVA-EXTRACT] ❌ Invalid response from background');
+                Logger.error('NETWORK', '[IMPERVA-EXTRACT] Expected: { status: "success" }');
+                Logger.error('NETWORK', '[IMPERVA-EXTRACT] Received:', JSON.stringify(response));
                 throw new Error(response?.error || 'Failed to enable extraction mode. Check background console for details.');
             }
 
-            console.log('[IMPERVA-EXTRACT] ========== EXTRACTION STARTED ==========');
+            Logger.network('[IMPERVA-EXTRACT] ========== EXTRACTION STARTED ==========');
         } catch (error) {
-            console.error('[IMPERVA-EXTRACT] ❌ Failed to start extraction:', error);
-            console.error('[IMPERVA-EXTRACT] Error stack:', error.stack);
+            Logger.error('NETWORK', '[IMPERVA-EXTRACT] ❌ Failed to start extraction:', error);
+            Logger.error('NETWORK', '[IMPERVA-EXTRACT] Error stack:', error.stack);
             NotificationHelper.error('Failed to start extraction: ' + error.message);
         }
     }
@@ -393,7 +393,7 @@ class ImpervaAdvanced extends BaseAdvancedModule {
         let reeseScriptPath = null;
         let reeseSensorPath = null;
 
-        console.log('[IMPERVA-EXTRACT] Parsing script paths from', scriptUrls.length, 'URLs');
+        Logger.network('[IMPERVA-EXTRACT] Parsing script paths from', scriptUrls.length, 'URLs');
 
         // Parse utmvc script path: /_Incapsula_Resource?SWKMTFSR=1&e=...
         const utmvcPattern = /\/_Incapsula_Resource\?SWKMTFSR=1&e=[^"'\s&]*/i;
@@ -401,7 +401,7 @@ class ImpervaAdvanced extends BaseAdvancedModule {
             const match = url.match(utmvcPattern);
             if (match) {
                 utmvcScriptPath = match[0];
-                console.log('[IMPERVA-EXTRACT] ✓ Found UTMVC script path:', utmvcScriptPath);
+                Logger.network('[IMPERVA-EXTRACT] ✓ Found UTMVC script path:', utmvcScriptPath);
                 break;
             }
         }
@@ -414,17 +414,17 @@ class ImpervaAdvanced extends BaseAdvancedModule {
             if (match && match[1]) {
                 reeseSensorPath = match[1]; // Base path: /abc123/456
                 reeseScriptPath = match[1] + (match[2] || ''); // Full path with query/hash
-                console.log('[IMPERVA-EXTRACT] ✓ Found Reese84 script path:', reeseScriptPath);
-                console.log('[IMPERVA-EXTRACT] ✓ Found Reese84 sensor path:', reeseSensorPath);
+                Logger.network('[IMPERVA-EXTRACT] ✓ Found Reese84 script path:', reeseScriptPath);
+                Logger.network('[IMPERVA-EXTRACT] ✓ Found Reese84 sensor path:', reeseSensorPath);
                 break;
             }
         }
 
         // If nothing found, log for debugging
         if (!utmvcScriptPath && !reeseScriptPath) {
-            console.log('[IMPERVA-EXTRACT] ⚠️ No script paths matched. Sample URLs:');
+            Logger.network('[IMPERVA-EXTRACT] ⚠️ No script paths matched. Sample URLs:');
             scriptUrls.slice(0, 5).forEach(url => {
-                console.log('[IMPERVA-EXTRACT]   -', url);
+                Logger.network('[IMPERVA-EXTRACT]   -', url);
             });
         }
 
@@ -490,8 +490,8 @@ function parseDynamicReeseScript(html, urlStr) {
 
 // Example usage:
 const result = parseDynamicReeseScript(htmlContent, '${extractedData.url || 'https://example.com'}');
-console.log('Sensor Path:', result.sensorPath);
-console.log('Script Path:', result.scriptPath);
+Logger.network('Sensor Path:', result.sensorPath);
+Logger.network('Script Path:', result.scriptPath);
 ` : ''}
 
 ${includeUtmvc && utmvcScriptPath ? `
@@ -513,7 +513,7 @@ function generateUtmvcScriptPath() {
 
 // Example detected path:
 const detectedPath = '${utmvcScriptPath}';
-console.log('UTMVC Script Path:', detectedPath);
+Logger.network('UTMVC Script Path:', detectedPath);
 ` : ''}
 
 // Detected on: ${hostname}
@@ -876,7 +876,7 @@ public static string GenerateUtmvcScriptPath()
      * Display extraction results in a modal (Akamai-style design)
      */
     displayExtractionResults(extractedData) {
-        console.log('[IMPERVA-EXTRACT] Displaying extraction results:', extractedData);
+        Logger.network('[IMPERVA-EXTRACT] Displaying extraction results:', extractedData);
 
         const modal = document.createElement('div');
         modal.className = 'tool-modal';

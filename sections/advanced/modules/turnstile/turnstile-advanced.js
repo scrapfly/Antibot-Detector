@@ -4,7 +4,7 @@
  * Extends BaseAdvancedModule for Cloudflare Turnstile detection and analysis.
  */
 
-console.log('[TurnstileAdvanced] Loading... Dependencies check:', {
+Logger.network('[TurnstileAdvanced] Loading... Dependencies check:', {
     BaseAdvancedModule: typeof BaseAdvancedModule,
     NotificationHelper: typeof NotificationHelper,
     AdvancedUtils: typeof AdvancedUtils
@@ -46,7 +46,7 @@ class TurnstileAdvanced extends BaseAdvancedModule {
     }
 
     setupToolListeners() {
-        console.log('[Turnstile] Setting up tool listeners...');
+        Logger.network('[Turnstile] Setting up tool listeners...');
 
         const checkCookiesBtn = document.querySelector('#turnstileCheckCookies');
         const analyzeScriptsBtn = document.querySelector('#turnstileAnalyzeScripts');
@@ -61,7 +61,7 @@ class TurnstileAdvanced extends BaseAdvancedModule {
     }
 
     async checkCookies() {
-        console.log('[Turnstile] ========== CHECK COOKIES ==========');
+        Logger.network('[Turnstile] ========== CHECK COOKIES ==========');
         try {
             if (!this.tabInfo || !this.tabInfo.url) {
                 throw new Error('Tab information not available');
@@ -80,7 +80,7 @@ class TurnstileAdvanced extends BaseAdvancedModule {
 
             this.displayCookiesModal(cfClearanceCookie);
         } catch (error) {
-            console.error('[Turnstile] Failed to check cookies:', error);
+            Logger.error('NETWORK', '[Turnstile] Failed to check cookies:', error);
             NotificationHelper.error('Failed to check cookies: ' + error.message);
         }
     }
@@ -151,7 +151,7 @@ class TurnstileAdvanced extends BaseAdvancedModule {
     }
 
     async analyzeScripts() {
-        console.log('[Turnstile] ========== ANALYZE SCRIPTS ==========');
+        Logger.network('[Turnstile] ========== ANALYZE SCRIPTS ==========');
         try {
             if (!this.tabInfo || !this.tabInfo.id) {
                 throw new Error('Tab information not available');
@@ -159,7 +159,7 @@ class TurnstileAdvanced extends BaseAdvancedModule {
 
             const analysisListener = (message) => {
                 if (message.type === 'TURNSTILE_ANALYSIS_RESULT') {
-                    console.log('[Turnstile] Analysis result received:', message.data);
+                    Logger.network('[Turnstile] Analysis result received:', message.data);
                     this.displayAnalysisModal(message.data);
                     chrome.runtime.onMessage.removeListener(analysisListener);
                 }
@@ -196,7 +196,7 @@ class TurnstileAdvanced extends BaseAdvancedModule {
                         });
 
                     } catch (cookieError) {
-                        console.error('[Turnstile] Failed to delete cookies:', cookieError);
+                        Logger.error('NETWORK', '[Turnstile] Failed to delete cookies:', cookieError);
                     }
 
                     await chrome.tabs.reload(this.tabInfo.id);
@@ -206,7 +206,7 @@ class TurnstileAdvanced extends BaseAdvancedModule {
                 NotificationHelper.error('Failed to start analysis');
             }
         } catch (error) {
-            console.error('[Turnstile] Failed to analyze scripts:', error);
+            Logger.error('NETWORK', '[Turnstile] Failed to analyze scripts:', error);
             NotificationHelper.error('Failed to analyze scripts: ' + error.message);
         }
     }
@@ -324,16 +324,16 @@ class TurnstileAdvanced extends BaseAdvancedModule {
 const turnstileScripts = ${JSON.stringify(urls, null, 2)};
 
 turnstileScripts.forEach((url, index) => {
-    console.log(\`Script \${index + 1}: \${url}\`);
+    Logger.network(\`Script \${index + 1}: \${url}\`);
 });
 
 async function fetchTurnstileScripts() {
     for (const url of turnstileScripts) {
         try {
             const response = await fetch(url);
-            console.log(\`Fetched: \${url}\`);
+            Logger.network(\`Fetched: \${url}\`);
         } catch (error) {
-            console.error(\`Failed: \${url}\`, error);
+            Logger.error('NETWORK', \`Failed: \${url}\`, error);
         }
     }
 }
@@ -363,9 +363,9 @@ async function fetchTurnstile() {
     for (const url of turnstileScripts) {
         try {
             await axios.get(url);
-            console.log(\`Fetched: \${url}\`);
+            Logger.network(\`Fetched: \${url}\`);
         } catch (error) {
-            console.error(\`Failed: \${url}\`, error.message);
+            Logger.error('NETWORK', \`Failed: \${url}\`, error.message);
         }
     }
 }
@@ -462,4 +462,4 @@ if (typeof module !== 'undefined' && module.exports) {
     window.TurnstileAdvanced = TurnstileAdvanced;
 }
 
-console.log('[TurnstileAdvanced] Loaded successfully');
+Logger.network('[TurnstileAdvanced] Loaded successfully');

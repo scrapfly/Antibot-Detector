@@ -22,23 +22,23 @@ var cleanupNotifications = self.BaseInterceptorHelpers?.cleanupNotifications;
  */
 function funcaptchaInitializeInterceptor(captureState) {
     if (funcaptchaCaptureStateRef) {
-        console.log('[FunCaptcha] Interceptor already initialized, skipping');
+        Logger.network('[FunCaptcha] Interceptor already initialized, skipping');
         return;
     }
     funcaptchaCaptureStateRef = captureState;
-    console.log('[FunCaptcha] Interceptor initialized with capture state');
+    Logger.network('[FunCaptcha] Interceptor initialized with capture state');
 }
 
 /**
  * Start FunCaptcha capture
  */
 async function funcaptchaStartCapture(tabId) {
-    console.log('[FunCaptcha] Starting capture for tab:', tabId);
+    Logger.network('[FunCaptcha] Starting capture for tab:', tabId);
 
     // Check if already capturing
     const existingState = funcaptchaCaptureStateRef.get(tabId);
     if (existingState && existingState.isCapturing) {
-        console.log('[FunCaptcha] Already capturing on this tab');
+        Logger.network('[FunCaptcha] Already capturing on this tab');
         return { status: 'already_capturing' };
     }
 
@@ -53,7 +53,7 @@ async function funcaptchaStartCapture(tabId) {
     };
 
     funcaptchaCaptureStateRef.set(tabId, state);
-    console.log('[FunCaptcha] Capture state initialized');
+    Logger.network('[FunCaptcha] Capture state initialized');
 
     // Start network interception
     startFuncaptchaInterception(tabId);
@@ -68,7 +68,7 @@ async function funcaptchaStartCapture(tabId) {
                 duration: 60000
             });
         } catch (error) {
-            console.log('[FunCaptcha] Notification error:', error.message);
+            Logger.network('[FunCaptcha] Notification error:', error.message);
         }
     }
 
@@ -80,7 +80,7 @@ async function funcaptchaStartCapture(tabId) {
     // Setup navigation listener for page load detection
     const navListener = (details) => {
         if (details.tabId === tabId && details.frameId === 0) {
-            console.log('[FunCaptcha] Page navigation detected, updating notification');
+            Logger.network('[FunCaptcha] Page navigation detected, updating notification');
             if (typeof showNotification === 'function') {
                 showNotification(tabId, {
                     type: 'info',
@@ -113,9 +113,9 @@ function startFuncaptchaInterception(tabId) {
             { urls: ['*://*/fc/*/public_key/*'] },
             ['requestBody']
         );
-        console.log('[FunCaptcha] Network interception started');
+        Logger.network('[FunCaptcha] Network interception started');
     } catch (error) {
-        console.error('[FunCaptcha] Failed to add network listener:', error.message);
+        Logger.error('NETWORK', '[FunCaptcha] Failed to add network listener:', error.message);
     }
 }
 
@@ -128,11 +128,11 @@ function handleFuncaptchaRequest(details, tabId) {
 
     try {
         const url = details.url;
-        console.log('[FunCaptcha] Intercepted request:', url);
+        Logger.network('[FunCaptcha] Intercepted request:', url);
 
         // Extract POST body
         if (!details.requestBody || !details.requestBody.raw) {
-            console.log('[FunCaptcha] No request body found');
+            Logger.network('[FunCaptcha] No request body found');
             return;
         }
 
@@ -155,7 +155,7 @@ function handleFuncaptchaRequest(details, tabId) {
             apiDomain: new URL(url).hostname
         };
 
-        console.log('[FunCaptcha] Extracted capture data:', {
+        Logger.network('[FunCaptcha] Extracted capture data:', {
             publicKey: captureData.publicKey?.substring(0, 20) + '...',
             apiDomain: captureData.apiDomain,
             isBlobRequired: captureData.isBlobRequired
@@ -170,7 +170,7 @@ function handleFuncaptchaRequest(details, tabId) {
         }, 100);
 
     } catch (error) {
-        console.error('[FunCaptcha] Error handling request:', error.message);
+        Logger.error('NETWORK', '[FunCaptcha] Error handling request:', error.message);
     }
 }
 
@@ -178,11 +178,11 @@ function handleFuncaptchaRequest(details, tabId) {
  * Stop FunCaptcha capture
  */
 async function funcaptchaStopCapture(tabId, reason = 'manual') {
-    console.log('[FunCaptcha] Stopping capture for tab:', tabId, 'reason:', reason);
+    Logger.network('[FunCaptcha] Stopping capture for tab:', tabId, 'reason:', reason);
 
     const state = funcaptchaCaptureStateRef.get(tabId);
     if (!state) {
-        console.log('[FunCaptcha] No capture state found');
+        Logger.network('[FunCaptcha] No capture state found');
         return { status: 'no_capture' };
     }
 
@@ -196,7 +196,7 @@ async function funcaptchaStopCapture(tabId, reason = 'manual') {
         try {
             chrome.webRequest.onBeforeRequest.removeListener(funcaptchaInterceptionListener);
         } catch (error) {
-            console.log('[FunCaptcha] Error removing network listener:', error.message);
+            Logger.network('[FunCaptcha] Error removing network listener:', error.message);
         }
     }
 
@@ -207,7 +207,7 @@ async function funcaptchaStopCapture(tabId, reason = 'manual') {
             chrome.webNavigation.onCommitted.removeListener(navListener);
             funcaptchaNavigationListeners.delete(tabId);
         } catch (error) {
-            console.log('[FunCaptcha] Error removing navigation listener:', error.message);
+            Logger.network('[FunCaptcha] Error removing navigation listener:', error.message);
         }
     }
 
@@ -230,7 +230,7 @@ async function funcaptchaStopCapture(tabId, reason = 'manual') {
                 });
             }
         } catch (error) {
-            console.log('[FunCaptcha] Notification error:', error.message);
+            Logger.network('[FunCaptcha] Notification error:', error.message);
         }
     }
 
@@ -245,7 +245,7 @@ async function funcaptchaStopCapture(tabId, reason = 'manual') {
                 });
                 results.push(captureData);
             } catch (error) {
-                console.error('[FunCaptcha] Error saving to history:', error.message);
+                Logger.error('NETWORK', '[FunCaptcha] Error saving to history:', error.message);
             }
         }
     }
@@ -263,7 +263,7 @@ async function funcaptchaStopCapture(tabId, reason = 'manual') {
             reason: reason
         });
     } catch (error) {
-        console.log('[FunCaptcha] Error sending completion message:', error.message);
+        Logger.network('[FunCaptcha] Error sending completion message:', error.message);
     }
 
     return { status: 'stopped', results: results };
@@ -363,13 +363,13 @@ function funcaptchaStartAnalysis(tabId, url) {
                 try {
                     chrome.webRequest.onBeforeRequest.removeListener(requestListener);
                 } catch (error) {
-                    console.log('[FunCaptcha] Error removing request listener:', error.message);
+                    Logger.network('[FunCaptcha] Error removing request listener:', error.message);
                 }
 
                 try {
                     chrome.webNavigation.onCompleted.removeListener(navigationListener);
                 } catch (error) {
-                    console.log('[FunCaptcha] Error removing navigation listener:', error.message);
+                    Logger.network('[FunCaptcha] Error removing navigation listener:', error.message);
                 }
 
                 try {
@@ -378,7 +378,7 @@ function funcaptchaStartAnalysis(tabId, url) {
                         data: { scripts: finalResults, scriptCount: finalResults.length }
                     });
                 } catch (error) {
-                    console.log('[FunCaptcha] Analysis result send error:', error.message);
+                    Logger.network('[FunCaptcha] Analysis result send error:', error.message);
                 }
             }, 5000);
         }
@@ -392,10 +392,10 @@ function funcaptchaStartAnalysis(tabId, url) {
         );
         chrome.webNavigation.onCompleted.addListener(navigationListener);
     } catch (error) {
-        console.error('[FunCaptcha] Error setting up analysis listeners:', error.message);
+        Logger.error('NETWORK', '[FunCaptcha] Error setting up analysis listeners:', error.message);
     }
 
     return { status: 'started' };
 }
 
-console.log('[FunCaptcha] Interceptor loaded');
+Logger.network('[FunCaptcha] Interceptor loaded');

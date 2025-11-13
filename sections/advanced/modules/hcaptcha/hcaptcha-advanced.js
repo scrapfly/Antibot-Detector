@@ -2,7 +2,7 @@
  * HCaptchaAdvanced - hCaptcha Module (simplified version)
  */
 
-console.log('[HCaptchaAdvanced] Loading...');
+Logger.network('[HCaptchaAdvanced] Loading...');
 
 class HCaptchaAdvanced extends BaseAdvancedModule {
     constructor(detection, tabInfo) {
@@ -72,7 +72,7 @@ class HCaptchaAdvanced extends BaseAdvancedModule {
             // Set up listener for version detection results BEFORE reloading
             const versionListener = (message) => {
                 if (message.type === 'HCAPTCHA_VERSION_RESULT') {
-                    console.log('[hCaptcha] Version result received:', message.data);
+                    Logger.network('[hCaptcha] Version result received:', message.data);
                     this.displayVersionModal(message.data);
                     chrome.runtime.onMessage.removeListener(versionListener);
                 }
@@ -86,7 +86,7 @@ class HCaptchaAdvanced extends BaseAdvancedModule {
                 tabId: this.tabInfo.id
             });
 
-            console.log('[hCaptcha] Check version initiated:', response);
+            Logger.network('[hCaptcha] Check version initiated:', response);
 
             if (response && response.status === 'started') {
                 NotificationHelper.info('Checking hCaptcha version... Page will reload');
@@ -110,7 +110,7 @@ class HCaptchaAdvanced extends BaseAdvancedModule {
                 chrome.runtime.onMessage.removeListener(versionListener);
             }
         } catch (error) {
-            console.error('[hCaptcha] Failed to check version:', error);
+            Logger.error('NETWORK', '[hCaptcha] Failed to check version:', error);
             NotificationHelper.error('Failed to check version: ' + error.message);
         }
     }
@@ -369,4 +369,4 @@ if (typeof module !== 'undefined' && module.exports) {
     window.HCaptchaAdvanced = HCaptchaAdvanced;
 }
 
-console.log('[HCaptchaAdvanced] Loaded');
+Logger.network('[HCaptchaAdvanced] Loaded');

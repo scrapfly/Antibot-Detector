@@ -2,7 +2,7 @@
  * FunCaptchaAdvanced - FunCaptcha Module (simplified version)
  */
 
-console.log('[FunCaptchaAdvanced] Loading...');
+Logger.network('[FunCaptchaAdvanced] Loading...');
 
 class FunCaptchaAdvanced extends BaseAdvancedModule {
     constructor(detection, tabInfo) {
@@ -204,4 +204,4 @@ if (typeof module !== 'undefined' && module.exports) {
     window.FunCaptchaAdvanced = FunCaptchaAdvanced;
 }
 
-console.log('[FunCaptchaAdvanced] Loaded');
+Logger.network('[FunCaptchaAdvanced] Loaded');

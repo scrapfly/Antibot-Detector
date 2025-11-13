@@ -14,7 +14,7 @@
  * - renderCaptureHistoryItems() - Optional: custom history item rendering
  */
 
-console.log('[BaseAdvancedModule] Loading...');
+Logger.ui('[BaseAdvancedModule] Loading...');
 
 class BaseAdvancedModule {
     /**
@@ -93,7 +93,7 @@ class BaseAdvancedModule {
 
             return response;
         } catch (error) {
-            console.error(`[${this.moduleName}] Error checking capture state:`, error);
+            Logger.error('UI', `[${this.moduleName}] Error checking capture state:`, error);
             return { isCapturing: false };
         }
     }
@@ -146,7 +146,7 @@ class BaseAdvancedModule {
     async startCapturing() {
         // If already capturing, stop instead
         if (this.isCapturing) {
-            console.log(`[${this.moduleName}] Already capturing, calling stopCapturing()`);
+            Logger.ui(`[${this.moduleName}] Already capturing, calling stopCapturing()`);
             await this.stopCapturing();
             return;
         }
@@ -155,7 +155,7 @@ class BaseAdvancedModule {
             // Hook: beforeCapture - allows validation and preparation
             const shouldProceed = await this.beforeCapture();
             if (shouldProceed === false) {
-                console.log(`[${this.moduleName}] Capture cancelled by beforeCapture hook`);
+                Logger.ui(`[${this.moduleName}] Capture cancelled by beforeCapture hook`);
                 return;
             }
 
@@ -177,7 +177,7 @@ class BaseAdvancedModule {
                 NotificationHelper.error(`Failed to start capture: ${response.error || 'Unknown error'}`);
             }
         } catch (error) {
-            console.error(`[${this.moduleName}] Failed to start capturing:`, error);
+            Logger.error('UI', `[${this.moduleName}] Failed to start capturing:`, error);
             NotificationHelper.error('Failed to start capture: ' + error.message);
         }
     }
@@ -200,7 +200,7 @@ class BaseAdvancedModule {
             await this.renderCapturedDataSection();
 
         } catch (error) {
-            console.error(`[${this.moduleName}] Failed to stop capturing:`, error);
+            Logger.error('UI', `[${this.moduleName}] Failed to stop capturing:`, error);
             NotificationHelper.error('Failed to stop capture: ' + error.message);
         }
     }
@@ -250,7 +250,7 @@ class BaseAdvancedModule {
         const currentHostname = new URL(this.tabInfo.url).hostname;
         const history = await this.loadCaptureHistory(currentHostname);
 
-        console.log(`[${this.moduleName}] renderCaptureHistoryHTML - Total items: ${history.length}`);
+        Logger.ui(`[${this.moduleName}] renderCaptureHistoryHTML - Total items: ${history.length}`);
 
         // Store filtered history for pagination
         this.currentCaptureHistory = history;
@@ -261,7 +261,7 @@ class BaseAdvancedModule {
         } else {
             // Show first 3 items (pagination will handle the rest)
             const itemsToRender = history.slice(0, 3);
-            console.log(`[${this.moduleName}] Rendering first ${itemsToRender.length} items of ${history.length} total`);
+            Logger.ui(`[${this.moduleName}] Rendering first ${itemsToRender.length} items of ${history.length} total`);
             historyItems = this.renderCaptureHistoryItems(itemsToRender);
         }
 
@@ -376,7 +376,7 @@ class BaseAdvancedModule {
      * Setup capture history event listeners
      */
     setupCaptureHistoryListeners() {
-        console.log(`[${this.moduleName}] setupCaptureHistoryListeners - Items: ${this.currentCaptureHistory?.length || 0}`);
+        Logger.ui(`[${this.moduleName}] setupCaptureHistoryListeners - Items: ${this.currentCaptureHistory?.length || 0}`);
 
         // Clear history button
         const clearBtnId = `clear${this.moduleName.charAt(0).toUpperCase() + this.moduleName.slice(1)}History`;
@@ -387,13 +387,13 @@ class BaseAdvancedModule {
 
         // Setup pagination if we have history items
         if (this.currentCaptureHistory && this.currentCaptureHistory.length > 3) {
-            console.log(`[${this.moduleName}] Setting up pagination for ${this.currentCaptureHistory.length} items`);
+            Logger.ui(`[${this.moduleName}] Setting up pagination for ${this.currentCaptureHistory.length} items`);
             this.setupCaptureHistoryPagination();
             return; // Pagination will handle expand listeners
         }
 
         // Otherwise setup expand listeners directly
-        console.log(`[${this.moduleName}] No pagination needed, setting up expand listeners directly`);
+        Logger.ui(`[${this.moduleName}] No pagination needed, setting up expand listeners directly`);
         this.setupExpandListeners();
     }
 
@@ -433,7 +433,7 @@ class BaseAdvancedModule {
      */
     setupCaptureHistoryPagination() {
         if (!this.currentCaptureHistory || this.currentCaptureHistory.length === 0) {
-            console.warn(`[${this.moduleName}] Cannot setup pagination - no history items`);
+            Logger.warn('UI', `[${this.moduleName}] Cannot setup pagination - no history items`);
             return;
         }
 
@@ -441,22 +441,22 @@ class BaseAdvancedModule {
         const paginationDiv = document.querySelector(`#${paginationId}`);
 
         if (!paginationDiv) {
-            console.error(`[${this.moduleName}] Pagination div #${paginationId} not found in DOM!`);
+            Logger.error('UI', `[${this.moduleName}] Pagination div #${paginationId} not found in DOM!`);
             return;
         }
 
-        console.log(`[${this.moduleName}] Creating PaginationManager for #${paginationId} with ${this.currentCaptureHistory.length} items`);
+        Logger.ui(`[${this.moduleName}] Creating PaginationManager for #${paginationId} with ${this.currentCaptureHistory.length} items`);
 
         this.captureHistoryPagination = new PaginationManager(paginationId, {
             itemsPerPage: 3,
             onPageChange: (page, items) => {
-                console.log(`[${this.moduleName}] Page changed to ${page}, showing ${items.length} items`);
+                Logger.ui(`[${this.moduleName}] Page changed to ${page}, showing ${items.length} items`);
                 this.renderCaptureHistoryPage(items);
             }
         });
 
         this.captureHistoryPagination.setItems(this.currentCaptureHistory);
-        console.log(`[${this.moduleName}] Pagination setup complete`);
+        Logger.ui(`[${this.moduleName}] Pagination setup complete`);
     }
 
     /**
@@ -466,7 +466,7 @@ class BaseAdvancedModule {
     renderCaptureHistoryPage(items) {
         const listContainer = document.querySelector(`#${this.moduleName}HistoryList`);
         if (!listContainer) {
-            console.warn(`[${this.moduleName}] History list container not found`);
+            Logger.warn('UI', `[${this.moduleName}] History list container not found`);
             return;
         }
 
@@ -665,7 +665,7 @@ class BaseAdvancedModule {
 
             // MIGRATION: Convert old { items: [] } format if needed
             if (history.items && Array.isArray(history.items)) {
-                console.log(`[${this.moduleName}] Migrating old storage format during clear`);
+                Logger.ui(`[${this.moduleName}] Migrating old storage format during clear`);
                 const migratedHistory = {};
 
                 // Group items by type, excluding current module
@@ -699,7 +699,7 @@ class BaseAdvancedModule {
             await this.renderCapturedDataSection();
             NotificationHelper.success(`${this.moduleName} capture history cleared`);
         } catch (error) {
-            console.error(`[${this.moduleName}] Failed to clear history:`, error);
+            Logger.error('UI', `[${this.moduleName}] Failed to clear history:`, error);
             NotificationHelper.error('Failed to clear history');
         }
     }
@@ -710,7 +710,7 @@ class BaseAdvancedModule {
     async renderCapturedDataSection() {
         const advancedContent = document.querySelector('#detectionToolsPanel');
         if (!advancedContent) {
-            console.warn(`[${this.moduleName}] #detectionToolsPanel not found`);
+            Logger.warn('UI', `[${this.moduleName}] #detectionToolsPanel not found`);
             return;
         }
 
@@ -784,5 +784,5 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = BaseAdvancedModule;
 } else if (typeof window !== 'undefined') {
     window.BaseAdvancedModule = BaseAdvancedModule;
-    console.log('[BaseAdvancedModule] ✓ Loaded and exported to window.BaseAdvancedModule');
+    Logger.ui('[BaseAdvancedModule] ✓ Loaded and exported to window.BaseAdvancedModule');
 }

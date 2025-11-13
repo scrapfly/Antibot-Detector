@@ -62,7 +62,7 @@ function turnstileStartAnalysis(tabId, url) {
                         data: { scripts: finalResults, scriptCount: finalResults.length }
                     });
                 } catch (error) {
-                    console.log('[Turnstile-Analysis] Popup not available');
+                    Logger.network('[Turnstile-Analysis] Popup not available');
                 }
             }, 5000);
         }
@@ -74,4 +74,4 @@ function turnstileStartAnalysis(tabId, url) {
     return { status: 'started' };
 }
 
-console.log('[Turnstile] Interceptor loaded');
+Logger.network('[Turnstile] Interceptor loaded');

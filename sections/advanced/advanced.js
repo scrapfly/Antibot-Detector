@@ -84,7 +84,7 @@ class Advanced {
    * Display advanced tools interface
    */
   async displayAdvancedTools() {
-    console.log('Advanced.displayAdvancedTools called');
+    Logger.ui('Advanced.displayAdvancedTools called');
 
     // Clean expired captures when displaying advanced tools
     await this.cleanExpiredCaptureData();
@@ -103,7 +103,7 @@ class Advanced {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       this.currentTab = tab;
     } catch (error) {
-      console.error('Failed to get current tab:', error);
+      Logger.error('UI', 'Failed to get current tab:', error);
     }
 
     // Setup message listener for capture completion
@@ -146,7 +146,7 @@ class Advanced {
 
     this.captureCompletionListener = async (message) => {
       if (message.type === 'AKAMAI_CAPTURE_COMPLETED' || message.type === 'RECAPTCHA_CAPTURE_COMPLETED' || message.type === 'HCAPTCHA_CAPTURE_COMPLETED') {
-        console.log('[Advanced] Capture completed, updating captured data display');
+        Logger.ui('[Advanced] Capture completed, updating captured data display');
 
         // Don't clear the tools panel, just update the captured data section
         if (this.activeModule) {
@@ -217,16 +217,16 @@ class Advanced {
     let results = this.detectionSection && this.detectionSection.currentResults ?
       this.detectionSection.currentResults : [];
 
-    console.log('[Advanced] 🔍 DETECTION RETRIEVAL STEP 1: Check detectionSection.currentResults');
-    console.log('[Advanced]   - detectionSection exists:', !!this.detectionSection);
-    console.log('[Advanced]   - currentResults length:', results.length);
+    Logger.ui('[Advanced] 🔍 DETECTION RETRIEVAL STEP 1: Check detectionSection.currentResults');
+    Logger.ui('[Advanced]   - detectionSection exists:', !!this.detectionSection);
+    Logger.ui('[Advanced]   - currentResults length:', results.length);
 
     // If results found, validate structure
     if (results.length > 0) {
-      console.log('[Advanced] ✅ Found', results.length, 'detections in detectionSection');
+      Logger.ui('[Advanced] ✅ Found', results.length, 'detections in detectionSection');
       // Log first detection structure for validation
       const firstDet = results[0];
-      console.log('[Advanced] 📋 First detection structure:', {
+      Logger.ui('[Advanced] 📋 First detection structure:', {
         hasDetector: !!firstDet.detector,
         detectorId: firstDet.detector?.id,
         detectorName: firstDet.detector?.name
@@ -235,13 +235,13 @@ class Advanced {
     }
 
     // PRIORITY 2: Fetch from background service worker with retries
-    console.log('[Advanced] 🔍 DETECTION RETRIEVAL STEP 2: Background fetch');
+    Logger.ui('[Advanced] 🔍 DETECTION RETRIEVAL STEP 2: Background fetch');
     if (!this.currentTab) {
-      console.warn('[Advanced] ⚠️  No currentTab available, cannot fetch from background');
+      Logger.warn('UI', '[Advanced] ⚠️  No currentTab available, cannot fetch from background');
       return results;
     }
 
-    console.log('[Advanced]   - Fetching for tab ID:', this.currentTab.id, 'URL:', this.currentTab.url);
+    Logger.ui('[Advanced]   - Fetching for tab ID:', this.currentTab.id, 'URL:', this.currentTab.url);
 
     // Try to fetch with retry logic
     let retryCount = 0;
@@ -250,7 +250,7 @@ class Advanced {
       try {
         const response = await new Promise((resolve) => {
           const timeout = setTimeout(() => {
-            console.warn('[Advanced] ⏱️  Background message timeout after 3s');
+            Logger.warn('UI', '[Advanced] ⏱️  Background message timeout after 3s');
             resolve(null);
           }, 3000);
 
@@ -261,10 +261,10 @@ class Advanced {
             clearTimeout(timeout);
 
             if (chrome.runtime.lastError) {
-              console.error('[Advanced] Chrome error in message:', chrome.runtime.lastError);
+              Logger.error('UI', '[Advanced] Chrome error in message:', chrome.runtime.lastError);
               resolve(null);
             } else {
-              console.log('[Advanced] ✓ Background response received (attempt', retryCount + 1, ')', response ? 'with data' : 'empty');
+              Logger.ui('[Advanced] ✓ Background response received (attempt', retryCount + 1, ')', response ? 'with data' : 'empty');
               resolve(response);
             }
           });
@@ -273,21 +273,21 @@ class Advanced {
         if (response && response.detectionResults && Array.isArray(response.detectionResults)) {
           if (response.detectionResults.length > 0) {
             results = response.detectionResults;
-            console.log('[Advanced] ✅ Fetched', results.length, 'detections from background');
+            Logger.ui('[Advanced] ✅ Fetched', results.length, 'detections from background');
 
             // Validate first detection
             const firstDet = results[0];
-            console.log('[Advanced] 📋 First detection from background:', {
+            Logger.ui('[Advanced] 📋 First detection from background:', {
               hasDetector: !!firstDet.detector,
               detectorId: firstDet.detector?.id,
               detectorName: firstDet.detector?.name
             });
             return results;
           } else {
-            console.log('[Advanced] ℹ️  Background returned empty array');
+            Logger.ui('[Advanced] ℹ️  Background returned empty array');
           }
         } else if (response) {
-          console.warn('[Advanced] ⚠️  Unexpected response format:', {
+          Logger.warn('UI', '[Advanced] ⚠️  Unexpected response format:', {
             hasDetectionResults: !!response.detectionResults,
             isArray: Array.isArray(response.detectionResults),
             responseKeys: Object.keys(response),
@@ -296,20 +296,20 @@ class Advanced {
           });
         }
       } catch (error) {
-        console.error('[Advanced] Error in background fetch attempt', retryCount + 1, ':', error);
+        Logger.error('UI', '[Advanced] Error in background fetch attempt', retryCount + 1, ':', error);
       }
 
       // Retry if failed
       if (results.length === 0 && retryCount < maxRetries - 1) {
         retryCount++;
-        console.log('[Advanced]   - Retrying... (attempt', retryCount + 1, 'of', maxRetries, ')');
+        Logger.ui('[Advanced]   - Retrying... (attempt', retryCount + 1, 'of', maxRetries, ')');
         await new Promise(resolve => setTimeout(resolve, 500)); // Wait before retry
       } else {
         break;
       }
     }
 
-    console.log('[Advanced] 📊 FINAL: Returning', results.length, 'detections');
+    Logger.ui('[Advanced] 📊 FINAL: Returning', results.length, 'detections');
     return results;
   }
 
@@ -321,35 +321,35 @@ class Advanced {
     const detections = await this.getCurrentDetections();
     const availableTools = [];
 
-    console.log('[Advanced] 🔧 CHECKING AVAILABLE MODULES');
-    console.log('[Advanced] Total detections to check:', detections.length);
-    console.log('[Advanced] Available module keys:', Object.keys(Advanced.AVAILABLE_MODULES));
+    Logger.ui('[Advanced] 🔧 CHECKING AVAILABLE MODULES');
+    Logger.ui('[Advanced] Total detections to check:', detections.length);
+    Logger.ui('[Advanced] Available module keys:', Object.keys(Advanced.AVAILABLE_MODULES));
 
     detections.forEach((detection, index) => {
       const detectorId = detection.detector?.id;
       const detectorName = detection.detector?.name;
       const hasModule = !!Advanced.AVAILABLE_MODULES[detectorId];
 
-      console.log(`[Advanced] [${index + 1}/${detections.length}] Checking:`, {
+      Logger.ui(`[Advanced] [${index + 1}/${detections.length}] Checking:`, {
         detectorId,
         detectorName,
         hasModule: hasModule ? '✅ YES' : '❌ NO'
       });
 
       if (detectorId && Advanced.AVAILABLE_MODULES[detectorId]) {
-        console.log(`[Advanced]   → Adding "${detectorName}" to available tools`);
+        Logger.ui(`[Advanced]   → Adding "${detectorName}" to available tools`);
         availableTools.push({
           detection,
           module: Advanced.AVAILABLE_MODULES[detectorId]
         });
       } else if (detectorId) {
-        console.log(`[Advanced]   → "${detectorName}" not in AVAILABLE_MODULES (missing implementation)`);
+        Logger.ui(`[Advanced]   → "${detectorName}" not in AVAILABLE_MODULES (missing implementation)`);
       } else {
-        console.warn(`[Advanced]   → Detection missing detector.id!`);
+        Logger.warn('UI', `[Advanced]   → Detection missing detector.id!`);
       }
     });
 
-    console.log('[Advanced] ✅ MODULE CHECK COMPLETE:', {
+    Logger.ui('[Advanced] ✅ MODULE CHECK COMPLETE:', {
       detectedTotal: detections.length,
       withTools: availableTools.length,
       withoutTools: detections.length - availableTools.length
@@ -371,14 +371,14 @@ class Advanced {
 
     const moduleInfo = Advanced.AVAILABLE_MODULES[moduleId];
     if (!moduleInfo) {
-      console.error(`Module ${moduleId} not found in registry`);
+      Logger.error('UI', `Module ${moduleId} not found in registry`);
       return null;
     }
 
     try {
       const ModuleClass = window[moduleInfo.name];
       if (!ModuleClass) {
-        console.error(`Module class ${moduleInfo.name} not loaded`);
+        Logger.error('UI', `Module class ${moduleInfo.name} not loaded`);
         return null;
       }
 
@@ -386,7 +386,7 @@ class Advanced {
       this.loadedModules[moduleId] = moduleInstance;
       return moduleInstance;
     } catch (error) {
-      console.error(`Failed to initialize module ${moduleId}:`, error);
+      Logger.error('UI', `Failed to initialize module ${moduleId}:`, error);
       return null;
     }
   }
@@ -396,51 +396,51 @@ class Advanced {
    */
   async renderAdvancedInterface() {
     try {
-      console.log('[Advanced] renderAdvancedInterface called');
+      Logger.ui('[Advanced] renderAdvancedInterface called');
       const advancedContent = document.querySelector('#advancedContent');
       const noAdvancedState = document.querySelector('#noAdvancedState');
 
       if (!advancedContent) {
-        console.error('[Advanced] ❌ #advancedContent not found in DOM!');
+        Logger.error('UI', '[Advanced] ❌ #advancedContent not found in DOM!');
         return;
       }
-      console.log('[Advanced] ✓ Found #advancedContent');
+      Logger.ui('[Advanced] ✓ Found #advancedContent');
 
       // Show loading state
-      console.log('[Advanced] 🔄 Setting display state...');
+      Logger.ui('[Advanced] 🔄 Setting display state...');
       advancedContent.style.display = 'flex';
       if (noAdvancedState) {
         noAdvancedState.style.display = 'none';
       }
 
-      console.log('[Advanced] 🔄 Fetching detection modules...');
+      Logger.ui('[Advanced] 🔄 Fetching detection modules...');
       const detectionTools = await this.getDetectionModules();
-      console.log('[Advanced] ✅ Fetching complete:', detectionTools.length, 'tools available');
+      Logger.ui('[Advanced] ✅ Fetching complete:', detectionTools.length, 'tools available');
       this.availableDetectionTools = detectionTools;
 
       // If no detections available, show empty state
       if (detectionTools.length === 0) {
-        console.log('[Advanced] ⚠️  No detection tools available (no matching modules)');
+        Logger.ui('[Advanced] ⚠️  No detection tools available (no matching modules)');
         advancedContent.style.display = 'none';
         if (noAdvancedState) {
           noAdvancedState.style.display = 'flex';
-          console.log('[Advanced] ✓ Showed empty state');
+          Logger.ui('[Advanced] ✓ Showed empty state');
         }
         return;
       }
 
-      console.log('[Advanced] ✅ Found', detectionTools.length, 'available tools, rendering interface');
+      Logger.ui('[Advanced] ✅ Found', detectionTools.length, 'available tools, rendering interface');
 
       // Get toolsPanel
       const toolsPanel = document.querySelector('#toolsPanel');
       if (!toolsPanel) {
-        console.error('[Advanced] ❌ #toolsPanel not found in DOM!');
+        Logger.error('UI', '[Advanced] ❌ #toolsPanel not found in DOM!');
         return;
       }
-      console.log('[Advanced] ✓ Found #toolsPanel');
+      Logger.ui('[Advanced] ✓ Found #toolsPanel');
 
       // Generate tools HTML
-      console.log('[Advanced] 🔨 Generating tools HTML...');
+      Logger.ui('[Advanced] 🔨 Generating tools HTML...');
       let captchaToolsHtml = '';
       if (detectionTools.length > 0) {
         const detectionsOptions = detectionTools.map(({ detection, module }) => {
@@ -501,12 +501,12 @@ class Advanced {
       `;
 
       // Inject into tools panel instead of entire content
-      console.log('[Advanced] 📝 Injecting HTML into toolsPanel...');
+      Logger.ui('[Advanced] 📝 Injecting HTML into toolsPanel...');
       toolsPanel.innerHTML = interfaceHtml;
-      console.log('[Advanced] ✓ HTML injected successfully');
+      Logger.ui('[Advanced] ✓ HTML injected successfully');
 
       // Setup sub-tab listeners
-      console.log('[Advanced] 🔗 Setting up listeners...');
+      Logger.ui('[Advanced] 🔗 Setting up listeners...');
       this.setupSubTabListeners();
 
       // Update capture count badge
@@ -514,11 +514,11 @@ class Advanced {
 
       this.setupDetectionToolsListeners();
       this.setupAdvancedEventListeners();
-      console.log('[Advanced] ✅ renderAdvancedInterface complete!');
+      Logger.ui('[Advanced] ✅ renderAdvancedInterface complete!');
 
     } catch (error) {
-      console.error('[Advanced] ❌ ERROR in renderAdvancedInterface:', error);
-      console.error('[Advanced] Stack trace:', error.stack);
+      Logger.error('UI', '[Advanced] ❌ ERROR in renderAdvancedInterface:', error);
+      Logger.error('UI', '[Advanced] Stack trace:', error.stack);
 
       // Show error state
       const advancedContent = document.querySelector('#advancedContent');
@@ -555,7 +555,7 @@ class Advanced {
    * @param {string} tabName - 'tools' or 'captures'
    */
   async switchAdvancedTab(tabName) {
-    console.log('[Advanced] Switching to tab:', tabName);
+    Logger.ui('[Advanced] Switching to tab:', tabName);
 
     // Update tab buttons
     const allTabs = document.querySelectorAll('.advanced-sub-tab');
@@ -632,7 +632,7 @@ class Advanced {
         badge.style.display = 'none';
       }
     } catch (error) {
-      console.error('[Advanced] Error updating capture count:', error);
+      Logger.error('UI', '[Advanced] Error updating capture count:', error);
     }
   }
 
@@ -673,7 +673,7 @@ class Advanced {
           // Log cleanup if items were removed
           if (allHistory[moduleId].length < originalLength) {
             const removedCount = originalLength - allHistory[moduleId].length;
-            console.log(`[Advanced] Cleaned ${removedCount} expired captures from ${moduleId}`);
+            Logger.ui(`[Advanced] Cleaned ${removedCount} expired captures from ${moduleId}`);
           }
         }
       });
@@ -683,10 +683,10 @@ class Advanced {
         await chrome.storage.local.set({
           scrapfly_advanced_history: allHistory
         });
-        console.log('[Advanced] ✓ Expired capture data cleaned and saved');
+        Logger.ui('[Advanced] ✓ Expired capture data cleaned and saved');
       }
     } catch (error) {
-      console.error('[Advanced] Error cleaning expired captures:', error);
+      Logger.error('UI', '[Advanced] Error cleaning expired captures:', error);
     }
   }
 
@@ -694,7 +694,7 @@ class Advanced {
    * Render unified capture history from all modules with filters and search
    */
   async renderUnifiedCaptureHistory() {
-    console.log('[Advanced] Rendering unified capture history');
+    Logger.ui('[Advanced] Rendering unified capture history');
     const capturesPanel = document.querySelector('#capturesPanel');
     if (!capturesPanel) return;
 
@@ -722,7 +722,7 @@ class Advanced {
 
       // MIGRATION: Convert old { items: [] } format to new { moduleId: [] } format
       if (allHistory.items && Array.isArray(allHistory.items)) {
-        console.log('[Advanced] Migrating old storage format to new format');
+        Logger.ui('[Advanced] Migrating old storage format to new format');
         const migratedHistory = {};
 
         // Group items by type (moduleId)
@@ -751,7 +751,7 @@ class Advanced {
           scrapfly_advanced_history: migratedHistory
         });
 
-        console.log('[Advanced] Migration complete:', Object.keys(allHistory));
+        Logger.ui('[Advanced] Migration complete:', Object.keys(allHistory));
       }
 
       // Collect all captures with module info
@@ -797,7 +797,7 @@ class Advanced {
       this.setupCaptureHistoryListeners();
 
     } catch (error) {
-      console.error('[Advanced] Error rendering unified capture history:', error);
+      Logger.error('UI', '[Advanced] Error rendering unified capture history:', error);
       capturesPanel.innerHTML = `
         <div class="error-state">
           <p>Error loading captures: ${error.message}</p>
@@ -817,7 +817,7 @@ class Advanced {
         return new URL(tab.url).hostname;
       }
     } catch (error) {
-      console.error('[Advanced] Error getting current site:', error);
+      Logger.error('UI', '[Advanced] Error getting current site:', error);
     }
     return null;
   }
@@ -1104,7 +1104,7 @@ class Advanced {
 
       // MIGRATION: Convert old { items: [] } format to new { moduleId: [] } format
       if (allHistory.items && Array.isArray(allHistory.items)) {
-        console.log('[Advanced] viewCaptureDetails: Migrating old storage format to new format');
+        Logger.ui('[Advanced] viewCaptureDetails: Migrating old storage format to new format');
         const migratedHistory = {};
 
         // Group items by type (moduleId)
@@ -1133,7 +1133,7 @@ class Advanced {
           scrapfly_advanced_history: migratedHistory
         });
 
-        console.log('[Advanced] viewCaptureDetails: Migration complete:', Object.keys(allHistory));
+        Logger.ui('[Advanced] viewCaptureDetails: Migration complete:', Object.keys(allHistory));
       }
 
       const moduleHistory = allHistory[moduleId] || [];
@@ -1185,7 +1185,7 @@ class Advanced {
         NotificationHelper.info('Details view not available for this module');
       }
     } catch (error) {
-      console.error('[Advanced] Error viewing capture details:', error);
+      Logger.error('UI', '[Advanced] Error viewing capture details:', error);
       NotificationHelper.error('Failed to view capture details');
     }
   }
@@ -1209,7 +1209,7 @@ class Advanced {
       await AdvancedUtils.copyToClipboard(JSON.stringify(captureData, null, 2));
       NotificationHelper.success('Capture data copied to clipboard');
     } catch (error) {
-      console.error('[Advanced] Error copying capture:', error);
+      Logger.error('UI', '[Advanced] Error copying capture:', error);
       NotificationHelper.error('Failed to copy capture data');
     }
   }
@@ -1236,7 +1236,7 @@ class Advanced {
       await this.renderUnifiedCaptureHistory();
       await this.updateCaptureCountBadge();
     } catch (error) {
-      console.error('[Advanced] Error deleting capture:', error);
+      Logger.error('UI', '[Advanced] Error deleting capture:', error);
       NotificationHelper.error('Failed to delete capture');
     }
   }
@@ -1291,7 +1291,7 @@ class Advanced {
 
       NotificationHelper.success(`Exported ${filteredCaptures.length} captures`);
     } catch (error) {
-      console.error('[Advanced] Error exporting captures:', error);
+      Logger.error('UI', '[Advanced] Error exporting captures:', error);
       NotificationHelper.error('Failed to export captures');
     }
   }
@@ -1390,7 +1390,7 @@ class Advanced {
       await this.renderUnifiedCaptureHistory();
       await this.updateCaptureCountBadge();
     } catch (error) {
-      console.error('[Advanced] Error clearing captures:', error);
+      Logger.error('UI', '[Advanced] Error clearing captures:', error);
       NotificationHelper.error('Failed to clear captures');
     }
   }
@@ -1604,7 +1604,7 @@ class Advanced {
    * Load tools for selected detection
    */
   async loadSelectedDetectionTools() {
-    console.log('[Advanced] loadSelectedDetectionTools called');
+    Logger.ui('[Advanced] loadSelectedDetectionTools called');
 
     // Clean expired captures when loading tools
     await this.cleanExpiredCaptureData();
@@ -1613,25 +1613,25 @@ class Advanced {
     const panel = document.querySelector('#detectionToolsPanel');
 
     if (!selector || !panel) {
-      console.error('[Advanced] Required elements not found:', { selector: !!selector, panel: !!panel });
+      Logger.error('UI', '[Advanced] Required elements not found:', { selector: !!selector, panel: !!panel });
       return;
     }
 
     const display = selector.querySelector('.selector-display');
     const detectorId = display?.getAttribute('data-selected');
-    console.log('[Advanced] Selected detector ID:', detectorId);
+    Logger.ui('[Advanced] Selected detector ID:', detectorId);
 
     if (!detectorId) {
-      console.warn('[Advanced] No detector selected');
+      Logger.warn('UI', '[Advanced] No detector selected');
       NotificationHelper.warning('Please select a detection first');
       return;
     }
 
     const selected = this.availableDetectionTools.find(({ detection }) => detection.detector?.id === detectorId);
-    console.log('[Advanced] Found selected tool:', selected);
+    Logger.ui('[Advanced] Found selected tool:', selected);
 
     if (!selected) {
-      console.error('[Advanced] Selected tool not found in availableDetectionTools');
+      Logger.error('UI', '[Advanced] Selected tool not found in availableDetectionTools');
       return;
     }
 
@@ -1868,13 +1868,13 @@ class Advanced {
       if (!tab) throw new Error('No active tab found');
 
       // Simulate deep analysis (in real implementation, this would be more comprehensive)
-      console.log('Running deep analysis on:', tab.url);
+      Logger.ui('Running deep analysis on:', tab.url);
 
       const analysisData = await this.performDeepAnalysis(tab);
       this.displayAnalysisResults(analysisData);
 
     } catch (error) {
-      console.error('Deep analysis failed:', error);
+      Logger.error('UI', 'Deep analysis failed:', error);
       this.displayError('Failed to run deep analysis: ' + error.message);
     } finally {
       // Reset UI
@@ -2082,12 +2082,12 @@ class Advanced {
       a.click();
       URL.revokeObjectURL(url);
 
-      console.log(`Exported data as ${format}`);
+      Logger.ui(`Exported data as ${format}`);
       this.hideExportModal();
       NotificationHelper.success(`Data exported successfully as ${format.toUpperCase()}`);
 
     } catch (error) {
-      console.error('Export failed:', error);
+      Logger.error('UI', 'Export failed:', error);
       NotificationHelper.error('Export failed: ' + error.message);
     }
   }
@@ -2156,7 +2156,7 @@ class Advanced {
    * Generate security report
    */
   generateSecurityReport() {
-    console.log('Generating security report...');
+    Logger.ui('Generating security report...');
     NotificationHelper.info('Security report generation feature coming soon!', {
       duration: 3000
     });
@@ -2166,7 +2166,7 @@ class Advanced {
    * Analyze bypass techniques
    */
   analyzeBypassTechniques() {
-    console.log('Analyzing bypass techniques...');
+    Logger.ui('Analyzing bypass techniques...');
     NotificationHelper.info('Bypass analysis feature coming soon!', {
       duration: 3000
     });
@@ -2205,7 +2205,7 @@ class Advanced {
    */
   async initialize() {
     await this.loadHTML();
-    console.log('Advanced section initialized');
+    Logger.ui('Advanced section initialized');
   }
 
   /**
@@ -2223,7 +2223,7 @@ class Advanced {
         this.setupAdvancedInfoModalListeners();
       }
     } catch (error) {
-      console.error('Failed to load advanced HTML:', error);
+      Logger.error('UI', 'Failed to load advanced HTML:', error);
     }
   }
 }

@@ -67,35 +67,35 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
      * Setup tool-specific event listeners
      */
     setupToolListeners() {
-        console.log('[ReCAPTCHA] Setting up tool listeners...');
-        console.log('[ReCAPTCHA] this.clickRecaptcha exists:', typeof this.clickRecaptcha);
-        console.log('[ReCAPTCHA] this.extractSiteKey exists:', typeof this.extractSiteKey);
-        console.log('[ReCAPTCHA] this.captureCallback exists:', typeof this.captureCallback);
-        console.log('[ReCAPTCHA] this.startCapturing exists:', typeof this.startCapturing);
+        Logger.network('[ReCAPTCHA] Setting up tool listeners...');
+        Logger.network('[ReCAPTCHA] this.clickRecaptcha exists:', typeof this.clickRecaptcha);
+        Logger.network('[ReCAPTCHA] this.extractSiteKey exists:', typeof this.extractSiteKey);
+        Logger.network('[ReCAPTCHA] this.captureCallback exists:', typeof this.captureCallback);
+        Logger.network('[ReCAPTCHA] this.startCapturing exists:', typeof this.startCapturing);
 
         const actions = [
             { id: 'recaptchaClick', method: () => {
-                console.log('[ReCAPTCHA] Click button pressed!');
+                Logger.network('[ReCAPTCHA] Click button pressed!');
                 try {
                     this.clickRecaptcha();
                 } catch (e) {
-                    console.error('[ReCAPTCHA] Error in clickRecaptcha:', e);
+                    Logger.error('NETWORK', '[ReCAPTCHA] Error in clickRecaptcha:', e);
                 }
             }},
             { id: 'recaptchaExtract', method: () => {
-                console.log('[ReCAPTCHA] Extract button pressed!');
+                Logger.network('[ReCAPTCHA] Extract button pressed!');
                 try {
                     this.extractSiteKey();
                 } catch (e) {
-                    console.error('[ReCAPTCHA] Error in extractSiteKey:', e);
+                    Logger.error('NETWORK', '[ReCAPTCHA] Error in extractSiteKey:', e);
                 }
             }},
             { id: 'recaptchaCallback', method: () => {
-                console.log('[ReCAPTCHA] Callback button pressed!');
+                Logger.network('[ReCAPTCHA] Callback button pressed!');
                 try {
                     this.captureCallback();
                 } catch (e) {
-                    console.error('[ReCAPTCHA] Error in captureCallback:', e);
+                    Logger.error('NETWORK', '[ReCAPTCHA] Error in captureCallback:', e);
                 }
             }},
             { id: 'recaptchaStartCapture', method: () => this.startCapturing() }
@@ -103,10 +103,10 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
 
         actions.forEach(({ id, method }) => {
             const btn = document.querySelector(`#${id}`);
-            console.log(`[ReCAPTCHA] Button #${id}:`, btn ? 'FOUND' : 'NOT FOUND');
+            Logger.network(`[ReCAPTCHA] Button #${id}:`, btn ? 'FOUND' : 'NOT FOUND');
             if (btn) {
                 btn.addEventListener('click', method);
-                console.log(`[ReCAPTCHA] Added listener to #${id}`);
+                Logger.network(`[ReCAPTCHA] Added listener to #${id}`);
             }
         });
     }
@@ -115,7 +115,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
      * Click reCAPTCHA and obtain selector
      */
     async clickRecaptcha() {
-        console.log('[ReCAPTCHA] clickRecaptcha() called');
+        Logger.network('[ReCAPTCHA] clickRecaptcha() called');
         try {
             if (!this.tabInfo || !this.tabInfo.id) {
                 throw new Error('Tab information not available');
@@ -164,15 +164,15 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
                 }
             });
 
-            console.log('[ReCAPTCHA] Script execution results:', results);
+            Logger.network('[ReCAPTCHA] Script execution results:', results);
             if (results && results[0] && results[0].result) {
-                console.log('[ReCAPTCHA] Calling displaySelectorModal with:', results[0].result);
+                Logger.network('[ReCAPTCHA] Calling displaySelectorModal with:', results[0].result);
                 this.displaySelectorModal(results[0].result);
             } else {
-                console.log('[ReCAPTCHA] No results from script execution');
+                Logger.network('[ReCAPTCHA] No results from script execution');
             }
         } catch (error) {
-            console.error('[ReCAPTCHA] Failed to click reCAPTCHA:', error);
+            Logger.error('NETWORK', '[ReCAPTCHA] Failed to click reCAPTCHA:', error);
             NotificationHelper.error('Failed to click: ' + error.message);
         }
     }
@@ -181,7 +181,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
      * Extract sitekey from page
      */
     async extractSiteKey() {
-        console.log('[ReCAPTCHA] extractSiteKey() called');
+        Logger.network('[ReCAPTCHA] extractSiteKey() called');
         try {
             if (!this.tabInfo || !this.tabInfo.id) {
                 throw new Error('Tab information not available');
@@ -224,22 +224,22 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
                 }
             });
 
-            console.log('[ReCAPTCHA] Extract script results:', results);
+            Logger.network('[ReCAPTCHA] Extract script results:', results);
             if (results && results[0] && results[0].result) {
                 const result = results[0].result;
-                console.log('[ReCAPTCHA] Extract result:', result);
+                Logger.network('[ReCAPTCHA] Extract result:', result);
                 if (result.success) {
-                    console.log('[ReCAPTCHA] Calling displaySiteKeyModal with:', result.sitekey);
+                    Logger.network('[ReCAPTCHA] Calling displaySiteKeyModal with:', result.sitekey);
                     this.displaySiteKeyModal(result.sitekey);
                 } else {
-                    console.log('[ReCAPTCHA] No sitekey found:', result.error);
+                    Logger.network('[ReCAPTCHA] No sitekey found:', result.error);
                     NotificationHelper.error(result.error);
                 }
             } else {
-                console.log('[ReCAPTCHA] No results from extract script');
+                Logger.network('[ReCAPTCHA] No results from extract script');
             }
         } catch (error) {
-            console.error('[ReCAPTCHA] Failed to extract sitekey:', error);
+            Logger.error('NETWORK', '[ReCAPTCHA] Failed to extract sitekey:', error);
             NotificationHelper.error('Failed to extract: ' + error.message);
         }
     }
@@ -248,7 +248,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
      * Check reCAPTCHA version on page
      */
     async checkVersion() {
-        console.log('[ReCAPTCHA] checkVersion() called');
+        Logger.network('[ReCAPTCHA] checkVersion() called');
         try {
             if (!this.tabInfo || !this.tabInfo.id) {
                 throw new Error('Tab information not available');
@@ -293,21 +293,21 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
                 }
             });
 
-            console.log('[ReCAPTCHA] Version check results:', results);
+            Logger.network('[ReCAPTCHA] Version check results:', results);
             if (results && results[0] && results[0].result) {
                 const result = results[0].result;
-                console.log('[ReCAPTCHA] Version result:', result);
+                Logger.network('[ReCAPTCHA] Version result:', result);
                 if (result.success) {
-                    console.log('[ReCAPTCHA] Calling displayVersionModal with:', result);
+                    Logger.network('[ReCAPTCHA] Calling displayVersionModal with:', result);
                     this.displayVersionModal(result);
                 } else {
-                    console.log('[ReCAPTCHA] Version check failed');
+                    Logger.network('[ReCAPTCHA] Version check failed');
                 }
             } else {
-                console.log('[ReCAPTCHA] No results from version check script');
+                Logger.network('[ReCAPTCHA] No results from version check script');
             }
         } catch (error) {
-            console.error('[ReCAPTCHA] Failed to check version:', error);
+            Logger.error('NETWORK', '[ReCAPTCHA] Failed to check version:', error);
             NotificationHelper.error('Failed to check: ' + error.message);
         }
     }
@@ -316,7 +316,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
      * Capture callback function names
      */
     async captureCallback() {
-        console.log('[ReCAPTCHA] captureCallback() called');
+        Logger.network('[ReCAPTCHA] captureCallback() called');
         try {
             if (!this.tabInfo || !this.tabInfo.id) {
                 throw new Error('Tab information not available');
@@ -432,7 +432,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
                 }
             }
         } catch (error) {
-            console.error('[ReCAPTCHA] Failed to capture callback:', error);
+            Logger.error('NETWORK', '[ReCAPTCHA] Failed to capture callback:', error);
             NotificationHelper.error('Failed to capture callback: ' + error.message);
         }
     }
@@ -441,7 +441,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
      * Display selector click result modal
      */
     displaySelectorModal(result) {
-        console.log('[ReCAPTCHA] displaySelectorModal called with:', result);
+        Logger.network('[ReCAPTCHA] displaySelectorModal called with:', result);
         const modal = document.createElement('div');
         modal.className = 'advanced-modal-overlay';
         modal.style.cssText = `
@@ -487,7 +487,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
             </div>
         `;
 
-        console.log('[ReCAPTCHA] Appending modal to body');
+        Logger.network('[ReCAPTCHA] Appending modal to body');
         document.body.appendChild(modal);
 
         // Add click-to-copy for selector value
@@ -514,21 +514,21 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
         const closeBtn = modal.querySelector('.advanced-modal-close-btn');
         if (closeBtn) {
             closeBtn.addEventListener('click', () => {
-                console.log('[ReCAPTCHA] Close button clicked');
+                Logger.network('[ReCAPTCHA] Close button clicked');
                 modal.remove();
             });
         }
 
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
-                console.log('[ReCAPTCHA] Modal overlay clicked');
+                Logger.network('[ReCAPTCHA] Modal overlay clicked');
                 modal.remove();
             }
         });
 
         setTimeout(() => {
             modal.style.opacity = '1';
-            console.log('[ReCAPTCHA] Modal opacity set to 1');
+            Logger.network('[ReCAPTCHA] Modal opacity set to 1');
         }, 10);
     }
 
@@ -536,7 +536,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
      * Display extracted sitekey modal
      */
     displaySiteKeyModal(sitekey) {
-        console.log('[ReCAPTCHA] displaySiteKeyModal called with:', sitekey);
+        Logger.network('[ReCAPTCHA] displaySiteKeyModal called with:', sitekey);
         const modal = document.createElement('div');
         modal.className = 'recaptcha-modal-overlay';
         modal.style.cssText = `
@@ -568,7 +568,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
             </div>
         `;
 
-        console.log('[ReCAPTCHA] Appending sitekey modal to body');
+        Logger.network('[ReCAPTCHA] Appending sitekey modal to body');
         document.body.appendChild(modal);
 
         // Add click-to-copy for sitekey value
@@ -603,7 +603,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
 
         setTimeout(() => {
             modal.style.opacity = '1';
-            console.log('[ReCAPTCHA] Sitekey modal visible');
+            Logger.network('[ReCAPTCHA] Sitekey modal visible');
         }, 10);
     }
 
@@ -611,7 +611,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
      * Display version check results modal
      */
     displayVersionModal(versionData) {
-        console.log('[ReCAPTCHA] displayVersionModal called with:', versionData);
+        Logger.network('[ReCAPTCHA] displayVersionModal called with:', versionData);
         const modal = document.createElement('div');
         modal.className = 'recaptcha-modal-overlay';
         modal.style.cssText = `
@@ -665,7 +665,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
             </div>
         `;
 
-        console.log('[ReCAPTCHA] Appending version modal to body');
+        Logger.network('[ReCAPTCHA] Appending version modal to body');
         document.body.appendChild(modal);
 
         const closeBtn = modal.querySelector('.advanced-modal-close-btn');
@@ -679,7 +679,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
 
         setTimeout(() => {
             modal.style.opacity = '1';
-            console.log('[ReCAPTCHA] Version modal visible');
+            Logger.network('[ReCAPTCHA] Version modal visible');
         }, 10);
     }
 
@@ -687,7 +687,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
      * Display callback functions modal
      */
     displayCallbackModal(data) {
-        console.log('[ReCAPTCHA] displayCallbackModal called with:', data);
+        Logger.network('[ReCAPTCHA] displayCallbackModal called with:', data);
         const modal = document.createElement('div');
         modal.className = 'recaptcha-modal-overlay';
         modal.style.cssText = `
@@ -801,7 +801,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
                             <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">Using callback: <code style="background: var(--bg-tertiary); padding: 2px 6px; border-radius: 3px; color: var(--success)">${cb}</code></div>
                             <code style="color: var(--success, #4ade80); font-family: monospace; font-size: 11px; padding: 12px; background: var(--bg-primary); border-radius: 4px; display: block; overflow-x: auto; border: 1px solid rgba(255, 255, 255, 0.05); line-height: 1.6; white-space: pre-wrap; word-break: break-word;">// When reCAPTCHA loads, this callback is called
 function ${cb}(token) {
-  console.log('reCAPTCHA token:', token);
+  Logger.network('reCAPTCHA token:', token);
 
   // NOTE: Endpoint and method may vary - change to match your backend
   fetch('/verify-captcha', {
@@ -812,7 +812,7 @@ function ${cb}(token) {
   .then(response => response.json())
   .then(data => {
     if (data.success) {
-      console.log('Verification successful!');
+      Logger.network('Verification successful!');
     }
   });
 }</code>
@@ -830,7 +830,7 @@ function ${cb}(token) {
                             <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">Using callback: <code style="background: var(--bg-tertiary); padding: 2px 6px; border-radius: 3px; color: var(--success)">${cb}</code></div>
                             <code style="color: var(--success, #4ade80); font-family: monospace; font-size: 11px; padding: 12px; background: var(--bg-primary); border-radius: 4px; display: block; overflow-x: auto; border: 1px solid rgba(255, 255, 255, 0.05); line-height: 1.6; white-space: pre-wrap; word-break: break-word;">// When reCAPTCHA completes, this callback is invoked
 function ${cb}(token) {
-  console.log('reCAPTCHA token:', token);
+  Logger.network('reCAPTCHA token:', token);
 
   // NOTE: Endpoint and method may vary - change to match your backend
   fetch('/verify-captcha', {
@@ -841,7 +841,7 @@ function ${cb}(token) {
   .then(response => response.json())
   .then(data => {
     if (data.success) {
-      console.log('Verification successful!');
+      Logger.network('Verification successful!');
     }
   });
 }</code>
@@ -854,7 +854,7 @@ function ${cb}(token) {
             </div>
         `;
 
-        console.log('[ReCAPTCHA] Appending callback modal to body');
+        Logger.network('[ReCAPTCHA] Appending callback modal to body');
         document.body.appendChild(modal);
 
         // Add click-to-copy for all callback values
@@ -889,7 +889,7 @@ function ${cb}(token) {
 
         setTimeout(() => {
             modal.style.opacity = '1';
-            console.log('[ReCAPTCHA] Callback modal visible');
+            Logger.network('[ReCAPTCHA] Callback modal visible');
         }, 10);
     }
 

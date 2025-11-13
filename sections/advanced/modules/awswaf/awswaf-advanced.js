@@ -5,7 +5,7 @@
  * Includes tools for checking cookies and capturing AWS WAF parameters.
  */
 
-console.log('[AwsWafAdvanced] Loading... Dependencies check:', {
+Logger.network('[AwsWafAdvanced] Loading... Dependencies check:', {
     BaseAdvancedModule: typeof BaseAdvancedModule,
     NotificationHelper: typeof NotificationHelper,
     AdvancedUtils: typeof AdvancedUtils
@@ -57,19 +57,19 @@ class AwsWafAdvanced extends BaseAdvancedModule {
      * Setup tool-specific event listeners
      */
     setupToolListeners() {
-        console.log('[AwsWaf] Setting up tool listeners...');
+        Logger.network('[AwsWaf] Setting up tool listeners...');
 
         const checkCookiesBtn = document.querySelector('#awswafCheckCookies');
         const analyzeScriptsBtn = document.querySelector('#awswafAnalyzeScripts');
 
         if (checkCookiesBtn) {
             checkCookiesBtn.addEventListener('click', () => this.checkCookies());
-            console.log('[AwsWaf] Added listener to Check Cookies button');
+            Logger.network('[AwsWaf] Added listener to Check Cookies button');
         }
 
         if (analyzeScriptsBtn) {
             analyzeScriptsBtn.addEventListener('click', () => this.analyzeScripts());
-            console.log('[AwsWaf] Added listener to Analyze Scripts button');
+            Logger.network('[AwsWaf] Added listener to Analyze Scripts button');
         }
     }
 
@@ -77,17 +77,17 @@ class AwsWafAdvanced extends BaseAdvancedModule {
      * Check AWS WAF cookies without reload
      */
     async checkCookies() {
-        console.log('[AwsWaf] ========== CHECK COOKIES ==========');
+        Logger.network('[AwsWaf] ========== CHECK COOKIES ==========');
         try {
             if (!this.tabInfo || !this.tabInfo.url) {
                 throw new Error('Tab information not available');
             }
 
             const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
-            console.log('[AwsWaf] Total cookies found:', cookies.length);
+            Logger.network('[AwsWaf] Total cookies found:', cookies.length);
 
             const awsWafToken = cookies.find(c => c.name === 'aws-waf-token');
-            console.log('[AwsWaf] aws-waf-token found:', !!awsWafToken);
+            Logger.network('[AwsWaf] aws-waf-token found:', !!awsWafToken);
 
             // Show notification
             if (awsWafToken) {
@@ -99,7 +99,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
             // Display modal with cookie details
             this.displayCookiesModal(awsWafToken);
         } catch (error) {
-            console.error('[AwsWaf] Failed to check cookies:', error);
+            Logger.error('NETWORK', '[AwsWaf] Failed to check cookies:', error);
             NotificationHelper.error('Failed to check cookies: ' + error.message);
         }
     }
@@ -189,7 +189,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
      * Deletes aws-waf-token cookie, reloads page, then analyzes scripts
      */
     async analyzeScripts() {
-        console.log('[AwsWaf] ========== ANALYZE SCRIPTS ==========');
+        Logger.network('[AwsWaf] ========== ANALYZE SCRIPTS ==========');
         try {
             if (!this.tabInfo || !this.tabInfo.id) {
                 throw new Error('Tab information not available');
@@ -198,7 +198,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
             // Setup listener for analysis results (like Shape Security)
             const analysisListener = (message) => {
                 if (message.type === 'AWSWAF_ANALYSIS_RESULT') {
-                    console.log('[AwsWaf] Analysis result received:', message.data);
+                    Logger.network('[AwsWaf] Analysis result received:', message.data);
                     this.displayAnalysisModal(message.data);
                     chrome.runtime.onMessage.removeListener(analysisListener);
                 }
@@ -213,7 +213,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
                 url: this.tabInfo.url
             });
 
-            console.log('[AwsWaf] Analysis mode response:', response);
+            Logger.network('[AwsWaf] Analysis mode response:', response);
 
             if (response && response.status === 'started') {
                 // Show notification about cookie deletion and reload
@@ -228,7 +228,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
                             name: 'aws-waf-token'
                         });
 
-                        console.log('[AwsWaf] Found aws-waf-token cookies to delete:', cookies.length);
+                        Logger.network('[AwsWaf] Found aws-waf-token cookies to delete:', cookies.length);
 
                         // Delete each cookie (may have multiple for different domains/paths)
                         for (const cookie of cookies) {
@@ -236,10 +236,10 @@ class AwsWafAdvanced extends BaseAdvancedModule {
                                 url: this.tabInfo.url,
                                 name: cookie.name
                             });
-                            console.log('[AwsWaf] Deleted cookie:', cookie.name, 'domain:', cookie.domain);
+                            Logger.network('[AwsWaf] Deleted cookie:', cookie.name, 'domain:', cookie.domain);
                         }
 
-                        console.log('[AwsWaf] Cookie deletion complete, reloading page...');
+                        Logger.network('[AwsWaf] Cookie deletion complete, reloading page...');
 
                         // Send message to show analyzing notification right before reload
                         await AdvancedUtils.sendMessage({
@@ -248,7 +248,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
                         });
 
                     } catch (cookieError) {
-                        console.error('[AwsWaf] Failed to delete cookies:', cookieError);
+                        Logger.error('NETWORK', '[AwsWaf] Failed to delete cookies:', cookieError);
                     }
 
                     // Reload page to trigger challenge.js or captcha.js
@@ -260,7 +260,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
                 NotificationHelper.error('Failed to start analysis');
             }
         } catch (error) {
-            console.error('[AwsWaf] Failed to analyze scripts:', error);
+            Logger.error('NETWORK', '[AwsWaf] Failed to analyze scripts:', error);
             NotificationHelper.error('Failed to analyze scripts: ' + error.message);
         }
     }
@@ -269,7 +269,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
      * Display script analysis results in modal (simplified - only challenge.js and captcha.js)
      */
     displayAnalysisModal(data) {
-        console.log('[AwsWaf] Displaying analysis modal with data:', data);
+        Logger.network('[AwsWaf] Displaying analysis modal with data:', data);
 
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
@@ -545,7 +545,7 @@ async function fetchAwsWafScripts() {
                 size: content.length
             });
 
-            console.log(\`✓ Fetched: \${url}\`);
+            Logger.network(\`✓ Fetched: \${url}\`);
         } catch (error) {
             results.push({
                 url: url,
@@ -553,7 +553,7 @@ async function fetchAwsWafScripts() {
                 error: error.message
             });
 
-            console.error(\`✗ Failed: \${url}\`, error);
+            Logger.error('NETWORK', \`✗ Failed: \${url}\`, error);
         }
     }
 
@@ -562,11 +562,11 @@ async function fetchAwsWafScripts() {
 
 // Execute and display results
 fetchAwsWafScripts().then(results => {
-    console.log('=== AWS WAF Scripts Fetched ===');
-    console.log(\`Total: \${results.length}\`);
-    console.log(\`Success: \${results.filter(r => r.success).length}\`);
-    console.log(\`Failed: \${results.filter(r => !r.success).length}\`);
-    console.log('Results:', results);
+    Logger.network('=== AWS WAF Scripts Fetched ===');
+    Logger.network(\`Total: \${results.length}\`);
+    Logger.network(\`Success: \${results.filter(r => r.success).length}\`);
+    Logger.network(\`Failed: \${results.filter(r => !r.success).length}\`);
+    Logger.network('Results:', results);
 });`,
 
             python: `# AWS WAF Script Fetcher - Python
@@ -634,7 +634,7 @@ async function fetchAwsWafScripts() {
                 statusCode: response.status
             });
 
-            console.log(\`✓ Fetched: \${url}\`);
+            Logger.network(\`✓ Fetched: \${url}\`);
         } catch (error) {
             results.push({
                 url: url,
@@ -642,7 +642,7 @@ async function fetchAwsWafScripts() {
                 error: error.message
             });
 
-            console.error(\`✗ Failed: \${url}\`, error.message);
+            Logger.error('NETWORK', \`✗ Failed: \${url}\`, error.message);
         }
     }
 
@@ -651,10 +651,10 @@ async function fetchAwsWafScripts() {
 
 // Execute and display results
 fetchAwsWafScripts().then(results => {
-    console.log('\\n=== AWS WAF Scripts Fetched ===');
-    console.log(\`Total: \${results.length}\`);
-    console.log(\`Success: \${results.filter(r => r.success).length}\`);
-    console.log(\`Failed: \${results.filter(r => !r.success).length}\`);
+    Logger.network('\\n=== AWS WAF Scripts Fetched ===');
+    Logger.network(\`Total: \${results.length}\`);
+    Logger.network(\`Success: \${results.filter(r => r.success).length}\`);
+    Logger.network(\`Failed: \${results.filter(r => !r.success).length}\`);
 }).catch(console.error);`,
 
             php: `<?php
@@ -956,5 +956,5 @@ func main() {
 // Explicitly add to window to ensure it's available
 window.AwsWafAdvanced = AwsWafAdvanced;
 
-console.log('[AwsWaf] Module loaded, class type:', typeof AwsWafAdvanced);
-console.log('[AwsWaf] Window.AwsWafAdvanced:', typeof window.AwsWafAdvanced);
+Logger.network('[AwsWaf] Module loaded, class type:', typeof AwsWafAdvanced);
+Logger.network('[AwsWaf] Window.AwsWafAdvanced:', typeof window.AwsWafAdvanced);

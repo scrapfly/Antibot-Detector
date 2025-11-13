@@ -5,7 +5,7 @@
  * Includes tools for checking cookies and capturing Cloudflare challenge scripts.
  */
 
-console.log('[CloudflareAdvanced] Loading... Dependencies check:', {
+Logger.network('[CloudflareAdvanced] Loading... Dependencies check:', {
     BaseAdvancedModule: typeof BaseAdvancedModule,
     NotificationHelper: typeof NotificationHelper,
     AdvancedUtils: typeof AdvancedUtils
@@ -59,7 +59,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
     }
 
     setupToolListeners() {
-        console.log('[Cloudflare] Setting up tool listeners...');
+        Logger.network('[Cloudflare] Setting up tool listeners...');
 
         const checkVersionBtn = document.querySelector('#cloudflareCheckVersion');
         const checkCookiesBtn = document.querySelector('#cloudflareCheckCookies');
@@ -68,27 +68,27 @@ class CloudflareAdvanced extends BaseAdvancedModule {
 
         if (checkVersionBtn) {
             checkVersionBtn.addEventListener('click', () => this.checkVersion());
-            console.log('[Cloudflare] Added listener to Check Version button');
+            Logger.network('[Cloudflare] Added listener to Check Version button');
         }
 
         if (checkCookiesBtn) {
             checkCookiesBtn.addEventListener('click', () => this.checkCookies());
-            console.log('[Cloudflare] Added listener to Check Cookies button');
+            Logger.network('[Cloudflare] Added listener to Check Cookies button');
         }
 
         if (extractSiteKeyBtn) {
             extractSiteKeyBtn.addEventListener('click', () => this.extractSiteKey());
-            console.log('[Cloudflare] Added listener to Extract Site Key button');
+            Logger.network('[Cloudflare] Added listener to Extract Site Key button');
         }
 
         if (analyzeScriptsBtn) {
             analyzeScriptsBtn.addEventListener('click', () => this.analyzeScripts());
-            console.log('[Cloudflare] Added listener to Analyze Scripts button');
+            Logger.network('[Cloudflare] Added listener to Analyze Scripts button');
         }
     }
 
     async checkCookies() {
-        console.log('[Cloudflare] ========== CHECK COOKIES ==========');
+        Logger.network('[Cloudflare] ========== CHECK COOKIES ==========');
         try {
             if (!this.tabInfo || !this.tabInfo.url) {
                 throw new Error('Tab information not available');
@@ -111,7 +111,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
 
             this.displayCookiesModal(cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie, cfuvIdCookie);
         } catch (error) {
-            console.error('[Cloudflare] Failed to check cookies:', error);
+            Logger.error('NETWORK', '[Cloudflare] Failed to check cookies:', error);
             NotificationHelper.error('Failed to check cookies: ' + error.message);
         }
     }
@@ -228,7 +228,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
     }
 
     async checkVersion() {
-        console.log('[Cloudflare] ========== CHECK VERSION ==========');
+        Logger.network('[Cloudflare] ========== CHECK VERSION ==========');
         try {
             if (!this.tabInfo || !this.tabInfo.url || !this.tabInfo.id) {
                 throw new Error('Tab information not available');
@@ -247,13 +247,13 @@ class CloudflareAdvanced extends BaseAdvancedModule {
             await chrome.tabs.reload(this.tabInfo.id);
 
         } catch (error) {
-            console.error('[Cloudflare] Failed to check version:', error);
+            Logger.error('NETWORK', '[Cloudflare] Failed to check version:', error);
             NotificationHelper.error('Failed to check version: ' + error.message);
         }
     }
 
     async extractSiteKey() {
-        console.log('[Cloudflare] ========== EXTRACT SITE KEY ==========');
+        Logger.network('[Cloudflare] ========== EXTRACT SITE KEY ==========');
         try {
             if (!this.tabInfo || !this.tabInfo.id) {
                 throw new Error('Tab information not available');
@@ -329,7 +329,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
                 }
             });
 
-            console.log('[Cloudflare] Extract script results:', results);
+            Logger.network('[Cloudflare] Extract script results:', results);
             if (results && results[0] && results[0].result) {
                 const result = results[0].result;
                 if (result.success) {
@@ -342,7 +342,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
                 NotificationHelper.error('Failed to extract sitekey');
             }
         } catch (error) {
-            console.error('[Cloudflare] Failed to extract sitekey:', error);
+            Logger.error('NETWORK', '[Cloudflare] Failed to extract sitekey:', error);
             NotificationHelper.error('Failed to extract: ' + error.message);
         }
     }
@@ -592,7 +592,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
     }
 
     async analyzeScripts() {
-        console.log('[Cloudflare] ========== ANALYZE SCRIPTS ==========');
+        Logger.network('[Cloudflare] ========== ANALYZE SCRIPTS ==========');
         try {
             if (!this.tabInfo || !this.tabInfo.id) {
                 throw new Error('Tab information not available');
@@ -600,7 +600,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
 
             const analysisListener = (message) => {
                 if (message.type === 'CLOUDFLARE_ANALYSIS_RESULT') {
-                    console.log('[Cloudflare] Analysis result received:', message.data);
+                    Logger.network('[Cloudflare] Analysis result received:', message.data);
                     this.displayAnalysisModal(message.data);
                     chrome.runtime.onMessage.removeListener(analysisListener);
                 }
@@ -614,7 +614,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
                 url: this.tabInfo.url
             });
 
-            console.log('[Cloudflare] Analysis mode response:', response);
+            Logger.network('[Cloudflare] Analysis mode response:', response);
 
             if (response && response.status === 'started') {
                 NotificationHelper.info('Analyzing Cloudflare scripts... Page will reload');
@@ -626,7 +626,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
                             tabId: this.tabInfo.id
                         });
                     } catch (error) {
-                        console.error('[Cloudflare] Failed to show analyzing notification:', error);
+                        Logger.error('NETWORK', '[Cloudflare] Failed to show analyzing notification:', error);
                     }
 
                     await chrome.tabs.reload(this.tabInfo.id);
@@ -636,7 +636,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
                 NotificationHelper.error('Failed to start analysis');
             }
         } catch (error) {
-            console.error('[Cloudflare] Failed to analyze scripts:', error);
+            Logger.error('NETWORK', '[Cloudflare] Failed to analyze scripts:', error);
             NotificationHelper.error('Failed to analyze scripts: ' + error.message);
         }
     }
@@ -824,7 +824,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
 const cloudflareScripts = ${JSON.stringify(urls, null, 2)};
 
 cloudflareScripts.forEach((url, index) => {
-    console.log(\`Script \${index + 1}: \${url}\`);
+    Logger.network(\`Script \${index + 1}: \${url}\`);
 });
 
 // Fetch challenge scripts
@@ -833,9 +833,9 @@ async function fetchCloudflareScripts() {
         try {
             const response = await fetch(url);
             const script = await response.text();
-            console.log(\`Fetched: \${url}\`);
+            Logger.network(\`Fetched: \${url}\`);
         } catch (error) {
-            console.error(\`Failed to fetch: \${url}\`, error);
+            Logger.error('NETWORK', \`Failed to fetch: \${url}\`, error);
         }
     }
 }
@@ -866,16 +866,16 @@ fetch_cloudflare_scripts()`,
 const cloudflareScripts = ${JSON.stringify(urls, null, 2)};
 
 cloudflareScripts.forEach((url, index) => {
-    console.log(\`Script \${index + 1}: \${url}\`);
+    Logger.network(\`Script \${index + 1}: \${url}\`);
 });
 
 async function fetchCloudflareScripts() {
     for (const url of cloudflareScripts) {
         try {
             const response = await axios.get(url);
-            console.log(\`Fetched: \${url}\`);
+            Logger.network(\`Fetched: \${url}\`);
         } catch (error) {
-            console.error(\`Failed to fetch: \${url}\`, error.message);
+            Logger.error('NETWORK', \`Failed to fetch: \${url}\`, error.message);
         }
     }
 }
@@ -994,4 +994,4 @@ if (typeof module !== 'undefined' && module.exports) {
     window.CloudflareAdvanced = CloudflareAdvanced;
 }
 
-console.log('[CloudflareAdvanced] Loaded successfully');
+Logger.network('[CloudflareAdvanced] Loaded successfully');

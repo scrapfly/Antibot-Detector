@@ -6,7 +6,7 @@
  * that run in the popup context (not service worker).
  */
 
-console.log('[AdvancedUtils] Loading...');
+Logger.ui('[AdvancedUtils] Loading...');
 
 /**
  * DOMCache - High-performance element caching for repeated DOM queries
@@ -162,7 +162,7 @@ const AdvancedUtils = {
             return items;
 
         } catch (error) {
-            console.error(`[AdvancedUtils] Failed to load capture history for ${type}:`, error);
+            Logger.error('UI', `[AdvancedUtils] Failed to load capture history for ${type}:`, error);
             return [];
         }
     },
@@ -199,13 +199,13 @@ const AdvancedUtils = {
                 await chrome.storage.local.set({
                     scrapfly_advanced_history: history
                 });
-                console.log(`[AdvancedUtils] Removed ${removedCount} expired items`);
+                Logger.ui(`[AdvancedUtils] Removed ${removedCount} expired items`);
             }
 
             return removedCount;
 
         } catch (error) {
-            console.error('[AdvancedUtils] Failed to clean expired history:', error);
+            Logger.error('UI', '[AdvancedUtils] Failed to clean expired history:', error);
             return 0;
         }
     },
@@ -518,5 +518,5 @@ const AdvancedUtils = {
 // Export to window
 if (typeof window !== 'undefined') {
     window.AdvancedUtils = AdvancedUtils;
-    console.log('[AdvancedUtils] ✓ Loaded and exported to window.AdvancedUtils');
+    Logger.ui('[AdvancedUtils] ✓ Loaded and exported to window.AdvancedUtils');
 }

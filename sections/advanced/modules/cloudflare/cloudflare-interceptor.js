@@ -23,18 +23,18 @@ function handleCloudflareMessage(request, sender, sendResponse) {
             (async () => {
                 try {
                     if (typeof showNotification === 'function') {
-                        console.log('[Cloudflare] Showing analyzing notification before reload...');
+                        Logger.network('[Cloudflare] Showing analyzing notification before reload...');
                         await showNotification(request.tabId, {
                             type: 'loading',
                             title: '🔍 Analyzing Cloudflare Scripts',
                             message: 'Please wait while we collect script URLs...',
                             duration: 15000
                         });
-                        console.log('[Cloudflare] Pre-reload notification shown successfully');
+                        Logger.network('[Cloudflare] Pre-reload notification shown successfully');
                     }
                     sendResponse({ status: 'success' });
                 } catch (error) {
-                    console.error('[Cloudflare] Error showing notification:', error);
+                    Logger.error('NETWORK', '[Cloudflare] Error showing notification:', error);
                     sendResponse({ status: 'error', error: error.message });
                 }
             })();
@@ -51,7 +51,7 @@ function handleCloudflareMessage(request, sender, sendResponse) {
 }
 
 function cloudflareCheckVersion(tabId) {
-    console.log('[Cloudflare-CheckVersion] Starting version check for tab:', tabId);
+    Logger.network('[Cloudflare-CheckVersion] Starting version check for tab:', tabId);
 
     const versionState = {
         hasTurnstile: false,
@@ -108,7 +108,7 @@ function cloudflareCheckVersion(tabId) {
                         }
                     });
                 } catch (error) {
-                    console.log('[Cloudflare-CheckVersion] Popup not available');
+                    Logger.network('[Cloudflare-CheckVersion] Popup not available');
                 }
             }, 5000);
         }
@@ -127,7 +127,7 @@ function cloudflareCheckVersion(tabId) {
 
 
 function cloudflareStartAnalysis(tabId, url) {
-    console.log('[Cloudflare-Analysis] Starting analysis mode for tab:', tabId);
+    Logger.network('[Cloudflare-Analysis] Starting analysis mode for tab:', tabId);
 
     const capturedUrls = new Set();
 
@@ -151,7 +151,7 @@ function cloudflareStartAnalysis(tabId, url) {
         // Check against all patterns
         for (const pattern of patterns) {
             if (pattern.regex.test(requestUrl)) {
-                console.log('[Cloudflare-Analysis] Network - Found', pattern.type, 'URL:', requestUrl);
+                Logger.network('[Cloudflare-Analysis] Network - Found', pattern.type, 'URL:', requestUrl);
                 capturedUrls.add(JSON.stringify({ url: requestUrl, type: pattern.type }));
                 break; // Match only once to avoid duplicate adding
             }
@@ -160,17 +160,17 @@ function cloudflareStartAnalysis(tabId, url) {
 
     const navigationListener = async (details) => {
         if (details.tabId === tabId && details.frameId === 0) {
-            console.log('[Cloudflare-Analysis] Page loaded, waiting for all requests to complete...');
+            Logger.network('[Cloudflare-Analysis] Page loaded, waiting for all requests to complete...');
 
             setTimeout(async () => {
-                console.log('[Cloudflare-Analysis] ========== FINALIZING RESULTS ==========');
+                Logger.network('[Cloudflare-Analysis] ========== FINALIZING RESULTS ==========');
 
                 const finalResults = Array.from(capturedUrls).map(jsonStr => {
                     const obj = JSON.parse(jsonStr);
                     return { ...obj, source: 'network' };
                 });
 
-                console.log('[Cloudflare-Analysis] Final captured URLs:', finalResults);
+                Logger.network('[Cloudflare-Analysis] Final captured URLs:', finalResults);
 
                 const analysisData = {
                     scripts: finalResults,
@@ -179,16 +179,16 @@ function cloudflareStartAnalysis(tabId, url) {
 
                 chrome.webRequest.onBeforeRequest.removeListener(requestListener);
                 chrome.webNavigation.onCompleted.removeListener(navigationListener);
-                console.log('[Cloudflare-Analysis] Listeners removed');
+                Logger.network('[Cloudflare-Analysis] Listeners removed');
 
                 try {
                     await chrome.runtime.sendMessage({
                         type: 'CLOUDFLARE_ANALYSIS_RESULT',
                         data: analysisData
                     });
-                    console.log('[Cloudflare-Analysis] ✓ Results sent to popup');
+                    Logger.network('[Cloudflare-Analysis] ✓ Results sent to popup');
                 } catch (error) {
-                    console.log('[Cloudflare-Analysis] Popup not available - results discarded');
+                    Logger.network('[Cloudflare-Analysis] Popup not available - results discarded');
                 }
             }, 5000);
         }
@@ -202,9 +202,9 @@ function cloudflareStartAnalysis(tabId, url) {
 
     chrome.webNavigation.onCompleted.addListener(navigationListener);
 
-    console.log('[Cloudflare-Analysis] Network listener added, ready for page reload');
+    Logger.network('[Cloudflare-Analysis] Network listener added, ready for page reload');
 
     return { status: 'started' };
 }
 
-console.log('[Cloudflare] Interceptor loaded successfully');
+Logger.network('[Cloudflare] Interceptor loaded successfully');
