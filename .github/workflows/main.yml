@@ -80,8 +80,7 @@ jobs:
 
       - name: Package extension
         run: |
-          cd core
-          zip -r "../artifact/antibot-detector-${TAG_NAME}.zip" .
+          zip -r "artifact/antibot-detector-${TAG_NAME}.zip" . -x ".git/*" ".github/*" "CHANGELOG.md" "README.md" "LICENSE" ".gitignore"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
