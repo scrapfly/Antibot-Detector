@@ -111,15 +111,12 @@ jobs:
       - name: Generate auto changelog
         id: changelog
         run: |
-          set -euo pipefail
-
           TAG="${TAG_NAME}"
 
           echo "## What's Changed in ${TAG}" > /tmp/CHANGELOG.md
           echo >> /tmp/CHANGELOG.md
 
           if [ -f CHANGELOG.md ]; then
-            # Match the heading line exactly: "## v2.0"
             pattern="^##[[:space:]]*${TAG}$"
 
             awk -v pat="$pattern" '
@@ -130,7 +127,6 @@ jobs:
               flag                              # print while flag == 1
             ' CHANGELOG.md >> /tmp/CHANGELOG.md || echo "Changelog section not found." >> /tmp/CHANGELOG.md
           else
-            # Fallback to git log when CHANGELOG.md is missing
             PREV_TAG=$(git describe --tags --abbrev=0 "${TAG}^" 2>/dev/null || echo "")
             if [ -n "$PREV_TAG" ]; then
               echo "_Changes since [$PREV_TAG](https://github.com/${{ github.repository }}/compare/$PREV_TAG...${TAG})_" >> /tmp/CHANGELOG.md
@@ -151,6 +147,7 @@ jobs:
             cat /tmp/CHANGELOG.md
             echo EOF
           } >> "$GITHUB_OUTPUT"
+
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

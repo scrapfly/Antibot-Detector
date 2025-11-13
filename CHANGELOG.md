@@ -1,12 +1,12 @@
-## v2.0
+## v2.1
 
-What's New in v2.0
+What's New in v2.1
 
 ### Major Refactor: Complete Logger System Migration
 - **Complete `console.*` → `Logger.*` migration**
 - 1,659 calls across 38 files (100% coverage)
-- Implement centralized Logger system with context-aware routing (background / content / main world)
-- 100% `CLAUDE.md` compliance – professional, unified logging infrastructure
+- Implement centralized Logger system with context-aware routing (background/content/main world)
+- 100% CLAUDE.md compliance – professional, unified logging infrastructure
 
 ### ⚡ Performance & Cache Optimizations
 - Change default cache scope from `path` to `domain` (more efficient caching)
