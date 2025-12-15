@@ -162,12 +162,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish extension to Chrome Web Store
-        uses: browser-actions/release-chrome-extension@v0.2.1
+        uses: mnao305/chrome-extension-upload@v5.0.0
         with:
-          # Your extension ID from the Web Store URL
           extension-id: ${{ secrets.WEBSTORE_EXTENSION_ID }}
-          # Reuse the same zip from the artifact
-          extension-path: artifact/antibot-detector-${{ env.TAG_NAME }}.zip
-          oauth-client-id:     ${{ secrets.WEBSTORE_CLIENT_ID }}
-          oauth-client-secret: ${{ secrets.WEBSTORE_CLIENT_SECRET }}
-          oauth-refresh-token: ${{ secrets.WEBSTORE_REFRESH_TOKEN }}
+          file-path: artifact/antibot-detector-${{ env.TAG_NAME }}.zip
+          client-id: ${{ secrets.WEBSTORE_CLIENT_ID }}
+          client-secret: ${{ secrets.WEBSTORE_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.WEBSTORE_REFRESH_TOKEN }}
+          publish: true
