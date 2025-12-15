@@ -1185,7 +1185,7 @@
   border: 1px solid var(--border);
   border-radius: 12px;
   width: 90%;
-  max-width: 500px;
+  max-width: 520px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
@@ -1193,7 +1193,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px;
+  padding: 20px 24px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -1228,7 +1228,7 @@
 }
 
 .sitekey-body {
-  padding: 20px;
+  padding: 20px 24px;
 }
 
 .sitekey-value {
@@ -1519,8 +1519,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(139, 92, 246, 0.15);
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
   margin-bottom: 4px;
 }
 
@@ -3169,8 +3169,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(139, 92, 246, 0.15);
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
 .empty-state-icon svg {

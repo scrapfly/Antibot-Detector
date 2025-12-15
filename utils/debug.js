@@ -32,20 +32,7 @@ const DebugState = {
   initialized: false
 };
 
-// Try to load from sessionStorage for immediate access (if previously set)
-if (typeof sessionStorage !== 'undefined') {
-  try {
-    const cachedDebug = sessionStorage.getItem('scrapfly_debug_mode');
-    if (cachedDebug !== null) {
-      DebugState.enabled = cachedDebug === 'true';
-      DebugState.initialized = true;
-    }
-  } catch (e) {
-    // Session storage might not be available in some contexts
-  }
-}
-
-// Load debug setting from storage if available
+// Load debug setting from chrome.storage
 if (typeof chrome !== 'undefined' && chrome.storage) {
   chrome.storage.local.get(['scrapfly_settings'], (result) => {
     if (result.scrapfly_settings) {
@@ -56,28 +43,11 @@ if (typeof chrome !== 'undefined' && chrome.storage) {
         const settingsData = settings.settings || settings;
         DebugState.enabled = settingsData.debugMode === true;
         DebugState.initialized = true;
-
-        // Cache in sessionStorage for next load
-        if (typeof sessionStorage !== 'undefined') {
-          try {
-            sessionStorage.setItem('scrapfly_debug_mode', String(DebugState.enabled));
-          } catch (e) {
-            // Ignore sessionStorage errors
-          }
-        }
       } catch (e) {
         originalConsole.error('[DebugMode] Failed to parse settings:', e);
       }
     } else {
       DebugState.initialized = true;
-      // Cache the default state
-      if (typeof sessionStorage !== 'undefined') {
-        try {
-          sessionStorage.setItem('scrapfly_debug_mode', 'false');
-        } catch (e) {
-          // Ignore sessionStorage errors
-        }
-      }
     }
   });
 
@@ -95,15 +65,6 @@ if (typeof chrome !== 'undefined' && chrome.storage) {
 
           if (newDebugMode !== DebugState.enabled) {
             DebugState.enabled = newDebugMode;
-
-            // Update sessionStorage cache
-            if (typeof sessionStorage !== 'undefined') {
-              try {
-                sessionStorage.setItem('scrapfly_debug_mode', String(DebugState.enabled));
-              } catch (e) {
-                // Ignore sessionStorage errors
-              }
-            }
           }
         } catch (e) {
           originalConsole.error('[DebugMode] Failed to parse settings change:', e);

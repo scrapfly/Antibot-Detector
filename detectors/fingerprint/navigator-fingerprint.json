@@ -1,7 +1,7 @@
 {
   "id": "navigator-fingerprint",
   "name": "Navigator Fingerprint",
-  "enabled": true,
+  "enabled": false,
   "category": "Fingerprint",
   "color": "#7c3aed",
   "lastUpdated": "2025-01-15",

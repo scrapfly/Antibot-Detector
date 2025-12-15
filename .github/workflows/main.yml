@@ -92,15 +92,15 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
+    env:
+      # Make TAG_NAME available to all steps & for expression usage
+      TAG_NAME: ${{ needs.build.outputs.TAG_NAME }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Set TAG_NAME from build job
-        run: echo "TAG_NAME=${{ needs.build.outputs.TAG_NAME }}" >> "$GITHUB_ENV"
 
       - name: Download artifact
         uses: actions/download-artifact@v5
@@ -148,7 +148,6 @@ jobs:
             echo EOF
           } >> "$GITHUB_OUTPUT"
 
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -161,3 +160,14 @@ jobs:
           overwrite_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish extension to Chrome Web Store
+        uses: browser-actions/release-chrome-extension@v0.2.1
+        with:
+          # Your extension ID from the Web Store URL
+          extension-id: ${{ secrets.WEBSTORE_EXTENSION_ID }}
+          # Reuse the same zip from the artifact
+          extension-path: artifact/antibot-detector-${{ env.TAG_NAME }}.zip
+          oauth-client-id:     ${{ secrets.WEBSTORE_CLIENT_ID }}
+          oauth-client-secret: ${{ secrets.WEBSTORE_CLIENT_SECRET }}
+          oauth-refresh-token: ${{ secrets.WEBSTORE_REFRESH_TOKEN }}

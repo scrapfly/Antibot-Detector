@@ -1,7 +1,7 @@
 {
   "id": "hardware-fingerprint",
   "name": "Hardware Fingerprint",
-  "enabled": true,
+  "enabled": false,
   "category": "Fingerprint",
   "color": "#ec4899",
   "lastUpdated": "2025-01-21",

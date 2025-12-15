@@ -1,7 +1,7 @@
 {
   "id": "css-fingerprint",
   "name": "CSS Fingerprint",
-  "enabled": true,
+  "enabled": false,
   "category": "Fingerprint",
   "color": "#0ea5e9",
   "lastUpdated": "2025-01-21",

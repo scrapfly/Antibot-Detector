@@ -1,5 +1,11 @@
 /* Settings Section Specific Styles */
 
+/* Spin animation for loading icons */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 /* Modal Styles */
 .modal, .modal-overlay {
   position: fixed;
@@ -19,9 +25,8 @@
   border: 1px solid var(--border);
   border-radius: 12px;
   width: 90%;
-  max-width: 400px;
-  height: auto;
-  max-height: 700px;
+  max-width: 520px;
+  max-height: 85%;
   overflow: hidden;
   box-shadow: 0 20px 40px var(--shadow);
   display: flex;
@@ -33,7 +38,7 @@
 .modal-header {
   display: flex;
   flex-direction: column;
-  padding: 16px 20px 12px 20px;
+  padding: 20px 24px;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
   width: 100%;
@@ -56,16 +61,16 @@
 }
 
 .close-btn {
-  background: none;
+  background: transparent;
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  padding: 8px;
-  border-radius: 6px;
+  padding: 4px;
+  border-radius: 4px;
   transition: all 0.2s;
   position: absolute;
-  top: 16px;
-  right: 20px;
+  top: 20px;
+  right: 24px;
 }
 
 .close-btn:hover {
@@ -157,7 +162,7 @@
 }
 
 .modal-body {
-  padding: 20px;
+  padding: 20px 24px;
   flex: 1 1 auto;
   overflow-y: auto;
   overflow-x: visible;
@@ -201,7 +206,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
-  padding: 16px 20px;
+  padding: 16px 24px;
   border-top: 1px solid var(--border);
   flex-shrink: 0;
   width: 100%;
@@ -1058,4 +1063,309 @@ input[type="file"] {
   margin-top: 12px;
   padding-top: 12px;
   border-top: 1px solid var(--border);
+}
+
+/* Custom HTTP Method Dropdown */
+.http-method-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+/* Ensure parent containers don't clip the dropdown */
+.setting-group:has(.http-method-dropdown.open) {
+  overflow: visible !important;
+}
+
+.webhook-settings-container:has(.http-method-dropdown.open) {
+  overflow: visible !important;
+}
+
+.http-method-dropdown-selected {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.http-method-dropdown-selected:hover {
+  border-color: var(--accent);
+}
+
+.http-method-dropdown.open .http-method-dropdown-selected {
+  border-color: var(--accent);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.http-method-dropdown-arrow {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--text-muted);
+  transition: transform 0.2s ease;
+}
+
+.http-method-dropdown.open .http-method-dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.http-method-dropdown-options {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent);
+  border-top: none;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  z-index: 9999;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.http-method-dropdown.open .http-method-dropdown-options {
+  display: block;
+}
+
+.http-method-dropdown-option {
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  font-size: 14px;
+  font-weight: 500;
+  pointer-events: auto;
+  user-select: none;
+}
+
+.http-method-dropdown-option:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.http-method-dropdown-option.selected {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+/* Method-specific colors */
+.http-method-get {
+  color: #22c55e;
+}
+
+.http-method-post {
+  color: #a855f7;
+}
+
+.http-method-put {
+  color: #a855f7;
+}
+
+.http-method-patch {
+  color: #a855f7;
+}
+
+.http-method-delete {
+  color: #ef4444;
+}
+
+.http-method-custom {
+  color: #3b82f6;
+}
+
+/* HTTP Method Badges */
+.http-method-badge {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 10px 12px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.http-method-badge input[type="checkbox"],
+.http-method-badge input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.http-method-badge .method-badge-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.25s;
+}
+
+.http-method-badge .method-icon {
+  font-size: 8px;
+  opacity: 0.5;
+  color: var(--text-secondary);
+  transition: all 0.25s;
+}
+
+.http-method-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* GET - Green */
+.http-method-badge[data-method="GET"]:has(input:checked),
+.http-method-badge[data-method="GET"].checked {
+  border-color: #22c55e;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(34, 197, 94, 0.15) 100%);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+.http-method-badge[data-method="GET"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="GET"].checked .method-badge-content {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.http-method-badge[data-method="GET"]:has(input:checked) .method-icon,
+.http-method-badge[data-method="GET"].checked .method-icon {
+  opacity: 1;
+  color: #22c55e;
+}
+
+/* POST - Purple */
+.http-method-badge[data-method="POST"]:has(input:checked),
+.http-method-badge[data-method="POST"].checked {
+  border-color: #a855f7;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(168, 85, 247, 0.15) 100%);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+}
+
+.http-method-badge[data-method="POST"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="POST"].checked .method-badge-content {
+  color: #a855f7;
+  font-weight: 600;
+}
+
+.http-method-badge[data-method="POST"]:has(input:checked) .method-icon,
+.http-method-badge[data-method="POST"].checked .method-icon {
+  opacity: 1;
+  color: #a855f7;
+}
+
+/* PUT - Purple */
+.http-method-badge[data-method="PUT"]:has(input:checked),
+.http-method-badge[data-method="PUT"].checked {
+  border-color: #a855f7;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(168, 85, 247, 0.15) 100%);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+}
+
+.http-method-badge[data-method="PUT"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="PUT"].checked .method-badge-content {
+  color: #a855f7;
+  font-weight: 600;
+}
+
+.http-method-badge[data-method="PUT"]:has(input:checked) .method-icon,
+.http-method-badge[data-method="PUT"].checked .method-icon {
+  opacity: 1;
+  color: #a855f7;
+}
+
+/* PATCH - Purple */
+.http-method-badge[data-method="PATCH"]:has(input:checked),
+.http-method-badge[data-method="PATCH"].checked {
+  border-color: #a855f7;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(168, 85, 247, 0.15) 100%);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+}
+
+.http-method-badge[data-method="PATCH"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="PATCH"].checked .method-badge-content {
+  color: #a855f7;
+  font-weight: 600;
+}
+
+.http-method-badge[data-method="PATCH"]:has(input:checked) .method-icon,
+.http-method-badge[data-method="PATCH"].checked .method-icon {
+  opacity: 1;
+  color: #a855f7;
+}
+
+/* DELETE - Red */
+.http-method-badge[data-method="DELETE"]:has(input:checked),
+.http-method-badge[data-method="DELETE"].checked {
+  border-color: #ef4444;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(239, 68, 68, 0.15) 100%);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.http-method-badge[data-method="DELETE"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="DELETE"].checked .method-badge-content {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.http-method-badge[data-method="DELETE"]:has(input:checked) .method-icon,
+.http-method-badge[data-method="DELETE"].checked .method-icon {
+  opacity: 1;
+  color: #ef4444;
+}
+
+/* Custom - Blue */
+.http-method-badge[data-method="CUSTOM"]:has(input:checked),
+.http-method-badge[data-method="CUSTOM"].checked {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 100%);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.http-method-badge[data-method="CUSTOM"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="CUSTOM"].checked .method-badge-content {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.http-method-badge[data-method="CUSTOM"]:has(input:checked) .method-icon,
+.http-method-badge[data-method="CUSTOM"].checked .method-icon {
+  opacity: 1;
+  color: #3b82f6;
+}
+
+.http-method-badge:active {
+  transform: scale(0.97);
+}
+
+/* Legacy select colors (fallback) */
+select.method-get {
+  color: #22c55e;
+}
+
+select.method-post {
+  color: #a855f7;
+}
+
+select.method-put {
+  color: #a855f7;
+}
+
+select.method-patch {
+  color: #a855f7;
+}
+
+select.method-delete {
+  color: #ef4444;
 }

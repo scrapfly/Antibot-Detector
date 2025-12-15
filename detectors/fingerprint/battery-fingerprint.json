@@ -1,7 +1,7 @@
 {
   "id": "battery-fingerprint",
   "name": "Battery API Fingerprint",
-  "enabled": true,
+  "enabled": false,
   "category": "Fingerprint",
   "color": "#10b981",
   "lastUpdated": "2025-01-21",

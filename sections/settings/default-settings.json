@@ -11,7 +11,7 @@
       "cacheScope": "domain",
       "blacklistedDomains": [],
       "enhancedDetection": {
-        "enabled": true,
+        "enabled": false,
         "windowPropertiesMode": "standard",
         "maxDetectionWindowMs": 20000,
         "keepHooksInstalled": false
@@ -41,6 +41,11 @@
       "duplicateScope": "full_url",
       "duplicateDuration": 1,
       "duplicateUnit": "hours"
+    },
+    "updates": {
+      "autoUpdate": true,
+      "checkIntervalHours": 12,
+      "lastCheckTimestamp": 0
     }
   }
 }

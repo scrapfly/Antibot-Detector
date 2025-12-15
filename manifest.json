@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Scrapfly",
-  "version": "2.1",
+  "version": "2.2",
   "description": "Detect CAPTCHAs, anti-bot systems, and fingerprinting technologies on websites",
 
   "content_security_policy": {
@@ -17,7 +17,8 @@
     "webRequest",
     "cookies",
     "notifications",
-    "downloads"
+    "downloads",
+    "alarms"
   ],
 
   "host_permissions": [

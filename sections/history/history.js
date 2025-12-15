@@ -209,20 +209,52 @@ class History {
     }
 
     let tagsHtml = '';
-    const maxTags = 2;
+    const maxTags = 5; // Reduced from 6 to prevent clipping with "+N More" badge
 
-    detections.slice(0, maxTags).forEach(detection => {
+    // Sort detections by priority: Anti-Bot > CAPTCHA > Fingerprinting
+    const categoryPriority = {
+      'Anti-Bot': 1,
+      'antibot': 1,
+      'anti-bot': 1,
+      'CAPTCHA': 2,
+      'captcha': 2,
+      'Fingerprint': 3,
+      'fingerprint': 3,
+      'Fingerprinting': 3
+    };
+
+    const sortedDetections = [...detections].sort((a, b) => {
+      const catA = a.category || '';
+      const catB = b.category || '';
+      const priorityA = categoryPriority[catA] || 999;
+      const priorityB = categoryPriority[catB] || 999;
+      return priorityA - priorityB;
+    });
+
+    // Helper function to get category color
+    const getCategoryColor = (category) => {
+      const cat = category?.toLowerCase() || '';
+      if (cat.includes('antibot') || cat.includes('anti-bot')) return '#FF5733';
+      if (cat.includes('captcha')) return '#33C3FF';
+      if (cat.includes('fingerprint')) return '#2196F3';
+      return '#666666';
+    };
+
+    sortedDetections.slice(0, maxTags).forEach(detection => {
       const name = detection.detector?.name || detection.detector || 'Unknown';
       const category = detection.category || '';
+      const categoryColor = getCategoryColor(category);
+      const tooltipText = `${name}${category ? ' (' + category + ')' : ''}`;
 
-      // Get detector color from storage
-      let detectorColor = '#666666'; // Default fallback
+      // Get detector object to retrieve icon
+      let detectorObj = null;
+      let iconHtml = '';
+
       if (this.detectorManager && category && name !== 'Unknown') {
-        const detectorObj = this.detectorManager.getDetectorByName(category, name);
-        if (detectorObj && detectorObj.color) {
-          detectorColor = detectorObj.color;
-        } else {
-          // Try with normalized category names if first attempt fails
+        detectorObj = this.detectorManager.getDetectorByName(category, name);
+
+        if (!detectorObj) {
+          // Try with normalized category names
           const categoryMappings = {
             'Anti-Bot': 'antibot',
             'antibot': 'antibot',
@@ -231,20 +263,26 @@ class History {
             'Fingerprint': 'fingerprint',
             'fingerprint': 'fingerprint'
           };
-
           const normalizedCategory = categoryMappings[category] || category.toLowerCase().replace(/[^a-z]/g, '');
-          const retryDetectorObj = this.detectorManager.getDetectorByName(normalizedCategory, name);
-          if (retryDetectorObj && retryDetectorObj.color) {
-            detectorColor = retryDetectorObj.color;
-          }
+          detectorObj = this.detectorManager.getDetectorByName(normalizedCategory, name);
         }
       }
 
-      tagsHtml += `<span class="history-detection-tag" title="${category}" style="background: ${detectorColor}; color: white; border-color: ${detectorColor};">${name}</span>`;
+      // Generate icon HTML
+      if (detectorObj && detectorObj.icon) {
+        const iconUrl = chrome.runtime.getURL(`detectors/icons/${detectorObj.icon}`);
+        iconHtml = `<img src="${iconUrl}" alt="${name}" class="detection-icon">`;
+      } else {
+        // Fallback: Use Scrapfly icon for all detectors without official icons
+        const scrapflyIconUrl = chrome.runtime.getURL('icons/icon32.png');
+        iconHtml = `<img src="${scrapflyIconUrl}" alt="${name}" class="detection-icon">`;
+      }
+
+      tagsHtml += `<span class="history-detection-tag icon-badge" title="${tooltipText}" style="border-color: ${categoryColor};">${iconHtml}</span>`;
     });
 
-    if (detections.length > maxTags) {
-      const hiddenDetections = detections.slice(maxTags);
+    if (sortedDetections.length > maxTags) {
+      const hiddenDetections = sortedDetections.slice(maxTags);
       const hiddenSummary = hiddenDetections
         .map(d => d.detector?.name || d.detector || 'Unknown')
         .join(', ');
@@ -330,7 +368,7 @@ class History {
             if (expandIcon) expandIcon.textContent = '▼';
           } else {
             card.classList.add('expanded');
-            methods.style.display = 'block';
+            methods.style.display = 'flex';
             if (expandIcon) expandIcon.textContent = '▲';
           }
         });
@@ -364,7 +402,7 @@ class History {
             if (expandIcon) expandIcon.textContent = '▼';
           } else {
             card.classList.add('expanded');
-            methods.style.display = 'block';
+            methods.style.display = 'flex';
             if (expandIcon) expandIcon.textContent = '▲';
           }
         });
@@ -395,17 +433,22 @@ class History {
     }
 
     if (overlay) {
-      overlay.onclick = closeModal;
+      overlay.onclick = (e) => {
+        e.stopPropagation();  // Prevent event bubbling to parent elements
+        closeModal();
+      };
     }
 
-    // ESC key handler
-    const escHandler = (e) => {
+    // ESC key handler - cleanup previous handler to prevent memory leak
+    if (this.overflowEscHandler) {
+      document.removeEventListener('keydown', this.overflowEscHandler);
+    }
+    this.overflowEscHandler = (e) => {
       if (e.key === 'Escape' && modal?.style.display === 'flex') {
         closeModal();
       }
     };
-
-    document.addEventListener('keydown', escHandler);
+    document.addEventListener('keydown', this.overflowEscHandler);
   }
 
   /**
@@ -720,10 +763,11 @@ class History {
       const confidence = detection.confidence || 0;
       const hasMethods = detection.matches && detection.matches.length > 0;
 
-      // Get detector color from storage
+      // Get detector object and color from storage
+      let detectorObj = null;
       let detectorColor = '#666666';
       if (this.detectorManager && category && name !== 'Unknown') {
-        const detectorObj = this.detectorManager.getDetectorByName(category, name);
+        detectorObj = this.detectorManager.getDetectorByName(category, name);
         if (detectorObj && detectorObj.color) {
           detectorColor = detectorObj.color;
         }
@@ -734,6 +778,17 @@ class History {
       if (this.detectorManager?.categoryManager && category) {
         const normalizedCategory = this.detectorManager.normalizeCategoryName(category);
         categoryColor = this.detectorManager.categoryManager.getCategoryColor(normalizedCategory) || categoryColor;
+      }
+
+      // Generate detector icon HTML
+      let detectorIconHtml = '';
+      if (detectorObj && detectorObj.icon) {
+        const iconUrl = chrome.runtime.getURL(`detectors/icons/${detectorObj.icon}`);
+        detectorIconHtml = `<img src="${iconUrl}" alt="${name}" class="modal-detector-icon">`;
+      } else {
+        // Fallback: Use Scrapfly icon for all detectors without official icons
+        const scrapflyIconUrl = chrome.runtime.getURL('icons/icon32.png');
+        detectorIconHtml = `<img src="${scrapflyIconUrl}" alt="${name}" class="modal-detector-icon">`;
       }
 
       // Confidence class
@@ -747,11 +802,14 @@ class History {
       return `
         <div class="history-modal-detection-card ${hasMethods ? 'has-methods' : ''}" data-detection-index="${index}">
           <div class="history-modal-detection-header">
-            <div class="history-modal-detection-name">${name}</div>
-            <div class="history-modal-detection-badges">
-              <span class="history-modal-badge" style="background: ${categoryColor}; color: white;">${category}</span>
-              <span class="history-modal-confidence ${confidenceClass}">${confidence}%</span>
-              ${hasMethods ? '<span class="history-modal-expand-icon">▼</span>' : ''}
+            ${detectorIconHtml}
+            <div class="history-modal-detection-content">
+              <div class="history-modal-detection-name">${name}</div>
+              <div class="history-modal-detection-badges">
+                <span class="history-modal-badge" style="background: ${categoryColor}; color: white;">${category}</span>
+                <span class="history-modal-confidence ${confidenceClass}">${confidence}%</span>
+                ${hasMethods ? '<span class="history-modal-expand-icon">▼</span>' : ''}
+              </div>
             </div>
           </div>
           ${hasMethods ? `
@@ -839,7 +897,7 @@ class History {
   setupModalCloseHandlers() {
     const modal = document.querySelector('#historyDetailModal');
     const closeBtn = document.querySelector('#historyModalClose');
-    const overlay = document.querySelector('.history-modal-overlay');
+    const overlay = modal?.querySelector('.history-modal-overlay');
 
     const closeModal = () => {
       if (modal) modal.style.display = 'none';
@@ -851,24 +909,23 @@ class History {
     }
 
     if (overlay) {
-      overlay.onclick = closeModal;
+      overlay.onclick = (e) => {
+        e.stopPropagation();  // Prevent event bubbling to parent elements
+        closeModal();
+      };
     }
 
-    // ESC key to close
-    document.addEventListener('keydown', (e) => {
+    // ESC key to close - cleanup previous handler to prevent memory leak
+    if (this.escHandler) {
+      document.removeEventListener('keydown', this.escHandler);
+    }
+    this.escHandler = (e) => {
       if (e.key === 'Escape' && modal && modal.style.display === 'flex') {
         closeModal();
       }
-    });
-
-    // Setup expand/collapse for detection cards
-    document.querySelectorAll('.history-modal-detection-card.has-methods .history-modal-detection-header').forEach(header => {
-      header.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const card = header.closest('.history-modal-detection-card');
-        card.classList.toggle('expanded');
-      });
-    });
+    };
+    document.addEventListener('keydown', this.escHandler);
+    // Note: expand/collapse handlers are set up in attachDetailModalClickHandlers()
   }
 
   /**

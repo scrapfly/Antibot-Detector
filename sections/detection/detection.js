@@ -75,17 +75,12 @@ class Detection {
         if (this.debugMode) Logger.ui('[Detection] Received detection completion for tab:', message.tabId);
 
         // Guard: Don't auto-refresh if we just cleared cache and are showing empty state
-        // Check both the instance flag and sessionStorage
-        const clearedTime = sessionStorage.getItem('scrapfly_just_cleared_cache');
-        const recentlyCleared = clearedTime && (Date.now() - parseInt(clearedTime)) < 5000; // 5 second window
-
-        if (this.justClearedCache || recentlyCleared) {
+        if (this.justClearedCache) {
           Logger.ui('[Detection] Ignoring NEW_DETECTION_DATA - showing empty state after cache clear');
           // Reset the flag after 5.5 seconds to allow future updates (after re-detection starts)
           if (!this.clearCacheResetTimer) {
             this.clearCacheResetTimer = setTimeout(() => {
               this.justClearedCache = false;
-              sessionStorage.removeItem('scrapfly_just_cleared_cache');
               this.clearCacheResetTimer = null;
             }, 5500);
           }
@@ -149,10 +144,6 @@ class Detection {
           if (detectionResults) {
             detectionResults.innerHTML = '';
           }
-
-          // Set the sessionStorage flag to prevent auto-detection on popup reopen
-          // (Treat cache scope change like explicit cache clear for protection)
-          sessionStorage.setItem('scrapfly_just_cleared_cache', Date.now().toString());
 
           // Set flags to prevent auto-detection
           this.justClearedCache = true;
@@ -1108,16 +1099,11 @@ class Detection {
         if (this.debugMode) Logger.warn('UI', 'Could not set badge:', error);
       }
 
-      // Remove debug mode flag from sessionStorage
-      sessionStorage.removeItem('scrapfly_debug_mode');
-
       // Clear current results immediately
       this.currentResults = [];
 
       // Set flag to prevent auto-refresh from NEW_DETECTION_DATA
-      // Store in sessionStorage to persist across popup close/reopen
       this.justClearedCache = true;
-      sessionStorage.setItem('scrapfly_just_cleared_cache', Date.now().toString());
 
       // Show "Nothing Detected" page immediately after cache clear
       this.showEmptyState();

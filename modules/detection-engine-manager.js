@@ -3113,9 +3113,21 @@ class DetectionEngineManager {
             const hookDefinitions = [];
             const windowPropertyDefinitions = [];
 
+            // Track if any fingerprint detector is enabled (for inline hooks)
+            let hasFingerprintEnabled = false;
+
             // Process all detector categories
             for (const [category, categoryDetectors] of Object.entries(detectors)) {
                 for (const [detectorId, detector] of Object.entries(categoryDetectors || {})) {
+                    // Skip disabled detectors entirely
+                    if (detector.enabled === false) {
+                        continue;
+                    }
+
+                    // Track if any fingerprint detector is enabled
+                    if (category === 'fingerprint') {
+                        hasFingerprintEnabled = true;
+                    }
 
                     // Collect JS hooks
                     if (detector.detection?.js_hooks && detector.detection.js_hooks.length > 0) {
@@ -3174,7 +3186,8 @@ class DetectionEngineManager {
                     hookDefinitions,
                     windowProperties: windowPropertyDefinitions,
                     debugMode,
-                    enhancedSettings  // ENHANCED DETECTION: Pass settings to MAIN world
+                    enhancedSettings,  // ENHANCED DETECTION: Pass settings to MAIN world
+                    fingerprintEnabled: hasFingerprintEnabled  // For inline hooks to check
                 }
             }));
         } catch (error) {

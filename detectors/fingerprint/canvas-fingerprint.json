@@ -1,7 +1,7 @@
 {
   "id": "canvas-fingerprint",
   "name": "Canvas Fingerprint",
-  "enabled": true,
+  "enabled": false,
   "category": "Fingerprint",
   "color": "#7c3aed",
   "lastUpdated": "2024-01-15",

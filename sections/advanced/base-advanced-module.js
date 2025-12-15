@@ -324,11 +324,11 @@ class BaseAdvancedModule {
                     <div class="empty-capture-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
                             <path d="M20 6H4C2.89 6 2 6.89 2 8V16C2 17.11 2.89 18 4 18H9V20H7V22H17V20H15V18H20C21.11 18 22 17.11 22 16V8C22 6.89 21.11 6 20 6M20 16H4V8H20V16Z"
-                                  stroke="url(#emptyGradient)" stroke-width="1.5" fill="rgba(139,92,246,0.15)"/>
+                                  stroke="url(#emptyGradient)" stroke-width="1.5" fill="rgba(59,130,246,0.15)"/>
                             <defs>
                                 <linearGradient id="emptyGradient" x1="4" y1="6" x2="20" y2="18" gradientUnits="userSpaceOnUse">
-                                    <stop offset="0" stop-color="#8b5cf6"/>
-                                    <stop offset="1" stop-color="#a78bfa"/>
+                                    <stop offset="0" stop-color="#3b82f6"/>
+                                    <stop offset="1" stop-color="#60a5fa"/>
                                 </linearGradient>
                             </defs>
                         </svg>

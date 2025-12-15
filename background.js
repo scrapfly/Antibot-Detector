@@ -15,6 +15,7 @@ importScripts(
     './modules/confidence-manager.js',
     './modules/detection-engine-manager.js',
     './modules/notification-manager.js',
+    './modules/update-manager.js',
     './sections/history/history.js',
     './sections/settings/settings.js',
     // Base helpers for interceptors (service worker context)
@@ -878,6 +879,57 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
     if (details.reason === 'install' || details.reason === 'update') {
         await initialize(details.reason, details.previousVersion);
+    }
+
+    // Setup update alarm after initialization
+    setupUpdateAlarm();
+});
+
+/**
+ * Setup periodic alarm for checking detector updates
+ */
+async function setupUpdateAlarm() {
+    try {
+        // Get update settings
+        const result = await chrome.storage.local.get(['scrapfly_settings']);
+        const settings = result.scrapfly_settings?.updates || {
+            autoUpdate: true,
+            checkIntervalHours: 12
+        };
+
+        if (settings.autoUpdate) {
+            // Create alarm for periodic update checks
+            const alarmName = 'detector-update-check';
+
+            // Clear existing alarm first
+            await chrome.alarms.clear(alarmName);
+
+            // Create new alarm
+            chrome.alarms.create(alarmName, {
+                periodInMinutes: settings.checkIntervalHours * 60
+            });
+
+            Logger.detector(`Update alarm set: every ${settings.checkIntervalHours} hours`);
+        }
+    } catch (error) {
+        Logger.error('DETECTOR', 'Failed to setup update alarm', error);
+    }
+}
+
+// Listen for alarms
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+    if (alarm.name === 'detector-update-check') {
+        Logger.detector('Update alarm triggered - checking for updates');
+        try {
+            if (typeof UpdateManager !== 'undefined') {
+                const updateManager = new UpdateManager();
+                await updateManager.initialize();
+                const result = await updateManager.checkForUpdates(false);
+                Logger.detector(`Update check result: ${result.newDetectors} new, ${result.updatedDetectors} updated`);
+            }
+        } catch (error) {
+            Logger.error('DETECTOR', 'Failed to check for updates on alarm', error);
+        }
     }
 });
 
@@ -3132,6 +3184,33 @@ function setupMessageListeners() {
                     sendResponse({ status: 'error', message: 'LogCollector not available' });
                 }
                 break;
+
+            case 'CHECK_FOR_UPDATES':
+                // Check for detector updates from GitHub
+                Logger.detector('CHECK_FOR_UPDATES message received');
+                (async () => {
+                    try {
+                        Logger.detector('Step 1: Checking if UpdateManager is defined');
+                        if (typeof UpdateManager === 'undefined') {
+                            Logger.error('DETECTOR', 'UpdateManager is undefined!');
+                            sendResponse({ success: false, error: 'UpdateManager not available' });
+                            return;
+                        }
+                        Logger.detector('Step 2: Creating UpdateManager instance');
+                        const updateManager = new UpdateManager();
+                        Logger.detector('Step 3: Initializing UpdateManager');
+                        await updateManager.initialize();
+                        Logger.detector('Step 4: Calling checkForUpdates');
+                        const result = await updateManager.checkForUpdates(request.force || false);
+                        Logger.detector('Step 5: checkForUpdates completed', result);
+                        sendResponse({ success: true, result: result });
+                        Logger.detector('Step 6: Response sent');
+                    } catch (error) {
+                        Logger.error('DETECTOR', 'Failed to check for updates', error);
+                        sendResponse({ success: false, error: error.message });
+                    }
+                })();
+                return true; // Async response
 
             default:
                 Logger.background('Scrapfly Background: Unknown message type:', request.type);

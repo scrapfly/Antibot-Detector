@@ -1,7 +1,7 @@
 {
   "id": "orientation-fingerprint",
   "name": "Device Orientation Fingerprint",
-  "enabled": true,
+  "enabled": false,
   "category": "Fingerprint",
   "color": "#f97316",
   "lastUpdated": "2025-01-21",

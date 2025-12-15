@@ -125,6 +125,49 @@
           </div>
         </div>
 
+        <!-- Update Rules Section -->
+        <div class="settings-section">
+          <h3>Update Rules</h3>
+
+          <div class="setting-group">
+            <label class="setting-label">
+              <span>Auto-Update Detection Rules</span>
+              <span class="setting-description">Automatically check for new and updated detectors</span>
+            </label>
+            <label class="switch">
+              <input type="checkbox" id="autoUpdateRules" checked>
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <div class="setting-group" id="updateIntervalGroup">
+            <label class="setting-label">
+              <span>Check Interval</span>
+              <span class="setting-description">How often to check for updates</span>
+            </label>
+            <select id="updateCheckInterval" class="input-field" style="padding: 10px;">
+              <option value="1">Every hour</option>
+              <option value="6">Every 6 hours</option>
+              <option value="12" selected>Every 12 hours</option>
+              <option value="24">Every 24 hours</option>
+            </select>
+          </div>
+
+          <div class="setting-group" style="flex-direction: column; align-items: flex-start; width: 100%;">
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 8px;">
+              <span id="lastUpdateCheck" style="font-size: 12px; color: var(--text-muted);">Last checked: Never</span>
+            </div>
+            <button id="checkUpdatesBtn" class="action-btn" style="width: 100%; font-size: 14px; padding: 10px; position: relative; overflow: hidden;">
+              <svg id="checkUpdatesBtnIcon" width="16" height="16" viewBox="0 0 24 24">
+                <path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" fill="currentColor"/>
+              </svg>
+              <span id="checkUpdatesBtnText">Check for Updates Now</span>
+              <div id="updateProgressBar" style="display: none; position: absolute; bottom: 0; left: 0; height: 3px; background: linear-gradient(90deg, #4CAF50, #8BC34A); width: 0%; transition: width 0.3s ease;"></div>
+            </button>
+            <div id="updateStatusText" style="display: none; font-size: 12px; color: var(--text-muted); margin-top: 8px; text-align: center;"></div>
+          </div>
+        </div>
+
         <!-- Badge Colors Section -->
         <div class="settings-section">
           <h3>Badge Colors</h3>
@@ -461,15 +504,65 @@
             </div>
 
             <div id="webhookSettings" class="webhook-settings-container">
-              <div class="setting-group">
+              <div class="setting-group" style="flex-direction: column; align-items: flex-start;">
                 <label class="setting-label">
                   <span style="font-size: 14px;">HTTP Method</span>
                 </label>
-                <select id="webhookMethod" class="input-field" style="font-size: 14px; padding: 10px;">
-                  <option value="GET">GET</option>
-                  <option value="POST" selected>POST</option>
-                  <option value="PUT">PUT</option>
-                </select>
+                <input type="hidden" id="webhookMethod" value="POST">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; margin-top: 8px;">
+                  <!-- GET -->
+                  <label class="http-method-badge" data-method="GET">
+                    <input type="radio" name="webhookMethodRadio" value="GET">
+                    <span class="method-badge-content">
+                      <span class="method-icon">●</span>
+                      <span class="method-text">GET</span>
+                    </span>
+                  </label>
+                  <!-- POST -->
+                  <label class="http-method-badge checked" data-method="POST">
+                    <input type="radio" name="webhookMethodRadio" value="POST" checked>
+                    <span class="method-badge-content">
+                      <span class="method-icon">●</span>
+                      <span class="method-text">POST</span>
+                    </span>
+                  </label>
+                  <!-- PUT -->
+                  <label class="http-method-badge" data-method="PUT">
+                    <input type="radio" name="webhookMethodRadio" value="PUT">
+                    <span class="method-badge-content">
+                      <span class="method-icon">●</span>
+                      <span class="method-text">PUT</span>
+                    </span>
+                  </label>
+                  <!-- PATCH -->
+                  <label class="http-method-badge" data-method="PATCH">
+                    <input type="radio" name="webhookMethodRadio" value="PATCH">
+                    <span class="method-badge-content">
+                      <span class="method-icon">●</span>
+                      <span class="method-text">PATCH</span>
+                    </span>
+                  </label>
+                  <!-- DELETE -->
+                  <label class="http-method-badge" data-method="DELETE">
+                    <input type="radio" name="webhookMethodRadio" value="DELETE">
+                    <span class="method-badge-content">
+                      <span class="method-icon">●</span>
+                      <span class="method-text">DELETE</span>
+                    </span>
+                  </label>
+                  <!-- Custom -->
+                  <label class="http-method-badge" data-method="CUSTOM">
+                    <input type="radio" name="webhookMethodRadio" value="CUSTOM">
+                    <span class="method-badge-content">
+                      <span class="method-icon">+</span>
+                      <span class="method-text">Custom</span>
+                    </span>
+                  </label>
+                </div>
+                <!-- Custom Method Input -->
+                <div id="webhookCustomMethodContainer" style="display: none; margin-top: 10px; width: 100%;">
+                  <input type="text" id="webhookCustomMethod" class="input-field" placeholder="Enter custom method (e.g., OPTIONS, HEAD)" style="width: 100%; font-size: 14px; padding: 10px;">
+                </div>
               </div>
 
               <div class="setting-group" style="flex-direction: column; align-items: flex-start;">
@@ -487,12 +580,11 @@
                 </div>
               </div>
 
-              <div class="setting-group" id="webhookContentTypeGroup">
+              <div class="setting-group" id="webhookContentTypeGroup" style="flex-direction: column; align-items: flex-start;">
                 <label class="setting-label">
                   <span style="font-size: 14px;">Content-Type</span>
-                  <span class="setting-description" style="font-size: 12px;">Request content type for POST/PUT</span>
                 </label>
-                <select id="webhookContentType" class="input-field" style="font-size: 14px; padding: 10px;">
+                <select id="webhookContentType" class="input-field" style="width: 100%; font-size: 14px; padding: 10px;">
                   <option value="application/json" selected>application/json</option>
                   <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
                   <option value="text/plain">text/plain</option>

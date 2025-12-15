@@ -73,6 +73,13 @@ class Settings {
         duplicateScope: 'full_url',
         duplicateDuration: 1,
         duplicateUnit: 'hours'
+      },
+
+      // Update Settings
+      updates: {
+        autoUpdate: true,
+        checkIntervalHours: 12,
+        lastCheckTimestamp: 0
       }
     };
 
@@ -371,6 +378,9 @@ class Settings {
       if (cacheUnitSelect) {
         cacheUnitSelect.value = this.settings.detection.cacheUnit || 'hours';
       }
+
+      // Render blacklisted domains
+      this.renderBlacklistUI();
     }
 
     // JS API Settings
@@ -381,6 +391,52 @@ class Settings {
       }
     }
 
+    // Update Settings - ensure updates object exists
+    if (!this.settings.updates) {
+      this.settings.updates = {
+        autoUpdate: true,
+        checkIntervalHours: 12,
+        lastCheckTimestamp: 0
+      };
+    }
+
+    const autoUpdateRules = document.querySelector('#autoUpdateRules');
+    if (autoUpdateRules) {
+      autoUpdateRules.checked = this.settings.updates.autoUpdate ?? true;
+      autoUpdateRules.addEventListener('change', () => {
+        const intervalGroup = document.querySelector('#updateIntervalGroup');
+        if (intervalGroup) {
+          intervalGroup.style.opacity = autoUpdateRules.checked ? '1' : '0.5';
+        }
+      });
+      // Set initial opacity
+      const intervalGroup = document.querySelector('#updateIntervalGroup');
+      if (intervalGroup) {
+        intervalGroup.style.opacity = autoUpdateRules.checked ? '1' : '0.5';
+      }
+    }
+
+    const updateCheckInterval = document.querySelector('#updateCheckInterval');
+    if (updateCheckInterval) {
+      updateCheckInterval.value = this.settings.updates.checkIntervalHours || 12;
+    }
+
+    // Update last check text
+    this.updateLastCheckDisplay();
+
+    // Setup check updates button - simple direct handler
+    const checkUpdatesBtn = document.querySelector('#checkUpdatesBtn');
+    if (checkUpdatesBtn) {
+      console.log('[Settings] Found checkUpdatesBtn, attaching handler');
+      const self = this;
+      checkUpdatesBtn.onclick = function() {
+        console.log('[Settings] Button clicked!');
+        self.handleCheckUpdates();
+      };
+    } else {
+      console.error('[Settings] checkUpdatesBtn NOT FOUND!');
+    }
+
     // Webhook Settings
     if (this.settings.webhook) {
       const enableWebhook = document.querySelector('#enableWebhook');
@@ -389,8 +445,48 @@ class Settings {
       const webhookOnCache = document.querySelector('#webhookOnCache');
       if (webhookOnCache) webhookOnCache.checked = this.settings.webhook.webhookOnCache ?? false;
 
-      const webhookMethod = document.querySelector('#webhookMethod');
-      if (webhookMethod) webhookMethod.value = this.settings.webhook.webhookMethod || 'POST';
+      // Setup webhook HTTP Method badges (radio buttons)
+      const webhookMethodInput = document.querySelector('#webhookMethod');
+      const customContainer = document.querySelector('#webhookCustomMethodContainer');
+      const customMethodInput = document.querySelector('#webhookCustomMethod');
+      const value = this.settings.webhook.webhookMethod || 'POST';
+      const standardMethods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
+      const isCustom = !standardMethods.includes(value.toUpperCase());
+
+      if (webhookMethodInput) {
+        webhookMethodInput.value = value;
+      }
+
+      // Clear all checked states first
+      document.querySelectorAll('input[name="webhookMethodRadio"]').forEach(radio => {
+        radio.checked = false;
+        const badge = radio.closest('.http-method-badge');
+        if (badge) badge.classList.remove('checked');
+      });
+
+      if (isCustom && customContainer && customMethodInput) {
+        // Custom method
+        const customRadio = document.querySelector('input[name="webhookMethodRadio"][value="CUSTOM"]');
+        if (customRadio) {
+          customRadio.checked = true;
+          const badge = customRadio.closest('.http-method-badge');
+          if (badge) badge.classList.add('checked');
+        }
+        customContainer.style.display = 'block';
+        customMethodInput.value = value;
+      } else {
+        // Standard method
+        const radio = document.querySelector(`input[name="webhookMethodRadio"][value="${value.toUpperCase()}"]`);
+        if (radio) {
+          radio.checked = true;
+          const badge = radio.closest('.http-method-badge');
+          if (badge) badge.classList.add('checked');
+        }
+        if (customContainer) customContainer.style.display = 'none';
+      }
+
+      // Setup radio button event listeners
+      this.setupWebhookMethodRadios();
 
       const webhookUrl = document.querySelector('#webhookUrl');
       if (webhookUrl) webhookUrl.value = this.settings.webhook.webhookUrl || '';
@@ -532,6 +628,13 @@ class Settings {
       duplicateScope: document.querySelector('#duplicateScope')?.value ?? this.settings.duplicatePrevention?.duplicateScope ?? 'full_url',
       duplicateDuration: parseInt(document.querySelector('#duplicateDuration')?.value ?? this.settings.duplicatePrevention?.duplicateDuration ?? 1),
       duplicateUnit: document.querySelector('#duplicateUnit')?.value ?? this.settings.duplicatePrevention?.duplicateUnit ?? 'hours'
+    };
+
+    // Update Settings
+    settings.updates = {
+      autoUpdate: document.querySelector('#autoUpdateRules')?.checked ?? this.settings.updates?.autoUpdate ?? true,
+      checkIntervalHours: parseInt(document.querySelector('#updateCheckInterval')?.value ?? this.settings.updates?.checkIntervalHours ?? 12),
+      lastCheckTimestamp: this.settings.updates?.lastCheckTimestamp ?? 0
     };
 
     // Keep any other existing settings that might not be in the form
@@ -742,7 +845,14 @@ class Settings {
     // Save settings button
     const saveSettingsBtn = document.querySelector('#saveSettingsBtn');
     if (saveSettingsBtn) {
-      saveSettingsBtn.addEventListener('click', () => this.handleSaveSettings());
+      Logger.ui('Save settings button found, attaching event listener');
+      saveSettingsBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        Logger.ui('Save settings button clicked');
+        await this.handleSaveSettings();
+      });
+    } else {
+      Logger.error('UI', 'Save settings button NOT found - event listener not attached');
     }
 
     // Cancel settings button
@@ -902,6 +1012,52 @@ class Settings {
       }
     });
 
+    // Add Current Page to blacklist button
+    const addCurrentDomainBtn = document.querySelector('#addCurrentDomainBtn');
+    if (addCurrentDomainBtn) {
+      addCurrentDomainBtn.addEventListener('click', async () => {
+        try {
+          // Get the current tab's URL
+          const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+          if (!tab || !tab.url) {
+            NotificationHelper.error('Could not get current page URL');
+            return;
+          }
+
+          // Extract domain from URL
+          const url = new URL(tab.url);
+          const domain = url.hostname;
+
+          // Check if already blacklisted
+          if (!this.settings.detection) {
+            this.settings.detection = { blacklistedDomains: [] };
+          }
+          if (!this.settings.detection.blacklistedDomains) {
+            this.settings.detection.blacklistedDomains = [];
+          }
+
+          if (this.settings.detection.blacklistedDomains.includes(domain)) {
+            NotificationHelper.info(`${domain} is already blacklisted`);
+            return;
+          }
+
+          // Add to blacklist
+          this.settings.detection.blacklistedDomains.push(domain);
+
+          // Update UI
+          this.renderBlacklistUI();
+
+          // Save settings
+          await this.saveSettings();
+
+          NotificationHelper.success(`Added ${domain} to blacklist`);
+        } catch (error) {
+          Logger.error('UI', 'Failed to add domain to blacklist', error);
+          NotificationHelper.error('Failed to add domain: ' + error.message);
+        }
+      });
+    }
+
     // Setup color pagination controls
     this.setupColorPagination();
   }
@@ -1001,26 +1157,75 @@ class Settings {
   }
 
   /**
+   * Render the blacklist UI showing all blacklisted domains
+   */
+  renderBlacklistUI() {
+    const container = document.querySelector('#blacklistContainer');
+    if (!container) return;
+
+    const domains = this.settings.detection?.blacklistedDomains || [];
+
+    if (domains.length === 0) {
+      container.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; padding: 10px;">No domains blacklisted</div>';
+      return;
+    }
+
+    container.innerHTML = domains.map(domain => `
+      <div class="blacklist-item" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--bg-tertiary); border-radius: 6px; margin-bottom: 6px;">
+        <span style="font-size: 13px; color: var(--text-primary);">${domain}</span>
+        <button class="remove-blacklist-btn" data-domain="${domain}" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; display: flex; align-items: center;">
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+    `).join('');
+
+    // Add click handlers for remove buttons
+    container.querySelectorAll('.remove-blacklist-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const domain = btn.getAttribute('data-domain');
+        this.settings.detection.blacklistedDomains = this.settings.detection.blacklistedDomains.filter(d => d !== domain);
+        this.renderBlacklistUI();
+        await this.saveSettings();
+        NotificationHelper.success(`Removed ${domain} from blacklist`);
+      });
+    });
+  }
+
+  /**
    * Handle save settings button click
    */
   async handleSaveSettings() {
+    Logger.ui('handleSaveSettings() called');
     try {
+      Logger.ui('Getting settings from UI...');
       const newSettings = this.getSettingsFromUI();
+      Logger.ui('Settings from UI:', newSettings);
+
+      Logger.ui('Validating settings...');
       const validation = this.validateSettings(newSettings);
+      Logger.ui('Validation result:', validation);
 
       if (!validation.isValid) {
+        Logger.warn('UI', 'Settings validation failed:', validation.errors);
         NotificationHelper.error('Invalid settings: ' + validation.errors.join(', '));
         return;
       }
 
       // Merge new settings with existing settings to preserve nested structure
+      Logger.ui('Merging settings...');
       this.settings = this.deepMerge(this.settings, newSettings);
       Logger.ui('Settings merged:', this.settings);
 
+      Logger.ui('Saving settings to storage...');
       await this.saveSettings();
+      Logger.ui('Settings saved successfully');
 
       // Close modal after successful save
+      Logger.ui('Closing modal...');
       this.hideSettings();
+      Logger.ui('Modal closed');
 
     } catch (error) {
       Logger.error('UI', 'Failed to handle save settings:', error);
@@ -1054,7 +1259,9 @@ class Settings {
   async initialize() {
     Logger.ui('Settings section initializing...');
     await this.loadHTML();
+    Logger.ui('Settings HTML loaded, setting up event listeners...');
     this.setupEventListeners();
+    Logger.ui('Event listeners set up, loading settings...');
     await this.loadSettings();
     Logger.ui('Settings section initialized');
   }
@@ -1064,12 +1271,22 @@ class Settings {
    */
   async loadHTML() {
     try {
+      Logger.ui('Loading settings HTML from:', chrome.runtime.getURL('sections/settings/settings.html'));
       const response = await fetch(chrome.runtime.getURL('sections/settings/settings.html'));
       const html = await response.text();
+      Logger.ui('Settings HTML fetched, length:', html.length);
 
       const settingsModal = document.querySelector('#settingsModal');
       if (settingsModal) {
         settingsModal.innerHTML = html;
+        Logger.ui('Settings HTML inserted into modal');
+
+        // Verify critical elements exist
+        const saveBtn = document.querySelector('#saveSettingsBtn');
+        const cancelBtn = document.querySelector('#cancelSettingsBtn');
+        Logger.ui('Save button found:', !!saveBtn, 'Cancel button found:', !!cancelBtn);
+      } else {
+        Logger.error('UI', 'Settings modal container #settingsModal not found in DOM');
       }
     } catch (error) {
       Logger.error('UI', 'Failed to load settings HTML:', error);
@@ -1296,6 +1513,312 @@ class Settings {
       Logger.error('UI', 'Scrapfly JS API: Failed to dispatch ready event:', error);
       return false;
     }
+  }
+
+  /**
+   * Update HTTP Method select dropdown color based on selected value (legacy)
+   * @param {HTMLSelectElement} selectElement - The select element to update
+   */
+  updateHttpMethodColor(selectElement) {
+    if (!selectElement) return;
+
+    // Remove all method classes
+    selectElement.classList.remove('method-get', 'method-post', 'method-put', 'method-patch', 'method-delete');
+
+    // Add appropriate class based on selected value
+    const value = selectElement.value.toLowerCase();
+    if (value) {
+      selectElement.classList.add(`method-${value}`);
+    }
+  }
+
+  /**
+   * Setup webhook HTTP Method radio button event listeners
+   */
+  setupWebhookMethodRadios() {
+    const radios = document.querySelectorAll('input[name="webhookMethodRadio"]');
+    const webhookMethodInput = document.querySelector('#webhookMethod');
+    const customContainer = document.querySelector('#webhookCustomMethodContainer');
+    const customInput = document.querySelector('#webhookCustomMethod');
+
+    radios.forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        // Remove .checked from all badges
+        radios.forEach(r => {
+          const badge = r.closest('.http-method-badge');
+          if (badge) badge.classList.remove('checked');
+        });
+
+        // Add .checked to selected badge
+        const badge = e.target.closest('.http-method-badge');
+        if (badge) badge.classList.add('checked');
+
+        // Handle custom method
+        if (e.target.value === 'CUSTOM') {
+          if (customContainer) customContainer.style.display = 'block';
+          if (customInput) customInput.focus();
+        } else {
+          if (customContainer) customContainer.style.display = 'none';
+          if (webhookMethodInput) webhookMethodInput.value = e.target.value;
+        }
+      });
+    });
+
+    // Handle custom input changes
+    if (customInput) {
+      customInput.addEventListener('input', () => {
+        const customValue = customInput.value.trim().toUpperCase();
+        if (customValue && webhookMethodInput) {
+          webhookMethodInput.value = customValue;
+        }
+      });
+    }
+  }
+
+  /**
+   * Setup custom HTTP Method dropdown event listeners (legacy)
+   * @param {HTMLElement} dropdown - The dropdown container element
+   * @param {HTMLInputElement} hiddenInput - The hidden input to store the value
+   */
+  setupCustomHttpMethodDropdown(dropdown, hiddenInput) {
+    if (!dropdown || !hiddenInput) return;
+
+    const selected = dropdown.querySelector('.http-method-dropdown-selected');
+    const options = dropdown.querySelectorAll('.http-method-dropdown-option');
+    const customContainer = document.querySelector('#webhookCustomMethodContainer');
+    const customInput = document.querySelector('#webhookCustomMethod');
+
+    // Toggle dropdown on click
+    selected.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle('open');
+    });
+
+    // Handle option selection
+    options.forEach(option => {
+      option.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const value = option.dataset.value;
+
+        if (value === 'CUSTOM') {
+          // Show custom input
+          if (customContainer) customContainer.style.display = 'block';
+          if (customInput) customInput.focus();
+          this.updateCustomHttpMethodDropdown(dropdown, 'Custom');
+        } else {
+          // Hide custom input
+          if (customContainer) customContainer.style.display = 'none';
+          hiddenInput.value = value;
+          this.updateCustomHttpMethodDropdown(dropdown, value);
+        }
+        dropdown.classList.remove('open');
+      });
+    });
+
+    // Handle custom method input changes
+    if (customInput) {
+      customInput.addEventListener('input', () => {
+        const customValue = customInput.value.trim().toUpperCase();
+        if (customValue) {
+          hiddenInput.value = customValue;
+        }
+      });
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove('open');
+      }
+    });
+  }
+
+  /**
+   * Update custom HTTP Method dropdown display
+   * @param {HTMLElement} dropdown - The dropdown container element
+   * @param {string} value - The selected value (GET, POST, PUT, etc.)
+   */
+  updateCustomHttpMethodDropdown(dropdown, value) {
+    if (!dropdown || !value) return;
+
+    const valueDisplay = dropdown.querySelector('.http-method-dropdown-value');
+    const options = dropdown.querySelectorAll('.http-method-dropdown-option');
+
+    // Update displayed value and its color class
+    if (valueDisplay) {
+      valueDisplay.textContent = value;
+      valueDisplay.className = `http-method-dropdown-value http-method-${value.toLowerCase()}`;
+    }
+
+    // Update selected state on options
+    options.forEach(option => {
+      if (option.dataset.value === value) {
+        option.classList.add('selected');
+      } else {
+        option.classList.remove('selected');
+      }
+    });
+  }
+
+  /**
+   * Update the last check display text
+   */
+  updateLastCheckDisplay() {
+    const lastCheckEl = document.querySelector('#lastUpdateCheck');
+    if (!lastCheckEl) return;
+
+    const lastCheck = this.settings.updates?.lastCheckTimestamp || 0;
+    if (lastCheck === 0) {
+      lastCheckEl.textContent = 'Last checked: Never';
+      return;
+    }
+
+    const now = Date.now();
+    const diffMs = now - lastCheck;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    let timeText;
+    if (diffDays > 0) {
+      timeText = `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    } else if (diffHours > 0) {
+      timeText = `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    } else if (diffMins > 0) {
+      timeText = `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+    } else {
+      timeText = 'Just now';
+    }
+
+    lastCheckEl.textContent = `Last checked: ${timeText}`;
+  }
+
+  /**
+   * Handle the Check for Updates button click
+   */
+  async handleCheckUpdates() {
+    Logger.ui('handleCheckUpdates called');
+    const btn = document.querySelector('#checkUpdatesBtn');
+    const btnText = document.querySelector('#checkUpdatesBtnText');
+    const btnIcon = document.querySelector('#checkUpdatesBtnIcon');
+    const progressBar = document.querySelector('#updateProgressBar');
+    const statusText = document.querySelector('#updateStatusText');
+
+    if (!btn || !btnText) {
+      Logger.warn('UI', 'Check updates button elements not found', { btn: !!btn, btnText: !!btnText });
+      return;
+    }
+
+    // Disable button and show loading state
+    btn.disabled = true;
+    const originalText = btnText.textContent;
+    btnText.textContent = 'Connecting...';
+
+    // Add spinning animation to icon
+    if (btnIcon) {
+      btnIcon.style.animation = 'spin 1s linear infinite';
+    }
+
+    // Show progress bar
+    if (progressBar) {
+      progressBar.style.display = 'block';
+      progressBar.style.width = '10%';
+    }
+
+    // Show status text
+    if (statusText) {
+      statusText.style.display = 'block';
+      statusText.textContent = 'Connecting to GitHub...';
+    }
+
+    Logger.ui('Sending CHECK_FOR_UPDATES message to background');
+
+    // Simulate progress updates
+    const progressSteps = [
+      { width: '20%', text: 'Fetching index...', delay: 500 },
+      { width: '40%', text: 'Checking detectors...', delay: 1500 },
+      { width: '60%', text: 'Comparing versions...', delay: 2500 },
+      { width: '80%', text: 'Applying updates...', delay: 3500 }
+    ];
+
+    const progressTimers = progressSteps.map(step =>
+      setTimeout(() => {
+        if (progressBar) progressBar.style.width = step.width;
+        if (statusText) statusText.textContent = step.text;
+      }, step.delay)
+    );
+
+    // Helper to finish the progress animation
+    const finishProgress = (success, message) => {
+      // Clear all pending timers
+      progressTimers.forEach(timer => clearTimeout(timer));
+
+      // Stop spinning
+      if (btnIcon) {
+        btnIcon.style.animation = '';
+      }
+
+      // Complete progress bar
+      if (progressBar) {
+        progressBar.style.width = '100%';
+        progressBar.style.background = success
+          ? 'linear-gradient(90deg, #4CAF50, #8BC34A)'
+          : 'linear-gradient(90deg, #f44336, #ff5722)';
+      }
+
+      // Update status
+      if (statusText) {
+        statusText.textContent = message;
+        statusText.style.color = success ? '#4CAF50' : '#f44336';
+      }
+    };
+
+    try {
+      // Send message to background to check for updates
+      const response = await chrome.runtime.sendMessage({
+        type: 'CHECK_FOR_UPDATES',
+        force: true
+      });
+
+      if (response && response.success) {
+        const result = response.result;
+        if (result.newDetectors > 0 || result.updatedDetectors > 0) {
+          btnText.textContent = `✓ ${result.newDetectors} new, ${result.updatedDetectors} updated`;
+          finishProgress(true, `Updated ${result.newDetectors} new and ${result.updatedDetectors} updated detectors`);
+        } else if (result.checked === false) {
+          btnText.textContent = '✗ Check failed';
+          finishProgress(false, result.reason || 'Update check failed');
+        } else {
+          btnText.textContent = '✓ All up to date!';
+          finishProgress(true, 'All detection rules are up to date');
+        }
+
+        // Update last check timestamp in settings
+        this.settings.updates.lastCheckTimestamp = Date.now();
+        this.updateLastCheckDisplay();
+      } else {
+        btnText.textContent = '✗ ' + (response?.error || 'Update check failed');
+        finishProgress(false, response?.error || 'Update check failed');
+      }
+    } catch (error) {
+      Logger.error('UI', 'Failed to check for updates', error);
+      btnText.textContent = '✗ Error checking';
+      finishProgress(false, 'Error: ' + error.message);
+    }
+
+    // Re-enable button and hide progress after a delay
+    setTimeout(() => {
+      btn.disabled = false;
+      btnText.textContent = originalText;
+      if (progressBar) {
+        progressBar.style.display = 'none';
+        progressBar.style.width = '0%';
+      }
+      if (statusText) {
+        statusText.style.display = 'none';
+        statusText.style.color = 'var(--text-muted)';
+      }
+    }, 5000);
   }
 }
 

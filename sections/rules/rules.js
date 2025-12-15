@@ -207,6 +207,13 @@ class Rules {
     // Setup Case Sensitive helper modal
     this.setupCaseSensitiveHelperModal();
 
+    // Setup HTTP method color for network request modal dropdown
+    const networkMethod = document.querySelector('#networkMethod');
+    if (networkMethod) {
+      this.updateHttpMethodColor(networkMethod);
+      networkMethod.addEventListener('change', () => this.updateHttpMethodColor(networkMethod));
+    }
+
     // Setup explanation modals
     this.setupRegexExplanationModal();
     this.setupWholeWordExplanationModal();
@@ -256,6 +263,39 @@ class Rules {
         valueDisplay.textContent = e.target.value;
       });
     }
+
+    // Setup HTTP method badge radio button listeners for .checked class toggle
+    document.querySelectorAll('.http-method-badge input[type="radio"], .http-method-badge input[type="checkbox"]').forEach(input => {
+      input.addEventListener('change', (e) => {
+        // For radio buttons, remove .checked from all badges in the same group first
+        if (e.target.type === 'radio') {
+          const groupName = e.target.name;
+          document.querySelectorAll(`input[name="${groupName}"]`).forEach(radio => {
+            const badge = radio.closest('.http-method-badge');
+            if (badge) badge.classList.remove('checked');
+          });
+        }
+
+        const badge = e.target.closest('.http-method-badge');
+        if (badge) {
+          badge.classList.toggle('checked', e.target.checked);
+        }
+
+        // Handle custom method - show/hide input field
+        if (e.target.id === 'payloadMethodCustom') {
+          const customContainer = document.querySelector('#customMethodInputContainer');
+          if (customContainer) {
+            customContainer.style.display = e.target.checked ? 'block' : 'none';
+          }
+        } else if (e.target.name === 'payloadMethod') {
+          // Hide custom input when selecting other methods
+          const customContainer = document.querySelector('#customMethodInputContainer');
+          if (customContainer) {
+            customContainer.style.display = 'none';
+          }
+        }
+      });
+    });
 
     // Setup click handlers for settings buttons (using event delegation)
     document.addEventListener('click', (e) => {
@@ -369,14 +409,46 @@ class Rules {
     // Set payload URL case sensitive checkbox (if it exists)
     setCheckbox('payloadUrlCaseSensitive', payloadUrlCaseSensitive);
 
-    // Set payload HTTP method checkboxes
-    const methodsArray = payloadMethods ? payloadMethods.split(',') : [];
-    ['Post', 'Put', 'Patch', 'Delete'].forEach(method => {
-      const checkbox = document.querySelector(`#payloadMethod${method}`);
-      if (checkbox) {
-        checkbox.checked = methodsArray.includes(method.toUpperCase());
-      }
+    // Set payload HTTP method radio buttons (single selection)
+    const selectedMethod = payloadMethods ? payloadMethods.split(',')[0] : ''; // Take first method only
+    const standardMethods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
+
+    // Clear all checked states first
+    document.querySelectorAll('.http-method-badge').forEach(badge => {
+      badge.classList.remove('checked');
     });
+    document.querySelectorAll('input[name="payloadMethod"]').forEach(radio => {
+      radio.checked = false;
+    });
+
+    // Check if it's a standard method or custom
+    const isCustom = selectedMethod && !standardMethods.includes(selectedMethod.toUpperCase());
+
+    if (isCustom) {
+      // Custom method
+      const customRadio = document.querySelector('#payloadMethodCustom');
+      const customInput = document.querySelector('#customMethodInput');
+      const customContainer = document.querySelector('#customMethodInputContainer');
+      if (customRadio && customInput && customContainer) {
+        customRadio.checked = true;
+        customInput.value = selectedMethod;
+        customContainer.style.display = 'block';
+        const badge = customRadio.closest('.http-method-badge');
+        if (badge) badge.classList.add('checked');
+      }
+    } else if (selectedMethod) {
+      // Standard method
+      const capitalizedMethod = selectedMethod.charAt(0).toUpperCase() + selectedMethod.slice(1).toLowerCase();
+      const radio = document.querySelector(`#payloadMethod${capitalizedMethod}`);
+      if (radio) {
+        radio.checked = true;
+        const badge = radio.closest('.http-method-badge');
+        if (badge) badge.classList.add('checked');
+      }
+      // Hide custom container
+      const customContainer = document.querySelector('#customMethodInputContainer');
+      if (customContainer) customContainer.style.display = 'none';
+    }
 
     // Show/hide scope settings groups based on method type
     const contentScopeGroup = document.querySelector('#contentScopeGroup');
@@ -2163,15 +2235,20 @@ class Rules {
     const payloadUrlRegex = document.querySelector('#payloadUrlRegex')?.checked || false;
     const payloadUrlCaseSensitive = document.querySelector('#payloadUrlCaseSensitive')?.checked || false;
 
-    // Get selected HTTP methods
-    const selectedMethods = [];
-    ['Post', 'Put', 'Patch', 'Delete'].forEach(method => {
-      const checkbox = document.querySelector(`#payloadMethod${method}`);
-      if (checkbox && checkbox.checked) {
-        selectedMethods.push(method.toUpperCase());
+    // Get selected HTTP method (single selection)
+    let payloadMethods = '';
+    const selectedRadio = document.querySelector('input[name="payloadMethod"]:checked');
+    if (selectedRadio) {
+      if (selectedRadio.value === 'CUSTOM') {
+        // Get custom method from input
+        const customInput = document.querySelector('#customMethodInput');
+        if (customInput && customInput.value.trim()) {
+          payloadMethods = customInput.value.trim().toUpperCase();
+        }
+      } else {
+        payloadMethods = selectedRadio.value;
       }
-    });
-    const payloadMethods = selectedMethods.join(',');
+    }
 
     // Save to data attributes
     this.currentMethodItem.dataset.confidence = confidence;
@@ -3868,6 +3945,23 @@ class Rules {
     // Update pagination with filtered results
     if (this.paginationManager) {
       this.paginationManager.setItems(this.filteredDetectors);
+    }
+  }
+
+  /**
+   * Update HTTP Method select dropdown color based on selected value
+   * @param {HTMLSelectElement} selectElement - The select element to update
+   */
+  updateHttpMethodColor(selectElement) {
+    if (!selectElement) return;
+
+    // Remove all method classes
+    selectElement.classList.remove('method-get', 'method-post', 'method-put', 'method-patch', 'method-delete');
+
+    // Add appropriate class based on selected value
+    const value = selectElement.value.toLowerCase();
+    if (value) {
+      selectElement.classList.add(`method-${value}`);
     }
   }
 }

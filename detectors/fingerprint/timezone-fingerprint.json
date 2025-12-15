@@ -1,7 +1,7 @@
 {
   "id": "timezone-fingerprint",
   "name": "Timezone/Intl Fingerprint",
-  "enabled": true,
+  "enabled": false,
   "category": "Fingerprint",
   "color": "#06b6d4",
   "lastUpdated": "2025-01-21",

@@ -628,9 +628,9 @@
   position: relative;
   background: var(--bg-primary);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 12px;
   width: 90%;
-  max-width: 550px;
+  max-width: 520px;
   max-height: 85%;
   display: flex;
   flex-direction: column;
@@ -643,11 +643,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: 20px 24px;
   border-bottom: 1px solid var(--border);
-  background: linear-gradient(to bottom, var(--bg-secondary), rgba(0, 0, 0, 0.02));
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
+  background: transparent;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
   flex-shrink: 0;
 }
 
@@ -659,12 +659,12 @@
 }
 
 .rule-modal-close {
-  background: none;
+  background: transparent;
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  padding: 8px;
-  border-radius: 6px;
+  padding: 4px;
+  border-radius: 4px;
   transition: all 0.2s;
   display: flex;
   align-items: center;
@@ -679,7 +679,7 @@
 }
 
 .rule-modal-body {
-  padding: 16px;
+  padding: 20px 24px;
   flex: 1;
   overflow-y: auto;
   min-height: 0;
@@ -687,20 +687,20 @@
 }
 
 .rule-section {
-  margin-bottom: 14px;
-  padding: 12px;
-  background: var(--bg-secondary);
-  border-radius: 8px;
-  border: 1px solid var(--border);
+  margin-bottom: 20px;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  border: none;
 }
 
 .section-title {
   display: block;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--text-primary);
   margin-bottom: 12px;
 }
 
@@ -927,7 +927,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
-  padding: 16px 20px;
+  padding: 16px 24px;
   border-top: 1px solid var(--border);
   background: linear-gradient(to bottom, var(--bg-secondary), rgba(0, 0, 0, 0.05));
   border-bottom-left-radius: 16px;
@@ -1274,7 +1274,8 @@
 
 /* Method Settings Modal Styles */
 .method-settings-modal {
-  width: 450px;
+  width: 100%;
+  max-width: 520px;
   display: flex;
   flex-direction: column;
 }
@@ -1296,7 +1297,7 @@
 
 .settings-group {
   margin-bottom: 20px;
-  padding: 16px;
+  padding: 16px 20px;
   background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(59, 130, 246, 0.05) 100%);
   border-radius: 10px;
   border: 1px solid var(--border);
@@ -2454,7 +2455,8 @@
   user-select: none;
 }
 
-.http-method-badge input[type="checkbox"] {
+.http-method-badge input[type="checkbox"],
+.http-method-badge input[type="radio"] {
   position: absolute;
   opacity: 0;
   width: 0;
@@ -2474,6 +2476,7 @@
 .method-icon {
   font-size: 8px;
   opacity: 0.5;
+  color: var(--text-secondary);
   transition: all 0.25s;
 }
 
@@ -2487,95 +2490,151 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* POST - Green */
-.http-method-badge[data-method="POST"]:hover {
-  border-color: rgba(34, 197, 94, 0.5);
-  background: rgba(34, 197, 94, 0.05);
-}
-
-.http-method-badge[data-method="POST"]:has(input:checked) {
+/* GET - Green */
+.http-method-badge[data-method="GET"]:has(input:checked),
+.http-method-badge[data-method="GET"]:has(input[type="radio"]:checked),
+.http-method-badge[data-method="GET"].checked {
   border-color: #22c55e;
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.08) 100%);
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(34, 197, 94, 0.15) 100%);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
 }
 
-.http-method-badge[data-method="POST"]:has(input:checked) .method-badge-content {
+.http-method-badge[data-method="GET"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="GET"]:has(input[type="radio"]:checked) .method-badge-content,
+.http-method-badge[data-method="GET"].checked .method-badge-content {
   color: #22c55e;
   font-weight: 600;
 }
 
-.http-method-badge[data-method="POST"]:has(input:checked) .method-icon {
+.http-method-badge[data-method="GET"]:has(input:checked) .method-icon,
+.http-method-badge[data-method="GET"]:has(input[type="radio"]:checked) .method-icon,
+.http-method-badge[data-method="GET"].checked .method-icon {
   opacity: 1;
   color: #22c55e;
 }
 
-/* PUT - Blue */
-.http-method-badge[data-method="PUT"]:hover {
-  border-color: rgba(59, 130, 246, 0.5);
-  background: rgba(59, 130, 246, 0.05);
+/* POST - Purple */
+.http-method-badge[data-method="POST"]:has(input:checked),
+.http-method-badge[data-method="POST"].checked {
+  border-color: #a855f7;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(168, 85, 247, 0.15) 100%);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
 }
 
-.http-method-badge[data-method="PUT"]:has(input:checked) {
-  border-color: #3b82f6;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.http-method-badge[data-method="PUT"]:has(input:checked) .method-badge-content {
-  color: #3b82f6;
+.http-method-badge[data-method="POST"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="POST"].checked .method-badge-content {
+  color: #a855f7;
   font-weight: 600;
 }
 
-.http-method-badge[data-method="PUT"]:has(input:checked) .method-icon {
+.http-method-badge[data-method="POST"]:has(input:checked) .method-icon,
+.http-method-badge[data-method="POST"].checked .method-icon {
   opacity: 1;
-  color: #3b82f6;
+  color: #a855f7;
 }
 
-/* PATCH - Orange */
-.http-method-badge[data-method="PATCH"]:hover {
-  border-color: rgba(249, 115, 22, 0.5);
-  background: rgba(249, 115, 22, 0.05);
+/* PUT - Purple */
+.http-method-badge[data-method="PUT"]:has(input:checked),
+.http-method-badge[data-method="PUT"].checked {
+  border-color: #a855f7;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(168, 85, 247, 0.15) 100%);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
 }
 
-.http-method-badge[data-method="PATCH"]:has(input:checked) {
-  border-color: #f97316;
-  background: linear-gradient(135deg, rgba(249, 115, 22, 0.15) 0%, rgba(249, 115, 22, 0.08) 100%);
-  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
-}
-
-.http-method-badge[data-method="PATCH"]:has(input:checked) .method-badge-content {
-  color: #f97316;
+.http-method-badge[data-method="PUT"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="PUT"].checked .method-badge-content {
+  color: #a855f7;
   font-weight: 600;
 }
 
-.http-method-badge[data-method="PATCH"]:has(input:checked) .method-icon {
+.http-method-badge[data-method="PUT"]:has(input:checked) .method-icon,
+.http-method-badge[data-method="PUT"].checked .method-icon {
   opacity: 1;
-  color: #f97316;
+  color: #a855f7;
+}
+
+/* PATCH - Purple */
+.http-method-badge[data-method="PATCH"]:has(input:checked),
+.http-method-badge[data-method="PATCH"].checked {
+  border-color: #a855f7;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(168, 85, 247, 0.15) 100%);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+}
+
+.http-method-badge[data-method="PATCH"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="PATCH"].checked .method-badge-content {
+  color: #a855f7;
+  font-weight: 600;
+}
+
+.http-method-badge[data-method="PATCH"]:has(input:checked) .method-icon,
+.http-method-badge[data-method="PATCH"].checked .method-icon {
+  opacity: 1;
+  color: #a855f7;
 }
 
 /* DELETE - Red */
-.http-method-badge[data-method="DELETE"]:hover {
-  border-color: rgba(239, 68, 68, 0.5);
-  background: rgba(239, 68, 68, 0.05);
-}
-
-.http-method-badge[data-method="DELETE"]:has(input:checked) {
+.http-method-badge[data-method="DELETE"]:has(input:checked),
+.http-method-badge[data-method="DELETE"].checked {
   border-color: #ef4444;
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.08) 100%);
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(239, 68, 68, 0.15) 100%);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
 }
 
-.http-method-badge[data-method="DELETE"]:has(input:checked) .method-badge-content {
+.http-method-badge[data-method="DELETE"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="DELETE"].checked .method-badge-content {
   color: #ef4444;
   font-weight: 600;
 }
 
-.http-method-badge[data-method="DELETE"]:has(input:checked) .method-icon {
+.http-method-badge[data-method="DELETE"]:has(input:checked) .method-icon,
+.http-method-badge[data-method="DELETE"].checked .method-icon {
   opacity: 1;
   color: #ef4444;
+}
+
+/* Custom - Blue */
+.http-method-badge[data-method="CUSTOM"]:has(input:checked),
+.http-method-badge[data-method="CUSTOM"].checked {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 100%);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.http-method-badge[data-method="CUSTOM"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="CUSTOM"].checked .method-badge-content {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.http-method-badge[data-method="CUSTOM"]:has(input:checked) .method-icon,
+.http-method-badge[data-method="CUSTOM"].checked .method-icon {
+  opacity: 1;
+  color: #3b82f6;
 }
 
 /* Active (Click) State */
 .http-method-badge:active {
   transform: scale(0.97);
+}
+
+/* HTTP Method Select Dropdown Colors */
+select.method-get {
+  color: #22c55e;
+}
+
+select.method-post {
+  color: #a855f7;
+}
+
+select.method-put {
+  color: #a855f7;
+}
+
+select.method-patch {
+  color: #a855f7;
+}
+
+select.method-delete {
+  color: #ef4444;
 }

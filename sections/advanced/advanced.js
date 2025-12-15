@@ -950,8 +950,8 @@ class Advanced {
         <div class="empty-state-card">
           <div class="empty-state-icon">
             <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-              <path d="M28 10L12 18V28C12 38 18 46 28 48C38 46 44 38 44 28V18L28 10Z" stroke="#8B5CF6" stroke-width="2" fill="rgba(139,92,246,0.1)"/>
-              <circle cx="28" cy="28" r="8" fill="#8B5CF6"/>
+              <path d="M28 10L12 18V28C12 38 18 46 28 48C38 46 44 38 44 28V18L28 10Z" stroke="#3b82f6" stroke-width="2" fill="rgba(59,130,246,0.1)"/>
+              <circle cx="28" cy="28" r="8" fill="#3b82f6"/>
             </svg>
           </div>
           <h3 class="empty-state-title">No captures yet</h3>

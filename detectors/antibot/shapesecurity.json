@@ -4,8 +4,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "color": "#FF6B35",
-  "lastUpdated": "2024-10-06",
-  "version": "1.1.0",
+  "lastUpdated": "2025-12-15",
+  "version": "1.1.1",
   "website": "https://www.shapesecurity.com/products/bot-manager",
   "icon": "shape_security_official.png",
   "description": "Enterprise-grade bot management solution providing real-time detection and mitigation",
@@ -28,7 +28,7 @@
     ],
     "header": [
       {
-        "name": "x-[a-z0-9]{8}-a",
+        "name": "^x-[a-z0-9]{8}-a$",
         "nameRegex": true,
         "confidence": 100,
         "description": "Shape Security dynamic header pattern (suffix -a)",
@@ -42,7 +42,7 @@
         "valueScope": "response"
       },
       {
-        "name": "x-[a-z0-9]{8}-b",
+        "name": "^x-[a-z0-9]{8}-b$",
         "nameRegex": true,
         "confidence": 95,
         "description": "Shape Security dynamic header pattern (suffix -b)",
@@ -56,7 +56,7 @@
         "valueScope": "response"
       },
       {
-        "name": "x-[a-z0-9]{8}-c",
+        "name": "^x-[a-z0-9]{8}-c$",
         "nameRegex": true,
         "confidence": 95,
         "description": "Shape Security dynamic header pattern (suffix -c)",
@@ -70,7 +70,7 @@
         "valueScope": "response"
       },
       {
-        "name": "x-[a-z0-9]{8}-d",
+        "name": "^x-[a-z0-9]{8}-d$",
         "nameRegex": true,
         "confidence": 95,
         "description": "Shape Security dynamic header pattern (suffix -d)",
@@ -84,7 +84,7 @@
         "valueScope": "response"
       },
       {
-        "name": "x-[a-z0-9]{8}-f",
+        "name": "^x-[a-z0-9]{8}-f$",
         "nameRegex": true,
         "confidence": 95,
         "description": "Shape Security dynamic header pattern (suffix -f)",
@@ -98,7 +98,7 @@
         "valueScope": "response"
       },
       {
-        "name": "x-[a-z0-9]{8}-z",
+        "name": "^x-[a-z0-9]{8}-z$",
         "nameRegex": true,
         "confidence": 95,
         "description": "Shape Security dynamic header pattern (suffix -z)",

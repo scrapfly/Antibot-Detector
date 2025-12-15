@@ -1,7 +1,7 @@
 {
   "id": "media-fingerprint",
   "name": "Media Fingerprint",
-  "enabled": true,
+  "enabled": false,
   "category": "Fingerprint",
   "color": "#7c3aed",
   "lastUpdated": "2025-01-15",

@@ -351,16 +351,24 @@
               </label>
             </div>
 
-            <!-- HTTP Methods Checkboxes -->
+            <!-- HTTP Methods Radio Buttons -->
             <div class="setting-option" style="display: flex; flex-direction: column; gap: 8px; border: none; padding: 12px 0 0 0;">
-              <label class="setting-label">HTTP Methods (select to filter)</label>
+              <label class="setting-label">HTTP Method (select one)</label>
               <p style="font-size: 10px; color: var(--text-muted); margin: 0 0 12px 0;">
-                If none selected, all methods are matched
+                Filter payload detection by HTTP method
               </p>
-              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                <!-- GET -->
+                <label class="http-method-badge" data-method="GET">
+                  <input type="radio" name="payloadMethod" id="payloadMethodGet" value="GET">
+                  <span class="method-badge-content">
+                    <span class="method-icon">●</span>
+                    <span class="method-text">GET</span>
+                  </span>
+                </label>
                 <!-- POST -->
                 <label class="http-method-badge" data-method="POST">
-                  <input type="checkbox" id="payloadMethodPost" value="POST">
+                  <input type="radio" name="payloadMethod" id="payloadMethodPost" value="POST">
                   <span class="method-badge-content">
                     <span class="method-icon">●</span>
                     <span class="method-text">POST</span>
@@ -368,7 +376,7 @@
                 </label>
                 <!-- PUT -->
                 <label class="http-method-badge" data-method="PUT">
-                  <input type="checkbox" id="payloadMethodPut" value="PUT">
+                  <input type="radio" name="payloadMethod" id="payloadMethodPut" value="PUT">
                   <span class="method-badge-content">
                     <span class="method-icon">●</span>
                     <span class="method-text">PUT</span>
@@ -376,7 +384,7 @@
                 </label>
                 <!-- PATCH -->
                 <label class="http-method-badge" data-method="PATCH">
-                  <input type="checkbox" id="payloadMethodPatch" value="PATCH">
+                  <input type="radio" name="payloadMethod" id="payloadMethodPatch" value="PATCH">
                   <span class="method-badge-content">
                     <span class="method-icon">●</span>
                     <span class="method-text">PATCH</span>
@@ -384,12 +392,25 @@
                 </label>
                 <!-- DELETE -->
                 <label class="http-method-badge" data-method="DELETE">
-                  <input type="checkbox" id="payloadMethodDelete" value="DELETE">
+                  <input type="radio" name="payloadMethod" id="payloadMethodDelete" value="DELETE">
                   <span class="method-badge-content">
                     <span class="method-icon">●</span>
                     <span class="method-text">DELETE</span>
                   </span>
                 </label>
+                <!-- Custom -->
+                <label class="http-method-badge" data-method="CUSTOM">
+                  <input type="radio" name="payloadMethod" id="payloadMethodCustom" value="CUSTOM">
+                  <span class="method-badge-content">
+                    <span class="method-icon">+</span>
+                    <span class="method-text">Custom</span>
+                  </span>
+                </label>
+              </div>
+              <!-- Custom Method Input -->
+              <div id="customMethodInputContainer" style="display: none; margin-top: 10px;">
+                <input type="text" id="customMethodInput" placeholder="Enter custom method (e.g., OPTIONS, HEAD)"
+                  style="width: 100%; padding: 10px 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 13px;">
               </div>
             </div>
           </div>

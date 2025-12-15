@@ -25,77 +25,7 @@
     }
   }, true);
 
-  /**
-   * ============================================================================
-   * DETECTION SYSTEM ARCHITECTURE
-   * ============================================================================
-   *
-   * This file implements Phase 1 & 2 of the detection flow:
-   *
-   * Phase 1: Hook Installation (0-5ms)
-   * ──────────────────────────────────
-   * - Installs 18 critical inline hooks SYNCHRONOUSLY at document_start
-   * - Wraps fingerprinting APIs: Performance, Navigator, Screen, Canvas, WebGL, etc.
-   * - Hooks fire when page scripts call these APIs
-   *
-   * Phase 2: Hook Detection & Reporting (5ms+)
-   * ──────────────────────────────────────────
-   * - Hook wrapper intercepts API call
-   * - reportHookDetection() sends window.postMessage() to content.js
-   * - Message includes: detectorId, detectorName, target API, confidence
-   *
-   * Content.js (ISOLATED world) then:
-   * Phase 3: Batching & Deduplication (10-50ms batches)
-   * ────────────────────────────────────────────────────
-   * - Receives postMessage() events
-   * - Deduplicates by "detectorId:target" key (same detector on same target = 1)
-   * - Sends batch to background.js via chrome.runtime.sendMessage()
-   *
-   * Phase 4: Completion Tracking (Entire duration)
-   * ──────────────────────────────────────────────
-   * - Completion timer initialized at 2 seconds
-   * - EVERY hook detection resets timer (even duplicates)
-   * - Completes when 2 seconds pass with NO activity (any hook detection)
-   * - Result: Simple "no activity = done" logic that never gets stuck
-   *
-   * Phase 5: Final Stats (At completion)
-   * ────────────────────────────────────
-   * - background.js receives completion signal
-   * - Logs final statistics with all detectors found
-   * - Shows completion method: "settled" or "timeout"
-   *
-   * ============================================================================
-   * WHY THIS DESIGN WORKS
-   * ============================================================================
-   *
-   * ✅ Synchronous inline hooks:
-   *    - Page scripts execute ~30ms after document_start
-   *    - If hooks install async, script might save native API reference first
-   *    - Sync installation GUARANTEES hooks are ready before any user code runs
-   *    - Result: 100% detection of early fingerprinting
-   *
-   * ✅ Simple 2-second reset-on-any-hook completion:
-   *    - When hook fires → Timer resets to 2s (even if duplicate)
-   *    - When 2s elapse with NO hook activity → Detection completes
-   *    - Proven system: Works consistently across all pages
-   *    - No complex activity tracking, no edge cases
-   *    - No "stuck at 86%" issues (always completes after 2s inactivity)
-   *    - Fast pages complete in 2-4 seconds total
-   *    - Works reliably on pages with repeated detector fires
-   *
-   * ✅ detectorId:target deduplication:
-   *    - Old: Counted only by target (API name) → Collisions
-   *      Example: "Performance Fingerprint" + "Inline Hook: now" both on Performance.prototype.now
-   *      Result: Old system = 1 count (WRONG), New system = 2 counts (CORRECT!)
-   *    - New: Tracks "detectorId:target" pairs uniquely
-   *    - Provides transparency logging showing what was deduplicated
-   *
-   * ============================================================================
-   */
 
-  // CRITICAL HOOKS: Install immediately (synchronously) to prevent race conditions
-  // These are the most common fingerprinting APIs that MUST intercept before page scripts
-  // Full detector list will be loaded async later for comprehensive detection
   const CRITICAL_INLINE_HOOKS = [
     // Performance API (high priority - used by almost all fingerprinting)
     { target: 'Performance.prototype.now', type: 'method' },
@@ -194,6 +124,7 @@
     'typeof bigint': (v) => typeof v === 'bigint',
 
     // Existence checks
+    'exists': (v) => v !== undefined,  // Used by UI - same as '!== undefined'
     '!== undefined': (v) => v !== undefined,
     '=== undefined': (v) => v === undefined,
     '!== null': (v) => v !== null,
@@ -448,6 +379,11 @@
             return; // Cache hit - skip all hook reporting
           }
 
+          // Skip reporting if fingerprint detection is disabled
+          if (window.__scrapflyFingerprintEnabled === false) {
+            return; // Fingerprint disabled - skip reporting
+          }
+
           if (!inlineHookDetections.has(hook.target)) {
             inlineHookDetections.set(hook.target, {
               target: hook.target,
@@ -572,8 +508,13 @@
     sendLog('warn', '[MAIN WORLD] SessionStorage cache check failed:', e.message);
   }
 
+  // Store fingerprint enabled state globally (will be updated when event arrives)
+  // Default to true - inline hooks install immediately, but only report if enabled
+  window.__scrapflyFingerprintEnabled = true;
+
   // CRITICAL: Install inline hooks IMMEDIATELY (synchronously)
   // This must happen BEFORE any page scripts execute
+  // Hooks always install, but only report detections if fingerprint detection is enabled
   const inlineHooksInstalled = installCriticalHooksSynchronously();
 
   // Listen for disable monitoring message from ISOLATED world (cache hit)
@@ -668,11 +609,26 @@
       return;
     }
 
+    // Handle fingerprintEnabled flag from event
+    // This is the authoritative value from ISOLATED world (updated from storage)
+    const fingerprintEnabled = event.detail?.fingerprintEnabled !== false;
+
+    // Update global flag with authoritative value
+    window.__scrapflyFingerprintEnabled = fingerprintEnabled;
+
+    // If fingerprint detection is disabled and inline hooks were installed, uninstall them
+    if (!fingerprintEnabled && inlineHookDetections.size > 0) {
+      sendLog('log', '[MAIN WORLD] 🚫 Fingerprint detection disabled - uninstalling inline hooks');
+      // Clear inline hook detections since they shouldn't be reported
+      inlineHookDetections.clear();
+    }
+
     sendLog('log', '[MAIN WORLD] 🎯 scrapfly-install-hooks event received!', {
       hasDetail: !!event.detail,
       hookDefinitionsCount: event.detail?.hookDefinitions?.length,
       windowPropertiesCount: event.detail?.windowProperties?.length,
       debugMode: debugMode,
+      fingerprintEnabled: fingerprintEnabled,
       enhancedDetection: enhancedSettings.enabled ? enhancedSettings.windowPropertiesMode : 'disabled',
       hooksTimeoutMs: enhancedSettings.hooksTimeoutMs,
       maxDetectionWindowMs: enhancedSettings.maxDetectionWindowMs

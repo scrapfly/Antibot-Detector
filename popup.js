@@ -262,15 +262,6 @@ class ScrapflyPopup {
         return;
       }
 
-      // Check if cache was recently cleared (use sessionStorage as source of truth)
-      const clearedTime = sessionStorage.getItem('scrapfly_just_cleared_cache');
-      const recentlyCleared = clearedTime && (Date.now() - parseInt(clearedTime)) < 10000; // 10 second window
-
-      if (recentlyCleared) {
-        this.detection.showEmptyState();
-        return;
-      }
-
       // Check if URL is blacklisted
       if (await Utils.isUrlBlacklisted(tab.url)) {
         const url = new URL(tab.url);
@@ -289,15 +280,6 @@ class ScrapflyPopup {
 
           // Check for pending status BEFORE checking for data
           if (response && response.status === 'pending') {
-            // Guard: Don't show analyzing if cache was just cleared
-            const clearedTime = sessionStorage.getItem('scrapfly_just_cleared_cache');
-            const recentlyCleared = clearedTime && (Date.now() - parseInt(clearedTime)) < 5000;
-
-            if (recentlyCleared) {
-              this.detection.showEmptyState();
-              return;
-            }
-
             this.detection.showAnalyzingState();
           } else if (response && response.data) {
             // Display existing detection data
