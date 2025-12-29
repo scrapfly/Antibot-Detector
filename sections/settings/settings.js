@@ -55,7 +55,8 @@ class Settings {
         webhookMethod: 'POST',
         webhookUrl: '',
         webhookContentType: 'application/json',
-        webhookPayload: ''
+        webhookPayload: '{"url": "<SITEURL>", "hostname": "<HOSTNAME>", "title": "<TITLE>", "favicon": "<FAVICON>", "detections": <DETECTIONS>, "timestamp": "<TIMESTAMP>", "count": <DETECTION_COUNT>, "categories": "<CATEGORIES>"}',
+        webhookHeaders: []
       },
 
       // History Settings
@@ -73,13 +74,6 @@ class Settings {
         duplicateScope: 'full_url',
         duplicateDuration: 1,
         duplicateUnit: 'hours'
-      },
-
-      // Update Settings
-      updates: {
-        autoUpdate: true,
-        checkIntervalHours: 12,
-        lastCheckTimestamp: 0
       }
     };
 
@@ -143,23 +137,35 @@ class Settings {
       const result = await chrome.storage.local.get(['scrapfly_settings']);
 
       if (result.scrapfly_settings) {
-        const savedSettings = JSON.parse(result.scrapfly_settings);
+        // Handle both string (from JSON.stringify) and object formats
+        // This prevents errors if storage returns an object directly
+        const savedSettings = typeof result.scrapfly_settings === 'string'
+          ? JSON.parse(result.scrapfly_settings)
+          : result.scrapfly_settings;
+
         // Extract the nested "settings" property from the saved data
         // Fallback to savedSettings for legacy data without nested structure
         const loadedSettings = savedSettings.settings || savedSettings;
+
+        Logger.ui('Loading settings - raw:', result.scrapfly_settings);
+        Logger.ui('Loading settings - parsed:', savedSettings);
+        Logger.ui('Loading settings - extracted:', loadedSettings);
 
         // Properly merge nested settings structure
         if (typeof loadedSettings === 'object' && loadedSettings !== null) {
           // Deep merge: preserve nested structure for detection, history, etc.
           this.settings = this.deepMerge(this.settings, loadedSettings);
         }
+      } else {
+        Logger.ui('No saved settings found, using defaults');
       }
 
       this.updateSettingsUI();
-      Logger.ui('Settings loaded:', this.settings);
+      Logger.ui('Settings loaded and UI updated:', this.settings);
 
     } catch (error) {
       Logger.error('UI', 'Failed to load settings:', error);
+      NotificationHelper.error('Failed to load settings. Using defaults.');
     }
   }
 
@@ -197,7 +203,10 @@ class Settings {
       try {
         const result = await chrome.storage.local.get(['scrapfly_settings']);
         if (result.scrapfly_settings) {
-          const savedSettings = JSON.parse(result.scrapfly_settings);
+          // Handle both string and object formats
+          const savedSettings = typeof result.scrapfly_settings === 'string'
+            ? JSON.parse(result.scrapfly_settings)
+            : result.scrapfly_settings;
           const loadedSettings = savedSettings.settings || savedSettings;
           oldCacheScope = loadedSettings.cacheScope || loadedSettings.detection?.cacheScope || 'domain';
         }
@@ -244,6 +253,16 @@ class Settings {
       } else {
         NotificationHelper.success('Settings saved successfully!');
       }
+
+      // Notify background script to invalidate settings cache
+      // This is critical for webhook and other background features to use updated settings
+      chrome.runtime.sendMessage({ type: 'SETTINGS_UPDATED' }, (response) => {
+        if (chrome.runtime.lastError) {
+          Logger.warn('UI', 'Failed to notify background of settings update:', chrome.runtime.lastError.message);
+        } else {
+          Logger.ui('Background notified of settings update:', response);
+        }
+      });
 
       // Notify background script to sync category colors
       chrome.runtime.sendMessage({ type: 'SYNC_CATEGORY_COLORS' }, (response) => {
@@ -391,56 +410,21 @@ class Settings {
       }
     }
 
-    // Update Settings - ensure updates object exists
-    if (!this.settings.updates) {
-      this.settings.updates = {
-        autoUpdate: true,
-        checkIntervalHours: 12,
-        lastCheckTimestamp: 0
-      };
-    }
-
-    const autoUpdateRules = document.querySelector('#autoUpdateRules');
-    if (autoUpdateRules) {
-      autoUpdateRules.checked = this.settings.updates.autoUpdate ?? true;
-      autoUpdateRules.addEventListener('change', () => {
-        const intervalGroup = document.querySelector('#updateIntervalGroup');
-        if (intervalGroup) {
-          intervalGroup.style.opacity = autoUpdateRules.checked ? '1' : '0.5';
-        }
-      });
-      // Set initial opacity
-      const intervalGroup = document.querySelector('#updateIntervalGroup');
-      if (intervalGroup) {
-        intervalGroup.style.opacity = autoUpdateRules.checked ? '1' : '0.5';
-      }
-    }
-
-    const updateCheckInterval = document.querySelector('#updateCheckInterval');
-    if (updateCheckInterval) {
-      updateCheckInterval.value = this.settings.updates.checkIntervalHours || 12;
-    }
-
-    // Update last check text
-    this.updateLastCheckDisplay();
-
-    // Setup check updates button - simple direct handler
-    const checkUpdatesBtn = document.querySelector('#checkUpdatesBtn');
-    if (checkUpdatesBtn) {
-      console.log('[Settings] Found checkUpdatesBtn, attaching handler');
-      const self = this;
-      checkUpdatesBtn.onclick = function() {
-        console.log('[Settings] Button clicked!');
-        self.handleCheckUpdates();
-      };
-    } else {
-      console.error('[Settings] checkUpdatesBtn NOT FOUND!');
-    }
-
     // Webhook Settings
     if (this.settings.webhook) {
       const enableWebhook = document.querySelector('#enableWebhook');
-      if (enableWebhook) enableWebhook.checked = this.settings.webhook.enableWebhook ?? false;
+      const isWebhookEnabled = this.settings.webhook.enableWebhook ?? false;
+      if (enableWebhook) enableWebhook.checked = isWebhookEnabled;
+
+      // Set visibility of webhook settings based on enable state
+      const webhookSettingsContainer = document.querySelector('#webhookSettings');
+      const webhookOnCacheGroup = document.querySelector('#webhookOnCacheGroup');
+      if (webhookSettingsContainer) {
+        webhookSettingsContainer.style.display = isWebhookEnabled ? 'block' : 'none';
+      }
+      if (webhookOnCacheGroup) {
+        webhookOnCacheGroup.style.display = isWebhookEnabled ? 'flex' : 'none';
+      }
 
       const webhookOnCache = document.querySelector('#webhookOnCache');
       if (webhookOnCache) webhookOnCache.checked = this.settings.webhook.webhookOnCache ?? false;
@@ -495,7 +479,11 @@ class Settings {
       if (webhookContentType) webhookContentType.value = this.settings.webhook.webhookContentType || 'application/json';
 
       const webhookPayload = document.querySelector('#webhookPayload');
-      if (webhookPayload) webhookPayload.value = this.settings.webhook.webhookPayload || '';
+      const defaultPayload = '{"url": "<SITEURL>", "hostname": "<HOSTNAME>", "title": "<TITLE>", "favicon": "<FAVICON>", "detections": <DETECTIONS>, "timestamp": "<TIMESTAMP>", "count": <DETECTION_COUNT>, "categories": "<CATEGORIES>"}';
+      if (webhookPayload) webhookPayload.value = this.settings.webhook.webhookPayload || defaultPayload;
+
+      // Render webhook headers
+      this.renderWebhookHeadersUI();
     }
 
     // ========== HISTORY TAB ==========
@@ -594,7 +582,7 @@ class Settings {
     settings.detection = {
       cacheDuration: parseInt(document.querySelector('#cacheDuration')?.value ?? this.settings.detection?.cacheDuration ?? 12),
       cacheUnit: document.querySelector('#cacheUnit')?.value ?? this.settings.detection?.cacheUnit ?? 'hours',
-      cacheScope: document.querySelector('#cacheScope')?.value ?? this.settings.detection?.cacheScope ?? 'path',
+      cacheScope: document.querySelector('#cacheScope')?.value ?? this.settings.detection?.cacheScope ?? 'domain',
       blacklistedDomains: this.settings.detection?.blacklistedDomains || [] // This is managed separately by the blacklist UI
     };
 
@@ -610,7 +598,8 @@ class Settings {
       webhookMethod: document.querySelector('#webhookMethod')?.value ?? this.settings.webhook?.webhookMethod ?? 'POST',
       webhookUrl: document.querySelector('#webhookUrl')?.value ?? this.settings.webhook?.webhookUrl ?? '',
       webhookContentType: document.querySelector('#webhookContentType')?.value ?? this.settings.webhook?.webhookContentType ?? 'application/json',
-      webhookPayload: document.querySelector('#webhookPayload')?.value ?? this.settings.webhook?.webhookPayload ?? ''
+      webhookPayload: document.querySelector('#webhookPayload')?.value ?? this.settings.webhook?.webhookPayload ?? '',
+      webhookHeaders: this.settings.webhook?.webhookHeaders || []
     };
 
     // ========== HISTORY TAB ==========
@@ -628,13 +617,6 @@ class Settings {
       duplicateScope: document.querySelector('#duplicateScope')?.value ?? this.settings.duplicatePrevention?.duplicateScope ?? 'full_url',
       duplicateDuration: parseInt(document.querySelector('#duplicateDuration')?.value ?? this.settings.duplicatePrevention?.duplicateDuration ?? 1),
       duplicateUnit: document.querySelector('#duplicateUnit')?.value ?? this.settings.duplicatePrevention?.duplicateUnit ?? 'hours'
-    };
-
-    // Update Settings
-    settings.updates = {
-      autoUpdate: document.querySelector('#autoUpdateRules')?.checked ?? this.settings.updates?.autoUpdate ?? true,
-      checkIntervalHours: parseInt(document.querySelector('#updateCheckInterval')?.value ?? this.settings.updates?.checkIntervalHours ?? 12),
-      lastCheckTimestamp: this.settings.updates?.lastCheckTimestamp ?? 0
     };
 
     // Keep any other existing settings that might not be in the form
@@ -1058,6 +1040,51 @@ class Settings {
       });
     }
 
+    // Add Webhook Header button
+    const addWebhookHeaderBtn = document.querySelector('#addWebhookHeaderBtn');
+    if (addWebhookHeaderBtn) {
+      addWebhookHeaderBtn.addEventListener('click', () => {
+        if (!this.settings.webhook) {
+          this.settings.webhook = { webhookHeaders: [] };
+        }
+        if (!this.settings.webhook.webhookHeaders) {
+          this.settings.webhook.webhookHeaders = [];
+        }
+        this.settings.webhook.webhookHeaders.push({ name: '', value: '' });
+        this.renderWebhookHeadersUI();
+      });
+    }
+
+    // Webhook Enable toggle - show/hide webhook settings
+    const enableWebhookToggle = document.querySelector('#enableWebhook');
+    const webhookSettingsContainer = document.querySelector('#webhookSettings');
+    const webhookOnCacheGroup = document.querySelector('#webhookOnCacheGroup');
+    if (enableWebhookToggle) {
+      enableWebhookToggle.addEventListener('change', (e) => {
+        const isEnabled = e.target.checked;
+        if (webhookSettingsContainer) {
+          webhookSettingsContainer.style.display = isEnabled ? 'block' : 'none';
+        }
+        if (webhookOnCacheGroup) {
+          webhookOnCacheGroup.style.display = isEnabled ? 'flex' : 'none';
+        }
+      });
+      // Set initial state
+      const isEnabled = enableWebhookToggle.checked;
+      if (webhookSettingsContainer) {
+        webhookSettingsContainer.style.display = isEnabled ? 'block' : 'none';
+      }
+      if (webhookOnCacheGroup) {
+        webhookOnCacheGroup.style.display = isEnabled ? 'flex' : 'none';
+      }
+    }
+
+    // Test Webhook button
+    const testWebhookBtn = document.querySelector('#testWebhookBtn');
+    if (testWebhookBtn) {
+      testWebhookBtn.addEventListener('click', () => this.handleTestWebhook());
+    }
+
     // Setup color pagination controls
     this.setupColorPagination();
   }
@@ -1157,29 +1184,63 @@ class Settings {
   }
 
   /**
-   * Render the blacklist UI showing all blacklisted domains
+   * Render the blacklist UI showing all blacklisted domains with pagination
    */
   renderBlacklistUI() {
     const container = document.querySelector('#blacklistContainer');
     if (!container) return;
 
     const domains = this.settings.detection?.blacklistedDomains || [];
+    const itemsPerPage = 5;
+
+    // Initialize pagination state if not exists
+    if (typeof this.blacklistPage === 'undefined') {
+      this.blacklistPage = 1;
+    }
+
+    const totalPages = Math.ceil(domains.length / itemsPerPage) || 1;
+
+    // Ensure current page is valid
+    if (this.blacklistPage > totalPages) this.blacklistPage = totalPages;
+    if (this.blacklistPage < 1) this.blacklistPage = 1;
 
     if (domains.length === 0) {
       container.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; padding: 10px;">No domains blacklisted</div>';
       return;
     }
 
-    container.innerHTML = domains.map(domain => `
+    // Get current page items
+    const startIndex = (this.blacklistPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentDomains = domains.slice(startIndex, endIndex);
+
+    let html = currentDomains.map(domain => `
       <div class="blacklist-item" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--bg-tertiary); border-radius: 6px; margin-bottom: 6px;">
         <span style="font-size: 13px; color: var(--text-primary);">${domain}</span>
-        <button class="remove-blacklist-btn" data-domain="${domain}" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; display: flex; align-items: center;">
+        <button class="remove-blacklist-btn" data-domain="${domain}" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; display: flex; align-items: center; transition: color 0.2s;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='var(--text-muted)'">
           <svg width="16" height="16" viewBox="0 0 24 24">
             <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
           </svg>
         </button>
       </div>
     `).join('');
+
+    // Add pagination if needed
+    if (totalPages > 1) {
+      html += `
+        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);">
+          <button class="blacklist-prev-btn" ${this.blacklistPage <= 1 ? 'disabled' : ''} style="padding: 4px 8px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 4px; cursor: ${this.blacklistPage <= 1 ? 'not-allowed' : 'pointer'}; color: var(--text-secondary); opacity: ${this.blacklistPage <= 1 ? '0.5' : '1'};">
+            <svg width="14" height="14" viewBox="0 0 24 24"><path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" fill="currentColor"/></svg>
+          </button>
+          <span style="font-size: 12px; color: var(--text-muted);">${this.blacklistPage} / ${totalPages}</span>
+          <button class="blacklist-next-btn" ${this.blacklistPage >= totalPages ? 'disabled' : ''} style="padding: 4px 8px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 4px; cursor: ${this.blacklistPage >= totalPages ? 'not-allowed' : 'pointer'}; color: var(--text-secondary); opacity: ${this.blacklistPage >= totalPages ? '0.5' : '1'};">
+            <svg width="14" height="14" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" fill="currentColor"/></svg>
+          </button>
+        </div>
+      `;
+    }
+
+    container.innerHTML = html;
 
     // Add click handlers for remove buttons
     container.querySelectorAll('.remove-blacklist-btn').forEach(btn => {
@@ -1191,6 +1252,90 @@ class Settings {
         NotificationHelper.success(`Removed ${domain} from blacklist`);
       });
     });
+
+    // Add pagination handlers
+    const prevBtn = container.querySelector('.blacklist-prev-btn');
+    const nextBtn = container.querySelector('.blacklist-next-btn');
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        if (this.blacklistPage > 1) {
+          this.blacklistPage--;
+          this.renderBlacklistUI();
+        }
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        if (this.blacklistPage < totalPages) {
+          this.blacklistPage++;
+          this.renderBlacklistUI();
+        }
+      });
+    }
+  }
+
+  /**
+   * Render the webhook headers UI showing all custom headers
+   */
+  renderWebhookHeadersUI() {
+    const container = document.querySelector('#webhookHeadersContainer');
+    if (!container) return;
+
+    const headers = this.settings.webhook?.webhookHeaders || [];
+
+    if (headers.length === 0) {
+      container.innerHTML = '<div style="color: var(--text-muted); font-size: 12px; padding: 8px; text-align: center;">No custom headers configured</div>';
+      return;
+    }
+
+    container.innerHTML = headers.map((header, index) => `
+      <div class="webhook-header-item" data-index="${index}" style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+        <input type="text" class="webhook-header-name input-field" placeholder="Header name" value="${this.escapeHtml(header.name || '')}" style="flex: 1; font-size: 13px; padding: 8px;">
+        <input type="text" class="webhook-header-value input-field" placeholder="Header value" value="${this.escapeHtml(header.value || '')}" style="flex: 2; font-size: 13px; padding: 8px;">
+        <button type="button" class="remove-webhook-header-btn" data-index="${index}" style="background: none; border: none; color: #ef4444; cursor: pointer; padding: 6px; display: flex; align-items: center;">
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+    `).join('');
+
+    // Add click handlers for remove buttons
+    container.querySelectorAll('.remove-webhook-header-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const index = parseInt(btn.getAttribute('data-index'));
+        this.settings.webhook.webhookHeaders.splice(index, 1);
+        this.renderWebhookHeadersUI();
+      });
+    });
+
+    // Add input change handlers to update settings in real-time
+    container.querySelectorAll('.webhook-header-item').forEach(item => {
+      const index = parseInt(item.getAttribute('data-index'));
+      const nameInput = item.querySelector('.webhook-header-name');
+      const valueInput = item.querySelector('.webhook-header-value');
+
+      nameInput.addEventListener('input', () => {
+        this.settings.webhook.webhookHeaders[index].name = nameInput.value;
+      });
+
+      valueInput.addEventListener('input', () => {
+        this.settings.webhook.webhookHeaders[index].value = valueInput.value;
+      });
+    });
+  }
+
+  /**
+   * Escape HTML special characters to prevent XSS
+   * @param {string} str - String to escape
+   * @returns {string} Escaped string
+   */
+  escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
   }
 
   /**
@@ -1428,25 +1573,147 @@ class Settings {
   static async sendWebhookIfEnabled(pageData, detectionResults) {
     try {
       const settings = await Utils.getSettings();
-      if (!settings.webhookEnabled || !settings.webhookUrl) {
+
+      // Debug: Log full settings structure
+      Logger.network('🌐 Full settings object keys:', Object.keys(settings));
+      Logger.network('🌐 Settings.webhook:', settings.webhook);
+
+      // Check both flat and nested paths for backwards compatibility
+      const webhook = settings.webhook || {};
+
+      Logger.network('🌐 Webhook check:', {
+        enableWebhook: webhook.enableWebhook,
+        webhookUrl: webhook.webhookUrl,
+        detectionCount: detectionResults?.length || 0
+      });
+
+      if (!webhook.enableWebhook || !webhook.webhookUrl) {
+        Logger.network('🌐 Webhook skipped: not enabled or no URL', {
+          enableWebhook: webhook.enableWebhook,
+          hasUrl: !!webhook.webhookUrl
+        });
         return;
       }
 
+      const url = pageData.url || '';
+      const hostname = pageData.hostname || new URL(url).hostname || '';
+      const title = pageData.title || 'Untitled';
+      const favicon = hostname ? `https://www.google.com/s2/favicons?domain=${hostname}&sz=64` : '';
+      const timestamp = new Date().toISOString();
+      const detectionCount = detectionResults.length;
+      const categories = [...new Set(detectionResults.map(d => d.category))].join(',');
+
+      // Build headers object
+      const headers = {};
+
+      // Add Content-Type header (not for GET requests without body)
+      const method = (webhook.webhookMethod || 'POST').toUpperCase();
+      if (method !== 'GET') {
+        headers['Content-Type'] = webhook.webhookContentType || 'application/json';
+      }
+
+      // Add custom headers
+      const customHeaders = webhook.webhookHeaders || [];
+      for (const header of customHeaders) {
+        if (header.name && header.name.trim()) {
+          // Process header value with variable substitution
+          let headerValue = header.value || '';
+          headerValue = headerValue
+            .replace(/<SITEURL>/g, url)
+            .replace(/<HOSTNAME>/g, hostname)
+            .replace(/<TITLE>/g, title)
+            .replace(/<FAVICON>/g, favicon)
+            .replace(/<TIMESTAMP>/g, timestamp)
+            .replace(/<DETECTION_COUNT>/g, String(detectionCount))
+            .replace(/<CATEGORIES>/g, categories);
+          headers[header.name.trim()] = headerValue;
+        }
+      }
+
+      // Process webhook URL with variable substitution
+      let processedUrl = webhook.webhookUrl
+        .replace(/<SITEURL>/g, encodeURIComponent(url))
+        .replace(/<HOSTNAME>/g, encodeURIComponent(hostname))
+        .replace(/<TITLE>/g, encodeURIComponent(title))
+        .replace(/<FAVICON>/g, encodeURIComponent(favicon))
+        .replace(/<TIMESTAMP>/g, encodeURIComponent(timestamp))
+        .replace(/<DETECTION_COUNT>/g, String(detectionCount))
+        .replace(/<CATEGORIES>/g, encodeURIComponent(categories));
+
+      // Build fetch options
+      const fetchOptions = {
+        method: method,
+        headers: headers
+      };
+
+      // Add body for non-GET requests
+      if (method !== 'GET') {
+        let payload = webhook.webhookPayload || '';
+
+        // If payload template is empty, use default JSON payload
+        if (!payload.trim()) {
+          payload = JSON.stringify({
+            url: url,
+            hostname: hostname,
+            title: title,
+            favicon: favicon,
+            detections: detectionResults,
+            timestamp: timestamp,
+            count: detectionCount
+          });
+        } else {
+          // Process payload template with variable substitution
+          payload = payload
+            .replace(/<SITEURL>/g, url)
+            .replace(/<HOSTNAME>/g, hostname)
+            .replace(/<TITLE>/g, title)
+            .replace(/<FAVICON>/g, favicon)
+            .replace(/<TIMESTAMP>/g, timestamp)
+            .replace(/<DETECTION_COUNT>/g, String(detectionCount))
+            .replace(/<CATEGORIES>/g, categories)
+            .replace(/<DETECTIONS>/g, JSON.stringify(detectionResults));
+        }
+
+        fetchOptions.body = payload;
+      }
+
       // Send webhook
-      await fetch(settings.webhookUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          url: pageData.url,
-          hostname: pageData.hostname,
-          detections: detectionResults,
-          timestamp: Date.now()
-        })
+      Logger.network('🌐 Sending webhook request:', {
+        url: processedUrl,
+        method: fetchOptions.method,
+        headers: fetchOptions.headers,
+        bodyLength: fetchOptions.body?.length || 0
       });
 
-      Logger.ui('Webhook sent successfully');
+      const response = await fetch(processedUrl, fetchOptions);
+
+      if (response.ok) {
+        Logger.network('🌐 Webhook sent successfully', { url: processedUrl, status: response.status });
+      } else {
+        const errorText = await response.text().catch(() => 'Could not read response');
+        Logger.warn('NETWORK', '🌐 Webhook returned non-OK status', {
+          url: processedUrl,
+          status: response.status,
+          statusText: response.statusText,
+          errorText: errorText
+        });
+      }
     } catch (error) {
-      Logger.error('UI', 'Failed to send webhook:', error);
+      Logger.error('NETWORK', '🌐 Failed to send webhook:', {
+        error: error.message,
+        name: error.name,
+        url: processedUrl,
+        method: fetchOptions.method
+      });
+
+      // Common causes for "Failed to fetch":
+      // 1. Server not running at the specified URL
+      // 2. CORS blocking the request (server needs Access-Control-Allow-Origin header)
+      // 3. Network/firewall blocking the request
+      // 4. Invalid URL format
+      if (error.message.includes('Failed to fetch')) {
+        Logger.error('NETWORK', '🌐 Hint: Check that your webhook server is running and accepts requests from extensions');
+      }
     }
   }
 
@@ -1661,164 +1928,145 @@ class Settings {
   }
 
   /**
-   * Update the last check display text
+   * Handle the Test Webhook button click
    */
-  updateLastCheckDisplay() {
-    const lastCheckEl = document.querySelector('#lastUpdateCheck');
-    if (!lastCheckEl) return;
-
-    const lastCheck = this.settings.updates?.lastCheckTimestamp || 0;
-    if (lastCheck === 0) {
-      lastCheckEl.textContent = 'Last checked: Never';
-      return;
-    }
-
-    const now = Date.now();
-    const diffMs = now - lastCheck;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHours / 24);
-
-    let timeText;
-    if (diffDays > 0) {
-      timeText = `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-    } else if (diffHours > 0) {
-      timeText = `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-    } else if (diffMins > 0) {
-      timeText = `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
-    } else {
-      timeText = 'Just now';
-    }
-
-    lastCheckEl.textContent = `Last checked: ${timeText}`;
-  }
-
-  /**
-   * Handle the Check for Updates button click
-   */
-  async handleCheckUpdates() {
-    Logger.ui('handleCheckUpdates called');
-    const btn = document.querySelector('#checkUpdatesBtn');
-    const btnText = document.querySelector('#checkUpdatesBtnText');
-    const btnIcon = document.querySelector('#checkUpdatesBtnIcon');
-    const progressBar = document.querySelector('#updateProgressBar');
-    const statusText = document.querySelector('#updateStatusText');
-
-    if (!btn || !btnText) {
-      Logger.warn('UI', 'Check updates button elements not found', { btn: !!btn, btnText: !!btnText });
-      return;
-    }
+  async handleTestWebhook() {
+    const btn = document.querySelector('#testWebhookBtn');
+    if (!btn) return;
 
     // Disable button and show loading state
     btn.disabled = true;
-    const originalText = btnText.textContent;
-    btnText.textContent = 'Connecting...';
-
-    // Add spinning animation to icon
-    if (btnIcon) {
-      btnIcon.style.animation = 'spin 1s linear infinite';
-    }
-
-    // Show progress bar
-    if (progressBar) {
-      progressBar.style.display = 'block';
-      progressBar.style.width = '10%';
-    }
-
-    // Show status text
-    if (statusText) {
-      statusText.style.display = 'block';
-      statusText.textContent = 'Connecting to GitHub...';
-    }
-
-    Logger.ui('Sending CHECK_FOR_UPDATES message to background');
-
-    // Simulate progress updates
-    const progressSteps = [
-      { width: '20%', text: 'Fetching index...', delay: 500 },
-      { width: '40%', text: 'Checking detectors...', delay: 1500 },
-      { width: '60%', text: 'Comparing versions...', delay: 2500 },
-      { width: '80%', text: 'Applying updates...', delay: 3500 }
-    ];
-
-    const progressTimers = progressSteps.map(step =>
-      setTimeout(() => {
-        if (progressBar) progressBar.style.width = step.width;
-        if (statusText) statusText.textContent = step.text;
-      }, step.delay)
-    );
-
-    // Helper to finish the progress animation
-    const finishProgress = (success, message) => {
-      // Clear all pending timers
-      progressTimers.forEach(timer => clearTimeout(timer));
-
-      // Stop spinning
-      if (btnIcon) {
-        btnIcon.style.animation = '';
-      }
-
-      // Complete progress bar
-      if (progressBar) {
-        progressBar.style.width = '100%';
-        progressBar.style.background = success
-          ? 'linear-gradient(90deg, #4CAF50, #8BC34A)'
-          : 'linear-gradient(90deg, #f44336, #ff5722)';
-      }
-
-      // Update status
-      if (statusText) {
-        statusText.textContent = message;
-        statusText.style.color = success ? '#4CAF50' : '#f44336';
-      }
-    };
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" class="spin">
+        <path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" fill="currentColor"/>
+      </svg>
+      Sending...
+    `;
 
     try {
-      // Send message to background to check for updates
-      const response = await chrome.runtime.sendMessage({
-        type: 'CHECK_FOR_UPDATES',
-        force: true
-      });
+      // Get current webhook settings from UI
+      const webhookUrl = document.querySelector('#webhookUrl')?.value || '';
+      const webhookMethod = document.querySelector('#webhookMethod')?.value || 'POST';
+      const webhookContentType = document.querySelector('#webhookContentType')?.value || 'application/json';
+      const webhookPayload = document.querySelector('#webhookPayload')?.value || '';
 
-      if (response && response.success) {
-        const result = response.result;
-        if (result.newDetectors > 0 || result.updatedDetectors > 0) {
-          btnText.textContent = `✓ ${result.newDetectors} new, ${result.updatedDetectors} updated`;
-          finishProgress(true, `Updated ${result.newDetectors} new and ${result.updatedDetectors} updated detectors`);
-        } else if (result.checked === false) {
-          btnText.textContent = '✗ Check failed';
-          finishProgress(false, result.reason || 'Update check failed');
+      if (!webhookUrl) {
+        NotificationHelper.error('Please enter a webhook URL');
+        return;
+      }
+
+      // Get custom headers from current settings
+      const customHeaders = this.settings.webhook?.webhookHeaders || [];
+
+      // Create test data
+      const testUrl = 'https://example.com/test-page';
+      const testHostname = 'example.com';
+      const testTitle = 'Test Page - Webhook Test';
+      const testFavicon = 'https://www.google.com/s2/favicons?domain=example.com&sz=64';
+      const testTimestamp = new Date().toISOString();
+      const testDetections = [
+        {
+          id: 'test-detector',
+          name: 'Test Detector',
+          category: 'Anti-Bot',
+          confidence: 95,
+          color: '#F48120',
+          methods: ['dom', 'cookie']
+        }
+      ];
+      const testCount = 1;
+      const testCategories = 'Anti-Bot';
+
+      // Build headers object
+      const headers = {};
+      if (webhookMethod.toUpperCase() !== 'GET') {
+        headers['Content-Type'] = webhookContentType;
+      }
+
+      // Add custom headers
+      for (const header of customHeaders) {
+        if (header.name && header.name.trim()) {
+          let headerValue = header.value || '';
+          headerValue = headerValue
+            .replace(/<SITEURL>/g, testUrl)
+            .replace(/<HOSTNAME>/g, testHostname)
+            .replace(/<TITLE>/g, testTitle)
+            .replace(/<FAVICON>/g, testFavicon)
+            .replace(/<TIMESTAMP>/g, testTimestamp)
+            .replace(/<DETECTION_COUNT>/g, String(testCount))
+            .replace(/<CATEGORIES>/g, testCategories);
+          headers[header.name.trim()] = headerValue;
+        }
+      }
+
+      // Process webhook URL with variable substitution
+      let processedUrl = webhookUrl
+        .replace(/<SITEURL>/g, encodeURIComponent(testUrl))
+        .replace(/<HOSTNAME>/g, encodeURIComponent(testHostname))
+        .replace(/<TITLE>/g, encodeURIComponent(testTitle))
+        .replace(/<FAVICON>/g, encodeURIComponent(testFavicon))
+        .replace(/<TIMESTAMP>/g, encodeURIComponent(testTimestamp))
+        .replace(/<DETECTION_COUNT>/g, String(testCount))
+        .replace(/<CATEGORIES>/g, encodeURIComponent(testCategories));
+
+      // Build fetch options
+      const fetchOptions = {
+        method: webhookMethod.toUpperCase(),
+        headers: headers
+      };
+
+      // Add body for non-GET requests
+      if (webhookMethod.toUpperCase() !== 'GET') {
+        let payload = webhookPayload;
+
+        // If payload template is empty, use default JSON payload
+        if (!payload.trim()) {
+          payload = JSON.stringify({
+            url: testUrl,
+            hostname: testHostname,
+            title: testTitle,
+            favicon: testFavicon,
+            detections: testDetections,
+            timestamp: testTimestamp,
+            count: testCount
+          });
         } else {
-          btnText.textContent = '✓ All up to date!';
-          finishProgress(true, 'All detection rules are up to date');
+          // Process payload template with variable substitution
+          payload = payload
+            .replace(/<SITEURL>/g, testUrl)
+            .replace(/<HOSTNAME>/g, testHostname)
+            .replace(/<TITLE>/g, testTitle)
+            .replace(/<FAVICON>/g, testFavicon)
+            .replace(/<TIMESTAMP>/g, testTimestamp)
+            .replace(/<DETECTION_COUNT>/g, String(testCount))
+            .replace(/<CATEGORIES>/g, testCategories)
+            .replace(/<DETECTIONS>/g, JSON.stringify(testDetections));
         }
 
-        // Update last check timestamp in settings
-        this.settings.updates.lastCheckTimestamp = Date.now();
-        this.updateLastCheckDisplay();
+        fetchOptions.body = payload;
+      }
+
+      Logger.network('🌐 Test webhook:', { url: processedUrl, options: fetchOptions });
+
+      // Send test webhook
+      const response = await fetch(processedUrl, fetchOptions);
+
+      if (response.ok) {
+        NotificationHelper.success(`Webhook test successful! Status: ${response.status}`);
+        Logger.network('🌐 Test webhook success:', { status: response.status });
       } else {
-        btnText.textContent = '✗ ' + (response?.error || 'Update check failed');
-        finishProgress(false, response?.error || 'Update check failed');
+        NotificationHelper.error(`Webhook returned status: ${response.status}`);
+        Logger.warn('NETWORK', '🌐 Test webhook failed:', { status: response.status });
       }
     } catch (error) {
-      Logger.error('UI', 'Failed to check for updates', error);
-      btnText.textContent = '✗ Error checking';
-      finishProgress(false, 'Error: ' + error.message);
-    }
-
-    // Re-enable button and hide progress after a delay
-    setTimeout(() => {
+      Logger.error('NETWORK', '🌐 Test webhook error:', error);
+      NotificationHelper.error('Webhook test failed: ' + error.message);
+    } finally {
+      // Re-enable button
       btn.disabled = false;
-      btnText.textContent = originalText;
-      if (progressBar) {
-        progressBar.style.display = 'none';
-        progressBar.style.width = '0%';
-      }
-      if (statusText) {
-        statusText.style.display = 'none';
-        statusText.style.color = 'var(--text-muted)';
-      }
-    }, 5000);
+      btn.innerHTML = originalText;
+    }
   }
 }
 

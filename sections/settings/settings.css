@@ -1065,6 +1065,27 @@ input[type="file"] {
   border-top: 1px solid var(--border);
 }
 
+/* Section Headers (JS API, Webhook, Duplicate Prevention) */
+.setting-section-header {
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+}
+
+.setting-section-header > .setting-label {
+  margin-bottom: 14px;
+}
+
+.setting-section-header > .setting-label > span:first-child {
+  font-size: 15px;
+}
+
+.setting-section-header > .setting-label > .setting-description {
+  font-size: 13px;
+}
+
 /* Custom HTTP Method Dropdown */
 .http-method-dropdown {
   position: relative;

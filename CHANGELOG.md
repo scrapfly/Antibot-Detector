@@ -1,3 +1,11 @@
+## v2.3
+
+### Removed
+- Remove update-manager.js auto-update module (simplify extension)
+- Remove `alarms` permission (no longer needed)
+
+---
+
 ## v2.2
 
 What's New in v2.2
@@ -16,6 +24,3 @@ What's New in v2.2
 - Remove sessionStorage usage for debug mode (chrome.storage only)
 - Remove sessionStorage usage for cache cleared flag
 - Simplify cache hit detection flow
-
-### New Features
-- Add update-manager.js module for checking detector updates

@@ -931,10 +931,20 @@ class Advanced {
 
     if (this.captureFilters.site === 'current' && currentSite) {
       banner.style.display = 'flex';
-      bannerText.innerHTML = `Showing captures from <strong>${currentSite}</strong>`;
+      // Use safe DOM manipulation to avoid XSS
+      bannerText.textContent = '';
+      bannerText.appendChild(document.createTextNode('Showing captures from '));
+      const strong = document.createElement('strong');
+      strong.textContent = currentSite;
+      bannerText.appendChild(strong);
     } else if (this.captureFilters.site !== 'all' && this.captureFilters.site !== 'current') {
       banner.style.display = 'flex';
-      bannerText.innerHTML = `Showing captures from <strong>${this.captureFilters.site}</strong>`;
+      // Use safe DOM manipulation to avoid XSS
+      bannerText.textContent = '';
+      bannerText.appendChild(document.createTextNode('Showing captures from '));
+      const strong = document.createElement('strong');
+      strong.textContent = this.captureFilters.site;
+      bannerText.appendChild(strong);
     } else {
       banner.style.display = 'none';
     }

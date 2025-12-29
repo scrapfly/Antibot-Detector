@@ -605,6 +605,8 @@ class Utils {
       // This prevents "Could not serialize message" errors from lazy getters
       const plainPageData = {
         url: pageData.url,
+        title: pageData.title,              // Page title
+        favicon: pageData.favicon,          // Page favicon URL
         cookies: pageData.cookies,          // Triggers lazy getter evaluation
         storageCookies: pageData.storageCookies,  // NEW: Storage cookies (localStorage + sessionStorage)
         content: pageData.content,          // Triggers lazy getter evaluation

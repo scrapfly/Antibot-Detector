@@ -47,7 +47,7 @@
         <div class="settings-section">
           <h3>General Settings</h3>
 
-          <div class="setting-group">
+          <div class="setting-group setting-group--stacked">
             <label class="setting-label">
               <span>Enable Notifications</span>
               <span class="setting-description">Show notifications when security systems are detected</span>
@@ -58,7 +58,7 @@
             </label>
           </div>
 
-          <div class="setting-group">
+          <div class="setting-group setting-group--stacked">
             <label class="setting-label">
               <span>Debug Mode</span>
               <span class="setting-description">Enable console logging for debugging</span>
@@ -71,7 +71,7 @@
 
           <!-- Log Collector Section (Only visible when Debug Mode is enabled) -->
           <div id="logCollectorSection" style="display: none; padding-top: 16px; border-top: 1px solid var(--border); margin-top: 16px;">
-            <div class="setting-group">
+            <div class="setting-group setting-group--stacked">
               <label class="setting-label">
                 <span>Log Collector</span>
                 <span class="setting-description">Collect and export all debug logs from the service worker</span>
@@ -89,7 +89,7 @@
                   <span>Max Logs</span>
                   <span class="setting-description">Maximum number of logs to store (100-100000)</span>
                 </label>
-                <input type="number" id="logCollectorMaxLogs" min="100" max="100000" step="100" value="5000" style="padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-primary); color: var(--text-primary); width: 100%; box-sizing: border-box;">
+                <input type="number" id="logCollectorMaxLogs" class="input-field" min="100" max="100000" step="100" value="5000">
               </div>
 
               <!-- Log Count Display -->
@@ -125,54 +125,11 @@
           </div>
         </div>
 
-        <!-- Update Rules Section -->
-        <div class="settings-section">
-          <h3>Update Rules</h3>
-
-          <div class="setting-group">
-            <label class="setting-label">
-              <span>Auto-Update Detection Rules</span>
-              <span class="setting-description">Automatically check for new and updated detectors</span>
-            </label>
-            <label class="switch">
-              <input type="checkbox" id="autoUpdateRules" checked>
-              <span class="slider round"></span>
-            </label>
-          </div>
-
-          <div class="setting-group" id="updateIntervalGroup">
-            <label class="setting-label">
-              <span>Check Interval</span>
-              <span class="setting-description">How often to check for updates</span>
-            </label>
-            <select id="updateCheckInterval" class="input-field" style="padding: 10px;">
-              <option value="1">Every hour</option>
-              <option value="6">Every 6 hours</option>
-              <option value="12" selected>Every 12 hours</option>
-              <option value="24">Every 24 hours</option>
-            </select>
-          </div>
-
-          <div class="setting-group" style="flex-direction: column; align-items: flex-start; width: 100%;">
-            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 8px;">
-              <span id="lastUpdateCheck" style="font-size: 12px; color: var(--text-muted);">Last checked: Never</span>
-            </div>
-            <button id="checkUpdatesBtn" class="action-btn" style="width: 100%; font-size: 14px; padding: 10px; position: relative; overflow: hidden;">
-              <svg id="checkUpdatesBtnIcon" width="16" height="16" viewBox="0 0 24 24">
-                <path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" fill="currentColor"/>
-              </svg>
-              <span id="checkUpdatesBtnText">Check for Updates Now</span>
-              <div id="updateProgressBar" style="display: none; position: absolute; bottom: 0; left: 0; height: 3px; background: linear-gradient(90deg, #4CAF50, #8BC34A); width: 0%; transition: width 0.3s ease;"></div>
-            </button>
-            <div id="updateStatusText" style="display: none; font-size: 12px; color: var(--text-muted); margin-top: 8px; text-align: center;"></div>
-          </div>
-        </div>
-
         <!-- Badge Colors Section -->
         <div class="settings-section">
           <h3>Badge Colors</h3>
 
-          <div class="setting-group">
+          <div class="setting-group setting-group--stacked">
             <label class="setting-label">
               <span>Low Detection (1-2)</span>
               <span class="setting-description">Badge color for low number of detections</span>
@@ -183,7 +140,7 @@
             </div>
           </div>
 
-          <div class="setting-group">
+          <div class="setting-group setting-group--stacked">
             <label class="setting-label">
               <span>Medium Detection (3-4)</span>
               <span class="setting-description">Badge color for medium number of detections</span>
@@ -194,7 +151,7 @@
             </div>
           </div>
 
-          <div class="setting-group">
+          <div class="setting-group setting-group--stacked">
             <label class="setting-label">
               <span>High Detection (5+)</span>
               <span class="setting-description">Badge color for high number of detections</span>
@@ -233,7 +190,7 @@
             <div class="color-page" data-page="1">
               <h4 class="color-section-title">Category Colors</h4>
 
-              <div class="setting-group">
+              <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
                   <span>Anti-Bot</span>
                   <span class="setting-description">Color for anti-bot detectors</span>
@@ -244,7 +201,7 @@
                 </div>
               </div>
 
-              <div class="setting-group">
+              <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
                   <span>Captcha</span>
                   <span class="setting-description">Color for Captcha detectors</span>
@@ -255,7 +212,7 @@
                 </div>
               </div>
 
-              <div class="setting-group">
+              <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
                   <span>Fingerprint</span>
                   <span class="setting-description">Color for fingerprint detectors</span>
@@ -271,7 +228,7 @@
             <div class="color-page" data-page="2" style="display: none;">
               <h4 class="color-section-title">Tag Colors (Part 1)</h4>
 
-              <div class="setting-group">
+              <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
                   <span>DOM</span>
                   <span class="setting-description">Color for DOM detection methods</span>
@@ -282,7 +239,7 @@
                 </div>
               </div>
 
-              <div class="setting-group">
+              <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
                   <span>Headers</span>
                   <span class="setting-description">Color for header detection methods</span>
@@ -293,7 +250,7 @@
                 </div>
               </div>
 
-              <div class="setting-group">
+              <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
                   <span>Cookies</span>
                   <span class="setting-description">Color for cookie detection methods</span>
@@ -309,7 +266,7 @@
             <div class="color-page" data-page="3" style="display: none;">
               <h4 class="color-section-title">Tag Colors (Part 2)</h4>
 
-              <div class="setting-group">
+              <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
                   <span>Content</span>
                   <span class="setting-description">Color for content detection methods</span>
@@ -320,7 +277,7 @@
                 </div>
               </div>
 
-              <div class="setting-group">
+              <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
                   <span>URLs</span>
                   <span class="setting-description">Color for URL detection methods</span>
@@ -331,7 +288,7 @@
                 </div>
               </div>
 
-              <div class="setting-group">
+              <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
                   <span>JS Hooks</span>
                   <span class="setting-description">Color for JavaScript hook detection methods</span>
@@ -347,7 +304,7 @@
             <div class="color-page" data-page="4" style="display: none;">
               <h4 class="color-section-title">Tag Colors (Part 3)</h4>
 
-              <div class="setting-group">
+              <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
                   <span>Windows</span>
                   <span class="setting-description">Color for window detection</span>
@@ -358,7 +315,7 @@
                 </div>
               </div>
 
-              <div class="setting-group">
+              <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
                   <span>Payload</span>
                   <span class="setting-description">Color for payload detection</span>
@@ -387,14 +344,14 @@
         <div class="settings-section">
           <h3>Detection Configuration</h3>
 
-          <div class="setting-group">
+          <div class="setting-group setting-group--stacked">
             <label class="setting-label">
-              <span style="font-size: 15px;">Detection Cache Duration</span>
-              <span class="setting-description" style="font-size: 13px;">How long to cache detection results</span>
+              <span>Detection Cache Duration</span>
+              <span class="setting-description">How long to cache detection results</span>
             </label>
-            <div style="display: flex; gap: 10px; width: 100%;">
-              <input type="number" id="cacheDuration" class="input-field" min="1" value="12" style="flex: 1; font-size: 15px; padding: 10px;">
-              <select id="cacheUnit" class="input-field" style="flex: 1; font-size: 15px; padding: 10px;">
+            <div style="display: flex; gap: 8px; flex-shrink: 0;">
+              <input type="number" id="cacheDuration" class="input-field" min="1" value="12" style="width: 70px;">
+              <select id="cacheUnit" class="input-field" style="width: 90px;">
                 <option value="minutes">Minutes</option>
                 <option value="hours" selected>Hours</option>
                 <option value="days">Days</option>
@@ -402,47 +359,45 @@
             </div>
           </div>
 
-          <div class="setting-group" style="flex-direction: column; align-items: flex-start;">
-            <label class="setting-label" style="margin-bottom: 10px;">
-              <span style="font-size: 15px;">Detection Cache Scope</span>
-              <span class="setting-description" style="font-size: 13px;">How to identify cached detection results</span>
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>Detection Cache Scope</span>
+              <span class="setting-description">How to identify cached detection results</span>
             </label>
-            <select id="cacheScope" class="input-field" style="width: 100%; font-size: 15px; padding: 10px;">
+            <select id="cacheScope" class="input-field" style="width: 100px;">
               <option value="domain">Domain</option>
               <option value="path">Path</option>
               <option value="full">Full URL</option>
             </select>
           </div>
 
-          <div class="setting-group" style="flex-direction: column; align-items: flex-start;">
-            <label class="setting-label" style="margin-bottom: 10px;">
-              <span style="font-size: 15px;">Blacklisted Domains</span>
-              <span class="setting-description" style="font-size: 13px;">Domains to skip detection completely</span>
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>Blacklisted Domains</span>
+              <span class="setting-description">Domains to skip detection completely</span>
             </label>
-            <div style="display: flex; gap: 8px; width: 100%; margin-bottom: 10px;">
-              <button id="addCurrentDomainBtn" class="action-btn" style="flex: 1; font-size: 14px; padding: 10px;">
-                <svg width="16" height="16" viewBox="0 0 24 24">
-                  <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
-                </svg>
-                Add Current Page
-              </button>
-            </div>
-            <div id="blacklistContainer" style="width: 100%; max-height: 150px; overflow-y: auto;">
+            <button id="addCurrentDomainBtn" class="action-btn" style="margin-top: 8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
+              </svg>
+              Add Current Page
+            </button>
+            <div id="blacklistContainer" style="width: 100%; max-height: 150px; overflow-y: auto; margin-top: 8px;">
               <!-- Blacklisted domains will be displayed here -->
             </div>
           </div>
 
           <!-- JS API Events Section -->
-          <div class="setting-group" style="flex-direction: column; align-items: flex-start; margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--border);">
-            <label class="setting-label" style="margin-bottom: 14px;">
-              <span style="font-size: 15px;">JS API Events</span>
-              <span class="setting-description" style="font-size: 13px;">Allow websites to listen for extension detection events</span>
+          <div class="setting-group setting-section-header">
+            <label class="setting-label">
+              <span>JS API Events</span>
+              <span class="setting-description">Allow websites to listen for extension detection events</span>
             </label>
 
-            <div class="setting-group">
+            <div class="setting-group setting-group--stacked">
               <label class="setting-label">
-                <span style="font-size: 14px;">Enable JS API Events</span>
-                <span class="setting-description" style="font-size: 12px;">Dispatch custom events to page window</span>
+                <span>Enable JS API Events</span>
+                <span class="setting-description">Dispatch custom events to page window</span>
               </label>
               <label class="switch">
                 <input type="checkbox" id="enableJsApi">
@@ -475,16 +430,16 @@
           </div>
 
           <!-- Webhook Integration Section -->
-          <div class="setting-group" style="flex-direction: column; align-items: flex-start; margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--border);">
-            <label class="setting-label" style="margin-bottom: 14px;">
-              <span style="font-size: 15px;">Webhook Integration</span>
-              <span class="setting-description" style="font-size: 13px;">Send detection results to external APIs</span>
+          <div class="setting-group setting-section-header">
+            <label class="setting-label">
+              <span>Webhook Integration</span>
+              <span class="setting-description">Send detection results to external APIs</span>
             </label>
 
-            <div class="setting-group">
+            <div class="setting-group setting-group--stacked">
               <label class="setting-label">
-                <span style="font-size: 14px;">Enable Webhook</span>
-                <span class="setting-description" style="font-size: 12px;">Send HTTP requests on detection</span>
+                <span>Enable Webhook</span>
+                <span class="setting-description">Send HTTP requests on detection</span>
               </label>
               <label class="switch">
                 <input type="checkbox" id="enableWebhook">
@@ -492,10 +447,10 @@
               </label>
             </div>
 
-            <div class="setting-group" id="webhookOnCacheGroup" style="display: none;">
+            <div class="setting-group setting-group--stacked" id="webhookOnCacheGroup">
               <label class="setting-label">
-                <span style="font-size: 14px;">Send on Every Page Load</span>
-                <span class="setting-description" style="font-size: 12px;">Send webhook even when using cached detection data</span>
+                <span>Send on Every Page Load</span>
+                <span class="setting-description">Send webhook even when using cached detection data</span>
               </label>
               <label class="switch">
                 <input type="checkbox" id="webhookOnCache">
@@ -504,9 +459,10 @@
             </div>
 
             <div id="webhookSettings" class="webhook-settings-container">
-              <div class="setting-group" style="flex-direction: column; align-items: flex-start;">
+              <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
-                  <span style="font-size: 14px;">HTTP Method</span>
+                  <span>HTTP Method</span>
+                  <span class="setting-description">Select the HTTP method for webhook requests</span>
                 </label>
                 <input type="hidden" id="webhookMethod" value="POST">
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; margin-top: 8px;">
@@ -565,12 +521,12 @@
                 </div>
               </div>
 
-              <div class="setting-group" style="flex-direction: column; align-items: flex-start;">
+              <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
-                  <span style="font-size: 14px;">Webhook URL</span>
-                  <span class="setting-description" id="webhookUrlDescription" style="font-size: 12px;">Complete endpoint URL (https://api.example.com/webhook)</span>
+                  <span>Webhook URL</span>
+                  <span class="setting-description" id="webhookUrlDescription">Complete endpoint URL (https://api.example.com/webhook)</span>
                 </label>
-                <input type="url" id="webhookUrl" class="input-field" placeholder="https://api.example.com/webhook" style="width: 100%; font-size: 14px; padding: 10px;">
+                <input type="url" id="webhookUrl" class="input-field" placeholder="https://api.example.com/webhook" style="width: 100%;">
                 <div class="webhook-url-hint" id="webhookUrlHint" style="display: none;">
                   <strong>Available variables:</strong>
                   <code>&lt;SITEURL&gt;</code>, <code>&lt;HOSTNAME&gt;</code>, <code>&lt;TIMESTAMP&gt;</code>, <code>&lt;DETECTION_COUNT&gt;</code>, <code>&lt;CATEGORIES&gt;</code>
@@ -580,31 +536,52 @@
                 </div>
               </div>
 
-              <div class="setting-group" id="webhookContentTypeGroup" style="flex-direction: column; align-items: flex-start;">
+              <div class="setting-group" id="webhookContentTypeGroup">
                 <label class="setting-label">
-                  <span style="font-size: 14px;">Content-Type</span>
+                  <span>Content-Type</span>
+                  <span class="setting-description">HTTP content type header</span>
                 </label>
-                <select id="webhookContentType" class="input-field" style="width: 100%; font-size: 14px; padding: 10px;">
+                <select id="webhookContentType" class="input-field" style="width: 140px;">
                   <option value="application/json" selected>application/json</option>
-                  <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+                  <option value="application/x-www-form-urlencoded">x-www-form-urlencoded</option>
                   <option value="text/plain">text/plain</option>
                 </select>
               </div>
 
-              <div class="setting-group" id="webhookPayloadGroup" style="flex-direction: column; align-items: flex-start;">
+              <div class="setting-group setting-group--stacked" id="webhookHeadersGroup">
                 <label class="setting-label">
-                  <span style="font-size: 14px;">Payload Template</span>
-                  <span class="setting-description" style="font-size: 12px;">Use variables: &lt;SITEURL&gt;, &lt;DETECTIONS&gt;, &lt;TIMESTAMP&gt;, &lt;DETECTION_COUNT&gt;, &lt;HOSTNAME&gt;, &lt;CATEGORIES&gt;</span>
+                  <span>Custom Headers</span>
+                  <span class="setting-description">Add custom HTTP headers to the webhook request</span>
                 </label>
-                <textarea id="webhookPayload" class="input-field" rows="6" style="width: 100%; font-family: monospace; font-size: 13px; padding: 10px;" placeholder='{"url": "<SITEURL>", "detections": <DETECTIONS>, "timestamp": "<TIMESTAMP>", "count": <DETECTION_COUNT>}'></textarea>
+                <div id="webhookHeadersContainer" style="margin-top: 8px;">
+                  <!-- Custom headers will be rendered here -->
+                </div>
+                <button type="button" id="addWebhookHeaderBtn" class="action-btn" style="margin-top: 8px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" style="margin-right: 6px;">
+                    <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
+                  </svg>
+                  Add Header
+                </button>
               </div>
 
-              <div style="display: flex; gap: 8px; margin-top: 8px;">
-                <button id="testWebhookBtn" class="action-btn" style="flex: 1; font-size: 14px; padding: 10px;">
+              <div class="setting-group setting-group--stacked" id="webhookPayloadGroup">
+                <label class="setting-label">
+                  <span>Payload Template</span>
+                  <span class="setting-description">Use variables: &lt;SITEURL&gt;, &lt;HOSTNAME&gt;, &lt;TITLE&gt;, &lt;FAVICON&gt;, &lt;DETECTIONS&gt;, &lt;TIMESTAMP&gt;, &lt;DETECTION_COUNT&gt;, &lt;CATEGORIES&gt;</span>
+                </label>
+                <textarea id="webhookPayload" class="textarea-field" rows="6" style="font-family: monospace;" placeholder='{"url": "<SITEURL>", "hostname": "<HOSTNAME>", "title": "<TITLE>", "favicon": "<FAVICON>", "detections": <DETECTIONS>, "timestamp": "<TIMESTAMP>", "count": <DETECTION_COUNT>, "categories": "<CATEGORIES>"}'></textarea>
+              </div>
+
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>Test Webhook</span>
+                  <span class="setting-description">Send a test request to your webhook URL</span>
+                </label>
+                <button id="testWebhookBtn" class="action-btn">
                   <svg width="16" height="16" viewBox="0 0 24 24">
                     <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" fill="currentColor"/>
                   </svg>
-                  Test Webhook
+                  Test
                 </button>
               </div>
             </div>
@@ -624,7 +601,7 @@
         <div class="settings-section">
           <h3>History Configuration</h3>
 
-          <div class="setting-group">
+          <div class="setting-group setting-group--stacked">
             <label class="setting-label">
               <span>History Limit</span>
               <span class="setting-description">Maximum number of entries to keep (0 for unlimited)</span>
@@ -632,7 +609,7 @@
             <input type="number" id="historyLimit" class="input-field" min="0" max="1000" value="100">
           </div>
 
-          <div class="setting-group">
+          <div class="setting-group setting-group--stacked">
             <label class="setting-label">
               <span>Auto Clear</span>
               <span class="setting-description">Automatically clear history older than specified days</span>
@@ -640,7 +617,7 @@
             <input type="number" id="autoClearDays" class="input-field" min="0" max="365" value="30">
           </div>
 
-          <div class="setting-group">
+          <div class="setting-group setting-group--stacked">
             <label class="setting-label">
               <span>Export Format</span>
               <span class="setting-description">Default format for history export</span>
@@ -652,7 +629,7 @@
             </select>
           </div>
 
-          <div class="setting-group">
+          <div class="setting-group setting-group--stacked">
             <label class="setting-label">
               <span>Include Timestamps</span>
               <span class="setting-description">Include detailed timestamps in history entries</span>
@@ -663,7 +640,7 @@
             </label>
           </div>
 
-          <div class="setting-group">
+          <div class="setting-group setting-group--stacked">
             <label class="setting-label">
               <span>Save History on Cache Hits</span>
               <span class="setting-description">Save to history even when detection results are cached</span>
@@ -675,13 +652,13 @@
           </div>
 
           <!-- Duplicate Prevention Section -->
-          <div class="setting-group" style="flex-direction: column; align-items: flex-start; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
-            <label class="setting-label" style="margin-bottom: 12px;">
+          <div class="setting-group setting-section-header" style="margin-top: 24px; padding-top: 24px;">
+            <label class="setting-label">
               <span>Duplicate Prevention</span>
               <span class="setting-description">Prevent duplicate entries in history for the same URL</span>
             </label>
 
-            <div class="setting-group">
+            <div class="setting-group setting-group--stacked">
               <label class="setting-label">
                 <span>Enable Duplicate Prevention</span>
                 <span class="setting-description">Block duplicate history entries within a time window</span>
@@ -693,7 +670,7 @@
             </div>
 
             <div id="duplicateSettingsContainer" class="duplicate-settings-container" style="display: none;">
-              <div class="setting-group">
+              <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
                   <span>Duplication Scope</span>
                   <span class="setting-description">How to identify duplicate entries</span>
@@ -705,7 +682,7 @@
                 </select>
               </div>
 
-              <div class="setting-group">
+              <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
                   <span>Time Window Duration</span>
                   <span class="setting-description">Duplicate detection time window duration</span>
@@ -713,7 +690,7 @@
                 <input type="number" id="duplicateDuration" class="input-field" min="1" max="999" value="1">
               </div>
 
-              <div class="setting-group">
+              <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
                   <span>Time Window Unit</span>
                   <span class="setting-description">Time unit for duplicate detection window</span>
@@ -752,7 +729,7 @@
         <div class="settings-section">
           <h3>Data Management</h3>
 
-          <div class="setting-group">
+          <div class="setting-group setting-group--stacked">
             <label class="setting-label">
               <span>Export Settings</span>
               <span class="setting-description">Download all settings as JSON file</span>
@@ -765,7 +742,7 @@
             </button>
           </div>
 
-          <div class="setting-group">
+          <div class="setting-group setting-group--stacked">
             <label class="setting-label">
               <span>Import Settings</span>
               <span class="setting-description">Load settings from JSON file</span>
@@ -779,7 +756,7 @@
             <input type="file" id="importFile" accept=".json" style="display: none;">
           </div>
 
-          <div class="setting-group">
+          <div class="setting-group setting-group--stacked">
             <label class="setting-label">
               <span>Export Detection History</span>
               <span class="setting-description">Download all detection history as CSV</span>

@@ -26,7 +26,8 @@
       "webhookMethod": "POST",
       "webhookUrl": "",
       "webhookContentType": "application/json",
-      "webhookPayload": "{\"url\": \"<SITEURL>\", \"detections\": <DETECTIONS>, \"timestamp\": \"<TIMESTAMP>\", \"count\": <DETECTION_COUNT>}"
+      "webhookPayload": "{\"url\": \"<SITEURL>\", \"hostname\": \"<HOSTNAME>\", \"title\": \"<TITLE>\", \"favicon\": \"<FAVICON>\", \"detections\": <DETECTIONS>, \"timestamp\": \"<TIMESTAMP>\", \"count\": <DETECTION_COUNT>, \"categories\": \"<CATEGORIES>\"}",
+      "webhookHeaders": []
     },
     "history": {
       "historyLimit": 0,
@@ -43,7 +44,7 @@
       "duplicateUnit": "hours"
     },
     "updates": {
-      "autoUpdate": true,
+      "autoUpdate": false,
       "checkIntervalHours": 12,
       "lastCheckTimestamp": 0
     }

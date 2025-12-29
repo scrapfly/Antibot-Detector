@@ -1977,9 +1977,12 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
    * @returns {string} Icon string (emoji or URL)
    */
   getDetectorIcon(detection) {
+    // Helper to escape alt text for HTML attribute safety
+    const escapeAlt = (text) => (text || 'Icon').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
     // Check for custom uploaded icon first
     if (detection.detector?.customIcon) {
-      return `<img src="${detection.detector.customIcon}" alt="${detection.detector.name || 'Icon'}" />`;
+      return `<img src="${detection.detector.customIcon}" alt="${escapeAlt(detection.detector.name)}" class="detector-icon" />`;
     }
 
     // Try to get real icon from detector data
@@ -1988,11 +1991,11 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
         const lowerIcon = detection.detector.icon.toLowerCase();
         if (lowerIcon === 'default') {
           const scrapflyIcon = chrome.runtime.getURL('icons/scrapfly.webp');
-          return `<img src="${scrapflyIcon}" alt="${detection.detector.name || 'Icon'}" />`;
+          return `<img src="${scrapflyIcon}" alt="${escapeAlt(detection.detector.name)}" class="detector-icon" />`;
         }
         if (lowerIcon === 'custom' || lowerIcon === 'custom.png') {
           const scrapflyIcon = chrome.runtime.getURL('icons/scrapfly.webp');
-          return `<img src="${scrapflyIcon}" alt="${detection.detector.name || 'Icon'}" />`;
+          return `<img src="${scrapflyIcon}" alt="${escapeAlt(detection.detector.name)}" class="detector-icon" />`;
         }
       }
       // Check if it's an emoji (not a file name)
@@ -2006,13 +2009,12 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
 
       // It's a file, build path to icon in detectors/icons folder
       const iconPath = chrome.runtime.getURL(`detectors/icons/${detection.detector.icon}`);
-      const defaultIconPath = chrome.runtime.getURL('detectors/icons/custom.png');
-      return `<img src="${iconPath}" alt="${detection.detector.name || 'Icon'}" onerror="this.src='${defaultIconPath}'" />`;
+      return `<img src="${iconPath}" alt="${escapeAlt(detection.detector.name)}" class="detector-icon" />`;
     }
 
     // No icon specified, use default custom.png
     const scrapflyIcon = chrome.runtime.getURL('icons/scrapfly.webp');
-    return `<img src="${scrapflyIcon}" alt="${detection.detector?.name || 'Icon'}" />`;
+    return `<img src="${scrapflyIcon}" alt="${escapeAlt(detection.detector?.name)}" class="detector-icon" />`;
   }
 
   /**
