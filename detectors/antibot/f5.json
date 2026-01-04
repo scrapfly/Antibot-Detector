@@ -1,0 +1,89 @@
+{
+  "id": "f5",
+  "name": "F5 BIG-IP ASM",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "color": "#E53935",
+  "lastUpdated": "2024-01-15",
+  "version": "1.0.0",
+  "website": "https://www.f5.com/",
+  "icon": "f5_official.png",
+  "description": "F5 BIG-IP Application Security Manager (ASM) - Web application firewall and bot protection",
+  "detection": {
+    "cookie": [
+      {
+        "name": "^TS[a-zA-Z0-9]+$",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "F5 BIG-IP session persistence cookies",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "name": "^BIGipServer.*",
+        "nameRegex": true,
+        "confidence": 95,
+        "description": "F5 BIG-IP load balancer cookies",
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "header": [
+      {
+        "name": "X-WA-Info",
+        "confidence": 90,
+        "description": "F5 WebAccelerator header",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
+    "url": [],
+    "content": [
+      {
+        "confidence": 90,
+        "description": "F5 Client-Side Protection & Mitigation",
+        "text": "f5_cspm",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 85,
+        "description": "F5 Session Tracking variable",
+        "text": "F5_ST",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ],
+    "dom": [],
+    "window": []
+  },
+  "notes": {
+    "detection_tips": [
+      "TS* cookies are commonly used for session persistence",
+      "BIGipServer* cookies indicate load balancing",
+      "F5 ASM often modifies response headers",
+      "Look for encoded values in cookies starting with 'TS'"
+    ]
+  }
+}

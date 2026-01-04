@@ -1,0 +1,103 @@
+{
+  "id": "reblaze",
+  "name": "Reblaze",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "color": "#E91E63",
+  "lastUpdated": "2024-01-15",
+  "version": "1.0.0",
+  "website": "https://www.reblaze.com/",
+  "icon": "reblaze_official.png",
+  "description": "Reblaze cloud-based web security platform with bot management",
+  "detection": {
+    "cookie": [
+      {
+        "name": "rbzid",
+        "confidence": 95,
+        "description": "Reblaze visitor ID",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "name": "rbzsessionid",
+        "confidence": 90,
+        "description": "Reblaze session identifier",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "name": "rbz*",
+        "confidence": 85,
+        "description": "Reblaze prefix cookies",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "header": [
+      {
+        "name": "X-Reblaze-*",
+        "confidence": 90,
+        "description": "Reblaze specific headers",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
+    "url": [
+      {
+        "confidence": 80,
+        "description": "Reblaze reference in URLs",
+        "text": "reblaze",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "confidence": 85,
+        "description": "Reblaze ID in scripts",
+        "text": "rbzid",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 80,
+        "description": "Reblaze reference",
+        "text": "reblaze",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ]
+  }
+}

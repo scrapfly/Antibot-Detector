@@ -1,0 +1,77 @@
+{
+"antibot": {
+    "colour": "#FF5733",
+    "detectors":[
+        "akamai",
+        "cloudflare",
+        "aws-waf",
+        "botguard",
+        "f5",
+        "datadome",
+        "incapsula",
+        "perimeterx",
+        "shapesecurity",
+        "sucuri",
+        "reblaze",
+        "threatmetrix",
+        "meetrics",
+        "ocule",
+        "cheq"
+
+    ]
+},
+"captcha": {
+    "colour": "#33C3FF",
+    "detectors":[
+        "hcaptcha",
+        "recaptcha",
+        "geetest",
+        "qcloud",
+        "funcaptcha",
+        "aliexpress",
+        "friendlycaptcha",
+        "captchaeu"
+    ]
+},
+"fingerprint": {
+    "colour": "#2196F3",
+    "detectors":[
+        "audio-fingerprint",
+        "battery-fingerprint",
+        "canvas-fingerprint",
+        "clipboard-fingerprint",
+        "crypto-fingerprint",
+        "css-fingerprint",
+        "font-fingerprint",
+        "gamepads-fingerprint",
+        "geolocation-fingerprint",
+        "hardware-fingerprint",
+        "indexeddb-fingerprint",
+        "media-fingerprint",
+        "navigator-fingerprint",
+        "orientation-fingerprint",
+        "performance-fingerprint",
+        "screen-fingerprint",
+        "storage-fingerprint",
+        "timezone-fingerprint",
+        "usb-fingerprint",
+        "webgl-fingerprint",
+        "webrtc-fingerprint"
+    ]
+},
+"tags":{
+    "dom": {"colour": "#2196F3"},
+    "header": {"colour": "#FF33A8"},
+    "cookie": {"colour": "#FFC133"},
+    "content": {"colour": "#33FFF3"},
+    "url": {"colour": "#00BCD4"},
+    "js_hooks": {"colour": "#00E5FF"},
+    "window": {"colour": "#4CAF50"},
+    "payload": {"colour": "#9C27B0"}
+},
+"badge": {
+    "low": {"colour": "#4CAF50"},
+    "medium": {"colour": "#FFA500"},
+    "high": {"colour": "#FF4444"}
+}
+}

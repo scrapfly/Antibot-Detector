@@ -1,0 +1,74 @@
+{
+  "id": "hardware-fingerprint",
+  "name": "Hardware Fingerprint",
+  "enabled": true,
+  "category": "Fingerprint",
+  "color": "#ec4899",
+  "lastUpdated": "2025-01-21",
+  "version": "1.0.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/API/navigator/hardwareConcurrency",
+  "icon": "custom.png",
+  "description": "Hardware capabilities detection including CPU cores, memory, and device specifications",
+  "detection": {
+    "js_hooks": [
+      {
+        "description": "Gets number of CPU cores",
+        "enabled": true,
+        "confidence": 95,
+        "target": "Navigator.prototype.hardwareConcurrency"
+      },
+      {
+        "description": "Gets device memory in GB",
+        "enabled": true,
+        "confidence": 95,
+        "target": "Navigator.prototype.deviceMemory"
+      }
+    ],
+    "window": [
+      {
+        "path": "navigator.hardwareConcurrency",
+        "description": "CPU core count",
+        "condition": "> 0"
+      },
+      {
+        "path": "navigator.deviceMemory",
+        "description": "Device RAM in gigabytes",
+        "condition": "> 0"
+      },
+      {
+        "path": "navigator.maxTouchPoints",
+        "description": "Maximum touch points supported",
+        "condition": ">= 0"
+      }
+    ],
+    "content": [
+      {
+        "text": "hardwareConcurrency",
+        "scope": "scripts",
+        "description": "CPU detection for device fingerprinting",
+        "confidence": 90,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "text": "deviceMemory",
+        "scope": "scripts",
+        "description": "Memory detection in scripts",
+        "confidence": 90,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "text": "maxTouchPoints",
+        "scope": "scripts",
+        "description": "Touch capabilities detection",
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ]
+  }
+}

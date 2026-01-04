@@ -1,0 +1,144 @@
+{
+  "id": "recaptcha",
+  "name": "Google reCAPTCHA",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "color": "#4285F4",
+  "lastUpdated": "2024-01-15",
+  "version": "1.0.0",
+  "website": "https://www.google.com/recaptcha/",
+  "icon": "recaptcha_official.png",
+  "description": "Google's CAPTCHA service for protecting websites from spam and abuse",
+  "detection": {
+    "url": [
+      {
+        "text": "recaptcha/api",
+        "confidence": 100,
+        "description": "reCAPTCHA API endpoint",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "text": "gstatic.com/recaptcha",
+        "confidence": 95,
+        "description": "Static resources",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "text": "google.com/recaptcha",
+        "confidence": 100,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "text": "recaptcha.net",
+        "confidence": 95,
+        "description": "Alternative domain",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "text": "grecaptcha",
+        "confidence": 100,
+        "description": "Global reCAPTCHA object",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "text": "recaptcha",
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "text": "g-recaptcha",
+        "confidence": 90,
+        "description": "reCAPTCHA container class",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "text": "grecaptcha.execute",
+        "confidence": 95,
+        "description": "v3 execution",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "text": "grecaptcha.render",
+        "confidence": 90,
+        "description": "v2 rendering",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ],
+    "dom": [
+      {
+        "selector": ".g-recaptcha",
+        "confidence": 95,
+        "description": "reCAPTCHA container",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
+      },
+      {
+        "selector": "[data-sitekey]",
+        "confidence": 85,
+        "description": "Site key attribute",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
+      },
+      {
+        "selector": "iframe[src*='recaptcha']",
+        "confidence": 90,
+        "description": "reCAPTCHA iframe",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
+      }
+    ],
+    "window": [
+      {
+        "path": "grecaptcha",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "Google reCAPTCHA main object"
+      },
+      {
+        "path": "grecaptcha.ready",
+        "condition": "typeof function",
+        "confidence": 95,
+        "description": "reCAPTCHA ready function"
+      },
+      {
+        "path": "grecaptcha.execute",
+        "condition": "typeof function",
+        "confidence": 95,
+        "description": "reCAPTCHA execute function"
+      },
+      {
+        "path": "___grecaptcha_cfg",
+        "condition": "typeof object",
+        "confidence": 90,
+        "description": "reCAPTCHA configuration object"
+      }
+    ]
+  }
+}

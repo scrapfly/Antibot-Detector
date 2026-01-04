@@ -1,0 +1,66 @@
+{
+  "id": "timezone-fingerprint",
+  "name": "Timezone/Intl Fingerprint",
+  "enabled": true,
+  "category": "Fingerprint",
+  "color": "#06b6d4",
+  "lastUpdated": "2025-01-21",
+  "version": "1.0.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl",
+  "icon": "custom.png",
+  "description": "Timezone and internationalization API detection for locale-based fingerprinting",
+  "detection": {
+    "js_hooks": [
+      {
+        "description": "Gets timezone and locale information",
+        "enabled": true,
+        "confidence": 95,
+        "target": "Intl.DateTimeFormat.prototype.resolvedOptions"
+      },
+      {
+        "description": "Creates date formatter for timezone detection",
+        "enabled": true,
+        "confidence": 90,
+        "target": "Intl.DateTimeFormat"
+      },
+      {
+        "description": "Compares strings based on locale",
+        "enabled": true,
+        "confidence": 85,
+        "target": "Intl.Collator.prototype.compare"
+      }
+    ],
+    "window": [
+      {
+        "path": "Intl",
+        "description": "Internationalization API",
+        "condition": "typeof object"
+      },
+      {
+        "path": "Intl.DateTimeFormat",
+        "description": "Date and time formatting",
+        "condition": "typeof function"
+      }
+    ],
+    "content": [
+      {
+        "text": "Intl.DateTimeFormat",
+        "scope": "scripts",
+        "description": "Timezone detection via Intl",
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "text": "resolvedOptions",
+        "scope": "scripts",
+        "description": "Getting locale and timezone info",
+        "confidence": 90,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ]
+  }
+}

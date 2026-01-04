@@ -1,0 +1,66 @@
+{
+  "id": "indexeddb-fingerprint",
+  "name": "IndexedDB Fingerprint",
+  "enabled": true,
+  "category": "Fingerprint",
+  "color": "#8b5cf6",
+  "lastUpdated": "2025-01-21",
+  "version": "1.0.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API",
+  "icon": "custom.png",
+  "description": "IndexedDB API access for local storage-based fingerprinting and database enumeration",
+  "detection": {
+    "js_hooks": [
+      {
+        "description": "Opens IndexedDB database for fingerprinting",
+        "enabled": true,
+        "confidence": 90,
+        "target": "IDBFactory.prototype.open"
+      },
+      {
+        "description": "Enumerates available IndexedDB databases",
+        "enabled": true,
+        "confidence": 95,
+        "target": "IDBFactory.prototype.databases"
+      },
+      {
+        "description": "Creates transactions for database access",
+        "enabled": true,
+        "confidence": 85,
+        "target": "IDBDatabase.prototype.transaction"
+      }
+    ],
+    "window": [
+      {
+        "path": "indexedDB",
+        "description": "IndexedDB API access point",
+        "condition": "typeof object"
+      },
+      {
+        "path": "indexedDB.databases",
+        "description": "Method to list available databases",
+        "condition": "typeof function"
+      }
+    ],
+    "content": [
+      {
+        "text": "indexedDB.open",
+        "scope": "scripts",
+        "description": "IndexedDB database opening",
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "text": "IDBDatabase",
+        "scope": "scripts",
+        "description": "IndexedDB database interface usage",
+        "confidence": 80,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ]
+  }
+}

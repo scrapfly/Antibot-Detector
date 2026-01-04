@@ -1,0 +1,119 @@
+{
+  "id": "hcaptcha",
+  "name": "hCaptcha",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "color": "#0074BF",
+  "lastUpdated": "2024-01-15",
+  "version": "1.0.0",
+  "website": "https://www.hcaptcha.com/",
+  "icon": "hcaptcha_official.png",
+  "description": "Privacy-focused CAPTCHA service that rewards websites",
+  "detection": {
+    "url": [
+      {
+        "confidence": 100,
+        "description": "hCaptcha domain",
+        "text": "hcaptcha.com",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 95,
+        "description": "Site configuration check",
+        "text": "/checksiteconfig",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 95,
+        "description": "Captcha retrieval endpoint",
+        "text": "/getcaptcha",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "confidence": 100,
+        "description": "hCaptcha object",
+        "text": "hcaptcha",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 95,
+        "description": "hCaptcha container class",
+        "text": "h-captcha",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 90,
+        "text": "hcaptcha.render",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 90,
+        "text": "hcaptcha.execute",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ],
+    "dom": [
+      {
+        "selector": ".h-captcha",
+        "confidence": 95,
+        "description": "hCaptcha container",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
+      },
+      {
+        "selector": "[data-hcaptcha-sitekey]",
+        "confidence": 90,
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
+      },
+      {
+        "selector": "iframe[src*='hcaptcha.com']",
+        "confidence": 95,
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
+      }
+    ],
+    "window": [
+      {
+        "path": "hcaptcha",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "hCaptcha main object"
+      },
+      {
+        "path": "hcaptcha.render",
+        "condition": "typeof function",
+        "confidence": 95,
+        "description": "hCaptcha render function"
+      },
+      {
+        "path": "hcaptcha.execute",
+        "condition": "typeof function",
+        "confidence": 90,
+        "description": "hCaptcha execute function"
+      }
+    ]
+  }
+}

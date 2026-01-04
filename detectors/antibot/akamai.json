@@ -1,0 +1,285 @@
+{
+  "id": "akamai",
+  "name": "Akamai Bot Manager",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "color": "#FF6B35",
+  "lastUpdated": "2024-01-15",
+  "version": "1.0.0",
+  "website": "https://www.akamai.com/products/bot-manager",
+  "icon": "akamai_official.png",
+  "description": "Enterprise-grade bot management solution providing real-time detection and mitigation",
+  "detection": {
+    "cookie": [
+      {
+        "name": "_abck",
+        "confidence": 100,
+        "description": "Akamai Bot Manager tracking cookie (anti-bot required)",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "name": "ak_bmsc",
+        "confidence": 90,
+        "description": "Bot Manager session cookie (pixel challenge required)",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "name": "sbsd",
+        "confidence": 95,
+        "description": "SB-SD challenge cookie (required for sensor bypass)",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "name": "sbsd_o",
+        "confidence": 95,
+        "description": "Akamai challenge cookie (required for advanced protection)",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "name": "bm_sz",
+        "confidence": 80,
+        "description": "Browser sensor data",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "name": "bm_sv",
+        "confidence": 75,
+        "description": "Server validation cookie",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "name": "bm_mi",
+        "confidence": 70,
+        "description": "Machine identification",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "header": [
+    ],
+    "url": [
+      {
+        "confidence": 85,
+        "description": "Akamai Bot Manager endpoint",
+        "text": "/akam/",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 95,
+        "description": "SB-SD challenge endpoint (SBSD required)",
+        "text": "/.well-known/sbsd/",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 90,
+        "description": "Akamai random path challenge (multiple encoded segments)",
+        "text": "/([a-zA-Z0-9_-]{2,30}/){4,}[a-zA-Z0-9_-]{2,30}$",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      },
+      {
+        "confidence": 90,
+        "description": "Akamai SBSD security endpoint",
+        "text": "_sec/sbsd/",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "confidence": 80,
+        "text": "ak_bmsc",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 85,
+        "text": "_abck",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 90,
+        "description": "Bot Manager API namespace",
+        "text": "bmak.",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 85,
+        "text": "sensor_data",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 95,
+        "description": "Pixel challenge HTML variable",
+        "text": "bazadebezolkohpepadr",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 90,
+        "description": "Pixel script variable pattern",
+        "text": "g=_\\[\\d+\\]",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 85,
+        "description": "Pixel array declaration",
+        "text": "var _=\\[",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 95,
+        "description": "SB-SD challenge endpoint reference in code",
+        "text": "/.well-known/sbsd/",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ],
+    "dom": [
+    ],
+    "window": [
+      {
+        "path": "bmak",
+        "condition": "typeof object",
+        "confidence": 95,
+        "description": "Akamai Bot Manager main object (bmak)"
+      }
+    ],
+    "payload": [
+      {
+        "text": "sensor_data",
+        "confidence": 95,
+        "description": "Akamai sensor data in request payload (generic)",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": false
+      },
+      {
+        "text": "sensor_data",
+        "confidence": 98,
+        "description": "Akamai sensor data POST to random path challenge endpoint",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": false,
+        "urlPattern": "/([a-zA-Z0-9_-]{2,30}/){4,}[a-zA-Z0-9_-]{2,30}$",
+        "urlRegex": true,
+        "urlCaseSensitive": true,
+        "methods": ["POST"]
+      },
+      {
+        "text": "body",
+        "confidence": 100,
+        "description": "Akamai sensor data POST to known SBSD endpoint",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": false,
+        "urlPattern": "/.well-known/sbsd/",
+        "urlRegex": false,
+        "urlCaseSensitive": false,
+        "methods": ["POST"]
+      },
+      {
+        "text": "body",
+        "confidence": 98,
+        "description": "Akamai SBSD body payload to random endpoint",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": false,
+        "urlPattern": "/.well-known/sbsd/[a-zA-Z0-9_-]+$",
+        "urlRegex": true,
+        "urlCaseSensitive": false,
+        "methods": ["POST"]
+      },
+      {
+        "text": "jsv=",
+        "confidence": 95,
+        "description": "Akamai pixel challenge fingerprinting payload",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "urlPattern": "/akam/\\d+/pixel_[a-f0-9]+$",
+        "urlRegex": true,
+        "urlCaseSensitive": false,
+        "methods": ["POST"]
+      }
+    ]
+  }
+}

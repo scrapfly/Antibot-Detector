@@ -1,0 +1,787 @@
+<!-- Settings Modal Template -->
+<div class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="header-content">
+        <h2>Settings</h2>
+      </div>
+      <button id="closeSettingsModal" class="close-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/>
+        </svg>
+      </button>
+      <p class="modal-subtitle">Configure your extension preferences</p>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="settings-tabs">
+      <button class="settings-tab-btn active" data-settings-tab="general">
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" fill="currentColor"/>
+        </svg>
+        General
+      </button>
+      <button class="settings-tab-btn" data-settings-tab="detection">
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path d="M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10M10,22C9.75,22 9.54,21.82 9.5,21.58L9.13,18.93C8.5,18.68 7.96,18.34 7.44,17.94L4.95,18.95C4.73,19.03 4.46,18.95 4.34,18.73L2.34,15.27C2.21,15.05 2.27,14.78 2.46,14.63L4.57,12.97L4.5,12L4.57,11L2.46,9.37C2.27,9.22 2.21,8.95 2.34,8.73L4.34,5.27C4.46,5.05 4.73,4.96 4.95,5.05L7.44,6.05C7.96,5.66 8.5,5.32 9.13,5.07L9.5,2.42C9.54,2.18 9.75,2 10,2H14C14.25,2 14.46,2.18 14.5,2.42L14.87,5.07C15.5,5.32 16.04,5.66 16.56,6.05L19.05,5.05C19.27,4.96 19.54,5.05 19.66,5.27L21.66,8.73C21.79,8.95 21.73,9.22 21.54,9.37L19.43,11L19.5,12L19.43,13L21.54,14.63C21.73,14.78 21.79,15.05 21.66,15.27L19.66,18.73C19.54,18.95 19.27,19.04 19.05,18.95L16.56,17.95C16.04,18.34 15.5,18.68 14.87,18.93L14.5,21.58C14.46,21.82 14.25,22 14,22H10M11.25,4L10.88,6.61C9.68,6.86 8.62,7.5 7.85,8.39L5.44,7.35L4.69,8.65L6.8,10.2C6.4,11.37 6.4,12.64 6.8,13.8L4.68,15.36L5.43,16.66L7.86,15.62C8.63,16.5 9.68,17.14 10.87,17.38L11.24,20H12.76L13.13,17.39C14.32,17.14 15.37,16.5 16.14,15.62L18.57,16.66L19.32,15.36L17.2,13.81C17.6,12.64 17.6,11.37 17.2,10.2L19.31,8.65L18.56,7.35L16.15,8.39C15.38,7.5 14.32,6.86 13.12,6.62L12.75,4H11.25Z" fill="currentColor"/>
+        </svg>
+        Detection
+      </button>
+      <button class="settings-tab-btn" data-settings-tab="history">
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path d="M13.5,8H12V13L16.28,15.54L17,14.33L13.5,12.25V8M13,3A9,9 0 0,0 4,12H1L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z" fill="currentColor"/>
+        </svg>
+        History
+      </button>
+      <button class="settings-tab-btn" data-settings-tab="data">
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z" fill="currentColor"/>
+        </svg>
+        Data
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- General Settings Tab -->
+      <div class="settings-tab-content active" data-tab-content="general">
+        <div class="settings-section">
+          <h3>General Settings</h3>
+
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>Enable Notifications</span>
+              <span class="setting-description">Show notifications when security systems are detected</span>
+            </label>
+            <label class="switch">
+              <input type="checkbox" id="notificationsEnabled">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>Debug Mode</span>
+              <span class="setting-description">Enable console logging for debugging</span>
+            </label>
+            <label class="switch">
+              <input type="checkbox" id="debugModeGeneral">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <!-- Log Collector Section (Only visible when Debug Mode is enabled) -->
+          <div id="logCollectorSection" style="display: none; padding-top: 16px; border-top: 1px solid var(--border); margin-top: 16px;">
+            <div class="setting-group setting-group--stacked">
+              <label class="setting-label">
+                <span>Log Collector</span>
+                <span class="setting-description">Collect and export all debug logs from the service worker</span>
+              </label>
+              <label class="switch">
+                <input type="checkbox" id="logCollectorEnabled">
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div id="logCollectorControls" style="display: none; padding: 12px; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border); margin-top: 8px;">
+              <!-- Max Logs Setting -->
+              <div class="setting-group" style="margin-bottom: 12px;">
+                <label class="setting-label">
+                  <span>Max Logs</span>
+                  <span class="setting-description">Maximum number of logs to store (100-100000)</span>
+                </label>
+                <input type="number" id="logCollectorMaxLogs" class="input-field" min="100" max="100000" step="100" value="5000">
+              </div>
+
+              <!-- Log Count Display -->
+              <div style="margin-bottom: 12px; padding: 10px; background: var(--bg-primary); border-radius: 6px; border: 1px solid var(--border);">
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Logs Collected:</div>
+                <div style="font-size: 16px; font-weight: 600; color: var(--text-primary);">
+                  <span id="logCountValue">0</span> / <span id="logCountMax">5000</span>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div style="display: flex; gap: 8px; flex-direction: column;">
+                <button id="exportLogsJsonBtn" class="action-btn" style="width: 100%;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" style="margin-right: 6px;">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z" fill="currentColor"/>
+                  </svg>
+                  Export as JSON
+                </button>
+                <button id="exportLogsTextBtn" class="action-btn" style="width: 100%;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" style="margin-right: 6px;">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M8,15.5H16V17H8V15.5M8,11.5H16V13H8V11.5Z" fill="currentColor"/>
+                  </svg>
+                  Export as Text
+                </button>
+                <button id="clearLogsBtn" class="action-btn" style="width: 100%; background-color: #ef4444; color: white;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" style="margin-right: 6px;">
+                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
+                  </svg>
+                  Clear Logs
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Badge Colors Section -->
+        <div class="settings-section">
+          <h3>Badge Colors</h3>
+
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>Low Detection (1-2)</span>
+              <span class="setting-description">Badge color for low number of detections</span>
+            </label>
+            <div class="color-picker-container">
+              <input type="color" id="colorBadgeLow" class="color-field" value="#4CAF50">
+              <span class="color-hex-display" id="hexBadgeLow">#4CAF50</span>
+            </div>
+          </div>
+
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>Medium Detection (3-4)</span>
+              <span class="setting-description">Badge color for medium number of detections</span>
+            </label>
+            <div class="color-picker-container">
+              <input type="color" id="colorBadgeMedium" class="color-field" value="#FFA500">
+              <span class="color-hex-display" id="hexBadgeMedium">#FFA500</span>
+            </div>
+          </div>
+
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>High Detection (5+)</span>
+              <span class="setting-description">Badge color for high number of detections</span>
+            </label>
+            <div class="color-picker-container">
+              <input type="color" id="colorBadgeHigh" class="color-field" value="#FF4444">
+              <span class="color-hex-display" id="hexBadgeHigh">#FF4444</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Colors Section with Pagination -->
+        <div class="settings-section">
+          <h3>Color Customization</h3>
+
+          <!-- Pagination Controls -->
+          <div class="color-pagination-controls">
+            <button id="colorPrevBtn" class="pagination-btn" disabled>
+              <svg width="14" height="14" viewBox="0 0 24 24">
+                <path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/>
+              </svg>
+            </button>
+            <span class="color-page-info">
+              <span id="colorPageNum">1</span> / <span id="colorTotalPages">4</span>
+            </span>
+            <button id="colorNextBtn" class="pagination-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24">
+                <path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Color Pages Container -->
+          <div id="colorPagesContainer">
+            <!-- Page 1: Category Colors -->
+            <div class="color-page" data-page="1">
+              <h4 class="color-section-title">Category Colors</h4>
+
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>Anti-Bot</span>
+                  <span class="setting-description">Color for anti-bot detectors</span>
+                </label>
+                <div class="color-picker-container">
+                  <input type="color" id="colorAntibot" class="color-field" value="#FF5733">
+                  <span class="color-hex-display" id="hexAntibot">#FF5733</span>
+                </div>
+              </div>
+
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>Captcha</span>
+                  <span class="setting-description">Color for Captcha detectors</span>
+                </label>
+                <div class="color-picker-container">
+                  <input type="color" id="colorCaptcha" class="color-field" value="#33C3FF">
+                  <span class="color-hex-display" id="hexCaptcha">#33C3FF</span>
+                </div>
+              </div>
+
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>Fingerprint</span>
+                  <span class="setting-description">Color for fingerprint detectors</span>
+                </label>
+                <div class="color-picker-container">
+                  <input type="color" id="colorFingerprint" class="color-field" value="#8D33FF">
+                  <span class="color-hex-display" id="hexFingerprint">#8D33FF</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Page 2: Tag Colors (Part 1) -->
+            <div class="color-page" data-page="2" style="display: none;">
+              <h4 class="color-section-title">Tag Colors (Part 1)</h4>
+
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>DOM</span>
+                  <span class="setting-description">Color for DOM detection methods</span>
+                </label>
+                <div class="color-picker-container">
+                  <input type="color" id="colorTagDOM" class="color-field" value="#8D33FF">
+                  <span class="color-hex-display" id="hexTagDOM">#8D33FF</span>
+                </div>
+              </div>
+
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>Headers</span>
+                  <span class="setting-description">Color for header detection methods</span>
+                </label>
+                <div class="color-picker-container">
+                  <input type="color" id="colorTagHeaders" class="color-field" value="#FF33A8">
+                  <span class="color-hex-display" id="hexTagHeaders">#FF33A8</span>
+                </div>
+              </div>
+
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>Cookies</span>
+                  <span class="setting-description">Color for cookie detection methods</span>
+                </label>
+                <div class="color-picker-container">
+                  <input type="color" id="colorTagCookies" class="color-field" value="#FFC133">
+                  <span class="color-hex-display" id="hexTagCookies">#FFC133</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Page 3: Tag Colors (Part 2) -->
+            <div class="color-page" data-page="3" style="display: none;">
+              <h4 class="color-section-title">Tag Colors (Part 2)</h4>
+
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>Content</span>
+                  <span class="setting-description">Color for content detection methods</span>
+                </label>
+                <div class="color-picker-container">
+                  <input type="color" id="colorTagContent" class="color-field" value="#33FFF3">
+                  <span class="color-hex-display" id="hexTagContent">#33FFF3</span>
+                </div>
+              </div>
+
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>URLs</span>
+                  <span class="setting-description">Color for URL detection methods</span>
+                </label>
+                <div class="color-picker-container">
+                  <input type="color" id="colorTagURLs" class="color-field" value="#00BCD4">
+                  <span class="color-hex-display" id="hexTagURLs">#00BCD4</span>
+                </div>
+              </div>
+
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>JS Hooks</span>
+                  <span class="setting-description">Color for JavaScript hook detection methods</span>
+                </label>
+                <div class="color-picker-container">
+                  <input type="color" id="colorTagJSHooks" class="color-field" value="#00E5FF">
+                  <span class="color-hex-display" id="hexTagJSHooks">#00E5FF</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Page 4: Tag Colors (Part 3) -->
+            <div class="color-page" data-page="4" style="display: none;">
+              <h4 class="color-section-title">Tag Colors (Part 3)</h4>
+
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>Windows</span>
+                  <span class="setting-description">Color for window detection</span>
+                </label>
+                <div class="color-picker-container">
+                  <input type="color" id="colorTagWindow" class="color-field" value="#4CAF50">
+                  <span class="color-hex-display" id="hexTagWindow">#4CAF50</span>
+                </div>
+              </div>
+
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>Payload</span>
+                  <span class="setting-description">Color for payload detection</span>
+                </label>
+                <div class="color-picker-container">
+                  <input type="color" id="colorTagPayload" class="color-field" value="#9C27B0">
+                  <span class="color-hex-display" id="hexTagPayload">#9C27B0</span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Creator Credit -->
+          <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center;">
+            <p style="font-size: 14px; color: var(--text-muted); margin: 0;">
+              Created by <a href="https://github.com/diegopzz" target="_blank" rel="noopener noreferrer" style="color: #3b82f6; text-decoration: none; font-weight: 700;">diegopzz</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detection Settings Tab -->
+      <div class="settings-tab-content" data-tab-content="detection">
+        <div class="settings-section">
+          <h3>Detection Configuration</h3>
+
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>Detection Cache Duration</span>
+              <span class="setting-description">How long to cache detection results</span>
+            </label>
+            <div style="display: flex; gap: 8px; flex-shrink: 0;">
+              <input type="number" id="cacheDuration" class="input-field" min="1" value="12" style="width: 70px;">
+              <select id="cacheUnit" class="input-field" style="width: 90px;">
+                <option value="minutes">Minutes</option>
+                <option value="hours" selected>Hours</option>
+                <option value="days">Days</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>Detection Cache Scope</span>
+              <span class="setting-description">How to identify cached detection results</span>
+            </label>
+            <select id="cacheScope" class="input-field" style="width: 100px;">
+              <option value="domain">Domain</option>
+              <option value="path">Path</option>
+              <option value="full">Full URL</option>
+            </select>
+          </div>
+
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>Blacklisted Domains</span>
+              <span class="setting-description">Domains to skip detection completely</span>
+            </label>
+            <button id="addCurrentDomainBtn" class="action-btn" style="margin-top: 8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
+              </svg>
+              Add Current Page
+            </button>
+            <div id="blacklistContainer" style="width: 100%; max-height: 150px; overflow-y: auto; margin-top: 8px;">
+              <!-- Blacklisted domains will be displayed here -->
+            </div>
+          </div>
+
+          <!-- JS API Events Section -->
+          <div class="setting-group setting-section-header">
+            <label class="setting-label">
+              <span>JS API Events</span>
+              <span class="setting-description">Allow websites to listen for extension detection events</span>
+            </label>
+
+            <div class="setting-group setting-group--stacked">
+              <label class="setting-label">
+                <span>Enable JS API Events</span>
+                <span class="setting-description">Dispatch custom events to page window</span>
+              </label>
+              <label class="switch">
+                <input type="checkbox" id="enableJsApi">
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div class="api-info-box">
+              <div class="api-info-title">Available Events:</div>
+              <div class="api-event-item">
+                <code>onScrapflyReady</code>
+                <span>Extension loaded and initialized</span>
+              </div>
+              <div class="api-event-item">
+                <code>onScrapflyDetection</code>
+                <span>Detection completed with results</span>
+              </div>
+              <div class="api-event-item">
+                <code>onScrapflyError</code>
+                <span>Detection error occurred</span>
+              </div>
+              <div class="api-usage-example">
+                <strong>Usage Example:</strong>
+                <pre>window.addEventListener('onScrapflyDetection', (e) => {
+  console.log('Detections:', e.detail.detections);
+  console.log('URL:', e.detail.url);
+});</pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- Webhook Integration Section -->
+          <div class="setting-group setting-section-header">
+            <label class="setting-label">
+              <span>Webhook Integration</span>
+              <span class="setting-description">Send detection results to external APIs</span>
+            </label>
+
+            <div class="setting-group setting-group--stacked">
+              <label class="setting-label">
+                <span>Enable Webhook</span>
+                <span class="setting-description">Send HTTP requests on detection</span>
+              </label>
+              <label class="switch">
+                <input type="checkbox" id="enableWebhook">
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div class="setting-group setting-group--stacked" id="webhookOnCacheGroup">
+              <label class="setting-label">
+                <span>Send on Every Page Load</span>
+                <span class="setting-description">Send webhook even when using cached detection data</span>
+              </label>
+              <label class="switch">
+                <input type="checkbox" id="webhookOnCache">
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div id="webhookSettings" class="webhook-settings-container">
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>HTTP Method</span>
+                  <span class="setting-description">Select the HTTP method for webhook requests</span>
+                </label>
+                <input type="hidden" id="webhookMethod" value="POST">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; margin-top: 8px;">
+                  <!-- GET -->
+                  <label class="http-method-badge" data-method="GET">
+                    <input type="radio" name="webhookMethodRadio" value="GET">
+                    <span class="method-badge-content">
+                      <span class="method-icon">●</span>
+                      <span class="method-text">GET</span>
+                    </span>
+                  </label>
+                  <!-- POST -->
+                  <label class="http-method-badge checked" data-method="POST">
+                    <input type="radio" name="webhookMethodRadio" value="POST" checked>
+                    <span class="method-badge-content">
+                      <span class="method-icon">●</span>
+                      <span class="method-text">POST</span>
+                    </span>
+                  </label>
+                  <!-- PUT -->
+                  <label class="http-method-badge" data-method="PUT">
+                    <input type="radio" name="webhookMethodRadio" value="PUT">
+                    <span class="method-badge-content">
+                      <span class="method-icon">●</span>
+                      <span class="method-text">PUT</span>
+                    </span>
+                  </label>
+                  <!-- PATCH -->
+                  <label class="http-method-badge" data-method="PATCH">
+                    <input type="radio" name="webhookMethodRadio" value="PATCH">
+                    <span class="method-badge-content">
+                      <span class="method-icon">●</span>
+                      <span class="method-text">PATCH</span>
+                    </span>
+                  </label>
+                  <!-- DELETE -->
+                  <label class="http-method-badge" data-method="DELETE">
+                    <input type="radio" name="webhookMethodRadio" value="DELETE">
+                    <span class="method-badge-content">
+                      <span class="method-icon">●</span>
+                      <span class="method-text">DELETE</span>
+                    </span>
+                  </label>
+                  <!-- Custom -->
+                  <label class="http-method-badge" data-method="CUSTOM">
+                    <input type="radio" name="webhookMethodRadio" value="CUSTOM">
+                    <span class="method-badge-content">
+                      <span class="method-icon">+</span>
+                      <span class="method-text">Custom</span>
+                    </span>
+                  </label>
+                </div>
+                <!-- Custom Method Input -->
+                <div id="webhookCustomMethodContainer" style="display: none; margin-top: 10px; width: 100%;">
+                  <input type="text" id="webhookCustomMethod" class="input-field" placeholder="Enter custom method (e.g., OPTIONS, HEAD)" style="width: 100%; font-size: 14px; padding: 10px;">
+                </div>
+              </div>
+
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>Webhook URL</span>
+                  <span class="setting-description" id="webhookUrlDescription">Complete endpoint URL (https://api.example.com/webhook)</span>
+                </label>
+                <input type="url" id="webhookUrl" class="input-field" placeholder="https://api.example.com/webhook" style="width: 100%;">
+                <div class="webhook-url-hint" id="webhookUrlHint" style="display: none;">
+                  <strong>Available variables:</strong>
+                  <code>&lt;SITEURL&gt;</code>, <code>&lt;HOSTNAME&gt;</code>, <code>&lt;TIMESTAMP&gt;</code>, <code>&lt;DETECTION_COUNT&gt;</code>, <code>&lt;CATEGORIES&gt;</code>
+                  <div style="margin-top: 6px; font-size: 11px; opacity: 0.8;">
+                    Example: https://api.example.com/webhook?url=&lt;SITEURL&gt;&count=&lt;DETECTION_COUNT&gt;&time=&lt;TIMESTAMP&gt;
+                  </div>
+                </div>
+              </div>
+
+              <div class="setting-group" id="webhookContentTypeGroup">
+                <label class="setting-label">
+                  <span>Content-Type</span>
+                  <span class="setting-description">HTTP content type header</span>
+                </label>
+                <select id="webhookContentType" class="input-field" style="width: 140px;">
+                  <option value="application/json" selected>application/json</option>
+                  <option value="application/x-www-form-urlencoded">x-www-form-urlencoded</option>
+                  <option value="text/plain">text/plain</option>
+                </select>
+              </div>
+
+              <div class="setting-group setting-group--stacked" id="webhookHeadersGroup">
+                <label class="setting-label">
+                  <span>Custom Headers</span>
+                  <span class="setting-description">Add custom HTTP headers to the webhook request</span>
+                </label>
+                <div id="webhookHeadersContainer" style="margin-top: 8px;">
+                  <!-- Custom headers will be rendered here -->
+                </div>
+                <button type="button" id="addWebhookHeaderBtn" class="action-btn" style="margin-top: 8px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" style="margin-right: 6px;">
+                    <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
+                  </svg>
+                  Add Header
+                </button>
+              </div>
+
+              <div class="setting-group setting-group--stacked" id="webhookPayloadGroup">
+                <label class="setting-label">
+                  <span>Payload Template</span>
+                  <span class="setting-description">Use variables: &lt;SITEURL&gt;, &lt;HOSTNAME&gt;, &lt;TITLE&gt;, &lt;FAVICON&gt;, &lt;DETECTIONS&gt;, &lt;TIMESTAMP&gt;, &lt;DETECTION_COUNT&gt;, &lt;CATEGORIES&gt;</span>
+                </label>
+                <textarea id="webhookPayload" class="textarea-field" rows="6" style="font-family: monospace;" placeholder='{"url": "<SITEURL>", "hostname": "<HOSTNAME>", "title": "<TITLE>", "favicon": "<FAVICON>", "detections": <DETECTIONS>, "timestamp": "<TIMESTAMP>", "count": <DETECTION_COUNT>, "categories": "<CATEGORIES>"}'></textarea>
+              </div>
+
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>Test Webhook</span>
+                  <span class="setting-description">Send a test request to your webhook URL</span>
+                </label>
+                <button id="testWebhookBtn" class="action-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" fill="currentColor"/>
+                  </svg>
+                  Test
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Creator Credit -->
+          <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center;">
+            <p style="font-size: 14px; color: var(--text-muted); margin: 0;">
+              Created by <a href="https://github.com/diegopzz" target="_blank" rel="noopener noreferrer" style="color: #3b82f6; text-decoration: none; font-weight: 700;">diegopzz</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- History Settings Tab -->
+      <div class="settings-tab-content" data-tab-content="history">
+        <div class="settings-section">
+          <h3>History Configuration</h3>
+
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>History Limit</span>
+              <span class="setting-description">Maximum number of entries to keep (0 for unlimited)</span>
+            </label>
+            <input type="number" id="historyLimit" class="input-field" min="0" max="1000" value="100">
+          </div>
+
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>Auto Clear</span>
+              <span class="setting-description">Automatically clear history older than specified days</span>
+            </label>
+            <input type="number" id="autoClearDays" class="input-field" min="0" max="365" value="30">
+          </div>
+
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>Export Format</span>
+              <span class="setting-description">Default format for history export</span>
+            </label>
+            <select id="exportFormat" class="select-field">
+              <option value="json">JSON</option>
+              <option value="csv">CSV</option>
+              <option value="txt">Plain Text</option>
+            </select>
+          </div>
+
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>Include Timestamps</span>
+              <span class="setting-description">Include detailed timestamps in history entries</span>
+            </label>
+            <label class="switch">
+              <input type="checkbox" id="includeTimestamps" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>Save History on Cache Hits</span>
+              <span class="setting-description">Save to history even when detection results are cached</span>
+            </label>
+            <label class="switch">
+              <input type="checkbox" id="historyBypassCache">
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <!-- Duplicate Prevention Section -->
+          <div class="setting-group setting-section-header" style="margin-top: 24px; padding-top: 24px;">
+            <label class="setting-label">
+              <span>Duplicate Prevention</span>
+              <span class="setting-description">Prevent duplicate entries in history for the same URL</span>
+            </label>
+
+            <div class="setting-group setting-group--stacked">
+              <label class="setting-label">
+                <span>Enable Duplicate Prevention</span>
+                <span class="setting-description">Block duplicate history entries within a time window</span>
+              </label>
+              <label class="switch">
+                <input type="checkbox" id="preventDuplicates">
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div id="duplicateSettingsContainer" class="duplicate-settings-container" style="display: none;">
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>Duplication Scope</span>
+                  <span class="setting-description">How to identify duplicate entries</span>
+                </label>
+                <select id="duplicateScope" class="select-field">
+                  <option value="full_url">Full URL</option>
+                  <option value="domain">Domain</option>
+                  <option value="path">Path</option>
+                </select>
+              </div>
+
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>Time Window Duration</span>
+                  <span class="setting-description">Duplicate detection time window duration</span>
+                </label>
+                <input type="number" id="duplicateDuration" class="input-field" min="1" max="999" value="1">
+              </div>
+
+              <div class="setting-group setting-group--stacked">
+                <label class="setting-label">
+                  <span>Time Window Unit</span>
+                  <span class="setting-description">Time unit for duplicate detection window</span>
+                </label>
+                <select id="duplicateUnit" class="select-field">
+                  <option value="minutes">Minutes</option>
+                  <option value="hours">Hours</option>
+                  <option value="days">Days</option>
+                </select>
+              </div>
+
+              <div class="duplicate-info-box">
+                <strong>How it works:</strong>
+                <p>When enabled, the extension will prevent duplicate history entries for the same URL within the specified time window.</p>
+                <ul>
+                  <li><strong>Full URL:</strong> Blocks duplicates with exact same URL (including query parameters)</li>
+                  <li><strong>Domain:</strong> Blocks duplicates from the same domain (e.g., example.com/page1 and example.com/page2 are considered the same)</li>
+                  <li><strong>Path:</strong> Blocks duplicates with same domain and path, ignoring query parameters (e.g., example.com/page?id=1 and example.com/page?id=2 are considered the same)</li>
+                </ul>
+                <p><em>Example: If you set 1 hour with "Full URL" scope, visiting the same page twice within 1 hour will only create one history entry.</em></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Creator Credit -->
+          <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center;">
+            <p style="font-size: 14px; color: var(--text-muted); margin: 0;">
+              Created by <a href="https://github.com/diegopzz" target="_blank" rel="noopener noreferrer" style="color: #3b82f6; text-decoration: none; font-weight: 700;">diegopzz</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Management Tab -->
+      <div class="settings-tab-content" data-tab-content="data">
+        <div class="settings-section">
+          <h3>Data Management</h3>
+
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>Export Settings</span>
+              <span class="setting-description">Download all settings as JSON file</span>
+            </label>
+            <button id="exportSettingsBtn" class="action-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M12,19L8,15H10.5V12H13.5V15H16L12,19Z" fill="currentColor"/>
+              </svg>
+              Export
+            </button>
+          </div>
+
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>Import Settings</span>
+              <span class="setting-description">Load settings from JSON file</span>
+            </label>
+            <button id="importSettingsBtn" class="action-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M12,12L16,16H13.5V19H10.5V16H8L12,12Z" fill="currentColor"/>
+              </svg>
+              Import
+            </button>
+            <input type="file" id="importFile" accept=".json" style="display: none;">
+          </div>
+
+          <div class="setting-group setting-group--stacked">
+            <label class="setting-label">
+              <span>Export Detection History</span>
+              <span class="setting-description">Download all detection history as CSV</span>
+            </label>
+            <button id="exportHistoryBtn" class="action-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M10,19L12,15H10V11H14V15H12L14,19H10Z" fill="currentColor"/>
+              </svg>
+              Export History
+            </button>
+          </div>
+
+          <!-- Creator Credit -->
+          <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center;">
+            <p style="font-size: 14px; color: var(--text-muted); margin: 0;">
+              Created by <a href="https://github.com/diegopzz" target="_blank" rel="noopener noreferrer" style="color: #3b82f6; text-decoration: none; font-weight: 700;">diegopzz</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button id="cancelSettingsBtn" class="secondary-btn">Cancel</button>
+      <button id="saveSettingsBtn" class="primary-btn">Save Settings</button>
+    </div>
+  </div>
+</div>

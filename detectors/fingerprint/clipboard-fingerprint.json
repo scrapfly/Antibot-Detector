@@ -1,0 +1,61 @@
+{
+  "id": "clipboard-fingerprint",
+  "name": "Clipboard API Fingerprint",
+  "enabled": true,
+  "category": "Fingerprint",
+  "color": "#f59e0b",
+  "lastUpdated": "2025-01-21",
+  "version": "1.0.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API",
+  "icon": "custom.png",
+  "description": "Clipboard API access used for fingerprinting clipboard contents and capabilities",
+  "detection": {
+    "js_hooks": [
+      {
+        "description": "Reads clipboard contents for fingerprinting",
+        "enabled": true,
+        "confidence": 95,
+        "target": "Clipboard.prototype.read"
+      },
+      {
+        "description": "Reads plain text from clipboard",
+        "enabled": true,
+        "confidence": 90,
+        "target": "Clipboard.prototype.readText"
+      },
+      {
+        "description": "Writes to clipboard for capability detection",
+        "enabled": true,
+        "confidence": 85,
+        "target": "Clipboard.prototype.write"
+      }
+    ],
+    "window": [
+      {
+        "path": "navigator.clipboard",
+        "description": "Clipboard API access point",
+        "condition": "typeof object"
+      }
+    ],
+    "content": [
+      {
+        "value": "navigator.clipboard",
+        "scope": "scripts",
+        "description": "Clipboard API usage",
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "value": "readText",
+        "scope": "scripts",
+        "description": "Clipboard read operations",
+        "confidence": 80,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ]
+  }
+}

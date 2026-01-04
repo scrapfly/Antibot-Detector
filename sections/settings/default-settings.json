@@ -1,0 +1,52 @@
+{
+  "version": "1.0.0",
+  "settings": {
+    "general": {
+      "notificationsEnabled": true,
+      "debugMode": false
+    },
+    "detection": {
+      "cacheDuration": 12,
+      "cacheUnit": "hours",
+      "cacheScope": "domain",
+      "blacklistedDomains": [],
+      "enhancedDetection": {
+        "enabled": false,
+        "windowPropertiesMode": "standard",
+        "maxDetectionWindowMs": 20000,
+        "keepHooksInstalled": false
+      }
+    },
+    "jsApi": {
+      "enableJsApi": false
+    },
+    "webhook": {
+      "enableWebhook": false,
+      "webhookOnCache": false,
+      "webhookMethod": "POST",
+      "webhookUrl": "",
+      "webhookContentType": "application/json",
+      "webhookPayload": "{\"url\": \"<SITEURL>\", \"hostname\": \"<HOSTNAME>\", \"title\": \"<TITLE>\", \"favicon\": \"<FAVICON>\", \"detections\": <DETECTIONS>, \"timestamp\": \"<TIMESTAMP>\", \"count\": <DETECTION_COUNT>, \"categories\": \"<CATEGORIES>\"}",
+      "webhookHeaders": []
+    },
+    "history": {
+      "historyLimit": 0,
+      "historyBehavior": "rolling",
+      "autoClearDays": 30,
+      "exportFormat": "json",
+      "includeTimestamps": true,
+      "historyBypassCache": false
+    },
+    "duplicatePrevention": {
+      "preventDuplicates": false,
+      "duplicateScope": "full_url",
+      "duplicateDuration": 1,
+      "duplicateUnit": "hours"
+    },
+    "updates": {
+      "autoUpdate": false,
+      "checkIntervalHours": 12,
+      "lastCheckTimestamp": 0
+    }
+  }
+}

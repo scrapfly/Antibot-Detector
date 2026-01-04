@@ -1,0 +1,50 @@
+{
+  "id": "datadome",
+  "name": "DataDome",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "color": "#22C55E",
+  "lastUpdated": "2024-01-15",
+  "version": "1.0.0",
+  "website": "https://datadome.co/",
+  "icon": "datadome_official.png",
+  "description": "Real-time bot protection with machine learning-based detection",
+  "detection": {
+    "cookie": [
+      {
+        "name": "datadome",
+        "confidence": 100,
+        "description": "Main DataDome tracking cookie",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "header": [
+      {
+        "name": "x-datadome-cid",
+        "confidence": 100,
+        "description": "DataDome client ID header",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
+    "url": [],
+    "content": [],
+    "dom": [],
+    "window": []
+  }
+}

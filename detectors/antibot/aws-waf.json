@@ -1,0 +1,112 @@
+{
+  "id": "aws-waf",
+  "name": "AWS WAF",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "color": "#FF9900",
+  "lastUpdated": "2024-01-15",
+  "version": "1.0.0",
+  "website": "https://aws.amazon.com/waf/",
+  "icon": "aws_official.png",
+  "description": "Amazon Web Services Web Application Firewall with bot control",
+  "detection": {
+    "cookie": [
+      {
+        "name": "aws-waf-token",
+        "confidence": 95,
+        "description": "AWS WAF session token",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "name": "awswaf*",
+        "confidence": 90,
+        "description": "AWS WAF cookies",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "header": [],
+    "url": [
+      {
+        "confidence": 80,
+        "description": "AWS WAF challenge script",
+        "text": "/challenge.js",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 85,
+        "description": "AWS WAF in URL",
+        "text": "awswaf",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 90,
+        "description": "",
+        "text": "/verify",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 90,
+        "description": "AWS WAF captcha endpoint",
+        "text": "/inputs?client=browser",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 90,
+        "description": "AWS WAF telemetry endpoint",
+        "text": "/telemetry",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "confidence": 80,
+        "description": "AWS WAF challenge script",
+        "text": "challenge.js",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 85,
+        "description": "AWS WAF reference",
+        "text": "awswaf",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ],
+    "dom": [],
+    "window": []
+  }
+}

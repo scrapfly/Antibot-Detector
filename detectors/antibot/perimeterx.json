@@ -1,0 +1,177 @@
+{
+  "id": "perimeterx",
+  "name": "PerimeterX",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "color": "#DC2626",
+  "lastUpdated": "2024-01-15",
+  "version": "1.0.0",
+  "website": "https://www.perimeterx.com/",
+  "icon": "perimeterx_official.png",
+  "description": "Behavioral-based bot detection with real-time risk scoring",
+  "detection": {
+    "cookie": [
+      {
+        "name": "_px2",
+        "confidence": 95,
+        "description": "PerimeterX tracking cookie v2",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "name": "_px3",
+        "confidence": 100,
+        "description": "PerimeterX tracking cookie v3",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "name": "_pxhd",
+        "confidence": 90,
+        "description": "PerimeterX header data",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "name": "_pxvid",
+        "confidence": 85,
+        "description": "PerimeterX visitor ID",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "header": [
+      {
+        "name": "X-PX-Authorization",
+        "confidence": 100,
+        "description": "PerimeterX authorization header",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "name": "X-PX-Original-Token",
+        "confidence": 95,
+        "description": "Original token header",
+        "nameRegex": false,
+        "nameWholeWord": false,
+        "nameCaseSensitive": false,
+        "value": "",
+        "valueRegex": false,
+        "valueWholeWord": false,
+        "valueCaseSensitive": false,
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
+    "url": [
+      {
+        "confidence": 100,
+        "description": "Data collector endpoint",
+        "text": "collector-*.perimeterx.net",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 95,
+        "description": "Collector API endpoint",
+        "text": "/api/v*/collector",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 90,
+        "description": "PerimeterX JavaScript",
+        "text": "px.js",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "confidence": 100,
+        "description": "PerimeterX application ID",
+        "text": "window._pxAppId",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 95,
+        "description": "PerimeterX initialization function",
+        "text": "pxInit",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 90,
+        "text": "_pxAction",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ],
+    "dom": [],
+    "window": [
+      {
+        "path": "_pxAppId",
+        "condition": "typeof string",
+        "confidence": 100,
+        "description": "PerimeterX application ID"
+      },
+      {
+        "path": "pxInit",
+        "condition": "typeof function",
+        "confidence": 95,
+        "description": "PerimeterX initialization function"
+      },
+      {
+        "path": "_pxAction",
+        "condition": "typeof string",
+        "confidence": 90,
+        "description": "PerimeterX action identifier"
+      }
+    ]
+  }
+}

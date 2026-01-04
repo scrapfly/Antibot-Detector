@@ -1,0 +1,109 @@
+{
+  "id": "captchaeu",
+  "name": "Captcha.eu",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "color": "#4285F4",
+  "lastUpdated": "2024-10-21",
+  "version": "1.0.0",
+  "website": "https://captcha.eu/",
+  "icon": "custom.png",
+  "description": "European GDPR-compliant CAPTCHA service with invisible protection and widget modes",
+  "detection": {
+    "url": [
+      {
+        "confidence": 100,
+        "description": "Captcha.eu domain",
+        "text": "captcha.eu",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 95,
+        "description": "Captcha.eu API endpoint",
+        "text": "/api/captcha",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 90,
+        "description": "Captcha.eu reference in URL",
+        "text": "captchaeu",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "confidence": 100,
+        "description": "Captcha.eu main object",
+        "text": "CaptchaEU",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 95,
+        "description": "Captcha.eu reference",
+        "text": "captchaeu",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 90,
+        "description": "Captcha.eu widget reference",
+        "text": "captcha.eu/widget",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ],
+    "dom": [
+      {
+        "selector": ".captchaeu-widget",
+        "confidence": 95,
+        "description": "Captcha.eu widget container",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
+      },
+      {
+        "selector": "iframe[src*='captcha.eu']",
+        "confidence": 100,
+        "description": "Captcha.eu iframe",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
+      },
+      {
+        "selector": "div[data-captchaeu-sitekey]",
+        "confidence": 95,
+        "description": "Captcha.eu widget with sitekey",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
+      }
+    ],
+    "window": [
+      {
+        "path": "CaptchaEU",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "Captcha.eu main object"
+      },
+      {
+        "path": "CaptchaEU.render",
+        "condition": "typeof function",
+        "confidence": 90,
+        "description": "Captcha.eu render function"
+      }
+    ]
+  }
+}

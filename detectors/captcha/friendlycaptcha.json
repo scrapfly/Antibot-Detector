@@ -1,0 +1,125 @@
+{
+  "id": "friendlycaptcha",
+  "name": "Friendly Captcha",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "color": "#00D084",
+  "lastUpdated": "2024-10-21",
+  "version": "1.0.0",
+  "website": "https://friendlycaptcha.com/",
+  "icon": "custom.png",
+  "description": "Privacy-first GDPR-compliant CAPTCHA service with no cookies or tracking",
+  "detection": {
+    "url": [
+      {
+        "confidence": 100,
+        "description": "Friendly Captcha domain",
+        "text": "friendlycaptcha.com",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 95,
+        "description": "Friendly Captcha puzzle endpoint",
+        "text": "/api/v1/puzzle",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 95,
+        "description": "Friendly Captcha script delivery",
+        "text": "friendly-js.pages.dev",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "confidence": 100,
+        "description": "Friendly Captcha container class",
+        "text": "frc-captcha",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 95,
+        "description": "Friendly Captcha JavaScript object",
+        "text": "friendlyChallenge",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 95,
+        "description": "Friendly Captcha element identifier",
+        "text": "friendly-challenge",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 90,
+        "description": "Friendly Captcha constructor reference",
+        "text": "FriendlyCaptcha",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ],
+    "dom": [
+      {
+        "selector": ".frc-captcha",
+        "confidence": 100,
+        "description": "Friendly Captcha container",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
+      },
+      {
+        "selector": "div[data-sitekey]",
+        "confidence": 85,
+        "description": "Friendly Captcha widget with sitekey",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
+      },
+      {
+        "selector": "iframe[src*='friendlycaptcha.com']",
+        "confidence": 95,
+        "description": "Friendly Captcha iframe",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
+      },
+      {
+        "selector": "script[src*='friendlycaptcha']",
+        "confidence": 95,
+        "description": "Friendly Captcha script tag",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": false
+      }
+    ],
+    "window": [
+      {
+        "path": "friendlyChallenge",
+        "condition": "typeof object",
+        "confidence": 95,
+        "description": "Friendly Captcha main object"
+      },
+      {
+        "path": "friendlyChallenge.render",
+        "condition": "typeof function",
+        "confidence": 90,
+        "description": "Friendly Captcha render function"
+      }
+    ]
+  }
+}

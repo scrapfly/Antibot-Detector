@@ -1,0 +1,172 @@
+name: Build and Release Antibot-Detector
+
+# Needed so the workflow can create/update GitHub Releases
+permissions:
+  contents: write
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (tag, e.g. v2.0)'
+        required: true
+        type: string
+      release_title:
+        description: 'Release title (optional; defaults to Antibot-Detector - vX.Y)'
+        required: false
+        type: string
+      release_notes:
+        description: 'Release description (Markdown; optional; overrides auto-changelog)'
+        required: false
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      TAG_NAME: ${{ steps.set_tag.outputs.TAG_NAME }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve tag name
+        id: resolve_tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "TAG_NAME=${{ inputs.version }}" >> "$GITHUB_ENV"
+          else
+            # For tag pushes, github.ref_name is already the tag (e.g. v2.0)
+            echo "TAG_NAME=${{ github.ref_name }}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Validate and echo TAG_NAME
+        run: |
+          if [ -z "$TAG_NAME" ]; then
+            echo "❌ Error: TAG_NAME is empty. For manual runs, ensure 'version' input is filled (e.g., v2.0)."
+            exit 1
+          fi
+          echo "✅ Using TAG_NAME: $TAG_NAME"
+
+      - name: Set output TAG_NAME
+        id: set_tag
+        run: echo "TAG_NAME=${TAG_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Create and push tag if missing (manual runs only)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if ! git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
+            git tag "$TAG_NAME"
+            git push origin "$TAG_NAME"
+            echo "✅ Created and pushed tag: $TAG_NAME"
+          else
+            echo "ℹ️ Tag $TAG_NAME already exists."
+          fi
+
+      - name: Create artifact directory
+        run: mkdir -p artifact
+
+      - name: Package extension
+        run: |
+          zip -r "artifact/antibot-detector-${TAG_NAME}.zip" . \
+            -x ".git/*" ".github/*" "CHANGELOG.md" "README.md" "LICENSE" ".gitignore"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: antibot-detector
+          path: artifact
+          if-no-files-found: error
+          retention-days: 30
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      # Make TAG_NAME available to all steps & for expression usage
+      TAG_NAME: ${{ needs.build.outputs.TAG_NAME }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: antibot-detector
+          path: artifact
+
+      - name: Generate auto changelog
+        id: changelog
+        run: |
+          TAG="${TAG_NAME}"
+
+          echo "## What's Changed in ${TAG}" > /tmp/CHANGELOG.md
+          echo >> /tmp/CHANGELOG.md
+
+          if [ -f CHANGELOG.md ]; then
+            pattern="^##[[:space:]]*${TAG}$"
+
+            awk -v pat="$pattern" '
+              $0 ~ pat {flag=1; next}           # start AFTER the "## vX.Y" line
+              /^##[[:space:]]*v[0-9]/ && flag { # stop at next "## v..." heading
+                flag=0
+              }
+              flag                              # print while flag == 1
+            ' CHANGELOG.md >> /tmp/CHANGELOG.md || echo "Changelog section not found." >> /tmp/CHANGELOG.md
+          else
+            PREV_TAG=$(git describe --tags --abbrev=0 "${TAG}^" 2>/dev/null || echo "")
+            if [ -n "$PREV_TAG" ]; then
+              echo "_Changes since [$PREV_TAG](https://github.com/${{ github.repository }}/compare/$PREV_TAG...${TAG})_" >> /tmp/CHANGELOG.md
+              git log "$PREV_TAG"..HEAD --pretty=format:"- %h %s" --no-merges --reverse >> /tmp/CHANGELOG.md || echo "- No new commits." >> /tmp/CHANGELOG.md
+            else
+              echo "- Initial release." >> /tmp/CHANGELOG.md
+            fi
+          fi
+
+          echo >> /tmp/CHANGELOG.md
+          echo "## Installation" >> /tmp/CHANGELOG.md
+          echo '```bash' >> /tmp/CHANGELOG.md
+          echo '# Download from Releases → Load as unpacked extension in Chrome' >> /tmp/CHANGELOG.md
+          echo '```' >> /tmp/CHANGELOG.md
+
+          {
+            echo 'body<<EOF'
+            cat /tmp/CHANGELOG.md
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          name: ${{ github.event.inputs.release_title || format('Antibot-Detector - {0}', env.TAG_NAME) }}
+          body: ${{ steps.changelog.outputs.body || github.event.inputs.release_notes || 'No release notes provided.' }}
+          files: artifact/antibot-detector-${{ env.TAG_NAME }}.zip
+          draft: false
+          prerelease: false
+          overwrite_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish extension to Chrome Web Store
+        uses: mnao305/chrome-extension-upload@v5.0.0
+        with:
+          extension-id: ${{ secrets.WEBSTORE_EXTENSION_ID }}
+          file-path: artifact/antibot-detector-${{ env.TAG_NAME }}.zip
+          client-id: ${{ secrets.WEBSTORE_CLIENT_ID }}
+          client-secret: ${{ secrets.WEBSTORE_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.WEBSTORE_REFRESH_TOKEN }}
+          publish: true
