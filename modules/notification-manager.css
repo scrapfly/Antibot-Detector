@@ -361,6 +361,30 @@
   transform: translateX(0);
 }
 
+/* Micro Toast - Compact notifications for quick feedback */
+.notification-micro {
+  max-width: 200px;
+}
+
+.notification-micro .notification-toast-content {
+  padding: 8px 12px;
+  gap: 8px;
+}
+
+.notification-micro .notification-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.notification-micro .notification-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.notification-micro .notification-message {
+  font-size: 12px;
+}
+
 /* Responsive Design */
 @media (max-width: 480px) {
   .notification-container {

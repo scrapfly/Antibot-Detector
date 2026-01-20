@@ -1,0 +1,106 @@
+{
+  "id": "detect-cheq",
+  "name": "Cheq",
+  "author": "scrapfly",
+  "enabled": true,
+  "category": "ANTIBOT",
+  "lastUpdated": "2024-10-21",
+  "version": "1.0",
+  "website": "https://cheq.ai/",
+  "icon": "custom.png",
+  "description": "Cheq bot detection and prevention with light obfuscation",
+  "detection": {
+    "content": [
+      {
+        "confidence": 100,
+        "description": "Cheq SDK main object",
+        "text": "CheqSdk",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 100,
+        "description": "Cheq identifier string",
+        "text": "\"CHEQ\"",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 95,
+        "description": "Cheq invalid user detection",
+        "text": "cheq_invalidUsers",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 85,
+        "description": "Cheq reference",
+        "text": "cheq",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ],
+    "url": [
+      {
+        "confidence": 100,
+        "description": "Cheq clicktrue invocation script",
+        "text": "clicktrue_invocation.js",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 100,
+        "description": "Cheq zone domain",
+        "text": "cheqzone.com",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 100,
+        "description": "Cheq obfuscation server",
+        "text": "ob.cheqzone.com",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 95,
+        "description": "Cheq main domain",
+        "text": "cheq.ai",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "window": [
+      {
+        "path": "CheqSdk",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "Cheq SDK object"
+      },
+      {
+        "path": "window.CheqSdk",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "Window-level Cheq SDK"
+      },
+      {
+        "path": "cheq_invalidUsers",
+        "condition": "typeof function",
+        "confidence": 95,
+        "description": "Cheq invalid users checker"
+      }
+    ]
+  }
+}

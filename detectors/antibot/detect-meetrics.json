@@ -1,0 +1,83 @@
+{
+  "id": "detect-meetrics",
+  "name": "Meetrics Check",
+  "author": "scrapfly",
+  "enabled": true,
+  "category": "ANTIBOT",
+  "lastUpdated": "2024-10-21",
+  "version": "1.0",
+  "website": "https://www.meetrics.com/en/",
+  "icon": "custom.png",
+  "description": "Meetrics user authenticity verification through behavior analysis and device fingerprinting",
+  "detection": {
+    "content": [
+      {
+        "confidence": 100,
+        "description": "Meetrics global object",
+        "text": "meetricsGlobal",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 95,
+        "description": "Meetrics mouse behavior detection",
+        "text": "suspicious_mouse_movement",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 85,
+        "description": "Meetrics reference",
+        "text": "meetrics",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ],
+    "url": [
+      {
+        "confidence": 100,
+        "description": "Meetrics CDN script",
+        "text": "mxcdn.net/bb-mx/serve/mtrcs",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 95,
+        "description": "Meetrics script identifier",
+        "text": "mtrcs_",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 90,
+        "description": "Meetrics domain",
+        "text": "meetrics.com",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "window": [
+      {
+        "path": "meetricsGlobal",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "Meetrics global configuration"
+      },
+      {
+        "path": "window.meetricsGlobal",
+        "condition": "typeof object",
+        "confidence": 100,
+        "description": "Window-level Meetrics object"
+      }
+    ]
+  }
+}

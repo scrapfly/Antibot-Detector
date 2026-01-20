@@ -1,0 +1,61 @@
+{
+  "id": "detect-battery-fingerprint",
+  "name": "Battery API Fingerprint",
+  "author": "scrapfly",
+  "enabled": true,
+  "category": "Fingerprint",
+  "lastUpdated": "2025-01-21",
+  "version": "1.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API",
+  "icon": "battery_fingerprint.png",
+  "description": "Battery Status API used for device fingerprinting via battery level and charging state",
+  "detection": {
+    "js_hooks": [
+      {
+        "description": "Gets battery status object for fingerprinting",
+        "enabled": true,
+        "confidence": 95,
+        "target": "Navigator.prototype.getBattery"
+      },
+      {
+        "description": "Listens to battery status changes",
+        "enabled": true,
+        "confidence": 90,
+        "target": "EventTarget.prototype.addEventListener",
+        "windowPath": "BatteryManager"
+      }
+    ],
+    "window": [
+      {
+        "path": "navigator.getBattery",
+        "description": "Battery Status API access point",
+        "condition": "typeof function"
+      },
+      {
+        "path": "navigator.battery",
+        "description": "Deprecated battery property",
+        "condition": "typeof object"
+      }
+    ],
+    "content": [
+      {
+        "text": "getBattery",
+        "scope": "scripts",
+        "description": "Battery API usage in scripts",
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "text": "batteryManager",
+        "scope": "scripts",
+        "description": "Battery manager references",
+        "confidence": 80,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ]
+  }
+}

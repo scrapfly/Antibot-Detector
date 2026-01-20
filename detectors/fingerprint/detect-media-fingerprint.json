@@ -1,0 +1,58 @@
+{
+  "id": "detect-media-fingerprint",
+  "name": "Media Fingerprint",
+  "author": "scrapfly",
+  "enabled": true,
+  "category": "Fingerprint",
+  "lastUpdated": "2025-01-15",
+  "version": "1.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/API/Media_Capabilities_API",
+  "icon": "media_fingerprint.png",
+  "description": "Media device, battery, voice synthesis, and plugin/mimetype enumeration fingerprinting",
+  "detection": {
+    "js_hooks": [
+      {
+        "description": "Accesses battery information for hardware fingerprinting",
+        "enabled": true,
+        "confidence": 95,
+        "target": "Navigator.prototype.getBattery"
+      },
+      {
+        "description": "Enumerates available voice options",
+        "enabled": true,
+        "confidence": 90,
+        "target": "window.speechSynthesis"
+      },
+      {
+        "description": "Counts supported MIME types",
+        "enabled": true,
+        "confidence": 85,
+        "target": "MimeTypeArray.prototype.length"
+      },
+      {
+        "description": "Reads MIME type descriptions",
+        "enabled": false,
+        "confidence": 75,
+        "target": "MimeType.prototype.description"
+      },
+      {
+        "description": "Counts installed browser plugins",
+        "enabled": true,
+        "confidence": 85,
+        "target": "PluginArray.prototype.length"
+      },
+      {
+        "description": "Reads plugin descriptions",
+        "enabled": false,
+        "confidence": 75,
+        "target": "Plugin.prototype.description"
+      },
+      {
+        "description": "Detects supported media codecs",
+        "enabled": true,
+        "confidence": 90,
+        "target": "HTMLMediaElement.prototype.canPlayType"
+      }
+    ]
+  }
+}

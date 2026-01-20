@@ -902,7 +902,7 @@ public static string GenerateUtmvcScriptPath()
 
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
 
         const cookieData = extractedData.cookies || {};
         const hasCookies = cookieData.reese84 || cookieData.utmvc ||
@@ -1056,7 +1056,7 @@ public static string GenerateUtmvcScriptPath()
     displayExportCodeModal(parsingCodes, scriptPaths, extractedData) {
         const modal = document.createElement('div');
         modal.className = 'tool-modal export-code-modal';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 10001; opacity: 0; transition: opacity 0.2s;';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10001; opacity: 0; transition: opacity 0.2s;';
 
         const hostname = extractedData.hostname || 'example.com';
         const hasReese84 = !!scriptPaths.reeseScriptPath;
@@ -1248,7 +1248,7 @@ public static string GenerateUtmvcScriptPath()
     displayCookiesModal(foundCookies, cookieStatus, protectionLevel) {
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
 
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">

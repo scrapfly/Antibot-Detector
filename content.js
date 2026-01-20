@@ -365,11 +365,17 @@ function setupDetectionTriggers() {
                 });
             } else if (request.type === 'DETECTION_COMPLETE') {
                 // Detection completed - dispatch JS API event
-                dispatchJsApiEvent('onScrapflyDetection', {
+                Logger.content('📡 [Content] Received DETECTION_COMPLETE from background', {
+                    url: request.url,
+                    detectionCount: request.detectionCount
+                });
+                dispatchJsApiEvent('onDetection', {
                     url: request.url || window.location.href,
                     detections: request.detections || [],
                     detectionCount: request.detectionCount || 0,
                     timestamp: request.timestamp || new Date().toISOString()
+                }).then(() => {
+                    Logger.content('📡 [Content] dispatchJsApiEvent completed successfully');
                 }).catch(e => Logger.error('CONTENT', 'Failed to dispatch detection event', e));
 
                 // FIX: Save to sessionStorage so NEXT visit skips hooks immediately
@@ -390,7 +396,7 @@ function setupDetectionTriggers() {
                 sendResponse({ status: 'event_dispatched' });
             } else if (request.type === 'DETECTION_ERROR') {
                 // Detection error - dispatch JS API error event
-                dispatchJsApiEvent('onScrapflyError', {
+                dispatchJsApiEvent('onError', {
                     url: request.url || window.location.href,
                     error: request.error || 'Unknown error',
                     timestamp: request.timestamp || new Date().toISOString()
@@ -639,6 +645,19 @@ async function initialize() {
                 timestamp: Date.now()
             }, '*');
 
+            // JS API: Dispatch detection event immediately with cached data
+            const cachedData = cacheCheckResponse.detectionData;
+            if (cachedData) {
+                Logger.cache('📡 Dispatching JS API event with cached detection data');
+                dispatchJsApiEvent('onDetection', {
+                    url: window.location.href,
+                    detections: cachedData.detectionResults || [],
+                    detectionCount: cachedData.detectionCount || 0,
+                    timestamp: cachedData.timestamp || new Date().toISOString(),
+                    fromCache: true
+                }).catch(e => Logger.error('CONTENT', 'Failed to dispatch cached detection event', e));
+            }
+
             // NEW OPTIMIZATION: Store cache status in sessionStorage for synchronous check on next page load
             try {
                 const cacheData = {
@@ -749,6 +768,66 @@ const hookBatcher = DetectionEngineManager.createHookBatcher(chrome);
 window.addEventListener('message', (event) => {
     if (event.data?.type === 'JS_HOOK_DETECTION') {
         event.stopImmediatePropagation?.();
+    }
+
+    // VERSION 2.3.0: Forward hook failure reports from HookResilienceManager
+    if (event.data?.type === 'HOOK_FAILURE_REPORT') {
+        try {
+            chrome.runtime.sendMessage({
+                type: 'HOOK_FAILURE_REPORT',
+                target: event.data.target,
+                failureType: event.data.failureType,
+                message: event.data.message,
+                timestamp: event.data.timestamp
+            }).catch(() => {});
+        } catch (e) {
+            // Extension context invalidated - silently ignore
+        }
+        return;
+    }
+
+    // VERSION 2.3.0: Forward hook tampering detection
+    if (event.data?.type === 'HOOK_TAMPERING_DETECTED') {
+        try {
+            chrome.runtime.sendMessage({
+                type: 'HOOK_TAMPERING_DETECTED',
+                target: event.data.target,
+                timestamp: event.data.timestamp
+            }).catch(() => {});
+        } catch (e) {
+            // Extension context invalidated - silently ignore
+        }
+        return;
+    }
+
+    // VERSION 2.3.0: Forward hook recovery results
+    if (event.data?.type === 'HOOK_RECOVERY_RESULT') {
+        try {
+            chrome.runtime.sendMessage({
+                type: 'HOOK_RECOVERY_RESULT',
+                target: event.data.target,
+                success: event.data.success,
+                error: event.data.error,
+                timestamp: event.data.timestamp
+            }).catch(() => {});
+        } catch (e) {
+            // Extension context invalidated - silently ignore
+        }
+        return;
+    }
+
+    // VERSION 2.3.0: Forward window property detections from WindowPropertyTracker
+    if (event.data?.type === 'WINDOW_DETECTIONS') {
+        try {
+            chrome.runtime.sendMessage({
+                type: 'WINDOW_DETECTIONS',
+                detections: event.data.detections,
+                timestamp: event.data.timestamp
+            }).catch(() => {});
+        } catch (e) {
+            // Extension context invalidated - silently ignore
+        }
+        return;
     }
 
     // FIX: Forward debug logs from MAIN world to background service worker

@@ -119,7 +119,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
     displayCookiesModal(cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie, cfuvIdCookie) {
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
 
         const foundCount = [cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie, cfuvIdCookie].filter(Boolean).length;
 
@@ -350,7 +350,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
     displaySiteKeyModal(sitekey, type = 'Unknown') {
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
 
         const typeColor = type === 'Turnstile' ? '#0074BF' : '#6366F1';
         const siteKeyDisplay = sitekey || 'N/A';
@@ -400,7 +400,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
     displayVersionModal(data) {
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
 
         const type = data?.type || 'Unknown';
         let typeColor = '#6366F1';
@@ -644,7 +644,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
     displayAnalysisModal(data) {
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
 
         const scripts = data?.scripts || [];
 
@@ -745,7 +745,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
     displayExportCodeModal(scripts) {
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10001; opacity: 0; transition: opacity 0.2s;';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10001; opacity: 0; transition: opacity 0.2s;';
 
         const languages = ['JavaScript', 'Python', 'Node.js', 'PHP', 'C#', 'Go'];
 

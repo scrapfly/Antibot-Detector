@@ -1,0 +1,46 @@
+{
+  "id": "detect-canvas-fingerprint",
+  "name": "Canvas Fingerprint",
+  "author": "scrapfly",
+  "enabled": true,
+  "category": "Fingerprint",
+  "lastUpdated": "2024-01-15",
+  "version": "1.0",
+  "website": "https://en.wikipedia.org/wiki/Canvas_fingerprinting",
+  "icon": "canvas_fingerprint.png",
+  "description": "HTML5 Canvas-based browser and device fingerprinting",
+  "detection": {
+    "js_hooks": [
+      {
+        "description": "Converts canvas to data URL for fingerprinting",
+        "enabled": true,
+        "confidence": 95,
+        "target": "HTMLCanvasElement.prototype.toDataURL"
+      },
+      {
+        "description": "Extracts pixel data from canvas",
+        "enabled": true,
+        "confidence": 90,
+        "target": "CanvasRenderingContext2D.prototype.getImageData"
+      },
+      {
+        "description": "Converts canvas to blob for fingerprinting",
+        "enabled": true,
+        "confidence": 85,
+        "target": "HTMLCanvasElement.prototype.toBlob"
+      },
+      {
+        "description": "Measures text dimensions for font fingerprinting",
+        "enabled": true,
+        "confidence": 85,
+        "target": "CanvasRenderingContext2D.prototype.measureText"
+      },
+      {
+        "description": "Creates offscreen canvas context for hidden fingerprinting",
+        "enabled": true,
+        "confidence": 90,
+        "target": "OffscreenCanvas.prototype.getContext"
+      }
+    ]
+  }
+}

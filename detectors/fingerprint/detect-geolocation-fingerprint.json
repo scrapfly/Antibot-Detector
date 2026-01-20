@@ -1,0 +1,69 @@
+{
+  "id": "detect-geolocation-fingerprint",
+  "name": "Geolocation Fingerprint",
+  "author": "scrapfly",
+  "enabled": true,
+  "category": "Fingerprint",
+  "lastUpdated": "2025-01-21",
+  "version": "1.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API",
+  "icon": "geolocation_fingerprint.png",
+  "description": "Geolocation API access for location-based fingerprinting and user tracking",
+  "detection": {
+    "js_hooks": [
+      {
+        "description": "Gets current user location",
+        "enabled": true,
+        "confidence": 95,
+        "target": "Geolocation.prototype.getCurrentPosition"
+      },
+      {
+        "description": "Watches user location continuously",
+        "enabled": true,
+        "confidence": 95,
+        "target": "Geolocation.prototype.watchPosition"
+      }
+    ],
+    "window": [
+      {
+        "path": "navigator.geolocation",
+        "description": "Geolocation API access point",
+        "condition": "typeof object"
+      },
+      {
+        "path": "navigator.geolocation.getCurrentPosition",
+        "description": "Location request method",
+        "condition": "typeof function"
+      }
+    ],
+    "content": [
+      {
+        "text": "navigator.geolocation",
+        "scope": "scripts",
+        "description": "Geolocation API usage",
+        "confidence": 90,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "text": "getCurrentPosition",
+        "scope": "scripts",
+        "description": "Location acquisition in scripts",
+        "confidence": 90,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "text": "watchPosition",
+        "scope": "scripts",
+        "description": "Continuous location tracking",
+        "confidence": 85,
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ]
+  }
+}

@@ -112,7 +112,7 @@ class AkamaiAdvanced extends BaseAdvancedModule {
     displayCookiesModal(foundCookies, allCookies) {
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
 
         const hasAbck = allCookies._abck;
         const hasBmSz = allCookies.bm_sz;
@@ -973,7 +973,7 @@ func main() {
     displayAnalysisModal(analysis) {
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
 
         const detectedPatterns = Object.entries(analysis.patterns).filter(([key, value]) => value);
         const hasAkamaiCookies = analysis.cookies && (analysis.cookies._abck || analysis.cookies.ak_bmsc || analysis.cookies.bm_sz);
@@ -1230,7 +1230,7 @@ func main() {
     showScriptParsingModal(scripts, sensorDataUrls = []) {
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
 
         // Convert sensor data URLs to script-like objects for export
         const sensorUrlScripts = sensorDataUrls.map((url, index) => ({
@@ -2637,7 +2637,7 @@ func main() {
     displaySensorDataModal(data) {
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
 
         // Extract data values
         const sensorData = data?.sensorData || '';

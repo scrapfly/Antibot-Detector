@@ -3,10 +3,11 @@
  * Runs in the MAIN world (page's JavaScript context) to install fingerprinting hooks
  * Receives hook definitions from content.js (ISOLATED world) via CustomEvent
  *
- * VERSION: 2.2.0-OLD-TIMEOUT (2025-01-19)
- * - Reverted to proven 2-second completion timeout system
- * - Timer resets on ANY hook detection (including duplicates)
- * - Simple, reliable, deterministic - fixes "stuck at 86%" issue
+ * VERSION: 2.3.0-NEVER-FAIL (2026-01-17)
+ * - Integrated HookResilienceManager for robust hook installation
+ * - Added try-catch around ALL hook installations with error reporting
+ * - Integrated WindowPropertyTracker for adaptive 60s polling
+ * - Multi-layer timeout system for guaranteed completion
  */
 
 (function() {
@@ -15,14 +16,17 @@
   let debugMode = false; // Will be set by ISOLATED world
 
   // Centralized configuration (7.7 - removes magic numbers)
+  // VERSION 2.3.0: Extended timeouts for "never fail" reliability
   const HOOKS_CONFIG = Object.freeze({
-    // Completion timeouts
-    ACTIVITY_TIMEOUT_MS: 2000,      // Inactivity before completion
-    MAX_DETECTION_MS: 8000,         // Absolute maximum wait (increased for lazy-loaded fingerprinting)
+    // Completion timeouts - Multi-layer timeout system
+    ACTIVITY_TIMEOUT_MS: 2000,      // Inactivity before completion (resets on activity)
+    MAX_DETECTION_MS: 8000,         // Absolute maximum wait for hooks
+    EMERGENCY_TIMEOUT_MS: 12000,    // Emergency fallback (should never fire)
+    HEARTBEAT_TIMEOUT_MS: 25000,    // Heartbeat check (worker still alive?)
 
-    // Window property polling
-    POLL_INTERVAL_MS: 200,          // Initial poll interval
-    DEFAULT_MAX_WINDOW_MS: 5000,    // Max polling duration (can be overridden by settings)
+    // Window property polling (now uses WindowPropertyTracker)
+    POLL_INTERVAL_MS: 100,          // Initial poll interval (EARLY phase)
+    DEFAULT_MAX_WINDOW_MS: 60000,   // Extended to 60s for late-loading properties
     SETTLED_CHECKS: 50,             // Checks before "settled"
 
     // Memory limits
@@ -422,6 +426,46 @@
 
       sendLog('log', '[MAIN WORLD] ✅ All monitoring disabled successfully (cache hit)');
     }
+
+    // Handle JS API events from ISOLATED world - dispatch CustomEvent to page
+    // This bridges the ISOLATED/MAIN world gap so page scripts can receive events
+    if (data && data.type === 'SCRAPFLY_JS_API_EVENT') {
+      try {
+        const eventName = data.eventName;
+        const eventDetail = data.detail;
+        const fullEventName = `scrapfly:${eventName}`;
+
+        // Store last detection data on window for pages that load after event
+        // This allows: const data = window.__scrapflyLastDetection;
+        if (eventName === 'onDetection') {
+          window.__scrapflyLastDetection = eventDetail;
+        }
+
+        // Method 1: Dispatch CustomEvent to page window (MAIN world)
+        const event = new CustomEvent(fullEventName, {
+          detail: eventDetail,
+          bubbles: true,
+          cancelable: false
+        });
+        window.dispatchEvent(event);
+        sendLog('log', `[MAIN WORLD] 📡 Dispatched JS API event: ${fullEventName}`);
+
+        // Method 2: Call callback function if defined (for early setup)
+        // Page can do: window.onDetection = (data) => console.log(data);
+        // eventName is already like 'onDetection', so use it directly
+        if (typeof window[eventName] === 'function') {
+          try {
+            window[eventName](eventDetail);
+            sendLog('log', `[MAIN WORLD] 📡 Called callback: window.${eventName}()`);
+          } catch (callbackError) {
+            sendLog('error', `[MAIN WORLD] Callback error: ${callbackError.message}`);
+          }
+        }
+      } catch (e) {
+        sendLog('error', '[MAIN WORLD] Failed to dispatch JS API event:', e.message);
+      }
+      return;
+    }
   });
 
   // Wait for hook configuration from ISOLATED world
@@ -440,31 +484,6 @@
     // Set debugMode first, before any logging
     debugMode = event.detail?.debugMode || false; // Receive debug mode from ISOLATED world
 
-    // FIX: Settings MUST come from installHooksOrchestrator (line 2738 in detection-engine-manager.js)
-    // which reads from default-settings.json at runtime
-    // NO hardcoded fallback values - only use what's explicitly passed from ISOLATED world
-    // If settings missing, it's an error state and should fail loudly
-    const enhancedSettings = event.detail?.enhancedSettings;
-
-    if (!enhancedSettings) {
-      sendLog('error', '[MAIN WORLD] ❌ CRITICAL: No enhancedSettings passed from installHooksOrchestrator!');
-      sendLog('error', '[MAIN WORLD] This should never happen - settings must come from default-settings.json');
-      // Send empty completion signals to unblock background
-      window.postMessage({
-        type: 'JS_HOOKS_COMPLETE',
-        url: window.location.href,
-        timestamp: Date.now(),
-        detectedCount: 0
-      }, '*');
-      window.postMessage({
-        type: 'WINDOW_PROPS_COMPLETE',
-        url: window.location.href,
-        timestamp: Date.now(),
-        detectedCount: 0
-      }, '*');
-      return;
-    }
-
     // Handle fingerprintEnabled flag from event
     // This is the authoritative value from ISOLATED world (updated from storage)
     const fingerprintEnabled = event.detail?.fingerprintEnabled !== false;
@@ -477,30 +496,29 @@
       hookDefinitionsCount: event.detail?.hookDefinitions?.length,
       windowPropertiesCount: event.detail?.windowProperties?.length,
       debugMode: debugMode,
-      fingerprintEnabled: fingerprintEnabled,
-      enhancedDetection: enhancedSettings.enabled ? enhancedSettings.windowPropertiesMode : 'disabled',
-      hooksTimeoutMs: enhancedSettings.hooksTimeoutMs,
-      maxDetectionWindowMs: enhancedSettings.maxDetectionWindowMs
+      fingerprintEnabled: fingerprintEnabled
     });
 
     const hookDefinitions = event.detail?.hookDefinitions || [];
     const windowProperties = event.detail?.windowProperties || [];
 
     sendLog('log', `[Hooks MAIN] Received ${hookDefinitions.length} detectors and ${windowProperties.length} window property checks`);
+
+    // VERSION 2.3.0: Set expected targets in HookResilienceManager
+    const resilienceManager = window.__HookResilienceManager;
+    if (resilienceManager) {
+      resilienceManager.setExpectedTargets(hookDefinitions);
+      sendLog('log', `[HookResilienceManager] Set ${resilienceManager.expectedTargets.size} expected targets from detector definitions`);
+    }
     sendLog('log', '[MAIN WORLD] 📋 Window properties to check:', windowProperties.map(p => p.path));
 
-    // Check window properties with polling mechanism
+    // Check window properties with WindowPropertyTracker (VERSION 2.3.0)
     if (windowProperties.length > 0) {
-      sendLog('log', `[Window Props] ⏳ Waiting for page load to check ${windowProperties.length} properties...`);
+      sendLog('log', `[Window Props] ⏳ Starting WindowPropertyTracker for ${windowProperties.length} properties...`);
 
-      // Track detections for reporting
-      let detectedCount = 0;
-      const detectedPropertyPaths = new Set(); // Track which properties we've already detected
-      let pollIntervalId = null; // Track polling interval
-
-      // POLLING: Check every 200ms until settled (no new detections for 10 seconds)
-      const checkPropertiesWithPolling = () => {
-        // Check cache flag before starting polling
+      // VERSION 2.3.0: Use WindowPropertyTracker for adaptive 60s polling
+      const startWindowChecksWithTracker = () => {
+        // Check cache flag before starting
         if (shouldSkipDueToCacheHit()) {
           sendLog('log', '[Window Props] ⏭️ Cache hit - skipping window property checks');
           window.postMessage({
@@ -513,144 +531,84 @@
           return;
         }
 
+        // Check if WindowPropertyTracker is available
+        const tracker = window.__WindowPropertyTracker;
+        if (tracker) {
+          // Initialize tracker with property definitions
+          tracker.initialize(windowProperties, {
+            debugMode: debugMode,
+            onDetection: (detections) => {
+              // Forward detections to content script
+              window.postMessage({
+                type: 'WINDOW_DETECTIONS',
+                detections: detections,
+                timestamp: Date.now()
+              }, '*');
+            },
+            onComplete: (result) => {
+              sendLog('log', `[Window Props] 📊 WindowPropertyTracker complete: ${result.detectedCount}/${result.totalChecked} in ${result.elapsedMs}ms (${result.reason})`);
+              // WINDOW_PROPS_COMPLETE is sent by the tracker itself
+            }
+          });
+
+          // Start adaptive polling (4 phases: EARLY 100ms → NORMAL 200ms → LATE 500ms → FINAL 1000ms)
+          tracker.startPolling();
+          sendLog('log', '[Window Props] 🔍 WindowPropertyTracker started with adaptive 60s polling');
+        } else {
+          // Fallback to legacy polling if tracker not available
+          sendLog('warn', '[Window Props] WindowPropertyTracker not available, using legacy polling');
+          legacyWindowPropertyPolling(windowProperties);
+        }
+      };
+
+      // Legacy polling fallback (simplified version of old code)
+      const legacyWindowPropertyPolling = (properties) => {
+        let detectedCount = 0;
+        const detectedPaths = new Set();
         const startTime = Date.now();
-        const POLL_INTERVAL_MS = HOOKS_CONFIG.POLL_INTERVAL_MS;
-        const MAX_WINDOW_MS = enhancedSettings?.maxDetectionWindowMs || HOOKS_CONFIG.DEFAULT_MAX_WINDOW_MS;
-        const SETTLED_CHECKS_REQUIRED = HOOKS_CONFIG.SETTLED_CHECKS;
-
-        let checksWithoutNewDetections = 0;
+        const MAX_WINDOW_MS = HOOKS_CONFIG.DEFAULT_MAX_WINDOW_MS;
         let pollCount = 0;
+        let checksWithoutNew = 0;
 
-        sendLog('log', `[Window Props] 🔍 Starting window property polling (${POLL_INTERVAL_MS}ms interval, ${MAX_WINDOW_MS}ms max window)`);
-
-        // Polling function
-        const pollProperties = () => {
+        const poll = () => {
           pollCount++;
-
-          // Check if cache hit was detected during polling
-          if (shouldSkipDueToCacheHit()) {
-            sendLog('log', '[Window Props] ⏭️ Cache hit mid-polling - stopping');
-            cleanupEnhancedDetection();
-            window.postMessage({
-              type: 'WINDOW_PROPS_COMPLETE',
-              url: window.location.href,
-              timestamp: Date.now(),
-              detectedCount: 0,
-              reason: 'cache_hit'
-            }, '*');
-            return;
-          }
-
           const elapsed = Date.now() - startTime;
 
-          // Check if max window exceeded
-          if (elapsed >= MAX_WINDOW_MS) {
-            sendLog('log', `[Window Props] ⏱️ Max detection window (${MAX_WINDOW_MS}ms) reached`);
-            sendLog('log', `[Window Props] 📊 Final: ${detectedCount}/${windowProperties.length} properties detected after ${pollCount} polls`);
-
+          if (elapsed >= MAX_WINDOW_MS || checksWithoutNew >= HOOKS_CONFIG.SETTLED_CHECKS) {
             window.postMessage({
               type: 'WINDOW_PROPS_COMPLETE',
               url: window.location.href,
               timestamp: Date.now(),
               detectedCount: detectedCount,
-              totalChecked: windowProperties.length,
+              totalChecked: properties.length,
               elapsedMs: elapsed,
-              reason: 'max_window_reached'
+              reason: elapsed >= MAX_WINDOW_MS ? 'max_window_reached' : 'settled'
             }, '*');
-
-            cleanupEnhancedDetection();
             return;
           }
 
-          // Check all properties
-          let newDetectionsThisPoll = 0;
-          checkWindowPropertiesCore(windowProperties, (newDetections) => {
-            // Only count truly new detections
-            newDetections.forEach(detection => {
-              const propertyPath = detection.path;
-              if (!detectedPropertyPaths.has(propertyPath)) {
-                detectedPropertyPaths.add(propertyPath);
+          let newThisPoll = 0;
+          checkWindowPropertiesCore(properties, (detections) => {
+            detections.forEach(d => {
+              if (!detectedPaths.has(d.property?.path)) {
+                detectedPaths.add(d.property?.path);
                 detectedCount++;
-                newDetectionsThisPoll++;
+                newThisPoll++;
               }
             });
           });
 
-          if (newDetectionsThisPoll > 0) {
-            sendLog('log', `[Window Props] ✅ Poll #${pollCount}: Found ${newDetectionsThisPoll} new properties (total: ${detectedCount}/${windowProperties.length})`);
-            checksWithoutNewDetections = 0; // Reset counter
-          } else {
-            checksWithoutNewDetections++;
-            if (checksWithoutNewDetections === 1) {
-              sendLog('log', `[Window Props] 🔁 Poll #${pollCount}: No new detections (${checksWithoutNewDetections}/${SETTLED_CHECKS_REQUIRED} to settle)`);
-            }
-          }
-
-          // Check if settled (3 consecutive checks with no new detections)
-          if (checksWithoutNewDetections >= SETTLED_CHECKS_REQUIRED) {
-            sendLog('log', `[Window Props] 🏁 Settled after ${pollCount} polls (${SETTLED_CHECKS_REQUIRED} consecutive checks with no new detections)`);
-            sendLog('log', `[Window Props] 📊 Final: ${detectedCount}/${windowProperties.length} properties detected in ${elapsed}ms`);
-
-            window.postMessage({
-              type: 'WINDOW_PROPS_COMPLETE',
-              url: window.location.href,
-              timestamp: Date.now(),
-              detectedCount: detectedCount,
-              totalChecked: windowProperties.length,
-              elapsedMs: elapsed,
-              reason: 'settled'
-            }, '*');
-
-            cleanupEnhancedDetection();
-            return;
-          }
-
-          // All properties detected?
-          if (detectedCount >= windowProperties.length) {
-            sendLog('log', `[Window Props] ✅ All ${windowProperties.length} properties detected after ${pollCount} polls in ${elapsed}ms`);
-
-            window.postMessage({
-              type: 'WINDOW_PROPS_COMPLETE',
-              url: window.location.href,
-              timestamp: Date.now(),
-              detectedCount: detectedCount,
-              totalChecked: windowProperties.length,
-              elapsedMs: elapsed,
-              reason: 'all_detected'
-            }, '*');
-
-            cleanupEnhancedDetection();
-            return;
-          }
+          checksWithoutNew = newThisPoll > 0 ? 0 : checksWithoutNew + 1;
+          setTimeout(poll, HOOKS_CONFIG.POLL_INTERVAL_MS);
         };
 
-        // Start polling
-        pollProperties(); // Run first check immediately
-        pollIntervalId = setInterval(pollProperties, POLL_INTERVAL_MS);
-      };
-
-      // Cleanup function to free resources
-      const cleanupEnhancedDetection = () => {
-        // Clear polling interval
-        if (pollIntervalId) {
-          clearInterval(pollIntervalId);
-          pollIntervalId = null;
-          sendLog('log', '[Window Props] 🧹 Polling interval cleared');
-        }
-
-        // Clear detection tracking set to free memory
-        detectedPropertyPaths.clear();
-      };
-
-      const startWindowChecks = () => {
-        sendLog('log', '[Window Props] 🔍 Starting window property polling after page ready');
-        checkPropertiesWithPolling();
+        poll();
       };
 
       if (document.readyState === 'complete' || pageReadySignalReceived) {
-        startWindowChecks();
+        startWindowChecksWithTracker();
       } else {
-        pageReadyCallbacks.push(startWindowChecks);
+        pageReadyCallbacks.push(startWindowChecksWithTracker);
       }
     } else {
       // No window properties to check - send completion immediately
@@ -895,7 +853,13 @@
         // explicitContext is ONLY used for special cases where we need to validate the context type
         // (like addEventListener where we check if context is Window/Document/etc for event filtering)
         // For most hooks, explicitContext is null and we rely entirely on natural binding
-        return Reflect.apply(original, this, args);
+        try {
+          return Reflect.apply(original, this, args);
+        } catch (e) {
+          // Re-throw with better context - "Illegal invocation" means 'this' context is wrong
+          // This happens when page code destructures methods: const { getBattery } = navigator; getBattery()
+          throw e;
+        }
       };
 
       // Apply stealth properties in one batch
@@ -924,19 +888,47 @@
     }
 
     function installHook(detectorId, detectorName, category, hook) {
+      // VERSION 2.3.0: Enhanced with HookResilienceManager integration
       try {
+        // Step 1: Verify hook target is valid using HookResilienceManager
+        const resilienceManager = window.__HookResilienceManager;
+        if (resilienceManager) {
+          const verification = resilienceManager.verifyHookTarget(hook.target);
+          if (!verification.canInstall) {
+            // Report verification failure
+            resilienceManager.registerHookFailure(hook.target, verification.reason);
+            sendLog('warn', `[Hooks MAIN] Verification failed for ${hook.target}: ${verification.reason}`);
+            return false;
+          }
+        }
+
         const parts = hook.target.split('.');
-        if (parts.length < 2) return false; // BULLETPROOF: Return false for invalid hooks
+        if (parts.length < 2) {
+          if (resilienceManager) {
+            resilienceManager.registerHookFailure(hook.target, 'INVALID_PATH');
+          }
+          return false;
+        }
 
         let obj = window;
         for (let i = 0; i < parts.length - 1; i++) {
           obj = obj[parts[i]];
-          if (!obj) return false; // BULLETPROOF: Return false if object path doesn't exist
+          if (!obj) {
+            if (resilienceManager) {
+              resilienceManager.registerHookFailure(hook.target, 'PATH_NOT_FOUND');
+            }
+            return false;
+          }
         }
 
         const propertyName = parts[parts.length - 1];
         const originalDescriptor = Reflect.getOwnPropertyDescriptor(obj, propertyName);
-        if (!originalDescriptor) return false; // BULLETPROOF: Return false if property doesn't exist
+        if (!originalDescriptor) {
+          if (resilienceManager) {
+            resilienceManager.registerHookFailure(hook.target, 'PROPERTY_NOT_FOUND');
+          }
+          return false;
+        }
 
         const existingHook = installedHooks.get(hook.target);
         if (existingHook) {
@@ -948,11 +940,14 @@
         // Resolve windowPath if provided in JSON (e.g., "navigator" for Navigator.prototype.getBattery)
         let explicitContext = null;
         if (hook.windowPath) {
-          const parts = hook.windowPath.split('.');
-          explicitContext = parts.reduce((parent, part) => parent?.[part], window);
+          const pathParts = hook.windowPath.split('.');
+          explicitContext = pathParts.reduce((parent, part) => parent?.[part], window);
           if (!explicitContext) {
             sendLog('warn', `[Hooks] Failed to resolve windowPath "${hook.windowPath}" for ${hook.target}`);
-            return false; // Hook fails if windowPath doesn't exist
+            if (resilienceManager) {
+              resilienceManager.registerHookFailure(hook.target, 'WINDOW_PATH_NOT_FOUND');
+            }
+            return false;
           }
         }
 
@@ -968,34 +963,48 @@
         const reportCallback = () => reportHookDetection(detectorId, detectorName, category, hook);
 
         // Handle getter properties - use optimized wrapper factory
+        let wrapperDescriptor = null;
         if (originalDescriptor.get && !originalDescriptor.value) {
           const stealthGetter = createStealthWrapper(originalDescriptor.get, reportCallback, explicitContext, true);
 
-          Object.defineProperty(obj, propertyName, {
+          wrapperDescriptor = {
             get: stealthGetter,
             set: originalDescriptor.set,
             enumerable: originalDescriptor.enumerable,
             configurable: originalDescriptor.configurable
-          });
+          };
+          Object.defineProperty(obj, propertyName, wrapperDescriptor);
           hookMetadata.wrapper = stealthGetter;
         }
         // Handle regular methods - use optimized wrapper factory
         else if (typeof originalDescriptor.value === 'function') {
           const wrapper = createStealthWrapper(originalDescriptor.value, reportCallback, explicitContext, false);
 
-          Object.defineProperty(obj, propertyName, {
+          wrapperDescriptor = {
             value: wrapper,
             writable: originalDescriptor.writable,
             enumerable: originalDescriptor.enumerable,
             configurable: originalDescriptor.configurable
-          });
+          };
+          Object.defineProperty(obj, propertyName, wrapperDescriptor);
           hookMetadata.wrapper = wrapper;
         }
 
         installedHooks.set(hook.target, hookMetadata);
+
+        // VERSION 2.3.0: Register successful installation with HookResilienceManager
+        if (resilienceManager && wrapperDescriptor) {
+          resilienceManager.registerHookInstall(hook.target, originalDescriptor, wrapperDescriptor);
+        }
+
         return hookMetadata;
       } catch (error) {
         sendLog('error', `[Hooks MAIN] Failed to install ${hook.target}:`, error);
+        // Report failure to HookResilienceManager
+        const resilienceManager = window.__HookResilienceManager;
+        if (resilienceManager) {
+          resilienceManager.registerHookFailure(hook.target, error.message);
+        }
         return false;
       }
     }

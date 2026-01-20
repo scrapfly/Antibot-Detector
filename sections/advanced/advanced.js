@@ -78,6 +78,24 @@ class Advanced {
     this.selectedDetection = null;
     this.availableDetectionTools = [];
     this.captureHistoryPagination = null;
+    this.cachedDetectionResults = []; // Cache detection results for reliable access
+  }
+
+  /**
+   * Called when Detection section has new detection data ready
+   * This fixes the timing issue where Advanced tab checks before Detection has loaded
+   * @param {Array} results - Detection results array
+   */
+  onDetectionDataReady(results) {
+    this.cachedDetectionResults = results || [];
+    Logger.ui(`[Advanced] Detection data received: ${this.cachedDetectionResults.length} detections cached`);
+
+    // If Advanced tab is currently visible, refresh the display
+    const advancedTab = document.querySelector('.tab-btn[data-tab="advanced"]');
+    if (advancedTab?.classList.contains('active')) {
+      Logger.ui('[Advanced] Advanced tab is active, refreshing tools display');
+      this.displayAdvancedTools();
+    }
   }
 
   /**
@@ -213,6 +231,21 @@ class Advanced {
    * @returns {Array} Current detections from Detection section
    */
   async getCurrentDetections() {
+    // PRIORITY 0: Check cached results from Detection notification (most reliable)
+    Logger.ui('[Advanced] 🔍 DETECTION RETRIEVAL STEP 0: Check cachedDetectionResults');
+    Logger.ui('[Advanced]   - cachedDetectionResults length:', this.cachedDetectionResults?.length || 0);
+
+    if (this.cachedDetectionResults && this.cachedDetectionResults.length > 0) {
+      Logger.ui('[Advanced] ✅ Found', this.cachedDetectionResults.length, 'detections in cache');
+      const firstDet = this.cachedDetectionResults[0];
+      Logger.ui('[Advanced] 📋 First cached detection:', {
+        hasDetector: !!firstDet.detector,
+        detectorId: firstDet.detector?.id,
+        detectorName: firstDet.detector?.name
+      });
+      return this.cachedDetectionResults;
+    }
+
     // PRIORITY 1: Try to get from Detection section's currentResults (fastest, in-memory)
     let results = this.detectionSection && this.detectionSection.currentResults ?
       this.detectionSection.currentResults : [];
@@ -221,9 +254,11 @@ class Advanced {
     Logger.ui('[Advanced]   - detectionSection exists:', !!this.detectionSection);
     Logger.ui('[Advanced]   - currentResults length:', results.length);
 
-    // If results found, validate structure
+    // If results found, validate structure and cache them
     if (results.length > 0) {
       Logger.ui('[Advanced] ✅ Found', results.length, 'detections in detectionSection');
+      // Cache for future use
+      this.cachedDetectionResults = results;
       // Log first detection structure for validation
       const firstDet = results[0];
       Logger.ui('[Advanced] 📋 First detection structure:', {
@@ -270,9 +305,9 @@ class Advanced {
           });
         });
 
-        if (response && response.detectionResults && Array.isArray(response.detectionResults)) {
-          if (response.detectionResults.length > 0) {
-            results = response.detectionResults;
+        if (response && response.data && Array.isArray(response.data)) {
+          if (response.data.length > 0) {
+            results = response.data;
             Logger.ui('[Advanced] ✅ Fetched', results.length, 'detections from background');
 
             // Validate first detection
@@ -286,14 +321,8 @@ class Advanced {
           } else {
             Logger.ui('[Advanced] ℹ️  Background returned empty array');
           }
-        } else if (response) {
-          Logger.warn('UI', '[Advanced] ⚠️  Unexpected response format:', {
-            hasDetectionResults: !!response.detectionResults,
-            isArray: Array.isArray(response.detectionResults),
-            responseKeys: Object.keys(response),
-            status: response.status,
-            type: typeof response
-          });
+        } else if (response && response.status === 'error') {
+          Logger.warn('UI', '[Advanced] ⚠️  Background returned error:', response.error);
         }
       } catch (error) {
         Logger.error('UI', '[Advanced] Error in background fetch attempt', retryCount + 1, ':', error);
@@ -326,11 +355,14 @@ class Advanced {
     Logger.ui('[Advanced] Available module keys:', Object.keys(Advanced.AVAILABLE_MODULES));
 
     detections.forEach((detection, index) => {
-      const detectorId = detection.detector?.id;
+      const rawDetectorId = detection.detector?.id;
+      // Strip "detect-" prefix to match AVAILABLE_MODULES keys (e.g., "detect-akamai" → "akamai")
+      const detectorId = rawDetectorId ? rawDetectorId.replace(/^detect-/, '') : null;
       const detectorName = detection.detector?.name;
       const hasModule = !!Advanced.AVAILABLE_MODULES[detectorId];
 
       Logger.ui(`[Advanced] [${index + 1}/${detections.length}] Checking:`, {
+        rawDetectorId,
         detectorId,
         detectorName,
         hasModule: hasModule ? '✅ YES' : '❌ NO'
@@ -365,13 +397,16 @@ class Advanced {
    * @returns {object} Module instance
    */
   async loadDetectionModule(moduleId, detection) {
-    if (this.loadedModules[moduleId]) {
-      return this.loadedModules[moduleId];
+    // Strip "detect-" prefix to match AVAILABLE_MODULES keys (e.g., "detect-incapsula" → "incapsula")
+    const normalizedId = moduleId ? moduleId.replace(/^detect-/, '') : moduleId;
+
+    if (this.loadedModules[normalizedId]) {
+      return this.loadedModules[normalizedId];
     }
 
-    const moduleInfo = Advanced.AVAILABLE_MODULES[moduleId];
+    const moduleInfo = Advanced.AVAILABLE_MODULES[normalizedId];
     if (!moduleInfo) {
-      Logger.error('UI', `Module ${moduleId} not found in registry`);
+      Logger.error('UI', `Module ${normalizedId} not found in registry`);
       return null;
     }
 
@@ -383,10 +418,10 @@ class Advanced {
       }
 
       const moduleInstance = new ModuleClass(detection, this.currentTab);
-      this.loadedModules[moduleId] = moduleInstance;
+      this.loadedModules[normalizedId] = moduleInstance;
       return moduleInstance;
     } catch (error) {
-      Logger.error('UI', `Failed to initialize module ${moduleId}:`, error);
+      Logger.error('UI', `Failed to initialize module ${normalizedId}:`, error);
       return null;
     }
   }
@@ -459,19 +494,34 @@ class Advanced {
 
         captchaToolsHtml = `
           <div class="captcha-tools-section">
-            <div class="captcha-tools-header">
-              <div class="header-left">
+            <!-- Compact Detection Bar (hidden by default, shown in compact mode) -->
+            <div class="compact-detection-bar" id="compactDetectionBar">
+              <div class="compact-detection-info">
+                <img src="" class="compact-detection-icon" id="compactDetectionIcon" alt="">
+                <span class="compact-detection-name" id="compactDetectionName">Detection Name</span>
+              </div>
+              <button class="compact-change-btn" id="changeDetectionBtn">Change</button>
+            </div>
+
+            <!-- Header with title and help button -->
+            <div class="tools-panel-header">
+              <div class="tools-panel-title">
                 <h3>Advanced Detection Tools</h3>
+                <p>Capture and analyze protection systems</p>
               </div>
               <button class="help-btn" id="showCaptchaHelp" title="Help">?</button>
             </div>
-            <p class="section-description">Specialized capture tools for analyzing anti-bot systems, CAPTCHAs, and fingerprinting technologies</p>
 
-            <div class="available-detections-section">
-              <div class="custom-select-wrapper">
+            <!-- Step 1: Select Detection -->
+            <div class="workflow-section">
+              <div class="workflow-step">
+                <div class="step-number" id="step1Number"><span>1</span></div>
+                <span class="step-label">Select Detection</span>
+              </div>
+              <div class="selector-card">
                 <div id="detectionSelector" class="detection-selector-custom">
                   <div class="selector-display">
-                    <span class="placeholder-text">Select a detection...</span>
+                    <span class="placeholder-text">Choose a detection...</span>
                   </div>
                   <div class="selector-dropdown" style="display: none;">
                     ${detectionsOptions}
@@ -480,17 +530,46 @@ class Advanced {
               </div>
             </div>
 
-            <div class="detection-actions">
-              <button class="import-btn-small" id="loadDetectionTools" disabled>
-                Load Tools
-              </button>
-              <button class="clear-btn-small" id="clearDetectionTools">
-                Clear All
-              </button>
+            <!-- Step 2: Load & Use Tools -->
+            <div class="workflow-section">
+              <div class="workflow-step">
+                <div class="step-number" id="step2Number"><span>2</span></div>
+                <span class="step-label">Load & Use Tools</span>
+              </div>
+              <div class="btn-row">
+                <button class="btn-primary-lg" id="loadDetectionTools" disabled>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z"/>
+                  </svg>
+                  Load Tools
+                </button>
+                <button class="btn-secondary-lg" id="clearDetectionTools">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+                  </svg>
+                  Clear All
+                </button>
+              </div>
             </div>
 
-            <div id="detectionToolsPanel" class="detection-tools-panel" style="display: none;">
+            <!-- Detection Tools Panel (animated reveal) -->
+            <div id="detectionToolsPanel" class="detection-tools-panel-animated" style="display: none;">
               <!-- Selected detection tools will be rendered here -->
+            </div>
+
+            <!-- Clear Tools Footer (shown in compact mode) -->
+            <div class="tools-clear-footer" id="toolsClearFooter">
+              <button class="clear-tools-btn-footer" id="clearToolsFooter">Clear All Tools</button>
+            </div>
+
+            <!-- Help Footer -->
+            <div class="help-footer">
+              <button class="help-link" id="showAdvancedHelp">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M11,18H13V16H11V18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,6A4,4 0 0,0 8,10H10A2,2 0 0,1 12,8A2,2 0 0,1 14,10C14,12 11,11.75 11,15H13C13,12.75 16,12.5 16,10A4,4 0 0,0 12,6Z"/>
+                </svg>
+                Learn about Advanced Tools
+              </button>
             </div>
           </div>
         `;
@@ -595,6 +674,9 @@ class Advanced {
     try {
       const badge = document.querySelector('#captureCountBadge');
       if (!badge) return;
+
+      // Clean expired captures first (keeps badge count in sync with displayed content)
+      await this.cleanExpiredCaptureData();
 
       // Get all captures from all modules
       const result = await chrome.storage.local.get('scrapfly_advanced_history');
@@ -1560,6 +1642,31 @@ class Advanced {
   }
 
   /**
+   * Update workflow step state (completed or not)
+   * @param {number} step - Step number (1 or 2)
+   * @param {boolean} completed - Whether the step is completed
+   */
+  updateStepState(step, completed) {
+    const stepEl = document.getElementById(`step${step}Number`);
+    if (!stepEl) return;
+
+    if (completed) {
+      stepEl.classList.add('completed');
+      // The CSS ::after will show the checkmark
+    } else {
+      stepEl.classList.remove('completed');
+    }
+  }
+
+  /**
+   * Reset all workflow steps to initial state
+   */
+  resetWorkflowSteps() {
+    this.updateStepState(1, false);
+    this.updateStepState(2, false);
+  }
+
+  /**
    * Setup detection tools selection listeners
    */
   setupDetectionToolsListeners() {
@@ -1587,6 +1694,7 @@ class Advanced {
           const name = option.querySelector('.detection-name')?.textContent || '';
 
           if (display) {
+            // Using innerHTML with controlled content from DOM elements (safe - no user input)
             display.innerHTML = `${iconHtml}<span class="selected-name">${name}</span>`;
             display.setAttribute('data-selected', detectorId);
           }
@@ -1597,6 +1705,9 @@ class Advanced {
           if (loadBtn) {
             loadBtn.disabled = false;
           }
+
+          // Mark step 1 as completed when a detection is selected
+          this.updateStepState(1, true);
         });
       });
 
@@ -1614,6 +1725,17 @@ class Advanced {
 
     if (clearBtn) {
       clearBtn.addEventListener('click', () => this.clearDetectionToolsPanel());
+    }
+
+    // Compact mode buttons
+    const changeBtn = document.getElementById('changeDetectionBtn');
+    if (changeBtn) {
+      changeBtn.addEventListener('click', () => this.clearDetectionToolsPanel());
+    }
+
+    const clearFooterBtn = document.getElementById('clearToolsFooter');
+    if (clearFooterBtn) {
+      clearFooterBtn.addEventListener('click', () => this.clearDetectionToolsPanel());
     }
   }
 
@@ -1661,6 +1783,28 @@ class Advanced {
 
       panel.innerHTML = toolsContent;
       panel.style.display = 'block';
+
+      // Enable compact mode to save vertical space
+      const section = document.querySelector('.captcha-tools-section');
+      if (section) {
+        section.classList.add('compact-mode');
+      }
+
+      // Update compact bar with selected detection info
+      const compactIcon = document.getElementById('compactDetectionIcon');
+      const compactName = document.getElementById('compactDetectionName');
+      if (compactIcon && detection.detector?.icon) {
+        compactIcon.src = chrome.runtime.getURL(`detectors/icons/${detection.detector.icon}`);
+        compactIcon.style.display = 'block';
+      } else if (compactIcon) {
+        compactIcon.style.display = 'none';
+      }
+      if (compactName) {
+        compactName.textContent = detection.detector?.name || detectorId;
+      }
+
+      // Mark step 2 as completed when tools are loaded
+      this.updateStepState(2, true);
 
       // Store the active module reference
       this.activeModule = moduleInstance;
@@ -1724,6 +1868,15 @@ class Advanced {
     this.activeModule = null; // Clear active module reference
     this.loadedModules = {};
 
+    // Disable compact mode to show full workflow UI
+    const section = document.querySelector('.captcha-tools-section');
+    if (section) {
+      section.classList.remove('compact-mode');
+    }
+
+    // Reset workflow steps to initial state
+    this.resetWorkflowSteps();
+
     // Show explanation section when tools are cleared
     const explanation = document.querySelector('#toolsExplanation');
     if (explanation) {
@@ -1773,6 +1926,15 @@ class Advanced {
    * Setup Advanced Info Modal event listeners
    */
   setupAdvancedInfoModalListeners() {
+    // Help icon (? button) in empty state - opens info modal
+    const helpIcon = document.querySelector('.empty-state-help');
+    if (helpIcon) {
+      helpIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openAdvancedInfoModal();
+      });
+    }
+
     // Close button
     const closeBtn = document.querySelector('#closeAdvancedInfoModal');
     if (closeBtn) {
@@ -1809,10 +1971,16 @@ class Advanced {
    * Setup event listeners for advanced tools
    */
   setupAdvancedEventListeners() {
-    // Help button
+    // Help button (in header)
     const helpBtn = document.querySelector('#showCaptchaHelp');
     if (helpBtn) {
       helpBtn.addEventListener('click', () => this.showCaptchaHelp());
+    }
+
+    // Help footer link
+    const helpFooterBtn = document.querySelector('#showAdvancedHelp');
+    if (helpFooterBtn) {
+      helpFooterBtn.addEventListener('click', () => this.showCaptchaHelp());
     }
 
     // Modal listeners are set up in loadHTML() after template loads

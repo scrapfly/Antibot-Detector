@@ -48,10 +48,34 @@
           <img id="siteFavicon" class="site-favicon" src="" alt="">
           <span id="siteUrl" class="site-url" title=""></span>
         </div>
+        <div class="url-action-buttons">
+          <button id="clearCacheBtn" class="url-action-btn clear-cache-btn" title="Clear Cache">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18"/>
+              <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+              <path d="M10 11v6"/>
+              <path d="M14 11v6"/>
+            </svg>
+          </button>
+          <button id="addToBlacklistBtn" class="url-action-btn blacklist-btn" title="Block this domain">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M4.93 4.93l14.14 14.14"/>
+            </svg>
+          </button>
+        </div>
       </div>
       <div class="stats-line">
         <div class="stat-inline detections-count" title="Detections">
-          <div class="stat-icon-inline">🔍</div>
+          <div class="stat-icon-inline">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="10" opacity="0.3"/>
+              <circle cx="12" cy="12" r="6" opacity="0.5"/>
+              <circle cx="12" cy="12" r="2"/>
+              <path d="M12 2v4M12 18v4"/>
+            </svg>
+          </div>
           <div class="stat-content-inline">
             <div class="stat-label-inline">DETECTIONS</div>
             <div class="stat-value-inline" id="detectionsCount">0</div>
@@ -59,7 +83,14 @@
         </div>
 
         <div class="stat-inline overall-confidence" title="Confidence">
-          <div class="stat-icon-inline">🎯</div>
+          <div class="stat-icon-inline">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M12 2a10 10 0 0 1 10 10" opacity="0.3"/>
+              <path d="M12 2a10 10 0 0 0-10 10" opacity="0.3"/>
+              <path d="M4.93 4.93l4.24 4.24"/>
+              <circle cx="12" cy="12" r="2" fill="currentColor"/>
+            </svg>
+          </div>
           <div class="stat-content-inline">
             <div class="stat-label-inline">CONFIDENCE</div>
             <div class="stat-value-inline" id="overallConfidence">0%</div>
@@ -67,7 +98,12 @@
         </div>
 
         <div class="stat-inline difficulty-level" title="Difficulty">
-          <div class="stat-icon-inline" id="difficultyIcon">🛡️</div>
+          <div class="stat-icon-inline" id="difficultyIcon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M9 12l2 2 4-4" opacity="0.7"/>
+            </svg>
+          </div>
           <div class="stat-content-inline">
             <div class="stat-label-inline">DIFFICULTY</div>
             <div class="stat-value-inline" id="difficultyLevel">Low</div>
@@ -77,14 +113,26 @@
 
       <div class="cache-expiry-line">
         <div class="stat-inline cache-scope-stat" title="Cache Scope">
-          <div class="stat-icon-inline">🌐</div>
+          <div class="stat-icon-inline">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M2 12h20" opacity="0.5"/>
+              <path d="M12 2a15 15 0 0 1 0 20" opacity="0.7"/>
+              <path d="M12 2a15 15 0 0 0 0 20" opacity="0.7"/>
+            </svg>
+          </div>
           <div class="stat-content-inline">
             <div class="stat-label-inline">CACHE SCOPE</div>
             <div class="stat-value-inline" id="cacheScopeDisplay">Domain</div>
           </div>
         </div>
         <div class="stat-inline cache-expiry-stat" title="Cache Expiration">
-          <div class="stat-icon-inline">⏰</div>
+          <div class="stat-icon-inline">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
           <div class="stat-content-inline">
             <div class="stat-label-inline">CACHE EXPIRATION</div>
             <div class="stat-value-inline" id="cacheExpiry">-</div>
@@ -92,25 +140,10 @@
         </div>
       </div>
 
-      <div class="action-buttons-row">
-        <button id="clearCacheBtn" class="detection-action-btn">
-          <svg width="14" height="14" viewBox="0 0 24 24">
-            <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
-          </svg>
-          <span>Clear Cache</span>
-        </button>
-        <button id="addToBlacklistBtn" class="detection-action-btn" title="Add this domain to blacklist">
-          <svg width="14" height="14" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
-            <line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="2"/>
-          </svg>
-          Blacklist
-        </button>
-      </div>
     </div>
 
     <div class="search-container">
-      <input type="text" id="detectionSearch" class="search-input" placeholder="Search by name, category, method, or any detail...">
+      <input type="text" id="detectionSearch" class="search-input" placeholder="Search detections...">
     </div>
 
     <div id="resultsList" class="results-list"></div>
@@ -199,6 +232,12 @@
           <div class="detection-modal-meta-item">
             <span class="meta-label">Matches Found</span>
             <span id="detectionModalDetections" class="meta-value">0</span>
+          </div>
+          <div class="detection-modal-meta-item">
+            <span class="meta-label">
+              <i class="fas fa-user"></i> Author
+            </span>
+            <span id="detectionModalAuthor" class="meta-value">Unknown</span>
           </div>
         </div>
         <div class="detection-modal-section">

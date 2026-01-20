@@ -62,28 +62,6 @@ class DetectionEngineManager {
     }
 
     /**
-     * Build enhanced detection settings object with defaults
-     * @param {object|undefined} enhancedDetectionSettings - Enhanced detection settings from storage
-     * @returns {object} Enhanced settings with defaults applied
-     */
-    static buildEnhancedSettings(enhancedDetectionSettings) {
-        return {
-            enabled: enhancedDetectionSettings?.enabled !== false,
-            windowPropertiesMode: enhancedDetectionSettings?.windowPropertiesMode || 'standard',
-            // FIX: Revert to original 5000ms (from JSON default-settings.json line 16)
-            // Settings MUST come from JSON file, not hardcoded fallback values
-            hooksTimeoutMs: enhancedDetectionSettings?.hooksTimeoutMs || 5000,
-            useEventDrivenChecks: enhancedDetectionSettings?.useEventDrivenChecks !== false,
-            useFinalIdleCheck: enhancedDetectionSettings?.useFinalIdleCheck !== false,
-            // FIX: Use 10000ms as specified in default-settings.json line 19
-            // This matches the intended 10-second detection window
-            // Always read from default-settings.json, never hardcode
-            maxDetectionWindowMs: enhancedDetectionSettings?.maxDetectionWindowMs || 10000,
-            keepHooksInstalled: enhancedDetectionSettings?.keepHooksInstalled || false
-        };
-    }
-
-    /**
      * Get cache expiry time in milliseconds from settings
      * @returns {Promise<number>} Expiry time in milliseconds
      */
@@ -1571,6 +1549,11 @@ class DetectionEngineManager {
 
                 // Add all matching cookies to results
                 for (const matchingCookie of matchingCookies) {
+                    // FIX: Skip if we already added a match for this cookie name
+                    // This prevents duplicates from different sources (document.cookie, chrome.cookies, response headers)
+                    if (matchedCookieNames.has(matchingCookie.name)) {
+                        continue;
+                    }
                     matchedCookieNames.add(matchingCookie.name); // Mark as matched
 
                     // Log successful match
@@ -2252,8 +2235,10 @@ class DetectionEngineManager {
                     confidence: detection.confidence,
                     matches: detection.matches?.map(m => ({
                         type: m.type,
+                        pattern: m.pattern,  // Full target like "Performance.prototype.now"
                         value: m.value || m.pattern || m.name || m.selector,
                         confidence: m.confidence,
+                        description: m.description,  // Human-readable description
                         fullUrl: m.fullUrl  // Preserve full URL for URL-type detections
                     })) || []
                 };
@@ -2364,11 +2349,11 @@ class DetectionEngineManager {
             const result = await chrome.storage.local.get(['scrapfly_enabled']);
             if (result.scrapfly_enabled === false) {
                 Logger.detection('Scrapfly Background: Extension is disabled, skipping page load detection');
-                // Set orange X badge to indicate extension is disabled
-                chrome.action.setBadgeText({ text: '✕', tabId: tabId }).catch((error) => {
+                // Set gray OFF badge to indicate extension is disabled
+                chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tabId }).catch((error) => {
                     Logger.detection(`[PageLoad] Failed to set disabled badge for tab ${tabId}:`, error.message);
                 });
-                chrome.action.setBadgeBackgroundColor({ color: '#f59e0b', tabId: tabId }).catch((error) => {
+                chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tabId }).catch((error) => {
                     Logger.detection(`[PageLoad] Failed to set badge color for tab ${tabId}:`, error.message);
                 });
                 return;
@@ -2381,11 +2366,11 @@ class DetectionEngineManager {
         const isBlacklisted = await Utils.isUrlBlacklisted(pageUrl);
         if (isBlacklisted) {
             Logger.detection(`[handlePageLoadNotification] ⛔ URL is blacklisted, skipping detection: ${pageUrl}`);
-            // Show orange X badge for blacklisted domains
-            chrome.action.setBadgeText({ text: '✕', tabId: tabId }).catch((error) => {
+            // Show orange BLK badge for blacklisted domains
+            chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId: tabId }).catch((error) => {
                 Logger.detection(`[PageLoad] Failed to set blacklist badge for tab ${tabId}:`, error.message);
             });
-            chrome.action.setBadgeBackgroundColor({ color: '#FF8C00', tabId: tabId }).catch((error) => {
+            chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tabId }).catch((error) => {
                 Logger.detection(`[PageLoad] Failed to set badge color (blacklisted) for tab ${tabId}:`, error.message);
             });
             return;
@@ -2432,10 +2417,14 @@ class DetectionEngineManager {
                     Logger.detection(`[PageLoad] Failed to set badge color (cached) for tab ${tabId}:`, error.message);
                 });
             } else {
-                // Clear badge if no detections or if blacklisted
-                chrome.action.setBadgeText({ text: '', tabId: tabId }).catch((error) => {
+                // Show clean checkmark if no detections
+                chrome.action.setBadgeText({ text: BADGE.TEXT.CLEAN, tabId: tabId }).catch((error) => {
                     // Expected: Tab might be closed
-                    Logger.detection(`[PageLoad] Failed to clear badge (no detections/blacklisted) for tab ${tabId}:`, error.message);
+                    Logger.detection(`[PageLoad] Failed to set clean badge for tab ${tabId}:`, error.message);
+                });
+                chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId: tabId }).catch((error) => {
+                    // Expected: Tab might be closed
+                    Logger.detection(`[PageLoad] Failed to set badge color (clean) for tab ${tabId}:`, error.message);
                 });
             }
 
@@ -2501,8 +2490,8 @@ class DetectionEngineManager {
 
         // Show loading indicator in badge
         try {
-            chrome.action.setBadgeText({ text: '⏳', tabId: tabId });
-            chrome.action.setBadgeBackgroundColor({ color: '#4A90E2', tabId: tabId }); // Blue color for loading
+            chrome.action.setBadgeText({ text: BADGE.TEXT.LOADING, tabId: tabId });
+            chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.LOADING, tabId: tabId });
         } catch (error) {
             Logger.error('DETECTION', 'Failed to set loading badge:', error);
         }
@@ -2659,8 +2648,8 @@ class DetectionEngineManager {
             } else {
                 // Show loading indicator in badge (only for non-silent detections)
                 try {
-                    chrome.action.setBadgeText({ text: '⏳', tabId: tabId });
-                    chrome.action.setBadgeBackgroundColor({ color: '#4A90E2', tabId: tabId }); // Blue color for loading
+                    chrome.action.setBadgeText({ text: BADGE.TEXT.LOADING, tabId: tabId });
+                    chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.LOADING, tabId: tabId });
                 } catch (error) {
                     Logger.error('DETECTION', 'Failed to set loading badge:', error);
                 }
@@ -2763,17 +2752,17 @@ class DetectionEngineManager {
             // PRIORITY 0: Check if extension is disabled - takes precedence over everything
             const result = await chrome.storage.local.get(['scrapfly_enabled']);
             if (result.scrapfly_enabled === false) {
-                Logger.detection(`[TabActivation] Extension is disabled - setting orange X badge for tab ${activeInfo.tabId}`);
-                await chrome.action.setBadgeText({ text: '✕', tabId: activeInfo.tabId });
-                await chrome.action.setBadgeBackgroundColor({ color: '#f59e0b', tabId: activeInfo.tabId });
+                Logger.detection(`[TabActivation] Extension is disabled - setting OFF badge for tab ${activeInfo.tabId}`);
+                await chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: activeInfo.tabId });
+                await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: activeInfo.tabId });
                 return; // Don't check cache or apply any other badge logic
             }
 
             // PRIORITY 1: Check if this tab has an interrupted detection
             if (interruptedDetections && interruptedDetections.has(activeInfo.tabId)) {
-                Logger.detection(`[TabActivation] Tab ${activeInfo.tabId} has interrupted detection - restoring red X badge`);
-                await chrome.action.setBadgeText({ text: '✕', tabId: activeInfo.tabId });
-                await chrome.action.setBadgeBackgroundColor({ color: '#ef4444', tabId: activeInfo.tabId }); // Red color
+                Logger.detection(`[TabActivation] Tab ${activeInfo.tabId} has interrupted detection - restoring reload badge`);
+                await chrome.action.setBadgeText({ text: BADGE.TEXT.INTERRUPTED, tabId: activeInfo.tabId });
+                await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.INTERRUPTED, tabId: activeInfo.tabId });
                 return; // Don't overwrite with normal badge
             }
 
@@ -2788,9 +2777,9 @@ class DetectionEngineManager {
             // PRIORITY 1.75: Check if URL is blacklisted
             const isBlacklisted = await Utils.isUrlBlacklisted(tab.url);
             if (isBlacklisted) {
-                Logger.detection(`[TabActivation] ⛔ Tab ${activeInfo.tabId} is blacklisted - showing orange X badge`);
-                await chrome.action.setBadgeText({ text: '✕', tabId: activeInfo.tabId });
-                await chrome.action.setBadgeBackgroundColor({ color: '#FF8C00', tabId: activeInfo.tabId }); // Orange color
+                Logger.detection(`[TabActivation] ⛔ Tab ${activeInfo.tabId} is blacklisted - showing BLK badge`);
+                await chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId: activeInfo.tabId });
+                await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: activeInfo.tabId });
                 return; // Don't check cache or show normal badge
             }
 
@@ -2808,8 +2797,9 @@ class DetectionEngineManager {
                     await chrome.action.setBadgeText({ text: count, tabId: activeInfo.tabId });
                     await chrome.action.setBadgeBackgroundColor({ color: color, tabId: activeInfo.tabId });
                 } else {
-                    // Clear badge if no detections
-                    await chrome.action.setBadgeText({ text: '', tabId: activeInfo.tabId });
+                    // Show clean checkmark if no detections
+                    await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEAN, tabId: activeInfo.tabId });
+                    await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId: activeInfo.tabId });
                 }
             } else {
                 // PRIORITY 3: No cached data - check if URL is valid for detection
@@ -2820,15 +2810,15 @@ class DetectionEngineManager {
                     const wasManuallyCleared = manuallyClearedCaches && manuallyClearedCaches.has(urlHash);
                     
                     if (wasManuallyCleared) {
-                        // Show gray X for manually cleared cache
-                        await chrome.action.setBadgeText({ text: '✕', tabId: activeInfo.tabId });
-                        await chrome.action.setBadgeBackgroundColor({ color: '#6c757d', tabId: activeInfo.tabId });
-                        Logger.detection(`[TabActivation] ✕ Cache was manually cleared for tab ${activeInfo.tabId} - showing gray X`);
+                        // Show CLR badge for manually cleared cache
+                        await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: activeInfo.tabId });
+                        await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEARED, tabId: activeInfo.tabId });
+                        Logger.detection(`[TabActivation] CLR Cache was manually cleared for tab ${activeInfo.tabId}`);
                     } else {
-                        // Show red X to indicate reload needed
-                        await chrome.action.setBadgeText({ text: '✕', tabId: activeInfo.tabId });
-                        await chrome.action.setBadgeBackgroundColor({ color: '#ef4444', tabId: activeInfo.tabId });
-                        Logger.detection(`[TabActivation] ✕ No cached data for tab ${activeInfo.tabId} - showing reload indicator`);
+                        // Show reload symbol to indicate reload needed
+                        await chrome.action.setBadgeText({ text: BADGE.TEXT.INTERRUPTED, tabId: activeInfo.tabId });
+                        await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.INTERRUPTED, tabId: activeInfo.tabId });
+                        Logger.detection(`[TabActivation] ↻ No cached data for tab ${activeInfo.tabId} - showing reload indicator`);
                     }
                 } else {
                     // Invalid URL (chrome://, about:, etc.) - clear badge
@@ -2837,7 +2827,12 @@ class DetectionEngineManager {
                 }
             }
         } catch (error) {
-            Logger.error('DETECTION', 'Error updating badge on tab activation:', error);
+            // Silently handle "No tab with id" errors - expected when tab closes during activation
+            if (error.message && error.message.includes('No tab with id')) {
+                Logger.debug('DETECTION', `Tab ${activeInfo.tabId} closed during activation, skipping badge update`);
+            } else {
+                Logger.error('DETECTION', 'Error updating badge on tab activation:', error);
+            }
         }
     }
 
@@ -2857,8 +2852,7 @@ class DetectionEngineManager {
                 detail: {
                     hookDefinitions: [],
                     windowProperties: [],
-                    debugMode: false,
-                    enhancedSettings: DetectionEngineManager.buildEnhancedSettings({ enabled: false })
+                    debugMode: false
                 }
             }));
             return;
@@ -2874,8 +2868,7 @@ class DetectionEngineManager {
                     detail: {
                         hookDefinitions: [],
                         windowProperties: [],
-                        debugMode: false,
-                        enhancedSettings: DetectionEngineManager.buildEnhancedSettings({ enabled: false })
+                        debugMode: false
                     }
                 }));
                 return;
@@ -2951,8 +2944,7 @@ class DetectionEngineManager {
                     detail: {
                         hookDefinitions: [],
                         windowProperties: [],
-                        debugMode: false,
-                        enhancedSettings: DetectionEngineManager.buildEnhancedSettings({ enabled: false })
+                        debugMode: false
                     }
                 }));
                 return;
@@ -3024,19 +3016,13 @@ class DetectionEngineManager {
 
             const debugMode = settingsData.debugMode || false;
 
-            // ENHANCED DETECTION: Extract enhanced detection settings
-            const enhancedDetectionSettings = settingsData.detection?.enhancedDetection;
-            const enhancedSettings = DetectionEngineManager.buildEnhancedSettings(enhancedDetectionSettings);
-
-            Logger.debug('DETECTION', '[Enhanced Detection] Settings loaded', enhancedSettings);
-
             // IMPORTANT: Always send configuration to MAIN world, even if empty
             // This ensures MAIN world sends completion signals (JS_HOOKS_COMPLETE, WINDOW_PROPS_COMPLETE)
             // Otherwise background waits forever for these signals and detection never finalizes
             if (hookDefinitions.length === 0 && windowPropertyDefinitions.length === 0) {
                 Logger.debug('HOOKS', 'No JS hooks or window properties defined - sending empty config to MAIN world');
             } else {
-                Logger.debug('HOOKS', `Sending ${hookDefinitions.length} hook detectors and ${windowPropertyDefinitions.length} window properties to MAIN world`, { debugMode, enhanced: enhancedSettings.enabled });
+                Logger.debug('HOOKS', `Sending ${hookDefinitions.length} hook detectors and ${windowPropertyDefinitions.length} window properties to MAIN world`, { debugMode });
             }
 
             // Send both hooks AND window properties to MAIN world via CustomEvent
@@ -3045,7 +3031,6 @@ class DetectionEngineManager {
                     hookDefinitions,
                     windowProperties: windowPropertyDefinitions,
                     debugMode,
-                    enhancedSettings,  // ENHANCED DETECTION: Pass settings to MAIN world
                     fingerprintEnabled: hasFingerprintEnabled  // For inline hooks to check
                 }
             }));

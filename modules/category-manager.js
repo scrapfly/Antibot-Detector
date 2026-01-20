@@ -200,7 +200,9 @@ class CategoryManager {
             // Read colors from Settings
             const result = await chrome.storage.local.get('scrapfly_settings');
             if (result.scrapfly_settings) {
-                const settingsData = JSON.parse(result.scrapfly_settings);
+                const settingsData = typeof result.scrapfly_settings === 'string'
+                    ? JSON.parse(result.scrapfly_settings)
+                    : result.scrapfly_settings;
                 const categoryColors = settingsData?.settings?.categoryColors;
 
                 if (categoryColors) {
@@ -315,9 +317,9 @@ class CategoryManager {
      */
     getBadgeColors() {
         return this.categories.badge || {
-            low: { colour: '#4CAF50' },
-            medium: { colour: '#FFA500' },
-            high: { colour: '#FF4444' }
+            low: { colour: BADGE.COLORS.LOW },
+            medium: { colour: BADGE.COLORS.MEDIUM },
+            high: { colour: BADGE.COLORS.HIGH }
         };
     }
 
@@ -339,13 +341,13 @@ class CategoryManager {
         } else if (levelData && levelData.colour) {
             color = levelData.colour;
         } else {
-            // Fallback defaults
+            // Fallback defaults (using BADGE constants)
             const defaults = {
-                low: '#4CAF50',
-                medium: '#FFA500',
-                high: '#FF4444'
+                low: BADGE.COLORS.LOW,
+                medium: BADGE.COLORS.MEDIUM,
+                high: BADGE.COLORS.HIGH
             };
-            color = defaults[normalizedLevel] || '#4CAF50';
+            color = defaults[normalizedLevel] || BADGE.COLORS.LOW;
         }
 
         return color;
@@ -465,26 +467,26 @@ class CategoryManager {
 
                 if (categoriesData.badge) {
                     return {
-                        low: categoriesData.badge.low || '#4CAF50',
-                        medium: categoriesData.badge.medium || '#FFA500',
-                        high: categoriesData.badge.high || '#FF4444'
+                        low: categoriesData.badge.low || BADGE.COLORS.LOW,
+                        medium: categoriesData.badge.medium || BADGE.COLORS.MEDIUM,
+                        high: categoriesData.badge.high || BADGE.COLORS.HIGH
                     };
                 }
             }
 
-            // Fallback defaults
+            // Fallback defaults (using BADGE constants)
             return {
-                low: '#4CAF50',
-                medium: '#FFA500',
-                high: '#FF4444'
+                low: BADGE.COLORS.LOW,
+                medium: BADGE.COLORS.MEDIUM,
+                high: BADGE.COLORS.HIGH
             };
         } catch (error) {
             Logger.error('BADGE', 'Error getting badge colors', error);
-            // Fallback defaults
+            // Fallback defaults (using BADGE constants)
             return {
-                low: '#4CAF50',
-                medium: '#FFA500',
-                high: '#FF4444'
+                low: BADGE.COLORS.LOW,
+                medium: BADGE.COLORS.MEDIUM,
+                high: BADGE.COLORS.HIGH
             };
         }
     }

@@ -116,6 +116,15 @@ class Rules {
     if (addBtn) {
       addBtn.addEventListener('click', () => this.handleAddDetector());
     }
+
+    // Update button - checks for updates or applies pending ones
+    const checkUpdatesBtn = document.querySelector('#checkUpdatesBtn');
+    if (checkUpdatesBtn) {
+      checkUpdatesBtn.addEventListener('click', () => this.handleCheckUpdates());
+    }
+
+    // Check for pending updates on load (shows badge if any)
+    this.checkPendingUpdates();
   }
 
   /**
@@ -171,6 +180,21 @@ class Rules {
     const saveBtn = document.querySelector('#saveRuleEdit');
     if (saveBtn) {
       saveBtn.addEventListener('click', () => this.saveRule());
+    }
+
+    // Category change - update icon styling
+    const categorySelect = document.querySelector('#detectorCategorySelect');
+    if (categorySelect) {
+      categorySelect.addEventListener('change', (e) => {
+        const currentIconContainer = document.querySelector('.current-icon');
+        if (currentIconContainer) {
+          if (e.target.value.toLowerCase() === 'fingerprint') {
+            currentIconContainer.classList.add('fingerprint-icon');
+          } else {
+            currentIconContainer.classList.remove('fingerprint-icon');
+          }
+        }
+      });
     }
 
     // Method helper modal for all detection types
@@ -504,6 +528,12 @@ class Rules {
       valueFieldGroup.style.display = isSingleInput ? 'none' : 'block';
     }
 
+    // Hide entire Edit modal while Method Settings is open
+    const editModal = document.querySelector('#editRuleModal');
+    if (editModal) {
+      editModal.style.visibility = 'hidden';
+    }
+
     // Show modal
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
@@ -518,9 +548,11 @@ class Rules {
     const valueInput = methodItem.querySelector('.method-input.method-value');
 
     if (nameInput) {
-      const nameIndicator = nameInput.nextElementSibling;
+      // Find indicator by data-for attribute (each input has its own badges in input-badges-row)
+      const dataForName = nameInput.dataset.methodKey + '-' + nameInput.dataset.itemIndex;
+      const nameIndicator = methodItem.querySelector(`.input-indicators[data-for="name-${dataForName}"]`);
 
-      if (nameIndicator && nameIndicator.classList.contains('input-indicators')) {
+      if (nameIndicator) {
         const indicators = [];
 
         // Only show badges if input has value
@@ -539,8 +571,11 @@ class Rules {
     }
 
     if (valueInput) {
-      const valueIndicator = valueInput.nextElementSibling;
-      if (valueIndicator && valueIndicator.classList.contains('input-indicators')) {
+      // Find indicator by data-for attribute (each input has its own badges in input-badges-row)
+      const dataForValue = valueInput.dataset.methodKey + '-' + valueInput.dataset.itemIndex;
+      const valueIndicator = methodItem.querySelector(`.input-indicators[data-for="value-${dataForValue}"]`);
+
+      if (valueIndicator) {
         const indicators = [];
 
         // Only show badges if input has value
@@ -565,6 +600,12 @@ class Rules {
   closeMethodSettingsModal() {
     const modal = document.querySelector('#methodSettingsModal');
     if (modal) {
+      // Restore Edit modal visibility
+      const editModal = document.querySelector('#editRuleModal');
+      if (editModal) {
+        editModal.style.visibility = '';
+      }
+
       modal.style.display = 'none';
       document.body.style.overflow = '';
       this.currentMethodItem = null;
@@ -1262,7 +1303,7 @@ class Rules {
             this.updateMethodIndicators(this.currentMethodItem);
 
             // Show success message
-            NotificationHelper.success('Pattern applied & Regex enabled!');
+            NotificationHelper.success('Pattern applied');
 
             // Close modal
             this.closeRegexHelperModal();
@@ -2017,8 +2058,40 @@ class Rules {
    * Open icon picker dialog
    */
   openIconPicker() {
+    // Remove any existing icon picker modal first (prevents stacking)
+    const existingModal = document.querySelector('.icon-picker-modal');
+    if (existingModal?.parentElement) {
+      existingModal.parentElement.remove();
+    }
+
     // List of available icons
+    // Fingerprint SVG icons with blue styling
+    const fingerprintSvgIcons = {
+      'audio_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M8 6v12M4 9v6M16 6v12M20 9v6"/></svg>',
+      'battery_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M22 11v2"/><path d="M6 11v2M10 11v2M14 11v2"/></svg>',
+      'canvas_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 12h4l2-3 2 6 2-3h2"/></svg>',
+      'clipboard_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>',
+      'crypto_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>',
+      'css_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 3h16l-1.5 15L12 21l-6.5-3L4 3z"/><path d="M8 8h8M7 12h6"/></svg>',
+      'font_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>',
+      'gamepads_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="4"/><path d="M6 12h4M8 10v4"/><circle cx="17" cy="10" r="1"/><circle cx="15" cy="14" r="1"/></svg>',
+      'geolocation_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+      'hardware_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 15h3M1 9h3M1 15h3"/></svg>',
+      'indexeddb_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',
+      'media_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M10 9l5 3-5 3z"/></svg>',
+      'navigator_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>',
+      'orientation_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M12 18h.01"/></svg>',
+      'performance_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
+      'screen_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
+      'storage_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>',
+      'timezone_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
+      'usb_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v10M7 7l5 5 5-5"/><circle cx="12" cy="16" r="2"/><path d="M12 18v4"/><path d="M6 12v3a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-3"/></svg>',
+      'webgl_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
+      'webrtc_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg>'
+    };
+
     const availableIcons = [
+      // Official brand icons
       'akamai_official.png',
       'aws_official.png',
       'cloudflare_official.png',
@@ -2031,41 +2104,65 @@ class Rules {
       'perimeterx_official.png',
       'reblaze_official.png',
       'recaptcha_official.png',
-      'sucuri_official.png'
+      'shape_security_official.png',
+      'sucuri_official.png',
+      // Fingerprint icons
+      'audio_fingerprint.png',
+      'battery_fingerprint.png',
+      'canvas_fingerprint.png',
+      'clipboard_fingerprint.png',
+      'crypto_fingerprint.png',
+      'css_fingerprint.png',
+      'font_fingerprint.png',
+      'gamepads_fingerprint.png',
+      'geolocation_fingerprint.png',
+      'hardware_fingerprint.png',
+      'indexeddb_fingerprint.png',
+      'media_fingerprint.png',
+      'navigator_fingerprint.png',
+      'orientation_fingerprint.png',
+      'performance_fingerprint.png',
+      'screen_fingerprint.png',
+      'storage_fingerprint.png',
+      'timezone_fingerprint.png',
+      'usb_fingerprint.png',
+      'webgl_fingerprint.png',
+      'webrtc_fingerprint.png'
     ];
+
+    // Helper to check if icon is fingerprint type
+    const isFingerprint = (icon) => icon.includes('_fingerprint.png');
 
     // Create modal HTML with Default option first, then Custom, then others
     const scrapflyIcon = chrome.runtime.getURL('icons/scrapfly.webp');
     const modalHtml = `
-      <div class="icon-picker-modal" style="display:flex;position:fixed;inset:0;background:rgba(10,10,10,0.65);backdrop-filter:blur(2px);z-index:10000;align-items:center;justify-content:center;padding:32px;">
-        <div class="icon-picker-content" style="display:flex;flex-direction:column;position:relative;background:var(--bg-elevated,var(--bg-primary));border-radius:16px;padding:28px;width:clamp(520px,60vw,700px);max-height:90vh;box-shadow:0 24px 60px rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.05);box-sizing:border-box;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:16px;">
-            <div style="flex:1;">
-              <h3 style="margin:0;font-size:18px;font-weight:700;letter-spacing:0.3px;">Choose Icon</h3>
-              <p style="margin:6px 0 0;font-size:12px;color:var(--text-muted);">Select an icon below or upload your own custom image.</p>
-            </div>
-            <button class="icon-picker-close" aria-label="Close icon picker" style="width:34px;height:34px;border:1px solid rgba(255,255,255,0.08);border-radius:8px;background:rgba(255,255,255,0.04);color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;font-size:18px;line-height:1;">
+      <div class="icon-picker-modal" style="display:flex;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(2px);z-index:10000;align-items:center;justify-content:center;">
+        <div class="icon-picker-content" style="display:flex;flex-direction:column;position:relative;background:var(--bg-secondary);border-radius:12px;width:90%;max-width:520px;max-height:85vh;box-shadow:0 25px 50px rgba(0,0,0,0.6);border:1px solid var(--border);overflow:hidden;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);">
+            <h3 style="margin:0;font-size:16px;font-weight:600;color:var(--text-primary);">Choose Icon</h3>
+            <button class="icon-picker-close" aria-label="Close icon picker" style="width:28px;height:28px;border:none;border-radius:6px;background:rgba(239,68,68,0.15);color:#ef4444;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s ease;font-size:14px;line-height:1;">
               ✕
             </button>
           </div>
-          <div style="position:relative;flex:1 1 auto;overflow:auto;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);">
-            <div class="icon-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:12px;padding:16px 16px 32px;max-height:clamp(280px,55vh,420px);box-sizing:border-box;">
+          <div style="flex:1;overflow:auto;padding:16px;">
+            <div class="icon-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:10px;">
               ${[
-                { icon: 'default', label: 'Default', image: scrapflyIcon, special: true, className: 'icon-option icon-option-default icon-option-special', imgSize: 48 },
-                ...availableIcons.map(icon => ({ icon, label: icon.replace('_official.png', '').replace('.png', ''), image: chrome.runtime.getURL('detectors/icons/' + icon), special: false, className: 'icon-option', imgSize: 42 }))
-              ].map(({ icon, label, image, special, className, imgSize }) => `
-                <div class="${className}" data-icon="${icon}" style="cursor:pointer;padding:10px;border:2px solid ${special ? 'var(--accent)' : 'rgba(255,255,255,0.06)'};border-radius:10px;text-align:center;transition:transform 0.18s ease,border-color 0.18s ease,background 0.18s ease;background:${special ? 'linear-gradient(135deg, rgba(59,130,246,0.18) 0%, rgba(59,130,246,0.28) 100%)' : 'rgba(255,255,255,0.02)'};">
-                  <img src="${image}" style="width:${imgSize}px;height:${imgSize}px;object-fit:contain;margin-bottom:6px;" />
-                  <div style="font-size:9px;color:var(--text-muted);word-break:break-word;text-transform:capitalize;">${label}</div>
+                { icon: 'default', label: 'Default', image: scrapflyIcon, special: true, className: 'icon-option icon-option-default icon-option-special', imgSize: 40, isFingerprint: false },
+                ...availableIcons.map(icon => ({ icon, label: icon.replace('_official.png', '').replace('_fingerprint.png', '').replace('.png', ''), image: chrome.runtime.getURL('detectors/icons/' + icon), special: false, className: 'icon-option', imgSize: 36, isFingerprint: isFingerprint(icon), svg: fingerprintSvgIcons[icon] }))
+              ].map(({ icon, label, image, special, className, imgSize, isFingerprint: isFp, svg }) => `
+                <div class="${className}" data-icon="${icon}" style="cursor:pointer;padding:8px;border:2px solid ${special ? 'var(--accent)' : 'var(--border)'};border-radius:8px;text-align:center;transition:all 0.15s ease;background:${special ? 'rgba(59,130,246,0.15)' : 'var(--bg-secondary)'};">
+                  ${isFp ? `<div style="width:${imgSize}px;height:${imgSize}px;margin:0 auto 4px;border-radius:50%;background:linear-gradient(135deg,#3b82f6 0%,#60a5fa 100%);display:flex;align-items:center;justify-content:center;color:white;">${svg.replace('viewBox', 'style="width:20px;height:20px;" viewBox')}</div>` : `<img src="${image}" style="width:${imgSize}px;height:${imgSize}px;object-fit:contain;margin-bottom:4px;" />`}
+                  <div style="font-size:9px;color:var(--text-muted);word-break:break-word;text-transform:capitalize;line-height:1.2;">${label}</div>
                 </div>
               `).join('')}
             </div>
           </div>
-          <div style="display:flex;gap:12px;margin-top:22px;">
-            <button id="uploadCustomIcon" style="flex:1;padding:12px 16px;background:linear-gradient(135deg,rgba(59,130,246,0.34) 0%,rgba(59,130,246,0.62) 100%);color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-              <span style="font-size:18px;">⬆</span> Upload Custom Icon
+          <div style="display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border);background:var(--bg-secondary);">
+            <button id="uploadCustomIcon" style="flex:1;padding:8px 12px;background:var(--accent, #3b82f6);color:white;border:none;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity 0.2s;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Upload Custom
             </button>
-            <button id="cancelIconPicker" style="padding:12px 18px;background:rgba(255,255,255,0.05);color:var(--text-muted);border:1px solid rgba(255,255,255,0.08);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;">
+            <button id="cancelIconPicker" style="padding:8px 16px;background:var(--bg-tertiary);color:var(--text-secondary);border:1px solid var(--border);border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;">
               Cancel
             </button>
           </div>
@@ -2132,11 +2229,23 @@ class Rules {
       }
     });
 
-    // Close button
+    // Close button with hover effects
     const closeBtn = modalContainer.querySelector('.icon-picker-close');
-    closeBtn?.addEventListener('click', () => {
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
         document.body.removeChild(modalContainer);
       });
+      closeBtn.addEventListener('mouseenter', () => {
+        closeBtn.style.background = '#ef4444';
+        closeBtn.style.color = 'white';
+        closeBtn.style.transform = 'scale(1.05)';
+      });
+      closeBtn.addEventListener('mouseleave', () => {
+        closeBtn.style.background = 'rgba(239, 68, 68, 0.15)';
+        closeBtn.style.color = '#ef4444';
+        closeBtn.style.transform = 'scale(1)';
+      });
+    }
   }
 
   /**
@@ -2303,9 +2412,8 @@ class Rules {
    */
   openEditModal(detector, category, detectorName, isNew = false) {
     const modal = document.querySelector('#editRuleModal');
-    const title = document.querySelector('#editRuleModalTitle');
 
-    if (!modal || !title) return;
+    if (!modal) return;
 
     // Ensure detector has detection property before storing
     const detectorWithDetection = {
@@ -2330,7 +2438,10 @@ class Rules {
 
     // Set dynamic title based on whether it's a new detector
     const action = this.currentEditDetector.isNew ? 'Add' : 'Edit';
-    title.textContent = `${action} ${detectorWithDetection.displayName || detectorName} Detection Rule`;
+    const actionEl = document.querySelector('#editRuleModalAction');
+    const nameEl = document.querySelector('#editRuleModalName');
+    if (actionEl) actionEl.textContent = `${action} ${detectorWithDetection.displayName || detectorName}`;
+    if (nameEl) nameEl.textContent = 'Detection Rule';
 
     // Populate modal with detector data (now currentEditDetector is available)
     this.populateModalData(detectorWithDetection);
@@ -2376,6 +2487,17 @@ class Rules {
     if (iconImg) {
       // Default Scrapfly icon fallback
       const scrapflyIcon = chrome.runtime.getURL('icons/scrapfly.webp');
+      const currentIconContainer = iconImg.parentElement;
+
+      // Add fingerprint-icon class for fingerprint category
+      const category = this.currentEditDetector?.category || detector.category || 'antibot';
+      if (currentIconContainer) {
+        if (category.toLowerCase() === 'fingerprint') {
+          currentIconContainer.classList.add('fingerprint-icon');
+        } else {
+          currentIconContainer.classList.remove('fingerprint-icon');
+        }
+      }
 
       // Set error handler to fallback to Scrapfly icon
       iconImg.onerror = () => {
@@ -2420,6 +2542,30 @@ class Rules {
       } else {
         // No icon specified, use Scrapfly icon
         iconImg.src = scrapflyIcon;
+      }
+    }
+
+    // Populate author field
+    const authorInput = document.querySelector('#detectorAuthorInput');
+    const authorHelp = document.querySelector('#authorHelp');
+
+    if (authorInput) {
+      // Set value (default to 'scrapfly' for new detectors)
+      authorInput.value = detector.author || 'scrapfly';
+
+      // Make read-only for official scrapfly detectors
+      if (detector.author === 'scrapfly') {
+        authorInput.setAttribute('readonly', 'readonly');
+        authorInput.classList.add('readonly-field');
+        if (authorHelp) {
+          authorHelp.textContent = 'Official Scrapfly detector (read-only)';
+        }
+      } else {
+        authorInput.removeAttribute('readonly');
+        authorInput.classList.remove('readonly-field');
+        if (authorHelp) {
+          authorHelp.textContent = 'Who created this detector';
+        }
       }
     }
 
@@ -2493,6 +2639,12 @@ class Rules {
       const tagColor = this.detectorManager.categoryManager.getTagColor(methodType);
       const backgroundColor = (tagColor && tagColor !== '#666666') ? tagColor : '#666666';
 
+      // Parse hex color to RGB for muted style
+      const methodHex = backgroundColor.replace('#', '');
+      const methodR = parseInt(methodHex.substring(0, 2), 16) || 102;
+      const methodG = parseInt(methodHex.substring(2, 4), 16) || 102;
+      const methodB = parseInt(methodHex.substring(4, 6), 16) || 102;
+
       // Add help button for all method types
       const helpButtonTitle = methodType === 'js_hooks' ? 'What are JS hooks?' :
                              methodType === 'window' ? 'What are Window properties?' :
@@ -2511,7 +2663,7 @@ class Rules {
       methodsHtml += `
         <div class="method-section">
           <div class="method-header">
-            <div class="method-title" style="background: ${backgroundColor}; color: white; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; display: inline-block;">${displayName}</div>
+            <div class="method-title" style="background: rgba(${methodR}, ${methodG}, ${methodB}, 0.2); color: ${backgroundColor}; border: 1px solid rgba(${methodR}, ${methodG}, ${methodB}, 0.35); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; display: inline-block;">${displayName}</div>
             ${methodHelper}
           </div>
           <div class="method-items">
@@ -2649,34 +2801,43 @@ class Rules {
                 data-payload-url-regex="${payloadUrlRegex}"
                 data-payload-url-case-sensitive="${payloadUrlCaseSensitive}"
                 data-payload-methods="${payloadMethods}">
-                <div class="method-item-row">
+                <div class="method-item-content">
                   <div class="method-item-inputs">
                     <div class="input-with-indicators">
-                      <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="${name}" data-method-key="${methodType}" data-item-index="${index}">
-                      <div class="input-indicators" data-for="name-${methodType}-${index}"></div>
+                      <div class="input-row">
+                        <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="${name}" data-method-key="${methodType}" data-item-index="${index}">
+                        ${methodType === 'dom' ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="${index}">?</button>` : ''}
+                        ${methodType === 'window' ? `<button class="window-helper-btn" title="Window Property Examples" data-input-index="${index}">?</button>` : ''}
+                      </div>
+                      <div class="input-badges-row">
+                        <div class="input-indicators" data-for="name-${methodType}-${index}"></div>
+                      </div>
                     </div>
-                    ${methodType === 'dom' ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="${index}">?</button>` : ''}
                     ${!isSingleInput ? `
                     <div class="input-with-indicators">
-                      <input type="text" class="method-input method-value" placeholder="${valuePlaceholder}" value="${value}" data-method-key="${methodType}" data-item-index="${index}">
-                      <div class="input-indicators" data-for="value-${methodType}-${index}"></div>
+                      <div class="input-row">
+                        <input type="text" class="method-input method-value" placeholder="${valuePlaceholder}" value="${value}" data-method-key="${methodType}" data-item-index="${index}">
+                      </div>
+                      <div class="input-badges-row">
+                        <div class="input-indicators" data-for="value-${methodType}-${index}"></div>
+                      </div>
                     </div>
                     ` : ''}
-                    ${methodType === 'js_hooks' ? '' : ''}
                   </div>
-                  ${methodType === 'window' ? `<button class="window-helper-btn" title="Window Property Examples" data-input-index="${index}">?</button>` : ''}
-                  ${methodType !== 'js_hooks' ? `
-                  <button class="method-action-btn settings ${hasCustomSettings ? 'has-custom-settings' : ''}" title="Settings">
-                    <svg width="12" height="12" viewBox="0 0 24 24">
-                      <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
-                    </svg>
-                  </button>
-                  ` : ''}
-                  <button class="method-action-btn delete" title="Delete">
-                    <svg width="12" height="12" viewBox="0 0 24 24">
-                      <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
-                    </svg>
-                  </button>
+                  <div class="method-item-actions">
+                    ${methodType !== 'js_hooks' ? `
+                    <button class="method-action-btn settings ${hasCustomSettings ? 'has-custom-settings' : ''}" title="Settings">
+                      <svg width="14" height="14" viewBox="0 0 24 24">
+                        <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+                      </svg>
+                    </button>
+                    ` : ''}
+                    <button class="method-action-btn delete" title="Delete">
+                      <svg width="14" height="14" viewBox="0 0 24 24">
+                        <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             `;
@@ -2775,33 +2936,43 @@ class Rules {
         data-payload-url-regex="false"
         data-payload-url-case-sensitive="false"
         data-payload-methods="">
-        <div class="method-item-row">
+        <div class="method-item-content">
           <div class="method-item-inputs">
             <div class="input-with-indicators">
-              <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="" data-method-key="${methodKey}" data-item-index="${itemIndex}">
-              <div class="input-indicators" data-for="name-${methodKey}-${itemIndex}"></div>
+              <div class="input-row">
+                <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="" data-method-key="${methodKey}" data-item-index="${itemIndex}">
+                ${isDom ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="${itemIndex}">?</button>` : ''}
+                ${isWindow ? `<button class="window-helper-btn" title="Window Property Examples" data-input-index="${itemIndex}">?</button>` : ''}
+              </div>
+              <div class="input-badges-row">
+                <div class="input-indicators" data-for="name-${methodKey}-${itemIndex}"></div>
+              </div>
             </div>
-            ${isDom ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="${itemIndex}">?</button>` : ''}
             ${!isSingleInput || isWindow ? `
             <div class="input-with-indicators">
-              <input type="text" class="method-input method-value" placeholder="${valuePlaceholder}" value="" data-method-key="${methodKey}" data-item-index="${itemIndex}">
-              <div class="input-indicators" data-for="value-${methodKey}-${itemIndex}"></div>
+              <div class="input-row">
+                <input type="text" class="method-input method-value" placeholder="${valuePlaceholder}" value="" data-method-key="${methodKey}" data-item-index="${itemIndex}">
+              </div>
+              <div class="input-badges-row">
+                <div class="input-indicators" data-for="value-${methodKey}-${itemIndex}"></div>
+              </div>
             </div>
             ` : ''}
           </div>
-          ${isWindow ? `<button class="window-helper-btn" title="Window Property Examples" data-input-index="${itemIndex}">?</button>` : ''}
-          ${methodKey !== 'js_hooks' ? `
-          <button class="method-action-btn settings" title="Settings">
-            <svg width="12" height="12" viewBox="0 0 24 24">
-              <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
-            </svg>
-          </button>
-          ` : ''}
-          <button class="method-action-btn delete" title="Delete">
-            <svg width="12" height="12" viewBox="0 0 24 24">
-              <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
-            </svg>
-          </button>
+          <div class="method-item-actions">
+            ${methodKey !== 'js_hooks' ? `
+            <button class="method-action-btn settings" title="Settings">
+              <svg width="14" height="14" viewBox="0 0 24 24">
+                <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+              </svg>
+            </button>
+            ` : ''}
+            <button class="method-action-btn delete" title="Delete">
+              <svg width="14" height="14" viewBox="0 0 24 24">
+                <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     `;
@@ -2844,30 +3015,40 @@ class Rules {
             data-value-regex="false"
             data-value-wholeword="false"
             data-value-case="false">
-            <div class="method-item-row">
+            <div class="method-item-content">
               <div class="method-item-inputs">
                 <div class="input-with-indicators">
-                  <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="" data-method-key="${methodKey}" data-item-index="new">
-                  <div class="input-indicators" data-for="name-${methodKey}-new"></div>
+                  <div class="input-row">
+                    <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="" data-method-key="${methodKey}" data-item-index="new">
+                    ${isDom ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="new">?</button>` : ''}
+                  </div>
+                  <div class="input-badges-row">
+                    <div class="input-indicators" data-for="name-${methodKey}-new"></div>
+                  </div>
                 </div>
-                ${isDom ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="new">?</button>` : ''}
                 ${!isSingleInput ? `
                 <div class="input-with-indicators">
-                  <input type="text" class="method-input method-value" placeholder="Value (optional)" value="" data-method-key="${methodKey}" data-item-index="new">
-                  <div class="input-indicators" data-for="value-${methodKey}-new"></div>
+                  <div class="input-row">
+                    <input type="text" class="method-input method-value" placeholder="Value (optional)" value="" data-method-key="${methodKey}" data-item-index="new">
+                  </div>
+                  <div class="input-badges-row">
+                    <div class="input-indicators" data-for="value-${methodKey}-new"></div>
+                  </div>
                 </div>
                 ` : ''}
               </div>
-              <button class="method-action-btn settings" title="Settings">
-                <svg width="12" height="12" viewBox="0 0 24 24">
-                  <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
-                </svg>
-              </button>
-              <button class="method-action-btn delete" title="Delete">
-                <svg width="12" height="12" viewBox="0 0 24 24">
-                  <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
-                </svg>
-              </button>
+              <div class="method-item-actions">
+                <button class="method-action-btn settings" title="Settings">
+                  <svg width="14" height="14" viewBox="0 0 24 24">
+                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+                  </svg>
+                </button>
+                <button class="method-action-btn delete" title="Delete">
+                  <svg width="14" height="14" viewBox="0 0 24 24">
+                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -2924,6 +3105,13 @@ class Rules {
       this.currentEditDetector.detector.category = categorySelect.value;
       // Update the category in the parent structure
       this.currentEditDetector.category = categorySelect.value;
+    }
+
+    // Save author field
+    const authorInput = document.querySelector('#detectorAuthorInput');
+    if (authorInput) {
+      const author = authorInput.value.trim() || 'scrapfly';
+      this.currentEditDetector.detector.author = author;
     }
 
     // Colors are managed by CategoryManager in Settings, not stored per detector
@@ -3083,6 +3271,19 @@ class Rules {
 
     // Update lastUpdated timestamp
     this.currentEditDetector.detector.lastUpdated = timestamp;
+
+    // Auto-increment version (1.0 → 1.1 → 1.2, etc.)
+    if (this.currentEditDetector.isNew) {
+      // New detector starts at version 1.0
+      this.currentEditDetector.detector.version = '1.0';
+    } else {
+      // Increment existing version
+      const currentVersion = this.currentEditDetector.detector.version || '1.0';
+      const versionNum = parseFloat(currentVersion) || 1.0;
+      const newVersion = (versionNum + 0.1).toFixed(1);
+      this.currentEditDetector.detector.version = newVersion;
+      Logger.ui(`Version incremented: ${currentVersion} → ${newVersion}`);
+    }
 
     // Handle new detector
     if (this.currentEditDetector.isNew) {
@@ -3287,11 +3488,17 @@ class Rules {
       // Get category method badges with dynamic colors
       const categoryMethod = this.getCategoryMethod(category);
 
-      // Create category badge with dynamic color from storage
-      const categoryBadge = `<span class="method-tag" style="background: ${categoryColor}; color: white;">${categoryMethod}</span>`;
+      // Parse category color to RGB for muted style
+      const catHex = categoryColor.replace('#', '');
+      const catR = parseInt(catHex.substring(0, 2), 16);
+      const catG = parseInt(catHex.substring(2, 4), 16);
+      const catB = parseInt(catHex.substring(4, 6), 16);
 
-      // Create the detector badge with category color
-      const detectorBadge = `<span class="method-tag" style="background: ${categoryColor}; color: white;">${detector.displayName}</span>`;
+      // Create category badge with muted style
+      const categoryBadge = `<span class="method-tag" style="background: rgba(${catR}, ${catG}, ${catB}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${catR}, ${catG}, ${catB}, 0.35);">${categoryMethod}</span>`;
+
+      // Create the detector badge with muted style
+      const detectorBadge = `<span class="method-tag" style="background: rgba(${catR}, ${catG}, ${catB}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${catR}, ${catG}, ${catB}, 0.35);">${detector.displayName}</span>`;
 
       const topBadges = `${categoryBadge}${detectorBadge}`;
 
@@ -3329,6 +3536,11 @@ class Rules {
             <div class="scripts-info">
               <div class="last-updated">
                 <span class="last-updated-value">${formattedLastUpdated}</span>
+              </div>
+              <div class="detector-author">
+                <i class="fas fa-user"></i>
+                <span class="author-name">${detector.author || 'scrapfly'}</span>
+                ${(detector.author || 'scrapfly').toLowerCase() === 'scrapfly' ? '<i class="fas fa-check-circle verified-badge" title="Official Scrapfly detector"></i>' : ''}
               </div>
               <label class="toggle-switch-small" data-stop-propagation="true">
                 <input type="checkbox" class="detector-toggle"
@@ -3590,11 +3802,13 @@ class Rules {
         const methodName = methodStr.replace(/_/g, ' ').toUpperCase();
 
         if (tagColor && tagColor !== '#666666') {
-          // Use dynamic color with transparent background
-          const r = parseInt(tagColor.slice(1, 3), 16);
-          const g = parseInt(tagColor.slice(3, 5), 16);
-          const b = parseInt(tagColor.slice(5, 7), 16);
-          methodsHtml += `<span class="method-tag" style="background: rgba(${r}, ${g}, ${b}, 0.15); color: ${tagColor}; border: 1px solid rgba(${r}, ${g}, ${b}, 0.3);">${methodName}</span>`;
+          // Parse hex color to RGB for semi-transparent background
+          const hex = tagColor.replace('#', '');
+          const r = parseInt(hex.substring(0, 2), 16);
+          const g = parseInt(hex.substring(2, 4), 16);
+          const b = parseInt(hex.substring(4, 6), 16);
+          // Use muted/subtle style: semi-transparent background with colored text
+          methodsHtml += `<span class="method-tag" style="background: rgba(${r}, ${g}, ${b}, 0.25); color: ${tagColor}; border: 1px solid rgba(${r}, ${g}, ${b}, 0.4);">${methodName}</span>`;
         } else {
           // Fallback to CSS class
           const badgeClass = this.getMethodBadgeClass(methodStr);
@@ -3669,6 +3883,31 @@ class Rules {
     // Default Scrapfly icon fallback
     const scrapflyIcon = chrome.runtime.getURL('icons/scrapfly.webp');
 
+    // Fingerprint SVG icons mapping
+    const fingerprintIcons = {
+      'audio_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M8 6v12M4 9v6M16 6v12M20 9v6"/></svg>',
+      'battery_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M22 11v2"/><path d="M6 11v2M10 11v2M14 11v2"/></svg>',
+      'canvas_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 12h4l2-3 2 6 2-3h2"/></svg>',
+      'clipboard_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>',
+      'crypto_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>',
+      'css_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 3h16l-1.5 15L12 21l-6.5-3L4 3z"/><path d="M8 8h8M7 12h6"/></svg>',
+      'font_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>',
+      'gamepads_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="4"/><circle cx="8" cy="12" r="2"/><path d="M15 10v4M13 12h4"/></svg>',
+      'geolocation_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>',
+      'hardware_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg>',
+      'indexeddb_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>',
+      'media_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><polygon points="10,8 16,11 10,14" fill="currentColor"/></svg>',
+      'navigator_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" fill="none"/></svg>',
+      'orientation_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 6h6"/></svg>',
+      'performance_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><path d="M12 2v2M22 12h-2M12 22v-2M2 12h2"/></svg>',
+      'screen_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
+      'storage_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M4 20v-3h16v3M4 7v10h16V7"/><path d="M4 11h16M4 15h16"/><circle cx="7" cy="9" r="1" fill="currentColor"/></svg>',
+      'timezone_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg>',
+      'usb_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v10M7 7l5 5 5-5"/><circle cx="12" cy="16" r="2"/><path d="M6 12v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4"/></svg>',
+      'webgl_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
+      'webrtc_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 10l5-5M20 10V5h-5"/><path d="M9 14l-5 5M4 14v5h5"/><circle cx="12" cy="12" r="3"/></svg>'
+    };
+
     // Check for custom uploaded icon first
     if (detector.customIcon) {
       return `<img src="${detector.customIcon}" alt="Icon" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
@@ -3676,13 +3915,21 @@ class Rules {
 
     // Try to get real icon from detector data
     if (detector.icon) {
-      if (detector.icon.toLowerCase && detector.icon.toLowerCase() === 'default') {
+      const lowerIcon = detector.icon.toLowerCase ? detector.icon.toLowerCase() : detector.icon;
+
+      if (lowerIcon === 'default') {
         return `<img src="${scrapflyIcon}" alt="Scrapfly Icon" class="detector-icon-img">`;
       }
       // If icon is "custom.png" or "custom", use scrapfly icon directly
       if (detector.icon === 'custom.png' || detector.icon === 'custom') {
         return `<img src="${scrapflyIcon}" alt="Scrapfly Icon" class="detector-icon-img">`;
       }
+
+      // Check for fingerprint SVG icons
+      if (fingerprintIcons[lowerIcon]) {
+        return `<div class="detector-icon-svg fingerprint-icon">${fingerprintIcons[lowerIcon]}</div>`;
+      }
+
       // If it's a URL, return as image
       if (detector.icon.startsWith('http') || detector.icon.startsWith('/')) {
         return `<img src="${detector.icon}" alt="Icon" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
@@ -3732,7 +3979,7 @@ class Rules {
 
       const success = await this.detectorManager.importDetectors(data, merge);
       if (success) {
-        NotificationHelper.success('Detectors imported successfully');
+        NotificationHelper.success('Detectors imported');
         this.displayRules();
       } else {
         NotificationHelper.error('Failed to import detectors. Check the file format.');
@@ -3763,6 +4010,144 @@ class Rules {
 
     URL.revokeObjectURL(url);
   }
+
+  // ============================================
+  // Update Management Methods
+  // ============================================
+
+  /**
+   * Check for pending updates and update badge
+   */
+  async checkPendingUpdates() {
+    try {
+      if (typeof UpdateManager === 'undefined') {
+        Logger.debug('UI', 'UpdateManager not available');
+        return;
+      }
+
+      // Get stored pending updates count and show badge
+      const count = await UpdateManager.getPendingUpdatesCount();
+      this.updateUpdatesBadge(count);
+    } catch (error) {
+      Logger.error('UI', 'Error checking pending updates', error);
+      this.updateUpdatesBadge(0);
+    }
+  }
+
+  /**
+   * Handle Update button click
+   * If updates are pending, apply them. Otherwise check for new updates.
+   */
+  async handleCheckUpdates() {
+    const btn = document.querySelector('#checkUpdatesBtn');
+    const btnText = document.querySelector('#checkUpdatesBtnText');
+
+    if (!btn || typeof UpdateManager === 'undefined') {
+      Logger.warn('UI', 'UpdateManager not available');
+      return;
+    }
+
+    // Check if there are pending updates to apply
+    const pendingCount = await UpdateManager.getPendingUpdatesCount();
+
+    if (pendingCount > 0) {
+      // Apply pending updates directly
+      btn.classList.add('checking');
+      if (btnText) btnText.textContent = 'Updating...';
+
+      try {
+        const result = await UpdateManager.applyUpdates();
+
+        if (result.success && result.count > 0) {
+          this.updateUpdatesBadge(0);
+          if (typeof NotificationManager !== 'undefined') {
+            NotificationManager.showNotification(
+              `${result.count} detector${result.count > 1 ? 's' : ''} updated`,
+              'success'
+            );
+          }
+          await this.loadDetectors();
+        } else if (result.failed > 0 && result.count === 0) {
+          this.updateUpdatesBadge(0);
+          if (typeof NotificationManager !== 'undefined') {
+            NotificationManager.showNotification(
+              `Could not fetch updates from server`,
+              'warning'
+            );
+          }
+        } else {
+          this.updateUpdatesBadge(0);
+        }
+      } catch (error) {
+        Logger.error('UI', 'Error applying updates', error);
+        if (typeof NotificationManager !== 'undefined') {
+          NotificationManager.showNotification('Error applying updates', 'error');
+        }
+      } finally {
+        btn.classList.remove('checking');
+        if (btnText) btnText.textContent = 'Update';
+      }
+    } else {
+      // Check for new updates
+      btn.classList.add('checking');
+      if (btnText) btnText.textContent = 'Checking...';
+
+      try {
+        const result = await UpdateManager.checkForUpdates(true);
+
+        if (result.error) {
+          if (typeof NotificationManager !== 'undefined') {
+            NotificationManager.showNotification('Failed to check for updates', 'error');
+          }
+        } else if (result.available && result.updates.length > 0) {
+          this.updateUpdatesBadge(result.updates.length);
+          if (typeof NotificationManager !== 'undefined') {
+            NotificationManager.showNotification(
+              `${result.updates.length} update${result.updates.length > 1 ? 's' : ''} available - click again to apply`,
+              'info'
+            );
+          }
+        } else {
+          this.updateUpdatesBadge(0);
+          if (typeof NotificationManager !== 'undefined') {
+            NotificationManager.showNotification('All detectors are up to date', 'success');
+          }
+        }
+      } catch (error) {
+        Logger.error('UI', 'Error checking for updates', error);
+        if (typeof NotificationManager !== 'undefined') {
+          NotificationManager.showNotification('Error checking for updates', 'error');
+        }
+      } finally {
+        btn.classList.remove('checking');
+        if (btnText) btnText.textContent = 'Update';
+      }
+    }
+  }
+
+  /**
+   * Update the updates badge count
+   * @param {number} count - Number of pending updates
+   */
+  updateUpdatesBadge(count) {
+    const badge = document.querySelector('#updatesBadge');
+    const btn = document.querySelector('#checkUpdatesBtn');
+
+    if (badge) {
+      if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'flex';
+        if (btn) btn.classList.add('has-updates');
+      } else {
+        badge.style.display = 'none';
+        if (btn) btn.classList.remove('has-updates');
+      }
+    }
+  }
+
+  // ============================================
+  // End Update Management Methods
+  // ============================================
 
   /**
    * Update detector enabled state
@@ -3922,42 +4307,38 @@ class Rules {
     if (!query.trim()) {
       this.filteredDetectors = [...this.allDetectors];
     } else {
-      // Use SearchManager for advanced searching
-      if (this.searchManager) {
-        this.filteredDetectors = this.searchManager.searchRules(this.allDetectors, query);
-      } else {
-        // Fallback to simple search if SearchManager not available
-        const searchTerm = query.toLowerCase().trim();
-        this.filteredDetectors = this.allDetectors.filter(({ detector, category }) => {
-          // Search in detector name, category, description, and detection methods
-          const searchableText = [
-            detector.displayName,
-            detector.name,
-            category,
-            detector.description,
-            detector.lastUpdated
-          ].filter(Boolean).join(' ').toLowerCase();
+      // Simple search focused on name, category, and description only
+      // Avoid searching detection pattern content to prevent false positives
+      const searchTerm = query.toLowerCase().trim();
+      this.filteredDetectors = this.allDetectors.filter(({ detector, category }) => {
+        // Search in detector name, category, description only
+        const searchableText = [
+          detector.displayName,
+          detector.name,
+          category,
+          detector.description
+        ].filter(Boolean).join(' ').toLowerCase();
 
-          // Also search in detection methods
-          if (detector.detection) {
-            for (const [methodType, methods] of Object.entries(detector.detection)) {
-              if (Array.isArray(methods)) {
-                const methodText = methods.map(m => {
-                  if (typeof m === 'string') return m;
-                  if (typeof m === 'object') return JSON.stringify(m);
-                  return '';
-                }).join(' ').toLowerCase();
+        // Check for basic text match first
+        if (searchableText.includes(searchTerm)) {
+          return true;
+        }
 
-                if (methodText.includes(searchTerm)) {
-                  return true;
-                }
-              }
-            }
+        // Also allow searching by detection method TYPE names (COOKIE, HEADER, DOM, etc.)
+        if (detector.detection) {
+          const methodTypes = Object.keys(detector.detection)
+            .filter(key => Array.isArray(detector.detection[key]) && detector.detection[key].length > 0)
+            .map(key => key.toUpperCase().replace(/_/g, ' '))
+            .join(' ')
+            .toLowerCase();
+
+          if (methodTypes.includes(searchTerm)) {
+            return true;
           }
+        }
 
-          return searchableText.includes(searchTerm);
-        });
-      }
+        return false;
+      });
     }
 
     // Update pagination with filtered results

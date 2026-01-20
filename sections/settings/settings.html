@@ -1,6 +1,6 @@
 <!-- Settings Modal Template -->
-<div class="modal-overlay">
-  <div class="modal-content">
+<div class="base-modal-backdrop"></div>
+<div class="base-modal-content">
     <div class="modal-header">
       <div class="header-content">
         <h2>Settings</h2>
@@ -44,421 +44,428 @@
     <div class="modal-body">
       <!-- General Settings Tab -->
       <div class="settings-tab-content active" data-tab-content="general">
-        <div class="settings-section">
-          <h3>General Settings</h3>
 
-          <div class="setting-group setting-group--stacked">
-            <label class="setting-label">
-              <span>Enable Notifications</span>
-              <span class="setting-description">Show notifications when security systems are detected</span>
-            </label>
-            <label class="switch">
-              <input type="checkbox" id="notificationsEnabled">
-              <span class="slider"></span>
-            </label>
-          </div>
+        <!-- Core Settings Group -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title">Core Settings</div>
 
-          <div class="setting-group setting-group--stacked">
-            <label class="setting-label">
-              <span>Debug Mode</span>
-              <span class="setting-description">Enable console logging for debugging</span>
-            </label>
-            <label class="switch">
-              <input type="checkbox" id="debugModeGeneral">
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <!-- Log Collector Section (Only visible when Debug Mode is enabled) -->
-          <div id="logCollectorSection" style="display: none; padding-top: 16px; border-top: 1px solid var(--border); margin-top: 16px;">
-            <div class="setting-group setting-group--stacked">
-              <label class="setting-label">
-                <span>Log Collector</span>
-                <span class="setting-description">Collect and export all debug logs from the service worker</span>
-              </label>
-              <label class="switch">
-                <input type="checkbox" id="logCollectorEnabled">
+          <!-- Notifications Card -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="settings-card-title">
+                <h4>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21,19V20H3V19L5,17V11C5,7.9 7.03,5.17 10,4.29C10,4.19 10,4.1 10,4A2,2 0 0,1 12,2A2,2 0 0,1 14,4C14,4.1 14,4.19 14,4.29C16.97,5.17 19,7.9 19,11V17L21,19M14,21A2,2 0 0,1 12,23A2,2 0 0,1 10,21"/></svg>
+                  Notifications
+                </h4>
+                <p>Show alerts when security systems are detected</p>
+              </div>
+              <label class="switch switch-sm">
+                <input type="checkbox" id="notificationsEnabled">
                 <span class="slider"></span>
               </label>
             </div>
+          </div>
 
-            <div id="logCollectorControls" style="display: none; padding: 12px; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border); margin-top: 8px;">
-              <!-- Max Logs Setting -->
-              <div class="setting-group" style="margin-bottom: 12px;">
-                <label class="setting-label">
-                  <span>Max Logs</span>
-                  <span class="setting-description">Maximum number of logs to store (100-100000)</span>
-                </label>
-                <input type="number" id="logCollectorMaxLogs" class="input-field" min="100" max="100000" step="100" value="5000">
+          <!-- Debug Mode Card -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="settings-card-title">
+                <h4>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14,12H10V10H14M14,16H10V14H14M20,8H17.19C16.74,7.22 16.12,6.55 15.37,6.04L17,4.41L15.59,3L13.42,5.17C12.96,5.06 12.5,5 12,5C11.5,5 11.04,5.06 10.59,5.17L8.41,3L7,4.41L8.62,6.04C7.88,6.55 7.26,7.22 6.81,8H4V10H6.09C6.04,10.33 6,10.66 6,11V12H4V14H6V15C6,15.34 6.04,15.67 6.09,16H4V18H6.81C7.85,19.79 9.78,21 12,21C14.22,21 16.15,19.79 17.19,18H20V16H17.91C17.96,15.67 18,15.34 18,15V14H20V12H18V11C18,10.66 17.96,10.33 17.91,10H20V8M16,15A4,4 0 0,1 12,19A4,4 0 0,1 8,15V11A4,4 0 0,1 12,7A4,4 0 0,1 16,11V15Z"/></svg>
+                  Debug Mode
+                </h4>
+                <p>Enable console logging for debugging</p>
               </div>
-
-              <!-- Log Count Display -->
-              <div style="margin-bottom: 12px; padding: 10px; background: var(--bg-primary); border-radius: 6px; border: 1px solid var(--border);">
-                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Logs Collected:</div>
-                <div style="font-size: 16px; font-weight: 600; color: var(--text-primary);">
-                  <span id="logCountValue">0</span> / <span id="logCountMax">5000</span>
+              <label class="switch switch-sm">
+                <input type="checkbox" id="debugModeGeneral">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <!-- Log Collector Section (Only visible when Debug Mode is enabled) -->
+            <div id="logCollectorSection" class="settings-card-body" style="display: none;">
+              <div class="setting-row">
+                <span class="setting-row-label">Log Collector</span>
+                <label class="switch switch-sm">
+                  <input type="checkbox" id="logCollectorEnabled">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div id="logCollectorControls" style="display: none;">
+                <div class="setting-row">
+                  <span class="setting-row-label">Max Logs</span>
+                  <input type="number" id="logCollectorMaxLogs" class="input-field" min="100" max="100000" step="100" value="5000" style="max-width: 90px;">
+                </div>
+                <div class="setting-row">
+                  <span class="setting-row-label">Collected</span>
+                  <span class="settings-info-badge"><span id="logCountValue">0</span> / <span id="logCountMax">5000</span></span>
+                </div>
+                <div class="settings-action-row">
+                  <button id="exportLogsJsonBtn" class="action-btn" title="Export JSON">
+                    <svg width="14" height="14" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z" fill="currentColor"/></svg>
+                    JSON
+                  </button>
+                  <button id="exportLogsTextBtn" class="action-btn" title="Export Text">
+                    <svg width="14" height="14" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M8,15.5H16V17H8V15.5M8,11.5H16V13H8V11.5Z" fill="currentColor"/></svg>
+                    Text
+                  </button>
+                  <button id="clearLogsBtn" class="action-btn" style="background-color: rgba(239,68,68,0.15); color: #ef4444;" title="Clear">
+                    <svg width="14" height="14" viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/></svg>
+                  </button>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
 
-              <!-- Action Buttons -->
-              <div style="display: flex; gap: 8px; flex-direction: column;">
-                <button id="exportLogsJsonBtn" class="action-btn" style="width: 100%;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" style="margin-right: 6px;">
-                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z" fill="currentColor"/>
-                  </svg>
-                  Export as JSON
-                </button>
-                <button id="exportLogsTextBtn" class="action-btn" style="width: 100%;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" style="margin-right: 6px;">
-                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M8,15.5H16V17H8V15.5M8,11.5H16V13H8V11.5Z" fill="currentColor"/>
-                  </svg>
-                  Export as Text
-                </button>
-                <button id="clearLogsBtn" class="action-btn" style="width: 100%; background-color: #ef4444; color: white;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" style="margin-right: 6px;">
-                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
-                  </svg>
-                  Clear Logs
+        <!-- Detector Updates Group -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title">Detector Updates</div>
+
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="settings-card-title">
+                <h4>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21,10.12H14.22L16.96,7.3C14.23,4.6 9.81,4.5 7.08,7.2C4.35,9.91 4.35,14.28 7.08,17C9.81,19.7 14.23,19.7 16.96,17C18.32,15.65 19,14.08 19,12.1H21C21,14.08 20.12,16.65 18.36,18.39C14.85,21.87 9.15,21.87 5.64,18.39C2.14,14.92 2.11,9.28 5.62,5.81C9.13,2.34 14.76,2.34 18.27,5.81L21,3V10.12M12.5,8V12.25L16,14.33L15.28,15.54L11,13V8H12.5Z"/></svg>
+                  Auto-check for Updates
+                </h4>
+                <p>Automatically check for new detector definitions</p>
+              </div>
+              <label class="switch switch-sm">
+                <input type="checkbox" id="autoUpdate">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="settings-card-body" id="updateIntervalGroup">
+              <div class="setting-row">
+                <span class="setting-row-label">Check Interval</span>
+                <select id="checkIntervalHours" class="select-field" style="min-width: 130px;">
+                  <option value="6">6 hours</option>
+                  <option value="12">12 hours</option>
+                  <option value="24">24 hours</option>
+                  <option value="48">2 days</option>
+                  <option value="168">1 week</option>
+                </select>
+              </div>
+              <div class="setting-row">
+                <span class="setting-row-label">Last Check: <span id="lastUpdateCheckTime" style="color: var(--text-muted);">Never</span></span>
+                <button id="checkUpdatesNowBtn" class="action-btn" style="padding: 6px 12px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" fill="currentColor"/></svg>
+                  Check Now
                 </button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Badge Colors Section -->
-        <div class="settings-section">
-          <h3>Badge Colors</h3>
+        <!-- Badge Colors Group -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title">Badge Colors</div>
 
-          <div class="setting-group setting-group--stacked">
-            <label class="setting-label">
-              <span>Low Detection (1-2)</span>
-              <span class="setting-description">Badge color for low number of detections</span>
-            </label>
-            <div class="color-picker-container">
-              <input type="color" id="colorBadgeLow" class="color-field" value="#4CAF50">
-              <span class="color-hex-display" id="hexBadgeLow">#4CAF50</span>
-            </div>
-          </div>
-
-          <div class="setting-group setting-group--stacked">
-            <label class="setting-label">
-              <span>Medium Detection (3-4)</span>
-              <span class="setting-description">Badge color for medium number of detections</span>
-            </label>
-            <div class="color-picker-container">
-              <input type="color" id="colorBadgeMedium" class="color-field" value="#FFA500">
-              <span class="color-hex-display" id="hexBadgeMedium">#FFA500</span>
-            </div>
-          </div>
-
-          <div class="setting-group setting-group--stacked">
-            <label class="setting-label">
-              <span>High Detection (5+)</span>
-              <span class="setting-description">Badge color for high number of detections</span>
-            </label>
-            <div class="color-picker-container">
-              <input type="color" id="colorBadgeHigh" class="color-field" value="#FF4444">
-              <span class="color-hex-display" id="hexBadgeHigh">#FF4444</span>
+          <div class="settings-card">
+            <div class="settings-card-body settings-card-body--no-border" style="padding-top: 14px;">
+              <div class="color-row">
+                <span class="color-row-label">Low (1-2)</span>
+                <div class="color-picker-container">
+                  <input type="color" id="colorBadgeLow" class="color-field" value="#4CAF50">
+                  <span class="color-hex-display" id="hexBadgeLow">#4CAF50</span>
+                </div>
+              </div>
+              <div class="color-row">
+                <span class="color-row-label">Medium (3-4)</span>
+                <div class="color-picker-container">
+                  <input type="color" id="colorBadgeMedium" class="color-field" value="#FFA500">
+                  <span class="color-hex-display" id="hexBadgeMedium">#FFA500</span>
+                </div>
+              </div>
+              <div class="color-row">
+                <span class="color-row-label">High (5+)</span>
+                <div class="color-picker-container">
+                  <input type="color" id="colorBadgeHigh" class="color-field" value="#FF4444">
+                  <span class="color-hex-display" id="hexBadgeHigh">#FF4444</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Colors Section with Pagination -->
-        <div class="settings-section">
-          <h3>Color Customization</h3>
-
-          <!-- Pagination Controls -->
-          <div class="color-pagination-controls">
-            <button id="colorPrevBtn" class="pagination-btn" disabled>
-              <svg width="14" height="14" viewBox="0 0 24 24">
-                <path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/>
-              </svg>
-            </button>
-            <span class="color-page-info">
-              <span id="colorPageNum">1</span> / <span id="colorTotalPages">4</span>
-            </span>
-            <button id="colorNextBtn" class="pagination-btn">
-              <svg width="14" height="14" viewBox="0 0 24 24">
-                <path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/>
-              </svg>
-            </button>
+        <div class="settings-card-group">
+          <div class="settings-card-group-title">
+            Color Customization
+            <div class="color-pagination-controls">
+              <button id="colorPrevBtn" class="pagination-btn" disabled>
+                <svg width="12" height="12" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/></svg>
+              </button>
+              <span class="color-page-info">
+                <span id="colorPageNum">1</span>/<span id="colorTotalPages">4</span>
+              </span>
+              <button id="colorNextBtn" class="pagination-btn">
+                <svg width="12" height="12" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/></svg>
+              </button>
+            </div>
           </div>
 
           <!-- Color Pages Container -->
           <div id="colorPagesContainer">
             <!-- Page 1: Category Colors -->
             <div class="color-page" data-page="1">
-              <h4 class="color-section-title">Category Colors</h4>
-
-              <div class="setting-group setting-group--stacked">
-                <label class="setting-label">
-                  <span>Anti-Bot</span>
-                  <span class="setting-description">Color for anti-bot detectors</span>
-                </label>
-                <div class="color-picker-container">
-                  <input type="color" id="colorAntibot" class="color-field" value="#FF5733">
-                  <span class="color-hex-display" id="hexAntibot">#FF5733</span>
-                </div>
-              </div>
-
-              <div class="setting-group setting-group--stacked">
-                <label class="setting-label">
-                  <span>Captcha</span>
-                  <span class="setting-description">Color for Captcha detectors</span>
-                </label>
-                <div class="color-picker-container">
-                  <input type="color" id="colorCaptcha" class="color-field" value="#33C3FF">
-                  <span class="color-hex-display" id="hexCaptcha">#33C3FF</span>
-                </div>
-              </div>
-
-              <div class="setting-group setting-group--stacked">
-                <label class="setting-label">
-                  <span>Fingerprint</span>
-                  <span class="setting-description">Color for fingerprint detectors</span>
-                </label>
-                <div class="color-picker-container">
-                  <input type="color" id="colorFingerprint" class="color-field" value="#8D33FF">
-                  <span class="color-hex-display" id="hexFingerprint">#8D33FF</span>
+              <div class="settings-card">
+                <div class="settings-card-body settings-card-body--no-border" style="padding-top: 14px;">
+                  <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.3px;">Category Colors</div>
+                  <div class="color-row">
+                    <span class="color-row-label">Anti-Bot</span>
+                    <div class="color-picker-container">
+                      <input type="color" id="colorAntibot" class="color-field" value="#FF5733">
+                      <span class="color-hex-display" id="hexAntibot">#FF5733</span>
+                    </div>
+                  </div>
+                  <div class="color-row">
+                    <span class="color-row-label">Captcha</span>
+                    <div class="color-picker-container">
+                      <input type="color" id="colorCaptcha" class="color-field" value="#33C3FF">
+                      <span class="color-hex-display" id="hexCaptcha">#33C3FF</span>
+                    </div>
+                  </div>
+                  <div class="color-row">
+                    <span class="color-row-label">Fingerprint</span>
+                    <div class="color-picker-container">
+                      <input type="color" id="colorFingerprint" class="color-field" value="#3b82f6">
+                      <span class="color-hex-display" id="hexFingerprint">#3b82f6</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- Page 2: Tag Colors (Part 1) -->
             <div class="color-page" data-page="2" style="display: none;">
-              <h4 class="color-section-title">Tag Colors (Part 1)</h4>
-
-              <div class="setting-group setting-group--stacked">
-                <label class="setting-label">
-                  <span>DOM</span>
-                  <span class="setting-description">Color for DOM detection methods</span>
-                </label>
-                <div class="color-picker-container">
-                  <input type="color" id="colorTagDOM" class="color-field" value="#8D33FF">
-                  <span class="color-hex-display" id="hexTagDOM">#8D33FF</span>
-                </div>
-              </div>
-
-              <div class="setting-group setting-group--stacked">
-                <label class="setting-label">
-                  <span>Headers</span>
-                  <span class="setting-description">Color for header detection methods</span>
-                </label>
-                <div class="color-picker-container">
-                  <input type="color" id="colorTagHeaders" class="color-field" value="#FF33A8">
-                  <span class="color-hex-display" id="hexTagHeaders">#FF33A8</span>
-                </div>
-              </div>
-
-              <div class="setting-group setting-group--stacked">
-                <label class="setting-label">
-                  <span>Cookies</span>
-                  <span class="setting-description">Color for cookie detection methods</span>
-                </label>
-                <div class="color-picker-container">
-                  <input type="color" id="colorTagCookies" class="color-field" value="#FFC133">
-                  <span class="color-hex-display" id="hexTagCookies">#FFC133</span>
+              <div class="settings-card">
+                <div class="settings-card-body settings-card-body--no-border" style="padding-top: 14px;">
+                  <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.3px;">Tag Colors (1/3)</div>
+                  <div class="color-row">
+                    <span class="color-row-label">Dom</span>
+                    <div class="color-picker-container">
+                      <input type="color" id="colorTagDOM" class="color-field" value="#8D33FF">
+                      <span class="color-hex-display" id="hexTagDOM">#8D33FF</span>
+                    </div>
+                  </div>
+                  <div class="color-row">
+                    <span class="color-row-label">Headers</span>
+                    <div class="color-picker-container">
+                      <input type="color" id="colorTagHeaders" class="color-field" value="#FF33A8">
+                      <span class="color-hex-display" id="hexTagHeaders">#FF33A8</span>
+                    </div>
+                  </div>
+                  <div class="color-row">
+                    <span class="color-row-label">Cookies</span>
+                    <div class="color-picker-container">
+                      <input type="color" id="colorTagCookies" class="color-field" value="#FFC133">
+                      <span class="color-hex-display" id="hexTagCookies">#FFC133</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- Page 3: Tag Colors (Part 2) -->
             <div class="color-page" data-page="3" style="display: none;">
-              <h4 class="color-section-title">Tag Colors (Part 2)</h4>
-
-              <div class="setting-group setting-group--stacked">
-                <label class="setting-label">
-                  <span>Content</span>
-                  <span class="setting-description">Color for content detection methods</span>
-                </label>
-                <div class="color-picker-container">
-                  <input type="color" id="colorTagContent" class="color-field" value="#33FFF3">
-                  <span class="color-hex-display" id="hexTagContent">#33FFF3</span>
-                </div>
-              </div>
-
-              <div class="setting-group setting-group--stacked">
-                <label class="setting-label">
-                  <span>URLs</span>
-                  <span class="setting-description">Color for URL detection methods</span>
-                </label>
-                <div class="color-picker-container">
-                  <input type="color" id="colorTagURLs" class="color-field" value="#00BCD4">
-                  <span class="color-hex-display" id="hexTagURLs">#00BCD4</span>
-                </div>
-              </div>
-
-              <div class="setting-group setting-group--stacked">
-                <label class="setting-label">
-                  <span>JS Hooks</span>
-                  <span class="setting-description">Color for JavaScript hook detection methods</span>
-                </label>
-                <div class="color-picker-container">
-                  <input type="color" id="colorTagJSHooks" class="color-field" value="#00E5FF">
-                  <span class="color-hex-display" id="hexTagJSHooks">#00E5FF</span>
+              <div class="settings-card">
+                <div class="settings-card-body settings-card-body--no-border" style="padding-top: 14px;">
+                  <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.3px;">Tag Colors (2/3)</div>
+                  <div class="color-row">
+                    <span class="color-row-label">Content</span>
+                    <div class="color-picker-container">
+                      <input type="color" id="colorTagContent" class="color-field" value="#33FFF3">
+                      <span class="color-hex-display" id="hexTagContent">#33FFF3</span>
+                    </div>
+                  </div>
+                  <div class="color-row">
+                    <span class="color-row-label">Urls</span>
+                    <div class="color-picker-container">
+                      <input type="color" id="colorTagURLs" class="color-field" value="#00BCD4">
+                      <span class="color-hex-display" id="hexTagURLs">#00BCD4</span>
+                    </div>
+                  </div>
+                  <div class="color-row">
+                    <span class="color-row-label">Js Hooks</span>
+                    <div class="color-picker-container">
+                      <input type="color" id="colorTagJSHooks" class="color-field" value="#00E5FF">
+                      <span class="color-hex-display" id="hexTagJSHooks">#00E5FF</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- Page 4: Tag Colors (Part 3) -->
             <div class="color-page" data-page="4" style="display: none;">
-              <h4 class="color-section-title">Tag Colors (Part 3)</h4>
-
-              <div class="setting-group setting-group--stacked">
-                <label class="setting-label">
-                  <span>Windows</span>
-                  <span class="setting-description">Color for window detection</span>
-                </label>
-                <div class="color-picker-container">
-                  <input type="color" id="colorTagWindow" class="color-field" value="#4CAF50">
-                  <span class="color-hex-display" id="hexTagWindow">#4CAF50</span>
+              <div class="settings-card">
+                <div class="settings-card-body settings-card-body--no-border" style="padding-top: 14px;">
+                  <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.3px;">Tag Colors (3/3)</div>
+                  <div class="color-row">
+                    <span class="color-row-label">Window</span>
+                    <div class="color-picker-container">
+                      <input type="color" id="colorTagWindow" class="color-field" value="#4CAF50">
+                      <span class="color-hex-display" id="hexTagWindow">#4CAF50</span>
+                    </div>
+                  </div>
+                  <div class="color-row">
+                    <span class="color-row-label">Payload</span>
+                    <div class="color-picker-container">
+                      <input type="color" id="colorTagPayload" class="color-field" value="#9C27B0">
+                      <span class="color-hex-display" id="hexTagPayload">#9C27B0</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-
-              <div class="setting-group setting-group--stacked">
-                <label class="setting-label">
-                  <span>Payload</span>
-                  <span class="setting-description">Color for payload detection</span>
-                </label>
-                <div class="color-picker-container">
-                  <input type="color" id="colorTagPayload" class="color-field" value="#9C27B0">
-                  <span class="color-hex-display" id="hexTagPayload">#9C27B0</span>
-                </div>
-              </div>
-
             </div>
 
-          </div>
-
-          <!-- Creator Credit -->
-          <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center;">
-            <p style="font-size: 14px; color: var(--text-muted); margin: 0;">
-              Created by <a href="https://github.com/diegopzz" target="_blank" rel="noopener noreferrer" style="color: #3b82f6; text-decoration: none; font-weight: 700;">diegopzz</a>
-            </p>
           </div>
         </div>
       </div>
 
       <!-- Detection Settings Tab -->
       <div class="settings-tab-content" data-tab-content="detection">
-        <div class="settings-section">
-          <h3>Detection Configuration</h3>
+        <!-- Cache Configuration Group -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title">Cache Configuration</div>
 
-          <div class="setting-group setting-group--stacked">
-            <label class="setting-label">
-              <span>Detection Cache Duration</span>
-              <span class="setting-description">How long to cache detection results</span>
-            </label>
-            <div style="display: flex; gap: 8px; flex-shrink: 0;">
-              <input type="number" id="cacheDuration" class="input-field" min="1" value="12" style="width: 70px;">
-              <select id="cacheUnit" class="input-field" style="width: 90px;">
-                <option value="minutes">Minutes</option>
-                <option value="hours" selected>Hours</option>
-                <option value="days">Days</option>
-              </select>
+          <div class="settings-card">
+            <div class="settings-card-header settings-card-header--static">
+              <div class="settings-card-title">
+                <h4>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z"/></svg>
+                  Cache Settings
+                </h4>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div class="setting-row">
+                <span class="setting-row-label">Cache Duration</span>
+                <div style="display: flex; gap: 6px;">
+                  <input type="number" id="cacheDuration" class="input-field" min="1" value="12" style="width: 60px;">
+                  <select id="cacheUnit" class="select-field" style="min-width: 90px;">
+                    <option value="minutes">Minutes</option>
+                    <option value="hours" selected>Hours</option>
+                    <option value="days">Days</option>
+                  </select>
+                </div>
+              </div>
+              <div class="setting-row">
+                <span class="setting-row-label">Cache Scope</span>
+                <select id="cacheScope" class="select-field" style="min-width: 100px;">
+                  <option value="domain">Domain</option>
+                  <option value="path">Path</option>
+                  <option value="full">Full URL</option>
+                </select>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div class="setting-group setting-group--stacked">
-            <label class="setting-label">
-              <span>Detection Cache Scope</span>
-              <span class="setting-description">How to identify cached detection results</span>
-            </label>
-            <select id="cacheScope" class="input-field" style="width: 100px;">
-              <option value="domain">Domain</option>
-              <option value="path">Path</option>
-              <option value="full">Full URL</option>
-            </select>
-          </div>
+        <!-- Blacklisted Domains Group -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title">Blacklisted Domains</div>
 
-          <div class="setting-group setting-group--stacked">
-            <label class="setting-label">
-              <span>Blacklisted Domains</span>
-              <span class="setting-description">Domains to skip detection completely</span>
-            </label>
-            <button id="addCurrentDomainBtn" class="action-btn" style="margin-top: 8px;">
-              <svg width="16" height="16" viewBox="0 0 24 24">
-                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
-              </svg>
-              Add Current Page
-            </button>
-            <div id="blacklistContainer" style="width: 100%; max-height: 150px; overflow-y: auto; margin-top: 8px;">
-              <!-- Blacklisted domains will be displayed here -->
+          <div class="settings-card">
+            <div class="settings-card-header settings-card-header--static">
+              <div class="settings-card-title">
+                <h4>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C17.5,2 22,6.5 22,12C22,17.5 17.5,22 12,22C6.5,22 2,17.5 2,12C2,6.5 6.5,2 12,2M12,4C7.58,4 4,7.58 4,12C4,16.42 7.58,20 12,20C16.42,20 20,16.42 20,12C20,7.58 16.42,4 12,4M16.95,5.63L18.37,7.05L7.05,18.37L5.63,16.95L16.95,5.63Z"/></svg>
+                  Skip Domains
+                </h4>
+                <p>Domains where detection is completely skipped</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <button id="addCurrentDomainBtn" class="action-btn" style="width: 100%;">
+                <svg width="14" height="14" viewBox="0 0 24 24">
+                  <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
+                </svg>
+                Add Current Page
+              </button>
+              <div id="blacklistContainer" style="width: 100%; max-height: 120px; overflow-y: auto; margin-top: 10px;">
+                <!-- Blacklisted domains will be displayed here -->
+              </div>
             </div>
           </div>
+        </div>
 
-          <!-- JS API Events Section -->
-          <div class="setting-group setting-section-header">
-            <label class="setting-label">
-              <span>JS API Events</span>
-              <span class="setting-description">Allow websites to listen for extension detection events</span>
-            </label>
+        <!-- JS API Events Group -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title">JS API Events</div>
 
-            <div class="setting-group setting-group--stacked">
-              <label class="setting-label">
-                <span>Enable JS API Events</span>
-                <span class="setting-description">Dispatch custom events to page window</span>
-              </label>
-              <label class="switch">
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="settings-card-title">
+                <h4>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,14H13V16H11V14M11,8H13V12H11V8Z"/></svg>
+                  Enable JS API Events
+                </h4>
+                <p>Dispatch custom events to page window</p>
+              </div>
+              <label class="switch switch-sm">
                 <input type="checkbox" id="enableJsApi">
-                <span class="slider round"></span>
+                <span class="slider"></span>
               </label>
             </div>
-
-            <div class="api-info-box">
-              <div class="api-info-title">Available Events:</div>
-              <div class="api-event-item">
-                <code>onScrapflyReady</code>
-                <span>Extension loaded and initialized</span>
-              </div>
-              <div class="api-event-item">
-                <code>onScrapflyDetection</code>
-                <span>Detection completed with results</span>
-              </div>
-              <div class="api-event-item">
-                <code>onScrapflyError</code>
-                <span>Detection error occurred</span>
-              </div>
-              <div class="api-usage-example">
-                <strong>Usage Example:</strong>
-                <pre>window.addEventListener('onScrapflyDetection', (e) => {
+            <div class="settings-card-body">
+              <div class="api-info-box">
+                <div class="api-info-title">Available Events:</div>
+                <div class="api-event-item">
+                  <code>scrapfly:ready</code>
+                  <span>Extension loaded and initialized</span>
+                </div>
+                <div class="api-event-item">
+                  <code>scrapfly:onDetection</code>
+                  <span>Detection completed with results</span>
+                </div>
+                <div class="api-event-item">
+                  <code>scrapfly:onError</code>
+                  <span>Detection error occurred</span>
+                </div>
+                <div class="api-usage-example">
+                  <strong>Usage Example:</strong>
+                  <pre>window.addEventListener('scrapfly:onDetection', (e) => {
   console.log('Detections:', e.detail.detections);
   console.log('URL:', e.detail.url);
 });</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Webhook Integration Group -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title">Webhook Integration</div>
+
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="settings-card-title">
+                <h4>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16,18C16,18.55 16.45,19 17,19H21V17H17C16.45,17 16,17.45 16,18M13,18C13,18.55 13.45,19 14,19H14.18C14.61,17.84 15.71,17 17,17H21V13H17C14.24,13 12,15.24 12,18C12,18.55 12.45,19 13,19M19,3H5C3.9,3 3,3.9 3,5V19C3,20.1 3.9,21 5,21H11.11C11.04,20.67 11,20.34 11,20C11,19.66 11.04,19.33 11.11,19H5V5H19V11.11C19.33,11.04 19.66,11 20,11C20.34,11 20.67,11.04 21,11.11V5C21,3.9 20.1,3 19,3M17,7H7V9H17V7M14,11H7V13H14V11Z"/></svg>
+                  Enable Webhook
+                </h4>
+                <p>Send HTTP requests on detection</p>
+              </div>
+              <label class="switch switch-sm">
+                <input type="checkbox" id="enableWebhook">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="settings-card-body" id="webhookOnCacheGroup">
+              <div class="setting-row">
+                <span class="setting-row-label">Send on Every Page Load</span>
+                <label class="switch switch-sm">
+                  <input type="checkbox" id="webhookOnCache">
+                  <span class="slider"></span>
+                </label>
               </div>
             </div>
           </div>
 
-          <!-- Webhook Integration Section -->
-          <div class="setting-group setting-section-header">
-            <label class="setting-label">
-              <span>Webhook Integration</span>
-              <span class="setting-description">Send detection results to external APIs</span>
-            </label>
-
-            <div class="setting-group setting-group--stacked">
-              <label class="setting-label">
-                <span>Enable Webhook</span>
-                <span class="setting-description">Send HTTP requests on detection</span>
-              </label>
-              <label class="switch">
-                <input type="checkbox" id="enableWebhook">
-                <span class="slider round"></span>
-              </label>
-            </div>
-
-            <div class="setting-group setting-group--stacked" id="webhookOnCacheGroup">
-              <label class="setting-label">
-                <span>Send on Every Page Load</span>
-                <span class="setting-description">Send webhook even when using cached detection data</span>
-              </label>
-              <label class="switch">
-                <input type="checkbox" id="webhookOnCache">
-                <span class="slider round"></span>
-              </label>
-            </div>
-
-            <div id="webhookSettings" class="webhook-settings-container">
+          <div id="webhookSettings" class="webhook-settings-container">
               <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
                   <span>HTTP Method</span>
@@ -584,196 +591,162 @@
                   Test
                 </button>
               </div>
-            </div>
-          </div>
-
-          <!-- Creator Credit -->
-          <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center;">
-            <p style="font-size: 14px; color: var(--text-muted); margin: 0;">
-              Created by <a href="https://github.com/diegopzz" target="_blank" rel="noopener noreferrer" style="color: #3b82f6; text-decoration: none; font-weight: 700;">diegopzz</a>
-            </p>
           </div>
         </div>
       </div>
 
       <!-- History Settings Tab -->
       <div class="settings-tab-content" data-tab-content="history">
-        <div class="settings-section">
-          <h3>History Configuration</h3>
+        <!-- History Configuration Group -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title">History Configuration</div>
 
-          <div class="setting-group setting-group--stacked">
-            <label class="setting-label">
-              <span>History Limit</span>
-              <span class="setting-description">Maximum number of entries to keep (0 for unlimited)</span>
-            </label>
-            <input type="number" id="historyLimit" class="input-field" min="0" max="1000" value="100">
+          <div class="settings-card">
+            <div class="settings-card-header settings-card-header--static">
+              <div class="settings-card-title">
+                <h4>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5,8H12V13L16.28,15.54L17,14.33L13.5,12.25V8M13,3A9,9 0 0,0 4,12H1L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z"/></svg>
+                  History Settings
+                </h4>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div class="setting-row">
+                <span class="setting-row-label">History Limit <span style="color: var(--text-muted); font-size: 10px;">(0 = unlimited)</span></span>
+                <input type="number" id="historyLimit" class="input-field" min="0" max="1000" value="100" style="width: 80px;">
+              </div>
+              <div class="setting-row">
+                <span class="setting-row-label">Auto Clear (days)</span>
+                <input type="number" id="autoClearDays" class="input-field" min="0" max="365" value="30" style="width: 80px;">
+              </div>
+              <div class="setting-row">
+                <span class="setting-row-label">Export Format</span>
+                <select id="exportFormat" class="select-field" style="min-width: 100px;">
+                  <option value="json">JSON</option>
+                  <option value="csv">CSV</option>
+                  <option value="txt">Plain Text</option>
+                </select>
+              </div>
+              <div class="setting-row">
+                <span class="setting-row-label">Include Timestamps</span>
+                <label class="switch switch-sm">
+                  <input type="checkbox" id="includeTimestamps" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="setting-row">
+                <span class="setting-row-label">Save on Cache Hits</span>
+                <label class="switch switch-sm">
+                  <input type="checkbox" id="historyBypassCache">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
           </div>
+        </div>
 
-          <div class="setting-group setting-group--stacked">
-            <label class="setting-label">
-              <span>Auto Clear</span>
-              <span class="setting-description">Automatically clear history older than specified days</span>
-            </label>
-            <input type="number" id="autoClearDays" class="input-field" min="0" max="365" value="30">
-          </div>
+        <!-- Duplicate Prevention Group -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title">Duplicate Prevention</div>
 
-          <div class="setting-group setting-group--stacked">
-            <label class="setting-label">
-              <span>Export Format</span>
-              <span class="setting-description">Default format for history export</span>
-            </label>
-            <select id="exportFormat" class="select-field">
-              <option value="json">JSON</option>
-              <option value="csv">CSV</option>
-              <option value="txt">Plain Text</option>
-            </select>
-          </div>
-
-          <div class="setting-group setting-group--stacked">
-            <label class="setting-label">
-              <span>Include Timestamps</span>
-              <span class="setting-description">Include detailed timestamps in history entries</span>
-            </label>
-            <label class="switch">
-              <input type="checkbox" id="includeTimestamps" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <div class="setting-group setting-group--stacked">
-            <label class="setting-label">
-              <span>Save History on Cache Hits</span>
-              <span class="setting-description">Save to history even when detection results are cached</span>
-            </label>
-            <label class="switch">
-              <input type="checkbox" id="historyBypassCache">
-              <span class="slider round"></span>
-            </label>
-          </div>
-
-          <!-- Duplicate Prevention Section -->
-          <div class="setting-group setting-section-header" style="margin-top: 24px; padding-top: 24px;">
-            <label class="setting-label">
-              <span>Duplicate Prevention</span>
-              <span class="setting-description">Prevent duplicate entries in history for the same URL</span>
-            </label>
-
-            <div class="setting-group setting-group--stacked">
-              <label class="setting-label">
-                <span>Enable Duplicate Prevention</span>
-                <span class="setting-description">Block duplicate history entries within a time window</span>
-              </label>
-              <label class="switch">
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="settings-card-title">
+                <h4>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>
+                  Enable Duplicate Prevention
+                </h4>
+                <p>Block duplicate history entries within a time window</p>
+              </div>
+              <label class="switch switch-sm">
                 <input type="checkbox" id="preventDuplicates">
-                <span class="slider round"></span>
+                <span class="slider"></span>
               </label>
             </div>
-
-            <div id="duplicateSettingsContainer" class="duplicate-settings-container" style="display: none;">
-              <div class="setting-group setting-group--stacked">
-                <label class="setting-label">
-                  <span>Duplication Scope</span>
-                  <span class="setting-description">How to identify duplicate entries</span>
-                </label>
-                <select id="duplicateScope" class="select-field">
+            <div class="settings-card-body" id="duplicateSettingsContainer" style="display: none;">
+              <div class="setting-row">
+                <span class="setting-row-label">Scope</span>
+                <select id="duplicateScope" class="select-field" style="min-width: 100px;">
                   <option value="full_url">Full URL</option>
                   <option value="domain">Domain</option>
                   <option value="path">Path</option>
                 </select>
               </div>
-
-              <div class="setting-group setting-group--stacked">
-                <label class="setting-label">
-                  <span>Time Window Duration</span>
-                  <span class="setting-description">Duplicate detection time window duration</span>
-                </label>
-                <input type="number" id="duplicateDuration" class="input-field" min="1" max="999" value="1">
+              <div class="setting-row">
+                <span class="setting-row-label">Time Window</span>
+                <div style="display: flex; gap: 6px;">
+                  <input type="number" id="duplicateDuration" class="input-field" min="1" max="999" value="1" style="width: 60px;">
+                  <select id="duplicateUnit" class="select-field" style="min-width: 90px;">
+                    <option value="minutes">Minutes</option>
+                    <option value="hours">Hours</option>
+                    <option value="days">Days</option>
+                  </select>
+                </div>
               </div>
-
-              <div class="setting-group setting-group--stacked">
-                <label class="setting-label">
-                  <span>Time Window Unit</span>
-                  <span class="setting-description">Time unit for duplicate detection window</span>
-                </label>
-                <select id="duplicateUnit" class="select-field">
-                  <option value="minutes">Minutes</option>
-                  <option value="hours">Hours</option>
-                  <option value="days">Days</option>
-                </select>
-              </div>
-
-              <div class="duplicate-info-box">
+              <div class="duplicate-info-box" style="margin-top: 12px;">
                 <strong>How it works:</strong>
-                <p>When enabled, the extension will prevent duplicate history entries for the same URL within the specified time window.</p>
+                <p>Prevents duplicate history entries for the same URL within the time window.</p>
                 <ul>
-                  <li><strong>Full URL:</strong> Blocks duplicates with exact same URL (including query parameters)</li>
-                  <li><strong>Domain:</strong> Blocks duplicates from the same domain (e.g., example.com/page1 and example.com/page2 are considered the same)</li>
-                  <li><strong>Path:</strong> Blocks duplicates with same domain and path, ignoring query parameters (e.g., example.com/page?id=1 and example.com/page?id=2 are considered the same)</li>
+                  <li><strong>Full URL:</strong> Exact URL match (including query params)</li>
+                  <li><strong>Domain:</strong> Same domain (different paths counted as same)</li>
+                  <li><strong>Path:</strong> Same domain+path (ignores query params)</li>
                 </ul>
-                <p><em>Example: If you set 1 hour with "Full URL" scope, visiting the same page twice within 1 hour will only create one history entry.</em></p>
               </div>
             </div>
-          </div>
-
-          <!-- Creator Credit -->
-          <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center;">
-            <p style="font-size: 14px; color: var(--text-muted); margin: 0;">
-              Created by <a href="https://github.com/diegopzz" target="_blank" rel="noopener noreferrer" style="color: #3b82f6; text-decoration: none; font-weight: 700;">diegopzz</a>
-            </p>
           </div>
         </div>
       </div>
 
       <!-- Data Management Tab -->
       <div class="settings-tab-content" data-tab-content="data">
-        <div class="settings-section">
-          <h3>Data Management</h3>
+        <!-- Export/Import Group -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title">Export & Import</div>
 
-          <div class="setting-group setting-group--stacked">
-            <label class="setting-label">
-              <span>Export Settings</span>
-              <span class="setting-description">Download all settings as JSON file</span>
-            </label>
-            <button id="exportSettingsBtn" class="action-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24">
-                <path d="M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M12,19L8,15H10.5V12H13.5V15H16L12,19Z" fill="currentColor"/>
-              </svg>
-              Export
-            </button>
-          </div>
-
-          <div class="setting-group setting-group--stacked">
-            <label class="setting-label">
-              <span>Import Settings</span>
-              <span class="setting-description">Load settings from JSON file</span>
-            </label>
-            <button id="importSettingsBtn" class="action-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24">
-                <path d="M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M12,12L16,16H13.5V19H10.5V16H8L12,12Z" fill="currentColor"/>
-              </svg>
-              Import
-            </button>
-            <input type="file" id="importFile" accept=".json" style="display: none;">
-          </div>
-
-          <div class="setting-group setting-group--stacked">
-            <label class="setting-label">
-              <span>Export Detection History</span>
-              <span class="setting-description">Download all detection history as CSV</span>
-            </label>
-            <button id="exportHistoryBtn" class="action-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24">
-                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M10,19L12,15H10V11H14V15H12L14,19H10Z" fill="currentColor"/>
-              </svg>
-              Export History
-            </button>
-          </div>
-
-          <!-- Creator Credit -->
-          <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center;">
-            <p style="font-size: 14px; color: var(--text-muted); margin: 0;">
-              Created by <a href="https://github.com/diegopzz" target="_blank" rel="noopener noreferrer" style="color: #3b82f6; text-decoration: none; font-weight: 700;">diegopzz</a>
-            </p>
+          <div class="settings-card">
+            <div class="settings-card-header settings-card-header--static">
+              <div class="settings-card-title">
+                <h4>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z"/></svg>
+                  Data Management
+                </h4>
+                <p>Export or import your extension data</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div class="setting-row">
+                <div style="flex: 1;">
+                  <span class="setting-row-label" style="display: block; margin-bottom: 2px;">Settings</span>
+                  <span style="font-size: 10px; color: var(--text-muted);">Export or import extension settings</span>
+                </div>
+                <div class="data-actions-row">
+                  <button id="exportSettingsBtn" class="data-icon-btn data-export-btn" title="Export Settings">
+                    <svg width="16" height="16" viewBox="0 0 24 24">
+                      <path d="M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M12,19L8,15H10.5V12H13.5V15H16L12,19Z" fill="currentColor"/>
+                    </svg>
+                  </button>
+                  <button id="importSettingsBtn" class="data-icon-btn data-import-btn" title="Import Settings">
+                    <svg width="16" height="16" viewBox="0 0 24 24">
+                      <path d="M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M12,12L16,16H13.5V19H10.5V16H8L12,12Z" fill="currentColor"/>
+                    </svg>
+                  </button>
+                  <input type="file" id="importFile" accept=".json" style="display: none;">
+                </div>
+              </div>
+              <div class="setting-row">
+                <div style="flex: 1;">
+                  <span class="setting-row-label" style="display: block; margin-bottom: 2px;">Detection History</span>
+                  <span style="font-size: 10px; color: var(--text-muted);">Export detection history as CSV</span>
+                </div>
+                <div class="data-actions-row">
+                  <button id="exportHistoryBtn" class="data-icon-btn data-export-btn" title="Export History">
+                    <svg width="16" height="16" viewBox="0 0 24 24">
+                      <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M10,19L12,15H10V11H14V15H12L14,19H10Z" fill="currentColor"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -783,5 +756,4 @@
       <button id="cancelSettingsBtn" class="secondary-btn">Cancel</button>
       <button id="saveSettingsBtn" class="primary-btn">Save Settings</button>
     </div>
-  </div>
 </div>

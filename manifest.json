@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Scrapfly: anti-bot detector",
-  "version": "2.4",
+  "version": "2.5",
   "description": "Detect CAPTCHAs, anti-bot systems and fingerprinting technologies on websites",
 
   "content_security_policy": {
@@ -17,7 +17,8 @@
     "webRequest",
     "cookies",
     "notifications",
-    "downloads"
+    "downloads",
+    "alarms"
   ],
 
   "host_permissions": [
@@ -32,7 +33,11 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["content-main-world.js"],
+      "js": [
+        "modules/hook-resilience-manager.js",
+        "modules/window-property-tracker.js",
+        "content-main-world.js"
+      ],
       "run_at": "document_start",
       "world": "MAIN",
       "all_frames": false

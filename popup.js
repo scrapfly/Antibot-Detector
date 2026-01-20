@@ -11,6 +11,10 @@ class ScrapflyPopup {
     this.rules = new Rules(this.detectorManager);
     // Lazy initialize Advanced to avoid race condition on fast systems
     this.advanced = typeof Advanced !== 'undefined' ? new Advanced(this.detectorManager, this.detection) : null;
+    // Link Advanced to Detection for cross-component notifications (fixes timing race condition)
+    if (this.advanced && this.detection) {
+      this.detection.advancedSection = this.advanced;
+    }
     this.settings = new Settings(this.categoryManager);
   }
 
@@ -233,6 +237,12 @@ class ScrapflyPopup {
           if (response && response.status === 'pending') {
             this.detection.showAnalyzingState();
           } else if (response && response.data) {
+            // Check if cache has expired - show empty state instead of stale data
+            if (response.data.expiry && Date.now() > response.data.expiry) {
+              Logger.ui('[Popup] Cache expired on tab switch, showing empty state');
+              this.detection.showEmptyState();
+              return;
+            }
             // Display existing detection data
             await this.processDetectionData(response.data);
           } else {
@@ -579,16 +589,18 @@ class ScrapflyPopup {
             this.detection.currentResults = [];
             this.detection.showEmptyState();
           } else {
-            // Re-render current results to ensure click handlers are attached to cards
+            // FIX: Check cache FIRST before re-rendering potentially stale currentResults
+            // checkAndDisplayExistingDetection will show empty state if cache expired,
+            // or display valid cached results and update currentResults
+            await this.checkAndDisplayExistingDetection();
+
+            // Re-attach click handlers for valid results (if any remain after cache check)
+            // This is needed because DOM elements may have been recreated
             if (this.detection.currentResults && this.detection.currentResults.length > 0) {
-              // This will re-render the cards and attach the click handlers
               if (this.detection.paginationManager) {
                 this.detection.paginationManager.setItems(this.detection.currentResults);
               }
             }
-
-            // FIX: Display existing detection data on subsequent visits
-            await this.checkAndDisplayExistingDetection();
           }
         }
         break;
@@ -621,6 +633,10 @@ class ScrapflyPopup {
         if (!this.advanced && typeof Advanced !== 'undefined') {
           this.advanced = new Advanced(this.detectorManager, this.detection);
           this.advanced.initialized = false;
+          // Link Advanced to Detection for cross-component notifications
+          if (this.detection) {
+            this.detection.advancedSection = this.advanced;
+          }
         }
         // Lazy initialize if needed
         if (this.advanced && !this.advanced.initialized) {

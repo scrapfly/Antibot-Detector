@@ -9,16 +9,10 @@
       "cacheDuration": 12,
       "cacheUnit": "hours",
       "cacheScope": "domain",
-      "blacklistedDomains": [],
-      "enhancedDetection": {
-        "enabled": false,
-        "windowPropertiesMode": "standard",
-        "maxDetectionWindowMs": 20000,
-        "keepHooksInstalled": false
-      }
+      "blacklistedDomains": []
     },
     "jsApi": {
-      "enableJsApi": false
+      "enableJsApi": true
     },
     "webhook": {
       "enableWebhook": false,

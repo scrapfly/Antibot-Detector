@@ -1,0 +1,52 @@
+{
+  "id": "detect-aliexpress",
+  "name": "AliExpress CAPTCHA",
+  "author": "scrapfly",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "lastUpdated": "2025-01-11",
+  "version": "1.0",
+  "website": "https://www.aliexpress.com/",
+  "icon": "custom.png",
+  "description": "AliExpress security challenge page with x5sec verification",
+  "detection": {
+    "url": [
+      {
+        "confidence": 100,
+        "description": "AliExpress security challenge URL",
+        "text": "punish?x5secdata",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "confidence": 100,
+        "description": "AliExpress x5sec verification",
+        "text": "punish\\?x5secdata",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "confidence": 90,
+        "description": "x5sec data parameter",
+        "text": "x5secdata",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      },
+      {
+        "confidence": 95,
+        "description": "AliExpress punish endpoint",
+        "text": "aliexpress.com/punish",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": false
+      }
+    ]
+  }
+}

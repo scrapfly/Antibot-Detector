@@ -22,6 +22,7 @@ class Detection {
     this.isShowingAnalyzing = false; // FIX: Track if analyzing state is already showing
     this.isShowingResults = false; // FIX: Track if displaying results to prevent message listeners from overriding
     this.cacheCleared = false; // FIX: Track if cache was cleared while tab was hidden - refresh when tab becomes visible
+    this.advancedSection = null; // Reference to Advanced section for cross-component notifications
 
     // Setup message listeners immediately (before initialization) so they work even if tab not accessed yet
     this.setupMessageListeners();
@@ -164,10 +165,10 @@ class Detection {
                 if (chrome.runtime.lastError) {
                   Logger.ui('[Detection] No cached data for new scope - showing empty state');
                   this.showEmptyState();
-                  // Set badge to gray X
-                  await chrome.action.setBadgeText({ text: '✕', tabId: tabs[0].id });
+                  // Set badge to CLR (cleared)
+                  await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tabs[0].id });
                   await chrome.action.setBadgeBackgroundColor({
-                    color: '#6B7280', // gray-500
+                    color: BADGE.COLORS.CLEARED,
                     tabId: tabs[0].id
                   });
                   return;
@@ -188,10 +189,10 @@ class Detection {
                   // No cached data for new scope - show empty state
                   Logger.ui('[Detection] No cached data for new scope - showing empty state');
                   this.showEmptyState();
-                  // Set badge to gray X
-                  await chrome.action.setBadgeText({ text: '✕', tabId: tabs[0].id });
+                  // Set badge to CLR (cleared)
+                  await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tabs[0].id });
                   await chrome.action.setBadgeBackgroundColor({
-                    color: '#6B7280', // gray-500
+                    color: BADGE.COLORS.CLEARED,
                     tabId: tabs[0].id
                   });
                 }
@@ -570,9 +571,19 @@ class Detection {
                   response.data
                 );
               } else {
-                // Truly stuck - show interrupted state
-                if (this.debugMode) Logger.ui('[Detection] Timeout with no results - showing interrupted state');
-                this.showInterruptedState();
+                // FIX: Check badge before showing interrupted - if numeric, detection is complete
+                const badgeStatus = await Detection.getBadgeStatus(tabs[0].id);
+                const isNumericBadge = /^\d+\+?$/.test(badgeStatus.trimmed);
+
+                if (isNumericBadge) {
+                  // Badge shows completion but no data yet - retry instead of showing interrupted
+                  if (this.debugMode) Logger.ui('[Detection] Timeout but badge shows completion - retrying fetch...');
+                  await this.refreshAnalysis();
+                } else {
+                  // Truly stuck - show interrupted state
+                  if (this.debugMode) Logger.ui('[Detection] Timeout with no results - showing interrupted state');
+                  this.showInterruptedState();
+                }
               }
             }
           );
@@ -634,8 +645,15 @@ class Detection {
     this.hideLoadingState();
     this.clearLoadingTimeout(); // Clear timeout when showing empty state
 
+    // FIX: Clear stale state to prevent re-rendering old data on tab switch
+    this.currentResults = [];
+    this.cacheMetadata = null;
+
     // Reset clear cache button to default state
     this.resetClearCacheButton();
+
+    // FIX: Clear badge to empty (cache expired or no detections)
+    this.clearBadgeForEmptyState();
 
     const emptyState = document.querySelector('#emptyState');
     const emptyStateIcon = document.querySelector('#emptyStateIcon');
@@ -736,6 +754,12 @@ class Detection {
     this.cacheMetadata = options.cacheMetadata || null;
     Logger.ui('[DEBUG Detection] ✅ currentResults stored:', this.currentResults.length, 'detections');
 
+    // Notify Advanced section that detection data is ready (fixes timing race condition)
+    if (this.advancedSection && typeof this.advancedSection.onDetectionDataReady === 'function') {
+      Logger.ui('[Detection] 📤 Notifying Advanced section of detection data');
+      this.advancedSection.onDetectionDataReady(detections);
+    }
+
     // FIX: Clear the loading timeout when results arrive
     // This prevents the "Cleaned" modal from appearing after detection completes
     this.clearLoadingTimeout();
@@ -749,6 +773,16 @@ class Detection {
     const detectionResults = document.querySelector('#detectionResults');
     const emptyState = document.querySelector('#emptyState');
     const disabledState = document.querySelector('#disabledState');
+
+    // Check if cache is expired - don't show stale data
+    if (options.fromStorage && options.cacheMetadata?.expiry) {
+      const isExpired = Date.now() > options.cacheMetadata.expiry;
+      if (isExpired) {
+        Logger.ui('[Detection] Cache expired, showing empty state instead of stale data');
+        this.showEmptyState();
+        return;
+      }
+    }
 
     if (detections.length === 0) {
       this.showEmptyState();
@@ -855,7 +889,6 @@ class Detection {
     const detectionsCount = document.querySelector('#detectionsCount');
     const overallConfidence = document.querySelector('#overallConfidence');
     const difficultyLevel = document.querySelector('#difficultyLevel');
-    const difficultyIcon = document.querySelector('#difficultyIcon');
     const detectionTime = document.querySelector('#detectionTime');
     const detectionCount = document.querySelector('#detectionCount');
 
@@ -866,20 +899,23 @@ class Detection {
 
     // Determine difficulty level based on number and confidence of detections
     let difficulty = 'Low';
-    let icon = '🛡️';
+    let difficultyColor = '#22c55e'; // Green for low
     if (totalDetections > 5 || avgConfidence > 80) {
       difficulty = 'High';
-      icon = '🔥';
+      difficultyColor = '#ef4444'; // Red for high
     } else if (totalDetections > 2 || avgConfidence > 60) {
       difficulty = 'Medium';
-      icon = '⚠️';
+      difficultyColor = '#f59e0b'; // Amber for medium
     }
 
     // Update UI elements
     if (detectionsCount) detectionsCount.textContent = totalDetections;
     if (overallConfidence) overallConfidence.textContent = `${avgConfidence}%`;
-    if (difficultyLevel) difficultyLevel.textContent = difficulty;
-    if (difficultyIcon) difficultyIcon.textContent = icon;
+    if (difficultyLevel) {
+      difficultyLevel.textContent = difficulty;
+      difficultyLevel.style.color = difficultyColor;
+    }
+    // Icon is now SVG in HTML, no need to update textContent
 
     if (detectionCount) detectionCount.textContent = totalDetections;
 
@@ -1088,11 +1124,11 @@ class Detection {
 
       NotificationHelper.success('Cache cleared');
 
-      // Set badge to "✕" with gray background to indicate no detection
+      // Set badge to "CLR" with slate background to indicate cleared
       try {
-        await chrome.action.setBadgeText({ text: '✕', tabId: tabs[0].id });
+        await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tabs[0].id });
         await chrome.action.setBadgeBackgroundColor({
-          color: '#6B7280', // gray-500
+          color: BADGE.COLORS.CLEARED,
           tabId: tabs[0].id
         });
       } catch (error) {
@@ -1250,13 +1286,13 @@ class Detection {
     if (interruptedState) interruptedState.style.display = 'none';
     if (detectionPagination) detectionPagination.style.display = 'none';
 
-    // Update badge to show orange X for blacklisted domain
+    // Update badge to show BLK for blacklisted domain
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0]) {
-        chrome.action.setBadgeText({ text: '✕', tabId: tabs[0].id }).catch((error) => {
+        chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId: tabs[0].id }).catch((error) => {
           if (this.debugMode) Logger.ui('Failed to set blacklist badge:', error.message);
         });
-        chrome.action.setBadgeBackgroundColor({ color: '#FF8C00', tabId: tabs[0].id }).catch((error) => {
+        chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tabs[0].id }).catch((error) => {
           if (this.debugMode) Logger.ui('Failed to set badge color:', error.message);
         });
       }
@@ -1335,10 +1371,8 @@ class Detection {
                   chrome.action.setBadgeText({ text: detections.length.toString(), tabId: tab.id }).catch((error) => {
                     if (this.debugMode) Logger.ui('Failed to update badge after blacklist removal:', error.message);
                   });
-                  // Set appropriate color based on count
-                  const color = detections.length >= 5 ? '#ef4444' : // red for high
-                               detections.length >= 3 ? '#f59e0b' : // orange for medium
-                               '#22c55e'; // green for low
+                  // Set appropriate color based on count using BADGE constants
+                  const color = getBadgeColorForCount(detections.length);
                   chrome.action.setBadgeBackgroundColor({ color: color, tabId: tab.id }).catch((error) => {
                     if (this.debugMode) Logger.ui('Failed to set badge color:', error.message);
                   });
@@ -1459,12 +1493,16 @@ class Detection {
   getCategoryBadges(detection) {
     const badges = [];
 
-    // Main category badge with dynamic color from storage
+    // Main category badge with dynamic color from storage (muted style)
     if (detection.category) {
       const categoryInfo = this.detectorManager.getCategoryInfo(detection.category.toLowerCase());
       const categoryColor = categoryInfo?.colour || '#666666';
       const categoryName = detection.category.charAt(0).toUpperCase() + detection.category.slice(1);
-      badges.push(`<span class="badge" style="background: ${categoryColor}; color: white;">${categoryName}</span>`);
+      const rgb = this.hexToRgb(categoryColor);
+      const bgStyle = rgb
+        ? `background: rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.35);`
+        : `background: ${categoryColor}; color: white;`;
+      badges.push(`<span class="badge" style="${bgStyle}">${categoryName}</span>`);
     }
 
     // Add detection method badges based on actual matches (with counts)
@@ -1485,11 +1523,12 @@ class Detection {
         const tagColor = this.detectorManager.categoryManager.getTagColor(typeName);
 
         if (tagColor && tagColor !== '#666666') {
-          // Use dynamic color from storage with transparent background
-          const r = parseInt(tagColor.slice(1, 3), 16);
-          const g = parseInt(tagColor.slice(3, 5), 16);
-          const b = parseInt(tagColor.slice(5, 7), 16);
-          badges.push(`<span class="badge" style="background: rgba(${r}, ${g}, ${b}, 0.15); color: ${tagColor}; border: 1px solid rgba(${r}, ${g}, ${b}, 0.3);">${displayText}</span>`);
+          // Use muted/transparent background with colored text
+          const rgb = this.hexToRgb(tagColor);
+          const bgStyle = rgb
+            ? `background: rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15); color: ${tagColor}; border: 1px solid rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3);`
+            : `background: ${tagColor}; color: white;`;
+          badges.push(`<span class="badge" style="${bgStyle}">${displayText}</span>`);
         } else {
           // Fallback to CSS class (use typeName for CSS class)
           const methodClass = `badge-${typeName}`;
@@ -1573,9 +1612,12 @@ class Detection {
       // Get tag color from CategoryManager using original matchType (preserves underscores)
       const tagColor = this.detectorManager.categoryManager.getTagColor(matchType);
 
-      // Always apply solid background color
-      const backgroundColor = (tagColor && tagColor !== '#666666') ? tagColor : '#666666';
-      const badgeStyle = `style="background: ${backgroundColor}; color: white; border: none;"`;
+      // Use muted/transparent background with colored text
+      const effectiveColor = (tagColor && tagColor !== '#666666') ? tagColor : '#666666';
+      const rgb = this.hexToRgb(effectiveColor);
+      const badgeStyle = rgb
+        ? `style="background: rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15); color: ${effectiveColor}; border: 1px solid rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3);"`
+        : `style="background: ${effectiveColor}; color: white; border: none;"`;
 
       // Confidence badge color
       let confidenceClass = 'confidence-low';
@@ -1623,7 +1665,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
 
     Utils.copyToClipboard(detailsText, {
       element: triggerElement,
-      notificationMessage: 'Detection details copied',
+      notificationMessage: 'Copied',
       inlineMessage: '✓ Copied!'
     });
   }
@@ -1637,7 +1679,7 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
     const textToCopy = `[${type}] ${value}`;
     Utils.copyToClipboard(textToCopy, {
       element: triggerElement,
-      notificationMessage: 'Method value copied',
+      notificationMessage: 'Copied',
       inlineMessage: '✓ Copied!'
     });
   }
@@ -1795,6 +1837,28 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
 
     if (this.modalElements.difficulty) {
       this.modalElements.difficulty.textContent = difficulty;
+    }
+
+    // Populate author field
+    const authorElement = document.querySelector('#detectionModalAuthor');
+    if (authorElement) {
+      const author = detection.detector?.author || 'scrapfly';
+
+      // Clear previous content
+      authorElement.textContent = '';
+
+      // Add author text (using textContent to prevent XSS)
+      const authorText = document.createTextNode(author);
+      authorElement.appendChild(authorText);
+
+      // Add verified badge for official scrapfly detectors
+      if (author.toLowerCase() === 'scrapfly') {
+        const verifiedBadge = document.createElement('i');
+        verifiedBadge.className = 'fas fa-check-circle verified-badge';
+        verifiedBadge.title = 'Official Scrapfly detector';
+        verifiedBadge.style.marginLeft = '6px';
+        authorElement.appendChild(verifiedBadge);
+      }
     }
 
     if (this.modalElements.description) {
@@ -1980,6 +2044,31 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
     // Helper to escape alt text for HTML attribute safety
     const escapeAlt = (text) => (text || 'Icon').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+    // Fingerprint SVG icons mapping
+    const fingerprintIcons = {
+      'audio_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M8 6v12M4 9v6M16 6v12M20 9v6"/></svg>',
+      'battery_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M22 11v2"/><path d="M6 11v2M10 11v2M14 11v2"/></svg>',
+      'canvas_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 12h4l2-3 2 6 2-3h2"/></svg>',
+      'clipboard_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>',
+      'crypto_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>',
+      'css_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 3h16l-1.5 15L12 21l-6.5-3L4 3z"/><path d="M8 8h8M7 12h6"/></svg>',
+      'font_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>',
+      'gamepads_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="4"/><circle cx="8" cy="12" r="2"/><path d="M15 10v4M13 12h4"/></svg>',
+      'geolocation_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>',
+      'hardware_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg>',
+      'indexeddb_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>',
+      'media_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><polygon points="10,8 16,11 10,14" fill="currentColor"/></svg>',
+      'navigator_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" fill="none"/></svg>',
+      'orientation_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 6h6"/></svg>',
+      'performance_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><path d="M12 2v2M22 12h-2M12 22v-2M2 12h2"/></svg>',
+      'screen_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
+      'storage_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M4 20v-3h16v3M4 7v10h16V7"/><path d="M4 11h16M4 15h16"/><circle cx="7" cy="9" r="1" fill="currentColor"/></svg>',
+      'timezone_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg>',
+      'usb_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v10M7 7l5 5 5-5"/><circle cx="12" cy="16" r="2"/><path d="M6 12v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4"/></svg>',
+      'webgl_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
+      'webrtc_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 10l5-5M20 10V5h-5"/><path d="M9 14l-5 5M4 14v5h5"/><circle cx="12" cy="12" r="3"/></svg>'
+    };
+
     // Check for custom uploaded icon first
     if (detection.detector?.customIcon) {
       return `<img src="${detection.detector.customIcon}" alt="${escapeAlt(detection.detector.name)}" class="detector-icon" />`;
@@ -1996,6 +2085,11 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
         if (lowerIcon === 'custom' || lowerIcon === 'custom.png') {
           const scrapflyIcon = chrome.runtime.getURL('icons/scrapfly.webp');
           return `<img src="${scrapflyIcon}" alt="${escapeAlt(detection.detector.name)}" class="detector-icon" />`;
+        }
+
+        // Check for fingerprint SVG icons
+        if (fingerprintIcons[lowerIcon]) {
+          return `<div class="detector-icon detector-icon-svg fingerprint-icon">${fingerprintIcons[lowerIcon]}</div>`;
         }
       }
       // Check if it's an emoji (not a file name)
@@ -2257,9 +2351,9 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
             const isNumericBadge = /^\d+\+?$/.test(badgeStatus.trimmed);
 
             if (isNumericBadge && !response.data) {
-              Logger.ui('Detection: Badge shows count but no data yet - retrying in 300ms', { badge: badgeStatus.trimmed });
-              // Wait for cache to be ready, then retry
-              await new Promise(resolve => setTimeout(resolve, 300));
+              Logger.ui('Detection: Badge shows count but no data yet - retrying in 500ms', { badge: badgeStatus.trimmed });
+              // Wait for cache to be ready, then retry (increased from 300ms for slower cache writes)
+              await new Promise(resolve => setTimeout(resolve, 500));
               const retryResponse = await new Promise((resolve) => {
                 chrome.runtime.sendMessage(
                   { type: 'GET_DETECTION_DATA', tabId: tab.id },
@@ -2273,8 +2367,8 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
                 return;
               }
 
-              // Still no data after retry - try one more time with longer delay
-              await new Promise(resolve => setTimeout(resolve, 500));
+              // Still no data after retry - try one more time with longer delay (increased from 500ms)
+              await new Promise(resolve => setTimeout(resolve, 1000));
               const retryResponse2 = await new Promise((resolve) => {
                 chrome.runtime.sendMessage(
                   { type: 'GET_DETECTION_DATA', tabId: tab.id },
@@ -2599,6 +2693,35 @@ Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.na
       if (this.debugMode) Logger.error('UI', 'Detection: Unexpected error reading badge color:', error);
       return '';
     }
+  }
+
+  /**
+   * Clear badge to empty state when cache expires or no detections found
+   * Called from showEmptyState() to ensure badge reflects current state
+   */
+  async clearBadgeForEmptyState() {
+    try {
+      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tabs && tabs[0]) {
+        await chrome.action.setBadgeText({ text: '', tabId: tabs[0].id });
+      }
+    } catch (error) {
+      // Silently fail if tab no longer exists
+    }
+  }
+
+  /**
+   * Convert hex color to RGB object
+   * @param {string} hex - Hex color value (e.g., "#FF5733" or "FF5733")
+   * @returns {Object|null} RGB object {r, g, b} or null if invalid
+   */
+  hexToRgb(hex) {
+    const result = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
   }
 }
 

@@ -1,3 +1,28 @@
+// Fingerprint SVG icons mapping for history modal
+const FINGERPRINT_ICONS = {
+  'audio_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M8 6v12M4 9v6M16 6v12M20 9v6"/></svg>',
+  'battery_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M22 11v2"/><path d="M6 11v2M10 11v2M14 11v2"/></svg>',
+  'canvas_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 12h4l2-3 2 6 2-3h2"/></svg>',
+  'clipboard_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>',
+  'crypto_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>',
+  'css_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 3h16l-1.5 15L12 21l-6.5-3L4 3z"/><path d="M8 8h8M7 12h6"/></svg>',
+  'font_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>',
+  'gamepads_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="4"/><circle cx="8" cy="12" r="2"/><path d="M15 10v4M13 12h4"/></svg>',
+  'geolocation_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>',
+  'hardware_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg>',
+  'indexeddb_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>',
+  'media_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><polygon points="10,8 16,11 10,14" fill="currentColor"/></svg>',
+  'navigator_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" fill="none"/></svg>',
+  'orientation_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 6h6"/></svg>',
+  'performance_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><path d="M12 2v2M22 12h-2M12 22v-2M2 12h2"/></svg>',
+  'screen_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
+  'storage_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M4 20v-3h16v3M4 7v10h16V7"/><path d="M4 11h16M4 15h16"/><circle cx="7" cy="9" r="1" fill="currentColor"/></svg>',
+  'timezone_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg>',
+  'usb_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v10M7 7l5 5 5-5"/><circle cx="12" cy="16" r="2"/><path d="M6 12v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4"/></svg>',
+  'webgl_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
+  'webrtc_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 10l5-5M20 10V5h-5"/><path d="M9 14l-5 5M4 14v5h5"/><circle cx="12" cy="12" r="3"/></svg>'
+};
+
 class History {
   constructor(detectorManager) {
     this.detectorManager = detectorManager;
@@ -157,33 +182,38 @@ class History {
 
       historyHtml += `
         <div class="history-item" data-history-id="${item.id}">
-          <div class="history-item-content">
-            <div class="history-header-info">
-              <img src="${faviconSrc}" alt="Favicon" class="history-favicon" data-fallback="${chrome.runtime.getURL('icons/icon16.png')}">
-              <div class="history-url" title="${item.url || ''}">${domain}</div>
+          <div class="history-item-top">
+            <div class="history-item-content">
+              <div class="history-header-info">
+                <img src="${faviconSrc}" alt="Favicon" class="history-favicon" data-fallback="${chrome.runtime.getURL('icons/icon16.png')}">
+                <div class="history-url" title="${item.url || ''}">${domain}</div>
+              </div>
+              <div class="history-title" title="${item.title || 'Untitled'}">${item.title || 'Untitled'}</div>
             </div>
-            <div class="history-title" title="${item.title || 'Untitled'}">${item.title || 'Untitled'}</div>
-            <div class="history-detections">
-              ${this.renderHistoryDetections(item.detections || [], item.id)}
+            <div class="history-item-right">
+              <div class="history-item-actions">
+                <button class="history-item-action-btn history-copy-btn" data-action="copy" title="Copy data">
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" fill="currentColor"/>
+                  </svg>
+                </button>
+                <button class="history-item-action-btn history-export-btn" data-action="export" title="Export item">
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" fill="currentColor"/>
+                  </svg>
+                </button>
+                <button class="history-item-action-btn history-delete-btn" data-action="delete" title="Delete item">
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
-          <div class="history-item-right">
-            <div class="history-item-actions">
-              <button class="history-item-action-btn history-copy-btn" data-action="copy" title="Copy data">
-                <svg width="12" height="12" viewBox="0 0 24 24">
-                  <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" fill="currentColor"/>
-                </svg>
-              </button>
-              <button class="history-item-action-btn history-export-btn" data-action="export" title="Export item">
-                <svg width="12" height="12" viewBox="0 0 24 24">
-                  <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" fill="currentColor"/>
-                </svg>
-              </button>
-              <button class="history-item-action-btn history-delete-btn" data-action="delete" title="Delete item">
-                <svg width="12" height="12" viewBox="0 0 24 24">
-                  <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
-                </svg>
-              </button>
+          ${this.renderHistoryStats(item)}
+          <div class="history-item-bottom">
+            <div class="history-detections">
+              ${this.renderHistoryDetections(item.detections || [], item.id)}
             </div>
             <div class="history-timestamp">${timeAgo}</div>
           </div>
@@ -216,7 +246,7 @@ class History {
     }
 
     let tagsHtml = '';
-    const maxTags = 5; // Reduced from 6 to prevent clipping with "+N More" badge
+    const maxTags = 6; // Show 6 icons + "+N" badge to fit in one row
 
     // Sort detections by priority: Anti-Bot > CAPTCHA > Fingerprinting
     const categoryPriority = {
@@ -243,7 +273,7 @@ class History {
       const cat = category?.toLowerCase() || '';
       if (cat.includes('antibot') || cat.includes('anti-bot')) return '#FF5733';
       if (cat.includes('captcha')) return '#33C3FF';
-      if (cat.includes('fingerprint')) return '#2196F3';
+      if (cat.includes('fingerprint')) return '#3b82f6';
       return '#666666';
     };
 
@@ -276,16 +306,25 @@ class History {
       }
 
       // Generate icon HTML
+      let isFingerprint = false;
       if (detectorObj && detectorObj.icon) {
-        const iconUrl = chrome.runtime.getURL(`detectors/icons/${detectorObj.icon}`);
-        iconHtml = `<img src="${iconUrl}" alt="${name}" class="detection-icon">`;
+        const iconName = detectorObj.icon.toLowerCase();
+        // Check if it's a fingerprint SVG icon
+        if (FINGERPRINT_ICONS[iconName]) {
+          iconHtml = `<div class="detection-icon-svg fingerprint-icon">${FINGERPRINT_ICONS[iconName]}</div>`;
+          isFingerprint = true;
+        } else {
+          const iconUrl = chrome.runtime.getURL(`detectors/icons/${detectorObj.icon}`);
+          iconHtml = `<img src="${iconUrl}" alt="${name}" class="detection-icon">`;
+        }
       } else {
         // Fallback: Use Scrapfly icon for all detectors without official icons
         const scrapflyIconUrl = chrome.runtime.getURL('icons/icon32.png');
         iconHtml = `<img src="${scrapflyIconUrl}" alt="${name}" class="detection-icon">`;
       }
 
-      tagsHtml += `<span class="history-detection-tag icon-badge" title="${tooltipText}" style="border-color: ${categoryColor};">${iconHtml}</span>`;
+      const badgeClass = isFingerprint ? 'history-detection-tag icon-badge fingerprint-badge' : 'history-detection-tag icon-badge';
+      tagsHtml += `<span class="${badgeClass}" title="${tooltipText}" style="border-color: ${categoryColor};">${iconHtml}</span>`;
     });
 
     if (sortedDetections.length > maxTags) {
@@ -302,6 +341,177 @@ class History {
   }
 
   /**
+   * Calculate stats for a history item
+   * @param {Array} detections - Array of detections
+   * @returns {object} Stats object with totalDetections, avgConfidence, difficulty, difficultyColor
+   */
+  calculateHistoryStats(detections) {
+    const totalDetections = detections?.length || 0;
+
+    // Calculate average confidence
+    let avgConfidence = 0;
+    if (totalDetections > 0) {
+      const totalConfidence = detections.reduce((sum, d) => sum + (d.confidence || 0), 0);
+      avgConfidence = Math.round(totalConfidence / totalDetections);
+    }
+
+    // Calculate difficulty based on detection count and confidence
+    let difficulty = 'Low';
+    let difficultyColor = '#22c55e'; // Green
+    if (totalDetections > 5 || avgConfidence > 80) {
+      difficulty = 'High';
+      difficultyColor = '#ef4444'; // Red
+    } else if (totalDetections > 2 || avgConfidence > 60) {
+      difficulty = 'Medium';
+      difficultyColor = '#f59e0b'; // Amber
+    }
+
+    return { totalDetections, avgConfidence, difficulty, difficultyColor };
+  }
+
+  /**
+   * Render stats row for a history item
+   * @param {Object} item - History item with detections and cacheScope
+   * @returns {string} HTML string for stats row
+   */
+  renderHistoryStats(item) {
+    const detections = item.detections || [];
+    const stats = this.calculateHistoryStats(detections);
+
+    // Cache scope display names
+    const scopeDisplayNames = {
+      'domain': 'Domain',
+      'path': 'Path',
+      'url': 'Full URL'
+    };
+    const cacheScope = item.cacheScope || 'domain';
+    const cacheScopeDisplay = scopeDisplayNames[cacheScope] || 'Domain';
+
+    return `
+      <div class="history-stats-line">
+        <div class="history-stat-inline history-stat-detections">
+          <div class="history-stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <div class="history-stat-content">
+            <div class="history-stat-label">Detections</div>
+            <div class="history-stat-value">${stats.totalDetections}</div>
+          </div>
+        </div>
+        <div class="history-stat-inline history-stat-confidence">
+          <div class="history-stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <div class="history-stat-content">
+            <div class="history-stat-label">Confidence</div>
+            <div class="history-stat-value">${stats.avgConfidence}%</div>
+          </div>
+        </div>
+        <div class="history-stat-inline history-stat-difficulty">
+          <div class="history-stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <div class="history-stat-content">
+            <div class="history-stat-label">Difficulty</div>
+            <div class="history-stat-value" style="color: ${stats.difficultyColor}">${stats.difficulty}</div>
+          </div>
+        </div>
+        <div class="history-stat-inline history-stat-cache-scope">
+          <div class="history-stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M2 12h20"/>
+              <path d="M12 2a15 15 0 0 1 0 20" opacity="0.7"/>
+              <path d="M12 2a15 15 0 0 0 0 20" opacity="0.7"/>
+            </svg>
+          </div>
+          <div class="history-stat-content">
+            <div class="history-stat-label">Scope</div>
+            <div class="history-stat-value">${cacheScopeDisplay}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Calculate category breakdown from detections
+   * @param {Array} detections - Array of detections
+   * @returns {object} Breakdown by category
+   */
+  calculateCategoryBreakdown(detections) {
+    const breakdown = {
+      antibot: 0,
+      captcha: 0,
+      fingerprint: 0
+    };
+
+    if (!detections || detections.length === 0) return breakdown;
+
+    detections.forEach(d => {
+      const cat = (d.category || '').toLowerCase();
+      if (cat.includes('antibot') || cat.includes('anti-bot')) {
+        breakdown.antibot++;
+      } else if (cat.includes('captcha')) {
+        breakdown.captcha++;
+      } else if (cat.includes('fingerprint')) {
+        breakdown.fingerprint++;
+      }
+
+      // Count js_hooks from matches (these are fingerprinting techniques)
+      if (d.matches) {
+        breakdown.fingerprint += d.matches.filter(m => m.type === 'js_hooks').length;
+      }
+    });
+
+    return breakdown;
+  }
+
+  /**
+   * Render category breakdown HTML for modal
+   * @param {Array} detections - Array of detections
+   * @returns {string} HTML string
+   */
+  renderCategoryBreakdown(detections) {
+    const breakdown = this.calculateCategoryBreakdown(detections);
+    let html = '<div class="history-modal-category-breakdown">';
+
+    // SVG icons for each category
+    const antibotIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
+    const captchaIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/></svg>';
+    const fingerprintIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4"/><path d="M5 19.5C5.5 18 6 15 6 12c0-.7.12-1.37.34-2"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M9 6.8a6 6 0 0 1 9 5.2c0 .47 0 1.17-.02 2"/></svg>';
+
+    if (breakdown.antibot > 0) {
+      html += `<div class="history-modal-category-badge antibot">${antibotIcon}${breakdown.antibot} Anti-Bot${breakdown.antibot > 1 ? 's' : ''}</div>`;
+    }
+    if (breakdown.captcha > 0) {
+      html += `<div class="history-modal-category-badge captcha">${captchaIcon}${breakdown.captcha} Captcha${breakdown.captcha > 1 ? 's' : ''}</div>`;
+    }
+    if (breakdown.fingerprint > 0) {
+      html += `<div class="history-modal-category-badge fingerprint">${fingerprintIcon}${breakdown.fingerprint} Fingerprint${breakdown.fingerprint > 1 ? 's' : ''}</div>`;
+    }
+
+    // If no categories found, show total
+    if (breakdown.antibot === 0 && breakdown.captcha === 0 && breakdown.fingerprint === 0) {
+      const total = detections?.length || 0;
+      html += `<div class="history-modal-category-badge">${total} Detection${total !== 1 ? 's' : ''}</div>`;
+    }
+
+    html += '</div>';
+    return html;
+  }
+
+  /**
    * Setup click handlers for overflow badges
    */
   setupOverflowBadgeHandlers() {
@@ -312,7 +522,7 @@ class History {
         const historyItemId = badge.dataset.historyItemId;
         const item = this.historyItems.find(h => h.id === historyItemId);
         if (item) {
-          this.showOverflowDetectionsModal(item);
+          this.showHistoryItemDetails(item);  // Open same modal as card click
         }
       });
     });
@@ -329,15 +539,20 @@ class History {
 
     if (!modal || !title || !content) return;
 
-    const maxTags = 2;
-    const hiddenDetections = historyItem.detections.slice(maxTags);
+    // Show ALL detections, not just hidden ones
+    const allDetections = historyItem.detections;
 
-    // Update title
-    const count = hiddenDetections.length;
-    title.textContent = `${count} Hidden Detection${count > 1 ? 's' : ''}`;
+    // Update title with history item page title
+    title.textContent = historyItem.title || 'Detections';
 
-    // Render detection cards
-    content.innerHTML = this.renderDetectionDetails(hiddenDetections);
+    // Render detection cards using safe DOM method
+    content.replaceChildren();
+    const detailsHtml = this.renderDetectionDetails(allDetections);
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = detailsHtml;
+    while (tempDiv.firstChild) {
+      content.appendChild(tempDiv.firstChild);
+    }
 
     // FIX: Attach click handlers to expand/collapse detection cards
     this.attachOverflowModalClickHandlers();
@@ -372,11 +587,9 @@ class History {
           if (isExpanded) {
             card.classList.remove('expanded');
             methods.style.display = 'none';
-            if (expandIcon) expandIcon.textContent = '▼';
           } else {
             card.classList.add('expanded');
             methods.style.display = 'flex';
-            if (expandIcon) expandIcon.textContent = '▲';
           }
         });
 
@@ -395,7 +608,6 @@ class History {
     cards.forEach(card => {
       const header = card.querySelector('.history-modal-detection-header');
       const methods = card.querySelector('.history-modal-detection-methods');
-      const expandIcon = card.querySelector('.history-modal-expand-icon');
 
       if (header && methods) {
         // Toggle expand/collapse on header click
@@ -406,11 +618,9 @@ class History {
           if (isExpanded) {
             card.classList.remove('expanded');
             methods.style.display = 'none';
-            if (expandIcon) expandIcon.textContent = '▼';
           } else {
             card.classList.add('expanded');
             methods.style.display = 'flex';
-            if (expandIcon) expandIcon.textContent = '▲';
           }
         });
 
@@ -480,7 +690,7 @@ class History {
       await chrome.storage.local.remove(['scrapfly_history']);
       this.showEmptyState();
       Logger.ui('History cleared');
-      NotificationHelper.success('History cleared successfully');
+      NotificationHelper.success('History cleared');
     } catch (error) {
       Logger.error('UI', 'Failed to clear history:', error);
       NotificationHelper.error('Failed to clear history: ' + error.message);
@@ -588,11 +798,13 @@ class History {
       url.href = historyItem.url;
     }
     if (timestamp) {
-      timestamp.textContent = `🕐 ${this.getTimeAgo(new Date(historyItem.timestamp))} (${new Date(historyItem.timestamp).toLocaleString()})`;
+      const timeAgo = this.getTimeAgo(new Date(historyItem.timestamp));
+      const fullDate = new Date(historyItem.timestamp).toLocaleString();
+      timestamp.innerHTML = `<span class="time-ago">${timeAgo}</span><span class="time-full">(${fullDate})</span>`;
     }
     if (detectionCount) {
-      const count = historyItem.detections?.length || 0;
-      detectionCount.textContent = `🔍 ${count} detection${count !== 1 ? 's' : ''}`;
+      // Replace simple count with category breakdown
+      detectionCount.innerHTML = this.renderCategoryBreakdown(historyItem.detections || []);
     }
 
     // Render detections in modal
@@ -642,7 +854,7 @@ class History {
     try {
       const detailsText = this.formatHistoryItemText(historyItem);
       await navigator.clipboard.writeText(detailsText);
-      NotificationHelper.success('History item copied to clipboard');
+      NotificationHelper.micro('Copied');
     } catch (error) {
       Logger.error('UI', 'Failed to copy:', error);
       NotificationHelper.error('Failed to copy to clipboard');
@@ -790,8 +1002,14 @@ class History {
       // Generate detector icon HTML
       let detectorIconHtml = '';
       if (detectorObj && detectorObj.icon) {
-        const iconUrl = chrome.runtime.getURL(`detectors/icons/${detectorObj.icon}`);
-        detectorIconHtml = `<img src="${iconUrl}" alt="${name}" class="modal-detector-icon">`;
+        const iconName = detectorObj.icon.toLowerCase();
+        // Check if it's a fingerprint SVG icon
+        if (FINGERPRINT_ICONS[iconName]) {
+          detectorIconHtml = `<div class="modal-detector-icon-svg fingerprint-icon">${FINGERPRINT_ICONS[iconName]}</div>`;
+        } else {
+          const iconUrl = chrome.runtime.getURL(`detectors/icons/${detectorObj.icon}`);
+          detectorIconHtml = `<img src="${iconUrl}" alt="${name}" class="modal-detector-icon">`;
+        }
       } else {
         // Fallback: Use Scrapfly icon for all detectors without official icons
         const scrapflyIconUrl = chrome.runtime.getURL('icons/icon32.png');
@@ -806,27 +1024,51 @@ class History {
       // Render detection methods
       const methodsHtml = this.renderDetectionMethods(detection.matches || []);
 
+      // Get match count and unique method types for expanded view
+      const matchCount = detection.matches?.length || 0;
+      const methodTypes = this.getUniqueMethodTypes(detection.matches || []);
+
       return `
         <div class="history-modal-detection-card ${hasMethods ? 'has-methods' : ''}" data-detection-index="${index}">
           <div class="history-modal-detection-header">
             ${detectorIconHtml}
             <div class="history-modal-detection-content">
               <div class="history-modal-detection-name">${name}</div>
-              <div class="history-modal-detection-badges">
-                <span class="history-modal-badge" style="background: ${categoryColor}; color: white;">${category}</span>
-                <span class="history-modal-confidence ${confidenceClass}">${confidence}%</span>
-                ${hasMethods ? '<span class="history-modal-expand-icon">▼</span>' : ''}
-              </div>
+            </div>
+            <div class="history-modal-detection-right">
+              <span class="history-modal-confidence ${confidenceClass}">${confidence}%</span>
+              ${hasMethods ? '<span class="history-modal-expand-icon">▼</span>' : ''}
             </div>
           </div>
           ${hasMethods ? `
-            <div class="history-modal-detection-methods">
-              ${methodsHtml}
+            <div class="history-modal-detection-details">
+              <div class="history-modal-detection-meta">
+                <span class="history-modal-badge" style="background: ${categoryColor}; color: white;">${category}</span>
+                <span class="history-modal-meta-separator">•</span>
+                <span class="history-modal-match-count">${matchCount} match${matchCount !== 1 ? 'es' : ''}</span>
+                ${methodTypes ? `<span class="history-modal-meta-separator">•</span><span class="history-modal-method-types">${methodTypes}</span>` : ''}
+              </div>
+              <div class="history-modal-detection-methods">
+                ${methodsHtml}
+              </div>
             </div>
           ` : ''}
         </div>
       `;
     }).join('');
+  }
+
+  /**
+   * Get unique method types from matches for display in collapsed view
+   * @param {Array} matches - Array of match objects
+   * @returns {string} Comma-separated list of unique method types (max 4)
+   */
+  getUniqueMethodTypes(matches) {
+    if (!matches || matches.length === 0) return '';
+    const types = [...new Set(matches.map(m =>
+      (m.type || 'unknown').toUpperCase().replace(/_/g, ' ')
+    ))];
+    return types.slice(0, 4).join(', ') + (types.length > 4 ? '...' : '');
   }
 
   /**
@@ -967,7 +1209,7 @@ class History {
         const textToCopy = `[${payload.methodType || 'METHOD'}] ${value}`;
         Utils.copyToClipboard(textToCopy, {
           element: item,
-          notificationMessage: 'Method value copied',
+          notificationMessage: 'Copied',
           inlineMessage: '✓ Copied!'
         });
 
@@ -1515,6 +1757,9 @@ class History {
         return false;
       }
 
+      // Get current cache scope setting
+      const cacheScope = await Utils.getCacheScope();
+
       // Create history entry
       const historyEntry = {
         id: `detection_${Date.now()}_${tabId}`,
@@ -1525,7 +1770,8 @@ class History {
         timestamp: Date.now(),
         detections: detectionResults,
         detectionCount: detectionResults.length,
-        categories: [...new Set(detectionResults.map(d => d.category))]
+        categories: [...new Set(detectionResults.map(d => d.category))],
+        cacheScope: cacheScope
       };
 
       // Add to history (newest first)

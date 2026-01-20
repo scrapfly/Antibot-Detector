@@ -854,7 +854,7 @@ class Utils {
       return scope;
     } catch (error) {
       Logger.error('UTIL', '[getCacheScope] Error getting cache scope:', error);
-      return 'path'; // Default to path scope on error
+      return 'domain'; // Default to domain scope on error (consistent with normal default)
     }
   }
 
@@ -1104,17 +1104,19 @@ class Utils {
    * @param {object} options - Feedback options
    * @param {HTMLElement|null} options.element - Element to show inline feedback on
    * @param {boolean} [options.notify=true] - Display toast notification on success
-   * @param {string} [options.notificationMessage='Copied to clipboard'] - Success toast message
+   * @param {string} [options.notificationMessage='Copied'] - Success toast message
    * @param {string} [options.inlineMessage='✓ Copied!'] - Temporary inline message
    * @param {number} [options.revertDelay=1600] - Delay before inline message reverts (ms)
+   * @param {boolean} [options.useMicroToast=true] - Use compact micro toast (default) vs full toast
    * @returns {Promise<boolean>} True if copy succeeded
    */
   static async copyToClipboard(text, {
     element = null,
     notify = true,
-    notificationMessage = 'Copied to clipboard',
+    notificationMessage = 'Copied',
     inlineMessage = '✓ Copied!',
-    revertDelay = 1600
+    revertDelay = 1600,
+    useMicroToast = true
   } = {}) {
     let success = false;
 
@@ -1144,8 +1146,13 @@ class Utils {
       return false;
     }
 
-    if (notify && typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.success === 'function') {
-      NotificationHelper.success(notificationMessage);
+    // Only show toast if no inline feedback element is provided (avoid redundancy)
+    if (notify && !element && typeof NotificationHelper !== 'undefined') {
+      if (useMicroToast && typeof NotificationHelper.micro === 'function') {
+        NotificationHelper.micro(notificationMessage);
+      } else if (typeof NotificationHelper.success === 'function') {
+        NotificationHelper.success(notificationMessage);
+      }
     }
 
     if (element && typeof document !== 'undefined') {

@@ -22,7 +22,7 @@
       </button>
     </div>
     <div class="search-container">
-      <input type="text" id="historySearch" class="search-input" placeholder="Search by URL, detector name or category...">
+      <input type="text" id="historySearch" class="search-input" placeholder="Search history...">
     </div>
   </div>
   <div id="historyList" class="history-list"></div>
@@ -76,18 +76,23 @@
         </button>
       </div>
       <div class="history-modal-meta">
-        <div class="history-modal-meta-info">
-          <span id="historyModalTimestamp"></span>
-          <span id="historyModalDetectionCount"></span>
+        <!-- Row 1: Timestamp -->
+        <div class="history-modal-meta-row timestamp-row">
+          <div id="historyModalTimestamp" class="history-modal-timestamp"></div>
         </div>
-        <div class="history-modal-actions">
-          <button id="historyModalCopy" class="history-modal-action-btn" title="Copy all data">
+        <!-- Row 2: Category Badges -->
+        <div class="history-modal-meta-row categories-row">
+          <div id="historyModalDetectionCount"></div>
+        </div>
+        <!-- Row 3: Action Buttons -->
+        <div class="history-modal-meta-row actions-row">
+          <button id="historyModalCopy" class="history-modal-action-btn copy-btn" title="Copy all data">
             <svg width="14" height="14" viewBox="0 0 24 24">
               <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" fill="currentColor"/>
             </svg>
             Copy
           </button>
-          <button id="historyModalExport" class="history-modal-action-btn" title="Export this history item">
+          <button id="historyModalExport" class="history-modal-action-btn export-btn" title="Export as JSON">
             <svg width="14" height="14" viewBox="0 0 24 24">
               <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" fill="currentColor"/>
             </svg>
@@ -106,7 +111,7 @@
     <div class="history-modal-overlay"></div>
     <div class="history-modal-container">
       <div class="history-modal-header">
-        <h3 id="overflowModalTitle">Hidden Detections</h3>
+        <h3 id="overflowModalTitle">Detections</h3>
         <button id="overflowModalClose" class="history-modal-close" title="Close">
           <svg width="16" height="16" viewBox="0 0 24 24">
             <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>

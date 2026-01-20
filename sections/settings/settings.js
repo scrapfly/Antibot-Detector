@@ -9,18 +9,18 @@ class Settings {
       logCollectorEnabled: false,
       logCollectorMaxLogs: 5000,
 
-      // Badge Colors
+      // Badge Colors (using BADGE constants as defaults)
       badgeColors: {
-        low: '#4CAF50',    // Green
-        medium: '#FFA500', // Orange
-        high: '#FF4444'    // Red
+        low: '#22c55e',    // Green (BADGE.COLORS.LOW)
+        medium: '#f59e0b', // Amber (BADGE.COLORS.MEDIUM)
+        high: '#ef4444'    // Red (BADGE.COLORS.HIGH)
       },
 
       // Category Colors
       categoryColors: {
         antibot: '#FF5733',
         captcha: '#33C3FF',
-        fingerprint: '#8D33FF'
+        fingerprint: '#3b82f6'
       },
 
       // Tag Colors
@@ -74,6 +74,13 @@ class Settings {
         duplicateScope: 'full_url',
         duplicateDuration: 1,
         duplicateUnit: 'hours'
+      },
+
+      // Update Settings
+      updates: {
+        autoUpdate: false,
+        checkIntervalHours: 12,
+        lastCheckTimestamp: 0
       }
     };
 
@@ -86,7 +93,7 @@ class Settings {
   showSettings() {
     const settingsModal = document.querySelector('#settingsModal');
     if (settingsModal) {
-      settingsModal.style.display = 'flex';
+      settingsModal.classList.add('is-open');
       this.isModalVisible = true;
       this.loadSettings();
     }
@@ -98,7 +105,7 @@ class Settings {
   hideSettings() {
     const settingsModal = document.querySelector('#settingsModal');
     if (settingsModal) {
-      settingsModal.style.display = 'none';
+      settingsModal.classList.remove('is-open');
       this.isModalVisible = false;
     }
   }
@@ -249,9 +256,9 @@ class Settings {
           }
         });
 
-        NotificationHelper.success('Settings saved! Cache scope changed.');
+        NotificationHelper.success('Settings saved');
       } else {
-        NotificationHelper.success('Settings saved successfully!');
+        NotificationHelper.success('Settings saved');
       }
 
       // Notify background script to invalidate settings cache
@@ -329,16 +336,16 @@ class Settings {
       this.startLogCountUpdate();
     }
 
-    // Badge Colors
+    // Badge Colors (using BADGE constants as defaults)
     if (this.settings.badgeColors) {
       const colorBadgeLow = document.querySelector('#colorBadgeLow');
-      if (colorBadgeLow) colorBadgeLow.value = this.settings.badgeColors.low || '#4CAF50';
+      if (colorBadgeLow) colorBadgeLow.value = this.settings.badgeColors.low || BADGE.COLORS.LOW;
 
       const colorBadgeMedium = document.querySelector('#colorBadgeMedium');
-      if (colorBadgeMedium) colorBadgeMedium.value = this.settings.badgeColors.medium || '#FFA500';
+      if (colorBadgeMedium) colorBadgeMedium.value = this.settings.badgeColors.medium || BADGE.COLORS.MEDIUM;
 
       const colorBadgeHigh = document.querySelector('#colorBadgeHigh');
-      if (colorBadgeHigh) colorBadgeHigh.value = this.settings.badgeColors.high || '#FF4444';
+      if (colorBadgeHigh) colorBadgeHigh.value = this.settings.badgeColors.high || BADGE.COLORS.HIGH;
     }
 
     // Category Colors
@@ -350,7 +357,7 @@ class Settings {
       if (colorCaptcha) colorCaptcha.value = this.settings.categoryColors.captcha || '#33C3FF';
 
       const colorFingerprint = document.querySelector('#colorFingerprint');
-      if (colorFingerprint) colorFingerprint.value = this.settings.categoryColors.fingerprint || '#8D33FF';
+      if (colorFingerprint) colorFingerprint.value = this.settings.categoryColors.fingerprint || '#3b82f6';
     }
 
     // Tag Colors
@@ -517,6 +524,42 @@ class Settings {
 
       const duplicateUnit = document.querySelector('#duplicateUnit');
       if (duplicateUnit) duplicateUnit.value = this.settings.duplicatePrevention.duplicateUnit || 'hours';
+
+      // Show/hide duplicate settings container based on toggle state
+      const duplicateSettingsContainer = document.querySelector('#duplicateSettingsContainer');
+      if (duplicateSettingsContainer) {
+        duplicateSettingsContainer.style.display = (this.settings.duplicatePrevention.preventDuplicates ?? false) ? 'flex' : 'none';
+      }
+    }
+
+    // ========== UPDATE SETTINGS ==========
+    // Auto-update toggle
+    const autoUpdateToggle = document.querySelector('#autoUpdate');
+    if (autoUpdateToggle) {
+      autoUpdateToggle.checked = this.settings.updates?.autoUpdate ?? false;
+    }
+
+    // Check interval selector
+    const checkIntervalSelect = document.querySelector('#checkIntervalHours');
+    if (checkIntervalSelect) {
+      checkIntervalSelect.value = this.settings.updates?.checkIntervalHours ?? 12;
+    }
+
+    // Show/hide update interval group based on auto-update state
+    const updateIntervalGroup = document.querySelector('#updateIntervalGroup');
+    if (updateIntervalGroup) {
+      updateIntervalGroup.style.display = (this.settings.updates?.autoUpdate ?? false) ? 'flex' : 'none';
+    }
+
+    // Last check time display
+    const lastCheckSpan = document.querySelector('#lastUpdateCheckTime');
+    if (lastCheckSpan) {
+      const lastCheck = this.settings.updates?.lastCheckTimestamp || 0;
+      if (lastCheck > 0 && typeof UpdateManager !== 'undefined') {
+        lastCheckSpan.textContent = UpdateManager.formatLastCheck(lastCheck);
+      } else {
+        lastCheckSpan.textContent = 'Never';
+      }
     }
 
     // Legacy fields that might still be around
@@ -552,18 +595,18 @@ class Settings {
     settings.logCollectorEnabled = logCollectorToggle?.checked ?? this.settings.logCollectorEnabled ?? false;
     settings.logCollectorMaxLogs = parseInt(logCollectorMaxLogsInput?.value ?? this.settings.logCollectorMaxLogs ?? 5000);
 
-    // Badge Colors
+    // Badge Colors (using BADGE constants as defaults)
     settings.badgeColors = {
-      low: document.querySelector('#colorBadgeLow')?.value ?? this.settings.badgeColors?.low ?? '#4CAF50',
-      medium: document.querySelector('#colorBadgeMedium')?.value ?? this.settings.badgeColors?.medium ?? '#FFA500',
-      high: document.querySelector('#colorBadgeHigh')?.value ?? this.settings.badgeColors?.high ?? '#FF4444'
+      low: document.querySelector('#colorBadgeLow')?.value ?? this.settings.badgeColors?.low ?? BADGE.COLORS.LOW,
+      medium: document.querySelector('#colorBadgeMedium')?.value ?? this.settings.badgeColors?.medium ?? BADGE.COLORS.MEDIUM,
+      high: document.querySelector('#colorBadgeHigh')?.value ?? this.settings.badgeColors?.high ?? BADGE.COLORS.HIGH
     };
 
     // Category Colors
     settings.categoryColors = {
       antibot: document.querySelector('#colorAntibot')?.value ?? this.settings.categoryColors?.antibot ?? '#FF5733',
       captcha: document.querySelector('#colorCaptcha')?.value ?? this.settings.categoryColors?.captcha ?? '#33C3FF',
-      fingerprint: document.querySelector('#colorFingerprint')?.value ?? this.settings.categoryColors?.fingerprint ?? '#8D33FF'
+      fingerprint: document.querySelector('#colorFingerprint')?.value ?? this.settings.categoryColors?.fingerprint ?? '#3b82f6'
     };
 
     // Tag Colors
@@ -617,6 +660,13 @@ class Settings {
       duplicateScope: document.querySelector('#duplicateScope')?.value ?? this.settings.duplicatePrevention?.duplicateScope ?? 'full_url',
       duplicateDuration: parseInt(document.querySelector('#duplicateDuration')?.value ?? this.settings.duplicatePrevention?.duplicateDuration ?? 1),
       duplicateUnit: document.querySelector('#duplicateUnit')?.value ?? this.settings.duplicatePrevention?.duplicateUnit ?? 'hours'
+    };
+
+    // Update Settings
+    settings.updates = {
+      autoUpdate: document.querySelector('#autoUpdate')?.checked ?? this.settings.updates?.autoUpdate ?? false,
+      checkIntervalHours: parseInt(document.querySelector('#checkIntervalHours')?.value ?? this.settings.updates?.checkIntervalHours ?? 12),
+      lastCheckTimestamp: this.settings.updates?.lastCheckTimestamp ?? 0 // Preserve timestamp, don't reset on save
     };
 
     // Keep any other existing settings that might not be in the form
@@ -698,7 +748,7 @@ class Settings {
 
       this.updateSettingsUI();
       await this.saveSettings();
-      NotificationHelper.success('Settings reset to defaults!');
+      NotificationHelper.success('Settings reset');
     }
   }
 
@@ -938,7 +988,7 @@ class Settings {
             if (logCountValue) {
               logCountValue.textContent = '0';
             }
-            NotificationHelper.success('Logs cleared successfully');
+            NotificationHelper.success('Logs cleared');
           }).catch(() => {
             NotificationHelper.error('Failed to clear logs');
           });
@@ -977,11 +1027,12 @@ class Settings {
       });
     });
 
-    // Close modal when clicking outside
+    // Close modal when clicking on backdrop
     const settingsModal = document.querySelector('#settingsModal');
     if (settingsModal) {
       settingsModal.addEventListener('click', (e) => {
-        if (e.target === settingsModal) {
+        // Close if clicking on the modal container itself or the backdrop
+        if (e.target === settingsModal || e.target.classList.contains('base-modal-backdrop')) {
           this.hideSettings();
         }
       });
@@ -1079,10 +1130,61 @@ class Settings {
       }
     }
 
+    // Duplicate Prevention toggle - show/hide duplicate settings
+    const preventDuplicatesToggle = document.querySelector('#preventDuplicates');
+    const duplicateSettingsContainer = document.querySelector('#duplicateSettingsContainer');
+    if (preventDuplicatesToggle) {
+      preventDuplicatesToggle.addEventListener('change', (e) => {
+        const isEnabled = e.target.checked;
+        if (duplicateSettingsContainer) {
+          duplicateSettingsContainer.style.display = isEnabled ? 'flex' : 'none';
+        }
+      });
+      // Set initial state
+      const isEnabled = preventDuplicatesToggle.checked;
+      if (duplicateSettingsContainer) {
+        duplicateSettingsContainer.style.display = isEnabled ? 'flex' : 'none';
+      }
+    }
+
     // Test Webhook button
     const testWebhookBtn = document.querySelector('#testWebhookBtn');
     if (testWebhookBtn) {
       testWebhookBtn.addEventListener('click', () => this.handleTestWebhook());
+    }
+
+    // ========== UPDATE SETTINGS ==========
+
+    // Auto-update toggle
+    const autoUpdateToggle = document.querySelector('#autoUpdate');
+    const updateIntervalGroup = document.querySelector('#updateIntervalGroup');
+    if (autoUpdateToggle) {
+      autoUpdateToggle.addEventListener('change', (e) => {
+        const isEnabled = e.target.checked;
+        if (!this.settings.updates) this.settings.updates = {};
+        this.settings.updates.autoUpdate = isEnabled;
+        // Show/hide interval selector based on auto-update state
+        if (updateIntervalGroup) {
+          updateIntervalGroup.style.display = isEnabled ? 'flex' : 'none';
+        }
+        this.saveSettings();
+      });
+    }
+
+    // Check interval selector
+    const checkIntervalSelect = document.querySelector('#checkIntervalHours');
+    if (checkIntervalSelect) {
+      checkIntervalSelect.addEventListener('change', (e) => {
+        if (!this.settings.updates) this.settings.updates = {};
+        this.settings.updates.checkIntervalHours = parseInt(e.target.value, 10);
+        this.saveSettings();
+      });
+    }
+
+    // Check Updates Now button
+    const checkUpdatesNowBtn = document.querySelector('#checkUpdatesNowBtn');
+    if (checkUpdatesNowBtn) {
+      checkUpdatesNowBtn.addEventListener('click', () => this.handleCheckUpdatesNow());
     }
 
     // Setup color pagination controls
@@ -1522,14 +1624,14 @@ class Settings {
           }
         }
       } else {
-        // When disabling, set X badge for all tabs
+        // When disabling, set OFF badge for all tabs
         const tabs = await chrome.tabs.query({});
         for (const tab of tabs) {
-          chrome.action.setBadgeText({ text: '✕', tabId: tab.id }).catch((error) => {
+          chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tab.id }).catch((error) => {
             // Expected: Tab might be closed
             Logger.ui(`[Settings] Failed to set disabled badge for tab ${tab.id}:`, error.message);
           });
-          chrome.action.setBadgeBackgroundColor({ color: '#f59e0b', tabId: tab.id }).catch((error) => {
+          chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tab.id }).catch((error) => {
             // Expected: Tab might be closed
             Logger.ui(`[Settings] Failed to set badge color for tab ${tab.id}:`, error.message);
           });
@@ -1728,42 +1830,53 @@ class Settings {
 
   /**
    * Dispatch JS API event to page window
-   * @param {string} eventName - Event name (e.g., 'onScrapflyDetection', 'ready')
+   * @param {string} eventName - Event name (e.g., 'onDetection', 'ready')
    * @param {object} data - Event data payload
    * @returns {Promise<boolean>} True if event was dispatched
    */
   static async dispatchJsApiEvent(eventName, data = {}) {
     try {
-      // Check if JS API is enabled in settings
+      Logger.ui(`📡 [Settings] dispatchJsApiEvent called: ${eventName}`);
+
+      // Check if JS API is enabled in settings (default to TRUE if not set)
       const settings = await Utils.getSettings();
-      if (!settings.jsApiEnabled) {
-        Logger.ui(`Scrapfly JS API: Disabled in settings, skipping ${eventName} event`);
+      // Default to true when setting doesn't exist (matches default-settings.json)
+      const jsApiEnabled = settings.jsApi?.enableJsApi ?? true;
+      Logger.ui(`📡 [Settings] JS API enabled: ${jsApiEnabled}`, settings.jsApi);
+
+      if (!jsApiEnabled) {
+        Logger.ui(`JS API: Disabled in settings, skipping ${eventName} event`);
         return false;
       }
 
-      // Dispatch CustomEvent to page window
-      const event = new CustomEvent(`scrapfly:${eventName}`, {
-        detail: {
-          ...data,
-          timestamp: data.timestamp || new Date().toISOString(),
-          version: '1.0.0'
-        },
-        bubbles: true,
-        cancelable: false
-      });
+      // IMPORTANT: Content scripts run in ISOLATED world, page scripts run in MAIN world
+      // window.dispatchEvent() in ISOLATED world is NOT visible to page scripts!
+      // We must use postMessage to communicate with MAIN world
+      const eventData = {
+        ...data,
+        timestamp: data.timestamp || new Date().toISOString(),
+        version: '1.0.0'
+      };
 
-      window.dispatchEvent(event);
-      Logger.ui(`Scrapfly JS API: Dispatched ${eventName} event`, data);
+      // Send to MAIN world via postMessage - content-main-world.js will dispatch the CustomEvent
+      Logger.ui(`📡 [Settings] Sending postMessage to MAIN world: scrapfly:${eventName}`);
+      window.postMessage({
+        type: 'SCRAPFLY_JS_API_EVENT',
+        eventName: eventName,
+        detail: eventData
+      }, '*');
+
+      Logger.ui(`JS API: Sent ${eventName} event to MAIN world`, data);
       return true;
 
     } catch (error) {
-      Logger.error('UI', `Scrapfly JS API: Failed to dispatch ${eventName} event:`, error);
+      Logger.error('UI', `JS API: Failed to dispatch ${eventName} event:`, error);
       return false;
     }
   }
 
   /**
-   * Dispatch ready event to notify page that Scrapfly extension is loaded
+   * Dispatch ready event to notify page that extension is loaded
    * @returns {Promise<boolean>} True if event was dispatched
    */
   static async dispatchReadyEvent() {
@@ -1777,7 +1890,7 @@ class Settings {
       });
 
     } catch (error) {
-      Logger.error('UI', 'Scrapfly JS API: Failed to dispatch ready event:', error);
+      Logger.error('UI', 'JS API: Failed to dispatch ready event:', error);
       return false;
     }
   }
@@ -2062,6 +2175,61 @@ class Settings {
     } catch (error) {
       Logger.error('NETWORK', '🌐 Test webhook error:', error);
       NotificationHelper.error('Webhook test failed: ' + error.message);
+    } finally {
+      // Re-enable button
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    }
+  }
+
+  /**
+   * Handle the Check Updates Now button click in Settings
+   */
+  async handleCheckUpdatesNow() {
+    const btn = document.querySelector('#checkUpdatesNowBtn');
+    const lastCheckSpan = document.querySelector('#lastUpdateCheckTime');
+    if (!btn) return;
+
+    // Disable button and show loading state
+    btn.disabled = true;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" class="spin">
+        <path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" fill="currentColor"/>
+      </svg>
+      Checking...
+    `;
+
+    try {
+      // Check if UpdateManager is available
+      if (typeof UpdateManager === 'undefined') {
+        throw new Error('UpdateManager not loaded');
+      }
+
+      // Force check for updates
+      const result = await UpdateManager.checkForUpdates(true);
+
+      // Update last check time display
+      if (lastCheckSpan) {
+        const settings = await Utils.getSettings();
+        const lastCheck = settings.updates?.lastCheckTimestamp || 0;
+        lastCheckSpan.textContent = lastCheck > 0 ? UpdateManager.formatLastCheck(lastCheck) : 'Just now';
+      }
+
+      // Get pending updates count
+      const pendingCount = await UpdateManager.getPendingUpdatesCount();
+
+      if (pendingCount > 0) {
+        NotificationHelper.success(`Found ${pendingCount} detector update${pendingCount > 1 ? 's' : ''} available!`);
+      } else {
+        NotificationHelper.info('All detectors are up to date.');
+      }
+
+      Logger.ui('Update check completed:', { pendingCount, result });
+
+    } catch (error) {
+      Logger.error('UI', 'Failed to check for updates:', error);
+      NotificationHelper.error('Failed to check for updates: ' + error.message);
     } finally {
       // Re-enable button
       btn.disabled = false;

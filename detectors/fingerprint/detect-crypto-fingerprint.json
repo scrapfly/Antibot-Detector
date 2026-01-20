@@ -1,0 +1,28 @@
+{
+  "id": "detect-crypto-fingerprint",
+  "name": "Crypto Fingerprint",
+  "author": "scrapfly",
+  "enabled": true,
+  "category": "Fingerprint",
+  "lastUpdated": "2025-01-15",
+  "version": "1.0",
+  "website": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API",
+  "icon": "crypto_fingerprint.png",
+  "description": "Web Crypto API usage detection for random number generation and cryptographic operations",
+  "detection": {
+    "js_hooks": [
+      {
+        "description": "Generates cryptographically secure random values",
+        "enabled": true,
+        "confidence": 95,
+        "target": "Crypto.prototype.getRandomValues"
+      },
+      {
+        "description": "Computes cryptographic hashes (SHA-256, etc.)",
+        "enabled": true,
+        "confidence": 90,
+        "target": "SubtleCrypto.prototype.digest"
+      }
+    ]
+  }
+}

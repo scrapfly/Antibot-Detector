@@ -348,7 +348,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
 
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
 
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 400px; max-height: 90vh; overflow-y: auto; width: 90%;">
@@ -525,7 +525,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
     displayHeadersResults(headers) {
         const resultDiv = document.createElement('div');
         resultDiv.className = 'analysis-results-modal';
-        resultDiv.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+        resultDiv.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10000;';
 
         const headersList = Object.entries(headers)
             .filter(([name]) => name.toLowerCase().startsWith('x-'))
@@ -569,7 +569,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
     displayCookieResults(cookieData) {
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10000;';
 
         const cookieFound = cookieData ? 1 : 0;
 
@@ -730,7 +730,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
     displayScriptDataModal(data) {
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
 
         // Process data
         const initJsScripts = data?.initJsUrls || [];
@@ -896,7 +896,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
     displayScriptResultsOld(scripts) {
         const modal = document.createElement('div');
         modal.className = 'tool-modal';
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.2s;';
 
         // Count scripts with seeds
         const scriptsWithSeeds = scripts.filter(s => s.hasSeed);
@@ -1057,7 +1057,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
     displayExportCodeModal(scripts) {
         const exportModal = document.createElement('div');
         exportModal.className = 'tool-modal export-code-modal';
-        exportModal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 10001; opacity: 0; transition: opacity 0.2s;';
+        exportModal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10001; opacity: 0; transition: opacity 0.2s;';
 
         // Categorize scripts like in analyze scripts
         const seedScripts = scripts.filter(s => s.hasSeed);

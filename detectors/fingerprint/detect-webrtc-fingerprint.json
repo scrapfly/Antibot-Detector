@@ -1,0 +1,44 @@
+{
+  "id": "detect-webrtc-fingerprint",
+  "name": "WebRTC Fingerprint",
+  "author": "scrapfly",
+  "enabled": true,
+  "category": "Fingerprint",
+  "lastUpdated": "2024-01-15",
+  "version": "1.0",
+  "icon": "webrtc_fingerprint.png",
+  "detection": {
+    "js_hooks": [
+      {
+        "description": "Creates WebRTC data channel for IP leak fingerprinting",
+        "enabled": true,
+        "confidence": 95,
+        "target": "RTCPeerConnection.prototype.createDataChannel"
+      },
+      {
+        "description": "Enumerates media devices for hardware fingerprinting",
+        "enabled": true,
+        "confidence": 95,
+        "target": "MediaDevices.prototype.enumerateDevices"
+      },
+      {
+        "description": "Creates SDP offer revealing local IPs",
+        "enabled": true,
+        "confidence": 90,
+        "target": "RTCPeerConnection.prototype.createOffer"
+      },
+      {
+        "description": "Reads ICE candidate address for IP sniffing",
+        "enabled": true,
+        "confidence": 95,
+        "target": "RTCIceCandidate.prototype.address"
+      },
+      {
+        "description": "Monitors ICE candidate events for IP leakage",
+        "enabled": false,
+        "confidence": 80,
+        "target": "RTCPeerConnection.prototype.onicecandidate"
+      }
+    ]
+  }
+}

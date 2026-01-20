@@ -6,6 +6,7 @@
 // Import scripts for service worker
 importScripts(
     './modules/logger.js',
+    './modules/badge-constants.js',
     './utils/log-collector.js',
     './utils/utils.js',
     './utils/pattern-cache.js', // Extracted from detection-engine-manager.js
@@ -15,6 +16,9 @@ importScripts(
     './modules/confidence-manager.js',
     './modules/detection-engine-manager.js',
     './modules/notification-manager.js',
+    './modules/update-manager.js', // Auto-update detector definitions
+    './modules/detection-state-manager.js', // VERSION 2.3.0: Persistent detection state
+    './modules/worker-keepalive-manager.js', // VERSION 2.3.0: Service worker keepalive
     './sections/history/history.js',
     './sections/settings/settings.js',
     // Base helpers for interceptors (service worker context)
@@ -185,6 +189,10 @@ let detectorManager = null;
 let categoryManager = null;
 let detectionEngine = null;
 
+// VERSION 2.3.0: New managers for "never fail" reliability
+let detectionStateManager = null;
+let workerKeepaliveManager = null;
+
 // Initialization guard to prevent concurrent initializations (race condition fix)
 let initializationInProgress = false;
 let initializationPromise = null;
@@ -312,6 +320,16 @@ function getOrCreateDetectionState(tabId, url) {
             activeDetections.delete(tabId);
         }
 
+        // VERSION 2.3.0: Abandon in persistent state manager
+        if (detectionStateManager && detectionStateManager.isDetecting(tabId)) {
+            detectionStateManager.abandonDetection(tabId, 'url_changed');
+        }
+
+        // VERSION 2.3.0: End keepalive for old detection
+        if (workerKeepaliveManager) {
+            workerKeepaliveManager.endOperationsForTab(tabId);
+        }
+
         // Mark old state as interrupted
         existingState.interrupted = true;
         existingState.error = 'url_changed';
@@ -327,7 +345,7 @@ function getOrCreateDetectionState(tabId, url) {
     }
 
     if (!detectionStates.has(tabId)) {
-        detectionStates.set(tabId, {
+        const newState = {
             url: url,
             tabTitle: null, // Will be set by processDetectionData
             hooksData: new Map(), // detectorId -> detector object
@@ -341,7 +359,24 @@ function getOrCreateDetectionState(tabId, url) {
             windowPropertiesComplete: false,
             lastHookBatchTime: 0, // OPTIMIZATION: Track when last hook batch arrived for deterministic finalization
             startTime: Date.now()
-        });
+        };
+
+        detectionStates.set(tabId, newState);
+
+        // VERSION 2.3.0: Start persistent detection state
+        if (detectionStateManager) {
+            detectionStateManager.startDetection(tabId, url).catch(e => {
+                Logger.error('BACKGROUND', '[DetectionStateManager] Failed to start detection:', e);
+            });
+        }
+
+        // VERSION 2.3.0: Start keepalive for this detection
+        if (workerKeepaliveManager) {
+            workerKeepaliveManager.startOperation(`detection-${tabId}`, {
+                tabId,
+                reason: 'page_detection'
+            });
+        }
     }
     return detectionStates.get(tabId);
 }
@@ -549,8 +584,18 @@ async function finalizeDetection(tabId, state) {
     // FIX: Mark this tab as finalized to prevent progress updates from overriding the final badge
     state.finalized = true;
 
+    // VERSION 2.3.0: End keepalive for this detection
+    if (workerKeepaliveManager) {
+        workerKeepaliveManager.endOperation(`detection-${tabId}`);
+    }
+
     // Safety check: Don't finalize if detection was interrupted
     if (state.interrupted || interruptedDetections.has(tabId)) {
+        // VERSION 2.3.0: Mark as abandoned in persistent state
+        if (detectionStateManager && detectionStateManager.isDetecting(tabId)) {
+            detectionStateManager.abandonDetection(tabId, 'interrupted');
+        }
+
         // Still clean up state to prevent zombie entries (fixes badge stuck on "✕")
         detectionStates.delete(tabId);
         activeDetections.delete(tabId);
@@ -629,8 +674,8 @@ async function finalizeDetection(tabId, state) {
             const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
 
             const count = detectionCount.toString();
-            const color = detectionCount >= 5 ? badgeColors.high :
-                         detectionCount >= 3 ? badgeColors.medium :
+            const color = detectionCount >= BADGE.THRESHOLDS.HIGH ? badgeColors.high :
+                         detectionCount >= BADGE.THRESHOLDS.MEDIUM ? badgeColors.medium :
                          badgeColors.low;
 
             // CHANGED: Make badge update synchronous to ensure it completes before popup checks
@@ -642,21 +687,23 @@ async function finalizeDetection(tabId, state) {
                 Logger.background(`[Finalize] Tab ${tabId} closed, skipping badge update`);
             }
         } else {
-            // Clear badge if blacklisted
+            // Show blacklisted badge
             try {
-                await chrome.action.setBadgeText({ text: '', tabId: tabId });
+                await chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId: tabId });
+                await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tabId });
             } catch (error) {
                 // Expected: Tab might be closed
-                Logger.background(`[Finalize] Tab ${tabId} closed, skipping badge clear`);
+                Logger.background(`[Finalize] Tab ${tabId} closed, skipping badge update`);
             }
         }
     } else {
-        // Clear badge if no detections
+        // Show clean page badge (no detections)
         try {
-            await chrome.action.setBadgeText({ text: '', tabId: tabId });
+            await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEAN, tabId: tabId });
+            await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId: tabId });
         } catch (error) {
             // Expected: Tab might be closed
-            Logger.background(`[Finalize] Tab ${tabId} closed, skipping badge clear`);
+            Logger.background(`[Finalize] Tab ${tabId} closed, skipping badge update`);
         }
     }
 
@@ -669,6 +716,20 @@ async function finalizeDetection(tabId, state) {
     }).catch(() => {
         // Expected: Popup may not be open
     });
+
+    // Notify content script for JS API event dispatch (onDetection)
+    try {
+        await chrome.tabs.sendMessage(tabId, {
+            type: 'DETECTION_COMPLETE',
+            url: state.url,
+            detections: finalResults,
+            detectionCount: finalResults.length,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        // Expected: Tab may have been closed or content script not ready
+        Logger.background(`[Finalize] Could not notify content script for JS API: ${error.message}`);
+    }
 
     // FIX: Save merged results to history (includes both main detections AND hooks/fingerprints)
     // This ensures fingerprints detected via JS hooks are also saved to history
@@ -690,6 +751,11 @@ async function finalizeDetection(tabId, state) {
         } catch (error) {
             Logger.error('DETECTION', '[Finalize] Error saving to history:', error);
         }
+    }
+
+    // VERSION 2.3.0: Mark detection as completed in persistent state manager
+    if (detectionStateManager && detectionStateManager.isDetecting(tabId)) {
+        await detectionStateManager.completeDetection(tabId, finalResults.length);
     }
 
     // Remove from active detections (detection completed successfully)
@@ -797,20 +863,28 @@ async function initialize(reason = 'startup', previousVersion = null) {
             Logger.error('BACKGROUND', '❌ RECOMMENDATION: Remove and re-add the extension, then refresh all tabs');
         }
 
+        // VERSION 2.3.0: Initialize "never fail" managers
+        detectionStateManager = new DetectionStateManager();
+        await detectionStateManager.initialize();
+        Logger.background('[DetectionStateManager] ✅ Initialized');
+
+        workerKeepaliveManager = new WorkerKeepaliveManager();
+        Logger.background('[WorkerKeepaliveManager] ✅ Initialized');
+
         // Check if extension is enabled/disabled and set badges accordingly
         const isEnabled = await isExtensionEnabled();
         const tabs = await chrome.tabs.query({});
 
         if (!isEnabled) {
-            // Extension is disabled - set X badge with amber color for all tabs
+            // Extension is disabled - set OFF badge with gray color for all tabs
             for (const tab of tabs) {
-                chrome.action.setBadgeText({ text: '✕', tabId: tab.id }).catch(() => {});
-                chrome.action.setBadgeBackgroundColor({ color: '#f59e0b', tabId: tab.id }).catch(() => {});
+                chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tab.id }).catch(() => {});
+                chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tab.id }).catch(() => {});
             }
         } else {
             // Extension is enabled - clear any leftover badges
             for (const tab of tabs) {
-                chrome.action.setBadgeText({ text: '', tabId: tab.id }).catch(() => {});
+                chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tab.id }).catch(() => {});
             }
         }
 
@@ -844,15 +918,75 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
     if (details.reason === 'install' || details.reason === 'update') {
         await initialize(details.reason, details.previousVersion);
+        // Check for detector updates after installation/update
+        scheduleUpdateCheck();
     }
 
 });
-// UpdateManager removed - auto-update feature disabled
+
+// Schedule update check after initialization completes
+// This runs on install, update, and startup
+async function scheduleUpdateCheck() {
+    try {
+        const settings = await Utils.getSettings();
+        if (settings.updates?.autoUpdate) {
+            Logger.background('🔄 Auto-update enabled, checking for detector updates...');
+            // Delay slightly to let the extension fully initialize first
+            setTimeout(async () => {
+                try {
+                    await UpdateManager.checkForUpdates(false); // Non-forced check respects interval
+                    Logger.background('🔄 Update check completed');
+                } catch (error) {
+                    Logger.error('BACKGROUND', '🔄 Failed to check for updates:', error);
+                }
+            }, 5000); // 5 second delay after startup
+
+            // Setup periodic alarm for update checks
+            // This ensures updates are checked even if the browser stays open
+            setupUpdateAlarm(settings.updates.checkIntervalHours || 12);
+        } else {
+            Logger.background('🔄 Auto-update disabled, skipping update check');
+            // Clear any existing alarm if auto-update is disabled
+            chrome.alarms.clear('scrapfly-update-check');
+            // Clear any stale pending updates
+            await UpdateManager.clearPendingUpdates();
+        }
+    } catch (error) {
+        Logger.error('BACKGROUND', '🔄 Failed to schedule update check:', error);
+    }
+}
+
+// Setup periodic alarm for update checks
+function setupUpdateAlarm(intervalHours) {
+    const periodInMinutes = intervalHours * 60;
+    chrome.alarms.create('scrapfly-update-check', {
+        periodInMinutes: periodInMinutes
+    });
+    Logger.background(`🔄 Update alarm set: every ${intervalHours} hours`);
+}
+
+// Handle alarm events
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+    if (alarm.name === 'scrapfly-update-check') {
+        Logger.background('🔄 Periodic update check triggered by alarm');
+        try {
+            const settings = await Utils.getSettings();
+            if (settings.updates?.autoUpdate) {
+                await UpdateManager.checkForUpdates(false);
+                Logger.background('🔄 Periodic update check completed');
+            }
+        } catch (error) {
+            Logger.error('BACKGROUND', '🔄 Periodic update check failed:', error);
+        }
+    }
+});
 
 
 // Initialize on browser startup (when browser starts with extension already installed)
 chrome.runtime.onStartup.addListener(async () => {
     await initialize('startup');
+    // Check for detector updates on browser startup
+    scheduleUpdateCheck();
 });
 
 // Also initialize immediately when service worker starts/restarts
@@ -1164,8 +1298,8 @@ async function processDetectionData(message, sender) {
 
     // Show progress indicator in badge and track as active detection
     try {
-        chrome.action.setBadgeText({ text: '⏳', tabId: tabId }).catch(() => {});
-        chrome.action.setBadgeBackgroundColor({ color: '#2196F3', tabId: tabId }).catch(() => {});
+        chrome.action.setBadgeText({ text: BADGE.TEXT.LOADING, tabId: tabId }).catch(() => {});
+        chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.LOADING, tabId: tabId }).catch(() => {});
 
         // Create AbortController to allow cancellation if tab switch occurs
         const abortController = new AbortController();
@@ -1480,8 +1614,8 @@ async function processDetectionData(message, sender) {
 
                 if (detectionCount > 0) {
                     const count = detectionCount.toString();
-                    const color = detectionCount >= 5 ? badgeColors.high :
-                                 detectionCount >= 3 ? badgeColors.medium :
+                    const color = detectionCount >= BADGE.THRESHOLDS.HIGH ? badgeColors.high :
+                                 detectionCount >= BADGE.THRESHOLDS.MEDIUM ? badgeColors.medium :
                                  badgeColors.low;
 
                     Logger.background(`%c[processDetectionData] 🔵 UPDATING BADGE TO FINAL COUNT: "${count}"`, 'color: #2196F3; font-weight: bold; font-size: 14px;');
@@ -1492,8 +1626,9 @@ async function processDetectionData(message, sender) {
 
                     Logger.background(`%c[processDetectionData] ✅ Badge set to FINAL COUNT "${count}" - NO MORE PERCENTAGE UPDATES!`, 'color: #4caf50; font-weight: bold; font-size: 14px;');
                 } else {
-                    Logger.background(`%c[processDetectionData] ℹ️ No detections found - badge will be cleared`, 'color: #ff9800; font-weight: bold;');
-                    await chrome.action.setBadgeText({ text: '', tabId: tabId });
+                    Logger.background(`%c[processDetectionData] ℹ️ No detections found - showing clean badge`, 'color: #ff9800; font-weight: bold;');
+                    await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEAN, tabId: tabId });
+                    await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId: tabId });
                 }
             } catch (error) {
                 // Silently ignore "No tab with id" errors - expected when tab closes during detection
@@ -1907,12 +2042,41 @@ function setupMessageListeners() {
 
                                     if (isNumericBadge) {
                                         // Badge shows count - detection completed but data not in cache yet
-                                        // Clear stale activeDetections flag and wait for cache
-                                        Logger.background(`[GET_DETECTION_DATA] Badge shows '${trimmed}' but no data - detection completed, clearing activeDetections`);
+                                        // Clear stale activeDetections flag and wait for cache write to complete
+                                        Logger.background(`[GET_DETECTION_DATA] Badge shows '${trimmed}' but no data - waiting for cache write...`);
                                         activeDetections.delete(tabId);
-                                        // Return pending to trigger retry in popup
-                                        status = 'pending';
-                                    } else if (trimmed === '⏳') {
+
+                                        // FIX: Wait for cache write to complete (400ms)
+                                        await new Promise(resolve => setTimeout(resolve, 400));
+
+                                        // Retry getting cached data
+                                        data = await DetectionEngineManager.getDetectionData(tabId);
+
+                                        // If still no cache, try using state.mainData directly
+                                        if (!data) {
+                                            const retryState = detectionStates.get(tabId);
+                                            if (retryState && retryState.mainData && retryState.mainData.length > 0) {
+                                                Logger.background(`[GET_DETECTION_DATA] Using state.mainData directly for tab ${tabId}`);
+                                                // Get expiry and cacheScope for proper display in popup
+                                                const expiryMs = await DetectionEngineManager.getExpiryMs();
+                                                const cacheScope = await Utils.getCacheScope();
+                                                const now = Date.now();
+                                                data = {
+                                                    detectionResults: retryState.mainData,
+                                                    timestamp: retryState.timestamp || now,
+                                                    url: retryState.url,
+                                                    favicon: retryState.favicon,
+                                                    fromStorage: false,
+                                                    processed: true,
+                                                    expiry: now + expiryMs,
+                                                    cacheScope: cacheScope
+                                                };
+                                            }
+                                        }
+
+                                        // CRITICAL: Badge is numeric = detection complete, return 'ok' not 'pending'
+                                        status = 'ok';
+                                    } else if (trimmed === BADGE.TEXT.LOADING) {
                                         // Truly still analyzing
                                         status = 'pending';
                                     } else if (activeDetections.has(tabId)) {
@@ -1956,28 +2120,85 @@ function setupMessageListeners() {
 
                                 // Only check interrupted/pending status if NO cached data exists
                                 if (!data) {
-                                    // FIX: If tab is marked interrupted but still has active detection, treat as pending
-                                    // This handles race conditions where popup opens during analysis
-                                    if (activeDetections.has(activeTab.id)) {
+                                    // FIX: Check badge first - if numeric, detection completed but cache not ready
+                                    let badgeText = '';
+                                    try {
+                                        badgeText = await chrome.action.getBadgeText({ tabId: activeTab.id });
+                                    } catch (badgeError) {
+                                        Logger.detection('[GET_DETECTION_DATA] Failed to read badge text for active tab:', badgeError.message);
+                                    }
+                                    const trimmed = badgeText ? badgeText.trim() : '';
+                                    const isNumericBadge = /^\d+\+?$/.test(trimmed);
+
+                                    if (isNumericBadge) {
+                                        // Badge shows count - detection completed but data not in cache yet
+                                        Logger.background(`[GET_DETECTION_DATA] Active tab badge shows '${trimmed}' but no data - waiting for cache write...`);
+                                        activeDetections.delete(activeTab.id);
+
+                                        // FIX: Wait for cache write to complete (400ms)
+                                        await new Promise(resolve => setTimeout(resolve, 400));
+
+                                        // Retry getting cached data
+                                        data = await getCurrentTabDetectionData();
+
+                                        // If still no cache, try using state.mainData directly
+                                        if (!data) {
+                                            const retryState = detectionStates.get(activeTab.id);
+                                            if (retryState && retryState.mainData && retryState.mainData.length > 0) {
+                                                Logger.background(`[GET_DETECTION_DATA] Using state.mainData directly for active tab ${activeTab.id}`);
+                                                // Get expiry and cacheScope for proper display in popup
+                                                const expiryMs = await DetectionEngineManager.getExpiryMs();
+                                                const cacheScope = await Utils.getCacheScope();
+                                                const now = Date.now();
+                                                data = {
+                                                    detectionResults: retryState.mainData,
+                                                    timestamp: retryState.timestamp || now,
+                                                    url: retryState.url,
+                                                    favicon: retryState.favicon,
+                                                    fromStorage: false,
+                                                    processed: true,
+                                                    expiry: now + expiryMs,
+                                                    cacheScope: cacheScope
+                                                };
+                                            }
+                                        }
+
+                                        // CRITICAL: Badge is numeric = detection complete, return 'ok' not 'pending'
+                                        status = 'ok';
+                                    } else if (trimmed === BADGE.TEXT.LOADING) {
+                                        // Truly still analyzing
+                                        status = 'pending';
+                                    } else if (activeDetections.has(activeTab.id)) {
+                                        // FIX: If tab is marked interrupted but still has active detection, treat as pending
+                                        // This handles race conditions where popup opens during analysis
                                         status = 'pending';
                                     } else if (interruptedDetections.has(activeTab.id)) {
                                         status = 'interrupted';
-                                    } else {
-                                        // Check badge as fallback ONLY for pending status (⏳)
-                                        // Do NOT check for interrupted status (✕) as badge may be stale
-                                        try {
-                                            const badgeText = await chrome.action.getBadgeText({ tabId: activeTab.id });
-                                            const trimmed = badgeText ? badgeText.trim() : '';
-                                            if (trimmed === '⏳') {
-                                                status = 'pending';
-                                            }
-                                            // Removed '✕' and '?' checks - interrupted state is tracked in interruptedDetections map
-                                        } catch (badgeError) {
-                                            Logger.detection('[GET_DETECTION_DATA] Failed to read badge text for active tab:', badgeError.message);
-                                        }
                                     }
+                                    // If badge is empty or other value, status stays 'ok' (shows empty state)
                                 }
                                 // If cached data exists, status stays 'ok' regardless of interrupted state
+                            }
+                        }
+
+                        // FIX: Clear stale badge when cache has expired
+                        // If data is null and status is 'ok', the cache has expired or no detections exist
+                        // Clear the badge if it still shows an old numeric count
+                        if (!data && status === 'ok') {
+                            const targetTabId = tabId || (await chrome.tabs.query({ active: true, currentWindow: true }))[0]?.id;
+                            if (targetTabId) {
+                                try {
+                                    const badgeText = await chrome.action.getBadgeText({ tabId: targetTabId });
+                                    const trimmed = badgeText ? badgeText.trim() : '';
+                                    const isNumericBadge = /^\d+\+?$/.test(trimmed);
+
+                                    if (isNumericBadge) {
+                                        Logger.background(`[GET_DETECTION_DATA] Cache expired, clearing stale badge '${trimmed}' for tab ${targetTabId}`);
+                                        await chrome.action.setBadgeText({ text: '', tabId: targetTabId });
+                                    }
+                                } catch (e) {
+                                    // Silently fail
+                                }
                             }
                         }
 
@@ -2234,26 +2455,30 @@ function setupMessageListeners() {
                                 // Use same color scheme as normal detection flow
                                 const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
                                 const count = detectionCount.toString();
-                                const color = detectionCount >= 5 ? badgeColors.high :
-                                             detectionCount >= 3 ? badgeColors.medium :
+                                const color = detectionCount >= BADGE.THRESHOLDS.HIGH ? badgeColors.high :
+                                             detectionCount >= BADGE.THRESHOLDS.MEDIUM ? badgeColors.medium :
                                              badgeColors.low;
 
-                                chrome.action.setBadgeText({
+                                await chrome.action.setBadgeText({
                                     text: count,
                                     tabId: tabId
                                 });
-                                chrome.action.setBadgeBackgroundColor({
+                                await chrome.action.setBadgeBackgroundColor({
                                     color: color,
                                     tabId: tabId
                                 });
                                 Logger.background(`[Background] [Early Cache] ✅ Badge updated: ${detectionCount} detections from cache`);
                             } else {
-                                // No detections - clear badge (consistent with normal flow)
-                                chrome.action.setBadgeText({
-                                    text: '',
+                                // No detections - show clean badge
+                                await chrome.action.setBadgeText({
+                                    text: BADGE.TEXT.CLEAN,
                                     tabId: tabId
                                 });
-                                Logger.background('[Background] [Early Cache] Badge cleared: no detections');
+                                await chrome.action.setBadgeBackgroundColor({
+                                    color: BADGE.COLORS.CLEAN,
+                                    tabId: tabId
+                                });
+                                Logger.background('[Background] [Early Cache] Badge: clean page (no detections)');
                             }
                         }
 
@@ -2333,18 +2558,18 @@ function setupMessageListeners() {
                                 // Update badge with cached count and color
                                 const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
                                 const count = storedData.detectionCount.toString();
-                                const color = storedData.detectionCount >= 5 ? badgeColors.high :
-                                             storedData.detectionCount >= 3 ? badgeColors.medium :
+                                const color = storedData.detectionCount >= BADGE.THRESHOLDS.HIGH ? badgeColors.high :
+                                             storedData.detectionCount >= BADGE.THRESHOLDS.MEDIUM ? badgeColors.medium :
                                              badgeColors.low;
 
                                 await chrome.action.setBadgeText({ text: count, tabId: tab.id });
                                 await chrome.action.setBadgeBackgroundColor({ color: color, tabId: tab.id });
                                 Logger.background(`[Background] Badge updated with cached data: ${count} detections (scope change)`);
                             } else {
-                                // No cached data with new scope - show gray X
-                                await chrome.action.setBadgeText({ text: '✕', tabId: tab.id });
-                                await chrome.action.setBadgeBackgroundColor({ color: '#6B7280', tabId: tab.id });
-                                Logger.background('[Background] Badge updated to gray X - no cached data with new scope');
+                                // No cached data with new scope - show reload needed badge
+                                await chrome.action.setBadgeText({ text: BADGE.TEXT.INTERRUPTED, tabId: tab.id });
+                                await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.INTERRUPTED, tabId: tab.id });
+                                Logger.background('[Background] Badge: reload needed - no cached data with new scope');
                             }
                         }
 
@@ -2442,14 +2667,14 @@ function setupMessageListeners() {
                             Logger.background(`[Background] 🔓 Tab ${request.tabId} removed from recently cleared list`);
                         }, 5000);
 
-                        // CRITICAL FIX: Update badge to show no detection
+                        // CRITICAL FIX: Update badge to show data was cleared
                         try {
-                            await chrome.action.setBadgeText({ text: '✕', tabId: request.tabId });
+                            await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: request.tabId });
                             await chrome.action.setBadgeBackgroundColor({
-                                color: '#6B7280', // gray-500
+                                color: BADGE.COLORS.CLEARED,
                                 tabId: request.tabId
                             });
-                            Logger.background(`[Background] 🔖 Badge set to ✕ for tab ${request.tabId}`);
+                            Logger.background(`[Background] 🔖 Badge set to CLR for tab ${request.tabId}`);
                         } catch (badgeError) {
                             Logger.warn('BACKGROUND', `[Background] Could not update badge for tab ${request.tabId}:`, badgeError);
                         }
@@ -3164,6 +3389,17 @@ function setupTabListeners() {
             Logger.background(`[TabCleanup] Removed tab ${tabId} from cache tracking`);
         }
 
+        // VERSION 2.3.0: Abandon detection in persistent state manager
+        if (detectionStateManager && detectionStateManager.isDetecting(tabId)) {
+            detectionStateManager.abandonDetection(tabId, 'tab_closed');
+            Logger.background(`[DetectionStateManager] Abandoned detection for closed tab ${tabId}`);
+        }
+
+        // VERSION 2.3.0: End keepalive operations for this tab
+        if (workerKeepaliveManager) {
+            workerKeepaliveManager.endOperationsForTab(tabId);
+        }
+
         // Clear detection state tracking
         detectionStates.delete(tabId);
         activeDetections.delete(tabId);
@@ -3255,7 +3491,7 @@ function setupTabListeners() {
 
         // Clear the badge for this tab
         chrome.action.setBadgeText({
-            text: '',
+            text: BADGE.TEXT.EMPTY,
             tabId: tabId
         }).catch((error) => {
             // Expected: Tab might already be closed
@@ -3267,11 +3503,11 @@ function setupTabListeners() {
     chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         // Check if extension is disabled when page starts loading
         if (changeInfo.status === 'loading' && !await isExtensionEnabled()) {
-            Logger.background(`[TabUpdate] Extension is disabled - setting orange X badge for tab ${tabId}`);
-            chrome.action.setBadgeText({ text: '✕', tabId: tabId }).catch((error) => {
+            Logger.background(`[TabUpdate] Extension is disabled - setting OFF badge for tab ${tabId}`);
+            chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tabId }).catch((error) => {
                 Logger.background(`[TabUpdate] Failed to set disabled badge for tab ${tabId}:`, error.message);
             });
-            chrome.action.setBadgeBackgroundColor({ color: '#f59e0b', tabId: tabId }).catch((error) => {
+            chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tabId }).catch((error) => {
                 Logger.background(`[TabUpdate] Failed to set badge color for tab ${tabId}:`, error.message);
             });
         }
@@ -3312,7 +3548,7 @@ function setupTabListeners() {
                 }
 
                 // Clear badge (new page will set its own badge when detection completes)
-                chrome.action.setBadgeText({ text: '', tabId: tabId }).catch((error) => {
+                chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tabId }).catch((error) => {
                     Logger.background(`[TabUpdate] Failed to clear badge for tab ${tabId}:`, error.message);
                 });
             }

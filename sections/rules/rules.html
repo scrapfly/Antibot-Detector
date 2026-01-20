@@ -2,6 +2,13 @@
   <div class="rules-header">
     <!-- Action Buttons -->
     <div class="action-buttons">
+      <button id="checkUpdatesBtn" class="check-updates-btn" title="Check for detector updates">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="update-icon">
+          <path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/>
+        </svg>
+        <span id="checkUpdatesBtnText">Update</span>
+        <span id="updatesBadge" class="updates-badge" style="display: none;">0</span>
+      </button>
       <button id="importRulesBtn" class="import-btn-small" title="Import">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
           <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,11L16,15H13.5V18H10.5V15H8L12,11Z"/>
@@ -31,7 +38,7 @@
 
     <!-- Search Bar -->
     <div class="search-container">
-      <input type="text" id="rulesSearch" class="search-input" placeholder="Search by name, pattern, or method (COOKIE, HEADER, DOM, URL, CONTENT, PAYLOAD, JS_HOOKS, WINDOW)...">
+      <input type="text" id="rulesSearch" class="search-input" placeholder="Search detectors...">
     </div>
   </div>
 
@@ -72,7 +79,10 @@
     <div class="rule-modal-backdrop"></div>
     <div class="rule-modal-content">
       <div class="rule-modal-header">
-        <h2 id="editRuleModalTitle">Edit Detection Rule</h2>
+        <div class="rule-modal-title-wrapper">
+          <span id="editRuleModalAction" class="rule-modal-action">Edit</span>
+          <span id="editRuleModalName" class="rule-modal-name">Detection Rule</span>
+        </div>
         <button id="closeRuleModal" class="rule-modal-close">
           <svg width="16" height="16" viewBox="0 0 24 24">
             <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
@@ -81,71 +91,112 @@
       </div>
 
       <div class="rule-modal-body">
-        <!-- Detector Information -->
-        <div class="rule-section">
-          <label class="section-title">Detector Information</label>
-          <div class="detector-info-grid">
-            <div class="detector-field">
-              <label class="field-label">Name:</label>
-              <input type="text" id="detectorNameInput" class="detector-input" placeholder="Enter detector name">
+        <!-- Detector Information Card -->
+        <div class="modal-card">
+          <div class="modal-card-header">
+            <span class="card-icon icon-info">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M9,13V19H7V13H9M15,15V19H17V15H15M11,11V19H13V11H11Z"/>
+              </svg>
+            </span>
+            <h3>Detector Information</h3>
+          </div>
+          <div class="modal-card-body">
+            <div class="form-group">
+              <label class="form-label">Name</label>
+              <input type="text" id="detectorNameInput" class="form-input" placeholder="Enter detector name">
             </div>
-            <div class="detector-field">
-              <label class="field-label">Category:</label>
-              <select id="detectorCategorySelect" class="detector-select">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="detectorCategorySelect" class="form-select">
                 <option value="antibot">Anti-Bot</option>
                 <option value="captcha">CAPTCHA</option>
                 <option value="fingerprint">Fingerprint</option>
               </select>
             </div>
-            <div class="detector-field">
-              <label class="field-label">Icon:</label>
-              <div class="icon-selector">
-                <div class="current-icon">
+            <div class="form-group">
+              <label class="form-label">Icon</label>
+              <div class="icon-selector-row">
+                <div class="icon-preview">
                   <img id="currentDetectorIcon" src="" alt="Icon">
                 </div>
                 <button type="button" class="change-icon-btn">Change Icon</button>
               </div>
             </div>
-          </div>
-        </div>
-
-        <div class="rule-section">
-          <label class="section-title">Badge Color</label>
-          <div class="color-picker-grid">
-            <div class="color-option" style="background: #3b82f6;" data-color="#3b82f6"></div>
-            <div class="color-option" style="background: #10b981;" data-color="#10b981"></div>
-            <div class="color-option" style="background: #ef4444;" data-color="#ef4444"></div>
-            <div class="color-option" style="background: #f59e0b;" data-color="#f59e0b"></div>
-            <div class="color-option" style="background: #8b5cf6;" data-color="#8b5cf6"></div>
-            <div class="color-option" style="background: #06b6d4;" data-color="#06b6d4"></div>
-            <div class="color-option" style="background: #eab308;" data-color="#eab308"></div>
-            <div class="color-option" style="background: #6b7280;" data-color="#6b7280"></div>
-            <div class="color-option" style="background: #ec4899;" data-color="#ec4899"></div>
-            <div class="color-option" style="background: #8b4513;" data-color="#8b4513"></div>
-            <div class="color-option rainbow-picker" id="rainbowPicker" title="Custom Color">
-              <span class="custom-color-hex"></span>
-              <svg width="16" height="16" viewBox="0 0 24 24">
-                <defs>
-                  <linearGradient id="rainbow" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:#ff0000"/>
-                    <stop offset="16.66%" style="stop-color:#ff8800"/>
-                    <stop offset="33.33%" style="stop-color:#ffff00"/>
-                    <stop offset="50%" style="stop-color:#00ff00"/>
-                    <stop offset="66.66%" style="stop-color:#0088ff"/>
-                    <stop offset="83.33%" style="stop-color:#8800ff"/>
-                    <stop offset="100%" style="stop-color:#ff00ff"/>
-                  </linearGradient>
-                </defs>
-                <rect x="2" y="2" width="20" height="20" rx="4" fill="url(#rainbow)"/>
-                <path d="M12,17.5L8,14L10,9L12,11L14,9L16,14L12,17.5Z" fill="white" opacity="0.8"/>
-              </svg>
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fas fa-user"></i> Author
+              </label>
+              <input
+                type="text"
+                id="detectorAuthorInput"
+                class="form-input"
+                placeholder="Enter author name (default: scrapfly)"
+                maxlength="50">
+              <small class="form-help" id="authorHelp">Who created this detector</small>
             </div>
           </div>
         </div>
 
-        <div class="rule-section">
-          <label class="section-title">Detection Methods</label>
-          <div id="detectionMethodsContainer"></div>
+        <!-- Badge Color Card -->
+        <div class="modal-card">
+          <div class="modal-card-header">
+            <span class="card-icon icon-color">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.5,12A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 17.5,9A1.5,1.5 0 0,1 19,10.5A1.5,1.5 0 0,1 17.5,12M14.5,8A1.5,1.5 0 0,1 13,6.5A1.5,1.5 0 0,1 14.5,5A1.5,1.5 0 0,1 16,6.5A1.5,1.5 0 0,1 14.5,8M9.5,8A1.5,1.5 0 0,1 8,6.5A1.5,1.5 0 0,1 9.5,5A1.5,1.5 0 0,1 11,6.5A1.5,1.5 0 0,1 9.5,8M6.5,12A1.5,1.5 0 0,1 5,10.5A1.5,1.5 0 0,1 6.5,9A1.5,1.5 0 0,1 8,10.5A1.5,1.5 0 0,1 6.5,12M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A1.5,1.5 0 0,0 13.5,19.5C13.5,19.11 13.35,18.76 13.11,18.5C12.88,18.23 12.73,17.88 12.73,17.5A1.5,1.5 0 0,1 14.23,16H16A5,5 0 0,0 21,11C21,6.58 16.97,3 12,3Z"/>
+              </svg>
+            </span>
+            <h3>Badge Color</h3>
+          </div>
+          <div class="modal-card-body">
+            <div class="color-picker-card">
+              <div class="color-picker-grid">
+                <div class="color-option" style="background: #3b82f6;" data-color="#3b82f6"></div>
+                <div class="color-option" style="background: #10b981;" data-color="#10b981"></div>
+                <div class="color-option" style="background: #ef4444;" data-color="#ef4444"></div>
+                <div class="color-option" style="background: #f59e0b;" data-color="#f59e0b"></div>
+                <div class="color-option" style="background: #8b5cf6;" data-color="#8b5cf6"></div>
+                <div class="color-option" style="background: #06b6d4;" data-color="#06b6d4"></div>
+                <div class="color-option" style="background: #eab308;" data-color="#eab308"></div>
+                <div class="color-option" style="background: #6b7280;" data-color="#6b7280"></div>
+                <div class="color-option" style="background: #ec4899;" data-color="#ec4899"></div>
+                <div class="color-option" style="background: #8b4513;" data-color="#8b4513"></div>
+                <div class="color-option rainbow-picker" id="rainbowPicker" title="Custom Color">
+                  <span class="custom-color-hex"></span>
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <defs>
+                      <linearGradient id="rainbow" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#ff0000"/>
+                        <stop offset="16.66%" style="stop-color:#ff8800"/>
+                        <stop offset="33.33%" style="stop-color:#ffff00"/>
+                        <stop offset="50%" style="stop-color:#00ff00"/>
+                        <stop offset="66.66%" style="stop-color:#0088ff"/>
+                        <stop offset="83.33%" style="stop-color:#8800ff"/>
+                        <stop offset="100%" style="stop-color:#ff00ff"/>
+                      </linearGradient>
+                    </defs>
+                    <rect x="2" y="2" width="20" height="20" rx="4" fill="url(#rainbow)"/>
+                    <path d="M12,17.5L8,14L10,9L12,11L14,9L16,14L12,17.5Z" fill="white" opacity="0.8"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detection Methods Card -->
+        <div class="modal-card">
+          <div class="modal-card-header">
+            <span class="card-icon icon-search">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+              </svg>
+            </span>
+            <h3>Detection Methods</h3>
+          </div>
+          <div class="modal-card-body modal-card-body-methods">
+            <div id="detectionMethodsContainer"></div>
+          </div>
         </div>
       </div>
 
@@ -215,121 +266,173 @@
       </div>
 
       <div class="rule-modal-body">
-        <!-- Confidence Level -->
-        <div class="settings-group">
-          <label class="settings-label">
-            Confidence Level: <span id="confidenceValue">100</span>%
-          </label>
-          <div class="confidence-slider-container">
-            <input type="range" id="confidenceSlider" class="confidence-slider" min="0" max="100" value="100">
-            <div class="confidence-marks">
-              <span>0</span>
-              <span>25</span>
-              <span>50</span>
-              <span>75</span>
-              <span>100</span>
+        <!-- Confidence Level Card -->
+        <div class="modal-card">
+          <div class="modal-card-header">
+            <span class="card-icon icon-gauge">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12C20,14.4 19,16.5 17.3,18C15.9,16.7 14,16 12,16C10,16 8.2,16.7 6.7,18C5,16.5 4,14.4 4,12A8,8 0 0,1 12,4M14,5.89C13.62,5.9 13.26,6.15 13.1,6.54L11.81,9.77L11.71,10C11,10.13 10.41,10.6 10.14,11.26C9.73,12.29 10.23,13.45 11.26,13.86C12.29,14.27 13.45,13.77 13.86,12.74C14.12,12.08 14,11.32 13.57,10.76L13.67,10.5L14.96,7.29L14.97,7.26C15.17,6.75 14.92,6.17 14.41,5.96C14.28,5.91 14.15,5.89 14,5.89M10,6A1,1 0 0,0 9,7A1,1 0 0,0 10,8A1,1 0 0,0 11,7A1,1 0 0,0 10,6M7,9A1,1 0 0,0 6,10A1,1 0 0,0 7,11A1,1 0 0,0 8,10A1,1 0 0,0 7,9M17,9A1,1 0 0,0 16,10A1,1 0 0,0 17,11A1,1 0 0,0 18,10A1,1 0 0,0 17,9Z"/>
+              </svg>
+            </span>
+            <h3>Confidence Level</h3>
+          </div>
+          <div class="modal-card-body">
+            <div class="confidence-display">
+              <span class="confidence-label">Detection confidence:</span>
+              <span id="confidenceValue" class="confidence-value">100</span>
+              <span class="confidence-percent">%</span>
+            </div>
+            <div class="confidence-slider-container">
+              <input type="range" id="confidenceSlider" class="confidence-slider" min="0" max="100" value="100">
+              <div class="confidence-marks">
+                <span>0</span>
+                <span>25</span>
+                <span>50</span>
+                <span>75</span>
+                <span>100</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Content Search Scope (for CONTENT detection only) -->
-        <div class="settings-group" id="contentScopeGroup">
-          <h3 class="settings-group-title">Content Search Scope (CONTENT detection only)</h3>
-          <p style="font-size: 10px; color: var(--text-muted); margin: 0 0 12px 0;"><strong>Default: Searches entire page.</strong> Enable options below to restrict search to specific areas only.</p>
-          <div class="settings-options">
-            <div class="setting-option">
-              <div class="option-content">
-                <span class="setting-label">Only check scripts</span>
-                <p style="font-size: 10px; color: var(--text-muted); margin: 4px 0 0 0;">Restrict search to JavaScript code and script URLs only</p>
+        <!-- Content Search Scope Card (for CONTENT detection only) -->
+        <div class="modal-card" id="contentScopeGroup">
+          <div class="modal-card-header">
+            <span class="card-icon icon-filter">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3,17V19H9V17H3M3,5V7H13V5H3M13,21V19H21V17H13V15H11V21H13M7,9V11H3V13H7V15H9V9H7M21,13V11H11V13H21M15,9H17V7H21V5H17V3H15V9Z"/>
+              </svg>
+            </span>
+            <h3>Content Search Scope</h3>
+          </div>
+          <div class="modal-card-body">
+            <p class="card-description"><strong>Default: Searches entire page.</strong> Enable options below to restrict search to specific areas only.</p>
+            <div class="settings-options">
+              <div class="setting-option">
+                <div class="option-content">
+                  <span class="setting-label">Only check scripts</span>
+                  <p class="option-hint">Restrict search to JavaScript code and script URLs only</p>
+                </div>
+                <label class="toggle-switch" for="checkScripts">
+                  <input type="checkbox" id="checkScripts" class="toggle-input">
+                  <span class="toggle-slider"></span>
+                </label>
               </div>
-              <label class="toggle-switch" for="checkScripts">
-                <input type="checkbox" id="checkScripts" class="toggle-input">
-                <span class="toggle-slider"></span>
-              </label>
             </div>
           </div>
         </div>
 
-        <!-- Header/Cookie Scope Settings (for HEADER and COOKIE detection only) -->
-        <div class="settings-group" id="headerCookieScopeGroup">
-          <h3 class="settings-group-title" id="scopeGroupTitle">Scope Settings</h3>
-          <p style="font-size: 10px; color: var(--text-muted); margin: 0 0 12px 0;">Configure where to check for matches (request/response/both)</p>
-          <div class="settings-options">
-            <div class="setting-option">
-              <div class="option-content">
-                <span class="setting-label" id="nameScopeLabel">Name Scope</span>
-                <p style="font-size: 10px; color: var(--text-muted); margin: 4px 0 0 0;">Where to check for name/field matches (Storage = localStorage/sessionStorage)</p>
+        <!-- Header/Cookie Scope Settings Card (for HEADER and COOKIE detection only) -->
+        <div class="modal-card" id="headerCookieScopeGroup">
+          <div class="modal-card-header">
+            <span class="card-icon icon-filter">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3,17V19H9V17H3M3,5V7H13V5H3M13,21V19H21V17H13V15H11V21H13M7,9V11H3V13H7V15H9V9H7M21,13V11H11V13H21M15,9H17V7H21V5H17V3H15V9Z"/>
+              </svg>
+            </span>
+            <h3 id="scopeGroupTitle">Scope Settings</h3>
+          </div>
+          <div class="modal-card-body">
+            <p class="card-description">Configure where to check for matches (request/response/both)</p>
+            <div class="settings-options">
+              <div class="setting-option">
+                <div class="option-content">
+                  <span class="setting-label" id="nameScopeLabel">Name Scope</span>
+                  <p class="option-hint">Where to check for name/field matches (Storage = localStorage/sessionStorage)</p>
+                </div>
+                <select id="nameScope" class="scope-select">
+                  <option value="request">Request</option>
+                  <option value="response">Response</option>
+                  <option value="storage">Storage</option>
+                  <option value="all">All</option>
+                </select>
               </div>
-              <select id="nameScope" class="scope-select">
-                <option value="request">Request</option>
-                <option value="response">Response</option>
-                <option value="storage">Storage</option>
-                <option value="all">All</option>
-              </select>
-            </div>
-            <div class="setting-option">
-              <div class="option-content">
-                <span class="setting-label">Value Scope</span>
-                <p style="font-size: 10px; color: var(--text-muted); margin: 4px 0 0 0;">Where to check for value matches (Storage = localStorage/sessionStorage)</p>
+              <div class="setting-option">
+                <div class="option-content">
+                  <span class="setting-label">Value Scope</span>
+                  <p class="option-hint">Where to check for value matches (Storage = localStorage/sessionStorage)</p>
+                </div>
+                <select id="valueScope" class="scope-select">
+                  <option value="request">Request</option>
+                  <option value="response">Response</option>
+                  <option value="storage">Storage</option>
+                  <option value="all">All</option>
+                </select>
               </div>
-              <select id="valueScope" class="scope-select">
-                <option value="request">Request</option>
-                <option value="response">Response</option>
-                <option value="storage">Storage</option>
-                <option value="all">All</option>
-              </select>
             </div>
           </div>
         </div>
 
-        <!-- URL Scope Settings (for URL detection only) -->
-        <div class="settings-group" id="urlScopeGroup">
-          <h3 class="settings-group-title">URL Scope Settings</h3>
-          <p style="font-size: 10px; color: var(--text-muted); margin: 0 0 12px 0;">Configure which URLs to check</p>
-          <div class="settings-options">
-            <div class="setting-option">
-              <div class="option-content">
-                <span class="setting-label">URL Scope</span>
-                <p style="font-size: 10px; color: var(--text-muted); margin: 4px 0 0 0;">Which URLs to search for matches</p>
+        <!-- URL Scope Settings Card (for URL detection only) -->
+        <div class="modal-card" id="urlScopeGroup">
+          <div class="modal-card-header">
+            <span class="card-icon icon-globe">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16.36,14C16.44,13.34 16.5,12.68 16.5,12C16.5,11.32 16.44,10.66 16.36,10H19.74C19.9,10.64 20,11.31 20,12C20,12.69 19.9,13.36 19.74,14M14.59,19.56C15.19,18.45 15.65,17.25 15.97,16H18.92C17.96,17.65 16.43,18.93 14.59,19.56M14.34,14H9.66C9.56,13.34 9.5,12.68 9.5,12C9.5,11.32 9.56,10.65 9.66,10H14.34C14.43,10.65 14.5,11.32 14.5,12C14.5,12.68 14.43,13.34 14.34,14M12,19.96C11.17,18.76 10.5,17.43 10.09,16H13.91C13.5,17.43 12.83,18.76 12,19.96M8,8H5.08C6.03,6.34 7.57,5.06 9.4,4.44C8.8,5.55 8.35,6.75 8,8M5.08,16H8C8.35,17.25 8.8,18.45 9.4,19.56C7.57,18.93 6.03,17.65 5.08,16M4.26,14C4.1,13.36 4,12.69 4,12C4,11.31 4.1,10.64 4.26,10H7.64C7.56,10.66 7.5,11.32 7.5,12C7.5,12.68 7.56,13.34 7.64,14M12,4.03C12.83,5.23 13.5,6.57 13.91,8H10.09C10.5,6.57 11.17,5.23 12,4.03M18.92,8H15.97C15.65,6.75 15.19,5.55 14.59,4.44C16.43,5.07 17.96,6.34 18.92,8M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
+              </svg>
+            </span>
+            <h3>URL Scope Settings</h3>
+          </div>
+          <div class="modal-card-body">
+            <p class="card-description">Configure which URLs to check</p>
+            <div class="settings-options">
+              <div class="setting-option">
+                <div class="option-content">
+                  <span class="setting-label">URL Scope</span>
+                  <p class="option-hint">Which URLs to search for matches</p>
+                </div>
+                <select id="textScope" class="scope-select">
+                  <option value="page_only">Page</option>
+                  <option value="page_and_scripts">Scripts</option>
+                  <option value="all">All (default)</option>
+                </select>
               </div>
-              <select id="textScope" class="scope-select">
-                <option value="page_only">Page</option>
-                <option value="page_and_scripts">Scripts</option>
-                <option value="all">All (default)</option>
-              </select>
             </div>
           </div>
         </div>
 
-        <!-- Payload Request Constraints (for PAYLOAD detection only) -->
-        <div class="settings-group" id="payloadScopeGroup" style="display: none;">
-          <h3 class="settings-group-title">Request Constraints</h3>
-          <p style="font-size: 10px; color: var(--text-muted); margin: 0 0 12px 0;">
-            Configure URL and HTTP method filters for payload matching
-          </p>
+        <!-- Payload Request Constraints Card (for PAYLOAD detection only) -->
+        <div class="modal-card" id="payloadScopeGroup" style="display: none;">
+          <div class="modal-card-header">
+            <span class="card-icon icon-target">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8Z"/>
+              </svg>
+            </span>
+            <h3>Request Constraints</h3>
+          </div>
+          <div class="modal-card-body">
+            <p class="card-description">Configure URL and HTTP method filters for payload matching</p>
           <div class="settings-options">
             <!-- URL Pattern Field -->
-            <div class="setting-option" style="display: flex; flex-direction: column; gap: 8px; border: none; padding: 0 0 12px 0;">
-              <label class="setting-label" style="margin-bottom: 0;">URL Pattern (optional)</label>
-              <input
-                type="text"
-                id="payloadUrlPattern"
-                class="scope-select"
-                placeholder="/api/verify or challenge.php"
-                style="width: 100%; min-width: auto; font-family: 'Monaco', 'Courier New', monospace;"
-              >
-              <p style="font-size: 10px; color: var(--text-muted); margin: 0;">
-                Leave empty to match any URL. Examples: <code>/api/verify</code>, <code>challenge</code>
-              </p>
+            <div class="setting-option payload-url-pattern-option">
+              <div class="option-content">
+                <span class="setting-label">URL Pattern (optional)</span>
+                <div class="option-examples">
+                  Leave empty to match any URL
+                </div>
+              </div>
             </div>
+            <input
+              type="text"
+              id="payloadUrlPattern"
+              class="method-input payload-url-input"
+              placeholder="/api/verify or challenge.php"
+            >
 
             <!-- URL Regex Toggle -->
             <div class="setting-option">
               <div class="option-content">
-                <span class="setting-label">URL Regular Expression (Regex)</span>
-                <p style="font-size: 10px; color: var(--text-muted); margin: 4px 0 0 0;">
-                  Treat URL pattern as regex (e.g., <code>/api/(verify|check)</code>)
-                </p>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="setting-label">URL Regular Expression (Regex)</span>
+                  <button id="payloadUrlRegexHelperBtn" class="regex-helper-btn" title="URL Regex Helper">?</button>
+                  <button id="payloadUrlRegexExplanationBtn" class="explanation-helper-btn" title="What is Regex?">ℹ</button>
+                </div>
+                <div class="option-examples">
+                  <span class="example-match">✓ Matches:</span> /api/(verify|check)
+                  <span class="example-separator">|</span>
+                  <span class="example-nomatch">✗ Won't:</span> literal text only
+                </div>
               </div>
               <label class="toggle-switch" for="payloadUrlRegex">
                 <input type="checkbox" id="payloadUrlRegex" class="toggle-input">
@@ -340,10 +443,16 @@
             <!-- URL Case Sensitive Toggle -->
             <div class="setting-option">
               <div class="option-content">
-                <span class="setting-label">URL Case Sensitive</span>
-                <p style="font-size: 10px; color: var(--text-muted); margin: 4px 0 0 0;">
-                  Match URL pattern with case sensitivity
-                </p>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="setting-label">URL Case Sensitive</span>
+                  <button id="payloadUrlCaseHelperBtn" class="pattern-helper-btn" title="Case Sensitive Helper">?</button>
+                  <button id="payloadUrlCaseExplanationBtn" class="explanation-helper-btn" title="What is Case Sensitive?">ℹ</button>
+                </div>
+                <div class="option-examples">
+                  <span class="example-match">✓ Matches:</span> /API/Verify (exact case)
+                  <span class="example-separator">|</span>
+                  <span class="example-nomatch">✗ Won't:</span> /api/verify
+                </div>
               </div>
               <label class="toggle-switch" for="payloadUrlCaseSensitive">
                 <input type="checkbox" id="payloadUrlCaseSensitive" class="toggle-input">
@@ -352,12 +461,12 @@
             </div>
 
             <!-- HTTP Methods Radio Buttons -->
-            <div class="setting-option" style="display: flex; flex-direction: column; gap: 8px; border: none; padding: 12px 0 0 0;">
-              <label class="setting-label">HTTP Method (select one)</label>
-              <p style="font-size: 10px; color: var(--text-muted); margin: 0 0 12px 0;">
-                Filter payload detection by HTTP method
-              </p>
-              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+            <div class="setting-option payload-http-method-option">
+              <div class="option-content" style="margin-bottom: 12px;">
+                <span class="setting-label">HTTP Method (select one)</span>
+                <div class="option-examples">Filter by request method (optional)</div>
+              </div>
+              <div class="http-method-badges-grid">
                 <!-- GET -->
                 <label class="http-method-badge" data-method="GET">
                   <input type="radio" name="payloadMethod" id="payloadMethodGet" value="GET">
@@ -414,113 +523,132 @@
               </div>
             </div>
           </div>
+          </div>
         </div>
 
-        <!-- Pattern Matching Settings (simplified) -->
-        <div class="settings-group">
-          <h3 class="settings-group-title" id="patternOptionsTitle">Pattern Matching Options</h3>
-          <p style="font-size: 10px; color: var(--text-muted); margin: 0 0 12px 0;">Configure how the pattern should match</p>
-          <div class="settings-options">
-            <div class="setting-option">
-              <div class="option-content">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span class="setting-label">Regular Expression (Regex)</span>
-                  <button id="regexHelperBtn" class="regex-helper-btn" title="Regex Pattern Helper">?</button>
-                  <button id="regexExplanationBtn" class="explanation-helper-btn" title="What is Regex?">ℹ</button>
+        <!-- Pattern Matching Settings Card -->
+        <div class="modal-card">
+          <div class="modal-card-header">
+            <span class="card-icon icon-settings">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/>
+              </svg>
+            </span>
+            <h3 id="patternOptionsTitle">Pattern Matching Options</h3>
+          </div>
+          <div class="modal-card-body">
+            <p class="card-description">Configure how the pattern should match</p>
+            <div class="settings-options">
+              <div class="setting-option">
+                <div class="option-content">
+                  <div class="setting-label-row">
+                    <span class="setting-label">Regular Expression (Regex)</span>
+                    <button id="regexHelperBtn" class="regex-helper-btn" title="Regex Pattern Helper">?</button>
+                    <button id="regexExplanationBtn" class="explanation-helper-btn" title="What is Regex?">ℹ</button>
+                  </div>
+                  <div class="option-examples" id="nameRegexExamples">
+                    <span class="example-match">✓ Matches:</span> _ab.*, _abck$, ^bm_
+                    <span class="example-separator">|</span>
+                    <span class="example-nomatch">✗ Won't match:</span> literal text only
+                  </div>
                 </div>
-                <div class="option-examples" id="nameRegexExamples">
-                  <span class="example-match">✓ Matches:</span> _ab.*, _abck$, ^bm_
-                  <span class="example-separator">|</span>
-                  <span class="example-nomatch">✗ Won't match:</span> literal text only
-                </div>
+                <label class="toggle-switch" for="nameRegex">
+                  <input type="checkbox" id="nameRegex" class="toggle-input">
+                  <span class="toggle-slider"></span>
+                </label>
               </div>
-              <label class="toggle-switch" for="nameRegex">
-                <input type="checkbox" id="nameRegex" class="toggle-input">
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            <div class="setting-option">
-              <div class="option-content">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span class="setting-label">Whole Word</span>
-                  <button id="wholeWordHelperBtn" class="pattern-helper-btn" title="Whole Word Helper">?</button>
-                  <button id="wholeWordExplanationBtn" class="explanation-helper-btn" title="What is Whole Word?">ℹ</button>
+              <div class="setting-option">
+                <div class="option-content">
+                  <div class="setting-label-row">
+                    <span class="setting-label">Whole Word</span>
+                    <button id="wholeWordHelperBtn" class="pattern-helper-btn" title="Whole Word Helper">?</button>
+                    <button id="wholeWordExplanationBtn" class="explanation-helper-btn" title="What is Whole Word?">ℹ</button>
+                  </div>
+                  <div class="option-examples" id="nameWholeWordExamples">
+                    <span class="example-match">✓ Matches:</span> _abck (alone)
+                    <span class="example-separator">|</span>
+                    <span class="example-nomatch">✗ Won't match:</span> test_abck, _abckTest
+                  </div>
                 </div>
-                <div class="option-examples" id="nameWholeWordExamples">
-                  <span class="example-match">✓ Matches:</span> _abck (alone)
-                  <span class="example-separator">|</span>
-                  <span class="example-nomatch">✗ Won't match:</span> test_abck, _abckTest
-                </div>
+                <label class="toggle-switch" for="nameWholeWord">
+                  <input type="checkbox" id="nameWholeWord" class="toggle-input">
+                  <span class="toggle-slider"></span>
+                </label>
               </div>
-              <label class="toggle-switch" for="nameWholeWord">
-                <input type="checkbox" id="nameWholeWord" class="toggle-input">
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            <div class="setting-option">
-              <div class="option-content">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span class="setting-label">Case Sensitive</span>
-                  <button id="caseSensitiveHelperBtn" class="pattern-helper-btn" title="Case Sensitive Helper">?</button>
-                  <button id="caseSensitiveExplanationBtn" class="explanation-helper-btn" title="What is Case Sensitive?">ℹ</button>
+              <div class="setting-option">
+                <div class="option-content">
+                  <div class="setting-label-row">
+                    <span class="setting-label">Case Sensitive</span>
+                    <button id="caseSensitiveHelperBtn" class="pattern-helper-btn" title="Case Sensitive Helper">?</button>
+                    <button id="caseSensitiveExplanationBtn" class="explanation-helper-btn" title="What is Case Sensitive?">ℹ</button>
+                  </div>
+                  <div class="option-examples" id="nameCaseExamples">
+                    <span class="example-match">✓ Matches:</span> Test (exact case)
+                    <span class="example-separator">|</span>
+                    <span class="example-nomatch">✗ Won't match:</span> test, TEST
+                  </div>
                 </div>
-                <div class="option-examples" id="nameCaseExamples">
-                  <span class="example-match">✓ Matches:</span> Test (exact case)
-                  <span class="example-separator">|</span>
-                  <span class="example-nomatch">✗ Won't match:</span> test, TEST
-                </div>
+                <label class="toggle-switch" for="nameCaseSensitive">
+                  <input type="checkbox" id="nameCaseSensitive" class="toggle-input">
+                  <span class="toggle-slider"></span>
+                </label>
               </div>
-              <label class="toggle-switch" for="nameCaseSensitive">
-                <input type="checkbox" id="nameCaseSensitive" class="toggle-input">
-                <span class="toggle-slider"></span>
-              </label>
             </div>
           </div>
         </div>
 
-        <!-- Value Field Settings (hidden for single-input types) -->
-        <div class="settings-group" id="valueFieldOptionsGroup" style="display: none;">
-          <h3 class="settings-group-title">Value Field Options</h3>
-          <p style="font-size: 10px; color: var(--text-muted); margin: 0 0 12px 0;">Configure how the value pattern should match</p>
-          <div class="settings-options">
-            <div class="setting-option">
-              <div class="option-content">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span class="setting-label">Regular Expression (Regex)</span>
-                  <button id="regexHelperBtnValue" class="regex-helper-btn" title="Regex Pattern Helper">?</button>
-                  <button id="regexExplanationBtnValue" class="explanation-helper-btn" title="What is Regex?">ℹ</button>
+        <!-- Value Field Settings Card (hidden for single-input types) -->
+        <div class="modal-card" id="valueFieldOptionsGroup" style="display: none;">
+          <div class="modal-card-header">
+            <span class="card-icon icon-edit">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/>
+              </svg>
+            </span>
+            <h3>Value Field Options</h3>
+          </div>
+          <div class="modal-card-body">
+            <p class="card-description">Configure how the value pattern should match</p>
+            <div class="settings-options">
+              <div class="setting-option">
+                <div class="option-content">
+                  <div class="setting-label-row">
+                    <span class="setting-label">Regular Expression (Regex)</span>
+                    <button id="regexHelperBtnValue" class="regex-helper-btn" title="Regex Pattern Helper">?</button>
+                    <button id="regexExplanationBtnValue" class="explanation-helper-btn" title="What is Regex?">ℹ</button>
+                  </div>
                 </div>
+                <label class="toggle-switch" for="valueRegex">
+                  <input type="checkbox" id="valueRegex" class="toggle-input">
+                  <span class="toggle-slider"></span>
+                </label>
               </div>
-              <label class="toggle-switch" for="valueRegex">
-                <input type="checkbox" id="valueRegex" class="toggle-input">
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            <div class="setting-option">
-              <div class="option-content">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span class="setting-label">Whole Word</span>
-                  <button id="wholeWordHelperBtnValue" class="pattern-helper-btn" title="Whole Word Helper">?</button>
-                  <button id="wholeWordExplanationBtnValue" class="explanation-helper-btn" title="What is Whole Word?">ℹ</button>
+              <div class="setting-option">
+                <div class="option-content">
+                  <div class="setting-label-row">
+                    <span class="setting-label">Whole Word</span>
+                    <button id="wholeWordHelperBtnValue" class="pattern-helper-btn" title="Whole Word Helper">?</button>
+                    <button id="wholeWordExplanationBtnValue" class="explanation-helper-btn" title="What is Whole Word?">ℹ</button>
+                  </div>
                 </div>
+                <label class="toggle-switch" for="valueWholeWord">
+                  <input type="checkbox" id="valueWholeWord" class="toggle-input">
+                  <span class="toggle-slider"></span>
+                </label>
               </div>
-              <label class="toggle-switch" for="valueWholeWord">
-                <input type="checkbox" id="valueWholeWord" class="toggle-input">
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            <div class="setting-option">
-              <div class="option-content">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span class="setting-label">Case Sensitive</span>
-                  <button id="caseSensitiveHelperBtnValue" class="pattern-helper-btn" title="Case Sensitive Helper">?</button>
-                  <button id="caseSensitiveExplanationBtnValue" class="explanation-helper-btn" title="What is Case Sensitive?">ℹ</button>
+              <div class="setting-option">
+                <div class="option-content">
+                  <div class="setting-label-row">
+                    <span class="setting-label">Case Sensitive</span>
+                    <button id="caseSensitiveHelperBtnValue" class="pattern-helper-btn" title="Case Sensitive Helper">?</button>
+                    <button id="caseSensitiveExplanationBtnValue" class="explanation-helper-btn" title="What is Case Sensitive?">ℹ</button>
+                  </div>
                 </div>
+                <label class="toggle-switch" for="valueCaseSensitive">
+                  <input type="checkbox" id="valueCaseSensitive" class="toggle-input">
+                  <span class="toggle-slider"></span>
+                </label>
               </div>
-              <label class="toggle-switch" for="valueCaseSensitive">
-                <input type="checkbox" id="valueCaseSensitive" class="toggle-input">
-                <span class="toggle-slider"></span>
-              </label>
             </div>
           </div>
         </div>

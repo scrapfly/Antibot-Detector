@@ -1,0 +1,40 @@
+{
+  "id": "detect-audio-fingerprint",
+  "name": "Audio Fingerprint",
+  "author": "scrapfly",
+  "enabled": true,
+  "category": "Fingerprint",
+  "lastUpdated": "2024-01-15",
+  "version": "1.0",
+  "website": "https://webaudio.github.io/web-audio-api/",
+  "icon": "audio_fingerprint.png",
+  "description": "Web Audio API-based device and system fingerprinting",
+  "detection": {
+    "js_hooks": [
+      {
+        "description": "Reads audio channel data for fingerprinting",
+        "enabled": true,
+        "confidence": 95,
+        "target": "AudioBuffer.prototype.getChannelData"
+      },
+      {
+        "description": "Analyzes audio frequency data",
+        "enabled": true,
+        "confidence": 90,
+        "target": "AnalyserNode.prototype.getFloatFrequencyData"
+      },
+      {
+        "description": "Creates audio oscillator for signal generation",
+        "enabled": true,
+        "confidence": 85,
+        "target": "BaseAudioContext.prototype.createOscillator"
+      },
+      {
+        "description": "Connects audio nodes for fingerprinting chain",
+        "enabled": false,
+        "confidence": 70,
+        "target": "AudioNode.prototype.connect"
+      }
+    ]
+  }
+}

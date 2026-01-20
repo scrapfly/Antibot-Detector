@@ -126,7 +126,7 @@ const AdvancedUtils = {
         return new Promise((resolve) => {
             const modal = document.createElement('div');
             modal.className = 'tool-modal confirmation-modal';
-            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; z-index: 10002; opacity: 0; transition: opacity 0.2s;';
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10002; opacity: 0; transition: opacity 0.2s;';
 
             const gradients = {
                 danger: 'linear-gradient(135deg, #EF5350 0%, #E53935 100%)',

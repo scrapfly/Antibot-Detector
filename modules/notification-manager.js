@@ -55,6 +55,7 @@ class NotificationManager {
       position: 'top-right',
       showProgress: true,
       closeable: true,
+      micro: false,
       icon: this.getIcon(type)
     };
 
@@ -64,7 +65,7 @@ class NotificationManager {
     // Create toast element
     const toast = document.createElement('div');
     toast.id = toastId;
-    toast.className = `notification-toast notification-${type} notification-${settings.position}`;
+    toast.className = `notification-toast notification-${type} notification-${settings.position}${settings.micro ? ' notification-micro' : ''}`;
     toast.setAttribute('data-show', 'false');
 
     // Build toast HTML
@@ -175,6 +176,22 @@ class NotificationManager {
    */
   info(message, options = {}) {
     return this.showToast(message, 'info', options);
+  }
+
+  /**
+   * Show a micro toast notification (compact, fast)
+   * Ideal for quick feedback like copy confirmations
+   * @param {string} message - Short notification message
+   * @param {string} type - Notification type (success, error, warning, info)
+   * @returns {string} Toast ID
+   */
+  micro(message, type = 'success') {
+    return this.showToast(message, type, {
+      duration: 1500,
+      showProgress: false,
+      closeable: false,
+      micro: true
+    });
   }
 
   /**
@@ -688,6 +705,19 @@ const NotificationHelper = {
 
     if (notificationManager && typeof notificationManager.warning === 'function') {
       return notificationManager.warning(message, options);
+    }
+  },
+
+  /**
+   * Safe micro notification (respects notification settings)
+   * Compact, fast toast for quick feedback like copy confirmations
+   */
+  async micro(message, type = 'success') {
+    const enabled = await this.areNotificationsEnabled();
+    if (!enabled) return;
+
+    if (notificationManager && typeof notificationManager.micro === 'function') {
+      return notificationManager.micro(message, type);
     }
   },
 
