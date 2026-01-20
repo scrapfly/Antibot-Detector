@@ -3534,13 +3534,15 @@ class Rules {
               ${detectionMethods}
             </div>
             <div class="scripts-info">
-              <div class="last-updated">
-                <span class="last-updated-value">${formattedLastUpdated}</span>
-              </div>
-              <div class="detector-author">
-                <i class="fas fa-user"></i>
-                <span class="author-name">${detector.author || 'scrapfly'}</span>
-                ${(detector.author || 'scrapfly').toLowerCase() === 'scrapfly' ? '<i class="fas fa-check-circle verified-badge" title="Official Scrapfly detector"></i>' : ''}
+              <div class="scripts-info-left">
+                <div class="last-updated">
+                  <span class="last-updated-value">${formattedLastUpdated}</span>
+                </div>
+                <div class="detector-author">
+                  <i class="fas fa-user"></i>
+                  <span class="author-name">${detector.author || 'scrapfly'}</span>
+                  ${(detector.author || 'scrapfly').toLowerCase() === 'scrapfly' ? '<i class="fas fa-check-circle verified-badge" title="Official Scrapfly detector"></i>' : ''}
+                </div>
               </div>
               <label class="toggle-switch-small" data-stop-propagation="true">
                 <input type="checkbox" class="detector-toggle"

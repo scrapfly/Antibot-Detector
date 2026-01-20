@@ -497,11 +497,19 @@
 .scripts-info {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-top: 8px;
   padding-top: 8px;
   padding-bottom: 2px;
   border-top: 1px solid var(--border);
+  gap: 12px;
+}
+
+.scripts-info-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
 }
 
 .last-updated {
@@ -3170,16 +3178,16 @@ select.method-delete {
 
 /* Author Display in Detector Card */
 .detector-author {
-  font-size: 0.85rem;
+  font-size: 11px;
   color: var(--text-secondary);
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-top: 4px;
+  margin: 0;
 }
 
 .detector-author i.fa-user {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
 }
 
 /* Verified Badge for Official Scrapfly Detectors */
