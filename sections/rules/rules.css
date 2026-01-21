@@ -883,7 +883,8 @@
 .color-picker-card {
   background: var(--bg-primary);
   border-radius: 8px;
-  padding: 12px;
+  padding: 16px;
+  overflow: hidden;
 }
 
 /* ============================================
@@ -1147,8 +1148,6 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 10px;
-  overflow: hidden;
-  border-radius: 8px;
 }
 
 /* Old styles for compatibility */
