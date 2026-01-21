@@ -885,6 +885,7 @@
   background: var(--bg-primary);
   border-radius: 8px;
   padding: 20px;
+  overflow: hidden;
 }
 
 /* ============================================
@@ -1148,6 +1149,7 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 10px;
+  padding: 4px;
 }
 
 /* Old styles for compatibility */
