@@ -1229,7 +1229,6 @@
 }
 
 .color-option:hover {
-  transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   border-color: rgba(255, 255, 255, 0.5);
 }
@@ -1237,7 +1236,6 @@
 .color-option.selected {
   border-color: white;
   box-shadow: 0 0 0 3px var(--accent), 0 4px 12px rgba(0, 0, 0, 0.35);
-  transform: scale(1.08);
 }
 
 .color-option.selected::after {
