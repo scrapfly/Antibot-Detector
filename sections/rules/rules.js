@@ -1,3 +1,11 @@
+function normalizeCookieHeaderScope(scope, fallback) {
+  const normalized = typeof scope === 'string' ? scope.trim().toLowerCase() : '';
+  if (normalized === 'all_with_storage') return 'all';
+  if (normalized === 'storage') return fallback;
+  if (normalized === 'request' || normalized === 'response' || normalized === 'all') return normalized;
+  return fallback;
+}
+
 class Rules {
   constructor(detectorManager) {
     this.detectorManager = detectorManager;
@@ -17,11 +25,34 @@ class Rules {
   async initialize() {
     if (!this.initialized) {
       await this.loadHTML();
+      // Keep WINDOW condition dropdowns aligned with the shared condition language (no duplicated lists).
+      this.refreshWindowConditionWizardDropdown();
       this.setupPagination();
       this.initializeColorManager();
       this.initializeSearchManager();
       this.setupEventListeners();
       this.initialized = true;
+    }
+  }
+
+  /**
+   * Refresh the WINDOW helper modal condition dropdown menu content.
+   * The base HTML provides a minimal fallback, but we prefer the shared condition language presets.
+   */
+  refreshWindowConditionWizardDropdown() {
+    const menu = document.querySelector('#conditionDropdownMenu');
+    if (!menu) return;
+
+    const hidden = document.querySelector('#windowConditionSelect');
+    const selected = (hidden?.value || 'exists').trim() || 'exists';
+
+    // Rebuild menu using the same rendering as inline dropdowns.
+    menu.innerHTML = this.renderWindowConditionMenu(selected);
+
+    // Keep trigger text consistent with the hidden value.
+    const triggerText = document.querySelector('#conditionDropdownTrigger .condition-selected-text');
+    if (triggerText) {
+      triggerText.textContent = selected;
     }
   }
 
@@ -326,19 +357,144 @@ class Rules {
       if (e.target.closest('.method-action-btn.settings')) {
         e.stopPropagation();
         const button = e.target.closest('.method-action-btn.settings');
+        const fieldActions = button.closest('.field-actions');
+        const fieldType = fieldActions?.dataset.fieldType || 'name';
         const methodItem = button.closest('.method-item');
         if (methodItem) {
-          this.openMethodSettingsModal(methodItem);
+          this.openMethodSettingsModal(methodItem, fieldType);
         }
+      }
+
+      // Handle inline condition dropdown trigger
+      if (e.target.closest('.condition-dropdown-trigger')) {
+        e.stopPropagation();
+        const trigger = e.target.closest('.condition-dropdown-trigger');
+        const dropdown = trigger.closest('.condition-dropdown');
+        if (dropdown) {
+          document.querySelectorAll('.condition-dropdown.open').forEach(openDropdown => {
+            if (openDropdown !== dropdown) {
+              openDropdown.classList.remove('open');
+            }
+          });
+          dropdown.classList.toggle('open');
+          trigger.setAttribute('aria-expanded', dropdown.classList.contains('open') ? 'true' : 'false');
+        }
+        return;
+      }
+
+      // Handle inline condition option selection
+      if (e.target.closest('.condition-dropdown .condition-option')) {
+        e.stopPropagation();
+        const option = e.target.closest('.condition-option');
+        const dropdown = option.closest('.condition-dropdown');
+          if (dropdown) {
+            const value = option.dataset.value;
+            const selectedText = dropdown.querySelector('.condition-selected-text');
+            if (selectedText) {
+              selectedText.textContent = value;
+            }
+            dropdown.dataset.conditionValue = value;
+            dropdown.querySelectorAll('.condition-option').forEach(opt => {
+              opt.classList.toggle('selected', opt === option);
+            });
+
+          const hiddenInput = dropdown.querySelector('.method-input.method-value');
+          if (hiddenInput) {
+            hiddenInput.value = value;
+            const methodItem = dropdown.closest('.method-item');
+            if (methodItem) {
+              this.updateMethodIndicators(methodItem);
+            }
+          }
+
+          // Handle wizard dropdown (window helper modal)
+          const helperHidden = document.querySelector('#windowConditionSelect');
+          if (helperHidden && dropdown.id === 'conditionDropdownContainer') {
+            helperHidden.value = value;
+            this.updateWindowRulePreview?.();
+          }
+
+          dropdown.classList.remove('open');
+          const trigger = dropdown.querySelector('.condition-dropdown-trigger');
+          if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        }
+        return;
+      }
+
+      // Close condition dropdowns when clicking outside
+      if (!e.target.closest('.condition-dropdown')) {
+        document.querySelectorAll('.condition-dropdown.open').forEach(openDropdown => {
+          openDropdown.classList.remove('open');
+          const trigger = openDropdown.querySelector('.condition-dropdown-trigger');
+          if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        });
       }
 
       // Handle delete button
       if (e.target.closest('.method-action-btn.delete')) {
         e.stopPropagation();
         const button = e.target.closest('.method-action-btn.delete');
+        const fieldActions = button.closest('.field-actions');
+        const fieldType = fieldActions?.dataset.fieldType || 'name';
         const methodItem = button.closest('.method-item');
+
         if (methodItem) {
-          methodItem.remove();
+          if (fieldType === 'value') {
+            // Clear value input and hide value row
+            const valueInput = methodItem.querySelector('.method-input.method-value');
+            const valueContainer = methodItem.querySelector('.value-field-container');
+            const addValueBtn = methodItem.querySelector('.add-value-btn');
+            const methodKey = methodItem.querySelector('.method-input')?.dataset.methodKey || '';
+
+            if (methodKey === 'window') {
+              if (valueInput) {
+                valueInput.value = 'exists';
+                this.updateMethodIndicators(methodItem);
+              }
+              if (valueContainer) valueContainer.style.display = 'flex';
+              if (addValueBtn) addValueBtn.style.display = 'none';
+              return;
+            }
+
+            if (valueInput) {
+              valueInput.value = '';
+              // Clear value-related settings
+              methodItem.dataset.valueRegex = 'false';
+              methodItem.dataset.valueWholeword = 'false';
+              methodItem.dataset.valueCase = 'false';
+              // Update indicators
+              this.updateMethodIndicators(methodItem);
+              // Update the settings button to remove highlight
+              const valueSettingsBtn = fieldActions.querySelector('.method-action-btn.settings');
+              if (valueSettingsBtn) {
+                valueSettingsBtn.classList.remove('has-custom-settings');
+              }
+            }
+            // Hide value container and show "Add Value" button
+            if (valueContainer) valueContainer.style.display = 'none';
+            if (addValueBtn) addValueBtn.style.display = 'flex';
+          } else {
+            // Remove entire method item
+            methodItem.remove();
+          }
+        }
+      }
+
+      // Handle "Add Value" button
+      if (e.target.closest('.add-value-btn')) {
+        e.stopPropagation();
+        const button = e.target.closest('.add-value-btn');
+        const methodItem = button.closest('.method-item');
+
+        if (methodItem) {
+          const valueContainer = methodItem.querySelector('.value-field-container');
+          const valueInput = methodItem.querySelector('.method-input.method-value');
+
+          // Hide "Add Value" button and show value container
+          button.style.display = 'none';
+          if (valueContainer) valueContainer.style.display = 'flex';
+          // Focus the value input
+          if (valueInput) valueInput.focus();
         }
       }
 
@@ -354,19 +510,33 @@ class Rules {
         e.stopPropagation();
         this.addNewMethodSection();
       }
+
+      // Handle method header click (toggle collapse)
+      if (e.target.closest('.method-header')) {
+        const header = e.target.closest('.method-header');
+        // Don't toggle if clicking help button, add method button, or other interactive elements
+        if (!e.target.closest('.method-help-btn') && !e.target.closest('.add-method-btn') && !e.target.closest('button')) {
+          const section = header.closest('.method-section');
+          if (section) {
+            section.classList.toggle('collapsed');
+          }
+        }
+      }
     });
   }
 
   /**
    * Open method settings modal for a specific method item
    * @param {HTMLElement} methodItem - The method item element
+   * @param {string} fieldType - The field type ('name' or 'value')
    */
-  openMethodSettingsModal(methodItem) {
+  openMethodSettingsModal(methodItem, fieldType = 'name') {
     const modal = document.querySelector('#methodSettingsModal');
     if (!modal) return;
 
-    // Store reference to current method item
+    // Store reference to current method item and field type
     this.currentMethodItem = methodItem;
+    this.currentFieldType = fieldType;
 
     // Determine method type from the method item
     const methodKey = methodItem.querySelector('.method-input')?.dataset.methodKey || '';
@@ -383,9 +553,17 @@ class Rules {
     const checkScripts = methodItem.dataset.checkScripts === 'true'; // Default: false (entire page)
 
     // Load scope settings from data attributes
-    const nameScope = methodItem.dataset.nameScope || (methodKey === 'header' || methodKey === 'cookie' ? (methodKey === 'header' ? 'response' : 'request') : '');
-    const valueScope = methodItem.dataset.valueScope || (methodKey === 'header' || methodKey === 'cookie' ? (methodKey === 'header' ? 'response' : 'request') : '');
+    let nameScope = methodItem.dataset.nameScope || (methodKey === 'header' || methodKey === 'cookie' ? (methodKey === 'header' ? 'response' : 'request') : '');
+    let valueScope = methodItem.dataset.valueScope || (methodKey === 'header' || methodKey === 'cookie' ? (methodKey === 'header' ? 'response' : 'request') : '');
     const textScope = methodItem.dataset.textScope || 'all';
+
+    if (methodKey === 'header') {
+      nameScope = normalizeCookieHeaderScope(nameScope, 'response');
+      valueScope = normalizeCookieHeaderScope(valueScope, 'response');
+    } else if (methodKey === 'cookie') {
+      nameScope = normalizeCookieHeaderScope(nameScope, 'request');
+      valueScope = normalizeCookieHeaderScope(valueScope, 'request');
+    }
 
     // Set values in modal
     const confidenceSlider = document.querySelector('#confidenceSlider');
@@ -416,6 +594,17 @@ class Rules {
     if (nameScopeSelect) nameScopeSelect.value = nameScope;
     if (valueScopeSelect) valueScopeSelect.value = valueScope;
     if (textScopeSelect) textScopeSelect.value = textScope;
+
+    // Show only the relevant scope row based on field type
+    const nameScopeRow = nameScopeSelect?.closest('.setting-option') || null;
+    const valueScopeRow = document.querySelector('#valueScopeRow');
+    if (fieldType === 'value') {
+      if (nameScopeRow) nameScopeRow.style.display = 'none';
+      if (valueScopeRow) valueScopeRow.style.display = 'flex';
+    } else {
+      if (nameScopeRow) nameScopeRow.style.display = 'flex';
+      if (valueScopeRow) valueScopeRow.style.display = 'none';
+    }
 
     // Load payload-specific settings from data attributes
     const payloadUrlPattern = methodItem.dataset.payloadUrlPattern || '';
@@ -497,35 +686,39 @@ class Rules {
       payloadScopeGroup.style.display = isPayload ? 'block' : 'none';
     }
 
-    // Determine if this is a single-input type (no value field)
-    const singleInputTypes = ['urls', 'url', 'content', 'dom', 'js_hooks', 'window', 'payload'];
-    const isSingleInput = singleInputTypes.includes(methodKey);
-
-    // Update field titles based on method type
-    const patternOptionsTitle = document.querySelector('#patternOptionsTitle');
+    // Get field option groups
+    const nameFieldGroup = document.querySelector('#nameFieldOptionsGroup');
     const valueFieldGroup = document.querySelector('#valueFieldOptionsGroup');
+    const patternOptionsTitle = document.querySelector('#patternOptionsTitle');
 
-    if (patternOptionsTitle) {
-      if (methodKey === 'urls' || methodKey === 'url') {
-        patternOptionsTitle.textContent = 'URL Pattern Matching';
-      } else if (methodKey === 'content') {
-        patternOptionsTitle.textContent = 'Text/Word Matching';
-      } else if (methodKey === 'dom') {
-        patternOptionsTitle.textContent = 'DOM Selector Matching';
-      } else if (methodKey === 'payload') {
-        patternOptionsTitle.textContent = 'Payload Text Matching';
-      } else if (methodKey === 'js_hooks') {
-        patternOptionsTitle.textContent = 'JS Hook Target Matching';
-      } else if (methodKey === 'window') {
-        patternOptionsTitle.textContent = 'Window Path Matching';
-      } else {
-        patternOptionsTitle.textContent = 'Name Field Matching';
+    // Show/hide field groups based on which field's settings button was clicked
+    if (fieldType === 'value') {
+      // Show only value options
+      if (nameFieldGroup) nameFieldGroup.style.display = 'none';
+      if (valueFieldGroup) valueFieldGroup.style.display = 'block';
+    } else {
+      // Show only name options (default)
+      if (nameFieldGroup) nameFieldGroup.style.display = 'block';
+      if (valueFieldGroup) valueFieldGroup.style.display = 'none';
+
+      // Update title based on method type
+      if (patternOptionsTitle) {
+        if (methodKey === 'urls' || methodKey === 'url') {
+          patternOptionsTitle.textContent = 'URL Pattern Matching';
+        } else if (methodKey === 'content') {
+          patternOptionsTitle.textContent = 'Text/Word Matching';
+        } else if (methodKey === 'dom') {
+          patternOptionsTitle.textContent = 'DOM Selector Matching';
+        } else if (methodKey === 'payload') {
+          patternOptionsTitle.textContent = 'Payload Text Matching';
+        } else if (methodKey === 'js_hooks') {
+          patternOptionsTitle.textContent = 'JS Hook Target Matching';
+        } else if (methodKey === 'window') {
+          patternOptionsTitle.textContent = 'Window Path Matching';
+        } else {
+          patternOptionsTitle.textContent = 'Name Field Matching';
+        }
       }
-    }
-
-    // Hide/show VALUE field options for single-input types
-    if (valueFieldGroup) {
-      valueFieldGroup.style.display = isSingleInput ? 'none' : 'block';
     }
 
     // Hide entire Edit modal while Method Settings is open
@@ -555,10 +748,12 @@ class Rules {
       if (nameIndicator) {
         const indicators = [];
 
-        // Only show badges if input has value
         const hasValue = nameInput.value.trim().length > 0;
+        const hasSettings = methodItem.dataset.nameRegex === 'true' ||
+          methodItem.dataset.nameWholeword === 'true' ||
+          methodItem.dataset.nameCase === 'true';
 
-        if (hasValue) {
+        if (hasValue || hasSettings) {
           if (methodItem.dataset.nameRegex === 'true') indicators.push('RX');
           if (methodItem.dataset.nameWholeword === 'true') indicators.push('WW');
           if (methodItem.dataset.nameCase === 'true') indicators.push('CS');
@@ -578,10 +773,12 @@ class Rules {
       if (valueIndicator) {
         const indicators = [];
 
-        // Only show badges if input has value
         const hasValue = valueInput.value.trim().length > 0;
+        const hasSettings = methodItem.dataset.valueRegex === 'true' ||
+          methodItem.dataset.valueWholeword === 'true' ||
+          methodItem.dataset.valueCase === 'true';
 
-        if (hasValue) {
+        if (hasValue || hasSettings) {
           if (methodItem.dataset.valueRegex === 'true') indicators.push('RX');
           if (methodItem.dataset.valueWholeword === 'true') indicators.push('WW');
           if (methodItem.dataset.valueCase === 'true') indicators.push('CS');
@@ -621,6 +818,207 @@ class Rules {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+  }
+
+  /**
+   * Get available window condition options (from helper modal, with fallbacks)
+   * @returns {string[]} Array of condition values
+   */
+  getWindowConditionOptions() {
+    const lang = globalThis.ScrapflyWindowConditionLanguage;
+    const defaults = (lang && typeof lang.getPresetValues === 'function')
+      ? lang.getPresetValues()
+      : [
+          'exists',
+          'truthy',
+          'falsy',
+          'typeof object',
+          'typeof function',
+          'typeof string',
+          'typeof number',
+          'typeof boolean',
+          '!== undefined',
+          '=== undefined',
+          '!== null',
+          '=== null',
+          'not undefined',
+          'not null',
+          'array',
+          'non-empty array',
+          'empty array',
+          'has keys',
+          'empty object',
+          '> 0',
+          '>= 0',
+          '=== 0',
+          '> 1',
+          '>= 1',
+          'length > 0',
+          'length === 0',
+          '=== true',
+          '=== false'
+        ];
+
+    const options = [];
+    const addOption = (value) => {
+      const trimmed = (value || '').trim();
+      if (!trimmed) return;
+      if (!options.includes(trimmed)) {
+        options.push(trimmed);
+      }
+    };
+
+    // Keep UI and engine aligned by defaulting to the shared condition language.
+    defaults.forEach(addOption);
+
+    const existsIndex = options.indexOf('exists');
+    if (existsIndex > 0) {
+      options.splice(existsIndex, 1);
+      options.unshift('exists');
+    } else if (existsIndex === -1) {
+      options.unshift('exists');
+    }
+
+    return options;
+  }
+
+  /**
+   * Get grouped window condition presets for dropdown rendering.
+   * Falls back to the previous hardcoded grouping if the shared module isn't available.
+   * @returns {{label:string, values:string[]}[]}
+   */
+  getWindowConditionGroups() {
+    const lang = globalThis.ScrapflyWindowConditionLanguage;
+    if (lang && typeof lang.getPresetGroups === 'function') {
+      return lang.getPresetGroups();
+    }
+
+    return [
+      { label: 'Type', values: ['typeof object', 'typeof function', 'typeof string', 'typeof number', 'typeof boolean'] },
+      { label: 'Existence', values: ['exists', 'truthy', 'falsy', '!== undefined', '=== undefined', '!== null', '=== null', 'not undefined', 'not null'] },
+      { label: 'Collections', values: ['array', 'non-empty array', 'empty array', 'has keys', 'empty object'] },
+      { label: 'Numeric', values: ['> 0', '>= 0', '=== 0', '> 1', '>= 1'] },
+      { label: 'String', values: ['length > 0', 'length === 0'] },
+      { label: 'Boolean', values: ['=== true', '=== false'] }
+    ];
+  }
+
+  /**
+   * Render window condition options for select dropdown
+   * @param {string} selectedValue
+   * @returns {string}
+   */
+  renderWindowConditionOptions(selectedValue) {
+    const options = this.getWindowConditionOptions();
+    const normalized = (selectedValue || '').trim();
+    const selected = normalized || 'exists';
+    const allOptions = normalized && !options.includes(normalized)
+      ? [normalized, ...options]
+      : options;
+
+    return allOptions.map((value) => {
+      const safeValue = this.escapeHtml(value);
+      return `<option value="${safeValue}"${value === selected ? ' selected' : ''}>${safeValue}</option>`;
+    }).join('');
+  }
+
+  /**
+   * Render window condition menu groups for inline dropdown
+   * @param {string} selectedValue
+   * @returns {string}
+   */
+  renderWindowConditionMenu(selectedValue) {
+    const options = this.getWindowConditionOptions();
+    const normalized = (selectedValue || '').trim();
+    const selected = normalized || 'exists';
+    const available = new Set(options);
+
+    const groups = this.getWindowConditionGroups();
+
+    const renderOption = (value) => {
+      const safeValue = this.escapeHtml(value);
+      const isSelected = value === selected;
+      return `<div class="condition-option${isSelected ? ' selected' : ''}" data-value="${safeValue}">${safeValue}</div>`;
+    };
+
+    const renderedGroups = groups.map((group) => {
+      const values = group.values.filter((value) => available.has(value));
+      if (values.length === 0) return '';
+      return `
+        <div class="condition-group">
+          <div class="condition-group-label">${group.label}</div>
+          ${values.map(renderOption).join('')}
+        </div>
+      `;
+    }).join('');
+
+    const extras = options.filter((value) => !groups.some((group) => group.values.includes(value)));
+    const extraGroup = extras.length
+      ? `
+        <div class="condition-group">
+          <div class="condition-group-label">Other</div>
+          ${extras.map(renderOption).join('')}
+        </div>
+      `
+      : '';
+
+    const customGroup = normalized && !options.includes(normalized)
+      ? `
+        <div class="condition-group">
+          <div class="condition-group-label">Custom</div>
+          ${renderOption(normalized)}
+        </div>
+      `
+      : '';
+
+    return renderedGroups + extraGroup + customGroup;
+  }
+
+  /**
+   * Render inline condition dropdown for window method
+   * @param {string} conditionValue
+   * @param {string} methodKey
+   * @param {string|number} itemIndex
+   * @returns {string}
+   */
+  renderInlineConditionDropdown(conditionValue, methodKey, itemIndex) {
+    const selected = (conditionValue || 'exists').trim() || 'exists';
+    const safeSelected = this.escapeHtml(selected);
+    const menu = this.renderWindowConditionMenu(selected);
+
+    return `
+      <div class="condition-dropdown inline-condition-dropdown" data-condition-dropdown="window" data-condition-value="${safeSelected}">
+        <button type="button" class="condition-dropdown-trigger" aria-expanded="false">
+          <span class="condition-selected-text">${safeSelected}</span>
+          <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+            <path d="M6 8L1 3h10z"/>
+          </svg>
+        </button>
+        <div class="condition-dropdown-menu">
+          ${menu}
+        </div>
+        <input type="hidden" class="method-input method-value" value="${safeSelected}" data-method-key="${methodKey}" data-item-index="${itemIndex}">
+      </div>
+    `;
+  }
+
+  /**
+   * Sync inline condition dropdown UI with hidden input value
+   * @param {HTMLElement} methodItem
+   */
+  syncInlineConditionDropdown(methodItem) {
+    const dropdown = methodItem?.querySelector('.inline-condition-dropdown');
+    if (!dropdown) return;
+    const hiddenInput = dropdown.querySelector('.method-input.method-value');
+    const value = hiddenInput?.value || 'exists';
+    const selectedText = dropdown.querySelector('.condition-selected-text');
+    if (selectedText) {
+      selectedText.textContent = value;
+    }
+    dropdown.dataset.conditionValue = value;
+    dropdown.querySelectorAll('.condition-option').forEach((option) => {
+      option.classList.toggle('selected', option.dataset.value === value);
+    });
   }
 
   /**
@@ -715,1608 +1113,10 @@ class Rules {
     }
   }
 
-  /**
-   * Setup DOM helper modal event listeners
-   */
-  setupDomHelperModal() {
-    const modal = document.querySelector('#domHelperModal');
-    const closeBtn = document.querySelector('#closeDomHelper');
-    const cancelBtn = document.querySelector('#cancelDomHelper');
-    const useBtn = document.querySelector('#useDomSelector');
-    const backdrop = modal?.querySelector('.rule-modal-backdrop');
-    const customInput = document.querySelector('#domCustomInput');
-    const keywordInput = document.querySelector('#domKeywordInput');
 
-    // Close modal events
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => this.closeDomHelperModal());
-    }
-    if (cancelBtn) {
-      cancelBtn.addEventListener('click', () => this.closeDomHelperModal());
-    }
-    if (backdrop) {
-      backdrop.addEventListener('click', () => this.closeDomHelperModal());
-    }
-
-    // Use selector button
-    if (useBtn) {
-      useBtn.addEventListener('click', () => this.useDomSelector());
-    }
-
-    // Keyword input for filtering suggestions
-    if (keywordInput) {
-      keywordInput.addEventListener('input', (e) => {
-        const keyword = e.target.value.trim();
-        this.displayDomSuggestions(keyword);
-
-        // Update step indicators
-        this.updateDomHelperSteps(keyword.length > 0 ? 2 : 1);
-      });
-    }
-
-    // Setup click handlers for DOM helper button and templates (using event delegation)
-    document.addEventListener('click', (e) => {
-      // Handle DOM helper button clicks
-      if (e.target.closest('.dom-helper-btn')) {
-        e.stopPropagation();
-        const button = e.target.closest('.dom-helper-btn');
-        const inputIndex = button.dataset.inputIndex;
-        const methodItem = button.closest('.method-item');
-        if (methodItem) {
-          this.openDomHelperModal(methodItem, inputIndex);
-        }
-      }
-
-      // Handle Window helper button clicks
-      if (e.target.closest('.window-helper-btn')) {
-        e.stopPropagation();
-        const button = e.target.closest('.window-helper-btn');
-        const inputIndex = button.dataset.inputIndex;
-        const methodItem = button.closest('.method-item');
-        if (methodItem) {
-          this.openWindowHelperModal(methodItem, inputIndex);
-        }
-      }
-
-      // Handle condition helper button clicks (for WINDOW method)
-      if (e.target.closest('.condition-helper-btn')) {
-        e.stopPropagation();
-        const button = e.target.closest('.condition-helper-btn');
-        const inputIndex = button.dataset.inputIndex;
-        const methodItem = button.closest('.method-item');
-        if (methodItem) {
-          this.openConditionHelperModal(methodItem, inputIndex);
-        }
-      }
-
-      // Handle template/suggestion clicks
-      if (e.target.closest('.dom-template, .dom-suggestion')) {
-        e.stopPropagation();
-        const suggestion = e.target.closest('.dom-template, .dom-suggestion');
-        const selector = suggestion.dataset.selector || suggestion.querySelector('.template-code')?.textContent;
-        const customInput = document.querySelector('#domCustomInput');
-        if (selector && customInput) {
-          customInput.value = selector;
-          customInput.focus();
-        }
-      }
-    });
-  }
-
-  /**
-   * Update DOM helper step indicators
-   * @param {number} activeStep - The active step number (1 or 2)
-   */
-  updateDomHelperSteps(activeStep) {
-    const step1 = document.querySelector('#domStep1');
-    const step2 = document.querySelector('#domStep2');
-
-    if (step1 && step2) {
-      if (activeStep === 1) {
-        step1.classList.add('active');
-        step2.classList.remove('active');
-      } else if (activeStep === 2) {
-        step1.classList.remove('active');
-        step2.classList.add('active');
-      }
-    }
-  }
-
-  /**
-   * Open DOM helper modal for a specific method item
-   * @param {HTMLElement} methodItem - The method item element
-   * @param {string} inputIndex - Index of the input field
-   */
-  openDomHelperModal(methodItem, inputIndex) {
-    const modal = document.querySelector('#domHelperModal');
-    if (!modal) return;
-
-    // Store reference to current method item
-    this.currentDomMethodItem = methodItem;
-
-    // Get current DOM selector value
-    const nameInput = methodItem.querySelector('.method-input.method-name');
-    const currentValue = nameInput?.value || '';
-
-    // Set custom input to current value
-    const customInput = document.querySelector('#domCustomInput');
-    if (customInput) {
-      customInput.value = currentValue;
-    }
-
-    // Clear keyword input and show initial suggestions
-    const keywordInput = document.querySelector('#domKeywordInput');
-    if (keywordInput) {
-      keywordInput.value = '';
-      keywordInput.focus();
-    }
-
-    // Display initial suggestions (empty keyword shows all examples)
-    this.displayDomSuggestions('');
-
-    // Reset step indicators to step 1
-    this.updateDomHelperSteps(1);
-
-    // Show modal
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  }
-
-  /**
-   * Use the selected DOM selector
-   */
-  useDomSelector() {
-    const customInput = document.querySelector('#domCustomInput');
-    const selector = customInput?.value.trim();
-
-    if (!selector) {
-      NotificationHelper.error('Please enter a selector');
-      return;
-    }
-
-    // Update the DOM input field
-    if (this.currentDomMethodItem) {
-      const nameInput = this.currentDomMethodItem.querySelector('.method-input.method-name');
-      if (nameInput) {
-        nameInput.value = selector;
-      }
-    }
-
-    // Close modal
-    this.closeDomHelperModal();
-  }
-
-  /**
-   * Close DOM helper modal
-   */
-  closeDomHelperModal() {
-    const modal = document.querySelector('#domHelperModal');
-    if (modal) {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-      this.currentDomMethodItem = null;
-    }
-  }
-
-  /**
-   * Open condition helper modal for WINDOW method
-   * @param {HTMLElement} methodItem - The method item element
-   * @param {string} inputIndex - Index of the input field
-   */
-  openConditionHelperModal(methodItem, inputIndex) {
-    // Store reference to current method item
-    this.currentConditionMethodItem = methodItem;
-
-    // Condition examples for WINDOW method
-    const conditionExamples = [
-      { value: 'exists', description: 'Checks if property exists' },
-      { value: 'typeof object', description: 'Property is an object' },
-      { value: 'typeof function', description: 'Property is a function' },
-      { value: 'typeof string', description: 'Property is a string' },
-      { value: 'typeof number', description: 'Property is a number' },
-      { value: 'typeof boolean', description: 'Property is a boolean' },
-      { value: 'not undefined', description: 'Property is not undefined' },
-      { value: 'not null', description: 'Property is not null' },
-      { value: 'truthy', description: 'Property has a truthy value' },
-      { value: 'falsy', description: 'Property has a falsy value' }
-    ];
-
-    // Create modal using DOM methods
-    const modalContainer = document.createElement('div');
-    modalContainer.classList.add('condition-helper-modal-container');
-
-    const modal = document.createElement('div');
-    modal.className = 'condition-helper-modal';
-    modal.style.cssText = 'display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(4px);';
-
-    const content = document.createElement('div');
-    content.className = 'condition-helper-content';
-    content.style.cssText = 'background: var(--bg-primary); border-radius: 12px; padding: 24px; max-width: 500px; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.5);';
-
-    const title = document.createElement('h3');
-    title.textContent = 'Window Condition Examples';
-    title.style.cssText = 'margin: 0 0 16px 0; font-size: 16px; color: var(--text-primary);';
-
-    const description = document.createElement('p');
-    description.textContent = 'Click on an example to use it:';
-    description.style.cssText = 'margin: 0 0 16px 0; font-size: 12px; color: var(--text-secondary);';
-
-    const examplesContainer = document.createElement('div');
-    examplesContainer.className = 'condition-examples';
-    examplesContainer.style.cssText = 'display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;';
-
-    // Create example elements
-    conditionExamples.forEach(example => {
-      const exampleDiv = document.createElement('div');
-      exampleDiv.className = 'condition-example';
-      exampleDiv.dataset.value = example.value;
-      exampleDiv.style.cssText = 'cursor: pointer; padding: 10px 12px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; transition: all 0.2s;';
-
-      const valueDiv = document.createElement('div');
-      valueDiv.textContent = example.value;
-      valueDiv.style.cssText = 'font-size: 12px; font-weight: 600; color: var(--accent); margin-bottom: 2px; font-family: Monaco, Courier New, monospace;';
-
-      const descDiv = document.createElement('div');
-      descDiv.textContent = example.description;
-      descDiv.style.cssText = 'font-size: 11px; color: var(--text-muted);';
-
-      exampleDiv.appendChild(valueDiv);
-      exampleDiv.appendChild(descDiv);
-      examplesContainer.appendChild(exampleDiv);
-
-      // Add hover and click handlers
-      exampleDiv.addEventListener('mouseenter', () => {
-        exampleDiv.style.borderColor = 'var(--accent)';
-        exampleDiv.style.background = 'var(--bg-tertiary)';
-        exampleDiv.style.transform = 'translateX(4px)';
-      });
-      exampleDiv.addEventListener('mouseleave', () => {
-        exampleDiv.style.borderColor = 'var(--border)';
-        exampleDiv.style.background = 'var(--bg-secondary)';
-        exampleDiv.style.transform = 'translateX(0)';
-      });
-      exampleDiv.addEventListener('click', () => {
-        const conditionValue = exampleDiv.dataset.value;
-        if (this.currentConditionMethodItem) {
-          const valueInput = this.currentConditionMethodItem.querySelector('.method-input.method-value');
-          if (valueInput) {
-            valueInput.value = conditionValue;
-          }
-        }
-        document.body.removeChild(modalContainer);
-        this.currentConditionMethodItem = null;
-      });
-    });
-
-    const closeBtn = document.createElement('button');
-    closeBtn.id = 'closeConditionHelper';
-    closeBtn.textContent = 'Close';
-    closeBtn.style.cssText = 'width: 100%; padding: 10px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;';
-    closeBtn.addEventListener('click', () => {
-      document.body.removeChild(modalContainer);
-      this.currentConditionMethodItem = null;
-    });
-
-    // Assemble modal
-    content.appendChild(title);
-    content.appendChild(description);
-    content.appendChild(examplesContainer);
-    content.appendChild(closeBtn);
-    modal.appendChild(content);
-    modalContainer.appendChild(modal);
-
-    // Close on backdrop click
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        document.body.removeChild(modalContainer);
-        this.currentConditionMethodItem = null;
-      }
-    });
-
-    document.body.appendChild(modalContainer);
-  }
-
-  /**
-   * Setup Window Properties helper modal event listeners
-   */
-  setupWindowHelperModal() {
-    const modal = document.querySelector('#windowHelperModal');
-    const closeBtn = document.querySelector('#closeWindowHelper');
-    const cancelBtn = document.querySelector('#cancelWindowHelper');
-    const useBtn = document.querySelector('#useWindowProperty');
-    const backdrop = modal?.querySelector('.rule-modal-backdrop');
-    const keywordInput = document.querySelector('#windowKeywordInput');
-
-    // Close modal events
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => this.closeWindowHelperModal());
-    }
-    if (cancelBtn) {
-      cancelBtn.addEventListener('click', () => this.closeWindowHelperModal());
-    }
-    if (backdrop) {
-      backdrop.addEventListener('click', () => this.closeWindowHelperModal());
-    }
-
-    // Use property button
-    if (useBtn) {
-      useBtn.addEventListener('click', () => this.useWindowProperty());
-    }
-
-    // Keyword input for filtering suggestions
-    if (keywordInput) {
-      keywordInput.addEventListener('input', (e) => {
-        const keyword = e.target.value.trim();
-        this.displayWindowSuggestions(keyword);
-        this.updateWindowHelperSteps(keyword.length > 0 ? 2 : 1);
-      });
-    }
-
-    // Setup click handlers for suggestions (using event delegation)
-    document.addEventListener('click', (e) => {
-      if (e.target.closest('.window-suggestion')) {
-        e.stopPropagation();
-        const suggestion = e.target.closest('.window-suggestion');
-        const property = suggestion.dataset.property;
-        const customInput = document.querySelector('#windowCustomInput');
-        if (property && customInput) {
-          customInput.value = property;
-          customInput.focus();
-        }
-      }
-    });
-  }
-
-  /**
-   * Update Window helper step indicators
-   */
-  updateWindowHelperSteps(activeStep) {
-    const step1 = document.querySelector('#windowStep1');
-    const step2 = document.querySelector('#windowStep2');
-    const step3 = document.querySelector('#windowStep3');
-    const conditionSection = document.querySelector('#windowConditionSection');
-    const useBtn = document.querySelector('#useWindowProperty');
-
-    if (step1 && step2 && step3) {
-      // Update step indicators
-      step1.classList.toggle('active', activeStep === 1);
-      step2.classList.toggle('active', activeStep === 2);
-      step3.classList.toggle('active', activeStep === 3);
-
-      // Show/hide condition section
-      if (conditionSection) {
-        conditionSection.style.display = activeStep === 3 ? 'block' : 'none';
-      }
-
-      // Update button text
-      if (useBtn) {
-        useBtn.textContent = activeStep === 3 ? 'Use Property' : 'Next';
-      }
-    }
-  }
-
-  /**
-   * Generate window property suggestions based on keyword
-   */
-  generateWindowTemplates(keyword) {
-    if (!keyword || keyword.trim() === '') return [];
-
-    const cssKeyword = keyword.replace(/\s+/g, '-').toLowerCase();
-
-    const templates = [
-      { property: cssKeyword, label: `Property "${keyword}"` },
-      { property: `window.${cssKeyword}`, label: `window.${cssKeyword}` },
-      { property: `navigator.${cssKeyword}`, label: `navigator.${cssKeyword}` },
-      { property: `document.${cssKeyword}`, label: `document.${cssKeyword}` },
-      { property: `globalThis.${cssKeyword}`, label: `globalThis.${cssKeyword}` }
-    ];
-
-    return templates;
-  }
-
-  /**
-   * Display window property suggestions
-   */
-  displayWindowSuggestions(keyword) {
-    const suggestionsContainer = document.querySelector('#windowSuggestions');
-    if (!suggestionsContainer) return;
-
-    suggestionsContainer.innerHTML = '';
-
-    if (!keyword || keyword.trim() === '') {
-      suggestionsContainer.innerHTML = `
-        <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">
-          Start typing above to see suggestions...
-        </div>
-      `;
-      return;
-    }
-
-    const templates = this.generateWindowTemplates(keyword);
-
-    templates.forEach(template => {
-      const suggestionDiv = document.createElement('div');
-      suggestionDiv.className = 'window-suggestion';
-      suggestionDiv.dataset.property = template.property;
-      suggestionDiv.style.cssText = 'padding: 10px 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s;';
-      suggestionDiv.innerHTML = `
-        <div style="font-family: 'Monaco', 'Courier New', monospace; font-size: 12px; color: var(--accent); font-weight: 500;">${this.escapeHtml(template.property)}</div>
-        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">${template.label}</div>
-      `;
-      suggestionDiv.addEventListener('mouseenter', () => {
-        suggestionDiv.style.background = 'var(--bg-secondary)';
-      });
-      suggestionDiv.addEventListener('mouseleave', () => {
-        suggestionDiv.style.background = 'var(--bg-tertiary)';
-      });
-      suggestionsContainer.appendChild(suggestionDiv);
-    });
-  }
-
-  /**
-   * Open Window helper modal
-   */
-  openWindowHelperModal(methodItem, inputIndex) {
-    const modal = document.querySelector('#windowHelperModal');
-    if (!modal) return;
-
-    this.currentWindowMethodItem = methodItem;
-
-    const nameInput = methodItem.querySelector('.method-input.method-name');
-    const currentValue = nameInput?.value || '';
-
-    const customInput = document.querySelector('#windowCustomInput');
-    if (customInput) {
-      customInput.value = currentValue;
-    }
-
-    const keywordInput = document.querySelector('#windowKeywordInput');
-    if (keywordInput) {
-      keywordInput.value = '';
-      keywordInput.focus();
-    }
-
-    this.displayWindowSuggestions('');
-    this.updateWindowHelperSteps(1);
-
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  }
-
-  /**
-   * Use selected window property
-   */
-  useWindowProperty() {
-    const customInput = document.querySelector('#windowCustomInput');
-    const property = customInput?.value.trim();
-    const step3 = document.querySelector('#windowStep3');
-    const isOnStep3 = step3?.classList.contains('active');
-
-    if (!property) {
-      alert('Please select or enter a property');
-      return;
-    }
-
-    // If we're not on step 3 yet, move to step 3 (condition selection)
-    if (!isOnStep3) {
-      this.updateWindowHelperSteps(3);
-      return;
-    }
-
-    // We're on step 3, now apply both property and condition
-    const conditionRadio = document.querySelector('input[name="windowCondition"]:checked');
-    const condition = conditionRadio?.value || 'exists';
-
-    if (this.currentWindowMethodItem) {
-      const nameInput = this.currentWindowMethodItem.querySelector('.method-input.method-name');
-      const valueInput = this.currentWindowMethodItem.querySelector('.method-input.method-value');
-
-      if (nameInput) {
-        nameInput.value = property;
-      }
-      if (valueInput) {
-        valueInput.value = condition;
-      }
-
-      this.updateMethodIndicators(this.currentWindowMethodItem);
-    }
-
-    this.closeWindowHelperModal();
-  }
-
-  /**
-   * Close Window helper modal
-   */
-  closeWindowHelperModal() {
-    const modal = document.querySelector('#windowHelperModal');
-    if (modal) {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-      this.currentWindowMethodItem = null;
-    }
-  }
-
-  /**
-   * Setup Regex helper modal event listeners
-   */
-  setupRegexHelperModal() {
-    const modal = document.querySelector('#regexHelperModal');
-    const closeBtn = document.querySelector('#closeRegexHelper');
-    const closeFooterBtn = document.querySelector('#closeRegexHelperBtn');
-    const backdrop = modal?.querySelector('.rule-modal-backdrop');
-    const keywordInput = document.querySelector('#regexKeywordInput');
-
-    // Close modal events
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => this.closeRegexHelperModal());
-    }
-    if (closeFooterBtn) {
-      closeFooterBtn.addEventListener('click', () => this.closeRegexHelperModal());
-    }
-    if (backdrop) {
-      backdrop.addEventListener('click', () => this.closeRegexHelperModal());
-    }
-
-    // Setup keyword input for step 1 (filtering patterns)
-    if (keywordInput) {
-      keywordInput.addEventListener('input', (e) => {
-        const keyword = e.target.value.toLowerCase().trim();
-        this.filterRegexPatterns(keyword);
-      });
-
-      // Also handle Enter key to move to next step or select first pattern
-      keywordInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          const firstPattern = document.querySelector('.regex-pattern');
-          if (firstPattern) {
-            firstPattern.click();
-          }
-        }
-      });
-    }
-
-    // Setup click handlers for regex helper button and patterns
-    document.addEventListener('click', (e) => {
-      // Handle regex helper button click (for both name and value fields)
-      if (e.target.closest('#regexHelperBtn') || e.target.closest('#regexHelperBtnValue')) {
-        e.stopPropagation();
-        this.openRegexHelperModal();
-      }
-
-      // Handle regex pattern clicks - insert into input field
-      if (e.target.closest('.regex-pattern')) {
-        e.stopPropagation();
-        const pattern = e.target.closest('.regex-pattern');
-        const patternText = pattern.dataset.pattern;
-
-        if (patternText && this.currentMethodItem) {
-          // Insert pattern into the input field
-          const nameInput = this.currentMethodItem.querySelector('.method-input.method-name');
-          if (nameInput) {
-            nameInput.value = patternText;
-
-            // Auto-enable regex checkbox in the method settings
-            this.currentMethodItem.dataset.nameRegex = 'true';
-
-            // Update visual indicators
-            this.updateMethodIndicators(this.currentMethodItem);
-
-            // Show success message
-            NotificationHelper.success('Pattern applied');
-
-            // Close modal
-            this.closeRegexHelperModal();
-          }
-        }
-      }
-    });
-  }
-
-  /**
-   * Get predefined regex patterns with keywords for filtering
-   */
-  getRegexPatterns() {
-    return [
-      { pattern: '^test', keywords: ['start', 'begins', 'starts', 'prefix'], description: 'Starts with "test"' },
-      { pattern: 'test$', keywords: ['end', 'ends', 'suffix'], description: 'Ends with "test"' },
-      { pattern: '.*test.*', keywords: ['contains', 'anywhere', 'includes'], description: 'Contains "test" anywhere' },
-      { pattern: '\\btest\\b', keywords: ['word', 'whole', 'boundary', 'exact'], description: 'Whole word match' },
-      { pattern: '^[0-9]+$', keywords: ['digit', 'number', 'numeric', 'integer'], description: 'Only digits' },
-      { pattern: '^[a-zA-Z]+$', keywords: ['letter', 'alpha', 'alphabetic'], description: 'Only letters' },
-      { pattern: '^[a-zA-Z0-9_]+$', keywords: ['alphanumeric', 'word char', 'identifier'], description: 'Alphanumeric and underscore' },
-      { pattern: '^[a-z]+$', keywords: ['lowercase', 'lower case', 'lower'], description: 'Only lowercase letters' },
-      { pattern: '^[A-Z]+$', keywords: ['uppercase', 'upper case', 'upper'], description: 'Only uppercase letters' },
-      { pattern: '^\\w+@\\w+\\.\\w+$', keywords: ['email', 'mail', '@'], description: 'Basic email pattern' },
-      { pattern: '^https?://', keywords: ['url', 'http', 'link', 'web'], description: 'Starts with http/https' },
-      { pattern: '(cloudflare|datadome|akamai)', keywords: ['or', 'alternative', 'multiple', 'either'], description: 'Multiple options (OR)' },
-      { pattern: '[0-9]{1,3}\\.[0-9]{1,3}', keywords: ['ip', 'address', 'version'], description: 'IP address pattern' },
-      { pattern: '^.{5,}$', keywords: ['length', 'min', 'minimum', 'characters'], description: 'At least 5 characters' },
-      { pattern: '(test|test2|test3)', keywords: ['list', 'options', 'choices', 'variants'], description: 'Match one of several options' }
-    ];
-  }
-
-  /**
-   * Generate dynamic regex patterns based on user input
-   */
-  generateDynamicRegexPatterns(input) {
-    const escaped = input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    return [
-      { pattern: `^${escaped}`, description: `Starts with "${input}"` },
-      { pattern: `${escaped}$`, description: `Ends with "${input}"` },
-      { pattern: `.*${escaped}.*`, description: `Contains "${input}" anywhere` },
-      { pattern: `\\b${escaped}\\b`, description: `Whole word match "${input}"` },
-      { pattern: `(${escaped}|alternative)`, description: `"${input}" OR another option` },
-      { pattern: `^${escaped}.+$`, description: `Starts with "${input}" + more characters` }
-    ];
-  }
-
-  /**
-   * Filter regex patterns based on user input - generates dynamic patterns
-   */
-  filterRegexPatterns(keyword) {
-    const suggestionsContainer = document.querySelector('#regexSuggestions');
-    if (!suggestionsContainer) return;
-
-    // If no keyword, show placeholder
-    if (!keyword) {
-      suggestionsContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">Start typing above to see suggestions...</div>';
-      return;
-    }
-
-    // Generate patterns dynamically from user input
-    const patterns = this.generateDynamicRegexPatterns(keyword);
-
-    suggestionsContainer.innerHTML = patterns.map(p => `
-      <div class="regex-pattern" data-pattern="${p.pattern}">
-        <div class="template-code">${p.pattern}</div>
-        <div class="template-description">${p.description}</div>
-      </div>
-    `).join('');
-  }
-
-  /**
-   * Open Regex helper modal
-   */
-  openRegexHelperModal() {
-    const modal = document.querySelector('#regexHelperModal');
-    if (!modal) return;
-
-    // Auto-enable regex toggle when opening helper
-    if (this.currentMethodItem) {
-      this.currentMethodItem.dataset.nameRegex = 'true';
-      this.updateMethodIndicators(this.currentMethodItem);
-    }
-
-    // Reset keyword input and show all patterns
-    const keywordInput = document.querySelector('#regexKeywordInput');
-    if (keywordInput) {
-      keywordInput.value = '';
-      keywordInput.focus();
-    }
-
-    // Display all patterns initially
-    this.filterRegexPatterns('');
-
-    // Update step indicators - focus on step 1
-    const step1 = document.querySelector('#regexStep1');
-    const step2 = document.querySelector('#regexStep2');
-    if (step1) step1.classList.add('active');
-    if (step2) step2.classList.remove('active');
-
-    // Show modal
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  }
-
-  /**
-   * Generate regex pattern suggestions based on user input
-   * @param {string} input - User's input text
-   * @returns {Array} - Array of suggestion objects with pattern and description
-   */
-  generateRegexSuggestions(input) {
-    const escaped = input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const suggestions = [];
-
-    // Exact match (escaped)
-    suggestions.push({
-      pattern: escaped,
-      description: 'Exact match (special chars escaped)'
-    });
-
-    // Starts with
-    suggestions.push({
-      pattern: `^${escaped}`,
-      description: 'Starts with your text'
-    });
-
-    // Ends with
-    suggestions.push({
-      pattern: `${escaped}$`,
-      description: 'Ends with your text'
-    });
-
-    // Contains anywhere
-    suggestions.push({
-      pattern: `.*${escaped}.*`,
-      description: 'Contains your text anywhere'
-    });
-
-    // Word boundary (whole word)
-    suggestions.push({
-      pattern: `\\b${escaped}\\b`,
-      description: 'Exact word match (with boundaries)'
-    });
-
-    // Case insensitive hint
-    if (input !== input.toLowerCase() && input !== input.toUpperCase()) {
-      suggestions.push({
-        pattern: escaped,
-        description: 'Note: Toggle "Case Sensitive" OFF to ignore case'
-      });
-    }
-
-    return suggestions;
-  }
-
-  /**
-   * Close Regex helper modal
-   */
-  closeRegexHelperModal() {
-    const modal = document.querySelector('#regexHelperModal');
-    if (modal) {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-    }
-  }
-
-  /**
-   * Get predefined whole word matching patterns
-   */
-  getWholeWordPatterns() {
-    return [
-      { name: '_abck', examples: [{ text: '_abck', match: true, reason: 'Exact word, surrounded by boundaries' }, { text: 'test_abck', match: false, reason: 'Connected to "test", not isolated' }, { text: '_abckMore', match: false, reason: 'Connected to "More", not isolated' }] },
-      { name: 'cf_clearance', examples: [{ text: 'cf_clearance', match: true, reason: 'Exact word, surrounded by boundaries' }, { text: '_cf_clearance', match: false, reason: 'Connected with underscore' }, { text: 'cf_clearance=value', match: true, reason: 'Separated by equals sign' }] },
-      { name: 'Akamai', examples: [{ text: 'Akamai', match: true, reason: 'Exact word' }, { text: 'AkamaiTest', match: false, reason: 'Connected to other text' }, { text: 'test Akamai server', match: true, reason: 'Separated by spaces' }] },
-      { name: 'grecaptcha', examples: [{ text: 'grecaptcha', match: true, reason: 'Exact word' }, { text: 'grecaptchaCallback', match: false, reason: 'Part of longer name' }, { text: 'window.grecaptcha', match: true, reason: 'Preceded by dot' }] }
-    ];
-  }
-
-  /**
-   * Generate dynamic whole word examples based on user input
-   */
-  generateWholeWordExamples(input) {
-    return [
-      { text: input, match: true, reason: 'Exact word, surrounded by boundaries' },
-      { text: `test${input}`, match: false, reason: 'Connected to "test", not isolated' },
-      { text: `${input}More`, match: false, reason: 'Connected to "More", not isolated' },
-      { text: `test ${input} more`, match: true, reason: 'Separated by spaces (word boundaries)' }
-    ];
-  }
-
-  /**
-   * Filter whole word patterns based on input - generates dynamic examples
-   */
-  filterWholeWordPatterns(keyword) {
-    const examplesContainer = document.querySelector('#wholeWordExamples');
-    if (!examplesContainer) return;
-
-    // If no keyword, show placeholder
-    if (!keyword) {
-      examplesContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">Start typing above to see examples...</div>';
-      return;
-    }
-
-    // Generate examples dynamically from user input
-    const examples = this.generateWholeWordExamples(keyword);
-
-    examplesContainer.innerHTML = `
-      <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 6px;">
-        <div style="font-weight: 600; color: #10b981; margin-bottom: 8px;">Pattern: ${keyword}</div>
-        <table style="font-size: 10px; width: 100%; border-collapse: collapse;">
-          <tr style="background: var(--bg-tertiary);">
-            <td style="padding: 6px; border: 1px solid var(--border);">Text</td>
-            <td style="padding: 6px; border: 1px solid var(--border);">Match?</td>
-            <td style="padding: 6px; border: 1px solid var(--border);">Reason</td>
-          </tr>
-          ${examples.map(e => `
-            <tr>
-              <td style="padding: 6px; border: 1px solid var(--border); color: var(--accent); font-family: monospace;">${e.text}</td>
-              <td style="padding: 6px; border: 1px solid var(--border); color: ${e.match ? '#10b981' : '#ef4444'};">${e.match ? '✓ Match' : '✗ No match'}</td>
-              <td style="padding: 6px; border: 1px solid var(--border);">${e.reason}</td>
-            </tr>
-          `).join('')}
-        </table>
-      </div>
-    `;
-  }
-
-  /**
-   * Setup Whole Word helper modal event listeners
-   */
-  setupWholeWordHelperModal() {
-    const modal = document.querySelector('#wholeWordHelperModal');
-    const helpBtn = document.querySelector('#wholeWordHelperBtn');
-    const closeBtn = document.querySelector('#closeWholeWordHelper');
-    const closeFooterBtn = document.querySelector('#closeWholeWordHelperBtn');
-    const backdrop = modal?.querySelector('.rule-modal-backdrop');
-    const keywordInput = document.querySelector('#wholeWordKeywordInput');
-
-    // Open modal when help button is clicked
-    if (helpBtn) {
-      helpBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.openWholeWordHelperModal();
-      });
-    }
-
-    // Close modal events
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => this.closeWholeWordHelperModal());
-    }
-    if (closeFooterBtn) {
-      closeFooterBtn.addEventListener('click', () => this.closeWholeWordHelperModal());
-    }
-    if (backdrop) {
-      backdrop.addEventListener('click', () => this.closeWholeWordHelperModal());
-    }
-
-    // Setup keyword input for filtering
-    if (keywordInput) {
-      keywordInput.addEventListener('input', (e) => {
-        const keyword = e.target.value.toLowerCase().trim();
-        this.filterWholeWordPatterns(keyword);
-      });
-    }
-  }
-
-  /**
-   * Open Whole Word helper modal
-   */
-  openWholeWordHelperModal() {
-    const modal = document.querySelector('#wholeWordHelperModal');
-    if (!modal) return;
-
-    // Reset keyword input and show all patterns
-    const keywordInput = document.querySelector('#wholeWordKeywordInput');
-    if (keywordInput) {
-      keywordInput.value = '';
-      keywordInput.focus();
-    }
-
-    // Display all patterns initially
-    this.filterWholeWordPatterns('');
-
-    // Update step indicators
-    const step1 = document.querySelector('#wholeWordStep1');
-    const step2 = document.querySelector('#wholeWordStep2');
-    if (step1) step1.classList.add('active');
-    if (step2) step2.classList.remove('active');
-
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  }
-
-  /**
-   * Close Whole Word helper modal
-   */
-  closeWholeWordHelperModal() {
-    const modal = document.querySelector('#wholeWordHelperModal');
-    if (modal) {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-    }
-  }
-
-  /**
-   * Get predefined case sensitivity patterns
-   */
-  getCaseSensitivePatterns() {
-    return [
-      { name: 'Akamai', examples: [{ text: 'Akamai', sensitive: true, insensitive: true }, { text: 'akamai', sensitive: false, insensitive: true }, { text: 'AKAMAI', sensitive: false, insensitive: true }] },
-      { name: '_abck', examples: [{ text: '_abck', sensitive: true, insensitive: true }, { text: '_Abck', sensitive: false, insensitive: true }, { text: '_ABCK', sensitive: false, insensitive: true }] },
-      { name: 'DataDome', examples: [{ text: 'DataDome', sensitive: true, insensitive: true }, { text: 'datadome', sensitive: false, insensitive: true }, { text: 'DATADOME', sensitive: false, insensitive: true }] },
-      { name: 'cf_clearance', examples: [{ text: 'cf_clearance', sensitive: true, insensitive: true }, { text: 'CF_CLEARANCE', sensitive: false, insensitive: true }, { text: 'Cf_Clearance', sensitive: false, insensitive: true }] }
-    ];
-  }
-
-  /**
-   * Generate dynamic case sensitivity examples based on user input
-   */
-  generateCaseSensitiveExamples(input) {
-    const variations = [
-      { text: input, sensitive: true, insensitive: true }  // Original (always matches both)
-    ];
-
-    // Add lowercase version if different
-    const lower = input.toLowerCase();
-    if (lower !== input) {
-      variations.push({ text: lower, sensitive: false, insensitive: true });
-    }
-
-    // Add uppercase version if different
-    const upper = input.toUpperCase();
-    if (upper !== input && upper !== lower) {
-      variations.push({ text: upper, sensitive: false, insensitive: true });
-    }
-
-    // Add capitalized version if different from all above
-    const capitalized = input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
-    if (capitalized !== input && capitalized !== lower && capitalized !== upper) {
-      variations.push({ text: capitalized, sensitive: false, insensitive: true });
-    }
-
-    return variations;
-  }
-
-  /**
-   * Filter case sensitive patterns based on input - generates dynamic examples
-   */
-  filterCaseSensitivePatterns(keyword) {
-    const examplesContainer = document.querySelector('#caseSensitiveExamples');
-    if (!examplesContainer) return;
-
-    // If no keyword, show placeholder
-    if (!keyword) {
-      examplesContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">Start typing above to see examples...</div>';
-      return;
-    }
-
-    // Generate examples dynamically from user input
-    const examples = this.generateCaseSensitiveExamples(keyword);
-
-    examplesContainer.innerHTML = `
-      <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 6px;">
-        <div style="font-weight: 600; color: #ef4444; margin-bottom: 8px;">Pattern: ${keyword}</div>
-        <table style="font-size: 10px; width: 100%; border-collapse: collapse;">
-          <tr style="background: var(--bg-tertiary);">
-            <td style="padding: 6px; border: 1px solid var(--border); font-weight: 600;">Text Found</td>
-            <td style="padding: 6px; border: 1px solid var(--border); font-weight: 600;">Case Sensitive</td>
-            <td style="padding: 6px; border: 1px solid var(--border); font-weight: 600;">Case Insensitive</td>
-          </tr>
-          ${examples.map(e => `
-            <tr>
-              <td style="padding: 6px; border: 1px solid var(--border); color: var(--accent); font-family: monospace;">${e.text}</td>
-              <td style="padding: 6px; border: 1px solid var(--border); color: ${e.sensitive ? '#10b981' : '#ef4444'};">${e.sensitive ? '✓ Match' : '✗ No match'}</td>
-              <td style="padding: 6px; border: 1px solid var(--border); color: ${e.insensitive ? '#10b981' : '#ef4444'};">${e.insensitive ? '✓ Match' : '✗ No match'}</td>
-            </tr>
-          `).join('')}
-        </table>
-      </div>
-    `;
-  }
-
-  /**
-   * Setup Case Sensitive helper modal event listeners
-   */
-  setupCaseSensitiveHelperModal() {
-    const modal = document.querySelector('#caseSensitiveHelperModal');
-    const helpBtn = document.querySelector('#caseSensitiveHelperBtn');
-    const closeBtn = document.querySelector('#closeCaseSensitiveHelper');
-    const closeFooterBtn = document.querySelector('#closeCaseSensitiveHelperBtn');
-    const backdrop = modal?.querySelector('.rule-modal-backdrop');
-    const keywordInput = document.querySelector('#caseSensitiveKeywordInput');
-
-    // Open modal when help button is clicked
-    if (helpBtn) {
-      helpBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.openCaseSensitiveHelperModal();
-      });
-    }
-
-    // Close modal events
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => this.closeCaseSensitiveHelperModal());
-    }
-    if (closeFooterBtn) {
-      closeFooterBtn.addEventListener('click', () => this.closeCaseSensitiveHelperModal());
-    }
-    if (backdrop) {
-      backdrop.addEventListener('click', () => this.closeCaseSensitiveHelperModal());
-    }
-
-    // Setup keyword input for filtering
-    if (keywordInput) {
-      keywordInput.addEventListener('input', (e) => {
-        const keyword = e.target.value.toLowerCase().trim();
-        this.filterCaseSensitivePatterns(keyword);
-      });
-    }
-  }
-
-  /**
-   * Open Case Sensitive helper modal
-   */
-  openCaseSensitiveHelperModal() {
-    const modal = document.querySelector('#caseSensitiveHelperModal');
-    if (!modal) return;
-
-    // Reset keyword input and show all patterns
-    const keywordInput = document.querySelector('#caseSensitiveKeywordInput');
-    if (keywordInput) {
-      keywordInput.value = '';
-      keywordInput.focus();
-    }
-
-    // Display all patterns initially
-    this.filterCaseSensitivePatterns('');
-
-    // Update step indicators
-    const step1 = document.querySelector('#caseSensitiveStep1');
-    const step2 = document.querySelector('#caseSensitiveStep2');
-    if (step1) step1.classList.add('active');
-    if (step2) step2.classList.remove('active');
-
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  }
-
-  /**
-   * Close Case Sensitive helper modal
-   */
-  closeCaseSensitiveHelperModal() {
-    const modal = document.querySelector('#caseSensitiveHelperModal');
-    if (modal) {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-    }
-  }
-
-  /**
-   * Setup Regex explanation modal event listeners
-   */
-  setupRegexExplanationModal() {
-    const modal = document.querySelector('#regexExplanationModal');
-    const explanationBtn = document.querySelector('#regexExplanationBtn');
-    const explanationBtnValue = document.querySelector('#regexExplanationBtnValue');
-    const closeBtn = document.querySelector('#closeRegexExplanation');
-    const backdrop = modal?.querySelector('.rule-modal-backdrop');
-
-    // Open modal when explanation button is clicked (Name field)
-    if (explanationBtn) {
-      explanationBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.openRegexExplanationModal();
-      });
-    }
-
-    // Open modal when explanation button is clicked (Value field)
-    if (explanationBtnValue) {
-      explanationBtnValue.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.openRegexExplanationModal();
-      });
-    }
-
-    // Close modal events
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => this.closeRegexExplanationModal());
-    }
-    if (backdrop) {
-      backdrop.addEventListener('click', () => this.closeRegexExplanationModal());
-    }
-  }
-
-  /**
-   * Open Regex explanation modal
-   */
-  openRegexExplanationModal() {
-    const modal = document.querySelector('#regexExplanationModal');
-    if (!modal) return;
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  }
-
-  /**
-   * Close Regex explanation modal
-   */
-  closeRegexExplanationModal() {
-    const modal = document.querySelector('#regexExplanationModal');
-    if (modal) {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-    }
-  }
-
-  /**
-   * Setup Whole Word explanation modal event listeners
-   */
-  setupWholeWordExplanationModal() {
-    const modal = document.querySelector('#wholeWordExplanationModal');
-    const explanationBtn = document.querySelector('#wholeWordExplanationBtn');
-    const explanationBtnValue = document.querySelector('#wholeWordExplanationBtnValue');
-    const closeBtn = document.querySelector('#closeWholeWordExplanation');
-    const backdrop = modal?.querySelector('.rule-modal-backdrop');
-
-    // Open modal when explanation button is clicked (Name field)
-    if (explanationBtn) {
-      explanationBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.openWholeWordExplanationModal();
-      });
-    }
-
-    // Open modal when explanation button is clicked (Value field)
-    if (explanationBtnValue) {
-      explanationBtnValue.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.openWholeWordExplanationModal();
-      });
-    }
-
-    // Close modal events
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => this.closeWholeWordExplanationModal());
-    }
-    if (backdrop) {
-      backdrop.addEventListener('click', () => this.closeWholeWordExplanationModal());
-    }
-  }
-
-  /**
-   * Open Whole Word explanation modal
-   */
-  openWholeWordExplanationModal() {
-    const modal = document.querySelector('#wholeWordExplanationModal');
-    if (!modal) return;
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  }
-
-  /**
-   * Close Whole Word explanation modal
-   */
-  closeWholeWordExplanationModal() {
-    const modal = document.querySelector('#wholeWordExplanationModal');
-    if (modal) {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-    }
-  }
-
-  /**
-   * Setup Case Sensitive explanation modal event listeners
-   */
-  setupCaseSensitiveExplanationModal() {
-    const modal = document.querySelector('#caseSensitiveExplanationModal');
-    const explanationBtn = document.querySelector('#caseSensitiveExplanationBtn');
-    const explanationBtnValue = document.querySelector('#caseSensitiveExplanationBtnValue');
-    const closeBtn = document.querySelector('#closeCaseSensitiveExplanation');
-    const backdrop = modal?.querySelector('.rule-modal-backdrop');
-
-    // Open modal when explanation button is clicked (Name field)
-    if (explanationBtn) {
-      explanationBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.openCaseSensitiveExplanationModal();
-      });
-    }
-
-    // Open modal when explanation button is clicked (Value field)
-    if (explanationBtnValue) {
-      explanationBtnValue.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.openCaseSensitiveExplanationModal();
-      });
-    }
-
-    // Close modal events
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => this.closeCaseSensitiveExplanationModal());
-    }
-    if (backdrop) {
-      backdrop.addEventListener('click', () => this.closeCaseSensitiveExplanationModal());
-    }
-  }
-
-  /**
-   * Open Case Sensitive explanation modal
-   */
-  openCaseSensitiveExplanationModal() {
-    const modal = document.querySelector('#caseSensitiveExplanationModal');
-    if (!modal) return;
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  }
-
-  /**
-   * Close Case Sensitive explanation modal
-   */
-  closeCaseSensitiveExplanationModal() {
-    const modal = document.querySelector('#caseSensitiveExplanationModal');
-    if (modal) {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-    }
-  }
-
-  /**
-   * Setup method help modal event listeners
-   */
-  setupMethodHelpModal() {
-    const modal = document.querySelector('#methodHelpModal');
-    const closeBtn = document.querySelector('#closeMethodHelp');
-    const backdrop = modal?.querySelector('.rule-modal-backdrop');
-
-    // Close modal events
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => this.closeMethodHelpModal());
-    }
-    if (backdrop) {
-      backdrop.addEventListener('click', () => this.closeMethodHelpModal());
-    }
-  }
-
-  /**
-   * Get help content for detection method types
-   */
-  getMethodHelpContent(methodType) {
-    const helpContent = {
-      'js_hooks': {
-        title: 'JavaScript Hooks Detection',
-        description: 'Hooks intercept browser API calls like <code>canvas.toDataURL()</code>, <code>navigator.webdriver</code>, or <code>RTCPeerConnection.createOffer()</code>. When a page calls these APIs, the hook records which anti-bot or fingerprinting system is active.',
-        warning: 'Hooks only fire when the APIs are actually called by page scripts. Some sites cache fingerprint results, so use a hard reload (Ctrl+F5) to trigger detection again.',
-        tip: 'Specify the full API path (e.g., <code>HTMLCanvasElement.prototype.toDataURL</code>).'
-      },
-      'window': {
-        title: 'Window Properties Detection',
-        description: 'Detects JavaScript objects and properties added to the <code>window</code> object by anti-bot scripts. Checks for specific paths like <code>_cf_chl_opt</code> (Cloudflare), <code>grecaptcha</code> (reCAPTCHA), or <code>dataDomeOptions</code> (DataDome).',
-        warning: 'Window properties must exist at page load time. If scripts create properties asynchronously, detection may fail.',
-        tip: 'Use dot notation for nested properties (e.g., <code>navigator.webdriver</code> or <code>window._pxAppId</code>).'
-      },
-      'url': {
-        title: 'URL Pattern Detection',
-        description: 'Matches URLs of loaded resources (scripts, images, stylesheets, XHR requests). Detects CDN URLs, API endpoints, and third-party domains used by anti-bot services.',
-        warning: 'URL detection triggers on any matching resource. Use specific patterns to avoid false positives.',
-        tip: 'Enable "Regex" for flexible pattern matching (e.g., <code>cdn\\.example\\.com/.*\\.js</code>). Use "Whole Word" to match exact domains.'
-      },
-      'header': {
-        title: 'HTTP Header Detection',
-        description: 'Detects HTTP request and response headers set by anti-bot systems. Examples: <code>cf-ray</code> (Cloudflare), <code>x-datadome-headers</code> (DataDome), <code>x-akamai-*</code> (Akamai).',
-        warning: 'Only response headers are visible to the extension. Request headers sent by the browser cannot be detected.',
-        tip: 'Use Name/Value pairs for precise matching. Enable "Regex" on name to match header families (e.g., <code>x-akamai-.*</code>).'
-      },
-      'cookie': {
-        title: 'Cookie Detection',
-        description: 'Detects cookies set by anti-bot and fingerprinting systems. Examples: <code>__cf_bm</code> (Cloudflare), <code>_abck</code> (Akamai), <code>datadome</code> (DataDome).',
-        warning: 'HttpOnly cookies are not accessible to JavaScript and cannot be detected. Secure cookies require HTTPS.',
-        tip: 'Use Name/Value pairs: leave Value empty to match any cookie with that name. Enable "Regex" on name to match cookie families (e.g., <code>_px.*</code>).'
-      },
-      'content': {
-        title: 'Page Content Detection',
-        description: 'Searches for text patterns in page HTML, inline scripts, and loaded JavaScript files. Detects obfuscated code, specific function names, or unique strings used by anti-bot scripts.',
-        warning: 'Content detection can be slow on large pages. Use specific patterns and enable "Whole Word" to reduce false positives.',
-        tip: 'Search in "Scripts Only" scope for better performance. Use "Regex" for complex patterns (e.g., <code>function\\s+botDetect</code>).'
-      },
-      'dom': {
-        title: 'DOM Selector Detection',
-        description: 'Detects HTML elements using CSS selectors. Finds CAPTCHA containers, challenge pages, bot detection widgets, and invisible tracking elements.',
-        warning: 'DOM detection requires elements to exist in the page. Dynamically created elements may not be detected immediately.',
-        tip: 'Use specific selectors like <code>#captcha-container</code> or <code>.g-recaptcha</code>. Attribute selectors work too: <code>[data-sitekey]</code>.'
-      },
-      'payload': {
-        title: 'Request Payload Detection',
-        description: 'Monitors all HTTP POST/PUT/PATCH requests including main frame navigations, API calls (fetch/XHR), and background requests. Detects patterns in request payloads to identify anti-bot telemetry, form submissions, and sensor data.',
-        warning: 'Payload detection can generate many matches on data-heavy sites. Use specific patterns and enable "Case Sensitive" for accurate matching to reduce false positives.',
-        tip: 'Look for unique parameter names or obfuscated payload structures (e.g., <code>sensor_data</code>, <code>challenge_token</code>). Enable "Regex" for flexible pattern matching of JSON structures.'
-      }
-    };
-
-    const content = helpContent[methodType];
-    if (!content) {
-      return {
-        title: 'Detection Method',
-        html: `<p>No help content available for this method type.</p>`
-      };
-    }
-
-    return {
-      title: content.title,
-      html: `
-        <p>${content.description}</p>
-        ${content.warning ? `<p style="color: #fbbf24; margin-top: 12px;"><strong>⚠️ Warning:</strong> ${content.warning}</p>` : ''}
-        ${content.tip ? `<p style="color: #60a5fa; margin-top: 12px;"><strong>💡 Tip:</strong> ${content.tip}</p>` : ''}
-      `
-    };
-  }
-
-  /**
-   * Open method help modal
-   */
-  openMethodHelpModal(methodType) {
-    const modal = document.querySelector('#methodHelpModal');
-    const title = document.querySelector('#methodHelpTitle');
-    const content = document.querySelector('#methodHelpContent');
-
-    if (!modal || !title || !content) return;
-
-    // Get help content
-    const helpData = this.getMethodHelpContent(methodType);
-
-    // Update modal title and content
-    title.textContent = helpData.title;
-    content.innerHTML = helpData.html;
-
-    // Show modal
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  }
-
-  /**
-   * Close method help modal
-   */
-  closeMethodHelpModal() {
-    const modal = document.querySelector('#methodHelpModal');
-    if (modal) {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-    }
-  }
-
-  /**
-   * Open icon picker dialog
-   */
-  openIconPicker() {
-    // Remove any existing icon picker modal first (prevents stacking)
-    const existingModal = document.querySelector('.icon-picker-modal');
-    if (existingModal?.parentElement) {
-      existingModal.parentElement.remove();
-    }
-
-    // List of available icons
-    // Fingerprint SVG icons with blue styling
-    const fingerprintSvgIcons = {
-      'audio_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M8 6v12M4 9v6M16 6v12M20 9v6"/></svg>',
-      'battery_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M22 11v2"/><path d="M6 11v2M10 11v2M14 11v2"/></svg>',
-      'canvas_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 12h4l2-3 2 6 2-3h2"/></svg>',
-      'clipboard_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>',
-      'crypto_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>',
-      'css_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 3h16l-1.5 15L12 21l-6.5-3L4 3z"/><path d="M8 8h8M7 12h6"/></svg>',
-      'font_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>',
-      'gamepads_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="4"/><path d="M6 12h4M8 10v4"/><circle cx="17" cy="10" r="1"/><circle cx="15" cy="14" r="1"/></svg>',
-      'geolocation_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
-      'hardware_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 15h3M1 9h3M1 15h3"/></svg>',
-      'indexeddb_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',
-      'media_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M10 9l5 3-5 3z"/></svg>',
-      'navigator_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>',
-      'orientation_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M12 18h.01"/></svg>',
-      'performance_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
-      'screen_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
-      'storage_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>',
-      'timezone_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
-      'usb_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v10M7 7l5 5 5-5"/><circle cx="12" cy="16" r="2"/><path d="M12 18v4"/><path d="M6 12v3a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-3"/></svg>',
-      'webgl_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
-      'webrtc_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg>'
-    };
-
-    const availableIcons = [
-      // Official brand icons
-      'akamai_official.png',
-      'aws_official.png',
-      'cloudflare_official.png',
-      'datadome_official.png',
-      'f5_official.png',
-      'funcaptcha_official.png',
-      'geetest_official.png',
-      'hcaptcha_official.png',
-      'imperva_official.png',
-      'perimeterx_official.png',
-      'reblaze_official.png',
-      'recaptcha_official.png',
-      'shape_security_official.png',
-      'sucuri_official.png',
-      // Fingerprint icons
-      'audio_fingerprint.png',
-      'battery_fingerprint.png',
-      'canvas_fingerprint.png',
-      'clipboard_fingerprint.png',
-      'crypto_fingerprint.png',
-      'css_fingerprint.png',
-      'font_fingerprint.png',
-      'gamepads_fingerprint.png',
-      'geolocation_fingerprint.png',
-      'hardware_fingerprint.png',
-      'indexeddb_fingerprint.png',
-      'media_fingerprint.png',
-      'navigator_fingerprint.png',
-      'orientation_fingerprint.png',
-      'performance_fingerprint.png',
-      'screen_fingerprint.png',
-      'storage_fingerprint.png',
-      'timezone_fingerprint.png',
-      'usb_fingerprint.png',
-      'webgl_fingerprint.png',
-      'webrtc_fingerprint.png'
-    ];
-
-    // Helper to check if icon is fingerprint type
-    const isFingerprint = (icon) => icon.includes('_fingerprint.png');
-
-    // Create modal HTML with Default option first, then Custom, then others
-    const scrapflyIcon = chrome.runtime.getURL('icons/scrapfly.webp');
-    const modalHtml = `
-      <div class="icon-picker-modal" style="display:flex;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(2px);z-index:10000;align-items:center;justify-content:center;">
-        <div class="icon-picker-content" style="display:flex;flex-direction:column;position:relative;background:var(--bg-secondary);border-radius:12px;width:90%;max-width:520px;max-height:85vh;box-shadow:0 25px 50px rgba(0,0,0,0.6);border:1px solid var(--border);overflow:hidden;">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);">
-            <h3 style="margin:0;font-size:16px;font-weight:600;color:var(--text-primary);">Choose Icon</h3>
-            <button class="icon-picker-close" aria-label="Close icon picker" style="width:28px;height:28px;border:none;border-radius:6px;background:rgba(239,68,68,0.15);color:#ef4444;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s ease;font-size:14px;line-height:1;">
-              ✕
-            </button>
-          </div>
-          <div style="flex:1;overflow:auto;padding:16px;">
-            <div class="icon-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:10px;">
-              ${[
-                { icon: 'default', label: 'Default', image: scrapflyIcon, special: true, className: 'icon-option icon-option-default icon-option-special', imgSize: 40, isFingerprint: false },
-                ...availableIcons.map(icon => ({ icon, label: icon.replace('_official.png', '').replace('_fingerprint.png', '').replace('.png', ''), image: chrome.runtime.getURL('detectors/icons/' + icon), special: false, className: 'icon-option', imgSize: 36, isFingerprint: isFingerprint(icon), svg: fingerprintSvgIcons[icon] }))
-              ].map(({ icon, label, image, special, className, imgSize, isFingerprint: isFp, svg }) => `
-                <div class="${className}" data-icon="${icon}" style="cursor:pointer;padding:8px;border:2px solid ${special ? 'var(--accent)' : 'var(--border)'};border-radius:8px;text-align:center;transition:all 0.15s ease;background:${special ? 'rgba(59,130,246,0.15)' : 'var(--bg-secondary)'};">
-                  ${isFp ? `<div style="width:${imgSize}px;height:${imgSize}px;margin:0 auto 4px;border-radius:50%;background:linear-gradient(135deg,#3b82f6 0%,#60a5fa 100%);display:flex;align-items:center;justify-content:center;color:white;">${svg.replace('viewBox', 'style="width:20px;height:20px;" viewBox')}</div>` : `<img src="${image}" style="width:${imgSize}px;height:${imgSize}px;object-fit:contain;margin-bottom:4px;" />`}
-                  <div style="font-size:9px;color:var(--text-muted);word-break:break-word;text-transform:capitalize;line-height:1.2;">${label}</div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-          <div style="display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border);background:var(--bg-secondary);">
-            <button id="uploadCustomIcon" style="flex:1;padding:8px 12px;background:var(--accent, #3b82f6);color:white;border:none;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity 0.2s;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              Upload Custom
-            </button>
-            <button id="cancelIconPicker" style="padding:8px 16px;background:var(--bg-tertiary);color:var(--text-secondary);border:1px solid var(--border);border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;">
-              Cancel
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-
-    // Add modal to page
-    const modalContainer = document.createElement('div');
-    modalContainer.innerHTML = modalHtml;
-    document.body.appendChild(modalContainer);
-
-    // Add hover effects and click handlers
-    const iconOptions = modalContainer.querySelectorAll('.icon-option');
-    iconOptions.forEach(option => {
-      const isDefault = option.classList.contains('icon-option-default');
-      const isSpecial = isDefault;
-
-      option.addEventListener('mouseenter', () => {
-        option.style.borderColor = 'var(--accent)';
-        if (!isSpecial) {
-          option.style.background = 'rgba(255,255,255,0.05)';
-        }
-      });
-      option.addEventListener('mouseleave', () => {
-        option.style.borderColor = isSpecial ? 'var(--accent)' : 'rgba(255,255,255,0.06)';
-        if (!isSpecial) {
-          option.style.background = 'rgba(255,255,255,0.02)';
-        }
-      });
-      option.addEventListener('click', () => {
-        const iconName = option.dataset.icon;
-
-        if (iconName === 'default') {
-          // Handle default icon - set to null or 'default'
-          this.selectIcon('default');
-          document.body.removeChild(modalContainer);
-        } else {
-          // Handle regular icon selection
-          this.selectIcon(iconName);
-          document.body.removeChild(modalContainer);
-        }
-      });
-    });
-
-    // Upload custom icon button
-    const uploadBtn = modalContainer.querySelector('#uploadCustomIcon');
-    uploadBtn.addEventListener('click', () => {
-      document.body.removeChild(modalContainer);
-      this.uploadCustomIcon();
-    });
-
-    // Cancel button
-    const cancelBtn = modalContainer.querySelector('#cancelIconPicker');
-    cancelBtn.addEventListener('click', () => {
-      document.body.removeChild(modalContainer);
-    });
-
-    // Close on backdrop click
-    const modal = modalContainer.querySelector('.icon-picker-modal');
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        document.body.removeChild(modalContainer);
-      }
-    });
-
-    // Close button with hover effects
-    const closeBtn = modalContainer.querySelector('.icon-picker-close');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => {
-        document.body.removeChild(modalContainer);
-      });
-      closeBtn.addEventListener('mouseenter', () => {
-        closeBtn.style.background = '#ef4444';
-        closeBtn.style.color = 'white';
-        closeBtn.style.transform = 'scale(1.05)';
-      });
-      closeBtn.addEventListener('mouseleave', () => {
-        closeBtn.style.background = 'rgba(239, 68, 68, 0.15)';
-        closeBtn.style.color = '#ef4444';
-        closeBtn.style.transform = 'scale(1)';
-      });
-    }
-  }
-
-  /**
-   * Select an icon from the available icons
-   */
-  selectIcon(iconName) {
-    // Update current icon display in modal
-    const currentIcon = document.querySelector('#currentDetectorIcon');
-    if (currentIcon) {
-      if (iconName === 'default') {
-        // Use Scrapfly icon for default
-        currentIcon.src = chrome.runtime.getURL('icons/scrapfly.webp');
-      } else {
-        currentIcon.src = chrome.runtime.getURL('detectors/icons/' + iconName);
-      }
-    }
-
-    // Store the icon in the detector
-    if (this.currentEditDetector) {
-      if (iconName === 'default') {
-        // Set icon to 'default' or remove it entirely
-        this.currentEditDetector.detector.icon = 'default';
-      } else {
-        this.currentEditDetector.detector.icon = iconName;
-      }
-      // Remove custom icon if one was set
-      delete this.currentEditDetector.detector.customIcon;
-      delete this.currentEditDetector.customIcon;
-    }
-  }
-
-  /**
-   * Upload a custom icon file
-   */
-  uploadCustomIcon() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-
-    input.onchange = async (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        // Check file size (limit to 100KB)
-        if (file.size > 100 * 1024) {
-          NotificationHelper.error('Icon file size must be less than 100KB');
-          return;
-        }
-
-        // Read file as data URL
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const dataUrl = event.target.result;
-
-          // Update current icon display in modal
-          const currentIcon = document.querySelector('#currentDetectorIcon');
-          if (currentIcon) {
-            currentIcon.src = dataUrl;
-          }
-
-          // Store the new icon data URL in the detector
-          if (this.currentEditDetector) {
-            this.currentEditDetector.customIcon = dataUrl;
-            this.currentEditDetector.detector.customIcon = dataUrl;
-          }
-        };
-        reader.readAsDataURL(file);
-      }
-    };
-
-    input.click();
-  }
+  // Helper modals (DOM, Condition, Window, Regex, WholeWord, CaseSensitive) are in helpers/helper-modals.js
+  // Explanation modals (Regex, WholeWord, CaseSensitive, Method Help) are in modals/explanation-modals.js
+  // Icon picker methods (openIconPicker, selectIcon, uploadCustomIcon) are in modals/icon-picker-modal.js
 
   /**
    * Save method settings from modal to method item
@@ -2335,9 +1135,18 @@ class Rules {
     const checkScripts = document.querySelector('#checkScripts')?.checked || false; // Default: false (entire page)
 
     // Get scope values from modal
-    const nameScope = document.querySelector('#nameScope')?.value || '';
-    const valueScope = document.querySelector('#valueScope')?.value || '';
+    let nameScope = document.querySelector('#nameScope')?.value || '';
+    let valueScope = document.querySelector('#valueScope')?.value || '';
     const textScope = document.querySelector('#textScope')?.value || 'all';
+
+    const methodType = this.currentMethodItem.dataset.methodType;
+    if (methodType === 'header') {
+      nameScope = normalizeCookieHeaderScope(nameScope, 'response');
+      valueScope = normalizeCookieHeaderScope(valueScope, 'response');
+    } else if (methodType === 'cookie') {
+      nameScope = normalizeCookieHeaderScope(nameScope, 'request');
+      valueScope = normalizeCookieHeaderScope(valueScope, 'request');
+    }
 
     // Get payload-specific values from modal
     const payloadUrlPattern = document.querySelector('#payloadUrlPattern')?.value || '';
@@ -2377,23 +1186,33 @@ class Rules {
     this.currentMethodItem.dataset.payloadMethods = payloadMethods;
 
     // Add visual indicator if settings are configured
-    const settingsBtn = this.currentMethodItem.querySelector('.method-action-btn.settings');
-    if (settingsBtn) {
-      // Get method type to check if content search scope settings apply
-      const methodType = this.currentMethodItem.dataset.methodType;
+    // Get method type to check if content search scope settings apply
 
-      // Don't consider confidence alone as a custom setting for the visual indicator
-      const hasCustomSettings = nameRegex || nameWholeWord || nameCaseSensitive ||
-        valueRegex || valueWholeWord || valueCaseSensitive ||
-        (methodType === 'content' && checkScripts === true)
+    // Update visual indicators for both name and value settings buttons
+    const nameSettingsBtn = this.currentMethodItem.querySelector('.field-actions[data-field-type="name"] .method-action-btn.settings');
+    const valueSettingsBtn = this.currentMethodItem.querySelector('.field-actions[data-field-type="value"] .method-action-btn.settings');
 
-      if (hasCustomSettings) {
-        settingsBtn.classList.add('has-custom-settings');
+    // Check if name or value have custom settings
+    const hasNameCustomSettings = nameRegex || nameWholeWord || nameCaseSensitive ||
+      (methodType === 'content' && checkScripts === true);
+    const hasValueCustomSettings = valueRegex || valueWholeWord || valueCaseSensitive;
+
+    if (nameSettingsBtn) {
+      if (hasNameCustomSettings) {
+        nameSettingsBtn.classList.add('has-custom-settings');
       } else {
-        settingsBtn.classList.remove('has-custom-settings');
+        nameSettingsBtn.classList.remove('has-custom-settings');
       }
-      // Always show confidence in tooltip
-      settingsBtn.title = `Settings (Confidence: ${confidence}%)`;
+      nameSettingsBtn.title = `Name Settings (Confidence: ${confidence}%)`;
+    }
+
+    if (valueSettingsBtn) {
+      if (hasValueCustomSettings) {
+        valueSettingsBtn.classList.add('has-custom-settings');
+      } else {
+        valueSettingsBtn.classList.remove('has-custom-settings');
+      }
+      valueSettingsBtn.title = `Value Settings`;
     }
 
     // Update input indicators
@@ -2446,6 +1265,10 @@ class Rules {
     // Populate modal with detector data (now currentEditDetector is available)
     this.populateModalData(detectorWithDetection);
 
+    // Store snapshot of detection AFTER populating form (includes defaults from form)
+    // This ensures comparison matches what save will produce
+    this.currentEditDetector.originalDetection = this._collectDetectionFromForm();
+
     // Show modal
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden'; // Prevent background scrolling
@@ -2461,6 +1284,132 @@ class Rules {
       document.body.style.overflow = ''; // Restore scrolling
       this.currentEditDetector = null;
     }
+  }
+
+  /**
+   * Collect detection methods from the form
+   * Used to capture original state for change detection
+   * @returns {object} Detection methods object
+   */
+  _collectDetectionFromForm() {
+    const methodsContainer = document.querySelector('#detectionMethodsContainer');
+    if (!methodsContainer) return {};
+
+    const detectionMethods = {};
+    const methodSections = methodsContainer.querySelectorAll('.method-section');
+
+    methodSections.forEach(section => {
+      const methodTitle = section.querySelector('.method-title')?.textContent.toLowerCase();
+      if (!methodTitle) return;
+
+      // Map display titles to detector data keys
+      let methodType = methodTitle;
+      if (methodTitle === 'js hooks') {
+        methodType = 'js_hooks';
+      }
+
+      const methods = [];
+      const methodItems = section.querySelectorAll('.method-item');
+
+      methodItems.forEach(item => {
+        const nameInput = item.querySelector('.method-name');
+        const valueInput = item.querySelector('.method-value');
+
+        const hasName = nameInput && nameInput.value.trim();
+
+        if (hasName) {
+          let methodData = {
+            confidence: parseInt(item.dataset.confidence || '100'),
+          };
+
+          // Structure data based on method type
+          if (methodType === 'header' || methodType === 'cookie') {
+            methodData.name = nameInput.value;
+            if (valueInput?.value) {
+              methodData.value = valueInput.value;
+            }
+          } else if (methodType === 'url' || methodType === 'content' || methodType === 'payload') {
+            methodData.text = nameInput.value;
+            if (valueInput?.value) {
+              methodData.description = valueInput.value;
+            }
+          } else if (methodType === 'dom') {
+            methodData.selector = nameInput.value;
+            if (valueInput?.value) {
+              methodData.description = valueInput.value;
+            }
+          } else if (methodType === 'js_hooks') {
+            methodData.target = nameInput.value;
+            if (valueInput?.value) {
+              methodData.description = valueInput.value;
+            }
+          } else if (methodType === 'window') {
+            methodData.path = nameInput.value;
+            methodData.condition = valueInput?.value || 'exists';
+          }
+
+          // Add optional pattern settings based on method type
+          if (methodType === 'header' || methodType === 'cookie') {
+            if (item.dataset.nameRegex === 'true') methodData.nameRegex = true;
+            if (item.dataset.nameWholeword === 'true') methodData.nameWholeWord = true;
+            if (item.dataset.nameCase === 'true') methodData.nameCaseSensitive = true;
+            if (item.dataset.valueRegex === 'true') methodData.valueRegex = true;
+            if (item.dataset.valueWholeword === 'true') methodData.valueWholeWord = true;
+            if (item.dataset.valueCase === 'true') methodData.valueCaseSensitive = true;
+          } else if (methodType === 'url' || methodType === 'content' || methodType === 'payload') {
+            if (item.dataset.nameRegex === 'true') methodData.textRegex = true;
+            if (item.dataset.nameWholeword === 'true') methodData.textWholeWord = true;
+            if (item.dataset.nameCase === 'true') methodData.textCaseSensitive = true;
+          } else if (methodType === 'dom') {
+            if (item.dataset.nameRegex === 'true') methodData.selectorRegex = true;
+            if (item.dataset.nameWholeword === 'true') methodData.selectorWholeWord = true;
+            if (item.dataset.nameCase === 'true') methodData.selectorCaseSensitive = true;
+          }
+
+          // Content scope settings
+          if (item.dataset.checkScripts === 'true') {
+            methodData.checkScripts = true;
+          }
+
+          // Save scope settings based on method type
+          if (methodType === 'header') {
+            methodData.nameScope = normalizeCookieHeaderScope(item.dataset.nameScope || 'response', 'response');
+            methodData.valueScope = normalizeCookieHeaderScope(item.dataset.valueScope || 'response', 'response');
+          } else if (methodType === 'cookie') {
+            methodData.nameScope = normalizeCookieHeaderScope(item.dataset.nameScope || 'request', 'request');
+            methodData.valueScope = normalizeCookieHeaderScope(item.dataset.valueScope || 'request', 'request');
+          } else if (methodType === 'url') {
+            methodData.textScope = item.dataset.textScope || 'all';
+          }
+
+          // Save payload-specific settings
+          if (methodType === 'payload') {
+            const urlPattern = item.dataset.payloadUrlPattern || '';
+            if (urlPattern) {
+              methodData.urlPattern = urlPattern;
+              if (item.dataset.payloadUrlRegex === 'true') {
+                methodData.urlRegex = true;
+              }
+              if (item.dataset.payloadUrlCaseSensitive === 'true') {
+                methodData.urlCaseSensitive = true;
+              }
+            }
+            const methodsList = item.dataset.payloadMethods || '';
+            if (methodsList) {
+              methodData.methods = methodsList.split(',').filter(m => m.trim());
+            }
+          }
+
+          methods.push(methodData);
+        }
+      });
+
+      if (methods.length > 0) {
+        detectionMethods[methodType] = methods;
+      }
+    });
+
+    return detectionMethods;
   }
 
   /**
@@ -2552,20 +1501,11 @@ class Rules {
     if (authorInput) {
       // Set value (default to 'scrapfly' for new detectors)
       authorInput.value = detector.author || 'scrapfly';
-
-      // Make read-only for official scrapfly detectors
-      if (detector.author === 'scrapfly') {
-        authorInput.setAttribute('readonly', 'readonly');
-        authorInput.classList.add('readonly-field');
-        if (authorHelp) {
-          authorHelp.textContent = 'Official Scrapfly detector (read-only)';
-        }
-      } else {
-        authorInput.removeAttribute('readonly');
-        authorInput.classList.remove('readonly-field');
-        if (authorHelp) {
-          authorHelp.textContent = 'Who created this detector';
-        }
+      // Always allow editing author
+      authorInput.removeAttribute('readonly');
+      authorInput.classList.remove('readonly-field');
+      if (authorHelp) {
+        authorHelp.textContent = 'Who created this detector';
       }
     }
 
@@ -2660,10 +1600,20 @@ class Rules {
             <button class="method-help-btn" type="button" data-method-help="${methodType}" title="${helpButtonTitle}">?</button>
           `;
 
+      // Count patterns for this method type
+      const patternCount = Array.isArray(methodsData) ? methodsData.length : 0;
+      const patternCountText = patternCount === 1 ? '1 pattern' : `${patternCount} patterns`;
+
       methodsHtml += `
-        <div class="method-section">
+        <div class="method-section collapsed">
           <div class="method-header">
-            <div class="method-title" style="background: rgba(${methodR}, ${methodG}, ${methodB}, 0.2); color: ${backgroundColor}; border: 1px solid rgba(${methodR}, ${methodG}, ${methodB}, 0.35); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; display: inline-block;">${displayName}</div>
+            <div class="method-header-left">
+              <svg class="method-collapse-icon" width="16" height="16" viewBox="0 0 24 24">
+                <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" fill="currentColor"/>
+              </svg>
+              <div class="method-title" style="background: rgba(${methodR}, ${methodG}, ${methodB}, 0.2); color: ${backgroundColor}; border: 1px solid rgba(${methodR}, ${methodG}, ${methodB}, 0.35); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; display: inline-block;">${displayName}</div>
+            </div>
+            <span class="method-pattern-count">${patternCountText}</span>
             ${methodHelper}
           </div>
           <div class="method-items">
@@ -2692,7 +1642,7 @@ class Rules {
               value = method.description || '';
             } else if (methodType === 'window') {
               name = method.path || '';
-              value = method.condition || '';
+              value = method.condition || 'exists';
             }
 
             const confidence = method.confidence || 100;
@@ -2727,11 +1677,11 @@ class Rules {
             let textScope = 'all';
 
             if (methodType === 'header') {
-              nameScope = method.nameScope || 'response';
-              valueScope = method.valueScope || 'response';
+              nameScope = normalizeCookieHeaderScope(method.nameScope || 'response', 'response');
+              valueScope = normalizeCookieHeaderScope(method.valueScope || 'response', 'response');
             } else if (methodType === 'cookie') {
-              nameScope = method.nameScope || 'request';
-              valueScope = method.valueScope || 'request';
+              nameScope = normalizeCookieHeaderScope(method.nameScope || 'request', 'request');
+              valueScope = normalizeCookieHeaderScope(method.valueScope || 'request', 'request');
             } else if (methodType === 'url') {
               textScope = method.textScope || 'all';
             }
@@ -2778,11 +1728,15 @@ class Rules {
             }
             else if (methodType === 'payload') inputPlaceholder = 'Text (e.g., sensor_data, challenge_token)';
 
-            // Check if any non-default settings are enabled
-            // Don't consider imported confidence values as custom settings, only user-modified pattern options
-            const hasCustomSettings = nameRegex || nameWholeWord || nameCaseSensitive ||
-                                      valueRegex || valueWholeWord || valueCaseSensitive ||
-                                      (methodType === 'content' && checkScripts === true);
+            // Check if name and value have custom settings separately
+            const hasNameCustomSettings = nameRegex || nameWholeWord || nameCaseSensitive ||
+                                          (methodType === 'content' && checkScripts === true);
+            const hasValueCustomSettings = valueRegex || valueWholeWord || valueCaseSensitive;
+
+            const windowConditionDropdown = methodType === 'window'
+              ? this.renderInlineConditionDropdown(value, methodType, index)
+              : '';
+            const showValueRow = !isSingleInput && (methodType === 'window' || value);
 
             methodsHtml += `
               <div class="method-item"
@@ -2808,35 +1762,56 @@ class Rules {
                         <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="${name}" data-method-key="${methodType}" data-item-index="${index}">
                         ${methodType === 'dom' ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="${index}">?</button>` : ''}
                         ${methodType === 'window' ? `<button class="window-helper-btn" title="Window Property Examples" data-input-index="${index}">?</button>` : ''}
+                        <div class="field-actions" data-field-type="name">
+                          ${methodType !== 'js_hooks' ? `
+                          <button class="method-action-btn settings ${hasNameCustomSettings ? 'has-custom-settings' : ''}" title="Name Settings">
+                            <svg width="14" height="14" viewBox="0 0 24 24">
+                              <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+                            </svg>
+                          </button>
+                          ` : ''}
+                          <button class="method-action-btn delete" title="Delete Method">
+                            <svg width="14" height="14" viewBox="0 0 24 24">
+                              <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
+                            </svg>
+                          </button>
+                        </div>
                       </div>
                       <div class="input-badges-row">
                         <div class="input-indicators" data-for="name-${methodType}-${index}"></div>
                       </div>
                     </div>
                     ${!isSingleInput ? `
-                    <div class="input-with-indicators">
+                    <div class="input-with-indicators value-field-container" style="display: ${showValueRow ? 'flex' : 'none'}">
                       <div class="input-row">
-                        <input type="text" class="method-input method-value" placeholder="${valuePlaceholder}" value="${value}" data-method-key="${methodType}" data-item-index="${index}">
+                        ${methodType === 'window'
+                          ? windowConditionDropdown
+                          : `<input type="text" class="method-input method-value" placeholder="${valuePlaceholder}" value="${value}" data-method-key="${methodType}" data-item-index="${index}">`
+                        }
+                        <div class="field-actions" data-field-type="value">
+                          <button class="method-action-btn settings ${hasValueCustomSettings ? 'has-custom-settings' : ''}" title="Value Settings">
+                            <svg width="14" height="14" viewBox="0 0 24 24">
+                              <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+                            </svg>
+                          </button>
+                          <button class="method-action-btn delete" title="Clear Value">
+                            <svg width="14" height="14" viewBox="0 0 24 24">
+                              <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
+                            </svg>
+                          </button>
+                        </div>
                       </div>
                       <div class="input-badges-row">
                         <div class="input-indicators" data-for="value-${methodType}-${index}"></div>
                       </div>
                     </div>
-                    ` : ''}
-                  </div>
-                  <div class="method-item-actions">
-                    ${methodType !== 'js_hooks' ? `
-                    <button class="method-action-btn settings ${hasCustomSettings ? 'has-custom-settings' : ''}" title="Settings">
-                      <svg width="14" height="14" viewBox="0 0 24 24">
-                        <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+                    <button class="add-value-btn" style="display: ${showValueRow ? 'none' : 'flex'}" data-method-key="${methodType}" data-item-index="${index}">
+                      <svg width="12" height="12" viewBox="0 0 24 24">
+                        <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
                       </svg>
+                      Add Value
                     </button>
                     ` : ''}
-                    <button class="method-action-btn delete" title="Delete">
-                      <svg width="14" height="14" viewBox="0 0 24 24">
-                        <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
-                      </svg>
-                    </button>
                   </div>
                 </div>
               </div>
@@ -2885,9 +1860,11 @@ class Rules {
       }
 
       if (valueInput) {
-        valueInput.addEventListener('input', () => {
+        const updateHandler = () => {
           this.updateMethodIndicators(item);
-        });
+        };
+        valueInput.addEventListener('input', updateHandler);
+        valueInput.addEventListener('change', updateHandler);
       }
     });
   }
@@ -2906,7 +1883,8 @@ class Rules {
 
     const itemIndex = `new-${Date.now()}`;
 
-    const singleInputTypes = ['urls', 'url', 'content', 'dom', 'js_hooks', 'payload'];
+    // Note: window, header, cookie are dual-input types (name + value/condition)
+    const singleInputTypes = ['url', 'content', 'dom', 'js_hooks', 'payload'];
     const isSingleInput = singleInputTypes.includes(methodKey);
     const isDom = methodKey === 'dom';
     const isWindow = methodKey === 'window';
@@ -2922,6 +1900,9 @@ class Rules {
       valuePlaceholder = 'Condition (e.g., typeof object, typeof function)';
     }
     else if (methodKey === 'payload') inputPlaceholder = 'Text (e.g., sensor_data, challenge_token)';
+
+    const windowConditionDropdown = isWindow ? this.renderInlineConditionDropdown('exists', methodKey, itemIndex) : '';
+    const showValueRow = isWindow;
 
     const newMethodHtml = `
       <div class="method-item"
@@ -2943,35 +1924,56 @@ class Rules {
                 <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="" data-method-key="${methodKey}" data-item-index="${itemIndex}">
                 ${isDom ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="${itemIndex}">?</button>` : ''}
                 ${isWindow ? `<button class="window-helper-btn" title="Window Property Examples" data-input-index="${itemIndex}">?</button>` : ''}
+                <div class="field-actions" data-field-type="name">
+                  ${methodKey !== 'js_hooks' ? `
+                  <button class="method-action-btn settings" title="Name Settings">
+                    <svg width="14" height="14" viewBox="0 0 24 24">
+                      <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+                    </svg>
+                  </button>
+                  ` : ''}
+                  <button class="method-action-btn delete" title="Delete Method">
+                    <svg width="14" height="14" viewBox="0 0 24 24">
+                      <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
+                    </svg>
+                  </button>
+                </div>
               </div>
               <div class="input-badges-row">
                 <div class="input-indicators" data-for="name-${methodKey}-${itemIndex}"></div>
               </div>
             </div>
-            ${!isSingleInput || isWindow ? `
-            <div class="input-with-indicators">
+            ${!isSingleInput ? `
+            <div class="input-with-indicators value-field-container" style="display: ${showValueRow ? 'flex' : 'none'}">
               <div class="input-row">
-                <input type="text" class="method-input method-value" placeholder="${valuePlaceholder}" value="" data-method-key="${methodKey}" data-item-index="${itemIndex}">
+                    ${isWindow
+                      ? windowConditionDropdown
+                      : `<input type="text" class="method-input method-value" placeholder="${valuePlaceholder}" value="" data-method-key="${methodKey}" data-item-index="${itemIndex}">`
+                    }
+                    <div class="field-actions" data-field-type="value">
+                  <button class="method-action-btn settings" title="Value Settings">
+                    <svg width="14" height="14" viewBox="0 0 24 24">
+                      <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+                    </svg>
+                  </button>
+                  <button class="method-action-btn delete" title="Clear Value">
+                    <svg width="14" height="14" viewBox="0 0 24 24">
+                      <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
+                    </svg>
+                  </button>
+                </div>
               </div>
               <div class="input-badges-row">
                 <div class="input-indicators" data-for="value-${methodKey}-${itemIndex}"></div>
               </div>
             </div>
-            ` : ''}
-          </div>
-          <div class="method-item-actions">
-            ${methodKey !== 'js_hooks' ? `
-            <button class="method-action-btn settings" title="Settings">
-              <svg width="14" height="14" viewBox="0 0 24 24">
-                <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+            <button class="add-value-btn" style="display: ${showValueRow ? 'none' : 'flex'}" data-method-key="${methodKey}" data-item-index="${itemIndex}">
+              <svg width="12" height="12" viewBox="0 0 24 24">
+                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
               </svg>
+              Add Value
             </button>
             ` : ''}
-            <button class="method-action-btn delete" title="Delete">
-              <svg width="14" height="14" viewBox="0 0 24 24">
-                <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
-              </svg>
-            </button>
           </div>
         </div>
       </div>
@@ -2992,14 +1994,20 @@ class Rules {
     if (!methodType) return;
 
     const methodKey = methodType.toLowerCase();
-    const singleInputTypes = ['urls', 'url', 'content', 'dom'];
+    // Note: window, header, cookie are dual-input types (name + value/condition)
+    const singleInputTypes = ['url', 'content', 'dom', 'js_hooks', 'payload'];
     const isSingleInput = singleInputTypes.includes(methodKey);
     const isDom = methodKey === 'dom';
+    const isWindow = methodKey === 'window';
 
     let inputPlaceholder = 'Name';
     if (methodKey === 'dom') inputPlaceholder = 'CSS Selector (e.g., .class, #id, [attr])';
     else if (methodKey === 'content') inputPlaceholder = 'Text/Word to search';
     else if (methodKey === 'urls' || methodKey === 'url') inputPlaceholder = 'URL Pattern';
+    else if (methodKey === 'window') inputPlaceholder = 'Window Path (e.g., grecaptcha, _cf_chl_opt)';
+
+    const windowConditionDropdown = isWindow ? this.renderInlineConditionDropdown('exists', methodKey, 'new') : '';
+    const showValueRow = isWindow;
 
     const newSectionHtml = `
       <div class="method-section">
@@ -3021,33 +2029,55 @@ class Rules {
                   <div class="input-row">
                     <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="" data-method-key="${methodKey}" data-item-index="new">
                     ${isDom ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="new">?</button>` : ''}
+                    ${isWindow ? `<button class="window-helper-btn" title="Window Property Examples" data-input-index="new">?</button>` : ''}
+                    <div class="field-actions" data-field-type="name">
+                      <button class="method-action-btn settings" title="Name Settings">
+                        <svg width="14" height="14" viewBox="0 0 24 24">
+                          <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+                        </svg>
+                      </button>
+                      <button class="method-action-btn delete" title="Delete Method">
+                        <svg width="14" height="14" viewBox="0 0 24 24">
+                          <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                   <div class="input-badges-row">
                     <div class="input-indicators" data-for="name-${methodKey}-new"></div>
                   </div>
                 </div>
                 ${!isSingleInput ? `
-                <div class="input-with-indicators">
+                <div class="input-with-indicators value-field-container" style="display: ${showValueRow ? 'flex' : 'none'}">
                   <div class="input-row">
-                    <input type="text" class="method-input method-value" placeholder="Value (optional)" value="" data-method-key="${methodKey}" data-item-index="new">
+                    ${isWindow
+                      ? windowConditionDropdown
+                      : `<input type="text" class="method-input method-value" placeholder="Value (optional)" value="" data-method-key="${methodKey}" data-item-index="new">`
+                    }
+                    <div class="field-actions" data-field-type="value">
+                      <button class="method-action-btn settings" title="Value Settings">
+                        <svg width="14" height="14" viewBox="0 0 24 24">
+                          <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+                        </svg>
+                      </button>
+                      <button class="method-action-btn delete" title="Clear Value">
+                        <svg width="14" height="14" viewBox="0 0 24 24">
+                          <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
+                        </svg>
+                      </button>
+                    </div>
                   </div>
-                  <div class="input-badges-row">
-                    <div class="input-indicators" data-for="value-${methodKey}-new"></div>
-                  </div>
+                <div class="input-badges-row">
+                  <div class="input-indicators" data-for="value-${methodKey}-new"></div>
                 </div>
-                ` : ''}
               </div>
-              <div class="method-item-actions">
-                <button class="method-action-btn settings" title="Settings">
-                  <svg width="14" height="14" viewBox="0 0 24 24">
-                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+                <button class="add-value-btn" style="display: ${showValueRow ? 'none' : 'flex'}" data-method-key="${methodKey}" data-item-index="new">
+                  <svg width="12" height="12" viewBox="0 0 24 24">
+                    <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
                   </svg>
+                  Add Value
                 </button>
-                <button class="method-action-btn delete" title="Delete">
-                  <svg width="14" height="14" viewBox="0 0 24 24">
-                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
-                  </svg>
-                </button>
+                ` : ''}
               </div>
             </div>
           </div>
@@ -3210,11 +2240,11 @@ class Rules {
 
             // Save scope settings based on method type
             if (methodType === 'header') {
-              methodData.nameScope = item.dataset.nameScope || 'response';
-              methodData.valueScope = item.dataset.valueScope || 'response';
+              methodData.nameScope = normalizeCookieHeaderScope(item.dataset.nameScope || 'response', 'response');
+              methodData.valueScope = normalizeCookieHeaderScope(item.dataset.valueScope || 'response', 'response');
             } else if (methodType === 'cookie') {
-              methodData.nameScope = item.dataset.nameScope || 'request';
-              methodData.valueScope = item.dataset.valueScope || 'request';
+              methodData.nameScope = normalizeCookieHeaderScope(item.dataset.nameScope || 'request', 'request');
+              methodData.valueScope = normalizeCookieHeaderScope(item.dataset.valueScope || 'request', 'request');
             } else if (methodType === 'url') {
               methodData.textScope = item.dataset.textScope || 'all';
             }
@@ -3272,17 +2302,26 @@ class Rules {
     // Update lastUpdated timestamp
     this.currentEditDetector.detector.lastUpdated = timestamp;
 
-    // Auto-increment version (1.0 → 1.1 → 1.2, etc.)
+    // Auto-increment version (1.0 → 1.1 → 1.2, etc.) - only if changes were made
     if (this.currentEditDetector.isNew) {
       // New detector starts at version 1.0
       this.currentEditDetector.detector.version = '1.0';
     } else {
-      // Increment existing version
-      const currentVersion = this.currentEditDetector.detector.version || '1.0';
-      const versionNum = parseFloat(currentVersion) || 1.0;
-      const newVersion = (versionNum + 0.1).toFixed(1);
-      this.currentEditDetector.detector.version = newVersion;
-      Logger.ui(`Version incremented: ${currentVersion} → ${newVersion}`);
+      // Check if detection methods actually changed
+      const originalDetection = this.currentEditDetector.originalDetection || {};
+      const currentDetection = this.currentEditDetector.detector.detection || {};
+      const hasChanges = JSON.stringify(originalDetection) !== JSON.stringify(currentDetection);
+
+      if (hasChanges) {
+        // Increment existing version only if changes were made
+        const currentVersion = this.currentEditDetector.detector.version || '1.0';
+        const versionNum = parseFloat(currentVersion) || 1.0;
+        const newVersion = (versionNum + 0.1).toFixed(1);
+        this.currentEditDetector.detector.version = newVersion;
+        Logger.ui(`Version incremented: ${currentVersion} → ${newVersion}`);
+      } else {
+        Logger.ui('No changes detected, version unchanged');
+      }
     }
 
     // Handle new detector
@@ -4036,116 +3075,7 @@ class Rules {
     }
   }
 
-  /**
-   * Handle Update button click
-   * If updates are pending, apply them. Otherwise check for new updates.
-   */
-  async handleCheckUpdates() {
-    const btn = document.querySelector('#checkUpdatesBtn');
-    const btnText = document.querySelector('#checkUpdatesBtnText');
-
-    if (!btn || typeof UpdateManager === 'undefined') {
-      Logger.warn('UI', 'UpdateManager not available');
-      return;
-    }
-
-    // Check if there are pending updates to apply
-    const pendingCount = await UpdateManager.getPendingUpdatesCount();
-
-    if (pendingCount > 0) {
-      // Apply pending updates directly
-      btn.classList.add('checking');
-      if (btnText) btnText.textContent = 'Updating...';
-
-      try {
-        const result = await UpdateManager.applyUpdates();
-
-        if (result.success && result.count > 0) {
-          this.updateUpdatesBadge(0);
-          if (typeof NotificationManager !== 'undefined') {
-            NotificationManager.showNotification(
-              `${result.count} detector${result.count > 1 ? 's' : ''} updated`,
-              'success'
-            );
-          }
-          await this.loadDetectors();
-        } else if (result.failed > 0 && result.count === 0) {
-          this.updateUpdatesBadge(0);
-          if (typeof NotificationManager !== 'undefined') {
-            NotificationManager.showNotification(
-              `Could not fetch updates from server`,
-              'warning'
-            );
-          }
-        } else {
-          this.updateUpdatesBadge(0);
-        }
-      } catch (error) {
-        Logger.error('UI', 'Error applying updates', error);
-        if (typeof NotificationManager !== 'undefined') {
-          NotificationManager.showNotification('Error applying updates', 'error');
-        }
-      } finally {
-        btn.classList.remove('checking');
-        if (btnText) btnText.textContent = 'Update';
-      }
-    } else {
-      // Check for new updates
-      btn.classList.add('checking');
-      if (btnText) btnText.textContent = 'Checking...';
-
-      try {
-        const result = await UpdateManager.checkForUpdates(true);
-
-        if (result.error) {
-          if (typeof NotificationManager !== 'undefined') {
-            NotificationManager.showNotification('Failed to check for updates', 'error');
-          }
-        } else if (result.available && result.updates.length > 0) {
-          this.updateUpdatesBadge(result.updates.length);
-          if (typeof NotificationManager !== 'undefined') {
-            NotificationManager.showNotification(
-              `${result.updates.length} update${result.updates.length > 1 ? 's' : ''} available - click again to apply`,
-              'info'
-            );
-          }
-        } else {
-          this.updateUpdatesBadge(0);
-          if (typeof NotificationManager !== 'undefined') {
-            NotificationManager.showNotification('All detectors are up to date', 'success');
-          }
-        }
-      } catch (error) {
-        Logger.error('UI', 'Error checking for updates', error);
-        if (typeof NotificationManager !== 'undefined') {
-          NotificationManager.showNotification('Error checking for updates', 'error');
-        }
-      } finally {
-        btn.classList.remove('checking');
-        if (btnText) btnText.textContent = 'Update';
-      }
-    }
-  }
-
-  /**
-   * Update the updates badge count
-   * @param {number} count - Number of pending updates
-   */
-  updateUpdatesBadge(count) {
-    const badge = document.querySelector('#updatesBadge');
-    const btn = document.querySelector('#checkUpdatesBtn');
-
-    if (badge) {
-      if (count > 0) {
-        badge.textContent = count;
-        badge.style.display = 'flex';
-        if (btn) btn.classList.add('has-updates');
-      } else {
-        badge.style.display = 'none';
-        if (btn) btn.classList.remove('has-updates');
-      }
-    }
-  }
+  // Note: handleCheckUpdates() and updateUpdatesBadge() are defined in rules-handlers.js as prototype methods
 
   // ============================================
   // End Update Management Methods
