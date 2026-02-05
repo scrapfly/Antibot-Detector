@@ -2289,39 +2289,41 @@ class Rules {
 
     Logger.ui('Saving rule for:', this.currentEditDetector.detector.displayName);
 
-    // Generate timestamp for lastUpdated
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    // Check if detection methods actually changed (for existing detectors)
+    const originalDetection = this.currentEditDetector.originalDetection || {};
+    const currentDetection = this.currentEditDetector.detector.detection || {};
+    const hasChanges = this.currentEditDetector.isNew ||
+      JSON.stringify(originalDetection) !== JSON.stringify(currentDetection);
 
-    // Update lastUpdated timestamp
-    this.currentEditDetector.detector.lastUpdated = timestamp;
+    // Only update timestamp and version if changes were made
+    if (hasChanges) {
+      // Generate timestamp for lastUpdated
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
-    // Auto-increment version (1.0 → 1.1 → 1.2, etc.) - only if changes were made
-    if (this.currentEditDetector.isNew) {
-      // New detector starts at version 1.0
-      this.currentEditDetector.detector.version = '1.0';
-    } else {
-      // Check if detection methods actually changed
-      const originalDetection = this.currentEditDetector.originalDetection || {};
-      const currentDetection = this.currentEditDetector.detector.detection || {};
-      const hasChanges = JSON.stringify(originalDetection) !== JSON.stringify(currentDetection);
+      // Update lastUpdated timestamp
+      this.currentEditDetector.detector.lastUpdated = timestamp;
 
-      if (hasChanges) {
-        // Increment existing version only if changes were made
+      // Auto-increment version (1.0 → 1.1 → 1.2, etc.)
+      if (this.currentEditDetector.isNew) {
+        // New detector starts at version 1.0
+        this.currentEditDetector.detector.version = '1.0';
+      } else {
+        // Increment existing version
         const currentVersion = this.currentEditDetector.detector.version || '1.0';
         const versionNum = parseFloat(currentVersion) || 1.0;
         const newVersion = (versionNum + 0.1).toFixed(1);
         this.currentEditDetector.detector.version = newVersion;
         Logger.ui(`Version incremented: ${currentVersion} → ${newVersion}`);
-      } else {
-        Logger.ui('No changes detected, version unchanged');
       }
+    } else {
+      Logger.ui('No changes detected, version and timestamp unchanged');
     }
 
     // Handle new detector
