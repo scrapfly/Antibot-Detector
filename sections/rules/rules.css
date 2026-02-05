@@ -753,6 +753,7 @@
 .modal-card-body {
   padding: 16px;
   overflow: hidden;
+  text-align: center;
 }
 
 .modal-card-body-methods {
@@ -769,9 +770,12 @@
 
 /* Option Hint Text */
 .option-hint {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-muted);
   margin: 4px 0 0 0;
+  line-height: 1.4;
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 /* Setting Label Row with Helper Buttons */
@@ -792,6 +796,31 @@
 
 .form-group:last-child {
   margin-bottom: 0;
+}
+
+/* Form Row - 2 column layout */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.form-row:last-child {
+  margin-bottom: 0;
+}
+
+.form-row .form-group {
+  margin-bottom: 0;
+}
+
+.form-row-centered {
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+
+.form-row-centered .form-group {
+  width: 50%;
 }
 
 /* Form Label */
@@ -839,6 +868,18 @@
   padding-right: 32px;
 }
 
+.form-input-readonly {
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.form-input-readonly:focus {
+  border-color: var(--border);
+  box-shadow: none;
+}
+
 /* ============================================
    Icon Selector Styles
    ============================================ */
@@ -852,7 +893,7 @@
 .icon-preview {
   width: 40px;
   height: 40px;
-  background: var(--bg-primary);
+  background: var(--bg-tertiary);
   border: 1px solid var(--border);
   border-radius: 8px;
   display: flex;
@@ -884,8 +925,9 @@
 .color-picker-card {
   background: var(--bg-primary);
   border-radius: 8px;
-  padding: 20px;
+  padding: 12px;
   overflow: hidden;
+  display: inline-block;
 }
 
 /* ============================================
@@ -939,12 +981,7 @@
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(2px);
-}
-
-/* Method Settings modal backdrop */
-#methodSettingsModal .rule-modal-backdrop {
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(2px);
+  z-index: 1000;
 }
 
 .rule-modal-content {
@@ -964,14 +1001,15 @@
 
 .rule-modal-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  padding: 20px 24px;
+  padding: 16px 24px;
   border-bottom: 1px solid var(--border);
   background: transparent;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
   flex-shrink: 0;
+  position: relative;
 }
 
 .rule-modal-header h2 {
@@ -1011,8 +1049,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  position: absolute;
+  top: 14px;
+  right: 24px;
+  width: 26px;
+  height: 26px;
 }
 
 .rule-modal-close:hover {
@@ -1021,12 +1062,39 @@
   transform: scale(1.05);
 }
 
+.rule-modal-close svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
 .rule-modal-body {
   padding: 20px 24px;
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   min-height: 0;
-  max-height: calc(85vh - 120px);
+  height: 400px;
+  max-height: 400px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) var(--bg-tertiary);
+}
+
+.rule-modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.rule-modal-body::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+}
+
+.rule-modal-body::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+.rule-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #60a5fa;
 }
 
 .rule-section {
@@ -1138,8 +1206,8 @@
 }
 
 .change-icon-btn:hover {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
   color: white;
   transform: translateY(-1px);
 }
@@ -1147,9 +1215,10 @@
 /* Color Picker Grid - Compact Modern Design */
 .color-picker-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(4, 36px);
   gap: 10px;
   padding: 4px;
+  justify-content: center;
 }
 
 /* Old styles for compatibility */
@@ -1226,6 +1295,13 @@
   transition: all 0.2s ease;
   position: relative;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  outline: none;
+}
+
+.color-option:focus,
+.color-option:focus-visible {
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
 .color-option:hover {
@@ -1235,7 +1311,7 @@
 
 .color-option.selected {
   border-color: white;
-  box-shadow: 0 0 0 3px var(--accent), 0 4px 12px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 
 .color-option.selected::after {
@@ -1272,22 +1348,24 @@
 .rule-modal-footer {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 16px 24px;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 24px;
   border-top: 1px solid var(--border);
   background: linear-gradient(to bottom, var(--bg-secondary), rgba(0, 0, 0, 0.05));
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
   flex-shrink: 0;
-  min-height: 60px;
+  min-height: 44px;
+  position: relative;
+  z-index: 10;
 }
 
 .rule-btn {
-  padding: 10px 16px;
+  padding: 8px 14px;
   border: none;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
@@ -1322,10 +1400,6 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 300px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 4px;
 }
 
 .method-section {
@@ -1345,6 +1419,45 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.method-header:hover {
+  opacity: 0.85;
+}
+
+.method-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.method-collapse-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.method-section.collapsed .method-collapse-icon {
+  transform: rotate(-90deg);
+}
+
+.method-section.collapsed .method-items,
+.method-section.collapsed .add-method-btn {
+  display: none;
+}
+
+.method-pattern-count {
+  font-size: 11px;
+  color: var(--accent);
+  padding: 2px 8px;
+  background: rgba(59, 130, 246, 0.15);
+  border-radius: 10px;
+  margin-left: auto;
+  margin-right: 8px;
 }
 .method-help-tooltip {
   position: absolute;
@@ -1458,6 +1571,7 @@
   align-items: flex-start;
   gap: 10px;
   width: 100%;
+  position: relative;
 }
 
 .method-item-actions {
@@ -1501,6 +1615,51 @@
 
 .input-row .method-input {
   flex: 1;
+}
+
+/* Field actions container (inline with input) */
+.field-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+/* Add Value button */
+.add-value-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px dashed rgba(82, 82, 82, 0.6);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-top: 4px;
+}
+
+.add-value-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.add-value-btn svg {
+  opacity: 0.7;
+}
+
+.add-value-btn:hover svg {
+  opacity: 1;
+}
+
+/* Value field container */
+.value-field-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 /* Badges row under each input */
@@ -1577,11 +1736,13 @@
 }
 
 .method-input.method-name {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
 }
 
 .method-input.method-value {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
 }
 
 .method-input::placeholder {
@@ -1635,8 +1796,43 @@
   background: rgba(59, 130, 246, 0.15);
 }
 
+.settings-icon-img {
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.method-action-btn.settings:hover .settings-icon-img {
+  opacity: 1;
+}
+
 .method-action-btn.delete:hover {
   background: rgba(239, 68, 68, 0.1);
+}
+
+/* Delete All Button */
+.method-delete-all-btn {
+  background: transparent;
+  border: none;
+  color: var(--danger, #ef4444);
+  padding: 4px 6px;
+  cursor: pointer;
+  opacity: 0.5;
+  border-radius: 4px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+}
+
+.method-delete-all-btn:hover {
+  opacity: 1;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.method-delete-all-btn svg {
+  width: 12px;
+  height: 12px;
 }
 
 /* Add Method/Section Buttons */
@@ -1648,10 +1844,10 @@
   width: 100%;
   padding: 8px 12px;
   margin-top: 8px;
-  background: var(--bg-tertiary);
-  border: 1px dashed var(--border);
+  background: var(--accent);
+  border: 1px solid var(--accent);
   border-radius: 6px;
-  color: var(--text-muted);
+  color: white;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
@@ -1660,10 +1856,9 @@
 
 .add-method-btn:hover,
 .add-section-btn:hover {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
   color: white;
-  border-style: solid;
 }
 
 .add-section-btn {
@@ -1681,6 +1876,123 @@
   color: white;
 }
 
+/* Add Value Button */
+.add-value-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  background: var(--bg-tertiary);
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.add-value-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  border-style: solid;
+}
+
+.add-value-btn svg {
+  flex-shrink: 0;
+}
+
+/* Value Input Wrapper */
+.value-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+}
+
+.value-input-wrapper .input-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.value-input-wrapper .method-value {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Remove Value Button - positioned absolutely to align with main action buttons */
+.remove-value-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--danger, #ef4444);
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  position: absolute;
+  /* Position outside wrapper: -(gap 10px + actions 52px) = -62px to reach right edge */
+  right: -62px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Value Settings Button - positioned absolutely to align with main action buttons */
+.value-settings-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--accent, #3b82f6);
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  position: absolute;
+  /* Position to align with main settings btn: -62px + 28px = -34px */
+  right: -34px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.value-settings-btn:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+.value-settings-btn.has-custom-settings {
+  background: rgba(59, 130, 246, 0.15);
+}
+
+.value-settings-btn .settings-icon-img {
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.value-settings-btn:hover .settings-icon-img {
+  opacity: 1;
+}
+
+.remove-value-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.remove-value-btn svg {
+  flex-shrink: 0;
+}
+
 /* Ensure edit modal also uses flex layout */
 #editRuleModal .rule-modal-content {
   display: flex;
@@ -1694,6 +2006,10 @@
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
+}
+
+#advancedColorModal .rule-modal-footer {
+  justify-content: center !important;
 }
 
 .settings-group {
@@ -1802,15 +2118,32 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
-  padding: 10px;
+  gap: 12px;
+  padding: 12px;
   background: var(--bg-tertiary);
   border-radius: 6px;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .setting-option:last-child {
   margin-bottom: 0;
+}
+
+/* When setting has a scope select, use stacked layout */
+.setting-option:has(.scope-select) {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.setting-option:has(.scope-select) .option-content {
+  flex: none;
+}
+
+.setting-option:has(.scope-select) .scope-select {
+  width: 100%;
 }
 
 .toggle-switch {
@@ -1819,6 +2152,7 @@
   width: 36px;
   height: 20px;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .toggle-input {
@@ -1873,12 +2207,12 @@
 }
 
 .setting-label {
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--text-primary);
   user-select: none;
   display: block;
-  margin-bottom: 0;
+  margin-bottom: 2px;
 }
 
 /* Example Hints */
@@ -1927,8 +2261,8 @@
 /* Canvas Color Picker Modal Styles */
 .canvas-color-modal {
   width: auto;
-  max-width: 420px;
-  min-width: 400px;
+  max-width: 340px;
+  min-width: 320px;
   height: auto;
 }
 
@@ -1938,45 +2272,24 @@
   max-height: none;
 }
 
-/* Method Settings Modal - improved scrollability */
+/* Method Settings Modal - match Edit Rule Modal size */
 #methodSettingsModal .rule-modal-content {
   max-height: 85%;
 }
 
-#methodSettingsModal .rule-modal-body {
-  max-height: calc(85vh - 120px);
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent) var(--bg-tertiary);
-}
-
-#methodSettingsModal .rule-modal-body::-webkit-scrollbar {
-  width: 8px;
-}
-
-#methodSettingsModal .rule-modal-body::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
-  border-radius: 4px;
-}
-
-#methodSettingsModal .rule-modal-body::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 4px;
-}
-
-#methodSettingsModal .rule-modal-body::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-hover);
-}
-
 /* Payload Request Constraints Section */
 .payload-url-pattern-option {
-  border-bottom: none !important;
-  padding-bottom: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin-bottom: 8px !important;
 }
 
 .payload-url-input {
   width: 100%;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   font-family: 'Monaco', 'Courier New', monospace;
+  box-sizing: border-box;
 }
 
 .payload-http-method-option {
@@ -1984,18 +2297,23 @@
   align-items: stretch !important;
   border-top: none !important;
   padding-top: 12px !important;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .http-method-badges-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .canvas-color-picker {
   display: flex;
-  gap: 12px;
-  padding: 16px;
+  gap: 10px;
+  padding: 12px;
   background: var(--bg-tertiary);
   border-radius: 8px;
   height: 100%;
@@ -2057,14 +2375,14 @@
 .color-controls {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  min-width: 90px;
+  gap: 6px;
+  min-width: 70px;
   justify-content: flex-start;
 }
 
 .selected-color-display {
-  width: 60px;
-  height: 45px;
+  width: 50px;
+  height: 38px;
   border-radius: 6px;
   overflow: hidden;
   border: 1px solid var(--border);
@@ -2097,14 +2415,21 @@
 }
 
 .rgb-input {
-  width: 45px;
-  padding: 3px 4px;
+  width: 40px;
+  padding: 2px 2px;
   background: var(--bg-primary);
   border: 1px solid var(--border);
   border-radius: 4px;
   color: var(--text-primary);
-  font-size: 11px;
+  font-size: 10px;
   text-align: center;
+  -moz-appearance: textfield;
+}
+
+.rgb-input::-webkit-outer-spin-button,
+.rgb-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .rgb-input:focus {
@@ -2303,10 +2628,55 @@
 
 /* DOM Helper Modal */
 #domHelperModal .rule-modal-content {
-  max-width: 600px;
+  /* Uses base width: 90%, max-width: 520px */
 }
 
-/* Step Indicators */
+/* Helper Modals - Higher z-index to properly stack above parent modals */
+#domHelperModal,
+#windowHelperModal,
+#regexHelperModal,
+#conditionHelperModal,
+#wholeWordHelperModal,
+#caseSensitiveHelperModal {
+  z-index: 1002;
+}
+
+/* Helper Modal Backdrops - Own blur (parent backdrop hidden via JS when helper opens) */
+#domHelperModal .rule-modal-backdrop,
+#windowHelperModal .rule-modal-backdrop,
+#regexHelperModal .rule-modal-backdrop,
+#conditionHelperModal .rule-modal-backdrop,
+#wholeWordHelperModal .rule-modal-backdrop,
+#caseSensitiveHelperModal .rule-modal-backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+/* Helper Modal Bodies - Adjusted height to account for footer buttons */
+#domHelperModal .rule-modal-body,
+#windowHelperModal .rule-modal-body,
+#regexHelperModal .rule-modal-body,
+#conditionHelperModal .rule-modal-body,
+#wholeWordHelperModal .rule-modal-body,
+#caseSensitiveHelperModal .rule-modal-body {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+/* Helper Modals - Match Method Settings modal size */
+#domHelperModal .rule-modal-content,
+#windowHelperModal .rule-modal-content,
+#regexHelperModal .rule-modal-content,
+#conditionHelperModal .rule-modal-content,
+#wholeWordHelperModal .rule-modal-content,
+#caseSensitiveHelperModal .rule-modal-content {
+  min-height: min(500px, 85vh);
+}
+
+/* Step Indicators (shared by helper modals) */
 .dom-helper-steps {
   display: flex;
   align-items: center;
@@ -2325,8 +2695,8 @@
 }
 
 .dom-step-number {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--bg-tertiary);
   border: 2px solid var(--border);
@@ -2334,9 +2704,10 @@
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-muted);
   transition: all 0.3s;
+  position: relative;
 }
 
 .dom-step.active .dom-step-number {
@@ -2345,10 +2716,36 @@
   color: white;
 }
 
+.dom-step.completed .dom-step-number {
+  background: #10b981;
+  border-color: #10b981;
+  color: white;
+}
+
+.dom-step.completed .dom-step-number span {
+  display: none;
+}
+
+.dom-step.completed .dom-step-number::after {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 6px;
+  border-left: 2.5px solid white;
+  border-bottom: 2.5px solid white;
+  transform: rotate(-45deg) translateY(-1px);
+}
+
+.dom-step.completed .dom-step-label {
+  color: #10b981;
+  font-weight: 600;
+}
+
 .dom-step-label {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
   text-align: center;
+  max-width: 90px;
 }
 
 .dom-step.active .dom-step-label {
@@ -2356,15 +2753,49 @@
   font-weight: 600;
 }
 
-/* Step Progress Line */
 .dom-helper-steps::before {
   content: '';
   position: absolute;
-  top: 16px;
-  left: 25%;
-  right: 25%;
-  height: 2px;
+  top: 20px;
+  left: 16%;
+  right: 16%;
+  height: 3px;
   background: var(--border);
+  border-radius: 2px;
+  z-index: 1;
+}
+
+.dom-helper-steps::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 16%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), #10b981);
+  border-radius: 2px;
+  z-index: 1;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0%;
+}
+
+.dom-helper-steps.two-steps[data-progress="1"]::after {
+  width: 0%;
+}
+
+.dom-helper-steps.two-steps[data-progress="2"]::after {
+  width: 68%;
+}
+
+.dom-helper-steps.three-steps[data-progress="1"]::after {
+  width: 0%;
+}
+
+.dom-helper-steps.three-steps[data-progress="2"]::after {
+  width: 34%;
+}
+
+.dom-helper-steps.three-steps[data-progress="3"]::after {
+  width: 68%;
 }
 
 /* Keyword Input Section */
@@ -2508,12 +2939,12 @@
 }
 
 .dom-templates::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: var(--accent);
   border-radius: 3px;
 }
 
 .dom-templates::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
+  background: #60a5fa;
 }
 
 /* Suggestion Items */
@@ -2574,13 +3005,6 @@
   border-top: 1px solid var(--border);
   padding-top: 16px;
   margin-top: 16px;
-}
-
-.dom-custom-label {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-  display: block;
 }
 
 .dom-template {
@@ -2649,22 +3073,125 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
-.dom-custom-input {
-  width: 100%;
-  padding: 10px 12px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-primary);
-  font-family: 'Monaco', 'Courier New', monospace;
-  font-size: 13px;
-  margin-top: 8px;
+/* ==================== */
+/* Helper Modal UX Improvements */
+/* ==================== */
+
+/* Footer with Back Button Layout */
+.rule-modal-footer.has-back {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.dom-custom-input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+.rule-modal-footer .footer-left {
+  display: flex;
+  gap: 8px;
+}
+
+.rule-modal-footer .footer-right {
+  display: flex;
+  gap: 8px;
+}
+
+/* Back Button */
+.rule-btn-back {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 13px;
+}
+
+.rule-btn-back:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+.rule-btn-back svg {
+  width: 14px;
+  height: 14px;
+}
+
+.rule-btn-back.hidden {
+  display: none;
+}
+
+/* Contextual Tips (inline within step) */
+.step-contextual-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(59, 130, 246, 0.08);
+  border-radius: 6px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.step-contextual-tip .tip-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+}
+
+.step-contextual-tip .tip-content {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.step-contextual-tip .tip-content strong {
+  color: var(--text-primary);
+}
+
+/* Improved Empty State for Suggestions */
+.suggestions-empty-state {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--text-muted);
+}
+
+.suggestions-empty-state .empty-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  opacity: 0.5;
+  color: var(--text-muted);
+}
+
+.suggestions-empty-state .empty-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.suggestions-empty-state .empty-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.suggestions-empty-state .empty-examples {
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.suggestions-empty-state .empty-examples code {
+  background: var(--bg-tertiary);
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin: 0 2px;
+  color: var(--accent);
 }
 
 /* Modern Toggle Switch for Method Enable/Disable */
@@ -2847,31 +3374,39 @@
 
 /* Scope Select Dropdowns */
 .scope-select {
-  padding: 6px 10px;
+  padding: 10px 14px;
   background: var(--bg-primary);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 8px;
   color: var(--text-primary);
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
-  min-width: 100px;
+  min-width: 120px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='%239ca3af'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
 }
 
 .scope-select:hover {
-  border-color: var(--accent);
+  border-color: rgba(150, 150, 150, 0.5);
+  background-color: var(--bg-secondary);
 }
 
 .scope-select:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  border-color: rgba(150, 150, 150, 0.6);
+  box-shadow: 0 0 0 3px rgba(100, 100, 100, 0.1);
 }
 
 .scope-select option {
-  background: var(--bg-secondary);
+  background: var(--bg-primary);
   color: var(--text-primary);
-  padding: 8px;
+  padding: 10px;
 }
 
 /* Window condition option styles */
@@ -2885,183 +3420,136 @@
   border-color: var(--accent) !important;
 }
 
-/* HTTP Method Badges - Beautiful Badge-Style Checkboxes */
+/* HTTP Method Badges - Text Only Style */
 .http-method-badge {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  padding: 10px 12px;
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  background: var(--bg-secondary);
+  padding: 7px 6px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .http-method-badge input[type="checkbox"],
 .http-method-badge input[type="radio"] {
   position: absolute;
   opacity: 0;
-  width: 0;
-  height: 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  margin: 0;
+  z-index: 10;
 }
 
 .method-badge-content {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 500;
+  justify-content: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
   color: var(--text-secondary);
   transition: all 0.25s;
+  pointer-events: none;
+  line-height: 1;
 }
 
 .method-icon {
-  font-size: 8px;
-  opacity: 0.5;
+  font-size: 6px;
+  opacity: 0.6;
   color: var(--text-secondary);
   transition: all 0.25s;
+  display: flex;
+  align-items: center;
 }
 
 .method-text {
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
-/* Hover State */
-.http-method-badge:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* GET - Green */
-.http-method-badge[data-method="GET"]:has(input:checked),
-.http-method-badge[data-method="GET"]:has(input[type="radio"]:checked),
-.http-method-badge[data-method="GET"].checked {
-  border-color: #22c55e;
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(34, 197, 94, 0.15) 100%);
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+/* GET - Green (hover and selected) */
+.http-method-badge[data-method="GET"]:hover .method-badge-content,
+.http-method-badge[data-method="GET"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="GET"]:has(input[type="radio"]:checked) .method-badge-content,
+.http-method-badge[data-method="GET"].checked .method-badge-content {
+  color: #22c55e;
 }
 
 .http-method-badge[data-method="GET"]:has(input:checked) .method-badge-content,
 .http-method-badge[data-method="GET"]:has(input[type="radio"]:checked) .method-badge-content,
 .http-method-badge[data-method="GET"].checked .method-badge-content {
-  color: #22c55e;
   font-weight: 600;
 }
 
-.http-method-badge[data-method="GET"]:has(input:checked) .method-icon,
-.http-method-badge[data-method="GET"]:has(input[type="radio"]:checked) .method-icon,
-.http-method-badge[data-method="GET"].checked .method-icon {
-  opacity: 1;
-  color: #22c55e;
-}
-
-/* POST - Purple */
-.http-method-badge[data-method="POST"]:has(input:checked),
-.http-method-badge[data-method="POST"].checked {
-  border-color: #a855f7;
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(168, 85, 247, 0.15) 100%);
-  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+/* POST - Purple (hover and selected) */
+.http-method-badge[data-method="POST"]:hover .method-badge-content,
+.http-method-badge[data-method="POST"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="POST"].checked .method-badge-content {
+  color: #a855f7;
 }
 
 .http-method-badge[data-method="POST"]:has(input:checked) .method-badge-content,
 .http-method-badge[data-method="POST"].checked .method-badge-content {
-  color: #a855f7;
   font-weight: 600;
 }
 
-.http-method-badge[data-method="POST"]:has(input:checked) .method-icon,
-.http-method-badge[data-method="POST"].checked .method-icon {
-  opacity: 1;
+/* PUT - Purple (hover and selected) */
+.http-method-badge[data-method="PUT"]:hover .method-badge-content,
+.http-method-badge[data-method="PUT"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="PUT"].checked .method-badge-content {
   color: #a855f7;
-}
-
-/* PUT - Purple */
-.http-method-badge[data-method="PUT"]:has(input:checked),
-.http-method-badge[data-method="PUT"].checked {
-  border-color: #a855f7;
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(168, 85, 247, 0.15) 100%);
-  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
 }
 
 .http-method-badge[data-method="PUT"]:has(input:checked) .method-badge-content,
 .http-method-badge[data-method="PUT"].checked .method-badge-content {
-  color: #a855f7;
   font-weight: 600;
 }
 
-.http-method-badge[data-method="PUT"]:has(input:checked) .method-icon,
-.http-method-badge[data-method="PUT"].checked .method-icon {
-  opacity: 1;
+/* PATCH - Purple (hover and selected) */
+.http-method-badge[data-method="PATCH"]:hover .method-badge-content,
+.http-method-badge[data-method="PATCH"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="PATCH"].checked .method-badge-content {
   color: #a855f7;
-}
-
-/* PATCH - Purple */
-.http-method-badge[data-method="PATCH"]:has(input:checked),
-.http-method-badge[data-method="PATCH"].checked {
-  border-color: #a855f7;
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(168, 85, 247, 0.15) 100%);
-  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
 }
 
 .http-method-badge[data-method="PATCH"]:has(input:checked) .method-badge-content,
 .http-method-badge[data-method="PATCH"].checked .method-badge-content {
-  color: #a855f7;
   font-weight: 600;
 }
 
-.http-method-badge[data-method="PATCH"]:has(input:checked) .method-icon,
-.http-method-badge[data-method="PATCH"].checked .method-icon {
-  opacity: 1;
-  color: #a855f7;
-}
-
-/* DELETE - Red */
-.http-method-badge[data-method="DELETE"]:has(input:checked),
-.http-method-badge[data-method="DELETE"].checked {
-  border-color: #ef4444;
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(239, 68, 68, 0.15) 100%);
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+/* DELETE - Red (hover and selected) */
+.http-method-badge[data-method="DELETE"]:hover .method-badge-content,
+.http-method-badge[data-method="DELETE"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="DELETE"].checked .method-badge-content {
+  color: #ef4444;
 }
 
 .http-method-badge[data-method="DELETE"]:has(input:checked) .method-badge-content,
 .http-method-badge[data-method="DELETE"].checked .method-badge-content {
-  color: #ef4444;
   font-weight: 600;
 }
 
-.http-method-badge[data-method="DELETE"]:has(input:checked) .method-icon,
-.http-method-badge[data-method="DELETE"].checked .method-icon {
-  opacity: 1;
-  color: #ef4444;
-}
-
-/* Custom - Blue */
-.http-method-badge[data-method="CUSTOM"]:has(input:checked),
-.http-method-badge[data-method="CUSTOM"].checked {
-  border-color: #3b82f6;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 100%);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+/* Custom - Blue (hover and selected) */
+.http-method-badge[data-method="CUSTOM"]:hover .method-badge-content,
+.http-method-badge[data-method="CUSTOM"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="CUSTOM"].checked .method-badge-content {
+  color: #3b82f6;
 }
 
 .http-method-badge[data-method="CUSTOM"]:has(input:checked) .method-badge-content,
 .http-method-badge[data-method="CUSTOM"].checked .method-badge-content {
-  color: #3b82f6;
   font-weight: 600;
 }
 
-.http-method-badge[data-method="CUSTOM"]:has(input:checked) .method-icon,
-.http-method-badge[data-method="CUSTOM"].checked .method-icon {
-  opacity: 1;
-  color: #3b82f6;
-}
-
-/* Active (Click) State */
-.http-method-badge:active {
-  transform: scale(0.97);
-}
 
 /* HTTP Method Select Dropdown Colors */
 select.method-get {
@@ -3093,8 +3581,6 @@ select.method-delete {
   gap: 5px;
   position: relative;
   white-space: nowrap;
-  overflow: visible;
-  min-width: 75px;
   background: rgba(6, 182, 212, 0.15);
   border-color: rgba(6, 182, 212, 0.35);
   color: #67e8f9;
@@ -3122,7 +3608,6 @@ select.method-delete {
 .check-updates-btn.checking {
   pointer-events: none;
   opacity: 0.7;
-  min-width: 90px;
 }
 
 .check-updates-btn.checking svg {
@@ -3208,4 +3693,241 @@ select.method-delete {
 /* Adjust action buttons grid for 5 columns */
 .action-buttons {
   grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+/* ============================================
+   Window Condition Select Dropdown
+   ============================================ */
+
+/* Inline condition select in method items */
+.condition-select {
+  flex: 1;
+  padding: 6px 24px 6px 8px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text-primary);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  min-width: 120px;
+  max-width: 140px;
+}
+
+.condition-select:hover {
+  border-color: var(--accent);
+}
+
+.condition-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.condition-select optgroup {
+  background: var(--bg-secondary);
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 10px;
+}
+
+.condition-select option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+/* Wizard modal condition select */
+.condition-select-wizard {
+  width: 100%;
+  padding: 10px 28px 10px 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.condition-select-wizard:hover {
+  border-color: var(--accent);
+  background-color: var(--bg-secondary);
+}
+
+.condition-select-wizard:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.condition-select-wizard optgroup {
+  background: var(--bg-primary);
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 10px;
+}
+
+.condition-select-wizard option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+/* ============================================
+   Custom Condition Dropdown
+   ============================================ */
+
+.condition-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.condition-dropdown-trigger {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.condition-dropdown-trigger:hover {
+  border-color: var(--accent);
+  background: var(--bg-secondary);
+}
+
+.condition-dropdown-trigger:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.condition-dropdown-trigger .dropdown-chevron {
+  color: var(--text-muted);
+  transition: transform 0.2s;
+}
+
+.condition-dropdown.open .dropdown-chevron {
+  transform: rotate(180deg);
+}
+
+.condition-dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.condition-dropdown.open .condition-dropdown-menu {
+  display: block;
+}
+
+.condition-group {
+  padding: 4px 0;
+}
+
+.condition-group:not(:last-child) {
+  border-bottom: 1px solid var(--border);
+}
+
+.condition-group-label {
+  padding: 8px 12px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.condition-option {
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.condition-option:hover {
+  background: var(--bg-tertiary);
+}
+
+.condition-option.selected {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* Inline condition dropdown (in edit modal) */
+.inline-condition-dropdown {
+  flex: 1;
+  min-width: 120px;
+}
+
+.inline-condition-dropdown .condition-dropdown-trigger {
+  padding: 6px 10px;
+  font-size: 12px;
+  min-height: 32px;
+  background: var(--bg-tertiary);
+  border-color: var(--border);
+  color: var(--text-primary);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.inline-condition-dropdown .condition-dropdown-trigger:hover {
+  background: var(--bg-secondary);
+  border-color: rgba(148, 163, 184, 0.5);
+  color: var(--text-primary);
+}
+
+.inline-condition-dropdown.open .condition-dropdown-trigger {
+  background: var(--bg-secondary);
+  border-color: rgba(148, 163, 184, 0.6);
+  box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.15);
+}
+
+
+.inline-condition-dropdown .condition-dropdown-menu {
+  min-width: 160px;
+  max-height: 200px;
+}
+
+.inline-condition-dropdown .condition-option {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.inline-condition-dropdown .condition-group-label {
+  padding: 6px 10px 2px;
+  font-size: 9px;
 }
