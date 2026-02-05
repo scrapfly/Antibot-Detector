@@ -2359,12 +2359,11 @@ class Rules {
       if (categoryDetectors && categoryDetectors[this.currentEditDetector.detectorName]) {
         const updatedDetector = {
           ...this.currentEditDetector.detector,
-          customIcon: this.currentEditDetector.detector.customIcon,
-          lastUpdated: timestamp
+          customIcon: this.currentEditDetector.detector.customIcon
         };
         categoryDetectors[this.currentEditDetector.detectorName] = updatedDetector;
 
-        Logger.ui('Updated lastUpdated timestamp to:', updatedDetector.lastUpdated);
+        Logger.ui('Detector updated, lastUpdated:', updatedDetector.lastUpdated);
 
         // Save to storage
         this.detectorManager.saveDetectorsToStorage().then(() => {
