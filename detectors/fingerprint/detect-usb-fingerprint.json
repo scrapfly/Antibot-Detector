@@ -1,7 +1,7 @@
 {
   "id": "detect-usb-fingerprint",
   "name": "USB API Fingerprint",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Fingerprint",
   "lastUpdated": "2025-01-21",
@@ -14,13 +14,13 @@
       {
         "description": "Gets list of connected USB devices",
         "enabled": true,
-        "confidence": 95,
+        "confidence": 80,
         "target": "USB.getDevices"
       },
       {
         "description": "Requests user to select USB device",
         "enabled": true,
-        "confidence": 95,
+        "confidence": 80,
         "target": "USB.requestDevice"
       }
     ],
@@ -41,7 +41,7 @@
         "text": "navigator.usb",
         "scope": "scripts",
         "description": "WebUSB API usage",
-        "confidence": 90,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
@@ -50,7 +50,7 @@
         "text": "getDevices",
         "scope": "scripts",
         "description": "USB device enumeration",
-        "confidence": 85,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
@@ -59,7 +59,7 @@
         "text": "requestDevice",
         "scope": "scripts",
         "description": "USB device request in scripts",
-        "confidence": 85,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false

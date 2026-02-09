@@ -1,7 +1,7 @@
 {
   "id": "detect-hcaptcha",
   "name": "hCaptcha",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "CAPTCHA",
   "lastUpdated": "2024-01-15",
@@ -21,7 +21,7 @@
         "textScope": "all"
       },
       {
-        "confidence": 95,
+        "confidence": 100,
         "description": "Site configuration check",
         "text": "/checksiteconfig",
         "textRegex": false,
@@ -30,7 +30,7 @@
         "textScope": "all"
       },
       {
-        "confidence": 95,
+        "confidence": 100,
         "description": "Captcha retrieval endpoint",
         "text": "/getcaptcha",
         "textRegex": false,
@@ -41,7 +41,7 @@
     ],
     "content": [
       {
-        "confidence": 100,
+        "confidence": 50,
         "description": "hCaptcha object",
         "text": "hcaptcha",
         "textRegex": false,
@@ -49,7 +49,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 95,
+        "confidence": 50,
         "description": "hCaptcha container class",
         "text": "h-captcha",
         "textRegex": false,
@@ -57,14 +57,14 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 90,
+        "confidence": 50,
         "text": "hcaptcha.render",
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
       },
       {
-        "confidence": 90,
+        "confidence": 50,
         "text": "hcaptcha.execute",
         "textRegex": false,
         "textWholeWord": false,
@@ -74,7 +74,7 @@
     "dom": [
       {
         "selector": ".h-captcha",
-        "confidence": 95,
+        "confidence": 100,
         "description": "hCaptcha container",
         "selectorRegex": false,
         "selectorWholeWord": false,
@@ -82,14 +82,14 @@
       },
       {
         "selector": "[data-hcaptcha-sitekey]",
-        "confidence": 90,
+        "confidence": 100,
         "selectorRegex": false,
         "selectorWholeWord": false,
         "selectorCaseSensitive": false
       },
       {
         "selector": "iframe[src*='hcaptcha.com']",
-        "confidence": 95,
+        "confidence": 100,
         "selectorRegex": false,
         "selectorWholeWord": false,
         "selectorCaseSensitive": false
@@ -105,13 +105,13 @@
       {
         "path": "hcaptcha.render",
         "condition": "typeof function",
-        "confidence": 95,
+        "confidence": 100,
         "description": "hCaptcha render function"
       },
       {
         "path": "hcaptcha.execute",
         "condition": "typeof function",
-        "confidence": 90,
+        "confidence": 100,
         "description": "hCaptcha execute function"
       }
     ]

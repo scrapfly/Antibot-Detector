@@ -738,7 +738,7 @@ async function showNotification(tabId, options = {}) {
                             @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
                             .scrapfly-notif-icon { display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; flex-shrink: 0; }
                             .scrapfly-notif-icon::before { content: '●'; color: white; font-size: 10px; }
-                            .scrapfly-notif-loading .scrapfly-notif-icon::before { content: '⚙️'; animation: spin 1s linear infinite; }
+                            .scrapfly-notif-loading .scrapfly-notif-icon::before { content: '\\2699'; animation: spin 1s linear infinite; }
                         `;
                         document.head.appendChild(styleTag);
 
@@ -850,5 +850,5 @@ if (globalContext) {
         detectVersion
     };
 
-    Logger.ui('[BaseInterceptorHelpers] ✓ Loaded in context:', typeof window !== 'undefined' ? 'popup' : 'service-worker');
+    Logger.ui('[BaseInterceptorHelpers] Loaded in context:', typeof window !== 'undefined' ? 'popup' : 'service-worker');
 }

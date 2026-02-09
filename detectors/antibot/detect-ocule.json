@@ -1,7 +1,7 @@
 {
   "id": "detect-ocule",
   "name": "Ocule",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "ANTIBOT",
   "lastUpdated": "2024-10-21",
@@ -40,13 +40,6 @@
         "textScope": "all"
       }
     ],
-    "window": [
-      {
-        "path": "Ocule",
-        "condition": "typeof object",
-        "confidence": 100,
-        "description": "Ocule main object"
-      }
-    ]
+    "window": []
   }
 }

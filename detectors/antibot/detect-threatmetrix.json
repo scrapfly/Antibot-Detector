@@ -1,7 +1,7 @@
 {
   "id": "detect-threatmetrix",
   "name": "ThreatMetrix",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "ANTIBOT",
   "lastUpdated": "2024-10-21",
@@ -12,7 +12,7 @@
   "detection": {
     "content": [
       {
-        "confidence": 95,
+        "confidence": 50,
         "description": "ThreatMetrix reference",
         "text": "ThreatMetrix",
         "textRegex": false,

@@ -38,7 +38,7 @@ function handleDataDomeMessage(request, sender, sendResponse) {
                         Logger.network('[DataDome] Showing analyzing notification before reload...');
                         await showNotification(request.tabId, {
                             type: 'loading',
-                            title: '🔍 Analyzing DataDome Scripts',
+                            title: 'Analyzing DataDome Scripts',
                             message: 'Please wait while we collect script URLs...',
                             duration: 15000 // Longer duration to persist through reload
                         });
@@ -127,7 +127,7 @@ function datadomeStartAnalysis(tabId, url) {
                         type: 'DATADOME_ANALYSIS_RESULT',
                         data: analysisData
                     });
-                    Logger.network('[DataDome-Analysis] ✓ Results sent to popup');
+                    Logger.network('[DataDome-Analysis] Results sent to popup');
                 } catch (error) {
                     Logger.network('[DataDome-Analysis] Popup not available - results discarded');
                 }

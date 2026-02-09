@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scrapfly Antibot Detector</title>
-  <link rel="stylesheet" href="popup.css">
-  <link rel="stylesheet" href="sections/detection/detection.css">
-  <link rel="stylesheet" href="sections/history/history.css">
-  <link rel="stylesheet" href="sections/rules/rules.css">
-  <link rel="stylesheet" href="sections/advanced/advanced.css">
-  <link rel="stylesheet" href="sections/settings/settings.css">
+  <link rel="stylesheet" href="modules/styles/popup.css">
+  <link rel="stylesheet" href="modules/styles/detection.css">
+  <link rel="stylesheet" href="modules/styles/history.css">
+  <link rel="stylesheet" href="modules/styles/rules.css">
+  <link rel="stylesheet" href="modules/styles/advanced.css">
+  <link rel="stylesheet" href="modules/styles/settings.css">
 </head>
 <body>
   <div id="app">
@@ -104,23 +104,55 @@
   </div>
 
   <!-- Scripts -->
-  <script src="modules/logger.js"></script>
-  <script src="modules/badge-constants.js"></script>
+  <!-- Core modules (foundation - must load first) -->
+  <script src="modules/core/logger.js"></script>
+  <script src="modules/core/badge-constants.js"></script>
   <script src="utils/utils.js"></script>
-  <script src="modules/storage-manager.js"></script>
-  <script src="modules/category-manager.js"></script>
-  <script src="modules/detector-manager.js"></script>
-  <script src="modules/confidence-manager.js"></script>
+  <script src="modules/core/storage-manager.js"></script>
+  <!-- Detection modules -->
+  <script src="modules/detection/managers/category-manager.js"></script>
+  <script src="modules/detection/managers/detector-manager.js"></script>
+  <script src="modules/detection/managers/confidence-manager.js"></script>
   <script src="utils/pattern-cache.js"></script>
-  <script src="modules/detection-engine-manager.js"></script>
-  <script src="modules/pagination-manager.js"></script>
-  <script src="modules/color-manager.js"></script>
-  <script src="modules/search-manager.js"></script>
-  <script src="modules/notification-manager.js"></script>
-  <script src="modules/update-manager.js"></script>
+  <script src="modules/detection/engine/detection-engine-analysis.js"></script>
+  <script src="modules/detection/engine/detection-engine-extractors.js"></script>
+  <script src="modules/detection/engine/detection-engine-matching.js"></script>
+  <script src="modules/detection/engine/detection-engine-hooks.js"></script>
+  <script src="modules/detection/engine/detection-engine-manager.js"></script>
+  <!-- UI modules -->
+  <script src="modules/ui/pagination-manager.js"></script>
+  <script src="modules/ui/color-manager.js"></script>
+  <script src="modules/ui/search-manager.js"></script>
+  <script src="modules/ui/notification-manager.js"></script>
+  <script src="modules/detection/hooks/window-condition-language.js"></script>
+  <!-- Update manager -->
+  <script src="modules/core/update-manager.js"></script>
+  <!-- Section core files -->
+  <script src="sections/detection/detection-state.js"></script>
   <script src="sections/detection/detection.js"></script>
   <script src="sections/history/history.js"></script>
   <script src="sections/rules/rules.js"></script>
+  <!-- Section extension files (after class definitions) -->
+  <script src="sections/detection/detection-requests.js"></script>
+  <script src="sections/detection/detection-ui.js"></script>
+  <script src="sections/detection/detection-actions.js"></script>
+  <script src="sections/detection/detection-modals.js"></script>
+  <script src="sections/rules/rules-formatters.js"></script>
+  <script src="sections/rules/rules-condition-ui.js"></script>
+  <script src="sections/rules/rules-method-settings.js"></script>
+  <script src="sections/rules/rules-editor-modal.js"></script>
+  <script src="sections/rules/rules-editor-render.js"></script>
+  <script src="sections/rules/rules-editor-data.js"></script>
+  <script src="sections/rules/rules-handlers.js"></script>
+  <script src="sections/rules/rules-display.js"></script>
+  <script src="sections/rules/modals/explanation-modals.js"></script>
+  <script src="sections/rules/modals/icon-picker-modal.js"></script>
+  <script src="sections/rules/helpers/helper-dom.js"></script>
+  <script src="sections/rules/helpers/helper-window.js"></script>
+  <script src="sections/rules/helpers/helper-regex.js"></script>
+  <script src="sections/rules/helpers/helper-whole-word.js"></script>
+  <script src="sections/rules/helpers/helper-case-sensitive.js"></script>
+  <script src="sections/rules/rules-modal-wiring.js"></script>
   <!-- Base template system for Advanced modules -->
   <script src="sections/advanced/base-interceptor-helpers.js"></script>
   <script src="sections/advanced/advanced-utils.js"></script>
@@ -140,7 +172,10 @@
   <script src="sections/advanced/modules/hcaptcha/hcaptcha-advanced.js"></script>
   <script src="sections/advanced/modules/funcaptcha/funcaptcha-advanced.js"></script>
   <script src="sections/advanced/advanced.js"></script>
+  <!-- Settings core + extensions -->
   <script src="sections/settings/settings.js"></script>
+  <script src="sections/settings/settings-runtime.js"></script>
+  <script src="sections/settings/settings-ui.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

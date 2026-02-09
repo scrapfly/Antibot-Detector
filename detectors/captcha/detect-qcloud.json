@@ -1,7 +1,7 @@
 {
   "id": "detect-qcloud",
   "name": "QCloud Captcha",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "CAPTCHA",
   "lastUpdated": "2024-10-21",
@@ -41,7 +41,7 @@
     ],
     "content": [
       {
-        "confidence": 100,
+        "confidence": 50,
         "description": "QCloud Captcha main object",
         "text": "TencentCaptcha",
         "textRegex": false,
@@ -49,7 +49,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 95,
+        "confidence": 50,
         "description": "QCloud Captcha reference",
         "text": "qcloud.captcha",
         "textRegex": false,
@@ -57,15 +57,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 90,
-        "description": "QCloud Captcha ticket parameter",
-        "text": "captcha_ticket",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 100,
+        "confidence": 50,
         "description": "Turing Captcha reference",
         "text": "turing.captcha",
         "textRegex": false,

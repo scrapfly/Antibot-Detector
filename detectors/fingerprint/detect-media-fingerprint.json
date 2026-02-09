@@ -1,7 +1,7 @@
 {
   "id": "detect-media-fingerprint",
   "name": "Media Fingerprint",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Fingerprint",
   "lastUpdated": "2025-01-15",
@@ -14,19 +14,19 @@
       {
         "description": "Accesses battery information for hardware fingerprinting",
         "enabled": true,
-        "confidence": 95,
+        "confidence": 65,
         "target": "Navigator.prototype.getBattery"
       },
       {
         "description": "Enumerates available voice options",
         "enabled": true,
-        "confidence": 90,
+        "confidence": 80,
         "target": "window.speechSynthesis"
       },
       {
         "description": "Counts supported MIME types",
         "enabled": true,
-        "confidence": 85,
+        "confidence": 80,
         "target": "MimeTypeArray.prototype.length"
       },
       {
@@ -38,7 +38,7 @@
       {
         "description": "Counts installed browser plugins",
         "enabled": true,
-        "confidence": 85,
+        "confidence": 80,
         "target": "PluginArray.prototype.length"
       },
       {
@@ -50,7 +50,7 @@
       {
         "description": "Detects supported media codecs",
         "enabled": true,
-        "confidence": 90,
+        "confidence": 80,
         "target": "HTMLMediaElement.prototype.canPlayType"
       }
     ]

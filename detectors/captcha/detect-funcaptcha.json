@@ -1,7 +1,7 @@
 {
   "id": "detect-funcaptcha",
   "name": "FunCaptcha (Arkose Labs)",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "CAPTCHA",
   "lastUpdated": "2024-01-15",
@@ -11,64 +11,10 @@
   "description": "Interactive game-based CAPTCHA by Arkose Labs",
   "detection": {
     "cookie": [
-      {
-        "name": "_arkose_*",
-        "confidence": 95,
-        "description": "Arkose Labs session cookies",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "all",
-        "valueScope": "all"
-      },
-      {
-        "name": "arkose_token",
-        "confidence": 100,
-        "description": "FunCaptcha token cookie",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "all",
-        "valueScope": "all"
-      }
+      
     ],
     "header": [
-      {
-        "name": "X-Arkose-Challenge",
-        "confidence": 100,
-        "description": "Arkose challenge header",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      },
-      {
-        "name": "X-Arkose-Token",
-        "confidence": 95,
-        "description": "Arkose token header",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      }
+     
     ],
     "url": [
       {
@@ -110,7 +56,7 @@
     ],
     "content": [
       {
-        "confidence": 100,
+        "confidence": 50,
         "description": "Arkose callback function",
         "text": "window.arkoseCallback",
         "textRegex": false,
@@ -118,7 +64,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 95,
+        "confidence": 50,
         "description": "Arkose enforcement object",
         "text": "ArkoseEnforce",
         "textRegex": false,
@@ -126,14 +72,14 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 90,
+        "confidence": 50,
         "text": "funcaptcha",
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
       },
       {
-        "confidence": 85,
+        "confidence": 50,
         "text": "setupEnforcement",
         "textRegex": false,
         "textWholeWord": false,

@@ -31,12 +31,12 @@ function akamaiInitializeInterceptor(captureState) {
  */
 function akamaiStartCapture(tabId, captureUrl) {
     Logger.network('[AKAMAI-CAPTURE] ========== START CAPTURE ==========');
-    Logger.network('[AKAMAI-CAPTURE] 🎯 Tab ID:', tabId);
-    Logger.network('[AKAMAI-CAPTURE] 📍 Capture URL:', captureUrl);
-    Logger.network('[AKAMAI-CAPTURE] ⏱️ Started at:', new Date().toISOString());
-    Logger.network('[AKAMAI-CAPTURE] ⏰ Auto-stop in: 60 seconds');
-    Logger.network('[AKAMAI-CAPTURE] 🎧 Listening for: POST requests to Akamai endpoints');
-    Logger.network('[AKAMAI-CAPTURE] ⚠️ Waiting for page reload before capturing');
+    Logger.network('[AKAMAI-CAPTURE] Tab ID:', tabId);
+    Logger.network('[AKAMAI-CAPTURE] Capture URL:', captureUrl);
+    Logger.network('[AKAMAI-CAPTURE] Started at:', new Date().toISOString());
+    Logger.network('[AKAMAI-CAPTURE] Auto-stop in: 60 seconds');
+    Logger.network('[AKAMAI-CAPTURE] Listening for: POST requests to Akamai endpoints');
+    Logger.network('[AKAMAI-CAPTURE] Waiting for page reload before capturing');
     Logger.network('[AKAMAI-CAPTURE] ========================================');
 
     if (!akamaiInterceptionListener) {
@@ -63,7 +63,7 @@ function akamaiStartCapture(tabId, captureUrl) {
     // Auto-stop after 60 seconds
     const state = akamaiCaptureStateRef.get(tabId);
     state.timeout = setTimeout(() => {
-        Logger.network(`[Akamai Debug] ⏰ Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
+        Logger.network(`[Akamai Debug] Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
         akamaiStopCapture(tabId);
     }, 60000);
 
@@ -89,11 +89,11 @@ function akamaiStartCapture(tabId, captureUrl) {
  */
 function akamaiStopCapture(tabId) {
     Logger.network('[AKAMAI-CAPTURE] ========== STOP CAPTURE ==========');
-    Logger.network('[AKAMAI-CAPTURE] 🎯 Tab ID:', tabId);
+    Logger.network('[AKAMAI-CAPTURE] Tab ID:', tabId);
 
     const state = akamaiCaptureStateRef.get(tabId);
     if (state) {
-        Logger.network('[AKAMAI-CAPTURE] 📊 Capture Results:');
+        Logger.network('[AKAMAI-CAPTURE] Capture Results:');
         Logger.network('[AKAMAI-CAPTURE]   sensor_data captured:', !!state.sensorData);
         Logger.network('[AKAMAI-CAPTURE]   endpoint:', state.endpoint || 'NONE');
         Logger.network('[AKAMAI-CAPTURE]   duration:', ((Date.now() - state.timestamp) / 1000).toFixed(2) + 's');
@@ -103,14 +103,14 @@ function akamaiStopCapture(tabId) {
         }
         akamaiCaptureStateRef.delete(tabId);
     } else {
-        Logger.network('[AKAMAI-CAPTURE] ⚠️ No capture state found for tab');
+        Logger.network('[AKAMAI-CAPTURE] No capture state found for tab');
     }
 
     // If no more active captures, remove listener
     if (akamaiCaptureStateRef.size === 0 && akamaiInterceptionListener) {
         chrome.webRequest.onBeforeRequest.removeListener(akamaiInterceptionListener);
         akamaiInterceptionListener = null;
-        Logger.network('[AKAMAI-CAPTURE] 🔌 Removed request interceptor (no active captures)');
+        Logger.network('[AKAMAI-CAPTURE] Removed request interceptor (no active captures)');
     }
 
     Logger.network('[AKAMAI-CAPTURE] ========================================');
@@ -206,10 +206,10 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
         Logger.network('[AKAMAI-CAPTURE] Step 1: Getting tab info...');
         const tab = await chrome.tabs.get(tabId);
         if (!tab || !tab.url) {
-            Logger.error('NETWORK', '[AKAMAI-CAPTURE] ❌ Tab not found or no URL');
+            Logger.error('NETWORK', '[AKAMAI-CAPTURE] Tab not found or no URL');
             return;
         }
-        Logger.network('[AKAMAI-CAPTURE] ✓ Tab info retrieved:', { url: tab.url, title: tab.title });
+        Logger.network('[AKAMAI-CAPTURE] Tab info retrieved:', { url: tab.url, title: tab.title });
 
         // Get cookies using helper
         Logger.network('[AKAMAI-CAPTURE] Step 2: Getting cookies for URL:', tab.url);
@@ -249,7 +249,7 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
             timestamp: Date.now()
             // NO sensor_data, NO cookie values, NO URLs stored
         };
-        Logger.network('[AKAMAI-CAPTURE] ✓ Capture data created successfully');
+        Logger.network('[AKAMAI-CAPTURE] Capture data created successfully');
         Logger.network('[AKAMAI-CAPTURE] URL Monitoring Results:', {
             requiresSbsd: captureData.requiresSbsd,
             requiresSecCpt: captureData.requiresSecCpt
@@ -258,7 +258,7 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
         // Save to history using helper
         Logger.network('[AKAMAI-CAPTURE] Step 4-6: Saving to history...');
         await saveToHistory(tabId, captureData, { type: 'akamai' });
-        Logger.network('[AKAMAI-CAPTURE] ✅ Successfully saved capture to history');
+        Logger.network('[AKAMAI-CAPTURE] Successfully saved capture to history');
 
         // Clean up capture state
         Logger.network('[AKAMAI-CAPTURE] Step 7: Cleaning up capture state for tab:', tabId);
@@ -268,7 +268,7 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
                 clearTimeout(state.timeout);
             }
             akamaiCaptureStateRef.delete(tabId);
-            Logger.network('[AKAMAI-CAPTURE] ✓ Capture state cleared');
+            Logger.network('[AKAMAI-CAPTURE] Capture state cleared');
         }
 
         // If no more active captures, remove listener
@@ -288,7 +288,7 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
                 timestamp: Date.now()
             }
         }).catch((err) => {
-            Logger.network('[AKAMAI-CAPTURE] ℹ️ Popup not open, message not sent (this is normal)');
+            Logger.network('[AKAMAI-CAPTURE] Popup not open, message not sent (this is normal)');
         });
 
         // Show success notification using helper
@@ -296,7 +296,7 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
         if (showNotification) {
             await showNotification(tabId, {
                 type: 'success',
-                title: '✅ Capture Completed',
+                title: 'Capture Completed',
                 message: 'Akamai sensor_data captured successfully',
                 duration: 5000
             }).catch(err => {
@@ -306,7 +306,7 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
 
         Logger.network('[AKAMAI-CAPTURE] ========== CAPTURE COMPLETED SUCCESSFULLY ==========');
     } catch (error) {
-        Logger.error('NETWORK', '[AKAMAI-CAPTURE] ❌ Error handling capture completion:', error);
+        Logger.error('NETWORK', '[AKAMAI-CAPTURE] Error handling capture completion:', error);
         Logger.error('NETWORK', '[AKAMAI-CAPTURE] Error stack:', error.stack);
 
         // Clean up on error
@@ -330,10 +330,10 @@ async function akamaiStartExtraction(tabId) {
         Logger.network('[AKAMAI-EXTRACT] Step 1: Getting tab info...');
         const tab = await chrome.tabs.get(tabId);
         if (!tab || !tab.url) {
-            Logger.error('NETWORK', '[AKAMAI-EXTRACT] ❌ Unable to get tab URL');
+            Logger.error('NETWORK', '[AKAMAI-EXTRACT] Unable to get tab URL');
             throw new Error('Unable to get tab URL');
         }
-        Logger.network('[AKAMAI-EXTRACT] ✓ Tab info:', { id: tab.id, url: tab.url });
+        Logger.network('[AKAMAI-EXTRACT] Tab info:', { id: tab.id, url: tab.url });
 
         // Delete _abck cookies for the current site
         Logger.network('[AKAMAI-EXTRACT] Step 2: Getting cookies for:', tab.url);
@@ -345,9 +345,9 @@ async function akamaiStartExtraction(tabId) {
                 url: tab.url,
                 name: cookie.name
             });
-            Logger.network('[AKAMAI-EXTRACT] ✓ Deleted cookie:', cookie.name);
+            Logger.network('[AKAMAI-EXTRACT] Deleted cookie:', cookie.name);
         }
-        Logger.network('[AKAMAI-EXTRACT] ✓ All _abck cookies deleted');
+        Logger.network('[AKAMAI-EXTRACT] All _abck cookies deleted');
 
         // Enable extraction mode in interceptor
         Logger.network('[AKAMAI-EXTRACT] Step 3: Enabling extraction mode...');
@@ -360,7 +360,7 @@ async function akamaiStartExtraction(tabId) {
 
         // Set up extraction mode in the capture state
         if (!akamaiCaptureStateRef) {
-            Logger.error('NETWORK', '[AKAMAI-EXTRACT] ❌ akamaiCaptureStateRef is not available!');
+            Logger.error('NETWORK', '[AKAMAI-EXTRACT] akamaiCaptureStateRef is not available!');
             throw new Error('Capture state not initialized');
         }
 
@@ -378,16 +378,16 @@ async function akamaiStartExtraction(tabId) {
                 const state = akamaiCaptureStateRef.get(tabId);
                 if (state && state.extractMode) {
                     akamaiCaptureStateRef.delete(tabId);
-                    Logger.network('[AKAMAI-EXTRACT] ⏱️ Auto-stopped after 30s timeout');
+                    Logger.network('[AKAMAI-EXTRACT] Auto-stopped after 30s timeout');
                 }
             }, 30000)
         });
-        Logger.network('[AKAMAI-EXTRACT] ✓ Extraction mode enabled for tab:', tabId);
+        Logger.network('[AKAMAI-EXTRACT] Extraction mode enabled for tab:', tabId);
 
         // Reload the page
         Logger.network('[AKAMAI-EXTRACT] Step 4: Reloading page...');
         await chrome.tabs.reload(tabId);
-        Logger.network('[AKAMAI-EXTRACT] ✓ Page reload initiated');
+        Logger.network('[AKAMAI-EXTRACT] Page reload initiated');
 
         // Show analyzing notification while waiting for sensor data
         try {
@@ -395,7 +395,7 @@ async function akamaiStartExtraction(tabId) {
                 Logger.network('[AKAMAI-EXTRACT] Showing analyzing notification...');
                 await showNotification(tabId, {
                     type: 'loading',
-                    title: '🔍 Extracting Akamai Sensor Data',
+                    title: 'Extracting Akamai Sensor Data',
                     message: 'Waiting for sensor information to be captured...',
                     duration: 30000 // Longer duration since extraction can take time
                 });
@@ -411,7 +411,7 @@ async function akamaiStartExtraction(tabId) {
 
         return { status: 'started' };
     } catch (error) {
-        Logger.error('NETWORK', '[AKAMAI-EXTRACT] ❌ Error:', error);
+        Logger.error('NETWORK', '[AKAMAI-EXTRACT] Error:', error);
         Logger.error('NETWORK', '[AKAMAI-EXTRACT] Stack:', error.stack);
         throw error;
     }
@@ -441,10 +441,10 @@ async function akamaiHandleExtractionCompleted(tabId, extractedData) {
             Logger.network('[AKAMAI-EXTRACT] Current state:', state);
             if (state && state.timeout) {
                 clearTimeout(state.timeout);
-                Logger.network('[AKAMAI-EXTRACT] ✓ Timeout cleared');
+                Logger.network('[AKAMAI-EXTRACT] Timeout cleared');
             }
             akamaiCaptureStateRef.delete(tabId);
-            Logger.network('[AKAMAI-EXTRACT] ✓ State deleted for tab:', tabId);
+            Logger.network('[AKAMAI-EXTRACT] State deleted for tab:', tabId);
         }
 
         // Send data to popup
@@ -455,14 +455,14 @@ async function akamaiHandleExtractionCompleted(tabId, extractedData) {
                 tabId: tabId,
                 extractedData: extractedData
             });
-            Logger.network('[AKAMAI-EXTRACT] ✓ Data sent to popup');
+            Logger.network('[AKAMAI-EXTRACT] Data sent to popup');
         } catch (err) {
-            Logger.network('[AKAMAI-EXTRACT] ℹ️ Popup not open (this is normal):', err.message);
+            Logger.network('[AKAMAI-EXTRACT] Popup not open (this is normal):', err.message);
         }
 
         Logger.network('[AKAMAI-EXTRACT] ========== EXTRACTION COMPLETED SUCCESSFULLY ==========');
     } catch (error) {
-        Logger.error('NETWORK', '[AKAMAI-EXTRACT] ❌ Error handling extraction completion:', error);
+        Logger.error('NETWORK', '[AKAMAI-EXTRACT] Error handling extraction completion:', error);
         Logger.error('NETWORK', '[AKAMAI-EXTRACT] Error stack:', error.stack);
 
         // Clean up on error
@@ -485,7 +485,7 @@ function setupAkamaiInterceptor() {
 
         // Log all requests in extraction mode for debugging
         if (state.extractMode) {
-            Logger.network('[AKAMAI-INTERCEPT-EXTRACT] 📡 Request in extraction mode:', {
+            Logger.network('[AKAMAI-INTERCEPT-EXTRACT] Request in extraction mode:', {
                 tabId: details.tabId,
                 method: details.method,
                 type: details.type,
@@ -496,7 +496,7 @@ function setupAkamaiInterceptor() {
 
         // If we're waiting for reload in normal mode, don't monitor yet
         if (!state.extractMode && state.waitingForReload) {
-            Logger.network('[AKAMAI-INTERCEPT] ⏳ Ignoring request - waiting for page reload');
+            Logger.network('[AKAMAI-INTERCEPT] Ignoring request - waiting for page reload');
             return;
         }
 
@@ -536,12 +536,12 @@ function setupAkamaiInterceptor() {
             }
 
             if (!details.requestBody) {
-                Logger.network('[AKAMAI-INTERCEPT-EXTRACT] ⚠️ POST request but no body:', url);
+                Logger.network('[AKAMAI-INTERCEPT-EXTRACT] POST request but no body:', url);
                 return;
             }
 
             // Continue to process the POST request body below
-            Logger.network('[AKAMAI-INTERCEPT-EXTRACT] ✅ Processing POST request with body');
+            Logger.network('[AKAMAI-INTERCEPT-EXTRACT] Processing POST request with body');
 
         } else {
             // Normal capture mode - monitor URLs
@@ -549,7 +549,7 @@ function setupAkamaiInterceptor() {
 
             // Check for SBSD patterns
             if (url.includes('.well-known/sbsd') || url.includes('/sbsd')) {
-                Logger.network('[AKAMAI-CAPTURE] 🔍 SBSD URL detected:', originalUrl);
+                Logger.network('[AKAMAI-CAPTURE] SBSD URL detected:', originalUrl);
                 state.requiresSbsd = true;
                 state.sbsdUrls.push(originalUrl);
                 // Don't stop capture - we need to keep monitoring for sensor_data
@@ -557,7 +557,7 @@ function setupAkamaiInterceptor() {
 
             // Check for SEC_CPT patterns
             if (url.includes('/sec_cpt/') || url.includes('cp_challenge') || url.includes('/sec-cpt/')) {
-                Logger.network('[AKAMAI-CAPTURE] 🔍 SEC_CPT URL detected:', originalUrl);
+                Logger.network('[AKAMAI-CAPTURE] SEC_CPT URL detected:', originalUrl);
                 state.requiresSecCpt = true;
                 state.secCptUrls.push(originalUrl);
             }
@@ -571,7 +571,7 @@ function setupAkamaiInterceptor() {
             }
         }
 
-        Logger.network('[AKAMAI-CAPTURE] 🎯 Intercepted POST request with body:', url);
+        Logger.network('[AKAMAI-CAPTURE] Intercepted POST request with body:', url);
         Logger.network('[AKAMAI-CAPTURE] Request details:', {
             method: details.method,
             hasBody: !!details.requestBody,
@@ -588,9 +588,9 @@ function setupAkamaiInterceptor() {
 
             // Check what type of body we have
             if (!details.requestBody) {
-                Logger.network('[AKAMAI-CAPTURE] ❌ No request body found!');
+                Logger.network('[AKAMAI-CAPTURE] No request body found!');
             } else if (details.requestBody.error) {
-                Logger.network('[AKAMAI-CAPTURE] ❌ Error in request body:', details.requestBody.error);
+                Logger.network('[AKAMAI-CAPTURE] Error in request body:', details.requestBody.error);
             } else if (details.requestBody.raw) {
                 Logger.network('[AKAMAI-CAPTURE] Has raw data, length:', details.requestBody.raw?.length);
             } else if (details.requestBody.formData) {
@@ -610,7 +610,7 @@ function setupAkamaiInterceptor() {
 
                 // Check if this raw body is sensor_data directly (starts with pattern like "3;0;1;0;")
                 if (/^\d+;\d+;\d+;\d+;\d+/.test(rawBody)) {
-                    Logger.network('[AKAMAI-CAPTURE] ✅ Raw body appears to be sensor_data directly!');
+                    Logger.network('[AKAMAI-CAPTURE] Raw body appears to be sensor_data directly!');
                     sensorData = rawBody;
                 }
             } else if (details.requestBody.formData) {
@@ -619,12 +619,12 @@ function setupAkamaiInterceptor() {
                 const formData = details.requestBody.formData;
                 Logger.network('[AKAMAI-CAPTURE] Form data keys:', Object.keys(formData));
                 if (formData.sensor_data) {
-                    Logger.network('[AKAMAI-CAPTURE] ✅ Found sensor_data in form data!');
+                    Logger.network('[AKAMAI-CAPTURE] Found sensor_data in form data!');
                     sensorData = formData.sensor_data[0];
                 }
                 rawBody = JSON.stringify(formData);
             } else {
-                Logger.network('[AKAMAI-CAPTURE] ⚠️ Unknown request body format');
+                Logger.network('[AKAMAI-CAPTURE] Unknown request body format');
             }
 
             // Try to parse sensor_data from raw body
@@ -663,12 +663,12 @@ function setupAkamaiInterceptor() {
 
                 // Check if this is SBSD data
                 if (url.includes('.well-known/sbsd')) {
-                    Logger.network('[AKAMAI-EXTRACT] 📦 SBSD data captured!');
+                    Logger.network('[AKAMAI-EXTRACT] SBSD data captured!');
                     state.extractedData.sbsdData = rawBody;
                 }
                 // Check if this is sensor_data
                 else if (sensorData) {
-                    Logger.network('[AKAMAI-EXTRACT] 📦 Sensor data captured!');
+                    Logger.network('[AKAMAI-EXTRACT] Sensor data captured!');
                     state.extractedData.sensorData = sensorData;
                     state.extractedData.sensorScriptUrl = originalUrl;
 
@@ -681,7 +681,7 @@ function setupAkamaiInterceptor() {
                 }
                 // Check for other Akamai endpoints with data
                 else if (rawBody && url.includes('/akam/')) {
-                    Logger.network('[AKAMAI-EXTRACT] 📦 Other Akamai data captured from:', originalUrl);
+                    Logger.network('[AKAMAI-EXTRACT] Other Akamai data captured from:', originalUrl);
                     // Store as sensor data if we don't have it yet
                     if (!state.extractedData.sensorData && rawBody.includes('sensor_data')) {
                         // Try to extract sensor_data from the body
@@ -689,7 +689,7 @@ function setupAkamaiInterceptor() {
                         if (match) {
                             state.extractedData.sensorData = match[1];
                             state.extractedData.sensorScriptUrl = originalUrl;
-                            Logger.network('[AKAMAI-EXTRACT] ✅ Extracted sensor_data from JSON!');
+                            Logger.network('[AKAMAI-EXTRACT] Extracted sensor_data from JSON!');
 
                             // Extract Akamai version
                             const versionMatch = match[1].match(/^(\d+);/);
@@ -706,7 +706,7 @@ function setupAkamaiInterceptor() {
 
                 // Check if we have enough data to complete extraction
                 if (state.extractedData.sensorData) {
-                    Logger.network('[AKAMAI-EXTRACT] ✅ Have sensor_data, completing extraction...');
+                    Logger.network('[AKAMAI-EXTRACT] Have sensor_data, completing extraction...');
 
                     // Since we're in background context, handle the extraction directly
                     Logger.network('[AKAMAI-EXTRACT] Handling extraction completion directly...');
@@ -724,7 +724,7 @@ function setupAkamaiInterceptor() {
                     }).then(() => {
                         Logger.network('[AKAMAI-EXTRACT] ✓ Extraction data sent to popup successfully');
                     }).catch((err) => {
-                        Logger.network('[AKAMAI-EXTRACT] ℹ️ Popup not open (this is normal):', err.message);
+                        Logger.network('[AKAMAI-EXTRACT] Popup not open (this is normal):', err.message);
                     });
 
                     // Clear the capture state
@@ -737,11 +737,11 @@ function setupAkamaiInterceptor() {
             // Normal capture mode handling
             if (sensorData && !state.extractMode) {
                 Logger.network('[AKAMAI-CAPTURE] ========== SENSOR DATA CAPTURED ==========');
-                Logger.network('[AKAMAI-CAPTURE] 🎯 Tab ID:', details.tabId);
-                Logger.network('[AKAMAI-CAPTURE] 📡 Endpoint:', url);
-                Logger.network('[AKAMAI-CAPTURE] 📦 sensor_data:', sensorData.substring(0, 100) + '...');
-                Logger.network('[AKAMAI-CAPTURE] 📏 sensor_data length:', sensorData.length);
-                Logger.network('[AKAMAI-CAPTURE] ⏱️ Timestamp:', new Date().toISOString());
+                Logger.network('[AKAMAI-CAPTURE] Tab ID:', details.tabId);
+                Logger.network('[AKAMAI-CAPTURE] Endpoint:', url);
+                Logger.network('[AKAMAI-CAPTURE] sensor_data:', sensorData.substring(0, 100) + '...');
+                Logger.network('[AKAMAI-CAPTURE] sensor_data length:', sensorData.length);
+                Logger.network('[AKAMAI-CAPTURE] Timestamp:', new Date().toISOString());
                 Logger.network('[AKAMAI-CAPTURE] ========================================');
 
                 state.sensorData = sensorData;
@@ -780,12 +780,12 @@ function setupAkamaiInterceptor() {
                     urlsMonitored: state.urlsMonitored || []
                 });
             } else if (rawBody) {
-                Logger.network('[AKAMAI-CAPTURE] ⚠️ POST request intercepted but no sensor_data found');
+                Logger.network('[AKAMAI-CAPTURE] POST request intercepted but no sensor_data found');
                 Logger.network('[AKAMAI-CAPTURE] Endpoint:', url);
                 Logger.network('[AKAMAI-CAPTURE] Body preview:', rawBody.substring(0, 200));
             }
         } catch (error) {
-            Logger.error('NETWORK', '[AKAMAI-CAPTURE] ❌ Error processing request:', error);
+            Logger.error('NETWORK', '[AKAMAI-CAPTURE] Error processing request:', error);
             Logger.error('NETWORK', '[AKAMAI-CAPTURE] Error stack:', error.stack);
             Logger.error('NETWORK', '[AKAMAI-CAPTURE] Error details:', {
                 message: error.message,
@@ -806,7 +806,7 @@ function setupAkamaiInterceptor() {
         ["requestBody"]
     );
 
-    Logger.network('[AKAMAI-CAPTURE] ✅ Request interceptor ready');
+    Logger.network('[AKAMAI-CAPTURE] Request interceptor ready');
 }
 
 /**
@@ -900,7 +900,7 @@ function akamaiHandleMessage(request, sendResponse) {
                     await akamaiHandleExtractionCompleted(tabId, extractedData);
                     sendResponse({ status: 'success' });
                 } catch (error) {
-                    Logger.error('NETWORK', '[AKAMAI-EXTRACT] Error handling extraction completion:', error);
+                    Logger.error('NETWORK', '[AKAMAI-EXTRACT] Error handling extraction completion', error);
                     sendResponse({ status: 'error', error: error.message });
                 }
             })();
@@ -914,7 +914,7 @@ function akamaiHandleMessage(request, sendResponse) {
                         Logger.network('[AKAMAI] Showing analyzing notification...');
                         await showNotification(request.tabId, {
                             type: 'loading',
-                            title: '🔍 Analyzing Akamai Content',
+                            title: 'Analyzing Akamai Content',
                             message: 'Scanning page for scripts and patterns...',
                             duration: 10000
                         });
@@ -938,7 +938,7 @@ function akamaiHandleMessage(request, sendResponse) {
                         Logger.network('[AKAMAI] Showing extracting sensor notification...');
                         await showNotification(request.tabId, {
                             type: 'loading',
-                            title: '🔍 Extracting Sensor Data',
+                            title: 'Extracting Sensor Data',
                             message: 'Capturing Akamai sensor information...',
                             duration: 15000 // Longer duration to persist through reload
                         });

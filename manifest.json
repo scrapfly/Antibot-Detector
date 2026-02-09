@@ -34,8 +34,9 @@
     {
       "matches": ["http://*/*", "https://*/*"],
       "js": [
-        "modules/hook-resilience-manager.js",
-        "modules/window-property-tracker.js",
+        "modules/detection/hooks/window-condition-language.js",
+        "modules/detection/hooks/hook-resilience-manager.js",
+        "modules/detection/hooks/window-property-tracker.js",
         "content-main-world.js"
       ],
       "run_at": "document_start",
@@ -44,7 +45,20 @@
     },
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["modules/logger.js", "utils/utils.js", "utils/pattern-cache.js", "modules/storage-manager.js", "modules/confidence-manager.js", "modules/detection-engine-manager.js", "sections/settings/settings.js", "content.js"],
+      "js": [
+        "modules/core/logger.js",
+        "utils/utils.js",
+        "utils/pattern-cache.js",
+        "modules/core/storage-manager.js",
+        "modules/detection/managers/confidence-manager.js",
+        "modules/detection/engine/detection-engine-analysis.js",
+        "modules/detection/engine/detection-engine-extractors.js",
+        "modules/detection/engine/detection-engine-matching.js",
+        "modules/detection/engine/detection-engine-hooks.js",
+        "modules/detection/engine/detection-engine-manager.js",
+        "sections/settings/settings-runtime.js",
+        "content.js"
+      ],
       "run_at": "document_start",
       "all_frames": false
     }
@@ -71,7 +85,7 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "modules/notification-manager.css",
+        "modules/styles/notification-manager.css",
         "detectors/*/*",
         "sections/settings/default-settings.json"
       ],

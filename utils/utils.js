@@ -1,7 +1,5 @@
 /**
  * URL Hash LRU Cache - Optimized cache with Least Recently Used eviction
- * OPTIMIZATION Phase 1: Proper LRU eviction (better than FIFO)
- * OPTIMIZATION Phase 9B.1: Added Set for O(1) existence checks (60-80% faster)
  */
 class URLHashCache {
   constructor(maxSize = 1000) {
@@ -28,7 +26,6 @@ class URLHashCache {
 
   /**
    * Set value in cache with LRU eviction
-   * OPTIMIZATION Phase 9B.1: Use Set for O(1) existence check
    * @param {string} key - Cache key
    * @param {string} value - Value to cache
    */
@@ -70,12 +67,10 @@ class URLHashCache {
 
   /**
    * Move key to end of access order (most recently used)
-   * OPTIMIZATION Phase 9B.1: Use Set for O(1) check before array indexOf
    * @private
    * @param {string} key - Cache key
    */
   _touch(key) {
-    // OPTIMIZED: O(1) check instead of O(n) indexOf
     if (this.accessSet.has(key)) {
       // Still need O(n) splice, but only when key exists
       const index = this.accessOrder.indexOf(key);
@@ -89,12 +84,9 @@ class URLHashCache {
 
   /**
    * Evict least recently used entries (first 10%)
-   * OPTIMIZATION Phase 9A.3: Reduced from 20% to 10% to reduce cache thrashing
-   * OPTIMIZATION Phase 9B.1: Keep Set in sync with evictions
    * @private
    */
   _evict() {
-    // OPTIMIZED: Evict only 10% (100 entries) to reduce thrashing
     const evictCount = Math.ceil(this.maxSize * 0.1);
     const keysToEvict = this.accessOrder.splice(0, evictCount);
 
@@ -106,7 +98,6 @@ class URLHashCache {
 
   /**
    * Clear entire cache
-   * OPTIMIZATION Phase 9B.1: Clear Set as well
    */
   clear() {
     this.cache.clear();
@@ -120,18 +111,114 @@ class URLHashCache {
  */
 
 class Utils {
-  // OPTIMIZATION Phase 1: LRU cache for URL hashes (prevents memory bloat)
   static urlHashCache = new URLHashCache(1000); // URL string -> hash
   static settingsCache = null; // Cached settings object
   static settingsCacheTime = 0; // Timestamp of settings cache
   static SETTINGS_CACHE_TTL = 60000; // 60 seconds
 
-  // OPTIMIZATION Phase 6E: JSON parse cache (30-40% fewer parse operations)
   static parsedObjectCache = new Map(); // cacheKey -> { parsed, timestamp }
   static JSON_CACHE_TTL = 300000; // 5 minutes
   static JSON_CACHE_MAX_SIZE = 50;
-  // OPTIMIZATION Phase 9A.4: Periodic cleanup timer for expired JSON cache entries
   static _jsonCacheCleanupTimer = null;
+
+  /**
+   * Apply debug mode flag globally for Logger.
+   * @param {object} settings
+   */
+  static applyDebugMode(settings) {
+    const enabled = !!settings?.debugMode;
+    const logCollectorEnabled = !!settings?.logCollectorEnabled;
+    if (typeof globalThis !== 'undefined') {
+      globalThis.debugMode = enabled;
+      globalThis.logCollectorEnabled = logCollectorEnabled;
+    }
+    if (typeof window !== 'undefined') {
+      window.debugMode = enabled;
+      window.logCollectorEnabled = logCollectorEnabled;
+    }
+    if (typeof self !== 'undefined') {
+      self.debugMode = enabled;
+      self.logCollectorEnabled = logCollectorEnabled;
+    }
+  }
+
+  /**
+   * Compute the average confidence for a list of detections (0-100).
+   * @param {Array} detections
+   * @returns {number}
+   */
+  static computeAverageConfidence(detections = []) {
+    if (!Array.isArray(detections) || detections.length === 0) return 0;
+    const total = detections.reduce((sum, d) => sum + (d?.confidence || 0), 0);
+    return Math.round(total / detections.length);
+  }
+
+  /**
+   * Compute a difficulty level for a set of detections.
+   * This is a UI-facing heuristic (Low/Medium/High), not a security guarantee.
+   * @param {Array} detections
+   * @param {number} [avgConfidence]
+   * @returns {'Low'|'Medium'|'High'}
+   */
+  static getDifficultyLevel(detections = [], avgConfidence = undefined) {
+    const totalDetections = Array.isArray(detections) ? detections.length : 0;
+
+    const safeAvgConfidence = Number.isFinite(avgConfidence)
+      ? avgConfidence
+      : Utils.computeAverageConfidence(detections);
+
+    const normalizedCategories = (Array.isArray(detections) ? detections : []).map((d) => {
+      const category = d?.category ?? d?.detector?.category ?? '';
+      return String(category).toLowerCase();
+    });
+
+    const antiCaptchaCount = normalizedCategories.filter((category) => {
+      return category.includes('anti') || category.includes('captcha');
+    }).length;
+
+    // Fingerprint-only detections (even many of them) shouldn't imply a "hard" page.
+    const fingerprintOnly = totalDetections > 0 && normalizedCategories.every((category) => {
+      return category.includes('fingerprint');
+    });
+
+    const isHighTierName = (d) => {
+      const name = (d?.detector?.name || d?.detector || d?.name || '').toLowerCase();
+      return name.includes('shape security') ||
+        name.includes('shapesecurity') ||
+        name.includes('hcaptcha') ||
+        name.includes('arkose') ||
+        name.includes('funcaptcha');
+    };
+
+    const highTierHighConfidence = (Array.isArray(detections) ? detections : []).some((d) => {
+      return isHighTierName(d) && (d?.confidence || 0) >= 80;
+    });
+
+    if (highTierHighConfidence) return 'High';
+    if (fingerprintOnly) return 'Low';
+
+    if (antiCaptchaCount >= 2 || totalDetections > 2 || safeAvgConfidence > 60) {
+      return 'Medium';
+    }
+
+    return 'Low';
+  }
+
+  /**
+   * Compute difficulty + default color.
+   * @param {Array} detections
+   * @param {number} [avgConfidence]
+   * @returns {{difficulty: 'Low'|'Medium'|'High', difficultyColor: string}}
+   */
+  static getDifficultyInfo(detections = [], avgConfidence = undefined) {
+    const difficulty = Utils.getDifficultyLevel(detections, avgConfidence);
+    const colors = {
+      High: '#ef4444',
+      Medium: '#f59e0b',
+      Low: '#22c55e'
+    };
+    return { difficulty, difficultyColor: colors[difficulty] || colors.Low };
+  }
 
   /**
    * Generate a hash for URL to use as cache key
@@ -145,7 +232,6 @@ class Utils {
     // Create cache key that includes the scope
     const cacheKey = `${scope}:${url}`;
 
-    // OPTIMIZATION: Check cache first
     if (Utils.urlHashCache.has(cacheKey)) {
       return Utils.urlHashCache.get(cacheKey);
     }
@@ -193,7 +279,6 @@ class Utils {
 
     const hashString = Math.abs(hash).toString(36);
 
-    // OPTIMIZATION Phase 1: LRU cache automatically handles eviction
     Utils.urlHashCache.set(cacheKey, hashString);
 
     return hashString;
@@ -201,15 +286,12 @@ class Utils {
 
   /**
    * Get cached settings or fetch from storage
-   * OPTIMIZATION: Caches settings in memory for 60 seconds
-   * OPTIMIZATION Phase 9A.7: Added forceReload parameter to bypass cache
    * @param {boolean} forceReload - Force reload from storage (bypass cache)
    * @returns {Promise<object>} Settings object
    */
   static async getCachedSettings(forceReload = false) {
     const now = Date.now();
 
-    // OPTIMIZATION Phase 9A.7: Allow forced cache bypass (used after settings update)
     if (forceReload) {
       Utils.settingsCache = null;
       Utils.settingsCacheTime = 0;
@@ -235,6 +317,7 @@ class Utils {
           Utils.settingsCache = parsed || {};
         }
         Utils.settingsCacheTime = now;
+        Utils.applyDebugMode(Utils.settingsCache);
 
         return Utils.settingsCache;
       }
@@ -254,16 +337,15 @@ class Utils {
   }
 
   /**
-   * Clear detection cache from storage (e.g., when cache scope changes)
+   * Clear detection cache (e.g., when cache scope changes)
+   * Note: Detection cache is now consolidated into history storage
    */
   static async clearDetectionCache() {
-    try {
-      await chrome.storage.local.remove('scrapfly_detection_storage');
-      return true;
-    } catch (error) {
-      Logger.error('UTIL', '[Utils] Error clearing detection cache:', error);
-      return false;
-    }
+    // No-op: Detection cache is now part of history storage
+    // Just clear the URL hash cache for fresh lookups
+    Utils.clearUrlHashCache();
+    Logger.storage('[Utils] Detection cache cleared (using history storage)');
+    return true;
   }
 
   /**
@@ -276,7 +358,7 @@ class Utils {
   }
 
   /**
-   * OPTIMIZATION Phase 9A.4: Start periodic cleanup of expired JSON cache entries
+   * Start periodic cleanup of expired JSON cache entries
    * @private
    */
   static _startJsonCacheCleanup() {
@@ -296,8 +378,6 @@ class Utils {
 
   /**
    * Parse JSON with caching to avoid repeated parsing
-   * OPTIMIZATION Phase 6E: Caches parsed results for 5 minutes
-   * OPTIMIZATION Phase 9A.4: Added automatic cleanup timer
    * @param {string} jsonString - JSON string to parse
    * @param {string} cacheKey - Optional cache key (defaults to hash of string)
    * @returns {object} Parsed object
@@ -305,7 +385,6 @@ class Utils {
   static parseJSON(jsonString, cacheKey = null) {
     if (!jsonString) return null;
 
-    // OPTIMIZATION Phase 9A.4: Start cleanup timer on first use
     if (!Utils._jsonCacheCleanupTimer) {
       Utils._startJsonCacheCleanup();
     }
@@ -590,16 +669,15 @@ class Utils {
 
       // CRITICAL: Ensure all getters are evaluated and converted to plain values
       // This prevents "Could not serialize message" errors from lazy getters
-      const plainPageData = {
-        url: pageData.url,
-        title: pageData.title,              // Page title
-        favicon: pageData.favicon,          // Page favicon URL
-        cookies: pageData.cookies,          // Triggers lazy getter evaluation
-        storageCookies: pageData.storageCookies,  // NEW: Storage cookies (localStorage + sessionStorage)
-        content: pageData.content,          // Triggers lazy getter evaluation
-        dom: pageData.dom,                  // Triggers lazy getter evaluation
-        headers: pageData.headers,
-        jsHooks: pageData.jsHooks,
+        const plainPageData = {
+          url: pageData.url,
+          title: pageData.title,              // Page title
+          favicon: pageData.favicon,          // Page favicon URL
+          cookies: pageData.cookies,          // Triggers lazy getter evaluation
+          content: pageData.content,          // Triggers lazy getter evaluation
+          dom: pageData.dom,                  // Triggers lazy getter evaluation
+          headers: pageData.headers,
+          jsHooks: pageData.jsHooks,
         payload: pageData.payload,
         payloads: pageData.payloads,
         networkUrls: pageData.networkUrls,
@@ -655,7 +733,7 @@ class Utils {
                 url: window.location.href
               };
               sessionStorage.setItem(cacheKey, JSON.stringify(cacheData));
-              Logger.cache('✅ Saved sessionStorage after detection send (for next visit)');
+              Logger.cache('Saved sessionStorage after detection send (for next visit)');
             } catch (e) {
               // sessionStorage not available - continue silently
             }
@@ -688,7 +766,7 @@ class Utils {
   }
 
   // ============================================================================
-  // Phase 9A: URL/Hostname Utilities
+  // URL/Hostname Utilities
   // ============================================================================
 
   /**
@@ -734,7 +812,7 @@ class Utils {
   }
 
   // ============================================================================
-  // Phase 9B: Storage Helper Functions
+  // Storage Helper Functions
   // ============================================================================
 
   /**
@@ -754,10 +832,12 @@ class Utils {
         // FIX: Always return the nested settings object if it exists
         // This ensures consistent structure regardless of how it was saved
         if (parsed && parsed.settings) {
+          Utils.applyDebugMode(parsed.settings);
           return parsed.settings;
         }
 
         // Fallback for flat structure (legacy)
+        Utils.applyDebugMode(parsed || {});
         return parsed || {};
       }
     } catch (error) {
@@ -765,6 +845,7 @@ class Utils {
     }
 
     // Return empty object as fallback (safe default)
+    Utils.applyDebugMode({ debugMode: false });
     return {};
   }
 
@@ -800,7 +881,8 @@ class Utils {
       const settings = await this.getSettings();
       // FIX: Check both flat and nested paths for backwards compatibility
       // Blacklist is stored at settings.detection.blacklistedDomains (nested structure)
-      const blacklist = settings.blacklistedDomains || settings.detection?.blacklistedDomains || [];
+      // Prefer nested detection settings (current), fall back to legacy flat keys
+      const blacklist = settings.detection?.blacklistedDomains || settings.blacklistedDomains || [];
 
       // Extract hostname for comparison
       const hostname = this.getHostnameFromUrl(url);
@@ -822,8 +904,11 @@ class Utils {
       const settings = await this.getSettings();
 
       // Support both new (cacheDuration + cacheUnit) and old (cacheHours) formats
-      if (settings.cacheDuration !== undefined && settings.cacheUnit) {
-        return this.convertToMilliseconds(settings.cacheDuration, settings.cacheUnit);
+      // Prefer nested detection settings (current), fall back to legacy flat keys
+      const duration = settings.detection?.cacheDuration ?? settings.cacheDuration;
+      const unit = settings.detection?.cacheUnit ?? settings.cacheUnit;
+      if (duration !== undefined && unit) {
+        return this.convertToMilliseconds(duration, unit);
       }
 
       // Fallback to old cacheHours format
@@ -843,7 +928,8 @@ class Utils {
     try {
       const settings = await this.getSettings();
 
-      const scope = settings.cacheScope || settings.detection?.cacheScope || 'domain';
+      // Prefer nested detection settings (current), fall back to legacy flat keys
+      const scope = settings.detection?.cacheScope || settings.cacheScope || 'domain';
 
       // Validate scope value
       if (!['domain', 'path', 'full'].includes(scope)) {
@@ -859,7 +945,7 @@ class Utils {
   }
 
   // ============================================================================
-  // Phase 9C: Time Formatting Utilities
+  // Time Formatting Utilities
   // ============================================================================
 
   /**
@@ -969,7 +1055,7 @@ class Utils {
   }
 
   // ============================================================================
-  // Phase 9D: Validation and Miscellaneous Utilities
+  // Validation and Miscellaneous Utilities
   // ============================================================================
 
   /**

@@ -1,7 +1,7 @@
 {
   "id": "detect-aliexpress",
   "name": "AliExpress CAPTCHA",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "CAPTCHA",
   "lastUpdated": "2025-01-11",
@@ -32,7 +32,7 @@
     ],
     "content": [
       {
-        "confidence": 90,
+        "confidence": 50,
         "description": "x5sec data parameter",
         "text": "x5secdata",
         "textRegex": false,
@@ -40,7 +40,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 95,
+        "confidence": 50,
         "description": "AliExpress punish endpoint",
         "text": "aliexpress.com/punish",
         "textRegex": false,

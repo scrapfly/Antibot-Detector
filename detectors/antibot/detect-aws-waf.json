@@ -1,7 +1,7 @@
 {
   "id": "detect-aws-waf",
   "name": "AWS WAF",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Anti-Bot",
   "lastUpdated": "2024-01-15",
@@ -13,7 +13,7 @@
     "cookie": [
       {
         "name": "aws-waf-token",
-        "confidence": 95,
+        "confidence": 100,
         "description": "AWS WAF session token",
         "nameRegex": false,
         "nameWholeWord": false,
@@ -27,7 +27,7 @@
       },
       {
         "name": "awswaf*",
-        "confidence": 90,
+        "confidence": 100,
         "description": "AWS WAF cookies",
         "nameRegex": false,
         "nameWholeWord": false,
@@ -43,7 +43,7 @@
     "header": [],
     "url": [
       {
-        "confidence": 80,
+        "confidence": 100,
         "description": "AWS WAF challenge script",
         "text": "/challenge.js",
         "textRegex": false,
@@ -90,7 +90,7 @@
     ],
     "content": [
       {
-        "confidence": 80,
+        "confidence": 50,
         "description": "AWS WAF challenge script",
         "text": "challenge.js",
         "textRegex": false,
@@ -98,7 +98,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 85,
+        "confidence": 50,
         "description": "AWS WAF reference",
         "text": "awswaf",
         "textRegex": false,

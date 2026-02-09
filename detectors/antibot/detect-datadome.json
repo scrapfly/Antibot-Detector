@@ -1,7 +1,7 @@
 {
   "id": "detect-datadome",
   "name": "DataDome",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Anti-Bot",
   "lastUpdated": "2024-01-15",
@@ -12,10 +12,10 @@
   "detection": {
     "cookie": [
       {
-        "name": "datadome",
+        "name": "^datadome$",
         "confidence": 100,
         "description": "Main DataDome tracking cookie",
-        "nameRegex": false,
+        "nameRegex": true,
         "nameWholeWord": false,
         "nameCaseSensitive": false,
         "value": "",
@@ -28,10 +28,10 @@
     ],
     "header": [
       {
-        "name": "x-datadome-cid",
+        "name": "^x-datadome-cid$",
         "confidence": 100,
         "description": "DataDome client ID header",
-        "nameRegex": false,
+        "nameRegex": true,
         "nameWholeWord": false,
         "nameCaseSensitive": false,
         "value": "",

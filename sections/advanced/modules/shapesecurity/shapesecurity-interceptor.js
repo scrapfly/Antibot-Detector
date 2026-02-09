@@ -58,7 +58,7 @@ function shapeSecurityHandleMessage(request, sendResponse) {
                         Logger.network('[ShapeSecurity] Showing analyzing notification before reload...');
                         await showNotification(request.tabId, {
                             type: 'loading',
-                            title: '🔍 Extracting Shape Security Scripts',
+                            title: 'Extracting Shape Security Scripts',
                             message: 'Please wait while we collect script URLs...',
                             duration: 15000 // Longer duration to persist through reload
                         });
@@ -216,8 +216,8 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
     if (showNotification) {
         await showNotification(tabId, {
             type: 'capture',
-            title: '🎯 Shape Security Capture Active',
-            message: '🔄 Please reload the page to start monitoring',
+            title: 'Shape Security Capture Active',
+            message: 'Please reload the page to start monitoring',
             duration: 60000
         }).catch(err => {
             Logger.error('NETWORK', '[ShapeSecurity] Failed to show notification:', err);
@@ -233,7 +233,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
             if (showNotification) {
                 showNotification(tabId, {
                     type: 'warning',
-                    title: '⚠️ Page Loading',
+                    title: 'Page Loading',
                     message: 'Please wait for the page to fully load before performing actions...',
                     duration: 5000
                 }).catch(err => {
@@ -344,7 +344,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
 
                                         notif.innerHTML = `
                                             <div style="font-weight: 600; font-size: 16px; margin-bottom: 6px;">
-                                                👁️ Monitoring Active (${version.toUpperCase()}) ⏱️ <span id="scrapfly-timer">60s</span>
+                                                Monitoring Active (${version.toUpperCase()}) <span id="scrapfly-timer">60s</span>
                                             </div>
                                             <div style="opacity: 0.9;">
                                                 ${message}
@@ -483,7 +483,7 @@ async function autoStopCapture(tabId, reason = 'complete') {
 
             let message;
             if (reason === 'timeout') {
-                message = `⏰ Timeout: ${cookieCount} cookie, ${headerCount} headers captured (${version.toUpperCase()})`;
+                message = `Timeout: ${cookieCount} cookie, ${headerCount} headers captured (${version.toUpperCase()})`;
             } else {
                 // Version-specific success message
                 if (version === 'v1') {
@@ -495,7 +495,7 @@ async function autoStopCapture(tabId, reason = 'complete') {
 
             await showNotification(tabId, {
                 type: 'success',
-                title: '✅ Capture Completed',
+                title: 'Capture Completed',
                 message: message,
                 duration: 5000
             }).catch(err => {
@@ -551,7 +551,7 @@ function handleShapeSecurityStopCapture(message, sender, sendResponse) {
 
                 await showNotification(tabId, {
                     type: 'success',
-                    title: '✅ Capture Completed',
+                    title: 'Capture Completed',
                     message: `Captured: ${cookieCount} cookie, ${headerCount} headers`,
                     duration: 5000
                 }).catch(err => {
@@ -695,7 +695,7 @@ async function handleShapeSecurityCheckCookies(message, sender, sendResponse) {
                                         value: valueMatch ? valueMatch[1] : '',
                                         setCookie: cookieHeader
                                     };
-                                    Logger.network('[ShapeSecurity] ✓ Found Shape Security cookie:', foundCookie);
+                                    Logger.network('[ShapeSecurity] Found Shape Security cookie:', foundCookie);
                                 }
                             }
                         }
@@ -1120,4 +1120,4 @@ async function handleShapeSecurityExtractionCompleted(message, sender, sendRespo
     sendResponse({ status: 'success' });
 }
 
-Logger.network('[ShapeSecurityInterceptor] ✓ Loaded');
+Logger.network('[ShapeSecurityInterceptor] Loaded');

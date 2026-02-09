@@ -171,16 +171,15 @@ class History {
     }
 
     historyList.style.display = 'block';
-    let historyHtml = '';
 
-    items.forEach(item => {
+    const buildHistoryItemHtml = (item) => {
       const timeAgo = this.getTimeAgo(new Date(item.timestamp));
       const domain = this.getDomainFromUrl(item.url);
 
       // Use Scrapfly icon as default for favicon
       const faviconSrc = item.favicon || chrome.runtime.getURL('icons/icon16.png');
 
-      historyHtml += `
+      return `
         <div class="history-item" data-history-id="${item.id}">
           <div class="history-item-top">
             <div class="history-item-content">
@@ -219,20 +218,64 @@ class History {
           </div>
         </div>
       `;
-    });
+    };
 
-    historyList.innerHTML = historyHtml;
+    const finalizeRender = () => {
+      if (renderToken !== this._historyRenderToken) {
+        return;
+      }
 
-    // CSP-compliant image error fallback
-    historyList.querySelectorAll('img[data-fallback]').forEach(img => {
-      img.addEventListener('error', function() {
-        this.src = this.dataset.fallback;
-      }, { once: true });
-    });
+      // CSP-compliant image error fallback
+      historyList.querySelectorAll('img[data-fallback]').forEach(img => {
+        img.addEventListener('error', function() {
+          this.src = this.dataset.fallback;
+        }, { once: true });
+      });
 
-    // Add click handlers for history items
-    this.setupHistoryItemHandlers();
-    this.setupOverflowBadgeHandlers();
+      // Add click handlers for history items
+      this.setupHistoryItemHandlers();
+      this.setupOverflowBadgeHandlers();
+    };
+
+    this._historyRenderToken = (this._historyRenderToken || 0) + 1;
+    const renderToken = this._historyRenderToken;
+    const shouldBatchRender = items.length > 40;
+
+    if (!shouldBatchRender) {
+      let historyHtml = '';
+      items.forEach(item => {
+        historyHtml += buildHistoryItemHtml(item);
+      });
+      historyList.innerHTML = historyHtml;
+      finalizeRender();
+      return;
+    }
+
+    historyList.innerHTML = '';
+    const batchSize = 10;
+    let offset = 0;
+
+    const renderBatch = () => {
+      if (renderToken !== this._historyRenderToken) {
+        return;
+      }
+
+      const slice = items.slice(offset, offset + batchSize);
+      let batchHtml = '';
+      slice.forEach(item => {
+        batchHtml += buildHistoryItemHtml(item);
+      });
+      historyList.insertAdjacentHTML('beforeend', batchHtml);
+      offset += batchSize;
+
+      if (offset < items.length) {
+        requestAnimationFrame(renderBatch);
+      } else {
+        finalizeRender();
+      }
+    };
+
+    renderBatch();
   }
 
   /**
@@ -355,18 +398,20 @@ class History {
       avgConfidence = Math.round(totalConfidence / totalDetections);
     }
 
-    // Calculate difficulty based on detection count and confidence
-    let difficulty = 'Low';
-    let difficultyColor = '#22c55e'; // Green
-    if (totalDetections > 5 || avgConfidence > 80) {
-      difficulty = 'High';
-      difficultyColor = '#ef4444'; // Red
-    } else if (totalDetections > 2 || avgConfidence > 60) {
-      difficulty = 'Medium';
-      difficultyColor = '#f59e0b'; // Amber
-    }
+    const difficultyInfo = this.getDifficultyInfo(detections || [], avgConfidence);
+    return { totalDetections, avgConfidence, difficulty: difficultyInfo.difficulty, difficultyColor: difficultyInfo.difficultyColor };
+  }
 
-    return { totalDetections, avgConfidence, difficulty, difficultyColor };
+  /**
+   * Compute difficulty for a set of detections.
+   * Escalates difficulty when multiple Anti-Bot/CAPTCHA detections appear,
+   * or when high-tier providers are present (Shape Security, hCaptcha, Arkose Labs).
+   * @param {Array} detections
+   * @param {number} avgConfidence
+   * @returns {{difficulty: string, difficultyColor: string}}
+   */
+  getDifficultyInfo(detections = [], avgConfidence = 0) {
+    return Utils.getDifficultyInfo(detections, avgConfidence);
   }
 
   /**
@@ -466,11 +511,6 @@ class History {
         breakdown.captcha++;
       } else if (cat.includes('fingerprint')) {
         breakdown.fingerprint++;
-      }
-
-      // Count js_hooks from matches (these are fingerprinting techniques)
-      if (d.matches) {
-        breakdown.fingerprint += d.matches.filter(m => m.type === 'js_hooks').length;
       }
     });
 
@@ -886,7 +926,7 @@ class History {
         text += `   Detection Methods:\n`;
         detection.matches.forEach(match => {
           const methodType = (match.type || 'unknown').replace(/_/g, ' ').toUpperCase();
-          const value = match.pattern || match.value || match.name || match.selector || 'unknown';
+          const value = match.fullUrl || match.value || match.name || match.selector || match.pattern || 'unknown';
           text += `     - ${methodType}: ${value} (${match.confidence || 0}%)\n`;
         });
       }
@@ -998,6 +1038,10 @@ class History {
         const normalizedCategory = this.detectorManager.normalizeCategoryName(category);
         categoryColor = this.detectorManager.categoryManager.getCategoryColor(normalizedCategory) || categoryColor;
       }
+      const categoryRgb = this.hexToRgb(categoryColor);
+      const categoryStyle = categoryRgb
+        ? `background: rgba(${categoryRgb.r}, ${categoryRgb.g}, ${categoryRgb.b}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${categoryRgb.r}, ${categoryRgb.g}, ${categoryRgb.b}, 0.35);`
+        : `background: ${categoryColor}; color: white;`;
 
       // Generate detector icon HTML
       let detectorIconHtml = '';
@@ -1024,9 +1068,9 @@ class History {
       // Render detection methods
       const methodsHtml = this.renderDetectionMethods(detection.matches || []);
 
-      // Get match count and unique method types for expanded view
+      // Get match count and method type badges for expanded view
       const matchCount = detection.matches?.length || 0;
-      const methodTypes = this.getUniqueMethodTypes(detection.matches || []);
+      const methodTypeBadges = this.renderMethodTypeBadges(detection.matches || []);
 
       return `
         <div class="history-modal-detection-card ${hasMethods ? 'has-methods' : ''}" data-detection-index="${index}">
@@ -1043,10 +1087,10 @@ class History {
           ${hasMethods ? `
             <div class="history-modal-detection-details">
               <div class="history-modal-detection-meta">
-                <span class="history-modal-badge" style="background: ${categoryColor}; color: white;">${category}</span>
+                <span class="history-modal-badge" style="${categoryStyle}">${category}</span>
                 <span class="history-modal-meta-separator">•</span>
                 <span class="history-modal-match-count">${matchCount} match${matchCount !== 1 ? 'es' : ''}</span>
-                ${methodTypes ? `<span class="history-modal-meta-separator">•</span><span class="history-modal-method-types">${methodTypes}</span>` : ''}
+                ${methodTypeBadges ? `<span class="history-modal-meta-separator">•</span><span class="history-modal-method-types">${methodTypeBadges}</span>` : ''}
               </div>
               <div class="history-modal-detection-methods">
                 ${methodsHtml}
@@ -1059,16 +1103,57 @@ class History {
   }
 
   /**
-   * Get unique method types from matches for display in collapsed view
+   * Get unique method types from matches
    * @param {Array} matches - Array of match objects
-   * @returns {string} Comma-separated list of unique method types (max 4)
+   * @returns {Array} Array of unique method type keys (lowercase)
    */
   getUniqueMethodTypes(matches) {
-    if (!matches || matches.length === 0) return '';
-    const types = [...new Set(matches.map(m =>
-      (m.type || 'unknown').toUpperCase().replace(/_/g, ' ')
-    ))];
-    return types.slice(0, 4).join(', ') + (types.length > 4 ? '...' : '');
+    if (!matches || matches.length === 0) return [];
+    const types = [];
+    const seen = new Set();
+    matches.forEach((match) => {
+      const typeKey = (match.type || 'unknown').toLowerCase();
+      if (!seen.has(typeKey)) {
+        seen.add(typeKey);
+        types.push(typeKey);
+      }
+    });
+    return types;
+  }
+
+  /**
+   * Render method type badges for modal meta row
+   * @param {Array} matches - Array of match objects
+   * @returns {string} HTML string
+   */
+  renderMethodTypeBadges(matches) {
+    const typeKeys = this.getUniqueMethodTypes(matches);
+    if (!typeKeys.length) return '';
+
+    const visibleTypes = typeKeys.slice(0, 4);
+    const overflowCount = typeKeys.length - visibleTypes.length;
+
+    const badgesHtml = visibleTypes.map(typeKey => {
+      const label = typeKey.replace(/_/g, ' ').toUpperCase();
+
+      // Get tag color (use original key for lookup)
+      let tagColor = '#666666';
+      if (this.detectorManager?.categoryManager) {
+        tagColor = this.detectorManager.categoryManager.getTagColor(typeKey) || '#666666';
+      }
+      const tagRgb = this.hexToRgb(tagColor);
+      const badgeStyle = tagRgb
+        ? `background: rgba(${tagRgb.r}, ${tagRgb.g}, ${tagRgb.b}, 0.18); color: ${tagColor}; border: 1px solid rgba(${tagRgb.r}, ${tagRgb.g}, ${tagRgb.b}, 0.35);`
+        : `background: ${tagColor}; color: white;`;
+
+      return `<span class="history-modal-method-type-badge" style="${badgeStyle}">${label}</span>`;
+    }).join('');
+
+    const overflowHtml = overflowCount > 0
+      ? `<span class="history-modal-method-type-badge history-modal-method-type-overflow">+${overflowCount}</span>`
+      : '';
+
+    return badgesHtml + overflowHtml;
   }
 
   /**
@@ -1099,18 +1184,17 @@ class History {
           break;
         case 'content':
         case 'script':
-        case 'scripts':
-          displayValue = match.pattern || match.content || match.value || 'unknown';
+          displayValue = match.content || match.value || match.pattern || 'unknown';
           break;
         case 'url':
         case 'urls':
-          displayValue = match.pattern || 'unknown';
+          displayValue = match.fullUrl || match.value || match.pattern || 'unknown';
           break;
         case 'dom':
           displayValue = match.value || match.selector || match.pattern || 'unknown';
           break;
         default:
-          displayValue = match.pattern || match.name || match.value || match.selector || 'unknown';
+          displayValue = match.value || match.name || match.selector || match.pattern || 'unknown';
       }
 
       // Get tag color (use originalType to preserve underscores for lookup)
@@ -1118,6 +1202,10 @@ class History {
       if (this.detectorManager?.categoryManager) {
         tagColor = this.detectorManager.categoryManager.getTagColor(originalType.toLowerCase()) || '#666666';
       }
+      const tagRgb = this.hexToRgb(tagColor);
+      const badgeStyle = tagRgb
+        ? `background: rgba(${tagRgb.r}, ${tagRgb.g}, ${tagRgb.b}, 0.15); color: ${tagColor}; border: 1px solid rgba(${tagRgb.r}, ${tagRgb.g}, ${tagRgb.b}, 0.3);`
+        : `background: ${tagColor}; color: white;`;
 
       // Confidence class
       let confidenceClass = 'confidence-low';
@@ -1130,10 +1218,12 @@ class History {
         confidence
       });
 
+      const safeDisplayValue = Utils.escapeHtml(displayValue);
+
       return `
         <div class="history-modal-method-item" data-copy-payload="${encodeURIComponent(copyPayload)}" title="Click to copy">
-          <span class="history-modal-method-badge" style="background: ${tagColor}; color: white;">${methodType}</span>
-          <span class="history-modal-method-value">${displayValue}</span>
+          <span class="history-modal-method-badge" style="${badgeStyle}">${methodType}</span>
+          <span class="history-modal-method-value">${safeDisplayValue}</span>
           <span class="history-modal-method-confidence ${confidenceClass}">${confidence}%</span>
         </div>
       `;
@@ -1245,18 +1335,7 @@ class History {
    * @returns {string} Time ago string
    */
   getTimeAgo(date) {
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMinutes = Math.floor(diffMs / (1000 * 60));
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-    if (diffMinutes < 1) return 'Just now';
-    if (diffMinutes < 60) return `${diffMinutes}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 30) return `${diffDays}d ago`;
-
-    return date.toLocaleDateString();
+    return Utils.getTimeAgo(date.getTime ? date.getTime() : date);
   }
 
   /**
@@ -1485,10 +1564,10 @@ class History {
         return false;
       }
 
-      // Get tab information
-      const tab = await chrome.tabs.get(tabId);
+      // Get tab information (handle closed tabs gracefully)
+      const tab = await chrome.tabs.get(tabId).catch(() => null);
       if (!tab || !tab.url) {
-        Logger.warn('UI', 'History: Cannot save capture - no tab URL');
+        Logger.warn('UI', 'History: Cannot save capture - tab closed or no URL');
         return false;
       }
 
@@ -1799,6 +1878,23 @@ class History {
       Logger.error('UI', 'History: Error stack:', error.stack);
       return false;
     }
+  }
+
+  /**
+   * Convert hex color to RGB object
+   * @param {string} hex - Hex color value (e.g., "#FF5733" or "FF5733")
+   * @returns {Object|null} RGB object {r, g, b} or null if invalid
+   */
+  hexToRgb(hex) {
+    if (!hex || typeof hex !== 'string') {
+      return null;
+    }
+    const result = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
   }
 }
 

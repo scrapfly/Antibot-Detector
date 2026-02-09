@@ -93,7 +93,7 @@
               <div id="logCollectorControls" style="display: none;">
                 <div class="setting-row">
                   <span class="setting-row-label">Max Logs</span>
-                  <input type="number" id="logCollectorMaxLogs" class="input-field" min="100" max="100000" step="100" value="5000" style="max-width: 90px;">
+                  <input type="number" id="logCollectorMaxLogs" class="input-field" min="100" max="5000" step="100" value="5000" style="max-width: 90px;">
                 </div>
                 <div class="setting-row">
                   <span class="setting-row-label">Collected</span>
@@ -154,6 +154,30 @@
                 </button>
               </div>
             </div>
+            <!-- Incompatible Updates Warning -->
+            <div id="incompatibleUpdatesWarning" class="settings-card-body" style="display: none;">
+              <div class="incompatible-warning-box">
+                <div class="warning-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z"/>
+                  </svg>
+                </div>
+                <div class="warning-content">
+                  <div class="warning-title">Extension Update Required</div>
+                  <div class="warning-message">
+                    <span id="incompatibleCount">0</span> detector update(s) require a newer extension version.
+                  </div>
+                  <a href="https://chromewebstore.google.com/detail/scrapfly-anti-bot-detecto/gpmmeepmabklpickfnjpmnbbonjhjhmn"
+                     target="_blank" class="action-btn action-btn-warning" style="margin-top: 8px; font-size: 12px; padding: 6px 12px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
+                    </svg>
+                    Update Extension
+                  </a>
+                </div>
+              </div>
+              <div id="incompatibleDetailsList" class="incompatible-details-list"></div>
+            </div>
           </div>
         </div>
 
@@ -164,21 +188,21 @@
           <div class="settings-card">
             <div class="settings-card-body settings-card-body--no-border" style="padding-top: 14px;">
               <div class="color-row">
-                <span class="color-row-label">Low (1-2)</span>
+                <span class="color-row-label">Low</span>
                 <div class="color-picker-container">
                   <input type="color" id="colorBadgeLow" class="color-field" value="#4CAF50">
                   <span class="color-hex-display" id="hexBadgeLow">#4CAF50</span>
                 </div>
               </div>
               <div class="color-row">
-                <span class="color-row-label">Medium (3-4)</span>
+                <span class="color-row-label">Medium</span>
                 <div class="color-picker-container">
                   <input type="color" id="colorBadgeMedium" class="color-field" value="#FFA500">
                   <span class="color-hex-display" id="hexBadgeMedium">#FFA500</span>
                 </div>
               </div>
               <div class="color-row">
-                <span class="color-row-label">High (5+)</span>
+                <span class="color-row-label">High</span>
                 <div class="color-picker-container">
                   <input type="color" id="colorBadgeHigh" class="color-field" value="#FF4444">
                   <span class="color-hex-display" id="hexBadgeHigh">#FF4444</span>
@@ -384,8 +408,24 @@
                 </svg>
                 Add Current Page
               </button>
-              <div id="blacklistContainer" style="width: 100%; max-height: 120px; overflow-y: auto; margin-top: 10px;">
+              <!-- Search input -->
+              <div class="blacklist-search-container" style="margin-top: 10px;">
+                <input type="text" id="blacklistSearchInput" class="input-field" placeholder="Search domains..." style="width: 100%; max-width: 100%;">
+              </div>
+              <div id="blacklistContainer" style="width: 100%; margin-top: 10px;">
                 <!-- Blacklisted domains will be displayed here -->
+              </div>
+              <!-- Pagination controls -->
+              <div id="blacklistPagination" class="blacklist-pagination" style="display: none;">
+                <button id="blacklistPrevBtn" class="pagination-btn" disabled>
+                  <svg width="12" height="12" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/></svg>
+                </button>
+                <span class="blacklist-page-info">
+                  <span id="blacklistPageNum">1</span>/<span id="blacklistTotalPages">1</span>
+                </span>
+                <button id="blacklistNextBtn" class="pagination-btn">
+                  <svg width="12" height="12" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/></svg>
+                </button>
               </div>
             </div>
           </div>
@@ -417,6 +457,22 @@
                   <span>Extension loaded and initialized</span>
                 </div>
                 <div class="api-event-item">
+                  <code>scrapfly:onStart</code>
+                  <span>Detection started (cache miss / manual)</span>
+                </div>
+                <div class="api-event-item">
+                  <code>scrapfly:onProgress</code>
+                  <span>Detection progress updates (method-level)</span>
+                </div>
+                <div class="api-event-item">
+                  <code>scrapfly:onHooksComplete</code>
+                  <span>JS hooks monitoring completed</span>
+                </div>
+                <div class="api-event-item">
+                  <code>scrapfly:onWindowPropsComplete</code>
+                  <span>Window property monitoring completed</span>
+                </div>
+                <div class="api-event-item">
                   <code>scrapfly:onDetection</code>
                   <span>Detection completed with results</span>
                 </div>
@@ -426,7 +482,11 @@
                 </div>
                 <div class="api-usage-example">
                   <strong>Usage Example:</strong>
-                  <pre>window.addEventListener('scrapfly:onDetection', (e) => {
+                  <pre id="jsApiUsageCode" class="click-to-copy" title="Click to copy">window.addEventListener('scrapfly:onStart', (e) => {
+  console.log('Detection started:', e.detail.url);
+});
+
+window.addEventListener('scrapfly:onDetection', (e) => {
   console.log('Detections:', e.detail.detections);
   console.log('URL:', e.detail.url);
 });</pre>
@@ -456,7 +516,7 @@
             </div>
             <div class="settings-card-body" id="webhookOnCacheGroup">
               <div class="setting-row">
-                <span class="setting-row-label">Send on Every Page Load</span>
+                <span class="setting-row-label">Send on every page load (bypass cache)</span>
                 <label class="switch switch-sm">
                   <input type="checkbox" id="webhookOnCache">
                   <span class="slider"></span>
@@ -477,7 +537,6 @@
                   <label class="http-method-badge" data-method="GET">
                     <input type="radio" name="webhookMethodRadio" value="GET">
                     <span class="method-badge-content">
-                      <span class="method-icon">●</span>
                       <span class="method-text">GET</span>
                     </span>
                   </label>
@@ -485,7 +544,6 @@
                   <label class="http-method-badge checked" data-method="POST">
                     <input type="radio" name="webhookMethodRadio" value="POST" checked>
                     <span class="method-badge-content">
-                      <span class="method-icon">●</span>
                       <span class="method-text">POST</span>
                     </span>
                   </label>
@@ -493,7 +551,6 @@
                   <label class="http-method-badge" data-method="PUT">
                     <input type="radio" name="webhookMethodRadio" value="PUT">
                     <span class="method-badge-content">
-                      <span class="method-icon">●</span>
                       <span class="method-text">PUT</span>
                     </span>
                   </label>
@@ -501,7 +558,6 @@
                   <label class="http-method-badge" data-method="PATCH">
                     <input type="radio" name="webhookMethodRadio" value="PATCH">
                     <span class="method-badge-content">
-                      <span class="method-icon">●</span>
                       <span class="method-text">PATCH</span>
                     </span>
                   </label>
@@ -509,7 +565,6 @@
                   <label class="http-method-badge" data-method="DELETE">
                     <input type="radio" name="webhookMethodRadio" value="DELETE">
                     <span class="method-badge-content">
-                      <span class="method-icon">●</span>
                       <span class="method-text">DELETE</span>
                     </span>
                   </label>
@@ -517,7 +572,6 @@
                   <label class="http-method-badge" data-method="CUSTOM">
                     <input type="radio" name="webhookMethodRadio" value="CUSTOM">
                     <span class="method-badge-content">
-                      <span class="method-icon">+</span>
                       <span class="method-text">Custom</span>
                     </span>
                   </label>
@@ -753,7 +807,12 @@
     </div>
 
     <div class="modal-footer">
-      <button id="cancelSettingsBtn" class="secondary-btn">Cancel</button>
-      <button id="saveSettingsBtn" class="primary-btn">Save Settings</button>
+      <div class="modal-footer-buttons">
+        <button id="cancelSettingsBtn" class="secondary-btn">Cancel</button>
+        <button id="saveSettingsBtn" class="primary-btn">Save Settings</button>
+      </div>
+      <div class="powered-by">
+        Powered by <a href="https://scrapfly.io" target="_blank" rel="noopener noreferrer">Scrapfly</a>
+      </div>
     </div>
 </div>

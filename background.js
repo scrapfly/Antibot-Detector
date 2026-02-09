@@ -5,22 +5,26 @@
 
 // Import scripts for service worker
 importScripts(
-    './modules/logger.js',
-    './modules/badge-constants.js',
-    './utils/log-collector.js',
+    './modules/core/logger.js',
+    './modules/core/badge-constants.js',
+    './modules/core/log-collector.js',
     './utils/utils.js',
-    './utils/pattern-cache.js', // Extracted from detection-engine-manager.js
-    './modules/storage-manager.js', // OPTIMIZATION Phase 1: Shared storage patterns
-    './modules/category-manager.js',
-    './modules/detector-manager.js',
-    './modules/confidence-manager.js',
-    './modules/detection-engine-manager.js',
-    './modules/notification-manager.js',
-    './modules/update-manager.js', // Auto-update detector definitions
-    './modules/detection-state-manager.js', // VERSION 2.3.0: Persistent detection state
-    './modules/worker-keepalive-manager.js', // VERSION 2.3.0: Service worker keepalive
+    './utils/pattern-cache.js',
+    './modules/core/storage-manager.js',
+    './modules/detection/managers/category-manager.js',
+    './modules/detection/managers/detector-manager.js',
+    './modules/detection/managers/confidence-manager.js',
+    './modules/detection/engine/detection-engine-analysis.js',
+    './modules/detection/engine/detection-engine-extractors.js',
+    './modules/detection/engine/detection-engine-matching.js',
+    './modules/detection/engine/detection-engine-hooks.js',
+    './modules/detection/engine/detection-engine-manager.js',
+    './modules/ui/notification-manager.js',
+    './modules/core/update-manager.js', // Auto-update detector definitions
+    './modules/detection/managers/detection-state-manager.js',
+    './modules/detection/hooks/worker-keepalive-manager.js',
     './sections/history/history.js',
-    './sections/settings/settings.js',
+    './sections/settings/settings-runtime.js',
     // Base helpers for interceptors (service worker context)
     './sections/advanced/base-interceptor-helpers.js',
     // Advanced module interceptors (service worker only - UI modules are in popup.html)
@@ -36,68 +40,25 @@ importScripts(
     './sections/advanced/modules/cloudflare/cloudflare-interceptor.js',
     './sections/advanced/modules/turnstile/turnstile-interceptor.js',
     './sections/advanced/modules/hcaptcha/hcaptcha-interceptor.js',
-    './sections/advanced/modules/funcaptcha/funcaptcha-interceptor.js'
+    './sections/advanced/modules/funcaptcha/funcaptcha-interceptor.js',
+    // Background runtime modules (phase-1 split)
+    './background/detection-lifecycle.js',
+    './background/handlers/router-utils.js',
+    './background/handlers/messages-logging.js',
+    './background/handlers/messages-detection.js',
+    './background/handlers/messages-cache.js',
+    './background/handlers/messages-settings.js',
+    './background/handlers/messages-log-collector.js',
+    './background/handlers/messages-advanced-capture.js',
+    './background/handlers/router-registry.js',
+    './background/handlers/message-router.js',
+    './background/tab-events.js',
+    './background/init.js'
     // Note: SessionManager and DetectionSession removed - using simple Map instead
 );
 
-Logger.background('✅ Logger initialized in BACKGROUND context');
+Logger.background('Logger initialized in BACKGROUND context');
 
-
-// OPTIMIZATION 4.1: Batched storage writer to reduce I/O overhead
-class BatchedStorageWriter {
-    constructor(batchWindow = 100) {
-        this.batchWindow = batchWindow; // milliseconds
-        this.pendingWrites = new Map(); // key -> value
-        this.writeTimeout = null;
-    }
-
-    /**
-     * Schedule a write operation (batched)
-     * @param {string} key - Storage key
-     * @param {any} value - Value to write
-     */
-    write(key, value) {
-        this.pendingWrites.set(key, value);
-
-        // Schedule flush if not already scheduled
-        if (!this.writeTimeout) {
-            this.writeTimeout = setTimeout(() => this.flush(), this.batchWindow);
-        }
-    }
-
-    /**
-     * Flush all pending writes to storage
-     */
-    async flush() {
-        if (this.pendingWrites.size === 0) return;
-
-        // Get all pending writes
-        const writes = Object.fromEntries(this.pendingWrites);
-        this.pendingWrites.clear();
-        this.writeTimeout = null;
-
-        // Write to storage in one operation
-        try {
-            await chrome.storage.local.set(writes);
-        } catch (error) {
-            Logger.error('STORAGE', '[BatchedStorage] Failed to flush writes:', error);
-        }
-    }
-
-    /**
-     * Force immediate flush (for critical writes)
-     */
-    async forceFlush() {
-        if (this.writeTimeout) {
-            clearTimeout(this.writeTimeout);
-            this.writeTimeout = null;
-        }
-        await this.flush();
-    }
-}
-
-// OPTIMIZED 3.3: Lazy Map with TTL cleanup
-// OPTIMIZATION Phase 9A.1: Added maxSize limit with LRU eviction
 class TTLMap extends Map {
     constructor(ttlMs = 300000, maxSize = 500) { // 5 min default, 500 entries max
         super();
@@ -108,9 +69,9 @@ class TTLMap extends Map {
     }
 
     set(key, value) {
-        // OPTIMIZATION Phase 9A.1 FIX: Check size AFTER removing old entry (prevents race condition)
+        // Update existing key
         if (this.has(key)) {
-            // Updating existing key - remove from accessOrder first
+            // Remove from accessOrder first
             const idx = this.accessOrder.indexOf(key);
             if (idx > -1) this.accessOrder.splice(idx, 1);
             clearTimeout(this.timers.get(key));
@@ -165,31 +126,23 @@ class TTLMap extends Map {
 }
 
 // Storage for headers per tab
-// OPTIMIZED 3.3: Use TTL-based auto-cleanup (5 min expiry)
 const headersStore = new TTLMap(300000); // Response headers
 const requestHeadersStore = new TTLMap(300000); // Request headers
 const responseCookiesStore = new TTLMap(300000); // Response cookies (from Set-Cookie)
 const payloadStore = new TTLMap(300000); // Request payloads (POST/PUT/PATCH bodies)
 const networkUrlsStore = new TTLMap(300000); // All network request URLs (for URL pattern detection)
 
-// OPTIMIZATION Phase B.3: Convert capture state maps to TTLMap to prevent memory leaks
-// 30 min TTL matches Advanced history expiration, 100 max entries prevents unbounded growth
+// Capture state maps (30 min TTL, max 100 entries)
 const reCaptchaCaptureState = new TTLMap(1800000, 100); // 30 min, max 100 captures
 const akamaiCaptureState = new TTLMap(1800000, 100); // 30 min, max 100 captures
 const impervaCaptureState = new TTLMap(1800000, 100); // 30 min, max 100 captures
 const funcaptchaCaptureState = new TTLMap(1800000, 100); // 30 min, max 100 captures
-
-// OPTIMIZED 3.1: Interceptors initialized lazily on first message (not here)
-
-// OPTIMIZATION 4.1: Batched storage writer (100ms batch window)
-const batchedStorage = new BatchedStorageWriter(100);
 
 // Initialize managers on extension startup
 let detectorManager = null;
 let categoryManager = null;
 let detectionEngine = null;
 
-// VERSION 2.3.0: New managers for "never fail" reliability
 let detectionStateManager = null;
 let workerKeepaliveManager = null;
 
@@ -197,11 +150,10 @@ let workerKeepaliveManager = null;
 let initializationInProgress = false;
 let initializationPromise = null;
 
-// OPTIMIZATION Phase B.3: Convert tracking maps to TTLMap to prevent memory leaks
 // Track recent detection requests to prevent duplicates (5 min TTL, max 200 entries)
 const recentDetectionRequests = new TTLMap(300000, 200); // 5 min, prevents spam
 
-// Track active detections (10 min TTL, max 50 entries - tabs currently running detection with ⏳ badge)
+// Track active detections (10 min TTL, max 50 entries - tabs currently running detection with loading badge)
 const activeDetections = new TTLMap(600000, 50); // 10 min, max 50 concurrent
 
 // Track interrupted detections (5 min TTL, max 50 entries - tabs where user switched away mid-detection)
@@ -217,7 +169,6 @@ const TAB_SWITCH_DEBOUNCE_MS = 500; // Ignore switches under 500ms (rapid tab sw
 // Track manually cleared caches to prevent showing red X on tab switch
 const manuallyClearedCaches = new Set(); // Set of URL hashes that were manually cleared
 
-// OPTIMIZATION: Cache scrapfly_enabled state to avoid repeated storage reads (~5-10ms each)
 let cachedEnabledState = { value: true, timestamp: 0 };
 const ENABLED_CACHE_TTL = 5000; // 5 seconds
 
@@ -248,9 +199,36 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     }
 });
 
-// OPTIMIZED 3.2: TTL-based detection state tracking (5 min auto-cleanup)
-// OPTIMIZATION Phase 9A.8: Add max 50 concurrent detections limit
 const detectionStates = new TTLMap(300000, 50); // tabId -> {url, hooksData: [], mainData: [], hooksComplete: false, mainComplete: false}
+
+// Hooks timing defaults (used if settings unavailable)
+const DEFAULT_HOOKS_MAX_DETECTION_MS = 8000;
+const HOOKS_DEADLINE_BUFFER_MS = 200;
+
+async function ensureHooksDeadline(state) {
+    if (!state) return Date.now() + DEFAULT_HOOKS_MAX_DETECTION_MS + HOOKS_DEADLINE_BUFFER_MS;
+    if (state.hooksDeadline) {
+        return state.hooksDeadline;
+    }
+
+    const startTime = state.startTime || Date.now();
+    state.hooksMaxMs = DEFAULT_HOOKS_MAX_DETECTION_MS;
+    state.hooksDeadline = startTime + DEFAULT_HOOKS_MAX_DETECTION_MS + HOOKS_DEADLINE_BUFFER_MS;
+    state.hooksDeadlineSource = 'default';
+    return state.hooksDeadline;
+}
+
+async function ensureDebugMode(state) {
+    if (!state) return false;
+    if (typeof state.debugMode === 'boolean') return state.debugMode;
+    try {
+        const settings = await Utils.getSettings(chrome);
+        state.debugMode = settings?.debugMode || false;
+    } catch (error) {
+        state.debugMode = false;
+    }
+    return state.debugMode;
+}
 
 // Track tabs that have cache hits to skip unnecessary capture work (payload, headers, etc)
 const tabsUsingCache = new Set();
@@ -258,7 +236,6 @@ const tabsUsingCache = new Set();
 // CRITICAL FIX: Track tabs where cache was recently cleared to prevent zombie data
 const recentlyClearedTabs = new Set();
 
-// OPTIMIZATION Phase 10.5: Debounce finalization checks to prevent redundant work
 const finalizationDebounce = new Map(); // tabId -> timeout
 
 // FIX: Track when batches are actively processing to prevent race conditions
@@ -270,7 +247,7 @@ const batchProcessingFlags = new Map(); // tabId -> boolean
  */
 
 /**
- * OPTIMIZATION Phase 10.2: Generate unique key for match deduplication
+ * Generate unique key for match deduplication
  * @param {Object} match - Match object with type and identifying fields
  * @returns {string} Unique key for the match
  */
@@ -320,12 +297,10 @@ function getOrCreateDetectionState(tabId, url) {
             activeDetections.delete(tabId);
         }
 
-        // VERSION 2.3.0: Abandon in persistent state manager
         if (detectionStateManager && detectionStateManager.isDetecting(tabId)) {
             detectionStateManager.abandonDetection(tabId, 'url_changed');
         }
 
-        // VERSION 2.3.0: End keepalive for old detection
         if (workerKeepaliveManager) {
             workerKeepaliveManager.endOperationsForTab(tabId);
         }
@@ -345,6 +320,7 @@ function getOrCreateDetectionState(tabId, url) {
     }
 
     if (!detectionStates.has(tabId)) {
+        const startTime = Date.now();
         const newState = {
             url: url,
             tabTitle: null, // Will be set by processDetectionData
@@ -357,20 +333,25 @@ function getOrCreateDetectionState(tabId, url) {
             hooksComplete: false,
             mainComplete: false,
             windowPropertiesComplete: false,
-            lastHookBatchTime: 0, // OPTIMIZATION: Track when last hook batch arrived for deterministic finalization
-            startTime: Date.now()
+            lastHookBatchTime: 0,
+            startTime: startTime,
+            hooksDeadline: startTime + DEFAULT_HOOKS_MAX_DETECTION_MS + HOOKS_DEADLINE_BUFFER_MS,
+            hooksMaxMs: DEFAULT_HOOKS_MAX_DETECTION_MS,
+            hooksDeadlineSource: 'default',
+            hooksTimedOut: false,
+            hooksCompletionReason: null,
+            hooksCompletionTime: null,
+            hooksUninstallStats: null
         };
 
         detectionStates.set(tabId, newState);
 
-        // VERSION 2.3.0: Start persistent detection state
         if (detectionStateManager) {
             detectionStateManager.startDetection(tabId, url).catch(e => {
                 Logger.error('BACKGROUND', '[DetectionStateManager] Failed to start detection:', e);
             });
         }
 
-        // VERSION 2.3.0: Start keepalive for this detection
         if (workerKeepaliveManager) {
             workerKeepaliveManager.startOperation(`detection-${tabId}`, {
                 tabId,
@@ -405,7 +386,7 @@ function sendProgressUpdate(tabId, methodName, completedMethods, totalMethods = 
         // Badge will be updated to final count in finalizeDetection()
 
         // Send granular progress message to popup (for step highlighting, not badge)
-        chrome.runtime.sendMessage({
+        const progressMessage = {
             type: 'DETECTION_PROGRESS',
             tabId: tabId,
             progress: {
@@ -413,595 +394,206 @@ function sendProgressUpdate(tabId, methodName, completedMethods, totalMethods = 
                 completedMethods: Array.from(completedMethods),
                 message: message
             }
-        }).catch(() => {
+        };
+
+        chrome.runtime.sendMessage(progressMessage).catch(() => {
             // Silently fail - popup might not be open
+        });
+
+        // Also forward to the content script so the JS API can emit scrapfly:onProgress
+        chrome.tabs.sendMessage(tabId, progressMessage).catch(() => {
+            // Content script might not be ready or might be on an unsupported URL
         });
     } catch (e) {
         Logger.error('DETECTION', '[Progress] Error sending update:', e);
     }
 }
 
-/**
- * Mark a detection method as complete and send progress update
- */
-function markMethodComplete(tabId, methodName) {
-    const state = detectionStates.get(tabId);
-    if (!state) {
-        Logger.warn('BACKGROUND', `[markMethodComplete] ❌ No detection state for tab ${tabId}, cannot mark ${methodName} complete`);
-        return;
-    }
+async function migrateLegacyStorageKeys() {
+    try {
+        const keys = [
+            'scrapfly_detection_storage',
+            'scrapfly_detection_state',
+            'scrapfly_history',
+            'scrapfly_log_collector_enabled',
+            'scrapfly_log_collector_max'
+        ];
 
-    // VALIDATION: Only allow valid method names from the official methodOrder
-    const validMethods = state.methodOrder || ['cookies', 'headers', 'url', 'dom', 'jsHooks', 'windowProperties', 'payload'];
-    if (!validMethods.includes(methodName)) {
-        Logger.warn('BACKGROUND', `[markMethodComplete] ⚠️ Rejecting invalid method name: "${methodName}" (valid methods: ${validMethods.join(', ')})`);
-        return;
-    }
+        const result = await chrome.storage.local.get(keys);
+        const hasLegacyDetectionStorage = Object.prototype.hasOwnProperty.call(result, 'scrapfly_detection_storage');
 
-    state.completedMethods.add(methodName);
-    sendProgressUpdate(tabId, methodName, state.completedMethods);
-}
-
-function checkAndFinalizeDetection(tabId) {
-    const state = detectionStates.get(tabId);
-    if (!state) {
-        Logger.warn('BACKGROUND', `[⏸️ Finalize Check] No state for tab ${tabId}, aborting`);
-        return;
-    }
-
-    // SAFETY CHECK: Don't finalize if state was just created (within 500ms)
-    // This prevents race conditions where navigation events trigger premature finalization
-    if (state.startTime && (Date.now() - state.startTime < 500)) {
-        return;
-    }
-
-    // FIX: Check if batches are actively processing - if so, defer finalization check
-    const batchActive = batchProcessingFlags.get(tabId) === true;
-    if (batchActive) {
-        // Don't schedule anything, batch completion will trigger checkAndFinalizeDetection
-        return;
-    }
-
-    // OPTIMIZATION MEDIUM-TERM #2: Debounce finalization checks (250ms window)
-    // Prevents redundant work when multiple completion signals arrive rapidly
-    // Increased from 10ms to 100ms to reduce timer spam and CPU overhead
-    // Debounce: 400ms = 2 polling cycles for window properties (200ms each)
-    if (finalizationDebounce.has(tabId)) {
-        clearTimeout(finalizationDebounce.get(tabId));
-    }
-
-    const timeout = setTimeout(() => {
-        // Re-check state in case it was deleted during debounce
-        const currentState = detectionStates.get(tabId);
-        if (!currentState) {
-            Logger.warn('BACKGROUND', `[🔍 Finalize Execute] No state found for tab ${tabId} after debounce, aborting`);
-            finalizationDebounce.delete(tabId);
-            return;
-        }
-
-        const completedMethods = Array.from(currentState.completedMethods || []);
-        const completedCount = completedMethods.length;
-        const totalMethods = 7;
-        const methodOrder = ['cookies', 'headers', 'url', 'dom', 'jsHooks', 'windowProperties', 'payload'];
-        const missingMethods = methodOrder.filter(m => !currentState.completedMethods.has(m));
-
-        // FIX: Double-check batch processing isn't active
-        if (batchProcessingFlags.get(tabId) === true) {
-            finalizationDebounce.delete(tabId);
-            return;
-        }
-
-        // OPTIMIZATION: Check if hook batches are still arriving
-        // Wait 100ms after LAST batch arrival to ensure all batches process
-        // Reduced from 2000ms - hooks batch every 10-50ms, so 100ms is sufficient
-        const timeSinceLastBatch = Date.now() - (currentState.lastHookBatchTime || 0);
-        const BATCH_SETTLE_TIME = 100; // FIX: Reduced from 2000ms to 100ms for faster finalization
-
-        if (currentState.lastHookBatchTime > 0 && timeSinceLastBatch < BATCH_SETTLE_TIME) {
-            const remainingMs = BATCH_SETTLE_TIME - timeSinceLastBatch;
-            // Reschedule check - don't clear, just set new one
-            const newTimeout = setTimeout(() => checkAndFinalizeDetection(tabId), remainingMs);
-            finalizationDebounce.set(tabId, newTimeout);
-            return;
-        }
-
-        // FIX 6.9: Minimum detection time to prevent race between fast window props and hooks timeout
-        // Ensures at least 500ms has passed since detection started, giving hooks time to fire
-        const MIN_DETECTION_TIME = 500;
-        const timeSinceStart = Date.now() - (currentState.startTime || 0);
-        if (currentState.startTime && timeSinceStart < MIN_DETECTION_TIME && !currentState.hooksComplete) {
-            const remainingMs = MIN_DETECTION_TIME - timeSinceStart;
-            Logger.background(`[Finalize] Waiting ${remainingMs}ms for minimum detection time (hooks not complete yet)`);
-            const newTimeout = setTimeout(() => checkAndFinalizeDetection(tabId), remainingMs);
-            finalizationDebounce.set(tabId, newTimeout);
-            return;
-        }
-
-        // PHASE 1 FIX: More lenient finalization requirements
-        // Instead of waiting for all 7 methods, finalize when we have the main methods (5)
-        // This prevents getting stuck waiting for jsHooks and windowProperties signals
-        const REQUIRED_METHODS = 5; // Reduced from 7 to exclude jsHooks and windowProperties
-        const mainMethodsComplete = ['cookies', 'headers', 'url', 'dom', 'payload'].every(m => currentState.completedMethods.has(m));
-
-        // Check if we should finalize
-        const shouldFinalize =
-            // Option 1: All 7 methods complete (ideal case)
-            completedCount >= totalMethods ||
-            // Option 2: Main 5 methods complete (fallback for signal issues)
-            (mainMethodsComplete && completedCount >= REQUIRED_METHODS) ||
-            // Option 3: We have detection data and main methods are done (quick finalization)
-            (mainMethodsComplete && (currentState.mainData?.length > 0 || currentState.hooksData?.size > 0));
-
-        if (shouldFinalize) {
-            // Send final update - use actual completed count for accurate badge
-            sendProgressUpdate(tabId, 'complete', currentState.completedMethods || new Set(), totalMethods);
-            finalizeDetection(tabId, currentState);
-        } else {
-            // Check if this detection is using cached data
-            if (currentState.usedCache) {
-                // Mark as finalized to prevent retry logic from firing
-                currentState.finalized = true;
-
-                finalizationDebounce.delete(tabId);
-                return;
-            }
-
-            // Only show warnings if debug mode is enabled
-            (async () => {
+        const parseMaybeJson = (value) => {
+            if (value === undefined || value === null) return null;
+            if (typeof value === 'string') {
                 try {
-                    const settings = await Utils.getSettings(chrome);
-                    if (settings?.debugMode) {
-                        const percent = Math.round((completedCount / totalMethods) * 100);
-                        Logger.warn('BACKGROUND', `%c[⏳ NOT READY] Only ${completedCount}/${totalMethods} methods complete (${percent}%) - waiting for main methods`, 'color: #f44336; font-weight: bold;');
-                        Logger.warn('BACKGROUND', `[⏳ NOT READY]   Completed: ${completedMethods.join(', ')}`);
-                        Logger.warn('BACKGROUND', `[⏳ NOT READY]   Missing: ${missingMethods.join(', ')}`);
-                        Logger.warn('BACKGROUND', `[⏳ NOT READY]   Main methods complete: ${mainMethodsComplete}`);
+                    return JSON.parse(value);
+                } catch (e) {
+                    return null;
+                }
+            }
+            return value;
+        };
 
-                        // Log which signals we're waiting for
-                        if (!currentState.windowPropertiesComplete) {
-                            Logger.warn('BACKGROUND', `%c[⏳ WAITING FOR] ⚠️ windowProperties signal (WINDOW_PROPS_COMPLETE) - will proceed without it`, 'color: #ff9800; font-weight: bold;');
-                        }
-                        if (!currentState.mainComplete) {
-                            Logger.warn('BACKGROUND', `[⏳ WAITING FOR] ❌ mainComplete signal (processDetectionData finished) - REQUIRED`);
-                        }
-                        if (!currentState.hooksComplete) {
-                            Logger.warn('BACKGROUND', `[⏳ WAITING FOR] ⚠️ hooksComplete signal (JS_HOOKS_COMPLETE) - will proceed without it`, 'color: #ff9800; font-weight: bold;');
+        const readHistoryItems = (raw) => {
+            if (!raw) return [];
+            if (typeof raw === 'string') {
+                try {
+                    const parsed = JSON.parse(raw);
+                    return Array.isArray(parsed?.items) ? parsed.items : [];
+                } catch (e) {
+                    return [];
+                }
+            }
+            if (Array.isArray(raw)) return raw;
+            if (raw && Array.isArray(raw.items)) return raw.items;
+            return [];
+        };
+
+        // Migrate legacy detection cache into history (if present)
+        if (hasLegacyDetectionStorage) {
+            const legacyParsed = parseMaybeJson(result.scrapfly_detection_storage);
+
+            if (legacyParsed && typeof legacyParsed === 'object') {
+                let legacyEntries = [];
+                if (Array.isArray(legacyParsed)) {
+                    legacyEntries = legacyParsed;
+                } else if (Array.isArray(legacyParsed.items)) {
+                    legacyEntries = legacyParsed.items;
+                } else {
+                    legacyEntries = Object.values(legacyParsed);
+                }
+
+                const now = Date.now();
+                const migrated = [];
+                let migratableCount = 0;
+
+                for (const entry of legacyEntries) {
+                    if (!entry || typeof entry !== 'object') continue;
+                    const url = entry.url;
+                    if (!url || typeof url !== 'string') continue;
+                    migratableCount += 1;
+
+                    const expiry = Number(entry.expiry);
+                    if (Number.isFinite(expiry) && expiry > 0 && expiry < now) {
+                        continue; // Skip expired cache entries
+                    }
+
+                    let ts = entry.timestamp;
+                    if (typeof ts === 'string') {
+                        const parsedTs = Date.parse(ts);
+                        ts = Number.isFinite(parsedTs) ? parsedTs : now;
+                    }
+                    if (typeof ts !== 'number' || !Number.isFinite(ts)) {
+                        ts = now;
+                    }
+
+                    const detections = Array.isArray(entry.detectionResults)
+                        ? entry.detectionResults
+                        : (Array.isArray(entry.detections) ? entry.detections : []);
+
+                    const detectionCount = Number.isFinite(Number(entry.detectionCount))
+                        ? Number(entry.detectionCount)
+                        : detections.length;
+
+                    let hostname = entry.hostname;
+                    if (!hostname) {
+                        try {
+                            hostname = new URL(url).hostname;
+                        } catch (e) {
+                            hostname = '';
                         }
                     }
-                } catch (error) {
-                    // Failed to get settings, skip logging
-                }
-            })();
-        }
 
-        finalizationDebounce.delete(tabId);
-    }, 400); // 400ms = 2 window property polling cycles (200ms each)
+                    const categories = Array.from(new Set(
+                        (detections || [])
+                            .map(d => d?.category || d?.detector?.category)
+                            .filter(Boolean)
+                    ));
 
-    finalizationDebounce.set(tabId, timeout);
-}
-
-async function finalizeDetection(tabId, state) {
-    // FIX: Mark this tab as finalized to prevent progress updates from overriding the final badge
-    state.finalized = true;
-
-    // VERSION 2.3.0: End keepalive for this detection
-    if (workerKeepaliveManager) {
-        workerKeepaliveManager.endOperation(`detection-${tabId}`);
-    }
-
-    // Safety check: Don't finalize if detection was interrupted
-    if (state.interrupted || interruptedDetections.has(tabId)) {
-        // VERSION 2.3.0: Mark as abandoned in persistent state
-        if (detectionStateManager && detectionStateManager.isDetecting(tabId)) {
-            detectionStateManager.abandonDetection(tabId, 'interrupted');
-        }
-
-        // Still clean up state to prevent zombie entries (fixes badge stuck on "✕")
-        detectionStates.delete(tabId);
-        activeDetections.delete(tabId);
-        // Note: Don't delete from interruptedDetections here - let PAGE_LOAD_NOTIFICATION handle it
-        // This way the popup knows to show "interrupted" state until user navigates
-        Logger.background(`[Finalize] Detection interrupted for tab ${tabId}, cleaned up state`);
-        return;
-    }
-
-    // SAFETY CHECK: Don't finalize if ALL data is empty AND no methods completed
-    // This catches race conditions where finalization is triggered before any detection runs
-    // FIX: Allow finalization even with empty results if methods actually completed
-    const hasHooksData = state.hooksData && state.hooksData.size > 0;
-    const hasMainData = state.mainData && state.mainData.length > 0;
-    const hasCompletedMethods = state.completedMethods && state.completedMethods.size > 0;
-
-    if (!hasHooksData && !hasMainData && !hasCompletedMethods) {
-        return; // Don't finalize with empty data AND no completed methods
-    }
-
-    // Merge hooks and main detection
-    const mergedDetections = new Map();
-
-    // Add hooks data
-    for (const [detectorId, detector] of state.hooksData.entries()) {
-        mergedDetections.set(detectorId, detector);
-    }
-
-    // Add main detection data (merge if detector already exists from hooks)
-    for (const detector of state.mainData) {
-        const detectorId = detector.detector?.id || detector.id;
-        if (mergedDetections.has(detectorId)) {
-            // Merge: combine matches and detection methods
-            const existing = mergedDetections.get(detectorId);
-            existing.matches = [...existing.matches, ...(detector.matches || [])];
-
-            // Safely merge detectionMethods arrays
-            const existingMethods = existing.detectionMethods || [];
-            const newMethods = detector.detectionMethods || [];
-            existing.detectionMethods = [...new Set([...existingMethods, ...newMethods])];
-        } else {
-            // Ensure detector has detectionMethods array
-            if (!detector.detectionMethods) {
-                detector.detectionMethods = [];
-            }
-            mergedDetections.set(detectorId, detector);
-        }
-    }
-
-    const finalResults = Array.from(mergedDetections.values());
-
-    // Store to cache
-    const pageData = {
-        url: state.url,
-        hostname: Utils.getHostnameFromUrl(state.url),
-        favicon: Utils.getFaviconUrl(state.url)
-    };
-
-    const storedDataWithExpiry = await DetectionEngineManager.storeDetection(state.url, pageData, finalResults);
-
-    // Update state with expiry info for immediate popup queries
-    if (storedDataWithExpiry) {
-        state.expiry = storedDataWithExpiry.expiry;
-        state.timestamp = storedDataWithExpiry.timestamp;
-        state.favicon = storedDataWithExpiry.favicon;
-    }
-
-    // Update badge with appropriate color
-    const detectionCount = finalResults.length;
-    if (detectionCount > 0) {
-        // Check if URL is blacklisted before setting badge
-        const isBlacklisted = await Utils.isUrlBlacklisted(state.url);
-
-        if (!isBlacklisted) {
-            // Load badge colors from CategoryManager
-            const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
-
-            const count = detectionCount.toString();
-            const color = detectionCount >= BADGE.THRESHOLDS.HIGH ? badgeColors.high :
-                         detectionCount >= BADGE.THRESHOLDS.MEDIUM ? badgeColors.medium :
-                         badgeColors.low;
-
-            // CHANGED: Make badge update synchronous to ensure it completes before popup checks
-            try {
-                await chrome.action.setBadgeText({ text: count, tabId: tabId });
-                await chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId });
-            } catch (error) {
-                // Expected: Tab might be closed - don't log as error
-                Logger.background(`[Finalize] Tab ${tabId} closed, skipping badge update`);
-            }
-        } else {
-            // Show blacklisted badge
-            try {
-                await chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId: tabId });
-                await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tabId });
-            } catch (error) {
-                // Expected: Tab might be closed
-                Logger.background(`[Finalize] Tab ${tabId} closed, skipping badge update`);
-            }
-        }
-    } else {
-        // Show clean page badge (no detections)
-        try {
-            await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEAN, tabId: tabId });
-            await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId: tabId });
-        } catch (error) {
-            // Expected: Tab might be closed
-            Logger.background(`[Finalize] Tab ${tabId} closed, skipping badge update`);
-        }
-    }
-
-    // Notify popup
-    chrome.runtime.sendMessage({
-        type: 'NEW_DETECTION_DATA',
-        tabId: tabId,
-        url: state.url,
-        detectionResults: finalResults
-    }).catch(() => {
-        // Expected: Popup may not be open
-    });
-
-    // Notify content script for JS API event dispatch (onDetection)
-    try {
-        await chrome.tabs.sendMessage(tabId, {
-            type: 'DETECTION_COMPLETE',
-            url: state.url,
-            detections: finalResults,
-            detectionCount: finalResults.length,
-            timestamp: new Date().toISOString()
-        });
-    } catch (error) {
-        // Expected: Tab may have been closed or content script not ready
-        Logger.background(`[Finalize] Could not notify content script for JS API: ${error.message}`);
-    }
-
-    // FIX: Save merged results to history (includes both main detections AND hooks/fingerprints)
-    // This ensures fingerprints detected via JS hooks are also saved to history
-    if (finalResults.length > 0) {
-        try {
-            const pageData = {
-                url: state.url,
-                hostname: Utils.getHostnameFromUrl(state.url),
-                tabTitle: state.tabTitle,
-                favicon: Utils.getFaviconUrl(state.url)
-            };
-
-            const historySettings = await Utils.getHistorySettings();
-            const shouldSave = await History.shouldSaveToHistory(state.url, historySettings, chrome);
-
-            if (shouldSave) {
-                await History.saveDetectionToHistory(tabId, pageData, finalResults, chrome);
-            }
-        } catch (error) {
-            Logger.error('DETECTION', '[Finalize] Error saving to history:', error);
-        }
-    }
-
-    // VERSION 2.3.0: Mark detection as completed in persistent state manager
-    if (detectionStateManager && detectionStateManager.isDetecting(tabId)) {
-        await detectionStateManager.completeDetection(tabId, finalResults.length);
-    }
-
-    // Remove from active detections (detection completed successfully)
-    if (activeDetections.has(tabId)) {
-        activeDetections.delete(tabId);
-    }
-
-    // Also remove from interrupted detections if it was marked (user came back to tab)
-    if (interruptedDetections.has(tabId)) {
-        interruptedDetections.delete(tabId);
-    }
-
-    // OPTIMIZED 3.2: State is auto-cleaned by TTL, but we can delete eagerly
-    detectionStates.delete(tabId);
-
-    // Clean up payloads after detection completes (they were stored for this detection)
-    if (payloadStore.has(tabId)) {
-        payloadStore.delete(tabId);
-    }
-
-    // Clean up network URLs after detection completes
-    if (networkUrlsStore.has(tabId)) {
-        networkUrlsStore.delete(tabId);
-    }
-
-    // Clean up headers after detection completes (free up memory like payloads)
-    if (headersStore.has(tabId)) {
-        headersStore.delete(tabId);
-    }
-
-    if (requestHeadersStore.has(tabId)) {
-        requestHeadersStore.delete(tabId);
-    }
-
-    // Clean up cookies after detection completes
-    if (responseCookiesStore.has(tabId)) {
-        responseCookiesStore.delete(tabId);
-    }
-
-    // NOTE: We don't clear tabsUsingCache here anymore!
-    // The flag persists across F5 refreshes to prevent race condition where
-    // webRequest fires before CHECK_CACHE_EARLY completes.
-    // The flag is only cleared when URL actually changes (see chrome.tabs.onUpdated handler)
-}
-
-/**
- * Unified initialization method
- * Called on extension install, update, and browser startup
- * @param {string} reason - Reason for initialization ('install', 'update', 'startup')
- * @param {string} previousVersion - Previous version if update
- */
-async function initialize(reason = 'startup', previousVersion = null) {
-    // RACE CONDITION FIX: Prevent concurrent initializations
-    // During extension updates, both onInstalled and IIFE can fire simultaneously
-    if (initializationInProgress && initializationPromise) {
-        const result = await initializationPromise;
-        return result;
-    }
-
-    // Set guard flag and create promise for this initialization
-    initializationInProgress = true;
-
-    // Create the initialization promise
-    initializationPromise = (async () => {
-        try {
-
-        // Create CategoryManager and DetectorManager instances
-        categoryManager = new CategoryManager();
-        detectorManager = new DetectorManager(categoryManager);
-
-        // Initialize the detector manager (loads from storage or JSON files)
-        const initStartTime = Date.now();
-        await detectorManager.initialize();
-        const initDuration = Date.now() - initStartTime;
-
-        // Storage health check - verify detectors were loaded correctly
-        let detectorCount = detectorManager.getDetectorCount();
-        let hasDetectors = detectorCount > 0;
-
-        // BUGFIX: Add retry logic if detectors haven't loaded yet (timing issue)
-        // This handles cases where service worker starts before JSON files are fully loaded
-        if (!hasDetectors) {
-            const maxRetries = 10; // 10 retries * 500ms = 5 seconds max wait
-            let retries = maxRetries;
-
-            while (retries > 0 && !hasDetectors) {
-                await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms
-                detectorCount = detectorManager.getDetectorCount();
-                hasDetectors = detectorCount > 0;
-
-                if (hasDetectors) {
-                    break;
+                    migrated.push({
+                        id: entry.id || `legacy_cache_${ts}_${hostname || 'unknown'}`,
+                        url,
+                        hostname,
+                        title: entry.title || hostname || url,
+                        favicon: entry.favicon || '',
+                        timestamp: ts,
+                        detections,
+                        detectionCount,
+                        categories,
+                        cacheScope: entry.cacheScope || 'domain'
+                    });
                 }
 
-                retries--;
-            }
-        }
+                if (migratableCount === 0) {
+                    Logger.warn('STORAGE', '[Migration] Found scrapfly_detection_storage but no entries had a usable URL - leaving as-is');
+                } else {
+                    let shouldRemoveLegacy = false;
 
-        if (!hasDetectors) {
-            Logger.error('BACKGROUND', '❌ CRITICAL: Detector system initialized but no detectors were loaded!');
-            Logger.error('BACKGROUND', '❌ This will cause content scripts to fail. Possible causes:');
-            Logger.error('BACKGROUND', '   1. Storage is empty or corrupted');
-            Logger.error('BACKGROUND', '   2. JSON files are missing or have errors');
-            Logger.error('BACKGROUND', '   3. File paths changed but extension not reloaded');
-            Logger.error('BACKGROUND', '❌ RECOMMENDATION: Remove and re-add the extension, then refresh all tabs');
-        }
+                    // If every URL entry was expired, we can safely remove the legacy cache.
+                    if (migrated.length === 0) {
+                        shouldRemoveLegacy = true;
+                    } else {
+                        const historyItems = readHistoryItems(result.scrapfly_history);
+                        const existing = new Set(historyItems.map((item) => `${item?.url || ''}|${item?.timestamp || ''}`));
+                        const dedupedMigrated = migrated.filter((item) => {
+                            const key = `${item.url}|${item.timestamp}`;
+                            if (existing.has(key)) return false;
+                            existing.add(key);
+                            return true;
+                        });
 
-        // VERSION 2.3.0: Initialize "never fail" managers
-        detectionStateManager = new DetectionStateManager();
-        await detectionStateManager.initialize();
-        Logger.background('[DetectionStateManager] ✅ Initialized');
+                        // If everything was already in history, we can remove the legacy cache without writing.
+                        if (dedupedMigrated.length === 0) {
+                            shouldRemoveLegacy = true;
+                        } else {
+                            try {
+                                const merged = historyItems.concat(dedupedMigrated);
+                                merged.sort((a, b) => (Number(b?.timestamp) || 0) - (Number(a?.timestamp) || 0));
 
-        workerKeepaliveManager = new WorkerKeepaliveManager();
-        Logger.background('[WorkerKeepaliveManager] ✅ Initialized');
+                                await chrome.storage.local.set({
+                                    scrapfly_history: JSON.stringify({
+                                        items: merged,
+                                        lastUpdated: Date.now()
+                                    }, null, 2)
+                                });
 
-        // Check if extension is enabled/disabled and set badges accordingly
-        const isEnabled = await isExtensionEnabled();
-        const tabs = await chrome.tabs.query({});
+                                Logger.storage(`[Migration] Moved ${dedupedMigrated.length} legacy cache entries into scrapfly_history`);
+                                shouldRemoveLegacy = true;
+                            } catch (e) {
+                                Logger.warn('STORAGE', '[Migration] Failed to write merged history - keeping scrapfly_detection_storage for safety');
+                                shouldRemoveLegacy = false;
+                            }
+                        }
+                    }
 
-        if (!isEnabled) {
-            // Extension is disabled - set OFF badge with gray color for all tabs
-            for (const tab of tabs) {
-                chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tab.id }).catch(() => {});
-                chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tab.id }).catch(() => {});
-            }
-        } else {
-            // Extension is enabled - clear any leftover badges
-            for (const tab of tabs) {
-                chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tab.id }).catch(() => {});
-            }
-        }
-
-        // Initialize all services (listeners, interceptors, etc.)
-        initializeServices();
-
-        // Clear guard flag on success
-        initializationInProgress = false;
-        return true;
-        } catch (error) {
-            Logger.error('BACKGROUND', 'Background: Failed to initialize detector system:', error);
-            Logger.error('BACKGROUND', 'Background: Error stack:', error.stack);
-
-            // Clear guard flag on error
-            initializationInProgress = false;
-            return false;
-        } finally {
-            // Clear promise reference when done (success or failure)
-            initializationPromise = null;
-        }
-    })();
-
-    // Await and return the result
-    return await initializationPromise;
-}
-
-// Listen for extension installation or update
-chrome.runtime.onInstalled.addListener(async (details) => {
-    // Clear all detection states on extension reload/update to prevent stale data
-    detectionStates.clear();
-
-    if (details.reason === 'install' || details.reason === 'update') {
-        await initialize(details.reason, details.previousVersion);
-        // Check for detector updates after installation/update
-        scheduleUpdateCheck();
-    }
-
-});
-
-// Schedule update check after initialization completes
-// This runs on install, update, and startup
-async function scheduleUpdateCheck() {
-    try {
-        const settings = await Utils.getSettings();
-        if (settings.updates?.autoUpdate) {
-            Logger.background('🔄 Auto-update enabled, checking for detector updates...');
-            // Delay slightly to let the extension fully initialize first
-            setTimeout(async () => {
-                try {
-                    await UpdateManager.checkForUpdates(false); // Non-forced check respects interval
-                    Logger.background('🔄 Update check completed');
-                } catch (error) {
-                    Logger.error('BACKGROUND', '🔄 Failed to check for updates:', error);
+                    if (shouldRemoveLegacy) {
+                        await chrome.storage.local.remove(['scrapfly_detection_storage']);
+                    }
                 }
-            }, 5000); // 5 second delay after startup
+            } else {
+                Logger.warn('STORAGE', '[Migration] Found scrapfly_detection_storage but could not parse it - leaving as-is');
+            }
+        }
 
-            // Setup periodic alarm for update checks
-            // This ensures updates are checked even if the browser stays open
-            setupUpdateAlarm(settings.updates.checkIntervalHours || 12);
-        } else {
-            Logger.background('🔄 Auto-update disabled, skipping update check');
-            // Clear any existing alarm if auto-update is disabled
-            chrome.alarms.clear('scrapfly-update-check');
-            // Clear any stale pending updates
-            await UpdateManager.clearPendingUpdates();
+        // Remove unused legacy keys
+        const removeKeys = [];
+        if (Object.prototype.hasOwnProperty.call(result, 'scrapfly_detection_state')) {
+            removeKeys.push('scrapfly_detection_state');
+        }
+        if (Object.prototype.hasOwnProperty.call(result, 'scrapfly_log_collector_enabled')) {
+            removeKeys.push('scrapfly_log_collector_enabled');
+        }
+        if (Object.prototype.hasOwnProperty.call(result, 'scrapfly_log_collector_max')) {
+            removeKeys.push('scrapfly_log_collector_max');
+        }
+        if (removeKeys.length > 0) {
+            await chrome.storage.local.remove(removeKeys);
         }
     } catch (error) {
-        Logger.error('BACKGROUND', '🔄 Failed to schedule update check:', error);
+        Logger.warn('STORAGE', '[Migration] Failed to migrate legacy storage keys:', error);
     }
 }
 
-// Setup periodic alarm for update checks
-function setupUpdateAlarm(intervalHours) {
-    const periodInMinutes = intervalHours * 60;
-    chrome.alarms.create('scrapfly-update-check', {
-        periodInMinutes: periodInMinutes
-    });
-    Logger.background(`🔄 Update alarm set: every ${intervalHours} hours`);
-}
-
-// Handle alarm events
-chrome.alarms.onAlarm.addListener(async (alarm) => {
-    if (alarm.name === 'scrapfly-update-check') {
-        Logger.background('🔄 Periodic update check triggered by alarm');
-        try {
-            const settings = await Utils.getSettings();
-            if (settings.updates?.autoUpdate) {
-                await UpdateManager.checkForUpdates(false);
-                Logger.background('🔄 Periodic update check completed');
-            }
-        } catch (error) {
-            Logger.error('BACKGROUND', '🔄 Periodic update check failed:', error);
-        }
-    }
-});
-
-
-// Initialize on browser startup (when browser starts with extension already installed)
-chrome.runtime.onStartup.addListener(async () => {
-    await initialize('startup');
-    // Check for detector updates on browser startup
-    scheduleUpdateCheck();
-});
-
-// Also initialize immediately when service worker starts/restarts
-// This handles the case where the service worker is awakened from idle
-(async () => {
-    // Check if we need to initialize (service worker may have been restarted)
-    if (!detectorManager || !detectorManager.initialized) {
-        await initialize('startup');
-    }
-})();
-
-/**
- * Ensure DetectorManager is initialized (lazy initialization)
- * Service workers can be terminated and restarted, losing in-memory state
- */
 async function ensureDetectorManagerInitialized() {
     if (!detectorManager || !detectorManager.initialized) {
         if (!categoryManager) {
@@ -1261,498 +853,6 @@ function setupHeaderCapture() {
     );
 }
 
-/**
- * Enrich page data with tab information
- * @param {object} pageData - Page data from content script
- * @param {object} tab - Tab object from sender
- * @returns {object} Enriched page data
- */
-function enrichPageDataWithTabInfo(pageData, tab) {
-    return {
-        ...pageData,
-        tabId: tab.id,
-        tabUrl: tab.url,
-        tabTitle: tab.title,
-        favicon: tab.favIconUrl
-    };
-}
-
-/**
- * Process detection data from content script
- * @param {object} message - Message from content script
- * @param {object} sender - Sender information
- */
-async function processDetectionData(message, sender) {
-    if (!sender.tab || !sender.tab.id) {
-        Logger.error('BACKGROUND', 'Scrapfly Background: No tab information in sender');
-        return;
-    }
-
-    // Check if extension is enabled
-    if (!await isExtensionEnabled()) {
-        return;
-    }
-
-    const tabId = sender.tab.id;
-    const pageData = enrichPageDataWithTabInfo(message.data, sender.tab);
-
-    // Show progress indicator in badge and track as active detection
-    try {
-        chrome.action.setBadgeText({ text: BADGE.TEXT.LOADING, tabId: tabId }).catch(() => {});
-        chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.LOADING, tabId: tabId }).catch(() => {});
-
-        // Create AbortController to allow cancellation if tab switch occurs
-        const abortController = new AbortController();
-
-        // Track this tab as having an active detection in progress
-        activeDetections.set(tabId, {
-            url: pageData.url,
-            startTime: Date.now(),
-            abortController: abortController
-        });
-    } catch (error) {
-        Logger.error('BACKGROUND', 'Failed to set loading badge:', error);
-    }
-
-    // Add response headers if available (backward compatibility - keep as pageData.headers)
-    if (headersStore.has(tabId)) {
-        const headerData = headersStore.get(tabId);
-
-        // Only use headers if they're from the same URL (or close enough)
-        if (headerData.url.includes(pageData.hostname)) {
-            pageData.headers = headerData.headers; // Response headers (backward compatibility)
-            pageData.responseHeaders = headerData.headers; // Also store explicitly as responseHeaders
-
-            // OPTIMIZED 3.3: Eager delete (TTL will clean up anyway, but we can help)
-            headersStore.delete(tabId);
-        }
-    }
-
-    // Add request headers if available
-    if (requestHeadersStore.has(tabId)) {
-        const requestHeaderData = requestHeadersStore.get(tabId);
-
-        if (requestHeaderData.url.includes(pageData.hostname)) {
-            pageData.requestHeaders = requestHeaderData.headers;
-
-            requestHeadersStore.delete(tabId);
-        }
-    }
-
-    // Add response cookies if available (from Set-Cookie headers)
-    if (responseCookiesStore.has(tabId)) {
-        const responseCookieData = responseCookiesStore.get(tabId);
-
-        if (responseCookieData.url.includes(pageData.hostname)) {
-            pageData.responseCookies = responseCookieData.cookies;
-
-            responseCookiesStore.delete(tabId);
-        }
-    }
-
-    // Add request payloads if available (POST/PUT/PATCH bodies)
-    // Now handles ARRAY of payloads per tab
-    if (payloadStore.has(tabId)) {
-        const payloadsArray = payloadStore.get(tabId);
-
-        // Pass all payloads to detection engine (no filtering)
-        const relevantPayloads = [];
-
-        for (const payloadData of payloadsArray) {
-            try {
-                relevantPayloads.push({
-                    method: payloadData.method,
-                    url: payloadData.url,
-                    data: payloadData.payload,
-                    type: payloadData.type
-                });
-            } catch (e) {
-                Logger.error('BACKGROUND', 'Error processing payload:', e);
-            }
-        }
-
-        // Pass all payloads for detection
-        if (relevantPayloads.length > 0) {
-            pageData.payloads = relevantPayloads;
-
-            // Don't delete yet - will delete after detection completes
-            // payloadStore.delete(tabId);
-        }
-    }
-
-    // Add network request URLs if available (for URL pattern detection)
-    if (networkUrlsStore.has(tabId)) {
-        const networkUrlsArray = networkUrlsStore.get(tabId);
-
-        // No filtering - pass all URLs to detection engine
-        const relevantUrls = networkUrlsArray;
-
-        if (relevantUrls.length > 0) {
-            pageData.networkUrls = relevantUrls;
-        }
-    }
-
-    // Note: Request cookies are already in pageData.cookies (from document.cookie in content script)
-
-    // ENHANCEMENT: Collect ALL cookies via chrome.cookies API (includes HttpOnly cookies)
-    // This supplements document.cookie which cannot access HttpOnly, Secure, or domain-specific cookies
-    try {
-        const allCookies = await chrome.cookies.getAll({ url: pageData.url });
-
-        // Convert to same format as extractCookies() from content script
-        pageData.allCookies = allCookies.map(cookie => ({
-            name: cookie.name,
-            value: cookie.value.substring(0, 100), // Match performance limit
-            domain: cookie.domain,
-            httpOnly: cookie.httpOnly,
-            secure: cookie.secure,
-            sameSite: cookie.sameSite
-        }));
-
-        // Log enhancement details
-        if (typeof Logger !== 'undefined') {
-            Logger.cache(`🪤 Enhanced cookie collection via chrome.cookies API`, {
-                documentCookies: pageData.cookies?.length || 0,
-                allCookies: pageData.allCookies.length,
-                httpOnlyCount: pageData.allCookies.filter(c => c.httpOnly).length,
-                secureCount: pageData.allCookies.filter(c => c.secure).length
-            });
-        }
-    } catch (error) {
-        if (typeof Logger !== 'undefined') {
-            Logger.error('CACHE', '❌ Failed to get cookies via chrome.cookies API', error);
-        }
-    }
-
-    // Run detection analysis immediately
-    let detectionResults = [];
-    try {
-        // Ensure DetectorManager is initialized (handles service worker restarts)
-        await ensureDetectorManagerInitialized();
-
-        // Create detection engine if not exists
-        if (!detectionEngine) {
-            detectionEngine = new DetectionEngineManager();
-        }
-        // Set detectors from detector manager
-        detectionEngine.setDetectors(detectorManager.getAllDetectors());
-
-        // Run detection with timeout (reduced from 30s to 10s - still plenty for slow pages)
-        try {
-            const startTime = Date.now();
-
-            // LOG: Show all network URLs being passed to detection
-            if (pageData.networkUrls && pageData.networkUrls.length > 0) {
-                Logger.background(`[Network URLs] ✅ Passing ${pageData.networkUrls.length} URLs to detection engine:`);
-                pageData.networkUrls.forEach((urlObj, index) => {
-                    Logger.background(`  ${index + 1}. ${urlObj.url} | Type: ${urlObj.type} | Method: ${urlObj.method}`);
-                });
-            } else {
-                Logger.background(`[Network URLs] ⚠️ No network URLs available for detection!`);
-            }
-
-            const detectionPromise = Promise.resolve(detectionEngine.detectOnPage(pageData));
-            const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('Detection timeout after 10 seconds')), 10000)
-            );
-            detectionResults = await Promise.race([detectionPromise, timeoutPromise]);
-
-            const elapsed = Date.now() - startTime;
-            Logger.background(`[processDetectionData] ✅ Main detection completed in ${elapsed}ms: ${detectionResults.length} detectors found`);
-
-            // GRANULAR PROGRESS: Send incremental updates for main detection methods
-            // Mark each method complete as it finishes detection
-            // FIX: Use markMethodComplete to properly track progress and trigger finalization
-            Logger.background(`%c[processDetectionData] 📊 MARKING MAIN METHODS COMPLETE for tab ${tabId}`, 'color: #2196F3; font-weight: bold; font-size: 14px;');
-            const mainMethods = ['cookies', 'headers', 'url', 'dom', 'payload'];
-            for (const method of mainMethods) {
-                Logger.background(`[processDetectionData] Marking ${method} complete...`);
-                markMethodComplete(tabId, method);
-            }
-            Logger.background(`%c[processDetectionData] ✅ All main methods marked complete`, 'color: #4caf50; font-weight: bold;');
-
-            // Log what was detected
-            if (detectionResults.length > 0) {
-                detectionResults.forEach(det => {
-                    const methods = det.matches?.map(m => m.type).filter((v, i, a) => a.indexOf(v) === i) || [];
-                    Logger.background(`[processDetectionData]   - ${det.detector?.name}: ${methods.join(', ')} (${det.matches?.length || 0} matches)`);
-                });
-            }
-        } catch (error) {
-            const errorType = error.message.includes('timeout') ? 'TIMEOUT' : 'ERROR';
-            Logger.error('BACKGROUND', `[processDetectionData] ❌ Main detection ${errorType} for tab ${tabId}:`, error.message);
-            Logger.error('BACKGROUND', `[processDetectionData] ❌ Stack:`, error.stack);
-            Logger.error('BACKGROUND', `[processDetectionData] ⚠️ Continuing with empty results - only window props and hooks will be preserved`);
-            detectionResults = []; // Continue with empty results - JS hooks and window props will still be preserved
-        }
-
-        Logger.background(`🎯 Scrapfly Background: Detected ${detectionResults.length} security systems via main detection`);
-
-        // Check if detection was aborted (tab switch occurred)
-        const detectionInfo = activeDetections.get(tabId);
-        if (detectionInfo && detectionInfo.abortController.signal.aborted) {
-            Logger.background(`[Detection] ⚠️ Detection for tab ${tabId} was aborted - skipping result storage`);
-            return; // Don't store results or finalize
-        }
-
-        // Also check if tab is marked as interrupted
-        if (interruptedDetections.has(tabId)) {
-            Logger.background(`[Detection] ⚠️ Detection for tab ${tabId} is interrupted - skipping result storage`);
-            return; // Don't store results or finalize
-        }
-
-        // Store main detection and check if ready to finalize
-        Logger.background(`%c[processDetectionData] 🔄 Getting/Creating detection state for tab ${tabId}`, 'color: #ff9800; font-weight: bold;');
-        const state = getOrCreateDetectionState(tabId, pageData.url);
-
-        // Store tabTitle in state for use when saving to history
-        if (!state.tabTitle && pageData.tabTitle) {
-            state.tabTitle = pageData.tabTitle;
-            Logger.background(`[processDetectionData] Stored tabTitle in state: "${state.tabTitle}"`);
-        }
-
-        Logger.background(`[processDetectionData] Current state before storing:`, {
-            completedMethods: Array.from(state.completedMethods || []),
-            completedCount: state.completedMethods?.size || 0,
-            url: state.url,
-            tabTitle: state.tabTitle
-        });
-
-        // URL validation: Ensure URL hasn't changed during detection
-        if (state.url !== pageData.url) {
-            Logger.background(`[Detection] ⚠️ URL changed during detection for tab ${tabId}: ${pageData.url} → ${state.url} - skipping result storage`);
-            return; // Don't store results for the wrong URL
-        }
-
-        // Merge with existing mainData (window properties may have been added already)
-        // Instead of replacing, merge detections by detectorId
-        const existingDetections = new Map();
-        for (const existing of state.mainData) {
-            const id = existing.detector?.id || existing.id;
-            if (id) existingDetections.set(id, existing);
-        }
-
-        // Add/merge main detection results
-        for (const newDetection of detectionResults) {
-            const id = newDetection.detector?.id || newDetection.id;
-            if (id && existingDetections.has(id)) {
-                // Merge: combine matches, but check for duplicates by category
-                const existing = existingDetections.get(id);
-                const existingMatches = existing.matches || [];
-                const newMatches = newDetection.matches || [];
-
-                // OPTIMIZATION Phase 10.2: Use Set for O(1) deduplication instead of O(n) Array.some()
-                // Build lookup set from existing matches for fast duplicate detection
-                const matchKeys = new Set();
-                for (const match of existingMatches) {
-                    matchKeys.add(generateMatchKey(match));
-                }
-
-                // Add new matches if not duplicate
-                for (const newMatch of newMatches) {
-                    const key = generateMatchKey(newMatch);
-                    if (!matchKeys.has(key)) {
-                        existingMatches.push(newMatch);
-                        matchKeys.add(key);
-                    }
-                }
-
-                existing.matches = existingMatches;
-
-                // Update confidence to highest
-                existing.confidence = Math.max(existing.confidence || 0, newDetection.confidence || 0);
-
-                // Merge detectionMethods
-                const existingMethods = existing.detectionMethods || [];
-                const newMethods = newDetection.detectionMethods || [];
-                existing.detectionMethods = [...new Set([...existingMethods, ...newMethods])];
-            } else {
-                // New detector, add it
-                existingDetections.set(id, newDetection);
-            }
-        }
-
-        // Update state.mainData with merged results
-        state.mainData = Array.from(existingDetections.values());
-        state.mainComplete = true;
-
-        Logger.background(`[processDetectionData] ✅ Main detection complete: ${detectionResults.length} detectors`);
-
-        // CRITICAL FIX: Update badge immediately when detection completes
-        // This is the ONLY place badge should be updated to the final count
-        // Fixes the "stuck at 29%" issue by setting badge to count ASAP, not via percentage
-        (async () => {
-            try {
-                // Wait a tiny bit for hooks data to arrive (in case it's close behind)
-                // But not too long - max 500ms
-                let attempts = 0;
-                while (state.hooksData.size === 0 && attempts < 5) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    attempts++;
-                }
-
-                // Merge hooks data + main data to get total detection count
-                const mergedDetections = new Map();
-
-                // Add hooks data
-                for (const [detectorId, detector] of state.hooksData.entries()) {
-                    mergedDetections.set(detectorId, detector);
-                }
-
-                // Add main detection data
-                for (const detector of state.mainData) {
-                    const detectorId = detector.detector?.id || detector.id;
-                    if (!mergedDetections.has(detectorId)) {
-                        mergedDetections.set(detectorId, detector);
-                    }
-                }
-
-                const detectionCount = mergedDetections.size;
-
-                // Get badge colors
-                const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
-
-                if (detectionCount > 0) {
-                    const count = detectionCount.toString();
-                    const color = detectionCount >= BADGE.THRESHOLDS.HIGH ? badgeColors.high :
-                                 detectionCount >= BADGE.THRESHOLDS.MEDIUM ? badgeColors.medium :
-                                 badgeColors.low;
-
-                    Logger.background(`%c[processDetectionData] 🔵 UPDATING BADGE TO FINAL COUNT: "${count}"`, 'color: #2196F3; font-weight: bold; font-size: 14px;');
-                    Logger.background(`[processDetectionData] Detection count: ${detectionCount} (hooks: ${state.hooksData.size}, main: ${state.mainData.length})`);
-
-                    await chrome.action.setBadgeText({ text: count, tabId: tabId });
-                    await chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId });
-
-                    Logger.background(`%c[processDetectionData] ✅ Badge set to FINAL COUNT "${count}" - NO MORE PERCENTAGE UPDATES!`, 'color: #4caf50; font-weight: bold; font-size: 14px;');
-                } else {
-                    Logger.background(`%c[processDetectionData] ℹ️ No detections found - showing clean badge`, 'color: #ff9800; font-weight: bold;');
-                    await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEAN, tabId: tabId });
-                    await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId: tabId });
-                }
-            } catch (error) {
-                // Silently ignore "No tab with id" errors - expected when tab closes during detection
-                if (error.message && error.message.includes('No tab with id')) {
-                    Logger.background(`[processDetectionData] Tab ${tabId} closed during detection, skipping badge update`);
-                } else {
-                    Logger.error('DETECTION', '[processDetectionData] Error updating badge:', error);
-                }
-            }
-        })();
-
-        // PHASE 1 FIX: Safety timeout for completion signals
-        // Wait longer (5 seconds) to give main detection time to complete
-        // This prevents the badge from being stuck at percentage (e.g., 29%)
-        setTimeout(async () => {
-            const currentState = detectionStates.get(tabId);
-            if (!currentState) {
-                Logger.background(`[⏱️ 5s Safety Timeout] Tab ${tabId} state already cleaned up`);
-                return;
-            }
-
-            if (currentState.finalized) {
-                Logger.background(`[⏱️ 5s Safety Timeout] Tab ${tabId} already finalized, no action needed`);
-                return;
-            }
-
-            // Check if main detection has completed
-            const mainMethodsComplete = ['cookies', 'headers', 'url', 'dom'].every(m => currentState.completedMethods.has(m));
-
-            if (!mainMethodsComplete) {
-                Logger.warn('BACKGROUND', `%c[⏱️ 5s SAFETY] Main detection hasn't completed yet - waiting...`, 'color: #ff9800; font-weight: bold;');
-                Logger.warn('BACKGROUND', `[⏱️ 5s SAFETY] Completed methods: [${Array.from(currentState.completedMethods)}]`);
-                // Don't force methods if main detection is still running
-                // Main detection will mark them complete when it finishes
-                return;
-            }
-
-            // Only force hook/window methods if main detection is done
-            let forcedMethods = [];
-
-            if (!currentState.windowPropertiesComplete) {
-                Logger.warn('BACKGROUND', `%c[⏱️ 5s SAFETY] Main complete, forcing windowProperties completion (signal lost)`, 'color: #ff9800; font-weight: bold;');
-                markMethodComplete(tabId, 'windowProperties');
-                currentState.windowPropertiesComplete = true;
-                forcedMethods.push('windowProperties');
-            }
-
-            if (!currentState.hooksComplete) {
-                Logger.warn('BACKGROUND', `%c[⏱️ 5s SAFETY] Main complete, forcing jsHooks completion (signal lost)`, 'color: #ff9800; font-weight: bold;');
-                markMethodComplete(tabId, 'jsHooks');
-                currentState.hooksComplete = true;
-                forcedMethods.push('jsHooks');
-            }
-
-            // CRITICAL FIX: Check if detection data is ALREADY stored
-            const storedData = await DetectionEngineManager.getStoredDetection(currentState.url);
-            if (storedData) {
-                Logger.background(`%c[⏱️ 5s SAFETY TIMEOUT] ✅ Detection data already stored for tab ${tabId}!`, 'color: #4caf50; font-weight: bold;');
-                Logger.background(`[⏱️ 5s SAFETY] Found ${storedData.detectionResults?.length || 0} detectors - finalizing immediately`);
-
-                // Finalize immediately
-                await finalizeDetection(tabId, currentState);
-                Logger.background(`%c[⏱️ 5s SAFETY] ✅ Finalization complete, badge updated to count`, 'color: #4caf50; font-weight: bold;');
-                return;
-            }
-
-            // If we forced any methods, trigger finalization
-            if (forcedMethods.length > 0) {
-                Logger.warn('BACKGROUND', `%c[⏱️ 5s SAFETY TIMEOUT TRIGGERED]`, 'color: #ff9800; font-weight: bold; font-size: 14px;');
-                Logger.warn('BACKGROUND', `[⏱️ 5s SAFETY] Forced completion of: ${forcedMethods.join(', ')}`);
-                Logger.warn('BACKGROUND', `[⏱️ 5s SAFETY] Current state:`, {
-                    windowPropertiesComplete: currentState.windowPropertiesComplete,
-                    mainComplete: currentState.mainComplete,
-                    hooksComplete: currentState.hooksComplete,
-                    completedMethods: Array.from(currentState.completedMethods),
-                    url: currentState.url
-                });
-
-                // Trigger finalization check
-                checkAndFinalizeDetection(tabId);
-                Logger.background(`%c[⏱️ 5s SAFETY] ✅ Forced finalization triggered`, 'color: #ff9800; font-weight: bold;');
-            }
-        }, 5000); // 5 seconds - give main detection time to complete
-
-        // Check if all methods are done
-        checkAndFinalizeDetection(tabId);
-
-        // FIX: Removed early history save - history is now saved ONLY in finalizeDetection()
-        // This prevents duplicate saves and ensures history contains complete data (including hooks)
-        // Early save here would miss JS hooks which arrive later via batching
-        Logger.detection('[processDetectionData] ⏭️  Skipping early history save - will save complete data during finalization');
-    } catch (error) {
-        Logger.error('BACKGROUND', 'Scrapfly Background: Error running detection:', error);
-    }
-
-    Logger.background(`Scrapfly Background: Processed detection data for tab ${tabId}`, {
-        url: pageData.url,
-        cookies: pageData.cookies.length,
-        content: pageData.content?.length || 0,
-        externalContent: pageData.externalContent?.length || 0,
-        dom: pageData.dom.length,
-        headers: Object.keys(pageData.headers || {}).length,
-        detections: detectionResults.length
-    });
-
-    // FIX: Don't notify popup here - wait for finalization when ALL methods complete
-    // This prevents showing partial results before hooks/window properties are analyzed
-    // Notification is sent in finalizeDetection() after 100% completion
-    
-    // Send webhook if enabled
-    if (detectionResults.length > 0) {
-        await Settings.sendWebhookIfEnabled(pageData, detectionResults);
-    }
-}
-
-
-
-// getDetectionData has been moved to DetectionEngineManager.js as a static method
-// Use DetectionEngineManager.getDetectionData(tabId) instead
-
-/**
- * Get detection data for the current active tab
- * @returns {Promise<object|null>} Detection data or null
- */
 async function getCurrentTabDetectionData() {
     try {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -1766,1898 +866,6 @@ async function getCurrentTabDetectionData() {
 }
 
 
-/**
- * Setup message listeners
- * OPTIMIZED 3.4: Message handlers organized for better performance
- */
-function setupMessageListeners() {
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        // OPTIMIZED 3.4: Early validation to skip invalid messages quickly
-        if (!request || !request.type) {
-            sendResponse({ status: 'error', error: 'Invalid message' });
-            return false;
-        }
-
-        // Reduced logging - comment out for less spam
-        // Logger.background('Scrapfly Background: Received message:', request.type);
-
-        switch (request.type) {
-            case 'DEBUG_LOG':
-                // Centralized logging - display all logs in service worker console
-                if (request.context && request.level && request.args) {
-                    const timestamp = new Date(request.timestamp).toISOString().split('T')[1].slice(0, -1);
-                    const prefix = `[${timestamp}] [${request.context}]`;
-
-                    // Parse JSON strings back to objects for better console display
-                    const parsedArgs = request.args.map(arg => {
-                        if (typeof arg === 'string' && (arg.startsWith('{') || arg.startsWith('['))) {
-                            try {
-                                return JSON.parse(arg);
-                            } catch (e) {
-                                return arg;
-                            }
-                        }
-                        return arg;
-                    });
-
-                    // Use appropriate console method
-                    switch (request.level) {
-                        case 'log': Logger.background(prefix, ...parsedArgs); break;
-                        case 'info': console.info(prefix, ...parsedArgs); break;
-                        case 'debug': console.debug(prefix, ...parsedArgs); break;
-                        case 'warn': Logger.warn('BACKGROUND', prefix, ...parsedArgs); break;
-                        case 'error': Logger.error('BACKGROUND', prefix, ...parsedArgs); break;
-                        case 'trace': console.trace(prefix, ...parsedArgs); break;
-                        case 'group': console.group(prefix, ...parsedArgs); break;
-                        case 'groupEnd': console.groupEnd(); break;
-                        case 'groupCollapsed': console.groupCollapsed(prefix, ...parsedArgs); break;
-                        case 'table': console.table(...parsedArgs); break;
-                        case 'time': console.time(...parsedArgs); break;
-                        case 'timeEnd': console.timeEnd(...parsedArgs); break;
-                        default: Logger.background(prefix, ...parsedArgs);
-                    }
-                }
-                break;
-
-            case 'LOG':
-                // Logger system - output logs from content scripts and main world
-                if (request.log) {
-                    Logger._outputToConsole(request.log);
-                }
-                break;
-
-            case 'SCRAPFLY_DEBUG_LOG':
-                // Debug logs from content scripts (only output when debug mode is enabled)
-                (async () => {
-                    try {
-                        const settings = await Utils.getSettings(chrome);
-                        if (settings?.debugMode) {
-                            const timestamp = new Date(request.timestamp).toISOString().split('T')[1].slice(0, -1);
-                            const prefix = `[${timestamp}] [${request.source || 'hooks'}]`;
-                            switch (request.level) {
-                                case 'log': Logger.background(prefix, request.message); break;
-                                case 'warn': Logger.warn('BACKGROUND', prefix, request.message); break;
-                                case 'error': Logger.error('BACKGROUND', prefix, request.message); break;
-                                default: Logger.background(prefix, request.message);
-                            }
-                        }
-                    } catch (e) {
-                        // Silently fail if settings can't be read
-                    }
-                })();
-                break;
-
-            case 'PING':
-                // Simple ping for connection test
-                sendResponse({ status: 'pong', timestamp: Date.now() });
-                break;
-
-            case 'PAGE_LOAD_NOTIFICATION':
-                // FIX: Clear interrupted state on new page load (prevents false "interrupted" messages)
-                if (sender.tab?.id) {
-                    if (interruptedDetections.has(sender.tab.id)) {
-                        Logger.background(`[Background] Clearing interrupted state for tab ${sender.tab.id} (new page load)`);
-                        interruptedDetections.delete(sender.tab.id);
-                    }
-                }
-
-                // Delegate to DetectionEngineManager handler
-                (async () => {
-                    // Ensure detector manager is initialized before processing
-                    await ensureDetectorManagerInitialized();
-
-                    await DetectionEngineManager.handlePageLoadNotification(request, sender, {
-                        chrome,
-                        Settings,
-                        CategoryManager,
-                        History,
-                        Utils,
-                        categoryManager,
-                        recentDetectionRequests
-                    });
-                })();
-                break;
-
-            case 'EXTENSION_TOGGLE_CHANGED':
-                // Handle extension enable/disable toggle with cached detection badge restoration
-                (async () => {
-                    try {
-                        const enabled = request.enabled;
-                        Logger.background(`[Background] Extension toggle changed to: ${enabled ? 'ENABLED' : 'DISABLED'}`);
-
-                        // Call Settings.handleEnableToggle with dependencies for badge restoration
-                        await Settings.handleEnableToggle(enabled, {
-                            DetectionEngineManager,
-                            CategoryManager,
-                            categoryManager
-                        });
-
-                        sendResponse({ status: 'success' });
-                    } catch (error) {
-                        Logger.error('BACKGROUND', '[Background] Error handling toggle change:', error);
-                        sendResponse({ status: 'error', error: error.message });
-                    }
-                })();
-                return true; // Async response
-
-            case 'DETECTION_DATA':
-                // Process detection data from content script
-                (async () => {
-                    Logger.debug('BACKGROUND', '[DEBUG] DETECTION_DATA message received!');
-                    Logger.debug('BACKGROUND', '[DEBUG] Sender tab ID:', sender.tab?.id);
-                    Logger.debug('BACKGROUND', '[DEBUG] Request keys:', Object.keys(request));
-                    const pageData = request.data;
-                    Logger.debug('BACKGROUND', '[DEBUG] Request data available:', {
-                        hasData: !!pageData,
-                        dataKeys: pageData ? Object.keys(pageData) : null,
-                        hasCookies: pageData?.cookies ? pageData.cookies.length : 0,
-                        hasHeaders: pageData?.headers ? Object.keys(pageData.headers).length : 0,
-                        hasScripts: pageData?.scripts ? pageData.scripts.length : 0,
-                        hasDom: pageData?.dom ? pageData.dom.length : 0,
-                        url: pageData?.url
-                    });
-                    try {
-                        Logger.debug('BACKGROUND', '[DEBUG] Calling processDetectionData...');
-                        await processDetectionData(request, sender);
-                        Logger.debug('BACKGROUND', '[DEBUG] processDetectionData completed successfully');
-                        sendResponse({ status: 'received', tabId: sender.tab?.id });
-                    } catch (error) {
-                        Logger.error('BACKGROUND', '[DEBUG] ERROR in processDetectionData:', error);
-                        sendResponse({ status: 'error', error: error.message });
-                    }
-                })();
-                return true; // Async response
-
-            case 'CONTENT_SCRIPT_READY':
-                // Content script is ready
-                Logger.background(`Scrapfly Background: Content script ready on ${request.url}`);
-                sendResponse({ status: 'acknowledged' });
-                break;
-
-            case 'GET_DETECTION_DATA':
-                // Request for detection data from popup
-                (async () => {
-                    try {
-                        let data = null;
-                        let status = 'ok';
-
-                        const tabId = request.tabId;
-
-                        // PRIORITY FIX: Get cached data FIRST, then check interrupted/pending status only if no cache
-                        if (tabId) {
-                            // FIX: Layer 2 - If popup is querying the current active tab and it's marked as interrupted,
-                            // clear the interrupted state because user is viewing this tab right now
-                            if (tabId === currentActiveTab && interruptedDetections.has(tabId)) {
-                                Logger.background(`[GET_DETECTION_DATA] Clearing interrupted state for current tab ${tabId} (user viewing popup)`);
-                                interruptedDetections.delete(tabId);
-                                try {
-                                    await chrome.action.setBadgeText({ text: '', tabId });
-                                } catch (error) {
-                                    // Silently fail
-                                }
-                            }
-
-                            // Try to get cached data first
-                            data = await DetectionEngineManager.getDetectionData(tabId);
-                            
-                            // FIX: If no cached data but detection state exists, construct response from state
-                            // This handles the case where detection just completed and storage write is still pending
-                            if (!data) {
-                                // CRITICAL FIX: Don't return zombie data from detectionStates if cache was recently cleared
-                                if (recentlyClearedTabs.has(tabId)) {
-                                    Logger.background(`[GET_DETECTION_DATA] Tab ${tabId} recently cleared - blocking zombie data from detectionStates`);
-                                    // Don't return stale data - let popup show empty state
-                                } else {
-                                    // PHASE 9 FIX: Check badge FIRST to determine if detection completed
-                                    // Badge updates EARLY (in processDetectionData async IIFE)
-                                    // state.expiry is set LATE (in finalizeDetection after storage write)
-                                    // So we need to check badge to know if mainData is valid
-                                    let badgeText = '';
-                                    try {
-                                        badgeText = await chrome.action.getBadgeText({ tabId });
-                                    } catch (e) {
-                                        // Silently fail
-                                    }
-                                    const trimmed = badgeText ? badgeText.trim() : '';
-                                    const isNumericBadge = /^\d+\+?$/.test(trimmed);
-
-                                    const state = detectionStates.get(tabId);
-
-                                    // If badge shows numeric count, use mainData even WITHOUT expiry
-                                    // This fixes the race where badge updates before finalizeDetection runs
-                                    if (isNumericBadge && state && state.mainData && state.mainData.length > 0) {
-                                        Logger.background(`[GET_DETECTION_DATA] Badge='${trimmed}', using mainData without expiry for tab ${tabId}`);
-                                        data = {
-                                            detectionResults: state.mainData,
-                                            timestamp: state.timestamp || Date.now(),
-                                            url: state.url,
-                                            favicon: state.favicon,
-                                            fromStorage: false,
-                                            processed: true
-                                        };
-                                    }
-                                    // Fallback: If state has expiry (finalizeDetection ran), use it
-                                    else if (state && state.expiry && state.mainData && state.mainData.length > 0) {
-                                        Logger.background(`[GET_DETECTION_DATA] Using fresh detection state with expiry for tab ${tabId}`);
-                                        data = {
-                                            detectionResults: state.mainData,
-                                            timestamp: state.timestamp,
-                                            expiry: state.expiry,
-                                            url: state.url,
-                                            favicon: state.favicon,
-                                            fromStorage: false,
-                                            processed: true
-                                        };
-                                    }
-                                }
-                            }
-                            
-                            // Reduced logging - comment out for less spam
-                            // Logger.background(`Scrapfly Background: Sending detection data for tab ${tabId}:`, data ? 'Data available' : 'No data');
-
-                            // FIX: Layer 3 - If we have cached data and tab is marked as interrupted, clear it
-                            // (Tab was interrupted but detection actually completed before interruption occurred)
-                            if (data && interruptedDetections.has(tabId)) {
-                                Logger.background(`[GET_DETECTION_DATA] Clearing interrupted state for tab ${tabId} (has cached completed data)`);
-                                interruptedDetections.delete(tabId);
-                            }
-
-                            // Only check interrupted/pending status if NO cached data exists
-                            if (!data) {
-                                // CRITICAL FIX: If cache was recently cleared, don't show pending/analyzing state
-                                if (recentlyClearedTabs.has(tabId)) {
-                                    Logger.background(`[GET_DETECTION_DATA] Tab ${tabId} recently cleared - returning empty state, not pending`);
-                                    status = 'ok';  // Return ok with no data to show empty state
-                                } else {
-                                    // FIX: Check badge FIRST - if it shows numeric count, detection completed
-                                    // even if activeDetections flag wasn't cleared yet (race condition)
-                                    let badgeText = '';
-                                    try {
-                                        badgeText = await chrome.action.getBadgeText({ tabId });
-                                    } catch (badgeError) {
-                                        Logger.background(`[GET_DETECTION_DATA] Failed to read badge text for tab ${tabId}:`, badgeError.message);
-                                    }
-                                    const trimmed = badgeText ? badgeText.trim() : '';
-                                    const isNumericBadge = /^\d+\+?$/.test(trimmed);
-
-                                    if (isNumericBadge) {
-                                        // Badge shows count - detection completed but data not in cache yet
-                                        // Clear stale activeDetections flag and wait for cache write to complete
-                                        Logger.background(`[GET_DETECTION_DATA] Badge shows '${trimmed}' but no data - waiting for cache write...`);
-                                        activeDetections.delete(tabId);
-
-                                        // FIX: Wait for cache write to complete (400ms)
-                                        await new Promise(resolve => setTimeout(resolve, 400));
-
-                                        // Retry getting cached data
-                                        data = await DetectionEngineManager.getDetectionData(tabId);
-
-                                        // If still no cache, try using state.mainData directly
-                                        if (!data) {
-                                            const retryState = detectionStates.get(tabId);
-                                            if (retryState && retryState.mainData && retryState.mainData.length > 0) {
-                                                Logger.background(`[GET_DETECTION_DATA] Using state.mainData directly for tab ${tabId}`);
-                                                // Get expiry and cacheScope for proper display in popup
-                                                const expiryMs = await DetectionEngineManager.getExpiryMs();
-                                                const cacheScope = await Utils.getCacheScope();
-                                                const now = Date.now();
-                                                data = {
-                                                    detectionResults: retryState.mainData,
-                                                    timestamp: retryState.timestamp || now,
-                                                    url: retryState.url,
-                                                    favicon: retryState.favicon,
-                                                    fromStorage: false,
-                                                    processed: true,
-                                                    expiry: now + expiryMs,
-                                                    cacheScope: cacheScope
-                                                };
-                                            }
-                                        }
-
-                                        // CRITICAL: Badge is numeric = detection complete, return 'ok' not 'pending'
-                                        status = 'ok';
-                                    } else if (trimmed === BADGE.TEXT.LOADING) {
-                                        // Truly still analyzing
-                                        status = 'pending';
-                                    } else if (activeDetections.has(tabId)) {
-                                        // FIX: If tab is marked interrupted but still has active detection, treat as pending
-                                        // This handles race conditions where popup opens during analysis
-                                        status = 'pending';
-                                    } else if (interruptedDetections.has(tabId)) {
-                                        status = 'interrupted';
-                                    }
-                                    // If badge is empty or other value, status stays 'ok' (shows empty state)
-                                }
-                            }
-                            // If cached data exists, status stays 'ok' regardless of interrupted state
-                        } else {
-                            // No tabId provided, use active tab
-                            const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
-                            if (activeTab) {
-                                // FIX: Layer 2 - If popup is querying the current active tab and it's marked as interrupted,
-                                // clear the interrupted state because user is viewing this tab right now
-                                if (interruptedDetections.has(activeTab.id)) {
-                                    Logger.background(`[GET_DETECTION_DATA] Clearing interrupted state for current tab ${activeTab.id} (user viewing popup)`);
-                                    interruptedDetections.delete(activeTab.id);
-                                    try {
-                                        await chrome.action.setBadgeText({ text: '', tabId: activeTab.id });
-                                    } catch (error) {
-                                        // Silently fail
-                                    }
-                                }
-
-                                // Try to get cached data first
-                                data = await getCurrentTabDetectionData();
-                                // Reduced logging - comment out for less spam
-                                // Logger.background('Scrapfly Background: Sending detection data for current tab:', data ? 'Data available' : 'No data');
-
-                                // FIX: Layer 3 - If we have cached data and tab is marked as interrupted, clear it
-                                // (Tab was interrupted but detection actually completed before interruption occurred)
-                                if (data && interruptedDetections.has(activeTab.id)) {
-                                    Logger.background(`[GET_DETECTION_DATA] Clearing interrupted state for active tab ${activeTab.id} (has cached completed data)`);
-                                    interruptedDetections.delete(activeTab.id);
-                                }
-
-                                // Only check interrupted/pending status if NO cached data exists
-                                if (!data) {
-                                    // FIX: Check badge first - if numeric, detection completed but cache not ready
-                                    let badgeText = '';
-                                    try {
-                                        badgeText = await chrome.action.getBadgeText({ tabId: activeTab.id });
-                                    } catch (badgeError) {
-                                        Logger.detection('[GET_DETECTION_DATA] Failed to read badge text for active tab:', badgeError.message);
-                                    }
-                                    const trimmed = badgeText ? badgeText.trim() : '';
-                                    const isNumericBadge = /^\d+\+?$/.test(trimmed);
-
-                                    if (isNumericBadge) {
-                                        // Badge shows count - detection completed but data not in cache yet
-                                        Logger.background(`[GET_DETECTION_DATA] Active tab badge shows '${trimmed}' but no data - waiting for cache write...`);
-                                        activeDetections.delete(activeTab.id);
-
-                                        // FIX: Wait for cache write to complete (400ms)
-                                        await new Promise(resolve => setTimeout(resolve, 400));
-
-                                        // Retry getting cached data
-                                        data = await getCurrentTabDetectionData();
-
-                                        // If still no cache, try using state.mainData directly
-                                        if (!data) {
-                                            const retryState = detectionStates.get(activeTab.id);
-                                            if (retryState && retryState.mainData && retryState.mainData.length > 0) {
-                                                Logger.background(`[GET_DETECTION_DATA] Using state.mainData directly for active tab ${activeTab.id}`);
-                                                // Get expiry and cacheScope for proper display in popup
-                                                const expiryMs = await DetectionEngineManager.getExpiryMs();
-                                                const cacheScope = await Utils.getCacheScope();
-                                                const now = Date.now();
-                                                data = {
-                                                    detectionResults: retryState.mainData,
-                                                    timestamp: retryState.timestamp || now,
-                                                    url: retryState.url,
-                                                    favicon: retryState.favicon,
-                                                    fromStorage: false,
-                                                    processed: true,
-                                                    expiry: now + expiryMs,
-                                                    cacheScope: cacheScope
-                                                };
-                                            }
-                                        }
-
-                                        // CRITICAL: Badge is numeric = detection complete, return 'ok' not 'pending'
-                                        status = 'ok';
-                                    } else if (trimmed === BADGE.TEXT.LOADING) {
-                                        // Truly still analyzing
-                                        status = 'pending';
-                                    } else if (activeDetections.has(activeTab.id)) {
-                                        // FIX: If tab is marked interrupted but still has active detection, treat as pending
-                                        // This handles race conditions where popup opens during analysis
-                                        status = 'pending';
-                                    } else if (interruptedDetections.has(activeTab.id)) {
-                                        status = 'interrupted';
-                                    }
-                                    // If badge is empty or other value, status stays 'ok' (shows empty state)
-                                }
-                                // If cached data exists, status stays 'ok' regardless of interrupted state
-                            }
-                        }
-
-                        // FIX: Clear stale badge when cache has expired
-                        // If data is null and status is 'ok', the cache has expired or no detections exist
-                        // Clear the badge if it still shows an old numeric count
-                        if (!data && status === 'ok') {
-                            const targetTabId = tabId || (await chrome.tabs.query({ active: true, currentWindow: true }))[0]?.id;
-                            if (targetTabId) {
-                                try {
-                                    const badgeText = await chrome.action.getBadgeText({ tabId: targetTabId });
-                                    const trimmed = badgeText ? badgeText.trim() : '';
-                                    const isNumericBadge = /^\d+\+?$/.test(trimmed);
-
-                                    if (isNumericBadge) {
-                                        Logger.background(`[GET_DETECTION_DATA] Cache expired, clearing stale badge '${trimmed}' for tab ${targetTabId}`);
-                                        await chrome.action.setBadgeText({ text: '', tabId: targetTabId });
-                                    }
-                                } catch (e) {
-                                    // Silently fail
-                                }
-                            }
-                        }
-
-                        // Include detection progress state so popup can update step colors
-                        const state = detectionStates.get(tabId) || (tabId ? null : detectionStates.get(activeTab?.id));
-                        const completedMethods = state ? Array.from(state.completedMethods || []) : [];
-                        const totalPercent = state ? Math.round((state.completedMethods?.size || 0) / 7 * 100) : 0;
-
-                        sendResponse({
-                            data,
-                            status,
-                            progress: {
-                                completedMethods,
-                                totalPercent,
-                                method: completedMethods[completedMethods.length - 1] || null // Last completed method
-                            }
-                        });
-                    } catch (error) {
-                        Logger.error('BACKGROUND', 'Scrapfly Background: Error in GET_DETECTION_DATA:', error);
-                        sendResponse({ data: null, status: 'error', error: error.message });
-                    }
-                })();
-                return true; // Will respond asynchronously
-                break;
-
-            case 'RELOAD_DETECTORS':
-                // Reload detectors from storage (after adding/updating/deleting)
-                (async () => {
-                    try {
-                        Logger.background('Scrapfly Background: Reloading detectors from storage...');
-
-                        // CRITICAL: Clear all optimization caches when rules change
-                        // This ensures pattern changes are immediately reflected
-                        if (typeof DetectionEngineManager !== 'undefined' && DetectionEngineManager.patternCache) {
-                            Logger.background('Scrapfly Background: Clearing PatternCache (rules changed)');
-                            DetectionEngineManager.patternCache.clear();
-                        }
-
-                        detectorManager.initialized = false;
-                        await detectorManager.initialize();
-                        Logger.background('Scrapfly Background: Detectors reloaded successfully');
-                        sendResponse({ status: 'reloaded', detectorCount: detectorManager.getDetectorCount() });
-                    } catch (error) {
-                        Logger.error('BACKGROUND', 'Scrapfly Background: Error reloading detectors:', error);
-                        sendResponse({ status: 'error', error: error.message });
-                    }
-                })();
-                return true; // Will respond asynchronously
-                break;
-
-            case 'SYNC_CATEGORY_COLORS':
-                // Sync category colors from Settings to CategoryManager
-                (async () => {
-                    try {
-                        Logger.background('Scrapfly Background: Syncing category colors from Settings...');
-                        const synced = await detectorManager.categoryManager.syncColorsFromSettings();
-                        Logger.background('Scrapfly Background: Category colors synced:', synced);
-                        sendResponse({ status: 'synced', success: synced });
-                    } catch (error) {
-                        Logger.error('BACKGROUND', 'Scrapfly Background: Error syncing category colors:', error);
-                        sendResponse({ status: 'error', error: error.message });
-                    }
-                })();
-                return true; // Will respond asynchronously
-                break;
-
-            case 'GET_DETECTORS':
-                // Content script requesting all detectors (for hook installation at document_start)
-                (async () => {
-                    try {
-                        const startTime = Date.now();
-                        Logger.background('[Background] GET_DETECTORS request received');
-
-                        // Ensure DetectorManager is fully initialized with retry logic
-                        // IMPROVED: Increased from 10→20 retries and 200ms→300ms delays (2s→6s total)
-                        // This handles slower JSON file loading during service worker startup
-                        let retries = 20;
-                        const maxRetries = retries;
-
-                        while (retries > 0) {
-                            await ensureDetectorManagerInitialized();
-
-                            // Check if detectors are actually loaded (not just initialized flag)
-                            const allDetectors = detectorManager.getAllDetectors();
-                            const hasDetectors = allDetectors && Object.keys(allDetectors).length > 0;
-
-                            if (hasDetectors) {
-                                const elapsed = Date.now() - startTime;
-                                const detectorCount = Object.values(allDetectors).reduce((sum, cat) =>
-                                    sum + Object.keys(cat).length, 0
-                                );
-                                const attempts = maxRetries - retries + 1;
-                                Logger.background(`[Background] ✅ Detectors loaded successfully in ${elapsed}ms (${attempts} attempts)`);
-                                Logger.background(`[Background] 📊 Sending ${detectorCount} detectors across ${Object.keys(allDetectors).length} categories`);
-
-                                sendResponse({
-                                    detectors: allDetectors
-                                });
-                                return;
-                            }
-
-                            // Detectors not loaded yet, wait and retry
-                            const attemptsLeft = retries - 1;
-                            const elapsedSoFar = Date.now() - startTime;
-                            Logger.warn('BACKGROUND', `[Background] ⚠️ Detectors not loaded yet (${elapsedSoFar}ms elapsed), retrying... (${attemptsLeft} attempts left)`);
-
-                            // Diagnostic info on why detectors might not be ready
-                            if (retries === maxRetries) {
-                                Logger.background('[Background] 🔍 Initial diagnostic: DetectorManager state:', {
-                                    exists: !!detectorManager,
-                                    initialized: detectorManager?.initialized,
-                                    detectorCount: detectorManager ? Object.keys(detectorManager.detectors || {}).length : 0,
-                                    categoryManagerExists: !!categoryManager
-                                });
-
-                                // Check raw storage to compare with detectorManager state
-                                chrome.storage.local.get(['scrapfly_detectors', 'scrapfly_categories'], (rawStorage) => {
-                                    Logger.background('[Background] 🔍 DIAGNOSTIC: Raw chrome.storage.local contents:', {
-                                        hasDetectorsKey: !!rawStorage.scrapfly_detectors,
-                                        hasCategoriesKey: !!rawStorage.scrapfly_categories,
-                                        detectorsTimestamp: rawStorage.scrapfly_detectors?.timestamp,
-                                        detectorsDataKeys: rawStorage.scrapfly_detectors?.detectors ? Object.keys(rawStorage.scrapfly_detectors.detectors) : [],
-                                        categoriesDataKeys: rawStorage.scrapfly_categories?.categories ? Object.keys(rawStorage.scrapfly_categories.categories) : []
-                                    });
-
-                                    // Show sample of what's in storage
-                                    if (rawStorage.scrapfly_detectors?.detectors) {
-                                        const detectorCategories = Object.keys(rawStorage.scrapfly_detectors.detectors);
-                                        Logger.background('[Background] 🔍 DIAGNOSTIC: Storage detector categories:', detectorCategories);
-
-                                        // Show count per category from storage
-                                        for (const cat of detectorCategories) {
-                                            const detectorNames = Object.keys(rawStorage.scrapfly_detectors.detectors[cat] || {});
-                                            Logger.background(`[Background] 🔍 DIAGNOSTIC: Storage category "${cat}": ${detectorNames.length} detectors`);
-                                        }
-                                    }
-
-                                    // Compare with detectorManager state
-                                    if (detectorManager?.detectors) {
-                                        const managerCategories = Object.keys(detectorManager.detectors);
-                                        Logger.background('[Background] 🔍 DIAGNOSTIC: DetectorManager.detectors categories:', managerCategories);
-
-                                        if (managerCategories.length === 0 && rawStorage.scrapfly_detectors?.detectors) {
-                                            Logger.error('BACKGROUND', '[Background] ❌ DIAGNOSTIC: MISMATCH! Storage has detectors but detectorManager.detectors is empty');
-                                            Logger.error('BACKGROUND', '[Background] ❌ DIAGNOSTIC: This indicates loadFromStorage() failed to populate detectorManager.detectors');
-                                        }
-                                    }
-                                });
-                            }
-
-                            // Show progress every 5 attempts
-                            if ((maxRetries - retries) % 5 === 0 && retries < maxRetries) {
-                                const progress = Math.round(((maxRetries - retries) / maxRetries) * 100);
-                                Logger.background(`[Background] ⏳ Progress: ${progress}% (waiting for JSON files to load...)`);
-                            }
-
-                            retries--;
-                            if (retries > 0) {
-                                await new Promise(resolve => setTimeout(resolve, 300)); // Wait 300ms before retry
-                            }
-                        }
-
-                        // Failed to load detectors after retries
-                        const elapsed = Date.now() - startTime;
-                        Logger.error('BACKGROUND', `[Background] ❌ Failed to load detectors after ${elapsed}ms (${maxRetries} retries)`);
-                        Logger.error('BACKGROUND', '[Background] ❌ Final diagnostic:', {
-                            detectorManagerExists: !!detectorManager,
-                            initialized: detectorManager?.initialized,
-                            categoriesCount: detectorManager ? Object.keys(detectorManager.detectors || {}).length : 0,
-                            categoryManagerExists: !!categoryManager,
-                            categoryManagerInitialized: categoryManager?.initialized
-                        });
-
-                        // Check if categories were loaded but not detectors
-                        if (categoryManager?.initialized && categoryManager.categories) {
-                            Logger.error('BACKGROUND', '[Background] ❌ Categories loaded but detectors empty - JSON loading issue');
-                            Logger.error('BACKGROUND', '[Background] ❌ Available categories:', Object.keys(categoryManager.categories));
-                        } else {
-                            Logger.error('BACKGROUND', '[Background] ❌ CategoryManager not initialized - initialization issue');
-                        }
-
-                        Logger.error('BACKGROUND', '[Background] ⚠️ Content script will receive empty config - extension may not work correctly');
-                        Logger.error('BACKGROUND', '[Background] 💡 Recommendation: Reload extension and refresh all tabs');
-
-                        // ALWAYS send response even on failure
-                        sendResponse({ detectors: {} });
-                    } catch (error) {
-                        Logger.error('BACKGROUND', '[Background] ❌ Error getting detectors:', error);
-                        Logger.error('BACKGROUND', '[Background] ❌ Stack trace:', error.stack);
-
-                        // ALWAYS send response even on error
-                        sendResponse({ detectors: {} });
-                    }
-                })();
-                return true; // Will respond asynchronously
-                break;
-
-            case 'CHECK_CACHE_EARLY':
-                // NEW OPTIMIZATION: Check cache before content script does any detection work
-                (async () => {
-                    try {
-                        const { url } = request;
-                        Logger.background('[Background] [Early Cache] Checking cache for:', url);
-
-                        // Use existing getStoredDetection function to check for cached data
-                        const cachedData = await DetectionEngineManager.getStoredDetection(url);
-
-                        if (cachedData) {
-                            Logger.background('[Background] ✅ [Early Cache] HIT - returning cached data');
-                            // Mark this tab as using cache to skip unnecessary capture work
-                            if (sender.tab?.id) {
-                                tabsUsingCache.add(sender.tab.id);
-                                Logger.background(`[Background] [Early Cache] Marked tab ${sender.tab.id} as using cache`);
-                            }
-                            sendResponse({
-                                cacheHit: true,
-                                detectionData: cachedData
-                            });
-                        } else {
-                            Logger.background('[Background] ❌ [Early Cache] MISS - detection needed');
-                            // Clear cache status for this tab (if it was previously cached)
-                            if (sender.tab?.id) {
-                                tabsUsingCache.delete(sender.tab.id);
-                            }
-                            sendResponse({
-                                cacheHit: false
-                            });
-                        }
-                    } catch (error) {
-                        Logger.error('BACKGROUND', '[Background] [Early Cache] Error checking cache:', error);
-                        sendResponse({
-                            cacheHit: false,
-                            error: error.message
-                        });
-                    }
-                })();
-                return true; // Will respond asynchronously
-                break;
-
-            case 'CACHE_HIT_EARLY_EXIT':
-                // Notification that content script detected cache hit and exited early
-                (async () => {
-                    try {
-                        const { url, detectionData } = request;
-                        const tabId = sender.tab?.id;
-
-                        Logger.background('[Background] [Early Cache] Content script exited early due to cache hit for:', url);
-
-                        // Update badge with cached detection count immediately
-                        if (detectionData && tabId) {
-                            const detectionCount = detectionData.detectionCount || 0;
-
-                            if (detectionCount > 0) {
-                                // Use same color scheme as normal detection flow
-                                const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
-                                const count = detectionCount.toString();
-                                const color = detectionCount >= BADGE.THRESHOLDS.HIGH ? badgeColors.high :
-                                             detectionCount >= BADGE.THRESHOLDS.MEDIUM ? badgeColors.medium :
-                                             badgeColors.low;
-
-                                await chrome.action.setBadgeText({
-                                    text: count,
-                                    tabId: tabId
-                                });
-                                await chrome.action.setBadgeBackgroundColor({
-                                    color: color,
-                                    tabId: tabId
-                                });
-                                Logger.background(`[Background] [Early Cache] ✅ Badge updated: ${detectionCount} detections from cache`);
-                            } else {
-                                // No detections - show clean badge
-                                await chrome.action.setBadgeText({
-                                    text: BADGE.TEXT.CLEAN,
-                                    tabId: tabId
-                                });
-                                await chrome.action.setBadgeBackgroundColor({
-                                    color: BADGE.COLORS.CLEAN,
-                                    tabId: tabId
-                                });
-                                Logger.background('[Background] [Early Cache] Badge: clean page (no detections)');
-                            }
-                        }
-
-                        sendResponse({ status: 'acknowledged' });
-                    } catch (error) {
-                        // Silently ignore "No tab with id" errors - expected when tab closes
-                        if (error.message && error.message.includes('No tab with id')) {
-                            Logger.background('[Background] [Early Cache] Tab closed, skipping badge update');
-                            sendResponse({ status: 'acknowledged' }); // Still acknowledge
-                        } else {
-                            Logger.error('BACKGROUND', '[Background] [Early Cache] Error updating badge:', error);
-                            sendResponse({ status: 'error', error: error.message });
-                        }
-                    }
-                })();
-                return true; // Will respond asynchronously
-                break;
-
-            case 'CATEGORY_COLORS_UPDATED':
-                // Reload CategoryManager when colors are updated
-                (async () => {
-                    try {
-                        Logger.background('Scrapfly Background: Category colors updated, reloading CategoryManager...');
-                        if (categoryManager) {
-                            await categoryManager.loadFromStorage();
-                            Logger.background('Scrapfly Background: CategoryManager reloaded with new colors');
-                        }
-                        sendResponse({ status: 'reloaded' });
-                    } catch (error) {
-                        Logger.error('BACKGROUND', 'Scrapfly Background: Error reloading CategoryManager:', error);
-                        sendResponse({ status: 'error', error: error.message });
-                    }
-                })();
-                return true; // Will respond asynchronously
-                break;
-
-            case 'SETTINGS_UPDATED':
-                // Delegate to Settings handler
-                (async () => {
-                    await Settings.handleSettingsUpdated({
-                        chrome,
-                        CategoryManager,
-                        categoryManager
-                    }, sendResponse);
-                })();
-                return true; // Will respond asynchronously
-                break;
-
-            case 'CACHE_SCOPE_CHANGED':
-                // Clear in-memory URL hash cache when cache scope changes
-                Logger.background('[Background] Cache scope changed - clearing URL hash cache');
-                Utils.clearUrlHashCache();
-
-                // Update badge for current tab based on cached data with new scope
-                (async () => {
-                    try {
-                        const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-                        if (tabs && tabs[0]) {
-                            const tab = tabs[0];
-
-                            // Check for cached data with new scope
-                            const storedData = await DetectionEngineManager.getStoredDetection(tab.url);
-
-                            // Add to recentlyClearedTabs to prevent auto-detection on popup reopen
-                            // (Treat cache scope change like explicit cache clear for protection)
-                            recentlyClearedTabs.add(tab.id);
-
-                            // FIX: Clear stale activeDetections state to prevent false "pending" status
-                            // This ensures GET_DETECTION_DATA doesn't return status='pending' for old detections
-                            activeDetections.delete(tab.id);
-                            Logger.background(`[Background] Cleared activeDetections for tab ${tab.id} (cache scope changed)`);
-
-                            setTimeout(() => recentlyClearedTabs.delete(tab.id), 10000);
-                            Logger.background(`[Background] Added tab ${tab.id} to recentlyClearedTabs for 10 seconds`);
-
-                            if (storedData && storedData.detectionCount > 0) {
-                                // Update badge with cached count and color
-                                const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
-                                const count = storedData.detectionCount.toString();
-                                const color = storedData.detectionCount >= BADGE.THRESHOLDS.HIGH ? badgeColors.high :
-                                             storedData.detectionCount >= BADGE.THRESHOLDS.MEDIUM ? badgeColors.medium :
-                                             badgeColors.low;
-
-                                await chrome.action.setBadgeText({ text: count, tabId: tab.id });
-                                await chrome.action.setBadgeBackgroundColor({ color: color, tabId: tab.id });
-                                Logger.background(`[Background] Badge updated with cached data: ${count} detections (scope change)`);
-                            } else {
-                                // No cached data with new scope - show reload needed badge
-                                await chrome.action.setBadgeText({ text: BADGE.TEXT.INTERRUPTED, tabId: tab.id });
-                                await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.INTERRUPTED, tabId: tab.id });
-                                Logger.background('[Background] Badge: reload needed - no cached data with new scope');
-                            }
-                        }
-
-                        if (sendResponse) {
-                            sendResponse({ success: true });
-                        }
-                    } catch (error) {
-                        // Silently ignore "No tab with id" errors - expected when tab closes
-                        if (error.message && error.message.includes('No tab with id')) {
-                            Logger.background('[Background] Tab closed during cache scope change, skipping');
-                            if (sendResponse) sendResponse({ success: true });
-                        } else {
-                            Logger.error('BACKGROUND', '[Background] Error updating badge on cache scope change:', error);
-                            if (sendResponse) {
-                                sendResponse({ success: false, error: error.message });
-                            }
-                        }
-                    }
-                })();
-
-                return true; // Async response
-                break;
-
-            case 'REQUEST_DETECTION':
-                // FIX: Send initial progress update with correct parameters
-                if (request.tabId) {
-                    sendProgressUpdate(request.tabId, 'main', new Set(), 7);
-                }
-
-                // Delegate to DetectionEngineManager handler
-                (async () => {
-                    // Ensure detector manager is initialized before processing
-                    await ensureDetectorManagerInitialized();
-
-                    return await DetectionEngineManager.handleRequestDetection(request, sendResponse, {
-                        chrome,
-                        Utils,
-                        recentDetectionRequests
-                    });
-                })();
-                return true; // Will respond asynchronously
-                break;
-
-            case 'CLEAR_DETECTION_DATA':
-                // Clear detection data for a tab
-                if (request.tabId) {
-                    headersStore.delete(request.tabId);
-                    requestHeadersStore.delete(request.tabId);
-                    responseCookiesStore.delete(request.tabId);
-                    payloadStore.delete(request.tabId);
-                    networkUrlsStore.delete(request.tabId);
-                } else {
-                    // Clear all
-                    headersStore.clear();
-                    requestHeadersStore.clear();
-                    responseCookiesStore.clear();
-                    payloadStore.clear();
-                    networkUrlsStore.clear();
-                }
-                sendResponse({ status: 'cleared' });
-                break;
-
-            case 'CLEAR_DETECTION_CACHE':
-                // Delegate to DetectionEngineManager handler
-                (async () => {
-                    // Clear chrome.storage cache
-                    await DetectionEngineManager.handleClearDetectionCache(request, sendResponse, manuallyClearedCaches);
-
-                    // CRITICAL FIX: Also clear in-memory caches to prevent zombie data
-                    if (request.tabId) {
-                        // Clear detection states (the main culprit of zombie data)
-                        if (detectionStates.has(request.tabId)) {
-                            detectionStates.delete(request.tabId);
-                            Logger.background(`[Background] 🧹 Cleared detectionStates for tab ${request.tabId}`);
-                        }
-
-                        // Clear active detection tracking
-                        if (activeDetections.has(request.tabId)) {
-                            activeDetections.delete(request.tabId);
-                            Logger.background(`[Background] 🧹 Cleared activeDetections for tab ${request.tabId}`);
-                        }
-
-                        // Clear other related stores
-                        headersStore.delete(request.tabId);
-                        requestHeadersStore.delete(request.tabId);
-                        responseCookiesStore.delete(request.tabId);
-                        payloadStore.delete(request.tabId);
-                        networkUrlsStore.delete(request.tabId);
-                        tabsUsingCache.delete(request.tabId);
-
-                        // Track this tab as recently cleared (prevent data resurrection for 5 seconds)
-                        recentlyClearedTabs.add(request.tabId);
-                        setTimeout(() => {
-                            recentlyClearedTabs.delete(request.tabId);
-                            Logger.background(`[Background] 🔓 Tab ${request.tabId} removed from recently cleared list`);
-                        }, 5000);
-
-                        // CRITICAL FIX: Update badge to show data was cleared
-                        try {
-                            await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: request.tabId });
-                            await chrome.action.setBadgeBackgroundColor({
-                                color: BADGE.COLORS.CLEARED,
-                                tabId: request.tabId
-                            });
-                            Logger.background(`[Background] 🔖 Badge set to CLR for tab ${request.tabId}`);
-                        } catch (badgeError) {
-                            Logger.warn('BACKGROUND', `[Background] Could not update badge for tab ${request.tabId}:`, badgeError);
-                        }
-
-                        Logger.background(`[Background] ✅ Complete cache clear for tab ${request.tabId} - all memory and storage cleared`);
-                    }
-                })();
-                return true; // Async response
-
-            case 'JS_HOOK_DETECTION':
-                // DEPRECATED: Individual hooks no longer used - batching is preferred
-                // Keeping for backward compatibility during transition
-                Logger.warn('BACKGROUND', '[Background] Individual JS_HOOK_DETECTION received (should be batched)');
-                return false;
-
-            case 'JS_HOOK_DETECTION_BATCH':
-                // OPTIMIZED 3.4: Handle batched JS hook detections (from content.js optimization 2.4)
-                (async () => {
-                    let tabId;  // FIX: Declare outside try block for finally access
-                    try {
-                        if (!sender.tab || !sender.tab.id) {
-                            Logger.error('BACKGROUND', '[Background] No tab info for JS hook batch');
-                            return;
-                        }
-
-                        tabId = sender.tab.id;
-
-                        // OPTIMIZATION: Early exit if tab is using cache
-                        if (tabsUsingCache.has(tabId)) {
-                            Logger.background(`[Background] ✅ JS Hooks - Tab ${tabId} using cache - discarding hooks immediately`);
-                            return; // Skip all processing for cached tabs
-                        }
-
-                        const detections = request.detections || [];
-
-                        if (detections.length === 0) return;
-
-                        // Extract URL for cache check
-                        const url = detections[0]?.url;
-                        if (!url) return;
-
-                        // Create state BEFORE cache check so we can set usedCache flag
-                        const state = getOrCreateDetectionState(tabId, url);
-
-                        // CACHE CHECK: If cache exists for this URL, skip processing hooks entirely
-                        const cachedData = await DetectionEngineManager.getStoredDetection(url);
-                        if (cachedData) {
-                            // Mark this detection as using cache to suppress misleading warning logs
-                            state.usedCache = true;
-
-                            batchProcessingFlags.set(tabId, false);
-                            Logger.background(`[🔒 Batch Flag] ✅ SET to FALSE (cache hit) for tab ${tabId}`);
-                            return; // Don't process hooks - we have cached results
-                        }
-
-                        // FIX: Mark batch processing as active to prevent finalization race conditions
-                        const previousFlag = batchProcessingFlags.get(tabId);
-                        batchProcessingFlags.set(tabId, true);
-                        Logger.background(`%c[🔒 Batch Flag] 🔴 SET to TRUE (batch start) for tab ${tabId}`, 'color: #f44336; font-weight: bold;');
-                        Logger.background(`[🔒 Batch Flag] Previous value: ${previousFlag}, New value: true`);
-                        Logger.background(`[🔒 Batch Flag] This BLOCKS finalization until set to FALSE`);
-
-                        Logger.background(`[Background] 🎯 JS Hook batch from tab ${tabId}: ${detections.length} hooks`);
-
-                        // DEBUG: Log each hook detection
-                        Logger.background(`[Background] 📋 JS Hooks details:`);
-                        detections.forEach(hookData => {
-                            const det = hookData.detection;
-
-                            // Check if this is an inline hook (detector ID starts with 'inline-hook-')
-                            const isInlineHook = det.detectorId && det.detectorId.startsWith('inline-hook-');
-
-                            Logger.background(`[Background]   - ${det.detectorName} (ID: ${det.detectorId}) [${isInlineHook ? 'INLINE' : 'DYNAMIC'}]: ${det.hook.target}`);
-                        });
-
-                        // Ensure DetectorManager is initialized once
-                        await ensureDetectorManagerInitialized();
-
-                        // State already created above for cache check (line 2315)
-
-                        // OPTIMIZATION: Record batch arrival time for deterministic finalization
-                        state.lastHookBatchTime = Date.now();
-
-                        // URL validation: Ensure URL hasn't changed during detection
-                        if (state.url !== url) {
-                            Logger.background(`[Background] ⚠️ URL changed during JS hooks for tab ${tabId}: ${url} → ${state.url} - skipping hooks`);
-                            return; // Don't store hooks for the wrong URL
-                        }
-
-                        // Process all detections in batch
-                        for (const hookData of detections) {
-                            const detection = hookData.detection;
-                            const detectorId = detection.detectorId;
-                            const normalizedCategory = detection.category ? detection.category.toLowerCase() : 'fingerprint';
-
-                            // Look up full detector definition (cached by DetectorManager)
-                            let fullDetector = detectorManager.getDetector(normalizedCategory, detectorId);
-                            if (!fullDetector) {
-                                fullDetector = detectorManager.findDetectorById(detectorId);
-                            }
-                            if (!fullDetector) {
-                                Logger.warn('BACKGROUND', `[Background] Detector ${detectorId} not found, skipping`);
-                                continue;
-                            }
-
-                            // Add or update detector in state
-                            if (!state.hooksData.has(detectorId)) {
-                                state.hooksData.set(detectorId, {
-                                    detector: {
-                                        id: fullDetector.id || detectorId,
-                                        name: fullDetector.name || detection.detectorName || 'Unknown',
-                                        icon: fullDetector.icon,
-                                        color: fullDetector.color,
-                                        description: fullDetector.description
-                                    },
-                                    category: normalizedCategory,
-                                    confidence: 0,
-                                    detectionMethods: ['js_hooks'],
-                                    matches: []
-                                });
-                            }
-
-                            // Add hook match (check for duplicates first)
-                            const detector = state.hooksData.get(detectorId);
-                            const newMatch = {
-                                type: 'js_hooks',
-                                pattern: detection.hook.target,
-                                value: detection.hook.target.split('.').pop(),
-                                confidence: detection.hook.confidence,
-                                description: detection.hook.description
-                            };
-
-                            // Only add if this exact pattern doesn't already exist
-                            const isDuplicate = detector.matches.some(m => m.pattern === newMatch.pattern);
-                            if (!isDuplicate) {
-                                detector.matches.push(newMatch);
-                            }
-
-                            // Update overall confidence (use highest confidence from all matches)
-                            detector.confidence = Math.max(...detector.matches.map(m => m.confidence || 0));
-                        }
-
-                        Logger.background(`[Background] ✅ Processed ${detections.length} hooks in batch for tab ${tabId}`);
-
-                    } catch (error) {
-                        Logger.error('BACKGROUND', '[Background] ❌ ERROR handling JS hook batch:', error);
-                    } finally {
-                        // FIX: Mark batch processing as complete (with safety guard)
-                        if (tabId) {
-                            const wasActive = batchProcessingFlags.get(tabId);
-                            batchProcessingFlags.set(tabId, false);
-                            Logger.background(`%c[🔒 Batch Flag] 🟢 SET to FALSE (batch complete) for tab ${tabId}`, 'color: #4caf50; font-weight: bold;');
-                            Logger.background(`[🔒 Batch Flag] Was active: ${wasActive}, Now: false`);
-                            Logger.background(`[🔒 Batch Flag] Batch processing complete - NOW allowing finalization`);
-                            // Trigger finalization check in case it was deferred
-                            // NOTE: During late arrival phase, this won't finalize until buffer expires
-                            Logger.background(`[🔒 Batch Flag] Calling checkAndFinalizeDetection after batch complete...`);
-                            checkAndFinalizeDetection(tabId);
-                        }
-                    }
-                })();
-                return false; // No response needed for batches
-
-            // REMOVED: Old JS_HOOKS_COMPLETE handler - replaced with comprehensive handler below (line ~2225)
-
-            case 'WINDOW_DETECTIONS':
-                // Handle window detections from MAIN world
-                (async () => {
-                    try {
-                        if (!sender.tab || !sender.tab.id) {
-                            Logger.error('BACKGROUND', '[Background] No tab info for window detections');
-                            return;
-                        }
-
-                        const tabId = sender.tab.id;
-
-                        // OPTIMIZATION: Early exit if tab is using cache
-                        if (tabsUsingCache.has(tabId)) {
-                            Logger.background(`[Background] ✅ Window Detections - Tab ${tabId} using cache - discarding properties immediately`);
-                            return; // Skip all processing for cached tabs
-                        }
-
-                        const url = sender.tab.url;
-                        const { detections, executionTime } = request;
-
-                        // Validate detections array
-                        if (!Array.isArray(detections)) {
-                            Logger.error('BACKGROUND', '[Background] ❌ Invalid detections format:', typeof detections);
-                            return;
-                        }
-
-                        // Create state BEFORE cache check so we can set usedCache flag
-                        const state = getOrCreateDetectionState(tabId, url);
-
-                        // CACHE CHECK: If cache exists for this URL, skip processing window properties entirely
-                        const cachedData = await DetectionEngineManager.getStoredDetection(url);
-                        if (cachedData) {
-                            // Mark this detection as using cache to suppress misleading warning logs
-                            state.usedCache = true;
-
-                            return; // Don't process window properties - we have cached results
-                        }
-
-                        Logger.background(`[Background] 🔍 Window property detections from tab ${tabId}: ${detections.length} properties in ${executionTime}ms`);
-
-                        // DEBUG: Log each window property detection
-                        if (detections.length > 0) {
-                            Logger.background(`[Background] 📋 Window property details:`);
-                            detections.forEach(det => {
-                                Logger.background(`[Background]   - ${det.detectorName} (${det.detectorId}): window.${det.property.path}`);
-                            });
-                        } else {
-                            Logger.background(`[Background] ⚠️ No window properties detected (none matched conditions)`);
-                        }
-
-                        // State already created above for cache check (line 2470)
-                        // Validate state
-                        if (!state) {
-                            Logger.error('BACKGROUND', '[Background] ❌ Failed to get/create detection state for tab', tabId);
-                            return;
-                        }
-
-                        // URL validation: Ensure URL hasn't changed during detection
-                        if (state.url !== url) {
-                            Logger.background(`[Background] ⚠️ URL changed during window props for tab ${tabId}: ${url} → ${state.url} - skipping window props`);
-                            return; // Don't store window props for the wrong URL
-                        }
-
-                        // Initialize mainData array if it doesn't exist
-                        if (!Array.isArray(state.mainData)) {
-                            Logger.background('[Background] Initializing mainData array for tab', tabId);
-                            state.mainData = [];
-                        }
-
-                        // Process each window property detection
-                        for (const detection of detections) {
-                            if (!detection || !detection.detectorId) {
-                                Logger.warn('BACKGROUND', '[Background] ⚠️ Skipping invalid detection:', detection);
-                                continue;
-                            }
-
-                            // Find or create the detector entry in mainData
-                            let detectionObj = state.mainData.find(d => d && (d.detector?.id === detection.detectorId || d.id === detection.detectorId));
-                            if (!detectionObj) {
-                                // Get full detector metadata from DetectorManager
-                                // Normalize category name (e.g., "Anti-Bot" -> "antibot")
-                                const categoryKey = detection.category.toLowerCase().replace(/[^a-z0-9]/g, '');
-                                const fullDetector = detectorManager.getDetector(categoryKey, detection.detectorId);
-
-                                // Create detection object with nested structure matching detectOnPage() output
-                                detectionObj = {
-                                    detected: true,
-                                    confidence: detection.property.confidence,
-                                    matches: [],
-                                    detectionMethods: [],
-                                    category: detection.category,
-                                    detector: {
-                                        id: detection.detectorId,
-                                        name: detection.detectorName,
-                                        icon: fullDetector?.icon,
-                                        color: fullDetector?.color,
-                                        description: fullDetector?.description
-                                    }
-                                };
-                                state.mainData.push(detectionObj);
-                            }
-
-                            // Add window property match
-                            const newMatch = {
-                                type: 'window',
-                                pattern: detection.property.path,
-                                confidence: detection.property.confidence,
-                                description: detection.property.description,
-                                actualType: detection.property.actualType,
-                                condition: detection.property.condition
-                            };
-
-                            // Check for duplicates
-                            const isDuplicate = detectionObj.matches.some(m =>
-                                m.type === 'window' && m.pattern === newMatch.pattern
-                            );
-
-                            if (!isDuplicate) {
-                                detectionObj.matches.push(newMatch);
-                                // Update detectionMethods to include window
-                                if (!detectionObj.detectionMethods) {
-                                    detectionObj.detectionMethods = [];
-                                }
-                                if (!detectionObj.detectionMethods.includes('window')) {
-                                    detectionObj.detectionMethods.push('window');
-                                }
-                                Logger.background(`[Background] ✅ Added window property: ${detection.property.path} for ${detection.detectorName}`);
-                            }
-
-                            // Update overall confidence
-                            detectionObj.confidence = Math.max(...detectionObj.matches.map(m => m.confidence || 0));
-                        }
-
-                        Logger.background(`[Background] ✅ Processed ${detections.length} window properties for tab ${tabId}`);
-
-                        // Note: windowPropertiesComplete will be marked by WINDOW_PROPS_COMPLETE signal
-                        // This allows multiple checks to complete before finalization
-
-                    } catch (error) {
-                        Logger.error('BACKGROUND', '[Background] ❌ ERROR handling window property detections:', error);
-                    }
-                })();
-                return false; // No response needed
-
-            case 'WINDOW_PROPS_COMPLETE':
-                // Window properties collection complete - mark session and potentially finalize
-                (async () => {
-                    try {
-                        if (!sender.tab || !sender.tab.id) {
-                            Logger.error('BACKGROUND', '[Background] No tab info for window props complete');
-                            return;
-                        }
-
-                        const tabId = sender.tab.id;
-
-                        // OPTIMIZATION: Early exit if tab is using cache
-                        if (tabsUsingCache.has(tabId)) {
-                            Logger.background(`[Background] ✅ Window Props - Tab ${tabId} using cache - discarding signal`);
-                            sendResponse({ status: 'cached', message: 'Tab using cached detection' });
-                            return; // Skip all processing for cached tabs
-                        }
-
-                        const url = request.url;
-
-                        Logger.background(`%c[🎯 WINDOW_PROPS_COMPLETE] Signal RECEIVED from tab ${tabId}`, 'color: #00cc00; font-weight: bold; font-size: 14px;');
-                        Logger.background(`[🎯 WINDOW_PROPS_COMPLETE] Window props stats:`, {
-                            detectedCount: request.detectedCount,
-                            totalChecked: request.totalChecked,
-                            elapsedMs: request.elapsedMs,
-                            reason: request.reason
-                        });
-
-                        // Mark window properties as complete
-                        const state = getOrCreateDetectionState(tabId, url);
-
-                        // URL validation with normalization to handle trailing slashes, etc.
-                        const normalizeUrl = (u) => {
-                            try {
-                                const parsed = new URL(u);
-                                // Remove trailing slash, hash, and normalize
-                                return parsed.origin + parsed.pathname.replace(/\/$/, '') + parsed.search;
-                            } catch (e) {
-                                return u;
-                            }
-                        };
-
-                        const normalizedStateUrl = normalizeUrl(state.url);
-                        const normalizedRequestUrl = normalizeUrl(url);
-
-                        if (normalizedStateUrl !== normalizedRequestUrl) {
-                            Logger.warn('BACKGROUND', `%c[🎯 WINDOW_PROPS_COMPLETE] ❌ URL MISMATCH - IGNORING SIGNAL for tab ${tabId}`, 'color: #f44336; font-weight: bold;');
-                            Logger.warn('BACKGROUND', `[🎯 WINDOW_PROPS_COMPLETE]   State URL: ${state.url}`);
-                            Logger.warn('BACKGROUND', `[🎯 WINDOW_PROPS_COMPLETE]   Request URL: ${url}`);
-                            Logger.warn('BACKGROUND', `[🎯 WINDOW_PROPS_COMPLETE]   Normalized state: ${normalizedStateUrl}`);
-                            Logger.warn('BACKGROUND', `[🎯 WINDOW_PROPS_COMPLETE]   Normalized request: ${normalizedRequestUrl}`);
-                            Logger.warn('BACKGROUND', `[🎯 WINDOW_PROPS_COMPLETE] ⚠️ This will cause 86% hang - signal will never be processed!`);
-                            sendResponse({ status: 'url_changed' });
-                            return;
-                        }
-
-                        // Check current state before marking complete
-                        const beforeState = {
-                            windowPropertiesComplete: state.windowPropertiesComplete,
-                            completedMethods: Array.from(state.completedMethods),
-                            finalized: state.finalized
-                        };
-
-                        state.windowPropertiesComplete = true;
-
-                        Logger.background(`[🎯 WINDOW_PROPS_COMPLETE] State flags:`, {
-                            before: beforeState,
-                            after: {
-                                windowPropertiesComplete: state.windowPropertiesComplete,
-                                completedMethods: Array.from(state.completedMethods),
-                                finalized: state.finalized
-                            }
-                        });
-
-                        // GRANULAR PROGRESS: Mark window properties method complete
-                        markMethodComplete(tabId, 'windowProperties');
-
-                        Logger.background(`%c[🎯 WINDOW_PROPS_COMPLETE] ✅ Window properties marked complete - calling finalization check`, 'color: #4caf50; font-weight: bold;');
-
-                        // Check if all methods are done
-                        checkAndFinalizeDetection(tabId);
-
-                        sendResponse({ status: 'success' });
-                    } catch (error) {
-                        Logger.error('BACKGROUND', '[🎯 WINDOW_PROPS_COMPLETE] ❌ ERROR handling window props complete:', error);
-                        sendResponse({ status: 'error', error: error.message });
-                    }
-                })();
-                return true; // Async response
-
-            case 'JS_HOOKS_COMPLETE':
-                // JS hooks collection complete - mark session and potentially finalize
-                (async () => {
-                    try {
-                        if (!sender.tab || !sender.tab.id) {
-                            Logger.error('BACKGROUND', '[Background] No tab info for JS hooks complete');
-                            return;
-                        }
-
-                        const tabId = sender.tab.id;
-                        const url = request.url;
-
-                        Logger.background(`%c[Background] 🎯 JS_HOOKS_COMPLETE received from tab ${tabId}`, 'color: #00cc00; font-weight: bold;');
-                        Logger.background(`[Background] Hook stats:`, {
-                            totalDetections: request.totalDetections,
-                            uniqueHooks: request.uniqueHooks,
-                            completionTime: request.completionTime,
-                            reason: request.completionReason
-                        });
-
-                        // Mark hooks as complete
-                        const state = getOrCreateDetectionState(tabId, url);
-
-                        // URL validation with normalization to handle trailing slashes, etc.
-                        const normalizeUrl = (u) => {
-                            try {
-                                const parsed = new URL(u);
-                                // Remove trailing slash, hash, and normalize
-                                return parsed.origin + parsed.pathname.replace(/\/$/, '') + parsed.search;
-                            } catch (e) {
-                                return u;
-                            }
-                        };
-
-                        const normalizedStateUrl = normalizeUrl(state.url);
-                        const normalizedRequestUrl = normalizeUrl(url);
-
-                        if (normalizedStateUrl !== normalizedRequestUrl) {
-                            Logger.warn('BACKGROUND', `[Background] ⚠️ URL mismatch - ignoring JS hooks complete for tab ${tabId}`);
-                            Logger.warn('BACKGROUND', `[Background]   State URL: ${state.url}`);
-                            Logger.warn('BACKGROUND', `[Background]   Request URL: ${url}`);
-                            Logger.warn('BACKGROUND', `[Background]   Normalized state: ${normalizedStateUrl}`);
-                            Logger.warn('BACKGROUND', `[Background]   Normalized request: ${normalizedRequestUrl}`);
-                            sendResponse({ status: 'url_changed' });
-                            return;
-                        }
-
-                        state.hooksComplete = true;
-
-                        // GRANULAR PROGRESS: Mark JS hooks method complete
-                        markMethodComplete(tabId, 'jsHooks');
-
-                        Logger.background(`[Background] ✅ Hooks marked complete`);
-                        Logger.background(`[Background] Current completion status: ${state.completedMethods.size}/7 methods`);
-                        Logger.background(`[Background] Completed methods: ${Array.from(state.completedMethods).join(', ')}`);
-
-                        // Check if all methods are done
-                        checkAndFinalizeDetection(tabId);
-
-                        // SAFETY: If still not finalized after 1 second, force another check
-                        // This handles edge cases where the debounce logic might miss the completion
-                        setTimeout(() => {
-                            const currentState = detectionStates.get(tabId);
-                            if (currentState && !currentState.finalized && currentState.completedMethods.has('jsHooks')) {
-                                Logger.warn('BACKGROUND', `[Background] 🔄 Retry: JS hooks complete but detection not finalized, forcing check`);
-                                checkAndFinalizeDetection(tabId);
-                            }
-                        }, 1000);
-
-                        sendResponse({ status: 'success' });
-                    } catch (error) {
-                        Logger.error('BACKGROUND', '[Background] ❌ ERROR handling JS hooks complete:', error);
-                        sendResponse({ status: 'error', error: error.message });
-                    }
-                })();
-                return true; // Async response
-
-            // OPTIMIZED 3.1: Lazy interceptor initialization
-            // reCAPTCHA messages - delegate to reCaptchaHandleMessage
-            case 'RECAPTCHA_START_CAPTURE':
-            case 'RECAPTCHA_STOP_CAPTURE':
-            case 'RECAPTCHA_GET_CAPTURE_STATE':
-            case 'RECAPTCHA_GET_CAPTURE_RESULTS':
-                // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)
-                if (typeof reCaptchaHandleMessage === 'function') {
-                    return reCaptchaHandleMessage(request, sendResponse, reCaptchaCaptureState);
-                }
-                break;
-
-            // Akamai messages - delegate to akamaiHandleMessage
-            case 'AKAMAI_START_CAPTURE':
-            case 'AKAMAI_STOP_CAPTURE':
-            case 'AKAMAI_GET_CAPTURE_STATE':
-            case 'AKAMAI_CAPTURE_COMPLETED':
-            case 'AKAMAI_EXTRACT_SENSOR':
-            case 'AKAMAI_EXTRACTION_COMPLETED':
-            case 'AKAMAI_SHOW_ANALYZING_NOTIFICATION':
-            case 'AKAMAI_SHOW_EXTRACTING_NOTIFICATION':
-                // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)
-                if (typeof akamaiHandleMessage === 'function') {
-                    return akamaiHandleMessage(request, sendResponse);
-                }
-                break;
-
-            // Imperva messages - delegate to impervaHandleMessage
-            case 'IMPERVA_START_CAPTURE':
-            case 'IMPERVA_STOP_CAPTURE':
-            case 'IMPERVA_EXTRACT_SCRIPTS':
-            case 'IMPERVA_GET_CAPTURE_STATE':
-            case 'IMPERVA_CAPTURE_COMPLETED':
-            case 'IMPERVA_SHOW_ANALYZING_NOTIFICATION':
-                // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)
-                if (typeof impervaHandleMessage === 'function') {
-                    return impervaHandleMessage(request, sendResponse);
-                }
-                break;
-
-            // Shape Security messages - delegate to shapeSecurityHandleMessage
-            case 'SHAPESECURITY_START_CAPTURE':
-            case 'SHAPESECURITY_STOP_CAPTURE':
-            case 'SHAPESECURITY_GET_CAPTURE_STATE':
-            case 'SHAPESECURITY_CHECK_HEADERS':
-            case 'SHAPESECURITY_CHECK_COOKIES':
-            case 'SHAPESECURITY_CHECK_VERSION':
-            case 'SHAPESECURITY_ANALYZE_SCRIPTS':
-            case 'SHAPESECURITY_START_EXTRACTION':
-            case 'SHAPESECURITY_SHOW_ANALYZING_NOTIFICATION':
-            case 'SHAPESECURITY_EXTRACTION_COMPLETED':
-                // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)
-                if (typeof shapeSecurityHandleMessage === 'function') {
-                    return shapeSecurityHandleMessage(request, sendResponse);
-                }
-                break;
-
-            // AWS WAF messages - delegate to handleAwsWafMessage
-            case 'AWSWAF_START_CAPTURE':
-            case 'AWSWAF_STOP_CAPTURE':
-            case 'AWSWAF_GET_STATE':
-            case 'AWSWAF_START_ANALYSIS':
-            case 'AWSWAF_SHOW_ANALYZING_NOTIFICATION':
-                // OPTIMIZED 3.1: Interceptor loaded via importScripts, no initialization needed
-                if (typeof handleAwsWafMessage === 'function') {
-                    return handleAwsWafMessage(request, sender, sendResponse);
-                }
-                break;
-
-            // Geetest messages - delegate to geetestHandleMessage (simplified - no capture)
-            case 'GEETEST_CHECK_VERSION':
-            case 'GEETEST_ANALYZE_SCRIPTS':
-            case 'GEETEST_SHOW_VERSION_NOTIFICATION':
-            case 'GEETEST_SHOW_ANALYZING_NOTIFICATION':
-                // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)
-                if (typeof geetestHandleMessage === 'function') {
-                    return geetestHandleMessage(request, sender, sendResponse);
-                }
-                break;
-
-            // DataDome messages - delegate to handleDataDomeMessage
-            case 'DATADOME_START_ANALYSIS':
-            case 'DATADOME_SHOW_ANALYZING_NOTIFICATION':
-                // OPTIMIZED 3.1: Interceptor loaded via importScripts, no initialization needed
-                if (typeof handleDataDomeMessage === 'function') {
-                    return handleDataDomeMessage(request, sender, sendResponse);
-                }
-                break;
-
-            // Cloudflare messages
-            case 'CLOUDFLARE_START_ANALYSIS':
-            case 'CLOUDFLARE_SHOW_ANALYZING_NOTIFICATION':
-            case 'CLOUDFLARE_CHECK_VERSION':
-                if (typeof handleCloudflareMessage === 'function') {
-                    return handleCloudflareMessage(request, sender, sendResponse);
-                }
-                break;
-
-            // Turnstile messages
-            case 'TURNSTILE_START_ANALYSIS':
-            case 'TURNSTILE_SHOW_ANALYZING_NOTIFICATION':
-                if (typeof handleTurnstileMessage === 'function') {
-                    return handleTurnstileMessage(request, sender, sendResponse);
-                }
-                break;
-
-            // hCaptcha messages
-            case 'HCAPTCHA_START_ANALYSIS':
-            case 'HCAPTCHA_SHOW_ANALYZING_NOTIFICATION':
-            case 'HCAPTCHA_SHOW_VERSION_NOTIFICATION':
-            case 'HCAPTCHA_CHECK_VERSION':
-            case 'HCAPTCHA_START_CAPTURE':
-            case 'HCAPTCHA_STOP_CAPTURE':
-            case 'HCAPTCHA_GET_CAPTURE_STATE':
-            case 'HCAPTCHA_CAPTURE_COMPLETED':
-                if (typeof handleHCaptchaMessage === 'function') {
-                    return handleHCaptchaMessage(request, sender, sendResponse);
-                }
-                break;
-
-            // FunCaptcha messages
-            case 'FUNCAPTCHA_START_ANALYSIS':
-            case 'FUNCAPTCHA_SHOW_ANALYZING_NOTIFICATION':
-            case 'FUNCAPTCHA_START_CAPTURE':
-            case 'FUNCAPTCHA_STOP_CAPTURE':
-            case 'FUNCAPTCHA_GET_CAPTURE_STATE':
-            case 'FUNCAPTCHA_CAPTURE_COMPLETED':
-                if (typeof handleFunCaptchaMessage === 'function') {
-                    return handleFunCaptchaMessage(request, sendResponse, funcaptchaCaptureState);
-                }
-                break;
-
-            // Log Collector messages
-            case 'LOG_COLLECTOR_ENABLE':
-                if (typeof logCollector !== 'undefined') {
-                    logCollector.enable();
-                    Logger.storage('[LogCollector] Log collection enabled via settings');
-                }
-                sendResponse({ status: 'success' });
-                break;
-
-            case 'LOG_COLLECTOR_DISABLE':
-                if (typeof logCollector !== 'undefined') {
-                    logCollector.disable();
-                    Logger.storage('[LogCollector] Log collection disabled via settings');
-                }
-                sendResponse({ status: 'success' });
-                break;
-
-            case 'LOG_COLLECTOR_CLEAR':
-                if (typeof logCollector !== 'undefined') {
-                    logCollector.clear();
-                    Logger.storage('[LogCollector] Logs cleared');
-                    sendResponse({ status: 'success' });
-                } else {
-                    sendResponse({ status: 'error', message: 'LogCollector not available' });
-                }
-                return true; // Keep message channel open for response
-
-            case 'LOG_COLLECTOR_EXPORT_JSON':
-                if (typeof logCollector !== 'undefined') {
-                    const jsonFilename = logCollector.exportAsJSON();
-                    Logger.storage('[LogCollector] Exported logs as JSON:', jsonFilename);
-                    sendResponse({ status: 'success', filename: jsonFilename });
-                } else {
-                    sendResponse({ status: 'error', message: 'LogCollector not available' });
-                }
-                return true; // Keep message channel open for response
-
-            case 'LOG_COLLECTOR_EXPORT_TEXT':
-                if (typeof logCollector !== 'undefined') {
-                    const textFilename = logCollector.exportAsText();
-                    Logger.storage('[LogCollector] Exported logs as text:', textFilename);
-                    sendResponse({ status: 'success', filename: textFilename });
-                } else {
-                    sendResponse({ status: 'error', message: 'LogCollector not available' });
-                }
-                return true; // Keep message channel open for response
-
-            case 'LOG_COLLECTOR_GET_COUNT':
-                if (typeof logCollector !== 'undefined') {
-                    // getLogCount is async, so handle it with Promise
-                    logCollector.getLogCount().then((count) => {
-                        sendResponse({ status: 'success', count: count });
-                    }).catch((error) => {
-                        Logger.error('STORAGE', '[LogCollector] Error getting log count:', error);
-                        sendResponse({ status: 'error', message: 'Failed to get log count', count: 0 });
-                    });
-                    return true; // Indicate async response
-                } else {
-                    sendResponse({ status: 'error', message: 'LogCollector not available', count: 0 });
-                }
-                break;
-
-            case 'LOG_COLLECTOR_SET_MAX_LOGS':
-                if (typeof logCollector !== 'undefined') {
-                    const maxLogs = request.maxLogs;
-                    logCollector.setMaxLogs(maxLogs);
-                    Logger.storage('[LogCollector] Max logs set to:', maxLogs);
-                    sendResponse({ status: 'success', maxLogs: maxLogs });
-                } else {
-                    sendResponse({ status: 'error', message: 'LogCollector not available' });
-                }
-                break;
-
-            case 'CHECK_FOR_UPDATES':
-                // UpdateManager removed - auto-update feature disabled
-                sendResponse({ success: false, error: 'Update feature disabled' });
-                break;
-
-            default:
-                Logger.background('Scrapfly Background: Unknown message type:', request.type);
-                sendResponse({ status: 'unknown' });
-        }
-
-        return false; // Synchronous response unless specified otherwise
-    });
-}
-
-/**
- * Setup tab event listeners
- */
-function setupTabListeners() {
-    // Clear data when tab is closed
-    chrome.tabs.onRemoved.addListener((tabId) => {
-        Logger.background(`Scrapfly Background: Tab ${tabId} closed, clearing headers, cookies, payloads, and network URLs`);
-        headersStore.delete(tabId);
-        requestHeadersStore.delete(tabId);
-        responseCookiesStore.delete(tabId);
-        payloadStore.delete(tabId);
-        networkUrlsStore.delete(tabId);
-
-        // Clear cache tracking for this tab
-        if (tabsUsingCache.has(tabId)) {
-            tabsUsingCache.delete(tabId);
-            Logger.background(`[TabCleanup] Removed tab ${tabId} from cache tracking`);
-        }
-
-        // VERSION 2.3.0: Abandon detection in persistent state manager
-        if (detectionStateManager && detectionStateManager.isDetecting(tabId)) {
-            detectionStateManager.abandonDetection(tabId, 'tab_closed');
-            Logger.background(`[DetectionStateManager] Abandoned detection for closed tab ${tabId}`);
-        }
-
-        // VERSION 2.3.0: End keepalive operations for this tab
-        if (workerKeepaliveManager) {
-            workerKeepaliveManager.endOperationsForTab(tabId);
-        }
-
-        // Clear detection state tracking
-        detectionStates.delete(tabId);
-        activeDetections.delete(tabId);
-        interruptedDetections.delete(tabId);
-        tabFocusTimestamps.delete(tabId);
-
-        // Clear finalization debounce (cancel pending timeout)
-        if (finalizationDebounce.has(tabId)) {
-            clearTimeout(finalizationDebounce.get(tabId));
-            finalizationDebounce.delete(tabId);
-        }
-
-        // Clear batch processing flag
-        batchProcessingFlags.delete(tabId);
-
-        // Clear capture state if tab is closed during capture
-        const captureStateForTab = reCaptchaCaptureState.get(tabId);
-        if (captureStateForTab) {
-            Logger.background(`Scrapfly Background: Tab ${tabId} closed during capture, cleaning up`);
-            if (captureStateForTab.captureInterval) {
-                clearInterval(captureStateForTab.captureInterval);
-            }
-            reCaptchaCaptureState.delete(tabId);
-            stopRecaptchaInterception();
-        }
-
-        // Clear FunCaptcha capture state if tab is closed during capture
-        if (funcaptchaCaptureState.has(tabId)) {
-            Logger.background(`Scrapfly Background: Tab ${tabId} closed during FunCaptcha capture, cleaning up`);
-            const funcState = funcaptchaCaptureState.get(tabId);
-            if (funcState && funcState.timeout) {
-                clearTimeout(funcState.timeout);
-            }
-            funcaptchaCaptureState.delete(tabId);
-        }
-
-        // Clear hCaptcha capture state if tab is closed during capture
-        if (typeof hcaptchaCaptureState !== 'undefined' && hcaptchaCaptureState.has(tabId)) {
-            Logger.background(`Scrapfly Background: Tab ${tabId} closed during hCaptcha capture, cleaning up`);
-            const hcaptchaState = hcaptchaCaptureState.get(tabId);
-            if (hcaptchaState && hcaptchaState.timeout) {
-                clearTimeout(hcaptchaState.timeout);
-            }
-            hcaptchaCaptureState.delete(tabId);
-        }
-
-        // Clear Akamai capture state if tab is closed during capture
-        if (akamaiCaptureState.has(tabId)) {
-            Logger.background(`Scrapfly Background: Tab ${tabId} closed during Akamai capture, cleaning up`);
-            const akamaiState = akamaiCaptureState.get(tabId);
-            if (akamaiState && akamaiState.timeout) {
-                clearTimeout(akamaiState.timeout);
-            }
-            akamaiCaptureState.delete(tabId);
-        }
-
-        // Clear Imperva capture state if tab is closed during capture
-        if (impervaCaptureState.has(tabId)) {
-            Logger.background(`Scrapfly Background: Tab ${tabId} closed during Imperva capture, cleaning up`);
-            const impervaState = impervaCaptureState.get(tabId);
-            if (impervaState && impervaState.timeout) {
-                clearTimeout(impervaState.timeout);
-            }
-            impervaCaptureState.delete(tabId);
-        }
-
-        // Clear Shape Security capture state if tab is closed during capture
-        if (typeof shapesecurityCaptureState !== 'undefined' && shapesecurityCaptureState.has(tabId)) {
-            Logger.background(`Scrapfly Background: Tab ${tabId} closed during Shape Security capture, cleaning up`);
-            const shapeState = shapesecurityCaptureState.get(tabId);
-            if (shapeState && shapeState.timeout) {
-                clearTimeout(shapeState.timeout);
-            }
-            shapesecurityCaptureState.delete(tabId);
-        }
-
-        // Clear AWS WAF capture state if tab is closed during capture
-        if (typeof awsWafCaptureStateRef !== 'undefined' && awsWafCaptureStateRef.isCapturing && awsWafCaptureStateRef.tabId === tabId) {
-            Logger.background(`Scrapfly Background: Tab ${tabId} closed during AWS WAF capture, cleaning up`);
-            if (awsWafCaptureStateRef.timeout) {
-                clearTimeout(awsWafCaptureStateRef.timeout);
-            }
-            // Reset AWS WAF state object
-            awsWafCaptureStateRef.isCapturing = false;
-            awsWafCaptureStateRef.tabId = null;
-            awsWafCaptureStateRef.url = null;
-            awsWafCaptureStateRef.capturedData = {};
-        }
-
-        // Clear the badge for this tab
-        chrome.action.setBadgeText({
-            text: BADGE.TEXT.EMPTY,
-            tabId: tabId
-        }).catch((error) => {
-            // Expected: Tab might already be closed
-            Logger.background(`[Cleanup] Failed to clear badge for removed tab ${tabId}:`, error.message);
-        });
-    });
-
-    // Run detection when tab is updated
-    chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-        // Check if extension is disabled when page starts loading
-        if (changeInfo.status === 'loading' && !await isExtensionEnabled()) {
-            Logger.background(`[TabUpdate] Extension is disabled - setting OFF badge for tab ${tabId}`);
-            chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tabId }).catch((error) => {
-                Logger.background(`[TabUpdate] Failed to set disabled badge for tab ${tabId}:`, error.message);
-            });
-            chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tabId }).catch((error) => {
-                Logger.background(`[TabUpdate] Failed to set badge color for tab ${tabId}:`, error.message);
-            });
-        }
-
-        // Detect URL changes within the same tab (same-tab navigation)
-        if (changeInfo.url) {
-            const newUrl = changeInfo.url;
-            Logger.background(`[TabUpdate] URL change detected for tab ${tabId}: ${newUrl}`);
-
-            // Clear cache tracking ONLY on URL change (not on F5 refresh)
-            if (tabsUsingCache.has(tabId)) {
-                tabsUsingCache.delete(tabId);
-                Logger.background(`[TabUpdate] URL changed - cleared cache tracking for tab ${tabId}`);
-            }
-
-            // Check if there's an active detection for this tab
-            if (activeDetections.has(tabId)) {
-                const activeInfo = activeDetections.get(tabId);
-                const oldUrl = activeInfo.url;
-
-                Logger.background(`[TabUpdate] ⚠️ Tab ${tabId} had active detection for ${oldUrl} - ABORTING (navigated to ${newUrl})`);
-
-                // Abort the detection process
-                if (activeInfo.abortController) {
-                    activeInfo.abortController.abort();
-                    Logger.background(`[TabUpdate] 🛑 Aborted detection for tab ${tabId} (URL changed)`);
-                }
-
-                // Remove from active detections
-                activeDetections.delete(tabId);
-
-                // Mark detection state as interrupted (if it exists)
-                const detectionState = detectionStates.get(tabId);
-                if (detectionState && detectionState.url === oldUrl) {
-                    detectionState.interrupted = true;
-                    detectionState.error = 'url_changed';
-                    Logger.background(`[TabUpdate] Marked detection state as interrupted for tab ${tabId}`);
-                }
-
-                // Clear badge (new page will set its own badge when detection completes)
-                chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tabId }).catch((error) => {
-                    Logger.background(`[TabUpdate] Failed to clear badge for tab ${tabId}:`, error.message);
-                });
-            }
-
-            // Note: Detection state will be cleared by getOrCreateDetectionState when new detection starts
-        }
-
-        // Handle reCAPTCHA capture updates - only monitors active captures
-        if (typeof reCaptchaHandleCaptureTabUpdate === 'function') {
-            reCaptchaHandleCaptureTabUpdate(tabId, changeInfo, tab, chrome);
-        }
-
-        // Handle Akamai capture updates - only monitors active captures
-        if (typeof akamaiHandleCaptureTabUpdate === 'function') {
-            akamaiHandleCaptureTabUpdate(tabId, changeInfo, tab);
-        }
-
-        // Handle Imperva capture updates - only monitors active captures
-        if (typeof impervaHandleCaptureTabUpdate === 'function') {
-            impervaHandleCaptureTabUpdate(tabId, changeInfo, tab);
-        }
-
-        // Handle AWS WAF capture updates - only monitors active captures
-        if (typeof awsWafHandleCaptureTabUpdate === 'function') {
-            awsWafHandleCaptureTabUpdate(tabId, changeInfo, tab);
-        }
-
-        // Handle AWS WAF analysis updates
-        if (typeof awsWafHandleAnalysisTabUpdate === 'function') {
-            awsWafHandleAnalysisTabUpdate(tabId, changeInfo, tab);
-        }
-    });
-
-    // Run detection when active tab changes - detect interruptions and delegate to DetectionEngineManager
-    chrome.tabs.onActivated.addListener(async (activeInfo) => {
-        const newTabId = activeInfo.tabId;
-        const now = Date.now();
-        
-        Logger.background(`[TabSwitch] Tab activated: ${newTabId}, previous: ${currentActiveTab}`);
-
-        // Check if user is returning to a previously interrupted tab - clear interrupted state
-        if (interruptedDetections.has(newTabId)) {
-            Logger.background(`[TabSwitch] ✅ User returned to tab ${newTabId} - clearing any stale interrupted state`);
-            interruptedDetections.delete(newTabId);
-            // Don't modify badge here - let popup query get fresh data and update badge appropriately
-        }
-
-        // Check if previous tab had an active detection that should be interrupted
-        if (currentActiveTab !== null && activeDetections.has(currentActiveTab)) {
-            const previousTabId = currentActiveTab;
-
-            // FIX: Only interrupt if new tab is a valid content tab (not popup/devtools/etc)
-            // This prevents false interruptions when popup opens on same webpage
-            try {
-                const newTab = await chrome.tabs.get(newTabId);
-                // Skip interruption if new tab is not a valid content tab
-                if (!newTab || !newTab.url || newTab.url.startsWith('chrome://') || newTab.url.startsWith('chrome-extension://')) {
-                    Logger.background(`[TabSwitch] ℹ️ New tab ${newTabId} is not a valid content tab (url: ${newTab?.url || 'none'}) - skipping interruption`);
-                    // Update current active tab and continue without interrupting
-                    currentActiveTab = newTabId;
-                    return;
-                }
-            } catch (error) {
-                Logger.background(`[TabSwitch] Failed to validate new tab ${newTabId}:`, error.message);
-                // On error, assume it's invalid and skip interruption
-                currentActiveTab = newTabId;
-                return;
-            }
-
-            const previousFocusTime = tabFocusTimestamps.get(previousTabId);
-            const focusDuration = previousFocusTime ? now - previousFocusTime : 0;
-
-            // FIX: Let detections complete in background when tab switches
-            // Chrome tabs continue executing even when not focused
-            // Detection will complete naturally and cache results
-            if (focusDuration < TAB_SWITCH_DEBOUNCE_MS) {
-                Logger.background(`[TabSwitch] ⚡ Tab ${previousTabId} was focused for only ${focusDuration}ms - rapid switch detected`);
-            } else {
-                Logger.background(`[TabSwitch] ℹ️ Tab ${previousTabId} detection will continue in background (user switched tabs)`);
-                // Don't abort, don't interrupt - just let it complete naturally
-                // Detection will cache results when finished
-            }
-        }
-
-        // Record focus timestamp for the newly activated tab
-        tabFocusTimestamps.set(newTabId, now);
-
-        // Update current active tab
-        currentActiveTab = newTabId;
-
-        // Delegate to DetectionEngineManager for normal tab activation handling
-        await DetectionEngineManager.handleTabActivation(activeInfo, {
-            chrome,
-            Settings,
-            CategoryManager,
-            Utils,                 // FIX: Pass Utils for blacklist checking
-            categoryManager,
-            interruptedDetections, // Pass interrupted detections map
-            activeDetections,      // TAB SWITCH FIX: Pass active detection tracking
-            detectionStates,       // TAB SWITCH FIX: Pass detection state tracking
-            manuallyClearedCaches  // Pass manually cleared caches Set
-        });
-    });
-}
-
-/**
- * Initialize background script services
- * This is called after detector manager initialization
- */
 function initializeServices() {
     Logger.background('Scrapfly Background: Initializing services...');
 

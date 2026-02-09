@@ -1,7 +1,7 @@
 {
   "id": "detect-timezone-fingerprint",
   "name": "Timezone/Intl Fingerprint",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Fingerprint",
   "lastUpdated": "2025-01-21",
@@ -14,19 +14,19 @@
       {
         "description": "Gets timezone and locale information",
         "enabled": true,
-        "confidence": 95,
+        "confidence": 65,
         "target": "Intl.DateTimeFormat.prototype.resolvedOptions"
       },
       {
         "description": "Creates date formatter for timezone detection",
         "enabled": true,
-        "confidence": 90,
+        "confidence": 65,
         "target": "Intl.DateTimeFormat"
       },
       {
         "description": "Compares strings based on locale",
         "enabled": true,
-        "confidence": 85,
+        "confidence": 65,
         "target": "Intl.Collator.prototype.compare"
       }
     ],
@@ -47,7 +47,7 @@
         "text": "Intl.DateTimeFormat",
         "scope": "scripts",
         "description": "Timezone detection via Intl",
-        "confidence": 85,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
@@ -56,7 +56,7 @@
         "text": "resolvedOptions",
         "scope": "scripts",
         "description": "Getting locale and timezone info",
-        "confidence": 90,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false

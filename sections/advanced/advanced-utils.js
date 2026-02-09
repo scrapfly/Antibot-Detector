@@ -135,8 +135,8 @@ const AdvancedUtils = {
             };
 
             const icons = {
-                danger: '⚠️',
-                primary: 'ℹ️',
+                danger: '',
+                primary: '',
                 success: '✓'
             };
 
@@ -302,7 +302,7 @@ const AdvancedUtils = {
      * @returns {Promise<void>}
      */
     async showCaptureStartNotification(moduleName) {
-        const logoUrl = chrome.runtime.getURL('icons/scrapfly.webp');
+        const logoUrl = chrome.runtime.getURL('icons/icon128.png');
         const message = `${moduleName} capture started. Reload the page to trigger capture.`;
 
         // Show notification with logo
@@ -366,7 +366,7 @@ const AdvancedUtils = {
          * Check cookies operation notifications
          */
         checkCookies: {
-            start: (moduleName) => `🍪 Checking ${moduleName} cookies...`,
+            start: (moduleName) => `Checking ${moduleName} cookies...`,
             success: (count, total) => `✓ Found ${count}/${total} cookies`,
             none: (moduleName) => `No ${moduleName} cookies found`
         },
@@ -375,7 +375,7 @@ const AdvancedUtils = {
          * Analyze/Extract scripts operation notifications
          */
         analyzeScripts: {
-            start: (moduleName) => `🔍 Analyzing ${moduleName} scripts... Page will reload`,
+            start: (moduleName) => `Analyzing ${moduleName} scripts... Page will reload`,
             success: (count) => `✓ Found ${count} script${count !== 1 ? 's' : ''}`,
             none: (moduleName) => `No ${moduleName} scripts found`
         },
@@ -384,9 +384,9 @@ const AdvancedUtils = {
          * Start/Stop capturing operation notifications
          */
         capturing: {
-            start: (moduleName) => `🎬 Started capturing ${moduleName} data`,
-            stop: (moduleName) => `⏹️ Stopped capturing ${moduleName} data`,
-            alreadyActive: () => `⚠️ Capturing already active`
+            start: (moduleName) => `Started capturing ${moduleName} data`,
+            stop: (moduleName) => `Stopped capturing ${moduleName} data`,
+            alreadyActive: () => `Capturing already active`
         },
 
         /**
@@ -402,7 +402,7 @@ const AdvancedUtils = {
 // Export to window
 if (typeof window !== 'undefined') {
     window.AdvancedUtils = AdvancedUtils;
-    Logger.ui('[AdvancedUtils] ✓ Loaded and exported to window.AdvancedUtils');
+    Logger.ui('[AdvancedUtils] Loaded and exported to window.AdvancedUtils');
 
     // CSP-compliant global event delegation for copy-value elements
     document.addEventListener('click', (e) => {

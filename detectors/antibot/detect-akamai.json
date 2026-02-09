@@ -1,7 +1,7 @@
 {
   "id": "detect-akamai",
   "name": "Akamai Bot Manager",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Anti-Bot",
   "lastUpdated": "2024-01-15",
@@ -151,21 +151,21 @@
     ],
     "content": [
       {
-        "confidence": 80,
+        "confidence": 50,
         "text": "ak_bmsc",
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
       },
       {
-        "confidence": 85,
+        "confidence": 50,
         "text": "_abck",
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
       },
       {
-        "confidence": 90,
+        "confidence": 50,
         "description": "Bot Manager API namespace",
         "text": "bmak.",
         "textRegex": false,
@@ -173,14 +173,14 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 85,
+        "confidence": 50,
         "text": "sensor_data",
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
       },
       {
-        "confidence": 95,
+        "confidence": 50,
         "description": "Pixel challenge HTML variable",
         "text": "bazadebezolkohpepadr",
         "textRegex": false,
@@ -188,7 +188,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 90,
+        "confidence": 50,
         "description": "Pixel script variable pattern",
         "text": "g=_\\[\\d+\\]",
         "textRegex": false,
@@ -196,7 +196,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 85,
+        "confidence": 50,
         "description": "Pixel array declaration",
         "text": "var _=\\[",
         "textRegex": false,
@@ -204,7 +204,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 95,
+        "confidence": 50,
         "description": "SB-SD challenge endpoint reference in code",
         "text": "/.well-known/sbsd/",
         "textRegex": false,
@@ -224,7 +224,7 @@
     "payload": [
       {
         "text": "sensor_data",
-        "confidence": 95,
+        "confidence": 100,
         "description": "Akamai sensor data in request payload (generic)",
         "textRegex": false,
         "textWholeWord": true,
@@ -232,7 +232,7 @@
       },
       {
         "text": "sensor_data",
-        "confidence": 98,
+        "confidence": 100,
         "description": "Akamai sensor data POST to random path challenge endpoint",
         "textRegex": false,
         "textWholeWord": true,
@@ -260,7 +260,7 @@
       },
       {
         "text": "body",
-        "confidence": 98,
+        "confidence": 100,
         "description": "Akamai SBSD body payload to random endpoint",
         "textRegex": false,
         "textWholeWord": true,
@@ -274,7 +274,7 @@
       },
       {
         "text": "jsv=",
-        "confidence": 95,
+        "confidence": 100,
         "description": "Akamai pixel challenge fingerprinting payload",
         "textRegex": false,
         "textWholeWord": false,

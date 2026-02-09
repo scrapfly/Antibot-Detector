@@ -1,7 +1,7 @@
 {
   "id": "detect-navigator-fingerprint",
   "name": "Navigator Fingerprint",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Fingerprint",
   "lastUpdated": "2025-01-15",
@@ -14,19 +14,19 @@
       {
         "description": "Reads browser user agent string",
         "enabled": true,
-        "confidence": 90,
+        "confidence": 80,
         "target": "Navigator.prototype.userAgent"
       },
       {
         "description": "Reads operating system platform",
         "enabled": true,
-        "confidence": 85,
+        "confidence": 80,
         "target": "Navigator.prototype.platform"
       },
       {
         "description": "Detects automated browsing (Selenium, Puppeteer)",
         "enabled": true,
-        "confidence": 95,
+        "confidence": 80,
         "target": "Navigator.prototype.webdriver"
       },
       {
@@ -38,25 +38,25 @@
       {
         "description": "Reads browser language preferences",
         "enabled": true,
-        "confidence": 85,
+        "confidence": 80,
         "target": "Navigator.prototype.languages"
       },
       {
         "description": "Reads CPU core count",
         "enabled": true,
-        "confidence": 90,
+        "confidence": 80,
         "target": "Navigator.prototype.hardwareConcurrency"
       },
       {
         "description": "Reads device memory (RAM) in GB",
         "enabled": true,
-        "confidence": 90,
+        "confidence": 80,
         "target": "Navigator.prototype.deviceMemory"
       },
       {
         "description": "Reads high entropy user agent client hints",
         "enabled": true,
-        "confidence": 95,
+        "confidence": 80,
         "target": "NavigatorUAData.prototype.getHighEntropyValues"
       }
     ]

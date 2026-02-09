@@ -1,7 +1,7 @@
 {
   "id": "detect-performance-fingerprint",
   "name": "Performance Fingerprint",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Fingerprint",
   "lastUpdated": "2025-01-15",
@@ -14,25 +14,25 @@
       {
         "description": "Reads high-resolution timestamps for timing analysis",
         "enabled": true,
-        "confidence": 95,
+        "confidence": 80,
         "target": "Performance.prototype.now"
       },
       {
-        "description": "Accesses navigation timing data",
-        "enabled": true,
-        "confidence": 90,
+        "description": "Accesses navigation timing data (deprecated API)",
+        "enabled": false,
+        "confidence": 80,
         "target": "Performance.prototype.timing"
       },
       {
         "description": "Reads memory usage statistics",
         "enabled": true,
-        "confidence": 100,
+        "confidence": 80,
         "target": "Performance.prototype.memory"
       },
       {
         "description": "Retrieves performance entries by type",
         "enabled": true,
-        "confidence": 85,
+        "confidence": 80,
         "target": "Performance.prototype.getEntriesByType"
       },
       {

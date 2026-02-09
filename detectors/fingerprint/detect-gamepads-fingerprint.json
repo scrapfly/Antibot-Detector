@@ -1,7 +1,7 @@
 {
   "id": "detect-gamepads-fingerprint",
   "name": "Gamepads API Fingerprint",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Fingerprint",
   "lastUpdated": "2025-01-21",
@@ -14,7 +14,7 @@
       {
         "description": "Gets connected gamepad devices",
         "enabled": true,
-        "confidence": 95,
+        "confidence": 80,
         "target": "Navigator.prototype.getGamepads"
       },
       {
@@ -34,28 +34,28 @@
     ],
     "content": [
       {
-        "value": "getGamepads",
+        "text": "getGamepads",
         "scope": "scripts",
         "description": "Gamepad detection in scripts",
-        "confidence": 90,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
       },
       {
-        "value": "gamepadconnected",
+        "text": "gamepadconnected",
         "scope": "scripts",
         "description": "Gamepad connection event listeners",
-        "confidence": 85,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
       },
       {
-        "value": "Gamepad",
+        "text": "Gamepad",
         "scope": "scripts",
         "description": "Gamepad interface usage",
-        "confidence": 80,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false

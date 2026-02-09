@@ -85,6 +85,7 @@ var monitoringDisabled = monitoringDisabled || false; // Track if monitoring has
 var contextCheckInterval = contextCheckInterval || null; // Interval for context validity checks
 var jsApiReady = jsApiReady || false; // Track if JS API event has been dispatched
 
+
 /**
  * Get the cache key for the current hostname
  * @returns {string} Cache key in format "scrapfly_cache_{hostname}"
@@ -297,7 +298,14 @@ function setupDetectionTriggers() {
 
             if (request.type === 'REQUEST_PAGE_DATA') {
                 // Background requests data collection (cache miss)
-                Logger.content('✅ REQUEST_PAGE_DATA received - starting collection');
+                Logger.content('REQUEST_PAGE_DATA received - starting collection');
+
+                // JS API: Notify page that detection is starting (cache miss)
+                dispatchJsApiEvent('onStart', {
+                    url: window.location.href,
+                    trigger: 'cache_miss',
+                    timestamp: new Date().toISOString()
+                }).catch(() => {});
 
                 // Clear sessionStorage cache flag since background detected a cache miss
                 try {
@@ -310,7 +318,7 @@ function setupDetectionTriggers() {
                 // BULLETPROOF: Ensure Utils is loaded before calling collectAndSendData
                 if (typeof Utils === 'undefined') {
                     Logger.debug('CONTENT', 'Utils not loaded yet, will retry in 500ms');
-                    Logger.error('CONTENT', '❌ Utils not loaded yet, waiting and retrying...');
+                    Logger.error('CONTENT', 'Utils not loaded yet, waiting and retrying...');
                     // Retry after Utils loads
                     setTimeout(() => {
                         if (typeof Utils !== 'undefined') {
@@ -318,7 +326,7 @@ function setupDetectionTriggers() {
                             collectAndSendData();
                         } else {
                             Logger.debug('CONTENT', 'Utils still not loaded after retry, collection failed');
-                            Logger.error('CONTENT', '❌ Utils still not loaded, collection failed');
+                            Logger.error('CONTENT', 'Utils still not loaded, collection failed');
                         }
                     }, 500);
                 } else {
@@ -329,7 +337,14 @@ function setupDetectionTriggers() {
                 sendResponse({ status: 'collecting_data' });
             } else if (request.type === 'RUN_DETECTION') {
                 // Manual detection request from popup (force bypass cache)
-                Logger.content('✅ RUN_DETECTION received - starting manual detection');
+                Logger.content('RUN_DETECTION received - starting manual detection');
+
+                // JS API: Notify page that detection is starting (manual trigger)
+                dispatchJsApiEvent('onStart', {
+                    url: window.location.href,
+                    trigger: 'manual',
+                    timestamp: new Date().toISOString()
+                }).catch(() => {});
 
                 // Clear sessionStorage cache flag since this is manual detection (bypasses cache)
                 try {
@@ -341,14 +356,14 @@ function setupDetectionTriggers() {
 
                 // BULLETPROOF: Ensure Utils is loaded before calling collectAndSendData
                 if (typeof Utils === 'undefined') {
-                    Logger.error('CONTENT', '❌ Utils not loaded yet, waiting and retrying...');
+                    Logger.error('CONTENT', 'Utils not loaded yet, waiting and retrying...');
                     // Retry after Utils loads
                     setTimeout(() => {
                         if (typeof Utils !== 'undefined') {
                             Logger.content('Utils now loaded, collecting data...');
                             collectAndSendData();
                         } else {
-                            Logger.error('CONTENT', '❌ Utils still not loaded, detection failed');
+                            Logger.error('CONTENT', 'Utils still not loaded, detection failed');
                         }
                     }, 500);
                 } else {
@@ -365,7 +380,7 @@ function setupDetectionTriggers() {
                 });
             } else if (request.type === 'DETECTION_COMPLETE') {
                 // Detection completed - dispatch JS API event
-                Logger.content('📡 [Content] Received DETECTION_COMPLETE from background', {
+                Logger.content('[Content] Received DETECTION_COMPLETE from background', {
                     url: request.url,
                     detectionCount: request.detectionCount
                 });
@@ -373,9 +388,11 @@ function setupDetectionTriggers() {
                     url: request.url || window.location.href,
                     detections: request.detections || [],
                     detectionCount: request.detectionCount || 0,
-                    timestamp: request.timestamp || new Date().toISOString()
+                    timestamp: request.timestamp || new Date().toISOString(),
+                    fromCache: request.fromCache === true,
+                    cacheScope: request.cacheScope
                 }).then(() => {
-                    Logger.content('📡 [Content] dispatchJsApiEvent completed successfully');
+                    Logger.content('[Content] dispatchJsApiEvent completed successfully');
                 }).catch(e => Logger.error('CONTENT', 'Failed to dispatch detection event', e));
 
                 // FIX: Save to sessionStorage so NEXT visit skips hooks immediately
@@ -388,12 +405,24 @@ function setupDetectionTriggers() {
                         url: window.location.href
                     };
                     sessionStorage.setItem(getCacheKey(), JSON.stringify(cacheData));
-                    Logger.cache('✅ Saved sessionStorage after detection complete (for next visit)');
+                    Logger.cache('Saved sessionStorage after detection complete (for next visit)');
                 } catch (e) {
                     // sessionStorage not available
                 }
 
                 sendResponse({ status: 'event_dispatched' });
+            } else if (request.type === 'DETECTION_PROGRESS') {
+                // Detection progress updates (method-level)
+                const progress = request.progress || {};
+                dispatchJsApiEvent('onProgress', {
+                    url: window.location.href,
+                    method: progress.method,
+                    completedMethods: Array.isArray(progress.completedMethods) ? progress.completedMethods : [],
+                    message: progress.message,
+                    timestamp: new Date().toISOString()
+                }).catch(() => {});
+
+                sendResponse({ status: 'progress_event_dispatched' });
             } else if (request.type === 'DETECTION_ERROR') {
                 // Detection error - dispatch JS API error event
                 dispatchJsApiEvent('onError', {
@@ -413,13 +442,13 @@ function setupDetectionTriggers() {
                             }
                         </style>
                         <div style="font-weight: 600; font-size: 16px; margin-bottom: 8px;">
-                            🎬 reCAPTCHA Capture - Step ${request.step}
+                            reCAPTCHA Capture - Step ${request.step}
                         </div>
                         <div style="opacity: 0.9;">
                             ${request.message}
                         </div>
                         <div id="scrapfly-timer" style="margin-top: 12px; font-size: 12px; opacity: 0.8; font-weight: 600;">
-                            ⏱️ Capturing...
+                            Capturing...
                         </div>
                     `;
                 }
@@ -428,7 +457,6 @@ function setupDetectionTriggers() {
                 // Cache hit - disable hooks and window properties monitoring
                 monitoringDisabled = true;
 
-                // Notify MAIN world to disable monitoring
                 window.postMessage({
                     type: 'DISABLE_MONITORING',
                     reason: 'cache_hit',
@@ -442,17 +470,17 @@ function setupDetectionTriggers() {
                     Logger.cache('Cleared sessionStorage cache flag due to manual cache clear');
                     sendResponse({ status: 'cleared' });
                 } catch (e) {
-                    Logger.error('CACHE', '❌ Could not clear sessionStorage', e);
+                    Logger.error('CACHE', 'Could not clear sessionStorage', e);
                     sendResponse({ status: 'error', error: e.message });
                 }
             } else if (request.type === 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM') {
                 // Extract sitekey from cf-turnstile element
-                Logger.content('📥 CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM message received');
+                Logger.content('CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM message received');
 
                 try {
                     // First, log what elements exist
                     const allDataElements = document.querySelectorAll('[data-sitekey]');
-                    Logger.content('🔍 Found elements with [data-sitekey]', { count: allDataElements.length });
+                    Logger.content('Found elements with [data-sitekey]', { count: allDataElements.length });
 
                     // Find the element
                     const element = document.querySelector('[data-sitekey]');
@@ -460,13 +488,13 @@ function setupDetectionTriggers() {
 
                     const sitekey = element?.getAttribute('data-sitekey') || null;
 
-                    Logger.content('✅ Extracted sitekey from DOM', { sitekey: sitekey ? sitekey.substring(0, 20) + '...' : 'null' });
+                    Logger.content('Extracted sitekey from DOM', { sitekey: sitekey ? sitekey.substring(0, 20) + '...' : 'null' });
 
                     sendResponse({
                         sitekey: sitekey
                     });
                 } catch (error) {
-                    Logger.error('CONTENT', '❌ Error extracting sitekey', error);
+                    Logger.error('CONTENT', 'Error extracting sitekey', error);
                     sendResponse({
                         sitekey: null,
                         error: error.message
@@ -543,8 +571,6 @@ async function initialize() {
     // Add retry logic to handle cases where background script isn't ready yet
     let detectorsLoaded = false;
     let retryCount = 0;
-    // OPTIMIZATION QUICK WIN #4: Reduce detector loading retries from 5 to 3 with exponential backoff
-    // This saves 1-3s on cold start while still allowing reasonable retry window
     const maxRetries = 3;
     let retryDelay = 500; // Start with 500ms, exponential backoff to 1s
 
@@ -571,7 +597,7 @@ async function initialize() {
 
                 if (detectorCount > 0) {
                     // FIX: Only log success, not every attempt
-                    Logger.content(`✅ Detectors loaded - smart data collection enabled (${detectorCount} detectors)`);
+                    Logger.content(`Detectors loaded - smart data collection enabled (${detectorCount} detectors)`);
 
                     // Set detectors in detection engine to enable smart data collection
                     detectionEngine.setDetectors(detectorsResponse.detectors);
@@ -615,16 +641,12 @@ async function initialize() {
     }
 
     if (!detectorsLoaded) {
-        Logger.warn('CONTENT', '⚠️ Failed to load detectors after all retries, will collect all data types as fallback');
+        Logger.warn('CONTENT', 'Failed to load detectors after all retries, will collect all data types as fallback');
     }
 
     // Note: JS hooks are installed by install-hooks.js at document_start (before this script runs)
 
-    // OPTIMIZED 2.5: Removed periodic context check interval
-    // Context validity is now checked on-demand during actual operations (message sending, etc.)
-    // This eliminates constant CPU wake-ups every 60 seconds
-
-    // NEW OPTIMIZATION: Early cache check - skip all detection work if cached
+    // Early cache check - skip all detection work if cached
     Logger.cache('Checking cache before starting detection work...');
     try {
         const cacheCheckResponse = await chrome.runtime.sendMessage({
@@ -633,22 +655,25 @@ async function initialize() {
         });
 
         if (cacheCheckResponse?.cacheHit) {
-            Logger.cache('✅ CACHE HIT - skipping all detection work, returning cached detections immediately');
+            Logger.cache('CACHE HIT - skipping all detection work, returning cached detections immediately');
 
             // Set flag to prevent hook installation (ISOLATED world)
             window.__scrapflyCacheHitEarlyExit = true;
 
             // CRITICAL: Notify MAIN world about cache hit so hooks stop firing
-            // MAIN world has separate window object, needs its own flag
             window.postMessage({
                 type: 'SCRAPFLY_CACHE_HIT',
                 timestamp: Date.now()
             }, '*');
 
+            // JS API: Still dispatch "ready" so page scripts can reliably initialize listeners
+            // even when we exit early due to cache hit.
+            await dispatchReadyEvent();
+
             // JS API: Dispatch detection event immediately with cached data
             const cachedData = cacheCheckResponse.detectionData;
             if (cachedData) {
-                Logger.cache('📡 Dispatching JS API event with cached detection data');
+                Logger.cache('Dispatching JS API event with cached detection data');
                 dispatchJsApiEvent('onDetection', {
                     url: window.location.href,
                     detections: cachedData.detectionResults || [],
@@ -658,7 +683,7 @@ async function initialize() {
                 }).catch(e => Logger.error('CONTENT', 'Failed to dispatch cached detection event', e));
             }
 
-            // NEW OPTIMIZATION: Store cache status in sessionStorage for synchronous check on next page load
+            // Store cache status in sessionStorage for synchronous check on next page load
             try {
                 const cacheData = {
                     timestamp: Date.now(),
@@ -666,7 +691,7 @@ async function initialize() {
                     url: window.location.href
                 };
                 sessionStorage.setItem(getCacheKey(), JSON.stringify(cacheData));
-                Logger.cache('✅ Saved cache status to sessionStorage for future synchronous checks');
+                Logger.cache('Saved cache status to sessionStorage for future synchronous checks');
             } catch (e) {
                 // SessionStorage might not be available, continue normally
                 Logger.cache('Could not save to sessionStorage', { error: e.message });
@@ -688,7 +713,7 @@ async function initialize() {
             Logger.cache('Content script initialization complete (cache hit path)');
             return;
         } else {
-            Logger.cache('❌ CACHE MISS - proceeding with full detection');
+            Logger.cache('CACHE MISS - proceeding with full detection');
 
             // Clear any stale sessionStorage cache flag since we have a cache miss
             try {
@@ -765,12 +790,28 @@ const hookBatcher = DetectionEngineManager.createHookBatcher(chrome);
 
 // Listen for JS Hook detections from MAIN world script
 // Delegate to DetectionEngineManager.handleHookMessage()
+const DEBUG_LOG_RATE_WINDOW_MS = 1000;
+const DEBUG_LOG_MAX_PER_WINDOW = 20;
+let debugLogWindowStart = Date.now();
+let debugLogCount = 0;
+
+function shouldForwardDebugLog() {
+    const now = Date.now();
+    if (now - debugLogWindowStart >= DEBUG_LOG_RATE_WINDOW_MS) {
+        debugLogWindowStart = now;
+        debugLogCount = 0;
+    }
+    debugLogCount += 1;
+    return debugLogCount <= DEBUG_LOG_MAX_PER_WINDOW;
+}
+
 window.addEventListener('message', (event) => {
+    // Stop propagation for hook detections to prevent page scripts from seeing them
     if (event.data?.type === 'JS_HOOK_DETECTION') {
         event.stopImmediatePropagation?.();
     }
 
-    // VERSION 2.3.0: Forward hook failure reports from HookResilienceManager
+    // Forward hook failure reports from HookResilienceManager
     if (event.data?.type === 'HOOK_FAILURE_REPORT') {
         try {
             chrome.runtime.sendMessage({
@@ -786,7 +827,7 @@ window.addEventListener('message', (event) => {
         return;
     }
 
-    // VERSION 2.3.0: Forward hook tampering detection
+    // Forward hook tampering detection
     if (event.data?.type === 'HOOK_TAMPERING_DETECTED') {
         try {
             chrome.runtime.sendMessage({
@@ -800,7 +841,7 @@ window.addEventListener('message', (event) => {
         return;
     }
 
-    // VERSION 2.3.0: Forward hook recovery results
+    // Forward hook recovery results
     if (event.data?.type === 'HOOK_RECOVERY_RESULT') {
         try {
             chrome.runtime.sendMessage({
@@ -816,7 +857,7 @@ window.addEventListener('message', (event) => {
         return;
     }
 
-    // VERSION 2.3.0: Forward window property detections from WindowPropertyTracker
+    // Forward window property detections from WindowPropertyTracker
     if (event.data?.type === 'WINDOW_DETECTIONS') {
         try {
             chrome.runtime.sendMessage({
@@ -831,8 +872,10 @@ window.addEventListener('message', (event) => {
     }
 
     // FIX: Forward debug logs from MAIN world to background service worker
-    // Wrapped in try-catch to handle synchronous "Extension context invalidated" errors
     if (event.data?.type === 'SCRAPFLY_DEBUG_LOG') {
+        if (!shouldForwardDebugLog()) {
+            return;
+        }
         try {
             chrome.runtime.sendMessage({
                 type: 'SCRAPFLY_DEBUG_LOG',
@@ -862,6 +905,21 @@ window.addEventListener('message', (event) => {
 
     // FIX: Listen for JS hooks completion signal from MAIN world
     if (event.data?.type === 'JS_HOOKS_COMPLETE') {
+        // JS API: Forward hook completion to page scripts
+        const hooksTs = (typeof event.data.timestamp === 'number')
+            ? new Date(event.data.timestamp).toISOString()
+            : (event.data.timestamp || new Date().toISOString());
+
+        dispatchJsApiEvent('onHooksComplete', {
+            url: event.data.url || window.location.href,
+            timestamp: hooksTs,
+            totalDetections: event.data.totalDetections,
+            uniqueHooks: event.data.uniqueHooks,
+            completionReason: event.data.completionReason,
+            completionTime: event.data.completionTime,
+            uninstallStats: event.data.uninstallStats
+        }).catch(() => {});
+
         try {
             chrome.runtime.sendMessage({
                 type: 'JS_HOOKS_COMPLETE',
@@ -880,6 +938,20 @@ window.addEventListener('message', (event) => {
 
     // FIX: Listen for window properties completion signal from MAIN world
     if (event.data?.type === 'WINDOW_PROPS_COMPLETE') {
+        // JS API: Forward window property completion to page scripts
+        const windowTs = (typeof event.data.timestamp === 'number')
+            ? new Date(event.data.timestamp).toISOString()
+            : (event.data.timestamp || new Date().toISOString());
+
+        dispatchJsApiEvent('onWindowPropsComplete', {
+            url: event.data.url || window.location.href,
+            timestamp: windowTs,
+            detectedCount: event.data.detectedCount,
+            totalChecked: event.data.totalChecked,
+            elapsedMs: event.data.elapsedMs,
+            reason: event.data.reason
+        }).catch(() => {});
+
         try {
             chrome.runtime.sendMessage({
                 type: 'WINDOW_PROPS_COMPLETE',
@@ -912,46 +984,10 @@ window.addEventListener('message', (event) => {
         return;
     }
 
-    // NEW OPTIMIZATION: Check sessionStorage for cache hit flag (synchronous)
-    // This flag is set when a cache hit is detected in a previous page load
-    try {
-        const cachedData = sessionStorage.getItem(getCacheKey());
-
-        if (cachedData) {
-            // Cache hit detected from previous check - skip hook installation entirely
-            const cacheInfo = JSON.parse(cachedData);
-            const cacheAge = Date.now() - cacheInfo.timestamp;
-
-            // Cache is valid for 12 hours (same as detection cache)
-            if (cacheAge < 12 * 60 * 60 * 1000) {
-                Logger.cache(`✅ Synchronous cache hit - SKIPPING hook installation (age: ${Math.round(cacheAge / 60000)} minutes)`);
-                window.__scrapflyHooksInstalled = true; // Prevent future attempts
-                window.__scrapflyCacheHitEarlyExit = true; // Set flag for other checks
-
-                // Still trigger page ready for window property checks to exit early
-                const triggerHookStart = () => {
-                    window.postMessage({
-                        type: 'SCRAPFLY_PAGE_READY'
-                    }, '*');
-                };
-
-                if (document.readyState === 'complete') {
-                    triggerHookStart();
-                } else {
-                    window.addEventListener('load', triggerHookStart, { once: true });
-                }
-
-                return; // EXIT - no hooks installed!
-            } else {
-                // Cache expired, clear it
-                Logger.cache('Cache expired, removing sessionStorage entry');
-                sessionStorage.removeItem(getCacheKey());
-            }
-        }
-    } catch (e) {
-        // SessionStorage might not be available or accessible, continue normally
-        Logger.cache('SessionStorage check failed', { error: e.message });
-    }
+    // IMPORTANT: Always install hooks at document_start for correctness.
+    // Cache hits are handled asynchronously (background discards batches + disables monitoring),
+    // and relying on sessionStorage can go stale (manual cache clear, settings changes).
+    window.__scrapflyCacheHitEarlyExit = false;
 
     // CRITICAL FIX: Install hooks IMMEDIATELY without any async storage checks
     // The cache check and enabled state check will happen AFTER hooks are installed
@@ -961,7 +997,7 @@ window.addEventListener('message', (event) => {
 
     // Test Logger (with safety check)
     if (typeof Logger !== 'undefined') {
-        Logger.content('✅ Logger initialized in CONTENT (ISOLATED) context');
+        Logger.content('Logger initialized in CONTENT (ISOLATED) context');
     }
 
     // Use flag to prevent duplicate triggers

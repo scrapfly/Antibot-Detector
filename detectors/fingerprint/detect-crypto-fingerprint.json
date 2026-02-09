@@ -1,7 +1,7 @@
 {
   "id": "detect-crypto-fingerprint",
   "name": "Crypto Fingerprint",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Fingerprint",
   "lastUpdated": "2025-01-15",
@@ -14,13 +14,13 @@
       {
         "description": "Generates cryptographically secure random values",
         "enabled": true,
-        "confidence": 95,
+        "confidence": 80,
         "target": "Crypto.prototype.getRandomValues"
       },
       {
         "description": "Computes cryptographic hashes (SHA-256, etc.)",
         "enabled": true,
-        "confidence": 90,
+        "confidence": 80,
         "target": "SubtleCrypto.prototype.digest"
       }
     ]

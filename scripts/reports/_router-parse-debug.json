@@ -1,0 +1,426 @@
+{
+  "markerCount": 95,
+  "groups": [
+    {
+      "labels": [
+        "DEBUG_LOG"
+      ],
+      "bodyPreview": "                // Centralized logging - display all logs in service worker console\r\n                if (request.context"
+    },
+    {
+      "labels": [
+        "LOG"
+      ],
+      "bodyPreview": "                // Logger system - output logs from content scripts and main world\r\n                if (request.log) {\r\n"
+    },
+    {
+      "labels": [
+        "SCRAPFLY_DEBUG_LOG"
+      ],
+      "bodyPreview": "                // Debug logs from content scripts (only output when debug mode is enabled)\r\n                (async () ="
+    },
+    {
+      "labels": [
+        "HOOK_FAILURE_REPORT",
+        "HOOK_TAMPERING_DETECTED",
+        "HOOK_RECOVERY_RESULT"
+      ],
+      "bodyPreview": "                // Internal diagnostics from MAIN-world HookResilienceManager.\r\n                // Popup doesn't need th"
+    },
+    {
+      "labels": [
+        "PING"
+      ],
+      "bodyPreview": "                // Simple ping for connection test\r\n                sendResponse({ status: 'pong', timestamp: Date.now()"
+    },
+    {
+      "labels": [
+        "PAGE_LOAD_NOTIFICATION"
+      ],
+      "bodyPreview": "                // FIX: Clear interrupted state on new page load (prevents false \"interrupted\" messages)\r\n              "
+    },
+    {
+      "labels": [
+        "EXTENSION_TOGGLE_CHANGED"
+      ],
+      "bodyPreview": "                // Handle extension enable/disable toggle with cached detection badge restoration\r\n                (asyn"
+    },
+    {
+      "labels": [
+        "DETECTION_DATA"
+      ],
+      "bodyPreview": "                // Process detection data from content script\r\n                (async () => {\r\n                    Logge"
+    },
+    {
+      "labels": [
+        "CONTENT_SCRIPT_READY"
+      ],
+      "bodyPreview": "                // Content script is ready\r\n                Logger.background(`Scrapfly Background: Content script ready"
+    },
+    {
+      "labels": [
+        "GET_DETECTION_DATA"
+      ],
+      "bodyPreview": "                // Request for detection data from popup\r\n                (async () => {\r\n                    try {\r\n   "
+    },
+    {
+      "labels": [
+        "RELOAD_DETECTORS"
+      ],
+      "bodyPreview": "                // Reload detectors from storage (after adding/updating/deleting)\r\n                (async () => {\r\n     "
+    },
+    {
+      "labels": [
+        "SYNC_CATEGORY_COLORS"
+      ],
+      "bodyPreview": "                // Sync category colors from Settings to CategoryManager\r\n                (async () => {\r\n              "
+    },
+    {
+      "labels": [
+        "GET_DETECTORS"
+      ],
+      "bodyPreview": "                // Content script requesting all detectors (for hook installation at document_start)\r\n                (a"
+    },
+    {
+      "labels": [
+        "CHECK_CACHE_EARLY"
+      ],
+      "bodyPreview": "                // NEW OPTIMIZATION: Check cache before content script does any detection work\r\n                (async ("
+    },
+    {
+      "labels": [
+        "CACHE_HIT_EARLY_EXIT"
+      ],
+      "bodyPreview": "                // Notification that content script detected cache hit and exited early\r\n                (async () => {\r"
+    },
+    {
+      "labels": [
+        "CATEGORY_COLORS_UPDATED"
+      ],
+      "bodyPreview": "                // Reload CategoryManager when colors are updated\r\n                (async () => {\r\n                    t"
+    },
+    {
+      "labels": [
+        "SETTINGS_UPDATED"
+      ],
+      "bodyPreview": "                // Delegate to Settings handler\r\n                (async () => {\r\n                    await Settings.hand"
+    },
+    {
+      "labels": [
+        "CACHE_SCOPE_CHANGED"
+      ],
+      "bodyPreview": "                // Clear in-memory URL hash cache when cache scope changes\r\n                Logger.background('[Backgrou"
+    },
+    {
+      "labels": [
+        "REQUEST_DETECTION"
+      ],
+      "bodyPreview": "                // FIX: Send initial progress update with correct parameters\r\n                if (request.tabId) {\r\n    "
+    },
+    {
+      "labels": [
+        "CLEAR_DETECTION_DATA"
+      ],
+      "bodyPreview": "                // Clear detection data for a tab\r\n                if (request.tabId) {\r\n                    headersStor"
+    },
+    {
+      "labels": [
+        "CLEAR_DETECTION_CACHE"
+      ],
+      "bodyPreview": "                // Delegate to DetectionEngineManager handler\r\n                (async () => {\r\n                    // Cl"
+    },
+    {
+      "labels": [
+        "JS_HOOK_DETECTION"
+      ],
+      "bodyPreview": "                // DEPRECATED: Individual hooks no longer used - batching is preferred\r\n                // Keeping for b"
+    },
+    {
+      "labels": [
+        "JS_HOOK_DETECTION_BATCH"
+      ],
+      "bodyPreview": "                // OPTIMIZED 3.4: Handle batched JS hook detections (from content.js optimization 2.4)\r\n                "
+    },
+    {
+      "labels": [
+        "WINDOW_DETECTIONS"
+      ],
+      "bodyPreview": "                // Handle window detections from MAIN world\r\n                (async () => {\r\n                    try {\r\n"
+    },
+    {
+      "labels": [
+        "WINDOW_PROPS_COMPLETE"
+      ],
+      "bodyPreview": "                // Window properties collection complete - mark session and potentially finalize\r\n                (async"
+    },
+    {
+      "labels": [
+        "JS_HOOKS_COMPLETE"
+      ],
+      "bodyPreview": "                // JS hooks collection complete - mark session and potentially finalize\r\n                (async () => {\r"
+    },
+    {
+      "labels": [
+        "RECAPTCHA_START_CAPTURE",
+        "RECAPTCHA_STOP_CAPTURE",
+        "RECAPTCHA_GET_CAPTURE_STATE",
+        "RECAPTCHA_GET_CAPTURE_RESULTS"
+      ],
+      "bodyPreview": "                // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)\r\n                if (typeof re"
+    },
+    {
+      "labels": [
+        "AKAMAI_START_CAPTURE",
+        "AKAMAI_STOP_CAPTURE",
+        "AKAMAI_GET_CAPTURE_STATE",
+        "AKAMAI_CAPTURE_COMPLETED",
+        "AKAMAI_EXTRACT_SENSOR",
+        "AKAMAI_EXTRACTION_COMPLETED",
+        "AKAMAI_SHOW_ANALYZING_NOTIFICATION",
+        "AKAMAI_SHOW_EXTRACTING_NOTIFICATION"
+      ],
+      "bodyPreview": "                // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)\r\n                if (typeof ak"
+    },
+    {
+      "labels": [
+        "IMPERVA_START_CAPTURE",
+        "IMPERVA_STOP_CAPTURE",
+        "IMPERVA_EXTRACT_SCRIPTS",
+        "IMPERVA_GET_CAPTURE_STATE",
+        "IMPERVA_CAPTURE_COMPLETED",
+        "IMPERVA_SHOW_ANALYZING_NOTIFICATION"
+      ],
+      "bodyPreview": "                // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)\r\n                if (typeof im"
+    },
+    {
+      "labels": [
+        "SHAPESECURITY_START_CAPTURE",
+        "SHAPESECURITY_STOP_CAPTURE",
+        "SHAPESECURITY_GET_CAPTURE_STATE",
+        "SHAPESECURITY_CHECK_HEADERS",
+        "SHAPESECURITY_CHECK_COOKIES",
+        "SHAPESECURITY_CHECK_VERSION",
+        "SHAPESECURITY_ANALYZE_SCRIPTS",
+        "SHAPESECURITY_START_EXTRACTION",
+        "SHAPESECURITY_SHOW_ANALYZING_NOTIFICATION",
+        "SHAPESECURITY_EXTRACTION_COMPLETED"
+      ],
+      "bodyPreview": "                // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)\r\n                if (typeof sh"
+    },
+    {
+      "labels": [
+        "AWSWAF_START_CAPTURE",
+        "AWSWAF_STOP_CAPTURE",
+        "AWSWAF_GET_STATE",
+        "AWSWAF_START_ANALYSIS",
+        "AWSWAF_SHOW_ANALYZING_NOTIFICATION"
+      ],
+      "bodyPreview": "                // OPTIMIZED 3.1: Interceptor loaded via importScripts, no initialization needed\r\n                if (ty"
+    },
+    {
+      "labels": [
+        "GEETEST_CHECK_VERSION",
+        "GEETEST_ANALYZE_SCRIPTS",
+        "GEETEST_SHOW_VERSION_NOTIFICATION",
+        "GEETEST_SHOW_ANALYZING_NOTIFICATION"
+      ],
+      "bodyPreview": "                // OPTIMIZED 3.1: Interceptor already loaded via importScripts (not lazy)\r\n                if (typeof ge"
+    },
+    {
+      "labels": [
+        "DATADOME_START_ANALYSIS",
+        "DATADOME_SHOW_ANALYZING_NOTIFICATION"
+      ],
+      "bodyPreview": "                // OPTIMIZED 3.1: Interceptor loaded via importScripts, no initialization needed\r\n                if (ty"
+    },
+    {
+      "labels": [
+        "CLOUDFLARE_START_ANALYSIS",
+        "CLOUDFLARE_SHOW_ANALYZING_NOTIFICATION",
+        "CLOUDFLARE_CHECK_VERSION"
+      ],
+      "bodyPreview": "                if (typeof handleCloudflareMessage === 'function') {\r\n                    return handleCloudflareMessage"
+    },
+    {
+      "labels": [
+        "TURNSTILE_START_ANALYSIS",
+        "TURNSTILE_SHOW_ANALYZING_NOTIFICATION"
+      ],
+      "bodyPreview": "                if (typeof handleTurnstileMessage === 'function') {\r\n                    return handleTurnstileMessage(r"
+    },
+    {
+      "labels": [
+        "HCAPTCHA_START_ANALYSIS",
+        "HCAPTCHA_SHOW_ANALYZING_NOTIFICATION",
+        "HCAPTCHA_SHOW_VERSION_NOTIFICATION",
+        "HCAPTCHA_CHECK_VERSION",
+        "HCAPTCHA_START_CAPTURE",
+        "HCAPTCHA_STOP_CAPTURE",
+        "HCAPTCHA_GET_CAPTURE_STATE",
+        "HCAPTCHA_CAPTURE_COMPLETED"
+      ],
+      "bodyPreview": "                if (typeof handleHCaptchaMessage === 'function') {\r\n                    return handleHCaptchaMessage(req"
+    },
+    {
+      "labels": [
+        "FUNCAPTCHA_START_ANALYSIS",
+        "FUNCAPTCHA_SHOW_ANALYZING_NOTIFICATION",
+        "FUNCAPTCHA_START_CAPTURE",
+        "FUNCAPTCHA_STOP_CAPTURE",
+        "FUNCAPTCHA_GET_CAPTURE_STATE",
+        "FUNCAPTCHA_CAPTURE_COMPLETED"
+      ],
+      "bodyPreview": "                if (typeof handleFunCaptchaMessage === 'function') {\r\n                    return handleFunCaptchaMessage"
+    },
+    {
+      "labels": [
+        "LOG_COLLECTOR_ENABLE"
+      ],
+      "bodyPreview": "                if (typeof logCollector !== 'undefined') {\r\n                    logCollector.enable();\r\n                "
+    },
+    {
+      "labels": [
+        "LOG_COLLECTOR_DISABLE"
+      ],
+      "bodyPreview": "                if (typeof logCollector !== 'undefined') {\r\n                    logCollector.disable();\r\n               "
+    },
+    {
+      "labels": [
+        "LOG_COLLECTOR_CLEAR"
+      ],
+      "bodyPreview": "                if (typeof logCollector !== 'undefined') {\r\n                    logCollector.clear();\r\n                 "
+    },
+    {
+      "labels": [
+        "LOG_COLLECTOR_EXPORT_JSON"
+      ],
+      "bodyPreview": "                if (typeof logCollector !== 'undefined') {\r\n                    const jsonFilename = logCollector.export"
+    },
+    {
+      "labels": [
+        "LOG_COLLECTOR_EXPORT_TEXT"
+      ],
+      "bodyPreview": "                if (typeof logCollector !== 'undefined') {\r\n                    const textFilename = logCollector.export"
+    },
+    {
+      "labels": [
+        "LOG_COLLECTOR_GET_COUNT"
+      ],
+      "bodyPreview": "                if (typeof logCollector !== 'undefined') {\r\n                    // getLogCount is async, so handle it wi"
+    },
+    {
+      "labels": [
+        "LOG_COLLECTOR_SET_MAX_LOGS"
+      ],
+      "bodyPreview": "                if (typeof logCollector !== 'undefined') {\r\n                    const maxLogs = request.maxLogs;\r\n      "
+    },
+    {
+      "labels": [
+        "CHECK_FOR_UPDATES"
+      ],
+      "bodyPreview": "                // UpdateManager removed - auto-update feature disabled\r\n                sendResponse({ success: false, "
+    },
+    {
+      "labels": [
+        "default"
+      ],
+      "bodyPreview": "                Logger.background('Scrapfly Background: Unknown message type:', request.type);\r\n                sendResp"
+    }
+  ],
+  "topCases": [
+    "DEBUG_LOG",
+    "LOG",
+    "SCRAPFLY_DEBUG_LOG",
+    "HOOK_FAILURE_REPORT",
+    "HOOK_TAMPERING_DETECTED",
+    "HOOK_RECOVERY_RESULT",
+    "PING",
+    "PAGE_LOAD_NOTIFICATION",
+    "EXTENSION_TOGGLE_CHANGED",
+    "DETECTION_DATA",
+    "CONTENT_SCRIPT_READY",
+    "GET_DETECTION_DATA",
+    "RELOAD_DETECTORS",
+    "SYNC_CATEGORY_COLORS",
+    "GET_DETECTORS",
+    "CHECK_CACHE_EARLY",
+    "CACHE_HIT_EARLY_EXIT",
+    "CATEGORY_COLORS_UPDATED",
+    "SETTINGS_UPDATED",
+    "CACHE_SCOPE_CHANGED",
+    "REQUEST_DETECTION",
+    "CLEAR_DETECTION_DATA",
+    "CLEAR_DETECTION_CACHE",
+    "JS_HOOK_DETECTION",
+    "JS_HOOK_DETECTION_BATCH",
+    "WINDOW_DETECTIONS",
+    "WINDOW_PROPS_COMPLETE",
+    "JS_HOOKS_COMPLETE",
+    "RECAPTCHA_START_CAPTURE",
+    "RECAPTCHA_STOP_CAPTURE",
+    "RECAPTCHA_GET_CAPTURE_STATE",
+    "RECAPTCHA_GET_CAPTURE_RESULTS",
+    "AKAMAI_START_CAPTURE",
+    "AKAMAI_STOP_CAPTURE",
+    "AKAMAI_GET_CAPTURE_STATE",
+    "AKAMAI_CAPTURE_COMPLETED",
+    "AKAMAI_EXTRACT_SENSOR",
+    "AKAMAI_EXTRACTION_COMPLETED",
+    "AKAMAI_SHOW_ANALYZING_NOTIFICATION",
+    "AKAMAI_SHOW_EXTRACTING_NOTIFICATION",
+    "IMPERVA_START_CAPTURE",
+    "IMPERVA_STOP_CAPTURE",
+    "IMPERVA_EXTRACT_SCRIPTS",
+    "IMPERVA_GET_CAPTURE_STATE",
+    "IMPERVA_CAPTURE_COMPLETED",
+    "IMPERVA_SHOW_ANALYZING_NOTIFICATION",
+    "SHAPESECURITY_START_CAPTURE",
+    "SHAPESECURITY_STOP_CAPTURE",
+    "SHAPESECURITY_GET_CAPTURE_STATE",
+    "SHAPESECURITY_CHECK_HEADERS",
+    "SHAPESECURITY_CHECK_COOKIES",
+    "SHAPESECURITY_CHECK_VERSION",
+    "SHAPESECURITY_ANALYZE_SCRIPTS",
+    "SHAPESECURITY_START_EXTRACTION",
+    "SHAPESECURITY_SHOW_ANALYZING_NOTIFICATION",
+    "SHAPESECURITY_EXTRACTION_COMPLETED",
+    "AWSWAF_START_CAPTURE",
+    "AWSWAF_STOP_CAPTURE",
+    "AWSWAF_GET_STATE",
+    "AWSWAF_START_ANALYSIS",
+    "AWSWAF_SHOW_ANALYZING_NOTIFICATION",
+    "GEETEST_CHECK_VERSION",
+    "GEETEST_ANALYZE_SCRIPTS",
+    "GEETEST_SHOW_VERSION_NOTIFICATION",
+    "GEETEST_SHOW_ANALYZING_NOTIFICATION",
+    "DATADOME_START_ANALYSIS",
+    "DATADOME_SHOW_ANALYZING_NOTIFICATION",
+    "CLOUDFLARE_START_ANALYSIS",
+    "CLOUDFLARE_SHOW_ANALYZING_NOTIFICATION",
+    "CLOUDFLARE_CHECK_VERSION",
+    "TURNSTILE_START_ANALYSIS",
+    "TURNSTILE_SHOW_ANALYZING_NOTIFICATION",
+    "HCAPTCHA_START_ANALYSIS",
+    "HCAPTCHA_SHOW_ANALYZING_NOTIFICATION",
+    "HCAPTCHA_SHOW_VERSION_NOTIFICATION",
+    "HCAPTCHA_CHECK_VERSION",
+    "HCAPTCHA_START_CAPTURE",
+    "HCAPTCHA_STOP_CAPTURE",
+    "HCAPTCHA_GET_CAPTURE_STATE",
+    "HCAPTCHA_CAPTURE_COMPLETED",
+    "FUNCAPTCHA_START_ANALYSIS",
+    "FUNCAPTCHA_SHOW_ANALYZING_NOTIFICATION",
+    "FUNCAPTCHA_START_CAPTURE",
+    "FUNCAPTCHA_STOP_CAPTURE",
+    "FUNCAPTCHA_GET_CAPTURE_STATE",
+    "FUNCAPTCHA_CAPTURE_COMPLETED",
+    "LOG_COLLECTOR_ENABLE",
+    "LOG_COLLECTOR_DISABLE",
+    "LOG_COLLECTOR_CLEAR",
+    "LOG_COLLECTOR_EXPORT_JSON",
+    "LOG_COLLECTOR_EXPORT_TEXT",
+    "LOG_COLLECTOR_GET_COUNT",
+    "LOG_COLLECTOR_SET_MAX_LOGS",
+    "CHECK_FOR_UPDATES"
+  ]
+}

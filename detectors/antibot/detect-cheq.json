@@ -1,7 +1,7 @@
 {
   "id": "detect-cheq",
   "name": "Cheq",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "ANTIBOT",
   "lastUpdated": "2024-10-21",
@@ -12,7 +12,7 @@
   "detection": {
     "content": [
       {
-        "confidence": 100,
+        "confidence": 50,
         "description": "Cheq SDK main object",
         "text": "CheqSdk",
         "textRegex": false,
@@ -20,7 +20,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 100,
+        "confidence": 50,
         "description": "Cheq identifier string",
         "text": "\"CHEQ\"",
         "textRegex": false,
@@ -28,7 +28,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 95,
+        "confidence": 50,
         "description": "Cheq invalid user detection",
         "text": "cheq_invalidUsers",
         "textRegex": false,
@@ -36,7 +36,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 85,
+        "confidence": 50,
         "description": "Cheq reference",
         "text": "cheq",
         "textRegex": false,

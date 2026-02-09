@@ -95,7 +95,7 @@ class TurnstileAdvanced extends BaseAdvancedModule {
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🍪 Turnstile Cookies</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Turnstile Cookies</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 
@@ -120,7 +120,7 @@ class TurnstileAdvanced extends BaseAdvancedModule {
                     </div>
                 ` : `
                     <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
-                        <div style="font-size: 48px; margin-bottom: 12px;">🔍</div>
+                        <div style="font-size: 48px; margin-bottom: 12px;"></div>
                         <div style="font-size: 14px;">No Turnstile cookies found</div>
                     </div>
                 `}
@@ -221,7 +221,7 @@ class TurnstileAdvanced extends BaseAdvancedModule {
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🔍 Turnstile Scripts (${scripts.length})</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Turnstile Scripts (${scripts.length})</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 

@@ -79,10 +79,7 @@
     <div class="rule-modal-backdrop"></div>
     <div class="rule-modal-content">
       <div class="rule-modal-header">
-        <div class="rule-modal-title-wrapper">
-          <span id="editRuleModalAction" class="rule-modal-action">Edit</span>
-          <span id="editRuleModalName" class="rule-modal-name">Detection Rule</span>
-        </div>
+        <span id="editRuleModalAction" class="rule-modal-action">Edit</span>
         <button id="closeRuleModal" class="rule-modal-close">
           <svg width="16" height="16" viewBox="0 0 24 24">
             <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
@@ -94,46 +91,37 @@
         <!-- Detector Information Card -->
         <div class="modal-card">
           <div class="modal-card-header">
-            <span class="card-icon icon-info">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M9,13V19H7V13H9M15,15V19H17V15H15M11,11V19H13V11H11Z"/>
-              </svg>
-            </span>
             <h3>Detector Information</h3>
           </div>
           <div class="modal-card-body">
-            <div class="form-group">
-              <label class="form-label">Name</label>
-              <input type="text" id="detectorNameInput" class="form-input" placeholder="Enter detector name">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Category</label>
-              <select id="detectorCategorySelect" class="form-select">
-                <option value="antibot">Anti-Bot</option>
-                <option value="captcha">CAPTCHA</option>
-                <option value="fingerprint">Fingerprint</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Icon</label>
-              <div class="icon-selector-row">
-                <div class="icon-preview">
-                  <img id="currentDetectorIcon" src="" alt="Icon">
-                </div>
-                <button type="button" class="change-icon-btn">Change Icon</button>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Name</label>
+                <input type="text" id="detectorNameInput" class="form-input" placeholder="Detector name">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Category</label>
+                <select id="detectorCategorySelect" class="form-select">
+                  <option value="antibot">Anti-Bot</option>
+                  <option value="captcha">CAPTCHA</option>
+                  <option value="fingerprint">Fingerprint</option>
+                </select>
               </div>
             </div>
-            <div class="form-group">
-              <label class="form-label">
-                <i class="fas fa-user"></i> Author
-              </label>
-              <input
-                type="text"
-                id="detectorAuthorInput"
-                class="form-input"
-                placeholder="Enter author name (default: scrapfly)"
-                maxlength="50">
-              <small class="form-help" id="authorHelp">Who created this detector</small>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Icon</label>
+                <div class="icon-selector-row">
+                  <div class="icon-preview">
+                    <img id="currentDetectorIcon" src="" alt="Icon">
+                  </div>
+                  <button type="button" class="change-icon-btn">Change</button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Author</label>
+                <input type="text" id="detectorAuthorInput" class="form-input" placeholder="scrapfly" maxlength="50">
+              </div>
             </div>
           </div>
         </div>
@@ -141,11 +129,6 @@
         <!-- Badge Color Card -->
         <div class="modal-card">
           <div class="modal-card-header">
-            <span class="card-icon icon-color">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.5,12A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 17.5,9A1.5,1.5 0 0,1 19,10.5A1.5,1.5 0 0,1 17.5,12M14.5,8A1.5,1.5 0 0,1 13,6.5A1.5,1.5 0 0,1 14.5,5A1.5,1.5 0 0,1 16,6.5A1.5,1.5 0 0,1 14.5,8M9.5,8A1.5,1.5 0 0,1 8,6.5A1.5,1.5 0 0,1 9.5,5A1.5,1.5 0 0,1 11,6.5A1.5,1.5 0 0,1 9.5,8M6.5,12A1.5,1.5 0 0,1 5,10.5A1.5,1.5 0 0,1 6.5,9A1.5,1.5 0 0,1 8,10.5A1.5,1.5 0 0,1 6.5,12M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A1.5,1.5 0 0,0 13.5,19.5C13.5,19.11 13.35,18.76 13.11,18.5C12.88,18.23 12.73,17.88 12.73,17.5A1.5,1.5 0 0,1 14.23,16H16A5,5 0 0,0 21,11C21,6.58 16.97,3 12,3Z"/>
-              </svg>
-            </span>
             <h3>Badge Color</h3>
           </div>
           <div class="modal-card-body">
@@ -156,11 +139,8 @@
                 <div class="color-option" style="background: #ef4444;" data-color="#ef4444"></div>
                 <div class="color-option" style="background: #f59e0b;" data-color="#f59e0b"></div>
                 <div class="color-option" style="background: #8b5cf6;" data-color="#8b5cf6"></div>
-                <div class="color-option" style="background: #06b6d4;" data-color="#06b6d4"></div>
-                <div class="color-option" style="background: #eab308;" data-color="#eab308"></div>
-                <div class="color-option" style="background: #6b7280;" data-color="#6b7280"></div>
                 <div class="color-option" style="background: #ec4899;" data-color="#ec4899"></div>
-                <div class="color-option" style="background: #8b4513;" data-color="#8b4513"></div>
+                <div class="color-option" style="background: #eab308;" data-color="#eab308"></div>
                 <div class="color-option rainbow-picker" id="rainbowPicker" title="Custom Color">
                   <span class="custom-color-hex"></span>
                   <svg width="16" height="16" viewBox="0 0 24 24">
@@ -187,11 +167,6 @@
         <!-- Detection Methods Card -->
         <div class="modal-card">
           <div class="modal-card-header">
-            <span class="card-icon icon-search">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
-              </svg>
-            </span>
             <h3>Detection Methods</h3>
           </div>
           <div class="modal-card-body modal-card-body-methods">
@@ -214,12 +189,12 @@
       <div class="rule-modal-body">
         <div class="canvas-color-picker">
           <div class="color-picker-canvas">
-            <canvas id="colorCanvas" width="240" height="160"></canvas>
+            <canvas id="colorCanvas" width="180" height="120"></canvas>
             <div id="colorPickerCursor" class="color-picker-cursor"></div>
           </div>
 
           <div class="hue-strip">
-            <canvas id="hueCanvas" width="20" height="160"></canvas>
+            <canvas id="hueCanvas" width="20" height="120"></canvas>
             <div id="hueSliderCursor" class="hue-slider-cursor"></div>
           </div>
 
@@ -267,7 +242,7 @@
 
       <div class="rule-modal-body">
         <!-- Confidence Level Card -->
-        <div class="modal-card">
+        <div class="modal-card" id="confidenceGroup">
           <div class="modal-card-header">
             <span class="card-icon icon-gauge">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -306,7 +281,6 @@
             <h3>Content Search Scope</h3>
           </div>
           <div class="modal-card-body">
-            <p class="card-description"><strong>Default: Searches entire page.</strong> Enable options below to restrict search to specific areas only.</p>
             <div class="settings-options">
               <div class="setting-option">
                 <div class="option-content">
@@ -333,29 +307,26 @@
             <h3 id="scopeGroupTitle">Scope Settings</h3>
           </div>
           <div class="modal-card-body">
-            <p class="card-description">Configure where to check for matches (request/response/both)</p>
             <div class="settings-options">
               <div class="setting-option">
                 <div class="option-content">
                   <span class="setting-label" id="nameScopeLabel">Name Scope</span>
-                  <p class="option-hint">Where to check for name/field matches (Storage = localStorage/sessionStorage)</p>
+                  <p class="option-hint">Where to check for name/field matches</p>
                 </div>
                 <select id="nameScope" class="scope-select">
                   <option value="request">Request</option>
                   <option value="response">Response</option>
-                  <option value="storage">Storage</option>
                   <option value="all">All</option>
                 </select>
               </div>
-              <div class="setting-option">
+              <div class="setting-option" id="valueScopeRow">
                 <div class="option-content">
                   <span class="setting-label">Value Scope</span>
-                  <p class="option-hint">Where to check for value matches (Storage = localStorage/sessionStorage)</p>
+                  <p class="option-hint">Where to check for value matches</p>
                 </div>
                 <select id="valueScope" class="scope-select">
                   <option value="request">Request</option>
                   <option value="response">Response</option>
-                  <option value="storage">Storage</option>
                   <option value="all">All</option>
                 </select>
               </div>
@@ -374,12 +345,11 @@
             <h3>URL Scope Settings</h3>
           </div>
           <div class="modal-card-body">
-            <p class="card-description">Configure which URLs to check</p>
             <div class="settings-options">
               <div class="setting-option">
                 <div class="option-content">
                   <span class="setting-label">URL Scope</span>
-                  <p class="option-hint">Which URLs to search for matches</p>
+                  <p class="option-hint">Page = current URL | Scripts = page + scripts | All = all requests</p>
                 </div>
                 <select id="textScope" class="scope-select">
                   <option value="page_only">Page</option>
@@ -402,7 +372,6 @@
             <h3>Request Constraints</h3>
           </div>
           <div class="modal-card-body">
-            <p class="card-description">Configure URL and HTTP method filters for payload matching</p>
           <div class="settings-options">
             <!-- URL Pattern Field -->
             <div class="setting-option payload-url-pattern-option">
@@ -471,7 +440,6 @@
                 <label class="http-method-badge" data-method="GET">
                   <input type="radio" name="payloadMethod" id="payloadMethodGet" value="GET">
                   <span class="method-badge-content">
-                    <span class="method-icon">●</span>
                     <span class="method-text">GET</span>
                   </span>
                 </label>
@@ -479,7 +447,6 @@
                 <label class="http-method-badge" data-method="POST">
                   <input type="radio" name="payloadMethod" id="payloadMethodPost" value="POST">
                   <span class="method-badge-content">
-                    <span class="method-icon">●</span>
                     <span class="method-text">POST</span>
                   </span>
                 </label>
@@ -487,7 +454,6 @@
                 <label class="http-method-badge" data-method="PUT">
                   <input type="radio" name="payloadMethod" id="payloadMethodPut" value="PUT">
                   <span class="method-badge-content">
-                    <span class="method-icon">●</span>
                     <span class="method-text">PUT</span>
                   </span>
                 </label>
@@ -495,7 +461,6 @@
                 <label class="http-method-badge" data-method="PATCH">
                   <input type="radio" name="payloadMethod" id="payloadMethodPatch" value="PATCH">
                   <span class="method-badge-content">
-                    <span class="method-icon">●</span>
                     <span class="method-text">PATCH</span>
                   </span>
                 </label>
@@ -503,7 +468,6 @@
                 <label class="http-method-badge" data-method="DELETE">
                   <input type="radio" name="payloadMethod" id="payloadMethodDelete" value="DELETE">
                   <span class="method-badge-content">
-                    <span class="method-icon">●</span>
                     <span class="method-text">DELETE</span>
                   </span>
                 </label>
@@ -511,7 +475,6 @@
                 <label class="http-method-badge" data-method="CUSTOM">
                   <input type="radio" name="payloadMethod" id="payloadMethodCustom" value="CUSTOM">
                   <span class="method-badge-content">
-                    <span class="method-icon">+</span>
                     <span class="method-text">Custom</span>
                   </span>
                 </label>
@@ -526,8 +489,8 @@
           </div>
         </div>
 
-        <!-- Pattern Matching Settings Card -->
-        <div class="modal-card">
+        <!-- Pattern Matching Settings Card (Name Field) -->
+        <div class="modal-card" id="nameFieldOptionsGroup">
           <div class="modal-card-header">
             <span class="card-icon icon-settings">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -537,7 +500,6 @@
             <h3 id="patternOptionsTitle">Pattern Matching Options</h3>
           </div>
           <div class="modal-card-body">
-            <p class="card-description">Configure how the pattern should match</p>
             <div class="settings-options">
               <div class="setting-option">
                 <div class="option-content">
@@ -608,7 +570,6 @@
             <h3>Value Field Options</h3>
           </div>
           <div class="modal-card-body">
-            <p class="card-description">Configure how the value pattern should match</p>
             <div class="settings-options">
               <div class="setting-option">
                 <div class="option-content">
@@ -675,15 +636,13 @@
       </div>
 
       <div class="rule-modal-body">
-        <!-- Step Indicators -->
-        <div class="dom-helper-steps">
-          <div class="dom-step active" id="domStep1">
-            <div class="dom-step-number">1</div>
-            <div class="dom-step-label">Enter Keyword</div>
-          </div>
-          <div class="dom-step" id="domStep2">
-            <div class="dom-step-number">2</div>
-            <div class="dom-step-label">Choose Selector</div>
+        <!-- Contextual Tip -->
+        <div class="step-contextual-tip">
+          <svg class="tip-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,22H14A1,1 0 0,0 15,21V20H9V21Z"/>
+          </svg>
+          <div class="tip-content">
+            <strong>Tip:</strong> Type keywords like "recaptcha", "captcha", "cloudflare" for common selectors, or element types like "button", "iframe", "canvas".
           </div>
         </div>
 
@@ -695,9 +654,6 @@
           <input type="text" id="domKeywordInput"
                  placeholder="Type a keyword (e.g., recaptcha, cloudflare, button, canvas)"
                  autocomplete="off">
-          <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
-            Type what element you want to select, then we'll show relevant selector suggestions.
-          </p>
         </div>
 
         <!-- Step 2: Suggestions -->
@@ -706,31 +662,16 @@
             Suggested Selectors
           </h4>
           <div id="domSuggestions" class="dom-templates">
-            <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">
-              Start typing above to see suggestions...
+            <div class="suggestions-empty-state">
+              <svg class="empty-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15.5,12C18,12 20,14 20,16.5C20,17.38 19.75,18.21 19.31,18.9L22.39,22L21,23.39L17.88,20.32C17.19,20.75 16.37,21 15.5,21C13,21 11,19 11,16.5C11,14 13,12 15.5,12M15.5,14A2.5,2.5 0 0,0 13,16.5A2.5,2.5 0 0,0 15.5,19A2.5,2.5 0 0,0 18,16.5A2.5,2.5 0 0,0 15.5,14M5,3H19A2,2 0 0,1 21,5V13.03C20.5,12.23 19.81,11.54 19,11V5H5V19H9.5C9.81,19.75 10.26,20.42 10.81,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M7,7H17V9H7V7M7,11H12.03C11.23,11.5 10.54,12.19 10,13H7V11M7,15H9.17C9.06,15.5 9,16 9,16.5V17H7V15Z"/>
+              </svg>
+              <div class="empty-title">Start typing to see suggestions</div>
+              <div class="empty-hint">We'll show common selectors matching your search</div>
+              <div class="empty-examples">
+                Try: <code>recaptcha</code> <code>iframe</code> <code>canvas</code> <code>button</code>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <!-- Custom Selector Input -->
-        <div class="dom-custom-section">
-          <label class="dom-custom-label">
-            Selected selector (you can edit this):
-          </label>
-          <input type="text" id="domCustomInput"
-                 placeholder="Your selector will appear here"
-                 class="dom-custom-input"
-                 autocomplete="off">
-          <div style="background: rgba(59,130,246,0.08); border-left: 3px solid var(--accent); padding: 10px; border-radius: 4px; margin-top: 8px;">
-            <p style="font-size: 11px; color: var(--text-primary); margin: 0 0 6px 0; font-weight: 500;">
-              💡 <strong>Selector patterns you can use:</strong>
-            </p>
-            <p style="font-size: 10px; color: var(--text-muted); margin: 0; line-height: 1.6;">
-              Class selector: <code style="background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 3px; color: #93c5fd;">.name</code><br>
-              ID selector: <code style="background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 3px; color: #93c5fd;">#name</code><br>
-              Data attribute: <code style="background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 3px; color: #93c5fd;">[data-name]</code><br>
-              Or use <code style="background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 3px; color: #93c5fd;">[name]</code> as placeholder to customize later
-            </p>
           </div>
         </div>
       </div>
@@ -745,7 +686,7 @@
   <!-- Window Properties Helper Modal -->
   <div id="windowHelperModal" class="rule-modal" style="display: none;">
     <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content" style="max-width: 600px;">
+    <div class="rule-modal-content">
       <div class="rule-modal-header">
         <h2>Window Properties Helper</h2>
         <button id="closeWindowHelper" class="rule-modal-close">
@@ -757,18 +698,28 @@
 
       <div class="rule-modal-body">
         <!-- Step Indicators -->
-        <div class="dom-helper-steps">
+        <div class="dom-helper-steps three-steps" data-progress="1">
           <div class="dom-step active" id="windowStep1">
-            <div class="dom-step-number">1</div>
+            <div class="dom-step-number"><span>1</span></div>
             <div class="dom-step-label">Enter Keyword</div>
           </div>
           <div class="dom-step" id="windowStep2">
-            <div class="dom-step-number">2</div>
+            <div class="dom-step-number"><span>2</span></div>
             <div class="dom-step-label">Choose Property</div>
           </div>
           <div class="dom-step" id="windowStep3">
-            <div class="dom-step-number">3</div>
+            <div class="dom-step-number"><span>3</span></div>
             <div class="dom-step-label">Select Condition</div>
+          </div>
+        </div>
+
+        <!-- Contextual Tip -->
+        <div class="step-contextual-tip">
+          <svg class="tip-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,22H14A1,1 0 0,0 15,21V20H9V21Z"/>
+          </svg>
+          <div class="tip-content">
+            <strong>Tip:</strong> Type keywords like "chrome", "webkit", "eval", "cdc_" to find common bot-detection properties.
           </div>
         </div>
 
@@ -780,9 +731,6 @@
           <input type="text" id="windowKeywordInput"
                  placeholder="Type a keyword (e.g., chrome, webkit, eval, Function)"
                  autocomplete="off">
-          <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
-            Type what global/window property you want to detect, then we'll show relevant suggestions.
-          </p>
         </div>
 
         <!-- Step 2: Suggestions -->
@@ -791,33 +739,21 @@
             Suggested Properties
           </h4>
           <div id="windowSuggestions" class="dom-templates">
-            <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">
-              Start typing above to see suggestions...
+            <div class="suggestions-empty-state">
+              <svg class="empty-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
+              </svg>
+              <div class="empty-title">Start typing to see suggestions</div>
+              <div class="empty-hint">We'll show common window properties matching your search</div>
+              <div class="empty-examples">
+                Try: <code>chrome</code> <code>webkit</code> <code>eval</code> <code>cdc_</code>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Custom Property Input -->
-        <div class="dom-custom-section">
-          <label class="dom-custom-label">
-            Selected property (you can edit this):
-          </label>
-          <input type="text" id="windowCustomInput"
-                 placeholder="Your property path will appear here"
-                 class="dom-custom-input"
-                 autocomplete="off">
-          <div style="background: rgba(59,130,246,0.08); border-left: 3px solid var(--accent); padding: 10px; border-radius: 4px; margin-top: 8px;">
-            <p style="font-size: 11px; color: var(--text-primary); margin: 0 0 6px 0; font-weight: 500;">
-              💡 <strong>Property patterns you can use:</strong>
-            </p>
-            <p style="font-size: 10px; color: var(--text-muted); margin: 0; line-height: 1.6;">
-              Global property: <code style="background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 3px; color: #93c5fd;">property</code><br>
-              Window property: <code style="background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 3px; color: #93c5fd;">window.property</code><br>
-              Navigator property: <code style="background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 3px; color: #93c5fd;">navigator.property</code><br>
-              Document property: <code style="background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 3px; color: #93c5fd;">document.property</code>
-            </p>
-          </div>
-        </div>
+        <!-- Hidden input to store selected property -->
+        <input type="hidden" id="windowCustomInput" value="">
 
         <!-- Step 3: Condition Selection -->
         <div id="windowConditionSection" class="dom-custom-section" style="display: none; margin-top: 20px;">
@@ -825,51 +761,55 @@
             Select Condition Type
           </h4>
           <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">
-            Choose how to check if the property exists:
+            Choose how to check the property value:
           </p>
-          <div id="windowConditionOptions" style="display: flex; flex-direction: column; gap: 8px;">
-            <label class="window-condition-option" style="display: flex; align-items: center; padding: 10px; background: var(--bg-tertiary); border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;">
-              <input type="radio" name="windowCondition" value="typeof object" style="margin-right: 10px;">
-              <div>
-                <div style="font-size: 13px; color: var(--text-primary); font-weight: 500;">typeof object</div>
-                <div style="font-size: 10px; color: var(--text-muted);">Check if property is an object</div>
+          <div class="condition-dropdown" id="conditionDropdownContainer">
+            <button type="button" class="condition-dropdown-trigger" id="conditionDropdownTrigger">
+              <span class="condition-selected-text">Exists</span>
+              <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                <path d="M6 8L1 3h10z"/>
+              </svg>
+            </button>
+            <div class="condition-dropdown-menu" id="conditionDropdownMenu">
+              <div class="condition-group">
+                <div class="condition-group-label">Type</div>
+                <div class="condition-option" data-value="typeof object">Object</div>
+                <div class="condition-option" data-value="typeof function">Function</div>
+                <div class="condition-option" data-value="typeof string">String</div>
+                <div class="condition-option" data-value="typeof number">Number</div>
+                <div class="condition-option" data-value="typeof boolean">Boolean</div>
               </div>
-            </label>
-            <label class="window-condition-option" style="display: flex; align-items: center; padding: 10px; background: var(--bg-tertiary); border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;">
-              <input type="radio" name="windowCondition" value="typeof function" style="margin-right: 10px;">
-              <div>
-                <div style="font-size: 13px; color: var(--text-primary); font-weight: 500;">typeof function</div>
-                <div style="font-size: 10px; color: var(--text-muted);">Check if property is a function</div>
+              <div class="condition-group">
+                <div class="condition-group-label">Existence</div>
+                <div class="condition-option selected" data-value="exists">Exists</div>
+                <div class="condition-option" data-value="truthy">Truthy</div>
+                <div class="condition-option" data-value="falsy">Falsy</div>
               </div>
-            </label>
-            <label class="window-condition-option" style="display: flex; align-items: center; padding: 10px; background: var(--bg-tertiary); border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;">
-              <input type="radio" name="windowCondition" value="typeof string" style="margin-right: 10px;">
-              <div>
-                <div style="font-size: 13px; color: var(--text-primary); font-weight: 500;">typeof string</div>
-                <div style="font-size: 10px; color: var(--text-muted);">Check if property is a string</div>
+              <div class="condition-group">
+                <div class="condition-group-label">Collections</div>
+                <div class="condition-option" data-value="array">Array</div>
+                <div class="condition-option" data-value="has keys">Has keys</div>
               </div>
-            </label>
-            <label class="window-condition-option" style="display: flex; align-items: center; padding: 10px; background: var(--bg-tertiary); border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;">
-              <input type="radio" name="windowCondition" value="typeof boolean" style="margin-right: 10px;">
-              <div>
-                <div style="font-size: 13px; color: var(--text-primary); font-weight: 500;">typeof boolean</div>
-                <div style="font-size: 10px; color: var(--text-muted);">Check if property is a boolean</div>
-              </div>
-            </label>
-            <label class="window-condition-option" style="display: flex; align-items: center; padding: 10px; background: var(--bg-tertiary); border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;">
-              <input type="radio" name="windowCondition" value="exists" checked style="margin-right: 10px;">
-              <div>
-                <div style="font-size: 13px; color: var(--text-primary); font-weight: 500;">exists</div>
-                <div style="font-size: 10px; color: var(--text-muted);">Just check if property exists (default)</div>
-              </div>
-            </label>
+            </div>
+            <input type="hidden" id="windowConditionSelect" value="exists">
           </div>
         </div>
+
       </div>
 
-      <div class="rule-modal-footer">
-        <button id="cancelWindowHelper" class="rule-btn rule-btn-cancel">Cancel</button>
-        <button id="useWindowProperty" class="rule-btn rule-btn-save">Next</button>
+      <div class="rule-modal-footer has-back">
+        <div class="footer-left">
+          <button id="backWindowHelper" class="rule-btn rule-btn-back hidden">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+            Back
+          </button>
+        </div>
+        <div class="footer-right">
+          <button id="cancelWindowHelper" class="rule-btn rule-btn-cancel">Cancel</button>
+          <button id="useWindowProperty" class="rule-btn rule-btn-save">Next: Choose Property</button>
+        </div>
       </div>
     </div>
   </div>
@@ -877,7 +817,7 @@
   <!-- Regex Helper Modal (2-Step) -->
   <div id="regexHelperModal" class="rule-modal" style="display: none;">
     <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content" style="max-width: 600px;">
+    <div class="rule-modal-content">
       <div class="rule-modal-header">
         <h2>Regular Expression Helper</h2>
         <button id="closeRegexHelper" class="rule-modal-close">
@@ -889,14 +829,24 @@
 
       <div class="rule-modal-body">
         <!-- Step Indicators -->
-        <div class="dom-helper-steps">
+        <div class="dom-helper-steps two-steps" data-progress="1">
           <div class="dom-step active" id="regexStep1">
-            <div class="dom-step-number">1</div>
+            <div class="dom-step-number"><span>1</span></div>
             <div class="dom-step-label">What do you need?</div>
           </div>
           <div class="dom-step" id="regexStep2">
-            <div class="dom-step-number">2</div>
+            <div class="dom-step-number"><span>2</span></div>
             <div class="dom-step-label">Choose Pattern</div>
+          </div>
+        </div>
+
+        <!-- Contextual Tip -->
+        <div class="step-contextual-tip">
+          <svg class="tip-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,22H14A1,1 0 0,0 15,21V20H9V21Z"/>
+          </svg>
+          <div class="tip-content">
+            <strong>Tip:</strong> Describe what you want to match: "starts with", "ends with", "digits only", "contains word", etc.
           </div>
         </div>
 
@@ -908,9 +858,6 @@
           <input type="text" id="regexKeywordInput"
                  placeholder="e.g., starts with, ends with, digits, contains, any text"
                  autocomplete="off">
-          <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
-            Type what you want to match, then we'll show relevant regex patterns.
-          </p>
         </div>
 
         <!-- Step 2: Suggestions -->
@@ -919,8 +866,15 @@
             Suggested Patterns
           </h4>
           <div id="regexSuggestions" class="dom-templates">
-            <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">
-              Start typing above to see suggestions...
+            <div class="suggestions-empty-state">
+              <svg class="empty-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19,19H5V5H19M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M17,17H7V14L10,11L7,8V5H17V8L14,11L17,14V17Z"/>
+              </svg>
+              <div class="empty-title">Start typing to see suggestions</div>
+              <div class="empty-hint">We'll show regex patterns matching your description</div>
+              <div class="empty-examples">
+                Try: <code>starts with</code> <code>ends with</code> <code>digits</code> <code>url</code>
+              </div>
             </div>
           </div>
         </div>
@@ -1409,7 +1363,7 @@
   <!-- Whole Word Helper Modal (2-Step) -->
   <div id="wholeWordHelperModal" class="rule-modal" style="display: none;">
     <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content" style="max-width: 600px;">
+    <div class="rule-modal-content">
       <div class="rule-modal-header">
         <h2>Whole Word Matcher</h2>
         <button id="closeWholeWordHelper" class="rule-modal-close">
@@ -1421,14 +1375,24 @@
 
       <div class="rule-modal-body">
         <!-- Step Indicators -->
-        <div class="dom-helper-steps">
+        <div class="dom-helper-steps two-steps" data-progress="1">
           <div class="dom-step active" id="wholeWordStep1">
-            <div class="dom-step-number">1</div>
+            <div class="dom-step-number"><span>1</span></div>
             <div class="dom-step-label">What do you need?</div>
           </div>
           <div class="dom-step" id="wholeWordStep2">
-            <div class="dom-step-number">2</div>
+            <div class="dom-step-number"><span>2</span></div>
             <div class="dom-step-label">View Examples</div>
+          </div>
+        </div>
+
+        <!-- Contextual Tip -->
+        <div class="step-contextual-tip" style="border-color: rgba(16, 185, 129, 0.2); background: rgba(16, 185, 129, 0.08);">
+          <svg class="tip-icon" viewBox="0 0 24 24" fill="#10b981">
+            <path d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,22H14A1,1 0 0,0 15,21V20H9V21Z"/>
+          </svg>
+          <div class="tip-content">
+            <strong>Tip:</strong> Whole word matching prevents partial matches. "test" won't match "testing" or "attest".
           </div>
         </div>
 
@@ -1440,9 +1404,6 @@
           <input type="text" id="wholeWordKeywordInput"
                  placeholder="e.g., cookie name, header name, exact match"
                  autocomplete="off">
-          <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
-            Type your pattern name, and we'll show you how whole word matching works with examples.
-          </p>
         </div>
 
         <!-- Step 2: Examples -->
@@ -1451,8 +1412,12 @@
             How It Works
           </h4>
           <div id="wholeWordExamples" class="dom-templates">
-            <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">
-              Start typing above to see examples...
+            <div class="suggestions-empty-state">
+              <svg class="empty-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+              </svg>
+              <div class="empty-title">Start typing to see examples</div>
+              <div class="empty-hint">We'll show how whole word matching affects your pattern</div>
             </div>
           </div>
         </div>
@@ -1468,7 +1433,7 @@
   <!-- Case Sensitive Helper Modal (2-Step) -->
   <div id="caseSensitiveHelperModal" class="rule-modal" style="display: none;">
     <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content" style="max-width: 600px;">
+    <div class="rule-modal-content">
       <div class="rule-modal-header">
         <h2>Case Sensitive Matcher</h2>
         <button id="closeCaseSensitiveHelper" class="rule-modal-close">
@@ -1480,14 +1445,24 @@
 
       <div class="rule-modal-body">
         <!-- Step Indicators -->
-        <div class="dom-helper-steps">
+        <div class="dom-helper-steps two-steps" data-progress="1">
           <div class="dom-step active" id="caseSensitiveStep1">
-            <div class="dom-step-number">1</div>
+            <div class="dom-step-number"><span>1</span></div>
             <div class="dom-step-label">What do you need?</div>
           </div>
           <div class="dom-step" id="caseSensitiveStep2">
-            <div class="dom-step-number">2</div>
+            <div class="dom-step-number"><span>2</span></div>
             <div class="dom-step-label">View Examples</div>
+          </div>
+        </div>
+
+        <!-- Contextual Tip -->
+        <div class="step-contextual-tip" style="border-color: rgba(239, 68, 68, 0.2); background: rgba(239, 68, 68, 0.08);">
+          <svg class="tip-icon" viewBox="0 0 24 24" fill="#ef4444">
+            <path d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,22H14A1,1 0 0,0 15,21V20H9V21Z"/>
+          </svg>
+          <div class="tip-content">
+            <strong>Tip:</strong> Case sensitive means "Test", "test", and "TEST" are all different. Enable for exact matching.
           </div>
         </div>
 
@@ -1499,9 +1474,6 @@
           <input type="text" id="caseSensitiveKeywordInput"
                  placeholder="e.g., cookie name, header, class name"
                  autocomplete="off">
-          <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
-            Type your pattern, and we'll show how case sensitivity affects matching.
-          </p>
         </div>
 
         <!-- Step 2: Examples -->
@@ -1510,8 +1482,12 @@
             Case Sensitivity Examples
           </h4>
           <div id="caseSensitiveExamples" class="dom-templates">
-            <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">
-              Start typing above to see examples...
+            <div class="suggestions-empty-state">
+              <svg class="empty-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2,4V7H7V19H10V7H15V4H2M21,9H12V12H15V19H18V12H21V9Z"/>
+              </svg>
+              <div class="empty-title">Start typing to see examples</div>
+              <div class="empty-hint">We'll show how case sensitivity affects your pattern</div>
             </div>
           </div>
         </div>

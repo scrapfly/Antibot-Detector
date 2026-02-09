@@ -1,0 +1,16 @@
+﻿{
+    "generatedAt":  "2026-02-09T13:21:17.9658934+01:00",
+    "repoRoot":  "D:\\Proton Drive\\diego\\Other computers\\PC\\repos\\Github_Repos\\Scrapfly\\src",
+    "filesScanned":  105,
+    "counts":  {
+                   "windowAssignments":  65,
+                   "moduleExports":  59,
+                   "prototypeRegistry":  {
+                                             "rulesPrototype":  98,
+                                             "detectionRequests":  17,
+                                             "settingsUI":  69,
+                                             "settingsRuntime":  30,
+                                             "total":  214
+                                         }
+               }
+}

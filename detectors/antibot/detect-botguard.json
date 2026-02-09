@@ -1,7 +1,7 @@
 {
   "id": "detect-botguard",
   "name": "Google BotGuard",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Anti-Bot",
   "lastUpdated": "2025-01-08 00:00:00",
@@ -10,20 +10,6 @@
   "description": "Google's proprietary bot detection system used in reCAPTCHA, YouTube, and other Google services",
   "detection": {
     "cookie": [
-      {
-        "name": "_+Secure-.*",
-        "nameRegex": true,
-        "confidence": 85,
-        "description": "BotGuard secure cookie pattern - matches _Secure- or __Secure- prefixes",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "all",
-        "valueScope": "all"
-      },
       {
         "name": "_+Secure-[0-9I]?PSID.*",
         "nameRegex": true,

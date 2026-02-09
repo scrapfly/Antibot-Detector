@@ -63,7 +63,7 @@ async function funcaptchaStartCapture(tabId) {
         try {
             await showNotification(tabId, {
                 type: 'loading',
-                title: '🔴 FunCaptcha Capture Active',
+                title: 'FunCaptcha Capture Active',
                 message: 'Please reload the page to trigger FunCaptcha challenge (60s timeout)',
                 duration: 60000
             });
@@ -84,7 +84,7 @@ async function funcaptchaStartCapture(tabId) {
             if (typeof showNotification === 'function') {
                 showNotification(tabId, {
                     type: 'info',
-                    title: '⏳ Page Loading',
+                    title: 'Page Loading',
                     message: 'Page is loading, please wait...',
                     duration: 5000
                 }).catch(() => {});
@@ -217,14 +217,14 @@ async function funcaptchaStopCapture(tabId, reason = 'manual') {
             if (reason === 'captured' && state.capturedData.length > 0) {
                 await showNotification(tabId, {
                     type: 'success',
-                    title: '✅ FunCaptcha Captured Successfully',
+                    title: 'FunCaptcha Captured Successfully',
                     message: `Captured ${state.capturedData.length} challenge(s)`,
                     duration: 5000
                 });
             } else if (reason === 'timeout') {
                 await showNotification(tabId, {
                     type: 'warning',
-                    title: '⏱️ Capture Timeout',
+                    title: 'Capture Timeout',
                     message: 'No FunCaptcha challenge detected (60s timeout)',
                     duration: 5000
                 });
@@ -318,7 +318,7 @@ function handleFunCaptchaMessage(request, sendResponse, captureState) {
                     if (typeof showNotification === 'function') {
                         await showNotification(request.tabId, {
                             type: 'loading',
-                            title: '🔍 Analyzing FunCaptcha Scripts',
+                            title: 'Analyzing FunCaptcha Scripts',
                             message: 'Please wait while we collect script URLs...',
                             duration: 15000
                         });

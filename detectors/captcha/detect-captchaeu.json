@@ -1,7 +1,7 @@
 {
   "id": "detect-captchaeu",
   "name": "Captcha.eu",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "CAPTCHA",
   "lastUpdated": "2024-10-21",
@@ -21,7 +21,7 @@
         "textScope": "all"
       },
       {
-        "confidence": 95,
+        "confidence": 100,
         "description": "Captcha.eu API endpoint",
         "text": "/api/captcha",
         "textRegex": false,
@@ -41,7 +41,7 @@
     ],
     "content": [
       {
-        "confidence": 100,
+        "confidence": 50,
         "description": "Captcha.eu main object",
         "text": "CaptchaEU",
         "textRegex": false,
@@ -49,7 +49,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 95,
+        "confidence": 50,
         "description": "Captcha.eu reference",
         "text": "captchaeu",
         "textRegex": false,
@@ -57,7 +57,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 90,
+        "confidence": 50,
         "description": "Captcha.eu widget reference",
         "text": "captcha.eu/widget",
         "textRegex": false,
@@ -68,7 +68,7 @@
     "dom": [
       {
         "selector": ".captchaeu-widget",
-        "confidence": 95,
+        "confidence": 100,
         "description": "Captcha.eu widget container",
         "selectorRegex": false,
         "selectorWholeWord": false,
@@ -84,7 +84,7 @@
       },
       {
         "selector": "div[data-captchaeu-sitekey]",
-        "confidence": 95,
+        "confidence": 100,
         "description": "Captcha.eu widget with sitekey",
         "selectorRegex": false,
         "selectorWholeWord": false,
@@ -101,7 +101,7 @@
       {
         "path": "CaptchaEU.render",
         "condition": "typeof function",
-        "confidence": 90,
+        "confidence": 100,
         "description": "Captcha.eu render function"
       }
     ]

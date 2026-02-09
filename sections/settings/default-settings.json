@@ -3,7 +3,9 @@
   "settings": {
     "general": {
       "notificationsEnabled": true,
-      "debugMode": false
+      "debugMode": false,
+      "logCollectorEnabled": false,
+      "logCollectorMaxLogs": 5000
     },
     "detection": {
       "cacheDuration": 12,
@@ -12,7 +14,8 @@
       "blacklistedDomains": []
     },
     "jsApi": {
-      "enableJsApi": true
+      "enableJsApi": true,
+      "logToConsole": false
     },
     "webhook": {
       "enableWebhook": false,

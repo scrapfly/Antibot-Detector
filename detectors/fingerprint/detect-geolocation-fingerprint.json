@@ -1,7 +1,7 @@
 {
   "id": "detect-geolocation-fingerprint",
   "name": "Geolocation Fingerprint",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Fingerprint",
   "lastUpdated": "2025-01-21",
@@ -14,13 +14,13 @@
       {
         "description": "Gets current user location",
         "enabled": true,
-        "confidence": 95,
+        "confidence": 65,
         "target": "Geolocation.prototype.getCurrentPosition"
       },
       {
         "description": "Watches user location continuously",
         "enabled": true,
-        "confidence": 95,
+        "confidence": 65,
         "target": "Geolocation.prototype.watchPosition"
       }
     ],
@@ -41,7 +41,7 @@
         "text": "navigator.geolocation",
         "scope": "scripts",
         "description": "Geolocation API usage",
-        "confidence": 90,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
@@ -50,7 +50,7 @@
         "text": "getCurrentPosition",
         "scope": "scripts",
         "description": "Location acquisition in scripts",
-        "confidence": 90,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
@@ -59,7 +59,7 @@
         "text": "watchPosition",
         "scope": "scripts",
         "description": "Continuous location tracking",
-        "confidence": 85,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false

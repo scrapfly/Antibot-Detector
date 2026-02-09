@@ -2,8 +2,6 @@
  * ImpervaAdvanced - Using BaseAdvancedModule Template System
  *
  * This module uses the new base template system for cleaner, more maintainable code.
- * OLD VERSION: ~1085 lines (see ImpervaAdvanced.old.js)
- * NEW VERSION: ~330 lines (77% reduction!)
  *
  * The base class handles:
  * - Message sending
@@ -197,11 +195,11 @@ class ImpervaAdvanced extends BaseAdvancedModule {
                 <label class="advanced-modal-label">Security Components</label>
                 <div class="advanced-modal-info-row">
                     <span class="advanced-modal-info-label">reese84</span>
-                    <span class="advanced-modal-info-value">${data.requiresReese84 ? '✅ Found' : '❌ Not found'}</span>
+                    <span class="advanced-modal-info-value">${data.requiresReese84 ? 'Found' : 'Not found'}</span>
                 </div>
                 <div class="advanced-modal-info-row">
                     <span class="advanced-modal-info-label">utmvc</span>
-                    <span class="advanced-modal-info-value">${data.requiresUtmvc ? '✅ Found' : '❌ Not found'}</span>
+                    <span class="advanced-modal-info-value">${data.requiresUtmvc ? 'Found' : 'Not found'}</span>
                 </div>
             </div>
 
@@ -327,11 +325,11 @@ class ImpervaAdvanced extends BaseAdvancedModule {
             // Get current tab
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
             if (!tab) {
-                Logger.error('NETWORK', '[IMPERVA-EXTRACT] ❌ No active tab found');
+                Logger.error('NETWORK', '[IMPERVA-EXTRACT] No active tab found');
                 throw new Error('No active tab found');
             }
 
-            Logger.network('[IMPERVA-EXTRACT] ✓ Tab found:', { id: tab.id, url: tab.url, title: tab.title });
+            Logger.network('[IMPERVA-EXTRACT] Tab found:', { id: tab.id, url: tab.url, title: tab.title });
 
             // Delete Imperva-related cookies to force regeneration
             Logger.network('[IMPERVA-EXTRACT] Step 2: Deleting Imperva cookies...');
@@ -352,15 +350,15 @@ class ImpervaAdvanced extends BaseAdvancedModule {
                             url: tab.url,
                             name: cookie.name
                         });
-                        Logger.network(`[IMPERVA-EXTRACT] ✓ Deleted cookie: ${cookie.name}`);
+                        Logger.network(`[IMPERVA-EXTRACT] Deleted cookie: ${cookie.name}`);
                         deletedCount++;
                     }
                 } catch (err) {
-                    Logger.network(`[IMPERVA-EXTRACT] ⚠️ Could not delete cookie ${cookieName}:`, err.message);
+                    Logger.network(`[IMPERVA-EXTRACT] Could not delete cookie ${cookieName}:`, err.message);
                 }
             }
 
-            Logger.network(`[IMPERVA-EXTRACT] ✓ Deleted ${deletedCount} cookies total`);
+            Logger.network(`[IMPERVA-EXTRACT] Deleted ${deletedCount} cookies total`);
 
             // Send message to start extraction mode
             Logger.network('[IMPERVA-EXTRACT] Step 3: Sending message to background to start extraction...');
@@ -374,7 +372,7 @@ class ImpervaAdvanced extends BaseAdvancedModule {
             Logger.network('[IMPERVA-EXTRACT] Response error:', response?.error);
 
             if (response && response.status === 'success') {
-                Logger.network('[IMPERVA-EXTRACT] ✓ Extraction mode enabled successfully');
+                Logger.network('[IMPERVA-EXTRACT] Extraction mode enabled successfully');
                 Logger.network('[IMPERVA-EXTRACT] Step 4: Showing analyzing notification...');
 
                 // Send message to background to show analyzing notification BEFORE reload
@@ -387,12 +385,12 @@ class ImpervaAdvanced extends BaseAdvancedModule {
 
                 // Reload the page to trigger Imperva scripts
                 await chrome.tabs.reload(tab.id);
-                Logger.network('[IMPERVA-EXTRACT] ✓ Page reload initiated');
+                Logger.network('[IMPERVA-EXTRACT] Page reload initiated');
 
                 // Show success notification
                 NotificationHelper.info(AdvancedUtils.notifications.analyzeScripts.start('Imperva'));
             } else {
-                Logger.error('NETWORK', '[IMPERVA-EXTRACT] ❌ Invalid response from background');
+                Logger.error('NETWORK', '[IMPERVA-EXTRACT] Invalid response from background');
                 Logger.error('NETWORK', '[IMPERVA-EXTRACT] Expected: { status: "success" }');
                 Logger.error('NETWORK', '[IMPERVA-EXTRACT] Received:', JSON.stringify(response));
                 throw new Error(response?.error || 'Failed to enable extraction mode. Check background console for details.');
@@ -400,7 +398,7 @@ class ImpervaAdvanced extends BaseAdvancedModule {
 
             Logger.network('[IMPERVA-EXTRACT] ========== EXTRACTION STARTED ==========');
         } catch (error) {
-            Logger.error('NETWORK', '[IMPERVA-EXTRACT] ❌ Failed to start extraction:', error);
+            Logger.error('NETWORK', '[IMPERVA-EXTRACT] Failed to start extraction:', error);
             Logger.error('NETWORK', '[IMPERVA-EXTRACT] Error stack:', error.stack);
             NotificationHelper.error('Failed to start extraction: ' + error.message);
         }
@@ -423,7 +421,7 @@ class ImpervaAdvanced extends BaseAdvancedModule {
             const match = url.match(utmvcPattern);
             if (match) {
                 utmvcScriptPath = match[0];
-                Logger.network('[IMPERVA-EXTRACT] ✓ Found UTMVC script path:', utmvcScriptPath);
+                Logger.network('[IMPERVA-EXTRACT] Found UTMVC script path:', utmvcScriptPath);
                 break;
             }
         }
@@ -436,15 +434,15 @@ class ImpervaAdvanced extends BaseAdvancedModule {
             if (match && match[1]) {
                 reeseSensorPath = match[1]; // Base path: /abc123/456
                 reeseScriptPath = match[1] + (match[2] || ''); // Full path with query/hash
-                Logger.network('[IMPERVA-EXTRACT] ✓ Found Reese84 script path:', reeseScriptPath);
-                Logger.network('[IMPERVA-EXTRACT] ✓ Found Reese84 sensor path:', reeseSensorPath);
+                Logger.network('[IMPERVA-EXTRACT] Found Reese84 script path:', reeseScriptPath);
+                Logger.network('[IMPERVA-EXTRACT] Found Reese84 sensor path:', reeseSensorPath);
                 break;
             }
         }
 
         // If nothing found, log for debugging
         if (!utmvcScriptPath && !reeseScriptPath) {
-            Logger.network('[IMPERVA-EXTRACT] ⚠️ No script paths matched. Sample URLs:');
+            Logger.network('[IMPERVA-EXTRACT] No script paths matched. Sample URLs:');
             scriptUrls.slice(0, 5).forEach(url => {
                 Logger.network('[IMPERVA-EXTRACT]   -', url);
             });
@@ -927,7 +925,7 @@ public static string GenerateUtmvcScriptPath()
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 700px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">📊 Imperva Analysis</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Imperva Analysis</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 
@@ -945,11 +943,10 @@ public static string GenerateUtmvcScriptPath()
 
                 ${impervaScripts.length > 0 ? `
                     <!-- Imperva Scripts Section -->
-                    <h4 style="font-size: 13px; color: var(--text-secondary); margin: 16px 0 8px 0; text-transform: uppercase;">📜 IMPERVA SCRIPTS</h4>
+                    <h4 style="font-size: 13px; color: var(--text-secondary); margin: 16px 0 8px 0; text-transform: uppercase;">IMPERVA SCRIPTS</h4>
 
                     <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 12px;">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                            <span style="font-size: 18px;">⚙️</span>
                             <span style="font-weight: 600; color: var(--text-primary); font-size: 14px;">Script Analysis</span>
                         </div>
                         <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 12px;">
@@ -983,7 +980,6 @@ public static string GenerateUtmvcScriptPath()
                 ${hasScriptPaths ? `
                     <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
                         <button class="export-code-btn modal-export-code-btn">
-                            <span>📤</span>
                             Export Code
                         </button>
                     </div>
@@ -991,7 +987,6 @@ public static string GenerateUtmvcScriptPath()
 
                 ${impervaScripts.length === 0 ? `
                     <div style="text-align: center; padding: 48px 16px; opacity: 0.7;">
-                        <div style="font-size: 64px; margin-bottom: 16px;">🔍</div>
                         <div style="font-size: 16px; color: var(--text-primary); margin-bottom: 8px;">No scripts detected</div>
                         <div style="font-size: 13px; color: var(--text-secondary);">Imperva may not be present on this page</div>
                     </div>
@@ -1066,7 +1061,6 @@ public static string GenerateUtmvcScriptPath()
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 85vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 18px;">📜</span>
                         <h3 style="margin: 0; font-size: 16px; color: var(--text-primary); font-weight: 600;">Script Parsing Code Generator</h3>
                     </div>
                     <button class="advanced-modal-close-btn">×</button>
@@ -1140,7 +1134,7 @@ public static string GenerateUtmvcScriptPath()
 
                 <!-- Browser Console Note -->
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding: 10px; background: var(--bg-tertiary); border-radius: 4px;">
-                    <span style="font-size: 14px;">ℹ️</span>
+                    <span style="font-size: 14px;"></span>
                     <span style="font-size: 11px; color: var(--text-secondary); line-height: 1.4;">Browser console code for intercepting and parsing Imperva scripts</span>
                 </div>
             </div>
@@ -1253,7 +1247,7 @@ public static string GenerateUtmvcScriptPath()
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🍪 Imperva Cookies</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Imperva Cookies</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 
@@ -1270,7 +1264,6 @@ public static string GenerateUtmvcScriptPath()
 
                 ${foundCookies.length === 0 ? `
                     <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
-                        <div style="font-size: 48px; margin-bottom: 12px;">🔍</div>
                         <div style="font-size: 14px;">No Imperva cookies found</div>
                     </div>
                 ` : `

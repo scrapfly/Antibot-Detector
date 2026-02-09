@@ -12,7 +12,7 @@ Logger.network('[ShapeSecurityAdvanced] Loading... Dependencies check:', {
 });
 
 class ShapeSecurityAdvanced extends BaseAdvancedModule {
-    // OPTIMIZATION Phase 6B: Cache for code generation templates
+    // Cache for code generation templates
     // Eliminates 80-90% of template generation overhead on repeat exports
     static codeTemplateCache = new Map();
     static CODE_CACHE_MAX_SIZE = 20;
@@ -370,13 +370,12 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                 <!-- Capture Requirements -->
                 <div style="background: var(--bg-tertiary); border-radius: 6px; padding: 16px; margin-bottom: 16px;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                        <span style="font-size: 18px;">🔍</span>
                         <h4 style="margin: 0; font-size: 13px; color: var(--text-primary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Capture Requirements</h4>
                     </div>
 
                     <div style="background: var(--bg-primary); border: 1px solid var(--border); border-radius: 4px; padding: 12px;">
                         <div style="font-size: 12px; color: var(--text-primary);">
-                            🍪 Cookie + 📡 Headers
+                            Cookie + Headers
                         </div>
                     </div>
                 </div>
@@ -468,11 +467,11 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                 const valueMatches = c.value && (c.value.includes('|1|0|') || c.value.includes('|1|1|'));
 
                 Logger.network(`[ShapeSecurity] Cookie ${i + 1}: "${c.name}"`);
-                Logger.network(`[ShapeSecurity]   ├─ Name length: ${c.name.length} ${nameMatches ? '✅' : '❌'} (need: 8)`);
-                Logger.network(`[ShapeSecurity]   ├─ Value contains |1|0| or |1|1|: ${valueMatches ? '✅' : '❌'}`);
+                Logger.network(`[ShapeSecurity]   ├─ Name length: ${c.name.length} ${nameMatches ? 'YES' : 'NO'} (need: 8)`);
+                Logger.network(`[ShapeSecurity]   ├─ Value contains |1|0| or |1|1|: ${valueMatches ? 'YES' : 'NO'}`);
 
                 if (nameMatches && valueMatches) {
-                    Logger.network(`[ShapeSecurity]   └─ MATCH! ✅ This is a Shape Security cookie`);
+                    Logger.network(`[ShapeSecurity]   └─ MATCH! This is a Shape Security cookie`);
                     shapeCookie = c;
                     break; // Found match, stop searching
                 } else {
@@ -483,7 +482,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             // DEBUG: Log final result
             Logger.network('[ShapeSecurity] ===== RESULT =====');
             if (shapeCookie) {
-                Logger.network('[ShapeSecurity] ✅ Shape Security cookie found!');
+                Logger.network('[ShapeSecurity] Shape Security cookie found!');
                 Logger.network('[ShapeSecurity] Cookie details:', {
                     name: shapeCookie.name,
                     domain: shapeCookie.domain,
@@ -495,7 +494,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                     fullValue: shapeCookie.value
                 });
             } else {
-                Logger.network('[ShapeSecurity] ❌ No Shape Security cookie found');
+                Logger.network('[ShapeSecurity] No Shape Security cookie found');
                 Logger.network('[ShapeSecurity] Possible reasons:');
                 Logger.network('[ShapeSecurity]   - No cookies with 8-character names');
                 Logger.network('[ShapeSecurity]   - No cookies with |1|0| or |1|1| pattern in value');
@@ -538,7 +537,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
 
         resultDiv.innerHTML = `
             <div style="background: var(--bg-secondary); border-radius: 8px; padding: 24px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
-                <h3 style="margin: 0 0 16px 0;">📡 Shape Security Headers</h3>
+                <h3 style="margin: 0 0 16px 0;">Shape Security Headers</h3>
                 <div class="details-grid">
                     ${headersList || '<div class="detail-empty">No dynamic headers found</div>'}
                 </div>
@@ -576,7 +575,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🍪 Shape Security Cookies</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Shape Security Cookies</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 
@@ -600,7 +599,6 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                     </div>
                 ` : `
                     <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
-                        <div style="font-size: 48px; margin-bottom: 12px;">🔍</div>
                         <div style="font-size: 14px;">No Shape Security cookies found</div>
                     </div>
                 `}
@@ -653,11 +651,11 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             // Get current tab
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
             if (!tab) {
-                Logger.error('NETWORK', '[SHAPESECURITY-EXTRACT] ❌ No active tab found');
+                Logger.error('NETWORK', '[SHAPESECURITY-EXTRACT] No active tab found');
                 throw new Error('No active tab found');
             }
 
-            Logger.network('[SHAPESECURITY-EXTRACT] ✓ Tab found:', { id: tab.id, url: tab.url, title: tab.title });
+            Logger.network('[SHAPESECURITY-EXTRACT] Tab found:', { id: tab.id, url: tab.url, title: tab.title });
 
             // Store extraction mode flag
             Logger.network('[SHAPESECURITY-EXTRACT] Step 2: Setting up extraction mode...');
@@ -668,7 +666,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             const extractionListener = (message) => {
                 Logger.network('[SHAPESECURITY-EXTRACT] Received message:', message.type);
                 if (message.type === 'SHAPESECURITY_EXTRACTION_RESULT') {
-                    Logger.network('[SHAPESECURITY-EXTRACT] ✅ EXTRACTION RESULT RECEIVED!');
+                    Logger.network('[SHAPESECURITY-EXTRACT] EXTRACTION RESULT RECEIVED!');
                     Logger.network('[SHAPESECURITY-EXTRACT] Extracted data:', message.extractedData);
 
                     // Display the script data
@@ -684,7 +682,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             };
 
             chrome.runtime.onMessage.addListener(extractionListener);
-            Logger.network('[SHAPESECURITY-EXTRACT] ✓ Listener added');
+            Logger.network('[SHAPESECURITY-EXTRACT] Listener added');
 
             // Send message to start extraction mode
             Logger.network('[SHAPESECURITY-EXTRACT] Step 4: Sending message to background to start extraction...');
@@ -695,7 +693,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             Logger.network('[SHAPESECURITY-EXTRACT] Background response:', response);
 
             if (response && response.status === 'success') {
-                Logger.network('[SHAPESECURITY-EXTRACT] ✓ Extraction mode enabled successfully');
+                Logger.network('[SHAPESECURITY-EXTRACT] Extraction mode enabled successfully');
                 Logger.network('[SHAPESECURITY-EXTRACT] Step 5: Showing analyzing notification...');
 
                 // Show analyzing notification before reload
@@ -708,7 +706,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
 
                 // Reload the page to trigger Shape Security scripts
                 await chrome.tabs.reload(tab.id);
-                Logger.network('[SHAPESECURITY-EXTRACT] ✓ Page reload initiated');
+                Logger.network('[SHAPESECURITY-EXTRACT] Page reload initiated');
 
                 // Show success notification
                 NotificationHelper.info(AdvancedUtils.notifications.analyzeScripts.start('Shape Security'));
@@ -718,7 +716,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
 
             Logger.network('[SHAPESECURITY-EXTRACT] ========== EXTRACTION STARTED ==========');
         } catch (error) {
-            Logger.error('NETWORK', '[SHAPESECURITY-EXTRACT] ❌ Failed to start extraction:', error);
+            Logger.error('NETWORK', '[SHAPESECURITY-EXTRACT] Failed to start extraction:', error);
             Logger.error('NETWORK', '[SHAPESECURITY-EXTRACT] Error stack:', error.stack);
             NotificationHelper.error('Failed to start extraction: ' + error.message);
         }
@@ -772,8 +770,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
 
                     <div style="margin-bottom: 12px;">
                         <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
-                            <span style="font-size: 16px;">⚙️</span>
-                            <span style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">Script Analysis</span>
+                                <span style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">Script Analysis</span>
                         </div>
                         <div style="font-size: 11px; color: var(--text-muted); margin-left: 22px;">
                             Found ${totalScripts} relevant script${totalScripts !== 1 ? 's' : ''}
@@ -814,7 +811,6 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                     id="exportCodeBtn"
                     style="width: 100%; background: #2196F3; color: white; border: none; border-radius: 6px; padding: 12px; font-size: 13px; cursor: pointer; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px;"
                 >
-                    <span style="font-size: 16px;">📄</span>
                     Export Code
                 </button>
             </div>
@@ -885,7 +881,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             });
             Logger.network('[ShapeSecurity] Click listener added successfully');
         } else {
-            Logger.error('NETWORK', '[ShapeSecurity] ❌ Export code button not found in modal!');
+            Logger.error('NETWORK', '[ShapeSecurity] Export code button not found in modal!');
             Logger.error('NETWORK', '[ShapeSecurity] Modal HTML:', modal.innerHTML.substring(0, 500));
         }
     }
@@ -905,7 +901,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 700px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🔍 Shape Security Scripts Analysis</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Shape Security Scripts Analysis</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 
@@ -926,7 +922,6 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
 
                 ${scripts.length === 0 ? `
                     <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
-                        <div style="font-size: 48px; margin-bottom: 12px;">🔍</div>
                         <div style="font-size: 14px; color: var(--text-secondary);">No Shape Security scripts found</div>
                         <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">Scripts with "seed=" parameters or "shape" in URL will appear here</div>
                     </div>
@@ -934,7 +929,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                     ${scriptsWithSeeds.length > 0 ? `
                         <div style="margin-bottom: 20px;">
                             <div style="font-weight: 500; color: var(--success); margin-bottom: 12px; font-size: 14px;">
-                                🌱 Scripts with Seed Parameters (${scriptsWithSeeds.length})
+                                Scripts with Seed Parameters (${scriptsWithSeeds.length})
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 12px;">
                                 ${scriptsWithSeeds.map(script => `
@@ -963,7 +958,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                     ${scriptsWithoutSeeds.length > 0 ? `
                         <div>
                             <div style="font-weight: 500; color: var(--text-muted); margin-bottom: 12px; font-size: 14px;">
-                                📜 Other Shape Security Scripts (${scriptsWithoutSeeds.length})
+                                Other Shape Security Scripts (${scriptsWithoutSeeds.length})
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 8px;">
                                 ${scriptsWithoutSeeds.map(script => `
@@ -1096,7 +1091,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
         exportModal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 900px; max-height: 90vh; overflow: hidden; width: 95%; display: flex; flex-direction: column;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-shrink: 0;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">📜 Script Parsing Code Generator</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Script Parsing Code Generator</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 
@@ -1125,27 +1120,27 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
                 <div style="position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column;">
                     <div class="code-container" data-lang="javascript" style="display: flex; flex-direction: column; height: 100%;">
                         <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.javascript}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">🌐 Browser console code for intercepting and parsing Shape Security scripts</div>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">Browser console code for intercepting and parsing Shape Security scripts</div>
                     </div>
 
                     <div class="code-container" data-lang="python" style="display: none; flex-direction: column; height: 100%;">
                         <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.python}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">🐍 Python script with requests and BeautifulSoup</div>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">Python script with requests and BeautifulSoup</div>
                     </div>
 
                     <div class="code-container" data-lang="nodejs" style="display: none; flex-direction: column; height: 100%;">
                         <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.nodejs}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">📦 Node.js script with axios and cheerio</div>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">Node.js script with axios and cheerio</div>
                     </div>
 
                     <div class="code-container" data-lang="php" style="display: none; flex-direction: column; height: 100%;">
                         <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.php}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">🐘 PHP script with cURL and DOMDocument</div>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">PHP script with cURL and DOMDocument</div>
                     </div>
 
                     <div class="code-container" data-lang="go" style="display: none; flex-direction: column; height: 100%;">
                         <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.go}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">🐹 Go with net/http and goquery</div>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">Go with net/http and goquery</div>
                     </div>
 
                     <!-- Copy Button -->
@@ -1246,12 +1241,12 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
 
     /**
      * Generate parsing code for Shape Security script URLs
-     * OPTIMIZED Phase 6B: Template caching for 80-90% faster repeat exports
+     * Template caching for faster repeat exports
      */
     generateParsingCode(scripts, options) {
         const { hasInitJs, hasVendor2, hasSeeds, scriptType = 'all' } = options;
 
-        // OPTIMIZATION: Generate cache key from script pattern characteristics
+        // Generate cache key from script pattern characteristics
         const cacheKey = JSON.stringify({
             scriptType,
             hasInitJs,
@@ -1265,7 +1260,7 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
             }
         });
 
-        // OPTIMIZATION: Return cached templates if available
+        // Return cached templates if available
         if (ShapeSecurityAdvanced.codeTemplateCache.has(cacheKey)) {
             Logger.network('[ShapeSecurityAdvanced] Using cached code templates');
             return ShapeSecurityAdvanced.codeTemplateCache.get(cacheKey);
@@ -1622,10 +1617,10 @@ func FindShapeSecurityScripts(html string) []string {
 // }`
         };
 
-        // OPTIMIZATION: Cache the generated templates
+        // Cache the generated templates
         ShapeSecurityAdvanced.codeTemplateCache.set(cacheKey, templates);
 
-        // OPTIMIZATION: Limit cache size (LRU-like eviction)
+        // Limit cache size (LRU-like eviction)
         if (ShapeSecurityAdvanced.codeTemplateCache.size > ShapeSecurityAdvanced.CODE_CACHE_MAX_SIZE) {
             const firstKey = ShapeSecurityAdvanced.codeTemplateCache.keys().next().value;
             ShapeSecurityAdvanced.codeTemplateCache.delete(firstKey);
@@ -1660,5 +1655,5 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = ShapeSecurityAdvanced;
 } else if (typeof window !== 'undefined') {
     window.ShapeSecurityAdvanced = ShapeSecurityAdvanced;
-    Logger.network('[ShapeSecurityAdvanced] ✓ Loaded and exported to window.ShapeSecurityAdvanced');
+    Logger.network('[ShapeSecurityAdvanced] Loaded and exported to window.ShapeSecurityAdvanced');
 }

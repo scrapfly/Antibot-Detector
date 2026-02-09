@@ -130,7 +130,7 @@ class HCaptchaAdvanced extends BaseAdvancedModule {
                         <button class="advanced-modal-close-btn">×</button>
                     </div>
                     <div style="padding: 32px 16px; opacity: 0.7;">
-                        <div style="font-size: 48px; margin-bottom: 12px;">🔍</div>
+                        <div style="font-size: 48px; margin-bottom: 12px;"></div>
                         <div style="color: var(--text-secondary);">${message || 'hCaptcha not detected. Please reload the page with hCaptcha loaded.'}</div>
                     </div>
                 </div>
@@ -152,7 +152,7 @@ class HCaptchaAdvanced extends BaseAdvancedModule {
                         <div style="background: var(--bg-tertiary); padding: 14px; border-radius: 6px;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <span style="color: var(--text-secondary); font-size: 12px;">Enterprise Mode</span>
-                                <span style="font-weight: 600; font-size: 18px;">${isEnterprise ? '✅' : '❌'}</span>
+                                <span style="font-weight: 600; font-size: 18px;">${isEnterprise ? 'Yes' : 'No'}</span>
                             </div>
                         </div>
                     </div>
@@ -187,7 +187,7 @@ class HCaptchaAdvanced extends BaseAdvancedModule {
         return historyItems.map(item => {
             const timestamp = item.timestamp ? new Date(item.timestamp).toLocaleString() : 'Unknown';
             const version = item.version || 'N/A';
-            const isEnterprise = item.isEnterprise ? '✅ Yes' : '❌ No';
+            const isEnterprise = item.isEnterprise ? 'Yes' : 'No';
             const siteKey = item.websiteKey || 'N/A';
             const websiteUrl = item.websiteURL || 'N/A';
 
@@ -238,7 +238,7 @@ class HCaptchaAdvanced extends BaseAdvancedModule {
         const version = data.version || 'N/A';
         const siteKey = data.websiteKey || 'N/A';
         const websiteUrl = data.websiteURL || 'N/A';
-        const isEnterprise = data.isEnterprise ? '✅ Yes' : '❌ No';
+        const isEnterprise = data.isEnterprise ? 'Yes' : 'No';
 
         return `
             <!-- URL Section -->
@@ -329,7 +329,7 @@ class HCaptchaAdvanced extends BaseAdvancedModule {
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🔍 hCaptcha Scripts (${scripts.length})</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">hCaptcha Scripts (${scripts.length})</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 

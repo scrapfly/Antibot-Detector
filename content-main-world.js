@@ -2,22 +2,42 @@
  * Content Script - MAIN World
  * Runs in the MAIN world (page's JavaScript context) to install fingerprinting hooks
  * Receives hook definitions from content.js (ISOLATED world) via CustomEvent
- *
- * VERSION: 2.3.0-NEVER-FAIL (2026-01-17)
- * - Integrated HookResilienceManager for robust hook installation
- * - Added try-catch around ALL hook installations with error reporting
- * - Integrated WindowPropertyTracker for adaptive 60s polling
- * - Multi-layer timeout system for guaranteed completion
  */
 
 (function() {
   'use strict';
 
   let debugMode = false; // Will be set by ISOLATED world
+  let logCollectorEnabled = false;
+
+  // When the extension itself reads properties (e.g., WindowPropertyTracker),
+  // those reads can traverse the same getters we hook for JS_HOOKS. That would
+  // create false positives and can prematurely uninstall hooks. Use a depth
+  // counter so internal reads can temporarily suppress hook reporting.
+  const HOOK_SUPPRESSION_DEPTH_KEY = '__scrapflyHookSuppressionDepth';
+
+  function isHookReportingSuppressed() {
+    return (window[HOOK_SUPPRESSION_DEPTH_KEY] || 0) > 0;
+  }
+
+  function incrementSuppressionDepth() {
+    window[HOOK_SUPPRESSION_DEPTH_KEY] = (window[HOOK_SUPPRESSION_DEPTH_KEY] || 0) + 1;
+  }
+
+  function decrementSuppressionDepth() {
+    const current = window[HOOK_SUPPRESSION_DEPTH_KEY] || 0;
+    if (current > 0) window[HOOK_SUPPRESSION_DEPTH_KEY] = current - 1;
+  }
+
+  const LOG_RATE_WINDOW_MS = 1000;
+  const LOG_MAX_PER_WINDOW = 20;
+  const LOG_MAX_PER_WINDOW_WITH_COLLECTOR = 5;
+  const MAX_LOG_MESSAGE_LENGTH = 1000;
+  let logRateWindowStart = Date.now();
+  let logRateCount = 0;
 
   // Centralized configuration (7.7 - removes magic numbers)
-  // VERSION 2.3.0: Extended timeouts for "never fail" reliability
-  const HOOKS_CONFIG = Object.freeze({
+  const DEFAULT_HOOKS_CONFIG = Object.freeze({
     // Completion timeouts - Multi-layer timeout system
     ACTIVITY_TIMEOUT_MS: 2000,      // Inactivity before completion (resets on activity)
     MAX_DETECTION_MS: 8000,         // Absolute maximum wait for hooks
@@ -34,11 +54,69 @@
     MAX_DETECTIONS_PER_TAB: 100     // Safety cap
   });
 
+  // Active hooks config (merged from settings on install)
+  let activeHooksConfig = { ...DEFAULT_HOOKS_CONFIG };
+
+  // Clamp helper to keep settings within safe limits
+  function clampNumber(value, min, max, fallback) {
+    const num = Number(value);
+    if (!Number.isFinite(num)) return fallback;
+    if (min != null && num < min) return min;
+    if (max != null && num > max) return max;
+    return num;
+  }
+
+  function buildHooksConfig(overrides = {}) {
+    const merged = { ...DEFAULT_HOOKS_CONFIG, ...(overrides || {}) };
+    return {
+      ACTIVITY_TIMEOUT_MS: clampNumber(merged.ACTIVITY_TIMEOUT_MS, 250, 20000, DEFAULT_HOOKS_CONFIG.ACTIVITY_TIMEOUT_MS),
+      MAX_DETECTION_MS: clampNumber(merged.MAX_DETECTION_MS, 1000, 60000, DEFAULT_HOOKS_CONFIG.MAX_DETECTION_MS),
+      EMERGENCY_TIMEOUT_MS: clampNumber(merged.EMERGENCY_TIMEOUT_MS, 2000, 120000, DEFAULT_HOOKS_CONFIG.EMERGENCY_TIMEOUT_MS),
+      HEARTBEAT_TIMEOUT_MS: clampNumber(merged.HEARTBEAT_TIMEOUT_MS, 5000, 180000, DEFAULT_HOOKS_CONFIG.HEARTBEAT_TIMEOUT_MS),
+      POLL_INTERVAL_MS: clampNumber(merged.POLL_INTERVAL_MS, 20, 2000, DEFAULT_HOOKS_CONFIG.POLL_INTERVAL_MS),
+      DEFAULT_MAX_WINDOW_MS: clampNumber(merged.DEFAULT_MAX_WINDOW_MS, 5000, 120000, DEFAULT_HOOKS_CONFIG.DEFAULT_MAX_WINDOW_MS),
+      SETTLED_CHECKS: clampNumber(merged.SETTLED_CHECKS, 5, 200, DEFAULT_HOOKS_CONFIG.SETTLED_CHECKS),
+      MAX_INSTALLED_HOOKS: clampNumber(merged.MAX_INSTALLED_HOOKS, 50, 2000, DEFAULT_HOOKS_CONFIG.MAX_INSTALLED_HOOKS),
+      MAX_DETECTIONS_PER_TAB: clampNumber(merged.MAX_DETECTIONS_PER_TAB, 20, 2000, DEFAULT_HOOKS_CONFIG.MAX_DETECTIONS_PER_TAB)
+    };
+  }
+
+  const getErrorMessage = (err) => {
+    if (!err) return '';
+    if (typeof err.message === 'string') return err.message;
+    try {
+      return String(err);
+    } catch (e) {
+      return '';
+    }
+  };
+
+  const isIllegalInvocationError = (err) => {
+    return getErrorMessage(err).includes('Illegal invocation');
+  };
+
   // Global error handler: Prevent hook errors from breaking page
   window.addEventListener('error', (event) => {
     if (event.filename && event.filename.includes('content-main-world')) {
       event.preventDefault();
       event.stopPropagation();
+    }
+  }, true);
+
+  // Promise rejections from hook wrappers can surface as "Uncaught (in promise) ... Illegal invocation"
+  // in the page console. We only suppress ones that originate from this file.
+  window.addEventListener('unhandledrejection', (event) => {
+    try {
+      const msg = getErrorMessage(event.reason);
+      if (!msg.includes('Illegal invocation')) return;
+
+      const stack = event.reason && typeof event.reason.stack === 'string' ? event.reason.stack : '';
+      if (stack.includes('content-main-world.js')) {
+        event.preventDefault();
+        event.stopPropagation?.();
+      }
+    } catch (e) {
+      // ignore
     }
   }, true);
 
@@ -48,6 +126,112 @@
   let pageReadySignalReceived = false;
   const pageReadyCallbacks = [];
 
+
+  // Early bind shims: prevent "Illegal invocation" even if page code calls APIs unbound
+  // (e.g., const f = navigator.getBattery; f()) before detector-driven hooks are installed.
+  // These shims are tiny and safe; later detection wrappers will wrap these shims (and uninstall
+  // back to them), so the page stays stable throughout.
+  const EARLY_BIND_SHIMS = [
+    {
+      target: 'Navigator.prototype.getBattery',
+      getProto: () => window.Navigator?.prototype,
+      getInstance: () => window.navigator
+    },
+    {
+      target: 'MediaDevices.prototype.enumerateDevices',
+      getProto: () => window.MediaDevices?.prototype,
+      getInstance: () => window.navigator?.mediaDevices
+    }
+  ];
+
+  const createBindShim = (original, instance) => {
+    const shim = function(...args) {
+      const ctx = (this === undefined || this === null || this === window) ? instance : this;
+      try {
+        const result = Reflect.apply(original, ctx, args);
+        if (instance && result && typeof result.then === 'function' && typeof result.catch === 'function') {
+          return result.catch((err) => {
+            if (isIllegalInvocationError(err)) {
+              return Reflect.apply(original, instance, args);
+            }
+            throw err;
+          });
+        }
+        return result;
+      } catch (e) {
+        if (instance) {
+          try {
+            return Reflect.apply(original, instance, args);
+          } catch (e2) {
+            throw e;
+          }
+        }
+        throw e;
+      }
+    };
+
+    // Mark as shimmed to prevent double-shimming
+    Object.defineProperty(shim, '__scrapflyBindShim', { value: true });
+    // Stealth: make toString look native
+    Object.defineProperty(shim, 'toString', {
+      value: function toString() {
+        return Function.prototype.toString.call(original);
+      },
+      writable: true,
+      configurable: true
+    });
+
+    return shim;
+  };
+
+  const installEarlyBindShims = () => {
+    for (const spec of EARLY_BIND_SHIMS) {
+      try {
+        const proto = spec.getProto();
+        const instance = spec.getInstance();
+        const propertyName = spec.target.split('.').pop();
+
+        // Prefer prototype patch (affects all instances)
+        if (proto) {
+          const desc = Object.getOwnPropertyDescriptor(proto, propertyName);
+          if (desc && typeof desc.value === 'function' && !desc.value.__scrapflyBindShim) {
+            const shim = createBindShim(desc.value, instance);
+            try {
+              Object.defineProperty(proto, propertyName, {
+                value: shim,
+                writable: desc.writable,
+                enumerable: desc.enumerable,
+                configurable: desc.configurable
+              });
+              continue;
+            } catch (e) {
+              // Fall through to instance patch
+            }
+          }
+        }
+
+        // Fallback: instance patch (if prototype is locked)
+        if (instance && typeof instance[propertyName] === 'function' && !instance[propertyName].__scrapflyBindShim) {
+          const shim = createBindShim(instance[propertyName], instance);
+          try {
+            // Prefer direct assignment (works for many DOM instances)
+            instance[propertyName] = shim;
+          } catch (e) {
+            try {
+              Object.defineProperty(instance, propertyName, { value: shim, writable: true, configurable: true });
+            } catch (e2) {
+              // ignore
+            }
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+  };
+
+  installEarlyBindShims();
+
   // Uninstall failure tracking (module scope for cross-function access)
   const uninstallStats = {
     attempts: 0,
@@ -55,9 +239,6 @@
     failures: 0,
     failedTargets: []
   };
-
-  // Use config for timeout values
-  const HOOKS_HARD_TIMEOUT_MS = HOOKS_CONFIG.ACTIVITY_TIMEOUT_MS;
 
   /**
    * Check if cache hit flag is set (helper to reduce duplication)
@@ -72,8 +253,12 @@
    * Prevents memory leaks from accumulating state across page transitions
    */
   function resetModuleState() {
-    // Clear installed hooks
-    installedHooks.clear();
+    // Restore previous hooks to avoid stacking wrappers across reinjection / SPA re-init.
+    try {
+      uninstallAllRemainingHooks();
+    } catch (e) {
+      // Best-effort cleanup only
+    }
 
     // Clear any pending completion timeout
     if (completionTimeout) {
@@ -98,20 +283,56 @@
   }
 
   // Helper to send logs to service worker (only when debug enabled)
-  // OPTIMIZATION: Early return when disabled - zero overhead
   // Logs are only sent to background/service-worker, not to page console
+  const formatLogArg = (arg) => {
+    if (arg === null || arg === undefined) return String(arg);
+    if (typeof arg === 'string') return arg;
+    if (typeof arg === 'number' || typeof arg === 'boolean' || typeof arg === 'bigint') {
+      return String(arg);
+    }
+    if (arg instanceof Error) {
+      return `Error(${arg.message})`;
+    }
+    if (Array.isArray(arg)) {
+      return `[Array(${arg.length})]`;
+    }
+    if (typeof arg === 'object') {
+      try {
+        const keys = Object.keys(arg).slice(0, 6);
+        return `{${keys.join(', ')}}`;
+      } catch (e) {
+        return '[Object]';
+      }
+    }
+    return String(arg);
+  };
+
   const sendLog = function(level, ...args) {
     // Early return for zero overhead when debug disabled
     if (!debugMode) return;
 
+    // When log collector is enabled, avoid chatty logs
+    if (logCollectorEnabled && level === 'log') {
+      return;
+    }
+
+    const now = Date.now();
+    if (now - logRateWindowStart >= LOG_RATE_WINDOW_MS) {
+      logRateWindowStart = now;
+      logRateCount = 0;
+    }
+    logRateCount += 1;
+    const maxPerWindow = logCollectorEnabled ? LOG_MAX_PER_WINDOW_WITH_COLLECTOR : LOG_MAX_PER_WINDOW;
+    if (logRateCount > maxPerWindow) {
+      return;
+    }
+
     try {
-      // Send to background service worker for debug output
       const prefix = '[MAIN_WORLD] [Hooks]';
-      const message = [prefix, ...args].map(arg => {
-        if (typeof arg === 'string') return arg;
-        if (typeof arg === 'object') return JSON.stringify(arg);
-        return String(arg);
-      }).join(' ');
+      let message = [prefix, ...args].map(formatLogArg).join(' ');
+      if (message.length > MAX_LOG_MESSAGE_LENGTH) {
+        message = `${message.slice(0, MAX_LOG_MESSAGE_LENGTH)}...`;
+      }
 
       window.postMessage({
         type: 'SCRAPFLY_DEBUG_LOG',
@@ -125,68 +346,21 @@
     }
   };
 
-  // OPTIMIZATION Phase 9B.2: Pre-compile condition evaluators at module scope (15-20% faster)
-  // Moved outside function to create only once per page load instead of on every call
-  const CONDITION_EVALUATORS = Object.freeze({
-    // Type checks
-    'typeof object': (v) => typeof v === 'object' && v !== null,
-    'typeof function': (v) => typeof v === 'function',
-    'typeof string': (v) => typeof v === 'string',
-    'typeof number': (v) => typeof v === 'number',
-    'typeof boolean': (v) => typeof v === 'boolean',
-    'typeof symbol': (v) => typeof v === 'symbol',
-    'typeof bigint': (v) => typeof v === 'bigint',
+  // Shared, safe condition language (no eval). Provided by modules/detection/hooks/window-condition-language.js.
+  const getConditionLanguage = () => {
+    const lang = globalThis.ScrapflyWindowConditionLanguage;
+    if (lang && typeof lang.compile === 'function' && typeof lang.describe === 'function') {
+      return lang;
+    }
+    return null;
+  };
 
-    // Existence checks
-    'exists': (v) => v !== undefined,  // Used by UI - same as '!== undefined'
-    '!== undefined': (v) => v !== undefined,
-    '=== undefined': (v) => v === undefined,
-    '!== null': (v) => v !== null,
-    '=== null': (v) => v === null,
-    'truthy': (v) => !!v,
-    'falsy': (v) => !v,
-
-    // Special checks
-    'array': (v) => Array.isArray(v),
-
-    // Safe custom conditions (replaces eval() - SECURITY FIX)
-    // Numeric comparisons
-    '> 0': (v) => typeof v === 'number' && v > 0,
-    '>= 0': (v) => typeof v === 'number' && v >= 0,
-    '< 0': (v) => typeof v === 'number' && v < 0,
-    '<= 0': (v) => typeof v === 'number' && v <= 0,
-    '> 1': (v) => typeof v === 'number' && v > 1,
-    '>= 1': (v) => typeof v === 'number' && v >= 1,
-    '=== 0': (v) => v === 0,
-    '!== 0': (v) => v !== 0,
-    '> 100': (v) => typeof v === 'number' && v > 100,
-    '< 100': (v) => typeof v === 'number' && v < 100,
-
-    // Boolean checks
-    '=== true': (v) => v === true,
-    '=== false': (v) => v === false,
-
-    // String checks
-    'length > 0': (v) => typeof v === 'string' && v.length > 0,
-    'length === 0': (v) => typeof v === 'string' && v.length === 0,
-
-    // Object/Array checks
-    'has length': (v) => v != null && typeof v.length === 'number',
-    'has keys': (v) => v != null && typeof v === 'object' && Object.keys(v).length > 0,
-    'empty object': (v) => v != null && typeof v === 'object' && Object.keys(v).length === 0,
-    'empty array': (v) => Array.isArray(v) && v.length === 0,
-    'non-empty array': (v) => Array.isArray(v) && v.length > 0
-  });
-
-  // OPTIMIZATION Phase 9B.3: Lazy path cache initialization (20-30% faster for repeated checks)
   // Module-level cache persists across calls
   let windowPropertyPathCache = null;
 
   /**
    * Check window properties for detection
    * This is the FASTEST detection method - runs in microseconds
-   * OPTIMIZATION Phase 9B.2: Uses pre-compiled evaluators
-   * OPTIMIZATION Phase 9B.3: Uses persistent path cache
    * @param {Array} propertyDefinitions - Array of property definitions from detectors
    * @param {Function} onDetection - Optional callback for each detection batch
    * @returns {Array} detections - Array of detection objects
@@ -196,14 +370,14 @@
 
     // Early exit on cache hit - skip all window property checks
     if (shouldSkipDueToCacheHit()) {
-      sendLog('log', '[Window Props] ⏭️ Cache hit detected - skipping property checks');
+      sendLog('log', '[Window Props] Cache hit detected - skipping property checks');
       return [];
     }
 
     const detections = [];
-    const startTime = performance.now();
+    // Avoid performance.now(): Performance.prototype.now is a JS_HOOKS target.
+    const startTime = Date.now();
 
-    // OPTIMIZATION Phase 9B.3: Lazy initialization - only create when actually needed
     if (!windowPropertyPathCache) {
       windowPropertyPathCache = new Map();
     }
@@ -211,7 +385,6 @@
     for (const propDef of propertyDefinitions) {
       try {
         // Safely access nested properties (e.g., "navigator.brave" -> window.navigator.brave)
-        // OPTIMIZATION Phase 9B.3: Use persistent cached path parts (reused across calls)
         let pathParts = windowPropertyPathCache.get(propDef.path);
         if (!pathParts) {
           pathParts = propDef.path.split('.');
@@ -219,11 +392,17 @@
         }
         let value = window;
 
-        sendLog('log', `[Window Props] 🔍 Checking: window.${propDef.path}`);
+        sendLog('log', `[Window Props] Checking: window.${propDef.path}`);
 
-        for (const part of pathParts) {
-          if (value == null) break; // null or undefined
-          value = value[part];
+        // Suppress hook reporting for extension-driven property reads to avoid false positives.
+        incrementSuppressionDepth();
+        try {
+          for (const part of pathParts) {
+            if (value == null) break; // null or undefined
+            value = value[part];
+          }
+        } finally {
+          decrementSuppressionDepth();
         }
 
         // DEBUG: Log the actual value found
@@ -233,28 +412,35 @@
                             typeof value === 'object' ? '[object]' :
                             typeof value === 'function' ? '[function]' :
                             String(value).substring(0, 50);
-        sendLog('log', `[Window Props] 📊 window.${propDef.path} = ${valuePreview} (type: ${valueType})`);
+        sendLog('log', `[Window Props] window.${propDef.path} = ${valuePreview} (type: ${valueType})`);
 
         // Evaluate the condition
         let conditionMet = false;
         const condition = propDef.condition || 'truthy';
-        sendLog('log', `[Window Props] 🎯 Testing condition: "${condition}"`);
+        sendLog('log', `[Window Props] Testing condition: "${condition}"`);
 
-        // OPTIMIZATION Phase 9B.2: Use pre-compiled evaluators (15-20% faster)
-        // SECURITY FIX: No eval() - only safe pre-compiled conditions allowed
-        const evaluator = CONDITION_EVALUATORS[condition];
-        if (evaluator) {
-          // Safe evaluation using pre-compiled function
-          conditionMet = evaluator(value);
+        // SECURITY: No eval(). Conditions are compiled via the shared language module.
+        const lang = getConditionLanguage();
+        if (lang) {
+          const compiled = lang.compile(condition);
+          if (compiled.ok && typeof compiled.fn === 'function') {
+            try {
+              conditionMet = !!compiled.fn(value);
+            } catch (e) {
+              conditionMet = false;
+            }
+          } else {
+            sendLog('error', `[Window Props] Unsupported condition: "${condition}" (${compiled.reason || 'UNSUPPORTED'}). ${lang.describe()}`);
+            conditionMet = false;
+          }
         } else {
-          // Unsupported condition - log error and skip
-          sendLog('error', `[Window Props] ⚠️ Unsupported condition: "${condition}". Add to CONDITION_EVALUATORS if needed.`);
-          sendLog('error', `[Window Props] Available conditions: ${Object.keys(CONDITION_EVALUATORS).join(', ')}`);
-          conditionMet = false;
+          // Fallback: if the shared module didn't load, default to truthy.
+          conditionMet = !!value;
         }
 
+
         if (conditionMet) {
-          sendLog('log', `[Window Props] ✅ MATCH! Condition "${condition}" passed for window.${propDef.path}`);
+          sendLog('log', `[Window Props] MATCH! Condition "${condition}" passed for window.${propDef.path}`);
 
           const confidence = propDef.confidence || 80;
           const detection = {
@@ -272,9 +458,9 @@
           };
           detections.push(detection);
 
-          sendLog('log', `[Window Props] ✅ Detected: window.${propDef.path} (${propDef.detectorName})`);
+          sendLog('log', `[Window Props] Detected: window.${propDef.path} (${propDef.detectorName})`);
         } else {
-          sendLog('log', `[Window Props] ❌ NO MATCH: Condition "${condition}" failed for window.${propDef.path} (value: ${valuePreview}, type: ${valueType})`);
+          sendLog('log', `[Window Props] NO MATCH: Condition "${condition}" failed for window.${propDef.path} (value: ${valuePreview}, type: ${valueType})`);
         }
       } catch (e) {
         // Property access might throw (e.g., cross-origin restrictions)
@@ -282,8 +468,8 @@
       }
     }
 
-    const elapsed = performance.now() - startTime;
-    sendLog('log', `[Window Props] ⚡ Checked ${propertyDefinitions.length} properties in ${elapsed.toFixed(2)}ms - found ${detections.length} detections`);
+    const elapsed = Date.now() - startTime;
+    sendLog('log', `[Window Props] Checked ${propertyDefinitions.length} properties in ${elapsed.toFixed(2)}ms - found ${detections.length} detections`);
 
     // Send detections to content script if any found
     if (detections.length > 0) {
@@ -291,7 +477,7 @@
         type: 'WINDOW_DETECTIONS',
         detections: detections,
         timestamp: Date.now(),
-        executionTime: elapsed
+        elapsedMs: elapsed
       }, '*');
     }
 
@@ -309,22 +495,23 @@
    */
   function uninstallAllRemainingHooks() {
     if (installedHooks.size === 0) {
-      sendLog('log', `[Hooks MAIN] ✅ All hooks already uninstalled`);
+      sendLog('log', `[Hooks MAIN] All hooks already uninstalled`);
       return { total: 0, successes: 0, failures: 0, failedTargets: [] };
     }
 
-    sendLog('log', `[Hooks MAIN] 🧹 Uninstalling ${installedHooks.size} remaining hooks...`);
+    const targetsToUninstall = Array.from(installedHooks.keys());
+
+    sendLog('log', `[Hooks MAIN] Uninstalling ${targetsToUninstall.length} remaining hooks...`);
 
     const stats = {
-      total: installedHooks.size,
+      total: targetsToUninstall.length,
       successes: 0,
       failures: 0,
       failedTargets: []
     };
 
     // Batch uninstall - iterate once
-    const hookTargets = Array.from(installedHooks.keys());
-    for (const hookTarget of hookTargets) {
+    for (const hookTarget of targetsToUninstall) {
       const hookData = installedHooks.get(hookTarget);
       if (!hookData) continue;
 
@@ -333,48 +520,30 @@
         Object.defineProperty(obj, propertyName, originalDescriptor);
         installedHooks.delete(hookTarget);
         stats.successes++;
-        sendLog('log', `[Hooks MAIN] 🗑️  Uninstalled: ${hookTarget}`);
+        sendLog('log', `[Hooks MAIN] Uninstalled: ${hookTarget}`);
       } catch (e) {
         // Property might not be configurable
         stats.failures++;
         stats.failedTargets.push(hookTarget);
-        sendLog('error', `[Hooks MAIN] ❌ Failed to uninstall ${hookTarget}: ${e.message}`);
+        sendLog('error', `[Hooks MAIN] Failed to uninstall ${hookTarget}: ${e.message}`);
       }
     }
 
-    sendLog('log', `[Hooks MAIN] ✅ Uninstall complete: ${stats.successes} succeeded, ${stats.failures} failed`);
+    sendLog('log', `[Hooks MAIN] Uninstall complete: ${stats.successes} succeeded, ${stats.failures} failed`);
     if (stats.failures > 0) {
-      sendLog('warn', `[Hooks MAIN] ⚠️  Failed hooks remain active: ${stats.failedTargets.join(', ')}`);
+      sendLog('warn', `[Hooks MAIN] Failed hooks remain active: ${stats.failedTargets.join(', ')}`);
     }
 
     return stats;
   }
 
-  // Check sessionStorage for cache hit flag BEFORE installing hooks (synchronous check)
-  // This flag is set by ISOLATED world when cache hit is detected
-  try {
-    const cacheKey = `scrapfly_cache_${window.location.hostname}`;
-    const cachedData = sessionStorage.getItem(cacheKey);
+  // Cache hit flag - set by ISOLATED world when cache hit detected
+  // IMPORTANT: Don't rely on sessionStorage for cache-hit decisions.
+  // Cache hits are confirmed asynchronously by the ISOLATED world/background and signaled via postMessage.
+  // This avoids stale cache-hit flags after manual cache clears or settings changes.
+  window.__scrapflyCacheHitEarlyExit = false;
 
-    if (cachedData) {
-      const cacheInfo = JSON.parse(cachedData);
-      const cacheAge = Date.now() - cacheInfo.timestamp;
-
-      // Cache is valid for 12 hours (same as detection cache)
-      if (cacheAge < 12 * 60 * 60 * 1000) {
-        sendLog('log', '[MAIN WORLD] ⏭️ Synchronous cache hit detected - setting flag to prevent hook reporting');
-        window.__scrapflyCacheHitEarlyExit = true;
-      } else {
-        // Cache expired, clear it
-        sessionStorage.removeItem(cacheKey);
-      }
-    }
-  } catch (e) {
-    // SessionStorage might not be available, continue normally
-    sendLog('warn', '[MAIN WORLD] SessionStorage cache check failed:', e.message);
-  }
-
-  // Store fingerprint enabled state globally (will be updated when event arrives)
+  // Store fingerprint enabled state (will be updated when event arrives)
   window.__scrapflyFingerprintEnabled = true;
 
   // Listen for disable monitoring message from ISOLATED world (cache hit)
@@ -385,7 +554,7 @@
     if (data && data.type === 'SCRAPFLY_PAGE_READY') {
       if (!pageReadySignalReceived) {
         pageReadySignalReceived = true;
-        sendLog('log', '[MAIN WORLD] 🚀 Page ready message received');
+        sendLog('log', '[MAIN WORLD] Page ready message received');
         while (pageReadyCallbacks.length > 0) {
           const callback = pageReadyCallbacks.shift();
           try {
@@ -400,14 +569,14 @@
 
     // Handle cache hit notification from ISOLATED world
     if (data && data.type === 'SCRAPFLY_CACHE_HIT') {
-      sendLog('log', '[MAIN WORLD] ⏭️ Cache hit notification received - setting flag to stop hook reporting');
+      sendLog('log', '[MAIN WORLD] Cache hit notification received - setting flag to stop hook reporting');
       window.__scrapflyCacheHitEarlyExit = true;
       return;
     }
 
     // Handle disable monitoring command (cache hit)
     if (data && data.type === 'DISABLE_MONITORING') {
-      sendLog('log', '[MAIN WORLD] 🛑 DISABLE_MONITORING received - cache hit, stopping all monitoring');
+      sendLog('log', '[MAIN WORLD] DISABLE_MONITORING received - cache hit, stopping all monitoring');
       sendLog('log', '[MAIN WORLD]   Reason:', data.reason);
       sendLog('log', '[MAIN WORLD]   URL:', data.url);
 
@@ -416,15 +585,15 @@
         clearTimeout(completionTimeout);
         completionTimeout = null;
       }
-      sendLog('log', '[Hooks MAIN] 🛑 Hooks monitoring disabled due to cache hit');
+      sendLog('log', '[Hooks MAIN] Hooks monitoring disabled due to cache hit');
 
       // Uninstall any installed hooks to reduce overhead
       const cacheHitUninstallStats = uninstallAllRemainingHooks();
       if (cacheHitUninstallStats.failures > 0) {
-        sendLog('warn', `[MAIN WORLD] ⚠️  Cache hit cleanup: ${cacheHitUninstallStats.failures} hooks failed to uninstall`);
+        sendLog('warn', `[MAIN WORLD] Cache hit cleanup: ${cacheHitUninstallStats.failures} hooks failed to uninstall`);
       }
 
-      sendLog('log', '[MAIN WORLD] ✅ All monitoring disabled successfully (cache hit)');
+      sendLog('log', '[MAIN WORLD] All monitoring disabled successfully (cache hit)');
     }
 
     // Handle JS API events from ISOLATED world - dispatch CustomEvent to page
@@ -435,11 +604,29 @@
         const eventDetail = data.detail;
         const fullEventName = `scrapfly:${eventName}`;
 
-        // Store last detection data on window for pages that load after event
-        // This allows: const data = window.__scrapflyLastDetection;
-        if (eventName === 'onDetection') {
-          window.__scrapflyLastDetection = eventDetail;
+        // Optional: log to the PAGE DevTools console (MAIN world) for debugging integrations.
+        // Controlled by settings.jsApi.logToConsole (default: false).
+        if (data.logToConsole === true) {
+          try {
+            if (typeof console !== 'undefined' && console) {
+              const label = `[Scrapfly JS API] ${fullEventName}`;
+              if (typeof console.groupCollapsed === 'function') {
+                console.groupCollapsed(label);
+                console.log(eventDetail);
+                if (typeof console.groupEnd === 'function') console.groupEnd();
+              } else if (typeof console.info === 'function') {
+                console.info(label, eventDetail);
+              } else if (typeof console.log === 'function') {
+                console.log(label, eventDetail);
+              }
+            }
+          } catch (e) {
+            // Never let console logging break event dispatch
+          }
         }
+
+        // Store last detection for sync access by page scripts
+        window.__scrapflyLastDetection = eventDetail;
 
         // Method 1: Dispatch CustomEvent to page window (MAIN world)
         const event = new CustomEvent(fullEventName, {
@@ -448,7 +635,7 @@
           cancelable: false
         });
         window.dispatchEvent(event);
-        sendLog('log', `[MAIN WORLD] 📡 Dispatched JS API event: ${fullEventName}`);
+        sendLog('log', `[MAIN WORLD] Dispatched JS API event: ${fullEventName}`);
 
         // Method 2: Call callback function if defined (for early setup)
         // Page can do: window.onDetection = (data) => console.log(data);
@@ -456,7 +643,7 @@
         if (typeof window[eventName] === 'function') {
           try {
             window[eventName](eventDetail);
-            sendLog('log', `[MAIN WORLD] 📡 Called callback: window.${eventName}()`);
+            sendLog('log', `[MAIN WORLD] Called callback: window.${eventName}()`);
           } catch (callbackError) {
             sendLog('error', `[MAIN WORLD] Callback error: ${callbackError.message}`);
           }
@@ -476,27 +663,32 @@
     }
 
     // CRITICAL TIMING: Record when event is received
-    const eventReceivedTime = performance.now();
+    // Avoid performance.now(): Performance.prototype.now is a JS_HOOKS target.
+    const eventReceivedTime = Date.now();
 
     // Reset module state for SPA navigation (prevents memory leaks)
     resetModuleState();
 
     // Set debugMode first, before any logging
     debugMode = event.detail?.debugMode || false; // Receive debug mode from ISOLATED world
+    logCollectorEnabled = event.detail?.logCollectorEnabled || false;
+
+    // Use in-code hooks config (settings UI removed)
+    activeHooksConfig = buildHooksConfig({});
 
     // Handle fingerprintEnabled flag from event
     // This is the authoritative value from ISOLATED world (updated from storage)
     const fingerprintEnabled = event.detail?.fingerprintEnabled !== false;
 
-    // Update global flag with authoritative value
     window.__scrapflyFingerprintEnabled = fingerprintEnabled;
 
-    sendLog('log', '[MAIN WORLD] 🎯 scrapfly-install-hooks event received!', {
+    sendLog('log', '[MAIN WORLD] scrapfly-install-hooks event received!', {
       hasDetail: !!event.detail,
       hookDefinitionsCount: event.detail?.hookDefinitions?.length,
       windowPropertiesCount: event.detail?.windowProperties?.length,
       debugMode: debugMode,
-      fingerprintEnabled: fingerprintEnabled
+      fingerprintEnabled: fingerprintEnabled,
+      hooksConfig: activeHooksConfig
     });
 
     const hookDefinitions = event.detail?.hookDefinitions || [];
@@ -504,23 +696,21 @@
 
     sendLog('log', `[Hooks MAIN] Received ${hookDefinitions.length} detectors and ${windowProperties.length} window property checks`);
 
-    // VERSION 2.3.0: Set expected targets in HookResilienceManager
     const resilienceManager = window.__HookResilienceManager;
     if (resilienceManager) {
       resilienceManager.setExpectedTargets(hookDefinitions);
       sendLog('log', `[HookResilienceManager] Set ${resilienceManager.expectedTargets.size} expected targets from detector definitions`);
     }
-    sendLog('log', '[MAIN WORLD] 📋 Window properties to check:', windowProperties.map(p => p.path));
+    sendLog('log', '[MAIN WORLD] Window properties to check:', windowProperties.map(p => p.path));
 
-    // Check window properties with WindowPropertyTracker (VERSION 2.3.0)
+    // Check window properties with WindowPropertyTracker
     if (windowProperties.length > 0) {
-      sendLog('log', `[Window Props] ⏳ Starting WindowPropertyTracker for ${windowProperties.length} properties...`);
+      sendLog('log', `[Window Props] Starting WindowPropertyTracker for ${windowProperties.length} properties...`);
 
-      // VERSION 2.3.0: Use WindowPropertyTracker for adaptive 60s polling
       const startWindowChecksWithTracker = () => {
         // Check cache flag before starting
         if (shouldSkipDueToCacheHit()) {
-          sendLog('log', '[Window Props] ⏭️ Cache hit - skipping window property checks');
+          sendLog('log', '[Window Props] Cache hit - skipping window property checks');
           window.postMessage({
             type: 'WINDOW_PROPS_COMPLETE',
             url: window.location.href,
@@ -546,14 +736,14 @@
               }, '*');
             },
             onComplete: (result) => {
-              sendLog('log', `[Window Props] 📊 WindowPropertyTracker complete: ${result.detectedCount}/${result.totalChecked} in ${result.elapsedMs}ms (${result.reason})`);
+              sendLog('log', `[Window Props] WindowPropertyTracker complete: ${result.detectedCount}/${result.totalChecked} in ${result.elapsedMs}ms (${result.reason})`);
               // WINDOW_PROPS_COMPLETE is sent by the tracker itself
             }
           });
 
           // Start adaptive polling (4 phases: EARLY 100ms → NORMAL 200ms → LATE 500ms → FINAL 1000ms)
           tracker.startPolling();
-          sendLog('log', '[Window Props] 🔍 WindowPropertyTracker started with adaptive 60s polling');
+          sendLog('log', '[Window Props] WindowPropertyTracker started with adaptive 60s polling');
         } else {
           // Fallback to legacy polling if tracker not available
           sendLog('warn', '[Window Props] WindowPropertyTracker not available, using legacy polling');
@@ -566,7 +756,7 @@
         let detectedCount = 0;
         const detectedPaths = new Set();
         const startTime = Date.now();
-        const MAX_WINDOW_MS = HOOKS_CONFIG.DEFAULT_MAX_WINDOW_MS;
+        const MAX_WINDOW_MS = activeHooksConfig.DEFAULT_MAX_WINDOW_MS;
         let pollCount = 0;
         let checksWithoutNew = 0;
 
@@ -574,7 +764,7 @@
           pollCount++;
           const elapsed = Date.now() - startTime;
 
-          if (elapsed >= MAX_WINDOW_MS || checksWithoutNew >= HOOKS_CONFIG.SETTLED_CHECKS) {
+          if (elapsed >= MAX_WINDOW_MS || checksWithoutNew >= activeHooksConfig.SETTLED_CHECKS) {
             window.postMessage({
               type: 'WINDOW_PROPS_COMPLETE',
               url: window.location.href,
@@ -599,7 +789,7 @@
           });
 
           checksWithoutNew = newThisPoll > 0 ? 0 : checksWithoutNew + 1;
-          setTimeout(poll, HOOKS_CONFIG.POLL_INTERVAL_MS);
+          setTimeout(poll, activeHooksConfig.POLL_INTERVAL_MS);
         };
 
         poll();
@@ -612,7 +802,7 @@
       }
     } else {
       // No window properties to check - send completion immediately
-      sendLog('log', '[Window Props] ✅ No window properties to check - sending completion immediately');
+      sendLog('log', '[Window Props] No window properties to check - sending completion immediately');
       window.postMessage({
         type: 'WINDOW_PROPS_COMPLETE',
         url: window.location.href,
@@ -624,6 +814,10 @@
     // Initialize/reset hooks state for this page load
     const triggeredHooks = new Set();
     let hooksStartTime = Date.now();
+    let minMonitorMs = Math.min(
+      activeHooksConfig.MAX_DETECTION_MS,
+      Math.max(4000, activeHooksConfig.ACTIVITY_TIMEOUT_MS * 2)
+    );
     // REMOVED: bufferedDetections array - no longer needed with always-on monitoring
 
     // Unified completion system with single entry point
@@ -640,26 +834,26 @@
       completionSignalSent = true;
 
       const elapsed = Date.now() - hooksStartTime;
-      sendLog('log', `[Hooks MAIN] 🏁 Detection complete (${reason}) - ${triggeredHooks.size} hooks in ${elapsed}ms`);
+      sendLog('log', `[Hooks MAIN] Detection complete (${reason}) - ${triggeredHooks.size} hooks in ${elapsed}ms`);
 
       // Cleanup: uninstall any remaining hooks (only needed for timeout completions)
       if (reason !== 'no_hooks' && reason !== 'cache_hit') {
         // Show summary
-        sendLog('log', `[Hooks MAIN] 📊 DETECTION SUMMARY:`);
-        sendLog('log', `[Hooks MAIN]    ✅ Hooks that FIRED: ${triggeredHooks.size}/${originalHooksCount || 0}`);
+        sendLog('log', `[Hooks MAIN] DETECTION SUMMARY:`);
+        sendLog('log', `[Hooks MAIN]    Hooks that FIRED: ${triggeredHooks.size}/${originalHooksCount || 0}`);
 
         if (triggeredHooks.size > 0) {
           const firedHooksList = Array.from(triggeredHooks).map(key => key.split(':')[1]).sort();
-          sendLog('log', `[Hooks MAIN]    📝 Fired hooks:`, firedHooksList);
+          sendLog('log', `[Hooks MAIN]    Fired hooks:`, firedHooksList);
         }
 
         // Uninstall remaining unfired hooks
         if (installedHooks.size > 0) {
           // Log unfired hooks BEFORE uninstalling (for debugging)
           const unfiredHooks = Array.from(installedHooks.keys()).sort();
-          sendLog('log', `[Hooks MAIN]    ⏳ Hooks that NEVER FIRED: ${installedHooks.size}`);
-          sendLog('log', `[Hooks MAIN]    📝 Unfired hooks:`, unfiredHooks);
-          sendLog('log', `[Hooks MAIN] 🧹 Uninstalling ${installedHooks.size} remaining unfired hooks...`);
+          sendLog('log', `[Hooks MAIN]    Hooks that NEVER FIRED: ${installedHooks.size}`);
+          sendLog('log', `[Hooks MAIN]    Unfired hooks:`, unfiredHooks);
+          sendLog('log', `[Hooks MAIN] Uninstalling ${installedHooks.size} remaining unfired hooks...`);
           const bulkUninstallStats = uninstallAllRemainingHooks();
           uninstallStats.attempts += bulkUninstallStats.total;
           uninstallStats.successes += bulkUninstallStats.successes;
@@ -669,7 +863,7 @@
 
         // Log final stats
         if (uninstallStats.attempts > 0) {
-          sendLog('log', `[Hooks MAIN] 📊 Final: ${uninstallStats.successes}/${uninstallStats.attempts} uninstalled (${uninstallStats.failures} failed)`);
+          sendLog('log', `[Hooks MAIN] Final: ${uninstallStats.successes}/${uninstallStats.attempts} uninstalled (${uninstallStats.failures} failed)`);
         }
       }
 
@@ -707,7 +901,6 @@
     uninstallStats.failures = 0;
     uninstallStats.failedTargets.length = 0;
 
-    // OPTIMIZED: Pre-calculate total hook count to avoid repeated iterations
     let totalHooksCount = 0;
     for (const detector of hookDefinitions) {
       totalHooksCount += detector.hooks.length;
@@ -722,7 +915,7 @@
     function uninstallHook(hookTarget) {
       const hookData = installedHooks.get(hookTarget);
       if (!hookData) {
-        sendLog('warn', `[Hooks MAIN] ⚠️  Cannot uninstall ${hookTarget} - not found in installedHooks`);
+        sendLog('warn', `[Hooks MAIN] Cannot uninstall ${hookTarget} - not found in installedHooks`);
         return false; // Already uninstalled or never installed
       }
 
@@ -730,11 +923,11 @@
       try {
         Object.defineProperty(obj, propertyName, originalDescriptor);
         installedHooks.delete(hookTarget);
-        sendLog('log', `[Hooks MAIN] 🗑️  Uninstalled: ${hookTarget}`);
+        sendLog('log', `[Hooks MAIN] Uninstalled: ${hookTarget}`);
         return true;
       } catch (e) {
         // Uninstall failed - likely property is non-configurable
-        sendLog('error', `[Hooks MAIN] ❌ Failed to uninstall ${hookTarget}: ${e.message}`);
+        sendLog('error', `[Hooks MAIN] Failed to uninstall ${hookTarget}: ${e.message}`);
         sendLog('error', `[Hooks MAIN]    Reason: Property "${propertyName}" is likely non-configurable`);
         sendLog('error', `[Hooks MAIN]    Hook will remain active until page unload`);
         // Don't delete from installedHooks - keeps metadata for debugging
@@ -749,54 +942,61 @@
     function scheduleCompletion() {
       if (completionTimeout) clearTimeout(completionTimeout);
       completionTimeout = setTimeout(() => {
+        const elapsed = Date.now() - hooksStartTime;
+        if (elapsed < minMonitorMs) {
+          const remaining = minMonitorMs - elapsed;
+          sendLog('log', `[Hooks MAIN] Minimum monitor window not reached (${elapsed}ms/${minMonitorMs}ms) - extending by ${remaining}ms`);
+          completionTimeout = setTimeout(() => {
+            completeDetection('activity_timeout');
+          }, remaining);
+          return;
+        }
+
         completeDetection('activity_timeout');
-      }, HOOKS_HARD_TIMEOUT_MS);
+      }, activeHooksConfig.ACTIVITY_TIMEOUT_MS);
     }
 
-    function reportHookDetection(detectorId, detectorName, category, hook) {
-      // FIX: Check sessionStorage on EVERY hook call (not just at module load)
-      // This catches cache hits that occur AFTER MAIN world module loads
-      // sessionStorage is shared between ISOLATED and MAIN worlds
-      try {
-        const cacheKey = `scrapfly_cache_${window.location.hostname}`;
-        const cachedData = sessionStorage.getItem(cacheKey);
-        if (cachedData) {
-          const cacheInfo = JSON.parse(cachedData);
-          if (Date.now() - cacheInfo.timestamp < 12 * 60 * 60 * 1000) {
-            sendLog('log', `[Hooks MAIN] ⏭️ Cache hit detected (sessionStorage) - skipping hook report`);
-            return; // Cache hit - don't report this hook
-          }
-        }
-      } catch (e) {
-        // sessionStorage not available or parse error - continue normally
-      }
-
-      // Backup check: module-level flag (set at load time or via postMessage)
+    function reportHookDetectionsForTarget(hookTarget) {
+      // Cache-hit decisions must come from authoritative signals (ISOLATED world/background).
+      // sessionStorage-based cache hints can go stale after manual cache clears or settings changes.
       if (shouldSkipDueToCacheHit()) {
         return;
       }
 
-      // FIX: Removed buffering - monitoring is always enabled from document_start
-      const detectionKey = `${detectorId}:${hook.target}`;
-      const isDuplicate = triggeredHooks.has(detectionKey);
+      const hookData = installedHooks.get(hookTarget);
+      const detectors = hookData && hookData.detectors instanceof Map ? hookData.detectors : null;
+      const detectorCount = detectors ? detectors.size : 0;
 
-      if (!isDuplicate) {
-        // NEW detection - add to set
+      if (!detectors || detectorCount === 0) {
+        // Still count activity so completion can settle reliably.
+        scheduleCompletion();
+        return;
+      }
+
+      const timeElapsed = Date.now() - hooksStartTime;
+      let newDetections = 0;
+
+      for (const [detectorId, info] of detectors.entries()) {
+        const detectionKey = `${detectorId}:${hookTarget}`;
+        if (triggeredHooks.has(detectionKey)) continue;
+
         triggeredHooks.add(detectionKey);
+        newDetections++;
 
-        // DEBUG #2: Track exactly which hooks fire and when
-        const timeElapsed = Date.now() - hooksStartTime;
-        sendLog('log', `[Hooks DEBUG] ✅ HOOK FIRED #${triggeredHooks.size}: ${hook.target} (${detectorName}) - at ${timeElapsed}ms`);
-        sendLog('log', `[Hooks MAIN] ✅ Hook detected: ${hook.target} (${detectorName})`);
+        const detectorName = info?.detectorName || detectorId;
+        const category = info?.category;
+        const hook = info?.hook || { target: hookTarget };
+
+        sendLog('log', `[Hooks MAIN] Hook detected: ${hookTarget} (${detectorName})`);
 
         window.postMessage({
           type: 'JS_HOOK_DETECTION',
           detection: {
-            detectorId,
-            detectorName,
-            category,
+            detectorId: detectorId,
+            detectorName: detectorName,
+            category: category,
             hook: {
-              target: hook.target,
+              target: hookTarget,
               confidence: hook.confidence,
               description: hook.description
             },
@@ -804,9 +1004,14 @@
           },
           url: window.location.href
         }, '*');
+      }
+
+      if (newDetections > 0) {
+        // DEBUG: log once per target fire (prevents log spam when multiple detectors share a hook target)
+        sendLog('log', `[Hooks DEBUG] HOOK FIRED +${newDetections}: ${hookTarget} (${detectorCount} detector(s)) - at ${timeElapsed}ms`);
       } else {
         // DUPLICATE detection - log but still reset timer
-        sendLog('log', `[Hooks MAIN] 🔁 Duplicate hook detected: ${hook.target} (resetting completion timer)`);
+        sendLog('log', `[Hooks MAIN] Duplicate hook detected: ${hookTarget} (resetting completion timer)`);
       }
 
       // CRITICAL: Always reset completion timer - OLD SYSTEM behavior
@@ -815,49 +1020,85 @@
       scheduleCompletion();
 
       // IMMEDIATE UNINSTALL: Uninstall hook as soon as it fires (reduces overhead)
-      // Each hook only needs to fire once to be detected
-      // Improves page performance by removing interceptors after detection
-      if (!isDuplicate) {
-        // Only uninstall once per unique detector:target pair
-        const uninstalled = uninstallHook(hook.target);
+      // Each hook target only needs to fire once to be detected for all associated detectors
+      if (newDetections > 0) {
+        const uninstalled = uninstallHook(hookTarget);
         if (uninstalled) {
           uninstallStats.successes++;
-          sendLog('log', `[Hooks MAIN] 🗑️ Immediately uninstalled: ${hook.target} (${installedHooks.size} remaining)`);
+          sendLog('log', `[Hooks MAIN] Immediately uninstalled: ${hookTarget} (${installedHooks.size} remaining)`);
         } else {
           uninstallStats.failures++;
-          uninstallStats.failedTargets.push(hook.target);
-          sendLog('warn', `[Hooks MAIN] ⚠️ Failed to uninstall: ${hook.target}`);
+          uninstallStats.failedTargets.push(hookTarget);
+          sendLog('warn', `[Hooks MAIN] Failed to uninstall: ${hookTarget}`);
         }
       }
     }
 
-    // OPTIMIZATION: Pre-create stealth property descriptors (reusable)
     const stealthDescriptors = {
       name: { writable: false, enumerable: false, configurable: true },
       length: { writable: false, enumerable: false, configurable: true },
       toString: { writable: true, enumerable: false, configurable: true }
     };
 
-    // OPTIMIZATION: Wrapper factory for faster hook creation
+    // Wrapper factory for faster hook creation
     // Creates lightweight wrappers without repeated property definitions
     // FIXED: Preserves proper 'this' context to avoid "Illegal invocation" errors
-    function createStealthWrapper(original, callback, explicitContext, isGetter = false) {
+    function resolveContextFromTarget(target) {
+      if (!target || typeof target !== 'string') return null;
+      if (target.startsWith('Navigator.prototype.')) return window.navigator || null;
+      if (target.startsWith('NavigatorUAData.prototype.')) return window.navigator?.userAgentData || null;
+      if (target.startsWith('MediaDevices.prototype.')) return window.navigator?.mediaDevices || null;
+      if (target.startsWith('Performance.prototype.')) return window.performance || null;
+      if (target.startsWith('Screen.prototype.')) return window.screen || null;
+      if (target.startsWith('History.prototype.')) return window.history || null;
+      if (target.startsWith('Location.prototype.')) return window.location || null;
+      if (target.startsWith('Document.prototype.') || target.startsWith('HTMLDocument.prototype.')) return window.document || null;
+      if (target.startsWith('Storage.prototype.')) return window.localStorage || window.sessionStorage || null;
+      return null;
+    }
+
+    function createStealthWrapper(original, callback, explicitContext, target, isGetter = false) {
       const wrapper = function(...args) {
-        try {
-          callback();
-        } catch (e) {
-          // Silently fail - detection error shouldn't break page API
+        // Don't report detections for extension-driven internal reads.
+        if (!isHookReportingSuppressed()) {
+          try {
+            callback();
+          } catch (e) {
+            // Silently fail - detection error shouldn't break page API
+          }
         }
         // FIX: Use natural 'this' binding for prototype methods
         // For methods like getBattery(), enumerateDevices(), etc., 'this' must be the actual instance
-        // explicitContext is ONLY used for special cases where we need to validate the context type
-        // (like addEventListener where we check if context is Window/Document/etc for event filtering)
-        // For most hooks, explicitContext is null and we rely entirely on natural binding
+        // explicitContext (object instance) is used as a fallback when 'this' is missing
+        // (e.g., destructured calls: const { getBattery } = navigator; getBattery())
+        const dynamicContext = (explicitContext && typeof explicitContext !== 'function')
+          ? explicitContext
+          : resolveContextFromTarget(target);
+
         try {
-          return Reflect.apply(original, this, args);
+          const context = (this === undefined || this === null || (this === window && dynamicContext))
+            ? (dynamicContext || this)
+            : this;
+          const result = Reflect.apply(original, context, args);
+          if (dynamicContext && result && typeof result.then === 'function' && typeof result.catch === 'function') {
+            return result.catch((err) => {
+              if (isIllegalInvocationError(err)) {
+                return Reflect.apply(original, dynamicContext, args);
+              }
+              throw err;
+            });
+          }
+          return result;
         } catch (e) {
-          // Re-throw with better context - "Illegal invocation" means 'this' context is wrong
-          // This happens when page code destructures methods: const { getBattery } = navigator; getBattery()
+          // Retry with explicit/dynamic context when available (prevents "Illegal invocation")
+          if (dynamicContext) {
+            try {
+              return Reflect.apply(original, dynamicContext, args);
+            } catch (fallbackError) {
+              // Re-throw original error if fallback also fails
+              throw e;
+            }
+          }
           throw e;
         }
       };
@@ -888,7 +1129,7 @@
     }
 
     function installHook(detectorId, detectorName, category, hook) {
-      // VERSION 2.3.0: Enhanced with HookResilienceManager integration
+      // Enhanced with HookResilienceManager integration
       try {
         // Step 1: Verify hook target is valid using HookResilienceManager
         const resilienceManager = window.__HookResilienceManager;
@@ -933,7 +1174,7 @@
         const existingHook = installedHooks.get(hook.target);
         if (existingHook) {
           // Hook already installed - just add this detector to its list
-          existingHook.detectors.set(detectorId, { detectorName, category });
+          existingHook.detectors.set(detectorId, { detectorName, category, hook });
           return existingHook;
         }
 
@@ -944,28 +1185,31 @@
           explicitContext = pathParts.reduce((parent, part) => parent?.[part], window);
           if (!explicitContext) {
             sendLog('warn', `[Hooks] Failed to resolve windowPath "${hook.windowPath}" for ${hook.target}`);
-            if (resilienceManager) {
-              resilienceManager.registerHookFailure(hook.target, 'WINDOW_PATH_NOT_FOUND');
-            }
-            return false;
+            explicitContext = null;
+          } else if (typeof explicitContext === 'function') {
+            // windowPath points to a constructor (e.g., BatteryManager); not a usable instance
+            explicitContext = null;
           }
+        }
+        if (!explicitContext) {
+          explicitContext = resolveContextFromTarget(hook.target);
         }
 
         const hookMetadata = {
           obj,
           propertyName,
           originalDescriptor,
-          detectors: new Map([[detectorId, { detectorName, category }]]),
+          detectors: new Map([[detectorId, { detectorName, category, hook }]]),
           wrapper: null
         };
 
-        // OPTIMIZATION: Create callback once to avoid closure overhead
-        const reportCallback = () => reportHookDetection(detectorId, detectorName, category, hook);
+        // Create callback once to avoid closure overhead
+        const reportCallback = () => reportHookDetectionsForTarget(hook.target);
 
         // Handle getter properties - use optimized wrapper factory
         let wrapperDescriptor = null;
         if (originalDescriptor.get && !originalDescriptor.value) {
-          const stealthGetter = createStealthWrapper(originalDescriptor.get, reportCallback, explicitContext, true);
+          const stealthGetter = createStealthWrapper(originalDescriptor.get, reportCallback, explicitContext, hook.target, true);
 
           wrapperDescriptor = {
             get: stealthGetter,
@@ -978,7 +1222,7 @@
         }
         // Handle regular methods - use optimized wrapper factory
         else if (typeof originalDescriptor.value === 'function') {
-          const wrapper = createStealthWrapper(originalDescriptor.value, reportCallback, explicitContext, false);
+          const wrapper = createStealthWrapper(originalDescriptor.value, reportCallback, explicitContext, hook.target, false);
 
           wrapperDescriptor = {
             value: wrapper,
@@ -992,7 +1236,7 @@
 
         installedHooks.set(hook.target, hookMetadata);
 
-        // VERSION 2.3.0: Register successful installation with HookResilienceManager
+        // Register successful installation with HookResilienceManager
         if (resilienceManager && wrapperDescriptor) {
           resilienceManager.registerHookInstall(hook.target, originalDescriptor, wrapperDescriptor);
         }
@@ -1029,9 +1273,9 @@
             const alreadyInstalled = installed.has(hook.target);
             if (!alreadyInstalled) {
               successCount++;
-              sendLog('log', `[Hooks DEBUG] ✅ INSTALLED: ${hook.target} (${detector.name})`);
+              sendLog('log', `[Hooks DEBUG] INSTALLED: ${hook.target} (${detector.name})`);
             } else {
-              sendLog('log', `[Hooks DEBUG] 🔁 Reused existing hook for ${hook.target} (already installed)`);
+              sendLog('log', `[Hooks DEBUG] Reused existing hook for ${hook.target} (already installed)`);
             }
 
             const entry = installed.get(hook.target) || { detectors: new Set() };
@@ -1043,10 +1287,10 @@
 
             if (isExpectedFailure) {
               expectedFailed.push(hook.target);
-              sendLog('log', `[Hooks DEBUG] ⚠️ EXPECTED: ${hook.target} not available (${detector.name}) - API not present in this context`);
+              sendLog('log', `[Hooks DEBUG] EXPECTED: ${hook.target} not available (${detector.name}) - API not present in this context`);
             } else {
               failed.push(hook.target);
-              sendLog('warn', `[Hooks DEBUG] ❌ FAILED: ${hook.target} (${detector.name}) - returned false`);
+              sendLog('warn', `[Hooks DEBUG] FAILED: ${hook.target} (${detector.name}) - returned false`);
             }
 
             failureReasons[hook.target] = (failureReasons[hook.target] || []).concat('installHook returned false');
@@ -1055,34 +1299,39 @@
           failCount++;
           failed.push(hook.target);
           failureReasons[hook.target] = (failureReasons[hook.target] || []).concat(e.message);
-          sendLog('error', `[Hooks DEBUG] ❌ EXCEPTION: ${hook.target} (${detector.name}) - ${e.message}`);
+          sendLog('error', `[Hooks DEBUG] EXCEPTION: ${hook.target} (${detector.name}) - ${e.message}`);
         }
       }
     }
 
     // CRITICAL TIMING: Record when hook installation completes
-    const hooksInstalledTime = performance.now();
+    // Avoid performance.now(): Performance.prototype.now is a JS_HOOKS target.
+    const hooksInstalledTime = Date.now();
 
-    sendLog('log', `[Hooks MAIN] 📊 Installation complete: ${successCount} hooks installed, ${failCount} failures (${expectedFailed.length} expected), ${installed.size} total hook targets`);
+    sendLog('log', `[Hooks MAIN] Installation complete: ${successCount} hooks installed, ${failCount} failures (${expectedFailed.length} expected), ${installed.size} total hook targets`);
     if (installed.size) {
       sendLog('log', `[Hooks DEBUG] Active hooks: ${Array.from(installed.entries()).map(([target, meta]) => `${target} (detectors: ${Array.from(meta.detectors).join(', ')})`).join('; ')}`);
     }
 
     // Report unexpected failures as warnings, expected failures as info
     if (failed.length > 0) {
-      sendLog('warn', `[Hooks MAIN] ❌ Unexpected failures (${failed.length}): ${failed.join(', ')}`);
+      sendLog('warn', `[Hooks MAIN] Unexpected failures (${failed.length}): ${failed.join(', ')}`);
       sendLog('warn', `[Hooks DEBUG] Failure details:`, failureReasons);
     }
 
     if (expectedFailed.length > 0) {
-      sendLog('log', `[Hooks MAIN] ℹ️ Expected unavailable APIs (${expectedFailed.length}): ${expectedFailed.join(', ')}`);
-      sendLog('log', `[Hooks MAIN] ℹ️ These APIs are browser/context-specific (WebUSB requires HTTPS + Chrome, Battery API deprecated, sensors require permission)`);
+      sendLog('log', `[Hooks MAIN] Expected unavailable APIs (${expectedFailed.length}): ${expectedFailed.join(', ')}`);
+      sendLog('log', `[Hooks MAIN] These APIs are browser/context-specific (WebUSB requires HTTPS + Chrome, Battery API deprecated, sensors require permission)`);
     }
 
     if (failCount === 0) {
-      sendLog('log', `[Hooks MAIN] ✅ All hooks installed successfully!`);
+      sendLog('log', `[Hooks MAIN] All hooks installed successfully!`);
     }
-    sendLog('log', `[Hooks MAIN] ⏳ Waiting for page to trigger fingerprinting APIs (8s max, 2s inactivity timeout)...`);
+    const plannedMinMonitorMs = Math.min(
+      activeHooksConfig.MAX_DETECTION_MS,
+      Math.max(4000, activeHooksConfig.ACTIVITY_TIMEOUT_MS * 2)
+    );
+    sendLog('log', `[Hooks MAIN] Waiting for page to trigger fingerprinting APIs (max ${activeHooksConfig.MAX_DETECTION_MS}ms, activity ${activeHooksConfig.ACTIVITY_TIMEOUT_MS}ms, min ${plannedMinMonitorMs}ms)...`);
 
     // IMMEDIATE UNINSTALL FIX: Save original hooks list for accurate completion statistics
     // Since hooks are uninstalled immediately when they fire, installedHooks.size decreases over time
@@ -1091,12 +1340,14 @@
     const originalHooksCount = originallyInstalledHooks.length;
 
     const startHookMonitoring = () => {
-      sendLog('log', '[Hooks MAIN] 🚀 Hook monitoring active - scheduling completion');
+      sendLog('log', '[Hooks MAIN] Hook monitoring active - scheduling completion');
+
+      sendLog('log', `[Hooks MAIN] Config: activity=${activeHooksConfig.ACTIVITY_TIMEOUT_MS}ms, minMonitor=${minMonitorMs}ms, max=${activeHooksConfig.MAX_DETECTION_MS}ms`);
 
       // Maximum timeout for guaranteed completion (even if hooks keep firing)
       maxTimeoutId = setTimeout(() => {
         completeDetection('max_timeout');
-      }, HOOKS_CONFIG.MAX_DETECTION_MS);
+      }, activeHooksConfig.MAX_DETECTION_MS);
 
       // Activity timeout (2s of inactivity)
       scheduleCompletion();

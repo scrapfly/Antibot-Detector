@@ -42,38 +42,38 @@ class AkamaiAdvanced extends BaseAdvancedModule {
 
             // Debug logs - show all cookies found
             Logger.network('[Akamai Debug] ========== CHECK COOKIES ==========');
-            Logger.network('[Akamai Debug] 🌐 URL:', this.tabInfo.url);
-            Logger.network('[Akamai Debug] 🍪 Cookies Found:', foundCookies.length + '/7');
+            Logger.network('[Akamai Debug] URL:', this.tabInfo.url);
+            Logger.network('[Akamai Debug] Cookies Found:', foundCookies.length + '/7');
 
             Logger.network('[Akamai Debug] Cookie Details:');
             if (akamaiCookies._abck) {
                 const isEasyMode = akamaiCookies._abck.value.includes('~0~');
-                Logger.network('[Akamai Debug]   ✅ _abck:', {
+                Logger.network('[Akamai Debug]   _abck:', {
                     value: akamaiCookies._abck.value.substring(0, 100) + '...',
                     length: akamaiCookies._abck.value.length,
                     domain: akamaiCookies._abck.domain,
                     easyMode: isEasyMode
                 });
             } else {
-                Logger.network('[Akamai Debug]   ❌ _abck: NOT FOUND');
+                Logger.network('[Akamai Debug]   _abck: NOT FOUND');
             }
 
             if (akamaiCookies.sbsd) {
-                Logger.network('[Akamai Debug]   ✅ sbsd:', akamaiCookies.sbsd.value.substring(0, 50) + '...');
+                Logger.network('[Akamai Debug]   sbsd:', akamaiCookies.sbsd.value.substring(0, 50) + '...');
             } else {
-                Logger.network('[Akamai Debug]   ❌ sbsd: NOT FOUND');
+                Logger.network('[Akamai Debug]   sbsd: NOT FOUND');
             }
 
             if (akamaiCookies.sbsd_o) {
-                Logger.network('[Akamai Debug]   ✅ sbsd_o:', akamaiCookies.sbsd_o.value.substring(0, 50) + '...');
+                Logger.network('[Akamai Debug]   sbsd_o:', akamaiCookies.sbsd_o.value.substring(0, 50) + '...');
             } else {
-                Logger.network('[Akamai Debug]   ❌ sbsd_o: NOT FOUND');
+                Logger.network('[Akamai Debug]   sbsd_o: NOT FOUND');
             }
 
-            Logger.network('[Akamai Debug]   ' + (akamaiCookies.ak_bmsc ? '✅' : '❌') + ' ak_bmsc:', akamaiCookies.ak_bmsc ? 'FOUND' : 'NOT FOUND');
-            Logger.network('[Akamai Debug]   ' + (akamaiCookies.bm_sz ? '✅' : '❌') + ' bm_sz:', akamaiCookies.bm_sz ? 'FOUND' : 'NOT FOUND');
-            Logger.network('[Akamai Debug]   ' + (akamaiCookies.bm_sv ? '✅' : '❌') + ' bm_sv:', akamaiCookies.bm_sv ? 'FOUND' : 'NOT FOUND');
-            Logger.network('[Akamai Debug]   ' + (akamaiCookies.bm_mi ? '✅' : '❌') + ' bm_mi:', akamaiCookies.bm_mi ? 'FOUND' : 'NOT FOUND');
+            Logger.network('[Akamai Debug]   ak_bmsc:', akamaiCookies.ak_bmsc ? 'FOUND' : 'NOT FOUND');
+            Logger.network('[Akamai Debug]   bm_sz:', akamaiCookies.bm_sz ? 'FOUND' : 'NOT FOUND');
+            Logger.network('[Akamai Debug]   bm_sv:', akamaiCookies.bm_sv ? 'FOUND' : 'NOT FOUND');
+            Logger.network('[Akamai Debug]   bm_mi:', akamaiCookies.bm_mi ? 'FOUND' : 'NOT FOUND');
 
             // Determine protection level
             const hasAbck = akamaiCookies._abck;
@@ -88,7 +88,7 @@ class AkamaiAdvanced extends BaseAdvancedModule {
                 protectionLevel = 'Basic';
             }
 
-            Logger.network('[Akamai Debug] 🛡️ Protection Level:', protectionLevel);
+            Logger.network('[Akamai Debug] Protection Level:', protectionLevel);
             Logger.network('[Akamai Debug] ========================================');
 
             // Show notification
@@ -133,7 +133,7 @@ class AkamaiAdvanced extends BaseAdvancedModule {
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🍪 Akamai Cookies</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Akamai Cookies</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 
@@ -156,7 +156,7 @@ class AkamaiAdvanced extends BaseAdvancedModule {
 
                 ${foundCookies.length === 0 ? `
                     <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
-                        <div style="font-size: 48px; margin-bottom: 12px;">🔍</div>
+                        <div style="font-size: 48px; margin-bottom: 12px;"></div>
                         <div style="font-size: 14px;">No Akamai cookies found</div>
                     </div>
                 ` : `
@@ -902,7 +902,7 @@ func main() {
 
                 // Console log all captured data
                 Logger.network('[Akamai Debug] ========== ANALYZE CONTENT - FULL DATA ==========');
-                Logger.network('[Akamai Debug] 🍪 COOKIES:');
+                Logger.network('[Akamai Debug] COOKIES:');
                 Logger.network('[Akamai Debug]   _abck:', abckCookie ? {
                     value: abckCookie.value,
                     length: abckCookie.value.length,
@@ -913,33 +913,33 @@ func main() {
                 Logger.network('[Akamai Debug]   ak_bmsc:', akBmscCookie ? 'FOUND' : 'NOT FOUND');
                 Logger.network('[Akamai Debug]   bm_sz:', bmSzCookie ? 'FOUND' : 'NOT FOUND');
 
-                Logger.network('[Akamai Debug] 🎯 MODE DETECTION:');
+                Logger.network('[Akamai Debug] MODE DETECTION:');
                 Logger.network('[Akamai Debug]   Easy Mode:', analysis.isEasyMode);
                 Logger.network('[Akamai Debug]   SBSD Required:', analysis.requiresSbsd);
                 Logger.network('[Akamai Debug]   sec_cpt Required:', analysis.requiresSecCpt);
                 Logger.network('[Akamai Debug]   Pixel Challenge:', analysis.requiresPixel);
 
-                Logger.network('[Akamai Debug] 🎨 PIXEL CHALLENGE DATA:');
+                Logger.network('[Akamai Debug] PIXEL CHALLENGE DATA:');
                 Logger.network('[Akamai Debug]   HTML Var (bazadebezolkohpepadr):', analysis.pixelHtmlVar || 'NOT FOUND');
                 Logger.network('[Akamai Debug]   Script URL:', analysis.pixelScriptUrls?.scriptUrl || 'NOT FOUND');
                 Logger.network('[Akamai Debug]   Post URL:', analysis.pixelScriptUrls?.postUrl || 'NOT FOUND');
                 Logger.network('[Akamai Debug]   Script Var:', analysis.pixelScriptVar || 'NOT FOUND');
 
-                Logger.network('[Akamai Debug] 📜 SCRIPTS:');
+                Logger.network('[Akamai Debug] SCRIPTS:');
                 Logger.network('[Akamai Debug]   Total Scripts:', analysis.scriptCount);
                 Logger.network('[Akamai Debug]   Akamai Scripts:', analysis.scripts.length);
                 Logger.network('[Akamai Debug]   Script Path:', analysis.akamaiScriptPath || 'NOT FOUND');
 
-                Logger.network('[Akamai Debug] 🔍 DETECTED PATTERNS:');
+                Logger.network('[Akamai Debug] DETECTED PATTERNS:');
                 Logger.network('[Akamai Debug]   bmak API:', analysis.patterns.bmak);
                 Logger.network('[Akamai Debug]   sensor_data:', analysis.patterns.sensorData);
                 Logger.network('[Akamai Debug]   _abck variable:', analysis.patterns.abckVariable);
                 Logger.network('[Akamai Debug]   Pixel in content:', analysis.patterns.pixelChallenge);
                 Logger.network('[Akamai Debug]   sec_cpt in content:', analysis.patterns.secCpt);
 
-                Logger.network('[Akamai Debug] 🎯 SENSOR ELEMENTS:', analysis.sensorElements.length > 0 ? analysis.sensorElements : 'NONE FOUND');
+                Logger.network('[Akamai Debug] SENSOR ELEMENTS:', analysis.sensorElements.length > 0 ? analysis.sensorElements : 'NONE FOUND');
 
-                Logger.network('[Akamai Debug] 🔗 SENSOR DATA URLS:');
+                Logger.network('[Akamai Debug] SENSOR DATA URLS:');
                 if (analysis.sensorDataUrls && analysis.sensorDataUrls.length > 0) {
                     analysis.sensorDataUrls.forEach((url, idx) => {
                         Logger.network(`[Akamai Debug]   ${idx + 1}. ${url}`);
@@ -949,7 +949,7 @@ func main() {
                 }
 
                 if (analysis.parsingCodes) {
-                    Logger.network('[Akamai Debug] 📝 MULTI-LANGUAGE PARSING CODE GENERATED');
+                    Logger.network('[Akamai Debug] MULTI-LANGUAGE PARSING CODE GENERATED');
                     Logger.network('[Akamai Debug] Available languages: JavaScript, Python, Node.js, PHP, C#, Go');
                     Logger.network('[Akamai Debug] JavaScript (Browser):');
                     Logger.network(analysis.parsingCodes.javascript);
@@ -1001,7 +1001,7 @@ func main() {
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 700px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">📊 Akamai Analysis</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Akamai Analysis</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 
@@ -1019,12 +1019,12 @@ func main() {
 
 
                 ${(analysis.scripts.length > 0 || (analysis.sensorDataUrls && analysis.sensorDataUrls.length > 0) || detectedPatterns.length > 0 || hasAkamaiCookies) ? `
-                    <h4 style="font-size: 13px; color: var(--text-secondary); margin: 16px 0 8px 0; text-transform: uppercase;">📜 Akamai Scripts</h4>
+                    <h4 style="font-size: 13px; color: var(--text-secondary); margin: 16px 0 8px 0; text-transform: uppercase;">Akamai Scripts</h4>
                     <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
                         <!-- Header Section -->
                         <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 16px;">
                             <div style="display: flex; align-items: center; gap: 8px;">
-                                <span style="font-size: 18px;">⚙️</span>
+                                <span style="font-size: 18px;"></span>
                                 <div>
                                     <div style="color: var(--text-primary); font-size: 14px; font-weight: 600;">Script Analysis</div>
                                     <div style="color: var(--text-muted); font-size: 11px;">Found ${analysis.scripts.length + (analysis.sensorDataUrls?.length || 0) + (analysis.akamaiScriptPath ? 1 : 0)} relevant script(s)</div>
@@ -1252,7 +1252,7 @@ func main() {
         modal.innerHTML = `
             <div style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 900px; max-height: 90vh; overflow: hidden; width: 95%; display: flex; flex-direction: column;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-shrink: 0;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">📜 Script Parsing Code Generator</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Script Parsing Code Generator</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 
@@ -1282,17 +1282,17 @@ func main() {
                 <div style="position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column;">
                     <div class="code-container" data-lang="javascript" style="display: flex; flex-direction: column; height: 100%;">
                         <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.javascript}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">🌐 Browser console code for intercepting and parsing Akamai scripts</div>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">Browser console code for intercepting and parsing Akamai scripts</div>
                     </div>
 
                     <div class="code-container" data-lang="python" style="display: none; flex-direction: column; height: 100%;">
                         <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.python}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">🐍 Python script with requests and BeautifulSoup</div>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">Python script with requests and BeautifulSoup</div>
                     </div>
 
                     <div class="code-container" data-lang="nodejs" style="display: none; flex-direction: column; height: 100%;">
                         <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.nodejs}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">📦 Node.js script with axios and cheerio</div>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">Node.js script with axios and cheerio</div>
                     </div>
 
                     <div class="code-container" data-lang="php" style="display: none; flex-direction: column; height: 100%;">
@@ -2224,7 +2224,7 @@ func main() {
                     document.head.appendChild(styleTag);
 
                     notif.innerHTML = `
-                        <div style="font-weight: 600; font-size: 16px; margin-bottom: 8px;">❌ No Akamai Detected</div>
+                        <div style="font-weight: 600; font-size: 16px; margin-bottom: 8px;">No Akamai Detected</div>
                         <div style="opacity: 0.9; font-size: 14px;">The _abck cookie is not present on this page.</div>
                         <div style="opacity: 0.8; font-size: 12px; margin-top: 8px;">Akamai Bot Manager is not active here.</div>
                     `;
@@ -2242,7 +2242,7 @@ func main() {
         }
 
         // Log detected cookies
-        Logger.network('[Akamai] ✅ Akamai cookies detected:', {
+        Logger.network('[Akamai] Akamai cookies detected:', {
             _abck: !!abckCookie,
             bm_sz: !!bmSzCookie,
             ak_bmsc: !!akBmscCookie,
@@ -2256,9 +2256,9 @@ func main() {
                 url: this.tabInfo.url,
                 name: '_abck'
             });
-            Logger.network('[Akamai] ✅ _abck cookie deleted successfully');
+            Logger.network('[Akamai] _abck cookie deleted successfully');
         } catch (err) {
-            Logger.network('[Akamai] ⚠️ Could not delete _abck cookie:', err);
+            Logger.network('[Akamai] Could not delete _abck cookie:', err);
         }
 
         // Check if already capturing - if so, stop it first
@@ -2544,11 +2544,11 @@ func main() {
             // Get current tab
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
             if (!tab) {
-                Logger.error('NETWORK', '[AKAMAI-EXTRACT] ❌ No active tab found');
+                Logger.error('NETWORK', '[AKAMAI-EXTRACT] No active tab found');
                 throw new Error('No active tab found');
             }
 
-            Logger.network('[AKAMAI-EXTRACT] ✓ Tab found:', { id: tab.id, url: tab.url, title: tab.title });
+            Logger.network('[AKAMAI-EXTRACT] Tab found:', { id: tab.id, url: tab.url, title: tab.title });
 
             // Delete Akamai-related cookies to force regeneration
             Logger.network('[AKAMAI-EXTRACT] Step 2: Deleting Akamai cookies...');
@@ -2561,10 +2561,10 @@ func main() {
                         url: tab.url,
                         name: cookieName
                     });
-                    Logger.network(`[AKAMAI-EXTRACT] ✓ Deleted cookie: ${cookieName}`);
+                    Logger.network(`[AKAMAI-EXTRACT] Deleted cookie: ${cookieName}`);
                     deletedCount++;
                 } catch (err) {
-                    Logger.network(`[AKAMAI-EXTRACT] ⚠️ Could not delete cookie ${cookieName}:`, err.message);
+                    Logger.network(`[AKAMAI-EXTRACT] Could not delete cookie ${cookieName}:`, err.message);
                 }
             }
             Logger.network(`[AKAMAI-EXTRACT] Deleted ${deletedCount}/${cookiesToDelete.length} cookies`);
@@ -2578,7 +2578,7 @@ func main() {
             const extractionListener = (message) => {
                 Logger.network('[AKAMAI-EXTRACT] Received message:', message.type);
                 if (message.type === 'AKAMAI_EXTRACTION_RESULT') {
-                    Logger.network('[AKAMAI-EXTRACT] ✅ EXTRACTION RESULT RECEIVED!');
+                    Logger.network('[AKAMAI-EXTRACT] EXTRACTION RESULT RECEIVED!');
                     Logger.network('[AKAMAI-EXTRACT] Extracted data:', message.extractedData);
 
                     // Display the sensor data
@@ -2594,7 +2594,7 @@ func main() {
             };
 
             chrome.runtime.onMessage.addListener(extractionListener);
-            Logger.network('[AKAMAI-EXTRACT] ✓ Listener added');
+            Logger.network('[AKAMAI-EXTRACT] Listener added');
 
             // Send message to start extraction mode
             Logger.network('[AKAMAI-EXTRACT] Step 5: Sending message to background to start extraction...');
@@ -2605,7 +2605,7 @@ func main() {
             Logger.network('[AKAMAI-EXTRACT] Background response:', response);
 
             if (response && response.status === 'success') {
-                Logger.network('[AKAMAI-EXTRACT] ✓ Extraction mode enabled successfully');
+                Logger.network('[AKAMAI-EXTRACT] Extraction mode enabled successfully');
                 Logger.network('[AKAMAI-EXTRACT] Step 6: Showing extracting notification...');
 
                 // Show extracting notification before reload
@@ -2616,14 +2616,14 @@ func main() {
 
                 Logger.network('[AKAMAI-EXTRACT] Step 7: Reloading tab to capture sensor data...');
                 await chrome.tabs.reload(tab.id);
-                Logger.network('[AKAMAI-EXTRACT] ✓ Tab reload initiated');
+                Logger.network('[AKAMAI-EXTRACT] Tab reload initiated');
                 Logger.network('[AKAMAI-EXTRACT] Waiting for sensor data capture...');
             } else {
-                Logger.error('NETWORK', '[AKAMAI-EXTRACT] ❌ Failed response from background:', response);
+                Logger.error('NETWORK', '[AKAMAI-EXTRACT] Failed response from background:', response);
                 throw new Error('Failed to start extraction mode');
             }
         } catch (error) {
-            Logger.error('NETWORK', '[AKAMAI-EXTRACT] ❌ ERROR:', error);
+            Logger.error('NETWORK', '[AKAMAI-EXTRACT] ERROR:', error);
             Logger.error('NETWORK', '[AKAMAI-EXTRACT] Stack trace:', error.stack);
             NotificationHelper.error('Failed to extract sensor information: ' + error.message);
             this.isExtracting = false;
@@ -2648,7 +2648,7 @@ func main() {
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 900px; max-height: 90vh; overflow-y: auto; width: 95%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="margin: 0; font-size: 18px; color: var(--text-primary);">📊 Extracted Sensor Information</h3>
+                    <h3 style="margin: 0; font-size: 18px; color: var(--text-primary);">Extracted Sensor Information</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 
@@ -2767,7 +2767,7 @@ func main() {
 
             // Show feedback
             const originalText = button.textContent;
-            button.textContent = '✅ Copied!';
+            button.textContent = 'Copied!';
             button.style.background = 'var(--success)';
 
             setTimeout(() => {
@@ -2941,7 +2941,7 @@ func main() {
             if (captureData.requiresSecCpt) badges.push('sec_cpt');
             const badgesHtml = badges.length > 0 ?
                 `<div style="display: flex; gap: 4px; margin-top: 4px;">
-                    ${badges.map(badge => `<span style="font-size: 10px; background: var(--danger); color: white; padding: 2px 6px; border-radius: 3px;">⚠️ ${badge}</span>`).join('')}
+                    ${badges.map(badge => `<span style="font-size: 10px; background: var(--danger); color: white; padding: 2px 6px; border-radius: 3px;">${badge}</span>`).join('')}
                 </div>` : '';
 
             return `
@@ -2997,7 +2997,7 @@ func main() {
             <div class="advanced-modal-section">
                 <div class="advanced-modal-info-row">
                     <span class="advanced-modal-info-label">ABCK Cookie</span>
-                    <span class="advanced-modal-info-value">${data.abckCookie ? '✅ Found' : '❌ Not found'}</span>
+                    <span class="advanced-modal-info-value">${data.abckCookie ? 'Found' : 'Not found'}</span>
                 </div>
                 ${data.abckCookie ? `
                 <div class="advanced-modal-info-row">
@@ -3017,9 +3017,9 @@ func main() {
             ${data.requiresSbsd || data.requiresSecCpt || data.requiresPixel ? `
             <div class="advanced-modal-section">
                 <label class="advanced-modal-label">Challenge Requirements</label>
-                ${data.requiresSbsd ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">SBSD Challenge</span><span class="advanced-modal-info-value">⚠️ Required</span></div>' : ''}
-                ${data.requiresSecCpt ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">sec_cpt Challenge</span><span class="advanced-modal-info-value">⚠️ Required</span></div>' : ''}
-                ${data.requiresPixel ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">Pixel Challenge</span><span class="advanced-modal-info-value">⚠️ Required</span></div>' : ''}
+                ${data.requiresSbsd ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">SBSD Challenge</span><span class="advanced-modal-info-value">Required</span></div>' : ''}
+                ${data.requiresSecCpt ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">sec_cpt Challenge</span><span class="advanced-modal-info-value">Required</span></div>' : ''}
+                ${data.requiresPixel ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">Pixel Challenge</span><span class="advanced-modal-info-value">Required</span></div>' : ''}
             </div>
             ` : ''}
 
@@ -3041,7 +3041,7 @@ func main() {
      */
     static async processCaptureCompletion(tabId, interceptorData, chrome) {
         try {
-            Logger.network('[Akamai] 🎯 Capture completed, processing data...');
+            Logger.network('[Akamai] Capture completed, processing data...');
 
             // Get tab info
             const tab = await chrome.tabs.get(tabId);
@@ -3165,7 +3165,7 @@ func main() {
             await chrome.storage.local.set({
                 scrapfly_advanced_history: JSON.stringify(history, null, 2)
             });
-            Logger.network('[Akamai] ✅ Capture saved to unified history as JSON string:', newCapture.id);
+            Logger.network('[Akamai] Capture saved to unified history as JSON string:', newCapture.id);
 
             // Notify popup to refresh UI
             chrome.runtime.sendMessage({ type: 'CAPTURE_COMPLETED' }).catch(() => {});
@@ -3199,7 +3199,7 @@ func main() {
                             @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
                         </style>
                         <div style="display: flex; align-items: center; gap: 12px;">
-                            <div style="font-size: 32px;">✅</div>
+                            <div style="font-size: 32px;"></div>
                             <div>
                                 <div style="font-weight: 600; font-size: 16px; margin-bottom: 4px;">Akamai Data Captured!</div>
                                 <div style="font-size: 13px; opacity: 0.9;">Check the Advanced tab for details</div>
@@ -3300,13 +3300,13 @@ func main() {
      */
     static logCaptureDebugInfo(interceptorData, abckCookie, sbsdCookie, sbsdOCookie, pageData, version, captureData) {
         Logger.network('[Akamai Debug] ========== CAPTURE COMPLETED - FULL DATA ==========');
-        Logger.network('[Akamai Debug] 📡 INTERCEPTED DATA:');
+        Logger.network('[Akamai Debug] INTERCEPTED DATA:');
         Logger.network('[Akamai Debug]   sensor_data:', interceptorData.sensorData ? interceptorData.sensorData.substring(0, 100) + '...' : 'NOT CAPTURED');
         Logger.network('[Akamai Debug]   sensor_data length:', interceptorData.sensorData ? interceptorData.sensorData.length : 0);
         Logger.network('[Akamai Debug]   endpoint:', interceptorData.endpoint);
         Logger.network('[Akamai Debug]   timestamp:', new Date(interceptorData.timestamp).toISOString());
 
-        Logger.network('[Akamai Debug] 🍪 COOKIES:');
+        Logger.network('[Akamai Debug] COOKIES:');
         Logger.network('[Akamai Debug]   _abck:', {
             value: abckCookie.value.substring(0, 100) + '...',
             fullLength: abckCookie.value.length,
@@ -3315,23 +3315,23 @@ func main() {
         Logger.network('[Akamai Debug]   sbsd:', sbsdCookie ? sbsdCookie.value.substring(0, 50) : 'NOT FOUND');
         Logger.network('[Akamai Debug]   sbsd_o:', sbsdOCookie ? sbsdOCookie.value.substring(0, 50) : 'NOT FOUND');
 
-        Logger.network('[Akamai Debug] 🎯 MODE DETECTION:');
+        Logger.network('[Akamai Debug] MODE DETECTION:');
         Logger.network('[Akamai Debug]   Version:', version);
         Logger.network('[Akamai Debug]   Easy Mode:', captureData.isEasyMode);
         Logger.network('[Akamai Debug]   SBSD Required:', captureData.requiresSbsd);
         Logger.network('[Akamai Debug]   sec_cpt Required:', pageData.requiresSecCpt);
         Logger.network('[Akamai Debug]   Pixel Challenge:', pageData.requiresPixel);
 
-        Logger.network('[Akamai Debug] 🎨 PIXEL CHALLENGE DATA:');
+        Logger.network('[Akamai Debug] PIXEL CHALLENGE DATA:');
         Logger.network('[Akamai Debug]   HTML Var:', pageData.pixelHtmlVar || 'NOT FOUND');
         Logger.network('[Akamai Debug]   Script URL:', pageData.pixelScriptUrls?.scriptUrl || 'NOT FOUND');
         Logger.network('[Akamai Debug]   Post URL:', pageData.pixelScriptUrls?.postUrl || 'NOT FOUND');
         Logger.network('[Akamai Debug]   Script Var:', pageData.pixelScriptVar || 'NOT FOUND');
 
-        Logger.network('[Akamai Debug] 📜 SCRIPTS:');
+        Logger.network('[Akamai Debug] SCRIPTS:');
         Logger.network('[Akamai Debug]   Script Path:', pageData.akamaiScriptPath || 'NOT FOUND');
 
-        Logger.network('[Akamai Debug] 💾 FINAL CAPTURE DATA:');
+        Logger.network('[Akamai Debug] FINAL CAPTURE DATA:');
         Logger.network('[Akamai Debug]', captureData);
         Logger.network('[Akamai Debug] ========================================');
     }
@@ -3515,20 +3515,7 @@ func main() {
      * @returns {string} Time ago string
      */
     static getTimeAgo(timestamp) {
-        if (!timestamp) return 'recently';
-
-        const now = Date.now();
-        const diff = now - timestamp;
-        const minutes = Math.floor(diff / 60000);
-
-        if (minutes < 1) return 'just now';
-        if (minutes < 60) return `${minutes} min${minutes > 1 ? 's' : ''} ago`;
-
-        const hours = Math.floor(minutes / 60);
-        if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-
-        const days = Math.floor(hours / 24);
-        return `${days} day${days > 1 ? 's' : ''} ago`;
+        return Utils.getTimeAgo(timestamp);
     }
 
     /**
@@ -3537,11 +3524,7 @@ func main() {
      * @returns {string} Escaped string
      */
     static escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/"/g, '&quot;')
-                  .replace(/'/g, '&#39;')
-                  .replace(/</g, '&lt;')
-                  .replace(/>/g, '&gt;');
+        return Utils.escapeHtml(str);
     }
 
     /**
@@ -3610,10 +3593,10 @@ func main() {
             Logger.network('[AKAMAI-CAPTURE] Step 1: Getting tab info...');
             const tab = await chrome.tabs.get(tabId);
             if (!tab || !tab.url) {
-                Logger.error('NETWORK', '[AKAMAI-CAPTURE] ❌ Tab not found or no URL');
+                Logger.error('NETWORK', '[AKAMAI-CAPTURE] Tab not found or no URL');
                 return;
             }
-            Logger.network('[AKAMAI-CAPTURE] ✓ Tab info retrieved:', { url: tab.url, title: tab.title });
+            Logger.network('[AKAMAI-CAPTURE] Tab info retrieved:', { url: tab.url, title: tab.title });
 
             // Get cookies
             Logger.network('[AKAMAI-CAPTURE] Step 2: Getting cookies for URL:', tab.url);
@@ -3649,7 +3632,7 @@ func main() {
                 timestamp: Date.now()
                 // NO sensor_data, NO cookie values, NO URLs stored
             };
-            Logger.network('[AKAMAI-CAPTURE] ✓ Capture data created successfully');
+            Logger.network('[AKAMAI-CAPTURE] Capture data created successfully');
             Logger.network('[AKAMAI-CAPTURE] URL Monitoring Results:', {
                 requiresSbsd: captureData.requiresSbsd,
                 requiresSecCpt: captureData.requiresSecCpt
@@ -3713,7 +3696,7 @@ func main() {
             await chrome.storage.local.set({
                 scrapfly_advanced_history: JSON.stringify(history)
             });
-            Logger.network('[AKAMAI-CAPTURE] ✓ History saved to storage');
+            Logger.network('[AKAMAI-CAPTURE] History saved to storage');
 
             // Send capture complete message to popup
             Logger.network('[AKAMAI-CAPTURE] Step 7: Sending AKAMAI_CAPTURE_SAVED to popup...');
@@ -3722,14 +3705,14 @@ func main() {
                     type: 'AKAMAI_CAPTURE_SAVED',
                     captureData: newCapture
                 });
-                Logger.network('[AKAMAI-CAPTURE] ✓ Message sent to popup');
+                Logger.network('[AKAMAI-CAPTURE] Message sent to popup');
             } catch (msgError) {
-                Logger.network('[AKAMAI-CAPTURE] ⚠️ Popup not available (expected if closed):', msgError.message);
+                Logger.network('[AKAMAI-CAPTURE] Popup not available (expected if closed):', msgError.message);
             }
 
             Logger.network('[AKAMAI-CAPTURE] ========== CAPTURE_COMPLETED END ==========');
         } catch (error) {
-            Logger.error('NETWORK', '[AKAMAI-CAPTURE] ❌ Error in capture process:', error);
+            Logger.error('NETWORK', '[AKAMAI-CAPTURE] Error in capture process:', error);
             Logger.error('NETWORK', '[AKAMAI-CAPTURE] Error stack:', error.stack);
         }
     }
@@ -3747,10 +3730,10 @@ func main() {
             Logger.network('[AKAMAI-EXTRACT] Step 1: Getting tab info...');
             const tab = await chrome.tabs.get(tabId);
             if (!tab || !tab.url) {
-                Logger.error('NETWORK', '[AKAMAI-EXTRACT] ❌ Unable to get tab URL');
+                Logger.error('NETWORK', '[AKAMAI-EXTRACT] Unable to get tab URL');
                 throw new Error('Unable to get tab URL');
             }
-            Logger.network('[AKAMAI-EXTRACT] ✓ Tab info:', { id: tab.id, url: tab.url });
+            Logger.network('[AKAMAI-EXTRACT] Tab info:', { id: tab.id, url: tab.url });
 
             // Delete _abck cookies for the current site
             Logger.network('[AKAMAI-EXTRACT] Step 2: Getting cookies for:', tab.url);
@@ -3762,9 +3745,9 @@ func main() {
                     url: tab.url,
                     name: cookie.name
                 });
-                Logger.network('[AKAMAI-EXTRACT] ✓ Deleted cookie:', cookie.name);
+                Logger.network('[AKAMAI-EXTRACT] Deleted cookie:', cookie.name);
             }
-            Logger.network('[AKAMAI-EXTRACT] ✓ All _abck cookies deleted');
+            Logger.network('[AKAMAI-EXTRACT] All _abck cookies deleted');
 
             // Enable extraction mode in interceptor
             Logger.network('[AKAMAI-EXTRACT] Step 3: Enabling extraction mode...');
@@ -3791,25 +3774,25 @@ func main() {
                         const state = akamaiCaptureState.get(tabId);
                         if (state && state.extractMode) {
                             akamaiCaptureState.delete(tabId);
-                            Logger.network('[AKAMAI-EXTRACT] ⏱️ Auto-stopped after 30s timeout');
+                            Logger.network('[AKAMAI-EXTRACT] Auto-stopped after 30s timeout');
                         }
                     }, 30000)
                 });
-                Logger.network('[AKAMAI-EXTRACT] ✓ Extraction mode enabled for tab:', tabId);
+                Logger.network('[AKAMAI-EXTRACT] Extraction mode enabled for tab:', tabId);
             } else {
-                Logger.error('NETWORK', '[AKAMAI-EXTRACT] ❌ akamaiCaptureState is not available!');
+                Logger.error('NETWORK', '[AKAMAI-EXTRACT] akamaiCaptureState is not available!');
                 throw new Error('Capture state not initialized');
             }
 
             // Reload the page
             Logger.network('[AKAMAI-EXTRACT] Step 4: Reloading page...');
             await chrome.tabs.reload(tabId);
-            Logger.network('[AKAMAI-EXTRACT] ✓ Page reload initiated');
+            Logger.network('[AKAMAI-EXTRACT] Page reload initiated');
 
             Logger.network('[AKAMAI-EXTRACT] ========== WAITING FOR SENSOR DATA ==========');
 
         } catch (error) {
-            Logger.error('NETWORK', '[AKAMAI-EXTRACT] ❌ Error:', error);
+            Logger.error('NETWORK', '[AKAMAI-EXTRACT] Error:', error);
             Logger.error('NETWORK', '[AKAMAI-EXTRACT] Stack:', error.stack);
             throw error;
         }
@@ -3839,10 +3822,10 @@ func main() {
                 Logger.network('[AKAMAI-EXTRACT] Current state:', state);
                 if (state && state.timeout) {
                     clearTimeout(state.timeout);
-                    Logger.network('[AKAMAI-EXTRACT] ✓ Timeout cleared');
+                    Logger.network('[AKAMAI-EXTRACT] Timeout cleared');
                 }
                 akamaiCaptureState.delete(tabId);
-                Logger.network('[AKAMAI-EXTRACT] ✓ State deleted for tab:', tabId);
+                Logger.network('[AKAMAI-EXTRACT] State deleted for tab:', tabId);
             }
 
             // Send data to popup
@@ -3852,14 +3835,14 @@ func main() {
                     type: 'AKAMAI_EXTRACTION_RESULT',
                     extractedData: extractedData
                 });
-                Logger.network('[AKAMAI-EXTRACT] ✓ Data sent to popup');
+                Logger.network('[AKAMAI-EXTRACT] Data sent to popup');
             } catch (msgError) {
-                Logger.network('[AKAMAI-EXTRACT] ⚠️ Popup not available (expected if closed):', msgError.message);
+                Logger.network('[AKAMAI-EXTRACT] Popup not available (expected if closed):', msgError.message);
             }
 
             Logger.network('[AKAMAI-EXTRACT] ========== EXTRACTION COMPLETED END ==========');
         } catch (error) {
-            Logger.error('NETWORK', '[AKAMAI-EXTRACT] ❌ Error:', error);
+            Logger.error('NETWORK', '[AKAMAI-EXTRACT] Error:', error);
             Logger.error('NETWORK', '[AKAMAI-EXTRACT] Stack:', error.stack);
         }
     }

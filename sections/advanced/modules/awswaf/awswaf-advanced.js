@@ -117,7 +117,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🍪 AWS WAF Cookies</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">AWS WAF Cookies</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 
@@ -142,7 +142,6 @@ class AwsWafAdvanced extends BaseAdvancedModule {
                     </div>
                 ` : `
                     <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
-                        <div style="font-size: 48px; margin-bottom: 12px;">🔍</div>
                         <div style="font-size: 14px;">No AWS WAF cookies found</div>
                     </div>
                 `}
@@ -281,13 +280,12 @@ class AwsWafAdvanced extends BaseAdvancedModule {
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🔍 AWS WAF Scripts (${scripts.length})</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">AWS WAF Scripts (${scripts.length})</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 
                 ${scripts.length === 0 ? `
                     <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
-                        <div style="font-size: 48px; margin-bottom: 12px;">🔍</div>
                         <div style="font-size: 14px; color: var(--text-secondary);">No AWS WAF scripts found</div>
                         <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">Delete aws-waf-token cookie and reload to trigger challenge</div>
                     </div>
@@ -330,7 +328,6 @@ class AwsWafAdvanced extends BaseAdvancedModule {
                     <!-- Export Code Button -->
                     <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
                         <button class="modal-export-code-btn" style="width: 100%; background: var(--accent); color: white; border: none; border-radius: 6px; padding: 12px; font-size: 13px; cursor: pointer; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
-                            <span style="font-size: 16px;">📤</span>
                             Export Code
                         </button>
                     </div>
@@ -396,7 +393,7 @@ class AwsWafAdvanced extends BaseAdvancedModule {
         modal.innerHTML = `
             <div style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 900px; max-height: 90vh; overflow: hidden; width: 95%; display: flex; flex-direction: column;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-shrink: 0;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">📜 AWS WAF Script Fetching Code</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">AWS WAF Script Fetching Code</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 
@@ -414,32 +411,32 @@ class AwsWafAdvanced extends BaseAdvancedModule {
                 <div style="position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column;">
                     <div class="code-container" data-lang="javascript" style="display: flex; flex-direction: column; height: 100%;">
                         <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.javascript}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">🌐 Browser console code for fetching AWS WAF scripts</div>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">Browser console code for fetching AWS WAF scripts</div>
                     </div>
 
                     <div class="code-container" data-lang="python" style="display: none; flex-direction: column; height: 100%;">
                         <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.python}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">🐍 Python script with requests library</div>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">Python script with requests library</div>
                     </div>
 
                     <div class="code-container" data-lang="nodejs" style="display: none; flex-direction: column; height: 100%;">
                         <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.nodejs}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">📦 Node.js script with axios</div>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">Node.js script with axios</div>
                     </div>
 
                     <div class="code-container" data-lang="php" style="display: none; flex-direction: column; height: 100%;">
                         <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.php}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">🐘 PHP script with cURL</div>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">PHP script with cURL</div>
                     </div>
 
                     <div class="code-container" data-lang="csharp" style="display: none; flex-direction: column; height: 100%;">
                         <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.csharp}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">🔷 C# with HttpClient</div>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">C# with HttpClient</div>
                     </div>
 
                     <div class="code-container" data-lang="go" style="display: none; flex-direction: column; height: 100%;">
                         <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.go}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">🔵 Go with net/http</div>
+                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">Go with net/http</div>
                     </div>
                 </div>
 
@@ -937,9 +934,9 @@ func main() {
             ${flags.hasStatus405 || flags.hasChallengeEndpoint || flags.hasProblemEndpoint ? `
             <div class="advanced-modal-section">
                 <label class="advanced-modal-label">Detection Indicators</label>
-                ${flags.hasStatus405 ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">Status 405</span><span class="advanced-modal-info-value">⚠️ Detected</span></div>' : ''}
-                ${flags.hasChallengeEndpoint ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">Challenge Endpoint</span><span class="advanced-modal-info-value">✅ Found</span></div>' : ''}
-                ${flags.hasProblemEndpoint ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">Problem Endpoint</span><span class="advanced-modal-info-value">✅ Found</span></div>' : ''}
+                ${flags.hasStatus405 ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">Status 405</span><span class="advanced-modal-info-value">Detected</span></div>' : ''}
+                ${flags.hasChallengeEndpoint ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">Challenge Endpoint</span><span class="advanced-modal-info-value">Found</span></div>' : ''}
+                ${flags.hasProblemEndpoint ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">Problem Endpoint</span><span class="advanced-modal-info-value">Found</span></div>' : ''}
             </div>
             ` : ''}
 

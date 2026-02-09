@@ -1,4 +1,6 @@
 {
+"schemaVersion": "1.1.0",
+"detectorIdPrefix": "detect-",
 "version": "1.0.0",
 "antibot": {
     "colour": "#FF5733",

@@ -232,13 +232,13 @@ class Advanced {
    */
   async getCurrentDetections() {
     // PRIORITY 0: Check cached results from Detection notification (most reliable)
-    Logger.ui('[Advanced] 🔍 DETECTION RETRIEVAL STEP 0: Check cachedDetectionResults');
+    Logger.ui('[Advanced] DETECTION RETRIEVAL STEP 0: Check cachedDetectionResults');
     Logger.ui('[Advanced]   - cachedDetectionResults length:', this.cachedDetectionResults?.length || 0);
 
     if (this.cachedDetectionResults && this.cachedDetectionResults.length > 0) {
-      Logger.ui('[Advanced] ✅ Found', this.cachedDetectionResults.length, 'detections in cache');
+      Logger.ui('[Advanced] Found', this.cachedDetectionResults.length, 'detections in cache');
       const firstDet = this.cachedDetectionResults[0];
-      Logger.ui('[Advanced] 📋 First cached detection:', {
+      Logger.ui('[Advanced] First cached detection:', {
         hasDetector: !!firstDet.detector,
         detectorId: firstDet.detector?.id,
         detectorName: firstDet.detector?.name
@@ -250,18 +250,18 @@ class Advanced {
     let results = this.detectionSection && this.detectionSection.currentResults ?
       this.detectionSection.currentResults : [];
 
-    Logger.ui('[Advanced] 🔍 DETECTION RETRIEVAL STEP 1: Check detectionSection.currentResults');
+    Logger.ui('[Advanced] DETECTION RETRIEVAL STEP 1: Check detectionSection.currentResults');
     Logger.ui('[Advanced]   - detectionSection exists:', !!this.detectionSection);
     Logger.ui('[Advanced]   - currentResults length:', results.length);
 
     // If results found, validate structure and cache them
     if (results.length > 0) {
-      Logger.ui('[Advanced] ✅ Found', results.length, 'detections in detectionSection');
+      Logger.ui('[Advanced] Found', results.length, 'detections in detectionSection');
       // Cache for future use
       this.cachedDetectionResults = results;
       // Log first detection structure for validation
       const firstDet = results[0];
-      Logger.ui('[Advanced] 📋 First detection structure:', {
+      Logger.ui('[Advanced] First detection structure:', {
         hasDetector: !!firstDet.detector,
         detectorId: firstDet.detector?.id,
         detectorName: firstDet.detector?.name
@@ -270,9 +270,9 @@ class Advanced {
     }
 
     // PRIORITY 2: Fetch from background service worker with retries
-    Logger.ui('[Advanced] 🔍 DETECTION RETRIEVAL STEP 2: Background fetch');
+    Logger.ui('[Advanced] DETECTION RETRIEVAL STEP 2: Background fetch');
     if (!this.currentTab) {
-      Logger.warn('UI', '[Advanced] ⚠️  No currentTab available, cannot fetch from background');
+      Logger.warn('UI', '[Advanced] No currentTab available, cannot fetch from background');
       return results;
     }
 
@@ -285,7 +285,7 @@ class Advanced {
       try {
         const response = await new Promise((resolve) => {
           const timeout = setTimeout(() => {
-            Logger.warn('UI', '[Advanced] ⏱️  Background message timeout after 3s');
+            Logger.warn('UI', '[Advanced] Background message timeout after 3s');
             resolve(null);
           }, 3000);
 
@@ -308,21 +308,21 @@ class Advanced {
         if (response && response.data && Array.isArray(response.data)) {
           if (response.data.length > 0) {
             results = response.data;
-            Logger.ui('[Advanced] ✅ Fetched', results.length, 'detections from background');
+            Logger.ui('[Advanced] Fetched', results.length, 'detections from background');
 
             // Validate first detection
             const firstDet = results[0];
-            Logger.ui('[Advanced] 📋 First detection from background:', {
+            Logger.ui('[Advanced] First detection from background:', {
               hasDetector: !!firstDet.detector,
               detectorId: firstDet.detector?.id,
               detectorName: firstDet.detector?.name
             });
             return results;
           } else {
-            Logger.ui('[Advanced] ℹ️  Background returned empty array');
+            Logger.ui('[Advanced] Background returned empty array');
           }
         } else if (response && response.status === 'error') {
-          Logger.warn('UI', '[Advanced] ⚠️  Background returned error:', response.error);
+          Logger.warn('UI', '[Advanced] Background returned error:', response.error);
         }
       } catch (error) {
         Logger.error('UI', '[Advanced] Error in background fetch attempt', retryCount + 1, ':', error);
@@ -338,7 +338,7 @@ class Advanced {
       }
     }
 
-    Logger.ui('[Advanced] 📊 FINAL: Returning', results.length, 'detections');
+    Logger.ui('[Advanced] FINAL: Returning', results.length, 'detections');
     return results;
   }
 
@@ -350,7 +350,7 @@ class Advanced {
     const detections = await this.getCurrentDetections();
     const availableTools = [];
 
-    Logger.ui('[Advanced] 🔧 CHECKING AVAILABLE MODULES');
+    Logger.ui('[Advanced] CHECKING AVAILABLE MODULES');
     Logger.ui('[Advanced] Total detections to check:', detections.length);
     Logger.ui('[Advanced] Available module keys:', Object.keys(Advanced.AVAILABLE_MODULES));
 
@@ -365,7 +365,7 @@ class Advanced {
         rawDetectorId,
         detectorId,
         detectorName,
-        hasModule: hasModule ? '✅ YES' : '❌ NO'
+        hasModule: hasModule ? 'YES' : 'NO'
       });
 
       if (detectorId && Advanced.AVAILABLE_MODULES[detectorId]) {
@@ -381,7 +381,7 @@ class Advanced {
       }
     });
 
-    Logger.ui('[Advanced] ✅ MODULE CHECK COMPLETE:', {
+    Logger.ui('[Advanced] MODULE CHECK COMPLETE:', {
       detectedTotal: detections.length,
       withTools: availableTools.length,
       withoutTools: detections.length - availableTools.length
@@ -436,26 +436,26 @@ class Advanced {
       const noAdvancedState = document.querySelector('#noAdvancedState');
 
       if (!advancedContent) {
-        Logger.error('UI', '[Advanced] ❌ #advancedContent not found in DOM!');
+        Logger.error('UI', '[Advanced] #advancedContent not found in DOM!');
         return;
       }
       Logger.ui('[Advanced] ✓ Found #advancedContent');
 
       // Show loading state
-      Logger.ui('[Advanced] 🔄 Setting display state...');
+      Logger.ui('[Advanced] Setting display state...');
       advancedContent.style.display = 'flex';
       if (noAdvancedState) {
         noAdvancedState.style.display = 'none';
       }
 
-      Logger.ui('[Advanced] 🔄 Fetching detection modules...');
+      Logger.ui('[Advanced] Fetching detection modules...');
       const detectionTools = await this.getDetectionModules();
-      Logger.ui('[Advanced] ✅ Fetching complete:', detectionTools.length, 'tools available');
+      Logger.ui('[Advanced] Fetching complete:', detectionTools.length, 'tools available');
       this.availableDetectionTools = detectionTools;
 
       // If no detections available, show empty state
       if (detectionTools.length === 0) {
-        Logger.ui('[Advanced] ⚠️  No detection tools available (no matching modules)');
+        Logger.ui('[Advanced] No detection tools available (no matching modules)');
         advancedContent.style.display = 'none';
         if (noAdvancedState) {
           noAdvancedState.style.display = 'flex';
@@ -464,18 +464,18 @@ class Advanced {
         return;
       }
 
-      Logger.ui('[Advanced] ✅ Found', detectionTools.length, 'available tools, rendering interface');
+      Logger.ui('[Advanced] Found', detectionTools.length, 'available tools, rendering interface');
 
       // Get toolsPanel
       const toolsPanel = document.querySelector('#toolsPanel');
       if (!toolsPanel) {
-        Logger.error('UI', '[Advanced] ❌ #toolsPanel not found in DOM!');
+        Logger.error('UI', '[Advanced] #toolsPanel not found in DOM!');
         return;
       }
       Logger.ui('[Advanced] ✓ Found #toolsPanel');
 
       // Generate tools HTML
-      Logger.ui('[Advanced] 🔨 Generating tools HTML...');
+      Logger.ui('[Advanced] Generating tools HTML...');
       let captchaToolsHtml = '';
       if (detectionTools.length > 0) {
         const detectionsOptions = detectionTools.map(({ detection, module }) => {
@@ -486,7 +486,7 @@ class Advanced {
 
           return `
             <div class="detection-option" data-detector-id="${detectorId}">
-              ${iconPath ? `<img src="${iconPath}" class="detection-icon" alt="${displayName}">` : '<span class="detection-icon-placeholder">🔒</span>'}
+              ${iconPath ? `<img src="${iconPath}" class="detection-icon" alt="${displayName}">` : '<span class="detection-icon-placeholder"></span>'}
               <span class="detection-name">${displayName}</span>
             </div>
           `;
@@ -580,12 +580,12 @@ class Advanced {
       `;
 
       // Inject into tools panel instead of entire content
-      Logger.ui('[Advanced] 📝 Injecting HTML into toolsPanel...');
+      Logger.ui('[Advanced] Injecting HTML into toolsPanel...');
       toolsPanel.innerHTML = interfaceHtml;
       Logger.ui('[Advanced] ✓ HTML injected successfully');
 
       // Setup sub-tab listeners
-      Logger.ui('[Advanced] 🔗 Setting up listeners...');
+      Logger.ui('[Advanced] Setting up listeners...');
       this.setupSubTabListeners();
 
       // Update capture count badge
@@ -593,10 +593,10 @@ class Advanced {
 
       this.setupDetectionToolsListeners();
       this.setupAdvancedEventListeners();
-      Logger.ui('[Advanced] ✅ renderAdvancedInterface complete!');
+      Logger.ui('[Advanced] renderAdvancedInterface complete!');
 
     } catch (error) {
-      Logger.error('UI', '[Advanced] ❌ ERROR in renderAdvancedInterface:', error);
+      Logger.error('UI', '[Advanced] ERROR in renderAdvancedInterface:', error);
       Logger.error('UI', '[Advanced] Stack trace:', error.stack);
 
       // Show error state
@@ -1064,7 +1064,7 @@ class Advanced {
 
     grid.innerHTML = `
       <div id="captureNoResults" class="capture-no-results">
-        <div class="no-results-icon">🔍</div>
+        <div class="no-results-icon"></div>
         <h3 class="no-results-title">No captures found</h3>
         <p class="no-results-text">Try adjusting your filters or search query to find captures.</p>
         <button id="resetAllFiltersBtn" class="reset-filters-btn">Reset All Filters</button>
@@ -1408,7 +1408,7 @@ class Advanced {
         <div class="confirmation-modal-overlay" id="confirmationModalOverlay">
           <div class="confirmation-modal">
             <div class="confirmation-modal-header">
-              <div class="confirmation-modal-icon">⚠️</div>
+              <div class="confirmation-modal-icon"></div>
               <h3 class="confirmation-modal-title">${title}</h3>
             </div>
             <div class="confirmation-modal-content">
@@ -2377,7 +2377,7 @@ class Advanced {
     if (resultsContent && analysisResults) {
       resultsContent.innerHTML = `
         <div class="error-message">
-          <div class="error-icon">⚠️</div>
+          <div class="error-icon"></div>
           <div class="error-text">${message}</div>
         </div>
       `;

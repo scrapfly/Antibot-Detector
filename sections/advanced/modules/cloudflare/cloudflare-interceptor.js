@@ -26,7 +26,7 @@ function handleCloudflareMessage(request, sender, sendResponse) {
                         Logger.network('[Cloudflare] Showing analyzing notification before reload...');
                         await showNotification(request.tabId, {
                             type: 'loading',
-                            title: '🔍 Analyzing Cloudflare Scripts',
+                            title: 'Analyzing Cloudflare Scripts',
                             message: 'Please wait while we collect script URLs...',
                             duration: 15000
                         });
@@ -186,7 +186,7 @@ function cloudflareStartAnalysis(tabId, url) {
                         type: 'CLOUDFLARE_ANALYSIS_RESULT',
                         data: analysisData
                     });
-                    Logger.network('[Cloudflare-Analysis] ✓ Results sent to popup');
+                    Logger.network('[Cloudflare-Analysis] Results sent to popup');
                 } catch (error) {
                     Logger.network('[Cloudflare-Analysis] Popup not available - results discarded');
                 }

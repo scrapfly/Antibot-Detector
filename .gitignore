@@ -81,6 +81,8 @@ NOTES.txt
 notes.txt
 todo.txt
 Claude.md
+AGENTS.md
+_delete_test_root.txt
 /.lh
 
 # Screenshots and test images (keep official icons)
@@ -121,3 +123,5 @@ WIP/
 # Debug dumps
 *.dmp
 *.dump
+assets
+.playwright-mcp/

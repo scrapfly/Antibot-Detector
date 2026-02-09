@@ -16,13 +16,14 @@ class ScrapflyPopup {
       this.detection.advancedSection = this.advanced;
     }
     this.settings = new Settings(this.categoryManager);
+    this.detectionViewRequestId = 0;
   }
 
   async initialize() {
     try {
       // Test Logger in popup context (with safety check)
       if (typeof Logger !== 'undefined') {
-        Logger.popup('✅ Logger initialized in POPUP context');
+        Logger.popup('Logger initialized in POPUP context');
       }
 
       // Initialize notification manager using helper
@@ -49,7 +50,7 @@ class ScrapflyPopup {
       // Then initialize all sections (lazy loading enabled)
       await this.initializeSections();
 
-      // OPTIMIZATION Phase A.3: Don't pre-render hidden tabs
+      // Don't pre-render hidden tabs
       // They'll be loaded on-demand when user switches to them
 
       // Load and show default tab from settings (will lazy-load that specific tab)
@@ -62,11 +63,11 @@ class ScrapflyPopup {
 
   /**
    * Initialize all sections
-   * OPTIMIZATION: Lazy loading - only initialize visible tab on startup
+   * Lazy loading - only initialize visible tab on startup
    */
   async initializeSections() {
     try {
-      // OPTIMIZATION Phase A.3: Only initialize Settings (always needed for toggle)
+      // Only initialize Settings (always needed for toggle)
       // Other sections will be lazy-loaded on first access
       await this.settings.initialize();
 
@@ -121,6 +122,9 @@ class ScrapflyPopup {
   async loadToggleState() {
     const toggle = document.querySelector('#enableToggle');
     await Settings.loadToggleState(toggle);
+    if (toggle) {
+      this.detection.setExtensionEnabled(toggle.checked);
+    }
   }
 
   /**
@@ -130,22 +134,27 @@ class ScrapflyPopup {
   async handleEnableToggle(enabled) {
     try {
       await Settings.handleEnableToggle(enabled);
+      this.detection.setExtensionEnabled(enabled !== false);
+      const requestId = this.beginDetectionViewRequest();
 
       // Immediately update Detection tab if it's currently visible
       if (this.currentTab === 'detection') {
         if (enabled) {
           // Extension enabled - try to load from cache first
           chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            if (tabs[0]) {
+            if (tabs[0] && this.isDetectionViewRequestCurrent(requestId)) {
               chrome.runtime.sendMessage(
                 { type: 'GET_DETECTION_DATA', tabId: tabs[0].id },
                 async (response) => {
+                  if (!this.isDetectionViewRequestCurrent(requestId)) {
+                    return;
+                  }
                   if (chrome.runtime.lastError) {
                     Logger.error('UI', 'Popup: Error getting cached data:', chrome.runtime.lastError);
                     this.detection.showInterruptedState();
                     return;
                   }
-                  await this.handleDetectionResponseAndUpdateUI(tabs[0].id, response);
+                  await this.handleDetectionResponseAndUpdateUI(tabs[0].id, response, requestId);
                 }
               );
             }
@@ -162,6 +171,15 @@ class ScrapflyPopup {
         NotificationHelper.error(`Failed to ${enabled ? 'enable' : 'disable'} extension: ${error.message}`);
       }
     }
+  }
+
+  beginDetectionViewRequest() {
+    this.detectionViewRequestId += 1;
+    return this.detectionViewRequestId;
+  }
+
+  isDetectionViewRequestCurrent(requestId) {
+    return requestId === this.detectionViewRequestId && this.currentTab === 'detection';
   }
 
   /**
@@ -198,8 +216,12 @@ class ScrapflyPopup {
    * Check and display existing detection data without triggering fresh detection
    * FIX: Fetches completed/cached data only, never sends REQUEST_DETECTION
    */
-  async checkAndDisplayExistingDetection() {
+  async checkAndDisplayExistingDetection(requestId = this.beginDetectionViewRequest()) {
     try {
+      if (!this.isDetectionViewRequestCurrent(requestId)) {
+        return;
+      }
+
       // DEBOUNCE: Prevent spam from multiple rapid calls
       const now = Date.now();
       if (this.lastCheckTime && (now - this.lastCheckTime) < 1000) {
@@ -208,17 +230,21 @@ class ScrapflyPopup {
       this.lastCheckTime = now;
 
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-      if (!tab) return;
+      if (!tab || !this.isDetectionViewRequestCurrent(requestId)) return;
 
       // Check if extension is enabled
       const result = await chrome.storage.local.get(['scrapfly_enabled']);
-      if (result.scrapfly_enabled === false) {
+      const isEnabled = result.scrapfly_enabled !== false;
+      this.detection.setExtensionEnabled(isEnabled);
+      if (!this.isDetectionViewRequestCurrent(requestId)) return;
+      if (!isEnabled) {
         this.detection.showDisabledState();
         return;
       }
 
       // Check if URL is blacklisted
       if (await Utils.isUrlBlacklisted(tab.url)) {
+        if (!this.isDetectionViewRequestCurrent(requestId)) return;
         const url = new URL(tab.url);
         this.detection.showBlacklistState(url.hostname);
         return;
@@ -228,8 +254,22 @@ class ScrapflyPopup {
       chrome.runtime.sendMessage(
         { type: 'GET_DETECTION_DATA', tabId: tab.id },
         async (response) => {
+          if (!this.isDetectionViewRequestCurrent(requestId)) {
+            return;
+          }
+
           if (chrome.runtime.lastError) {
             this.detection.showEmptyState();
+            return;
+          }
+
+          const latestState = await chrome.storage.local.get(['scrapfly_enabled']);
+          if (!this.isDetectionViewRequestCurrent(requestId)) {
+            return;
+          }
+          if (latestState.scrapfly_enabled === false) {
+            this.detection.setExtensionEnabled(false);
+            this.detection.showDisabledState();
             return;
           }
 
@@ -253,7 +293,9 @@ class ScrapflyPopup {
       );
     } catch (error) {
       Logger.error('UI', 'Popup: Error in checkAndDisplayExistingDetection:', error);
-      this.detection.showEmptyState();
+      if (this.isDetectionViewRequestCurrent(requestId)) {
+        this.detection.showEmptyState();
+      }
     }
   }
 
@@ -264,7 +306,11 @@ class ScrapflyPopup {
    * @param {object} response - The detection response from background
    * @returns {Promise<boolean>} - True if data was processed, false if showing a state
    */
-  async handleDetectionResponseAndUpdateUI(tabId, response) {
+  async handleDetectionResponseAndUpdateUI(tabId, response, requestId = this.detectionViewRequestId) {
+    if (!this.isDetectionViewRequestCurrent(requestId)) {
+      return false;
+    }
+
     if (!response) {
       this.detection.showInterruptedState();
       return false;
@@ -288,9 +334,12 @@ class ScrapflyPopup {
 
     // Check badge state
     const badgeText = await Detection.getBadgeText(tabId);
+    if (!this.isDetectionViewRequestCurrent(requestId)) {
+      return false;
+    }
     const badgeTrimmed = badgeText ? badgeText.trim() : '';
 
-    if (badgeTrimmed === '⏳') {
+    if (badgeTrimmed === '\u23F3') {
       this.detection.showAnalyzingState();
       return false;
     }
@@ -298,6 +347,9 @@ class ScrapflyPopup {
     // Check if badge is gray ✕ (cache cleared) vs other ✕ (interrupted)
     if (badgeTrimmed === '✕') {
       const badgeColor = await Detection.getBadgeBackgroundColor(tabId);
+      if (!this.isDetectionViewRequestCurrent(requestId)) {
+        return false;
+      }
       if (badgeColor === '#6B7280' || badgeColor === '#6b7280') {
         this.detection.showEmptyState();
         return false;
@@ -310,6 +362,9 @@ class ScrapflyPopup {
     }
 
     if (response.data) {
+      if (!this.isDetectionViewRequestCurrent(requestId)) {
+        return false;
+      }
       await this.processDetectionData(response.data);
       return true;
     } else {
@@ -320,15 +375,24 @@ class ScrapflyPopup {
         // Detection completed (badge is numeric) but cache write still pending
         Logger.debug('UI', 'Badge shows count but no data yet, retrying...', { badge: badgeTrimmed });
         await new Promise(resolve => setTimeout(resolve, 200));
+        if (!this.isDetectionViewRequestCurrent(requestId)) {
+          return false;
+        }
         // Retry getting data
         const retryResponse = await chrome.runtime.sendMessage({
           type: 'GET_DETECTION_DATA',
           tabId: tabId
         });
+        if (!this.isDetectionViewRequestCurrent(requestId)) {
+          return false;
+        }
         if (retryResponse && retryResponse.data) {
           await this.processDetectionData(retryResponse.data);
           return true;
         }
+      }
+      if (!this.isDetectionViewRequestCurrent(requestId)) {
+        return false;
       }
       this.detection.showInterruptedState();
       return false;
@@ -395,6 +459,12 @@ class ScrapflyPopup {
    */
   setupMessageHandlers() {
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      // Internal hook diagnostics are broadcasted from content scripts; ignore them in the popup.
+      // (We still handle a few explicitly below, but this guard prevents noisy "Unknown message type" logs.)
+      if (request && typeof request.type === 'string' && request.type.startsWith('HOOK_')) {
+        return false;
+      }
+
       switch (request.type) {
         case 'NEW_DETECTION_DATA':
           // New detection data available
@@ -447,22 +517,27 @@ class ScrapflyPopup {
           });
           break;
 
-        case 'EXTENSION_TOGGLE_CHANGED':
+        case 'EXTENSION_TOGGLE_CHANGED': {
+          this.detection.setExtensionEnabled(request.enabled !== false);
+          const requestId = this.beginDetectionViewRequest();
           // Extension was enabled or disabled
           if (this.currentTab === 'detection') {
             if (request.enabled) {
               // Extension enabled - try to load from cache first
               chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                if (tabs[0]) {
+                if (tabs[0] && this.isDetectionViewRequestCurrent(requestId)) {
                   chrome.runtime.sendMessage(
                     { type: 'GET_DETECTION_DATA', tabId: tabs[0].id },
                     async (response) => {
+                      if (!this.isDetectionViewRequestCurrent(requestId)) {
+                        return;
+                      }
                       if (chrome.runtime.lastError) {
                         Logger.error('UI', 'Popup: Error getting cached data:', chrome.runtime.lastError);
                         this.detection.showInterruptedState();
                         return;
                       }
-                      await this.handleDetectionResponseAndUpdateUI(tabs[0].id, response);
+                      await this.handleDetectionResponseAndUpdateUI(tabs[0].id, response, requestId);
                     }
                   );
                 }
@@ -473,6 +548,7 @@ class ScrapflyPopup {
             }
           }
           break;
+        }
 
         // Internal messages between content scripts and background (silently ignore)
         case 'WINDOW_DETECTIONS':
@@ -482,6 +558,9 @@ class ScrapflyPopup {
         case 'LOG':
         case 'JS_HOOK_DETECTION_BATCH':
         case 'JS_HOOKS_COMPLETE':
+        case 'HOOK_FAILURE_REPORT':
+        case 'HOOK_TAMPERING_DETECTED':
+        case 'HOOK_RECOVERY_RESULT':
         case 'GET_DETECTORS':
         case 'CHECK_CACHE_EARLY':
         case 'CONTENT_SCRIPT_READY':
@@ -507,17 +586,30 @@ class ScrapflyPopup {
   }
 
   async switchTab(tabName) {
+    const sectionMap = {
+      'detection': this.detection,
+      'history': this.history,
+      'rules': this.rules,
+      'advanced': this.advanced,
+      'settings': this.settings
+    };
+
+    if (this.currentTab === tabName) {
+      const currentSection = sectionMap[tabName];
+      if (tabName === 'detection' && this.detection.initializingPromise) {
+        return;
+      }
+      if (currentSection && currentSection.initialized) {
+        const shouldSkipRefresh = tabName !== 'detection'
+          || (this.detection.htmlLoaded && !this.detection.cacheCleared);
+        if (shouldSkipRefresh) {
+          return;
+        }
+      }
+    }
+
     // Cleanup previous section's event listeners before switching
     if (this.currentTab && this.currentTab !== tabName) {
-      // Call cleanup on the previous section if it has the method
-      const sectionMap = {
-        'detection': this.detection,
-        'history': this.history,
-        'rules': this.rules,
-        'advanced': this.advanced,
-        'settings': this.settings
-      };
-
       const previousSection = sectionMap[this.currentTab];
       if (previousSection && typeof previousSection.cleanup === 'function') {
         try {
@@ -563,25 +655,28 @@ class ScrapflyPopup {
       Logger.error('UI', 'Could not find tab content for:', tabName);
     }
 
-    // OPTIMIZATION Phase A.3: Lazy-load sections on first access
+    // Lazy-load sections on first access
     // Handle section-specific logic when tabs are clicked
     switch (tabName) {
-      case 'detection':
+      case 'detection': {
+        const requestId = this.beginDetectionViewRequest();
+
         // Lazy initialize if needed
         if (!this.detection.initialized) {
           this.detection.initialize().then(async () => {
+            if (!this.isDetectionViewRequestCurrent(requestId)) {
+              return;
+            }
             // FIX: Display existing detection data (cache or completed) without triggering fresh detection
-            await this.checkAndDisplayExistingDetection();
+            await this.checkAndDisplayExistingDetection(requestId);
           });
         } else {
           // FIX: Even if initialized, ensure HTML is loaded before displaying data
           // This prevents click handlers from being attached to non-existent DOM elements
           if (!this.detection.htmlLoaded) {
             await this.detection.loadHTML();
+            this.detection.setupEventListeners();
           }
-
-          // Re-attach event listeners after tab switch (for modal, buttons, etc.)
-          this.detection.setupEventListeners();
 
           // FIX: Check if cache was cleared while tab was hidden
           if (this.detection.cacheCleared) {
@@ -592,7 +687,11 @@ class ScrapflyPopup {
             // FIX: Check cache FIRST before re-rendering potentially stale currentResults
             // checkAndDisplayExistingDetection will show empty state if cache expired,
             // or display valid cached results and update currentResults
-            await this.checkAndDisplayExistingDetection();
+            await this.checkAndDisplayExistingDetection(requestId);
+
+            if (!this.isDetectionViewRequestCurrent(requestId)) {
+              break;
+            }
 
             // Re-attach click handlers for valid results (if any remain after cache check)
             // This is needed because DOM elements may have been recreated
@@ -604,6 +703,7 @@ class ScrapflyPopup {
           }
         }
         break;
+      }
       case 'history':
         // Lazy initialize if needed
         if (!this.history.initialized) {

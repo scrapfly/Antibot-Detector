@@ -1,7 +1,7 @@
 {
   "id": "detect-hardware-fingerprint",
   "name": "Hardware Fingerprint",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Fingerprint",
   "lastUpdated": "2025-01-21",
@@ -14,13 +14,13 @@
       {
         "description": "Gets number of CPU cores",
         "enabled": true,
-        "confidence": 95,
+        "confidence": 80,
         "target": "Navigator.prototype.hardwareConcurrency"
       },
       {
         "description": "Gets device memory in GB",
         "enabled": true,
-        "confidence": 95,
+        "confidence": 80,
         "target": "Navigator.prototype.deviceMemory"
       }
     ],
@@ -46,7 +46,7 @@
         "text": "hardwareConcurrency",
         "scope": "scripts",
         "description": "CPU detection for device fingerprinting",
-        "confidence": 90,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
@@ -55,7 +55,7 @@
         "text": "deviceMemory",
         "scope": "scripts",
         "description": "Memory detection in scripts",
-        "confidence": 90,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
@@ -64,7 +64,7 @@
         "text": "maxTouchPoints",
         "scope": "scripts",
         "description": "Touch capabilities detection",
-        "confidence": 85,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false

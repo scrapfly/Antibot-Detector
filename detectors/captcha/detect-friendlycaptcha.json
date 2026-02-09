@@ -1,7 +1,7 @@
 {
   "id": "detect-friendlycaptcha",
   "name": "Friendly Captcha",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "CAPTCHA",
   "lastUpdated": "2024-10-21",
@@ -41,7 +41,7 @@
     ],
     "content": [
       {
-        "confidence": 100,
+        "confidence": 50,
         "description": "Friendly Captcha container class",
         "text": "frc-captcha",
         "textRegex": false,
@@ -49,7 +49,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 95,
+        "confidence": 50,
         "description": "Friendly Captcha JavaScript object",
         "text": "friendlyChallenge",
         "textRegex": false,
@@ -57,7 +57,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 95,
+        "confidence": 50,
         "description": "Friendly Captcha element identifier",
         "text": "friendly-challenge",
         "textRegex": false,
@@ -65,7 +65,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 90,
+        "confidence": 50,
         "description": "Friendly Captcha constructor reference",
         "text": "FriendlyCaptcha",
         "textRegex": false,

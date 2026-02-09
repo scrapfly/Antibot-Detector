@@ -635,7 +635,7 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
         modal.innerHTML = `
             <div class="recaptcha-modal" style="background: var(--bg-secondary, #2a2a2a); border-radius: 8px; padding: 20px; max-width: 500px; width: 90%;">
                 <div class="recaptcha-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; color: var(--text-primary, #fff);">📋 Version Detection</h3>
+                    <h3 style="margin: 0; color: var(--text-primary, #fff);">Version Detection</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
                 <div class="recaptcha-modal-content">
@@ -652,16 +652,16 @@ class ReCaptchaAdvanced extends BaseAdvancedModule {
                     </div>
                     <div class="version-checks" style="display: flex; flex-direction: column; gap: 8px;">
                         <div class="check-item" style="padding: 8px; background: var(--bg-tertiary, #1a1a1a); border-radius: 4px; color: ${versionData.checks.hasV2Checkbox ? 'var(--success, #4ade80)' : 'var(--text-secondary, #aaa)'};">
-                            ${versionData.checks.hasV2Checkbox ? '✅' : '❌'} V2 Checkbox
+                            ${versionData.checks.hasV2Checkbox ? 'Yes' : 'No'} V2 Checkbox
                         </div>
                         <div class="check-item" style="padding: 8px; background: var(--bg-tertiary, #1a1a1a); border-radius: 4px; color: ${versionData.checks.hasV2Iframe ? 'var(--success, #4ade80)' : 'var(--text-secondary, #aaa)'};">
-                            ${versionData.checks.hasV2Iframe ? '✅' : '❌'} V2 Iframe
+                            ${versionData.checks.hasV2Iframe ? 'Yes' : 'No'} V2 Iframe
                         </div>
                         <div class="check-item" style="padding: 8px; background: var(--bg-tertiary, #1a1a1a); border-radius: 4px; color: ${versionData.checks.hasV3Script ? 'var(--success, #4ade80)' : 'var(--text-secondary, #aaa)'};">
-                            ${versionData.checks.hasV3Script ? '✅' : '❌'} V3 Script
+                            ${versionData.checks.hasV3Script ? 'Yes' : 'No'} V3 Script
                         </div>
                         <div class="check-item" style="padding: 8px; background: var(--bg-tertiary, #1a1a1a); border-radius: 4px; color: ${versionData.checks.hasInvisible ? 'var(--success, #4ade80)' : 'var(--text-secondary, #aaa)'};">
-                            ${versionData.checks.hasInvisible ? '✅' : '❌'} Invisible
+                            ${versionData.checks.hasInvisible ? 'Yes' : 'No'} Invisible
                         </div>
                     </div>
                 </div>

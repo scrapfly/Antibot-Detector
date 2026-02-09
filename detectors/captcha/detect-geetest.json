@@ -1,7 +1,7 @@
 {
   "id": "detect-geetest",
   "name": "GeeTest",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "CAPTCHA",
   "lastUpdated": "2024-01-15",
@@ -11,64 +11,10 @@
   "description": "AI-powered behavioral CAPTCHA with slide verification",
   "detection": {
     "cookie": [
-      {
-        "name": "geetest_*",
-        "confidence": 95,
-        "description": "GeeTest session cookies",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "all",
-        "valueScope": "all"
-      },
-      {
-        "name": "gt_*",
-        "confidence": 90,
-        "description": "GeeTest tracking cookies",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "all",
-        "valueScope": "all"
-      }
+      
     ],
     "header": [
-      {
-        "name": "X-Geetest-Challenge",
-        "confidence": 100,
-        "description": "GeeTest challenge header",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      },
-      {
-        "name": "X-Geetest-Validate",
-        "confidence": 95,
-        "description": "GeeTest validation header",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      }
+     
     ],
     "url": [
       {
@@ -90,7 +36,7 @@
         "textScope": "all"
       },
       {
-        "confidence": 95,
+        "confidence": 100,
         "description": "GeeTest type endpoint",
         "text": "/gettype.php",
         "textRegex": false,
@@ -99,36 +45,19 @@
         "textScope": "all"
       },
       {
-        "confidence": 90,
+        "confidence": 50,
         "description": "GeeTest challenge endpoint",
         "text": "/get.php",
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false,
         "textScope": "all"
-      },
-      {
-        "confidence": 90,
-        "description": "GeeTest validation endpoint",
-        "text": "/validate.php",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
-      },
-      {
-        "confidence": 85,
-        "description": "GeeTest JavaScript library",
-        "text": "gt.js",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
       }
+      
     ],
     "content": [
       {
-        "confidence": 100,
+        "confidence": 50,
         "description": "GeeTest initialization function",
         "text": "window.initGeetest",
         "textRegex": false,
@@ -136,21 +65,21 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 95,
+        "confidence": 50,
         "text": "geetest",
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
       },
       {
-        "confidence": 90,
+        "confidence": 50,
         "text": "getGeetest",
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
       },
       {
-        "confidence": 85,
+        "confidence": 50,
         "text": "geetestUtils",
         "textRegex": false,
         "textWholeWord": false,
@@ -158,50 +87,10 @@
       }
     ],
     "dom": [
-      {
-        "selector": "[class*='geetest_']",
-        "confidence": 100,
-        "description": "GeeTest CSS classes",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
-      },
-      {
-        "selector": "[data-geetest]",
-        "confidence": 95,
-        "description": "GeeTest data attributes",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
-      },
-      {
-        "selector": "#geetest-captcha",
-        "confidence": 90,
-        "description": "Common GeeTest container ID",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
-      }
+     
     ],
     "window": [
-      {
-        "path": "initGeetest",
-        "condition": "typeof function",
-        "confidence": 100,
-        "description": "GeeTest initialization function"
-      },
-      {
-        "path": "geetest",
-        "condition": "typeof object",
-        "confidence": 95,
-        "description": "GeeTest main object"
-      },
-      {
-        "path": "getGeetest",
-        "condition": "typeof function",
-        "confidence": 90,
-        "description": "GeeTest getter function"
-      }
+
     ]
   }
 }

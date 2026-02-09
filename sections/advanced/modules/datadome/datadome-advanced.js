@@ -117,7 +117,7 @@ class DataDomeAdvanced extends BaseAdvancedModule {
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🍪 DataDome Cookies</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">DataDome Cookies</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 
@@ -142,7 +142,7 @@ class DataDomeAdvanced extends BaseAdvancedModule {
                     </div>
                 ` : `
                     <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
-                        <div style="font-size: 48px; margin-bottom: 12px;">🔍</div>
+                        <div style="font-size: 48px; margin-bottom: 12px;"></div>
                         <div style="font-size: 14px;">No DataDome cookies found</div>
                     </div>
                 `}
@@ -254,7 +254,7 @@ class DataDomeAdvanced extends BaseAdvancedModule {
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🔍 DataDome Scripts (${scripts.length})</h3>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">DataDome Scripts (${scripts.length})</h3>
                     <button class="advanced-modal-close-btn">×</button>
                 </div>
 
@@ -329,7 +329,7 @@ class DataDomeAdvanced extends BaseAdvancedModule {
             });
             Logger.network('[DataDome] Click listener added successfully');
         } else {
-            Logger.error('NETWORK', '[DataDome] ❌ Export code button not found in modal!');
+            Logger.error('NETWORK', '[DataDome] Export code button not found in modal!');
             Logger.error('NETWORK', '[DataDome] Modal HTML:', modal.innerHTML.substring(0, 500));
         }
 

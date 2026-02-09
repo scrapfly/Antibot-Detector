@@ -1,7 +1,7 @@
 {
   "id": "detect-reblaze",
   "name": "Reblaze",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Anti-Bot",
   "lastUpdated": "2024-01-15",
@@ -13,7 +13,7 @@
     "cookie": [
       {
         "name": "rbzid",
-        "confidence": 95,
+        "confidence": 100,
         "description": "Reblaze visitor ID",
         "nameRegex": false,
         "nameWholeWord": false,
@@ -27,7 +27,7 @@
       },
       {
         "name": "rbzsessionid",
-        "confidence": 90,
+        "confidence": 100,
         "description": "Reblaze session identifier",
         "nameRegex": false,
         "nameWholeWord": false,
@@ -41,7 +41,7 @@
       },
       {
         "name": "rbz*",
-        "confidence": 85,
+        "confidence": 100,
         "description": "Reblaze prefix cookies",
         "nameRegex": false,
         "nameWholeWord": false,
@@ -54,36 +54,11 @@
         "valueScope": "all"
       }
     ],
-    "header": [
-      {
-        "name": "X-Reblaze-*",
-        "confidence": 90,
-        "description": "Reblaze specific headers",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      }
-    ],
-    "url": [
-      {
-        "confidence": 80,
-        "description": "Reblaze reference in URLs",
-        "text": "reblaze",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
-      }
-    ],
+    "header": [],
+    "url": [],
     "content": [
       {
-        "confidence": 85,
+        "confidence": 50,
         "description": "Reblaze ID in scripts",
         "text": "rbzid",
         "textRegex": false,
@@ -91,7 +66,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 80,
+        "confidence": 50,
         "description": "Reblaze reference",
         "text": "reblaze",
         "textRegex": false,

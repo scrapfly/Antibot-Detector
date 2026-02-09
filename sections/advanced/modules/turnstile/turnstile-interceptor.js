@@ -19,7 +19,7 @@ function handleTurnstileMessage(request, sender, sendResponse) {
                     if (typeof showNotification === 'function') {
                         await showNotification(request.tabId, {
                             type: 'loading',
-                            title: '🔍 Analyzing Turnstile Scripts',
+                            title: 'Analyzing Turnstile Scripts',
                             message: 'Please wait while we collect script URLs...',
                             duration: 15000
                         });

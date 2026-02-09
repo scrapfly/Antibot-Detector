@@ -1,7 +1,7 @@
 {
   "id": "detect-indexeddb-fingerprint",
   "name": "IndexedDB Fingerprint",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Fingerprint",
   "lastUpdated": "2025-01-21",
@@ -14,19 +14,19 @@
       {
         "description": "Opens IndexedDB database for fingerprinting",
         "enabled": true,
-        "confidence": 90,
+        "confidence": 80,
         "target": "IDBFactory.prototype.open"
       },
       {
         "description": "Enumerates available IndexedDB databases",
         "enabled": true,
-        "confidence": 95,
+        "confidence": 80,
         "target": "IDBFactory.prototype.databases"
       },
       {
         "description": "Creates transactions for database access",
         "enabled": true,
-        "confidence": 85,
+        "confidence": 80,
         "target": "IDBDatabase.prototype.transaction"
       }
     ],
@@ -47,7 +47,7 @@
         "text": "indexedDB.open",
         "scope": "scripts",
         "description": "IndexedDB database opening",
-        "confidence": 85,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
@@ -56,7 +56,7 @@
         "text": "IDBDatabase",
         "scope": "scripts",
         "description": "IndexedDB database interface usage",
-        "confidence": 80,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false

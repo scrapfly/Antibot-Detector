@@ -1,7 +1,7 @@
 {
   "id": "detect-screen-fingerprint",
   "name": "Screen Fingerprint",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Fingerprint",
   "lastUpdated": "2025-01-15",
@@ -14,13 +14,13 @@
       {
         "description": "Reads screen width for display fingerprinting",
         "enabled": true,
-        "confidence": 85,
+        "confidence": 80,
         "target": "Screen.prototype.width"
       },
       {
         "description": "Reads screen height for display fingerprinting",
         "enabled": true,
-        "confidence": 85,
+        "confidence": 80,
         "target": "Screen.prototype.height"
       },
       {
@@ -32,7 +32,7 @@
       {
         "description": "Reads screen color depth",
         "enabled": true,
-        "confidence": 90,
+        "confidence": 80,
         "target": "Screen.prototype.colorDepth"
       },
       {
@@ -44,7 +44,7 @@
       {
         "description": "Reads device pixel ratio for high-DPI detection",
         "enabled": true,
-        "confidence": 90,
+        "confidence": 80,
         "target": "window.devicePixelRatio"
       }
     ]

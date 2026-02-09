@@ -1,7 +1,7 @@
 {
   "id": "detect-css-fingerprint",
   "name": "CSS Fingerprint",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Fingerprint",
   "lastUpdated": "2025-01-21",
@@ -14,13 +14,13 @@
       {
         "description": "Retrieves computed CSS styles for fingerprinting (disabled - getComputedStyle is on window object, not Window.prototype)",
         "enabled": false,
-        "confidence": 90,
+        "confidence": 80,
         "target": "Window.prototype.getComputedStyle"
       },
       {
         "description": "Gets CSS property values for feature detection",
         "enabled": true,
-        "confidence": 85,
+        "confidence": 80,
         "target": "CSSStyleDeclaration.prototype.getPropertyValue"
       }
     ],
@@ -33,19 +33,19 @@
     ],
     "content": [
       {
-        "value": "CSS.supports(",
+        "text": "CSS.supports(",
         "scope": "scripts",
         "description": "CSS feature detection in scripts",
-        "confidence": 80,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
       },
       {
-        "value": "getComputedStyle",
+        "text": "getComputedStyle",
         "scope": "scripts",
         "description": "Computing element styles for fingerprinting",
-        "confidence": 75,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false

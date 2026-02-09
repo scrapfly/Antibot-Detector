@@ -1,7 +1,7 @@
 {
   "id": "detect-recaptcha",
   "name": "Google reCAPTCHA",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "CAPTCHA",
   "lastUpdated": "2024-01-15",
@@ -22,7 +22,7 @@
       },
       {
         "text": "gstatic.com/recaptcha",
-        "confidence": 95,
+        "confidence": 100,
         "description": "Static resources",
         "textRegex": false,
         "textWholeWord": false,
@@ -39,7 +39,7 @@
       },
       {
         "text": "recaptcha.net",
-        "confidence": 95,
+        "confidence": 100,
         "description": "Alternative domain",
         "textRegex": false,
         "textWholeWord": false,
@@ -50,7 +50,7 @@
     "content": [
       {
         "text": "grecaptcha",
-        "confidence": 100,
+        "confidence": 50,
         "description": "Global reCAPTCHA object",
         "textRegex": false,
         "textWholeWord": false,
@@ -58,14 +58,14 @@
       },
       {
         "text": "recaptcha",
-        "confidence": 85,
+        "confidence": 50,
         "textRegex": false,
         "textWholeWord": false,
         "textCaseSensitive": false
       },
       {
         "text": "g-recaptcha",
-        "confidence": 90,
+        "confidence": 50,
         "description": "reCAPTCHA container class",
         "textRegex": false,
         "textWholeWord": false,
@@ -73,7 +73,7 @@
       },
       {
         "text": "grecaptcha.execute",
-        "confidence": 95,
+        "confidence": 50,
         "description": "v3 execution",
         "textRegex": false,
         "textWholeWord": false,
@@ -81,7 +81,7 @@
       },
       {
         "text": "grecaptcha.render",
-        "confidence": 90,
+        "confidence": 50,
         "description": "v2 rendering",
         "textRegex": false,
         "textWholeWord": false,
@@ -91,7 +91,7 @@
     "dom": [
       {
         "selector": ".g-recaptcha",
-        "confidence": 95,
+        "confidence": 100,
         "description": "reCAPTCHA container",
         "selectorRegex": false,
         "selectorWholeWord": false,
@@ -99,7 +99,7 @@
       },
       {
         "selector": "[data-sitekey]",
-        "confidence": 85,
+        "confidence": 50,
         "description": "Site key attribute",
         "selectorRegex": false,
         "selectorWholeWord": false,
@@ -107,7 +107,7 @@
       },
       {
         "selector": "iframe[src*='recaptcha']",
-        "confidence": 90,
+        "confidence": 100,
         "description": "reCAPTCHA iframe",
         "selectorRegex": false,
         "selectorWholeWord": false,
@@ -124,19 +124,19 @@
       {
         "path": "grecaptcha.ready",
         "condition": "typeof function",
-        "confidence": 95,
+        "confidence": 100,
         "description": "reCAPTCHA ready function"
       },
       {
         "path": "grecaptcha.execute",
         "condition": "typeof function",
-        "confidence": 95,
+        "confidence": 100,
         "description": "reCAPTCHA execute function"
       },
       {
         "path": "___grecaptcha_cfg",
         "condition": "typeof object",
-        "confidence": 90,
+        "confidence": 100,
         "description": "reCAPTCHA configuration object"
       }
     ]

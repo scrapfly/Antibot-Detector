@@ -105,8 +105,8 @@ function awsWafStartCapture(tabId, url) {
   if (showNotification) {
     showNotification(tabId, {
       type: 'capture',
-      title: '🎯 AWS WAF Capture Active',
-      message: '🔄 Please reload the page to start monitoring',
+      title: 'AWS WAF Capture Active',
+      message: 'Please reload the page to start monitoring',
       duration: 60000
     }).catch(err => {
       Logger.error('NETWORK', '[AwsWaf] Failed to show notification:', err);
@@ -311,7 +311,7 @@ async function handleAwsWafCaptureCompleted(tabId) {
     const capturedCount = Object.values(awsWafCaptureStateRef.capturedData).filter(v => v !== null).length - 1; // -1 for websiteURL
     showNotification(tabId, {
       type: 'success',
-      title: '✅ Capture Completed',
+      title: 'Capture Completed',
       message: `AWS WAF data captured (${capturedCount} items)`,
       duration: 5000
     }).catch(err => {
@@ -380,7 +380,7 @@ function handleAwsWafMessage(message, sender, sendResponse) {
             Logger.network('[AwsWaf] Showing analyzing notification before reload...');
             await showNotification(message.tabId, {
               type: 'loading',
-              title: '🔍 Analyzing AWS WAF Scripts',
+              title: 'Analyzing AWS WAF Scripts',
               message: 'Please wait while we collect script URLs...',
               duration: 15000 // Longer duration to persist through reload
             });
@@ -475,7 +475,7 @@ function awsWafStartAnalysis(tabId, url) {
             type: 'AWSWAF_ANALYSIS_RESULT',
             data: analysisData
           });
-          Logger.network('[AwsWaf-Analysis] ✓ Results sent to popup');
+          Logger.network('[AwsWaf-Analysis] Results sent to popup');
         } catch (error) {
           Logger.network('[AwsWaf-Analysis] Popup not available - results discarded');
         }

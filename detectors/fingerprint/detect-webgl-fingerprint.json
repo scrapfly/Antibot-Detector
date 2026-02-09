@@ -1,11 +1,11 @@
 {
   "id": "detect-webgl-fingerprint",
   "name": "WebGL Fingerprint",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Fingerprint",
-  "lastUpdated": "2024-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-02-04",
+  "version": "1.0.1",
   "website": "https://en.wikipedia.org/wiki/WebGL",
   "icon": "webgl_fingerprint.png",
   "description": "WebGL-based graphics hardware and driver fingerprinting",
@@ -14,13 +14,13 @@
       {
         "description": "Retrieves WebGL parameters for hardware fingerprinting",
         "enabled": true,
-        "confidence": 95,
+        "confidence": 100,
         "target": "WebGLRenderingContext.prototype.getParameter"
       },
       {
         "description": "Lists supported WebGL extensions",
         "enabled": true,
-        "confidence": 90,
+        "confidence": 100,
         "target": "WebGLRenderingContext.prototype.getSupportedExtensions"
       },
       {
@@ -32,7 +32,7 @@
       {
         "description": "Retrieves WebGL2 parameters",
         "enabled": true,
-        "confidence": 95,
+        "confidence": 100,
         "target": "WebGL2RenderingContext.prototype.getParameter"
       },
       {
@@ -50,7 +50,7 @@
       {
         "description": "Reads pixel data from WebGL2 framebuffer",
         "enabled": true,
-        "confidence": 90,
+        "confidence": 100,
         "target": "WebGL2RenderingContext.prototype.readPixels"
       }
     ]

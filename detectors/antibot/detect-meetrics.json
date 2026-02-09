@@ -1,7 +1,7 @@
 {
   "id": "detect-meetrics",
   "name": "Meetrics Check",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "ANTIBOT",
   "lastUpdated": "2024-10-21",
@@ -12,7 +12,7 @@
   "detection": {
     "content": [
       {
-        "confidence": 100,
+        "confidence": 50,
         "description": "Meetrics global object",
         "text": "meetricsGlobal",
         "textRegex": false,
@@ -20,7 +20,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 95,
+        "confidence": 50,
         "description": "Meetrics mouse behavior detection",
         "text": "suspicious_mouse_movement",
         "textRegex": false,
@@ -28,7 +28,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 85,
+        "confidence": 50,
         "description": "Meetrics reference",
         "text": "meetrics",
         "textRegex": false,

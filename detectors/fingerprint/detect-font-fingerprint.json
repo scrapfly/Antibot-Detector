@@ -1,18 +1,18 @@
 {
   "id": "detect-font-fingerprint",
   "name": "Font Fingerprint",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Fingerprint",
-  "lastUpdated": "2024-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-02-04",
+  "version": "1.0.1",
   "icon": "font_fingerprint.png",
   "detection": {
     "js_hooks": [
       {
         "description": "Measures text dimensions to detect installed fonts",
         "enabled": true,
-        "confidence": 90,
+        "confidence": 100,
         "target": "CanvasRenderingContext2D.prototype.measureText"
       },
       {

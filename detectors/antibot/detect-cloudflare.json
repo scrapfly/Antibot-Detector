@@ -1,7 +1,7 @@
 {
   "id": "detect-cloudflare",
   "name": "Cloudflare Bot Management",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Anti-Bot",
   "lastUpdated": "2024-01-15",
@@ -60,30 +60,7 @@
         "textScope": "all"
       }
     ],
-    "content": [
-      {
-        "confidence": 100,
-        "text": "cf-browser-verification",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 100,
-        "description": "Turnstile CAPTCHA",
-        "text": "turnstile.render",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 90,
-        "text": "__cf_chl_ctx",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      }
-    ],
+    "content": [],
     "window": [
       {
         "path": "_cf_chl_opt",

@@ -196,7 +196,7 @@ class CloudflareAdvanced extends BaseAdvancedModule {
 
                     ${foundCount === 0 ? `
                         <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
-                            <div style="font-size: 48px; margin-bottom: 12px;">🔍</div>
+                            <div style="font-size: 48px; margin-bottom: 12px;"></div>
                             <div style="font-size: 14px;">No Cloudflare cookies found</div>
                         </div>
                     ` : ''}

@@ -1,7 +1,7 @@
 {
   "id": "detect-sucuri",
   "name": "Sucuri WAF",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Anti-Bot",
   "lastUpdated": "2024-01-15",
@@ -11,107 +11,17 @@
   "description": "Sucuri Website Security Platform with WAF and bot protection",
   "detection": {
     "cookie": [
-      {
-        "name": "sucuri_cloudproxy",
-        "confidence": 95,
-        "description": "Sucuri CloudProxy cookie",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "all",
-        "valueScope": "all"
-      },
-      {
-        "name": "sucuri-*",
-        "confidence": 90,
-        "description": "Sucuri prefix cookies",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "all",
-        "valueScope": "all"
-      }
+    
     ],
     "header": [
-      {
-        "name": "X-Sucuri-ID",
-        "confidence": 95,
-        "description": "Sucuri request identifier",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      },
-      {
-        "name": "X-Sucuri-Cache",
-        "confidence": 90,
-        "description": "Sucuri cache status",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      },
-      {
-        "name": "Server",
-        "value": "Sucuri",
-        "confidence": 95,
-        "description": "Sucuri server header",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      },
-      {
-        "name": "X-Sucuri-Block",
-        "confidence": 100,
-        "description": "Sucuri block indicator",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      }
+    
     ],
     "url": [
-      {
-        "confidence": 90,
-        "description": "Sucuri domain in resources",
-        "text": "sucuri.net",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
-      }
+    
     ],
     "content": [
       {
-        "confidence": 85,
+        "confidence": 50,
         "description": "Sucuri reference in scripts",
         "text": "sucuri",
         "textRegex": false,
@@ -120,14 +30,7 @@
       }
     ],
     "dom": [
-      {
-        "selector": "meta[name*='sucuri']",
-        "confidence": 85,
-        "description": "Sucuri meta tags",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
-      }
+      
     ]
   }
 }

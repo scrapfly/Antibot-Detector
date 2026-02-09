@@ -1,7 +1,7 @@
 {
   "id": "detect-incapsula",
   "name": "Incapsula (Imperva)",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Anti-Bot",
   "lastUpdated": "2024-01-15",
@@ -70,7 +70,7 @@
       {
         "name": "utmvc",
         "nameRegex": false,
-        "confidence": 95,
+        "confidence": 100,
         "description": "UTMVC tracking cookie",
         "nameWholeWord": false,
         "nameCaseSensitive": false,
@@ -85,7 +85,7 @@
     "header": [],
     "url": [
       {
-        "confidence": 95,
+        "confidence": 100,
         "description": "Incapsula domain resources",
         "text": "incapsula.com",
         "textRegex": false,
@@ -105,7 +105,7 @@
     ],
     "content": [
       {
-        "confidence": 100,
+        "confidence": 50,
         "description": "Incapsula global object",
         "text": "_Incapsula",
         "textRegex": false,
@@ -113,7 +113,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 90,
+        "confidence": 50,
         "text": "incapsula",
         "textRegex": false,
         "textWholeWord": false,

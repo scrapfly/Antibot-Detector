@@ -1,7 +1,7 @@
 {
   "id": "detect-perimeterx",
   "name": "PerimeterX",
-  "author": "scrapfly",
+  "author": "Scrapfly",
   "enabled": true,
   "category": "Anti-Bot",
   "lastUpdated": "2024-01-15",
@@ -13,7 +13,7 @@
     "cookie": [
       {
         "name": "_px2",
-        "confidence": 95,
+        "confidence": 100,
         "description": "PerimeterX tracking cookie v2",
         "nameRegex": false,
         "nameWholeWord": false,
@@ -41,7 +41,7 @@
       },
       {
         "name": "_pxhd",
-        "confidence": 90,
+        "confidence": 100,
         "description": "PerimeterX header data",
         "nameRegex": false,
         "nameWholeWord": false,
@@ -55,7 +55,7 @@
       },
       {
         "name": "_pxvid",
-        "confidence": 85,
+        "confidence": 100,
         "description": "PerimeterX visitor ID",
         "nameRegex": false,
         "nameWholeWord": false,
@@ -68,36 +68,7 @@
         "valueScope": "all"
       }
     ],
-    "header": [
-      {
-        "name": "X-PX-Authorization",
-        "confidence": 100,
-        "description": "PerimeterX authorization header",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      },
-      {
-        "name": "X-PX-Original-Token",
-        "confidence": 95,
-        "description": "Original token header",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      }
-    ],
+    "header": [],
     "url": [
       {
         "confidence": 100,
@@ -116,20 +87,11 @@
         "textWholeWord": false,
         "textCaseSensitive": false,
         "textScope": "all"
-      },
-      {
-        "confidence": 90,
-        "description": "PerimeterX JavaScript",
-        "text": "px.js",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
       }
     ],
     "content": [
       {
-        "confidence": 100,
+        "confidence": 50,
         "description": "PerimeterX application ID",
         "text": "window._pxAppId",
         "textRegex": false,
@@ -137,7 +99,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 95,
+        "confidence": 50,
         "description": "PerimeterX initialization function",
         "text": "pxInit",
         "textRegex": false,
@@ -145,7 +107,7 @@
         "textCaseSensitive": false
       },
       {
-        "confidence": 90,
+        "confidence": 50,
         "text": "_pxAction",
         "textRegex": false,
         "textWholeWord": false,
