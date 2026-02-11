@@ -31,7 +31,8 @@ Scrapfly Anti-bot Detector is a Manifest V3 Chrome extension that helps security
 - **Fingerprinting techniques**: Canvas, WebGL, Audio, Font, WebRTC, Performance, Navigator, Storage, and other browser fingerprinting methods
 
 <div align="center">
-<img src="assets/scrapfly-screenshot-1-1280x800.png" alt="Detection Demo" width="600">
+<img width="1280" height="800" alt="unnamed (1)" src="https://github.com/user-attachments/assets/6b589276-b653-4127-8edd-d39b566cf744" />
+
 </div>
 
 ## Features
@@ -251,4 +252,5 @@ See the [LICENSE](LICENSE) file for complete terms and conditions.
 <div align="center">
 
 </div>
+
 
