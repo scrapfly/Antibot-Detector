@@ -5,40 +5,12 @@
   "enabled": true,
   "category": "Anti-Bot",
   "lastUpdated": "2025-01-08 00:00:00",
-  "version": "1.0",
+  "version": "1.1",
   "website": "https://developers.google.com/recaptcha",
   "icon": "custom.png",
   "description": "Google's proprietary bot detection system used in reCAPTCHA, YouTube, and other Google services",
   "detection": {
     "cookie": [
-      {
-        "name": "_+Secure-[0-9I]?PSID.*",
-        "nameRegex": true,
-        "confidence": 90,
-        "description": "Google session ID variants (PSID, PSIDCC, PSIDDRTS, PSIDTS) with optional digit/I prefix",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "all",
-        "valueScope": "all"
-      },
-      {
-        "name": "_+Secure-[0-9I]?PAPISID.*",
-        "nameRegex": true,
-        "confidence": 90,
-        "description": "Google API session ID variants with optional digit/I prefix",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "all",
-        "valueScope": "all"
-      }
     ],
     "header": [],
     "url": [],
