@@ -9,7 +9,8 @@
 
 <br>
 
-<img src="assets/scrapfly-marquee-promo-1400x560.png" alt="Scrapfly Anti-bot Detector" width="700">
+<img width="1280" height="800" alt="unnamed" src="https://github.com/user-attachments/assets/e36a7a2d-6e49-49f7-91e5-811153b5b6f6" />
+
 
 <br>
 
@@ -250,3 +251,4 @@ See the [LICENSE](LICENSE) file for complete terms and conditions.
 <div align="center">
 
 </div>
+
