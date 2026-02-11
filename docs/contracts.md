@@ -51,7 +51,6 @@
 - `scrapfly_categories`
 - `scrapfly_detection_storage`
 - `scrapfly_detection_state`
-- `scrapfly_detection_states`
 - `scrapfly_history`
 - `scrapfly_advanced_history`
 - `scrapfly_js_hook_detections`

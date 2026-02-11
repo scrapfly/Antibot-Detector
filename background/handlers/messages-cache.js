@@ -72,8 +72,8 @@ function registerCacheHandlers(registry, context) {
                         const count = detectionCount.toString();
                         let color;
                         if (detections.length > 0) {
-                            const avgConfidence = Utils.computeAverageConfidence(detections);
-                            const difficulty = Utils.getDifficultyLevel(detections, avgConfidence);
+                            const avgConfidence = DetectionUtils.computeAverageConfidence(detections);
+                            const difficulty = DetectionUtils.getDifficultyLevel(detections, avgConfidence);
                             color = difficulty === 'High' ? badgeColors.high :
                                    difficulty === 'Medium' ? badgeColors.medium :
                                    badgeColors.low;

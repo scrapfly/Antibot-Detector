@@ -19,12 +19,6 @@ function setupTabListeners() {
             Logger.background(`[TabCleanup] Removed tab ${tabId} from cache tracking`);
         }
 
-        // Abandon detection in persistent state manager
-        if (detectionStateManager && detectionStateManager.isDetecting(tabId)) {
-            detectionStateManager.abandonDetection(tabId, 'tab_closed');
-            Logger.background(`[DetectionStateManager] Abandoned detection for closed tab ${tabId}`);
-        }
-
         // End keepalive operations for this tab
         if (workerKeepaliveManager) {
             workerKeepaliveManager.endOperationsForTab(tabId);
@@ -269,18 +263,6 @@ function setupTabListeners() {
         // Update current active tab
         currentActiveTab = newTabId;
 
-        // Delegate to DetectionEngineManager for normal tab activation handling
-        await DetectionEngineManager.handleTabActivation(activeInfo, {
-            chrome,
-            Settings,
-            CategoryManager,
-            Utils,                 // FIX: Pass Utils for blacklist checking
-            categoryManager,
-            interruptedDetections, // Pass interrupted detections map
-            activeDetections,      // TAB SWITCH FIX: Pass active detection tracking
-            detectionStates,       // TAB SWITCH FIX: Pass detection state tracking
-            manuallyClearedCaches  // Pass manually cleared caches Set
-        });
     });
 }
 

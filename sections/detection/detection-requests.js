@@ -430,11 +430,11 @@ DetectionRequests.getBadgeBackgroundColor = async function(tabId) {
             resolve('');
             return;
           }
-          // colorInfo is {r, g, b, a}, convert to hex
+          // colorInfo is ColorArray [r, g, b, a], not {r, g, b, a}
           if (colorInfo && typeof colorInfo === 'object') {
-            const r = colorInfo.r.toString(16).padStart(2, '0');
-            const g = colorInfo.g.toString(16).padStart(2, '0');
-            const b = colorInfo.b.toString(16).padStart(2, '0');
+            const r = (colorInfo[0] || 0).toString(16).padStart(2, '0');
+            const g = (colorInfo[1] || 0).toString(16).padStart(2, '0');
+            const b = (colorInfo[2] || 0).toString(16).padStart(2, '0');
             resolve(`#${r}${g}${b}`.toUpperCase());
           } else {
             resolve('');

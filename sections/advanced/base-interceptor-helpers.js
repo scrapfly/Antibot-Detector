@@ -138,71 +138,6 @@ async function checkCookies(tabUrl, config) {
 }
 
 // ============================================================================
-// HEADER CHECKING
-// ============================================================================
-
-/**
- * Check headers against configuration
- * @param {object} details - webRequest details object
- * @param {Array|object} config - Header configuration(s)
- *   Single: { name: {pattern, regex, caseSensitive}, value: {...}, returnValue: true }
- *   Array: [{ name: {...}, value: {...} }, ...]
- * @returns {Array} Array of matched headers
- */
-function checkHeaders(details, config) {
-    if (!details || !details.responseHeaders) {
-        Logger.warn('UI', '[BaseInterceptor] checkHeaders: No headers in details');
-        return [];
-    }
-
-    const configs = Array.isArray(config) ? config : [config];
-    const matches = [];
-
-    for (const headerConfig of configs) {
-        const { name: nameConfig, value: valueConfig, returnValue = true } = headerConfig;
-
-        for (const header of details.responseHeaders) {
-            let nameMatch = true;
-            let valueMatch = true;
-
-            // Check name if config provided
-            if (nameConfig && nameConfig.pattern) {
-                nameMatch = matchPattern(header.name, nameConfig.pattern, {
-                    regex: nameConfig.regex || false,
-                    caseSensitive: nameConfig.caseSensitive !== false,
-                    wholeWord: nameConfig.wholeWord || false
-                });
-            }
-
-            // Check value if config provided
-            if (valueConfig && valueConfig.pattern && nameMatch && header.value) {
-                valueMatch = matchPattern(header.value, valueConfig.pattern, {
-                    regex: valueConfig.regex || false,
-                    caseSensitive: valueConfig.caseSensitive !== false,
-                    wholeWord: valueConfig.wholeWord || false
-                });
-            }
-
-            // If both match, add to results
-            if (nameMatch && valueMatch) {
-                const result = {
-                    name: header.name
-                };
-
-                // Optionally include value
-                if (returnValue && header.value) {
-                    result.value = header.value;
-                }
-
-                matches.push(result);
-            }
-        }
-    }
-
-    return matches;
-}
-
-// ============================================================================
 // URL CHECKING
 // ============================================================================
 
@@ -326,196 +261,6 @@ function checkUrls(urls, config = {}) {
  *   }
  * @returns {object} { found: boolean, matches: {}, raw: string }
  */
-function checkPayload(requestBody, config = {}) {
-    const {
-        patterns = [],
-        extractFormat = 'auto',
-        regex = false,
-        returnMatches = true,
-        returnAll = false
-    } = config;
-
-    const result = {
-        found: false,
-        matches: {},
-        raw: null,
-        parsed: null
-    };
-
-    if (!requestBody) {
-        return result;
-    }
-
-    let rawBody = null;
-    let parsedBody = null;
-
-    try {
-        // Extract raw body
-        if (requestBody.raw && requestBody.raw[0]) {
-            const decoder = new TextDecoder('utf-8');
-            rawBody = decoder.decode(requestBody.raw[0].bytes);
-            result.raw = rawBody;
-        } else if (requestBody.formData) {
-            rawBody = JSON.stringify(requestBody.formData);
-            parsedBody = requestBody.formData;
-        }
-
-        if (!rawBody) {
-            return result;
-        }
-
-        // Parse body based on format
-        if (extractFormat === 'json' || (extractFormat === 'auto' && rawBody.trim().startsWith('{'))) {
-            try {
-                parsedBody = JSON.parse(rawBody);
-            } catch (e) {
-                Logger.warn('UI', '[BaseInterceptor] Failed to parse JSON body');
-            }
-        } else if (extractFormat === 'urlencoded' || (extractFormat === 'auto' && rawBody.includes('='))) {
-            try {
-                parsedBody = {};
-                const params = new URLSearchParams(rawBody);
-                for (const [key, value] of params.entries()) {
-                    parsedBody[key] = value;
-                }
-            } catch (e) {
-                Logger.warn('UI', '[BaseInterceptor] Failed to parse URL-encoded body');
-            }
-        }
-
-        result.parsed = parsedBody;
-
-        // Return all if requested
-        if (returnAll && parsedBody) {
-            result.found = true;
-            result.matches = parsedBody;
-            return result;
-        }
-
-        // Check patterns
-        for (const pattern of patterns) {
-            let found = false;
-            let matchedValue = null;
-
-            // Check in parsed body (if available)
-            if (parsedBody && typeof parsedBody === 'object') {
-                for (const [key, value] of Object.entries(parsedBody)) {
-                    const keyMatch = matchPattern(key, pattern, { regex, caseSensitive: true });
-                    if (keyMatch) {
-                        found = true;
-                        matchedValue = value;
-                        if (returnMatches) {
-                            result.matches[key] = value;
-                        }
-                        break;
-                    }
-                }
-            }
-
-            // Fallback to raw body search
-            if (!found) {
-                const rawMatch = matchPattern(rawBody, pattern, { regex, caseSensitive: true });
-                if (rawMatch) {
-                    found = true;
-                    result.found = true;
-
-                    // Try to extract value using regex if pattern is a field name
-                    if (!regex && returnMatches) {
-                        const extractRegex = new RegExp(`${pattern}[=:]\\s*["']?([^"'&\\s]+)["']?`, 'i');
-                        const match = rawBody.match(extractRegex);
-                        if (match && match[1]) {
-                            result.matches[pattern] = match[1];
-                        }
-                    }
-                }
-            }
-
-            if (found) {
-                result.found = true;
-            }
-        }
-
-    } catch (error) {
-        Logger.error('UI', '[BaseInterceptor] Error checking payload:', error);
-    }
-
-    return result;
-}
-
-// ============================================================================
-// CONTENT CHECKING (RESPONSE BODY / HTML)
-// ============================================================================
-
-/**
- * Check response content/HTML against patterns
- * NOTE: This requires webRequest.onBeforeRequest + filterResponseData
- * @param {string} content - Response text/HTML content
- * @param {object} config - Content configuration
- *   {
- *     patterns: ['pattern1', 'pattern2'],  // Patterns to search for
- *     regex: boolean,  // Use regex matching
- *     returnUrls: boolean,  // Extract and return URLs from matches
- *     returnMatches: boolean,  // Return matched strings
- *     caseSensitive: boolean  // Case sensitive matching
- *   }
- * @returns {object} { found: boolean, matches: [], urls: [] }
- */
-function checkContent(content, config = {}) {
-    const {
-        patterns = [],
-        regex = false,
-        returnUrls = false,
-        returnMatches = true,
-        caseSensitive = false
-    } = config;
-
-    const result = {
-        found: false,
-        matches: [],
-        urls: []
-    };
-
-    if (!content || !patterns.length) {
-        return result;
-    }
-
-    try {
-        for (const pattern of patterns) {
-            const found = matchPattern(content, pattern, { regex, caseSensitive });
-
-            if (found) {
-                result.found = true;
-
-                // Return matched strings if using regex with capture groups
-                if (returnMatches && regex) {
-                    try {
-                        const flags = caseSensitive ? 'g' : 'gi';
-                        const re = new RegExp(pattern, flags);
-                        const matches = [...content.matchAll(re)];
-                        result.matches.push(...matches.map(m => m[0]));
-                    } catch (e) {
-                        Logger.warn('UI', '[BaseInterceptor] Regex matchAll failed:', e);
-                    }
-                } else if (returnMatches) {
-                    result.matches.push(pattern);
-                }
-            }
-        }
-
-        // Extract URLs if requested
-        if (returnUrls) {
-            const urlRegex = /(https?:\/\/[^\s"'<>]+)/gi;
-            const urls = [...content.matchAll(urlRegex)].map(m => m[0]);
-            result.urls = [...new Set(urls)]; // Deduplicate
-        }
-
-    } catch (error) {
-        Logger.error('UI', '[BaseInterceptor] Error checking content:', error);
-    }
-
-    return result;
-}
-
 // ============================================================================
 // STORAGE HELPERS
 // ============================================================================
@@ -619,42 +364,6 @@ async function saveToHistory(tabId, captureData, options = {}) {
     } catch (error) {
         Logger.error('UI', '[BaseInterceptor] Error saving to history:', error);
         throw error;
-    }
-}
-
-/**
- * Load capture history for a specific module type
- * @param {string} type - Module type (e.g., 'akamai', 'recaptcha')
- * @param {string} hostname - Optional hostname filter
- * @returns {Promise<Array>} Array of capture history items
- */
-async function loadHistory(type, hostname = null) {
-    try {
-        const result = await chrome.storage.local.get(['scrapfly_advanced_history']);
-        let history = result.scrapfly_advanced_history || { items: [] };
-
-        // Handle legacy string format
-        if (typeof history === 'string') {
-            history = JSON.parse(history);
-        }
-        if (!history.items) {
-            return [];
-        }
-
-        // Filter by type and expiry
-        const now = Date.now();
-        let items = history.items.filter(item => {
-            const typeMatch = item.type === type;
-            const notExpired = !item.expiresAt || item.expiresAt > now;
-            const hostnameMatch = !hostname || item.hostname === hostname;
-            return typeMatch && notExpired && hostnameMatch;
-        });
-
-        return items;
-
-    } catch (error) {
-        Logger.error('UI', '[BaseInterceptor] Error loading history:', error);
-        return [];
     }
 }
 
@@ -804,29 +513,6 @@ async function showNotification(tabId, options = {}) {
 // VERSION DETECTION
 // ============================================================================
 
-/**
- * Detect version from data using pattern
- * @param {string} data - Data to extract version from
- * @param {string|RegExp} pattern - Version pattern (e.g., "^(\\d+);" for Akamai)
- * @param {string} prefix - Optional prefix (e.g., "Akamai V")
- * @returns {string|null} Detected version or null
- */
-function detectVersion(data, pattern, prefix = '') {
-    if (!data || !pattern) return null;
-
-    try {
-        const regex = typeof pattern === 'string' ? new RegExp(pattern) : pattern;
-        const match = data.match(regex);
-        if (match && match[1]) {
-            return prefix ? `${prefix}${match[1]}` : match[1];
-        }
-    } catch (error) {
-        Logger.error('UI', '[BaseInterceptor] Error detecting version:', error);
-    }
-
-    return null;
-}
-
 // ============================================================================
 // EXPORTS (for both popup and service worker contexts)
 // ============================================================================
@@ -840,14 +526,9 @@ if (globalContext) {
     globalContext.BaseInterceptorHelpers = {
         matchPattern,
         checkCookies,
-        checkHeaders,
         checkUrls,
-        checkPayload,
-        checkContent,
         saveToHistory,
-        loadHistory,
-        showNotification,
-        detectVersion
+        showNotification
     };
 
     Logger.ui('[BaseInterceptorHelpers] Loaded in context:', typeof window !== 'undefined' ? 'popup' : 'service-worker');

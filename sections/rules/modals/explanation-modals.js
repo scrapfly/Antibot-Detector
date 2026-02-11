@@ -8,212 +8,47 @@
  * - Method Help modal (detection method descriptions)
  *
  * These methods are added to the Rules prototype.
+ * Dependencies: rules-modal-lifecycle.js, rules.js
  */
 
 // ============================================
-// Regex Explanation Modal
+// Data-driven explanation modal setup
 // ============================================
 
-/**
- * Setup Regex explanation modal event listeners
- */
-Rules.prototype.setupRegexExplanationModal = function() {
-  const modal = document.querySelector('#regexExplanationModal');
-  const explanationBtn = document.querySelector('#regexExplanationBtn');
-  const explanationBtnValue = document.querySelector('#regexExplanationBtnValue');
-  const closeBtn = document.querySelector('#closeRegexExplanation');
-  const backdrop = modal?.querySelector('.rule-modal-backdrop');
-
-  // Open modal when explanation button is clicked (Name field)
-  if (explanationBtn) {
-    explanationBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.openRegexExplanationModal();
-    });
+const EXPLANATION_MODAL_CONFIGS = [
+  {
+    modal: '#regexExplanationModal',
+    btn: '#regexExplanationBtn',
+    btnAlt: '#regexExplanationBtnValue',
+    close: '#closeRegexExplanation'
+  },
+  {
+    modal: '#wholeWordExplanationModal',
+    btn: '#wholeWordExplanationBtn',
+    btnAlt: '#wholeWordExplanationBtnValue',
+    close: '#closeWholeWordExplanation'
+  },
+  {
+    modal: '#caseSensitiveExplanationModal',
+    btn: '#caseSensitiveExplanationBtn',
+    btnAlt: '#caseSensitiveExplanationBtnValue',
+    close: '#closeCaseSensitiveExplanation'
   }
-
-  // Open modal when explanation button is clicked (Value field)
-  if (explanationBtnValue) {
-    explanationBtnValue.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.openRegexExplanationModal();
-    });
-  }
-
-  // Close modal events
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => this.closeRegexExplanationModal());
-  }
-  if (backdrop) {
-    backdrop.addEventListener('click', () => this.closeRegexExplanationModal());
-  }
-};
+];
 
 /**
- * Open Regex explanation modal
+ * Setup all explanation modals (regex, wholeWord, caseSensitive)
+ * Replaces setupRegexExplanationModal, setupWholeWordExplanationModal, setupCaseSensitiveExplanationModal
  */
-Rules.prototype.openRegexExplanationModal = function() {
-  const modal = document.querySelector('#regexExplanationModal');
-  if (!modal) return;
+Rules.prototype.setupExplanationModals = function() {
+  this._explanationModals = {};
 
-  // Hide parent modal backdrop to prevent blur stacking
-  const methodSettingsBackdrop = document.querySelector('#methodSettingsModal .rule-modal-backdrop');
-  if (methodSettingsBackdrop) methodSettingsBackdrop.style.display = 'none';
-
-  modal.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-};
-
-/**
- * Close Regex explanation modal
- */
-Rules.prototype.closeRegexExplanationModal = function() {
-  const modal = document.querySelector('#regexExplanationModal');
-  if (modal) {
-    modal.style.display = 'none';
-    document.body.style.overflow = '';
-
-    // Restore parent modal backdrop
-    const methodSettingsBackdrop = document.querySelector('#methodSettingsModal .rule-modal-backdrop');
-    if (methodSettingsBackdrop) methodSettingsBackdrop.style.display = '';
-  }
-};
-
-// ============================================
-// Whole Word Explanation Modal
-// ============================================
-
-/**
- * Setup Whole Word explanation modal event listeners
- */
-Rules.prototype.setupWholeWordExplanationModal = function() {
-  const modal = document.querySelector('#wholeWordExplanationModal');
-  const explanationBtn = document.querySelector('#wholeWordExplanationBtn');
-  const explanationBtnValue = document.querySelector('#wholeWordExplanationBtnValue');
-  const closeBtn = document.querySelector('#closeWholeWordExplanation');
-  const backdrop = modal?.querySelector('.rule-modal-backdrop');
-
-  // Open modal when explanation button is clicked (Name field)
-  if (explanationBtn) {
-    explanationBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.openWholeWordExplanationModal();
-    });
-  }
-
-  // Open modal when explanation button is clicked (Value field)
-  if (explanationBtnValue) {
-    explanationBtnValue.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.openWholeWordExplanationModal();
-    });
-  }
-
-  // Close modal events
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => this.closeWholeWordExplanationModal());
-  }
-  if (backdrop) {
-    backdrop.addEventListener('click', () => this.closeWholeWordExplanationModal());
-  }
-};
-
-/**
- * Open Whole Word explanation modal
- */
-Rules.prototype.openWholeWordExplanationModal = function() {
-  const modal = document.querySelector('#wholeWordExplanationModal');
-  if (!modal) return;
-
-  // Hide parent modal backdrop to prevent blur stacking
-  const methodSettingsBackdrop = document.querySelector('#methodSettingsModal .rule-modal-backdrop');
-  if (methodSettingsBackdrop) methodSettingsBackdrop.style.display = 'none';
-
-  modal.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-};
-
-/**
- * Close Whole Word explanation modal
- */
-Rules.prototype.closeWholeWordExplanationModal = function() {
-  const modal = document.querySelector('#wholeWordExplanationModal');
-  if (modal) {
-    modal.style.display = 'none';
-    document.body.style.overflow = '';
-
-    // Restore parent modal backdrop
-    const methodSettingsBackdrop = document.querySelector('#methodSettingsModal .rule-modal-backdrop');
-    if (methodSettingsBackdrop) methodSettingsBackdrop.style.display = '';
-  }
-};
-
-// ============================================
-// Case Sensitive Explanation Modal
-// ============================================
-
-/**
- * Setup Case Sensitive explanation modal event listeners
- */
-Rules.prototype.setupCaseSensitiveExplanationModal = function() {
-  const modal = document.querySelector('#caseSensitiveExplanationModal');
-  const explanationBtn = document.querySelector('#caseSensitiveExplanationBtn');
-  const explanationBtnValue = document.querySelector('#caseSensitiveExplanationBtnValue');
-  const closeBtn = document.querySelector('#closeCaseSensitiveExplanation');
-  const backdrop = modal?.querySelector('.rule-modal-backdrop');
-
-  // Open modal when explanation button is clicked (Name field)
-  if (explanationBtn) {
-    explanationBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.openCaseSensitiveExplanationModal();
-    });
-  }
-
-  // Open modal when explanation button is clicked (Value field)
-  if (explanationBtnValue) {
-    explanationBtnValue.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.openCaseSensitiveExplanationModal();
-    });
-  }
-
-  // Close modal events
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => this.closeCaseSensitiveExplanationModal());
-  }
-  if (backdrop) {
-    backdrop.addEventListener('click', () => this.closeCaseSensitiveExplanationModal());
-  }
-};
-
-/**
- * Open Case Sensitive explanation modal
- */
-Rules.prototype.openCaseSensitiveExplanationModal = function() {
-  const modal = document.querySelector('#caseSensitiveExplanationModal');
-  if (!modal) return;
-
-  // Hide parent modal backdrop to prevent blur stacking
-  const methodSettingsBackdrop = document.querySelector('#methodSettingsModal .rule-modal-backdrop');
-  if (methodSettingsBackdrop) methodSettingsBackdrop.style.display = 'none';
-
-  modal.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-};
-
-/**
- * Close Case Sensitive explanation modal
- */
-Rules.prototype.closeCaseSensitiveExplanationModal = function() {
-  const modal = document.querySelector('#caseSensitiveExplanationModal');
-  if (modal) {
-    modal.style.display = 'none';
-    document.body.style.overflow = '';
-
-    // Restore parent modal backdrop
-    const methodSettingsBackdrop = document.querySelector('#methodSettingsModal .rule-modal-backdrop');
-    if (methodSettingsBackdrop) methodSettingsBackdrop.style.display = '';
+  for (const config of EXPLANATION_MODAL_CONFIGS) {
+    const modal = new RulesModalLifecycle(config.modal);
+    modal.setupCloseListeners(config.close);
+    if (config.btn) modal.setupOpenListener(config.btn);
+    if (config.btnAlt) modal.setupOpenListener(config.btnAlt);
+    this._explanationModals[config.modal] = modal;
   }
 };
 
@@ -225,17 +60,10 @@ Rules.prototype.closeCaseSensitiveExplanationModal = function() {
  * Setup method help modal event listeners
  */
 Rules.prototype.setupMethodHelpModal = function() {
-  const modal = document.querySelector('#methodHelpModal');
-  const closeBtn = document.querySelector('#closeMethodHelp');
-  const backdrop = modal?.querySelector('.rule-modal-backdrop');
-
-  // Close modal events
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => this.closeMethodHelpModal());
-  }
-  if (backdrop) {
-    backdrop.addEventListener('click', () => this.closeMethodHelpModal());
-  }
+  this._methodHelpModal = new RulesModalLifecycle('#methodHelpModal', {
+    hideParentOnOpen: false
+  });
+  this._methodHelpModal.setupCloseListeners('#closeMethodHelp');
 };
 
 /**
@@ -305,8 +133,8 @@ Rules.prototype.getMethodHelpContent = function(methodType) {
     title: content.title,
     html: `
       <p>${content.description}</p>
-      ${content.warning ? `<p style="color: #fbbf24; margin-top: 12px;"><strong>Warning:</strong> ${content.warning}</p>` : ''}
-      ${content.tip ? `<p style="color: #60a5fa; margin-top: 12px;"><strong>Tip:</strong> ${content.tip}</p>` : ''}
+      ${content.warning ? `<p style="color: var(--warning); margin-top: 12px;"><strong>Warning:</strong> ${content.warning}</p>` : ''}
+      ${content.tip ? `<p style="color: var(--accent-light); margin-top: 12px;"><strong>Tip:</strong> ${content.tip}</p>` : ''}
     `
   };
 };
@@ -315,31 +143,13 @@ Rules.prototype.getMethodHelpContent = function(methodType) {
  * Open method help modal
  */
 Rules.prototype.openMethodHelpModal = function(methodType) {
-  const modal = document.querySelector('#methodHelpModal');
   const title = document.querySelector('#methodHelpTitle');
   const content = document.querySelector('#methodHelpContent');
+  if (!title || !content) return;
 
-  if (!modal || !title || !content) return;
-
-  // Get help content
   const helpData = this.getMethodHelpContent(methodType);
-
-  // Update modal title and content
   title.textContent = helpData.title;
   content.innerHTML = helpData.html;
 
-  // Show modal
-  modal.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-};
-
-/**
- * Close method help modal
- */
-Rules.prototype.closeMethodHelpModal = function() {
-  const modal = document.querySelector('#methodHelpModal');
-  if (modal) {
-    modal.style.display = 'none';
-    document.body.style.overflow = '';
-  }
+  this._methodHelpModal.open();
 };

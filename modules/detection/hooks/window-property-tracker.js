@@ -103,6 +103,7 @@
       this.phaseStartTime = 0;
       this.pollingInterval = null;
       this.isPolling = false;
+      this.completed = false;
 
       // Callbacks
       this.onDetection = null;
@@ -579,6 +580,8 @@
      * Complete polling and report results
      */
     _completePolling(reason) {
+      if (this.completed) return;
+      this.completed = true;
       this.isPolling = false;
 
       if (this.pollingInterval) {
@@ -652,6 +655,7 @@
      */
     cleanup() {
       this.stop();
+      this.completed = false;
       this.properties.clear();
       this.detectedProperties.clear();
     }

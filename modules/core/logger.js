@@ -399,6 +399,18 @@ class Logger {
     const prefix = `[${time}] [${log.context.toUpperCase()}] [${log.category}] [${log.level}]`;
     const fullMessage = `${prefix} ${icon} ${log.message}`;
 
+    // Stringify data into message so it's readable on extension error pages
+    // (which show [object Object] for separate console arguments)
+    let dataStr = '';
+    if (log.data !== null && log.data !== undefined) {
+      try {
+        dataStr = typeof log.data === 'string' ? ` ${log.data}` : ` ${JSON.stringify(log.data)}`;
+      } catch (e) {
+        dataStr = ' [Unstringifiable data]';
+      }
+    }
+    const messageWithData = fullMessage + dataStr;
+
     // If LogCollector is enabled in the service worker, prefer storing over printing:
     // printing high-volume logs to the SW console can retain object graphs and crash Chrome.
     const collector = (typeof globalThis !== 'undefined' && globalThis.logCollector && typeof globalThis.logCollector.addLog === 'function')
@@ -407,9 +419,8 @@ class Logger {
     const collectorActive = !!(collector && collector.enabled);
     if (collectorActive && log.level !== Logger.LEVELS.WARN && log.level !== Logger.LEVELS.ERROR) {
       try {
-        const args = log.data ? [fullMessage, log.data] : [fullMessage];
         // Keep INFO/DEBUG inside the collector and avoid console spam.
-        collector.addLog(log.level === Logger.LEVELS.DEBUG ? 'debug' : 'info', args);
+        collector.addLog(log.level === Logger.LEVELS.DEBUG ? 'debug' : 'info', [messageWithData]);
       } catch (e) {
         // ignore
       }
@@ -418,23 +429,11 @@ class Logger {
 
     // Choose console method based on level
     if (log.level === Logger.LEVELS.ERROR) {
-      if (log.data) {
-        console.error(fullMessage, log.data);
-      } else {
-        console.error(fullMessage);
-      }
+      console.error(messageWithData);
     } else if (log.level === Logger.LEVELS.WARN) {
-      if (log.data) {
-        console.warn(fullMessage, log.data);
-      } else {
-        console.warn(fullMessage);
-      }
+      console.warn(messageWithData);
     } else {
-      if (log.data) {
-        console.log(fullMessage, log.data);
-      } else {
-        console.log(fullMessage);
-      }
+      console.log(messageWithData);
     }
   }
 

@@ -31,27 +31,14 @@
   margin: 0;
 }
 
+/* .close-btn base styles now in common.css */
+/* Settings-specific positioning override */
 .close-btn {
-  background: rgba(239, 68, 68, 0.15);
-  border: none;
-  color: #ef4444;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.2s ease;
   position: absolute;
   top: 12px;
   right: 24px;
   width: 26px;
   height: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.close-btn:hover {
-  background: #ef4444;
-  color: white;
-  transform: scale(1.05);
 }
 
 /* Tab Navigation */
@@ -70,18 +57,7 @@
   border-bottom: 1px solid var(--border);
 }
 
-.settings-tabs::-webkit-scrollbar {
-  height: 3px;
-}
-
-.settings-tabs::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 2px;
-}
-
-.settings-tabs::-webkit-scrollbar-thumb:hover {
-  background: #60a5fa;
-}
+/* settings-tabs scrollbar inherited from common.css */
 
 .settings-tab-btn {
   padding: 6px 10px;
@@ -251,71 +227,13 @@
   line-height: 1.4;
 }
 
-/* Switch Component */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 44px;
-  height: 24px;
-  flex-shrink: 0;
-}
+/* Switch and base form element styles now in common.css */
 
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--bg-tertiary);
-  transition: 0.2s;
-  border-radius: 12px;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 2px;
-  bottom: 2px;
-  background: var(--text-secondary);
-  transition: 0.2s;
-  border-radius: 50%;
-}
-
-input:checked + .slider {
-  background: var(--accent);
-}
-
-input:checked + .slider:before {
-  transform: translateX(20px);
-  background: white;
-}
-
-/* Form Elements */
-.input-field,
-.select-field,
-.textarea-field {
-  padding: 8px 12px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-primary);
-  font-size: 14px;
-  flex-shrink: 0;
-  box-sizing: border-box;
-}
-
+/* Settings-specific form element overrides */
 .input-field {
   min-width: 80px;
   max-width: 120px;
+  flex-shrink: 0;
 }
 
 .select-field {
@@ -325,6 +243,7 @@ input:checked + .slider:before {
   font-size: 13px;
   font-weight: 500;
   padding: 10px 12px;
+  flex-shrink: 0;
 }
 
 .textarea-field {
@@ -333,14 +252,7 @@ input:checked + .slider:before {
   resize: vertical;
   font-family: inherit;
   line-height: 1.5;
-}
-
-.input-field:focus,
-.select-field:focus,
-.textarea-field:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  flex-shrink: 0;
 }
 
 /* Color Picker */
@@ -508,39 +420,7 @@ input[type="file"] {
   display: none;
 }
 
-/* Button Styles */
-.primary-btn {
-  padding: 10px 16px;
-  background: var(--accent);
-  border: none;
-  border-radius: 6px;
-  color: white;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background 0.2s;
-}
-
-.primary-btn:hover {
-  background: var(--accent-hover);
-}
-
-.secondary-btn {
-  padding: 10px 16px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.secondary-btn:hover {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-}
+/* Button styles (primary-btn, secondary-btn) now in common.css */
 
 /* Settings Notifications */
 .settings-notification {
@@ -612,24 +492,7 @@ input[type="file"] {
   }
 }
 
-/* Scrollbar for modal body */
-.modal-body::-webkit-scrollbar {
-  width: 6px;
-}
-
-.modal-body::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-  border-radius: 3px;
-}
-
-.modal-body::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 3px;
-}
-
-.modal-body::-webkit-scrollbar-thumb:hover {
-  background: #60a5fa;
-}
+/* modal-body scrollbar inherited from common.css */
 
 /* Responsive adjustments */
 @media (max-width: 640px) {
@@ -706,13 +569,13 @@ input[type="file"] {
 }
 
 .action-btn-warning {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: linear-gradient(135deg, var(--warning) 0%, var(--warning-dark) 100%);
   color: white;
   border-color: transparent;
 }
 
 .action-btn-warning:hover {
-  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  background: linear-gradient(135deg, var(--warning-dark) 0%, #b45309 100%);
   color: white;
   border-color: transparent;
   transform: translateY(-1px);
@@ -777,8 +640,8 @@ input[type="file"] {
 
 /* Import button - Blue */
 .data-icon-btn.data-import-btn {
-  background: var(--accent, #3b82f6);
-  border: 1px solid var(--accent, #3b82f6);
+  background: var(--accent);
+  border: 1px solid var(--accent);
   color: #ffffff;
 }
 
@@ -789,14 +652,11 @@ input[type="file"] {
 }
 
 .data-icon-btn.data-import-btn:hover {
-  background: var(--accent-hover, #2563eb);
-  border-color: var(--accent-hover, #2563eb);
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 
-/* Global overflow prevention */
-* {
-  box-sizing: border-box;
-}
+/* Global box-sizing now in common.css */
 
 .modal-content *,
 .settings-tabs *,
@@ -1053,27 +913,27 @@ input[type="file"] {
 
 /* Method-specific colors */
 .http-method-get {
-  color: #22c55e;
+  color: var(--green);
 }
 
 .http-method-post {
-  color: #a855f7;
+  color: var(--purple-light);
 }
 
 .http-method-put {
-  color: #a855f7;
+  color: var(--purple-light);
 }
 
 .http-method-patch {
-  color: #a855f7;
+  color: var(--purple-light);
 }
 
 .http-method-delete {
-  color: #ef4444;
+  color: var(--danger);
 }
 
 .http-method-custom {
-  color: #3b82f6;
+  color: var(--accent);
 }
 
 /* HTTP Method Badges - Text only style */
@@ -1118,28 +978,28 @@ input[type="file"] {
 
 /* Legacy select colors (fallback) */
 select.method-get {
-  color: #22c55e;
+  color: var(--green);
 }
 
 select.method-post {
-  color: #a855f7;
+  color: var(--purple-light);
 }
 
 select.method-put {
-  color: #a855f7;
+  color: var(--purple-light);
 }
 
 select.method-patch {
-  color: #a855f7;
+  color: var(--purple-light);
 }
 
 select.method-delete {
-  color: #ef4444;
+  color: var(--danger);
 }
 
 /* Blacklist remove button hover - CSP compliant */
 .remove-blacklist-btn:hover {
-  color: #ef4444 !important;
+  color: var(--danger) !important;
 }
 
 /* ============================================
@@ -1359,7 +1219,7 @@ select.method-delete {
 
 .incompatible-warning-box .warning-icon {
   flex-shrink: 0;
-  color: #f59e0b;
+  color: var(--warning);
   display: flex;
   align-items: flex-start;
   padding-top: 2px;
@@ -1373,7 +1233,7 @@ select.method-delete {
 .incompatible-warning-box .warning-title {
   font-weight: 600;
   font-size: 13px;
-  color: #f59e0b;
+  color: var(--warning);
   margin-bottom: 4px;
 }
 
@@ -1389,18 +1249,7 @@ select.method-delete {
   margin-top: 10px;
 }
 
-.incompatible-details-list::-webkit-scrollbar {
-  width: 4px;
-}
-
-.incompatible-details-list::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 2px;
-}
-
-.incompatible-details-list::-webkit-scrollbar-thumb:hover {
-  background: #60a5fa;
-}
+/* incompatible-details-list scrollbar inherited from common.css */
 
 .incompatible-item {
   display: flex;

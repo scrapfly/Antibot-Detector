@@ -253,29 +253,6 @@ DetectionUI.updateMethodStatus = function(currentMethod, completedMethods) {
     this.renderAnalysisSteps();
 };
 
-DetectionUI.highlightPhase = function(phase) {
-    const stepElements = document.querySelectorAll('.analysis-step');
-    if (!stepElements.length) return;
-
-    stepElements.forEach((element) => {
-      const stepPhase = element.getAttribute('data-step-phase');
-      if (stepPhase === phase) {
-        element.classList.remove('is-complete');
-        element.classList.add('is-active');
-      } else if (phase === 'complete' || this.isPhaseAfter(stepPhase, phase)) {
-        element.classList.remove('is-active');
-        element.classList.add('is-complete');
-      } else {
-        element.classList.remove('is-active', 'is-complete');
-      }
-    });
-};
-
-DetectionUI.isPhaseAfter = function(phase1, phase2) {
-    const phaseOrder = ['main', 'hooks', 'window_props', 'complete'];
-    return phaseOrder.indexOf(phase1) > phaseOrder.indexOf(phase2);
-};
-
 DetectionUI.handleLoadingTimeout = function() {
     if (this.debugMode) Logger.ui('[Detection] Loading timeout reached - checking if detection completed');
 
@@ -1131,8 +1108,8 @@ DetectionUI.getMethodBadges = function(matches) {
       const methodClass = matchType.replace(/_/g, '-').replace(/s$/, ''); // js_hooks -> js-hooks, cookies -> cookie
 
       const encodedValue = encodeURIComponent(copyValue);
-      const safeDisplayValue = Utils.escapeHtml(displayValue);
-      const safeFullValue = Utils.escapeHtml(copyValue);
+      const safeDisplayValue = FormatUtils.escapeHtml(displayValue);
+      const safeFullValue = FormatUtils.escapeHtml(copyValue);
 
       return `
         <div class="method-item-card method-${methodClass}" data-copy-value="${encodedValue}" data-method-type="${methodType}" title="Click to copy">
@@ -1274,21 +1251,6 @@ DetectionUI.getDetectorIcon = function(detection) {
     return `<img src="${scrapflyIcon}" alt="${escapeAlt(detection.detector?.name)}" class="detector-icon" />`;
 };
 
-DetectionUI.getCategoryIcon = function(category) {
-    switch (category?.toLowerCase()) {
-      case 'antibot':
-      case 'anti-bot':
-        return '';
-      case 'captcha':
-        return '';
-      case 'fingerprint':
-      case 'fingerprinting':
-        return '';
-      default:
-        return '';
-    }
-};
-
 DetectionUI.clearBadgeForEmptyState = async function() {
     try {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -1310,7 +1272,7 @@ DetectionUI.hexToRgb = function(hex) {
 };
 
 DetectionUI.getDifficultyInfo = function(detections = [], avgConfidence = 0) {
-    return Utils.getDifficultyInfo(detections, avgConfidence);
+    return DetectionUtils.getDifficultyInfo(detections, avgConfidence);
 };
 
 if (typeof self !== 'undefined') {

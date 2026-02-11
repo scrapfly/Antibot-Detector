@@ -81,9 +81,8 @@
 var detectionEngine = detectionEngine || null;
 var hasCleanedUp = hasCleanedUp || false;
 var contextCheckFailures = contextCheckFailures || 0;
-var monitoringDisabled = monitoringDisabled || false; // Track if monitoring has been disabled after cache hit
 var contextCheckInterval = contextCheckInterval || null; // Interval for context validity checks
-var jsApiReady = jsApiReady || false; // Track if JS API event has been dispatched
+var detectionFinalized = detectionFinalized || false; // Flag to suppress late events after onDetection
 
 
 /**
@@ -170,10 +169,7 @@ async function dispatchJsApiEvent(eventName, data = {}) {
  * Delegates to Settings.dispatchReadyEvent()
  */
 async function dispatchReadyEvent() {
-    const dispatched = await Settings.dispatchReadyEvent();
-    if (dispatched) {
-        jsApiReady = true;
-    }
+    await Settings.dispatchReadyEvent();
 }
 
 /**
@@ -380,6 +376,7 @@ function setupDetectionTriggers() {
                 });
             } else if (request.type === 'DETECTION_COMPLETE') {
                 // Detection completed - dispatch JS API event
+                detectionFinalized = true;
                 Logger.content('[Content] Received DETECTION_COMPLETE from background', {
                     url: request.url,
                     detectionCount: request.detectionCount
@@ -394,6 +391,9 @@ function setupDetectionTriggers() {
                 }).then(() => {
                     Logger.content('[Content] dispatchJsApiEvent completed successfully');
                 }).catch(e => Logger.error('CONTENT', 'Failed to dispatch detection event', e));
+
+                // Stop window property polling - detection is finalized, late results won't update anything
+                window.postMessage({ type: 'STOP_WINDOW_POLLING', reason: 'detection_complete' }, '*');
 
                 // FIX: Save to sessionStorage so NEXT visit skips hooks immediately
                 // Previously sessionStorage was only saved on cache HIT (visit 2), not after detection (visit 1)
@@ -455,8 +455,6 @@ function setupDetectionTriggers() {
                 sendResponse({ status: 'updated' });
             } else if (request.type === 'CACHE_HIT_DISABLE_MONITORING') {
                 // Cache hit - disable hooks and window properties monitoring
-                monitoringDisabled = true;
-
                 window.postMessage({
                     type: 'DISABLE_MONITORING',
                     reason: 'cache_hit',
@@ -473,33 +471,6 @@ function setupDetectionTriggers() {
                     Logger.error('CACHE', 'Could not clear sessionStorage', e);
                     sendResponse({ status: 'error', error: e.message });
                 }
-            } else if (request.type === 'CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM') {
-                // Extract sitekey from cf-turnstile element
-                Logger.content('CLOUDFLARE_EXTRACT_SITEKEY_FROM_DOM message received');
-
-                try {
-                    // First, log what elements exist
-                    const allDataElements = document.querySelectorAll('[data-sitekey]');
-                    Logger.content('Found elements with [data-sitekey]', { count: allDataElements.length });
-
-                    // Find the element
-                    const element = document.querySelector('[data-sitekey]');
-                    Logger.content('Element found', { found: !!element, tag: element?.tagName, classes: element?.className });
-
-                    const sitekey = element?.getAttribute('data-sitekey') || null;
-
-                    Logger.content('Extracted sitekey from DOM', { sitekey: sitekey ? sitekey.substring(0, 20) + '...' : 'null' });
-
-                    sendResponse({
-                        sitekey: sitekey
-                    });
-                } catch (error) {
-                    Logger.error('CONTENT', 'Error extracting sitekey', error);
-                    sendResponse({
-                        sitekey: null,
-                        error: error.message
-                    });
-                }
             }
 
             // Return true to indicate async response
@@ -508,27 +479,6 @@ function setupDetectionTriggers() {
     }
 
     Logger.content('Detection triggers setup complete');
-}
-
-/**
- * Perform context validation
- * Delegates to Utils.performContextCheck()
- */
-function performContextCheck() {
-    if (typeof Utils === 'undefined') {
-        if (typeof Logger !== 'undefined') {
-            Logger.warn('CONTENT', 'Utils not loaded, skipping context check');
-        }
-        return;
-    }
-    return Utils.performContextCheck(
-        {
-            hasCleanedUp: hasCleanedUp,
-            contextCheckInterval: contextCheckInterval,
-            contextCheckFailures: contextCheckFailures
-        },
-        cleanupOrphanedScript
-    );
 }
 
 /**
@@ -903,70 +853,43 @@ window.addEventListener('message', (event) => {
         return;
     }
 
-    // FIX: Listen for JS hooks completion signal from MAIN world
+    // Dispatch JS API events for completion signals (before handleHookMessage sends to background with retry)
     if (event.data?.type === 'JS_HOOKS_COMPLETE') {
-        // JS API: Forward hook completion to page scripts
-        const hooksTs = (typeof event.data.timestamp === 'number')
-            ? new Date(event.data.timestamp).toISOString()
-            : (event.data.timestamp || new Date().toISOString());
+        if (!detectionFinalized) {
+            const hooksTs = (typeof event.data.timestamp === 'number')
+                ? new Date(event.data.timestamp).toISOString()
+                : (event.data.timestamp || new Date().toISOString());
 
-        dispatchJsApiEvent('onHooksComplete', {
-            url: event.data.url || window.location.href,
-            timestamp: hooksTs,
-            totalDetections: event.data.totalDetections,
-            uniqueHooks: event.data.uniqueHooks,
-            completionReason: event.data.completionReason,
-            completionTime: event.data.completionTime,
-            uninstallStats: event.data.uninstallStats
-        }).catch(() => {});
-
-        try {
-            chrome.runtime.sendMessage({
-                type: 'JS_HOOKS_COMPLETE',
-                url: event.data.url,
-                timestamp: event.data.timestamp,
+            dispatchJsApiEvent('onHooksComplete', {
+                url: event.data.url || window.location.href,
+                timestamp: hooksTs,
                 totalDetections: event.data.totalDetections,
                 uniqueHooks: event.data.uniqueHooks,
                 completionReason: event.data.completionReason,
                 completionTime: event.data.completionTime,
                 uninstallStats: event.data.uninstallStats
             }).catch(() => {});
-        } catch (e) {
-            // Extension context invalidated - silently ignore
         }
     }
 
-    // FIX: Listen for window properties completion signal from MAIN world
     if (event.data?.type === 'WINDOW_PROPS_COMPLETE') {
-        // JS API: Forward window property completion to page scripts
-        const windowTs = (typeof event.data.timestamp === 'number')
-            ? new Date(event.data.timestamp).toISOString()
-            : (event.data.timestamp || new Date().toISOString());
+        if (!detectionFinalized) {
+            const windowTs = (typeof event.data.timestamp === 'number')
+                ? new Date(event.data.timestamp).toISOString()
+                : (event.data.timestamp || new Date().toISOString());
 
-        dispatchJsApiEvent('onWindowPropsComplete', {
-            url: event.data.url || window.location.href,
-            timestamp: windowTs,
-            detectedCount: event.data.detectedCount,
-            totalChecked: event.data.totalChecked,
-            elapsedMs: event.data.elapsedMs,
-            reason: event.data.reason
-        }).catch(() => {});
-
-        try {
-            chrome.runtime.sendMessage({
-                type: 'WINDOW_PROPS_COMPLETE',
-                url: event.data.url,
-                timestamp: event.data.timestamp,
+            dispatchJsApiEvent('onWindowPropsComplete', {
+                url: event.data.url || window.location.href,
+                timestamp: windowTs,
                 detectedCount: event.data.detectedCount,
                 totalChecked: event.data.totalChecked,
                 elapsedMs: event.data.elapsedMs,
                 reason: event.data.reason
             }).catch(() => {});
-        } catch (e) {
-            // Extension context invalidated - silently ignore
         }
     }
 
+    // handleHookMessage sends completion signals to background with 3-attempt retry logic
     DetectionEngineManager.handleHookMessage(event, chrome, hookBatcher);
 });
 

@@ -180,7 +180,7 @@ SettingsUI.saveSettings = async function() {
         Logger.ui(`[Settings] Cache scope changed from "${oldCacheScope}" to "${newCacheScope}" - preserving cache data, invalidating current view`);
 
         // Clear in-memory URL hash cache in popup context
-        Utils.clearUrlHashCache();
+        UrlUtils.clearUrlHashCache();
 
         // Notify background worker to clear its in-memory cache
         chrome.runtime.sendMessage({ type: 'CACHE_SCOPE_CHANGED' }, (response) => {
@@ -353,7 +353,7 @@ SettingsUI.updateSettingsUI = function() {
     if (this.settings.jsApi) {
       const enableJsApi = document.querySelector('#enableJsApi');
       if (enableJsApi) {
-        enableJsApi.checked = this.settings.jsApi.enableJsApi ?? false;
+        enableJsApi.checked = this.settings.jsApi.enableJsApi ?? true;
       }
     }
 
@@ -505,20 +505,6 @@ SettingsUI.updateSettingsUI = function() {
     // Update incompatible updates warning display
     this.updateIncompatibleUpdatesDisplay();
 
-    // Legacy fields that might still be around
-    const autoDetectionToggle = document.querySelector('#autoDetectionEnabled');
-    if (autoDetectionToggle) {
-      autoDetectionToggle.checked = this.settings.autoDetectionEnabled ?? true;
-    }
-
-    const confidenceSlider = document.querySelector('#confidenceThreshold');
-    const confidenceValue = document.querySelector('#confidenceValue');
-    if (confidenceSlider) {
-      confidenceSlider.value = this.settings.confidenceThreshold ?? 70;
-    }
-    if (confidenceValue) {
-      confidenceValue.textContent = `${this.settings.confidenceThreshold ?? 70}%`;
-    }
 };
 
 SettingsUI.getSettingsFromUI = function() {
@@ -578,11 +564,10 @@ SettingsUI.getSettingsFromUI = function() {
       blacklistedDomains: this.settings.detection?.blacklistedDomains || [] // This is managed separately by the blacklist UI
     };
 
-    // JS API Settings - logToConsole follows enableJsApi
-    const jsApiEnabled = document.querySelector('#enableJsApi')?.checked ?? this.settings.jsApi?.enableJsApi ?? false;
+    // JS API Settings
+    const jsApiEnabled = document.querySelector('#enableJsApi')?.checked ?? this.settings.jsApi?.enableJsApi ?? true;
     settings.jsApi = {
-      enableJsApi: jsApiEnabled,
-      logToConsole: jsApiEnabled
+      enableJsApi: jsApiEnabled
     };
 
     // Webhook Settings
@@ -620,11 +605,6 @@ SettingsUI.getSettingsFromUI = function() {
       lastCheckTimestamp: this.settings.updates?.lastCheckTimestamp ?? 0 // Preserve timestamp, don't reset on save
     };
 
-    // Keep any other existing settings that might not be in the form
-    // (autoDetectionEnabled, confidenceThreshold are not in the current form)
-    settings.autoDetectionEnabled = this.settings.autoDetectionEnabled ?? true;
-    settings.confidenceThreshold = this.settings.confidenceThreshold ?? 70;
-
     return settings;
 };
 
@@ -635,13 +615,6 @@ SettingsUI.validateSettings = function(settings) {
     if (settings.history && settings.history.historyLimit !== undefined) {
       if (settings.history.historyLimit < 0 || settings.history.historyLimit > 10000) {
         errors.push('History limit must be between 0 (unlimited) and 10000');
-      }
-    }
-
-    // Validate confidence threshold
-    if (settings.confidenceThreshold !== undefined) {
-      if (settings.confidenceThreshold < 0 || settings.confidenceThreshold > 100) {
-        errors.push('Confidence threshold must be between 0 and 100');
       }
     }
 
@@ -682,13 +655,7 @@ SettingsUI.resetToDefaults = async function() {
     });
 
     if (confirmed) {
-      this.settings = {
-        notificationsEnabled: true,
-        autoDetectionEnabled: true,
-        historyLimit: 100,
-        confidenceThreshold: 70
-      };
-
+      await this.loadDefaults();
       this.updateSettingsUI();
       await this.saveSettings();
       NotificationHelper.success('Settings reset');
@@ -822,15 +789,6 @@ SettingsUI.setupEventListeners = function() {
     const clearAllDataBtn = document.querySelector('#clearAllDataBtn');
     if (clearAllDataBtn) {
       clearAllDataBtn.addEventListener('click', () => this.clearAllData());
-    }
-
-    // Confidence threshold slider
-    const confidenceSlider = document.querySelector('#confidenceThreshold');
-    const confidenceValue = document.querySelector('#confidenceValue');
-    if (confidenceSlider && confidenceValue) {
-      confidenceSlider.addEventListener('input', (e) => {
-        confidenceValue.textContent = `${e.target.value}%`;
-      });
     }
 
     // Debug Mode toggle - show/hide Log Collector section
@@ -1029,7 +987,7 @@ SettingsUI.setupEventListeners = function() {
     const jsApiCodeBlock = document.querySelector('#jsApiUsageCode');
     if (jsApiCodeBlock) {
       jsApiCodeBlock.addEventListener('click', () => {
-        Utils.copyToClipboard(jsApiCodeBlock.textContent, { notificationMessage: 'Code copied' });
+        FormatUtils.copyToClipboard(jsApiCodeBlock.textContent, { notificationMessage: 'Code copied' });
       });
     }
 
@@ -1038,7 +996,7 @@ SettingsUI.setupEventListeners = function() {
       codeEl.style.cursor = 'pointer';
       codeEl.title = 'Click to copy';
       codeEl.addEventListener('click', () => {
-        Utils.copyToClipboard(codeEl.textContent, { notificationMessage: 'Copied' });
+        FormatUtils.copyToClipboard(codeEl.textContent, { notificationMessage: 'Copied' });
       });
     });
 

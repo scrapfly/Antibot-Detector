@@ -19,7 +19,7 @@ Confidence: ${detection.confidence || 0}%
 Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.name || m.selector}`).join(', ') || 'Unknown'}
     `.trim();
 
-    Utils.copyToClipboard(detailsText, {
+    FormatUtils.copyToClipboard(detailsText, {
       element: triggerElement,
       notificationMessage: 'Copied',
       inlineMessage: '✓ Copied!'
@@ -30,7 +30,7 @@ DetectionModals.copyDetectionOverview = async function() {
     const detections = Array.isArray(this.currentResults) ? this.currentResults : [];
     const totalDetections = detections.length;
 
-    const avgConfidence = Utils.computeAverageConfidence(detections);
+    const avgConfidence = DetectionUtils.computeAverageConfidence(detections);
     const { difficulty } = this.getDifficultyInfo(detections, avgConfidence);
 
     const siteUrlNode = document.querySelector('#siteUrl');
@@ -99,12 +99,12 @@ DetectionModals.copyDetectionOverview = async function() {
       });
     }
 
-    await Utils.copyToClipboard(text.trim(), { notificationMessage: 'Copied' });
+    await FormatUtils.copyToClipboard(text.trim(), { notificationMessage: 'Copied' });
 };
 
 DetectionModals.copyMethodValue = function(value, type, triggerElement = null) {
     const textToCopy = `[${type}] ${value}`;
-    Utils.copyToClipboard(textToCopy, {
+    FormatUtils.copyToClipboard(textToCopy, {
       element: triggerElement,
       notificationMessage: 'Copied',
       inlineMessage: '✓ Copied!'

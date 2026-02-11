@@ -236,23 +236,7 @@
   z-index: 1000;
 }
 
-.selector-dropdown::-webkit-scrollbar {
-  width: 6px;
-}
-
-.selector-dropdown::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
-  border-radius: 3px;
-}
-
-.selector-dropdown::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 3px;
-}
-
-.selector-dropdown::-webkit-scrollbar-thumb:hover {
-  background: #60a5fa;
-}
+/* selector-dropdown scrollbar inherited from common.css */
 
 .detection-option {
   display: flex;
@@ -335,12 +319,12 @@
   flex: 1;
   background: rgba(239, 68, 68, 0.2);
   border-color: rgba(239, 68, 68, 0.35);
-  color: #fca5a5;
+  color: var(--danger-light);
 }
 
 #advancedTab .clear-btn-small-tools:hover {
   background: rgba(239, 68, 68, 0.32);
-  color: #fecaca;
+  color: var(--danger-lightest);
 }
 
 .detection-tools-panel {
@@ -419,22 +403,22 @@
 }
 
 .tool-icon-blue {
-  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
   border-color: rgba(59, 130, 246, 0.5);
 }
 
 .tool-icon-green {
-  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  background: linear-gradient(135deg, var(--success) 0%, var(--success-light) 100%);
   border-color: rgba(16, 185, 129, 0.5);
 }
 
 .tool-icon-purple {
-  background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+  background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
   border-color: rgba(139, 92, 246, 0.5);
 }
 
 .tool-icon-red {
-  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+  background: linear-gradient(135deg, var(--danger) 0%, var(--danger-lighter) 100%);
   border-color: rgba(239, 68, 68, 0.5);
 }
 
@@ -688,25 +672,6 @@
   margin-bottom: 4px;
 }
 
-.close-btn {
-  background: rgba(239, 68, 68, 0.15);
-  border: none;
-  color: #ef4444;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-}
-
-.close-btn:hover {
-  background: #ef4444;
-  color: white;
-  transform: scale(1.05);
-}
 
 .export-option {
   padding: 12px 16px;
@@ -1001,7 +966,7 @@
 }
 
 .capture-card:hover {
-  border-color: #3b82f6;
+  border-color: var(--accent);
   background: var(--bg-secondary);
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
   transform: translateY(-2px);
@@ -1388,7 +1353,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 50%, #3b82f6 100%);
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-hover) 50%, var(--accent) 100%);
   animation: shimmer 3s ease-in-out infinite;
 }
 
@@ -1537,23 +1502,7 @@
   }
 }
 
-.advanced-info-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.advanced-info-container::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
-  border-radius: 3px;
-}
-
-.advanced-info-container::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 3px;
-}
-
-.advanced-info-container::-webkit-scrollbar-thumb:hover {
-  background: #60a5fa;
-}
+/* advanced-info-container scrollbar inherited from common.css */
 
 .advanced-info-header {
   display: flex;
@@ -1583,13 +1532,13 @@
   background: rgba(239, 68, 68, 0.15);
   border: none;
   border-radius: 6px;
-  color: #ef4444;
+  color: var(--danger);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .modal-close-btn:hover {
-  background: #ef4444;
+  background: var(--danger);
   color: white;
   transform: scale(1.05);
 }
@@ -1691,7 +1640,7 @@
 .advanced-info-step-number {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, var(--accent), #60a5fa);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
   color: white;
   border-radius: 50%;
   display: flex;
@@ -1846,7 +1795,7 @@
 .advanced-modal-close-btn {
   background: rgba(239, 68, 68, 0.15);
   border: none;
-  color: #ef4444;
+  color: var(--danger);
   cursor: pointer;
   width: 28px;
   height: 28px;
@@ -1861,7 +1810,7 @@
 }
 
 .advanced-modal-close-btn:hover {
-  background: #ef4444;
+  background: var(--danger);
   color: white;
   transform: scale(1.05);
 }
@@ -1884,7 +1833,7 @@
 }
 
 .advanced-modal-action-btn:hover {
-  background: #2563eb;
+  background: var(--accent-hover);
   transform: translateY(-1px);
 }
 
@@ -1900,23 +1849,7 @@
   min-height: 0;
 }
 
-.advanced-modal-body::-webkit-scrollbar {
-  width: 6px;
-}
-
-.advanced-modal-body::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
-  border-radius: 3px;
-}
-
-.advanced-modal-body::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 3px;
-}
-
-.advanced-modal-body::-webkit-scrollbar-thumb:hover {
-  background: #60a5fa;
-}
+/* advanced-modal-body scrollbar inherited from common.css */
 
 /* Modal Sections */
 .advanced-modal-section {
@@ -2177,12 +2110,12 @@
 #advancedTab .clear-btn-small {
   background: rgba(239, 68, 68, 0.2);
   border-color: rgba(239, 68, 68, 0.35);
-  color: #fca5a5;
+  color: var(--danger-light);
 }
 
 #advancedTab .clear-btn-small:hover {
   background: rgba(239, 68, 68, 0.32);
-  color: #fecaca;
+  color: var(--danger-lightest);
 }
 
 .capture-filter-select {
@@ -2232,8 +2165,8 @@
 }
 
 .capture-filter-select option:checked {
-  background: #3b82f6;
-  background-image: linear-gradient(#3b82f6, #3b82f6);
+  background: var(--accent);
+  background-image: linear-gradient(var(--accent), var(--accent));
   color: #ffffff;
   font-weight: 600;
 }
@@ -2431,7 +2364,7 @@
 .capture-action-btn.delete-btn {
   background: rgba(239, 68, 68, 0.1);
   border-color: rgba(239, 68, 68, 0.3);
-  color: #ef4444;
+  color: var(--danger);
 }
 
 .capture-action-btn.delete-btn:hover {
@@ -2702,8 +2635,8 @@
 }
 
 .confirmation-modal-btn-danger:hover {
-  background: #dc2626;
-  border-color: #dc2626;
+  background: var(--danger-dark);
+  border-color: var(--danger-dark);
 }
 
 .confirmation-modal-btn-danger:active {
@@ -3054,12 +2987,12 @@
 .filters-actions .btn-clear {
   background: rgba(239, 68, 68, 0.15);
   border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #fca5a5;
+  color: var(--danger-light);
 }
 
 .filters-actions .btn-clear:hover {
   background: rgba(239, 68, 68, 0.25);
-  color: #fecaca;
+  color: var(--danger-lightest);
 }
 
 /* Responsive adjustments for workflow UI */
@@ -3188,7 +3121,7 @@
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);
   border-radius: 6px;
-  color: #fca5a5;
+  color: var(--danger-light);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;

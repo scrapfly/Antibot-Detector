@@ -56,8 +56,8 @@ SettingsRuntime.handleEnableToggle = async function(enabled, context = null) {
             const detections = Array.isArray(storedData.detectionResults) ? storedData.detectionResults : [];
             let color;
             if (detections.length > 0) {
-              const avgConfidence = Utils.computeAverageConfidence(detections);
-              const difficulty = Utils.getDifficultyLevel(detections, avgConfidence);
+              const avgConfidence = DetectionUtils.computeAverageConfidence(detections);
+              const difficulty = DetectionUtils.getDifficultyLevel(detections, avgConfidence);
               color = difficulty === 'High' ? badgeColors.high :
                      difficulty === 'Medium' ? badgeColors.medium :
                      badgeColors.low;
@@ -278,7 +278,6 @@ SettingsRuntime.dispatchJsApiEvent = async function(eventName, data = {}) {
       const settings = await Utils.getSettings();
       // Default to true when setting doesn't exist (matches default-settings.json)
       const jsApiEnabled = settings.jsApi?.enableJsApi ?? true;
-      const jsApiLogToConsole = settings.jsApi?.logToConsole === true;
       Logger.ui(`[Settings] JS API enabled: ${jsApiEnabled}`, settings.jsApi);
 
       if (!jsApiEnabled) {
@@ -289,34 +288,17 @@ SettingsRuntime.dispatchJsApiEvent = async function(eventName, data = {}) {
       // IMPORTANT: Content scripts run in ISOLATED world, page scripts run in MAIN world
       // window.dispatchEvent() in ISOLATED world is NOT visible to page scripts!
       // We must use postMessage to communicate with MAIN world
-      const extensionVersion = (() => {
-        try {
-          return chrome?.runtime?.getManifest?.().version;
-        } catch (e) {
-          return undefined;
-        }
-      })();
-
       const eventData = {
         ...data,
-        timestamp: data.timestamp || new Date().toISOString(),
-        apiVersion: '1.0.0',
-        extensionVersion: data.extensionVersion || extensionVersion
+        timestamp: data.timestamp || new Date().toISOString()
       };
-
-      // Back-compat: allow callers to specify `version`, otherwise use the extension version.
-      // (dispatchReadyEvent() already passes the extension version via `version`.)
-      if (!eventData.version && extensionVersion) {
-        eventData.version = extensionVersion;
-      }
 
       // Send to MAIN world via postMessage - content-main-world.js will dispatch the CustomEvent
       Logger.ui(`[Settings] Sending postMessage to MAIN world: scrapfly:${eventName}`);
       window.postMessage({
         type: 'SCRAPFLY_JS_API_EVENT',
         eventName: eventName,
-        detail: eventData,
-        logToConsole: jsApiLogToConsole
+        detail: eventData
       }, '*');
 
       Logger.ui(`JS API: Sent ${eventName} event to MAIN world`, data);
@@ -330,11 +312,8 @@ SettingsRuntime.dispatchJsApiEvent = async function(eventName, data = {}) {
 
 SettingsRuntime.dispatchReadyEvent = async function() {
     try {
-      const settings = await Utils.getSettings();
-
       return SettingsRuntime.dispatchJsApiEvent('ready', {
-        enabled: settings.autoDetectionEnabled !== false,
-        confidenceThreshold: settings.confidenceThreshold || 70,
+        enabled: true,
         version: chrome.runtime.getManifest().version
       });
 

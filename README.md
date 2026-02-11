@@ -5,7 +5,7 @@
 ![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)
 ![Manifest V3](https://img.shields.io/badge/Manifest-V3-green?style=for-the-badge)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![Version](https://img.shields.io/badge/Version-2.4-blue?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-2.5-blue?style=for-the-badge)
 
 <br>
 
@@ -73,26 +73,6 @@ Scrapfly Anti-bot Detector is a Manifest V3 Chrome extension that helps security
 <img src="assets/scrapfly-screenshot-2-1280x800.png" alt="Powerful Detection Features" width="600">
 </div>
 
-## Installation
-
-### Manual Installation (Developer Mode)
-
-1. **Download the Extension**
-   ```bash
-   git clone https://github.com/diegopzz/Antibot-Detector.git
-   cd Antibot-Detector/core
-   ```
-
-2. **Load in Chrome**
-   - Open Chrome and navigate to `chrome://extensions/`
-   - Enable **Developer mode** (top-right toggle)
-   - Click **Load unpacked**
-   - Select the `core/` folder
-
-3. **Start Detecting**
-   - Click the extension icon in your toolbar
-   - Browse to any website
-   - View detected security systems in the popup
 
 ## Usage
 
@@ -257,7 +237,7 @@ core/
 
 This project is licensed under the **Non-Profit Open Software License 3.0 (NPOSL-3.0)**.
 
-Copyright (c) 2025 Scrapfly
+Copyright (c) 2026 Scrapfly
 
 
 
@@ -268,9 +248,5 @@ See the [LICENSE](LICENSE) file for complete terms and conditions.
 ---
 
 <div align="center">
-
-**Made with care for the security research community**
-
-![License](https://img.shields.io/badge/License-NPOSL--3.0-blue?style=for-the-badge)
 
 </div>

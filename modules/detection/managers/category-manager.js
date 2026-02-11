@@ -419,30 +419,6 @@ class CategoryManager {
     }
 
     /**
-     * Export categories data as JSON string
-     * @returns {string} JSON string of categories
-     */
-    exportCategories() {
-        return JSON.stringify(this.categories, null, 2);
-    }
-
-    /**
-     * Import categories from JSON string
-     * @param {string} jsonString - JSON string of categories
-     * @returns {boolean} Success status
-     */
-    importCategories(jsonString) {
-        try {
-            const imported = JSON.parse(jsonString);
-            this.categories = imported;
-            return true;
-        } catch (error) {
-            Logger.error('DETECTOR', 'Failed to import categories', error);
-            return false;
-        }
-    }
-
-    /**
      * Get badge colors from CategoryManager instance or storage
      * @param {CategoryManager} [categoryManagerInstance] - Optional CategoryManager instance
      * @returns {Promise<Object>} Badge colors {low, medium, high}

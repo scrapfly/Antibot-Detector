@@ -1,6 +1,6 @@
 /**
- * Rules extension methods.
- * Dependencies: `sections/rules/rules.js` must be loaded first.
+ * Rules extension methods - Modal event listener wiring.
+ * Dependencies: rules.js, rules-modal-lifecycle.js, all modal/helper files
  */
 
 Rules.prototype.setupModalEventListeners = function() {
@@ -40,13 +40,12 @@ Rules.prototype.setupModalEventListeners = function() {
       });
     }
 
-    // Method helper modal for all detection types
+    // Method helper modal for all detection types (event delegation)
     document.addEventListener('click', (event) => {
       const button = event.target.closest('.method-help-btn[data-method-help]');
       if (button) {
         event.stopPropagation();
-        const methodType = button.dataset.methodHelp;
-        this.openMethodHelpModal(methodType);
+        this.openMethodHelpModal(button.dataset.methodHelp);
       }
     });
 
@@ -56,23 +55,15 @@ Rules.prototype.setupModalEventListeners = function() {
       changeIconBtn.addEventListener('click', () => this.openIconPicker());
     }
 
-    // Setup method settings modal
+    // Setup all modals
     this.setupMethodSettingsModal();
-
-    // Setup DOM helper modal
     this.setupDomHelperModal();
-
-    // Setup Window helper modal
     this.setupWindowHelperModal();
-
-    // Setup Regex helper modal
     this.setupRegexHelperModal();
-
-    // Setup Whole Word helper modal
     this.setupWholeWordHelperModal();
-
-    // Setup Case Sensitive helper modal
     this.setupCaseSensitiveHelperModal();
+    this.setupExplanationModals();
+    this.setupMethodHelpModal();
 
     // Setup HTTP method color for network request modal dropdown
     const networkMethod = document.querySelector('#networkMethod');
@@ -80,12 +71,4 @@ Rules.prototype.setupModalEventListeners = function() {
       this.updateHttpMethodColor(networkMethod);
       networkMethod.addEventListener('change', () => this.updateHttpMethodColor(networkMethod));
     }
-
-    // Setup explanation modals
-    this.setupRegexExplanationModal();
-    this.setupWholeWordExplanationModal();
-    this.setupCaseSensitiveExplanationModal();
-
-    // Setup method help modal
-    this.setupMethodHelpModal();
   };

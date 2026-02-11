@@ -86,91 +86,11 @@
   display: none; /* Chrome/Safari */
 }
 
-/* Pagination */
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 6px 10px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  margin-top: 6px;
-  margin-bottom: 0;
-  flex-shrink: 0;
-}
+/* Pagination base styles now in common.css */
 
 #historyTab .pagination {
   margin-top: 2px;
   padding: 5px 8px;
-}
-.pagination-info {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-
-.pagination-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.page-info {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.page-input {
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-primary);
-  font-size: 12px;
-  font-weight: 600;
-  text-align: center;
-}
-
-.page-input:focus {
-  outline: none;
-  border-color: var(--accent);
-  background: var(--bg-primary);
-}
-
-.total-pages {
-  font-weight: 700;
-  color: var(--accent);
-}
-
-.pagination-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: var(--bg-tertiary);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.pagination-btn:hover:not(:disabled) {
-  background: var(--accent);
-  color: white;
-  border-color: var(--accent);
-}
-
-.pagination-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .history-item {
@@ -277,13 +197,13 @@
 .history-item-action-btn.history-delete-btn {
   background: rgba(239, 68, 68, 0.2);
   border: 1px solid rgba(239, 68, 68, 0.35);
-  color: #fca5a5;
+  color: var(--danger-light);
 }
 
 .history-item-action-btn.history-delete-btn svg,
 .history-item-action-btn.history-delete-btn svg path {
-  color: #fca5a5;
-  fill: #fca5a5;
+  color: var(--danger-light);
+  fill: var(--danger-light);
 }
 
 .history-item-action-btn:hover {
@@ -312,13 +232,13 @@
 
 .history-item-action-btn.history-delete-btn:hover {
   background: rgba(239, 68, 68, 0.32);
-  color: #fecaca;
+  color: var(--danger-lightest);
 }
 
 .history-item-action-btn.history-delete-btn:hover svg,
 .history-item-action-btn.history-delete-btn:hover svg path {
-  color: #fecaca;
-  fill: #fecaca;
+  color: var(--danger-lightest);
+  fill: var(--danger-lightest);
 }
 
 .history-item-action-btn:active {
@@ -414,9 +334,9 @@
 }
 
 .history-detection-tag.more-detections {
-  background: var(--bg-secondary, #2d2d2d);
-  color: var(--text-secondary, #b3b3b3);
-  border: 1px solid var(--border, #404040) !important;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border) !important;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -440,8 +360,8 @@
 .history-detection-tag.more-detections:hover {
   transform: scale(1.08);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
-  background: var(--bg-tertiary, #3d3d3d);
-  color: var(--text-primary, #ffffff);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
 }
 
 .history-detection-tag.more-detections:active {
@@ -458,8 +378,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-secondary, #2d2d2d);
-  border: 1px solid var(--border, #404040) !important;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border) !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   overflow: visible;
 }
@@ -472,7 +392,7 @@
   transform: scale(1.08);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
   z-index: 10;
-  background: var(--bg-tertiary, #3d3d3d);
+  background: var(--bg-tertiary);
 }
 
 .history-detection-tag.icon-badge .detection-icon {
@@ -492,10 +412,7 @@
   justify-content: center;
 }
 
-.history-detection-tag.icon-badge .fingerprint-icon {
-  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
-  color: white;
-}
+/* .fingerprint-icon gradient now in common.css */
 
 .history-detection-tag.icon-badge .fingerprint-icon svg {
   width: 18px;
@@ -505,7 +422,7 @@
 /* Override badge background for fingerprint badges */
 .history-detection-tag.icon-badge.fingerprint-badge {
   background: transparent;
-  border-color: #3b82f6 !important;
+  border-color: var(--accent) !important;
 }
 
 /* History Detail Modal */
@@ -538,8 +455,8 @@
   width: 90%;
   max-width: 520px;
   max-height: 85%;
-  background: var(--bg-secondary, #2d2d2d);
-  border: 1px solid var(--border, #404040);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
   display: flex;
@@ -554,8 +471,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px 24px;
-  border-bottom: 1px solid var(--border, #404040);
-  background: var(--bg-secondary, #2d2d2d);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
 }
 
 .history-modal-title-section {
@@ -572,8 +489,8 @@
   padding: 6px;
   border-radius: 10px;
   flex-shrink: 0;
-  background: var(--bg-secondary, #2d2d2d);
-  border: 1px solid var(--border, #404040);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
   object-fit: contain;
 }
 
@@ -605,25 +522,7 @@
   text-decoration: underline;
 }
 
-.history-modal-close {
-  background: rgba(239, 68, 68, 0.15);
-  border: none;
-  color: #ef4444;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-}
-
-.history-modal-close:hover {
-  background: #ef4444;
-  color: white;
-  transform: scale(1.05);
-}
+/* .history-modal-close now in common.css */
 
 /* Modal Meta Bar - Dark Theme - Compact Layout */
 .history-modal-meta {
@@ -631,10 +530,10 @@
   flex-direction: column;
   gap: 8px;
   padding: 12px 16px;
-  background: var(--bg-secondary, #2d2d2d);
-  border: 1px solid var(--border, #404040);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
   font-size: 12px;
-  color: var(--text-secondary, #b3b3b3);
+  color: var(--text-secondary);
   border-radius: 8px;
   margin: 12px 16px;
 }
@@ -665,7 +564,7 @@
   justify-content: center;
   gap: 8px;
   padding-top: 8px;
-  border-top: 1px solid var(--border, #404040);
+  border-top: 1px solid var(--border);
   margin-top: 2px;
 }
 
@@ -675,10 +574,10 @@
   align-items: center;
   gap: 5px;
   padding: 6px 12px;
-  background: var(--bg-tertiary, #3d3d3d);
-  border: 1px solid var(--border, #404040);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
   border-radius: 6px;
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   cursor: pointer;
   font-size: 11px;
   font-weight: 500;
@@ -687,8 +586,8 @@
 }
 
 .history-modal-action-btn:hover {
-  background: var(--bg-secondary, #2d2d2d);
-  border-color: var(--border-light, #525252);
+  background: var(--bg-secondary);
+  border-color: var(--border-light);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
@@ -737,12 +636,12 @@
   align-items: center;
   gap: 4px;
   padding: 4px 10px;
-  background: var(--bg-tertiary, #3d3d3d);
-  border: 1px solid var(--border, #404040);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
   border-radius: 4px;
   font-size: 11px;
   font-weight: 500;
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
 }
 
 .history-modal-category-badge svg {
@@ -775,11 +674,11 @@
 .history-modal-category-badge.fingerprint {
   background: rgba(59, 130, 246, 0.15);
   border-color: rgba(59, 130, 246, 0.4);
-  color: #3b82f6;
+  color: var(--accent);
 }
 
 .history-modal-category-badge.fingerprint svg {
-  stroke: #3b82f6;
+  stroke: var(--accent);
 }
 
 /* Timestamp display */
@@ -788,16 +687,16 @@
   align-items: center;
   gap: 6px;
   font-size: 11px;
-  color: var(--text-muted, #888888);
+  color: var(--text-muted);
 }
 
 .history-modal-timestamp .time-ago {
-  color: var(--text-secondary, #b3b3b3);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .history-modal-timestamp .time-full {
-  color: var(--text-muted, #888888);
+  color: var(--text-muted);
   font-size: 10px;
 }
 
@@ -809,32 +708,16 @@
   flex: 1;
   overflow-y: auto;
   padding: 16px 20px;
-  background: var(--bg-secondary, #2d2d2d);
+  background: var(--bg-secondary);
   height: 400px;
   max-height: 400px;
 }
 
-.history-modal-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.history-modal-content::-webkit-scrollbar-track {
-  background: var(--bg-primary, #1a1a1a);
-  border-radius: 3px;
-}
-
-.history-modal-content::-webkit-scrollbar-thumb {
-  background: var(--accent, #3b82f6);
-  border-radius: 3px;
-}
-
-.history-modal-content::-webkit-scrollbar-thumb:hover {
-  background: #60a5fa;
-}
+/* history-modal-content scrollbar inherited from common.css */
 
 .history-modal-detection-card {
-  background: var(--bg-secondary, #2d2d2d);
-  border: 1px solid var(--border, #404040);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px 12px;
   margin-bottom: 8px;
@@ -858,7 +741,7 @@
 }
 
 .history-modal-detection-card.has-methods:hover {
-  border-color: var(--border-light, #525252);
+  border-color: var(--border-light);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
@@ -875,8 +758,8 @@
   object-fit: contain;
   border-radius: 6px;
   flex-shrink: 0;
-  background: var(--bg-tertiary, #3d3d3d);
-  border: 1px solid var(--border, #404040);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
 }
 
 /* Fingerprint SVG icons in modal cards */
@@ -891,9 +774,8 @@
   flex-shrink: 0;
 }
 
+/* .fingerprint-icon gradient now in common.css */
 .history-modal-detection-header .fingerprint-icon {
-  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
-  color: white;
   border: none;
 }
 
@@ -946,27 +828,27 @@
   min-width: 48px;
   text-align: center;
   transition: all 0.2s ease;
-  background: var(--bg-tertiary, #3d3d3d);
-  color: var(--text-primary, #ffffff);
-  border: 1px solid var(--border, #404040);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
 }
 
 .history-modal-confidence.confidence-high {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
   color: white;
   box-shadow: 0 1px 2px rgba(16, 185, 129, 0.3);
   border-color: transparent;
 }
 
 .history-modal-confidence.confidence-medium {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: linear-gradient(135deg, var(--warning) 0%, var(--warning-dark) 100%);
   color: white;
   box-shadow: 0 1px 2px rgba(245, 158, 11, 0.3);
   border-color: transparent;
 }
 
 .history-modal-confidence.confidence-low {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  background: linear-gradient(135deg, var(--danger) 0%, var(--danger-dark) 100%);
   color: white;
   box-shadow: 0 1px 2px rgba(239, 68, 68, 0.3);
   border-color: transparent;
@@ -976,10 +858,10 @@
   padding: 4px 8px;
   font-size: 10px;
   transition: transform 0.2s;
-  color: var(--text-secondary, #b3b3b3);
+  color: var(--text-secondary);
   flex-shrink: 0;
-  background: var(--bg-tertiary, #3d3d3d);
-  border: 1px solid var(--border, #404040);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
   border-radius: 4px;
 }
 
@@ -1010,13 +892,13 @@
 }
 
 .history-modal-meta-separator {
-  color: var(--text-muted, #666666);
+  color: var(--text-muted);
   font-size: 12px;
 }
 
 .history-modal-match-count {
   font-size: 12px;
-  color: var(--text-secondary, #b3b3b3);
+  color: var(--text-secondary);
 }
 
 .history-modal-method-types {
@@ -1035,14 +917,14 @@
   letter-spacing: 0.3px;
   line-height: 1.2;
   border: 1px solid transparent;
-  background: var(--bg-secondary, #2f2f2f);
-  color: var(--text-secondary, #b3b3b3);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
 }
 
 .history-modal-method-type-overflow {
-  background: var(--bg-tertiary, #3d3d3d);
-  color: var(--text-secondary, #b3b3b3);
-  border-color: var(--border, #404040);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border-color: var(--border);
 }
 
 /* Methods list inside details */
@@ -1114,11 +996,11 @@
 .history-modal-method-item.copy-feedback {
   background: rgba(16, 185, 129, 0.25);
   border-color: rgba(16, 185, 129, 0.6);
-  border-left-color: #10b981;
+  border-left-color: var(--success);
 }
 
 .history-modal-method-item.copy-feedback .history-modal-method-value {
-  color: #34d399;
+  color: var(--success-light);
   font-weight: 600;
   border-color: rgba(16, 185, 129, 0.6);
   background: rgba(16, 185, 129, 0.2);
@@ -1135,19 +1017,19 @@
 }
 
 .history-modal-method-confidence.confidence-high {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
   color: white;
   box-shadow: 0 1px 2px rgba(16, 185, 129, 0.3);
 }
 
 .history-modal-method-confidence.confidence-medium {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: linear-gradient(135deg, var(--warning) 0%, var(--warning-dark) 100%);
   color: white;
   box-shadow: 0 1px 2px rgba(245, 158, 11, 0.3);
 }
 
 .history-modal-method-confidence.confidence-low {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  background: linear-gradient(135deg, var(--danger) 0%, var(--danger-dark) 100%);
   color: white;
   box-shadow: 0 1px 2px rgba(239, 68, 68, 0.3);
 }
@@ -1216,22 +1098,22 @@
 
 /* Stat-specific colors */
 .history-stat-detections .history-stat-icon {
-  color: #3b82f6;
+  color: var(--accent);
   background: rgba(59, 130, 246, 0.15);
 }
 
 .history-stat-confidence .history-stat-icon {
-  color: #22c55e;
+  color: var(--green);
   background: rgba(34, 197, 94, 0.15);
 }
 
 .history-stat-difficulty .history-stat-icon {
-  color: #f59e0b;
+  color: var(--warning);
   background: rgba(245, 158, 11, 0.15);
 }
 
 .history-stat-cache-scope .history-stat-icon {
-  color: #8b5cf6;
+  color: var(--purple);
   background: rgba(139, 92, 246, 0.15);
 }
 

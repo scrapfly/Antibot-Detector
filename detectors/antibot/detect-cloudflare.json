@@ -13,7 +13,7 @@
     "cookie": [
       {
         "name": "__cf_bm",
-        "confidence": 95,
+        "confidence": 50,
         "description": "Bot management cookie",
         "nameRegex": false,
         "nameWholeWord": false,

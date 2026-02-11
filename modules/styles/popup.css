@@ -1,25 +1,4 @@
-:root {
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #2d2d2d;
-  --bg-tertiary: #3d3d3d;
-  --text-primary: #ffffff;
-  --text-secondary: #b3b3b3;
-  --text-muted: #666666;
-  --accent: #3b82f6;
-  --accent-hover: #2563eb;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-  --border: #404040;
-  --border-light: #525252;
-  --shadow: rgba(0, 0, 0, 0.5);
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* Design tokens and global reset now in common.css */
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -36,12 +15,7 @@ body {
   height: 580px;
 }
 
-.copy-feedback-active {
-  background: rgba(16, 185, 129, 0.25) !important;
-  color: #34d399 !important;
-  border-color: rgba(16, 185, 129, 0.6) !important;
-  font-weight: 600 !important;
-}
+/* copy-feedback-active now in common.css */
 
 /* Header */
 .header {
@@ -186,10 +160,10 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--bg-tertiary, #3d3d3d);
+  background-color: var(--bg-tertiary);
   transition: all 0.3s ease;
   border-radius: 18px;
-  border: 1px solid var(--border, #404040);
+  border: 1px solid var(--border);
 }
 
 .toggle-slider:before {
@@ -200,14 +174,14 @@ body {
   left: 2px;
   top: 50%;
   transform: translateY(-50%);
-  background-color: var(--text-muted, #999999);
+  background-color: var(--text-muted);
   transition: all 0.3s ease;
   border-radius: 50%;
 }
 
 .toggle-input:checked + .toggle-label .toggle-slider {
-  background-color: var(--accent, #3b82f6);
-  border-color: var(--accent, #3b82f6);
+  background-color: var(--accent);
+  border-color: var(--accent);
 }
 
 .toggle-input:checked + .toggle-label .toggle-slider:before {
@@ -388,10 +362,7 @@ body {
   margin: 0;
 }
 
-.pagination-info .pagination-count {
-  color: var(--accent);
-  font-weight: 600;
-}
+/* pagination-count styles now in common.css */
 
 /* Detection Results */
 .detection-results {
@@ -642,25 +613,7 @@ body {
   color: var(--text-muted);
 }
 
-.close-btn {
-  background: rgba(239, 68, 68, 0.15);
-  border: none;
-  color: #ef4444;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-}
-
-.close-btn:hover {
-  background: #ef4444;
-  color: white;
-  transform: scale(1.05);
-}
+/* .close-btn now in common.css */
 
 .modal-body {
   padding: 20px 24px;
@@ -708,115 +661,13 @@ body {
   margin-top: 2px;
 }
 
-/* Switch */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 44px;
-  height: 24px;
-}
+/* Switch, form elements, primary-btn, secondary-btn now in common.css */
 
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--bg-tertiary);
-  transition: 0.2s;
-  border-radius: 12px;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 2px;
-  bottom: 2px;
-  background: var(--text-secondary);
-  transition: 0.2s;
-  border-radius: 50%;
-}
-
-input:checked + .slider {
-  background: var(--accent);
-}
-
-input:checked + .slider:before {
-  transform: translateX(20px);
-  background: white;
-}
-
-/* Form Elements */
 .input-field {
-  padding: 8px 12px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-primary);
-  font-size: 14px;
   width: 100px;
 }
 
-.primary-btn {
-  padding: 10px 16px;
-  background: var(--accent);
-  border: none;
-  border-radius: 6px;
-  color: white;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background 0.2s;
-}
-
-.primary-btn:hover {
-  background: var(--accent-hover);
-}
-
-.secondary-btn {
-  padding: 10px 16px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.secondary-btn:hover {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-}
-
-/* Scrollbar - Blue accent */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #60a5fa;
-}
+/* Scrollbar styles now in common.css */
 
 /* CSP-compliant copy value hover effect */
 .copy-value {

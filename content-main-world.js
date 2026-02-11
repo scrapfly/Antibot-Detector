@@ -543,9 +543,6 @@
   // This avoids stale cache-hit flags after manual cache clears or settings changes.
   window.__scrapflyCacheHitEarlyExit = false;
 
-  // Store fingerprint enabled state (will be updated when event arrives)
-  window.__scrapflyFingerprintEnabled = true;
-
   // Listen for disable monitoring message from ISOLATED world (cache hit)
   window.addEventListener('message', (event) => {
     if (event.source !== window) return;
@@ -596,6 +593,15 @@
       sendLog('log', '[MAIN WORLD] All monitoring disabled successfully (cache hit)');
     }
 
+    // Stop window property polling after detection completes (late results won't update anything)
+    if (data && data.type === 'STOP_WINDOW_POLLING') {
+      const tracker = window.__WindowPropertyTracker;
+      if (tracker && tracker.isPolling) {
+        tracker.stop();
+        sendLog('log', '[MAIN WORLD] Window property polling stopped (detection finalized)');
+      }
+    }
+
     // Handle JS API events from ISOLATED world - dispatch CustomEvent to page
     // This bridges the ISOLATED/MAIN world gap so page scripts can receive events
     if (data && data.type === 'SCRAPFLY_JS_API_EVENT') {
@@ -604,25 +610,23 @@
         const eventDetail = data.detail;
         const fullEventName = `scrapfly:${eventName}`;
 
-        // Optional: log to the PAGE DevTools console (MAIN world) for debugging integrations.
-        // Controlled by settings.jsApi.logToConsole (default: false).
-        if (data.logToConsole === true) {
-          try {
-            if (typeof console !== 'undefined' && console) {
-              const label = `[Scrapfly JS API] ${fullEventName}`;
-              if (typeof console.groupCollapsed === 'function') {
-                console.groupCollapsed(label);
-                console.log(eventDetail);
-                if (typeof console.groupEnd === 'function') console.groupEnd();
-              } else if (typeof console.info === 'function') {
-                console.info(label, eventDetail);
-              } else if (typeof console.log === 'function') {
-                console.log(label, eventDetail);
-              }
+        // Log to PAGE DevTools console (MAIN world) so users can see events when JS API is enabled.
+        // This handler only fires when JS API is enabled (checked in settings-runtime.js).
+        try {
+          if (typeof console !== 'undefined' && console) {
+            const label = `[Scrapfly JS API] ${fullEventName}`;
+            if (typeof console.groupCollapsed === 'function') {
+              console.groupCollapsed(label);
+              console.log(eventDetail);
+              if (typeof console.groupEnd === 'function') console.groupEnd();
+            } else if (typeof console.info === 'function') {
+              console.info(label, eventDetail);
+            } else if (typeof console.log === 'function') {
+              console.log(label, eventDetail);
             }
-          } catch (e) {
-            // Never let console logging break event dispatch
           }
+        } catch (e) {
+          // Never let console logging break event dispatch
         }
 
         // Store last detection for sync access by page scripts
@@ -679,8 +683,6 @@
     // Handle fingerprintEnabled flag from event
     // This is the authoritative value from ISOLATED world (updated from storage)
     const fingerprintEnabled = event.detail?.fingerprintEnabled !== false;
-
-    window.__scrapflyFingerprintEnabled = fingerprintEnabled;
 
     sendLog('log', '[MAIN WORLD] scrapfly-install-hooks event received!', {
       hasDetail: !!event.detail,

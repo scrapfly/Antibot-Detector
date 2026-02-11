@@ -81,6 +81,7 @@ NOTES.txt
 notes.txt
 todo.txt
 Claude.md
+CLAUDE.md
 AGENTS.md
 _delete_test_root.txt
 /.lh
@@ -123,5 +124,7 @@ WIP/
 # Debug dumps
 *.dmp
 *.dump
-assets
 .playwright-mcp/
+
+# Assets (icons, images)
+assets/

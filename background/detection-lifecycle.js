@@ -201,11 +201,6 @@ async function finalizeDetection(tabId, state) {
 
     // Safety check: Don't finalize if detection was interrupted
     if (state.interrupted || interruptedDetections.has(tabId)) {
-        // Mark as abandoned in persistent state
-        if (detectionStateManager && detectionStateManager.isDetecting(tabId)) {
-            detectionStateManager.abandonDetection(tabId, 'interrupted');
-        }
-
         // Still clean up state to prevent zombie entries (fixes badge stuck on "✕")
         detectionStates.delete(tabId);
         activeDetections.delete(tabId);
@@ -260,8 +255,8 @@ async function finalizeDetection(tabId, state) {
     // Store to cache
     const pageData = {
         url: state.url,
-        hostname: Utils.getHostnameFromUrl(state.url),
-        favicon: Utils.getFaviconUrl(state.url)
+        hostname: UrlUtils.getHostnameFromUrl(state.url),
+        favicon: UrlUtils.getFaviconUrl(state.url)
     };
 
     const storedDataWithExpiry = await DetectionEngineManager.storeDetection(state.url, pageData, finalResults);
@@ -284,8 +279,8 @@ async function finalizeDetection(tabId, state) {
             const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
 
             const count = detectionCount.toString();
-            const avgConfidence = Utils.computeAverageConfidence(finalResults);
-            const difficulty = Utils.getDifficultyLevel(finalResults, avgConfidence);
+            const avgConfidence = DetectionUtils.computeAverageConfidence(finalResults);
+            const difficulty = DetectionUtils.getDifficultyLevel(finalResults, avgConfidence);
             const color = difficulty === 'High' ? badgeColors.high :
                          difficulty === 'Medium' ? badgeColors.medium :
                          badgeColors.low;
@@ -349,9 +344,9 @@ async function finalizeDetection(tabId, state) {
         try {
             const pageData = {
                 url: state.url,
-                hostname: Utils.getHostnameFromUrl(state.url),
+                hostname: UrlUtils.getHostnameFromUrl(state.url),
                 tabTitle: state.tabTitle,
-                favicon: Utils.getFaviconUrl(state.url)
+                favicon: UrlUtils.getFaviconUrl(state.url)
             };
 
             const historySettings = await Utils.getHistorySettings();
@@ -363,11 +358,6 @@ async function finalizeDetection(tabId, state) {
         } catch (error) {
             Logger.error('DETECTION', '[Finalize] Error saving to history:', error);
         }
-    }
-
-    // Mark detection as completed in persistent state manager
-    if (detectionStateManager && detectionStateManager.isDetecting(tabId)) {
-        await detectionStateManager.completeDetection(tabId, finalResults.length);
     }
 
     // Remove from active detections (detection completed successfully)
@@ -769,8 +759,8 @@ async function processDetectionData(message, sender) {
                 if (detectionCount > 0) {
                     const detections = Array.from(mergedDetections.values());
                     const count = detectionCount.toString();
-                    const avgConfidence = Utils.computeAverageConfidence(detections);
-                    const difficulty = Utils.getDifficultyLevel(detections, avgConfidence);
+                    const avgConfidence = DetectionUtils.computeAverageConfidence(detections);
+                    const difficulty = DetectionUtils.getDifficultyLevel(detections, avgConfidence);
                     const color = difficulty === 'High' ? badgeColors.high :
                                  difficulty === 'Medium' ? badgeColors.medium :
                                  badgeColors.low;

@@ -411,7 +411,7 @@ class History {
    * @returns {{difficulty: string, difficultyColor: string}}
    */
   getDifficultyInfo(detections = [], avgConfidence = 0) {
-    return Utils.getDifficultyInfo(detections, avgConfidence);
+    return DetectionUtils.getDifficultyInfo(detections, avgConfidence);
   }
 
   /**
@@ -569,77 +569,6 @@ class History {
   }
 
   /**
-   * Show overflow detections modal with hidden detection details
-   * @param {object} historyItem - History item object
-   */
-  showOverflowDetectionsModal(historyItem) {
-    const modal = document.querySelector('#overflowDetectionsModal');
-    const title = document.querySelector('#overflowModalTitle');
-    const content = document.querySelector('#overflowModalContent');
-
-    if (!modal || !title || !content) return;
-
-    // Show ALL detections, not just hidden ones
-    const allDetections = historyItem.detections;
-
-    // Update title with history item page title
-    title.textContent = historyItem.title || 'Detections';
-
-    // Render detection cards using safe DOM method
-    content.replaceChildren();
-    const detailsHtml = this.renderDetectionDetails(allDetections);
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = detailsHtml;
-    while (tempDiv.firstChild) {
-      content.appendChild(tempDiv.firstChild);
-    }
-
-    // FIX: Attach click handlers to expand/collapse detection cards
-    this.attachOverflowModalClickHandlers();
-
-    // Enable click-to-copy for method badges
-    this.setupMethodCopyHandlers();
-
-    // Show modal
-    modal.style.display = 'flex';
-
-    // Setup close handlers
-    this.setupOverflowModalCloseHandlers();
-  }
-
-  /**
-   * Attach click handlers to detection cards in overflow modal
-   */
-  attachOverflowModalClickHandlers() {
-    const cards = document.querySelectorAll('#overflowModalContent .history-modal-detection-card.has-methods');
-
-    cards.forEach(card => {
-      const header = card.querySelector('.history-modal-detection-header');
-      const methods = card.querySelector('.history-modal-detection-methods');
-      const expandIcon = card.querySelector('.history-modal-expand-icon');
-
-      if (header && methods) {
-        // Toggle expand/collapse on header click
-        header.style.cursor = 'pointer';
-        header.addEventListener('click', () => {
-          const isExpanded = card.classList.contains('expanded');
-
-          if (isExpanded) {
-            card.classList.remove('expanded');
-            methods.style.display = 'none';
-          } else {
-            card.classList.add('expanded');
-            methods.style.display = 'flex';
-          }
-        });
-
-        // Initially hide methods
-        methods.style.display = 'none';
-      }
-    });
-  }
-
-  /**
    * Attach click handlers to detection cards in detail modal
    */
   attachDetailModalClickHandlers() {
@@ -668,44 +597,6 @@ class History {
         methods.style.display = 'none';
       }
     });
-  }
-
-  /**
-   * Setup close handlers for overflow modal
-   */
-  setupOverflowModalCloseHandlers() {
-    const modal = document.querySelector('#overflowDetectionsModal');
-    const closeBtn = document.querySelector('#overflowModalClose');
-    const overlay = modal?.querySelector('.history-modal-overlay');
-
-    const closeModal = () => {
-      if (modal) modal.style.display = 'none';
-    };
-
-    if (closeBtn) {
-      closeBtn.onclick = (e) => {
-        e.stopPropagation();
-        closeModal();
-      };
-    }
-
-    if (overlay) {
-      overlay.onclick = (e) => {
-        e.stopPropagation();  // Prevent event bubbling to parent elements
-        closeModal();
-      };
-    }
-
-    // ESC key handler - cleanup previous handler to prevent memory leak
-    if (this.overflowEscHandler) {
-      document.removeEventListener('keydown', this.overflowEscHandler);
-    }
-    this.overflowEscHandler = (e) => {
-      if (e.key === 'Escape' && modal?.style.display === 'flex') {
-        closeModal();
-      }
-    };
-    document.addEventListener('keydown', this.overflowEscHandler);
   }
 
   /**
@@ -1218,7 +1109,7 @@ class History {
         confidence
       });
 
-      const safeDisplayValue = Utils.escapeHtml(displayValue);
+      const safeDisplayValue = FormatUtils.escapeHtml(displayValue);
 
       return `
         <div class="history-modal-method-item" data-copy-payload="${encodeURIComponent(copyPayload)}" title="Click to copy">
@@ -1297,7 +1188,7 @@ class History {
         }
 
         const textToCopy = `[${payload.methodType || 'METHOD'}] ${value}`;
-        Utils.copyToClipboard(textToCopy, {
+        FormatUtils.copyToClipboard(textToCopy, {
           element: item,
           notificationMessage: 'Copied',
           inlineMessage: '✓ Copied!'
@@ -1335,7 +1226,7 @@ class History {
    * @returns {string} Time ago string
    */
   getTimeAgo(date) {
-    return Utils.getTimeAgo(date.getTime ? date.getTime() : date);
+    return FormatUtils.getTimeAgo(date.getTime ? date.getTime() : date);
   }
 
   /**
@@ -1703,7 +1594,7 @@ class History {
       }
 
       // Parse duplicate duration
-      const durationMs = Utils.convertToMilliseconds(
+      const durationMs = FormatUtils.convertToMilliseconds(
         settings.duplicateDuration || 1,
         settings.duplicateUnit || 'hours'
       );
@@ -1828,14 +1719,6 @@ class History {
       const historyLimit = Number.isFinite(parseInt(settings.historyLimit, 10))
         ? parseInt(settings.historyLimit, 10)
         : 0; // 0 = unlimited
-      const historyBehavior = settings.historyBehavior || 'rolling';
-
-      // Check if we should stop at limit
-      if (historyBehavior === 'stop_at_limit' && historyLimit > 0 && history.length >= historyLimit) {
-        Logger.ui(`History: Limit reached (${historyLimit}), not saving new detection (behavior: stop_at_limit)`);
-        return false;
-      }
-
       // Get current cache scope setting
       const cacheScope = await Utils.getCacheScope();
 

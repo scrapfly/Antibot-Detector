@@ -3515,7 +3515,7 @@ func main() {
      * @returns {string} Time ago string
      */
     static getTimeAgo(timestamp) {
-        return Utils.getTimeAgo(timestamp);
+        return FormatUtils.getTimeAgo(timestamp);
     }
 
     /**
@@ -3524,7 +3524,7 @@ func main() {
      * @returns {string} Escaped string
      */
     static escapeHtml(str) {
-        return Utils.escapeHtml(str);
+        return FormatUtils.escapeHtml(str);
     }
 
     /**

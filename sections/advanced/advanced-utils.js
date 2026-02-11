@@ -17,7 +17,7 @@ const AdvancedUtils = {
      * @returns {string} Relative time string (e.g., "5m ago")
      */
     getTimeAgo(timestamp) {
-        return Utils.getTimeAgo(timestamp);
+        return FormatUtils.getTimeAgo(timestamp);
     },
 
     /**
@@ -26,7 +26,7 @@ const AdvancedUtils = {
      * @returns {string} Time until expiration (e.g., "5m")
      */
     getTimeUntil(expiresAt) {
-        return Utils.getTimeUntil(expiresAt);
+        return FormatUtils.getTimeUntil(expiresAt);
     },
 
     /**
@@ -255,7 +255,12 @@ const AdvancedUtils = {
      * @returns {string} Formatted size (e.g., "1.5 KB")
      */
     formatBytes(bytes) {
-        return Utils.formatBytes(bytes, 2);
+        if (bytes === 0) return '0 B';
+        if (!bytes || isNaN(bytes)) return '-';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     },
 
     /**
@@ -265,7 +270,7 @@ const AdvancedUtils = {
      * @returns {Promise<boolean>} True if successful
      */
     async copyToClipboard(text, button = null, options = {}) {
-        return Utils.copyToClipboard(text, {
+        return FormatUtils.copyToClipboard(text, {
             element: button,
             notificationMessage: options.notificationMessage || 'Copied to clipboard',
             inlineMessage: options.inlineMessage || '✓ Copied!',
@@ -318,7 +323,7 @@ const AdvancedUtils = {
      * @returns {string} Favicon URL
      */
     getFaviconUrl(hostname) {
-        return Utils.getFaviconUrl(hostname);
+        return UrlUtils.getFaviconUrl(hostname);
     },
 
     /**
@@ -328,7 +333,9 @@ const AdvancedUtils = {
      * @returns {string} Truncated string
      */
     truncate(str, maxLength = 50) {
-        return Utils.truncate(str, maxLength);
+        if (!str || typeof str !== 'string') return '';
+        if (str.length <= maxLength) return str;
+        return str.substring(0, maxLength - 3) + '...';
     },
 
     /**
@@ -337,7 +344,7 @@ const AdvancedUtils = {
      * @returns {string} Escaped text
      */
     escapeHtml(text) {
-        return Utils.escapeHtml(text);
+        return FormatUtils.escapeHtml(text);
     },
 
     /**
@@ -347,7 +354,7 @@ const AdvancedUtils = {
      * @returns {string} Formatted date string
      */
     formatTimestamp(timestamp, options = {}) {
-        return Utils.formatTimestamp(timestamp, options);
+        return FormatUtils.formatTimestamp(timestamp, options);
     },
 
     /**

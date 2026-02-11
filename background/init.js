@@ -18,9 +18,6 @@ async function initialize(reason = 'startup', previousVersion = null) {
     initializationPromise = (async () => {
         try {
 
-        // Migrate old storage formats/keys before initialization logic runs.
-        await migrateLegacyStorageKeys();
-
         // Create CategoryManager and DetectorManager instances
         categoryManager = new CategoryManager();
         detectorManager = new DetectorManager(categoryManager);
@@ -63,10 +60,6 @@ async function initialize(reason = 'startup', previousVersion = null) {
         }
 
         // Initialize "never fail" managers
-        detectionStateManager = new DetectionStateManager();
-        await detectionStateManager.initialize();
-        Logger.background('[DetectionStateManager] Initialized');
-
         workerKeepaliveManager = new WorkerKeepaliveManager();
         Logger.background('[WorkerKeepaliveManager] Initialized');
 

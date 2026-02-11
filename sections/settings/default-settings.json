@@ -1,22 +1,45 @@
 {
   "version": "1.0.0",
   "settings": {
-    "general": {
-      "notificationsEnabled": true,
-      "debugMode": false,
-      "logCollectorEnabled": false,
-      "logCollectorMaxLogs": 5000
+    "notificationsEnabled": true,
+    "debugMode": false,
+    "logCollectorEnabled": false,
+    "logCollectorMaxLogs": 5000,
+
+    "badgeColors": {
+      "low": "#22c55e",
+      "medium": "#f59e0b",
+      "high": "#ef4444"
     },
+
+    "categoryColors": {
+      "antibot": "#FF5733",
+      "captcha": "#33C3FF",
+      "fingerprint": "#3b82f6"
+    },
+
+    "tagColors": {
+      "dom": "#8D33FF",
+      "headers": "#FF33A8",
+      "cookies": "#FFC133",
+      "content": "#33FFF3",
+      "urls": "#00BCD4",
+      "js_hooks": "#00E5FF",
+      "window": "#4CAF50",
+      "payload": "#9C27B0"
+    },
+
     "detection": {
       "cacheDuration": 12,
       "cacheUnit": "hours",
       "cacheScope": "domain",
       "blacklistedDomains": []
     },
+
     "jsApi": {
-      "enableJsApi": true,
-      "logToConsole": false
+      "enableJsApi": true
     },
+
     "webhook": {
       "enableWebhook": false,
       "webhookOnCache": false,
@@ -26,20 +49,22 @@
       "webhookPayload": "{\"url\": \"<SITEURL>\", \"hostname\": \"<HOSTNAME>\", \"title\": \"<TITLE>\", \"favicon\": \"<FAVICON>\", \"detections\": <DETECTIONS>, \"timestamp\": \"<TIMESTAMP>\", \"count\": <DETECTION_COUNT>, \"categories\": \"<CATEGORIES>\"}",
       "webhookHeaders": []
     },
+
     "history": {
       "historyLimit": 0,
-      "historyBehavior": "rolling",
       "autoClearDays": 30,
       "exportFormat": "json",
       "includeTimestamps": true,
       "historyBypassCache": false
     },
+
     "duplicatePrevention": {
       "preventDuplicates": false,
       "duplicateScope": "full_url",
       "duplicateDuration": 1,
       "duplicateUnit": "hours"
     },
+
     "updates": {
       "autoUpdate": false,
       "checkIntervalHours": 12,

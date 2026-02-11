@@ -824,13 +824,13 @@ function registerDetectionHandlers(registry, context) {
                     }
                 });
 
-                // GRANULAR PROGRESS: Mark window properties method complete
-                markMethodComplete(tabId, 'windowProperties');
-
-                Logger.background(`%c[WINDOW_PROPS_COMPLETE] Window properties marked complete - calling finalization check`, 'color: #4caf50; font-weight: bold;');
-
-                // Check if all methods are done
-                checkAndFinalizeDetection(tabId);
+                // Only send progress update and re-check finalization if detection isn't already done
+                // When finalized, onDetection has already fired — late progress events would be confusing
+                if (!state.finalized) {
+                    markMethodComplete(tabId, 'windowProperties');
+                    Logger.background(`%c[WINDOW_PROPS_COMPLETE] Window properties marked complete - calling finalization check`, 'color: #4caf50; font-weight: bold;');
+                    checkAndFinalizeDetection(tabId);
+                }
 
                 sendResponse({ status: 'success' });
             } catch (error) {
@@ -903,15 +903,16 @@ function registerDetectionHandlers(registry, context) {
                         Logger.background(`[Background] Hook uninstall stats:`, request.uninstallStats);
                     }
 
-                    // GRANULAR PROGRESS: Mark JS hooks method complete
-                    markMethodComplete(tabId, 'jsHooks');
+                    // Only send progress update and re-check finalization if detection isn't already done
+                    if (!state.finalized) {
+                        markMethodComplete(tabId, 'jsHooks');
 
-                    Logger.background(`[Background] Hooks marked complete`);
-                    Logger.background(`[Background] Current completion status: ${state.completedMethods.size}/7 methods`);
-                    Logger.background(`[Background] Completed methods: ${Array.from(state.completedMethods).join(', ')}`);
+                        Logger.background(`[Background] Hooks marked complete`);
+                        Logger.background(`[Background] Current completion status: ${state.completedMethods.size}/7 methods`);
+                        Logger.background(`[Background] Completed methods: ${Array.from(state.completedMethods).join(', ')}`);
 
-                    // Check if all methods are done
-                    checkAndFinalizeDetection(tabId);
+                        checkAndFinalizeDetection(tabId);
+                    }
 
                     // SAFETY: If still not finalized after 1 second, force another check
                     // This handles edge cases where the debounce logic might miss the completion

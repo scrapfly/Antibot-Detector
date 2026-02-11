@@ -132,11 +132,11 @@
 
 .url-action-btn.clear-cache-btn {
   background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
+  color: var(--danger);
 }
 
 .url-action-btn.clear-cache-btn:hover {
-  background: #ef4444;
+  background: var(--danger);
   color: white;
   transform: scale(1.05);
 }
@@ -154,11 +154,11 @@
 
 .url-action-btn.copy-overview-btn {
   background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
+  color: var(--accent);
 }
 
 .url-action-btn.copy-overview-btn:hover {
-  background: #3b82f6;
+  background: var(--accent);
   color: white;
   transform: scale(1.05);
 }
@@ -259,12 +259,12 @@
 #detectionTab #addToBlacklistBtn {
   background: rgba(239, 68, 68, 0.2);
   border-color: rgba(239, 68, 68, 0.35);
-  color: #fca5a5;
+  color: var(--danger-light);
 }
 
 #detectionTab #addToBlacklistBtn:hover {
   background: rgba(239, 68, 68, 0.32);
-  color: #fecaca;
+  color: var(--danger-lightest);
 }
 
 #detectionTab .action-btn {
@@ -298,11 +298,11 @@
 }
 
 #detectionTab .action-btn-warning {
-  background: #f59e0b;
+  background: var(--warning);
 }
 
 #detectionTab .action-btn-danger {
-  background: #ef4444;
+  background: var(--danger);
 }
 
 #detectionTab .action-btn:disabled {
@@ -363,22 +363,22 @@
 
 /* Colored stat icons */
 .detections-count .stat-icon-inline {
-  color: #3b82f6;
+  color: var(--accent);
   background: rgba(59, 130, 246, 0.15);
 }
 
 .overall-confidence .stat-icon-inline {
-  color: #22c55e;
+  color: var(--green);
   background: rgba(34, 197, 94, 0.15);
 }
 
 .difficulty-level .stat-icon-inline {
-  color: #f59e0b;
+  color: var(--warning);
   background: rgba(245, 158, 11, 0.15);
 }
 
 .cache-scope-stat .stat-icon-inline {
-  color: #8b5cf6;
+  color: var(--purple);
   background: rgba(139, 92, 246, 0.15);
 }
 
@@ -491,23 +491,7 @@
   gap: 5px;
 }
 
-.results-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.results-list::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-  border-radius: 3px;
-}
-
-.results-list::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 3px;
-}
-
-.results-list::-webkit-scrollbar-thumb:hover {
-  background: #60a5fa;
-}
+/* results-list scrollbar inherited from common.css global scrollbar */
 
 /* New Card Design */
 
@@ -582,10 +566,7 @@
   padding: 4px;
 }
 
-.card-icon-section .fingerprint-icon {
-  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
-  color: white;
-}
+/* .fingerprint-icon base gradient now in common.css */
 
 .card-icon-section .fingerprint-icon svg {
   width: 18px;
@@ -613,103 +594,7 @@
   flex-wrap: wrap;
 }
 
-.badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 7px;
-  border-radius: 6px;
-  font-size: 9px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  white-space: nowrap;
-  transition: all 0.2s ease;
-}
-
-/* Category Badges - Muted Style */
-.badge-captcha {
-  background: rgba(51, 195, 255, 0.2);
-  color: #33C3FF;
-  border: 1px solid rgba(51, 195, 255, 0.35);
-}
-
-.badge-antibot,
-.badge-anti-bot {
-  background: rgba(255, 87, 51, 0.2);
-  color: #FF5733;
-  border: 1px solid rgba(255, 87, 51, 0.35);
-}
-
-.badge-fingerprint {
-  background: rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-  border: 1px solid rgba(59, 130, 246, 0.35);
-}
-
-.badge-default {
-  background: rgba(97, 97, 97, 0.15);
-  color: #94a3b8;
-  border: 1px solid rgba(97, 97, 97, 0.25);
-}
-
-/* Detection Method Badge Colors - Muted Style */
-.badge-dom {
-  background: rgba(33, 150, 243, 0.2);
-  color: #2196F3;
-  border: 1px solid rgba(33, 150, 243, 0.35);
-}
-
-.badge-content {
-  background: rgba(16, 185, 129, 0.2);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.35);
-}
-
-.badge-headers,
-.badge-header {
-  background: rgba(236, 72, 153, 0.2);
-  color: #ec4899;
-  border: 1px solid rgba(236, 72, 153, 0.35);
-}
-
-.badge-cookies,
-.badge-cookie {
-  background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.35);
-}
-
-.badge-urls,
-.badge-url {
-  background: rgba(6, 182, 212, 0.2);
-  color: #06b6d4;
-  border: 1px solid rgba(6, 182, 212, 0.35);
-}
-
-.badge-window {
-  background: rgba(107, 114, 128, 0.2);
-  color: #6b7280;
-  border: 1px solid rgba(107, 114, 128, 0.35);
-}
-
-.badge-js_hooks,
-.badge-js-hooks {
-  background: rgba(139, 92, 246, 0.2);
-  color: #8b5cf6;
-  border: 1px solid rgba(139, 92, 246, 0.35);
-}
-
-.badge-css {
-  background: rgba(233, 30, 99, 0.2);
-  color: #E91E63;
-  border: 1px solid rgba(233, 30, 99, 0.35);
-}
-
-.badge-payload {
-  background: rgba(107, 114, 128, 0.2);
-  color: #6b7280;
-  border: 1px solid rgba(107, 114, 128, 0.35);
-}
+/* Badge system (category + detection method badges) now in common.css */
 
 .card-actions {
   display: flex;
@@ -718,53 +603,44 @@
   gap: 4px;
 }
 
-.confidence-display {
-  padding: 2px 6px;
-  border-radius: 8px;
-  font-size: 9px;
-  font-weight: 700;
-  min-width: 28px;
-  text-align: center;
-}
+/* confidence-display and basic confidence-high/medium/low now in common.css */
 
-.confidence-high {
+/* Detection-specific confidence with gradient + hover effects */
+.detection-card .confidence-high {
   background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
-  color: white;
   border-radius: 8px;
   padding: 2px 6px;
   box-shadow: 0 1px 3px rgba(76, 175, 80, 0.3), 0 1px 2px rgba(0, 0, 0, 0.08);
   transition: all 0.2s ease;
 }
 
-.confidence-high:hover {
+.detection-card .confidence-high:hover {
   box-shadow: 0 2px 6px rgba(76, 175, 80, 0.4), 0 1px 3px rgba(0, 0, 0, 0.12);
   transform: translateY(-1px);
 }
 
-.confidence-medium {
+.detection-card .confidence-medium {
   background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
-  color: white;
   border-radius: 8px;
   padding: 2px 6px;
   box-shadow: 0 1px 3px rgba(255, 152, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.08);
   transition: all 0.2s ease;
 }
 
-.confidence-medium:hover {
+.detection-card .confidence-medium:hover {
   box-shadow: 0 2px 6px rgba(255, 152, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.12);
   transform: translateY(-1px);
 }
 
-.confidence-low {
+.detection-card .confidence-low {
   background: linear-gradient(135deg, #f44336 0%, #da190b 100%);
-  color: white;
   border-radius: 8px;
   padding: 2px 6px;
   box-shadow: 0 1px 3px rgba(244, 67, 54, 0.3), 0 1px 2px rgba(0, 0, 0, 0.08);
   transition: all 0.2s ease;
 }
 
-.confidence-low:hover {
+.detection-card .confidence-low:hover {
   box-shadow: 0 2px 6px rgba(244, 67, 54, 0.4), 0 1px 3px rgba(0, 0, 0, 0.12);
   transform: translateY(-1px);
 }
@@ -878,10 +754,7 @@
   padding: 6px;
 }
 
-.detection-modal-icon .fingerprint-icon {
-  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
-  color: white;
-}
+/* .fingerprint-icon gradient now in common.css */
 
 .detection-modal-icon .fingerprint-icon svg {
   width: 28px;
@@ -918,25 +791,7 @@
   padding: 3px 8px;
 }
 
-.detection-modal-close {
-  background: rgba(239, 68, 68, 0.15);
-  border: none;
-  color: #ef4444;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-}
-
-.detection-modal-close:hover {
-  background: #ef4444;
-  color: white;
-  transform: scale(1.05);
-}
+/* .detection-modal-close now in common.css */
 
 .detection-modal-meta {
   display: grid;
@@ -1014,7 +869,7 @@
 .meta-value.confidence-low {
   background: rgba(239, 68, 68, 0.18);
   border-color: rgba(239, 68, 68, 0.4);
-  color: #fca5a5;
+  color: var(--danger-light);
   box-shadow: 0 1px 2px rgba(239, 68, 68, 0.1);
 }
 
@@ -1041,7 +896,7 @@
 .meta-value.difficulty-high {
   background: rgba(239, 68, 68, 0.18);
   border-color: rgba(239, 68, 68, 0.4);
-  color: #fca5a5;
+  color: var(--danger-light);
 }
 
 .meta-value.difficulty-medium {
@@ -1068,18 +923,7 @@
   max-height: none;
 }
 
-.detection-modal-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.detection-modal-content::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 3px;
-}
-
-.detection-modal-content::-webkit-scrollbar-thumb:hover {
-  background: #60a5fa;
-}
+/* detection-modal-content scrollbar inherited from common.css */
 
 .detection-modal-description {
   font-size: 12px;
@@ -1183,11 +1027,11 @@
 .method-item-card.copy-feedback {
   background: rgba(16, 185, 129, 0.25) !important;
   border-color: rgba(16, 185, 129, 0.6) !important;
-  border-left-color: #10b981 !important;
+  border-left-color: var(--success) !important;
 }
 
 .method-item-card.copy-feedback .method-value-btn {
-  color: #34d399 !important;
+  color: var(--success-light) !important;
   font-weight: 600 !important;
 }
 
@@ -1237,7 +1081,7 @@
 .method-value-btn.copy-feedback-active {
   background: rgba(16, 185, 129, 0.25) !important;
   border-color: rgba(16, 185, 129, 0.6) !important;
-  color: #34d399 !important;
+  color: var(--success-light) !important;
   font-weight: 600 !important;
   border-radius: 6px !important;
 }
@@ -1274,129 +1118,20 @@
   border-color: var(--accent);
 }
 
-.confidence-high {
-  background: var(--success);
-  color: white;
-}
+/* Basic confidence-high/medium/low now in common.css */
 
-.confidence-medium {
-  background: var(--warning);
-  color: white;
-}
-
-.confidence-low {
-  background: var(--danger);
-  color: white;
-}
-
-/* Pagination - align with History/Rules sizing */
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 6px 10px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  margin-top: 6px;
-  margin-bottom: 0;
-  flex-shrink: 0;
-}
+/* Pagination base styles now in common.css */
 
 #detectionTab .pagination {
   margin-top: 2px;
   padding: 5px 8px;
 }
 
-.pagination-info {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.pagination-info .static-label {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 18px;
-}
-
-.pagination-count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 32px;
-  padding: 0 2px;
-  font-variant-numeric: tabular-nums;
-}
-
-.pagination-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.page-info {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.page-input {
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-primary);
-  font-size: 12px;
-  font-weight: 600;
-  text-align: center;
-}
-
-.page-input:focus {
-  outline: none;
-  border-color: var(--accent);
-  background: var(--bg-primary);
-}
-
 .total-pages {
-  font-weight: 700;
-  color: var(--accent);
   min-width: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-}
-
-.pagination-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.pagination-btn:hover:not(:disabled) {
-  background: var(--accent);
-  color: white;
-  border-color: var(--accent);
-}
-
-.pagination-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 /* Old Interrupted State styles removed - now using unified .state-card */
@@ -1712,8 +1447,8 @@
 }
 
 .state-card--orange::before { background: #f97316; }
-.state-card--red::before { background: #ef4444; }
-.state-card--blue::before { background: #3b82f6; }
+.state-card--red::before { background: var(--danger); }
+.state-card--blue::before { background: var(--accent); }
 
 /* Icon container */
 .state-card-icon {
@@ -1745,8 +1480,8 @@
 }
 
 .state-card--orange .state-card-title { color: #f97316; }
-.state-card--red .state-card-title { color: #ef4444; }
-.state-card--blue .state-card-title { color: #3b82f6; }
+.state-card--red .state-card-title { color: var(--danger); }
+.state-card--blue .state-card-title { color: var(--accent); }
 
 /* Description & Action text */
 .state-card-description {
@@ -1799,7 +1534,7 @@
   background: rgba(239, 68, 68, 0.15);
   border: 1px solid rgba(239, 68, 68, 0.3);
   border-radius: 8px;
-  color: #ef4444;
+  color: var(--danger);
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -1902,7 +1637,7 @@
   left: 0;
   right: 0;
   height: 5px;
-  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 50%, #3b82f6 100%);
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-hover) 50%, var(--accent) 100%);
   animation: shimmer 3s ease-in-out infinite;
 }
 

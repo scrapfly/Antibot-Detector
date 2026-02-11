@@ -12,6 +12,7 @@ class DetectionEngineManager {
     // Detection storage configuration constants
     static HISTORY_KEY = 'scrapfly_history';
     static DEFAULT_EXPIRY_HOURS = 12; // Default cache expiry if setting not found
+    static STORAGE_KEY = 'scrapfly_detection_storage';
 
     // Shared pattern cache for all instances
     static patternCache = new PatternCache(500);
@@ -115,6 +116,121 @@ class DetectionEngineManager {
     }
 
     /**
+     * Orchestrate JS hook installation by loading detectors and dispatching
+     * hook definitions to the MAIN world via CustomEvent.
+     * Called from content.js (ISOLATED world) at document_start.
+     * @param {Window} window - The window object
+     * @param {object} chrome - The chrome API object
+     */
+    static async installHooksOrchestrator(window, chrome) {
+        try {
+            const result = await chrome.storage.local.get(['scrapfly_detectors', 'scrapfly_settings', 'scrapfly_enabled']);
+
+            // Extension disabled - skip hook installation entirely
+            // Dispatch empty event so MAIN world sends completion signals and doesn't hang
+            if (result.scrapfly_enabled === false) {
+                window.dispatchEvent(new CustomEvent('scrapfly-install-hooks', {
+                    detail: {
+                        hookDefinitions: [],
+                        windowProperties: [],
+                        debugMode: false,
+                        logCollectorEnabled: false,
+                        enableJsApi: false,
+                        fingerprintEnabled: false
+                    }
+                }));
+                return;
+            }
+
+            // Parse settings
+            const settingsRaw = result.scrapfly_settings;
+            const parsedSettings = typeof settingsRaw === 'string' ? JSON.parse(settingsRaw) : settingsRaw;
+            const actualSettings = parsedSettings?.settings || parsedSettings || {};
+            const debugMode = actualSettings.debugMode || false;
+            const logCollectorEnabled = actualSettings.logCollectorEnabled || false;
+            const enableJsApi = actualSettings.jsApi?.enableJsApi ?? true;
+
+            const detectorsData = result.scrapfly_detectors;
+
+            // No detectors loaded yet - dispatch empty event so MAIN world sends completion signals
+            if (!detectorsData?.detectors) {
+                window.dispatchEvent(new CustomEvent('scrapfly-install-hooks', {
+                    detail: {
+                        hookDefinitions: [],
+                        windowProperties: [],
+                        debugMode,
+                        logCollectorEnabled,
+                        enableJsApi,
+                        fingerprintEnabled: true
+                    }
+                }));
+                return;
+            }
+
+            // Extract hookDefinitions from fingerprint detectors with js_hooks
+            const hookDefinitions = [];
+            const fingerprintDetectors = detectorsData.detectors.fingerprint || {};
+            for (const [detectorKey, detector] of Object.entries(fingerprintDetectors)) {
+                if (detector.enabled === false) continue;
+                if (!detector.detection?.js_hooks || detector.detection.js_hooks.length === 0) continue;
+
+                hookDefinitions.push({
+                    id: detector.id || detectorKey,
+                    name: detector.name,
+                    category: 'fingerprint',
+                    hooks: detector.detection.js_hooks.filter(h => h.enabled !== false)
+                });
+            }
+
+            // Extract windowProperties from ALL detectors (any category)
+            const windowProperties = [];
+            for (const [category, categoryDetectors] of Object.entries(detectorsData.detectors)) {
+                for (const [detectorKey, detector] of Object.entries(categoryDetectors || {})) {
+                    if (detector.enabled === false) continue;
+                    if (!detector.detection?.window || detector.detection.window.length === 0) continue;
+
+                    for (const prop of detector.detection.window) {
+                        windowProperties.push({
+                            ...prop,
+                            detectorId: detector.id || detectorKey,
+                            detectorName: detector.name,
+                            category: category
+                        });
+                    }
+                }
+            }
+
+            // Dispatch to MAIN world via CustomEvent
+            window.dispatchEvent(new CustomEvent('scrapfly-install-hooks', {
+                detail: {
+                    hookDefinitions,
+                    windowProperties,
+                    debugMode,
+                    logCollectorEnabled,
+                    enableJsApi,
+                    fingerprintEnabled: true
+                }
+            }));
+
+        } catch (error) {
+            if (typeof Logger !== 'undefined') {
+                Logger.error('DETECTION', '[installHooksOrchestrator] Failed:', error);
+            }
+            // Still dispatch empty event so MAIN world doesn't hang
+            window.dispatchEvent(new CustomEvent('scrapfly-install-hooks', {
+                detail: {
+                    hookDefinitions: [],
+                    windowProperties: [],
+                    debugMode: false,
+                    logCollectorEnabled: false,
+                    enableJsApi: true,
+                    fingerprintEnabled: true
+                }
+            }));
+        }
+    }
+
+    /**
      * Analyze which detection methods are actually used by loaded detectors
      * Scans all detectors to determine which data types need to be collected
      * @returns {Object} Map of detection methods that are actually used
@@ -148,6 +264,321 @@ class DetectionEngineManager {
     clearDetectionData() {
         this.detectionData = null;
         this.lastDetectionTime = null;
+    }
+
+    /**
+     * Collect page data for detection analysis
+     * Uses lazy getters (Object.defineProperty) to only extract data when accessed
+     * @returns {Promise<object>} Page data object with lazy getters
+     */
+    async collectPageData() {
+        Logger.detection('DetectionEngineManager: Collecting page data...');
+        const startTime = Date.now();
+
+        // OPTIMIZATION Phase C.1: Analyze which detection methods are used
+        const usedMethods = this.analyzeUsedMethods();
+
+        // OPTIMIZATION 8E: Check which data types are actually needed by detectors
+        const needsExternal = this.needsExternalContent();
+
+        let externalContent = [];
+        if (needsExternal) {
+            Logger.detection('[8E: Incremental] External content needed, fetching...');
+            try {
+                externalContent = await this.extractExternalContent();
+            } catch (error) {
+                Logger.error('DETECTION', 'DetectionEngineManager: Error fetching external content:', error);
+                externalContent = [];
+            }
+        } else {
+            Logger.detection('[8E: Incremental] Skipping external content fetch (not needed by any detector)');
+        }
+
+        // Extract favicon with multiple fallback strategies
+        let favicon = '';
+        const faviconSelectors = [
+            'link[rel="icon"]',
+            'link[rel="shortcut icon"]',
+            'link[rel="apple-touch-icon"]',
+            'link[rel="apple-touch-icon-precomposed"]',
+            'link[type="image/x-icon"]',
+            'link[type="image/png"]',
+            'link[rel*="icon"]'
+        ];
+
+        for (const selector of faviconSelectors) {
+            const link = document.querySelector(selector);
+            if (link && link.href) {
+                favicon = link.href;
+                break;
+            }
+        }
+
+        // Get JS Hook detections from storage
+        let jsHooks = [];
+        try {
+            const hookData = await new Promise((resolve) => {
+                chrome.storage.local.get(['scrapfly_js_hook_detections'], (result) => {
+                    resolve(result.scrapfly_js_hook_detections || {});
+                });
+            });
+
+            const currentHooks = hookData[window.location.href];
+            if (currentHooks && currentHooks.hooks) {
+                jsHooks = currentHooks.hooks;
+                Logger.detection(`[JS Hooks] Found ${jsHooks.length} hook detections for this page`);
+            }
+        } catch (error) {
+            Logger.error('HOOKS', '[JS Hooks] Error loading hook detections:', error);
+        }
+
+        // OPTIMIZATION 8A + 8E + C.1: Smart lazy data collection
+        let cachedPageHTML = null;
+        let cachedCookies = null;
+        let cachedContent = null;
+        let cachedDOM = null;
+        let cachedStorageCookies = null;
+
+        const pageData = {
+            url: window.location.href,
+            hostname: window.location.hostname,
+            title: document.title || 'Untitled',
+            favicon: favicon,
+            timestamp: new Date().toISOString(),
+
+            externalContent: externalContent,
+            jsHooks: jsHooks,
+            headers: [],
+
+            _extractCookies: () => this.extractCookies(),
+            _extractStorageCookies: () => this.extractStorageCookies(),
+            _extractScriptElements: () => this.extractScriptElements(),
+            _extractDOM: () => this.extractDOM()
+        };
+
+        if (usedMethods.cookie) {
+            Object.defineProperty(pageData, 'cookies', {
+                get() {
+                    if (cachedCookies === null) {
+                        const start = Date.now();
+                        cachedCookies = this._extractCookies();
+                        Logger.detection(`[C.1: Lazy Cookies] Extracted ${cachedCookies.length} cookies in ${Date.now() - start}ms`);
+                    }
+                    return cachedCookies;
+                },
+                set(value) { cachedCookies = value; },
+                enumerable: true
+            });
+
+            Object.defineProperty(pageData, 'storageCookies', {
+                get() {
+                    if (cachedStorageCookies === null) {
+                        const start = Date.now();
+                        cachedStorageCookies = this._extractStorageCookies();
+                        Logger.detection(`[C.1: Lazy Storage] Extracted ${cachedStorageCookies.length} storage items in ${Date.now() - start}ms`);
+                    }
+                    return cachedStorageCookies;
+                },
+                set(value) { cachedStorageCookies = value; },
+                enumerable: true
+            });
+        } else {
+            Logger.detection('[C.1] Skipped cookies getter - no detector uses cookie detection');
+        }
+
+        if (usedMethods.content) {
+            Object.defineProperty(pageData, 'content', {
+                get() {
+                    if (cachedContent === null) {
+                        const start = Date.now();
+                        cachedContent = this._extractScriptElements();
+                        Logger.detection(`[C.1: Lazy Content] Extracted ${cachedContent.length} scripts in ${Date.now() - start}ms`);
+                    }
+                    return cachedContent;
+                },
+                set(value) { cachedContent = value; },
+                enumerable: true
+            });
+        } else {
+            Logger.detection('[C.1] Skipped content getter - no detector uses content detection');
+        }
+
+        if (usedMethods.dom) {
+            Object.defineProperty(pageData, 'dom', {
+                get() {
+                    if (cachedDOM === null) {
+                        const start = Date.now();
+                        cachedDOM = this._extractDOM();
+                        Logger.detection(`[C.1: Lazy DOM] Extracted ${cachedDOM.length} elements in ${Date.now() - start}ms`);
+                    }
+                    return cachedDOM;
+                },
+                set(value) { cachedDOM = value; },
+                enumerable: true
+            });
+        } else {
+            Logger.detection('[C.1] Skipped DOM getter - no detector uses DOM detection');
+        }
+
+        if (usedMethods.content) {
+            Object.defineProperty(pageData, 'pageHTML', {
+                get() {
+                    if (cachedPageHTML === null) {
+                        cachedPageHTML = document.body ? document.body.innerHTML : '';
+                        Logger.detection(`[C.1: Lazy HTML] Extracted pageHTML on first access (${cachedPageHTML.length} bytes)`);
+                    }
+                    return cachedPageHTML;
+                },
+                set(value) { cachedPageHTML = value; },
+                enumerable: true
+            });
+        } else {
+            Logger.detection('[C.1] Skipped pageHTML getter - content detection not used');
+        }
+
+        this.detectionData = pageData;
+        this.lastDetectionTime = Date.now();
+
+        const collectionTime = Date.now() - startTime;
+        const skippedMethods = Object.entries(usedMethods).filter(([k, v]) => !v).map(([k]) => k);
+        Logger.detection(`[C.1: Smart Collection] Data collected in ${collectionTime}ms`);
+        if (skippedMethods.length > 0) {
+            Logger.detection(`[C.1: Smart Collection] Skipped ${skippedMethods.length} unused methods: ${skippedMethods.join(', ')}`);
+        }
+
+        return pageData;
+    }
+
+    /**
+     * Extract storage cookies from localStorage and sessionStorage
+     * @returns {array} Array of storage cookie objects
+     */
+    extractStorageCookies() {
+        const storageCookies = [];
+
+        try {
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                if (key && value) {
+                    storageCookies.push({
+                        name: key,
+                        value: value.substring(0, 100),
+                        domain: window.location.hostname,
+                        source: 'localStorage'
+                    });
+                }
+            }
+        } catch (error) {
+            Logger.warn('STORAGE', '[Storage Cookies] Cannot access localStorage:', error.message);
+        }
+
+        try {
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                const value = sessionStorage.getItem(key);
+                if (key && value) {
+                    storageCookies.push({
+                        name: key,
+                        value: value.substring(0, 100),
+                        domain: window.location.hostname,
+                        source: 'sessionStorage'
+                    });
+                }
+            }
+        } catch (error) {
+            Logger.warn('STORAGE', '[Storage Cookies] Cannot access sessionStorage:', error.message);
+        }
+
+        if (typeof Logger !== 'undefined') {
+            Logger.cache(`Collected ${storageCookies.length} storage items from page`, {
+                localStorage: storageCookies.filter(c => c.source === 'localStorage').map(c => c.name),
+                sessionStorage: storageCookies.filter(c => c.source === 'sessionStorage').map(c => c.name)
+            });
+        }
+
+        return storageCookies;
+    }
+
+    /**
+     * Fetch external resource content (JS, CSS files) via HTTP
+     * @returns {Promise<array>} Array of fetched resource content
+     */
+    async extractExternalContent() {
+        const scriptElements = document.querySelectorAll('script[src]');
+        const scriptUrls = Array.from(scriptElements).map(s => s.src).filter(Boolean);
+        Logger.detection(`extractExternalContent: Found ${scriptUrls.length} external scripts`);
+
+        const linkElements = document.querySelectorAll('link[rel="stylesheet"]');
+        const cssUrls = Array.from(linkElements).map(l => l.href).filter(Boolean);
+        Logger.detection(`extractExternalContent: Found ${cssUrls.length} CSS files`);
+
+        const allUrls = [...scriptUrls, ...cssUrls];
+        Logger.detection(`extractExternalContent: Total ${allUrls.length} external resources to fetch`);
+
+        const CONCURRENCY_LIMIT = 6;
+        const MAX_CONTENT_SIZE = 5 * 1024 * 1024;
+        const FETCH_TIMEOUT = 5000;
+
+        const startTime = Date.now();
+        const results = [];
+
+        for (let i = 0; i < allUrls.length; i += CONCURRENCY_LIMIT) {
+            const batch = allUrls.slice(i, i + CONCURRENCY_LIMIT);
+            const batchPromises = batch.map(url =>
+                fetch(url, {
+                    method: 'GET',
+                    cache: 'default',
+                    credentials: 'omit',
+                    signal: AbortSignal.timeout(FETCH_TIMEOUT)
+                })
+                .then(async response => {
+                    if (response.ok) {
+                        const contentLength = parseInt(response.headers.get('content-length'), 10);
+                        if (contentLength && contentLength > MAX_CONTENT_SIZE) {
+                            Logger.detection(`Skipping large file: ${url} (${(contentLength / 1024 / 1024).toFixed(2)} MB)`);
+                            return null;
+                        }
+
+                        const content = await response.text();
+
+                        if (content.length > MAX_CONTENT_SIZE) {
+                            return {
+                                url: url,
+                                type: url.endsWith('.css') ? 'css' : 'javascript',
+                                content: content.substring(0, MAX_CONTENT_SIZE),
+                                size: content.length,
+                                truncated: true
+                            };
+                        }
+
+                        return {
+                            url: url,
+                            type: url.endsWith('.css') ? 'css' : 'javascript',
+                            content: content,
+                            size: content.length
+                        };
+                    }
+                    return null;
+                })
+                .catch(error => {
+                    Logger.detection(`Error fetching: ${url} (${error.message})`);
+                    return null;
+                })
+            );
+
+            const batchResults = await Promise.allSettled(batchPromises);
+            results.push(...batchResults);
+        }
+
+        const resources = results
+            .filter(result => result.status === 'fulfilled' && result.value !== null)
+            .map(result => result.value);
+
+        const fetchTime = Date.now() - startTime;
+        Logger.detection(`extractExternalContent: Successfully fetched ${resources.length}/${allUrls.length} resources in ${fetchTime}ms`);
+
+        return resources;
     }
 
     /**
@@ -898,6 +1329,159 @@ class DetectionEngineManager {
     }
 
     /**
+     * Run detection on all loaded detectors against collected page data
+     * Uses pre-computed priorities for faster detection
+     * @param {object} pageData - Page data from collectPageData()
+     * @returns {Promise<array>} Array of detection results
+     */
+    async detectOnPage(pageData = {}) {
+        Logger.detection('DetectionEngineManager.detectOnPage called');
+
+        if (!this.detectors) {
+            Logger.error('DETECTION', 'Detectors not set!');
+            throw new Error('Detectors not set. Call setDetectors() first.');
+        }
+
+        const detections = [];
+        const { url = '', content = [], dom = [], cookies = [], headers = {}, pageHTML = '', externalContent = [], jsHooks = [], payload, payloads, networkUrls = [], allCookies = [], responseCookies = [], storageCookies = [] } = pageData;
+
+        const cookiesToMatch = allCookies.length > 0 ? allCookies : cookies;
+
+        const startTime = Date.now();
+
+        Logger.detection('Page Data Summary:', {
+            url: url,
+            contentCount: content.length,
+            domCount: dom.length,
+            documentCookies: cookies.length,
+            allCookies: allCookies.length,
+            cookiesForMatching: cookiesToMatch.length,
+            headersCount: Object.keys(headers).length,
+            pageHTMLLength: pageHTML.length,
+            externalContentCount: externalContent.length
+        });
+
+        const categoriesCount = Object.keys(this.detectors).length;
+        Logger.detection(`Processing ${categoriesCount} categories...`);
+
+        // Use pre-computed priorities (saves 50-100ms per detection)
+        let detectorPriorities = this.precomputedPriorities || [];
+
+        if (detectorPriorities.length === 0) {
+            Logger.warn('PERF', '[Phase 1 Optimization] Pre-computed priorities missing - falling back to runtime calculation');
+            this._precomputePriorities();
+            detectorPriorities = this.precomputedPriorities || [];
+        }
+
+        Logger.detection(`Running ${detectorPriorities.length} detectors (using pre-computed priorities)`);
+
+        let highConfidenceCount = 0;
+        const HIGH_CONFIDENCE_THRESHOLD = 95;
+        const EARLY_EXIT_COUNT = 3;
+
+        for (const { category, detectorName, detector } of detectorPriorities) {
+            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, pageHTML, externalContent, payload, payloads, networkUrls, allCookies, responseCookies, storageCookies });
+            if (detection.detected) {
+                Logger.detection(`DETECTED: ${detectorName} (confidence: ${detection.confidence}%)`);
+                const detectionObj = {
+                    ...detection,
+                    category,
+                    detector: DetectionEngineManager.buildDetectorInfo(detector, detectorName, detectorName)
+                };
+
+                if (!detectionObj.detector?.id) {
+                    Logger.error('DETECTION', `[detectOnPage] CRITICAL: Detection created without detector.id for ${detectorName}:`, {
+                        hasDetector: !!detectionObj.detector,
+                        detectorId: detectionObj.detector?.id,
+                        detectorName: detectionObj.detector?.name
+                    });
+                }
+
+                detections.push(detectionObj);
+
+                if (detection.confidence >= HIGH_CONFIDENCE_THRESHOLD) {
+                    highConfidenceCount++;
+                }
+
+                if (highConfidenceCount >= EARLY_EXIT_COUNT) {
+                    Logger.detection(`Early exit: Found ${highConfidenceCount} high-confidence detections`);
+                    break;
+                }
+            }
+        }
+
+        // Process JS Hook detections from MAIN world
+        if (jsHooks && jsHooks.length > 0) {
+            Logger.detection(`[JS Hooks] Processing ${jsHooks.length} hook detections`);
+
+            // Build detector lookup table once (O(1) lookup instead of nested loop)
+            const detectorLookup = new Map();
+            for (const [category, categoryDetectors] of Object.entries(this.detectors)) {
+                for (const [detectorId, detector] of Object.entries(categoryDetectors)) {
+                    detectorLookup.set(detector.id || detectorId, { category, detector });
+                }
+            }
+
+            for (const hookData of jsHooks) {
+                const found = detectorLookup.get(hookData.detectorId);
+
+                if (found) {
+                    const { category, detector } = found;
+                    const existingDetection = detections.find(d => d.detector.id === hookData.detectorId);
+
+                    if (existingDetection) {
+                        existingDetection.matches.push({
+                            type: 'js_hooks',
+                            target: hookData.target,
+                            value: hookData.target,
+                            confidence: hookData.confidence || 80,
+                            description: hookData.description || 'JavaScript API hook'
+                        });
+
+                        if (!existingDetection.detectionMethods) {
+                            existingDetection.detectionMethods = [];
+                        }
+                        if (!existingDetection.detectionMethods.includes('js_hooks')) {
+                            existingDetection.detectionMethods.push('js_hooks');
+                        }
+
+                        existingDetection.confidence = this.confidenceManager
+                            ? this.confidenceManager.calculateConfidence(existingDetection.matches)
+                            : Math.max(...existingDetection.matches.map(m => m.confidence || 0), 0);
+
+                        Logger.detection(`[JS Hooks] Added hook to existing detection: ${detector.name}`);
+                    } else {
+                        detections.push({
+                            detected: true,
+                            confidence: hookData.confidence || 80,
+                            matches: [{
+                                type: 'js_hooks',
+                                target: hookData.target,
+                                value: hookData.target,
+                                confidence: hookData.confidence || 80,
+                                description: hookData.description || 'JavaScript API hook'
+                            }],
+                            detectionMethods: ['js_hooks'],
+                            category,
+                            detector: DetectionEngineManager.buildDetectorInfo(detector, hookData.detectorName, hookData.detectorId)
+                        });
+
+                        Logger.detection(`[JS Hooks] Created new detection: ${detector.name}`);
+                    }
+                }
+            }
+        }
+
+        const detectionTime = Date.now() - startTime;
+        Logger.detection(`Total detections found: ${detections.length} in ${detectionTime}ms`);
+        if (detections.length > 0) {
+            Logger.detection('Detections:', detections.map(d => d.detector.name));
+        }
+
+        return detections;
+    }
+
+    /**
      * Match cookie names with stricter defaults (exact match unless regex/wholeWord)
      * @param {string} name - Cookie name
      * @param {string} pattern - Pattern to match
@@ -921,5 +1505,458 @@ class DetectionEngineManager {
     }
     static handleHookMessage(event, chrome, hookBatcher) {
         return demHandleHookMessage.apply(this, arguments);
+    }
+
+    // ========== Cache & Detection Data Methods ==========
+    // Restored from pre-cleanup version (lost in commit d430159)
+
+    /**
+     * Look up cached detection data by URL hash
+     * @param {string} url - Page URL
+     * @returns {Promise<object|null>} Cached detection data or null
+     */
+    static async getStoredDetection(url) {
+        try {
+            const cacheScope = await Utils.getCacheScope();
+            const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY]);
+            const storage = result[DetectionEngineManager.STORAGE_KEY] || {};
+            const urlHash = UrlUtils.hashUrl(url, cacheScope);
+
+            const stored = storage[urlHash];
+
+            if (stored) {
+                // Validate cache scope matches current settings
+                if (stored.cacheScope && stored.cacheScope !== cacheScope) {
+                    Logger.detection(`[getStoredDetection] Cache scope mismatch: stored with '${stored.cacheScope}', current is '${cacheScope}' - treating as cache miss`);
+                    return null;
+                }
+
+                // Check if stored detection is expired
+                if (Date.now() < stored.expiry) {
+                    Logger.detection(`[getStoredDetection] Cache hit for ${url} (expires in ${Math.round((stored.expiry - Date.now()) / 1000 / 60)} minutes)`);
+                    return stored;
+                } else {
+                    Logger.detection(`[getStoredDetection] Cache expired for ${url}`);
+                    delete storage[urlHash];
+                    await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: storage });
+                }
+            }
+        } catch (error) {
+            Logger.error('DETECTION', 'getStoredDetection: Error reading stored detections:', error);
+        }
+        return null;
+    }
+
+    /**
+     * Get detection data for a specific tab
+     * @param {number} tabId - Tab ID
+     * @returns {Promise<object|null>} Detection data or null
+     */
+    static async getDetectionData(tabId) {
+        try {
+            const tab = await chrome.tabs.get(tabId);
+            if (!tab || !tab.url) {
+                return null;
+            }
+
+            const storedData = await DetectionEngineManager.getStoredDetection(tab.url);
+            if (storedData) {
+                return {
+                    data: storedData,
+                    detectionResults: storedData.detectionResults || [],
+                    timestamp: storedData.timestamp,
+                    expiry: storedData.expiry,
+                    storageExpiry: storedData.expiry,
+                    fromStorage: true,
+                    processed: true,
+                    url: storedData.url,
+                    cacheScope: storedData.cacheScope
+                };
+            }
+        } catch (error) {
+            Logger.error('DETECTION', 'getDetectionData: Error:', error);
+        }
+
+        return null;
+    }
+
+    /**
+     * Store detection results for a URL
+     * @param {string} url - Page URL
+     * @param {object} pageData - Page data (url, hostname, favicon)
+     * @param {array} detectionResults - Detection results
+     * @returns {Promise<object|null>} Stored data object or null
+     */
+    static async storeDetection(url, pageData, detectionResults) {
+        try {
+            const cacheScope = await Utils.getCacheScope();
+            const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY]);
+            const storage = result[DetectionEngineManager.STORAGE_KEY] || {};
+            const urlHash = UrlUtils.hashUrl(url, cacheScope);
+
+            // Compress detectionResults to essential fields only
+            const compressedResults = detectionResults.map((detection) => {
+                return {
+                    id: detection.id,
+                    detector: {
+                        id: detection.detector?.id,
+                        name: detection.detector?.name || detection.name || 'Unknown',
+                        icon: detection.detector?.icon || 'custom.png',
+                        color: detection.detector?.color,
+                        description: detection.detector?.description
+                    },
+                    category: detection.category,
+                    confidence: detection.confidence,
+                    matches: detection.matches?.map(m => ({
+                        type: m.type,
+                        pattern: m.pattern,
+                        value: m.value || m.pattern || m.name || m.selector,
+                        confidence: m.confidence,
+                        description: m.description,
+                        fullUrl: m.fullUrl
+                    })) || []
+                };
+            });
+
+            // Calculate overall confidence
+            const overallConfidence = detectionResults.length > 0
+                ? Math.round(detectionResults.reduce((sum, d) => sum + d.confidence, 0) / detectionResults.length)
+                : 0;
+
+            const expiryMs = await DetectionEngineManager.getExpiryMs();
+
+            const storedData = {
+                url: url,
+                hostname: pageData.hostname,
+                favicon: pageData.favicon || '',
+                detectionResults: compressedResults,
+                timestamp: Date.now(),
+                expiry: Date.now() + expiryMs,
+                confidence: overallConfidence,
+                detectionCount: detectionResults.length,
+                fromStorage: false,
+                cacheScope: cacheScope
+            };
+
+            storage[urlHash] = storedData;
+            await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: storage });
+
+            Logger.detection(`[storeDetection] Stored ${detectionResults.length} detections for ${url}`);
+            return storedData;
+        } catch (error) {
+            Logger.error('STORAGE', '[storeDetection] Error storing detection:', error);
+            return null;
+        }
+    }
+
+    /**
+     * Handle PAGE_LOAD_NOTIFICATION message
+     * @param {object} request - Message request object
+     * @param {object} sender - Message sender
+     * @param {object} dependencies - Required dependencies
+     */
+    static async handlePageLoadNotification(request, sender, dependencies) {
+        const { chrome, CategoryManager, History, Utils, categoryManager, recentDetectionRequests } = dependencies;
+
+        const pageUrl = request.url;
+        const tabId = sender.tab?.id;
+        const triggerSource = request.triggerSource || 'unknown';
+
+        if (!tabId) {
+            Logger.error('DETECTION', 'No tab ID in PAGE_LOAD_NOTIFICATION');
+            return;
+        }
+
+        Logger.detection(`[handlePageLoadNotification] Detection trigger: ${triggerSource} for tab ${tabId}`);
+
+        // Check if extension is enabled
+        try {
+            const result = await chrome.storage.local.get(['scrapfly_enabled']);
+            if (result.scrapfly_enabled === false) {
+                Logger.detection('Extension is disabled, skipping page load detection');
+                chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tabId }).catch(() => {});
+                chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tabId }).catch(() => {});
+                return;
+            }
+        } catch (error) {
+            Logger.error('DETECTION', 'Failed to check enabled state:', error);
+        }
+
+        // Check if URL is blacklisted
+        const isBlacklisted = await Utils.isUrlBlacklisted(pageUrl);
+        if (isBlacklisted) {
+            Logger.detection(`[handlePageLoadNotification] URL is blacklisted: ${pageUrl}`);
+            chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId: tabId }).catch(() => {});
+            chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tabId }).catch(() => {});
+            return;
+        }
+
+        // Check cache first
+        const storedData = await DetectionEngineManager.getStoredDetection(pageUrl);
+
+        if (storedData) {
+            Logger.detection(`[handlePageLoadNotification] Cache hit for ${pageUrl} (${storedData.detectionCount} detectors)`);
+
+            // Update badge with cached detection count
+            if (storedData.detectionCount > 0) {
+                const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
+                const count = storedData.detectionCount.toString();
+                const color = storedData.detectionCount >= 5 ? badgeColors.high :
+                             storedData.detectionCount >= 3 ? badgeColors.medium :
+                             badgeColors.low;
+                chrome.action.setBadgeText({ text: count, tabId: tabId }).catch(() => {});
+                chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId }).catch(() => {});
+            } else {
+                chrome.action.setBadgeText({ text: BADGE.TEXT.CLEAN, tabId: tabId }).catch(() => {});
+                chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId: tabId }).catch(() => {});
+            }
+
+            // Notify popup if open
+            chrome.runtime.sendMessage({
+                type: 'NEW_DETECTION_DATA',
+                tabId: tabId,
+                url: pageUrl,
+                detectionResults: storedData.detectionResults,
+                fromStorage: true
+            }).catch(() => {});
+
+            // Notify content script to disable monitoring (cache hit)
+            chrome.tabs.sendMessage(tabId, {
+                type: 'CACHE_HIT_DISABLE_MONITORING',
+                url: pageUrl
+            }).catch(() => {});
+
+            // Check if we should save to history on cache hit
+            const historySettings = await Utils.getHistorySettings();
+            if (historySettings.historyBypassCache === true && storedData.detectionResults && storedData.detectionResults.length > 0) {
+                const shouldSave = await History.shouldSaveToHistory(pageUrl, historySettings, chrome);
+                if (shouldSave) {
+                    const tab = await chrome.tabs.get(tabId).catch(() => null);
+                    if (tab) {
+                        const pageData = {
+                            url: pageUrl,
+                            hostname: UrlUtils.getHostnameFromUrl(pageUrl),
+                            title: tab.title || 'Untitled',
+                            favicon: tab.favIconUrl || UrlUtils.getFaviconUrl(pageUrl)
+                        };
+                        await History.saveDetectionToHistory(tabId, pageData, storedData.detectionResults, chrome);
+                    }
+                }
+            }
+
+            return;
+        }
+
+        // Cache miss - skip if recent detection exists
+        if (Utils.shouldSkipDetection(tabId, 1500, recentDetectionRequests)) {
+            Logger.detection(`Skipping duplicate detection request for tab ${tabId}`);
+            return;
+        }
+
+        // Show loading indicator
+        try {
+            chrome.action.setBadgeText({ text: BADGE.TEXT.LOADING, tabId: tabId });
+            chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.LOADING, tabId: tabId });
+        } catch (error) {
+            Logger.error('DETECTION', 'Failed to set loading badge:', error);
+        }
+
+        // Request data collection from content script with retry
+        let retryCount = 0;
+        const maxRetries = 5;
+        const retryDelay = 200;
+
+        const sendDataRequest = () => {
+            chrome.tabs.sendMessage(tabId, { type: 'REQUEST_PAGE_DATA' }, (response) => {
+                if (chrome.runtime.lastError) {
+                    const errorMsg = chrome.runtime.lastError?.message || '';
+                    if ((errorMsg.includes('Could not establish connection') ||
+                         errorMsg.includes('Receiving end does not exist') ||
+                         errorMsg.includes('No receiving end')) && retryCount < maxRetries) {
+                        retryCount++;
+                        setTimeout(sendDataRequest, retryDelay);
+                    } else {
+                        Logger.warn('DETECTION', `Failed to send data collection request after ${retryCount} retries: ${errorMsg}`);
+                    }
+                }
+            });
+        };
+
+        sendDataRequest();
+    }
+
+    /**
+     * Handle CLEAR_DETECTION_CACHE message
+     * @param {object} request - Message request object
+     * @param {function} sendResponse - Response callback
+     * @param {Set} manuallyClearedCaches - Set to track manually cleared URLs
+     * @returns {boolean} True (async response)
+     */
+    static async handleClearDetectionCache(request, sendResponse, manuallyClearedCaches = null) {
+        try {
+            const cacheScope = await Utils.getCacheScope();
+            const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY]);
+            const storage = result[DetectionEngineManager.STORAGE_KEY] || {};
+            const urlHash = UrlUtils.hashUrl(request.url, cacheScope);
+
+            if (storage[urlHash]) {
+                delete storage[urlHash];
+                await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: storage });
+
+                if (manuallyClearedCaches) {
+                    manuallyClearedCaches.add(urlHash);
+                }
+
+                // Notify content script to clear sessionStorage cache flag
+                if (request.tabId) {
+                    try {
+                        await chrome.tabs.sendMessage(request.tabId, {
+                            type: 'CLEAR_SESSION_CACHE'
+                        });
+                    } catch (e) {
+                        // Content script might not be loaded
+                    }
+                }
+
+                sendResponse({ status: 'cleared', urlHash });
+            } else {
+                sendResponse({ status: 'not_found' });
+            }
+        } catch (error) {
+            Logger.error('DETECTION', 'Error clearing cache:', error);
+            sendResponse({ status: 'error', error: error.message });
+        }
+
+        return true;
+    }
+
+    /**
+     * Handle REQUEST_DETECTION message - manually triggered detection
+     * @param {object} request - Message request object
+     * @param {function} sendResponse - Response callback
+     * @param {object} dependencies - Required dependencies
+     * @returns {boolean} True (async response)
+     */
+    static async handleRequestDetection(request, sendResponse, dependencies) {
+        const { chrome, Utils, recentDetectionRequests } = dependencies;
+        const tabId = request.tabId;
+
+        if (!tabId) {
+            sendResponse({ status: 'error', error: 'No tab ID provided' });
+            return false;
+        }
+
+        // Check if extension is enabled
+        try {
+            const result = await chrome.storage.local.get(['scrapfly_enabled']);
+            if (result.scrapfly_enabled === false) {
+                sendResponse({ status: 'error', error: 'Extension is disabled' });
+                return true;
+            }
+        } catch (error) {
+            Logger.error('DETECTION', 'Failed to check enabled state:', error);
+        }
+
+        try {
+            const tab = await chrome.tabs.get(tabId);
+
+            if (!Utils.isValidContentScriptTab(tab)) {
+                sendResponse({ status: 'error', error: 'Invalid URL for detection' });
+                return true;
+            }
+
+            if (Utils.shouldSkipDetection(tabId, 2000, recentDetectionRequests)) {
+                sendResponse({ status: 'skipped', reason: 'Recent detection exists' });
+                return true;
+            }
+
+            const isSilent = request.silent === true;
+
+            if (!isSilent) {
+                try {
+                    chrome.action.setBadgeText({ text: BADGE.TEXT.LOADING, tabId: tabId });
+                    chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.LOADING, tabId: tabId });
+                } catch (error) {
+                    Logger.error('DETECTION', 'Failed to set loading badge:', error);
+                }
+            }
+
+            // Try to ping the content script first
+            let scriptExists = false;
+            try {
+                await new Promise((resolve) => {
+                    chrome.tabs.sendMessage(tabId, { type: 'GET_DETECTION_STATUS' }, (response) => {
+                        if (!chrome.runtime.lastError && response && response.status === 'active') {
+                            scriptExists = true;
+                        }
+                        resolve();
+                    });
+                });
+            } catch (e) {
+                // Content script may not be ready
+            }
+
+            // If script doesn't exist, inject it
+            if (!scriptExists) {
+                try {
+                    const [checkResult] = await chrome.scripting.executeScript({
+                        target: { tabId: tabId },
+                        func: () => typeof window.DetectionEngineManager !== 'undefined'
+                    });
+
+                    if (!checkResult.result) {
+                        const scriptsToInject = [
+                            'modules/core/logger.js',
+                            'utils/utils.js',
+                            'utils/pattern-cache.js',
+                            'modules/core/storage-manager.js',
+                            'modules/detection/managers/confidence-manager.js',
+                            'modules/detection/engine/detection-engine-analysis.js',
+                            'modules/detection/engine/detection-engine-extractors.js',
+                            'modules/detection/engine/detection-engine-matching.js',
+                            'modules/detection/engine/detection-engine-hooks.js',
+                            'modules/detection/engine/detection-engine-manager.js',
+                            'sections/settings/settings-runtime.js'
+                        ];
+
+                        for (const file of scriptsToInject) {
+                            await chrome.scripting.executeScript({
+                                target: { tabId: tabId },
+                                files: [file]
+                            });
+                        }
+                    }
+
+                    await chrome.scripting.executeScript({
+                        target: { tabId: tabId },
+                        files: ['content.js']
+                    });
+
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                } catch (injectionError) {
+                    Logger.error('DETECTION', 'Failed to inject scripts:', injectionError);
+                    sendResponse({ status: 'error', error: `Script injection failed: ${injectionError.message}` });
+                    return true;
+                }
+            }
+
+            // Send the detection request
+            chrome.tabs.sendMessage(tabId, {
+                type: 'RUN_DETECTION',
+                silent: isSilent
+            }, (response) => {
+                if (chrome.runtime.lastError) {
+                    Logger.error('DETECTION', 'Failed to trigger detection:', chrome.runtime.lastError.message);
+                    sendResponse({ status: 'error', error: chrome.runtime.lastError.message });
+                } else {
+                    sendResponse({ status: 'requested', response: response });
+                }
+            });
+        } catch (error) {
+            Logger.error('DETECTION', 'Error in REQUEST_DETECTION:', error);
+            sendResponse({ status: 'error', error: error.message });
+        }
+
+        return true;
     }
 }

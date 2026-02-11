@@ -91,7 +91,7 @@ function registerSettingsHandlers(registry, context) {
 
         // Clear in-memory URL hash cache when cache scope changes
         Logger.background('[Background] Cache scope changed - clearing URL hash cache');
-        Utils.clearUrlHashCache();
+        UrlUtils.clearUrlHashCache();
 
         // Update badge for current tab based on cached data with new scope
         (async () => {
@@ -122,8 +122,8 @@ function registerSettingsHandlers(registry, context) {
                         const detections = Array.isArray(storedData.detectionResults) ? storedData.detectionResults : [];
                         let color;
                         if (detections.length > 0) {
-                            const avgConfidence = Utils.computeAverageConfidence(detections);
-                            const difficulty = Utils.getDifficultyLevel(detections, avgConfidence);
+                            const avgConfidence = DetectionUtils.computeAverageConfidence(detections);
+                            const difficulty = DetectionUtils.getDifficultyLevel(detections, avgConfidence);
                             color = difficulty === 'High' ? badgeColors.high :
                                    difficulty === 'Medium' ? badgeColors.medium :
                                    badgeColors.low;

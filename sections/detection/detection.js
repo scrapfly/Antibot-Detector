@@ -295,12 +295,6 @@ class Detection {
   updateMethodStatus(...args) {
     return DetectionUI.updateMethodStatus.apply(this, args);
   }
-  highlightPhase(...args) {
-    return DetectionUI.highlightPhase.apply(this, args);
-  }
-  isPhaseAfter(...args) {
-    return DetectionUI.isPhaseAfter.apply(this, args);
-  }
   handleLoadingTimeout(...args) {
     return DetectionUI.handleLoadingTimeout.apply(this, args);
   }
@@ -405,9 +399,6 @@ class Detection {
   }
   getDetectorIcon(...args) {
     return DetectionUI.getDetectorIcon.apply(this, args);
-  }
-  getCategoryIcon(...args) {
-    return DetectionUI.getCategoryIcon.apply(this, args);
   }
   async initialize() {
     if (this.initialized) {

@@ -21,7 +21,7 @@ Rules.prototype.refreshWindowConditionWizardDropdown = function() {
   };
 
 Rules.prototype.escapeHtml = function(str) {
-    return Utils.escapeHtml(str);
+    return FormatUtils.escapeHtml(str);
   };
 
 Rules.prototype.getWindowConditionOptions = function() {
@@ -96,20 +96,6 @@ Rules.prototype.getWindowConditionGroups = function() {
       { label: 'String', values: ['length > 0', 'length === 0'] },
       { label: 'Boolean', values: ['=== true', '=== false'] }
     ];
-  };
-
-Rules.prototype.renderWindowConditionOptions = function(selectedValue) {
-    const options = this.getWindowConditionOptions();
-    const normalized = (selectedValue || '').trim();
-    const selected = normalized || 'exists';
-    const allOptions = normalized && !options.includes(normalized)
-      ? [normalized, ...options]
-      : options;
-
-    return allOptions.map((value) => {
-      const safeValue = this.escapeHtml(value);
-      return `<option value="${safeValue}"${value === selected ? ' selected' : ''}>${safeValue}</option>`;
-    }).join('');
   };
 
 Rules.prototype.renderWindowConditionMenu = function(selectedValue) {

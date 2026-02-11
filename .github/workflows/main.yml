@@ -79,7 +79,10 @@ jobs:
       - name: Package extension
         run: |
           zip -r "artifact/antibot-detector-${TAG_NAME}.zip" . \
-            -x ".git/*" ".github/*" "CHANGELOG.md" "README.md" "LICENSE" ".gitignore"
+            -x ".git/*" ".github/*" ".claude/*" "artifact/*" \
+            "CHANGELOG.md" "README.md" "LICENSE" ".gitignore" \
+            "CLAUDE.md" "AGENTS.md" \
+            "docs/*" "assets/*" "scripts/*"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -117,7 +120,7 @@ jobs:
           echo >> /tmp/CHANGELOG.md
 
           if [ -f CHANGELOG.md ]; then
-            pattern="^##[[:space:]]*${TAG}$"
+            pattern="^##[[:space:]]*${TAG}([[:space:]]|$)"
 
             awk -v pat="$pattern" '
               $0 ~ pat {flag=1; next}           # start AFTER the "## vX.Y" line

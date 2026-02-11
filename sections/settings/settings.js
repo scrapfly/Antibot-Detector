@@ -1,90 +1,7 @@
 class Settings {
   constructor() {
-    // Initialize with complete nested structure and defaults
-    this.settings = {
-      // Basic toggles
-      notificationsEnabled: true,
-      debugMode: false,
-      autoDetectionEnabled: true,
-      logCollectorEnabled: false,
-      logCollectorMaxLogs: 5000,
-
-      // Badge Colors (using BADGE constants as defaults)
-      badgeColors: {
-        low: '#22c55e',    // Green (BADGE.COLORS.LOW)
-        medium: '#f59e0b', // Amber (BADGE.COLORS.MEDIUM)
-        high: '#ef4444'    // Red (BADGE.COLORS.HIGH)
-      },
-
-      // Category Colors
-      categoryColors: {
-        antibot: '#FF5733',
-        captcha: '#33C3FF',
-        fingerprint: '#3b82f6'
-      },
-
-      // Tag Colors
-      tagColors: {
-        dom: '#8D33FF',
-        headers: '#FF33A8',
-        cookies: '#FFC133',
-        content: '#33FFF3',
-        urls: '#00BCD4',
-        js_hooks: '#00E5FF',
-        window: '#4CAF50',
-        payload: '#9C27B0'
-      },
-
-      // Detection settings
-      detection: {
-        cacheDuration: 12,
-        cacheUnit: 'hours',
-        cacheScope: 'domain',
-        blacklistedDomains: []
-      },
-
-      // JS API Settings
-      jsApi: {
-        enableJsApi: false,
-        logToConsole: false
-      },
-
-      // Webhook Settings
-      webhook: {
-        enableWebhook: false,
-        webhookOnCache: false,
-        webhookMethod: 'POST',
-        webhookUrl: '',
-        webhookContentType: 'application/json',
-        webhookPayload: '{"url": "<SITEURL>", "hostname": "<HOSTNAME>", "title": "<TITLE>", "favicon": "<FAVICON>", "detections": <DETECTIONS>, "timestamp": "<TIMESTAMP>", "count": <DETECTION_COUNT>, "categories": "<CATEGORIES>"}',
-        webhookHeaders: []
-      },
-
-      // History Settings
-      history: {
-        historyLimit: 0,  // 0 = unlimited
-        autoClearDays: 30,
-        exportFormat: 'json',
-        includeTimestamps: true,
-        historyBypassCache: false
-      },
-
-      // Duplicate Prevention Settings
-      duplicatePrevention: {
-        preventDuplicates: false,
-        duplicateScope: 'full_url',
-        duplicateDuration: 1,
-        duplicateUnit: 'hours'
-      },
-
-      // Update Settings
-      updates: {
-        autoUpdate: false,
-        checkIntervalHours: 12,
-        lastCheckTimestamp: 0
-      }
-    };
-
+    // Defaults loaded from default-settings.json in initialize()
+    this.settings = {};
     this.isModalVisible = false;
   }
 
@@ -161,7 +78,7 @@ class Settings {
     return SettingsUI.renderWebhookHeadersUI.apply(this, args);
   }
   escapeHtml(...args) {
-    return Utils.escapeHtml(...args);
+    return FormatUtils.escapeHtml(...args);
   }
   async handleSaveSettings(...args) {
     return await SettingsUI.handleSaveSettings.apply(this, args);
@@ -183,14 +100,28 @@ class Settings {
   }
 
   /**
+   * Load default settings from default-settings.json (single source of truth)
+   */
+  async loadDefaults() {
+    try {
+      const url = chrome.runtime.getURL('sections/settings/default-settings.json');
+      const response = await fetch(url);
+      const data = await response.json();
+      this.settings = data.settings || data;
+    } catch (error) {
+      Logger.error('UI', 'Failed to load default-settings.json', error);
+      this.settings = {};
+    }
+  }
+
+  /**
    * Initialize settings section
    */
   async initialize() {
     Logger.ui('Settings section initializing...');
+    await this.loadDefaults();
     await this.loadHTML();
-    Logger.ui('Settings HTML loaded, setting up event listeners...');
     this.setupEventListeners();
-    Logger.ui('Event listeners set up, loading settings...');
     await this.loadSettings();
     Logger.ui('Settings section initialized');
   }
