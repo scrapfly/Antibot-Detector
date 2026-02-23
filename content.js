@@ -108,7 +108,7 @@ async function installJSHooks() {
 function isExtensionContextValid() {
     if (typeof Utils === 'undefined') {
         if (typeof Logger !== 'undefined') {
-            Logger.warn('CONTENT', 'Utils not loaded yet');
+            Logger.debug('CONTENT', '[isExtensionContextValid] Utils not loaded yet');
         }
         return false;
     }
@@ -122,7 +122,7 @@ function isExtensionContextValid() {
 function cleanupOrphanedScript() {
     if (typeof Utils === 'undefined') {
         if (typeof Logger !== 'undefined') {
-            Logger.warn('CONTENT', 'Utils not loaded, skipping cleanup');
+            Logger.debug('CONTENT', '[cleanupOrphanedScript] Utils not loaded, skipping');
         }
         return;
     }
@@ -180,7 +180,7 @@ async function dispatchReadyEvent() {
 async function notifyPageLoad(triggerSource = 'page_load') {
     if (typeof Utils === 'undefined') {
         if (typeof Logger !== 'undefined') {
-            Logger.warn('CONTENT', 'Utils not loaded, skipping page load notification');
+            Logger.debug('CONTENT', '[notifyPageLoad] Utils not loaded, skipping');
         }
         return;
     }
@@ -197,14 +197,14 @@ async function notifyPageLoad(triggerSource = 'page_load') {
  * Delegates to Utils.collectAndSendData()
  */
 async function collectAndSendData() {
-    Logger.debug('CONTENT', 'collectAndSendData() called');
+    Logger.debug('CONTENT', '[collectAndSendData] Called');
     if (typeof Utils === 'undefined') {
         if (typeof Logger !== 'undefined') {
-            Logger.debug('CONTENT', 'Utils not loaded, skipping data collection');
+            Logger.debug('CONTENT', '[collectAndSendData] Utils not loaded, skipping');
         }
         return;
     }
-    Logger.debug('CONTENT', 'Calling Utils.collectAndSendData()...');
+    Logger.debug('CONTENT', '[collectAndSendData] Delegating to Utils');
     return Utils.collectAndSendData({
         detectionEngine: detectionEngine,
         isExtensionContextValid: isExtensionContextValid,
@@ -276,7 +276,7 @@ function setupDetectionTriggers() {
                 });
             } else if (checkCount >= maxChecks) {
                 clearInterval(checkBody);
-                Logger.warn('CONTENT', 'Timeout waiting for document.body');
+                Logger.warn('CONTENT', '[init] Timeout waiting for document.body');
             }
         }, 10);
     }
@@ -313,20 +313,18 @@ function setupDetectionTriggers() {
 
                 // BULLETPROOF: Ensure Utils is loaded before calling collectAndSendData
                 if (typeof Utils === 'undefined') {
-                    Logger.debug('CONTENT', 'Utils not loaded yet, will retry in 500ms');
-                    Logger.error('CONTENT', 'Utils not loaded yet, waiting and retrying...');
+                    Logger.debug('CONTENT', '[init] Utils not loaded, retrying in 500ms');
                     // Retry after Utils loads
                     setTimeout(() => {
                         if (typeof Utils !== 'undefined') {
-                            Logger.content('Utils now loaded, collecting data...');
+                            Logger.debug('CONTENT', '[init] Utils loaded on retry, collecting data');
                             collectAndSendData();
                         } else {
-                            Logger.debug('CONTENT', 'Utils still not loaded after retry, collection failed');
-                            Logger.error('CONTENT', 'Utils still not loaded, collection failed');
+                            Logger.warn('CONTENT', '[init] Utils still not loaded after retry');
                         }
                     }, 500);
                 } else {
-                    Logger.debug('CONTENT', 'Utils already loaded, calling collectAndSendData() immediately');
+                    Logger.debug('CONTENT', '[init] Utils loaded, collecting data');
                     collectAndSendData();
                 }
 
@@ -591,7 +589,7 @@ async function initialize() {
     }
 
     if (!detectorsLoaded) {
-        Logger.warn('CONTENT', 'Failed to load detectors after all retries, will collect all data types as fallback');
+        Logger.warn('CONTENT', '[init] Detector load failed after retries, collecting all data types as fallback');
     }
 
     // Note: JS hooks are installed by install-hooks.js at document_start (before this script runs)
@@ -694,10 +692,10 @@ async function initialize() {
                 if (chrome.runtime.lastError) {
                     if (chrome.runtime.lastError.message &&
                         chrome.runtime.lastError.message.includes('Extension context invalidated')) {
-                        Logger.warn('CONTENT', 'Extension was reloaded before initialization completed');
+                        Logger.debug('CONTENT', '[init] Extension reloaded before initialization completed');
                         // Don't cleanup immediately, might be temporary
                     } else {
-                        Logger.error('CONTENT', 'Failed to notify background', chrome.runtime.lastError);
+                        Logger.error('CONTENT', '[init] Failed to notify background', chrome.runtime.lastError);
                     }
                 } else {
                     Logger.content('Successfully notified background of readiness');
@@ -705,14 +703,14 @@ async function initialize() {
             });
         } catch (error) {
             if (error.message && error.message.includes('Extension context invalidated')) {
-                Logger.warn('CONTENT', 'Extension context invalidated during initialization');
+                Logger.debug('CONTENT', '[init] Extension context invalidated during initialization');
                 // Don't cleanup immediately, might be temporary
             } else {
-                Logger.error('CONTENT', 'Error notifying background', error);
+                Logger.error('CONTENT', '[init] Error notifying background', error);
             }
         }
     } else {
-        Logger.warn('CONTENT', 'Extension context not available at initialization');
+        Logger.debug('CONTENT', '[init] Extension context not available');
     }
 }
 

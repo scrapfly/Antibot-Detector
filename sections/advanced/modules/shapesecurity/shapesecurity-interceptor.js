@@ -5,14 +5,32 @@
 
 Logger.network('[ShapeSecurityInterceptor] Loading...');
 
-// Shape Security capture state
-var shapesecurityCaptureState = shapesecurityCaptureState || new Map();
+// Shape Security capture state (initialized via shapeSecurityInitializeInterceptor)
+var shapesecurityCaptureStateRef = shapesecurityCaptureStateRef || null;
 
-// Extraction mode state
-var shapeSecurityExtractionState = shapeSecurityExtractionState || new Map();
+// Extraction mode state (initialized via shapeSecurityInitializeInterceptor)
+var shapeSecurityExtractionStateRef = shapeSecurityExtractionStateRef || null;
+
+/**
+ * Initialize ShapeSecurity interceptor with capture states from background.js
+ * @param {TTLMap} captureState - TTLMap for capture state
+ * @param {TTLMap} extractionState - TTLMap for extraction state
+ */
+function shapeSecurityInitializeInterceptor(captureState, extractionState) {
+    if (shapesecurityCaptureStateRef) {
+        Logger.network('[ShapeSecurity] Interceptor already initialized, skipping');
+        return;
+    }
+    shapesecurityCaptureStateRef = captureState;
+    shapeSecurityExtractionStateRef = extractionState;
+}
 
 // Destructure helpers from BaseInterceptorHelpers
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
+var showCaptureStarted = self.BaseInterceptorHelpers?.showCaptureStarted;
+var getCaptureState = self.BaseInterceptorHelpers?.getCaptureState;
+var clearCaptureTimeout = self.BaseInterceptorHelpers?.clearCaptureTimeout;
+var removeCaptureState = self.BaseInterceptorHelpers?.removeCaptureState;
 
 /**
  * Centralized message handler for all Shape Security-related messages
@@ -20,7 +38,12 @@ var showNotification = self.BaseInterceptorHelpers?.showNotification;
  * @param {function} sendResponse - Response callback
  * @returns {boolean} True if async response
  */
-function shapeSecurityHandleMessage(request, sendResponse) {
+function shapeSecurityHandleMessage(request, sendResponse, captureState, extractionState) {
+    // Initialize interceptor with TTLMaps from background.js on first message
+    if (captureState) {
+        shapeSecurityInitializeInterceptor(captureState, extractionState);
+    }
+
     switch (request.type) {
         case 'SHAPESECURITY_START_CAPTURE':
             handleShapeSecurityStartCapture(request, null, sendResponse);
@@ -95,7 +118,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
     const tabId = message.tabId;
     Logger.network('[ShapeSecurity] Start capture requested for tab:', tabId);
 
-    if (shapesecurityCaptureState.has(tabId)) {
+    if (shapesecurityCaptureStateRef.has(tabId)) {
         Logger.network('[ShapeSecurity] Already capturing for this tab');
         sendResponse({ status: 'already_capturing' });
         return;
@@ -103,7 +126,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
 
     // Initialize capture state WITHOUT version detection yet
     // Version will be detected AFTER page reload when Shape Security scripts have loaded
-    shapesecurityCaptureState.set(tabId, {
+    shapesecurityCaptureStateRef.set(tabId, {
         active: true,
         startTime: Date.now(),
         headers: [],
@@ -130,7 +153,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                             if (maxAgeMatch && maxAgeMatch[1] === '1577847600') {
                                 // Extract value
                                 const valueMatch = cookieHeader.match(/^[^=]+=([^;]+)/);
-                                const captureState = shapesecurityCaptureState.get(tabId);
+                                const captureState = shapesecurityCaptureStateRef.get(tabId);
                                 if (captureState) {
                                     captureState.cookie = {
                                         name: cookieName,
@@ -165,7 +188,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
     // Set up request header listener to capture dynamic headers
     const requestHeaderListener = (details) => {
         if (details.tabId === tabId && details.requestHeaders) {
-            const captureState = shapesecurityCaptureState.get(tabId);
+            const captureState = shapesecurityCaptureStateRef.get(tabId);
             if (captureState) {
                 // Pattern: x-[8 random chars]-[single letter]
                 const headerPattern = /^x-[a-z0-9]{8}-[a-z]$/i;
@@ -213,12 +236,20 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
     Logger.network('[ShapeSecurity] Capture started for tab:', tabId);
 
     // Show in-page notification
-    if (showNotification) {
+    if (typeof showCaptureStarted === 'function') {
+        await showCaptureStarted(tabId, {
+            title: 'Shape Security Monitoring Started',
+            message: 'Reload the page to begin monitoring Shape Security headers and cookies',
+            duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
+        }).catch(err => {
+            Logger.error('NETWORK', '[ShapeSecurity] Failed to show notification:', err);
+        });
+    } else if (showNotification) {
         await showNotification(tabId, {
             type: 'capture',
-            title: 'Shape Security Capture Active',
-            message: 'Please reload the page to start monitoring',
-            duration: 60000
+            title: 'Shape Security Monitoring Started',
+            message: 'Reload the page to begin monitoring Shape Security headers and cookies',
+            duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
             Logger.error('NETWORK', '[ShapeSecurity] Failed to show notification:', err);
         });
@@ -250,7 +281,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
 
             // Check window.__xr_bmobdb directly in page context
             setTimeout(async () => {
-                const captureState = shapesecurityCaptureState.get(tabId);
+                const captureState = shapesecurityCaptureStateRef.get(tabId);
                 if (captureState && captureState.version === 'unknown') {
                     try {
                         // Inject script to check window.__xr_bmobdb in page context
@@ -269,7 +300,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                         Logger.network('[ShapeSecurity] Detected version:', version);
 
                         captureState.version = version;
-                        shapesecurityCaptureState.set(tabId, captureState);
+                        shapesecurityCaptureStateRef.set(tabId, captureState);
 
                         // Auto-stop based on version
                         if (version === 'v1' && captureState.cookie) {
@@ -284,12 +315,12 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                     } catch (error) {
                         Logger.error('NETWORK', '[ShapeSecurity] Error detecting version:', error);
                         captureState.version = 'v2'; // Default to V2 on error
-                        shapesecurityCaptureState.set(tabId, captureState);
+                        shapesecurityCaptureStateRef.set(tabId, captureState);
                     }
                 }
 
                 // Show notification
-                const currentState = shapesecurityCaptureState.get(tabId);
+                const currentState = shapesecurityCaptureStateRef.get(tabId);
                 const version = currentState?.version || 'v2';
 
                 if (showNotification) {
@@ -390,10 +421,10 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
     // Set 60-second timeout for auto-stop
     const captureTimeout = setTimeout(async () => {
         await autoStopCapture(tabId, 'timeout');
-    }, 60000);
+    }, Constants.CAPTURE_AUTO_STOP_TIMEOUT);
 
     // Store listeners and timeout in capture state for cleanup
-    const captureState = shapesecurityCaptureState.get(tabId);
+    const captureState = shapesecurityCaptureStateRef.get(tabId);
     if (captureState) {
         captureState.setCookieListener = setCookieListener;
         captureState.requestHeaderListener = requestHeaderListener;
@@ -413,14 +444,18 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
 async function autoStopCapture(tabId, reason = 'complete') {
     Logger.network(`[ShapeSecurity] Auto-stopping capture for tab ${tabId}, reason: ${reason}`);
 
-    const captureState = shapesecurityCaptureState.get(tabId);
+    const captureState = (typeof getCaptureState === 'function')
+        ? getCaptureState(shapesecurityCaptureStateRef, tabId)
+        : shapesecurityCaptureStateRef.get(tabId);
     if (!captureState) {
         Logger.network('[ShapeSecurity] No active capture state found');
         return;
     }
 
     // Clear timeout if exists
-    if (captureState.captureTimeout) {
+    if (typeof clearCaptureTimeout === 'function') {
+        clearCaptureTimeout(captureState);
+    } else if (captureState.captureTimeout) {
         clearTimeout(captureState.captureTimeout);
     }
 
@@ -473,7 +508,11 @@ async function autoStopCapture(tabId, reason = 'complete') {
         Logger.network('[ShapeSecurity] Capture data saved to history');
 
         // Delete capture state
-        shapesecurityCaptureState.delete(tabId);
+        if (typeof removeCaptureState === 'function') {
+            removeCaptureState(shapesecurityCaptureStateRef, tabId);
+        } else {
+            shapesecurityCaptureStateRef.delete(tabId);
+        }
 
         // Show completion notification
         if (showNotification) {
@@ -514,7 +553,9 @@ function handleShapeSecurityStopCapture(message, sender, sendResponse) {
     const tabId = message.tabId;
     Logger.network('[ShapeSecurity] Stop capture requested for tab:', tabId);
 
-    const captureState = shapesecurityCaptureState.get(tabId);
+    const captureState = (typeof getCaptureState === 'function')
+        ? getCaptureState(shapesecurityCaptureStateRef, tabId)
+        : shapesecurityCaptureStateRef.get(tabId);
     if (!captureState) {
         Logger.network('[ShapeSecurity] No active capture for this tab');
         sendResponse({ status: 'not_capturing' });
@@ -542,7 +583,11 @@ function handleShapeSecurityStopCapture(message, sender, sendResponse) {
     BaseInterceptorHelpers.saveToHistory(tabId, capturedData, { type: 'shapesecurity', expiryMinutes: 30 })
         .then(async () => {
             Logger.network('[ShapeSecurity] Capture data saved to history');
-            shapesecurityCaptureState.delete(tabId);
+            if (typeof removeCaptureState === 'function') {
+                removeCaptureState(shapesecurityCaptureStateRef, tabId);
+            } else {
+                shapesecurityCaptureStateRef.delete(tabId);
+            }
 
             // Show completion notification
             if (showNotification) {
@@ -574,7 +619,9 @@ function handleShapeSecurityStopCapture(message, sender, sendResponse) {
  */
 function handleShapeSecurityGetCaptureState(message, sender, sendResponse) {
     const tabId = message.tabId;
-    const captureState = shapesecurityCaptureState.get(tabId);
+    const captureState = (typeof getCaptureState === 'function')
+        ? getCaptureState(shapesecurityCaptureStateRef, tabId)
+        : shapesecurityCaptureStateRef.get(tabId);
 
     sendResponse({
         isCapturing: !!captureState,
@@ -888,7 +935,7 @@ async function handleShapeSecurityCheckVersion(message, sender, sendResponse) {
  */
 function interceptShapeSecurityRequest(details) {
     // Find if any tab is capturing
-    for (const [tabId, state] of shapesecurityCaptureState.entries()) {
+    for (const [tabId, state] of shapesecurityCaptureStateRef.entries()) {
         if (state.active && details.tabId === tabId) {
             const url = details.url;
 
@@ -940,7 +987,7 @@ function handleShapeSecurityStartExtraction(message, sender, sendResponse) {
     Logger.network('[ShapeSecurity-EXTRACT] Start extraction requested for tab:', tabId);
 
     // Enable extraction mode
-    shapeSecurityExtractionState.set(tabId, {
+    shapeSecurityExtractionStateRef.set(tabId, {
         active: true,
         startTime: Date.now(),
         initJsUrls: [],
@@ -1048,7 +1095,7 @@ async function handleShapeSecurityExtractionCompleted(message, sender, sendRespo
     const tabId = message.tabId;
     Logger.network('[ShapeSecurity-EXTRACT] Extraction completed for tab:', tabId);
 
-    const state = shapeSecurityExtractionState.get(tabId);
+    const state = shapeSecurityExtractionStateRef.get(tabId);
     if (!state) {
         Logger.network('[ShapeSecurity-EXTRACT] No extraction state found');
         sendResponse({ status: 'error', error: 'No extraction state' });
@@ -1114,7 +1161,7 @@ async function handleShapeSecurityExtractionCompleted(message, sender, sendRespo
     }
 
     // Clean up extraction state
-    shapeSecurityExtractionState.delete(tabId);
+    shapeSecurityExtractionStateRef.delete(tabId);
     Logger.network('[ShapeSecurity-EXTRACT] Extraction state cleaned up');
 
     sendResponse({ status: 'success' });

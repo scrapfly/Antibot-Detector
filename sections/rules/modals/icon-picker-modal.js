@@ -95,33 +95,36 @@ Rules.prototype.openIconPicker = function() {
   // Create modal HTML with Default option first, then Custom, then others
   const scrapflyIcon = chrome.runtime.getURL('icons/icon128.png');
   const modalHtml = `
-    <div class="icon-picker-modal" style="display:flex;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:10000;align-items:center;justify-content:center;">
-      <div class="icon-picker-content" style="display:flex;flex-direction:column;position:relative;background:var(--bg-secondary);border-radius:12px;width:90%;max-width:520px;max-height:85vh;box-shadow:0 25px 50px rgba(0,0,0,0.6);border:1px solid var(--border);overflow:hidden;">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);">
-          <h3 style="margin:0;font-size:16px;font-weight:600;color:var(--text-primary);">Choose Icon</h3>
-          <button class="icon-picker-close" aria-label="Close icon picker" style="width:28px;height:28px;border:none;border-radius:6px;background:rgba(239,68,68,0.15);color:#ef4444;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s ease;font-size:14px;line-height:1;">
-            ✕
+    <div class="icon-picker-modal rule-modal">
+      <div class="icon-picker-backdrop rule-modal-backdrop"></div>
+      <div class="icon-picker-content rule-modal-content">
+        <div class="icon-picker-header rule-modal-header">
+          <h2>Choose Icon</h2>
+          <button class="icon-picker-close rule-modal-close" aria-label="Close icon picker" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
+            </svg>
           </button>
         </div>
-        <div style="flex:1;overflow:auto;padding:16px;">
-          <div class="icon-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:10px;">
+        <div class="icon-picker-body rule-modal-body">
+          <div class="icon-grid">
             ${[
-              { icon: 'default', label: 'Default', image: scrapflyIcon, special: true, className: 'icon-option icon-option-default icon-option-special', imgSize: 40, isFingerprint: false },
-              ...availableIcons.map(icon => ({ icon, label: icon.replace('_official.png', '').replace('_fingerprint.png', '').replace('.png', ''), image: chrome.runtime.getURL('detectors/icons/' + icon), special: false, className: 'icon-option', imgSize: 36, isFingerprint: isFingerprint(icon), svg: fingerprintSvgIcons[icon] }))
-            ].map(({ icon, label, image, special, className, imgSize, isFingerprint: isFp, svg }) => `
-              <div class="${className}" data-icon="${icon}" style="cursor:pointer;padding:8px;border:2px solid ${special ? 'var(--accent)' : 'var(--border)'};border-radius:8px;text-align:center;transition:all 0.15s ease;background:${special ? 'rgba(59,130,246,0.15)' : 'var(--bg-secondary)'};">
-                ${isFp ? `<div style="width:${imgSize}px;height:${imgSize}px;margin:0 auto 4px;border-radius:50%;background:linear-gradient(135deg,#3b82f6 0%,#60a5fa 100%);display:flex;align-items:center;justify-content:center;color:white;">${svg.replace('viewBox', 'style="width:20px;height:20px;" viewBox')}</div>` : `<img src="${image}" style="width:${imgSize}px;height:${imgSize}px;object-fit:contain;margin-bottom:4px;" />`}
-                <div style="font-size:9px;color:var(--text-muted);word-break:break-word;text-transform:capitalize;line-height:1.2;">${label}</div>
+              { icon: 'default', label: 'Default', image: scrapflyIcon, className: 'icon-option icon-option-default icon-option-special', isFingerprint: false },
+              ...availableIcons.map(icon => ({ icon, label: icon.replace('_official.png', '').replace('_fingerprint.png', '').replace('.png', ''), image: chrome.runtime.getURL('detectors/icons/' + icon), className: 'icon-option', isFingerprint: isFingerprint(icon), svg: fingerprintSvgIcons[icon] }))
+            ].map(({ icon, label, image, className, isFingerprint: isFp, svg }) => `
+              <div class="${className}" data-icon="${icon}">
+                ${isFp ? `<div class="icon-option-fingerprint-preview fingerprint-icon fingerprint-icon-shell">${svg}</div>` : `<img src="${image}" alt="${label}" class="icon-option-image ${icon === 'default' ? 'icon-option-image-default' : ''}">`}
+                <div class="icon-option-label">${label}</div>
               </div>
             `).join('')}
           </div>
         </div>
-        <div style="display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border);background:var(--bg-secondary);">
-          <button id="uploadCustomIcon" style="flex:1;padding:8px 12px;background:var(--accent, #3b82f6);color:white;border:none;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity 0.2s;">
+        <div class="icon-picker-footer rule-modal-footer">
+          <button id="uploadCustomIcon" class="icon-picker-upload-btn" type="button">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
             Upload Custom
           </button>
-          <button id="cancelIconPicker" style="padding:8px 16px;background:var(--bg-tertiary);color:var(--text-secondary);border:1px solid var(--border);border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;">
+          <button id="cancelIconPicker" class="icon-picker-cancel-btn rule-btn rule-btn-cancel" type="button">
             Cancel
           </button>
         </div>
@@ -134,76 +137,62 @@ Rules.prototype.openIconPicker = function() {
   modalContainer.innerHTML = modalHtml;
   document.body.appendChild(modalContainer);
 
-  // Add hover effects and click handlers
+  const editBackdrop = document.querySelector('#editRuleModal .rule-modal-backdrop');
+  const previousEditBackdropVisibility = editBackdrop ? editBackdrop.style.visibility : '';
+  if (editBackdrop) {
+    editBackdrop.style.visibility = 'hidden';
+  }
+
+  let isClosed = false;
+  const closeModal = () => {
+    if (isClosed) return;
+    isClosed = true;
+    if (editBackdrop) {
+      editBackdrop.style.visibility = previousEditBackdropVisibility;
+    }
+    modalContainer.remove();
+  };
+
+  // Add click handlers
   const iconOptions = modalContainer.querySelectorAll('.icon-option');
   iconOptions.forEach(option => {
-    const isDefault = option.classList.contains('icon-option-default');
-    const isSpecial = isDefault;
-
-    option.addEventListener('mouseenter', () => {
-      option.style.borderColor = 'var(--accent)';
-      if (!isSpecial) {
-        option.style.background = 'rgba(255,255,255,0.05)';
-      }
-    });
-    option.addEventListener('mouseleave', () => {
-      option.style.borderColor = isSpecial ? 'var(--accent)' : 'rgba(255,255,255,0.06)';
-      if (!isSpecial) {
-        option.style.background = 'rgba(255,255,255,0.02)';
-      }
-    });
     option.addEventListener('click', () => {
       const iconName = option.dataset.icon;
 
       if (iconName === 'default') {
         // Handle default icon - set to null or 'default'
         this.selectIcon('default');
-        document.body.removeChild(modalContainer);
       } else {
         // Handle regular icon selection
         this.selectIcon(iconName);
-        document.body.removeChild(modalContainer);
       }
+      closeModal();
     });
   });
 
   // Upload custom icon button
   const uploadBtn = modalContainer.querySelector('#uploadCustomIcon');
   uploadBtn.addEventListener('click', () => {
-    document.body.removeChild(modalContainer);
+    closeModal();
     this.uploadCustomIcon();
   });
 
   // Cancel button
   const cancelBtn = modalContainer.querySelector('#cancelIconPicker');
   cancelBtn.addEventListener('click', () => {
-    document.body.removeChild(modalContainer);
+    closeModal();
   });
 
   // Close on backdrop click
-  const modal = modalContainer.querySelector('.icon-picker-modal');
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      document.body.removeChild(modalContainer);
-    }
-  });
+  const backdrop = modalContainer.querySelector('.icon-picker-backdrop');
+  if (backdrop) {
+    backdrop.addEventListener('click', () => closeModal());
+  }
 
-  // Close button with hover effects
+  // Close button
   const closeBtn = modalContainer.querySelector('.icon-picker-close');
   if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      document.body.removeChild(modalContainer);
-    });
-    closeBtn.addEventListener('mouseenter', () => {
-      closeBtn.style.background = '#ef4444';
-      closeBtn.style.color = 'white';
-      closeBtn.style.transform = 'scale(1.05)';
-    });
-    closeBtn.addEventListener('mouseleave', () => {
-      closeBtn.style.background = 'rgba(239, 68, 68, 0.15)';
-      closeBtn.style.color = '#ef4444';
-      closeBtn.style.transform = 'scale(1)';
-    });
+    closeBtn.addEventListener('click', () => closeModal());
   }
 };
 
@@ -214,11 +203,27 @@ Rules.prototype.selectIcon = function(iconName) {
   // Update current icon display in modal
   const currentIcon = document.querySelector('#currentDetectorIcon');
   if (currentIcon) {
+    const isFingerprintCategory = (this.currentEditDetector?.category || '').toLowerCase() === 'fingerprint';
+    let iconSourceType = 'default';
+
     if (iconName === 'default') {
       // Use Scrapfly icon for default
       currentIcon.src = chrome.runtime.getURL('icons/icon128.png');
+      iconSourceType = 'default';
     } else {
       currentIcon.src = chrome.runtime.getURL('detectors/icons/' + iconName);
+      iconSourceType = iconName.toLowerCase().includes('_fingerprint.') ? 'builtin' : 'default';
+    }
+
+    if (isFingerprintCategory) {
+      this.setCurrentDetectorIconSourceClass?.(iconSourceType);
+    } else {
+      currentIcon.classList.remove(
+        'fingerprint-icon-image',
+        'fingerprint-icon-image--builtin',
+        'fingerprint-icon-image--custom',
+        'fingerprint-icon-image--default'
+      );
     }
   }
 
@@ -262,6 +267,17 @@ Rules.prototype.uploadCustomIcon = function() {
         const currentIcon = document.querySelector('#currentDetectorIcon');
         if (currentIcon) {
           currentIcon.src = dataUrl;
+          const isFingerprintCategory = (this.currentEditDetector?.category || '').toLowerCase() === 'fingerprint';
+          if (isFingerprintCategory) {
+            this.setCurrentDetectorIconSourceClass?.('custom');
+          } else {
+            currentIcon.classList.remove(
+              'fingerprint-icon-image',
+              'fingerprint-icon-image--builtin',
+              'fingerprint-icon-image--custom',
+              'fingerprint-icon-image--default'
+            );
+          }
         }
 
         // Store the new icon data URL in the detector

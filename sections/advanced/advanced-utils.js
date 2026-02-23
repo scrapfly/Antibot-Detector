@@ -38,27 +38,20 @@ const AdvancedUtils = {
      */
     async loadCaptureHistory(type, hostname = null) {
         try {
-            const result = await chrome.storage.local.get(['scrapfly_advanced_history']);
-            let history = result.scrapfly_advanced_history || { items: [] };
-
-            // Handle legacy string format
-            if (typeof history === 'string') {
-                history = JSON.parse(history);
-            }
-            if (!history.items) {
+            if (!AdvancedHistoryStore) {
                 return [];
             }
 
-            // Filter by type and expiry
-            const now = Date.now();
-            let items = history.items.filter(item => {
-                const typeMatch = item.type === type;
-                const notExpired = !item.expiresAt || item.expiresAt > now;
-                const hostnameMatch = !hostname || item.hostname === hostname;
-                return typeMatch && notExpired && hostnameMatch;
+            const captures = await AdvancedHistoryStore.getModule(type, {
+                includeExpired: false,
+                hostname
             });
 
-            return items;
+            return captures.map((item) => ({
+                ...item,
+                type: item.type || type,
+                captureData: item.captureData !== undefined ? item.captureData : item.data
+            }));
 
         } catch (error) {
             Logger.error('UI', `[AdvancedUtils] Failed to load capture history for ${type}:`, error);
@@ -73,31 +66,12 @@ const AdvancedUtils = {
      */
     async cleanExpiredHistory(type = null) {
         try {
-            const result = await chrome.storage.local.get(['scrapfly_advanced_history']);
-            let history = result.scrapfly_advanced_history || { items: [] };
-
-            // Handle legacy string format
-            if (typeof history === 'string') {
-                history = JSON.parse(history);
+            if (!AdvancedHistoryStore) {
+                return 0;
             }
 
-            const originalCount = history.items?.length || 0;
-            const now = Date.now();
-
-            // Filter out expired items
-            history.items = (history.items || []).filter(item => {
-                const notExpired = !item.expiresAt || item.expiresAt > now;
-                const typeMatch = !type || item.type === type;
-                return notExpired || !typeMatch;
-            });
-
-            const removedCount = originalCount - history.items.length;
-
+            const { removedCount } = await AdvancedHistoryStore.cleanupExpired(type);
             if (removedCount > 0) {
-                history.lastUpdated = Date.now();
-                await chrome.storage.local.set({
-                    scrapfly_advanced_history: history
-                });
                 Logger.ui(`[AdvancedUtils] Removed ${removedCount} expired items`);
             }
 
@@ -308,22 +282,13 @@ const AdvancedUtils = {
      */
     async showCaptureStartNotification(moduleName) {
         const logoUrl = chrome.runtime.getURL('icons/icon128.png');
-        const message = `${moduleName} capture started. Reload the page to trigger capture.`;
+        const message = `${moduleName} monitoring started. Reload the page to begin capture.`;
 
         // Show notification with logo
         NotificationHelper.info(message);
 
         // Optionally show in-page notification with logo for better UX
         // This creates a branded notification experience
-    },
-
-    /**
-     * Get favicon URL for a hostname - delegates to Utils
-     * @param {string} hostname - Hostname
-     * @returns {string} Favicon URL
-     */
-    getFaviconUrl(hostname) {
-        return UrlUtils.getFaviconUrl(hostname);
     },
 
     /**
@@ -367,14 +332,14 @@ const AdvancedUtils = {
          * @param {string} moduleName - Name of the module (e.g., "Shape Security")
          * @returns {string} Notification message
          */
-        moduleLoaded: (moduleName) => `✓ Loaded ${moduleName} tools`,
+        moduleLoaded: (moduleName) => `${moduleName} tools loaded`,
 
         /**
          * Check cookies operation notifications
          */
         checkCookies: {
             start: (moduleName) => `Checking ${moduleName} cookies...`,
-            success: (count, total) => `✓ Found ${count}/${total} cookies`,
+            success: (count, total) => `Found ${count}/${total} cookies`,
             none: (moduleName) => `No ${moduleName} cookies found`
         },
 
@@ -383,7 +348,7 @@ const AdvancedUtils = {
          */
         analyzeScripts: {
             start: (moduleName) => `Analyzing ${moduleName} scripts... Page will reload`,
-            success: (count) => `✓ Found ${count} script${count !== 1 ? 's' : ''}`,
+            success: (count) => `Found ${count} script${count !== 1 ? 's' : ''}`,
             none: (moduleName) => `No ${moduleName} scripts found`
         },
 
@@ -400,7 +365,7 @@ const AdvancedUtils = {
          * Check version operation notifications
          */
         checkVersion: {
-            success: (moduleName, version) => `✓ Detected ${moduleName} version: ${version}`,
+            success: (moduleName, version) => `${moduleName} version detected: ${version}`,
             none: (moduleName) => `No ${moduleName} version detected`
         }
     }

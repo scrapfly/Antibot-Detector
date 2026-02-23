@@ -29,7 +29,7 @@ function demGenerateHookCode(detectors) {
   const triggeredHooks = new Set();
   let completionTimeout = null;
   let hooksEnabled = true;
-  const COMPLETION_DELAY_MS = 2000;
+  const COMPLETION_DELAY_MS = Constants.COMPLETION_DELAY;
 
   function scheduleCompletion() {
 if (completionTimeout) clearTimeout(completionTimeout);
@@ -254,7 +254,7 @@ function demCreateHookBatcher(chrome) {
                 }
                 // Other errors - log as warning
                 else {
-                    Logger.warn('CONTENT', '[Content Script] Failed to send hook batch:', error);
+                    Logger.debug('CONTENT', '[hookBatcher] Failed to send hook batch:', error);
                 }
             });
         } catch (e) {
@@ -329,7 +329,7 @@ function demHandleHookMessage(event, chrome, hookBatcher) {
     if (data && data.type === 'JS_HOOK_DETECTION') {
         // Defensive check - shouldn't happen if MAIN world is working correctly
         if (window.__scrapflyCacheHitEarlyExit) {
-            Logger.warn('CONTENT', '[Content] Received hook detection despite cache hit flag - ignoring');
+            Logger.debug('CONTENT', '[handleHookMessage] Hook detection received despite cache hit, ignoring');
             return true;
         }
 
@@ -346,7 +346,7 @@ function demHandleHookMessage(event, chrome, hookBatcher) {
     if (data && data.type === 'WINDOW_DETECTIONS') {
         // Defensive check - shouldn't happen if MAIN world polling check is working correctly
         if (window.__scrapflyCacheHitEarlyExit) {
-            Logger.warn('CONTENT', '[Content] Received window detections despite cache hit flag - ignoring');
+            Logger.debug('CONTENT', '[handleHookMessage] Window detections received despite cache hit, ignoring');
             return true;
         }
 

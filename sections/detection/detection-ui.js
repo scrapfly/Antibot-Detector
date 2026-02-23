@@ -276,8 +276,8 @@ DetectionUI.handleLoadingTimeout = function() {
             { type: 'GET_DETECTION_DATA', tabId: tabs[0].id },
             async (response) => {
               if (chrome.runtime.lastError) {
-                if (this.debugMode) Logger.warn('UI', '[Detection] Error checking for results:', chrome.runtime.lastError);
-                this.showInterruptedState();
+                if (this.debugMode) Logger.debug('UI', '[Detection] Error checking for results:', chrome.runtime.lastError);
+                this.showEmptyState();
                 return;
               }
 
@@ -303,16 +303,16 @@ DetectionUI.handleLoadingTimeout = function() {
                   if (this.debugMode) Logger.ui('[Detection] Timeout but badge shows completion - retrying fetch...');
                   await this.refreshAnalysis();
                 } else {
-                  // Truly stuck - show interrupted state
-                  if (this.debugMode) Logger.ui('[Detection] Timeout with no results - showing interrupted state');
-                  this.showInterruptedState();
+                  // Truly stuck/no data - normalize to empty state
+                  if (this.debugMode) Logger.ui('[Detection] Timeout with no results - showing empty state');
+                  this.showEmptyState();
                 }
               }
             }
           );
         } else {
-          // No tab found - show interrupted state
-          this.showInterruptedState();
+          // No tab found - normalize to empty state
+          this.showEmptyState();
         }
       });
     }
@@ -356,7 +356,7 @@ DetectionUI.showAnalyzingState = function(message = 'Analyzing page…') {
     this.startAnalysisProgress();
 };
 
-DetectionUI.showEmptyState = function() {
+DetectionUI.showEmptyState = function(options = {}) {
     if (!this.isExtensionEnabled) {
       this.showDisabledState();
       return;
@@ -381,10 +381,10 @@ DetectionUI.showEmptyState = function() {
     this.clearBadgeForEmptyState();
 
     const emptyState = document.querySelector('#emptyState');
-    const emptyStateIcon = document.querySelector('#emptyStateIcon');
-    const emptyStateTitle = document.querySelector('.empty-state-title');
-    const emptyStateText = document.querySelector('.empty-state-description');
-    const emptyStateFooter = document.querySelector('.empty-state-footer');
+    const emptyStateIcon = emptyState?.querySelector('.state-card-logo');
+    const emptyStateTitle = emptyState?.querySelector('.state-card-title');
+    const emptyStateText = emptyState?.querySelector('.state-card-description');
+    const emptyStateFooter = emptyState?.querySelector('.state-card-badges');
     const detectionResults = document.querySelector('#detectionResults');
     const disabledState = document.querySelector('#disabledState');
     const detectionPagination = document.querySelector('#detectionPagination');
@@ -395,15 +395,15 @@ DetectionUI.showEmptyState = function() {
       emptyStateIcon.alt = 'Scrapfly';
     }
 
-    // Show normal empty state
+    // Show empty state with optional overrides
     if (emptyStateTitle) {
-      emptyStateTitle.textContent = 'Nothing Detected';
+      emptyStateTitle.textContent = options.title || 'Nothing Detected';
     }
     if (emptyStateText) {
-      emptyStateText.textContent = 'This page is clean and free from bot detection systems. No CAPTCHAs, anti-bot challenges, or fingerprinting techniques were found during the scan.';
+      emptyStateText.textContent = options.description || 'This page is clean and free from bot detection systems. No CAPTCHAs, anti-bot challenges, or fingerprinting techniques were found during the scan.';
     }
     if (emptyStateFooter) {
-      emptyStateFooter.style.display = 'block';
+      emptyStateFooter.style.display = options.showBadges === false ? 'none' : 'flex';
     }
 
     if (emptyState) emptyState.style.display = 'flex';
@@ -493,7 +493,9 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     this.currentResults = detections;
     this.displayOptions = options;
     this.cacheMetadata = options.cacheMetadata || null;
-    Logger.ui('[DEBUG Detection] currentResults stored:', this.currentResults.length, 'detections');
+    if (this.debugMode) {
+      Logger.ui('[DEBUG Detection] currentResults stored:', this.currentResults.length, 'detections');
+    }
 
     // Notify Advanced section that detection data is ready (fixes timing race condition)
     if (this.advancedSection && typeof this.advancedSection.onDetectionDataReady === 'function') {
@@ -621,7 +623,7 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
       }
     } catch (error) {
       if (this.debugMode) {
-        Logger.warn('UI', '[Detection] Could not update badge:', error);
+        Logger.debug('UI', '[Detection] Could not update badge:', error);
       }
     }
 };
@@ -1181,8 +1183,11 @@ DetectionUI.handleSearch = function(query) {
 };
 
 DetectionUI.getDetectorIcon = function(detection) {
-    // Helper to escape alt text for HTML attribute safety
-    const escapeAlt = (text) => (text || 'Icon').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const escapeAlt = (text) => FormatUtils.escapeHtml(text || 'Icon');
+    const normalizedCategory = String(detection?.category || detection?.detector?.category || '')
+      .toLowerCase()
+      .replace(/[^a-z]/g, '');
+    const isFingerprintCategory = normalizedCategory === 'fingerprint' || normalizedCategory.includes('fingerprint');
 
     // Fingerprint SVG icons mapping
     const fingerprintIcons = {
@@ -1209,8 +1214,15 @@ DetectionUI.getDetectorIcon = function(detection) {
       'webrtc_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 10l5-5M20 10V5h-5"/><path d="M9 14l-5 5M4 14v5h5"/><circle cx="12" cy="12" r="3"/></svg>'
     };
 
+    const wrapFingerprintImage = (src, alt, sourceType) => (
+      `<div class="detector-icon detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${src}" alt="${alt}" class="detector-icon fingerprint-icon-image fingerprint-icon-image--${sourceType}" /></div>`
+    );
+
     // Check for custom uploaded icon first
     if (detection.detector?.customIcon) {
+      if (isFingerprintCategory) {
+        return wrapFingerprintImage(detection.detector.customIcon, escapeAlt(detection.detector.name), 'custom');
+      }
       return `<img src="${detection.detector.customIcon}" alt="${escapeAlt(detection.detector.name)}" class="detector-icon" />`;
     }
 
@@ -1220,16 +1232,22 @@ DetectionUI.getDetectorIcon = function(detection) {
         const lowerIcon = detection.detector.icon.toLowerCase();
         if (lowerIcon === 'default') {
           const scrapflyIcon = chrome.runtime.getURL('icons/icon128.png');
+          if (isFingerprintCategory) {
+            return wrapFingerprintImage(scrapflyIcon, escapeAlt(detection.detector.name), 'default');
+          }
           return `<img src="${scrapflyIcon}" alt="${escapeAlt(detection.detector.name)}" class="detector-icon" />`;
         }
         if (lowerIcon === 'custom' || lowerIcon === 'custom.png') {
           const scrapflyIcon = chrome.runtime.getURL('icons/icon128.png');
+          if (isFingerprintCategory) {
+            return wrapFingerprintImage(scrapflyIcon, escapeAlt(detection.detector.name), 'default');
+          }
           return `<img src="${scrapflyIcon}" alt="${escapeAlt(detection.detector.name)}" class="detector-icon" />`;
         }
 
         // Check for fingerprint SVG icons
         if (fingerprintIcons[lowerIcon]) {
-          return `<div class="detector-icon detector-icon-svg fingerprint-icon">${fingerprintIcons[lowerIcon]}</div>`;
+          return `<div class="detector-icon detector-icon-svg fingerprint-icon fingerprint-icon-shell">${fingerprintIcons[lowerIcon]}</div>`;
         }
       }
       // Check if it's an emoji (not a file name)
@@ -1243,11 +1261,17 @@ DetectionUI.getDetectorIcon = function(detection) {
 
       // It's a file, build path to icon in detectors/icons folder
       const iconPath = chrome.runtime.getURL(`detectors/icons/${detection.detector.icon}`);
+      if (isFingerprintCategory) {
+        return wrapFingerprintImage(iconPath, escapeAlt(detection.detector.name), 'builtin');
+      }
       return `<img src="${iconPath}" alt="${escapeAlt(detection.detector.name)}" class="detector-icon" />`;
     }
 
     // No icon specified, use default custom.png
     const scrapflyIcon = chrome.runtime.getURL('icons/icon128.png');
+    if (isFingerprintCategory) {
+      return wrapFingerprintImage(scrapflyIcon, escapeAlt(detection.detector?.name), 'default');
+    }
     return `<img src="${scrapflyIcon}" alt="${escapeAlt(detection.detector?.name)}" class="detector-icon" />`;
 };
 

@@ -152,12 +152,11 @@ function registerCacheHandlers(registry, context) {
                 networkUrlsStore.delete(request.tabId);
                 tabsUsingCache.delete(request.tabId);
 
-                // Track this tab as recently cleared (prevent data resurrection for 5 seconds)
                 recentlyClearedTabs.add(request.tabId);
                 setTimeout(() => {
                     recentlyClearedTabs.delete(request.tabId);
                     Logger.background(`[Background] Tab ${request.tabId} removed from recently cleared list`);
-                }, 5000);
+                }, Constants.RECENTLY_CLEARED_TAB_TIMEOUT);
 
                 // CRITICAL FIX: Update badge to show data was cleared
                 try {
@@ -177,5 +176,6 @@ function registerCacheHandlers(registry, context) {
         return true; // Async response
     };
     registry['DETECTION_CLEAR_CACHE'] = handle_clear_detection_cache;
+    registry['HISTORY_CLEAR_CACHE'] = handle_clear_detection_cache;
 
 }

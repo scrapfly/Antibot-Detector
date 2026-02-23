@@ -103,12 +103,12 @@ Rules.prototype.handleCheckUpdates = async function() {
   const btnText = document.querySelector('#checkUpdatesBtnText');
 
   if (!btn) {
-    Logger.warn('UI', 'Update button not found');
+    Logger.debug('UI', 'Update button not found');
     return;
   }
 
   if (typeof UpdateManager === 'undefined') {
-    Logger.warn('UI', 'UpdateManager not available');
+    Logger.warn('UI', '[Rules] UpdateManager not available');
     if (typeof NotificationHelper !== 'undefined') {
       NotificationHelper.error('Update service not available');
     }
@@ -297,6 +297,7 @@ Rules.prototype.handleAddDetector = function() {
     name: 'New Detector',
     displayName: 'New Detector',
     category: 'antibot',
+    difficulty: 'Medium',
     icon: 'default',
     color: '#3b82f6',
     description: 'Custom detector',

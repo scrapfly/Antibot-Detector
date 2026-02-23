@@ -104,9 +104,6 @@ SettingsRuntime.handleSettingsUpdated = async function(context, sendResponse) {
     try {
       const { chrome, CategoryManager, categoryManager } = context;
 
-      // Invalidate settings cache
-      Utils.invalidateSettingsCache();
-
       // Reload category manager if colors changed
       if (categoryManager) {
         await categoryManager.loadFromStorage();
@@ -147,7 +144,7 @@ SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults
       const url = pageData.url || '';
       const hostname = pageData.hostname || new URL(url).hostname || '';
       const title = pageData.title || 'Untitled';
-      const favicon = hostname ? `https://www.google.com/s2/favicons?domain=${hostname}&sz=64` : '';
+      const favicon = hostname ? UrlUtils.getFaviconUrl(hostname, 64) : '';
       const timestamp = new Date().toISOString();
       const detectionCount = detectionResults.length;
       const categories = [...new Set(detectionResults.map(d => d.category))].join(',');

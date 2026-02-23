@@ -359,7 +359,7 @@ Rules.prototype.displayWindowSuggestions = function(keyword) {
     suggestionDiv.dataset.property = template.property;
     suggestionDiv.style.cssText = 'padding: 10px 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s;';
     suggestionDiv.innerHTML = `
-      <div style="font-family: 'Monaco', 'Courier New', monospace; font-size: 12px; color: var(--accent); font-weight: 500;">${this.escapeHtml(template.property)}</div>
+      <div style="font-family: 'Monaco', 'Courier New', monospace; font-size: 12px; color: var(--accent); font-weight: 500;">${FormatUtils.escapeHtml(template.property)}</div>
       <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">${template.label}</div>
     `;
     suggestionDiv.addEventListener('mouseenter', () => {

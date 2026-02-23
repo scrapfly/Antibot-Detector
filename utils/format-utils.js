@@ -215,10 +215,7 @@ class FormatUtils {
   }
 }
 
-// Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = FormatUtils;
-} else if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
   window.FormatUtils = FormatUtils;
 } else if (typeof self !== 'undefined') {
   self.FormatUtils = FormatUtils;

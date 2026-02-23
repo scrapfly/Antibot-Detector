@@ -112,8 +112,8 @@ function registerSettingsHandlers(registry, context) {
                     activeDetections.delete(tab.id);
                     Logger.background(`[Background] Cleared activeDetections for tab ${tab.id} (cache scope changed)`);
 
-                    setTimeout(() => recentlyClearedTabs.delete(tab.id), 10000);
-                    Logger.background(`[Background] Added tab ${tab.id} to recentlyClearedTabs for 10 seconds`);
+                    setTimeout(() => recentlyClearedTabs.delete(tab.id), Constants.RECENTLY_CLEARED_TAB_TIMEOUT);
+                    Logger.background(`[Background] Added tab ${tab.id} to recentlyClearedTabs`);
 
                     if (storedData && storedData.detectionCount > 0) {
                         // Update badge with cached count and color
@@ -137,10 +137,10 @@ function registerSettingsHandlers(registry, context) {
                         await chrome.action.setBadgeBackgroundColor({ color: color, tabId: tab.id });
                         Logger.background(`[Background] Badge updated with cached data: ${count} detections (scope change)`);
                     } else {
-                        // No cached data with new scope - show reload needed badge
-                        await chrome.action.setBadgeText({ text: BADGE.TEXT.INTERRUPTED, tabId: tab.id });
-                        await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.INTERRUPTED, tabId: tab.id });
-                        Logger.background('[Background] Badge: reload needed - no cached data with new scope');
+                        // No cached data with new scope - normalize to cleared/empty state.
+                        await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tab.id });
+                        await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEARED, tabId: tab.id });
+                        Logger.background('[Background] Badge: cleared state - no cached data with new scope');
                     }
                 }
 

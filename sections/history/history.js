@@ -51,7 +51,7 @@ class History {
       await this.loadHistoryFromStorage();
       this.renderHistory();
     } catch (error) {
-      Logger.error('UI', 'Failed to display history:', error);
+      Logger.warn('UI', '[History] Failed to display history', error);
       this.showEmptyState();
     }
   }
@@ -74,7 +74,7 @@ class History {
         this.historyItems = [];
       }
     } catch (error) {
-      Logger.error('UI', 'Failed to load history from storage:', error);
+      Logger.warn('UI', '[History] Storage load failed', error);
       this.historyItems = [];
     }
   }
@@ -95,7 +95,7 @@ class History {
 
       Logger.ui('History saved to storage');
     } catch (error) {
-      Logger.error('UI', 'Failed to save history to storage:', error);
+      Logger.warn('UI', '[History] Storage save failed', error);
     }
   }
 
@@ -166,7 +166,7 @@ class History {
   renderHistoryPage(items) {
     const historyList = document.querySelector('#historyList');
     if (!historyList) {
-      Logger.error('UI', 'History list element not found');
+      Logger.warn('UI', '[History] List element not found');
       return;
     }
 
@@ -191,6 +191,11 @@ class History {
             </div>
             <div class="history-item-right">
               <div class="history-item-actions">
+                <button class="history-item-action-btn history-clear-cache-btn" data-action="clear-cache" title="Clear cache">
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
+                  </svg>
+                </button>
                 <button class="history-item-action-btn history-copy-btn" data-action="copy" title="Copy data">
                   <svg width="16" height="16" viewBox="0 0 24 24">
                     <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" fill="currentColor"/>
@@ -198,7 +203,13 @@ class History {
                 </button>
                 <button class="history-item-action-btn history-export-btn" data-action="export" title="Export item">
                   <svg width="16" height="16" viewBox="0 0 24 24">
-                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" fill="currentColor"/>
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z" fill="currentColor"/>
+                  </svg>
+                </button>
+                <button class="history-item-action-btn history-blacklist-btn" data-action="blacklist" title="Add to blacklist">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M4.93 4.93l14.14 14.14"/>
                   </svg>
                 </button>
                 <button class="history-item-action-btn history-delete-btn" data-action="delete" title="Delete item">
@@ -348,22 +359,37 @@ class History {
         }
       }
 
+      const normalizedCategoryName = String(category || detectorObj?.category || '')
+        .toLowerCase()
+        .replace(/[^a-z]/g, '');
+      const isFingerprintCategory = normalizedCategoryName === 'fingerprint' || normalizedCategoryName.includes('fingerprint');
+
       // Generate icon HTML
       let isFingerprint = false;
       if (detectorObj && detectorObj.icon) {
         const iconName = detectorObj.icon.toLowerCase();
         // Check if it's a fingerprint SVG icon
         if (FINGERPRINT_ICONS[iconName]) {
-          iconHtml = `<div class="detection-icon-svg fingerprint-icon">${FINGERPRINT_ICONS[iconName]}</div>`;
+          iconHtml = `<div class="detection-icon-svg fingerprint-icon fingerprint-icon-shell">${FINGERPRINT_ICONS[iconName]}</div>`;
           isFingerprint = true;
         } else {
           const iconUrl = chrome.runtime.getURL(`detectors/icons/${detectorObj.icon}`);
-          iconHtml = `<img src="${iconUrl}" alt="${name}" class="detection-icon">`;
+          if (isFingerprintCategory) {
+            iconHtml = `<div class="detection-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${iconUrl}" alt="${name}" class="fingerprint-icon-image fingerprint-icon-image--builtin history-fingerprint-image"></div>`;
+            isFingerprint = true;
+          } else {
+            iconHtml = `<img src="${iconUrl}" alt="${name}" class="detection-icon">`;
+          }
         }
       } else {
         // Fallback: Use Scrapfly icon for all detectors without official icons
         const scrapflyIconUrl = chrome.runtime.getURL('icons/icon32.png');
-        iconHtml = `<img src="${scrapflyIconUrl}" alt="${name}" class="detection-icon">`;
+        if (isFingerprintCategory) {
+          iconHtml = `<div class="detection-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${scrapflyIconUrl}" alt="${name}" class="fingerprint-icon-image fingerprint-icon-image--default history-fingerprint-image"></div>`;
+          isFingerprint = true;
+        } else {
+          iconHtml = `<img src="${scrapflyIconUrl}" alt="${name}" class="detection-icon">`;
+        }
       }
 
       const badgeClass = isFingerprint ? 'history-detection-tag icon-badge fingerprint-badge' : 'history-detection-tag icon-badge';
@@ -427,9 +453,11 @@ class History {
     const scopeDisplayNames = {
       'domain': 'Domain',
       'path': 'Path',
-      'url': 'Full URL'
+      'url': 'Full URL',
+      'full': 'Full URL',
+      'full_url': 'Full URL'
     };
-    const cacheScope = item.cacheScope || 'domain';
+    const cacheScope = String(item.cacheScope || 'domain').toLowerCase();
     const cacheScopeDisplay = scopeDisplayNames[cacheScope] || 'Domain';
 
     return `
@@ -623,7 +651,7 @@ class History {
       Logger.ui('History cleared');
       NotificationHelper.success('History cleared');
     } catch (error) {
-      Logger.error('UI', 'Failed to clear history:', error);
+      Logger.warn('UI', '[History] Clear failed', error);
       NotificationHelper.error('Failed to clear history: ' + error.message);
     }
   }
@@ -661,7 +689,7 @@ class History {
    * Setup click handlers for history items
    */
   setupHistoryItemHandlers() {
-    // Handle action button clicks (copy/export)
+    // Handle action button clicks (clear cache/copy/export/blacklist/delete)
     document.querySelectorAll('.history-item-action-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -672,10 +700,14 @@ class History {
 
         if (!item) return;
 
-        if (action === 'copy') {
+        if (action === 'clear-cache') {
+          this.clearHistoryItemCache(item);
+        } else if (action === 'copy') {
           this.copyHistoryItem(item);
         } else if (action === 'export') {
           this.exportHistoryItem(item);
+        } else if (action === 'blacklist') {
+          this.addHistoryItemToBlacklist(item);
         } else if (action === 'delete') {
           this.deleteHistoryItem(item);
         }
@@ -704,7 +736,7 @@ class History {
 
     const modal = document.querySelector('#historyDetailModal');
     if (!modal) {
-      Logger.error('UI', 'History detail modal not found');
+      Logger.warn('UI', '[History] Detail modal not found');
       return;
     }
 
@@ -713,7 +745,7 @@ class History {
     const title = document.querySelector('#historyModalTitle');
     const url = document.querySelector('#historyModalUrl');
     const timestamp = document.querySelector('#historyModalTimestamp');
-    const detectionCount = document.querySelector('#historyModalDetectionCount');
+    const modalStats = document.querySelector('#historyModalStats');
     const content = document.querySelector('#historyModalContent');
 
     if (favicon) {
@@ -733,9 +765,8 @@ class History {
       const fullDate = new Date(historyItem.timestamp).toLocaleString();
       timestamp.innerHTML = `<span class="time-ago">${timeAgo}</span><span class="time-full">(${fullDate})</span>`;
     }
-    if (detectionCount) {
-      // Replace simple count with category breakdown
-      detectionCount.innerHTML = this.renderCategoryBreakdown(historyItem.detections || []);
+    if (modalStats) {
+      modalStats.innerHTML = this.renderHistoryStats(historyItem);
     }
 
     // Render detections in modal
@@ -753,28 +784,8 @@ class History {
     // Setup close handlers
     this.setupModalCloseHandlers();
 
-    // Setup copy and export handlers
-    this.setupModalActionHandlers(historyItem);
-
     // Setup copy handlers for individual method items
     this.setupMethodCopyHandlers();
-  }
-
-  /**
-   * Setup copy and export handlers for modal
-   * @param {object} historyItem - Current history item
-   */
-  setupModalActionHandlers(historyItem) {
-    const copyBtn = document.querySelector('#historyModalCopy');
-    const exportBtn = document.querySelector('#historyModalExport');
-
-    if (copyBtn) {
-      copyBtn.onclick = () => this.copyHistoryItem(historyItem);
-    }
-
-    if (exportBtn) {
-      exportBtn.onclick = () => this.exportHistoryItem(historyItem);
-    }
   }
 
   /**
@@ -782,14 +793,8 @@ class History {
    * @param {object} historyItem - History item to copy
    */
   async copyHistoryItem(historyItem) {
-    try {
-      const detailsText = this.formatHistoryItemText(historyItem);
-      await navigator.clipboard.writeText(detailsText);
-      NotificationHelper.micro('Copied');
-    } catch (error) {
-      Logger.error('UI', 'Failed to copy:', error);
-      NotificationHelper.error('Failed to copy to clipboard');
-    }
+    const detailsText = this.formatHistoryItemText(historyItem);
+    await FormatUtils.copyToClipboard(detailsText);
   }
 
   /**
@@ -855,6 +860,122 @@ class History {
   }
 
   /**
+   * Clear cached detection data for a history item URL while keeping the entry.
+   * @param {Object} historyItem - History item whose cache should be cleared
+   */
+  async clearHistoryItemCache(historyItem) {
+    try {
+      const domain = this.getDomainFromUrl(historyItem.url);
+      const confirmed = await NotificationHelper.confirm({
+        title: 'Clear Cache',
+        message: `Clear cached detection data for ${domain}? The history entry will be kept.`,
+        type: 'warning',
+        confirmText: 'Clear Cache',
+        cancelText: 'Cancel'
+      });
+
+      if (!confirmed) return;
+
+      const rawScope = String(historyItem.cacheScope || 'domain').toLowerCase();
+      const mappedScope = rawScope === 'url' ? 'full' : rawScope;
+      const cacheScope = ['domain', 'path', 'full'].includes(mappedScope) ? mappedScope : 'domain';
+
+      const request = {
+        type: 'HISTORY_CLEAR_CACHE',
+        url: historyItem.url,
+        cacheScope
+      };
+
+      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+      const activeTab = tabs[0];
+      if (activeTab && typeof activeTab.id === 'number' && activeTab.url) {
+        const activeHash = UrlUtils.hashUrl(activeTab.url, cacheScope);
+        const targetHash = UrlUtils.hashUrl(historyItem.url, cacheScope);
+        if (activeHash === targetHash) {
+          request.tabId = activeTab.id;
+        }
+      }
+
+      const response = await chrome.runtime.sendMessage(request);
+
+      if (response?.status === 'cleared') {
+        NotificationHelper.success('Cache cleared');
+      } else if (response?.status === 'not_found') {
+        NotificationHelper.info('Cache already cleared');
+      } else {
+        NotificationHelper.error('Failed to clear cache');
+      }
+    } catch (error) {
+      Logger.warn('UI', '[History] Cache clear failed', error);
+      NotificationHelper.error('Failed to clear cache');
+    }
+  }
+
+  /**
+   * Add the history item's domain to blacklist.
+   * @param {Object} historyItem - History item whose domain should be blacklisted
+   */
+  async addHistoryItemToBlacklist(historyItem) {
+    try {
+      if (!historyItem?.url) {
+        NotificationHelper.error('Invalid URL');
+        return;
+      }
+
+      const domain = this.getDomainFromUrl(historyItem.url);
+      if (!domain || domain === 'Unknown') {
+        NotificationHelper.error('Invalid domain');
+        return;
+      }
+
+      const confirmed = await NotificationHelper.confirm({
+        title: 'Add to Blacklist',
+        message: `Domain "${domain}" will be excluded from all future detections. You can remove it later in Settings.`,
+        confirmText: 'Add to Blacklist',
+        cancelText: 'Cancel',
+        type: 'danger'
+      });
+
+      if (!confirmed) return;
+
+      const result = await chrome.storage.local.get('scrapfly_settings');
+      let settings = result.scrapfly_settings || {};
+
+      if (typeof settings === 'string') {
+        try {
+          settings = JSON.parse(settings);
+        } catch (error) {
+          settings = {};
+        }
+      }
+
+      if (settings.settings && typeof settings.settings === 'object') {
+        settings = settings.settings;
+      }
+
+      if (!settings.detection) {
+        settings.detection = {};
+      }
+      if (!Array.isArray(settings.detection.blacklistedDomains)) {
+        settings.detection.blacklistedDomains = [];
+      }
+
+      if (settings.detection.blacklistedDomains.includes(domain)) {
+        NotificationHelper.info(`Domain "${domain}" is already blacklisted`);
+        return;
+      }
+
+      settings.detection.blacklistedDomains.push(domain);
+      await chrome.storage.local.set({ scrapfly_settings: settings });
+
+      NotificationHelper.success(`Added "${domain}" to blacklist`);
+    } catch (error) {
+      Logger.warn('UI', '[History] Blacklist add failed', error);
+      NotificationHelper.error('Failed to add to blacklist');
+    }
+  }
+
+  /**
    * Delete a single history item
    * @param {Object} historyItem - History item to delete
    */
@@ -864,7 +985,7 @@ class History {
       const confirmed = await NotificationHelper.confirm({
         title: 'Delete History Item',
         message: `Are you sure you want to delete this detection from ${this.getDomainFromUrl(historyItem.url)}?`,
-        type: 'warning',
+        type: 'danger',
         confirmText: 'Delete',
         cancelText: 'Cancel'
       });
@@ -892,7 +1013,7 @@ class History {
         Logger.ui('History: Item deleted successfully');
       }
     } catch (error) {
-      Logger.error('UI', 'Failed to delete history item:', error);
+      Logger.warn('UI', '[History] Delete failed', error);
       NotificationHelper.error('Failed to delete history item');
     }
   }
@@ -934,21 +1055,34 @@ class History {
         ? `background: rgba(${categoryRgb.r}, ${categoryRgb.g}, ${categoryRgb.b}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${categoryRgb.r}, ${categoryRgb.g}, ${categoryRgb.b}, 0.35);`
         : `background: ${categoryColor}; color: white;`;
 
+      const normalizedDetectionCategory = String(category || detectorObj?.category || '')
+        .toLowerCase()
+        .replace(/[^a-z]/g, '');
+      const isFingerprintCategory = normalizedDetectionCategory === 'fingerprint' || normalizedDetectionCategory.includes('fingerprint');
+
       // Generate detector icon HTML
       let detectorIconHtml = '';
       if (detectorObj && detectorObj.icon) {
         const iconName = detectorObj.icon.toLowerCase();
         // Check if it's a fingerprint SVG icon
         if (FINGERPRINT_ICONS[iconName]) {
-          detectorIconHtml = `<div class="modal-detector-icon-svg fingerprint-icon">${FINGERPRINT_ICONS[iconName]}</div>`;
+          detectorIconHtml = `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell">${FINGERPRINT_ICONS[iconName]}</div>`;
         } else {
           const iconUrl = chrome.runtime.getURL(`detectors/icons/${detectorObj.icon}`);
-          detectorIconHtml = `<img src="${iconUrl}" alt="${name}" class="modal-detector-icon">`;
+          if (isFingerprintCategory) {
+            detectorIconHtml = `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${iconUrl}" alt="${name}" class="fingerprint-icon-image fingerprint-icon-image--builtin history-modal-fingerprint-image"></div>`;
+          } else {
+            detectorIconHtml = `<img src="${iconUrl}" alt="${name}" class="modal-detector-icon">`;
+          }
         }
       } else {
         // Fallback: Use Scrapfly icon for all detectors without official icons
         const scrapflyIconUrl = chrome.runtime.getURL('icons/icon32.png');
-        detectorIconHtml = `<img src="${scrapflyIconUrl}" alt="${name}" class="modal-detector-icon">`;
+        if (isFingerprintCategory) {
+          detectorIconHtml = `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${scrapflyIconUrl}" alt="${name}" class="fingerprint-icon-image fingerprint-icon-image--default history-modal-fingerprint-image"></div>`;
+        } else {
+          detectorIconHtml = `<img src="${scrapflyIconUrl}" alt="${name}" class="modal-detector-icon">`;
+        }
       }
 
       // Confidence class
@@ -1321,7 +1455,7 @@ class History {
       try {
         await this.refreshHistoryLimit();
       } catch (error) {
-        Logger.error('UI', 'History: Failed to read history limit from settings, defaulting to 0 (unlimited)', error);
+        Logger.warn('UI', '[History] History limit read failed, defaulting to unlimited', error);
         this.historyLimit = 0; // 0 = unlimited
       }
 
@@ -1344,7 +1478,7 @@ class History {
         this.historyLimit = newLimit;
       }
     } catch (error) {
-      Logger.error('UI', 'History: Failed to refresh history limit, keeping current value', error);
+      Logger.warn('UI', '[History] Limit refresh failed, keeping current value', error);
     }
   }
 
@@ -1358,7 +1492,7 @@ class History {
         .then(() => this.loadHistoryFromStorage())
         .then(() => this.renderHistory())
         .catch(error => {
-          Logger.error('UI', 'History: Failed to refresh after settings update', error);
+          Logger.warn('UI', '[History] Refresh after settings update failed', error);
         });
     });
   }
@@ -1388,7 +1522,7 @@ class History {
         historyTab.innerHTML = html;
       }
     } catch (error) {
-      Logger.error('UI', 'Failed to load history HTML:', error);
+      Logger.error('UI', '[History] HTML load failed', error);
     }
   }
 
@@ -1458,35 +1592,12 @@ class History {
       // Get tab information (handle closed tabs gracefully)
       const tab = await chrome.tabs.get(tabId).catch(() => null);
       if (!tab || !tab.url) {
-        Logger.warn('UI', 'History: Cannot save capture - tab closed or no URL');
+        Logger.debug('UI', 'History: Cannot save capture - tab closed or no URL');
         return false;
       }
 
-      // Get existing advanced history
-      const result = await chrome.storage.local.get(['scrapfly_advanced_history']);
-      let history = [];
-
-      if (result.scrapfly_advanced_history) {
-        if (typeof result.scrapfly_advanced_history === 'string') {
-          try {
-            const parsed = JSON.parse(result.scrapfly_advanced_history);
-            history = parsed.items || [];
-            Logger.ui('History: Parsed advanced history from JSON string format');
-          } catch (parseError) {
-            Logger.error('UI', 'History: Error parsing advanced history JSON:', parseError);
-            history = [];
-          }
-        } else if (Array.isArray(result.scrapfly_advanced_history)) {
-          history = result.scrapfly_advanced_history;
-        } else if (result.scrapfly_advanced_history.items) {
-          history = result.scrapfly_advanced_history.items || [];
-        }
-      }
-
-      if (!Array.isArray(history)) {
-        Logger.warn('UI', 'History: Advanced history is not an array, resetting');
-        history = [];
-      }
+      const allAdvancedHistory = await AdvancedHistoryStore.load();
+      let history = Array.isArray(allAdvancedHistory.recaptcha) ? allAdvancedHistory.recaptcha : [];
 
       // Create URL hash (simple hash for storage key)
       const urlHash = btoa(tab.url).substring(0, 32);
@@ -1536,21 +1647,13 @@ class History {
         history = history.slice(0, historyLimit);
       }
 
-      // Save back to storage
-      const historyData = {
-        items: history,
-        lastUpdated: Date.now()
-      };
-
-      await chrome.storage.local.set({
-        scrapfly_advanced_history: JSON.stringify(historyData, null, 2)
-      });
+      allAdvancedHistory.recaptcha = history;
+      await AdvancedHistoryStore.save(allAdvancedHistory);
 
       Logger.ui(`History: Saved ${captureResults.length} capture(s) to advanced history for ${tab.url}`);
       return true;
     } catch (error) {
-      Logger.error('UI', 'History: Error saving capture to history:', error);
-      Logger.error('UI', 'History: Error stack:', error.stack);
+      Logger.error('UI', '[History] Capture save failed', error);
       return false;
     }
   }
@@ -1579,7 +1682,7 @@ class History {
             const parsed = JSON.parse(result.scrapfly_history);
             history = parsed.items || [];
           } catch (parseError) {
-            Logger.error('UI', 'History: Error parsing history JSON for duplicate check:', parseError);
+            Logger.warn('UI', '[History] JSON parse failed in duplicate check', parseError);
             return true; // On error, allow save
           }
         } else if (Array.isArray(result.scrapfly_history)) {
@@ -1621,7 +1724,7 @@ class History {
             normalizedUrl = url;
         }
       } catch (error) {
-        Logger.warn('UI', 'History: Failed to parse URL for duplicate check:', error);
+        Logger.debug('UI', 'History: Failed to parse URL for duplicate check:', error);
         return true; // On error, allow save
       }
 
@@ -1666,7 +1769,7 @@ class History {
 
       return true;
     } catch (error) {
-      Logger.error('UI', 'History: Error checking for duplicates:', error);
+      Logger.warn('UI', '[History] Duplicate check failed', error);
       return true; // On error, allow save
     }
   }
@@ -1694,7 +1797,7 @@ class History {
             history = parsed.items || [];
             Logger.ui('History: Parsed history from JSON string format');
           } catch (parseError) {
-            Logger.error('UI', 'History: Error parsing history JSON:', parseError);
+            Logger.warn('UI', '[History] JSON parse failed', parseError);
             history = [];
           }
         } else if (Array.isArray(result.scrapfly_history)) {
@@ -1757,8 +1860,7 @@ class History {
       Logger.ui(`History: Saved detection to history for ${pageData.url}`);
       return true;
     } catch (error) {
-      Logger.error('UI', 'History: Error saving to history:', error);
-      Logger.error('UI', 'History: Error stack:', error.stack);
+      Logger.error('UI', '[History] Detection save failed', error);
       return false;
     }
   }
@@ -1781,9 +1883,6 @@ class History {
   }
 }
 
-// Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = History;
-} else if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
   window.History = History;
 }

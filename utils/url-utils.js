@@ -2,7 +2,7 @@
  * URL Hash LRU Cache - Optimized cache with Least Recently Used eviction
  */
 class URLHashCache {
-  constructor(maxSize = 1000) {
+  constructor(maxSize = Constants.URL_HASH_CACHE_MAX_SIZE) {
     this.maxSize = maxSize;
     this.cache = new Map();
     this.accessOrder = [];
@@ -184,7 +184,7 @@ class UrlUtils {
    * @param {string} urlOrHostname - Full URL or just hostname
    * @returns {string} Google favicon service URL
    */
-  static getFaviconUrl(urlOrHostname) {
+  static getFaviconUrl(urlOrHostname, size) {
     if (!urlOrHostname) return this.getDefaultFaviconUrl();
 
     try {
@@ -192,7 +192,8 @@ class UrlUtils {
         ? this.getHostnameFromUrl(urlOrHostname)
         : urlOrHostname;
 
-      return `https://www.google.com/s2/favicons?domain=${hostname}`;
+      const sizeParam = size ? `&sz=${size}` : '';
+      return `https://www.google.com/s2/favicons?domain=${hostname}${sizeParam}`;
     } catch (error) {
       return this.getDefaultFaviconUrl();
     }
@@ -218,10 +219,7 @@ class UrlUtils {
   }
 }
 
-// Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { UrlUtils, URLHashCache };
-} else if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
   window.UrlUtils = UrlUtils;
   window.URLHashCache = URLHashCache;
 } else if (typeof self !== 'undefined') {

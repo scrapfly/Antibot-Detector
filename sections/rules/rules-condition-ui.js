@@ -20,10 +20,6 @@ Rules.prototype.refreshWindowConditionWizardDropdown = function() {
     }
   };
 
-Rules.prototype.escapeHtml = function(str) {
-    return FormatUtils.escapeHtml(str);
-  };
-
 Rules.prototype.getWindowConditionOptions = function() {
     const lang = globalThis.ScrapflyWindowConditionLanguage;
     const defaults = (lang && typeof lang.getPresetValues === 'function')
@@ -107,7 +103,7 @@ Rules.prototype.renderWindowConditionMenu = function(selectedValue) {
     const groups = this.getWindowConditionGroups();
 
     const renderOption = (value) => {
-      const safeValue = this.escapeHtml(value);
+      const safeValue = FormatUtils.escapeHtml(value);
       const isSelected = value === selected;
       return `<div class="condition-option${isSelected ? ' selected' : ''}" data-value="${safeValue}">${safeValue}</div>`;
     };
@@ -147,7 +143,7 @@ Rules.prototype.renderWindowConditionMenu = function(selectedValue) {
 
 Rules.prototype.renderInlineConditionDropdown = function(conditionValue, methodKey, itemIndex) {
     const selected = (conditionValue || 'exists').trim() || 'exists';
-    const safeSelected = this.escapeHtml(selected);
+    const safeSelected = FormatUtils.escapeHtml(selected);
     const menu = this.renderWindowConditionMenu(selected);
 
     return `
@@ -245,8 +241,8 @@ Rules.prototype.displayDomSuggestions = function(keyword) {
     let suggestionsHTML = '';
 
     templates.forEach(template => {
-      const escapedSelector = this.escapeHtml(template.selector);
-      const escapedLabel = this.escapeHtml(template.label);
+      const escapedSelector = FormatUtils.escapeHtml(template.selector);
+      const escapedLabel = FormatUtils.escapeHtml(template.label);
       suggestionsHTML += `
         <div class="dom-suggestion" data-selector="${escapedSelector}">
           <div class="dom-suggestion-selector">${escapedSelector}</div>

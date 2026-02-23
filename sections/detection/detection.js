@@ -160,7 +160,7 @@ class Detection {
                     response.data
                   );
                 } else {
-                  if (this.debugMode) Logger.warn('UI', '[Detection] No data in completion response');
+                  if (this.debugMode) Logger.debug('UI', '[Detection] No data in completion response');
                   this.showEmptyState();
                 }
               }
@@ -245,7 +245,7 @@ class Detection {
               }
             );
           } catch (error) {
-            if (this.debugMode) Logger.warn('UI', '[Detection] Error checking for cached data:', error);
+            if (this.debugMode) Logger.debug('UI', '[Detection] Error checking for cached data:', error);
             this.showEmptyState();
           }
 
@@ -482,7 +482,7 @@ class Detection {
                 const badgeText = await chrome.action.getBadgeText({ tabId: tabs[0].id });
                 // Badge percentage sync removed - no longer showing percentages in badge
               } catch (error) {
-                if (this.debugMode) Logger.warn('UI', '[Detection] Could not read badge text:', error);
+                if (this.debugMode) Logger.debug('UI', '[Detection] Could not read badge text:', error);
               }
             }
           });
@@ -608,9 +608,6 @@ class Detection {
   }
 }
 
-// Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = Detection;
-} else if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
   window.Detection = Detection;
 }

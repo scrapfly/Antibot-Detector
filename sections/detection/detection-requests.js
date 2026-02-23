@@ -8,10 +8,12 @@ DetectionRequests.getBadgeStatus = async function(tabId) {
     const badgeText = await Detection.getBadgeText(tabId);
     const badgeColor = await Detection.getBadgeBackgroundColor(tabId);
     const trimmed = badgeText ? badgeText.trim() : '';
+    const isGrayBadge = badgeColor === '#6B7280' || badgeColor === '#6b7280';
+    const isLegacyInterrupted = trimmed === '?' || trimmed === '\u2715' || trimmed === '\u00D7';
 
     // Determine if this is a cleared cache badge (gray) or interrupted detection badge (other colors)
-    const isCleared = trimmed === '✕' && (badgeColor === '#6B7280' || badgeColor === '#6b7280');
-    const isInterrupted = (trimmed === '?' || trimmed === '✕') && !isCleared;
+    const isCleared = trimmed === BADGE.TEXT.CLEARED && isGrayBadge;
+    const isInterrupted = (trimmed === BADGE.TEXT.INTERRUPTED || isLegacyInterrupted) && !isCleared;
 
     return {
       text: badgeText,
@@ -20,7 +22,7 @@ DetectionRequests.getBadgeStatus = async function(tabId) {
       isLoading: trimmed === BADGE.TEXT.LOADING,
       isCleared: isCleared,        // FIX: New flag for cache cleared state
       isInterrupted: isInterrupted,
-      isError: trimmed === '✕',
+      isError: isLegacyInterrupted,
       isQuestion: trimmed === '?',
       isEmpty: trimmed === ''
     };
@@ -40,8 +42,8 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
       // Set flag to prevent concurrent requests
       detection.isRequestingDetection = true;
 
-      // Don't show analyzing state immediately - wait for background response to determine correct state
-      // This prevents the confusing double transition (Analyzing → Interrupted) when popup opens on interrupted tab
+      // Don't show analyzing state immediately - wait for background response to determine correct state.
+      // This avoids a confusing double transition (Analyzing -> Interrupted) when popup opens.
 
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       if (!tab) {
@@ -174,8 +176,8 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
           }
 
           if (response && response.status === 'interrupted') {
-            if (this.debugMode) Logger.ui('Detection: Detection was interrupted, prompting reload');
-            detection.showInterruptedState();
+            if (this.debugMode) Logger.ui('Detection: Detection status interrupted with no data - showing empty state');
+            detection.showEmptyState();
             return;
           }
 
@@ -221,7 +223,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
             return;
           }
 
-          // FIX: Check if cache was cleared (gray ✕ badge) - show empty state
+          // FIX: Check if cache was cleared (gray cleared badge) and show empty state.
           if (badgeStatus.isCleared) {
             if (this.debugMode) Logger.ui('Detection: Badge indicates cache cleared, showing empty state');
             detection.showEmptyState();
@@ -231,8 +233,8 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
           // FIX: Only show interrupted if we DON'T have valid data
           // Badge might be stale after extension reload or tab return
           if (badgeStatus.isInterrupted && (!response || !response.data)) {
-            if (this.debugMode) Logger.ui('Detection: Badge indicates interruption with no data, showing reload state');
-            detection.showInterruptedState();
+            if (this.debugMode) Logger.ui('Detection: Badge indicates interruption with no data, showing empty state');
+            detection.showEmptyState();
             return;
           }
 
@@ -296,12 +298,14 @@ DetectionRequests.requestFreshDetection = function(context) {
 DetectionRequests.processDetectionData = async function(context, detectionData) {
     const { detection, detectionEngine, detectorManager, history } = context;
 
-    Logger.ui('[DEBUG processDetectionData] Called with:', {
-      hasDetectionData: !!detectionData,
-      dataKeys: detectionData ? Object.keys(detectionData) : null,
-      hasDetectionResults: !!detectionData?.detectionResults,
-      detectionCount: detectionData?.detectionResults?.length
-    });
+    if (detection.debugMode) {
+      Logger.ui('[DEBUG processDetectionData] Called with:', {
+        hasDetectionData: !!detectionData,
+        dataKeys: detectionData ? Object.keys(detectionData) : null,
+        hasDetectionResults: !!detectionData?.detectionResults,
+        detectionCount: detectionData?.detectionResults?.length
+      });
+    }
 
     try {
       if (!detection.isExtensionEnabled) {
@@ -310,7 +314,9 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
       }
 
       if (!detectionData) {
-        Logger.ui('[DEBUG processDetectionData] No detection data provided - showing empty state');
+        if (detection.debugMode) {
+          Logger.ui('[DEBUG processDetectionData] No detection data provided - showing empty state');
+        }
         detection.showEmptyState();
         return;
       }
@@ -322,7 +328,9 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
 
       // Check if we have pre-processed detection results
       if (detectionData.detectionResults) {
-        Logger.ui('[DEBUG processDetectionData] Using pre-processed results:', detectionData.detectionResults.length);
+        if (detection.debugMode) {
+          Logger.ui('[DEBUG processDetectionData] Using pre-processed results:', detectionData.detectionResults.length);
+        }
         detections = detectionData.detectionResults;
 
         // MIGRATION: Handle old cached data format
@@ -347,7 +355,7 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
                     }
                   } catch (e) {
                     // If regex fails, keep the full URL
-                    Logger.warn('UI', '[Migration] Failed to extract match from URL:', e);
+                    Logger.debug('UI', '[Migration] Failed to extract match from URL:', e);
                   }
                 }
               }
@@ -364,12 +372,14 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
         if (this.debugMode) Logger.ui('Detection: Running detection on raw page data');
         detections = detectionEngine.detectOnPage(detectionData.pageData);
       } else {
-        if (this.debugMode) Logger.warn('UI', 'Detection: No valid data format in detectionData');
+        if (this.debugMode) Logger.debug('UI', 'Detection: No valid data format in detectionData');
         detection.showEmptyState();
         return;
       }
 
-      Logger.ui(`[DEBUG processDetectionData] Found ${detections.length} security systems, calling displayResults()`);
+      if (detection.debugMode) {
+        Logger.ui(`[DEBUG processDetectionData] Found ${detections.length} security systems, calling displayResults()`);
+      }
 
       // Display results with metadata
       // Construct cacheMetadata from available fields
@@ -381,15 +391,19 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
         cacheScope: detectionData.cacheScope
       } : null;
 
-      Logger.ui('[DEBUG processDetectionData] Cache metadata:', cacheMetadata);
-      Logger.ui('[DEBUG processDetectionData] From storage:', detectionData.fromStorage);
+      if (detection.debugMode) {
+        Logger.ui('[DEBUG processDetectionData] Cache metadata:', cacheMetadata);
+        Logger.ui('[DEBUG processDetectionData] From storage:', detectionData.fromStorage);
+      }
 
       await detection.displayResults(detections, {
         fromStorage: detectionData.fromStorage || false,
         cacheMetadata: cacheMetadata
       });
 
-      Logger.ui('[DEBUG processDetectionData] displayResults() completed');
+      if (detection.debugMode) {
+        Logger.ui('[DEBUG processDetectionData] displayResults() completed');
+      }
 
       // Update history if we have detections
       if (detections.length > 0 && history && typeof history.loadHistory === 'function') {
@@ -408,7 +422,7 @@ DetectionRequests.getBadgeText = async function(tabId) {
       return await new Promise((resolve) => {
         chrome.action.getBadgeText({ tabId }, (text) => {
           if (chrome.runtime.lastError) {
-            if (this.debugMode) Logger.warn('UI', 'Detection: Failed to read badge text:', chrome.runtime.lastError.message);
+            if (this.debugMode) Logger.debug('UI', 'Detection: Failed to read badge text:', chrome.runtime.lastError.message);
             resolve('');
             return;
           }
@@ -426,7 +440,7 @@ DetectionRequests.getBadgeBackgroundColor = async function(tabId) {
       return await new Promise((resolve) => {
         chrome.action.getBadgeBackgroundColor({ tabId }, (colorInfo) => {
           if (chrome.runtime.lastError) {
-            if (this.debugMode) Logger.warn('UI', 'Detection: Failed to read badge color:', chrome.runtime.lastError.message);
+            if (this.debugMode) Logger.debug('UI', 'Detection: Failed to read badge color:', chrome.runtime.lastError.message);
             resolve('');
             return;
           }
@@ -450,3 +464,4 @@ DetectionRequests.getBadgeBackgroundColor = async function(tabId) {
 if (typeof self !== 'undefined') {
     self.DetectionRequests = DetectionRequests;
 }
+

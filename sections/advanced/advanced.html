@@ -15,37 +15,14 @@
   <p class="blacklist-hint">Or go to Settings → Detection → Blacklisted Domains to manage.</p>
 </div>
 
-<div id="noAdvancedState" class="empty-state empty-state--centered advanced-empty-state">
-  <div class="empty-state-card advanced-empty-card">
-    <div class="empty-state-icon">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-        <!-- Robot head -->
-        <rect x="5" y="7" width="14" height="12" rx="2" fill="url(#robotGradient)"/>
-        <!-- Eyes -->
-        <circle cx="9" cy="12" r="1.5" fill="#1e293b"/>
-        <circle cx="15" cy="12" r="1.5" fill="#1e293b"/>
-        <!-- Mouth -->
-        <rect x="8" y="15" width="8" height="1.5" rx="0.75" fill="#1e293b"/>
-        <!-- Antenna -->
-        <line x1="12" y1="7" x2="12" y2="4" stroke="url(#robotGradient)" stroke-width="2" stroke-linecap="round"/>
-        <circle cx="12" cy="3" r="1.5" fill="url(#robotGradient)"/>
-        <!-- Ears -->
-        <rect x="2" y="10" width="3" height="5" rx="1" fill="url(#robotGradient)"/>
-        <rect x="19" y="10" width="3" height="5" rx="1" fill="url(#robotGradient)"/>
-        <defs>
-          <linearGradient id="robotGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#3b82f6"/>
-            <stop offset="100%" stop-color="#60a5fa"/>
-          </linearGradient>
-        </defs>
-      </svg>
+<div id="noAdvancedState" class="empty-state empty-state--centered">
+  <div class="state-card state-card--blue">
+    <div class="state-card-icon">
+      <img src="icons/icon48.png" alt="Scrapfly" width="48" height="48" class="state-card-logo">
     </div>
-    <div class="empty-state-title-row">
-      <h3 class="empty-state-title">Advanced Capture Tools</h3>
-      <span class="empty-state-help" title="Click for help">?</span>
-    </div>
-    <p class="empty-state-description">Extract cookies, tokens, and sitekeys from detected protection systems</p>
-    <p class="empty-state-text">Visit a protected page to enable capture tools</p>
+    <h3 class="state-card-title">Advanced Capture Tools</h3>
+    <p class="state-card-description">Extract cookies, tokens, and sitekeys from detected protection systems</p>
+    <p class="state-card-action">Visit a protected page to enable capture tools</p>
   </div>
 </div>
 
@@ -53,16 +30,26 @@
   <!-- Sub-tabs for Tools and Capture History -->
   <div class="advanced-sub-tabs">
     <button class="advanced-sub-tab active" id="advancedToolsTab" data-tab="tools">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M20,2H4C2.9,2 2,2.9 2,4V20C2,21.1 2.9,22 4,22H20C21.1,22 22,21.1 22,20V4C22,2.9 21.1,2 20,2M20,20H4V4H20V20M6,13H18V15H6V13Z"/>
-      </svg>
-      Tools
+      <span class="advanced-sub-tab-icon advanced-sub-tab-icon--tools" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M4.5 7H13.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M10.5 12H19.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M4.5 17H13.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="16.5" cy="7" r="1.6" stroke="currentColor" stroke-width="1.8"/>
+          <circle cx="7.5" cy="12" r="1.6" stroke="currentColor" stroke-width="1.8"/>
+          <circle cx="16.5" cy="17" r="1.6" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+      </span>
+      <span class="advanced-sub-tab-label">Tools</span>
     </button>
     <button class="advanced-sub-tab" id="advancedCaptureTab" data-tab="captures">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3Z"/>
-      </svg>
-      History
+      <span class="advanced-sub-tab-icon advanced-sub-tab-icon--history" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="7.5" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M12 8.5V12L14.75 13.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="advanced-sub-tab-label">History</span>
       <span class="capture-count-badge" id="captureCountBadge" style="display: none;"></span>
     </button>
   </div>
@@ -74,74 +61,73 @@
 
   <!-- Capture History Tab Content -->
   <div class="advanced-tab-panel" id="capturesPanel" style="display: none;">
-    <!-- Unified Filters Card -->
-    <div class="filters-card">
-      <div class="filters-title">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M14,12V19.88C14.04,20.18 13.94,20.5 13.71,20.71C13.32,21.1 12.69,21.1 12.3,20.71L10.29,18.7C10.06,18.47 9.96,18.16 10,17.87V12H9.97L4.21,4.62C3.87,4.19 3.95,3.56 4.38,3.22C4.57,3.08 4.78,3 5,3H19C19.22,3 19.43,3.08 19.62,3.22C20.05,3.56 20.13,4.19 19.79,4.62L14.03,12H14Z"/>
-        </svg>
-        Filters
-      </div>
-
-      <!-- Filter Dropdowns Row -->
-      <div class="filters-row">
-        <div class="filter-item">
-          <span class="filter-item-label">Site</span>
-          <select id="captureSiteFilter" class="capture-filter-select">
-            <option value="all">All Sites</option>
-            <option value="current" selected data-site="">Current Site</option>
-          </select>
+    <div class="history-v2-shell">
+      <div class="history-v2-controls">
+        <div class="history-v2-heading">
+          <span class="history-v2-heading-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M8 5H5.8C4.81 5 4 5.81 4 6.8V18.2C4 19.19 4.81 20 5.8 20H18.2C19.19 20 20 19.19 20 18.2V16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M15 4H18.2C19.19 4 20 4.81 20 5.8V11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M8 10H13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M8 14H16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <div>
+            <h3 class="history-v2-title">Capture History</h3>
+            <p class="history-v2-subtitle">Filter, inspect, and export collected captures</p>
+          </div>
         </div>
-        <div class="filter-item">
-          <span class="filter-item-label">Module</span>
-          <select id="captureModuleFilter" class="capture-filter-select">
-            <option value="all">All Modules</option>
-            <option value="recaptcha">reCAPTCHA</option>
-            <option value="akamai">Akamai</option>
-            <option value="incapsula">Imperva</option>
-            <option value="shapesecurity">Shape Security</option>
-            <option value="aws-waf">AWS WAF</option>
-          </select>
+
+        <div class="history-v2-filters-grid">
+          <label class="history-v2-field">
+            <span class="history-v2-label">Site</span>
+            <select id="captureSiteFilter" class="history-v2-select">
+              <option value="all">All Sites</option>
+              <option value="current" selected data-site="">Current Site</option>
+            </select>
+          </label>
+
+          <label class="history-v2-field">
+            <span class="history-v2-label">Module</span>
+            <select id="captureModuleFilter" class="history-v2-select">
+              <option value="all">All Modules</option>
+              <option value="recaptcha">reCAPTCHA</option>
+              <option value="akamai">Akamai</option>
+              <option value="incapsula">Imperva</option>
+              <option value="shapesecurity">Shape Security</option>
+              <option value="aws-waf">AWS WAF</option>
+            </select>
+          </label>
+
+          <label class="history-v2-field history-v2-field--search">
+            <span class="history-v2-label">Search</span>
+            <input type="text" id="captureSearchInput" class="history-v2-search" placeholder="Search by URL, module, site, or content...">
+          </label>
+        </div>
+
+        <div class="history-v2-actions">
+          <button id="exportCapturesBtn" class="history-v2-btn history-v2-btn--primary" title="Export captures">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 4V14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M8.5 10.5L12 14L15.5 10.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M5 18H19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            Export
+          </button>
+          <button id="clearAllCapturesBtn" class="history-v2-btn history-v2-btn--danger" title="Clear all captures">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M6 7H18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M9 7V5.8C9 4.81 9.81 4 10.8 4H13.2C14.19 4 15 4.81 15 5.8V7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M8 7L8.6 18.1C8.65 19.14 9.5 20 10.54 20H13.46C14.5 20 15.35 19.14 15.4 18.1L16 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            Clear All
+          </button>
         </div>
       </div>
 
-      <!-- Search Row -->
-      <div class="filters-row">
-        <div class="filter-item" style="flex: 1;">
-          <input type="text" id="captureSearchInput" class="capture-search-input"
-                 placeholder="Search captures..." style="margin-bottom: 0;">
-        </div>
+      <div id="captureGrid" class="history-v2-grid">
+        <!-- Capture cards rendered by Advanced.js -->
       </div>
-
-      <!-- Action Buttons Row -->
-      <div class="filters-actions">
-        <button id="exportCapturesBtn" class="btn-sm btn-export" title="Export captures">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z"/>
-          </svg>
-          Export
-        </button>
-        <button id="clearAllCapturesBtn" class="btn-sm btn-clear" title="Clear all captures">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
-          </svg>
-          Clear All
-        </button>
-      </div>
-    </div>
-
-    <!-- Active Filter Banner (initially hidden) -->
-    <div id="captureFilterBanner" class="active-filter-banner" style="display: none;">
-      <div class="filter-info">
-        <span class="filter-icon">🔍</span>
-        <span class="filter-text" id="filterBannerText">Showing captures from <strong>example.com</strong></span>
-      </div>
-      <button id="showAllSitesBtn" class="clear-filter-btn">Show All</button>
-    </div>
-
-    <!-- Capture Grid -->
-    <div id="captureGrid" class="capture-grid">
-      <!-- Capture cards will be rendered here -->
     </div>
 
     <!-- Empty State -->

@@ -16,8 +16,8 @@ class WorkerKeepaliveManager {
   constructor() {
     // Keepalive state
     this.keepaliveInterval = null;
-    this.keepalivePeriodMs = 20000; // 20 seconds (Chrome suspends after 30s)
-    this.staleOperationMs = 120000; // 2 minutes
+    this.keepalivePeriodMs = Constants.KEEPALIVE_PERIOD_MS;
+    this.staleOperationMs = Constants.STALE_OPERATION_MS;
 
     // Reference counting for active operations
     this.activeOperations = new Map(); // operationId -> { tabId, startTime, reason }

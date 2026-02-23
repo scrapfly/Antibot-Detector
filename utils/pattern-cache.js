@@ -24,7 +24,7 @@ function simpleHash(str) {
  * Eliminates 60-80% of regex compilation overhead
  */
 class PatternCache {
-    constructor(maxSize = 500) {
+    constructor(maxSize = Constants.PATTERN_CACHE_MAX_SIZE) {
         this.maxSize = maxSize;
         // Cache for compiled regex patterns: key -> {regex, timestamp}
         this.regexCache = new Map();
@@ -83,8 +83,7 @@ class PatternCache {
 
         if (this.matchCache.has(matchKey)) {
             const cached = this.matchCache.get(matchKey);
-            // Cache valid for 5 minutes
-            if (Date.now() - cached.timestamp < 300000) {
+            if (Date.now() - cached.timestamp < Constants.MATCH_CACHE_TTL) {
                 return { found: true, result: cached.result };
             }
             // Expired, remove

@@ -28,8 +28,6 @@ class ScrapflyPopup {
 
       // Initialize notification manager using helper
       NotificationHelper.initialize();
-      // Clear badge when popup is opened
-      NotificationHelper.clearBadge();
 
       // Set version from manifest
       const manifest = chrome.runtime.getManifest();
@@ -140,7 +138,8 @@ class ScrapflyPopup {
       // Immediately update Detection tab if it's currently visible
       if (this.currentTab === 'detection') {
         if (enabled) {
-          // Extension enabled - try to load from cache first
+          // Extension just enabled - show loading while checking cache.
+          this.detection.showLoadingState('Loading cache...');
           chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0] && this.isDetectionViewRequestCurrent(requestId)) {
               chrome.runtime.sendMessage(
@@ -149,12 +148,21 @@ class ScrapflyPopup {
                   if (!this.isDetectionViewRequestCurrent(requestId)) {
                     return;
                   }
+                  const noCacheOptions = {
+                    title: 'No Cache Found',
+                    description: 'No cached detection data available for this page. Reload the page to run a fresh scan.',
+                    showBadges: false
+                  };
                   if (chrome.runtime.lastError) {
                     Logger.error('UI', 'Popup: Error getting cached data:', chrome.runtime.lastError);
-                    this.detection.showInterruptedState();
+                    this.detection.showEmptyState(noCacheOptions);
                     return;
                   }
-                  await this.handleDetectionResponseAndUpdateUI(tabs[0].id, response, requestId);
+                  if (response?.data) {
+                    await this.processDetectionData(response.data);
+                  } else {
+                    this.detection.showEmptyState(noCacheOptions);
+                  }
                 }
               );
             }
@@ -273,22 +281,7 @@ class ScrapflyPopup {
             return;
           }
 
-          // Check for pending status BEFORE checking for data
-          if (response && response.status === 'pending') {
-            this.detection.showAnalyzingState();
-          } else if (response && response.data) {
-            // Check if cache has expired - show empty state instead of stale data
-            if (response.data.expiry && Date.now() > response.data.expiry) {
-              Logger.ui('[Popup] Cache expired on tab switch, showing empty state');
-              this.detection.showEmptyState();
-              return;
-            }
-            // Display existing detection data
-            await this.processDetectionData(response.data);
-          } else {
-            // No data available (includes recently cleared cache)
-            this.detection.showEmptyState();
-          }
+          await this.handleDetectionResponseAndUpdateUI(tab.id, response, requestId);
         }
       );
     } catch (error) {
@@ -311,8 +304,30 @@ class ScrapflyPopup {
       return false;
     }
 
+    const badgeText = await Detection.getBadgeText(tabId);
+    if (!this.isDetectionViewRequestCurrent(requestId)) {
+      return false;
+    }
+    const badgeTrimmed = badgeText ? badgeText.trim() : '';
+
+    // Check if badge is gray cleared mark vs interrupted mark.
+    const isReloadBadge =
+      badgeTrimmed === BADGE.TEXT.INTERRUPTED ||
+      badgeTrimmed === BADGE.TEXT.CLEARED ||
+      badgeTrimmed === '?' ||
+      badgeTrimmed === '\u2715';
+
+    if (isReloadBadge) {
+      this.detection.showEmptyState();
+      return false;
+    }
+
     if (!response) {
-      this.detection.showInterruptedState();
+      if (badgeTrimmed === BADGE.TEXT.LOADING) {
+        this.detection.showAnalyzingState();
+      } else {
+        this.detection.showEmptyState();
+      }
       return false;
     }
 
@@ -322,42 +337,17 @@ class ScrapflyPopup {
     }
 
     if (response.status === 'interrupted') {
-      this.detection.showInterruptedState();
+      this.detection.showEmptyState();
       return false;
     }
 
     if (response.status === 'error') {
       Logger.error('UI', 'Popup: Error retrieving detection data:', response.error);
-      this.detection.showInterruptedState();
-      return false;
-    }
-
-    // Check badge state
-    const badgeText = await Detection.getBadgeText(tabId);
-    if (!this.isDetectionViewRequestCurrent(requestId)) {
-      return false;
-    }
-    const badgeTrimmed = badgeText ? badgeText.trim() : '';
-
-    if (badgeTrimmed === '\u23F3') {
-      this.detection.showAnalyzingState();
-      return false;
-    }
-
-    // Check if badge is gray ✕ (cache cleared) vs other ✕ (interrupted)
-    if (badgeTrimmed === '✕') {
-      const badgeColor = await Detection.getBadgeBackgroundColor(tabId);
-      if (!this.isDetectionViewRequestCurrent(requestId)) {
-        return false;
-      }
-      if (badgeColor === '#6B7280' || badgeColor === '#6b7280') {
+      if (badgeTrimmed === BADGE.TEXT.LOADING) {
+        this.detection.showAnalyzingState();
+      } else {
         this.detection.showEmptyState();
-        return false;
       }
-    }
-
-    if (badgeTrimmed === '?' || badgeTrimmed === '✕') {
-      this.detection.showInterruptedState();
       return false;
     }
 
@@ -367,36 +357,18 @@ class ScrapflyPopup {
       }
       await this.processDetectionData(response.data);
       return true;
-    } else {
-      // FIX 6.10: Check if badge shows numeric count (detection completed but cache not ready)
-      // This handles race condition where badge updates before cache write completes
-      const isNumericBadge = /^\d+\+?$/.test(badgeTrimmed);
-      if (isNumericBadge) {
-        // Detection completed (badge is numeric) but cache write still pending
-        Logger.debug('UI', 'Badge shows count but no data yet, retrying...', { badge: badgeTrimmed });
-        await new Promise(resolve => setTimeout(resolve, 200));
-        if (!this.isDetectionViewRequestCurrent(requestId)) {
-          return false;
-        }
-        // Retry getting data
-        const retryResponse = await chrome.runtime.sendMessage({
-          type: 'GET_DETECTION_DATA',
-          tabId: tabId
-        });
-        if (!this.isDetectionViewRequestCurrent(requestId)) {
-          return false;
-        }
-        if (retryResponse && retryResponse.data) {
-          await this.processDetectionData(retryResponse.data);
-          return true;
-        }
-      }
-      if (!this.isDetectionViewRequestCurrent(requestId)) {
-        return false;
-      }
-      this.detection.showInterruptedState();
+    }
+
+    if (!this.isDetectionViewRequestCurrent(requestId)) {
       return false;
     }
+
+    if (badgeTrimmed === BADGE.TEXT.LOADING) {
+      this.detection.showAnalyzingState();
+    } else {
+      this.detection.showEmptyState();
+    }
+    return false;
   }
 
   /**
@@ -523,7 +495,13 @@ class ScrapflyPopup {
           // Extension was enabled or disabled
           if (this.currentTab === 'detection') {
             if (request.enabled) {
-              // Extension enabled - try to load from cache first
+              // Extension just enabled - show loading while checking cache.
+              this.detection.showLoadingState('Loading cache...');
+              const noCacheOpts = {
+                title: 'No Cache Found',
+                description: 'No cached detection data available for this page. Reload the page to run a fresh scan.',
+                showBadges: false
+              };
               chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 if (tabs[0] && this.isDetectionViewRequestCurrent(requestId)) {
                   chrome.runtime.sendMessage(
@@ -534,10 +512,14 @@ class ScrapflyPopup {
                       }
                       if (chrome.runtime.lastError) {
                         Logger.error('UI', 'Popup: Error getting cached data:', chrome.runtime.lastError);
-                        this.detection.showInterruptedState();
+                        this.detection.showEmptyState(noCacheOpts);
                         return;
                       }
-                      await this.handleDetectionResponseAndUpdateUI(tabs[0].id, response, requestId);
+                      if (response?.data) {
+                        await this.processDetectionData(response.data);
+                      } else {
+                        this.detection.showEmptyState(noCacheOpts);
+                      }
                     }
                   );
                 }
@@ -577,7 +559,7 @@ class ScrapflyPopup {
           return false;
 
         default:
-          Logger.warn('UI', 'Popup: Unknown message type:', request.type);
+          Logger.debug('UI', 'Popup: Unknown message type:', request.type);
       }
 
       sendResponse({ status: 'received' });

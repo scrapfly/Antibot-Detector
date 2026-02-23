@@ -112,13 +112,13 @@
   margin-bottom: 0;
 }
 
-/* Hover effect removed to avoid blue background
-.history-item:hover {
-  background: var(--bg-tertiary);
+/* History-tab scoped override: neutralize popup.css full-card tint on hover */
+#historyTab .history-item:hover {
+  background: var(--bg-secondary);
   border-color: var(--border-light);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16);
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-} */
+}
 
 .history-item-top {
   display: flex;
@@ -149,7 +149,7 @@
 .history-item-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
   margin-top: 4px;
 }
@@ -158,26 +158,58 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
   padding: 0;
   border: none;
 }
 
-/* Copy button - Blue outlined (like Delete style) */
+.history-item-action-btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* Clear cache button - Detection-style amber */
+.history-item-action-btn.history-clear-cache-btn {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #fcd34d;
+}
+
+.history-item-action-btn.history-clear-cache-btn svg,
+.history-item-action-btn.history-clear-cache-btn svg path {
+  color: #fcd34d;
+  stroke: currentColor;
+  fill: none;
+}
+
+.history-item-action-btn.history-clear-cache-btn:hover {
+  background: rgba(245, 158, 11, 0.32);
+  color: #fde68a;
+}
+
+.history-item-action-btn.history-clear-cache-btn:hover svg,
+.history-item-action-btn.history-clear-cache-btn:hover svg path {
+  color: #fde68a;
+  stroke: currentColor;
+  fill: none;
+}
+
+/* Copy button - Detection-style blue */
 .history-item-action-btn.history-copy-btn {
-  background: rgba(59, 130, 246, 0.2);
-  border: 1px solid rgba(59, 130, 246, 0.35);
-  color: #93c5fd;
+  background: rgba(59, 130, 246, 0.15);
+  border: none;
+  color: var(--accent);
 }
 
 .history-item-action-btn.history-copy-btn svg,
 .history-item-action-btn.history-copy-btn svg path {
-  color: #93c5fd;
-  fill: #93c5fd;
+  color: var(--accent);
+  fill: var(--accent);
 }
 
 /* Export button - Gray outlined (like Delete style) */
@@ -191,6 +223,20 @@
 .history-item-action-btn.history-export-btn svg path {
   color: #cbd5e1;
   fill: #cbd5e1;
+}
+
+/* Blacklist button - Detection-style red */
+.history-item-action-btn.history-blacklist-btn {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: var(--danger-light);
+}
+
+.history-item-action-btn.history-blacklist-btn svg,
+.history-item-action-btn.history-blacklist-btn svg path {
+  color: var(--danger-light);
+  stroke: currentColor;
+  fill: none;
 }
 
 /* Delete button - Red */
@@ -207,17 +253,18 @@
 }
 
 .history-item-action-btn:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .history-item-action-btn.history-copy-btn:hover {
-  background: rgba(59, 130, 246, 0.32);
+  background: var(--accent);
+  color: #fff;
 }
 
 .history-item-action-btn.history-copy-btn:hover svg,
 .history-item-action-btn.history-copy-btn:hover svg path {
-  color: #bfdbfe;
-  fill: #bfdbfe;
+  color: #fff;
+  fill: #fff;
 }
 
 .history-item-action-btn.history-export-btn:hover {
@@ -228,6 +275,18 @@
 .history-item-action-btn.history-export-btn:hover svg path {
   color: #f1f5f9;
   fill: #f1f5f9;
+}
+
+.history-item-action-btn.history-blacklist-btn:hover {
+  background: rgba(239, 68, 68, 0.32);
+  color: var(--danger-lightest);
+}
+
+.history-item-action-btn.history-blacklist-btn:hover svg,
+.history-item-action-btn.history-blacklist-btn:hover svg path {
+  color: var(--danger-lightest);
+  stroke: currentColor;
+  fill: none;
 }
 
 .history-item-action-btn.history-delete-btn:hover {
@@ -402,7 +461,7 @@
   border-radius: 4px;
 }
 
-/* Fingerprint SVG icons in history card badges - blue gradient background */
+/* Fingerprint icons in history card badges */
 .history-detection-tag.icon-badge .detection-icon-svg {
   width: 100%;
   height: 100%;
@@ -419,10 +478,15 @@
   height: 18px;
 }
 
+.history-detection-tag.icon-badge .history-fingerprint-image {
+  width: 18px;
+  height: 18px;
+}
+
 /* Override badge background for fingerprint badges */
 .history-detection-tag.icon-badge.fingerprint-badge {
-  background: transparent;
-  border-color: var(--accent) !important;
+  background: var(--bg-secondary);
+  border-color: var(--border) !important;
 }
 
 /* History Detail Modal */
@@ -481,6 +545,7 @@
   gap: 12px;
   flex: 1;
   min-width: 0;
+  padding-right: 8px;
 }
 
 .history-modal-favicon {
@@ -559,68 +624,19 @@
   width: 100%;
 }
 
-/* Row 3: Action buttons - centered */
-.history-modal-meta-row.actions-row {
-  justify-content: center;
-  gap: 8px;
-  padding-top: 8px;
-  border-top: 1px solid var(--border);
-  margin-top: 2px;
+/* Row 2 (stats): same alignment as badges, but hosts 4-tile stats grid */
+.history-modal-meta-row.stats-row {
+  justify-content: flex-start;
 }
 
-/* Dark Mode Outline Buttons */
-.history-modal-action-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 6px 12px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-primary);
-  cursor: pointer;
-  font-size: 11px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  white-space: nowrap;
+.history-modal-meta-row.stats-row > div {
+  width: 100%;
 }
 
-.history-modal-action-btn:hover {
-  background: var(--bg-secondary);
-  border-color: var(--border-light);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+.history-modal-meta-row.stats-row .history-stats-line {
+  width: 100%;
 }
 
-.history-modal-action-btn:active {
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-/* Copy button - Blue outlined (like Export but blue) */
-.history-modal-action-btn.copy-btn {
-  background: rgba(59, 130, 246, 0.18);
-  border-color: rgba(59, 130, 246, 0.35);
-  color: #93c5fd;
-}
-
-.history-modal-action-btn.copy-btn:hover {
-  background: rgba(59, 130, 246, 0.28);
-  border-color: rgba(59, 130, 246, 0.45);
-  color: #bfdbfe;
-}
-
-/* Export button - Gray outlined */
-.history-modal-action-btn.export-btn {
-  background: rgba(148, 163, 184, 0.18);
-  border-color: rgba(148, 163, 184, 0.32);
-  color: #d1d5db;
-}
-
-.history-modal-action-btn.export-btn:hover {
-  background: rgba(148, 163, 184, 0.28);
-  color: #f8fafc;
-}
 
 /* Category breakdown badges in modal meta */
 .history-modal-category-breakdown {
@@ -700,10 +716,6 @@
   font-size: 10px;
 }
 
-.history-modal-action-btn svg {
-  flex-shrink: 0;
-}
-
 .history-modal-content {
   flex: 1;
   overflow-y: auto;
@@ -774,12 +786,14 @@
   flex-shrink: 0;
 }
 
-/* .fingerprint-icon gradient now in common.css */
-.history-modal-detection-header .fingerprint-icon {
-  border: none;
-}
+/* .fingerprint-icon style now in common.css */
 
 .history-modal-detection-header .fingerprint-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.history-modal-detection-header .history-modal-fingerprint-image {
   width: 16px;
   height: 16px;
 }

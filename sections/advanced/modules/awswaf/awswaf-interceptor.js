@@ -9,38 +9,27 @@ var awsWafStatusListener = awsWafStatusListener || null;
 
 // Destructure helpers from BaseInterceptorHelpers (use var to avoid redeclaration errors)
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
+var showCaptureStarted = self.BaseInterceptorHelpers?.showCaptureStarted;
+var getCaptureState = self.BaseInterceptorHelpers?.getCaptureState;
+var removeCaptureState = self.BaseInterceptorHelpers?.removeCaptureState;
+var registerManagedListener = self.BaseInterceptorHelpers?.registerManagedListener;
+var cleanupManagedListeners = self.BaseInterceptorHelpers?.cleanupManagedListeners;
 
 // ============================================================================
-// State Management
+// State Management (initialized via awsWafInitializeInterceptor)
 // ============================================================================
-var awsWafCaptureStateRef = {
-  isCapturing: false,
-  tabId: null,
-  url: null,
-  capturedData: {
-    websiteURL: null,
-    awsChallengeJS: null,
-    awsApiJs: null,
-    awsProblemUrl: null,
-    awsApiKey: null,
-    awsExistingToken: null
-  },
-  detectionFlags: {
-    hasStatus405: false,
-    hasChallengeEndpoint: false,
-    hasProblemEndpoint: false
-  }
-};
-
-// ============================================================================
-// Initialization
-// ============================================================================
+var awsWafCaptureStateRef = awsWafCaptureStateRef || null;
 
 /**
- * Initialize AWS WAF interceptor on extension load
+ * Initialize AWS WAF interceptor with capture state from background.js
+ * @param {TTLMap} captureState - TTLMap instance from background.js
  */
-function awsWafInitializeInterceptor() {
-  Logger.network('[AwsWaf] Initializing interceptor');
+function awsWafInitializeInterceptor(captureState) {
+  if (awsWafCaptureStateRef) {
+    Logger.network('[AwsWaf] Interceptor already initialized, skipping');
+    return;
+  }
+  awsWafCaptureStateRef = captureState;
 
   // Cleanup any existing listeners
   if (awsWafInterceptionListener) {
@@ -77,37 +66,47 @@ function awsWafInitializeInterceptor() {
 function awsWafStartCapture(tabId, url) {
   Logger.network('[AwsWaf] Starting capture for tab:', tabId, 'url:', url);
 
-  // Stop any existing capture
-  awsWafStopCapture();
+  // Stop any existing capture for this tab
+  if (awsWafCaptureStateRef && awsWafCaptureStateRef.has(tabId)) {
+    awsWafStopCapture(tabId);
+  }
 
-  // Reset state
-  awsWafCaptureStateRef.isCapturing = true;
-  awsWafCaptureStateRef.tabId = tabId;
-  awsWafCaptureStateRef.url = url;
-  awsWafCaptureStateRef.capturedData = {
-    websiteURL: url,
-    awsChallengeJS: null,
-    awsApiJs: null,
-    awsProblemUrl: null,
-    awsApiKey: null,
-    awsExistingToken: null
-  };
-  awsWafCaptureStateRef.detectionFlags = {
-    hasStatus405: false,
-    hasChallengeEndpoint: false,
-    hasProblemEndpoint: false
-  };
+  // Set state on map
+  awsWafCaptureStateRef.set(tabId, {
+    url: url,
+    capturedData: {
+      websiteURL: url,
+      awsChallengeJS: null,
+      awsApiJs: null,
+      awsProblemUrl: null,
+      awsApiKey: null,
+      awsExistingToken: null
+    },
+    detectionFlags: {
+      hasStatus405: false,
+      hasChallengeEndpoint: false,
+      hasProblemEndpoint: false
+    }
+  });
 
   // Setup interceptor
   setupAwsWafInterceptor(tabId);
 
   // Show standardized in-page notification
-  if (showNotification) {
+  if (typeof showCaptureStarted === 'function') {
+    showCaptureStarted(tabId, {
+      title: 'AWS WAF Monitoring Started',
+      message: 'Reload the page to begin monitoring AWS WAF requests',
+      duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
+    }).catch(err => {
+      Logger.error('NETWORK', '[AwsWaf] Failed to show notification:', err);
+    });
+  } else if (showNotification) {
     showNotification(tabId, {
       type: 'capture',
-      title: 'AWS WAF Capture Active',
-      message: 'Please reload the page to start monitoring',
-      duration: 60000
+      title: 'AWS WAF Monitoring Started',
+      message: 'Reload the page to begin monitoring AWS WAF requests',
+      duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
     }).catch(err => {
       Logger.error('NETWORK', '[AwsWaf] Failed to show notification:', err);
     });
@@ -117,16 +116,21 @@ function awsWafStartCapture(tabId, url) {
 
   return {
     status: 'started',
-    message: 'AWS WAF capture started. Page will reload to capture data.',
+    message: 'AWS WAF monitoring started. Reload the page to begin capture.',
     tabId: tabId
   };
 }
 
 /**
  * Stop capturing AWS WAF data
+ * @param {number} tabId - Tab ID to stop capturing for
  */
-function awsWafStopCapture() {
-  Logger.network('[AwsWaf] Stopping capture');
+function awsWafStopCapture(tabId) {
+  Logger.network('[AwsWaf] Stopping capture for tab:', tabId);
+
+  if (typeof cleanupManagedListeners === 'function' && tabId != null) {
+    cleanupManagedListeners(tabId);
+  }
 
   // Remove listeners
   if (awsWafInterceptionListener) {
@@ -148,10 +152,14 @@ function awsWafStopCapture() {
   awsWafInterceptionListener = null;
   awsWafStatusListener = null;
 
-  // Reset state
-  awsWafCaptureStateRef.isCapturing = false;
-  awsWafCaptureStateRef.tabId = null;
-  awsWafCaptureStateRef.url = null;
+  // Remove state from map
+  if (awsWafCaptureStateRef && tabId != null) {
+    if (typeof removeCaptureState === 'function') {
+      removeCaptureState(awsWafCaptureStateRef, tabId);
+    } else {
+      awsWafCaptureStateRef.delete(tabId);
+    }
+  }
 
   Logger.network('[AwsWaf] Capture stopped');
 }
@@ -170,7 +178,8 @@ function setupAwsWafInterceptor(tabId) {
   // Request listener - Monitor URLs
   awsWafInterceptionListener = (details) => {
     if (details.tabId !== tabId) return;
-    if (!awsWafCaptureStateRef.isCapturing) return;
+    const state = awsWafCaptureStateRef ? awsWafCaptureStateRef.get(tabId) : null;
+    if (!state) return;
 
     const url = details.url;
     Logger.network('[AwsWaf] Intercepted request:', url);
@@ -178,20 +187,20 @@ function setupAwsWafInterceptor(tabId) {
     // Check for jsapi.js
     if (url.includes('jsapi.js')) {
       Logger.network('[AwsWaf] Found jsapi.js:', url);
-      awsWafCaptureStateRef.capturedData.awsApiJs = url;
+      state.capturedData.awsApiJs = url;
     }
 
     // Check for challenge.js
     if (url.includes('challenge.js')) {
       Logger.network('[AwsWaf] Found challenge.js:', url);
-      awsWafCaptureStateRef.capturedData.awsChallengeJS = url;
+      state.capturedData.awsChallengeJS = url;
     }
 
     // Check for /problem endpoint
     if (url.includes('/problem')) {
       Logger.network('[AwsWaf] Found problem endpoint:', url);
-      awsWafCaptureStateRef.capturedData.awsProblemUrl = url;
-      awsWafCaptureStateRef.detectionFlags.hasProblemEndpoint = true;
+      state.capturedData.awsProblemUrl = url;
+      state.detectionFlags.hasProblemEndpoint = true;
 
       // Extract api_key from query parameters
       try {
@@ -199,7 +208,7 @@ function setupAwsWafInterceptor(tabId) {
         const apiKey = urlObj.searchParams.get('api_key');
         if (apiKey) {
           Logger.network('[AwsWaf] Extracted api_key:', apiKey);
-          awsWafCaptureStateRef.capturedData.awsApiKey = apiKey;
+          state.capturedData.awsApiKey = apiKey;
         }
       } catch (e) {
         Logger.error('NETWORK', '[AwsWaf] Error parsing problem URL:', e);
@@ -210,7 +219,8 @@ function setupAwsWafInterceptor(tabId) {
   // Status listener - Monitor status codes
   awsWafStatusListener = (details) => {
     if (details.tabId !== tabId) return;
-    if (!awsWafCaptureStateRef.isCapturing) return;
+    const state = awsWafCaptureStateRef ? awsWafCaptureStateRef.get(tabId) : null;
+    if (!state) return;
 
     const url = details.url;
     const statusCode = details.statusCode;
@@ -220,13 +230,13 @@ function setupAwsWafInterceptor(tabId) {
     // Check for status 405 - AWS Captcha indicator
     if (statusCode === 405) {
       Logger.network('[AwsWaf] Detected status 405 - AWS Captcha');
-      awsWafCaptureStateRef.detectionFlags.hasStatus405 = true;
+      state.detectionFlags.hasStatus405 = true;
     }
 
     // Check for status 202 with /challenge endpoint
     if (statusCode === 202 && url.includes('/challenge')) {
       Logger.network('[AwsWaf] Detected status 202 with /challenge - Challenge endpoint');
-      awsWafCaptureStateRef.detectionFlags.hasChallengeEndpoint = true;
+      state.detectionFlags.hasChallengeEndpoint = true;
     }
   };
 
@@ -242,6 +252,21 @@ function setupAwsWafInterceptor(tabId) {
     { urls: ['<all_urls>'], tabId: tabId },
     []
   );
+
+  if (typeof registerManagedListener === 'function') {
+    registerManagedListener(
+      tabId,
+      'awswaf-before-request',
+      awsWafInterceptionListener,
+      chrome.webRequest.onBeforeRequest.removeListener.bind(chrome.webRequest.onBeforeRequest)
+    );
+    registerManagedListener(
+      tabId,
+      'awswaf-completed',
+      awsWafStatusListener,
+      chrome.webRequest.onCompleted.removeListener.bind(chrome.webRequest.onCompleted)
+    );
+  }
 
   Logger.network('[AwsWaf] Interceptor setup complete');
 }
@@ -287,15 +312,22 @@ async function awsWafReadCookie(url) {
  */
 async function handleAwsWafCaptureCompleted(tabId) {
   Logger.network('[AwsWaf] ========== CAPTURE COMPLETED ==========');
-  Logger.network('[AwsWaf] Captured data:', awsWafCaptureStateRef.capturedData);
-  Logger.network('[AwsWaf] Detection flags:', awsWafCaptureStateRef.detectionFlags);
+
+  const state = awsWafCaptureStateRef ? awsWafCaptureStateRef.get(tabId) : null;
+  if (!state) {
+    Logger.network('[AwsWaf] No capture state for tab:', tabId);
+    return;
+  }
+
+  Logger.network('[AwsWaf] Captured data:', state.capturedData);
+  Logger.network('[AwsWaf] Detection flags:', state.detectionFlags);
 
   // Prepare history entry
   const historyEntry = {
     timestamp: Date.now(),
-    url: awsWafCaptureStateRef.url,
-    data: { ...awsWafCaptureStateRef.capturedData },
-    flags: { ...awsWafCaptureStateRef.detectionFlags }
+    url: state.url,
+    data: { ...state.capturedData },
+    flags: { ...state.detectionFlags }
   };
 
   // Save to history
@@ -308,7 +340,7 @@ async function handleAwsWafCaptureCompleted(tabId) {
 
   // Show standardized success notification
   if (showNotification) {
-    const capturedCount = Object.values(awsWafCaptureStateRef.capturedData).filter(v => v !== null).length - 1; // -1 for websiteURL
+    const capturedCount = Object.values(state.capturedData).filter(v => v !== null).length - 1; // -1 for websiteURL
     showNotification(tabId, {
       type: 'success',
       title: 'Capture Completed',
@@ -320,7 +352,7 @@ async function handleAwsWafCaptureCompleted(tabId) {
   }
 
   // Stop capture
-  awsWafStopCapture();
+  awsWafStopCapture(tabId);
 
   // Send message to popup if it's open
   try {
@@ -343,9 +375,15 @@ async function handleAwsWafCaptureCompleted(tabId) {
  * @param {Object} message - Message object
  * @param {Object} sender - Sender info
  * @param {Function} sendResponse - Response callback
+ * @param {TTLMap} captureState - TTLMap from background.js
  * @returns {boolean} True if async response
  */
-function handleAwsWafMessage(message, sender, sendResponse) {
+function handleAwsWafMessage(message, sender, sendResponse, captureState) {
+  // Initialize interceptor with TTLMap from background.js on first message
+  if (captureState) {
+    awsWafInitializeInterceptor(captureState);
+  }
+
   Logger.network('[AwsWaf] Received message:', message.type);
 
   switch (message.type) {
@@ -355,17 +393,19 @@ function handleAwsWafMessage(message, sender, sendResponse) {
       return false;
 
     case 'AWSWAF_STOP_CAPTURE':
-      awsWafStopCapture();
+      awsWafStopCapture(message.tabId);
       sendResponse({ status: 'stopped' });
       return false;
 
-    case 'AWSWAF_GET_STATE':
+    case 'AWSWAF_GET_STATE': {
+      const state = awsWafCaptureStateRef ? awsWafCaptureStateRef.get(message.tabId) : null;
       sendResponse({
-        isCapturing: awsWafCaptureStateRef.isCapturing,
-        tabId: awsWafCaptureStateRef.tabId,
-        capturedData: awsWafCaptureStateRef.capturedData
+        isCapturing: !!state,
+        tabId: message.tabId,
+        capturedData: state ? state.capturedData : {}
       });
       return false;
+    }
 
     case 'AWSWAF_START_ANALYSIS':
       const analysisResult = awsWafStartAnalysis(message.tabId, message.url);

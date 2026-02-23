@@ -141,7 +141,7 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
   let rulesHtml = '';
 
   detectors.forEach(({ category, detectorName, detector }) => {
-    const detectorIcon = this.getDetectorIcon(detector);
+    const detectorIcon = this.getDetectorIcon(detector, category);
     const categoryInfo = this.categoryManager.getCategoryInfo(category);
     const categoryColor = categoryInfo?.colour || '#3b82f6';
 

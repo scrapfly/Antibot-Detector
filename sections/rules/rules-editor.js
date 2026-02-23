@@ -9,6 +9,8 @@
 // Form Rendering
 // ============================================
 
+const METHOD_PATTERNS_PER_PAGE = 3;
+
 Rules.prototype.populateDetectionMethods = function(detector) {
     const container = document.querySelector('#detectionMethodsContainer');
     if (!container) return;
@@ -73,7 +75,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
       const patternCountText = patternCount === 1 ? '1 pattern' : `${patternCount} patterns`;
 
       methodsHtml += `
-        <div class="method-section collapsed">
+        <div class="method-section collapsed" data-method-type="${methodType}">
           <div class="method-header">
             <div class="method-header-left">
               <svg class="method-collapse-icon" width="16" height="16" viewBox="0 0 24 24">
@@ -83,6 +85,14 @@ Rules.prototype.populateDetectionMethods = function(detector) {
             </div>
             <span class="method-pattern-count">${patternCountText}</span>
             ${methodHelper}
+          </div>
+          <div class="method-search-row">
+            <input
+              type="text"
+              class="method-search-input"
+              data-method-search="${methodType}"
+              placeholder="Search patterns..."
+            >
           </div>
           <div class="method-items">
       `;
@@ -204,9 +214,12 @@ Rules.prototype.populateDetectionMethods = function(detector) {
               ? this.renderInlineConditionDropdown(value, methodType, index)
               : '';
             const showValueRow = !isSingleInput && (methodType === 'window' || value);
+            const showNameSettings = true;
+            const showValueActions = methodType !== 'window';
 
             methodsHtml += `
               <div class="method-item"
+                data-method-order="${index}"
                 data-confidence="${confidence}"
                 data-name-regex="${nameRegex}"
                 data-name-wholeword="${nameWholeWord}"
@@ -230,7 +243,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                         ${methodType === 'dom' ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="${index}">?</button>` : ''}
                         ${methodType === 'window' ? `<button class="window-helper-btn" title="Window Property Examples" data-input-index="${index}">?</button>` : ''}
                         <div class="field-actions" data-field-type="name">
-                          ${methodType !== 'js_hooks' ? `
+                          ${showNameSettings ? `
                           <button class="method-action-btn settings ${hasNameCustomSettings ? 'has-custom-settings' : ''}" title="Name Settings">
                             <svg width="14" height="14" viewBox="0 0 24 24">
                               <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
@@ -255,6 +268,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                           ? windowConditionDropdown
                           : `<input type="text" class="method-input method-value" placeholder="${valuePlaceholder}" value="${value}" data-method-key="${methodType}" data-item-index="${index}">`
                         }
+                        ${showValueActions ? `
                         <div class="field-actions" data-field-type="value">
                           <button class="method-action-btn settings ${hasValueCustomSettings ? 'has-custom-settings' : ''}" title="Value Settings">
                             <svg width="14" height="14" viewBox="0 0 24 24">
@@ -267,6 +281,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                             </svg>
                           </button>
                         </div>
+                        ` : ''}
                       </div>
                       <div class="input-badges-row">
                         <div class="input-indicators" data-for="value-${methodType}-${index}"></div>
@@ -288,11 +303,27 @@ Rules.prototype.populateDetectionMethods = function(detector) {
 
       methodsHtml += `
           </div>
+          <div class="method-pagination" data-method-pagination="${methodType}">
+            <span class="method-pagination-info">Showing 0-0 of 0 patterns</span>
+            <div class="method-pagination-controls">
+              <button type="button" class="method-pagination-btn prev" title="Previous page" disabled>
+                <svg width="12" height="12" viewBox="0 0 24 24">
+                  <path d="M15.41,7.41L14,6L8,12L14,18L15.41,16.59L10.83,12L15.41,7.41Z" fill="currentColor"/>
+                </svg>
+              </button>
+              <span class="method-pagination-page">Page 1 / 1</span>
+              <button type="button" class="method-pagination-btn next" title="Next page" disabled>
+                <svg width="12" height="12" viewBox="0 0 24 24">
+                  <path d="M8.59,16.59L10,18L16,12L10,6L8.59,7.41L13.17,12L8.59,16.59Z" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+          </div>
           <button class="add-method-btn" data-method-type="${methodType}">
             <svg width="12" height="12" viewBox="0 0 24 24">
               <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
             </svg>
-            Add Method
+            Add Pattern
           </button>
         </div>
       `;
@@ -300,6 +331,21 @@ Rules.prototype.populateDetectionMethods = function(detector) {
 
     // Add button to add new method section
     container.innerHTML = methodsHtml;
+    this.methodPaginationState = {};
+
+    const methodSections = container.querySelectorAll('.method-section');
+    methodSections.forEach(section => {
+      this.updateMethodSectionPagination(section);
+    });
+    this.updateAllAddPatternButtonStates();
+
+    const searchInputs = container.querySelectorAll('.method-search-input');
+    searchInputs.forEach(input => {
+      input.addEventListener('input', (event) => {
+        const section = event.target.closest('.method-section');
+        this.updateMethodSectionPagination(section, { searchQuery: event.target.value });
+      });
+    });
 
     // Update indicators for all method items that have settings
     const methodItems = container.querySelectorAll('.method-item');
@@ -336,6 +382,325 @@ Rules.prototype.populateDetectionMethods = function(detector) {
     });
   };
 
+Rules.prototype.getMethodSectionType = function(section) {
+    if (!section) return '';
+
+    const datasetType = section.dataset.methodType;
+    if (datasetType) {
+      return datasetType === 'js hooks' ? 'js_hooks' : datasetType;
+    }
+
+    const buttonType = section.querySelector('.add-method-btn')?.dataset.methodType;
+    if (buttonType) return buttonType;
+
+    const methodTitle = section.querySelector('.method-title')?.textContent?.trim().toLowerCase();
+    if (!methodTitle) return '';
+
+    if (methodTitle === 'js hooks') return 'js_hooks';
+    return methodTitle;
+  };
+
+Rules.prototype.updateMethodPatternCount = function(section) {
+    if (!section) return 0;
+
+    const totalPatterns = section.querySelectorAll('.method-item').length;
+    const patternCountEl = section.querySelector('.method-pattern-count');
+    if (patternCountEl) {
+      patternCountEl.textContent = totalPatterns === 1 ? '1 pattern' : `${totalPatterns} patterns`;
+    }
+    return totalPatterns;
+  };
+
+Rules.prototype.getMethodPaginationEntry = function(methodType) {
+    if (!this.methodPaginationState || typeof this.methodPaginationState !== 'object') {
+      this.methodPaginationState = {};
+    }
+
+    const existingState = this.methodPaginationState[methodType];
+    if (existingState && typeof existingState === 'object') {
+      if (typeof existingState.page !== 'number') existingState.page = 1;
+      if (typeof existingState.searchQuery !== 'string') existingState.searchQuery = '';
+      return existingState;
+    }
+
+    const entry = {
+      page: typeof existingState === 'number' ? existingState : 1,
+      searchQuery: ''
+    };
+    this.methodPaginationState[methodType] = entry;
+    return entry;
+  };
+
+Rules.prototype.methodItemMatchesSearch = function(item, normalizedQuery) {
+    if (!normalizedQuery) return true;
+    if (!item) return false;
+
+    const tokens = [];
+
+    item.querySelectorAll('.method-input').forEach(input => {
+      if (typeof input.value === 'string' && input.value.trim()) {
+        tokens.push(input.value.trim());
+      }
+    });
+
+    const selectedCondition = item.querySelector('.condition-selected-text')?.textContent?.trim();
+    if (selectedCondition) {
+      tokens.push(selectedCondition);
+    }
+
+    const methodKey = item.querySelector('.method-input')?.dataset.methodKey;
+    if (methodKey) {
+      tokens.push(methodKey.replace(/_/g, ' '));
+    }
+
+    return tokens.join(' ').toLowerCase().includes(normalizedQuery);
+  };
+
+Rules.prototype.updateMethodSectionPagination = function(section, options = {}) {
+    if (!section) return;
+
+    const methodType = this.getMethodSectionType(section);
+    if (!methodType) return;
+    const isCollapsed = section.classList.contains('collapsed');
+
+    if (!this.methodPaginationState || typeof this.methodPaginationState !== 'object') {
+      this.methodPaginationState = {};
+    }
+
+    const paginationEntry = this.getMethodPaginationEntry(methodType);
+    if (typeof options.searchQuery === 'string') {
+      paginationEntry.searchQuery = options.searchQuery.trim().toLowerCase();
+      paginationEntry.page = 1;
+    }
+
+    const items = Array.from(section.querySelectorAll('.method-item'));
+    const totalItems = this.updateMethodPatternCount(section);
+    const searchRow = section.querySelector('.method-search-row');
+    const searchInput = section.querySelector('.method-search-input');
+
+    if (totalItems === 0) {
+      paginationEntry.searchQuery = '';
+      paginationEntry.page = 1;
+      if (searchInput) {
+        searchInput.value = '';
+      }
+    }
+
+    if (searchRow) {
+      searchRow.style.display = (isCollapsed || totalItems === 0) ? 'none' : '';
+    }
+
+    const filteredItems = paginationEntry.searchQuery
+      ? items.filter(item => this.methodItemMatchesSearch(item, paginationEntry.searchQuery))
+      : items;
+    const filteredCount = filteredItems.length;
+    const perPage = METHOD_PATTERNS_PER_PAGE;
+    const totalPages = Math.max(1, Math.ceil(filteredCount / perPage));
+
+    let currentPage = paginationEntry.page || 1;
+
+    if (options.goToLastPage) {
+      currentPage = totalPages;
+    }
+    if (typeof options.pageDelta === 'number' && options.pageDelta !== 0) {
+      currentPage += options.pageDelta;
+    }
+
+    currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+    paginationEntry.page = currentPage;
+
+    const startIndex = (currentPage - 1) * perPage;
+    const endIndex = startIndex + perPage;
+
+    items.forEach(item => {
+      item.style.display = 'none';
+    });
+
+    filteredItems.forEach((item, index) => {
+      if (index >= startIndex && index < endIndex) {
+        item.style.display = '';
+      }
+    });
+
+    const pagination = section.querySelector('.method-pagination');
+    const infoEl = section.querySelector('.method-pagination-info');
+    const pageEl = section.querySelector('.method-pagination-page');
+    const prevBtn = section.querySelector('.method-pagination-btn.prev');
+    const nextBtn = section.querySelector('.method-pagination-btn.next');
+
+    if (infoEl) {
+      if (filteredCount === 0) {
+        infoEl.textContent = paginationEntry.searchQuery ? 'No matching patterns' : 'No patterns';
+      } else {
+        const startItem = startIndex + 1;
+        const endItem = Math.min(endIndex, filteredCount);
+        const suffix = paginationEntry.searchQuery ? 'matches' : 'patterns';
+        infoEl.textContent = `Showing ${startItem}-${endItem} of ${filteredCount} ${suffix}`;
+      }
+    }
+
+    if (pageEl) {
+      pageEl.textContent = `Page ${currentPage} / ${totalPages}`;
+    }
+
+    if (prevBtn) {
+      prevBtn.disabled = currentPage <= 1;
+    }
+
+    if (nextBtn) {
+      nextBtn.disabled = currentPage >= totalPages;
+    }
+
+    if (pagination) {
+      if (isCollapsed) {
+        pagination.style.display = 'none';
+      } else {
+        pagination.style.display = (filteredCount > perPage || !!paginationEntry.searchQuery) ? 'flex' : 'none';
+      }
+    }
+  };
+
+Rules.prototype.sectionHasEmptyRequiredPattern = function(section) {
+    if (!section) return false;
+
+    return Array.from(section.querySelectorAll('.method-item')).some(item => {
+      const requiredInput = item.querySelector('.method-name');
+      if (!requiredInput) return false;
+      return !requiredInput.value.trim();
+    });
+  };
+
+Rules.prototype.updateAddPatternButtonState = function(section) {
+    if (!section) return;
+
+    const addPatternBtn = section.querySelector('.add-method-btn');
+    if (!addPatternBtn) return;
+
+    const hasEmptyRequiredPattern = this.sectionHasEmptyRequiredPattern(section);
+    addPatternBtn.disabled = hasEmptyRequiredPattern;
+    addPatternBtn.setAttribute('aria-disabled', hasEmptyRequiredPattern ? 'true' : 'false');
+
+    if (hasEmptyRequiredPattern) {
+      addPatternBtn.title = 'Complete the current empty pattern before adding another.';
+    } else {
+      addPatternBtn.removeAttribute('title');
+    }
+  };
+
+Rules.prototype.updateAllAddPatternButtonStates = function() {
+    const container = document.querySelector('#detectionMethodsContainer');
+    if (!container) return;
+
+    container.querySelectorAll('.method-section').forEach(section => {
+      this.updateAddPatternButtonState(section);
+    });
+  };
+
+Rules.prototype.validatePatternRows = function() {
+    const methodsContainer = document.querySelector('#detectionMethodsContainer');
+    if (!methodsContainer) {
+      return {
+        isValid: true,
+        invalidRows: []
+      };
+    }
+
+    const invalidRows = [];
+    const methodSections = methodsContainer.querySelectorAll('.method-section');
+
+    methodSections.forEach(section => {
+      const methodType = this.getMethodSectionType(section);
+      const methodItems = Array.from(section.querySelectorAll('.method-item'));
+
+      methodItems.forEach((item, itemIndexInSection) => {
+        const requiredInput = item.querySelector('.method-name');
+        const requiredValue = requiredInput?.value?.trim() || '';
+
+        if (!requiredValue) {
+          invalidRows.push({
+            section,
+            item,
+            input: requiredInput,
+            methodType,
+            itemIndexInSection
+          });
+        }
+      });
+    });
+
+    return {
+      isValid: invalidRows.length === 0,
+      invalidRows
+    };
+  };
+
+Rules.prototype.clearPatternValidationState = function() {
+    const modal = document.querySelector('#editRuleModal');
+    const scope = modal || document;
+
+    scope.querySelectorAll('.method-item-invalid').forEach(item => {
+      item.classList.remove('method-item-invalid');
+    });
+
+    scope.querySelectorAll('.method-input-invalid').forEach(input => {
+      input.classList.remove('method-input-invalid');
+      input.removeAttribute('aria-invalid');
+    });
+  };
+
+Rules.prototype.markPatternValidationState = function(invalidRows = []) {
+    if (!Array.isArray(invalidRows) || invalidRows.length === 0) return;
+
+    invalidRows.forEach(({ item, input }) => {
+      if (item) {
+        item.classList.add('method-item-invalid');
+      }
+      if (input) {
+        input.classList.add('method-input-invalid');
+        input.setAttribute('aria-invalid', 'true');
+      }
+    });
+  };
+
+Rules.prototype.revealAndFocusInvalidRow = function(invalidRow) {
+    if (!invalidRow) return;
+
+    const { section, item, input, itemIndexInSection } = invalidRow;
+    if (!section || !item) return;
+
+    section.classList.remove('collapsed');
+
+    const methodType = invalidRow.methodType || this.getMethodSectionType(section);
+    const searchInput = section.querySelector('.method-search-input');
+    if (searchInput) {
+      searchInput.value = '';
+    }
+
+    if (methodType) {
+      const paginationEntry = this.getMethodPaginationEntry(methodType);
+      paginationEntry.searchQuery = '';
+
+      const allItems = Array.from(section.querySelectorAll('.method-item'));
+      const absoluteIndex = typeof itemIndexInSection === 'number'
+        ? itemIndexInSection
+        : allItems.indexOf(item);
+      const normalizedIndex = absoluteIndex >= 0 ? absoluteIndex : 0;
+      paginationEntry.page = Math.max(1, Math.floor(normalizedIndex / METHOD_PATTERNS_PER_PAGE) + 1);
+    }
+
+    this.updateMethodSectionPagination(section);
+
+    const targetInput = input || item.querySelector('.method-name');
+    requestAnimationFrame(() => {
+      if (targetInput) {
+        targetInput.focus();
+        targetInput.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+      } else {
+        item.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+      }
+    });
+  };
+
 Rules.prototype.addNewMethodItem = function(button) {
     const methodSection = button.closest('.method-section');
     const methodItems = methodSection.querySelector('.method-items');
@@ -366,9 +731,13 @@ Rules.prototype.addNewMethodItem = function(button) {
 
     const windowConditionDropdown = isWindow ? this.renderInlineConditionDropdown('exists', methodKey, itemIndex) : '';
     const showValueRow = isWindow;
+    const showNameSettings = true;
+    const showValueActions = !isWindow;
+    const methodOrder = methodItems.querySelectorAll('.method-item').length;
 
     const newMethodHtml = `
       <div class="method-item"
+        data-method-order="${methodOrder}"
         data-confidence="100"
         data-name-regex="false"
         data-name-wholeword="false"
@@ -388,7 +757,7 @@ Rules.prototype.addNewMethodItem = function(button) {
                 ${isDom ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="${itemIndex}">?</button>` : ''}
                 ${isWindow ? `<button class="window-helper-btn" title="Window Property Examples" data-input-index="${itemIndex}">?</button>` : ''}
                 <div class="field-actions" data-field-type="name">
-                  ${methodKey !== 'js_hooks' ? `
+                  ${showNameSettings ? `
                   <button class="method-action-btn settings" title="Name Settings">
                     <svg width="14" height="14" viewBox="0 0 24 24">
                       <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
@@ -413,6 +782,7 @@ Rules.prototype.addNewMethodItem = function(button) {
                       ? windowConditionDropdown
                       : `<input type="text" class="method-input method-value" placeholder="${valuePlaceholder}" value="" data-method-key="${methodKey}" data-item-index="${itemIndex}">`
                     }
+                    ${showValueActions ? `
                     <div class="field-actions" data-field-type="value">
                   <button class="method-action-btn settings" title="Value Settings">
                     <svg width="14" height="14" viewBox="0 0 24 24">
@@ -425,6 +795,7 @@ Rules.prototype.addNewMethodItem = function(button) {
                     </svg>
                   </button>
                 </div>
+                ` : ''}
               </div>
               <div class="input-badges-row">
                 <div class="input-indicators" data-for="value-${methodKey}-${itemIndex}"></div>
@@ -443,6 +814,13 @@ Rules.prototype.addNewMethodItem = function(button) {
     `;
 
     methodItems.insertAdjacentHTML('beforeend', newMethodHtml);
+    const searchInput = methodSection.querySelector('.method-search-input');
+    if (searchInput && searchInput.value.trim()) {
+      searchInput.value = '';
+      this.updateMethodSectionPagination(methodSection, { searchQuery: '' });
+    }
+    this.updateMethodSectionPagination(methodSection, { goToLastPage: true });
+    this.updateAddPatternButtonState(methodSection);
   };
 
 Rules.prototype.addNewMethodSection = function() {
@@ -468,14 +846,25 @@ Rules.prototype.addNewMethodSection = function() {
 
     const windowConditionDropdown = isWindow ? this.renderInlineConditionDropdown('exists', methodKey, 'new') : '';
     const showValueRow = isWindow;
+    const showNameSettings = true;
+    const showValueActions = !isWindow;
 
     const newSectionHtml = `
-      <div class="method-section">
+      <div class="method-section" data-method-type="${methodKey}">
         <div class="method-header">
           <div class="method-title">${methodType.toUpperCase()}</div>
         </div>
+        <div class="method-search-row">
+          <input
+            type="text"
+            class="method-search-input"
+            data-method-search="${methodKey}"
+            placeholder="Search patterns..."
+          >
+        </div>
         <div class="method-items">
           <div class="method-item"
+            data-method-order="0"
             data-confidence="100"
             data-name-regex="false"
             data-name-wholeword="false"
@@ -491,11 +880,13 @@ Rules.prototype.addNewMethodSection = function() {
                     ${isDom ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="new">?</button>` : ''}
                     ${isWindow ? `<button class="window-helper-btn" title="Window Property Examples" data-input-index="new">?</button>` : ''}
                     <div class="field-actions" data-field-type="name">
+                      ${showNameSettings ? `
                       <button class="method-action-btn settings" title="Name Settings">
                         <svg width="14" height="14" viewBox="0 0 24 24">
                           <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
                         </svg>
                       </button>
+                      ` : ''}
                       <button class="method-action-btn delete" title="Delete Method">
                         <svg width="14" height="14" viewBox="0 0 24 24">
                           <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
@@ -514,6 +905,7 @@ Rules.prototype.addNewMethodSection = function() {
                       ? windowConditionDropdown
                       : `<input type="text" class="method-input method-value" placeholder="Value (optional)" value="" data-method-key="${methodKey}" data-item-index="new">`
                     }
+                    ${showValueActions ? `
                     <div class="field-actions" data-field-type="value">
                       <button class="method-action-btn settings" title="Value Settings">
                         <svg width="14" height="14" viewBox="0 0 24 24">
@@ -526,6 +918,7 @@ Rules.prototype.addNewMethodSection = function() {
                         </svg>
                       </button>
                     </div>
+                    ` : ''}
                   </div>
                 <div class="input-badges-row">
                   <div class="input-indicators" data-for="value-${methodKey}-new"></div>
@@ -542,16 +935,42 @@ Rules.prototype.addNewMethodSection = function() {
             </div>
           </div>
         </div>
+        <div class="method-pagination" data-method-pagination="${methodKey}">
+          <span class="method-pagination-info">Showing 0-0 of 0 patterns</span>
+          <div class="method-pagination-controls">
+            <button type="button" class="method-pagination-btn prev" title="Previous page" disabled>
+              <svg width="12" height="12" viewBox="0 0 24 24">
+                <path d="M15.41,7.41L14,6L8,12L14,18L15.41,16.59L10.83,12L15.41,7.41Z" fill="currentColor"/>
+              </svg>
+            </button>
+            <span class="method-pagination-page">Page 1 / 1</span>
+            <button type="button" class="method-pagination-btn next" title="Next page" disabled>
+              <svg width="12" height="12" viewBox="0 0 24 24">
+                <path d="M8.59,16.59L10,18L16,12L10,6L8.59,7.41L13.17,12L8.59,16.59Z" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
+        </div>
         <button class="add-method-btn" data-method-type="${methodType.toLowerCase()}">
           <svg width="12" height="12" viewBox="0 0 24 24">
             <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
           </svg>
-          Add Method
+          Add Pattern
         </button>
       </div>
     `;
 
     addSectionBtn.insertAdjacentHTML('beforebegin', newSectionHtml);
+    const insertedSection = addSectionBtn.previousElementSibling;
+    const searchInput = insertedSection?.querySelector('.method-search-input');
+    if (searchInput) {
+      searchInput.addEventListener('input', (event) => {
+        const section = event.target.closest('.method-section');
+        this.updateMethodSectionPagination(section, { searchQuery: event.target.value });
+      });
+    }
+    this.updateMethodSectionPagination(insertedSection);
+    this.updateAddPatternButtonState(insertedSection);
   };
 
 // ============================================
@@ -576,6 +995,7 @@ Rules.prototype._collectDetectionFromForm = function() {
       }
 
       const methods = [];
+      // Hidden paginated items remain in DOM and are still collected.
       const methodItems = section.querySelectorAll('.method-item');
 
       methodItems.forEach(item => {
@@ -699,9 +1119,24 @@ Rules.prototype.updateDetectorBadgeColor = function(detectorName, color) {
 Rules.prototype.saveRule = function() {
     if (!this.currentEditDetector) return;
 
+    this.clearPatternValidationState();
+    const patternValidation = this.validatePatternRows();
+    if (!patternValidation.isValid) {
+      this.markPatternValidationState(patternValidation.invalidRows);
+      this.revealAndFocusInvalidRow(patternValidation.invalidRows[0]);
+
+      if (typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.warning === 'function') {
+        NotificationHelper.warning('Please fill all required pattern fields before saving.');
+      } else {
+        alert('Please fill all required pattern fields before saving.');
+      }
+      return;
+    }
+
     // Get detector information from fields
     const nameInput = document.querySelector('#detectorNameInput');
     const categorySelect = document.querySelector('#detectorCategorySelect');
+    const difficultySelect = document.querySelector('#detectorDifficultySelect');
 
     if (nameInput) {
       this.currentEditDetector.detector.name = nameInput.value;
@@ -712,6 +1147,16 @@ Rules.prototype.saveRule = function() {
       this.currentEditDetector.detector.category = categorySelect.value;
       // Update the category in the parent structure
       this.currentEditDetector.category = categorySelect.value;
+    }
+
+    if (difficultySelect) {
+      const normalizedDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.normalizeDifficulty === 'function')
+        ? DetectionUtils.normalizeDifficulty(difficultySelect.value)
+        : null;
+      const defaultDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.defaultDifficultyForCategory === 'function')
+        ? DetectionUtils.defaultDifficultyForCategory(this.currentEditDetector.category || this.currentEditDetector.detector.category)
+        : 'Medium';
+      this.currentEditDetector.detector.difficulty = normalizedDifficulty || defaultDifficulty;
     }
 
     // Save author field
@@ -755,6 +1200,8 @@ Rules.prototype.saveRule = function() {
 
       // Update lastUpdated timestamp
       this.currentEditDetector.detector.lastUpdated = timestamp;
+
+      // UI version field (#detectorVersionInput) is display-only; version is managed here.
 
       // Auto-increment version (1.0 → 1.1 → 1.2, etc.)
       if (this.currentEditDetector.isNew) {

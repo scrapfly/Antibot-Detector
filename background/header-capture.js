@@ -156,8 +156,7 @@ function setupHeaderCapture() {
                             timestamp: Date.now()
                         });
 
-                        // Keep max 50 payloads to prevent memory issues
-                        if (payloads.length > 50) {
+                        if (payloads.length > Constants.MAX_PAYLOADS_PER_TAB) {
                             payloads.shift();
                         }
 
@@ -197,8 +196,7 @@ function setupHeaderCapture() {
                 timestamp: Date.now()
             });
 
-            // Keep max 200 URLs per tab to prevent memory issues
-            if (networkUrls.length > 200) {
+            if (networkUrls.length > Constants.MAX_NETWORK_URLS_PER_TAB) {
                 networkUrls.shift();
             }
 

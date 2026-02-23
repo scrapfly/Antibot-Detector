@@ -23,10 +23,6 @@
           <div class="logo-text">
             <span id="appBrand">Scrapfly Antibot Detector</span>
             <span id="appVersion" class="app-version"></span>
-            <div id="currentTabInfo" class="current-tab-info" style="display: none;">
-              <img id="currentTabFavicon" class="tab-favicon" src="" alt="">
-              <span id="currentTabUrl"></span>
-            </div>
           </div>
         </div>
         <div class="header-controls">
@@ -66,7 +62,7 @@
         </button>
         <button class="tab-btn" data-tab="advanced">
           <svg width="16" height="16" viewBox="0 0 24 24">
-            <path d="M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H14A7,7 0 0,1 21,14H22A1,1 0 0,1 23,15V18A1,1 0 0,1 22,19H21V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V19H2A1,1 0 0,1 1,18V15A1,1 0 0,1 2,14H3A7,7 0 0,1 10,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2M7.5,13A0.5,0.5 0 0,0 7,13.5A0.5,0.5 0 0,0 7.5,14A0.5,0.5 0 0,0 8,13.5A0.5,0.5 0 0,0 7.5,13M16.5,13A0.5,0.5 0 0,0 16,13.5A0.5,0.5 0 0,0 16.5,14A0.5,0.5 0 0,0 17,13.5A0.5,0.5 0 0,0 16.5,13Z" fill="currentColor"/>
+            <path d="M12,2A2,2 0 0,1 14,4V6H16A2,2 0 0,1 18,8V16A2,2 0 0,1 16,18H8A2,2 0 0,1 6,16V8A2,2 0 0,1 8,6H10V4A2,2 0 0,1 12,2M9,10A1,1 0 0,0 8,11A1,1 0 0,0 9,12A1,1 0 0,0 10,11A1,1 0 0,0 9,10M15,10A1,1 0 0,0 14,11A1,1 0 0,0 15,12A1,1 0 0,0 16,11A1,1 0 0,0 15,10M8,14V16H16V14H8Z" fill="currentColor"/>
           </svg>
           Advanced
         </button>
@@ -108,6 +104,8 @@
   <!-- Core modules (foundation - must load first) -->
   <script src="modules/core/logger.js"></script>
   <script src="modules/core/badge-constants.js"></script>
+  <script src="modules/core/constants.js"></script>
+  <script src="modules/core/message-types.js"></script>
   <script src="utils/format-utils.js"></script>
   <script src="utils/url-utils.js"></script>
   <script src="utils/detection-utils.js"></script>
@@ -154,25 +152,64 @@
   <script src="sections/rules/helpers/helper-window.js"></script>
   <script src="sections/rules/helpers/pattern-helpers.js"></script>
   <script src="sections/rules/rules-modal-wiring.js"></script>
+  <!-- ADVANCED_SCRIPTS_START -->
   <!-- Base template system for Advanced modules -->
   <script src="sections/advanced/base-interceptor-helpers.js"></script>
+  <script src="sections/advanced/advanced-history-store.js"></script>
   <script src="sections/advanced/advanced-utils.js"></script>
   <script src="sections/advanced/base-advanced-module.js"></script>
   <!-- Advanced module implementations -->
   <script src="sections/advanced/modules/recaptcha/libs/pbf.js"></script>
   <script src="sections/advanced/modules/recaptcha/libs/message.browser.js"></script>
   <script src="sections/advanced/modules/recaptcha/recaptcha-advanced.js"></script>
+  <script src="sections/advanced/modules/recaptcha/recaptcha-advanced-lifecycle.js"></script>
+  <script src="sections/advanced/modules/recaptcha/recaptcha-advanced-ui.js"></script>
+  <script src="sections/advanced/modules/recaptcha/recaptcha-advanced-actions.js"></script>
   <script src="sections/advanced/modules/akamai/akamai-advanced.js"></script>
+  <script src="sections/advanced/modules/akamai/akamai-advanced-lifecycle.js"></script>
+  <script src="sections/advanced/modules/akamai/akamai-advanced-ui.js"></script>
+  <script src="sections/advanced/modules/akamai/akamai-advanced-actions.js"></script>
   <script src="sections/advanced/modules/imperva/imperva-advanced.js"></script>
+  <script src="sections/advanced/modules/imperva/imperva-advanced-lifecycle.js"></script>
+  <script src="sections/advanced/modules/imperva/imperva-advanced-ui.js"></script>
+  <script src="sections/advanced/modules/imperva/imperva-advanced-actions.js"></script>
   <script src="sections/advanced/modules/shapesecurity/shapesecurity-advanced.js"></script>
+  <script src="sections/advanced/modules/shapesecurity/shapesecurity-advanced-lifecycle.js"></script>
+  <script src="sections/advanced/modules/shapesecurity/shapesecurity-advanced-ui.js"></script>
+  <script src="sections/advanced/modules/shapesecurity/shapesecurity-advanced-actions.js"></script>
   <script src="sections/advanced/modules/awswaf/awswaf-advanced.js"></script>
+  <script src="sections/advanced/modules/awswaf/awswaf-advanced-lifecycle.js"></script>
+  <script src="sections/advanced/modules/awswaf/awswaf-advanced-ui.js"></script>
+  <script src="sections/advanced/modules/awswaf/awswaf-advanced-actions.js"></script>
   <script src="sections/advanced/modules/geetest/geetest-advanced.js"></script>
+  <script src="sections/advanced/modules/geetest/geetest-advanced-lifecycle.js"></script>
+  <script src="sections/advanced/modules/geetest/geetest-advanced-ui.js"></script>
+  <script src="sections/advanced/modules/geetest/geetest-advanced-actions.js"></script>
   <script src="sections/advanced/modules/datadome/datadome-advanced.js"></script>
+  <script src="sections/advanced/modules/datadome/datadome-advanced-lifecycle.js"></script>
+  <script src="sections/advanced/modules/datadome/datadome-advanced-ui.js"></script>
+  <script src="sections/advanced/modules/datadome/datadome-advanced-actions.js"></script>
   <script src="sections/advanced/modules/cloudflare/cloudflare-advanced.js"></script>
+  <script src="sections/advanced/modules/cloudflare/cloudflare-advanced-ui.js"></script>
+  <script src="sections/advanced/modules/cloudflare/cloudflare-advanced-actions.js"></script>
   <script src="sections/advanced/modules/turnstile/turnstile-advanced.js"></script>
+  <script src="sections/advanced/modules/turnstile/turnstile-advanced-lifecycle.js"></script>
+  <script src="sections/advanced/modules/turnstile/turnstile-advanced-ui.js"></script>
+  <script src="sections/advanced/modules/turnstile/turnstile-advanced-actions.js"></script>
   <script src="sections/advanced/modules/hcaptcha/hcaptcha-advanced.js"></script>
+  <script src="sections/advanced/modules/hcaptcha/hcaptcha-advanced-lifecycle.js"></script>
+  <script src="sections/advanced/modules/hcaptcha/hcaptcha-advanced-ui.js"></script>
+  <script src="sections/advanced/modules/hcaptcha/hcaptcha-advanced-actions.js"></script>
   <script src="sections/advanced/modules/funcaptcha/funcaptcha-advanced.js"></script>
+  <script src="sections/advanced/modules/funcaptcha/funcaptcha-advanced-lifecycle.js"></script>
+  <script src="sections/advanced/modules/funcaptcha/funcaptcha-advanced-ui.js"></script>
+  <script src="sections/advanced/modules/funcaptcha/funcaptcha-advanced-actions.js"></script>
   <script src="sections/advanced/advanced.js"></script>
+  <script src="sections/advanced/advanced-runtime.js"></script>
+  <script src="sections/advanced/advanced-tools.js"></script>
+  <script src="sections/advanced/advanced-history.js"></script>
+  <script src="sections/advanced/advanced-modals.js"></script>
+  <!-- ADVANCED_SCRIPTS_END -->
   <!-- Settings core + extensions -->
   <script src="sections/settings/settings.js"></script>
   <script src="sections/settings/settings-runtime.js"></script>
@@ -180,3 +217,4 @@
   <script src="popup.js"></script>
 </body>
 </html>
+

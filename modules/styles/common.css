@@ -63,7 +63,6 @@
 
   /* Badge Colors - Categories */
   --badge-captcha: #33C3FF;
-  --badge-antibot: #FF5733;
   --badge-fingerprint: #3b82f6;
 }
 
@@ -112,6 +111,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  align-self: flex-start;
+  line-height: 1;
+  flex-shrink: 0;
   width: 28px;
   height: 28px;
 }
@@ -144,13 +146,6 @@
   background: rgba(51, 195, 255, 0.2);
   color: var(--badge-captcha);
   border: 1px solid rgba(51, 195, 255, 0.35);
-}
-
-.badge-antibot,
-.badge-anti-bot {
-  background: rgba(255, 87, 51, 0.2);
-  color: var(--badge-antibot);
-  border: 1px solid rgba(255, 87, 51, 0.35);
 }
 
 .badge-fingerprint {
@@ -469,11 +464,38 @@ input:checked + .slider:before {
 }
 
 /* ============================================
-   FINGERPRINT ICON (shared gradient pattern)
+   FINGERPRINT ICON (shared color layer)
    ============================================ */
 .fingerprint-icon {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-  color: white;
+  color: var(--accent-light);
+}
+
+.fingerprint-icon-shell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.fingerprint-icon-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+.fingerprint-icon-image--builtin {
+  filter: brightness(0) saturate(100%) invert(65%) sepia(39%) saturate(1506%) hue-rotate(186deg) brightness(100%) contrast(101%);
+}
+
+.fingerprint-icon-image--custom {
+  filter: brightness(0) saturate(100%) invert(65%) sepia(39%) saturate(1506%) hue-rotate(186deg) brightness(100%) contrast(101%);
+}
+
+.fingerprint-icon-image--default {
+  filter: none;
 }
 
 /* ============================================

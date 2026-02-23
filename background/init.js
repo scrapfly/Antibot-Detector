@@ -34,11 +34,11 @@ async function initialize(reason = 'startup', previousVersion = null) {
         // BUGFIX: Add retry logic if detectors haven't loaded yet (timing issue)
         // This handles cases where service worker starts before JSON files are fully loaded
         if (!hasDetectors) {
-            const maxRetries = 10; // 10 retries * 500ms = 5 seconds max wait
+            const maxRetries = Constants.DETECTOR_LOAD_MAX_RETRIES;
             let retries = maxRetries;
 
             while (retries > 0 && !hasDetectors) {
-                await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms
+                await new Promise(resolve => setTimeout(resolve, Constants.DETECTOR_LOAD_RETRY_DELAY));
                 detectorCount = detectorManager.getDetectorCount();
                 hasDetectors = detectorCount > 0;
 
@@ -51,12 +51,7 @@ async function initialize(reason = 'startup', previousVersion = null) {
         }
 
         if (!hasDetectors) {
-            Logger.error('BACKGROUND', 'CRITICAL: Detector system initialized but no detectors were loaded!');
-            Logger.error('BACKGROUND', 'This will cause content scripts to fail. Possible causes:');
-            Logger.error('BACKGROUND', '   1. Storage is empty or corrupted');
-            Logger.error('BACKGROUND', '   2. JSON files are missing or have errors');
-            Logger.error('BACKGROUND', '   3. File paths changed but extension not reloaded');
-            Logger.error('BACKGROUND', 'RECOMMENDATION: Remove and re-add the extension, then refresh all tabs');
+            Logger.error('BACKGROUND', 'CRITICAL: No detectors loaded - extension will not work. Remove and re-add the extension, then refresh all tabs.');
         }
 
         // Initialize "never fail" managers
@@ -87,8 +82,7 @@ async function initialize(reason = 'startup', previousVersion = null) {
         initializationInProgress = false;
         return true;
         } catch (error) {
-            Logger.error('BACKGROUND', 'Background: Failed to initialize detector system:', error);
-            Logger.error('BACKGROUND', 'Background: Error stack:', error.stack);
+            Logger.error('BACKGROUND', 'Failed to initialize detector system:', error);
 
             // Clear guard flag on error
             initializationInProgress = false;
@@ -129,9 +123,9 @@ async function scheduleUpdateCheck() {
                     await UpdateManager.checkForUpdates(false); // Non-forced check respects interval
                     Logger.background('Update check completed');
                 } catch (error) {
-                    Logger.error('BACKGROUND', 'Failed to check for updates:', error);
+                    Logger.warn('BACKGROUND', 'Failed to check for updates:', error);
                 }
-            }, 5000); // 5 second delay after startup
+            }, Constants.UPDATE_CHECK_DELAY);
 
             // Setup periodic alarm for update checks
             // This ensures updates are checked even if the browser stays open
@@ -144,7 +138,7 @@ async function scheduleUpdateCheck() {
             await UpdateManager.clearPendingUpdates();
         }
     } catch (error) {
-        Logger.error('BACKGROUND', 'Failed to schedule update check:', error);
+        Logger.warn('BACKGROUND', 'Failed to schedule update check:', error);
     }
 }
 
@@ -168,7 +162,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
                 Logger.background('Periodic update check completed');
             }
         } catch (error) {
-            Logger.error('BACKGROUND', 'Periodic update check failed:', error);
+            Logger.warn('BACKGROUND', 'Periodic update check failed:', error);
         }
     }
 });

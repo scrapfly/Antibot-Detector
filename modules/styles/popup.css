@@ -106,21 +106,6 @@ body {
   letter-spacing: 0.5px;
 }
 
-.current-tab-info {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 4px;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.tab-favicon {
-  width: 16px;
-  height: 16px;
-  border-radius: 2px;
-}
-
 .header-controls {
   display: flex;
   align-items: center;

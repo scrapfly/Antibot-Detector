@@ -4,6 +4,7 @@
   "author": "Scrapfly",
   "enabled": true,
   "category": "Fingerprint",
+  "difficulty": "Low",
   "lastUpdated": "2026-02-04",
   "version": "1.0.1",
   "website": "https://en.wikipedia.org/wiki/WebGL",

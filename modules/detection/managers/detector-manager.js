@@ -153,17 +153,16 @@ class DetectorManager {
         }
 
         if (!detectorData.id || detectorData.id !== canonicalId) {
-            Logger.warn('DETECTOR', `[normalizeDetectorSchema] Canonicalizing detector ID (${source})`, {
+            Logger.debug('DETECTOR', `[normalizeDetectorSchema] Canonicalizing ID (${source})`, {
                 from: detectorData.id,
-                to: canonicalId,
-                category: categoryName
+                to: canonicalId
             });
             detectorData.id = canonicalId;
         }
 
         if (!detectorData.name || typeof detectorData.name !== 'string') {
             detectorData.name = DetectorManager.humanizeDetectorName(canonicalId);
-            Logger.warn('DETECTOR', `[normalizeDetectorSchema] Missing name, using fallback (${source})`, {
+            Logger.debug('DETECTOR', `[normalizeDetectorSchema] Missing name, using fallback (${source})`, {
                 id: canonicalId,
                 name: detectorData.name
             });
@@ -180,6 +179,14 @@ class DetectorManager {
         if (!detectorData.version || typeof detectorData.version !== 'string') {
             detectorData.version = '0.0';
         }
+
+        const normalizedDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.normalizeDifficulty === 'function')
+            ? DetectionUtils.normalizeDifficulty(detectorData.difficulty)
+            : null;
+        const defaultDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.defaultDifficultyForCategory === 'function')
+            ? DetectionUtils.defaultDifficultyForCategory(categoryName || detectorData.category)
+            : 'Medium';
+        detectorData.difficulty = normalizedDifficulty || defaultDifficulty;
 
         if (!detectorData.detection || typeof detectorData.detection !== 'object') {
             Logger.warn('DETECTOR', `[normalizeDetectorSchema] Missing detection object (${source})`, {
@@ -445,7 +452,7 @@ class DetectorManager {
      * @param {string} detectorName - Detector name (cloudflare, hcaptcha, etc.)
      */
     async loadDetectorFile(categoryName, detectorName) {
-        const FETCH_TIMEOUT = 5000; // 5 second timeout per file
+        const FETCH_TIMEOUT = Constants.FETCH_TIMEOUT;
 
         try {
             const detectorPath = `detectors/${categoryName}/${detectorName}.json`;
@@ -610,6 +617,7 @@ class DetectorManager {
                     }
 
                     for (const [detectorKey, detector] of Object.entries(categoryDetectors)) {
+                        const originalDifficulty = detector?.difficulty;
                         if (detector?.detection) {
                             for (const methodData of Object.values(detector.detection)) {
                                 if (typeof methodData === 'string') {
@@ -637,9 +645,12 @@ class DetectorManager {
                         if (normalized.id !== detectorKey) {
                             needsResave = true;
                         }
+                        if (normalized.difficulty !== originalDifficulty) {
+                            needsResave = true;
+                        }
 
                         if (seenIds.has(normalized.id)) {
-                            Logger.warn('DETECTOR', '[loadFromStorage] Duplicate detector ID detected, skipping', {
+                            Logger.debug('DETECTOR', '[loadFromStorage] Duplicate detector ID, skipping', {
                                 id: normalized.id,
                                 category
                             });
@@ -855,6 +866,14 @@ class DetectorManager {
                 this.detectors[category] = {};
             }
 
+            const normalizedDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.normalizeDifficulty === 'function')
+                ? DetectionUtils.normalizeDifficulty(detector?.difficulty)
+                : null;
+            const defaultDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.defaultDifficultyForCategory === 'function')
+                ? DetectionUtils.defaultDifficultyForCategory(category || detector?.category)
+                : 'Medium';
+            detector.difficulty = normalizedDifficulty || defaultDifficulty;
+
             // Add timestamp in local time: YYYY-MM-DD HH:MM:SS
             const now = new Date();
             const year = now.getFullYear();
@@ -883,9 +902,6 @@ class DetectorManager {
     }
 }
 
-// Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = DetectorManager;
-} else if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
   window.DetectorManager = DetectorManager;
 }

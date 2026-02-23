@@ -4,6 +4,7 @@
   "author": "Scrapfly",
   "enabled": true,
   "category": "CAPTCHA",
+  "difficulty": "High",
   "lastUpdated": "2025-01-11",
   "version": "1.0",
   "website": "https://www.aliexpress.com/",

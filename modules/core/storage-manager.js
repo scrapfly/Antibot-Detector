@@ -334,7 +334,3 @@ if (typeof self !== 'undefined') {
     self.StorageManager = StorageManager;
 }
 
-// CommonJS export for compatibility with Node-based tooling.
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = StorageManager;
-}

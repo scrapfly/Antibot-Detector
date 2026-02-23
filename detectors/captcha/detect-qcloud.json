@@ -4,6 +4,7 @@
   "author": "Scrapfly",
   "enabled": true,
   "category": "CAPTCHA",
+  "difficulty": "High",
   "lastUpdated": "2024-10-21",
   "version": "1.0",
   "website": "https://cloud.tencent.com/product/tci",

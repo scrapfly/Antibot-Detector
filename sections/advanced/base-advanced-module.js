@@ -17,6 +17,21 @@
 Logger.ui('[BaseAdvancedModule] Loading...');
 
 class BaseAdvancedModule {
+    /** Display name map: moduleName → human-readable name for notifications */
+    static DISPLAY_NAMES = {
+        'akamai': 'Akamai',
+        'awswaf': 'AWS WAF',
+        'cloudflare': 'Cloudflare',
+        'datadome': 'DataDome',
+        'funcaptcha': 'FunCaptcha',
+        'geetest': 'Geetest',
+        'hcaptcha': 'hCaptcha',
+        'imperva': 'Imperva',
+        'recaptcha': 'reCAPTCHA',
+        'shapesecurity': 'Shape Security',
+        'turnstile': 'Turnstile'
+    };
+
     /**
      * Constructor
      * @param {object} detection - Detection result for current page
@@ -31,6 +46,7 @@ class BaseAdvancedModule {
         this.detection = detection;
         this.tabInfo = tabInfo;
         this.moduleName = moduleName;
+        this.displayName = BaseAdvancedModule.DISPLAY_NAMES[moduleName] || moduleName;
         this.captureHistoryPagination = null;
         this.currentCaptureHistory = [];
         this.isCapturing = false;
@@ -113,35 +129,20 @@ class BaseAdvancedModule {
     }
 
     /**
-     * Hook: Get notification configuration for capture start
-     * Override to customize the notification shown when capture starts
-     * @returns {object|null} Notification config { type, message } or null for custom handling
-     */
-    getStartNotification() {
-        // Default: simple notification
-        return {
-            type: 'info',
-            message: `${this.moduleName} capture started. Reload the page to trigger capture.`
-        };
-    }
-
-    /**
      * Hook: Called after capture successfully started
      * Override to show custom notifications, UI updates, etc.
      * @param {object} response - Response from START_CAPTURE message
      * @returns {Promise<void>}
      */
     async afterCaptureStart(response) {
-        // Default: show notification if config provided
-        const notifConfig = this.getStartNotification();
-        if (notifConfig) {
-            NotificationHelper.info(notifConfig.message);
+        if (response && (response.status === 'started' || response.status === 'already_capturing')) {
+            await AdvancedUtils.showCaptureStartNotification(this.displayName);
         }
     }
 
     /**
      * Start capturing (toggles between start/stop)
-     * Uses hooks for customization: beforeCapture(), getStartNotification(), afterCaptureStart()
+     * Uses hooks for customization: beforeCapture(), afterCaptureStart()
      */
     async startCapturing() {
         // If already capturing, stop instead
@@ -213,7 +214,7 @@ class BaseAdvancedModule {
         const btn = document.querySelector(`#${this.moduleName}StartCapture`);
         if (!btn) return;
 
-        const label = btn.querySelector('.tool-btn-label');
+        const label = btn.querySelector('.advanced-tool-label, .tool-btn-label');
         if (isCapturing) {
             btn.classList.add('capturing');
             if (label) label.textContent = 'Stop Capturing';
@@ -221,6 +222,267 @@ class BaseAdvancedModule {
             btn.classList.remove('capturing');
             if (label) label.textContent = 'Start Capturing';
         }
+    }
+
+    /**
+     * Resolve semantic icon tone for tool actions.
+     * @param {{id?:string,label?:string,kind?:string}} tool
+     * @returns {'blue'|'green'|'purple'|'red'}
+     */
+    resolveToolTone(tool = {}) {
+        const toolId = typeof tool.id === 'string' ? tool.id.toLowerCase() : '';
+        const toolLabel = typeof tool.label === 'string' ? tool.label.toLowerCase() : '';
+        const isCaptureAction = tool.kind === 'capture' || toolId.includes('startcapture');
+
+        if (isCaptureAction) {
+            return 'red';
+        }
+
+        if (toolId.includes('checkcookies') || toolLabel.includes('check cookies')) {
+            return 'green';
+        }
+
+        if (toolId.includes('extract') || toolLabel.includes('extract')) {
+            return 'purple';
+        }
+
+        return 'blue';
+    }
+
+    /**
+     * Render a normalized tools grid for Advanced modules.
+     * @param {Array<{id:string,label:string,iconSvg:string,kind?:'default'|'capture'}>} tools
+     * @param {{columns?:number, className?:string}} options
+     * @returns {string}
+     */
+    renderToolGrid(tools = [], options = {}) {
+        const columns = Number.isInteger(options.columns) && options.columns > 0 ? options.columns : 2;
+        const extraClass = options.className ? ` ${options.className}` : '';
+        const columnClass = `advanced-tool-grid--${columns}`;
+
+        const items = tools.map((tool) => {
+            const kind = tool.kind === 'capture' ? 'capture' : 'default';
+            const tone = this.resolveToolTone(tool);
+            return `
+                <button class="advanced-tool-card" id="${tool.id}" data-tool-kind="${kind}">
+                    <div class="advanced-tool-icon advanced-tool-icon--${tone}">
+                        ${tool.iconSvg}
+                    </div>
+                    <div class="advanced-tool-label">${tool.label}</div>
+                </button>
+            `;
+        }).join('');
+
+        return `<div class="advanced-tool-grid ${columnClass}${extraClass}">${items}</div>`;
+    }
+
+    /**
+     * Bind click actions for normalized tools.
+     * @param {Array<{id:string, handler?:Function, method?:Function}>} actions
+     */
+    bindToolActions(actions = []) {
+        actions.forEach(({ id, handler, method }) => {
+            if (!id) return;
+            const fn = typeof handler === 'function' ? handler : method;
+            if (typeof fn !== 'function') return;
+            const btn = document.querySelector(`#${id}`);
+            if (btn) {
+                btn.addEventListener('click', fn);
+            }
+        });
+    }
+
+    /**
+     * Create a standardized tool modal overlay.
+     * @param {object} options
+     * @param {number} options.zIndex
+     * @param {string} options.maxWidth
+     * @param {string} options.width
+     * @param {string} options.maxHeight
+     * @returns {HTMLDivElement}
+     */
+    createToolModal(options = {}) {
+        const {
+            zIndex = 10000,
+            maxWidth = '600px',
+            width = '90%',
+            maxHeight = '80vh'
+        } = options;
+
+        const modal = document.createElement('div');
+        modal.className = 'tool-modal';
+        modal.style.cssText = [
+            'position: fixed',
+            'top: 0',
+            'left: 0',
+            'right: 0',
+            'bottom: 0',
+            'background: rgba(0,0,0,0.5)',
+            'backdrop-filter: blur(2px)',
+            'display: flex',
+            'align-items: center',
+            'justify-content: center',
+            `z-index: ${zIndex}`,
+            'opacity: 0',
+            'transition: opacity 0.2s'
+        ].join('; ');
+
+        modal.dataset.modalMaxWidth = maxWidth;
+        modal.dataset.modalWidth = width;
+        modal.dataset.modalMaxHeight = maxHeight;
+
+        return modal;
+    }
+
+    /**
+     * Attach and fade in a tool modal.
+     * @param {HTMLElement} modal
+     */
+    showToolModal(modal) {
+        if (!modal) return;
+        if (!modal.parentNode) {
+            document.body.appendChild(modal);
+        }
+        setTimeout(() => {
+            modal.style.opacity = '1';
+        }, 10);
+    }
+
+    /**
+     * Fade out and remove a tool modal.
+     * @param {HTMLElement} modal
+     */
+    closeToolModal(modal) {
+        if (!modal) return;
+        modal.style.opacity = '0';
+        setTimeout(() => {
+            if (modal.parentNode) {
+                modal.remove();
+            }
+        }, 200);
+    }
+
+    /**
+     * Bind close button and overlay-close behavior for a tool modal.
+     * @param {HTMLElement} modal
+     * @param {object} options
+     * @param {string} options.closeSelector
+     * @param {boolean} options.closeOnOverlay
+     */
+    bindModalClose(modal, options = {}) {
+        if (!modal) return;
+
+        const {
+            closeSelector = '.advanced-modal-close-btn',
+            closeOnOverlay = true
+        } = options;
+
+        const close = () => this.closeToolModal(modal);
+
+        modal.querySelectorAll(closeSelector).forEach((btn) => {
+            btn.addEventListener('click', close);
+        });
+
+        if (closeOnOverlay) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    close();
+                }
+            });
+        }
+    }
+
+    /**
+     * Bind copy handlers for elements marked with data-copy.
+     * @param {HTMLElement} container
+     * @param {object} options
+     * @param {string} options.defaultMessage
+     * @param {string} options.selector
+     */
+    bindCopyValueHandlers(container, options = {}) {
+        if (!container) return;
+
+        const {
+            defaultMessage = 'Value copied',
+            selector = '.copy-value[data-copy], .clickable-copy-value[data-copy]'
+        } = options;
+
+        container.querySelectorAll(selector).forEach((element) => {
+            element.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const textToCopy = element.getAttribute('data-copy');
+                if (!textToCopy) return;
+
+                const notificationMessage = element.getAttribute('data-copy-message') || defaultMessage;
+                AdvancedUtils.copyToClipboard(textToCopy, element, { notificationMessage });
+            });
+        });
+    }
+
+    /**
+     * Build the standard "cookies found" summary row.
+     * @param {number} foundCount
+     * @param {number} totalCount
+     * @returns {string}
+     */
+    buildCookieStatusSummary(foundCount, totalCount) {
+        return `
+            <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-secondary); font-size: 13px;">Cookies Found:</span>
+                    <span style="color: var(--text-primary); font-weight: 500;">${foundCount}/${totalCount}</span>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * Build a simple script list section with badges.
+     * @param {object} options
+     * @param {Array} options.scripts
+     * @param {string} options.emptyText
+     * @param {Function} options.typeBadgeResolver
+     * @returns {string}
+     */
+    buildSimpleScriptListSection(options = {}) {
+        const {
+            scripts = [],
+            emptyText = 'No scripts found',
+            typeBadgeResolver = () => ({
+                label: 'Script',
+                color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+            })
+        } = options;
+
+        if (!Array.isArray(scripts) || scripts.length === 0) {
+            return `
+                <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
+                    <div style="font-size: 14px; color: var(--text-secondary);">${emptyText}</div>
+                </div>
+            `;
+        }
+
+        return `
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                ${scripts.map((script, idx) => {
+                    const { label, color } = typeBadgeResolver(script, idx) || {};
+                    const badgeLabel = label || 'Script';
+                    const badgeColor = color || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                    const url = script && script.url ? script.url : '';
+                    const safeUrl = AdvancedUtils.escapeHtml(url);
+                    return `
+                        <div style="background: var(--bg-tertiary); padding: 14px; border-radius: 6px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <span style="font-weight: 500;">Script ${idx + 1}</span>
+                                <span style="background: ${badgeColor}; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 500;">${badgeLabel}</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">URL</div>
+                            <div class="copy-value" data-copy="${safeUrl}" data-copy-message="URL copied" style="font-size: 12px; color: var(--text-primary); word-break: break-all; font-family: monospace; background: var(--bg-primary); padding: 8px; border-radius: 4px; cursor: pointer; transition: background 0.2s;" title="Click to copy">${safeUrl}</div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
     }
 
     // ========================================================================
@@ -351,12 +613,12 @@ class BaseAdvancedModule {
         return items.map((item) => {
             const { hostname, timestamp, id } = item;
             const timeAgo = this.getTimeAgo(timestamp);
-            const faviconUrl = `https://www.google.com/s2/favicons?domain=${hostname}`;
+            const faviconUrl = UrlUtils.getFaviconUrl(hostname);
 
             return `
                 <div class="capture-card" data-capture-id="${id}">
                     <div class="capture-card-top">
-                        <img src="${faviconUrl}" class="capture-favicon" alt="${hostname}" data-hide-on-error="true">
+                        <img src="${faviconUrl}" class="capture-favicon" alt="${hostname}" data-fallback="${UrlUtils.getDefaultFaviconUrl()}">
                         <div class="capture-info">
                             <div class="capture-hostname-row">
                                 <span class="capture-hostname">${hostname}</span>
@@ -401,11 +663,11 @@ class BaseAdvancedModule {
      * Setup expand button listeners for capture cards
      */
     setupExpandListeners() {
-        // Add error handlers for favicons (CSP-compliant)
-        document.querySelectorAll('.capture-favicon[data-hide-on-error]').forEach(img => {
+        // CSP-compliant image error fallback
+        document.querySelectorAll('img[data-fallback]').forEach(img => {
             img.addEventListener('error', function() {
-                this.style.display = 'none';
-            });
+                this.src = this.dataset.fallback;
+            }, { once: true });
         });
 
         const expandBtns = document.querySelectorAll('.capture-expand');
@@ -433,7 +695,7 @@ class BaseAdvancedModule {
      */
     setupCaptureHistoryPagination() {
         if (!this.currentCaptureHistory || this.currentCaptureHistory.length === 0) {
-            Logger.warn('UI', `[${this.moduleName}] Cannot setup pagination - no history items`);
+            Logger.debug('UI', `[${this.moduleName}] Cannot setup pagination - no history items`);
             return;
         }
 
@@ -466,7 +728,7 @@ class BaseAdvancedModule {
     renderCaptureHistoryPage(items) {
         const listContainer = document.querySelector(`#${this.moduleName}HistoryList`);
         if (!listContainer) {
-            Logger.warn('UI', `[${this.moduleName}] History list container not found`);
+            Logger.debug('UI', `[${this.moduleName}] History list container not found`);
             return;
         }
 
@@ -485,7 +747,7 @@ class BaseAdvancedModule {
      */
     renderCaptureDetailsContent(capture) {
         // Default implementation - shows basic capture info
-        const url = (capture.url || 'N/A').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const url = AdvancedUtils.escapeHtml(capture.url || 'N/A');
         const timestamp = new Date(capture.timestamp).toLocaleString();
 
         return `
@@ -655,46 +917,7 @@ class BaseAdvancedModule {
         }
 
         try {
-            const result = await chrome.storage.local.get(['scrapfly_advanced_history']);
-            let history = result.scrapfly_advanced_history || {};
-
-            // Handle legacy string format
-            if (typeof history === 'string') {
-                history = JSON.parse(history);
-            }
-
-            // MIGRATION: Convert old { items: [] } format if needed
-            if (history.items && Array.isArray(history.items)) {
-                Logger.ui(`[${this.moduleName}] Migrating old storage format during clear`);
-                const migratedHistory = {};
-
-                // Group items by type, excluding current module
-                for (const item of history.items) {
-                    if (!item.type || item.type === this.moduleName) continue;
-
-                    const moduleId = item.type;
-                    if (!migratedHistory[moduleId]) {
-                        migratedHistory[moduleId] = [];
-                    }
-
-                    migratedHistory[moduleId].push({
-                        id: item.id || `${moduleId}_${item.timestamp}`,
-                        timestamp: item.timestamp,
-                        url: item.url,
-                        data: item.captureData || item.data,
-                        expiresAt: item.expiresAt
-                    });
-                }
-
-                history = migratedHistory;
-            } else {
-                // NEW format: just delete this module's array
-                delete history[this.moduleName];
-            }
-
-            await chrome.storage.local.set({
-                scrapfly_advanced_history: history
-            });
+            await AdvancedHistoryStore.clear(this.moduleName);
 
             await this.renderCapturedDataSection();
             NotificationHelper.success(`${this.moduleName} capture history cleared`);
@@ -710,7 +933,7 @@ class BaseAdvancedModule {
     async renderCapturedDataSection() {
         const advancedContent = document.querySelector('#detectionToolsPanel');
         if (!advancedContent) {
-            Logger.warn('UI', `[${this.moduleName}] #detectionToolsPanel not found`);
+            Logger.debug('UI', `[${this.moduleName}] #detectionToolsPanel not found`);
             return;
         }
 
@@ -779,10 +1002,7 @@ class BaseAdvancedModule {
     }
 }
 
-// Export for use in popup
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = BaseAdvancedModule;
-} else if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
     window.BaseAdvancedModule = BaseAdvancedModule;
     Logger.ui('[BaseAdvancedModule] ✓ Loaded and exported to window.BaseAdvancedModule');
 }

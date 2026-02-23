@@ -234,7 +234,10 @@ DetectionModals.renderDetectionModalContent = function(detection) {
     else if (confidence >= 70) confidenceClass = 'confidence-medium';
 
     const difficultyInfo = this.getDifficultyInfo([detection], confidence);
-    const difficulty = detection.difficulty || difficultyInfo.difficulty;
+    const manualDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.normalizeDifficulty === 'function')
+      ? DetectionUtils.normalizeDifficulty(detection?.difficulty || detection?.detector?.difficulty)
+      : null;
+    const difficulty = manualDifficulty || difficultyInfo.difficulty;
 
     if (this.modalElements.icon) {
       this.modalElements.icon.innerHTML = this.getDetectorIcon(detection);

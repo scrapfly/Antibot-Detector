@@ -27,13 +27,6 @@ class Utils {
     }
   }
 
-  /**
-   * Invalidate settings cache (call when settings are updated)
-   */
-  static invalidateSettingsCache() {
-    // No-op: legacy cache removed, but callers still invoke this on settings change
-  }
-
   // ============================================================================
   // Detection Request Throttling
   // ============================================================================
@@ -45,7 +38,7 @@ class Utils {
    * @param {Map} recentRequests - Map to track recent requests (passed from caller)
    * @returns {boolean} true if should skip, false otherwise
    */
-  static shouldSkipDetection(tabId, threshold = 2000, recentRequests) {
+  static shouldSkipDetection(tabId, threshold = Constants.DETECTION_SKIP_THRESHOLD, recentRequests) {
     const lastRequest = recentRequests.get(tabId);
     const now = Date.now();
 
@@ -232,7 +225,7 @@ class Utils {
         if (chrome.runtime.lastError) {
           if (chrome.runtime.lastError.message &&
             chrome.runtime.lastError.message.includes('Extension context invalidated')) {
-            Logger.warn('UTIL', 'Scrapfly Content Script: Extension was reloaded');
+            Logger.debug('UTIL', 'Extension context invalidated (extension reloaded)');
             cleanupOrphanedScript();
           }
         }
@@ -431,10 +424,7 @@ class Utils {
 
 }
 
-// Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = Utils;
-} else if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
   window.Utils = Utils;
 } else if (typeof self !== 'undefined') {
   self.Utils = Utils;

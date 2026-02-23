@@ -20,8 +20,10 @@ importScripts(
     // Core utilities
     './modules/core/logger.js',
     './modules/core/badge-constants.js',
+    './modules/core/message-types.js',
     './modules/core/log-collector.js',
     './modules/core/ttl-map.js',
+    './modules/core/constants.js',
     './utils/format-utils.js',
     './utils/url-utils.js',
     './utils/detection-utils.js',
@@ -45,6 +47,7 @@ importScripts(
     './sections/settings/settings-runtime.js',
     // Interceptors
     './sections/advanced/base-interceptor-helpers.js',
+    './sections/advanced/advanced-history-store.js',
     './sections/advanced/modules/recaptcha/libs/pbf.js',
     './sections/advanced/modules/recaptcha/libs/message.browser.js',
     './sections/advanced/modules/recaptcha/recaptcha-interceptor.js',
@@ -77,27 +80,31 @@ importScripts(
 
 Logger.background('Logger initialized in BACKGROUND context');
 
-// ─── Network Data Stores (5 min TTL) ────────────────────────────────────────
+// ─── Network Data Stores ────────────────────────────────────────────────────
 
-const headersStore = new TTLMap(300000);
-const requestHeadersStore = new TTLMap(300000);
-const responseCookiesStore = new TTLMap(300000);
-const payloadStore = new TTLMap(300000);
-const networkUrlsStore = new TTLMap(300000);
+const headersStore = new TTLMap(Constants.NETWORK_DATA_TTL);
+const requestHeadersStore = new TTLMap(Constants.NETWORK_DATA_TTL);
+const responseCookiesStore = new TTLMap(Constants.NETWORK_DATA_TTL);
+const payloadStore = new TTLMap(Constants.NETWORK_DATA_TTL);
+const networkUrlsStore = new TTLMap(Constants.NETWORK_DATA_TTL);
 
-// ─── Advanced Capture States (30 min TTL, max 100) ──────────────────────────
+// ─── Advanced Capture States ────────────────────────────────────────────────
 
-const reCaptchaCaptureState = new TTLMap(1800000, 100);
-const akamaiCaptureState = new TTLMap(1800000, 100);
-const impervaCaptureState = new TTLMap(1800000, 100);
-const funcaptchaCaptureState = new TTLMap(1800000, 100);
+const reCaptchaCaptureState = new TTLMap(Constants.CAPTURE_STATE_TTL, Constants.CAPTURE_STATE_MAX_SIZE);
+const akamaiCaptureState = new TTLMap(Constants.CAPTURE_STATE_TTL, Constants.CAPTURE_STATE_MAX_SIZE);
+const impervaCaptureState = new TTLMap(Constants.CAPTURE_STATE_TTL, Constants.CAPTURE_STATE_MAX_SIZE);
+const funcaptchaCaptureState = new TTLMap(Constants.CAPTURE_STATE_TTL, Constants.CAPTURE_STATE_MAX_SIZE);
+const hcaptchaCaptureState = new TTLMap(Constants.CAPTURE_STATE_TTL, Constants.CAPTURE_STATE_MAX_SIZE);
+const shapesecurityCaptureState = new TTLMap(Constants.CAPTURE_STATE_TTL, Constants.CAPTURE_STATE_MAX_SIZE);
+const shapeSecurityExtractionState = new TTLMap(Constants.CAPTURE_STATE_TTL, Constants.CAPTURE_STATE_MAX_SIZE);
+const awsWafCaptureState = new TTLMap(Constants.CAPTURE_STATE_TTL, Constants.CAPTURE_STATE_MAX_SIZE);
 
 // ─── Detection Tracking ─────────────────────────────────────────────────────
 
-const recentDetectionRequests = new TTLMap(300000, 200);
-const activeDetections = new TTLMap(600000, 50);
-const interruptedDetections = new TTLMap(300000, 50);
-const detectionStates = new TTLMap(300000, 50);
+const recentDetectionRequests = new TTLMap(Constants.NETWORK_DATA_TTL, Constants.RECENT_REQUESTS_MAX_SIZE);
+const activeDetections = new TTLMap(Constants.ACTIVE_DETECTION_TTL, Constants.DETECTION_MAP_MAX_SIZE);
+const interruptedDetections = new TTLMap(Constants.NETWORK_DATA_TTL, Constants.DETECTION_MAP_MAX_SIZE);
+const detectionStates = new TTLMap(Constants.NETWORK_DATA_TTL, Constants.DETECTION_MAP_MAX_SIZE);
 
 // ─── Finalization Control ────────────────────────────────────────────────────
 
@@ -107,8 +114,6 @@ const batchProcessingFlags = new Map();
 // ─── Tab Tracking ────────────────────────────────────────────────────────────
 
 let currentActiveTab = null;
-const tabFocusTimestamps = new Map();
-const TAB_SWITCH_DEBOUNCE_MS = 500;
 
 // ─── Cache Tracking ─────────────────────────────────────────────────────────
 
@@ -122,11 +127,10 @@ const manuallyClearedCaches = new Set();
 // ─── Extension Enabled State Cache ──────────────────────────────────────────
 
 let cachedEnabledState = { value: true, timestamp: 0 };
-const ENABLED_CACHE_TTL = 5000;
 
 async function isExtensionEnabled() {
     const now = Date.now();
-    if (now - cachedEnabledState.timestamp < ENABLED_CACHE_TTL) {
+    if (now - cachedEnabledState.timestamp < Constants.ENABLED_CACHE_TTL) {
         return cachedEnabledState.value;
     }
     const result = await chrome.storage.local.get(['scrapfly_enabled']);

@@ -9,6 +9,13 @@ var reCaptchaCaptureStateRef = reCaptchaCaptureStateRef || null;
 var checkCookies = self.BaseInterceptorHelpers?.checkCookies;
 var saveToHistory = self.BaseInterceptorHelpers?.saveToHistory;
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
+var getCaptureState = self.BaseInterceptorHelpers?.getCaptureState;
+var clearCaptureTimeout = self.BaseInterceptorHelpers?.clearCaptureTimeout;
+var removeCaptureState = self.BaseInterceptorHelpers?.removeCaptureState;
+var showCaptureStarted = self.BaseInterceptorHelpers?.showCaptureStarted;
+var registerManagedListener = self.BaseInterceptorHelpers?.registerManagedListener;
+var removeManagedListener = self.BaseInterceptorHelpers?.removeManagedListener;
+var cleanupManagedListeners = self.BaseInterceptorHelpers?.cleanupManagedListeners;
 
 function reCaptchaInitializeInterceptor(captureState) {
     if (reCaptchaCaptureStateRef) {
@@ -29,7 +36,9 @@ async function reCaptchaStartCapture(tabId) {
         Logger.network('[reCAPTCHA] RECAPTCHA_START_CAPTURE received for tab:', tabId);
 
         // Check if actively capturing (not just if state exists)
-        const existingState = reCaptchaCaptureStateRef.get(tabId);
+        const existingState = (typeof getCaptureState === 'function')
+            ? getCaptureState(reCaptchaCaptureStateRef, tabId)
+            : reCaptchaCaptureStateRef.get(tabId);
         if (existingState && existingState.isCapturing) {
             Logger.network('[reCAPTCHA] Already actively capturing for this tab');
             return { status: 'already_capturing' };
@@ -38,7 +47,11 @@ async function reCaptchaStartCapture(tabId) {
         // Clean up old state if exists but not capturing
         if (existingState) {
             Logger.network('[reCAPTCHA] Cleaning up stale state from previous capture');
-            reCaptchaCaptureStateRef.delete(tabId);
+            if (typeof removeCaptureState === 'function') {
+                removeCaptureState(reCaptchaCaptureStateRef, tabId);
+            } else {
+                reCaptchaCaptureStateRef.delete(tabId);
+            }
         }
 
         // Get tab URL to track navigation changes and check cookies
@@ -83,12 +96,20 @@ async function reCaptchaStartCapture(tabId) {
         startRecaptchaInterception();
 
         // Show in-page notification using helper
-        if (showNotification) {
+        if (typeof showCaptureStarted === 'function') {
+            await showCaptureStarted(tabId, {
+                title: 'reCAPTCHA Monitoring Started',
+                message: 'Reload the page and solve a reCAPTCHA challenge to begin monitoring',
+                duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
+            }).catch(err => {
+                Logger.error('NETWORK', '[reCAPTCHA] Failed to show notification:', err);
+            });
+        } else if (showNotification) {
             await showNotification(tabId, {
                 type: 'capture',
-                title: 'reCAPTCHA Capture Active',
-                message: 'Reload the page and solve any reCAPTCHA to capture its data',
-                duration: 60000
+                title: 'reCAPTCHA Monitoring Started',
+                message: 'Reload the page and solve a reCAPTCHA challenge to begin monitoring',
+                duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
             }).catch(err => {
                 Logger.error('NETWORK', '[reCAPTCHA] Failed to show notification:', err);
             });
@@ -116,7 +137,9 @@ async function reCaptchaStartCapture(tabId) {
                 Logger.network('[reCAPTCHA] Page fully loaded');
 
                 // Check if capture is still active and not already completed
-                const currentState = reCaptchaCaptureStateRef.get(tabId);
+                const currentState = (typeof getCaptureState === 'function')
+                    ? getCaptureState(reCaptchaCaptureStateRef, tabId)
+                    : reCaptchaCaptureStateRef.get(tabId);
 
                 setTimeout(() => {
                     // Only show "Page Loaded" if still capturing and no data captured yet
@@ -147,10 +170,26 @@ async function reCaptchaStartCapture(tabId) {
 
         chrome.webNavigation.onCommitted.addListener(navigationListener);
         chrome.webNavigation.onCompleted.addListener(loadCompleteListener);
+        if (typeof registerManagedListener === 'function') {
+            registerManagedListener(
+                tabId,
+                'recaptcha-navigation-committed',
+                navigationListener,
+                chrome.webNavigation.onCommitted.removeListener.bind(chrome.webNavigation.onCommitted)
+            );
+            registerManagedListener(
+                tabId,
+                'recaptcha-navigation-completed',
+                loadCompleteListener,
+                chrome.webNavigation.onCompleted.removeListener.bind(chrome.webNavigation.onCompleted)
+            );
+        }
 
         // Auto-stop after 60 seconds
         const captureTimeout = setTimeout(async () => {
-            const captureState = reCaptchaCaptureStateRef.get(tabId);
+            const captureState = (typeof getCaptureState === 'function')
+                ? getCaptureState(reCaptchaCaptureStateRef, tabId)
+                : reCaptchaCaptureStateRef.get(tabId);
             if (captureState && captureState.isCapturing) {
                 if (captureState.captureInterval) {
                     clearInterval(captureState.captureInterval);
@@ -171,7 +210,14 @@ async function reCaptchaStartCapture(tabId) {
                 }
 
                 // Delete state completely to prevent blocking next capture
-                reCaptchaCaptureStateRef.delete(tabId);
+                if (typeof removeCaptureState === 'function') {
+                    removeCaptureState(reCaptchaCaptureStateRef, tabId);
+                } else {
+                    reCaptchaCaptureStateRef.delete(tabId);
+                }
+                if (typeof cleanupManagedListeners === 'function') {
+                    cleanupManagedListeners(tabId);
+                }
                 Logger.network('[reCAPTCHA] Deleted capture state after 60s timeout');
 
                 stopRecaptchaInterception();
@@ -189,10 +235,12 @@ async function reCaptchaStartCapture(tabId) {
                     }).catch(err => Logger.error('NETWORK', '[reCAPTCHA] Failed to show completion notification:', err));
                 }
             }
-        }, 60000);
+        }, Constants.CAPTURE_AUTO_STOP_TIMEOUT);
 
         // Store navigation listeners and timeout in capture state for cleanup
-        const state = reCaptchaCaptureStateRef.get(tabId);
+        const state = (typeof getCaptureState === 'function')
+            ? getCaptureState(reCaptchaCaptureStateRef, tabId)
+            : reCaptchaCaptureStateRef.get(tabId);
         if (state) {
             state.navigationListener = navigationListener;
             state.loadCompleteListener = loadCompleteListener;
@@ -216,7 +264,9 @@ function handleRecaptchaRequest(details) {
         type: details.type
     });
 
-    const state = captureState.get(details.tabId);
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(captureState, details.tabId)
+        : captureState.get(details.tabId);
     if (!state || !state.isCapturing) {
         return;
     }
@@ -290,13 +340,17 @@ function handleRecaptchaRequest(details) {
                 Logger.network('[reCAPTCHA] Both anchor and reload captured - triggering auto-stop');
 
                 setTimeout(async () => {
-                    const finalState = captureState.get(details.tabId);
+                    const finalState = (typeof getCaptureState === 'function')
+                        ? getCaptureState(captureState, details.tabId)
+                        : captureState.get(details.tabId);
                     if (!finalState || !finalState.isCapturing) {
                         return;
                     }
 
                     // Clear timeouts
-                    if (finalState.captureTimeout) {
+                    if (typeof clearCaptureTimeout === 'function') {
+                        clearCaptureTimeout(finalState);
+                    } else if (finalState.captureTimeout) {
                         clearTimeout(finalState.captureTimeout);
                     }
 
@@ -309,7 +363,11 @@ function handleRecaptchaRequest(details) {
                     finalState.results = results;
 
                     // Delete state completely to prevent blocking next capture
-                    captureState.delete(details.tabId);
+                    if (typeof removeCaptureState === 'function') {
+                        removeCaptureState(captureState, details.tabId);
+                    } else {
+                        captureState.delete(details.tabId);
+                    }
 
                     // Stop interception
                     stopRecaptchaInterception();
@@ -382,6 +440,14 @@ function startRecaptchaInterception() {
         { urls: ["*://*.google.com/recaptcha/*", "*://*.recaptcha.net/recaptcha/*"] },
         ["requestBody"]
     );
+    if (typeof registerManagedListener === 'function') {
+        registerManagedListener(
+            'global',
+            'recaptcha-webrequest',
+            recaptchaInterceptionListener,
+            chrome.webRequest.onBeforeRequest.removeListener.bind(chrome.webRequest.onBeforeRequest)
+        );
+    }
 
     Logger.network('[reCAPTCHA] Interception active');
 }
@@ -390,6 +456,9 @@ function stopRecaptchaInterception() {
     if (recaptchaInterceptionListener) {
         Logger.network('[reCAPTCHA] Stopping request interception...');
         chrome.webRequest.onBeforeRequest.removeListener(recaptchaInterceptionListener);
+        if (typeof removeManagedListener === 'function') {
+            removeManagedListener('global', 'recaptcha-webrequest');
+        }
         recaptchaInterceptionListener = null;
         Logger.network('[reCAPTCHA] Interception stopped');
     }
@@ -401,7 +470,7 @@ async function processCaptureData(state) {
     const results = [];
 
     if (!state.reloadData || state.reloadData.length === 0) {
-        Logger.warn('NETWORK', '[reCAPTCHA] No reload data captured');
+        Logger.debug('NETWORK', '[reCAPTCHA] No reload data captured');
         return results;
     }
 
@@ -503,7 +572,9 @@ async function reCaptchaStopCapture(tabId) {
     try {
         Logger.network('[reCAPTCHA] RECAPTCHA_STOP_CAPTURE received for tab:', tabId);
 
-        const stateStop = reCaptchaCaptureStateRef.get(tabId);
+        const stateStop = (typeof getCaptureState === 'function')
+            ? getCaptureState(reCaptchaCaptureStateRef, tabId)
+            : reCaptchaCaptureStateRef.get(tabId);
         if (!stateStop) {
             Logger.network('[reCAPTCHA] No capture state found for tab:', tabId);
             return { status: 'not_capturing', results: [], resultsCount: 0 };
@@ -515,6 +586,10 @@ async function reCaptchaStopCapture(tabId) {
         }
         if (stateStop.captureTimeout) {
             Logger.network('[reCAPTCHA] Clearing 60s timeout (manual stop)');
+        }
+        if (typeof clearCaptureTimeout === 'function') {
+            clearCaptureTimeout(stateStop);
+        } else if (stateStop.captureTimeout) {
             clearTimeout(stateStop.captureTimeout);
         }
 
@@ -584,7 +659,11 @@ async function reCaptchaStopCapture(tabId) {
         }
 
         // Delete capture state completely to prevent stale data
-        reCaptchaCaptureStateRef.delete(tabId);
+        if (typeof removeCaptureState === 'function') {
+            removeCaptureState(reCaptchaCaptureStateRef, tabId);
+        } else {
+            reCaptchaCaptureStateRef.delete(tabId);
+        }
 
         return { status: 'stopped', results: capturedResults, resultsCount: capturedResults.length };
     } catch (error) {
@@ -599,7 +678,9 @@ async function reCaptchaStopCapture(tabId) {
 function reCaptchaHandleCaptureTabUpdate(tabId, changeInfo, tab, chrome) {
     if (!reCaptchaCaptureStateRef) return;
 
-    const state = reCaptchaCaptureStateRef.get(tabId);
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(reCaptchaCaptureStateRef, tabId)
+        : reCaptchaCaptureStateRef.get(tabId);
     if (!state) return;
 
     // If URL changed (user navigated away), clear capture state
@@ -608,7 +689,11 @@ function reCaptchaHandleCaptureTabUpdate(tabId, changeInfo, tab, chrome) {
         if (state.captureInterval) {
             clearInterval(state.captureInterval);
         }
-        reCaptchaCaptureStateRef.delete(tabId);
+        if (typeof removeCaptureState === 'function') {
+            removeCaptureState(reCaptchaCaptureStateRef, tabId);
+        } else {
+            reCaptchaCaptureStateRef.delete(tabId);
+        }
         stopRecaptchaInterception();
         return;
     }
@@ -624,7 +709,7 @@ function reCaptchaHandleCaptureTabUpdate(tabId, changeInfo, tab, chrome) {
                 type: 'warning',
                 title: 'reCAPTCHA Capture - Step 2',
                 message: 'Now trigger or click the reCAPTCHA',
-                duration: 60000 - (Date.now() - state.startTime)
+                duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT - (Date.now() - state.startTime)
             }).catch(err => Logger.error('NETWORK', '[reCAPTCHA] Failed to show Step 2 notification:', err));
         }
     }
@@ -663,7 +748,9 @@ function reCaptchaHandleMessage(request, sendResponse, captureState) {
 
         case 'RECAPTCHA_GET_CAPTURE_STATE':
             const tabIdGet = request.tabId;
-            const stateGet = reCaptchaCaptureStateRef?.get(tabIdGet);
+            const stateGet = (typeof getCaptureState === 'function')
+                ? getCaptureState(reCaptchaCaptureStateRef, tabIdGet)
+                : reCaptchaCaptureStateRef?.get(tabIdGet);
             sendResponse({
                 isCapturing: stateGet?.isCapturing || false,
                 step: stateGet?.step || 0
@@ -672,7 +759,9 @@ function reCaptchaHandleMessage(request, sendResponse, captureState) {
 
         case 'RECAPTCHA_GET_CAPTURE_RESULTS':
             const tabIdResults = request.tabId;
-            const stateResults = reCaptchaCaptureStateRef?.get(tabIdResults);
+            const stateResults = (typeof getCaptureState === 'function')
+                ? getCaptureState(reCaptchaCaptureStateRef, tabIdResults)
+                : reCaptchaCaptureStateRef?.get(tabIdResults);
             if (stateResults && stateResults.results) {
                 sendResponse({
                     success: true,

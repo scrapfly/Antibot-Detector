@@ -83,6 +83,10 @@ Rules.prototype.setupMethodSettingsModal = function() {
         const fieldType = fieldActions?.dataset.fieldType || 'name';
         const methodItem = button.closest('.method-item');
         if (methodItem) {
+          const methodKey = methodItem.querySelector('.method-input')?.dataset.methodKey || '';
+          if (methodKey === 'window' && fieldType === 'value') {
+            return;
+          }
           this.openMethodSettingsModal(methodItem, fieldType);
         }
       }
@@ -126,6 +130,10 @@ Rules.prototype.setupMethodSettingsModal = function() {
             const methodItem = dropdown.closest('.method-item');
             if (methodItem) {
               this.updateMethodIndicators(methodItem);
+              const section = methodItem.closest('.method-section');
+              if (section) {
+                this.updateMethodSectionPagination(section);
+              }
             }
           }
 
@@ -197,7 +205,12 @@ Rules.prototype.setupMethodSettingsModal = function() {
             if (addValueBtn) addValueBtn.style.display = 'flex';
           } else {
             // Remove entire method item
+            const section = methodItem.closest('.method-section');
             methodItem.remove();
+            if (section) {
+              this.updateMethodSectionPagination(section);
+              this.updateAddPatternButtonState?.(section);
+            }
           }
         }
       }
@@ -220,10 +233,25 @@ Rules.prototype.setupMethodSettingsModal = function() {
         }
       }
 
+      // Handle method pagination controls
+      if (e.target.closest('.method-pagination-btn')) {
+        e.stopPropagation();
+        const paginationBtn = e.target.closest('.method-pagination-btn');
+        const section = paginationBtn.closest('.method-section');
+        if (section) {
+          const pageDelta = paginationBtn.classList.contains('prev') ? -1 : 1;
+          this.updateMethodSectionPagination(section, { pageDelta });
+        }
+        return;
+      }
+
       // Handle add method button
       if (e.target.closest('.add-method-btn')) {
         e.stopPropagation();
         const button = e.target.closest('.add-method-btn');
+        if (button.disabled) {
+          return;
+        }
         this.addNewMethodItem(button);
       }
 
@@ -241,9 +269,32 @@ Rules.prototype.setupMethodSettingsModal = function() {
           const section = header.closest('.method-section');
           if (section) {
             section.classList.toggle('collapsed');
+            this.updateMethodSectionPagination(section);
           }
         }
       }
+    });
+
+    // Keep filtered pagination in sync while editing method inputs.
+    document.addEventListener('input', (e) => {
+      if (!e.target.classList.contains('method-input')) return;
+
+      const methodItem = e.target.closest('.method-item');
+      if (methodItem && e.target.classList.contains('method-name') && e.target.value.trim()) {
+        methodItem.classList.remove('method-item-invalid');
+        e.target.classList.remove('method-input-invalid');
+        e.target.removeAttribute('aria-invalid');
+      }
+
+      const section = e.target.closest('.method-section');
+      if (!section) return;
+      const methodType = this.getMethodSectionType?.(section);
+      if (!methodType) return;
+      const activeSearch = this.methodPaginationState?.[methodType]?.searchQuery;
+      if (activeSearch) {
+        this.updateMethodSectionPagination(section);
+      }
+      this.updateAddPatternButtonState?.(section);
     });
   };
 
@@ -408,8 +459,15 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
     const valueFieldGroup = document.querySelector('#valueFieldOptionsGroup');
     const patternOptionsTitle = document.querySelector('#patternOptionsTitle');
 
+    // JS Hooks and Window have no pattern options — only show confidence
+    const noPatternOptions = methodKey === 'js_hooks' || methodKey === 'window';
+
     // Show/hide field groups based on which field's settings button was clicked
-    if (fieldType === 'value') {
+    if (noPatternOptions) {
+      // Hide all pattern option groups for js_hooks and window
+      if (nameFieldGroup) nameFieldGroup.style.display = 'none';
+      if (valueFieldGroup) valueFieldGroup.style.display = 'none';
+    } else if (fieldType === 'value') {
       // Show only value options
       if (nameFieldGroup) nameFieldGroup.style.display = 'none';
       if (valueFieldGroup) valueFieldGroup.style.display = 'block';
@@ -428,10 +486,6 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
           patternOptionsTitle.textContent = 'DOM Selector Matching';
         } else if (methodKey === 'payload') {
           patternOptionsTitle.textContent = 'Payload Text Matching';
-        } else if (methodKey === 'js_hooks') {
-          patternOptionsTitle.textContent = 'JS Hook Target Matching';
-        } else if (methodKey === 'window') {
-          patternOptionsTitle.textContent = 'Window Path Matching';
         } else {
           patternOptionsTitle.textContent = 'Name Field Matching';
         }

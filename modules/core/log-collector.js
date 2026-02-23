@@ -9,12 +9,12 @@
  *   window.LogCollector.disable()  // Stop collecting
  */
 class LogCollector {
-    constructor(maxLogs = 5000) {
-        this.MAX_SAFE_LOGS = 5000;
-        this.MAX_PERSISTED_LOGS = 1000;
+    constructor(maxLogs = Constants.LOG_COLLECTOR_MAX_LOGS) {
+        this.MAX_SAFE_LOGS = Constants.LOG_COLLECTOR_MAX_LOGS;
+        this.MAX_PERSISTED_LOGS = Constants.LOG_COLLECTOR_MAX_PERSISTED;
         // Keep this conservative: capturing logs is cheap, but printing them (and DevTools retaining
         // rich objects) can easily crash the browser when debug is enabled.
-        this.LOG_RATE_LIMIT_PER_SEC = 40;
+        this.LOG_RATE_LIMIT_PER_SEC = Constants.LOG_COLLECTOR_RATE_LIMIT;
         this.maxLogs = Math.min(Math.max(Number(maxLogs) || 5000, 100), this.MAX_SAFE_LOGS);
         // Ring buffer storage (O(1) append, no Array.shift())
         this.buffer = new Array(this.maxLogs);

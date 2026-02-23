@@ -653,9 +653,6 @@ class ColorManager {
   }
 }
 
-// Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = ColorManager;
-} else if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
   window.ColorManager = ColorManager;
 }

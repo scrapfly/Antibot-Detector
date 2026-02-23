@@ -9,7 +9,7 @@ class UpdateManager {
     static REMOTE_BASE_URL = 'https://raw.githubusercontent.com/scrapfly/Antibot-Detector/main/detectors';
 
     // Fetch timeout in milliseconds
-    static FETCH_TIMEOUT = 15000;
+    static FETCH_TIMEOUT = Constants.UPDATE_FETCH_TIMEOUT;
 
     // Storage keys
     static STORAGE_KEYS = {
@@ -93,7 +93,7 @@ class UpdateManager {
 
                 // Check interval
                 const lastCheck = settings.updates?.lastCheckTimestamp || 0;
-                const intervalMs = (settings.updates?.checkIntervalHours || 12) * 3600000;
+                const intervalMs = (settings.updates?.checkIntervalHours || Constants.DEFAULT_CACHE_EXPIRY_HOURS) * 3600000;
                 const now = Date.now();
 
                 if (now - lastCheck < intervalMs) {
@@ -115,7 +115,7 @@ class UpdateManager {
             // Add 30-second timeout to prevent hanging on slow networks
             const comparePromise = this.compareVersions(remoteIndex);
             const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('Update check timed out')), 30000)
+                setTimeout(() => reject(new Error('Update check timed out')), Constants.UPDATE_CHECK_TIMEOUT)
             );
             const { updates, incompatibleUpdates } = await Promise.race([comparePromise, timeoutPromise]);
 
@@ -335,6 +335,9 @@ class UpdateManager {
                     if (localDetector && typeof localDetector.enabled === 'boolean') {
                         remoteDetector.enabled = localDetector.enabled;
                     }
+                    if (localDetector && localDetector.difficulty !== undefined) {
+                        remoteDetector.difficulty = localDetector.difficulty;
+                    }
 
                     // Ensure category exists
                     if (!detectors[update.category]) {
@@ -425,7 +428,6 @@ class UpdateManager {
             await chrome.storage.local.set({
                 'scrapfly_settings': JSON.stringify(settings, null, 2)
             });
-            Utils.invalidateSettingsCache();
         } catch (error) {
             Logger.error('STORAGE', 'UpdateManager: Failed to update timestamp', error);
         }
@@ -505,7 +507,3 @@ if (typeof self !== 'undefined') {
     self.UpdateManager = UpdateManager;
 }
 
-// CommonJS export for compatibility with Node-based tooling.
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = UpdateManager;
-}

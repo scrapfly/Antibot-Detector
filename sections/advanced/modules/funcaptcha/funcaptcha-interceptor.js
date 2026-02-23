@@ -16,6 +16,13 @@ var funcaptchaNavigationListeners = funcaptchaNavigationListeners || new Map();
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
 var saveToHistory = self.BaseInterceptorHelpers?.saveToHistory;
 var cleanupNotifications = self.BaseInterceptorHelpers?.cleanupNotifications;
+var isCaptureStateReady = self.BaseInterceptorHelpers?.isCaptureStateReady;
+var getCaptureState = self.BaseInterceptorHelpers?.getCaptureState;
+var setCaptureTimeout = self.BaseInterceptorHelpers?.setCaptureTimeout;
+var clearCaptureTimeout = self.BaseInterceptorHelpers?.clearCaptureTimeout;
+var showCaptureStarted = self.BaseInterceptorHelpers?.showCaptureStarted;
+var registerManagedListener = self.BaseInterceptorHelpers?.registerManagedListener;
+var cleanupManagedListeners = self.BaseInterceptorHelpers?.cleanupManagedListeners;
 
 /**
  * Initialize interceptor with reference to capture state Map
@@ -35,8 +42,15 @@ function funcaptchaInitializeInterceptor(captureState) {
 async function funcaptchaStartCapture(tabId) {
     Logger.network('[FunCaptcha] Starting capture for tab:', tabId);
 
+    if (typeof isCaptureStateReady === 'function' && !isCaptureStateReady(funcaptchaCaptureStateRef)) {
+        Logger.error('NETWORK', '[FunCaptcha] Capture state map is not initialized');
+        return { status: 'error', error: 'Capture state not initialized' };
+    }
+
     // Check if already capturing
-    const existingState = funcaptchaCaptureStateRef.get(tabId);
+    const existingState = (typeof getCaptureState === 'function')
+        ? getCaptureState(funcaptchaCaptureStateRef, tabId)
+        : funcaptchaCaptureStateRef.get(tabId);
     if (existingState && existingState.isCapturing) {
         Logger.network('[FunCaptcha] Already capturing on this tab');
         return { status: 'already_capturing' };
@@ -59,13 +73,23 @@ async function funcaptchaStartCapture(tabId) {
     startFuncaptchaInterception(tabId);
 
     // Show page notification
-    if (typeof showNotification === 'function') {
+    if (typeof showCaptureStarted === 'function') {
+        try {
+            await showCaptureStarted(tabId, {
+                title: 'FunCaptcha Monitoring Started',
+                message: 'Reload the page to begin monitoring and trigger a FunCaptcha challenge (60s timeout)',
+                duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
+            });
+        } catch (error) {
+            Logger.network('[FunCaptcha] Notification error:', error.message);
+        }
+    } else if (typeof showNotification === 'function') {
         try {
             await showNotification(tabId, {
                 type: 'loading',
-                title: 'FunCaptcha Capture Active',
-                message: 'Please reload the page to trigger FunCaptcha challenge (60s timeout)',
-                duration: 60000
+                title: 'FunCaptcha Monitoring Started',
+                message: 'Reload the page to begin monitoring and trigger a FunCaptcha challenge (60s timeout)',
+                duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
             });
         } catch (error) {
             Logger.network('[FunCaptcha] Notification error:', error.message);
@@ -73,9 +97,15 @@ async function funcaptchaStartCapture(tabId) {
     }
 
     // Setup 60-second timeout
-    state.timeout = setTimeout(() => {
-        funcaptchaStopCapture(tabId, 'timeout');
-    }, 60000);
+    if (typeof setCaptureTimeout === 'function') {
+        setCaptureTimeout(funcaptchaCaptureStateRef, tabId, Constants.CAPTURE_AUTO_STOP_TIMEOUT, () => {
+            funcaptchaStopCapture(tabId, 'timeout');
+        });
+    } else {
+        state.timeout = setTimeout(() => {
+            funcaptchaStopCapture(tabId, 'timeout');
+        }, Constants.CAPTURE_AUTO_STOP_TIMEOUT);
+    }
 
     // Setup navigation listener for page load detection
     const navListener = (details) => {
@@ -93,6 +123,14 @@ async function funcaptchaStartCapture(tabId) {
     };
 
     chrome.webNavigation.onCommitted.addListener(navListener);
+    if (typeof registerManagedListener === 'function') {
+        registerManagedListener(
+            tabId,
+            'funcaptcha-nav-committed',
+            navListener,
+            chrome.webNavigation.onCommitted.removeListener.bind(chrome.webNavigation.onCommitted)
+        );
+    }
     funcaptchaNavigationListeners.set(tabId, navListener);
 
     return { status: 'started' };
@@ -113,6 +151,14 @@ function startFuncaptchaInterception(tabId) {
             { urls: ['*://*/fc/*/public_key/*'] },
             ['requestBody']
         );
+        if (typeof registerManagedListener === 'function') {
+            registerManagedListener(
+                tabId,
+                'funcaptcha-before-request',
+                funcaptchaInterceptionListener,
+                chrome.webRequest.onBeforeRequest.removeListener.bind(chrome.webRequest.onBeforeRequest)
+            );
+        }
         Logger.network('[FunCaptcha] Network interception started');
     } catch (error) {
         Logger.error('NETWORK', '[FunCaptcha] Failed to add network listener:', error.message);
@@ -123,7 +169,9 @@ function startFuncaptchaInterception(tabId) {
  * Handle FunCaptcha API request - extract capture data
  */
 function handleFuncaptchaRequest(details, tabId) {
-    const state = funcaptchaCaptureStateRef.get(tabId);
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(funcaptchaCaptureStateRef, tabId)
+        : funcaptchaCaptureStateRef.get(tabId);
     if (!state || !state.isCapturing) return;
 
     try {
@@ -180,14 +228,22 @@ function handleFuncaptchaRequest(details, tabId) {
 async function funcaptchaStopCapture(tabId, reason = 'manual') {
     Logger.network('[FunCaptcha] Stopping capture for tab:', tabId, 'reason:', reason);
 
-    const state = funcaptchaCaptureStateRef.get(tabId);
+    if (typeof cleanupManagedListeners === 'function') {
+        cleanupManagedListeners(tabId);
+    }
+
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(funcaptchaCaptureStateRef, tabId)
+        : funcaptchaCaptureStateRef.get(tabId);
     if (!state) {
         Logger.network('[FunCaptcha] No capture state found');
         return { status: 'no_capture' };
     }
 
     // Clean up timeout
-    if (state.timeout) {
+    if (typeof clearCaptureTimeout === 'function') {
+        clearCaptureTimeout(state);
+    } else if (state.timeout) {
         clearTimeout(state.timeout);
     }
 
@@ -273,7 +329,9 @@ async function funcaptchaStopCapture(tabId, reason = 'manual') {
  * Get current capture state
  */
 function funcaptchaGetCaptureState(tabId) {
-    const state = funcaptchaCaptureStateRef.get(tabId);
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(funcaptchaCaptureStateRef, tabId)
+        : funcaptchaCaptureStateRef.get(tabId);
     if (!state) {
         return { isCapturing: false, capturedCount: 0 };
     }

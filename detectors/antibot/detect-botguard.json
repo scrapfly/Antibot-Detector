@@ -4,6 +4,7 @@
   "author": "Scrapfly",
   "enabled": true,
   "category": "Anti-Bot",
+  "difficulty": "Medium",
   "lastUpdated": "2025-01-08 00:00:00",
   "version": "1.1",
   "website": "https://developers.google.com/recaptcha",

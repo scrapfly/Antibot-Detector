@@ -10,6 +10,12 @@ var checkCookies = self.BaseInterceptorHelpers?.checkCookies;
 var checkUrls = self.BaseInterceptorHelpers?.checkUrls;
 var saveToHistory = self.BaseInterceptorHelpers?.saveToHistory;
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
+var getCaptureState = self.BaseInterceptorHelpers?.getCaptureState;
+var setCaptureTimeout = self.BaseInterceptorHelpers?.setCaptureTimeout;
+var clearCaptureTimeout = self.BaseInterceptorHelpers?.clearCaptureTimeout;
+var removeCaptureState = self.BaseInterceptorHelpers?.removeCaptureState;
+var removeListenerIfIdle = self.BaseInterceptorHelpers?.removeListenerIfIdle;
+var showCaptureStarted = self.BaseInterceptorHelpers?.showCaptureStarted;
 
 /**
  * Initialize Imperva interceptor with capture state reference
@@ -66,19 +72,36 @@ function impervaStartCapture(tabId, captureUrl) {
     });
 
     // Auto-stop after 60 seconds
-    const state = impervaCaptureStateRef.get(tabId);
-    state.timeout = setTimeout(() => {
-        Logger.network(`[IMPERVA-CAPTURE] Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
-        impervaStopCapture(tabId);
-    }, 60000);
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(impervaCaptureStateRef, tabId)
+        : impervaCaptureStateRef.get(tabId);
+    if (typeof setCaptureTimeout === 'function') {
+        setCaptureTimeout(impervaCaptureStateRef, tabId, Constants.CAPTURE_AUTO_STOP_TIMEOUT, () => {
+            Logger.network(`[IMPERVA-CAPTURE] Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
+            impervaStopCapture(tabId);
+        });
+    } else if (state) {
+        state.timeout = setTimeout(() => {
+            Logger.network(`[IMPERVA-CAPTURE] Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
+            impervaStopCapture(tabId);
+        }, Constants.CAPTURE_AUTO_STOP_TIMEOUT);
+    }
 
     // Show in-page notification
-    if (showNotification) {
+    if (typeof showCaptureStarted === 'function') {
+        showCaptureStarted(tabId, {
+            title: 'Imperva Monitoring Started',
+            message: 'Reload the page to begin monitoring Imperva requests and cookies',
+            duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
+        }).catch(err => {
+            Logger.error('NETWORK', '[IMPERVA-CAPTURE] Failed to show notification:', err);
+        });
+    } else if (showNotification) {
         showNotification(tabId, {
             type: 'capture',
-            title: 'Imperva Capture Active',
-            message: 'Please reload the page to start monitoring',
-            duration: 60000 // Show for 60 seconds (until auto-stop)
+            title: 'Imperva Monitoring Started',
+            message: 'Reload the page to begin monitoring Imperva requests and cookies',
+            duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT // Show for 60 seconds (until auto-stop)
         }).catch(err => {
             Logger.error('NETWORK', '[IMPERVA-CAPTURE] Failed to show notification:', err);
         });
@@ -127,11 +150,20 @@ function impervaStartExtraction(tabId, url) {
     });
 
     // Auto-stop after 60 seconds
-    const state = impervaCaptureStateRef.get(tabId);
-    state.timeout = setTimeout(() => {
-        Logger.network(`[IMPERVA-EXTRACT] Auto-stopping extraction for tab ${tabId} (60s timeout reached)`);
-        impervaStopCapture(tabId);
-    }, 60000);
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(impervaCaptureStateRef, tabId)
+        : impervaCaptureStateRef.get(tabId);
+    if (typeof setCaptureTimeout === 'function') {
+        setCaptureTimeout(impervaCaptureStateRef, tabId, Constants.CAPTURE_AUTO_STOP_TIMEOUT, () => {
+            Logger.network(`[IMPERVA-EXTRACT] Auto-stopping extraction for tab ${tabId} (60s timeout reached)`);
+            impervaStopCapture(tabId);
+        });
+    } else if (state) {
+        state.timeout = setTimeout(() => {
+            Logger.network(`[IMPERVA-EXTRACT] Auto-stopping extraction for tab ${tabId} (60s timeout reached)`);
+            impervaStopCapture(tabId);
+        }, Constants.CAPTURE_AUTO_STOP_TIMEOUT);
+    }
 
     return { status: 'started' };
 }
@@ -145,7 +177,9 @@ function impervaStopCapture(tabId) {
     Logger.network('[IMPERVA-CAPTURE] ========== STOP CAPTURE ==========');
     Logger.network('[IMPERVA-CAPTURE] Tab ID:', tabId);
 
-    const state = impervaCaptureStateRef.get(tabId);
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(impervaCaptureStateRef, tabId)
+        : impervaCaptureStateRef.get(tabId);
     if (state) {
         Logger.network('[IMPERVA-CAPTURE] Capture Results:');
         Logger.network('[IMPERVA-CAPTURE]   reese84 found:', state.foundCookies.reese84);
@@ -172,16 +206,32 @@ function impervaStopCapture(tabId) {
             });
         }
 
-        if (state.timeout) {
+        if (typeof clearCaptureTimeout === 'function') {
+            clearCaptureTimeout(state);
+        } else if (state.timeout) {
             clearTimeout(state.timeout);
         }
-        impervaCaptureStateRef.delete(tabId);
+        if (typeof removeCaptureState === 'function') {
+            removeCaptureState(impervaCaptureStateRef, tabId);
+        } else {
+            impervaCaptureStateRef.delete(tabId);
+        }
     } else {
         Logger.network('[IMPERVA-CAPTURE] No capture state found for tab');
     }
 
     // If no more active captures, remove listener
-    if (impervaCaptureStateRef.size === 0 && impervaInterceptionListener) {
+    if (typeof removeListenerIfIdle === 'function') {
+        const removed = removeListenerIfIdle({
+            captureStateRef: impervaCaptureStateRef,
+            listenerRef: impervaInterceptionListener,
+            removeFn: chrome.webRequest.onBeforeRequest.removeListener.bind(chrome.webRequest.onBeforeRequest)
+        });
+        if (removed) {
+            impervaInterceptionListener = null;
+            Logger.network('[IMPERVA-CAPTURE] Removed request interceptor (no active captures)');
+        }
+    } else if (impervaCaptureStateRef.size === 0 && impervaInterceptionListener) {
         chrome.webRequest.onBeforeRequest.removeListener(impervaInterceptionListener);
         impervaInterceptionListener = null;
         Logger.network('[IMPERVA-CAPTURE] Removed request interceptor (no active captures)');
@@ -214,7 +264,9 @@ function impervaGetCaptureState(tabId) {
         };
     }
 
-    const state = impervaCaptureStateRef.get(tabId);
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(impervaCaptureStateRef, tabId)
+        : impervaCaptureStateRef.get(tabId);
     return {
         isCapturing: !!state,
         state: state || null
@@ -230,7 +282,9 @@ function impervaGetCaptureState(tabId) {
 function impervaHandleCaptureTabUpdate(tabId, changeInfo, tab) {
     if (!impervaCaptureStateRef) return;
 
-    const state = impervaCaptureStateRef.get(tabId);
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(impervaCaptureStateRef, tabId)
+        : impervaCaptureStateRef.get(tabId);
     if (!state) return;
 
     // If URL changed (user navigated to a different page), clear capture state
@@ -246,12 +300,28 @@ function impervaHandleCaptureTabUpdate(tabId, changeInfo, tab) {
                 Logger.network('[IMPERVA-CAPTURE] URL changed (navigation detected), clearing capture state for tab:', tabId);
                 Logger.network('[IMPERVA-CAPTURE] Old URL:', oldBase);
                 Logger.network('[IMPERVA-CAPTURE] New URL:', newBase);
-                if (state.timeout) {
+                if (typeof clearCaptureTimeout === 'function') {
+                    clearCaptureTimeout(state);
+                } else if (state.timeout) {
                     clearTimeout(state.timeout);
                 }
-                impervaCaptureStateRef.delete(tabId);
+                if (typeof removeCaptureState === 'function') {
+                    removeCaptureState(impervaCaptureStateRef, tabId);
+                } else {
+                    impervaCaptureStateRef.delete(tabId);
+                }
 
-                if (impervaCaptureStateRef.size === 0 && impervaInterceptionListener) {
+                if (typeof removeListenerIfIdle === 'function') {
+                    const removed = removeListenerIfIdle({
+                        captureStateRef: impervaCaptureStateRef,
+                        listenerRef: impervaInterceptionListener,
+                        removeFn: chrome.webRequest.onBeforeRequest.removeListener.bind(chrome.webRequest.onBeforeRequest)
+                    });
+                    if (removed) {
+                        impervaInterceptionListener = null;
+                        Logger.network('[IMPERVA-CAPTURE] Removed request interceptor (no active captures)');
+                    }
+                } else if (impervaCaptureStateRef.size === 0 && impervaInterceptionListener) {
                     chrome.webRequest.onBeforeRequest.removeListener(impervaInterceptionListener);
                     impervaInterceptionListener = null;
                     Logger.network('[IMPERVA-CAPTURE] Removed request interceptor (no active captures)');
@@ -282,7 +352,9 @@ function impervaHandleCaptureTabUpdate(tabId, changeInfo, tab) {
  */
 async function checkImpervaCookies(tabId, url) {
     try {
-        const state = impervaCaptureStateRef.get(tabId);
+        const state = (typeof getCaptureState === 'function')
+            ? getCaptureState(impervaCaptureStateRef, tabId)
+            : impervaCaptureStateRef.get(tabId);
         if (!state) return;
 
         // Use checkCookies helper instead of manual chrome.cookies.getAll
@@ -343,7 +415,9 @@ async function checkImpervaCookies(tabId, url) {
  * @param {number} tabId - Tab ID
  */
 function checkAndCompleteCapture(tabId) {
-    const state = impervaCaptureStateRef.get(tabId);
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(impervaCaptureStateRef, tabId)
+        : impervaCaptureStateRef.get(tabId);
     if (!state || state.waitingForReload) return;
 
     // Check if we have any meaningful data
@@ -451,16 +525,34 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
         // Clean up capture state
         Logger.network('[IMPERVA-CAPTURE] Step 7: Cleaning up capture state for tab:', tabId);
         if (impervaCaptureStateRef && impervaCaptureStateRef.has(tabId)) {
-            const state = impervaCaptureStateRef.get(tabId);
-            if (state && state.timeout) {
+            const state = (typeof getCaptureState === 'function')
+                ? getCaptureState(impervaCaptureStateRef, tabId)
+                : impervaCaptureStateRef.get(tabId);
+            if (typeof clearCaptureTimeout === 'function') {
+                clearCaptureTimeout(state);
+            } else if (state && state.timeout) {
                 clearTimeout(state.timeout);
             }
-            impervaCaptureStateRef.delete(tabId);
+            if (typeof removeCaptureState === 'function') {
+                removeCaptureState(impervaCaptureStateRef, tabId);
+            } else {
+                impervaCaptureStateRef.delete(tabId);
+            }
             Logger.network('[IMPERVA-CAPTURE] Capture state cleared');
         }
 
         // If no more active captures, remove listener
-        if (impervaCaptureStateRef && impervaCaptureStateRef.size === 0 && impervaInterceptionListener) {
+        if (impervaCaptureStateRef && typeof removeListenerIfIdle === 'function') {
+            const removed = removeListenerIfIdle({
+                captureStateRef: impervaCaptureStateRef,
+                listenerRef: impervaInterceptionListener,
+                removeFn: chrome.webRequest.onBeforeRequest.removeListener.bind(chrome.webRequest.onBeforeRequest)
+            });
+            if (removed) {
+                impervaInterceptionListener = null;
+                Logger.network('[IMPERVA-CAPTURE] All captures stopped - listener removed');
+            }
+        } else if (impervaCaptureStateRef && impervaCaptureStateRef.size === 0 && impervaInterceptionListener) {
             chrome.webRequest.onBeforeRequest.removeListener(impervaInterceptionListener);
             impervaInterceptionListener = null;
             Logger.network('[IMPERVA-CAPTURE] All captures stopped - listener removed');
@@ -482,7 +574,11 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
 
         // Clean up on error
         if (impervaCaptureStateRef && impervaCaptureStateRef.has(tabId)) {
-            impervaCaptureStateRef.delete(tabId);
+            if (typeof removeCaptureState === 'function') {
+                removeCaptureState(impervaCaptureStateRef, tabId);
+            } else {
+                impervaCaptureStateRef.delete(tabId);
+            }
         }
     }
 }
@@ -549,10 +645,16 @@ async function handleImpervaExtractionCompleted(tabId, extractionState) {
         });
 
         // Clean up extraction state
-        if (extractionState.timeout) {
+        if (typeof clearCaptureTimeout === 'function') {
+            clearCaptureTimeout(extractionState);
+        } else if (extractionState.timeout) {
             clearTimeout(extractionState.timeout);
         }
-        impervaCaptureStateRef.delete(tabId);
+        if (typeof removeCaptureState === 'function') {
+            removeCaptureState(impervaCaptureStateRef, tabId);
+        } else {
+            impervaCaptureStateRef.delete(tabId);
+        }
 
         Logger.network('[IMPERVA-EXTRACT] ========== EXTRACTION COMPLETED SUCCESSFULLY ==========');
     } catch (error) {
@@ -561,7 +663,11 @@ async function handleImpervaExtractionCompleted(tabId, extractionState) {
 
         // Clean up on error
         if (impervaCaptureStateRef && impervaCaptureStateRef.has(tabId)) {
-            impervaCaptureStateRef.delete(tabId);
+            if (typeof removeCaptureState === 'function') {
+                removeCaptureState(impervaCaptureStateRef, tabId);
+            } else {
+                impervaCaptureStateRef.delete(tabId);
+            }
         }
     }
 }
@@ -573,7 +679,9 @@ function setupImpervaInterceptor() {
     Logger.network('[IMPERVA-CAPTURE] Setting up request interceptor');
 
     impervaInterceptionListener = (details) => {
-        const state = impervaCaptureStateRef.get(details.tabId);
+        const state = (typeof getCaptureState === 'function')
+            ? getCaptureState(impervaCaptureStateRef, details.tabId)
+            : impervaCaptureStateRef.get(details.tabId);
         if (!state) return;
 
         // If waiting for reload, don't monitor yet
@@ -667,7 +775,9 @@ function setupImpervaInterceptor() {
                         // Auto-complete extraction when we have challenge data
                         Logger.network('[IMPERVA-EXTRACT] Challenge data captured, completing extraction...');
                         setTimeout(() => {
-                            const currentState = impervaCaptureStateRef.get(details.tabId);
+                            const currentState = (typeof getCaptureState === 'function')
+                                ? getCaptureState(impervaCaptureStateRef, details.tabId)
+                                : impervaCaptureStateRef.get(details.tabId);
                             if (currentState && currentState.extractMode) {
                                 handleImpervaExtractionCompleted(details.tabId, currentState);
                             }

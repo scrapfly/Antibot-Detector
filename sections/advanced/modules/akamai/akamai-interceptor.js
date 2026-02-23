@@ -9,6 +9,14 @@ var akamaiCaptureStateRef = akamaiCaptureStateRef || null;
 var checkCookies = self.BaseInterceptorHelpers?.checkCookies;
 var saveToHistory = self.BaseInterceptorHelpers?.saveToHistory;
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
+var isCaptureStateReady = self.BaseInterceptorHelpers?.isCaptureStateReady;
+var getCaptureState = self.BaseInterceptorHelpers?.getCaptureState;
+var setCaptureTimeout = self.BaseInterceptorHelpers?.setCaptureTimeout;
+var clearCaptureTimeout = self.BaseInterceptorHelpers?.clearCaptureTimeout;
+var removeCaptureState = self.BaseInterceptorHelpers?.removeCaptureState;
+var removeListenerIfIdle = self.BaseInterceptorHelpers?.removeListenerIfIdle;
+var handleUrlChangeAbort = self.BaseInterceptorHelpers?.handleUrlChangeAbort;
+var showCaptureStarted = self.BaseInterceptorHelpers?.showCaptureStarted;
 
 /**
  * Initialize Akamai interceptor with capture state reference
@@ -61,19 +69,34 @@ function akamaiStartCapture(tabId, captureUrl) {
     });
 
     // Auto-stop after 60 seconds
-    const state = akamaiCaptureStateRef.get(tabId);
-    state.timeout = setTimeout(() => {
-        Logger.network(`[Akamai Debug] Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
-        akamaiStopCapture(tabId);
-    }, 60000);
+    if (typeof setCaptureTimeout === 'function') {
+        setCaptureTimeout(akamaiCaptureStateRef, tabId, Constants.CAPTURE_AUTO_STOP_TIMEOUT, () => {
+            Logger.network(`[Akamai Debug] Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
+            akamaiStopCapture(tabId);
+        });
+    } else {
+        const state = akamaiCaptureStateRef.get(tabId);
+        state.timeout = setTimeout(() => {
+            Logger.network(`[Akamai Debug] Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
+            akamaiStopCapture(tabId);
+        }, Constants.CAPTURE_AUTO_STOP_TIMEOUT);
+    }
 
     // Show standardized in-page notification
-    if (showNotification) {
+    if (typeof showCaptureStarted === 'function') {
+        showCaptureStarted(tabId, {
+            title: 'Akamai Monitoring Started',
+            message: 'Reload the page to begin monitoring for sensor data and request details',
+            duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
+        }).catch(err => {
+            Logger.error('NETWORK', '[AKAMAI-CAPTURE] Failed to show notification:', err);
+        });
+    } else if (showNotification) {
         showNotification(tabId, {
             type: 'capture',
-            title: 'Akamai Capture Active',
-            message: 'Reload the page to capture sensor data and request details',
-            duration: 60000
+            title: 'Akamai Monitoring Started',
+            message: 'Reload the page to begin monitoring for sensor data and request details',
+            duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
             Logger.error('NETWORK', '[AKAMAI-CAPTURE] Failed to show notification:', err);
         });
@@ -91,23 +114,39 @@ function akamaiStopCapture(tabId) {
     Logger.network('[AKAMAI-CAPTURE] ========== STOP CAPTURE ==========');
     Logger.network('[AKAMAI-CAPTURE] Tab ID:', tabId);
 
-    const state = akamaiCaptureStateRef.get(tabId);
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(akamaiCaptureStateRef, tabId)
+        : akamaiCaptureStateRef.get(tabId);
     if (state) {
         Logger.network('[AKAMAI-CAPTURE] Capture Results:');
         Logger.network('[AKAMAI-CAPTURE]   sensor_data captured:', !!state.sensorData);
         Logger.network('[AKAMAI-CAPTURE]   endpoint:', state.endpoint || 'NONE');
         Logger.network('[AKAMAI-CAPTURE]   duration:', ((Date.now() - state.timestamp) / 1000).toFixed(2) + 's');
 
-        if (state.timeout) {
-            clearTimeout(state.timeout);
+        if (typeof removeCaptureState === 'function') {
+            removeCaptureState(akamaiCaptureStateRef, tabId);
+        } else {
+            if (state.timeout) {
+                clearTimeout(state.timeout);
+            }
+            akamaiCaptureStateRef.delete(tabId);
         }
-        akamaiCaptureStateRef.delete(tabId);
     } else {
         Logger.network('[AKAMAI-CAPTURE] No capture state found for tab');
     }
 
     // If no more active captures, remove listener
-    if (akamaiCaptureStateRef.size === 0 && akamaiInterceptionListener) {
+    if (typeof removeListenerIfIdle === 'function') {
+        const removed = removeListenerIfIdle({
+            captureStateRef: akamaiCaptureStateRef,
+            listenerRef: akamaiInterceptionListener,
+            removeFn: chrome.webRequest.onBeforeRequest.removeListener
+        });
+        if (removed) {
+            akamaiInterceptionListener = null;
+            Logger.network('[AKAMAI-CAPTURE] Removed request interceptor (no active captures)');
+        }
+    } else if (akamaiCaptureStateRef.size === 0 && akamaiInterceptionListener) {
         chrome.webRequest.onBeforeRequest.removeListener(akamaiInterceptionListener);
         akamaiInterceptionListener = null;
         Logger.network('[AKAMAI-CAPTURE] Removed request interceptor (no active captures)');
@@ -124,7 +163,14 @@ function akamaiStopCapture(tabId) {
  * @returns {object} Capture state
  */
 function akamaiGetCaptureState(tabId) {
-    // Check if interceptor is initialized
+    if (typeof isCaptureStateReady === 'function' && !isCaptureStateReady(akamaiCaptureStateRef)) {
+        Logger.network('[AKAMAI-CAPTURE] CaptureStateRef is null, returning default state');
+        return {
+            isCapturing: false,
+            state: null
+        };
+    }
+
     if (!akamaiCaptureStateRef) {
         Logger.network('[AKAMAI-CAPTURE] CaptureStateRef is null, returning default state');
         return {
@@ -133,7 +179,6 @@ function akamaiGetCaptureState(tabId) {
         };
     }
 
-    // Check if it's a valid Map
     if (typeof akamaiCaptureStateRef.get !== 'function') {
         Logger.error('NETWORK', '[Akamai] CaptureStateRef is not a Map:', typeof akamaiCaptureStateRef);
         return {
@@ -142,7 +187,9 @@ function akamaiGetCaptureState(tabId) {
         };
     }
 
-    const state = akamaiCaptureStateRef.get(tabId);
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(akamaiCaptureStateRef, tabId)
+        : akamaiCaptureStateRef.get(tabId);
     return {
         isCapturing: !!state,
         state: state || null
@@ -161,22 +208,40 @@ function akamaiHandleCaptureTabUpdate(tabId, changeInfo, tab) {
     // Check if captureStateRef is initialized first
     if (!akamaiCaptureStateRef) return;
 
-    const state = akamaiCaptureStateRef.get(tabId);
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(akamaiCaptureStateRef, tabId)
+        : akamaiCaptureStateRef.get(tabId);
     if (!state) return;
 
     // If URL changed (user navigated away), clear capture state
-    if (changeInfo.url && state.captureUrl && changeInfo.url !== state.captureUrl) {
+    if (typeof handleUrlChangeAbort === 'function') {
+        const aborted = handleUrlChangeAbort({
+            tabId,
+            changeInfo,
+            state,
+            captureStateRef: akamaiCaptureStateRef,
+            listenerRef: akamaiInterceptionListener,
+            removeFn: chrome.webRequest.onBeforeRequest.removeListener,
+            loggerPrefix: 'AKAMAI-CAPTURE'
+        });
+        if (aborted && akamaiCaptureStateRef.size === 0) {
+            akamaiInterceptionListener = null;
+            Logger.network('[AKAMAI-CAPTURE] Removed request interceptor (no active captures)');
+        }
+        if (aborted) {
+            return;
+        }
+    } else if (changeInfo.url && state.captureUrl && changeInfo.url !== state.captureUrl) {
         Logger.network('[AKAMAI-CAPTURE] URL changed, clearing capture state for tab:', tabId);
         if (state.timeout) {
             clearTimeout(state.timeout);
         }
         akamaiCaptureStateRef.delete(tabId);
 
-        // If no more active captures, remove listener
         if (akamaiCaptureStateRef.size === 0 && akamaiInterceptionListener) {
             chrome.webRequest.onBeforeRequest.removeListener(akamaiInterceptionListener);
             akamaiInterceptionListener = null;
-            Logger.network('[AKAMAI-CAPTURE] Removed request interceptor (no active captures');
+            Logger.network('[AKAMAI-CAPTURE] Removed request interceptor (no active captures)');
         }
         return;
     }
@@ -263,16 +328,30 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
         // Clean up capture state
         Logger.network('[AKAMAI-CAPTURE] Step 7: Cleaning up capture state for tab:', tabId);
         if (akamaiCaptureStateRef && akamaiCaptureStateRef.has(tabId)) {
-            const state = akamaiCaptureStateRef.get(tabId);
-            if (state && state.timeout) {
-                clearTimeout(state.timeout);
+            if (typeof removeCaptureState === 'function') {
+                removeCaptureState(akamaiCaptureStateRef, tabId);
+            } else {
+                const state = akamaiCaptureStateRef.get(tabId);
+                if (state && state.timeout) {
+                    clearTimeout(state.timeout);
+                }
+                akamaiCaptureStateRef.delete(tabId);
             }
-            akamaiCaptureStateRef.delete(tabId);
             Logger.network('[AKAMAI-CAPTURE] Capture state cleared');
         }
 
         // If no more active captures, remove listener
-        if (akamaiCaptureStateRef && akamaiCaptureStateRef.size === 0 && akamaiInterceptionListener) {
+        if (akamaiCaptureStateRef && typeof removeListenerIfIdle === 'function') {
+            const removed = removeListenerIfIdle({
+                captureStateRef: akamaiCaptureStateRef,
+                listenerRef: akamaiInterceptionListener,
+                removeFn: chrome.webRequest.onBeforeRequest.removeListener
+            });
+            if (removed) {
+                akamaiInterceptionListener = null;
+                Logger.network('[AKAMAI-CAPTURE] All captures stopped - listener removed');
+            }
+        } else if (akamaiCaptureStateRef && akamaiCaptureStateRef.size === 0 && akamaiInterceptionListener) {
             chrome.webRequest.onBeforeRequest.removeListener(akamaiInterceptionListener);
             akamaiInterceptionListener = null;
             Logger.network('[AKAMAI-CAPTURE] All captures stopped - listener removed');
@@ -311,7 +390,11 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
 
         // Clean up on error
         if (akamaiCaptureStateRef && akamaiCaptureStateRef.has(tabId)) {
-            akamaiCaptureStateRef.delete(tabId);
+            if (typeof removeCaptureState === 'function') {
+                removeCaptureState(akamaiCaptureStateRef, tabId);
+            } else {
+                akamaiCaptureStateRef.delete(tabId);
+            }
         }
     }
 }
@@ -373,15 +456,31 @@ async function akamaiStartExtraction(tabId) {
             results: null,
             waitingForReload: false,  // Don't wait for reload in extraction mode
             extractedData: null,
-            timeout: setTimeout(() => {
-                // Auto-stop after 30 seconds
+            timeout: null
+        });
+        if (typeof setCaptureTimeout === 'function') {
+            setCaptureTimeout(akamaiCaptureStateRef, tabId, 30000, () => {
                 const state = akamaiCaptureStateRef.get(tabId);
                 if (state && state.extractMode) {
+                    if (typeof removeCaptureState === 'function') {
+                        removeCaptureState(akamaiCaptureStateRef, tabId);
+                    } else {
+                        akamaiCaptureStateRef.delete(tabId);
+                    }
+                    Logger.network('[AKAMAI-EXTRACT] Auto-stopped after 30s timeout');
+                }
+            });
+        } else {
+            const state = akamaiCaptureStateRef.get(tabId);
+            state.timeout = setTimeout(() => {
+                const currentState = akamaiCaptureStateRef.get(tabId);
+                if (currentState && currentState.extractMode) {
                     akamaiCaptureStateRef.delete(tabId);
                     Logger.network('[AKAMAI-EXTRACT] Auto-stopped after 30s timeout');
                 }
-            }, 30000)
-        });
+            }, 30000);
+            akamaiCaptureStateRef.set(tabId, state);
+        }
         Logger.network('[AKAMAI-EXTRACT] Extraction mode enabled for tab:', tabId);
 
         // Reload the page
@@ -437,13 +536,20 @@ async function akamaiHandleExtractionCompleted(tabId, extractedData) {
         // Stop capture
         Logger.network('[AKAMAI-EXTRACT] Step 1: Stopping capture state...');
         if (akamaiCaptureStateRef) {
-            const state = akamaiCaptureStateRef.get(tabId);
+            const state = (typeof getCaptureState === 'function')
+                ? getCaptureState(akamaiCaptureStateRef, tabId)
+                : akamaiCaptureStateRef.get(tabId);
             Logger.network('[AKAMAI-EXTRACT] Current state:', state);
-            if (state && state.timeout) {
-                clearTimeout(state.timeout);
+            if (typeof removeCaptureState === 'function') {
+                removeCaptureState(akamaiCaptureStateRef, tabId);
                 Logger.network('[AKAMAI-EXTRACT] Timeout cleared');
+            } else {
+                if (state && state.timeout) {
+                    clearTimeout(state.timeout);
+                    Logger.network('[AKAMAI-EXTRACT] Timeout cleared');
+                }
+                akamaiCaptureStateRef.delete(tabId);
             }
-            akamaiCaptureStateRef.delete(tabId);
             Logger.network('[AKAMAI-EXTRACT] State deleted for tab:', tabId);
         }
 
@@ -467,7 +573,11 @@ async function akamaiHandleExtractionCompleted(tabId, extractedData) {
 
         // Clean up on error
         if (akamaiCaptureStateRef && akamaiCaptureStateRef.has(tabId)) {
-            akamaiCaptureStateRef.delete(tabId);
+            if (typeof removeCaptureState === 'function') {
+                removeCaptureState(akamaiCaptureStateRef, tabId);
+            } else {
+                akamaiCaptureStateRef.delete(tabId);
+            }
         }
     }
 }
@@ -728,7 +838,11 @@ function setupAkamaiInterceptor() {
                     });
 
                     // Clear the capture state
-                    akamaiCaptureStateRef.delete(details.tabId);
+                    if (typeof removeCaptureState === 'function') {
+                        removeCaptureState(akamaiCaptureStateRef, details.tabId);
+                    } else {
+                        akamaiCaptureStateRef.delete(details.tabId);
+                    }
                     Logger.network('[AKAMAI-EXTRACT] ========== EXTRACTION COMPLETE ==========');
                 }
                 return;
@@ -759,7 +873,9 @@ function setupAkamaiInterceptor() {
 
                 // Auto-stop capture after getting sensor data
                 Logger.network('[AKAMAI-CAPTURE] Auto-stopping capture (data captured)');
-                if (state.timeout) {
+                if (typeof clearCaptureTimeout === 'function') {
+                    clearCaptureTimeout(state);
+                } else if (state.timeout) {
                     clearTimeout(state.timeout);
                 }
 

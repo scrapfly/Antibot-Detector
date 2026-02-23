@@ -220,7 +220,7 @@ function checkUrls(urls, config = {}) {
                             // Merge params (last match wins for duplicate keys)
                             Object.assign(result.params, params);
                         } catch (e) {
-                            Logger.warn('UI', '[BaseInterceptor] Failed to parse URL for params:', url, e);
+                            Logger.debug('UI', '[BaseInterceptor] Failed to parse URL for params:', url, e);
                         }
                     }
 
@@ -231,7 +231,7 @@ function checkUrls(urls, config = {}) {
                             const fullPath = urlObj.pathname + urlObj.search + urlObj.hash;
                             result.paths.push(fullPath);
                         } catch (e) {
-                            Logger.warn('UI', '[BaseInterceptor] Failed to parse URL for path:', url, e);
+                            Logger.debug('UI', '[BaseInterceptor] Failed to parse URL for path:', url, e);
                         }
                     }
                 }
@@ -292,70 +292,15 @@ async function saveToHistory(tabId, captureData, options = {}) {
         }
 
         const captureHostname = hostname || new URL(tab.url).hostname;
-
-        // Load existing history
-        const result = await chrome.storage.local.get(['scrapfly_advanced_history']);
-        let history = result.scrapfly_advanced_history || {};
-
-        // MIGRATION: Convert old { items: [] } format to new { moduleId: [] } format
-        if (history.items && Array.isArray(history.items)) {
-            Logger.ui('[BaseInterceptor] Migrating old storage format to new format');
-            const migratedHistory = {};
-
-            // Group items by type (moduleId)
-            for (const item of history.items) {
-                if (!item.type) continue;
-
-                const moduleId = item.type;
-                if (!migratedHistory[moduleId]) {
-                    migratedHistory[moduleId] = [];
-                }
-
-                // Convert to new format
-                migratedHistory[moduleId].push({
-                    id: item.id || `${moduleId}_${item.timestamp}`,
-                    timestamp: item.timestamp,
-                    url: item.url,
-                    data: item.captureData || item.data,
-                    expiresAt: item.expiresAt
-                });
-            }
-
-            history = migratedHistory;
-            Logger.ui('[BaseInterceptor] Migration complete:', Object.keys(history));
-        }
-
-        // Handle legacy string format
-        if (typeof history === 'string') {
-            history = JSON.parse(history);
-        }
-
-        // Ensure moduleId array exists
-        if (!history[type]) {
-            history[type] = [];
-        }
-
-        // Create new capture (NEW format)
-        const newCapture = {
+        const newCapture = await AdvancedHistoryStore.appendCapture(type, {
             id: `${type}_${Date.now()}`,
             timestamp: Date.now(),
             url: tab.url,
+            hostname: captureHostname,
             data: captureData,
-            expiresAt: Date.now() + (expiryMinutes * 60 * 1000)
-        };
-
-        // Remove expired items from this module
-        const now = Date.now();
-        history[type] = history[type].filter(item => {
-            return !item.expiresAt || item.expiresAt > now;
-        });
-
-        // Add new capture to beginning
-        history[type].unshift(newCapture);
-
-        // Save to storage
-        await chrome.storage.local.set({
-            scrapfly_advanced_history: history
+            captureData
+        }, {
+            expiryMinutes
         });
 
         Logger.ui(`[BaseInterceptor] Saved ${type} capture to history:`, newCapture.id);
@@ -510,6 +455,342 @@ async function showNotification(tabId, options = {}) {
 }
 
 // ============================================================================
+// CAPTURE LIFECYCLE HELPERS
+// ============================================================================
+
+/**
+ * Check whether capture state map is ready.
+ * @param {Map} captureStateRef
+ * @returns {boolean}
+ */
+function isCaptureStateReady(captureStateRef) {
+    return !!(captureStateRef && typeof captureStateRef.get === 'function' && typeof captureStateRef.set === 'function');
+}
+
+/**
+ * Get capture state for a tab.
+ * @param {Map} captureStateRef
+ * @param {number} tabId
+ * @returns {object|null}
+ */
+function getCaptureState(captureStateRef, tabId) {
+    if (!isCaptureStateReady(captureStateRef)) {
+        return null;
+    }
+    return captureStateRef.get(tabId) || null;
+}
+
+/**
+ * Set/update timeout for a capture state entry.
+ * @param {Map} captureStateRef
+ * @param {number} tabId
+ * @param {number} ms
+ * @param {Function} onTimeout
+ * @returns {boolean}
+ */
+function setCaptureTimeout(captureStateRef, tabId, ms, onTimeout) {
+    const state = getCaptureState(captureStateRef, tabId);
+    if (!state) {
+        return false;
+    }
+
+    if (state.timeout) {
+        clearTimeout(state.timeout);
+    }
+
+    state.timeout = setTimeout(() => {
+        if (typeof onTimeout === 'function') {
+            onTimeout();
+        }
+    }, ms);
+
+    captureStateRef.set(tabId, state);
+    return true;
+}
+
+/**
+ * Clear timeout on state object if present.
+ * @param {object} state
+ */
+function clearCaptureTimeout(state) {
+    if (!state) {
+        return;
+    }
+
+    if (state.timeout) {
+        clearTimeout(state.timeout);
+        state.timeout = null;
+    }
+
+    if (state.captureTimeout) {
+        clearTimeout(state.captureTimeout);
+        state.captureTimeout = null;
+    }
+}
+
+/**
+ * Remove capture state for a tab and clear timeout if present.
+ * @param {Map} captureStateRef
+ * @param {number} tabId
+ * @returns {object|null}
+ */
+function removeCaptureState(captureStateRef, tabId) {
+    const state = getCaptureState(captureStateRef, tabId);
+    if (!state) {
+        return null;
+    }
+    clearCaptureTimeout(state);
+    captureStateRef.delete(tabId);
+    return state;
+}
+
+/**
+ * Remove a webRequest listener if no captures remain.
+ * @param {object} options
+ * @param {Map} options.captureStateRef
+ * @param {Function} options.listenerRef
+ * @param {Function} options.removeFn
+ * @returns {boolean}
+ */
+function removeListenerIfIdle(options = {}) {
+    const { captureStateRef, listenerRef, removeFn } = options;
+    if (!isCaptureStateReady(captureStateRef)) {
+        return false;
+    }
+    if (captureStateRef.size !== 0) {
+        return false;
+    }
+    if (typeof listenerRef !== 'function' || typeof removeFn !== 'function') {
+        return false;
+    }
+
+    try {
+        removeFn(listenerRef);
+        return true;
+    } catch (error) {
+        Logger.error('NETWORK', '[BaseInterceptor] Failed to remove listener:', error);
+        return false;
+    }
+}
+
+// ============================================================================
+// MANAGED LISTENER LIFECYCLE
+// ============================================================================
+
+// tabId -> Map(kind -> { listener, removeFn })
+const managedListenersByTab = new Map();
+
+/**
+ * Register a listener for lifecycle cleanup.
+ * If an entry exists for the same {tabId, kind}, it is removed first.
+ * @param {number|string} tabId
+ * @param {string} kind
+ * @param {Function} listener
+ * @param {Function} removeFn
+ * @returns {boolean}
+ */
+function registerManagedListener(tabId, kind, listener, removeFn) {
+    if (tabId === undefined || tabId === null || !kind || typeof listener !== 'function' || typeof removeFn !== 'function') {
+        return false;
+    }
+
+    const tabKey = String(tabId);
+    if (!managedListenersByTab.has(tabKey)) {
+        managedListenersByTab.set(tabKey, new Map());
+    }
+
+    const tabListeners = managedListenersByTab.get(tabKey);
+    const existing = tabListeners.get(kind);
+    if (existing && typeof existing.removeFn === 'function' && typeof existing.listener === 'function') {
+        try {
+            existing.removeFn(existing.listener);
+        } catch (error) {
+            Logger.error('NETWORK', '[BaseInterceptor] Failed to remove existing managed listener:', error);
+        }
+    }
+
+    tabListeners.set(kind, { listener, removeFn });
+    return true;
+}
+
+/**
+ * Remove a specific managed listener.
+ * @param {number|string} tabId
+ * @param {string} kind
+ * @returns {boolean}
+ */
+function removeManagedListener(tabId, kind) {
+    const tabKey = String(tabId);
+    const tabListeners = managedListenersByTab.get(tabKey);
+    if (!tabListeners) {
+        return false;
+    }
+
+    const existing = tabListeners.get(kind);
+    if (!existing) {
+        return false;
+    }
+
+    try {
+        existing.removeFn(existing.listener);
+    } catch (error) {
+        Logger.error('NETWORK', '[BaseInterceptor] Failed to remove managed listener:', error);
+        return false;
+    } finally {
+        tabListeners.delete(kind);
+        if (tabListeners.size === 0) {
+            managedListenersByTab.delete(tabKey);
+        }
+    }
+
+    return true;
+}
+
+/**
+ * Cleanup all managed listeners for a tab.
+ * @param {number|string} tabId
+ * @returns {number} Number of listeners removed
+ */
+function cleanupManagedListeners(tabId) {
+    const tabKey = String(tabId);
+    const tabListeners = managedListenersByTab.get(tabKey);
+    if (!tabListeners) {
+        return 0;
+    }
+
+    let removedCount = 0;
+    Array.from(tabListeners.keys()).forEach((kind) => {
+        if (removeManagedListener(tabKey, kind)) {
+            removedCount += 1;
+        }
+    });
+
+    return removedCount;
+}
+
+/**
+ * Cleanup all managed listeners across tabs.
+ * @returns {number} Number of listeners removed
+ */
+function cleanupAllManagedListeners() {
+    let removedCount = 0;
+    Array.from(managedListenersByTab.keys()).forEach((tabId) => {
+        removedCount += cleanupManagedListeners(tabId);
+    });
+    return removedCount;
+}
+
+/**
+ * Handle tab URL change abort for active capture.
+ * @param {object} options
+ * @returns {boolean}
+ */
+function handleUrlChangeAbort(options = {}) {
+    const {
+        tabId,
+        changeInfo,
+        state,
+        captureStateRef,
+        listenerRef,
+        removeFn,
+        loggerPrefix = 'Capture'
+    } = options;
+
+    if (!changeInfo || !changeInfo.url || !state || !state.captureUrl || changeInfo.url === state.captureUrl) {
+        return false;
+    }
+
+    Logger.network(`[${loggerPrefix}] URL changed, clearing capture state for tab:`, tabId);
+    removeCaptureState(captureStateRef, tabId);
+    removeListenerIfIdle({ captureStateRef, listenerRef, removeFn });
+    return true;
+}
+
+/**
+ * Show standardized "capture started" notification.
+ * @param {number} tabId
+ * @param {object} options
+ * @returns {Promise<void>}
+ */
+async function showCaptureStarted(tabId, options = {}) {
+    const {
+        title = 'Capture Active',
+        message = 'Reload the page to trigger capture.',
+        duration = 60000
+    } = options;
+
+    return showNotification(tabId, {
+        type: 'capture',
+        title,
+        message,
+        duration
+    });
+}
+
+/**
+ * Show standardized "capture in progress" notification.
+ * @param {number} tabId
+ * @param {object} options
+ * @returns {Promise<void>}
+ */
+async function showCaptureProgress(tabId, options = {}) {
+    const {
+        title = 'Capture In Progress',
+        message = 'Monitoring requests...',
+        duration = 5000
+    } = options;
+
+    return showNotification(tabId, {
+        type: 'info',
+        title,
+        message,
+        duration
+    });
+}
+
+/**
+ * Show standardized "capture completed" notification.
+ * @param {number} tabId
+ * @param {object} options
+ * @returns {Promise<void>}
+ */
+async function showCaptureCompleted(tabId, options = {}) {
+    const {
+        title = 'Capture Completed',
+        message = 'Capture data saved successfully.',
+        duration = 5000
+    } = options;
+
+    return showNotification(tabId, {
+        type: 'success',
+        title,
+        message,
+        duration
+    });
+}
+
+/**
+ * Show standardized "capture error" notification.
+ * @param {number} tabId
+ * @param {object} options
+ * @returns {Promise<void>}
+ */
+async function showCaptureError(tabId, options = {}) {
+    const {
+        title = 'Capture Error',
+        message = 'Failed to capture data.',
+        duration = 6000
+    } = options;
+
+    return showNotification(tabId, {
+        type: 'error',
+        title,
+        message,
+        duration
+    });
+}
+
+// ============================================================================
 // VERSION DETECTION
 // ============================================================================
 
@@ -522,13 +803,28 @@ async function showNotification(tabId, options = {}) {
 
 const globalContext = typeof window !== 'undefined' ? window : (typeof self !== 'undefined' ? self : globalThis);
 
-if (globalContext) {
+    if (globalContext) {
     globalContext.BaseInterceptorHelpers = {
         matchPattern,
         checkCookies,
         checkUrls,
         saveToHistory,
-        showNotification
+        showNotification,
+        isCaptureStateReady,
+        getCaptureState,
+        setCaptureTimeout,
+        clearCaptureTimeout,
+        removeCaptureState,
+        removeListenerIfIdle,
+        registerManagedListener,
+        removeManagedListener,
+        cleanupManagedListeners,
+        cleanupAllManagedListeners,
+        handleUrlChangeAbort,
+        showCaptureStarted,
+        showCaptureProgress,
+        showCaptureCompleted,
+        showCaptureError
     };
 
     Logger.ui('[BaseInterceptorHelpers] Loaded in context:', typeof window !== 'undefined' ? 'popup' : 'service-worker');

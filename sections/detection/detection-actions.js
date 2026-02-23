@@ -72,7 +72,7 @@ DetectionActions.clearCache = async function() {
           tabId: tabs[0].id
         });
       } catch (error) {
-        if (this.debugMode) Logger.warn('UI', 'Could not set badge:', error);
+        if (this.debugMode) Logger.debug('UI', 'Could not set badge:', error);
       }
 
       // Clear current results immediately
@@ -177,11 +177,6 @@ DetectionActions.addToBlacklist = async function() {
       // Save settings (maintaining the correct structure)
       await chrome.storage.local.set({ scrapfly_settings: settings });
 
-      // Invalidate settings cache
-      if (typeof Utils !== 'undefined' && typeof Utils.invalidateSettingsCache === 'function') {
-        Utils.invalidateSettingsCache();
-      }
-
       NotificationHelper.success(`Added "${domain}" to blacklist`);
 
       // Show blacklist warning state
@@ -257,11 +252,6 @@ DetectionActions.removeFromBlacklist = async function(domain) {
 
         // Save updated settings
         await chrome.storage.local.set({ scrapfly_settings: settings });
-
-        // Invalidate settings cache
-        if (typeof Utils !== 'undefined' && typeof Utils.invalidateSettingsCache === 'function') {
-          Utils.invalidateSettingsCache();
-        }
 
         NotificationHelper.success(`Removed "${domain}" from blacklist`);
 

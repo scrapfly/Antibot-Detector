@@ -578,7 +578,3 @@ if (typeof window !== 'undefined') {
 if (typeof self !== 'undefined') {
   self.Logger = Logger;
 }
-// CommonJS export for Node.js compatibility
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = Logger;
-}

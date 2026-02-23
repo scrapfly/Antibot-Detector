@@ -498,9 +498,6 @@ class CategoryManager {
     }
 }
 
-// Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = CategoryManager;
-} else if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
     window.CategoryManager = CategoryManager;
 }

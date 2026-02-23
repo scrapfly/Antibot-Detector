@@ -28,7 +28,6 @@ function setupTabListeners() {
         detectionStates.delete(tabId);
         activeDetections.delete(tabId);
         interruptedDetections.delete(tabId);
-        tabFocusTimestamps.delete(tabId);
 
         // Clear finalization debounce (cancel pending timeout)
         if (finalizationDebounce.has(tabId)) {
@@ -39,78 +38,55 @@ function setupTabListeners() {
         // Clear batch processing flag
         batchProcessingFlags.delete(tabId);
 
-        // Clear capture state if tab is closed during capture
-        const captureStateForTab = reCaptchaCaptureState.get(tabId);
-        if (captureStateForTab) {
-            Logger.background(`Scrapfly Background: Tab ${tabId} closed during capture, cleaning up`);
-            if (captureStateForTab.captureInterval) {
-                clearInterval(captureStateForTab.captureInterval);
+        // Clear capture states if tab is closed during capture
+        // All providers use TTLMap from background.js with clearCaptureTimeout() for consistent cleanup
+
+        if (reCaptchaCaptureState.has(tabId)) {
+            Logger.background(`[TabCleanup] Tab ${tabId} closed during reCAPTCHA capture, cleaning up`);
+            const state = reCaptchaCaptureState.get(tabId);
+            if (state && state.captureInterval) {
+                clearInterval(state.captureInterval);
             }
+            clearCaptureTimeout(state);
             reCaptchaCaptureState.delete(tabId);
             stopRecaptchaInterception();
         }
 
-        // Clear FunCaptcha capture state if tab is closed during capture
         if (funcaptchaCaptureState.has(tabId)) {
-            Logger.background(`Scrapfly Background: Tab ${tabId} closed during FunCaptcha capture, cleaning up`);
-            const funcState = funcaptchaCaptureState.get(tabId);
-            if (funcState && funcState.timeout) {
-                clearTimeout(funcState.timeout);
-            }
+            Logger.background(`[TabCleanup] Tab ${tabId} closed during FunCaptcha capture, cleaning up`);
+            clearCaptureTimeout(funcaptchaCaptureState.get(tabId));
             funcaptchaCaptureState.delete(tabId);
         }
 
-        // Clear hCaptcha capture state if tab is closed during capture
-        if (typeof hcaptchaCaptureState !== 'undefined' && hcaptchaCaptureState.has(tabId)) {
-            Logger.background(`Scrapfly Background: Tab ${tabId} closed during hCaptcha capture, cleaning up`);
-            const hcaptchaState = hcaptchaCaptureState.get(tabId);
-            if (hcaptchaState && hcaptchaState.timeout) {
-                clearTimeout(hcaptchaState.timeout);
-            }
+        if (hcaptchaCaptureState.has(tabId)) {
+            Logger.background(`[TabCleanup] Tab ${tabId} closed during hCaptcha capture, cleaning up`);
+            clearCaptureTimeout(hcaptchaCaptureState.get(tabId));
             hcaptchaCaptureState.delete(tabId);
         }
 
-        // Clear Akamai capture state if tab is closed during capture
         if (akamaiCaptureState.has(tabId)) {
-            Logger.background(`Scrapfly Background: Tab ${tabId} closed during Akamai capture, cleaning up`);
-            const akamaiState = akamaiCaptureState.get(tabId);
-            if (akamaiState && akamaiState.timeout) {
-                clearTimeout(akamaiState.timeout);
-            }
+            Logger.background(`[TabCleanup] Tab ${tabId} closed during Akamai capture, cleaning up`);
+            clearCaptureTimeout(akamaiCaptureState.get(tabId));
             akamaiCaptureState.delete(tabId);
         }
 
-        // Clear Imperva capture state if tab is closed during capture
         if (impervaCaptureState.has(tabId)) {
-            Logger.background(`Scrapfly Background: Tab ${tabId} closed during Imperva capture, cleaning up`);
-            const impervaState = impervaCaptureState.get(tabId);
-            if (impervaState && impervaState.timeout) {
-                clearTimeout(impervaState.timeout);
-            }
+            Logger.background(`[TabCleanup] Tab ${tabId} closed during Imperva capture, cleaning up`);
+            clearCaptureTimeout(impervaCaptureState.get(tabId));
             impervaCaptureState.delete(tabId);
         }
 
-        // Clear Shape Security capture state if tab is closed during capture
-        if (typeof shapesecurityCaptureState !== 'undefined' && shapesecurityCaptureState.has(tabId)) {
-            Logger.background(`Scrapfly Background: Tab ${tabId} closed during Shape Security capture, cleaning up`);
-            const shapeState = shapesecurityCaptureState.get(tabId);
-            if (shapeState && shapeState.timeout) {
-                clearTimeout(shapeState.timeout);
-            }
+        if (shapesecurityCaptureState.has(tabId)) {
+            Logger.background(`[TabCleanup] Tab ${tabId} closed during Shape Security capture, cleaning up`);
+            clearCaptureTimeout(shapesecurityCaptureState.get(tabId));
             shapesecurityCaptureState.delete(tabId);
+            shapeSecurityExtractionState.delete(tabId);
         }
 
-        // Clear AWS WAF capture state if tab is closed during capture
-        if (typeof awsWafCaptureStateRef !== 'undefined' && awsWafCaptureStateRef.isCapturing && awsWafCaptureStateRef.tabId === tabId) {
-            Logger.background(`Scrapfly Background: Tab ${tabId} closed during AWS WAF capture, cleaning up`);
-            if (awsWafCaptureStateRef.timeout) {
-                clearTimeout(awsWafCaptureStateRef.timeout);
-            }
-            // Reset AWS WAF state object
-            awsWafCaptureStateRef.isCapturing = false;
-            awsWafCaptureStateRef.tabId = null;
-            awsWafCaptureStateRef.url = null;
-            awsWafCaptureStateRef.capturedData = {};
+        if (awsWafCaptureState.has(tabId)) {
+            Logger.background(`[TabCleanup] Tab ${tabId} closed during AWS WAF capture, cleaning up`);
+            clearCaptureTimeout(awsWafCaptureState.get(tabId));
+            awsWafStopCapture(tabId);
         }
 
         // Clear the badge for this tab
@@ -209,8 +185,6 @@ function setupTabListeners() {
     // Run detection when active tab changes - detect interruptions and delegate to DetectionEngineManager
     chrome.tabs.onActivated.addListener(async (activeInfo) => {
         const newTabId = activeInfo.tabId;
-        const now = Date.now();
-        
         Logger.background(`[TabSwitch] Tab activated: ${newTabId}, previous: ${currentActiveTab}`);
 
         // Check if user is returning to a previously interrupted tab - clear interrupted state
@@ -242,23 +216,11 @@ function setupTabListeners() {
                 return;
             }
 
-            const previousFocusTime = tabFocusTimestamps.get(previousTabId);
-            const focusDuration = previousFocusTime ? now - previousFocusTime : 0;
-
-            // FIX: Let detections complete in background when tab switches
+            // Let detections complete in background when tab switches
             // Chrome tabs continue executing even when not focused
             // Detection will complete naturally and cache results
-            if (focusDuration < TAB_SWITCH_DEBOUNCE_MS) {
-                Logger.background(`[TabSwitch] Tab ${previousTabId} was focused for only ${focusDuration}ms - rapid switch detected`);
-            } else {
-                Logger.background(`[TabSwitch] Tab ${previousTabId} detection will continue in background (user switched tabs)`);
-                // Don't abort, don't interrupt - just let it complete naturally
-                // Detection will cache results when finished
-            }
+            Logger.background(`[TabSwitch] Tab ${previousTabId} detection will continue in background`);
         }
-
-        // Record focus timestamp for the newly activated tab
-        tabFocusTimestamps.set(newTabId, now);
 
         // Update current active tab
         currentActiveTab = newTabId;

@@ -145,7 +145,7 @@ SettingsUI.saveSettings = async function() {
           oldCacheScope = loadedSettings.cacheScope || loadedSettings.detection?.cacheScope || 'domain';
         }
       } catch (error) {
-        Logger.warn('UI', 'Could not read old cache scope:', error);
+        Logger.debug('UI', 'Could not read old cache scope:', error);
       }
 
       delete this.settings.hooksConfig;
@@ -185,14 +185,14 @@ SettingsUI.saveSettings = async function() {
         // Notify background worker to clear its in-memory cache
         chrome.runtime.sendMessage({ type: 'CACHE_SCOPE_CHANGED' }, (response) => {
           if (chrome.runtime.lastError) {
-            Logger.warn('UI', 'Failed to notify background of cache scope change:', chrome.runtime.lastError.message);
+            Logger.debug('UI', 'Failed to notify background of cache scope change:', chrome.runtime.lastError.message);
           }
         });
 
         // Notify Detection tab to clear current results display
         chrome.runtime.sendMessage({ type: 'DETECTION_CLEAR_CACHE' }, (response) => {
           if (chrome.runtime.lastError) {
-            Logger.warn('UI', 'Failed to notify Detection tab:', chrome.runtime.lastError.message);
+            Logger.debug('UI', 'Failed to notify Detection tab:', chrome.runtime.lastError.message);
           }
         });
 
@@ -205,7 +205,7 @@ SettingsUI.saveSettings = async function() {
       // This is critical for webhook and other background features to use updated settings
       chrome.runtime.sendMessage({ type: 'SETTINGS_UPDATED' }, (response) => {
         if (chrome.runtime.lastError) {
-          Logger.warn('UI', 'Failed to notify background of settings update:', chrome.runtime.lastError.message);
+          Logger.debug('UI', 'Failed to notify background of settings update:', chrome.runtime.lastError.message);
         } else {
           Logger.ui('Background notified of settings update:', response);
         }
@@ -214,7 +214,7 @@ SettingsUI.saveSettings = async function() {
       // Notify background script to sync category colors
       chrome.runtime.sendMessage({ type: 'SYNC_CATEGORY_COLORS' }, (response) => {
         if (chrome.runtime.lastError) {
-          Logger.warn('UI', 'Failed to sync category colors:', chrome.runtime.lastError.message);
+          Logger.debug('UI', 'Failed to sync category colors:', chrome.runtime.lastError.message);
         } else {
           Logger.ui('Category colors synced:', response);
         }
@@ -1536,7 +1536,7 @@ SettingsUI.handleTestWebhook = async function() {
       const testUrl = 'https://example.com/test-page';
       const testHostname = 'example.com';
       const testTitle = 'Test Page - Webhook Test';
-      const testFavicon = 'https://www.google.com/s2/favicons?domain=example.com&sz=64';
+      const testFavicon = UrlUtils.getFaviconUrl('example.com', 64);
       const testTimestamp = new Date().toISOString();
       const testDetections = [
         {

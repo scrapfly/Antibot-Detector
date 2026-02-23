@@ -4,6 +4,57 @@
 class DetectionUtils {
 
   /**
+   * Normalize difficulty label to canonical values.
+   * @param {string} value
+   * @returns {'Low'|'Medium'|'High'|null}
+   */
+  static normalizeDifficulty(value) {
+    if (typeof value !== 'string') return null;
+    const normalized = value.trim().toLowerCase();
+    if (normalized === 'low') return 'Low';
+    if (normalized === 'medium') return 'Medium';
+    if (normalized === 'high') return 'High';
+    return null;
+  }
+
+  /**
+   * Convert difficulty label to numeric rank.
+   * @param {string} label
+   * @returns {0|1|2|3}
+   */
+  static getDifficultyRank(label) {
+    const normalized = DetectionUtils.normalizeDifficulty(label);
+    if (normalized === 'Low') return 1;
+    if (normalized === 'Medium') return 2;
+    if (normalized === 'High') return 3;
+    return 0;
+  }
+
+  /**
+   * Convert numeric rank back to difficulty label.
+   * @param {number} rank
+   * @returns {'Low'|'Medium'|'High'}
+   */
+  static rankToDifficulty(rank) {
+    if (rank >= 3) return 'High';
+    if (rank >= 2) return 'Medium';
+    return 'Low';
+  }
+
+  /**
+   * Get default detector difficulty for a category.
+   * @param {string} category
+   * @returns {'Low'|'Medium'|'High'}
+   */
+  static defaultDifficultyForCategory(category) {
+    const normalized = String(category || '').toLowerCase().replace(/[^a-z]/g, '');
+    if (normalized === 'captcha') return 'High';
+    if (normalized === 'fingerprint') return 'Low';
+    if (normalized === 'antibot') return 'Medium';
+    return 'Medium';
+  }
+
+  /**
    * Compute the average confidence for a list of detections (0-100).
    * @param {Array} detections
    * @returns {number}
@@ -23,12 +74,13 @@ class DetectionUtils {
    */
   static getDifficultyLevel(detections = [], avgConfidence = undefined) {
     const totalDetections = Array.isArray(detections) ? detections.length : 0;
+    const safeDetections = Array.isArray(detections) ? detections : [];
 
     const safeAvgConfidence = Number.isFinite(avgConfidence)
       ? avgConfidence
       : DetectionUtils.computeAverageConfidence(detections);
 
-    const normalizedCategories = (Array.isArray(detections) ? detections : []).map((d) => {
+    const normalizedCategories = safeDetections.map((d) => {
       const category = d?.category ?? d?.detector?.category ?? '';
       return String(category).toLowerCase();
     });
@@ -51,18 +103,25 @@ class DetectionUtils {
         name.includes('funcaptcha');
     };
 
-    const highTierHighConfidence = (Array.isArray(detections) ? detections : []).some((d) => {
+    const highTierHighConfidence = safeDetections.some((d) => {
       return isHighTierName(d) && (d?.confidence || 0) >= 80;
     });
 
-    if (highTierHighConfidence) return 'High';
-    if (fingerprintOnly) return 'Low';
+    let heuristicDifficulty = 'Low';
+    if (highTierHighConfidence) heuristicDifficulty = 'High';
+    else if (fingerprintOnly) heuristicDifficulty = 'Low';
+    else if (antiCaptchaCount >= 2 || totalDetections > 2 || safeAvgConfidence > 60) heuristicDifficulty = 'Medium';
 
-    if (antiCaptchaCount >= 2 || totalDetections > 2 || safeAvgConfidence > 60) {
-      return 'Medium';
-    }
+    // Manual detector difficulty acts as a minimum floor for aggregate difficulty.
+    const manualFloorRank = safeDetections.reduce((maxRank, detection) => {
+      const manualDifficulty = DetectionUtils.normalizeDifficulty(
+        detection?.difficulty || detection?.detector?.difficulty
+      );
+      return Math.max(maxRank, DetectionUtils.getDifficultyRank(manualDifficulty));
+    }, 0);
 
-    return 'Low';
+    const heuristicRank = DetectionUtils.getDifficultyRank(heuristicDifficulty);
+    return DetectionUtils.rankToDifficulty(Math.max(heuristicRank, manualFloorRank));
   }
 
   /**
@@ -82,10 +141,7 @@ class DetectionUtils {
   }
 }
 
-// Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = DetectionUtils;
-} else if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
   window.DetectionUtils = DetectionUtils;
 } else if (typeof self !== 'undefined') {
   self.DetectionUtils = DetectionUtils;

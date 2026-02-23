@@ -4,6 +4,7 @@
   "author": "Scrapfly",
   "enabled": true,
   "category": "Fingerprint",
+  "difficulty": "Low",
   "lastUpdated": "2025-01-21",
   "version": "1.0",
   "website": "https://en.wikipedia.org/wiki/CSS_fingerprinting",

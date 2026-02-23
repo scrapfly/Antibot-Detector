@@ -277,11 +277,16 @@ Rules.prototype.getMethodBadgeClass = function(method) {
 /**
  * Get detector icon HTML from detector data
  * @param {object} detector - Detector object
+ * @param {string} [category] - Detector category
  * @returns {string} HTML for detector icon
  */
-Rules.prototype.getDetectorIcon = function(detector) {
+Rules.prototype.getDetectorIcon = function(detector, category = '') {
   // Default Scrapfly icon fallback
   const scrapflyIcon = chrome.runtime.getURL('icons/icon128.png');
+  const normalizedCategory = String(category || detector?.category || '')
+    .toLowerCase()
+    .replace(/[^a-z]/g, '');
+  const isFingerprintCategory = normalizedCategory === 'fingerprint' || normalizedCategory.includes('fingerprint');
 
   // Fingerprint SVG icons mapping
   const fingerprintIcons = {
@@ -308,8 +313,20 @@ Rules.prototype.getDetectorIcon = function(detector) {
     'webrtc_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 10l5-5M20 10V5h-5"/><path d="M9 14l-5 5M4 14v5h5"/><circle cx="12" cy="12" r="3"/></svg>'
   };
 
+  const wrapFingerprintImage = (src, alt, sourceType, fallback) => {
+    const fallbackAttr = fallback ? ` data-fallback="${fallback}"` : '';
+    return `
+      <div class="detector-icon-svg fingerprint-icon fingerprint-icon-shell">
+        <img src="${src}" alt="${alt}" class="detector-icon-img fingerprint-icon-image fingerprint-icon-image--${sourceType}"${fallbackAttr}>
+      </div>
+    `;
+  };
+
   // Check for custom uploaded icon first
   if (detector.customIcon) {
+    if (isFingerprintCategory) {
+      return wrapFingerprintImage(detector.customIcon, 'Icon', 'custom', scrapflyIcon);
+    }
     return `<img src="${detector.customIcon}" alt="Icon" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
   }
 
@@ -318,24 +335,36 @@ Rules.prototype.getDetectorIcon = function(detector) {
     const lowerIcon = detector.icon.toLowerCase ? detector.icon.toLowerCase() : detector.icon;
 
     if (lowerIcon === 'default') {
+      if (isFingerprintCategory) {
+        return wrapFingerprintImage(scrapflyIcon, 'Scrapfly Icon', 'default', '');
+      }
       return `<img src="${scrapflyIcon}" alt="Scrapfly Icon" class="detector-icon-img">`;
     }
     // If icon is "custom.png" or "custom", use scrapfly icon directly
     if (detector.icon === 'custom.png' || detector.icon === 'custom') {
+      if (isFingerprintCategory) {
+        return wrapFingerprintImage(scrapflyIcon, 'Scrapfly Icon', 'default', '');
+      }
       return `<img src="${scrapflyIcon}" alt="Scrapfly Icon" class="detector-icon-img">`;
     }
 
     // Check for fingerprint SVG icons
     if (fingerprintIcons[lowerIcon]) {
-      return `<div class="detector-icon-svg fingerprint-icon">${fingerprintIcons[lowerIcon]}</div>`;
+      return `<div class="detector-icon-svg fingerprint-icon fingerprint-icon-shell">${fingerprintIcons[lowerIcon]}</div>`;
     }
 
     // If it's a URL, return as image
     if (detector.icon.startsWith('http') || detector.icon.startsWith('/')) {
+      if (isFingerprintCategory) {
+        return wrapFingerprintImage(detector.icon, 'Icon', 'builtin', scrapflyIcon);
+      }
       return `<img src="${detector.icon}" alt="Icon" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
     }
     // If it's a filename, construct the path to the detectors/icons folder
     if (detector.icon.includes('.png') || detector.icon.includes('.jpg') || detector.icon.includes('.svg') || detector.icon.includes('.webp')) {
+      if (isFingerprintCategory) {
+        return wrapFingerprintImage(`detectors/icons/${detector.icon}`, `${detector.displayName || detector.name} Icon`, 'builtin', scrapflyIcon);
+      }
       return `<img src="detectors/icons/${detector.icon}" alt="${detector.displayName || detector.name} Icon" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
     }
     // Otherwise return as emoji or text
@@ -343,5 +372,8 @@ Rules.prototype.getDetectorIcon = function(detector) {
   }
 
   // Fallback to Scrapfly default icon
+  if (isFingerprintCategory) {
+    return wrapFingerprintImage(scrapflyIcon, 'Scrapfly Icon', 'default', '');
+  }
   return `<img src="${scrapflyIcon}" alt="Scrapfly Icon" class="detector-icon-img">`;
 };

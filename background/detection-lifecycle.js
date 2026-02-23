@@ -6,14 +6,14 @@
 function markMethodComplete(tabId, methodName) {
     const state = detectionStates.get(tabId);
     if (!state) {
-        Logger.warn('BACKGROUND', `[markMethodComplete] No detection state for tab ${tabId}, cannot mark ${methodName} complete`);
+        Logger.debug('BACKGROUND', `[markMethodComplete] No state for tab ${tabId}, cannot mark ${methodName} complete`);
         return;
     }
 
     // VALIDATION: Only allow valid method names from the official methodOrder
     const validMethods = state.methodOrder || ['cookies', 'headers', 'url', 'dom', 'jsHooks', 'windowProperties', 'payload'];
     if (!validMethods.includes(methodName)) {
-        Logger.warn('BACKGROUND', `[markMethodComplete] Rejecting invalid method name: "${methodName}" (valid methods: ${validMethods.join(', ')})`);
+        Logger.warn('BACKGROUND', `[markMethodComplete] Invalid method name: "${methodName}"`);
         return;
     }
 
@@ -28,13 +28,13 @@ function markMethodComplete(tabId, methodName) {
 function checkAndFinalizeDetection(tabId) {
     const state = detectionStates.get(tabId);
     if (!state) {
-        Logger.warn('BACKGROUND', `[Finalize Check] No state for tab ${tabId}, aborting`);
+        Logger.debug('BACKGROUND', `[checkAndFinalize] No state for tab ${tabId}, aborting`);
         return;
     }
 
     // SAFETY CHECK: Don't finalize if state was just created (within 500ms)
     // This prevents race conditions where navigation events trigger premature finalization
-    if (state.startTime && (Date.now() - state.startTime < 500)) {
+    if (state.startTime && (Date.now() - state.startTime < Constants.MIN_DETECTION_TIME)) {
         return;
     }
 
@@ -57,7 +57,7 @@ function checkAndFinalizeDetection(tabId) {
         // Re-check state in case it was deleted during debounce
         const currentState = detectionStates.get(tabId);
         if (!currentState) {
-            Logger.warn('BACKGROUND', `[Finalize Execute] No state found for tab ${tabId} after debounce, aborting`);
+            Logger.debug('BACKGROUND', `[checkAndFinalize] No state for tab ${tabId} after debounce, aborting`);
             finalizationDebounce.delete(tabId);
             return;
         }
@@ -78,10 +78,8 @@ function checkAndFinalizeDetection(tabId) {
         // Wait 100ms after LAST batch arrival to ensure all batches process
         // Reduced from 2000ms - hooks batch every 10-50ms, so 100ms is sufficient
         const timeSinceLastBatch = Date.now() - (currentState.lastHookBatchTime || 0);
-        const BATCH_SETTLE_TIME = 250; // More buffer to reduce late-batch misses
-
-        if (currentState.lastHookBatchTime > 0 && timeSinceLastBatch < BATCH_SETTLE_TIME) {
-            const remainingMs = BATCH_SETTLE_TIME - timeSinceLastBatch;
+        if (currentState.lastHookBatchTime > 0 && timeSinceLastBatch < Constants.BATCH_SETTLE_TIME) {
+            const remainingMs = Constants.BATCH_SETTLE_TIME - timeSinceLastBatch;
             // Reschedule check - don't clear, just set new one
             const newTimeout = setTimeout(() => checkAndFinalizeDetection(tabId), remainingMs);
             finalizationDebounce.set(tabId, newTimeout);
@@ -90,10 +88,9 @@ function checkAndFinalizeDetection(tabId) {
 
         // FIX 6.9: Minimum detection time to prevent race between fast window props and hooks timeout
         // Ensures at least 500ms has passed since detection started, giving hooks time to fire
-        const MIN_DETECTION_TIME = 500;
         const timeSinceStart = Date.now() - (currentState.startTime || 0);
-        if (currentState.startTime && timeSinceStart < MIN_DETECTION_TIME && !currentState.hooksComplete) {
-            const remainingMs = MIN_DETECTION_TIME - timeSinceStart;
+        if (currentState.startTime && timeSinceStart < Constants.MIN_DETECTION_TIME && !currentState.hooksComplete) {
+            const remainingMs = Constants.MIN_DETECTION_TIME - timeSinceStart;
             Logger.background(`[Finalize] Waiting ${remainingMs}ms for minimum detection time (hooks not complete yet)`);
             const newTimeout = setTimeout(() => checkAndFinalizeDetection(tabId), remainingMs);
             finalizationDebounce.set(tabId, newTimeout);
@@ -123,7 +120,7 @@ function checkAndFinalizeDetection(tabId) {
             if (!currentState.hooksComplete && !currentState.usedCache && now < hooksDeadline) {
                 if (debugMode) {
                     const remaining = hooksDeadline - now;
-                    Logger.warn('BACKGROUND', `[Finalize] Deferring finalization for hooks: ${remaining}ms remaining until deadline`);
+                    Logger.debug('BACKGROUND', `[checkAndFinalize] Deferring for hooks: ${remaining}ms until deadline`);
                 }
                 const remainingMs = hooksDeadline - now;
                 const delay = Math.min(remainingMs, 500);
@@ -139,7 +136,7 @@ function checkAndFinalizeDetection(tabId) {
                 currentState.hooksCompletionTime = currentState.hooksCompletionTime || (now - (currentState.startTime || now));
                 markMethodComplete(tabId, 'jsHooks');
                 if (debugMode) {
-                    Logger.warn('BACKGROUND', `[Finalize] Hooks deadline reached - marking jsHooks complete to finalize`);
+                    Logger.debug('BACKGROUND', `[checkAndFinalize] Hooks deadline reached, marking jsHooks complete`);
                 }
             }
 
@@ -156,36 +153,21 @@ function checkAndFinalizeDetection(tabId) {
                 return;
             }
 
-            // Only show warnings if debug mode is enabled
-            (async () => {
-                try {
-                    const settings = await Utils.getSettings(chrome);
-                    if (settings?.debugMode) {
-                        const percent = Math.round((completedCount / totalMethods) * 100);
-                        Logger.warn('BACKGROUND', `%c[NOT READY] Only ${completedCount}/${totalMethods} methods complete (${percent}%) - waiting for main methods`, 'color: #f44336; font-weight: bold;');
-                        Logger.warn('BACKGROUND', `[NOT READY]   Completed: ${completedMethods.join(', ')}`);
-                        Logger.warn('BACKGROUND', `[NOT READY]   Missing: ${missingMethods.join(', ')}`);
-                        Logger.warn('BACKGROUND', `[NOT READY]   Main methods complete: ${mainMethodsComplete}`);
-
-                        // Log which signals we're waiting for
-                        if (!currentState.windowPropertiesComplete) {
-                            Logger.warn('BACKGROUND', `%c[WAITING FOR] windowProperties signal (WINDOW_PROPS_COMPLETE) - will proceed without it`, 'color: #ff9800; font-weight: bold;');
-                        }
-                        if (!currentState.mainComplete) {
-                            Logger.warn('BACKGROUND', `[WAITING FOR] mainComplete signal (processDetectionData finished) - REQUIRED`);
-                        }
-                        if (!currentState.hooksComplete) {
-                            Logger.warn('BACKGROUND', `[WAITING FOR] hooksComplete signal (JS_HOOKS_COMPLETE) - will proceed without it`, 'color: #ff9800; font-weight: bold;');
-                        }
-                    }
-                } catch (error) {
-                    // Failed to get settings, skip logging
+            // Debug-only: log incomplete methods
+            const percent = Math.round((completedCount / totalMethods) * 100);
+            Logger.debug('BACKGROUND', `[checkAndFinalize] ${completedCount}/${totalMethods} methods (${percent}%)`, {
+                completed: completedMethods,
+                missing: missingMethods,
+                waiting: {
+                    windowProperties: !currentState.windowPropertiesComplete,
+                    mainComplete: !currentState.mainComplete,
+                    hooks: !currentState.hooksComplete
                 }
-            })();
+            });
         }
 
         finalizationDebounce.delete(tabId);
-    }, 400); // 400ms = 2 window property polling cycles (200ms each)
+    }, Constants.FINALIZATION_CHECK_DELAY); // 2 window property polling cycles (200ms each)
 
     finalizationDebounce.set(tabId, timeout);
 }
@@ -256,7 +238,7 @@ async function finalizeDetection(tabId, state) {
     const pageData = {
         url: state.url,
         hostname: UrlUtils.getHostnameFromUrl(state.url),
-        favicon: UrlUtils.getFaviconUrl(state.url)
+        favicon: state.favicon || UrlUtils.getFaviconUrl(state.url)
     };
 
     const storedDataWithExpiry = await DetectionEngineManager.storeDetection(state.url, pageData, finalResults);
@@ -285,10 +267,11 @@ async function finalizeDetection(tabId, state) {
                          difficulty === 'Medium' ? badgeColors.medium :
                          badgeColors.low;
 
-            // CHANGED: Make badge update synchronous to ensure it completes before popup checks
             try {
-                await chrome.action.setBadgeText({ text: count, tabId: tabId });
-                await chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId });
+                await Promise.all([
+                    chrome.action.setBadgeText({ text: count, tabId: tabId }),
+                    chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId })
+                ]);
             } catch (error) {
                 // Expected: Tab might be closed - don't log as error
                 Logger.background(`[Finalize] Tab ${tabId} closed, skipping badge update`);
@@ -296,8 +279,10 @@ async function finalizeDetection(tabId, state) {
         } else {
             // Show blacklisted badge
             try {
-                await chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId: tabId });
-                await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tabId });
+                await Promise.all([
+                    chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId: tabId }),
+                    chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tabId })
+                ]);
             } catch (error) {
                 // Expected: Tab might be closed
                 Logger.background(`[Finalize] Tab ${tabId} closed, skipping badge update`);
@@ -306,8 +291,10 @@ async function finalizeDetection(tabId, state) {
     } else {
         // Show clean page badge (no detections)
         try {
-            await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEAN, tabId: tabId });
-            await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId: tabId });
+            await Promise.all([
+                chrome.action.setBadgeText({ text: BADGE.TEXT.CLEAN, tabId: tabId }),
+                chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId: tabId })
+            ]);
         } catch (error) {
             // Expected: Tab might be closed
             Logger.background(`[Finalize] Tab ${tabId} closed, skipping badge update`);
@@ -346,7 +333,7 @@ async function finalizeDetection(tabId, state) {
                 url: state.url,
                 hostname: UrlUtils.getHostnameFromUrl(state.url),
                 tabTitle: state.tabTitle,
-                favicon: UrlUtils.getFaviconUrl(state.url)
+                favicon: state.favicon || UrlUtils.getFaviconUrl(state.url)
             };
 
             const historySettings = await Utils.getHistorySettings();
@@ -442,8 +429,10 @@ async function processDetectionData(message, sender) {
 
     // Show progress indicator in badge and track as active detection
     try {
-        chrome.action.setBadgeText({ text: BADGE.TEXT.LOADING, tabId: tabId }).catch(() => {});
-        chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.LOADING, tabId: tabId }).catch(() => {});
+        Promise.all([
+            chrome.action.setBadgeText({ text: BADGE.TEXT.LOADING, tabId: tabId }),
+            chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.LOADING, tabId: tabId })
+        ]).catch(() => {});
 
         // Create AbortController to allow cancellation if tab switch occurs
         const abortController = new AbortController();
@@ -546,7 +535,7 @@ async function processDetectionData(message, sender) {
         // Convert to same format as extractCookies() from content script
         pageData.allCookies = allCookies.map(cookie => ({
             name: cookie.name,
-            value: cookie.value.substring(0, 100), // Match performance limit
+            value: cookie.value.substring(0, Constants.COOKIE_VALUE_MAX_LENGTH),
             domain: cookie.domain,
             httpOnly: cookie.httpOnly,
             secure: cookie.secure,
@@ -597,7 +586,7 @@ async function processDetectionData(message, sender) {
 
             const detectionPromise = Promise.resolve(detectionEngine.detectOnPage(pageData));
             const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('Detection timeout after 10 seconds')), 10000)
+                setTimeout(() => reject(new Error('Detection timeout')), Constants.DETECTION_TIMEOUT)
             );
             detectionResults = await Promise.race([detectionPromise, timeoutPromise]);
 
@@ -607,13 +596,11 @@ async function processDetectionData(message, sender) {
             // GRANULAR PROGRESS: Send incremental updates for main detection methods
             // Mark each method complete as it finishes detection
             // FIX: Use markMethodComplete to properly track progress and trigger finalization
-            Logger.background(`%c[processDetectionData] MARKING MAIN METHODS COMPLETE for tab ${tabId}`, 'color: #2196F3; font-weight: bold; font-size: 14px;');
             const mainMethods = ['cookies', 'headers', 'url', 'dom', 'payload'];
             for (const method of mainMethods) {
-                Logger.background(`[processDetectionData] Marking ${method} complete...`);
                 markMethodComplete(tabId, method);
             }
-            Logger.background(`%c[processDetectionData] All main methods marked complete`, 'color: #4caf50; font-weight: bold;');
+            Logger.background(`[processDetectionData] Main methods marked complete for tab ${tabId}`);
 
             // Log what was detected
             if (detectionResults.length > 0) {
@@ -646,7 +633,7 @@ async function processDetectionData(message, sender) {
         }
 
         // Store main detection and check if ready to finalize
-        Logger.background(`%c[processDetectionData] Getting/Creating detection state for tab ${tabId}`, 'color: #ff9800; font-weight: bold;');
+        Logger.background(`[processDetectionData] Getting/creating state for tab ${tabId}`);
         const state = getOrCreateDetectionState(tabId, pageData.url);
 
         // Store tabTitle in state for use when saving to history
@@ -722,70 +709,8 @@ async function processDetectionData(message, sender) {
 
         Logger.background(`[processDetectionData] Main detection complete: ${detectionResults.length} detectors`);
 
-        // CRITICAL FIX: Update badge immediately when detection completes
-        // This is the ONLY place badge should be updated to the final count
-        // Fixes the "stuck at 29%" issue by setting badge to count ASAP, not via percentage
-        await (async () => {
-            try {
-                // Wait a tiny bit for hooks data to arrive (in case it's close behind)
-                // But not too long - max 500ms
-                let attempts = 0;
-                while (state.hooksData.size === 0 && attempts < 5) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    attempts++;
-                }
-
-                // Merge hooks data + main data to get total detection count
-                const mergedDetections = new Map();
-
-                // Add hooks data
-                for (const [detectorId, detector] of state.hooksData.entries()) {
-                    mergedDetections.set(detectorId, detector);
-                }
-
-                // Add main detection data
-                for (const detector of state.mainData) {
-                    const detectorId = detector.detector?.id || detector.id;
-                    if (!mergedDetections.has(detectorId)) {
-                        mergedDetections.set(detectorId, detector);
-                    }
-                }
-
-                const detectionCount = mergedDetections.size;
-
-                // Get badge colors
-                const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
-
-                if (detectionCount > 0) {
-                    const detections = Array.from(mergedDetections.values());
-                    const count = detectionCount.toString();
-                    const avgConfidence = DetectionUtils.computeAverageConfidence(detections);
-                    const difficulty = DetectionUtils.getDifficultyLevel(detections, avgConfidence);
-                    const color = difficulty === 'High' ? badgeColors.high :
-                                 difficulty === 'Medium' ? badgeColors.medium :
-                                 badgeColors.low;
-
-                    Logger.background(`%c[processDetectionData] UPDATING BADGE TO FINAL COUNT: "${count}"`, 'color: #2196F3; font-weight: bold; font-size: 14px;');
-                    Logger.background(`[processDetectionData] Detection count: ${detectionCount} (hooks: ${state.hooksData.size}, main: ${state.mainData.length})`);
-
-                    await chrome.action.setBadgeText({ text: count, tabId: tabId });
-                    await chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId });
-
-                    Logger.background(`%c[processDetectionData] Badge set to FINAL COUNT "${count}" - NO MORE PERCENTAGE UPDATES!`, 'color: #4caf50; font-weight: bold; font-size: 14px;');
-                } else {
-                    Logger.background(`%c[processDetectionData] No detections found - showing clean badge`, 'color: #ff9800; font-weight: bold;');
-                    await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEAN, tabId: tabId });
-                    await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId: tabId });
-                }
-            } catch (error) {
-                // Silently ignore "No tab with id" errors - expected when tab closes during detection
-                if (error.message && error.message.includes('No tab with id')) {
-                    Logger.background(`[processDetectionData] Tab ${tabId} closed during detection, skipping badge update`);
-                } else {
-                    Logger.error('DETECTION', '[processDetectionData] Error updating badge:', error);
-                }
-            }
-        })();
+        // Keep loading badge while detection is still in-memory/finalizing.
+        // Final numeric/clean badge is set only in finalizeDetection() after cache write.
 
         // PHASE 1 FIX: Safety timeout for completion signals
         // Wait longer (5 seconds) to give main detection time to complete
@@ -806,10 +731,9 @@ async function processDetectionData(message, sender) {
             const mainMethodsComplete = ['cookies', 'headers', 'url', 'dom'].every(m => currentState.completedMethods.has(m));
 
             if (!mainMethodsComplete) {
-                Logger.warn('BACKGROUND', `%c[5s SAFETY] Main detection hasn't completed yet - waiting...`, 'color: #ff9800; font-weight: bold;');
-                Logger.warn('BACKGROUND', `[5s SAFETY] Completed methods: [${Array.from(currentState.completedMethods)}]`);
-                // Don't force methods if main detection is still running
-                // Main detection will mark them complete when it finishes
+                Logger.debug('BACKGROUND', `[5s safety] Main detection incomplete`, {
+                    completed: Array.from(currentState.completedMethods)
+                });
                 return;
             }
 
@@ -817,7 +741,7 @@ async function processDetectionData(message, sender) {
             let forcedMethods = [];
 
             if (!currentState.windowPropertiesComplete) {
-                Logger.warn('BACKGROUND', `%c[5s SAFETY] Main complete, forcing windowProperties completion (signal lost)`, 'color: #ff9800; font-weight: bold;');
+                Logger.debug('BACKGROUND', `[5s safety] Forcing windowProperties completion`);
                 markMethodComplete(tabId, 'windowProperties');
                 currentState.windowPropertiesComplete = true;
                 forcedMethods.push('windowProperties');
@@ -827,12 +751,9 @@ async function processDetectionData(message, sender) {
                 const hooksDeadline = await ensureHooksDeadline(currentState);
                 const now = Date.now();
                 if (now < hooksDeadline) {
-                    const debugMode = await ensureDebugMode(currentState);
-                    if (debugMode) {
-                        Logger.warn('BACKGROUND', `[5s SAFETY] Deferring jsHooks force; ${hooksDeadline - now}ms until hooks deadline`);
-                    }
+                    Logger.debug('BACKGROUND', `[5s safety] Deferring jsHooks force; ${hooksDeadline - now}ms until deadline`);
                 } else {
-                    Logger.warn('BACKGROUND', `%c[5s SAFETY] Main complete, forcing jsHooks completion (signal lost)`, 'color: #ff9800; font-weight: bold;');
+                    Logger.debug('BACKGROUND', `[5s safety] Forcing jsHooks completion`);
                     markMethodComplete(tabId, 'jsHooks');
                     currentState.hooksComplete = true;
                     currentState.hooksTimedOut = true;
@@ -843,32 +764,19 @@ async function processDetectionData(message, sender) {
             // CRITICAL FIX: Check if detection data is ALREADY stored
             const storedData = await DetectionEngineManager.getStoredDetection(currentState.url);
             if (storedData) {
-                Logger.background(`%c[5s SAFETY TIMEOUT] Detection data already stored for tab ${tabId}!`, 'color: #4caf50; font-weight: bold;');
-                Logger.background(`[5s SAFETY] Found ${storedData.detectionResults?.length || 0} detectors - finalizing immediately`);
-
-                // Finalize immediately
+                Logger.background(`[5s safety] Detection already stored for tab ${tabId}, finalizing`);
                 await finalizeDetection(tabId, currentState);
-                Logger.background(`%c[5s SAFETY] Finalization complete, badge updated to count`, 'color: #4caf50; font-weight: bold;');
                 return;
             }
 
             // If we forced any methods, trigger finalization
             if (forcedMethods.length > 0) {
-                Logger.warn('BACKGROUND', `%c[5s SAFETY TIMEOUT TRIGGERED]`, 'color: #ff9800; font-weight: bold; font-size: 14px;');
-                Logger.warn('BACKGROUND', `[5s SAFETY] Forced completion of: ${forcedMethods.join(', ')}`);
-                Logger.warn('BACKGROUND', `[5s SAFETY] Current state:`, {
-                    windowPropertiesComplete: currentState.windowPropertiesComplete,
-                    mainComplete: currentState.mainComplete,
-                    hooksComplete: currentState.hooksComplete,
-                    completedMethods: Array.from(currentState.completedMethods),
-                    url: currentState.url
+                Logger.debug('BACKGROUND', `[5s safety] Forced: ${forcedMethods.join(', ')}`, {
+                    completedMethods: Array.from(currentState.completedMethods)
                 });
-
-                // Trigger finalization check
                 checkAndFinalizeDetection(tabId);
-                Logger.background(`%c[5s SAFETY] Forced finalization triggered`, 'color: #ff9800; font-weight: bold;');
             }
-        }, 5000); // 5 seconds - give main detection time to complete
+        }, Constants.SAFETY_TIMEOUT); // Give main detection time to complete
 
         // Check if all methods are done
         checkAndFinalizeDetection(tabId);

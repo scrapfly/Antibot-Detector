@@ -29,13 +29,33 @@ Rules.prototype.setupModalEventListeners = function() {
     const categorySelect = document.querySelector('#detectorCategorySelect');
     if (categorySelect) {
       categorySelect.addEventListener('change', (e) => {
-        const currentIconContainer = document.querySelector('.current-icon');
-        if (currentIconContainer) {
-          if (e.target.value.toLowerCase() === 'fingerprint') {
+        const isFingerprint = e.target.value.toLowerCase() === 'fingerprint';
+        document.querySelectorAll('.current-icon, .icon-preview').forEach(currentIconContainer => {
+          if (isFingerprint) {
             currentIconContainer.classList.add('fingerprint-icon');
           } else {
             currentIconContainer.classList.remove('fingerprint-icon');
           }
+        });
+
+        const iconImg = document.querySelector('#currentDetectorIcon');
+        if (!iconImg) return;
+
+        if (isFingerprint) {
+          if (
+            !iconImg.classList.contains('fingerprint-icon-image--builtin') &&
+            !iconImg.classList.contains('fingerprint-icon-image--custom') &&
+            !iconImg.classList.contains('fingerprint-icon-image--default')
+          ) {
+            this.setCurrentDetectorIconSourceClass?.('default');
+          }
+        } else {
+          iconImg.classList.remove(
+            'fingerprint-icon-image',
+            'fingerprint-icon-image--builtin',
+            'fingerprint-icon-image--custom',
+            'fingerprint-icon-image--default'
+          );
         }
       });
     }
@@ -49,10 +69,10 @@ Rules.prototype.setupModalEventListeners = function() {
       }
     });
 
-    // Change Icon button
-    const changeIconBtn = document.querySelector('.change-icon-btn');
-    if (changeIconBtn) {
-      changeIconBtn.addEventListener('click', () => this.openIconPicker());
+    // Icon picker trigger (icon preview button)
+    const iconPickerTrigger = document.querySelector('#openIconPickerBtn');
+    if (iconPickerTrigger) {
+      iconPickerTrigger.addEventListener('click', () => this.openIconPicker());
     }
 
     // Setup all modals

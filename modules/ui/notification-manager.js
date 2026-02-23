@@ -51,7 +51,7 @@ class NotificationManager {
     if (!this.initialized) this.initialize();
 
     const defaults = {
-      duration: 3000,
+      duration: Constants.NOTIFICATION_DURATION,
       position: 'top-right',
       showProgress: true,
       closeable: true,
@@ -178,7 +178,7 @@ class NotificationManager {
     setTimeout(() => {
       toast.remove();
       this.toasts = this.toasts.filter(t => t.id !== toastId);
-    }, 300);
+    }, Constants.NOTIFICATION_FADE_MS);
   }
 
   /**
@@ -308,7 +308,7 @@ class NotificationManager {
         setTimeout(() => {
           backdrop.remove();
           dialog.remove();
-        }, 300);
+        }, Constants.NOTIFICATION_FADE_MS);
       };
 
       confirmBtn.addEventListener('click', () => {
@@ -594,10 +594,7 @@ const NotificationHelper = {
   }
 };
 
-// Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = notificationManager;
-} else if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
   window.NotificationManager = notificationManager;
   window.NotificationHelper = NotificationHelper;
 }

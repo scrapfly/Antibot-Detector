@@ -164,9 +164,6 @@ class PaginationManager {
   }
 }
 
-// Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = PaginationManager;
-} else if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
   window.PaginationManager = PaginationManager;
 }

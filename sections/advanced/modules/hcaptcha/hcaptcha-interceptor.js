@@ -8,9 +8,28 @@ var hcaptchaInterceptionListener = hcaptchaInterceptionListener || null;
 
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
 var saveToHistory = self.BaseInterceptorHelpers?.saveToHistory;
+var getCaptureState = self.BaseInterceptorHelpers?.getCaptureState;
+var setCaptureTimeout = self.BaseInterceptorHelpers?.setCaptureTimeout;
+var clearCaptureTimeout = self.BaseInterceptorHelpers?.clearCaptureTimeout;
+var removeCaptureState = self.BaseInterceptorHelpers?.removeCaptureState;
+var showCaptureStarted = self.BaseInterceptorHelpers?.showCaptureStarted;
+var registerManagedListener = self.BaseInterceptorHelpers?.registerManagedListener;
+var cleanupManagedListeners = self.BaseInterceptorHelpers?.cleanupManagedListeners;
 
-// hCaptcha capture state
-var hcaptchaCaptureState = hcaptchaCaptureState || new Map();
+// hCaptcha capture state (initialized via hcaptchaInitializeInterceptor)
+var hcaptchaCaptureStateRef = hcaptchaCaptureStateRef || null;
+
+/**
+ * Initialize hCaptcha interceptor with capture state from background.js
+ * @param {TTLMap} captureState - TTLMap instance from background.js
+ */
+function hcaptchaInitializeInterceptor(captureState) {
+    if (hcaptchaCaptureStateRef) {
+        Logger.network('[hCaptcha] Interceptor already initialized, skipping');
+        return;
+    }
+    hcaptchaCaptureStateRef = captureState;
+}
 
 // Store active version check requests
 const activeVersionChecks = {};
@@ -28,13 +47,13 @@ function hcaptchaStartCapture(tabId, captureUrl) {
     Logger.network('[hCaptcha-Capture] Auto-stop in: 60 seconds');
     Logger.network('[hCaptcha-Capture] Waiting for page reload before capturing');
 
-    if (hcaptchaCaptureState.has(tabId)) {
+    if (hcaptchaCaptureStateRef.has(tabId)) {
         Logger.network('[hCaptcha-Capture] Already capturing for this tab');
         return { status: 'already_capturing' };
     }
 
     // Initialize capture state
-    hcaptchaCaptureState.set(tabId, {
+    hcaptchaCaptureStateRef.set(tabId, {
         active: true,
         timestamp: Date.now(),
         captureUrl: captureUrl,
@@ -49,7 +68,9 @@ function hcaptchaStartCapture(tabId, captureUrl) {
     const requestListener = (details) => {
         if (details.tabId !== tabId) return;
         const url = details.url;
-        const state = hcaptchaCaptureState.get(tabId);
+        const state = (typeof getCaptureState === 'function')
+            ? getCaptureState(hcaptchaCaptureStateRef, tabId)
+            : hcaptchaCaptureStateRef.get(tabId);
         if (!state) return;
 
         // checksiteconfig API - extract version, site key, website URL
@@ -91,7 +112,9 @@ function hcaptchaStartCapture(tabId, captureUrl) {
                             Logger.network('[hCaptcha-Capture] Auto-stopping capture (data complete)');
 
                             // Clear timeout since we got the data
-                            if (state.timeout) {
+                            if (typeof clearCaptureTimeout === 'function') {
+                                clearCaptureTimeout(state);
+                            } else if (state.timeout) {
                                 clearTimeout(state.timeout);
                             }
 
@@ -151,7 +174,9 @@ function hcaptchaStartCapture(tabId, captureUrl) {
             Logger.network('[hCaptcha-Capture] Auto-stopping capture (data complete)');
 
             // Clear timeout since we got the data
-            if (state.timeout) {
+            if (typeof clearCaptureTimeout === 'function') {
+                clearCaptureTimeout(state);
+            } else if (state.timeout) {
                 clearTimeout(state.timeout);
             }
 
@@ -176,30 +201,51 @@ function hcaptchaStartCapture(tabId, captureUrl) {
         { urls: ['<all_urls>'], tabId: tabId },
         ['requestBody']
     );
+    if (typeof registerManagedListener === 'function') {
+        registerManagedListener(
+            tabId,
+            'hcaptcha-capture-webrequest',
+            requestListener,
+            chrome.webRequest.onBeforeRequest.removeListener.bind(chrome.webRequest.onBeforeRequest)
+        );
+    }
 
     // Store listener for cleanup
-    const state = hcaptchaCaptureState.get(tabId);
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(hcaptchaCaptureStateRef, tabId)
+        : hcaptchaCaptureStateRef.get(tabId);
     if (state) {
         state.requestListener = requestListener;
     }
 
     // Auto-stop after 60 seconds
-    const timeout = setTimeout(() => {
-        Logger.network(`[hCaptcha-Capture] Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
-        hcaptchaStopCapture(tabId);
-    }, 60000);
-
-    if (state) {
-        state.timeout = timeout;
+    if (typeof setCaptureTimeout === 'function') {
+        setCaptureTimeout(hcaptchaCaptureStateRef, tabId, Constants.CAPTURE_AUTO_STOP_TIMEOUT, () => {
+            Logger.network(`[hCaptcha-Capture] Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
+            hcaptchaStopCapture(tabId);
+        });
+    } else if (state) {
+        state.timeout = setTimeout(() => {
+            Logger.network(`[hCaptcha-Capture] Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
+            hcaptchaStopCapture(tabId);
+        }, Constants.CAPTURE_AUTO_STOP_TIMEOUT);
     }
 
     // Show in-page notification
-    if (showNotification) {
+    if (typeof showCaptureStarted === 'function') {
+        showCaptureStarted(tabId, {
+            title: 'hCaptcha Monitoring Started',
+            message: 'Reload the page to begin monitoring hCaptcha requests',
+            duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
+        }).catch(err => {
+            Logger.error('NETWORK', '[hCaptcha-Capture] Failed to show notification:', err);
+        });
+    } else if (showNotification) {
         showNotification(tabId, {
             type: 'capture',
-            title: 'hCaptcha Capture Active',
-            message: 'Please reload the page to start monitoring',
-            duration: 60000
+            title: 'hCaptcha Monitoring Started',
+            message: 'Reload the page to begin monitoring hCaptcha requests',
+            duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
             Logger.error('NETWORK', '[hCaptcha-Capture] Failed to show notification:', err);
         });
@@ -240,7 +286,11 @@ async function handleHCaptchaCaptureCompleted(tabId, captureData) {
         }
 
         // Clean up capture state
-        hcaptchaCaptureState.delete(tabId);
+        if (typeof removeCaptureState === 'function') {
+            removeCaptureState(hcaptchaCaptureStateRef, tabId);
+        } else {
+            hcaptchaCaptureStateRef.delete(tabId);
+        }
 
         // Notify popup to update UI (if open)
         Logger.network('[hCaptcha-Capture] Notifying popup (if open)...');
@@ -281,7 +331,9 @@ function hcaptchaStopCapture(tabId) {
     Logger.network('[hCaptcha-Capture] ========== STOP CAPTURE ==========');
     Logger.network('[hCaptcha-Capture] Tab ID:', tabId);
 
-    const state = hcaptchaCaptureState.get(tabId);
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(hcaptchaCaptureStateRef, tabId)
+        : hcaptchaCaptureStateRef.get(tabId);
     if (!state) {
         Logger.network('[hCaptcha-Capture] No capture state for this tab');
         return { status: 'not_capturing' };
@@ -291,7 +343,9 @@ function hcaptchaStopCapture(tabId) {
     if (state.requestListener) {
         chrome.webRequest.onBeforeRequest.removeListener(state.requestListener);
     }
-    if (state.timeout) {
+    if (typeof clearCaptureTimeout === 'function') {
+        clearCaptureTimeout(state);
+    } else if (state.timeout) {
         clearTimeout(state.timeout);
     }
 
@@ -303,7 +357,14 @@ function hcaptchaStopCapture(tabId) {
     Logger.network('[hCaptcha-Capture] Website URL:', state.websiteURL);
 
     // Clean up state
-    hcaptchaCaptureState.delete(tabId);
+    if (typeof removeCaptureState === 'function') {
+        removeCaptureState(hcaptchaCaptureStateRef, tabId);
+    } else {
+        hcaptchaCaptureStateRef.delete(tabId);
+    }
+    if (typeof cleanupManagedListeners === 'function') {
+        cleanupManagedListeners(tabId);
+    }
     Logger.network('[hCaptcha-Capture] ========================================');
 
     return { status: 'stopped' };
@@ -313,7 +374,9 @@ function hcaptchaStopCapture(tabId) {
  * Get current capture state for a tab
  */
 function hcaptchaGetCaptureState(tabId) {
-    const state = hcaptchaCaptureState.get(tabId);
+    const state = (typeof getCaptureState === 'function')
+        ? getCaptureState(hcaptchaCaptureStateRef, tabId)
+        : hcaptchaCaptureStateRef.get(tabId);
     if (!state) {
         return { status: 'not_capturing', isCapturing: false };
     }
@@ -479,7 +542,12 @@ function completeVersionCheck(tabId, requestListener, navigationListener, detect
 /**
  * Centralized message handler for all hCaptcha-related messages
  */
-function handleHCaptchaMessage(request, sender, sendResponse) {
+function handleHCaptchaMessage(request, sender, sendResponse, captureState) {
+    // Initialize interceptor with TTLMap from background.js on first message
+    if (captureState) {
+        hcaptchaInitializeInterceptor(captureState);
+    }
+
     const { type } = request;
     Logger.network('[hCaptcha] Message received:', type);
 

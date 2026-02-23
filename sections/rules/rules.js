@@ -194,9 +194,6 @@ class Rules {
   }
 }
 
-// Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = Rules;
-} else if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
   window.Rules = Rules;
 }

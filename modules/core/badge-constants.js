@@ -22,7 +22,7 @@ const BADGE = {
         DISABLED: '#f97316',
         BLACKLISTED: '#f97316',
         INTERRUPTED: '#3b82f6',
-        CLEARED: '#3b82f6',
+        CLEARED: '#6B7280',
         CLEAN: '#22c55e'
     },
 
@@ -41,8 +41,10 @@ function getBadgeColorForCount(count) {
 
 async function setBadge(tabId, text, color) {
     try {
-        await chrome.action.setBadgeText({ text, tabId });
-        await chrome.action.setBadgeBackgroundColor({ color, tabId });
+        await Promise.all([
+            chrome.action.setBadgeText({ text, tabId }),
+            chrome.action.setBadgeBackgroundColor({ color, tabId })
+        ]);
     } catch (error) {
         if (!error.message?.includes('No tab with id')) {
             Logger.error('BADGE', 'Failed to set badge', error);
@@ -71,11 +73,3 @@ if (badgeGlobal) {
     badgeGlobal.clearBadge = clearBadge;
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        BADGE,
-        getBadgeColorForCount,
-        setBadge,
-        clearBadge
-    };
-}

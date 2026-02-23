@@ -28,7 +28,7 @@ class DetectionEngineManager {
         // Invalidate cache when detectors change (setDetectors)
         this.analyzedMethodsCache = null;
         this.analyzedMethodsCacheTime = 0;
-        this.ANALYSIS_CACHE_TTL = 300000; // Cache for 5 minutes (detectors rarely change)
+        this.ANALYSIS_CACHE_TTL = Constants.ANALYSIS_CACHE_TTL;
     }
 
     /**
@@ -39,12 +39,19 @@ class DetectionEngineManager {
      * @returns {object} Detector info object
      */
     static buildDetectorInfo(detector, fallbackName, fallbackId) {
+        const manualDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.normalizeDifficulty === 'function')
+            ? DetectionUtils.normalizeDifficulty(detector?.difficulty)
+            : null;
+        const defaultDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.defaultDifficultyForCategory === 'function')
+            ? DetectionUtils.defaultDifficultyForCategory(detector?.category)
+            : 'Medium';
         const result = {
             name: detector.name || fallbackName,
             icon: detector.icon,
             // Note: color is not stored here - it's looked up from CategoryManager based on category
             id: detector.id || fallbackId,
-            description: detector.description
+            description: detector.description,
+            difficulty: manualDifficulty || defaultDifficulty
         };
 
         // DEBUG: Log if ID is missing
@@ -110,7 +117,7 @@ class DetectionEngineManager {
             Logger.detection(`[CACHE] No settings found, using default: ${DetectionEngineManager.DEFAULT_EXPIRY_HOURS} hours`);
             return defaultMs;
         } catch (error) {
-            Logger.error('CACHE', '[CACHE] Error reading cache duration from settings:', error);
+            Logger.warn('CACHE', '[getCacheDuration] Settings read failed, using default', error);
             return DetectionEngineManager.DEFAULT_EXPIRY_HOURS * 60 * 60 * 1000;
         }
     }
@@ -287,7 +294,7 @@ class DetectionEngineManager {
             try {
                 externalContent = await this.extractExternalContent();
             } catch (error) {
-                Logger.error('DETECTION', 'DetectionEngineManager: Error fetching external content:', error);
+                Logger.warn('DETECTION', '[runDetection] External content fetch failed, continuing without', error);
                 externalContent = [];
             }
         } else {
@@ -329,7 +336,7 @@ class DetectionEngineManager {
                 Logger.detection(`[JS Hooks] Found ${jsHooks.length} hook detections for this page`);
             }
         } catch (error) {
-            Logger.error('HOOKS', '[JS Hooks] Error loading hook detections:', error);
+            Logger.warn('HOOKS', '[runDetection] Hook detections load failed', error);
         }
 
         // OPTIMIZATION 8A + 8E + C.1: Smart lazy data collection
@@ -470,7 +477,7 @@ class DetectionEngineManager {
                 }
             }
         } catch (error) {
-            Logger.warn('STORAGE', '[Storage Cookies] Cannot access localStorage:', error.message);
+            Logger.debug('STORAGE', '[extractStorageCookies] Cannot access localStorage:', error.message);
         }
 
         try {
@@ -487,7 +494,7 @@ class DetectionEngineManager {
                 }
             }
         } catch (error) {
-            Logger.warn('STORAGE', '[Storage Cookies] Cannot access sessionStorage:', error.message);
+            Logger.debug('STORAGE', '[extractStorageCookies] Cannot access sessionStorage:', error.message);
         }
 
         if (typeof Logger !== 'undefined') {
@@ -518,7 +525,7 @@ class DetectionEngineManager {
 
         const CONCURRENCY_LIMIT = 6;
         const MAX_CONTENT_SIZE = 5 * 1024 * 1024;
-        const FETCH_TIMEOUT = 5000;
+        const FETCH_TIMEOUT = Constants.FETCH_TIMEOUT;
 
         const startTime = Date.now();
         const results = [];
@@ -1311,10 +1318,18 @@ class DetectionEngineManager {
 
         // Extract unique detection method types from matches
         const detectionMethods = [...new Set(matches.map(m => m.type))];
+        const manualDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.normalizeDifficulty === 'function')
+            ? DetectionUtils.normalizeDifficulty(detector?.difficulty)
+            : null;
+        const defaultDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.defaultDifficultyForCategory === 'function')
+            ? DetectionUtils.defaultDifficultyForCategory(detector?.category)
+            : 'Medium';
+        const difficulty = manualDifficulty || defaultDifficulty;
 
         return {
             detected: overallConfidence > 0,
             confidence: overallConfidence,
+            difficulty: difficulty,
             matches,
             detectionMethods,
             detector: {
@@ -1323,7 +1338,8 @@ class DetectionEngineManager {
                 category: detector.category,
                 // Note: color is not stored here - it's looked up from CategoryManager based on category
                 icon: detector.icon,
-                description: detector.description
+                description: detector.description,
+                difficulty: difficulty
             }
         };
     }
@@ -1368,7 +1384,7 @@ class DetectionEngineManager {
         let detectorPriorities = this.precomputedPriorities || [];
 
         if (detectorPriorities.length === 0) {
-            Logger.warn('PERF', '[Phase 1 Optimization] Pre-computed priorities missing - falling back to runtime calculation');
+            Logger.debug('DETECTION', '[detectOnPage] Pre-computed priorities missing, falling back to runtime calculation');
             this._precomputePriorities();
             detectorPriorities = this.precomputedPriorities || [];
         }
@@ -1451,9 +1467,11 @@ class DetectionEngineManager {
 
                         Logger.detection(`[JS Hooks] Added hook to existing detection: ${detector.name}`);
                     } else {
+                        const detectorInfo = DetectionEngineManager.buildDetectorInfo(detector, hookData.detectorName, hookData.detectorId);
                         detections.push({
                             detected: true,
                             confidence: hookData.confidence || 80,
+                            difficulty: detectorInfo.difficulty,
                             matches: [{
                                 type: 'js_hooks',
                                 target: hookData.target,
@@ -1463,7 +1481,7 @@ class DetectionEngineManager {
                             }],
                             detectionMethods: ['js_hooks'],
                             category,
-                            detector: DetectionEngineManager.buildDetectorInfo(detector, hookData.detectorName, hookData.detectorId)
+                            detector: detectorInfo
                         });
 
                         Logger.detection(`[JS Hooks] Created new detection: ${detector.name}`);
@@ -1542,7 +1560,7 @@ class DetectionEngineManager {
                 }
             }
         } catch (error) {
-            Logger.error('DETECTION', 'getStoredDetection: Error reading stored detections:', error);
+            Logger.warn('DETECTION', '[getStoredDetection] Storage read failed', error);
         }
         return null;
     }
@@ -1574,7 +1592,7 @@ class DetectionEngineManager {
                 };
             }
         } catch (error) {
-            Logger.error('DETECTION', 'getDetectionData: Error:', error);
+            Logger.warn('DETECTION', '[getDetectionData] Storage read failed', error);
         }
 
         return null;
@@ -1596,14 +1614,24 @@ class DetectionEngineManager {
 
             // Compress detectionResults to essential fields only
             const compressedResults = detectionResults.map((detection) => {
+                const normalizedDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.normalizeDifficulty === 'function')
+                    ? DetectionUtils.normalizeDifficulty(detection?.difficulty || detection?.detector?.difficulty)
+                    : null;
+                const defaultDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.defaultDifficultyForCategory === 'function')
+                    ? DetectionUtils.defaultDifficultyForCategory(detection?.category || detection?.detector?.category)
+                    : 'Medium';
+                const difficulty = normalizedDifficulty || defaultDifficulty;
+
                 return {
                     id: detection.id,
+                    difficulty: difficulty,
                     detector: {
                         id: detection.detector?.id,
                         name: detection.detector?.name || detection.name || 'Unknown',
                         icon: detection.detector?.icon || 'custom.png',
                         color: detection.detector?.color,
-                        description: detection.detector?.description
+                        description: detection.detector?.description,
+                        difficulty: difficulty
                     },
                     category: detection.category,
                     confidence: detection.confidence,
@@ -1663,7 +1691,7 @@ class DetectionEngineManager {
         const triggerSource = request.triggerSource || 'unknown';
 
         if (!tabId) {
-            Logger.error('DETECTION', 'No tab ID in PAGE_LOAD_NOTIFICATION');
+            Logger.warn('DETECTION', '[handlePageLoad] No tab ID in notification');
             return;
         }
 
@@ -1679,7 +1707,7 @@ class DetectionEngineManager {
                 return;
             }
         } catch (error) {
-            Logger.error('DETECTION', 'Failed to check enabled state:', error);
+            Logger.warn('DETECTION', '[handlePageLoad] Enabled state check failed', error);
         }
 
         // Check if URL is blacklisted
@@ -1758,7 +1786,7 @@ class DetectionEngineManager {
             chrome.action.setBadgeText({ text: BADGE.TEXT.LOADING, tabId: tabId });
             chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.LOADING, tabId: tabId });
         } catch (error) {
-            Logger.error('DETECTION', 'Failed to set loading badge:', error);
+            Logger.warn('DETECTION', '[handlePageLoad] Loading badge failed', error);
         }
 
         // Request data collection from content script with retry
@@ -1794,7 +1822,17 @@ class DetectionEngineManager {
      */
     static async handleClearDetectionCache(request, sendResponse, manuallyClearedCaches = null) {
         try {
-            const cacheScope = await Utils.getCacheScope();
+            const requestedScopeRaw = String(request.cacheScope || '').toLowerCase();
+            const requestedScope = requestedScopeRaw === 'url' ? 'full' : requestedScopeRaw;
+            const allowedScopes = ['domain', 'path', 'full'];
+
+            if (requestedScopeRaw && !allowedScopes.includes(requestedScope)) {
+                Logger.warn('DETECTION', `[handleClearDetectionCache] Invalid cache scope "${requestedScopeRaw}", falling back to settings scope`);
+            }
+
+            const cacheScope = allowedScopes.includes(requestedScope)
+                ? requestedScope
+                : await Utils.getCacheScope();
             const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY]);
             const storage = result[DetectionEngineManager.STORAGE_KEY] || {};
             const urlHash = UrlUtils.hashUrl(request.url, cacheScope);
@@ -1854,7 +1892,7 @@ class DetectionEngineManager {
                 return true;
             }
         } catch (error) {
-            Logger.error('DETECTION', 'Failed to check enabled state:', error);
+            Logger.warn('DETECTION', '[requestDetection] Enabled state check failed', error);
         }
 
         try {
@@ -1865,7 +1903,7 @@ class DetectionEngineManager {
                 return true;
             }
 
-            if (Utils.shouldSkipDetection(tabId, 2000, recentDetectionRequests)) {
+            if (Utils.shouldSkipDetection(tabId, Constants.DETECTION_SKIP_THRESHOLD, recentDetectionRequests)) {
                 sendResponse({ status: 'skipped', reason: 'Recent detection exists' });
                 return true;
             }
@@ -1877,7 +1915,7 @@ class DetectionEngineManager {
                     chrome.action.setBadgeText({ text: BADGE.TEXT.LOADING, tabId: tabId });
                     chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.LOADING, tabId: tabId });
                 } catch (error) {
-                    Logger.error('DETECTION', 'Failed to set loading badge:', error);
+                    Logger.warn('DETECTION', '[requestDetection] Loading badge failed', error);
                 }
             }
 
@@ -1946,7 +1984,7 @@ class DetectionEngineManager {
                 silent: isSilent
             }, (response) => {
                 if (chrome.runtime.lastError) {
-                    Logger.error('DETECTION', 'Failed to trigger detection:', chrome.runtime.lastError.message);
+                    Logger.warn('DETECTION', '[requestDetection] Trigger failed:', chrome.runtime.lastError.message);
                     sendResponse({ status: 'error', error: chrome.runtime.lastError.message });
                 } else {
                     sendResponse({ status: 'requested', response: response });

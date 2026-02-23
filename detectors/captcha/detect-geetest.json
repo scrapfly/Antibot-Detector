@@ -4,6 +4,7 @@
   "author": "Scrapfly",
   "enabled": true,
   "category": "CAPTCHA",
+  "difficulty": "High",
   "lastUpdated": "2024-01-15",
   "version": "1.0",
   "website": "https://www.geetest.com/",
