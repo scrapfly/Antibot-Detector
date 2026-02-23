@@ -1,9 +1,3 @@
-/**
- * shapesecurity-advanced-ui.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
     /**
      * Render Shape Security specific tools
      */
@@ -82,7 +76,7 @@ ShapeSecurityAdvanced.prototype.renderCaptureHistoryItems = function(items) {
         return items.map((item) => {
             const { hostname, captureData, timestamp, id } = item;
             const timeAgo = this.getTimeAgo(timestamp);
-            const faviconUrl = UrlUtils.getFaviconUrl(hostname);
+            const faviconUrl = UrlUtils.resolveDisplayFavicon(item.favicon, item.url || hostname);
 
             const headers = captureData.headers || [];
             const cookie = captureData.cookie || null;
@@ -432,149 +426,6 @@ ShapeSecurityAdvanced.prototype.displayScriptDataModal = function(data) {
         } else {
             Logger.error('NETWORK', '[ShapeSecurity] Export code button not found in modal!');
             Logger.error('NETWORK', '[ShapeSecurity] Modal HTML:', modal.innerHTML.substring(0, 500));
-        }
-    };
-
-
-    /**
-     * OLD: Display script analysis results in a detailed modal (KEPT FOR REFERENCE)
-     */
-ShapeSecurityAdvanced.prototype.displayScriptResultsOld = function(scripts) {
-        const modal = this.createToolModal();
-
-        // Count scripts with seeds
-        const scriptsWithSeeds = scripts.filter(s => s.hasSeed);
-        const scriptsWithoutSeeds = scripts.filter(s => !s.hasSeed);
-
-        modal.innerHTML = `
-            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 700px; max-height: 80vh; overflow-y: auto; width: 90%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Shape Security Scripts Analysis</h3>
-                    <button class="advanced-modal-close-btn">×</button>
-                </div>
-
-                <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 16px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">Total Scripts:</span>
-                        <span style="color: var(--text-primary); font-weight: 500;">${scripts.length}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">With Seed Parameters:</span>
-                        <span style="color: var(--success); font-weight: 500;">${scriptsWithSeeds.length}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">Without Seeds:</span>
-                        <span style="color: var(--text-muted); font-weight: 500;">${scriptsWithoutSeeds.length}</span>
-                    </div>
-                </div>
-
-                ${scripts.length === 0 ? `
-                    <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
-                        <div style="font-size: 14px; color: var(--text-secondary);">No Shape Security scripts found</div>
-                        <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">Scripts with "seed=" parameters or "shape" in URL will appear here</div>
-                    </div>
-                ` : `
-                    ${scriptsWithSeeds.length > 0 ? `
-                        <div style="margin-bottom: 20px;">
-                            <div style="font-weight: 500; color: var(--success); margin-bottom: 12px; font-size: 14px;">
-                                Scripts with Seed Parameters (${scriptsWithSeeds.length})
-                            </div>
-                            <div style="display: flex; flex-direction: column; gap: 12px;">
-                                ${scriptsWithSeeds.map(script => `
-                                    <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; border-left: 3px solid var(--success);">
-                                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
-                                            <div style="font-size: 12px; color: var(--text-secondary); word-break: break-all; flex: 1; font-family: monospace;">
-                                                ${AdvancedUtils.escapeHtml(script.url)}
-                                            </div>
-                                            <button class="copy-script-url" data-url="${AdvancedUtils.escapeHtml(script.url)}" style="margin-left: 8px; flex-shrink: 0;">Copy</button>
-                                        </div>
-                                        ${script.seed ? `
-                                            <div style="background: var(--bg-primary); padding: 8px; border-radius: 4px; margin-top: 8px;">
-                                                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">Seed Parameter:</div>
-                                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                                    <code style="font-size: 11px; color: var(--success); word-break: break-all; flex: 1;">${AdvancedUtils.truncate(script.seed, 100)}</code>
-                                                    <button class="copy-seed" data-seed="${AdvancedUtils.escapeHtml(script.seed)}" style="margin-left: 8px; flex-shrink: 0;">Copy Seed</button>
-                                                </div>
-                                            </div>
-                                        ` : ''}
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-
-                    ${scriptsWithoutSeeds.length > 0 ? `
-                        <div>
-                            <div style="font-weight: 500; color: var(--text-muted); margin-bottom: 12px; font-size: 14px;">
-                                Other Shape Security Scripts (${scriptsWithoutSeeds.length})
-                            </div>
-                            <div style="display: flex; flex-direction: column; gap: 8px;">
-                                ${scriptsWithoutSeeds.map(script => `
-                                    <div style="background: var(--bg-tertiary); padding: 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
-                                        <div style="font-size: 12px; color: var(--text-secondary); word-break: break-all; flex: 1; font-family: monospace;">
-                                            ${AdvancedUtils.escapeHtml(script.url)}
-                                        </div>
-                                        <button class="copy-script-url" data-url="${AdvancedUtils.escapeHtml(script.url)}" style="margin-left: 8px; flex-shrink: 0;">Copy</button>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-                `}
-
-                <div class="modal-button-group">
-                    <button class="export-code-btn advanced-modal-action-btn" style="margin-bottom: 0; flex: 1;">Export Code</button>
-                    <button class="copy-all-scripts advanced-modal-action-btn">Copy All URLs</button>
-                </div>
-            </div>
-        `;
-
-        this.bindModalClose(modal);
-        this.showToolModal(modal);
-
-        // Copy individual script URL buttons
-        modal.querySelectorAll('.copy-script-url').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const url = btn.getAttribute('data-url');
-                if (!url) {
-                    return;
-                }
-                AdvancedUtils.copyToClipboard(url, btn, {
-                    notificationMessage: 'URL copied'
-                });
-            });
-        });
-
-        // Copy seed buttons
-        modal.querySelectorAll('.copy-seed').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const seed = btn.getAttribute('data-seed');
-                if (!seed) {
-                    return;
-                }
-                AdvancedUtils.copyToClipboard(seed, btn, {
-                    notificationMessage: 'Seed copied'
-                });
-            });
-        });
-
-        // Copy all URLs button
-        const copyAllBtn = modal.querySelector('.copy-all-scripts');
-        if (copyAllBtn) {
-            copyAllBtn.addEventListener('click', () => {
-                const allUrls = scripts.map(s => s.url).join('\n');
-                AdvancedUtils.copyToClipboard(allUrls, copyAllBtn, {
-                    notificationMessage: 'All URLs copied'
-                });
-            });
-        }
-
-        // Export code button
-        const exportCodeBtn = modal.querySelector('.export-code-btn');
-        if (exportCodeBtn) {
-            exportCodeBtn.addEventListener('click', () => {
-                this.displayExportCodeModal(scripts);
-            });
         }
     };
 

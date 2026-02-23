@@ -4,17 +4,12 @@
  */
 
 async function initialize(reason = 'startup', previousVersion = null) {
-    // RACE CONDITION FIX: Prevent concurrent initializations
-    // During extension updates, both onInstalled and IIFE can fire simultaneously
+    // Reuse existing initialization promise if already in progress
     if (initializationInProgress && initializationPromise) {
-        const result = await initializationPromise;
-        return result;
+        return await initializationPromise;
     }
 
-    // Set guard flag and create promise for this initialization
     initializationInProgress = true;
-
-    // Create the initialization promise
     initializationPromise = (async () => {
         try {
 
@@ -27,12 +22,10 @@ async function initialize(reason = 'startup', previousVersion = null) {
         await detectorManager.initialize();
         const initDuration = Date.now() - initStartTime;
 
-        // Storage health check - verify detectors were loaded correctly
         let detectorCount = detectorManager.getDetectorCount();
         let hasDetectors = detectorCount > 0;
 
-        // BUGFIX: Add retry logic if detectors haven't loaded yet (timing issue)
-        // This handles cases where service worker starts before JSON files are fully loaded
+        // Retry detector loading with exponential backoff
         if (!hasDetectors) {
             const maxRetries = Constants.DETECTOR_LOAD_MAX_RETRIES;
             let retries = maxRetries;
@@ -54,22 +47,20 @@ async function initialize(reason = 'startup', previousVersion = null) {
             Logger.error('BACKGROUND', 'CRITICAL: No detectors loaded - extension will not work. Remove and re-add the extension, then refresh all tabs.');
         }
 
-        // Initialize "never fail" managers
+        // Initialize keepalive manager
         workerKeepaliveManager = new WorkerKeepaliveManager();
         Logger.background('[WorkerKeepaliveManager] Initialized');
 
-        // Check if extension is enabled/disabled and set badges accordingly
+        // Set disabled badge if extension is disabled
         const isEnabled = await isExtensionEnabled();
         const tabs = await chrome.tabs.query({});
 
         if (!isEnabled) {
-            // Extension is disabled - set OFF badge with gray color for all tabs
             for (const tab of tabs) {
                 chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tab.id }).catch(() => {});
                 chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tab.id }).catch(() => {});
             }
         } else {
-            // Extension is enabled - clear any leftover badges
             for (const tab of tabs) {
                 chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tab.id }).catch(() => {});
             }
@@ -78,107 +69,43 @@ async function initialize(reason = 'startup', previousVersion = null) {
         // Initialize all services (listeners, interceptors, etc.)
         initializeServices();
 
-        // Clear guard flag on success
         initializationInProgress = false;
         return true;
         } catch (error) {
             Logger.error('BACKGROUND', 'Failed to initialize detector system:', error);
 
-            // Clear guard flag on error
             initializationInProgress = false;
             return false;
         } finally {
-            // Clear promise reference when done (success or failure)
             initializationPromise = null;
         }
     })();
 
-    // Await and return the result
     return await initializationPromise;
 }
 
-// Listen for extension installation or update
 chrome.runtime.onInstalled.addListener(async (details) => {
-    // Clear all detection states on extension reload/update to prevent stale data
     detectionStates.clear();
 
     if (details.reason === 'install' || details.reason === 'update') {
         await initialize(details.reason, details.previousVersion);
         // Check for detector updates after installation/update
-        scheduleUpdateCheck();
+        UpdateManager.scheduleCheck();
     }
 
 });
 
-// Schedule update check after initialization completes
-// This runs on install, update, and startup
-async function scheduleUpdateCheck() {
-    try {
-        const settings = await Utils.getSettings();
-        if (settings.updates?.autoUpdate) {
-            Logger.background('Auto-update enabled, checking for detector updates...');
-            // Delay slightly to let the extension fully initialize first
-            setTimeout(async () => {
-                try {
-                    await UpdateManager.checkForUpdates(false); // Non-forced check respects interval
-                    Logger.background('Update check completed');
-                } catch (error) {
-                    Logger.warn('BACKGROUND', 'Failed to check for updates:', error);
-                }
-            }, Constants.UPDATE_CHECK_DELAY);
-
-            // Setup periodic alarm for update checks
-            // This ensures updates are checked even if the browser stays open
-            setupUpdateAlarm(settings.updates.checkIntervalHours || 12);
-        } else {
-            Logger.background('Auto-update disabled, skipping update check');
-            // Clear any existing alarm if auto-update is disabled
-            chrome.alarms.clear('scrapfly-update-check');
-            // Clear any stale pending updates
-            await UpdateManager.clearPendingUpdates();
-        }
-    } catch (error) {
-        Logger.warn('BACKGROUND', 'Failed to schedule update check:', error);
-    }
-}
-
-// Setup periodic alarm for update checks
-function setupUpdateAlarm(intervalHours) {
-    const periodInMinutes = intervalHours * 60;
-    chrome.alarms.create('scrapfly-update-check', {
-        periodInMinutes: periodInMinutes
-    });
-    Logger.background(`Update alarm set: every ${intervalHours} hours`);
-}
-
-// Handle alarm events
-chrome.alarms.onAlarm.addListener(async (alarm) => {
-    if (alarm.name === 'scrapfly-update-check') {
-        Logger.background('Periodic update check triggered by alarm');
-        try {
-            const settings = await Utils.getSettings();
-            if (settings.updates?.autoUpdate) {
-                await UpdateManager.checkForUpdates(false);
-                Logger.background('Periodic update check completed');
-            }
-        } catch (error) {
-            Logger.warn('BACKGROUND', 'Periodic update check failed:', error);
-        }
-    }
-});
+// Register periodic update alarm listener once during init
+UpdateManager.setupAlarmListener();
 
 
-// Initialize on browser startup (when browser starts with extension already installed)
 chrome.runtime.onStartup.addListener(async () => {
     await initialize('startup');
-    // Check for detector updates on browser startup
-    scheduleUpdateCheck();
+    UpdateManager.scheduleCheck();
 });
 
-// Also initialize immediately when service worker starts/restarts
-// This handles the case where the service worker is awakened from idle
+// Initialize when service worker starts/restarts from idle
 (async () => {
-    // Check if we need to initialize (service worker may have been restarted)
     if (!detectorManager || !detectorManager.initialized) {
         await initialize('startup');
     }

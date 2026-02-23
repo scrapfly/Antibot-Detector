@@ -21,8 +21,7 @@ const DetectionUIStates = {
   LOADING: 'loading',
   ANALYZING: 'analyzing',
   RESULTS: 'results',
-  DISABLED: 'disabled',
-  INTERRUPTED: 'interrupted'
+  DISABLED: 'disabled'
 };
 
 if (typeof window !== 'undefined') {

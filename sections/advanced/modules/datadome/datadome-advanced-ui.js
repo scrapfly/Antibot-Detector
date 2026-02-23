@@ -1,9 +1,3 @@
-/**
- * datadome-advanced-ui.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
     /**
      * Render DataDome-specific tools
      */

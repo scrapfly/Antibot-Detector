@@ -1,8 +1,4 @@
-/**
- * TurnstileAdvanced - Cloudflare Turnstile CAPTCHA Module
- *
- * Extends BaseAdvancedModule for Cloudflare Turnstile detection and analysis.
- */
+// TurnstileAdvanced - Extends BaseAdvancedModule for Cloudflare Turnstile detection
 
 Logger.network('[TurnstileAdvanced] Loading... Dependencies check:', {
     BaseAdvancedModule: typeof BaseAdvancedModule,

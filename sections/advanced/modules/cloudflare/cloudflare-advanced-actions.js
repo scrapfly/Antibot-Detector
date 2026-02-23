@@ -1,8 +1,3 @@
-/**
- * cloudflare-advanced-actions.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
 CloudflareAdvanced.prototype.checkCookies = async function() {
         Logger.network('[Cloudflare] ========== CHECK COOKIES ==========');
         try {

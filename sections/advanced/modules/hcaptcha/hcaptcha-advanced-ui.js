@@ -1,8 +1,3 @@
-/**
- * hcaptcha-advanced-ui.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
 HCaptchaAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {
@@ -107,7 +102,7 @@ HCaptchaAdvanced.prototype.renderCaptureHistoryItems = function(historyItems) {
         return historyItems.map(item => {
             const timestamp = item.timestamp ? new Date(item.timestamp).toLocaleString() : 'Unknown';
             const hostname = item.hostname || (item.websiteURL ? new URL(item.websiteURL).hostname : '');
-            const faviconUrl = UrlUtils.getFaviconUrl(hostname);
+            const faviconUrl = UrlUtils.resolveDisplayFavicon(item.favicon, item.url || hostname);
             const version = item.version || 'N/A';
             const isEnterprise = item.isEnterprise ? 'Yes' : 'No';
             const siteKey = item.websiteKey || 'N/A';

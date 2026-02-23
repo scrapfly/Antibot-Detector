@@ -13,7 +13,6 @@ const Constants = Object.freeze({
     ENABLED_CACHE_TTL: 5000,               // 5 sec - extension enabled state cache
 
     // ─── Map Size Limits ───────────────────────────────────────────────────────
-    NETWORK_DATA_MAX_SIZE: 50,             // default for network stores
     CAPTURE_STATE_MAX_SIZE: 100,           // capture state maps
     RECENT_REQUESTS_MAX_SIZE: 200,         // recent detection requests
     DETECTION_MAP_MAX_SIZE: 50,            // active/interrupted/state maps
@@ -28,6 +27,8 @@ const Constants = Object.freeze({
     SAFETY_TIMEOUT: 5000,                  // 5 sec - safety fallback
     DETECTION_SKIP_THRESHOLD: 2000,        // skip detection for recent requests
     COMPLETION_DELAY: 2000,                // hook completion delay
+    DEFAULT_HOOKS_MAX_DETECTION_MS: 8000,  // max time for JS hooks detection
+    HOOKS_DEADLINE_BUFFER_MS: 200,         // buffer added to hooks deadline
 
     // ─── Retry Configuration ───────────────────────────────────────────────────
     DETECTOR_LOAD_MAX_RETRIES: 20,         // max retries for detector loading

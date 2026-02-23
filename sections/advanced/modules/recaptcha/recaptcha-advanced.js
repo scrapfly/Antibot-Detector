@@ -1,9 +1,4 @@
-/**
- * ReCaptchaAdvanced - Using BaseAdvancedModule Template System
- *
- * Extends base class for reCAPTCHA-specific capture and analysis tools.
- * Includes tools for clicking reCAPTCHA, extracting sitekeys, checking versions, and capturing callbacks.
- */
+// ReCaptchaAdvanced - Extends BaseAdvancedModule for reCAPTCHA detection
 class ReCaptchaAdvanced extends BaseAdvancedModule {
     constructor(detection, tabInfo) {
         super(detection, tabInfo, 'recaptcha');

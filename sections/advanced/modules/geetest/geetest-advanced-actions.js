@@ -1,9 +1,3 @@
-/**
- * geetest-advanced-actions.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
     /**
      * Check Geetest version (V3 or V4) - simplified, notification only
      */

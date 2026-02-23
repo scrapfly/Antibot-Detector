@@ -930,55 +930,6 @@ async function handleShapeSecurityCheckVersion(message, sender, sendResponse) {
 }
 
 /**
- * Intercept requests to capture Shape Security headers and scripts
- * This would be called from webRequest listener in background.js
- */
-function interceptShapeSecurityRequest(details) {
-    // Find if any tab is capturing
-    for (const [tabId, state] of shapesecurityCaptureStateRef.entries()) {
-        if (state.active && details.tabId === tabId) {
-            const url = details.url;
-
-            // Check for seed parameter
-            if (url.includes('seed=')) {
-                const seedMatch = url.match(/seed=([A-Za-z0-9_\-]+)/);
-                if (seedMatch) {
-                    state.seedParams.push({
-                        url: url,
-                        seed: seedMatch[1],
-                        timestamp: Date.now()
-                    });
-                    Logger.network('[ShapeSecurity] Captured seed parameter:', seedMatch[1]);
-                }
-            }
-
-            // Capture dynamic headers (would need onHeadersReceived listener)
-            if (details.responseHeaders) {
-                details.responseHeaders.forEach(header => {
-                    const headerName = header.name.toLowerCase();
-                    if (headerName.startsWith('x-') && headerName.match(/x-[a-z0-9]{8}-[a-z]/)) {
-                        state.headers.push({
-                            name: header.name,
-                            value: header.value,
-                            timestamp: Date.now()
-                        });
-                        Logger.network('[ShapeSecurity] Captured dynamic header:', header.name);
-                    }
-                });
-            }
-
-            // Track scripts
-            if (url.includes('.js')) {
-                state.scripts.push({
-                    url: url,
-                    timestamp: Date.now()
-                });
-            }
-        }
-    }
-}
-
-/**
  * Start extraction mode - reload page and capture all script URLs
  * Uses immediate injection + accumulation to catch intermediate challenge pages
  */

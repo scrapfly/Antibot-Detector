@@ -1,8 +1,4 @@
-/**
- * GeetestAdvanced - Geetest CAPTCHA Advanced Tools Module
- * Version: 1.0.0 - 2024-10-22
- * Extends BaseAdvancedModule for Geetest V3/V4 detection and parameter extraction
- */
+// GeetestAdvanced - Extends BaseAdvancedModule for Geetest V3/V4 detection
 
 class GeetestAdvanced extends BaseAdvancedModule {
     constructor(detection, tabInfo) {

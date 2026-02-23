@@ -3,11 +3,8 @@ class PaginationManager {
     this.containerId = containerId;
     this.currentPage = 1;
     this.itemsPerPage = options.itemsPerPage || 10;
-    this.maxPageButtons = options.maxPageButtons || 5;
-    this.items = [];
     this.filteredItems = [];
     this.onPageChange = options.onPageChange || (() => {});
-    this.renderItem = options.renderItem || ((item) => item.toString());
   }
 
   /**
@@ -15,18 +12,7 @@ class PaginationManager {
    * @param {Array} items - Array of items to paginate
    */
   setItems(items) {
-    this.items = items;
     this.filteredItems = items;
-    this.currentPage = 1;
-    this.render();
-  }
-
-  /**
-   * Filter items and update pagination
-   * @param {Function} filterFn - Filter function
-   */
-  filter(filterFn) {
-    this.filteredItems = this.items.filter(filterFn);
     this.currentPage = 1;
     this.render();
   }

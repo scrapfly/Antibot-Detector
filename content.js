@@ -1,97 +1,16 @@
 /**
  * Content Script (ISOLATED World)
- * Collects page data and sends it for analysis
- *
- * ============================================================================
- * DETECTION SYSTEM - PHASE 3 & 4: BATCHING & COMPLETION
- * ============================================================================
- *
- * This file implements Phase 3 & 4 of the detection flow:
- *
- * Phase 3: Batching & Deduplication (10-50ms batches)
- * ────────────────────────────────────────────────────
- * 1. Listens for postMessage() events from MAIN world (content-main-world.js)
- * 2. Each event contains a hook detection: detectorId, detectorName, target API
- * 3. Adds to hookBatcher queue
- * 4. Deduplicates by "detectorId:target" key:
- *    - Same detector firing on same API multiple times = 1 entry
- *    - Different detector on same API = separate entries (no collision!)
- * 5. Sends batches to background.js via chrome.runtime.sendMessage()
- *
- * Example deduplication:
- * ───────────────────
- * Input (from MAIN world):
- *   1. performance-fingerprint:Performance.prototype.now
- *   2. performance-fingerprint:Performance.prototype.now (REPEAT - ignored)
- *   3. performance-fingerprint:Performance.prototype.memory
- *   4. inline-hook-performance-prototype-now:Performance.prototype.now (NEW ID)
- *
- * After dedup:
- *   - performance-fingerprint:Performance.prototype.now (kept 1st, ignored 2nd repeat)
- *   - performance-fingerprint:Performance.prototype.memory (kept - different target)
- *   - inline-hook-performance-prototype-now:Performance.prototype.now (kept - different ID!)
- *
- * Result: 3 entries sent, 1 duplicate removed
- *
- * Phase 4: Completion Tracking (Entire duration)
- * ──────────────────────────────────────────────
- * 1. Content-main-world.js schedules 2-second completion timeout
- * 2. On each hook detection (new or duplicate), timeout resets to 2 seconds
- * 3. Completes when 2 seconds pass with NO hook activity (any type)
- * 4. Sends JS_HOOKS_COMPLETE signal to background.js with timing data
- *
- * Why this works:
- * ───────────────
- * - Simple, proven system: "No activity for 2 seconds = detection complete"
- * - Resets on ANY hook detection (even duplicates) - ensures completion
- * - Never gets stuck (always completes after 2s of silence)
- * - Deduplication still happens (at MAIN world and batching layer)
- *
- * ============================================================================
- * CRITICAL TIMING CONSTRAINTS
- * ============================================================================
- *
- * document_start (0ms)
- *   ↓
- *   ├─ content-main-world.js loads (MAIN world)
- *   ├─ content.js loads (ISOLATED world)
- *   └─ 18 inline hooks install synchronously
- *
- * ~30ms: First page script executes
- *   ├─ Hooks already installed ✓
- *   └─ Can't save native API references (they're hooked!)
- *
- * ~5-500ms: Hook detections flow in
- *   ├─ Batched every 10-50ms (adaptive)
- *   ├─ Each batch deduplicated
- *   └─ Sent to background
- *
- * ~500-8000ms: Lazy-loaded scripts execute
- *   ├─ More hook detections possible
- *   ├─ Completion tracker monitoring
- *   └─ Settles when no new detectors for 1.5s
- *
- * <8000ms: Detection complete
- *   └─ background.js logs final stats
- *
- * ============================================================================
+ * Detection system phases 3-4: Batching & completion.
+ * Batches hook detections from MAIN world, deduplicates by "detectorId:target",
+ * and completes after 2s of inactivity (resets on any hook activity).
  */
 
 // Global variables - use var to allow redeclaration during extension reloads
 var detectionEngine = detectionEngine || null;
 var hasCleanedUp = hasCleanedUp || false;
-var contextCheckFailures = contextCheckFailures || 0;
 var contextCheckInterval = contextCheckInterval || null; // Interval for context validity checks
 var detectionFinalized = detectionFinalized || false; // Flag to suppress late events after onDetection
 
-
-/**
- * Get the cache key for the current hostname
- * @returns {string} Cache key in format "scrapfly_cache_{hostname}"
- */
-function getCacheKey() {
-    return `scrapfly_cache_${window.location.hostname}`;
-}
 
 /**
  * Install JS Hooks early (at document_start)
@@ -232,10 +151,7 @@ function setupDetectionTriggers() {
         }, { once: true });
     }
 
-    // FIX: Removed visibility/focus event listeners that triggered data collection on popup open/tab switch
-    // Detection should ONLY run on page load, not when popup opens or tabs switch
-
-    // OPTIMIZED: Debounced URL change detection for SPAs
+    // Debounced SPA URL change detection
     let lastUrl = location.href;
     let urlChangeTimeout = null;
     const observer = new MutationObserver(() => {
@@ -245,8 +161,7 @@ function setupDetectionTriggers() {
         if (currentUrl !== lastUrl) {
             lastUrl = currentUrl;
 
-            // Debounce URL changes (prevent rapid notifications from SPA frameworks)
-            // Reduced from 500ms to 100ms for faster SPA detection (utils.js has 2000ms debounce)
+            // Debounce URL changes (utils.js has 2000ms debounce)
             if (urlChangeTimeout) clearTimeout(urlChangeTimeout);
             urlChangeTimeout = setTimeout(() => {
                 Logger.content('URL changed, notifying with url_change trigger...');
@@ -303,15 +218,7 @@ function setupDetectionTriggers() {
                     timestamp: new Date().toISOString()
                 }).catch(() => {});
 
-                // Clear sessionStorage cache flag since background detected a cache miss
-                try {
-                    sessionStorage.removeItem(getCacheKey());
-                    Logger.cache('Cleared sessionStorage cache flag due to REQUEST_PAGE_DATA (cache miss)');
-                } catch (e) {
-                    // SessionStorage might not be available, continue normally
-                }
-
-                // BULLETPROOF: Ensure Utils is loaded before calling collectAndSendData
+                // Ensure Utils is loaded before collecting data
                 if (typeof Utils === 'undefined') {
                     Logger.debug('CONTENT', '[init] Utils not loaded, retrying in 500ms');
                     // Retry after Utils loads
@@ -340,15 +247,7 @@ function setupDetectionTriggers() {
                     timestamp: new Date().toISOString()
                 }).catch(() => {});
 
-                // Clear sessionStorage cache flag since this is manual detection (bypasses cache)
-                try {
-                    sessionStorage.removeItem(getCacheKey());
-                    Logger.cache('Cleared sessionStorage cache flag for manual detection');
-                } catch (e) {
-                    // SessionStorage might not be available, continue normally
-                }
-
-                // BULLETPROOF: Ensure Utils is loaded before calling collectAndSendData
+                // Ensure Utils is loaded before collecting data
                 if (typeof Utils === 'undefined') {
                     Logger.error('CONTENT', 'Utils not loaded yet, waiting and retrying...');
                     // Retry after Utils loads
@@ -392,21 +291,6 @@ function setupDetectionTriggers() {
 
                 // Stop window property polling - detection is finalized, late results won't update anything
                 window.postMessage({ type: 'STOP_WINDOW_POLLING', reason: 'detection_complete' }, '*');
-
-                // FIX: Save to sessionStorage so NEXT visit skips hooks immediately
-                // Previously sessionStorage was only saved on cache HIT (visit 2), not after detection (visit 1)
-                // This caused visit 2 to re-run hooks before async cache check returned
-                try {
-                    const cacheData = {
-                        timestamp: Date.now(),
-                        detectionCount: request.detectionCount || 0,
-                        url: window.location.href
-                    };
-                    sessionStorage.setItem(getCacheKey(), JSON.stringify(cacheData));
-                    Logger.cache('Saved sessionStorage after detection complete (for next visit)');
-                } catch (e) {
-                    // sessionStorage not available
-                }
 
                 sendResponse({ status: 'event_dispatched' });
             } else if (request.type === 'DETECTION_PROGRESS') {
@@ -459,16 +343,6 @@ function setupDetectionTriggers() {
                     url: request.url
                 }, '*');
                 sendResponse({ status: 'disabled' });
-            } else if (request.type === 'CLEAR_SESSION_CACHE') {
-                // Clear sessionStorage cache flag when cache is manually cleared
-                try {
-                    sessionStorage.removeItem(getCacheKey());
-                    Logger.cache('Cleared sessionStorage cache flag due to manual cache clear');
-                    sendResponse({ status: 'cleared' });
-                } catch (e) {
-                    Logger.error('CACHE', 'Could not clear sessionStorage', e);
-                    sendResponse({ status: 'error', error: e.message });
-                }
             }
 
             // Return true to indicate async response
@@ -485,7 +359,7 @@ function setupDetectionTriggers() {
 async function initialize() {
     Logger.content('Initializing on', { url: window.location.href });
 
-    // CHECK CONTEXT FIRST - before any operations
+    // Check context before any operations
     if (!isExtensionContextValid()) {
         Logger.content('Extension context not valid, cleaning up');
         cleanupOrphanedScript();
@@ -523,7 +397,7 @@ async function initialize() {
     let retryDelay = 500; // Start with 500ms, exponential backoff to 1s
 
     while (!detectorsLoaded && retryCount < maxRetries) {
-        // CHECK CONTEXT BEFORE EACH ATTEMPT
+        // Verify context before each retry attempt
         if (!isExtensionContextValid()) {
             Logger.content('Extension context lost during detector loading');
             cleanupOrphanedScript();
@@ -544,7 +418,6 @@ async function initialize() {
                     .reduce((sum, category) => sum + Object.keys(category).length, 0);
 
                 if (detectorCount > 0) {
-                    // FIX: Only log success, not every attempt
                     Logger.content(`Detectors loaded - smart data collection enabled (${detectorCount} detectors)`);
 
                     // Set detectors in detection engine to enable smart data collection
@@ -555,7 +428,7 @@ async function initialize() {
                     retryCount++;
 
                     if (retryCount < maxRetries) {
-                        // FIX: Silent retry - only log if final failure
+                        // Silent retry with exponential backoff
                         await new Promise(resolve => setTimeout(resolve, retryDelay));
                         // Exponential backoff: 500ms → 1000ms
                         retryDelay = Math.min(retryDelay * 2, 1000);
@@ -565,7 +438,7 @@ async function initialize() {
                 retryCount++;
 
                 if (retryCount < maxRetries) {
-                    // FIX: Silent retry - only log if final failure
+                    // Silent retry with exponential backoff
                     await new Promise(resolve => setTimeout(resolve, retryDelay));
                     // Exponential backoff: 500ms → 1000ms
                     retryDelay = Math.min(retryDelay * 2, 1000);
@@ -577,7 +450,7 @@ async function initialize() {
                 retryCount++;
 
                 if (retryCount < maxRetries) {
-                    // FIX: Silent retry - only log if final failure
+                    // Silent retry with exponential backoff
                     await new Promise(resolve => setTimeout(resolve, retryDelay));
                     // Exponential backoff: 500ms → 1000ms
                     retryDelay = Math.min(retryDelay * 2, 1000);
@@ -608,7 +481,7 @@ async function initialize() {
             // Set flag to prevent hook installation (ISOLATED world)
             window.__scrapflyCacheHitEarlyExit = true;
 
-            // CRITICAL: Notify MAIN world about cache hit so hooks stop firing
+            // Notify MAIN world about cache hit so hooks stop firing
             window.postMessage({
                 type: 'SCRAPFLY_CACHE_HIT',
                 timestamp: Date.now()
@@ -631,20 +504,6 @@ async function initialize() {
                 }).catch(e => Logger.error('CONTENT', 'Failed to dispatch cached detection event', e));
             }
 
-            // Store cache status in sessionStorage for synchronous check on next page load
-            try {
-                const cacheData = {
-                    timestamp: Date.now(),
-                    detectionCount: cacheCheckResponse.detectionData?.detectionCount || 0,
-                    url: window.location.href
-                };
-                sessionStorage.setItem(getCacheKey(), JSON.stringify(cacheData));
-                Logger.cache('Saved cache status to sessionStorage for future synchronous checks');
-            } catch (e) {
-                // SessionStorage might not be available, continue normally
-                Logger.cache('Could not save to sessionStorage', { error: e.message });
-            }
-
             // Notify background about early cache exit AND send cached detection data
             // This ensures the badge is updated with detection count immediately
             try {
@@ -662,14 +521,6 @@ async function initialize() {
             return;
         } else {
             Logger.cache('CACHE MISS - proceeding with full detection');
-
-            // Clear any stale sessionStorage cache flag since we have a cache miss
-            try {
-                sessionStorage.removeItem(getCacheKey());
-                Logger.cache('Cleared sessionStorage cache flag due to cache miss');
-            } catch (e) {
-                // SessionStorage might not be available, continue normally
-            }
         }
     } catch (error) {
         Logger.error('CACHE', 'Error during cache check, proceeding with detection', error);
@@ -729,9 +580,7 @@ function waitForUtilsAndInitialize() {
     }
 }
 
-// Don't clear cache here - let PAGE_LOAD_NOTIFICATION handle it
-// Clearing cache immediately causes race conditions where JS hooks
-// fire before regular detection runs, creating incomplete entries
+// Don't clear cache here -- PAGE_LOAD_NOTIFICATION handles it
 
 // Create hook batcher using DetectionEngineManager
 const hookBatcher = DetectionEngineManager.createHookBatcher(chrome);
@@ -819,7 +668,7 @@ window.addEventListener('message', (event) => {
         return;
     }
 
-    // FIX: Forward debug logs from MAIN world to background service worker
+    // Forward debug logs from MAIN world to background service worker
     if (event.data?.type === 'SCRAPFLY_DEBUG_LOG') {
         if (!shouldForwardDebugLog()) {
             return;
@@ -887,14 +736,11 @@ window.addEventListener('message', (event) => {
         }
     }
 
-    // handleHookMessage sends completion signals to background with 3-attempt retry logic
+    // handleHookMessage manages completion with retry
     DetectionEngineManager.handleHookMessage(event, chrome, hookBatcher);
 });
 
-// Install hooks IMMEDIATELY (document_start) - don't wait for Utils
-// This must run before page scripts to intercept API calls
-// CRITICAL: NO ASYNC OPERATIONS BEFORE installJSHooks() to prevent race conditions
-// Page scripts can execute during async delays and save native API references, bypassing hooks
+// Install hooks at document_start before page scripts; no async operations before installJSHooks()
 (function() {
     if (window.__scrapflyHooksInstalled) {
         return; // Already installed
@@ -910,9 +756,7 @@ window.addEventListener('message', (event) => {
     // and relying on sessionStorage can go stale (manual cache clear, settings changes).
     window.__scrapflyCacheHitEarlyExit = false;
 
-    // CRITICAL FIX: Install hooks IMMEDIATELY without any async storage checks
-    // The cache check and enabled state check will happen AFTER hooks are installed
-    // This guarantees hooks install before any page scripts execute
+    // Install hooks immediately without async storage checks (cache/enabled checked after)
     window.__scrapflyHooksInstalled = true;
     installJSHooks();
 

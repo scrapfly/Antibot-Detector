@@ -4,10 +4,7 @@
  */
 
 // ─── Manager References ─────────────────────────────────────────────────────
-// IMPORTANT: Declare BEFORE importScripts() because init.js contains an IIFE
-// that calls initialize() which sets these variables. If declared after
-// importScripts(), the `= null` assignment runs AFTER the IIFE has already
-// set valid instances, overwriting them and causing null reference errors.
+// Manager references declared before importScripts() due to temporal dead zone
 
 var detectorManager = null;
 var categoryManager = null;
@@ -19,11 +16,11 @@ var initializationPromise = null;
 importScripts(
     // Core utilities
     './modules/core/logger.js',
+    './modules/core/constants.js',
     './modules/core/badge-constants.js',
     './modules/core/message-types.js',
     './modules/core/log-collector.js',
     './modules/core/ttl-map.js',
-    './modules/core/constants.js',
     './utils/format-utils.js',
     './utils/url-utils.js',
     './utils/detection-utils.js',
@@ -121,8 +118,6 @@ const tabsUsingCache = new Set();
 const recentlyClearedTabs = new Set();
 const manuallyClearedCaches = new Set();
 
-// ─── Manager References ─────────────────────────────────────────────────────
-// Declared before importScripts() above. See comment there for explanation.
 
 // ─── Extension Enabled State Cache ──────────────────────────────────────────
 
@@ -152,18 +147,16 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 
 // ─── Detection State Constants & Helpers ────────────────────────────────────
 
-const DEFAULT_HOOKS_MAX_DETECTION_MS = 8000;
-const HOOKS_DEADLINE_BUFFER_MS = 200;
 
 async function ensureHooksDeadline(state) {
-    if (!state) return Date.now() + DEFAULT_HOOKS_MAX_DETECTION_MS + HOOKS_DEADLINE_BUFFER_MS;
+    if (!state) return Date.now() + Constants.DEFAULT_HOOKS_MAX_DETECTION_MS + Constants.HOOKS_DEADLINE_BUFFER_MS;
     if (state.hooksDeadline) {
         return state.hooksDeadline;
     }
 
     const startTime = state.startTime || Date.now();
-    state.hooksMaxMs = DEFAULT_HOOKS_MAX_DETECTION_MS;
-    state.hooksDeadline = startTime + DEFAULT_HOOKS_MAX_DETECTION_MS + HOOKS_DEADLINE_BUFFER_MS;
+    state.hooksMaxMs = Constants.DEFAULT_HOOKS_MAX_DETECTION_MS;
+    state.hooksDeadline = startTime + Constants.DEFAULT_HOOKS_MAX_DETECTION_MS + Constants.HOOKS_DEADLINE_BUFFER_MS;
     state.hooksDeadlineSource = 'default';
     return state.hooksDeadline;
 }
@@ -245,8 +238,8 @@ function getOrCreateDetectionState(tabId, url) {
             windowPropertiesComplete: false,
             lastHookBatchTime: 0,
             startTime: startTime,
-            hooksDeadline: startTime + DEFAULT_HOOKS_MAX_DETECTION_MS + HOOKS_DEADLINE_BUFFER_MS,
-            hooksMaxMs: DEFAULT_HOOKS_MAX_DETECTION_MS,
+            hooksDeadline: startTime + Constants.DEFAULT_HOOKS_MAX_DETECTION_MS + Constants.HOOKS_DEADLINE_BUFFER_MS,
+            hooksMaxMs: Constants.DEFAULT_HOOKS_MAX_DETECTION_MS,
             hooksDeadlineSource: 'default',
             hooksTimedOut: false,
             hooksCompletionReason: null,

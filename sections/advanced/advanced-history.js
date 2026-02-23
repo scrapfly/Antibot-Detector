@@ -1,9 +1,3 @@
-/**
- * advanced-history.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
   /**
    * Update the capture count badge on the Capture History tab
    */
@@ -401,7 +395,7 @@ Advanced.prototype.renderCaptureCards = function(captures, container) {
       const url = capture.url || 'No URL';
       const site = capture.site || 'unknown';
       const size = AdvancedUtils.formatBytes(JSON.stringify(capture.data || {}).length);
-      const favicon = UrlUtils.getFaviconUrl(url);
+      const favicon = UrlUtils.resolveDisplayFavicon(capture.favicon, url || capture.hostname);
 
       return `
         <div class="capture-card" data-module-id="${capture.moduleId}" data-capture-id="${capture.id}">
@@ -885,24 +879,6 @@ Advanced.prototype.setupCaptureHistoryListeners = function() {
       showAllBtn.addEventListener('click', this._showAllHandler);
     }
   };
-
-
-  /**
-   * Setup click listeners for unified capture cards
-   */
-Advanced.prototype.setupUnifiedCaptureClickListeners = function() {
-    const captureCards = document.querySelectorAll('.capture-card');
-    captureCards.forEach(card => {
-      card.addEventListener('click', async () => {
-        const moduleId = card.getAttribute('data-module-id');
-        const captureId = card.getAttribute('data-capture-id');
-
-        // Use the viewCaptureDetails method which handles module loading properly
-        await this.viewCaptureDetails(moduleId, captureId);
-      });
-    });
-  };
-
 
 
   /**

@@ -15,7 +15,6 @@ Rules.prototype.populateDetectionMethods = function(detector) {
     const container = document.querySelector('#detectionMethodsContainer');
     if (!container) return;
 
-    // Ensure detector has a detection property
     if (!detector.detection) {
       detector.detection = {
         urls: [],
@@ -28,13 +27,11 @@ Rules.prototype.populateDetectionMethods = function(detector) {
 
     let methodsHtml = '';
 
-    // Define all possible method types (matching detector data structure)
     const allMethodTypes = ['url', 'header', 'cookie', 'content', 'dom', 'js_hooks', 'window', 'payload'];
 
-    // Iterate through all method types to ensure all sections are shown
     allMethodTypes.forEach(methodType => {
       const methodsData = detector.detection?.[methodType];
-      // Show section even if empty
+      // Map internal key to uppercase display label
       const displayName = methodType === 'content' ? 'CONTENT' :
                          methodType === 'dom' ? 'DOM' :
                          methodType === 'url' ? 'URL' :
@@ -45,17 +42,14 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                          methodType === 'payload' ? 'PAYLOAD' :
                          methodType.toUpperCase();
 
-      // Get color from CategoryManager
       const tagColor = this.detectorManager.categoryManager.getTagColor(methodType);
       const backgroundColor = (tagColor && tagColor !== '#666666') ? tagColor : '#666666';
 
-      // Parse hex color to RGB for muted style
       const methodHex = backgroundColor.replace('#', '');
       const methodR = parseInt(methodHex.substring(0, 2), 16) || 102;
       const methodG = parseInt(methodHex.substring(2, 4), 16) || 102;
       const methodB = parseInt(methodHex.substring(4, 6), 16) || 102;
 
-      // Add help button for all method types
       const helpButtonTitle = methodType === 'js_hooks' ? 'What are JS hooks?' :
                              methodType === 'window' ? 'What are Window properties?' :
                              methodType === 'url' ? 'What is URL detection?' :
@@ -70,7 +64,6 @@ Rules.prototype.populateDetectionMethods = function(detector) {
             <button class="method-help-btn" type="button" data-method-help="${methodType}" title="${helpButtonTitle}">?</button>
           `;
 
-      // Count patterns for this method type
       const patternCount = Array.isArray(methodsData) ? methodsData.length : 0;
       const patternCountText = patternCount === 1 ? '1 pattern' : `${patternCount} patterns`;
 
@@ -97,14 +90,12 @@ Rules.prototype.populateDetectionMethods = function(detector) {
           <div class="method-items">
       `;
 
-      // Only add existing methods if there are any
       if (Array.isArray(methodsData) && methodsData.length > 0) {
         methodsData.forEach((method, index) => {
-            // Get the appropriate values based on method type
             let name = '';
             let value = '';
 
-            // Different method types have different structures
+            // Extract name/value based on method type's data structure
             if (methodType === 'header' || methodType === 'cookie') {
               name = method.name || '';
               value = method.value || '';
@@ -124,7 +115,6 @@ Rules.prototype.populateDetectionMethods = function(detector) {
 
             const confidence = method.confidence || 100;
 
-            // Pattern options based on method type
             let nameRegex = false, nameWholeWord = false, nameCaseSensitive = false;
             let valueRegex = false, valueWholeWord = false, valueCaseSensitive = false;
 
@@ -144,11 +134,8 @@ Rules.prototype.populateDetectionMethods = function(detector) {
               nameWholeWord = method.selectorWholeWord || false;
               nameCaseSensitive = method.selectorCaseSensitive || false;
             }
-            // Note: window and js_hooks have NO pattern options
-
             const checkScripts = method.checkScripts || false;
 
-            // Load scope settings from JSON
             let nameScope = '';
             let valueScope = '';
             let textScope = 'all';
@@ -163,7 +150,6 @@ Rules.prototype.populateDetectionMethods = function(detector) {
               textScope = method.textScope || 'all';
             }
 
-            // Load payload-specific settings from JSON
             let payloadUrlPattern = '';
             let payloadUrlRegex = false;
             let payloadUrlCaseSensitive = false;
@@ -173,19 +159,16 @@ Rules.prototype.populateDetectionMethods = function(detector) {
               payloadUrlPattern = method.urlPattern || '';
               payloadUrlRegex = method.urlRegex || false;
               payloadUrlCaseSensitive = method.urlCaseSensitive || false;
-              // Convert array of methods to comma-separated string
               if (Array.isArray(method.methods) && method.methods.length > 0) {
                 payloadMethods = method.methods.join(',');
               }
             }
 
-            // Skip completely empty method items
             if (!name && !value) {
               return;
             }
 
-            // SIMPLIFICATION: js_hooks only needs target, no regex options
-            // window now has dual inputs: path (required) + condition (optional, defaults to "exists")
+            // js_hooks: single input (target only); window: dual inputs (path + condition)
             const singleInputTypes = ['url', 'content', 'dom', 'js_hooks', 'payload'];
             const isSingleInput = singleInputTypes.includes(methodType);
 
@@ -205,7 +188,6 @@ Rules.prototype.populateDetectionMethods = function(detector) {
             }
             else if (methodType === 'payload') inputPlaceholder = 'Text (e.g., sensor_data, challenge_token)';
 
-            // Check if name and value have custom settings separately
             const hasNameCustomSettings = nameRegex || nameWholeWord || nameCaseSensitive ||
                                           (methodType === 'content' && checkScripts === true);
             const hasValueCustomSettings = valueRegex || valueWholeWord || valueCaseSensitive;
@@ -329,7 +311,6 @@ Rules.prototype.populateDetectionMethods = function(detector) {
       `;
     });
 
-    // Add button to add new method section
     container.innerHTML = methodsHtml;
     this.methodPaginationState = {};
 
@@ -347,7 +328,6 @@ Rules.prototype.populateDetectionMethods = function(detector) {
       });
     });
 
-    // Update indicators for all method items that have settings
     const methodItems = container.querySelectorAll('.method-item');
     methodItems.forEach(item => {
       const hasSettings =
@@ -362,7 +342,6 @@ Rules.prototype.populateDetectionMethods = function(detector) {
         this.updateMethodIndicators(item);
       }
 
-      // Add input event listeners to update badges dynamically as user types
       const nameInput = item.querySelector('.method-input.method-name');
       const valueInput = item.querySelector('.method-input.method-value');
 
@@ -706,12 +685,9 @@ Rules.prototype.addNewMethodItem = function(button) {
     const methodItems = methodSection.querySelector('.method-items');
     let methodKey = methodSection.querySelector('.method-title').textContent.toLowerCase();
 
-    // Map display name to internal key
     if (methodKey === 'js hooks') methodKey = 'js_hooks';
 
     const itemIndex = `new-${Date.now()}`;
-
-    // Note: window, header, cookie are dual-input types (name + value/condition)
     const singleInputTypes = ['url', 'content', 'dom', 'js_hooks', 'payload'];
     const isSingleInput = singleInputTypes.includes(methodKey);
     const isDom = methodKey === 'dom';
@@ -827,12 +803,10 @@ Rules.prototype.addNewMethodSection = function() {
     const container = document.querySelector('#detectionMethodsContainer');
     const addSectionBtn = container.querySelector('.add-section-btn');
 
-    // Prompt for method type name
     const methodType = prompt('Enter detection method type (e.g., HEADERS, CONTENT, URLs):');
     if (!methodType) return;
 
     const methodKey = methodType.toLowerCase();
-    // Note: window, header, cookie are dual-input types (name + value/condition)
     const singleInputTypes = ['url', 'content', 'dom', 'js_hooks', 'payload'];
     const isSingleInput = singleInputTypes.includes(methodKey);
     const isDom = methodKey === 'dom';
@@ -988,14 +962,12 @@ Rules.prototype._collectDetectionFromForm = function() {
       const methodTitle = section.querySelector('.method-title')?.textContent.toLowerCase();
       if (!methodTitle) return;
 
-      // Map display titles to detector data keys
       let methodType = methodTitle;
       if (methodTitle === 'js hooks') {
         methodType = 'js_hooks';
       }
 
       const methods = [];
-      // Hidden paginated items remain in DOM and are still collected.
       const methodItems = section.querySelectorAll('.method-item');
 
       methodItems.forEach(item => {
@@ -1009,7 +981,6 @@ Rules.prototype._collectDetectionFromForm = function() {
             confidence: parseInt(item.dataset.confidence || '100'),
           };
 
-          // Structure data based on method type
           if (methodType === 'header' || methodType === 'cookie') {
             methodData.name = nameInput.value;
             if (valueInput?.value) {
@@ -1035,7 +1006,6 @@ Rules.prototype._collectDetectionFromForm = function() {
             methodData.condition = valueInput?.value || 'exists';
           }
 
-          // Add optional pattern settings based on method type
           if (methodType === 'header' || methodType === 'cookie') {
             if (item.dataset.nameRegex === 'true') methodData.nameRegex = true;
             if (item.dataset.nameWholeword === 'true') methodData.nameWholeWord = true;
@@ -1053,12 +1023,10 @@ Rules.prototype._collectDetectionFromForm = function() {
             if (item.dataset.nameCase === 'true') methodData.selectorCaseSensitive = true;
           }
 
-          // Content scope settings
           if (item.dataset.checkScripts === 'true') {
             methodData.checkScripts = true;
           }
 
-          // Save scope settings based on method type
           if (methodType === 'header') {
             methodData.nameScope = normalizeCookieHeaderScope(item.dataset.nameScope || 'response', 'response');
             methodData.valueScope = normalizeCookieHeaderScope(item.dataset.valueScope || 'response', 'response');
@@ -1069,7 +1037,6 @@ Rules.prototype._collectDetectionFromForm = function() {
             methodData.textScope = item.dataset.textScope || 'all';
           }
 
-          // Save payload-specific settings
           if (methodType === 'payload') {
             const urlPattern = item.dataset.payloadUrlPattern || '';
             if (urlPattern) {
@@ -1102,17 +1069,14 @@ Rules.prototype._collectDetectionFromForm = function() {
 Rules.prototype.updateDetectorBadgeColor = function(detectorName, color) {
     if (!this.categoryManager || !detectorName || !color) return;
 
-    // Get all categories
     const categories = this.categoryManager.getCategories();
 
-    // Find and update the detector's color in categories
     Object.values(categories).forEach(category => {
       if (category.detectors && category.detectors[detectorName]) {
         category.detectors[detectorName].color = color;
       }
     });
 
-    // Save updated categories to storage
     this.categoryManager.saveToStorage();
   };
 
@@ -1133,7 +1097,6 @@ Rules.prototype.saveRule = function() {
       return;
     }
 
-    // Get detector information from fields
     const nameInput = document.querySelector('#detectorNameInput');
     const categorySelect = document.querySelector('#detectorCategorySelect');
     const difficultySelect = document.querySelector('#detectorDifficultySelect');
@@ -1145,7 +1108,6 @@ Rules.prototype.saveRule = function() {
 
     if (categorySelect) {
       this.currentEditDetector.detector.category = categorySelect.value;
-      // Update the category in the parent structure
       this.currentEditDetector.category = categorySelect.value;
     }
 
@@ -1159,19 +1121,16 @@ Rules.prototype.saveRule = function() {
       this.currentEditDetector.detector.difficulty = normalizedDifficulty || defaultDifficulty;
     }
 
-    // Save author field
     const authorInput = document.querySelector('#detectorAuthorInput');
     if (authorInput) {
       const author = authorInput.value.trim() || 'scrapfly';
       this.currentEditDetector.detector.author = author;
     }
 
-    // Save custom icon if one was selected
     if (this.currentEditDetector.customIcon) {
       this.currentEditDetector.detector.customIcon = this.currentEditDetector.customIcon;
     }
 
-    // Collect detection methods using shared extraction logic
     const detectionMethods = this._collectDetectionFromForm();
     if (Object.keys(detectionMethods).length > 0) {
       this.currentEditDetector.detector.detection = detectionMethods;
@@ -1180,15 +1139,12 @@ Rules.prototype.saveRule = function() {
 
     Logger.ui('Saving rule for:', this.currentEditDetector.detector.displayName);
 
-    // Check if detection methods actually changed (for existing detectors)
     const originalDetection = this.currentEditDetector.originalDetection || {};
     const currentDetection = this.currentEditDetector.detector.detection || {};
     const hasChanges = this.currentEditDetector.isNew ||
       JSON.stringify(originalDetection) !== JSON.stringify(currentDetection);
 
-    // Only update timestamp and version if changes were made
     if (hasChanges) {
-      // Generate timestamp for lastUpdated
       const now = new Date();
       const year = now.getFullYear();
       const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -1198,17 +1154,12 @@ Rules.prototype.saveRule = function() {
       const seconds = String(now.getSeconds()).padStart(2, '0');
       const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
-      // Update lastUpdated timestamp
       this.currentEditDetector.detector.lastUpdated = timestamp;
 
-      // UI version field (#detectorVersionInput) is display-only; version is managed here.
-
-      // Auto-increment version (1.0 → 1.1 → 1.2, etc.)
+      // Auto-increment version
       if (this.currentEditDetector.isNew) {
-        // New detector starts at version 1.0
         this.currentEditDetector.detector.version = '1.0';
       } else {
-        // Increment existing version
         const currentVersion = this.currentEditDetector.detector.version || '1.0';
         const versionNum = parseFloat(currentVersion) || 1.0;
         const newVersion = (versionNum + 0.1).toFixed(1);
@@ -1219,7 +1170,6 @@ Rules.prototype.saveRule = function() {
       Logger.ui('No changes detected, version and timestamp unchanged');
     }
 
-    // Handle new detector
     if (this.currentEditDetector.isNew) {
       const detectorName = this.currentEditDetector.detector.name || 'custom';
       const slugName = detectorName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -1234,7 +1184,6 @@ Rules.prototype.saveRule = function() {
       ).then(success => {
         if (success) {
           Logger.ui('New detector added successfully');
-          // Reload detectors in background script
           chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
             Logger.ui('Detectors reloaded in background:', response);
           });
@@ -1246,7 +1195,6 @@ Rules.prototype.saveRule = function() {
       return;
     }
 
-    // Update existing detector in DetectorManager
     if (this.detectorManager) {
       const categoryDetectors = this.detectorManager.detectors[this.currentEditDetector.category];
       if (categoryDetectors && categoryDetectors[this.currentEditDetector.detectorName]) {
@@ -1258,10 +1206,8 @@ Rules.prototype.saveRule = function() {
 
         Logger.ui('Detector updated, lastUpdated:', updatedDetector.lastUpdated);
 
-        // Save to storage
         this.detectorManager.saveDetectorsToStorage().then(() => {
           Logger.ui('Detector saved to storage successfully');
-          // Reload detectors in background script
           chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
             Logger.ui('Detectors reloaded in background:', response);
           });
@@ -1271,15 +1217,11 @@ Rules.prototype.saveRule = function() {
       }
     }
 
-    // Update the category's color if it changed
     if (this.categoryManager && this.colorManager) {
       const color = this.colorManager.getColor();
       this.updateDetectorBadgeColor(this.currentEditDetector.detectorName, color);
     }
 
-    // Close modal
     this.closeEditModal();
-
-    // Refresh the rules list to show updated data
     this.displayRules();
   };

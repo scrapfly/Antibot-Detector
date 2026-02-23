@@ -281,7 +281,6 @@
   }
 
   root.ScrapflyWindowConditionLanguage = Object.freeze({
-    normalize,
     compile,
     evaluate,
     getPresetGroups,

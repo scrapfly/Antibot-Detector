@@ -54,14 +54,6 @@ class URLHashCache {
   }
 
   /**
-   * Get current cache size
-   * @returns {number} Number of entries
-   */
-  get size() {
-    return this.cache.size;
-  }
-
-  /**
    * Move key to end of access order (most recently used)
    * @private
    * @param {string} key - Cache key
@@ -200,6 +192,68 @@ class UrlUtils {
   }
 
   /**
+   * Check if favicon URL is an unstable Google faviconV2 redirect URL.
+   * These often expire and produce 404s when reused from storage.
+   * @param {string} url - Favicon URL to inspect
+   * @returns {boolean}
+   */
+  static isUnstableGoogleFaviconUrl(url) {
+    if (!url || typeof url !== 'string') return false;
+
+    try {
+      const parsed = new URL(url);
+      const hostname = parsed.hostname.toLowerCase();
+      const path = parsed.pathname.toLowerCase();
+      return hostname.endsWith('gstatic.com') && path.includes('/faviconv2');
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * Normalize favicon URL before persisting to storage/history.
+   * @param {string} rawFavicon - Raw favicon candidate
+   * @param {string} pageUrlOrHostname - Page URL or hostname used to derive fallback favicon
+   * @param {number} size - Optional favicon size
+   * @returns {string} Stable favicon URL
+   */
+  static normalizeFaviconForStorage(rawFavicon, pageUrlOrHostname, size) {
+    const candidate = typeof rawFavicon === 'string' ? rawFavicon.trim() : '';
+
+    if (candidate) {
+      if (this.isUnstableGoogleFaviconUrl(candidate)) {
+        return this.getFaviconUrl(pageUrlOrHostname || candidate, size);
+      }
+
+      try {
+        const parsed = new URL(candidate);
+        if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+          return candidate;
+        }
+      } catch (error) {
+        // Ignore parse errors and fall back below.
+      }
+    }
+
+    if (pageUrlOrHostname) {
+      return this.getFaviconUrl(pageUrlOrHostname, size);
+    }
+
+    return this.getDefaultFaviconUrl();
+  }
+
+  /**
+   * Resolve favicon for UI rendering with compatibility for old stored values.
+   * @param {string} rawFavicon - Stored favicon value
+   * @param {string} pageUrlOrHostname - Page URL or hostname fallback
+   * @param {number} size - Optional favicon size
+   * @returns {string} Sanitized display favicon URL
+   */
+  static resolveDisplayFavicon(rawFavicon, pageUrlOrHostname, size) {
+    return this.normalizeFaviconForStorage(rawFavicon, pageUrlOrHostname, size);
+  }
+
+  /**
    * Get default favicon URL (extension icon)
    * @returns {string} Default favicon URL
    */
@@ -221,8 +275,6 @@ class UrlUtils {
 
 if (typeof window !== 'undefined') {
   window.UrlUtils = UrlUtils;
-  window.URLHashCache = URLHashCache;
 } else if (typeof self !== 'undefined') {
   self.UrlUtils = UrlUtils;
-  self.URLHashCache = URLHashCache;
 }

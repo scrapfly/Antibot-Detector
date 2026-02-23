@@ -863,21 +863,6 @@ function impervaStopAnalysis(tabId) {
     return state || { tabId, stoppedAt: Date.now(), detectedUrls: [] };
 }
 
-function notifyImpervaAnalysisUpdate(tabId) {
-    const state = impervaAnalysisState.get(tabId);
-    if (!state) return;
-
-    try {
-        chrome.runtime.sendMessage({
-            type: 'IMPERVA_ANALYSIS_RESULT',
-            tabId,
-            detectedUrls: state.detectedUrls
-        }).catch(() => {});
-    } catch (error) {
-        Logger.error('NETWORK', '[IMPERVA-ANALYZE] Failed to send analysis update:', error);
-    }
-}
-
 function upsertImpervaAnalysisRecord(tabId, requestId, updates) {
     const state = impervaAnalysisState.get(tabId);
     if (!state) return;
@@ -905,7 +890,6 @@ function upsertImpervaAnalysisRecord(tabId, requestId, updates) {
     }
 
     impervaAnalysisState.set(tabId, state);
-    notifyImpervaAnalysisUpdate(tabId);
 }
 
 function isImpervaRelevantUrl(url) {

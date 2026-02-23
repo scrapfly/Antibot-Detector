@@ -21,7 +21,6 @@ const BADGE = {
         LOADING: '#3b82f6',
         DISABLED: '#f97316',
         BLACKLISTED: '#f97316',
-        INTERRUPTED: '#3b82f6',
         CLEARED: '#6B7280',
         CLEAN: '#22c55e'
     },
@@ -39,29 +38,6 @@ function getBadgeColorForCount(count) {
     return colors.LOW;
 }
 
-async function setBadge(tabId, text, color) {
-    try {
-        await Promise.all([
-            chrome.action.setBadgeText({ text, tabId }),
-            chrome.action.setBadgeBackgroundColor({ color, tabId })
-        ]);
-    } catch (error) {
-        if (!error.message?.includes('No tab with id')) {
-            Logger.error('BADGE', 'Failed to set badge', error);
-        }
-    }
-}
-
-async function clearBadge(tabId) {
-    try {
-        await chrome.action.setBadgeText({ text: '', tabId });
-    } catch (error) {
-        if (!error.message?.includes('No tab with id')) {
-            Logger.error('BADGE', 'Failed to clear badge', error);
-        }
-    }
-}
-
 const badgeGlobal = typeof globalThis !== 'undefined'
     ? globalThis
     : (typeof self !== 'undefined' ? self : (typeof window !== 'undefined' ? window : null));
@@ -69,7 +45,5 @@ const badgeGlobal = typeof globalThis !== 'undefined'
 if (badgeGlobal) {
     badgeGlobal.BADGE = BADGE;
     badgeGlobal.getBadgeColorForCount = getBadgeColorForCount;
-    badgeGlobal.setBadge = setBadge;
-    badgeGlobal.clearBadge = clearBadge;
 }
 

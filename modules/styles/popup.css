@@ -290,20 +290,6 @@ body {
   animation: pulse 2s ease-in-out infinite;
 }
 
-.spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid var(--bg-tertiary);
-  border-top: 3px solid var(--accent);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.6; }
@@ -379,12 +365,6 @@ body {
 /* Stats Grid */
 .detection-overview {
   margin-top: 12px;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
 }
 
 .search-container {

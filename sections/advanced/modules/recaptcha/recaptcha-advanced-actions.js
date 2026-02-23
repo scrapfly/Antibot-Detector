@@ -1,9 +1,3 @@
-/**
- * recaptcha-advanced-actions.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
     /**
      * Click reCAPTCHA and obtain selector
      */

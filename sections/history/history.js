@@ -100,36 +100,6 @@ class History {
   }
 
   /**
-   * Add a new detection result to history
-   * @param {object} detection - Detection result object
-   * @param {string} url - URL where detection occurred
-   * @param {string} title - Page title
-   * @param {string} favicon - Page favicon URL
-   */
-  async addHistoryItem(detection, url, title = '', favicon = '') {
-    const historyItem = {
-      id: Date.now().toString(),
-      url,
-      title: title || url,
-      favicon,
-      timestamp: new Date().toISOString(),
-      detections: Array.isArray(detection) ? detection : [detection],
-      totalDetections: Array.isArray(detection) ? detection.length : 1
-    };
-
-    // Add to beginning of array (newest first)
-    this.historyItems.unshift(historyItem);
-
-    // Apply configured history limit (0 = unlimited)
-    if (this.historyLimit > 0 && this.historyItems.length > this.historyLimit) {
-      this.historyItems = this.historyItems.slice(0, this.historyLimit);
-    }
-
-    await this.saveHistoryToStorage();
-    Logger.ui('Added history item:', historyItem);
-  }
-
-  /**
    * Render history items in the UI
    */
   renderHistory() {
@@ -138,21 +108,17 @@ class History {
       return;
     }
 
-    // Hide empty state
     const historyEmpty = document.querySelector('#historyEmpty');
     if (historyEmpty) historyEmpty.style.display = 'none';
 
-    // Filter items if search query exists
     const itemsToShow = this.searchQuery
       ? this.getFilteredItems()
       : this.historyItems;
 
-    // Use pagination to display items
     if (this.paginationManager) {
       this.paginationManager.setItems(itemsToShow);
     }
 
-    // Ensure pagination is visible
     const historyPagination = document.querySelector('#historyPagination');
     if (historyPagination && itemsToShow.length > 0) {
       historyPagination.style.display = 'flex';
@@ -176,8 +142,7 @@ class History {
       const timeAgo = this.getTimeAgo(new Date(item.timestamp));
       const domain = this.getDomainFromUrl(item.url);
 
-      // Use Scrapfly icon as default for favicon
-      const faviconSrc = item.favicon || chrome.runtime.getURL('icons/icon16.png');
+      const faviconSrc = UrlUtils.resolveDisplayFavicon(item.favicon, item.url || item.hostname);
 
       return `
         <div class="history-item" data-history-id="${item.id}">
@@ -518,68 +483,6 @@ class History {
   }
 
   /**
-   * Calculate category breakdown from detections
-   * @param {Array} detections - Array of detections
-   * @returns {object} Breakdown by category
-   */
-  calculateCategoryBreakdown(detections) {
-    const breakdown = {
-      antibot: 0,
-      captcha: 0,
-      fingerprint: 0
-    };
-
-    if (!detections || detections.length === 0) return breakdown;
-
-    detections.forEach(d => {
-      const cat = (d.category || '').toLowerCase();
-      if (cat.includes('antibot') || cat.includes('anti-bot')) {
-        breakdown.antibot++;
-      } else if (cat.includes('captcha')) {
-        breakdown.captcha++;
-      } else if (cat.includes('fingerprint')) {
-        breakdown.fingerprint++;
-      }
-    });
-
-    return breakdown;
-  }
-
-  /**
-   * Render category breakdown HTML for modal
-   * @param {Array} detections - Array of detections
-   * @returns {string} HTML string
-   */
-  renderCategoryBreakdown(detections) {
-    const breakdown = this.calculateCategoryBreakdown(detections);
-    let html = '<div class="history-modal-category-breakdown">';
-
-    // SVG icons for each category
-    const antibotIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
-    const captchaIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 8v3"/></svg>';
-    const fingerprintIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4"/><path d="M5 19.5C5.5 18 6 15 6 12c0-.7.12-1.37.34-2"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M9 6.8a6 6 0 0 1 9 5.2c0 .47 0 1.17-.02 2"/></svg>';
-
-    if (breakdown.antibot > 0) {
-      html += `<div class="history-modal-category-badge antibot">${antibotIcon}${breakdown.antibot} Anti-Bot${breakdown.antibot > 1 ? 's' : ''}</div>`;
-    }
-    if (breakdown.captcha > 0) {
-      html += `<div class="history-modal-category-badge captcha">${captchaIcon}${breakdown.captcha} Captcha${breakdown.captcha > 1 ? 's' : ''}</div>`;
-    }
-    if (breakdown.fingerprint > 0) {
-      html += `<div class="history-modal-category-badge fingerprint">${fingerprintIcon}${breakdown.fingerprint} Fingerprint${breakdown.fingerprint > 1 ? 's' : ''}</div>`;
-    }
-
-    // If no categories found, show total
-    if (breakdown.antibot === 0 && breakdown.captcha === 0 && breakdown.fingerprint === 0) {
-      const total = detections?.length || 0;
-      html += `<div class="history-modal-category-badge">${total} Detection${total !== 1 ? 's' : ''}</div>`;
-    }
-
-    html += '</div>';
-    return html;
-  }
-
-  /**
    * Setup click handlers for overflow badges
    */
   setupOverflowBadgeHandlers() {
@@ -749,7 +652,7 @@ class History {
     const content = document.querySelector('#historyModalContent');
 
     if (favicon) {
-      const faviconUrl = historyItem.favicon || chrome.runtime.getURL('icons/icon16.png');
+      const faviconUrl = UrlUtils.resolveDisplayFavicon(historyItem.favicon, historyItem.url || historyItem.hostname);
       favicon.src = faviconUrl;
       favicon.onerror = () => {
         favicon.src = chrome.runtime.getURL('icons/icon16.png');
@@ -774,7 +677,6 @@ class History {
       content.innerHTML = this.renderDetectionDetails(historyItem.detections || []);
     }
 
-    // FIX: Attach click handlers to expand/collapse detection cards
     this.attachDetailModalClickHandlers();
 
     // Show modal
@@ -871,7 +773,8 @@ class History {
         message: `Clear cached detection data for ${domain}? The history entry will be kept.`,
         type: 'warning',
         confirmText: 'Clear Cache',
-        cancelText: 'Cancel'
+        cancelText: 'Cancel',
+        emphasizeAction: true
       });
 
       if (!confirmed) return;
@@ -933,7 +836,8 @@ class History {
         message: `Domain "${domain}" will be excluded from all future detections. You can remove it later in Settings.`,
         confirmText: 'Add to Blacklist',
         cancelText: 'Cancel',
-        type: 'danger'
+        type: 'danger',
+        emphasizeAction: true
       });
 
       if (!confirmed) return;
@@ -987,7 +891,8 @@ class History {
         message: `Are you sure you want to delete this detection from ${this.getDomainFromUrl(historyItem.url)}?`,
         type: 'danger',
         confirmText: 'Delete',
-        cancelText: 'Cancel'
+        cancelText: 'Cancel',
+        emphasizeAction: true
       });
 
       if (!confirmed) return;
@@ -1551,7 +1456,8 @@ class History {
           message: 'Are you sure you want to clear all history? This action cannot be undone.',
           type: 'danger',
           confirmText: 'Clear All',
-          cancelText: 'Cancel'
+          cancelText: 'Cancel',
+          emphasizeAction: true
         });
 
         if (confirmed) {
@@ -1576,86 +1482,86 @@ class History {
   }
 
   /**
-   * Save reCAPTCHA capture data to advanced history (called from background.js)
-   * @param {number} tabId - Tab ID
-   * @param {Array} captureResults - Array of capture results
-   * @param {Object} chrome - Chrome API object
-   * @returns {Promise<boolean>} Success status
+   * Normalize URL/hostname into duplicate-comparison key.
+   * @param {string} url - URL candidate
+   * @param {string} hostname - Hostname fallback
+   * @param {string} scope - Duplicate scope: domain|path|full_url
+   * @returns {string|null} Normalized key or null if unavailable
    */
-  static async saveCaptureToHistory(tabId, captureResults, chrome) {
-    try {
-      if (!captureResults || captureResults.length === 0) {
-        Logger.ui('History: No capture results to save to history');
-        return false;
+  static normalizeDuplicateKey(url, hostname, scope = 'full_url') {
+    const duplicateScope = ['domain', 'path', 'full_url'].includes(scope) ? scope : 'full_url';
+    const rawUrl = typeof url === 'string' ? url.trim() : '';
+    const rawHostname = typeof hostname === 'string' ? hostname.trim() : '';
+
+    const normalizeHostname = (hostValue) => {
+      if (!hostValue || typeof hostValue !== 'string') {
+        return '';
       }
+      const normalized = hostValue.trim().toLowerCase();
+      return (normalized && normalized !== 'unknown') ? normalized : '';
+    };
 
-      // Get tab information (handle closed tabs gracefully)
-      const tab = await chrome.tabs.get(tabId).catch(() => null);
-      if (!tab || !tab.url) {
-        Logger.debug('UI', 'History: Cannot save capture - tab closed or no URL');
-        return false;
+    let parsedUrl = null;
+    if (rawUrl) {
+      try {
+        parsedUrl = new URL(rawUrl);
+      } catch (error) {
+        Logger.debug('UI', `[History] normalizeDuplicateKey parse failed for scope "${duplicateScope}", using hostname fallback`);
       }
+    }
 
-      const allAdvancedHistory = await AdvancedHistoryStore.load();
-      let history = Array.isArray(allAdvancedHistory.recaptcha) ? allAdvancedHistory.recaptcha : [];
+    const fallbackHostname = normalizeHostname(rawHostname)
+      || normalizeHostname(rawUrl ? UrlUtils.getHostnameFromUrl(rawUrl) : '');
 
-      // Create URL hash (simple hash for storage key)
-      const urlHash = btoa(tab.url).substring(0, 32);
+    if (duplicateScope === 'domain') {
+      const hostnameKey = parsedUrl ? normalizeHostname(parsedUrl.hostname) : fallbackHostname;
+      return hostnameKey || null;
+    }
 
-      // Create history entries (one per capture result)
-      const now = Date.now();
-      const expirationTime = 30 * 60 * 1000; // 30 minutes in milliseconds
-
-      captureResults.forEach((captureData, index) => {
-        const expiresAt = now + expirationTime;
-        const expiresAtDate = new Date(expiresAt);
-        Logger.ui(`[Capture History] Saving capture ${index + 1} - will expire at: ${expiresAtDate.toLocaleTimeString()}`);
-        Logger.ui(`[Capture History] Session Mode: ${captureData.hasSession ? 'Enabled' : 'Disabled'}, Required Cookie: ${captureData.requiredCookie || 'None'}`);
-
-        const historyEntry = {
-          id: `capture_${now}_${tabId}_${index}`,
-          url: tab.url,
-          urlHash: urlHash,
-          hostname: new URL(tab.url).hostname,
-          title: tab.title || 'Untitled',
-          timestamp: now,
-          expiresAt: expiresAt, // 30 minutes from now
-          captureData: {
-            siteKey: captureData.siteKey,
-            siteUrl: captureData.siteUrl,
-            version: captureData.version,
-            type: captureData.type,
-            action: captureData.action || '',
-            isEnterprise: captureData.isEnterprise,
-            isInvisible: captureData.isInvisible,
-            isSRequired: captureData.isSRequired,
-            apiDomain: captureData.apiDomain || '',
-            hasSession: captureData.hasSession || false,
-            requiredCookie: captureData.requiredCookie || null
-          }
-        };
-
-        history.unshift(historyEntry);
-      });
-
-      const settings = await Utils.getHistorySettings();
-      const historyLimit = Number.isFinite(parseInt(settings.historyLimit, 10))
-        ? parseInt(settings.historyLimit, 10)
-        : 0; // 0 = unlimited
-
-      if (historyLimit > 0 && history.length > historyLimit) {
-        history = history.slice(0, historyLimit);
+    if (duplicateScope === 'path') {
+      if (parsedUrl) {
+        return `${parsedUrl.origin}${parsedUrl.pathname}`;
       }
+      return fallbackHostname || null;
+    }
 
-      allAdvancedHistory.recaptcha = history;
-      await AdvancedHistoryStore.save(allAdvancedHistory);
+    if (parsedUrl) {
+      return parsedUrl.href;
+    }
 
-      Logger.ui(`History: Saved ${captureResults.length} capture(s) to advanced history for ${tab.url}`);
-      return true;
-    } catch (error) {
-      Logger.error('UI', '[History] Capture save failed', error);
+    return fallbackHostname || null;
+  }
+
+  /**
+   * Check whether a history array already contains a duplicate key in the time window.
+   * @param {Array} history - History items
+   * @param {string} normalizedKey - Candidate duplicate key
+   * @param {number} cutoffTime - Minimum timestamp (ms) to consider
+   * @param {string} scope - Duplicate scope: domain|path|full_url
+   * @returns {boolean} True if duplicate exists
+   */
+  static isDuplicateHistoryEntry(history, normalizedKey, cutoffTime, scope = 'full_url') {
+    if (!Array.isArray(history) || !normalizedKey) {
       return false;
     }
+
+    return history.some((item) => {
+      if (!item) {
+        return false;
+      }
+
+      const rawTimestamp = typeof item.timestamp === 'string'
+        ? new Date(item.timestamp).getTime()
+        : Number(item.timestamp);
+      const itemTimestamp = Number.isFinite(rawTimestamp) ? rawTimestamp : 0;
+
+      if (itemTimestamp < cutoffTime) {
+        return false;
+      }
+
+      const itemKey = this.normalizeDuplicateKey(item.url, item.hostname, scope);
+      return !!itemKey && itemKey === normalizedKey;
+    });
   }
 
   /**
@@ -1696,74 +1602,29 @@ class History {
         return true; // No history, always save
       }
 
-      // Parse duplicate duration
+      const duplicateScope = settings.duplicateScope || 'full_url';
+      const duplicateDuration = Number.isFinite(parseInt(settings.duplicateDuration, 10))
+        ? parseInt(settings.duplicateDuration, 10)
+        : 1;
+      const duplicateUnit = settings.duplicateUnit || 'hours';
+
       const durationMs = FormatUtils.convertToMilliseconds(
-        settings.duplicateDuration || 1,
-        settings.duplicateUnit || 'hours'
+        duplicateDuration,
+        duplicateUnit
       );
 
       const now = Date.now();
       const cutoffTime = now - durationMs;
-
-      // Normalize URL based on scope
-      let normalizedUrl = url;
-      try {
-        const urlObj = new URL(url);
-        switch (settings.duplicateScope) {
-          case 'domain':
-            // Domain only: https://example.com
-            normalizedUrl = urlObj.hostname;
-            break;
-          case 'path':
-            // Domain + path: https://example.com/path
-            normalizedUrl = urlObj.origin + urlObj.pathname;
-            break;
-          case 'full_url':
-          default:
-            // Full URL with query params: https://example.com/path?foo=bar
-            normalizedUrl = url;
-        }
-      } catch (error) {
-        Logger.debug('UI', 'History: Failed to parse URL for duplicate check:', error);
-        return true; // On error, allow save
+      const normalizedKey = this.normalizeDuplicateKey(url, null, duplicateScope);
+      if (!normalizedKey) {
+        Logger.debug('UI', `[History] Duplicate pre-check could not normalize key (scope: ${duplicateScope}), allowing save`);
+        return true;
       }
 
-      // Check for duplicates within time window
-      const isDuplicate = history.some(item => {
-        // Check if entry is within time window
-        const itemTimestamp = typeof item.timestamp === 'string'
-          ? new Date(item.timestamp).getTime()
-          : item.timestamp;
-
-        if (itemTimestamp < cutoffTime) {
-          return false; // Too old, not a duplicate
-        }
-
-        // Normalize historical URL based on scope
-        let itemNormalizedUrl = item.url;
-        try {
-          const itemUrlObj = new URL(item.url);
-          switch (settings.duplicateScope) {
-            case 'domain':
-              itemNormalizedUrl = itemUrlObj.hostname;
-              break;
-            case 'path':
-              itemNormalizedUrl = itemUrlObj.origin + itemUrlObj.pathname;
-              break;
-            case 'full_url':
-            default:
-              itemNormalizedUrl = item.url;
-          }
-        } catch (error) {
-          // If URL parsing fails, fall back to exact match
-          itemNormalizedUrl = item.url;
-        }
-
-        return itemNormalizedUrl === normalizedUrl;
-      });
+      const isDuplicate = this.isDuplicateHistoryEntry(history, normalizedKey, cutoffTime, duplicateScope);
 
       if (isDuplicate) {
-        Logger.ui(`History: Skipping duplicate URL within ${settings.duplicateDuration} ${settings.duplicateUnit} (scope: ${settings.duplicateScope}): ${normalizedUrl}`);
+        Logger.ui(`History: Skipping duplicate URL within ${duplicateDuration} ${duplicateUnit} (scope: ${duplicateScope}, source: precheck): ${normalizedKey}`);
         return false;
       }
 
@@ -1780,9 +1641,17 @@ class History {
    * @param {Object} pageData - Page data
    * @param {Array} detectionResults - Detection results
    * @param {Object} chrome - Chrome API object
+   * @param {Object} options - Save options
+   * @param {Object} options.historySettings - Optional preloaded history settings
+   * @param {string} options.source - Save source context (e.g., finalize, cache_hit)
    * @returns {Promise<boolean>} Success status
    */
-  static async saveDetectionToHistory(tabId, pageData, detectionResults, chrome) {
+  static async saveDetectionToHistory(tabId, pageData, detectionResults, chrome, options = {}) {
+    const {
+      historySettings = null,
+      source = 'unknown'
+    } = options || {};
+
     try {
       // Get existing history
       const result = await chrome.storage.local.get(['scrapfly_history']);
@@ -1818,20 +1687,45 @@ class History {
         history = [];
       }
 
-      const settings = await Utils.getHistorySettings();
+      const settings = historySettings || await Utils.getHistorySettings();
+      const duplicateScope = settings.duplicateScope || 'full_url';
+      const duplicateDuration = Number.isFinite(parseInt(settings.duplicateDuration, 10))
+        ? parseInt(settings.duplicateDuration, 10)
+        : 1;
+      const duplicateUnit = settings.duplicateUnit || 'hours';
+
+      if (settings.preventDuplicates) {
+        const durationMs = FormatUtils.convertToMilliseconds(duplicateDuration, duplicateUnit);
+        const cutoffTime = Date.now() - durationMs;
+        const normalizedKey = this.normalizeDuplicateKey(pageData.url, pageData.hostname, duplicateScope);
+
+        if (!normalizedKey) {
+          Logger.debug('UI', `[History] Duplicate save-check could not normalize key (scope: ${duplicateScope}, source: ${source}), allowing save`);
+        } else if (this.isDuplicateHistoryEntry(history, normalizedKey, cutoffTime, duplicateScope)) {
+          Logger.ui(`History: Skipping duplicate history save within ${duplicateDuration} ${duplicateUnit} (scope: ${duplicateScope}, source: ${source}): ${normalizedKey}`);
+          return false;
+        }
+      }
+
       const historyLimit = Number.isFinite(parseInt(settings.historyLimit, 10))
         ? parseInt(settings.historyLimit, 10)
         : 0; // 0 = unlimited
       // Get current cache scope setting
       const cacheScope = await Utils.getCacheScope();
+      const normalizedFavicon = UrlUtils.normalizeFaviconForStorage(
+        pageData.favicon,
+        pageData.url || pageData.hostname
+      );
 
       // Create history entry
+      const entryUrl = pageData.url || '';
+      const entryHostname = pageData.hostname || UrlUtils.getHostnameFromUrl(entryUrl);
       const historyEntry = {
         id: `detection_${Date.now()}_${tabId}`,
-        url: pageData.url,
-        hostname: pageData.hostname,
+        url: entryUrl,
+        hostname: entryHostname,
         title: pageData.tabTitle || pageData.title || 'Untitled',
-        favicon: pageData.favicon,
+        favicon: normalizedFavicon,
         timestamp: Date.now(),
         detections: detectionResults,
         detectionCount: detectionResults.length,

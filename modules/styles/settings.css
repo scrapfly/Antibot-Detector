@@ -422,44 +422,9 @@ input[type="file"] {
 
 /* Button styles (primary-btn, secondary-btn) now in common.css */
 
-/* Settings Notifications */
-.settings-notification {
-  margin: -20px -20px 20px -20px;
-  padding: 12px 20px;
-  border-bottom: 1px solid var(--border);
-  animation: slideDown 0.3s ease-out;
-}
-
-.settings-notification-success {
-  background: rgba(16, 185, 129, 0.1);
-  border-left: 4px solid var(--success);
-}
-
-.settings-notification-error {
-  background: rgba(239, 68, 68, 0.1);
-  border-left: 4px solid var(--danger);
-}
-
-.settings-notification-info {
-  background: rgba(59, 130, 246, 0.1);
-  border-left: 4px solid var(--accent);
-}
-
-.notification-content {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .notification-icon {
   font-size: 14px;
   flex-shrink: 0;
-}
-
-.notification-text {
-  flex: 1;
-  font-size: 13px;
-  color: var(--text-primary);
 }
 
 .notification-close {
@@ -819,121 +784,6 @@ input[type="file"] {
   margin-top: 12px;
   padding-top: 12px;
   border-top: 1px solid var(--border);
-}
-
-/* Custom HTTP Method Dropdown */
-.http-method-dropdown {
-  position: relative;
-  width: 100%;
-}
-
-/* Ensure parent containers don't clip the dropdown */
-.setting-group:has(.http-method-dropdown.open) {
-  overflow: visible !important;
-}
-
-.webhook-settings-container:has(.http-method-dropdown.open) {
-  overflow: visible !important;
-}
-
-.http-method-dropdown-selected {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 12px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 14px;
-}
-
-.http-method-dropdown-selected:hover {
-  border-color: var(--accent);
-}
-
-.http-method-dropdown.open .http-method-dropdown-selected {
-  border-color: var(--accent);
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.http-method-dropdown-arrow {
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid var(--text-muted);
-  transition: transform 0.2s ease;
-}
-
-.http-method-dropdown.open .http-method-dropdown-arrow {
-  transform: rotate(180deg);
-}
-
-.http-method-dropdown-options {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: var(--bg-secondary);
-  border: 1px solid var(--accent);
-  border-top: none;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  z-index: 9999;
-  max-height: 200px;
-  overflow-y: auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.http-method-dropdown.open .http-method-dropdown-options {
-  display: block;
-}
-
-.http-method-dropdown-option {
-  padding: 10px 12px;
-  cursor: pointer;
-  transition: background 0.15s ease;
-  font-size: 14px;
-  font-weight: 500;
-  pointer-events: auto;
-  user-select: none;
-}
-
-.http-method-dropdown-option:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.http-method-dropdown-option.selected {
-  background: rgba(59, 130, 246, 0.1);
-}
-
-/* Method-specific colors */
-.http-method-get {
-  color: var(--green);
-}
-
-.http-method-post {
-  color: var(--purple-light);
-}
-
-.http-method-put {
-  color: var(--purple-light);
-}
-
-.http-method-patch {
-  color: var(--purple-light);
-}
-
-.http-method-delete {
-  color: var(--danger);
-}
-
-.http-method-custom {
-  color: var(--accent);
 }
 
 /* HTTP Method Badges - Text only style */

@@ -45,60 +45,6 @@ class FormatUtils {
   }
 
   /**
-   * Format time until expiry (e.g., "2h 30m", "45m", "expired")
-   * @param {number} expiresAt - Expiry timestamp in milliseconds
-   * @returns {string} Time remaining until expiry
-   */
-  static getTimeUntil(expiresAt) {
-    if (!expiresAt) return '-';
-
-    const diff = expiresAt - Date.now();
-
-    if (diff <= 0) return 'Expired';
-
-    const seconds = Math.floor(diff / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    if (days > 0) {
-      const remainingHours = hours % 24;
-      return remainingHours > 0 ? `${days}d ${remainingHours}h` : `${days}d`;
-    }
-    if (hours > 0) {
-      const remainingMinutes = minutes % 60;
-      return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
-    }
-    if (minutes > 0) return `${minutes}m`;
-    return `${seconds}s`;
-  }
-
-  /**
-   * Format timestamp as localized date/time string
-   * @param {number} timestamp - Unix timestamp in milliseconds
-   * @param {object} options - Intl.DateTimeFormat options
-   * @returns {string} Formatted date/time string
-   */
-  static formatTimestamp(timestamp, options = {}) {
-    if (!timestamp) return 'Unknown';
-
-    const defaults = {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    };
-
-    try {
-      return new Date(timestamp).toLocaleString(undefined, { ...defaults, ...options });
-    } catch (error) {
-      return new Date(timestamp).toString();
-    }
-  }
-
-  /**
    * Escape HTML special characters to prevent XSS
    * @param {string} text - Text to escape
    * @returns {string} HTML-escaped text

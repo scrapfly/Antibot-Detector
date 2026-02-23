@@ -2,9 +2,6 @@
  * Turnstile Script Interceptor
  */
 
-// Guard against re-initialization (use var for service worker reload compatibility)
-var turnstileInterceptionListener = turnstileInterceptionListener || null;
-
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
 
 function handleTurnstileMessage(request, sender, sendResponse) {

@@ -292,11 +292,13 @@ async function saveToHistory(tabId, captureData, options = {}) {
         }
 
         const captureHostname = hostname || new URL(tab.url).hostname;
+        const normalizedFavicon = UrlUtils.normalizeFaviconForStorage(tab.favIconUrl, tab.url || captureHostname);
         const newCapture = await AdvancedHistoryStore.appendCapture(type, {
             id: `${type}_${Date.now()}`,
             timestamp: Date.now(),
             url: tab.url,
             hostname: captureHostname,
+            favicon: normalizedFavicon,
             data: captureData,
             captureData
         }, {
@@ -669,18 +671,6 @@ function cleanupManagedListeners(tabId) {
 }
 
 /**
- * Cleanup all managed listeners across tabs.
- * @returns {number} Number of listeners removed
- */
-function cleanupAllManagedListeners() {
-    let removedCount = 0;
-    Array.from(managedListenersByTab.keys()).forEach((tabId) => {
-        removedCount += cleanupManagedListeners(tabId);
-    });
-    return removedCount;
-}
-
-/**
  * Handle tab URL change abort for active capture.
  * @param {object} options
  * @returns {boolean}
@@ -727,69 +717,6 @@ async function showCaptureStarted(tabId, options = {}) {
     });
 }
 
-/**
- * Show standardized "capture in progress" notification.
- * @param {number} tabId
- * @param {object} options
- * @returns {Promise<void>}
- */
-async function showCaptureProgress(tabId, options = {}) {
-    const {
-        title = 'Capture In Progress',
-        message = 'Monitoring requests...',
-        duration = 5000
-    } = options;
-
-    return showNotification(tabId, {
-        type: 'info',
-        title,
-        message,
-        duration
-    });
-}
-
-/**
- * Show standardized "capture completed" notification.
- * @param {number} tabId
- * @param {object} options
- * @returns {Promise<void>}
- */
-async function showCaptureCompleted(tabId, options = {}) {
-    const {
-        title = 'Capture Completed',
-        message = 'Capture data saved successfully.',
-        duration = 5000
-    } = options;
-
-    return showNotification(tabId, {
-        type: 'success',
-        title,
-        message,
-        duration
-    });
-}
-
-/**
- * Show standardized "capture error" notification.
- * @param {number} tabId
- * @param {object} options
- * @returns {Promise<void>}
- */
-async function showCaptureError(tabId, options = {}) {
-    const {
-        title = 'Capture Error',
-        message = 'Failed to capture data.',
-        duration = 6000
-    } = options;
-
-    return showNotification(tabId, {
-        type: 'error',
-        title,
-        message,
-        duration
-    });
-}
-
 // ============================================================================
 // VERSION DETECTION
 // ============================================================================
@@ -819,12 +746,8 @@ const globalContext = typeof window !== 'undefined' ? window : (typeof self !== 
         registerManagedListener,
         removeManagedListener,
         cleanupManagedListeners,
-        cleanupAllManagedListeners,
         handleUrlChangeAbort,
-        showCaptureStarted,
-        showCaptureProgress,
-        showCaptureCompleted,
-        showCaptureError
+        showCaptureStarted
     };
 
     Logger.ui('[BaseInterceptorHelpers] Loaded in context:', typeof window !== 'undefined' ? 'popup' : 'service-worker');

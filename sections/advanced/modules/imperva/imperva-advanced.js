@@ -1,15 +1,4 @@
-/**
- * ImpervaAdvanced - Using BaseAdvancedModule Template System
- *
- * This module uses the new base template system for cleaner, more maintainable code.
- *
- * The base class handles:
- * - Message sending
- * - Capture state management (start/stop/check)
- * - History loading, rendering, pagination
- * - Event listener setup
- * - Utility methods (getTimeAgo, etc.)
- */
+// ImpervaAdvanced - Extends BaseAdvancedModule for Imperva/Incapsula detection
 
 Logger.network('[ImpervaAdvanced] Loading... Dependencies check:', {
     BaseAdvancedModule: typeof BaseAdvancedModule,

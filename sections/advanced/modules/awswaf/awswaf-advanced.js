@@ -1,9 +1,4 @@
-/**
- * AwsWafAdvanced - AWS WAF Module
- *
- * Extends BaseAdvancedModule for AWS WAF detection and analysis.
- * Includes tools for checking cookies and capturing AWS WAF parameters.
- */
+// AwsWafAdvanced - Extends BaseAdvancedModule for AWS WAF detection
 
 Logger.network('[AwsWafAdvanced] Loading... Dependencies check:', {
     BaseAdvancedModule: typeof BaseAdvancedModule,

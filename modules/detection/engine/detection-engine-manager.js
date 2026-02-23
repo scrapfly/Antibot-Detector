@@ -1,34 +1,24 @@
-// PatternCache and simpleHash are loaded from utils/pattern-cache.js
-
-/**
- * DetectionEngineManager - Core module for collecting page data for security detection
- * Collects cookies, DOM elements, scripts, and URLs for analysis
- *
- * Storage Configuration:
- * - Detection results are cached using scrapfly_history (consolidated storage)
- * - Cache expires after 12 hours to ensure fresh detection
- */
+// Core detection engine: page data collection and pattern matching
 class DetectionEngineManager {
-    // Detection storage configuration constants
-    static HISTORY_KEY = 'scrapfly_history';
-    static DEFAULT_EXPIRY_HOURS = 12; // Default cache expiry if setting not found
+    static DEFAULT_EXPIRY_HOURS = 12;
     static STORAGE_KEY = 'scrapfly_detection_storage';
-
-    // Shared pattern cache for all instances
     static patternCache = new PatternCache(500);
 
     constructor() {
         this.detectionData = null;
         this.lastDetectionTime = null;
-        // Only create ConfidenceManager if it's available (not in content script)
+        // ConfidenceManager only available in background context
         this.confidenceManager = typeof ConfidenceManager !== 'undefined' ? new ConfidenceManager() : null;
-        this.cleanupInterval = null;
         this.precomputedPriorities = null;
-        // Cache analyzeUsedMethods results
-        // Invalidate cache when detectors change (setDetectors)
         this.analyzedMethodsCache = null;
         this.analyzedMethodsCacheTime = 0;
-        this.ANALYSIS_CACHE_TTL = Constants.ANALYSIS_CACHE_TTL;
+        this.ANALYSIS_CACHE_TTL = (typeof Constants !== 'undefined' && Number.isFinite(Constants.ANALYSIS_CACHE_TTL))
+            ? Constants.ANALYSIS_CACHE_TTL
+            : 300000;
+
+        if (typeof Constants === 'undefined' || !Number.isFinite(Constants.ANALYSIS_CACHE_TTL)) {
+            Logger.warn('DETECTION', '[DetectionEngineManager] Constants.ANALYSIS_CACHE_TTL unavailable, using fallback 300000ms');
+        }
     }
 
     /**
@@ -48,13 +38,12 @@ class DetectionEngineManager {
         const result = {
             name: detector.name || fallbackName,
             icon: detector.icon,
-            // Note: color is not stored here - it's looked up from CategoryManager based on category
+            // Color resolved dynamically from CategoryManager
             id: detector.id || fallbackId,
             description: detector.description,
             difficulty: manualDifficulty || defaultDifficulty
         };
 
-        // DEBUG: Log if ID is missing
         if (!result.id) {
             Logger.warn('DETECTOR', '[buildDetectorInfo] MISSING ID:', {
                 detectorName: result.name,
@@ -149,7 +138,6 @@ class DetectionEngineManager {
                 return;
             }
 
-            // Parse settings
             const settingsRaw = result.scrapfly_settings;
             const parsedSettings = typeof settingsRaw === 'string' ? JSON.parse(settingsRaw) : settingsRaw;
             const actualSettings = parsedSettings?.settings || parsedSettings || {};
@@ -159,7 +147,7 @@ class DetectionEngineManager {
 
             const detectorsData = result.scrapfly_detectors;
 
-            // No detectors loaded yet - dispatch empty event so MAIN world sends completion signals
+            // No detectors: dispatch empty event to prevent MAIN world hang
             if (!detectorsData?.detectors) {
                 window.dispatchEvent(new CustomEvent('scrapfly-install-hooks', {
                     detail: {
@@ -174,7 +162,7 @@ class DetectionEngineManager {
                 return;
             }
 
-            // Extract hookDefinitions from fingerprint detectors with js_hooks
+            // Extract hook definitions from fingerprint detectors
             const hookDefinitions = [];
             const fingerprintDetectors = detectorsData.detectors.fingerprint || {};
             for (const [detectorKey, detector] of Object.entries(fingerprintDetectors)) {
@@ -189,7 +177,7 @@ class DetectionEngineManager {
                 });
             }
 
-            // Extract windowProperties from ALL detectors (any category)
+            // Extract window properties (all categories)
             const windowProperties = [];
             for (const [category, categoryDetectors] of Object.entries(detectorsData.detectors)) {
                 for (const [detectorKey, detector] of Object.entries(categoryDetectors || {})) {
@@ -207,7 +195,6 @@ class DetectionEngineManager {
                 }
             }
 
-            // Dispatch to MAIN world via CustomEvent
             window.dispatchEvent(new CustomEvent('scrapfly-install-hooks', {
                 detail: {
                     hookDefinitions,
@@ -282,10 +269,10 @@ class DetectionEngineManager {
         Logger.detection('DetectionEngineManager: Collecting page data...');
         const startTime = Date.now();
 
-        // OPTIMIZATION Phase C.1: Analyze which detection methods are used
+        // Analyze used detection methods
         const usedMethods = this.analyzeUsedMethods();
 
-        // OPTIMIZATION 8E: Check which data types are actually needed by detectors
+        // Check needed data types
         const needsExternal = this.needsExternalContent();
 
         let externalContent = [];
@@ -301,7 +288,6 @@ class DetectionEngineManager {
             Logger.detection('[8E: Incremental] Skipping external content fetch (not needed by any detector)');
         }
 
-        // Extract favicon with multiple fallback strategies
         let favicon = '';
         const faviconSelectors = [
             'link[rel="icon"]',
@@ -339,7 +325,7 @@ class DetectionEngineManager {
             Logger.warn('HOOKS', '[runDetection] Hook detections load failed', error);
         }
 
-        // OPTIMIZATION 8A + 8E + C.1: Smart lazy data collection
+        // Smart lazy data collection
         let cachedPageHTML = null;
         let cachedCookies = null;
         let cachedContent = null;
@@ -595,10 +581,9 @@ class DetectionEngineManager {
      */
     setDetectors(detectors) {
         this.detectors = detectors;
-        // Clear analysis cache when detectors change (force re-analysis on next call)
+        // Clear cache; force re-analysis
         this.analyzedMethodsCache = null;
         this.analyzedMethodsCacheTime = 0;
-        // Pre-compute detector priorities immediately
         this._precomputePriorities();
     }
 
@@ -610,14 +595,11 @@ class DetectionEngineManager {
     _precomputePriorities() {
         return demPrecomputePriorities.apply(this, arguments);
     }
-    static generateHookCode(detectors) {
-        return demGenerateHookCode.apply(this, arguments);
-    }
     runDetector(detector, pageData) {
         const { url, content, dom, cookies = [], headers = {}, pageHTML = '', externalContent = [], allCookies = [], responseCookies = [] } = pageData;
         const matches = [];
 
-        // ENHANCEMENT: Use allCookies (from chrome.cookies API) if available, includes HttpOnly cookies
+        // allCookies includes HttpOnly cookies from chrome.cookies API
         const cookiesToMatch = allCookies.length > 0 ? allCookies : cookies;
 
         if (detector.detection?.url) {
@@ -903,8 +885,7 @@ class DetectionEngineManager {
 
                 // Add all matching cookies to results
                 for (const matchingCookie of matchingCookies) {
-                    // FIX: Skip if we already added a match for this cookie name
-                    // This prevents duplicates from different sources (document.cookie, chrome.cookies, response headers)
+                    // Prevent duplicate matches across cookie sources
                     if (matchedCookieNames.has(matchingCookie.name)) {
                         continue;
                     }
@@ -962,7 +943,6 @@ class DetectionEngineManager {
                 const headersForName = getHeadersByScope(nameScope);
                 const headersForValue = getHeadersByScope(valueScope);
 
-                // FIX: Loop through ALL headers and match all of them (removed break statements)
                 for (const [headerName, headerValue] of Object.entries(headersForName)) {
                     if (headerPattern.name && this.matchPattern(headerName, headerPattern.name, nameMatchOptions)) {
                         // If value pattern specified, check it in valueScope headers
@@ -1004,8 +984,7 @@ class DetectionEngineManager {
             // Check each payload in the array
             for (const payloadItem of pageData.payloads) {
                 for (const payloadPattern of detector.detection.payload) {
-                    // Skip if this exact pattern already matched in a previous payload
-                    // Use description as key (unique per pattern) instead of text (can be duplicated)
+                    // Skip already-matched patterns
                     const patternKey = payloadPattern.description || payloadPattern.text;
                     if (matchedPatterns.has(patternKey)) {
                         continue;
@@ -1210,7 +1189,6 @@ class DetectionEngineManager {
         // Check DOM patterns
         if (detector.detection?.dom && dom.length > 0) {
             for (const domPattern of detector.detection.dom) {
-                // FIX: Use .filter() to get ALL matching DOM elements, not just the first one
                 const matchingElements = dom.filter(element => {
                     // The DOM data from content script contains various properties
                     // We need to match the selector pattern against the element data
@@ -1307,9 +1285,7 @@ class DetectionEngineManager {
             }
         }
 
-        // JavaScript Hooks are detected via MAIN world injection script
-        // This detection engine doesn't auto-detect them - they're reported via postMessage
-        // See: fingerprint-hooks.js (MAIN world script)
+        // JS hooks detected via MAIN world postMessage
 
         // Calculate confidence if ConfidenceManager is available, otherwise use max confidence
         const overallConfidence = this.confidenceManager
@@ -1336,7 +1312,7 @@ class DetectionEngineManager {
                 id: detector.id,
                 name: detector.name,
                 category: detector.category,
-                // Note: color is not stored here - it's looked up from CategoryManager based on category
+                // Color resolved dynamically from CategoryManager
                 icon: detector.icon,
                 description: detector.description,
                 difficulty: difficulty
@@ -1525,9 +1501,6 @@ class DetectionEngineManager {
         return demHandleHookMessage.apply(this, arguments);
     }
 
-    // ========== Cache & Detection Data Methods ==========
-    // Restored from pre-cleanup version (lost in commit d430159)
-
     /**
      * Look up cached detection data by URL hash
      * @param {string} url - Page URL
@@ -1652,11 +1625,15 @@ class DetectionEngineManager {
                 : 0;
 
             const expiryMs = await DetectionEngineManager.getExpiryMs();
+            const normalizedFavicon = UrlUtils.normalizeFaviconForStorage(
+                pageData.favicon,
+                pageData.url || pageData.hostname || url
+            );
 
             const storedData = {
                 url: url,
                 hostname: pageData.hostname,
-                favicon: pageData.favicon || '',
+                favicon: normalizedFavicon,
                 detectionResults: compressedResults,
                 timestamp: Date.now(),
                 expiry: Date.now() + expiryMs,
@@ -1765,9 +1742,12 @@ class DetectionEngineManager {
                             url: pageUrl,
                             hostname: UrlUtils.getHostnameFromUrl(pageUrl),
                             title: tab.title || 'Untitled',
-                            favicon: tab.favIconUrl || UrlUtils.getFaviconUrl(pageUrl)
+                            favicon: UrlUtils.normalizeFaviconForStorage(tab.favIconUrl, pageUrl)
                         };
-                        await History.saveDetectionToHistory(tabId, pageData, storedData.detectionResults, chrome);
+                        await History.saveDetectionToHistory(tabId, pageData, storedData.detectionResults, chrome, {
+                            historySettings,
+                            source: 'cache_hit'
+                        });
                     }
                 }
             }
@@ -1843,17 +1823,6 @@ class DetectionEngineManager {
 
                 if (manuallyClearedCaches) {
                     manuallyClearedCaches.add(urlHash);
-                }
-
-                // Notify content script to clear sessionStorage cache flag
-                if (request.tabId) {
-                    try {
-                        await chrome.tabs.sendMessage(request.tabId, {
-                            type: 'CLEAR_SESSION_CACHE'
-                        });
-                    } catch (e) {
-                        // Content script might not be loaded
-                    }
                 }
 
                 sendResponse({ status: 'cleared', urlHash });
@@ -1945,6 +1914,10 @@ class DetectionEngineManager {
                     if (!checkResult.result) {
                         const scriptsToInject = [
                             'modules/core/logger.js',
+                            'modules/core/constants.js',
+                            'utils/format-utils.js',
+                            'utils/url-utils.js',
+                            'utils/detection-utils.js',
                             'utils/utils.js',
                             'utils/pattern-cache.js',
                             'modules/core/storage-manager.js',

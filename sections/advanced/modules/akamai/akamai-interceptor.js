@@ -553,19 +553,6 @@ async function akamaiHandleExtractionCompleted(tabId, extractedData) {
             Logger.network('[AKAMAI-EXTRACT] State deleted for tab:', tabId);
         }
 
-        // Send data to popup
-        Logger.network('[AKAMAI-EXTRACT] Step 2: Sending data to popup...');
-        try {
-            await chrome.runtime.sendMessage({
-                type: 'AKAMAI_EXTRACTION_READY',
-                tabId: tabId,
-                extractedData: extractedData
-            });
-            Logger.network('[AKAMAI-EXTRACT] Data sent to popup');
-        } catch (err) {
-            Logger.network('[AKAMAI-EXTRACT] Popup not open (this is normal):', err.message);
-        }
-
         Logger.network('[AKAMAI-EXTRACT] ========== EXTRACTION COMPLETED SUCCESSFULLY ==========');
     } catch (error) {
         Logger.error('NETWORK', '[AKAMAI-EXTRACT] Error handling extraction completion:', error);

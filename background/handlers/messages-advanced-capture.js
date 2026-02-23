@@ -76,9 +76,7 @@ function buildAdvancedCaptureRegistryMap(handlers, messageTypes) {
             handler: handlers.geetest,
             messageKeys: [
                 messageTypes.GEETEST_CHECK_VERSION,
-                messageTypes.GEETEST_ANALYZE_SCRIPTS,
-                messageTypes.GEETEST_SHOW_VERSION_NOTIFICATION,
-                messageTypes.GEETEST_SHOW_ANALYZING_NOTIFICATION
+                messageTypes.GEETEST_ANALYZE_SCRIPTS
             ]
         },
         {

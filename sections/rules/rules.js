@@ -152,13 +152,6 @@ class Rules {
     });
   }
 
-  /**
-   * Setup modal event listeners
-   */
-  getCategoryIcon(category) {
-    return this.categoryManager.getCategoryIcon(category);
-  }
-
   async updateDetectorEnabledState(category, detectorName, enabled) {
     try {
       // Get the detector

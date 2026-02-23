@@ -1,8 +1,3 @@
-/**
- * hcaptcha-advanced-lifecycle.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
 HCaptchaAdvanced.prototype.afterCaptureStart = async function(response) {
         if (response && (response.status === 'started' || response.status === 'already_capturing')) {
             // Show brief notification in popup

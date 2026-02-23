@@ -5,7 +5,6 @@
 const DetectionUI = (typeof self !== 'undefined' && self.DetectionUI) ? self.DetectionUI : {};
 
 DetectionUI.createAnalysisSteps = function() {
-    // GRANULAR PROGRESS: 7 detection methods with individual tracking
     return [
       {
         emoji: '',
@@ -53,7 +52,7 @@ DetectionUI.createAnalysisSteps = function() {
 };
 
 DetectionUI.showLoadingState = function(message = 'Analyzing page…') {
-    this.isShowingResults = false; // FIX: Reset flag when showing loading state
+    this.isShowingResults = false;
     if (this.uiStateMachine) {
       if (this.uiStateMachine.getState() !== this.uiStates.ANALYZING) {
         this.uiStateMachine.setState(this.uiStates.LOADING, { message });
@@ -68,10 +67,6 @@ DetectionUI.showLoadingState = function(message = 'Analyzing page…') {
 
     if (loadingState) {
       loadingState.style.display = 'flex';
-      const loadingTitle = loadingState.querySelector('.loading-title');
-      if (loadingTitle && message) {
-        loadingTitle.textContent = message;
-      }
     }
     if (emptyState) emptyState.style.display = 'none';
     if (detectionResults) detectionResults.style.display = 'none';
@@ -81,58 +76,10 @@ DetectionUI.showLoadingState = function(message = 'Analyzing page…') {
 };
 
 DetectionUI.renderAnalysisSteps = function() {
-    const stepsContainer = document.querySelector('#analysisStepsList');
-    if (!stepsContainer) {
-      return;
-    }
-
-    if (!Array.isArray(this.analysisSteps) || this.analysisSteps.length === 0) {
-      stepsContainer.innerHTML = '';
-      return;
-    }
-
-    // GRANULAR PROGRESS: Render steps with status-based classes (pending/in_progress/completed)
-    const stepsHtml = this.analysisSteps.map((step, index) => {
-      const stepNumber = index + 1;
-      const emoji = step.emoji || '';
-      const status = step.status || 'pending';
-      const method = step.method || '';
-
-      // Determine status icon
-      let statusIcon = '';
-      if (status === 'completed') {
-        statusIcon = '<span class="status-icon status-icon-complete">✓</span>';
-      } else if (status === 'in_progress') {
-        statusIcon = '<span class="status-icon status-icon-progress"></span>';
-      } else {
-        statusIcon = '<span class="status-icon status-icon-pending">○</span>';
-      }
-
-      const classString = `analysis-step status-${status}`;
-
-      return `
-        <div class="${classString}" data-step-index="${index}" data-step-method="${method}">
-          <div class="analysis-step-badge">
-            <span class="analysis-step-emoji">${emoji}</span>
-          </div>
-          <div class="analysis-step-content">
-            <div class="analysis-step-title">${step.title || `Step ${stepNumber}`} ${statusIcon}</div>
-            <div class="analysis-step-description">${step.description || ''}</div>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    stepsContainer.innerHTML = stepsHtml;
+    // No-op: #analysisStepsList element does not exist in the HTML
 };
 
 DetectionUI.startAnalysisProgress = function() {
-    const stepsContainer = document.querySelector('#analysisStepsList');
-
-    if (!stepsContainer) {
-      return;
-    }
-
     this.stopAnalysisProgress();
     this.clearLoadingTimeout(); // Clear any existing timeout
     this.analysisStepIndex = 0;
@@ -142,9 +89,6 @@ DetectionUI.startAnalysisProgress = function() {
     this.loadingTimeout = setTimeout(() => {
       this.handleLoadingTimeout();
     }, this.loadingTimeoutDuration);
-
-    // FIX: Removed simulated progress animation - we use real progress updates from background now
-    // The real progress is sent via DETECTION_PROGRESS messages which are more accurate
 };
 
 DetectionUI.updateAnalysisStepStates = function(forceComplete = false) {
@@ -174,26 +118,7 @@ DetectionUI.updateAnalysisStepStates = function(forceComplete = false) {
 };
 
 DetectionUI.updateAnalysisPercent = function(forceValue = null) {
-    const progressBarFill = document.querySelector('#progressBarFill');
-
-    if (!progressBarFill) {
-      return;
-    }
-
-    if (typeof forceValue === 'number') {
-      const clamped = Math.max(0, Math.min(100, Math.round(forceValue)));
-
-      // Update progress bar fill (visual only, no percentage text)
-      if (progressBarFill) {
-        progressBarFill.style.width = `${clamped}%`;
-      }
-
-      return;
-    }
-
-    // FIX: Use real progress updates only - don't auto-calculate
-    // This function should only be called with forceValue now
-    // If called without forceValue, just return (don't override real progress)
+    // No-op: #progressBarFill element does not exist in the HTML
 };
 
 DetectionUI.stopAnalysisProgress = function({ markComplete = false } = {}) {
@@ -211,25 +136,7 @@ DetectionUI.stopAnalysisProgress = function({ markComplete = false } = {}) {
 DetectionUI.updateRealProgress = function(progress) {
     if (!progress) return;
 
-    const { method, totalPercent, completedMethods, message } = progress;
-
-    // Update progress bar fill (visual only, no percentage text)
-    const progressBarFill = document.querySelector('#progressBarFill');
-    if (progressBarFill) {
-      progressBarFill.style.width = `${totalPercent}%`;
-    }
-
-    // Update progress label with current message
-    const progressLabel = document.querySelector('#progressLabel');
-    if (progressLabel && message) {
-      progressLabel.textContent = message;
-    }
-
-    // Update loading title message
-    const loadingTitle = document.querySelector('.loading-title');
-    if (loadingTitle && message) {
-      loadingTitle.textContent = message;
-    }
+    const { method, completedMethods } = progress;
 
     // Update method status in analysis steps
     if (method && completedMethods) {
@@ -268,8 +175,7 @@ DetectionUI.handleLoadingTimeout = function() {
     // Check if we're still in loading state
     const loadingState = document.querySelector('#loadingState');
     if (loadingState && loadingState.style.display !== 'none') {
-      // CRITICAL: Check if detection actually completed with results
-      // Don't show interrupted state if results exist!
+      // Check if detection completed before showing interrupted state
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (tabs[0]) {
           chrome.runtime.sendMessage(
@@ -294,7 +200,7 @@ DetectionUI.handleLoadingTimeout = function() {
                   response.data
                 );
               } else {
-                // FIX: Check badge before showing interrupted - if numeric, detection is complete
+                // Check badge before showing interrupted - numeric means detection is complete
                 const badgeStatus = await Detection.getBadgeStatus(tabs[0].id);
                 const isNumericBadge = /^\d+\+?$/.test(badgeStatus.trimmed);
 
@@ -338,8 +244,7 @@ DetectionUI.showAnalyzingState = function(message = 'Analyzing page…') {
       return;
     }
 
-    // FIX: Prevent re-showing analyzing state if already showing
-    // This prevents UI flicker when popup opens during active detection
+    // Prevent re-render flicker if already in analyzing state
     if (this.isShowingAnalyzing) {
       if (this.debugMode) Logger.ui('Detection: Already showing analyzing state, skipping re-render');
       return;
@@ -366,18 +271,17 @@ DetectionUI.showEmptyState = function(options = {}) {
       this.uiStateMachine.setState(this.uiStates.EMPTY);
     }
     this.wasInterrupted = false; // Reset flag when showing successful state
-    this.isShowingResults = false; // FIX: Reset flag when showing empty state
+    this.isShowingResults = false;
     this.hideLoadingState();
     this.clearLoadingTimeout(); // Clear timeout when showing empty state
 
-    // FIX: Clear stale state to prevent re-rendering old data on tab switch
+    // Clear stale state to prevent re-rendering old data on tab switch
     this.currentResults = [];
     this.cacheMetadata = null;
 
     // Reset clear cache button to default state
     this.resetClearCacheButton();
 
-    // FIX: Clear badge to empty (cache expired or no detections)
     this.clearBadgeForEmptyState();
 
     const emptyState = document.querySelector('#emptyState');
@@ -420,7 +324,7 @@ DetectionUI.showDisabledState = function(isBlacklisted = false) {
       this.uiStateMachine.setState(this.uiStates.DISABLED, { isBlacklisted });
     }
     this.wasInterrupted = false; // Reset flag when showing disabled state
-    this.isShowingResults = false; // FIX: Reset flag when showing disabled state
+    this.isShowingResults = false;
     this.hideLoadingState();
     this.clearLoadingTimeout(); // Clear timeout when showing disabled state
     const disabledState = document.querySelector('#disabledState');
@@ -442,36 +346,6 @@ DetectionUI.showDisabledState = function(isBlacklisted = false) {
     }
 };
 
-DetectionUI.showInterruptedState = function() {
-    if (!this.isExtensionEnabled) {
-      this.showDisabledState();
-      return;
-    }
-
-    if (this.uiStateMachine) {
-      this.uiStateMachine.setState(this.uiStates.INTERRUPTED);
-    }
-    this.hideLoadingState();
-    this.clearLoadingTimeout(); // Clear timeout when showing interrupted state
-    this.wasInterrupted = true; // Set flag to prevent re-showing analyzing state
-    this.isShowingResults = false; // FIX: Reset flag when showing interrupted state
-
-    const interruptedState = document.querySelector('#interruptedState');
-    const detectionResults = document.querySelector('#detectionResults');
-    const emptyState = document.querySelector('#emptyState');
-    const disabledState = document.querySelector('#disabledState');
-    const detectionPagination = document.querySelector('#detectionPagination');
-
-    if (interruptedState) interruptedState.style.display = 'flex';
-    if (detectionResults) detectionResults.style.display = 'none';
-    if (emptyState) emptyState.style.display = 'none';
-    if (disabledState) disabledState.style.display = 'none';
-    if (detectionPagination) detectionPagination.style.display = 'none';
-
-    // Badge is managed exclusively by background script - removed popup badge management
-    // This prevents vicious cycle where popup sets badge which then causes interrupted state on next open
-};
-
 DetectionUI.displayResults = async function(detections = [], options = {}) {
     if (!this.isExtensionEnabled) {
       this.showDisabledState();
@@ -489,7 +363,7 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     }
 
     this.wasInterrupted = false; // Reset flag when successfully displaying results
-    this.isShowingResults = true; // FIX: Mark that we're showing results to prevent message listeners from overriding
+    this.isShowingResults = true; // Prevent message listeners from overriding displayed results
     this.currentResults = detections;
     this.displayOptions = options;
     this.cacheMetadata = options.cacheMetadata || null;
@@ -503,8 +377,6 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
       this.advancedSection.onDetectionDataReady(detections);
     }
 
-    // FIX: Clear the loading timeout when results arrive
-    // This prevents the "Cleaned" modal from appearing after detection completes
     this.clearLoadingTimeout();
 
     this.hideLoadingState();
@@ -592,9 +464,7 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     // Update cache info
     this.updateCacheInfo();
 
-    // FIX: Update badge when displaying cached results
-    // The background script only updates badge during active detection, not when returning cached data
-    // So we need to update it here when displayResults() is called with cached detections
+    // Update badge for cached results (background only updates during active detection)
     try {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
       if (tabs && tabs[0]) {
@@ -632,8 +502,6 @@ DetectionUI.updateStats = function(detections) {
     const detectionsCount = document.querySelector('#detectionsCount');
     const overallConfidence = document.querySelector('#overallConfidence');
     const difficultyLevel = document.querySelector('#difficultyLevel');
-    const detectionTime = document.querySelector('#detectionTime');
-    const detectionCount = document.querySelector('#detectionCount');
 
     const totalDetections = detections.length;
     const avgConfidence = totalDetections > 0
@@ -650,9 +518,6 @@ DetectionUI.updateStats = function(detections) {
       difficultyLevel.textContent = difficulty;
       difficultyLevel.style.color = difficultyColor;
     }
-    // Icon is now SVG in HTML, no need to update textContent
-
-    if (detectionCount) detectionCount.textContent = totalDetections;
 };
 
 DetectionUI.updateUrlDisplay = function(options = {}) {

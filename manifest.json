@@ -47,6 +47,7 @@
       "matches": ["http://*/*", "https://*/*"],
       "js": [
         "modules/core/logger.js",
+        "modules/core/constants.js",
         "utils/format-utils.js",
         "utils/url-utils.js",
         "utils/detection-utils.js",

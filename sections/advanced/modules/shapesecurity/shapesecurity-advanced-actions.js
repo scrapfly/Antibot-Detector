@@ -1,9 +1,3 @@
-/**
- * shapesecurity-advanced-actions.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
     /**
      * Check and display Shape Security headers
      */

@@ -1,7 +1,4 @@
-/**
- * detection-engine-matching.js - extracted helpers for DetectionEngineManager.
- * Loaded before detection-engine-manager.js in classic script mode.
- */
+// Pattern matching helpers for DetectionEngineManager
 
 function demMatchCookieName(name, pattern, options = {}) {
     const {
@@ -59,7 +56,7 @@ function demMatchPattern(text, pattern, options = {}) {
 
     let result = false;
 
-    // Regex matching - use cached compiled pattern
+    // Regex matching
     if (regex) {
         const compiledRegex = DetectionEngineManager.patternCache.getCompiledPattern(patternToMatch, { regex: true, caseSensitive });
         if (compiledRegex) {
@@ -71,7 +68,7 @@ function demMatchPattern(text, pattern, options = {}) {
             }
         }
     }
-    // Whole word matching - use cached compiled pattern
+    // Whole word matching
     else if (wholeWord) {
         const compiledRegex = DetectionEngineManager.patternCache.getCompiledPattern(patternToMatch, { wholeWord: true, caseSensitive });
         if (compiledRegex) {
@@ -88,7 +85,7 @@ function demMatchPattern(text, pattern, options = {}) {
         result = textToSearch.includes(patternToMatch);
     }
 
-    // Cache the result for 5 minutes
+    // Cache result (5min TTL)
     DetectionEngineManager.patternCache.cacheMatch(text, pattern, options, result);
     return result;
 }
@@ -107,7 +104,6 @@ function demMatchPatternWithCapture(text, pattern, options = {}) {
         const patternToMatch = caseSensitive ? pattern : pattern.toLowerCase();
 
         if (regex) {
-            // Regex matching - find the actual matched substring
             const flags = caseSensitive ? 'g' : 'gi';
             const compiledRegex = new RegExp(patternToMatch, flags);
             const match = compiledRegex.exec(text);
@@ -121,7 +117,7 @@ function demMatchPatternWithCapture(text, pattern, options = {}) {
             return match ? match[0] : null;
         }
         else {
-            // Simple substring matching - return the actual substring from original text
+            // Substring matching
             const index = textToSearch.indexOf(patternToMatch);
             if (index !== -1) {
                 return text.substring(index, index + pattern.length);

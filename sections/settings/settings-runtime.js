@@ -34,62 +34,57 @@ SettingsRuntime.handleEnableToggle = async function(enabled, context = null) {
       await chrome.storage.local.set({ scrapfly_enabled: enabled });
       Logger.ui('Extension enabled state updated:', enabled);
 
-      // Broadcast to all contexts
       chrome.runtime.sendMessage({
         type: 'EXTENSION_TOGGLE_CHANGED',
         enabled: enabled
-      }).catch(() => {
-        // Ignore if popup not open
-      });
+      }).catch(() => {});
 
-      // Update badges efficiently
+      // Restore badges for ALL tabs when re-enabling extension
       if (enabled) {
-        // When enabling, only update the currently active tab from cache
-        // Other tabs will update naturally when user navigates to them
-        const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        if (activeTab && context && context.DetectionEngineManager && context.CategoryManager && context.categoryManager) {
-          const storedData = await context.DetectionEngineManager.getStoredDetection(activeTab.url);
-          if (storedData && storedData.detectionCount > 0) {
-            // Restore badge from cached data for active tab only
-            const badgeColors = await context.CategoryManager.getBadgeColors(context.categoryManager);
-            const count = storedData.detectionCount.toString();
-            const detections = Array.isArray(storedData.detectionResults) ? storedData.detectionResults : [];
-            let color;
-            if (detections.length > 0) {
-              const avgConfidence = DetectionUtils.computeAverageConfidence(detections);
-              const difficulty = DetectionUtils.getDifficultyLevel(detections, avgConfidence);
-              color = difficulty === 'High' ? badgeColors.high :
-                     difficulty === 'Medium' ? badgeColors.medium :
-                     badgeColors.low;
-            } else {
-              // Fallback for older stored payloads without detectionResults
-              // Prefer matching difficulty semantics: don't treat "many detections" as automatically "High".
-              color = storedData.detectionCount >= 3 ? badgeColors.medium : badgeColors.low;
-            }
+        const hasContext = context && context.DetectionEngineManager && context.CategoryManager && context.categoryManager;
 
-            chrome.action.setBadgeText({ text: count, tabId: activeTab.id }).catch((error) => {
-              Logger.ui(`[Settings] Failed to set badge for active tab ${activeTab.id}:`, error.message);
-            });
-            chrome.action.setBadgeBackgroundColor({ color: color, tabId: activeTab.id }).catch((error) => {
-              Logger.ui(`[Settings] Failed to set badge color for active tab ${activeTab.id}:`, error.message);
-            });
-          } else {
-            // No cached detections, clear badge
-            chrome.action.setBadgeText({ text: '', tabId: activeTab.id }).catch((error) => {
-              Logger.ui(`[Settings] Failed to clear badge for active tab ${activeTab.id}:`, error.message);
-            });
+        // Only restore badges when we have background context (DetectionEngineManager, etc.).
+        // In popup context (!hasContext), skip — background handles it via EXTENSION_TOGGLE_CHANGED.
+        // Without this guard, popup sets all badges to EMPTY which races with background's restore.
+        if (hasContext) {
+          const badgeColors = await context.CategoryManager.getBadgeColors(context.categoryManager);
+          const tabs = await chrome.tabs.query({});
+
+          for (const tab of tabs) {
+            if (!tab.url || tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://') ||
+                tab.url.startsWith('about:') || tab.url.startsWith('edge://')) {
+              continue;
+            }
+            try {
+              const storedData = await context.DetectionEngineManager.getStoredDetection(tab.url);
+              if (storedData && storedData.detectionCount > 0) {
+                const detections = Array.isArray(storedData.detectionResults) ? storedData.detectionResults : [];
+                let color;
+                if (detections.length > 0) {
+                  const avgConfidence = DetectionUtils.computeAverageConfidence(detections);
+                  const difficulty = DetectionUtils.getDifficultyLevel(detections, avgConfidence);
+                  color = difficulty === 'High' ? badgeColors.high :
+                         difficulty === 'Medium' ? badgeColors.medium : badgeColors.low;
+                } else {
+                  color = storedData.detectionCount >= 3 ? badgeColors.medium : badgeColors.low;
+                }
+                chrome.action.setBadgeText({ text: storedData.detectionCount.toString(), tabId: tab.id }).catch(() => {});
+                chrome.action.setBadgeBackgroundColor({ color, tabId: tab.id }).catch(() => {});
+              } else {
+                chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tab.id }).catch(() => {});
+              }
+            } catch (e) {
+              // Tab might be closing
+            }
           }
         }
       } else {
-        // When disabling, set OFF badge for all tabs
         const tabs = await chrome.tabs.query({});
         for (const tab of tabs) {
           chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tab.id }).catch((error) => {
-            // Expected: Tab might be closed
             Logger.ui(`[Settings] Failed to set disabled badge for tab ${tab.id}:`, error.message);
           });
           chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tab.id }).catch((error) => {
-            // Expected: Tab might be closed
             Logger.ui(`[Settings] Failed to set badge color for tab ${tab.id}:`, error.message);
           });
         }
@@ -104,7 +99,6 @@ SettingsRuntime.handleSettingsUpdated = async function(context, sendResponse) {
     try {
       const { chrome, CategoryManager, categoryManager } = context;
 
-      // Reload category manager if colors changed
       if (categoryManager) {
         await categoryManager.loadFromStorage();
       }
@@ -119,25 +113,9 @@ SettingsRuntime.handleSettingsUpdated = async function(context, sendResponse) {
 SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults) {
     try {
       const settings = await Utils.getSettings();
-
-      // Debug: Log full settings structure
-      Logger.network('Full settings object keys:', Object.keys(settings));
-      Logger.network('Settings.webhook:', settings.webhook);
-
-      // Check both flat and nested paths for backwards compatibility
       const webhook = settings.webhook || {};
 
-      Logger.network('Webhook check:', {
-        enableWebhook: webhook.enableWebhook,
-        webhookUrl: webhook.webhookUrl,
-        detectionCount: detectionResults?.length || 0
-      });
-
       if (!webhook.enableWebhook || !webhook.webhookUrl) {
-        Logger.network('Webhook skipped: not enabled or no URL', {
-          enableWebhook: webhook.enableWebhook,
-          hasUrl: !!webhook.webhookUrl
-        });
         return;
       }
 
@@ -149,20 +127,15 @@ SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults
       const detectionCount = detectionResults.length;
       const categories = [...new Set(detectionResults.map(d => d.category))].join(',');
 
-      // Build headers object
       const headers = {};
-
-      // Add Content-Type header (not for GET requests without body)
       const method = (webhook.webhookMethod || 'POST').toUpperCase();
       if (method !== 'GET') {
         headers['Content-Type'] = webhook.webhookContentType || 'application/json';
       }
 
-      // Add custom headers
       const customHeaders = webhook.webhookHeaders || [];
       for (const header of customHeaders) {
         if (header.name && header.name.trim()) {
-          // Process header value with variable substitution
           let headerValue = header.value || '';
           headerValue = headerValue
             .replace(/<SITEURL>/g, url)
@@ -176,7 +149,6 @@ SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults
         }
       }
 
-      // Process webhook URL with variable substitution
       let processedUrl = webhook.webhookUrl
         .replace(/<SITEURL>/g, encodeURIComponent(url))
         .replace(/<HOSTNAME>/g, encodeURIComponent(hostname))
@@ -186,17 +158,14 @@ SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults
         .replace(/<DETECTION_COUNT>/g, String(detectionCount))
         .replace(/<CATEGORIES>/g, encodeURIComponent(categories));
 
-      // Build fetch options
       const fetchOptions = {
         method: method,
         headers: headers
       };
 
-      // Add body for non-GET requests
       if (method !== 'GET') {
         let payload = webhook.webhookPayload || '';
 
-        // If payload template is empty, use default JSON payload
         if (!payload.trim()) {
           payload = JSON.stringify({
             url: url,
@@ -208,7 +177,6 @@ SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults
             count: detectionCount
           });
         } else {
-          // Process payload template with variable substitution
           payload = payload
             .replace(/<SITEURL>/g, url)
             .replace(/<HOSTNAME>/g, hostname)
@@ -223,7 +191,6 @@ SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults
         fetchOptions.body = payload;
       }
 
-      // Send webhook
       Logger.network('Sending webhook request:', {
         url: processedUrl,
         method: fetchOptions.method,
@@ -252,45 +219,31 @@ SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults
         method: fetchOptions.method
       });
 
-      // Common causes for "Failed to fetch":
-      // 1. Server not running at the specified URL
-      // 2. CORS blocking the request (server needs Access-Control-Allow-Origin header)
-      // 3. Network/firewall blocking the request
-      // 4. Invalid URL format
+      // "Failed to fetch" usually means server down, CORS issue, firewall, or bad URL
       if (error.message.includes('Failed to fetch')) {
         Logger.error('NETWORK', 'Hint: Check that your webhook server is running and accepts requests from extensions');
       }
     }
 };
 
-SettingsRuntime.isUrlBlacklisted = async function(url) {
-    return Utils.isUrlBlacklisted(url);
-};
-
 SettingsRuntime.dispatchJsApiEvent = async function(eventName, data = {}) {
     try {
       Logger.ui(`[Settings] dispatchJsApiEvent called: ${eventName}`);
 
-      // Check if JS API is enabled in settings (default to TRUE if not set)
       const settings = await Utils.getSettings();
-      // Default to true when setting doesn't exist (matches default-settings.json)
       const jsApiEnabled = settings.jsApi?.enableJsApi ?? true;
-      Logger.ui(`[Settings] JS API enabled: ${jsApiEnabled}`, settings.jsApi);
 
       if (!jsApiEnabled) {
         Logger.ui(`JS API: Disabled in settings, skipping ${eventName} event`);
         return false;
       }
 
-      // IMPORTANT: Content scripts run in ISOLATED world, page scripts run in MAIN world
-      // window.dispatchEvent() in ISOLATED world is NOT visible to page scripts!
-      // We must use postMessage to communicate with MAIN world
+      // ISOLATED world events aren't visible to page scripts; use postMessage to reach MAIN world
       const eventData = {
         ...data,
         timestamp: data.timestamp || new Date().toISOString()
       };
 
-      // Send to MAIN world via postMessage - content-main-world.js will dispatch the CustomEvent
       Logger.ui(`[Settings] Sending postMessage to MAIN world: scrapfly:${eventName}`);
       window.postMessage({
         type: 'SCRAPFLY_JS_API_EVENT',
@@ -329,7 +282,6 @@ if (typeof self !== 'undefined') {
         handleEnableToggle: (...args) => SettingsRuntime.handleEnableToggle(...args),
         handleSettingsUpdated: (...args) => SettingsRuntime.handleSettingsUpdated(...args),
         sendWebhookIfEnabled: (...args) => SettingsRuntime.sendWebhookIfEnabled(...args),
-        isUrlBlacklisted: (...args) => SettingsRuntime.isUrlBlacklisted(...args),
         dispatchJsApiEvent: (...args) => SettingsRuntime.dispatchJsApiEvent(...args),
         dispatchReadyEvent: (...args) => SettingsRuntime.dispatchReadyEvent(...args)
       };

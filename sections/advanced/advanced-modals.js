@@ -1,9 +1,3 @@
-/**
- * advanced-modals.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
   /**
    * Open Advanced Info Modal
    */

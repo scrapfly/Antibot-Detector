@@ -1,8 +1,4 @@
-/**
- * CategoryManager Module
- * Manages detector categories including loading, storage, and metadata
- * Handles category configuration from index.json and Chrome storage
- */
+// Manages detector categories, colors, and storage
 class CategoryManager {
     constructor() {
         this.categories = {};
@@ -18,20 +14,17 @@ class CategoryManager {
         if (this.initialized) return;
 
         try {
-            // TRY STORAGE FIRST - preserve custom colors!
+            // Load from storage first (preserves custom colors)
             const storageLoaded = await this.loadFromStorage();
 
             if (!storageLoaded) {
-                // Only load from index.json if storage is empty (first run)
                 await this.loadCategoriesFromIndex();
                 await this.saveToStorage();
             } else {
-                // IMPORTANT: Merge any new tags from index.json that aren't in storage
-                // This ensures new detection methods (like js_hooks) get their colors even if storage is old
+                // Merge new tags from index.json not yet in storage
                 await this.mergeNewTagsFromIndex();
             }
 
-            // Sync colors from Settings (user customizations take precedence)
             await this.syncColorsFromSettings();
 
             this.initialized = true;
@@ -57,7 +50,6 @@ class CategoryManager {
             const indexData = await response.json();
             this.categories = indexData;
 
-            // Warn if badge colors missing
             if (!this.categories.badge) {
                 Logger.warn('DETECTOR', 'No badge section found in index.json');
             }
@@ -81,7 +73,6 @@ class CategoryManager {
 
             const indexData = await response.json();
 
-            // Merge tags from index.json that aren't in storage
             if (indexData.tags) {
                 if (!this.categories.tags) {
                     this.categories.tags = {};
@@ -104,13 +95,8 @@ class CategoryManager {
         }
     }
 
-    /**
-     * Save category data to Chrome storage as 'scrapfly_categories'
-     * Uses StorageManager for consistent save patterns
-     */
     async saveToStorage() {
         try {
-            // Use StorageManager for consistent save with metadata
             const success = await StorageManager.saveToStorage('scrapfly_categories', {
                 categories: this.categories,
                 totalCategories: Object.keys(this.categories).length
@@ -128,13 +114,8 @@ class CategoryManager {
         }
     }
 
-    /**
-     * Load previously saved category data from Chrome storage
-     * Uses StorageManager for consistent load patterns
-     */
     async loadFromStorage() {
         try {
-            // Use StorageManager with backward compatibility support
             const categoriesData = await StorageManager.loadFromStorage(
                 'scrapfly_categories',
                 'scrapfly_categories.json',
@@ -226,25 +207,6 @@ class CategoryManager {
     }
 
     /**
-     * Get detector names for a specific category
-     * @param {string} categoryName - Category name
-     * @returns {string[]} Array of detector names
-     */
-    getCategoryDetectors(categoryName) {
-        const categoryInfo = this.categories[categoryName];
-        return categoryInfo ? categoryInfo.detectors : [];
-    }
-
-    /**
-     * Check if a category exists
-     * @param {string} categoryName - Category name
-     * @returns {boolean} True if category exists
-     */
-    hasCategory(categoryName) {
-        return categoryName in this.categories;
-    }
-
-    /**
      * Get category display name
      * @param {string} categoryName - Category name
      * @returns {string} Formatted display name
@@ -298,10 +260,8 @@ class CategoryManager {
         const tags = this.getTagColors();
         const normalizedTagName = tagName.toLowerCase();
 
-        // Get tag data directly (method names now match tag names exactly)
         const tagData = tags[normalizedTagName];
 
-        // Handle both old format (string) and new format (object with colour property)
         if (typeof tagData === 'string') {
             return tagData;
         } else if (tagData && tagData.colour) {
@@ -334,14 +294,12 @@ class CategoryManager {
 
         const levelData = badgeColors[normalizedLevel];
 
-        // Handle both old format (string) and new format (object with colour property)
         let color;
         if (typeof levelData === 'string') {
             color = levelData;
         } else if (levelData && levelData.colour) {
             color = levelData.colour;
         } else {
-            // Fallback defaults (using BADGE constants)
             const defaults = {
                 low: BADGE.COLORS.LOW,
                 medium: BADGE.COLORS.MEDIUM,
@@ -354,78 +312,12 @@ class CategoryManager {
     }
 
     /**
-     * Update category color
-     * @param {string} categoryName - Category name
-     * @param {string} color - New color hex value
-     */
-    updateCategoryColor(categoryName, color) {
-        if (!this.hasCategory(categoryName)) {
-            return false;
-        }
-
-        this.categories[categoryName].colour = color;
-        return true;
-    }
-
-    /**
-     * Get total count of categories
-     * @returns {number} Number of categories
-     */
-    getCategoryCount() {
-        return Object.keys(this.categories).length;
-    }
-
-    /**
-     * Get total count of all detectors across all categories
-     * @returns {number} Total number of detectors
-     */
-    getTotalDetectorCount() {
-        let count = 0;
-        for (const category of Object.values(this.categories)) {
-            count += (category.detectors?.length || 0);
-        }
-        return count;
-    }
-
-    /**
-     * Clear category data from Chrome storage
-     * Uses StorageManager for consistent clear patterns
-     */
-    async clearStorage() {
-        try {
-            // Remove both old and new keys
-            await StorageManager.clearStorage(['scrapfly_categories', 'scrapfly_categories.json']);
-        } catch (error) {
-            Logger.error('STORAGE', 'Failed to clear category storage', error);
-        }
-    }
-
-    /**
-     * Get storage information
-     * @returns {object} Object with category stats
-     */
-    getStorageInfo() {
-        const detectorCounts = {};
-        for (const [name, data] of Object.entries(this.categories)) {
-            detectorCounts[name] = data.detectors?.length || 0;
-        }
-
-        return {
-            categoryCount: this.getCategoryCount(),
-            totalDetectorCount: this.getTotalDetectorCount(),
-            detectorsByCategory: detectorCounts,
-            initialized: this.initialized
-        };
-    }
-
-    /**
      * Get badge colors from CategoryManager instance or storage
      * @param {CategoryManager} [categoryManagerInstance] - Optional CategoryManager instance
      * @returns {Promise<Object>} Badge colors {low, medium, high}
      */
     static async getBadgeColors(categoryManagerInstance = null) {
         try {
-            // If instance provided and initialized, use it
             if (categoryManagerInstance && categoryManagerInstance.initialized) {
                 return {
                     low: categoryManagerInstance.getBadgeColor('low'),
@@ -443,8 +335,6 @@ class CategoryManager {
                 return fallback;
             };
 
-            // Otherwise, load from storage directly.
-            // NOTE: scrapfly_categories is typically wrapped as: { timestamp, categories: {...}, totalCategories }
             const result = await chrome.storage.local.get(['scrapfly_categories', 'scrapfly_settings']);
 
             if (result.scrapfly_categories) {
@@ -464,7 +354,6 @@ class CategoryManager {
                 }
             }
 
-            // Fallback: read from settings (if present)
             if (result.scrapfly_settings) {
                 const settingsData = typeof result.scrapfly_settings === 'string'
                     ? JSON.parse(result.scrapfly_settings)
@@ -480,7 +369,6 @@ class CategoryManager {
                 }
             }
 
-            // Fallback defaults (using BADGE constants)
             return {
                 low: BADGE.COLORS.LOW,
                 medium: BADGE.COLORS.MEDIUM,
@@ -488,7 +376,6 @@ class CategoryManager {
             };
         } catch (error) {
             Logger.error('BADGE', 'Error getting badge colors', error);
-            // Fallback defaults (using BADGE constants)
             return {
                 low: BADGE.COLORS.LOW,
                 medium: BADGE.COLORS.MEDIUM,

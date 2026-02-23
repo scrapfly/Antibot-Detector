@@ -1,8 +1,3 @@
-/**
- * hcaptcha-advanced-actions.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
 HCaptchaAdvanced.prototype.checkVersion = async function() {
         try {
             if (!this.tabInfo || !this.tabInfo.id) throw new Error('Tab information not available');

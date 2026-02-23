@@ -113,22 +113,6 @@ Rules.prototype.formatLastUpdated = function(rawTimestamp) {
 };
 
 /**
- * Format date for display
- * @param {Date} date - Date object
- * @returns {string} Formatted date string
- */
-Rules.prototype.formatDateForDisplay = function(date) {
-  const options = {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit'
-  };
-  return date.toLocaleString(undefined, options);
-};
-
-/**
  * Get timestamp for sorting
  * @param {string|number} rawTimestamp - Raw timestamp value
  * @returns {number} Timestamp in milliseconds

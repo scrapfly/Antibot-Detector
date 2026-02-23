@@ -1,9 +1,3 @@
-/**
- * awswaf-advanced-ui.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
     /**
      * Render AWS WAF-specific tools
      */

@@ -32,7 +32,6 @@
   --danger: #ef4444;
   --danger-light: #fca5a5;
   --danger-dark: #dc2626;
-  --danger-lighter: #f87171;
   --danger-lightest: #fecaca;
   --purple: #8b5cf6;
   --purple-light: #a78bfa;
@@ -44,11 +43,7 @@
   --border-light: #525252;
 
   /* Shadows */
-  --shadow: rgba(0, 0, 0, 0.5);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.25);
-  --shadow-xl: 0 25px 50px rgba(0, 0, 0, 0.6);
 
   /* Badge Colors - Detection Methods */
   --badge-dom: #2196F3;
@@ -58,7 +53,6 @@
   --badge-url: #06b6d4;
   --badge-window: #6b7280;
   --badge-js-hooks: #8b5cf6;
-  --badge-css: #E91E63;
   --badge-payload: #6b7280;
 
   /* Badge Colors - Categories */
@@ -142,24 +136,6 @@
   transition: all 0.2s ease;
 }
 
-.badge-captcha {
-  background: rgba(51, 195, 255, 0.2);
-  color: var(--badge-captcha);
-  border: 1px solid rgba(51, 195, 255, 0.35);
-}
-
-.badge-fingerprint {
-  background: rgba(59, 130, 246, 0.2);
-  color: var(--badge-fingerprint);
-  border: 1px solid rgba(59, 130, 246, 0.35);
-}
-
-.badge-default {
-  background: rgba(97, 97, 97, 0.15);
-  color: #94a3b8;
-  border: 1px solid rgba(97, 97, 97, 0.25);
-}
-
 /* Detection Method Badges */
 .badge-dom {
   background: rgba(33, 150, 243, 0.2);
@@ -205,12 +181,6 @@
   background: rgba(139, 92, 246, 0.2);
   color: var(--badge-js-hooks);
   border: 1px solid rgba(139, 92, 246, 0.35);
-}
-
-.badge-css {
-  background: rgba(233, 30, 99, 0.2);
-  color: var(--badge-css);
-  border: 1px solid rgba(233, 30, 99, 0.35);
 }
 
 .badge-payload {

@@ -5,7 +5,6 @@
 class NotificationManager {
   constructor() {
     this.toasts = [];
-    this.confirmDialogs = [];
     this.initialized = false;
     this.container = null;
     this.maxToasts = 2;
@@ -73,10 +72,9 @@ class NotificationManager {
       if (settings.showProgress) {
         const progressBar = existingToast.element.querySelector('.notification-progress-bar');
         if (progressBar) {
-          // Reset to full width instantly, then animate to 0
           progressBar.style.transition = 'none';
           progressBar.style.width = '100%';
-          progressBar.offsetHeight; // Force reflow
+          progressBar.offsetHeight; // Force reflow before re-animating
           progressBar.style.transition = `width ${settings.duration}ms linear`;
           requestAnimationFrame(() => {
             progressBar.style.width = '0%';
@@ -116,10 +114,8 @@ class NotificationManager {
     // Add to container
     this.container.appendChild(toast);
 
-    // Trigger reflow to enable transition
-    toast.offsetHeight;
+    toast.offsetHeight; // Trigger reflow to enable transition
 
-    // Show toast with animation
     requestAnimationFrame(() => {
       toast.setAttribute('data-show', 'true');
     });
@@ -145,7 +141,6 @@ class NotificationManager {
       timeoutId = setTimeout(() => this.removeToast(toastId), settings.duration);
     }
 
-    // Track toast with message, type, and timeoutId for deduplication
     this.toasts.push({ id: toastId, element: toast, message, type, timeoutId });
 
     // Remove oldest toast if exceeded max
@@ -248,7 +243,8 @@ class NotificationManager {
       cancelText: 'Cancel',
       type: 'info', // info, warning, danger
       showIcon: true,
-      icon: null
+      icon: null,
+      emphasizeAction: false
     };
 
     const settings = { ...defaults, ...options };
@@ -267,7 +263,8 @@ class NotificationManager {
       // Create dialog
       const dialog = document.createElement('div');
       dialog.id = dialogId;
-      dialog.className = `notification-confirm notification-confirm-${settings.type}`;
+      const emphasisClass = settings.emphasizeAction ? ' notification-confirm-emphasis' : '';
+      dialog.className = `notification-confirm notification-confirm-${settings.type}${emphasisClass}`;
       dialog.setAttribute('data-show', 'false');
 
       // Build dialog HTML
@@ -329,43 +326,6 @@ class NotificationManager {
   }
 
   /**
-   * Set badge on extension icon
-   * @param {string} text - Badge text
-   * @param {string} color - Badge color type (success, error, warning, info)
-   */
-  async setBadge(text, color = 'info') {
-    const colors = {
-      success: '#10b981',
-      error: '#ef4444',
-      warning: '#f59e0b',
-      info: '#3b82f6',
-      danger: '#ef4444'
-    };
-
-    try {
-      if (typeof chrome !== 'undefined' && chrome.action) {
-        await chrome.action.setBadgeText({ text: String(text) });
-        await chrome.action.setBadgeBackgroundColor({ color: colors[color] || colors.info });
-      }
-    } catch (error) {
-      Logger.error('BADGE', 'Failed to set badge', error);
-    }
-  }
-
-  /**
-   * Clear badge from extension icon
-   */
-  async clearBadge() {
-    try {
-      if (typeof chrome !== 'undefined' && chrome.action) {
-        await chrome.action.setBadgeText({ text: '' });
-      }
-    } catch (error) {
-      Logger.error('BADGE', 'Failed to clear badge', error);
-    }
-  }
-
-  /**
    * Get icon for notification type
    * @param {string} type - Notification type
    * @returns {string} Icon HTML or emoji
@@ -424,22 +384,11 @@ class NotificationManager {
 // Create singleton instance
 const notificationManager = new NotificationManager();
 
-// Create NotificationHelper as a safe wrapper with fallback methods
 const NotificationHelper = {
-  // Cache notification settings with 30s TTL for faster checks
   _notificationCache: {
     value: null,
     timestamp: 0,
     ttl: 30000 // 30 seconds
-  },
-
-  /**
-   * Invalidate the notification settings cache
-   * Should be called when notification settings are updated
-   */
-  invalidateCache() {
-    this._notificationCache.value = null;
-    this._notificationCache.timestamp = 0;
   },
 
   /**
@@ -564,24 +513,6 @@ const NotificationHelper = {
       return notificationManager.loading(message);
     }
     return { close: () => {}, update: () => {} };
-  },
-
-  /**
-   * Safe badge setter
-   */
-  async setBadge(text, color) {
-    if (notificationManager && typeof notificationManager.setBadge === 'function') {
-      return await notificationManager.setBadge(text, color);
-    }
-  },
-
-  /**
-   * Safe badge clearer
-   */
-  async clearBadge() {
-    if (notificationManager && typeof notificationManager.clearBadge === 'function') {
-      return await notificationManager.clearBadge();
-    }
   },
 
   /**

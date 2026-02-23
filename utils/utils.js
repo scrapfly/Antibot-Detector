@@ -160,37 +160,6 @@ class Utils {
     return true;
   }
 
-  /**
-   * Perform context validation check
-   * @param {Object} state - State object with hasCleanedUp, contextCheckInterval, contextCheckFailures
-   * @param {Function} cleanupOrphanedScript - Cleanup function to call on failure
-   */
-  static performContextCheck(state, cleanupOrphanedScript) {
-    if (state.hasCleanedUp) {
-      if (state.contextCheckInterval) {
-        clearInterval(state.contextCheckInterval);
-        state.contextCheckInterval = null;
-      }
-      return;
-    }
-
-    if (!Utils.isExtensionContextValid()) {
-      state.contextCheckFailures = (state.contextCheckFailures || 0) + 1;
-
-      if (state.contextCheckFailures >= 2) {
-        Logger.warn('UTIL', 'Scrapfly Content Script: Extension context lost after multiple checks');
-        cleanupOrphanedScript();
-
-        if (state.contextCheckInterval) {
-          clearInterval(state.contextCheckInterval);
-          state.contextCheckInterval = null;
-        }
-      }
-    } else {
-      state.contextCheckFailures = 0;
-    }
-  }
-
   // ============================================================================
   // Page Data Collection & Messaging
   // ============================================================================
@@ -295,19 +264,6 @@ class Utils {
             else {
               Logger.warn('UTIL', 'Scrapfly Content Script: Error sending detection data:', chrome.runtime.lastError);
             }
-          } else {
-            try {
-              const cacheKey = `scrapfly_cache_${window.location.hostname}`;
-              const cacheData = {
-                timestamp: Date.now(),
-                detectionCount: response?.detectionCount || 0,
-                url: window.location.href
-              };
-              sessionStorage.setItem(cacheKey, JSON.stringify(cacheData));
-              Logger.cache('Saved sessionStorage after detection send (for next visit)');
-            } catch (e) {
-              // sessionStorage not available - continue silently
-            }
           }
         });
       } catch (sendError) {
@@ -371,16 +327,41 @@ class Utils {
    */
   static async getHistorySettings() {
     const settings = await this.getSettings();
+    const historySettings = settings.history || {};
+    const duplicatePrevention = settings.duplicatePrevention || {};
+
+    const rawDuplicateScope = duplicatePrevention.duplicateScope ?? settings.duplicateScope ?? 'full_url';
+    const normalizedDuplicateScope = (() => {
+      const normalizedScope = String(rawDuplicateScope || '').toLowerCase();
+
+      if (normalizedScope === 'url' || normalizedScope === 'full') {
+        return 'full_url';
+      }
+
+      if (normalizedScope === 'domain' || normalizedScope === 'path' || normalizedScope === 'full_url') {
+        return normalizedScope;
+      }
+
+      return 'full_url';
+    })();
+
+    const parsedDuplicateDuration = parseInt(
+      duplicatePrevention.duplicateDuration ?? settings.duplicateDuration ?? 1,
+      10
+    );
+
     return {
-      historyLimit: settings.historyLimit ?? 0,
-      autoClearDays: settings.autoClearDays ?? 30,
-      exportFormat: settings.exportFormat || 'json',
-      includeTimestamps: settings.includeTimestamps !== false,
-      historyBypassCache: settings.historyBypassCache ?? false,
-      preventDuplicates: settings.preventDuplicates ?? false,
-      duplicateScope: settings.duplicateScope || 'full_url',
-      duplicateDuration: settings.duplicateDuration ?? 1,
-      duplicateUnit: settings.duplicateUnit || 'hours'
+      historyLimit: historySettings.historyLimit ?? settings.historyLimit ?? 0,
+      autoClearDays: historySettings.autoClearDays ?? settings.autoClearDays ?? 30,
+      exportFormat: historySettings.exportFormat || settings.exportFormat || 'json',
+      includeTimestamps: historySettings.includeTimestamps ?? settings.includeTimestamps ?? true,
+      historyBypassCache: historySettings.historyBypassCache ?? settings.historyBypassCache ?? false,
+      preventDuplicates: duplicatePrevention.preventDuplicates ?? settings.preventDuplicates ?? false,
+      duplicateScope: normalizedDuplicateScope,
+      duplicateDuration: Number.isFinite(parsedDuplicateDuration) && parsedDuplicateDuration > 0
+        ? parsedDuplicateDuration
+        : 1,
+      duplicateUnit: duplicatePrevention.duplicateUnit || settings.duplicateUnit || 'hours'
     };
   }
 

@@ -1,9 +1,3 @@
-/**
- * shapesecurity-advanced-lifecycle.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
     /**
      * Setup listener for extraction completion messages
      */

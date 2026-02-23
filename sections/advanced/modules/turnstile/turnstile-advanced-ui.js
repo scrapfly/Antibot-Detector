@@ -1,8 +1,3 @@
-/**
- * turnstile-advanced-ui.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
 TurnstileAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {

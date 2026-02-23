@@ -74,7 +74,17 @@
 
       <!-- Detection Tab -->
       <div id="detectionTab" class="tab-content active">
-        <!-- Content populated by Detection.js -->
+        <!-- Inline loading placeholder (replaced by detection.html on init) -->
+        <div class="loading-state" style="display: flex;">
+          <div class="loading-content">
+            <div class="loading-spinner">
+              <svg class="spinner-svg" viewBox="0 0 50 50">
+                <circle class="spinner-circle" cx="25" cy="25" r="20"></circle>
+              </svg>
+            </div>
+            <h2 class="loading-text">Loading...</h2>
+          </div>
+        </div>
       </div>
 
       <!-- History Tab -->
@@ -162,7 +172,6 @@
   <script src="sections/advanced/modules/recaptcha/libs/pbf.js"></script>
   <script src="sections/advanced/modules/recaptcha/libs/message.browser.js"></script>
   <script src="sections/advanced/modules/recaptcha/recaptcha-advanced.js"></script>
-  <script src="sections/advanced/modules/recaptcha/recaptcha-advanced-lifecycle.js"></script>
   <script src="sections/advanced/modules/recaptcha/recaptcha-advanced-ui.js"></script>
   <script src="sections/advanced/modules/recaptcha/recaptcha-advanced-actions.js"></script>
   <script src="sections/advanced/modules/akamai/akamai-advanced.js"></script>
@@ -178,22 +187,18 @@
   <script src="sections/advanced/modules/shapesecurity/shapesecurity-advanced-ui.js"></script>
   <script src="sections/advanced/modules/shapesecurity/shapesecurity-advanced-actions.js"></script>
   <script src="sections/advanced/modules/awswaf/awswaf-advanced.js"></script>
-  <script src="sections/advanced/modules/awswaf/awswaf-advanced-lifecycle.js"></script>
   <script src="sections/advanced/modules/awswaf/awswaf-advanced-ui.js"></script>
   <script src="sections/advanced/modules/awswaf/awswaf-advanced-actions.js"></script>
   <script src="sections/advanced/modules/geetest/geetest-advanced.js"></script>
-  <script src="sections/advanced/modules/geetest/geetest-advanced-lifecycle.js"></script>
   <script src="sections/advanced/modules/geetest/geetest-advanced-ui.js"></script>
   <script src="sections/advanced/modules/geetest/geetest-advanced-actions.js"></script>
   <script src="sections/advanced/modules/datadome/datadome-advanced.js"></script>
-  <script src="sections/advanced/modules/datadome/datadome-advanced-lifecycle.js"></script>
   <script src="sections/advanced/modules/datadome/datadome-advanced-ui.js"></script>
   <script src="sections/advanced/modules/datadome/datadome-advanced-actions.js"></script>
   <script src="sections/advanced/modules/cloudflare/cloudflare-advanced.js"></script>
   <script src="sections/advanced/modules/cloudflare/cloudflare-advanced-ui.js"></script>
   <script src="sections/advanced/modules/cloudflare/cloudflare-advanced-actions.js"></script>
   <script src="sections/advanced/modules/turnstile/turnstile-advanced.js"></script>
-  <script src="sections/advanced/modules/turnstile/turnstile-advanced-lifecycle.js"></script>
   <script src="sections/advanced/modules/turnstile/turnstile-advanced-ui.js"></script>
   <script src="sections/advanced/modules/turnstile/turnstile-advanced-actions.js"></script>
   <script src="sections/advanced/modules/hcaptcha/hcaptcha-advanced.js"></script>
@@ -201,7 +206,6 @@
   <script src="sections/advanced/modules/hcaptcha/hcaptcha-advanced-ui.js"></script>
   <script src="sections/advanced/modules/hcaptcha/hcaptcha-advanced-actions.js"></script>
   <script src="sections/advanced/modules/funcaptcha/funcaptcha-advanced.js"></script>
-  <script src="sections/advanced/modules/funcaptcha/funcaptcha-advanced-lifecycle.js"></script>
   <script src="sections/advanced/modules/funcaptcha/funcaptcha-advanced-ui.js"></script>
   <script src="sections/advanced/modules/funcaptcha/funcaptcha-advanced-actions.js"></script>
   <script src="sections/advanced/advanced.js"></script>

@@ -1,9 +1,4 @@
-/**
- * DataDomeAdvanced - DataDome Module
- *
- * Extends BaseAdvancedModule for DataDome detection and analysis.
- * Includes tools for checking cookies and capturing DataDome scripts.
- */
+// DataDomeAdvanced - Extends BaseAdvancedModule for DataDome detection
 
 Logger.network('[DataDomeAdvanced] Loading... Dependencies check:', {
     BaseAdvancedModule: typeof BaseAdvancedModule,

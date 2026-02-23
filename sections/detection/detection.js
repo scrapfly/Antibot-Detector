@@ -8,8 +8,6 @@ class Detection {
     this.initializingPromise = null;
     this.htmlLoaded = false;
     this.paginationManager = null;
-    this.lastNotificationTime = 0;
-    this.notificationDebounceTime = 2000; // 2 seconds debounce
     this.analysisSteps = this.createAnalysisSteps();
     this.analysisStepIndex = 0;
     this.analysisProgressInterval = null;
@@ -18,13 +16,12 @@ class Detection {
     this.modalElements = null;
     this.activeModalIndex = null;
     this.handleModalKeyDown = null;
-    this.wasInterrupted = false; // Track if detection was interrupted to prevent confusing state flow
-    this.debugMode = false; // Debug logging flag, loaded from settings
-    this.isRequestingDetection = false; // FIX: Track if we're already requesting detection
-    this.isShowingAnalyzing = false; // FIX: Track if analyzing state is already showing
-    this.isShowingResults = false; // FIX: Track if displaying results to prevent message listeners from overriding
+    this.debugMode = false;
+    this.isRequestingDetection = false; // Prevents duplicate requests
+    this.isShowingAnalyzing = false; // Prevents UI flicker
+    this.isShowingResults = false; // Prevents message listeners from overriding results
     this.isExtensionEnabled = true;
-    this.cacheCleared = false; // FIX: Track if cache was cleared while tab was hidden - refresh when tab becomes visible
+    this.cacheCleared = false; // Refresh when tab becomes visible
     this.advancedSection = null; // Reference to Advanced section for cross-component notifications
     this.uiStates = (typeof DetectionUIStates !== 'undefined')
       ? DetectionUIStates
@@ -33,14 +30,13 @@ class Detection {
         LOADING: 'loading',
         ANALYZING: 'analyzing',
         RESULTS: 'results',
-        DISABLED: 'disabled',
-        INTERRUPTED: 'interrupted'
+        DISABLED: 'disabled'
       };
     this.uiStateMachine = (typeof DetectionUIStateMachine !== 'undefined')
       ? new DetectionUIStateMachine(this.uiStates.EMPTY)
       : null;
 
-    // Setup message listeners immediately (before initialization) so they work even if tab not accessed yet
+    // Setup listeners before init to catch early messages
     this.setupMessageListeners();
 
     chrome.storage.local.get(['scrapfly_enabled'])
@@ -61,17 +57,13 @@ class Detection {
    * Called from constructor to ensure listeners are active even before tab initialization
    */
   setupMessageListeners() {
-    // FIX: Listen for tab URL changes while popup is open
-    // When user navigates, transition to analyzing state to show live progress
+    // Listen for tab navigation; show analyzing state
     chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       if (changeInfo.status === 'loading' && changeInfo.url) {
         if (this.debugMode) Logger.ui('[Detection] Tab navigated to:', changeInfo.url);
-        // Check if detection is starting (badge will show %)
         chrome.action.getBadgeText({ tabId }, (badgeText) => {
           if (badgeText && badgeText.endsWith('%')) {
-            // Detection started - transition to analyzing state
             if (this.debugMode) Logger.ui('[Detection] Navigation detected, badge shows progress, transitioning to analyzing state');
-            // FIX: Don't override if already showing results
             if (!this.wasInterrupted && !this.isShowingResults && this.isExtensionEnabled !== false) {
               this.showAnalyzingState();
             }
@@ -80,7 +72,7 @@ class Detection {
       }
     });
 
-    // FIX: Listen for real-time detection progress from background
+    // Listen for real-time detection progress
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type === 'EXTENSION_TOGGLE_CHANGED') {
         this.setExtensionEnabled(message.enabled !== false);
@@ -96,9 +88,7 @@ class Detection {
         }
         if (this.debugMode) Logger.ui('[Detection] Received progress update:', message.progress);
 
-        // CRITICAL: If popup is not in analyzing state, transition to it
-        // This handles case where popup is open showing old results when new detection starts
-        // FIX: Don't override if already showing results (cached detection)
+        // Transition to analyzing if not already showing results
         const loadingState = document.querySelector('#loadingState');
         if (!loadingState || loadingState.style.display === 'none') {
           if (this.debugMode) Logger.ui('[Detection] Progress received but not in analyzing state - transitioning now');
@@ -110,7 +100,7 @@ class Detection {
         this.updateRealProgress(message.progress);
       }
 
-      // FIX: Listen for detection completion from background
+      // Listen for detection completion
       if (message.type === 'NEW_DETECTION_DATA') {
         if (!this.isExtensionEnabled) {
           return false;
@@ -313,9 +303,6 @@ class Detection {
   showDisabledState(...args) {
     return DetectionUI.showDisabledState.apply(this, args);
   }
-  showInterruptedState(...args) {
-    return DetectionUI.showInterruptedState.apply(this, args);
-  }
   async displayResults(...args) {
     return await DetectionUI.displayResults.apply(this, args);
   }
@@ -463,8 +450,7 @@ class Detection {
         this.renderAnalysisSteps();
         const loadingState = document.querySelector('#loadingState');
         if (loadingState && loadingState.style.display !== 'none') {
-          // FIX: Don't call startAnalysisProgress() - it runs old animation
-          // Instead, initialize UI for real progress updates only
+          // Initialize UI for real progress updates (not old step-animation)
           this.stopAnalysisProgress();
           this.clearLoadingTimeout();
           this.analysisStepIndex = 0;
@@ -474,8 +460,7 @@ class Detection {
             this.handleLoadingTimeout();
           }, this.loadingTimeoutDuration);
 
-          // FIX: Read current badge percentage and sync popup with it
-          // This ensures popup shows same % as badge (in case popup opened after progress updates)
+          // Sync popup progress with current badge percentage
           chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
             if (tabs[0]) {
               try {

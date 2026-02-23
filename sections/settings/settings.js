@@ -41,18 +41,6 @@ class Settings {
   async clearAllData(...args) {
     return await SettingsUI.clearAllData.apply(this, args);
   }
-  showSuccessMessage(...args) {
-    return SettingsUI.showSuccessMessage.apply(this, args);
-  }
-  showErrorMessage(...args) {
-    return SettingsUI.showErrorMessage.apply(this, args);
-  }
-  showNotification(...args) {
-    return SettingsUI.showNotification.apply(this, args);
-  }
-  getNotificationIcon(...args) {
-    return SettingsUI.getNotificationIcon.apply(this, args);
-  }
   setupEventListeners(...args) {
     return SettingsUI.setupEventListeners.apply(this, args);
   }
@@ -77,26 +65,14 @@ class Settings {
   renderWebhookHeadersUI(...args) {
     return SettingsUI.renderWebhookHeadersUI.apply(this, args);
   }
+  setToggleControlledVisibility(...args) {
+    return SettingsUI.setToggleControlledVisibility.apply(this, args);
+  }
   escapeHtml(...args) {
     return FormatUtils.escapeHtml(...args);
   }
   async handleSaveSettings(...args) {
     return await SettingsUI.handleSaveSettings.apply(this, args);
-  }
-  getSettings() {
-    return { ...this.settings };
-  }
-
-  /**
-   * Update a specific setting
-   * @param {string} key - Setting key
-   * @param {any} value - Setting value
-   */
-  async updateSetting(key, value) {
-    if (this.settings.hasOwnProperty(key)) {
-      this.settings[key] = value;
-      await this.saveSettings();
-    }
   }
 
   /**
@@ -176,26 +152,14 @@ class Settings {
   static async sendWebhookIfEnabled(...args) {
     return await SettingsRuntime.sendWebhookIfEnabled.apply(this, args);
   }
-  static async isUrlBlacklisted(...args) {
-    return await SettingsRuntime.isUrlBlacklisted.apply(this, args);
-  }
   static async dispatchJsApiEvent(...args) {
     return await SettingsRuntime.dispatchJsApiEvent.apply(this, args);
   }
   static async dispatchReadyEvent(...args) {
     return await SettingsRuntime.dispatchReadyEvent.apply(this, args);
   }
-  updateHttpMethodColor(...args) {
-    return SettingsUI.updateHttpMethodColor.apply(this, args);
-  }
   setupWebhookMethodRadios(...args) {
     return SettingsUI.setupWebhookMethodRadios.apply(this, args);
-  }
-  setupCustomHttpMethodDropdown(...args) {
-    return SettingsUI.setupCustomHttpMethodDropdown.apply(this, args);
-  }
-  updateCustomHttpMethodDropdown(...args) {
-    return SettingsUI.updateCustomHttpMethodDropdown.apply(this, args);
   }
   async handleTestWebhook(...args) {
     return await SettingsUI.handleTestWebhook.apply(this, args);

@@ -1,9 +1,3 @@
-/**
- * recaptcha-advanced-ui.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
     /**
      * Render reCAPTCHA-specific tools
      */
@@ -422,7 +416,7 @@ ReCaptchaAdvanced.prototype.renderCaptureHistoryItems = function(items) {
             const { version, siteKey, isEnterprise, isInvisible } = captureData;
 
             const timeAgo = this.getTimeAgo(timestamp);
-            const faviconUrl = UrlUtils.getFaviconUrl(hostname);
+            const faviconUrl = UrlUtils.resolveDisplayFavicon(item.favicon, item.url || hostname);
 
             let versionDisplay = version;
             if (isEnterprise) {

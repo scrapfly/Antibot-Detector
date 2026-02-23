@@ -15,7 +15,8 @@ DetectionActions.clearCache = async function() {
         message: 'This will remove cached detection data for this domain and trigger a fresh analysis.',
         confirmText: 'Clear Cache',
         cancelText: 'Cancel',
-        type: 'warning'
+        type: 'warning',
+        emphasizeAction: true
       });
 
       if (!confirmed) return;
@@ -45,13 +46,10 @@ DetectionActions.clearCache = async function() {
 
       const url = tabs[0].url;
 
-      // OPTION 1: Clean cache clear with automatic silent re-detection
-      // Send message to background to clear cache (NO hold period)
       await chrome.runtime.sendMessage({
         type: 'DETECTION_CLEAR_CACHE',
         url: url,
         tabId: tabs[0].id
-        // Removed: holdDetectionForMs (we'll trigger background detection instead)
       });
 
       // Update button to show success
@@ -75,13 +73,8 @@ DetectionActions.clearCache = async function() {
         if (this.debugMode) Logger.debug('UI', 'Could not set badge:', error);
       }
 
-      // Clear current results immediately
       this.currentResults = [];
-
-      // Set flag to prevent auto-refresh from NEW_DETECTION_DATA
-      this.justClearedCache = true;
-
-      // Show "Nothing Detected" page immediately after cache clear
+      this.justClearedCache = true; // Prevent auto-refresh from NEW_DETECTION_DATA
       this.showEmptyState();
     } catch (error) {
       if (this.debugMode) Logger.error('UI', 'Failed to clear cache:', error);
@@ -131,7 +124,8 @@ DetectionActions.addToBlacklist = async function() {
         message: `Domain "${domain}" will be excluded from all future detections. You can remove it later in Settings.`,
         confirmText: 'Add to Blacklist',
         cancelText: 'Cancel',
-        type: 'danger'
+        type: 'danger',
+        emphasizeAction: true
       });
 
       if (!confirmed) return;
@@ -361,7 +355,7 @@ DetectionActions.refreshAnalysis = async function() {
                 }
               }
             );
-          }, 2000); // Wait 2 seconds for detection to complete
+          }, 2000);
         }
       );
 

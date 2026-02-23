@@ -9,9 +9,8 @@ class ScrapflyPopup {
     this.detection = new Detection(this.detectorManager, this.detectionEngine);
     this.history = new History(this.detectorManager);
     this.rules = new Rules(this.detectorManager);
-    // Lazy initialize Advanced to avoid race condition on fast systems
+    // Lazy initialize Advanced; link to Detection for notifications
     this.advanced = typeof Advanced !== 'undefined' ? new Advanced(this.detectorManager, this.detection) : null;
-    // Link Advanced to Detection for cross-component notifications (fixes timing race condition)
     if (this.advanced && this.detection) {
       this.detection.advancedSection = this.advanced;
     }
@@ -21,12 +20,10 @@ class ScrapflyPopup {
 
   async initialize() {
     try {
-      // Test Logger in popup context (with safety check)
       if (typeof Logger !== 'undefined') {
         Logger.popup('Logger initialized in POPUP context');
       }
 
-      // Initialize notification manager using helper
       NotificationHelper.initialize();
 
       // Set version from manifest
@@ -39,19 +36,13 @@ class ScrapflyPopup {
       this.setupEventListeners();
       this.setupMessageHandlers();
 
-      // Initialize detector manager FIRST (will load from storage if available)
-      // Check if already initialized to avoid duplicate initialization
       if (!this.detectorManager.initialized) {
         await this.detectorManager.initialize();
       }
 
-      // Then initialize all sections (lazy loading enabled)
       await this.initializeSections();
 
-      // Don't pre-render hidden tabs
-      // They'll be loaded on-demand when user switches to them
-
-      // Load and show default tab from settings (will lazy-load that specific tab)
+      // Load and show default tab from settings
       await this.loadAndApplyDefaultTab();
 
     } catch (error) {
@@ -191,38 +182,8 @@ class ScrapflyPopup {
   }
 
   /**
-   * Check detection status before requesting
-   * Prevents interference with active detections
-   */
-  async checkAndRequestDetection() {
-    try {
-      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-      if (!tab) return;
-
-      // First, check if detection is already in progress
-      chrome.runtime.sendMessage(
-        { type: 'GET_DETECTION_DATA', tabId: tab.id },
-        async (response) => {
-          if (chrome.runtime.lastError) {
-            Logger.error('UI', 'Popup: Error checking detection status:', chrome.runtime.lastError);
-            this.requestCurrentTabDetection();
-            return;
-          }
-
-          // Always call requestCurrentTabDetection, it now has safeguards
-          // to prevent duplicate requests
-          this.requestCurrentTabDetection();
-        }
-      );
-    } catch (error) {
-      Logger.error('UI', 'Popup: Error in checkAndRequestDetection:', error);
-      this.requestCurrentTabDetection();
-    }
-  }
-
-  /**
    * Check and display existing detection data without triggering fresh detection
-   * FIX: Fetches completed/cached data only, never sends REQUEST_DETECTION
+   * Fetches completed/cached data only, never triggers fresh detection
    */
   async checkAndDisplayExistingDetection(requestId = this.beginDetectionViewRequest()) {
     try {
@@ -230,7 +191,7 @@ class ScrapflyPopup {
         return;
       }
 
-      // DEBOUNCE: Prevent spam from multiple rapid calls
+      // Debounce to prevent spam from rapid calls
       const now = Date.now();
       if (this.lastCheckTime && (now - this.lastCheckTime) < 1000) {
         return;
@@ -376,40 +337,10 @@ class ScrapflyPopup {
    * Delegates to Detection.requestCurrentTabDetection()
    */
   async requestCurrentTabDetection() {
-    // Notify content script that popup is open (to prevent visibility-triggered detections)
-    try {
-      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-      if (tab) {
-        chrome.tabs.sendMessage(tab.id, {
-          type: 'POPUP_OPENED',
-          timestamp: Date.now()
-        }).catch((error) => {
-          // Content script might not be ready, that's okay
-          if (typeof Logger !== 'undefined') {
-            Logger.debug('POPUP', 'Could not notify content script of popup open', { error: error.message });
-          }
-        });
-      }
-    } catch (error) {
-      // Ignore errors - not critical
-    }
-
     await Detection.requestCurrentTabDetection({
       detection: this.detection,
       Utils: Utils,
       processDetectionDataCallback: (data) => this.processDetectionData(data)
-    });
-  }
-
-  /**
-   * Request a fresh detection for a specific tab
-   * Delegates to Detection.requestFreshDetection()
-   */
-  requestFreshDetection(tabId) {
-    Detection.requestFreshDetection({
-      detection: this.detection,
-      tabId: tabId,
-      requestCurrentTabDetectionCallback: () => this.requestCurrentTabDetection()
     });
   }
 
@@ -431,8 +362,7 @@ class ScrapflyPopup {
    */
   setupMessageHandlers() {
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      // Internal hook diagnostics are broadcasted from content scripts; ignore them in the popup.
-      // (We still handle a few explicitly below, but this guard prevents noisy "Unknown message type" logs.)
+      // Ignore internal hook diagnostic messages in popup
       if (request && typeof request.type === 'string' && request.type.startsWith('HOOK_')) {
         return false;
       }
@@ -472,21 +402,6 @@ class ScrapflyPopup {
           if (this.history && typeof this.history.displayHistory === 'function') {
             this.history.displayHistory();
           }
-          break;
-
-        case 'CATEGORY_COLORS_UPDATED':
-          // Category colors were updated in settings
-          // Reload categories from storage
-          this.categoryManager.loadFromStorage().then(() => {
-            // Refresh Rules section display
-            if (this.rules && typeof this.rules.displayRules === 'function') {
-              this.rules.displayRules();
-            }
-            // Refresh Detection section display with new colors (without re-fetching)
-            if (this.detection && this.detection.currentResults?.length > 0) {
-              this.detection.refreshDisplay();
-            }
-          });
           break;
 
         case 'EXTENSION_TOGGLE_CHANGED': {
@@ -590,7 +505,7 @@ class ScrapflyPopup {
       }
     }
 
-    // Cleanup previous section's event listeners before switching
+    // Cleanup previous section before switching
     if (this.currentTab && this.currentTab !== tabName) {
       const previousSection = sectionMap[this.currentTab];
       if (previousSection && typeof previousSection.cleanup === 'function') {
@@ -649,26 +564,23 @@ class ScrapflyPopup {
             if (!this.isDetectionViewRequestCurrent(requestId)) {
               return;
             }
-            // FIX: Display existing detection data (cache or completed) without triggering fresh detection
+            // Display existing cached data without triggering fresh detection
             await this.checkAndDisplayExistingDetection(requestId);
           });
         } else {
-          // FIX: Even if initialized, ensure HTML is loaded before displaying data
-          // This prevents click handlers from being attached to non-existent DOM elements
+          // Ensure HTML is loaded before displaying data
           if (!this.detection.htmlLoaded) {
             await this.detection.loadHTML();
             this.detection.setupEventListeners();
           }
 
-          // FIX: Check if cache was cleared while tab was hidden
+          // Check if cache was cleared while tab was hidden
           if (this.detection.cacheCleared) {
             this.detection.cacheCleared = false;
             this.detection.currentResults = [];
             this.detection.showEmptyState();
           } else {
-            // FIX: Check cache FIRST before re-rendering potentially stale currentResults
-            // checkAndDisplayExistingDetection will show empty state if cache expired,
-            // or display valid cached results and update currentResults
+            // Display existing cached data without triggering fresh detection
             await this.checkAndDisplayExistingDetection(requestId);
 
             if (!this.isDetectionViewRequestCurrent(requestId)) {
@@ -741,7 +653,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const popup = new ScrapflyPopup();
   popup.initialize();
 
-  // Expose popup instance and categoryManager globally
+  // Expose popup instance globally
   window.popupInstance = popup;
-  window.categoryManager = popup.categoryManager;
 });

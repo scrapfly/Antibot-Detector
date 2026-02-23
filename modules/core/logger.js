@@ -36,9 +36,7 @@ class Logger {
     ERROR: 'ERROR'
   };
 
-  // Safety: avoid overwhelming the browser/extension with log storms.
-  // Note: This is especially important when debug mode is enabled, as logging
-  // can quickly become the #1 source of CPU/memory pressure and crash the tab.
+  // Rate limit to prevent log storms
   static RATE_LIMIT_WINDOW_MS = 1000;
   static MAX_LOGS_PER_WINDOW = 30; // default per-level ceiling (see _getMaxLogsPerWindow)
   static _rateWindowStart = 0;
@@ -518,10 +516,6 @@ class Logger {
     Logger._log(Logger.CATEGORIES.STORAGE, Logger.LEVELS.INFO, message, data);
   }
 
-  static detector(message, data = null) {
-    Logger._log(Logger.CATEGORIES.DETECTOR, Logger.LEVELS.INFO, message, data);
-  }
-
   static popup(message, data = null) {
     Logger._log(Logger.CATEGORIES.POPUP, Logger.LEVELS.INFO, message, data);
   }
@@ -534,20 +528,8 @@ class Logger {
     Logger._log(Logger.CATEGORIES.BACKGROUND, Logger.LEVELS.INFO, message, data);
   }
 
-  static perf(message, data = null) {
-    Logger._log(Logger.CATEGORIES.PERF, Logger.LEVELS.INFO, message, data);
-  }
-
   static ui(message, data = null) {
     Logger._log(Logger.CATEGORIES.UI, Logger.LEVELS.INFO, message, data);
-  }
-
-  static tab(message, data = null) {
-    Logger._log(Logger.CATEGORIES.TAB, Logger.LEVELS.INFO, message, data);
-  }
-
-  static badge(message, data = null) {
-    Logger._log(Logger.CATEGORIES.BADGE, Logger.LEVELS.INFO, message, data);
   }
 
   // ============================================================================

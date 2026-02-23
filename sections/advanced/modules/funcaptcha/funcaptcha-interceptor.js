@@ -15,7 +15,6 @@ var funcaptchaNavigationListeners = funcaptchaNavigationListeners || new Map();
 // Destructure helpers from BaseInterceptorHelpers (use var to avoid redeclaration errors)
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
 var saveToHistory = self.BaseInterceptorHelpers?.saveToHistory;
-var cleanupNotifications = self.BaseInterceptorHelpers?.cleanupNotifications;
 var isCaptureStateReady = self.BaseInterceptorHelpers?.isCaptureStateReady;
 var getCaptureState = self.BaseInterceptorHelpers?.getCaptureState;
 var setCaptureTimeout = self.BaseInterceptorHelpers?.setCaptureTimeout;

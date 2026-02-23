@@ -20,7 +20,6 @@
 Rules.prototype.displayRules = async function() {
   Logger.ui('displayRules called');
 
-  // Ensure HTML is loaded
   if (!this.initialized) {
     await this.initialize();
   }
@@ -38,7 +37,6 @@ Rules.prototype.displayRules = async function() {
   const detectors = this.detectorManager.getAllDetectors();
 
   if (!detectors || Object.keys(detectors).length === 0) {
-    // Show empty state
     if (detectorsEmpty) {
       detectorsEmpty.style.display = 'block';
     }
@@ -48,18 +46,15 @@ Rules.prototype.displayRules = async function() {
     return;
   }
 
-  // Hide empty state
   if (detectorsEmpty) {
     detectorsEmpty.style.display = 'none';
   }
 
-  // Flatten detectors from all categories into a single array
   this.allDetectors = [];
   for (const [category, categoryDetectors] of Object.entries(detectors)) {
     if (!categoryDetectors || Object.keys(categoryDetectors).length === 0) continue;
 
     for (const [detectorName, detector] of Object.entries(categoryDetectors)) {
-      // Ensure detector has detection property
       const detectorWithDefaults = {
         ...detector,
         displayName: detector.name || detectorName,
@@ -80,39 +75,22 @@ Rules.prototype.displayRules = async function() {
     }
   }
 
-  // Sort detectors:
-  // 1. Enabled detectors first, disabled last
-  // 2. Within each group, sort by lastUpdated (newest first)
-  const categoryPriority = {
-    antibot: 0,
-    captcha: 1,
-    fingerprint: 2
-  };
+  // Sort by: enabled status, then date (newest first), then category priority
+  const categoryPriority = { antibot: 0, captcha: 1, fingerprint: 2 };
 
   this.allDetectors.sort((a, b) => {
-    // First, sort by enabled status (enabled first)
     const aEnabled = a.detector.enabled !== false;
     const bEnabled = b.detector.enabled !== false;
-    if (aEnabled !== bEnabled) {
-      return aEnabled ? -1 : 1;
-    }
+    if (aEnabled !== bEnabled) return aEnabled ? -1 : 1;
 
-    // Then sort by lastUpdated (newest first)
     const aTimestamp = this.getSortTimestamp(a.detector.lastUpdated);
     const bTimestamp = this.getSortTimestamp(b.detector.lastUpdated);
+    if (aTimestamp !== bTimestamp) return bTimestamp - aTimestamp;
 
-    if (aTimestamp !== bTimestamp) {
-      return bTimestamp - aTimestamp;
-    }
-
-    // When dates are equal, prioritize by category order: antibot → captcha → fingerprint
     const aPriority = categoryPriority[a.category] ?? 99;
     const bPriority = categoryPriority[b.category] ?? 99;
-    if (aPriority !== bPriority) {
-      return aPriority - bPriority;
-    }
+    if (aPriority !== bPriority) return aPriority - bPriority;
 
-    // Final fallback: alphabetical by display name
     const aName = (a.detector.displayName || a.detectorName || '').toLowerCase();
     const bName = (b.detector.displayName || b.detectorName || '').toLowerCase();
     return aName.localeCompare(bName);
@@ -120,7 +98,6 @@ Rules.prototype.displayRules = async function() {
 
   this.filteredDetectors = [...this.allDetectors];
 
-  // Setup pagination with all detectors
   if (this.paginationManager) {
     this.paginationManager.setItems(this.filteredDetectors);
   }
@@ -145,29 +122,21 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
     const categoryInfo = this.categoryManager.getCategoryInfo(category);
     const categoryColor = categoryInfo?.colour || '#3b82f6';
 
-    // Get detection methods from detector data
     const detectionMethods = this.getDetectionMethods(detector);
-
     const formattedLastUpdated = this.formatLastUpdated(detector.lastUpdated);
-
-    // Get category method badges with dynamic colors
     const categoryMethod = this.getCategoryMethod(category);
 
-    // Parse category color to RGB for muted style
     const catHex = categoryColor.replace('#', '');
     const catR = parseInt(catHex.substring(0, 2), 16);
     const catG = parseInt(catHex.substring(2, 4), 16);
     const catB = parseInt(catHex.substring(4, 6), 16);
 
-    // Create category badge with muted style
     const categoryBadge = `<span class="method-tag" style="background: rgba(${catR}, ${catG}, ${catB}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${catR}, ${catG}, ${catB}, 0.35);">${categoryMethod}</span>`;
 
-    // Create the detector badge with muted style
     const detectorBadge = `<span class="method-tag" style="background: rgba(${catR}, ${catG}, ${catB}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${catR}, ${catG}, ${catB}, 0.35);">${detector.displayName}</span>`;
 
     const topBadges = `${categoryBadge}${detectorBadge}`;
 
-    // Add disabled class if detector is disabled
     const isDisabled = detector.enabled === false;
     rulesHtml += `
       <div class="detector-card ${isDisabled ? 'detector-disabled' : ''}" data-detector-id="${detectorName}" data-category="${category}">
@@ -223,19 +192,17 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
 
   rulesList.innerHTML = rulesHtml;
 
-  // CSP-compliant stopPropagation handling
+  // CSP-compliant: event delegation for stopPropagation and image fallback
   rulesList.querySelectorAll('[data-stop-propagation]').forEach(el => {
     el.addEventListener('click', (e) => e.stopPropagation());
   });
 
-  // CSP-compliant image error fallback
   rulesList.querySelectorAll('img[data-fallback]').forEach(img => {
     img.addEventListener('error', function() {
       this.src = this.dataset.fallback;
     }, { once: true });
   });
 
-  // Add click event listeners to detector cards and edit buttons
   this.setupDetectorCardListeners(detectors);
 };
 
@@ -248,17 +215,13 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
  * @param {Array} detectors - Array of detectors for current page
  */
 Rules.prototype.setupDetectorCardListeners = function(detectors) {
-  // Add click listeners to detector cards
   const detectorCards = document.querySelectorAll('.detector-card');
   detectorCards.forEach((card, index) => {
     if (detectors[index]) {
       const { category, detectorName, detector } = detectors[index];
 
-      // Click on card to edit
       card.addEventListener('click', (e) => {
-        // Don't open modal if clicking on action buttons, method badges, or toggle switch
         if (!e.target.closest('.detector-actions') && !e.target.closest('.method-tag') && !e.target.closest('.toggle-switch-small')) {
-          // Pass the detector ensuring it has detection property
           const detectorToEdit = {
             ...detector,
             detection: detector.detection || {
@@ -273,19 +236,16 @@ Rules.prototype.setupDetectorCardListeners = function(detectors) {
         }
       });
 
-      // Add hover effect
       card.style.cursor = 'pointer';
     }
   });
 
-  // Add click listeners to edit buttons
   const editButtons = document.querySelectorAll('.edit-btn');
   editButtons.forEach((btn, index) => {
     if (detectors[index]) {
       const { category, detectorName, detector } = detectors[index];
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        // Pass the detector ensuring it has detection property
         const detectorToEdit = {
           ...detector,
           detection: detector.detection || {
@@ -301,7 +261,6 @@ Rules.prototype.setupDetectorCardListeners = function(detectors) {
     }
   });
 
-  // Add click listeners to delete buttons
   const deleteButtons = document.querySelectorAll('.delete-btn');
   deleteButtons.forEach((btn, index) => {
     if (detectors[index]) {

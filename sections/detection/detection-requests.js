@@ -20,7 +20,7 @@ DetectionRequests.getBadgeStatus = async function(tabId) {
       trimmed: trimmed,
       color: badgeColor,
       isLoading: trimmed === BADGE.TEXT.LOADING,
-      isCleared: isCleared,        // FIX: New flag for cache cleared state
+      isCleared: isCleared,
       isInterrupted: isInterrupted,
       isError: isLegacyInterrupted,
       isQuestion: trimmed === '?',
@@ -31,19 +31,16 @@ DetectionRequests.getBadgeStatus = async function(tabId) {
 DetectionRequests.requestCurrentTabDetection = async function(context) {
     const { detection, Utils, processDetectionDataCallback } = context;
 
-    // FIX: Prevent duplicate requests when popup opens during active detection
-    // Check if we're already requesting detection data to avoid interference
+    // Prevent duplicate concurrent requests
     if (detection.isRequestingDetection) {
       if (detection.debugMode) Logger.ui('Detection: Already requesting detection, skipping duplicate request');
       return;
     }
 
     try {
-      // Set flag to prevent concurrent requests
       detection.isRequestingDetection = true;
 
-      // Don't show analyzing state immediately - wait for background response to determine correct state.
-      // This avoids a confusing double transition (Analyzing -> Interrupted) when popup opens.
+      // Wait for background response before choosing UI state (avoids Analyzing -> Interrupted flicker)
 
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       if (!tab) {
@@ -88,9 +85,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
             return;
           }
 
-          // FIX: Don't show empty state immediately if response is null/undefined
-          // Badge check below will determine the correct state (analyzing, cached data, etc.)
-          // Only show empty state if we explicitly get a response with no data
+          // Let badge check determine state when response is null
           if (!response) {
             if (this.debugMode) Logger.ui('Detection: No response yet, continuing to badge check...');
             // Don't return - let badge check handle state
@@ -99,16 +94,14 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
           if (response && response.status === 'pending') {
             if (this.debugMode) Logger.ui('Detection: Detection still running - checking if cached data exists first');
 
-            // FIX: Check if cached data exists even though detection is pending
-            // This handles race condition where detection completed but status still says pending
+            // Race condition: detection may have completed while status still says pending
             if (response.data && response.data.detectionResults?.length > 0) {
               if (this.debugMode) Logger.ui('Detection: Found cached results despite pending status - displaying');
               await processDetectionDataCallback(response.data);
               return;
             }
 
-            // FIX: Check badge - if numeric, detection completed but cache write still pending
-            // Retry after short delay instead of showing analyzing forever
+            // Badge numeric = detection done but cache write pending; retry after delay
             const badgeStatus = await Detection.getBadgeStatus(tab.id);
             const isNumericBadge = /^\d+\+?$/.test(badgeStatus.trimmed);
 
@@ -151,13 +144,10 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
             // No cached data, truly still running - show analyzing state
             if (this.debugMode) Logger.ui('Detection: No cached data, showing analyzing state');
 
-            // FIX: Only show analyzing state if we're not already showing it
-            // This prevents UI flicker and state resets when popup opens during detection
+            // Skip re-render if already analyzing (prevents UI flicker on popup reopen)
             if (!detection.isShowingAnalyzing) {
               detection.showAnalyzingState();
             } else {
-              // If already showing analyzing state, just ensure progress steps are visible
-              // This handles the case where popup reopens during detection
               if (detection.debugMode) Logger.ui('Detection: Already showing analyzing, updating progress only');
               if (!detection.analysisSteps || detection.analysisSteps.length === 0) {
                 detection.analysisSteps = detection.createAnalysisSteps();
@@ -165,8 +155,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
               }
             }
 
-            // FIX: Color completed steps immediately, even during active detection
-            // This shows progress one-by-one instead of waiting for 100%
+            // Color completed steps immediately (one-by-one progress)
             if (response.progress && response.progress.completedMethods) {
               const lastMethod = response.progress.method || response.progress.completedMethods[response.progress.completedMethods.length - 1];
               detection.updateMethodStatus(lastMethod, response.progress.completedMethods);
@@ -223,15 +212,14 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
             return;
           }
 
-          // FIX: Check if cache was cleared (gray cleared badge) and show empty state.
+          // Gray "CLR" badge = cache was cleared; show empty state
           if (badgeStatus.isCleared) {
             if (this.debugMode) Logger.ui('Detection: Badge indicates cache cleared, showing empty state');
             detection.showEmptyState();
             return;
           }
 
-          // FIX: Only show interrupted if we DON'T have valid data
-          // Badge might be stale after extension reload or tab return
+          // Show interrupted only when no valid data (badge may be stale)
           if (badgeStatus.isInterrupted && (!response || !response.data)) {
             if (this.debugMode) Logger.ui('Detection: Badge indicates interruption with no data, showing empty state');
             detection.showEmptyState();
@@ -239,8 +227,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
           }
 
           if (response && response.data) {
-            // FIX: Update step colors to reflect completed methods
-            // This works for both pending and cached results
+            // Update step colors from completed methods
             if (response.progress && response.progress.completedMethods) {
               const lastMethod = response.progress.method || response.progress.completedMethods[response.progress.completedMethods.length - 1];
               detection.updateMethodStatus(lastMethod, response.progress.completedMethods);
@@ -248,8 +235,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
 
             await processDetectionDataCallback(response.data);
           } else {
-            // FIX: If badge shows loading/progress but no data yet, keep showing analyzing state
-            // Don't switch to empty state while detection is in progress
+            // Keep analyzing state while detection is in progress
             const currentBadgeStatus = await Detection.getBadgeStatus(tab.id);
             if (currentBadgeStatus.isLoading) {
               if (this.debugMode) Logger.ui('Detection: No data yet but detection in progress, keeping analyzing state');

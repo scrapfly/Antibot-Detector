@@ -22,13 +22,11 @@ function setupHeaderCapture() {
                 const headers = {};
                 const responseCookies = [];
 
-                // Convert headers array to object for easier access
-                // Also extract Set-Cookie headers for response cookie detection
+                // Convert headers to object and extract Set-Cookie values
                 details.responseHeaders.forEach(header => {
                     const headerName = header.name.toLowerCase();
                     headers[headerName] = header.value;
 
-                    // Parse Set-Cookie headers for response cookies
                     if (headerName === 'set-cookie') {
                         const cookieParts = header.value.split(';')[0].split('=');
                         if (cookieParts.length >= 2) {
@@ -46,7 +44,6 @@ function setupHeaderCapture() {
                     timestamp: Date.now()
                 });
 
-                // Store response cookies if any were found
                 if (responseCookies.length > 0) {
                     responseCookiesStore.set(details.tabId, {
                         url: details.url,
@@ -77,12 +74,10 @@ function setupHeaderCapture() {
             if (details.type === 'main_frame' && details.requestHeaders) {
                 const headers = {};
 
-                // Convert headers array to object for easier access
                 details.requestHeaders.forEach(header => {
                     headers[header.name.toLowerCase()] = header.value;
                 });
 
-                // Store request headers
                 requestHeadersStore.set(details.tabId, {
                     url: details.url,
                     headers: headers,
@@ -107,7 +102,6 @@ function setupHeaderCapture() {
                 return;
             }
 
-            // Capture ALL requests with bodies (not just main_frame)
             if (details.requestBody) {
                 const method = details.method || 'GET';
 
@@ -116,22 +110,17 @@ function setupHeaderCapture() {
                     let payloadData = null;
                     let payloadType = 'unknown';
 
-                    // Check if we have form data
                     if (details.requestBody.formData) {
                         payloadData = details.requestBody.formData;
                         payloadType = 'formData';
                     }
-                    // Check if we have raw data
                     else if (details.requestBody.raw && details.requestBody.raw.length > 0) {
-                        // Combine all raw chunks
                         const rawData = details.requestBody.raw.map(item => {
                             if (item.bytes) {
-                                // Convert ArrayBuffer to string
                                 try {
                                     const decoder = new TextDecoder('utf-8');
                                     return decoder.decode(item.bytes);
                                 } catch (e) {
-                                    // If decoding fails, store as base64
                                     return btoa(String.fromCharCode(...new Uint8Array(item.bytes)));
                                 }
                             }
@@ -142,12 +131,10 @@ function setupHeaderCapture() {
                         payloadType = 'raw';
                     }
 
-                    // Store payload if we found data - store ALL payloads in an array
+                    // Store all payloads in an array per tab
                     if (payloadData) {
-                        // Get existing payloads array or create new one
                         let payloads = payloadStore.get(details.tabId) || [];
 
-                        // Add new payload to array
                         payloads.push({
                             url: details.url,
                             method: method,
@@ -169,10 +156,7 @@ function setupHeaderCapture() {
         ["requestBody"]
     );
 
-    // Capture ALL network request URLs for URL pattern detection
-    // This allows detecting anti-bot systems that use specific URL patterns (e.g., Akamai /akam/, /sbsd/)
-    // URLs are captured during the ENTIRE page lifecycle (not just during active detection)
-    // because many anti-bot scripts load asynchronously 1-5+ seconds after initial page load
+    // Capture all network URLs for pattern detection (anti-bot scripts load asynchronously)
     chrome.webRequest.onBeforeRequest.addListener(
         async (details) => {
             // Skip if extension is disabled
@@ -180,13 +164,10 @@ function setupHeaderCapture() {
                 return;
             }
 
-            // Skip if cache hit
             if (tabsUsingCache.has(details.tabId)) return;
 
-            // Skip invalid tab IDs
             if (details.tabId < 0) return;
 
-            // Capture ALL request URLs (GET, POST, XHR, script, etc.)
             let networkUrls = networkUrlsStore.get(details.tabId) || [];
 
             networkUrls.push({

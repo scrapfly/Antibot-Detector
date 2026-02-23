@@ -3,10 +3,6 @@
  * Captures both Turnstile and Cloudflare Challenge data
  */
 
-// Guard against re-initialization (use var for service worker reload compatibility)
-var cloudflareInterceptionListener = cloudflareInterceptionListener || null;
-var cloudflareStatusListener = cloudflareStatusListener || null;
-
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
 var saveToHistory = self.BaseInterceptorHelpers?.saveToHistory;
 
@@ -84,32 +80,9 @@ function cloudflareCheckVersion(tabId) {
 
     const navigationListener = async (details) => {
         if (details.tabId === tabId && details.frameId === 0) {
-            setTimeout(async () => {
+            setTimeout(() => {
                 chrome.webRequest.onBeforeRequest.removeListener(requestListener);
                 chrome.webNavigation.onCompleted.removeListener(navigationListener);
-
-                let type = 'Unknown';
-                if (versionState.hasTurnstile && versionState.hasChallenge) {
-                    type = 'Turnstile + Challenge';
-                } else if (versionState.hasTurnstile) {
-                    type = 'Turnstile';
-                } else if (versionState.hasChallenge) {
-                    type = 'Challenge';
-                }
-
-                try {
-                    await chrome.runtime.sendMessage({
-                        type: 'CLOUDFLARE_VERSION_DETECTION_RESULT',
-                        data: {
-                            type: type,
-                            hasTurnstile: versionState.hasTurnstile,
-                            hasChallenge: versionState.hasChallenge,
-                            detectionMethods: versionState.detectionMethods
-                        }
-                    });
-                } catch (error) {
-                    Logger.network('[Cloudflare-CheckVersion] Popup not available');
-                }
             }, 5000);
         }
     };

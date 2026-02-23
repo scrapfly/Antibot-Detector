@@ -4,10 +4,6 @@
 function buildMessageHandlerRegistry(context) {
     const registry = {};
 
-    registry['PING'] = function({ sendResponse }) {
-        sendResponse({ status: 'pong', timestamp: Date.now() });
-    };
-
     if (typeof registerLoggingHandlers === 'function') {
         registerLoggingHandlers(registry, context);
     }

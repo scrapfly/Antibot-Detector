@@ -267,46 +267,37 @@
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
-/* Confirm Types */
-.notification-confirm-danger .notification-confirm-icon {
-  background: rgba(239, 68, 68, 0.15);
-  color: var(--danger);
+.notification-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
-.notification-btn-danger {
-  background: rgba(239, 68, 68, 0.2);
-  color: var(--danger-light);
-  border: 1px solid rgba(239, 68, 68, 0.35);
-}
-
-.notification-btn-danger:hover {
-  background: rgba(239, 68, 68, 0.32);
-  color: var(--danger-lightest);
-  border-color: rgba(239, 68, 68, 0.45);
-  transform: translateY(-1px);
-}
-
-.notification-confirm-warning .notification-confirm-icon {
-  background: rgba(245, 158, 11, 0.15);
-  color: var(--warning);
-}
-
-.notification-btn-warning {
+.notification-confirm.notification-confirm-emphasis .notification-btn-confirm.notification-btn-warning {
   background: var(--warning);
-  color: var(--text-primary);
-  border: none;
 }
 
-.notification-btn-warning:hover {
+.notification-confirm.notification-confirm-emphasis .notification-btn-confirm.notification-btn-warning:hover {
   background: var(--warning-dark);
-  color: var(--text-primary);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
 }
 
-.notification-confirm-info .notification-confirm-icon {
-  background: rgba(59, 130, 246, 0.15);
-  color: var(--accent);
+.notification-confirm.notification-confirm-emphasis .notification-btn-confirm.notification-btn-warning:focus-visible {
+  outline-color: var(--warning-light);
+}
+
+.notification-confirm.notification-confirm-emphasis .notification-btn-confirm.notification-btn-danger {
+  background: var(--danger);
+}
+
+.notification-confirm.notification-confirm-emphasis .notification-btn-confirm.notification-btn-danger:hover {
+  background: var(--danger-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.notification-confirm.notification-confirm-emphasis .notification-btn-confirm.notification-btn-danger:focus-visible {
+  outline-color: var(--danger-light);
 }
 
 /* Loading Spinner */
@@ -321,44 +312,6 @@
 
 @keyframes notification-spin {
   to { transform: rotate(360deg); }
-}
-
-/* Position Variants */
-.notification-top-left {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  right: auto;
-  transform: translateX(-120%);
-}
-
-.notification-top-left[data-show="true"] {
-  transform: translateX(0);
-}
-
-.notification-bottom-right {
-  position: fixed;
-  top: auto;
-  bottom: 20px;
-  right: 20px;
-  transform: translateX(120%);
-}
-
-.notification-bottom-right[data-show="true"] {
-  transform: translateX(0);
-}
-
-.notification-bottom-left {
-  position: fixed;
-  top: auto;
-  bottom: 20px;
-  left: 20px;
-  right: auto;
-  transform: translateX(-120%);
-}
-
-.notification-bottom-left[data-show="true"] {
-  transform: translateX(0);
 }
 
 /* Micro Toast - Compact notifications for quick feedback */

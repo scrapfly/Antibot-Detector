@@ -436,55 +436,6 @@ class BaseAdvancedModule {
         `;
     }
 
-    /**
-     * Build a simple script list section with badges.
-     * @param {object} options
-     * @param {Array} options.scripts
-     * @param {string} options.emptyText
-     * @param {Function} options.typeBadgeResolver
-     * @returns {string}
-     */
-    buildSimpleScriptListSection(options = {}) {
-        const {
-            scripts = [],
-            emptyText = 'No scripts found',
-            typeBadgeResolver = () => ({
-                label: 'Script',
-                color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-            })
-        } = options;
-
-        if (!Array.isArray(scripts) || scripts.length === 0) {
-            return `
-                <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
-                    <div style="font-size: 14px; color: var(--text-secondary);">${emptyText}</div>
-                </div>
-            `;
-        }
-
-        return `
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-                ${scripts.map((script, idx) => {
-                    const { label, color } = typeBadgeResolver(script, idx) || {};
-                    const badgeLabel = label || 'Script';
-                    const badgeColor = color || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-                    const url = script && script.url ? script.url : '';
-                    const safeUrl = AdvancedUtils.escapeHtml(url);
-                    return `
-                        <div style="background: var(--bg-tertiary); padding: 14px; border-radius: 6px;">
-                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                <span style="font-weight: 500;">Script ${idx + 1}</span>
-                                <span style="background: ${badgeColor}; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 500;">${badgeLabel}</span>
-                            </div>
-                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">URL</div>
-                            <div class="copy-value" data-copy="${safeUrl}" data-copy-message="URL copied" style="font-size: 12px; color: var(--text-primary); word-break: break-all; font-family: monospace; background: var(--bg-primary); padding: 8px; border-radius: 4px; cursor: pointer; transition: background 0.2s;" title="Click to copy">${safeUrl}</div>
-                        </div>
-                    `;
-                }).join('')}
-            </div>
-        `;
-    }
-
     // ========================================================================
     // CAPTURE HISTORY
     // ========================================================================
@@ -613,7 +564,7 @@ class BaseAdvancedModule {
         return items.map((item) => {
             const { hostname, timestamp, id } = item;
             const timeAgo = this.getTimeAgo(timestamp);
-            const faviconUrl = UrlUtils.getFaviconUrl(hostname);
+            const faviconUrl = UrlUtils.resolveDisplayFavicon(item.favicon, item.url || hostname);
 
             return `
                 <div class="capture-card" data-capture-id="${id}">
@@ -991,15 +942,6 @@ class BaseAdvancedModule {
         return AdvancedUtils.getTimeAgo(timestamp);
     }
 
-    /**
-     * Get time until expiration
-     * Delegates to AdvancedUtils.getTimeUntil()
-     * @param {number} expiresAt - Expiration timestamp in milliseconds
-     * @returns {string} Time until expiration (e.g., "5m")
-     */
-    getTimeUntil(expiresAt) {
-        return AdvancedUtils.getTimeUntil(expiresAt);
-    }
 }
 
 if (typeof window !== 'undefined') {

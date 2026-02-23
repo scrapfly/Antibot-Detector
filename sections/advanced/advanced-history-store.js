@@ -138,10 +138,6 @@
         };
     }
 
-    function cloneHistory(history) {
-        return JSON.parse(JSON.stringify(history || {}));
-    }
-
     async function load(options = {}) {
         const { persistIfChanged = true } = options;
         const result = await chrome.storage.local.get([STORAGE_KEY]);
@@ -167,32 +163,6 @@
 
     function filterNotExpired(entries, now = Date.now()) {
         return (entries || []).filter((entry) => !entry.expiresAt || entry.expiresAt > now);
-    }
-
-    async function cleanupExpired(moduleId = null) {
-        const history = await load();
-        const now = Date.now();
-        let removedCount = 0;
-
-        if (moduleId) {
-            const existing = Array.isArray(history[moduleId]) ? history[moduleId] : [];
-            const filtered = filterNotExpired(existing, now);
-            removedCount += (existing.length - filtered.length);
-            history[moduleId] = filtered;
-        } else {
-            Object.keys(history).forEach((key) => {
-                const existing = Array.isArray(history[key]) ? history[key] : [];
-                const filtered = filterNotExpired(existing, now);
-                removedCount += (existing.length - filtered.length);
-                history[key] = filtered;
-            });
-        }
-
-        if (removedCount > 0) {
-            await save(history);
-        }
-
-        return { history, removedCount };
     }
 
     async function appendCapture(moduleId, capture, options = {}) {
@@ -226,15 +196,6 @@
 
         await save(history);
         return normalized;
-    }
-
-    async function replaceModule(moduleId, entries = []) {
-        const history = await load();
-        history[moduleId] = (entries || [])
-            .map((entry) => normalizeCapture(moduleId, entry))
-            .filter(Boolean);
-        await save(history);
-        return history[moduleId];
     }
 
     async function getModule(moduleId, options = {}) {
@@ -289,13 +250,10 @@
         migrate: migrateToCanonical,
         load,
         save,
-        cleanupExpired,
         appendCapture,
-        replaceModule,
         getModule,
         deleteCapture,
-        clear,
-        cloneHistory
+        clear
     };
 
     globalContext.AdvancedHistoryStore = AdvancedHistoryStore;

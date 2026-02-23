@@ -21,15 +21,6 @@ const AdvancedUtils = {
     },
 
     /**
-     * Get time until expiration - delegates to Utils
-     * @param {number} expiresAt - Expiration timestamp in milliseconds
-     * @returns {string} Time until expiration (e.g., "5m")
-     */
-    getTimeUntil(expiresAt) {
-        return FormatUtils.getTimeUntil(expiresAt);
-    },
-
-    /**
      * Load capture history from storage (popup context)
      * This is a UI-friendly wrapper around BaseInterceptorHelpers.loadHistory
      * @param {string} type - Module type (e.g., 'akamai', 'recaptcha')
@@ -56,30 +47,6 @@ const AdvancedUtils = {
         } catch (error) {
             Logger.error('UI', `[AdvancedUtils] Failed to load capture history for ${type}:`, error);
             return [];
-        }
-    },
-
-    /**
-     * Clean expired items from capture history
-     * @param {string} type - Optional module type to clean (if not provided, cleans all)
-     * @returns {Promise<number>} Number of items removed
-     */
-    async cleanExpiredHistory(type = null) {
-        try {
-            if (!AdvancedHistoryStore) {
-                return 0;
-            }
-
-            const { removedCount } = await AdvancedHistoryStore.cleanupExpired(type);
-            if (removedCount > 0) {
-                Logger.ui(`[AdvancedUtils] Removed ${removedCount} expired items`);
-            }
-
-            return removedCount;
-
-        } catch (error) {
-            Logger.error('UI', '[AdvancedUtils] Failed to clean expired history:', error);
-            return 0;
         }
     },
 
@@ -313,16 +280,6 @@ const AdvancedUtils = {
     },
 
     /**
-     * Format timestamp to locale string - delegates to Utils
-     * @param {number} timestamp - Unix timestamp in milliseconds
-     * @param {object} options - Intl.DateTimeFormat options
-     * @returns {string} Formatted date string
-     */
-    formatTimestamp(timestamp, options = {}) {
-        return FormatUtils.formatTimestamp(timestamp, options);
-    },
-
-    /**
      * Standardized notification messages for advanced modules
      * Provides consistent messaging across all advanced modules
      */
@@ -338,7 +295,6 @@ const AdvancedUtils = {
          * Check cookies operation notifications
          */
         checkCookies: {
-            start: (moduleName) => `Checking ${moduleName} cookies...`,
             success: (count, total) => `Found ${count}/${total} cookies`,
             none: (moduleName) => `No ${moduleName} cookies found`
         },
@@ -350,15 +306,6 @@ const AdvancedUtils = {
             start: (moduleName) => `Analyzing ${moduleName} scripts... Page will reload`,
             success: (count) => `Found ${count} script${count !== 1 ? 's' : ''}`,
             none: (moduleName) => `No ${moduleName} scripts found`
-        },
-
-        /**
-         * Start/Stop capturing operation notifications
-         */
-        capturing: {
-            start: (moduleName) => `Started capturing ${moduleName} data`,
-            stop: (moduleName) => `Stopped capturing ${moduleName} data`,
-            alreadyActive: () => `Capturing already active`
         },
 
         /**

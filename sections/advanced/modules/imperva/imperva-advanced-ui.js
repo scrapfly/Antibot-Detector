@@ -1,9 +1,3 @@
-/**
- * imperva-advanced-ui.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
     /**
      * Render Imperva-specific tools
      */
@@ -60,7 +54,7 @@ ImpervaAdvanced.prototype.renderCaptureHistoryItems = function(items) {
         return items.map((item) => {
             const { hostname, captureData, timestamp, id } = item;
             const timeAgo = this.getTimeAgo(timestamp);
-            const faviconUrl = UrlUtils.getFaviconUrl(hostname);
+            const faviconUrl = UrlUtils.resolveDisplayFavicon(item.favicon, item.url || hostname);
 
             const incapSesCount = (captureData.incapSesCookies || []).length;
 

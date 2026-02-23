@@ -1,11 +1,3 @@
-/**
- * akamai-advanced-lifecycle.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
-
-
 
     /**
      * Update capture button state

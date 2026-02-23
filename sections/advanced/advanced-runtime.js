@@ -1,9 +1,3 @@
-/**
- * advanced-runtime.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
   /**
    * Called when Detection section has new detection data ready
    * This fixes the timing issue where Advanced tab checks before Detection has loaded
@@ -77,7 +71,6 @@ Advanced.prototype.showToolsInterface = async function() {
     if (advancedContent) {
       advancedContent.style.display = 'flex';
       await this.renderAdvancedInterface();
-      await this.restoreSelectedDetection();
     }
   };
 

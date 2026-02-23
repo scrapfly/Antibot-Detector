@@ -47,7 +47,6 @@ class ColorManager {
    * Setup color picker UI and event listeners
    */
   setupColorPicker() {
-    // For new grid layout - directly attach to color options
     const colorGrid = document.querySelector('.color-picker-grid');
 
     if (colorGrid) {
@@ -56,9 +55,7 @@ class ColorManager {
         const colorOption = e.target.closest('.color-option');
         if (!colorOption) return;
 
-        // Check if this is the rainbow picker
         if (colorOption.id === 'rainbowPicker') {
-          // If it has a custom color stored, set it as current before opening
           if (colorOption.dataset.customColor) {
             this.currentColor = colorOption.dataset.customColor;
             // Parse the color for the picker
@@ -114,21 +111,18 @@ class ColorManager {
   setColor(color) {
     this.currentColor = color;
 
-    // Remove selected from all options first
     document.querySelectorAll('.color-option').forEach(option => {
       option.classList.remove('selected');
     });
 
-    // Select matching preset color if it exists
     const matchingOption = document.querySelector(`[data-color="${color}"]`);
     if (matchingOption) {
       matchingOption.classList.add('selected');
     } else {
-      // If no preset matches, it's a custom color - select the rainbow picker
+      // No preset match -- mark rainbow picker as selected with custom color
       const rainbowPicker = document.querySelector('#rainbowPicker');
       if (rainbowPicker) {
         rainbowPicker.classList.add('selected');
-        // Store the custom color as a data attribute for later use
         rainbowPicker.dataset.customColor = color;
       }
     }
@@ -190,14 +184,11 @@ class ColorManager {
       this.selectedColor = this.hexToRgb(this.currentColor) || { r: 255, g: 0, b: 0 };
     }
 
-    // Update RGB inputs and preview
     this.updateColorDisplay(this.selectedColor, colorPreview, rInput, gInput, bInput);
 
-    // Calculate HSV from RGB to position cursors
     const hsv = this.rgbToHsv(this.selectedColor.r, this.selectedColor.g, this.selectedColor.b);
     this.currentHue = hsv.h;
 
-    // Redraw color canvas with correct hue
     if (colorCanvas) {
       const ctx = colorCanvas.getContext('2d');
       if (ctx) {
@@ -205,7 +196,6 @@ class ColorManager {
       }
     }
 
-    // Redraw hue strip (in case it's not visible)
     if (hueCanvas) {
       const hueCtx = hueCanvas.getContext('2d');
       if (hueCtx) {
@@ -213,14 +203,12 @@ class ColorManager {
       }
     }
 
-    // Position hue cursor
     if (hueCursor) {
       const hueY = (this.currentHue / 360) * 160;
       hueCursor.style.top = `${hueY}px`;
       hueCursor.style.display = 'block';
     }
 
-    // Position color cursor - use HSV coordinates
     if (colorCursor) {
       const colorX = hsv.s * 240;
       const colorY = (1 - hsv.v) * 160;
@@ -300,15 +288,12 @@ class ColorManager {
       hueCursor.style.display = 'block';
     }
 
-    // Hue canvas interaction handlers
     if (hueCanvas && hueCursor) {
       let isHueDragging = false;
 
       const updateHueFromPosition = (e) => {
         const rect = hueCanvas.getBoundingClientRect();
-        const y = Math.max(0, Math.min(160, e.clientY - rect.top)); // Changed to 160 to match canvas height
-        this.currentHue = (y / 160) * 360; // Changed to 160
-
+        const y = Math.max(0, Math.min(160, e.clientY - rect.top));        this.currentHue = (y / 160) * 360;
         // Update hue cursor
         hueCursor.style.top = `${y}px`;
 
@@ -331,69 +316,57 @@ class ColorManager {
         updateHueFromPosition(e);
       });
 
-      // Mouse move - update hue if dragging
       hueCanvas.addEventListener('mousemove', (e) => {
         if (isHueDragging) {
           updateHueFromPosition(e);
         }
       });
 
-      // Mouse up - stop dragging
       document.addEventListener('mouseup', () => {
         isHueDragging = false;
       });
 
-      // Click handler for single clicks
       hueCanvas.addEventListener('click', (e) => {
         updateHueFromPosition(e);
       });
     }
 
-    // Color canvas interaction handlers
     if (colorCanvas && colorCursor) {
       let isDragging = false;
 
       const updateColorFromPosition = (e) => {
         const rect = colorCanvas.getBoundingClientRect();
-        const x = Math.max(0, Math.min(240, e.clientX - rect.left)); // Changed to 240 to match canvas width
-        const y = Math.max(0, Math.min(160, e.clientY - rect.top)); // Changed to 160 to match canvas height
-
-        const saturation = x / 240; // Changed to 240
-        const value = 1 - (y / 160); // Changed to 160
+        const x = Math.max(0, Math.min(240, e.clientX - rect.left));        const y = Math.max(0, Math.min(160, e.clientY - rect.top));
+        const saturation = x / 240;
+        const value = 1 - (y / 160);
         this.selectedColor = this.hsvToRgb(this.currentHue, saturation, value);
 
-        // Update color cursor
         colorCursor.style.left = `${x}px`;
         colorCursor.style.top = `${y}px`;
 
         this.updateColorDisplay(this.selectedColor, colorPreview, rInput, gInput, bInput);
       };
 
-      // Mouse down - start dragging
       colorCanvas.addEventListener('mousedown', (e) => {
         isDragging = true;
         updateColorFromPosition(e);
       });
 
-      // Mouse move - update color if dragging
       colorCanvas.addEventListener('mousemove', (e) => {
         if (isDragging) {
           updateColorFromPosition(e);
         }
       });
 
-      // Mouse up - stop dragging
       document.addEventListener('mouseup', () => {
         isDragging = false;
       });
 
-      // Click handler for single clicks
       colorCanvas.addEventListener('click', (e) => {
         updateColorFromPosition(e);
       });
     }
 
-    // RGB input change handlers
     const updateFromRGB = () => {
       this.selectedColor = {
         r: parseInt(rInput?.value) || 0,
@@ -402,17 +375,14 @@ class ColorManager {
       };
       this.updateColorDisplay(this.selectedColor, colorPreview, rInput, gInput, bInput);
 
-      // Update cursor positions based on new RGB values
       const hsv = this.rgbToHsv(this.selectedColor.r, this.selectedColor.g, this.selectedColor.b);
       this.currentHue = hsv.h;
 
-      // Update hue cursor
       if (hueCursor) {
         const hueY = (hsv.h / 360) * 160;
         hueCursor.style.top = `${hueY}px`;
       }
 
-      // Update color cursor
       if (colorCursor) {
         const colorX = hsv.s * 240;
         const colorY = (1 - hsv.v) * 160;
@@ -420,7 +390,6 @@ class ColorManager {
         colorCursor.style.top = `${colorY}px`;
       }
 
-      // Redraw color canvas with new hue
       this.drawColorCanvas(colorCtx, this.currentHue);
 
       if (this.onColorChange) {
@@ -446,8 +415,7 @@ class ColorManager {
    * @param {CanvasRenderingContext2D} ctx - The canvas context
    */
   drawHueStrip(ctx) {
-    const gradient = ctx.createLinearGradient(0, 0, 0, 160); // Changed to 160
-    gradient.addColorStop(0, '#ff0000');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 160);    gradient.addColorStop(0, '#ff0000');
     gradient.addColorStop(0.17, '#ff00ff');
     gradient.addColorStop(0.33, '#0000ff');
     gradient.addColorStop(0.5, '#00ffff');
@@ -456,8 +424,7 @@ class ColorManager {
     gradient.addColorStop(1, '#ff0000');
 
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 20, 160); // Changed to 160
-  }
+    ctx.fillRect(0, 0, 20, 160);  }
 
   /**
    * Draw the saturation/lightness canvas
@@ -466,26 +433,21 @@ class ColorManager {
    */
   drawColorCanvas(ctx, hue) {
     // Clear canvas
-    ctx.clearRect(0, 0, 240, 160); // Changed to 240x160
-
+    ctx.clearRect(0, 0, 240, 160);
     // Create gradients
     // White to color (saturation)
-    const satGradient = ctx.createLinearGradient(0, 0, 240, 0); // Changed to 240
-    satGradient.addColorStop(0, '#ffffff');
+    const satGradient = ctx.createLinearGradient(0, 0, 240, 0);    satGradient.addColorStop(0, '#ffffff');
     const baseColor = this.hsvToRgb(hue, 1, 1);
     satGradient.addColorStop(1, `rgb(${baseColor.r}, ${baseColor.g}, ${baseColor.b})`);
 
     ctx.fillStyle = satGradient;
-    ctx.fillRect(0, 0, 240, 160); // Changed to 240x160
-
+    ctx.fillRect(0, 0, 240, 160);
     // Transparent to black (lightness)
-    const lightGradient = ctx.createLinearGradient(0, 0, 0, 160); // Changed to 160
-    lightGradient.addColorStop(0, 'rgba(0,0,0,0)');
+    const lightGradient = ctx.createLinearGradient(0, 0, 0, 160);    lightGradient.addColorStop(0, 'rgba(0,0,0,0)');
     lightGradient.addColorStop(1, 'rgba(0,0,0,1)');
 
     ctx.fillStyle = lightGradient;
-    ctx.fillRect(0, 0, 240, 160); // Changed to 240x160
-  }
+    ctx.fillRect(0, 0, 240, 160);  }
 
   /**
    * Update color display in UI
@@ -521,22 +483,17 @@ class ColorManager {
 
     this.currentColor = hex;
 
-    // Update the selected state in the color grid
-    // Remove selected class from all color options
     document.querySelectorAll('.color-option').forEach(option => {
       option.classList.remove('selected');
     });
 
-    // Check if the selected color matches any preset
     const matchingPreset = document.querySelector(`[data-color="${hex}"]`);
     if (matchingPreset) {
       matchingPreset.classList.add('selected');
     } else {
-      // If it's a custom color, mark the rainbow picker as selected
       const rainbowPicker = document.querySelector('#rainbowPicker');
       if (rainbowPicker) {
         rainbowPicker.classList.add('selected');
-        // Store the custom color as a data attribute for later use
         rainbowPicker.dataset.customColor = hex;
       }
     }

@@ -1,8 +1,3 @@
-/**
- * funcaptcha-advanced-ui.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
 FunCaptchaAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {

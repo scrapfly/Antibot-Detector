@@ -212,37 +212,6 @@
   flex: 1;
 }
 
-/* Action Buttons Row */
-.action-buttons-row {
-  display: flex;
-  gap: 6px;
-  margin-top: 4px;
-  padding: 0;
-}
-
-/* Detection-specific button styling */
-#detectionTab .detection-action-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  height: 32px;
-  padding: 0 12px;
-  border-radius: 7px;
-  font-size: 11px;
-  font-weight: 600;
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex: 1;
-}
-
-#detectionTab .detection-action-btn svg {
-  flex-shrink: 0;
-  width: 14px;
-  height: 14px;
-}
-
 /* Clear Cache button - Orange */
 #detectionTab #clearCacheBtn {
   background: rgba(245, 158, 11, 0.2);
@@ -299,10 +268,6 @@
 
 #detectionTab .action-btn-warning {
   background: var(--warning);
-}
-
-#detectionTab .action-btn-danger {
-  background: var(--danger);
 }
 
 #detectionTab .action-btn:disabled {
@@ -459,16 +424,6 @@
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
-}
-
-.search-container .search-icon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  opacity: 0.5;
-  width: 14px;
-  height: 14px;
 }
 
 /* Results List */
@@ -1233,21 +1188,6 @@
   letter-spacing: 0.4px;
 }
 
-#detectionTab .loading-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px; /* Reduced from 12px to fit all 7 steps */
-  width: 100%;
-  max-width: 420px;
-  padding: 0;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  text-align: center;
-  color: var(--text-primary);
-}
-
 .analysis-step {
   display: flex;
   align-items: flex-start;
@@ -1271,13 +1211,6 @@
   border: 1px solid rgba(33, 150, 243, 0.3);
 }
 
-.analysis-step-emoji {
-  font-size: 13px; /* Reduced from 15px */
-  line-height: 1;
-  margin-bottom: 1px; /* Reduced from 2px */
-  display: none; /* FIX: Hide emojis - show only step index and titles */
-}
-
 .analysis-step-content {
   display: flex;
   flex-direction: column;
@@ -1290,39 +1223,6 @@
   font-weight: 600;
   color: var(--text-primary);
   line-height: 1.2; /* Reduced from 1.25 */
-}
-
-.analysis-step-description {
-  font-size: 10px;
-  color: var(--text-secondary);
-  line-height: 1.35; /* Reduced from 1.4 */
-  display: none;
-}
-
-/* GRANULAR PROGRESS: Status-based styling for 7 detection methods */
-
-/* Pending state - not started yet */
-.analysis-step.status-pending {
-  opacity: 0.5;
-}
-
-/* In progress state - currently checking */
-.analysis-step.status-in_progress {
-  opacity: 1;
-  background: rgba(33, 150, 243, 0.25) !important;
-  border-color: rgba(33, 150, 243, 0.5) !important;
-}
-
-.analysis-step.status-in_progress .analysis-step-badge {
-  background: rgba(33, 150, 243, 0.35);
-  border-color: rgba(33, 150, 243, 0.6);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
 }
 
 /* Completed state - check finished */
@@ -1366,67 +1266,11 @@
   opacity: 0.4;
 }
 
-/* Legacy classes for backward compatibility (can be removed later) */
-.analysis-step.is-active {
-  background: rgba(33, 150, 243, 0.15);
-  border-color: rgba(33, 150, 243, 0.35);
-}
-
-.analysis-step.is-active .analysis-step-badge {
-  background: rgba(33, 150, 243, 0.25);
-  border-color: rgba(33, 150, 243, 0.45);
-  animation: pulse 2s infinite;
-}
-
-.analysis-step.is-complete {
-  opacity: 0.6;
-}
-
-#detectionTab .loading-orb {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, rgba(33, 150, 243, 0.15), rgba(33, 150, 243, 0.25));
-  border: 3px solid var(--accent);
-  margin-bottom: 16px;
-  box-shadow: 0 0 20px rgba(33, 150, 243, 0.2);
-  animation: orbPulse 2s infinite;
-}
-
-@keyframes orbPulse {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(33, 150, 243, 0.2);
-    transform: scale(1);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(33, 150, 243, 0.35);
-    transform: scale(1.02);
-  }
-}
-
 #detectionTab .loading-title {
   margin: 0;
   font-size: 15px; /* Reduced from 16px */
   font-weight: 600;
   color: var(--text-primary);
-}
-
-#detectionTab .loading-description {
-  margin: 0;
-  font-size: 11px; /* Reduced from 12px */
-  line-height: 1.4; /* Reduced from 1.45 */
-  color: var(--text-secondary);
-  max-width: 320px; /* Reduced from 350px */
-}
-
-#detectionTab .loading-footnote {
-  margin-top: 4px; /* Reduced from 6px */
-  font-size: 10px; /* Reduced from 11px */
-  color: var(--text-muted);
-  opacity: 0.8;
 }
 
 /* Unified State Cards (Disabled, Interrupted, Nothing Detected) */
@@ -1636,11 +1480,6 @@
   line-height: 1.2;
 }
 
-.empty-state-text,
-.empty-state-footnote {
-  display: none;
-}
-
 .empty-state-card::before {
   content: '';
   position: absolute;
@@ -1669,14 +1508,6 @@
   pointer-events: none;
   border-radius: 50%;
   transform: translate(50%, 50%);
-}
-
-.empty-state-footer {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 4px;
 }
 
 /* Author Display in Detection Modal */

@@ -67,14 +67,6 @@ class UpdateManager {
     }
 
     /**
-     * Clear incompatible updates from storage
-     * @returns {Promise<void>}
-     */
-    static async clearIncompatibleUpdates() {
-        await chrome.storage.local.remove(this.STORAGE_KEYS.INCOMPATIBLE_UPDATES);
-    }
-
-    /**
      * Check for detector updates from remote server
      * @param {boolean} force - Force check regardless of interval
      * @returns {Promise<{available: boolean, updates: Array, incompatibleCount: number, error: string|null}>}
@@ -394,19 +386,6 @@ class UpdateManager {
     }
 
     /**
-     * Get pending updates details
-     * @returns {Promise<Array>}
-     */
-    static async getPendingUpdates() {
-        try {
-            const result = await chrome.storage.local.get(this.STORAGE_KEYS.PENDING_UPDATES);
-            return result[this.STORAGE_KEYS.PENDING_UPDATES] || [];
-        } catch (error) {
-            return [];
-        }
-    }
-
-    /**
      * Clear pending updates
      * @returns {Promise<void>}
      */
@@ -461,17 +440,66 @@ class UpdateManager {
         return false; // Equal versions
     }
 
+    // Alarm name for periodic update checks
+    static ALARM_NAME = 'scrapfly-update-check';
+
     /**
-     * Get last check timestamp
-     * @returns {Promise<number>}
+     * Schedule an initial update check + set up periodic alarm
      */
-    static async getLastCheckTimestamp() {
+    static async scheduleCheck() {
         try {
             const settings = await Utils.getSettings();
-            return settings.updates?.lastCheckTimestamp || 0;
+            if (settings.updates?.autoUpdate) {
+                Logger.background('Auto-update enabled, checking for detector updates...');
+                setTimeout(async () => {
+                    try {
+                        await this.checkForUpdates(false);
+                        Logger.background('Update check completed');
+                    } catch (error) {
+                        Logger.warn('BACKGROUND', 'Failed to check for updates:', error);
+                    }
+                }, Constants.UPDATE_CHECK_DELAY);
+
+                this.setupAlarm(settings.updates.checkIntervalHours || 12);
+            } else {
+                Logger.background('Auto-update disabled, skipping update check');
+                chrome.alarms.clear(this.ALARM_NAME);
+                await this.clearPendingUpdates();
+            }
         } catch (error) {
-            return 0;
+            Logger.warn('BACKGROUND', 'Failed to schedule update check:', error);
         }
+    }
+
+    /**
+     * Create a periodic alarm for update checks
+     */
+    static setupAlarm(intervalHours) {
+        chrome.alarms.create(this.ALARM_NAME, {
+            periodInMinutes: intervalHours * 60
+        });
+        Logger.background(`Update alarm set: every ${intervalHours} hours`);
+    }
+
+    /**
+     * Register the chrome.alarms listener for periodic checks.
+     * Call once during background initialization.
+     */
+    static setupAlarmListener() {
+        chrome.alarms.onAlarm.addListener(async (alarm) => {
+            if (alarm.name === this.ALARM_NAME) {
+                Logger.background('Periodic update check triggered by alarm');
+                try {
+                    const settings = await Utils.getSettings();
+                    if (settings.updates?.autoUpdate) {
+                        await this.checkForUpdates(false);
+                        Logger.background('Periodic update check completed');
+                    }
+                } catch (error) {
+                    Logger.warn('BACKGROUND', 'Periodic update check failed:', error);
+                }
+            }
+        });
     }
 
     /**

@@ -1,9 +1,3 @@
-/**
- * datadome-advanced-actions.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
     /**
      * Check DataDome cookies without reload
      */

@@ -1,9 +1,3 @@
-/**
- * advanced-tools.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
   /**
    * Render advanced tools interface
    */
@@ -495,18 +489,3 @@ Advanced.prototype.clearDetectionToolsPanel = function() {
   };
 
 
-  /**
-   * Restore previously selected detection after popup reopens
-   * Note: Selection is no longer persisted - user must reselect each time
-   */
-Advanced.prototype.restoreSelectedDetection = async function() {
-    // Selection persistence removed - each popup open starts fresh
-  };
-
-
-  /**
-   * Show help information for CAPTCHA tools
-   */
-Advanced.prototype.showCaptchaHelp = function() {
-    this.openAdvancedInfoModal();
-  };

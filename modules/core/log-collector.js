@@ -12,8 +12,7 @@ class LogCollector {
     constructor(maxLogs = Constants.LOG_COLLECTOR_MAX_LOGS) {
         this.MAX_SAFE_LOGS = Constants.LOG_COLLECTOR_MAX_LOGS;
         this.MAX_PERSISTED_LOGS = Constants.LOG_COLLECTOR_MAX_PERSISTED;
-        // Keep this conservative: capturing logs is cheap, but printing them (and DevTools retaining
-        // rich objects) can easily crash the browser when debug is enabled.
+        // Conservative limit: logging can crash browser in debug mode
         this.LOG_RATE_LIMIT_PER_SEC = Constants.LOG_COLLECTOR_RATE_LIMIT;
         this.maxLogs = Math.min(Math.max(Number(maxLogs) || 5000, 100), this.MAX_SAFE_LOGS);
         // Ring buffer storage (O(1) append, no Array.shift())
@@ -33,7 +32,6 @@ class LogCollector {
         this.initPromise = null;
         this.rateWindowStart = Date.now();
         this.rateCount = 0;
-        this.droppedLogs = 0;
         // Initialize and load from storage
         this.initPromise = this.initializeFromStorage();
     }
@@ -495,7 +493,6 @@ class LogCollector {
         }
         this.rateCount += 1;
         if (this.rateCount > this.LOG_RATE_LIMIT_PER_SEC) {
-            this.droppedLogs += 1;
             return;
         }
 
@@ -685,55 +682,6 @@ class LogCollector {
     }
 
     /**
-     * Copy logs to clipboard as text
-     * @returns {Promise<{success: boolean, message: string, count: number}>}
-     */
-    async copyToClipboard() {
-        try {
-            const logs = this._getOrderedLogs();
-            // Format logs same as exportAsText()
-            const header = [
-                '='.repeat(80),
-                'Scrapfly Debug Logs',
-                '='.repeat(80),
-                `Export Time: ${new Date().toISOString()}`,
-                `Session Start: ${new Date(this.startTime).toISOString()}`,
-                `Session Duration: ${Math.round((Date.now() - this.startTime) / 1000)}s`,
-                `Total Logs: ${logs.length}`,
-                `Extension Version: ${chrome.runtime.getManifest().version}`,
-                `User Agent: ${navigator.userAgent}`,
-                '='.repeat(80),
-                ''
-            ].join('\n');
-
-            const lines = logs.map(entry => {
-                const time = new Date(entry.timestamp).toISOString();
-                const relative = `+${(entry.relativeTime / 1000).toFixed(3)}s`;
-                const level = entry.level.toUpperCase().padEnd(5);
-                return `[${time}] [${relative.padStart(12)}] [${level}] ${entry.message}`;
-            });
-
-            const text = header + lines.join('\n');
-
-            // Use Clipboard API
-            await navigator.clipboard.writeText(text);
-
-            return {
-                success: true,
-                message: `Copied ${logs.length} logs to clipboard`,
-                count: logs.length
-            };
-        } catch (error) {
-            Logger.error('UTIL', '[LogCollector] Failed to copy to clipboard:', error);
-            return {
-                success: false,
-                message: `Failed to copy: ${error.message}`,
-                count: 0
-            };
-        }
-    }
-
-    /**
      * Clear all collected logs
      */
     clear() {
@@ -781,35 +729,6 @@ class LogCollector {
 
         // Save updated max logs setting to settings
         this._updateSettings({ logCollectorMaxLogs: this.maxLogs }, { removeLegacyKeys: [this.legacyMaxLogsKey] });
-    }
-
-    /**
-     * Get logs filtered by level
-     */
-    getLogsByLevel(level) {
-        return this._getOrderedLogs().filter(entry => entry.level === level);
-    }
-
-    /**
-     * Get log statistics
-     */
-    getStats() {
-        const logs = this._getOrderedLogs();
-        const stats = {
-            total: logs.length,
-            log: 0,
-            warn: 0,
-            error: 0,
-            info: 0,
-            debug: 0,
-            dropped: this.droppedLogs
-        };
-
-        logs.forEach(entry => {
-            stats[entry.level]++;
-        });
-
-        return stats;
     }
 }
 

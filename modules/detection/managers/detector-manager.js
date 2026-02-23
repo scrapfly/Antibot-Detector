@@ -6,22 +6,14 @@ class DetectorManager {
         this.initialized = false;
     }
 
-    /**
-     * Create a readable name from a detector ID.
-     * @param {string} detectorId
-     * @returns {string}
-     */
+    // Remove prefix, join with spaces, capitalize
     static humanizeDetectorName(detectorId) {
         if (!detectorId || typeof detectorId !== 'string') return 'Unknown';
         const cleaned = detectorId.replace(/^detect-/, '').replace(/[-_]+/g, ' ').trim();
         return cleaned.split(' ').filter(Boolean).map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     }
 
-    /**
-     * Ensure detector ID uses canonical prefix.
-     * @param {string} detectorId
-     * @returns {string}
-     */
+    // Ensure canonical prefix format
     static canonicalizeDetectorId(detectorId) {
         if (!detectorId || typeof detectorId !== 'string') return '';
         if (detectorId.startsWith(DetectorManager.DETECTOR_ID_PREFIX)) {
@@ -30,11 +22,7 @@ class DetectorManager {
         return `${DetectorManager.DETECTOR_ID_PREFIX}${detectorId}`;
     }
 
-    /**
-     * Convert internal category name to display name.
-     * @param {string} categoryName
-     * @returns {string}
-     */
+    // Convert category name to display format
     static categoryDisplayName(categoryName) {
         const normalized = (categoryName || '').toLowerCase();
         const map = {
@@ -119,27 +107,16 @@ class DetectorManager {
                 }
 
                 if (changed) {
-                    // Noise control: this is expected when loading older detectors from storage.
                     Logger.debug('DETECTOR', `[normalizeDetectorSchema] Applied DataDome fixups (${source})`);
                 }
             }
         } catch (e) {
-            // Best-effort only
         }
 
         return detectorData;
     }
 
-    /**
-     * Validate and normalize detector schema.
-     * Ensures canonical IDs and safe defaults.
-     * @param {object} detectorData
-     * @param {object} context
-     * @param {string} context.categoryName
-     * @param {string} context.detectorName - Canonical detector ID (file name)
-     * @param {string} context.source
-     * @returns {object|null} Normalized detector or null if invalid
-     */
+    // Validate and normalize detector schema; ensures canonical IDs and safe defaults
     static normalizeDetectorSchema(detectorData, { categoryName, detectorName, source = 'unknown' } = {}) {
         if (!detectorData || typeof detectorData !== 'object') {
             Logger.error('DETECTOR', `[normalizeDetectorSchema] Invalid detector data (${source})`, { categoryName, detectorName });
@@ -209,8 +186,7 @@ class DetectorManager {
             }
         }
 
-        // Cookie/Header scopes: do NOT allow storage scopes (localStorage/sessionStorage) for cookie/header matching.
-        // Only real cookies/headers should be used.
+        // Disallow storage scopes for cookie/header matching
         const normalizeCookieHeaderScope = (scope, fallback) => {
             const normalized = typeof scope === 'string' ? scope.trim().toLowerCase() : '';
             if (normalized === 'all_with_storage') return 'all';
@@ -250,15 +226,12 @@ class DetectorManager {
         }
 
         try {
-            // Initialize CategoryManager if not already done
             if (!this.categoryManager.initialized) {
                 await this.categoryManager.initialize();
             }
 
-            // First, try to load from storage
             const storageLoaded = await this.loadFromStorage();
 
-            // Only load from JSON files if storage is empty
             if (!storageLoaded || this.getDetectorCount() === 0) {
                 await this.loadDetectorsFromIndex();
                 await this.saveDetectorsToStorage();
@@ -282,7 +255,6 @@ class DetectorManager {
 
         let totalDetectorsToLoad = 0;
 
-        // Count total detectors to load
         for (const [categoryName, categoryData] of Object.entries(categories)) {
             if (categoryData.detectors && Array.isArray(categoryData.detectors)) {
                 totalDetectorsToLoad += categoryData.detectors.length;
@@ -290,7 +262,6 @@ class DetectorManager {
         }
 
         for (const [categoryName, categoryData] of Object.entries(categories)) {
-            // Skip entries that don't have a detectors array (like "tags")
             if (!categoryData.detectors || !Array.isArray(categoryData.detectors)) {
                 continue;
             }
@@ -497,7 +468,7 @@ class DetectorManager {
                     normalized.lastUpdated = `${normalized.lastUpdated} 00:00:00`;
                 }
 
-                // Clean old patterns before recompiling (detector reload)
+                // Clean old patterns (reload)
                 if (this.detectors[categoryName]?.[detectorName]) {
                     this.cleanPrecompiledPatterns(this.detectors[categoryName][detectorName]);
                 }
@@ -561,14 +532,10 @@ class DetectorManager {
     }
 
 
-    /**
-     * Load previously saved data from Chrome storage
-     * Uses StorageManager.batchLoadStorage() for 40-50% faster I/O
-     * @returns {boolean} True if data was loaded from storage, false otherwise
-     */
+    // Load from Chrome storage; returns true if data was loaded
+
     async loadFromStorage() {
         try {
-            // Batch load all required storage keys using StorageManager
             const loadedData = await StorageManager.batchLoadStorage([
                 {
                     primary: 'scrapfly_categories',
@@ -582,7 +549,6 @@ class DetectorManager {
                 }
             ]);
 
-            // Process categories first
             const categoriesData = loadedData['scrapfly_categories'];
             if (categoriesData) {
                 const categoryCount = Object.keys(categoriesData.categories || {}).length;
@@ -590,11 +556,9 @@ class DetectorManager {
                 this.categoryManager.initialized = categoryCount > 0;
             }
 
-            // Process detectors
             const detectorsData = loadedData['scrapfly_detectors'];
 
             if (detectorsData) {
-                // Validate storage data structure
                 if (!detectorsData.detectors || typeof detectorsData.detectors !== 'object') {
                     Logger.error('DETECTOR', 'Invalid storage format - detectors property missing or wrong type', { detectorsData });
                     return false;
@@ -665,7 +629,6 @@ class DetectorManager {
                     if (hasCorruption) break;
                 }
 
-                // If corrupted, reload from JSON files
                 if (hasCorruption) {
                     await this.loadDetectorsFromIndex();
                     await this.saveDetectorsToStorage();
@@ -674,7 +637,6 @@ class DetectorManager {
 
                 this.detectors = normalizedDetectors;
 
-                // Validate that detectors actually loaded
                 const detectorCount = this.getDetectorCount();
                 if (detectorCount === 0) {
                     return false; // Force reload from JSON
@@ -696,29 +658,12 @@ class DetectorManager {
     }
 
     /**
-     * Get list of available category names
-     * @returns {string[]} Array of category names
-     */
-    getCategories() {
-        return this.categoryManager.getCategories();
-    }
-
-    /**
      * Get category information including color and detector list
      * @param {string} categoryName - Category name
      * @returns {object} Category data with colour and detectors array
      */
     getCategoryInfo(categoryName) {
         return this.categoryManager.getCategoryInfo(categoryName);
-    }
-
-    /**
-     * Get detector names for a specific category
-     * @param {string} categoryName - Category name
-     * @returns {string[]} Array of detector names
-     */
-    getCategoryDetectors(categoryName) {
-        return this.categoryManager.getCategoryDetectors(categoryName);
     }
 
     /**
@@ -773,15 +718,6 @@ class DetectorManager {
     }
 
     /**
-     * Get all detectors for a specific category
-     * @param {string} categoryName - Category name
-     * @returns {object} Object with detector names as keys and configs as values
-     */
-    getDetectorsByCategory(categoryName) {
-        return this.detectors[categoryName] || {};
-    }
-
-    /**
      * Find a detector by ID across all categories
      * Fallback method when category is unknown or incorrect
      * @param {string} detectorId - Detector ID to find
@@ -824,33 +760,6 @@ class DetectorManager {
             count += Object.keys(category).length;
         }
         return count;
-    }
-
-    /**
-     * Clear all detector data from Chrome storage
-     * Uses StorageManager for consistent clear patterns
-     */
-    async clearStorage() {
-        try {
-            await StorageManager.clearStorage(['scrapfly_detectors', 'scrapfly_detectors.json']);
-            await this.categoryManager.clearStorage();
-        } catch (error) {
-            Logger.error('STORAGE', 'Failed to clear detector storage', error);
-        }
-    }
-
-    /**
-     * Get information about stored data
-     * @returns {object} Object with categories count, detectors count, and initialized status
-     */
-    getStorageInfo() {
-        const categoryInfo = this.categoryManager.getStorageInfo();
-        return {
-            categories: categoryInfo.categoryCount,
-            detectors: this.getDetectorCount(),
-            initialized: this.initialized,
-            categoryDetails: categoryInfo
-        };
     }
 
     /**

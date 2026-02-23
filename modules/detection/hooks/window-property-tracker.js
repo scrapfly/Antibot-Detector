@@ -1,18 +1,8 @@
-/**
- * Window Property Tracker
- * Provides reliable detection of window properties with retry strategies
- *
- * Key Features:
- * - State machine tracking: PENDING → PATH_NOT_FOUND → DETECTED → ERROR
- * - 4-phase adaptive polling: EARLY (100ms) → NORMAL (200ms) → LATE (500ms) → FINAL (1000ms)
- * - Retry strategies: linear backoff for missing props, exponential for getter errors
- * - Error classification: recoverable (retry) vs non-recoverable (abandon)
- */
+// Window property detection with adaptive polling and retry strategies
 
 (function() {
   'use strict';
 
-  // Skip if already initialized
   if (window.__WindowPropertyTracker) {
     return;
   }
@@ -96,7 +86,6 @@
     constructor() {
       // Property tracking state
       this.properties = new Map(); // path -> PropertyTrackingData
-      this.detectedProperties = new Set();
 
       // Polling state
       this.currentPhase = null;
@@ -137,10 +126,6 @@
       this.onDetection = options.onDetection || null;
       this.onComplete = options.onComplete || null;
       this.debugMode = options.debugMode || false;
-      if (options.config) {
-        this.applyConfig(options.config);
-      }
-
       // Initialize tracking state for each property
       for (const propDef of propertyDefinitions) {
         if (!propDef.path) continue;
@@ -158,83 +143,6 @@
 
       this.stats.totalProperties = this.properties.size;
       this._log(`Initialized tracking for ${this.properties.size} properties`);
-    }
-
-    /**
-     * Apply configuration overrides
-     * @param {Object} config - Window property config or reliability config
-     */
-    applyConfig(config = {}) {
-      const windowConfig = config.windowPropertyConfig || config || {};
-      const nextPollingPhases = cloneConfig(DEFAULT_POLLING_PHASES);
-      const nextRetryConfig = cloneConfig(DEFAULT_RETRY_CONFIG);
-
-      const phases = windowConfig.pollingPhases;
-      if (phases && typeof phases === 'object') {
-        for (const phaseName of Object.keys(nextPollingPhases)) {
-          const phaseOverride = phases[phaseName];
-          if (!phaseOverride) continue;
-
-          const duration = phaseOverride.duration;
-          const interval = phaseOverride.interval;
-
-          if (Number.isFinite(duration) && duration >= 0) {
-            nextPollingPhases[phaseName].duration = duration;
-          }
-          if (Number.isFinite(interval) && interval >= 0) {
-            nextPollingPhases[phaseName].interval = interval;
-          }
-        }
-      }
-
-      const retry = windowConfig.retry;
-      if (retry && typeof retry === 'object') {
-        const pathNotFound = retry.pathNotFound;
-        if (pathNotFound) {
-          if (Number.isFinite(pathNotFound.maxRetries) && pathNotFound.maxRetries >= 0) {
-            nextRetryConfig.pathNotFound.maxRetries = pathNotFound.maxRetries;
-          }
-          if (Number.isFinite(pathNotFound.baseDelay) && pathNotFound.baseDelay >= 0) {
-            nextRetryConfig.pathNotFound.baseDelay = pathNotFound.baseDelay;
-          }
-          if (Number.isFinite(pathNotFound.maxDelay) && pathNotFound.maxDelay >= 0) {
-            nextRetryConfig.pathNotFound.maxDelay = pathNotFound.maxDelay;
-          }
-        }
-
-        const getterError = retry.getterError;
-        if (getterError) {
-          if (Number.isFinite(getterError.maxRetries) && getterError.maxRetries >= 0) {
-            nextRetryConfig.getterError.maxRetries = getterError.maxRetries;
-          }
-          if (Number.isFinite(getterError.baseDelay) && getterError.baseDelay >= 0) {
-            nextRetryConfig.getterError.baseDelay = getterError.baseDelay;
-          }
-          if (Number.isFinite(getterError.multiplier) && getterError.multiplier >= 0) {
-            nextRetryConfig.getterError.multiplier = getterError.multiplier;
-          }
-          if (Number.isFinite(getterError.maxDelay) && getterError.maxDelay >= 0) {
-            nextRetryConfig.getterError.maxDelay = getterError.maxDelay;
-          }
-        }
-
-        const propertyAbsent = retry.propertyAbsent;
-        if (propertyAbsent) {
-          if (Number.isFinite(propertyAbsent.maxRetries) && propertyAbsent.maxRetries >= 0) {
-            nextRetryConfig.propertyAbsent.maxRetries = propertyAbsent.maxRetries;
-          }
-          if (Number.isFinite(propertyAbsent.baseDelay) && propertyAbsent.baseDelay >= 0) {
-            nextRetryConfig.propertyAbsent.baseDelay = propertyAbsent.baseDelay;
-          }
-        }
-      }
-
-      this.pollingPhases = nextPollingPhases;
-      this.retryConfig = nextRetryConfig;
-
-      if (this.currentPhase && this.currentPhase.name) {
-        this.currentPhase = this.pollingPhases[this.currentPhase.name] || this.pollingPhases.EARLY;
-      }
     }
 
     /**
@@ -462,7 +370,6 @@
      */
     _handlePropertyDetected(path, trackingData, value) {
       trackingData.state = PropertyState.DETECTED;
-      this.detectedProperties.add(path);
       this.stats.detected++;
 
       const detection = {
@@ -599,8 +506,7 @@
           detectedCount: this.stats.detected,
           totalChecked: this.stats.totalProperties,
           elapsedMs: elapsed,
-          reason: reason,
-          stats: this.getStats()
+          reason: reason
         });
       }
 
@@ -627,37 +533,6 @@
       }
 
       this._log('Polling stopped');
-    }
-
-    /**
-     * Get current statistics
-     */
-    getStats() {
-      const stateBreakdown = {};
-      for (const state of Object.values(PropertyState)) {
-        stateBreakdown[state] = 0;
-      }
-
-      for (const trackingData of this.properties.values()) {
-        stateBreakdown[trackingData.state]++;
-      }
-
-      return {
-        ...this.stats,
-        stateBreakdown,
-        currentPhase: this.currentPhase?.name || 'none',
-        isPolling: this.isPolling
-      };
-    }
-
-    /**
-     * Cleanup
-     */
-    cleanup() {
-      this.stop();
-      this.completed = false;
-      this.properties.clear();
-      this.detectedProperties.clear();
     }
 
     /**
@@ -689,7 +564,4 @@
 
   // Create singleton instance
   window.__WindowPropertyTracker = new WindowPropertyTracker();
-
-  // Also export PropertyState for external use
-  window.__PropertyState = PropertyState;
 })();

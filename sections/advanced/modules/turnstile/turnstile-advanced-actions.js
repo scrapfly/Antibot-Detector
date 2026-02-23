@@ -1,8 +1,3 @@
-/**
- * turnstile-advanced-actions.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
 TurnstileAdvanced.prototype.checkCookies = async function() {
         Logger.network('[Turnstile] ========== CHECK COOKIES ==========');
         try {

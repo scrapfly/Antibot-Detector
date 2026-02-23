@@ -22,7 +22,6 @@ SettingsUI.hideSettings = function() {
 };
 
 SettingsUI.switchTab = function(tabName) {
-    // Update tab buttons
     const allTabButtons = document.querySelectorAll('.settings-tab-btn');
     allTabButtons.forEach(btn => {
       if (btn.getAttribute('data-settings-tab') === tabName) {
@@ -32,7 +31,6 @@ SettingsUI.switchTab = function(tabName) {
       }
     });
 
-    // Update tab content
     const allTabContents = document.querySelectorAll('.settings-tab-content');
     allTabContents.forEach(content => {
       if (content.getAttribute('data-tab-content') === tabName) {
@@ -48,27 +46,22 @@ SettingsUI.loadSettings = async function() {
       const result = await chrome.storage.local.get(['scrapfly_settings']);
 
       if (result.scrapfly_settings) {
-        // Handle both string (from JSON.stringify) and object formats
-        // This prevents errors if storage returns an object directly
+        // Handle both string and object storage formats
         const savedSettings = typeof result.scrapfly_settings === 'string'
           ? JSON.parse(result.scrapfly_settings)
           : result.scrapfly_settings;
 
-        // Extract the nested "settings" property from the saved data
-        // Fallback to savedSettings for legacy data without nested structure
         const loadedSettings = savedSettings.settings || savedSettings;
 
         Logger.ui('Loading settings - raw:', result.scrapfly_settings);
         Logger.ui('Loading settings - parsed:', savedSettings);
         Logger.ui('Loading settings - extracted:', loadedSettings);
 
-        // Properly merge nested settings structure
         if (typeof loadedSettings === 'object' && loadedSettings !== null) {
-          // Deep merge: preserve nested structure for detection, history, etc.
           this.settings = this.deepMerge(this.settings, loadedSettings);
           delete this.settings.hooksConfig;
           delete this.settings.reliabilityConfig;
-          // Legacy cleanup: cache settings used to be stored flat; keep only detection.* to avoid conflicts
+          // Legacy compatibility: migrate flat cache settings to nested structure
           if (this.settings.detection) {
             if (this.settings.detection.cacheDuration === undefined && this.settings.cacheDuration !== undefined) {
               this.settings.detection.cacheDuration = this.settings.cacheDuration;
@@ -83,7 +76,6 @@ SettingsUI.loadSettings = async function() {
                 Array.isArray(this.settings.blacklistedDomains) && this.settings.blacklistedDomains.length > 0) {
               this.settings.detection.blacklistedDomains = this.settings.blacklistedDomains;
             }
-            // cacheHours was a legacy field (hours only)
             if (this.settings.detection.cacheDuration === undefined && this.settings.cacheHours !== undefined) {
               this.settings.detection.cacheDuration = this.settings.cacheHours;
               this.settings.detection.cacheUnit = this.settings.detection.cacheUnit || 'hours';
@@ -118,10 +110,8 @@ SettingsUI.deepMerge = function(target, source) {
     for (const key in source) {
       if (source.hasOwnProperty(key)) {
         if (typeof source[key] === 'object' && source[key] !== null && !Array.isArray(source[key])) {
-          // Recursively merge nested objects
           result[key] = this.deepMerge(result[key] || {}, source[key]);
         } else {
-          // Copy primitive values and arrays
           result[key] = source[key];
         }
       }
@@ -130,14 +120,30 @@ SettingsUI.deepMerge = function(target, source) {
     return result;
 };
 
+SettingsUI.setToggleControlledVisibility = function(toggleEl, targets = []) {
+    if (!Array.isArray(targets) || targets.length === 0) {
+      return;
+    }
+
+    const isEnabled = !!(toggleEl && toggleEl.checked);
+
+    targets.forEach((target) => {
+      if (!target || !target.element) {
+        return;
+      }
+
+      target.element.style.display = isEnabled
+        ? (target.onDisplay || 'block')
+        : 'none';
+    });
+};
+
 SettingsUI.saveSettings = async function() {
     try {
-      // Get old cache scope before saving (to detect changes)
       let oldCacheScope = null;
       try {
         const result = await chrome.storage.local.get(['scrapfly_settings']);
         if (result.scrapfly_settings) {
-          // Handle both string and object formats
           const savedSettings = typeof result.scrapfly_settings === 'string'
             ? JSON.parse(result.scrapfly_settings)
             : result.scrapfly_settings;
@@ -150,7 +156,7 @@ SettingsUI.saveSettings = async function() {
 
       delete this.settings.hooksConfig;
       delete this.settings.reliabilityConfig;
-      // Legacy cleanup: cache settings used to be stored flat; keep only detection.* to avoid conflicts
+      // Legacy compatibility: remove flat cache settings migrated to detection.*
       delete this.settings.cacheDuration;
       delete this.settings.cacheUnit;
       delete this.settings.cacheScope;
@@ -172,24 +178,20 @@ SettingsUI.saveSettings = async function() {
 
       Logger.ui('Settings saved:', this.settings);
 
-      // Check if cache scope changed
       const newCacheScope = this.settings.cacheScope || this.settings.detection?.cacheScope || 'domain';
       const cacheScopeChanged = oldCacheScope && oldCacheScope !== newCacheScope;
 
       if (cacheScopeChanged) {
         Logger.ui(`[Settings] Cache scope changed from "${oldCacheScope}" to "${newCacheScope}" - preserving cache data, invalidating current view`);
 
-        // Clear in-memory URL hash cache in popup context
         UrlUtils.clearUrlHashCache();
 
-        // Notify background worker to clear its in-memory cache
         chrome.runtime.sendMessage({ type: 'CACHE_SCOPE_CHANGED' }, (response) => {
           if (chrome.runtime.lastError) {
             Logger.debug('UI', 'Failed to notify background of cache scope change:', chrome.runtime.lastError.message);
           }
         });
 
-        // Notify Detection tab to clear current results display
         chrome.runtime.sendMessage({ type: 'DETECTION_CLEAR_CACHE' }, (response) => {
           if (chrome.runtime.lastError) {
             Logger.debug('UI', 'Failed to notify Detection tab:', chrome.runtime.lastError.message);
@@ -201,8 +203,7 @@ SettingsUI.saveSettings = async function() {
         NotificationHelper.success('Settings saved');
       }
 
-      // Notify background script to invalidate settings cache
-      // This is critical for webhook and other background features to use updated settings
+      // Invalidate background settings cache so webhook/background features use updated values
       chrome.runtime.sendMessage({ type: 'SETTINGS_UPDATED' }, (response) => {
         if (chrome.runtime.lastError) {
           Logger.debug('UI', 'Failed to notify background of settings update:', chrome.runtime.lastError.message);
@@ -211,7 +212,6 @@ SettingsUI.saveSettings = async function() {
         }
       });
 
-      // Notify background script to sync category colors
       chrome.runtime.sendMessage({ type: 'SYNC_CATEGORY_COLORS' }, (response) => {
         if (chrome.runtime.lastError) {
           Logger.debug('UI', 'Failed to sync category colors:', chrome.runtime.lastError.message);
@@ -228,7 +228,6 @@ SettingsUI.saveSettings = async function() {
 
 SettingsUI.updateSettingsUI = function() {
     // ========== GENERAL TAB ==========
-    // Basic toggles
     const notificationsToggle = document.querySelector('#notificationsEnabled');
     if (notificationsToggle) {
       notificationsToggle.checked = this.settings.notificationsEnabled ?? true;
@@ -239,7 +238,6 @@ SettingsUI.updateSettingsUI = function() {
       debugModeToggle.checked = this.settings.debugMode ?? false;
     }
 
-    // Log Collector (only visible if debug mode is enabled)
     const logCollectorSection = document.querySelector('#logCollectorSection');
     if (logCollectorSection) {
       logCollectorSection.style.display = (this.settings.debugMode ?? false) ? 'block' : 'none';
@@ -250,27 +248,23 @@ SettingsUI.updateSettingsUI = function() {
       logCollectorToggle.checked = this.settings.logCollectorEnabled ?? false;
     }
 
-    // Show log collector controls if enabled
     const logCollectorControls = document.querySelector('#logCollectorControls');
     if (logCollectorControls) {
       logCollectorControls.style.display = (this.settings.logCollectorEnabled ?? false) ? 'block' : 'none';
     }
 
-    // Load max logs setting
     const logCollectorMaxLogsInput = document.querySelector('#logCollectorMaxLogs');
     if (logCollectorMaxLogsInput) {
       const safeMax = Math.min(Math.max(this.settings.logCollectorMaxLogs ?? 5000, 100), 5000);
       logCollectorMaxLogsInput.value = safeMax;
     }
 
-    // Update the max logs display
     const logCountMax = document.querySelector('#logCountMax');
     if (logCountMax) {
       const safeMax = Math.min(Math.max(this.settings.logCollectorMaxLogs ?? 5000, 100), 5000);
       logCountMax.textContent = safeMax;
     }
 
-    // If Log Collector is already enabled, start updating the log count immediately
     if (this.settings.logCollectorEnabled ?? false) {
       this.startLogCountUpdate();
     }
@@ -344,94 +338,86 @@ SettingsUI.updateSettingsUI = function() {
         cacheUnitSelect.value = this.settings.detection.cacheUnit || 'hours';
       }
 
-      // Render blacklisted domains
-      this.renderBlacklistUI();
+        this.renderBlacklistUI();
       this.setupBlacklistEventListeners();
     }
 
     // JS API Settings
-    if (this.settings.jsApi) {
-      const enableJsApi = document.querySelector('#enableJsApi');
-      if (enableJsApi) {
-        enableJsApi.checked = this.settings.jsApi.enableJsApi ?? true;
-      }
+    const enableJsApi = document.querySelector('#enableJsApi');
+    const jsApiSettingsContainer = document.querySelector('#jsApiSettings');
+    const jsApiEnabled = this.settings.jsApi?.enableJsApi ?? true;
+    if (enableJsApi) {
+      enableJsApi.checked = jsApiEnabled;
     }
+    SettingsUI.setToggleControlledVisibility(enableJsApi, [
+      { element: jsApiSettingsContainer, onDisplay: 'flex' }
+    ]);
 
     // Webhook Settings
-    if (this.settings.webhook) {
-      const enableWebhook = document.querySelector('#enableWebhook');
-      const isWebhookEnabled = this.settings.webhook.enableWebhook ?? false;
-      if (enableWebhook) enableWebhook.checked = isWebhookEnabled;
+    const webhookSettings = this.settings.webhook || {};
+    const enableWebhook = document.querySelector('#enableWebhook');
+    const isWebhookEnabled = webhookSettings.enableWebhook ?? false;
+    if (enableWebhook) enableWebhook.checked = isWebhookEnabled;
 
-      // Set visibility of webhook settings based on enable state
-      const webhookSettingsContainer = document.querySelector('#webhookSettings');
-      const webhookOnCacheGroup = document.querySelector('#webhookOnCacheGroup');
-      if (webhookSettingsContainer) {
-        webhookSettingsContainer.style.display = isWebhookEnabled ? 'block' : 'none';
-      }
-      if (webhookOnCacheGroup) {
-        webhookOnCacheGroup.style.display = isWebhookEnabled ? 'flex' : 'none';
-      }
+    const webhookSettingsContainer = document.querySelector('#webhookSettings');
+    const webhookOnCacheGroup = document.querySelector('#webhookOnCacheGroup');
+    SettingsUI.setToggleControlledVisibility(enableWebhook, [
+      { element: webhookSettingsContainer, onDisplay: 'block' },
+      { element: webhookOnCacheGroup, onDisplay: 'flex' }
+    ]);
 
-      const webhookOnCache = document.querySelector('#webhookOnCache');
-      if (webhookOnCache) webhookOnCache.checked = this.settings.webhook.webhookOnCache ?? false;
+    const webhookOnCache = document.querySelector('#webhookOnCache');
+    if (webhookOnCache) webhookOnCache.checked = webhookSettings.webhookOnCache ?? false;
 
-      // Setup webhook HTTP Method badges (radio buttons)
-      const webhookMethodInput = document.querySelector('#webhookMethod');
-      const customContainer = document.querySelector('#webhookCustomMethodContainer');
-      const customMethodInput = document.querySelector('#webhookCustomMethod');
-      const value = this.settings.webhook.webhookMethod || 'POST';
-      const standardMethods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
-      const isCustom = !standardMethods.includes(value.toUpperCase());
+    const webhookMethodInput = document.querySelector('#webhookMethod');
+    const customContainer = document.querySelector('#webhookCustomMethodContainer');
+    const customMethodInput = document.querySelector('#webhookCustomMethod');
+    const value = webhookSettings.webhookMethod || 'POST';
+    const standardMethods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
+    const isCustom = !standardMethods.includes(value.toUpperCase());
 
-      if (webhookMethodInput) {
-        webhookMethodInput.value = value;
-      }
-
-      // Clear all checked states first
-      document.querySelectorAll('input[name="webhookMethodRadio"]').forEach(radio => {
-        radio.checked = false;
-        const badge = radio.closest('.http-method-badge');
-        if (badge) badge.classList.remove('checked');
-      });
-
-      if (isCustom && customContainer && customMethodInput) {
-        // Custom method
-        const customRadio = document.querySelector('input[name="webhookMethodRadio"][value="CUSTOM"]');
-        if (customRadio) {
-          customRadio.checked = true;
-          const badge = customRadio.closest('.http-method-badge');
-          if (badge) badge.classList.add('checked');
-        }
-        customContainer.style.display = 'block';
-        customMethodInput.value = value;
-      } else {
-        // Standard method
-        const radio = document.querySelector(`input[name="webhookMethodRadio"][value="${value.toUpperCase()}"]`);
-        if (radio) {
-          radio.checked = true;
-          const badge = radio.closest('.http-method-badge');
-          if (badge) badge.classList.add('checked');
-        }
-        if (customContainer) customContainer.style.display = 'none';
-      }
-
-      // Setup radio button event listeners
-      this.setupWebhookMethodRadios();
-
-      const webhookUrl = document.querySelector('#webhookUrl');
-      if (webhookUrl) webhookUrl.value = this.settings.webhook.webhookUrl || '';
-
-      const webhookContentType = document.querySelector('#webhookContentType');
-      if (webhookContentType) webhookContentType.value = this.settings.webhook.webhookContentType || 'application/json';
-
-      const webhookPayload = document.querySelector('#webhookPayload');
-      const defaultPayload = '{"url": "<SITEURL>", "hostname": "<HOSTNAME>", "title": "<TITLE>", "favicon": "<FAVICON>", "detections": <DETECTIONS>, "timestamp": "<TIMESTAMP>", "count": <DETECTION_COUNT>, "categories": "<CATEGORIES>"}';
-      if (webhookPayload) webhookPayload.value = this.settings.webhook.webhookPayload || defaultPayload;
-
-      // Render webhook headers
-      this.renderWebhookHeadersUI();
+    if (webhookMethodInput) {
+      webhookMethodInput.value = value;
     }
+
+    document.querySelectorAll('input[name="webhookMethodRadio"]').forEach(radio => {
+      radio.checked = false;
+      const badge = radio.closest('.http-method-badge');
+      if (badge) badge.classList.remove('checked');
+    });
+
+    if (isCustom && customContainer && customMethodInput) {
+      const customRadio = document.querySelector('input[name="webhookMethodRadio"][value="CUSTOM"]');
+      if (customRadio) {
+        customRadio.checked = true;
+        const badge = customRadio.closest('.http-method-badge');
+        if (badge) badge.classList.add('checked');
+      }
+      customContainer.style.display = 'block';
+      customMethodInput.value = value;
+    } else {
+      const radio = document.querySelector(`input[name="webhookMethodRadio"][value="${value.toUpperCase()}"]`);
+      if (radio) {
+        radio.checked = true;
+        const badge = radio.closest('.http-method-badge');
+        if (badge) badge.classList.add('checked');
+      }
+      if (customContainer) customContainer.style.display = 'none';
+    }
+
+    this.setupWebhookMethodRadios();
+
+    const webhookUrl = document.querySelector('#webhookUrl');
+    if (webhookUrl) webhookUrl.value = webhookSettings.webhookUrl || '';
+
+    const webhookContentType = document.querySelector('#webhookContentType');
+    if (webhookContentType) webhookContentType.value = webhookSettings.webhookContentType || 'application/json';
+
+    const webhookPayload = document.querySelector('#webhookPayload');
+    const defaultPayload = '{"url": "<SITEURL>", "hostname": "<HOSTNAME>", "title": "<TITLE>", "favicon": "<FAVICON>", "detections": <DETECTIONS>, "timestamp": "<TIMESTAMP>", "count": <DETECTION_COUNT>, "categories": "<CATEGORIES>"}';
+    if (webhookPayload) webhookPayload.value = webhookSettings.webhookPayload || defaultPayload;
+
+    this.renderWebhookHeadersUI();
 
     // ========== HISTORY TAB ==========
     if (this.settings.history) {
@@ -465,33 +451,28 @@ SettingsUI.updateSettingsUI = function() {
       const duplicateUnit = document.querySelector('#duplicateUnit');
       if (duplicateUnit) duplicateUnit.value = this.settings.duplicatePrevention.duplicateUnit || 'hours';
 
-      // Show/hide duplicate settings container based on toggle state
-      const duplicateSettingsContainer = document.querySelector('#duplicateSettingsContainer');
+        const duplicateSettingsContainer = document.querySelector('#duplicateSettingsContainer');
       if (duplicateSettingsContainer) {
         duplicateSettingsContainer.style.display = (this.settings.duplicatePrevention.preventDuplicates ?? false) ? 'flex' : 'none';
       }
     }
 
     // ========== UPDATE SETTINGS ==========
-    // Auto-update toggle
     const autoUpdateToggle = document.querySelector('#autoUpdate');
     if (autoUpdateToggle) {
       autoUpdateToggle.checked = this.settings.updates?.autoUpdate ?? false;
     }
 
-    // Check interval selector
     const checkIntervalSelect = document.querySelector('#checkIntervalHours');
     if (checkIntervalSelect) {
       checkIntervalSelect.value = this.settings.updates?.checkIntervalHours ?? 12;
     }
 
-    // Show/hide update interval group based on auto-update state
     const updateIntervalGroup = document.querySelector('#updateIntervalGroup');
     if (updateIntervalGroup) {
       updateIntervalGroup.style.display = (this.settings.updates?.autoUpdate ?? false) ? 'flex' : 'none';
     }
 
-    // Last check time display
     const lastCheckSpan = document.querySelector('#lastUpdateCheckTime');
     if (lastCheckSpan) {
       const lastCheck = this.settings.updates?.lastCheckTimestamp || 0;
@@ -502,7 +483,6 @@ SettingsUI.updateSettingsUI = function() {
       }
     }
 
-    // Update incompatible updates warning display
     this.updateIncompatibleUpdatesDisplay();
 
 };
@@ -519,7 +499,6 @@ SettingsUI.getSettingsFromUI = function() {
     };
 
     // ========== GENERAL TAB ==========
-    // Basic toggles
     const notificationsToggle = document.querySelector('#notificationsEnabled');
     const debugModeToggle = document.querySelector('#debugModeGeneral');
     const logCollectorToggle = document.querySelector('#logCollectorEnabled');
@@ -611,28 +590,24 @@ SettingsUI.getSettingsFromUI = function() {
 SettingsUI.validateSettings = function(settings) {
     const errors = [];
 
-    // Validate history limit (can be 0 for unlimited)
     if (settings.history && settings.history.historyLimit !== undefined) {
       if (settings.history.historyLimit < 0 || settings.history.historyLimit > 10000) {
         errors.push('History limit must be between 0 (unlimited) and 10000');
       }
     }
 
-    // Validate cache duration
     if (settings.detection && settings.detection.cacheDuration !== undefined) {
       if (settings.detection.cacheDuration < 1 || settings.detection.cacheDuration > 9999) {
         errors.push('Cache duration must be between 1 and 9999');
       }
     }
 
-    // Validate auto clear days
     if (settings.history && settings.history.autoClearDays !== undefined) {
       if (settings.history.autoClearDays < 0 || settings.history.autoClearDays > 365) {
         errors.push('Auto clear days must be between 0 and 365');
       }
     }
 
-    // Validate duplicate duration
     if (settings.duplicatePrevention && settings.duplicatePrevention.duplicateDuration !== undefined) {
       if (settings.duplicatePrevention.duplicateDuration < 1 || settings.duplicatePrevention.duplicateDuration > 999) {
         errors.push('Duplicate duration must be between 1 and 999');
@@ -676,7 +651,6 @@ SettingsUI.clearAllData = async function() {
         await chrome.storage.local.clear();
         NotificationHelper.success('All data cleared successfully! The extension will reload.');
 
-        // Reload the extension after a short delay
         setTimeout(() => {
           chrome.runtime.reload();
         }, 2000);
@@ -688,79 +662,17 @@ SettingsUI.clearAllData = async function() {
     }
 };
 
-SettingsUI.showSuccessMessage = function(message) {
-    this.showNotification(message, 'success');
-};
-
-SettingsUI.showErrorMessage = function(message) {
-    this.showNotification(message, 'error');
-};
-
-SettingsUI.showNotification = function(message, type = 'info') {
-    // Remove any existing notifications
-    const existingNotification = document.querySelector('.settings-notification');
-    if (existingNotification) {
-      existingNotification.remove();
-    }
-
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `settings-notification settings-notification-${type}`;
-    notification.innerHTML = `
-      <div class="notification-content">
-        <span class="notification-icon">${this.getNotificationIcon(type)}</span>
-        <span class="notification-text">${message}</span>
-        <button class="notification-close">×</button>
-      </div>
-    `;
-
-    // Add to modal
-    const modalContent = document.querySelector('.modal-content');
-    if (modalContent) {
-      modalContent.insertBefore(notification, modalContent.firstChild);
-    }
-
-    // Setup close button
-    const closeBtn = notification.querySelector('.notification-close');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => notification.remove());
-    }
-
-    // Auto-remove after 5 seconds
-    setTimeout(() => {
-      if (notification.parentNode) {
-        notification.remove();
-      }
-    }, 5000);
-};
-
-SettingsUI.getNotificationIcon = function(type) {
-    switch (type) {
-      case 'success':
-        return '';
-      case 'error':
-        return '';
-      case 'warning':
-        return '';
-      default:
-        return '';
-    }
-};
-
 SettingsUI.setupEventListeners = function() {
-    // Settings button in header
     const settingsBtn = document.querySelector('#settingsBtn');
     if (settingsBtn) {
       settingsBtn.addEventListener('click', () => this.showSettings());
     }
 
-    // Close modal button
     const closeSettingsBtn = document.querySelector('#closeSettingsModal');
     if (closeSettingsBtn) {
       closeSettingsBtn.addEventListener('click', () => this.hideSettings());
     }
 
-    // Save settings button
     const saveSettingsBtn = document.querySelector('#saveSettingsBtn');
     if (saveSettingsBtn) {
       Logger.ui('Save settings button found, attaching event listener');
@@ -773,25 +685,21 @@ SettingsUI.setupEventListeners = function() {
       Logger.error('UI', 'Save settings button NOT found - event listener not attached');
     }
 
-    // Cancel settings button
     const cancelSettingsBtn = document.querySelector('#cancelSettingsBtn');
     if (cancelSettingsBtn) {
       cancelSettingsBtn.addEventListener('click', () => this.hideSettings());
     }
 
-    // Reset settings button
     const resetSettingsBtn = document.querySelector('#resetSettingsBtn');
     if (resetSettingsBtn) {
       resetSettingsBtn.addEventListener('click', () => this.resetToDefaults());
     }
 
-    // Clear all data button
     const clearAllDataBtn = document.querySelector('#clearAllDataBtn');
     if (clearAllDataBtn) {
       clearAllDataBtn.addEventListener('click', () => this.clearAllData());
     }
 
-    // Debug Mode toggle - show/hide Log Collector section
     const debugModeToggle = document.querySelector('#debugModeGeneral');
     if (debugModeToggle) {
       debugModeToggle.addEventListener('change', (e) => {
@@ -802,7 +710,6 @@ SettingsUI.setupEventListeners = function() {
       });
     }
 
-    // Log Collector toggle - show/hide controls and enable/disable collection
     const logCollectorToggle = document.querySelector('#logCollectorEnabled');
     if (logCollectorToggle) {
       logCollectorToggle.addEventListener('change', (e) => {
@@ -811,24 +718,20 @@ SettingsUI.setupEventListeners = function() {
           logCollectorControls.style.display = e.target.checked ? 'block' : 'none';
         }
 
-        // Send message to background to enable/disable log collection
         if (e.target.checked) {
           chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_ENABLE' }).catch(() => {
             Logger.ui('Failed to enable log collection');
           });
-          // Start updating log count
           this.startLogCountUpdate();
         } else {
           chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_DISABLE' }).catch(() => {
             Logger.ui('Failed to disable log collection');
           });
-          // Stop updating log count
           this.stopLogCountUpdate();
         }
       });
     }
 
-    // Log Collector action buttons
     const exportLogsJsonBtn = document.querySelector('#exportLogsJsonBtn');
     if (exportLogsJsonBtn) {
       exportLogsJsonBtn.addEventListener('click', () => {
@@ -860,7 +763,6 @@ SettingsUI.setupEventListeners = function() {
 
         if (confirmed) {
           chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_CLEAR' }).then(() => {
-            // Update log count to 0
             const logCountValue = document.querySelector('#logCountValue');
             if (logCountValue) {
               logCountValue.textContent = '0';
@@ -873,29 +775,23 @@ SettingsUI.setupEventListeners = function() {
       });
     }
 
-    // Max Logs input listener - send to background when changed
     const logCollectorMaxLogsInput = document.querySelector('#logCollectorMaxLogs');
     if (logCollectorMaxLogsInput) {
       logCollectorMaxLogsInput.addEventListener('change', (e) => {
         let maxLogs = parseInt(e.target.value || 5000);
-        // Clamp value between 100 and 5000
         if (maxLogs < 100) maxLogs = 100;
         if (maxLogs > 5000) maxLogs = 5000;
-        // Update the input field with clamped value
         e.target.value = maxLogs;
-        // Update the display
         const logCountMax = document.querySelector('#logCountMax');
         if (logCountMax) {
           logCountMax.textContent = maxLogs;
         }
-        // Send to background to update LogCollector
         chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_SET_MAX_LOGS', maxLogs: maxLogs }).catch(() => {
           Logger.ui('Failed to set max logs');
         });
       });
     }
 
-    // Tab navigation
     const tabButtons = document.querySelectorAll('.settings-tab-btn');
     tabButtons.forEach(button => {
       button.addEventListener('click', () => {
@@ -904,41 +800,34 @@ SettingsUI.setupEventListeners = function() {
       });
     });
 
-    // Close modal when clicking on backdrop
     const settingsModal = document.querySelector('#settingsModal');
     if (settingsModal) {
       settingsModal.addEventListener('click', (e) => {
-        // Close if clicking on the modal container itself or the backdrop
         if (e.target === settingsModal || e.target.classList.contains('base-modal-backdrop')) {
           this.hideSettings();
         }
       });
     }
 
-    // ESC key to close modal
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.isModalVisible) {
         this.hideSettings();
       }
     });
 
-    // Add Current Page to blacklist button
     const addCurrentDomainBtn = document.querySelector('#addCurrentDomainBtn');
     if (addCurrentDomainBtn) {
       addCurrentDomainBtn.addEventListener('click', async () => {
         try {
-          // Get the current tab's URL
           const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
           if (!tab || !tab.url) {
             NotificationHelper.error('Could not get current page URL');
             return;
           }
 
-          // Extract domain from URL
           const url = new URL(tab.url);
           const domain = url.hostname;
 
-          // Check if already blacklisted
           if (!this.settings.detection) {
             this.settings.detection = { blacklistedDomains: [] };
           }
@@ -951,13 +840,8 @@ SettingsUI.setupEventListeners = function() {
             return;
           }
 
-          // Add to blacklist
           this.settings.detection.blacklistedDomains.push(domain);
-
-          // Update UI
           this.renderBlacklistUI();
-
-          // Save settings
           await this.saveSettings();
 
           NotificationHelper.success(`Added ${domain} to blacklist`);
@@ -968,7 +852,6 @@ SettingsUI.setupEventListeners = function() {
       });
     }
 
-    // Add Webhook Header button
     const addWebhookHeaderBtn = document.querySelector('#addWebhookHeaderBtn');
     if (addWebhookHeaderBtn) {
       addWebhookHeaderBtn.addEventListener('click', () => {
@@ -983,7 +866,6 @@ SettingsUI.setupEventListeners = function() {
       });
     }
 
-    // JS API usage example - click to copy
     const jsApiCodeBlock = document.querySelector('#jsApiUsageCode');
     if (jsApiCodeBlock) {
       jsApiCodeBlock.addEventListener('click', () => {
@@ -991,7 +873,6 @@ SettingsUI.setupEventListeners = function() {
       });
     }
 
-    // JS API event names - click to copy
     document.querySelectorAll('.api-event-item code').forEach(codeEl => {
       codeEl.style.cursor = 'pointer';
       codeEl.title = 'Click to copy';
@@ -1000,31 +881,35 @@ SettingsUI.setupEventListeners = function() {
       });
     });
 
-    // Webhook Enable toggle - show/hide webhook settings
+    const enableJsApiToggle = document.querySelector('#enableJsApi');
+    const jsApiSettingsContainer = document.querySelector('#jsApiSettings');
+    if (enableJsApiToggle) {
+      enableJsApiToggle.addEventListener('change', () => {
+        SettingsUI.setToggleControlledVisibility(enableJsApiToggle, [
+          { element: jsApiSettingsContainer, onDisplay: 'flex' }
+        ]);
+      });
+      SettingsUI.setToggleControlledVisibility(enableJsApiToggle, [
+        { element: jsApiSettingsContainer, onDisplay: 'flex' }
+      ]);
+    }
+
     const enableWebhookToggle = document.querySelector('#enableWebhook');
     const webhookSettingsContainer = document.querySelector('#webhookSettings');
     const webhookOnCacheGroup = document.querySelector('#webhookOnCacheGroup');
     if (enableWebhookToggle) {
-      enableWebhookToggle.addEventListener('change', (e) => {
-        const isEnabled = e.target.checked;
-        if (webhookSettingsContainer) {
-          webhookSettingsContainer.style.display = isEnabled ? 'block' : 'none';
-        }
-        if (webhookOnCacheGroup) {
-          webhookOnCacheGroup.style.display = isEnabled ? 'flex' : 'none';
-        }
+      enableWebhookToggle.addEventListener('change', () => {
+        SettingsUI.setToggleControlledVisibility(enableWebhookToggle, [
+          { element: webhookSettingsContainer, onDisplay: 'block' },
+          { element: webhookOnCacheGroup, onDisplay: 'flex' }
+        ]);
       });
-      // Set initial state
-      const isEnabled = enableWebhookToggle.checked;
-      if (webhookSettingsContainer) {
-        webhookSettingsContainer.style.display = isEnabled ? 'block' : 'none';
-      }
-      if (webhookOnCacheGroup) {
-        webhookOnCacheGroup.style.display = isEnabled ? 'flex' : 'none';
-      }
+      SettingsUI.setToggleControlledVisibility(enableWebhookToggle, [
+        { element: webhookSettingsContainer, onDisplay: 'block' },
+        { element: webhookOnCacheGroup, onDisplay: 'flex' }
+      ]);
     }
 
-    // Duplicate Prevention toggle - show/hide duplicate settings
     const preventDuplicatesToggle = document.querySelector('#preventDuplicates');
     const duplicateSettingsContainer = document.querySelector('#duplicateSettingsContainer');
     if (preventDuplicatesToggle) {
@@ -1034,22 +919,18 @@ SettingsUI.setupEventListeners = function() {
           duplicateSettingsContainer.style.display = isEnabled ? 'flex' : 'none';
         }
       });
-      // Set initial state
       const isEnabled = preventDuplicatesToggle.checked;
       if (duplicateSettingsContainer) {
         duplicateSettingsContainer.style.display = isEnabled ? 'flex' : 'none';
       }
     }
 
-    // Test Webhook button
     const testWebhookBtn = document.querySelector('#testWebhookBtn');
     if (testWebhookBtn) {
       testWebhookBtn.addEventListener('click', () => this.handleTestWebhook());
     }
 
     // ========== UPDATE SETTINGS ==========
-
-    // Auto-update toggle
     const autoUpdateToggle = document.querySelector('#autoUpdate');
     const updateIntervalGroup = document.querySelector('#updateIntervalGroup');
     if (autoUpdateToggle) {
@@ -1057,7 +938,6 @@ SettingsUI.setupEventListeners = function() {
         const isEnabled = e.target.checked;
         if (!this.settings.updates) this.settings.updates = {};
         this.settings.updates.autoUpdate = isEnabled;
-        // Show/hide interval selector based on auto-update state
         if (updateIntervalGroup) {
           updateIntervalGroup.style.display = isEnabled ? 'flex' : 'none';
         }
@@ -1065,7 +945,6 @@ SettingsUI.setupEventListeners = function() {
       });
     }
 
-    // Check interval selector
     const checkIntervalSelect = document.querySelector('#checkIntervalHours');
     if (checkIntervalSelect) {
       checkIntervalSelect.addEventListener('change', (e) => {
@@ -1075,13 +954,11 @@ SettingsUI.setupEventListeners = function() {
       });
     }
 
-    // Check Updates Now button
     const checkUpdatesNowBtn = document.querySelector('#checkUpdatesNowBtn');
     if (checkUpdatesNowBtn) {
       checkUpdatesNowBtn.addEventListener('click', () => this.handleCheckUpdatesNow());
     }
 
-    // Setup color pagination controls
     this.setupColorPagination();
 };
 
@@ -1134,20 +1011,16 @@ SettingsUI.setupColorPagination = function() {
     const total = pages.length;
 
     const updatePagination = () => {
-      // Update page display
       pageNum.textContent = currentPage;
 
-      // Show/hide pages
       pages.forEach((page, index) => {
         page.style.display = (index + 1) === currentPage ? 'block' : 'none';
       });
 
-      // Enable/disable buttons
       prevBtn.disabled = currentPage === 1;
       nextBtn.disabled = currentPage === total;
     };
 
-    // Previous button
     prevBtn.addEventListener('click', () => {
       if (currentPage > 1) {
         currentPage--;
@@ -1155,7 +1028,6 @@ SettingsUI.setupColorPagination = function() {
       }
     });
 
-    // Next button
     nextBtn.addEventListener('click', () => {
       if (currentPage < total) {
         currentPage++;
@@ -1163,7 +1035,6 @@ SettingsUI.setupColorPagination = function() {
       }
     });
 
-    // Initialize
     updatePagination();
 };
 
@@ -1181,7 +1052,6 @@ SettingsUI.renderBlacklistUI = function() {
     const allDomains = this.settings.detection?.blacklistedDomains || [];
     const itemsPerPage = 3;
 
-    // Initialize state if not exists
     if (typeof this.blacklistPage === 'undefined') {
       this.blacklistPage = 1;
     }
@@ -1189,7 +1059,6 @@ SettingsUI.renderBlacklistUI = function() {
       this.blacklistSearch = '';
     }
 
-    // Filter domains by search
     const searchTerm = this.blacklistSearch.toLowerCase().trim();
     const filteredDomains = searchTerm
       ? allDomains.filter(d => d.toLowerCase().includes(searchTerm))
@@ -1197,20 +1066,16 @@ SettingsUI.renderBlacklistUI = function() {
 
     const totalPages = Math.ceil(filteredDomains.length / itemsPerPage) || 1;
 
-    // Ensure current page is valid
     if (this.blacklistPage > totalPages) this.blacklistPage = totalPages;
     if (this.blacklistPage < 1) this.blacklistPage = 1;
 
-    // Show/hide pagination
     if (paginationContainer) {
       paginationContainer.style.display = filteredDomains.length > itemsPerPage ? 'flex' : 'none';
     }
 
-    // Update pagination info
     if (pageNumEl) pageNumEl.textContent = this.blacklistPage;
     if (totalPagesEl) totalPagesEl.textContent = totalPages;
 
-    // Update pagination buttons
     if (prevBtn) prevBtn.disabled = this.blacklistPage <= 1;
     if (nextBtn) nextBtn.disabled = this.blacklistPage >= totalPages;
 
@@ -1221,7 +1086,6 @@ SettingsUI.renderBlacklistUI = function() {
       return;
     }
 
-    // Get current page items
     const startIndex = (this.blacklistPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentDomains = filteredDomains.slice(startIndex, endIndex);
@@ -1239,7 +1103,6 @@ SettingsUI.renderBlacklistUI = function() {
 
     container.innerHTML = html;
 
-    // Add click handlers for remove buttons
     container.querySelectorAll('.remove-blacklist-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const domain = btn.getAttribute('data-domain');
@@ -1313,7 +1176,6 @@ SettingsUI.renderWebhookHeadersUI = function() {
       </div>
     `).join('');
 
-    // Add click handlers for remove buttons
     container.querySelectorAll('.remove-webhook-header-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const index = parseInt(btn.getAttribute('data-index'));
@@ -1322,7 +1184,6 @@ SettingsUI.renderWebhookHeadersUI = function() {
       });
     });
 
-    // Add input change handlers to update settings in real-time
     container.querySelectorAll('.webhook-header-item').forEach(item => {
       const index = parseInt(item.getAttribute('data-index'));
       const nameInput = item.querySelector('.webhook-header-name');
@@ -1355,7 +1216,6 @@ SettingsUI.handleSaveSettings = async function() {
         return;
       }
 
-      // Merge new settings with existing settings to preserve nested structure
       Logger.ui('Merging settings...');
       this.settings = this.deepMerge(this.settings, newSettings);
       Logger.ui('Settings merged:', this.settings);
@@ -1364,7 +1224,6 @@ SettingsUI.handleSaveSettings = async function() {
       await this.saveSettings();
       Logger.ui('Settings saved successfully');
 
-      // Close modal after successful save
       Logger.ui('Closing modal...');
       this.hideSettings();
       Logger.ui('Modal closed');
@@ -1372,19 +1231,6 @@ SettingsUI.handleSaveSettings = async function() {
     } catch (error) {
       Logger.error('UI', 'Failed to handle save settings:', error);
       NotificationHelper.error('Failed to save settings: ' + error.message);
-    }
-};
-
-SettingsUI.updateHttpMethodColor = function(selectElement) {
-    if (!selectElement) return;
-
-    // Remove all method classes
-    selectElement.classList.remove('method-get', 'method-post', 'method-put', 'method-patch', 'method-delete');
-
-    // Add appropriate class based on selected value
-    const value = selectElement.value.toLowerCase();
-    if (value) {
-      selectElement.classList.add(`method-${value}`);
     }
 };
 
@@ -1396,17 +1242,14 @@ SettingsUI.setupWebhookMethodRadios = function() {
 
     radios.forEach(radio => {
       radio.addEventListener('change', (e) => {
-        // Remove .checked from all badges
         radios.forEach(r => {
           const badge = r.closest('.http-method-badge');
           if (badge) badge.classList.remove('checked');
         });
 
-        // Add .checked to selected badge
         const badge = e.target.closest('.http-method-badge');
         if (badge) badge.classList.add('checked');
 
-        // Handle custom method
         if (e.target.value === 'CUSTOM') {
           if (customContainer) customContainer.style.display = 'block';
           if (customInput) customInput.focus();
@@ -1417,7 +1260,6 @@ SettingsUI.setupWebhookMethodRadios = function() {
       });
     });
 
-    // Handle custom input changes
     if (customInput) {
       customInput.addEventListener('input', () => {
         const customValue = customInput.value.trim().toUpperCase();
@@ -1428,86 +1270,10 @@ SettingsUI.setupWebhookMethodRadios = function() {
     }
 };
 
-SettingsUI.setupCustomHttpMethodDropdown = function(dropdown, hiddenInput) {
-    if (!dropdown || !hiddenInput) return;
-
-    const selected = dropdown.querySelector('.http-method-dropdown-selected');
-    const options = dropdown.querySelectorAll('.http-method-dropdown-option');
-    const customContainer = document.querySelector('#webhookCustomMethodContainer');
-    const customInput = document.querySelector('#webhookCustomMethod');
-
-    // Toggle dropdown on click
-    selected.addEventListener('click', (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle('open');
-    });
-
-    // Handle option selection
-    options.forEach(option => {
-      option.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const value = option.dataset.value;
-
-        if (value === 'CUSTOM') {
-          // Show custom input
-          if (customContainer) customContainer.style.display = 'block';
-          if (customInput) customInput.focus();
-          this.updateCustomHttpMethodDropdown(dropdown, 'Custom');
-        } else {
-          // Hide custom input
-          if (customContainer) customContainer.style.display = 'none';
-          hiddenInput.value = value;
-          this.updateCustomHttpMethodDropdown(dropdown, value);
-        }
-        dropdown.classList.remove('open');
-      });
-    });
-
-    // Handle custom method input changes
-    if (customInput) {
-      customInput.addEventListener('input', () => {
-        const customValue = customInput.value.trim().toUpperCase();
-        if (customValue) {
-          hiddenInput.value = customValue;
-        }
-      });
-    }
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!dropdown.contains(e.target)) {
-        dropdown.classList.remove('open');
-      }
-    });
-};
-
-SettingsUI.updateCustomHttpMethodDropdown = function(dropdown, value) {
-    if (!dropdown || !value) return;
-
-    const valueDisplay = dropdown.querySelector('.http-method-dropdown-value');
-    const options = dropdown.querySelectorAll('.http-method-dropdown-option');
-
-    // Update displayed value and its color class
-    if (valueDisplay) {
-      valueDisplay.textContent = value;
-      valueDisplay.className = `http-method-dropdown-value http-method-${value.toLowerCase()}`;
-    }
-
-    // Update selected state on options
-    options.forEach(option => {
-      if (option.dataset.value === value) {
-        option.classList.add('selected');
-      } else {
-        option.classList.remove('selected');
-      }
-    });
-};
-
 SettingsUI.handleTestWebhook = async function() {
     const btn = document.querySelector('#testWebhookBtn');
     if (!btn) return;
 
-    // Disable button and show loading state
     btn.disabled = true;
     const originalText = btn.innerHTML;
     btn.innerHTML = `
@@ -1518,7 +1284,6 @@ SettingsUI.handleTestWebhook = async function() {
     `;
 
     try {
-      // Get current webhook settings from UI
       const webhookUrl = document.querySelector('#webhookUrl')?.value || '';
       const webhookMethod = document.querySelector('#webhookMethod')?.value || 'POST';
       const webhookContentType = document.querySelector('#webhookContentType')?.value || 'application/json';
@@ -1529,10 +1294,7 @@ SettingsUI.handleTestWebhook = async function() {
         return;
       }
 
-      // Get custom headers from current settings
       const customHeaders = this.settings.webhook?.webhookHeaders || [];
-
-      // Create test data
       const testUrl = 'https://example.com/test-page';
       const testHostname = 'example.com';
       const testTitle = 'Test Page - Webhook Test';
@@ -1551,13 +1313,11 @@ SettingsUI.handleTestWebhook = async function() {
       const testCount = 1;
       const testCategories = 'Anti-Bot';
 
-      // Build headers object
       const headers = {};
       if (webhookMethod.toUpperCase() !== 'GET') {
         headers['Content-Type'] = webhookContentType;
       }
 
-      // Add custom headers
       for (const header of customHeaders) {
         if (header.name && header.name.trim()) {
           let headerValue = header.value || '';
@@ -1573,7 +1333,6 @@ SettingsUI.handleTestWebhook = async function() {
         }
       }
 
-      // Process webhook URL with variable substitution
       let processedUrl = webhookUrl
         .replace(/<SITEURL>/g, encodeURIComponent(testUrl))
         .replace(/<HOSTNAME>/g, encodeURIComponent(testHostname))
@@ -1583,17 +1342,14 @@ SettingsUI.handleTestWebhook = async function() {
         .replace(/<DETECTION_COUNT>/g, String(testCount))
         .replace(/<CATEGORIES>/g, encodeURIComponent(testCategories));
 
-      // Build fetch options
       const fetchOptions = {
         method: webhookMethod.toUpperCase(),
         headers: headers
       };
 
-      // Add body for non-GET requests
       if (webhookMethod.toUpperCase() !== 'GET') {
         let payload = webhookPayload;
 
-        // If payload template is empty, use default JSON payload
         if (!payload.trim()) {
           payload = JSON.stringify({
             url: testUrl,
@@ -1605,7 +1361,6 @@ SettingsUI.handleTestWebhook = async function() {
             count: testCount
           });
         } else {
-          // Process payload template with variable substitution
           payload = payload
             .replace(/<SITEURL>/g, testUrl)
             .replace(/<HOSTNAME>/g, testHostname)
@@ -1622,7 +1377,6 @@ SettingsUI.handleTestWebhook = async function() {
 
       Logger.network('Test webhook:', { url: processedUrl, options: fetchOptions });
 
-      // Send test webhook
       const response = await fetch(processedUrl, fetchOptions);
 
       if (response.ok) {
@@ -1636,7 +1390,6 @@ SettingsUI.handleTestWebhook = async function() {
       Logger.error('NETWORK', 'Test webhook error:', error);
       NotificationHelper.error('Webhook test failed: ' + error.message);
     } finally {
-      // Re-enable button
       btn.disabled = false;
       btn.innerHTML = originalText;
     }
@@ -1654,16 +1407,14 @@ SettingsUI.updateIncompatibleUpdatesDisplay = async function() {
         return;
       }
 
-      // Show warning
       warning.style.display = 'flex';
 
-      // Update count
       const countSpan = document.querySelector('#incompatibleCount');
       if (countSpan) {
         countSpan.textContent = updates.length;
       }
 
-      // Build details list using safe DOM methods (CSP compliant - no innerHTML)
+      // CSP-compliant: build details list via DOM methods instead of innerHTML
       const list = document.querySelector('#incompatibleDetailsList');
       if (list) {
         list.replaceChildren(); // Clear existing items
@@ -1696,7 +1447,6 @@ SettingsUI.handleCheckUpdatesNow = async function() {
     const lastCheckSpan = document.querySelector('#lastUpdateCheckTime');
     if (!btn) return;
 
-    // Disable button and show loading state
     btn.disabled = true;
     const originalText = btn.innerHTML;
     btn.innerHTML = `
@@ -1707,22 +1457,18 @@ SettingsUI.handleCheckUpdatesNow = async function() {
     `;
 
     try {
-      // Check if UpdateManager is available
       if (typeof UpdateManager === 'undefined') {
         throw new Error('UpdateManager not loaded');
       }
 
-      // Force check for updates
       const result = await UpdateManager.checkForUpdates(true);
 
-      // Update last check time display
       if (lastCheckSpan) {
         const settings = await Utils.getSettings();
         const lastCheck = settings.updates?.lastCheckTimestamp || 0;
         lastCheckSpan.textContent = lastCheck > 0 ? UpdateManager.formatLastCheck(lastCheck) : 'Just now';
       }
 
-      // Get pending updates count
       const pendingCount = await UpdateManager.getPendingUpdatesCount();
 
       if (pendingCount > 0) {
@@ -1731,7 +1477,6 @@ SettingsUI.handleCheckUpdatesNow = async function() {
         NotificationHelper.info('All detectors are up to date.');
       }
 
-      // Check for incompatible updates and notify user
       const incompatibleCount = await UpdateManager.getIncompatibleUpdatesCount();
       if (incompatibleCount > 0) {
         NotificationHelper.warning(
@@ -1740,7 +1485,6 @@ SettingsUI.handleCheckUpdatesNow = async function() {
         );
       }
 
-      // Update the incompatible updates display
       await this.updateIncompatibleUpdatesDisplay();
 
       Logger.ui('Update check completed:', { pendingCount, incompatibleCount, result });
@@ -1749,7 +1493,6 @@ SettingsUI.handleCheckUpdatesNow = async function() {
       Logger.error('UI', 'Failed to check for updates:', error);
       NotificationHelper.error('Failed to check for updates: ' + error.message);
     } finally {
-      // Re-enable button
       btn.disabled = false;
       btn.innerHTML = originalText;
     }

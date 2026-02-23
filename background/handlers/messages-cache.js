@@ -8,18 +8,14 @@ function registerCacheHandlers(registry, context) {
     const handle_check_cache_early = function({ request, sender, sendResponse, context }) {
         void context;
 
-        // Check cache before content script does any detection work
         (async () => {
             try {
                 const { url } = request;
                 Logger.background('[Background] [Early Cache] Checking cache for:', url);
-
-                // Use existing getStoredDetection function to check for cached data
                 const cachedData = await DetectionEngineManager.getStoredDetection(url);
 
                 if (cachedData) {
                     Logger.background('[Background] [Early Cache] HIT - returning cached data');
-                    // Mark this tab as using cache to skip unnecessary capture work
                     if (sender.tab?.id) {
                         tabsUsingCache.add(sender.tab.id);
                         Logger.background(`[Background] [Early Cache] Marked tab ${sender.tab.id} as using cache`);
@@ -30,7 +26,6 @@ function registerCacheHandlers(registry, context) {
                     });
                 } else {
                     Logger.background('[Background] [Early Cache] MISS - detection needed');
-                    // Clear cache status for this tab (if it was previously cached)
                     if (sender.tab?.id) {
                         tabsUsingCache.delete(sender.tab.id);
                     }
@@ -53,7 +48,7 @@ function registerCacheHandlers(registry, context) {
     const handle_cache_hit_early_exit = function({ request, sender, sendResponse, context }) {
         void context;
 
-        // Notification that content script detected cache hit and exited early
+        // Update badge from cached detection data
         (async () => {
             try {
                 const { url, detectionData } = request;
@@ -61,13 +56,11 @@ function registerCacheHandlers(registry, context) {
 
                 Logger.background('[Background] [Early Cache] Content script exited early due to cache hit for:', url);
 
-                // Update badge with cached detection count immediately
                 if (detectionData && tabId) {
                     const detectionCount = detectionData.detectionCount || 0;
                     const detections = Array.isArray(detectionData.detectionResults) ? detectionData.detectionResults : [];
 
                     if (detectionCount > 0) {
-                        // Use same color scheme as normal detection flow
                         const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
                         const count = detectionCount.toString();
                         let color;
@@ -79,7 +72,6 @@ function registerCacheHandlers(registry, context) {
                                    badgeColors.low;
                         } else {
                             // Fallback for older cache payloads without detectionResults
-                            // Prefer matching difficulty semantics: don't treat "many detections" as automatically "High".
                             color = detectionCount >= BADGE.THRESHOLDS.MEDIUM ? badgeColors.medium : badgeColors.low;
                         }
 
@@ -93,7 +85,6 @@ function registerCacheHandlers(registry, context) {
                         });
                         Logger.background(`[Background] [Early Cache] Badge updated: ${detectionCount} detections from cache`);
                     } else {
-                        // No detections - show clean badge
                         await chrome.action.setBadgeText({
                             text: BADGE.TEXT.CLEAN,
                             tabId: tabId
@@ -108,7 +99,7 @@ function registerCacheHandlers(registry, context) {
 
                 sendResponse({ status: 'acknowledged' });
             } catch (error) {
-                // Silently ignore "No tab with id" errors - expected when tab closes
+                // Expected: tab may have closed
                 if (error.message && error.message.includes('No tab with id')) {
                     Logger.background('[Background] [Early Cache] Tab closed, skipping badge update');
                     sendResponse({ status: 'acknowledged' }); // Still acknowledge
@@ -125,26 +116,21 @@ function registerCacheHandlers(registry, context) {
     const handle_clear_detection_cache = function({ request, sender, sendResponse, context }) {
         void context;
 
-        // Delegate to DetectionEngineManager handler
+        // Clear both storage and in-memory caches
         (async () => {
-            // Clear chrome.storage cache
             await DetectionEngineManager.handleClearDetectionCache(request, sendResponse, manuallyClearedCaches);
 
-            // CRITICAL FIX: Also clear in-memory caches to prevent zombie data
             if (request.tabId) {
-                // Clear detection states (the main culprit of zombie data)
                 if (detectionStates.has(request.tabId)) {
                     detectionStates.delete(request.tabId);
                     Logger.background(`[Background] Cleared detectionStates for tab ${request.tabId}`);
                 }
 
-                // Clear active detection tracking
                 if (activeDetections.has(request.tabId)) {
                     activeDetections.delete(request.tabId);
                     Logger.background(`[Background] Cleared activeDetections for tab ${request.tabId}`);
                 }
 
-                // Clear other related stores
                 headersStore.delete(request.tabId);
                 requestHeadersStore.delete(request.tabId);
                 responseCookiesStore.delete(request.tabId);
@@ -158,7 +144,6 @@ function registerCacheHandlers(registry, context) {
                     Logger.background(`[Background] Tab ${request.tabId} removed from recently cleared list`);
                 }, Constants.RECENTLY_CLEARED_TAB_TIMEOUT);
 
-                // CRITICAL FIX: Update badge to show data was cleared
                 try {
                     await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: request.tabId });
                     await chrome.action.setBadgeBackgroundColor({

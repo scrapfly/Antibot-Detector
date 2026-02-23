@@ -1,9 +1,3 @@
-/**
- * geetest-advanced-ui.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
     /**
      * Render Geetest-specific tools (simplified - 2 buttons only, standardized icons)
      */

@@ -3,10 +3,6 @@
  * Captures DataDome script URLs from network requests
  */
 
-// Guard against re-initialization (use var for service worker reload compatibility)
-var datadomeInterceptionListener = datadomeInterceptionListener || null;
-var datadomeStatusListener = datadomeStatusListener || null;
-
 // Destructure helpers from BaseInterceptorHelpers (use var to avoid redeclaration errors)
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
 

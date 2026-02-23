@@ -1,9 +1,3 @@
-/**
- * imperva-advanced-actions.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
     /**
      * Check Imperva cookies using BaseInterceptorHelpers
      */

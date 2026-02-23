@@ -8,9 +8,8 @@ function registerLoggingHandlers(registry, context) {
     const handle_debug_log = function({ request, sender, sendResponse, context }) {
         void context;
 
-        // Centralized logging - display all logs in service worker console
+        // Route content/main-world logs to service worker console
         if (request.context && request.level && request.args) {
-            // NOTE: Avoid JSON.parse here: it can allocate huge objects and crash Chrome.
             const levelMap = {
                 warn: Logger.LEVELS.WARN,
                 error: Logger.LEVELS.ERROR,
@@ -37,7 +36,6 @@ function registerLoggingHandlers(registry, context) {
     const handle_log = function({ request, sender, sendResponse, context }) {
         void context;
 
-        // Logger system - output logs from content scripts and main world
         if (request.log) {
             Logger._outputToConsole(request.log);
         }
@@ -47,7 +45,7 @@ function registerLoggingHandlers(registry, context) {
     const handle_scrapfly_debug_log = function({ request, sender, sendResponse, context }) {
         void context;
 
-        // Debug logs from content scripts (only output when debug mode is enabled)
+        // Forward debug logs from content scripts (gated by debug mode)
         (async () => {
             try {
                 const settings = await Utils.getSettings(chrome);
@@ -75,8 +73,7 @@ function registerLoggingHandlers(registry, context) {
     const handle_hook_failure_report = function({ request, sender, sendResponse, context }) {
         void context;
 
-        // Internal diagnostics from MAIN-world HookResilienceManager.
-        // Popup doesn't need these; keep background quiet unless debug mode is enabled.
+        // Hook diagnostics from MAIN world (debug mode only)
         (async () => {
             try {
                 const settings = await Utils.getSettings(chrome);

@@ -1,9 +1,4 @@
-/**
- * CloudflareAdvanced - Cloudflare Bot Management Module
- *
- * Extends BaseAdvancedModule for Cloudflare detection and analysis.
- * Includes tools for checking cookies and capturing Cloudflare challenge scripts.
- */
+// CloudflareAdvanced - Extends BaseAdvancedModule for Cloudflare Bot Management detection
 
 Logger.network('[CloudflareAdvanced] Loading... Dependencies check:', {
     BaseAdvancedModule: typeof BaseAdvancedModule,

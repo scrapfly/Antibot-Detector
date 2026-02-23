@@ -1,9 +1,3 @@
-/**
- * awswaf-advanced-actions.js
- * Split from monolithic file; method bodies intentionally unchanged.
- */
-
-
     /**
      * Check AWS WAF cookies without reload
      */

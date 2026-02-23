@@ -4,7 +4,7 @@
  */
 
 function setupTabListeners() {
-    // Clear data when tab is closed
+    // Clear all data stores and detection state for closed tab
     chrome.tabs.onRemoved.addListener((tabId) => {
         Logger.background(`Scrapfly Background: Tab ${tabId} closed, clearing headers, cookies, payloads, and network URLs`);
         headersStore.delete(tabId);
@@ -13,33 +13,27 @@ function setupTabListeners() {
         payloadStore.delete(tabId);
         networkUrlsStore.delete(tabId);
 
-        // Clear cache tracking for this tab
         if (tabsUsingCache.has(tabId)) {
             tabsUsingCache.delete(tabId);
             Logger.background(`[TabCleanup] Removed tab ${tabId} from cache tracking`);
         }
 
-        // End keepalive operations for this tab
         if (workerKeepaliveManager) {
             workerKeepaliveManager.endOperationsForTab(tabId);
         }
 
-        // Clear detection state tracking
         detectionStates.delete(tabId);
         activeDetections.delete(tabId);
         interruptedDetections.delete(tabId);
 
-        // Clear finalization debounce (cancel pending timeout)
         if (finalizationDebounce.has(tabId)) {
             clearTimeout(finalizationDebounce.get(tabId));
             finalizationDebounce.delete(tabId);
         }
 
-        // Clear batch processing flag
         batchProcessingFlags.delete(tabId);
 
-        // Clear capture states if tab is closed during capture
-        // All providers use TTLMap from background.js with clearCaptureTimeout() for consistent cleanup
+        // Clear capture states for all providers
 
         if (reCaptchaCaptureState.has(tabId)) {
             Logger.background(`[TabCleanup] Tab ${tabId} closed during reCAPTCHA capture, cleaning up`);
@@ -89,7 +83,6 @@ function setupTabListeners() {
             awsWafStopCapture(tabId);
         }
 
-        // Clear the badge for this tab
         chrome.action.setBadgeText({
             text: BADGE.TEXT.EMPTY,
             tabId: tabId
@@ -99,9 +92,7 @@ function setupTabListeners() {
         });
     });
 
-    // Run detection when tab is updated
     chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-        // Check if extension is disabled when page starts loading
         if (changeInfo.status === 'loading' && !await isExtensionEnabled()) {
             Logger.background(`[TabUpdate] Extension is disabled - setting OFF badge for tab ${tabId}`);
             chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tabId }).catch((error) => {
@@ -112,34 +103,29 @@ function setupTabListeners() {
             });
         }
 
-        // Detect URL changes within the same tab (same-tab navigation)
+        // URL change: abort active detection, clear cache tracking
         if (changeInfo.url) {
             const newUrl = changeInfo.url;
             Logger.background(`[TabUpdate] URL change detected for tab ${tabId}: ${newUrl}`);
 
-            // Clear cache tracking ONLY on URL change (not on F5 refresh)
+            // Only clear cache tracking on URL change, not F5 refresh
             if (tabsUsingCache.has(tabId)) {
                 tabsUsingCache.delete(tabId);
                 Logger.background(`[TabUpdate] URL changed - cleared cache tracking for tab ${tabId}`);
             }
 
-            // Check if there's an active detection for this tab
             if (activeDetections.has(tabId)) {
                 const activeInfo = activeDetections.get(tabId);
                 const oldUrl = activeInfo.url;
 
                 Logger.background(`[TabUpdate] Tab ${tabId} had active detection for ${oldUrl} - ABORTING (navigated to ${newUrl})`);
 
-                // Abort the detection process
                 if (activeInfo.abortController) {
                     activeInfo.abortController.abort();
                     Logger.background(`[TabUpdate] Aborted detection for tab ${tabId} (URL changed)`);
                 }
 
-                // Remove from active detections
                 activeDetections.delete(tabId);
-
-                // Mark detection state as interrupted (if it exists)
                 const detectionState = detectionStates.get(tabId);
                 if (detectionState && detectionState.url === oldUrl) {
                     detectionState.interrupted = true;
@@ -147,79 +133,111 @@ function setupTabListeners() {
                     Logger.background(`[TabUpdate] Marked detection state as interrupted for tab ${tabId}`);
                 }
 
-                // Clear badge (new page will set its own badge when detection completes)
                 chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tabId }).catch((error) => {
                     Logger.background(`[TabUpdate] Failed to clear badge for tab ${tabId}:`, error.message);
                 });
             }
 
-            // Note: Detection state will be cleared by getOrCreateDetectionState when new detection starts
         }
 
-        // Handle reCAPTCHA capture updates - only monitors active captures
+        // Delegate capture tab updates to provider handlers
         if (typeof reCaptchaHandleCaptureTabUpdate === 'function') {
             reCaptchaHandleCaptureTabUpdate(tabId, changeInfo, tab, chrome);
         }
-
-        // Handle Akamai capture updates - only monitors active captures
         if (typeof akamaiHandleCaptureTabUpdate === 'function') {
             akamaiHandleCaptureTabUpdate(tabId, changeInfo, tab);
         }
-
-        // Handle Imperva capture updates - only monitors active captures
         if (typeof impervaHandleCaptureTabUpdate === 'function') {
             impervaHandleCaptureTabUpdate(tabId, changeInfo, tab);
         }
-
-        // Handle AWS WAF capture updates - only monitors active captures
         if (typeof awsWafHandleCaptureTabUpdate === 'function') {
             awsWafHandleCaptureTabUpdate(tabId, changeInfo, tab);
         }
-
-        // Handle AWS WAF analysis updates
         if (typeof awsWafHandleAnalysisTabUpdate === 'function') {
             awsWafHandleAnalysisTabUpdate(tabId, changeInfo, tab);
         }
     });
 
-    // Run detection when active tab changes - detect interruptions and delegate to DetectionEngineManager
     chrome.tabs.onActivated.addListener(async (activeInfo) => {
         const newTabId = activeInfo.tabId;
         Logger.background(`[TabSwitch] Tab activated: ${newTabId}, previous: ${currentActiveTab}`);
 
-        // Check if user is returning to a previously interrupted tab - clear interrupted state
+        // Clear stale interrupted state when user returns to tab
         if (interruptedDetections.has(newTabId)) {
             Logger.background(`[TabSwitch] User returned to tab ${newTabId} - clearing any stale interrupted state`);
             interruptedDetections.delete(newTabId);
-            // Don't modify badge here - let popup query get fresh data and update badge appropriately
         }
 
-        // Check if previous tab had an active detection that should be interrupted
         if (currentActiveTab !== null && activeDetections.has(currentActiveTab)) {
             const previousTabId = currentActiveTab;
 
-            // FIX: Only interrupt if new tab is a valid content tab (not popup/devtools/etc)
-            // This prevents false interruptions when popup opens on same webpage
+            // Only interrupt if new tab is a content tab (skip popup/devtools/chrome://)
             try {
                 const newTab = await chrome.tabs.get(newTabId);
-                // Skip interruption if new tab is not a valid content tab
                 if (!newTab || !newTab.url || newTab.url.startsWith('chrome://') || newTab.url.startsWith('chrome-extension://')) {
                     Logger.background(`[TabSwitch] New tab ${newTabId} is not a valid content tab (url: ${newTab?.url || 'none'}) - skipping interruption`);
-                    // Update current active tab and continue without interrupting
                     currentActiveTab = newTabId;
                     return;
                 }
             } catch (error) {
                 Logger.background(`[TabSwitch] Failed to validate new tab ${newTabId}:`, error.message);
-                // On error, assume it's invalid and skip interruption
                 currentActiveTab = newTabId;
                 return;
             }
 
-            // Let detections complete in background when tab switches
-            // Chrome tabs continue executing even when not focused
-            // Detection will complete naturally and cache results
+            // Detections continue in background; Chrome tabs keep executing when unfocused
             Logger.background(`[TabSwitch] Tab ${previousTabId} detection will continue in background`);
+        }
+        // Restore badge from cache, or trigger detection for uncached activated tabs.
+        try {
+            const tab = await chrome.tabs.get(newTabId);
+            if (!tab || !tab.url) {
+                currentActiveTab = newTabId;
+                return;
+            }
+
+            const url = tab.url;
+            if (!Utils.isValidContentScriptUrl(url)) {
+                currentActiveTab = newTabId;
+                return;
+            }
+
+            if (!await isExtensionEnabled()) {
+                currentActiveTab = newTabId;
+                return;
+            }
+
+            const detectionState = detectionStates.get(newTabId);
+            const hasInFlightDetection = activeDetections.has(newTabId) || (detectionState && !detectionState.finalized);
+
+            const cachedData = await DetectionEngineManager.getDetectionData(newTabId);
+            if (cachedData) {
+                const detectionResults = cachedData.detectionResults || [];
+                await setBadgeForDetections(newTabId, url, detectionResults);
+                Logger.background(`[TabSwitch] Badge restored for tab ${newTabId}: ${detectionResults.length} detection(s)`);
+            } else if (!hasInFlightDetection && !recentlyClearedTabs.has(newTabId)) {
+                const requested = await requestDetectionForTab(newTabId, {
+                    source: 'tab_activated',
+                    silent: false
+                });
+
+                if (requested) {
+                    Logger.background(`[TabSwitch] Triggered detection for uncached tab ${newTabId}`);
+                } else {
+                    const badgeText = await chrome.action.getBadgeText({ tabId: newTabId }).catch(() => '');
+                    if (badgeText === BADGE.TEXT.DISABLED || badgeText === BADGE.TEXT.LOADING) {
+                        await chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: newTabId }).catch(() => {});
+                    }
+                }
+            } else if (!hasInFlightDetection) {
+                const badgeText = await chrome.action.getBadgeText({ tabId: newTabId }).catch(() => '');
+                if (badgeText === BADGE.TEXT.DISABLED || badgeText === BADGE.TEXT.LOADING) {
+                    await chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: newTabId }).catch(() => {});
+                }
+            }
+        } catch (error) {
+            // Expected: tab may have closed during async operations
+            Logger.background(`[TabSwitch] Badge sync skipped for tab ${newTabId}: ${error.message}`);
         }
 
         // Update current active tab
@@ -227,4 +245,5 @@ function setupTabListeners() {
 
     });
 }
+
 

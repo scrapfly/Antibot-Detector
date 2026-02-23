@@ -10,10 +10,7 @@
   let debugMode = false; // Will be set by ISOLATED world
   let logCollectorEnabled = false;
 
-  // When the extension itself reads properties (e.g., WindowPropertyTracker),
-  // those reads can traverse the same getters we hook for JS_HOOKS. That would
-  // create false positives and can prematurely uninstall hooks. Use a depth
-  // counter so internal reads can temporarily suppress hook reporting.
+  // Suppress hook reporting during extension-driven property reads
   const HOOK_SUPPRESSION_DEPTH_KEY = '__scrapflyHookSuppressionDepth';
 
   function isHookReportingSuppressed() {
@@ -36,28 +33,22 @@
   let logRateWindowStart = Date.now();
   let logRateCount = 0;
 
-  // Centralized configuration (7.7 - removes magic numbers)
+  // Completion timeouts, window polling, and memory limits
   const DEFAULT_HOOKS_CONFIG = Object.freeze({
-    // Completion timeouts - Multi-layer timeout system
-    ACTIVITY_TIMEOUT_MS: 2000,      // Inactivity before completion (resets on activity)
-    MAX_DETECTION_MS: 8000,         // Absolute maximum wait for hooks
-    EMERGENCY_TIMEOUT_MS: 12000,    // Emergency fallback (should never fire)
-    HEARTBEAT_TIMEOUT_MS: 25000,    // Heartbeat check (worker still alive?)
-
-    // Window property polling (now uses WindowPropertyTracker)
-    POLL_INTERVAL_MS: 100,          // Initial poll interval (EARLY phase)
-    DEFAULT_MAX_WINDOW_MS: 60000,   // Extended to 60s for late-loading properties
-    SETTLED_CHECKS: 50,             // Checks before "settled"
-
-    // Memory limits
-    MAX_INSTALLED_HOOKS: 500,       // Safety cap
-    MAX_DETECTIONS_PER_TAB: 100     // Safety cap
+    ACTIVITY_TIMEOUT_MS: 2000,
+    MAX_DETECTION_MS: 8000,
+    EMERGENCY_TIMEOUT_MS: 12000,
+    HEARTBEAT_TIMEOUT_MS: 25000,
+    POLL_INTERVAL_MS: 100,
+    DEFAULT_MAX_WINDOW_MS: 60000,
+    SETTLED_CHECKS: 50,
+    MAX_INSTALLED_HOOKS: 500,
+    MAX_DETECTIONS_PER_TAB: 100
   });
 
   // Active hooks config (merged from settings on install)
   let activeHooksConfig = { ...DEFAULT_HOOKS_CONFIG };
 
-  // Clamp helper to keep settings within safe limits
   function clampNumber(value, min, max, fallback) {
     const num = Number(value);
     if (!Number.isFinite(num)) return fallback;
@@ -95,7 +86,7 @@
     return getErrorMessage(err).includes('Illegal invocation');
   };
 
-  // Global error handler: Prevent hook errors from breaking page
+  // Suppress hook-related errors from breaking the page
   window.addEventListener('error', (event) => {
     if (event.filename && event.filename.includes('content-main-world')) {
       event.preventDefault();
@@ -103,8 +94,7 @@
     }
   }, true);
 
-  // Promise rejections from hook wrappers can surface as "Uncaught (in promise) ... Illegal invocation"
-  // in the page console. We only suppress ones that originate from this file.
+  // Suppress unhandled promise rejections from hook wrappers
   window.addEventListener('unhandledrejection', (event) => {
     try {
       const msg = getErrorMessage(event.reason);
@@ -127,10 +117,7 @@
   const pageReadyCallbacks = [];
 
 
-  // Early bind shims: prevent "Illegal invocation" even if page code calls APIs unbound
-  // (e.g., const f = navigator.getBattery; f()) before detector-driven hooks are installed.
-  // These shims are tiny and safe; later detection wrappers will wrap these shims (and uninstall
-  // back to them), so the page stays stable throughout.
+  // Early bind shims: prevent "Illegal invocation" for unbound API calls
   const EARLY_BIND_SHIMS = [
     {
       target: 'Navigator.prototype.getBattery',
@@ -170,9 +157,7 @@
       }
     };
 
-    // Mark as shimmed to prevent double-shimming
     Object.defineProperty(shim, '__scrapflyBindShim', { value: true });
-    // Stealth: make toString look native
     Object.defineProperty(shim, 'toString', {
       value: function toString() {
         return Function.prototype.toString.call(original);
@@ -282,8 +267,7 @@
     }
   }
 
-  // Helper to send logs to service worker (only when debug enabled)
-  // Logs are only sent to background/service-worker, not to page console
+  // Send debug logs to service worker when debug mode enabled
   const formatLogArg = (arg) => {
     if (arg === null || arg === undefined) return String(arg);
     if (typeof arg === 'string') return arg;
@@ -537,10 +521,7 @@
     return stats;
   }
 
-  // Cache hit flag - set by ISOLATED world when cache hit detected
-  // IMPORTANT: Don't rely on sessionStorage for cache-hit decisions.
-  // Cache hits are confirmed asynchronously by the ISOLATED world/background and signaled via postMessage.
-  // This avoids stale cache-hit flags after manual cache clears or settings changes.
+  // Cache hit confirmed async by ISOLATED world/background via postMessage
   window.__scrapflyCacheHitEarlyExit = false;
 
   // Listen for disable monitoring message from ISOLATED world (cache hit)
@@ -659,7 +640,6 @@
     }
   });
 
-  // Wait for hook configuration from ISOLATED world
   window.addEventListener('scrapfly-install-hooks', (event) => {
     // Check if cache hit - skip hook installation entirely
     if (shouldSkipDueToCacheHit()) {
@@ -743,7 +723,7 @@
             }
           });
 
-          // Start adaptive polling (4 phases: EARLY 100ms → NORMAL 200ms → LATE 500ms → FINAL 1000ms)
+          // Start adaptive polling: EARLY 100ms -> NORMAL 200ms -> LATE 500ms -> FINAL 1000ms
           tracker.startPolling();
           sendLog('log', '[Window Props] WindowPropertyTracker started with adaptive 60s polling');
         } else {
@@ -820,7 +800,6 @@
       activeHooksConfig.MAX_DETECTION_MS,
       Math.max(4000, activeHooksConfig.ACTIVITY_TIMEOUT_MS * 2)
     );
-    // REMOVED: bufferedDetections array - no longer needed with always-on monitoring
 
     // Unified completion system with single entry point
     // Prevents race conditions between activity timeout (2s) and max timeout (3s)
@@ -840,7 +819,7 @@
 
       // Cleanup: uninstall any remaining hooks (only needed for timeout completions)
       if (reason !== 'no_hooks' && reason !== 'cache_hit') {
-        // Show summary
+        // Log fired hooks summary before uninstalling unfired ones
         sendLog('log', `[Hooks MAIN] DETECTION SUMMARY:`);
         sendLog('log', `[Hooks MAIN]    Hooks that FIRED: ${triggeredHooks.size}/${originalHooksCount || 0}`);
 
@@ -849,9 +828,7 @@
           sendLog('log', `[Hooks MAIN]    Fired hooks:`, firedHooksList);
         }
 
-        // Uninstall remaining unfired hooks
         if (installedHooks.size > 0) {
-          // Log unfired hooks BEFORE uninstalling (for debugging)
           const unfiredHooks = Array.from(installedHooks.keys()).sort();
           sendLog('log', `[Hooks MAIN]    Hooks that NEVER FIRED: ${installedHooks.size}`);
           sendLog('log', `[Hooks MAIN]    Unfired hooks:`, unfiredHooks);
@@ -1016,13 +993,10 @@
         sendLog('log', `[Hooks MAIN] Duplicate hook detected: ${hookTarget} (resetting completion timer)`);
       }
 
-      // CRITICAL: Always reset completion timer - OLD SYSTEM behavior
-      // Even if this is a duplicate detection, reset the timer
-      // This ensures: "No activity for 2 seconds = detection complete"
+      // Reset completion timer even for duplicates (no activity for 2s = complete)
       scheduleCompletion();
 
-      // IMMEDIATE UNINSTALL: Uninstall hook as soon as it fires (reduces overhead)
-      // Each hook target only needs to fire once to be detected for all associated detectors
+      // Uninstall hook immediately after firing to reduce overhead
       if (newDetections > 0) {
         const uninstalled = uninstallHook(hookTarget);
         if (uninstalled) {
@@ -1069,9 +1043,8 @@
             // Silently fail - detection error shouldn't break page API
           }
         }
-        // FIX: Use natural 'this' binding for prototype methods
-        // For methods like getBattery(), enumerateDevices(), etc., 'this' must be the actual instance
-        // explicitContext (object instance) is used as a fallback when 'this' is missing
+        // Use natural 'this' binding for prototype methods (e.g. getBattery, enumerateDevices)
+        // explicitContext (object instance) is fallback when 'this' is missing
         // (e.g., destructured calls: const { getBattery } = navigator; getBattery())
         const dynamicContext = (explicitContext && typeof explicitContext !== 'function')
           ? explicitContext
@@ -1255,13 +1228,13 @@
       }
     }
 
-    // DEBUG #1: Track installation success/failure with DETAILED logging
+    // Track installation success/failure
     let successCount = 0;
     let failCount = 0;
     const failed = [];
-    const expectedFailed = []; // Expected failures (APIs not available in all contexts)
-    const installed = new Map(); // target -> { detectors: Set, fallbackContext }
-    const failureReasons = {}; // target -> reason array
+    const expectedFailed = [];
+    const installed = new Map();
+    const failureReasons = {};
 
     // APIs that are not always available (browser-specific, requires HTTPS, needs permissions, etc.)
     const EXPECTED_UNAVAILABLE = ['USB.getDevices', 'USB.requestDevice', 'DeviceOrientationEvent', 'DeviceMotionEvent', 'BatteryManager'];
@@ -1335,9 +1308,7 @@
     );
     sendLog('log', `[Hooks MAIN] Waiting for page to trigger fingerprinting APIs (max ${activeHooksConfig.MAX_DETECTION_MS}ms, activity ${activeHooksConfig.ACTIVITY_TIMEOUT_MS}ms, min ${plannedMinMonitorMs}ms)...`);
 
-    // IMMEDIATE UNINSTALL FIX: Save original hooks list for accurate completion statistics
-    // Since hooks are uninstalled immediately when they fire, installedHooks.size decreases over time
-    // We need the original list to calculate which hooks never fired
+    // Save original hooks list since they're uninstalled when they fire
     const originallyInstalledHooks = Array.from(installedHooks.keys());
     const originalHooksCount = originallyInstalledHooks.length;
 

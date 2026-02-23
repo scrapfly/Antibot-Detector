@@ -1,9 +1,4 @@
-/**
- * ShapeSecurityAdvanced - Using BaseAdvancedModule Template System
- *
- * Advanced tools for Shape Security detection and analysis
- * Similar structure to Imperva module with capture and analysis features
- */
+// ShapeSecurityAdvanced - Extends BaseAdvancedModule for Shape Security detection
 
 Logger.network('[ShapeSecurityAdvanced] Loading... Dependencies check:', {
     BaseAdvancedModule: typeof BaseAdvancedModule,

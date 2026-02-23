@@ -1,7 +1,4 @@
-/**
- * detection-engine-extractors.js - extracted helpers for DetectionEngineManager.
- * Loaded before detection-engine-manager.js in classic script mode.
- */
+// Data extraction helpers for DetectionEngineManager
 
 function demExtractCookies() {
     const cookies = [];
@@ -42,7 +39,7 @@ function demExtractScriptElements() {
     const scriptElements = document.querySelectorAll('script');
 
     scriptElements.forEach((script) => {
-        // External scripts - store both URL and try to get content
+        // External scripts
         if (script.src) {
             const content = (script.textContent || script.innerHTML || '').trim();
             scripts.push({
@@ -51,7 +48,6 @@ function demExtractScriptElements() {
                 content: content || script.src
             });
         }
-        // Inline scripts
         else if (script.textContent || script.innerHTML) {
             const content = (script.textContent || script.innerHTML || '').trim();
             if (content.length > 0) {
@@ -82,9 +78,7 @@ function demExtractDOM() {
         {
             acceptNode: function(node) {
                 const tagName = node.tagName.toLowerCase();
-                // Skip elements we don't care about
                 if (!relevantTags.has(tagName)) {
-                    // But check if element has data attributes we care about
                     if (node.hasAttribute('data-sitekey') ||
                         node.hasAttribute('data-captcha') ||
                         node.hasAttribute('data-callback')) {
@@ -105,7 +99,6 @@ function demExtractDOM() {
         const tagName = element.tagName.toLowerCase();
         nodeCount++;
 
-        // Check for elements with specific data attributes (for non-standard tags)
         if (!relevantTags.has(tagName)) {
             domData.push({
                 selector: tagName,
@@ -114,7 +107,6 @@ function demExtractDOM() {
             continue; // Skip switch statement
         }
 
-        // Process specific elements based on tag type
         switch (tagName) {
             case 'iframe': {
                 const src = element.getAttribute('src') || '';
@@ -142,7 +134,6 @@ function demExtractDOM() {
             case 'div': {
                 const id = element.getAttribute('id') || '';
                 const className = element.getAttribute('class') || '';
-                // Only include if it has meaningful ID or class
                 if (id || className) {
                     domData.push({
                         selector: 'div',
@@ -193,7 +184,6 @@ function demExtractDOM() {
         }
     }
 
-    // Add canvas count if any found
     if (canvasCount > 0) {
         domData.push({
             selector: 'canvas',

@@ -32,23 +32,18 @@ function checkAndFinalizeDetection(tabId) {
         return;
     }
 
-    // SAFETY CHECK: Don't finalize if state was just created (within 500ms)
-    // This prevents race conditions where navigation events trigger premature finalization
+    // Prevent premature finalization on newly created state
     if (state.startTime && (Date.now() - state.startTime < Constants.MIN_DETECTION_TIME)) {
         return;
     }
 
-    // FIX: Check if batches are actively processing - if so, defer finalization check
+    // Skip finalization if batch processing is active
     const batchActive = batchProcessingFlags.get(tabId) === true;
     if (batchActive) {
-        // Don't schedule anything, batch completion will trigger checkAndFinalizeDetection
         return;
     }
 
-    // OPTIMIZATION MEDIUM-TERM #2: Debounce finalization checks (250ms window)
-    // Prevents redundant work when multiple completion signals arrive rapidly
-    // Increased from 10ms to 100ms to reduce timer spam and CPU overhead
-    // Debounce: 400ms = 2 polling cycles for window properties (200ms each)
+    // Debounce finalization checks (400ms = 2 window property polling cycles)
     if (finalizationDebounce.has(tabId)) {
         clearTimeout(finalizationDebounce.get(tabId));
     }
@@ -68,15 +63,12 @@ function checkAndFinalizeDetection(tabId) {
         const methodOrder = ['cookies', 'headers', 'url', 'dom', 'jsHooks', 'windowProperties', 'payload'];
         const missingMethods = methodOrder.filter(m => !currentState.completedMethods.has(m));
 
-        // FIX: Double-check batch processing isn't active
         if (batchProcessingFlags.get(tabId) === true) {
             finalizationDebounce.delete(tabId);
             return;
         }
 
-        // Check if hook batches are still arriving
-        // Wait 100ms after LAST batch arrival to ensure all batches process
-        // Reduced from 2000ms - hooks batch every 10-50ms, so 100ms is sufficient
+        // Wait for batch settle time after last batch arrival
         const timeSinceLastBatch = Date.now() - (currentState.lastHookBatchTime || 0);
         if (currentState.lastHookBatchTime > 0 && timeSinceLastBatch < Constants.BATCH_SETTLE_TIME) {
             const remainingMs = Constants.BATCH_SETTLE_TIME - timeSinceLastBatch;
@@ -86,8 +78,7 @@ function checkAndFinalizeDetection(tabId) {
             return;
         }
 
-        // FIX 6.9: Minimum detection time to prevent race between fast window props and hooks timeout
-        // Ensures at least 500ms has passed since detection started, giving hooks time to fire
+        // Ensure minimum 500ms passed since detection started
         const timeSinceStart = Date.now() - (currentState.startTime || 0);
         if (currentState.startTime && timeSinceStart < Constants.MIN_DETECTION_TIME && !currentState.hooksComplete) {
             const remainingMs = Constants.MIN_DETECTION_TIME - timeSinceStart;
@@ -97,10 +88,8 @@ function checkAndFinalizeDetection(tabId) {
             return;
         }
 
-        // PHASE 1 FIX: More lenient finalization requirements
-        // Instead of waiting for all 7 methods, finalize when we have the main methods (5)
-        // This prevents getting stuck waiting for jsHooks and windowProperties signals
-        const REQUIRED_METHODS = 5; // Reduced from 7 to exclude jsHooks and windowProperties
+        // Lenient finalization: 5 main methods instead of all 7
+        const REQUIRED_METHODS = 5;
         const mainMethodsComplete = ['cookies', 'headers', 'url', 'dom', 'payload'].every(m => currentState.completedMethods.has(m));
 
         // Check if we should finalize
@@ -173,7 +162,7 @@ function checkAndFinalizeDetection(tabId) {
 }
 
 async function finalizeDetection(tabId, state) {
-    // FIX: Mark this tab as finalized to prevent progress updates from overriding the final badge
+    // Prevent progress updates from overriding the final badge
     state.finalized = true;
 
     // End keepalive for this detection
@@ -181,20 +170,15 @@ async function finalizeDetection(tabId, state) {
         workerKeepaliveManager.endOperation(`detection-${tabId}`);
     }
 
-    // Safety check: Don't finalize if detection was interrupted
+    // Skip finalization if detection was interrupted; clean up to prevent zombie state
     if (state.interrupted || interruptedDetections.has(tabId)) {
-        // Still clean up state to prevent zombie entries (fixes badge stuck on "✕")
         detectionStates.delete(tabId);
         activeDetections.delete(tabId);
-        // Note: Don't delete from interruptedDetections here - let PAGE_LOAD_NOTIFICATION handle it
-        // This way the popup knows to show "interrupted" state until user navigates
         Logger.background(`[Finalize] Detection interrupted for tab ${tabId}, cleaned up state`);
         return;
     }
 
-    // SAFETY CHECK: Don't finalize if ALL data is empty AND no methods completed
-    // This catches race conditions where finalization is triggered before any detection runs
-    // FIX: Allow finalization even with empty results if methods actually completed
+    // Allow finalization if methods completed, even with empty results
     const hasHooksData = state.hooksData && state.hooksData.size > 0;
     const hasMainData = state.mainData && state.mainData.length > 0;
     const hasCompletedMethods = state.completedMethods && state.completedMethods.size > 0;
@@ -203,28 +187,23 @@ async function finalizeDetection(tabId, state) {
         return; // Don't finalize with empty data AND no completed methods
     }
 
-    // Merge hooks and main detection
+    // Merge hooks and main detection by detectorId
     const mergedDetections = new Map();
 
-    // Add hooks data
     for (const [detectorId, detector] of state.hooksData.entries()) {
         mergedDetections.set(detectorId, detector);
     }
 
-    // Add main detection data (merge if detector already exists from hooks)
     for (const detector of state.mainData) {
         const detectorId = detector.detector?.id || detector.id;
         if (mergedDetections.has(detectorId)) {
-            // Merge: combine matches and detection methods
             const existing = mergedDetections.get(detectorId);
             existing.matches = [...existing.matches, ...(detector.matches || [])];
 
-            // Safely merge detectionMethods arrays
             const existingMethods = existing.detectionMethods || [];
             const newMethods = detector.detectionMethods || [];
             existing.detectionMethods = [...new Set([...existingMethods, ...newMethods])];
         } else {
-            // Ensure detector has detectionMethods array
             if (!detector.detectionMethods) {
                 detector.detectionMethods = [];
             }
@@ -233,12 +212,13 @@ async function finalizeDetection(tabId, state) {
     }
 
     const finalResults = Array.from(mergedDetections.values());
+    const normalizedFavicon = UrlUtils.normalizeFaviconForStorage(state.favicon, state.url);
 
     // Store to cache
     const pageData = {
         url: state.url,
         hostname: UrlUtils.getHostnameFromUrl(state.url),
-        favicon: state.favicon || UrlUtils.getFaviconUrl(state.url)
+        favicon: normalizedFavicon
     };
 
     const storedDataWithExpiry = await DetectionEngineManager.storeDetection(state.url, pageData, finalResults);
@@ -251,55 +231,7 @@ async function finalizeDetection(tabId, state) {
     }
 
     // Update badge with appropriate color
-    const detectionCount = finalResults.length;
-    if (detectionCount > 0) {
-        // Check if URL is blacklisted before setting badge
-        const isBlacklisted = await Utils.isUrlBlacklisted(state.url);
-
-        if (!isBlacklisted) {
-            // Load badge colors from CategoryManager
-            const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
-
-            const count = detectionCount.toString();
-            const avgConfidence = DetectionUtils.computeAverageConfidence(finalResults);
-            const difficulty = DetectionUtils.getDifficultyLevel(finalResults, avgConfidence);
-            const color = difficulty === 'High' ? badgeColors.high :
-                         difficulty === 'Medium' ? badgeColors.medium :
-                         badgeColors.low;
-
-            try {
-                await Promise.all([
-                    chrome.action.setBadgeText({ text: count, tabId: tabId }),
-                    chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabId })
-                ]);
-            } catch (error) {
-                // Expected: Tab might be closed - don't log as error
-                Logger.background(`[Finalize] Tab ${tabId} closed, skipping badge update`);
-            }
-        } else {
-            // Show blacklisted badge
-            try {
-                await Promise.all([
-                    chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId: tabId }),
-                    chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tabId })
-                ]);
-            } catch (error) {
-                // Expected: Tab might be closed
-                Logger.background(`[Finalize] Tab ${tabId} closed, skipping badge update`);
-            }
-        }
-    } else {
-        // Show clean page badge (no detections)
-        try {
-            await Promise.all([
-                chrome.action.setBadgeText({ text: BADGE.TEXT.CLEAN, tabId: tabId }),
-                chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId: tabId })
-            ]);
-        } catch (error) {
-            // Expected: Tab might be closed
-            Logger.background(`[Finalize] Tab ${tabId} closed, skipping badge update`);
-        }
-    }
+    await setBadgeForDetections(tabId, state.url, finalResults);
 
     // Notify popup
     chrome.runtime.sendMessage({
@@ -325,22 +257,24 @@ async function finalizeDetection(tabId, state) {
         Logger.background(`[Finalize] Could not notify content script for JS API: ${error.message}`);
     }
 
-    // FIX: Save merged results to history (includes both main detections AND hooks/fingerprints)
-    // This ensures fingerprints detected via JS hooks are also saved to history
+    // Save complete detections (includes hooks/fingerprints) to history
     if (finalResults.length > 0) {
         try {
             const pageData = {
                 url: state.url,
                 hostname: UrlUtils.getHostnameFromUrl(state.url),
                 tabTitle: state.tabTitle,
-                favicon: state.favicon || UrlUtils.getFaviconUrl(state.url)
+                favicon: UrlUtils.normalizeFaviconForStorage(state.favicon, state.url)
             };
 
             const historySettings = await Utils.getHistorySettings();
             const shouldSave = await History.shouldSaveToHistory(state.url, historySettings, chrome);
 
             if (shouldSave) {
-                await History.saveDetectionToHistory(tabId, pageData, finalResults, chrome);
+                await History.saveDetectionToHistory(tabId, pageData, finalResults, chrome, {
+                    historySettings,
+                    source: 'finalize'
+                });
             }
         } catch (error) {
             Logger.error('DETECTION', '[Finalize] Error saving to history:', error);
@@ -357,7 +291,7 @@ async function finalizeDetection(tabId, state) {
         interruptedDetections.delete(tabId);
     }
 
-    // OPTIMIZED 3.2: State is auto-cleaned by TTL, but we can delete eagerly
+    // Eagerly delete state (TTL would clean up eventually)
     detectionStates.delete(tabId);
 
     // Clean up payloads after detection completes (they were stored for this detection)
@@ -384,27 +318,19 @@ async function finalizeDetection(tabId, state) {
         responseCookiesStore.delete(tabId);
     }
 
-    // NOTE: We don't clear tabsUsingCache here anymore!
-    // The flag persists across F5 refreshes to prevent race condition where
-    // webRequest fires before CHECK_CACHE_EARLY completes.
-    // The flag is only cleared when URL actually changes (see chrome.tabs.onUpdated handler)
+    // Cache flag persists across F5 to prevent race conditions; cleared on URL change only
 }
 
-/**
- * Migrate legacy storage keys into current format.
- *
- * - Moves `scrapfly_detection_storage` into `scrapfly_history` (cache now lives in history)
- * - Removes unused legacy keys like `scrapfly_detection_state`
- * - Removes legacy log-collector keys (now stored inside `scrapfly_settings`)
- */
-
 function enrichPageDataWithTabInfo(pageData, tab) {
+    const pageUrl = tab.url || pageData.url || pageData.hostname;
+    const favicon = UrlUtils.normalizeFaviconForStorage(tab.favIconUrl || pageData.favicon, pageUrl);
+
     return {
         ...pageData,
         tabId: tab.id,
         tabUrl: tab.url,
         tabTitle: tab.title,
-        favicon: tab.favIconUrl
+        favicon: favicon
     };
 }
 
@@ -447,7 +373,7 @@ async function processDetectionData(message, sender) {
         Logger.error('BACKGROUND', 'Failed to set loading badge:', error);
     }
 
-    // Add response headers if available (backward compatibility - keep as pageData.headers)
+    // Attach response headers (backward-compatible as pageData.headers)
     if (headersStore.has(tabId)) {
         const headerData = headersStore.get(tabId);
 
@@ -456,7 +382,7 @@ async function processDetectionData(message, sender) {
             pageData.headers = headerData.headers; // Response headers (backward compatibility)
             pageData.responseHeaders = headerData.headers; // Also store explicitly as responseHeaders
 
-            // OPTIMIZED 3.3: Eager delete (TTL will clean up anyway, but we can help)
+            // Eager delete after use
             headersStore.delete(tabId);
         }
     }
@@ -483,8 +409,7 @@ async function processDetectionData(message, sender) {
         }
     }
 
-    // Add request payloads if available (POST/PUT/PATCH bodies)
-    // Now handles ARRAY of payloads per tab
+    // Attach request payloads (array of POST/PUT/PATCH bodies per tab)
     if (payloadStore.has(tabId)) {
         const payloadsArray = payloadStore.get(tabId);
 
@@ -527,8 +452,7 @@ async function processDetectionData(message, sender) {
 
     // Note: Request cookies are already in pageData.cookies (from document.cookie in content script)
 
-    // ENHANCEMENT: Collect ALL cookies via chrome.cookies API (includes HttpOnly cookies)
-    // This supplements document.cookie which cannot access HttpOnly, Secure, or domain-specific cookies
+    // Collect all cookies via chrome.cookies API (includes HttpOnly, Secure, domain-specific)
     try {
         const allCookies = await chrome.cookies.getAll({ url: pageData.url });
 
@@ -593,9 +517,7 @@ async function processDetectionData(message, sender) {
             const elapsed = Date.now() - startTime;
             Logger.background(`[processDetectionData] Main detection completed in ${elapsed}ms: ${detectionResults.length} detectors found`);
 
-            // GRANULAR PROGRESS: Send incremental updates for main detection methods
-            // Mark each method complete as it finishes detection
-            // FIX: Use markMethodComplete to properly track progress and trigger finalization
+            // Mark each main detection method complete
             const mainMethods = ['cookies', 'headers', 'url', 'dom', 'payload'];
             for (const method of mainMethods) {
                 markMethodComplete(tabId, method);
@@ -655,8 +577,7 @@ async function processDetectionData(message, sender) {
             return; // Don't store results for the wrong URL
         }
 
-        // Merge with existing mainData (window properties may have been added already)
-        // Instead of replacing, merge detections by detectorId
+        // Merge with existing mainData by detectorId (window properties may already exist)
         const existingDetections = new Map();
         for (const existing of state.mainData) {
             const id = existing.detector?.id || existing.id;
@@ -672,8 +593,7 @@ async function processDetectionData(message, sender) {
                 const existingMatches = existing.matches || [];
                 const newMatches = newDetection.matches || [];
 
-                // Use Set for O(1) deduplication instead of O(n) Array.some()
-                // Build lookup set from existing matches for fast duplicate detection
+                // O(1) deduplication via Set
                 const matchKeys = new Set();
                 for (const match of existingMatches) {
                     matchKeys.add(generateMatchKey(match));
@@ -709,12 +629,9 @@ async function processDetectionData(message, sender) {
 
         Logger.background(`[processDetectionData] Main detection complete: ${detectionResults.length} detectors`);
 
-        // Keep loading badge while detection is still in-memory/finalizing.
-        // Final numeric/clean badge is set only in finalizeDetection() after cache write.
+        // Final badge is set in finalizeDetection() after cache write
 
-        // PHASE 1 FIX: Safety timeout for completion signals
-        // Wait longer (5 seconds) to give main detection time to complete
-        // This prevents the badge from being stuck at percentage (e.g., 29%)
+        // 5s safety timeout to force finalization if signals are stuck
         setTimeout(async () => {
             const currentState = detectionStates.get(tabId);
             if (!currentState) {
@@ -761,7 +678,7 @@ async function processDetectionData(message, sender) {
                 }
             }
 
-            // CRITICAL FIX: Check if detection data is ALREADY stored
+            // Check if detection data is already stored
             const storedData = await DetectionEngineManager.getStoredDetection(currentState.url);
             if (storedData) {
                 Logger.background(`[5s safety] Detection already stored for tab ${tabId}, finalizing`);
@@ -781,9 +698,6 @@ async function processDetectionData(message, sender) {
         // Check if all methods are done
         checkAndFinalizeDetection(tabId);
 
-        // FIX: Removed early history save - history is now saved ONLY in finalizeDetection()
-        // This prevents duplicate saves and ensures history contains complete data (including hooks)
-        // Early save here would miss JS hooks which arrive later via batching
         Logger.detection('[processDetectionData] Skipping early history save - will save complete data during finalization');
     } catch (error) {
         Logger.error('BACKGROUND', 'Scrapfly Background: Error running detection:', error);
@@ -799,10 +713,8 @@ async function processDetectionData(message, sender) {
         detections: detectionResults.length
     });
 
-    // FIX: Don't notify popup here - wait for finalization when ALL methods complete
-    // This prevents showing partial results before hooks/window properties are analyzed
-    // Notification is sent in finalizeDetection() after 100% completion
-    
+    // Defer popup notification until finalization with complete results
+
     // Send webhook if enabled
     if (detectionResults.length > 0) {
         await Settings.sendWebhookIfEnabled(pageData, detectionResults);
