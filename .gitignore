@@ -62,8 +62,8 @@ temp/
 *.crx
 *.pem
 
-# Documentation that might be auto-generated
-docs/_build/
+# Documentation
+docs/
 *.pdf
 
 # Backup files
