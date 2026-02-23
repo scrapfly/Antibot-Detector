@@ -71,9 +71,6 @@ Scrapfly Anti-bot Detector is a Manifest V3 Chrome extension that helps security
 - **Context Isolation**: Proper separation between MAIN and ISOLATED worlds
 - **Safe Conditions**: Pre-compiled evaluators (no eval/arbitrary code execution)
 
-<div align="center">
-<img src="assets/scrapfly-screenshot-2-1280x800.png" alt="Powerful Detection Features" width="600">
-</div>
 
 
 ## Usage
@@ -252,5 +249,6 @@ See the [LICENSE](LICENSE) file for complete terms and conditions.
 <div align="center">
 
 </div>
+
 
 
