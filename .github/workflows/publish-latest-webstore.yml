@@ -1,0 +1,127 @@
+name: Submit Latest Release to Chrome Web Store
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish immediately after upload'
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: webstore-submit-latest-release
+  cancel-in-progress: false
+
+jobs:
+  submit_latest_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate required secrets
+        env:
+          WEBSTORE_EXTENSION_ID: ${{ secrets.WEBSTORE_EXTENSION_ID }}
+          WEBSTORE_CLIENT_ID: ${{ secrets.WEBSTORE_CLIENT_ID }}
+          WEBSTORE_CLIENT_SECRET: ${{ secrets.WEBSTORE_CLIENT_SECRET }}
+          WEBSTORE_REFRESH_TOKEN: ${{ secrets.WEBSTORE_REFRESH_TOKEN }}
+        run: |
+          set -euo pipefail
+          missing=()
+
+          for var_name in WEBSTORE_EXTENSION_ID WEBSTORE_CLIENT_ID WEBSTORE_CLIENT_SECRET WEBSTORE_REFRESH_TOKEN; do
+            if [ -z "${!var_name:-}" ]; then
+              missing+=("$var_name")
+            fi
+          done
+
+          if [ "${#missing[@]}" -gt 0 ]; then
+            echo "Missing required secrets: ${missing[*]}" >&2
+            exit 1
+          fi
+
+      - name: Resolve latest release and ZIP asset
+        id: resolve_release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = 'scrapfly';
+            const repo = 'Antibot-Detector';
+
+            const { data: release } = await github.rest.repos.getLatestRelease({
+              owner,
+              repo
+            });
+
+            const assets = Array.isArray(release.assets) ? release.assets : [];
+            const preferredAsset = assets.find((asset) => /^antibot-detector-.*\.zip$/i.test(asset.name));
+            const fallbackAsset = assets.find((asset) => /\.zip$/i.test(asset.name));
+            const selectedAsset = preferredAsset || fallbackAsset;
+
+            if (!selectedAsset) {
+              core.setFailed(`No zip asset found in latest release ${release.tag_name} from ${owner}/${repo}.`);
+              return;
+            }
+
+            core.info(`Using release ${release.tag_name} and asset ${selectedAsset.name}`);
+            core.setOutput('source_owner', owner);
+            core.setOutput('source_repo', repo);
+            core.setOutput('release_tag', release.tag_name);
+            core.setOutput('release_name', release.name || '');
+            core.setOutput('asset_name', selectedAsset.name);
+
+      - name: Download selected release asset
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p artifact
+
+          gh release download "${{ steps.resolve_release.outputs.release_tag }}" \
+            --repo "${{ steps.resolve_release.outputs.source_owner }}/${{ steps.resolve_release.outputs.source_repo }}" \
+            --pattern "${{ steps.resolve_release.outputs.asset_name }}" \
+            --dir artifact \
+            --clobber
+
+      - name: Verify downloaded asset
+        id: verify_asset
+        run: |
+          set -euo pipefail
+          asset_path="artifact/${{ steps.resolve_release.outputs.asset_name }}"
+
+          if [ ! -f "$asset_path" ]; then
+            echo "Downloaded asset not found: $asset_path" >&2
+            ls -la artifact || true
+            exit 1
+          fi
+
+          if [ ! -s "$asset_path" ]; then
+            echo "Downloaded asset is empty: $asset_path" >&2
+            exit 1
+          fi
+
+          echo "asset_path=$asset_path" >> "$GITHUB_OUTPUT"
+
+      - name: Upload to Chrome Web Store
+        uses: mnao305/chrome-extension-upload@v5.0.0
+        with:
+          extension-id: ${{ secrets.WEBSTORE_EXTENSION_ID }}
+          file-path: ${{ steps.verify_asset.outputs.asset_path }}
+          client-id: ${{ secrets.WEBSTORE_CLIENT_ID }}
+          client-secret: ${{ secrets.WEBSTORE_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.WEBSTORE_REFRESH_TOKEN }}
+          publish: ${{ inputs.publish }}
+
+      - name: Write run summary
+        run: |
+          {
+            echo "## Chrome Web Store Submission"
+            echo ""
+            echo "- Source repository: \`${{ steps.resolve_release.outputs.source_owner }}/${{ steps.resolve_release.outputs.source_repo }}\`"
+            echo "- Release tag: \`${{ steps.resolve_release.outputs.release_tag }}\`"
+            echo "- Release name: \`${{ steps.resolve_release.outputs.release_name || 'N/A' }}\`"
+            echo "- Asset: \`${{ steps.resolve_release.outputs.asset_name }}\`"
+            echo "- Publish mode: \`${{ inputs.publish }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
