@@ -26,7 +26,7 @@ body {
   max-height: 200px;
 }
 
-.header-content {
+.header > .header-content {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -221,6 +221,22 @@ body {
 .tab-btn:hover {
   background: var(--bg-tertiary);
   color: var(--text-secondary);
+}
+
+/* Keyboard-only focus indicator (avoids ring on mouse click) */
+.tab-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.toggle-input:focus-visible + .toggle-label .toggle-slider {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.settings-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .tab-btn.active {
@@ -479,7 +495,14 @@ body {
 .history-favicon {
   width: 16px;
   height: 16px;
+  min-width: 16px;
+  max-width: 16px;
+  max-height: 16px;
   border-radius: 2px;
+  flex-shrink: 0;
+  object-fit: cover;
+  overflow: hidden;
+  display: block;
 }
 
 .history-url {

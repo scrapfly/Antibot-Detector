@@ -1,0 +1,1676 @@
+{
+  "extensionName": {
+    "message": "Scrapfly: rilevatore anti-bot"
+  },
+  "extensionDescription": {
+    "message": "Rileva CAPTCHA, sistemi anti-bot e tecnologie di fingerprinting sui siti web"
+  },
+  "tabDetection": {
+    "message": "Rilevamento"
+  },
+  "tabHistory": {
+    "message": "Cronologia"
+  },
+  "tabRules": {
+    "message": "Regole"
+  },
+  "tabAdvanced": {
+    "message": "Avanzate"
+  },
+  "openSettings": {
+    "message": "Apri impostazioni"
+  },
+  "enableOrDisableDetection": {
+    "message": "Abilita o disabilita il rilevamento"
+  },
+  "noDetectionsFound": {
+    "message": "Nessun rilevamento"
+  },
+  "analyzingPage": {
+    "message": "Analisi della pagina"
+  },
+  "actionRemoveFromBlacklist": {
+    "message": "Rimuovi dalla lista nera"
+  },
+  "advancedDomainBlacklisted": {
+    "message": "Strumenti avanzati disattivati per questo dominio"
+  },
+  "blacklistManageHint": {
+    "message": "Oppure vai su Impostazioni → Rilevamento → Domini in lista nera per gestire."
+  },
+  "statDetections": {
+    "message": "Rilevamenti"
+  },
+  "statConfidence": {
+    "message": "Affidabilità"
+  },
+  "statDifficulty": {
+    "message": "Difficoltà"
+  },
+  "statCacheScope": {
+    "message": "Ambito cache"
+  },
+  "scopeDomain": {
+    "message": "Dominio"
+  },
+  "scopePath": {
+    "message": "Percorso"
+  },
+  "scopeFullUrl": {
+    "message": "URL completo"
+  },
+  "difficultyLow": {
+    "message": "Bassa"
+  },
+  "difficultyMedium": {
+    "message": "Media"
+  },
+  "difficultyHigh": {
+    "message": "Alta"
+  },
+  "searchHistory": {
+    "message": "Cerca cronologia..."
+  },
+  "searchDetectors": {
+    "message": "Cerca rilevatori..."
+  },
+  "paginationPrev": {
+    "message": "Pagina precedente"
+  },
+  "paginationNext": {
+    "message": "Pagina successiva"
+  },
+  "paginationPage": {
+    "message": "Pagina"
+  },
+  "paginationOf": {
+    "message": "di"
+  },
+  "paginationNoItems": {
+    "message": "Nessun elemento da visualizzare"
+  },
+  "paginationCurrentPageAria": {
+    "message": "Numero della pagina corrente"
+  },
+  "btnImport": {
+    "message": "Importa"
+  },
+  "btnExport": {
+    "message": "Esporta"
+  },
+  "btnClear": {
+    "message": "Svuota"
+  },
+  "btnAdd": {
+    "message": "Aggiungi"
+  },
+  "btnUpdate": {
+    "message": "Aggiorna"
+  },
+  "btnClose": {
+    "message": "Chiudi"
+  },
+  "btnSave": {
+    "message": "Salva"
+  },
+  "btnCancel": {
+    "message": "Annulla"
+  },
+  "btnDelete": {
+    "message": "Elimina"
+  },
+  "historyImportTitle": {
+    "message": "Importa cronologia"
+  },
+  "historyExportTitle": {
+    "message": "Esporta cronologia"
+  },
+  "historyClearTitle": {
+    "message": "Svuota cronologia"
+  },
+  "historyEmptyTitle": {
+    "message": "Nessuna cronologia"
+  },
+  "historyEmptyDescription": {
+    "message": "La cronologia di rilevamento apparirà qui mentre navighi."
+  },
+  "rulesUpdateTitle": {
+    "message": "Controlla aggiornamenti rilevatori"
+  },
+  "rulesClearTitle": {
+    "message": "Cancella tutte le regole"
+  },
+  "rulesAddTitle": {
+    "message": "Aggiungi nuovo rilevatore"
+  },
+  "rulesEmptyTitle": {
+    "message": "Nessun rilevatore caricato"
+  },
+  "rulesEmptyDescription": {
+    "message": "I rilevatori appariranno qui una volta caricati dallo storage e dai file."
+  },
+  "ruleModalActionEdit": {
+    "message": "Modifica"
+  },
+  "ruleSectionDetectorInfo": {
+    "message": "Informazioni rilevatore"
+  },
+  "ruleFieldName": {
+    "message": "Nome"
+  },
+  "ruleFieldNamePlaceholder": {
+    "message": "Nome del rilevatore"
+  },
+  "ruleFieldCategory": {
+    "message": "Categoria"
+  },
+  "categoryAntibot": {
+    "message": "Anti-bot"
+  },
+  "categoryCaptcha": {
+    "message": "Captcha"
+  },
+  "categoryFingerprint": {
+    "message": "Fingerprint"
+  },
+  "ruleFieldDifficulty": {
+    "message": "Difficoltà"
+  },
+  "ruleFieldIcon": {
+    "message": "Icona"
+  },
+  "ruleFieldVersion": {
+    "message": "Versione"
+  },
+  "ruleFieldAuthor": {
+    "message": "Autore"
+  },
+  "ruleSectionBadgeColor": {
+    "message": "Colore badge"
+  },
+  "ruleSectionDetectionMethods": {
+    "message": "Metodi di rilevamento"
+  },
+  "settingsTitle": {
+    "message": "Impostazioni"
+  },
+  "settingsSubtitle": {
+    "message": "Configura le preferenze dell'estensione"
+  },
+  "settingsTabGeneral": {
+    "message": "Generale"
+  },
+  "settingsTabDetection": {
+    "message": "Rilevamento"
+  },
+  "settingsTabHistory": {
+    "message": "Cronologia"
+  },
+  "settingsTabData": {
+    "message": "Dati"
+  },
+  "settingsGroupCoreSettings": {
+    "message": "Impostazioni principali"
+  },
+  "settingsCardNotifications": {
+    "message": "Notifiche"
+  },
+  "settingsCardNotificationsDesc": {
+    "message": "Mostra avvisi quando vengono rilevati sistemi di sicurezza"
+  },
+  "settingsCardDebug": {
+    "message": "Modalità debug"
+  },
+  "settingsCardDebugDesc": {
+    "message": "Abilita il logging della console per il debug"
+  },
+  "settingsRowLogCollector": {
+    "message": "Raccoglitore log"
+  },
+  "settingsRowMaxLogs": {
+    "message": "Max log"
+  },
+  "settingsRowCollected": {
+    "message": "Raccolti"
+  },
+  "settingsGroupDetectorUpdates": {
+    "message": "Aggiornamenti rilevatori"
+  },
+  "settingsCardAutoUpdate": {
+    "message": "Controllo automatico aggiornamenti"
+  },
+  "settingsCardAutoUpdateDesc": {
+    "message": "Cerca automaticamente nuove definizioni di rilevatori"
+  },
+  "settingsRowCheckInterval": {
+    "message": "Intervallo di controllo"
+  },
+  "settingsCheckIntervalNever": {
+    "message": "Mai"
+  },
+  "settingsBtnCheckNow": {
+    "message": "Controlla ora"
+  },
+  "settingsExtensionUpdateRequired": {
+    "message": "Aggiornamento estensione richiesto"
+  },
+  "settingsBtnUpdateExtension": {
+    "message": "Aggiorna estensione"
+  },
+  "settingsGroupBadgeColors": {
+    "message": "Colori badge"
+  },
+  "settingsRowLastCheck": {
+    "message": "Ultimo controllo"
+  },
+  "advancedToolsTitle": {
+    "message": "Strumenti di acquisizione avanzati"
+  },
+  "advancedToolsDescription": {
+    "message": "Estrai cookie, token e sitekey dai sistemi di protezione rilevati"
+  },
+  "advancedToolsHint": {
+    "message": "Visita una pagina protetta per abilitare gli strumenti di acquisizione"
+  },
+  "advancedSubtabTools": {
+    "message": "Strumenti"
+  },
+  "advancedSubtabHistory": {
+    "message": "Cronologia"
+  },
+  "advancedCaptureHistoryTitle": {
+    "message": "Cronologia acquisizioni"
+  },
+  "advancedCaptureHistorySubtitle": {
+    "message": "Filtra, ispeziona ed esporta le acquisizioni raccolte"
+  },
+  "advancedFilterSite": {
+    "message": "Sito"
+  },
+  "advancedFilterAllSites": {
+    "message": "Tutti i siti"
+  },
+  "advancedFilterCurrentSite": {
+    "message": "Sito corrente"
+  },
+  "advancedFilterModule": {
+    "message": "Modulo"
+  },
+  "advancedFilterAllModules": {
+    "message": "Tutti i moduli"
+  },
+  "advancedFilterSearch": {
+    "message": "Cerca"
+  },
+  "advancedBtnExport": {
+    "message": "Esporta"
+  },
+  "advancedBtnExportTitle": {
+    "message": "Esporta acquisizioni"
+  },
+  "advancedBtnClearAll": {
+    "message": "Cancella tutto"
+  },
+  "advancedBtnClearAllTitle": {
+    "message": "Cancella tutte le acquisizioni"
+  },
+  "advancedEmptyCapturesTitle": {
+    "message": "Nessuna acquisizione"
+  },
+  "advancedEmptyCapturesHint": {
+    "message": "Usa la scheda Strumenti per acquisire dati dai sistemi rilevati"
+  },
+  "advancedNoResultsTitle": {
+    "message": "Nessuna acquisizione trovata"
+  },
+  "advancedNoResultsHint": {
+    "message": "Prova a regolare i filtri o la ricerca"
+  },
+  "advancedBtnResetFilters": {
+    "message": "Reimposta tutti i filtri"
+  },
+  "advancedModalTitle": {
+    "message": "Strumenti di rilevamento avanzati"
+  },
+  "advancedModalIntro": {
+    "message": "Strumenti di acquisizione specializzati per l'analisi approfondita di sistemi anti-bot, CAPTCHA e tecniche di fingerprinting. Questi strumenti appaiono automaticamente quando vengono trovati rilevamenti rilevanti."
+  },
+  "advancedSectionSupported": {
+    "message": "Sistemi attualmente supportati"
+  },
+  "advancedSectionHowItWorks": {
+    "message": "Come funziona"
+  },
+  "advancedStep1Title": {
+    "message": "Rilevamento automatico"
+  },
+  "advancedStep1Desc": {
+    "message": "Gli strumenti appaiono quando vengono rilevati sistemi anti-bot rilevanti nella pagina corrente"
+  },
+  "advancedStep2Title": {
+    "message": "Avvia acquisizione"
+  },
+  "advancedStep2Desc": {
+    "message": "Gli strumenti inizializzano automaticamente gli intercettori e iniziano a monitorare le richieste di rete"
+  },
+  "advancedStep3Title": {
+    "message": "Rivedi i risultati"
+  },
+  "advancedStep3Desc": {
+    "message": "I dati acquisiti vengono memorizzati temporaneamente (30 minuti) con capacità di esportazione complete"
+  },
+  "advancedFooterHint": {
+    "message": "I risultati scadono dopo 30 minuti per garantire dati aggiornati"
+  },
+  "settings": {
+    "message": "Impostazioni"
+  },
+  "paginationShowingFmt": {
+    "message": "Visualizzazione {0}-{1} di {2}"
+  },
+  "paginationShowingItems": {
+    "message": "Visualizzazione {0}-{1} di {2} {3}"
+  },
+  "timeUnknown": {
+    "message": "Sconosciuto"
+  },
+  "timeJustNow": {
+    "message": "Adesso"
+  },
+  "timeSecondsAgoFmt": {
+    "message": "{0}s fa"
+  },
+  "timeMinutesAgoFmt": {
+    "message": "{0}m fa"
+  },
+  "timeHoursAgoFmt": {
+    "message": "{0}h fa"
+  },
+  "timeDaysAgoFmt": {
+    "message": "{0}g fa"
+  },
+  "timeOneMinuteAgo": {
+    "message": "1 minuto fa"
+  },
+  "timeMinutesAgoLongFmt": {
+    "message": "{0} minuti fa"
+  },
+  "timeOneHourAgo": {
+    "message": "1h fa"
+  },
+  "timeHoursAgoLongFmt": {
+    "message": "{0}h fa"
+  },
+  "timeOneDayAgo": {
+    "message": "1 giorno fa"
+  },
+  "timeDaysAgoLongFmt": {
+    "message": "{0} giorni fa"
+  },
+  "timeOneWeekAgo": {
+    "message": "1 settimana fa"
+  },
+  "timeWeeksAgoFmt": {
+    "message": "{0} settimane fa"
+  },
+  "timeOneMonthAgo": {
+    "message": "1 mese fa"
+  },
+  "timeMonthsAgoFmt": {
+    "message": "{0} mesi fa"
+  },
+  "timeOneYearAgo": {
+    "message": "1 anno fa"
+  },
+  "timeYearsAgoFmt": {
+    "message": "{0} anni fa"
+  },
+  "btnCancelSettings": {
+    "message": "Annulla"
+  },
+  "btnSaveSettings": {
+    "message": "Salva impostazioni"
+  },
+  "poweredBy": {
+    "message": "Realizzato da"
+  },
+  "categoryColors": {
+    "message": "COLORI CATEGORIA"
+  },
+  "methodSuffixPatterns": {
+    "message": "pattern"
+  },
+  "btnSaveRule": {
+    "message": "Salva regola"
+  },
+  "tagColors": {
+    "message": "Colori dei tag"
+  },
+  "cacheConfiguration": {
+    "message": "Configurazione cache"
+  },
+  "cacheDuration": {
+    "message": "Durata cache"
+  },
+  "timeUnitMinutes": {
+    "message": "Minuti"
+  },
+  "timeUnitHours": {
+    "message": "Ore"
+  },
+  "timeUnitDays": {
+    "message": "Giorni"
+  },
+  "blacklistedDomains": {
+    "message": "Domini in lista nera"
+  },
+  "blacklistedDomainsDesc": {
+    "message": "Domini in cui il rilevamento viene completamente saltato"
+  },
+  "jsApiEvents": {
+    "message": "Eventi JS API"
+  },
+  "jsApiEventsDesc": {
+    "message": "Inviare eventi personalizzati alla window della pagina"
+  },
+  "ruleMethodSettings": {
+    "message": "Impostazioni metodo di rilevamento"
+  },
+  "ruleConfidenceLevel": {
+    "message": "Livello di affidabilità"
+  },
+  "ruleConfidencePrefix": {
+    "message": "Affidabilità rilevamento:"
+  },
+  "detectionName": {
+    "message": "Nome rilevamento"
+  },
+  "historyModalUrl": {
+    "message": "URL"
+  },
+  "interval6Hours": {
+    "message": "6 ore"
+  },
+  "interval12Hours": {
+    "message": "12 ore"
+  },
+  "interval24Hours": {
+    "message": "24 ore"
+  },
+  "interval2Days": {
+    "message": "2 giorni"
+  },
+  "interval1Week": {
+    "message": "1 settimana"
+  },
+  "methodLabelUrl": {
+    "message": "URL"
+  },
+  "methodLabelHeader": {
+    "message": "HEADER"
+  },
+  "methodLabelCookie": {
+    "message": "COOKIE"
+  },
+  "methodLabelContent": {
+    "message": "CONTENT"
+  },
+  "methodLabelDom": {
+    "message": "DOM"
+  },
+  "methodLabelJsHooks": {
+    "message": "JS HOOKS"
+  },
+  "methodLabelWindow": {
+    "message": "WINDOW"
+  },
+  "methodLabelPayload": {
+    "message": "PAYLOAD"
+  },
+  "methodOnePattern": {
+    "message": "1 pattern"
+  },
+  "methodPatternsFmt": {
+    "message": "{0} pattern"
+  },
+  "methodAddPattern": {
+    "message": "Aggiungi pattern"
+  },
+  "methodSearchPatterns": {
+    "message": "Cerca pattern..."
+  },
+  "methodNoPatterns": {
+    "message": "Nessun pattern"
+  },
+  "methodNoMatchingPatterns": {
+    "message": "Nessun pattern corrispondente"
+  },
+  "methodSuffixMatches": {
+    "message": "corrispondenze"
+  },
+  "cacheExpiredLabel": {
+    "message": "Scaduto"
+  },
+  "copiedNotification": {
+    "message": "Copiato"
+  },
+  "copiedInlineMsg": {
+    "message": "✓ Copiato!"
+  },
+  "unknownDetection": {
+    "message": "Rilevamento sconosciuto"
+  },
+  "matchSingular": {
+    "message": "corrispondenza"
+  },
+  "matchPlural": {
+    "message": "corrispondenze"
+  },
+  "noMatchesRecorded": {
+    "message": "Nessuna corrispondenza registrata"
+  },
+  "clearCacheConfirmTitle": {
+    "message": "Svuota cache"
+  },
+  "clearCacheConfirmMsg": {
+    "message": "Verranno rimossi i dati di rilevamento in cache per questo dominio e verrà avviata una nuova analisi."
+  },
+  "clearCacheConfirmBtn": {
+    "message": "Svuota cache"
+  },
+  "clearingMsg": {
+    "message": "Pulizia in corso..."
+  },
+  "clearedSuccessMsg": {
+    "message": "✓ Svuotata!"
+  },
+  "cacheClearedToast": {
+    "message": "Cache svuotata"
+  },
+  "failedToClearCacheToast": {
+    "message": "Impossibile svuotare la cache"
+  },
+  "unableGetCurrentPage": {
+    "message": "Impossibile ottenere la pagina corrente"
+  },
+  "invalidDomain": {
+    "message": "Dominio non valido"
+  },
+  "addBlacklistTitle": {
+    "message": "Aggiungi alla blacklist"
+  },
+  "addBlacklistMsgFmt": {
+    "message": "Il dominio \"{0}\" verrà escluso da tutti i rilevamenti futuri. Potrai rimuoverlo in seguito dalle Impostazioni."
+  },
+  "addBlacklistBtn": {
+    "message": "Aggiungi alla blacklist"
+  },
+  "alreadyBlacklistedFmt": {
+    "message": "Il dominio \"{0}\" è già in blacklist"
+  },
+  "addedToBlacklistFmt": {
+    "message": "\"{0}\" aggiunto alla blacklist"
+  },
+  "failedAddBlacklistFmt": {
+    "message": "Impossibile aggiungere alla blacklist: {0}"
+  },
+  "removedFromBlacklistFmt": {
+    "message": "\"{0}\" rimosso dalla blacklist"
+  },
+  "failedRemoveBlacklistFmt": {
+    "message": "Impossibile rimuovere dalla blacklist: {0}"
+  },
+  "historyNoDetections": {
+    "message": "Nessun rilevamento"
+  },
+  "historyNoDetectionsFound": {
+    "message": "Nessun rilevamento trovato"
+  },
+  "historyMatchCountFmt": {
+    "message": "{0} corrispondenze"
+  },
+  "historyOneMatch": {
+    "message": "1 corrispondenza"
+  },
+  "notificationHistoryCleared": {
+    "message": "Cronologia svuotata"
+  },
+  "notificationClearHistoryFailedFmt": {
+    "message": "Impossibile svuotare la cronologia: {0}"
+  },
+  "notificationHistoryItemExported": {
+    "message": "Voce della cronologia esportata"
+  },
+  "notificationCacheCleared": {
+    "message": "Cache svuotata"
+  },
+  "notificationCacheAlreadyCleared": {
+    "message": "Cache già svuotata"
+  },
+  "notificationClearCacheFailed": {
+    "message": "Impossibile svuotare la cache"
+  },
+  "notificationDomainBlacklistedFmt": {
+    "message": "\"{0}\" aggiunto alla blacklist"
+  },
+  "notificationBlacklistFailed": {
+    "message": "Impossibile aggiungere alla blacklist"
+  },
+  "notificationHistoryItemDeleted": {
+    "message": "Voce della cronologia eliminata"
+  },
+  "notificationDeleteHistoryItemFailed": {
+    "message": "Impossibile eliminare la voce della cronologia"
+  },
+  "notificationHistoryExportedFmt": {
+    "message": "Esportate {0} voci della cronologia"
+  },
+  "notificationHistoryMergedFmt": {
+    "message": "Unite {0} nuove voci della cronologia"
+  },
+  "notificationHistoryReplacedFmt": {
+    "message": "Cronologia sostituita con {0} voci"
+  },
+  "notificationImportHistoryFailedFmt": {
+    "message": "Impossibile importare la cronologia: {0}"
+  },
+  "dialogClearHistoryTitle": {
+    "message": "Svuota cronologia"
+  },
+  "dialogClearHistoryMessage": {
+    "message": "Vuoi davvero svuotare tutta la cronologia? Questa azione non può essere annullata."
+  },
+  "buttonClearAll": {
+    "message": "Svuota tutto"
+  },
+  "dialogClearCacheTitle": {
+    "message": "Svuota cache"
+  },
+  "dialogClearCacheMessageFmt": {
+    "message": "Svuotare i dati di rilevamento in cache per {0}? La voce della cronologia verrà conservata."
+  },
+  "buttonClearCache": {
+    "message": "Svuota cache"
+  },
+  "dialogDeleteHistoryTitle": {
+    "message": "Elimina voce della cronologia"
+  },
+  "dialogDeleteHistoryMessageFmt": {
+    "message": "Vuoi davvero eliminare questo rilevamento da {0}?"
+  },
+  "failedLoadSettingsDefault": {
+    "message": "Impossibile caricare le impostazioni. Verranno usate quelle predefinite."
+  },
+  "settingsSavedToast": {
+    "message": "Impostazioni salvate"
+  },
+  "failedSaveSettingsFmt": {
+    "message": "Impossibile salvare le impostazioni: {0}"
+  },
+  "settingsResetToast": {
+    "message": "Impostazioni ripristinate"
+  },
+  "dataClearedReloadNotice": {
+    "message": "Tutti i dati sono stati eliminati con successo! L'estensione verrà ricaricata."
+  },
+  "failedClearDataFmt": {
+    "message": "Impossibile eliminare i dati: {0}"
+  },
+  "failedExportLogs": {
+    "message": "Impossibile esportare i log"
+  },
+  "logsCleared": {
+    "message": "Log eliminati"
+  },
+  "failedClearLogs": {
+    "message": "Impossibile eliminare i log"
+  },
+  "couldNotGetPageUrl": {
+    "message": "Impossibile ottenere l'URL della pagina corrente"
+  },
+  "domainAlreadyBlacklistedFmt": {
+    "message": "{0} è già in blacklist"
+  },
+  "addedDomainToBlacklistFmt": {
+    "message": "{0} aggiunto alla blacklist"
+  },
+  "failedAddDomainFmt": {
+    "message": "Impossibile aggiungere il dominio: {0}"
+  },
+  "removedDomainFromBlacklistFmt": {
+    "message": "{0} rimosso dalla blacklist"
+  },
+  "invalidSettingsFmt": {
+    "message": "Impostazioni non valide: {0}"
+  },
+  "pleaseEnterWebhookUrl": {
+    "message": "Inserisci un URL del webhook"
+  },
+  "webhookTestSuccessfulFmt": {
+    "message": "Test del webhook riuscito! Stato: {0}"
+  },
+  "webhookFailedStatusFmt": {
+    "message": "Il webhook ha restituito lo stato: {0}"
+  },
+  "webhookTestFailedFmt": {
+    "message": "Test del webhook fallito: {0}"
+  },
+  "foundDetectorUpdatesAvailableFmt": {
+    "message": "Trovati {0} aggiornamenti dei detector disponibili!"
+  },
+  "allDetectorsUpToDate": {
+    "message": "Tutti i detector sono aggiornati."
+  },
+  "importDetectorsTitle": {
+    "message": "Importa detector"
+  },
+  "importMergeQuestion": {
+    "message": "Vuoi unirli ai detector esistenti?"
+  },
+  "mergeOption": {
+    "message": "Unisci"
+  },
+  "replaceAllOption": {
+    "message": "Sostituisci tutto"
+  },
+  "detectorsImported": {
+    "message": "Detector importati"
+  },
+  "failedImportDetectors": {
+    "message": "Impossibile importare i detector. Controlla il formato del file."
+  },
+  "errorReadingFileFmt": {
+    "message": "Errore nella lettura del file: {0}"
+  },
+  "detectorsUpdatedFmt": {
+    "message": "{0} detector aggiornati"
+  },
+  "updatesAvailableClickToApplyFmt": {
+    "message": "{0} aggiornamenti disponibili - fai clic di nuovo per applicarli"
+  },
+  "detectorDeletedFmt": {
+    "message": "\"{0}\" eliminato"
+  },
+  "allDetectorsCleared": {
+    "message": "Tutti i detector eliminati"
+  },
+  "failedClearDetectors": {
+    "message": "Impossibile eliminare i detector"
+  },
+  "urlPatternMatching": {
+    "message": "Corrispondenza pattern URL"
+  },
+  "textWordMatching": {
+    "message": "Corrispondenza testo/parola"
+  },
+  "domSelectorMatching": {
+    "message": "Corrispondenza selettore DOM"
+  },
+  "payloadTextMatching": {
+    "message": "Corrispondenza testo payload"
+  },
+  "nameFieldMatching": {
+    "message": "Corrispondenza campo nome"
+  },
+  "captureNotFound": {
+    "message": "Cattura non trovata"
+  },
+  "captureModuleClassNotFound": {
+    "message": "Classe del modulo non trovata"
+  },
+  "captureDetailsUnavailable": {
+    "message": "Vista dettagli non disponibile"
+  },
+  "captureDataCopied": {
+    "message": "Dati di cattura copiati"
+  },
+  "captureDeleted": {
+    "message": "Cattura eliminata"
+  },
+  "capturesExportedFmt": {
+    "message": "Esportate {0} catture"
+  },
+  "allCapturesCleared": {
+    "message": "Tutte le catture eliminate"
+  },
+  "captureExportFailed": {
+    "message": "Esportazione della cattura fallita"
+  },
+  "invalidUrl": {
+    "message": "URL non valido"
+  },
+  "importHistoryTitle": {
+    "message": "Importa cronologia"
+  },
+  "importHistoryMessageFmt": {
+    "message": "Importare {0} voci della cronologia? La cronologia attuale contiene {1} voci."
+  },
+  "replaceOption": {
+    "message": "Sostituisci"
+  },
+  "settingsResetTitle": {
+    "message": "Ripristina impostazioni"
+  },
+  "settingsResetMessage": {
+    "message": "Vuoi davvero ripristinare tutte le impostazioni ai valori predefiniti? Questa azione non può essere annullata."
+  },
+  "btnReset": {
+    "message": "Ripristina"
+  },
+  "clearAllDataTitle": {
+    "message": "Elimina tutti i dati"
+  },
+  "clearAllDataMessage": {
+    "message": "Vuoi davvero eliminare TUTTI i dati dell'estensione? Verranno rimossi:<br><br>• Tutta la cronologia dei rilevamenti<br>• Tutte le regole dei detector<br>• Tutte le impostazioni<br><br>Questa azione non può essere annullata!"
+  },
+  "clearEverythingBtn": {
+    "message": "Elimina tutto"
+  },
+  "clearLogsTitle": {
+    "message": "Elimina log"
+  },
+  "clearLogsMessage": {
+    "message": "Vuoi davvero eliminare tutti i log raccolti? Questa azione non può essere annullata."
+  },
+  "failedCheckForUpdatesFmt": {
+    "message": "Impossibile verificare gli aggiornamenti: {0}"
+  },
+  "couldNotFetchUpdates": {
+    "message": "Impossibile recuperare gli aggiornamenti dal server"
+  },
+  "errorApplyingUpdates": {
+    "message": "Errore nell'applicazione degli aggiornamenti"
+  },
+  "failedCheckForUpdates": {
+    "message": "Impossibile verificare gli aggiornamenti"
+  },
+  "errorCheckingForUpdates": {
+    "message": "Errore durante la verifica degli aggiornamenti"
+  },
+  "updateServiceNotAvailable": {
+    "message": "Servizio di aggiornamento non disponibile"
+  },
+  "clearAllDetectorsTitle": {
+    "message": "Elimina tutti i detector"
+  },
+  "clearAllDetectorsMessage": {
+    "message": "Verranno rimossi TUTTI i detector. Sei sicuro?"
+  },
+  "clearingAllDetectors": {
+    "message": "Eliminazione di tutti i detector..."
+  },
+  "deleteDetectorTitle": {
+    "message": "Elimina detector"
+  },
+  "deleteDetectorMessageFmt": {
+    "message": "Vuoi davvero eliminare \"{0}\"?"
+  },
+  "detectorNotFound": {
+    "message": "Detector non trovato"
+  },
+  "failedDeleteDetector": {
+    "message": "Impossibile eliminare il detector"
+  },
+  "detectorNotFoundFmt": {
+    "message": "Detector non trovato: {0}"
+  },
+  "failedViewCaptureDetails": {
+    "message": "Impossibile visualizzare i dettagli della cattura"
+  },
+  "failedCopyCaptureData": {
+    "message": "Impossibile copiare i dati di cattura"
+  },
+  "failedDeleteCapture": {
+    "message": "Impossibile eliminare la cattura"
+  },
+  "noCapturesToExport": {
+    "message": "Nessuna cattura da esportare"
+  },
+  "clearAllCapturesConfirm": {
+    "message": "Vuoi davvero eliminare tutte le catture? L'operazione non può essere annullata."
+  },
+  "failedClearCaptures": {
+    "message": "Impossibile eliminare le catture"
+  },
+  "settingsCardWebhookIntegration": {
+    "message": "Integrazione webhook"
+  },
+  "settingsEnableWebhook": {
+    "message": "Abilita webhook"
+  },
+  "settingsEnableWebhookDesc": {
+    "message": "Invia richieste HTTP al rilevamento"
+  },
+  "settingsBypassCache": {
+    "message": "Invia ad ogni caricamento della pagina (ignora la cache)"
+  },
+  "settingsHttpMethod": {
+    "message": "Metodo HTTP"
+  },
+  "settingsHttpMethodDesc": {
+    "message": "Seleziona il metodo HTTP per le richieste webhook"
+  },
+  "settingsCustomMethod": {
+    "message": "Personalizzato"
+  },
+  "settingsCustomMethodPlaceholder": {
+    "message": "Inserisci un metodo personalizzato (es. OPTIONS, HEAD)"
+  },
+  "settingsWebhookUrl": {
+    "message": "URL del webhook"
+  },
+  "settingsWebhookUrlDesc": {
+    "message": "URL completo dell'endpoint (https://api.example.com/webhook)"
+  },
+  "settingsAvailableVariables": {
+    "message": "Variabili disponibili:"
+  },
+  "settingsWebhookUrlExample": {
+    "message": "Esempio: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
+  },
+  "settingsContentType": {
+    "message": "Content-Type"
+  },
+  "settingsContentTypeDesc": {
+    "message": "Intestazione HTTP content type"
+  },
+  "settingsCustomHeaders": {
+    "message": "Intestazioni personalizzate"
+  },
+  "settingsCustomHeadersDesc": {
+    "message": "Aggiungi intestazioni HTTP personalizzate alla richiesta webhook"
+  },
+  "settingsPayloadTemplate": {
+    "message": "Modello di payload"
+  },
+  "settingsPayloadTemplateDesc": {
+    "message": "Usa le variabili: <SITEURL>, <HOSTNAME>, <TITLE>, <FAVICON>, <DETECTIONS>, <TIMESTAMP>, <DETECTION_COUNT>, <CATEGORIES>"
+  },
+  "settingsTestWebhook": {
+    "message": "Prova webhook"
+  },
+  "settingsTestWebhookDesc": {
+    "message": "Invia una richiesta di prova al tuo URL del webhook"
+  },
+  "settingsTestBtn": {
+    "message": "Prova"
+  },
+  "settingsCardHistoryConfig": {
+    "message": "Configurazione cronologia"
+  },
+  "settingsHistorySettings": {
+    "message": "Impostazioni cronologia"
+  },
+  "settingsHistoryLimit": {
+    "message": "Limite cronologia"
+  },
+  "settingsHistoryLimitNote": {
+    "message": "(0 = illimitata)"
+  },
+  "settingsAutoClearDays": {
+    "message": "Pulizia automatica (giorni)"
+  },
+  "settingsExportFormat": {
+    "message": "Formato di esportazione"
+  },
+  "settingsExportFormatPlainText": {
+    "message": "Testo semplice"
+  },
+  "settingsIncludeTimestamps": {
+    "message": "Includi timestamp"
+  },
+  "settingsSaveOnCacheHits": {
+    "message": "Salva sui cache hit"
+  },
+  "settingsCardDuplicatePrevention": {
+    "message": "Prevenzione duplicati"
+  },
+  "settingsEnableDuplicatePrevention": {
+    "message": "Abilita prevenzione duplicati"
+  },
+  "settingsDuplicatePreventionDesc": {
+    "message": "Blocca le voci duplicate della cronologia all'interno di una finestra temporale"
+  },
+  "settingsDuplicateScope": {
+    "message": "Ambito"
+  },
+  "settingsDuplicateScopeFullUrl": {
+    "message": "URL completo"
+  },
+  "settingsDuplicateScopeDomain": {
+    "message": "Dominio"
+  },
+  "settingsDuplicateScopePath": {
+    "message": "Percorso"
+  },
+  "settingsTimeWindow": {
+    "message": "Finestra temporale"
+  },
+  "settingsTimeMinutes": {
+    "message": "Minuti"
+  },
+  "settingsTimeHours": {
+    "message": "Ore"
+  },
+  "settingsTimeDays": {
+    "message": "Giorni"
+  },
+  "settingsHowItWorks": {
+    "message": "Come funziona:"
+  },
+  "settingsHowItWorksDesc": {
+    "message": "Impedisce voci duplicate nella cronologia per lo stesso URL all'interno della finestra temporale."
+  },
+  "settingsDuplicateFullUrlBullet": {
+    "message": "URL completo: corrispondenza esatta dell'URL (parametri di query inclusi)"
+  },
+  "settingsDuplicateDomainBullet": {
+    "message": "Dominio: stesso dominio (percorsi diversi considerati uguali)"
+  },
+  "settingsDuplicatePathBullet": {
+    "message": "Percorso: stesso dominio+percorso (ignora i parametri di query)"
+  },
+  "settingsCardCacheSettings": {
+    "message": "Impostazioni cache"
+  },
+  "settingsCardSkipDomains": {
+    "message": "Domini da ignorare"
+  },
+  "settingsAddCurrentPage": {
+    "message": "Aggiungi pagina corrente"
+  },
+  "settingsSearchDomainsPlaceholder": {
+    "message": "Cerca domini..."
+  },
+  "settingsBadgeColorLow": {
+    "message": "Basso"
+  },
+  "settingsBadgeColorMedium": {
+    "message": "Medio"
+  },
+  "settingsBadgeColorHigh": {
+    "message": "Alto"
+  },
+  "settingsEnableJsApi": {
+    "message": "Attiva eventi JS API"
+  },
+  "settingsDataExportImport": {
+    "message": "Esporta e importa"
+  },
+  "settingsDataManagement": {
+    "message": "Gestione dati"
+  },
+  "settingsDataManagementDesc": {
+    "message": "Esporta o importa i dati dell'estensione"
+  },
+  "settingsDataSettingsRow": {
+    "message": "Impostazioni"
+  },
+  "settingsDataSettingsRowDesc": {
+    "message": "Esporta o importa le impostazioni dell'estensione"
+  },
+  "settingsDataHistoryRow": {
+    "message": "Cronologia rilevamenti"
+  },
+  "settingsDataHistoryRowDesc": {
+    "message": "Esporta la cronologia dei rilevamenti come CSV"
+  },
+  "settingsDataExportSettingsTitle": {
+    "message": "Esporta impostazioni"
+  },
+  "settingsDataImportSettingsTitle": {
+    "message": "Importa impostazioni"
+  },
+  "settingsDataExportHistoryTitle": {
+    "message": "Esporta cronologia"
+  },
+  "settingsAvailableEvents": {
+    "message": "Eventi disponibili:"
+  },
+  "settingsApiEventReady": {
+    "message": "Estensione caricata e inizializzata"
+  },
+  "settingsApiEventOnStart": {
+    "message": "Rilevamento avviato (cache miss / manuale)"
+  },
+  "settingsApiEventOnProgress": {
+    "message": "Aggiornamenti di avanzamento del rilevamento (a livello di metodo)"
+  },
+  "settingsApiEventOnHooksComplete": {
+    "message": "Monitoraggio degli hook JS completato"
+  },
+  "settingsApiEventOnWindowPropsComplete": {
+    "message": "Monitoraggio delle proprietà window completato"
+  },
+  "settingsApiEventOnDetection": {
+    "message": "Rilevamento completato con risultati"
+  },
+  "settingsApiEventOnError": {
+    "message": "Si è verificato un errore di rilevamento"
+  },
+  "settingsUsageExample": {
+    "message": "Esempio di utilizzo:"
+  },
+  "detectionDisabledForDomain": {
+    "message": "Rilevamento disattivato per questo dominio"
+  },
+  "detectionRemoveFromBlacklistBtn": {
+    "message": "Rimuovi dalla blacklist"
+  },
+  "detectionBlacklistHint": {
+    "message": "Oppure vai su Impostazioni → Rilevamento → Domini in blacklist per gestirli."
+  },
+  "detectionNoDetectionsDesc": {
+    "message": "Nessun segnale antibot, CAPTCHA o di fingerprinting è stato trovato su questa pagina."
+  },
+  "detectionNoCachedDataDesc": {
+    "message": "Non sono disponibili dati di rilevamento nella cache per questa pagina. Ricarica la pagina per eseguire una nuova scansione."
+  },
+  "detectionTitleUploadPaste": {
+    "message": "Carica rilevamenti (link condivisibile)"
+  },
+  "pasteUploadSuccessToast": {
+    "message": "Link copiato negli appunti"
+  },
+  "failedReadSettings": {
+    "message": "Impossibile leggere le impostazioni — operazione annullata"
+  },
+  "failedRemoveBlacklist": {
+    "message": "Rimozione dalla lista nera non riuscita"
+  },
+  "pasteConfirmTitle": {
+    "message": "Caricare i rilevamenti?"
+  },
+  "pasteConfirmMsg": {
+    "message": "Questo carica un riepilogo dei rilevamenti di questa pagina su un paste pubblico (dpaste.com, non elencato, scade tra 30 giorni). Chiunque abbia il link può visualizzarlo. La query string dell’URL e i valori di cookie/intestazioni non sono inclusi."
+  },
+  "pasteConfirmBtn": {
+    "message": "Carica"
+  },
+  "pasteUploadFailedToast": {
+    "message": "Caricamento non riuscito"
+  },
+  "pasteNoDetectionsToast": {
+    "message": "Nessun rilevamento da caricare"
+  },
+  "detectionTitleClearCache": {
+    "message": "Svuota cache"
+  },
+  "detectionTitleCopyOverview": {
+    "message": "Copia panoramica"
+  },
+  "detectionTitleBlockDomain": {
+    "message": "Blocca questo dominio"
+  },
+  "detectionStatDetections": {
+    "message": "RILEVAMENTI"
+  },
+  "detectionStatConfidence": {
+    "message": "AFFIDABILITÀ"
+  },
+  "detectionStatDifficulty": {
+    "message": "DIFFICOLTÀ"
+  },
+  "detectionStatCacheScope": {
+    "message": "AMBITO CACHE"
+  },
+  "detectionStatCacheExpiration": {
+    "message": "SCADENZA CACHE"
+  },
+  "detectionSearchPlaceholder": {
+    "message": "Cerca rilevamenti..."
+  },
+  "detectionPaginationPage": {
+    "message": "Pagina"
+  },
+  "detectionPaginationOf": {
+    "message": "di"
+  },
+  "detectionDomainBlacklistedTitle": {
+    "message": "Questo dominio è in blacklist"
+  },
+  "detectionModalConfidence": {
+    "message": "Affidabilità"
+  },
+  "detectionModalDifficulty": {
+    "message": "Difficoltà"
+  },
+  "detectionModalMatchesFound": {
+    "message": "Corrispondenze trovate"
+  },
+  "detectionModalAuthor": {
+    "message": "Autore"
+  },
+  "detectionModalDescription": {
+    "message": "Descrizione"
+  },
+  "detectionModalNoDescription": {
+    "message": "Nessuna descrizione disponibile."
+  },
+  "detectionModalDetectionMethods": {
+    "message": "Metodi di rilevamento"
+  },
+  "detectionModalNoMethodsDetected": {
+    "message": "Nessun metodo rilevato"
+  },
+  "advancedSearchPlaceholder": {
+    "message": "Cerca per URL, modulo, sito o contenuto..."
+  },
+  "advancedPaginationPage": {
+    "message": "Pagina"
+  },
+  "advancedPaginationOf": {
+    "message": "di"
+  },
+  "advancedInfoRecaptchaDesc": {
+    "message": "Cattura site key, azioni e parametri di configurazione"
+  },
+  "advancedInfoAkamaiDesc": {
+    "message": "Intercetta i dati dei sensori ed estrae le informazioni di versione"
+  },
+  "advancedInfoImpervaTitle": {
+    "message": "Imperva / Incapsula"
+  },
+  "advancedInfoImpervaDesc": {
+    "message": "Monitora i cookie e le variazioni del livello di protezione"
+  },
+  "advancedInfoShapeSecurityDesc": {
+    "message": "Analizza intestazioni dinamiche e parametri degli script"
+  },
+  "advancedInfoAwsWafDesc": {
+    "message": "Cattura endpoint di challenge e dettagli dei token"
+  },
+  "btnStartCapturing": {
+    "message": "Avvia cattura"
+  },
+  "btnStopCapturing": {
+    "message": "Interrompi cattura"
+  },
+  "btnCheckCookies": {
+    "message": "Controlla cookie"
+  },
+  "btnCheckVersion": {
+    "message": "Controlla versione"
+  },
+  "btnAnalyzeScripts": {
+    "message": "Analizza script"
+  },
+  "btnExtractSiteKey": {
+    "message": "Estrai SiteKey"
+  },
+  "btnObtainSelector": {
+    "message": "Ottieni selettore"
+  },
+  "btnCopyAllData": {
+    "message": "Copia tutti i dati"
+  },
+  "btnClearData": {
+    "message": "Elimina dati"
+  },
+  "advCapturedDataSection": {
+    "message": "Dati catturati"
+  },
+  "advNoCapturesYet": {
+    "message": "Nessuna cattura ancora"
+  },
+  "advCaptureDetails": {
+    "message": "Dettagli cattura"
+  },
+  "advValueCopied": {
+    "message": "Valore copiato"
+  },
+  "advConfirmClearAllTitle": {
+    "message": "Eliminare tutti i dati catturati?"
+  },
+  "advConfirmClearAllMsg": {
+    "message": "Verranno eliminati in modo permanente tutti i dati catturati per questo provider."
+  },
+  "rulesColorPickerCancel": {
+    "message": "Annulla"
+  },
+  "rulesColorPickerOk": {
+    "message": "OK"
+  },
+  "rulesContentSearchScopeTitle": {
+    "message": "Ambito di ricerca dei contenuti"
+  },
+  "rulesOnlyCheckScripts": {
+    "message": "Controlla solo gli script"
+  },
+  "rulesOnlyCheckScriptsHint": {
+    "message": "Limita la ricerca al solo codice JavaScript e agli URL degli script"
+  },
+  "rulesScopeSettingsTitle": {
+    "message": "Impostazioni ambito"
+  },
+  "rulesNameScopeLabel": {
+    "message": "Ambito nome"
+  },
+  "rulesNameScopeHint": {
+    "message": "Dove controllare le corrispondenze di nome/campo"
+  },
+  "rulesScopeRequest": {
+    "message": "Richiesta"
+  },
+  "rulesScopeResponse": {
+    "message": "Risposta"
+  },
+  "rulesScopeAll": {
+    "message": "Tutti"
+  },
+  "rulesValueScopeLabel": {
+    "message": "Ambito valore"
+  },
+  "rulesValueScopeHint": {
+    "message": "Dove controllare le corrispondenze di valore"
+  },
+  "rulesUrlScopeSettings": {
+    "message": "Impostazioni ambito URL"
+  },
+  "rulesUrlScopeLabel": {
+    "message": "Ambito URL"
+  },
+  "rulesUrlScopePageOnly": {
+    "message": "Pagina"
+  },
+  "rulesUrlScopeScripts": {
+    "message": "Script"
+  },
+  "rulesUrlScopeAllDefault": {
+    "message": "Tutti (predefinito)"
+  },
+  "rulesRequestConstraints": {
+    "message": "Vincoli della richiesta"
+  },
+  "rulesUrlPatternOptional": {
+    "message": "Pattern URL (opzionale)"
+  },
+  "rulesUrlRegex": {
+    "message": "Espressione regolare URL (Regex)"
+  },
+  "rulesUrlCaseSensitive": {
+    "message": "URL sensibile a maiuscole/minuscole"
+  },
+  "rulesHttpMethodSelect": {
+    "message": "Metodo HTTP (selezionane uno)"
+  },
+  "rulesHttpMethodFilterHint": {
+    "message": "Filtra per metodo della richiesta (opzionale)"
+  },
+  "rulesHttpMethodAny": {
+    "message": "Qualsiasi"
+  },
+  "rulesPatternMatchingOptions": {
+    "message": "Opzioni di corrispondenza dei pattern"
+  },
+  "rulesPatternRegex": {
+    "message": "Espressione regolare (Regex)"
+  },
+  "rulesPatternWholeWord": {
+    "message": "Parola intera"
+  },
+  "rulesPatternCaseSensitive": {
+    "message": "Sensibile a maiuscole/minuscole"
+  },
+  "rulesValueFieldOptions": {
+    "message": "Opzioni del campo valore"
+  },
+  "rulesApplySettings": {
+    "message": "Applica impostazioni"
+  },
+  "rulesDomSelectorHelper": {
+    "message": "Assistente selettori DOM"
+  },
+  "rulesStartTypingSuggestions": {
+    "message": "Inizia a digitare per vedere i suggerimenti"
+  },
+  "rulesUseSelectorBtn": {
+    "message": "Usa selettore"
+  },
+  "rulesWindowPropertiesHelper": {
+    "message": "Assistente proprietà window"
+  },
+  "rulesStepEnterKeyword": {
+    "message": "Inserisci parola chiave"
+  },
+  "rulesStepChooseProperty": {
+    "message": "Scegli proprietà"
+  },
+  "rulesStepSelectCondition": {
+    "message": "Seleziona condizione"
+  },
+  "rulesConditionExists": {
+    "message": "Esiste"
+  },
+  "rulesConditionGroupType": {
+    "message": "Tipo"
+  },
+  "rulesTypeofObject": {
+    "message": "Object"
+  },
+  "rulesTypeofFunction": {
+    "message": "Function"
+  },
+  "rulesTypeofString": {
+    "message": "String"
+  },
+  "rulesTypeofNumber": {
+    "message": "Number"
+  },
+  "rulesTypeofBoolean": {
+    "message": "Boolean"
+  },
+  "notifConfirmTitleDefault": {
+    "message": "Conferma"
+  },
+  "notifConfirmMessageDefault": {
+    "message": "Sei sicuro?"
+  },
+  "notifLoadingDefault": {
+    "message": "Caricamento..."
+  },
+  "helperPatternStartTypingSuggestions": {
+    "message": "Inizia a digitare sopra per vedere i suggerimenti..."
+  },
+  "helperPatternStartTypingExamples": {
+    "message": "Inizia a digitare sopra per vedere gli esempi..."
+  },
+  "helpJsHooksTitle": {
+    "message": "Rilevamento tramite hook JavaScript"
+  },
+  "helpJsHooksDescription": {
+    "message": "Gli hook intercettano le chiamate alle API del browser (Canvas, Audio, WebGL, ecc.) per rilevare in tempo reale il codice di fingerprinting anti-bot quando la pagina accede a tali API."
+  },
+  "helpJsHooksWarning": {
+    "message": "Gli hook devono essere installati a document_start prima dell'esecuzione di qualsiasi script della pagina — altrimenti la pagina può salvare riferimenti alle API originali prima che il nostro shim sia attivo."
+  },
+  "helpJsHooksTip": {
+    "message": "Aggiungi un target come CanvasRenderingContext2D.prototype.getImageData per rilevare il fingerprinting del canvas."
+  },
+  "helpWindowTitle": {
+    "message": "Rilevamento proprietà window"
+  },
+  "helpWindowDescription": {
+    "message": "Rileva oggetti e proprietà JavaScript aggiunti all'oggetto globale window dagli script anti-bot."
+  },
+  "helpWindowWarning": {
+    "message": "Alcuni script anti-bot usano chiavi Symbol() che non sono enumerabili — queste sono più difficili da rilevare."
+  },
+  "helpWindowTip": {
+    "message": "Usa condizioni come typeof object o exists per verificare il tipo della proprietà."
+  },
+  "helpUrlTitle": {
+    "message": "Rilevamento tramite pattern URL"
+  },
+  "helpUrlDescription": {
+    "message": "Confronta gli URL delle risorse caricate (script, immagini, richieste di rete) con i pattern."
+  },
+  "helpUrlWarning": {
+    "message": "I pattern sono sensibili a maiuscole/minuscole per impostazione predefinita. Attiva/disattiva l'opzione URL Case Sensitive se hai bisogno di una corrispondenza non sensibile."
+  },
+  "helpUrlTip": {
+    "message": "Usa l'opzione Regex per pattern avanzati come /\\/v\\d+\\/challenge/."
+  },
+  "helpHeaderTitle": {
+    "message": "Rilevamento delle intestazioni HTTP"
+  },
+  "helpHeaderDescription": {
+    "message": "Rileva le intestazioni delle richieste e risposte HTTP impostate dai middleware anti-bot."
+  },
+  "helpHeaderWarning": {
+    "message": "Alcune intestazioni sono presenti solo nella richiesta iniziale — assicurati che il tuo ambito includa Richiesta."
+  },
+  "helpHeaderTip": {
+    "message": "Target comuni: x-akamai-bot-manager-token, cf-ray, x-shape-version."
+  },
+  "helpCookieTitle": {
+    "message": "Rilevamento dei cookie"
+  },
+  "helpCookieDescription": {
+    "message": "Rileva i cookie impostati dalle challenge anti-bot. Confronta il nome del cookie (e facoltativamente il pattern del valore)."
+  },
+  "helpCookieWarning": {
+    "message": "I nomi di cookie con suffissi casuali (es. _abck-xyz123) richiedono un pattern regex, non un nome letterale."
+  },
+  "helpCookieTip": {
+    "message": "Usa Parola intera per corrispondenze esatte di nome, oppure Regex per pattern di prefisso come ^datadome-."
+  },
+  "helpContentTitle": {
+    "message": "Rilevamento dei contenuti della pagina"
+  },
+  "helpContentDescription": {
+    "message": "Cerca pattern di testo all'interno dell'HTML della pagina e nei tag script inline."
+  },
+  "helpContentWarning": {
+    "message": "La scansione completa della pagina può essere lenta su pagine grandi. Limita a Controlla solo gli script se la firma è nel codice JS."
+  },
+  "helpContentTip": {
+    "message": "Usa Parola intera per evitare falsi positivi da sottostringhe all'interno di parole più lunghe."
+  },
+  "helpDomTitle": {
+    "message": "Rilevamento tramite selettore DOM"
+  },
+  "helpDomDescription": {
+    "message": "Rileva elementi HTML usando selettori CSS. Si attiva quando l'elemento corrispondente è presente nel DOM."
+  },
+  "helpDomWarning": {
+    "message": "I selettori corrispondono solo agli elementi resi nel DOM effettivo — non a quelli all'interno di iframe o shadow root."
+  },
+  "helpDomTip": {
+    "message": "Usa selettori specifici come div#cf-challenge[data-ray] invece di quelli generici per ridurre i falsi positivi."
+  },
+  "helpPayloadTitle": {
+    "message": "Rilevamento del payload delle richieste"
+  },
+  "helpPayloadDescription": {
+    "message": "Monitora i corpi di tutte le richieste HTTP POST/PUT/PATCH alla ricerca di pattern di testo."
+  },
+  "helpPayloadWarning": {
+    "message": "Il monitoraggio del payload funziona solo per le richieste che la nostra estensione può intercettare (nessun corpo cifrato, nessun blob opaco)."
+  },
+  "helpPayloadTip": {
+    "message": "Combinalo con Pattern URL per limitare la corrispondenza a endpoint specifici."
+  },
+  "helpWarningLabel": {
+    "message": "Attenzione:"
+  },
+  "helpTipLabel": {
+    "message": "Suggerimento:"
+  },
+  "detectionMethodTitle": {
+    "message": "Metodo di rilevamento"
+  },
+  "noHelpContentAvailable": {
+    "message": "Nessun contenuto di aiuto disponibile per questo tipo di metodo."
+  },
+  "advNoCapturesHintFmt": {
+    "message": "Fai clic su \"Avvia cattura\" qui sopra per iniziare a catturare i dati {0}"
+  },
+  "advancedToolsHeading": {
+    "message": "Strumenti di rilevamento avanzati"
+  },
+  "advancedToolsSubtitle": {
+    "message": "Cattura e analizza i sistemi di protezione"
+  },
+  "advancedToolsHelpTitle": {
+    "message": "Aiuto"
+  },
+  "advancedToolsStepSelect": {
+    "message": "Seleziona rilevamento"
+  },
+  "advancedToolsChooseDetection": {
+    "message": "Scegli un rilevamento..."
+  },
+  "advancedToolsStepLoadUse": {
+    "message": "Carica e usa gli strumenti"
+  },
+  "advancedToolsLoadTools": {
+    "message": "Carica strumenti"
+  },
+  "advancedToolsClearAll": {
+    "message": "Cancella tutto"
+  },
+  "advancedToolsClearAllFooter": {
+    "message": "Cancella tutti gli strumenti"
+  },
+  "advancedToolsLearnMore": {
+    "message": "Scopri di più sugli strumenti avanzati"
+  },
+  "advancedToolsChange": {
+    "message": "Cambia"
+  },
+  "advancedToolsDetectionName": {
+    "message": "Nome del rilevamento"
+  },
+  "settingsLanguageTitle": {
+    "message": "Lingua"
+  },
+  "settingsLanguageDesc": {
+    "message": "Scegli la lingua dell'interfaccia. Di default si usa la lingua del browser."
+  },
+  "settingsLanguageAuto": {
+    "message": "Usa la lingua del browser"
+  },
+  "copiedJsonNotification": {
+    "message": "JSON copiato"
+  },
+  "detectionEmptyTitle": {
+    "message": "Nessun rilevamento"
+  },
+  "detectionBadgeNoCaptchas": {
+    "message": "✓ Nessun CAPTCHA"
+  },
+  "detectionBadgeNoAntibot": {
+    "message": "✓ Nessun anti-bot"
+  },
+  "detectionBadgeNoFingerprint": {
+    "message": "✓ Nessun fingerprinting"
+  },
+  "detectionDisabledTitle": {
+    "message": "Rilevamento disattivato"
+  },
+  "detectionDisabledDesc": {
+    "message": "Il rilevamento di sicurezza è attualmente disattivato."
+  },
+  "detectionDisabledAction": {
+    "message": "Attiva l’interruttore in alto per abilitare il rilevamento."
+  },
+  "rulesModalDetectorLabel": {
+    "message": "Regola di rilevamento"
+  },
+  "rulesAuthorHelpHint": {
+    "message": "Chi ha creato questo detector"
+  },
+  "rulesWindowConditionExamplesTitle": {
+    "message": "Esempi di condizioni window"
+  },
+  "rulesWindowConditionExamplesHint": {
+    "message": "Fai clic su un esempio per usarlo:"
+  },
+  "rulesBtnNextFmt": {
+    "message": "Avanti: {0}"
+  },
+  "rulesUsePropertyBtn": {
+    "message": "Usa proprietà"
+  }
+}

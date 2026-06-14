@@ -67,6 +67,12 @@ class Rules {
    * Setup event listeners
    */
   setupEventListeners() {
+    if (this.eventListenersSetup) {
+      return;
+    }
+
+    this.eventListenersSetup = true;
+
     // Search functionality
     const searchInput = document.querySelector('#rulesSearch');
     if (searchInput) {

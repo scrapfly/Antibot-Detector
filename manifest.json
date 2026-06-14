@@ -1,11 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "Scrapfly: anti-bot detector",
-  "version": "2.6",
-  "description": "Detect CAPTCHAs, anti-bot systems and fingerprinting technologies on websites",
+  "name": "__MSG_extensionName__",
+  "version": "2.7",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "en",
 
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
+    "extension_pages": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'none'; base-uri 'none'; form-action 'none'; object-src 'self'"
   },
 
   "permissions": [
@@ -84,16 +85,5 @@
     "32": "icons/icon32.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  },
-
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "modules/styles/notification-manager.css",
-        "detectors/*/*",
-        "sections/settings/default-settings.json"
-      ],
-      "matches": ["<all_urls>"]
-    }
-  ]
+  }
 }

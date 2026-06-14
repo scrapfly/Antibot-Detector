@@ -33,7 +33,8 @@
       "cacheDuration": 12,
       "cacheUnit": "hours",
       "cacheScope": "domain",
-      "blacklistedDomains": []
+      "blacklistedDomains": [],
+      "hooksConfig": {}
     },
 
     "jsApi": {

@@ -81,8 +81,10 @@ jobs:
           zip -r "artifact/antibot-detector-${TAG_NAME}.zip" . \
             -x ".git/*" ".github/*" ".claude/*" "artifact/*" \
             "CHANGELOG.md" "README.md" "LICENSE" ".gitignore" \
-            "CLAUDE.md" "AGENTS.md" \
-            "docs/*" "assets/*" "scripts/*"
+            "CLAUDE.md" "AGENTS.md" "MEMORY.md" \
+            "docs/*" "assets/*" "scripts/*" \
+            "test/*" "plans/*" "node_modules/*" "logs/*" \
+            "package.json" "package-lock.json" "*.test.js"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

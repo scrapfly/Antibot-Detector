@@ -211,7 +211,7 @@ async function finalizeDetection(tabId, state) {
         }
     }
 
-    const finalResults = Array.from(mergedDetections.values());
+    let finalResults = Array.from(mergedDetections.values());
     const normalizedFavicon = UrlUtils.normalizeFaviconForStorage(state.favicon, state.url);
 
     // Store to cache
@@ -222,6 +222,12 @@ async function finalizeDetection(tabId, state) {
     };
 
     const storedDataWithExpiry = await DetectionEngineManager.storeDetection(state.url, pageData, finalResults);
+    const preservedExistingCache = storedDataWithExpiry?.preservedExisting === true;
+
+    if (preservedExistingCache && storedDataWithExpiry.detectionResults?.length > 0) {
+        finalResults = storedDataWithExpiry.detectionResults;
+        Logger.background(`[Finalize] Preserved existing positive cache for tab ${tabId}; suppressing empty re-detection result`);
+    }
 
     // Update state with expiry info for immediate popup queries
     if (storedDataWithExpiry) {
@@ -258,7 +264,7 @@ async function finalizeDetection(tabId, state) {
     }
 
     // Save complete detections (includes hooks/fingerprints) to history
-    if (finalResults.length > 0) {
+    if (finalResults.length > 0 && !preservedExistingCache) {
         try {
             const pageData = {
                 url: state.url,
@@ -355,10 +361,7 @@ async function processDetectionData(message, sender) {
 
     // Show progress indicator in badge and track as active detection
     try {
-        Promise.all([
-            chrome.action.setBadgeText({ text: BADGE.TEXT.LOADING, tabId: tabId }),
-            chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.LOADING, tabId: tabId })
-        ]).catch(() => {});
+        startBadgeSpinner(tabId);
 
         // Create AbortController to allow cancellation if tab switch occurs
         const abortController = new AbortController();
@@ -720,4 +723,3 @@ async function processDetectionData(message, sender) {
         await Settings.sendWebhookIfEnabled(pageData, detectionResults);
     }
 }
-

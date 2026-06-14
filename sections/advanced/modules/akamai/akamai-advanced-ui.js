@@ -153,7 +153,7 @@ AkamaiAdvanced.prototype.displayCookiesModal = function(foundCookies, allCookies
                         ${foundCookies.map(cookie => `
                             <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <div class="copy-value" data-copy="${cookie.name}" style="font-weight: 500; color: var(--text-primary); font-family: monospace; cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="Click to copy">${cookie.name}</div>
+                                    <div class="copy-value" data-copy="${cookie.name}" style="font-weight: 500; color: var(--text-primary); font-family: monospace; cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="Click to copy">${FormatUtils.escapeHtml(cookie.name)}</div>
                                     <div style="display: flex; gap: 6px;">
                                         ${cookie.secure ? '<span style="font-size: 10px; background: var(--success); color: white; padding: 2px 6px; border-radius: 3px;">SECURE</span>' : ''}
                                         ${cookie.httpOnly ? '<span style="font-size: 10px; background: var(--bg-primary); color: var(--text-primary); padding: 2px 6px; border-radius: 3px;">HTTP</span>' : ''}
@@ -660,7 +660,7 @@ AkamaiAdvanced.prototype.displaySensorDataModal = function(data) {
                             readonly
                             style="width: 100%; min-height: 120px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; padding: 10px; color: var(--text-primary); font-family: monospace; font-size: 12px; resize: vertical; cursor: text;"
                             placeholder="No sensor data captured"
-                        >${sensorData}</textarea>
+                        >${AdvancedUtils.escapeHtml(sensorData || '')}</textarea>
                         ${sensorData ? `
                         <button
                             class="copy-sensor-btn"
@@ -681,7 +681,7 @@ AkamaiAdvanced.prototype.displaySensorDataModal = function(data) {
                             id="sbsdDataInput"
                             readonly
                             style="width: 100%; min-height: 80px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; padding: 10px; color: var(--text-primary); font-family: monospace; font-size: 12px; resize: vertical; cursor: text;"
-                        >${sbsdData}</textarea>
+                        >${AdvancedUtils.escapeHtml(sbsdData)}</textarea>
                         <button
                             class="copy-sbsd-btn"
                             style="position: absolute; top: 10px; right: 10px; background: var(--primary); color: white; border: none; border-radius: 4px; padding: 6px 12px; font-size: 11px; cursor: pointer;"

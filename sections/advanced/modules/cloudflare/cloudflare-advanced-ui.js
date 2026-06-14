@@ -2,7 +2,7 @@ CloudflareAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {
                 id: 'cloudflareCheckVersion',
-                label: 'Check Version',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckVersion')) || 'Check Version'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12.5,7H11V13L16.2,16.2L17.2,15.2L12.5,12.2V7Z"/>
@@ -11,7 +11,7 @@ CloudflareAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'cloudflareCheckCookies',
-                label: 'Check Cookies',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckCookies')) || 'Check Cookies'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A9,9 0 0,0 21,12A9,9 0 0,0 12,3M9,8A1.5,1.5 0 0,1 10.5,9.5A1.5,1.5 0 0,1 9,11A1.5,1.5 0 0,1 7.5,9.5A1.5,1.5 0 0,1 9,8M16.5,9.5A1.5,1.5 0 0,1 15,11A1.5,1.5 0 0,1 13.5,9.5A1.5,1.5 0 0,1 15,8A1.5,1.5 0 0,1 16.5,9.5M9,15A1.5,1.5 0 0,1 10.5,16.5A1.5,1.5 0 0,1 9,18A1.5,1.5 0 0,1 7.5,16.5A1.5,1.5 0 0,1 9,15M15,14A1.5,1.5 0 0,1 16.5,15.5A1.5,1.5 0 0,1 15,17A1.5,1.5 0 0,1 13.5,15.5A1.5,1.5 0 0,1 15,14Z"/>
@@ -29,7 +29,7 @@ CloudflareAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'cloudflareAnalyzeScripts',
-                label: 'Analyze Scripts',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnAnalyzeScripts')) || 'Analyze Scripts'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
@@ -162,7 +162,7 @@ CloudflareAdvanced.prototype.displaySiteKeyModal = function(sitekey, type = 'Unk
 
                 <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
                     <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">Site Key (Click to copy)</div>
-                    <div class="copy-value" data-copy="${siteKeyDisplay}" style="font-size: 12px; color: var(--text-primary); word-break: break-all; font-family: monospace; background: var(--bg-primary); padding: 12px; border-radius: 4px; cursor: pointer; transition: background 0.2s;" title="Click to copy">${siteKeyDisplay}</div>
+                    <div class="copy-value" data-copy="${siteKeyDisplay}" style="font-size: 12px; color: var(--text-primary); word-break: break-all; font-family: monospace; background: var(--bg-primary); padding: 12px; border-radius: 4px; cursor: pointer; transition: background 0.2s;" title="Click to copy">${FormatUtils.escapeHtml(siteKeyDisplay)}</div>
                 </div>
             </div>
         `;
@@ -230,7 +230,7 @@ CloudflareAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
             ${type.includes('Turnstile') ? `
                 <div class="advanced-modal-section">
                     <label class="advanced-modal-label">Site Key</label>
-                    <div class="advanced-modal-code-block" data-copy="${sitekey}" style="word-break: break-all;">${sitekey}</div>
+                    <div class="advanced-modal-code-block" data-copy="${sitekey}" style="word-break: break-all;">${FormatUtils.escapeHtml(sitekey)}</div>
                 </div>
 
                 <div class="advanced-modal-section">
@@ -246,7 +246,7 @@ CloudflareAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
 
             <div class="advanced-modal-section">
                 <label class="advanced-modal-label">Site URL</label>
-                <div class="advanced-modal-code-block" data-copy="${siteURL}" style="word-break: break-all;">${siteURL}</div>
+                <div class="advanced-modal-code-block" data-copy="${siteURL}" style="word-break: break-all;">${FormatUtils.escapeHtml(siteURL)}</div>
             </div>
 
             <!-- Timestamp Section (at bottom) -->

@@ -36,68 +36,10 @@ function handleCloudflareMessage(request, sender, sendResponse) {
             })();
             return true;
 
-        case 'CLOUDFLARE_CHECK_VERSION':
-            cloudflareCheckVersion(request.tabId);
-            sendResponse({ status: 'started' });
-            return false;
-
         default:
             return false;
     }
 }
-
-function cloudflareCheckVersion(tabId) {
-    Logger.network('[Cloudflare-CheckVersion] Starting version check for tab:', tabId);
-
-    const versionState = {
-        hasTurnstile: false,
-        hasChallenge: false,
-        detectionMethods: []
-    };
-
-    const requestListener = (details) => {
-        if (details.tabId !== tabId) return;
-        const url = details.url;
-
-        // Check for Turnstile (cdata/cAction parameters)
-        if (/turnstile|cdata|cAction/i.test(url)) {
-            if (url.includes('cdata') || url.includes('cAction')) {
-                versionState.hasTurnstile = true;
-                if (!versionState.detectionMethods.includes('cdata-caction-param')) {
-                    versionState.detectionMethods.push('cdata-caction-param');
-                }
-            }
-        }
-
-        // Check for Cloudflare Challenge
-        if (/cdn-cgi\/challenge-platform|challenges\.cloudflare\.com/.test(url)) {
-            versionState.hasChallenge = true;
-            if (!versionState.detectionMethods.includes('challenge-url')) {
-                versionState.detectionMethods.push('challenge-url');
-            }
-        }
-    };
-
-    const navigationListener = async (details) => {
-        if (details.tabId === tabId && details.frameId === 0) {
-            setTimeout(() => {
-                chrome.webRequest.onBeforeRequest.removeListener(requestListener);
-                chrome.webNavigation.onCompleted.removeListener(navigationListener);
-            }, 5000);
-        }
-    };
-
-    chrome.webRequest.onBeforeRequest.addListener(
-        requestListener,
-        { urls: ['<all_urls>'], tabId: tabId },
-        []
-    );
-
-    chrome.webNavigation.onCompleted.addListener(navigationListener);
-
-    return { status: 'started' };
-}
-
 
 function cloudflareStartAnalysis(tabId, url) {
     Logger.network('[Cloudflare-Analysis] Starting analysis mode for tab:', tabId);

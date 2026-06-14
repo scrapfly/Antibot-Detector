@@ -53,6 +53,59 @@ class StorageManager {
     }
 
     /**
+     * Normalize the Scrapfly settings container to the actual settings object.
+     * Supports current raw settings, legacy JSON strings, and old { settings } wrappers.
+     * @param {any} rawData - Raw scrapfly_settings value
+     * @returns {Object} Settings object
+     */
+    static normalizeSettings(rawData) {
+        const parsed = StorageManager.parseStoredValue(rawData, 'scrapfly_settings');
+        if (!parsed || typeof parsed !== 'object') {
+            return {};
+        }
+
+        if (parsed.settings && typeof parsed.settings === 'object') {
+            return parsed.settings;
+        }
+
+        return parsed;
+    }
+
+    /**
+     * Load normalized extension settings.
+     * @returns {Promise<Object>} Settings object
+     */
+    static async getSettings() {
+        try {
+            const result = await chrome.storage.local.get(['scrapfly_settings']) || {};
+            return StorageManager.normalizeSettings(result.scrapfly_settings);
+        } catch (error) {
+            Logger.error('STORAGE', 'Failed to load settings', error);
+            return {};
+        }
+    }
+
+    /**
+     * Save normalized extension settings in the canonical JSON-string wrapper format.
+     * @param {Object} settings - Settings object
+     * @returns {Promise<boolean>} Success status
+     */
+    static async saveSettings(settings) {
+        try {
+            await chrome.storage.local.set({
+                scrapfly_settings: JSON.stringify({
+                    timestamp: new Date().toISOString(),
+                    settings: settings || {}
+                }, null, 2)
+            });
+            return true;
+        } catch (error) {
+            Logger.error('STORAGE', 'Failed to save settings', error);
+            return false;
+        }
+    }
+
+    /**
      * Load data from Chrome storage with backward compatibility support
      * Automatically handles:
      * - Legacy key migration (old key → new key)
@@ -75,7 +128,7 @@ class StorageManager {
                 keysToLoad.push(legacyKey);
             }
 
-            const result = await chrome.storage.local.get(keysToLoad);
+            const result = await chrome.storage.local.get(keysToLoad) || {};
 
             let rawData = null;
             let needsMigration = false;
@@ -159,7 +212,7 @@ class StorageManager {
             }
 
             // Single Chrome storage call for all keys
-            const result = await chrome.storage.local.get(allKeys);
+            const result = await chrome.storage.local.get(allKeys) || {};
 
             // Process each key config
             const loadedData = {};

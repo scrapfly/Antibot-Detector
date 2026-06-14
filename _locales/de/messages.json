@@ -1,0 +1,1676 @@
+{
+  "extensionName": {
+    "message": "Scrapfly: Anti-Bot-Detektor"
+  },
+  "extensionDescription": {
+    "message": "Erkennt CAPTCHAs, Anti-Bot-Systeme und Fingerprinting-Technologien auf Websites"
+  },
+  "tabDetection": {
+    "message": "Erkennung"
+  },
+  "tabHistory": {
+    "message": "Verlauf"
+  },
+  "tabRules": {
+    "message": "Regeln"
+  },
+  "tabAdvanced": {
+    "message": "Erweitert"
+  },
+  "openSettings": {
+    "message": "Einstellungen öffnen"
+  },
+  "enableOrDisableDetection": {
+    "message": "Erkennung aktivieren oder deaktivieren"
+  },
+  "noDetectionsFound": {
+    "message": "Keine Erkennungen gefunden"
+  },
+  "analyzingPage": {
+    "message": "Seite wird analysiert"
+  },
+  "actionRemoveFromBlacklist": {
+    "message": "Von Sperrliste entfernen"
+  },
+  "advancedDomainBlacklisted": {
+    "message": "Erweiterte Tools für diese Domain deaktiviert"
+  },
+  "blacklistManageHint": {
+    "message": "Oder gehe zu Einstellungen → Erkennung → Gesperrte Domains zur Verwaltung."
+  },
+  "statDetections": {
+    "message": "Erkennungen"
+  },
+  "statConfidence": {
+    "message": "Vertrauen"
+  },
+  "statDifficulty": {
+    "message": "Schwierigkeit"
+  },
+  "statCacheScope": {
+    "message": "Cache-Bereich"
+  },
+  "scopeDomain": {
+    "message": "Domain"
+  },
+  "scopePath": {
+    "message": "Pfad"
+  },
+  "scopeFullUrl": {
+    "message": "Vollständige URL"
+  },
+  "difficultyLow": {
+    "message": "Niedrig"
+  },
+  "difficultyMedium": {
+    "message": "Mittel"
+  },
+  "difficultyHigh": {
+    "message": "Hoch"
+  },
+  "searchHistory": {
+    "message": "Verlauf suchen..."
+  },
+  "searchDetectors": {
+    "message": "Detektoren suchen..."
+  },
+  "paginationPrev": {
+    "message": "Vorherige Seite"
+  },
+  "paginationNext": {
+    "message": "Nächste Seite"
+  },
+  "paginationPage": {
+    "message": "Seite"
+  },
+  "paginationOf": {
+    "message": "von"
+  },
+  "paginationNoItems": {
+    "message": "Keine Elemente zum Anzeigen"
+  },
+  "paginationCurrentPageAria": {
+    "message": "Aktuelle Seitenzahl"
+  },
+  "btnImport": {
+    "message": "Importieren"
+  },
+  "btnExport": {
+    "message": "Exportieren"
+  },
+  "btnClear": {
+    "message": "Leeren"
+  },
+  "btnAdd": {
+    "message": "Hinzufügen"
+  },
+  "btnUpdate": {
+    "message": "Aktualisieren"
+  },
+  "btnClose": {
+    "message": "Schließen"
+  },
+  "btnSave": {
+    "message": "Speichern"
+  },
+  "btnCancel": {
+    "message": "Abbrechen"
+  },
+  "btnDelete": {
+    "message": "Löschen"
+  },
+  "historyImportTitle": {
+    "message": "Verlauf importieren"
+  },
+  "historyExportTitle": {
+    "message": "Verlauf exportieren"
+  },
+  "historyClearTitle": {
+    "message": "Verlauf leeren"
+  },
+  "historyEmptyTitle": {
+    "message": "Noch kein Verlauf"
+  },
+  "historyEmptyDescription": {
+    "message": "Der Erkennungsverlauf wird hier angezeigt, während du im Web surfst."
+  },
+  "rulesUpdateTitle": {
+    "message": "Nach Detektor-Updates suchen"
+  },
+  "rulesClearTitle": {
+    "message": "Alle Regeln löschen"
+  },
+  "rulesAddTitle": {
+    "message": "Neuen Detektor hinzufügen"
+  },
+  "rulesEmptyTitle": {
+    "message": "Keine Detektoren geladen"
+  },
+  "rulesEmptyDescription": {
+    "message": "Detektoren werden hier angezeigt, sobald sie aus Speicher und Dateien geladen sind."
+  },
+  "ruleModalActionEdit": {
+    "message": "Bearbeiten"
+  },
+  "ruleSectionDetectorInfo": {
+    "message": "Detektor-Informationen"
+  },
+  "ruleFieldName": {
+    "message": "Name"
+  },
+  "ruleFieldNamePlaceholder": {
+    "message": "Detektorname"
+  },
+  "ruleFieldCategory": {
+    "message": "Kategorie"
+  },
+  "categoryAntibot": {
+    "message": "Anti-Bot"
+  },
+  "categoryCaptcha": {
+    "message": "Captcha"
+  },
+  "categoryFingerprint": {
+    "message": "Fingerprint"
+  },
+  "ruleFieldDifficulty": {
+    "message": "Schwierigkeit"
+  },
+  "ruleFieldIcon": {
+    "message": "Symbol"
+  },
+  "ruleFieldVersion": {
+    "message": "Version"
+  },
+  "ruleFieldAuthor": {
+    "message": "Autor"
+  },
+  "ruleSectionBadgeColor": {
+    "message": "Badge-Farbe"
+  },
+  "ruleSectionDetectionMethods": {
+    "message": "Erkennungsmethoden"
+  },
+  "settingsTitle": {
+    "message": "Einstellungen"
+  },
+  "settingsSubtitle": {
+    "message": "Konfiguriere deine Erweiterungseinstellungen"
+  },
+  "settingsTabGeneral": {
+    "message": "Allgemein"
+  },
+  "settingsTabDetection": {
+    "message": "Erkennung"
+  },
+  "settingsTabHistory": {
+    "message": "Verlauf"
+  },
+  "settingsTabData": {
+    "message": "Daten"
+  },
+  "settingsGroupCoreSettings": {
+    "message": "Kerneinstellungen"
+  },
+  "settingsCardNotifications": {
+    "message": "Benachrichtigungen"
+  },
+  "settingsCardNotificationsDesc": {
+    "message": "Warnungen anzeigen, wenn Sicherheitssysteme erkannt werden"
+  },
+  "settingsCardDebug": {
+    "message": "Debug-Modus"
+  },
+  "settingsCardDebugDesc": {
+    "message": "Konsolen-Logging zum Debuggen aktivieren"
+  },
+  "settingsRowLogCollector": {
+    "message": "Log-Sammler"
+  },
+  "settingsRowMaxLogs": {
+    "message": "Max. Logs"
+  },
+  "settingsRowCollected": {
+    "message": "Gesammelt"
+  },
+  "settingsGroupDetectorUpdates": {
+    "message": "Detektor-Updates"
+  },
+  "settingsCardAutoUpdate": {
+    "message": "Automatisch nach Updates suchen"
+  },
+  "settingsCardAutoUpdateDesc": {
+    "message": "Automatisch nach neuen Detektor-Definitionen suchen"
+  },
+  "settingsRowCheckInterval": {
+    "message": "Prüfintervall"
+  },
+  "settingsCheckIntervalNever": {
+    "message": "Nie"
+  },
+  "settingsBtnCheckNow": {
+    "message": "Jetzt prüfen"
+  },
+  "settingsExtensionUpdateRequired": {
+    "message": "Erweiterungs-Update erforderlich"
+  },
+  "settingsBtnUpdateExtension": {
+    "message": "Erweiterung aktualisieren"
+  },
+  "settingsGroupBadgeColors": {
+    "message": "Badge-Farben"
+  },
+  "settingsRowLastCheck": {
+    "message": "Letzte Prüfung"
+  },
+  "advancedToolsTitle": {
+    "message": "Erweiterte Erfassungs-Tools"
+  },
+  "advancedToolsDescription": {
+    "message": "Extrahiere Cookies, Tokens und Sitekeys aus erkannten Schutzsystemen"
+  },
+  "advancedToolsHint": {
+    "message": "Besuche eine geschützte Seite, um die Erfassungs-Tools zu aktivieren"
+  },
+  "advancedSubtabTools": {
+    "message": "Werkzeuge"
+  },
+  "advancedSubtabHistory": {
+    "message": "Verlauf"
+  },
+  "advancedCaptureHistoryTitle": {
+    "message": "Erfassungsverlauf"
+  },
+  "advancedCaptureHistorySubtitle": {
+    "message": "Filtere, untersuche und exportiere gesammelte Erfassungen"
+  },
+  "advancedFilterSite": {
+    "message": "Website"
+  },
+  "advancedFilterAllSites": {
+    "message": "Alle Sites"
+  },
+  "advancedFilterCurrentSite": {
+    "message": "Aktuelle Site"
+  },
+  "advancedFilterModule": {
+    "message": "Modul"
+  },
+  "advancedFilterAllModules": {
+    "message": "Alle Module"
+  },
+  "advancedFilterSearch": {
+    "message": "Suche"
+  },
+  "advancedBtnExport": {
+    "message": "Exportieren"
+  },
+  "advancedBtnExportTitle": {
+    "message": "Erfassungen exportieren"
+  },
+  "advancedBtnClearAll": {
+    "message": "Alle löschen"
+  },
+  "advancedBtnClearAllTitle": {
+    "message": "Alle Erfassungen löschen"
+  },
+  "advancedEmptyCapturesTitle": {
+    "message": "Noch keine Erfassungen"
+  },
+  "advancedEmptyCapturesHint": {
+    "message": "Verwende die Tools-Registerkarte, um Daten von erkannten Systemen zu erfassen"
+  },
+  "advancedNoResultsTitle": {
+    "message": "Keine Erfassungen gefunden"
+  },
+  "advancedNoResultsHint": {
+    "message": "Versuche, die Filter oder die Suchanfrage anzupassen"
+  },
+  "advancedBtnResetFilters": {
+    "message": "Alle Filter zurücksetzen"
+  },
+  "advancedModalTitle": {
+    "message": "Erweiterte Erkennungs-Tools"
+  },
+  "advancedModalIntro": {
+    "message": "Spezialisierte Erfassungs-Tools zur tiefen Analyse von Anti-Bot-Systemen, CAPTCHAs und Fingerprinting-Technologien. Diese Tools erscheinen automatisch, wenn relevante Erkennungen gefunden werden."
+  },
+  "advancedSectionSupported": {
+    "message": "Derzeit unterstützte Systeme"
+  },
+  "advancedSectionHowItWorks": {
+    "message": "Wie es funktioniert"
+  },
+  "advancedStep1Title": {
+    "message": "Automatische Erkennung"
+  },
+  "advancedStep1Desc": {
+    "message": "Tools erscheinen, wenn relevante Anti-Bot-Systeme auf der aktuellen Seite erkannt werden"
+  },
+  "advancedStep2Title": {
+    "message": "Erfassung starten"
+  },
+  "advancedStep2Desc": {
+    "message": "Tools initialisieren automatisch Interceptors und beginnen mit der Überwachung von Netzwerkanfragen"
+  },
+  "advancedStep3Title": {
+    "message": "Ergebnisse überprüfen"
+  },
+  "advancedStep3Desc": {
+    "message": "Erfasste Daten werden vorübergehend (30 Minuten) mit vollständigen Exportmöglichkeiten gespeichert"
+  },
+  "advancedFooterHint": {
+    "message": "Ergebnisse laufen nach 30 Minuten ab, um frische Daten zu gewährleisten"
+  },
+  "settings": {
+    "message": "Einstellungen"
+  },
+  "paginationShowingFmt": {
+    "message": "Zeige {0}-{1} von {2}"
+  },
+  "paginationShowingItems": {
+    "message": "Zeige {0}-{1} von {2} {3}"
+  },
+  "timeUnknown": {
+    "message": "Unbekannt"
+  },
+  "timeJustNow": {
+    "message": "Gerade eben"
+  },
+  "timeSecondsAgoFmt": {
+    "message": "vor {0} s"
+  },
+  "timeMinutesAgoFmt": {
+    "message": "vor {0} m"
+  },
+  "timeHoursAgoFmt": {
+    "message": "vor {0} h"
+  },
+  "timeDaysAgoFmt": {
+    "message": "vor {0} T"
+  },
+  "timeOneMinuteAgo": {
+    "message": "vor 1 Minute"
+  },
+  "timeMinutesAgoLongFmt": {
+    "message": "vor {0} Minuten"
+  },
+  "timeOneHourAgo": {
+    "message": "vor 1h"
+  },
+  "timeHoursAgoLongFmt": {
+    "message": "vor {0}h"
+  },
+  "timeOneDayAgo": {
+    "message": "vor 1 Tag"
+  },
+  "timeDaysAgoLongFmt": {
+    "message": "vor {0} Tagen"
+  },
+  "timeOneWeekAgo": {
+    "message": "vor 1 Woche"
+  },
+  "timeWeeksAgoFmt": {
+    "message": "vor {0} Wochen"
+  },
+  "timeOneMonthAgo": {
+    "message": "vor 1 Monat"
+  },
+  "timeMonthsAgoFmt": {
+    "message": "vor {0} Monaten"
+  },
+  "timeOneYearAgo": {
+    "message": "vor 1 Jahr"
+  },
+  "timeYearsAgoFmt": {
+    "message": "vor {0} Jahren"
+  },
+  "btnCancelSettings": {
+    "message": "Abbrechen"
+  },
+  "btnSaveSettings": {
+    "message": "Einstellungen speichern"
+  },
+  "poweredBy": {
+    "message": "Bereitgestellt von"
+  },
+  "categoryColors": {
+    "message": "KATEGORIE-FARBEN"
+  },
+  "methodSuffixPatterns": {
+    "message": "Mustern"
+  },
+  "btnSaveRule": {
+    "message": "Regel speichern"
+  },
+  "tagColors": {
+    "message": "Tag-Farben"
+  },
+  "cacheConfiguration": {
+    "message": "Cache-Konfiguration"
+  },
+  "cacheDuration": {
+    "message": "Cache-Dauer"
+  },
+  "timeUnitMinutes": {
+    "message": "Minuten"
+  },
+  "timeUnitHours": {
+    "message": "Stunden"
+  },
+  "timeUnitDays": {
+    "message": "Tage"
+  },
+  "blacklistedDomains": {
+    "message": "Gesperrte Domains"
+  },
+  "blacklistedDomainsDesc": {
+    "message": "Domains, bei denen die Erkennung komplett übersprungen wird"
+  },
+  "jsApiEvents": {
+    "message": "JS-API-Ereignisse"
+  },
+  "jsApiEventsDesc": {
+    "message": "Benutzerdefinierte Events ans Page-Window senden"
+  },
+  "ruleMethodSettings": {
+    "message": "Erkennungsmethoden-Einstellungen"
+  },
+  "ruleConfidenceLevel": {
+    "message": "Vertrauensstufe"
+  },
+  "ruleConfidencePrefix": {
+    "message": "Erkennungs-Vertrauen:"
+  },
+  "detectionName": {
+    "message": "Erkennungsname"
+  },
+  "historyModalUrl": {
+    "message": "URL"
+  },
+  "interval6Hours": {
+    "message": "6 Stunden"
+  },
+  "interval12Hours": {
+    "message": "12 Stunden"
+  },
+  "interval24Hours": {
+    "message": "24 Stunden"
+  },
+  "interval2Days": {
+    "message": "2 Tage"
+  },
+  "interval1Week": {
+    "message": "1 Woche"
+  },
+  "methodLabelUrl": {
+    "message": "URL"
+  },
+  "methodLabelHeader": {
+    "message": "HEADER"
+  },
+  "methodLabelCookie": {
+    "message": "COOKIE"
+  },
+  "methodLabelContent": {
+    "message": "CONTENT"
+  },
+  "methodLabelDom": {
+    "message": "DOM"
+  },
+  "methodLabelJsHooks": {
+    "message": "JS HOOKS"
+  },
+  "methodLabelWindow": {
+    "message": "WINDOW"
+  },
+  "methodLabelPayload": {
+    "message": "PAYLOAD"
+  },
+  "methodOnePattern": {
+    "message": "1 Muster"
+  },
+  "methodPatternsFmt": {
+    "message": "{0} Muster"
+  },
+  "methodAddPattern": {
+    "message": "Muster hinzufügen"
+  },
+  "methodSearchPatterns": {
+    "message": "Muster suchen..."
+  },
+  "methodNoPatterns": {
+    "message": "Keine Muster"
+  },
+  "methodNoMatchingPatterns": {
+    "message": "Keine passenden Muster"
+  },
+  "methodSuffixMatches": {
+    "message": "Treffer"
+  },
+  "cacheExpiredLabel": {
+    "message": "Abgelaufen"
+  },
+  "copiedNotification": {
+    "message": "Kopiert"
+  },
+  "copiedInlineMsg": {
+    "message": "✓ Kopiert!"
+  },
+  "unknownDetection": {
+    "message": "Unbekannte Erkennung"
+  },
+  "matchSingular": {
+    "message": "Treffer"
+  },
+  "matchPlural": {
+    "message": "Treffer"
+  },
+  "noMatchesRecorded": {
+    "message": "Keine Treffer erfasst"
+  },
+  "clearCacheConfirmTitle": {
+    "message": "Cache leeren"
+  },
+  "clearCacheConfirmMsg": {
+    "message": "Dadurch werden die zwischengespeicherten Erkennungsdaten für diese Domain entfernt und eine neue Analyse ausgelöst."
+  },
+  "clearCacheConfirmBtn": {
+    "message": "Cache leeren"
+  },
+  "clearingMsg": {
+    "message": "Wird geleert..."
+  },
+  "clearedSuccessMsg": {
+    "message": "✓ Geleert!"
+  },
+  "cacheClearedToast": {
+    "message": "Cache geleert"
+  },
+  "failedToClearCacheToast": {
+    "message": "Cache konnte nicht geleert werden"
+  },
+  "unableGetCurrentPage": {
+    "message": "Aktuelle Seite kann nicht abgerufen werden"
+  },
+  "invalidDomain": {
+    "message": "Ungültige Domain"
+  },
+  "addBlacklistTitle": {
+    "message": "Zur Sperrliste hinzufügen"
+  },
+  "addBlacklistMsgFmt": {
+    "message": "Die Domain \"{0}\" wird von allen zukünftigen Erkennungen ausgeschlossen. Sie können sie später in den Einstellungen wieder entfernen."
+  },
+  "addBlacklistBtn": {
+    "message": "Zur Sperrliste hinzufügen"
+  },
+  "alreadyBlacklistedFmt": {
+    "message": "Die Domain \"{0}\" steht bereits auf der Sperrliste"
+  },
+  "addedToBlacklistFmt": {
+    "message": "\"{0}\" zur Sperrliste hinzugefügt"
+  },
+  "failedAddBlacklistFmt": {
+    "message": "Hinzufügen zur Sperrliste fehlgeschlagen: {0}"
+  },
+  "removedFromBlacklistFmt": {
+    "message": "\"{0}\" von der Sperrliste entfernt"
+  },
+  "failedRemoveBlacklistFmt": {
+    "message": "Entfernen von der Sperrliste fehlgeschlagen: {0}"
+  },
+  "historyNoDetections": {
+    "message": "Keine Erkennungen"
+  },
+  "historyNoDetectionsFound": {
+    "message": "Keine Erkennungen gefunden"
+  },
+  "historyMatchCountFmt": {
+    "message": "{0} Treffer"
+  },
+  "historyOneMatch": {
+    "message": "1 Treffer"
+  },
+  "notificationHistoryCleared": {
+    "message": "Verlauf gelöscht"
+  },
+  "notificationClearHistoryFailedFmt": {
+    "message": "Verlauf konnte nicht gelöscht werden: {0}"
+  },
+  "notificationHistoryItemExported": {
+    "message": "Verlaufseintrag exportiert"
+  },
+  "notificationCacheCleared": {
+    "message": "Cache geleert"
+  },
+  "notificationCacheAlreadyCleared": {
+    "message": "Cache bereits geleert"
+  },
+  "notificationClearCacheFailed": {
+    "message": "Cache konnte nicht geleert werden"
+  },
+  "notificationDomainBlacklistedFmt": {
+    "message": "\"{0}\" zur Sperrliste hinzugefügt"
+  },
+  "notificationBlacklistFailed": {
+    "message": "Hinzufügen zur Sperrliste fehlgeschlagen"
+  },
+  "notificationHistoryItemDeleted": {
+    "message": "Verlaufseintrag gelöscht"
+  },
+  "notificationDeleteHistoryItemFailed": {
+    "message": "Verlaufseintrag konnte nicht gelöscht werden"
+  },
+  "notificationHistoryExportedFmt": {
+    "message": "{0} Verlaufseinträge exportiert"
+  },
+  "notificationHistoryMergedFmt": {
+    "message": "{0} neue Verlaufseinträge zusammengeführt"
+  },
+  "notificationHistoryReplacedFmt": {
+    "message": "Verlauf durch {0} Einträge ersetzt"
+  },
+  "notificationImportHistoryFailedFmt": {
+    "message": "Verlauf konnte nicht importiert werden: {0}"
+  },
+  "dialogClearHistoryTitle": {
+    "message": "Verlauf löschen"
+  },
+  "dialogClearHistoryMessage": {
+    "message": "Möchten Sie wirklich den gesamten Verlauf löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+  },
+  "buttonClearAll": {
+    "message": "Alle löschen"
+  },
+  "dialogClearCacheTitle": {
+    "message": "Cache leeren"
+  },
+  "dialogClearCacheMessageFmt": {
+    "message": "Zwischengespeicherte Erkennungsdaten für {0} leeren? Der Verlaufseintrag bleibt erhalten."
+  },
+  "buttonClearCache": {
+    "message": "Cache leeren"
+  },
+  "dialogDeleteHistoryTitle": {
+    "message": "Verlaufseintrag löschen"
+  },
+  "dialogDeleteHistoryMessageFmt": {
+    "message": "Möchten Sie diese Erkennung von {0} wirklich löschen?"
+  },
+  "failedLoadSettingsDefault": {
+    "message": "Einstellungen konnten nicht geladen werden. Standardwerte werden verwendet."
+  },
+  "settingsSavedToast": {
+    "message": "Einstellungen gespeichert"
+  },
+  "failedSaveSettingsFmt": {
+    "message": "Einstellungen konnten nicht gespeichert werden: {0}"
+  },
+  "settingsResetToast": {
+    "message": "Einstellungen zurückgesetzt"
+  },
+  "dataClearedReloadNotice": {
+    "message": "Alle Daten erfolgreich gelöscht! Die Erweiterung wird neu geladen."
+  },
+  "failedClearDataFmt": {
+    "message": "Daten konnten nicht gelöscht werden: {0}"
+  },
+  "failedExportLogs": {
+    "message": "Protokolle konnten nicht exportiert werden"
+  },
+  "logsCleared": {
+    "message": "Protokolle gelöscht"
+  },
+  "failedClearLogs": {
+    "message": "Protokolle konnten nicht gelöscht werden"
+  },
+  "couldNotGetPageUrl": {
+    "message": "URL der aktuellen Seite konnte nicht abgerufen werden"
+  },
+  "domainAlreadyBlacklistedFmt": {
+    "message": "{0} steht bereits auf der Sperrliste"
+  },
+  "addedDomainToBlacklistFmt": {
+    "message": "{0} zur Sperrliste hinzugefügt"
+  },
+  "failedAddDomainFmt": {
+    "message": "Domain konnte nicht hinzugefügt werden: {0}"
+  },
+  "removedDomainFromBlacklistFmt": {
+    "message": "{0} von der Sperrliste entfernt"
+  },
+  "invalidSettingsFmt": {
+    "message": "Ungültige Einstellungen: {0}"
+  },
+  "pleaseEnterWebhookUrl": {
+    "message": "Bitte geben Sie eine Webhook-URL ein"
+  },
+  "webhookTestSuccessfulFmt": {
+    "message": "Webhook-Test erfolgreich! Status: {0}"
+  },
+  "webhookFailedStatusFmt": {
+    "message": "Webhook hat folgenden Status zurückgegeben: {0}"
+  },
+  "webhookTestFailedFmt": {
+    "message": "Webhook-Test fehlgeschlagen: {0}"
+  },
+  "foundDetectorUpdatesAvailableFmt": {
+    "message": "{0} Detektor-Updates verfügbar!"
+  },
+  "allDetectorsUpToDate": {
+    "message": "Alle Detektoren sind auf dem neuesten Stand."
+  },
+  "importDetectorsTitle": {
+    "message": "Detektoren importieren"
+  },
+  "importMergeQuestion": {
+    "message": "Möchten Sie sie mit vorhandenen Detektoren zusammenführen?"
+  },
+  "mergeOption": {
+    "message": "Zusammenführen"
+  },
+  "replaceAllOption": {
+    "message": "Alle ersetzen"
+  },
+  "detectorsImported": {
+    "message": "Detektoren importiert"
+  },
+  "failedImportDetectors": {
+    "message": "Detektoren konnten nicht importiert werden. Bitte das Dateiformat prüfen."
+  },
+  "errorReadingFileFmt": {
+    "message": "Fehler beim Lesen der Datei: {0}"
+  },
+  "detectorsUpdatedFmt": {
+    "message": "{0} Detektoren aktualisiert"
+  },
+  "updatesAvailableClickToApplyFmt": {
+    "message": "{0} Updates verfügbar – erneut klicken, um sie anzuwenden"
+  },
+  "detectorDeletedFmt": {
+    "message": "\"{0}\" gelöscht"
+  },
+  "allDetectorsCleared": {
+    "message": "Alle Detektoren gelöscht"
+  },
+  "failedClearDetectors": {
+    "message": "Detektoren konnten nicht gelöscht werden"
+  },
+  "urlPatternMatching": {
+    "message": "URL-Musterabgleich"
+  },
+  "textWordMatching": {
+    "message": "Text-/Wortabgleich"
+  },
+  "domSelectorMatching": {
+    "message": "DOM-Selektor-Abgleich"
+  },
+  "payloadTextMatching": {
+    "message": "Nutzlast-Textabgleich"
+  },
+  "nameFieldMatching": {
+    "message": "Namensfeld-Abgleich"
+  },
+  "captureNotFound": {
+    "message": "Aufzeichnung nicht gefunden"
+  },
+  "captureModuleClassNotFound": {
+    "message": "Modulklasse nicht gefunden"
+  },
+  "captureDetailsUnavailable": {
+    "message": "Detailansicht nicht verfügbar"
+  },
+  "captureDataCopied": {
+    "message": "Aufzeichnungsdaten kopiert"
+  },
+  "captureDeleted": {
+    "message": "Aufzeichnung gelöscht"
+  },
+  "capturesExportedFmt": {
+    "message": "{0} Aufzeichnungen exportiert"
+  },
+  "allCapturesCleared": {
+    "message": "Alle Aufzeichnungen gelöscht"
+  },
+  "captureExportFailed": {
+    "message": "Export der Aufzeichnung fehlgeschlagen"
+  },
+  "invalidUrl": {
+    "message": "Ungültige URL"
+  },
+  "importHistoryTitle": {
+    "message": "Verlauf importieren"
+  },
+  "importHistoryMessageFmt": {
+    "message": "{0} Verlaufseinträge importieren? Der aktuelle Verlauf enthält {1} Einträge."
+  },
+  "replaceOption": {
+    "message": "Ersetzen"
+  },
+  "settingsResetTitle": {
+    "message": "Einstellungen zurücksetzen"
+  },
+  "settingsResetMessage": {
+    "message": "Möchten Sie wirklich alle Einstellungen auf ihre Standardwerte zurücksetzen? Diese Aktion kann nicht rückgängig gemacht werden."
+  },
+  "btnReset": {
+    "message": "Zurücksetzen"
+  },
+  "clearAllDataTitle": {
+    "message": "Alle Daten löschen"
+  },
+  "clearAllDataMessage": {
+    "message": "Möchten Sie wirklich ALLE Erweiterungsdaten löschen? Dadurch werden entfernt:<br><br>• Der gesamte Erkennungsverlauf<br>• Alle Detektor-Regeln<br>• Alle Einstellungen<br><br>Diese Aktion kann nicht rückgängig gemacht werden!"
+  },
+  "clearEverythingBtn": {
+    "message": "Alles löschen"
+  },
+  "clearLogsTitle": {
+    "message": "Protokolle löschen"
+  },
+  "clearLogsMessage": {
+    "message": "Möchten Sie wirklich alle gesammelten Protokolle löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+  },
+  "failedCheckForUpdatesFmt": {
+    "message": "Suche nach Updates fehlgeschlagen: {0}"
+  },
+  "couldNotFetchUpdates": {
+    "message": "Updates konnten nicht vom Server abgerufen werden"
+  },
+  "errorApplyingUpdates": {
+    "message": "Fehler beim Anwenden der Updates"
+  },
+  "failedCheckForUpdates": {
+    "message": "Suche nach Updates fehlgeschlagen"
+  },
+  "errorCheckingForUpdates": {
+    "message": "Fehler bei der Suche nach Updates"
+  },
+  "updateServiceNotAvailable": {
+    "message": "Update-Dienst nicht verfügbar"
+  },
+  "clearAllDetectorsTitle": {
+    "message": "Alle Detektoren löschen"
+  },
+  "clearAllDetectorsMessage": {
+    "message": "Dadurch werden ALLE Detektoren entfernt. Sind Sie sicher?"
+  },
+  "clearingAllDetectors": {
+    "message": "Alle Detektoren werden gelöscht..."
+  },
+  "deleteDetectorTitle": {
+    "message": "Detektor löschen"
+  },
+  "deleteDetectorMessageFmt": {
+    "message": "Möchten Sie \"{0}\" wirklich löschen?"
+  },
+  "detectorNotFound": {
+    "message": "Detektor nicht gefunden"
+  },
+  "failedDeleteDetector": {
+    "message": "Detektor konnte nicht gelöscht werden"
+  },
+  "detectorNotFoundFmt": {
+    "message": "Detektor nicht gefunden: {0}"
+  },
+  "failedViewCaptureDetails": {
+    "message": "Aufzeichnungsdetails konnten nicht angezeigt werden"
+  },
+  "failedCopyCaptureData": {
+    "message": "Aufzeichnungsdaten konnten nicht kopiert werden"
+  },
+  "failedDeleteCapture": {
+    "message": "Aufzeichnung konnte nicht gelöscht werden"
+  },
+  "noCapturesToExport": {
+    "message": "Keine Aufzeichnungen zum Exportieren"
+  },
+  "clearAllCapturesConfirm": {
+    "message": "Möchten Sie wirklich alle Aufzeichnungen löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+  },
+  "failedClearCaptures": {
+    "message": "Aufzeichnungen konnten nicht gelöscht werden"
+  },
+  "settingsCardWebhookIntegration": {
+    "message": "Webhook-Integration"
+  },
+  "settingsEnableWebhook": {
+    "message": "Webhook aktivieren"
+  },
+  "settingsEnableWebhookDesc": {
+    "message": "Bei einer Erkennung HTTP-Anfragen senden"
+  },
+  "settingsBypassCache": {
+    "message": "Bei jedem Seitenaufruf senden (Cache umgehen)"
+  },
+  "settingsHttpMethod": {
+    "message": "HTTP-Methode"
+  },
+  "settingsHttpMethodDesc": {
+    "message": "Wählen Sie die HTTP-Methode für Webhook-Anfragen"
+  },
+  "settingsCustomMethod": {
+    "message": "Benutzerdefiniert"
+  },
+  "settingsCustomMethodPlaceholder": {
+    "message": "Benutzerdefinierte Methode eingeben (z. B. OPTIONS, HEAD)"
+  },
+  "settingsWebhookUrl": {
+    "message": "Webhook-URL"
+  },
+  "settingsWebhookUrlDesc": {
+    "message": "Vollständige Endpunkt-URL (https://api.example.com/webhook)"
+  },
+  "settingsAvailableVariables": {
+    "message": "Verfügbare Variablen:"
+  },
+  "settingsWebhookUrlExample": {
+    "message": "Beispiel: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
+  },
+  "settingsContentType": {
+    "message": "Content-Type"
+  },
+  "settingsContentTypeDesc": {
+    "message": "HTTP-Content-Type-Header"
+  },
+  "settingsCustomHeaders": {
+    "message": "Benutzerdefinierte Header"
+  },
+  "settingsCustomHeadersDesc": {
+    "message": "Fügen Sie der Webhook-Anfrage benutzerdefinierte HTTP-Header hinzu"
+  },
+  "settingsPayloadTemplate": {
+    "message": "Nutzlast-Vorlage"
+  },
+  "settingsPayloadTemplateDesc": {
+    "message": "Verwenden Sie Variablen: <SITEURL>, <HOSTNAME>, <TITLE>, <FAVICON>, <DETECTIONS>, <TIMESTAMP>, <DETECTION_COUNT>, <CATEGORIES>"
+  },
+  "settingsTestWebhook": {
+    "message": "Webhook testen"
+  },
+  "settingsTestWebhookDesc": {
+    "message": "Eine Testanfrage an Ihre Webhook-URL senden"
+  },
+  "settingsTestBtn": {
+    "message": "Testen"
+  },
+  "settingsCardHistoryConfig": {
+    "message": "Verlaufskonfiguration"
+  },
+  "settingsHistorySettings": {
+    "message": "Verlaufseinstellungen"
+  },
+  "settingsHistoryLimit": {
+    "message": "Verlaufslimit"
+  },
+  "settingsHistoryLimitNote": {
+    "message": "(0 = unbegrenzt)"
+  },
+  "settingsAutoClearDays": {
+    "message": "Automatisches Löschen (Tage)"
+  },
+  "settingsExportFormat": {
+    "message": "Exportformat"
+  },
+  "settingsExportFormatPlainText": {
+    "message": "Klartext"
+  },
+  "settingsIncludeTimestamps": {
+    "message": "Zeitstempel einschließen"
+  },
+  "settingsSaveOnCacheHits": {
+    "message": "Bei Cache-Treffern speichern"
+  },
+  "settingsCardDuplicatePrevention": {
+    "message": "Duplikatvermeidung"
+  },
+  "settingsEnableDuplicatePrevention": {
+    "message": "Duplikatvermeidung aktivieren"
+  },
+  "settingsDuplicatePreventionDesc": {
+    "message": "Doppelte Verlaufseinträge innerhalb eines Zeitfensters blockieren"
+  },
+  "settingsDuplicateScope": {
+    "message": "Bereich"
+  },
+  "settingsDuplicateScopeFullUrl": {
+    "message": "Vollständige URL"
+  },
+  "settingsDuplicateScopeDomain": {
+    "message": "Domain"
+  },
+  "settingsDuplicateScopePath": {
+    "message": "Pfad"
+  },
+  "settingsTimeWindow": {
+    "message": "Zeitfenster"
+  },
+  "settingsTimeMinutes": {
+    "message": "Minuten"
+  },
+  "settingsTimeHours": {
+    "message": "Stunden"
+  },
+  "settingsTimeDays": {
+    "message": "Tage"
+  },
+  "settingsHowItWorks": {
+    "message": "So funktioniert es:"
+  },
+  "settingsHowItWorksDesc": {
+    "message": "Verhindert doppelte Verlaufseinträge für dieselbe URL innerhalb des Zeitfensters."
+  },
+  "settingsDuplicateFullUrlBullet": {
+    "message": "Vollständige URL: Exakte URL-Übereinstimmung (inklusive Query-Parameter)"
+  },
+  "settingsDuplicateDomainBullet": {
+    "message": "Domain: Gleiche Domain (unterschiedliche Pfade gelten als identisch)"
+  },
+  "settingsDuplicatePathBullet": {
+    "message": "Pfad: Gleiche Domain + Pfad (Query-Parameter werden ignoriert)"
+  },
+  "settingsCardCacheSettings": {
+    "message": "Cache-Einstellungen"
+  },
+  "settingsCardSkipDomains": {
+    "message": "Domains überspringen"
+  },
+  "settingsAddCurrentPage": {
+    "message": "Aktuelle Seite hinzufügen"
+  },
+  "settingsSearchDomainsPlaceholder": {
+    "message": "Domains suchen..."
+  },
+  "settingsBadgeColorLow": {
+    "message": "Niedrig"
+  },
+  "settingsBadgeColorMedium": {
+    "message": "Mittel"
+  },
+  "settingsBadgeColorHigh": {
+    "message": "Hoch"
+  },
+  "settingsEnableJsApi": {
+    "message": "JS-API-Ereignisse aktivieren"
+  },
+  "settingsDataExportImport": {
+    "message": "Exportieren & importieren"
+  },
+  "settingsDataManagement": {
+    "message": "Datenverwaltung"
+  },
+  "settingsDataManagementDesc": {
+    "message": "Erweiterungsdaten exportieren oder importieren"
+  },
+  "settingsDataSettingsRow": {
+    "message": "Einstellungen"
+  },
+  "settingsDataSettingsRowDesc": {
+    "message": "Erweiterungseinstellungen exportieren oder importieren"
+  },
+  "settingsDataHistoryRow": {
+    "message": "Erkennungsverlauf"
+  },
+  "settingsDataHistoryRowDesc": {
+    "message": "Erkennungsverlauf als CSV exportieren"
+  },
+  "settingsDataExportSettingsTitle": {
+    "message": "Einstellungen exportieren"
+  },
+  "settingsDataImportSettingsTitle": {
+    "message": "Einstellungen importieren"
+  },
+  "settingsDataExportHistoryTitle": {
+    "message": "Verlauf exportieren"
+  },
+  "settingsAvailableEvents": {
+    "message": "Verfügbare Ereignisse:"
+  },
+  "settingsApiEventReady": {
+    "message": "Erweiterung geladen und initialisiert"
+  },
+  "settingsApiEventOnStart": {
+    "message": "Erkennung gestartet (Cache-Fehltreffer / manuell)"
+  },
+  "settingsApiEventOnProgress": {
+    "message": "Erkennungsfortschritt-Updates (auf Methodenebene)"
+  },
+  "settingsApiEventOnHooksComplete": {
+    "message": "Überwachung der JS-Hooks abgeschlossen"
+  },
+  "settingsApiEventOnWindowPropsComplete": {
+    "message": "Überwachung der Window-Eigenschaften abgeschlossen"
+  },
+  "settingsApiEventOnDetection": {
+    "message": "Erkennung mit Ergebnissen abgeschlossen"
+  },
+  "settingsApiEventOnError": {
+    "message": "Bei der Erkennung ist ein Fehler aufgetreten"
+  },
+  "settingsUsageExample": {
+    "message": "Anwendungsbeispiel:"
+  },
+  "detectionDisabledForDomain": {
+    "message": "Erkennung für diese Domain deaktiviert"
+  },
+  "detectionRemoveFromBlacklistBtn": {
+    "message": "Von der Sperrliste entfernen"
+  },
+  "detectionBlacklistHint": {
+    "message": "Oder verwalten Sie sie unter Einstellungen → Erkennung → Gesperrte Domains."
+  },
+  "detectionNoDetectionsDesc": {
+    "message": "Auf dieser Seite wurden keine passenden Anti-Bot-, CAPTCHA- oder Fingerprinting-Signale gefunden."
+  },
+  "detectionNoCachedDataDesc": {
+    "message": "Für diese Seite sind keine zwischengespeicherten Erkennungsdaten verfügbar. Laden Sie die Seite neu, um einen neuen Scan durchzuführen."
+  },
+  "detectionTitleUploadPaste": {
+    "message": "Erkennungen hochladen (teilbarer Link)"
+  },
+  "pasteUploadSuccessToast": {
+    "message": "Link in die Zwischenablage kopiert"
+  },
+  "failedReadSettings": {
+    "message": "Einstellungen konnten nicht gelesen werden — Vorgang abgebrochen"
+  },
+  "failedRemoveBlacklist": {
+    "message": "Entfernen von der Sperrliste fehlgeschlagen"
+  },
+  "pasteConfirmTitle": {
+    "message": "Erkennungen hochladen?"
+  },
+  "pasteConfirmMsg": {
+    "message": "Dies lädt eine Zusammenfassung der Erkennungen dieser Seite zu einem öffentlichen Paste hoch (dpaste.com, nicht gelistet, läuft in 30 Tagen ab). Jeder mit dem Link kann es ansehen. Der URL-Query-String und Cookie-/Header-Werte sind nicht enthalten."
+  },
+  "pasteConfirmBtn": {
+    "message": "Hochladen"
+  },
+  "pasteUploadFailedToast": {
+    "message": "Upload fehlgeschlagen"
+  },
+  "pasteNoDetectionsToast": {
+    "message": "Keine Erkennungen zum Hochladen"
+  },
+  "detectionTitleClearCache": {
+    "message": "Cache leeren"
+  },
+  "detectionTitleCopyOverview": {
+    "message": "Übersicht kopieren"
+  },
+  "detectionTitleBlockDomain": {
+    "message": "Diese Domain blockieren"
+  },
+  "detectionStatDetections": {
+    "message": "ERKENNUNGEN"
+  },
+  "detectionStatConfidence": {
+    "message": "ZUVERLÄSSIGKEIT"
+  },
+  "detectionStatDifficulty": {
+    "message": "SCHWIERIGKEIT"
+  },
+  "detectionStatCacheScope": {
+    "message": "CACHE-BEREICH"
+  },
+  "detectionStatCacheExpiration": {
+    "message": "CACHE-ABLAUF"
+  },
+  "detectionSearchPlaceholder": {
+    "message": "Erkennungen suchen..."
+  },
+  "detectionPaginationPage": {
+    "message": "Seite"
+  },
+  "detectionPaginationOf": {
+    "message": "von"
+  },
+  "detectionDomainBlacklistedTitle": {
+    "message": "Diese Domain steht auf der Sperrliste"
+  },
+  "detectionModalConfidence": {
+    "message": "Zuverlässigkeit"
+  },
+  "detectionModalDifficulty": {
+    "message": "Schwierigkeit"
+  },
+  "detectionModalMatchesFound": {
+    "message": "Gefundene Treffer"
+  },
+  "detectionModalAuthor": {
+    "message": "Autor"
+  },
+  "detectionModalDescription": {
+    "message": "Beschreibung"
+  },
+  "detectionModalNoDescription": {
+    "message": "Keine Beschreibung verfügbar."
+  },
+  "detectionModalDetectionMethods": {
+    "message": "Erkennungsmethoden"
+  },
+  "detectionModalNoMethodsDetected": {
+    "message": "Keine Methoden erkannt"
+  },
+  "advancedSearchPlaceholder": {
+    "message": "Nach URL, Modul, Website oder Inhalt suchen..."
+  },
+  "advancedPaginationPage": {
+    "message": "Seite"
+  },
+  "advancedPaginationOf": {
+    "message": "von"
+  },
+  "advancedInfoRecaptchaDesc": {
+    "message": "Erfasst Site-Keys, Aktionen und Konfigurationsparameter"
+  },
+  "advancedInfoAkamaiDesc": {
+    "message": "Fängt Sensordaten ab und extrahiert Versionsinformationen"
+  },
+  "advancedInfoImpervaTitle": {
+    "message": "Imperva / Incapsula"
+  },
+  "advancedInfoImpervaDesc": {
+    "message": "Überwacht Cookies und Änderungen der Schutzstufe"
+  },
+  "advancedInfoShapeSecurityDesc": {
+    "message": "Analysiert dynamische Header und Skriptparameter"
+  },
+  "advancedInfoAwsWafDesc": {
+    "message": "Erfasst Challenge-Endpunkte und Token-Details"
+  },
+  "btnStartCapturing": {
+    "message": "Aufzeichnung starten"
+  },
+  "btnStopCapturing": {
+    "message": "Aufzeichnung stoppen"
+  },
+  "btnCheckCookies": {
+    "message": "Cookies prüfen"
+  },
+  "btnCheckVersion": {
+    "message": "Version prüfen"
+  },
+  "btnAnalyzeScripts": {
+    "message": "Skripte analysieren"
+  },
+  "btnExtractSiteKey": {
+    "message": "SiteKey extrahieren"
+  },
+  "btnObtainSelector": {
+    "message": "Selektor abrufen"
+  },
+  "btnCopyAllData": {
+    "message": "Alle Daten kopieren"
+  },
+  "btnClearData": {
+    "message": "Daten löschen"
+  },
+  "advCapturedDataSection": {
+    "message": "Erfasste Daten"
+  },
+  "advNoCapturesYet": {
+    "message": "Noch keine Aufzeichnungen"
+  },
+  "advCaptureDetails": {
+    "message": "Aufzeichnungsdetails"
+  },
+  "advValueCopied": {
+    "message": "Wert kopiert"
+  },
+  "advConfirmClearAllTitle": {
+    "message": "Alle erfassten Daten löschen?"
+  },
+  "advConfirmClearAllMsg": {
+    "message": "Dadurch werden alle erfassten Daten für diesen Anbieter dauerhaft gelöscht."
+  },
+  "rulesColorPickerCancel": {
+    "message": "Abbrechen"
+  },
+  "rulesColorPickerOk": {
+    "message": "OK"
+  },
+  "rulesContentSearchScopeTitle": {
+    "message": "Inhalts-Suchbereich"
+  },
+  "rulesOnlyCheckScripts": {
+    "message": "Nur Skripte prüfen"
+  },
+  "rulesOnlyCheckScriptsHint": {
+    "message": "Suche auf JavaScript-Code und Skript-URLs beschränken"
+  },
+  "rulesScopeSettingsTitle": {
+    "message": "Bereichseinstellungen"
+  },
+  "rulesNameScopeLabel": {
+    "message": "Namensbereich"
+  },
+  "rulesNameScopeHint": {
+    "message": "Wo nach Namens-/Feldübereinstimmungen gesucht werden soll"
+  },
+  "rulesScopeRequest": {
+    "message": "Anfrage"
+  },
+  "rulesScopeResponse": {
+    "message": "Antwort"
+  },
+  "rulesScopeAll": {
+    "message": "Alle"
+  },
+  "rulesValueScopeLabel": {
+    "message": "Wertebereich"
+  },
+  "rulesValueScopeHint": {
+    "message": "Wo nach Wertübereinstimmungen gesucht werden soll"
+  },
+  "rulesUrlScopeSettings": {
+    "message": "URL-Bereichseinstellungen"
+  },
+  "rulesUrlScopeLabel": {
+    "message": "URL-Bereich"
+  },
+  "rulesUrlScopePageOnly": {
+    "message": "Seite"
+  },
+  "rulesUrlScopeScripts": {
+    "message": "Skripte"
+  },
+  "rulesUrlScopeAllDefault": {
+    "message": "Alle (Standard)"
+  },
+  "rulesRequestConstraints": {
+    "message": "Anfrage-Einschränkungen"
+  },
+  "rulesUrlPatternOptional": {
+    "message": "URL-Muster (optional)"
+  },
+  "rulesUrlRegex": {
+    "message": "URL Regulärer Ausdruck (Regex)"
+  },
+  "rulesUrlCaseSensitive": {
+    "message": "URL Groß-/Kleinschreibung beachten"
+  },
+  "rulesHttpMethodSelect": {
+    "message": "HTTP-Methode (eine auswählen)"
+  },
+  "rulesHttpMethodFilterHint": {
+    "message": "Nach Anfragemethode filtern (optional)"
+  },
+  "rulesHttpMethodAny": {
+    "message": "Beliebig"
+  },
+  "rulesPatternMatchingOptions": {
+    "message": "Optionen für den Musterabgleich"
+  },
+  "rulesPatternRegex": {
+    "message": "Regulärer Ausdruck (Regex)"
+  },
+  "rulesPatternWholeWord": {
+    "message": "Ganzes Wort"
+  },
+  "rulesPatternCaseSensitive": {
+    "message": "Groß-/Kleinschreibung beachten"
+  },
+  "rulesValueFieldOptions": {
+    "message": "Optionen für Wertfeld"
+  },
+  "rulesApplySettings": {
+    "message": "Einstellungen anwenden"
+  },
+  "rulesDomSelectorHelper": {
+    "message": "DOM-Selektor-Helfer"
+  },
+  "rulesStartTypingSuggestions": {
+    "message": "Tippen Sie, um Vorschläge zu sehen"
+  },
+  "rulesUseSelectorBtn": {
+    "message": "Selektor verwenden"
+  },
+  "rulesWindowPropertiesHelper": {
+    "message": "Helfer für Window-Eigenschaften"
+  },
+  "rulesStepEnterKeyword": {
+    "message": "Stichwort eingeben"
+  },
+  "rulesStepChooseProperty": {
+    "message": "Eigenschaft auswählen"
+  },
+  "rulesStepSelectCondition": {
+    "message": "Bedingung auswählen"
+  },
+  "rulesConditionExists": {
+    "message": "Vorhanden"
+  },
+  "rulesConditionGroupType": {
+    "message": "Typ"
+  },
+  "rulesTypeofObject": {
+    "message": "Object"
+  },
+  "rulesTypeofFunction": {
+    "message": "Function"
+  },
+  "rulesTypeofString": {
+    "message": "String"
+  },
+  "rulesTypeofNumber": {
+    "message": "Number"
+  },
+  "rulesTypeofBoolean": {
+    "message": "Boolean"
+  },
+  "notifConfirmTitleDefault": {
+    "message": "Bestätigen"
+  },
+  "notifConfirmMessageDefault": {
+    "message": "Sind Sie sicher?"
+  },
+  "notifLoadingDefault": {
+    "message": "Wird geladen..."
+  },
+  "helperPatternStartTypingSuggestions": {
+    "message": "Tippen Sie oben, um Vorschläge zu sehen..."
+  },
+  "helperPatternStartTypingExamples": {
+    "message": "Tippen Sie oben, um Beispiele zu sehen..."
+  },
+  "helpJsHooksTitle": {
+    "message": "Erkennung über JavaScript-Hooks"
+  },
+  "helpJsHooksDescription": {
+    "message": "Hooks fangen Browser-API-Aufrufe ab (Canvas, Audio, WebGL usw.), um Anti-Bot-Fingerprinting-Code in Echtzeit zu erkennen, sobald die Seite auf diese APIs zugreift."
+  },
+  "helpJsHooksWarning": {
+    "message": "Hooks müssen bei document_start installiert werden, bevor ein Seitenskript ausgeführt wird – andernfalls kann die Seite Referenzen auf die ursprünglichen APIs speichern, bevor unser Shim aktiv ist."
+  },
+  "helpJsHooksTip": {
+    "message": "Fügen Sie ein Ziel wie CanvasRenderingContext2D.prototype.getImageData hinzu, um Canvas-Fingerprinting zu erkennen."
+  },
+  "helpWindowTitle": {
+    "message": "Erkennung über Window-Eigenschaften"
+  },
+  "helpWindowDescription": {
+    "message": "Erkennt JavaScript-Objekte und -Eigenschaften, die von Anti-Bot-Skripten zum globalen Window-Objekt hinzugefügt werden."
+  },
+  "helpWindowWarning": {
+    "message": "Einige Anti-Bot-Skripte verwenden Symbol()-Schlüssel, die nicht aufzählbar sind – diese sind schwerer zu erkennen."
+  },
+  "helpWindowTip": {
+    "message": "Verwenden Sie Bedingungen wie typeof object oder exists, um den Eigenschaftstyp abzugleichen."
+  },
+  "helpUrlTitle": {
+    "message": "Erkennung über URL-Muster"
+  },
+  "helpUrlDescription": {
+    "message": "Gleicht URLs geladener Ressourcen (Skripte, Bilder, Netzwerkanfragen) mit Mustern ab."
+  },
+  "helpUrlWarning": {
+    "message": "Bei Mustern wird standardmäßig die Groß-/Kleinschreibung beachtet. Schalten Sie die Option \"URL Groß-/Kleinschreibung beachten\" um, wenn Sie einen Abgleich ohne Beachtung der Groß-/Kleinschreibung benötigen."
+  },
+  "helpUrlTip": {
+    "message": "Verwenden Sie die Regex-Option für komplexe Muster wie /\\/v\\d+\\/challenge/."
+  },
+  "helpHeaderTitle": {
+    "message": "Erkennung über HTTP-Header"
+  },
+  "helpHeaderDescription": {
+    "message": "Erkennt HTTP-Request- und -Response-Header, die von Anti-Bot-Middleware gesetzt werden."
+  },
+  "helpHeaderWarning": {
+    "message": "Einige Header sind nur in der ursprünglichen Anfrage vorhanden – stellen Sie sicher, dass Ihr Bereich \"Anfrage\" einschließt."
+  },
+  "helpHeaderTip": {
+    "message": "Häufige Ziele: x-akamai-bot-manager-token, cf-ray, x-shape-version."
+  },
+  "helpCookieTitle": {
+    "message": "Erkennung über Cookies"
+  },
+  "helpCookieDescription": {
+    "message": "Erkennt Cookies, die von Anti-Bot-Challenges gesetzt werden. Gleicht den Cookie-Namen (und optional das Wertmuster) ab."
+  },
+  "helpCookieWarning": {
+    "message": "Cookie-Namen mit zufälligen Suffixen (z. B. _abck-xyz123) erfordern ein Regex-Muster anstelle eines wörtlichen Namens."
+  },
+  "helpCookieTip": {
+    "message": "Verwenden Sie \"Ganzes Wort\" für exakte Namensübereinstimmungen oder \"Regex\" für Präfixmuster wie ^datadome-."
+  },
+  "helpContentTitle": {
+    "message": "Erkennung über Seiteninhalte"
+  },
+  "helpContentDescription": {
+    "message": "Sucht nach Textmustern im HTML der Seite und in Inline-Skript-Tags."
+  },
+  "helpContentWarning": {
+    "message": "Das Scannen der gesamten Seite kann bei großen Seiten langsam sein. Beschränken Sie es auf \"Nur Skripte prüfen\", wenn die Signatur im JS-Code liegt."
+  },
+  "helpContentTip": {
+    "message": "Verwenden Sie \"Ganzes Wort\", um Fehlalarme durch Teilzeichenfolgen innerhalb längerer Wörter zu vermeiden."
+  },
+  "helpDomTitle": {
+    "message": "Erkennung über DOM-Selektoren"
+  },
+  "helpDomDescription": {
+    "message": "Erkennt HTML-Elemente über CSS-Selektoren. Wird ausgelöst, wenn das übereinstimmende Element im DOM vorhanden ist."
+  },
+  "helpDomWarning": {
+    "message": "Selektoren stimmen nur mit Elementen überein, die in das tatsächliche DOM gerendert wurden – nicht mit solchen innerhalb von iframes oder Shadow Roots."
+  },
+  "helpDomTip": {
+    "message": "Verwenden Sie spezifische Selektoren wie div#cf-challenge[data-ray] anstelle von generischen, um Fehlalarme zu reduzieren."
+  },
+  "helpPayloadTitle": {
+    "message": "Erkennung über Anfrage-Nutzlast"
+  },
+  "helpPayloadDescription": {
+    "message": "Überwacht alle HTTP-POST/PUT/PATCH-Anfrage-Bodies auf Textmuster."
+  },
+  "helpPayloadWarning": {
+    "message": "Die Nutzlast-Überwachung funktioniert nur für Anfragen, die unsere Erweiterung abfangen kann (keine verschlüsselten Bodies, keine undurchsichtigen Blobs)."
+  },
+  "helpPayloadTip": {
+    "message": "Kombinieren Sie dies mit einem URL-Muster, um den Abgleich auf bestimmte Endpunkte zu beschränken."
+  },
+  "helpWarningLabel": {
+    "message": "Warnung:"
+  },
+  "helpTipLabel": {
+    "message": "Tipp:"
+  },
+  "detectionMethodTitle": {
+    "message": "Erkennungsmethode"
+  },
+  "noHelpContentAvailable": {
+    "message": "Für diesen Methodentyp ist keine Hilfe verfügbar."
+  },
+  "advNoCapturesHintFmt": {
+    "message": "Klicken Sie oben auf \"Aufzeichnung starten\", um mit der Erfassung von {0}-Daten zu beginnen"
+  },
+  "advancedToolsHeading": {
+    "message": "Erweiterte Erkennungstools"
+  },
+  "advancedToolsSubtitle": {
+    "message": "Schutzsysteme erfassen und analysieren"
+  },
+  "advancedToolsHelpTitle": {
+    "message": "Hilfe"
+  },
+  "advancedToolsStepSelect": {
+    "message": "Erkennung auswählen"
+  },
+  "advancedToolsChooseDetection": {
+    "message": "Erkennung wählen..."
+  },
+  "advancedToolsStepLoadUse": {
+    "message": "Tools laden und verwenden"
+  },
+  "advancedToolsLoadTools": {
+    "message": "Tools laden"
+  },
+  "advancedToolsClearAll": {
+    "message": "Alles löschen"
+  },
+  "advancedToolsClearAllFooter": {
+    "message": "Alle Tools löschen"
+  },
+  "advancedToolsLearnMore": {
+    "message": "Mehr über erweiterte Tools erfahren"
+  },
+  "advancedToolsChange": {
+    "message": "Ändern"
+  },
+  "advancedToolsDetectionName": {
+    "message": "Erkennungsname"
+  },
+  "settingsLanguageTitle": {
+    "message": "Sprache"
+  },
+  "settingsLanguageDesc": {
+    "message": "Überschreibt die UI-Sprache. Standardmäßig folgt sie Ihrem Browser."
+  },
+  "settingsLanguageAuto": {
+    "message": "Browsersprache verwenden"
+  },
+  "copiedJsonNotification": {
+    "message": "JSON kopiert"
+  },
+  "detectionEmptyTitle": {
+    "message": "Nichts erkannt"
+  },
+  "detectionBadgeNoCaptchas": {
+    "message": "✓ Keine CAPTCHAs"
+  },
+  "detectionBadgeNoAntibot": {
+    "message": "✓ Kein Anti-Bot"
+  },
+  "detectionBadgeNoFingerprint": {
+    "message": "✓ Kein Fingerprinting"
+  },
+  "detectionDisabledTitle": {
+    "message": "Erkennung deaktiviert"
+  },
+  "detectionDisabledDesc": {
+    "message": "Die Sicherheitserkennung ist derzeit ausgeschaltet."
+  },
+  "detectionDisabledAction": {
+    "message": "Schalten Sie oben den Schalter um, um die Erkennung zu aktivieren."
+  },
+  "rulesModalDetectorLabel": {
+    "message": "Erkennungsregel"
+  },
+  "rulesAuthorHelpHint": {
+    "message": "Wer hat diesen Detektor erstellt"
+  },
+  "rulesWindowConditionExamplesTitle": {
+    "message": "Window-Bedingungsbeispiele"
+  },
+  "rulesWindowConditionExamplesHint": {
+    "message": "Klicken Sie auf ein Beispiel, um es zu verwenden:"
+  },
+  "rulesBtnNextFmt": {
+    "message": "Weiter: {0}"
+  },
+  "rulesUsePropertyBtn": {
+    "message": "Eigenschaft verwenden"
+  }
+}

@@ -4,11 +4,15 @@
  */
 
 Rules.prototype.setupMethodSettingsModal = function() {
-    // Prevent duplicate event listener registration
-    if (this.eventListenersSetup) {
+    // Prevent duplicate event listener registration. Use a DISTINCT flag from
+    // rules.js setupEventListeners() — that function sets this.eventListenersSetup
+    // = true BEFORE calling this (via setupModalEventListeners), so sharing the
+    // flag made this bail out early and the method-section handlers (header
+    // expand/collapse, add pattern, pagination, add value) were never attached.
+    if (this.methodSettingsListenersSetup) {
       return;
     }
-    this.eventListenersSetup = true;
+    this.methodSettingsListenersSetup = true;
 
     const modal = document.querySelector('#methodSettingsModal');
     const closeBtn = document.querySelector('#closeMethodSettings');
@@ -83,7 +87,7 @@ Rules.prototype.setupMethodSettingsModal = function() {
         const fieldType = fieldActions?.dataset.fieldType || 'name';
         const methodItem = button.closest('.method-item');
         if (methodItem) {
-          const methodKey = methodItem.querySelector('.method-input')?.dataset.methodKey || '';
+          const methodKey = this.getMethodItemType(methodItem);
           if (methodKey === 'window' && fieldType === 'value') {
             return;
           }
@@ -298,6 +302,52 @@ Rules.prototype.setupMethodSettingsModal = function() {
     });
   };
 
+Rules.prototype.getMethodItemType = function(methodItem) {
+    const section = methodItem?.closest('.method-section');
+    const sectionType = typeof this.getMethodSectionType === 'function'
+      ? this.getMethodSectionType(section)
+      : section?.dataset?.methodType;
+    const inputType = methodItem?.querySelector('.method-input')?.dataset.methodKey || '';
+    const methodType = (sectionType || inputType || '').toLowerCase();
+
+    return methodType === 'js hooks' ? 'js_hooks' : methodType;
+};
+
+Rules.prototype.formatMethodSettingsMethodName = function(methodType) {
+    const labels = {
+      url: 'URL',
+      dom: 'DOM',
+      js_hooks: 'JS Hooks',
+      header: 'Header',
+      cookie: 'Cookie',
+      content: 'Content',
+      window: 'Window',
+      payload: 'Payload'
+    };
+
+    if (labels[methodType]) {
+      return labels[methodType];
+    }
+
+    return methodType
+      ? methodType.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())
+      : 'Method';
+};
+
+Rules.prototype.updateMethodSettingsTitle = function(methodType) {
+    const title = document.querySelector('#methodSettingsTitle');
+    if (!title) return;
+
+    const detector = this.currentEditDetector?.detector || {};
+    const activeName = document.querySelector('#detectorNameInput')?.value.trim();
+    const detectorName = activeName || detector.displayName || detector.name || this.currentEditDetector?.detectorName || '';
+    const methodName = this.formatMethodSettingsMethodName(methodType);
+
+    title.textContent = detectorName
+      ? `${detectorName} ${methodName} Settings`
+      : `${methodName} Settings`;
+};
+
 Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name') {
     const modal = document.querySelector('#methodSettingsModal');
     if (!modal) return;
@@ -307,7 +357,8 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
     this.currentFieldType = fieldType;
 
     // Determine method type from the method item
-    const methodKey = methodItem.querySelector('.method-input')?.dataset.methodKey || '';
+    const methodKey = this.getMethodItemType(methodItem);
+    this.updateMethodSettingsTitle(methodKey);
     const isContentMethod = methodKey === 'content';
 
     // Load current settings from data attributes
@@ -429,6 +480,15 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
       // Hide custom container
       const customContainer = document.querySelector('#customMethodInputContainer');
       if (customContainer) customContainer.style.display = 'none';
+    } else {
+      const anyRadio = document.querySelector('#payloadMethodAny');
+      if (anyRadio) {
+        anyRadio.checked = true;
+        const badge = anyRadio.closest('.http-method-badge');
+        if (badge) badge.classList.add('checked');
+      }
+      const customContainer = document.querySelector('#customMethodInputContainer');
+      if (customContainer) customContainer.style.display = 'none';
     }
 
     // Show/hide scope settings groups based on method type
@@ -476,18 +536,19 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
       if (nameFieldGroup) nameFieldGroup.style.display = 'block';
       if (valueFieldGroup) valueFieldGroup.style.display = 'none';
 
-      // Update title based on method type
       if (patternOptionsTitle) {
+        const _tMS = (typeof I18n !== 'undefined') ? I18n : null;
+        const _trMS = (key, fallback) => (_tMS && _tMS.get(key)) || fallback;
         if (methodKey === 'urls' || methodKey === 'url') {
-          patternOptionsTitle.textContent = 'URL Pattern Matching';
+          patternOptionsTitle.textContent = _trMS('urlPatternMatching', 'URL Pattern Matching');
         } else if (methodKey === 'content') {
-          patternOptionsTitle.textContent = 'Text/Word Matching';
+          patternOptionsTitle.textContent = _trMS('textWordMatching', 'Text/Word Matching');
         } else if (methodKey === 'dom') {
-          patternOptionsTitle.textContent = 'DOM Selector Matching';
+          patternOptionsTitle.textContent = _trMS('domSelectorMatching', 'DOM Selector Matching');
         } else if (methodKey === 'payload') {
-          patternOptionsTitle.textContent = 'Payload Text Matching';
+          patternOptionsTitle.textContent = _trMS('payloadTextMatching', 'Payload Text Matching');
         } else {
-          patternOptionsTitle.textContent = 'Name Field Matching';
+          patternOptionsTitle.textContent = _trMS('nameFieldMatching', 'Name Field Matching');
         }
       }
     }
@@ -591,7 +652,7 @@ Rules.prototype.saveMethodSettings = function() {
     let valueScope = document.querySelector('#valueScope')?.value || '';
     const textScope = document.querySelector('#textScope')?.value || 'all';
 
-    const methodType = this.currentMethodItem.dataset.methodType;
+    const methodType = this.getMethodItemType(this.currentMethodItem);
     if (methodType === 'header') {
       nameScope = normalizeCookieHeaderScope(nameScope, 'response');
       valueScope = normalizeCookieHeaderScope(valueScope, 'response');

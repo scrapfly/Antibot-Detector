@@ -18,35 +18,6 @@ function registerSettingsHandlers(registry, context) {
                     categoryManager
                 });
 
-                if (enabled) {
-                    const activeTabs = await chrome.tabs.query({ active: true });
-                    for (const tab of activeTabs) {
-                        if (!tab?.id || !Utils.isValidContentScriptTab(tab)) {
-                            continue;
-                        }
-
-                        const cachedData = await DetectionEngineManager.getStoredDetection(tab.url);
-                        if (cachedData) {
-                            continue;
-                        }
-
-                        if (recentlyClearedTabs.has(tab.id)) {
-                            continue;
-                        }
-
-                        const detectionState = detectionStates.get(tab.id);
-                        const hasInFlightDetection = activeDetections.has(tab.id) || (detectionState && !detectionState.finalized);
-                        if (hasInFlightDetection) {
-                            continue;
-                        }
-
-                        await requestDetectionForTab(tab.id, {
-                            source: 'toggle_enabled',
-                            silent: false
-                        });
-                    }
-                }
-
                 sendResponse({ status: 'success' });
             } catch (error) {
                 Logger.error('BACKGROUND', '[Background] Error handling toggle change:', error);

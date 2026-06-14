@@ -214,13 +214,14 @@ class BaseAdvancedModule {
         const btn = document.querySelector(`#${this.moduleName}StartCapture`);
         if (!btn) return;
 
+        const _t = (typeof I18n !== 'undefined') ? I18n : null;
         const label = btn.querySelector('.advanced-tool-label, .tool-btn-label');
         if (isCapturing) {
             btn.classList.add('capturing');
-            if (label) label.textContent = 'Stop Capturing';
+            if (label) label.textContent = (_t && _t.get('btnStopCapturing')) || 'Stop Capturing';
         } else {
             btn.classList.remove('capturing');
-            if (label) label.textContent = 'Start Capturing';
+            if (label) label.textContent = (_t && _t.get('btnStartCapturing')) || 'Start Capturing';
         }
     }
 
@@ -487,7 +488,7 @@ class BaseAdvancedModule {
                                 <path d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3Z"/>
                             </svg>
                         </div>
-                        <h3>Captured Data</h3>
+                        <h3>${((typeof I18n !== 'undefined' && I18n.get('advCapturedDataSection')) || 'Captured Data')}</h3>
                     </div>
                     <div class="header-right">
                         <span class="history-count">${history.length} capture${history.length !== 1 ? 's' : ''}</span>
@@ -546,8 +547,8 @@ class BaseAdvancedModule {
                             </defs>
                         </svg>
                     </div>
-                    <h4 class="empty-capture-title">No captures yet</h4>
-                    <p class="empty-capture-text">Click "Start Capturing" above to begin capturing ${this.moduleName} data</p>
+                    <h4 class="empty-capture-title">${((typeof I18n !== 'undefined' && I18n.get('advNoCapturesYet')) || 'No captures yet')}</h4>
+                    <p class="empty-capture-text">${((typeof I18n !== 'undefined' && I18n.format('advNoCapturesHintFmt', this.moduleName)) || `Click "Start Capturing" above to begin capturing ${this.moduleName} data`)}</p>
                 </div>
             </div>
         `;
@@ -736,12 +737,20 @@ class BaseAdvancedModule {
 
         const title = document.createElement('h3');
         title.className = 'advanced-modal-title';
-        title.innerHTML = `
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3Z"/>
-            </svg>
-            Capture Details
-        `;
+        const svgNs = 'http://www.w3.org/2000/svg';
+        const titleSvg = document.createElementNS(svgNs, 'svg');
+        titleSvg.setAttribute('width', '16');
+        titleSvg.setAttribute('height', '16');
+        titleSvg.setAttribute('viewBox', '0 0 24 24');
+        titleSvg.setAttribute('fill', 'currentColor');
+        const titlePath = document.createElementNS(svgNs, 'path');
+        titlePath.setAttribute('d', 'M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3Z');
+        titleSvg.appendChild(titlePath);
+        title.appendChild(titleSvg);
+        const titleSpan = document.createElement('span');
+        const _tCD = (typeof I18n !== 'undefined') ? I18n : null;
+        titleSpan.textContent = ' ' + ((_tCD && _tCD.get('advCaptureDetails')) || 'Capture Details');
+        title.appendChild(titleSpan);
 
         const closeBtn = document.createElement('button');
         closeBtn.className = 'advanced-modal-close-btn';
@@ -769,7 +778,7 @@ class BaseAdvancedModule {
                 e.stopPropagation();
                 const valueToCopy = codeBlock.dataset.copy;
                 AdvancedUtils.copyToClipboard(valueToCopy, codeBlock, {
-                    notificationMessage: 'Value copied'
+                    notificationMessage: ((typeof I18n !== 'undefined') && I18n.get('advValueCopied')) || 'Value copied'
                 });
                 return;
             }
@@ -814,7 +823,7 @@ class BaseAdvancedModule {
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/>
                     </svg>
-                    Copy All Data
+                    ${((typeof I18n !== 'undefined' && I18n.get('btnCopyAllData')) || 'Copy All Data')}
                 </button>
             </div>
         `;
@@ -830,7 +839,7 @@ class BaseAdvancedModule {
                     e.stopPropagation();
                     const payload = JSON.stringify(capture.captureData, null, 2);
                     AdvancedUtils.copyToClipboard(payload, copyBtn, {
-                        notificationMessage: 'Capture data copied'
+                        notificationMessage: ((typeof I18n !== 'undefined') && I18n.get('captureDataCopied')) || 'Capture data copied'
                     });
                 });
             }
@@ -842,12 +851,13 @@ class BaseAdvancedModule {
      * Delegates to AdvancedUtils.showConfirmationModal()
      * @returns {Promise<boolean>} True if confirmed, false if cancelled
      */
-    showConfirmationModal(title, message, confirmText = 'Delete', cancelText = 'Cancel') {
+    showConfirmationModal(title, message, confirmText, cancelText) {
+        const _tSC = (typeof I18n !== 'undefined') ? I18n : null;
         return AdvancedUtils.showConfirmationModal({
             title,
             message,
-            confirmText,
-            cancelText,
+            confirmText: confirmText || ((_tSC && _tSC.get('btnDelete')) || 'Delete'),
+            cancelText: cancelText || ((_tSC && _tSC.get('btnCancel')) || 'Cancel'),
             confirmClass: 'danger'
         });
     }
@@ -856,11 +866,12 @@ class BaseAdvancedModule {
      * Clear all capture history
      */
     async clearCaptureHistory() {
+        const _tCH = (typeof I18n !== 'undefined') ? I18n : null;
         const confirmed = await this.showConfirmationModal(
-            'Clear All Captured Data?',
-            'This will permanently delete all captured data for this module. This action cannot be undone.',
-            'Clear Data',
-            'Cancel'
+            (_tCH && _tCH.get('advConfirmClearAllTitle')) || 'Clear All Captured Data?',
+            (_tCH && _tCH.get('advConfirmClearAllMsg')) || 'This will permanently delete all captured data for this module. This action cannot be undone.',
+            (_tCH && _tCH.get('btnClearData')) || 'Clear Data',
+            (_tCH && _tCH.get('btnCancel')) || 'Cancel'
         );
 
         if (!confirmed) {

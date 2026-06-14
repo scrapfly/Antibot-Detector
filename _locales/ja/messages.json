@@ -1,0 +1,1676 @@
+{
+  "extensionName": {
+    "message": "Scrapfly:アンチボット検出器"
+  },
+  "extensionDescription": {
+    "message": "ウェブサイト上のCAPTCHA、アンチボットシステム、フィンガープリント技術を検出"
+  },
+  "tabDetection": {
+    "message": "検出"
+  },
+  "tabHistory": {
+    "message": "履歴"
+  },
+  "tabRules": {
+    "message": "ルール"
+  },
+  "tabAdvanced": {
+    "message": "詳細"
+  },
+  "openSettings": {
+    "message": "設定を開く"
+  },
+  "enableOrDisableDetection": {
+    "message": "検出を有効または無効にする"
+  },
+  "noDetectionsFound": {
+    "message": "検出が見つかりません"
+  },
+  "analyzingPage": {
+    "message": "ページを分析中"
+  },
+  "actionRemoveFromBlacklist": {
+    "message": "ブラックリストから削除"
+  },
+  "advancedDomainBlacklisted": {
+    "message": "このドメインの詳細ツールは無効です"
+  },
+  "blacklistManageHint": {
+    "message": "または、設定 → 検出 → ブラックリストドメインで管理してください。"
+  },
+  "statDetections": {
+    "message": "検出数"
+  },
+  "statConfidence": {
+    "message": "信頼度"
+  },
+  "statDifficulty": {
+    "message": "難易度"
+  },
+  "statCacheScope": {
+    "message": "キャッシュ範囲"
+  },
+  "scopeDomain": {
+    "message": "ドメイン"
+  },
+  "scopePath": {
+    "message": "パス"
+  },
+  "scopeFullUrl": {
+    "message": "完全URL"
+  },
+  "difficultyLow": {
+    "message": "低"
+  },
+  "difficultyMedium": {
+    "message": "中"
+  },
+  "difficultyHigh": {
+    "message": "高"
+  },
+  "searchHistory": {
+    "message": "履歴を検索..."
+  },
+  "searchDetectors": {
+    "message": "検出器を検索..."
+  },
+  "paginationPrev": {
+    "message": "前のページ"
+  },
+  "paginationNext": {
+    "message": "次のページ"
+  },
+  "paginationPage": {
+    "message": "ページ"
+  },
+  "paginationOf": {
+    "message": "/"
+  },
+  "paginationNoItems": {
+    "message": "表示する項目がありません"
+  },
+  "paginationCurrentPageAria": {
+    "message": "現在のページ番号"
+  },
+  "btnImport": {
+    "message": "インポート"
+  },
+  "btnExport": {
+    "message": "エクスポート"
+  },
+  "btnClear": {
+    "message": "クリア"
+  },
+  "btnAdd": {
+    "message": "追加"
+  },
+  "btnUpdate": {
+    "message": "更新"
+  },
+  "btnClose": {
+    "message": "閉じる"
+  },
+  "btnSave": {
+    "message": "保存"
+  },
+  "btnCancel": {
+    "message": "キャンセル"
+  },
+  "btnDelete": {
+    "message": "削除"
+  },
+  "historyImportTitle": {
+    "message": "履歴をインポート"
+  },
+  "historyExportTitle": {
+    "message": "履歴をエクスポート"
+  },
+  "historyClearTitle": {
+    "message": "履歴をクリア"
+  },
+  "historyEmptyTitle": {
+    "message": "履歴はまだありません"
+  },
+  "historyEmptyDescription": {
+    "message": "ウェブサイトを閲覧すると、検出履歴がここに表示されます。"
+  },
+  "rulesUpdateTitle": {
+    "message": "検出器の更新を確認"
+  },
+  "rulesClearTitle": {
+    "message": "すべてのルールをクリア"
+  },
+  "rulesAddTitle": {
+    "message": "新しい検出器を追加"
+  },
+  "rulesEmptyTitle": {
+    "message": "検出器が読み込まれていません"
+  },
+  "rulesEmptyDescription": {
+    "message": "ストレージとファイルから読み込むと、検出器がここに表示されます。"
+  },
+  "ruleModalActionEdit": {
+    "message": "編集"
+  },
+  "ruleSectionDetectorInfo": {
+    "message": "検出器情報"
+  },
+  "ruleFieldName": {
+    "message": "名前"
+  },
+  "ruleFieldNamePlaceholder": {
+    "message": "検出器名"
+  },
+  "ruleFieldCategory": {
+    "message": "カテゴリー"
+  },
+  "categoryAntibot": {
+    "message": "アンチボット"
+  },
+  "categoryCaptcha": {
+    "message": "Captcha"
+  },
+  "categoryFingerprint": {
+    "message": "フィンガープリント"
+  },
+  "ruleFieldDifficulty": {
+    "message": "難易度"
+  },
+  "ruleFieldIcon": {
+    "message": "アイコン"
+  },
+  "ruleFieldVersion": {
+    "message": "バージョン"
+  },
+  "ruleFieldAuthor": {
+    "message": "作成者"
+  },
+  "ruleSectionBadgeColor": {
+    "message": "バッジの色"
+  },
+  "ruleSectionDetectionMethods": {
+    "message": "検出方法"
+  },
+  "settingsTitle": {
+    "message": "設定"
+  },
+  "settingsSubtitle": {
+    "message": "拡張機能の設定を構成"
+  },
+  "settingsTabGeneral": {
+    "message": "一般"
+  },
+  "settingsTabDetection": {
+    "message": "検出"
+  },
+  "settingsTabHistory": {
+    "message": "履歴"
+  },
+  "settingsTabData": {
+    "message": "データ"
+  },
+  "settingsGroupCoreSettings": {
+    "message": "コア設定"
+  },
+  "settingsCardNotifications": {
+    "message": "通知"
+  },
+  "settingsCardNotificationsDesc": {
+    "message": "セキュリティシステムが検出されたときに通知を表示"
+  },
+  "settingsCardDebug": {
+    "message": "デバッグモード"
+  },
+  "settingsCardDebugDesc": {
+    "message": "デバッグ用のコンソールログを有効化"
+  },
+  "settingsRowLogCollector": {
+    "message": "ログコレクター"
+  },
+  "settingsRowMaxLogs": {
+    "message": "最大ログ数"
+  },
+  "settingsRowCollected": {
+    "message": "収集済み"
+  },
+  "settingsGroupDetectorUpdates": {
+    "message": "検出器の更新"
+  },
+  "settingsCardAutoUpdate": {
+    "message": "自動更新確認"
+  },
+  "settingsCardAutoUpdateDesc": {
+    "message": "新しい検出器定義を自動的に確認"
+  },
+  "settingsRowCheckInterval": {
+    "message": "確認間隔"
+  },
+  "settingsCheckIntervalNever": {
+    "message": "なし"
+  },
+  "settingsBtnCheckNow": {
+    "message": "今すぐ確認"
+  },
+  "settingsExtensionUpdateRequired": {
+    "message": "拡張機能の更新が必要"
+  },
+  "settingsBtnUpdateExtension": {
+    "message": "拡張機能を更新"
+  },
+  "settingsGroupBadgeColors": {
+    "message": "バッジの色"
+  },
+  "settingsRowLastCheck": {
+    "message": "最終確認"
+  },
+  "advancedToolsTitle": {
+    "message": "詳細キャプチャツール"
+  },
+  "advancedToolsDescription": {
+    "message": "検出された保護システムからクッキー、トークン、サイトキーを抽出"
+  },
+  "advancedToolsHint": {
+    "message": "キャプチャツールを有効にするには、保護されたページにアクセスしてください"
+  },
+  "advancedSubtabTools": {
+    "message": "ツール"
+  },
+  "advancedSubtabHistory": {
+    "message": "履歴"
+  },
+  "advancedCaptureHistoryTitle": {
+    "message": "キャプチャ履歴"
+  },
+  "advancedCaptureHistorySubtitle": {
+    "message": "収集したキャプチャをフィルタリング、検査、エクスポート"
+  },
+  "advancedFilterSite": {
+    "message": "サイト"
+  },
+  "advancedFilterAllSites": {
+    "message": "すべてのサイト"
+  },
+  "advancedFilterCurrentSite": {
+    "message": "現在のサイト"
+  },
+  "advancedFilterModule": {
+    "message": "モジュール"
+  },
+  "advancedFilterAllModules": {
+    "message": "すべてのモジュール"
+  },
+  "advancedFilterSearch": {
+    "message": "検索"
+  },
+  "advancedBtnExport": {
+    "message": "エクスポート"
+  },
+  "advancedBtnExportTitle": {
+    "message": "キャプチャをエクスポート"
+  },
+  "advancedBtnClearAll": {
+    "message": "すべてクリア"
+  },
+  "advancedBtnClearAllTitle": {
+    "message": "すべてのキャプチャをクリア"
+  },
+  "advancedEmptyCapturesTitle": {
+    "message": "キャプチャはまだありません"
+  },
+  "advancedEmptyCapturesHint": {
+    "message": "ツールタブを使用して、検出されたシステムからデータをキャプチャしてください"
+  },
+  "advancedNoResultsTitle": {
+    "message": "キャプチャが見つかりません"
+  },
+  "advancedNoResultsHint": {
+    "message": "フィルターや検索クエリの調整をお試しください"
+  },
+  "advancedBtnResetFilters": {
+    "message": "すべてのフィルターをリセット"
+  },
+  "advancedModalTitle": {
+    "message": "詳細検出ツール"
+  },
+  "advancedModalIntro": {
+    "message": "アンチボットシステム、CAPTCHA、フィンガープリント技術の詳細分析のための専門キャプチャツール。関連する検出が見つかると自動的に表示されます。"
+  },
+  "advancedSectionSupported": {
+    "message": "現在サポートされているシステム"
+  },
+  "advancedSectionHowItWorks": {
+    "message": "仕組み"
+  },
+  "advancedStep1Title": {
+    "message": "自動検出"
+  },
+  "advancedStep1Desc": {
+    "message": "現在のページで関連するアンチボットシステムが検出されるとツールが表示されます"
+  },
+  "advancedStep2Title": {
+    "message": "キャプチャ開始"
+  },
+  "advancedStep2Desc": {
+    "message": "ツールは自動的にインターセプターを初期化し、ネットワーク要求の監視を開始します"
+  },
+  "advancedStep3Title": {
+    "message": "結果を確認"
+  },
+  "advancedStep3Desc": {
+    "message": "キャプチャしたデータは一時的に(30分間)保存され、完全なエクスポート機能があります"
+  },
+  "advancedFooterHint": {
+    "message": "結果は新鮮なデータを確保するため30分後に期限切れになります"
+  },
+  "settings": {
+    "message": "設定"
+  },
+  "paginationShowingFmt": {
+    "message": "{2} 件中 {0}-{1} 件を表示"
+  },
+  "paginationShowingItems": {
+    "message": "{2} 件中 {0}-{1} 件の {3} を表示"
+  },
+  "timeUnknown": {
+    "message": "不明"
+  },
+  "timeJustNow": {
+    "message": "たった今"
+  },
+  "timeSecondsAgoFmt": {
+    "message": "{0}秒前"
+  },
+  "timeMinutesAgoFmt": {
+    "message": "{0}分前"
+  },
+  "timeHoursAgoFmt": {
+    "message": "{0}時間前"
+  },
+  "timeDaysAgoFmt": {
+    "message": "{0}日前"
+  },
+  "timeOneMinuteAgo": {
+    "message": "1 分前"
+  },
+  "timeMinutesAgoLongFmt": {
+    "message": "{0} 分前"
+  },
+  "timeOneHourAgo": {
+    "message": "1 時間前"
+  },
+  "timeHoursAgoLongFmt": {
+    "message": "{0} 時間前"
+  },
+  "timeOneDayAgo": {
+    "message": "1 日前"
+  },
+  "timeDaysAgoLongFmt": {
+    "message": "{0} 日前"
+  },
+  "timeOneWeekAgo": {
+    "message": "1 週間前"
+  },
+  "timeWeeksAgoFmt": {
+    "message": "{0} 週間前"
+  },
+  "timeOneMonthAgo": {
+    "message": "1 か月前"
+  },
+  "timeMonthsAgoFmt": {
+    "message": "{0} か月前"
+  },
+  "timeOneYearAgo": {
+    "message": "1 年前"
+  },
+  "timeYearsAgoFmt": {
+    "message": "{0} 年前"
+  },
+  "btnCancelSettings": {
+    "message": "キャンセル"
+  },
+  "btnSaveSettings": {
+    "message": "設定を保存"
+  },
+  "poweredBy": {
+    "message": "提供:"
+  },
+  "categoryColors": {
+    "message": "カテゴリーの色"
+  },
+  "methodSuffixPatterns": {
+    "message": "パターン"
+  },
+  "btnSaveRule": {
+    "message": "ルールを保存"
+  },
+  "tagColors": {
+    "message": "タグの色"
+  },
+  "cacheConfiguration": {
+    "message": "キャッシュ構成"
+  },
+  "cacheDuration": {
+    "message": "キャッシュ期間"
+  },
+  "timeUnitMinutes": {
+    "message": "分"
+  },
+  "timeUnitHours": {
+    "message": "時間"
+  },
+  "timeUnitDays": {
+    "message": "日"
+  },
+  "blacklistedDomains": {
+    "message": "ブラックリストドメイン"
+  },
+  "blacklistedDomainsDesc": {
+    "message": "検出が完全にスキップされるドメイン"
+  },
+  "jsApiEvents": {
+    "message": "JS API イベント"
+  },
+  "jsApiEventsDesc": {
+    "message": "ページウィンドウにカスタムイベントを送信"
+  },
+  "ruleMethodSettings": {
+    "message": "検出方法の設定"
+  },
+  "ruleConfidenceLevel": {
+    "message": "信頼度"
+  },
+  "ruleConfidencePrefix": {
+    "message": "検出信頼度:"
+  },
+  "detectionName": {
+    "message": "検出名"
+  },
+  "historyModalUrl": {
+    "message": "URL"
+  },
+  "interval6Hours": {
+    "message": "6 時間"
+  },
+  "interval12Hours": {
+    "message": "12 時間"
+  },
+  "interval24Hours": {
+    "message": "24 時間"
+  },
+  "interval2Days": {
+    "message": "2 日"
+  },
+  "interval1Week": {
+    "message": "1 週間"
+  },
+  "methodLabelUrl": {
+    "message": "URL"
+  },
+  "methodLabelHeader": {
+    "message": "HEADER"
+  },
+  "methodLabelCookie": {
+    "message": "COOKIE"
+  },
+  "methodLabelContent": {
+    "message": "CONTENT"
+  },
+  "methodLabelDom": {
+    "message": "DOM"
+  },
+  "methodLabelJsHooks": {
+    "message": "JS HOOKS"
+  },
+  "methodLabelWindow": {
+    "message": "WINDOW"
+  },
+  "methodLabelPayload": {
+    "message": "PAYLOAD"
+  },
+  "methodOnePattern": {
+    "message": "1 パターン"
+  },
+  "methodPatternsFmt": {
+    "message": "{0} パターン"
+  },
+  "methodAddPattern": {
+    "message": "パターンを追加"
+  },
+  "methodSearchPatterns": {
+    "message": "パターンを検索..."
+  },
+  "methodNoPatterns": {
+    "message": "パターンなし"
+  },
+  "methodNoMatchingPatterns": {
+    "message": "一致するパターンなし"
+  },
+  "methodSuffixMatches": {
+    "message": "一致"
+  },
+  "cacheExpiredLabel": {
+    "message": "期限切れ"
+  },
+  "copiedNotification": {
+    "message": "コピーしました"
+  },
+  "copiedInlineMsg": {
+    "message": "✓ コピーしました!"
+  },
+  "unknownDetection": {
+    "message": "不明な検出"
+  },
+  "matchSingular": {
+    "message": "件一致"
+  },
+  "matchPlural": {
+    "message": "件一致"
+  },
+  "noMatchesRecorded": {
+    "message": "記録された一致はありません"
+  },
+  "clearCacheConfirmTitle": {
+    "message": "キャッシュをクリア"
+  },
+  "clearCacheConfirmMsg": {
+    "message": "このドメインのキャッシュされた検出データを削除し、新しい解析を実行します。"
+  },
+  "clearCacheConfirmBtn": {
+    "message": "キャッシュをクリア"
+  },
+  "clearingMsg": {
+    "message": "クリア中..."
+  },
+  "clearedSuccessMsg": {
+    "message": "✓ クリアしました!"
+  },
+  "cacheClearedToast": {
+    "message": "キャッシュをクリアしました"
+  },
+  "failedToClearCacheToast": {
+    "message": "キャッシュのクリアに失敗しました"
+  },
+  "unableGetCurrentPage": {
+    "message": "現在のページを取得できません"
+  },
+  "invalidDomain": {
+    "message": "無効なドメイン"
+  },
+  "addBlacklistTitle": {
+    "message": "ブラックリストに追加"
+  },
+  "addBlacklistMsgFmt": {
+    "message": "ドメイン「{0}」は今後すべての検出から除外されます。後で設定から削除できます。"
+  },
+  "addBlacklistBtn": {
+    "message": "ブラックリストに追加"
+  },
+  "alreadyBlacklistedFmt": {
+    "message": "ドメイン「{0}」は既にブラックリストに登録されています"
+  },
+  "addedToBlacklistFmt": {
+    "message": "「{0}」をブラックリストに追加しました"
+  },
+  "failedAddBlacklistFmt": {
+    "message": "ブラックリストへの追加に失敗しました: {0}"
+  },
+  "removedFromBlacklistFmt": {
+    "message": "「{0}」をブラックリストから削除しました"
+  },
+  "failedRemoveBlacklistFmt": {
+    "message": "ブラックリストからの削除に失敗しました: {0}"
+  },
+  "historyNoDetections": {
+    "message": "検出なし"
+  },
+  "historyNoDetectionsFound": {
+    "message": "検出は見つかりませんでした"
+  },
+  "historyMatchCountFmt": {
+    "message": "{0}件一致"
+  },
+  "historyOneMatch": {
+    "message": "1件一致"
+  },
+  "notificationHistoryCleared": {
+    "message": "履歴をクリアしました"
+  },
+  "notificationClearHistoryFailedFmt": {
+    "message": "履歴のクリアに失敗しました: {0}"
+  },
+  "notificationHistoryItemExported": {
+    "message": "履歴項目をエクスポートしました"
+  },
+  "notificationCacheCleared": {
+    "message": "キャッシュをクリアしました"
+  },
+  "notificationCacheAlreadyCleared": {
+    "message": "キャッシュは既にクリア済みです"
+  },
+  "notificationClearCacheFailed": {
+    "message": "キャッシュのクリアに失敗しました"
+  },
+  "notificationDomainBlacklistedFmt": {
+    "message": "「{0}」をブラックリストに追加しました"
+  },
+  "notificationBlacklistFailed": {
+    "message": "ブラックリストへの追加に失敗しました"
+  },
+  "notificationHistoryItemDeleted": {
+    "message": "履歴項目を削除しました"
+  },
+  "notificationDeleteHistoryItemFailed": {
+    "message": "履歴項目の削除に失敗しました"
+  },
+  "notificationHistoryExportedFmt": {
+    "message": "{0}件の履歴項目をエクスポートしました"
+  },
+  "notificationHistoryMergedFmt": {
+    "message": "{0}件の新しい履歴項目をマージしました"
+  },
+  "notificationHistoryReplacedFmt": {
+    "message": "履歴を{0}件の項目で置き換えました"
+  },
+  "notificationImportHistoryFailedFmt": {
+    "message": "履歴のインポートに失敗しました: {0}"
+  },
+  "dialogClearHistoryTitle": {
+    "message": "履歴をクリア"
+  },
+  "dialogClearHistoryMessage": {
+    "message": "すべての履歴をクリアしてもよろしいですか?この操作は元に戻せません。"
+  },
+  "buttonClearAll": {
+    "message": "すべてクリア"
+  },
+  "dialogClearCacheTitle": {
+    "message": "キャッシュをクリア"
+  },
+  "dialogClearCacheMessageFmt": {
+    "message": "{0}のキャッシュされた検出データをクリアしますか?履歴のエントリは保持されます。"
+  },
+  "buttonClearCache": {
+    "message": "キャッシュをクリア"
+  },
+  "dialogDeleteHistoryTitle": {
+    "message": "履歴項目を削除"
+  },
+  "dialogDeleteHistoryMessageFmt": {
+    "message": "{0}のこの検出を削除してもよろしいですか?"
+  },
+  "failedLoadSettingsDefault": {
+    "message": "設定の読み込みに失敗しました。デフォルト値を使用します。"
+  },
+  "settingsSavedToast": {
+    "message": "設定を保存しました"
+  },
+  "failedSaveSettingsFmt": {
+    "message": "設定の保存に失敗しました: {0}"
+  },
+  "settingsResetToast": {
+    "message": "設定をリセットしました"
+  },
+  "dataClearedReloadNotice": {
+    "message": "すべてのデータを正常にクリアしました!拡張機能を再読み込みします。"
+  },
+  "failedClearDataFmt": {
+    "message": "データのクリアに失敗しました: {0}"
+  },
+  "failedExportLogs": {
+    "message": "ログのエクスポートに失敗しました"
+  },
+  "logsCleared": {
+    "message": "ログをクリアしました"
+  },
+  "failedClearLogs": {
+    "message": "ログのクリアに失敗しました"
+  },
+  "couldNotGetPageUrl": {
+    "message": "現在のページのURLを取得できませんでした"
+  },
+  "domainAlreadyBlacklistedFmt": {
+    "message": "{0}は既にブラックリストに登録されています"
+  },
+  "addedDomainToBlacklistFmt": {
+    "message": "{0}をブラックリストに追加しました"
+  },
+  "failedAddDomainFmt": {
+    "message": "ドメインの追加に失敗しました: {0}"
+  },
+  "removedDomainFromBlacklistFmt": {
+    "message": "{0}をブラックリストから削除しました"
+  },
+  "invalidSettingsFmt": {
+    "message": "無効な設定: {0}"
+  },
+  "pleaseEnterWebhookUrl": {
+    "message": "Webhook URLを入力してください"
+  },
+  "webhookTestSuccessfulFmt": {
+    "message": "Webhookテストに成功しました!ステータス: {0}"
+  },
+  "webhookFailedStatusFmt": {
+    "message": "Webhookが返したステータス: {0}"
+  },
+  "webhookTestFailedFmt": {
+    "message": "Webhookテストに失敗しました: {0}"
+  },
+  "foundDetectorUpdatesAvailableFmt": {
+    "message": "{0}件のディテクター更新が利用可能です!"
+  },
+  "allDetectorsUpToDate": {
+    "message": "すべてのディテクターは最新です。"
+  },
+  "importDetectorsTitle": {
+    "message": "ディテクターをインポート"
+  },
+  "importMergeQuestion": {
+    "message": "既存のディテクターとマージしますか?"
+  },
+  "mergeOption": {
+    "message": "マージ"
+  },
+  "replaceAllOption": {
+    "message": "すべて置換"
+  },
+  "detectorsImported": {
+    "message": "ディテクターをインポートしました"
+  },
+  "failedImportDetectors": {
+    "message": "ディテクターのインポートに失敗しました。ファイル形式を確認してください。"
+  },
+  "errorReadingFileFmt": {
+    "message": "ファイルの読み込みエラー: {0}"
+  },
+  "detectorsUpdatedFmt": {
+    "message": "{0}件のディテクターを更新しました"
+  },
+  "updatesAvailableClickToApplyFmt": {
+    "message": "{0}件の更新が利用可能 - もう一度クリックして適用"
+  },
+  "detectorDeletedFmt": {
+    "message": "「{0}」を削除しました"
+  },
+  "allDetectorsCleared": {
+    "message": "すべてのディテクターをクリアしました"
+  },
+  "failedClearDetectors": {
+    "message": "ディテクターのクリアに失敗しました"
+  },
+  "urlPatternMatching": {
+    "message": "URLパターンマッチング"
+  },
+  "textWordMatching": {
+    "message": "テキスト/単語マッチング"
+  },
+  "domSelectorMatching": {
+    "message": "DOMセレクタマッチング"
+  },
+  "payloadTextMatching": {
+    "message": "ペイロードテキストマッチング"
+  },
+  "nameFieldMatching": {
+    "message": "名前フィールドマッチング"
+  },
+  "captureNotFound": {
+    "message": "キャプチャが見つかりません"
+  },
+  "captureModuleClassNotFound": {
+    "message": "モジュールクラスが見つかりません"
+  },
+  "captureDetailsUnavailable": {
+    "message": "詳細表示は利用できません"
+  },
+  "captureDataCopied": {
+    "message": "キャプチャデータをコピーしました"
+  },
+  "captureDeleted": {
+    "message": "キャプチャを削除しました"
+  },
+  "capturesExportedFmt": {
+    "message": "{0}件のキャプチャをエクスポートしました"
+  },
+  "allCapturesCleared": {
+    "message": "すべてのキャプチャをクリアしました"
+  },
+  "captureExportFailed": {
+    "message": "キャプチャのエクスポートに失敗しました"
+  },
+  "invalidUrl": {
+    "message": "無効なURL"
+  },
+  "importHistoryTitle": {
+    "message": "履歴をインポート"
+  },
+  "importHistoryMessageFmt": {
+    "message": "{0}件の履歴項目をインポートしますか?現在の履歴には{1}件の項目があります。"
+  },
+  "replaceOption": {
+    "message": "置換"
+  },
+  "settingsResetTitle": {
+    "message": "設定をリセット"
+  },
+  "settingsResetMessage": {
+    "message": "すべての設定をデフォルト値にリセットしてもよろしいですか?この操作は元に戻せません。"
+  },
+  "btnReset": {
+    "message": "リセット"
+  },
+  "clearAllDataTitle": {
+    "message": "すべてのデータをクリア"
+  },
+  "clearAllDataMessage": {
+    "message": "拡張機能のすべてのデータをクリアしてもよろしいですか?以下が削除されます:<br><br>• すべての検出履歴<br>• すべてのディテクタールール<br>• すべての設定<br><br>この操作は元に戻せません!"
+  },
+  "clearEverythingBtn": {
+    "message": "すべてクリア"
+  },
+  "clearLogsTitle": {
+    "message": "ログをクリア"
+  },
+  "clearLogsMessage": {
+    "message": "収集されたすべてのログをクリアしてもよろしいですか?この操作は元に戻せません。"
+  },
+  "failedCheckForUpdatesFmt": {
+    "message": "更新の確認に失敗しました: {0}"
+  },
+  "couldNotFetchUpdates": {
+    "message": "サーバーから更新を取得できませんでした"
+  },
+  "errorApplyingUpdates": {
+    "message": "更新の適用エラー"
+  },
+  "failedCheckForUpdates": {
+    "message": "更新の確認に失敗しました"
+  },
+  "errorCheckingForUpdates": {
+    "message": "更新の確認エラー"
+  },
+  "updateServiceNotAvailable": {
+    "message": "更新サービスは利用できません"
+  },
+  "clearAllDetectorsTitle": {
+    "message": "すべてのディテクターをクリア"
+  },
+  "clearAllDetectorsMessage": {
+    "message": "すべてのディテクターを削除します。よろしいですか?"
+  },
+  "clearingAllDetectors": {
+    "message": "すべてのディテクターをクリア中..."
+  },
+  "deleteDetectorTitle": {
+    "message": "ディテクターを削除"
+  },
+  "deleteDetectorMessageFmt": {
+    "message": "「{0}」を削除してもよろしいですか?"
+  },
+  "detectorNotFound": {
+    "message": "ディテクターが見つかりません"
+  },
+  "failedDeleteDetector": {
+    "message": "ディテクターの削除に失敗しました"
+  },
+  "detectorNotFoundFmt": {
+    "message": "ディテクターが見つかりません: {0}"
+  },
+  "failedViewCaptureDetails": {
+    "message": "キャプチャ詳細の表示に失敗しました"
+  },
+  "failedCopyCaptureData": {
+    "message": "キャプチャデータのコピーに失敗しました"
+  },
+  "failedDeleteCapture": {
+    "message": "キャプチャの削除に失敗しました"
+  },
+  "noCapturesToExport": {
+    "message": "エクスポートするキャプチャがありません"
+  },
+  "clearAllCapturesConfirm": {
+    "message": "すべてのキャプチャを削除してもよろしいですか?この操作は元に戻せません。"
+  },
+  "failedClearCaptures": {
+    "message": "キャプチャのクリアに失敗しました"
+  },
+  "settingsCardWebhookIntegration": {
+    "message": "Webhook連携"
+  },
+  "settingsEnableWebhook": {
+    "message": "Webhookを有効化"
+  },
+  "settingsEnableWebhookDesc": {
+    "message": "検出時にHTTPリクエストを送信します"
+  },
+  "settingsBypassCache": {
+    "message": "ページ読み込みのたびに送信(キャッシュを無視)"
+  },
+  "settingsHttpMethod": {
+    "message": "HTTPメソッド"
+  },
+  "settingsHttpMethodDesc": {
+    "message": "Webhookリクエストに使用するHTTPメソッドを選択します"
+  },
+  "settingsCustomMethod": {
+    "message": "カスタム"
+  },
+  "settingsCustomMethodPlaceholder": {
+    "message": "カスタムメソッドを入力(例: OPTIONS, HEAD)"
+  },
+  "settingsWebhookUrl": {
+    "message": "Webhook URL"
+  },
+  "settingsWebhookUrlDesc": {
+    "message": "完全なエンドポイントURL (https://api.example.com/webhook)"
+  },
+  "settingsAvailableVariables": {
+    "message": "利用可能な変数:"
+  },
+  "settingsWebhookUrlExample": {
+    "message": "例: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
+  },
+  "settingsContentType": {
+    "message": "Content-Type"
+  },
+  "settingsContentTypeDesc": {
+    "message": "HTTPのコンテンツタイプヘッダー"
+  },
+  "settingsCustomHeaders": {
+    "message": "カスタムヘッダー"
+  },
+  "settingsCustomHeadersDesc": {
+    "message": "Webhookリクエストにカスタム HTTPヘッダーを追加します"
+  },
+  "settingsPayloadTemplate": {
+    "message": "ペイロードテンプレート"
+  },
+  "settingsPayloadTemplateDesc": {
+    "message": "使用可能な変数: <SITEURL>, <HOSTNAME>, <TITLE>, <FAVICON>, <DETECTIONS>, <TIMESTAMP>, <DETECTION_COUNT>, <CATEGORIES>"
+  },
+  "settingsTestWebhook": {
+    "message": "Webhookをテスト"
+  },
+  "settingsTestWebhookDesc": {
+    "message": "Webhook URLにテストリクエストを送信します"
+  },
+  "settingsTestBtn": {
+    "message": "テスト"
+  },
+  "settingsCardHistoryConfig": {
+    "message": "履歴の設定"
+  },
+  "settingsHistorySettings": {
+    "message": "履歴の設定"
+  },
+  "settingsHistoryLimit": {
+    "message": "履歴の上限"
+  },
+  "settingsHistoryLimitNote": {
+    "message": "(0 = 無制限)"
+  },
+  "settingsAutoClearDays": {
+    "message": "自動クリア(日数)"
+  },
+  "settingsExportFormat": {
+    "message": "エクスポート形式"
+  },
+  "settingsExportFormatPlainText": {
+    "message": "プレーンテキスト"
+  },
+  "settingsIncludeTimestamps": {
+    "message": "タイムスタンプを含める"
+  },
+  "settingsSaveOnCacheHits": {
+    "message": "キャッシュヒット時に保存"
+  },
+  "settingsCardDuplicatePrevention": {
+    "message": "重複防止"
+  },
+  "settingsEnableDuplicatePrevention": {
+    "message": "重複防止を有効化"
+  },
+  "settingsDuplicatePreventionDesc": {
+    "message": "一定時間内の重複した履歴エントリをブロックします"
+  },
+  "settingsDuplicateScope": {
+    "message": "スコープ"
+  },
+  "settingsDuplicateScopeFullUrl": {
+    "message": "完全なURL"
+  },
+  "settingsDuplicateScopeDomain": {
+    "message": "ドメイン"
+  },
+  "settingsDuplicateScopePath": {
+    "message": "パス"
+  },
+  "settingsTimeWindow": {
+    "message": "時間枠"
+  },
+  "settingsTimeMinutes": {
+    "message": "分"
+  },
+  "settingsTimeHours": {
+    "message": "時間"
+  },
+  "settingsTimeDays": {
+    "message": "日"
+  },
+  "settingsHowItWorks": {
+    "message": "動作の仕組み:"
+  },
+  "settingsHowItWorksDesc": {
+    "message": "指定した時間枠内に同じURLに対する重複した履歴エントリを防止します。"
+  },
+  "settingsDuplicateFullUrlBullet": {
+    "message": "完全なURL: URLの完全一致(クエリパラメータを含む)"
+  },
+  "settingsDuplicateDomainBullet": {
+    "message": "ドメイン: 同じドメイン(異なるパスも同一とみなす)"
+  },
+  "settingsDuplicatePathBullet": {
+    "message": "パス: 同じドメイン+パス(クエリパラメータは無視)"
+  },
+  "settingsCardCacheSettings": {
+    "message": "キャッシュ設定"
+  },
+  "settingsCardSkipDomains": {
+    "message": "スキップするドメイン"
+  },
+  "settingsAddCurrentPage": {
+    "message": "現在のページを追加"
+  },
+  "settingsSearchDomainsPlaceholder": {
+    "message": "ドメインを検索..."
+  },
+  "settingsBadgeColorLow": {
+    "message": "低"
+  },
+  "settingsBadgeColorMedium": {
+    "message": "中"
+  },
+  "settingsBadgeColorHigh": {
+    "message": "高"
+  },
+  "settingsEnableJsApi": {
+    "message": "JS API イベントを有効化"
+  },
+  "settingsDataExportImport": {
+    "message": "エクスポートとインポート"
+  },
+  "settingsDataManagement": {
+    "message": "データ管理"
+  },
+  "settingsDataManagementDesc": {
+    "message": "拡張機能のデータをエクスポートまたはインポート"
+  },
+  "settingsDataSettingsRow": {
+    "message": "設定"
+  },
+  "settingsDataSettingsRowDesc": {
+    "message": "拡張機能の設定をエクスポートまたはインポート"
+  },
+  "settingsDataHistoryRow": {
+    "message": "検出履歴"
+  },
+  "settingsDataHistoryRowDesc": {
+    "message": "検出履歴を CSV としてエクスポート"
+  },
+  "settingsDataExportSettingsTitle": {
+    "message": "設定をエクスポート"
+  },
+  "settingsDataImportSettingsTitle": {
+    "message": "設定をインポート"
+  },
+  "settingsDataExportHistoryTitle": {
+    "message": "履歴をエクスポート"
+  },
+  "settingsAvailableEvents": {
+    "message": "利用可能なイベント:"
+  },
+  "settingsApiEventReady": {
+    "message": "拡張機能が読み込まれ初期化された"
+  },
+  "settingsApiEventOnStart": {
+    "message": "検出が開始された(キャッシュミス/手動)"
+  },
+  "settingsApiEventOnProgress": {
+    "message": "検出の進捗更新(メソッド単位)"
+  },
+  "settingsApiEventOnHooksComplete": {
+    "message": "JSフックの監視が完了"
+  },
+  "settingsApiEventOnWindowPropsComplete": {
+    "message": "Windowプロパティの監視が完了"
+  },
+  "settingsApiEventOnDetection": {
+    "message": "検出が結果とともに完了"
+  },
+  "settingsApiEventOnError": {
+    "message": "検出エラーが発生"
+  },
+  "settingsUsageExample": {
+    "message": "使用例:"
+  },
+  "detectionDisabledForDomain": {
+    "message": "このドメインでは検出が無効化されています"
+  },
+  "detectionRemoveFromBlacklistBtn": {
+    "message": "ブラックリストから削除"
+  },
+  "detectionBlacklistHint": {
+    "message": "または、設定 → 検出 → ブラックリストドメイン から管理できます。"
+  },
+  "detectionNoDetectionsDesc": {
+    "message": "このページではアンチボット、CAPTCHA、フィンガープリンティングの該当する痕跡は見つかりませんでした。"
+  },
+  "detectionNoCachedDataDesc": {
+    "message": "このページのキャッシュされた検出データはありません。ページを再読み込みして新しいスキャンを実行してください。"
+  },
+  "detectionTitleUploadPaste": {
+    "message": "検出結果をアップロード（共有リンク）"
+  },
+  "pasteUploadSuccessToast": {
+    "message": "リンクをクリップボードにコピーしました"
+  },
+  "failedReadSettings": {
+    "message": "設定を読み込めませんでした — 操作をキャンセルしました"
+  },
+  "failedRemoveBlacklist": {
+    "message": "ブロックリストからの削除に失敗しました"
+  },
+  "pasteConfirmTitle": {
+    "message": "検出結果をアップロードしますか？"
+  },
+  "pasteConfirmMsg": {
+    "message": "このページの検出結果の概要を公開ペースト（dpaste.com、非公開リスト、30日で期限切れ）にアップロードします。リンクを知っている人は誰でも閲覧できます。URLのクエリ文字列やCookie/ヘッダーの値は含まれません。"
+  },
+  "pasteConfirmBtn": {
+    "message": "アップロード"
+  },
+  "pasteUploadFailedToast": {
+    "message": "アップロードに失敗しました"
+  },
+  "pasteNoDetectionsToast": {
+    "message": "アップロードする検出結果がありません"
+  },
+  "detectionTitleClearCache": {
+    "message": "キャッシュをクリア"
+  },
+  "detectionTitleCopyOverview": {
+    "message": "概要をコピー"
+  },
+  "detectionTitleBlockDomain": {
+    "message": "このドメインをブロック"
+  },
+  "detectionStatDetections": {
+    "message": "検出"
+  },
+  "detectionStatConfidence": {
+    "message": "信頼度"
+  },
+  "detectionStatDifficulty": {
+    "message": "難易度"
+  },
+  "detectionStatCacheScope": {
+    "message": "キャッシュスコープ"
+  },
+  "detectionStatCacheExpiration": {
+    "message": "キャッシュ有効期限"
+  },
+  "detectionSearchPlaceholder": {
+    "message": "検出を検索..."
+  },
+  "detectionPaginationPage": {
+    "message": "ページ"
+  },
+  "detectionPaginationOf": {
+    "message": "/"
+  },
+  "detectionDomainBlacklistedTitle": {
+    "message": "このドメインはブラックリストに登録されています"
+  },
+  "detectionModalConfidence": {
+    "message": "信頼度"
+  },
+  "detectionModalDifficulty": {
+    "message": "難易度"
+  },
+  "detectionModalMatchesFound": {
+    "message": "見つかった一致"
+  },
+  "detectionModalAuthor": {
+    "message": "作成者"
+  },
+  "detectionModalDescription": {
+    "message": "説明"
+  },
+  "detectionModalNoDescription": {
+    "message": "説明はありません。"
+  },
+  "detectionModalDetectionMethods": {
+    "message": "検出メソッド"
+  },
+  "detectionModalNoMethodsDetected": {
+    "message": "メソッドは検出されませんでした"
+  },
+  "advancedSearchPlaceholder": {
+    "message": "URL、モジュール、サイト、またはコンテンツで検索..."
+  },
+  "advancedPaginationPage": {
+    "message": "ページ"
+  },
+  "advancedPaginationOf": {
+    "message": "/"
+  },
+  "advancedInfoRecaptchaDesc": {
+    "message": "サイトキー、アクション、構成パラメータをキャプチャします"
+  },
+  "advancedInfoAkamaiDesc": {
+    "message": "センサーデータをインターセプトし、バージョン情報を抽出します"
+  },
+  "advancedInfoImpervaTitle": {
+    "message": "Imperva / Incapsula"
+  },
+  "advancedInfoImpervaDesc": {
+    "message": "Cookieと保護レベルの変更を監視します"
+  },
+  "advancedInfoShapeSecurityDesc": {
+    "message": "動的なヘッダーとスクリプトパラメータを解析します"
+  },
+  "advancedInfoAwsWafDesc": {
+    "message": "チャレンジエンドポイントとトークンの詳細をキャプチャします"
+  },
+  "btnStartCapturing": {
+    "message": "キャプチャ開始"
+  },
+  "btnStopCapturing": {
+    "message": "キャプチャ停止"
+  },
+  "btnCheckCookies": {
+    "message": "Cookieを確認"
+  },
+  "btnCheckVersion": {
+    "message": "バージョンを確認"
+  },
+  "btnAnalyzeScripts": {
+    "message": "スクリプトを解析"
+  },
+  "btnExtractSiteKey": {
+    "message": "SiteKeyを抽出"
+  },
+  "btnObtainSelector": {
+    "message": "セレクタを取得"
+  },
+  "btnCopyAllData": {
+    "message": "すべてのデータをコピー"
+  },
+  "btnClearData": {
+    "message": "データをクリア"
+  },
+  "advCapturedDataSection": {
+    "message": "キャプチャしたデータ"
+  },
+  "advNoCapturesYet": {
+    "message": "キャプチャはまだありません"
+  },
+  "advCaptureDetails": {
+    "message": "キャプチャの詳細"
+  },
+  "advValueCopied": {
+    "message": "値をコピーしました"
+  },
+  "advConfirmClearAllTitle": {
+    "message": "キャプチャしたすべてのデータをクリアしますか?"
+  },
+  "advConfirmClearAllMsg": {
+    "message": "このプロバイダーのキャプチャしたすべてのデータが永久に削除されます。"
+  },
+  "rulesColorPickerCancel": {
+    "message": "キャンセル"
+  },
+  "rulesColorPickerOk": {
+    "message": "OK"
+  },
+  "rulesContentSearchScopeTitle": {
+    "message": "コンテンツ検索スコープ"
+  },
+  "rulesOnlyCheckScripts": {
+    "message": "スクリプトのみチェック"
+  },
+  "rulesOnlyCheckScriptsHint": {
+    "message": "検索をJavaScriptコードとスクリプトURLのみに制限します"
+  },
+  "rulesScopeSettingsTitle": {
+    "message": "スコープ設定"
+  },
+  "rulesNameScopeLabel": {
+    "message": "名前スコープ"
+  },
+  "rulesNameScopeHint": {
+    "message": "名前/フィールドの一致をどこで確認するか"
+  },
+  "rulesScopeRequest": {
+    "message": "リクエスト"
+  },
+  "rulesScopeResponse": {
+    "message": "レスポンス"
+  },
+  "rulesScopeAll": {
+    "message": "すべて"
+  },
+  "rulesValueScopeLabel": {
+    "message": "値スコープ"
+  },
+  "rulesValueScopeHint": {
+    "message": "値の一致をどこで確認するか"
+  },
+  "rulesUrlScopeSettings": {
+    "message": "URLスコープ設定"
+  },
+  "rulesUrlScopeLabel": {
+    "message": "URLスコープ"
+  },
+  "rulesUrlScopePageOnly": {
+    "message": "ページ"
+  },
+  "rulesUrlScopeScripts": {
+    "message": "スクリプト"
+  },
+  "rulesUrlScopeAllDefault": {
+    "message": "すべて(デフォルト)"
+  },
+  "rulesRequestConstraints": {
+    "message": "リクエスト制約"
+  },
+  "rulesUrlPatternOptional": {
+    "message": "URLパターン(任意)"
+  },
+  "rulesUrlRegex": {
+    "message": "URL正規表現 (Regex)"
+  },
+  "rulesUrlCaseSensitive": {
+    "message": "URL大文字小文字を区別"
+  },
+  "rulesHttpMethodSelect": {
+    "message": "HTTPメソッド(1つ選択)"
+  },
+  "rulesHttpMethodFilterHint": {
+    "message": "リクエストメソッドでフィルタ(任意)"
+  },
+  "rulesHttpMethodAny": {
+    "message": "任意"
+  },
+  "rulesPatternMatchingOptions": {
+    "message": "パターンマッチングオプション"
+  },
+  "rulesPatternRegex": {
+    "message": "正規表現 (Regex)"
+  },
+  "rulesPatternWholeWord": {
+    "message": "単語単位"
+  },
+  "rulesPatternCaseSensitive": {
+    "message": "大文字小文字を区別"
+  },
+  "rulesValueFieldOptions": {
+    "message": "値フィールドオプション"
+  },
+  "rulesApplySettings": {
+    "message": "設定を適用"
+  },
+  "rulesDomSelectorHelper": {
+    "message": "DOMセレクタヘルパー"
+  },
+  "rulesStartTypingSuggestions": {
+    "message": "入力を開始すると候補が表示されます"
+  },
+  "rulesUseSelectorBtn": {
+    "message": "セレクタを使用"
+  },
+  "rulesWindowPropertiesHelper": {
+    "message": "Windowプロパティヘルパー"
+  },
+  "rulesStepEnterKeyword": {
+    "message": "キーワードを入力"
+  },
+  "rulesStepChooseProperty": {
+    "message": "プロパティを選択"
+  },
+  "rulesStepSelectCondition": {
+    "message": "条件を選択"
+  },
+  "rulesConditionExists": {
+    "message": "存在する"
+  },
+  "rulesConditionGroupType": {
+    "message": "型"
+  },
+  "rulesTypeofObject": {
+    "message": "Object"
+  },
+  "rulesTypeofFunction": {
+    "message": "Function"
+  },
+  "rulesTypeofString": {
+    "message": "String"
+  },
+  "rulesTypeofNumber": {
+    "message": "Number"
+  },
+  "rulesTypeofBoolean": {
+    "message": "Boolean"
+  },
+  "notifConfirmTitleDefault": {
+    "message": "確認"
+  },
+  "notifConfirmMessageDefault": {
+    "message": "よろしいですか?"
+  },
+  "notifLoadingDefault": {
+    "message": "読み込み中..."
+  },
+  "helperPatternStartTypingSuggestions": {
+    "message": "上記に入力すると候補が表示されます..."
+  },
+  "helperPatternStartTypingExamples": {
+    "message": "上記に入力すると例が表示されます..."
+  },
+  "helpJsHooksTitle": {
+    "message": "JavaScriptフック検出"
+  },
+  "helpJsHooksDescription": {
+    "message": "フックはブラウザのAPI呼び出し(Canvas、Audio、WebGLなど)をインターセプトし、ページがそれらのAPIにアクセスするタイミングでアンチボットのフィンガープリントコードをリアルタイムに検出します。"
+  },
+  "helpJsHooksWarning": {
+    "message": "フックはページスクリプトが実行される前に document_start でインストールする必要があります。さもないと、シムが設置される前にページが元のAPIへの参照を保存してしまう可能性があります。"
+  },
+  "helpJsHooksTip": {
+    "message": "Canvasフィンガープリンティングを検出するには、CanvasRenderingContext2D.prototype.getImageData のようなターゲットを追加します。"
+  },
+  "helpWindowTitle": {
+    "message": "Windowプロパティ検出"
+  },
+  "helpWindowDescription": {
+    "message": "アンチボットスクリプトによって window グローバルに追加されたJavaScriptオブジェクトおよびプロパティを検出します。"
+  },
+  "helpWindowWarning": {
+    "message": "一部のアンチボットスクリプトは列挙不可能な Symbol() キーを使用するため、検出が難しくなります。"
+  },
+  "helpWindowTip": {
+    "message": "プロパティの型と一致させるには、typeof object や exists などの条件を使用してください。"
+  },
+  "helpUrlTitle": {
+    "message": "URLパターン検出"
+  },
+  "helpUrlDescription": {
+    "message": "読み込まれたリソース(スクリプト、画像、ネットワークリクエスト)のURLをパターンと照合します。"
+  },
+  "helpUrlWarning": {
+    "message": "パターンはデフォルトで大文字小文字を区別します。大文字小文字を区別しないマッチングが必要な場合は、URL大文字小文字を区別オプションを切り替えてください。"
+  },
+  "helpUrlTip": {
+    "message": "/\\/v\\d+\\/challenge/ のような高度なパターンには、Regexオプションを使用してください。"
+  },
+  "helpHeaderTitle": {
+    "message": "HTTPヘッダー検出"
+  },
+  "helpHeaderDescription": {
+    "message": "アンチボットのミドルウェアが設定するHTTPリクエストおよびレスポンスヘッダーを検出します。"
+  },
+  "helpHeaderWarning": {
+    "message": "一部のヘッダーは初回のリクエストにのみ存在します。スコープにリクエストが含まれていることを確認してください。"
+  },
+  "helpHeaderTip": {
+    "message": "一般的なターゲット: x-akamai-bot-manager-token、cf-ray、x-shape-version。"
+  },
+  "helpCookieTitle": {
+    "message": "Cookie検出"
+  },
+  "helpCookieDescription": {
+    "message": "アンチボットチャレンジが設定するCookieを検出します。Cookie名(および必要に応じて値のパターン)を照合します。"
+  },
+  "helpCookieWarning": {
+    "message": "ランダムなサフィックスを持つCookie名(例: _abck-xyz123)には、リテラル名ではなく正規表現パターンが必要です。"
+  },
+  "helpCookieTip": {
+    "message": "完全な名前一致には単語単位を、^datadome- のような接頭辞パターンには Regex を使用してください。"
+  },
+  "helpContentTitle": {
+    "message": "ページコンテンツ検出"
+  },
+  "helpContentDescription": {
+    "message": "ページのHTMLとインラインスクリプトタグ内のテキストパターンを検索します。"
+  },
+  "helpContentWarning": {
+    "message": "大きなページでは全ページスキャンが遅くなる可能性があります。シグネチャがJSコード内にある場合は、スクリプトのみチェックに制限してください。"
+  },
+  "helpContentTip": {
+    "message": "より大きな単語内の部分文字列による誤検出を避けるため、単語単位を使用してください。"
+  },
+  "helpDomTitle": {
+    "message": "DOMセレクタ検出"
+  },
+  "helpDomDescription": {
+    "message": "CSSセレクタを使用してHTML要素を検出します。一致する要素がDOM内に存在するときに発火します。"
+  },
+  "helpDomWarning": {
+    "message": "セレクタは実際のDOMにレンダリングされた要素にのみ一致します。iframe や shadow root の内部の要素には一致しません。"
+  },
+  "helpDomTip": {
+    "message": "誤検出を減らすため、汎用的なものではなく、div#cf-challenge[data-ray] のような具体的なセレクタを使用してください。"
+  },
+  "helpPayloadTitle": {
+    "message": "リクエストペイロード検出"
+  },
+  "helpPayloadDescription": {
+    "message": "すべてのHTTP POST/PUT/PATCHリクエストのボディに対してテキストパターンを監視します。"
+  },
+  "helpPayloadWarning": {
+    "message": "ペイロード監視は、本拡張機能がインターセプト可能なリクエストでのみ動作します(暗号化されたボディや不透明なBLOBは対象外)。"
+  },
+  "helpPayloadTip": {
+    "message": "特定のエンドポイントにマッチングを限定するには、URLパターンと組み合わせてください。"
+  },
+  "helpWarningLabel": {
+    "message": "警告:"
+  },
+  "helpTipLabel": {
+    "message": "ヒント:"
+  },
+  "detectionMethodTitle": {
+    "message": "検出メソッド"
+  },
+  "noHelpContentAvailable": {
+    "message": "このメソッドタイプに利用可能なヘルプコンテンツはありません。"
+  },
+  "advNoCapturesHintFmt": {
+    "message": "{0}のデータのキャプチャを開始するには、上の「キャプチャ開始」をクリックしてください"
+  },
+  "advancedToolsHeading": {
+    "message": "高度な検出ツール"
+  },
+  "advancedToolsSubtitle": {
+    "message": "保護システムをキャプチャして解析"
+  },
+  "advancedToolsHelpTitle": {
+    "message": "ヘルプ"
+  },
+  "advancedToolsStepSelect": {
+    "message": "検出を選択"
+  },
+  "advancedToolsChooseDetection": {
+    "message": "検出を選んでください..."
+  },
+  "advancedToolsStepLoadUse": {
+    "message": "ツールを読み込んで使用"
+  },
+  "advancedToolsLoadTools": {
+    "message": "ツールを読み込む"
+  },
+  "advancedToolsClearAll": {
+    "message": "すべてクリア"
+  },
+  "advancedToolsClearAllFooter": {
+    "message": "すべてのツールをクリア"
+  },
+  "advancedToolsLearnMore": {
+    "message": "高度なツールについて"
+  },
+  "advancedToolsChange": {
+    "message": "変更"
+  },
+  "advancedToolsDetectionName": {
+    "message": "検出名"
+  },
+  "settingsLanguageTitle": {
+    "message": "言語"
+  },
+  "settingsLanguageDesc": {
+    "message": "拡張機能の UI 言語を上書きします。既定はブラウザの言語です。"
+  },
+  "settingsLanguageAuto": {
+    "message": "ブラウザの言語を使用"
+  },
+  "copiedJsonNotification": {
+    "message": "JSON をコピーしました"
+  },
+  "detectionEmptyTitle": {
+    "message": "何も検出されません"
+  },
+  "detectionBadgeNoCaptchas": {
+    "message": "✓ CAPTCHAなし"
+  },
+  "detectionBadgeNoAntibot": {
+    "message": "✓ アンチボットなし"
+  },
+  "detectionBadgeNoFingerprint": {
+    "message": "✓ フィンガープリントなし"
+  },
+  "detectionDisabledTitle": {
+    "message": "検出が無効"
+  },
+  "detectionDisabledDesc": {
+    "message": "セキュリティ検出は現在オフになっています。"
+  },
+  "detectionDisabledAction": {
+    "message": "上部のスイッチを切り替えて検出を有効にします。"
+  },
+  "rulesModalDetectorLabel": {
+    "message": "検出ルール"
+  },
+  "rulesAuthorHelpHint": {
+    "message": "この検出器の作成者"
+  },
+  "rulesWindowConditionExamplesTitle": {
+    "message": "Window 条件の例"
+  },
+  "rulesWindowConditionExamplesHint": {
+    "message": "例をクリックして使用:"
+  },
+  "rulesBtnNextFmt": {
+    "message": "次へ: {0}"
+  },
+  "rulesUsePropertyBtn": {
+    "message": "プロパティを使用"
+  }
+}

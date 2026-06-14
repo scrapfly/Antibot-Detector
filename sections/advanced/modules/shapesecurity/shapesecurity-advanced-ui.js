@@ -5,7 +5,7 @@ ShapeSecurityAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {
                 id: 'shapesecurityCheckVersion',
-                label: 'Check Version',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckVersion')) || 'Check Version'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M5.5,7A1.5,1.5 0 0,1 4,5.5A1.5,1.5 0 0,1 5.5,4A1.5,1.5 0 0,1 7,5.5A1.5,1.5 0 0,1 5.5,7M21.41,11.58L12.41,2.58C12.05,2.22 11.55,2 11,2H4C2.89,2 2,2.89 2,4V11C2,11.55 2.22,12.05 2.59,12.41L11.58,21.41C11.95,21.77 12.45,22 13,22C13.55,22 14.05,21.77 14.41,21.41L21.41,14.41C21.77,14.05 22,13.55 22,13C22,12.45 21.77,11.95 21.41,11.58Z"/>
@@ -14,7 +14,7 @@ ShapeSecurityAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'shapesecurityCheckCookies',
-                label: 'Check Cookies',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckCookies')) || 'Check Cookies'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A9,9 0 0,0 21,12A9,9 0 0,0 12,3M9,8A1.5,1.5 0 0,1 10.5,9.5A1.5,1.5 0 0,1 9,11A1.5,1.5 0 0,1 7.5,9.5A1.5,1.5 0 0,1 9,8M16.5,9.5A1.5,1.5 0 0,1 15,11A1.5,1.5 0 0,1 13.5,9.5A1.5,1.5 0 0,1 15,8A1.5,1.5 0 0,1 16.5,9.5M9,15A1.5,1.5 0 0,1 10.5,16.5A1.5,1.5 0 0,1 9,18A1.5,1.5 0 0,1 7.5,16.5A1.5,1.5 0 0,1 9,15M15,14A1.5,1.5 0 0,1 16.5,15.5A1.5,1.5 0 0,1 15,17A1.5,1.5 0 0,1 13.5,15.5A1.5,1.5 0 0,1 15,14Z"/>
@@ -23,7 +23,7 @@ ShapeSecurityAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'shapesecurityStartCapture',
-                label: 'Start Capturing',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnStartCapturing')) || 'Start Capturing'),
                 kind: 'capture',
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -33,7 +33,7 @@ ShapeSecurityAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'shapesecurityAnalyzeScripts',
-                label: 'Analyze Scripts',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnAnalyzeScripts')) || 'Analyze Scripts'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
@@ -183,51 +183,6 @@ ShapeSecurityAdvanced.prototype.renderCaptureDetailsContent = function(capture) 
     // ========================================================================
     // CAPTURE HOOKS (Override base module behavior)
     // ========================================================================
-
-
-    /**
-     * Display headers analysis results
-     */
-ShapeSecurityAdvanced.prototype.displayHeadersResults = function(headers) {
-        const resultDiv = document.createElement('div');
-        resultDiv.className = 'analysis-results-modal';
-        resultDiv.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 10000;';
-
-        const headersList = Object.entries(headers)
-            .filter(([name]) => name.toLowerCase().startsWith('x-'))
-            .map(([name, value]) => `
-                <div class="detail-row">
-                    <span class="detail-label">${AdvancedUtils.escapeHtml(name)}:</span>
-                    <span class="detail-value">${AdvancedUtils.truncate(value, 50)}</span>
-                </div>
-            `).join('');
-
-        resultDiv.innerHTML = `
-            <div style="background: var(--bg-secondary); border-radius: 8px; padding: 24px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
-                <h3 style="margin: 0 0 16px 0;">Shape Security Headers</h3>
-                <div class="details-grid">
-                    ${headersList || '<div class="detail-empty">No dynamic headers found</div>'}
-                </div>
-            </div>
-        `;
-
-        document.body.appendChild(resultDiv);
-
-        // Add close button handler (CSP-compliant)
-        const closeBtn = resultDiv.querySelector('.close-modal-btn');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                resultDiv.remove();
-            });
-        }
-
-        // Close on background click
-        resultDiv.addEventListener('click', (e) => {
-            if (e.target === resultDiv) {
-                resultDiv.remove();
-            }
-        });
-    };
 
 
     /**

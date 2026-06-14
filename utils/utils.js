@@ -113,7 +113,7 @@ class Utils {
       }
       return false;
     } catch (error) {
-      if (!error.message.includes('Cannot read properties of undefined')) {
+      if (!(error instanceof TypeError && /Cannot read|undefined|invalid/.test(error.message))) {
         Logger.error('UTIL', 'Extension context check error:', error.message);
       }
       return false;
@@ -299,20 +299,21 @@ class Utils {
    */
   static async getSettings() {
     try {
-      const result = await chrome.storage.local.get(['scrapfly_settings']);
-      if (result.scrapfly_settings) {
-        const parsed = typeof result.scrapfly_settings === 'string'
-          ? JSON.parse(result.scrapfly_settings)
-          : result.scrapfly_settings;
-
-        if (parsed && parsed.settings) {
-          Utils.applyDebugMode(parsed.settings);
-          return parsed.settings;
-        }
-
-        Utils.applyDebugMode(parsed || {});
-        return parsed || {};
+      if (typeof StorageManager !== 'undefined' && typeof StorageManager.getSettings === 'function') {
+        const settings = await StorageManager.getSettings();
+        Utils.applyDebugMode(settings);
+        return settings;
       }
+
+      const result = await chrome.storage.local.get(['scrapfly_settings']);
+      const parsed = typeof result.scrapfly_settings === 'string'
+        ? JSON.parse(result.scrapfly_settings)
+        : result.scrapfly_settings;
+      const settings = parsed?.settings && typeof parsed.settings === 'object'
+        ? parsed.settings
+        : (parsed || {});
+      Utils.applyDebugMode(settings);
+      return settings;
     } catch (error) {
       Logger.error('UTIL', 'Failed to load settings:', error);
     }

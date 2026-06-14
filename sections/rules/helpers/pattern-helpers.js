@@ -66,17 +66,73 @@ Rules.prototype.filterRegexPatterns = function(keyword) {
   if (!suggestionsContainer) return;
 
   if (!keyword) {
-    suggestionsContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">Start typing above to see suggestions...</div>';
+    const _t = (typeof I18n !== 'undefined') ? I18n : null;
+    const msg = (_t && _t.get('helperPatternStartTypingSuggestions')) || 'Start typing above to see suggestions...';
+    const div = document.createElement('div');
+    div.style.cssText = 'text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;';
+    div.textContent = msg;
+    suggestionsContainer.replaceChildren(div);
     return;
   }
 
   const patterns = this.generateDynamicRegexPatterns(keyword);
-  suggestionsContainer.innerHTML = patterns.map(p => `
-    <div class="regex-pattern" data-pattern="${p.pattern}">
-      <div class="template-code">${p.pattern}</div>
-      <div class="template-description">${p.description}</div>
+  const safeHtml = patterns.map(p => {
+    const safePattern = FormatUtils.escapeHtml(p.pattern);
+    const safeDescription = FormatUtils.escapeHtml(p.description);
+    return `
+    <div class="regex-pattern" data-pattern="${safePattern}">
+      <div class="template-code">${safePattern}</div>
+      <div class="template-description">${safeDescription}</div>
     </div>
-  `).join('');
+  `;
+  }).join('');
+  suggestionsContainer.innerHTML = safeHtml;
+};
+
+Rules.prototype.setRegexHelperTargetEnabled = function(target) {
+  if (target === 'payloadUrl') {
+    const payloadUrlRegex = document.querySelector('#payloadUrlRegex');
+    if (payloadUrlRegex) payloadUrlRegex.checked = true;
+    return;
+  }
+
+  if (!this.currentMethodItem) return;
+
+  if (target === 'value') {
+    this.currentMethodItem.dataset.valueRegex = 'true';
+    const valueRegex = document.querySelector('#valueRegex');
+    if (valueRegex) valueRegex.checked = true;
+  } else {
+    this.currentMethodItem.dataset.nameRegex = 'true';
+    const nameRegex = document.querySelector('#nameRegex');
+    if (nameRegex) nameRegex.checked = true;
+  }
+
+  this.updateMethodIndicators(this.currentMethodItem);
+};
+
+Rules.prototype.applyRegexHelperPattern = function(patternText) {
+  const target = this.currentPatternHelperTarget || 'name';
+
+  if (target === 'payloadUrl') {
+    const payloadUrlInput = document.querySelector('#payloadUrlPattern');
+    if (!payloadUrlInput) return false;
+    payloadUrlInput.value = patternText;
+    this.setRegexHelperTargetEnabled(target);
+    return true;
+  }
+
+  if (!this.currentMethodItem) return false;
+
+  const inputSelector = target === 'value'
+    ? '.method-input.method-value'
+    : '.method-input.method-name';
+  const input = this.currentMethodItem.querySelector(inputSelector);
+  if (!input) return false;
+
+  input.value = patternText;
+  this.setRegexHelperTargetEnabled(target);
+  return true;
 };
 
 Rules.prototype.setupRegexHelperModal = function() {
@@ -87,10 +143,7 @@ Rules.prototype.setupRegexHelperModal = function() {
     stepSelectors: ['#regexStep1', '#regexStep2'],
     filterFn: this.filterRegexPatterns,
     onOpen: function() {
-      if (this.currentMethodItem) {
-        this.currentMethodItem.dataset.nameRegex = 'true';
-        this.updateMethodIndicators(this.currentMethodItem);
-      }
+      this.setRegexHelperTargetEnabled(this.currentPatternHelperTarget || this.currentFieldType || 'name');
     }
   });
 
@@ -108,8 +161,14 @@ Rules.prototype.setupRegexHelperModal = function() {
 
   // Regex-specific: Event delegation for open buttons and pattern clicks
   document.addEventListener('click', (e) => {
-    if (e.target.closest('#regexHelperBtn') || e.target.closest('#regexHelperBtnValue')) {
+    const helperBtn = e.target.closest('#regexHelperBtn, #regexHelperBtnValue, #payloadUrlRegexHelperBtn');
+    if (helperBtn) {
       e.stopPropagation();
+      this.currentPatternHelperTarget = helperBtn.id === 'regexHelperBtnValue'
+        ? 'value'
+        : helperBtn.id === 'payloadUrlRegexHelperBtn'
+          ? 'payloadUrl'
+          : 'name';
       this._regexHelperModal.open();
     }
 
@@ -118,15 +177,9 @@ Rules.prototype.setupRegexHelperModal = function() {
       const pattern = e.target.closest('.regex-pattern');
       const patternText = pattern.dataset.pattern;
 
-      if (patternText && this.currentMethodItem) {
-        const nameInput = this.currentMethodItem.querySelector('.method-input.method-name');
-        if (nameInput) {
-          nameInput.value = patternText;
-          this.currentMethodItem.dataset.nameRegex = 'true';
-          this.updateMethodIndicators(this.currentMethodItem);
-          NotificationHelper.success('Pattern applied');
-          this._regexHelperModal.close();
-        }
+      if (patternText && this.applyRegexHelperPattern(patternText)) {
+        NotificationHelper.success('Pattern applied');
+        this._regexHelperModal.close();
       }
     }
   });
@@ -150,14 +203,20 @@ Rules.prototype.filterWholeWordPatterns = function(keyword) {
   if (!examplesContainer) return;
 
   if (!keyword) {
-    examplesContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">Start typing above to see examples...</div>';
+    const _t = (typeof I18n !== 'undefined') ? I18n : null;
+    const msg = (_t && _t.get('helperPatternStartTypingExamples')) || 'Start typing above to see examples...';
+    const div = document.createElement('div');
+    div.style.cssText = 'text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;';
+    div.textContent = msg;
+    examplesContainer.replaceChildren(div);
     return;
   }
 
   const examples = this.generateWholeWordExamples(keyword);
+  const safeKeyword = FormatUtils.escapeHtml(keyword);
   examplesContainer.innerHTML = `
     <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 6px;">
-      <div style="font-weight: 600; color: var(--success); margin-bottom: 8px;">Pattern: ${keyword}</div>
+      <div style="font-weight: 600; color: var(--success); margin-bottom: 8px;">Pattern: ${safeKeyword}</div>
       <table style="font-size: 10px; width: 100%; border-collapse: collapse;">
         <tr style="background: var(--bg-tertiary);">
           <td style="padding: 6px; border: 1px solid var(--border);">Text</td>
@@ -166,9 +225,9 @@ Rules.prototype.filterWholeWordPatterns = function(keyword) {
         </tr>
         ${examples.map(e => `
           <tr>
-            <td style="padding: 6px; border: 1px solid var(--border); color: var(--accent); font-family: monospace;">${e.text}</td>
+            <td style="padding: 6px; border: 1px solid var(--border); color: var(--accent); font-family: monospace;">${FormatUtils.escapeHtml(e.text)}</td>
             <td style="padding: 6px; border: 1px solid var(--border); color: ${e.match ? 'var(--success)' : 'var(--danger)'};">${e.match ? '\u2713 Match' : '\u2717 No match'}</td>
-            <td style="padding: 6px; border: 1px solid var(--border);">${e.reason}</td>
+            <td style="padding: 6px; border: 1px solid var(--border);">${FormatUtils.escapeHtml(e.reason)}</td>
           </tr>
         `).join('')}
       </table>
@@ -180,7 +239,7 @@ Rules.prototype.setupWholeWordHelperModal = function() {
   this._wholeWordHelperModal = this._setupPatternHelper({
     modalSelector: '#wholeWordHelperModal',
     closeSelectors: ['#closeWholeWordHelper', '#closeWholeWordHelperBtn'],
-    openSelectors: ['#wholeWordHelperBtn'],
+    openSelectors: ['#wholeWordHelperBtn', '#wholeWordHelperBtnValue'],
     inputSelector: '#wholeWordKeywordInput',
     stepSelectors: ['#wholeWordStep1', '#wholeWordStep2'],
     filterFn: this.filterWholeWordPatterns
@@ -219,14 +278,20 @@ Rules.prototype.filterCaseSensitivePatterns = function(keyword) {
   if (!examplesContainer) return;
 
   if (!keyword) {
-    examplesContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">Start typing above to see examples...</div>';
+    const _t = (typeof I18n !== 'undefined') ? I18n : null;
+    const msg = (_t && _t.get('helperPatternStartTypingExamples')) || 'Start typing above to see examples...';
+    const div = document.createElement('div');
+    div.style.cssText = 'text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;';
+    div.textContent = msg;
+    examplesContainer.replaceChildren(div);
     return;
   }
 
   const examples = this.generateCaseSensitiveExamples(keyword);
+  const safeKeyword = FormatUtils.escapeHtml(keyword);
   examplesContainer.innerHTML = `
     <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 6px;">
-      <div style="font-weight: 600; color: var(--danger); margin-bottom: 8px;">Pattern: ${keyword}</div>
+      <div style="font-weight: 600; color: var(--danger); margin-bottom: 8px;">Pattern: ${safeKeyword}</div>
       <table style="font-size: 10px; width: 100%; border-collapse: collapse;">
         <tr style="background: var(--bg-tertiary);">
           <td style="padding: 6px; border: 1px solid var(--border); font-weight: 600;">Text Found</td>
@@ -235,7 +300,7 @@ Rules.prototype.filterCaseSensitivePatterns = function(keyword) {
         </tr>
         ${examples.map(e => `
           <tr>
-            <td style="padding: 6px; border: 1px solid var(--border); color: var(--accent); font-family: monospace;">${e.text}</td>
+            <td style="padding: 6px; border: 1px solid var(--border); color: var(--accent); font-family: monospace;">${FormatUtils.escapeHtml(e.text)}</td>
             <td style="padding: 6px; border: 1px solid var(--border); color: ${e.sensitive ? 'var(--success)' : 'var(--danger)'};">${e.sensitive ? '\u2713 Match' : '\u2717 No match'}</td>
             <td style="padding: 6px; border: 1px solid var(--border); color: ${e.insensitive ? 'var(--success)' : 'var(--danger)'};">${e.insensitive ? '\u2713 Match' : '\u2717 No match'}</td>
           </tr>
@@ -249,7 +314,7 @@ Rules.prototype.setupCaseSensitiveHelperModal = function() {
   this._caseSensitiveHelperModal = this._setupPatternHelper({
     modalSelector: '#caseSensitiveHelperModal',
     closeSelectors: ['#closeCaseSensitiveHelper', '#closeCaseSensitiveHelperBtn'],
-    openSelectors: ['#caseSensitiveHelperBtn'],
+    openSelectors: ['#caseSensitiveHelperBtn', '#caseSensitiveHelperBtnValue', '#payloadUrlCaseHelperBtn'],
     inputSelector: '#caseSensitiveKeywordInput',
     stepSelectors: ['#caseSensitiveStep1', '#caseSensitiveStep2'],
     filterFn: this.filterCaseSensitivePatterns

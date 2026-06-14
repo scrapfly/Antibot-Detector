@@ -5,7 +5,7 @@
 ![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)
 ![Manifest V3](https://img.shields.io/badge/Manifest-V3-green?style=for-the-badge)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![Version](https://img.shields.io/badge/Version-2.5-blue?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-2.7-blue?style=for-the-badge)
 
 <br>
 
@@ -35,6 +35,16 @@ Scrapfly Anti-bot Detector is a Manifest V3 Chrome extension that helps security
 
 </div>
 
+## Screenshots
+
+| Detection | History | Rules |
+|-----------|---------|-------|
+| ![Detection](assets/store-screenshots/01-detection-1280x800.png) | ![History](assets/store-screenshots/02-history-1280x800.png) | ![Rules](assets/store-screenshots/03-rules-1280x800.png) |
+
+| Advanced Tools | Settings |
+|----------------|----------|
+| ![Advanced Tools](assets/store-screenshots/04-advanced-tools-1280x800.png) | ![Settings](assets/store-screenshots/05-settings-1280x800.png) |
+
 ## Features
 
 ### Multi-Layer Detection System
@@ -42,7 +52,7 @@ Scrapfly Anti-bot Detector is a Manifest V3 Chrome extension that helps security
 - **DOM Analysis**: Detects scripts, classes, and HTML elements
 - **Network Monitoring**: Analyzes cookies, headers, and URLs
 - **Payload Analysis**: Inspects request bodies with URL pattern and HTTP method filtering
-- **JavaScript Hooks**: Intercepts 21 fingerprinting API categories (Canvas, WebGL, Audio, Performance, etc.)
+- **JavaScript Hooks**: Intercepts fingerprinting APIs (Canvas, WebGL, Audio, Performance, Navigator, Storage, etc.) — hook targets are driven entirely by detector definitions, installed synchronously at `document_start`
 - **Window Properties**: Checks for anti-bot objects in the global scope
 
 ### Modern UI
@@ -57,7 +67,7 @@ Scrapfly Anti-bot Detector is a Manifest V3 Chrome extension that helps security
 
 ### Performance Optimized
 
-- **Smart Caching**: 12-hour detection cache with sessionStorage sync for instant refresh
+- **Smart Caching**: 12-hour detection cache with background validation and cache-hit early exit
 - **Pattern Caching**: LRU cache for compiled regex patterns (60-80% faster)
 - **Early Exit**: Stops detection after finding high-confidence matches
 - **Lazy Evaluation**: On-demand data collection based on enabled detectors
@@ -70,8 +80,6 @@ Scrapfly Anti-bot Detector is a Manifest V3 Chrome extension that helps security
 - **CSP Compliant**: No inline event handlers or unsafe-eval
 - **Context Isolation**: Proper separation between MAIN and ISOLATED worlds
 - **Safe Conditions**: Pre-compiled evaluators (no eval/arbitrary code execution)
-
-
 
 ## Usage
 
@@ -131,17 +139,17 @@ core/
 │   ├── fingerprint/          # Canvas, WebGL, Audio, Performance (21 detectors)
 │   └── index.json            # Category configuration
 │
-├── modules/                   # Core managers (singleton pattern)
-│   ├── detection-engine-manager.js    # Detection orchestration & hook batching
-│   ├── detector-manager.js            # Detector CRUD operations
-│   ├── category-manager.js            # Category metadata & badge colors
-│   ├── confidence-manager.js          # Confidence score calculations
-│   ├── storage-manager.js             # Chrome storage wrapper with caching
-│   ├── notification-manager.js        # Toast notifications
-│   ├── pagination-manager.js          # Pagination component
-│   ├── color-manager.js               # Color picker UI
-│   ├── search-manager.js              # Advanced search
-│   └── logger.js                      # Centralized logging system
+├── modules/                   # Core managers & helpers (singleton pattern)
+│   ├── core/                 # logger, storage-manager, ttl-map, badge-constants,
+│   │                         #   log-collector, update-manager
+│   ├── detection/
+│   │   ├── engine/           # DetectionEngineManager + analysis/extractors/
+│   │   │                     #   matching/hooks helpers (orchestration & batching)
+│   │   ├── managers/         # detector-manager, category-manager, confidence-manager
+│   │   └── hooks/            # hook-resilience-manager, window-condition-language,
+│   │                         #   window-property-tracker, worker-keepalive-manager
+│   ├── ui/                   # color-manager, notification-manager, pagination-manager
+│   └── styles/               # CSS stylesheets (popup, detection, rules, settings, …)
 │
 ├── sections/                  # UI sections (modular architecture)
 │   ├── detection/            # Detection results tab
@@ -165,8 +173,14 @@ core/
 │           └── cloudflare/
 │
 └── utils/                     # Utility functions
-    └── utils.js              # Core utilities (data collection, URL handling)
+    ├── utils.js              # Core utilities (data collection, URL handling)
+    ├── format-utils.js       # HTML escaping & formatting helpers
+    ├── url-utils.js          # URL hashing, favicon & locale-flag helpers
+    ├── detection-utils.js    # Detection/difficulty helpers
+    └── pattern-cache.js      # LRU compiled-regex cache (ReDoS-guarded)
 ```
+
+> Tooling lives in `scripts/` (verification checks) and `test/` (unit tests). Both stay in the repo for CI but are excluded from the packaged extension. Internal planning notes (`plans/`) are git-ignored.
 
 ### Detection Flow
 
@@ -174,13 +188,12 @@ core/
 ┌─────────────────────────────────────────────────────────────┐
 │  1. Page Load (document_start)                              │
 │     └─> content-main-world.js installs JS hooks             │
-│         • 21 fingerprinting API categories                  │
+│         • Detector-driven fingerprinting API hooks          │
 │         • Must install BEFORE page scripts execute          │
 └─────────────────────────────────────────────────────────────┘
                           ↓
 ┌─────────────────────────────────────────────────────────────┐
 │  2. Cache Check                                             │
-│     └─> sessionStorage sync check (synchronous)             │
 │     └─> background.js cache check (async)                   │
 │         • If cache hit: Skip detection, show cached results │
 │         • If cache miss: Proceed to data collection         │
@@ -191,8 +204,8 @@ core/
 │     └─> DetectionEngineManager.collectPageData()            │
 │         • DOM elements, scripts, classes                    │
 │         • Cookies, headers (via background.js)              │
-│         • Window properties (via MAIN world postMessage)    │
-│         • JS hooks (via MAIN world postMessage)             │
+│         • Window properties (via authenticated bridge)      │
+│         • JS hooks (via authenticated bridge)               │
 │         • Request payloads (via background.js)              │
 └─────────────────────────────────────────────────────────────┘
                           ↓
@@ -215,7 +228,6 @@ core/
 ┌─────────────────────────────────────────────────────────────┐
 │  6. Storage & Display                                       │
 │     └─> Cache results (12-hour expiry)                      │
-│     └─> Save sessionStorage (for instant refresh)           │
 │     └─> Update badge with detection count                   │
 │     └─> Update popup UI with detections                     │
 └─────────────────────────────────────────────────────────────┘
@@ -224,13 +236,39 @@ core/
 ### Key Design Patterns
 
 - **Singleton Managers**: DetectorManager, CategoryManager, StorageManager for centralized state
-- **Event-Driven Communication**: postMessage for MAIN ↔ ISOLATED world communication
+- **Event-Driven Communication**: authenticated bridge events for MAIN <-> ISOLATED world communication
 - **Modular Sections**: Each UI section is self-contained (JS + HTML + CSS)
 - **JSON-Driven Detectors**: All detection rules stored in JSON for easy updates
 - **LRU Caching**: Pattern cache, URL hash cache for performance
 - **Centralized Logging**: All logs routed to Service Worker console via Logger module
 - **CSP Compliance**: Event delegation instead of inline handlers
 
+
+## Development
+
+No build step — it's pure JavaScript. Load the `src/` folder as an unpacked extension:
+
+1. Open `chrome://extensions/`
+2. Enable **Developer mode** (top-right)
+3. **Load unpacked** → select this folder
+4. After changes, click the reload icon on the extension card
+
+### Verification
+
+```bash
+npm run verify        # syntax + structure + locale parity + unit tests
+```
+
+Individual checks:
+
+```bash
+npm run check:syntax      # node --check across all .js files
+npm run check:structure   # HTML tag balance, JSON validity, modal-header pattern
+npm run check:locale      # _locales/* key parity across all languages
+npm test                  # node:test unit suite
+```
+
+Unit tests live in `test/` and run on Node's built-in test runner (zero dependencies). They cover the pattern cache, the window-condition language and Rules-UI fallback parity, the TTL map, confidence scoring, detection-engine storage locking, the worker keepalive, and detection-UI state transitions. CI runs `npm run verify` on every push.
 
 ## License
 
@@ -249,6 +287,5 @@ See the [LICENSE](LICENSE) file for complete terms and conditions.
 <div align="center">
 
 </div>
-
 
 

@@ -10,6 +10,12 @@ SettingsUI.showSettings = function() {
       settingsModal.classList.add('is-open');
       this.isModalVisible = true;
       this.loadSettings();
+      requestAnimationFrame(() => {
+        const activeBtn = document.querySelector('.settings-tab-btn.active');
+        if (activeBtn) {
+          activeBtn.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        }
+      });
     }
 };
 
@@ -23,13 +29,19 @@ SettingsUI.hideSettings = function() {
 
 SettingsUI.switchTab = function(tabName) {
     const allTabButtons = document.querySelectorAll('.settings-tab-btn');
+    let activeBtn = null;
     allTabButtons.forEach(btn => {
       if (btn.getAttribute('data-settings-tab') === tabName) {
         btn.classList.add('active');
+        activeBtn = btn;
       } else {
         btn.classList.remove('active');
       }
     });
+
+    if (activeBtn) {
+      activeBtn.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }
 
     const allTabContents = document.querySelectorAll('.settings-tab-content');
     allTabContents.forEach(content => {
@@ -47,11 +59,14 @@ SettingsUI.loadSettings = async function() {
 
       if (result.scrapfly_settings) {
         // Handle both string and object storage formats
-        const savedSettings = typeof result.scrapfly_settings === 'string'
-          ? JSON.parse(result.scrapfly_settings)
-          : result.scrapfly_settings;
-
-        const loadedSettings = savedSettings.settings || savedSettings;
+        const savedSettings = typeof StorageManager !== 'undefined' && typeof StorageManager.parseStoredValue === 'function'
+          ? StorageManager.parseStoredValue(result.scrapfly_settings, 'scrapfly_settings')
+          : (typeof result.scrapfly_settings === 'string'
+              ? JSON.parse(result.scrapfly_settings)
+              : result.scrapfly_settings);
+        const loadedSettings = typeof StorageManager !== 'undefined' && typeof StorageManager.normalizeSettings === 'function'
+          ? StorageManager.normalizeSettings(result.scrapfly_settings)
+          : (savedSettings.settings || savedSettings);
 
         Logger.ui('Loading settings - raw:', result.scrapfly_settings);
         Logger.ui('Loading settings - parsed:', savedSettings);
@@ -59,10 +74,15 @@ SettingsUI.loadSettings = async function() {
 
         if (typeof loadedSettings === 'object' && loadedSettings !== null) {
           this.settings = this.deepMerge(this.settings, loadedSettings);
+          const legacyHooksConfig = this.settings.hooksConfig;
           delete this.settings.hooksConfig;
           delete this.settings.reliabilityConfig;
           // Legacy compatibility: migrate flat cache settings to nested structure
           if (this.settings.detection) {
+            if (this.settings.detection.hooksConfig === undefined &&
+                legacyHooksConfig && typeof legacyHooksConfig === 'object') {
+              this.settings.detection.hooksConfig = legacyHooksConfig;
+            }
             if (this.settings.detection.cacheDuration === undefined && this.settings.cacheDuration !== undefined) {
               this.settings.detection.cacheDuration = this.settings.cacheDuration;
             }
@@ -95,25 +115,61 @@ SettingsUI.loadSettings = async function() {
         Utils.applyDebugMode(this.settings);
       }
 
+      // Apply current language override (stored separately from main settings
+      // so it can be loaded at popup boot before settings UI initializes).
+      try {
+        const langResult = await chrome.storage.local.get(['scrapfly_language_override']);
+        const langValue = langResult.scrapfly_language_override || 'auto';
+        if (typeof SettingsUI.setLanguagePickerValue === 'function') {
+          SettingsUI.setLanguagePickerValue(langValue);
+        } else {
+          const langInput = document.querySelector('#languageOverride');
+          if (langInput) langInput.value = langValue;
+        }
+      } catch (_) {
+        // chrome.storage unavailable (rare; e.g., extension reloading mid-popup).
+        // Dropdown stays at its default 'auto' option — matches the runtime
+        // behavior in popup.js, which also falls back to the browser locale
+        // when storage is unreadable. No user-visible regression.
+      }
+
       this.updateSettingsUI();
       Logger.ui('Settings loaded and UI updated:', this.settings);
 
     } catch (error) {
       Logger.error('UI', 'Failed to load settings:', error);
-      NotificationHelper.error('Failed to load settings. Using defaults.');
+      NotificationHelper.error(((typeof I18n !== 'undefined') && I18n.get('failedLoadSettingsDefault')) || 'Failed to load settings. Using defaults.');
     }
 };
 
 SettingsUI.deepMerge = function(target, source) {
     const result = { ...target };
 
+    const typeOf = (v) => {
+      if (Array.isArray(v)) return 'array';
+      if (v === null) return 'null';
+      return typeof v;
+    };
+
     for (const key in source) {
-      if (source.hasOwnProperty(key)) {
-        if (typeof source[key] === 'object' && source[key] !== null && !Array.isArray(source[key])) {
-          result[key] = this.deepMerge(result[key] || {}, source[key]);
-        } else {
-          result[key] = source[key];
-        }
+      if (!source.hasOwnProperty(key)) continue;
+      const srcVal = source[key];
+      const tgtVal = result[key];
+
+      // New key (not in defaults) — allow as-is; can't validate without schema.
+      if (tgtVal === undefined) {
+        result[key] = srcVal;
+        continue;
+      }
+
+      // Drop stored values whose type doesn't match defaults — protects against
+      // a corrupted/malicious storage entry poisoning the merged settings shape.
+      if (typeOf(srcVal) !== typeOf(tgtVal)) continue;
+
+      if (typeOf(srcVal) === 'object') {
+        result[key] = this.deepMerge(tgtVal, srcVal);
+      } else {
+        result[key] = srcVal;
       }
     }
 
@@ -138,16 +194,16 @@ SettingsUI.setToggleControlledVisibility = function(toggleEl, targets = []) {
     });
 };
 
-SettingsUI.saveSettings = async function() {
+SettingsUI.saveSettings = async function(options = {}) {
     try {
+      const shouldNotify = options.notify !== false;
       let oldCacheScope = null;
       try {
         const result = await chrome.storage.local.get(['scrapfly_settings']);
         if (result.scrapfly_settings) {
-          const savedSettings = typeof result.scrapfly_settings === 'string'
-            ? JSON.parse(result.scrapfly_settings)
-            : result.scrapfly_settings;
-          const loadedSettings = savedSettings.settings || savedSettings;
+          const loadedSettings = typeof StorageManager !== 'undefined' && typeof StorageManager.normalizeSettings === 'function'
+            ? StorageManager.normalizeSettings(result.scrapfly_settings)
+            : {};
           oldCacheScope = loadedSettings.cacheScope || loadedSettings.detection?.cacheScope || 'domain';
         }
       } catch (error) {
@@ -197,10 +253,10 @@ SettingsUI.saveSettings = async function() {
             Logger.debug('UI', 'Failed to notify Detection tab:', chrome.runtime.lastError.message);
           }
         });
+      }
 
-        NotificationHelper.success('Settings saved');
-      } else {
-        NotificationHelper.success('Settings saved');
+      if (shouldNotify) {
+        NotificationHelper.success(((typeof I18n !== 'undefined') && I18n.get('settingsSavedToast')) || 'Settings saved');
       }
 
       // Invalidate background settings cache so webhook/background features use updated values
@@ -220,9 +276,13 @@ SettingsUI.saveSettings = async function() {
         }
       });
 
+      return true;
+
     } catch (error) {
       Logger.error('UI', 'Failed to save settings:', error);
-      NotificationHelper.error('Failed to save settings: ' + error.message);
+      const _tFS = (typeof I18n !== 'undefined') ? I18n : null;
+      NotificationHelper.error((_tFS && _tFS.format('failedSaveSettingsFmt', error.message)) || ('Failed to save settings: ' + error.message));
+      return false;
     }
 };
 
@@ -318,6 +378,10 @@ SettingsUI.updateSettingsUI = function() {
 
       const colorTagPayload = document.querySelector('#colorTagPayload');
       if (colorTagPayload) colorTagPayload.value = this.settings.tagColors.payload || '#9C27B0';
+    }
+
+    if (typeof SettingsUI.syncColorRowBadges === 'function') {
+      SettingsUI.syncColorRowBadges();
     }
 
     // ========== DETECTION TAB ==========
@@ -479,11 +543,13 @@ SettingsUI.updateSettingsUI = function() {
       if (lastCheck > 0 && typeof UpdateManager !== 'undefined') {
         lastCheckSpan.textContent = UpdateManager.formatLastCheck(lastCheck);
       } else {
-        lastCheckSpan.textContent = 'Never';
+        lastCheckSpan.textContent = ((typeof I18n !== 'undefined') && I18n.get('settingsCheckIntervalNever')) || 'Never';
       }
     }
 
-    this.updateIncompatibleUpdatesDisplay();
+    if (typeof SettingsUI.updateIncompatibleUpdatesDisplay === 'function') {
+      void SettingsUI.updateIncompatibleUpdatesDisplay.call(this);
+    }
 
 };
 
@@ -540,7 +606,8 @@ SettingsUI.getSettingsFromUI = function() {
       cacheDuration: parseInt(document.querySelector('#cacheDuration')?.value ?? this.settings.detection?.cacheDuration ?? 12),
       cacheUnit: document.querySelector('#cacheUnit')?.value ?? this.settings.detection?.cacheUnit ?? 'hours',
       cacheScope: document.querySelector('#cacheScope')?.value ?? this.settings.detection?.cacheScope ?? 'domain',
-      blacklistedDomains: this.settings.detection?.blacklistedDomains || [] // This is managed separately by the blacklist UI
+      blacklistedDomains: this.settings.detection?.blacklistedDomains || [], // This is managed separately by the blacklist UI
+      hooksConfig: this.settings.detection?.hooksConfig || {}
     };
 
     // JS API Settings
@@ -620,49 +687,9 @@ SettingsUI.validateSettings = function(settings) {
     };
 };
 
-SettingsUI.resetToDefaults = async function() {
-    const confirmed = await NotificationHelper.confirm({
-      title: 'Reset Settings',
-      message: 'Are you sure you want to reset all settings to their default values? This action cannot be undone.',
-      type: 'warning',
-      confirmText: 'Reset',
-      cancelText: 'Cancel'
-    });
-
-    if (confirmed) {
-      await this.loadDefaults();
-      this.updateSettingsUI();
-      await this.saveSettings();
-      NotificationHelper.success('Settings reset');
-    }
-};
-
-SettingsUI.clearAllData = async function() {
-    const confirmed = await NotificationHelper.confirm({
-      title: 'Clear All Data',
-      message: 'Are you sure you want to clear ALL extension data? This will remove:<br><br>• All detection history<br>• All detector rules<br>• All settings<br><br>This action cannot be undone!',
-      type: 'danger',
-      confirmText: 'Clear Everything',
-      cancelText: 'Cancel'
-    });
-
-    if (confirmed) {
-      try {
-        await chrome.storage.local.clear();
-        NotificationHelper.success('All data cleared successfully! The extension will reload.');
-
-        setTimeout(() => {
-          chrome.runtime.reload();
-        }, 2000);
-
-      } catch (error) {
-        Logger.error('UI', 'Failed to clear data:', error);
-        NotificationHelper.error('Failed to clear data: ' + error.message);
-      }
-    }
-};
-
 SettingsUI.setupEventListeners = function() {
+    if (this.listenersAttached) return;
+    this.listenersAttached = true;
     const settingsBtn = document.querySelector('#settingsBtn');
     if (settingsBtn) {
       settingsBtn.addEventListener('click', () => this.showSettings());
@@ -690,106 +717,8 @@ SettingsUI.setupEventListeners = function() {
       cancelSettingsBtn.addEventListener('click', () => this.hideSettings());
     }
 
-    const resetSettingsBtn = document.querySelector('#resetSettingsBtn');
-    if (resetSettingsBtn) {
-      resetSettingsBtn.addEventListener('click', () => this.resetToDefaults());
-    }
-
-    const clearAllDataBtn = document.querySelector('#clearAllDataBtn');
-    if (clearAllDataBtn) {
-      clearAllDataBtn.addEventListener('click', () => this.clearAllData());
-    }
-
-    const debugModeToggle = document.querySelector('#debugModeGeneral');
-    if (debugModeToggle) {
-      debugModeToggle.addEventListener('change', (e) => {
-        const logCollectorSection = document.querySelector('#logCollectorSection');
-        if (logCollectorSection) {
-          logCollectorSection.style.display = e.target.checked ? 'block' : 'none';
-        }
-      });
-    }
-
-    const logCollectorToggle = document.querySelector('#logCollectorEnabled');
-    if (logCollectorToggle) {
-      logCollectorToggle.addEventListener('change', (e) => {
-        const logCollectorControls = document.querySelector('#logCollectorControls');
-        if (logCollectorControls) {
-          logCollectorControls.style.display = e.target.checked ? 'block' : 'none';
-        }
-
-        if (e.target.checked) {
-          chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_ENABLE' }).catch(() => {
-            Logger.ui('Failed to enable log collection');
-          });
-          this.startLogCountUpdate();
-        } else {
-          chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_DISABLE' }).catch(() => {
-            Logger.ui('Failed to disable log collection');
-          });
-          this.stopLogCountUpdate();
-        }
-      });
-    }
-
-    const exportLogsJsonBtn = document.querySelector('#exportLogsJsonBtn');
-    if (exportLogsJsonBtn) {
-      exportLogsJsonBtn.addEventListener('click', () => {
-        chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_EXPORT_JSON' }).catch(() => {
-          NotificationHelper.error('Failed to export logs');
-        });
-      });
-    }
-
-    const exportLogsTextBtn = document.querySelector('#exportLogsTextBtn');
-    if (exportLogsTextBtn) {
-      exportLogsTextBtn.addEventListener('click', () => {
-        chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_EXPORT_TEXT' }).catch(() => {
-          NotificationHelper.error('Failed to export logs');
-        });
-      });
-    }
-
-    const clearLogsBtn = document.querySelector('#clearLogsBtn');
-    if (clearLogsBtn) {
-      clearLogsBtn.addEventListener('click', async () => {
-        const confirmed = await NotificationHelper.confirm({
-          title: 'Clear Logs',
-          message: 'Are you sure you want to clear all collected logs? This action cannot be undone.',
-          type: 'warning',
-          confirmText: 'Clear',
-          cancelText: 'Cancel'
-        });
-
-        if (confirmed) {
-          chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_CLEAR' }).then(() => {
-            const logCountValue = document.querySelector('#logCountValue');
-            if (logCountValue) {
-              logCountValue.textContent = '0';
-            }
-            NotificationHelper.success('Logs cleared');
-          }).catch(() => {
-            NotificationHelper.error('Failed to clear logs');
-          });
-        }
-      });
-    }
-
-    const logCollectorMaxLogsInput = document.querySelector('#logCollectorMaxLogs');
-    if (logCollectorMaxLogsInput) {
-      logCollectorMaxLogsInput.addEventListener('change', (e) => {
-        let maxLogs = parseInt(e.target.value || 5000);
-        if (maxLogs < 100) maxLogs = 100;
-        if (maxLogs > 5000) maxLogs = 5000;
-        e.target.value = maxLogs;
-        const logCountMax = document.querySelector('#logCountMax');
-        if (logCountMax) {
-          logCountMax.textContent = maxLogs;
-        }
-        chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_SET_MAX_LOGS', maxLogs: maxLogs }).catch(() => {
-          Logger.ui('Failed to set max logs');
-        });
-      });
+    if (typeof SettingsUI.initLanguagePicker === 'function') {
+      SettingsUI.initLanguagePicker();
     }
 
     const tabButtons = document.querySelectorAll('.settings-tab-btn');
@@ -818,10 +747,13 @@ SettingsUI.setupEventListeners = function() {
     const addCurrentDomainBtn = document.querySelector('#addCurrentDomainBtn');
     if (addCurrentDomainBtn) {
       addCurrentDomainBtn.addEventListener('click', async () => {
+        const t2 = (typeof I18n !== 'undefined') ? I18n : null;
+        const _tr2 = (key, fallback) => (t2 && t2.get(key)) || fallback;
+        const _fmt2 = (key, fallback, ...args) => (t2 && t2.format(key, ...args)) || fallback;
         try {
           const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
           if (!tab || !tab.url) {
-            NotificationHelper.error('Could not get current page URL');
+            NotificationHelper.error(_tr2('couldNotGetPageUrl', 'Could not get current page URL'));
             return;
           }
 
@@ -836,33 +768,22 @@ SettingsUI.setupEventListeners = function() {
           }
 
           if (this.settings.detection.blacklistedDomains.includes(domain)) {
-            NotificationHelper.info(`${domain} is already blacklisted`);
+            NotificationHelper.info(_fmt2('domainAlreadyBlacklistedFmt', `${domain} is already blacklisted`, domain));
             return;
           }
 
           this.settings.detection.blacklistedDomains.push(domain);
           this.renderBlacklistUI();
-          await this.saveSettings();
+          const saved = await this.saveSettings({ notify: false });
+          if (!saved) {
+            return;
+          }
 
-          NotificationHelper.success(`Added ${domain} to blacklist`);
+          NotificationHelper.success(_fmt2('addedDomainToBlacklistFmt', `Added ${domain} to blacklist`, domain));
         } catch (error) {
           Logger.error('UI', 'Failed to add domain to blacklist', error);
-          NotificationHelper.error('Failed to add domain: ' + error.message);
+          NotificationHelper.error(_fmt2('failedAddDomainFmt', 'Failed to add domain: ' + error.message, error.message));
         }
-      });
-    }
-
-    const addWebhookHeaderBtn = document.querySelector('#addWebhookHeaderBtn');
-    if (addWebhookHeaderBtn) {
-      addWebhookHeaderBtn.addEventListener('click', () => {
-        if (!this.settings.webhook) {
-          this.settings.webhook = { webhookHeaders: [] };
-        }
-        if (!this.settings.webhook.webhookHeaders) {
-          this.settings.webhook.webhookHeaders = [];
-        }
-        this.settings.webhook.webhookHeaders.push({ name: '', value: '' });
-        this.renderWebhookHeadersUI();
       });
     }
 
@@ -894,22 +815,6 @@ SettingsUI.setupEventListeners = function() {
       ]);
     }
 
-    const enableWebhookToggle = document.querySelector('#enableWebhook');
-    const webhookSettingsContainer = document.querySelector('#webhookSettings');
-    const webhookOnCacheGroup = document.querySelector('#webhookOnCacheGroup');
-    if (enableWebhookToggle) {
-      enableWebhookToggle.addEventListener('change', () => {
-        SettingsUI.setToggleControlledVisibility(enableWebhookToggle, [
-          { element: webhookSettingsContainer, onDisplay: 'block' },
-          { element: webhookOnCacheGroup, onDisplay: 'flex' }
-        ]);
-      });
-      SettingsUI.setToggleControlledVisibility(enableWebhookToggle, [
-        { element: webhookSettingsContainer, onDisplay: 'block' },
-        { element: webhookOnCacheGroup, onDisplay: 'flex' }
-      ]);
-    }
-
     const preventDuplicatesToggle = document.querySelector('#preventDuplicates');
     const duplicateSettingsContainer = document.querySelector('#duplicateSettingsContainer');
     if (preventDuplicatesToggle) {
@@ -923,11 +828,6 @@ SettingsUI.setupEventListeners = function() {
       if (duplicateSettingsContainer) {
         duplicateSettingsContainer.style.display = isEnabled ? 'flex' : 'none';
       }
-    }
-
-    const testWebhookBtn = document.querySelector('#testWebhookBtn');
-    if (testWebhookBtn) {
-      testWebhookBtn.addEventListener('click', () => this.handleTestWebhook());
     }
 
     // ========== UPDATE SETTINGS ==========
@@ -959,542 +859,19 @@ SettingsUI.setupEventListeners = function() {
       checkUpdatesNowBtn.addEventListener('click', () => this.handleCheckUpdatesNow());
     }
 
+    if (typeof SettingsUI._setupDataListeners === 'function') {
+      SettingsUI._setupDataListeners.call(this);
+    }
+    if (typeof SettingsUI._setupLogListeners === 'function') {
+      SettingsUI._setupLogListeners.call(this);
+    }
+    if (typeof SettingsUI._setupWebhookListeners === 'function') {
+      SettingsUI._setupWebhookListeners.call(this);
+    }
+
     this.setupColorPagination();
-};
-
-SettingsUI.startLogCountUpdate = function() {
-    if (this.logCountUpdateInterval) {
-      clearInterval(this.logCountUpdateInterval);
-    }
-
-    // Update immediately
-    this.updateLogCount();
-
-    // Then update every 2 seconds
-    this.logCountUpdateInterval = setInterval(() => {
-      this.updateLogCount();
-    }, 2000);
-};
-
-SettingsUI.stopLogCountUpdate = function() {
-    if (this.logCountUpdateInterval) {
-      clearInterval(this.logCountUpdateInterval);
-      this.logCountUpdateInterval = null;
-    }
-};
-
-SettingsUI.updateLogCount = function() {
-    chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_GET_COUNT' }).then((response) => {
-      if (response && typeof response.count === 'number') {
-        const logCountValue = document.querySelector('#logCountValue');
-        if (logCountValue) {
-          logCountValue.textContent = response.count;
-        }
-      }
-    }).catch(() => {
-      // Silently ignore errors
-    });
-};
-
-SettingsUI.setupColorPagination = function() {
-    const prevBtn = document.querySelector('#colorPrevBtn');
-    const nextBtn = document.querySelector('#colorNextBtn');
-    const pageNum = document.querySelector('#colorPageNum');
-    const totalPages = document.querySelector('#colorTotalPages');
-    const pages = document.querySelectorAll('.color-page');
-
-    if (!prevBtn || !nextBtn || !pageNum || !totalPages || pages.length === 0) {
-      return;
-    }
-
-    let currentPage = 1;
-    const total = pages.length;
-
-    const updatePagination = () => {
-      pageNum.textContent = currentPage;
-
-      pages.forEach((page, index) => {
-        page.style.display = (index + 1) === currentPage ? 'block' : 'none';
-      });
-
-      prevBtn.disabled = currentPage === 1;
-      nextBtn.disabled = currentPage === total;
-    };
-
-    prevBtn.addEventListener('click', () => {
-      if (currentPage > 1) {
-        currentPage--;
-        updatePagination();
-      }
-    });
-
-    nextBtn.addEventListener('click', () => {
-      if (currentPage < total) {
-        currentPage++;
-        updatePagination();
-      }
-    });
-
-    updatePagination();
-};
-
-SettingsUI.renderBlacklistUI = function() {
-    const container = document.querySelector('#blacklistContainer');
-    const paginationContainer = document.querySelector('#blacklistPagination');
-    const pageNumEl = document.querySelector('#blacklistPageNum');
-    const totalPagesEl = document.querySelector('#blacklistTotalPages');
-    const prevBtn = document.querySelector('#blacklistPrevBtn');
-    const nextBtn = document.querySelector('#blacklistNextBtn');
-    const searchInput = document.querySelector('#blacklistSearchInput');
-
-    if (!container) return;
-
-    const allDomains = this.settings.detection?.blacklistedDomains || [];
-    const itemsPerPage = 3;
-
-    if (typeof this.blacklistPage === 'undefined') {
-      this.blacklistPage = 1;
-    }
-    if (typeof this.blacklistSearch === 'undefined') {
-      this.blacklistSearch = '';
-    }
-
-    const searchTerm = this.blacklistSearch.toLowerCase().trim();
-    const filteredDomains = searchTerm
-      ? allDomains.filter(d => d.toLowerCase().includes(searchTerm))
-      : allDomains;
-
-    const totalPages = Math.ceil(filteredDomains.length / itemsPerPage) || 1;
-
-    if (this.blacklistPage > totalPages) this.blacklistPage = totalPages;
-    if (this.blacklistPage < 1) this.blacklistPage = 1;
-
-    if (paginationContainer) {
-      paginationContainer.style.display = filteredDomains.length > itemsPerPage ? 'flex' : 'none';
-    }
-
-    if (pageNumEl) pageNumEl.textContent = this.blacklistPage;
-    if (totalPagesEl) totalPagesEl.textContent = totalPages;
-
-    if (prevBtn) prevBtn.disabled = this.blacklistPage <= 1;
-    if (nextBtn) nextBtn.disabled = this.blacklistPage >= totalPages;
-
-    if (filteredDomains.length === 0) {
-      container.innerHTML = searchTerm
-        ? '<div style="color: var(--text-muted); font-size: 12px; padding: 8px; text-align: center;">No domains match your search</div>'
-        : '<div style="color: var(--text-muted); font-size: 12px; padding: 8px; text-align: center;">No domains blacklisted</div>';
-      return;
-    }
-
-    const startIndex = (this.blacklistPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const currentDomains = filteredDomains.slice(startIndex, endIndex);
-
-    const html = currentDomains.map(domain => `
-      <div class="blacklist-item" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; background: var(--bg-tertiary); border-radius: 4px; margin-bottom: 4px;">
-        <span style="font-size: 12px; line-height: 14px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${domain}</span>
-        <button class="remove-blacklist-btn" data-domain="${domain}" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; transition: color 0.2s; flex-shrink: 0; margin-left: 8px;">
-          <svg width="14" height="14" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-          </svg>
-        </button>
-      </div>
-    `).join('');
-
-    container.innerHTML = html;
-
-    container.querySelectorAll('.remove-blacklist-btn').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const domain = btn.getAttribute('data-domain');
-        this.settings.detection.blacklistedDomains = this.settings.detection.blacklistedDomains.filter(d => d !== domain);
-        this.renderBlacklistUI();
-        await this.saveSettings();
-        NotificationHelper.success(`Removed ${domain} from blacklist`);
-      });
-    });
-};
-
-SettingsUI.setupBlacklistEventListeners = function() {
-    const searchInput = document.querySelector('#blacklistSearchInput');
-    const prevBtn = document.querySelector('#blacklistPrevBtn');
-    const nextBtn = document.querySelector('#blacklistNextBtn');
-
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        this.blacklistSearch = e.target.value;
-        this.blacklistPage = 1; // Reset to first page on search
-        this.renderBlacklistUI();
-      });
-    }
-
-    if (prevBtn) {
-      prevBtn.addEventListener('click', () => {
-        if (this.blacklistPage > 1) {
-          this.blacklistPage--;
-          this.renderBlacklistUI();
-        }
-      });
-    }
-
-    if (nextBtn) {
-      nextBtn.addEventListener('click', () => {
-        const allDomains = this.settings.detection?.blacklistedDomains || [];
-        const searchTerm = (this.blacklistSearch || '').toLowerCase().trim();
-        const filteredDomains = searchTerm
-          ? allDomains.filter(d => d.toLowerCase().includes(searchTerm))
-          : allDomains;
-        const totalPages = Math.ceil(filteredDomains.length / 3) || 1;
-
-        if (this.blacklistPage < totalPages) {
-          this.blacklistPage++;
-          this.renderBlacklistUI();
-        }
-      });
-    }
-};
-
-SettingsUI.renderWebhookHeadersUI = function() {
-    const container = document.querySelector('#webhookHeadersContainer');
-    if (!container) return;
-
-    const headers = this.settings.webhook?.webhookHeaders || [];
-
-    if (headers.length === 0) {
-      container.innerHTML = '<div style="color: var(--text-muted); font-size: 12px; padding: 8px; text-align: center;">No custom headers configured</div>';
-      return;
-    }
-
-    container.innerHTML = headers.map((header, index) => `
-      <div class="webhook-header-item" data-index="${index}" style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
-        <input type="text" class="webhook-header-name input-field" placeholder="Header name" value="${this.escapeHtml(header.name || '')}" style="flex: 1; font-size: 13px; padding: 8px;">
-        <input type="text" class="webhook-header-value input-field" placeholder="Header value" value="${this.escapeHtml(header.value || '')}" style="flex: 2; font-size: 13px; padding: 8px;">
-        <button type="button" class="remove-webhook-header-btn" data-index="${index}" style="background: none; border: none; color: #ef4444; cursor: pointer; padding: 6px; display: flex; align-items: center;">
-          <svg width="16" height="16" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-          </svg>
-        </button>
-      </div>
-    `).join('');
-
-    container.querySelectorAll('.remove-webhook-header-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const index = parseInt(btn.getAttribute('data-index'));
-        this.settings.webhook.webhookHeaders.splice(index, 1);
-        this.renderWebhookHeadersUI();
-      });
-    });
-
-    container.querySelectorAll('.webhook-header-item').forEach(item => {
-      const index = parseInt(item.getAttribute('data-index'));
-      const nameInput = item.querySelector('.webhook-header-name');
-      const valueInput = item.querySelector('.webhook-header-value');
-
-      nameInput.addEventListener('input', () => {
-        this.settings.webhook.webhookHeaders[index].name = nameInput.value;
-      });
-
-      valueInput.addEventListener('input', () => {
-        this.settings.webhook.webhookHeaders[index].value = valueInput.value;
-      });
-    });
-};
-
-SettingsUI.handleSaveSettings = async function() {
-    Logger.ui('handleSaveSettings() called');
-    try {
-      Logger.ui('Getting settings from UI...');
-      const newSettings = this.getSettingsFromUI();
-      Logger.ui('Settings from UI:', newSettings);
-
-      Logger.ui('Validating settings...');
-      const validation = this.validateSettings(newSettings);
-      Logger.ui('Validation result:', validation);
-
-      if (!validation.isValid) {
-        Logger.warn('UI', 'Settings validation failed:', validation.errors);
-        NotificationHelper.error('Invalid settings: ' + validation.errors.join(', '));
-        return;
-      }
-
-      Logger.ui('Merging settings...');
-      this.settings = this.deepMerge(this.settings, newSettings);
-      Logger.ui('Settings merged:', this.settings);
-
-      Logger.ui('Saving settings to storage...');
-      await this.saveSettings();
-      Logger.ui('Settings saved successfully');
-
-      Logger.ui('Closing modal...');
-      this.hideSettings();
-      Logger.ui('Modal closed');
-
-    } catch (error) {
-      Logger.error('UI', 'Failed to handle save settings:', error);
-      NotificationHelper.error('Failed to save settings: ' + error.message);
-    }
-};
-
-SettingsUI.setupWebhookMethodRadios = function() {
-    const radios = document.querySelectorAll('input[name="webhookMethodRadio"]');
-    const webhookMethodInput = document.querySelector('#webhookMethod');
-    const customContainer = document.querySelector('#webhookCustomMethodContainer');
-    const customInput = document.querySelector('#webhookCustomMethod');
-
-    radios.forEach(radio => {
-      radio.addEventListener('change', (e) => {
-        radios.forEach(r => {
-          const badge = r.closest('.http-method-badge');
-          if (badge) badge.classList.remove('checked');
-        });
-
-        const badge = e.target.closest('.http-method-badge');
-        if (badge) badge.classList.add('checked');
-
-        if (e.target.value === 'CUSTOM') {
-          if (customContainer) customContainer.style.display = 'block';
-          if (customInput) customInput.focus();
-        } else {
-          if (customContainer) customContainer.style.display = 'none';
-          if (webhookMethodInput) webhookMethodInput.value = e.target.value;
-        }
-      });
-    });
-
-    if (customInput) {
-      customInput.addEventListener('input', () => {
-        const customValue = customInput.value.trim().toUpperCase();
-        if (customValue && webhookMethodInput) {
-          webhookMethodInput.value = customValue;
-        }
-      });
-    }
-};
-
-SettingsUI.handleTestWebhook = async function() {
-    const btn = document.querySelector('#testWebhookBtn');
-    if (!btn) return;
-
-    btn.disabled = true;
-    const originalText = btn.innerHTML;
-    btn.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" class="spin">
-        <path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" fill="currentColor"/>
-      </svg>
-      Sending...
-    `;
-
-    try {
-      const webhookUrl = document.querySelector('#webhookUrl')?.value || '';
-      const webhookMethod = document.querySelector('#webhookMethod')?.value || 'POST';
-      const webhookContentType = document.querySelector('#webhookContentType')?.value || 'application/json';
-      const webhookPayload = document.querySelector('#webhookPayload')?.value || '';
-
-      if (!webhookUrl) {
-        NotificationHelper.error('Please enter a webhook URL');
-        return;
-      }
-
-      const customHeaders = this.settings.webhook?.webhookHeaders || [];
-      const testUrl = 'https://example.com/test-page';
-      const testHostname = 'example.com';
-      const testTitle = 'Test Page - Webhook Test';
-      const testFavicon = UrlUtils.getFaviconUrl('example.com', 64);
-      const testTimestamp = new Date().toISOString();
-      const testDetections = [
-        {
-          id: 'test-detector',
-          name: 'Test Detector',
-          category: 'Anti-Bot',
-          confidence: 95,
-          color: '#F48120',
-          methods: ['dom', 'cookie']
-        }
-      ];
-      const testCount = 1;
-      const testCategories = 'Anti-Bot';
-
-      const headers = {};
-      if (webhookMethod.toUpperCase() !== 'GET') {
-        headers['Content-Type'] = webhookContentType;
-      }
-
-      for (const header of customHeaders) {
-        if (header.name && header.name.trim()) {
-          let headerValue = header.value || '';
-          headerValue = headerValue
-            .replace(/<SITEURL>/g, testUrl)
-            .replace(/<HOSTNAME>/g, testHostname)
-            .replace(/<TITLE>/g, testTitle)
-            .replace(/<FAVICON>/g, testFavicon)
-            .replace(/<TIMESTAMP>/g, testTimestamp)
-            .replace(/<DETECTION_COUNT>/g, String(testCount))
-            .replace(/<CATEGORIES>/g, testCategories);
-          headers[header.name.trim()] = headerValue;
-        }
-      }
-
-      let processedUrl = webhookUrl
-        .replace(/<SITEURL>/g, encodeURIComponent(testUrl))
-        .replace(/<HOSTNAME>/g, encodeURIComponent(testHostname))
-        .replace(/<TITLE>/g, encodeURIComponent(testTitle))
-        .replace(/<FAVICON>/g, encodeURIComponent(testFavicon))
-        .replace(/<TIMESTAMP>/g, encodeURIComponent(testTimestamp))
-        .replace(/<DETECTION_COUNT>/g, String(testCount))
-        .replace(/<CATEGORIES>/g, encodeURIComponent(testCategories));
-
-      const fetchOptions = {
-        method: webhookMethod.toUpperCase(),
-        headers: headers
-      };
-
-      if (webhookMethod.toUpperCase() !== 'GET') {
-        let payload = webhookPayload;
-
-        if (!payload.trim()) {
-          payload = JSON.stringify({
-            url: testUrl,
-            hostname: testHostname,
-            title: testTitle,
-            favicon: testFavicon,
-            detections: testDetections,
-            timestamp: testTimestamp,
-            count: testCount
-          });
-        } else {
-          payload = payload
-            .replace(/<SITEURL>/g, testUrl)
-            .replace(/<HOSTNAME>/g, testHostname)
-            .replace(/<TITLE>/g, testTitle)
-            .replace(/<FAVICON>/g, testFavicon)
-            .replace(/<TIMESTAMP>/g, testTimestamp)
-            .replace(/<DETECTION_COUNT>/g, String(testCount))
-            .replace(/<CATEGORIES>/g, testCategories)
-            .replace(/<DETECTIONS>/g, JSON.stringify(testDetections));
-        }
-
-        fetchOptions.body = payload;
-      }
-
-      Logger.network('Test webhook:', { url: processedUrl, options: fetchOptions });
-
-      const response = await fetch(processedUrl, fetchOptions);
-
-      if (response.ok) {
-        NotificationHelper.success(`Webhook test successful! Status: ${response.status}`);
-        Logger.network('Test webhook success:', { status: response.status });
-      } else {
-        NotificationHelper.error(`Webhook returned status: ${response.status}`);
-        Logger.warn('NETWORK', 'Test webhook failed:', { status: response.status });
-      }
-    } catch (error) {
-      Logger.error('NETWORK', 'Test webhook error:', error);
-      NotificationHelper.error('Webhook test failed: ' + error.message);
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = originalText;
-    }
-};
-
-SettingsUI.updateIncompatibleUpdatesDisplay = async function() {
-    const warning = document.querySelector('#incompatibleUpdatesWarning');
-    if (!warning || typeof UpdateManager === 'undefined') return;
-
-    try {
-      const updates = await UpdateManager.getIncompatibleUpdates();
-
-      if (updates.length === 0) {
-        warning.style.display = 'none';
-        return;
-      }
-
-      warning.style.display = 'flex';
-
-      const countSpan = document.querySelector('#incompatibleCount');
-      if (countSpan) {
-        countSpan.textContent = updates.length;
-      }
-
-      // CSP-compliant: build details list via DOM methods instead of innerHTML
-      const list = document.querySelector('#incompatibleDetailsList');
-      if (list) {
-        list.replaceChildren(); // Clear existing items
-
-        for (const update of updates) {
-          const item = document.createElement('div');
-          item.className = 'incompatible-item';
-
-          const nameSpan = document.createElement('span');
-          nameSpan.className = 'incompatible-item-name';
-          nameSpan.textContent = update.name;
-
-          const versionSpan = document.createElement('span');
-          versionSpan.className = 'incompatible-item-version';
-          versionSpan.textContent = `v${update.remoteVersion} (needs ext v${update.minExtensionVersion})`;
-
-          item.appendChild(nameSpan);
-          item.appendChild(versionSpan);
-          list.appendChild(item);
-        }
-      }
-    } catch (error) {
-      Logger.error('UI', 'Failed to update incompatible updates display:', error);
-      warning.style.display = 'none';
-    }
-};
-
-SettingsUI.handleCheckUpdatesNow = async function() {
-    const btn = document.querySelector('#checkUpdatesNowBtn');
-    const lastCheckSpan = document.querySelector('#lastUpdateCheckTime');
-    if (!btn) return;
-
-    btn.disabled = true;
-    const originalText = btn.innerHTML;
-    btn.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" class="spin">
-        <path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" fill="currentColor"/>
-      </svg>
-      Checking...
-    `;
-
-    try {
-      if (typeof UpdateManager === 'undefined') {
-        throw new Error('UpdateManager not loaded');
-      }
-
-      const result = await UpdateManager.checkForUpdates(true);
-
-      if (lastCheckSpan) {
-        const settings = await Utils.getSettings();
-        const lastCheck = settings.updates?.lastCheckTimestamp || 0;
-        lastCheckSpan.textContent = lastCheck > 0 ? UpdateManager.formatLastCheck(lastCheck) : 'Just now';
-      }
-
-      const pendingCount = await UpdateManager.getPendingUpdatesCount();
-
-      if (pendingCount > 0) {
-        NotificationHelper.success(`Found ${pendingCount} detector update${pendingCount > 1 ? 's' : ''} available!`);
-      } else {
-        NotificationHelper.info('All detectors are up to date.');
-      }
-
-      const incompatibleCount = await UpdateManager.getIncompatibleUpdatesCount();
-      if (incompatibleCount > 0) {
-        NotificationHelper.warning(
-          `${incompatibleCount} detector update${incompatibleCount > 1 ? 's' : ''} require a newer extension version.`,
-          { duration: 8000 }
-        );
-      }
-
-      await this.updateIncompatibleUpdatesDisplay();
-
-      Logger.ui('Update check completed:', { pendingCount, incompatibleCount, result });
-
-    } catch (error) {
-      Logger.error('UI', 'Failed to check for updates:', error);
-      NotificationHelper.error('Failed to check for updates: ' + error.message);
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = originalText;
+    if (typeof SettingsUI._setupColorListeners === 'function') {
+      SettingsUI._setupColorListeners();
     }
 };
 

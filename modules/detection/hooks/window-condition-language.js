@@ -90,7 +90,17 @@
     'present': '!== undefined'
   });
 
-  const cache = new Map(); // condition -> compiled
+  // condition -> compiled. LRU-capped to prevent unbounded growth from
+  // many unique conditions across many detectors.
+  const _CACHE_CAP = 500;
+  const cache = new Map();
+  const _originalCacheSet = cache.set.bind(cache);
+  cache.set = function (key, value) {
+    if (this.size >= _CACHE_CAP && !this.has(key)) {
+      this.delete(this.keys().next().value);
+    }
+    return _originalCacheSet(key, value);
+  };
 
   function _toString(value) {
     try {

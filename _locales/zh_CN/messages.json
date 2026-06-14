@@ -1,0 +1,1676 @@
+{
+  "extensionName": {
+    "message": "Scrapfly:反机器人检测器"
+  },
+  "extensionDescription": {
+    "message": "检测网站上的验证码、反机器人系统和指纹识别技术"
+  },
+  "tabDetection": {
+    "message": "检测"
+  },
+  "tabHistory": {
+    "message": "历史记录"
+  },
+  "tabRules": {
+    "message": "规则"
+  },
+  "tabAdvanced": {
+    "message": "高级"
+  },
+  "openSettings": {
+    "message": "打开设置"
+  },
+  "enableOrDisableDetection": {
+    "message": "启用或禁用检测"
+  },
+  "noDetectionsFound": {
+    "message": "未发现检测"
+  },
+  "analyzingPage": {
+    "message": "正在分析页面"
+  },
+  "actionRemoveFromBlacklist": {
+    "message": "从黑名单中移除"
+  },
+  "advancedDomainBlacklisted": {
+    "message": "此域名的高级工具已禁用"
+  },
+  "blacklistManageHint": {
+    "message": "或前往“设置 → 检测 → 黑名单域”进行管理。"
+  },
+  "statDetections": {
+    "message": "检测数"
+  },
+  "statConfidence": {
+    "message": "置信度"
+  },
+  "statDifficulty": {
+    "message": "难度"
+  },
+  "statCacheScope": {
+    "message": "缓存范围"
+  },
+  "scopeDomain": {
+    "message": "域名"
+  },
+  "scopePath": {
+    "message": "路径"
+  },
+  "scopeFullUrl": {
+    "message": "完整 URL"
+  },
+  "difficultyLow": {
+    "message": "低"
+  },
+  "difficultyMedium": {
+    "message": "中"
+  },
+  "difficultyHigh": {
+    "message": "高"
+  },
+  "searchHistory": {
+    "message": "搜索历史记录..."
+  },
+  "searchDetectors": {
+    "message": "搜索检测器..."
+  },
+  "paginationPrev": {
+    "message": "上一页"
+  },
+  "paginationNext": {
+    "message": "下一页"
+  },
+  "paginationPage": {
+    "message": "页"
+  },
+  "paginationOf": {
+    "message": "/"
+  },
+  "paginationNoItems": {
+    "message": "没有项目可显示"
+  },
+  "paginationCurrentPageAria": {
+    "message": "当前页码"
+  },
+  "btnImport": {
+    "message": "导入"
+  },
+  "btnExport": {
+    "message": "导出"
+  },
+  "btnClear": {
+    "message": "清除"
+  },
+  "btnAdd": {
+    "message": "添加"
+  },
+  "btnUpdate": {
+    "message": "更新"
+  },
+  "btnClose": {
+    "message": "关闭"
+  },
+  "btnSave": {
+    "message": "保存"
+  },
+  "btnCancel": {
+    "message": "取消"
+  },
+  "btnDelete": {
+    "message": "删除"
+  },
+  "historyImportTitle": {
+    "message": "导入历史记录"
+  },
+  "historyExportTitle": {
+    "message": "导出历史记录"
+  },
+  "historyClearTitle": {
+    "message": "清除历史记录"
+  },
+  "historyEmptyTitle": {
+    "message": "暂无历史记录"
+  },
+  "historyEmptyDescription": {
+    "message": "浏览网站时,检测历史记录将显示在此处。"
+  },
+  "rulesUpdateTitle": {
+    "message": "检查检测器更新"
+  },
+  "rulesClearTitle": {
+    "message": "清除所有规则"
+  },
+  "rulesAddTitle": {
+    "message": "添加新检测器"
+  },
+  "rulesEmptyTitle": {
+    "message": "未加载检测器"
+  },
+  "rulesEmptyDescription": {
+    "message": "从存储和文件加载后,检测器将显示在此处。"
+  },
+  "ruleModalActionEdit": {
+    "message": "编辑"
+  },
+  "ruleSectionDetectorInfo": {
+    "message": "检测器信息"
+  },
+  "ruleFieldName": {
+    "message": "名称"
+  },
+  "ruleFieldNamePlaceholder": {
+    "message": "检测器名称"
+  },
+  "ruleFieldCategory": {
+    "message": "类别"
+  },
+  "categoryAntibot": {
+    "message": "反机器人"
+  },
+  "categoryCaptcha": {
+    "message": "验证码"
+  },
+  "categoryFingerprint": {
+    "message": "指纹识别"
+  },
+  "ruleFieldDifficulty": {
+    "message": "难度"
+  },
+  "ruleFieldIcon": {
+    "message": "图标"
+  },
+  "ruleFieldVersion": {
+    "message": "版本"
+  },
+  "ruleFieldAuthor": {
+    "message": "作者"
+  },
+  "ruleSectionBadgeColor": {
+    "message": "徽章颜色"
+  },
+  "ruleSectionDetectionMethods": {
+    "message": "检测方法"
+  },
+  "settingsTitle": {
+    "message": "设置"
+  },
+  "settingsSubtitle": {
+    "message": "配置扩展首选项"
+  },
+  "settingsTabGeneral": {
+    "message": "常规"
+  },
+  "settingsTabDetection": {
+    "message": "检测"
+  },
+  "settingsTabHistory": {
+    "message": "历史记录"
+  },
+  "settingsTabData": {
+    "message": "数据"
+  },
+  "settingsGroupCoreSettings": {
+    "message": "核心设置"
+  },
+  "settingsCardNotifications": {
+    "message": "通知"
+  },
+  "settingsCardNotificationsDesc": {
+    "message": "检测到安全系统时显示警报"
+  },
+  "settingsCardDebug": {
+    "message": "调试模式"
+  },
+  "settingsCardDebugDesc": {
+    "message": "启用控制台日志记录以进行调试"
+  },
+  "settingsRowLogCollector": {
+    "message": "日志收集器"
+  },
+  "settingsRowMaxLogs": {
+    "message": "最大日志数"
+  },
+  "settingsRowCollected": {
+    "message": "已收集"
+  },
+  "settingsGroupDetectorUpdates": {
+    "message": "检测器更新"
+  },
+  "settingsCardAutoUpdate": {
+    "message": "自动检查更新"
+  },
+  "settingsCardAutoUpdateDesc": {
+    "message": "自动检查新的检测器定义"
+  },
+  "settingsRowCheckInterval": {
+    "message": "检查间隔"
+  },
+  "settingsCheckIntervalNever": {
+    "message": "从不"
+  },
+  "settingsBtnCheckNow": {
+    "message": "立即检查"
+  },
+  "settingsExtensionUpdateRequired": {
+    "message": "需要更新扩展"
+  },
+  "settingsBtnUpdateExtension": {
+    "message": "更新扩展"
+  },
+  "settingsGroupBadgeColors": {
+    "message": "徽章颜色"
+  },
+  "settingsRowLastCheck": {
+    "message": "上次检查"
+  },
+  "advancedToolsTitle": {
+    "message": "高级捕获工具"
+  },
+  "advancedToolsDescription": {
+    "message": "从检测到的保护系统中提取 cookie、令牌和站点密钥"
+  },
+  "advancedToolsHint": {
+    "message": "访问受保护的页面以启用捕获工具"
+  },
+  "advancedSubtabTools": {
+    "message": "工具"
+  },
+  "advancedSubtabHistory": {
+    "message": "历史记录"
+  },
+  "advancedCaptureHistoryTitle": {
+    "message": "捕获历史记录"
+  },
+  "advancedCaptureHistorySubtitle": {
+    "message": "过滤、检查和导出收集的捕获"
+  },
+  "advancedFilterSite": {
+    "message": "站点"
+  },
+  "advancedFilterAllSites": {
+    "message": "所有站点"
+  },
+  "advancedFilterCurrentSite": {
+    "message": "当前站点"
+  },
+  "advancedFilterModule": {
+    "message": "模块"
+  },
+  "advancedFilterAllModules": {
+    "message": "所有模块"
+  },
+  "advancedFilterSearch": {
+    "message": "搜索"
+  },
+  "advancedBtnExport": {
+    "message": "导出"
+  },
+  "advancedBtnExportTitle": {
+    "message": "导出捕获"
+  },
+  "advancedBtnClearAll": {
+    "message": "全部清除"
+  },
+  "advancedBtnClearAllTitle": {
+    "message": "清除所有捕获"
+  },
+  "advancedEmptyCapturesTitle": {
+    "message": "暂无捕获"
+  },
+  "advancedEmptyCapturesHint": {
+    "message": "使用“工具”选项卡从检测到的系统中捕获数据"
+  },
+  "advancedNoResultsTitle": {
+    "message": "未找到捕获"
+  },
+  "advancedNoResultsHint": {
+    "message": "尝试调整过滤器或搜索查询"
+  },
+  "advancedBtnResetFilters": {
+    "message": "重置所有过滤器"
+  },
+  "advancedModalTitle": {
+    "message": "高级检测工具"
+  },
+  "advancedModalIntro": {
+    "message": "用于深入分析反机器人系统、验证码和指纹识别技术的专业捕获工具。当发现相关检测时,这些工具会自动出现。"
+  },
+  "advancedSectionSupported": {
+    "message": "当前支持的系统"
+  },
+  "advancedSectionHowItWorks": {
+    "message": "工作原理"
+  },
+  "advancedStep1Title": {
+    "message": "自动检测"
+  },
+  "advancedStep1Desc": {
+    "message": "在当前页面检测到相关反机器人系统时,工具会出现"
+  },
+  "advancedStep2Title": {
+    "message": "开始捕获"
+  },
+  "advancedStep2Desc": {
+    "message": "工具会自动初始化拦截器并开始监控网络请求"
+  },
+  "advancedStep3Title": {
+    "message": "查看结果"
+  },
+  "advancedStep3Desc": {
+    "message": "捕获的数据会暂时存储 (30 分钟),并具有完整的导出功能"
+  },
+  "advancedFooterHint": {
+    "message": "结果在 30 分钟后过期,以确保数据新鲜"
+  },
+  "settings": {
+    "message": "设置"
+  },
+  "paginationShowingFmt": {
+    "message": "显示 {0}-{1} / 共 {2}"
+  },
+  "paginationShowingItems": {
+    "message": "显示 {0}-{1} / 共 {2} {3}"
+  },
+  "timeUnknown": {
+    "message": "未知"
+  },
+  "timeJustNow": {
+    "message": "刚刚"
+  },
+  "timeSecondsAgoFmt": {
+    "message": "{0} 秒前"
+  },
+  "timeMinutesAgoFmt": {
+    "message": "{0} 分钟前"
+  },
+  "timeHoursAgoFmt": {
+    "message": "{0} 小时前"
+  },
+  "timeDaysAgoFmt": {
+    "message": "{0} 天前"
+  },
+  "timeOneMinuteAgo": {
+    "message": "1 分钟前"
+  },
+  "timeMinutesAgoLongFmt": {
+    "message": "{0} 分钟前"
+  },
+  "timeOneHourAgo": {
+    "message": "1 小时前"
+  },
+  "timeHoursAgoLongFmt": {
+    "message": "{0} 小时前"
+  },
+  "timeOneDayAgo": {
+    "message": "1 天前"
+  },
+  "timeDaysAgoLongFmt": {
+    "message": "{0} 天前"
+  },
+  "timeOneWeekAgo": {
+    "message": "1 周前"
+  },
+  "timeWeeksAgoFmt": {
+    "message": "{0} 周前"
+  },
+  "timeOneMonthAgo": {
+    "message": "1 个月前"
+  },
+  "timeMonthsAgoFmt": {
+    "message": "{0} 个月前"
+  },
+  "timeOneYearAgo": {
+    "message": "1 年前"
+  },
+  "timeYearsAgoFmt": {
+    "message": "{0} 年前"
+  },
+  "btnCancelSettings": {
+    "message": "取消"
+  },
+  "btnSaveSettings": {
+    "message": "保存设置"
+  },
+  "poweredBy": {
+    "message": "由以下提供支持"
+  },
+  "categoryColors": {
+    "message": "类别颜色"
+  },
+  "methodSuffixPatterns": {
+    "message": "模式"
+  },
+  "btnSaveRule": {
+    "message": "保存规则"
+  },
+  "tagColors": {
+    "message": "标签颜色"
+  },
+  "cacheConfiguration": {
+    "message": "缓存配置"
+  },
+  "cacheDuration": {
+    "message": "缓存持续时间"
+  },
+  "timeUnitMinutes": {
+    "message": "分钟"
+  },
+  "timeUnitHours": {
+    "message": "小时"
+  },
+  "timeUnitDays": {
+    "message": "天"
+  },
+  "blacklistedDomains": {
+    "message": "黑名单域名"
+  },
+  "blacklistedDomainsDesc": {
+    "message": "完全跳过检测的域名"
+  },
+  "jsApiEvents": {
+    "message": "JS API 事件"
+  },
+  "jsApiEventsDesc": {
+    "message": "向页面 window 派发自定义事件"
+  },
+  "ruleMethodSettings": {
+    "message": "检测方法设置"
+  },
+  "ruleConfidenceLevel": {
+    "message": "置信度"
+  },
+  "ruleConfidencePrefix": {
+    "message": "检测置信度:"
+  },
+  "detectionName": {
+    "message": "检测名称"
+  },
+  "historyModalUrl": {
+    "message": "URL"
+  },
+  "interval6Hours": {
+    "message": "6 小时"
+  },
+  "interval12Hours": {
+    "message": "12 小时"
+  },
+  "interval24Hours": {
+    "message": "24 小时"
+  },
+  "interval2Days": {
+    "message": "2 天"
+  },
+  "interval1Week": {
+    "message": "1 周"
+  },
+  "methodLabelUrl": {
+    "message": "URL"
+  },
+  "methodLabelHeader": {
+    "message": "HEADER"
+  },
+  "methodLabelCookie": {
+    "message": "COOKIE"
+  },
+  "methodLabelContent": {
+    "message": "CONTENT"
+  },
+  "methodLabelDom": {
+    "message": "DOM"
+  },
+  "methodLabelJsHooks": {
+    "message": "JS HOOKS"
+  },
+  "methodLabelWindow": {
+    "message": "WINDOW"
+  },
+  "methodLabelPayload": {
+    "message": "PAYLOAD"
+  },
+  "methodOnePattern": {
+    "message": "1 个模式"
+  },
+  "methodPatternsFmt": {
+    "message": "{0} 个模式"
+  },
+  "methodAddPattern": {
+    "message": "添加模式"
+  },
+  "methodSearchPatterns": {
+    "message": "搜索模式..."
+  },
+  "methodNoPatterns": {
+    "message": "无模式"
+  },
+  "methodNoMatchingPatterns": {
+    "message": "无匹配模式"
+  },
+  "methodSuffixMatches": {
+    "message": "匹配"
+  },
+  "cacheExpiredLabel": {
+    "message": "已过期"
+  },
+  "copiedNotification": {
+    "message": "已复制"
+  },
+  "copiedInlineMsg": {
+    "message": "✓ 已复制!"
+  },
+  "unknownDetection": {
+    "message": "未知检测"
+  },
+  "matchSingular": {
+    "message": "项匹配"
+  },
+  "matchPlural": {
+    "message": "项匹配"
+  },
+  "noMatchesRecorded": {
+    "message": "未记录到匹配项"
+  },
+  "clearCacheConfirmTitle": {
+    "message": "清除缓存"
+  },
+  "clearCacheConfirmMsg": {
+    "message": "此操作将移除该域名的缓存检测数据并触发新一轮分析。"
+  },
+  "clearCacheConfirmBtn": {
+    "message": "清除缓存"
+  },
+  "clearingMsg": {
+    "message": "正在清除..."
+  },
+  "clearedSuccessMsg": {
+    "message": "✓ 已清除!"
+  },
+  "cacheClearedToast": {
+    "message": "缓存已清除"
+  },
+  "failedToClearCacheToast": {
+    "message": "清除缓存失败"
+  },
+  "unableGetCurrentPage": {
+    "message": "无法获取当前页面"
+  },
+  "invalidDomain": {
+    "message": "无效的域名"
+  },
+  "addBlacklistTitle": {
+    "message": "添加到黑名单"
+  },
+  "addBlacklistMsgFmt": {
+    "message": "域名 \"{0}\" 将从今后所有检测中排除。您可以稍后在设置中将其移除。"
+  },
+  "addBlacklistBtn": {
+    "message": "添加到黑名单"
+  },
+  "alreadyBlacklistedFmt": {
+    "message": "域名 \"{0}\" 已在黑名单中"
+  },
+  "addedToBlacklistFmt": {
+    "message": "已将 \"{0}\" 添加到黑名单"
+  },
+  "failedAddBlacklistFmt": {
+    "message": "添加到黑名单失败:{0}"
+  },
+  "removedFromBlacklistFmt": {
+    "message": "已将 \"{0}\" 从黑名单中移除"
+  },
+  "failedRemoveBlacklistFmt": {
+    "message": "从黑名单移除失败:{0}"
+  },
+  "historyNoDetections": {
+    "message": "无检测结果"
+  },
+  "historyNoDetectionsFound": {
+    "message": "未找到检测结果"
+  },
+  "historyMatchCountFmt": {
+    "message": "{0} 项匹配"
+  },
+  "historyOneMatch": {
+    "message": "1 项匹配"
+  },
+  "notificationHistoryCleared": {
+    "message": "历史记录已清除"
+  },
+  "notificationClearHistoryFailedFmt": {
+    "message": "清除历史记录失败:{0}"
+  },
+  "notificationHistoryItemExported": {
+    "message": "历史记录项已导出"
+  },
+  "notificationCacheCleared": {
+    "message": "缓存已清除"
+  },
+  "notificationCacheAlreadyCleared": {
+    "message": "缓存已被清除"
+  },
+  "notificationClearCacheFailed": {
+    "message": "清除缓存失败"
+  },
+  "notificationDomainBlacklistedFmt": {
+    "message": "已将 \"{0}\" 添加到黑名单"
+  },
+  "notificationBlacklistFailed": {
+    "message": "添加到黑名单失败"
+  },
+  "notificationHistoryItemDeleted": {
+    "message": "历史记录项已删除"
+  },
+  "notificationDeleteHistoryItemFailed": {
+    "message": "删除历史记录项失败"
+  },
+  "notificationHistoryExportedFmt": {
+    "message": "已导出 {0} 条历史记录"
+  },
+  "notificationHistoryMergedFmt": {
+    "message": "已合并 {0} 条新历史记录"
+  },
+  "notificationHistoryReplacedFmt": {
+    "message": "已用 {0} 条记录替换历史记录"
+  },
+  "notificationImportHistoryFailedFmt": {
+    "message": "导入历史记录失败:{0}"
+  },
+  "dialogClearHistoryTitle": {
+    "message": "清除历史记录"
+  },
+  "dialogClearHistoryMessage": {
+    "message": "确定要清除所有历史记录吗?此操作无法撤销。"
+  },
+  "buttonClearAll": {
+    "message": "全部清除"
+  },
+  "dialogClearCacheTitle": {
+    "message": "清除缓存"
+  },
+  "dialogClearCacheMessageFmt": {
+    "message": "是否清除 {0} 的缓存检测数据?历史记录条目将保留。"
+  },
+  "buttonClearCache": {
+    "message": "清除缓存"
+  },
+  "dialogDeleteHistoryTitle": {
+    "message": "删除历史记录项"
+  },
+  "dialogDeleteHistoryMessageFmt": {
+    "message": "确定要删除来自 {0} 的此检测记录吗?"
+  },
+  "failedLoadSettingsDefault": {
+    "message": "加载设置失败。正在使用默认值。"
+  },
+  "settingsSavedToast": {
+    "message": "设置已保存"
+  },
+  "failedSaveSettingsFmt": {
+    "message": "保存设置失败:{0}"
+  },
+  "settingsResetToast": {
+    "message": "设置已重置"
+  },
+  "dataClearedReloadNotice": {
+    "message": "所有数据已成功清除!扩展程序将重新加载。"
+  },
+  "failedClearDataFmt": {
+    "message": "清除数据失败:{0}"
+  },
+  "failedExportLogs": {
+    "message": "导出日志失败"
+  },
+  "logsCleared": {
+    "message": "日志已清除"
+  },
+  "failedClearLogs": {
+    "message": "清除日志失败"
+  },
+  "couldNotGetPageUrl": {
+    "message": "无法获取当前页面 URL"
+  },
+  "domainAlreadyBlacklistedFmt": {
+    "message": "{0} 已在黑名单中"
+  },
+  "addedDomainToBlacklistFmt": {
+    "message": "已将 {0} 添加到黑名单"
+  },
+  "failedAddDomainFmt": {
+    "message": "添加域名失败:{0}"
+  },
+  "removedDomainFromBlacklistFmt": {
+    "message": "已将 {0} 从黑名单中移除"
+  },
+  "invalidSettingsFmt": {
+    "message": "设置无效:{0}"
+  },
+  "pleaseEnterWebhookUrl": {
+    "message": "请输入 Webhook URL"
+  },
+  "webhookTestSuccessfulFmt": {
+    "message": "Webhook 测试成功!状态:{0}"
+  },
+  "webhookFailedStatusFmt": {
+    "message": "Webhook 返回状态:{0}"
+  },
+  "webhookTestFailedFmt": {
+    "message": "Webhook 测试失败:{0}"
+  },
+  "foundDetectorUpdatesAvailableFmt": {
+    "message": "发现 {0} 个可用的检测器更新!"
+  },
+  "allDetectorsUpToDate": {
+    "message": "所有检测器均为最新版本。"
+  },
+  "importDetectorsTitle": {
+    "message": "导入检测器"
+  },
+  "importMergeQuestion": {
+    "message": "是否要与现有检测器合并?"
+  },
+  "mergeOption": {
+    "message": "合并"
+  },
+  "replaceAllOption": {
+    "message": "全部替换"
+  },
+  "detectorsImported": {
+    "message": "检测器已导入"
+  },
+  "failedImportDetectors": {
+    "message": "导入检测器失败。请检查文件格式。"
+  },
+  "errorReadingFileFmt": {
+    "message": "读取文件出错:{0}"
+  },
+  "detectorsUpdatedFmt": {
+    "message": "已更新 {0} 个检测器"
+  },
+  "updatesAvailableClickToApplyFmt": {
+    "message": "有 {0} 项更新可用 - 再次点击以应用"
+  },
+  "detectorDeletedFmt": {
+    "message": "已删除 \"{0}\""
+  },
+  "allDetectorsCleared": {
+    "message": "所有检测器已清除"
+  },
+  "failedClearDetectors": {
+    "message": "清除检测器失败"
+  },
+  "urlPatternMatching": {
+    "message": "URL 模式匹配"
+  },
+  "textWordMatching": {
+    "message": "文本/单词匹配"
+  },
+  "domSelectorMatching": {
+    "message": "DOM 选择器匹配"
+  },
+  "payloadTextMatching": {
+    "message": "负载文本匹配"
+  },
+  "nameFieldMatching": {
+    "message": "名称字段匹配"
+  },
+  "captureNotFound": {
+    "message": "未找到捕获项"
+  },
+  "captureModuleClassNotFound": {
+    "message": "未找到模块类"
+  },
+  "captureDetailsUnavailable": {
+    "message": "详情视图不可用"
+  },
+  "captureDataCopied": {
+    "message": "已复制捕获数据"
+  },
+  "captureDeleted": {
+    "message": "捕获项已删除"
+  },
+  "capturesExportedFmt": {
+    "message": "已导出 {0} 个捕获项"
+  },
+  "allCapturesCleared": {
+    "message": "所有捕获项已清除"
+  },
+  "captureExportFailed": {
+    "message": "捕获项导出失败"
+  },
+  "invalidUrl": {
+    "message": "无效的 URL"
+  },
+  "importHistoryTitle": {
+    "message": "导入历史记录"
+  },
+  "importHistoryMessageFmt": {
+    "message": "导入 {0} 条历史记录?当前历史记录有 {1} 条。"
+  },
+  "replaceOption": {
+    "message": "替换"
+  },
+  "settingsResetTitle": {
+    "message": "重置设置"
+  },
+  "settingsResetMessage": {
+    "message": "确定要将所有设置重置为默认值吗?此操作无法撤销。"
+  },
+  "btnReset": {
+    "message": "重置"
+  },
+  "clearAllDataTitle": {
+    "message": "清除所有数据"
+  },
+  "clearAllDataMessage": {
+    "message": "确定要清除扩展程序的所有数据吗?此操作将移除:<br><br>• 所有检测历史记录<br>• 所有检测器规则<br>• 所有设置<br><br>此操作无法撤销!"
+  },
+  "clearEverythingBtn": {
+    "message": "全部清除"
+  },
+  "clearLogsTitle": {
+    "message": "清除日志"
+  },
+  "clearLogsMessage": {
+    "message": "确定要清除所有已收集的日志吗?此操作无法撤销。"
+  },
+  "failedCheckForUpdatesFmt": {
+    "message": "检查更新失败:{0}"
+  },
+  "couldNotFetchUpdates": {
+    "message": "无法从服务器获取更新"
+  },
+  "errorApplyingUpdates": {
+    "message": "应用更新时出错"
+  },
+  "failedCheckForUpdates": {
+    "message": "检查更新失败"
+  },
+  "errorCheckingForUpdates": {
+    "message": "检查更新时出错"
+  },
+  "updateServiceNotAvailable": {
+    "message": "更新服务不可用"
+  },
+  "clearAllDetectorsTitle": {
+    "message": "清除所有检测器"
+  },
+  "clearAllDetectorsMessage": {
+    "message": "此操作将移除所有检测器。确定要继续吗?"
+  },
+  "clearingAllDetectors": {
+    "message": "正在清除所有检测器..."
+  },
+  "deleteDetectorTitle": {
+    "message": "删除检测器"
+  },
+  "deleteDetectorMessageFmt": {
+    "message": "确定要删除 \"{0}\" 吗?"
+  },
+  "detectorNotFound": {
+    "message": "未找到检测器"
+  },
+  "failedDeleteDetector": {
+    "message": "删除检测器失败"
+  },
+  "detectorNotFoundFmt": {
+    "message": "未找到检测器:{0}"
+  },
+  "failedViewCaptureDetails": {
+    "message": "查看捕获详情失败"
+  },
+  "failedCopyCaptureData": {
+    "message": "复制捕获数据失败"
+  },
+  "failedDeleteCapture": {
+    "message": "删除捕获项失败"
+  },
+  "noCapturesToExport": {
+    "message": "没有可导出的捕获项"
+  },
+  "clearAllCapturesConfirm": {
+    "message": "确定要删除所有捕获项吗?此操作无法撤销。"
+  },
+  "failedClearCaptures": {
+    "message": "清除捕获项失败"
+  },
+  "settingsCardWebhookIntegration": {
+    "message": "Webhook 集成"
+  },
+  "settingsEnableWebhook": {
+    "message": "启用 Webhook"
+  },
+  "settingsEnableWebhookDesc": {
+    "message": "在检测时发送 HTTP 请求"
+  },
+  "settingsBypassCache": {
+    "message": "每次页面加载时发送(绕过缓存)"
+  },
+  "settingsHttpMethod": {
+    "message": "HTTP 方法"
+  },
+  "settingsHttpMethodDesc": {
+    "message": "选择用于 Webhook 请求的 HTTP 方法"
+  },
+  "settingsCustomMethod": {
+    "message": "自定义"
+  },
+  "settingsCustomMethodPlaceholder": {
+    "message": "输入自定义方法(例如 OPTIONS、HEAD)"
+  },
+  "settingsWebhookUrl": {
+    "message": "Webhook URL"
+  },
+  "settingsWebhookUrlDesc": {
+    "message": "完整的端点 URL (https://api.example.com/webhook)"
+  },
+  "settingsAvailableVariables": {
+    "message": "可用变量:"
+  },
+  "settingsWebhookUrlExample": {
+    "message": "示例:https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
+  },
+  "settingsContentType": {
+    "message": "Content-Type"
+  },
+  "settingsContentTypeDesc": {
+    "message": "HTTP 内容类型标头"
+  },
+  "settingsCustomHeaders": {
+    "message": "自定义标头"
+  },
+  "settingsCustomHeadersDesc": {
+    "message": "向 Webhook 请求添加自定义 HTTP 标头"
+  },
+  "settingsPayloadTemplate": {
+    "message": "负载模板"
+  },
+  "settingsPayloadTemplateDesc": {
+    "message": "可使用变量:<SITEURL>、<HOSTNAME>、<TITLE>、<FAVICON>、<DETECTIONS>、<TIMESTAMP>、<DETECTION_COUNT>、<CATEGORIES>"
+  },
+  "settingsTestWebhook": {
+    "message": "测试 Webhook"
+  },
+  "settingsTestWebhookDesc": {
+    "message": "向您的 Webhook URL 发送测试请求"
+  },
+  "settingsTestBtn": {
+    "message": "测试"
+  },
+  "settingsCardHistoryConfig": {
+    "message": "历史记录配置"
+  },
+  "settingsHistorySettings": {
+    "message": "历史记录设置"
+  },
+  "settingsHistoryLimit": {
+    "message": "历史记录上限"
+  },
+  "settingsHistoryLimitNote": {
+    "message": "(0 = 无限制)"
+  },
+  "settingsAutoClearDays": {
+    "message": "自动清除(天)"
+  },
+  "settingsExportFormat": {
+    "message": "导出格式"
+  },
+  "settingsExportFormatPlainText": {
+    "message": "纯文本"
+  },
+  "settingsIncludeTimestamps": {
+    "message": "包含时间戳"
+  },
+  "settingsSaveOnCacheHits": {
+    "message": "缓存命中时保存"
+  },
+  "settingsCardDuplicatePrevention": {
+    "message": "重复防护"
+  },
+  "settingsEnableDuplicatePrevention": {
+    "message": "启用重复防护"
+  },
+  "settingsDuplicatePreventionDesc": {
+    "message": "在时间窗口内阻止重复的历史记录条目"
+  },
+  "settingsDuplicateScope": {
+    "message": "范围"
+  },
+  "settingsDuplicateScopeFullUrl": {
+    "message": "完整 URL"
+  },
+  "settingsDuplicateScopeDomain": {
+    "message": "域名"
+  },
+  "settingsDuplicateScopePath": {
+    "message": "路径"
+  },
+  "settingsTimeWindow": {
+    "message": "时间窗口"
+  },
+  "settingsTimeMinutes": {
+    "message": "分钟"
+  },
+  "settingsTimeHours": {
+    "message": "小时"
+  },
+  "settingsTimeDays": {
+    "message": "天"
+  },
+  "settingsHowItWorks": {
+    "message": "工作原理:"
+  },
+  "settingsHowItWorksDesc": {
+    "message": "在时间窗口内防止同一 URL 产生重复的历史记录条目。"
+  },
+  "settingsDuplicateFullUrlBullet": {
+    "message": "完整 URL:精确匹配 URL(包含查询参数)"
+  },
+  "settingsDuplicateDomainBullet": {
+    "message": "域名:相同域名(不同路径视为相同)"
+  },
+  "settingsDuplicatePathBullet": {
+    "message": "路径:相同的域名+路径(忽略查询参数)"
+  },
+  "settingsCardCacheSettings": {
+    "message": "缓存设置"
+  },
+  "settingsCardSkipDomains": {
+    "message": "跳过的域名"
+  },
+  "settingsAddCurrentPage": {
+    "message": "添加当前页面"
+  },
+  "settingsSearchDomainsPlaceholder": {
+    "message": "搜索域名..."
+  },
+  "settingsBadgeColorLow": {
+    "message": "低"
+  },
+  "settingsBadgeColorMedium": {
+    "message": "中"
+  },
+  "settingsBadgeColorHigh": {
+    "message": "高"
+  },
+  "settingsEnableJsApi": {
+    "message": "启用 JS API 事件"
+  },
+  "settingsDataExportImport": {
+    "message": "导出与导入"
+  },
+  "settingsDataManagement": {
+    "message": "数据管理"
+  },
+  "settingsDataManagementDesc": {
+    "message": "导出或导入扩展数据"
+  },
+  "settingsDataSettingsRow": {
+    "message": "设置"
+  },
+  "settingsDataSettingsRowDesc": {
+    "message": "导出或导入扩展设置"
+  },
+  "settingsDataHistoryRow": {
+    "message": "检测历史"
+  },
+  "settingsDataHistoryRowDesc": {
+    "message": "将检测历史导出为 CSV"
+  },
+  "settingsDataExportSettingsTitle": {
+    "message": "导出设置"
+  },
+  "settingsDataImportSettingsTitle": {
+    "message": "导入设置"
+  },
+  "settingsDataExportHistoryTitle": {
+    "message": "导出历史"
+  },
+  "settingsAvailableEvents": {
+    "message": "可用事件:"
+  },
+  "settingsApiEventReady": {
+    "message": "扩展程序已加载并初始化"
+  },
+  "settingsApiEventOnStart": {
+    "message": "检测已开始(缓存未命中/手动)"
+  },
+  "settingsApiEventOnProgress": {
+    "message": "检测进度更新(方法级)"
+  },
+  "settingsApiEventOnHooksComplete": {
+    "message": "JS 钩子监控已完成"
+  },
+  "settingsApiEventOnWindowPropsComplete": {
+    "message": "窗口属性监控已完成"
+  },
+  "settingsApiEventOnDetection": {
+    "message": "检测完成并已得出结果"
+  },
+  "settingsApiEventOnError": {
+    "message": "检测发生错误"
+  },
+  "settingsUsageExample": {
+    "message": "使用示例:"
+  },
+  "detectionDisabledForDomain": {
+    "message": "已为此域名禁用检测"
+  },
+  "detectionRemoveFromBlacklistBtn": {
+    "message": "从黑名单移除"
+  },
+  "detectionBlacklistHint": {
+    "message": "也可前往“设置 → 检测 → 黑名单域名”进行管理。"
+  },
+  "detectionNoDetectionsDesc": {
+    "message": "在此页面上未发现匹配的反爬虫、CAPTCHA 或指纹识别信号。"
+  },
+  "detectionNoCachedDataDesc": {
+    "message": "此页面没有可用的缓存检测数据。请重新加载页面以运行新的扫描。"
+  },
+  "detectionTitleUploadPaste": {
+    "message": "上传检测结果（可分享链接）"
+  },
+  "pasteUploadSuccessToast": {
+    "message": "链接已复制到剪贴板"
+  },
+  "failedReadSettings": {
+    "message": "无法读取设置 — 操作已取消"
+  },
+  "failedRemoveBlacklist": {
+    "message": "从黑名单移除失败"
+  },
+  "pasteConfirmTitle": {
+    "message": "上传检测结果？"
+  },
+  "pasteConfirmMsg": {
+    "message": "这会将此页面的检测摘要上传到公开粘贴（dpaste.com，未列出，30 天后过期）。任何拥有链接的人都可以查看。不包含 URL 查询字符串和 Cookie/标头值。"
+  },
+  "pasteConfirmBtn": {
+    "message": "上传"
+  },
+  "pasteUploadFailedToast": {
+    "message": "上传失败"
+  },
+  "pasteNoDetectionsToast": {
+    "message": "没有可上传的检测结果"
+  },
+  "detectionTitleClearCache": {
+    "message": "清除缓存"
+  },
+  "detectionTitleCopyOverview": {
+    "message": "复制概览"
+  },
+  "detectionTitleBlockDomain": {
+    "message": "屏蔽此域名"
+  },
+  "detectionStatDetections": {
+    "message": "检测数"
+  },
+  "detectionStatConfidence": {
+    "message": "置信度"
+  },
+  "detectionStatDifficulty": {
+    "message": "难度"
+  },
+  "detectionStatCacheScope": {
+    "message": "缓存范围"
+  },
+  "detectionStatCacheExpiration": {
+    "message": "缓存过期时间"
+  },
+  "detectionSearchPlaceholder": {
+    "message": "搜索检测结果..."
+  },
+  "detectionPaginationPage": {
+    "message": "第"
+  },
+  "detectionPaginationOf": {
+    "message": "页 / 共"
+  },
+  "detectionDomainBlacklistedTitle": {
+    "message": "此域名已在黑名单中"
+  },
+  "detectionModalConfidence": {
+    "message": "置信度"
+  },
+  "detectionModalDifficulty": {
+    "message": "难度"
+  },
+  "detectionModalMatchesFound": {
+    "message": "发现的匹配项"
+  },
+  "detectionModalAuthor": {
+    "message": "作者"
+  },
+  "detectionModalDescription": {
+    "message": "描述"
+  },
+  "detectionModalNoDescription": {
+    "message": "暂无描述。"
+  },
+  "detectionModalDetectionMethods": {
+    "message": "检测方法"
+  },
+  "detectionModalNoMethodsDetected": {
+    "message": "未检测到任何方法"
+  },
+  "advancedSearchPlaceholder": {
+    "message": "按 URL、模块、站点或内容搜索..."
+  },
+  "advancedPaginationPage": {
+    "message": "第"
+  },
+  "advancedPaginationOf": {
+    "message": "页 / 共"
+  },
+  "advancedInfoRecaptchaDesc": {
+    "message": "捕获 site key、actions 和配置参数"
+  },
+  "advancedInfoAkamaiDesc": {
+    "message": "拦截 sensor 数据并提取版本信息"
+  },
+  "advancedInfoImpervaTitle": {
+    "message": "Imperva / Incapsula"
+  },
+  "advancedInfoImpervaDesc": {
+    "message": "监控 Cookie 和防护级别的变化"
+  },
+  "advancedInfoShapeSecurityDesc": {
+    "message": "分析动态标头和脚本参数"
+  },
+  "advancedInfoAwsWafDesc": {
+    "message": "捕获挑战端点和令牌详情"
+  },
+  "btnStartCapturing": {
+    "message": "开始捕获"
+  },
+  "btnStopCapturing": {
+    "message": "停止捕获"
+  },
+  "btnCheckCookies": {
+    "message": "检查 Cookie"
+  },
+  "btnCheckVersion": {
+    "message": "检查版本"
+  },
+  "btnAnalyzeScripts": {
+    "message": "分析脚本"
+  },
+  "btnExtractSiteKey": {
+    "message": "提取 SiteKey"
+  },
+  "btnObtainSelector": {
+    "message": "获取选择器"
+  },
+  "btnCopyAllData": {
+    "message": "复制全部数据"
+  },
+  "btnClearData": {
+    "message": "清除数据"
+  },
+  "advCapturedDataSection": {
+    "message": "已捕获数据"
+  },
+  "advNoCapturesYet": {
+    "message": "尚无捕获项"
+  },
+  "advCaptureDetails": {
+    "message": "捕获详情"
+  },
+  "advValueCopied": {
+    "message": "已复制值"
+  },
+  "advConfirmClearAllTitle": {
+    "message": "清除所有已捕获数据?"
+  },
+  "advConfirmClearAllMsg": {
+    "message": "此操作将永久删除该提供商的所有已捕获数据。"
+  },
+  "rulesColorPickerCancel": {
+    "message": "取消"
+  },
+  "rulesColorPickerOk": {
+    "message": "确定"
+  },
+  "rulesContentSearchScopeTitle": {
+    "message": "内容搜索范围"
+  },
+  "rulesOnlyCheckScripts": {
+    "message": "仅检查脚本"
+  },
+  "rulesOnlyCheckScriptsHint": {
+    "message": "仅在 JavaScript 代码和脚本 URL 中进行搜索"
+  },
+  "rulesScopeSettingsTitle": {
+    "message": "范围设置"
+  },
+  "rulesNameScopeLabel": {
+    "message": "名称范围"
+  },
+  "rulesNameScopeHint": {
+    "message": "在何处检查名称/字段匹配"
+  },
+  "rulesScopeRequest": {
+    "message": "请求"
+  },
+  "rulesScopeResponse": {
+    "message": "响应"
+  },
+  "rulesScopeAll": {
+    "message": "全部"
+  },
+  "rulesValueScopeLabel": {
+    "message": "值范围"
+  },
+  "rulesValueScopeHint": {
+    "message": "在何处检查值匹配"
+  },
+  "rulesUrlScopeSettings": {
+    "message": "URL 范围设置"
+  },
+  "rulesUrlScopeLabel": {
+    "message": "URL 范围"
+  },
+  "rulesUrlScopePageOnly": {
+    "message": "页面"
+  },
+  "rulesUrlScopeScripts": {
+    "message": "脚本"
+  },
+  "rulesUrlScopeAllDefault": {
+    "message": "全部(默认)"
+  },
+  "rulesRequestConstraints": {
+    "message": "请求约束"
+  },
+  "rulesUrlPatternOptional": {
+    "message": "URL 模式(可选)"
+  },
+  "rulesUrlRegex": {
+    "message": "URL 正则表达式(Regex)"
+  },
+  "rulesUrlCaseSensitive": {
+    "message": "URL 区分大小写"
+  },
+  "rulesHttpMethodSelect": {
+    "message": "HTTP 方法(选择一项)"
+  },
+  "rulesHttpMethodFilterHint": {
+    "message": "按请求方法筛选(可选)"
+  },
+  "rulesHttpMethodAny": {
+    "message": "任意"
+  },
+  "rulesPatternMatchingOptions": {
+    "message": "模式匹配选项"
+  },
+  "rulesPatternRegex": {
+    "message": "正则表达式(Regex)"
+  },
+  "rulesPatternWholeWord": {
+    "message": "全字匹配"
+  },
+  "rulesPatternCaseSensitive": {
+    "message": "区分大小写"
+  },
+  "rulesValueFieldOptions": {
+    "message": "值字段选项"
+  },
+  "rulesApplySettings": {
+    "message": "应用设置"
+  },
+  "rulesDomSelectorHelper": {
+    "message": "DOM 选择器助手"
+  },
+  "rulesStartTypingSuggestions": {
+    "message": "开始输入以查看建议"
+  },
+  "rulesUseSelectorBtn": {
+    "message": "使用选择器"
+  },
+  "rulesWindowPropertiesHelper": {
+    "message": "窗口属性助手"
+  },
+  "rulesStepEnterKeyword": {
+    "message": "输入关键字"
+  },
+  "rulesStepChooseProperty": {
+    "message": "选择属性"
+  },
+  "rulesStepSelectCondition": {
+    "message": "选择条件"
+  },
+  "rulesConditionExists": {
+    "message": "存在"
+  },
+  "rulesConditionGroupType": {
+    "message": "类型"
+  },
+  "rulesTypeofObject": {
+    "message": "对象"
+  },
+  "rulesTypeofFunction": {
+    "message": "函数"
+  },
+  "rulesTypeofString": {
+    "message": "字符串"
+  },
+  "rulesTypeofNumber": {
+    "message": "数字"
+  },
+  "rulesTypeofBoolean": {
+    "message": "布尔值"
+  },
+  "notifConfirmTitleDefault": {
+    "message": "确认"
+  },
+  "notifConfirmMessageDefault": {
+    "message": "确定吗?"
+  },
+  "notifLoadingDefault": {
+    "message": "加载中..."
+  },
+  "helperPatternStartTypingSuggestions": {
+    "message": "在上方开始输入以查看建议..."
+  },
+  "helperPatternStartTypingExamples": {
+    "message": "在上方开始输入以查看示例..."
+  },
+  "helpJsHooksTitle": {
+    "message": "JavaScript 钩子检测"
+  },
+  "helpJsHooksDescription": {
+    "message": "钩子用于拦截浏览器 API 调用(Canvas、Audio、WebGL 等),以便在页面访问这些 API 时实时检测反爬虫指纹识别代码。"
+  },
+  "helpJsHooksWarning": {
+    "message": "钩子必须在 document_start 阶段、任何页面脚本运行之前安装,否则页面可能在我们的垫片就位前保存原始 API 的引用。"
+  },
+  "helpJsHooksTip": {
+    "message": "添加类似 CanvasRenderingContext2D.prototype.getImageData 的目标以检测 canvas 指纹识别。"
+  },
+  "helpWindowTitle": {
+    "message": "窗口属性检测"
+  },
+  "helpWindowDescription": {
+    "message": "检测反爬虫脚本添加到 window 全局对象上的 JavaScript 对象和属性。"
+  },
+  "helpWindowWarning": {
+    "message": "部分反爬虫脚本使用不可枚举的 Symbol() 键,这类属性较难检测。"
+  },
+  "helpWindowTip": {
+    "message": "使用 typeof object 或 exists 等条件来匹配属性类型。"
+  },
+  "helpUrlTitle": {
+    "message": "URL 模式检测"
+  },
+  "helpUrlDescription": {
+    "message": "将已加载资源(脚本、图片、网络请求)的 URL 与模式进行匹配。"
+  },
+  "helpUrlWarning": {
+    "message": "模式默认区分大小写。如需不区分大小写的匹配,请切换“URL 区分大小写”选项。"
+  },
+  "helpUrlTip": {
+    "message": "对于 /\\/v\\d+\\/challenge/ 这类高级模式,请使用 Regex 选项。"
+  },
+  "helpHeaderTitle": {
+    "message": "HTTP 标头检测"
+  },
+  "helpHeaderDescription": {
+    "message": "检测反爬虫中间件设置的 HTTP 请求和响应标头。"
+  },
+  "helpHeaderWarning": {
+    "message": "部分标头仅出现在初始请求中,请确保您的范围包含“请求”。"
+  },
+  "helpHeaderTip": {
+    "message": "常见目标:x-akamai-bot-manager-token、cf-ray、x-shape-version。"
+  },
+  "helpCookieTitle": {
+    "message": "Cookie 检测"
+  },
+  "helpCookieDescription": {
+    "message": "检测由反爬虫挑战设置的 Cookie。匹配 Cookie 名称(可选地匹配值模式)。"
+  },
+  "helpCookieWarning": {
+    "message": "带有随机后缀的 Cookie 名称(例如 _abck-xyz123)需要使用正则表达式模式,而非字面名称。"
+  },
+  "helpCookieTip": {
+    "message": "对精确名称匹配使用“全字匹配”,对于 ^datadome- 这类前缀模式则使用 Regex。"
+  },
+  "helpContentTitle": {
+    "message": "页面内容检测"
+  },
+  "helpContentDescription": {
+    "message": "在页面 HTML 和内联 script 标签中搜索文本模式。"
+  },
+  "helpContentWarning": {
+    "message": "在大型页面上进行全页扫描可能较慢。如果特征位于 JS 代码中,请限制为“仅检查脚本”。"
+  },
+  "helpContentTip": {
+    "message": "使用“全字匹配”可避免来自更大单词内子串的误报。"
+  },
+  "helpDomTitle": {
+    "message": "DOM 选择器检测"
+  },
+  "helpDomDescription": {
+    "message": "使用 CSS 选择器检测 HTML 元素。当 DOM 中存在匹配元素时触发。"
+  },
+  "helpDomWarning": {
+    "message": "选择器仅匹配渲染到实际 DOM 中的元素,而不包括 iframe 或 shadow root 内的元素。"
+  },
+  "helpDomTip": {
+    "message": "使用 div#cf-challenge[data-ray] 这类具体选择器而非通用选择器,可减少误报。"
+  },
+  "helpPayloadTitle": {
+    "message": "请求负载检测"
+  },
+  "helpPayloadDescription": {
+    "message": "监控所有 HTTP POST/PUT/PATCH 请求正文中的文本模式。"
+  },
+  "helpPayloadWarning": {
+    "message": "负载监控仅对扩展程序可拦截的请求生效(不支持加密正文或不透明的二进制对象)。"
+  },
+  "helpPayloadTip": {
+    "message": "结合“URL 模式”将匹配限制在特定端点。"
+  },
+  "helpWarningLabel": {
+    "message": "警告:"
+  },
+  "helpTipLabel": {
+    "message": "提示:"
+  },
+  "detectionMethodTitle": {
+    "message": "检测方法"
+  },
+  "noHelpContentAvailable": {
+    "message": "此方法类型暂无可用的帮助内容。"
+  },
+  "advNoCapturesHintFmt": {
+    "message": "点击上方的“开始捕获”以开始捕获 {0} 数据"
+  },
+  "advancedToolsHeading": {
+    "message": "高级检测工具"
+  },
+  "advancedToolsSubtitle": {
+    "message": "捕获并分析保护系统"
+  },
+  "advancedToolsHelpTitle": {
+    "message": "帮助"
+  },
+  "advancedToolsStepSelect": {
+    "message": "选择检测"
+  },
+  "advancedToolsChooseDetection": {
+    "message": "选择一个检测..."
+  },
+  "advancedToolsStepLoadUse": {
+    "message": "加载并使用工具"
+  },
+  "advancedToolsLoadTools": {
+    "message": "加载工具"
+  },
+  "advancedToolsClearAll": {
+    "message": "全部清除"
+  },
+  "advancedToolsClearAllFooter": {
+    "message": "清除所有工具"
+  },
+  "advancedToolsLearnMore": {
+    "message": "了解高级工具"
+  },
+  "advancedToolsChange": {
+    "message": "更改"
+  },
+  "advancedToolsDetectionName": {
+    "message": "检测名称"
+  },
+  "settingsLanguageTitle": {
+    "message": "语言"
+  },
+  "settingsLanguageDesc": {
+    "message": "覆盖扩展 UI 语言。默认使用浏览器语言。"
+  },
+  "settingsLanguageAuto": {
+    "message": "使用浏览器语言"
+  },
+  "copiedJsonNotification": {
+    "message": "已复制 JSON"
+  },
+  "detectionEmptyTitle": {
+    "message": "未检测到任何内容"
+  },
+  "detectionBadgeNoCaptchas": {
+    "message": "✓ 无验证码"
+  },
+  "detectionBadgeNoAntibot": {
+    "message": "✓ 无反机器人"
+  },
+  "detectionBadgeNoFingerprint": {
+    "message": "✓ 无指纹识别"
+  },
+  "detectionDisabledTitle": {
+    "message": "检测已禁用"
+  },
+  "detectionDisabledDesc": {
+    "message": "安全检测当前已关闭。"
+  },
+  "detectionDisabledAction": {
+    "message": "切换顶部的开关以启用检测。"
+  },
+  "rulesModalDetectorLabel": {
+    "message": "检测规则"
+  },
+  "rulesAuthorHelpHint": {
+    "message": "谁创建了此检测器"
+  },
+  "rulesWindowConditionExamplesTitle": {
+    "message": "Window 条件示例"
+  },
+  "rulesWindowConditionExamplesHint": {
+    "message": "点击示例以使用:"
+  },
+  "rulesBtnNextFmt": {
+    "message": "下一步：{0}"
+  },
+  "rulesUsePropertyBtn": {
+    "message": "使用属性"
+  }
+}

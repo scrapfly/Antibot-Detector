@@ -92,7 +92,9 @@ Advanced.prototype.setupCaptureCompletionListener = function() {
             const captureBtn = document.querySelector('#akamaiStartCapture');
             if (captureBtn) {
               captureBtn.classList.remove('capturing');
-              captureBtn.querySelector('.tool-btn-label').textContent = 'Start Capturing';
+              captureBtn.querySelector('.tool-btn-label').textContent = (typeof I18n !== 'undefined')
+                ? I18n.tr('btnStartCapturing', 'Start Capturing')
+                : 'Start Capturing';
             }
           }
 
@@ -101,7 +103,9 @@ Advanced.prototype.setupCaptureCompletionListener = function() {
             const captureBtn = document.querySelector('#recaptchaStartCapture');
             if (captureBtn) {
               captureBtn.classList.remove('capturing');
-              captureBtn.querySelector('.tool-btn-label').textContent = 'Start Capturing';
+              captureBtn.querySelector('.tool-btn-label').textContent = (typeof I18n !== 'undefined')
+                ? I18n.tr('btnStartCapturing', 'Start Capturing')
+                : 'Start Capturing';
             }
           }
 
@@ -110,7 +114,9 @@ Advanced.prototype.setupCaptureCompletionListener = function() {
             const captureBtn = document.querySelector('#hcaptchaStartCapture');
             if (captureBtn) {
               captureBtn.classList.remove('capturing');
-              captureBtn.querySelector('.tool-btn-label').textContent = 'Start Capturing';
+              captureBtn.querySelector('.tool-btn-label').textContent = (typeof I18n !== 'undefined')
+                ? I18n.tr('btnStartCapturing', 'Start Capturing')
+                : 'Start Capturing';
             }
           }
 

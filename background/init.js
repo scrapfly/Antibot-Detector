@@ -66,9 +66,9 @@ async function initialize(reason = 'startup', previousVersion = null) {
             }
         }
 
-        // Initialize all services (listeners, interceptors, etc.)
-        initializeServices();
-
+        // NOTE: listeners (webRequest/onMessage/tabs) are now registered
+        // synchronously at the end of background.js so MV3 cold-start events are
+        // not dropped. initialize() only loads detectors / sets badges.
         initializationInProgress = false;
         return true;
         } catch (error) {
@@ -109,5 +109,11 @@ chrome.runtime.onStartup.addListener(async () => {
     if (!detectorManager || !detectorManager.initialized) {
         await initialize('startup');
     }
-})();
+})().catch((error) => {
+    // Last-resort guard: a throw here would be an invisible unhandled SW
+    // rejection that leaves detectors uninitialized. Logger may not be ready.
+    try { Logger.error('BACKGROUND', '[init] Startup initialization failed:', error); } catch (_) {
+        console.error('[Scrapfly] Fatal startup error:', error);
+    }
+});
 

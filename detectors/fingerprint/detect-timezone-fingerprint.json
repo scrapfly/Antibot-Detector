@@ -19,12 +19,6 @@
         "target": "Intl.DateTimeFormat.prototype.resolvedOptions"
       },
       {
-        "description": "Creates date formatter for timezone detection",
-        "enabled": true,
-        "confidence": 65,
-        "target": "Intl.DateTimeFormat"
-      },
-      {
         "description": "Compares strings based on locale",
         "enabled": true,
         "confidence": 65,

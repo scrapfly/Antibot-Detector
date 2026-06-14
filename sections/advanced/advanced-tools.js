@@ -64,36 +64,38 @@ Advanced.prototype.renderAdvancedInterface = async function() {
           `;
         }).join('');
 
+        const _at = (typeof I18n !== 'undefined') ? I18n : null;
+        const _atr = (key, fb) => (_at && _at.tr(key, fb)) || fb;
         captchaToolsHtml = `
           <div class="captcha-tools-section">
             <!-- Compact Detection Bar (hidden by default, shown in compact mode) -->
             <div class="compact-detection-bar" id="compactDetectionBar">
               <div class="compact-detection-info">
                 <img src="" class="compact-detection-icon" id="compactDetectionIcon" alt="">
-                <span class="compact-detection-name" id="compactDetectionName">Detection Name</span>
+                <span class="compact-detection-name" id="compactDetectionName">${_atr('advancedToolsDetectionName', 'Detection Name')}</span>
               </div>
-              <button class="compact-change-btn" id="changeDetectionBtn">Change</button>
+              <button class="compact-change-btn" id="changeDetectionBtn">${_atr('advancedToolsChange', 'Change')}</button>
             </div>
 
             <!-- Header with title and help button -->
             <div class="tools-panel-header">
               <div class="tools-panel-title">
-                <h3>Advanced Detection Tools</h3>
-                <p>Capture and analyze protection systems</p>
+                <h3>${_atr('advancedToolsHeading', 'Advanced Detection Tools')}</h3>
+                <p>${_atr('advancedToolsSubtitle', 'Capture and analyze protection systems')}</p>
               </div>
-              <button class="help-btn" id="showCaptchaHelp" title="Help">?</button>
+              <button class="help-btn" id="showCaptchaHelp" title="${_atr('advancedToolsHelpTitle', 'Help')}">?</button>
             </div>
 
             <!-- Step 1: Select Detection -->
             <div class="workflow-section">
               <div class="workflow-step">
                 <div class="step-number" id="step1Number"><span>1</span></div>
-                <span class="step-label">Select Detection</span>
+                <span class="step-label">${_atr('advancedToolsStepSelect', 'Select Detection')}</span>
               </div>
               <div class="selector-card">
                 <div id="detectionSelector" class="detection-selector-custom">
                   <div class="selector-display">
-                    <span class="placeholder-text">Choose a detection...</span>
+                    <span class="placeholder-text">${_atr('advancedToolsChooseDetection', 'Choose a detection...')}</span>
                   </div>
                   <div class="selector-dropdown" style="display: none;">
                     ${detectionsOptions}
@@ -106,20 +108,20 @@ Advanced.prototype.renderAdvancedInterface = async function() {
             <div class="workflow-section">
               <div class="workflow-step">
                 <div class="step-number" id="step2Number"><span>2</span></div>
-                <span class="step-label">Load & Use Tools</span>
+                <span class="step-label">${_atr('advancedToolsStepLoadUse', 'Load & Use Tools')}</span>
               </div>
               <div class="btn-row">
                 <button class="btn-primary-lg" id="loadDetectionTools" disabled>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z"/>
                   </svg>
-                  Load Tools
+                  ${_atr('advancedToolsLoadTools', 'Load Tools')}
                 </button>
                 <button class="btn-secondary-lg" id="clearDetectionTools">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
                   </svg>
-                  Clear All
+                  ${_atr('advancedToolsClearAll', 'Clear All')}
                 </button>
               </div>
             </div>
@@ -131,7 +133,7 @@ Advanced.prototype.renderAdvancedInterface = async function() {
 
             <!-- Clear Tools Footer (shown in compact mode) -->
             <div class="tools-clear-footer" id="toolsClearFooter">
-              <button class="clear-tools-btn-footer" id="clearToolsFooter">Clear All Tools</button>
+              <button class="clear-tools-btn-footer" id="clearToolsFooter">${_atr('advancedToolsClearAllFooter', 'Clear All Tools')}</button>
             </div>
 
             <!-- Help Footer -->
@@ -140,7 +142,7 @@ Advanced.prototype.renderAdvancedInterface = async function() {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M11,18H13V16H11V18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,6A4,4 0 0,0 8,10H10A2,2 0 0,1 12,8A2,2 0 0,1 14,10C14,12 11,11.75 11,15H13C13,12.75 16,12.5 16,10A4,4 0 0,0 12,6Z"/>
                 </svg>
-                Learn about Advanced Tools
+                ${_atr('advancedToolsLearnMore', 'Learn about Advanced Tools')}
               </button>
             </div>
           </div>

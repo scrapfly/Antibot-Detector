@@ -5,7 +5,7 @@ GeetestAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {
                 id: 'geetestVersion',
-                label: 'Check Version',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckVersion')) || 'Check Version'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M5.5,7A1.5,1.5 0 0,1 4,5.5A1.5,1.5 0 0,1 5.5,4A1.5,1.5 0 0,1 7,5.5A1.5,1.5 0 0,1 5.5,7M21.41,11.58L12.41,2.58C12.05,2.22 11.55,2 11,2H4C2.89,2 2,2.89 2,4V11C2,11.55 2.22,12.05 2.59,12.41L11.58,21.41C11.95,21.77 12.45,22 13,22C13.55,22 14.05,21.77 14.41,21.41L21.41,14.41C21.77,14.05 22,13.55 22,13C22,12.45 21.77,11.95 21.41,11.58Z"/>
@@ -14,7 +14,7 @@ GeetestAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'geetestAnalyze',
-                label: 'Analyze Scripts',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnAnalyzeScripts')) || 'Analyze Scripts'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
@@ -81,7 +81,7 @@ GeetestAdvanced.prototype.displayScriptsModal = function(scripts) {
                             <div class="clickable-copy-value" data-copy="${script.captchaId}" data-copy-message="Value copied" style="background: var(--bg-primary); padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px; color: var(--success); cursor: pointer; word-break: break-all; border: 1px solid var(--border); transition: all 0.2s;" title="Click to copy captchaId">
                                 ${script.captchaId}
                             </div>
-                            ${script.product ? `<div style="margin-top: 8px; color: var(--text-secondary); font-size: 11px;">Product: <span style="color: var(--text-primary); font-weight: 500;">${script.product}</span></div>` : ''}
+                            ${script.product ? `<div style="margin-top: 8px; color: var(--text-secondary); font-size: 11px;">Product: <span style="color: var(--text-primary); font-weight: 500;">${FormatUtils.escapeHtml(script.product)}</span></div>` : ''}
                         </div>
                     ` : `
                         <div style="margin-bottom: 12px;">

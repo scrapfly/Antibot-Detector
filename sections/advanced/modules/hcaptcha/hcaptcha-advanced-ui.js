@@ -2,7 +2,7 @@ HCaptchaAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {
                 id: 'hcaptchaCheckVersion',
-                label: 'Check Version',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckVersion')) || 'Check Version'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12.5,7H11V13L16.25,16.15L17.02,14.92L12.5,11.58V7Z"/>
@@ -11,7 +11,7 @@ HCaptchaAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'hcaptchaStartCapture',
-                label: 'Start Capturing',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnStartCapturing')) || 'Start Capturing'),
                 kind: 'capture',
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -21,7 +21,7 @@ HCaptchaAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'hcaptchaAnalyzeScripts',
-                label: 'Analyze Scripts',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnAnalyzeScripts')) || 'Analyze Scripts'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
@@ -131,12 +131,12 @@ HCaptchaAdvanced.prototype.renderCaptureHistoryItems = function(historyItems) {
 
                         <div>
                             <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 4px;">Site Key</div>
-                            <div class="copy-value" data-copy="${siteKey}" style="font-size: 11px; color: var(--text-primary); font-family: monospace; cursor: pointer; background: var(--bg-primary); padding: 6px; border-radius: 4px; word-break: break-all;">${siteKey}</div>
+                            <div class="copy-value" data-copy="${siteKey}" style="font-size: 11px; color: var(--text-primary); font-family: monospace; cursor: pointer; background: var(--bg-primary); padding: 6px; border-radius: 4px; word-break: break-all;">${FormatUtils.escapeHtml(siteKey)}</div>
                         </div>
 
                         <div>
                             <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 4px;">Website URL</div>
-                            <div class="copy-value" data-copy="${websiteUrl}" style="font-size: 11px; color: var(--text-primary); font-family: monospace; cursor: pointer; background: var(--bg-primary); padding: 6px; border-radius: 4px; word-break: break-all;">${websiteUrl}</div>
+                            <div class="copy-value" data-copy="${websiteUrl}" style="font-size: 11px; color: var(--text-primary); font-family: monospace; cursor: pointer; background: var(--bg-primary); padding: 6px; border-radius: 4px; word-break: break-all;">${FormatUtils.escapeHtml(websiteUrl)}</div>
                         </div>
                     </div>
                 </div>
@@ -175,13 +175,13 @@ HCaptchaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
             <!-- Site Key Section -->
             <div class="advanced-modal-section">
                 <label class="advanced-modal-label">Site Key</label>
-                <div class="advanced-modal-code-block" data-copy="${siteKey}" style="word-break: break-all;">${siteKey}</div>
+                <div class="advanced-modal-code-block" data-copy="${siteKey}" style="word-break: break-all;">${FormatUtils.escapeHtml(siteKey)}</div>
             </div>
 
             <!-- Website URL Section -->
             <div class="advanced-modal-section">
                 <label class="advanced-modal-label">Website URL</label>
-                <div class="advanced-modal-code-block" data-copy="${websiteUrl}" style="word-break: break-all;">${websiteUrl}</div>
+                <div class="advanced-modal-code-block" data-copy="${websiteUrl}" style="word-break: break-all;">${FormatUtils.escapeHtml(websiteUrl)}</div>
             </div>
 
             <!-- Enterprise Mode Section -->

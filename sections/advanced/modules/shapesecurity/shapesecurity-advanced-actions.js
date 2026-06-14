@@ -1,39 +1,4 @@
     /**
-     * Check and display Shape Security headers
-     */
-ShapeSecurityAdvanced.prototype.checkHeaders = async function() {
-        try {
-            NotificationHelper.info('Checking Shape Security headers...');
-
-            // Get current tab
-            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (!tab) {
-                NotificationHelper.error('No active tab found');
-                return;
-            }
-
-            // Request headers check from background
-            const response = await this.sendMessage({
-                type: 'SHAPESECURITY_CHECK_HEADERS',
-                tabId: tab.id
-            });
-
-            if (response && response.headers) {
-                this.displayHeadersResults(response.headers);
-            } else {
-                NotificationHelper.warning('No Shape Security headers detected');
-            }
-        } catch (error) {
-            Logger.error('NETWORK', '[ShapeSecurity] Check headers error:', error);
-            NotificationHelper.error('Failed to check headers: ' + error.message);
-        }
-    };
-
-    /**
-     * Check and display Shape Security cookies
-     */
-
-    /**
      * Check Shape Security version (V1 or V2)
      */
 ShapeSecurityAdvanced.prototype.checkVersion = async function() {

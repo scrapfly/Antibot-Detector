@@ -1,0 +1,169 @@
+/* Settings → General language picker (loaded after settings.css) */
+
+.settings-card--language {
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 16px;
+}
+
+.settings-card--language .settings-card-header--static {
+  padding: 16px 18px 0;
+}
+
+.settings-card--language .settings-card-title p {
+  margin: 6px 0 0 0;
+  padding-bottom: 0;
+  line-height: 1.45;
+}
+
+.settings-card--language .language-picker {
+  margin-top: 14px;
+}
+
+/* Must follow .settings-card-body in settings.css (cascade fix) */
+.settings-card--language .settings-card-body.settings-card-body--language {
+  border-top: none;
+  padding: 0 18px 18px;
+}
+
+.settings-card--language.is-picker-open {
+  z-index: 120;
+}
+
+.language-picker {
+  position: relative;
+  width: 100%;
+  isolation: isolate;
+}
+
+.language-picker-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 16px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.language-picker-trigger:hover {
+  border-color: var(--border-light);
+}
+
+.language-picker.open .language-picker-trigger,
+.language-picker-trigger:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+  outline: none;
+}
+
+.language-picker-flag-slot {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  min-width: 22px;
+}
+
+.language-picker-flag {
+  flex-shrink: 0;
+  width: 22px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.language-picker-flag-slot--empty {
+  display: none;
+  width: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.language-picker-trigger:has(.language-picker-flag-slot--empty) {
+  gap: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.language-picker-label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 4px;
+}
+
+.language-picker-chevron {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+  transition: transform 0.15s ease;
+}
+
+.language-picker.open .language-picker-chevron {
+  transform: rotate(180deg);
+}
+
+.language-picker-menu[hidden] {
+  display: none !important;
+}
+
+.language-picker-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 200;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  max-height: 260px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+}
+
+.language-picker-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 38px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.language-picker-option:hover {
+  background: var(--bg-tertiary);
+}
+
+.language-picker-option.is-selected {
+  background: rgba(59, 130, 246, 0.18);
+}
+
+.language-picker-option-label {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -117,6 +117,16 @@ class Settings {
         settingsModal.innerHTML = html;
         Logger.ui('Settings HTML inserted into modal');
 
+        if (typeof I18n !== 'undefined') {
+          I18n.apply(settingsModal);
+        }
+        if (typeof SettingsUI.applyCategoryColorLabels === 'function') {
+          SettingsUI.applyCategoryColorLabels(settingsModal);
+        }
+        if (typeof SettingsUI.syncColorRowBadges === 'function') {
+          SettingsUI.syncColorRowBadges();
+        }
+
         // Verify critical elements exist
         const saveBtn = document.querySelector('#saveSettingsBtn');
         const cancelBtn = document.querySelector('#cancelSettingsBtn');

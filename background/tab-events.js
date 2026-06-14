@@ -22,6 +22,8 @@ function setupTabListeners() {
             workerKeepaliveManager.endOperationsForTab(tabId);
         }
 
+        stopBadgeSpinner(tabId);
+
         detectionStates.delete(tabId);
         activeDetections.delete(tabId);
         interruptedDetections.delete(tabId);
@@ -42,6 +44,7 @@ function setupTabListeners() {
                 clearInterval(state.captureInterval);
             }
             clearCaptureTimeout(state);
+            cleanupManagedListeners(tabId); // remove leaked per-tab navigation/request listeners on tab close
             reCaptchaCaptureState.delete(tabId);
             stopRecaptchaInterception();
         }
@@ -49,12 +52,14 @@ function setupTabListeners() {
         if (funcaptchaCaptureState.has(tabId)) {
             Logger.background(`[TabCleanup] Tab ${tabId} closed during FunCaptcha capture, cleaning up`);
             clearCaptureTimeout(funcaptchaCaptureState.get(tabId));
+            cleanupManagedListeners(tabId); // remove leaked per-tab listeners on tab close
             funcaptchaCaptureState.delete(tabId);
         }
 
         if (hcaptchaCaptureState.has(tabId)) {
             Logger.background(`[TabCleanup] Tab ${tabId} closed during hCaptcha capture, cleaning up`);
             clearCaptureTimeout(hcaptchaCaptureState.get(tabId));
+            cleanupManagedListeners(tabId); // remove leaked per-tab listeners on tab close
             hcaptchaCaptureState.delete(tabId);
         }
 
@@ -208,7 +213,13 @@ function setupTabListeners() {
             }
 
             const detectionState = detectionStates.get(newTabId);
-            const hasInFlightDetection = activeDetections.has(newTabId) || (detectionState && !detectionState.finalized);
+            let activeDetection = activeDetections.get(newTabId);
+            if (activeDetection?.pendingRequest &&
+                Date.now() - activeDetection.startTime > Constants.REQUEST_DETECTION_PENDING_TIMEOUT) {
+                activeDetections.delete(newTabId);
+                activeDetection = null;
+            }
+            const hasInFlightDetection = !!activeDetection || (detectionState && !detectionState.finalized);
 
             const cachedData = await DetectionEngineManager.getDetectionData(newTabId);
             if (cachedData) {
@@ -225,13 +236,13 @@ function setupTabListeners() {
                     Logger.background(`[TabSwitch] Triggered detection for uncached tab ${newTabId}`);
                 } else {
                     const badgeText = await chrome.action.getBadgeText({ tabId: newTabId }).catch(() => '');
-                    if (badgeText === BADGE.TEXT.DISABLED || badgeText === BADGE.TEXT.LOADING) {
+                    if (badgeText === BADGE.TEXT.DISABLED || isLoadingBadgeText(badgeText)) {
                         await chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: newTabId }).catch(() => {});
                     }
                 }
             } else if (!hasInFlightDetection) {
                 const badgeText = await chrome.action.getBadgeText({ tabId: newTabId }).catch(() => '');
-                if (badgeText === BADGE.TEXT.DISABLED || badgeText === BADGE.TEXT.LOADING) {
+                if (badgeText === BADGE.TEXT.DISABLED || isLoadingBadgeText(badgeText)) {
                     await chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: newTabId }).catch(() => {});
                 }
             }
@@ -245,5 +256,4 @@ function setupTabListeners() {
 
     });
 }
-
 

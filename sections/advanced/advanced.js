@@ -77,7 +77,6 @@
     this.currentTab = null;
     this.selectedDetection = null;
     this.availableDetectionTools = [];
-    this.captureHistoryPagination = null;
     this.cachedDetectionResults = []; // Cache detection results for reliable access
   }
 

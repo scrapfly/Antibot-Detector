@@ -259,10 +259,16 @@ DetectionModals.renderDetectionModalContent = function(detection) {
     if (this.modalElements.detections) {
       const matchCount = Array.isArray(detection.matches) ? detection.matches.length : 0;
       if (matchCount > 0) {
-        const matchLabel = matchCount === 1 ? 'match' : 'matches';
+        const matchKey = matchCount === 1 ? 'matchSingular' : 'matchPlural';
+        const matchFallback = matchCount === 1 ? 'match' : 'matches';
+        const matchLabel = (typeof I18n !== 'undefined')
+          ? I18n.tr(matchKey, matchFallback)
+          : matchFallback;
         this.modalElements.detections.textContent = `${matchCount} ${matchLabel}`;
       } else {
-        this.modalElements.detections.textContent = 'No matches recorded';
+        this.modalElements.detections.textContent = (typeof I18n !== 'undefined')
+          ? I18n.tr('noMatchesRecorded', 'No matches recorded')
+          : 'No matches recorded';
       }
     }
 

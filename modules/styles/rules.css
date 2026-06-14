@@ -58,6 +58,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   height: 32px;
   padding: 0 10px;
   border-radius: 7px;
@@ -890,13 +891,13 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  gap: 12px;
   padding: 16px 24px;
   border-bottom: 1px solid var(--border);
   background: transparent;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
   flex-shrink: 0;
-  position: relative;
 }
 
 .rule-modal-header h2 {
@@ -904,6 +905,10 @@
   font-weight: 600;
   margin: 0;
   color: var(--text-primary);
+  line-height: 1.25;
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .rule-modal-action {
@@ -911,8 +916,13 @@
   font-weight: 600;
   color: var(--text-primary);
   line-height: 1.2;
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
+/* Close button is a normal flex sibling that always reserves its slot —
+   never position:absolute (that lets header text slide under it). */
 .rule-modal-close {
   background: rgba(239, 68, 68, 0.15);
   border: none;
@@ -923,9 +933,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
-  top: 14px;
-  right: 24px;
+  flex-shrink: 0;
   width: 26px;
   height: 26px;
 }
@@ -1608,20 +1616,21 @@
 }
 
 .method-action-btn {
-  padding: 4px;
+  padding: 0;
   background: transparent;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.15s ease;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 34px;
+  height: 34px;
   font-size: 12px;
   flex-shrink: 0;
   margin-top: 0;
+  box-sizing: border-box;
 }
 
 .method-action-btn.settings {
@@ -1633,7 +1642,7 @@
 }
 
 .method-action-btn:hover {
-  transform: scale(1.1);
+  transform: none;
 }
 
 .method-action-btn.settings.has-custom-settings {
@@ -2139,71 +2148,86 @@
 
 /* DOM Helper Button */
 .dom-helper-btn {
-  padding: 4px 8px;
+  padding: 0;
   background: var(--accent);
   color: white;
   border: none;
-  border-radius: 3px;
+  border-radius: 6px;
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
-  margin-left: 4px;
+  margin-left: 0;
   margin-top: 0;
-  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
   flex-shrink: 0;
-  align-self: flex-start;
+  align-self: center;
+  box-sizing: border-box;
 }
 
 .dom-helper-btn:hover {
   background: var(--accent-hover);
-  transform: translateY(-1px);
+  transform: none;
 }
 
 /* Window Helper Button */
 .window-helper-btn {
-  padding: 4px 8px;
+  padding: 0;
   background: var(--accent);
   color: white;
   border: none;
-  border-radius: 3px;
+  border-radius: 6px;
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
-  margin-left: 4px;
+  margin-left: 0;
   margin-top: 0;
-  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
   flex-shrink: 0;
-  align-self: flex-start;
+  align-self: center;
+  box-sizing: border-box;
 }
 
 .window-helper-btn:hover {
   background: var(--accent-hover);
-  transform: translateY(-1px);
+  transform: none;
 }
 
 /* Condition Helper Button (for WINDOW methods) */
 .condition-helper-btn {
-  padding: 4px 8px;
+  padding: 0;
   background: var(--accent);
   color: white;
   border: none;
-  border-radius: 3px;
+  border-radius: 6px;
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
-  margin-left: 4px;
+  margin-left: 0;
   margin-top: 0;
-  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
   flex-shrink: 0;
-  align-self: flex-start;
+  align-self: center;
+  box-sizing: border-box;
 }
 
 .condition-helper-btn:hover {
   background: var(--accent-hover);
-  transform: translateY(-1px);
+  transform: none;
 }
 
 /* Regex Helper Button */
@@ -3009,6 +3033,18 @@
   letter-spacing: 0.3px;
 }
 
+/* ANY - Neutral (hover and selected) */
+.http-method-badge[data-method="ANY"]:hover .method-badge-content,
+.http-method-badge[data-method="ANY"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="ANY"].checked .method-badge-content {
+  color: var(--text-primary);
+}
+
+.http-method-badge[data-method="ANY"]:has(input:checked) .method-badge-content,
+.http-method-badge[data-method="ANY"].checked .method-badge-content {
+  font-weight: 600;
+}
+
 /* GET - Green (hover and selected) */
 .http-method-badge[data-method="GET"]:hover .method-badge-content,
 .http-method-badge[data-method="GET"]:has(input:checked) .method-badge-content,
@@ -3203,6 +3239,10 @@ select.method-delete {
   align-items: center;
   gap: 4px;
   margin: 0;
+}
+
+.detector-author .version-author {
+  color: var(--accent);
 }
 
 .detector-author i.fa-user {

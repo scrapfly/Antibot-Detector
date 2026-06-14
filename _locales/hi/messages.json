@@ -1,0 +1,1676 @@
+{
+  "extensionName": {
+    "message": "Scrapfly: एंटी-बॉट डिटेक्टर"
+  },
+  "extensionDescription": {
+    "message": "वेबसाइटों पर CAPTCHA, एंटी-बॉट सिस्टम और फ़िंगरप्रिंटिंग तकनीकों का पता लगाएं"
+  },
+  "tabDetection": {
+    "message": "जांच"
+  },
+  "tabHistory": {
+    "message": "इतिहास"
+  },
+  "tabRules": {
+    "message": "नियम"
+  },
+  "tabAdvanced": {
+    "message": "उन्नत"
+  },
+  "openSettings": {
+    "message": "सेटिंग्स खोलें"
+  },
+  "enableOrDisableDetection": {
+    "message": "जांच सक्षम या अक्षम करें"
+  },
+  "noDetectionsFound": {
+    "message": "कोई जांच नहीं मिली"
+  },
+  "analyzingPage": {
+    "message": "पृष्ठ का विश्लेषण किया जा रहा है"
+  },
+  "actionRemoveFromBlacklist": {
+    "message": "ब्लैकलिस्ट से हटाएं"
+  },
+  "advancedDomainBlacklisted": {
+    "message": "इस डोमेन के लिए उन्नत टूल अक्षम हैं"
+  },
+  "blacklistManageHint": {
+    "message": "या प्रबंधन के लिए सेटिंग्स → जांच → ब्लैकलिस्टेड डोमेन पर जाएं।"
+  },
+  "statDetections": {
+    "message": "जांच"
+  },
+  "statConfidence": {
+    "message": "विश्वास"
+  },
+  "statDifficulty": {
+    "message": "कठिनाई"
+  },
+  "statCacheScope": {
+    "message": "कैश दायरा"
+  },
+  "scopeDomain": {
+    "message": "डोमेन"
+  },
+  "scopePath": {
+    "message": "पथ"
+  },
+  "scopeFullUrl": {
+    "message": "पूर्ण URL"
+  },
+  "difficultyLow": {
+    "message": "कम"
+  },
+  "difficultyMedium": {
+    "message": "मध्यम"
+  },
+  "difficultyHigh": {
+    "message": "अधिक"
+  },
+  "searchHistory": {
+    "message": "इतिहास खोजें..."
+  },
+  "searchDetectors": {
+    "message": "डिटेक्टर खोजें..."
+  },
+  "paginationPrev": {
+    "message": "पिछला पृष्ठ"
+  },
+  "paginationNext": {
+    "message": "अगला पृष्ठ"
+  },
+  "paginationPage": {
+    "message": "पृष्ठ"
+  },
+  "paginationOf": {
+    "message": "का"
+  },
+  "paginationNoItems": {
+    "message": "दिखाने के लिए कोई आइटम नहीं"
+  },
+  "paginationCurrentPageAria": {
+    "message": "वर्तमान पृष्ठ संख्या"
+  },
+  "btnImport": {
+    "message": "आयात"
+  },
+  "btnExport": {
+    "message": "निर्यात"
+  },
+  "btnClear": {
+    "message": "साफ़ करें"
+  },
+  "btnAdd": {
+    "message": "जोड़ें"
+  },
+  "btnUpdate": {
+    "message": "अद्यतन"
+  },
+  "btnClose": {
+    "message": "बंद करें"
+  },
+  "btnSave": {
+    "message": "सहेजें"
+  },
+  "btnCancel": {
+    "message": "रद्द करें"
+  },
+  "btnDelete": {
+    "message": "हटाएं"
+  },
+  "historyImportTitle": {
+    "message": "इतिहास आयात करें"
+  },
+  "historyExportTitle": {
+    "message": "इतिहास निर्यात करें"
+  },
+  "historyClearTitle": {
+    "message": "इतिहास साफ़ करें"
+  },
+  "historyEmptyTitle": {
+    "message": "अभी कोई इतिहास नहीं"
+  },
+  "historyEmptyDescription": {
+    "message": "जैसे ही आप वेबसाइटों को ब्राउज़ करेंगे, जांच इतिहास यहां दिखाई देगा।"
+  },
+  "rulesUpdateTitle": {
+    "message": "डिटेक्टर अद्यतन की जांच करें"
+  },
+  "rulesClearTitle": {
+    "message": "सभी नियम साफ़ करें"
+  },
+  "rulesAddTitle": {
+    "message": "नया डिटेक्टर जोड़ें"
+  },
+  "rulesEmptyTitle": {
+    "message": "कोई डिटेक्टर लोड नहीं"
+  },
+  "rulesEmptyDescription": {
+    "message": "भंडारण और फ़ाइलों से लोड होने पर डिटेक्टर यहां दिखाई देंगे।"
+  },
+  "ruleModalActionEdit": {
+    "message": "संपादन"
+  },
+  "ruleSectionDetectorInfo": {
+    "message": "डिटेक्टर जानकारी"
+  },
+  "ruleFieldName": {
+    "message": "नाम"
+  },
+  "ruleFieldNamePlaceholder": {
+    "message": "डिटेक्टर का नाम"
+  },
+  "ruleFieldCategory": {
+    "message": "श्रेणी"
+  },
+  "categoryAntibot": {
+    "message": "एंटी-बॉट"
+  },
+  "categoryCaptcha": {
+    "message": "Captcha"
+  },
+  "categoryFingerprint": {
+    "message": "फ़िंगरप्रिंट"
+  },
+  "ruleFieldDifficulty": {
+    "message": "कठिनाई"
+  },
+  "ruleFieldIcon": {
+    "message": "आइकन"
+  },
+  "ruleFieldVersion": {
+    "message": "संस्करण"
+  },
+  "ruleFieldAuthor": {
+    "message": "लेखक"
+  },
+  "ruleSectionBadgeColor": {
+    "message": "बैज रंग"
+  },
+  "ruleSectionDetectionMethods": {
+    "message": "जांच विधियां"
+  },
+  "settingsTitle": {
+    "message": "सेटिंग्स"
+  },
+  "settingsSubtitle": {
+    "message": "अपनी एक्सटेंशन प्राथमिकताएं कॉन्फ़िगर करें"
+  },
+  "settingsTabGeneral": {
+    "message": "सामान्य"
+  },
+  "settingsTabDetection": {
+    "message": "जांच"
+  },
+  "settingsTabHistory": {
+    "message": "इतिहास"
+  },
+  "settingsTabData": {
+    "message": "डेटा"
+  },
+  "settingsGroupCoreSettings": {
+    "message": "मुख्य सेटिंग्स"
+  },
+  "settingsCardNotifications": {
+    "message": "सूचनाएं"
+  },
+  "settingsCardNotificationsDesc": {
+    "message": "जब सुरक्षा प्रणालियों का पता चले तो अलर्ट दिखाएं"
+  },
+  "settingsCardDebug": {
+    "message": "डीबग मोड"
+  },
+  "settingsCardDebugDesc": {
+    "message": "डीबगिंग के लिए कंसोल लॉगिंग सक्षम करें"
+  },
+  "settingsRowLogCollector": {
+    "message": "लॉग कलेक्टर"
+  },
+  "settingsRowMaxLogs": {
+    "message": "अधिकतम लॉग"
+  },
+  "settingsRowCollected": {
+    "message": "एकत्रित"
+  },
+  "settingsGroupDetectorUpdates": {
+    "message": "डिटेक्टर अद्यतन"
+  },
+  "settingsCardAutoUpdate": {
+    "message": "स्वचालित अद्यतन जांच"
+  },
+  "settingsCardAutoUpdateDesc": {
+    "message": "नई डिटेक्टर परिभाषाओं के लिए स्वचालित रूप से जांचें"
+  },
+  "settingsRowCheckInterval": {
+    "message": "जांच अंतराल"
+  },
+  "settingsCheckIntervalNever": {
+    "message": "कभी नहीं"
+  },
+  "settingsBtnCheckNow": {
+    "message": "अभी जांचें"
+  },
+  "settingsExtensionUpdateRequired": {
+    "message": "एक्सटेंशन अद्यतन आवश्यक"
+  },
+  "settingsBtnUpdateExtension": {
+    "message": "एक्सटेंशन अद्यतन करें"
+  },
+  "settingsGroupBadgeColors": {
+    "message": "बैज रंग"
+  },
+  "settingsRowLastCheck": {
+    "message": "अंतिम जांच"
+  },
+  "advancedToolsTitle": {
+    "message": "उन्नत कैप्चर टूल"
+  },
+  "advancedToolsDescription": {
+    "message": "पता लगाई गई सुरक्षा प्रणालियों से कुकीज़, टोकन और साइटकीज़ निकालें"
+  },
+  "advancedToolsHint": {
+    "message": "कैप्चर टूल सक्षम करने के लिए एक संरक्षित पृष्ठ पर जाएं"
+  },
+  "advancedSubtabTools": {
+    "message": "टूल"
+  },
+  "advancedSubtabHistory": {
+    "message": "इतिहास"
+  },
+  "advancedCaptureHistoryTitle": {
+    "message": "कैप्चर इतिहास"
+  },
+  "advancedCaptureHistorySubtitle": {
+    "message": "एकत्र किए गए कैप्चर को फ़िल्टर करें, जांचें और निर्यात करें"
+  },
+  "advancedFilterSite": {
+    "message": "साइट"
+  },
+  "advancedFilterAllSites": {
+    "message": "सभी साइटें"
+  },
+  "advancedFilterCurrentSite": {
+    "message": "वर्तमान साइट"
+  },
+  "advancedFilterModule": {
+    "message": "मॉड्यूल"
+  },
+  "advancedFilterAllModules": {
+    "message": "सभी मॉड्यूल"
+  },
+  "advancedFilterSearch": {
+    "message": "खोजें"
+  },
+  "advancedBtnExport": {
+    "message": "निर्यात"
+  },
+  "advancedBtnExportTitle": {
+    "message": "कैप्चर निर्यात करें"
+  },
+  "advancedBtnClearAll": {
+    "message": "सभी साफ़ करें"
+  },
+  "advancedBtnClearAllTitle": {
+    "message": "सभी कैप्चर साफ़ करें"
+  },
+  "advancedEmptyCapturesTitle": {
+    "message": "अभी तक कोई कैप्चर नहीं"
+  },
+  "advancedEmptyCapturesHint": {
+    "message": "पता लगाई गई प्रणालियों से डेटा कैप्चर करने के लिए टूल टैब का उपयोग करें"
+  },
+  "advancedNoResultsTitle": {
+    "message": "कोई कैप्चर नहीं मिला"
+  },
+  "advancedNoResultsHint": {
+    "message": "अपने फ़िल्टर या खोज क्वेरी को समायोजित करने का प्रयास करें"
+  },
+  "advancedBtnResetFilters": {
+    "message": "सभी फ़िल्टर रीसेट करें"
+  },
+  "advancedModalTitle": {
+    "message": "उन्नत जांच टूल"
+  },
+  "advancedModalIntro": {
+    "message": "एंटी-बॉट सिस्टम, CAPTCHA और फ़िंगरप्रिंटिंग तकनीकों के गहन विश्लेषण के लिए विशेष कैप्चर टूल। प्रासंगिक जांच मिलने पर ये टूल स्वचालित रूप से दिखाई देते हैं।"
+  },
+  "advancedSectionSupported": {
+    "message": "वर्तमान में समर्थित प्रणालियां"
+  },
+  "advancedSectionHowItWorks": {
+    "message": "यह कैसे काम करता है"
+  },
+  "advancedStep1Title": {
+    "message": "स्वचालित जांच"
+  },
+  "advancedStep1Desc": {
+    "message": "वर्तमान पृष्ठ पर प्रासंगिक एंटी-बॉट सिस्टम का पता चलने पर टूल दिखाई देते हैं"
+  },
+  "advancedStep2Title": {
+    "message": "कैप्चर शुरू करें"
+  },
+  "advancedStep2Desc": {
+    "message": "टूल स्वचालित रूप से इंटरसेप्टर आरंभ करते हैं और नेटवर्क अनुरोधों की निगरानी शुरू करते हैं"
+  },
+  "advancedStep3Title": {
+    "message": "परिणामों की समीक्षा करें"
+  },
+  "advancedStep3Desc": {
+    "message": "कैप्चर किया गया डेटा अस्थायी रूप से (30 मिनट) पूर्ण निर्यात क्षमताओं के साथ संग्रहीत किया जाता है"
+  },
+  "advancedFooterHint": {
+    "message": "ताज़ा डेटा सुनिश्चित करने के लिए परिणाम 30 मिनट के बाद समाप्त हो जाते हैं"
+  },
+  "settings": {
+    "message": "सेटिंग्स"
+  },
+  "paginationShowingFmt": {
+    "message": "{2} में से {0}-{1} दिखा रहा है"
+  },
+  "paginationShowingItems": {
+    "message": "{2} में से {0}-{1} {3} दिखा रहा है"
+  },
+  "timeUnknown": {
+    "message": "अज्ञात"
+  },
+  "timeJustNow": {
+    "message": "अभी"
+  },
+  "timeSecondsAgoFmt": {
+    "message": "{0} सेकंड पहले"
+  },
+  "timeMinutesAgoFmt": {
+    "message": "{0} मिनट पहले"
+  },
+  "timeHoursAgoFmt": {
+    "message": "{0} घंटे पहले"
+  },
+  "timeDaysAgoFmt": {
+    "message": "{0} दिन पहले"
+  },
+  "timeOneMinuteAgo": {
+    "message": "1 मिनट पहले"
+  },
+  "timeMinutesAgoLongFmt": {
+    "message": "{0} मिनट पहले"
+  },
+  "timeOneHourAgo": {
+    "message": "1 घंटा पहले"
+  },
+  "timeHoursAgoLongFmt": {
+    "message": "{0} घंटे पहले"
+  },
+  "timeOneDayAgo": {
+    "message": "1 दिन पहले"
+  },
+  "timeDaysAgoLongFmt": {
+    "message": "{0} दिन पहले"
+  },
+  "timeOneWeekAgo": {
+    "message": "1 सप्ताह पहले"
+  },
+  "timeWeeksAgoFmt": {
+    "message": "{0} सप्ताह पहले"
+  },
+  "timeOneMonthAgo": {
+    "message": "1 महीना पहले"
+  },
+  "timeMonthsAgoFmt": {
+    "message": "{0} महीने पहले"
+  },
+  "timeOneYearAgo": {
+    "message": "1 साल पहले"
+  },
+  "timeYearsAgoFmt": {
+    "message": "{0} साल पहले"
+  },
+  "btnCancelSettings": {
+    "message": "रद्द करें"
+  },
+  "btnSaveSettings": {
+    "message": "सेटिंग्स सहेजें"
+  },
+  "poweredBy": {
+    "message": "द्वारा संचालित"
+  },
+  "categoryColors": {
+    "message": "श्रेणी रंग"
+  },
+  "methodSuffixPatterns": {
+    "message": "पैटर्न"
+  },
+  "btnSaveRule": {
+    "message": "नियम सहेजें"
+  },
+  "tagColors": {
+    "message": "टैग रंग"
+  },
+  "cacheConfiguration": {
+    "message": "कैश कॉन्फ़िगरेशन"
+  },
+  "cacheDuration": {
+    "message": "कैश अवधि"
+  },
+  "timeUnitMinutes": {
+    "message": "मिनट"
+  },
+  "timeUnitHours": {
+    "message": "घंटे"
+  },
+  "timeUnitDays": {
+    "message": "दिन"
+  },
+  "blacklistedDomains": {
+    "message": "ब्लैकलिस्टेड डोमेन"
+  },
+  "blacklistedDomainsDesc": {
+    "message": "डोमेन जहां जांच पूरी तरह से छोड़ दी जाती है"
+  },
+  "jsApiEvents": {
+    "message": "JS API इवेंट"
+  },
+  "jsApiEventsDesc": {
+    "message": "पेज विंडो पर कस्टम इवेंट डिस्पैच करें"
+  },
+  "ruleMethodSettings": {
+    "message": "जांच विधि सेटिंग्स"
+  },
+  "ruleConfidenceLevel": {
+    "message": "विश्वास स्तर"
+  },
+  "ruleConfidencePrefix": {
+    "message": "जांच विश्वास:"
+  },
+  "detectionName": {
+    "message": "जांच नाम"
+  },
+  "historyModalUrl": {
+    "message": "URL"
+  },
+  "interval6Hours": {
+    "message": "6 घंटे"
+  },
+  "interval12Hours": {
+    "message": "12 घंटे"
+  },
+  "interval24Hours": {
+    "message": "24 घंटे"
+  },
+  "interval2Days": {
+    "message": "2 दिन"
+  },
+  "interval1Week": {
+    "message": "1 सप्ताह"
+  },
+  "methodLabelUrl": {
+    "message": "URL"
+  },
+  "methodLabelHeader": {
+    "message": "HEADER"
+  },
+  "methodLabelCookie": {
+    "message": "COOKIE"
+  },
+  "methodLabelContent": {
+    "message": "CONTENT"
+  },
+  "methodLabelDom": {
+    "message": "DOM"
+  },
+  "methodLabelJsHooks": {
+    "message": "JS HOOKS"
+  },
+  "methodLabelWindow": {
+    "message": "WINDOW"
+  },
+  "methodLabelPayload": {
+    "message": "PAYLOAD"
+  },
+  "methodOnePattern": {
+    "message": "1 पैटर्न"
+  },
+  "methodPatternsFmt": {
+    "message": "{0} पैटर्न"
+  },
+  "methodAddPattern": {
+    "message": "पैटर्न जोड़ें"
+  },
+  "methodSearchPatterns": {
+    "message": "पैटर्न खोजें..."
+  },
+  "methodNoPatterns": {
+    "message": "कोई पैटर्न नहीं"
+  },
+  "methodNoMatchingPatterns": {
+    "message": "कोई मेल खाने वाला पैटर्न नहीं"
+  },
+  "methodSuffixMatches": {
+    "message": "मिलान"
+  },
+  "cacheExpiredLabel": {
+    "message": "समाप्त"
+  },
+  "copiedNotification": {
+    "message": "कॉपी हो गया"
+  },
+  "copiedInlineMsg": {
+    "message": "✓ कॉपी हो गया!"
+  },
+  "unknownDetection": {
+    "message": "अज्ञात डिटेक्शन"
+  },
+  "matchSingular": {
+    "message": "मिलान"
+  },
+  "matchPlural": {
+    "message": "मिलान"
+  },
+  "noMatchesRecorded": {
+    "message": "कोई मिलान दर्ज नहीं हुआ"
+  },
+  "clearCacheConfirmTitle": {
+    "message": "कैश साफ़ करें"
+  },
+  "clearCacheConfirmMsg": {
+    "message": "इससे इस डोमेन के लिए कैश किया गया डिटेक्शन डेटा हटा दिया जाएगा और एक नया विश्लेषण शुरू हो जाएगा।"
+  },
+  "clearCacheConfirmBtn": {
+    "message": "कैश साफ़ करें"
+  },
+  "clearingMsg": {
+    "message": "साफ़ किया जा रहा है..."
+  },
+  "clearedSuccessMsg": {
+    "message": "✓ साफ़ हो गया!"
+  },
+  "cacheClearedToast": {
+    "message": "कैश साफ़ कर दिया गया"
+  },
+  "failedToClearCacheToast": {
+    "message": "कैश साफ़ करने में विफल"
+  },
+  "unableGetCurrentPage": {
+    "message": "वर्तमान पेज प्राप्त करने में असमर्थ"
+  },
+  "invalidDomain": {
+    "message": "अमान्य डोमेन"
+  },
+  "addBlacklistTitle": {
+    "message": "ब्लैकलिस्ट में जोड़ें"
+  },
+  "addBlacklistMsgFmt": {
+    "message": "डोमेन \"{0}\" को भविष्य के सभी डिटेक्शन से बाहर रखा जाएगा। आप इसे बाद में सेटिंग्स में हटा सकते हैं।"
+  },
+  "addBlacklistBtn": {
+    "message": "ब्लैकलिस्ट में जोड़ें"
+  },
+  "alreadyBlacklistedFmt": {
+    "message": "डोमेन \"{0}\" पहले से ब्लैकलिस्टेड है"
+  },
+  "addedToBlacklistFmt": {
+    "message": "\"{0}\" को ब्लैकलिस्ट में जोड़ा गया"
+  },
+  "failedAddBlacklistFmt": {
+    "message": "ब्लैकलिस्ट में जोड़ने में विफल: {0}"
+  },
+  "removedFromBlacklistFmt": {
+    "message": "\"{0}\" को ब्लैकलिस्ट से हटाया गया"
+  },
+  "failedRemoveBlacklistFmt": {
+    "message": "ब्लैकलिस्ट से हटाने में विफल: {0}"
+  },
+  "historyNoDetections": {
+    "message": "कोई डिटेक्शन नहीं"
+  },
+  "historyNoDetectionsFound": {
+    "message": "कोई डिटेक्शन नहीं मिला"
+  },
+  "historyMatchCountFmt": {
+    "message": "{0} मिलान"
+  },
+  "historyOneMatch": {
+    "message": "1 मिलान"
+  },
+  "notificationHistoryCleared": {
+    "message": "इतिहास साफ़ कर दिया गया"
+  },
+  "notificationClearHistoryFailedFmt": {
+    "message": "इतिहास साफ़ करने में विफल: {0}"
+  },
+  "notificationHistoryItemExported": {
+    "message": "इतिहास आइटम एक्सपोर्ट किया गया"
+  },
+  "notificationCacheCleared": {
+    "message": "कैश साफ़ कर दिया गया"
+  },
+  "notificationCacheAlreadyCleared": {
+    "message": "कैश पहले ही साफ़ किया जा चुका है"
+  },
+  "notificationClearCacheFailed": {
+    "message": "कैश साफ़ करने में विफल"
+  },
+  "notificationDomainBlacklistedFmt": {
+    "message": "\"{0}\" को ब्लैकलिस्ट में जोड़ा गया"
+  },
+  "notificationBlacklistFailed": {
+    "message": "ब्लैकलिस्ट में जोड़ने में विफल"
+  },
+  "notificationHistoryItemDeleted": {
+    "message": "इतिहास आइटम हटा दिया गया"
+  },
+  "notificationDeleteHistoryItemFailed": {
+    "message": "इतिहास आइटम हटाने में विफल"
+  },
+  "notificationHistoryExportedFmt": {
+    "message": "{0} इतिहास आइटम एक्सपोर्ट किए गए"
+  },
+  "notificationHistoryMergedFmt": {
+    "message": "{0} नए इतिहास आइटम मर्ज किए गए"
+  },
+  "notificationHistoryReplacedFmt": {
+    "message": "इतिहास को {0} आइटम से बदला गया"
+  },
+  "notificationImportHistoryFailedFmt": {
+    "message": "इतिहास इम्पोर्ट करने में विफल: {0}"
+  },
+  "dialogClearHistoryTitle": {
+    "message": "इतिहास साफ़ करें"
+  },
+  "dialogClearHistoryMessage": {
+    "message": "क्या आप वाकई सारा इतिहास साफ़ करना चाहते हैं? यह क्रिया वापस नहीं की जा सकती।"
+  },
+  "buttonClearAll": {
+    "message": "सभी साफ़ करें"
+  },
+  "dialogClearCacheTitle": {
+    "message": "कैश साफ़ करें"
+  },
+  "dialogClearCacheMessageFmt": {
+    "message": "{0} के लिए कैश किया गया डिटेक्शन डेटा साफ़ करें? इतिहास प्रविष्टि बनी रहेगी।"
+  },
+  "buttonClearCache": {
+    "message": "कैश साफ़ करें"
+  },
+  "dialogDeleteHistoryTitle": {
+    "message": "इतिहास आइटम हटाएँ"
+  },
+  "dialogDeleteHistoryMessageFmt": {
+    "message": "क्या आप वाकई {0} से इस डिटेक्शन को हटाना चाहते हैं?"
+  },
+  "failedLoadSettingsDefault": {
+    "message": "सेटिंग्स लोड करने में विफल। डिफ़ॉल्ट का उपयोग किया जा रहा है।"
+  },
+  "settingsSavedToast": {
+    "message": "सेटिंग्स सहेजी गईं"
+  },
+  "failedSaveSettingsFmt": {
+    "message": "सेटिंग्स सहेजने में विफल: {0}"
+  },
+  "settingsResetToast": {
+    "message": "सेटिंग्स रीसेट कर दी गईं"
+  },
+  "dataClearedReloadNotice": {
+    "message": "सारा डेटा सफलतापूर्वक साफ़ हो गया! एक्सटेंशन फिर से लोड होगा।"
+  },
+  "failedClearDataFmt": {
+    "message": "डेटा साफ़ करने में विफल: {0}"
+  },
+  "failedExportLogs": {
+    "message": "लॉग एक्सपोर्ट करने में विफल"
+  },
+  "logsCleared": {
+    "message": "लॉग साफ़ कर दिए गए"
+  },
+  "failedClearLogs": {
+    "message": "लॉग साफ़ करने में विफल"
+  },
+  "couldNotGetPageUrl": {
+    "message": "वर्तमान पेज URL प्राप्त नहीं हो सका"
+  },
+  "domainAlreadyBlacklistedFmt": {
+    "message": "{0} पहले से ब्लैकलिस्टेड है"
+  },
+  "addedDomainToBlacklistFmt": {
+    "message": "{0} को ब्लैकलिस्ट में जोड़ा गया"
+  },
+  "failedAddDomainFmt": {
+    "message": "डोमेन जोड़ने में विफल: {0}"
+  },
+  "removedDomainFromBlacklistFmt": {
+    "message": "{0} को ब्लैकलिस्ट से हटाया गया"
+  },
+  "invalidSettingsFmt": {
+    "message": "अमान्य सेटिंग्स: {0}"
+  },
+  "pleaseEnterWebhookUrl": {
+    "message": "कृपया एक webhook URL दर्ज करें"
+  },
+  "webhookTestSuccessfulFmt": {
+    "message": "Webhook परीक्षण सफल! स्थिति: {0}"
+  },
+  "webhookFailedStatusFmt": {
+    "message": "Webhook ने स्थिति लौटाई: {0}"
+  },
+  "webhookTestFailedFmt": {
+    "message": "Webhook परीक्षण विफल: {0}"
+  },
+  "foundDetectorUpdatesAvailableFmt": {
+    "message": "{0} डिटेक्टर अपडेट उपलब्ध मिले!"
+  },
+  "allDetectorsUpToDate": {
+    "message": "सभी डिटेक्टर अद्यतित हैं।"
+  },
+  "importDetectorsTitle": {
+    "message": "डिटेक्टर इम्पोर्ट करें"
+  },
+  "importMergeQuestion": {
+    "message": "क्या आप मौजूदा डिटेक्टरों के साथ मर्ज करना चाहते हैं?"
+  },
+  "mergeOption": {
+    "message": "मर्ज करें"
+  },
+  "replaceAllOption": {
+    "message": "सभी को बदलें"
+  },
+  "detectorsImported": {
+    "message": "डिटेक्टर इम्पोर्ट किए गए"
+  },
+  "failedImportDetectors": {
+    "message": "डिटेक्टर इम्पोर्ट करने में विफल। फ़ाइल फ़ॉर्मेट जाँचें।"
+  },
+  "errorReadingFileFmt": {
+    "message": "फ़ाइल पढ़ने में त्रुटि: {0}"
+  },
+  "detectorsUpdatedFmt": {
+    "message": "{0} डिटेक्टर अपडेट किए गए"
+  },
+  "updatesAvailableClickToApplyFmt": {
+    "message": "{0} अपडेट उपलब्ध - लागू करने के लिए फिर से क्लिक करें"
+  },
+  "detectorDeletedFmt": {
+    "message": "\"{0}\" हटा दिया गया"
+  },
+  "allDetectorsCleared": {
+    "message": "सभी डिटेक्टर साफ़ कर दिए गए"
+  },
+  "failedClearDetectors": {
+    "message": "डिटेक्टर साफ़ करने में विफल"
+  },
+  "urlPatternMatching": {
+    "message": "URL पैटर्न मिलान"
+  },
+  "textWordMatching": {
+    "message": "टेक्स्ट/शब्द मिलान"
+  },
+  "domSelectorMatching": {
+    "message": "DOM सेलेक्टर मिलान"
+  },
+  "payloadTextMatching": {
+    "message": "पेलोड टेक्स्ट मिलान"
+  },
+  "nameFieldMatching": {
+    "message": "नाम फ़ील्ड मिलान"
+  },
+  "captureNotFound": {
+    "message": "कैप्चर नहीं मिला"
+  },
+  "captureModuleClassNotFound": {
+    "message": "मॉड्यूल क्लास नहीं मिला"
+  },
+  "captureDetailsUnavailable": {
+    "message": "विवरण दृश्य अनुपलब्ध"
+  },
+  "captureDataCopied": {
+    "message": "कैप्चर डेटा कॉपी किया गया"
+  },
+  "captureDeleted": {
+    "message": "कैप्चर हटा दिया गया"
+  },
+  "capturesExportedFmt": {
+    "message": "{0} कैप्चर एक्सपोर्ट किए गए"
+  },
+  "allCapturesCleared": {
+    "message": "सभी कैप्चर साफ़ कर दिए गए"
+  },
+  "captureExportFailed": {
+    "message": "कैप्चर एक्सपोर्ट विफल"
+  },
+  "invalidUrl": {
+    "message": "अमान्य URL"
+  },
+  "importHistoryTitle": {
+    "message": "इतिहास इम्पोर्ट करें"
+  },
+  "importHistoryMessageFmt": {
+    "message": "{0} इतिहास आइटम इम्पोर्ट करें? वर्तमान इतिहास में {1} आइटम हैं।"
+  },
+  "replaceOption": {
+    "message": "बदलें"
+  },
+  "settingsResetTitle": {
+    "message": "सेटिंग्स रीसेट करें"
+  },
+  "settingsResetMessage": {
+    "message": "क्या आप वाकई सभी सेटिंग्स को उनके डिफ़ॉल्ट मानों पर रीसेट करना चाहते हैं? यह क्रिया वापस नहीं की जा सकती।"
+  },
+  "btnReset": {
+    "message": "रीसेट करें"
+  },
+  "clearAllDataTitle": {
+    "message": "सारा डेटा साफ़ करें"
+  },
+  "clearAllDataMessage": {
+    "message": "क्या आप वाकई एक्सटेंशन का सारा डेटा साफ़ करना चाहते हैं? यह हटा देगा:<br><br>• सारा डिटेक्शन इतिहास<br>• सभी डिटेक्टर नियम<br>• सभी सेटिंग्स<br><br>यह क्रिया वापस नहीं की जा सकती!"
+  },
+  "clearEverythingBtn": {
+    "message": "सब कुछ साफ़ करें"
+  },
+  "clearLogsTitle": {
+    "message": "लॉग साफ़ करें"
+  },
+  "clearLogsMessage": {
+    "message": "क्या आप वाकई सभी एकत्रित लॉग साफ़ करना चाहते हैं? यह क्रिया वापस नहीं की जा सकती।"
+  },
+  "failedCheckForUpdatesFmt": {
+    "message": "अपडेट की जाँच करने में विफल: {0}"
+  },
+  "couldNotFetchUpdates": {
+    "message": "सर्वर से अपडेट प्राप्त नहीं हो सके"
+  },
+  "errorApplyingUpdates": {
+    "message": "अपडेट लागू करने में त्रुटि"
+  },
+  "failedCheckForUpdates": {
+    "message": "अपडेट की जाँच करने में विफल"
+  },
+  "errorCheckingForUpdates": {
+    "message": "अपडेट की जाँच में त्रुटि"
+  },
+  "updateServiceNotAvailable": {
+    "message": "अपडेट सेवा उपलब्ध नहीं है"
+  },
+  "clearAllDetectorsTitle": {
+    "message": "सभी डिटेक्टर साफ़ करें"
+  },
+  "clearAllDetectorsMessage": {
+    "message": "इससे सभी डिटेक्टर हट जाएँगे। क्या आप सुनिश्चित हैं?"
+  },
+  "clearingAllDetectors": {
+    "message": "सभी डिटेक्टर साफ़ किए जा रहे हैं..."
+  },
+  "deleteDetectorTitle": {
+    "message": "डिटेक्टर हटाएँ"
+  },
+  "deleteDetectorMessageFmt": {
+    "message": "क्या आप वाकई \"{0}\" को हटाना चाहते हैं?"
+  },
+  "detectorNotFound": {
+    "message": "डिटेक्टर नहीं मिला"
+  },
+  "failedDeleteDetector": {
+    "message": "डिटेक्टर हटाने में विफल"
+  },
+  "detectorNotFoundFmt": {
+    "message": "डिटेक्टर नहीं मिला: {0}"
+  },
+  "failedViewCaptureDetails": {
+    "message": "कैप्चर विवरण देखने में विफल"
+  },
+  "failedCopyCaptureData": {
+    "message": "कैप्चर डेटा कॉपी करने में विफल"
+  },
+  "failedDeleteCapture": {
+    "message": "कैप्चर हटाने में विफल"
+  },
+  "noCapturesToExport": {
+    "message": "एक्सपोर्ट के लिए कोई कैप्चर नहीं"
+  },
+  "clearAllCapturesConfirm": {
+    "message": "क्या आप वाकई सभी कैप्चर हटाना चाहते हैं? यह वापस नहीं किया जा सकता।"
+  },
+  "failedClearCaptures": {
+    "message": "कैप्चर साफ़ करने में विफल"
+  },
+  "settingsCardWebhookIntegration": {
+    "message": "Webhook एकीकरण"
+  },
+  "settingsEnableWebhook": {
+    "message": "Webhook सक्षम करें"
+  },
+  "settingsEnableWebhookDesc": {
+    "message": "डिटेक्शन पर HTTP रिक्वेस्ट भेजें"
+  },
+  "settingsBypassCache": {
+    "message": "हर पेज लोड पर भेजें (कैश को बायपास करें)"
+  },
+  "settingsHttpMethod": {
+    "message": "HTTP विधि"
+  },
+  "settingsHttpMethodDesc": {
+    "message": "Webhook रिक्वेस्ट के लिए HTTP विधि चुनें"
+  },
+  "settingsCustomMethod": {
+    "message": "कस्टम"
+  },
+  "settingsCustomMethodPlaceholder": {
+    "message": "कस्टम विधि दर्ज करें (जैसे, OPTIONS, HEAD)"
+  },
+  "settingsWebhookUrl": {
+    "message": "Webhook URL"
+  },
+  "settingsWebhookUrlDesc": {
+    "message": "पूर्ण एंडपॉइंट URL (https://api.example.com/webhook)"
+  },
+  "settingsAvailableVariables": {
+    "message": "उपलब्ध वेरिएबल:"
+  },
+  "settingsWebhookUrlExample": {
+    "message": "उदाहरण: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
+  },
+  "settingsContentType": {
+    "message": "Content-Type"
+  },
+  "settingsContentTypeDesc": {
+    "message": "HTTP कंटेंट टाइप हेडर"
+  },
+  "settingsCustomHeaders": {
+    "message": "कस्टम हेडर"
+  },
+  "settingsCustomHeadersDesc": {
+    "message": "Webhook रिक्वेस्ट में कस्टम HTTP हेडर जोड़ें"
+  },
+  "settingsPayloadTemplate": {
+    "message": "पेलोड टेम्पलेट"
+  },
+  "settingsPayloadTemplateDesc": {
+    "message": "वेरिएबल का उपयोग करें: <SITEURL>, <HOSTNAME>, <TITLE>, <FAVICON>, <DETECTIONS>, <TIMESTAMP>, <DETECTION_COUNT>, <CATEGORIES>"
+  },
+  "settingsTestWebhook": {
+    "message": "Webhook परीक्षण करें"
+  },
+  "settingsTestWebhookDesc": {
+    "message": "अपने webhook URL पर एक परीक्षण रिक्वेस्ट भेजें"
+  },
+  "settingsTestBtn": {
+    "message": "परीक्षण"
+  },
+  "settingsCardHistoryConfig": {
+    "message": "इतिहास कॉन्फ़िगरेशन"
+  },
+  "settingsHistorySettings": {
+    "message": "इतिहास सेटिंग्स"
+  },
+  "settingsHistoryLimit": {
+    "message": "इतिहास सीमा"
+  },
+  "settingsHistoryLimitNote": {
+    "message": "(0 = असीमित)"
+  },
+  "settingsAutoClearDays": {
+    "message": "स्वतः साफ़ करें (दिन)"
+  },
+  "settingsExportFormat": {
+    "message": "एक्सपोर्ट फ़ॉर्मेट"
+  },
+  "settingsExportFormatPlainText": {
+    "message": "सादा टेक्स्ट"
+  },
+  "settingsIncludeTimestamps": {
+    "message": "टाइमस्टैम्प शामिल करें"
+  },
+  "settingsSaveOnCacheHits": {
+    "message": "कैश हिट पर सहेजें"
+  },
+  "settingsCardDuplicatePrevention": {
+    "message": "डुप्लिकेट रोकथाम"
+  },
+  "settingsEnableDuplicatePrevention": {
+    "message": "डुप्लिकेट रोकथाम सक्षम करें"
+  },
+  "settingsDuplicatePreventionDesc": {
+    "message": "समय विंडो के भीतर डुप्लिकेट इतिहास प्रविष्टियों को ब्लॉक करें"
+  },
+  "settingsDuplicateScope": {
+    "message": "स्कोप"
+  },
+  "settingsDuplicateScopeFullUrl": {
+    "message": "पूर्ण URL"
+  },
+  "settingsDuplicateScopeDomain": {
+    "message": "डोमेन"
+  },
+  "settingsDuplicateScopePath": {
+    "message": "पथ"
+  },
+  "settingsTimeWindow": {
+    "message": "समय विंडो"
+  },
+  "settingsTimeMinutes": {
+    "message": "मिनट"
+  },
+  "settingsTimeHours": {
+    "message": "घंटे"
+  },
+  "settingsTimeDays": {
+    "message": "दिन"
+  },
+  "settingsHowItWorks": {
+    "message": "यह कैसे काम करता है:"
+  },
+  "settingsHowItWorksDesc": {
+    "message": "समय विंडो के भीतर एक ही URL के लिए डुप्लिकेट इतिहास प्रविष्टियों को रोकता है।"
+  },
+  "settingsDuplicateFullUrlBullet": {
+    "message": "पूर्ण URL: सटीक URL मिलान (क्वेरी पैरामीटर सहित)"
+  },
+  "settingsDuplicateDomainBullet": {
+    "message": "डोमेन: समान डोमेन (अलग-अलग पथ समान माने जाते हैं)"
+  },
+  "settingsDuplicatePathBullet": {
+    "message": "पथ: समान डोमेन+पथ (क्वेरी पैरामीटर को अनदेखा करता है)"
+  },
+  "settingsCardCacheSettings": {
+    "message": "कैश सेटिंग्स"
+  },
+  "settingsCardSkipDomains": {
+    "message": "डोमेन छोड़ें"
+  },
+  "settingsAddCurrentPage": {
+    "message": "वर्तमान पेज जोड़ें"
+  },
+  "settingsSearchDomainsPlaceholder": {
+    "message": "डोमेन खोजें..."
+  },
+  "settingsBadgeColorLow": {
+    "message": "कम"
+  },
+  "settingsBadgeColorMedium": {
+    "message": "मध्यम"
+  },
+  "settingsBadgeColorHigh": {
+    "message": "उच्च"
+  },
+  "settingsEnableJsApi": {
+    "message": "JS API इवेंट सक्षम करें"
+  },
+  "settingsDataExportImport": {
+    "message": "एक्सपोर्ट और इम्पोर्ट"
+  },
+  "settingsDataManagement": {
+    "message": "डेटा प्रबंधन"
+  },
+  "settingsDataManagementDesc": {
+    "message": "एक्सटेंशन डेटा एक्सपोर्ट या इम्पोर्ट करें"
+  },
+  "settingsDataSettingsRow": {
+    "message": "सेटिंग्स"
+  },
+  "settingsDataSettingsRowDesc": {
+    "message": "एक्सटेंशन सेटिंग्स एक्सपोर्ट या इम्पोर्ट करें"
+  },
+  "settingsDataHistoryRow": {
+    "message": "डिटेक्शन इतिहास"
+  },
+  "settingsDataHistoryRowDesc": {
+    "message": "डिटेक्शन इतिहास को CSV के रूप में एक्सपोर्ट करें"
+  },
+  "settingsDataExportSettingsTitle": {
+    "message": "सेटिंग्स एक्सपोर्ट करें"
+  },
+  "settingsDataImportSettingsTitle": {
+    "message": "सेटिंग्स इम्पोर्ट करें"
+  },
+  "settingsDataExportHistoryTitle": {
+    "message": "इतिहास एक्सपोर्ट करें"
+  },
+  "settingsAvailableEvents": {
+    "message": "उपलब्ध इवेंट्स:"
+  },
+  "settingsApiEventReady": {
+    "message": "एक्सटेंशन लोड और इनिशियलाइज़ हो गया"
+  },
+  "settingsApiEventOnStart": {
+    "message": "डिटेक्शन शुरू हुआ (कैश मिस / मैनुअल)"
+  },
+  "settingsApiEventOnProgress": {
+    "message": "डिटेक्शन प्रगति अपडेट (विधि-स्तरीय)"
+  },
+  "settingsApiEventOnHooksComplete": {
+    "message": "JS हुक्स निगरानी पूर्ण हुई"
+  },
+  "settingsApiEventOnWindowPropsComplete": {
+    "message": "विंडो प्रॉपर्टी निगरानी पूर्ण हुई"
+  },
+  "settingsApiEventOnDetection": {
+    "message": "परिणामों के साथ डिटेक्शन पूर्ण हुआ"
+  },
+  "settingsApiEventOnError": {
+    "message": "डिटेक्शन त्रुटि हुई"
+  },
+  "settingsUsageExample": {
+    "message": "उपयोग उदाहरण:"
+  },
+  "detectionDisabledForDomain": {
+    "message": "इस डोमेन के लिए डिटेक्शन अक्षम है"
+  },
+  "detectionRemoveFromBlacklistBtn": {
+    "message": "ब्लैकलिस्ट से हटाएँ"
+  },
+  "detectionBlacklistHint": {
+    "message": "या प्रबंधन के लिए सेटिंग्स → डिटेक्शन → ब्लैकलिस्टेड डोमेन पर जाएँ।"
+  },
+  "detectionNoDetectionsDesc": {
+    "message": "इस पेज पर कोई मिलान वाले एंटी-बॉट, CAPTCHA, या फ़िंगरप्रिंटिंग सिग्नल नहीं मिले।"
+  },
+  "detectionNoCachedDataDesc": {
+    "message": "इस पेज के लिए कोई कैश्ड डिटेक्शन डेटा उपलब्ध नहीं है। नया स्कैन चलाने के लिए पेज को रीलोड करें।"
+  },
+  "detectionTitleUploadPaste": {
+    "message": "पहचान अपलोड करें (साझा करने योग्य लिंक)"
+  },
+  "pasteUploadSuccessToast": {
+    "message": "लिंक क्लिपबोर्ड पर कॉपी किया गया"
+  },
+  "failedReadSettings": {
+    "message": "सेटिंग्स पढ़ नहीं सकीं — कार्रवाई रद्द की गई"
+  },
+  "failedRemoveBlacklist": {
+    "message": "ब्लैकलिस्ट से हटाने में विफल"
+  },
+  "pasteConfirmTitle": {
+    "message": "पहचान अपलोड करें?"
+  },
+  "pasteConfirmMsg": {
+    "message": "यह इस पृष्ठ की पहचान का सारांश एक सार्वजनिक पेस्ट (dpaste.com, असूचीबद्ध, 30 दिनों में समाप्त) पर अपलोड करता है। लिंक वाला कोई भी इसे देख सकता है। URL क्वेरी स्ट्रिंग और कुकी/हेडर मान शामिल नहीं हैं।"
+  },
+  "pasteConfirmBtn": {
+    "message": "अपलोड करें"
+  },
+  "pasteUploadFailedToast": {
+    "message": "अपलोड विफल"
+  },
+  "pasteNoDetectionsToast": {
+    "message": "अपलोड करने के लिए कोई पहचान नहीं"
+  },
+  "detectionTitleClearCache": {
+    "message": "कैश साफ़ करें"
+  },
+  "detectionTitleCopyOverview": {
+    "message": "अवलोकन कॉपी करें"
+  },
+  "detectionTitleBlockDomain": {
+    "message": "इस डोमेन को ब्लॉक करें"
+  },
+  "detectionStatDetections": {
+    "message": "डिटेक्शन"
+  },
+  "detectionStatConfidence": {
+    "message": "विश्वसनीयता"
+  },
+  "detectionStatDifficulty": {
+    "message": "कठिनाई"
+  },
+  "detectionStatCacheScope": {
+    "message": "कैश स्कोप"
+  },
+  "detectionStatCacheExpiration": {
+    "message": "कैश समाप्ति"
+  },
+  "detectionSearchPlaceholder": {
+    "message": "डिटेक्शन खोजें..."
+  },
+  "detectionPaginationPage": {
+    "message": "पृष्ठ"
+  },
+  "detectionPaginationOf": {
+    "message": "का"
+  },
+  "detectionDomainBlacklistedTitle": {
+    "message": "यह डोमेन ब्लैकलिस्टेड है"
+  },
+  "detectionModalConfidence": {
+    "message": "विश्वसनीयता"
+  },
+  "detectionModalDifficulty": {
+    "message": "कठिनाई"
+  },
+  "detectionModalMatchesFound": {
+    "message": "मिलान मिले"
+  },
+  "detectionModalAuthor": {
+    "message": "लेखक"
+  },
+  "detectionModalDescription": {
+    "message": "विवरण"
+  },
+  "detectionModalNoDescription": {
+    "message": "कोई विवरण उपलब्ध नहीं है।"
+  },
+  "detectionModalDetectionMethods": {
+    "message": "डिटेक्शन विधियाँ"
+  },
+  "detectionModalNoMethodsDetected": {
+    "message": "कोई विधि नहीं मिली"
+  },
+  "advancedSearchPlaceholder": {
+    "message": "URL, मॉड्यूल, साइट, या सामग्री द्वारा खोजें..."
+  },
+  "advancedPaginationPage": {
+    "message": "पृष्ठ"
+  },
+  "advancedPaginationOf": {
+    "message": "का"
+  },
+  "advancedInfoRecaptchaDesc": {
+    "message": "साइट कीज़, क्रियाएँ, और कॉन्फ़िगरेशन पैरामीटर कैप्चर करता है"
+  },
+  "advancedInfoAkamaiDesc": {
+    "message": "सेंसर डेटा इंटरसेप्ट करता है और संस्करण जानकारी निकालता है"
+  },
+  "advancedInfoImpervaTitle": {
+    "message": "Imperva / Incapsula"
+  },
+  "advancedInfoImpervaDesc": {
+    "message": "कुकीज़ और सुरक्षा स्तर परिवर्तनों की निगरानी करता है"
+  },
+  "advancedInfoShapeSecurityDesc": {
+    "message": "डायनामिक हेडर और स्क्रिप्ट पैरामीटर का विश्लेषण करता है"
+  },
+  "advancedInfoAwsWafDesc": {
+    "message": "चैलेंज एंडपॉइंट और टोकन विवरण कैप्चर करता है"
+  },
+  "btnStartCapturing": {
+    "message": "कैप्चरिंग शुरू करें"
+  },
+  "btnStopCapturing": {
+    "message": "कैप्चरिंग रोकें"
+  },
+  "btnCheckCookies": {
+    "message": "कुकीज़ जाँचें"
+  },
+  "btnCheckVersion": {
+    "message": "संस्करण जाँचें"
+  },
+  "btnAnalyzeScripts": {
+    "message": "स्क्रिप्ट का विश्लेषण करें"
+  },
+  "btnExtractSiteKey": {
+    "message": "SiteKey निकालें"
+  },
+  "btnObtainSelector": {
+    "message": "सेलेक्टर प्राप्त करें"
+  },
+  "btnCopyAllData": {
+    "message": "सारा डेटा कॉपी करें"
+  },
+  "btnClearData": {
+    "message": "डेटा साफ़ करें"
+  },
+  "advCapturedDataSection": {
+    "message": "कैप्चर किया गया डेटा"
+  },
+  "advNoCapturesYet": {
+    "message": "अभी तक कोई कैप्चर नहीं"
+  },
+  "advCaptureDetails": {
+    "message": "कैप्चर विवरण"
+  },
+  "advValueCopied": {
+    "message": "मान कॉपी हो गया"
+  },
+  "advConfirmClearAllTitle": {
+    "message": "सारा कैप्चर किया गया डेटा साफ़ करें?"
+  },
+  "advConfirmClearAllMsg": {
+    "message": "इससे इस प्रदाता के लिए सारा कैप्चर किया गया डेटा स्थायी रूप से हट जाएगा।"
+  },
+  "rulesColorPickerCancel": {
+    "message": "रद्द करें"
+  },
+  "rulesColorPickerOk": {
+    "message": "ठीक है"
+  },
+  "rulesContentSearchScopeTitle": {
+    "message": "सामग्री खोज स्कोप"
+  },
+  "rulesOnlyCheckScripts": {
+    "message": "केवल स्क्रिप्ट जाँचें"
+  },
+  "rulesOnlyCheckScriptsHint": {
+    "message": "खोज को केवल JavaScript कोड और स्क्रिप्ट URL तक सीमित करें"
+  },
+  "rulesScopeSettingsTitle": {
+    "message": "स्कोप सेटिंग्स"
+  },
+  "rulesNameScopeLabel": {
+    "message": "नाम स्कोप"
+  },
+  "rulesNameScopeHint": {
+    "message": "नाम/फ़ील्ड मिलान की जाँच कहाँ करें"
+  },
+  "rulesScopeRequest": {
+    "message": "रिक्वेस्ट"
+  },
+  "rulesScopeResponse": {
+    "message": "रिस्पॉन्स"
+  },
+  "rulesScopeAll": {
+    "message": "सभी"
+  },
+  "rulesValueScopeLabel": {
+    "message": "मान स्कोप"
+  },
+  "rulesValueScopeHint": {
+    "message": "मान मिलान की जाँच कहाँ करें"
+  },
+  "rulesUrlScopeSettings": {
+    "message": "URL स्कोप सेटिंग्स"
+  },
+  "rulesUrlScopeLabel": {
+    "message": "URL स्कोप"
+  },
+  "rulesUrlScopePageOnly": {
+    "message": "पेज"
+  },
+  "rulesUrlScopeScripts": {
+    "message": "स्क्रिप्ट"
+  },
+  "rulesUrlScopeAllDefault": {
+    "message": "सभी (डिफ़ॉल्ट)"
+  },
+  "rulesRequestConstraints": {
+    "message": "रिक्वेस्ट बाधाएँ"
+  },
+  "rulesUrlPatternOptional": {
+    "message": "URL पैटर्न (वैकल्पिक)"
+  },
+  "rulesUrlRegex": {
+    "message": "URL नियमित अभिव्यक्ति (Regex)"
+  },
+  "rulesUrlCaseSensitive": {
+    "message": "URL केस संवेदी"
+  },
+  "rulesHttpMethodSelect": {
+    "message": "HTTP विधि (एक चुनें)"
+  },
+  "rulesHttpMethodFilterHint": {
+    "message": "रिक्वेस्ट विधि द्वारा फ़िल्टर करें (वैकल्पिक)"
+  },
+  "rulesHttpMethodAny": {
+    "message": "कोई भी"
+  },
+  "rulesPatternMatchingOptions": {
+    "message": "पैटर्न मिलान विकल्प"
+  },
+  "rulesPatternRegex": {
+    "message": "नियमित अभिव्यक्ति (Regex)"
+  },
+  "rulesPatternWholeWord": {
+    "message": "पूरा शब्द"
+  },
+  "rulesPatternCaseSensitive": {
+    "message": "केस संवेदी"
+  },
+  "rulesValueFieldOptions": {
+    "message": "मान फ़ील्ड विकल्प"
+  },
+  "rulesApplySettings": {
+    "message": "सेटिंग्स लागू करें"
+  },
+  "rulesDomSelectorHelper": {
+    "message": "DOM सेलेक्टर सहायक"
+  },
+  "rulesStartTypingSuggestions": {
+    "message": "सुझाव देखने के लिए टाइप करना शुरू करें"
+  },
+  "rulesUseSelectorBtn": {
+    "message": "सेलेक्टर का उपयोग करें"
+  },
+  "rulesWindowPropertiesHelper": {
+    "message": "विंडो प्रॉपर्टीज़ सहायक"
+  },
+  "rulesStepEnterKeyword": {
+    "message": "कीवर्ड दर्ज करें"
+  },
+  "rulesStepChooseProperty": {
+    "message": "प्रॉपर्टी चुनें"
+  },
+  "rulesStepSelectCondition": {
+    "message": "शर्त चुनें"
+  },
+  "rulesConditionExists": {
+    "message": "मौजूद है"
+  },
+  "rulesConditionGroupType": {
+    "message": "प्रकार"
+  },
+  "rulesTypeofObject": {
+    "message": "ऑब्जेक्ट"
+  },
+  "rulesTypeofFunction": {
+    "message": "फ़ंक्शन"
+  },
+  "rulesTypeofString": {
+    "message": "स्ट्रिंग"
+  },
+  "rulesTypeofNumber": {
+    "message": "संख्या"
+  },
+  "rulesTypeofBoolean": {
+    "message": "बूलियन"
+  },
+  "notifConfirmTitleDefault": {
+    "message": "पुष्टि करें"
+  },
+  "notifConfirmMessageDefault": {
+    "message": "क्या आप सुनिश्चित हैं?"
+  },
+  "notifLoadingDefault": {
+    "message": "लोड हो रहा है..."
+  },
+  "helperPatternStartTypingSuggestions": {
+    "message": "सुझाव देखने के लिए ऊपर टाइप करना शुरू करें..."
+  },
+  "helperPatternStartTypingExamples": {
+    "message": "उदाहरण देखने के लिए ऊपर टाइप करना शुरू करें..."
+  },
+  "helpJsHooksTitle": {
+    "message": "JavaScript हुक्स डिटेक्शन"
+  },
+  "helpJsHooksDescription": {
+    "message": "हुक्स ब्राउज़र API कॉल्स (Canvas, Audio, WebGL, आदि) को इंटरसेप्ट करते हैं ताकि पेज द्वारा उन APIs को एक्सेस करते समय एंटी-बॉट फ़िंगरप्रिंटिंग कोड को रीयल-टाइम में डिटेक्ट किया जा सके।"
+  },
+  "helpJsHooksWarning": {
+    "message": "हुक्स को किसी भी पेज स्क्रिप्ट के चलने से पहले document_start पर इंस्टॉल होना चाहिए — अन्यथा पेज हमारे शिम के मौजूद होने से पहले मूल APIs के संदर्भ सहेज सकता है।"
+  },
+  "helpJsHooksTip": {
+    "message": "Canvas फ़िंगरप्रिंटिंग डिटेक्ट करने के लिए CanvasRenderingContext2D.prototype.getImageData जैसा टारगेट जोड़ें।"
+  },
+  "helpWindowTitle": {
+    "message": "विंडो प्रॉपर्टीज़ डिटेक्शन"
+  },
+  "helpWindowDescription": {
+    "message": "एंटी-बॉट स्क्रिप्ट्स द्वारा विंडो ग्लोबल में जोड़े गए JavaScript ऑब्जेक्ट्स और प्रॉपर्टीज़ डिटेक्ट करता है।"
+  },
+  "helpWindowWarning": {
+    "message": "कुछ एंटी-बॉट स्क्रिप्ट्स Symbol() कीज़ का उपयोग करती हैं जो enumerable नहीं होतीं — उन्हें डिटेक्ट करना कठिन है।"
+  },
+  "helpWindowTip": {
+    "message": "प्रॉपर्टी प्रकार के साथ मिलान करने के लिए typeof object या exists जैसी शर्तों का उपयोग करें।"
+  },
+  "helpUrlTitle": {
+    "message": "URL पैटर्न डिटेक्शन"
+  },
+  "helpUrlDescription": {
+    "message": "लोड किए गए संसाधनों (स्क्रिप्ट, इमेज, नेटवर्क रिक्वेस्ट) के URL को पैटर्न के साथ मिलाता है।"
+  },
+  "helpUrlWarning": {
+    "message": "पैटर्न डिफ़ॉल्ट रूप से केस-संवेदी होते हैं। यदि आपको केस-असंवेदी मिलान चाहिए तो URL केस संवेदी विकल्प को टॉगल करें।"
+  },
+  "helpUrlTip": {
+    "message": "/\\/v\\d+\\/challenge/ जैसे उन्नत पैटर्न के लिए Regex विकल्प का उपयोग करें।"
+  },
+  "helpHeaderTitle": {
+    "message": "HTTP हेडर डिटेक्शन"
+  },
+  "helpHeaderDescription": {
+    "message": "एंटी-बॉट मिडलवेयर द्वारा सेट किए गए HTTP रिक्वेस्ट और रिस्पॉन्स हेडर डिटेक्ट करता है।"
+  },
+  "helpHeaderWarning": {
+    "message": "कुछ हेडर केवल आरंभिक रिक्वेस्ट पर ही मौजूद होते हैं — सुनिश्चित करें कि आपके स्कोप में रिक्वेस्ट शामिल है।"
+  },
+  "helpHeaderTip": {
+    "message": "सामान्य टारगेट: x-akamai-bot-manager-token, cf-ray, x-shape-version।"
+  },
+  "helpCookieTitle": {
+    "message": "कुकी डिटेक्शन"
+  },
+  "helpCookieDescription": {
+    "message": "एंटी-बॉट चैलेंजों द्वारा सेट की गई कुकीज़ डिटेक्ट करता है। कुकी नाम (और वैकल्पिक रूप से मान पैटर्न) के साथ मिलान करता है।"
+  },
+  "helpCookieWarning": {
+    "message": "रैंडम सफ़िक्स वाली कुकी नामों (जैसे _abck-xyz123) के लिए लिटरल नाम नहीं बल्कि regex पैटर्न की ज़रूरत होती है।"
+  },
+  "helpCookieTip": {
+    "message": "सटीक-नाम मिलान के लिए पूरा शब्द, या ^datadome- जैसे प्रीफ़िक्स पैटर्न के लिए Regex का उपयोग करें।"
+  },
+  "helpContentTitle": {
+    "message": "पेज सामग्री डिटेक्शन"
+  },
+  "helpContentDescription": {
+    "message": "पेज HTML और इनलाइन स्क्रिप्ट टैग के अंदर टेक्स्ट पैटर्न खोजता है।"
+  },
+  "helpContentWarning": {
+    "message": "बड़े पेजों पर पूर्ण-पेज स्कैनिंग धीमी हो सकती है। यदि सिग्नेचर JS कोड में है तो केवल स्क्रिप्ट जाँचें तक सीमित करें।"
+  },
+  "helpContentTip": {
+    "message": "बड़े शब्दों के अंदर सबस्ट्रिंग से होने वाले फॉल्स पॉज़िटिव से बचने के लिए पूरा शब्द का उपयोग करें।"
+  },
+  "helpDomTitle": {
+    "message": "DOM सेलेक्टर डिटेक्शन"
+  },
+  "helpDomDescription": {
+    "message": "CSS सेलेक्टर का उपयोग करके HTML एलिमेंट्स डिटेक्ट करता है। DOM में मिलान करने वाला एलिमेंट मौजूद होने पर ट्रिगर होता है।"
+  },
+  "helpDomWarning": {
+    "message": "सेलेक्टर केवल वास्तविक DOM में रेंडर किए गए एलिमेंट्स से मिलान करते हैं — iframes या shadow roots के अंदर वालों से नहीं।"
+  },
+  "helpDomTip": {
+    "message": "फॉल्स पॉज़िटिव कम करने के लिए सामान्य सेलेक्टरों के बजाय div#cf-challenge[data-ray] जैसे विशिष्ट सेलेक्टरों का उपयोग करें।"
+  },
+  "helpPayloadTitle": {
+    "message": "रिक्वेस्ट पेलोड डिटेक्शन"
+  },
+  "helpPayloadDescription": {
+    "message": "टेक्स्ट पैटर्न के लिए सभी HTTP POST/PUT/PATCH रिक्वेस्ट बॉडी की निगरानी करता है।"
+  },
+  "helpPayloadWarning": {
+    "message": "पेलोड निगरानी केवल उन रिक्वेस्ट्स के लिए काम करती है जिन्हें हमारा एक्सटेंशन इंटरसेप्ट कर सकता है (कोई एन्क्रिप्टेड बॉडी नहीं, कोई अपारदर्शी ब्लॉब नहीं)।"
+  },
+  "helpPayloadTip": {
+    "message": "विशिष्ट एंडपॉइंट्स तक मिलान सीमित करने के लिए URL पैटर्न के साथ संयोजित करें।"
+  },
+  "helpWarningLabel": {
+    "message": "चेतावनी:"
+  },
+  "helpTipLabel": {
+    "message": "सुझाव:"
+  },
+  "detectionMethodTitle": {
+    "message": "डिटेक्शन विधि"
+  },
+  "noHelpContentAvailable": {
+    "message": "इस विधि प्रकार के लिए कोई सहायता सामग्री उपलब्ध नहीं है।"
+  },
+  "advNoCapturesHintFmt": {
+    "message": "{0} डेटा कैप्चर करना शुरू करने के लिए ऊपर \"कैप्चरिंग शुरू करें\" पर क्लिक करें"
+  },
+  "advancedToolsHeading": {
+    "message": "उन्नत डिटेक्शन टूल्स"
+  },
+  "advancedToolsSubtitle": {
+    "message": "सुरक्षा सिस्टम को कैप्चर और विश्लेषण करें"
+  },
+  "advancedToolsHelpTitle": {
+    "message": "सहायता"
+  },
+  "advancedToolsStepSelect": {
+    "message": "डिटेक्शन चुनें"
+  },
+  "advancedToolsChooseDetection": {
+    "message": "एक डिटेक्शन चुनें..."
+  },
+  "advancedToolsStepLoadUse": {
+    "message": "टूल्स लोड करें और उपयोग करें"
+  },
+  "advancedToolsLoadTools": {
+    "message": "टूल्स लोड करें"
+  },
+  "advancedToolsClearAll": {
+    "message": "सभी साफ़ करें"
+  },
+  "advancedToolsClearAllFooter": {
+    "message": "सभी टूल्स साफ़ करें"
+  },
+  "advancedToolsLearnMore": {
+    "message": "उन्नत टूल्स के बारे में जानें"
+  },
+  "advancedToolsChange": {
+    "message": "बदलें"
+  },
+  "advancedToolsDetectionName": {
+    "message": "डिटेक्शन का नाम"
+  },
+  "settingsLanguageTitle": {
+    "message": "भाषा"
+  },
+  "settingsLanguageDesc": {
+    "message": "एक्सटेंशन UI भाषा को ओवरराइड करें। डिफ़ॉल्ट आपके ब्राउज़र का अनुसरण करता है।"
+  },
+  "settingsLanguageAuto": {
+    "message": "ब्राउज़र की भाषा का उपयोग करें"
+  },
+  "copiedJsonNotification": {
+    "message": "JSON कॉपी किया गया"
+  },
+  "detectionEmptyTitle": {
+    "message": "कुछ नहीं मिला"
+  },
+  "detectionBadgeNoCaptchas": {
+    "message": "✓ कोई CAPTCHA नहीं"
+  },
+  "detectionBadgeNoAntibot": {
+    "message": "✓ कोई एंटी-बॉट नहीं"
+  },
+  "detectionBadgeNoFingerprint": {
+    "message": "✓ कोई फ़िंगरप्रिंटिंग नहीं"
+  },
+  "detectionDisabledTitle": {
+    "message": "पहचान अक्षम"
+  },
+  "detectionDisabledDesc": {
+    "message": "सुरक्षा पहचान वर्तमान में बंद है।"
+  },
+  "detectionDisabledAction": {
+    "message": "पहचान सक्षम करने के लिए ऊपर स्विच टॉगल करें।"
+  },
+  "rulesModalDetectorLabel": {
+    "message": "डिटेक्शन नियम"
+  },
+  "rulesAuthorHelpHint": {
+    "message": "इस डिटेक्टर को किसने बनाया"
+  },
+  "rulesWindowConditionExamplesTitle": {
+    "message": "Window शर्त के उदाहरण"
+  },
+  "rulesWindowConditionExamplesHint": {
+    "message": "उपयोग के लिए किसी उदाहरण पर क्लिक करें:"
+  },
+  "rulesBtnNextFmt": {
+    "message": "अगला: {0}"
+  },
+  "rulesUsePropertyBtn": {
+    "message": "प्रॉपर्टी उपयोग करें"
+  }
+}

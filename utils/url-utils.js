@@ -113,7 +113,7 @@ class UrlUtils {
     }
 
     let normalizedUrl;
-    let hash;
+    let effectiveScope = scope;
 
     try {
       const urlObj = new URL(url);
@@ -130,25 +130,24 @@ class UrlUtils {
         case 'domain':
         default:
           normalizedUrl = `${urlObj.protocol}//${urlObj.hostname}`;
+          effectiveScope = 'domain';
           break;
       }
-
-      hash = 0;
-      for (let i = 0; i < normalizedUrl.length; i++) {
-        const char = normalizedUrl.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-      }
     } catch (e) {
-      hash = 0;
-      for (let i = 0; i < url.length; i++) {
-        const char = url.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-      }
+      normalizedUrl = url;
     }
 
-    const hashString = Math.abs(hash).toString(36);
+    // Two parallel non-cryptographic hashes (djb2 + sdbm) → ~64 bits of state.
+    // Drops collision probability from ~50% at 77k URLs to ~50% at 5B URLs.
+    let h1 = 5381;
+    let h2 = 0;
+    for (let i = 0; i < normalizedUrl.length; i++) {
+      const char = normalizedUrl.charCodeAt(i);
+      h1 = (((h1 << 5) + h1) + char) | 0;
+      h2 = (char + (h2 << 6) + (h2 << 16) - h2) | 0;
+    }
+
+    const hashString = `${effectiveScope}_${(h1 >>> 0).toString(36)}_${(h2 >>> 0).toString(36)}`;
 
     UrlUtils.urlHashCache.set(cacheKey, hashString);
 
@@ -169,6 +168,35 @@ class UrlUtils {
     } catch (error) {
       return url;
     }
+  }
+
+  /**
+   * Normalize hostname for cache fallback matching (lowercase, no trailing dot).
+   * Does not alter stored cache keys.
+   * @param {string} hostname
+   * @returns {string}
+   */
+  static normalizeHostname(hostname) {
+    if (!hostname || typeof hostname !== 'string') {
+      return '';
+    }
+    return hostname.toLowerCase().replace(/\.$/, '').trim();
+  }
+
+  /**
+   * Compare hostnames with optional www equivalence (fallback reads only).
+   * @param {string} a
+   * @param {string} b
+   * @returns {boolean}
+   */
+  static hostnamesMatch(a, b) {
+    const stripWww = (host) => {
+      const normalized = UrlUtils.normalizeHostname(host);
+      return normalized.startsWith('www.') ? normalized.slice(4) : normalized;
+    };
+    const left = stripWww(a);
+    const right = stripWww(b);
+    return left.length > 0 && left === right;
   }
 
   /**
@@ -228,7 +256,7 @@ class UrlUtils {
       try {
         const parsed = new URL(candidate);
         if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
-          return candidate;
+          return parsed.href; // normalized + quote-safe (raw candidate could break out of a src="..." attribute)
         }
       } catch (error) {
         // Ignore parse errors and fall back below.
@@ -251,6 +279,36 @@ class UrlUtils {
    */
   static resolveDisplayFavicon(rawFavicon, pageUrlOrHostname, size) {
     return this.normalizeFaviconForStorage(rawFavicon, pageUrlOrHostname, size);
+  }
+
+  /** Locale override value → ISO country code for flag images. */
+  static LOCALE_FLAG_COUNTRY = {
+    en: 'us',
+    es: 'es',
+    pt_BR: 'br',
+    fr: 'fr',
+    de: 'de',
+    it: 'it',
+    ru: 'ru',
+    ja: 'jp',
+    ko: 'kr',
+    zh_CN: 'cn',
+    ar: 'sa',
+    hi: 'in'
+  };
+
+  /**
+   * Flag image URL for a settings language locale code.
+   * @param {string} locale - e.g. "en", "pt_BR", "auto"
+   * @param {number} [size=20]
+   * @returns {string|null} null for "auto" (use globe icon in UI)
+   */
+  static getLocaleFlagUrl(locale, size = 20) {
+    if (!locale || locale === 'auto') return null;
+    const code = UrlUtils.LOCALE_FLAG_COUNTRY[locale];
+    if (!code) return null;
+    const width = Math.min(Math.max(Number(size) || 20, 16), 40);
+    return `https://flagcdn.com/w${width}/${code}.png`;
   }
 
   /**
@@ -278,3 +336,6 @@ if (typeof window !== 'undefined') {
 } else if (typeof self !== 'undefined') {
   self.UrlUtils = UrlUtils;
 }
+
+// Node test export (no-op in the browser, where `module` is undefined).
+if (typeof module !== 'undefined' && module.exports) { module.exports = UrlUtils; }

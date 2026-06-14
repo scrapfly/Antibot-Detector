@@ -49,6 +49,7 @@ class UpdateManager {
             const result = await chrome.storage.local.get(this.STORAGE_KEYS.INCOMPATIBLE_UPDATES);
             return result[this.STORAGE_KEYS.INCOMPATIBLE_UPDATES] || [];
         } catch (error) {
+            Logger.warn('STORAGE', '[UpdateManager] Failed to read incompatible updates:', error);
             return [];
         }
     }
@@ -62,6 +63,7 @@ class UpdateManager {
             const updates = await this.getIncompatibleUpdates();
             return updates.length;
         } catch (error) {
+            Logger.warn('STORAGE', '[UpdateManager] Failed to count incompatible updates:', error);
             return 0;
         }
     }
@@ -404,9 +406,7 @@ class UpdateManager {
                 settings.updates = {};
             }
             settings.updates.lastCheckTimestamp = Date.now();
-            await chrome.storage.local.set({
-                'scrapfly_settings': JSON.stringify(settings, null, 2)
-            });
+            await StorageManager.saveSettings(settings);
         } catch (error) {
             Logger.error('STORAGE', 'UpdateManager: Failed to update timestamp', error);
         }
@@ -508,7 +508,11 @@ class UpdateManager {
      * @returns {string}
      */
     static formatLastCheck(timestamp) {
-        if (!timestamp) return 'Never';
+        const _i18n = (typeof I18n !== 'undefined') ? I18n : null;
+        const _get = (k, fb) => (_i18n && _i18n.get(k)) || fb;
+        const _fmt = (k, fb, n) => (_i18n && _i18n.format(k, n)) || fb;
+
+        if (!timestamp) return _get('settingsCheckIntervalNever', 'Never');
 
         const now = Date.now();
         const diff = now - timestamp;
@@ -517,10 +521,20 @@ class UpdateManager {
         const hours = Math.floor(diff / 3600000);
         const days = Math.floor(diff / 86400000);
 
-        if (minutes < 1) return 'Just now';
-        if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-        if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-        return `${days} day${days > 1 ? 's' : ''} ago`;
+        if (minutes < 1) return _get('timeJustNow', 'Just now');
+        if (minutes < 60) {
+            return minutes === 1
+                ? _get('timeOneMinuteAgo', '1 minute ago')
+                : _fmt('timeMinutesAgoLongFmt', `${minutes} minutes ago`, minutes);
+        }
+        if (hours < 24) {
+            return hours === 1
+                ? _get('timeOneHourAgo', '1 hour ago')
+                : _fmt('timeHoursAgoLongFmt', `${hours} hours ago`, hours);
+        }
+        return days === 1
+            ? _get('timeOneDayAgo', '1 day ago')
+            : _fmt('timeDaysAgoLongFmt', `${days} days ago`, days);
     }
 }
 

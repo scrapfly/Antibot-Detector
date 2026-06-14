@@ -124,7 +124,29 @@ class WorkerKeepaliveManager {
    * Send a keepalive ping
    * Uses chrome.runtime.getPlatformInfo() as a lightweight keepalive
    */
+  /**
+   * Drop operations older than staleOperationMs. These leak when a detection
+   * state is evicted by TTL/LRU before finalize/tab-close/url-change ends its
+   * keepalive op; without this sweep the leaked op pins the worker awake forever.
+   */
+  _sweepStaleOperations() {
+    const now = Date.now();
+    for (const [opId, ctx] of this.activeOperations.entries()) {
+      if (now - ctx.startTime > this.staleOperationMs) {
+        Logger.background(`[WorkerKeepalive] Sweeping stale operation: ${opId} (age ${now - ctx.startTime}ms)`);
+        this.activeOperations.delete(opId);
+      }
+    }
+    if (this.activeOperations.size === 0) {
+      this._stopKeepalive();
+    }
+  }
+
   async _sendKeepalive() {
+    // Reap leaked operations first; this may stop the keepalive if none remain.
+    this._sweepStaleOperations();
+    if (!this.isRunning) return;
+
     try {
       // This API call keeps the service worker alive
       await chrome.runtime.getPlatformInfo();
@@ -140,3 +162,6 @@ class WorkerKeepaliveManager {
 if (typeof globalThis !== 'undefined') {
   globalThis.WorkerKeepaliveManager = WorkerKeepaliveManager;
 }
+
+// Node test export (no-op in the browser/SW, where `module` is undefined).
+if (typeof module !== 'undefined' && module.exports) { module.exports = WorkerKeepaliveManager; }

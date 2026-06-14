@@ -24,9 +24,9 @@ const Constants = Object.freeze({
     BATCH_SETTLE_TIME: 250,                // hook batch debounce window
     FINALIZATION_CHECK_DELAY: 400,         // finalization check timeout
     DETECTION_TIMEOUT: 10000,              // 10 sec - detection timeout
+    REQUEST_DETECTION_PENDING_TIMEOUT: 15000, // max time to keep a pre-collection pending marker
     SAFETY_TIMEOUT: 5000,                  // 5 sec - safety fallback
     DETECTION_SKIP_THRESHOLD: 2000,        // skip detection for recent requests
-    COMPLETION_DELAY: 2000,                // hook completion delay
     DEFAULT_HOOKS_MAX_DETECTION_MS: 8000,  // max time for JS hooks detection
     HOOKS_DEADLINE_BUFFER_MS: 200,         // buffer added to hooks deadline
 

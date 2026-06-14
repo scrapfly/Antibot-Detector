@@ -1,0 +1,13 @@
+{
+  "name": "scrapfly-extension",
+  "version": "2.7.0",
+  "private": true,
+  "description": "Scrapfly MV3 extension — verification scripts (no build step, no runtime dependencies).",
+  "scripts": {
+    "check:structure": "node scripts/check-structure.js",
+    "check:locale": "node scripts/check-locale-keys.js",
+    "check:syntax": "node scripts/check-syntax.js",
+    "test": "node --test test/*.test.js",
+    "verify": "npm run check:syntax && npm run check:structure && npm run check:locale && npm run test"
+  }
+}

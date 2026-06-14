@@ -99,11 +99,11 @@ const AdvancedUtils = {
                     </div>
 
                     <div style="background: var(--bg-primary); padding: 20px; display: flex; flex-direction: row; gap: 12px; border-top: 1px solid var(--border);">
-                        <button class="modal-cancel" style="padding: 12px 24px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; flex: 1;">
-                            ${cancelText}
-                        </button>
                         <button class="modal-confirm modal-confirm-${confirmClass}" style="padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; flex: 1;">
                             ${confirmText}
+                        </button>
+                        <button class="modal-cancel" style="padding: 12px 24px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; flex: 1;">
+                            ${cancelText}
                         </button>
                     </div>
                 </div>

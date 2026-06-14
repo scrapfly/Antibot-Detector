@@ -145,7 +145,14 @@ function registerDetectionHandlers(registry, context) {
                     if (!data) {
                         const detectionState = detectionStates.get(targetTabId);
                         const hasActiveState = !!(detectionState && !detectionState.finalized);
-                        const hasActiveDetection = activeDetections.has(targetTabId);
+                        let activeDetection = activeDetections.get(targetTabId);
+                        if (activeDetection?.pendingRequest &&
+                            Date.now() - activeDetection.startTime > Constants.REQUEST_DETECTION_PENDING_TIMEOUT) {
+                            Logger.background(`[GET_DETECTION_DATA] Clearing stale pending request for tab ${targetTabId}`);
+                            activeDetections.delete(targetTabId);
+                            activeDetection = null;
+                        }
+                        const hasActiveDetection = !!activeDetection;
                         const isRecentlyCleared = recentlyClearedTabs.has(targetTabId);
                         const isInterrupted = interruptedDetections.has(targetTabId);
 
@@ -163,7 +170,7 @@ function registerDetectionHandlers(registry, context) {
                                 Logger.background(`[GET_DETECTION_DATA] Failed to read badge text for tab ${targetTabId}:`, badgeError.message);
                             }
                             const trimmed = badgeText ? badgeText.trim() : '';
-                            const isLoadingBadge = trimmed === BADGE.TEXT.LOADING;
+                            const isLoadingBadge = isLoadingBadgeText(trimmed);
 
                             // Clear stale loading badge for idle tab
                             if (isLoadingBadge) {
@@ -227,13 +234,22 @@ function registerDetectionHandlers(registry, context) {
         }
 
         (async () => {
-            await ensureDetectorManagerInitialized();
+            try {
+                await ensureDetectorManagerInitialized();
 
-            return await DetectionEngineManager.handleRequestDetection(request, sendResponse, {
-                chrome,
-                Utils,
-                recentDetectionRequests
-            });
+                return await DetectionEngineManager.handleRequestDetection(request, sendResponse, {
+                    chrome,
+                    Utils,
+                    recentDetectionRequests,
+                    activeDetections
+                });
+            } catch (error) {
+                // Without this, a throw before handleRequestDetection calls
+                // sendResponse leaves the message channel open forever and the
+                // popup hangs with no diagnostic.
+                Logger.error('BACKGROUND', '[REQUEST_DETECTION] Unhandled error:', error);
+                try { sendResponse({ status: 'error', error: error && error.message }); } catch (_) { /* channel already closed */ }
+            }
         })();
         return true; // Will respond asynchronously
     };

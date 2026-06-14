@@ -53,10 +53,7 @@ function buildAdvancedCaptureRegistryMap(handlers, messageTypes) {
                 messageTypes.SHAPESECURITY_START_CAPTURE,
                 messageTypes.SHAPESECURITY_STOP_CAPTURE,
                 messageTypes.SHAPESECURITY_GET_CAPTURE_STATE,
-                messageTypes.SHAPESECURITY_CHECK_HEADERS,
-                messageTypes.SHAPESECURITY_CHECK_COOKIES,
                 messageTypes.SHAPESECURITY_CHECK_VERSION,
-                messageTypes.SHAPESECURITY_ANALYZE_SCRIPTS,
                 messageTypes.SHAPESECURITY_START_EXTRACTION,
                 messageTypes.SHAPESECURITY_SHOW_ANALYZING_NOTIFICATION,
                 messageTypes.SHAPESECURITY_EXTRACTION_COMPLETED
@@ -65,9 +62,6 @@ function buildAdvancedCaptureRegistryMap(handlers, messageTypes) {
         {
             handler: handlers.awswaf,
             messageKeys: [
-                messageTypes.AWSWAF_START_CAPTURE,
-                messageTypes.AWSWAF_STOP_CAPTURE,
-                messageTypes.AWSWAF_GET_STATE,
                 messageTypes.AWSWAF_START_ANALYSIS,
                 messageTypes.AWSWAF_SHOW_ANALYZING_NOTIFICATION
             ]
@@ -90,8 +84,7 @@ function buildAdvancedCaptureRegistryMap(handlers, messageTypes) {
             handler: handlers.cloudflare,
             messageKeys: [
                 messageTypes.CLOUDFLARE_START_ANALYSIS,
-                messageTypes.CLOUDFLARE_SHOW_ANALYZING_NOTIFICATION,
-                messageTypes.CLOUDFLARE_CHECK_VERSION
+                messageTypes.CLOUDFLARE_SHOW_ANALYZING_NOTIFICATION
             ]
         },
         {

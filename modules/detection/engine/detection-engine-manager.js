@@ -1,4 +1,17 @@
 // Core detection engine: page data collection and pattern matching
+
+// Serializes read-modify-write access to scrapfly_detection_storage so concurrent
+// tab finalizations (store-vs-store) cannot lost-update each other. Callers await
+// the prior critical section, then call the returned release fn in a finally.
+let __detectionStorageLock = Promise.resolve();
+function acquireDetectionStorageLock() {
+    let release;
+    const next = new Promise((resolve) => { release = resolve; });
+    const prior = __detectionStorageLock;
+    __detectionStorageLock = next;
+    return prior.then(() => release);
+}
+
 class DetectionEngineManager {
     static DEFAULT_EXPIRY_HOURS = 12;
     static STORAGE_KEY = 'scrapfly_detection_storage';
@@ -62,12 +75,8 @@ class DetectionEngineManager {
      */
     static async getExpiryMs() {
         try {
-            const result = await chrome.storage.local.get(['scrapfly_settings']);
-            if (result.scrapfly_settings) {
-                const settings = typeof result.scrapfly_settings === 'string'
-                    ? JSON.parse(result.scrapfly_settings)
-                    : result.scrapfly_settings;
-                const actualSettings = settings.settings || settings;
+            const actualSettings = await Utils.getSettings();
+            if (actualSettings && Object.keys(actualSettings).length > 0) {
 
                 Logger.cache('[CACHE] Raw settings object:', {
                     cacheDuration: actualSettings.cacheDuration,
@@ -92,18 +101,18 @@ class DetectionEngineManager {
                     };
 
                     expiryMs = conversions[unit] || (duration * 60 * 60 * 1000); // Default to hours
-                    Logger.detection(`[CACHE] Using cache duration: ${duration} ${unit} (${expiryMs}ms)`);
+                    Logger.debugMode && Logger.detection(`[CACHE] Using cache duration: ${duration} ${unit} (${expiryMs}ms)`);
                 } else {
                     // Fallback to old cacheHours format
                     const cacheHours = actualSettings.cacheHours || DetectionEngineManager.DEFAULT_EXPIRY_HOURS;
                     expiryMs = cacheHours * 60 * 60 * 1000;
-                    Logger.detection(`[CACHE] Using legacy cache duration: ${cacheHours} hours (${expiryMs}ms)`);
+                    Logger.debugMode && Logger.detection(`[CACHE] Using legacy cache duration: ${cacheHours} hours (${expiryMs}ms)`);
                 }
 
                 return expiryMs;
             }
             const defaultMs = DetectionEngineManager.DEFAULT_EXPIRY_HOURS * 60 * 60 * 1000;
-            Logger.detection(`[CACHE] No settings found, using default: ${DetectionEngineManager.DEFAULT_EXPIRY_HOURS} hours`);
+            Logger.debugMode && Logger.detection(`[CACHE] No settings found, using default: ${DetectionEngineManager.DEFAULT_EXPIRY_HOURS} hours`);
             return defaultMs;
         } catch (error) {
             Logger.warn('CACHE', '[getCacheDuration] Settings read failed, using default', error);
@@ -121,44 +130,66 @@ class DetectionEngineManager {
     static async installHooksOrchestrator(window, chrome) {
         try {
             const result = await chrome.storage.local.get(['scrapfly_detectors', 'scrapfly_settings', 'scrapfly_enabled']);
+            const bridgeToken = window.ScrapflyBridge?.getToken?.() || null;
+            const dispatchInstallHooks = (detail) => {
+                const safeDetail = bridgeToken
+                    ? { ...detail, __scrapflyBridgeToken: bridgeToken }
+                    : detail;
+                window.dispatchEvent(new CustomEvent('scrapfly-install-hooks', {
+                    detail: safeDetail
+                }));
+            };
+            const normalizeHook = (hook) => {
+                if (!hook || hook.enabled === false || typeof hook.target !== 'string') {
+                    return null;
+                }
+
+                const target = hook.target.trim();
+                if (!target || target.length > 200) {
+                    return null;
+                }
+
+                return {
+                    ...hook,
+                    target
+                };
+            };
 
             // Extension disabled - skip hook installation entirely
             // Dispatch empty event so MAIN world sends completion signals and doesn't hang
             if (result.scrapfly_enabled === false) {
-                window.dispatchEvent(new CustomEvent('scrapfly-install-hooks', {
-                    detail: {
-                        hookDefinitions: [],
-                        windowProperties: [],
-                        debugMode: false,
-                        logCollectorEnabled: false,
-                        enableJsApi: false,
-                        fingerprintEnabled: false
-                    }
-                }));
+                dispatchInstallHooks({
+                    hookDefinitions: [],
+                    windowProperties: [],
+                    debugMode: false,
+                    logCollectorEnabled: false,
+                    enableJsApi: false,
+                    fingerprintEnabled: false
+                });
                 return;
             }
 
-            const settingsRaw = result.scrapfly_settings;
-            const parsedSettings = typeof settingsRaw === 'string' ? JSON.parse(settingsRaw) : settingsRaw;
-            const actualSettings = parsedSettings?.settings || parsedSettings || {};
+            const actualSettings = typeof StorageManager !== 'undefined' && typeof StorageManager.normalizeSettings === 'function'
+                ? StorageManager.normalizeSettings(result.scrapfly_settings)
+                : {};
             const debugMode = actualSettings.debugMode || false;
             const logCollectorEnabled = actualSettings.logCollectorEnabled || false;
             const enableJsApi = actualSettings.jsApi?.enableJsApi ?? true;
+            const hooksConfig = actualSettings.hooksConfig || actualSettings.detection?.hooksConfig || {};
 
             const detectorsData = result.scrapfly_detectors;
 
             // No detectors: dispatch empty event to prevent MAIN world hang
             if (!detectorsData?.detectors) {
-                window.dispatchEvent(new CustomEvent('scrapfly-install-hooks', {
-                    detail: {
-                        hookDefinitions: [],
-                        windowProperties: [],
-                        debugMode,
-                        logCollectorEnabled,
-                        enableJsApi,
-                        fingerprintEnabled: true
-                    }
-                }));
+                dispatchInstallHooks({
+                    hookDefinitions: [],
+                    windowProperties: [],
+                    debugMode,
+                    logCollectorEnabled,
+                    enableJsApi,
+                    hooksConfig,
+                    fingerprintEnabled: true
+                });
                 return;
             }
 
@@ -173,7 +204,7 @@ class DetectionEngineManager {
                     id: detector.id || detectorKey,
                     name: detector.name,
                     category: 'fingerprint',
-                    hooks: detector.detection.js_hooks.filter(h => h.enabled !== false)
+                    hooks: detector.detection.js_hooks.map(normalizeHook).filter(Boolean)
                 });
             }
 
@@ -195,22 +226,22 @@ class DetectionEngineManager {
                 }
             }
 
-            window.dispatchEvent(new CustomEvent('scrapfly-install-hooks', {
-                detail: {
-                    hookDefinitions,
-                    windowProperties,
-                    debugMode,
-                    logCollectorEnabled,
-                    enableJsApi,
-                    fingerprintEnabled: true
-                }
-            }));
+            dispatchInstallHooks({
+                hookDefinitions,
+                windowProperties,
+                debugMode,
+                logCollectorEnabled,
+                enableJsApi,
+                hooksConfig,
+                fingerprintEnabled: true
+            });
 
         } catch (error) {
             if (typeof Logger !== 'undefined') {
                 Logger.error('DETECTION', '[installHooksOrchestrator] Failed:', error);
             }
             // Still dispatch empty event so MAIN world doesn't hang
+            const bridgeToken = window.ScrapflyBridge?.getToken?.() || null;
             window.dispatchEvent(new CustomEvent('scrapfly-install-hooks', {
                 detail: {
                     hookDefinitions: [],
@@ -218,7 +249,8 @@ class DetectionEngineManager {
                     debugMode: false,
                     logCollectorEnabled: false,
                     enableJsApi: true,
-                    fingerprintEnabled: true
+                    fingerprintEnabled: true,
+                    ...(bridgeToken ? { __scrapflyBridgeToken: bridgeToken } : {})
                 }
             }));
         }
@@ -266,7 +298,7 @@ class DetectionEngineManager {
      * @returns {Promise<object>} Page data object with lazy getters
      */
     async collectPageData() {
-        Logger.detection('DetectionEngineManager: Collecting page data...');
+        Logger.debugMode && Logger.detection('DetectionEngineManager: Collecting page data...');
         const startTime = Date.now();
 
         // Analyze used detection methods
@@ -277,7 +309,7 @@ class DetectionEngineManager {
 
         let externalContent = [];
         if (needsExternal) {
-            Logger.detection('[8E: Incremental] External content needed, fetching...');
+            Logger.debugMode && Logger.detection('[8E: Incremental] External content needed, fetching...');
             try {
                 externalContent = await this.extractExternalContent();
             } catch (error) {
@@ -285,7 +317,7 @@ class DetectionEngineManager {
                 externalContent = [];
             }
         } else {
-            Logger.detection('[8E: Incremental] Skipping external content fetch (not needed by any detector)');
+            Logger.debugMode && Logger.detection('[8E: Incremental] Skipping external content fetch (not needed by any detector)');
         }
 
         let favicon = '';
@@ -319,7 +351,7 @@ class DetectionEngineManager {
             const currentHooks = hookData[window.location.href];
             if (currentHooks && currentHooks.hooks) {
                 jsHooks = currentHooks.hooks;
-                Logger.detection(`[JS Hooks] Found ${jsHooks.length} hook detections for this page`);
+                Logger.debugMode && Logger.detection(`[JS Hooks] Found ${jsHooks.length} hook detections for this page`);
             }
         } catch (error) {
             Logger.warn('HOOKS', '[runDetection] Hook detections load failed', error);
@@ -330,7 +362,6 @@ class DetectionEngineManager {
         let cachedCookies = null;
         let cachedContent = null;
         let cachedDOM = null;
-        let cachedStorageCookies = null;
 
         const pageData = {
             url: window.location.href,
@@ -344,7 +375,6 @@ class DetectionEngineManager {
             headers: [],
 
             _extractCookies: () => this.extractCookies(),
-            _extractStorageCookies: () => this.extractStorageCookies(),
             _extractScriptElements: () => this.extractScriptElements(),
             _extractDOM: () => this.extractDOM()
         };
@@ -355,28 +385,15 @@ class DetectionEngineManager {
                     if (cachedCookies === null) {
                         const start = Date.now();
                         cachedCookies = this._extractCookies();
-                        Logger.detection(`[C.1: Lazy Cookies] Extracted ${cachedCookies.length} cookies in ${Date.now() - start}ms`);
+                        Logger.debugMode && Logger.detection(`[C.1: Lazy Cookies] Extracted ${cachedCookies.length} cookies in ${Date.now() - start}ms`);
                     }
                     return cachedCookies;
                 },
                 set(value) { cachedCookies = value; },
                 enumerable: true
             });
-
-            Object.defineProperty(pageData, 'storageCookies', {
-                get() {
-                    if (cachedStorageCookies === null) {
-                        const start = Date.now();
-                        cachedStorageCookies = this._extractStorageCookies();
-                        Logger.detection(`[C.1: Lazy Storage] Extracted ${cachedStorageCookies.length} storage items in ${Date.now() - start}ms`);
-                    }
-                    return cachedStorageCookies;
-                },
-                set(value) { cachedStorageCookies = value; },
-                enumerable: true
-            });
         } else {
-            Logger.detection('[C.1] Skipped cookies getter - no detector uses cookie detection');
+            Logger.debugMode && Logger.detection('[C.1] Skipped cookies getter - no detector uses cookie detection');
         }
 
         if (usedMethods.content) {
@@ -385,7 +402,7 @@ class DetectionEngineManager {
                     if (cachedContent === null) {
                         const start = Date.now();
                         cachedContent = this._extractScriptElements();
-                        Logger.detection(`[C.1: Lazy Content] Extracted ${cachedContent.length} scripts in ${Date.now() - start}ms`);
+                        Logger.debugMode && Logger.detection(`[C.1: Lazy Content] Extracted ${cachedContent.length} scripts in ${Date.now() - start}ms`);
                     }
                     return cachedContent;
                 },
@@ -393,7 +410,7 @@ class DetectionEngineManager {
                 enumerable: true
             });
         } else {
-            Logger.detection('[C.1] Skipped content getter - no detector uses content detection');
+            Logger.debugMode && Logger.detection('[C.1] Skipped content getter - no detector uses content detection');
         }
 
         if (usedMethods.dom) {
@@ -402,7 +419,7 @@ class DetectionEngineManager {
                     if (cachedDOM === null) {
                         const start = Date.now();
                         cachedDOM = this._extractDOM();
-                        Logger.detection(`[C.1: Lazy DOM] Extracted ${cachedDOM.length} elements in ${Date.now() - start}ms`);
+                        Logger.debugMode && Logger.detection(`[C.1: Lazy DOM] Extracted ${cachedDOM.length} elements in ${Date.now() - start}ms`);
                     }
                     return cachedDOM;
                 },
@@ -410,7 +427,7 @@ class DetectionEngineManager {
                 enumerable: true
             });
         } else {
-            Logger.detection('[C.1] Skipped DOM getter - no detector uses DOM detection');
+            Logger.debugMode && Logger.detection('[C.1] Skipped DOM getter - no detector uses DOM detection');
         }
 
         if (usedMethods.content) {
@@ -418,7 +435,7 @@ class DetectionEngineManager {
                 get() {
                     if (cachedPageHTML === null) {
                         cachedPageHTML = document.body ? document.body.innerHTML : '';
-                        Logger.detection(`[C.1: Lazy HTML] Extracted pageHTML on first access (${cachedPageHTML.length} bytes)`);
+                        Logger.debugMode && Logger.detection(`[C.1: Lazy HTML] Extracted pageHTML on first access (${cachedPageHTML.length} bytes)`);
                     }
                     return cachedPageHTML;
                 },
@@ -426,7 +443,7 @@ class DetectionEngineManager {
                 enumerable: true
             });
         } else {
-            Logger.detection('[C.1] Skipped pageHTML getter - content detection not used');
+            Logger.debugMode && Logger.detection('[C.1] Skipped pageHTML getter - content detection not used');
         }
 
         this.detectionData = pageData;
@@ -434,63 +451,12 @@ class DetectionEngineManager {
 
         const collectionTime = Date.now() - startTime;
         const skippedMethods = Object.entries(usedMethods).filter(([k, v]) => !v).map(([k]) => k);
-        Logger.detection(`[C.1: Smart Collection] Data collected in ${collectionTime}ms`);
+        Logger.debugMode && Logger.detection(`[C.1: Smart Collection] Data collected in ${collectionTime}ms`);
         if (skippedMethods.length > 0) {
-            Logger.detection(`[C.1: Smart Collection] Skipped ${skippedMethods.length} unused methods: ${skippedMethods.join(', ')}`);
+            Logger.debugMode && Logger.detection(`[C.1: Smart Collection] Skipped ${skippedMethods.length} unused methods: ${skippedMethods.join(', ')}`);
         }
 
         return pageData;
-    }
-
-    /**
-     * Extract storage cookies from localStorage and sessionStorage
-     * @returns {array} Array of storage cookie objects
-     */
-    extractStorageCookies() {
-        const storageCookies = [];
-
-        try {
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                const value = localStorage.getItem(key);
-                if (key && value) {
-                    storageCookies.push({
-                        name: key,
-                        value: value.substring(0, 100),
-                        domain: window.location.hostname,
-                        source: 'localStorage'
-                    });
-                }
-            }
-        } catch (error) {
-            Logger.debug('STORAGE', '[extractStorageCookies] Cannot access localStorage:', error.message);
-        }
-
-        try {
-            for (let i = 0; i < sessionStorage.length; i++) {
-                const key = sessionStorage.key(i);
-                const value = sessionStorage.getItem(key);
-                if (key && value) {
-                    storageCookies.push({
-                        name: key,
-                        value: value.substring(0, 100),
-                        domain: window.location.hostname,
-                        source: 'sessionStorage'
-                    });
-                }
-            }
-        } catch (error) {
-            Logger.debug('STORAGE', '[extractStorageCookies] Cannot access sessionStorage:', error.message);
-        }
-
-        if (typeof Logger !== 'undefined') {
-            Logger.cache(`Collected ${storageCookies.length} storage items from page`, {
-                localStorage: storageCookies.filter(c => c.source === 'localStorage').map(c => c.name),
-                sessionStorage: storageCookies.filter(c => c.source === 'sessionStorage').map(c => c.name)
-            });
-        }
-
-        return storageCookies;
     }
 
     /**
@@ -500,14 +466,14 @@ class DetectionEngineManager {
     async extractExternalContent() {
         const scriptElements = document.querySelectorAll('script[src]');
         const scriptUrls = Array.from(scriptElements).map(s => s.src).filter(Boolean);
-        Logger.detection(`extractExternalContent: Found ${scriptUrls.length} external scripts`);
+        Logger.debugMode && Logger.detection(`extractExternalContent: Found ${scriptUrls.length} external scripts`);
 
         const linkElements = document.querySelectorAll('link[rel="stylesheet"]');
         const cssUrls = Array.from(linkElements).map(l => l.href).filter(Boolean);
-        Logger.detection(`extractExternalContent: Found ${cssUrls.length} CSS files`);
+        Logger.debugMode && Logger.detection(`extractExternalContent: Found ${cssUrls.length} CSS files`);
 
         const allUrls = [...scriptUrls, ...cssUrls];
-        Logger.detection(`extractExternalContent: Total ${allUrls.length} external resources to fetch`);
+        Logger.debugMode && Logger.detection(`extractExternalContent: Total ${allUrls.length} external resources to fetch`);
 
         const CONCURRENCY_LIMIT = 6;
         const MAX_CONTENT_SIZE = 5 * 1024 * 1024;
@@ -529,7 +495,7 @@ class DetectionEngineManager {
                     if (response.ok) {
                         const contentLength = parseInt(response.headers.get('content-length'), 10);
                         if (contentLength && contentLength > MAX_CONTENT_SIZE) {
-                            Logger.detection(`Skipping large file: ${url} (${(contentLength / 1024 / 1024).toFixed(2)} MB)`);
+                            Logger.debugMode && Logger.detection(`Skipping large file: ${url} (${(contentLength / 1024 / 1024).toFixed(2)} MB)`);
                             return null;
                         }
 
@@ -555,7 +521,7 @@ class DetectionEngineManager {
                     return null;
                 })
                 .catch(error => {
-                    Logger.detection(`Error fetching: ${url} (${error.message})`);
+                    Logger.debugMode && Logger.detection(`Error fetching: ${url} (${error.message})`);
                     return null;
                 })
             );
@@ -569,7 +535,7 @@ class DetectionEngineManager {
             .map(result => result.value);
 
         const fetchTime = Date.now() - startTime;
-        Logger.detection(`extractExternalContent: Successfully fetched ${resources.length}/${allUrls.length} resources in ${fetchTime}ms`);
+        Logger.debugMode && Logger.detection(`extractExternalContent: Successfully fetched ${resources.length}/${allUrls.length} resources in ${fetchTime}ms`);
 
         return resources;
     }
@@ -618,10 +584,10 @@ class DetectionEngineManager {
 
                 // Check main page URL (always checked unless scope is explicitly scripts-only)
                 // Match against full URL including query parameters for "contains" matching
-                Logger.detection(`[URL Detection] ${detector.name}: Testing pattern "${urlPattern.text}" against URL "${url}"`);
+                Logger.debugMode && Logger.detection(`[URL Detection] ${detector.name}: Testing pattern "${urlPattern.text}" against URL "${url}"`);
                 const urlMatch = this.matchPatternWithCapture(url, urlPattern.text, matchOptions);
                 if (urlMatch) {
-                    Logger.detection(`[URL Detection] ${detector.name}: MATCHED! Value: "${urlMatch}"`);
+                    Logger.debugMode && Logger.detection(`[URL Detection] ${detector.name}: MATCHED! Value: "${urlMatch}"`);
                     addedUrlPatterns.add(urlPattern.text);
                     matches.push({
                         type: 'url',
@@ -632,7 +598,7 @@ class DetectionEngineManager {
                         description: urlPattern.description
                     });
                 } else {
-                    Logger.detection(`[URL Detection] ${detector.name}: No match`);
+                    Logger.debugMode && Logger.detection(`[URL Detection] ${detector.name}: No match`);
                 }
 
                 // Check script src URLs if scope is 'page_and_scripts' or 'all'
@@ -679,13 +645,13 @@ class DetectionEngineManager {
 
                 // Check ALL network request URLs if scope is 'all' (NEW: captures XHR, fetch, etc.)
                 if (textScope === 'all' && pageData.networkUrls && pageData.networkUrls.length > 0) {
-                    Logger.detection(`[URL Detection] ${detector.name}: Checking ${pageData.networkUrls.length} network request URLs`);
+                    Logger.debugMode && Logger.detection(`[URL Detection] ${detector.name}: Checking ${pageData.networkUrls.length} network request URLs`);
                     for (const networkUrl of pageData.networkUrls) {
                         if (addedUrlPatterns.has(urlPattern.text)) break; // Already found, skip remaining URLs
                         const networkMatch = this.matchPatternWithCapture(networkUrl.url, urlPattern.text, matchOptions);
                         if (networkMatch) {
                             addedUrlPatterns.add(urlPattern.text);
-                            Logger.detection(`[URL Detection] ${detector.name}: Network URL MATCHED! URL: ${networkUrl.url}, Type: ${networkUrl.type}, Method: ${networkUrl.method}`);
+                            Logger.debugMode && Logger.detection(`[URL Detection] ${detector.name}: Network URL MATCHED! URL: ${networkUrl.url}, Type: ${networkUrl.type}, Method: ${networkUrl.method}`);
                             matches.push({
                                 type: 'url',
                                 pattern: urlPattern.text,
@@ -704,13 +670,16 @@ class DetectionEngineManager {
 
         // Check content patterns
         const contentPatterns = detector.detection?.content;
-        Logger.detection(`[Content Detection] ${detector.name}: contentPatterns=${!!contentPatterns}, count=${contentPatterns?.length || 0}, hasPageHTML=${!!pageHTML}, pageHTMLLength=${pageHTML?.length || 0}`);
+        Logger.debugMode && Logger.detection(`[Content Detection] ${detector.name}: contentPatterns=${!!contentPatterns}, count=${contentPatterns?.length || 0}, hasPageHTML=${!!pageHTML}, pageHTMLLength=${pageHTML?.length || 0}`);
 
         if (contentPatterns && pageHTML) {
-            Logger.detection(`[Content Detection] ${detector.name}: Starting check of ${contentPatterns.length} patterns`);
+            // Lowercase the (potentially large) pageHTML once and reuse it across
+            // every content pattern instead of re-lowercasing per pattern.
+            const pageHTMLLower = pageHTML.toLowerCase();
+            Logger.debugMode && Logger.detection(`[Content Detection] ${detector.name}: Starting check of ${contentPatterns.length} patterns`);
             for (const contentPattern of contentPatterns) {
                 const patternText = contentPattern.text || '';
-                Logger.detection(`[Content Detection] ${detector.name}: Pattern="${patternText}", regex=${contentPattern.textRegex}, wholeWord=${contentPattern.textWholeWord}, caseSensitive=${contentPattern.textCaseSensitive}`);
+                Logger.debugMode && Logger.detection(`[Content Detection] ${detector.name}: Pattern="${patternText}", regex=${contentPattern.textRegex}, wholeWord=${contentPattern.textWholeWord}, caseSensitive=${contentPattern.textCaseSensitive}`);
 
                 const matchOptions = {
                     regex: contentPattern.textRegex === true,
@@ -723,35 +692,35 @@ class DetectionEngineManager {
                 // If false or undefined, search entire page (default)
                 const checkScripts = contentPattern.checkScripts === true;
 
-                Logger.detection(`[Content Detection] ${detector.name}: checkScripts=${checkScripts}`);
+                Logger.debugMode && Logger.detection(`[Content Detection] ${detector.name}: checkScripts=${checkScripts}`);
 
                 let found = false;
                 let foundIn = '';
 
                 if (!checkScripts) {
                     // No restrictions = check entire page HTML + external content (default behavior)
-                    Logger.detection(`[Content Detection] ${detector.name}: Searching entire page HTML for "${patternText}"`);
-                    if (this.matchPattern(pageHTML, patternText, matchOptions)) {
+                    Logger.debugMode && Logger.detection(`[Content Detection] ${detector.name}: Searching entire page HTML for "${patternText}"`);
+                    if (this.matchPattern(pageHTML, patternText, matchOptions, pageHTMLLower)) {
                         found = true;
                         foundIn = 'page content';
-                        Logger.detection(`[Content Detection] ${detector.name}: MATCH FOUND in page content!`);
+                        Logger.debugMode && Logger.detection(`[Content Detection] ${detector.name}: MATCH FOUND in page content!`);
                     }
 
                     // Also search external fetched content
                     if (!found && pageData.externalContent && pageData.externalContent.length > 0) {
-                        Logger.detection(`[Content Detection] ${detector.name}: Searching ${pageData.externalContent.length} external resources`);
+                        Logger.debugMode && Logger.detection(`[Content Detection] ${detector.name}: Searching ${pageData.externalContent.length} external resources`);
                         for (const resource of pageData.externalContent) {
                             if (this.matchPattern(resource.content, patternText, matchOptions)) {
                                 found = true;
                                 foundIn = resource.url;
-                                Logger.detection(`[Content Detection] ${detector.name}: MATCH FOUND in external resource: ${resource.url}`);
+                                Logger.debugMode && Logger.detection(`[Content Detection] ${detector.name}: MATCH FOUND in external resource: ${resource.url}`);
                                 break;
                             }
                         }
                     }
 
                     if (!found) {
-                        Logger.detection(`[Content Detection] ${detector.name}: No match in page content or external resources`);
+                        Logger.debugMode && Logger.detection(`[Content Detection] ${detector.name}: No match in page content or external resources`);
                     }
                 } else {
                     // Check only scripts
@@ -768,7 +737,7 @@ class DetectionEngineManager {
                 }
 
                 if (found) {
-                    Logger.detection(`[Content Detection] ${detector.name}: Adding match! confidence=${contentPattern.confidence}, foundIn=${foundIn}`);
+                    Logger.debugMode && Logger.detection(`[Content Detection] ${detector.name}: Adding match! confidence=${contentPattern.confidence}, foundIn=${foundIn}`);
                     matches.push({
                         type: 'content',
                         pattern: patternText,
@@ -777,15 +746,15 @@ class DetectionEngineManager {
                         description: contentPattern.description
                     });
                 } else {
-                    Logger.detection(`[Content Detection] ${detector.name}: Pattern not found: "${patternText}"`);
+                    Logger.debugMode && Logger.detection(`[Content Detection] ${detector.name}: Pattern not found: "${patternText}"`);
                 }
             }
         } else {
             if (!contentPatterns) {
-                Logger.detection(`[Content Detection] ${detector.name}: No content patterns defined`);
+                Logger.debugMode && Logger.detection(`[Content Detection] ${detector.name}: No content patterns defined`);
             }
             if (!pageHTML) {
-                Logger.detection(`[Content Detection] ${detector.name}: No pageHTML provided!`);
+                Logger.debugMode && Logger.detection(`[Content Detection] ${detector.name}: No pageHTML provided!`);
             }
         }
 
@@ -1327,7 +1296,7 @@ class DetectionEngineManager {
      * @returns {Promise<array>} Array of detection results
      */
     async detectOnPage(pageData = {}) {
-        Logger.detection('DetectionEngineManager.detectOnPage called');
+        Logger.debugMode && Logger.detection('DetectionEngineManager.detectOnPage called');
 
         if (!this.detectors) {
             Logger.error('DETECTION', 'Detectors not set!');
@@ -1335,13 +1304,13 @@ class DetectionEngineManager {
         }
 
         const detections = [];
-        const { url = '', content = [], dom = [], cookies = [], headers = {}, pageHTML = '', externalContent = [], jsHooks = [], payload, payloads, networkUrls = [], allCookies = [], responseCookies = [], storageCookies = [] } = pageData;
+        const { url = '', content = [], dom = [], cookies = [], headers = {}, pageHTML = '', externalContent = [], jsHooks = [], payload, payloads, networkUrls = [], allCookies = [], responseCookies = [] } = pageData;
 
         const cookiesToMatch = allCookies.length > 0 ? allCookies : cookies;
 
         const startTime = Date.now();
 
-        Logger.detection('Page Data Summary:', {
+        Logger.debugMode && Logger.detection('Page Data Summary:', {
             url: url,
             contentCount: content.length,
             domCount: dom.length,
@@ -1354,7 +1323,7 @@ class DetectionEngineManager {
         });
 
         const categoriesCount = Object.keys(this.detectors).length;
-        Logger.detection(`Processing ${categoriesCount} categories...`);
+        Logger.debugMode && Logger.detection(`Processing ${categoriesCount} categories...`);
 
         // Use pre-computed priorities (saves 50-100ms per detection)
         let detectorPriorities = this.precomputedPriorities || [];
@@ -1365,16 +1334,16 @@ class DetectionEngineManager {
             detectorPriorities = this.precomputedPriorities || [];
         }
 
-        Logger.detection(`Running ${detectorPriorities.length} detectors (using pre-computed priorities)`);
+        Logger.debugMode && Logger.detection(`Running ${detectorPriorities.length} detectors (using pre-computed priorities)`);
 
         let highConfidenceCount = 0;
         const HIGH_CONFIDENCE_THRESHOLD = 95;
         const EARLY_EXIT_COUNT = 3;
 
         for (const { category, detectorName, detector } of detectorPriorities) {
-            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, pageHTML, externalContent, payload, payloads, networkUrls, allCookies, responseCookies, storageCookies });
+            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, pageHTML, externalContent, payload, payloads, networkUrls, allCookies, responseCookies });
             if (detection.detected) {
-                Logger.detection(`DETECTED: ${detectorName} (confidence: ${detection.confidence}%)`);
+                Logger.debugMode && Logger.detection(`DETECTED: ${detectorName} (confidence: ${detection.confidence}%)`);
                 const detectionObj = {
                     ...detection,
                     category,
@@ -1396,7 +1365,7 @@ class DetectionEngineManager {
                 }
 
                 if (highConfidenceCount >= EARLY_EXIT_COUNT) {
-                    Logger.detection(`Early exit: Found ${highConfidenceCount} high-confidence detections`);
+                    Logger.debugMode && Logger.detection(`Early exit: Found ${highConfidenceCount} high-confidence detections`);
                     break;
                 }
             }
@@ -1404,7 +1373,7 @@ class DetectionEngineManager {
 
         // Process JS Hook detections from MAIN world
         if (jsHooks && jsHooks.length > 0) {
-            Logger.detection(`[JS Hooks] Processing ${jsHooks.length} hook detections`);
+            Logger.debugMode && Logger.detection(`[JS Hooks] Processing ${jsHooks.length} hook detections`);
 
             // Build detector lookup table once (O(1) lookup instead of nested loop)
             const detectorLookup = new Map();
@@ -1441,7 +1410,7 @@ class DetectionEngineManager {
                             ? this.confidenceManager.calculateConfidence(existingDetection.matches)
                             : Math.max(...existingDetection.matches.map(m => m.confidence || 0), 0);
 
-                        Logger.detection(`[JS Hooks] Added hook to existing detection: ${detector.name}`);
+                        Logger.debugMode && Logger.detection(`[JS Hooks] Added hook to existing detection: ${detector.name}`);
                     } else {
                         const detectorInfo = DetectionEngineManager.buildDetectorInfo(detector, hookData.detectorName, hookData.detectorId);
                         detections.push({
@@ -1460,16 +1429,16 @@ class DetectionEngineManager {
                             detector: detectorInfo
                         });
 
-                        Logger.detection(`[JS Hooks] Created new detection: ${detector.name}`);
+                        Logger.debugMode && Logger.detection(`[JS Hooks] Created new detection: ${detector.name}`);
                     }
                 }
             }
         }
 
         const detectionTime = Date.now() - startTime;
-        Logger.detection(`Total detections found: ${detections.length} in ${detectionTime}ms`);
+        Logger.debugMode && Logger.detection(`Total detections found: ${detections.length} in ${detectionTime}ms`);
         if (detections.length > 0) {
-            Logger.detection('Detections:', detections.map(d => d.detector.name));
+            Logger.debugMode && Logger.detection('Detections:', detections.map(d => d.detector.name));
         }
 
         return detections;
@@ -1507,35 +1476,106 @@ class DetectionEngineManager {
      * @returns {Promise<object|null>} Cached detection data or null
      */
     static async getStoredDetection(url) {
+        const releaseStorageLock = await acquireDetectionStorageLock();
+        try { // outer: release the storage lock in finally
         try {
             const cacheScope = await Utils.getCacheScope();
             const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY]);
-            const storage = result[DetectionEngineManager.STORAGE_KEY] || {};
-            const urlHash = UrlUtils.hashUrl(url, cacheScope);
-
-            const stored = storage[urlHash];
-
-            if (stored) {
-                // Validate cache scope matches current settings
-                if (stored.cacheScope && stored.cacheScope !== cacheScope) {
-                    Logger.detection(`[getStoredDetection] Cache scope mismatch: stored with '${stored.cacheScope}', current is '${cacheScope}' - treating as cache miss`);
+            let storage = result[DetectionEngineManager.STORAGE_KEY] || {};
+            if (typeof storage === 'string') {
+                try {
+                    storage = JSON.parse(storage);
+                } catch (error) {
+                    Logger.warn('DETECTION', '[getStoredDetection] Stored cache is not valid JSON; ignoring cache', error);
+                    storage = {};
+                }
+            }
+            if (!storage || typeof storage !== 'object' || Array.isArray(storage)) {
+                storage = {};
+            }
+            const expiredKeys = [];
+            const getStoredDetectionCount = (stored) => (
+                stored?.detectionCount ?? (Array.isArray(stored?.detectionResults) ? stored.detectionResults.length : 0)
+            );
+            const getValidStored = (key, source) => {
+                const stored = storage[key];
+                if (!stored) {
                     return null;
                 }
 
-                // Check if stored detection is expired
-                if (Date.now() < stored.expiry) {
-                    Logger.detection(`[getStoredDetection] Cache hit for ${url} (expires in ${Math.round((stored.expiry - Date.now()) / 1000 / 60)} minutes)`);
-                    return stored;
-                } else {
-                    Logger.detection(`[getStoredDetection] Cache expired for ${url}`);
-                    delete storage[urlHash];
-                    await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: storage });
+                if (Date.now() >= stored.expiry) {
+                    Logger.debugMode && Logger.detection(`[getStoredDetection] Cache expired for ${url} (${source})`);
+                    expiredKeys.push(key);
+                    return null;
                 }
+
+                Logger.debugMode && Logger.detection(`[getStoredDetection] Cache hit for ${url} via ${source} (stored scope: ${stored.cacheScope || 'unknown'})`);
+                return stored;
+            };
+
+            const scopesToTry = [cacheScope, ...['domain', 'path', 'full'].filter(scope => scope !== cacheScope)];
+            let scopeFallback = null;
+            for (const scope of scopesToTry) {
+                const urlHash = UrlUtils.hashUrl(url, scope);
+                const stored = getValidStored(urlHash, `scope:${scope}`);
+                if (stored) {
+                    if (getStoredDetectionCount(stored) > 0) {
+                        if (expiredKeys.length > 0) {
+                            for (const expiredKey of new Set(expiredKeys)) {
+                                delete storage[expiredKey];
+                            }
+                            await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: storage });
+                        }
+                        return stored;
+                    }
+
+                    if (!scopeFallback || stored.timestamp > scopeFallback.timestamp) {
+                        scopeFallback = stored;
+                    }
+                }
+            }
+
+            const requestedHostname = UrlUtils.getHostnameFromUrl(url);
+            let hostnameFallback = null;
+            for (const [key, stored] of Object.entries(storage)) {
+                if (!stored) continue;
+                if (Date.now() >= stored.expiry) {
+                    expiredKeys.push(key);
+                    continue;
+                }
+                const storedHostname = stored.hostname || UrlUtils.getHostnameFromUrl(stored.url || '');
+                if (UrlUtils.hostnamesMatch(requestedHostname, storedHostname)) {
+                    if (!hostnameFallback ||
+                        getStoredDetectionCount(stored) > getStoredDetectionCount(hostnameFallback) ||
+                        (getStoredDetectionCount(stored) === getStoredDetectionCount(hostnameFallback) && stored.timestamp > hostnameFallback.timestamp)) {
+                        hostnameFallback = stored;
+                    }
+                }
+            }
+
+            if (expiredKeys.length > 0) {
+                for (const key of new Set(expiredKeys)) {
+                    delete storage[key];
+                }
+                await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: storage });
+            }
+
+            if (hostnameFallback) {
+                Logger.debugMode && Logger.detection(`[getStoredDetection] Cache hit for ${url} via hostname fallback`);
+                return hostnameFallback;
+            }
+
+            if (scopeFallback) {
+                Logger.debugMode && Logger.detection(`[getStoredDetection] Cache hit for ${url} via zero-result scope fallback`);
+                return scopeFallback;
             }
         } catch (error) {
             Logger.warn('DETECTION', '[getStoredDetection] Storage read failed', error);
         }
         return null;
+        } finally {
+            releaseStorageLock();
+        }
     }
 
     /**
@@ -1579,11 +1619,66 @@ class DetectionEngineManager {
      * @returns {Promise<object|null>} Stored data object or null
      */
     static async storeDetection(url, pageData, detectionResults) {
+        const releaseStorageLock = await acquireDetectionStorageLock();
+        try { // outer: release the storage lock in finally
         try {
             const cacheScope = await Utils.getCacheScope();
             const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY]);
-            const storage = result[DetectionEngineManager.STORAGE_KEY] || {};
+            let storage = result[DetectionEngineManager.STORAGE_KEY] || {};
+            if (typeof storage === 'string') {
+                try {
+                    storage = JSON.parse(storage);
+                } catch (error) {
+                    Logger.warn('STORAGE', '[storeDetection] Stored cache is not valid JSON; replacing cache', error);
+                    storage = {};
+                }
+            }
+            if (!storage || typeof storage !== 'object' || Array.isArray(storage)) {
+                storage = {};
+            }
             const urlHash = UrlUtils.hashUrl(url, cacheScope);
+            const existingStoredData = storage[urlHash];
+            const existingIsValid = existingStoredData &&
+                (!existingStoredData.cacheScope || existingStoredData.cacheScope === cacheScope) &&
+                Date.now() < existingStoredData.expiry;
+            const getStoredDetectionCount = (stored) => (
+                stored?.detectionCount ?? (Array.isArray(stored?.detectionResults) ? stored.detectionResults.length : 0)
+            );
+            let existingPositiveData = existingIsValid && getStoredDetectionCount(existingStoredData) > 0
+                ? existingStoredData
+                : null;
+
+            if (detectionResults.length === 0 && !existingPositiveData) {
+                const requestedHostname = UrlUtils.getHostnameFromUrl(url);
+                for (const stored of Object.values(storage)) {
+                    if (!stored || Date.now() >= stored.expiry || getStoredDetectionCount(stored) <= 0) {
+                        continue;
+                    }
+
+                    const exactUrlMatch = stored.url === url;
+                    const storedHostname = stored.hostname || UrlUtils.getHostnameFromUrl(stored.url || '');
+                    if (!exactUrlMatch && !UrlUtils.hostnamesMatch(requestedHostname, storedHostname)) {
+                        continue;
+                    }
+
+                    if (!existingPositiveData ||
+                        getStoredDetectionCount(stored) > getStoredDetectionCount(existingPositiveData) ||
+                        (getStoredDetectionCount(stored) === getStoredDetectionCount(existingPositiveData) && stored.timestamp > existingPositiveData.timestamp)) {
+                        existingPositiveData = stored;
+                    }
+                }
+            }
+
+            // A weak/no-signal re-detection should not erase a still-valid positive
+            // cache entry. This commonly happens when an existing tab is revisited
+            // after hooks have already fired or content-script signals are unavailable.
+            if (detectionResults.length === 0 && existingPositiveData) {
+                Logger.warn('STORAGE', `[storeDetection] Preserving existing positive cache for ${url}; new run produced zero detections`);
+                return {
+                    ...existingPositiveData,
+                    preservedExisting: true
+                };
+            }
 
             // Compress detectionResults to essential fields only
             const compressedResults = detectionResults.map((detection) => {
@@ -1646,11 +1741,14 @@ class DetectionEngineManager {
             storage[urlHash] = storedData;
             await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: storage });
 
-            Logger.detection(`[storeDetection] Stored ${detectionResults.length} detections for ${url}`);
+            Logger.debugMode && Logger.detection(`[storeDetection] Stored ${detectionResults.length} detections for ${url}`);
             return storedData;
         } catch (error) {
             Logger.error('STORAGE', '[storeDetection] Error storing detection:', error);
             return null;
+        }
+        } finally {
+            releaseStorageLock();
         }
     }
 
@@ -1672,13 +1770,13 @@ class DetectionEngineManager {
             return;
         }
 
-        Logger.detection(`[handlePageLoadNotification] Detection trigger: ${triggerSource} for tab ${tabId}`);
+        Logger.debugMode && Logger.detection(`[handlePageLoadNotification] Detection trigger: ${triggerSource} for tab ${tabId}`);
 
         // Check if extension is enabled
         try {
             const result = await chrome.storage.local.get(['scrapfly_enabled']);
             if (result.scrapfly_enabled === false) {
-                Logger.detection('Extension is disabled, skipping page load detection');
+                Logger.debugMode && Logger.detection('Extension is disabled, skipping page load detection');
                 chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tabId }).catch(() => {});
                 chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tabId }).catch(() => {});
                 return;
@@ -1690,7 +1788,7 @@ class DetectionEngineManager {
         // Check if URL is blacklisted
         const isBlacklisted = await Utils.isUrlBlacklisted(pageUrl);
         if (isBlacklisted) {
-            Logger.detection(`[handlePageLoadNotification] URL is blacklisted: ${pageUrl}`);
+            Logger.debugMode && Logger.detection(`[handlePageLoadNotification] URL is blacklisted: ${pageUrl}`);
             chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId: tabId }).catch(() => {});
             chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tabId }).catch(() => {});
             return;
@@ -1700,7 +1798,7 @@ class DetectionEngineManager {
         const storedData = await DetectionEngineManager.getStoredDetection(pageUrl);
 
         if (storedData) {
-            Logger.detection(`[handlePageLoadNotification] Cache hit for ${pageUrl} (${storedData.detectionCount} detectors)`);
+            Logger.debugMode && Logger.detection(`[handlePageLoadNotification] Cache hit for ${pageUrl} (${storedData.detectionCount} detectors)`);
 
             // Update badge with cached detection count
             if (storedData.detectionCount > 0) {
@@ -1757,14 +1855,15 @@ class DetectionEngineManager {
 
         // Cache miss - skip if recent detection exists
         if (Utils.shouldSkipDetection(tabId, 1500, recentDetectionRequests)) {
-            Logger.detection(`Skipping duplicate detection request for tab ${tabId}`);
+            Logger.debugMode && Logger.detection(`Skipping duplicate detection request for tab ${tabId}`);
             return;
         }
 
         // Show loading indicator
         try {
-            chrome.action.setBadgeText({ text: BADGE.TEXT.LOADING, tabId: tabId });
-            chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.LOADING, tabId: tabId });
+            if (typeof startBadgeSpinner === 'function') {
+                startBadgeSpinner(tabId);
+            }
         } catch (error) {
             Logger.warn('DETECTION', '[handlePageLoad] Loading badge failed', error);
         }
@@ -1845,7 +1944,7 @@ class DetectionEngineManager {
      * @returns {boolean} True (async response)
      */
     static async handleRequestDetection(request, sendResponse, dependencies) {
-        const { chrome, Utils, recentDetectionRequests } = dependencies;
+        const { chrome, Utils, recentDetectionRequests, activeDetections } = dependencies;
         const tabId = request.tabId;
 
         if (!tabId) {
@@ -1879,15 +1978,6 @@ class DetectionEngineManager {
 
             const isSilent = request.silent === true;
 
-            if (!isSilent) {
-                try {
-                    chrome.action.setBadgeText({ text: BADGE.TEXT.LOADING, tabId: tabId });
-                    chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.LOADING, tabId: tabId });
-                } catch (error) {
-                    Logger.warn('DETECTION', '[requestDetection] Loading badge failed', error);
-                }
-            }
-
             // Try to ping the content script first
             let scriptExists = false;
             try {
@@ -1903,51 +1993,54 @@ class DetectionEngineManager {
                 // Content script may not be ready
             }
 
-            // If script doesn't exist, inject it
             if (!scriptExists) {
-                try {
-                    const [checkResult] = await chrome.scripting.executeScript({
-                        target: { tabId: tabId },
-                        func: () => typeof window.DetectionEngineManager !== 'undefined'
-                    });
-
-                    if (!checkResult.result) {
-                        const scriptsToInject = [
-                            'modules/core/logger.js',
-                            'modules/core/constants.js',
-                            'utils/format-utils.js',
-                            'utils/url-utils.js',
-                            'utils/detection-utils.js',
-                            'utils/utils.js',
-                            'utils/pattern-cache.js',
-                            'modules/core/storage-manager.js',
-                            'modules/detection/managers/confidence-manager.js',
-                            'modules/detection/engine/detection-engine-analysis.js',
-                            'modules/detection/engine/detection-engine-extractors.js',
-                            'modules/detection/engine/detection-engine-matching.js',
-                            'modules/detection/engine/detection-engine-hooks.js',
-                            'modules/detection/engine/detection-engine-manager.js',
-                            'sections/settings/settings-runtime.js'
-                        ];
-
-                        for (const file of scriptsToInject) {
-                            await chrome.scripting.executeScript({
-                                target: { tabId: tabId },
-                                files: [file]
-                            });
-                        }
+                if (!isSilent) {
+                    try {
+                        await chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tabId });
+                    } catch (error) {
+                        Logger.warn('DETECTION', '[requestDetection] Empty badge reset failed', error);
                     }
+                }
 
-                    await chrome.scripting.executeScript({
-                        target: { tabId: tabId },
-                        files: ['content.js']
-                    });
+                Logger.warn('DETECTION', '[requestDetection] Content script unavailable; page reload required', { tabId });
+                sendResponse({
+                    status: 'needs_reload',
+                    reason: 'content_script_unavailable',
+                    message: 'Reload the page to run detection.'
+                });
+                return true;
+            }
 
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                } catch (injectionError) {
-                    Logger.error('DETECTION', 'Failed to inject scripts:', injectionError);
-                    sendResponse({ status: 'error', error: `Script injection failed: ${injectionError.message}` });
-                    return true;
+            const requestStartTime = Date.now();
+            if (activeDetections) {
+                activeDetections.set(tabId, {
+                    url: tab.url,
+                    startTime: requestStartTime,
+                    abortController: new AbortController(),
+                    pendingRequest: true,
+                    source: request.source || 'request_detection'
+                });
+
+                setTimeout(() => {
+                    try {
+                        const current = activeDetections.get(tabId);
+                        if (current?.pendingRequest && current.startTime === requestStartTime) {
+                            Logger.warn('DETECTION', `[requestDetection] Pending detection did not produce data for tab ${tabId}; clearing marker`);
+                            activeDetections.delete(tabId);
+                        }
+                    } catch (error) {
+                        Logger.warn('DETECTION', '[requestDetection] Pending marker cleanup failed', error);
+                    }
+                }, Constants.REQUEST_DETECTION_PENDING_TIMEOUT);
+            }
+
+            if (!isSilent) {
+                try {
+                    if (typeof startBadgeSpinner === 'function') {
+                        startBadgeSpinner(tabId);
+                    }
+                } catch (error) {
+                    Logger.warn('DETECTION', '[requestDetection] Loading badge failed', error);
                 }
             }
 
@@ -1958,6 +2051,12 @@ class DetectionEngineManager {
             }, (response) => {
                 if (chrome.runtime.lastError) {
                     Logger.warn('DETECTION', '[requestDetection] Trigger failed:', chrome.runtime.lastError.message);
+                    if (activeDetections) {
+                        const current = activeDetections.get(tabId);
+                        if (current?.pendingRequest && current.startTime === requestStartTime) {
+                            activeDetections.delete(tabId);
+                        }
+                    }
                     sendResponse({ status: 'error', error: chrome.runtime.lastError.message });
                 } else {
                     sendResponse({ status: 'requested', response: response });

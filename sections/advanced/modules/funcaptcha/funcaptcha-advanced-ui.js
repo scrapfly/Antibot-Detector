@@ -2,7 +2,7 @@ FunCaptchaAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {
                 id: 'funcaptchaAnalyzeScripts',
-                label: 'Analyze Scripts',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnAnalyzeScripts')) || 'Analyze Scripts'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
@@ -11,7 +11,7 @@ FunCaptchaAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'funcaptchaStartCapture',
-                label: 'Start Capturing',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnStartCapturing')) || 'Start Capturing'),
                 kind: 'capture',
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -86,13 +86,13 @@ FunCaptchaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
             <!-- API Domain Section -->
             <div class="advanced-modal-section">
                 <label class="advanced-modal-label">API Domain</label>
-                <div class="advanced-modal-code-block" data-copy="${apiDomain}">${apiDomain}</div>
+                <div class="advanced-modal-code-block" data-copy="${apiDomain}">${FormatUtils.escapeHtml(apiDomain)}</div>
             </div>
 
             <!-- Website URL Section -->
             <div class="advanced-modal-section">
                 <label class="advanced-modal-label">Website URL</label>
-                <div class="advanced-modal-code-block" data-copy="${websiteUrl}" style="word-break: break-all;">${websiteUrl}</div>
+                <div class="advanced-modal-code-block" data-copy="${websiteUrl}" style="word-break: break-all;">${FormatUtils.escapeHtml(websiteUrl)}</div>
             </div>
 
             <!-- User Agent Section -->

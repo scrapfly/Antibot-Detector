@@ -2,64 +2,49 @@
   <div class="rules-header">
     <!-- Action Buttons -->
     <div class="action-buttons">
-      <button id="checkUpdatesBtn" class="check-updates-btn" title="Check for detector updates">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="update-icon">
-          <path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/>
-        </svg>
-        <span id="checkUpdatesBtnText">Update</span>
+      <button id="checkUpdatesBtn" class="check-updates-btn" title="Check for detector updates" data-i18n-title="rulesUpdateTitle">
+        <span id="checkUpdatesBtnText" data-i18n="btnUpdate">Update</span>
         <span id="updatesBadge" class="updates-badge" style="display: none;">0</span>
       </button>
-      <button id="importRulesBtn" class="import-btn-small" title="Import">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,11L16,15H13.5V18H10.5V15H8L12,11Z"/>
-        </svg>
-        Import
+      <button id="importRulesBtn" class="import-btn-small" title="Import" data-i18n-title="btnImport">
+        <span data-i18n="btnImport">Import</span>
       </button>
       <input type="file" id="importRulesFile" accept=".json" style="display: none;">
-      <button id="exportRulesBtn" class="export-btn-small" title="Export">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z"/>
-        </svg>
-        Export
+      <button id="exportRulesBtn" class="export-btn-small" title="Export" data-i18n-title="btnExport">
+        <span data-i18n="btnExport">Export</span>
       </button>
-      <button id="clearRulesBtn" class="clear-btn-small" title="Clear All Rules">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
-        </svg>
-        Clear
+      <button id="clearRulesBtn" class="clear-btn-small" title="Clear All Rules" data-i18n-title="rulesClearTitle">
+        <span data-i18n="btnClear">Clear</span>
       </button>
-      <button id="addDetectorBtn" class="add-btn" title="Add New Detector">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
-        </svg>
-        Add
+      <button id="addDetectorBtn" class="add-btn" title="Add New Detector" data-i18n-title="rulesAddTitle">
+        <span data-i18n="btnAdd">Add</span>
       </button>
     </div>
 
     <!-- Search Bar -->
     <div class="search-container">
-      <input type="text" id="rulesSearch" class="search-input" placeholder="Search detectors...">
+      <input type="text" id="rulesSearch" class="search-input" placeholder="Search detectors..." data-i18n-placeholder="searchDetectors">
     </div>
   </div>
 
   <div id="rulesList" class="rules-list"></div>
 
   <div id="rulesPagination" class="pagination" style="display: none;">
-    <div class="pagination-info">No items to display</div>
+    <div class="pagination-info" data-i18n="paginationNoItems">No items to display</div>
     <div class="pagination-controls">
-      <button class="pagination-btn pagination-btn-prev" disabled>
-        <svg width="16" height="16" viewBox="0 0 24 24">
+      <button class="pagination-btn pagination-btn-prev" disabled aria-label="Previous page" data-i18n-aria-label="paginationPrev">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/>
         </svg>
       </button>
       <div class="page-info">
-        <span>Page</span>
-        <input type="text" class="page-input" value="1" />
-        <span>of</span>
+        <span data-i18n="paginationPage">Page</span>
+        <input type="text" class="page-input" value="1" aria-label="Current page number" data-i18n-aria-label="paginationCurrentPageAria" />
+        <span data-i18n="paginationOf">of</span>
         <span class="total-pages">1</span>
       </div>
-      <button class="pagination-btn pagination-btn-next" disabled>
-        <svg width="16" height="16" viewBox="0 0 24 24">
+      <button class="pagination-btn pagination-btn-next" disabled aria-label="Next page" data-i18n-aria-label="paginationNext">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/>
         </svg>
       </button>
@@ -67,11 +52,11 @@
   </div>
 
   <div id="detectorsEmpty" class="empty-state" style="display: none;">
-    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" opacity="0.5">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" opacity="0.5" aria-hidden="true">
       <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.98C19.47,12.66 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.97 19.05,5.05L16.56,6.05C16.04,5.65 15.48,5.32 14.87,5.07L14.49,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.51,2.42L9.13,5.07C8.52,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.72,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.52,18.68 9.13,18.93L9.51,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.49,21.58L14.87,18.93C15.48,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.28,19.04 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.98Z" stroke="currentColor" stroke-width="2" fill="none"/>
     </svg>
-    <h3>No detectors loaded</h3>
-    <p>Detectors will appear here once loaded from storage and files.</p>
+    <h3 data-i18n="rulesEmptyTitle">No detectors loaded</h3>
+    <p data-i18n="rulesEmptyDescription">Detectors will appear here once loaded from storage and files.</p>
   </div>
 
   <!-- Edit Rule Modal -->
@@ -79,9 +64,9 @@
     <div class="rule-modal-backdrop"></div>
     <div class="rule-modal-content">
       <div class="rule-modal-header">
-        <span id="editRuleModalAction" class="rule-modal-action">Edit</span>
-        <button id="closeRuleModal" class="rule-modal-close">
-          <svg width="16" height="16" viewBox="0 0 24 24">
+        <span id="editRuleModalAction" class="rule-modal-action" data-i18n="ruleModalActionEdit">Edit</span>
+        <button id="closeRuleModal" class="rule-modal-close" aria-label="Close" data-i18n-aria-label="btnClose">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
           </svg>
         </button>
@@ -96,34 +81,34 @@
                 <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11.5C15.4,12.1 16,12.8 16,13.8V17.8C16,18.9 15.1,19.8 14,19.8H10C8.9,19.8 8,18.9 8,17.8V13.8C8,12.8 8.6,12.1 9.2,11.5V10C9.2,8.6 10.6,7 12,7Z" fill="currentColor"/>
               </svg>
             </span>
-            <h3>Detector Information</h3>
+            <h3 data-i18n="ruleSectionDetectorInfo">Detector Information</h3>
           </div>
           <div class="modal-card-body">
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Name</label>
-                <input type="text" id="detectorNameInput" class="form-input" placeholder="Detector name">
+                <label class="form-label" data-i18n="ruleFieldName">Name</label>
+                <input type="text" id="detectorNameInput" class="form-input" placeholder="Detector name" data-i18n-placeholder="ruleFieldNamePlaceholder">
               </div>
               <div class="form-group">
-                <label class="form-label">Category</label>
+                <label class="form-label" data-i18n="ruleFieldCategory">Category</label>
                 <select id="detectorCategorySelect" class="form-select">
-                  <option value="antibot">Anti-Bot</option>
-                  <option value="captcha">CAPTCHA</option>
-                  <option value="fingerprint">Fingerprint</option>
+                  <option value="antibot" data-i18n="categoryAntibot">Anti-Bot</option>
+                  <option value="captcha" data-i18n="categoryCaptcha">Captcha</option>
+                  <option value="fingerprint" data-i18n="categoryFingerprint">Fingerprint</option>
                 </select>
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label">Difficulty</label>
+              <label class="form-label" data-i18n="ruleFieldDifficulty">Difficulty</label>
               <select id="detectorDifficultySelect" class="form-select">
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
+                <option value="Low" data-i18n="difficultyLow">Low</option>
+                <option value="Medium" data-i18n="difficultyMedium">Medium</option>
+                <option value="High" data-i18n="difficultyHigh">High</option>
               </select>
             </div>
             <div class="form-row form-row-icon-version-author">
               <div class="form-group form-group-icon">
-                <label class="form-label">Icon</label>
+                <label class="form-label" data-i18n="ruleFieldIcon">Icon</label>
                 <div class="icon-selector-row">
                   <button type="button" id="openIconPickerBtn" class="icon-preview icon-preview-trigger" title="Change icon" aria-label="Change detector icon">
                     <img id="currentDetectorIcon" src="" alt="Icon">
@@ -131,11 +116,11 @@
                 </div>
               </div>
               <div class="form-group form-group-version">
-                <label class="form-label">Version</label>
+                <label class="form-label" data-i18n="ruleFieldVersion">Version</label>
                 <input type="text" id="detectorVersionInput" class="form-input form-input-readonly" value="1.0" readonly>
               </div>
               <div class="form-group form-group-author">
-                <label class="form-label">Author</label>
+                <label class="form-label" data-i18n="ruleFieldAuthor">Author</label>
                 <input type="text" id="detectorAuthorInput" class="form-input" placeholder="scrapfly" maxlength="50">
               </div>
             </div>
@@ -150,7 +135,7 @@
                 <path d="M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21H13A2,2 0 0,0 15,19C15,18.47 14.79,17.96 14.41,17.59C14.04,17.21 13.53,17 13,17H12A2,2 0 0,1 10,15A2,2 0 0,1 12,13H17A4,4 0 0,0 21,9A6,6 0 0,0 12,3M6.5,11A1.5,1.5 0 0,1 5,9.5A1.5,1.5 0 0,1 6.5,8A1.5,1.5 0 0,1 8,9.5A1.5,1.5 0 0,1 6.5,11M9.5,7A1.5,1.5 0 0,1 8,5.5A1.5,1.5 0 0,1 9.5,4A1.5,1.5 0 0,1 11,5.5A1.5,1.5 0 0,1 9.5,7M14.5,7A1.5,1.5 0 0,1 13,5.5A1.5,1.5 0 0,1 14.5,4A1.5,1.5 0 0,1 16,5.5A1.5,1.5 0 0,1 14.5,7M17.5,11A1.5,1.5 0 0,1 16,9.5A1.5,1.5 0 0,1 17.5,8A1.5,1.5 0 0,1 19,9.5A1.5,1.5 0 0,1 17.5,11Z" fill="currentColor"/>
               </svg>
             </span>
-            <h3>Badge Color</h3>
+            <h3 data-i18n="ruleSectionBadgeColor">Badge Color</h3>
           </div>
           <div class="modal-card-body">
             <div class="color-picker-card">
@@ -193,7 +178,7 @@
                 <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5A6.5,6.5 0 0,1 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5A4.5,4.5 0 0,0 5,9.5A4.5,4.5 0 0,0 9.5,14A4.5,4.5 0 0,0 14,9.5A4.5,4.5 0 0,0 9.5,5M14.71,13.29L21,19.59L19.59,21L13.29,14.71L14.71,13.29Z" fill="currentColor"/>
               </svg>
             </span>
-            <h3>Detection Methods</h3>
+            <h3 data-i18n="ruleSectionDetectionMethods">Detection Methods</h3>
           </div>
           <div class="modal-card-body modal-card-body-methods">
             <div id="detectionMethodsContainer"></div>
@@ -202,8 +187,8 @@
       </div>
 
       <div class="rule-modal-footer">
-        <button id="cancelRuleEdit" class="rule-btn rule-btn-cancel">Cancel</button>
-        <button id="saveRuleEdit" class="rule-btn rule-btn-save">Save Rule</button>
+        <button id="saveRuleEdit" class="rule-btn rule-btn-save" data-i18n="btnSaveRule">Save Rule</button>
+        <button id="cancelRuleEdit" class="rule-btn rule-btn-cancel" data-i18n="btnCancel">Cancel</button>
       </div>
     </div>
   </div>
@@ -247,8 +232,8 @@
         </div>
       </div>
       <div class="rule-modal-footer">
-        <button id="cancelAdvancedColor" class="rule-btn rule-btn-cancel">Cancel</button>
-        <button id="selectAdvancedColor" class="rule-btn rule-btn-save">OK</button>
+        <button id="selectAdvancedColor" class="rule-btn rule-btn-save" data-i18n="rulesColorPickerOk">OK</button>
+        <button id="cancelAdvancedColor" class="rule-btn rule-btn-cancel" data-i18n="rulesColorPickerCancel">Cancel</button>
       </div>
     </div>
   </div>
@@ -258,7 +243,7 @@
     <div class="rule-modal-backdrop"></div>
     <div class="rule-modal-content method-settings-modal">
       <div class="rule-modal-header">
-        <h2>Detection Method Settings</h2>
+        <h2 id="methodSettingsTitle" data-i18n="ruleMethodSettings">Detection Method Settings</h2>
         <button id="closeMethodSettings" class="rule-modal-close">
           <svg width="16" height="16" viewBox="0 0 24 24">
             <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
@@ -275,11 +260,11 @@
                 <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12C20,14.4 19,16.5 17.3,18C15.9,16.7 14,16 12,16C10,16 8.2,16.7 6.7,18C5,16.5 4,14.4 4,12A8,8 0 0,1 12,4M14,5.89C13.62,5.9 13.26,6.15 13.1,6.54L11.81,9.77L11.71,10C11,10.13 10.41,10.6 10.14,11.26C9.73,12.29 10.23,13.45 11.26,13.86C12.29,14.27 13.45,13.77 13.86,12.74C14.12,12.08 14,11.32 13.57,10.76L13.67,10.5L14.96,7.29L14.97,7.26C15.17,6.75 14.92,6.17 14.41,5.96C14.28,5.91 14.15,5.89 14,5.89M10,6A1,1 0 0,0 9,7A1,1 0 0,0 10,8A1,1 0 0,0 11,7A1,1 0 0,0 10,6M7,9A1,1 0 0,0 6,10A1,1 0 0,0 7,11A1,1 0 0,0 8,10A1,1 0 0,0 7,9M17,9A1,1 0 0,0 16,10A1,1 0 0,0 17,11A1,1 0 0,0 18,10A1,1 0 0,0 17,9Z"/>
               </svg>
             </span>
-            <h3>Confidence Level</h3>
+            <h3 data-i18n="ruleConfidenceLevel">Confidence Level</h3>
           </div>
           <div class="modal-card-body">
             <div class="confidence-display">
-              <span class="confidence-label">Detection confidence:</span>
+              <span class="confidence-label" data-i18n="ruleConfidencePrefix">Detection confidence:</span>
               <span id="confidenceValue" class="confidence-value">100</span>
               <span class="confidence-percent">%</span>
             </div>
@@ -304,14 +289,14 @@
                 <path d="M3,17V19H9V17H3M3,5V7H13V5H3M13,21V19H21V17H13V15H11V21H13M7,9V11H3V13H7V15H9V9H7M21,13V11H11V13H21M15,9H17V7H21V5H17V3H15V9Z"/>
               </svg>
             </span>
-            <h3>Content Search Scope</h3>
+            <h3 data-i18n="rulesContentSearchScopeTitle">Content Search Scope</h3>
           </div>
           <div class="modal-card-body">
             <div class="settings-options">
               <div class="setting-option">
                 <div class="option-content">
-                  <span class="setting-label">Only check scripts</span>
-                  <p class="option-hint">Restrict search to JavaScript code and script URLs only</p>
+                  <span class="setting-label" data-i18n="rulesOnlyCheckScripts">Only check scripts</span>
+                  <p class="option-hint" data-i18n="rulesOnlyCheckScriptsHint">Restrict search to JavaScript code and script URLs only</p>
                 </div>
                 <label class="toggle-switch" for="checkScripts">
                   <input type="checkbox" id="checkScripts" class="toggle-input">
@@ -330,30 +315,30 @@
                 <path d="M3,17V19H9V17H3M3,5V7H13V5H3M13,21V19H21V17H13V15H11V21H13M7,9V11H3V13H7V15H9V9H7M21,13V11H11V13H21M15,9H17V7H21V5H17V3H15V9Z"/>
               </svg>
             </span>
-            <h3 id="scopeGroupTitle">Scope Settings</h3>
+            <h3 id="scopeGroupTitle" data-i18n="rulesScopeSettingsTitle">Scope Settings</h3>
           </div>
           <div class="modal-card-body">
             <div class="settings-options">
               <div class="setting-option">
                 <div class="option-content">
-                  <span class="setting-label" id="nameScopeLabel">Name Scope</span>
-                  <p class="option-hint">Where to check for name/field matches</p>
+                  <span class="setting-label" id="nameScopeLabel" data-i18n="rulesNameScopeLabel">Name Scope</span>
+                  <p class="option-hint" data-i18n="rulesNameScopeHint">Where to check for name/field matches</p>
                 </div>
                 <select id="nameScope" class="scope-select">
-                  <option value="request">Request</option>
-                  <option value="response">Response</option>
-                  <option value="all">All</option>
+                  <option value="request" data-i18n="rulesScopeRequest">Request</option>
+                  <option value="response" data-i18n="rulesScopeResponse">Response</option>
+                  <option value="all" data-i18n="rulesScopeAll">All</option>
                 </select>
               </div>
               <div class="setting-option" id="valueScopeRow">
                 <div class="option-content">
-                  <span class="setting-label">Value Scope</span>
-                  <p class="option-hint">Where to check for value matches</p>
+                  <span class="setting-label" data-i18n="rulesValueScopeLabel">Value Scope</span>
+                  <p class="option-hint" data-i18n="rulesValueScopeHint">Where to check for value matches</p>
                 </div>
                 <select id="valueScope" class="scope-select">
-                  <option value="request">Request</option>
-                  <option value="response">Response</option>
-                  <option value="all">All</option>
+                  <option value="request" data-i18n="rulesScopeRequest">Request</option>
+                  <option value="response" data-i18n="rulesScopeResponse">Response</option>
+                  <option value="all" data-i18n="rulesScopeAll">All</option>
                 </select>
               </div>
             </div>
@@ -368,19 +353,19 @@
                 <path d="M16.36,14C16.44,13.34 16.5,12.68 16.5,12C16.5,11.32 16.44,10.66 16.36,10H19.74C19.9,10.64 20,11.31 20,12C20,12.69 19.9,13.36 19.74,14M14.59,19.56C15.19,18.45 15.65,17.25 15.97,16H18.92C17.96,17.65 16.43,18.93 14.59,19.56M14.34,14H9.66C9.56,13.34 9.5,12.68 9.5,12C9.5,11.32 9.56,10.65 9.66,10H14.34C14.43,10.65 14.5,11.32 14.5,12C14.5,12.68 14.43,13.34 14.34,14M12,19.96C11.17,18.76 10.5,17.43 10.09,16H13.91C13.5,17.43 12.83,18.76 12,19.96M8,8H5.08C6.03,6.34 7.57,5.06 9.4,4.44C8.8,5.55 8.35,6.75 8,8M5.08,16H8C8.35,17.25 8.8,18.45 9.4,19.56C7.57,18.93 6.03,17.65 5.08,16M4.26,14C4.1,13.36 4,12.69 4,12C4,11.31 4.1,10.64 4.26,10H7.64C7.56,10.66 7.5,11.32 7.5,12C7.5,12.68 7.56,13.34 7.64,14M12,4.03C12.83,5.23 13.5,6.57 13.91,8H10.09C10.5,6.57 11.17,5.23 12,4.03M18.92,8H15.97C15.65,6.75 15.19,5.55 14.59,4.44C16.43,5.07 17.96,6.34 18.92,8M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
               </svg>
             </span>
-            <h3>URL Scope Settings</h3>
+            <h3 data-i18n="rulesUrlScopeSettings">URL Scope Settings</h3>
           </div>
           <div class="modal-card-body">
             <div class="settings-options">
               <div class="setting-option">
                 <div class="option-content">
-                  <span class="setting-label">URL Scope</span>
+                  <span class="setting-label" data-i18n="rulesUrlScopeLabel">URL Scope</span>
                   <p class="option-hint">Page = current URL | Scripts = page + scripts | All = all requests</p>
                 </div>
                 <select id="textScope" class="scope-select">
-                  <option value="page_only">Page</option>
-                  <option value="page_and_scripts">Scripts</option>
-                  <option value="all">All (default)</option>
+                  <option value="page_only" data-i18n="rulesUrlScopePageOnly">Page</option>
+                  <option value="page_and_scripts" data-i18n="rulesUrlScopeScripts">Scripts</option>
+                  <option value="all" data-i18n="rulesUrlScopeAllDefault">All (default)</option>
                 </select>
               </div>
             </div>
@@ -395,14 +380,14 @@
                 <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8Z"/>
               </svg>
             </span>
-            <h3>Request Constraints</h3>
+            <h3 data-i18n="rulesRequestConstraints">Request Constraints</h3>
           </div>
           <div class="modal-card-body">
           <div class="settings-options">
             <!-- URL Pattern Field -->
             <div class="setting-option payload-url-pattern-option">
               <div class="option-content">
-                <span class="setting-label">URL Pattern (optional)</span>
+                <span class="setting-label" data-i18n="rulesUrlPatternOptional">URL Pattern (optional)</span>
                 <div class="option-examples">
                   Leave empty to match any URL
                 </div>
@@ -419,7 +404,7 @@
             <div class="setting-option">
               <div class="option-content">
                 <div style="display: flex; align-items: center; gap: 8px;">
-                  <span class="setting-label">URL Regular Expression (Regex)</span>
+                  <span class="setting-label" data-i18n="rulesUrlRegex">URL Regular Expression (Regex)</span>
                   <button id="payloadUrlRegexHelperBtn" class="regex-helper-btn" title="URL Regex Helper">?</button>
                   <button id="payloadUrlRegexExplanationBtn" class="explanation-helper-btn" title="What is Regex?">ℹ</button>
                 </div>
@@ -439,7 +424,7 @@
             <div class="setting-option">
               <div class="option-content">
                 <div style="display: flex; align-items: center; gap: 8px;">
-                  <span class="setting-label">URL Case Sensitive</span>
+                  <span class="setting-label" data-i18n="rulesUrlCaseSensitive">URL Case Sensitive</span>
                   <button id="payloadUrlCaseHelperBtn" class="pattern-helper-btn" title="Case Sensitive Helper">?</button>
                   <button id="payloadUrlCaseExplanationBtn" class="explanation-helper-btn" title="What is Case Sensitive?">ℹ</button>
                 </div>
@@ -458,10 +443,17 @@
             <!-- HTTP Methods Radio Buttons -->
             <div class="setting-option payload-http-method-option">
               <div class="option-content" style="margin-bottom: 12px;">
-                <span class="setting-label">HTTP Method (select one)</span>
-                <div class="option-examples">Filter by request method (optional)</div>
+                <span class="setting-label" data-i18n="rulesHttpMethodSelect">HTTP Method (select one)</span>
+                <div class="option-examples" data-i18n="rulesHttpMethodFilterHint">Filter by request method (optional)</div>
               </div>
               <div class="http-method-badges-grid">
+                <!-- Any -->
+                <label class="http-method-badge" data-method="ANY">
+                  <input type="radio" name="payloadMethod" id="payloadMethodAny" value="">
+                  <span class="method-badge-content">
+                    <span class="method-text" data-i18n="rulesHttpMethodAny">Any</span>
+                  </span>
+                </label>
                 <!-- GET -->
                 <label class="http-method-badge" data-method="GET">
                   <input type="radio" name="payloadMethod" id="payloadMethodGet" value="GET">
@@ -501,13 +493,13 @@
                 <label class="http-method-badge" data-method="CUSTOM">
                   <input type="radio" name="payloadMethod" id="payloadMethodCustom" value="CUSTOM">
                   <span class="method-badge-content">
-                    <span class="method-text">Custom</span>
+                    <span class="method-text" data-i18n="settingsCustomMethod">Custom</span>
                   </span>
                 </label>
               </div>
               <!-- Custom Method Input -->
               <div id="customMethodInputContainer" style="display: none; margin-top: 10px;">
-                <input type="text" id="customMethodInput" placeholder="Enter custom method (e.g., OPTIONS, HEAD)"
+                <input type="text" id="customMethodInput" placeholder="Enter custom method (e.g., OPTIONS, HEAD)" data-i18n-placeholder="settingsCustomMethodPlaceholder"
                   style="width: 100%; padding: 10px 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 13px;">
               </div>
             </div>
@@ -523,14 +515,14 @@
                 <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/>
               </svg>
             </span>
-            <h3 id="patternOptionsTitle">Pattern Matching Options</h3>
+            <h3 id="patternOptionsTitle" data-i18n="rulesPatternMatchingOptions">Pattern Matching Options</h3>
           </div>
           <div class="modal-card-body">
             <div class="settings-options">
               <div class="setting-option">
                 <div class="option-content">
                   <div class="setting-label-row">
-                    <span class="setting-label">Regular Expression (Regex)</span>
+                    <span class="setting-label" data-i18n="rulesPatternRegex">Regular Expression (Regex)</span>
                     <button id="regexHelperBtn" class="regex-helper-btn" title="Regex Pattern Helper">?</button>
                     <button id="regexExplanationBtn" class="explanation-helper-btn" title="What is Regex?">ℹ</button>
                   </div>
@@ -548,7 +540,7 @@
               <div class="setting-option">
                 <div class="option-content">
                   <div class="setting-label-row">
-                    <span class="setting-label">Whole Word</span>
+                    <span class="setting-label" data-i18n="rulesPatternWholeWord">Whole Word</span>
                     <button id="wholeWordHelperBtn" class="pattern-helper-btn" title="Whole Word Helper">?</button>
                     <button id="wholeWordExplanationBtn" class="explanation-helper-btn" title="What is Whole Word?">ℹ</button>
                   </div>
@@ -566,7 +558,7 @@
               <div class="setting-option">
                 <div class="option-content">
                   <div class="setting-label-row">
-                    <span class="setting-label">Case Sensitive</span>
+                    <span class="setting-label" data-i18n="rulesPatternCaseSensitive">Case Sensitive</span>
                     <button id="caseSensitiveHelperBtn" class="pattern-helper-btn" title="Case Sensitive Helper">?</button>
                     <button id="caseSensitiveExplanationBtn" class="explanation-helper-btn" title="What is Case Sensitive?">ℹ</button>
                   </div>
@@ -593,14 +585,14 @@
                 <path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/>
               </svg>
             </span>
-            <h3>Value Field Options</h3>
+            <h3 data-i18n="rulesValueFieldOptions">Value Field Options</h3>
           </div>
           <div class="modal-card-body">
             <div class="settings-options">
               <div class="setting-option">
                 <div class="option-content">
                   <div class="setting-label-row">
-                    <span class="setting-label">Regular Expression (Regex)</span>
+                    <span class="setting-label" data-i18n="rulesPatternRegex">Regular Expression (Regex)</span>
                     <button id="regexHelperBtnValue" class="regex-helper-btn" title="Regex Pattern Helper">?</button>
                     <button id="regexExplanationBtnValue" class="explanation-helper-btn" title="What is Regex?">ℹ</button>
                   </div>
@@ -613,7 +605,7 @@
               <div class="setting-option">
                 <div class="option-content">
                   <div class="setting-label-row">
-                    <span class="setting-label">Whole Word</span>
+                    <span class="setting-label" data-i18n="rulesPatternWholeWord">Whole Word</span>
                     <button id="wholeWordHelperBtnValue" class="pattern-helper-btn" title="Whole Word Helper">?</button>
                     <button id="wholeWordExplanationBtnValue" class="explanation-helper-btn" title="What is Whole Word?">ℹ</button>
                   </div>
@@ -626,7 +618,7 @@
               <div class="setting-option">
                 <div class="option-content">
                   <div class="setting-label-row">
-                    <span class="setting-label">Case Sensitive</span>
+                    <span class="setting-label" data-i18n="rulesPatternCaseSensitive">Case Sensitive</span>
                     <button id="caseSensitiveHelperBtnValue" class="pattern-helper-btn" title="Case Sensitive Helper">?</button>
                     <button id="caseSensitiveExplanationBtnValue" class="explanation-helper-btn" title="What is Case Sensitive?">ℹ</button>
                   </div>
@@ -642,8 +634,8 @@
       </div>
 
       <div class="rule-modal-footer">
-        <button id="cancelMethodSettings" class="rule-btn rule-btn-cancel">Cancel</button>
-        <button id="saveMethodSettings" class="rule-btn rule-btn-save">Apply Settings</button>
+        <button id="cancelMethodSettings" class="rule-btn rule-btn-cancel" data-i18n="rulesColorPickerCancel">Cancel</button>
+        <button id="saveMethodSettings" class="rule-btn rule-btn-save" data-i18n="rulesApplySettings">Apply Settings</button>
       </div>
     </div>
   </div>
@@ -653,7 +645,7 @@
     <div class="rule-modal-backdrop"></div>
     <div class="rule-modal-content" style="max-width: 600px;">
       <div class="rule-modal-header">
-        <h2>DOM Selector Helper</h2>
+        <h2 data-i18n="rulesDomSelectorHelper">DOM Selector Helper</h2>
         <button id="closeDomHelper" class="rule-modal-close">
           <svg width="16" height="16" viewBox="0 0 24 24">
             <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
@@ -692,7 +684,7 @@
               <svg class="empty-icon" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M15.5,12C18,12 20,14 20,16.5C20,17.38 19.75,18.21 19.31,18.9L22.39,22L21,23.39L17.88,20.32C17.19,20.75 16.37,21 15.5,21C13,21 11,19 11,16.5C11,14 13,12 15.5,12M15.5,14A2.5,2.5 0 0,0 13,16.5A2.5,2.5 0 0,0 15.5,19A2.5,2.5 0 0,0 18,16.5A2.5,2.5 0 0,0 15.5,14M5,3H19A2,2 0 0,1 21,5V13.03C20.5,12.23 19.81,11.54 19,11V5H5V19H9.5C9.81,19.75 10.26,20.42 10.81,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M7,7H17V9H7V7M7,11H12.03C11.23,11.5 10.54,12.19 10,13H7V11M7,15H9.17C9.06,15.5 9,16 9,16.5V17H7V15Z"/>
               </svg>
-              <div class="empty-title">Start typing to see suggestions</div>
+              <div class="empty-title" data-i18n="rulesStartTypingSuggestions">Start typing to see suggestions</div>
               <div class="empty-hint">We'll show common selectors matching your search</div>
               <div class="empty-examples">
                 Try: <code>recaptcha</code> <code>iframe</code> <code>canvas</code> <code>button</code>
@@ -703,8 +695,8 @@
       </div>
 
       <div class="rule-modal-footer">
-        <button id="cancelDomHelper" class="rule-btn rule-btn-cancel">Cancel</button>
-        <button id="useDomSelector" class="rule-btn rule-btn-save">Use Selector</button>
+        <button id="cancelDomHelper" class="rule-btn rule-btn-cancel" data-i18n="rulesColorPickerCancel">Cancel</button>
+        <button id="useDomSelector" class="rule-btn rule-btn-save" data-i18n="rulesUseSelectorBtn">Use Selector</button>
       </div>
     </div>
   </div>
@@ -714,7 +706,7 @@
     <div class="rule-modal-backdrop"></div>
     <div class="rule-modal-content">
       <div class="rule-modal-header">
-        <h2>Window Properties Helper</h2>
+        <h2 data-i18n="rulesWindowPropertiesHelper">Window Properties Helper</h2>
         <button id="closeWindowHelper" class="rule-modal-close">
           <svg width="16" height="16" viewBox="0 0 24 24">
             <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
@@ -727,15 +719,15 @@
         <div class="dom-helper-steps three-steps" data-progress="1">
           <div class="dom-step active" id="windowStep1">
             <div class="dom-step-number"><span>1</span></div>
-            <div class="dom-step-label">Enter Keyword</div>
+            <div class="dom-step-label" data-i18n="rulesStepEnterKeyword">Enter Keyword</div>
           </div>
           <div class="dom-step" id="windowStep2">
             <div class="dom-step-number"><span>2</span></div>
-            <div class="dom-step-label">Choose Property</div>
+            <div class="dom-step-label" data-i18n="rulesStepChooseProperty">Choose Property</div>
           </div>
           <div class="dom-step" id="windowStep3">
             <div class="dom-step-number"><span>3</span></div>
-            <div class="dom-step-label">Select Condition</div>
+            <div class="dom-step-label" data-i18n="rulesStepSelectCondition">Select Condition</div>
           </div>
         </div>
 
@@ -769,7 +761,7 @@
               <svg class="empty-icon" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
               </svg>
-              <div class="empty-title">Start typing to see suggestions</div>
+              <div class="empty-title" data-i18n="rulesStartTypingSuggestions">Start typing to see suggestions</div>
               <div class="empty-hint">We'll show common window properties matching your search</div>
               <div class="empty-examples">
                 Try: <code>chrome</code> <code>webkit</code> <code>eval</code> <code>cdc_</code>
@@ -791,19 +783,19 @@
           </p>
           <div class="condition-dropdown" id="conditionDropdownContainer">
             <button type="button" class="condition-dropdown-trigger" id="conditionDropdownTrigger">
-              <span class="condition-selected-text">Exists</span>
+              <span class="condition-selected-text" data-i18n="rulesConditionExists">Exists</span>
               <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
                 <path d="M6 8L1 3h10z"/>
               </svg>
             </button>
             <div class="condition-dropdown-menu" id="conditionDropdownMenu">
               <div class="condition-group">
-                <div class="condition-group-label">Type</div>
-                <div class="condition-option" data-value="typeof object">Object</div>
-                <div class="condition-option" data-value="typeof function">Function</div>
-                <div class="condition-option" data-value="typeof string">String</div>
-                <div class="condition-option" data-value="typeof number">Number</div>
-                <div class="condition-option" data-value="typeof boolean">Boolean</div>
+                <div class="condition-group-label" data-i18n="rulesConditionGroupType">Type</div>
+                <div class="condition-option" data-value="typeof object" data-i18n="rulesTypeofObject">Object</div>
+                <div class="condition-option" data-value="typeof function" data-i18n="rulesTypeofFunction">Function</div>
+                <div class="condition-option" data-value="typeof string" data-i18n="rulesTypeofString">String</div>
+                <div class="condition-option" data-value="typeof number" data-i18n="rulesTypeofNumber">Number</div>
+                <div class="condition-option" data-value="typeof boolean" data-i18n="rulesTypeofBoolean">Boolean</div>
               </div>
               <div class="condition-group">
                 <div class="condition-group-label">Existence</div>

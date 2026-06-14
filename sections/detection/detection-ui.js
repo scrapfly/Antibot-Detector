@@ -163,6 +163,11 @@ DetectionUI.updateMethodStatus = function(currentMethod, completedMethods) {
 DetectionUI.handleLoadingTimeout = function() {
     if (this.debugMode) Logger.ui('[Detection] Loading timeout reached - checking if detection completed');
 
+    if (this.isShowingResults && this.currentResults?.length > 0) {
+      this.loadingTimeout = null;
+      return;
+    }
+
     // Clear any existing intervals
     this.stopAnalysisProgress();
 
@@ -178,12 +183,18 @@ DetectionUI.handleLoadingTimeout = function() {
       // Check if detection completed before showing interrupted state
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (tabs[0]) {
+          if (this.viewedTabId !== null && tabs[0].id !== this.viewedTabId) {
+            return;
+          }
+
           chrome.runtime.sendMessage(
             { type: 'GET_DETECTION_DATA', tabId: tabs[0].id },
             async (response) => {
               if (chrome.runtime.lastError) {
                 if (this.debugMode) Logger.debug('UI', '[Detection] Error checking for results:', chrome.runtime.lastError);
-                this.showEmptyState();
+                if (!this.isShowingResults || this.currentResults.length === 0) {
+                  this.showEmptyState();
+                }
                 return;
               }
 
@@ -199,6 +210,10 @@ DetectionUI.handleLoadingTimeout = function() {
                   },
                   response.data
                 );
+              } else if (response?.status === 'pending') {
+                if (!this.wasInterrupted && !this.isShowingResults) {
+                  this.showAnalyzingState();
+                }
               } else {
                 // Check badge before showing interrupted - numeric means detection is complete
                 const badgeStatus = await Detection.getBadgeStatus(tabs[0].id);
@@ -211,14 +226,18 @@ DetectionUI.handleLoadingTimeout = function() {
                 } else {
                   // Truly stuck/no data - normalize to empty state
                   if (this.debugMode) Logger.ui('[Detection] Timeout with no results - showing empty state');
-                  this.showEmptyState();
+                  if (!this.isShowingResults || this.currentResults.length === 0) {
+                    this.showEmptyState();
+                  }
                 }
               }
             }
           );
         } else {
           // No tab found - normalize to empty state
-          this.showEmptyState();
+          if (!this.isShowingResults || this.currentResults.length === 0) {
+            this.showEmptyState();
+          }
         }
       });
     }
@@ -261,6 +280,88 @@ DetectionUI.showAnalyzingState = function(message = 'Analyzing page…') {
     this.startAnalysisProgress();
 };
 
+DetectionUI.applyEmptyStateCopy = function(options = {}) {
+    const tr = (key, fallback) => (
+      typeof I18n !== 'undefined' ? I18n.tr(key, fallback) : fallback
+    );
+
+    const emptyStateTitle = document.querySelector('#emptyState .state-card-title');
+    const emptyStateText = document.querySelector('#emptyState .state-card-description');
+
+    if (emptyStateTitle) {
+      if (options.title) {
+        emptyStateTitle.textContent = options.title;
+        emptyStateTitle.removeAttribute('data-i18n');
+      } else {
+        const titleKey = options.noCache ? 'noDetectionsFound' : 'detectionEmptyTitle';
+        const titleFallback = options.noCache ? 'No detections found' : 'Nothing Detected';
+        emptyStateTitle.setAttribute('data-i18n', titleKey);
+        emptyStateTitle.textContent = tr(titleKey, titleFallback);
+      }
+    }
+
+    if (emptyStateText) {
+      if (options.description) {
+        emptyStateText.textContent = options.description;
+        emptyStateText.removeAttribute('data-i18n');
+      } else {
+        const descKey = options.noCache ? 'detectionNoCachedDataDesc' : 'detectionNoDetectionsDesc';
+        const descFallback = options.noCache
+          ? 'No cached detection data is available for this page. Reload the page to run a fresh scan.'
+          : 'No matching antibot, CAPTCHA, or fingerprinting signals were found on this page.';
+        emptyStateText.setAttribute('data-i18n', descKey);
+        emptyStateText.textContent = tr(descKey, descFallback);
+      }
+    }
+};
+
+DetectionUI.applyDisabledStateCopy = function() {
+    const tr = (key, fallback) => (
+      typeof I18n !== 'undefined' ? I18n.tr(key, fallback) : fallback
+    );
+    const root = document.querySelector('#disabledState');
+    if (!root) return;
+
+    const title = root.querySelector('.state-card-title');
+    const desc = root.querySelector('.state-card-description');
+    const action = root.querySelector('.state-card-action');
+    const blacklistBtn = root.querySelector('#disabledBlacklistBtn');
+
+    if (title) {
+      title.setAttribute('data-i18n', 'detectionDisabledTitle');
+      title.textContent = tr('detectionDisabledTitle', 'Detection Disabled');
+    }
+    if (desc) {
+      desc.setAttribute('data-i18n', 'detectionDisabledDesc');
+      desc.textContent = tr('detectionDisabledDesc', 'Security detection is currently turned off.');
+    }
+    if (action) {
+      action.setAttribute('data-i18n', 'detectionDisabledAction');
+      action.textContent = tr('detectionDisabledAction', 'Toggle the switch at the top to enable detection.');
+    }
+    if (blacklistBtn) {
+      blacklistBtn.setAttribute('data-i18n-title', 'detectionDomainBlacklistedTitle');
+      const titleText = tr('detectionDomainBlacklistedTitle', 'This domain is blacklisted');
+      blacklistBtn.setAttribute('title', titleText);
+    }
+};
+
+DetectionUI.refreshEmptyStateI18n = function() {
+    const emptyState = document.querySelector('#emptyState');
+    if (!emptyState || emptyState.style.display === 'none' || !this._lastEmptyStateOptions) {
+      return;
+    }
+    DetectionUI.applyEmptyStateCopy.call(this, this._lastEmptyStateOptions);
+};
+
+DetectionUI.refreshDetectionStateI18n = function() {
+    DetectionUI.refreshEmptyStateI18n.call(this);
+    const disabledState = document.querySelector('#disabledState');
+    if (disabledState && disabledState.style.display !== 'none') {
+      DetectionUI.applyDisabledStateCopy.call(this);
+    }
+};
+
 DetectionUI.showEmptyState = function(options = {}) {
     if (!this.isExtensionEnabled) {
       this.showDisabledState();
@@ -286,8 +387,6 @@ DetectionUI.showEmptyState = function(options = {}) {
 
     const emptyState = document.querySelector('#emptyState');
     const emptyStateIcon = emptyState?.querySelector('.state-card-logo');
-    const emptyStateTitle = emptyState?.querySelector('.state-card-title');
-    const emptyStateText = emptyState?.querySelector('.state-card-description');
     const emptyStateFooter = emptyState?.querySelector('.state-card-badges');
     const detectionResults = document.querySelector('#detectionResults');
     const disabledState = document.querySelector('#disabledState');
@@ -299,13 +398,9 @@ DetectionUI.showEmptyState = function(options = {}) {
       emptyStateIcon.alt = 'Scrapfly';
     }
 
-    // Show empty state with optional overrides
-    if (emptyStateTitle) {
-      emptyStateTitle.textContent = options.title || 'Nothing Detected';
-    }
-    if (emptyStateText) {
-      emptyStateText.textContent = options.description || 'This page is clean and free from bot detection systems. No CAPTCHAs, anti-bot challenges, or fingerprinting techniques were found during the scan.';
-    }
+    this._lastEmptyStateOptions = { ...options };
+    DetectionUI.applyEmptyStateCopy.call(this, options);
+
     if (emptyStateFooter) {
       emptyStateFooter.style.display = options.showBadges === false ? 'none' : 'flex';
     }
@@ -340,10 +435,13 @@ DetectionUI.showDisabledState = function(isBlacklisted = false) {
     if (detectionPagination) detectionPagination.style.display = 'none';
     if (interruptedState) interruptedState.style.display = 'none';
 
-    // Show/hide blacklist button based on whether domain is blacklisted
     if (disabledBlacklistBtn) {
       disabledBlacklistBtn.classList.toggle('visible', isBlacklisted);
+      disabledBlacklistBtn.hidden = !isBlacklisted;
+      disabledBlacklistBtn.setAttribute('aria-hidden', isBlacklisted ? 'false' : 'true');
     }
+
+    DetectionUI.applyDisabledStateCopy.call(this);
 };
 
 DetectionUI.displayResults = async function(detections = [], options = {}) {
@@ -518,6 +616,10 @@ DetectionUI.updateStats = function(detections) {
       difficultyLevel.textContent = difficulty;
       difficultyLevel.style.color = difficultyColor;
     }
+
+    this.setCopyableValue(detectionsCount?.closest('.stat-inline') || detectionsCount, String(totalDetections), 'detections');
+    this.setCopyableValue(overallConfidence?.closest('.stat-inline') || overallConfidence, `${avgConfidence}%`, 'confidence');
+    this.setCopyableValue(difficultyLevel?.closest('.stat-inline') || difficultyLevel, difficulty, 'difficulty');
 };
 
 DetectionUI.updateUrlDisplay = function(options = {}) {
@@ -550,9 +652,11 @@ DetectionUI.updateUrlDisplay = function(options = {}) {
               const urlObj = new URL(url);
               siteUrl.textContent = urlObj.hostname;
               siteUrl.title = url;
+              this.setCopyableValue(siteUrl, url, 'URL');
             } catch (e) {
               siteUrl.textContent = url;
               siteUrl.title = url;
+              this.setCopyableValue(siteUrl, url, 'URL');
             }
           }
 
@@ -567,9 +671,11 @@ DetectionUI.updateUrlDisplay = function(options = {}) {
         const urlObj = new URL(url);
         siteUrl.textContent = urlObj.hostname;
         siteUrl.title = url;
+        this.setCopyableValue(siteUrl, url, 'URL');
       } catch (e) {
         siteUrl.textContent = url;
         siteUrl.title = url;
+        this.setCopyableValue(siteUrl, url, 'URL');
       }
 
       // Set favicon if available
@@ -612,40 +718,42 @@ DetectionUI.updateCacheInfo = function() {
       if (diff > 0) {
         cacheExpiry.textContent = this.formatExpiryRemaining(diff);
       } else {
-        cacheExpiry.textContent = 'Expired';
+        cacheExpiry.textContent = (typeof I18n !== 'undefined')
+          ? I18n.tr('cacheExpiredLabel', 'Expired')
+          : 'Expired';
       }
     } else {
       cacheExpiry.textContent = '-';
     }
+    this.setCopyableValue(cacheExpiry.closest('.stat-inline') || cacheExpiry, cacheExpiry.textContent, 'cache expiration');
 
     // Update cache scope display
     if (cacheScopeDisplay) {
       if (this.cacheMetadata && this.cacheMetadata.cacheScope) {
         // Map scope values to user-friendly display names
+        const scopeTr = (key, fallback) => (
+          typeof I18n !== 'undefined' ? I18n.tr(key, fallback) : fallback
+        );
         const scopeDisplayNames = {
-          'domain': 'Domain',
-          'path': 'Path',
-          'full': 'Full URL'
+          'domain': scopeTr('scopeDomain', 'Domain'),
+          'path': scopeTr('scopePath', 'Path'),
+          'full': scopeTr('scopeFullUrl', 'Full URL')
         };
         cacheScopeDisplay.textContent = scopeDisplayNames[this.cacheMetadata.cacheScope] || 'Path';
+        this.setCopyableValue(cacheScopeDisplay.closest('.stat-inline') || cacheScopeDisplay, cacheScopeDisplay.textContent, 'cache scope');
       } else {
         // Fallback: read current setting from storage
-        chrome.storage.local.get(['scrapfly_settings'], (result) => {
-          if (result.scrapfly_settings) {
-            const settings = typeof result.scrapfly_settings === 'string'
-              ? JSON.parse(result.scrapfly_settings)
-              : result.scrapfly_settings;
-            const actualSettings = settings.settings || settings;
-            const cacheScope = actualSettings.cacheScope || actualSettings.detection?.cacheScope || 'path';
+        Utils.getSettings().then((settings) => {
+          const cacheScope = settings.cacheScope || settings.detection?.cacheScope || 'path';
 
-            const scopeDisplayNames = {
-              'domain': 'Domain',
-              'path': 'Path',
-              'full': 'Full URL'
-            };
-            cacheScopeDisplay.textContent = scopeDisplayNames[cacheScope] || 'Path';
-          }
-        });
+          const scopeDisplayNames = {
+            'domain': 'Domain',
+            'path': 'Path',
+            'full': 'Full URL'
+          };
+          cacheScopeDisplay.textContent = scopeDisplayNames[cacheScope] || 'Path';
+          this.setCopyableValue(cacheScopeDisplay.closest('.stat-inline') || cacheScopeDisplay, cacheScopeDisplay.textContent, 'cache scope');
+        }).catch(() => {});
       }
     }
 };
@@ -718,6 +826,87 @@ DetectionUI.formatExpiryRemaining = function(msRemaining) {
     return `${minutes}m`;
 };
 
+DetectionUI.setCopyableValue = function(element, value, label = 'value') {
+    if (!element) {
+      return;
+    }
+
+    const copyValue = String(value ?? '').trim();
+    if (!copyValue || copyValue === '-') {
+      element.classList.remove('copyable-value');
+      element.removeAttribute('data-copy-value');
+      element.removeAttribute('data-copy-label');
+      element.removeAttribute('role');
+      element.removeAttribute('tabindex');
+      element.removeAttribute('aria-label');
+      return;
+    }
+
+    element.classList.add('copyable-value');
+    element.dataset.copyValue = copyValue;
+    element.dataset.copyLabel = label;
+    element.setAttribute('role', 'button');
+    element.setAttribute('tabindex', '0');
+    element.setAttribute('aria-label', `Copy ${label}`);
+    element.title = element.id === 'siteUrl' ? copyValue : `Copy ${label}: ${copyValue}`;
+};
+
+DetectionUI.copyCopyableValue = async function(element) {
+    const value = element?.dataset?.copyValue;
+    if (!value) {
+      return;
+    }
+
+    const copied = await FormatUtils.copyToClipboard(value, {
+      notify: true,
+      notificationMessage: 'Copied',
+      element: null
+    });
+
+    if (!copied) {
+      return;
+    }
+
+    element.classList.add('copy-feedback-active');
+    if (element._copyFeedbackTimer) {
+      clearTimeout(element._copyFeedbackTimer);
+    }
+    element._copyFeedbackTimer = setTimeout(() => {
+      element.classList.remove('copy-feedback-active');
+      element._copyFeedbackTimer = null;
+    }, 900);
+};
+
+DetectionUI.handleCopyableValueClick = function(event) {
+    const eventTarget = event.target instanceof Element ? event.target : event.target?.parentElement;
+    const target = eventTarget?.closest('[data-copy-value]');
+    const container = document.querySelector('#detectionResults');
+    if (!target || !container || !container.contains(target)) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    this.copyCopyableValue(target);
+};
+
+DetectionUI.handleCopyableValueKeyDown = function(event) {
+    if (event.key !== 'Enter' && event.key !== ' ') {
+      return;
+    }
+
+    const eventTarget = event.target instanceof Element ? event.target : event.target?.parentElement;
+    const target = eventTarget?.closest('[data-copy-value]');
+    const container = document.querySelector('#detectionResults');
+    if (!target || !container || !container.contains(target)) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    this.copyCopyableValue(target);
+};
+
 DetectionUI.renderDetectionsPage = function(detections) {
     Logger.ui(`[renderDetectionsPage] Called with ${detections?.length || 0} detections`);
     const resultsList = document.querySelector('#resultsList');
@@ -741,6 +930,10 @@ DetectionUI.renderDetectionsPage = function(detections) {
       else if (confidence >= 70) confidenceClass = 'confidence-medium';
 
       const detectorIcon = this.getDetectorIcon(detection);
+      const detectorName = detection.detector?.name || detection.detector || 'Unknown';
+      const safeDetectorName = FormatUtils.escapeHtml(detectorName);
+      const copyDetectorName = FormatUtils.escapeAttr(detectorName);
+      const copyConfidence = FormatUtils.escapeAttr(`${confidence}%`);
 
       // Get category badges
       const categoryBadges = this.getCategoryBadges(detection);
@@ -754,13 +947,13 @@ DetectionUI.renderDetectionsPage = function(detections) {
               ${detectorIcon}
             </div>
             <div class="card-info">
-              <h3 class="detector-name">${detection.detector?.name || detection.detector || 'Unknown'}</h3>
+              <h3 class="detector-name copyable-value" data-copy-value="${copyDetectorName}" data-copy-label="detector name" role="button" tabindex="0" title="Copy detector name: ${copyDetectorName}">${safeDetectorName}</h3>
               <div class="category-badges">
                 ${categoryBadges}
               </div>
             </div>
             <div class="card-actions">
-              <span class="confidence-display ${confidenceClass}">${confidence}%</span>
+              <span class="confidence-display ${confidenceClass} copyable-value" data-copy-value="${copyConfidence}" data-copy-label="confidence" role="button" tabindex="0" title="Copy confidence: ${copyConfidence}">${confidence}%</span>
               <button class="copy-btn" data-detection-index="${globalIndex}" title="Copy detection details">
                 <svg width="14" height="14" viewBox="0 0 24 24">
                   <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" fill="currentColor"/>
@@ -784,7 +977,7 @@ DetectionUI.renderDetectionsPage = function(detections) {
       cards.forEach(card => {
         card.addEventListener('click', (e) => {
           Logger.ui('[renderDetectionsPage] Card clicked');
-          if (e.target.closest('.copy-btn')) {
+          if (e.target.closest('.copy-btn') || e.target.closest('[data-copy-value]')) {
             return;
           }
 
@@ -856,11 +1049,16 @@ DetectionUI.getCategoryBadges = function(detection) {
       const categoryInfo = this.detectorManager.getCategoryInfo(detection.category.toLowerCase());
       const categoryColor = categoryInfo?.colour || '#666666';
       const categoryName = detection.category.charAt(0).toUpperCase() + detection.category.slice(1);
+      const safeCategoryName = FormatUtils.escapeHtml(categoryName);
+      const copyCategoryName = FormatUtils.escapeAttr(categoryName);
       const rgb = this.hexToRgb(categoryColor);
+      // In the rgb branch categoryColor passed hexToRgb so it is a valid hex.
+      // In the fallback branch use a constant — never interpolate an
+      // unvalidated color into the style attribute.
       const bgStyle = rgb
         ? `background: rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.35);`
-        : `background: ${categoryColor}; color: white;`;
-      badges.push(`<span class="badge" style="${bgStyle}">${categoryName}</span>`);
+        : `background: #666666; color: white;`;
+      badges.push(`<span class="badge copyable-value" style="${bgStyle}" data-copy-value="${copyCategoryName}" data-copy-label="category" role="button" tabindex="0" title="Copy category: ${copyCategoryName}">${safeCategoryName}</span>`);
     }
 
     // Add detection method badges based on actual matches (with counts)
@@ -886,11 +1084,15 @@ DetectionUI.getCategoryBadges = function(detection) {
           const bgStyle = rgb
             ? `background: rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15); color: ${tagColor}; border: 1px solid rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3);`
             : `background: ${tagColor}; color: white;`;
-          badges.push(`<span class="badge" style="${bgStyle}">${displayText}</span>`);
+          const safeDisplayText = FormatUtils.escapeHtml(displayText);
+          const copyDisplayText = FormatUtils.escapeAttr(displayText);
+          badges.push(`<span class="badge copyable-value" style="${bgStyle}" data-copy-value="${copyDisplayText}" data-copy-label="method" role="button" tabindex="0" title="Copy method: ${copyDisplayText}">${safeDisplayText}</span>`);
         } else {
           // Fallback to CSS class (use typeName for CSS class)
           const methodClass = `badge-${typeName}`;
-          badges.push(`<span class="badge ${methodClass}">${displayText}</span>`);
+          const safeDisplayText = FormatUtils.escapeHtml(displayText);
+          const copyDisplayText = FormatUtils.escapeAttr(displayText);
+          badges.push(`<span class="badge ${methodClass} copyable-value" data-copy-value="${copyDisplayText}" data-copy-label="method" role="button" tabindex="0" title="Copy method: ${copyDisplayText}">${safeDisplayText}</span>`);
         }
       });
     }
@@ -1048,7 +1250,7 @@ DetectionUI.handleSearch = function(query) {
 };
 
 DetectionUI.getDetectorIcon = function(detection) {
-    const escapeAlt = (text) => FormatUtils.escapeHtml(text || 'Icon');
+    const escapeAlt = (text) => FormatUtils.escapeAttr(text || 'Icon');
     const normalizedCategory = String(detection?.category || detection?.detector?.category || '')
       .toLowerCase()
       .replace(/[^a-z]/g, '');
@@ -1080,7 +1282,7 @@ DetectionUI.getDetectorIcon = function(detection) {
     };
 
     const wrapFingerprintImage = (src, alt, sourceType) => (
-      `<div class="detector-icon detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${src}" alt="${alt}" class="detector-icon fingerprint-icon-image fingerprint-icon-image--${sourceType}" /></div>`
+      `<div class="detector-icon detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${FormatUtils.escapeAttr(src)}" alt="${alt}" class="detector-icon fingerprint-icon-image fingerprint-icon-image--${sourceType}" /></div>`
     );
 
     // Check for custom uploaded icon first
@@ -1088,7 +1290,7 @@ DetectionUI.getDetectorIcon = function(detection) {
       if (isFingerprintCategory) {
         return wrapFingerprintImage(detection.detector.customIcon, escapeAlt(detection.detector.name), 'custom');
       }
-      return `<img src="${detection.detector.customIcon}" alt="${escapeAlt(detection.detector.name)}" class="detector-icon" />`;
+      return `<img src="${FormatUtils.escapeAttr(detection.detector.customIcon)}" alt="${escapeAlt(detection.detector.name)}" class="detector-icon" />`;
     }
 
     // Try to get real icon from detector data
@@ -1120,8 +1322,8 @@ DetectionUI.getDetectorIcon = function(detection) {
           !detection.detector.icon.includes('.jpg') &&
           !detection.detector.icon.includes('.svg') &&
           !detection.detector.icon.includes('http')) {
-        // It's an emoji or text, return it directly
-        return detection.detector.icon;
+        // It's an emoji or text — escape before it lands in innerHTML.
+        return FormatUtils.escapeHtml(detection.detector.icon);
       }
 
       // It's a file, build path to icon in detectors/icons folder

@@ -65,9 +65,9 @@
 }
 
 .notification-close {
-  background: none;
+  background: rgba(239, 68, 68, 0.15);
   border: none;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--danger);
   cursor: pointer;
   font-size: 20px;
   line-height: 1;

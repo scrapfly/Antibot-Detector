@@ -3,6 +3,22 @@
  * Dependencies: `sections/rules/rules.js` must be loaded first.
  */
 
+const rulesHelperTr = (key, fallback) => (
+  typeof I18n !== 'undefined' ? I18n.tr(key, fallback) : fallback
+);
+
+const rulesHelperFormat = (key, fallback, ...args) => {
+  if (typeof I18n !== 'undefined' && typeof I18n.format === 'function') {
+    const formatted = I18n.format(key, ...args);
+    if (formatted !== null) return formatted;
+  }
+  let msg = fallback;
+  for (let i = 0; i < args.length; i++) {
+    msg = msg.split('{' + i + '}').join(String(args[i]));
+  }
+  return msg;
+};
+
 Rules.prototype.openConditionHelperModal = function(methodItem, inputIndex) {
   // Store reference to current method item
   this.currentConditionMethodItem = methodItem;
@@ -36,20 +52,38 @@ Rules.prototype.openConditionHelperModal = function(methodItem, inputIndex) {
   const lang = globalThis.ScrapflyWindowConditionLanguage;
   const values = (lang && typeof lang.getPresetValues === 'function')
     ? lang.getPresetValues()
+    // Fallback must mirror PRESET_GROUPS in window-condition-language.js
     : [
-        'exists',
         'typeof object',
         'typeof function',
         'typeof string',
         'typeof number',
         'typeof boolean',
+        'typeof symbol',
+        'typeof bigint',
+        'exists',
         'truthy',
         'falsy',
         '!== undefined',
         '=== undefined',
         '!== null',
         '=== null',
-        'array'
+        'array',
+        'non-empty array',
+        'empty array',
+        'has length',
+        'has keys',
+        'empty object',
+        '> 0',
+        '>= 0',
+        '=== 0',
+        '!== 0',
+        '> 1',
+        '>= 1',
+        'length > 0',
+        'length === 0',
+        '=== true',
+        '=== false'
       ];
 
   const conditionExamples = values.map((value) => ({ value, description: describeCondition(value) }));
@@ -67,11 +101,11 @@ Rules.prototype.openConditionHelperModal = function(methodItem, inputIndex) {
   content.style.cssText = 'background: var(--bg-primary); border-radius: 12px; padding: 24px; max-width: 500px; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.5);';
 
   const title = document.createElement('h3');
-  title.textContent = 'Window Condition Examples';
+  title.textContent = rulesHelperTr('rulesWindowConditionExamplesTitle', 'Window Condition Examples');
   title.style.cssText = 'margin: 0 0 16px 0; font-size: 16px; color: var(--text-primary);';
 
   const description = document.createElement('p');
-  description.textContent = 'Click on an example to use it:';
+  description.textContent = rulesHelperTr('rulesWindowConditionExamplesHint', 'Click on an example to use it:');
   description.style.cssText = 'margin: 0 0 16px 0; font-size: 12px; color: var(--text-secondary);';
 
   const examplesContainer = document.createElement('div');
@@ -128,7 +162,7 @@ Rules.prototype.openConditionHelperModal = function(methodItem, inputIndex) {
 
   const closeBtn = document.createElement('button');
   closeBtn.id = 'closeConditionHelper';
-  closeBtn.textContent = 'Close';
+  closeBtn.textContent = rulesHelperTr('btnClose', 'Close');
   closeBtn.style.cssText = 'width: 100%; padding: 10px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;';
   closeBtn.addEventListener('click', () => {
     document.body.removeChild(modalContainer);
@@ -264,13 +298,21 @@ Rules.prototype.updateWindowHelperSteps = function(activeStep) {
     if (useBtn) {
       switch (activeStep) {
         case 1:
-          useBtn.textContent = 'Next: Choose Property';
+          useBtn.textContent = rulesHelperFormat(
+            'rulesBtnNextFmt',
+            'Next: {0}',
+            rulesHelperTr('rulesStepChooseProperty', 'Choose Property')
+          );
           break;
         case 2:
-          useBtn.textContent = 'Next: Select Condition';
+          useBtn.textContent = rulesHelperFormat(
+            'rulesBtnNextFmt',
+            'Next: {0}',
+            rulesHelperTr('rulesStepSelectCondition', 'Select Condition')
+          );
           break;
         case 3:
-          useBtn.textContent = 'Use Property';
+          useBtn.textContent = rulesHelperTr('rulesUsePropertyBtn', 'Use Property');
           break;
       }
     }
@@ -424,7 +466,7 @@ Rules.prototype.resetConditionDropdown = function() {
   }
 
   if (selectedText) {
-    selectedText.textContent = 'Exists';
+    selectedText.textContent = rulesHelperTr('rulesConditionExists', 'Exists');
   }
 
   if (menu) {

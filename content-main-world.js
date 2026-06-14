@@ -9,6 +9,62 @@
 
   let debugMode = false; // Will be set by ISOLATED world
   let logCollectorEnabled = false;
+  let bridgeToken = null;
+  let lastHooksInstallAt = 0;
+
+  const SCRAPFLY_BRIDGE_TOKEN_FIELD = '__scrapflyBridgeToken';
+  const SCRAPFLY_BRIDGE_INIT_EVENT = 'scrapfly-bridge-init';
+  const SCRAPFLY_ISOLATED_TO_MAIN_EVENT = 'scrapfly-isolated-bridge-message';
+  const SCRAPFLY_MAIN_TO_ISOLATED_EVENT = 'scrapfly-main-bridge-message';
+  const SCRAPFLY_ALLOWED_ISOLATED_MESSAGE_TYPES = new Set([
+    'SCRAPFLY_PAGE_READY',
+    'SCRAPFLY_CACHE_HIT',
+    'DISABLE_MONITORING',
+    'STOP_WINDOW_POLLING',
+    'SCRAPFLY_JS_API_EVENT'
+  ]);
+
+  function isValidBridgeToken(token) {
+    return typeof token === 'string' && token.length >= 16 && token.length <= 128 && /^[A-Za-z0-9_-]+$/.test(token);
+  }
+
+  function setBridgeToken(token) {
+    if (!isValidBridgeToken(token)) return false;
+    if (bridgeToken && bridgeToken !== token) return false;
+    bridgeToken = token;
+    return true;
+  }
+
+  function postBridgeMessage(message) {
+    if (!bridgeToken || !message || typeof message !== 'object') {
+      return false;
+    }
+
+    try {
+      window.dispatchEvent(new CustomEvent(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, {
+        detail: {
+          ...message,
+          [SCRAPFLY_BRIDGE_TOKEN_FIELD]: bridgeToken
+        }
+      }));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function getTrustedIsolatedMessageData(event) {
+    const data = event?.detail;
+    if (!data || typeof data !== 'object') return null;
+    if (data[SCRAPFLY_BRIDGE_TOKEN_FIELD] !== bridgeToken) return null;
+    if (!SCRAPFLY_ALLOWED_ISOLATED_MESSAGE_TYPES.has(data.type)) return null;
+    return data;
+  }
+
+  window.addEventListener(SCRAPFLY_BRIDGE_INIT_EVENT, (event) => {
+    event.stopImmediatePropagation?.();
+    setBridgeToken(event.detail?.[SCRAPFLY_BRIDGE_TOKEN_FIELD]);
+  }, true);
 
   // Suppress hook reporting during extension-driven property reads
   const HOOK_SUPPRESSION_DEPTH_KEY = '__scrapflyHookSuppressionDepth';
@@ -42,9 +98,12 @@
     POLL_INTERVAL_MS: 100,
     DEFAULT_MAX_WINDOW_MS: 60000,
     SETTLED_CHECKS: 50,
-    MAX_INSTALLED_HOOKS: 500,
+    INSTALL_DEBOUNCE_MS: 250,
     MAX_DETECTIONS_PER_TAB: 100
   });
+
+  // APIs that are not always available (browser-specific, requires HTTPS, needs permissions, etc.)
+  const EXPECTED_UNAVAILABLE_APIS = ['USB.getDevices', 'USB.requestDevice', 'DeviceOrientationEvent', 'DeviceMotionEvent', 'BatteryManager'];
 
   // Active hooks config (merged from settings on install)
   let activeHooksConfig = { ...DEFAULT_HOOKS_CONFIG };
@@ -67,7 +126,7 @@
       POLL_INTERVAL_MS: clampNumber(merged.POLL_INTERVAL_MS, 20, 2000, DEFAULT_HOOKS_CONFIG.POLL_INTERVAL_MS),
       DEFAULT_MAX_WINDOW_MS: clampNumber(merged.DEFAULT_MAX_WINDOW_MS, 5000, 120000, DEFAULT_HOOKS_CONFIG.DEFAULT_MAX_WINDOW_MS),
       SETTLED_CHECKS: clampNumber(merged.SETTLED_CHECKS, 5, 200, DEFAULT_HOOKS_CONFIG.SETTLED_CHECKS),
-      MAX_INSTALLED_HOOKS: clampNumber(merged.MAX_INSTALLED_HOOKS, 50, 2000, DEFAULT_HOOKS_CONFIG.MAX_INSTALLED_HOOKS),
+      INSTALL_DEBOUNCE_MS: clampNumber(merged.INSTALL_DEBOUNCE_MS, 0, 2000, DEFAULT_HOOKS_CONFIG.INSTALL_DEBOUNCE_MS),
       MAX_DETECTIONS_PER_TAB: clampNumber(merged.MAX_DETECTIONS_PER_TAB, 20, 2000, DEFAULT_HOOKS_CONFIG.MAX_DETECTIONS_PER_TAB)
     };
   }
@@ -86,11 +145,14 @@
     return getErrorMessage(err).includes('Illegal invocation');
   };
 
-  // Suppress hook-related errors from breaking the page
+  // Suppress hook-related errors from breaking the page.
+  // Only suppress our own internal "Illegal invocation" noise — never swallow
+  // genuine page/API errors that merely pass through our frame.
   window.addEventListener('error', (event) => {
-    if (event.filename && event.filename.includes('content-main-world')) {
+    const msg = getErrorMessage(event.error || event.message || event);
+    if (event.filename && event.filename.includes('content-main-world') && msg.includes('Illegal invocation')) {
       event.preventDefault();
-      event.stopPropagation();
+      event.stopImmediatePropagation?.();
     }
   }, true);
 
@@ -103,10 +165,10 @@
       const stack = event.reason && typeof event.reason.stack === 'string' ? event.reason.stack : '';
       if (stack.includes('content-main-world.js')) {
         event.preventDefault();
-        event.stopPropagation?.();
+        event.stopImmediatePropagation?.();
       }
     } catch (e) {
-      // ignore
+      if (debugMode) sendLog('error', `[Hooks MAIN] unhandledrejection inspection failed: ${getErrorMessage(e)}`);
     }
   }, true);
 
@@ -135,23 +197,13 @@
     const shim = function(...args) {
       const ctx = (this === undefined || this === null || this === window) ? instance : this;
       try {
-        const result = Reflect.apply(original, ctx, args);
-        if (instance && result && typeof result.then === 'function' && typeof result.catch === 'function') {
-          return result.catch((err) => {
-            if (isIllegalInvocationError(err)) {
-              return Reflect.apply(original, instance, args);
-            }
-            throw err;
-          });
-        }
-        return result;
+        // Return the original result/promise untouched to preserve identity.
+        return Reflect.apply(original, ctx, args);
       } catch (e) {
-        if (instance) {
-          try {
-            return Reflect.apply(original, instance, args);
-          } catch (e2) {
-            throw e;
-          }
+        // Retry only for a genuine "Illegal invocation"; all other errors
+        // propagate exactly like the native call.
+        if (instance && instance !== ctx && isIllegalInvocationError(e)) {
+          return Reflect.apply(original, instance, args);
         }
         throw e;
       }
@@ -265,6 +317,11 @@
     if (windowPropertyPathCache) {
       windowPropertyPathCache.clear();
     }
+
+    const tracker = window.__WindowPropertyTracker;
+    if (tracker && typeof tracker.reset === 'function') {
+      tracker.reset();
+    }
   }
 
   // Send debug logs to service worker when debug mode enabled
@@ -318,13 +375,13 @@
         message = `${message.slice(0, MAX_LOG_MESSAGE_LENGTH)}...`;
       }
 
-      window.postMessage({
+      postBridgeMessage({
         type: 'SCRAPFLY_DEBUG_LOG',
         level: level,
         message: message,
         source: 'content-main-world',
         timestamp: Date.now()
-      }, '*');
+      });
     } catch (e) {
       // Silently fail
     }
@@ -457,12 +514,12 @@
 
     // Send detections to content script if any found
     if (detections.length > 0) {
-      window.postMessage({
+      postBridgeMessage({
         type: 'WINDOW_DETECTIONS',
         detections: detections,
         timestamp: Date.now(),
         elapsedMs: elapsed
-      }, '*');
+      });
     }
 
     // Call detection handler if provided (for retry mechanism tracking)
@@ -524,10 +581,11 @@
   // Cache hit confirmed async by ISOLATED world/background via postMessage
   window.__scrapflyCacheHitEarlyExit = false;
 
-  // Listen for disable monitoring message from ISOLATED world (cache hit)
-  window.addEventListener('message', (event) => {
-    if (event.source !== window) return;
-    const data = event.data;
+  // Listen for authenticated control messages from ISOLATED world.
+  window.addEventListener(SCRAPFLY_ISOLATED_TO_MAIN_EVENT, (event) => {
+    event.stopImmediatePropagation?.();
+    const data = getTrustedIsolatedMessageData(event);
+    if (!data) return;
 
     if (data && data.type === 'SCRAPFLY_PAGE_READY') {
       if (!pageReadySignalReceived) {
@@ -638,17 +696,24 @@
       }
       return;
     }
-  });
+  }, true);
 
   window.addEventListener('scrapfly-install-hooks', (event) => {
+    event.stopImmediatePropagation?.();
+    if (!setBridgeToken(event.detail?.[SCRAPFLY_BRIDGE_TOKEN_FIELD])) {
+      return;
+    }
+
+    const now = Date.now();
+    if (now - lastHooksInstallAt < activeHooksConfig.INSTALL_DEBOUNCE_MS) {
+      return;
+    }
+    lastHooksInstallAt = now;
+
     // Check if cache hit - skip hook installation entirely
     if (shouldSkipDueToCacheHit()) {
       return;
     }
-
-    // CRITICAL TIMING: Record when event is received
-    // Avoid performance.now(): Performance.prototype.now is a JS_HOOKS target.
-    const eventReceivedTime = Date.now();
 
     // Reset module state for SPA navigation (prevents memory leaks)
     resetModuleState();
@@ -657,8 +722,7 @@
     debugMode = event.detail?.debugMode || false; // Receive debug mode from ISOLATED world
     logCollectorEnabled = event.detail?.logCollectorEnabled || false;
 
-    // Use in-code hooks config (settings UI removed)
-    activeHooksConfig = buildHooksConfig({});
+    activeHooksConfig = buildHooksConfig(event.detail?.hooksConfig || {});
 
     // Handle fingerprintEnabled flag from event
     // This is the authoritative value from ISOLATED world (updated from storage)
@@ -680,6 +744,9 @@
 
     const resilienceManager = window.__HookResilienceManager;
     if (resilienceManager) {
+      if (typeof resilienceManager.setFailureReporter === 'function') {
+        resilienceManager.setFailureReporter(postBridgeMessage);
+      }
       resilienceManager.setExpectedTargets(hookDefinitions);
       sendLog('log', `[HookResilienceManager] Set ${resilienceManager.expectedTargets.size} expected targets from detector definitions`);
     }
@@ -693,13 +760,13 @@
         // Check cache flag before starting
         if (shouldSkipDueToCacheHit()) {
           sendLog('log', '[Window Props] Cache hit - skipping window property checks');
-          window.postMessage({
+          postBridgeMessage({
             type: 'WINDOW_PROPS_COMPLETE',
             url: window.location.href,
             timestamp: Date.now(),
             detectedCount: 0,
             reason: 'cache_hit'
-          }, '*');
+          });
           return;
         }
 
@@ -709,13 +776,14 @@
           // Initialize tracker with property definitions
           tracker.initialize(windowProperties, {
             debugMode: debugMode,
+            postMessageToIsolated: postBridgeMessage,
             onDetection: (detections) => {
               // Forward detections to content script
-              window.postMessage({
+              postBridgeMessage({
                 type: 'WINDOW_DETECTIONS',
                 detections: detections,
                 timestamp: Date.now()
-              }, '*');
+              });
             },
             onComplete: (result) => {
               sendLog('log', `[Window Props] WindowPropertyTracker complete: ${result.detectedCount}/${result.totalChecked} in ${result.elapsedMs}ms (${result.reason})`);
@@ -747,7 +815,7 @@
           const elapsed = Date.now() - startTime;
 
           if (elapsed >= MAX_WINDOW_MS || checksWithoutNew >= activeHooksConfig.SETTLED_CHECKS) {
-            window.postMessage({
+            postBridgeMessage({
               type: 'WINDOW_PROPS_COMPLETE',
               url: window.location.href,
               timestamp: Date.now(),
@@ -755,7 +823,7 @@
               totalChecked: properties.length,
               elapsedMs: elapsed,
               reason: elapsed >= MAX_WINDOW_MS ? 'max_window_reached' : 'settled'
-            }, '*');
+            });
             return;
           }
 
@@ -785,16 +853,21 @@
     } else {
       // No window properties to check - send completion immediately
       sendLog('log', '[Window Props] No window properties to check - sending completion immediately');
-      window.postMessage({
+      postBridgeMessage({
         type: 'WINDOW_PROPS_COMPLETE',
         url: window.location.href,
         timestamp: Date.now(),
         detectedCount: 0
-      }, '*');
+      });
     }
 
     // Initialize/reset hooks state for this page load
     const triggeredHooks = new Set();
+    // Targets whose detectors have all fired their one-shot detection. The
+    // wrapper short-circuits the entire detection path for these, eliminating
+    // per-call overhead on hot APIs (e.g. performance.now, getComputedStyle).
+    // Lives in the per-install scope, so it resets naturally on SPA re-init.
+    const exhaustedHooks = new Set();
     let hooksStartTime = Date.now();
     let minMonitorMs = Math.min(
       activeHooksConfig.MAX_DETECTION_MS,
@@ -857,7 +930,7 @@
       }
 
       // Send completion signal
-      window.postMessage({
+      postBridgeMessage({
         type: 'JS_HOOKS_COMPLETE',
         url: window.location.href,
         timestamp: Date.now(),
@@ -871,7 +944,7 @@
           failures: uninstallStats.failures,
           failedTargets: uninstallStats.failedTargets.slice()
         }
-      }, '*');
+      });
     };
 
     // Reset uninstall failure tracking for this page load
@@ -968,7 +1041,7 @@
 
         sendLog('log', `[Hooks MAIN] Hook detected: ${hookTarget} (${detectorName})`);
 
-        window.postMessage({
+        postBridgeMessage({
           type: 'JS_HOOK_DETECTION',
           detection: {
             detectorId: detectorId,
@@ -982,19 +1055,28 @@
             timestamp: Date.now()
           },
           url: window.location.href
-        }, '*');
+        });
       }
 
       if (newDetections > 0) {
         // DEBUG: log once per target fire (prevents log spam when multiple detectors share a hook target)
         sendLog('log', `[Hooks DEBUG] HOOK FIRED +${newDetections}: ${hookTarget} (${detectorCount} detector(s)) - at ${timeElapsed}ms`);
+        // Reset the inactivity timer only on genuine NEW detections. Duplicate
+        // fires of an already-detected target are not new activity and must not
+        // churn clearTimeout/setTimeout on every hot-path call.
+        scheduleCompletion();
       } else {
-        // DUPLICATE detection - log but still reset timer
-        sendLog('log', `[Hooks MAIN] Duplicate hook detected: ${hookTarget} (resetting completion timer)`);
+        sendLog('log', `[Hooks MAIN] Duplicate hook detected: ${hookTarget}`);
       }
 
-      // Reset completion timer even for duplicates (no activity for 2s = complete)
-      scheduleCompletion();
+      // Once every detector for this target has fired its one-shot message, mark
+      // the target exhausted so the wrapper stops invoking the detection path.
+      // This also covers non-configurable targets that cannot be uninstalled.
+      let allTriggered = true;
+      for (const detectorId of detectors.keys()) {
+        if (!triggeredHooks.has(`${detectorId}:${hookTarget}`)) { allTriggered = false; break; }
+      }
+      if (allTriggered) exhaustedHooks.add(hookTarget);
 
       // Uninstall hook immediately after firing to reduce overhead
       if (newDetections > 0) {
@@ -1035,44 +1117,34 @@
 
     function createStealthWrapper(original, callback, explicitContext, target, isGetter = false) {
       const wrapper = function(...args) {
-        // Don't report detections for extension-driven internal reads.
-        if (!isHookReportingSuppressed()) {
+        // Detection is one-shot per target. Skip the whole detection path for
+        // extension-driven internal reads AND for targets already fully detected
+        // (exhausted) — this removes per-call overhead on hot APIs.
+        if (!isHookReportingSuppressed() && !exhaustedHooks.has(target)) {
           try {
             callback();
           } catch (e) {
-            // Silently fail - detection error shouldn't break page API
+            // Detection error must never break the page API.
+            if (debugMode) sendLog('error', `[Hooks MAIN] Detection callback error for ${target}: ${getErrorMessage(e)}`);
           }
         }
-        // Use natural 'this' binding for prototype methods (e.g. getBattery, enumerateDevices)
-        // explicitContext (object instance) is fallback when 'this' is missing
-        // (e.g., destructured calls: const { getBattery } = navigator; getBattery())
+
+        // Prefer the natural 'this'; fall back to a resolved context only when
+        // 'this' is missing (e.g. destructured calls: const { getBattery } = navigator).
         const dynamicContext = (explicitContext && typeof explicitContext !== 'function')
           ? explicitContext
           : resolveContextFromTarget(target);
+        const context = (this === undefined || this === null) ? (dynamicContext || this) : this;
 
         try {
-          const context = (this === undefined || this === null || (this === window && dynamicContext))
-            ? (dynamicContext || this)
-            : this;
-          const result = Reflect.apply(original, context, args);
-          if (dynamicContext && result && typeof result.then === 'function' && typeof result.catch === 'function') {
-            return result.catch((err) => {
-              if (isIllegalInvocationError(err)) {
-                return Reflect.apply(original, dynamicContext, args);
-              }
-              throw err;
-            });
-          }
-          return result;
+          // Return the original result/promise untouched to preserve identity.
+          return Reflect.apply(original, context, args);
         } catch (e) {
-          // Retry with explicit/dynamic context when available (prevents "Illegal invocation")
-          if (dynamicContext) {
-            try {
-              return Reflect.apply(original, dynamicContext, args);
-            } catch (fallbackError) {
-              // Re-throw original error if fallback also fails
-              throw e;
-            }
+          // Last-resort retry ONLY for a genuine "Illegal invocation" when a
+          // different context is available. All other errors propagate exactly
+          // like the native call (no double-execution of side-effecting APIs).
+          if (dynamicContext && dynamicContext !== context && isIllegalInvocationError(e)) {
+            return Reflect.apply(original, dynamicContext, args);
           }
           throw e;
         }
@@ -1101,6 +1173,20 @@
       }
 
       return wrapper;
+    }
+
+    // A non-`.prototype.` function target that owns a real prototype object is a
+    // constructor/namespace (Intl.DateTimeFormat, DeviceMotionEvent, …). Wrapping it
+    // as a plain function would silently drop its static methods (e.g.
+    // Intl.DateTimeFormat.supportedLocalesOf) and break `new`/subclassing, which
+    // crashes strict apps during init. We refuse to hook these.
+    function isConstructorLikeTarget(fn) {
+      try {
+        const protoDesc = Object.getOwnPropertyDescriptor(fn, 'prototype');
+        return !!(protoDesc && protoDesc.value && typeof protoDesc.value === 'object');
+      } catch (e) {
+        return true; // conservative: if unsure, don't wrap
+      }
     }
 
     function installHook(detectorId, detectorName, category, hook) {
@@ -1143,6 +1229,20 @@
           if (resilienceManager) {
             resilienceManager.registerHookFailure(hook.target, 'PROPERTY_NOT_FOUND');
           }
+          return false;
+        }
+
+        // Never destructively wrap a constructor/namespace target. Detectors that
+        // target these (e.g. Intl.DateTimeFormat) must use a window-property check
+        // instead. Accessor/data window.* props (devicePixelRatio, innerHeight,
+        // speechSynthesis) are NOT functions, so they remain hookable.
+        if (!hook.target.includes('.prototype.') &&
+            typeof originalDescriptor.value === 'function' &&
+            isConstructorLikeTarget(originalDescriptor.value)) {
+          if (resilienceManager) {
+            resilienceManager.registerHookFailure(hook.target, 'CONSTRUCTOR_TARGET_NOT_HOOKABLE');
+          }
+          sendLog('warn', `[Hooks MAIN] Skipped constructor/namespace target (would break page): ${hook.target}`);
           return false;
         }
 
@@ -1236,9 +1336,6 @@
     const installed = new Map();
     const failureReasons = {};
 
-    // APIs that are not always available (browser-specific, requires HTTPS, needs permissions, etc.)
-    const EXPECTED_UNAVAILABLE = ['USB.getDevices', 'USB.requestDevice', 'DeviceOrientationEvent', 'DeviceMotionEvent', 'BatteryManager'];
-
     for (const detector of hookDefinitions) {
       for (const hook of detector.hooks) {
         try {
@@ -1258,7 +1355,7 @@
             installed.set(hook.target, entry);
           } else {
             failCount++;
-            const isExpectedFailure = EXPECTED_UNAVAILABLE.some(ef => hook.target.includes(ef));
+            const isExpectedFailure = EXPECTED_UNAVAILABLE_APIS.some(ef => hook.target.includes(ef));
 
             if (isExpectedFailure) {
               expectedFailed.push(hook.target);
@@ -1336,5 +1433,5 @@
     if (hookDefinitions.length === 0 || hookDefinitions.every(d => d.hooks.length === 0)) {
       completeDetection('no_hooks');
     }
-  }, { once: true });
+  }, { capture: true });
 })();

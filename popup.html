@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="modules/styles/rules.css">
   <link rel="stylesheet" href="modules/styles/advanced.css">
   <link rel="stylesheet" href="modules/styles/settings.css">
+  <link rel="stylesheet" href="modules/styles/settings-language.css">
 </head>
 <body>
   <div id="app">
@@ -21,19 +22,19 @@
             <img src="icons/icon32.png" alt="Scrapfly Robot" width="32" height="32" class="logo-icon">
           </div>
           <div class="logo-text">
-            <span id="appBrand">Scrapfly Antibot Detector</span>
+            <span id="appBrand" data-i18n="extensionName">Scrapfly: anti-bot detector</span>
             <span id="appVersion" class="app-version"></span>
           </div>
         </div>
         <div class="header-controls">
           <div class="toggle-switch">
-            <input type="checkbox" id="enableToggle" class="toggle-input" checked>
+            <input type="checkbox" id="enableToggle" class="toggle-input" checked aria-label="Enable or disable detection" data-i18n-aria-label="enableOrDisableDetection">
             <label for="enableToggle" class="toggle-label">
               <span class="toggle-slider"></span>
             </label>
           </div>
-          <button id="settingsBtn" class="settings-btn" title="Settings">
-            <svg width="16" height="16" viewBox="0 0 24 24">
+          <button id="settingsBtn" class="settings-btn" title="Settings" aria-label="Open settings" data-i18n-title="settings" data-i18n-aria-label="openSettings">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
             </svg>
           </button>
@@ -43,28 +44,28 @@
       <!-- Tabs Navigation -->
       <nav class="tabs-nav">
         <button class="tab-btn active" data-tab="detection">
-          <svg width="16" height="16" viewBox="0 0 24 24">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11.5C15.4,12.1 16,12.8 16,13.8V17.8C16,18.9 15.1,19.8 14,19.8H10C8.9,19.8 8,18.9 8,17.8V13.8C8,12.8 8.6,12.1 9.2,11.5V10C9.2,8.6 10.6,7 12,7Z" fill="currentColor"/>
           </svg>
-          Detection
+          <span data-i18n="tabDetection">Detection</span>
         </button>
         <button class="tab-btn" data-tab="history">
-          <svg width="16" height="16" viewBox="0 0 24 24">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M16.2,16.2L11,13V7H12.5V12.2L17,14.9L16.2,16.2Z" fill="currentColor"/>
           </svg>
-          History
+          <span data-i18n="tabHistory">History</span>
         </button>
         <button class="tab-btn" data-tab="rules">
-          <svg width="16" height="16" viewBox="0 0 24 24">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.98C19.47,12.66 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.97 19.05,5.05L16.56,6.05C16.04,5.65 15.48,5.32 14.87,5.07L14.49,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.51,2.42L9.13,5.07C8.52,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.72,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.52,18.68 9.13,18.93L9.51,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.49,21.58L14.87,18.93C15.48,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.28,19.04 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.98Z" fill="currentColor"/>
           </svg>
-          Rules
+          <span data-i18n="tabRules">Rules</span>
         </button>
         <button class="tab-btn" data-tab="advanced">
-          <svg width="16" height="16" viewBox="0 0 24 24">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12,2A2,2 0 0,1 14,4V6H16A2,2 0 0,1 18,8V16A2,2 0 0,1 16,18H8A2,2 0 0,1 6,16V8A2,2 0 0,1 8,6H10V4A2,2 0 0,1 12,2M9,10A1,1 0 0,0 8,11A1,1 0 0,0 9,12A1,1 0 0,0 10,11A1,1 0 0,0 9,10M15,10A1,1 0 0,0 14,11A1,1 0 0,0 15,12A1,1 0 0,0 16,11A1,1 0 0,0 15,10M8,14V16H16V14H8Z" fill="currentColor"/>
           </svg>
-          Advanced
+          <span data-i18n="tabAdvanced">Advanced</span>
         </button>
       </nav>
     </header>
@@ -81,6 +82,7 @@
               <svg class="spinner-svg" viewBox="0 0 50 50">
                 <circle class="spinner-circle" cx="25" cy="25" r="20"></circle>
               </svg>
+              <img src="icons/icon48.png" alt="" class="loading-spinner-icon" width="48" height="48">
             </div>
             <h2 class="loading-text">Loading...</h2>
           </div>
@@ -112,6 +114,7 @@
 
   <!-- Scripts -->
   <!-- Core modules (foundation - must load first) -->
+  <script src="modules/core/i18n.js"></script>
   <script src="modules/core/logger.js"></script>
   <script src="modules/core/badge-constants.js"></script>
   <script src="modules/core/constants.js"></script>
@@ -218,6 +221,14 @@
   <script src="sections/settings/settings.js"></script>
   <script src="sections/settings/settings-runtime.js"></script>
   <script src="sections/settings/settings-ui.js"></script>
+  <!-- SettingsUI feature extensions — load after settings-ui.js so the global is defined. -->
+  <script src="sections/settings/settings-ui-webhook.js"></script>
+  <script src="sections/settings/settings-ui-blacklist.js"></script>
+  <script src="sections/settings/settings-ui-colors.js"></script>
+  <script src="sections/settings/settings-ui-logs.js"></script>
+  <script src="sections/settings/settings-ui-data.js"></script>
+  <script src="sections/settings/settings-ui-updates.js"></script>
+  <script src="sections/settings/settings-ui-language.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

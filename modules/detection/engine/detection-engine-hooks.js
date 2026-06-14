@@ -48,13 +48,7 @@ function demCreateHookBatcher(chrome) {
             return;
         }
 
-        // Deduplicate by detector:hook combination
-        const dedupeKeyCounts = new Map();
-        for (const hookData of hookBatch) {
-            const key = `${hookData.detection.detectorId}:${hookData.detection.hook.target}`;
-            dedupeKeyCounts.set(key, (dedupeKeyCounts.get(key) || 0) + 1);
-        }
-
+        // Deduplicate by detector:hook combination (one detection per detectorId:target)
         const uniqueHooks = new Map();
         for (const hookData of hookBatch) {
             const key = `${hookData.detection.detectorId}:${hookData.detection.hook.target}`;

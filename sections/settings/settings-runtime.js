@@ -31,22 +31,24 @@ SettingsRuntime.loadAndApplyDefaultTab = async function(switchTabCallback) {
 
 SettingsRuntime.handleEnableToggle = async function(enabled, context = null) {
     try {
+      const hasBackgroundContext = context && context.DetectionEngineManager && context.CategoryManager && context.categoryManager;
+
       await chrome.storage.local.set({ scrapfly_enabled: enabled });
       Logger.ui('Extension enabled state updated:', enabled);
 
-      chrome.runtime.sendMessage({
-        type: 'EXTENSION_TOGGLE_CHANGED',
-        enabled: enabled
-      }).catch(() => {});
+      if (!hasBackgroundContext) {
+        chrome.runtime.sendMessage({
+          type: 'EXTENSION_TOGGLE_CHANGED',
+          enabled: enabled
+        }).catch(() => {});
+      }
 
       // Restore badges for ALL tabs when re-enabling extension
       if (enabled) {
-        const hasContext = context && context.DetectionEngineManager && context.CategoryManager && context.categoryManager;
-
         // Only restore badges when we have background context (DetectionEngineManager, etc.).
-        // In popup context (!hasContext), skip — background handles it via EXTENSION_TOGGLE_CHANGED.
+        // In popup context (!hasBackgroundContext), skip — background handles it via EXTENSION_TOGGLE_CHANGED.
         // Without this guard, popup sets all badges to EMPTY which races with background's restore.
-        if (hasContext) {
+        if (hasBackgroundContext) {
           const badgeColors = await context.CategoryManager.getBadgeColors(context.categoryManager);
           const tabs = await chrome.tabs.query({});
 
@@ -110,119 +112,174 @@ SettingsRuntime.handleSettingsUpdated = async function(context, sendResponse) {
     }
 };
 
-SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults) {
+// SSRF guard for the user-supplied webhook URL. Blocks anything that's not
+// HTTPS to a publicly-routable host so a hostile/misconfigured webhook URL
+// can't probe the user's LAN, AWS metadata service, etc.
+//
+// Note: this is a static check at validation time — Chrome's fetch() doesn't
+// expose a resolve-then-connect API, so a DNS-rebinding host that resolves
+// publicly here and privately at fetch time can still slip through. The
+// `redirect: 'error'` flag in the fetch options prevents the redirect-based
+// variant of the same attack.
+SettingsRuntime._isWebhookUrlSafe = function(rawUrl) {
+    let parsed;
+    try { parsed = new URL(rawUrl); } catch { return false; }
+    if (parsed.protocol !== 'https:') return false;
+
+    const host = parsed.hostname.toLowerCase();
+    if (host === 'localhost' || host.endsWith('.localhost')) return false;
+
+    if (/^\d+\.\d+\.\d+\.\d+$/.test(host)) {
+        const o = host.split('.').map(Number);
+        if (o[0] === 0) return false;                              // 0.0.0.0/8     — "this network"
+        if (o[0] === 10) return false;                             // 10.0.0.0/8    — RFC 1918 private
+        if (o[0] === 127) return false;                            // 127.0.0.0/8   — loopback
+        if (o[0] === 169 && o[1] === 254) return false;            // 169.254.0.0/16 — link-local (AWS/GCP metadata)
+        if (o[0] === 172 && o[1] >= 16 && o[1] <= 31) return false; // 172.16.0.0/12 — RFC 1918 private
+        if (o[0] === 192 && o[1] === 168) return false;            // 192.168.0.0/16 — RFC 1918 private
+    }
+
+    if (host.startsWith('[') && host.endsWith(']')) {
+        const v6 = host.slice(1, -1);
+        // ::1 = IPv6 loopback; :: = unspecified; fe80::/10 = link-local;
+        // fc00::/7 = unique-local (matched via fc/fd prefix).
+        if (v6 === '::1' || v6 === '::' || v6.startsWith('fe80:') || v6.startsWith('fc') || v6.startsWith('fd')) return false;
+    }
+
+    return true;
+};
+
+SettingsRuntime._redactUrlForLog = function(rawUrl) {
     try {
-      const settings = await Utils.getSettings();
-      const webhook = settings.webhook || {};
+      const u = new URL(rawUrl);
+      return `${u.protocol}//${u.host}${u.pathname}`;
+    } catch { return '[unparseable webhook url]'; }
+};
 
-      if (!webhook.enableWebhook || !webhook.webhookUrl) {
-        return;
-      }
+// Builds the template-substitution context for webhook URL/headers/body.
+SettingsRuntime._buildWebhookContext = function(pageData, detectionResults) {
+    const url = pageData.url || '';
+    let hostname = pageData.hostname || '';
+    if (!hostname && url) {
+        try { hostname = new URL(url).hostname; } catch { /* leave empty */ }
+    }
+    return {
+        url,
+        hostname,
+        title: pageData.title || 'Untitled',
+        favicon: hostname ? UrlUtils.getFaviconUrl(hostname, 64) : '',
+        timestamp: new Date().toISOString(),
+        detectionCount: detectionResults.length,
+        categories: [...new Set(detectionResults.map(d => d.category))].join(',')
+    };
+};
 
-      const url = pageData.url || '';
-      const hostname = pageData.hostname || new URL(url).hostname || '';
-      const title = pageData.title || 'Untitled';
-      const favicon = hostname ? UrlUtils.getFaviconUrl(hostname, 64) : '';
-      const timestamp = new Date().toISOString();
-      const detectionCount = detectionResults.length;
-      const categories = [...new Set(detectionResults.map(d => d.category))].join(',');
+// Substitutes <SITEURL>, <HOSTNAME>, etc. tokens into a template string.
+// Pass encode=true for URL-component contexts.
+SettingsRuntime._substituteWebhookTokens = function(template, ctx, { encode = false } = {}) {
+    const e = encode ? encodeURIComponent : (v) => v;
+    return template
+        .replace(/<SITEURL>/g, e(ctx.url))
+        .replace(/<HOSTNAME>/g, e(ctx.hostname))
+        .replace(/<TITLE>/g, e(ctx.title))
+        .replace(/<FAVICON>/g, e(ctx.favicon))
+        .replace(/<TIMESTAMP>/g, e(ctx.timestamp))
+        .replace(/<DETECTION_COUNT>/g, String(ctx.detectionCount))
+        .replace(/<CATEGORIES>/g, e(ctx.categories));
+};
 
-      const headers = {};
-      const method = (webhook.webhookMethod || 'POST').toUpperCase();
-      if (method !== 'GET') {
+SettingsRuntime._buildWebhookHeaders = function(webhook, method, ctx) {
+    const headers = {};
+    if (method !== 'GET') {
         headers['Content-Type'] = webhook.webhookContentType || 'application/json';
-      }
+    }
+    for (const header of (webhook.webhookHeaders || [])) {
+        // Strip everything outside the RFC 7230 token charset (incl. CR/LF and
+        // spaces) so a malformed header name throws no opaque fetch TypeError
+        // and can't smuggle control characters.
+        const name = (header.name || '').trim().replace(/[^!#$%&'*+.^_`|~0-9A-Za-z-]/g, '');
+        if (!name) continue;
+        headers[name] = SettingsRuntime._substituteWebhookTokens(header.value || '', ctx);
+    }
+    return headers;
+};
 
-      const customHeaders = webhook.webhookHeaders || [];
-      for (const header of customHeaders) {
-        if (header.name && header.name.trim()) {
-          let headerValue = header.value || '';
-          headerValue = headerValue
-            .replace(/<SITEURL>/g, url)
-            .replace(/<HOSTNAME>/g, hostname)
-            .replace(/<TITLE>/g, title)
-            .replace(/<FAVICON>/g, favicon)
-            .replace(/<TIMESTAMP>/g, timestamp)
-            .replace(/<DETECTION_COUNT>/g, String(detectionCount))
-            .replace(/<CATEGORIES>/g, categories);
-          headers[header.name.trim()] = headerValue;
-        }
-      }
-
-      let processedUrl = webhook.webhookUrl
-        .replace(/<SITEURL>/g, encodeURIComponent(url))
-        .replace(/<HOSTNAME>/g, encodeURIComponent(hostname))
-        .replace(/<TITLE>/g, encodeURIComponent(title))
-        .replace(/<FAVICON>/g, encodeURIComponent(favicon))
-        .replace(/<TIMESTAMP>/g, encodeURIComponent(timestamp))
-        .replace(/<DETECTION_COUNT>/g, String(detectionCount))
-        .replace(/<CATEGORIES>/g, encodeURIComponent(categories));
-
-      const fetchOptions = {
-        method: method,
-        headers: headers
-      };
-
-      if (method !== 'GET') {
-        let payload = webhook.webhookPayload || '';
-
-        if (!payload.trim()) {
-          payload = JSON.stringify({
-            url: url,
-            hostname: hostname,
-            title: title,
-            favicon: favicon,
+SettingsRuntime._buildWebhookBody = function(webhook, detectionResults, ctx) {
+    const template = (webhook.webhookPayload || '').trim();
+    if (!template) {
+        return JSON.stringify({
+            url: ctx.url,
+            hostname: ctx.hostname,
+            title: ctx.title,
+            favicon: ctx.favicon,
             detections: detectionResults,
-            timestamp: timestamp,
-            count: detectionCount
-          });
-        } else {
-          payload = payload
-            .replace(/<SITEURL>/g, url)
-            .replace(/<HOSTNAME>/g, hostname)
-            .replace(/<TITLE>/g, title)
-            .replace(/<FAVICON>/g, favicon)
-            .replace(/<TIMESTAMP>/g, timestamp)
-            .replace(/<DETECTION_COUNT>/g, String(detectionCount))
-            .replace(/<CATEGORIES>/g, categories)
-            .replace(/<DETECTIONS>/g, JSON.stringify(detectionResults));
+            timestamp: ctx.timestamp,
+            count: ctx.detectionCount
+        });
+    }
+    return SettingsRuntime._substituteWebhookTokens(template, ctx)
+        .replace(/<DETECTIONS>/g, JSON.stringify(detectionResults));
+};
+
+SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults) {
+    // Outer-scope so the catch block can log even if URL processing threw.
+    let redactedUrl = '';
+    let method = '';
+    try {
+        const settings = await Utils.getSettings();
+        const webhook = settings.webhook || {};
+        if (!webhook.enableWebhook || !webhook.webhookUrl) return;
+
+        if (!SettingsRuntime._isWebhookUrlSafe(webhook.webhookUrl)) {
+            Logger.warn('NETWORK', 'Webhook URL rejected (must be https:// to a public host)', {
+                url: SettingsRuntime._redactUrlForLog(webhook.webhookUrl)
+            });
+            return;
         }
 
-        fetchOptions.body = payload;
-      }
+        const ctx = SettingsRuntime._buildWebhookContext(pageData, detectionResults);
+        method = (webhook.webhookMethod || 'POST').toUpperCase();
+        const processedUrl = SettingsRuntime._substituteWebhookTokens(webhook.webhookUrl, ctx, { encode: true });
+        redactedUrl = SettingsRuntime._redactUrlForLog(processedUrl);
 
-      Logger.network('Sending webhook request:', {
-        url: processedUrl,
-        method: fetchOptions.method,
-        headers: fetchOptions.headers,
-        bodyLength: fetchOptions.body?.length || 0
-      });
+        const fetchOptions = {
+            method,
+            headers: SettingsRuntime._buildWebhookHeaders(webhook, method, ctx),
+            redirect: 'error',
+            credentials: 'omit',
+            referrerPolicy: 'no-referrer'
+        };
+        if (method !== 'GET') {
+            fetchOptions.body = SettingsRuntime._buildWebhookBody(webhook, detectionResults, ctx);
+        }
 
-      const response = await fetch(processedUrl, fetchOptions);
-
-      if (response.ok) {
-        Logger.network('Webhook sent successfully', { url: processedUrl, status: response.status });
-      } else {
-        const errorText = await response.text().catch(() => 'Could not read response');
-        Logger.warn('NETWORK', 'Webhook returned non-OK status', {
-          url: processedUrl,
-          status: response.status,
-          statusText: response.statusText,
-          errorText: errorText
+        Logger.network('Sending webhook request:', {
+            url: redactedUrl,
+            method: fetchOptions.method,
+            bodyLength: fetchOptions.body?.length || 0
         });
-      }
-    } catch (error) {
-      Logger.error('NETWORK', 'Failed to send webhook:', {
-        error: error.message,
-        name: error.name,
-        url: processedUrl,
-        method: fetchOptions.method
-      });
 
-      // "Failed to fetch" usually means server down, CORS issue, firewall, or bad URL
-      if (error.message.includes('Failed to fetch')) {
-        Logger.error('NETWORK', 'Hint: Check that your webhook server is running and accepts requests from extensions');
-      }
+        const response = await fetch(processedUrl, fetchOptions);
+        if (response.ok) {
+            Logger.network('Webhook sent successfully', { url: redactedUrl, status: response.status });
+        } else {
+            Logger.warn('NETWORK', 'Webhook returned non-OK status', {
+                url: redactedUrl,
+                status: response.status,
+                statusText: response.statusText
+            });
+        }
+    } catch (error) {
+        Logger.error('NETWORK', 'Failed to send webhook:', {
+            error: error.message,
+            name: error.name,
+            url: redactedUrl || '[no url]',
+            method: method || '[no method]'
+        });
+        // "Failed to fetch" usually means server down, CORS issue, firewall, or bad URL.
+        if (error.message.includes('Failed to fetch')) {
+            Logger.error('NETWORK', 'Hint: Check that your webhook server is running and accepts requests from extensions');
+        }
     }
 };
 
@@ -238,18 +295,27 @@ SettingsRuntime.dispatchJsApiEvent = async function(eventName, data = {}) {
         return false;
       }
 
-      // ISOLATED world events aren't visible to page scripts; use postMessage to reach MAIN world
+      // ISOLATED world events aren't visible to page scripts; use the authenticated
+      // content bridge to reach MAIN world when available.
       const eventData = {
         ...data,
         timestamp: data.timestamp || new Date().toISOString()
       };
 
-      Logger.ui(`[Settings] Sending postMessage to MAIN world: scrapfly:${eventName}`);
-      window.postMessage({
+      Logger.ui(`[Settings] Sending JS API event to MAIN world: scrapfly:${eventName}`);
+      const bridge = typeof window !== 'undefined' ? window.ScrapflyBridge : null;
+      const message = {
         type: 'SCRAPFLY_JS_API_EVENT',
         eventName: eventName,
         detail: eventData
-      }, '*');
+      };
+
+      if (bridge && typeof bridge.sendToMainWorld === 'function') {
+        bridge.sendToMainWorld(message);
+      } else {
+        Logger.warn('UI', 'JS API: MAIN world bridge unavailable, event skipped');
+        return false;
+      }
 
       Logger.ui(`JS API: Sent ${eventName} event to MAIN world`, data);
       return true;

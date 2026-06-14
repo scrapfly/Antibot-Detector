@@ -10,6 +10,30 @@ class NotificationManager {
     this.maxToasts = 2;
   }
 
+  normalizeText(value) {
+    if (value === null || value === undefined) return '';
+    return String(value);
+  }
+
+  normalizeType(type) {
+    const allowedTypes = new Set(['success', 'error', 'warning', 'info', 'danger']);
+    return allowedTypes.has(type) ? type : 'info';
+  }
+
+  normalizePosition(position) {
+    const allowedPositions = new Set(['top-right', 'top-left', 'bottom-right', 'bottom-left']);
+    return allowedPositions.has(position) ? position : 'top-right';
+  }
+
+  setIconContent(element, iconMarkup) {
+    const markup = this.normalizeText(iconMarkup).trim();
+    if (markup.startsWith('<svg ') || markup.startsWith('<svg>') || markup.startsWith('<div class="notification-spinner"')) {
+      element.innerHTML = markup;
+      return;
+    }
+    element.textContent = markup;
+  }
+
   /**
    * Initialize the notification system
    */
@@ -59,9 +83,12 @@ class NotificationManager {
     };
 
     const settings = { ...defaults, ...options };
+    const safeType = this.normalizeType(type);
+    const safePosition = this.normalizePosition(settings.position);
+    const messageText = this.normalizeText(message);
 
     // Check for existing toast with same message and type - reset timer instead of creating new
-    const existingToast = this.toasts.find(t => t.message === message && t.type === type);
+    const existingToast = this.toasts.find(t => t.message === messageText && t.type === safeType);
     if (existingToast && existingToast.element && document.contains(existingToast.element)) {
       // Clear existing timeout
       if (existingToast.timeoutId) {
@@ -96,20 +123,44 @@ class NotificationManager {
     // Create toast element
     const toast = document.createElement('div');
     toast.id = toastId;
-    toast.className = `notification-toast notification-${type} notification-${settings.position}${settings.micro ? ' notification-micro' : ''}`;
+    toast.className = `notification-toast notification-${safeType} notification-${safePosition}${settings.micro ? ' notification-micro' : ''}`;
     toast.setAttribute('data-show', 'false');
 
-    // Build toast HTML
-    toast.innerHTML = `
-      <div class="notification-toast-content">
-        <span class="notification-icon">${settings.icon}</span>
-        <div class="notification-body">
-          <div class="notification-message">${message}</div>
-        </div>
-        ${settings.closeable ? '<button class="notification-close">&times;</button>' : ''}
-      </div>
-      ${settings.showProgress ? '<div class="notification-progress"><div class="notification-progress-bar"></div></div>' : ''}
-    `;
+    const content = document.createElement('div');
+    content.className = 'notification-toast-content';
+
+    const icon = document.createElement('span');
+    icon.className = 'notification-icon';
+    this.setIconContent(icon, settings.icon);
+    content.appendChild(icon);
+
+    const body = document.createElement('div');
+    body.className = 'notification-body';
+    const messageEl = document.createElement('div');
+    messageEl.className = 'notification-message';
+    messageEl.textContent = messageText;
+    body.appendChild(messageEl);
+    content.appendChild(body);
+
+    if (settings.closeable) {
+      const closeButton = document.createElement('button');
+      closeButton.className = 'notification-close';
+      closeButton.type = 'button';
+      closeButton.setAttribute('aria-label', 'Close notification');
+      closeButton.textContent = '\u00d7';
+      content.appendChild(closeButton);
+    }
+
+    toast.appendChild(content);
+
+    if (settings.showProgress) {
+      const progress = document.createElement('div');
+      progress.className = 'notification-progress';
+      const progressBar = document.createElement('div');
+      progressBar.className = 'notification-progress-bar';
+      progress.appendChild(progressBar);
+      toast.appendChild(progress);
+    }
 
     // Add to container
     this.container.appendChild(toast);
@@ -141,7 +192,7 @@ class NotificationManager {
       timeoutId = setTimeout(() => this.removeToast(toastId), settings.duration);
     }
 
-    this.toasts.push({ id: toastId, element: toast, message, type, timeoutId });
+    this.toasts.push({ id: toastId, element: toast, message: messageText, type: safeType, timeoutId });
 
     // Remove oldest toast if exceeded max
     if (this.toasts.length > this.maxToasts) {
@@ -236,18 +287,20 @@ class NotificationManager {
   confirm(options = {}) {
     if (!this.initialized) this.initialize();
 
+    const _t = (typeof I18n !== 'undefined') ? I18n : null;
     const defaults = {
-      title: 'Confirm',
-      message: 'Are you sure?',
-      confirmText: 'Confirm',
-      cancelText: 'Cancel',
-      type: 'info', // info, warning, danger
+      title: (_t && _t.get('notifConfirmTitleDefault')) || 'Confirm',
+      message: (_t && _t.get('notifConfirmMessageDefault')) || 'Are you sure?',
+      confirmText: (_t && _t.get('notifConfirmTitleDefault')) || 'Confirm',
+      cancelText: (_t && _t.get('btnCancel')) || 'Cancel',
+      type: 'info',
       showIcon: true,
       icon: null,
       emphasizeAction: false
     };
 
     const settings = { ...defaults, ...options };
+    settings.type = this.normalizeType(settings.type);
     if (!settings.icon) {
       settings.icon = this.getIcon(settings.type === 'danger' ? 'error' : settings.type);
     }
@@ -267,18 +320,43 @@ class NotificationManager {
       dialog.className = `notification-confirm notification-confirm-${settings.type}${emphasisClass}`;
       dialog.setAttribute('data-show', 'false');
 
-      // Build dialog HTML
-      dialog.innerHTML = `
-        <div class="notification-confirm-content">
-          ${settings.showIcon ? `<div class="notification-confirm-icon">${settings.icon}</div>` : ''}
-          <h3 class="notification-confirm-title">${settings.title}</h3>
-          <p class="notification-confirm-message">${settings.message}</p>
-          <div class="notification-confirm-buttons">
-            <button class="notification-btn notification-btn-cancel">${settings.cancelText}</button>
-            <button class="notification-btn notification-btn-confirm notification-btn-${settings.type}">${settings.confirmText}</button>
-          </div>
-        </div>
-      `;
+      const content = document.createElement('div');
+      content.className = 'notification-confirm-content';
+
+      if (settings.showIcon) {
+        const icon = document.createElement('div');
+        icon.className = 'notification-confirm-icon';
+        this.setIconContent(icon, settings.icon);
+        content.appendChild(icon);
+      }
+
+      const title = document.createElement('h3');
+      title.className = 'notification-confirm-title';
+      title.textContent = this.normalizeText(settings.title);
+      content.appendChild(title);
+
+      const message = document.createElement('p');
+      message.className = 'notification-confirm-message';
+      message.textContent = this.normalizeText(settings.message);
+      content.appendChild(message);
+
+      const buttons = document.createElement('div');
+      buttons.className = 'notification-confirm-buttons';
+
+      const confirmButton = document.createElement('button');
+      confirmButton.className = `notification-btn notification-btn-confirm notification-btn-${settings.type}`;
+      confirmButton.type = 'button';
+      confirmButton.textContent = this.normalizeText(settings.confirmText);
+      buttons.appendChild(confirmButton);
+
+      const cancelButton = document.createElement('button');
+      cancelButton.className = 'notification-btn notification-btn-cancel';
+      cancelButton.type = 'button';
+      cancelButton.textContent = this.normalizeText(settings.cancelText);
+      buttons.appendChild(cancelButton);
+
+      content.appendChild(buttons);
+      dialog.appendChild(content);
 
       // Add to body
       document.body.appendChild(backdrop);
@@ -360,7 +438,11 @@ class NotificationManager {
    * @param {string} message - Loading message
    * @returns {Object} Loading controller with update and close methods
    */
-  loading(message = 'Loading...') {
+  loading(message) {
+    if (!message) {
+      const _tL = (typeof I18n !== 'undefined') ? I18n : null;
+      message = (_tL && _tL.get('notifLoadingDefault')) || 'Loading...';
+    }
     const toastId = this.showToast(message, 'info', {
       duration: 0,
       closeable: false,
@@ -406,15 +488,9 @@ const NotificationHelper = {
         return this._notificationCache.value;
       }
 
-      const result = await chrome.storage.local.get(['scrapfly_settings']);
-
-      if (result.scrapfly_settings) {
-        const settings = typeof result.scrapfly_settings === 'string'
-          ? JSON.parse(result.scrapfly_settings)
-          : result.scrapfly_settings;
-
-        const actualSettings = settings.settings || settings;
-        const enabled = actualSettings.notificationsEnabled !== false;
+      if (typeof Utils !== 'undefined' && typeof Utils.getSettings === 'function') {
+        const settings = await Utils.getSettings();
+        const enabled = settings.notificationsEnabled !== false;
 
         // Cache the result
         this._notificationCache.value = enabled;

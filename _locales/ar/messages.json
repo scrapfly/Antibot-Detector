@@ -1,0 +1,1676 @@
+{
+  "extensionName": {
+    "message": "Scrapfly: كاشف مكافحة الروبوتات"
+  },
+  "extensionDescription": {
+    "message": "اكتشاف CAPTCHA وأنظمة مكافحة الروبوتات وتقنيات البصمة على المواقع"
+  },
+  "tabDetection": {
+    "message": "الكشف"
+  },
+  "tabHistory": {
+    "message": "السجل"
+  },
+  "tabRules": {
+    "message": "القواعد"
+  },
+  "tabAdvanced": {
+    "message": "متقدم"
+  },
+  "openSettings": {
+    "message": "فتح الإعدادات"
+  },
+  "enableOrDisableDetection": {
+    "message": "تفعيل أو تعطيل الكشف"
+  },
+  "noDetectionsFound": {
+    "message": "لم يتم العثور على كشوفات"
+  },
+  "analyzingPage": {
+    "message": "جارٍ تحليل الصفحة"
+  },
+  "actionRemoveFromBlacklist": {
+    "message": "إزالة من القائمة السوداء"
+  },
+  "advancedDomainBlacklisted": {
+    "message": "الأدوات المتقدمة معطلة لهذا النطاق"
+  },
+  "blacklistManageHint": {
+    "message": "أو انتقل إلى الإعدادات ← الكشف ← النطاقات المحظورة للإدارة."
+  },
+  "statDetections": {
+    "message": "الكشوفات"
+  },
+  "statConfidence": {
+    "message": "الثقة"
+  },
+  "statDifficulty": {
+    "message": "الصعوبة"
+  },
+  "statCacheScope": {
+    "message": "نطاق التخزين المؤقت"
+  },
+  "scopeDomain": {
+    "message": "النطاق"
+  },
+  "scopePath": {
+    "message": "المسار"
+  },
+  "scopeFullUrl": {
+    "message": "URL كامل"
+  },
+  "difficultyLow": {
+    "message": "منخفض"
+  },
+  "difficultyMedium": {
+    "message": "متوسط"
+  },
+  "difficultyHigh": {
+    "message": "عالٍ"
+  },
+  "searchHistory": {
+    "message": "البحث في السجل..."
+  },
+  "searchDetectors": {
+    "message": "البحث في الكواشف..."
+  },
+  "paginationPrev": {
+    "message": "الصفحة السابقة"
+  },
+  "paginationNext": {
+    "message": "الصفحة التالية"
+  },
+  "paginationPage": {
+    "message": "صفحة"
+  },
+  "paginationOf": {
+    "message": "من"
+  },
+  "paginationNoItems": {
+    "message": "لا توجد عناصر للعرض"
+  },
+  "paginationCurrentPageAria": {
+    "message": "رقم الصفحة الحالية"
+  },
+  "btnImport": {
+    "message": "استيراد"
+  },
+  "btnExport": {
+    "message": "تصدير"
+  },
+  "btnClear": {
+    "message": "مسح"
+  },
+  "btnAdd": {
+    "message": "إضافة"
+  },
+  "btnUpdate": {
+    "message": "تحديث"
+  },
+  "btnClose": {
+    "message": "إغلاق"
+  },
+  "btnSave": {
+    "message": "حفظ"
+  },
+  "btnCancel": {
+    "message": "إلغاء"
+  },
+  "btnDelete": {
+    "message": "حذف"
+  },
+  "historyImportTitle": {
+    "message": "استيراد السجل"
+  },
+  "historyExportTitle": {
+    "message": "تصدير السجل"
+  },
+  "historyClearTitle": {
+    "message": "مسح السجل"
+  },
+  "historyEmptyTitle": {
+    "message": "لا يوجد سجل بعد"
+  },
+  "historyEmptyDescription": {
+    "message": "سيظهر سجل الكشف هنا أثناء تصفحك للمواقع."
+  },
+  "rulesUpdateTitle": {
+    "message": "البحث عن تحديثات الكواشف"
+  },
+  "rulesClearTitle": {
+    "message": "مسح جميع القواعد"
+  },
+  "rulesAddTitle": {
+    "message": "إضافة كاشف جديد"
+  },
+  "rulesEmptyTitle": {
+    "message": "لم يتم تحميل كواشف"
+  },
+  "rulesEmptyDescription": {
+    "message": "ستظهر الكواشف هنا بمجرد تحميلها من التخزين والملفات."
+  },
+  "ruleModalActionEdit": {
+    "message": "تعديل"
+  },
+  "ruleSectionDetectorInfo": {
+    "message": "معلومات الكاشف"
+  },
+  "ruleFieldName": {
+    "message": "الاسم"
+  },
+  "ruleFieldNamePlaceholder": {
+    "message": "اسم الكاشف"
+  },
+  "ruleFieldCategory": {
+    "message": "الفئة"
+  },
+  "categoryAntibot": {
+    "message": "مكافحة الروبوتات"
+  },
+  "categoryCaptcha": {
+    "message": "Captcha"
+  },
+  "categoryFingerprint": {
+    "message": "البصمة"
+  },
+  "ruleFieldDifficulty": {
+    "message": "الصعوبة"
+  },
+  "ruleFieldIcon": {
+    "message": "أيقونة"
+  },
+  "ruleFieldVersion": {
+    "message": "الإصدار"
+  },
+  "ruleFieldAuthor": {
+    "message": "المؤلف"
+  },
+  "ruleSectionBadgeColor": {
+    "message": "لون الشارة"
+  },
+  "ruleSectionDetectionMethods": {
+    "message": "طرق الكشف"
+  },
+  "settingsTitle": {
+    "message": "الإعدادات"
+  },
+  "settingsSubtitle": {
+    "message": "تكوين تفضيلات الإضافة"
+  },
+  "settingsTabGeneral": {
+    "message": "عام"
+  },
+  "settingsTabDetection": {
+    "message": "الكشف"
+  },
+  "settingsTabHistory": {
+    "message": "السجل"
+  },
+  "settingsTabData": {
+    "message": "البيانات"
+  },
+  "settingsGroupCoreSettings": {
+    "message": "الإعدادات الأساسية"
+  },
+  "settingsCardNotifications": {
+    "message": "الإشعارات"
+  },
+  "settingsCardNotificationsDesc": {
+    "message": "إظهار التنبيهات عند اكتشاف أنظمة الأمان"
+  },
+  "settingsCardDebug": {
+    "message": "وضع التصحيح"
+  },
+  "settingsCardDebugDesc": {
+    "message": "تمكين تسجيل وحدة التحكم للتصحيح"
+  },
+  "settingsRowLogCollector": {
+    "message": "جامع السجلات"
+  },
+  "settingsRowMaxLogs": {
+    "message": "الحد الأقصى للسجلات"
+  },
+  "settingsRowCollected": {
+    "message": "المجموع"
+  },
+  "settingsGroupDetectorUpdates": {
+    "message": "تحديثات الكواشف"
+  },
+  "settingsCardAutoUpdate": {
+    "message": "التحقق التلقائي من التحديثات"
+  },
+  "settingsCardAutoUpdateDesc": {
+    "message": "التحقق تلقائيًا من تعريفات الكواشف الجديدة"
+  },
+  "settingsRowCheckInterval": {
+    "message": "فاصل التحقق"
+  },
+  "settingsCheckIntervalNever": {
+    "message": "أبدًا"
+  },
+  "settingsBtnCheckNow": {
+    "message": "تحقق الآن"
+  },
+  "settingsExtensionUpdateRequired": {
+    "message": "تحديث الإضافة مطلوب"
+  },
+  "settingsBtnUpdateExtension": {
+    "message": "تحديث الإضافة"
+  },
+  "settingsGroupBadgeColors": {
+    "message": "ألوان الشارات"
+  },
+  "settingsRowLastCheck": {
+    "message": "آخر تحقق"
+  },
+  "advancedToolsTitle": {
+    "message": "أدوات الالتقاط المتقدمة"
+  },
+  "advancedToolsDescription": {
+    "message": "استخراج ملفات تعريف الارتباط والرموز ومفاتيح الموقع من أنظمة الحماية المكتشفة"
+  },
+  "advancedToolsHint": {
+    "message": "قم بزيارة صفحة محمية لتمكين أدوات الالتقاط"
+  },
+  "advancedSubtabTools": {
+    "message": "الأدوات"
+  },
+  "advancedSubtabHistory": {
+    "message": "السجل"
+  },
+  "advancedCaptureHistoryTitle": {
+    "message": "سجل الالتقاطات"
+  },
+  "advancedCaptureHistorySubtitle": {
+    "message": "تصفية الالتقاطات المجمعة وفحصها وتصديرها"
+  },
+  "advancedFilterSite": {
+    "message": "الموقع"
+  },
+  "advancedFilterAllSites": {
+    "message": "جميع المواقع"
+  },
+  "advancedFilterCurrentSite": {
+    "message": "الموقع الحالي"
+  },
+  "advancedFilterModule": {
+    "message": "الوحدة"
+  },
+  "advancedFilterAllModules": {
+    "message": "جميع الوحدات"
+  },
+  "advancedFilterSearch": {
+    "message": "بحث"
+  },
+  "advancedBtnExport": {
+    "message": "تصدير"
+  },
+  "advancedBtnExportTitle": {
+    "message": "تصدير الالتقاطات"
+  },
+  "advancedBtnClearAll": {
+    "message": "مسح الكل"
+  },
+  "advancedBtnClearAllTitle": {
+    "message": "مسح جميع الالتقاطات"
+  },
+  "advancedEmptyCapturesTitle": {
+    "message": "لا توجد التقاطات بعد"
+  },
+  "advancedEmptyCapturesHint": {
+    "message": "استخدم علامة تبويب الأدوات لالتقاط البيانات من الأنظمة المكتشفة"
+  },
+  "advancedNoResultsTitle": {
+    "message": "لم يتم العثور على التقاطات"
+  },
+  "advancedNoResultsHint": {
+    "message": "حاول تعديل المرشحات أو استعلام البحث"
+  },
+  "advancedBtnResetFilters": {
+    "message": "إعادة تعيين جميع المرشحات"
+  },
+  "advancedModalTitle": {
+    "message": "أدوات الكشف المتقدمة"
+  },
+  "advancedModalIntro": {
+    "message": "أدوات التقاط متخصصة للتحليل العميق لأنظمة مكافحة الروبوتات و CAPTCHA وتقنيات البصمة. تظهر هذه الأدوات تلقائيًا عند العثور على الكشوفات ذات الصلة."
+  },
+  "advancedSectionSupported": {
+    "message": "الأنظمة المدعومة حاليًا"
+  },
+  "advancedSectionHowItWorks": {
+    "message": "كيف يعمل"
+  },
+  "advancedStep1Title": {
+    "message": "الكشف التلقائي"
+  },
+  "advancedStep1Desc": {
+    "message": "تظهر الأدوات عند اكتشاف أنظمة مكافحة الروبوتات ذات الصلة في الصفحة الحالية"
+  },
+  "advancedStep2Title": {
+    "message": "بدء الالتقاط"
+  },
+  "advancedStep2Desc": {
+    "message": "تقوم الأدوات تلقائيًا بتهيئة المعترضات وبدء مراقبة طلبات الشبكة"
+  },
+  "advancedStep3Title": {
+    "message": "مراجعة النتائج"
+  },
+  "advancedStep3Desc": {
+    "message": "يتم تخزين البيانات الملتقطة مؤقتًا (30 دقيقة) مع إمكانيات تصدير كاملة"
+  },
+  "advancedFooterHint": {
+    "message": "تنتهي صلاحية النتائج بعد 30 دقيقة لضمان البيانات الجديدة"
+  },
+  "settings": {
+    "message": "الإعدادات"
+  },
+  "paginationShowingFmt": {
+    "message": "عرض {0}-{1} من {2}"
+  },
+  "paginationShowingItems": {
+    "message": "عرض {0}-{1} من {2} {3}"
+  },
+  "timeUnknown": {
+    "message": "غير معروف"
+  },
+  "timeJustNow": {
+    "message": "الآن"
+  },
+  "timeSecondsAgoFmt": {
+    "message": "قبل {0} ث"
+  },
+  "timeMinutesAgoFmt": {
+    "message": "قبل {0} د"
+  },
+  "timeHoursAgoFmt": {
+    "message": "قبل {0} س"
+  },
+  "timeDaysAgoFmt": {
+    "message": "قبل {0} ي"
+  },
+  "timeOneMinuteAgo": {
+    "message": "قبل دقيقة"
+  },
+  "timeMinutesAgoLongFmt": {
+    "message": "قبل {0} دقائق"
+  },
+  "timeOneHourAgo": {
+    "message": "قبل ساعة"
+  },
+  "timeHoursAgoLongFmt": {
+    "message": "قبل {0} ساعات"
+  },
+  "timeOneDayAgo": {
+    "message": "قبل يوم"
+  },
+  "timeDaysAgoLongFmt": {
+    "message": "قبل {0} أيام"
+  },
+  "timeOneWeekAgo": {
+    "message": "قبل أسبوع"
+  },
+  "timeWeeksAgoFmt": {
+    "message": "قبل {0} أسابيع"
+  },
+  "timeOneMonthAgo": {
+    "message": "قبل شهر"
+  },
+  "timeMonthsAgoFmt": {
+    "message": "قبل {0} أشهر"
+  },
+  "timeOneYearAgo": {
+    "message": "قبل سنة"
+  },
+  "timeYearsAgoFmt": {
+    "message": "قبل {0} سنوات"
+  },
+  "btnCancelSettings": {
+    "message": "إلغاء"
+  },
+  "btnSaveSettings": {
+    "message": "حفظ الإعدادات"
+  },
+  "poweredBy": {
+    "message": "بدعم من"
+  },
+  "categoryColors": {
+    "message": "ألوان الفئات"
+  },
+  "methodSuffixPatterns": {
+    "message": "أنماط"
+  },
+  "btnSaveRule": {
+    "message": "حفظ القاعدة"
+  },
+  "tagColors": {
+    "message": "ألوان العلامات"
+  },
+  "cacheConfiguration": {
+    "message": "تكوين التخزين المؤقت"
+  },
+  "cacheDuration": {
+    "message": "مدة التخزين المؤقت"
+  },
+  "timeUnitMinutes": {
+    "message": "دقائق"
+  },
+  "timeUnitHours": {
+    "message": "ساعات"
+  },
+  "timeUnitDays": {
+    "message": "أيام"
+  },
+  "blacklistedDomains": {
+    "message": "النطاقات المحظورة"
+  },
+  "blacklistedDomainsDesc": {
+    "message": "النطاقات التي يتم فيها تخطي الكشف بالكامل"
+  },
+  "jsApiEvents": {
+    "message": "أحداث JS API"
+  },
+  "jsApiEventsDesc": {
+    "message": "إرسال أحداث مخصصة إلى نافذة الصفحة"
+  },
+  "ruleMethodSettings": {
+    "message": "إعدادات طريقة الكشف"
+  },
+  "ruleConfidenceLevel": {
+    "message": "مستوى الثقة"
+  },
+  "ruleConfidencePrefix": {
+    "message": "ثقة الكشف:"
+  },
+  "detectionName": {
+    "message": "اسم الكشف"
+  },
+  "historyModalUrl": {
+    "message": "URL"
+  },
+  "interval6Hours": {
+    "message": "6 ساعات"
+  },
+  "interval12Hours": {
+    "message": "12 ساعة"
+  },
+  "interval24Hours": {
+    "message": "24 ساعة"
+  },
+  "interval2Days": {
+    "message": "يومان"
+  },
+  "interval1Week": {
+    "message": "أسبوع"
+  },
+  "methodLabelUrl": {
+    "message": "URL"
+  },
+  "methodLabelHeader": {
+    "message": "HEADER"
+  },
+  "methodLabelCookie": {
+    "message": "COOKIE"
+  },
+  "methodLabelContent": {
+    "message": "CONTENT"
+  },
+  "methodLabelDom": {
+    "message": "DOM"
+  },
+  "methodLabelJsHooks": {
+    "message": "JS HOOKS"
+  },
+  "methodLabelWindow": {
+    "message": "WINDOW"
+  },
+  "methodLabelPayload": {
+    "message": "PAYLOAD"
+  },
+  "methodOnePattern": {
+    "message": "نمط واحد"
+  },
+  "methodPatternsFmt": {
+    "message": "{0} أنماط"
+  },
+  "methodAddPattern": {
+    "message": "إضافة نمط"
+  },
+  "methodSearchPatterns": {
+    "message": "البحث في الأنماط..."
+  },
+  "methodNoPatterns": {
+    "message": "لا توجد أنماط"
+  },
+  "methodNoMatchingPatterns": {
+    "message": "لا توجد أنماط مطابقة"
+  },
+  "methodSuffixMatches": {
+    "message": "تطابقات"
+  },
+  "cacheExpiredLabel": {
+    "message": "منتهي الصلاحية"
+  },
+  "copiedNotification": {
+    "message": "تم النسخ"
+  },
+  "copiedInlineMsg": {
+    "message": "✓ تم النسخ!"
+  },
+  "unknownDetection": {
+    "message": "اكتشاف غير معروف"
+  },
+  "matchSingular": {
+    "message": "تطابق"
+  },
+  "matchPlural": {
+    "message": "تطابقات"
+  },
+  "noMatchesRecorded": {
+    "message": "لم تُسجَّل أي تطابقات"
+  },
+  "clearCacheConfirmTitle": {
+    "message": "مسح التخزين المؤقت"
+  },
+  "clearCacheConfirmMsg": {
+    "message": "سيؤدي هذا إلى إزالة بيانات الاكتشاف المخزَّنة مؤقتًا لهذا النطاق وتشغيل تحليل جديد."
+  },
+  "clearCacheConfirmBtn": {
+    "message": "مسح التخزين المؤقت"
+  },
+  "clearingMsg": {
+    "message": "جارٍ المسح..."
+  },
+  "clearedSuccessMsg": {
+    "message": "✓ تم المسح!"
+  },
+  "cacheClearedToast": {
+    "message": "تم مسح التخزين المؤقت"
+  },
+  "failedToClearCacheToast": {
+    "message": "تعذَّر مسح التخزين المؤقت"
+  },
+  "unableGetCurrentPage": {
+    "message": "تعذَّر الحصول على الصفحة الحالية"
+  },
+  "invalidDomain": {
+    "message": "نطاق غير صالح"
+  },
+  "addBlacklistTitle": {
+    "message": "إضافة إلى القائمة السوداء"
+  },
+  "addBlacklistMsgFmt": {
+    "message": "سيتم استبعاد النطاق \"{0}\" من جميع عمليات الاكتشاف المستقبلية. يمكنك إزالته لاحقًا من الإعدادات."
+  },
+  "addBlacklistBtn": {
+    "message": "إضافة إلى القائمة السوداء"
+  },
+  "alreadyBlacklistedFmt": {
+    "message": "النطاق \"{0}\" موجود بالفعل في القائمة السوداء"
+  },
+  "addedToBlacklistFmt": {
+    "message": "تمت إضافة \"{0}\" إلى القائمة السوداء"
+  },
+  "failedAddBlacklistFmt": {
+    "message": "تعذَّرت الإضافة إلى القائمة السوداء: {0}"
+  },
+  "removedFromBlacklistFmt": {
+    "message": "تمت إزالة \"{0}\" من القائمة السوداء"
+  },
+  "failedRemoveBlacklistFmt": {
+    "message": "تعذَّرت الإزالة من القائمة السوداء: {0}"
+  },
+  "historyNoDetections": {
+    "message": "لا توجد اكتشافات"
+  },
+  "historyNoDetectionsFound": {
+    "message": "لم يُعثر على أي اكتشافات"
+  },
+  "historyMatchCountFmt": {
+    "message": "{0} تطابقات"
+  },
+  "historyOneMatch": {
+    "message": "تطابق واحد"
+  },
+  "notificationHistoryCleared": {
+    "message": "تم مسح السجل"
+  },
+  "notificationClearHistoryFailedFmt": {
+    "message": "تعذَّر مسح السجل: {0}"
+  },
+  "notificationHistoryItemExported": {
+    "message": "تم تصدير عنصر السجل"
+  },
+  "notificationCacheCleared": {
+    "message": "تم مسح التخزين المؤقت"
+  },
+  "notificationCacheAlreadyCleared": {
+    "message": "تم مسح التخزين المؤقت بالفعل"
+  },
+  "notificationClearCacheFailed": {
+    "message": "تعذَّر مسح التخزين المؤقت"
+  },
+  "notificationDomainBlacklistedFmt": {
+    "message": "تمت إضافة \"{0}\" إلى القائمة السوداء"
+  },
+  "notificationBlacklistFailed": {
+    "message": "تعذَّرت الإضافة إلى القائمة السوداء"
+  },
+  "notificationHistoryItemDeleted": {
+    "message": "تم حذف عنصر السجل"
+  },
+  "notificationDeleteHistoryItemFailed": {
+    "message": "تعذَّر حذف عنصر السجل"
+  },
+  "notificationHistoryExportedFmt": {
+    "message": "تم تصدير {0} من عناصر السجل"
+  },
+  "notificationHistoryMergedFmt": {
+    "message": "تم دمج {0} من عناصر السجل الجديدة"
+  },
+  "notificationHistoryReplacedFmt": {
+    "message": "تم استبدال السجل بـ {0} عنصرًا"
+  },
+  "notificationImportHistoryFailedFmt": {
+    "message": "تعذَّر استيراد السجل: {0}"
+  },
+  "dialogClearHistoryTitle": {
+    "message": "مسح السجل"
+  },
+  "dialogClearHistoryMessage": {
+    "message": "هل أنت متأكد من رغبتك في مسح كل السجل؟ لا يمكن التراجع عن هذا الإجراء."
+  },
+  "buttonClearAll": {
+    "message": "مسح الكل"
+  },
+  "dialogClearCacheTitle": {
+    "message": "مسح التخزين المؤقت"
+  },
+  "dialogClearCacheMessageFmt": {
+    "message": "مسح بيانات الاكتشاف المخزَّنة مؤقتًا لـ {0}؟ سيتم الاحتفاظ بإدخال السجل."
+  },
+  "buttonClearCache": {
+    "message": "مسح التخزين المؤقت"
+  },
+  "dialogDeleteHistoryTitle": {
+    "message": "حذف عنصر السجل"
+  },
+  "dialogDeleteHistoryMessageFmt": {
+    "message": "هل أنت متأكد من رغبتك في حذف هذا الاكتشاف من {0}؟"
+  },
+  "failedLoadSettingsDefault": {
+    "message": "تعذَّر تحميل الإعدادات. سيتم استخدام الإعدادات الافتراضية."
+  },
+  "settingsSavedToast": {
+    "message": "تم حفظ الإعدادات"
+  },
+  "failedSaveSettingsFmt": {
+    "message": "تعذَّر حفظ الإعدادات: {0}"
+  },
+  "settingsResetToast": {
+    "message": "تمت إعادة تعيين الإعدادات"
+  },
+  "dataClearedReloadNotice": {
+    "message": "تم مسح جميع البيانات بنجاح! ستتم إعادة تحميل الإضافة."
+  },
+  "failedClearDataFmt": {
+    "message": "تعذَّر مسح البيانات: {0}"
+  },
+  "failedExportLogs": {
+    "message": "تعذَّر تصدير السجلات"
+  },
+  "logsCleared": {
+    "message": "تم مسح السجلات"
+  },
+  "failedClearLogs": {
+    "message": "تعذَّر مسح السجلات"
+  },
+  "couldNotGetPageUrl": {
+    "message": "تعذَّر الحصول على URL الصفحة الحالية"
+  },
+  "domainAlreadyBlacklistedFmt": {
+    "message": "{0} موجود بالفعل في القائمة السوداء"
+  },
+  "addedDomainToBlacklistFmt": {
+    "message": "تمت إضافة {0} إلى القائمة السوداء"
+  },
+  "failedAddDomainFmt": {
+    "message": "تعذَّرت إضافة النطاق: {0}"
+  },
+  "removedDomainFromBlacklistFmt": {
+    "message": "تمت إزالة {0} من القائمة السوداء"
+  },
+  "invalidSettingsFmt": {
+    "message": "إعدادات غير صالحة: {0}"
+  },
+  "pleaseEnterWebhookUrl": {
+    "message": "يرجى إدخال URL الـ webhook"
+  },
+  "webhookTestSuccessfulFmt": {
+    "message": "نجح اختبار الـ webhook! الحالة: {0}"
+  },
+  "webhookFailedStatusFmt": {
+    "message": "أعاد الـ webhook الحالة: {0}"
+  },
+  "webhookTestFailedFmt": {
+    "message": "فشل اختبار الـ webhook: {0}"
+  },
+  "foundDetectorUpdatesAvailableFmt": {
+    "message": "تم العثور على {0} من تحديثات الكواشف المتاحة!"
+  },
+  "allDetectorsUpToDate": {
+    "message": "جميع الكواشف محدَّثة."
+  },
+  "importDetectorsTitle": {
+    "message": "استيراد الكواشف"
+  },
+  "importMergeQuestion": {
+    "message": "هل تريد الدمج مع الكواشف الحالية؟"
+  },
+  "mergeOption": {
+    "message": "دمج"
+  },
+  "replaceAllOption": {
+    "message": "استبدال الكل"
+  },
+  "detectorsImported": {
+    "message": "تم استيراد الكواشف"
+  },
+  "failedImportDetectors": {
+    "message": "تعذَّر استيراد الكواشف. تحقق من تنسيق الملف."
+  },
+  "errorReadingFileFmt": {
+    "message": "خطأ في قراءة الملف: {0}"
+  },
+  "detectorsUpdatedFmt": {
+    "message": "تم تحديث {0} من الكواشف"
+  },
+  "updatesAvailableClickToApplyFmt": {
+    "message": "{0} من التحديثات المتاحة - انقر مجددًا للتطبيق"
+  },
+  "detectorDeletedFmt": {
+    "message": "تم حذف \"{0}\""
+  },
+  "allDetectorsCleared": {
+    "message": "تم مسح جميع الكواشف"
+  },
+  "failedClearDetectors": {
+    "message": "تعذَّر مسح الكواشف"
+  },
+  "urlPatternMatching": {
+    "message": "مطابقة أنماط URL"
+  },
+  "textWordMatching": {
+    "message": "مطابقة النص/الكلمة"
+  },
+  "domSelectorMatching": {
+    "message": "مطابقة محدِّدات DOM"
+  },
+  "payloadTextMatching": {
+    "message": "مطابقة نص الحمولة"
+  },
+  "nameFieldMatching": {
+    "message": "مطابقة حقل الاسم"
+  },
+  "captureNotFound": {
+    "message": "لم يُعثر على الالتقاط"
+  },
+  "captureModuleClassNotFound": {
+    "message": "لم يُعثر على فئة الوحدة"
+  },
+  "captureDetailsUnavailable": {
+    "message": "عرض التفاصيل غير متاح"
+  },
+  "captureDataCopied": {
+    "message": "تم نسخ بيانات الالتقاط"
+  },
+  "captureDeleted": {
+    "message": "تم حذف الالتقاط"
+  },
+  "capturesExportedFmt": {
+    "message": "تم تصدير {0} من عمليات الالتقاط"
+  },
+  "allCapturesCleared": {
+    "message": "تم مسح جميع عمليات الالتقاط"
+  },
+  "captureExportFailed": {
+    "message": "فشل تصدير الالتقاط"
+  },
+  "invalidUrl": {
+    "message": "URL غير صالح"
+  },
+  "importHistoryTitle": {
+    "message": "استيراد السجل"
+  },
+  "importHistoryMessageFmt": {
+    "message": "هل تريد استيراد {0} من عناصر السجل؟ يحتوي السجل الحالي على {1} عنصرًا."
+  },
+  "replaceOption": {
+    "message": "استبدال"
+  },
+  "settingsResetTitle": {
+    "message": "إعادة تعيين الإعدادات"
+  },
+  "settingsResetMessage": {
+    "message": "هل أنت متأكد من رغبتك في إعادة تعيين جميع الإعدادات إلى قيمها الافتراضية؟ لا يمكن التراجع عن هذا الإجراء."
+  },
+  "btnReset": {
+    "message": "إعادة تعيين"
+  },
+  "clearAllDataTitle": {
+    "message": "مسح جميع البيانات"
+  },
+  "clearAllDataMessage": {
+    "message": "هل أنت متأكد من رغبتك في مسح جميع بيانات الإضافة؟ سيؤدي هذا إلى إزالة:<br><br>• كل سجل الاكتشافات<br>• كل قواعد الكواشف<br>• كل الإعدادات<br><br>لا يمكن التراجع عن هذا الإجراء!"
+  },
+  "clearEverythingBtn": {
+    "message": "مسح كل شيء"
+  },
+  "clearLogsTitle": {
+    "message": "مسح السجلات"
+  },
+  "clearLogsMessage": {
+    "message": "هل أنت متأكد من رغبتك في مسح جميع السجلات المجمَّعة؟ لا يمكن التراجع عن هذا الإجراء."
+  },
+  "failedCheckForUpdatesFmt": {
+    "message": "تعذَّر التحقق من التحديثات: {0}"
+  },
+  "couldNotFetchUpdates": {
+    "message": "تعذَّر جلب التحديثات من الخادم"
+  },
+  "errorApplyingUpdates": {
+    "message": "خطأ في تطبيق التحديثات"
+  },
+  "failedCheckForUpdates": {
+    "message": "تعذَّر التحقق من التحديثات"
+  },
+  "errorCheckingForUpdates": {
+    "message": "خطأ في التحقق من التحديثات"
+  },
+  "updateServiceNotAvailable": {
+    "message": "خدمة التحديث غير متاحة"
+  },
+  "clearAllDetectorsTitle": {
+    "message": "مسح جميع الكواشف"
+  },
+  "clearAllDetectorsMessage": {
+    "message": "سيؤدي هذا إلى إزالة جميع الكواشف. هل أنت متأكد؟"
+  },
+  "clearingAllDetectors": {
+    "message": "جارٍ مسح جميع الكواشف..."
+  },
+  "deleteDetectorTitle": {
+    "message": "حذف الكاشف"
+  },
+  "deleteDetectorMessageFmt": {
+    "message": "هل أنت متأكد من رغبتك في حذف \"{0}\"؟"
+  },
+  "detectorNotFound": {
+    "message": "لم يُعثر على الكاشف"
+  },
+  "failedDeleteDetector": {
+    "message": "تعذَّر حذف الكاشف"
+  },
+  "detectorNotFoundFmt": {
+    "message": "لم يُعثر على الكاشف: {0}"
+  },
+  "failedViewCaptureDetails": {
+    "message": "تعذَّر عرض تفاصيل الالتقاط"
+  },
+  "failedCopyCaptureData": {
+    "message": "تعذَّر نسخ بيانات الالتقاط"
+  },
+  "failedDeleteCapture": {
+    "message": "تعذَّر حذف الالتقاط"
+  },
+  "noCapturesToExport": {
+    "message": "لا توجد عمليات التقاط للتصدير"
+  },
+  "clearAllCapturesConfirm": {
+    "message": "هل أنت متأكد من رغبتك في حذف جميع عمليات الالتقاط؟ لا يمكن التراجع عن هذا الإجراء."
+  },
+  "failedClearCaptures": {
+    "message": "تعذَّر مسح عمليات الالتقاط"
+  },
+  "settingsCardWebhookIntegration": {
+    "message": "تكامل Webhook"
+  },
+  "settingsEnableWebhook": {
+    "message": "تفعيل Webhook"
+  },
+  "settingsEnableWebhookDesc": {
+    "message": "إرسال طلبات HTTP عند الاكتشاف"
+  },
+  "settingsBypassCache": {
+    "message": "الإرسال عند كل تحميل صفحة (تجاوز التخزين المؤقت)"
+  },
+  "settingsHttpMethod": {
+    "message": "طريقة HTTP"
+  },
+  "settingsHttpMethodDesc": {
+    "message": "حدد طريقة HTTP لطلبات الـ webhook"
+  },
+  "settingsCustomMethod": {
+    "message": "مخصصة"
+  },
+  "settingsCustomMethodPlaceholder": {
+    "message": "أدخل طريقة مخصصة (مثل OPTIONS، HEAD)"
+  },
+  "settingsWebhookUrl": {
+    "message": "URL الـ Webhook"
+  },
+  "settingsWebhookUrlDesc": {
+    "message": "URL نقطة النهاية الكاملة (https://api.example.com/webhook)"
+  },
+  "settingsAvailableVariables": {
+    "message": "المتغيرات المتاحة:"
+  },
+  "settingsWebhookUrlExample": {
+    "message": "مثال: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
+  },
+  "settingsContentType": {
+    "message": "Content-Type"
+  },
+  "settingsContentTypeDesc": {
+    "message": "ترويسة نوع محتوى HTTP"
+  },
+  "settingsCustomHeaders": {
+    "message": "ترويسات مخصصة"
+  },
+  "settingsCustomHeadersDesc": {
+    "message": "أضف ترويسات HTTP مخصصة إلى طلب الـ webhook"
+  },
+  "settingsPayloadTemplate": {
+    "message": "قالب الحمولة"
+  },
+  "settingsPayloadTemplateDesc": {
+    "message": "استخدم المتغيرات: <SITEURL>, <HOSTNAME>, <TITLE>, <FAVICON>, <DETECTIONS>, <TIMESTAMP>, <DETECTION_COUNT>, <CATEGORIES>"
+  },
+  "settingsTestWebhook": {
+    "message": "اختبار Webhook"
+  },
+  "settingsTestWebhookDesc": {
+    "message": "إرسال طلب اختبار إلى URL الـ webhook الخاص بك"
+  },
+  "settingsTestBtn": {
+    "message": "اختبار"
+  },
+  "settingsCardHistoryConfig": {
+    "message": "إعداد السجل"
+  },
+  "settingsHistorySettings": {
+    "message": "إعدادات السجل"
+  },
+  "settingsHistoryLimit": {
+    "message": "حد السجل"
+  },
+  "settingsHistoryLimitNote": {
+    "message": "(0 = غير محدود)"
+  },
+  "settingsAutoClearDays": {
+    "message": "المسح التلقائي (بالأيام)"
+  },
+  "settingsExportFormat": {
+    "message": "تنسيق التصدير"
+  },
+  "settingsExportFormatPlainText": {
+    "message": "نص عادي"
+  },
+  "settingsIncludeTimestamps": {
+    "message": "تضمين الطوابع الزمنية"
+  },
+  "settingsSaveOnCacheHits": {
+    "message": "الحفظ عند إصابات التخزين المؤقت"
+  },
+  "settingsCardDuplicatePrevention": {
+    "message": "منع التكرار"
+  },
+  "settingsEnableDuplicatePrevention": {
+    "message": "تفعيل منع التكرار"
+  },
+  "settingsDuplicatePreventionDesc": {
+    "message": "حظر إدخالات السجل المكررة ضمن نافذة زمنية"
+  },
+  "settingsDuplicateScope": {
+    "message": "النطاق"
+  },
+  "settingsDuplicateScopeFullUrl": {
+    "message": "URL كامل"
+  },
+  "settingsDuplicateScopeDomain": {
+    "message": "النطاق"
+  },
+  "settingsDuplicateScopePath": {
+    "message": "المسار"
+  },
+  "settingsTimeWindow": {
+    "message": "النافذة الزمنية"
+  },
+  "settingsTimeMinutes": {
+    "message": "دقائق"
+  },
+  "settingsTimeHours": {
+    "message": "ساعات"
+  },
+  "settingsTimeDays": {
+    "message": "أيام"
+  },
+  "settingsHowItWorks": {
+    "message": "كيف تعمل:"
+  },
+  "settingsHowItWorksDesc": {
+    "message": "تمنع إدخالات السجل المكررة لنفس URL ضمن النافذة الزمنية."
+  },
+  "settingsDuplicateFullUrlBullet": {
+    "message": "URL كامل: مطابقة URL تامة (بما في ذلك معلَمات الاستعلام)"
+  },
+  "settingsDuplicateDomainBullet": {
+    "message": "النطاق: نفس النطاق (تُحتسب المسارات المختلفة كنفس النطاق)"
+  },
+  "settingsDuplicatePathBullet": {
+    "message": "المسار: نفس النطاق+المسار (يتجاهل معلَمات الاستعلام)"
+  },
+  "settingsCardCacheSettings": {
+    "message": "إعدادات التخزين المؤقت"
+  },
+  "settingsCardSkipDomains": {
+    "message": "تخطي النطاقات"
+  },
+  "settingsAddCurrentPage": {
+    "message": "إضافة الصفحة الحالية"
+  },
+  "settingsSearchDomainsPlaceholder": {
+    "message": "البحث في النطاقات..."
+  },
+  "settingsBadgeColorLow": {
+    "message": "منخفض"
+  },
+  "settingsBadgeColorMedium": {
+    "message": "متوسط"
+  },
+  "settingsBadgeColorHigh": {
+    "message": "مرتفع"
+  },
+  "settingsEnableJsApi": {
+    "message": "تفعيل أحداث JS API"
+  },
+  "settingsDataExportImport": {
+    "message": "تصدير واستيراد"
+  },
+  "settingsDataManagement": {
+    "message": "إدارة البيانات"
+  },
+  "settingsDataManagementDesc": {
+    "message": "تصدير أو استيراد بيانات الإضافة"
+  },
+  "settingsDataSettingsRow": {
+    "message": "الإعدادات"
+  },
+  "settingsDataSettingsRowDesc": {
+    "message": "تصدير أو استيراد إعدادات الإضافة"
+  },
+  "settingsDataHistoryRow": {
+    "message": "سجل الاكتشافات"
+  },
+  "settingsDataHistoryRowDesc": {
+    "message": "تصدير سجل الاكتشافات بصيغة CSV"
+  },
+  "settingsDataExportSettingsTitle": {
+    "message": "تصدير الإعدادات"
+  },
+  "settingsDataImportSettingsTitle": {
+    "message": "استيراد الإعدادات"
+  },
+  "settingsDataExportHistoryTitle": {
+    "message": "تصدير السجل"
+  },
+  "settingsAvailableEvents": {
+    "message": "الأحداث المتاحة:"
+  },
+  "settingsApiEventReady": {
+    "message": "تم تحميل الإضافة وتهيئتها"
+  },
+  "settingsApiEventOnStart": {
+    "message": "بدأ الاكتشاف (تعذُّر التخزين المؤقت / يدوي)"
+  },
+  "settingsApiEventOnProgress": {
+    "message": "تحديثات تقدم الاكتشاف (على مستوى الطريقة)"
+  },
+  "settingsApiEventOnHooksComplete": {
+    "message": "اكتملت مراقبة خطافات JS"
+  },
+  "settingsApiEventOnWindowPropsComplete": {
+    "message": "اكتملت مراقبة خصائص النافذة"
+  },
+  "settingsApiEventOnDetection": {
+    "message": "اكتمل الاكتشاف مع النتائج"
+  },
+  "settingsApiEventOnError": {
+    "message": "حدث خطأ في الاكتشاف"
+  },
+  "settingsUsageExample": {
+    "message": "مثال على الاستخدام:"
+  },
+  "detectionDisabledForDomain": {
+    "message": "تم تعطيل الاكتشاف لهذا النطاق"
+  },
+  "detectionRemoveFromBlacklistBtn": {
+    "message": "إزالة من القائمة السوداء"
+  },
+  "detectionBlacklistHint": {
+    "message": "أو انتقل إلى الإعدادات ← الاكتشاف ← النطاقات المحظورة للإدارة."
+  },
+  "detectionNoDetectionsDesc": {
+    "message": "لم يُعثر على أي إشارات مطابِقة لمكافحة البوتات أو CAPTCHA أو بصمة الجهاز في هذه الصفحة."
+  },
+  "detectionNoCachedDataDesc": {
+    "message": "لا تتوفر بيانات كشف مخزّنة مؤقتًا لهذه الصفحة. أعد تحميل الصفحة لتشغيل فحص جديد."
+  },
+  "detectionTitleUploadPaste": {
+    "message": "رفع الاكتشافات (رابط للمشاركة)"
+  },
+  "pasteUploadSuccessToast": {
+    "message": "تم نسخ الرابط إلى الحافظة"
+  },
+  "failedReadSettings": {
+    "message": "تعذّر قراءة الإعدادات — تم إلغاء العملية"
+  },
+  "failedRemoveBlacklist": {
+    "message": "فشل الإزالة من القائمة السوداء"
+  },
+  "pasteConfirmTitle": {
+    "message": "رفع الاكتشافات؟"
+  },
+  "pasteConfirmMsg": {
+    "message": "يؤدي هذا إلى رفع ملخص لاكتشافات هذه الصفحة إلى لصق عام (dpaste.com، غير مُدرَج، تنتهي صلاحيته خلال 30 يومًا). يمكن لأي شخص لديه الرابط عرضه. لا يتم تضمين سلسلة استعلام URL أو قيم ملفات تعريف الارتباط/الترويسات."
+  },
+  "pasteConfirmBtn": {
+    "message": "رفع"
+  },
+  "pasteUploadFailedToast": {
+    "message": "فشل الرفع"
+  },
+  "pasteNoDetectionsToast": {
+    "message": "لا توجد اكتشافات للرفع"
+  },
+  "detectionTitleClearCache": {
+    "message": "مسح التخزين المؤقت"
+  },
+  "detectionTitleCopyOverview": {
+    "message": "نسخ النظرة العامة"
+  },
+  "detectionTitleBlockDomain": {
+    "message": "حظر هذا النطاق"
+  },
+  "detectionStatDetections": {
+    "message": "الاكتشافات"
+  },
+  "detectionStatConfidence": {
+    "message": "درجة الثقة"
+  },
+  "detectionStatDifficulty": {
+    "message": "الصعوبة"
+  },
+  "detectionStatCacheScope": {
+    "message": "نطاق التخزين المؤقت"
+  },
+  "detectionStatCacheExpiration": {
+    "message": "انتهاء صلاحية التخزين المؤقت"
+  },
+  "detectionSearchPlaceholder": {
+    "message": "البحث في الاكتشافات..."
+  },
+  "detectionPaginationPage": {
+    "message": "صفحة"
+  },
+  "detectionPaginationOf": {
+    "message": "من"
+  },
+  "detectionDomainBlacklistedTitle": {
+    "message": "هذا النطاق محظور"
+  },
+  "detectionModalConfidence": {
+    "message": "درجة الثقة"
+  },
+  "detectionModalDifficulty": {
+    "message": "الصعوبة"
+  },
+  "detectionModalMatchesFound": {
+    "message": "التطابقات الموجودة"
+  },
+  "detectionModalAuthor": {
+    "message": "المؤلف"
+  },
+  "detectionModalDescription": {
+    "message": "الوصف"
+  },
+  "detectionModalNoDescription": {
+    "message": "لا يتوفر وصف."
+  },
+  "detectionModalDetectionMethods": {
+    "message": "طرق الاكتشاف"
+  },
+  "detectionModalNoMethodsDetected": {
+    "message": "لم يُكتشف أي طرق"
+  },
+  "advancedSearchPlaceholder": {
+    "message": "البحث حسب URL أو الوحدة أو الموقع أو المحتوى..."
+  },
+  "advancedPaginationPage": {
+    "message": "صفحة"
+  },
+  "advancedPaginationOf": {
+    "message": "من"
+  },
+  "advancedInfoRecaptchaDesc": {
+    "message": "يلتقط مفاتيح الموقع والإجراءات ومعلَمات الإعداد"
+  },
+  "advancedInfoAkamaiDesc": {
+    "message": "يعترض بيانات المستشعرات ويستخرج معلومات الإصدار"
+  },
+  "advancedInfoImpervaTitle": {
+    "message": "Imperva / Incapsula"
+  },
+  "advancedInfoImpervaDesc": {
+    "message": "يراقب الكوكيز والتغيرات في مستوى الحماية"
+  },
+  "advancedInfoShapeSecurityDesc": {
+    "message": "يحلل الترويسات الديناميكية ومعلَمات النصوص البرمجية"
+  },
+  "advancedInfoAwsWafDesc": {
+    "message": "يلتقط نقاط نهاية التحدي وتفاصيل الرموز"
+  },
+  "btnStartCapturing": {
+    "message": "بدء الالتقاط"
+  },
+  "btnStopCapturing": {
+    "message": "إيقاف الالتقاط"
+  },
+  "btnCheckCookies": {
+    "message": "فحص الكوكيز"
+  },
+  "btnCheckVersion": {
+    "message": "فحص الإصدار"
+  },
+  "btnAnalyzeScripts": {
+    "message": "تحليل النصوص البرمجية"
+  },
+  "btnExtractSiteKey": {
+    "message": "استخراج SiteKey"
+  },
+  "btnObtainSelector": {
+    "message": "الحصول على المحدِّد"
+  },
+  "btnCopyAllData": {
+    "message": "نسخ جميع البيانات"
+  },
+  "btnClearData": {
+    "message": "مسح البيانات"
+  },
+  "advCapturedDataSection": {
+    "message": "البيانات الملتقطة"
+  },
+  "advNoCapturesYet": {
+    "message": "لا توجد عمليات التقاط بعد"
+  },
+  "advCaptureDetails": {
+    "message": "تفاصيل الالتقاط"
+  },
+  "advValueCopied": {
+    "message": "تم نسخ القيمة"
+  },
+  "advConfirmClearAllTitle": {
+    "message": "مسح جميع البيانات الملتقطة؟"
+  },
+  "advConfirmClearAllMsg": {
+    "message": "سيؤدي هذا إلى حذف جميع البيانات الملتقطة لهذا المزوِّد بشكل دائم."
+  },
+  "rulesColorPickerCancel": {
+    "message": "إلغاء"
+  },
+  "rulesColorPickerOk": {
+    "message": "موافق"
+  },
+  "rulesContentSearchScopeTitle": {
+    "message": "نطاق البحث في المحتوى"
+  },
+  "rulesOnlyCheckScripts": {
+    "message": "فحص النصوص البرمجية فقط"
+  },
+  "rulesOnlyCheckScriptsHint": {
+    "message": "تقييد البحث على شفرة JavaScript وعناوين URL للنصوص البرمجية فقط"
+  },
+  "rulesScopeSettingsTitle": {
+    "message": "إعدادات النطاق"
+  },
+  "rulesNameScopeLabel": {
+    "message": "نطاق الاسم"
+  },
+  "rulesNameScopeHint": {
+    "message": "أين يتم التحقق من تطابقات الاسم/الحقل"
+  },
+  "rulesScopeRequest": {
+    "message": "الطلب"
+  },
+  "rulesScopeResponse": {
+    "message": "الاستجابة"
+  },
+  "rulesScopeAll": {
+    "message": "الكل"
+  },
+  "rulesValueScopeLabel": {
+    "message": "نطاق القيمة"
+  },
+  "rulesValueScopeHint": {
+    "message": "أين يتم التحقق من تطابقات القيمة"
+  },
+  "rulesUrlScopeSettings": {
+    "message": "إعدادات نطاق URL"
+  },
+  "rulesUrlScopeLabel": {
+    "message": "نطاق URL"
+  },
+  "rulesUrlScopePageOnly": {
+    "message": "الصفحة"
+  },
+  "rulesUrlScopeScripts": {
+    "message": "النصوص البرمجية"
+  },
+  "rulesUrlScopeAllDefault": {
+    "message": "الكل (افتراضي)"
+  },
+  "rulesRequestConstraints": {
+    "message": "قيود الطلب"
+  },
+  "rulesUrlPatternOptional": {
+    "message": "نمط URL (اختياري)"
+  },
+  "rulesUrlRegex": {
+    "message": "تعبير منتظم لـ URL (Regex)"
+  },
+  "rulesUrlCaseSensitive": {
+    "message": "URL حساس لحالة الأحرف"
+  },
+  "rulesHttpMethodSelect": {
+    "message": "طريقة HTTP (اختر واحدة)"
+  },
+  "rulesHttpMethodFilterHint": {
+    "message": "التصفية حسب طريقة الطلب (اختياري)"
+  },
+  "rulesHttpMethodAny": {
+    "message": "أي"
+  },
+  "rulesPatternMatchingOptions": {
+    "message": "خيارات مطابقة الأنماط"
+  },
+  "rulesPatternRegex": {
+    "message": "تعبير منتظم (Regex)"
+  },
+  "rulesPatternWholeWord": {
+    "message": "الكلمة كاملة"
+  },
+  "rulesPatternCaseSensitive": {
+    "message": "حساس لحالة الأحرف"
+  },
+  "rulesValueFieldOptions": {
+    "message": "خيارات حقل القيمة"
+  },
+  "rulesApplySettings": {
+    "message": "تطبيق الإعدادات"
+  },
+  "rulesDomSelectorHelper": {
+    "message": "مساعد محدِّد DOM"
+  },
+  "rulesStartTypingSuggestions": {
+    "message": "ابدأ بالكتابة لرؤية الاقتراحات"
+  },
+  "rulesUseSelectorBtn": {
+    "message": "استخدام المحدِّد"
+  },
+  "rulesWindowPropertiesHelper": {
+    "message": "مساعد خصائص النافذة"
+  },
+  "rulesStepEnterKeyword": {
+    "message": "أدخل الكلمة المفتاحية"
+  },
+  "rulesStepChooseProperty": {
+    "message": "اختر الخاصية"
+  },
+  "rulesStepSelectCondition": {
+    "message": "اختر الشرط"
+  },
+  "rulesConditionExists": {
+    "message": "موجود"
+  },
+  "rulesConditionGroupType": {
+    "message": "النوع"
+  },
+  "rulesTypeofObject": {
+    "message": "كائن"
+  },
+  "rulesTypeofFunction": {
+    "message": "دالة"
+  },
+  "rulesTypeofString": {
+    "message": "سلسلة نصية"
+  },
+  "rulesTypeofNumber": {
+    "message": "رقم"
+  },
+  "rulesTypeofBoolean": {
+    "message": "قيمة منطقية"
+  },
+  "notifConfirmTitleDefault": {
+    "message": "تأكيد"
+  },
+  "notifConfirmMessageDefault": {
+    "message": "هل أنت متأكد؟"
+  },
+  "notifLoadingDefault": {
+    "message": "جارٍ التحميل..."
+  },
+  "helperPatternStartTypingSuggestions": {
+    "message": "ابدأ بالكتابة في الأعلى لرؤية الاقتراحات..."
+  },
+  "helperPatternStartTypingExamples": {
+    "message": "ابدأ بالكتابة في الأعلى لرؤية الأمثلة..."
+  },
+  "helpJsHooksTitle": {
+    "message": "اكتشاف خطافات JavaScript"
+  },
+  "helpJsHooksDescription": {
+    "message": "تعترض الخطافات استدعاءات API للمتصفح (Canvas، Audio، WebGL، إلخ.) لاكتشاف شفرة بصمة الجهاز المضادة للبوتات في الوقت الفعلي عند وصول الصفحة إلى تلك الواجهات."
+  },
+  "helpJsHooksWarning": {
+    "message": "يجب تثبيت الخطافات عند document_start قبل تشغيل أي نص برمجي للصفحة — وإلا قد تحفظ الصفحة مراجع إلى واجهات API الأصلية قبل أن يتم تركيب الـ shim الخاص بنا."
+  },
+  "helpJsHooksTip": {
+    "message": "أضف هدفًا مثل CanvasRenderingContext2D.prototype.getImageData لاكتشاف بصمة Canvas."
+  },
+  "helpWindowTitle": {
+    "message": "اكتشاف خصائص النافذة"
+  },
+  "helpWindowDescription": {
+    "message": "يكتشف كائنات وخصائص JavaScript التي تُضاف إلى كائن النافذة العام بواسطة النصوص البرمجية المضادة للبوتات."
+  },
+  "helpWindowWarning": {
+    "message": "تستخدم بعض النصوص البرمجية المضادة للبوتات مفاتيح Symbol() غير قابلة للتعداد — وهي أصعب في الاكتشاف."
+  },
+  "helpWindowTip": {
+    "message": "استخدم شروطًا مثل typeof object أو exists للمطابقة مع نوع الخاصية."
+  },
+  "helpUrlTitle": {
+    "message": "اكتشاف نمط URL"
+  },
+  "helpUrlDescription": {
+    "message": "يطابق عناوين URL للموارد المُحمَّلة (النصوص البرمجية والصور وطلبات الشبكة) مع الأنماط."
+  },
+  "helpUrlWarning": {
+    "message": "الأنماط حساسة لحالة الأحرف افتراضيًا. بدِّل خيار حساسية URL لحالة الأحرف إذا كنت بحاجة إلى مطابقة غير حساسة لحالة الأحرف."
+  },
+  "helpUrlTip": {
+    "message": "استخدم خيار Regex للأنماط المتقدمة مثل /\\/v\\d+\\/challenge/."
+  },
+  "helpHeaderTitle": {
+    "message": "اكتشاف ترويسات HTTP"
+  },
+  "helpHeaderDescription": {
+    "message": "يكتشف ترويسات طلب واستجابة HTTP التي تضعها برمجيات مكافحة البوتات الوسيطة."
+  },
+  "helpHeaderWarning": {
+    "message": "بعض الترويسات تظهر فقط في الطلب الأولي — تأكد من أن نطاقك يتضمن الطلب."
+  },
+  "helpHeaderTip": {
+    "message": "أهداف شائعة: x-akamai-bot-manager-token، cf-ray، x-shape-version."
+  },
+  "helpCookieTitle": {
+    "message": "اكتشاف الكوكيز"
+  },
+  "helpCookieDescription": {
+    "message": "يكتشف الكوكيز التي تضعها تحديات مكافحة البوتات. يطابق اسم الكوكي (واختياريًا نمط القيمة)."
+  },
+  "helpCookieWarning": {
+    "message": "أسماء الكوكيز ذات اللواحق العشوائية (مثل _abck-xyz123) تحتاج إلى نمط regex وليس اسمًا حرفيًا."
+  },
+  "helpCookieTip": {
+    "message": "استخدم الكلمة كاملة للمطابقات بالاسم الدقيق، أو Regex لأنماط البادئات مثل ^datadome-."
+  },
+  "helpContentTitle": {
+    "message": "اكتشاف محتوى الصفحة"
+  },
+  "helpContentDescription": {
+    "message": "يبحث عن أنماط نصية داخل HTML الصفحة ووسوم النصوص البرمجية المضمَّنة."
+  },
+  "helpContentWarning": {
+    "message": "قد يكون فحص الصفحة الكاملة بطيئًا في الصفحات الكبيرة. قيِّد الفحص إلى النصوص البرمجية فقط إذا كان التوقيع في شفرة JS."
+  },
+  "helpContentTip": {
+    "message": "استخدم الكلمة كاملة لتجنب الإيجابيات الخاطئة من السلاسل الفرعية داخل كلمات أكبر."
+  },
+  "helpDomTitle": {
+    "message": "اكتشاف محدِّد DOM"
+  },
+  "helpDomDescription": {
+    "message": "يكتشف عناصر HTML باستخدام محدِّدات CSS. يتم تشغيله عندما يكون العنصر المطابق موجودًا في DOM."
+  },
+  "helpDomWarning": {
+    "message": "تطابق المحدِّدات العناصر المعروضة في DOM الفعلي فقط — وليس تلك الموجودة داخل iframes أو shadow roots."
+  },
+  "helpDomTip": {
+    "message": "استخدم محدِّدات محددة مثل div#cf-challenge[data-ray] بدلاً من المحدِّدات العامة لتقليل الإيجابيات الخاطئة."
+  },
+  "helpPayloadTitle": {
+    "message": "اكتشاف حمولة الطلب"
+  },
+  "helpPayloadDescription": {
+    "message": "يراقب جميع نصوص طلبات HTTP POST/PUT/PATCH بحثًا عن الأنماط النصية."
+  },
+  "helpPayloadWarning": {
+    "message": "تعمل مراقبة الحمولة فقط للطلبات التي يمكن لإضافتنا اعتراضها (لا أجسام مشفرة، لا كائنات blob غامضة)."
+  },
+  "helpPayloadTip": {
+    "message": "ادمجها مع نمط URL لقصر المطابقة على نقاط نهاية محددة."
+  },
+  "helpWarningLabel": {
+    "message": "تحذير:"
+  },
+  "helpTipLabel": {
+    "message": "نصيحة:"
+  },
+  "detectionMethodTitle": {
+    "message": "طريقة الاكتشاف"
+  },
+  "noHelpContentAvailable": {
+    "message": "لا يتوفر محتوى مساعدة لهذا النوع من الطرق."
+  },
+  "advNoCapturesHintFmt": {
+    "message": "انقر على \"بدء الالتقاط\" في الأعلى لبدء التقاط بيانات {0}"
+  },
+  "advancedToolsHeading": {
+    "message": "أدوات الكشف المتقدمة"
+  },
+  "advancedToolsSubtitle": {
+    "message": "التقاط وتحليل أنظمة الحماية"
+  },
+  "advancedToolsHelpTitle": {
+    "message": "مساعدة"
+  },
+  "advancedToolsStepSelect": {
+    "message": "اختر الكشف"
+  },
+  "advancedToolsChooseDetection": {
+    "message": "اختر كشفًا..."
+  },
+  "advancedToolsStepLoadUse": {
+    "message": "تحميل واستخدام الأدوات"
+  },
+  "advancedToolsLoadTools": {
+    "message": "تحميل الأدوات"
+  },
+  "advancedToolsClearAll": {
+    "message": "مسح الكل"
+  },
+  "advancedToolsClearAllFooter": {
+    "message": "مسح جميع الأدوات"
+  },
+  "advancedToolsLearnMore": {
+    "message": "تعرّف على الأدوات المتقدمة"
+  },
+  "advancedToolsChange": {
+    "message": "تغيير"
+  },
+  "advancedToolsDetectionName": {
+    "message": "اسم الكشف"
+  },
+  "settingsLanguageTitle": {
+    "message": "اللغة"
+  },
+  "settingsLanguageDesc": {
+    "message": "تجاوز لغة واجهة الإضافة. الافتراضي يتبع متصفحك."
+  },
+  "settingsLanguageAuto": {
+    "message": "استخدام لغة المتصفح"
+  },
+  "copiedJsonNotification": {
+    "message": "تم نسخ JSON"
+  },
+  "detectionEmptyTitle": {
+    "message": "لم يتم اكتشاف شيء"
+  },
+  "detectionBadgeNoCaptchas": {
+    "message": "✓ لا يوجد CAPTCHA"
+  },
+  "detectionBadgeNoAntibot": {
+    "message": "✓ لا يوجد مضاد روبوتات"
+  },
+  "detectionBadgeNoFingerprint": {
+    "message": "✓ لا توجد بصمة"
+  },
+  "detectionDisabledTitle": {
+    "message": "تم تعطيل الكشف"
+  },
+  "detectionDisabledDesc": {
+    "message": "كشف الأمان معطّل حاليًا."
+  },
+  "detectionDisabledAction": {
+    "message": "بدّل المفتاح في الأعلى لتمكين الكشف."
+  },
+  "rulesModalDetectorLabel": {
+    "message": "قاعدة الكشف"
+  },
+  "rulesAuthorHelpHint": {
+    "message": "من أنشأ هذا المُكتشف"
+  },
+  "rulesWindowConditionExamplesTitle": {
+    "message": "أمثلة شروط Window"
+  },
+  "rulesWindowConditionExamplesHint": {
+    "message": "انقر على مثال لاستخدامه:"
+  },
+  "rulesBtnNextFmt": {
+    "message": "التالي: {0}"
+  },
+  "rulesUsePropertyBtn": {
+    "message": "استخدام الخاصية"
+  }
+}

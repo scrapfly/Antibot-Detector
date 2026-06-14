@@ -23,32 +23,33 @@ Rules.prototype.handleImport = async function(event) {
   const file = event.target.files[0];
   if (!file) return;
 
+  const t = (typeof I18n !== 'undefined') ? I18n : null;
+  const _tr = (key, fallback) => (t && t.get(key)) || fallback;
+  const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
+
   try {
     const text = await file.text();
     const data = JSON.parse(text);
 
-    // Ask user if they want to merge or replace
-    // Use NotificationHelper for safe access
     const merge = await NotificationHelper.confirm({
-          title: 'Import Detectors',
-          message: 'Do you want to merge with existing detectors?',
-          confirmText: 'Merge',
-          cancelText: 'Replace All',
-          type: 'info'
-        });
+      title: _tr('importDetectorsTitle', 'Import Detectors'),
+      message: _tr('importMergeQuestion', 'Do you want to merge with existing detectors?'),
+      confirmText: _tr('mergeOption', 'Merge'),
+      cancelText: _tr('replaceAllOption', 'Replace All'),
+      type: 'info'
+    });
 
     const success = await this.detectorManager.importDetectors(data, merge);
     if (success) {
-      NotificationHelper.success('Detectors imported');
+      NotificationHelper.success(_tr('detectorsImported', 'Detectors imported'));
       this.displayRules();
     } else {
-      NotificationHelper.error('Failed to import detectors. Check the file format.');
+      NotificationHelper.error(_tr('failedImportDetectors', 'Failed to import detectors. Check the file format.'));
     }
   } catch (error) {
-    NotificationHelper.error('Error reading file: ' + error.message);
+    NotificationHelper.error(_fmt('errorReadingFileFmt', 'Error reading file: ' + error.message, error.message));
   }
 
-  // Reset file input
   event.target.value = '';
 };
 
@@ -107,19 +108,21 @@ Rules.prototype.handleCheckUpdates = async function() {
     return;
   }
 
+  const t = (typeof I18n !== 'undefined') ? I18n : null;
+  const _tr = (key, fallback) => (t && t.get(key)) || fallback;
+  const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
+
   if (typeof UpdateManager === 'undefined') {
     Logger.warn('UI', '[Rules] UpdateManager not available');
     if (typeof NotificationHelper !== 'undefined') {
-      NotificationHelper.error('Update service not available');
+      NotificationHelper.error(_tr('updateServiceNotAvailable', 'Update service not available'));
     }
     return;
   }
 
-  // Check if there are pending updates to apply
   const pendingCount = await UpdateManager.getPendingUpdatesCount();
 
   if (pendingCount > 0) {
-    // Apply pending updates directly
     btn.classList.add('checking');
 
     try {
@@ -128,13 +131,13 @@ Rules.prototype.handleCheckUpdates = async function() {
       if (result.success && result.count > 0) {
         this.updateUpdatesBadge(0);
         if (typeof NotificationHelper !== 'undefined') {
-          NotificationHelper.success(`${result.count} detector${result.count > 1 ? 's' : ''} updated`);
+          NotificationHelper.success(_fmt('detectorsUpdatedFmt', `${result.count} detectors updated`, result.count));
         }
         await this.displayRules();
       } else if (result.failed > 0 && result.count === 0) {
         this.updateUpdatesBadge(0);
         if (typeof NotificationHelper !== 'undefined') {
-          NotificationHelper.warning('Could not fetch updates from server');
+          NotificationHelper.warning(_tr('couldNotFetchUpdates', 'Could not fetch updates from server'));
         }
       } else {
         this.updateUpdatesBadge(0);
@@ -142,13 +145,12 @@ Rules.prototype.handleCheckUpdates = async function() {
     } catch (error) {
       Logger.error('UI', 'Error applying updates', error);
       if (typeof NotificationHelper !== 'undefined') {
-        NotificationHelper.error('Error applying updates');
+        NotificationHelper.error(_tr('errorApplyingUpdates', 'Error applying updates'));
       }
     } finally {
       btn.classList.remove('checking');
     }
   } else {
-    // Check for new updates
     btn.classList.add('checking');
 
     try {
@@ -156,23 +158,23 @@ Rules.prototype.handleCheckUpdates = async function() {
 
       if (result.error) {
         if (typeof NotificationHelper !== 'undefined') {
-          NotificationHelper.error('Failed to check for updates');
+          NotificationHelper.error(_tr('failedCheckForUpdates', 'Failed to check for updates'));
         }
       } else if (result.available && result.updates.length > 0) {
         this.updateUpdatesBadge(result.updates.length);
         if (typeof NotificationHelper !== 'undefined') {
-          NotificationHelper.info(`${result.updates.length} update${result.updates.length > 1 ? 's' : ''} available - click again to apply`);
+          NotificationHelper.info(_fmt('updatesAvailableClickToApplyFmt', `${result.updates.length} updates available - click again to apply`, result.updates.length));
         }
       } else {
         this.updateUpdatesBadge(0);
         if (typeof NotificationHelper !== 'undefined') {
-          NotificationHelper.success('All detectors are up to date');
+          NotificationHelper.success(_tr('allDetectorsUpToDate', 'All detectors are up to date'));
         }
       }
     } catch (error) {
       Logger.error('UI', 'Error checking for updates', error);
       if (typeof NotificationHelper !== 'undefined') {
-        NotificationHelper.error('Error checking for updates');
+        NotificationHelper.error(_tr('errorCheckingForUpdates', 'Error checking for updates'));
       }
     } finally {
       btn.classList.remove('checking');
@@ -208,27 +210,29 @@ Rules.prototype.updateUpdatesBadge = function(count) {
  * Handle clearing all detectors
  */
 Rules.prototype.handleClear = async function() {
+  const t = (typeof I18n !== 'undefined') ? I18n : null;
+  const _tr = (key, fallback) => (t && t.get(key)) || fallback;
   const confirmed = await NotificationHelper.confirm({
-        title: 'Clear All Detectors',
-        message: 'This will remove ALL detectors. Are you sure?',
-        confirmText: 'Clear All',
-        cancelText: 'Cancel',
-        type: 'danger'
-      });
+    title: _tr('clearAllDetectorsTitle', 'Clear All Detectors'),
+    message: _tr('clearAllDetectorsMessage', 'This will remove ALL detectors. Are you sure?'),
+    confirmText: _tr('buttonClearAll', 'Clear All'),
+    cancelText: _tr('btnCancel', 'Cancel'),
+    type: 'danger'
+  });
 
   if (!confirmed) {
     return;
   }
 
-  const loader = NotificationHelper.loading('Clearing all detectors...');
+  const loader = NotificationHelper.loading(_tr('clearingAllDetectors', 'Clearing all detectors...'));
   const success = await this.detectorManager.clearAllDetectors();
   loader.close();
 
   if (success) {
-    NotificationHelper.success('All detectors cleared');
+    NotificationHelper.success(_tr('allDetectorsCleared', 'All detectors cleared'));
     this.displayRules();
   } else {
-    NotificationHelper.error('Failed to clear detectors');
+    NotificationHelper.error(_tr('failedClearDetectors', 'Failed to clear detectors'));
   }
 };
 
@@ -239,11 +243,14 @@ Rules.prototype.handleClear = async function() {
  * @param {string} displayName - Display name for confirmation
  */
 Rules.prototype.handleDeleteDetector = async function(category, detectorName, displayName) {
+  const t = (typeof I18n !== 'undefined') ? I18n : null;
+  const _tr = (key, fallback) => (t && t.get(key)) || fallback;
+  const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
   const confirmed = await NotificationHelper.confirm({
-    title: 'Delete Detector',
-    message: `Are you sure you want to delete "${displayName}"?`,
-    confirmText: 'Delete',
-    cancelText: 'Cancel',
+    title: _tr('deleteDetectorTitle', 'Delete Detector'),
+    message: _fmt('deleteDetectorMessageFmt', `Are you sure you want to delete "${displayName}"?`, displayName),
+    confirmText: _tr('btnDelete', 'Delete'),
+    cancelText: _tr('btnCancel', 'Cancel'),
     type: 'danger'
   });
 
@@ -252,28 +259,24 @@ Rules.prototype.handleDeleteDetector = async function(category, detectorName, di
   }
 
   try {
-    // Remove detector from detectorManager
     if (this.detectorManager.detectors[category] && this.detectorManager.detectors[category][detectorName]) {
       delete this.detectorManager.detectors[category][detectorName];
 
-      // Save to storage
       await this.detectorManager.saveDetectorsToStorage();
 
-      // Reload detectors in background script
       chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
         Logger.ui('Detectors reloaded in background after delete:', response);
       });
 
-      NotificationHelper.success(`Deleted "${displayName}"`);
+      NotificationHelper.success(_fmt('detectorDeletedFmt', `Deleted "${displayName}"`, displayName));
 
-      // Refresh the display
       this.displayRules();
     } else {
-      NotificationHelper.error('Detector not found');
+      NotificationHelper.error(_tr('detectorNotFound', 'Detector not found'));
     }
   } catch (error) {
     Logger.error('UI', 'Failed to delete detector:', error);
-    NotificationHelper.error('Failed to delete detector');
+    NotificationHelper.error(_tr('failedDeleteDetector', 'Failed to delete detector'));
   }
 };
 

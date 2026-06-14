@@ -13,18 +13,6 @@
   "detection": {
     "js_hooks": [
       {
-        "description": "Detects device orientation events (disabled - constructor, not hookable method)",
-        "enabled": false,
-        "confidence": 65,
-        "target": "DeviceOrientationEvent"
-      },
-      {
-        "description": "Detects device motion/acceleration events (disabled - constructor, not hookable method)",
-        "enabled": false,
-        "confidence": 65,
-        "target": "DeviceMotionEvent"
-      },
-      {
         "description": "Adds listeners for device sensors",
         "enabled": true,
         "confidence": 65,

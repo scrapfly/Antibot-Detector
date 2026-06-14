@@ -24,29 +24,32 @@ Rules.prototype.getWindowConditionOptions = function() {
     const lang = globalThis.ScrapflyWindowConditionLanguage;
     const defaults = (lang && typeof lang.getPresetValues === 'function')
       ? lang.getPresetValues()
+      // Fallback must mirror PRESET_GROUPS in window-condition-language.js
       : [
-          'exists',
-          'truthy',
-          'falsy',
           'typeof object',
           'typeof function',
           'typeof string',
           'typeof number',
           'typeof boolean',
+          'typeof symbol',
+          'typeof bigint',
+          'exists',
+          'truthy',
+          'falsy',
           '!== undefined',
           '=== undefined',
           '!== null',
           '=== null',
-          'not undefined',
-          'not null',
           'array',
           'non-empty array',
           'empty array',
+          'has length',
           'has keys',
           'empty object',
           '> 0',
           '>= 0',
           '=== 0',
+          '!== 0',
           '> 1',
           '>= 1',
           'length > 0',
@@ -84,11 +87,12 @@ Rules.prototype.getWindowConditionGroups = function() {
       return lang.getPresetGroups();
     }
 
+    // Fallback must mirror PRESET_GROUPS in window-condition-language.js
     return [
-      { label: 'Type', values: ['typeof object', 'typeof function', 'typeof string', 'typeof number', 'typeof boolean'] },
-      { label: 'Existence', values: ['exists', 'truthy', 'falsy', '!== undefined', '=== undefined', '!== null', '=== null', 'not undefined', 'not null'] },
-      { label: 'Collections', values: ['array', 'non-empty array', 'empty array', 'has keys', 'empty object'] },
-      { label: 'Numeric', values: ['> 0', '>= 0', '=== 0', '> 1', '>= 1'] },
+      { label: 'Type', values: ['typeof object', 'typeof function', 'typeof string', 'typeof number', 'typeof boolean', 'typeof symbol', 'typeof bigint'] },
+      { label: 'Existence', values: ['exists', 'truthy', 'falsy', '!== undefined', '=== undefined', '!== null', '=== null'] },
+      { label: 'Collections', values: ['array', 'non-empty array', 'empty array', 'has length', 'has keys', 'empty object'] },
+      { label: 'Numeric', values: ['> 0', '>= 0', '=== 0', '!== 0', '> 1', '>= 1'] },
       { label: 'String', values: ['length > 0', 'length === 0'] },
       { label: 'Boolean', values: ['=== true', '=== false'] }
     ];

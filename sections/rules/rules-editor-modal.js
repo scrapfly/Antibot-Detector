@@ -53,11 +53,18 @@ Rules.prototype.openEditModal = function(detector, category, detectorName, isNew
     };
 
     // Set dynamic title based on whether it's a new detector
-    const action = this.currentEditDetector.isNew ? 'Add' : 'Edit';
+    const _t = (typeof I18n !== 'undefined') ? I18n : null;
+    const actionKey = this.currentEditDetector.isNew ? 'btnAdd' : 'ruleModalActionEdit';
+    const fallback = this.currentEditDetector.isNew ? 'Add' : 'Edit';
+    const action = (_t && _t.get(actionKey)) || fallback;
     const actionEl = document.querySelector('#editRuleModalAction');
     const nameEl = document.querySelector('#editRuleModalName');
     if (actionEl) actionEl.textContent = `${action} ${detectorWithDetection.displayName || detectorName}`;
-    if (nameEl) nameEl.textContent = 'Detection Rule';
+    if (nameEl) {
+      nameEl.textContent = (_t && typeof _t.tr === 'function')
+        ? _t.tr('rulesModalDetectorLabel', 'Detection Rule')
+        : 'Detection Rule';
+    }
 
     // Populate modal with detector data (now currentEditDetector is available)
     this.populateModalData(detectorWithDetection);
@@ -198,7 +205,9 @@ Rules.prototype.populateModalData = function(detector) {
       authorInput.removeAttribute('readonly');
       authorInput.classList.remove('readonly-field');
       if (authorHelp) {
-        authorHelp.textContent = 'Who created this detector';
+        authorHelp.textContent = (_t && typeof _t.tr === 'function')
+          ? _t.tr('rulesAuthorHelpHint', 'Who created this detector')
+          : 'Who created this detector';
       }
     }
 

@@ -16,8 +16,11 @@ function buildMessageHandlerContext() {
         History,
         DetectionEngineManager,
         logCollector: typeof logCollector !== 'undefined' ? logCollector : undefined,
-        categoryManager: typeof categoryManager !== 'undefined' ? categoryManager : undefined,
-        detectorManager: typeof detectorManager !== 'undefined' ? detectorManager : undefined,
+        // Live getters: the registry/context may now be built before initialize()
+        // creates the managers (listeners register synchronously at SW startup),
+        // so resolve these lazily at dispatch time instead of snapshotting null.
+        get categoryManager() { return typeof categoryManager !== 'undefined' ? categoryManager : undefined; },
+        get detectorManager() { return typeof detectorManager !== 'undefined' ? detectorManager : undefined; },
         recentDetectionRequests: typeof recentDetectionRequests !== 'undefined' ? recentDetectionRequests : undefined,
         interruptedDetections: typeof interruptedDetections !== 'undefined' ? interruptedDetections : undefined,
         detectionStates: typeof detectionStates !== 'undefined' ? detectionStates : undefined,

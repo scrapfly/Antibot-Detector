@@ -97,6 +97,7 @@
       // Callbacks
       this.onDetection = null;
       this.onComplete = null;
+      this.postMessageToIsolated = null;
 
       // Statistics
       this.stats = {
@@ -117,14 +118,49 @@
       this.retryConfig = cloneConfig(DEFAULT_RETRY_CONFIG);
     }
 
+    _createStats() {
+      return {
+        totalProperties: 0,
+        detected: 0,
+        notMatched: 0,
+        errors: 0,
+        abandoned: 0,
+        totalChecks: 0,
+        phaseTransitions: 0
+      };
+    }
+
+    reset() {
+      if (this.pollingInterval) {
+        clearTimeout(this.pollingInterval);
+        this.pollingInterval = null;
+      }
+
+      this.properties.clear();
+      this.currentPhase = null;
+      this.phaseStartTime = 0;
+      this.isPolling = false;
+      this.completed = false;
+      this.onDetection = null;
+      this.onComplete = null;
+      this.postMessageToIsolated = null;
+      this.stats = this._createStats();
+      this.pollingPhases = cloneConfig(DEFAULT_POLLING_PHASES);
+      this.retryConfig = cloneConfig(DEFAULT_RETRY_CONFIG);
+    }
+
     /**
      * Initialize tracking for a set of property definitions
      * @param {Array} propertyDefinitions - Array of property definitions from detectors
      * @param {Object} options - Configuration options
      */
     initialize(propertyDefinitions, options = {}) {
+      this.reset();
       this.onDetection = options.onDetection || null;
       this.onComplete = options.onComplete || null;
+      this.postMessageToIsolated = typeof options.postMessageToIsolated === 'function'
+        ? options.postMessageToIsolated
+        : null;
       this.debugMode = options.debugMode || false;
       // Initialize tracking state for each property
       for (const propDef of propertyDefinitions) {
@@ -143,6 +179,13 @@
 
       this.stats.totalProperties = this.properties.size;
       this._log(`Initialized tracking for ${this.properties.size} properties`);
+    }
+
+    _postToIsolated(message) {
+      if (typeof this.postMessageToIsolated !== 'function') {
+        return false;
+      }
+      return this.postMessageToIsolated(message);
     }
 
     /**
@@ -510,7 +553,7 @@
         });
       }
 
-      window.postMessage({
+      this._postToIsolated({
         type: 'WINDOW_PROPS_COMPLETE',
         url: window.location.href,
         timestamp: Date.now(),
@@ -518,7 +561,7 @@
         totalChecked: this.stats.totalProperties,
         elapsedMs: elapsed,
         reason: reason
-      }, '*');
+      });
     }
 
     /**
@@ -543,21 +586,21 @@
 
       const logMsg = `[WindowPropertyTracker] ${message}`;
       if (data) {
-        window.postMessage({
+        this._postToIsolated({
           type: 'SCRAPFLY_DEBUG_LOG',
           level: 'log',
           message: `${logMsg} ${JSON.stringify(data)}`,
           source: 'window-property-tracker',
           timestamp: Date.now()
-        }, '*');
+        });
       } else {
-        window.postMessage({
+        this._postToIsolated({
           type: 'SCRAPFLY_DEBUG_LOG',
           level: 'log',
           message: logMsg,
           source: 'window-property-tracker',
           timestamp: Date.now()
-        }, '*');
+        });
       }
     }
   }

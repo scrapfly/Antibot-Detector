@@ -3,10 +3,23 @@
  * Stores captured data in TTLMap stores for use by the detection engine.
  */
 
+// Wrap a webRequest listener so an unexpected throw is logged instead of
+// becoming an unhandled service-worker rejection (which Chrome drops silently
+// and which can destabilize the worker).
+function safeWebRequestListener(fn) {
+    return async (details) => {
+        try {
+            return await fn(details);
+        } catch (error) {
+            Logger.error('NETWORK', '[headerCapture] webRequest listener failed:', error);
+        }
+    };
+}
+
 function setupHeaderCapture() {
     // Listen for response headers
     chrome.webRequest.onHeadersReceived.addListener(
-        async (details) => {
+        safeWebRequestListener(async (details) => {
             // Skip if extension is disabled
             if (!await isExtensionEnabled()) {
                 return;
@@ -52,14 +65,14 @@ function setupHeaderCapture() {
                     });
                 }
             }
-        },
+        }),
         { urls: ["<all_urls>"] },
         ["responseHeaders"]
     );
 
     // Listen for request headers
     chrome.webRequest.onBeforeSendHeaders.addListener(
-        async (details) => {
+        safeWebRequestListener(async (details) => {
             // Skip if extension is disabled
             if (!await isExtensionEnabled()) {
                 return;
@@ -84,14 +97,14 @@ function setupHeaderCapture() {
                     timestamp: Date.now()
                 });
             }
-        },
+        }),
         { urls: ["<all_urls>"] },
         ["requestHeaders"]
     );
 
     // Listen for request payloads (POST/PUT/PATCH/DELETE bodies)
     chrome.webRequest.onBeforeRequest.addListener(
-        async (details) => {
+        safeWebRequestListener(async (details) => {
             // Skip if extension is disabled
             if (!await isExtensionEnabled()) {
                 return;
@@ -151,14 +164,14 @@ function setupHeaderCapture() {
                     }
                 }
             }
-        },
+        }),
         { urls: ["<all_urls>"] },
         ["requestBody"]
     );
 
     // Capture all network URLs for pattern detection (anti-bot scripts load asynchronously)
     chrome.webRequest.onBeforeRequest.addListener(
-        async (details) => {
+        safeWebRequestListener(async (details) => {
             // Skip if extension is disabled
             if (!await isExtensionEnabled()) {
                 return;
@@ -167,6 +180,12 @@ function setupHeaderCapture() {
             if (tabsUsingCache.has(details.tabId)) return;
 
             if (details.tabId < 0) return;
+
+            // Skip heavy static-asset request types that anti-bot / fingerprint URL
+            // patterns never meaningfully match, to bound per-tab memory and the
+            // amount of URL data scanned on asset-heavy pages. Keep script/xhr/fetch/
+            // websocket/image/ping/main_frame/sub_frame (beacons can be images/pings).
+            if (details.type === 'font' || details.type === 'media' || details.type === 'stylesheet') return;
 
             let networkUrls = networkUrlsStore.get(details.tabId) || [];
 
@@ -182,7 +201,7 @@ function setupHeaderCapture() {
             }
 
             networkUrlsStore.set(details.tabId, networkUrls);
-        },
+        }),
         { urls: ["<all_urls>"] }
     );
 }

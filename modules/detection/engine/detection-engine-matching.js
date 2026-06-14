@@ -33,7 +33,7 @@ function demMatchCookieName(name, pattern, options = {}) {
     return nameToCompare.startsWith(patternToCompare);
 }
 
-function demMatchPattern(text, pattern, options = {}) {
+function demMatchPattern(text, pattern, options = {}, preparedLower) {
     const {
         regex = false,
         wholeWord = false,
@@ -44,14 +44,18 @@ function demMatchPattern(text, pattern, options = {}) {
         return false;
     }
 
-    // Check result cache first (5-minute TTL)
-    const cached = DetectionEngineManager.patternCache.getCachedMatch(text, pattern, options);
+    // Check result cache first (5-minute TTL). Hash the text once and reuse the
+    // key for both the lookup and the store (previously hashed twice per call).
+    const pc = DetectionEngineManager.patternCache;
+    const textKey = pc.textKeyFor(text);
+    const cached = pc.getCachedMatch(text, pattern, options, textKey);
     if (cached.found) {
         return cached.result;
     }
 
-    // Apply case sensitivity once
-    const textToSearch = caseSensitive ? text : text.toLowerCase();
+    // Apply case sensitivity once. Reuse a precomputed lowercased copy when the
+    // caller passes one (runDetector lowercases pageHTML once for all patterns).
+    const textToSearch = caseSensitive ? text : (preparedLower !== undefined ? preparedLower : text.toLowerCase());
     const patternToMatch = caseSensitive ? pattern : pattern.toLowerCase();
 
     let result = false;
@@ -76,7 +80,7 @@ function demMatchPattern(text, pattern, options = {}) {
         } else {
             // Fallback to direct matching if compilation failed
             const escapedPattern = this.escapeRegExp(patternToMatch);
-            const wordBoundaryRegex = new RegExp(`\\b${escapedPattern}\\b`, caseSensitive ? 'g' : 'gi');
+            const wordBoundaryRegex = new RegExp(`\\b${escapedPattern}\\b`, caseSensitive ? '' : 'i');
             result = wordBoundaryRegex.test(textToSearch);
         }
     }
@@ -86,7 +90,7 @@ function demMatchPattern(text, pattern, options = {}) {
     }
 
     // Cache result (5min TTL)
-    DetectionEngineManager.patternCache.cacheMatch(text, pattern, options, result);
+    pc.cacheMatch(text, pattern, options, result, textKey);
     return result;
 }
 
@@ -104,17 +108,16 @@ function demMatchPatternWithCapture(text, pattern, options = {}) {
         const patternToMatch = caseSensitive ? pattern : pattern.toLowerCase();
 
         if (regex) {
-            const flags = caseSensitive ? 'g' : 'gi';
-            const compiledRegex = new RegExp(patternToMatch, flags);
-            const match = compiledRegex.exec(text);
-            return match ? match[0] : null;
+            const compiledRegex = DetectionEngineManager.patternCache.getCompiledPattern(patternToMatch, { regex: true, caseSensitive });
+            if (!compiledRegex) return null;
+            const result = text.match(compiledRegex);
+            return (result && result.length) ? result[0] : null;
         }
         else if (wholeWord) {
-            // Whole word matching
-            const escapedPattern = this.escapeRegExp(patternToMatch);
-            const wordBoundaryRegex = new RegExp(`\\b${escapedPattern}\\b`, caseSensitive ? 'g' : 'gi');
-            const match = wordBoundaryRegex.exec(text);
-            return match ? match[0] : null;
+            const compiledRegex = DetectionEngineManager.patternCache.getCompiledPattern(patternToMatch, { wholeWord: true, caseSensitive });
+            if (!compiledRegex) return null;
+            const result = text.match(compiledRegex);
+            return (result && result.length) ? result[0] : null;
         }
         else {
             // Substring matching
@@ -132,4 +135,9 @@ function demMatchPatternWithCapture(text, pattern, options = {}) {
 
 function demEscapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Node test export (no-op in the browser, where `module` is undefined).
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { demMatchPattern, demMatchPatternWithCapture, demMatchCookieName, demEscapeRegExp };
 }

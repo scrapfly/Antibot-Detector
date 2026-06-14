@@ -133,20 +133,20 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
 
     const categoryBadge = `<span class="method-tag" style="background: rgba(${catR}, ${catG}, ${catB}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${catR}, ${catG}, ${catB}, 0.35);">${categoryMethod}</span>`;
 
-    const detectorBadge = `<span class="method-tag" style="background: rgba(${catR}, ${catG}, ${catB}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${catR}, ${catG}, ${catB}, 0.35);">${detector.displayName}</span>`;
+    const detectorBadge = `<span class="method-tag" style="background: rgba(${catR}, ${catG}, ${catB}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${catR}, ${catG}, ${catB}, 0.35);">${FormatUtils.escapeHtml(detector.displayName)}</span>`;
 
     const topBadges = `${categoryBadge}${detectorBadge}`;
 
     const isDisabled = detector.enabled === false;
     rulesHtml += `
-      <div class="detector-card ${isDisabled ? 'detector-disabled' : ''}" data-detector-id="${detectorName}" data-category="${category}">
+      <div class="detector-card ${isDisabled ? 'detector-disabled' : ''}" data-detector-id="${FormatUtils.escapeAttr(detectorName)}" data-category="${FormatUtils.escapeAttr(category)}">
         <div class="detector-header">
           <div class="detector-icon">${detectorIcon}</div>
           <div class="detector-info">
             <div class="detector-name-row">
-              <div class="detector-name">${detector.displayName}</div>
+              <div class="detector-name">${FormatUtils.escapeHtml(detector.displayName)}</div>
               <div class="detector-actions" data-stop-propagation="true">
-                <button class="edit-btn" title="Edit Detector" data-detector-id="${detectorName}" data-category="${category}">
+                <button class="edit-btn" title="Edit Detector" data-detector-id="${FormatUtils.escapeAttr(detectorName)}" data-category="${FormatUtils.escapeAttr(category)}">
                   <svg width="14" height="14" viewBox="0 0 24 24">
                     <path d="M3,17.25V21h3.75L17.81,9.94l-3.75-3.75L3,17.25zM20.71,7.04c0.39-0.39,0.39-1.02,0-1.41l-2.34-2.34c-0.39-0.39-1.02-0.39-1.41,0l-1.83,1.83l3.75,3.75L20.71,7.04z" fill="currentColor"/>
                   </svg>
@@ -173,14 +173,14 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
                 <span class="last-updated-value">${formattedLastUpdated}</span>
               </div>
               <div class="detector-author">
-                <span class="version-author">${detector.version || '1.0'} | ${detector.author || 'scrapfly'}</span>
+                <span class="version-author">${FormatUtils.escapeHtml(detector.version || '1.0')} | ${FormatUtils.escapeHtml(detector.author || 'scrapfly')}</span>
                 ${(detector.author || 'scrapfly').toLowerCase() === 'scrapfly' ? '<i class="fas fa-check-circle verified-badge" title="Official Scrapfly detector"></i>' : ''}
               </div>
             </div>
             <label class="toggle-switch-small" data-stop-propagation="true">
               <input type="checkbox" class="detector-toggle"
-                     data-detector="${detectorName}"
-                     data-category="${category}"
+                     data-detector="${FormatUtils.escapeAttr(detectorName)}"
+                     data-category="${FormatUtils.escapeAttr(category)}"
                      ${detector.enabled !== false ? 'checked' : ''}>
               <span class="toggle-slider-small"></span>
             </label>

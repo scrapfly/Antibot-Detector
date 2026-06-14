@@ -10,12 +10,6 @@ class ImpervaAdvanced extends BaseAdvancedModule {
     constructor(detection, tabInfo) {
         super(detection, tabInfo, 'imperva');
 
-        // Imperva-specific state
-        this.analysisActive = false;
-        this.analysisResults = [];
-        this.analysisListener = null;
-        this.analysisTimer = null;
-
         // Setup extraction completion listener
         this.setupExtractionListener();
     }

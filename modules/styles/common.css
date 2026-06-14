@@ -5,6 +5,23 @@
    ============================================ */
 
 /* ============================================
+   REDUCED MOTION
+   Respect user OS-level "reduce motion" preference.
+   Disable animations and transitions for users with
+   vestibular sensitivity (motion sickness, dizziness).
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================
    DESIGN TOKENS
    ============================================ */
 :root {
@@ -92,6 +109,14 @@
 
 /* ============================================
    CLOSE BUTTON (shared across all modals)
+   --------------------------------------------
+   CANONICAL MODAL-HEADER PATTERN — keep every modal on this shape:
+     .modal-header  -> display:flex; gap; (NO position:relative)
+       .header-content / title -> flex:1; min-width:0; (text wraps here)
+       .close-btn               -> flex-shrink:0; (always reserves its slot)
+   NEVER position:absolute the close button — that lets longer translated
+   or RTL header text slide underneath and clip the X. Enforced by
+   scripts/check-structure.js.
    ============================================ */
 .close-btn,
 .detection-modal-close,
@@ -118,6 +143,30 @@
   background: var(--danger);
   color: white;
   transform: scale(1.05);
+}
+
+/* Unblock control on disabled card — only when domain is blacklisted (.visible) */
+.state-card-blacklist-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: none;
+  color: var(--text-secondary, #9ca3af);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.state-card-blacklist-btn.visible {
+  display: inline-flex;
+}
+
+.state-card-blacklist-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger, #ef4444);
 }
 
 /* ============================================
@@ -223,6 +272,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   padding: 6px 10px;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
@@ -230,6 +280,10 @@
   margin-top: 6px;
   margin-bottom: 0;
   flex-shrink: 0;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .pagination-info {
@@ -238,6 +292,10 @@
   gap: 2px;
   font-size: 12px;
   color: var(--text-muted);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .pagination-info .static-label {
@@ -265,6 +323,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .page-info {

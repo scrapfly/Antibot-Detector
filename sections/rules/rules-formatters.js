@@ -33,17 +33,29 @@ Rules.prototype.getRelativeTime = function(date) {
   if (diffSeconds < 60) {
     return 'just now';
   } else if (diffMinutes < 60) {
-    return diffMinutes === 1 ? '1 minute ago' : `${diffMinutes} minutes ago`;
+    return diffMinutes === 1
+      ? (((typeof I18n !== 'undefined') && I18n.get('timeOneMinuteAgo')) || '1 minute ago')
+      : (((typeof I18n !== 'undefined') && I18n.format('timeMinutesAgoLongFmt', diffMinutes)) || `${diffMinutes} minutes ago`);
   } else if (diffHours < 24) {
-    return diffHours === 1 ? '1h ago' : `${diffHours}h ago`;
+    return diffHours === 1
+      ? (((typeof I18n !== 'undefined') && I18n.get('timeOneHourAgo')) || '1h ago')
+      : (((typeof I18n !== 'undefined') && I18n.format('timeHoursAgoLongFmt', diffHours)) || `${diffHours}h ago`);
   } else if (diffDays < 7) {
-    return diffDays === 1 ? '1 day ago' : `${diffDays} days ago`;
+    return diffDays === 1
+      ? (((typeof I18n !== 'undefined') && I18n.get('timeOneDayAgo')) || '1 day ago')
+      : (((typeof I18n !== 'undefined') && I18n.format('timeDaysAgoLongFmt', diffDays)) || `${diffDays} days ago`);
   } else if (diffWeeks < 4) {
-    return diffWeeks === 1 ? '1 week ago' : `${diffWeeks} weeks ago`;
+    return diffWeeks === 1
+      ? (((typeof I18n !== 'undefined') && I18n.get('timeOneWeekAgo')) || '1 week ago')
+      : (((typeof I18n !== 'undefined') && I18n.format('timeWeeksAgoFmt', diffWeeks)) || `${diffWeeks} weeks ago`);
   } else if (diffMonths < 12) {
-    return diffMonths === 1 ? '1 month ago' : `${diffMonths} months ago`;
+    return diffMonths === 1
+      ? (((typeof I18n !== 'undefined') && I18n.get('timeOneMonthAgo')) || '1 month ago')
+      : (((typeof I18n !== 'undefined') && I18n.format('timeMonthsAgoFmt', diffMonths)) || `${diffMonths} months ago`);
   } else {
-    return diffYears === 1 ? '1 year ago' : `${diffYears} years ago`;
+    return diffYears === 1
+      ? (((typeof I18n !== 'undefined') && I18n.get('timeOneYearAgo')) || '1 year ago')
+      : (((typeof I18n !== 'undefined') && I18n.format('timeYearsAgoFmt', diffYears)) || `${diffYears} years ago`);
   }
 };
 

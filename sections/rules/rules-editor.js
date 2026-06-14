@@ -29,18 +29,22 @@ Rules.prototype.populateDetectionMethods = function(detector) {
 
     const allMethodTypes = ['url', 'header', 'cookie', 'content', 'dom', 'js_hooks', 'window', 'payload'];
 
+    const _t = (typeof I18n !== 'undefined') ? I18n : null;
+    const methodLabelKey = {
+      url: 'methodLabelUrl', header: 'methodLabelHeader', cookie: 'methodLabelCookie',
+      content: 'methodLabelContent', dom: 'methodLabelDom', js_hooks: 'methodLabelJsHooks',
+      window: 'methodLabelWindow', payload: 'methodLabelPayload'
+    };
+    const methodLabelFallback = {
+      url: 'URL', header: 'HEADER', cookie: 'COOKIE', content: 'CONTENT', dom: 'DOM',
+      js_hooks: 'JS HOOKS', window: 'WINDOW', payload: 'PAYLOAD'
+    };
+
     allMethodTypes.forEach(methodType => {
       const methodsData = detector.detection?.[methodType];
-      // Map internal key to uppercase display label
-      const displayName = methodType === 'content' ? 'CONTENT' :
-                         methodType === 'dom' ? 'DOM' :
-                         methodType === 'url' ? 'URL' :
-                         methodType === 'header' ? 'HEADER' :
-                         methodType === 'cookie' ? 'COOKIE' :
-                         methodType === 'js_hooks' ? 'JS HOOKS' :
-                         methodType === 'window' ? 'WINDOW' :
-                         methodType === 'payload' ? 'PAYLOAD' :
-                         methodType.toUpperCase();
+      const displayName = _t
+        ? _t.get(methodLabelKey[methodType] || '') || (methodLabelFallback[methodType] || methodType.toUpperCase())
+        : (methodLabelFallback[methodType] || methodType.toUpperCase());
 
       const tagColor = this.detectorManager.categoryManager.getTagColor(methodType);
       const backgroundColor = (tagColor && tagColor !== '#666666') ? tagColor : '#666666';
@@ -65,7 +69,9 @@ Rules.prototype.populateDetectionMethods = function(detector) {
           `;
 
       const patternCount = Array.isArray(methodsData) ? methodsData.length : 0;
-      const patternCountText = patternCount === 1 ? '1 pattern' : `${patternCount} patterns`;
+      const patternCountText = patternCount === 1
+        ? ((_t && _t.get('methodOnePattern')) || '1 pattern')
+        : ((_t && _t.format('methodPatternsFmt', patternCount)) || `${patternCount} patterns`);
 
       methodsHtml += `
         <div class="method-section collapsed" data-method-type="${methodType}">
@@ -84,7 +90,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
               type="text"
               class="method-search-input"
               data-method-search="${methodType}"
-              placeholder="Search patterns..."
+              placeholder="${(_t && _t.get('methodSearchPatterns')) || 'Search patterns...'}"
             >
           </div>
           <div class="method-items">
@@ -134,7 +140,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
               nameWholeWord = method.selectorWholeWord || false;
               nameCaseSensitive = method.selectorCaseSensitive || false;
             }
-            const checkScripts = method.checkScripts || false;
+            const checkScripts = method.checkScripts === true || method.scope === 'scripts';
 
             let nameScope = '';
             let valueScope = '';
@@ -305,7 +311,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
             <svg width="12" height="12" viewBox="0 0 24 24">
               <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
             </svg>
-            Add Pattern
+            ${(_t && _t.get('methodAddPattern')) || 'Add Pattern'}
           </button>
         </div>
       `;
@@ -382,10 +388,13 @@ Rules.prototype.getMethodSectionType = function(section) {
 Rules.prototype.updateMethodPatternCount = function(section) {
     if (!section) return 0;
 
+    const _t = (typeof I18n !== 'undefined') ? I18n : null;
     const totalPatterns = section.querySelectorAll('.method-item').length;
     const patternCountEl = section.querySelector('.method-pattern-count');
     if (patternCountEl) {
-      patternCountEl.textContent = totalPatterns === 1 ? '1 pattern' : `${totalPatterns} patterns`;
+      patternCountEl.textContent = totalPatterns === 1
+        ? ((_t && _t.get('methodOnePattern')) || '1 pattern')
+        : ((_t && _t.format('methodPatternsFmt', totalPatterns)) || `${totalPatterns} patterns`);
     }
     return totalPatterns;
   };
@@ -508,13 +517,19 @@ Rules.prototype.updateMethodSectionPagination = function(section, options = {}) 
     const nextBtn = section.querySelector('.method-pagination-btn.next');
 
     if (infoEl) {
+      const _t = (typeof I18n !== 'undefined') ? I18n : null;
       if (filteredCount === 0) {
-        infoEl.textContent = paginationEntry.searchQuery ? 'No matching patterns' : 'No patterns';
+        infoEl.textContent = paginationEntry.searchQuery
+          ? ((_t && _t.get('methodNoMatchingPatterns')) || 'No matching patterns')
+          : ((_t && _t.get('methodNoPatterns')) || 'No patterns');
       } else {
         const startItem = startIndex + 1;
         const endItem = Math.min(endIndex, filteredCount);
-        const suffix = paginationEntry.searchQuery ? 'matches' : 'patterns';
-        infoEl.textContent = `Showing ${startItem}-${endItem} of ${filteredCount} ${suffix}`;
+        const suffix = paginationEntry.searchQuery
+          ? ((_t && _t.get('methodSuffixMatches')) || 'matches')
+          : ((_t && _t.get('methodSuffixPatterns')) || 'patterns');
+        infoEl.textContent = (_t && _t.format('paginationShowingItems', startItem, endItem, filteredCount, suffix))
+          || `Showing ${startItem}-${endItem} of ${filteredCount} ${suffix}`;
       }
     }
 
@@ -929,7 +944,7 @@ Rules.prototype.addNewMethodSection = function() {
           <svg width="12" height="12" viewBox="0 0 24 24">
             <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
           </svg>
-          Add Pattern
+          ${(typeof I18n !== 'undefined') ? I18n.get('methodAddPattern') : 'Add Pattern'}
         </button>
       </div>
     `;

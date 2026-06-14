@@ -402,7 +402,7 @@ Advanced.prototype.renderCaptureCards = function(captures, container) {
           <div class="capture-card-header">
             <div class="capture-card-badges">
               <span class="capture-module-badge ${moduleClass}">${moduleName}</span>
-              <span class="capture-site-badge">${site}</span>
+              <span class="capture-site-badge">${FormatUtils.escapeHtml(site)}</span>
             </div>
           </div>
           <div class="capture-card-body">
@@ -506,17 +506,17 @@ Advanced.prototype.viewCaptureDetails = async function(moduleId, captureId) {
       const moduleHistory = allHistory[moduleId] || [];
       const captureData = moduleHistory.find(c => c.id === captureId);
 
+      const _tAH = (typeof I18n !== 'undefined') ? I18n : null;
+      const _trAH = (key, fallback) => (_tAH && _tAH.get(key)) || fallback;
       if (!captureData) {
-        NotificationHelper.error('Capture not found');
+        NotificationHelper.error(_trAH('captureNotFound', 'Capture not found'));
         return;
       }
 
-      // Load the module instance if needed
       if (!this.loadedModules[moduleId]) {
-        // Create a temporary detection object for viewing captures
         const detector = this.detectorManager.findDetectorById(moduleId);
         if (!detector) {
-          NotificationHelper.error('Detector not found: ' + moduleId);
+          NotificationHelper.error(((_tAH && _tAH.format('detectorNotFoundFmt', moduleId)) || ('Detector not found: ' + moduleId)));
           return;
         }
 
@@ -531,7 +531,7 @@ Advanced.prototype.viewCaptureDetails = async function(moduleId, captureId) {
 
       const moduleInstance = this.loadedModules[moduleId];
       if (!moduleInstance) {
-        NotificationHelper.error('Module class not found. Please ensure the module is properly loaded.');
+        NotificationHelper.error(_trAH('captureModuleClassNotFound', 'Module class not found. Please ensure the module is properly loaded.'));
         return;
       }
 
@@ -549,11 +549,11 @@ Advanced.prototype.viewCaptureDetails = async function(moduleId, captureId) {
         const detailsContent = moduleInstance.renderCaptureDetailsContent(transformedCaptureData);
         moduleInstance.displayCaptureDetailsModal(captureData.id, detailsContent);
       } else {
-        NotificationHelper.info('Details view not available for this module');
+        NotificationHelper.info(_trAH('captureDetailsUnavailable', 'Details view not available for this module'));
       }
     } catch (error) {
       Logger.error('UI', '[Advanced] Error viewing capture details:', error);
-      NotificationHelper.error('Failed to view capture details');
+      NotificationHelper.error(_trAH('failedViewCaptureDetails', 'Failed to view capture details'));
     }
   };
 
@@ -564,20 +564,22 @@ Advanced.prototype.viewCaptureDetails = async function(moduleId, captureId) {
    * @param {string} captureId - Capture ID
    */
 Advanced.prototype.copyCaptureData = async function(moduleId, captureId) {
+    const _tCC = (typeof I18n !== 'undefined') ? I18n : null;
+    const _trCC = (key, fallback) => (_tCC && _tCC.get(key)) || fallback;
     try {
       const moduleHistory = await AdvancedHistoryStore.getModule(moduleId, { includeExpired: true });
       const captureData = moduleHistory.find(c => c.id === captureId);
 
       if (!captureData) {
-        NotificationHelper.error('Capture not found');
+        NotificationHelper.error(_trCC('captureNotFound', 'Capture not found'));
         return;
       }
 
       await AdvancedUtils.copyToClipboard(JSON.stringify(captureData, null, 2));
-      NotificationHelper.success('Capture data copied to clipboard');
+      NotificationHelper.success(_trCC('captureDataCopied', 'Capture data copied to clipboard'));
     } catch (error) {
       Logger.error('UI', '[Advanced] Error copying capture:', error);
-      NotificationHelper.error('Failed to copy capture data');
+      NotificationHelper.error(_trCC('failedCopyCaptureData', 'Failed to copy capture data'));
     }
   };
 
@@ -588,17 +590,18 @@ Advanced.prototype.copyCaptureData = async function(moduleId, captureId) {
    * @param {string} captureId - Capture ID
    */
 Advanced.prototype.deleteSingleCapture = async function(moduleId, captureId) {
+    const _tDC = (typeof I18n !== 'undefined') ? I18n : null;
+    const _trDC = (key, fallback) => (_tDC && _tDC.get(key)) || fallback;
     try {
       await AdvancedHistoryStore.deleteCapture(moduleId, captureId);
 
-      NotificationHelper.success('Capture deleted');
+      NotificationHelper.success(_trDC('captureDeleted', 'Capture deleted'));
 
-      // Re-render
       await this.renderUnifiedCaptureHistory();
       await this.updateCaptureCountBadge();
     } catch (error) {
       Logger.error('UI', '[Advanced] Error deleting capture:', error);
-      NotificationHelper.error('Failed to delete capture');
+      NotificationHelper.error(_trDC('failedDeleteCapture', 'Failed to delete capture'));
     }
   };
 
@@ -629,8 +632,10 @@ Advanced.prototype.exportCaptures = async function() {
       // Apply current filters
       const filteredCaptures = this.applyFilters(allCaptures, currentSite);
 
+      const _tEX = (typeof I18n !== 'undefined') ? I18n : null;
+      const _trEX = (key, fallback) => (_tEX && _tEX.get(key)) || fallback;
       if (filteredCaptures.length === 0) {
-        NotificationHelper.warning('No captures to export');
+        NotificationHelper.warning(_trEX('noCapturesToExport', 'No captures to export'));
         return;
       }
 
@@ -650,10 +655,11 @@ Advanced.prototype.exportCaptures = async function() {
       a.click();
       URL.revokeObjectURL(url);
 
-      NotificationHelper.success(`Exported ${filteredCaptures.length} captures`);
+      const _tFmt = (typeof I18n !== 'undefined') ? I18n : null;
+      NotificationHelper.success((_tFmt && _tFmt.format('capturesExportedFmt', filteredCaptures.length)) || `Exported ${filteredCaptures.length} captures`);
     } catch (error) {
       Logger.error('UI', '[Advanced] Error exporting captures:', error);
-      NotificationHelper.error('Failed to export captures');
+      NotificationHelper.error(((typeof I18n !== 'undefined') && I18n.get('captureExportFailed')) || 'Failed to export captures');
     }
   };
 
@@ -678,11 +684,11 @@ Advanced.prototype.showWarningConfirmation = function(message, title = 'Mensaje 
               <p class="confirmation-modal-message">${message}</p>
             </div>
             <div class="confirmation-modal-footer">
-              <button class="confirmation-modal-btn confirmation-modal-btn-cancel" id="confirmCancelBtn">
-                Cancelar
-              </button>
               <button class="confirmation-modal-btn confirmation-modal-btn-danger" id="confirmAcceptBtn">
                 Aceptar
+              </button>
+              <button class="confirmation-modal-btn confirmation-modal-btn-cancel" id="confirmCancelBtn">
+                Cancelar
               </button>
             </div>
           </div>
@@ -738,23 +744,23 @@ Advanced.prototype.showWarningConfirmation = function(message, title = 'Mensaje 
    * Clear all captures
    */
 Advanced.prototype.clearAllCaptures = async function() {
+    const _tCA = (typeof I18n !== 'undefined') ? I18n : null;
+    const _trCA = (key, fallback) => (_tCA && _tCA.get(key)) || fallback;
     try {
-      // Show warning confirmation modal
       const confirmed = await this.showWarningConfirmation(
-        'Are you sure you want to delete all captures? This cannot be undone.'
+        _trCA('clearAllCapturesConfirm', 'Are you sure you want to delete all captures? This cannot be undone.')
       );
       if (!confirmed) return;
 
       await AdvancedHistoryStore.clear();
 
-      NotificationHelper.success('All captures cleared');
+      NotificationHelper.success(_trCA('allCapturesCleared', 'All captures cleared'));
 
-      // Re-render
       await this.renderUnifiedCaptureHistory();
       await this.updateCaptureCountBadge();
     } catch (error) {
       Logger.error('UI', '[Advanced] Error clearing captures:', error);
-      NotificationHelper.error('Failed to clear captures');
+      NotificationHelper.error(_trCA('failedClearCaptures', 'Failed to clear captures'));
     }
   };
 

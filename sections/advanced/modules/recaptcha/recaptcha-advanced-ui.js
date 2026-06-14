@@ -5,7 +5,7 @@ ReCaptchaAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {
                 id: 'recaptchaClick',
-                label: 'Obtain selector',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnObtainSelector')) || 'Obtain selector'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/>
@@ -14,7 +14,7 @@ ReCaptchaAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'recaptchaExtract',
-                label: 'Extract SiteKey',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnExtractSiteKey')) || 'Extract SiteKey'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
@@ -32,7 +32,7 @@ ReCaptchaAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'recaptchaStartCapture',
-                label: 'Start Capturing',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnStartCapturing')) || 'Start Capturing'),
                 kind: 'capture',
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -160,7 +160,7 @@ ReCaptchaAdvanced.prototype.displaySiteKeyModal = function(sitekey) {
                 </div>
                 <div class="recaptcha-modal-content">
                     <div class="sitekey-display" style="display: flex; flex-direction: column; gap: 14px;">
-                        <code class="sitekey-code clickable-copy-value" data-copy="${sitekey}" data-copy-message="SiteKey copied to clipboard!" style="display: block; background: var(--bg-tertiary, #1a1a1a); padding: 14px; border-radius: 6px; color: var(--success, #4ade80); font-family: monospace; word-break: break-all; font-size: 13px; line-height: 1.5; cursor: pointer; transition: all 0.2s; user-select: text;">${sitekey}</code>
+                        <code class="sitekey-code clickable-copy-value" data-copy="${sitekey}" data-copy-message="SiteKey copied to clipboard!" style="display: block; background: var(--bg-tertiary, #1a1a1a); padding: 14px; border-radius: 6px; color: var(--success, #4ade80); font-family: monospace; word-break: break-all; font-size: 13px; line-height: 1.5; cursor: pointer; transition: all 0.2s; user-select: text;">${FormatUtils.escapeHtml(sitekey)}</code>
                     </div>
                 </div>
             </div>
@@ -179,55 +179,6 @@ ReCaptchaAdvanced.prototype.displaySiteKeyModal = function(sitekey) {
                 element.style.background = 'var(--bg-tertiary)';
             });
         });
-    };
-
-
-    /**
-     * Display version check results modal
-     */
-ReCaptchaAdvanced.prototype.displayVersionModal = function(versionData) {
-        Logger.network('[ReCAPTCHA] displayVersionModal called with:', versionData);
-        const modal = this.createToolModal();
-        modal.classList.add('recaptcha-modal-overlay');
-
-        modal.innerHTML = `
-            <div class="recaptcha-modal" style="background: var(--bg-secondary, #2a2a2a); border-radius: 8px; padding: 20px; max-width: 500px; width: 90%;">
-                <div class="recaptcha-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; color: var(--text-primary, #fff);">Version Detection</h3>
-                    <button class="advanced-modal-close-btn">×</button>
-                </div>
-                <div class="recaptcha-modal-content">
-                    <div class="version-info" style="margin-bottom: 16px;">
-                        <div class="version-main" style="display: flex; justify-content: space-between; padding: 8px; background: var(--bg-tertiary, #1a1a1a); border-radius: 4px; margin-bottom: 8px;">
-                            <span class="version-label" style="color: var(--text-secondary, #aaa);">Version:</span>
-                            <span class="version-value" style="color: var(--text-primary, #fff); font-weight: 600;">${versionData.version}</span>
-                        </div>
-                        <div class="version-type" style="display: flex; justify-content: space-between; padding: 8px; background: var(--bg-tertiary, #1a1a1a); border-radius: 4px;">
-                            <span class="version-label" style="color: var(--text-secondary, #aaa);">Type:</span>
-                            <span class="version-value" style="color: var(--text-primary, #fff); font-weight: 600;">${versionData.type}</span>
-                        </div>
-                        ${versionData.enterprise ? '<div class="enterprise-badge" style="margin-top: 8px; padding: 8px; background: var(--warning, #fbbf24); color: #000; border-radius: 4px; text-align: center; font-weight: 600;">⭐ Enterprise</div>' : ''}
-                    </div>
-                    <div class="version-checks" style="display: flex; flex-direction: column; gap: 8px;">
-                        <div class="check-item" style="padding: 8px; background: var(--bg-tertiary, #1a1a1a); border-radius: 4px; color: ${versionData.checks.hasV2Checkbox ? 'var(--success, #4ade80)' : 'var(--text-secondary, #aaa)'};">
-                            ${versionData.checks.hasV2Checkbox ? 'Yes' : 'No'} V2 Checkbox
-                        </div>
-                        <div class="check-item" style="padding: 8px; background: var(--bg-tertiary, #1a1a1a); border-radius: 4px; color: ${versionData.checks.hasV2Iframe ? 'var(--success, #4ade80)' : 'var(--text-secondary, #aaa)'};">
-                            ${versionData.checks.hasV2Iframe ? 'Yes' : 'No'} V2 Iframe
-                        </div>
-                        <div class="check-item" style="padding: 8px; background: var(--bg-tertiary, #1a1a1a); border-radius: 4px; color: ${versionData.checks.hasV3Script ? 'var(--success, #4ade80)' : 'var(--text-secondary, #aaa)'};">
-                            ${versionData.checks.hasV3Script ? 'Yes' : 'No'} V3 Script
-                        </div>
-                        <div class="check-item" style="padding: 8px; background: var(--bg-tertiary, #1a1a1a); border-radius: 4px; color: ${versionData.checks.hasInvisible ? 'var(--success, #4ade80)' : 'var(--text-secondary, #aaa)'};">
-                            ${versionData.checks.hasInvisible ? 'Yes' : 'No'} Invisible
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        this.bindModalClose(modal);
-        this.showToolModal(modal);
     };
 
 
@@ -271,7 +222,7 @@ ReCaptchaAdvanced.prototype.displayCallbackModal = function(data) {
                                     ${client.sitekey ? `
                                     <div style="margin-bottom: 12px;">
                                         <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">SiteKey</div>
-                                        <code class="callback-value-clickable" data-copy="${client.sitekey}" data-copy-message="Copied to clipboard!" style="color: var(--success, #4ade80); font-size: 12px; font-family: monospace; background: var(--bg-primary); padding: 8px 10px; border-radius: 4px; display: block; overflow-x: auto; border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; transition: all 0.2s; user-select: text;">${client.sitekey}</code>
+                                        <code class="callback-value-clickable" data-copy="${client.sitekey}" data-copy-message="Copied to clipboard!" style="color: var(--success, #4ade80); font-size: 12px; font-family: monospace; background: var(--bg-primary); padding: 8px 10px; border-radius: 4px; display: block; overflow-x: auto; border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; transition: all 0.2s; user-select: text;">${FormatUtils.escapeHtml(client.sitekey)}</code>
                                     </div>
                                     ` : ''}
 
@@ -445,7 +396,7 @@ ReCaptchaAdvanced.prototype.renderCaptureHistoryItems = function(items) {
                         </button>
                     </div>
                     <div class="capture-sitekey-container">
-                        <code class="capture-sitekey-code">${siteKey}</code>
+                        <code class="capture-sitekey-code">${FormatUtils.escapeHtml(siteKey)}</code>
                     </div>
                 </div>
             `;
@@ -534,7 +485,7 @@ ReCaptchaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
                 <!-- Site URL Card -->
                 <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
                     <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">Site URL</div>
-                    <div class="copy-value" style="color: #60a5fa; font-size: 12px; word-break: break-all; padding: 8px;" data-copy="${siteUrl}" data-copy-message="URL copied" title="Click to copy">${siteUrl}</div>
+                    <div class="copy-value" style="color: #60a5fa; font-size: 12px; word-break: break-all; padding: 8px;" data-copy="${siteUrl}" data-copy-message="URL copied" title="Click to copy">${FormatUtils.escapeHtml(siteUrl)}</div>
                 </div>
 
                 <!-- Metadata Card -->

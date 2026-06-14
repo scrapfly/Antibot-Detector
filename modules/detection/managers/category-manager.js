@@ -5,6 +5,87 @@ class CategoryManager {
         this.initialized = false;
     }
 
+    static getPackagedFallbackIndex() {
+        return {
+            version: '1.0.0',
+            antibot: {
+                colour: '#FF5733',
+                detectors: [
+                    'detect-akamai',
+                    'detect-cloudflare',
+                    'detect-aws-waf',
+                    'detect-botguard',
+                    'detect-f5',
+                    'detect-datadome',
+                    'detect-incapsula',
+                    'detect-perimeterx',
+                    'detect-shapesecurity',
+                    'detect-sucuri',
+                    'detect-reblaze',
+                    'detect-threatmetrix',
+                    'detect-meetrics',
+                    'detect-ocule',
+                    'detect-cheq',
+                    'detect-kasada'
+                ]
+            },
+            captcha: {
+                colour: '#33C3FF',
+                detectors: [
+                    'detect-hcaptcha',
+                    'detect-recaptcha',
+                    'detect-geetest',
+                    'detect-qcloud',
+                    'detect-funcaptcha',
+                    'detect-aliexpress',
+                    'detect-friendlycaptcha',
+                    'detect-captchaeu'
+                ]
+            },
+            fingerprint: {
+                colour: '#3b82f6',
+                detectors: [
+                    'detect-audio-fingerprint',
+                    'detect-battery-fingerprint',
+                    'detect-canvas-fingerprint',
+                    'detect-clipboard-fingerprint',
+                    'detect-crypto-fingerprint',
+                    'detect-css-fingerprint',
+                    'detect-font-fingerprint',
+                    'detect-gamepads-fingerprint',
+                    'detect-geolocation-fingerprint',
+                    'detect-hardware-fingerprint',
+                    'detect-indexeddb-fingerprint',
+                    'detect-media-fingerprint',
+                    'detect-navigator-fingerprint',
+                    'detect-orientation-fingerprint',
+                    'detect-performance-fingerprint',
+                    'detect-screen-fingerprint',
+                    'detect-storage-fingerprint',
+                    'detect-timezone-fingerprint',
+                    'detect-usb-fingerprint',
+                    'detect-webgl-fingerprint',
+                    'detect-webrtc-fingerprint'
+                ]
+            },
+            tags: {
+                dom: { colour: '#3b82f6' },
+                header: { colour: '#FF33A8' },
+                cookie: { colour: '#FFC133' },
+                content: { colour: '#33FFF3' },
+                url: { colour: '#00BCD4' },
+                js_hooks: { colour: '#00E5FF' },
+                window: { colour: '#4CAF50' },
+                payload: { colour: '#9C27B0' }
+            },
+            badge: {
+                low: { colour: '#4CAF50' },
+                medium: { colour: '#FFA500' },
+                high: { colour: '#FF4444' }
+            }
+        };
+    }
+
     /**
      * Initialize the CategoryManager by loading categories from storage first,
      * then falling back to index.json if storage is empty.
@@ -55,8 +136,8 @@ class CategoryManager {
             }
 
         } catch (error) {
-            Logger.error('DETECTOR', 'Failed to load detectors index', error);
-            throw error;
+            Logger.error('DETECTOR', 'Failed to load detectors index, using packaged fallback', error);
+            this.categories = CategoryManager.getPackagedFallbackIndex();
         }
     }
 
@@ -122,7 +203,7 @@ class CategoryManager {
                 null // Load full wrapper (timestamp + categories)
             );
 
-            if (categoriesData) {
+            if (categoriesData && categoriesData.categories && typeof categoriesData.categories === 'object') {
                 this.categories = categoriesData.categories;
                 this.initialized = Object.keys(this.categories).length > 0;
                 return true;
@@ -179,25 +260,20 @@ class CategoryManager {
     async syncColorsFromSettings() {
         try {
             // Read colors from Settings
-            const result = await chrome.storage.local.get('scrapfly_settings');
-            if (result.scrapfly_settings) {
-                const settingsData = typeof result.scrapfly_settings === 'string'
-                    ? JSON.parse(result.scrapfly_settings)
-                    : result.scrapfly_settings;
-                const categoryColors = settingsData?.settings?.categoryColors;
+            const settingsData = await Utils.getSettings();
+            const categoryColors = settingsData?.categoryColors;
 
-                if (categoryColors) {
-                    // Update colors in CategoryManager's categories
-                    for (const [categoryName, color] of Object.entries(categoryColors)) {
-                        if (this.categories[categoryName]) {
-                            this.categories[categoryName].colour = color;
-                        }
+            if (categoryColors) {
+                // Update colors in CategoryManager's categories
+                for (const [categoryName, color] of Object.entries(categoryColors)) {
+                    if (this.categories[categoryName]) {
+                        this.categories[categoryName].colour = color;
                     }
-
-                    // Save updated categories to storage
-                    await this.saveToStorage();
-                    return true;
                 }
+
+                // Save updated categories to storage
+                await this.saveToStorage();
+                return true;
             }
             return false;
         } catch (error) {
@@ -212,11 +288,22 @@ class CategoryManager {
      * @returns {string} Formatted display name
      */
     getCategoryDisplayName(categoryName) {
+        const i18nKeyByCategory = {
+            antibot: 'categoryAntibot',
+            captcha: 'categoryCaptcha',
+            fingerprint: 'categoryFingerprint'
+        };
+        const key = i18nKeyByCategory[categoryName?.toLowerCase()];
+        if (key && typeof I18n !== 'undefined') {
+            const translated = I18n.get(key);
+            if (translated) return translated;
+        }
+
         switch (categoryName?.toLowerCase()) {
             case 'antibot':
                 return 'Anti-Bot';
             case 'captcha':
-                return 'CAPTCHA';
+                return 'Captcha';
             case 'fingerprint':
                 return 'Fingerprint';
             default:
@@ -354,19 +441,14 @@ class CategoryManager {
                 }
             }
 
-            if (result.scrapfly_settings) {
-                const settingsData = typeof result.scrapfly_settings === 'string'
-                    ? JSON.parse(result.scrapfly_settings)
-                    : result.scrapfly_settings;
-
-                const badgeColors = settingsData?.settings?.badgeColors;
-                if (badgeColors) {
-                    return {
-                        low: badgeColors.low || BADGE.COLORS.LOW,
-                        medium: badgeColors.medium || BADGE.COLORS.MEDIUM,
-                        high: badgeColors.high || BADGE.COLORS.HIGH
-                    };
-                }
+            const settingsData = await Utils.getSettings();
+            const badgeColors = settingsData?.badgeColors;
+            if (badgeColors) {
+                return {
+                    low: badgeColors.low || BADGE.COLORS.LOW,
+                    medium: badgeColors.medium || BADGE.COLORS.MEDIUM,
+                    high: badgeColors.high || BADGE.COLORS.HIGH
+                };
             }
 
             return {

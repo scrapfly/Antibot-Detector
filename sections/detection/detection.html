@@ -5,8 +5,9 @@
         <svg class="spinner-svg" viewBox="0 0 50 50">
           <circle class="spinner-circle" cx="25" cy="25" r="20"></circle>
         </svg>
+        <img src="icons/icon48.png" alt="" class="loading-spinner-icon" width="48" height="48">
       </div>
-      <h2 class="loading-text">Analyzing Page</h2>
+      <h2 class="loading-text" data-i18n="analyzingPage">Analyzing Page</h2>
     </div>
   </div>
 
@@ -15,15 +16,15 @@
       <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
       <line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="2"/>
     </svg>
-    <h3>Detection disabled for this domain</h3>
+    <h3 data-i18n="detectionDisabledForDomain">Detection disabled for this domain</h3>
     <p id="blacklistDomain" class="blacklist-domain-text"></p>
     <button id="removeFromBlacklistBtn" class="remove-blacklist-btn">
       <svg width="16" height="16" viewBox="0 0 24 24">
         <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/>
       </svg>
-      Remove from Blacklist
+      <span data-i18n="detectionRemoveFromBlacklistBtn">Remove from Blacklist</span>
     </button>
-    <p class="blacklist-hint">Or go to Settings → Detection → Blacklisted Domains to manage.</p>
+    <p class="blacklist-hint" data-i18n="detectionBlacklistHint">Or go to Settings → Detection → Blacklisted Domains to manage.</p>
   </div>
 
   <div id="emptyState" class="empty-state empty-state--centered" style="display: none;">
@@ -31,12 +32,12 @@
       <div class="state-card-icon">
         <img src="icons/icon48.png" alt="Scrapfly" width="48" height="48" class="state-card-logo">
       </div>
-      <h3 class="state-card-title">Nothing Detected</h3>
-      <p class="state-card-description">This page is clean / cache was cleared or requires reload.</p>
+      <h3 class="state-card-title" data-i18n="detectionEmptyTitle">Nothing Detected</h3>
+      <p class="state-card-description" data-i18n="detectionNoDetectionsDesc">No matching antibot, CAPTCHA, or fingerprinting signals were found on this page.</p>
       <div class="state-card-badges">
-        <span class="state-card-badge">✓ No CAPTCHAs</span>
-        <span class="state-card-badge">✓ No Anti-Bot</span>
-        <span class="state-card-badge">✓ No Fingerprinting</span>
+        <span class="state-card-badge" data-i18n="detectionBadgeNoCaptchas">✓ No CAPTCHAs</span>
+        <span class="state-card-badge" data-i18n="detectionBadgeNoAntibot">✓ No Anti-Bot</span>
+        <span class="state-card-badge" data-i18n="detectionBadgeNoFingerprint">✓ No Fingerprinting</span>
       </div>
     </div>
   </div>
@@ -49,7 +50,14 @@
           <span id="siteUrl" class="site-url" title=""></span>
         </div>
         <div class="url-action-buttons">
-          <button id="clearCacheBtn" class="url-action-btn clear-cache-btn" title="Clear Cache">
+          <button id="uploadPasteBtn" class="url-action-btn upload-paste-btn" title="Upload detections (shareable link)" data-i18n-title="detectionTitleUploadPaste">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>
+              <polyline points="7 9 12 4 17 9"/>
+              <line x1="12" y1="4" x2="12" y2="16"/>
+            </svg>
+          </button>
+          <button id="clearCacheBtn" class="url-action-btn clear-cache-btn" title="Clear Cache" data-i18n-title="detectionTitleClearCache">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M3 6h18"/>
               <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -58,12 +66,12 @@
               <path d="M14 11v6"/>
             </svg>
           </button>
-          <button id="copyOverviewBtn" class="url-action-btn copy-overview-btn" title="Copy overview">
+          <button id="copyOverviewBtn" class="url-action-btn copy-overview-btn" title="Copy overview" data-i18n-title="detectionTitleCopyOverview">
             <svg width="14" height="14" viewBox="0 0 24 24">
               <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" fill="currentColor"/>
             </svg>
           </button>
-          <button id="addToBlacklistBtn" class="url-action-btn blacklist-btn" title="Block this domain">
+          <button id="addToBlacklistBtn" class="url-action-btn blacklist-btn" title="Block this domain" data-i18n-title="detectionTitleBlockDomain">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <circle cx="12" cy="12" r="10"/>
               <path d="M4.93 4.93l14.14 14.14"/>
@@ -82,7 +90,7 @@
             </svg>
           </div>
           <div class="stat-content-inline">
-            <div class="stat-label-inline">DETECTIONS</div>
+            <div class="stat-label-inline" data-i18n="detectionStatDetections">DETECTIONS</div>
             <div class="stat-value-inline" id="detectionsCount">0</div>
           </div>
         </div>
@@ -97,7 +105,7 @@
             </svg>
           </div>
           <div class="stat-content-inline">
-            <div class="stat-label-inline">CONFIDENCE</div>
+            <div class="stat-label-inline" data-i18n="detectionStatConfidence">CONFIDENCE</div>
             <div class="stat-value-inline" id="overallConfidence">0%</div>
           </div>
         </div>
@@ -110,7 +118,7 @@
             </svg>
           </div>
           <div class="stat-content-inline">
-            <div class="stat-label-inline">DIFFICULTY</div>
+            <div class="stat-label-inline" data-i18n="detectionStatDifficulty">DIFFICULTY</div>
             <div class="stat-value-inline" id="difficultyLevel">Low</div>
           </div>
         </div>
@@ -127,7 +135,7 @@
             </svg>
           </div>
           <div class="stat-content-inline">
-            <div class="stat-label-inline">CACHE SCOPE</div>
+            <div class="stat-label-inline" data-i18n="detectionStatCacheScope">CACHE SCOPE</div>
             <div class="stat-value-inline" id="cacheScopeDisplay">Domain</div>
           </div>
         </div>
@@ -139,7 +147,7 @@
             </svg>
           </div>
           <div class="stat-content-inline">
-            <div class="stat-label-inline">CACHE EXPIRATION</div>
+            <div class="stat-label-inline" data-i18n="detectionStatCacheExpiration">CACHE EXPIRATION</div>
             <div class="stat-value-inline" id="cacheExpiry">-</div>
           </div>
         </div>
@@ -148,7 +156,7 @@
     </div>
 
     <div class="search-container">
-      <input type="text" id="detectionSearch" class="search-input" placeholder="Search detections...">
+      <input type="text" id="detectionSearch" class="search-input" placeholder="Search detections..." data-i18n-placeholder="detectionSearchPlaceholder">
     </div>
 
     <div id="resultsList" class="results-list"></div>
@@ -162,9 +170,9 @@
           </svg>
         </button>
         <div class="page-info">
-          <span>Page</span>
+          <span data-i18n="detectionPaginationPage">Page</span>
           <input type="text" class="page-input" value="1" />
-          <span>of</span>
+          <span data-i18n="detectionPaginationOf">of</span>
           <span class="total-pages">1</span>
         </div>
         <button class="pagination-btn pagination-btn-next" disabled>
@@ -181,10 +189,10 @@
       <div class="state-card-icon">
         <img src="icons/icon48.png" alt="Scrapfly" width="48" height="48" class="state-card-logo">
       </div>
-      <h3 class="state-card-title">Detection Disabled</h3>
-      <p class="state-card-description">Security detection is currently turned off.</p>
-      <p class="state-card-action">Toggle the switch at the top to enable detection.</p>
-      <button id="disabledBlacklistBtn" class="state-card-blacklist-btn" title="This domain is blacklisted">
+      <h3 class="state-card-title" data-i18n="detectionDisabledTitle">Detection Disabled</h3>
+      <p class="state-card-description" data-i18n="detectionDisabledDesc">Security detection is currently turned off.</p>
+      <p class="state-card-action" data-i18n="detectionDisabledAction">Toggle the switch at the top to enable detection.</p>
+      <button id="disabledBlacklistBtn" class="state-card-blacklist-btn" title="This domain is blacklisted" data-i18n-title="detectionDomainBlacklistedTitle">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12,2C17.5,2 22,6.5 22,12C22,17.5 17.5,22 12,22C6.5,22 2,17.5 2,12C2,6.5 6.5,2 12,2M12,4C7.58,4 4,7.58 4,12C4,16.42 7.58,20 12,20C16.42,20 20,16.42 20,12C20,7.58 16.42,4 12,4M16.95,5.63L18.37,7.05L7.05,18.37L5.63,16.95L16.95,5.63Z"/>
         </svg>
@@ -204,7 +212,7 @@
             <div id="detectionModalCategories" class="detection-modal-categories"></div>
           </div>
         </div>
-        <button id="closeDetectionModal" class="detection-modal-close" title="Close modal">
+        <button id="closeDetectionModal" class="detection-modal-close" title="Close modal" data-i18n-title="btnClose">
           <svg width="20" height="20" viewBox="0 0 24 24">
             <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/>
           </svg>
@@ -213,36 +221,36 @@
       <div class="detection-modal-content">
         <div class="detection-modal-meta">
           <div class="detection-modal-meta-item">
-            <span class="meta-label">Confidence</span>
+            <span class="meta-label" data-i18n="detectionModalConfidence">Confidence</span>
             <span id="detectionModalConfidence" class="meta-value">0%</span>
           </div>
           <div class="detection-modal-meta-item">
-            <span class="meta-label">Difficulty</span>
+            <span class="meta-label" data-i18n="detectionModalDifficulty">Difficulty</span>
             <span id="detectionModalDifficulty" class="meta-value">Low</span>
           </div>
           <div class="detection-modal-meta-item">
-            <span class="meta-label">Matches Found</span>
+            <span class="meta-label" data-i18n="detectionModalMatchesFound">Matches Found</span>
             <span id="detectionModalDetections" class="meta-value">0</span>
           </div>
           <div class="detection-modal-meta-item">
             <span class="meta-label">
-              <i class="fas fa-user"></i> Author
+              <i class="fas fa-user"></i> <span data-i18n="detectionModalAuthor">Author</span>
             </span>
             <span id="detectionModalAuthor" class="meta-value">Unknown</span>
           </div>
         </div>
         <div class="detection-modal-section">
           <div class="detection-modal-section-header">
-            <h4>Description</h4>
+            <h4 data-i18n="detectionModalDescription">Description</h4>
           </div>
-          <p id="detectionModalDescription" class="detection-modal-description">No description available.</p>
+          <p id="detectionModalDescription" class="detection-modal-description" data-i18n="detectionModalNoDescription">No description available.</p>
         </div>
         <div class="detection-modal-section detection-modal-section--methods">
           <div class="detection-modal-section-header">
-            <h4>Detection Methods</h4>
+            <h4 data-i18n="detectionModalDetectionMethods">Detection Methods</h4>
           </div>
           <div id="detectionModalMethods" class="detection-modal-methods-list">
-            <span class="badge">No methods detected</span>
+            <span class="badge" data-i18n="detectionModalNoMethodsDetected">No methods detected</span>
           </div>
         </div>
       </div>

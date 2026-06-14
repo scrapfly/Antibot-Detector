@@ -4,8 +4,7 @@
  */
 class ConfidenceManager {
   constructor() {
-    // Only 'max' method is used - kept for API compatibility
-    this.calculationMethod = 'max';
+    // Only max confidence calculation is used.
   }
 
   /**
@@ -36,3 +35,6 @@ class ConfidenceManager {
     return maxConfidence;
   }
 }
+
+// Node test export (no-op in the browser, where `module` is undefined).
+if (typeof module !== 'undefined' && module.exports) { module.exports = ConfidenceManager; }

@@ -1,0 +1,1676 @@
+{
+  "extensionName": {
+    "message": "Scrapfly: детектор анти-бот"
+  },
+  "extensionDescription": {
+    "message": "Обнаружение CAPTCHA, систем анти-бот и технологий снятия отпечатков на сайтах"
+  },
+  "tabDetection": {
+    "message": "Обнаружение"
+  },
+  "tabHistory": {
+    "message": "История"
+  },
+  "tabRules": {
+    "message": "Правила"
+  },
+  "tabAdvanced": {
+    "message": "Расширенно"
+  },
+  "openSettings": {
+    "message": "Открыть настройки"
+  },
+  "enableOrDisableDetection": {
+    "message": "Включить или отключить обнаружение"
+  },
+  "noDetectionsFound": {
+    "message": "Обнаружений не найдено"
+  },
+  "analyzingPage": {
+    "message": "Анализ страницы"
+  },
+  "actionRemoveFromBlacklist": {
+    "message": "Удалить из чёрного списка"
+  },
+  "advancedDomainBlacklisted": {
+    "message": "Расширенные инструменты отключены для этого домена"
+  },
+  "blacklistManageHint": {
+    "message": "Или перейдите в Настройки → Обнаружение → Чёрный список доменов для управления."
+  },
+  "statDetections": {
+    "message": "Обнаружения"
+  },
+  "statConfidence": {
+    "message": "Уверенность"
+  },
+  "statDifficulty": {
+    "message": "Сложность"
+  },
+  "statCacheScope": {
+    "message": "Область кэша"
+  },
+  "scopeDomain": {
+    "message": "Домен"
+  },
+  "scopePath": {
+    "message": "Путь"
+  },
+  "scopeFullUrl": {
+    "message": "Полный URL"
+  },
+  "difficultyLow": {
+    "message": "Низкая"
+  },
+  "difficultyMedium": {
+    "message": "Средняя"
+  },
+  "difficultyHigh": {
+    "message": "Высокая"
+  },
+  "searchHistory": {
+    "message": "Поиск истории..."
+  },
+  "searchDetectors": {
+    "message": "Поиск детекторов..."
+  },
+  "paginationPrev": {
+    "message": "Предыдущая страница"
+  },
+  "paginationNext": {
+    "message": "Следующая страница"
+  },
+  "paginationPage": {
+    "message": "Страница"
+  },
+  "paginationOf": {
+    "message": "из"
+  },
+  "paginationNoItems": {
+    "message": "Нет элементов для отображения"
+  },
+  "paginationCurrentPageAria": {
+    "message": "Номер текущей страницы"
+  },
+  "btnImport": {
+    "message": "Импорт"
+  },
+  "btnExport": {
+    "message": "Экспорт"
+  },
+  "btnClear": {
+    "message": "Очистить"
+  },
+  "btnAdd": {
+    "message": "Добавить"
+  },
+  "btnUpdate": {
+    "message": "Обновить"
+  },
+  "btnClose": {
+    "message": "Закрыть"
+  },
+  "btnSave": {
+    "message": "Сохранить"
+  },
+  "btnCancel": {
+    "message": "Отмена"
+  },
+  "btnDelete": {
+    "message": "Удалить"
+  },
+  "historyImportTitle": {
+    "message": "Импортировать историю"
+  },
+  "historyExportTitle": {
+    "message": "Экспортировать историю"
+  },
+  "historyClearTitle": {
+    "message": "Очистить историю"
+  },
+  "historyEmptyTitle": {
+    "message": "История пока пуста"
+  },
+  "historyEmptyDescription": {
+    "message": "История обнаружений появится здесь по мере просмотра сайтов."
+  },
+  "rulesUpdateTitle": {
+    "message": "Проверить обновления детекторов"
+  },
+  "rulesClearTitle": {
+    "message": "Очистить все правила"
+  },
+  "rulesAddTitle": {
+    "message": "Добавить новый детектор"
+  },
+  "rulesEmptyTitle": {
+    "message": "Детекторы не загружены"
+  },
+  "rulesEmptyDescription": {
+    "message": "Детекторы появятся здесь после загрузки из хранилища и файлов."
+  },
+  "ruleModalActionEdit": {
+    "message": "Редактировать"
+  },
+  "ruleSectionDetectorInfo": {
+    "message": "Информация о детекторе"
+  },
+  "ruleFieldName": {
+    "message": "Имя"
+  },
+  "ruleFieldNamePlaceholder": {
+    "message": "Имя детектора"
+  },
+  "ruleFieldCategory": {
+    "message": "Категория"
+  },
+  "categoryAntibot": {
+    "message": "Анти-бот"
+  },
+  "categoryCaptcha": {
+    "message": "Captcha"
+  },
+  "categoryFingerprint": {
+    "message": "Отпечаток"
+  },
+  "ruleFieldDifficulty": {
+    "message": "Сложность"
+  },
+  "ruleFieldIcon": {
+    "message": "Значок"
+  },
+  "ruleFieldVersion": {
+    "message": "Версия"
+  },
+  "ruleFieldAuthor": {
+    "message": "Автор"
+  },
+  "ruleSectionBadgeColor": {
+    "message": "Цвет значка"
+  },
+  "ruleSectionDetectionMethods": {
+    "message": "Методы обнаружения"
+  },
+  "settingsTitle": {
+    "message": "Настройки"
+  },
+  "settingsSubtitle": {
+    "message": "Настройте параметры расширения"
+  },
+  "settingsTabGeneral": {
+    "message": "Общие"
+  },
+  "settingsTabDetection": {
+    "message": "Обнаружение"
+  },
+  "settingsTabHistory": {
+    "message": "История"
+  },
+  "settingsTabData": {
+    "message": "Данные"
+  },
+  "settingsGroupCoreSettings": {
+    "message": "Основные настройки"
+  },
+  "settingsCardNotifications": {
+    "message": "Уведомления"
+  },
+  "settingsCardNotificationsDesc": {
+    "message": "Показывать оповещения при обнаружении систем безопасности"
+  },
+  "settingsCardDebug": {
+    "message": "Режим отладки"
+  },
+  "settingsCardDebugDesc": {
+    "message": "Включить логирование консоли для отладки"
+  },
+  "settingsRowLogCollector": {
+    "message": "Сборщик логов"
+  },
+  "settingsRowMaxLogs": {
+    "message": "Макс. логов"
+  },
+  "settingsRowCollected": {
+    "message": "Собрано"
+  },
+  "settingsGroupDetectorUpdates": {
+    "message": "Обновления детекторов"
+  },
+  "settingsCardAutoUpdate": {
+    "message": "Автопроверка обновлений"
+  },
+  "settingsCardAutoUpdateDesc": {
+    "message": "Автоматически проверять новые определения детекторов"
+  },
+  "settingsRowCheckInterval": {
+    "message": "Интервал проверки"
+  },
+  "settingsCheckIntervalNever": {
+    "message": "Никогда"
+  },
+  "settingsBtnCheckNow": {
+    "message": "Проверить сейчас"
+  },
+  "settingsExtensionUpdateRequired": {
+    "message": "Требуется обновление расширения"
+  },
+  "settingsBtnUpdateExtension": {
+    "message": "Обновить расширение"
+  },
+  "settingsGroupBadgeColors": {
+    "message": "Цвета значков"
+  },
+  "settingsRowLastCheck": {
+    "message": "Последняя проверка"
+  },
+  "advancedToolsTitle": {
+    "message": "Расширенные инструменты захвата"
+  },
+  "advancedToolsDescription": {
+    "message": "Извлекайте куки, токены и sitekeys из обнаруженных систем защиты"
+  },
+  "advancedToolsHint": {
+    "message": "Посетите защищённую страницу, чтобы включить инструменты захвата"
+  },
+  "advancedSubtabTools": {
+    "message": "Инструменты"
+  },
+  "advancedSubtabHistory": {
+    "message": "История"
+  },
+  "advancedCaptureHistoryTitle": {
+    "message": "История захватов"
+  },
+  "advancedCaptureHistorySubtitle": {
+    "message": "Фильтруйте, просматривайте и экспортируйте собранные захваты"
+  },
+  "advancedFilterSite": {
+    "message": "Сайт"
+  },
+  "advancedFilterAllSites": {
+    "message": "Все сайты"
+  },
+  "advancedFilterCurrentSite": {
+    "message": "Текущий сайт"
+  },
+  "advancedFilterModule": {
+    "message": "Модуль"
+  },
+  "advancedFilterAllModules": {
+    "message": "Все модули"
+  },
+  "advancedFilterSearch": {
+    "message": "Поиск"
+  },
+  "advancedBtnExport": {
+    "message": "Экспорт"
+  },
+  "advancedBtnExportTitle": {
+    "message": "Экспортировать захваты"
+  },
+  "advancedBtnClearAll": {
+    "message": "Очистить всё"
+  },
+  "advancedBtnClearAllTitle": {
+    "message": "Очистить все захваты"
+  },
+  "advancedEmptyCapturesTitle": {
+    "message": "Захватов пока нет"
+  },
+  "advancedEmptyCapturesHint": {
+    "message": "Используйте вкладку Инструменты для захвата данных из обнаруженных систем"
+  },
+  "advancedNoResultsTitle": {
+    "message": "Захваты не найдены"
+  },
+  "advancedNoResultsHint": {
+    "message": "Попробуйте изменить фильтры или поисковый запрос"
+  },
+  "advancedBtnResetFilters": {
+    "message": "Сбросить все фильтры"
+  },
+  "advancedModalTitle": {
+    "message": "Расширенные инструменты обнаружения"
+  },
+  "advancedModalIntro": {
+    "message": "Специализированные инструменты захвата для глубокого анализа систем анти-бот, CAPTCHA и технологий снятия отпечатков. Эти инструменты появляются автоматически при обнаружении соответствующих систем."
+  },
+  "advancedSectionSupported": {
+    "message": "Поддерживаемые системы"
+  },
+  "advancedSectionHowItWorks": {
+    "message": "Как это работает"
+  },
+  "advancedStep1Title": {
+    "message": "Автоматическое обнаружение"
+  },
+  "advancedStep1Desc": {
+    "message": "Инструменты появляются при обнаружении соответствующих систем анти-бот на текущей странице"
+  },
+  "advancedStep2Title": {
+    "message": "Начать захват"
+  },
+  "advancedStep2Desc": {
+    "message": "Инструменты автоматически инициализируют перехватчики и начинают мониторинг сетевых запросов"
+  },
+  "advancedStep3Title": {
+    "message": "Просмотр результатов"
+  },
+  "advancedStep3Desc": {
+    "message": "Захваченные данные хранятся временно (30 минут) с полными возможностями экспорта"
+  },
+  "advancedFooterHint": {
+    "message": "Результаты истекают через 30 минут для обеспечения свежих данных"
+  },
+  "settings": {
+    "message": "Настройки"
+  },
+  "paginationShowingFmt": {
+    "message": "Показано {0}-{1} из {2}"
+  },
+  "paginationShowingItems": {
+    "message": "Показано {0}-{1} из {2} {3}"
+  },
+  "timeUnknown": {
+    "message": "Неизвестно"
+  },
+  "timeJustNow": {
+    "message": "Только что"
+  },
+  "timeSecondsAgoFmt": {
+    "message": "{0} с назад"
+  },
+  "timeMinutesAgoFmt": {
+    "message": "{0} мин назад"
+  },
+  "timeHoursAgoFmt": {
+    "message": "{0} ч назад"
+  },
+  "timeDaysAgoFmt": {
+    "message": "{0} д назад"
+  },
+  "timeOneMinuteAgo": {
+    "message": "1 минуту назад"
+  },
+  "timeMinutesAgoLongFmt": {
+    "message": "{0} минут назад"
+  },
+  "timeOneHourAgo": {
+    "message": "1 ч назад"
+  },
+  "timeHoursAgoLongFmt": {
+    "message": "{0} ч назад"
+  },
+  "timeOneDayAgo": {
+    "message": "1 день назад"
+  },
+  "timeDaysAgoLongFmt": {
+    "message": "{0} дней назад"
+  },
+  "timeOneWeekAgo": {
+    "message": "1 неделю назад"
+  },
+  "timeWeeksAgoFmt": {
+    "message": "{0} недель назад"
+  },
+  "timeOneMonthAgo": {
+    "message": "1 месяц назад"
+  },
+  "timeMonthsAgoFmt": {
+    "message": "{0} месяцев назад"
+  },
+  "timeOneYearAgo": {
+    "message": "1 год назад"
+  },
+  "timeYearsAgoFmt": {
+    "message": "{0} лет назад"
+  },
+  "btnCancelSettings": {
+    "message": "Отмена"
+  },
+  "btnSaveSettings": {
+    "message": "Сохранить настройки"
+  },
+  "poweredBy": {
+    "message": "Работает на"
+  },
+  "categoryColors": {
+    "message": "ЦВЕТА КАТЕГОРИЙ"
+  },
+  "methodSuffixPatterns": {
+    "message": "шаблонов"
+  },
+  "btnSaveRule": {
+    "message": "Сохранить правило"
+  },
+  "tagColors": {
+    "message": "Цвета меток"
+  },
+  "cacheConfiguration": {
+    "message": "Конфигурация кэша"
+  },
+  "cacheDuration": {
+    "message": "Длительность кэша"
+  },
+  "timeUnitMinutes": {
+    "message": "Минут"
+  },
+  "timeUnitHours": {
+    "message": "Часов"
+  },
+  "timeUnitDays": {
+    "message": "Дней"
+  },
+  "blacklistedDomains": {
+    "message": "Чёрный список доменов"
+  },
+  "blacklistedDomainsDesc": {
+    "message": "Домены, для которых обнаружение полностью пропускается"
+  },
+  "jsApiEvents": {
+    "message": "События JS API"
+  },
+  "jsApiEventsDesc": {
+    "message": "Отправлять пользовательские события в window страницы"
+  },
+  "ruleMethodSettings": {
+    "message": "Настройки метода обнаружения"
+  },
+  "ruleConfidenceLevel": {
+    "message": "Уровень уверенности"
+  },
+  "ruleConfidencePrefix": {
+    "message": "Уверенность обнаружения:"
+  },
+  "detectionName": {
+    "message": "Имя обнаружения"
+  },
+  "historyModalUrl": {
+    "message": "URL"
+  },
+  "interval6Hours": {
+    "message": "6 часов"
+  },
+  "interval12Hours": {
+    "message": "12 часов"
+  },
+  "interval24Hours": {
+    "message": "24 часа"
+  },
+  "interval2Days": {
+    "message": "2 дня"
+  },
+  "interval1Week": {
+    "message": "1 неделя"
+  },
+  "methodLabelUrl": {
+    "message": "URL"
+  },
+  "methodLabelHeader": {
+    "message": "HEADER"
+  },
+  "methodLabelCookie": {
+    "message": "COOKIE"
+  },
+  "methodLabelContent": {
+    "message": "CONTENT"
+  },
+  "methodLabelDom": {
+    "message": "DOM"
+  },
+  "methodLabelJsHooks": {
+    "message": "JS HOOKS"
+  },
+  "methodLabelWindow": {
+    "message": "WINDOW"
+  },
+  "methodLabelPayload": {
+    "message": "PAYLOAD"
+  },
+  "methodOnePattern": {
+    "message": "1 шаблон"
+  },
+  "methodPatternsFmt": {
+    "message": "{0} шаблонов"
+  },
+  "methodAddPattern": {
+    "message": "Добавить шаблон"
+  },
+  "methodSearchPatterns": {
+    "message": "Поиск шаблонов..."
+  },
+  "methodNoPatterns": {
+    "message": "Нет шаблонов"
+  },
+  "methodNoMatchingPatterns": {
+    "message": "Нет совпадающих шаблонов"
+  },
+  "methodSuffixMatches": {
+    "message": "совпадений"
+  },
+  "cacheExpiredLabel": {
+    "message": "Истёк"
+  },
+  "copiedNotification": {
+    "message": "Скопировано"
+  },
+  "copiedInlineMsg": {
+    "message": "✓ Скопировано!"
+  },
+  "unknownDetection": {
+    "message": "Неизвестное обнаружение"
+  },
+  "matchSingular": {
+    "message": "совпадение"
+  },
+  "matchPlural": {
+    "message": "совпадений"
+  },
+  "noMatchesRecorded": {
+    "message": "Совпадений не зафиксировано"
+  },
+  "clearCacheConfirmTitle": {
+    "message": "Очистить кэш"
+  },
+  "clearCacheConfirmMsg": {
+    "message": "Это удалит закэшированные данные обнаружения для этого домена и запустит новый анализ."
+  },
+  "clearCacheConfirmBtn": {
+    "message": "Очистить кэш"
+  },
+  "clearingMsg": {
+    "message": "Очистка..."
+  },
+  "clearedSuccessMsg": {
+    "message": "✓ Очищено!"
+  },
+  "cacheClearedToast": {
+    "message": "Кэш очищен"
+  },
+  "failedToClearCacheToast": {
+    "message": "Не удалось очистить кэш"
+  },
+  "unableGetCurrentPage": {
+    "message": "Не удалось получить текущую страницу"
+  },
+  "invalidDomain": {
+    "message": "Недопустимый домен"
+  },
+  "addBlacklistTitle": {
+    "message": "Добавить в чёрный список"
+  },
+  "addBlacklistMsgFmt": {
+    "message": "Домен \"{0}\" будет исключён из всех последующих обнаружений. Вы можете удалить его позже в настройках."
+  },
+  "addBlacklistBtn": {
+    "message": "Добавить в чёрный список"
+  },
+  "alreadyBlacklistedFmt": {
+    "message": "Домен \"{0}\" уже в чёрном списке"
+  },
+  "addedToBlacklistFmt": {
+    "message": "Домен \"{0}\" добавлен в чёрный список"
+  },
+  "failedAddBlacklistFmt": {
+    "message": "Не удалось добавить в чёрный список: {0}"
+  },
+  "removedFromBlacklistFmt": {
+    "message": "Домен \"{0}\" удалён из чёрного списка"
+  },
+  "failedRemoveBlacklistFmt": {
+    "message": "Не удалось удалить из чёрного списка: {0}"
+  },
+  "historyNoDetections": {
+    "message": "Нет обнаружений"
+  },
+  "historyNoDetectionsFound": {
+    "message": "Обнаружений не найдено"
+  },
+  "historyMatchCountFmt": {
+    "message": "{0} совпадений"
+  },
+  "historyOneMatch": {
+    "message": "1 совпадение"
+  },
+  "notificationHistoryCleared": {
+    "message": "История очищена"
+  },
+  "notificationClearHistoryFailedFmt": {
+    "message": "Не удалось очистить историю: {0}"
+  },
+  "notificationHistoryItemExported": {
+    "message": "Запись истории экспортирована"
+  },
+  "notificationCacheCleared": {
+    "message": "Кэш очищен"
+  },
+  "notificationCacheAlreadyCleared": {
+    "message": "Кэш уже очищен"
+  },
+  "notificationClearCacheFailed": {
+    "message": "Не удалось очистить кэш"
+  },
+  "notificationDomainBlacklistedFmt": {
+    "message": "Домен \"{0}\" добавлен в чёрный список"
+  },
+  "notificationBlacklistFailed": {
+    "message": "Не удалось добавить в чёрный список"
+  },
+  "notificationHistoryItemDeleted": {
+    "message": "Запись истории удалена"
+  },
+  "notificationDeleteHistoryItemFailed": {
+    "message": "Не удалось удалить запись истории"
+  },
+  "notificationHistoryExportedFmt": {
+    "message": "Экспортировано записей истории: {0}"
+  },
+  "notificationHistoryMergedFmt": {
+    "message": "Объединено новых записей истории: {0}"
+  },
+  "notificationHistoryReplacedFmt": {
+    "message": "История заменена записями: {0}"
+  },
+  "notificationImportHistoryFailedFmt": {
+    "message": "Не удалось импортировать историю: {0}"
+  },
+  "dialogClearHistoryTitle": {
+    "message": "Очистить историю"
+  },
+  "dialogClearHistoryMessage": {
+    "message": "Вы уверены, что хотите очистить всю историю? Это действие нельзя отменить."
+  },
+  "buttonClearAll": {
+    "message": "Очистить всё"
+  },
+  "dialogClearCacheTitle": {
+    "message": "Очистить кэш"
+  },
+  "dialogClearCacheMessageFmt": {
+    "message": "Очистить закэшированные данные обнаружения для {0}? Запись в истории будет сохранена."
+  },
+  "buttonClearCache": {
+    "message": "Очистить кэш"
+  },
+  "dialogDeleteHistoryTitle": {
+    "message": "Удалить запись истории"
+  },
+  "dialogDeleteHistoryMessageFmt": {
+    "message": "Вы уверены, что хотите удалить это обнаружение от {0}?"
+  },
+  "failedLoadSettingsDefault": {
+    "message": "Не удалось загрузить настройки. Используются значения по умолчанию."
+  },
+  "settingsSavedToast": {
+    "message": "Настройки сохранены"
+  },
+  "failedSaveSettingsFmt": {
+    "message": "Не удалось сохранить настройки: {0}"
+  },
+  "settingsResetToast": {
+    "message": "Настройки сброшены"
+  },
+  "dataClearedReloadNotice": {
+    "message": "Все данные успешно очищены! Расширение будет перезагружено."
+  },
+  "failedClearDataFmt": {
+    "message": "Не удалось очистить данные: {0}"
+  },
+  "failedExportLogs": {
+    "message": "Не удалось экспортировать журналы"
+  },
+  "logsCleared": {
+    "message": "Журналы очищены"
+  },
+  "failedClearLogs": {
+    "message": "Не удалось очистить журналы"
+  },
+  "couldNotGetPageUrl": {
+    "message": "Не удалось получить URL текущей страницы"
+  },
+  "domainAlreadyBlacklistedFmt": {
+    "message": "{0} уже в чёрном списке"
+  },
+  "addedDomainToBlacklistFmt": {
+    "message": "{0} добавлен в чёрный список"
+  },
+  "failedAddDomainFmt": {
+    "message": "Не удалось добавить домен: {0}"
+  },
+  "removedDomainFromBlacklistFmt": {
+    "message": "{0} удалён из чёрного списка"
+  },
+  "invalidSettingsFmt": {
+    "message": "Недопустимые настройки: {0}"
+  },
+  "pleaseEnterWebhookUrl": {
+    "message": "Введите URL вебхука"
+  },
+  "webhookTestSuccessfulFmt": {
+    "message": "Проверка вебхука прошла успешно! Статус: {0}"
+  },
+  "webhookFailedStatusFmt": {
+    "message": "Вебхук вернул статус: {0}"
+  },
+  "webhookTestFailedFmt": {
+    "message": "Проверка вебхука не удалась: {0}"
+  },
+  "foundDetectorUpdatesAvailableFmt": {
+    "message": "Найдено доступных обновлений детекторов: {0}!"
+  },
+  "allDetectorsUpToDate": {
+    "message": "Все детекторы актуальны."
+  },
+  "importDetectorsTitle": {
+    "message": "Импорт детекторов"
+  },
+  "importMergeQuestion": {
+    "message": "Объединить с существующими детекторами?"
+  },
+  "mergeOption": {
+    "message": "Объединить"
+  },
+  "replaceAllOption": {
+    "message": "Заменить все"
+  },
+  "detectorsImported": {
+    "message": "Детекторы импортированы"
+  },
+  "failedImportDetectors": {
+    "message": "Не удалось импортировать детекторы. Проверьте формат файла."
+  },
+  "errorReadingFileFmt": {
+    "message": "Ошибка чтения файла: {0}"
+  },
+  "detectorsUpdatedFmt": {
+    "message": "Обновлено детекторов: {0}"
+  },
+  "updatesAvailableClickToApplyFmt": {
+    "message": "Доступно обновлений: {0} — нажмите ещё раз, чтобы применить"
+  },
+  "detectorDeletedFmt": {
+    "message": "Удалён \"{0}\""
+  },
+  "allDetectorsCleared": {
+    "message": "Все детекторы удалены"
+  },
+  "failedClearDetectors": {
+    "message": "Не удалось удалить детекторы"
+  },
+  "urlPatternMatching": {
+    "message": "Сопоставление шаблонов URL"
+  },
+  "textWordMatching": {
+    "message": "Сопоставление текста/слов"
+  },
+  "domSelectorMatching": {
+    "message": "Сопоставление DOM-селекторов"
+  },
+  "payloadTextMatching": {
+    "message": "Сопоставление текста полезной нагрузки"
+  },
+  "nameFieldMatching": {
+    "message": "Сопоставление поля имени"
+  },
+  "captureNotFound": {
+    "message": "Захват не найден"
+  },
+  "captureModuleClassNotFound": {
+    "message": "Класс модуля не найден"
+  },
+  "captureDetailsUnavailable": {
+    "message": "Просмотр сведений недоступен"
+  },
+  "captureDataCopied": {
+    "message": "Данные захвата скопированы"
+  },
+  "captureDeleted": {
+    "message": "Захват удалён"
+  },
+  "capturesExportedFmt": {
+    "message": "Экспортировано захватов: {0}"
+  },
+  "allCapturesCleared": {
+    "message": "Все захваты удалены"
+  },
+  "captureExportFailed": {
+    "message": "Не удалось экспортировать захват"
+  },
+  "invalidUrl": {
+    "message": "Недопустимый URL"
+  },
+  "importHistoryTitle": {
+    "message": "Импорт истории"
+  },
+  "importHistoryMessageFmt": {
+    "message": "Импортировать записей истории: {0}? В текущей истории записей: {1}."
+  },
+  "replaceOption": {
+    "message": "Заменить"
+  },
+  "settingsResetTitle": {
+    "message": "Сбросить настройки"
+  },
+  "settingsResetMessage": {
+    "message": "Вы уверены, что хотите сбросить все настройки к значениям по умолчанию? Это действие нельзя отменить."
+  },
+  "btnReset": {
+    "message": "Сбросить"
+  },
+  "clearAllDataTitle": {
+    "message": "Очистить все данные"
+  },
+  "clearAllDataMessage": {
+    "message": "Вы уверены, что хотите очистить ВСЕ данные расширения? Будут удалены:<br><br>• Вся история обнаружений<br>• Все правила детекторов<br>• Все настройки<br><br>Это действие нельзя отменить!"
+  },
+  "clearEverythingBtn": {
+    "message": "Очистить всё"
+  },
+  "clearLogsTitle": {
+    "message": "Очистить журналы"
+  },
+  "clearLogsMessage": {
+    "message": "Вы уверены, что хотите очистить все собранные журналы? Это действие нельзя отменить."
+  },
+  "failedCheckForUpdatesFmt": {
+    "message": "Не удалось проверить обновления: {0}"
+  },
+  "couldNotFetchUpdates": {
+    "message": "Не удалось получить обновления с сервера"
+  },
+  "errorApplyingUpdates": {
+    "message": "Ошибка применения обновлений"
+  },
+  "failedCheckForUpdates": {
+    "message": "Не удалось проверить обновления"
+  },
+  "errorCheckingForUpdates": {
+    "message": "Ошибка при проверке обновлений"
+  },
+  "updateServiceNotAvailable": {
+    "message": "Служба обновлений недоступна"
+  },
+  "clearAllDetectorsTitle": {
+    "message": "Удалить все детекторы"
+  },
+  "clearAllDetectorsMessage": {
+    "message": "Это удалит ВСЕ детекторы. Вы уверены?"
+  },
+  "clearingAllDetectors": {
+    "message": "Удаление всех детекторов..."
+  },
+  "deleteDetectorTitle": {
+    "message": "Удалить детектор"
+  },
+  "deleteDetectorMessageFmt": {
+    "message": "Вы уверены, что хотите удалить \"{0}\"?"
+  },
+  "detectorNotFound": {
+    "message": "Детектор не найден"
+  },
+  "failedDeleteDetector": {
+    "message": "Не удалось удалить детектор"
+  },
+  "detectorNotFoundFmt": {
+    "message": "Детектор не найден: {0}"
+  },
+  "failedViewCaptureDetails": {
+    "message": "Не удалось просмотреть сведения о захвате"
+  },
+  "failedCopyCaptureData": {
+    "message": "Не удалось скопировать данные захвата"
+  },
+  "failedDeleteCapture": {
+    "message": "Не удалось удалить захват"
+  },
+  "noCapturesToExport": {
+    "message": "Нет захватов для экспорта"
+  },
+  "clearAllCapturesConfirm": {
+    "message": "Вы уверены, что хотите удалить все захваты? Это нельзя отменить."
+  },
+  "failedClearCaptures": {
+    "message": "Не удалось удалить захваты"
+  },
+  "settingsCardWebhookIntegration": {
+    "message": "Интеграция вебхука"
+  },
+  "settingsEnableWebhook": {
+    "message": "Включить вебхук"
+  },
+  "settingsEnableWebhookDesc": {
+    "message": "Отправлять HTTP-запросы при обнаружении"
+  },
+  "settingsBypassCache": {
+    "message": "Отправлять при каждой загрузке страницы (в обход кэша)"
+  },
+  "settingsHttpMethod": {
+    "message": "HTTP-метод"
+  },
+  "settingsHttpMethodDesc": {
+    "message": "Выберите HTTP-метод для запросов вебхука"
+  },
+  "settingsCustomMethod": {
+    "message": "Пользовательский"
+  },
+  "settingsCustomMethodPlaceholder": {
+    "message": "Введите пользовательский метод (например, OPTIONS, HEAD)"
+  },
+  "settingsWebhookUrl": {
+    "message": "URL вебхука"
+  },
+  "settingsWebhookUrlDesc": {
+    "message": "Полный URL конечной точки (https://api.example.com/webhook)"
+  },
+  "settingsAvailableVariables": {
+    "message": "Доступные переменные:"
+  },
+  "settingsWebhookUrlExample": {
+    "message": "Пример: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
+  },
+  "settingsContentType": {
+    "message": "Content-Type"
+  },
+  "settingsContentTypeDesc": {
+    "message": "Заголовок HTTP Content-Type"
+  },
+  "settingsCustomHeaders": {
+    "message": "Пользовательские заголовки"
+  },
+  "settingsCustomHeadersDesc": {
+    "message": "Добавьте пользовательские HTTP-заголовки к запросу вебхука"
+  },
+  "settingsPayloadTemplate": {
+    "message": "Шаблон полезной нагрузки"
+  },
+  "settingsPayloadTemplateDesc": {
+    "message": "Используйте переменные: <SITEURL>, <HOSTNAME>, <TITLE>, <FAVICON>, <DETECTIONS>, <TIMESTAMP>, <DETECTION_COUNT>, <CATEGORIES>"
+  },
+  "settingsTestWebhook": {
+    "message": "Проверить вебхук"
+  },
+  "settingsTestWebhookDesc": {
+    "message": "Отправить тестовый запрос на URL вебхука"
+  },
+  "settingsTestBtn": {
+    "message": "Проверить"
+  },
+  "settingsCardHistoryConfig": {
+    "message": "Настройка истории"
+  },
+  "settingsHistorySettings": {
+    "message": "Настройки истории"
+  },
+  "settingsHistoryLimit": {
+    "message": "Лимит истории"
+  },
+  "settingsHistoryLimitNote": {
+    "message": "(0 = без ограничений)"
+  },
+  "settingsAutoClearDays": {
+    "message": "Автоочистка (дней)"
+  },
+  "settingsExportFormat": {
+    "message": "Формат экспорта"
+  },
+  "settingsExportFormatPlainText": {
+    "message": "Обычный текст"
+  },
+  "settingsIncludeTimestamps": {
+    "message": "Включать метки времени"
+  },
+  "settingsSaveOnCacheHits": {
+    "message": "Сохранять при попаданиях в кэш"
+  },
+  "settingsCardDuplicatePrevention": {
+    "message": "Защита от дубликатов"
+  },
+  "settingsEnableDuplicatePrevention": {
+    "message": "Включить защиту от дубликатов"
+  },
+  "settingsDuplicatePreventionDesc": {
+    "message": "Блокировать повторные записи в истории в пределах временного окна"
+  },
+  "settingsDuplicateScope": {
+    "message": "Область"
+  },
+  "settingsDuplicateScopeFullUrl": {
+    "message": "Полный URL"
+  },
+  "settingsDuplicateScopeDomain": {
+    "message": "Домен"
+  },
+  "settingsDuplicateScopePath": {
+    "message": "Путь"
+  },
+  "settingsTimeWindow": {
+    "message": "Временное окно"
+  },
+  "settingsTimeMinutes": {
+    "message": "Минуты"
+  },
+  "settingsTimeHours": {
+    "message": "Часы"
+  },
+  "settingsTimeDays": {
+    "message": "Дни"
+  },
+  "settingsHowItWorks": {
+    "message": "Как это работает:"
+  },
+  "settingsHowItWorksDesc": {
+    "message": "Предотвращает повторные записи в истории для одного и того же URL в пределах временного окна."
+  },
+  "settingsDuplicateFullUrlBullet": {
+    "message": "Полный URL: точное совпадение URL (включая параметры запроса)"
+  },
+  "settingsDuplicateDomainBullet": {
+    "message": "Домен: один и тот же домен (разные пути считаются одинаковыми)"
+  },
+  "settingsDuplicatePathBullet": {
+    "message": "Путь: один и тот же домен+путь (без учёта параметров запроса)"
+  },
+  "settingsCardCacheSettings": {
+    "message": "Настройки кэша"
+  },
+  "settingsCardSkipDomains": {
+    "message": "Пропускаемые домены"
+  },
+  "settingsAddCurrentPage": {
+    "message": "Добавить текущую страницу"
+  },
+  "settingsSearchDomainsPlaceholder": {
+    "message": "Поиск доменов..."
+  },
+  "settingsBadgeColorLow": {
+    "message": "Низкая"
+  },
+  "settingsBadgeColorMedium": {
+    "message": "Средняя"
+  },
+  "settingsBadgeColorHigh": {
+    "message": "Высокая"
+  },
+  "settingsEnableJsApi": {
+    "message": "Включить события JS API"
+  },
+  "settingsDataExportImport": {
+    "message": "Экспорт и импорт"
+  },
+  "settingsDataManagement": {
+    "message": "Управление данными"
+  },
+  "settingsDataManagementDesc": {
+    "message": "Экспорт или импорт данных расширения"
+  },
+  "settingsDataSettingsRow": {
+    "message": "Настройки"
+  },
+  "settingsDataSettingsRowDesc": {
+    "message": "Экспорт или импорт настроек расширения"
+  },
+  "settingsDataHistoryRow": {
+    "message": "История обнаружений"
+  },
+  "settingsDataHistoryRowDesc": {
+    "message": "Экспорт истории обнаружений в CSV"
+  },
+  "settingsDataExportSettingsTitle": {
+    "message": "Экспорт настроек"
+  },
+  "settingsDataImportSettingsTitle": {
+    "message": "Импорт настроек"
+  },
+  "settingsDataExportHistoryTitle": {
+    "message": "Экспорт истории"
+  },
+  "settingsAvailableEvents": {
+    "message": "Доступные события:"
+  },
+  "settingsApiEventReady": {
+    "message": "Расширение загружено и инициализировано"
+  },
+  "settingsApiEventOnStart": {
+    "message": "Обнаружение запущено (промах кэша / вручную)"
+  },
+  "settingsApiEventOnProgress": {
+    "message": "Обновления хода обнаружения (на уровне методов)"
+  },
+  "settingsApiEventOnHooksComplete": {
+    "message": "Отслеживание JS-хуков завершено"
+  },
+  "settingsApiEventOnWindowPropsComplete": {
+    "message": "Отслеживание свойств window завершено"
+  },
+  "settingsApiEventOnDetection": {
+    "message": "Обнаружение завершено с результатами"
+  },
+  "settingsApiEventOnError": {
+    "message": "Произошла ошибка обнаружения"
+  },
+  "settingsUsageExample": {
+    "message": "Пример использования:"
+  },
+  "detectionDisabledForDomain": {
+    "message": "Обнаружение отключено для этого домена"
+  },
+  "detectionRemoveFromBlacklistBtn": {
+    "message": "Удалить из чёрного списка"
+  },
+  "detectionBlacklistHint": {
+    "message": "Или перейдите в Настройки → Обнаружение → Домены в чёрном списке для управления."
+  },
+  "detectionNoDetectionsDesc": {
+    "message": "На этой странице не найдено сигналов анти-бот систем, CAPTCHA или фингерпринтинга."
+  },
+  "detectionNoCachedDataDesc": {
+    "message": "Для этой страницы нет кэшированных данных обнаружения. Перезагрузите страницу, чтобы запустить новое сканирование."
+  },
+  "detectionTitleUploadPaste": {
+    "message": "Загрузить обнаружения (ссылка для доступа)"
+  },
+  "pasteUploadSuccessToast": {
+    "message": "Ссылка скопирована в буфер обмена"
+  },
+  "failedReadSettings": {
+    "message": "Не удалось прочитать настройки — операция отменена"
+  },
+  "failedRemoveBlacklist": {
+    "message": "Не удалось удалить из чёрного списка"
+  },
+  "pasteConfirmTitle": {
+    "message": "Загрузить обнаружения?"
+  },
+  "pasteConfirmMsg": {
+    "message": "Это загрузит сводку обнаружений этой страницы в публичную вставку (dpaste.com, не в списке, истекает через 30 дней). Любой, у кого есть ссылка, может её просмотреть. Строка запроса URL и значения cookie/заголовков не включаются."
+  },
+  "pasteConfirmBtn": {
+    "message": "Загрузить"
+  },
+  "pasteUploadFailedToast": {
+    "message": "Не удалось загрузить"
+  },
+  "pasteNoDetectionsToast": {
+    "message": "Нет обнаружений для загрузки"
+  },
+  "detectionTitleClearCache": {
+    "message": "Очистить кэш"
+  },
+  "detectionTitleCopyOverview": {
+    "message": "Копировать обзор"
+  },
+  "detectionTitleBlockDomain": {
+    "message": "Заблокировать этот домен"
+  },
+  "detectionStatDetections": {
+    "message": "ОБНАРУЖЕНИЯ"
+  },
+  "detectionStatConfidence": {
+    "message": "УВЕРЕННОСТЬ"
+  },
+  "detectionStatDifficulty": {
+    "message": "СЛОЖНОСТЬ"
+  },
+  "detectionStatCacheScope": {
+    "message": "ОБЛАСТЬ КЭША"
+  },
+  "detectionStatCacheExpiration": {
+    "message": "СРОК ДЕЙСТВИЯ КЭША"
+  },
+  "detectionSearchPlaceholder": {
+    "message": "Поиск обнаружений..."
+  },
+  "detectionPaginationPage": {
+    "message": "Страница"
+  },
+  "detectionPaginationOf": {
+    "message": "из"
+  },
+  "detectionDomainBlacklistedTitle": {
+    "message": "Этот домен в чёрном списке"
+  },
+  "detectionModalConfidence": {
+    "message": "Уверенность"
+  },
+  "detectionModalDifficulty": {
+    "message": "Сложность"
+  },
+  "detectionModalMatchesFound": {
+    "message": "Найдено совпадений"
+  },
+  "detectionModalAuthor": {
+    "message": "Автор"
+  },
+  "detectionModalDescription": {
+    "message": "Описание"
+  },
+  "detectionModalNoDescription": {
+    "message": "Описание отсутствует."
+  },
+  "detectionModalDetectionMethods": {
+    "message": "Методы обнаружения"
+  },
+  "detectionModalNoMethodsDetected": {
+    "message": "Методы не обнаружены"
+  },
+  "advancedSearchPlaceholder": {
+    "message": "Поиск по URL, модулю, сайту или содержимому..."
+  },
+  "advancedPaginationPage": {
+    "message": "Страница"
+  },
+  "advancedPaginationOf": {
+    "message": "из"
+  },
+  "advancedInfoRecaptchaDesc": {
+    "message": "Захватывает ключи сайта, действия и параметры конфигурации"
+  },
+  "advancedInfoAkamaiDesc": {
+    "message": "Перехватывает данные сенсоров и извлекает сведения о версии"
+  },
+  "advancedInfoImpervaTitle": {
+    "message": "Imperva / Incapsula"
+  },
+  "advancedInfoImpervaDesc": {
+    "message": "Отслеживает куки и изменения уровня защиты"
+  },
+  "advancedInfoShapeSecurityDesc": {
+    "message": "Анализирует динамические заголовки и параметры скриптов"
+  },
+  "advancedInfoAwsWafDesc": {
+    "message": "Захватывает конечные точки проверок и сведения о токенах"
+  },
+  "btnStartCapturing": {
+    "message": "Начать захват"
+  },
+  "btnStopCapturing": {
+    "message": "Остановить захват"
+  },
+  "btnCheckCookies": {
+    "message": "Проверить куки"
+  },
+  "btnCheckVersion": {
+    "message": "Проверить версию"
+  },
+  "btnAnalyzeScripts": {
+    "message": "Анализ скриптов"
+  },
+  "btnExtractSiteKey": {
+    "message": "Извлечь SiteKey"
+  },
+  "btnObtainSelector": {
+    "message": "Получить селектор"
+  },
+  "btnCopyAllData": {
+    "message": "Копировать все данные"
+  },
+  "btnClearData": {
+    "message": "Очистить данные"
+  },
+  "advCapturedDataSection": {
+    "message": "Захваченные данные"
+  },
+  "advNoCapturesYet": {
+    "message": "Захватов пока нет"
+  },
+  "advCaptureDetails": {
+    "message": "Сведения о захвате"
+  },
+  "advValueCopied": {
+    "message": "Значение скопировано"
+  },
+  "advConfirmClearAllTitle": {
+    "message": "Очистить все захваченные данные?"
+  },
+  "advConfirmClearAllMsg": {
+    "message": "Это безвозвратно удалит все захваченные данные для этого провайдера."
+  },
+  "rulesColorPickerCancel": {
+    "message": "Отмена"
+  },
+  "rulesColorPickerOk": {
+    "message": "OK"
+  },
+  "rulesContentSearchScopeTitle": {
+    "message": "Область поиска по содержимому"
+  },
+  "rulesOnlyCheckScripts": {
+    "message": "Проверять только скрипты"
+  },
+  "rulesOnlyCheckScriptsHint": {
+    "message": "Ограничить поиск только кодом JavaScript и URL-адресами скриптов"
+  },
+  "rulesScopeSettingsTitle": {
+    "message": "Настройки области"
+  },
+  "rulesNameScopeLabel": {
+    "message": "Область имени"
+  },
+  "rulesNameScopeHint": {
+    "message": "Где искать совпадения по имени/полю"
+  },
+  "rulesScopeRequest": {
+    "message": "Запрос"
+  },
+  "rulesScopeResponse": {
+    "message": "Ответ"
+  },
+  "rulesScopeAll": {
+    "message": "Все"
+  },
+  "rulesValueScopeLabel": {
+    "message": "Область значения"
+  },
+  "rulesValueScopeHint": {
+    "message": "Где искать совпадения по значению"
+  },
+  "rulesUrlScopeSettings": {
+    "message": "Настройки области URL"
+  },
+  "rulesUrlScopeLabel": {
+    "message": "Область URL"
+  },
+  "rulesUrlScopePageOnly": {
+    "message": "Страница"
+  },
+  "rulesUrlScopeScripts": {
+    "message": "Скрипты"
+  },
+  "rulesUrlScopeAllDefault": {
+    "message": "Все (по умолчанию)"
+  },
+  "rulesRequestConstraints": {
+    "message": "Ограничения запроса"
+  },
+  "rulesUrlPatternOptional": {
+    "message": "Шаблон URL (необязательно)"
+  },
+  "rulesUrlRegex": {
+    "message": "Регулярное выражение URL (Regex)"
+  },
+  "rulesUrlCaseSensitive": {
+    "message": "URL с учётом регистра"
+  },
+  "rulesHttpMethodSelect": {
+    "message": "HTTP-метод (выберите один)"
+  },
+  "rulesHttpMethodFilterHint": {
+    "message": "Фильтр по методу запроса (необязательно)"
+  },
+  "rulesHttpMethodAny": {
+    "message": "Любой"
+  },
+  "rulesPatternMatchingOptions": {
+    "message": "Параметры сопоставления шаблонов"
+  },
+  "rulesPatternRegex": {
+    "message": "Регулярное выражение (Regex)"
+  },
+  "rulesPatternWholeWord": {
+    "message": "Целое слово"
+  },
+  "rulesPatternCaseSensitive": {
+    "message": "С учётом регистра"
+  },
+  "rulesValueFieldOptions": {
+    "message": "Параметры поля значения"
+  },
+  "rulesApplySettings": {
+    "message": "Применить настройки"
+  },
+  "rulesDomSelectorHelper": {
+    "message": "Помощник по DOM-селекторам"
+  },
+  "rulesStartTypingSuggestions": {
+    "message": "Начните вводить, чтобы увидеть подсказки"
+  },
+  "rulesUseSelectorBtn": {
+    "message": "Использовать селектор"
+  },
+  "rulesWindowPropertiesHelper": {
+    "message": "Помощник по свойствам window"
+  },
+  "rulesStepEnterKeyword": {
+    "message": "Введите ключевое слово"
+  },
+  "rulesStepChooseProperty": {
+    "message": "Выберите свойство"
+  },
+  "rulesStepSelectCondition": {
+    "message": "Выберите условие"
+  },
+  "rulesConditionExists": {
+    "message": "Существует"
+  },
+  "rulesConditionGroupType": {
+    "message": "Тип"
+  },
+  "rulesTypeofObject": {
+    "message": "Object"
+  },
+  "rulesTypeofFunction": {
+    "message": "Function"
+  },
+  "rulesTypeofString": {
+    "message": "String"
+  },
+  "rulesTypeofNumber": {
+    "message": "Number"
+  },
+  "rulesTypeofBoolean": {
+    "message": "Boolean"
+  },
+  "notifConfirmTitleDefault": {
+    "message": "Подтвердите"
+  },
+  "notifConfirmMessageDefault": {
+    "message": "Вы уверены?"
+  },
+  "notifLoadingDefault": {
+    "message": "Загрузка..."
+  },
+  "helperPatternStartTypingSuggestions": {
+    "message": "Начните вводить выше, чтобы увидеть подсказки..."
+  },
+  "helperPatternStartTypingExamples": {
+    "message": "Начните вводить выше, чтобы увидеть примеры..."
+  },
+  "helpJsHooksTitle": {
+    "message": "Обнаружение через JavaScript-хуки"
+  },
+  "helpJsHooksDescription": {
+    "message": "Хуки перехватывают вызовы браузерных API (Canvas, Audio, WebGL и др.), чтобы в реальном времени обнаруживать код фингерпринтинга анти-бот систем при обращении страницы к этим API."
+  },
+  "helpJsHooksWarning": {
+    "message": "Хуки должны устанавливаться на document_start до запуска любого скрипта страницы — иначе страница может сохранить ссылки на оригинальные API до установки нашей обёртки."
+  },
+  "helpJsHooksTip": {
+    "message": "Добавьте цель вроде CanvasRenderingContext2D.prototype.getImageData для обнаружения canvas-фингерпринтинга."
+  },
+  "helpWindowTitle": {
+    "message": "Обнаружение через свойства window"
+  },
+  "helpWindowDescription": {
+    "message": "Обнаруживает JavaScript-объекты и свойства, добавляемые в глобальный объект window скриптами анти-бот систем."
+  },
+  "helpWindowWarning": {
+    "message": "Некоторые анти-бот скрипты используют ключи Symbol(), которые не перечисляются — их сложнее обнаружить."
+  },
+  "helpWindowTip": {
+    "message": "Используйте условия вроде typeof object или exists для сопоставления по типу свойства."
+  },
+  "helpUrlTitle": {
+    "message": "Обнаружение по шаблону URL"
+  },
+  "helpUrlDescription": {
+    "message": "Сопоставляет URL загружаемых ресурсов (скрипты, изображения, сетевые запросы) с шаблонами."
+  },
+  "helpUrlWarning": {
+    "message": "По умолчанию шаблоны учитывают регистр. Отключите параметр «URL с учётом регистра», если требуется сопоставление без учёта регистра."
+  },
+  "helpUrlTip": {
+    "message": "Используйте параметр Regex для сложных шаблонов вроде /\\/v\\d+\\/challenge/."
+  },
+  "helpHeaderTitle": {
+    "message": "Обнаружение по HTTP-заголовкам"
+  },
+  "helpHeaderDescription": {
+    "message": "Обнаруживает заголовки HTTP-запросов и ответов, устанавливаемые промежуточным ПО анти-бот систем."
+  },
+  "helpHeaderWarning": {
+    "message": "Некоторые заголовки присутствуют только в первоначальном запросе — убедитесь, что область включает «Запрос»."
+  },
+  "helpHeaderTip": {
+    "message": "Типичные цели: x-akamai-bot-manager-token, cf-ray, x-shape-version."
+  },
+  "helpCookieTitle": {
+    "message": "Обнаружение по куки"
+  },
+  "helpCookieDescription": {
+    "message": "Обнаруживает куки, устанавливаемые проверками анти-бот систем. Сопоставляет имя куки (и при необходимости шаблон значения)."
+  },
+  "helpCookieWarning": {
+    "message": "Для имён куки со случайными суффиксами (например, _abck-xyz123) нужен regex-шаблон, а не буквальное имя."
+  },
+  "helpCookieTip": {
+    "message": "Используйте «Целое слово» для точного совпадения имени или Regex для шаблонов с префиксом вроде ^datadome-."
+  },
+  "helpContentTitle": {
+    "message": "Обнаружение по содержимому страницы"
+  },
+  "helpContentDescription": {
+    "message": "Ищет текстовые шаблоны внутри HTML страницы и встроенных тегов script."
+  },
+  "helpContentWarning": {
+    "message": "Сканирование всей страницы может быть медленным на больших страницах. Ограничьте «Проверять только скрипты», если сигнатура находится в JS-коде."
+  },
+  "helpContentTip": {
+    "message": "Используйте «Целое слово», чтобы избежать ложных срабатываний на подстроках внутри более длинных слов."
+  },
+  "helpDomTitle": {
+    "message": "Обнаружение по DOM-селекторам"
+  },
+  "helpDomDescription": {
+    "message": "Обнаруживает HTML-элементы с помощью CSS-селекторов. Срабатывает, когда соответствующий элемент присутствует в DOM."
+  },
+  "helpDomWarning": {
+    "message": "Селекторы сопоставляются только с элементами, отрисованными в фактическом DOM, — не с теми, что внутри iframe или shadow root."
+  },
+  "helpDomTip": {
+    "message": "Используйте специфичные селекторы вроде div#cf-challenge[data-ray], а не общие, чтобы снизить число ложных срабатываний."
+  },
+  "helpPayloadTitle": {
+    "message": "Обнаружение по полезной нагрузке запроса"
+  },
+  "helpPayloadDescription": {
+    "message": "Отслеживает тела всех HTTP-запросов POST/PUT/PATCH на наличие текстовых шаблонов."
+  },
+  "helpPayloadWarning": {
+    "message": "Отслеживание полезной нагрузки работает только для запросов, которые расширение может перехватить (без зашифрованных тел, без непрозрачных blob-объектов)."
+  },
+  "helpPayloadTip": {
+    "message": "Сочетайте с шаблоном URL, чтобы ограничить сопоставление конкретными конечными точками."
+  },
+  "helpWarningLabel": {
+    "message": "Предупреждение:"
+  },
+  "helpTipLabel": {
+    "message": "Совет:"
+  },
+  "detectionMethodTitle": {
+    "message": "Метод обнаружения"
+  },
+  "noHelpContentAvailable": {
+    "message": "Справка для этого типа метода недоступна."
+  },
+  "advNoCapturesHintFmt": {
+    "message": "Нажмите «Начать захват» выше, чтобы начать захват данных {0}"
+  },
+  "advancedToolsHeading": {
+    "message": "Расширенные инструменты обнаружения"
+  },
+  "advancedToolsSubtitle": {
+    "message": "Захват и анализ систем защиты"
+  },
+  "advancedToolsHelpTitle": {
+    "message": "Справка"
+  },
+  "advancedToolsStepSelect": {
+    "message": "Выберите обнаружение"
+  },
+  "advancedToolsChooseDetection": {
+    "message": "Выберите обнаружение..."
+  },
+  "advancedToolsStepLoadUse": {
+    "message": "Загрузить и использовать инструменты"
+  },
+  "advancedToolsLoadTools": {
+    "message": "Загрузить инструменты"
+  },
+  "advancedToolsClearAll": {
+    "message": "Очистить всё"
+  },
+  "advancedToolsClearAllFooter": {
+    "message": "Очистить все инструменты"
+  },
+  "advancedToolsLearnMore": {
+    "message": "Узнать о расширенных инструментах"
+  },
+  "advancedToolsChange": {
+    "message": "Изменить"
+  },
+  "advancedToolsDetectionName": {
+    "message": "Название обнаружения"
+  },
+  "settingsLanguageTitle": {
+    "message": "Язык"
+  },
+  "settingsLanguageDesc": {
+    "message": "Переопределяет язык интерфейса. По умолчанию используется язык браузера."
+  },
+  "settingsLanguageAuto": {
+    "message": "Использовать язык браузера"
+  },
+  "copiedJsonNotification": {
+    "message": "JSON скопирован"
+  },
+  "detectionEmptyTitle": {
+    "message": "Ничего не обнаружено"
+  },
+  "detectionBadgeNoCaptchas": {
+    "message": "✓ Без CAPTCHA"
+  },
+  "detectionBadgeNoAntibot": {
+    "message": "✓ Без анти-бота"
+  },
+  "detectionBadgeNoFingerprint": {
+    "message": "✓ Без отпечатков"
+  },
+  "detectionDisabledTitle": {
+    "message": "Обнаружение отключено"
+  },
+  "detectionDisabledDesc": {
+    "message": "Обнаружение безопасности сейчас отключено."
+  },
+  "detectionDisabledAction": {
+    "message": "Включите переключатель вверху, чтобы включить обнаружение."
+  },
+  "rulesModalDetectorLabel": {
+    "message": "Правило обнаружения"
+  },
+  "rulesAuthorHelpHint": {
+    "message": "Кто создал этот детектор"
+  },
+  "rulesWindowConditionExamplesTitle": {
+    "message": "Примеры условий window"
+  },
+  "rulesWindowConditionExamplesHint": {
+    "message": "Нажмите на пример, чтобы использовать его:"
+  },
+  "rulesBtnNextFmt": {
+    "message": "Далее: {0}"
+  },
+  "rulesUsePropertyBtn": {
+    "message": "Использовать свойство"
+  }
+}

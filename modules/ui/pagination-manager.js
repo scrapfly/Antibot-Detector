@@ -88,13 +88,32 @@ class PaginationManager {
       totalPagesSpan.textContent = totalPages;
     }
 
-    // Update the "Showing X-Y of Z" text
+    // Update the "Showing X-Y of Z" text (locale-aware)
     if (paginationInfo) {
       const totalItems = this.filteredItems.length;
+      const _t = (typeof I18n !== 'undefined') ? I18n : null;
       if (totalItems === 0) {
-        paginationInfo.textContent = 'No items to display';
+        paginationInfo.textContent = (_t && _t.get('paginationNoItems')) || 'No items to display';
       } else {
-        paginationInfo.innerHTML = `Showing <span class="pagination-count">${startItem}-${endItem}</span> <span class="static-label">of</span> <span class="pagination-count">${totalItems}</span>`;
+        const tpl = (_t && _t.get('paginationShowingFmt')) || 'Showing {0}-{1} of {2}';
+        // Build DOM piece-by-piece so the translated template's interleaved
+        // text and number-spans stay structurally correct.
+        const makeCount = (text) => {
+          const s = document.createElement('span');
+          s.className = 'pagination-count';
+          s.textContent = text;
+          return s;
+        };
+        // Tokenize template on placeholders, then rebuild.
+        paginationInfo.textContent = '';
+        const subs = { '{0}': makeCount(String(startItem)),
+                       '{1}': makeCount(String(endItem)),
+                       '{2}': makeCount(String(totalItems)) };
+        const parts = tpl.split(/(\{[012]\})/g);
+        for (const part of parts) {
+          if (subs[part]) paginationInfo.appendChild(subs[part]);
+          else if (part) paginationInfo.appendChild(document.createTextNode(part));
+        }
       }
     }
 

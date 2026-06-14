@@ -20,6 +20,7 @@ const EXPLANATION_MODAL_CONFIGS = [
     modal: '#regexExplanationModal',
     btn: '#regexExplanationBtn',
     btnAlt: '#regexExplanationBtnValue',
+    buttons: ['#payloadUrlRegexExplanationBtn'],
     close: '#closeRegexExplanation'
   },
   {
@@ -32,6 +33,7 @@ const EXPLANATION_MODAL_CONFIGS = [
     modal: '#caseSensitiveExplanationModal',
     btn: '#caseSensitiveExplanationBtn',
     btnAlt: '#caseSensitiveExplanationBtnValue',
+    buttons: ['#payloadUrlCaseExplanationBtn'],
     close: '#closeCaseSensitiveExplanation'
   }
 ];
@@ -46,8 +48,9 @@ Rules.prototype.setupExplanationModals = function() {
   for (const config of EXPLANATION_MODAL_CONFIGS) {
     const modal = new RulesModalLifecycle(config.modal);
     modal.setupCloseListeners(config.close);
-    if (config.btn) modal.setupOpenListener(config.btn);
-    if (config.btnAlt) modal.setupOpenListener(config.btnAlt);
+    [config.btn, config.btnAlt, ...(config.buttons || [])]
+      .filter(Boolean)
+      .forEach((selector) => modal.setupOpenListener(selector));
     this._explanationModals[config.modal] = modal;
   }
 };
@@ -70,71 +73,75 @@ Rules.prototype.setupMethodHelpModal = function() {
  * Get help content for detection method types
  */
 Rules.prototype.getMethodHelpContent = function(methodType) {
+  const _t = (typeof I18n !== 'undefined') ? I18n : null;
+  const _tr = (key, fb) => (_t && _t.get(key)) || fb;
   const helpContent = {
     'js_hooks': {
-      title: 'JavaScript Hooks Detection',
-      description: 'Hooks intercept browser API calls like <code>canvas.toDataURL()</code>, <code>navigator.webdriver</code>, or <code>RTCPeerConnection.createOffer()</code>. When a page calls these APIs, the hook records which anti-bot or fingerprinting system is active.',
-      warning: 'Hooks only fire when the APIs are actually called by page scripts. Some sites cache fingerprint results, so use a hard reload (Ctrl+F5) to trigger detection again.',
-      tip: 'Specify the full API path (e.g., <code>HTMLCanvasElement.prototype.toDataURL</code>).'
+      title: _tr('helpJsHooksTitle', 'JavaScript Hooks Detection'),
+      description: _tr('helpJsHooksDescription', 'Hooks intercept browser API calls like <code>canvas.toDataURL()</code>, <code>navigator.webdriver</code>, or <code>RTCPeerConnection.createOffer()</code>. When a page calls these APIs, the hook records which anti-bot or fingerprinting system is active.'),
+      warning: _tr('helpJsHooksWarning', 'Hooks only fire when the APIs are actually called by page scripts. Some sites cache fingerprint results, so use a hard reload (Ctrl+F5) to trigger detection again.'),
+      tip: _tr('helpJsHooksTip', 'Specify the full API path (e.g., <code>HTMLCanvasElement.prototype.toDataURL</code>).')
     },
     'window': {
-      title: 'Window Properties Detection',
-      description: 'Detects JavaScript objects and properties added to the <code>window</code> object by anti-bot scripts. Checks for specific paths like <code>_cf_chl_opt</code> (Cloudflare), <code>grecaptcha</code> (reCAPTCHA), or <code>dataDomeOptions</code> (DataDome).',
-      warning: 'Window properties must exist at page load time. If scripts create properties asynchronously, detection may fail.',
-      tip: 'Use dot notation for nested properties (e.g., <code>navigator.webdriver</code> or <code>window._pxAppId</code>).'
+      title: _tr('helpWindowTitle', 'Window Properties Detection'),
+      description: _tr('helpWindowDescription', 'Detects JavaScript objects and properties added to the <code>window</code> object by anti-bot scripts. Checks for specific paths like <code>_cf_chl_opt</code> (Cloudflare), <code>grecaptcha</code> (reCAPTCHA), or <code>dataDomeOptions</code> (DataDome).'),
+      warning: _tr('helpWindowWarning', 'Window properties must exist at page load time. If scripts create properties asynchronously, detection may fail.'),
+      tip: _tr('helpWindowTip', 'Use dot notation for nested properties (e.g., <code>navigator.webdriver</code> or <code>window._pxAppId</code>).')
     },
     'url': {
-      title: 'URL Pattern Detection',
-      description: 'Matches URLs of loaded resources (scripts, images, stylesheets, XHR requests). Detects CDN URLs, API endpoints, and third-party domains used by anti-bot services.',
-      warning: 'URL detection triggers on any matching resource. Use specific patterns to avoid false positives.',
-      tip: 'Enable "Regex" for flexible pattern matching (e.g., <code>cdn\\.example\\.com/.*\\.js</code>). Use "Whole Word" to match exact domains.'
+      title: _tr('helpUrlTitle', 'URL Pattern Detection'),
+      description: _tr('helpUrlDescription', 'Matches URLs of loaded resources (scripts, images, stylesheets, XHR requests). Detects CDN URLs, API endpoints, and third-party domains used by anti-bot services.'),
+      warning: _tr('helpUrlWarning', 'URL detection triggers on any matching resource. Use specific patterns to avoid false positives.'),
+      tip: _tr('helpUrlTip', 'Enable "Regex" for flexible pattern matching (e.g., <code>cdn\\.example\\.com/.*\\.js</code>). Use "Whole Word" to match exact domains.')
     },
     'header': {
-      title: 'HTTP Header Detection',
-      description: 'Detects HTTP request and response headers set by anti-bot systems. Examples: <code>cf-ray</code> (Cloudflare), <code>x-datadome-headers</code> (DataDome), <code>x-akamai-*</code> (Akamai).',
-      warning: 'Only response headers are visible to the extension. Request headers sent by the browser cannot be detected.',
-      tip: 'Use Name/Value pairs for precise matching. Enable "Regex" on name to match header families (e.g., <code>x-akamai-.*</code>).'
+      title: _tr('helpHeaderTitle', 'HTTP Header Detection'),
+      description: _tr('helpHeaderDescription', 'Detects HTTP request and response headers set by anti-bot systems. Examples: <code>cf-ray</code> (Cloudflare), <code>x-datadome-headers</code> (DataDome), <code>x-akamai-*</code> (Akamai).'),
+      warning: _tr('helpHeaderWarning', 'Only response headers are visible to the extension. Request headers sent by the browser cannot be detected.'),
+      tip: _tr('helpHeaderTip', 'Use Name/Value pairs for precise matching. Enable "Regex" on name to match header families (e.g., <code>x-akamai-.*</code>).')
     },
     'cookie': {
-      title: 'Cookie Detection',
-      description: 'Detects cookies set by anti-bot and fingerprinting systems. Examples: <code>__cf_bm</code> (Cloudflare), <code>_abck</code> (Akamai), <code>datadome</code> (DataDome).',
-      warning: 'HttpOnly cookies are not accessible to JavaScript and cannot be detected. Secure cookies require HTTPS.',
-      tip: 'Use Name/Value pairs: leave Value empty to match any cookie with that name. Enable "Regex" on name to match cookie families (e.g., <code>_px.*</code>).'
+      title: _tr('helpCookieTitle', 'Cookie Detection'),
+      description: _tr('helpCookieDescription', 'Detects cookies set by anti-bot and fingerprinting systems. Examples: <code>__cf_bm</code> (Cloudflare), <code>_abck</code> (Akamai), <code>datadome</code> (DataDome).'),
+      warning: _tr('helpCookieWarning', 'HttpOnly cookies are not accessible to JavaScript and cannot be detected. Secure cookies require HTTPS.'),
+      tip: _tr('helpCookieTip', 'Use Name/Value pairs: leave Value empty to match any cookie with that name. Enable "Regex" on name to match cookie families (e.g., <code>_px.*</code>).')
     },
     'content': {
-      title: 'Page Content Detection',
-      description: 'Searches for text patterns in page HTML, inline scripts, and loaded JavaScript files. Detects obfuscated code, specific function names, or unique strings used by anti-bot scripts.',
-      warning: 'Content detection can be slow on large pages. Use specific patterns and enable "Whole Word" to reduce false positives.',
-      tip: 'Search in "Scripts Only" scope for better performance. Use "Regex" for complex patterns (e.g., <code>function\\s+botDetect</code>).'
+      title: _tr('helpContentTitle', 'Page Content Detection'),
+      description: _tr('helpContentDescription', 'Searches for text patterns in page HTML, inline scripts, and loaded JavaScript files. Detects obfuscated code, specific function names, or unique strings used by anti-bot scripts.'),
+      warning: _tr('helpContentWarning', 'Content detection can be slow on large pages. Use specific patterns and enable "Whole Word" to reduce false positives.'),
+      tip: _tr('helpContentTip', 'Search in "Scripts Only" scope for better performance. Use "Regex" for complex patterns (e.g., <code>function\\s+botDetect</code>).')
     },
     'dom': {
-      title: 'DOM Selector Detection',
-      description: 'Detects HTML elements using CSS selectors. Finds CAPTCHA containers, challenge pages, bot detection widgets, and invisible tracking elements.',
-      warning: 'DOM detection requires elements to exist in the page. Dynamically created elements may not be detected immediately.',
-      tip: 'Use specific selectors like <code>#captcha-container</code> or <code>.g-recaptcha</code>. Attribute selectors work too: <code>[data-sitekey]</code>.'
+      title: _tr('helpDomTitle', 'DOM Selector Detection'),
+      description: _tr('helpDomDescription', 'Detects HTML elements using CSS selectors. Finds CAPTCHA containers, challenge pages, bot detection widgets, and invisible tracking elements.'),
+      warning: _tr('helpDomWarning', 'DOM detection requires elements to exist in the page. Dynamically created elements may not be detected immediately.'),
+      tip: _tr('helpDomTip', 'Use specific selectors like <code>#captcha-container</code> or <code>.g-recaptcha</code>. Attribute selectors work too: <code>[data-sitekey]</code>.')
     },
     'payload': {
-      title: 'Request Payload Detection',
-      description: 'Monitors all HTTP POST/PUT/PATCH requests including main frame navigations, API calls (fetch/XHR), and background requests. Detects patterns in request payloads to identify anti-bot telemetry, form submissions, and sensor data.',
-      warning: 'Payload detection can generate many matches on data-heavy sites. Use specific patterns and enable "Case Sensitive" for accurate matching to reduce false positives.',
-      tip: 'Look for unique parameter names or obfuscated payload structures (e.g., <code>sensor_data</code>, <code>challenge_token</code>). Enable "Regex" for flexible pattern matching of JSON structures.'
+      title: _tr('helpPayloadTitle', 'Request Payload Detection'),
+      description: _tr('helpPayloadDescription', 'Monitors all HTTP POST/PUT/PATCH requests including main frame navigations, API calls (fetch/XHR), and background requests. Detects patterns in request payloads to identify anti-bot telemetry, form submissions, and sensor data.'),
+      warning: _tr('helpPayloadWarning', 'Payload detection can generate many matches on data-heavy sites. Use specific patterns and enable "Case Sensitive" for accurate matching to reduce false positives.'),
+      tip: _tr('helpPayloadTip', 'Look for unique parameter names or obfuscated payload structures (e.g., <code>sensor_data</code>, <code>challenge_token</code>). Enable "Regex" for flexible pattern matching of JSON structures.')
     }
   };
 
   const content = helpContent[methodType];
   if (!content) {
     return {
-      title: 'Detection Method',
-      html: `<p>No help content available for this method type.</p>`
+      title: _tr('detectionMethodTitle', 'Detection Method'),
+      html: `<p>${_tr('noHelpContentAvailable', 'No help content available for this method type.')}</p>`
     };
   }
 
+  const warningLabel = _tr('helpWarningLabel', 'Warning:');
+  const tipLabel = _tr('helpTipLabel', 'Tip:');
   return {
     title: content.title,
     html: `
       <p>${content.description}</p>
-      ${content.warning ? `<p style="color: var(--warning); margin-top: 12px;"><strong>Warning:</strong> ${content.warning}</p>` : ''}
-      ${content.tip ? `<p style="color: var(--accent-light); margin-top: 12px;"><strong>Tip:</strong> ${content.tip}</p>` : ''}
+      ${content.warning ? `<p style="color: var(--warning); margin-top: 12px;"><strong>${warningLabel}</strong> ${content.warning}</p>` : ''}
+      ${content.tip ? `<p style="color: var(--accent-light); margin-top: 12px;"><strong>${tipLabel}</strong> ${content.tip}</p>` : ''}
     `
   };
 };

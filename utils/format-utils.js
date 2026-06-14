@@ -25,23 +25,27 @@ class FormatUtils {
    * @returns {string} Human-readable time ago string
    */
   static getTimeAgo(timestamp) {
-    if (!timestamp) return 'Unknown';
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
+    const fmt = (key, fallback, n) => (t && t.format(key, n)) || fallback;
+    const get = (key, fallback) => (t && t.get(key)) || fallback;
+
+    if (!timestamp) return get('timeUnknown', 'Unknown');
 
     const now = Date.now();
     const diff = now - timestamp;
 
-    if (diff < 0) return 'Just now';
+    if (diff < 0) return get('timeJustNow', 'Just now');
 
     const seconds = Math.floor(diff / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
 
-    if (days > 0) return `${days}d ago`;
-    if (hours > 0) return `${hours}h ago`;
-    if (minutes > 0) return `${minutes}m ago`;
-    if (seconds > 0) return `${seconds}s ago`;
-    return 'Just now';
+    if (days > 0) return fmt('timeDaysAgoFmt', `${days}d ago`, days);
+    if (hours > 0) return fmt('timeHoursAgoFmt', `${hours}h ago`, hours);
+    if (minutes > 0) return fmt('timeMinutesAgoFmt', `${minutes}m ago`, minutes);
+    if (seconds > 0) return fmt('timeSecondsAgoFmt', `${seconds}s ago`, seconds);
+    return get('timeJustNow', 'Just now');
   }
 
   /**
@@ -55,6 +59,19 @@ class FormatUtils {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  /**
+   * Escape a value for use inside an HTML attribute ("..."). escapeHtml alone
+   * does NOT escape quotes, so it is unsafe for attribute context — a value
+   * containing a double-quote could break out. Use this for src/alt/title/etc.
+   * @param {*} text
+   * @returns {string}
+   */
+  static escapeAttr(text) {
+    return FormatUtils.escapeHtml(text)
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   /**
@@ -72,11 +89,18 @@ class FormatUtils {
   static async copyToClipboard(text, {
     element = null,
     notify = true,
-    notificationMessage = 'Copied',
-    inlineMessage = '\u2713 Copied!',
+    notificationMessage = null,
+    inlineMessage = null,
     revertDelay = 1600,
     useMicroToast = true
   } = {}) {
+    const _i18n = (typeof I18n !== 'undefined') ? I18n : null;
+    if (notificationMessage == null) {
+      notificationMessage = (_i18n && _i18n.tr('copiedNotification', 'Copied')) || 'Copied';
+    }
+    if (inlineMessage == null) {
+      inlineMessage = (_i18n && _i18n.tr('copiedInlineMsg', '\u2713 Copied!')) || '\u2713 Copied!';
+    }
     let success = false;
 
     try {
@@ -166,3 +190,6 @@ if (typeof window !== 'undefined') {
 } else if (typeof self !== 'undefined') {
   self.FormatUtils = FormatUtils;
 }
+
+// Node test export (no-op in the browser, where `module` is undefined).
+if (typeof module !== 'undefined' && module.exports) { module.exports = FormatUtils; }

@@ -10,11 +10,14 @@ AkamaiAdvanced.prototype.updateCaptureButtonState = function(isCapturing) {
         const label = btn.querySelector('.tool-btn-label');
         if (!label) return;
 
+        const tr = (key, fallback) => (
+            typeof I18n !== 'undefined' ? I18n.tr(key, fallback) : fallback
+        );
         if (isCapturing) {
-            label.textContent = 'Stop Capturing';
+            label.textContent = tr('btnStopCapturing', 'Stop Capturing');
             btn.style.background = 'var(--danger)';
         } else {
-            label.textContent = 'Start Capturing';
+            label.textContent = tr('btnStartCapturing', 'Start Capturing');
             btn.style.background = '';
         }
     };

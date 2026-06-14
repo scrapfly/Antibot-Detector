@@ -1,48 +1,39 @@
 <!-- History Tab Template -->
   <div class="history-header">
     <div class="action-buttons">
-      <button id="importHistoryBtn" class="import-btn-small" title="Import history">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,11L16,15H13.5V18H10.5V15H8L12,11Z"/>
-        </svg>
-        Import
+      <button id="importHistoryBtn" class="import-btn-small" title="Import history" data-i18n-title="historyImportTitle">
+        <span data-i18n="btnImport">Import</span>
       </button>
       <input type="file" id="importHistoryFile" accept=".json" style="display: none;">
-      <button id="exportHistoryBtn" class="export-btn-small" title="Export history">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z"/>
-        </svg>
-        Export
+      <button id="exportHistoryBtn" class="export-btn-small" title="Export history" data-i18n-title="historyExportTitle">
+        <span data-i18n="btnExport">Export</span>
       </button>
-      <button id="clearHistoryBtn" class="clear-btn-small" title="Clear history">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
-        </svg>
-        Clear
+      <button id="clearHistoryBtn" class="clear-btn-small" title="Clear history" data-i18n-title="historyClearTitle">
+        <span data-i18n="btnClear">Clear</span>
       </button>
     </div>
     <div class="search-container">
-      <input type="text" id="historySearch" class="search-input" placeholder="Search history...">
+      <input type="text" id="historySearch" class="search-input" placeholder="Search history..." data-i18n-placeholder="searchHistory">
     </div>
   </div>
   <div id="historyList" class="history-list"></div>
 
   <div id="historyPagination" class="pagination">
-    <div class="pagination-info">No items to display</div>
+    <div class="pagination-info" data-i18n="paginationNoItems">No items to display</div>
     <div class="pagination-controls">
-      <button class="pagination-btn pagination-btn-prev" disabled>
-        <svg width="16" height="16" viewBox="0 0 24 24">
+      <button class="pagination-btn pagination-btn-prev" disabled aria-label="Previous page" data-i18n-aria-label="paginationPrev">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/>
         </svg>
       </button>
       <div class="page-info">
-        <span>Page</span>
-        <input type="text" class="page-input" value="1" />
-        <span>of</span>
+        <span data-i18n="paginationPage">Page</span>
+        <input type="text" class="page-input" value="1" aria-label="Current page number" data-i18n-aria-label="paginationCurrentPageAria" />
+        <span data-i18n="paginationOf">of</span>
         <span class="total-pages">1</span>
       </div>
-      <button class="pagination-btn pagination-btn-next" disabled>
-        <svg width="16" height="16" viewBox="0 0 24 24">
+      <button class="pagination-btn pagination-btn-next" disabled aria-label="Next page" data-i18n-aria-label="paginationNext">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/>
         </svg>
       </button>
@@ -50,11 +41,11 @@
   </div>
 
   <div id="historyEmpty" class="empty-state" style="display: none;">
-    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" opacity="0.5">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" opacity="0.5" aria-hidden="true">
       <path d="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z" stroke="currentColor" stroke-width="2" fill="none"/>
     </svg>
-    <h3>No history yet</h3>
-    <p>Detection history will appear here as you browse websites.</p>
+    <h3 data-i18n="historyEmptyTitle">No history yet</h3>
+    <p data-i18n="historyEmptyDescription">Detection history will appear here as you browse websites.</p>
   </div>
 
   <!-- History Detail Modal -->
@@ -69,8 +60,8 @@
             <a id="historyModalUrl" class="history-modal-url" href="#" target="_blank">URL</a>
           </div>
         </div>
-        <button id="historyModalClose" class="history-modal-close" title="Close">
-          <svg width="16" height="16" viewBox="0 0 24 24">
+        <button id="historyModalClose" class="history-modal-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
           </svg>
         </button>

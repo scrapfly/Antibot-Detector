@@ -10,6 +10,11 @@
   class HookResilienceManager {
     constructor() {
       this.expectedTargets = new Set();
+      this.failureReporter = null;
+    }
+
+    setFailureReporter(reporter) {
+      this.failureReporter = typeof reporter === 'function' ? reporter : null;
     }
 
     setExpectedTargets(hookDefinitions) {
@@ -115,13 +120,14 @@
 
     _reportFailure(target, type, message) {
       try {
-        window.postMessage({
+        if (!this.failureReporter) return;
+        this.failureReporter({
           type: 'HOOK_FAILURE_REPORT',
           target,
           failureType: type,
           message,
           timestamp: Date.now()
-        }, '*');
+        });
       } catch (e) {
         // Silently fail
       }

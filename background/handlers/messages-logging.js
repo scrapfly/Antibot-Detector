@@ -64,7 +64,7 @@ function registerLoggingHandlers(registry, context) {
                     }
                 }
             } catch (e) {
-                // Silently fail if settings can't be read
+                Logger.warn('BACKGROUND', '[SCRAPFLY_DEBUG_LOG] Could not read settings for debug log:', e);
             }
         })();
     };
@@ -86,7 +86,7 @@ function registerLoggingHandlers(registry, context) {
                     error: request.error
                 });
             } catch (e) {
-                // ignore
+                Logger.warn('HOOKS', '[HOOK_FAILURE_REPORT] Could not read settings for hook diagnostic:', e);
             }
         })();
         sendResponse({ status: 'ignored' });

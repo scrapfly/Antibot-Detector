@@ -112,12 +112,12 @@
   margin-bottom: 0;
 }
 
-/* History-tab scoped override: neutralize popup.css full-card tint on hover */
+/* History-tab scoped: match the Rules card's blue-accent hover so selection is obvious */
 #historyTab .history-item:hover {
   background: var(--bg-secondary);
-  border-color: var(--border-light);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16);
-  transform: translateY(-1px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
 }
 
 .history-item-top {

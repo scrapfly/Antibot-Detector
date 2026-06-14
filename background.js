@@ -282,3 +282,12 @@ function sendProgressUpdate(tabId, methodName, completedMethods) {
         Logger.error('DETECTION', '[Progress] Error sending update:', e);
     }
 }
+
+// ─── Synchronous Listener Registration (MV3 cold-start safety) ───────────────
+// Register webRequest / runtime.onMessage / tabs listeners synchronously during
+// the first turn of the service worker, so an event that revives a terminated
+// worker is never dropped. Heavy detector initialization stays lazy: it runs via
+// onInstalled / onStartup / the startup IIFE in init.js, and message handlers
+// call ensureDetectorManagerInitialized() before using managers. Guarded by
+// `servicesInitialized` so it is safe even if invoked more than once.
+initializeServices();

@@ -141,6 +141,9 @@ class History {
     const buildHistoryItemHtml = (item) => {
       const timeAgo = this.getTimeAgo(new Date(item.timestamp));
       const domain = this.getDomainFromUrl(item.url);
+      const safeTitle = FormatUtils.escapeHtml(item.title || 'Untitled');
+      const safeUrl = FormatUtils.escapeHtml(item.url || '');
+      const safeDomain = FormatUtils.escapeHtml(domain);
 
       const faviconSrc = UrlUtils.resolveDisplayFavicon(item.favicon, item.url || item.hostname);
 
@@ -150,35 +153,35 @@ class History {
             <div class="history-item-content">
               <div class="history-header-info">
                 <img src="${faviconSrc}" alt="Favicon" class="history-favicon" data-fallback="${chrome.runtime.getURL('icons/icon16.png')}">
-                <div class="history-url" title="${item.url || ''}">${domain}</div>
+                <div class="history-url" title="${safeUrl}">${safeDomain}</div>
               </div>
-              <div class="history-title" title="${item.title || 'Untitled'}">${item.title || 'Untitled'}</div>
+              <div class="history-title" title="${safeTitle}">${safeTitle}</div>
             </div>
             <div class="history-item-right">
               <div class="history-item-actions">
-                <button class="history-item-action-btn history-clear-cache-btn" data-action="clear-cache" title="Clear cache">
-                  <svg width="16" height="16" viewBox="0 0 24 24">
+                <button class="history-item-action-btn history-clear-cache-btn" data-action="clear-cache" title="Clear cache" aria-label="Clear cache for this entry">
+                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
                   </svg>
                 </button>
-                <button class="history-item-action-btn history-copy-btn" data-action="copy" title="Copy data">
-                  <svg width="16" height="16" viewBox="0 0 24 24">
+                <button class="history-item-action-btn history-copy-btn" data-action="copy" title="Copy data" aria-label="Copy detection data for this entry">
+                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" fill="currentColor"/>
                   </svg>
                 </button>
-                <button class="history-item-action-btn history-export-btn" data-action="export" title="Export item">
-                  <svg width="16" height="16" viewBox="0 0 24 24">
+                <button class="history-item-action-btn history-export-btn" data-action="export" title="Export item" aria-label="Export this history entry as JSON">
+                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z" fill="currentColor"/>
                   </svg>
                 </button>
-                <button class="history-item-action-btn history-blacklist-btn" data-action="blacklist" title="Add to blacklist">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <button class="history-item-action-btn history-blacklist-btn" data-action="blacklist" title="Add to blacklist" aria-label="Add this domain to the blacklist">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
                     <circle cx="12" cy="12" r="10"/>
                     <path d="M4.93 4.93l14.14 14.14"/>
                   </svg>
                 </button>
-                <button class="history-item-action-btn history-delete-btn" data-action="delete" title="Delete item">
-                  <svg width="16" height="16" viewBox="0 0 24 24">
+                <button class="history-item-action-btn history-delete-btn" data-action="delete" title="Delete item" aria-label="Delete this history entry">
+                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
                   </svg>
                 </button>
@@ -300,7 +303,8 @@ class History {
       const name = detection.detector?.name || detection.detector || 'Unknown';
       const category = detection.category || '';
       const categoryColor = getCategoryColor(category);
-      const tooltipText = `${name}${category ? ' (' + category + ')' : ''}`;
+      const tooltipText = FormatUtils.escapeHtml(`${name}${category ? ' (' + category + ')' : ''}`);
+      const safeName = FormatUtils.escapeHtml(name);
 
       // Get detector object to retrieve icon
       let detectorObj = null;
@@ -340,20 +344,20 @@ class History {
         } else {
           const iconUrl = chrome.runtime.getURL(`detectors/icons/${detectorObj.icon}`);
           if (isFingerprintCategory) {
-            iconHtml = `<div class="detection-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${iconUrl}" alt="${name}" class="fingerprint-icon-image fingerprint-icon-image--builtin history-fingerprint-image"></div>`;
+            iconHtml = `<div class="detection-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${iconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--builtin history-fingerprint-image"></div>`;
             isFingerprint = true;
           } else {
-            iconHtml = `<img src="${iconUrl}" alt="${name}" class="detection-icon">`;
+            iconHtml = `<img src="${iconUrl}" alt="${safeName}" class="detection-icon">`;
           }
         }
       } else {
         // Fallback: Use Scrapfly icon for all detectors without official icons
         const scrapflyIconUrl = chrome.runtime.getURL('icons/icon32.png');
         if (isFingerprintCategory) {
-          iconHtml = `<div class="detection-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${scrapflyIconUrl}" alt="${name}" class="fingerprint-icon-image fingerprint-icon-image--default history-fingerprint-image"></div>`;
+          iconHtml = `<div class="detection-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${scrapflyIconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--default history-fingerprint-image"></div>`;
           isFingerprint = true;
         } else {
-          iconHtml = `<img src="${scrapflyIconUrl}" alt="${name}" class="detection-icon">`;
+          iconHtml = `<img src="${scrapflyIconUrl}" alt="${safeName}" class="detection-icon">`;
         }
       }
 
@@ -363,9 +367,9 @@ class History {
 
     if (sortedDetections.length > maxTags) {
       const hiddenDetections = sortedDetections.slice(maxTags);
-      const hiddenSummary = hiddenDetections
+      const hiddenSummary = FormatUtils.escapeHtml(hiddenDetections
         .map(d => d.detector?.name || d.detector || 'Unknown')
-        .join(', ');
+        .join(', '));
       const tooltipAttr = hiddenSummary ? ` title="${hiddenSummary}"` : '';
 
       tagsHtml += `<span class="history-detection-tag more-detections" data-history-item-id="${itemId}"${tooltipAttr}>+${hiddenDetections.length}</span>`;
@@ -414,16 +418,31 @@ class History {
     const detections = item.detections || [];
     const stats = this.calculateHistoryStats(detections);
 
-    // Cache scope display names
-    const scopeDisplayNames = {
-      'domain': 'Domain',
-      'path': 'Path',
-      'url': 'Full URL',
-      'full': 'Full URL',
-      'full_url': 'Full URL'
+    // Cache scope display names — resolve via i18n so they match the user's locale.
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
+    const _tr = (key, fallback) => (t && t.get(key)) || fallback;
+    const scopeKeyByValue = {
+      'domain': 'scopeDomain',
+      'path': 'scopePath',
+      'url': 'scopeFullUrl',
+      'full': 'scopeFullUrl',
+      'full_url': 'scopeFullUrl'
     };
+    const scopeFallback = { 'domain': 'Domain', 'path': 'Path', 'url': 'Full URL', 'full': 'Full URL', 'full_url': 'Full URL' };
     const cacheScope = String(item.cacheScope || 'domain').toLowerCase();
-    const cacheScopeDisplay = scopeDisplayNames[cacheScope] || 'Domain';
+    const scopeKey = scopeKeyByValue[cacheScope] || 'scopeDomain';
+    const cacheScopeDisplay = _tr(scopeKey, scopeFallback[cacheScope] || 'Domain');
+
+    // Translated stat labels (CSS renders them uppercase via text-transform).
+    const lblDetections = _tr('statDetections', 'Detections');
+    const lblConfidence = _tr('statConfidence', 'Confidence');
+    const lblDifficulty = _tr('statDifficulty', 'Difficulty');
+    const lblScope = _tr('statCacheScope', 'Scope');
+
+    // Translated difficulty value (Low/Medium/High → localized).
+    const difficultyKeyByValue = { 'Low': 'difficultyLow', 'Medium': 'difficultyMedium', 'High': 'difficultyHigh' };
+    const difficultyKey = difficultyKeyByValue[stats.difficulty];
+    const difficultyDisplay = difficultyKey ? _tr(difficultyKey, stats.difficulty || '') : (stats.difficulty || '');
 
     return `
       <div class="history-stats-line">
@@ -435,7 +454,7 @@ class History {
             </svg>
           </div>
           <div class="history-stat-content">
-            <div class="history-stat-label">Detections</div>
+            <div class="history-stat-label">${lblDetections}</div>
             <div class="history-stat-value">${stats.totalDetections}</div>
           </div>
         </div>
@@ -447,7 +466,7 @@ class History {
             </svg>
           </div>
           <div class="history-stat-content">
-            <div class="history-stat-label">Confidence</div>
+            <div class="history-stat-label">${lblConfidence}</div>
             <div class="history-stat-value">${stats.avgConfidence}%</div>
           </div>
         </div>
@@ -460,8 +479,8 @@ class History {
             </svg>
           </div>
           <div class="history-stat-content">
-            <div class="history-stat-label">Difficulty</div>
-            <div class="history-stat-value" style="color: ${stats.difficultyColor}">${stats.difficulty}</div>
+            <div class="history-stat-label">${lblDifficulty}</div>
+            <div class="history-stat-value" style="color: ${stats.difficultyColor}">${difficultyDisplay}</div>
           </div>
         </div>
         <div class="history-stat-inline history-stat-cache-scope">
@@ -474,7 +493,7 @@ class History {
             </svg>
           </div>
           <div class="history-stat-content">
-            <div class="history-stat-label">Scope</div>
+            <div class="history-stat-label">${lblScope}</div>
             <div class="history-stat-value">${cacheScopeDisplay}</div>
           </div>
         </div>
@@ -547,15 +566,18 @@ class History {
    * Clear all history items
    */
   async clearHistory() {
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
+    const _tr = (key, fallback) => (t && t.get(key)) || fallback;
+    const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
     try {
       this.historyItems = [];
       await chrome.storage.local.remove(['scrapfly_history']);
       this.showEmptyState();
       Logger.ui('History cleared');
-      NotificationHelper.success('History cleared');
+      NotificationHelper.success(_tr('notificationHistoryCleared', 'History cleared'));
     } catch (error) {
       Logger.warn('UI', '[History] Clear failed', error);
-      NotificationHelper.error('Failed to clear history: ' + error.message);
+      NotificationHelper.error(_fmt('notificationClearHistoryFailedFmt', 'Failed to clear history: ' + error.message, error.message));
     }
   }
 
@@ -666,7 +688,7 @@ class History {
     if (timestamp) {
       const timeAgo = this.getTimeAgo(new Date(historyItem.timestamp));
       const fullDate = new Date(historyItem.timestamp).toLocaleString();
-      timestamp.innerHTML = `<span class="time-ago">${timeAgo}</span><span class="time-full">(${fullDate})</span>`;
+      timestamp.innerHTML = `<span class="time-ago">${FormatUtils.escapeHtml(timeAgo)}</span><span class="time-full">(${FormatUtils.escapeHtml(fullDate)})</span>`;
     }
     if (modalStats) {
       modalStats.innerHTML = this.renderHistoryStats(historyItem);
@@ -758,7 +780,8 @@ class History {
     a.click();
 
     URL.revokeObjectURL(url);
-    NotificationHelper.success('History item exported');
+    const _t1 = (typeof I18n !== 'undefined') ? I18n : null;
+    NotificationHelper.success((_t1 && _t1.get('notificationHistoryItemExported')) || 'History item exported');
   }
 
   /**
@@ -766,14 +789,17 @@ class History {
    * @param {Object} historyItem - History item whose cache should be cleared
    */
   async clearHistoryItemCache(historyItem) {
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
+    const _tr = (key, fallback) => (t && t.get(key)) || fallback;
+    const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
     try {
       const domain = this.getDomainFromUrl(historyItem.url);
       const confirmed = await NotificationHelper.confirm({
-        title: 'Clear Cache',
-        message: `Clear cached detection data for ${domain}? The history entry will be kept.`,
+        title: _tr('dialogClearCacheTitle', 'Clear Cache'),
+        message: _fmt('dialogClearCacheMessageFmt', `Clear cached detection data for ${domain}? The history entry will be kept.`, domain),
         type: 'warning',
-        confirmText: 'Clear Cache',
-        cancelText: 'Cancel',
+        confirmText: _tr('buttonClearCache', 'Clear Cache'),
+        cancelText: _tr('btnCancel', 'Cancel'),
         emphasizeAction: true
       });
 
@@ -802,15 +828,15 @@ class History {
       const response = await chrome.runtime.sendMessage(request);
 
       if (response?.status === 'cleared') {
-        NotificationHelper.success('Cache cleared');
+        NotificationHelper.success(_tr('notificationCacheCleared', 'Cache cleared'));
       } else if (response?.status === 'not_found') {
-        NotificationHelper.info('Cache already cleared');
+        NotificationHelper.info(_tr('notificationCacheAlreadyCleared', 'Cache already cleared'));
       } else {
-        NotificationHelper.error('Failed to clear cache');
+        NotificationHelper.error(_tr('notificationClearCacheFailed', 'Failed to clear cache'));
       }
     } catch (error) {
       Logger.warn('UI', '[History] Cache clear failed', error);
-      NotificationHelper.error('Failed to clear cache');
+      NotificationHelper.error(_tr('notificationClearCacheFailed', 'Failed to clear cache'));
     }
   }
 
@@ -819,43 +845,33 @@ class History {
    * @param {Object} historyItem - History item whose domain should be blacklisted
    */
   async addHistoryItemToBlacklist(historyItem) {
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
+    const _tr = (key, fallback) => (t && t.get(key)) || fallback;
+    const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
     try {
       if (!historyItem?.url) {
-        NotificationHelper.error('Invalid URL');
+        NotificationHelper.error(_tr('invalidUrl', 'Invalid URL'));
         return;
       }
 
       const domain = this.getDomainFromUrl(historyItem.url);
       if (!domain || domain === 'Unknown') {
-        NotificationHelper.error('Invalid domain');
+        NotificationHelper.error(_tr('invalidDomain', 'Invalid domain'));
         return;
       }
 
       const confirmed = await NotificationHelper.confirm({
-        title: 'Add to Blacklist',
-        message: `Domain "${domain}" will be excluded from all future detections. You can remove it later in Settings.`,
-        confirmText: 'Add to Blacklist',
-        cancelText: 'Cancel',
+        title: _tr('addBlacklistTitle', 'Add to Blacklist'),
+        message: _fmt('addBlacklistMsgFmt', `Domain "${domain}" will be excluded from all future detections. You can remove it later in Settings.`, domain),
+        confirmText: _tr('addBlacklistBtn', 'Add to Blacklist'),
+        cancelText: _tr('btnCancel', 'Cancel'),
         type: 'danger',
         emphasizeAction: true
       });
 
       if (!confirmed) return;
 
-      const result = await chrome.storage.local.get('scrapfly_settings');
-      let settings = result.scrapfly_settings || {};
-
-      if (typeof settings === 'string') {
-        try {
-          settings = JSON.parse(settings);
-        } catch (error) {
-          settings = {};
-        }
-      }
-
-      if (settings.settings && typeof settings.settings === 'object') {
-        settings = settings.settings;
-      }
+      const settings = await Utils.getSettings();
 
       if (!settings.detection) {
         settings.detection = {};
@@ -865,17 +881,22 @@ class History {
       }
 
       if (settings.detection.blacklistedDomains.includes(domain)) {
-        NotificationHelper.info(`Domain "${domain}" is already blacklisted`);
+        NotificationHelper.info(_fmt('alreadyBlacklistedFmt', `Domain "${domain}" is already blacklisted`, domain));
         return;
       }
 
       settings.detection.blacklistedDomains.push(domain);
-      await chrome.storage.local.set({ scrapfly_settings: settings });
+      const saved = typeof StorageManager !== 'undefined' && typeof StorageManager.saveSettings === 'function'
+        ? await StorageManager.saveSettings(settings)
+        : false;
+      if (!saved) {
+        throw new Error('Failed to save settings');
+      }
 
-      NotificationHelper.success(`Added "${domain}" to blacklist`);
+      NotificationHelper.success(_fmt('notificationDomainBlacklistedFmt', `Added "${domain}" to blacklist`, domain));
     } catch (error) {
       Logger.warn('UI', '[History] Blacklist add failed', error);
-      NotificationHelper.error('Failed to add to blacklist');
+      NotificationHelper.error(_tr('notificationBlacklistFailed', 'Failed to add to blacklist'));
     }
   }
 
@@ -884,14 +905,17 @@ class History {
    * @param {Object} historyItem - History item to delete
    */
   async deleteHistoryItem(historyItem) {
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
+    const _tr = (key, fallback) => (t && t.get(key)) || fallback;
+    const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
     try {
-      // Show confirmation dialog
+      const domain = this.getDomainFromUrl(historyItem.url);
       const confirmed = await NotificationHelper.confirm({
-        title: 'Delete History Item',
-        message: `Are you sure you want to delete this detection from ${this.getDomainFromUrl(historyItem.url)}?`,
+        title: _tr('dialogDeleteHistoryTitle', 'Delete History Item'),
+        message: _fmt('dialogDeleteHistoryMessageFmt', `Are you sure you want to delete this detection from ${domain}?`, domain),
         type: 'danger',
-        confirmText: 'Delete',
-        cancelText: 'Cancel',
+        confirmText: _tr('btnDelete', 'Delete'),
+        cancelText: _tr('btnCancel', 'Cancel'),
         emphasizeAction: true
       });
 
@@ -914,12 +938,12 @@ class History {
         // Re-render the history
         this.renderHistory();
 
-        NotificationHelper.success('History item deleted');
+        NotificationHelper.success(_tr('notificationHistoryItemDeleted', 'History item deleted'));
         Logger.ui('History: Item deleted successfully');
       }
     } catch (error) {
       Logger.warn('UI', '[History] Delete failed', error);
-      NotificationHelper.error('Failed to delete history item');
+      NotificationHelper.error(_tr('notificationDeleteHistoryItemFailed', 'Failed to delete history item'));
     }
   }
 
@@ -929,13 +953,26 @@ class History {
    * @returns {string} HTML string
    */
   renderDetectionDetails(detections) {
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
+    const _tr = (key, fallback) => (t && t.get(key)) || fallback;
+    const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
     if (!detections || detections.length === 0) {
-      return '<div class="history-modal-empty">No detections found</div>';
+      return `<div class="history-modal-empty">${_tr('historyNoDetectionsFound', 'No detections found')}</div>`;
     }
 
+    const categoryKeyByValue = {
+      'anti-bot': 'categoryAntibot', 'antibot': 'categoryAntibot',
+      'captcha': 'categoryCaptcha',
+      'fingerprint': 'categoryFingerprint', 'fingerprinting': 'categoryFingerprint'
+    };
+
     return detections.map((detection, index) => {
-      const name = detection.detector?.name || detection.detector || 'Unknown';
+      const name = detection.detector?.name || detection.detector || _tr('unknownDetection', 'Unknown');
+      const safeName = FormatUtils.escapeHtml(name);
       const category = detection.category || '';
+      const categoryKey = categoryKeyByValue[String(category).toLowerCase()] || null;
+      const translatedCategory = categoryKey ? _tr(categoryKey, category) : category;
+      const safeCategory = FormatUtils.escapeHtml(translatedCategory);
       const confidence = detection.confidence || 0;
       const hasMethods = detection.matches && detection.matches.length > 0;
 
@@ -975,18 +1012,18 @@ class History {
         } else {
           const iconUrl = chrome.runtime.getURL(`detectors/icons/${detectorObj.icon}`);
           if (isFingerprintCategory) {
-            detectorIconHtml = `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${iconUrl}" alt="${name}" class="fingerprint-icon-image fingerprint-icon-image--builtin history-modal-fingerprint-image"></div>`;
+            detectorIconHtml = `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${iconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--builtin history-modal-fingerprint-image"></div>`;
           } else {
-            detectorIconHtml = `<img src="${iconUrl}" alt="${name}" class="modal-detector-icon">`;
+            detectorIconHtml = `<img src="${iconUrl}" alt="${safeName}" class="modal-detector-icon">`;
           }
         }
       } else {
         // Fallback: Use Scrapfly icon for all detectors without official icons
         const scrapflyIconUrl = chrome.runtime.getURL('icons/icon32.png');
         if (isFingerprintCategory) {
-          detectorIconHtml = `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${scrapflyIconUrl}" alt="${name}" class="fingerprint-icon-image fingerprint-icon-image--default history-modal-fingerprint-image"></div>`;
+          detectorIconHtml = `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${scrapflyIconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--default history-modal-fingerprint-image"></div>`;
         } else {
-          detectorIconHtml = `<img src="${scrapflyIconUrl}" alt="${name}" class="modal-detector-icon">`;
+          detectorIconHtml = `<img src="${scrapflyIconUrl}" alt="${safeName}" class="modal-detector-icon">`;
         }
       }
 
@@ -1007,7 +1044,7 @@ class History {
           <div class="history-modal-detection-header">
             ${detectorIconHtml}
             <div class="history-modal-detection-content">
-              <div class="history-modal-detection-name">${name}</div>
+              <div class="history-modal-detection-name">${safeName}</div>
             </div>
             <div class="history-modal-detection-right">
               <span class="history-modal-confidence ${confidenceClass}">${confidence}%</span>
@@ -1017,10 +1054,10 @@ class History {
           ${hasMethods ? `
             <div class="history-modal-detection-details">
               <div class="history-modal-detection-meta">
-                <span class="history-modal-badge" style="${categoryStyle}">${category}</span>
-                <span class="history-modal-meta-separator">•</span>
-                <span class="history-modal-match-count">${matchCount} match${matchCount !== 1 ? 'es' : ''}</span>
+                <span class="history-modal-badge" style="${categoryStyle}">${safeCategory}</span>
                 ${methodTypeBadges ? `<span class="history-modal-meta-separator">•</span><span class="history-modal-method-types">${methodTypeBadges}</span>` : ''}
+                <span class="history-modal-meta-separator">•</span>
+                <span class="history-modal-match-count">${matchCount === 1 ? _tr('historyOneMatch', '1 match') : _fmt('historyMatchCountFmt', `${matchCount} matches`, matchCount)}</span>
               </div>
               <div class="history-modal-detection-methods">
                 ${methodsHtml}
@@ -1060,11 +1097,20 @@ class History {
     const typeKeys = this.getUniqueMethodTypes(matches);
     if (!typeKeys.length) return '';
 
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
+    const _tr = (key, fallback) => (t && t.get(key)) || fallback;
+    const methodLabelKey = {
+      url: 'methodLabelUrl', header: 'methodLabelHeader', cookie: 'methodLabelCookie',
+      content: 'methodLabelContent', dom: 'methodLabelDom', js_hooks: 'methodLabelJsHooks',
+      window: 'methodLabelWindow', payload: 'methodLabelPayload'
+    };
+
     const visibleTypes = typeKeys.slice(0, 4);
     const overflowCount = typeKeys.length - visibleTypes.length;
 
     const badgesHtml = visibleTypes.map(typeKey => {
-      const label = typeKey.replace(/_/g, ' ').toUpperCase();
+      const fallbackLabel = typeKey.replace(/_/g, ' ').toUpperCase();
+      const label = methodLabelKey[typeKey] ? _tr(methodLabelKey[typeKey], fallbackLabel) : fallbackLabel;
 
       // Get tag color (use original key for lookup)
       let tagColor = '#666666';
@@ -1291,7 +1337,8 @@ class History {
     a.click();
 
     URL.revokeObjectURL(url);
-    NotificationHelper.success(`Exported ${this.historyItems.length} history items`);
+    const _t2 = (typeof I18n !== 'undefined') ? I18n : null;
+    NotificationHelper.success((_t2 && _t2.format('notificationHistoryExportedFmt', this.historyItems.length)) || `Exported ${this.historyItems.length} history items`);
   }
 
   /**
@@ -1302,53 +1349,51 @@ class History {
     const file = event.target.files[0];
     if (!file) return;
 
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
+    const _tr = (key, fallback) => (t && t.get(key)) || fallback;
+    const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
+
     try {
       const text = await file.text();
       const data = JSON.parse(text);
 
-      // Validate the imported data
       if (!data.items || !Array.isArray(data.items)) {
         throw new Error('Invalid history file format');
       }
 
-      // Ask if user wants to merge or replace
       const shouldMerge = await NotificationHelper.confirm({
-        title: 'Import History',
-        message: `Import ${data.items.length} history items? Current history has ${this.historyItems.length} items.`,
+        title: _tr('importHistoryTitle', 'Import History'),
+        message: _fmt('importHistoryMessageFmt', `Import ${data.items.length} history items? Current history has ${this.historyItems.length} items.`, data.items.length, this.historyItems.length),
         type: 'info',
-        confirmText: 'Merge',
-        cancelText: 'Replace'
+        confirmText: _tr('mergeOption', 'Merge'),
+        cancelText: _tr('replaceOption', 'Replace')
       });
 
       if (shouldMerge) {
-        // Merge with existing history
         const existingIds = new Set(this.historyItems.map(item => item.id));
         const newItems = data.items.filter(item => !existingIds.has(item.id));
         this.historyItems = [...newItems, ...this.historyItems];
 
-        // Sort by timestamp (newest first)
         this.historyItems.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
         if (this.historyLimit > 0 && this.historyItems.length > this.historyLimit) {
           this.historyItems = this.historyItems.slice(0, this.historyLimit);
         }
 
-        NotificationHelper.success(`Merged ${newItems.length} new history items`);
+        NotificationHelper.success(_fmt('notificationHistoryMergedFmt', `Merged ${newItems.length} new history items`, newItems.length));
       } else {
-        // Replace existing history
         this.historyItems = this.historyLimit > 0
           ? data.items.slice(0, this.historyLimit)
           : data.items;
-        NotificationHelper.success(`Replaced history with ${this.historyItems.length} items`);
+        NotificationHelper.success(_fmt('notificationHistoryReplacedFmt', `Replaced history with ${this.historyItems.length} items`, this.historyItems.length));
       }
 
       await this.saveHistoryToStorage();
       this.renderHistory();
     } catch (error) {
-      NotificationHelper.error('Failed to import history: ' + error.message);
+      NotificationHelper.error(_fmt('notificationImportHistoryFailedFmt', 'Failed to import history: ' + error.message, error.message));
     }
 
-    // Reset the file input
     event.target.value = '';
   }
 
@@ -1388,6 +1433,8 @@ class History {
   }
 
   registerSettingsListener() {
+    if (this._settingsListenerAttached) return;
+    this._settingsListenerAttached = true;
     chrome.runtime.onMessage.addListener((message) => {
       if (!message || message.type !== 'SETTINGS_UPDATED') {
         return;
@@ -1451,12 +1498,14 @@ class History {
     const clearBtn = document.querySelector('#clearHistoryBtn');
     if (clearBtn) {
       clearBtn.addEventListener('click', async () => {
+        const t = (typeof I18n !== 'undefined') ? I18n : null;
+        const _tr = (key, fallback) => (t && t.get(key)) || fallback;
         const confirmed = await NotificationHelper.confirm({
-          title: 'Clear History',
-          message: 'Are you sure you want to clear all history? This action cannot be undone.',
+          title: _tr('dialogClearHistoryTitle', 'Clear History'),
+          message: _tr('dialogClearHistoryMessage', 'Are you sure you want to clear all history? This action cannot be undone.'),
           type: 'danger',
-          confirmText: 'Clear All',
-          cancelText: 'Cancel',
+          confirmText: _tr('buttonClearAll', 'Clear All'),
+          cancelText: _tr('btnCancel', 'Cancel'),
           emphasizeAction: true
         });
 
@@ -1646,7 +1695,19 @@ class History {
    * @param {string} options.source - Save source context (e.g., finalize, cache_hit)
    * @returns {Promise<boolean>} Success status
    */
-  static async saveDetectionToHistory(tabId, pageData, detectionResults, chrome, options = {}) {
+  static saveDetectionToHistory(tabId, pageData, detectionResults, chrome, options = {}) {
+    // Serialize all writes: each call awaits the previous, eliminating the
+    // get-modify-set race that could lose history entries when two detections
+    // finish back-to-back.
+    if (!History._saveQueue) History._saveQueue = Promise.resolve();
+    const work = History._saveQueue
+      .catch(() => undefined)
+      .then(() => History._doSaveDetectionToHistory(tabId, pageData, detectionResults, chrome, options));
+    History._saveQueue = work.catch(() => undefined);
+    return work;
+  }
+
+  static async _doSaveDetectionToHistory(tabId, pageData, detectionResults, chrome, options = {}) {
     const {
       historySettings = null,
       source = 'unknown'

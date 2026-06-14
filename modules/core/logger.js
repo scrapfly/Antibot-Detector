@@ -480,15 +480,14 @@ class Logger {
   }
 
   /**
-   * Send log to content script from main world
+   * Send log to content script from main world.
+   * MAIN/ISOLATED internals use the authenticated Scrapfly bridge; do not
+   * fall back to public window.postMessage here.
    * @param {Object} log - Log object
    */
   static _sendToContent(log) {
-    if (typeof window !== 'undefined' && window.postMessage) {
-      window.postMessage({
-        type: 'SCRAPFLY_LOG',
-        log: log
-      }, '*');
+    if (typeof window !== 'undefined' && typeof window.__scrapflySendLogToContent === 'function') {
+      window.__scrapflySendLogToContent(log);
     }
   }
 

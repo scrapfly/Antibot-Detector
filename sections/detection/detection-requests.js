@@ -19,7 +19,7 @@ DetectionRequests.getBadgeStatus = async function(tabId) {
       text: badgeText,
       trimmed: trimmed,
       color: badgeColor,
-      isLoading: trimmed === BADGE.TEXT.LOADING,
+      isLoading: isLoadingBadgeText(trimmed),
       isCleared: isCleared,
       isInterrupted: isInterrupted,
       isError: isLegacyInterrupted,
@@ -44,7 +44,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
 
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       if (!tab) {
-        if (this.debugMode) Logger.error('UI', 'Detection: No active tab found');
+        Logger.error('UI', 'Detection: No active tab found');
         detection.showEmptyState();
         detection.isRequestingDetection = false;
         return;
@@ -80,7 +80,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
           detection.isRequestingDetection = false;
 
           if (chrome.runtime.lastError) {
-            if (this.debugMode) Logger.error('UI', 'Detection: Error getting detection data:', chrome.runtime.lastError);
+            Logger.error('UI', 'Detection: Error getting detection data:', chrome.runtime.lastError);
             detection.showEmptyState();
             return;
           }
@@ -171,7 +171,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
           }
 
           if (response && response.status === 'error') {
-            if (this.debugMode) Logger.error('UI', 'Detection: Background reported error fetching detection data:', response.error);
+            Logger.error('UI', 'Detection: Background reported error fetching detection data:', response.error);
             detection.showEmptyState();
             return;
           }
@@ -188,7 +188,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
               { type: 'GET_DETECTION_DATA', tabId: tab.id },
               async (response) => {
                 if (chrome.runtime.lastError) {
-                  if (this.debugMode) Logger.error('UI', 'Detection: Error checking cache:', chrome.runtime.lastError);
+                  Logger.error('UI', 'Detection: Error checking cache:', chrome.runtime.lastError);
                   if (!detection.wasInterrupted) {
                     detection.showAnalyzingState();
                   }
@@ -250,35 +250,9 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
         }
       );
     } catch (error) {
-      if (this.debugMode) Logger.error('UI', 'Detection: Failed to request detection:', error);
+      Logger.error('UI', 'Detection: Failed to request detection:', error);
       detection.showEmptyState();
     }
-};
-
-DetectionRequests.requestFreshDetection = function(context) {
-    const { detection, tabId, requestCurrentTabDetectionCallback } = context;
-
-    if (this.debugMode) Logger.ui('Detection: Requesting fresh detection for tab', tabId);
-    detection.showAnalyzingState();
-
-    chrome.runtime.sendMessage(
-      { type: 'REQUEST_DETECTION', tabId: tabId },
-      (response) => {
-        if (chrome.runtime.lastError) {
-          if (this.debugMode) Logger.error('UI', 'Detection: Error requesting fresh detection:', chrome.runtime.lastError);
-          detection.hideLoadingState();
-          detection.showEmptyState();
-          return;
-        }
-
-        if (this.debugMode) Logger.ui('Detection: Fresh detection requested, waiting for completion...');
-        // Wait for detection to complete, then request the data
-        setTimeout(() => {
-          if (this.debugMode) Logger.ui('Detection: Fetching fresh detection results...');
-          requestCurrentTabDetectionCallback();
-        }, 2000);
-      }
-    );
 };
 
 DetectionRequests.processDetectionData = async function(context, detectionData) {
@@ -397,8 +371,8 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
         await history.loadHistory();
       }
     } catch (error) {
-      if (this.debugMode) Logger.error('UI', 'Detection: Failed to process detection data:', error);
-      if (this.debugMode) Logger.error('UI', 'Detection: Stack trace:', error.stack);
+      Logger.error('UI', 'Detection: Failed to process detection data:', error);
+      Logger.error('UI', 'Detection: Stack trace:', error.stack);
       detection.showEmptyState();
     }
 };
@@ -416,7 +390,7 @@ DetectionRequests.getBadgeText = async function(tabId) {
         });
       });
     } catch (error) {
-      if (this.debugMode) Logger.error('UI', 'Detection: Unexpected error reading badge text:', error);
+      Logger.error('UI', 'Detection: Unexpected error reading badge text:', error);
       return '';
     }
 };
@@ -442,7 +416,7 @@ DetectionRequests.getBadgeBackgroundColor = async function(tabId) {
         });
       });
     } catch (error) {
-      if (this.debugMode) Logger.error('UI', 'Detection: Unexpected error reading badge color:', error);
+      Logger.error('UI', 'Detection: Unexpected error reading badge color:', error);
       return '';
     }
 };

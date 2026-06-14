@@ -103,6 +103,7 @@
   gap: 6px;
   flex: 1;
   min-width: 0;
+  overflow: hidden;
 }
 
 /* URL Action Buttons (Clear Cache & Blacklist) */
@@ -163,11 +164,35 @@
   transform: scale(1.05);
 }
 
-.site-favicon {
+.url-action-btn.upload-paste-btn {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.url-action-btn.upload-paste-btn:hover {
+  background: #10b981;
+  color: white;
+  transform: scale(1.05);
+}
+
+.url-action-btn.upload-paste-btn:disabled {
+  opacity: 0.55;
+  cursor: progress;
+  transform: none;
+}
+
+.site-favicon,
+.site-country-flag {
   width: 16px;
   height: 16px;
+  min-width: 16px;
+  max-width: 16px;
+  max-height: 16px;
   flex-shrink: 0;
-  border-radius: 4px;
+  border-radius: 2px;
+  object-fit: cover;
+  display: block;
+  overflow: hidden;
 }
 
 .site-url {
@@ -554,6 +579,14 @@
   flex-wrap: wrap;
 }
 
+.category-badges .badge-match-count {
+  order: 99;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  font-weight: 500;
+}
+
 /* Badge system (category + detection method badges) now in common.css */
 
 .card-actions {
@@ -618,6 +651,37 @@
 .copy-btn:hover {
   background: var(--bg-tertiary);
   color: var(--text-primary);
+}
+
+.copyable-value {
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.stat-inline.copyable-value:hover {
+  border-color: rgba(59, 130, 246, 0.45);
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.site-url.copyable-value:hover,
+.detector-name.copyable-value:hover,
+.badge.copyable-value:hover,
+.confidence-display.copyable-value:hover {
+  color: var(--accent-light);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.badge.copyable-value:hover,
+.confidence-display.copyable-value:hover {
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35);
+}
+
+.copyable-value.copy-feedback-active {
+  background: rgba(16, 185, 129, 0.22) !important;
+  border-color: rgba(16, 185, 129, 0.55) !important;
+  color: var(--success-light) !important;
+  text-decoration: none !important;
 }
 
 #detectionModalMethods {
@@ -1125,8 +1189,19 @@
 
 /* Loading Spinner */
 .loading-spinner {
-  width: 64px;
-  height: 64px;
+  position: relative;
+  width: 96px;
+  height: 96px;
+}
+
+/* Scrapfly logo centered inside the spinner ring; the SVG ring rotates around it. */
+.loading-spinner-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 48px;
+  height: 48px;
+  transform: translate(-50%, -50%);
 }
 
 .spinner-svg {
@@ -1169,7 +1244,7 @@
 /* Loading Text */
 .loading-text {
   margin: 0;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 600;
   color: var(--text-primary);
   letter-spacing: -0.3px;
@@ -1305,6 +1380,29 @@
 .state-card--red::before { background: var(--danger); }
 .state-card--blue::before { background: var(--accent); }
 
+.state-card--clean,
+.state-card--disabled {
+  align-items: center;
+  gap: 14px;
+  max-width: 318px;
+  min-height: 0;
+  padding: 30px 24px 26px;
+  background: linear-gradient(180deg, rgba(45, 45, 45, 0.98), rgba(39, 39, 39, 0.98));
+  border: 1px solid rgba(96, 165, 250, 0.18);
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
+}
+
+.state-card--clean::before,
+.state-card--disabled::before {
+  display: none;
+}
+
+.state-card--disabled {
+  border-color: rgba(249, 115, 22, 0.22);
+}
+
 /* Icon container */
 .state-card-icon {
   width: 64px;
@@ -1312,6 +1410,36 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.state-card-icon--logo {
+  width: 58px;
+  height: 58px;
+  border: 1px solid rgba(59, 130, 246, 0.24);
+  border-radius: 16px;
+  background: rgba(59, 130, 246, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 10px 24px rgba(59, 130, 246, 0.12);
+}
+
+.state-card--disabled .state-card-icon--logo {
+  border-color: rgba(249, 115, 22, 0.3);
+  background: rgba(249, 115, 22, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 10px 24px rgba(249, 115, 22, 0.12);
+}
+
+.state-card-logo {
+  display: block;
+}
+
+.state-card-logo--disabled {
+  opacity: 0.9;
+  filter: brightness(0) saturate(100%) invert(57%) sepia(88%) saturate(1718%) hue-rotate(348deg) brightness(102%) contrast(95%);
+}
+
+.state-card--disabled svg {
+  color: inherit;
+  margin-bottom: 0;
+  opacity: 1;
 }
 
 /* Logo with color filters */
@@ -1337,6 +1465,12 @@
 .state-card--orange .state-card-title { color: #f97316; }
 .state-card--red .state-card-title { color: var(--danger); }
 .state-card--blue .state-card-title { color: var(--accent); }
+.state-card--clean .state-card-title,
+.state-card--disabled .state-card-title {
+  color: var(--text-primary);
+  font-size: 17px;
+  line-height: 1.25;
+}
 
 /* Description & Action text */
 .state-card-description {
@@ -1347,12 +1481,82 @@
   max-width: 280px;
 }
 
+.state-card--clean .state-card-description,
+.state-card--disabled .state-card-description {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  max-width: 258px;
+}
+
 .state-card-action {
   margin: 0;
   font-size: 12px;
   line-height: 1.5;
   color: var(--text-secondary);
   max-width: 280px;
+}
+
+.state-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+  width: 100%;
+}
+
+.state-card-primary-btn,
+.state-card-secondary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.state-card-primary-btn {
+  min-width: 176px;
+  border: 1px solid rgba(59, 130, 246, 0.52);
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
+}
+
+.state-card-primary-btn:hover {
+  background: #1d4ed8;
+  border-color: rgba(96, 165, 250, 0.64);
+  transform: translateY(-1px);
+}
+
+.state-card--disabled .state-card-primary-btn {
+  border-color: rgba(249, 115, 22, 0.58);
+  background: #f97316;
+  box-shadow: 0 8px 18px rgba(249, 115, 22, 0.2);
+}
+
+.state-card--disabled .state-card-primary-btn:hover {
+  background: #ea580c;
+  border-color: rgba(251, 146, 60, 0.72);
+}
+
+.state-card-secondary-btn {
+  display: none;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger-light);
+}
+
+.state-card-secondary-btn:hover {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.48);
 }
 
 /* Footer badges (for empty/nothing detected state) */
@@ -1377,31 +1581,15 @@
   color: #93c5fd;
 }
 
+.state-card--clean .state-card-badge {
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.24);
+  color: #93c5fd;
+}
+
 /* Blacklist button (for disabled state) */
-.state-card-blacklist-btn {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  margin-top: 4px;
-  padding: 0;
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: 8px;
-  color: var(--danger);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.state-card-blacklist-btn:hover {
-  background: rgba(239, 68, 68, 0.25);
-  border-color: rgba(239, 68, 68, 0.5);
-  transform: scale(1.05);
-}
-
-.state-card-blacklist-btn.visible {
-  display: flex;
+.state-card-secondary-btn.visible {
+  display: inline-flex;
 }
 
 /* Empty State */
@@ -1537,4 +1725,3 @@
   font-size: 0.85rem;
   margin-left: 2px;
 }
-

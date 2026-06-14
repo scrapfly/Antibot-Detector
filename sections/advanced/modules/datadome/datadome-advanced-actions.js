@@ -187,7 +187,7 @@ fetchDataDomeScripts();`,
 
             'PHP': () => `<?php
 // DataDome Script URLs
-$datadomeScripts = ${JSON.stringify($urls, null, 2)};
+$datadomeScripts = ${JSON.stringify(urls, null, 2)};
 
 // Process each script URL
 foreach ($datadomeScripts as $index => $url) {

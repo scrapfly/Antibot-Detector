@@ -21,6 +21,8 @@ class Detection {
     this.isShowingAnalyzing = false; // Prevents UI flicker
     this.isShowingResults = false; // Prevents message listeners from overriding results
     this.isExtensionEnabled = true;
+    this.viewedTabId = null;
+    this.viewedTabUrl = null;
     this.cacheCleared = false; // Refresh when tab becomes visible
     this.advancedSection = null; // Reference to Advanced section for cross-component notifications
     this.uiStates = (typeof DetectionUIStates !== 'undefined')
@@ -43,7 +45,8 @@ class Detection {
       .then((result) => {
         this.setExtensionEnabled(result.scrapfly_enabled !== false);
       })
-      .catch(() => {
+      .catch((error) => {
+        Logger.error('UI', 'Failed to read enabled state from storage; defaulting to enabled:', error);
         this.setExtensionEnabled(true);
       });
   }
@@ -57,8 +60,13 @@ class Detection {
    * Called from constructor to ensure listeners are active even before tab initialization
    */
   setupMessageListeners() {
+    if (this._messageListenersAttached) return;
+    this._messageListenersAttached = true;
     // Listen for tab navigation; show analyzing state
     chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+      if (this.viewedTabId !== null && tabId !== this.viewedTabId) {
+        return;
+      }
       if (changeInfo.status === 'loading' && changeInfo.url) {
         if (this.debugMode) Logger.ui('[Detection] Tab navigated to:', changeInfo.url);
         chrome.action.getBadgeText({ tabId }, (badgeText) => {
@@ -86,6 +94,9 @@ class Detection {
         if (!this.isExtensionEnabled) {
           return false;
         }
+        if (this.viewedTabId !== null && message.tabId !== this.viewedTabId) {
+          return false;
+        }
         if (this.debugMode) Logger.ui('[Detection] Received progress update:', message.progress);
 
         // Transition to analyzing if not already showing results
@@ -103,6 +114,12 @@ class Detection {
       // Listen for detection completion
       if (message.type === 'NEW_DETECTION_DATA') {
         if (!this.isExtensionEnabled) {
+          return false;
+        }
+        if (this.viewedTabId !== null && message.tabId !== this.viewedTabId) {
+          return false;
+        }
+        if (window.popupInstance) {
           return false;
         }
         if (this.debugMode) Logger.ui('[Detection] Received detection completion for tab:', message.tabId);
@@ -134,7 +151,9 @@ class Detection {
               async (response) => {
                 if (chrome.runtime.lastError) {
                   Logger.error('UI', '[Detection] Error fetching completed data:', chrome.runtime.lastError);
-                  this.showEmptyState();
+                  if (!this.isShowingResults || this.currentResults.length === 0) {
+                    this.showEmptyState();
+                  }
                   return;
                 }
 
@@ -151,7 +170,9 @@ class Detection {
                   );
                 } else {
                   if (this.debugMode) Logger.debug('UI', '[Detection] No data in completion response');
-                  this.showEmptyState();
+                  if (!this.isShowingResults || this.currentResults.length === 0) {
+                    this.showEmptyState();
+                  }
                 }
               }
             );
@@ -300,6 +321,12 @@ class Detection {
   showEmptyState(...args) {
     return DetectionUI.showEmptyState.apply(this, args);
   }
+  refreshEmptyStateI18n(...args) {
+    return DetectionUI.refreshEmptyStateI18n.apply(this, args);
+  }
+  refreshDetectionStateI18n(...args) {
+    return DetectionUI.refreshDetectionStateI18n.apply(this, args);
+  }
   showDisabledState(...args) {
     return DetectionUI.showDisabledState.apply(this, args);
   }
@@ -318,8 +345,17 @@ class Detection {
   formatExpiryRemaining(...args) {
     return DetectionUI.formatExpiryRemaining.apply(this, args);
   }
+  setCopyableValue(...args) {
+    return DetectionUI.setCopyableValue.apply(this, args);
+  }
+  async copyCopyableValue(...args) {
+    return await DetectionUI.copyCopyableValue.apply(this, args);
+  }
   async clearCache(...args) {
     return await DetectionActions.clearCache.apply(this, args);
+  }
+  async uploadDetectionsToPaste(...args) {
+    return await DetectionActions.uploadDetectionsToPaste.apply(this, args);
   }
   resetClearCacheButton(...args) {
     return DetectionActions.resetClearCacheButton.apply(this, args);
@@ -405,8 +441,7 @@ class Detection {
 
       // Load debug mode from settings
       try {
-        const result = await chrome.storage.local.get(['scrapfly_settings']);
-        const settings = result.scrapfly_settings || {};
+        const settings = await Utils.getSettings();
         this.debugMode = settings.debugMode || false;
       } catch (e) {
         this.debugMode = false;
@@ -447,6 +482,9 @@ class Detection {
       if (detectionTab) {
         detectionTab.innerHTML = html;
         this.htmlLoaded = true;
+        if (typeof I18n !== 'undefined') {
+          I18n.apply(detectionTab);
+        }
         this.renderAnalysisSteps();
         const loadingState = document.querySelector('#loadingState');
         if (loadingState && loadingState.style.display !== 'none') {
@@ -477,7 +515,7 @@ class Detection {
       }
     } catch (error) {
       this.htmlLoaded = false;
-      if (this.debugMode) Logger.error('UI', 'Failed to load detection HTML:', error);
+      Logger.error('UI', 'Failed to load detection HTML:', error);
     }
   }
 
@@ -485,6 +523,10 @@ class Detection {
    * Setup event listeners after HTML is loaded
    */
   setupEventListeners() {
+    // NOTE: no `listenersAttached` short-circuit here — loadHTML() rebuilds the
+    // detection tab's innerHTML (destroying old element listeners), and the
+    // re-show path re-calls this to re-bind. Per-target dataset guards (e.g.
+    // copyValueHandlerBound) prevent any genuine double-binding instead.
     // Reset modal elements to ensure they are properly initialized
     this.modalElements = null;
 
@@ -493,6 +535,26 @@ class Detection {
     if (searchInput) {
       searchInput.addEventListener('input', (e) => {
         this.handleSearch(e.target.value);
+      });
+    }
+
+    const detectionResults = document.querySelector('#detectionResults');
+    if (detectionResults && detectionResults.dataset.copyValueHandlerBound !== 'true') {
+      detectionResults.dataset.copyValueHandlerBound = 'true';
+      detectionResults.addEventListener('click', (e) => {
+        DetectionUI.handleCopyableValueClick.call(this, e);
+      }, true);
+      detectionResults.addEventListener('keydown', (e) => {
+        DetectionUI.handleCopyableValueKeyDown.call(this, e);
+      }, true);
+    }
+
+    // Setup upload-to-paste button
+    const uploadPasteBtn = document.querySelector('#uploadPasteBtn');
+    if (uploadPasteBtn) {
+      uploadPasteBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        await this.uploadDetectionsToPaste();
       });
     }
 
@@ -548,7 +610,9 @@ class Detection {
             disabledBlacklistBtn.classList.remove('visible');
           }
         } catch (error) {
-          if (this.debugMode) Logger.error('UI', 'Failed to remove from blacklist:', error);
+          Logger.error('UI', 'Failed to remove from blacklist:', error);
+          const removeErrMsg = (typeof I18n !== 'undefined') ? I18n.tr('failedRemoveBlacklist', 'Failed to remove from blacklist') : 'Failed to remove from blacklist';
+          NotificationHelper.error(removeErrMsg);
         }
       });
     }
@@ -569,9 +633,6 @@ class Detection {
    */
   static async requestCurrentTabDetection(...args) {
     return await DetectionRequests.requestCurrentTabDetection.apply(this, args);
-  }
-  static requestFreshDetection(...args) {
-    return DetectionRequests.requestFreshDetection.apply(this, args);
   }
   static async processDetectionData(...args) {
     return await DetectionRequests.processDetectionData.apply(this, args);

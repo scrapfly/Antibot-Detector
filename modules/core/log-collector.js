@@ -91,6 +91,12 @@ class LogCollector {
 
         try {
             chrome.storage.local.get([this.settingsKey], (result) => {
+                if (chrome.runtime?.lastError) {
+                    Logger.warn('UTIL', '[LogCollector] Settings update skipped:', chrome.runtime.lastError.message);
+                    return;
+                }
+
+                result = result || {};
                 const parsed = this._parseSettingsStorageValue(result[this.settingsKey]);
                 let container = parsed.container;
                 let settings = parsed.settings;
@@ -194,6 +200,14 @@ class LogCollector {
             try {
                 chrome.storage.local.get([this.storageKey, this.settingsKey, this.legacyEnabledStateKey, this.legacyMaxLogsKey], (result) => {
                     try {
+                        if (chrome.runtime?.lastError) {
+                            Logger.warn('UTIL', '[LogCollector] Storage restore skipped:', chrome.runtime.lastError.message);
+                            this.initialized = true;
+                            resolve();
+                            return;
+                        }
+
+                        result = result || {};
                         const storedLogs = (result[this.storageKey] && Array.isArray(result[this.storageKey]))
                             ? result[this.storageKey]
                             : [];
