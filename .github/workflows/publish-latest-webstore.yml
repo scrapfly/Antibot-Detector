@@ -105,7 +105,7 @@ jobs:
 
           echo "asset_path=$asset_path" >> "$GITHUB_OUTPUT"
 
-      - name: Upload to Chrome Web Store
+      - name: Upload package to Chrome Web Store
         env:
           EXTENSION_ID: ${{ secrets.WEBSTORE_EXTENSION_ID }}
           PUBLISHER_ID: ${{ secrets.WEBSTORE_PUBLISHER_ID }}
@@ -114,13 +114,18 @@ jobs:
           REFRESH_TOKEN: ${{ secrets.WEBSTORE_REFRESH_TOKEN }}
         run: |
           set -euo pipefail
-          asset_path="${{ steps.verify_asset.outputs.asset_path }}"
+          npx --yes chrome-webstore-upload-cli@4 upload \
+            --source "${{ steps.verify_asset.outputs.asset_path }}"
 
-          if [ "${{ inputs.publish }}" = "true" ]; then
-            npx --yes chrome-webstore-upload-cli@4 --source "$asset_path"
-          else
-            npx --yes chrome-webstore-upload-cli@4 upload --source "$asset_path"
-          fi
+      - name: Publish Chrome Web Store release
+        if: inputs.publish
+        env:
+          EXTENSION_ID: ${{ secrets.WEBSTORE_EXTENSION_ID }}
+          PUBLISHER_ID: ${{ secrets.WEBSTORE_PUBLISHER_ID }}
+          CLIENT_ID: ${{ secrets.WEBSTORE_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.WEBSTORE_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.WEBSTORE_REFRESH_TOKEN }}
+        run: npx --yes chrome-webstore-upload-cli@4 publish
 
       - name: Write run summary
         run: |

@@ -188,11 +188,23 @@ jobs:
             exit 1
           fi
 
-      - name: Publish extension to Chrome Web Store
+      - name: Upload package to Chrome Web Store
         env:
           EXTENSION_ID: ${{ secrets.WEBSTORE_EXTENSION_ID }}
           PUBLISHER_ID: ${{ secrets.WEBSTORE_PUBLISHER_ID }}
           CLIENT_ID: ${{ secrets.WEBSTORE_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.WEBSTORE_CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.WEBSTORE_REFRESH_TOKEN }}
-        run: npx --yes chrome-webstore-upload-cli@4 --source "artifact/antibot-detector-${TAG_NAME}.zip"
+        run: |
+          set -euo pipefail
+          npx --yes chrome-webstore-upload-cli@4 upload \
+            --source "artifact/antibot-detector-${TAG_NAME}.zip"
+
+      - name: Publish Chrome Web Store release
+        env:
+          EXTENSION_ID: ${{ secrets.WEBSTORE_EXTENSION_ID }}
+          PUBLISHER_ID: ${{ secrets.WEBSTORE_PUBLISHER_ID }}
+          CLIENT_ID: ${{ secrets.WEBSTORE_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.WEBSTORE_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.WEBSTORE_REFRESH_TOKEN }}
+        run: npx --yes chrome-webstore-upload-cli@4 publish
