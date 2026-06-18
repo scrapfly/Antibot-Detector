@@ -166,12 +166,33 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Validate Chrome Web Store secrets
+        env:
+          WEBSTORE_EXTENSION_ID: ${{ secrets.WEBSTORE_EXTENSION_ID }}
+          WEBSTORE_PUBLISHER_ID: ${{ secrets.WEBSTORE_PUBLISHER_ID }}
+          WEBSTORE_CLIENT_ID: ${{ secrets.WEBSTORE_CLIENT_ID }}
+          WEBSTORE_CLIENT_SECRET: ${{ secrets.WEBSTORE_CLIENT_SECRET }}
+          WEBSTORE_REFRESH_TOKEN: ${{ secrets.WEBSTORE_REFRESH_TOKEN }}
+        run: |
+          set -euo pipefail
+          missing=()
+
+          for var_name in WEBSTORE_EXTENSION_ID WEBSTORE_PUBLISHER_ID WEBSTORE_CLIENT_ID WEBSTORE_CLIENT_SECRET WEBSTORE_REFRESH_TOKEN; do
+            if [ -z "${!var_name:-}" ]; then
+              missing+=("$var_name")
+            fi
+          done
+
+          if [ "${#missing[@]}" -gt 0 ]; then
+            echo "Missing required secrets: ${missing[*]}" >&2
+            exit 1
+          fi
+
       - name: Publish extension to Chrome Web Store
-        uses: mnao305/chrome-extension-upload@v5.0.0
-        with:
-          extension-id: ${{ secrets.WEBSTORE_EXTENSION_ID }}
-          file-path: artifact/antibot-detector-${{ env.TAG_NAME }}.zip
-          client-id: ${{ secrets.WEBSTORE_CLIENT_ID }}
-          client-secret: ${{ secrets.WEBSTORE_CLIENT_SECRET }}
-          refresh-token: ${{ secrets.WEBSTORE_REFRESH_TOKEN }}
-          publish: true
+        env:
+          EXTENSION_ID: ${{ secrets.WEBSTORE_EXTENSION_ID }}
+          PUBLISHER_ID: ${{ secrets.WEBSTORE_PUBLISHER_ID }}
+          CLIENT_ID: ${{ secrets.WEBSTORE_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.WEBSTORE_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.WEBSTORE_REFRESH_TOKEN }}
+        run: npx --yes chrome-webstore-upload-cli@4 --source "artifact/antibot-detector-${TAG_NAME}.zip"

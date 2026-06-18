@@ -24,6 +24,7 @@ jobs:
       - name: Validate required secrets
         env:
           WEBSTORE_EXTENSION_ID: ${{ secrets.WEBSTORE_EXTENSION_ID }}
+          WEBSTORE_PUBLISHER_ID: ${{ secrets.WEBSTORE_PUBLISHER_ID }}
           WEBSTORE_CLIENT_ID: ${{ secrets.WEBSTORE_CLIENT_ID }}
           WEBSTORE_CLIENT_SECRET: ${{ secrets.WEBSTORE_CLIENT_SECRET }}
           WEBSTORE_REFRESH_TOKEN: ${{ secrets.WEBSTORE_REFRESH_TOKEN }}
@@ -31,7 +32,7 @@ jobs:
           set -euo pipefail
           missing=()
 
-          for var_name in WEBSTORE_EXTENSION_ID WEBSTORE_CLIENT_ID WEBSTORE_CLIENT_SECRET WEBSTORE_REFRESH_TOKEN; do
+          for var_name in WEBSTORE_EXTENSION_ID WEBSTORE_PUBLISHER_ID WEBSTORE_CLIENT_ID WEBSTORE_CLIENT_SECRET WEBSTORE_REFRESH_TOKEN; do
             if [ -z "${!var_name:-}" ]; then
               missing+=("$var_name")
             fi
@@ -105,14 +106,21 @@ jobs:
           echo "asset_path=$asset_path" >> "$GITHUB_OUTPUT"
 
       - name: Upload to Chrome Web Store
-        uses: mnao305/chrome-extension-upload@v5.0.0
-        with:
-          extension-id: ${{ secrets.WEBSTORE_EXTENSION_ID }}
-          file-path: ${{ steps.verify_asset.outputs.asset_path }}
-          client-id: ${{ secrets.WEBSTORE_CLIENT_ID }}
-          client-secret: ${{ secrets.WEBSTORE_CLIENT_SECRET }}
-          refresh-token: ${{ secrets.WEBSTORE_REFRESH_TOKEN }}
-          publish: ${{ inputs.publish }}
+        env:
+          EXTENSION_ID: ${{ secrets.WEBSTORE_EXTENSION_ID }}
+          PUBLISHER_ID: ${{ secrets.WEBSTORE_PUBLISHER_ID }}
+          CLIENT_ID: ${{ secrets.WEBSTORE_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.WEBSTORE_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.WEBSTORE_REFRESH_TOKEN }}
+        run: |
+          set -euo pipefail
+          asset_path="${{ steps.verify_asset.outputs.asset_path }}"
+
+          if [ "${{ inputs.publish }}" = "true" ]; then
+            npx --yes chrome-webstore-upload-cli@4 --source "$asset_path"
+          else
+            npx --yes chrome-webstore-upload-cli@4 upload --source "$asset_path"
+          fi
 
       - name: Write run summary
         run: |
