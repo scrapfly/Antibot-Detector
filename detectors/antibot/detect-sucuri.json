@@ -5,33 +5,175 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2024-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-05",
+  "version": "2.0.0",
   "website": "https://sucuri.net/",
   "icon": "sucuri_official.png",
   "description": "Sucuri Website Security Platform with WAF and bot protection",
   "detection": {
-    "cookie": [
-    
-    ],
     "header": [
-    
+      {
+        "id": "sucuri-id-header",
+        "name": "^x-sucuri-id$",
+        "nameRegex": true,
+        "confidence": 85,
+        "description": "Sucuri WAF node id header",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "sucuri-block-header",
+        "name": "^x-sucuri-block$",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "Sucuri block reason header",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "sucuri-server-header",
+        "name": "^server$",
+        "nameRegex": true,
+        "value": "^Sucuri/Cloudproxy$",
+        "valueRegex": true,
+        "confidence": 85,
+        "description": "Sucuri CloudProxy server header",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "sucuri-cache-header",
+        "name": "^x-sucuri-cache$",
+        "nameRegex": true,
+        "confidence": 50,
+        "standalone": false,
+        "description": "Sucuri cache status header",
+        "nameScope": "response",
+        "valueScope": "response"
+      }
     ],
-    "url": [
-    
+    "cookie": [
+      {
+        "id": "sucuri-cloudproxy-cookie",
+        "name": "^sucuri_cloudproxy_uuid_[0-9a-f]{6,12}$",
+        "nameRegex": true,
+        "confidence": 85,
+        "description": "Sucuri CloudProxy JS-challenge cookie",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
     ],
     "content": [
       {
-        "confidence": 50,
-        "description": "Sucuri reference in scripts",
-        "text": "sucuri",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "id": "sucuri-block-title",
+        "confidence": 30,
+        "standalone": false,
+        "description": "Sucuri block page title",
+        "text": "Sucuri WebSite Firewall - Access Denied",
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      },
+      {
+        "id": "sucuri-block-id",
+        "confidence": 20,
+        "standalone": false,
+        "description": "Block ID label on the Sucuri block page",
+        "text": "Block ID:",
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      },
+      {
+        "id": "sucuri-challenge-script",
+        "confidence": 10,
+        "description": "Sucuri CloudProxy JS challenge variable",
+        "text": "sucuri_cloudproxy_js",
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
       }
-    ],
-    "dom": [
-      
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "sucuri-block-page",
+      "name": "Sucuri block page with its headers",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "sucuri-block-title"
+              },
+              {
+                "pattern": "sucuri-block-id"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "sucuri-id-header"
+              },
+              {
+                "pattern": "sucuri-block-header"
+              },
+              {
+                "pattern": "sucuri-server-header"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "sucuri-edge",
+      "name": "Sucuri server with node id",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "sucuri-server-header"
+          },
+          {
+            "any": [
+              {
+                "pattern": "sucuri-id-header"
+              },
+              {
+                "pattern": "sucuri-cache-header"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "sucuri-js-challenge",
+      "name": "CloudProxy challenge with its cookie or headers",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "pattern": "sucuri-challenge-script"
+          },
+          {
+            "any": [
+              {
+                "pattern": "sucuri-cloudproxy-cookie"
+              },
+              {
+                "pattern": "sucuri-id-header"
+              },
+              {
+                "pattern": "sucuri-server-header"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

@@ -17,6 +17,7 @@ class I18n {
     // Override loaded from `scrapfly_language_override` setting; null = use browser locale.
     static _overrideMessages = null;
     static _overrideLocale = null;
+    static _syncPromise = null;
 
     /**
      * Load a locale's messages.json into memory as an override. Pass `null`
@@ -48,6 +49,36 @@ class I18n {
             I18n._overrideMessages = null;
             I18n._overrideLocale = null;
         }
+    }
+
+    /**
+     * Load the stored language override and follow later changes to it, for
+     * contexts without a page bootstrap (the service worker). Returns the
+     * promise of the current load; ready() waits for the latest one.
+     */
+    static syncOverrideFromStorage() {
+        if (I18n._syncPromise) return I18n._syncPromise;
+        if (typeof chrome === 'undefined' || !chrome.storage || !chrome.storage.local) {
+            I18n._syncPromise = Promise.resolve();
+            return I18n._syncPromise;
+        }
+        const load = (value) => I18n.loadOverride(value || null).catch(() => undefined);
+        I18n._syncPromise = chrome.storage.local.get(['scrapfly_language_override'])
+            .then((r) => load(r && r.scrapfly_language_override))
+            .catch(() => undefined);
+        if (chrome.storage.onChanged) {
+            chrome.storage.onChanged.addListener((changes, area) => {
+                if (area === 'local' && changes.scrapfly_language_override) {
+                    I18n._syncPromise = load(changes.scrapfly_language_override.newValue);
+                }
+            });
+        }
+        return I18n._syncPromise;
+    }
+
+    /** Resolves once the language override (if any) is loaded. */
+    static ready() {
+        return I18n._syncPromise || Promise.resolve();
     }
 
     /**
@@ -100,8 +131,36 @@ class I18n {
         return msg;
     }
 
+    /**
+     * BCP 47 tag of the language the UI is shown in ("es", "zh-CN"): the
+     * override when one is loaded, otherwise the browser UI language.
+     * Use it for Intl formatters and the document's lang attribute.
+     */
+    static locale() {
+        let raw = I18n._overrideLocale;
+        if (!raw) {
+            try {
+                raw = (typeof chrome !== 'undefined' && chrome.i18n && chrome.i18n.getUILanguage && chrome.i18n.getUILanguage()) || 'en';
+            } catch (_) {
+                raw = 'en';
+            }
+        }
+        return String(raw).replace('_', '-');
+    }
+
+    /**
+     * Tag the page with the UI language so CSS can pick script-specific
+     * fonts (Han glyph forms differ between Chinese and Japanese).
+     */
+    static applyDocumentLang(doc = (typeof document !== 'undefined' ? document : null)) {
+        if (!doc || !doc.documentElement) return;
+        const tag = I18n.locale();
+        if (doc.documentElement.getAttribute('lang') !== tag) doc.documentElement.setAttribute('lang', tag);
+    }
+
     static apply(root = document) {
         if (!root || typeof chrome === 'undefined' || !chrome.i18n) return;
+        if (root === document) I18n.applyDocumentLang(document);
 
         const scope = (typeof root.querySelectorAll === 'function') ? root : document;
 

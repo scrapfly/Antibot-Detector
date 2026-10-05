@@ -4,6 +4,57 @@
 class DetectionUtils {
 
   /**
+   * Author name reserved for the detectors Scrapfly ships with the extension.
+   */
+  static OFFICIAL_AUTHOR = 'Scrapfly';
+
+  /**
+   * IDs of the detectors bundled in detectors/index.json. Filled once by
+   * DetectorManager.loadOfficialDetectorIds(); empty until then, which makes
+   * every detector non-official (fail closed).
+   * @type {Set<string>}
+   */
+  static _officialDetectorIds = new Set();
+
+  /**
+   * Register the IDs of the bundled (shipped) detectors.
+   * @param {Iterable<string>} ids
+   */
+  static setOfficialDetectorIds(ids) {
+    DetectionUtils._officialDetectorIds = new Set(
+      Array.from(ids || []).filter(id => typeof id === 'string' && id)
+    );
+  }
+
+  /**
+   * True when an author string claims the reserved "Scrapfly" name
+   * (case-insensitive, surrounding whitespace ignored).
+   * @param {string} author
+   * @returns {boolean}
+   */
+  static isReservedAuthor(author) {
+    if (typeof author !== 'string') return false;
+    return author.trim().toLowerCase() === DetectionUtils.OFFICIAL_AUTHOR.toLowerCase();
+  }
+
+  /**
+   * An official detector is one Scrapfly ships: its author is "Scrapfly" AND
+   * its ID is one of the detectors bundled in detectors/index.json. The author
+   * alone is not enough, because anyone can type it into an imported file.
+   * Official detectors show the verified check and can be disabled but never
+   * deleted.
+   * @param {object} detector
+   * @param {Set<string>|Array<string>} [officialIds] - defaults to the registered bundled IDs
+   * @returns {boolean}
+   */
+  static isOfficialDetector(detector, officialIds = DetectionUtils._officialDetectorIds) {
+    if (!detector || typeof detector !== 'object') return false;
+    if (!DetectionUtils.isReservedAuthor(detector.author)) return false;
+    const ids = officialIds instanceof Set ? officialIds : new Set(officialIds || []);
+    return typeof detector.id === 'string' && ids.has(detector.id);
+  }
+
+  /**
    * Normalize difficulty label to canonical values.
    * @param {string} value
    * @returns {'Low'|'Medium'|'High'|null}
@@ -63,6 +114,21 @@ class DetectionUtils {
     if (!Array.isArray(detections) || detections.length === 0) return 0;
     const total = detections.reduce((sum, d) => sum + (d?.confidence || 0), 0);
     return Math.round(total / detections.length);
+  }
+
+  /**
+   * Toolbar badge colour for a page's detections. The badge always follows the
+   * page difficulty shown in the popup (Baja/Media/Alta), coloured with the
+   * user's badge colours, so every path that sets it agrees.
+   * @param {Array} detections
+   * @param {{low: string, medium: string, high: string}} badgeColors
+   * @returns {string}
+   */
+  static getBadgeColor(detections, badgeColors) {
+    const difficulty = DetectionUtils.getDifficultyLevel(detections);
+    if (difficulty === 'High') return badgeColors.high;
+    if (difficulty === 'Medium') return badgeColors.medium;
+    return badgeColors.low;
   }
 
   /**
@@ -146,3 +212,6 @@ if (typeof window !== 'undefined') {
 } else if (typeof self !== 'undefined') {
   self.DetectionUtils = DetectionUtils;
 }
+
+// Node test export (no-op in the browser, where `module` is undefined).
+if (typeof module !== 'undefined' && module.exports) { module.exports = DetectionUtils; }

@@ -31,16 +31,23 @@ Rules.prototype.handleImport = async function(event) {
     const text = await file.text();
     const data = JSON.parse(text);
 
-    const merge = await NotificationHelper.confirm({
+    const mode = await NotificationHelper.chooseImportMode({
       title: _tr('importDetectorsTitle', 'Import Detectors'),
-      message: _tr('importMergeQuestion', 'Do you want to merge with existing detectors?'),
-      confirmText: _tr('mergeOption', 'Merge'),
-      cancelText: _tr('replaceAllOption', 'Replace All'),
-      type: 'info'
+      message: _tr('importDetectorsModeMessage', 'Merge adds the imported detectors to yours.<br>Replace All deletes your custom detectors first; built-in detectors stay.'),
+      replaceText: _tr('replaceAllOption', 'Replace All')
     });
 
-    const success = await this.detectorManager.importDetectors(data, merge);
+    // Cancel, ✕, Escape and the backdrop: leave the stored detectors alone
+    if (mode === 'cancel') {
+      event.target.value = '';
+      return;
+    }
+
+    const success = await this.detectorManager.importDetectors(data, mode === 'merge');
     if (success) {
+      chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
+        Logger.ui('Detectors reloaded in background after import:', response);
+      });
       NotificationHelper.success(_tr('detectorsImported', 'Detectors imported'));
       this.displayRules();
     } else {
@@ -207,15 +214,16 @@ Rules.prototype.updateUpdatesBadge = function(count) {
 // ============================================
 
 /**
- * Handle clearing all detectors
+ * Handle clearing the custom detectors (official ones are kept)
  */
 Rules.prototype.handleClear = async function() {
   const t = (typeof I18n !== 'undefined') ? I18n : null;
   const _tr = (key, fallback) => (t && t.get(key)) || fallback;
+  const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
   const confirmed = await NotificationHelper.confirm({
-    title: _tr('clearAllDetectorsTitle', 'Clear All Detectors'),
-    message: _tr('clearAllDetectorsMessage', 'This will remove ALL detectors. Are you sure?'),
-    confirmText: _tr('buttonClearAll', 'Clear All'),
+    title: _tr('clearCustomDetectorsTitle', 'Clear custom detectors'),
+    message: _tr('clearCustomDetectorsMessage', 'This will remove all your custom detectors. Official Scrapfly detectors are kept (you can disable them instead). Are you sure?'),
+    confirmText: _tr('btnClear', 'Clear'),
     cancelText: _tr('btnCancel', 'Cancel'),
     type: 'danger'
   });
@@ -224,15 +232,45 @@ Rules.prototype.handleClear = async function() {
     return;
   }
 
-  const loader = NotificationHelper.loading(_tr('clearingAllDetectors', 'Clearing all detectors...'));
-  const success = await this.detectorManager.clearAllDetectors();
-  loader.close();
-
-  if (success) {
-    NotificationHelper.success(_tr('allDetectorsCleared', 'All detectors cleared'));
+  const loader = NotificationHelper.loading(_tr('clearingCustomDetectors', 'Clearing custom detectors...'));
+  try {
+    const removed = await this.detectorManager.clearCustomDetectors();
+    loader.close();
+    if (removed > 0) {
+      chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
+        Logger.ui('Detectors reloaded in background after clear:', response);
+      });
+      NotificationHelper.success(_fmt('customDetectorsClearedFmt', `${removed} custom detectors removed`, removed));
+    } else {
+      NotificationHelper.info(_tr('noCustomDetectorsToClear', 'There are no custom detectors to clear'));
+    }
     this.displayRules();
-  } else {
+  } catch (error) {
+    loader.close();
+    Logger.error('UI', 'Failed to clear custom detectors:', error);
     NotificationHelper.error(_tr('failedClearDetectors', 'Failed to clear detectors'));
+  }
+};
+
+/**
+ * Bring back the official detectors the user deleted
+ */
+Rules.prototype.handleRestoreOfficial = async function() {
+  const t = (typeof I18n !== 'undefined') ? I18n : null;
+  const _tr = (key, fallback) => (t && t.get(key)) || fallback;
+  const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
+  try {
+    const restored = await this.detectorManager.restoreOfficialDetectors();
+    if (restored > 0) {
+      chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, () => {});
+      NotificationHelper.success(_fmt('officialDetectorsRestoredFmt', `${restored} official detectors restored`, restored));
+      this.displayRules();
+    } else {
+      NotificationHelper.info(_tr('noOfficialDetectorsToRestore', 'No official detectors were deleted'));
+    }
+  } catch (error) {
+    Logger.error('UI', 'Failed to restore official detectors:', error);
+    NotificationHelper.error(_tr('failedRestoreOfficialDetectors', 'Failed to restore official detectors'));
   }
 };
 
@@ -246,9 +284,13 @@ Rules.prototype.handleDeleteDetector = async function(category, detectorName, di
   const t = (typeof I18n !== 'undefined') ? I18n : null;
   const _tr = (key, fallback) => (t && t.get(key)) || fallback;
   const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
+  const isOfficial = DetectionUtils.isOfficialDetector(this.detectorManager.getDetector(category, detectorName));
+  const baseMessage = _fmt('deleteDetectorMessageFmt', `Are you sure you want to delete "${displayName}"?`, displayName);
   const confirmed = await NotificationHelper.confirm({
     title: _tr('deleteDetectorTitle', 'Delete Detector'),
-    message: _fmt('deleteDetectorMessageFmt', `Are you sure you want to delete "${displayName}"?`, displayName),
+    message: isOfficial
+      ? `${baseMessage}<br>${FormatUtils.escapeHtml(_tr('deleteOfficialDetectorNote', 'This is an official Scrapfly detector. Updates will not bring it back; use "Restore official detectors" in the … menu to get it again.'))}`
+      : baseMessage,
     confirmText: _tr('btnDelete', 'Delete'),
     cancelText: _tr('btnCancel', 'Cancel'),
     type: 'danger'
@@ -259,11 +301,8 @@ Rules.prototype.handleDeleteDetector = async function(category, detectorName, di
   }
 
   try {
-    if (this.detectorManager.detectors[category] && this.detectorManager.detectors[category][detectorName]) {
-      delete this.detectorManager.detectors[category][detectorName];
-
-      await this.detectorManager.saveDetectorsToStorage();
-
+    const result = await this.detectorManager.deleteDetector(category, detectorName);
+    if (result.deleted) {
       chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
         Logger.ui('Detectors reloaded in background after delete:', response);
       });
@@ -294,11 +333,14 @@ Rules.prototype.handleAddDetector = function() {
   const seconds = String(now.getSeconds()).padStart(2, '0');
   const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
-  // Create a new empty detector
+  // Create a new empty detector. It has no name yet: the editor shows the
+  // default name in the UI language ("New detector", "Nuevo detector", ...) and
+  // saveRule() stores whatever the name field holds, so the English default
+  // is never stored.
   const newDetector = {
     id: `custom-${Date.now()}`,
-    name: 'New Detector',
-    displayName: 'New Detector',
+    name: '',
+    displayName: '',
     category: 'antibot',
     difficulty: 'Medium',
     icon: 'default',

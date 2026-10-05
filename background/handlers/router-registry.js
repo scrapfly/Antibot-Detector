@@ -22,6 +22,10 @@ function buildMessageHandlerRegistry(context) {
     if (typeof registerAdvancedCaptureHandlers === 'function') {
         registerAdvancedCaptureHandlers(registry, context);
     }
+    // History writes (delete / import / clear) from the popup: the worker is the only writer
+    if (typeof HistoryStore !== 'undefined') {
+        HistoryStore.registerHandlers(registry);
+    }
 
     return registry;
 }

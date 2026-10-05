@@ -4,20 +4,9 @@
  */
 
 Rules.prototype.refreshWindowConditionWizardDropdown = function() {
-    const menu = document.querySelector('#conditionDropdownMenu');
-    if (!menu) return;
-
-    const hidden = document.querySelector('#windowConditionSelect');
-    const selected = (hidden?.value || 'exists').trim() || 'exists';
-
-    // Rebuild menu using the same rendering as inline dropdowns.
-    menu.innerHTML = this.renderWindowConditionMenu(selected);
-
-    // Keep trigger text consistent with the hidden value.
-    const triggerText = document.querySelector('#conditionDropdownTrigger .condition-selected-text');
-    if (triggerText) {
-      triggerText.textContent = selected;
-    }
+    // The window property helper builds its condition picker from the shared
+    // condition language presets (see helpers/helper-window.js).
+    this.renderWindowConditionSelect?.(document.querySelector('#windowConditionSelect')?.value || 'exists');
   };
 
 Rules.prototype.getWindowConditionOptions = function() {
@@ -98,6 +87,20 @@ Rules.prototype.getWindowConditionGroups = function() {
     ];
   };
 
+/**
+ * Group heading of the condition menu in the UI language. Reuses the keys of
+ * the window property helper (WINDOW_CONDITION_GROUP_KEYS in
+ * helpers/helper-window.js); the preset group names themselves stay English.
+ * @param {string} label - Preset group name (Type, Existence, ...)
+ * @returns {string}
+ */
+Rules.prototype.getWindowConditionGroupLabel = function(label) {
+    const keys = (typeof WINDOW_CONDITION_GROUP_KEYS !== 'undefined') ? WINDOW_CONDITION_GROUP_KEYS : null;
+    const entry = keys && keys[label];
+    if (!entry) return label;
+    return (typeof I18n !== 'undefined' && I18n.get(entry[0])) || entry[1];
+  };
+
 Rules.prototype.renderWindowConditionMenu = function(selectedValue) {
     const options = this.getWindowConditionOptions();
     const normalized = (selectedValue || '').trim();
@@ -105,6 +108,9 @@ Rules.prototype.renderWindowConditionMenu = function(selectedValue) {
     const available = new Set(options);
 
     const groups = this.getWindowConditionGroups();
+    const _t = (typeof I18n !== 'undefined') ? I18n : null;
+    const otherLabel = FormatUtils.escapeHtml((_t && _t.get('ruleConditionGroupOther')) || 'Other');
+    const customLabel = FormatUtils.escapeHtml((_t && _t.get('rhCustomChip')) || 'Custom');
 
     const renderOption = (value) => {
       const safeValue = FormatUtils.escapeHtml(value);
@@ -117,7 +123,7 @@ Rules.prototype.renderWindowConditionMenu = function(selectedValue) {
       if (values.length === 0) return '';
       return `
         <div class="condition-group">
-          <div class="condition-group-label">${group.label}</div>
+          <div class="condition-group-label">${FormatUtils.escapeHtml(this.getWindowConditionGroupLabel(group.label))}</div>
           ${values.map(renderOption).join('')}
         </div>
       `;
@@ -127,7 +133,7 @@ Rules.prototype.renderWindowConditionMenu = function(selectedValue) {
     const extraGroup = extras.length
       ? `
         <div class="condition-group">
-          <div class="condition-group-label">Other</div>
+          <div class="condition-group-label">${otherLabel}</div>
           ${extras.map(renderOption).join('')}
         </div>
       `
@@ -136,7 +142,7 @@ Rules.prototype.renderWindowConditionMenu = function(selectedValue) {
     const customGroup = normalized && !options.includes(normalized)
       ? `
         <div class="condition-group">
-          <div class="condition-group-label">Custom</div>
+          <div class="condition-group-label">${customLabel}</div>
           ${renderOption(normalized)}
         </div>
       `
@@ -179,87 +185,4 @@ Rules.prototype.syncInlineConditionDropdown = function(methodItem) {
     dropdown.querySelectorAll('.condition-option').forEach((option) => {
       option.classList.toggle('selected', option.dataset.value === value);
     });
-  };
-
-Rules.prototype.generateDomTemplates = function(keyword) {
-    if (!keyword || keyword.trim() === '') return [];
-
-    // Store original keyword for display and create CSS-safe version
-    const originalKeyword = keyword;
-    const cssKeyword = keyword.replace(/\s+/g, '-').toLowerCase();
-
-    const templates = [
-      // Basic selectors (use CSS-safe keyword for selector, original for display)
-      { selector: `.${cssKeyword}`, label: `Class selector for "${originalKeyword}"` },
-      { selector: `#${cssKeyword}`, label: `ID selector for "${originalKeyword}"` },
-      { selector: `[data-${cssKeyword}]`, label: `Data attribute for "${originalKeyword}"` },
-      { selector: `[class*='${originalKeyword}']`, label: `Classes containing "${originalKeyword}"` },
-      { selector: `[id*='${originalKeyword}']`, label: `IDs containing "${originalKeyword}"` },
-      { selector: `iframe[src*='${originalKeyword}']`, label: `Iframes with "${originalKeyword}" in URL` },
-      { selector: `[title*='${originalKeyword}']`, label: `Elements with "${originalKeyword}" in title` },
-      { selector: `[alt*='${originalKeyword}']`, label: `Elements with "${originalKeyword}" in alt text` }
-    ];
-
-    // Only show element selector if it's a valid HTML tag name
-    if (!keyword.includes(' ') && !keyword.includes('-')) {
-      templates.splice(5, 0,
-        { selector: `${cssKeyword}`, label: `${originalKeyword} HTML tag` },
-        { selector: `[${cssKeyword}]`, label: `Elements with ${originalKeyword} attribute` }
-      );
-    }
-
-    // For compound words, also generate variations
-    if (cssKeyword.includes('-') || cssKeyword.includes('_')) {
-      const camelCase = cssKeyword.replace(/[-_]([a-z])/g, (g) => g[1].toUpperCase());
-      templates.push(
-        { selector: `.${camelCase}`, label: `Class selector for "${camelCase}" (camelCase)` }
-      );
-    }
-
-    return templates;
-  };
-
-Rules.prototype.displayDomSuggestions = function(keyword) {
-    const suggestionsContainer = document.querySelector('#domSuggestions');
-    const customInput = document.querySelector('#domCustomInput');
-
-    if (!suggestionsContainer) return;
-
-    // Clear existing suggestions
-    suggestionsContainer.innerHTML = '';
-
-    if (!keyword || keyword.trim() === '') {
-      // Show empty state message
-      suggestionsContainer.innerHTML = `
-        <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">
-          Start typing above to see suggestions...
-        </div>
-      `;
-      return;
-    }
-
-    // Generate dynamic templates based on keyword
-    const templates = this.generateDomTemplates(keyword);
-
-    // Build HTML for all suggestions
-    let suggestionsHTML = '';
-
-    templates.forEach(template => {
-      const escapedSelector = FormatUtils.escapeHtml(template.selector);
-      const escapedLabel = FormatUtils.escapeHtml(template.label);
-      suggestionsHTML += `
-        <div class="dom-suggestion" data-selector="${escapedSelector}">
-          <div class="dom-suggestion-selector">${escapedSelector}</div>
-          <div class="dom-suggestion-label">${escapedLabel}</div>
-        </div>
-      `;
-    });
-
-    // Set all suggestions at once
-    suggestionsContainer.innerHTML = suggestionsHTML;
-
-    // Update custom input placeholder
-    if (customInput) {
-      customInput.placeholder = `Or enter custom selector for "${keyword}"...`;
-    }
   };

@@ -43,9 +43,10 @@ SettingsUI.renderBlacklistUI = function() {
     if (nextBtn) nextBtn.disabled = this.blacklistPage >= totalPages;
 
     if (filteredDomains.length === 0) {
-      container.innerHTML = searchTerm
-        ? '<div style="color: var(--text-muted); font-size: 12px; padding: 8px; text-align: center;">No domains match your search</div>'
-        : '<div style="color: var(--text-muted); font-size: 12px; padding: 8px; text-align: center;">No domains blacklisted</div>';
+      const emptyText = searchTerm
+        ? FormatUtils.t('settingsUiBlacklistNoMatches', 'No domains match your search')
+        : FormatUtils.t('settingsUiBlacklistEmpty', 'No domains blacklisted');
+      container.innerHTML = `<div style="color: var(--text-muted); font-size: 12px; padding: 8px; text-align: center;">${FormatUtils.escapeHtml(emptyText)}</div>`;
       return;
     }
 
@@ -53,10 +54,11 @@ SettingsUI.renderBlacklistUI = function() {
     const endIndex = startIndex + itemsPerPage;
     const currentDomains = filteredDomains.slice(startIndex, endIndex);
 
+    const removeLabel = FormatUtils.escapeAttr(FormatUtils.t('actionRemoveFromBlacklist', 'Remove from Blacklist'));
     const html = currentDomains.map(domain => `
       <div class="blacklist-item" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; background: var(--bg-tertiary); border-radius: 4px; margin-bottom: 4px;">
         <span style="font-size: 12px; line-height: 14px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${FormatUtils.escapeHtml(domain)}</span>
-        <button class="remove-blacklist-btn" data-domain="${domain}" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; transition: color 0.2s; flex-shrink: 0; margin-left: 8px;">
+        <button class="remove-blacklist-btn" data-domain="${FormatUtils.escapeAttr(domain)}" title="${removeLabel}" aria-label="${removeLabel}" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; transition: color 0.2s; flex-shrink: 0; margin-left: 8px;">
           <svg width="14" height="14" viewBox="0 0 24 24">
             <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
           </svg>

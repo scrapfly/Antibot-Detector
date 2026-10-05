@@ -31,6 +31,7 @@ DetectionActions.clearCache = async function() {
         confirmText: detectionActionsTr('clearCacheConfirmBtn', 'Clear Cache'),
         cancelText: detectionActionsTr('btnCancel', 'Cancel'),
         type: 'warning',
+        tone: 'danger',
         emphasizeAction: true
       });
 
@@ -75,6 +76,7 @@ DetectionActions.clearCache = async function() {
       NotificationHelper.success(detectionActionsTr('cacheClearedToast', 'Cache cleared'));
 
       try {
+        await setBadgeTextColor(tabs[0].id, false, BADGE.COLORS.CLEARED);
         await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tabs[0].id });
         await chrome.action.setBadgeBackgroundColor({
           color: BADGE.COLORS.CLEARED,
@@ -189,8 +191,21 @@ DetectionActions.addToBlacklist = async function() {
 };
 
 DetectionActions.showBlacklistState = function(domain) {
-    this.setExtensionEnabled(true);
+    this.blacklistedDomain = domain;
+    if (!this.isExtensionEnabled) {
+      this.showDisabledState(true);
+      return;
+    }
+    this.isShowingResults = false;
+    this.wasInterrupted = false;
+    this.currentResults = [];
+    this.cacheMetadata = null;
+    this.displayOptions = {};
     this.hideLoadingState();
+    this.closeDetectionModal();
+    if (this.uiStateMachine) {
+      this.uiStateMachine.setState(this.uiStates.DISABLED, { isBlacklisted: true, domain });
+    }
 
     const blacklistWarning = document.querySelector('#blacklistWarning');
     const blacklistDomain = document.querySelector('#blacklistDomain');
@@ -212,12 +227,14 @@ DetectionActions.showBlacklistState = function(domain) {
     if (detectionPagination) detectionPagination.style.display = 'none';
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0]) {
+      if (tabs[0] && this.isExtensionEnabled && this.blacklistedDomain === domain) {
+        setPausedIcon(tabs[0].id, true);
+        setBadgeTextColor(tabs[0].id, true);
         chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId: tabs[0].id }).catch((error) => {
-          if (this.debugMode) Logger.ui('Failed to set blacklist badge:', error.message);
+          if (this.debugMode) Logger.debug('UI', 'Failed to set blacklist badge:', error.message);
         });
         chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tabs[0].id }).catch((error) => {
-          if (this.debugMode) Logger.ui('Failed to set badge color:', error.message);
+          if (this.debugMode) Logger.debug('UI', 'Failed to set badge color:', error.message);
         });
       }
     });
@@ -237,6 +254,7 @@ DetectionActions.removeFromBlacklist = async function(domain) {
           throw new Error(detectionActionsTr('failedReadSettings', 'Could not save settings'));
         }
 
+        this.blacklistedDomain = null;
         NotificationHelper.success(detectionActionsFormat(
           'removedFromBlacklistFmt',
           'Removed "{0}" from blacklist',
@@ -248,6 +266,7 @@ DetectionActions.removeFromBlacklist = async function(domain) {
 
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
         if (tab) {
+          setPausedIcon(tab.id, false);
           this.showAnalyzingState();
 
           chrome.runtime.sendMessage(
@@ -260,22 +279,27 @@ DetectionActions.removeFromBlacklist = async function(domain) {
               }
 
               if (response && response.data) {
-                if (this.debugMode) Logger.ui('Detection: Using cached data after blacklist removal');
-                this.detectionEngine.setDetectors(this.detectorManager.getAllDetectors());
-                const detections = this.detectionEngine.detectOnPage(response.data);
-                this.displayResults(detections);
+                if (this.debugMode) Logger.debug('UI', 'Detection: Using cached data after blacklist removal');
+                await Detection.processDetectionData({
+                  detection: this,
+                  detectionEngine: this.detectionEngine,
+                  detectorManager: this.detectorManager
+                }, response.data);
+                const detections = this.currentResults;
 
                 if (detections.length > 0) {
                   chrome.action.setBadgeText({ text: detections.length.toString(), tabId: tab.id }).catch((error) => {
-                    if (this.debugMode) Logger.ui('Failed to update badge after blacklist removal:', error.message);
+                    if (this.debugMode) Logger.debug('UI', 'Failed to update badge after blacklist removal:', error.message);
                   });
-                  const color = getBadgeColorForCount(detections.length);
+                  const badgeColors = await CategoryManager.getBadgeColors();
+                  const color = DetectionUtils.getBadgeColor(detections, badgeColors);
+                  await setBadgeTextColor(tab.id, false, color);
                   chrome.action.setBadgeBackgroundColor({ color: color, tabId: tab.id }).catch((error) => {
-                    if (this.debugMode) Logger.ui('Failed to set badge color:', error.message);
+                    if (this.debugMode) Logger.debug('UI', 'Failed to set badge color:', error.message);
                   });
                 }
               } else {
-                if (this.debugMode) Logger.ui('Detection: No cached data, requesting fresh detection');
+                if (this.debugMode) Logger.debug('UI', 'Detection: No cached data, requesting fresh detection');
                 this.refreshAnalysis();
               }
             }
@@ -293,7 +317,7 @@ DetectionActions.removeFromBlacklist = async function(domain) {
 };
 
 DetectionActions.refreshAnalysis = async function() {
-    if (this.debugMode) Logger.ui('Refreshing detection analysis...');
+    if (this.debugMode) Logger.debug('UI', 'Refreshing detection analysis...');
 
     try {
       this.showAnalyzingState();
@@ -313,7 +337,7 @@ DetectionActions.refreshAnalysis = async function() {
             return;
           }
 
-          if (this.debugMode) Logger.ui('Detection: Fresh detection requested:', response);
+          if (this.debugMode) Logger.debug('UI', 'Detection: Fresh detection requested:', response);
 
           setTimeout(() => {
             chrome.runtime.sendMessage(
@@ -327,13 +351,14 @@ DetectionActions.refreshAnalysis = async function() {
                 }
 
                 if (dataResponse && dataResponse.data) {
-                  this.detectionEngine.setDetectors(this.detectorManager.getAllDetectors());
-                  const detections = this.detectionEngine.detectOnPage(dataResponse.data);
-                  if (this.debugMode) Logger.ui(`Detection: Found ${detections.length} detections after refresh`);
-
-                  this.displayResults(detections);
+                  await Detection.processDetectionData({
+                    detection: this,
+                    detectionEngine: this.detectionEngine,
+                    detectorManager: this.detectorManager
+                  }, dataResponse.data);
+                  if (this.debugMode) Logger.debug('UI', `Detection: Found ${this.currentResults.length} detections after refresh`);
                 } else {
-                  if (this.debugMode) Logger.ui('Detection: No data received after refresh');
+                  if (this.debugMode) Logger.debug('UI', 'Detection: No data received after refresh');
                   this.hideLoadingState();
                   this.showEmptyState();
                 }
@@ -446,6 +471,7 @@ DetectionActions.uploadDetectionsToPaste = async function() {
       confirmText: detectionActionsTr('pasteConfirmBtn', 'Upload'),
       cancelText: detectionActionsTr('btnCancel', 'Cancel'),
       type: 'warning',
+      tone: 'warning',
       emphasizeAction: true
     });
     if (!confirmed) return;

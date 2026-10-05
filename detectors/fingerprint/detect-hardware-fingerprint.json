@@ -5,71 +5,121 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2025-01-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/navigator/hardwareConcurrency",
   "icon": "hardware_fingerprint.png",
-  "description": "Hardware capabilities detection including CPU cores, memory, and device specifications",
+  "description": "Observed reads of CPU, memory, and touch capabilities with graded hardware profile evidence",
   "detection": {
     "js_hooks": [
       {
-        "description": "Gets number of CPU cores",
+        "description": "Reads the reported logical CPU count",
         "enabled": true,
-        "confidence": 80,
-        "target": "Navigator.prototype.hardwareConcurrency"
+        "confidence": 20,
+        "target": "Navigator.prototype.hardwareConcurrency",
+        "id": "hardware-cpu",
+        "standalone": true
       },
       {
-        "description": "Gets device memory in GB",
+        "description": "Reads the reported approximate device memory",
         "enabled": true,
-        "confidence": 80,
-        "target": "Navigator.prototype.deviceMemory"
-      }
-    ],
-    "window": [
-      {
-        "path": "navigator.hardwareConcurrency",
-        "description": "CPU core count",
-        "condition": "> 0"
+        "confidence": 25,
+        "target": "Navigator.prototype.deviceMemory",
+        "id": "hardware-memory",
+        "standalone": true
       },
       {
-        "path": "navigator.deviceMemory",
-        "description": "Device RAM in gigabytes",
-        "condition": "> 0"
-      },
-      {
-        "path": "navigator.maxTouchPoints",
-        "description": "Maximum touch points supported",
-        "condition": ">= 0"
+        "description": "Reads the maximum supported simultaneous touch points",
+        "enabled": true,
+        "confidence": 15,
+        "target": "Navigator.prototype.maxTouchPoints",
+        "id": "hardware-touch",
+        "standalone": true
       }
     ],
     "content": [
       {
+        "id": "hardware-cpu-script",
         "text": "hardwareConcurrency",
         "scope": "scripts",
-        "description": "CPU detection for device fingerprinting",
-        "confidence": 50,
+        "checkScripts": true,
+        "description": "Script reference to hardwareConcurrency (usage and intent unconfirmed)",
+        "confidence": 10,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": false,
+        "standalone": true
       },
       {
+        "id": "hardware-memory-script",
         "text": "deviceMemory",
         "scope": "scripts",
-        "description": "Memory detection in scripts",
-        "confidence": 50,
+        "checkScripts": true,
+        "description": "Script reference to deviceMemory (usage and intent unconfirmed)",
+        "confidence": 10,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": false,
+        "standalone": true
       },
       {
+        "id": "hardware-touch-script",
         "text": "maxTouchPoints",
         "scope": "scripts",
-        "description": "Touch capabilities detection",
-        "confidence": 50,
+        "checkScripts": true,
+        "description": "Script reference to maxTouchPoints (usage and intent unconfirmed)",
+        "confidence": 10,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": false,
+        "standalone": true
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "hardware-script-profile",
+      "name": "Multiple hardware capability references in scripts",
+      "confidence": 15,
+      "when": {
+        "atLeast": 2,
+        "of": [
+          { "pattern": "hardware-cpu-script" },
+          { "pattern": "hardware-memory-script" },
+          { "pattern": "hardware-touch-script" }
+        ]
+      }
+    },
+    {
+      "id": "hardware-touch-profile",
+      "name": "Touch capability and compute capability reads",
+      "confidence": 35,
+      "when": {
+        "all": [
+          { "pattern": "hardware-touch" },
+          { "any": [ { "pattern": "hardware-cpu" }, { "pattern": "hardware-memory" } ] }
+        ]
+      }
+    },
+    {
+      "id": "hardware-profile",
+      "name": "CPU and memory profile",
+      "confidence": 50,
+      "when": {
+        "all": [ { "pattern": "hardware-cpu" }, { "pattern": "hardware-memory" } ]
+      }
+    },
+    {
+      "id": "hardware-full-profile",
+      "name": "CPU, memory, and touch capability reads",
+      "confidence": 65,
+      "when": {
+        "all": [
+          { "pattern": "hardware-cpu" },
+          { "pattern": "hardware-memory" },
+          { "pattern": "hardware-touch" }
+        ]
+      }
+    }
+  ]
 }

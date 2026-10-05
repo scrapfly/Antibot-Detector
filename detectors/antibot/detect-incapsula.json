@@ -5,130 +5,201 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2024-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-05",
+  "version": "2.0.0",
   "website": "https://www.imperva.com/products/web-application-firewall-waf/",
   "icon": "imperva_official.png",
   "description": "Web application firewall with advanced bot protection",
   "detection": {
     "cookie": [
       {
-        "name": "incap_ses_",
-        "nameRegex": false,
-        "confidence": 100,
-        "description": "Incapsula session cookies",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "id": "incap-session-cookie",
+        "name": "^incap_ses_[0-9]+_[0-9]+$",
+        "nameRegex": true,
+        "confidence": 85,
+        "description": "Incapsula session cookie (incap_ses_<proxy>_<site>)",
         "nameScope": "all",
         "valueScope": "all"
       },
       {
-        "name": "visid_incap_",
-        "nameRegex": false,
-        "confidence": 95,
-        "description": "Visitor ID cookie",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "id": "incap-visitor-cookie",
+        "name": "^visid_incap_[0-9]+$",
+        "nameRegex": true,
+        "confidence": 85,
+        "description": "Incapsula visitor ID cookie (visid_incap_<site>)",
         "nameScope": "all",
         "valueScope": "all"
       },
       {
-        "name": "nlbi_",
-        "nameRegex": false,
-        "confidence": 90,
-        "description": "Load balancer identifier",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "id": "incap-balancer-cookie",
+        "name": "^nlbi_[0-9]+(?:_[0-9]+)?$",
+        "nameRegex": true,
+        "confidence": 60,
+        "description": "Incapsula load balancer cookie (nlbi_<site>)",
         "nameScope": "all",
         "valueScope": "all"
       },
       {
-        "name": "reese84",
-        "nameRegex": false,
-        "confidence": 100,
-        "description": "Reese84 bot detection cookie",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "id": "reese84-cookie",
+        "name": "^reese84$",
+        "nameRegex": true,
+        "confidence": 85,
+        "description": "Imperva Advanced Bot Protection token cookie",
         "nameScope": "all",
         "valueScope": "all"
       },
       {
-        "name": "utmvc",
-        "nameRegex": false,
-        "confidence": 100,
-        "description": "UTMVC tracking cookie",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "id": "utmvc-cookie",
+        "name": "^___utmvc$",
+        "nameRegex": true,
+        "confidence": 80,
+        "description": "Incapsula JavaScript challenge cookie (___utmvc)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "impv-routing-cookie",
+        "name": "^_impv_routing$",
+        "nameRegex": true,
+        "confidence": 40,
+        "standalone": false,
+        "description": "Imperva edge routing cookie (seen with incap_ses_ / visid_incap_)",
         "nameScope": "all",
         "valueScope": "all"
       }
     ],
-    "header": [],
-    "url": [
+    "header": [
       {
-        "confidence": 100,
-        "description": "Incapsula domain resources",
-        "text": "incapsula.com",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
+        "id": "incap-iinfo-header",
+        "name": "^x-iinfo$",
+        "nameRegex": true,
+        "confidence": 85,
+        "description": "Incapsula request info response header",
+        "nameScope": "response",
+        "valueScope": "response"
       },
       {
-        "confidence": 100,
-        "description": "Incapsula resource endpoint",
-        "text": "/_Incapsula_Resource",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "imperva-cdn-header",
+        "name": "^x-cdn$",
+        "nameRegex": true,
+        "value": "^(?:Imperva|Incapsula)$",
+        "valueRegex": true,
+        "confidence": 80,
+        "description": "Imperva CDN response header",
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
+    "url": [
+      {
+        "id": "incapsula-resource",
+        "confidence": 85,
+        "description": "Incapsula challenge resource endpoint",
+        "text": "^https?://[^/?#]+/_Incapsula_Resource\\?",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       }
     ],
     "content": [
       {
-        "confidence": 50,
-        "description": "Incapsula global object",
-        "text": "_Incapsula",
-        "textRegex": false,
+        "id": "incapsula-reference",
+        "confidence": 20,
+        "description": "Script reference to _Incapsula_Resource or the incident page",
+        "text": "_Incapsula_Resource",
         "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "text": "incapsula",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
       }
     ],
-    "dom": [],
-    "window": [
-      {
-        "path": "_Incapsula",
-        "condition": "typeof object",
-        "confidence": 100,
-        "description": "Incapsula protection object"
+    "window": []
+  },
+  "combinations": [
+    {
+      "id": "incapsula-session",
+      "name": "Incapsula session and visitor cookies",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "incap-session-cookie"
+          },
+          {
+            "any": [
+              {
+                "pattern": "incap-visitor-cookie"
+              },
+              {
+                "pattern": "incap-balancer-cookie"
+              },
+              {
+                "pattern": "impv-routing-cookie"
+              }
+            ]
+          }
+        ]
       }
-    ]
-  }
+    },
+    {
+      "id": "incapsula-edge",
+      "name": "Imperva edge header with an Incapsula cookie",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "incap-iinfo-header"
+              },
+              {
+                "pattern": "imperva-cdn-header"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "incap-session-cookie"
+              },
+              {
+                "pattern": "incap-visitor-cookie"
+              },
+              {
+                "pattern": "incap-balancer-cookie"
+              },
+              {
+                "pattern": "reese84-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "incapsula-challenge",
+      "name": "Incapsula challenge resource with a challenge cookie",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "pattern": "incapsula-resource"
+          },
+          {
+            "any": [
+              {
+                "pattern": "utmvc-cookie"
+              },
+              {
+                "pattern": "reese84-cookie"
+              },
+              {
+                "pattern": "incap-session-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

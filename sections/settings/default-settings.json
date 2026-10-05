@@ -3,6 +3,7 @@
   "settings": {
     "notificationsEnabled": true,
     "debugMode": false,
+    "debugVerbose": false,
     "logCollectorEnabled": false,
     "logCollectorMaxLogs": 5000,
 
@@ -53,7 +54,8 @@
 
     "history": {
       "historyLimit": 0,
-      "autoClearDays": 30,
+      "historyAutoDelete": false,
+      "historyAutoDeleteDays": 30,
       "exportFormat": "json",
       "includeTimestamps": true,
       "historyBypassCache": false

@@ -22,30 +22,30 @@ SettingsUI.applyCategoryColorLabels = function(root) {
   });
 };
 
-SettingsUI._hexToRgb = function(hex) {
-  if (!hex || typeof hex !== 'string') return null;
-  const normalized = hex.trim().replace('#', '');
-  if (normalized.length !== 6) return null;
-  const num = parseInt(normalized, 16);
-  if (Number.isNaN(num)) return null;
-  return {
-    r: (num >> 16) & 255,
-    g: (num >> 8) & 255,
-    b: num & 255
-  };
-};
-
 SettingsUI._applyColorRowBadgeStyle = function(badge, hexColor) {
   if (!badge) return;
   const color = hexColor || '#666666';
-  const rgb = SettingsUI._hexToRgb(color);
+  const rgb = FormatUtils.hexToRgb(color);
   if (!rgb) return;
   badge.style.background = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`;
   badge.style.color = color;
   badge.style.borderColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.35)`;
 };
 
+// Hex label next to a colour input (#colorX -> #hexX), shown uppercase as in 2.8
+SettingsUI._syncHexLabel = function(input) {
+  const hexEl = document.querySelector(`#${input.id.replace(/^color/, 'hex')}`);
+  if (hexEl) {
+    hexEl.textContent = String(input.value || '').toUpperCase();
+  }
+};
+
 SettingsUI.syncColorRowBadges = function() {
+  // Inputs are filled programmatically on load (no input event), so every
+  // hex label is refreshed here, including rows without a preview badge.
+  document.querySelectorAll('input.color-field[id^="color"]').forEach((input) => {
+    SettingsUI._syncHexLabel(input);
+  });
   document.querySelectorAll('.color-row-badge[data-color-for]').forEach((badge) => {
     const inputId = badge.dataset.colorFor;
     const input = inputId ? document.querySelector(`#${inputId}`) : null;
@@ -104,18 +104,14 @@ SettingsUI._setupColorListeners = function() {
   if (SettingsUI._colorListenersReady) return;
   SettingsUI._colorListenersReady = true;
 
-  document.querySelectorAll('.color-row-badge[data-color-for]').forEach((badge) => {
-    const inputId = badge.dataset.colorFor;
-    const input = inputId ? document.querySelector(`#${inputId}`) : null;
-    if (!input) return;
+  document.querySelectorAll('input.color-field[id^="color"]').forEach((input) => {
+    const badge = document.querySelector(`.color-row-badge[data-color-for="${input.id}"]`);
 
     const syncHex = () => {
-      const hexId = input.id.replace(/^color/, 'hex');
-      const hexEl = document.querySelector(`#${hexId}`);
-      if (hexEl) {
-        hexEl.textContent = input.value;
+      SettingsUI._syncHexLabel(input);
+      if (badge) {
+        SettingsUI._applyColorRowBadgeStyle(badge, input.value);
       }
-      SettingsUI._applyColorRowBadgeStyle(badge, input.value);
     };
 
     input.addEventListener('input', syncHex);

@@ -5,288 +5,378 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2024-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-05",
+  "version": "2.0.0",
   "website": "https://www.akamai.com/products/bot-manager",
   "icon": "akamai_official.png",
   "description": "Enterprise-grade bot management solution providing real-time detection and mitigation",
   "detection": {
     "cookie": [
       {
+        "id": "abck-sensor-cookie",
         "name": "_abck",
-        "confidence": 100,
-        "description": "Akamai Bot Manager tracking cookie (anti-bot required)",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "value": "^[0-9A-F]{32}~-?[0-9]+~",
+        "valueRegex": true,
+        "valueCaseSensitive": true,
+        "confidence": 85,
+        "description": "Bot Manager sensor cookie in its documented hash~state~token shape",
         "nameScope": "all",
         "valueScope": "all"
       },
       {
-        "name": "ak_bmsc",
+        "id": "abck-cookie-name",
+        "name": "^_abck$",
+        "nameRegex": true,
         "confidence": 60,
-        "description": "Bot Manager session cookie (pixel challenge required)",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "standalone": false,
+        "description": "Cookie named _abck; value shape not visible (e.g. truncated)",
         "nameScope": "all",
         "valueScope": "all"
       },
       {
-        "name": "sbsd",
-        "confidence": 100,
-        "description": "SB-SD challenge cookie (required for sensor bypass)",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "all",
-        "valueScope": "all"
-      },
-      {
-        "name": "sbsd_o",
-        "confidence": 100,
-        "description": "Akamai challenge cookie (required for advanced protection)",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "all",
-        "valueScope": "all"
-      },
-      {
+        "id": "bm-sz-cookie",
         "name": "bm_sz",
-        "confidence": 60,
-        "description": "Browser sensor data",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "value": "^[0-9A-F]{32}~",
+        "valueRegex": true,
+        "valueCaseSensitive": true,
+        "confidence": 70,
+        "description": "Bot Manager session cookie (hash~token)",
         "nameScope": "all",
         "valueScope": "all"
       },
       {
-        "name": "bm_sv",
+        "id": "ak-bmsc-cookie",
+        "name": "^ak_bmsc$",
+        "nameRegex": true,
         "confidence": 60,
-        "description": "Server validation cookie",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "description": "Bot Manager edge session cookie",
         "nameScope": "all",
         "valueScope": "all"
       },
       {
-        "name": "bm_mi",
-        "confidence": 60,
-        "description": "Machine identification",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "id": "bm-family-cookie",
+        "name": "^bm_(?:mi|sv|s|so|lso)$",
+        "nameRegex": true,
+        "confidence": 30,
+        "standalone": false,
+        "description": "Other Bot Manager cookies (bm_mi, bm_sv, bm_s, bm_so); short names, corroboration only",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "sbsd-cookie",
+        "name": "^sbsd(?:_o)?$",
+        "nameRegex": true,
+        "confidence": 65,
+        "description": "SBSD challenge cookie",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "akamai-edge-cookie",
+        "name": "^(?:AKA_A2|akavpau_[A-Za-z0-9_]+)$",
+        "nameRegex": true,
+        "confidence": 15,
+        "standalone": false,
+        "description": "Akamai edge platform cookie (CDN or waiting room); not Bot Manager on its own",
         "nameScope": "all",
         "valueScope": "all"
       }
     ],
-    "header": [],
+    "header": [
+      {
+        "id": "akamai-edge-server",
+        "name": "^server$",
+        "nameRegex": true,
+        "value": "^AkamaiGHost$",
+        "valueRegex": true,
+        "confidence": 15,
+        "standalone": false,
+        "description": "Akamai edge server header; CDN delivery, not Bot Manager on its own",
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
     "url": [
       {
-        "confidence": 100,
-        "description": "Akamai Bot Manager endpoint",
-        "text": "/akam/",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
-      },
-      {
-        "confidence": 100,
-        "description": "SB-SD challenge endpoint (SBSD required)",
-        "text": "/.well-known/sbsd/",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
-      },
-      {
-        "confidence": 100,
-        "description": "Akamai random path challenge (multiple encoded segments)",
-        "text": "/([a-zA-Z0-9_-]{2,30}/){4,}[a-zA-Z0-9_-]{2,30}$",
+        "id": "akam-sensor-script",
+        "confidence": 70,
+        "description": "First-party Bot Manager sensor script under /akam/<version>/",
+        "text": "^https?://[^/?#]+/akam/[0-9]{1,3}/[0-9a-f]{6,10}(?:[?#]|$)",
         "textRegex": true,
-        "textWholeWord": false,
-        "textCaseSensitive": true,
+        "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "confidence": 100,
-        "description": "Akamai SBSD security endpoint",
-        "text": "_sec/sbsd/",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "akam-pixel",
+        "confidence": 60,
+        "description": "Bot Manager pixel challenge endpoint",
+        "text": "^https?://[^/?#]+/akam/[0-9]{1,3}/pixel_[0-9a-f]{6,10}(?:[?#]|$)",
+        "textRegex": true,
         "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "sbsd-endpoint",
+        "confidence": 65,
+        "description": "SBSD challenge endpoint",
+        "text": "^https?://[^/?#]+/(?:\\.well-known|_sec)/sbsd(?:[/?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "obfuscated-script-path",
+        "confidence": 20,
+        "standalone": false,
+        "description": "First-party script on a long random multi-segment path, the shape of the Bot Manager sensor script",
+        "text": "^https?://[^/?#]+/(?:[A-Za-z0-9_-]{2,40}/){3,}[A-Za-z0-9_-]{2,40}$",
+        "textRegex": true,
+        "textCaseSensitive": true,
         "textScope": "all"
       }
     ],
     "content": [
       {
-        "confidence": 50,
-        "text": "ak_bmsc",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "id": "bmak-reference",
+        "confidence": 15,
+        "description": "Script reference to the bmak sensor namespace",
+        "text": "bmak",
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
       },
       {
-        "confidence": 50,
-        "text": "_abck",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "description": "Bot Manager API namespace",
-        "text": "bmak.",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "text": "sensor_data",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "description": "Pixel challenge HTML variable",
+        "id": "pixel-variable",
+        "confidence": 30,
+        "description": "Pixel challenge bootstrap variable injected into the page",
         "text": "bazadebezolkohpepadr",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "description": "Pixel script variable pattern",
-        "text": "g=_\\[\\d+\\]",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "description": "Pixel array declaration",
-        "text": "var _=\\[",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "description": "SB-SD challenge endpoint reference in code",
-        "text": "/.well-known/sbsd/",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
       }
     ],
-    "dom": [],
     "window": [
       {
+        "id": "bmak-object",
         "path": "bmak",
         "condition": "typeof object",
-        "confidence": 95,
-        "description": "Akamai Bot Manager main object (bmak)"
+        "confidence": 60,
+        "description": "Bot Manager sensor object (bmak)"
       }
     ],
     "payload": [
       {
+        "id": "sensor-data-payload",
         "text": "sensor_data",
-        "confidence": 100,
-        "description": "Akamai sensor data in request payload (generic)",
-        "textRegex": false,
+        "confidence": 80,
+        "description": "Bot Manager sensor_data POST body",
         "textWholeWord": true,
-        "textCaseSensitive": false
-      },
-      {
-        "text": "sensor_data",
-        "confidence": 100,
-        "description": "Akamai sensor data POST to random path challenge endpoint",
-        "textRegex": false,
-        "textWholeWord": true,
-        "textCaseSensitive": false,
-        "urlPattern": "/([a-zA-Z0-9_-]{2,30}/){4,}[a-zA-Z0-9_-]{2,30}$",
-        "urlRegex": true,
-        "urlCaseSensitive": true,
         "methods": [
           "POST"
         ]
       },
       {
+        "id": "sbsd-payload",
         "text": "body",
-        "confidence": 100,
-        "description": "Akamai sensor data POST to known SBSD endpoint",
-        "textRegex": false,
+        "confidence": 70,
+        "description": "SBSD challenge POST to the sbsd endpoint",
         "textWholeWord": true,
-        "textCaseSensitive": false,
-        "urlPattern": "/.well-known/sbsd/",
-        "urlRegex": false,
-        "urlCaseSensitive": false,
-        "methods": [
-          "POST"
-        ]
-      },
-      {
-        "text": "body",
-        "confidence": 100,
-        "description": "Akamai SBSD body payload to random endpoint",
-        "textRegex": false,
-        "textWholeWord": true,
-        "textCaseSensitive": false,
-        "urlPattern": "/.well-known/sbsd/[a-zA-Z0-9_-]+$",
+        "urlPattern": "/(?:\\.well-known|_sec)/sbsd",
         "urlRegex": true,
-        "urlCaseSensitive": false,
         "methods": [
           "POST"
         ]
       },
       {
+        "id": "pixel-payload",
         "text": "jsv=",
-        "confidence": 100,
-        "description": "Akamai pixel challenge fingerprinting payload",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "urlPattern": "/akam/\\d+/pixel_[a-f0-9]+$",
+        "confidence": 65,
+        "description": "Pixel challenge fingerprint POST",
+        "urlPattern": "/akam/[0-9]+/pixel_[0-9a-f]+",
         "urlRegex": true,
-        "urlCaseSensitive": false,
         "methods": [
           "POST"
         ]
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "akamai-sensor-cookies",
+      "name": "Sensor cookie with session cookie",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "abck-sensor-cookie"
+              },
+              {
+                "pattern": "abck-cookie-name"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "bm-sz-cookie"
+              },
+              {
+                "pattern": "ak-bmsc-cookie"
+              },
+              {
+                "pattern": "bm-family-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "akamai-sensor-script",
+      "name": "Sensor script or object with a Bot Manager cookie",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "akam-sensor-script"
+              },
+              {
+                "pattern": "bmak-object"
+              },
+              {
+                "pattern": "sensor-data-payload"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "abck-sensor-cookie"
+              },
+              {
+                "pattern": "abck-cookie-name"
+              },
+              {
+                "pattern": "bm-sz-cookie"
+              },
+              {
+                "pattern": "ak-bmsc-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "akamai-obfuscated-sensor",
+      "name": "Random-path first-party script on an Akamai edge with Bot Manager cookies",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "pattern": "obfuscated-script-path"
+          },
+          {
+            "any": [
+              {
+                "pattern": "abck-sensor-cookie"
+              },
+              {
+                "pattern": "abck-cookie-name"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "akamai-edge-server"
+              },
+              {
+                "pattern": "akamai-edge-cookie"
+              },
+              {
+                "pattern": "bm-sz-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "akamai-sbsd-challenge",
+      "name": "SBSD challenge endpoint with its cookie",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "sbsd-endpoint"
+              },
+              {
+                "pattern": "sbsd-payload"
+              }
+            ]
+          },
+          {
+            "pattern": "sbsd-cookie"
+          }
+        ]
+      }
+    },
+    {
+      "id": "akamai-edge-bot-cookie",
+      "name": "Akamai edge with a Bot Manager sensor or session cookie",
+      "confidence": 80,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "akamai-edge-server"
+              },
+              {
+                "pattern": "akamai-edge-cookie"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "abck-cookie-name"
+              },
+              {
+                "pattern": "bm-sz-cookie"
+              },
+              {
+                "pattern": "ak-bmsc-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "akamai-bmsc-session",
+      "name": "Bot Manager edge session with its companion cookie",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "pattern": "ak-bmsc-cookie"
+          },
+          {
+            "pattern": "bm-family-cookie"
+          }
+        ]
+      }
+    }
+  ]
 }

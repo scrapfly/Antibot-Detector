@@ -5,41 +5,30 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-02-04",
-  "version": "1.0.1",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "icon": "webrtc_fingerprint.png",
+  "description": "WebRTC setup, device enumeration and candidate address access; communication use remains possible",
   "detection": {
     "js_hooks": [
-      {
-        "description": "Creates WebRTC data channel for IP leak fingerprinting",
-        "enabled": true,
-        "confidence": 100,
-        "target": "RTCPeerConnection.prototype.createDataChannel"
-      },
-      {
-        "description": "Enumerates media devices for hardware fingerprinting",
-        "enabled": true,
-        "confidence": 100,
-        "target": "MediaDevices.prototype.enumerateDevices"
-      },
-      {
-        "description": "Creates SDP offer revealing local IPs",
-        "enabled": true,
-        "confidence": 100,
-        "target": "RTCPeerConnection.prototype.createOffer"
-      },
-      {
-        "description": "Reads ICE candidate address for IP sniffing",
-        "enabled": true,
-        "confidence": 100,
-        "target": "RTCIceCandidate.prototype.address"
-      },
-      {
-        "description": "Monitors ICE candidate events for IP leakage",
-        "enabled": false,
-        "confidence": 75,
-        "target": "RTCPeerConnection.prototype.onicecandidate"
-      }
+      { "id": "webrtc-channel", "description": "Creates a WebRTC data channel", "enabled": true, "confidence": 10, "target": "RTCPeerConnection.prototype.createDataChannel", "standalone": true },
+      { "id": "webrtc-devices", "description": "Enumerates media devices", "enabled": true, "confidence": 20, "target": "MediaDevices.prototype.enumerateDevices", "standalone": true },
+      { "id": "webrtc-offer", "description": "Creates an SDP offer, including ordinary peer connection setup", "enabled": true, "confidence": 10, "target": "RTCPeerConnection.prototype.createOffer", "standalone": true },
+      { "id": "webrtc-address", "description": "Reads an ICE candidate address", "enabled": true, "confidence": 25, "target": "RTCIceCandidate.prototype.address", "standalone": true },
+      { "id": "webrtc-candidate-listener", "description": "Monitors ICE candidate events", "enabled": false, "confidence": 10, "target": "RTCPeerConnection.prototype.onicecandidate", "standalone": false }
+    ],
+    "content": [
+      { "id": "webrtc-peer-script", "text": "RTCPeerConnection", "description": "Script reference to peer connections; execution unconfirmed", "confidence": 10, "standalone": true, "scope": "scripts", "checkScripts": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
+      { "id": "webrtc-channel-script", "text": "createDataChannel", "description": "Script reference to data channels; execution unconfirmed", "confidence": 10, "standalone": true, "scope": "scripts", "checkScripts": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
+      { "id": "webrtc-devices-script", "text": "enumerateDevices", "description": "Script reference to device enumeration; execution unconfirmed", "confidence": 10, "standalone": true, "scope": "scripts", "checkScripts": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
+      { "id": "webrtc-offer-script", "text": "createOffer", "description": "Script reference to SDP offers; execution unconfirmed", "confidence": 10, "standalone": true, "scope": "scripts", "checkScripts": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
+      { "id": "webrtc-candidate-script", "text": "RTCIceCandidate", "description": "Script reference to ICE candidates; execution unconfirmed", "confidence": 10, "standalone": true, "scope": "scripts", "checkScripts": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true }
     ]
-  }
+  },
+  "combinations": [
+    { "id": "webrtc-setup", "name": "Data channel and SDP offer creation", "confidence": 20, "when": { "all": [ { "pattern": "webrtc-channel" }, { "pattern": "webrtc-offer" } ] } },
+    { "id": "webrtc-candidate-access", "name": "Candidate address access with peer connection setup", "confidence": 40, "when": { "all": [ { "pattern": "webrtc-address" }, { "any": [ { "pattern": "webrtc-channel" }, { "pattern": "webrtc-offer" } ] } ] } },
+    { "id": "webrtc-profile", "name": "Peer connection and candidate address access", "confidence": 50, "when": { "all": [ { "pattern": "webrtc-channel" }, { "pattern": "webrtc-offer" }, { "pattern": "webrtc-address" } ] } },
+    { "id": "webrtc-device-address-profile", "name": "Device enumeration with peer setup and candidate address access", "confidence": 60, "when": { "all": [ { "pattern": "webrtc-devices" }, { "pattern": "webrtc-channel" }, { "pattern": "webrtc-offer" }, { "pattern": "webrtc-address" } ] } }
+  ]
 }

@@ -1,4 +1,16 @@
   /**
+   * i18n helpers for the unified capture list (English fallback kept inline).
+   */
+function _advHistoryTr(key, fallback) {
+    return (typeof I18n !== 'undefined' && I18n.get(key)) || fallback;
+  }
+
+function _advHistoryFmt(key, fallback, ...args) {
+    return (typeof I18n !== 'undefined' && I18n.format(key, ...args)) || fallback;
+  }
+
+
+  /**
    * Update the capture count badge on the Capture History tab
    */
 Advanced.prototype.updateCaptureCountBadge = async function() {
@@ -85,7 +97,7 @@ Advanced.prototype.cleanExpiredCaptureData = async function() {
           // Log cleanup if items were removed
           if (allHistory[moduleId].length < originalLength) {
             const removedCount = originalLength - allHistory[moduleId].length;
-            Logger.ui(`[Advanced] Cleaned ${removedCount} expired captures from ${moduleId}`);
+            Logger.debug('UI', `[Advanced] Cleaned ${removedCount} expired captures from ${moduleId}`);
           }
         }
       });
@@ -93,7 +105,7 @@ Advanced.prototype.cleanExpiredCaptureData = async function() {
       // Save cleaned history if any items were removed
       if (hadExpiredData) {
         await AdvancedHistoryStore.save(allHistory);
-        Logger.ui('[Advanced] ✓ Expired capture data cleaned and saved');
+        Logger.debug('UI', '[Advanced] ✓ Expired capture data cleaned and saved');
       }
     } catch (error) {
       Logger.error('UI', '[Advanced] Error cleaning expired captures:', error);
@@ -105,7 +117,7 @@ Advanced.prototype.cleanExpiredCaptureData = async function() {
    * Render unified capture history from all modules with filters and search
    */
 Advanced.prototype.renderUnifiedCaptureHistory = async function() {
-    Logger.ui('[Advanced] Rendering unified capture history');
+    Logger.debug('UI', '[Advanced] Rendering unified capture history');
     const capturesPanel = document.querySelector('#capturesPanel');
     if (!capturesPanel) return;
 
@@ -114,8 +126,6 @@ Advanced.prototype.renderUnifiedCaptureHistory = async function() {
       this.captureFilters = {
         site: 'current',
         module: 'all',
-        date: 'all',
-        sort: 'newest',
         search: ''
       };
     }
@@ -154,29 +164,29 @@ Advanced.prototype.renderUnifiedCaptureHistory = async function() {
         return;
       }
 
-      // Render no results if filtered out everything
-      if (filteredCaptures.length === 0 && allCaptures.length > 0) {
-        this.renderNoResults(capturesPanel);
-        return;
-      }
-
-      // Setup site filter options
+      // Keep the template and its controls across empty/populated transitions.
+      capturesPanel.classList.toggle('is-empty', false);
+      document.querySelector('#advancedContent')?.classList.toggle('is-capture-history-empty', false);
+      const shell = capturesPanel.querySelector('.history-v2-shell');
+      const emptyState = capturesPanel.querySelector('#captureEmptyState');
+      if (shell) shell.style.display = 'flex';
+      if (emptyState) emptyState.style.display = 'none';
       this.updateSiteFilterOptions(allCaptures, currentSite);
-
-      // Update filter banner
-      this.updateFilterBanner(currentSite);
-
-      // Render filtered captures
-      this.renderCaptureCards(filteredCaptures, capturesPanel);
-
-      // Setup event listeners
       this.setupCaptureHistoryListeners();
 
+      // Filters must work even when this is the first history view.
+      if (filteredCaptures.length === 0) {
+        this.renderNoResults(capturesPanel);
+      } else {
+        this.renderCaptureCards(filteredCaptures, capturesPanel);
+      }
+
     } catch (error) {
+      document.querySelector('#advancedContent')?.classList.toggle('is-capture-history-empty', false);
       Logger.error('UI', '[Advanced] Error rendering unified capture history:', error);
       capturesPanel.innerHTML = `
         <div class="error-state">
-          <p>Error loading captures: ${error.message}</p>
+          <p>${FormatUtils.escapeHtml(_advHistoryFmt('advPanelErrorLoadingCapturesFmt', `Error loading captures: ${error.message}`, error.message))}</p>
         </div>
       `;
     }
@@ -221,21 +231,6 @@ Advanced.prototype.applyFilters = function(captures, currentSite) {
       filtered = filtered.filter(c => c.moduleId === this.captureFilters.module);
     }
 
-    // Date filter
-    if (this.captureFilters.date !== 'all') {
-      const now = Date.now();
-      const ranges = {
-        '1h': 60 * 60 * 1000,
-        '24h': 24 * 60 * 60 * 1000,
-        '7d': 7 * 24 * 60 * 60 * 1000,
-        '30d': 30 * 24 * 60 * 60 * 1000
-      };
-      const range = ranges[this.captureFilters.date];
-      if (range) {
-        filtered = filtered.filter(c => (now - c.timestamp) <= range);
-      }
-    }
-
     // Search filter
     if (this.captureFilters.search) {
       const query = this.captureFilters.search.toLowerCase();
@@ -251,62 +246,10 @@ Advanced.prototype.applyFilters = function(captures, currentSite) {
       });
     }
 
-    // Sort
-    switch (this.captureFilters.sort) {
-      case 'newest':
-        filtered.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-        break;
-      case 'oldest':
-        filtered.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-        break;
-      case 'site':
-        filtered.sort((a, b) => (a.site || '').localeCompare(b.site || ''));
-        break;
-      case 'module':
-        filtered.sort((a, b) => (a.moduleName || '').localeCompare(b.moduleName || ''));
-        break;
-      case 'size':
-        filtered.sort((a, b) => {
-          const sizeA = JSON.stringify(a.data || {}).length;
-          const sizeB = JSON.stringify(b.data || {}).length;
-          return sizeB - sizeA;
-        });
-        break;
-    }
+    // Newest first
+    filtered.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
     return filtered;
-  };
-
-
-  /**
-   * Update filter info banner
-   * @param {string} currentSite - Current site hostname
-   */
-Advanced.prototype.updateFilterBanner = function(currentSite) {
-    const banner = document.querySelector('#captureFilterBanner');
-    const bannerText = document.querySelector('#filterBannerText');
-
-    if (!banner || !bannerText) return;
-
-    if (this.captureFilters.site === 'current' && currentSite) {
-      banner.style.display = 'flex';
-      // Use safe DOM manipulation to avoid XSS
-      bannerText.textContent = '';
-      bannerText.appendChild(document.createTextNode('Showing captures from '));
-      const strong = document.createElement('strong');
-      strong.textContent = currentSite;
-      bannerText.appendChild(strong);
-    } else if (this.captureFilters.site !== 'all' && this.captureFilters.site !== 'current') {
-      banner.style.display = 'flex';
-      // Use safe DOM manipulation to avoid XSS
-      bannerText.textContent = '';
-      bannerText.appendChild(document.createTextNode('Showing captures from '));
-      const strong = document.createElement('strong');
-      strong.textContent = this.captureFilters.site;
-      bannerText.appendChild(strong);
-    } else {
-      banner.style.display = 'none';
-    }
   };
 
 
@@ -320,10 +263,14 @@ Advanced.prototype.updateSiteFilterOptions = function(captures, currentSite) {
     if (!siteFilter) return;
 
     // Build options HTML - only show "All Sites" and "Current Site"
+    const esc = FormatUtils.escapeHtml;
+    const currentLabel = currentSite
+      ? _advHistoryFmt('advPanelCurrentSiteFmt', `Current Site (${currentSite})`, currentSite)
+      : _advHistoryTr('advancedFilterCurrentSite', 'Current Site');
     let optionsHtml = `
-      <option value="all">All Sites</option>
-      <option value="current" ${this.captureFilters.site === 'current' ? 'selected' : ''} data-site="${currentSite || ''}">
-        Current Site ${currentSite ? `(${currentSite})` : ''}
+      <option value="all">${esc(_advHistoryTr('advancedFilterAllSites', 'All Sites'))}</option>
+      <option value="current" ${this.captureFilters.site === 'current' ? 'selected' : ''} data-site="${esc(currentSite || '')}">
+        ${esc(currentLabel)}
       </option>
     `;
 
@@ -336,21 +283,25 @@ Advanced.prototype.updateSiteFilterOptions = function(captures, currentSite) {
    * @param {HTMLElement} container - Container element
    */
 Advanced.prototype.renderEmptyState = function(container) {
-    container.innerHTML = `
-      <div id="captureEmptyState" class="empty-state">
-        <div class="empty-state-card">
-          <div class="empty-state-icon">
-            <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-              <path d="M28 10L12 18V28C12 38 18 46 28 48C38 46 44 38 44 28V18L28 10Z" stroke="#3b82f6" stroke-width="2" fill="rgba(59,130,246,0.1)"/>
-              <circle cx="28" cy="28" r="8" fill="#3b82f6"/>
-            </svg>
-          </div>
-          <h3 class="empty-state-title">No captures yet</h3>
-          <p class="empty-state-text">Use the Tools tab to capture data from detected anti-bot systems, CAPTCHAs, and fingerprinting technologies.</p>
-          <div class="empty-state-footnote">Captures are stored for 30 minutes</div>
-        </div>
-      </div>
-    `;
+    container.classList.toggle('is-empty', true);
+    document.querySelector('#advancedContent')?.classList.toggle('is-capture-history-empty', true);
+    const shell = container.querySelector('.history-v2-shell');
+    const grid = container.querySelector('#captureGrid');
+    const emptyState = container.querySelector('#captureEmptyState');
+    const pagination = container.querySelector('#capturePagination');
+    if (shell) shell.style.display = 'none';
+    if (grid) grid.innerHTML = '';
+    if (emptyState) emptyState.style.display = 'flex';
+    if (pagination) pagination.style.display = 'none';
+
+    const openTools = container.querySelector('#captureOpenToolsBtn');
+    if (openTools && openTools.dataset.bound !== 'true') {
+      openTools.dataset.bound = 'true';
+      openTools.addEventListener('click', async () => {
+        await this.switchAdvancedTab('tools');
+        document.querySelector('#toolsPanel')?.focus();
+      });
+    }
   };
 
 
@@ -365,9 +316,9 @@ Advanced.prototype.renderNoResults = function(container) {
     grid.innerHTML = `
       <div id="captureNoResults" class="capture-no-results">
         <div class="no-results-icon"></div>
-        <h3 class="no-results-title">No captures found</h3>
-        <p class="no-results-text">Try adjusting your filters or search query to find captures.</p>
-        <button id="resetAllFiltersBtn" class="reset-filters-btn">Reset All Filters</button>
+        <h3 class="no-results-title">${_advHistoryTr('advancedNoResultsTitle', 'No captures found')}</h3>
+        <p class="no-results-text">${_advHistoryTr('advPanelNoResultsText', 'Try adjusting your filters or search query to find captures.')}</p>
+        <button id="resetAllFiltersBtn" class="reset-filters-btn">${_advHistoryTr('advancedBtnResetFilters', 'Reset All Filters')}</button>
       </div>
     `;
 
@@ -388,46 +339,63 @@ Advanced.prototype.renderCaptureCards = function(captures, container) {
     const grid = container.querySelector('#captureGrid');
     if (!grid) return;
 
+    const unknownLabel = _advHistoryTr('timeUnknown', 'Unknown');
+    const noUrlLabel = _advHistoryTr('advPanelNoUrl', 'No URL');
+    const viewLabel = _advHistoryTr('advPanelView', 'View');
+    const copyLabel = _advHistoryTr('advCommonCopy', 'Copy');
+    const deleteLabel = _advHistoryTr('btnDelete', 'Delete');
+    const uiLocale = (typeof I18n !== 'undefined' && typeof I18n.locale === 'function') ? I18n.locale() : undefined;
+
     const capturesHtml = captures.map(capture => {
-      const moduleName = capture.moduleName || capture.moduleId || 'Unknown';
+      const moduleName = capture.moduleName || capture.moduleId || unknownLabel;
       const moduleClass = capture.moduleId || 'unknown';
       const timestamp = AdvancedUtils.getTimeAgo(capture.timestamp);
-      const url = capture.url || 'No URL';
-      const site = capture.site || 'unknown';
+      let absoluteTime = '';
+      if (capture.timestamp) {
+        try {
+          absoluteTime = new Date(capture.timestamp).toLocaleString(uiLocale);
+        } catch (_) {
+          absoluteTime = new Date(capture.timestamp).toLocaleString();
+        }
+      }
+      const url = capture.url || noUrlLabel;
+      // 'unknown' is the internal site value used for filtering; show it localised
+      const site = (capture.site && capture.site !== 'unknown') ? capture.site : unknownLabel;
       const size = AdvancedUtils.formatBytes(JSON.stringify(capture.data || {}).length);
       const favicon = UrlUtils.resolveDisplayFavicon(capture.favicon, url || capture.hostname);
 
+      // Same anatomy as the History tab cards: favicon tile, title + "host • time",
+      // module chip and size below, icon actions on the right
+      const hostLabel = (capture.site && capture.site !== 'unknown') ? capture.site : (capture.url ? UrlUtils.getHostnameFromUrl(capture.url) : site);
       return `
-        <div class="capture-card" data-module-id="${capture.moduleId}" data-capture-id="${capture.id}">
-          <div class="capture-card-header">
-            <div class="capture-card-badges">
-              <span class="capture-module-badge ${moduleClass}">${moduleName}</span>
-              <span class="capture-site-badge">${FormatUtils.escapeHtml(site)}</span>
+        <div class="capture-card capture-card--v28" data-module-id="${capture.moduleId}" data-capture-id="${capture.id}" tabindex="0" role="button" aria-label="${FormatUtils.escapeAttr(`${viewLabel}: ${moduleName} · ${hostLabel}`)}">
+          <div class="capture-card-row">
+            <span class="capture-favicon-tile">
+              <img src="${favicon}" class="capture-url-favicon" alt="" data-fallback="${UrlUtils.getDefaultFaviconUrl()}">
+            </span>
+            <div class="capture-card-main">
+              <div class="capture-card-title" title="${AdvancedUtils.escapeHtml(url)}">${AdvancedUtils.escapeHtml(url)}</div>
+              <div class="capture-card-sub">
+                <span class="capture-card-host">${FormatUtils.escapeHtml(hostLabel || site)}</span>
+                <span class="capture-card-dot" aria-hidden="true">•</span>
+                <span class="capture-timestamp"${absoluteTime ? ` title="${FormatUtils.escapeHtml(absoluteTime)}"` : ''}>${timestamp}</span>
+              </div>
+            </div>
+            <div class="capture-card-actions">
+              <button class="capture-action-btn copy-btn" data-action="copy" title="${FormatUtils.escapeAttr(copyLabel)}" aria-label="${FormatUtils.escapeAttr(copyLabel)}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>
+              </button>
+              <button class="capture-action-btn delete-btn" data-action="delete" title="${FormatUtils.escapeAttr(deleteLabel)}" aria-label="${FormatUtils.escapeAttr(deleteLabel)}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              </button>
             </div>
           </div>
-          <div class="capture-card-body">
-            <div class="capture-url-row">
-              <img src="${favicon}" class="capture-url-favicon" alt="Favicon" data-fallback="${UrlUtils.getDefaultFaviconUrl()}">
-              <span class="capture-url-text" title="${AdvancedUtils.escapeHtml(url)}">${AdvancedUtils.truncate(url, 60)}</span>
-            </div>
-            <div class="capture-meta-row">
-              <span class="capture-size">${size}</span>
-              <span class="capture-timestamp">${timestamp}</span>
-            </div>
-          </div>
-          <div class="capture-card-actions">
-            <button class="capture-action-btn view-btn" data-action="view">
-              <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/></svg>
-              View
-            </button>
-            <button class="capture-action-btn copy-btn" data-action="copy">
-              <svg width="14" height="14" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" fill="currentColor"/></svg>
-              Copy
-            </button>
-            <button class="capture-action-btn delete-btn" data-action="delete">
-              <svg width="14" height="14" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="currentColor"/></svg>
-              Delete
-            </button>
+          <div class="capture-card-foot">
+            <span class="capture-module-badge ${moduleClass}">${moduleName}</span>
+            <span class="capture-size">${size}</span>
+            <span class="capture-card-open">${FormatUtils.escapeHtml(viewLabel)}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+            </span>
           </div>
         </div>
       `;
@@ -468,6 +436,12 @@ Advanced.prototype.setupCaptureCardListeners = function() {
           this.viewCaptureDetails(moduleId, captureId);
         }
       });
+      card.addEventListener('keydown', (e) => {
+        if ((e.key === 'Enter' || e.key === ' ') && e.target === card) {
+          e.preventDefault();
+          this.viewCaptureDetails(moduleId, captureId);
+        }
+      });
 
       if (viewBtn) {
         viewBtn.addEventListener('click', (e) => {
@@ -499,51 +473,68 @@ Advanced.prototype.setupCaptureCardListeners = function() {
    * @param {string} captureId - Capture ID
    */
 Advanced.prototype.viewCaptureDetails = async function(moduleId, captureId) {
+    const _trAH = (key, fallback) => _advHistoryTr(key, fallback);
     try {
       // Get capture data (auto-migrated by store)
       const allHistory = await AdvancedHistoryStore.load();
 
-      const moduleHistory = allHistory[moduleId] || [];
-      const captureData = moduleHistory.find(c => c.id === captureId);
+      const moduleHistory = allHistory && Object.hasOwn(allHistory, moduleId) ? allHistory[moduleId] : [];
+      const captureData = Array.isArray(moduleHistory)
+        ? moduleHistory.find(c => c && typeof c === 'object' && c.id === captureId)
+        : null;
 
-      const _tAH = (typeof I18n !== 'undefined') ? I18n : null;
-      const _trAH = (key, fallback) => (_tAH && _tAH.get(key)) || fallback;
-      if (!captureData) {
+      if (!captureData || !captureId) {
         NotificationHelper.error(_trAH('captureNotFound', 'Capture not found'));
         return;
       }
 
-      if (!this.loadedModules[moduleId]) {
-        const detector = this.detectorManager.findDetectorById(moduleId);
-        if (!detector) {
-          NotificationHelper.error(((_tAH && _tAH.format('detectorNotFoundFmt', moduleId)) || ('Detector not found: ' + moduleId)));
-          return;
+      // Storage buckets, module registry keys and detector IDs are distinct.
+      // Read the exact bucket above to avoid collisions between saved aliases.
+      const identity = typeof moduleId === 'string' ? moduleId.replace(/^detect-/, '') : '';
+      const registryId = identity === 'imperva' ? 'incapsula' : identity === 'awswaf' ? 'aws-waf' : identity;
+      const registry = Advanced.AVAILABLE_MODULES || {};
+      if (!Object.hasOwn(registry, registryId)) {
+        NotificationHelper.info(_trAH('captureDetailsUnavailable', 'Details view not available for this module'));
+        return;
+      }
+      const storageIdentity = registryId === 'incapsula' ? 'imperva' : registryId === 'aws-waf' ? 'awswaf' : registryId;
+      const loaded = this.loadedModules || {};
+      let moduleInstance = [registryId, storageIdentity, moduleId]
+        .filter(id => Object.hasOwn(loaded, id))
+        .map(id => loaded[id]).find(instance => instance);
+      if (!moduleInstance) {
+        const manager = this.detectorManager;
+        let detector = null;
+        if (manager && typeof manager.findDetectorById === 'function') {
+          for (const id of new Set([`detect-${registryId}`, `detect-${storageIdentity}`])) {
+            detector = manager.findDetectorById(id);
+            if (detector) break;
+          }
         }
-
-        const tempDetection = {
-          detector: detector,
-          confidence: 100,
+        // Viewing saved data does not require a currently installed detector.
+        const detection = {
+          detector: detector || { id: `detect-${registryId}`, name: registry[registryId].productName },
+          confidence: 0,
           methods: []
         };
-
-        await this.loadDetectionModule(moduleId, tempDetection);
+        moduleInstance = await this.loadDetectionModule(registryId, detection);
+        if (!moduleInstance && typeof BaseAdvancedModule !== 'undefined') {
+          // Reuse the existing generic details and native modal implementation.
+          moduleInstance = new BaseAdvancedModule(detection, this.currentTab, storageIdentity);
+        }
       }
-
-      const moduleInstance = this.loadedModules[moduleId];
       if (!moduleInstance) {
         NotificationHelper.error(_trAH('captureModuleClassNotFound', 'Module class not found. Please ensure the module is properly loaded.'));
         return;
       }
 
-      if (moduleInstance.renderCaptureDetailsContent && moduleInstance.displayCaptureDetailsModal) {
+      if (typeof moduleInstance.renderCaptureDetailsContent === 'function' && typeof moduleInstance.displayCaptureDetailsModal === 'function') {
         // Transform capture data to match module expectations
         // Storage format: { id, timestamp, url, data, expiresAt }
         // Module expects: { timestamp, url, captureData, ... }
         const transformedCaptureData = {
-          timestamp: captureData.timestamp,
-          url: captureData.url,
-          captureData: captureData.data || {},
-          ...captureData  // Include all other properties for module-specific use
+          ...captureData,
+          captureData: captureData.data !== undefined ? captureData.data : (captureData.captureData || {})
         };
 
         const detailsContent = moduleInstance.renderCaptureDetailsContent(transformedCaptureData);
@@ -670,7 +661,10 @@ Advanced.prototype.exportCaptures = async function() {
    * @param {string} title - Modal title
    * @returns {Promise<boolean>} True if confirmed, false if cancelled
    */
-Advanced.prototype.showWarningConfirmation = function(message, title = 'Mensaje de la extensión Scrapfly') {
+Advanced.prototype.showWarningConfirmation = function(message, title) {
+    const modalTitle = title || _advHistoryTr('notifConfirmTitleDefault', 'Confirm');
+    const acceptLabel = _advHistoryTr('advPanelBtnOk', 'OK');
+    const cancelLabel = _advHistoryTr('btnCancel', 'Cancel');
     return new Promise((resolve) => {
       // Create modal HTML
       const modalHtml = `
@@ -678,17 +672,17 @@ Advanced.prototype.showWarningConfirmation = function(message, title = 'Mensaje 
           <div class="confirmation-modal">
             <div class="confirmation-modal-header">
               <div class="confirmation-modal-icon"></div>
-              <h3 class="confirmation-modal-title">${title}</h3>
+              <h3 class="confirmation-modal-title">${modalTitle}</h3>
             </div>
             <div class="confirmation-modal-content">
               <p class="confirmation-modal-message">${message}</p>
             </div>
             <div class="confirmation-modal-footer">
               <button class="confirmation-modal-btn confirmation-modal-btn-danger" id="confirmAcceptBtn">
-                Aceptar
+                ${acceptLabel}
               </button>
               <button class="confirmation-modal-btn confirmation-modal-btn-cancel" id="confirmCancelBtn">
-                Cancelar
+                ${cancelLabel}
               </button>
             </div>
           </div>
@@ -772,20 +766,16 @@ Advanced.prototype.resetAllFilters = async function() {
     this.captureFilters = {
       site: 'current',
       module: 'all',
-      date: 'all',
-      sort: 'newest',
       search: ''
     };
 
     // Update UI
     const siteFilter = document.querySelector('#captureSiteFilter');
     const moduleFilter = document.querySelector('#captureModuleFilter');
-    const sortFilter = document.querySelector('#captureSortFilter');
     const searchInput = document.querySelector('#captureSearchInput');
 
     if (siteFilter) siteFilter.value = 'current';
     if (moduleFilter) moduleFilter.value = 'all';
-    if (sortFilter) sortFilter.value = 'newest';
     if (searchInput) searchInput.value = '';
 
     // Re-render
@@ -835,28 +825,6 @@ Advanced.prototype.setupCaptureHistoryListeners = function() {
       moduleFilter.addEventListener('change', this._moduleFilterHandler);
     }
 
-    // Date filter removed from UI
-    // const dateFilter = document.querySelector('#captureDateFilter');
-    // if (dateFilter) {
-    //   dateFilter.removeEventListener('change', this._dateFilterHandler);
-    //   this._dateFilterHandler = (e) => {
-    //     this.captureFilters.date = e.target.value;
-    //     this.renderUnifiedCaptureHistory();
-    //   };
-    //   dateFilter.addEventListener('change', this._dateFilterHandler);
-    // }
-
-    // Sort filter
-    const sortFilter = document.querySelector('#captureSortFilter');
-    if (sortFilter) {
-      sortFilter.removeEventListener('change', this._sortFilterHandler);
-      this._sortFilterHandler = (e) => {
-        this.captureFilters.sort = e.target.value;
-        this.renderUnifiedCaptureHistory();
-      };
-      sortFilter.addEventListener('change', this._sortFilterHandler);
-    }
-
     // Search input (with debounce)
     const searchInput = document.querySelector('#captureSearchInput');
     if (searchInput) {
@@ -872,18 +840,6 @@ Advanced.prototype.setupCaptureHistoryListeners = function() {
       searchInput.addEventListener('input', this._searchHandler);
     }
 
-    // Show all sites button
-    const showAllBtn = document.querySelector('#showAllSitesBtn');
-    if (showAllBtn) {
-      showAllBtn.removeEventListener('click', this._showAllHandler);
-      this._showAllHandler = () => {
-        this.captureFilters.site = 'all';
-        const siteFilter = document.querySelector('#captureSiteFilter');
-        if (siteFilter) siteFilter.value = 'all';
-        this.renderUnifiedCaptureHistory();
-      };
-      showAllBtn.addEventListener('click', this._showAllHandler);
-    }
   };
 
 
@@ -894,5 +850,5 @@ Advanced.prototype.setupCaptureHistoryListeners = function() {
    */
 Advanced.prototype.getModuleName = function(moduleId) {
     const moduleInfo = Advanced.AVAILABLE_MODULES[moduleId];
-    return moduleInfo ? moduleInfo.displayName.replace(' Tools', '') : moduleId;
+    return moduleInfo ? moduleInfo.productName : moduleId;
   };

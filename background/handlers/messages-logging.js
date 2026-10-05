@@ -4,95 +4,54 @@
  */
 function registerLoggingHandlers(registry, context) {
     void context;
+    const BRIDGE_TYPES = globalThis.ScrapflyBridgeProtocol.MESSAGE_TYPES;
 
-    const handle_debug_log = function({ request, sender, sendResponse, context }) {
-        void context;
-
-        // Route content/main-world logs to service worker console
-        if (request.context && request.level && request.args) {
-            const levelMap = {
-                warn: Logger.LEVELS.WARN,
-                error: Logger.LEVELS.ERROR,
-                debug: Logger.LEVELS.DEBUG,
-                info: Logger.LEVELS.INFO,
-                log: Logger.LEVELS.INFO
-            };
-
-            const mappedLevel = levelMap[request.level] || Logger.LEVELS.INFO;
-            const safeArgs = Array.isArray(request.args) ? request.args.slice(0, 5).map((arg) => Logger.sanitize(arg)) : [];
-
-            Logger._outputToConsole({
-                timestamp: new Date(request.timestamp || Date.now()).toISOString(),
-                context: request.context,
-                category: Logger.CATEGORIES.BACKGROUND,
-                level: mappedLevel,
-                message: safeArgs.join(' '),
-                data: null
-            });
-        }
-    };
-    registry['DEBUG_LOG'] = handle_debug_log;
-
+    // Content-script lines arrive batched ({ logs: [...] }); older pages send { log }
     const handle_log = function({ request, sender, sendResponse, context }) {
         void context;
 
-        if (request.log) {
-            Logger._outputToConsole(request.log);
+        const logs = Array.isArray(request.logs) ? request.logs : (request.log ? [request.log] : []);
+        for (const log of logs.slice(0, Logger.MAX_BATCH)) {
+            if (log && typeof log === 'object') Logger._outputToConsole({ ...log, context: 'content' });
         }
     };
     registry['LOG'] = handle_log;
 
+    // MAIN-world lines. The MAIN world only sends them in Debug mode; the
+    // worker's own Logger flags (refreshed on start and on every settings
+    // change, see background.js) decide without a storage read per line.
     const handle_scrapfly_debug_log = function({ request, sender, sendResponse, context }) {
         void context;
 
-        // Forward debug logs from content scripts (gated by debug mode)
-        (async () => {
-            try {
-                const settings = await Utils.getSettings(chrome);
-                const logCollectorActive = typeof logCollector !== 'undefined' && logCollector.enabled;
-                if (settings?.debugMode) {
-                    if (logCollectorActive && request.level === 'log') {
-                        return;
-                    }
-                    const timestamp = new Date(request.timestamp).toISOString().split('T')[1].slice(0, -1);
-                    const prefix = `[${timestamp}] [${request.source || 'hooks'}]`;
-                    switch (request.level) {
-                        case 'log': Logger.background(prefix, request.message); break;
-                        case 'warn': Logger.warn('BACKGROUND', prefix, request.message); break;
-                        case 'error': Logger.error('BACKGROUND', prefix, request.message); break;
-                        default: Logger.background(prefix, request.message);
-                    }
-                }
-            } catch (e) {
-                Logger.warn('BACKGROUND', '[SCRAPFLY_DEBUG_LOG] Could not read settings for debug log:', e);
-            }
-        })();
+        if (!Logger.debugMode || typeof request.message !== 'string') return;
+        const LOG = globalThis.ScrapflyBridgeProtocol.LOG;
+        const level = request.level === LOG.LEVELS.ERROR ? Logger.LEVELS.ERROR
+            : request.level === LOG.LEVELS.WARN ? Logger.LEVELS.WARN : Logger.LEVELS.DEBUG;
+        // Routine MAIN-world traces belong to the verbose tier
+        if (level === Logger.LEVELS.DEBUG && !Logger.verboseMode) return;
+        const prefix = request.source === LOG.SOURCES.WINDOW_TRACKER ? LOG.PREFIXES.WINDOW_TRACKER : LOG.PREFIXES.MAIN_WORLD;
+        const message = request.message.startsWith(prefix) ? request.message.slice(prefix.length).trim() : request.message;
+        const area = request.source === LOG.SOURCES.WINDOW_TRACKER ? 'window' : 'hooks';
+        const tab = sender?.tab?.url ? ` ${Logger.hostOf(sender.tab.url)}:` : '';
+        Logger._outputToConsole({
+            timestamp: typeof request.timestamp === 'number' ? request.timestamp : Date.now(),
+            context: 'main', category: area, level,
+            message: Logger._cut(`${tab} ${message}`.trim(), Logger.MAX_MESSAGE_LENGTH)
+        });
     };
-    registry['SCRAPFLY_DEBUG_LOG'] = handle_scrapfly_debug_log;
+    registry[BRIDGE_TYPES.DEBUG_LOG] = handle_scrapfly_debug_log;
 
     const handle_hook_failure_report = function({ request, sender, sendResponse, context }) {
         void context;
 
-        // Hook diagnostics from MAIN world (debug mode only)
-        (async () => {
-            try {
-                const settings = await Utils.getSettings(chrome);
-                if (!settings?.debugMode) return;
-                Logger.warn('HOOKS', `[Hooks] ${request.type}`, {
-                    target: request.target,
-                    failureType: request.failureType,
-                    message: request.message,
-                    success: request.success,
-                    error: request.error
-                });
-            } catch (e) {
-                Logger.warn('HOOKS', '[HOOK_FAILURE_REPORT] Could not read settings for hook diagnostic:', e);
-            }
-        })();
+        // Hook diagnostics from MAIN world (Debug mode only)
+        if (Logger.debugMode) {
+            Logger.warn('HOOKS', `Hook ${request.failureType || 'failure'}: ${request.target}`, {
+                reason: request.message, error: request.error
+            });
+        }
         sendResponse({ status: 'ignored' });
     };
-    registry['HOOK_FAILURE_REPORT'] = handle_hook_failure_report;
-    registry['HOOK_TAMPERING_DETECTED'] = handle_hook_failure_report;
-    registry['HOOK_RECOVERY_RESULT'] = handle_hook_failure_report;
+    registry[BRIDGE_TYPES.HOOK_FAILURE_REPORT] = handle_hook_failure_report;
 
 }

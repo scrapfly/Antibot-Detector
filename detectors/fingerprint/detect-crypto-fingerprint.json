@@ -5,25 +5,79 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2025-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API",
   "icon": "crypto_fingerprint.png",
-  "description": "Web Crypto API usage detection for random number generation and cryptographic operations",
+  "description": "Web Crypto API references and random-value or digest calls; fingerprinting inputs and intent are unconfirmed",
   "detection": {
     "js_hooks": [
       {
-        "description": "Generates cryptographically secure random values",
+        "id": "crypto-random-values",
+        "description": "Attempts to generate secure random values (result and intent unconfirmed)",
         "enabled": true,
-        "confidence": 80,
+        "standalone": true,
+        "confidence": 5,
         "target": "Crypto.prototype.getRandomValues"
       },
       {
-        "description": "Computes cryptographic hashes (SHA-256, etc.)",
+        "id": "crypto-digest",
+        "description": "Attempts to compute a digest (input, result and intent unconfirmed)",
         "enabled": true,
-        "confidence": 80,
+        "standalone": true,
+        "confidence": 10,
         "target": "SubtleCrypto.prototype.digest"
       }
+    ],
+    "content": [
+      {
+        "id": "crypto-random-values-reference",
+        "text": "getRandomValues",
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to getRandomValues (usage and intent unconfirmed)",
+        "confidence": 5,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": false
+      },
+      {
+        "id": "crypto-digest-reference",
+        "text": "crypto.subtle.digest",
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to crypto.subtle.digest (usage and intent unconfirmed)",
+        "confidence": 5,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": false
+      }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "crypto-script-references",
+      "name": "Random-value and digest references (execution unconfirmed)",
+      "confidence": 10,
+      "when": {
+        "all": [
+          { "pattern": "crypto-random-values-reference" },
+          { "pattern": "crypto-digest-reference" }
+        ]
+      }
+    },
+    {
+      "id": "crypto-random-and-digest-calls",
+      "name": "Random-value and digest methods called (inputs and intent unconfirmed)",
+      "confidence": 15,
+      "when": {
+        "all": [
+          { "pattern": "crypto-random-values" },
+          { "pattern": "crypto-digest" }
+        ]
+      }
+    }
+  ]
 }

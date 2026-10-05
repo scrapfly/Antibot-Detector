@@ -33,9 +33,10 @@ function handleDataDomeMessage(request, sender, sendResponse) {
                     if (typeof showNotification === 'function') {
                         Logger.network('[DataDome] Showing analyzing notification before reload...');
                         await showNotification(request.tabId, {
+                            module: 'DataDome',
                             type: 'loading',
-                            title: 'Analyzing DataDome Scripts',
-                            message: 'Please wait while we collect script URLs...',
+                            title: pageText('pageNoticeAnalyzingScriptsFmt', 'Analyzing {0} Scripts', 'DataDome'),
+                            message: pageText('pageNoticeCollectingScripts', 'Please wait while we collect script URLs...'),
                             duration: 15000 // Longer duration to persist through reload
                         });
                         Logger.network('[DataDome] Pre-reload notification shown successfully');

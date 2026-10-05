@@ -5,12 +5,12 @@
    */
 Advanced.prototype.onDetectionDataReady = function(results) {
     this.cachedDetectionResults = results || [];
-    Logger.ui(`[Advanced] Detection data received: ${this.cachedDetectionResults.length} detections cached`);
+    Logger.debug('UI', `[Advanced] Detection data received: ${this.cachedDetectionResults.length} detections cached`);
 
     // If Advanced tab is currently visible, refresh the display
     const advancedTab = document.querySelector('.tab-btn[data-tab="advanced"]');
     if (advancedTab?.classList.contains('active')) {
-      Logger.ui('[Advanced] Advanced tab is active, refreshing tools display');
+      Logger.debug('UI', '[Advanced] Advanced tab is active, refreshing tools display');
       this.displayAdvancedTools();
     }
   };
@@ -20,13 +20,10 @@ Advanced.prototype.onDetectionDataReady = function(results) {
    * Display advanced tools interface
    */
 Advanced.prototype.displayAdvancedTools = async function() {
-    Logger.ui('Advanced.displayAdvancedTools called');
+    Logger.debug('UI', 'Advanced.displayAdvancedTools called');
 
     // Clean expired captures when displaying advanced tools
     await this.cleanExpiredCaptureData();
-
-    const noAdvancedState = document.querySelector('#noAdvancedState');
-    const advancedContent = document.querySelector('#advancedContent');
 
     // Check if DetectorManager is initialized
     if (!this.detectorManager.initialized) {
@@ -45,17 +42,9 @@ Advanced.prototype.displayAdvancedTools = async function() {
     // Setup message listener for capture completion
     this.setupCaptureCompletionListener();
 
-    // Check if we have available detection modules
-    const detectionTools = await this.getDetectionModules();
-
-    if (detectionTools.length > 0) {
-      // We have detections - show tools interface automatically
-      await this.showToolsInterface();
-    } else {
-      // No compatible detections - show empty state
-      if (noAdvancedState) noAdvancedState.style.display = 'flex';
-      if (advancedContent) advancedContent.style.display = 'none';
-    }
+    // v2.8 always shows the tools layout; the detection selector itself shows
+    // the empty state when the page has no supported detection
+    await this.showToolsInterface();
   };
 
 
@@ -63,15 +52,8 @@ Advanced.prototype.displayAdvancedTools = async function() {
    * Transition from landing page to tools interface
    */
 Advanced.prototype.showToolsInterface = async function() {
-    const noAdvancedState = document.querySelector('#noAdvancedState');
-    const advancedContent = document.querySelector('#advancedContent');
-
-    // Hide landing page, show tools
-    if (noAdvancedState) noAdvancedState.style.display = 'none';
-    if (advancedContent) {
-      advancedContent.style.display = 'flex';
-      await this.renderAdvancedInterface();
-    }
+    // Rendering decides which complete state to reveal after the lookup.
+    await this.renderAdvancedInterface();
   };
 
 
@@ -83,7 +65,7 @@ Advanced.prototype.setupCaptureCompletionListener = function() {
 
     this.captureCompletionListener = async (message) => {
       if (message.type === 'AKAMAI_CAPTURE_COMPLETED' || message.type === 'RECAPTCHA_CAPTURE_COMPLETED' || message.type === 'HCAPTCHA_CAPTURE_COMPLETED') {
-        Logger.ui('[Advanced] Capture completed, updating captured data display');
+        Logger.debug('UI', '[Advanced] Capture completed, updating captured data display');
 
         // Don't clear the tools panel, just update the captured data section
         if (this.activeModule) {
@@ -148,6 +130,8 @@ Advanced.prototype.showPlaceholderState = function() {
     const noAdvancedState = document.querySelector('#noAdvancedState');
     const advancedContent = document.querySelector('#advancedContent');
 
+    const loading = document.querySelector('#advancedLoadingState');
+    if (loading) loading.style.display = 'none';
     if (noAdvancedState) noAdvancedState.style.display = 'flex';
     if (advancedContent) advancedContent.style.display = 'none';
   };
@@ -159,13 +143,13 @@ Advanced.prototype.showPlaceholderState = function() {
    */
 Advanced.prototype.getCurrentDetections = async function() {
     // PRIORITY 0: Check cached results from Detection notification (most reliable)
-    Logger.ui('[Advanced] DETECTION RETRIEVAL STEP 0: Check cachedDetectionResults');
-    Logger.ui('[Advanced]   - cachedDetectionResults length:', this.cachedDetectionResults?.length || 0);
+    Logger.debug('UI', '[Advanced] DETECTION RETRIEVAL STEP 0: Check cachedDetectionResults');
+    Logger.debug('UI', '[Advanced]   - cachedDetectionResults length:', this.cachedDetectionResults?.length || 0);
 
     if (this.cachedDetectionResults && this.cachedDetectionResults.length > 0) {
-      Logger.ui('[Advanced] Found', this.cachedDetectionResults.length, 'detections in cache');
+      Logger.debug('UI', '[Advanced] Found', this.cachedDetectionResults.length, 'detections in cache');
       const firstDet = this.cachedDetectionResults[0];
-      Logger.ui('[Advanced] First cached detection:', {
+      Logger.debug('UI', '[Advanced] First cached detection:', {
         hasDetector: !!firstDet.detector,
         detectorId: firstDet.detector?.id,
         detectorName: firstDet.detector?.name
@@ -177,18 +161,18 @@ Advanced.prototype.getCurrentDetections = async function() {
     let results = this.detectionSection && this.detectionSection.currentResults ?
       this.detectionSection.currentResults : [];
 
-    Logger.ui('[Advanced] DETECTION RETRIEVAL STEP 1: Check detectionSection.currentResults');
-    Logger.ui('[Advanced]   - detectionSection exists:', !!this.detectionSection);
-    Logger.ui('[Advanced]   - currentResults length:', results.length);
+    Logger.debug('UI', '[Advanced] DETECTION RETRIEVAL STEP 1: Check detectionSection.currentResults');
+    Logger.debug('UI', '[Advanced]   - detectionSection exists:', !!this.detectionSection);
+    Logger.debug('UI', '[Advanced]   - currentResults length:', results.length);
 
     // If results found, validate structure and cache them
     if (results.length > 0) {
-      Logger.ui('[Advanced] Found', results.length, 'detections in detectionSection');
+      Logger.debug('UI', '[Advanced] Found', results.length, 'detections in detectionSection');
       // Cache for future use
       this.cachedDetectionResults = results;
       // Log first detection structure for validation
       const firstDet = results[0];
-      Logger.ui('[Advanced] First detection structure:', {
+      Logger.debug('UI', '[Advanced] First detection structure:', {
         hasDetector: !!firstDet.detector,
         detectorId: firstDet.detector?.id,
         detectorName: firstDet.detector?.name
@@ -197,13 +181,13 @@ Advanced.prototype.getCurrentDetections = async function() {
     }
 
     // PRIORITY 2: Fetch from background service worker with retries
-    Logger.ui('[Advanced] DETECTION RETRIEVAL STEP 2: Background fetch');
+    Logger.debug('UI', '[Advanced] DETECTION RETRIEVAL STEP 2: Background fetch');
     if (!this.currentTab) {
       Logger.debug('UI', '[Advanced] No currentTab available, cannot fetch from background');
       return results;
     }
 
-    Logger.ui('[Advanced]   - Fetching for tab ID:', this.currentTab.id, 'URL:', this.currentTab.url);
+    Logger.debug('UI', '[Advanced]   - Fetching for tab ID:', this.currentTab.id, 'URL:', this.currentTab.url);
 
     // Try to fetch with retry logic
     let retryCount = 0;
@@ -226,27 +210,37 @@ Advanced.prototype.getCurrentDetections = async function() {
               Logger.error('UI', '[Advanced] Chrome error in message:', chrome.runtime.lastError);
               resolve(null);
             } else {
-              Logger.ui('[Advanced] ✓ Background response received (attempt', retryCount + 1, ')', response ? 'with data' : 'empty');
+              Logger.debug('UI', '[Advanced] ✓ Background response received (attempt', retryCount + 1, ')', response ? 'with data' : 'empty');
               resolve(response);
             }
           });
         });
 
-        if (response && response.data && Array.isArray(response.data)) {
-          if (response.data.length > 0) {
-            results = response.data;
-            Logger.ui('[Advanced] Fetched', results.length, 'detections from background');
+        // Current responses wrap matches in data.detectionResults. Retain
+        // support for the older array response used by previous versions.
+        const responseResults = Array.isArray(response?.data)
+          ? response.data : response?.data?.detectionResults;
+        // An authoritative empty response is complete, not a reason to retry.
+        if (response?.status === 'ok' &&
+            (response.data === null || (Array.isArray(responseResults) && responseResults.length === 0))) {
+          return [];
+        }
+        if (Array.isArray(responseResults)) {
+          if (responseResults.length > 0) {
+            results = responseResults;
+            this.cachedDetectionResults = results;
+            Logger.debug('UI', '[Advanced] Fetched', results.length, 'detections from background');
 
             // Validate first detection
             const firstDet = results[0];
-            Logger.ui('[Advanced] First detection from background:', {
+            Logger.debug('UI', '[Advanced] First detection from background:', {
               hasDetector: !!firstDet.detector,
               detectorId: firstDet.detector?.id,
               detectorName: firstDet.detector?.name
             });
             return results;
           } else {
-            Logger.ui('[Advanced] Background returned empty array');
+            Logger.debug('UI', '[Advanced] Background returned empty array');
           }
         } else if (response && response.status === 'error') {
           Logger.debug('UI', '[Advanced] Background returned error:', response.error);
@@ -258,14 +252,14 @@ Advanced.prototype.getCurrentDetections = async function() {
       // Retry if failed
       if (results.length === 0 && retryCount < maxRetries - 1) {
         retryCount++;
-        Logger.ui('[Advanced]   - Retrying... (attempt', retryCount + 1, 'of', maxRetries, ')');
+        Logger.debug('UI', '[Advanced]   - Retrying... (attempt', retryCount + 1, 'of', maxRetries, ')');
         await new Promise(resolve => setTimeout(resolve, 500)); // Wait before retry
       } else {
         break;
       }
     }
 
-    Logger.ui('[Advanced] FINAL: Returning', results.length, 'detections');
+    Logger.debug('UI', '[Advanced] FINAL: Returning', results.length, 'detections');
     return results;
   };
 
@@ -278,9 +272,9 @@ Advanced.prototype.getDetectionModules = async function() {
     const detections = await this.getCurrentDetections();
     const availableTools = [];
 
-    Logger.ui('[Advanced] CHECKING AVAILABLE MODULES');
-    Logger.ui('[Advanced] Total detections to check:', detections.length);
-    Logger.ui('[Advanced] Available module keys:', Object.keys(Advanced.AVAILABLE_MODULES));
+    Logger.debug('UI', '[Advanced] CHECKING AVAILABLE MODULES');
+    Logger.debug('UI', '[Advanced] Total detections to check:', detections.length);
+    Logger.debug('UI', '[Advanced] Available module keys:', Object.keys(Advanced.AVAILABLE_MODULES));
 
     detections.forEach((detection, index) => {
       const rawDetectorId = detection.detector?.id;
@@ -289,7 +283,7 @@ Advanced.prototype.getDetectionModules = async function() {
       const detectorName = detection.detector?.name;
       const hasModule = !!Advanced.AVAILABLE_MODULES[detectorId];
 
-      Logger.ui(`[Advanced] [${index + 1}/${detections.length}] Checking:`, {
+      Logger.debug('UI', `[Advanced] [${index + 1}/${detections.length}] Checking:`, {
         rawDetectorId,
         detectorId,
         detectorName,
@@ -297,19 +291,19 @@ Advanced.prototype.getDetectionModules = async function() {
       });
 
       if (detectorId && Advanced.AVAILABLE_MODULES[detectorId]) {
-        Logger.ui(`[Advanced]   → Adding "${detectorName}" to available tools`);
+        Logger.debug('UI', `[Advanced]   → Adding "${detectorName}" to available tools`);
         availableTools.push({
           detection,
           module: Advanced.AVAILABLE_MODULES[detectorId]
         });
       } else if (detectorId) {
-        Logger.ui(`[Advanced]   → "${detectorName}" not in AVAILABLE_MODULES (missing implementation)`);
+        Logger.debug('UI', `[Advanced]   → "${detectorName}" not in AVAILABLE_MODULES (missing implementation)`);
       } else {
         Logger.debug('UI', `[Advanced] Detection missing detector.id`);
       }
     });
 
-    Logger.ui('[Advanced] MODULE CHECK COMPLETE:', {
+    Logger.debug('UI', '[Advanced] MODULE CHECK COMPLETE:', {
       detectedTotal: detections.length,
       withTools: availableTools.length,
       withoutTools: detections.length - availableTools.length
@@ -353,4 +347,4 @@ Advanced.prototype.loadDetectionModule = async function(moduleId, detection) {
       Logger.error('UI', `Failed to initialize module ${normalizedId}:`, error);
       return null;
     }
-  };
+  };

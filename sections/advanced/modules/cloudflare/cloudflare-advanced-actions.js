@@ -23,7 +23,7 @@ CloudflareAdvanced.prototype.checkCookies = async function() {
             this.displayCookiesModal(cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie, cfuvIdCookie);
         } catch (error) {
             Logger.error('NETWORK', '[Cloudflare] Failed to check cookies:', error);
-            NotificationHelper.error('Failed to check cookies: ' + error.message);
+            NotificationHelper.error(this._txt('advCommonFailedCheckCookiesFmt', 'Failed to check cookies: {0}', error.message));
         }
     };
 
@@ -36,7 +36,7 @@ CloudflareAdvanced.prototype.checkVersion = async function() {
             }
 
             // Show popup notification
-            NotificationHelper.info('Checking Cloudflare version... Page will reload');
+            NotificationHelper.info(this._txt('advCloudflareCheckingVersion', 'Checking Cloudflare version... Page will reload'));
 
             // Send page notification before reload
             await AdvancedUtils.sendMessage({
@@ -49,7 +49,7 @@ CloudflareAdvanced.prototype.checkVersion = async function() {
 
         } catch (error) {
             Logger.error('NETWORK', '[Cloudflare] Failed to check version:', error);
-            NotificationHelper.error('Failed to check version: ' + error.message);
+            NotificationHelper.error(this._txt('advCommonFailedCheckVersionFmt', 'Failed to check version: {0}', error.message));
         }
     };
 
@@ -136,16 +136,18 @@ CloudflareAdvanced.prototype.extractSiteKey = async function() {
                 const result = results[0].result;
                 if (result.success) {
                     this.displaySiteKeyModal(result.sitekey, result.type);
-                    NotificationHelper.success('Site Key extracted successfully');
+                    NotificationHelper.success(this._txt('advCloudflareSiteKeyExtracted', 'Site Key extracted successfully'));
                 } else {
-                    NotificationHelper.error(result.error);
+                    NotificationHelper.error(result.error === 'No sitekey found on page'
+                        ? this._txt('advCloudflareNoSitekey', 'No sitekey found on page')
+                        : result.error);
                 }
             } else {
-                NotificationHelper.error('Failed to extract sitekey');
+                NotificationHelper.error(this._txt('advCloudflareFailedExtractSitekey', 'Failed to extract sitekey'));
             }
         } catch (error) {
             Logger.error('NETWORK', '[Cloudflare] Failed to extract sitekey:', error);
-            NotificationHelper.error('Failed to extract: ' + error.message);
+            NotificationHelper.error(this._txt('advCommonFailedExtractFmt', 'Failed to extract: {0}', error.message));
         }
     };
 
@@ -176,9 +178,10 @@ CloudflareAdvanced.prototype.analyzeScripts = async function() {
             Logger.network('[Cloudflare] Analysis mode response:', response);
 
             if (response && response.status === 'started') {
-                NotificationHelper.info('Analyzing Cloudflare scripts... Page will reload');
+                NotificationHelper.info(this._txt('advCommonAnalyzingReloadFmt', 'Analyzing {0} scripts... Page will reload', 'Cloudflare'));
 
-                setTimeout(async () => {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                {
                     try {
                         await AdvancedUtils.sendMessage({
                             type: 'CLOUDFLARE_SHOW_ANALYZING_NOTIFICATION',
@@ -189,14 +192,14 @@ CloudflareAdvanced.prototype.analyzeScripts = async function() {
                     }
 
                     await chrome.tabs.reload(this.tabInfo.id);
-                }, 500);
+                }
             } else {
                 chrome.runtime.onMessage.removeListener(analysisListener);
-                NotificationHelper.error('Failed to start analysis');
+                NotificationHelper.error(this._txt('advCommonFailedStartAnalysis', 'Failed to start analysis'));
             }
         } catch (error) {
             Logger.error('NETWORK', '[Cloudflare] Failed to analyze scripts:', error);
-            NotificationHelper.error('Failed to analyze scripts: ' + error.message);
+            NotificationHelper.error(this._txt('advCommonFailedAnalyzeScriptsFmt', 'Failed to analyze scripts: {0}', error.message));
         }
     };
 
@@ -367,5 +370,5 @@ func fetchCloudflareScripts() {
             }
         };
 
-        return templates[language] ? templates[language]() : 'Code generation not available';
+        return templates[language] ? templates[language]() : this._txt('advCommonCodeGenUnavailable', 'Code generation not available');
     };

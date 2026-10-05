@@ -5,6 +5,11 @@
  * Used by: DetectorManager, CategoryManager, and other managers
  */
 class StorageManager {
+    /** Read raw values without normalization or writes, including single-writer history. */
+    static async readRaw(keys) {
+        return (await chrome.storage.local.get(keys)) || {};
+    }
+
     /**
      * Parse a stored value that may be a JSON string or an object.
      * Centralizes parsing logic to avoid duplicated try/catch blocks.
@@ -278,7 +283,7 @@ class StorageManager {
                 await chrome.storage.local.remove(removals);
             }
 
-            Logger.storage('Batch loaded storage keys', { count: keyConfigs.length });
+            Logger.debug('STORAGE', `Batch read ${keyConfigs.length} keys`);
             return loadedData;
 
         } catch (error) {
@@ -352,27 +357,6 @@ class StorageManager {
         }
     }
 
-    /**
-     * Clear one or more keys from Chrome storage
-     *
-     * @param {string|Array<string>} keys - Storage key(s) to clear
-     * @returns {Promise<boolean>} Success status
-     *
-     * @example
-     * await StorageManager.clearStorage('scrapfly_detectors');
-     * await StorageManager.clearStorage(['scrapfly_detectors', 'scrapfly_detectors.json']);
-     */
-    static async clearStorage(keys) {
-        try {
-            const keyArray = Array.isArray(keys) ? keys : [keys];
-            await chrome.storage.local.remove(keyArray);
-            Logger.storage('Cleared storage keys', { keys: keyArray });
-            return true;
-        } catch (error) {
-            Logger.error('STORAGE', 'Failed to clear storage', error);
-            return false;
-        }
-    }
 
 }
 

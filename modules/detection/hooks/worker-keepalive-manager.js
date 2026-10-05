@@ -43,7 +43,7 @@ class WorkerKeepaliveManager {
       this._startKeepalive();
     }
 
-    Logger.background(`[WorkerKeepalive] Started operation: ${operationId} (${this.activeOperations.size} active)`);
+    Logger.debug('BACKGROUND', `Keepalive +${operationId} (${this.activeOperations.size} active)`);
   }
 
   /**
@@ -54,7 +54,7 @@ class WorkerKeepaliveManager {
     if (this.activeOperations.has(operationId)) {
       this.activeOperations.delete(operationId);
 
-      Logger.background(`[WorkerKeepalive] Ended operation: ${operationId} (${this.activeOperations.size} remaining)`);
+      Logger.debug('BACKGROUND', `Keepalive -${operationId} (${this.activeOperations.size} active)`);
 
       // Stop keepalive if no more operations
       if (this.activeOperations.size === 0) {
@@ -81,7 +81,7 @@ class WorkerKeepaliveManager {
     }
 
     if (toRemove.length > 0) {
-      Logger.background(`[WorkerKeepalive] Ended ${toRemove.length} operations for tab ${tabId}`);
+      Logger.debug('BACKGROUND', `Keepalive: ended ${toRemove.length} for tab ${tabId}`);
     }
   }
 
@@ -101,7 +101,7 @@ class WorkerKeepaliveManager {
       this._sendKeepalive();
     }, this.keepalivePeriodMs);
 
-    Logger.background('[WorkerKeepalive] Started keepalive');
+    Logger.debug('BACKGROUND', 'Keepalive on');
   }
 
   /**
@@ -117,7 +117,7 @@ class WorkerKeepaliveManager {
       this.keepaliveInterval = null;
     }
 
-    Logger.background('[WorkerKeepalive] Stopped keepalive');
+    Logger.debug('BACKGROUND', 'Keepalive off');
   }
 
   /**

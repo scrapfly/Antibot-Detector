@@ -3,8 +3,8 @@
 /* Container for all notifications */
 .notification-container {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 10px;
+  right: 10px;
   z-index: 10000;
   pointer-events: none;
   display: flex;
@@ -13,17 +13,30 @@
   max-width: 400px;
 }
 
-/* Toast Notifications */
+/* Toast: a flat 2.8 bar. Text, close button and a 3px type line on the
+   left; no icon tile, gradient or blur. The bottom line counts down. */
 .notification-toast {
-  background: rgba(30, 30, 30, 0.95);
-  backdrop-filter: blur(10px);
+  --toast-tone: var(--accent);
+  position: relative;
+  min-width: 176px;
+  background: var(--bg-secondary);
+  border: 1px solid #424242;
   border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
   overflow: hidden;
   pointer-events: auto;
   transform: translateX(120%);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.notification-toast::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--toast-tone);
 }
 
 .notification-toast[data-show="true"] {
@@ -32,24 +45,24 @@
 
 .notification-toast-content {
   display: flex;
-  align-items: flex-start;
-  padding: 12px 16px;
-  gap: 12px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 6px 8px 13px;
   position: relative;
 }
 
+/* Only when a caller passes one (the loading spinner) */
 .notification-icon {
   flex-shrink: 0;
-  width: 20px;
-  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--toast-tone);
 }
 
 .notification-icon svg {
-  width: 100%;
-  height: 100%;
+  width: 13px;
+  height: 13px;
 }
 
 .notification-body {
@@ -59,39 +72,21 @@
 
 .notification-message {
   color: var(--text-primary);
-  font-size: 13px;
-  line-height: 1.4;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
   word-wrap: break-word;
 }
 
+/* Close control is the shared .btn-close.btn-close--sm (common.css) */
 .notification-close {
-  background: rgba(239, 68, 68, 0.15);
-  border: none;
-  color: var(--danger);
-  cursor: pointer;
-  font-size: 20px;
-  line-height: 1;
-  padding: 0;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.2s;
-  flex-shrink: 0;
+  margin-left: auto;
 }
 
-.notification-close:hover {
-  background: var(--danger);
-  border-color: var(--danger);
-  color: white;
-  transform: scale(1.05);
-}
-
-/* Progress Bar */
+/* Countdown line */
 .notification-progress {
-  height: 3px;
-  background: rgba(255, 255, 255, 0.1);
+  height: 2px;
+  background: transparent;
   position: relative;
   overflow: hidden;
 }
@@ -99,60 +94,25 @@
 .notification-progress-bar {
   height: 100%;
   width: 100%;
-  background: currentColor;
+  background: var(--toast-tone);
+  opacity: 0.6;
   transition: width linear;
 }
 
-/* Toast Types */
-.notification-success {
-  border-left: 3px solid var(--success);
-}
+/* Toast types: only the line colour changes */
+.notification-success { --toast-tone: var(--success); }
+.notification-error { --toast-tone: var(--danger); }
+.notification-warning { --toast-tone: var(--warning); }
+.notification-info { --toast-tone: var(--accent); }
 
-.notification-success .notification-icon {
-  color: var(--success);
-}
-
-.notification-success .notification-progress-bar {
-  background: var(--success);
-}
-
-.notification-error {
-  border-left: 3px solid var(--danger);
-}
-
-.notification-error .notification-icon {
-  color: var(--danger);
-}
-
-.notification-error .notification-progress-bar {
-  background: var(--danger);
-}
-
-.notification-warning {
-  border-left: 3px solid var(--warning);
-}
-
-.notification-warning .notification-icon {
-  color: var(--warning);
-}
-
-.notification-warning .notification-progress-bar {
-  background: var(--warning);
-}
-
-.notification-info {
-  border-left: 3px solid var(--accent);
-}
-
-.notification-info .notification-icon {
-  color: var(--accent);
-}
-
-.notification-info .notification-progress-bar {
-  background: var(--accent);
-}
-
-/* Confirmation Dialog */
+/* ============================================
+   Confirmation dialog — 2.8 modal look
+   header:  tone-tinted icon tile + left-aligned title + shared .btn-close
+   body:    message text (scrolls when long)
+   footer:  secondary Cancel + primary, right-aligned side by side
+   Tone (warning / danger / info) tints the icon tile; the primary button is
+   red for danger and the extension blue otherwise.
+   ============================================ */
 .notification-backdrop {
   position: fixed;
   top: 0;
@@ -163,7 +123,7 @@
   backdrop-filter: blur(4px);
   z-index: 9998;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.2s;
 }
 
 .notification-backdrop[data-show="true"] {
@@ -171,20 +131,28 @@
 }
 
 .notification-confirm {
+  --confirm-tone: var(--accent);
+  --confirm-tone-text: var(--accent-light);
+  --confirm-tone-bg: rgba(59, 130, 246, 0.12);
+  --confirm-tone-border: rgba(59, 130, 246, 0.32);
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
-  background: rgba(30, 30, 30, 0.98);
-  backdrop-filter: blur(20px);
+  transform: translate(-50%, -50%) scale(0.96);
+  display: flex;
+  flex-direction: column;
+  width: 352px;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 32px);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
   border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55);
   z-index: 9999;
-  min-width: 320px;
-  max-width: 440px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  text-align: left;
   opacity: 0;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s;
 }
 
 .notification-confirm[data-show="true"] {
@@ -192,112 +160,167 @@
   transform: translate(-50%, -50%) scale(1);
 }
 
-.notification-confirm-content {
-  padding: 24px;
-  text-align: center;
+.notification-confirm--warning {
+  --confirm-tone: var(--warning);
+  --confirm-tone-text: var(--warning-light);
+  --confirm-tone-bg: rgba(245, 158, 11, 0.12);
+  --confirm-tone-border: rgba(245, 158, 11, 0.34);
+}
+
+.notification-confirm--danger {
+  --confirm-tone: var(--danger);
+  --confirm-tone-text: var(--danger-light);
+  --confirm-tone-bg: rgba(239, 68, 68, 0.12);
+  --confirm-tone-border: rgba(239, 68, 68, 0.34);
+}
+
+/* Header — canonical modal-header shape (common.css) */
+.notification-confirm-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  min-height: var(--modal-header-min-height);
+  padding: var(--modal-header-padding);
+  border-bottom: 1px solid var(--border);
 }
 
 .notification-confirm-icon {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 16px;
-  display: flex;
+  flex: 0 0 28px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  color: var(--confirm-tone-text);
+  background: var(--confirm-tone-bg);
+  border: 1px solid var(--confirm-tone-border);
 }
 
 .notification-confirm-icon svg {
-  width: 24px;
-  height: 24px;
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.2;
 }
 
 .notification-confirm-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
   color: var(--text-primary);
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0 0 8px;
-  line-height: 1.3;
+  font-size: var(--modal-title-size);
+  font-weight: var(--modal-title-weight);
+  line-height: var(--modal-title-line);
+  overflow-wrap: anywhere;
+}
+
+/* Body */
+.notification-confirm-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px 14px 14px;
 }
 
 .notification-confirm-message {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 14px;
-  line-height: 1.5;
-  margin: 0 0 24px;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  line-height: 1.55;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
-.notification-confirm-buttons {
+/* Footer */
+.notification-confirm-footer {
   display: flex;
-  gap: 12px;
-  justify-content: stretch;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+  min-height: 48px;
+  padding: 9px 12px;
+  border-top: 1px solid var(--border);
 }
 
 .notification-btn {
-  padding: 11px 24px;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  height: 30px;
+  padding: 0 12px 1px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   cursor: pointer;
-  transition: all 0.2s;
-  flex: 1;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
 }
 
 .notification-btn-cancel {
-  background: rgba(61, 61, 61, 1);
-  color: var(--text-primary);
-  border: 1px solid rgba(64, 64, 64, 1);
+  background: var(--bg-tertiary);
+  border-color: var(--border);
+  color: #e0e0e0;
 }
 
 .notification-btn-cancel:hover {
-  background: rgba(45, 45, 45, 1);
+  background: #464646;
   color: var(--text-primary);
 }
 
 .notification-btn-confirm {
   background: var(--accent);
-  color: var(--text-primary);
+  border-color: var(--accent);
+  color: #ffffff;
 }
 
 .notification-btn-confirm:hover {
   background: var(--accent-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  border-color: var(--accent-hover);
+}
+
+.notification-btn-confirm.notification-btn-danger {
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+.notification-btn-confirm.notification-btn-danger:hover {
+  background: var(--danger-dark);
+  border-color: var(--danger-dark);
+}
+
+/* Destructive action next to a primary one (e.g. Replace beside Merge):
+   outlined so it never reads as the default, filled on hover. */
+.notification-btn-destructive {
+  background: transparent;
+  border-color: var(--danger);
+  color: var(--danger-light);
+}
+
+.notification-btn-destructive:hover {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #ffffff;
+}
+
+.notification-btn:focus {
+  outline: none;
 }
 
 .notification-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--bg-secondary), 0 0 0 4px var(--accent);
 }
 
-.notification-confirm.notification-confirm-emphasis .notification-btn-confirm.notification-btn-warning {
-  background: var(--warning);
-}
-
-.notification-confirm.notification-confirm-emphasis .notification-btn-confirm.notification-btn-warning:hover {
-  background: var(--warning-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
-}
-
-.notification-confirm.notification-confirm-emphasis .notification-btn-confirm.notification-btn-warning:focus-visible {
-  outline-color: var(--warning-light);
-}
-
-.notification-confirm.notification-confirm-emphasis .notification-btn-confirm.notification-btn-danger {
-  background: var(--danger);
-}
-
-.notification-confirm.notification-confirm-emphasis .notification-btn-confirm.notification-btn-danger:hover {
-  background: var(--danger-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-}
-
-.notification-confirm.notification-confirm-emphasis .notification-btn-confirm.notification-btn-danger:focus-visible {
-  outline-color: var(--danger-light);
+.notification-btn-confirm.notification-btn-danger:focus-visible,
+.notification-btn-destructive:focus-visible {
+  box-shadow: 0 0 0 2px var(--bg-secondary), 0 0 0 4px var(--danger-light);
 }
 
 /* Loading Spinner */
@@ -320,40 +343,12 @@
 }
 
 .notification-micro .notification-toast-content {
-  padding: 8px 12px;
-  gap: 8px;
-}
-
-.notification-micro .notification-icon {
-  width: 14px;
-  height: 14px;
-}
-
-.notification-micro .notification-icon svg {
-  width: 14px;
-  height: 14px;
-}
-
-.notification-micro .notification-message {
-  font-size: 12px;
+  padding: 7px 10px 7px 12px;
 }
 
 /* Responsive Design */
 @media (max-width: 480px) {
   .notification-container {
     max-width: calc(100vw - 40px);
-  }
-
-  .notification-confirm {
-    width: calc(100vw - 40px);
-    max-width: none;
-  }
-
-  .notification-confirm-buttons {
-    flex-direction: column;
-  }
-
-  .notification-btn {
-    width: 100%;
   }
 }

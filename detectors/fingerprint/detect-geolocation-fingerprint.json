@@ -5,66 +5,150 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2025-01-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API",
   "icon": "geolocation_fingerprint.png",
-  "description": "Geolocation API access for location-based fingerprinting and user tracking",
+  "description": "Location requests and coordinate-field access; maps, navigation and local services can produce the same evidence",
   "detection": {
     "js_hooks": [
       {
-        "description": "Gets current user location",
+        "id": "js_hooks-1",
+        "description": "Requests current location; success, permission and returned location are unknown",
         "enabled": true,
-        "confidence": 65,
+        "standalone": true,
+        "confidence": 10,
         "target": "Geolocation.prototype.getCurrentPosition"
       },
       {
-        "description": "Watches user location continuously",
+        "id": "js_hooks-2",
+        "description": "Requests location updates; success and update frequency are unknown",
         "enabled": true,
-        "confidence": 65,
+        "standalone": true,
+        "confidence": 10,
         "target": "Geolocation.prototype.watchPosition"
-      }
-    ],
-    "window": [
-      {
-        "path": "navigator.geolocation",
-        "description": "Geolocation API access point",
-        "condition": "typeof object"
       },
       {
-        "path": "navigator.geolocation.getCurrentPosition",
-        "description": "Location request method",
-        "condition": "typeof function"
+        "id": "hook-location-latitude",
+        "description": "Reads a latitude coordinate; the value is not observed",
+        "enabled": true,
+        "standalone": true,
+        "confidence": 10,
+        "target": "GeolocationCoordinates.prototype.latitude"
+      },
+      {
+        "id": "hook-location-longitude",
+        "description": "Reads a longitude coordinate; the value is not observed",
+        "enabled": true,
+        "standalone": true,
+        "confidence": 10,
+        "target": "GeolocationCoordinates.prototype.longitude"
+      },
+      {
+        "id": "hook-location-altitude",
+        "description": "Reads altitude; availability and value are unknown",
+        "enabled": true,
+        "standalone": true,
+        "confidence": 5,
+        "target": "GeolocationCoordinates.prototype.altitude"
+      },
+      {
+        "id": "hook-location-heading",
+        "description": "Reads heading; availability and value are unknown",
+        "enabled": true,
+        "standalone": true,
+        "confidence": 5,
+        "target": "GeolocationCoordinates.prototype.heading"
+      },
+      {
+        "id": "hook-location-speed",
+        "description": "Reads speed; availability and value are unknown",
+        "enabled": true,
+        "standalone": true,
+        "confidence": 5,
+        "target": "GeolocationCoordinates.prototype.speed"
       }
     ],
     "content": [
       {
+        "id": "content-1",
         "text": "navigator.geolocation",
         "scope": "scripts",
-        "description": "Geolocation API usage",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to navigator.geolocation (usage and intent unconfirmed)",
+        "confidence": 5,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true
       },
       {
+        "id": "content-2",
         "text": "getCurrentPosition",
         "scope": "scripts",
-        "description": "Location acquisition in scripts",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to getCurrentPosition (usage and intent unconfirmed)",
+        "confidence": 5,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true
       },
       {
+        "id": "content-3",
         "text": "watchPosition",
         "scope": "scripts",
-        "description": "Continuous location tracking",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to watchPosition (usage and intent unconfirmed)",
+        "confidence": 5,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "location-request-coordinate-pair",
+      "name": "Location request and horizontal coordinate access",
+      "confidence": 25,
+      "when": {
+        "all": [
+          { "any": [{ "pattern": "js_hooks-1" }, { "pattern": "js_hooks-2" }] },
+          { "pattern": "hook-location-latitude" },
+          { "pattern": "hook-location-longitude" }
+        ]
+      }
+    },
+    {
+      "id": "location-watch-motion",
+      "name": "Location updates with horizontal coordinates and motion access",
+      "confidence": 35,
+      "when": {
+        "all": [
+          { "pattern": "js_hooks-2" },
+          { "pattern": "hook-location-latitude" },
+          { "pattern": "hook-location-longitude" },
+          { "pattern": "hook-location-heading" },
+          { "pattern": "hook-location-speed" }
+        ]
+      }
+    },
+    {
+      "id": "location-watch-spatial-motion",
+      "name": "Location updates with horizontal, altitude and motion access",
+      "confidence": 40,
+      "when": {
+        "all": [
+          { "pattern": "js_hooks-2" },
+          { "pattern": "hook-location-latitude" },
+          { "pattern": "hook-location-longitude" },
+          { "pattern": "hook-location-heading" },
+          { "pattern": "hook-location-speed" },
+          { "pattern": "hook-location-altitude" }
+        ]
+      }
+    }
+  ]
 }

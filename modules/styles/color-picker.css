@@ -1,0 +1,165 @@
+/* ============================================
+   COLOR PICKER — in-popup popover that replaces the native
+   <input type="color"> dialog (modules/ui/color-picker.js).
+   2.8 dark look: #323232 card, #4b4b4b borders, 8px radius.
+   ============================================ */
+
+.cp-popover {
+  --cp-hue: hsl(0, 100%, 50%);
+  --cp-color: #000000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9990;
+  width: 236px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #323232;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+  color: #e0e0e0;
+  font-family: var(--font-sans);
+  user-select: none;
+}
+
+.cp-popover[hidden] {
+  display: none;
+}
+
+/* Saturation (x) / brightness (y) area */
+.cp-sv {
+  position: relative;
+  height: 128px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(to top, #000000, rgba(0, 0, 0, 0)),
+    linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0)),
+    var(--cp-hue);
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.cp-sv-handle,
+.cp-hue-handle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, -50%);
+  outline: none;
+}
+
+.cp-sv-handle {
+  background: var(--cp-color);
+}
+
+.cp-sv-handle:focus-visible,
+.cp-hue-handle:focus-visible {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45), 0 0 0 4px rgba(59, 130, 246, 0.6);
+}
+
+.cp-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cp-preview {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--cp-color);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+/* Hue slider */
+.cp-hue {
+  position: relative;
+  flex: 1;
+  height: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+  cursor: pointer;
+  touch-action: none;
+}
+
+.cp-hue-handle {
+  top: 50%;
+  background: var(--cp-hue);
+}
+
+/* HEX / R / G / B fields */
+.cp-fields {
+  display: grid;
+  grid-template-columns: 1.9fr 1fr 1fr 1fr;
+  gap: 6px;
+}
+
+.cp-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+}
+
+.cp-input {
+  width: 100%;
+  height: 28px;
+  padding: 0 4px;
+  background: #2d2d2d;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: #e0e0e0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-align: center;
+  outline: none;
+}
+
+.cp-input:focus {
+  border-color: var(--accent);
+}
+
+.cp-field-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #b3b3b3;
+}
+
+/* Preset swatches (extension palette) */
+.cp-presets {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.cp-preset {
+  aspect-ratio: 1;
+  width: 100%;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+}
+
+.cp-preset:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.cp-preset:focus-visible,
+.cp-preset[aria-pressed="true"] {
+  box-shadow: 0 0 0 2px #323232, 0 0 0 3px #e0e0e0;
+}

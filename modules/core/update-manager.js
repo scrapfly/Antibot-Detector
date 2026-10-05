@@ -186,6 +186,9 @@ class UpdateManager {
             const result = await chrome.storage.local.get('scrapfly_detectors');
             const storageData = await StorageManager.normalizeStoredValue('scrapfly_detectors', result.scrapfly_detectors) || {};
             const localDetectors = storageData.detectors || {};
+            // Official detectors the user deleted stay deleted: never offered as "new"
+            const deletedRes = await chrome.storage.local.get('scrapfly_deleted_official_detectors');
+            const deletedOfficial = new Set(Array.isArray(deletedRes.scrapfly_deleted_official_detectors) ? deletedRes.scrapfly_deleted_official_detectors : []);
 
             // Collect all detector fetch promises for parallel execution
             const fetchPromises = [];
@@ -198,6 +201,7 @@ class UpdateManager {
                 }
 
                 for (const detectorId of categoryData.detectors) {
+                    if (deletedOfficial.has(detectorId) && !localDetectors[category]?.[detectorId]) continue;
                     fetchPromises.push(
                         this.fetchRemoteDetector(category, detectorId)
                             .then(remoteDetector => ({ category, detectorId, remoteDetector }))
@@ -314,7 +318,11 @@ class UpdateManager {
             let updatedCount = 0;
             let failedCount = 0;
 
+            const deletedRes = await chrome.storage.local.get('scrapfly_deleted_official_detectors');
+            const deletedOfficial = new Set(Array.isArray(deletedRes.scrapfly_deleted_official_detectors) ? deletedRes.scrapfly_deleted_official_detectors : []);
+
             for (const update of pendingUpdates) {
+                if (deletedOfficial.has(update.id) && !detectors[update.category]?.[update.id]) continue;
                 try {
                     // Fetch the full detector data
                     const remoteDetector = await this.fetchRemoteDetector(update.category, update.id);

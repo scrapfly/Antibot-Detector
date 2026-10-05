@@ -5,55 +5,147 @@
   "enabled": true,
   "category": "ANTIBOT",
   "difficulty": "Medium",
-  "lastUpdated": "2024-10-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-05",
+  "version": "2.0.0",
   "website": "https://www.threatmetrix.com/",
   "icon": "custom.png",
   "description": "LexisNexis ThreatMetrix fingerprinting service for fraud prevention and device identification",
   "detection": {
-    "content": [
-      {
-        "confidence": 50,
-        "description": "ThreatMetrix reference",
-        "text": "ThreatMetrix",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      }
-    ],
     "url": [
       {
-        "confidence": 95,
-        "description": "ThreatMetrix fingerprint check endpoint",
-        "text": "fp/check.js",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "tmx-tags",
+        "confidence": 85,
+        "description": "ThreatMetrix profiling tag (fp/tags.js?org_id=...)",
+        "text": "^https://(?:h\\.online-metrix\\.net|[a-z0-9-]+\\.online-metrix\\.net)/fp/tags(?:\\.js)?\\?(?:[^#]*&)?org_id=",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "confidence": 85,
-        "description": "ThreatMetrix organization ID parameter",
-        "text": "org_id=",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "tmx-check",
+        "confidence": 70,
+        "description": "ThreatMetrix profiling resource (check.js, sym.map, clear.png)",
+        "text": "^https://(?:h\\.online-metrix\\.net|[a-z0-9-]+\\.online-metrix\\.net)/fp/(?:check\\.js|clear\\.png|sym\\.map|ls_fp\\.html)",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
+      },
+      {
+        "id": "tmx-first-party-tags",
+        "confidence": 50,
+        "standalone": false,
+        "description": "First-party (CNAME) ThreatMetrix tag with org_id and session_id",
+        "text": "^https?://[^/?#]+/fp/tags(?:\\.js)?\\?(?:[^#]*&)?org_id=[A-Za-z0-9]{6,12}&(?:[^#]*&)?session_id=",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "tmx-profiling-reference",
+        "confidence": 10,
+        "description": "ThreatMetrix profiling globals in scripts",
+        "text": "tmx_(?:profiling_started|run_page_fingerprinting)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
       }
     ],
     "window": [
       {
-        "path": "BNQL",
-        "condition": "typeof object",
-        "confidence": 90,
-        "description": "ThreatMetrix analytics object"
+        "id": "tmx-profiling-flag",
+        "path": "tmx_profiling_started",
+        "condition": "typeof boolean",
+        "confidence": 70,
+        "description": "ThreatMetrix profiling flag"
       },
       {
-        "path": "BNQL.Config",
-        "condition": "typeof object",
-        "confidence": 95,
-        "description": "ThreatMetrix configuration"
+        "id": "tmx-page-fingerprint",
+        "path": "tmx_run_page_fingerprinting",
+        "condition": "typeof function",
+        "confidence": 60,
+        "description": "ThreatMetrix page fingerprint function"
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "tmx-tag-running",
+      "name": "Profiling tag with its runtime",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "tmx-tags"
+              },
+              {
+                "pattern": "tmx-first-party-tags"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "tmx-profiling-flag"
+              },
+              {
+                "pattern": "tmx-page-fingerprint"
+              },
+              {
+                "pattern": "tmx-profiling-reference"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "tmx-tag-resources",
+      "name": "Profiling tag with its follow-up resources",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "tmx-tags"
+              },
+              {
+                "pattern": "tmx-first-party-tags"
+              }
+            ]
+          },
+          {
+            "pattern": "tmx-check"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tmx-first-party-runtime",
+      "name": "First-party tag with ThreatMetrix resources or flag",
+      "confidence": 80,
+      "when": {
+        "all": [
+          {
+            "pattern": "tmx-first-party-tags"
+          },
+          {
+            "any": [
+              {
+                "pattern": "tmx-check"
+              },
+              {
+                "pattern": "tmx-profiling-flag"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

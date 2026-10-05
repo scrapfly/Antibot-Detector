@@ -5,58 +5,116 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2025-01-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API",
   "icon": "clipboard_fingerprint.png",
-  "description": "Clipboard API access used for fingerprinting clipboard contents and capabilities",
+  "description": "Clipboard API references and attempted reads or writes; successful access and fingerprinting intent are unconfirmed",
   "detection": {
     "js_hooks": [
       {
-        "description": "Reads clipboard contents for fingerprinting",
+        "id": "clipboard-read",
+        "description": "Attempts to read clipboard data (result and intent unconfirmed)",
         "enabled": true,
-        "confidence": 65,
+        "standalone": true,
+        "confidence": 5,
         "target": "Clipboard.prototype.read"
       },
       {
-        "description": "Reads plain text from clipboard",
+        "id": "clipboard-read-text",
+        "description": "Attempts to read clipboard text (result and intent unconfirmed)",
         "enabled": true,
-        "confidence": 65,
+        "standalone": true,
+        "confidence": 5,
         "target": "Clipboard.prototype.readText"
       },
       {
-        "description": "Writes to clipboard for capability detection",
+        "id": "clipboard-write",
+        "description": "Attempts to write clipboard data (result and intent unconfirmed)",
         "enabled": true,
-        "confidence": 65,
+        "standalone": true,
+        "confidence": 5,
         "target": "Clipboard.prototype.write"
-      }
-    ],
-    "window": [
+      },
       {
-        "path": "navigator.clipboard",
-        "description": "Clipboard API access point",
-        "condition": "typeof object"
+        "id": "clipboard-write-text",
+        "description": "Attempts to write clipboard text (result and intent unconfirmed)",
+        "enabled": true,
+        "standalone": true,
+        "confidence": 5,
+        "target": "Clipboard.prototype.writeText"
       }
     ],
     "content": [
       {
+        "id": "clipboard-api-reference",
         "text": "navigator.clipboard",
         "scope": "scripts",
-        "description": "Clipboard API usage",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to navigator.clipboard (usage and intent unconfirmed)",
+        "confidence": 5,
         "textRegex": false,
-        "textWholeWord": false,
+        "textWholeWord": true,
         "textCaseSensitive": false
       },
       {
+        "id": "clipboard-read-text-reference",
         "text": "readText",
         "scope": "scripts",
-        "description": "Clipboard read operations",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to readText (usage and intent unconfirmed)",
+        "confidence": 5,
         "textRegex": false,
-        "textWholeWord": false,
+        "textWholeWord": true,
         "textCaseSensitive": false
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "clipboard-script-references",
+      "name": "Clipboard API and text-read references (execution unconfirmed)",
+      "confidence": 10,
+      "when": {
+        "all": [
+          { "pattern": "clipboard-api-reference" },
+          { "pattern": "clipboard-read-text-reference" }
+        ]
+      }
+    },
+    {
+      "id": "clipboard-read-methods",
+      "name": "Both clipboard read methods called (access and intent unconfirmed)",
+      "confidence": 10,
+      "when": {
+        "all": [
+          { "pattern": "clipboard-read" },
+          { "pattern": "clipboard-read-text" }
+        ]
+      }
+    },
+    {
+      "id": "clipboard-read-and-write",
+      "name": "Clipboard read and write methods called (access and intent unconfirmed)",
+      "confidence": 15,
+      "when": {
+        "all": [
+          {
+            "any": [
+              { "pattern": "clipboard-read" },
+              { "pattern": "clipboard-read-text" }
+            ]
+          },
+          {
+            "any": [
+              { "pattern": "clipboard-write" },
+              { "pattern": "clipboard-write-text" }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

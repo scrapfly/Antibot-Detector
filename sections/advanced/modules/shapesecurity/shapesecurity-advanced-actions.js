@@ -8,7 +8,7 @@ ShapeSecurityAdvanced.prototype.checkVersion = async function() {
             // Get current tab
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
             if (!tab) {
-                NotificationHelper.error('No active tab found');
+                NotificationHelper.error(shapeSecurityText('advShapeNoActiveTab', 'No active tab found'));
                 return;
             }
 
@@ -23,7 +23,7 @@ ShapeSecurityAdvanced.prototype.checkVersion = async function() {
             Logger.network('[ShapeSecurity] Response:', response);
 
             if (response && response.error) {
-                NotificationHelper.error('Error: ' + response.error);
+                NotificationHelper.error(shapeSecurityText('advShapeErrorFmt', 'Error: {0}', response.error));
                 return;
             }
 
@@ -38,7 +38,7 @@ ShapeSecurityAdvanced.prototype.checkVersion = async function() {
 
         } catch (error) {
             Logger.error('NETWORK', '[ShapeSecurity] Check version error:', error);
-            NotificationHelper.error('Failed to check version: ' + error.message);
+            NotificationHelper.error(shapeSecurityText('advCommonFailedCheckVersionFmt', 'Failed to check version: {0}', error.message));
         }
     };
 
@@ -50,33 +50,34 @@ ShapeSecurityAdvanced.prototype.showVersionModal = function(version) {
         const versionUpper = version.toUpperCase();
 
         const modal = this.createToolModal();
+        const valueCopied = shapeSecurityText('advValueCopied', 'Value copied');
 
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 400px; max-height: 90vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <h3 style="margin: 0; font-size: 16px; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 20px;">🟠</span> Shape Security Version
+                        <span style="font-size: 20px;">🟠</span> ${shapeSecurityText('advShapeVersionTitle', 'Shape Security Version')}
                     </h3>
-                    <button class="advanced-modal-close-btn">×</button>
+                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
                 </div>
 
                 <!-- Version Info -->
                 <div style="background: var(--bg-tertiary); border-radius: 6px; padding: 12px; margin-bottom: 16px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">Detected Version:</span>
-                        <span class="copy-value" data-copy="${versionUpper}" data-copy-message="Value copied" style="color: ${version === 'v1' ? 'var(--success)' : 'var(--primary)'}; font-weight: 600; font-size: 14px; cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="Click to copy">${versionUpper}</span>
+                        <span style="color: var(--text-secondary); font-size: 13px;">${shapeSecurityText('advShapeDetectedVersion', 'Detected Version:')}</span>
+                        <span class="copy-value" data-copy="${versionUpper}" data-copy-message="${AdvancedUtils.escapeHtml(valueCopied)}" style="color: ${version === 'v1' ? 'var(--success)' : 'var(--primary)'}; font-weight: 600; font-size: 14px; cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="${AdvancedUtils.escapeHtml(shapeSecurityText('advCommonClickToCopy', 'Click to copy'))}">${versionUpper}</span>
                     </div>
                 </div>
 
                 <!-- Capture Requirements -->
                 <div style="background: var(--bg-tertiary); border-radius: 6px; padding: 16px; margin-bottom: 16px;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                        <h4 style="margin: 0; font-size: 13px; color: var(--text-primary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Capture Requirements</h4>
+                        <h4 style="margin: 0; font-size: 13px; color: var(--text-primary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">${shapeSecurityText('advShapeCaptureRequirements', 'Capture Requirements')}</h4>
                     </div>
 
                     <div style="background: var(--bg-primary); border: 1px solid var(--border); border-radius: 4px; padding: 12px;">
                         <div style="font-size: 12px; color: var(--text-primary);">
-                            Cookie + Headers
+                            ${shapeSecurityText('advShapeCookieAndHeaders', 'Cookie + Headers')}
                         </div>
                     </div>
                 </div>
@@ -84,7 +85,7 @@ ShapeSecurityAdvanced.prototype.showVersionModal = function(version) {
             </div>
         `;
 
-        this.bindCopyValueHandlers(modal, { defaultMessage: 'Value copied' });
+        this.bindCopyValueHandlers(modal, { defaultMessage: valueCopied });
         this.bindModalClose(modal);
         this.showToolModal(modal);
 
@@ -191,7 +192,7 @@ ShapeSecurityAdvanced.prototype.checkCookies = async function() {
 
         } catch (error) {
             Logger.error('NETWORK', '[ShapeSecurity] Check cookies error:', error);
-            NotificationHelper.error('Failed to check cookies: ' + error.message);
+            NotificationHelper.error(shapeSecurityText('advCommonFailedCheckCookiesFmt', 'Failed to check cookies: {0}', error.message));
         }
     };
 
@@ -274,7 +275,7 @@ ShapeSecurityAdvanced.prototype.extractScripts = async function() {
         } catch (error) {
             Logger.error('NETWORK', '[SHAPESECURITY-EXTRACT] Failed to start extraction:', error);
             Logger.error('NETWORK', '[SHAPESECURITY-EXTRACT] Error stack:', error.stack);
-            NotificationHelper.error('Failed to start extraction: ' + error.message);
+            NotificationHelper.error(shapeSecurityText('advCommonFailedStartExtractionFmt', 'Failed to start extraction: {0}', error.message));
         }
     };
 

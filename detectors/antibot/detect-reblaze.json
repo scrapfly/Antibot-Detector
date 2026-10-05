@@ -5,75 +5,183 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2024-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-05",
+  "version": "2.0.0",
   "website": "https://www.reblaze.com/",
   "icon": "reblaze_official.png",
   "description": "Reblaze cloud-based web security platform with bot management",
   "detection": {
     "cookie": [
       {
-        "name": "rbzid",
-        "confidence": 100,
-        "description": "Reblaze visitor ID",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "id": "rbzid-cookie",
+        "name": "^rbzid$",
+        "nameRegex": true,
+        "confidence": 80,
+        "description": "Reblaze visitor id cookie",
         "nameScope": "all",
         "valueScope": "all"
       },
       {
-        "name": "rbzsessionid",
-        "confidence": 100,
-        "description": "Reblaze session identifier",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "id": "rbz-session-cookie",
+        "name": "^rbzsessionid$",
+        "nameRegex": true,
+        "confidence": 70,
+        "description": "Reblaze session cookie",
         "nameScope": "all",
         "valueScope": "all"
       },
       {
-        "name": "rbz*",
-        "confidence": 100,
-        "description": "Reblaze prefix cookies",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "id": "rbz-aux-cookie",
+        "name": "^rbz(?!id$|sessionid$)[a-z0-9_]{2,20}$",
+        "nameRegex": true,
+        "confidence": 30,
+        "standalone": false,
+        "description": "Other rbz* cookies (not rbzid or rbzsessionid)",
         "nameScope": "all",
         "valueScope": "all"
       }
     ],
-    "header": [],
-    "url": [],
+    "url": [
+      {
+        "id": "reblaze-lib-script",
+        "confidence": 70,
+        "description": "Reblaze active-challenge library (<name>.ac_v2.lib.js)",
+        "text": "^https?://[^/?#]+/[A-Za-z0-9_-]{3,40}\\.ac_v2\\.lib\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
     "content": [
       {
-        "confidence": 50,
-        "description": "Reblaze ID in scripts",
-        "text": "rbzid",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "id": "rbzns-reference",
+        "confidence": 10,
+        "description": "Reblaze namespace in page scripts",
+        "text": "rbzns",
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
       },
       {
-        "confidence": 50,
-        "description": "Reblaze reference",
-        "text": "reblaze",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "id": "rbz-bereshit-reference",
+        "confidence": 20,
+        "standalone": false,
+        "description": "Reblaze challenge config key (rbzns.bereshit)",
+        "text": "bereshit",
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ],
+    "window": [
+      {
+        "id": "rbzns-object",
+        "path": "rbzns",
+        "condition": "typeof object",
+        "confidence": 75,
+        "description": "Reblaze namespace object (window.rbzns)"
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "reblaze-challenge-runtime",
+      "name": "Challenge library with its namespace",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "reblaze-lib-script"
+          },
+          {
+            "any": [
+              {
+                "pattern": "rbzns-object"
+              },
+              {
+                "pattern": "rbzns-reference"
+              },
+              {
+                "pattern": "rbz-bereshit-reference"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "reblaze-session",
+      "name": "Reblaze cookies with its namespace or library",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "rbzid-cookie"
+              },
+              {
+                "pattern": "rbz-session-cookie"
+              },
+              {
+                "pattern": "rbz-aux-cookie"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "rbzns-object"
+              },
+              {
+                "pattern": "reblaze-lib-script"
+              },
+              {
+                "pattern": "rbzns-reference"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "reblaze-cookie-pair",
+      "name": "Reblaze id and session cookies",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "pattern": "rbzid-cookie"
+          },
+          {
+            "any": [
+              {
+                "pattern": "rbz-session-cookie"
+              },
+              {
+                "pattern": "rbz-aux-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "reblaze-namespace-config",
+      "name": "Reblaze namespace running with its challenge config",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "pattern": "rbzns-object"
+          },
+          {
+            "pattern": "rbz-bereshit-reference"
+          }
+        ]
+      }
+    }
+  ]
 }

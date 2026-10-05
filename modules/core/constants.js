@@ -27,8 +27,10 @@ const Constants = Object.freeze({
     REQUEST_DETECTION_PENDING_TIMEOUT: 15000, // max time to keep a pre-collection pending marker
     SAFETY_TIMEOUT: 5000,                  // 5 sec - safety fallback
     DETECTION_SKIP_THRESHOLD: 2000,        // skip detection for recent requests
-    DEFAULT_HOOKS_MAX_DETECTION_MS: 8000,  // max time for JS hooks detection
     HOOKS_DEADLINE_BUFFER_MS: 200,         // buffer added to hooks deadline
+
+    // ─── Detector Defaults ─────────────────────────────────────────────────────
+    DEFAULT_MATCH_CONFIDENCE: 80,          // confidence of a detector entry that declares none
 
     // ─── Retry Configuration ───────────────────────────────────────────────────
     DETECTOR_LOAD_MAX_RETRIES: 20,         // max retries for detector loading

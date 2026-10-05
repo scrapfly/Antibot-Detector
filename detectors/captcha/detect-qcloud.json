@@ -5,114 +5,117 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "High",
-  "lastUpdated": "2024-10-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-04",
+  "version": "1.2.0",
   "website": "https://cloud.tencent.com/product/tci",
   "icon": "custom.png",
   "description": "Tencent Cloud Captcha service for bot detection",
   "detection": {
     "url": [
       {
-        "confidence": 100,
-        "description": "QCloud Captcha main domain",
-        "text": "turing.captcha.qcloud.com",
-        "textRegex": false,
+        "id": "qcloud-sdk",
+        "confidence": 60,
+        "description": "Official Tencent CAPTCHA SDK resource, including the legacy captcha.qq.com loader; not proof of execution",
+        "text": "^https://(?:turing\\.captcha\\.qcloud\\.com/(?:TCaptcha|TJCaptcha)\\.js|ca\\.turing\\.captcha\\.qcloud\\.com/(?:TCaptcha-global|TJNCaptcha-global)\\.js|www\\.tycaptcha\\.com/TJNCaptcha-global\\.js|(?:ssl|t)\\.captcha\\.qq\\.com/TCaptcha\\.js)(?:[?#].*)?$",
+        "textRegex": true,
         "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
+        "textCaseSensitive": true,
+        "textScope": "all",
+        "standalone": true
       },
       {
-        "confidence": 100,
-        "description": "QCloud Captcha CDN domain (Tencent image server)",
-        "text": "turing.captcha.gtimg.com",
-        "textRegex": false,
+        "id": "qcloud-prehandle",
+        "confidence": 50,
+        "description": "Challenge handshake the SDK sends to its own capDomain before showing a challenge",
+        "text": "^https://(?:turing\\.captcha\\.qcloud\\.com|ca\\.turing\\.captcha\\.qcloud\\.com|(?:ssl|t)\\.captcha\\.qq\\.com)/cap_union_(?:prehandle|preload)(?:[?#]|$)",
+        "textRegex": true,
         "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
-      },
-      {
-        "confidence": 95,
-        "description": "QCloud Captcha JavaScript library",
-        "text": "tdc.js",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
+        "textCaseSensitive": true,
+        "textScope": "all",
+        "standalone": true
       }
     ],
     "content": [
       {
-        "confidence": 50,
-        "description": "QCloud Captcha main object",
+        "id": "qcloud-constructor-reference",
+        "confidence": 10,
+        "description": "Script reference to TencentCaptcha, runtime presence unconfirmed",
         "text": "TencentCaptcha",
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
       },
       {
-        "confidence": 50,
-        "description": "QCloud Captcha reference",
-        "text": "qcloud.captcha",
-        "textRegex": false,
+        "id": "qcloud-sdk-reference",
+        "confidence": 10,
+        "description": "Script reference to Tencent SDK filenames, loading unconfirmed",
+        "text": "\\b(?:TCaptcha(?:-global)?|TJCaptcha|TJNCaptcha-global)\\.js\\b",
+        "textRegex": true,
         "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "description": "Turing Captcha reference",
-        "text": "turing.captcha",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
       }
     ],
     "dom": [
       {
-        "selector": "#tencent_captcha",
-        "confidence": 95,
-        "description": "QCloud Captcha container element",
+        "id": "qcloud-challenge-frame",
+        "selector": "iframe[src='https://turing.captcha.qcloud.com/template/placeholder_v2.html'], iframe[src^='https://turing.captcha.qcloud.com/template/placeholder_v2.html?'], iframe[src='https://turing.captcha.qcloud.com/template/new_slide_placeholder.html'], iframe[src^='https://turing.captcha.qcloud.com/template/new_slide_placeholder.html?'], iframe[src='https://ca.turing.captcha.qcloud.com/template/placeholder_v2.html'], iframe[src^='https://ca.turing.captcha.qcloud.com/template/placeholder_v2.html?'], iframe[src='https://ca.turing.captcha.qcloud.com/template/new_slide_placeholder.html'], iframe[src^='https://ca.turing.captcha.qcloud.com/template/new_slide_placeholder.html?']",
+        "confidence": 60,
+        "description": "Tencent SDK challenge frame markup on the China or international host; visibility and verification unconfirmed",
         "selectorRegex": false,
         "selectorWholeWord": false,
-        "selectorCaseSensitive": false
-      },
-      {
-        "selector": ".tencent-captcha",
-        "confidence": 90,
-        "description": "QCloud Captcha container class",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
-      },
-      {
-        "selector": "iframe[src*='turing.captcha.qcloud.com']",
-        "confidence": 100,
-        "description": "QCloud Captcha iframe",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
-      },
-      {
-        "selector": "iframe[src*='turing.captcha.gtimg.com']",
-        "confidence": 100,
-        "description": "QCloud Captcha CDN iframe",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
+        "selectorCaseSensitive": true,
+        "standalone": true
       }
     ],
     "window": [
       {
+        "id": "qcloud-constructor",
         "path": "TencentCaptcha",
         "condition": "typeof function",
-        "confidence": 100,
-        "description": "QCloud Captcha constructor"
-      },
-      {
-        "path": "window.TencentCaptcha",
-        "condition": "typeof function",
-        "confidence": 100,
-        "description": "Window-level QCloud Captcha"
+        "confidence": 40,
+        "description": "TencentCaptcha constructor presence, not an executed challenge",
+        "standalone": true
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "qcloud-loaded-api",
+      "name": "Official SDK and compatible constructor present",
+      "when": {
+        "all": [{ "pattern": "qcloud-sdk" }, { "pattern": "qcloud-constructor" }]
+      },
+      "confidence": 70
+    },
+    {
+      "id": "qcloud-sdk-prehandle",
+      "name": "Official SDK and its challenge handshake request",
+      "when": {
+        "all": [{ "pattern": "qcloud-sdk" }, { "pattern": "qcloud-prehandle" }]
+      },
+      "confidence": 80
+    },
+    {
+      "id": "qcloud-sdk-frame",
+      "name": "Official SDK and Tencent challenge frame markup present",
+      "when": {
+        "all": [{ "pattern": "qcloud-sdk" }, { "pattern": "qcloud-challenge-frame" }]
+      },
+      "confidence": 85
+    },
+    {
+      "id": "qcloud-integrated-frame",
+      "name": "SDK, challenge frame markup and constructor corroborate integration",
+      "when": {
+        "all": [{ "pattern": "qcloud-sdk" }, { "pattern": "qcloud-challenge-frame" }, { "pattern": "qcloud-constructor" }]
+      },
+      "confidence": 95
+    }
+  ]
 }

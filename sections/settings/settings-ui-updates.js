@@ -2,19 +2,19 @@
 // after the file split. Requires settings-ui.js to load first.
 
 SettingsUI.handleSaveSettings = async function() {
-  Logger.ui('handleSaveSettings() called');
+  Logger.debug('UI', 'handleSaveSettings() called');
   const _t = (typeof I18n !== 'undefined') ? I18n : null;
   const _tr = (key, fallback) => (_t && _t.get(key)) || fallback;
   const _fmt = (key, fallback, ...args) => (_t && _t.format(key, ...args)) || fallback;
 
   try {
-    Logger.ui('Getting settings from UI...');
+    Logger.debug('UI', 'Getting settings from UI...');
     const newSettings = this.getSettingsFromUI();
-    Logger.ui('Settings from UI:', newSettings);
+    Logger.debug('UI', 'Settings from UI:', newSettings);
 
-    Logger.ui('Validating settings...');
+    Logger.debug('UI', 'Validating settings...');
     const validation = this.validateSettings(newSettings);
-    Logger.ui('Validation result:', validation);
+    Logger.debug('UI', 'Validation result:', validation);
 
     if (!validation.isValid) {
       Logger.warn('UI', 'Settings validation failed:', validation.errors);
@@ -24,17 +24,17 @@ SettingsUI.handleSaveSettings = async function() {
       return;
     }
 
-    Logger.ui('Merging settings...');
+    Logger.debug('UI', 'Merging settings...');
     this.settings = this.deepMerge(this.settings, newSettings);
-    Logger.ui('Settings merged:', this.settings);
+    Logger.debug('UI', 'Settings merged:', this.settings);
 
-    Logger.ui('Saving settings to storage...');
+    Logger.debug('UI', 'Saving settings to storage...');
     await this.saveSettings();
-    Logger.ui('Settings saved successfully');
+    Logger.debug('UI', 'Settings saved successfully');
 
-    Logger.ui('Closing modal...');
+    Logger.debug('UI', 'Closing modal...');
     this.hideSettings();
-    Logger.ui('Modal closed');
+    Logger.debug('UI', 'Modal closed');
 
   } catch (error) {
     Logger.error('UI', 'Failed to handle save settings:', error);
@@ -58,9 +58,12 @@ SettingsUI.updateIncompatibleUpdatesDisplay = async function() {
 
     warning.style.display = 'flex';
 
-    const countSpan = document.querySelector('#incompatibleCount');
-    if (countSpan) {
-      countSpan.textContent = String(updates.length);
+    // data-i18n-args keeps the count when the language changes (I18n.apply re-formats it)
+    const message = document.querySelector('#incompatibleMessage');
+    if (message) {
+      message.setAttribute('data-i18n-args', String(updates.length));
+      message.textContent = FormatUtils.t('settingsUiIncompatibleCountFmt',
+        'Detector updates that need a newer extension version: {0}', updates.length);
     }
 
     const list = document.querySelector('#incompatibleDetailsList');
@@ -77,7 +80,8 @@ SettingsUI.updateIncompatibleUpdatesDisplay = async function() {
 
         const versionSpan = document.createElement('span');
         versionSpan.className = 'incompatible-item-version';
-        versionSpan.textContent = `v${update.remoteVersion} (needs ext v${update.minExtensionVersion})`;
+        versionSpan.textContent = FormatUtils.t('settingsUiNeedsExtVersionFmt', 'v{0} (needs ext v{1})',
+          update.remoteVersion, update.minExtensionVersion);
 
         item.appendChild(nameSpan);
         item.appendChild(versionSpan);
@@ -105,7 +109,7 @@ SettingsUI.handleCheckUpdatesNow = async function() {
     <svg width="16" height="16" viewBox="0 0 24 24" class="spin">
       <path d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" fill="currentColor"/>
     </svg>
-    Checking...
+    ${FormatUtils.escapeHtml(_tr('settingsUiChecking', 'Checking...'))}
   `;
 
   try {
@@ -137,15 +141,14 @@ SettingsUI.handleCheckUpdatesNow = async function() {
 
     const incompatibleCount = await UpdateManager.getIncompatibleUpdatesCount();
     if (incompatibleCount > 0) {
-      const msg = incompatibleCount === 1
-        ? '1 detector update requires a newer extension version.'
-        : `${incompatibleCount} detector updates require a newer extension version.`;
+      const msg = FormatUtils.t('settingsUiIncompatibleCountFmt',
+        'Detector updates that need a newer extension version: {0}', incompatibleCount);
       NotificationHelper.warning(msg, { duration: 8000 });
     }
 
     await this.updateIncompatibleUpdatesDisplay();
 
-    Logger.ui('Update check completed:', { pendingCount, incompatibleCount, result });
+    Logger.debug('UI', 'Update check completed:', { pendingCount, incompatibleCount, result });
 
   } catch (error) {
     Logger.error('UI', 'Failed to check for updates:', error);

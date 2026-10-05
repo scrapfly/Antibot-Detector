@@ -5,97 +5,97 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2025-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Performance",
   "icon": "performance_fingerprint.png",
-  "description": "Performance timing and resource measurement fingerprinting for device and network profiling",
+  "description": "Performance timing, entry enumeration and memory reads; ordinary monitoring also matches and fingerprinting intent is unconfirmed",
   "detection": {
     "js_hooks": [
+      { "id": "js_hooks-1", "standalone": true, "description": "Reads high-resolution timestamps for timing analysis", "enabled": true, "confidence": 5, "target": "Performance.prototype.now" },
+      { "id": "js_hooks-2", "description": "Accesses navigation timing data (deprecated API)", "enabled": false, "confidence": 5, "target": "Performance.prototype.timing" },
+      { "id": "js_hooks-3", "standalone": true, "description": "Reads memory usage statistics; ordinary monitoring also matches", "enabled": true, "confidence": 15, "target": "Performance.prototype.memory" },
+      { "id": "js_hooks-4", "standalone": true, "description": "Retrieves performance entries by type", "enabled": true, "confidence": 10, "target": "Performance.prototype.getEntriesByType" },
+      { "id": "js_hooks-5", "description": "Reads performance entry start time", "enabled": false, "confidence": 5, "target": "PerformanceEntry.prototype.startTime" },
+      { "id": "js_hooks-6", "description": "Reads connection timing", "enabled": false, "confidence": 5, "target": "PerformanceResourceTiming.prototype.connectEnd" },
+      { "id": "js_hooks-7", "description": "Reads connection start time", "enabled": false, "confidence": 5, "target": "PerformanceResourceTiming.prototype.connectStart" },
+      { "id": "js_hooks-8", "description": "Reads decoded resource size", "enabled": false, "confidence": 5, "target": "PerformanceResourceTiming.prototype.decodedBodySize" },
+      { "id": "js_hooks-9", "description": "Reads domain lookup end time", "enabled": false, "confidence": 5, "target": "PerformanceResourceTiming.prototype.domainLookupEnd" },
+      { "id": "js_hooks-10", "description": "Reads domain lookup start time", "enabled": false, "confidence": 5, "target": "PerformanceResourceTiming.prototype.domainLookupStart" },
+      { "id": "js_hooks-11", "description": "Reads response end time", "enabled": false, "confidence": 5, "target": "PerformanceResourceTiming.prototype.responseEnd" },
+      { "id": "js_hooks-12", "description": "Reads TLS handshake start time", "enabled": false, "confidence": 5, "target": "PerformanceResourceTiming.prototype.secureConnectionStart" },
+      { "id": "js_hooks-13", "description": "Reads transfer size including headers", "enabled": false, "confidence": 5, "target": "PerformanceResourceTiming.prototype.transferSize" },
+      { "id": "js_hooks-14", "description": "Reads navigation start timestamp", "enabled": false, "confidence": 5, "target": "PerformanceTiming.prototype.navigationStart" }
+    ],
+    "content": [
       {
-        "description": "Reads high-resolution timestamps for timing analysis",
-        "enabled": true,
-        "confidence": 80,
-        "target": "Performance.prototype.now"
+        "id": "performance-now-reference",
+        "text": "performance.now",
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to performance.now (usage and intent unconfirmed)",
+        "confidence": 5,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true
       },
       {
-        "description": "Accesses navigation timing data (deprecated API)",
-        "enabled": false,
-        "confidence": 80,
-        "target": "Performance.prototype.timing"
+        "id": "performance-memory-reference",
+        "text": "performance.memory",
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to performance.memory (usage and intent unconfirmed)",
+        "confidence": 10,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true
       },
       {
-        "description": "Reads memory usage statistics",
-        "enabled": true,
-        "confidence": 80,
-        "target": "Performance.prototype.memory"
-      },
-      {
-        "description": "Retrieves performance entries by type",
-        "enabled": true,
-        "confidence": 80,
-        "target": "Performance.prototype.getEntriesByType"
-      },
-      {
-        "description": "Reads performance entry start time",
-        "enabled": false,
-        "confidence": 75,
-        "target": "PerformanceEntry.prototype.startTime"
-      },
-      {
-        "description": "Reads connection timing for network fingerprinting",
-        "enabled": false,
-        "confidence": 80,
-        "target": "PerformanceResourceTiming.prototype.connectEnd"
-      },
-      {
-        "description": "Reads connection start time",
-        "enabled": false,
-        "confidence": 80,
-        "target": "PerformanceResourceTiming.prototype.connectStart"
-      },
-      {
-        "description": "Reads decoded resource size",
-        "enabled": false,
-        "confidence": 75,
-        "target": "PerformanceResourceTiming.prototype.decodedBodySize"
-      },
-      {
-        "description": "Reads domain lookup end time",
-        "enabled": false,
-        "confidence": 75,
-        "target": "PerformanceResourceTiming.prototype.domainLookupEnd"
-      },
-      {
-        "description": "Reads domain lookup start time",
-        "enabled": false,
-        "confidence": 75,
-        "target": "PerformanceResourceTiming.prototype.domainLookupStart"
-      },
-      {
-        "description": "Reads response end time",
-        "enabled": false,
-        "confidence": 75,
-        "target": "PerformanceResourceTiming.prototype.responseEnd"
-      },
-      {
-        "description": "Reads TLS handshake start time",
-        "enabled": false,
-        "confidence": 80,
-        "target": "PerformanceResourceTiming.prototype.secureConnectionStart"
-      },
-      {
-        "description": "Reads transfer size including headers",
-        "enabled": false,
-        "confidence": 75,
-        "target": "PerformanceResourceTiming.prototype.transferSize"
-      },
-      {
-        "description": "Reads navigation start timestamp",
-        "enabled": false,
-        "confidence": 75,
-        "target": "PerformanceTiming.prototype.navigationStart"
+        "id": "performance-entries-reference",
+        "text": "getEntriesByType",
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to getEntriesByType (usage and intent unconfirmed)",
+        "confidence": 10,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "performance-source-api-references",
+      "name": "Multiple performance API references in scripts; usage unconfirmed",
+      "confidence": 15,
+      "when": { "atLeast": 2, "of": [{ "pattern": "performance-now-reference" }, { "pattern": "performance-memory-reference" }, { "pattern": "performance-entries-reference" }] }
+    },
+    {
+      "id": "performance-timing-and-entries",
+      "name": "Timestamp reads and performance entry enumeration observed",
+      "confidence": 15,
+      "when": { "all": [{ "pattern": "js_hooks-1" }, { "pattern": "js_hooks-4" }] }
+    },
+    {
+      "id": "performance-memory-and-timing",
+      "name": "Memory statistics and timestamp reads observed",
+      "confidence": 20,
+      "when": { "all": [{ "pattern": "js_hooks-3" }, { "pattern": "js_hooks-1" }] }
+    },
+    {
+      "id": "performance-memory-and-entries",
+      "name": "Memory statistics and performance entry enumeration observed",
+      "confidence": 25,
+      "when": { "all": [{ "pattern": "js_hooks-3" }, { "pattern": "js_hooks-4" }] }
+    },
+    {
+      "id": "performance-memory-timing-and-entries",
+      "name": "Memory statistics, timestamps and performance entries accessed; intent unconfirmed",
+      "confidence": 30,
+      "when": { "all": [{ "pattern": "js_hooks-3" }, { "pattern": "js_hooks-1" }, { "pattern": "js_hooks-4" }] }
+    }
+  ]
 }

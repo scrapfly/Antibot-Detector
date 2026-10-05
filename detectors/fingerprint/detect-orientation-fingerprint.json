@@ -5,61 +5,76 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2025-01-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent",
   "icon": "orientation_fingerprint.png",
-  "description": "Device orientation and motion sensors for fingerprinting mobile and sensor-enabled devices",
+  "description": "Script references to orientation and motion APIs; sensor collection and fingerprinting intent are unconfirmed",
   "detection": {
-    "js_hooks": [
-      {
-        "description": "Adds listeners for device sensors",
-        "enabled": true,
-        "confidence": 65,
-        "target": "EventTarget.prototype.addEventListener",
-        "windowPath": "Window"
-      }
-    ],
-    "window": [
-      {
-        "path": "DeviceOrientationEvent",
-        "description": "Device orientation sensor API",
-        "condition": "typeof function"
-      },
-      {
-        "path": "DeviceMotionEvent",
-        "description": "Device motion sensor API",
-        "condition": "typeof function"
-      }
-    ],
+    "js_hooks": [],
     "content": [
       {
+        "id": "content-1",
         "text": "deviceorientation",
         "scope": "scripts",
-        "description": "Device orientation event listeners",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to deviceorientation (usage and intent unconfirmed)",
+        "confidence": 10,
         "textRegex": false,
-        "textWholeWord": false,
+        "textWholeWord": true,
         "textCaseSensitive": false
       },
       {
+        "id": "content-2",
         "text": "devicemotion",
         "scope": "scripts",
-        "description": "Device motion event listeners",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to devicemotion (usage and intent unconfirmed)",
+        "confidence": 10,
         "textRegex": false,
-        "textWholeWord": false,
+        "textWholeWord": true,
         "textCaseSensitive": false
       },
       {
+        "id": "content-3",
         "text": "DeviceOrientationEvent",
         "scope": "scripts",
-        "description": "Device orientation API usage",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to DeviceOrientationEvent (availability checks and ordinary applications also match)",
+        "confidence": 5,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true
+      },
+      {
+        "id": "content-motion-event",
+        "text": "DeviceMotionEvent",
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to DeviceMotionEvent (availability checks and ordinary applications also match)",
+        "confidence": 5,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "orientation-motion-api-references",
+      "name": "Orientation and motion API names referenced in scripts",
+      "confidence": 10,
+      "when": { "all": [{ "pattern": "content-3" }, { "pattern": "content-motion-event" }] }
+    },
+    {
+      "id": "orientation-motion-event-references",
+      "name": "Orientation and motion event names referenced in scripts; collection unconfirmed",
+      "confidence": 15,
+      "when": { "all": [{ "pattern": "content-1" }, { "pattern": "content-2" }] }
+    }
+  ]
 }

@@ -39,8 +39,8 @@ TurnstileAdvanced.prototype.displayCookiesModal = function(cfClearanceCookie) {
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Turnstile Cookies</h3>
-                    <button class="advanced-modal-close-btn">×</button>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${this._txt('advCommonCookiesTitleFmt', '{0} Cookies', 'Turnstile')}</h3>
+                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
                 </div>
 
                 ${this.buildCookieStatusSummary(foundCount, 1)}
@@ -48,25 +48,25 @@ TurnstileAdvanced.prototype.displayCookiesModal = function(cfClearanceCookie) {
                 ${cfClearanceCookie ? `
                     <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <div class="copy-value" data-copy="cf_clearance" style="font-weight: 500; color: var(--text-primary); font-family: monospace; cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="Click to copy">cf_clearance</div>
+                            <div class="copy-value" data-copy="cf_clearance" style="font-weight: 500; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">cf_clearance</div>
                             <div style="display: flex; gap: 6px;">
                                 ${cfClearanceCookie.secure ? '<span style="font-size: 10px; background: var(--success); color: white; padding: 2px 6px; border-radius: 3px;">SECURE</span>' : ''}
                                 ${cfClearanceCookie.httpOnly ? '<span style="font-size: 10px; background: var(--bg-primary); color: var(--text-primary); padding: 2px 6px; border-radius: 3px;">HTTP</span>' : ''}
                             </div>
                         </div>
-                        <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(cfClearanceCookie.value)}" style="font-size: 11px; color: var(--text-secondary); word-break: break-all; font-family: monospace; background: var(--bg-primary); padding: 8px; border-radius: 4px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s;" title="Click to copy">${cfClearanceCookie.value.substring(0, 60)}${cfClearanceCookie.value.length > 60 ? '...' : ''}</div>
-                        <div style="font-size: 11px; color: var(--text-muted);">Domain: ${cfClearanceCookie.domain}</div>
+                        <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(cfClearanceCookie.value)}" style="font-size: 11px; color: var(--text-secondary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">${cfClearanceCookie.value.substring(0, 60)}${cfClearanceCookie.value.length > 60 ? '...' : ''}</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">${this._txt('advCommonDomainLabel', 'Domain:')} ${cfClearanceCookie.domain}</div>
                     </div>
                 ` : `
                     <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
                         <div style="font-size: 48px; margin-bottom: 12px;"></div>
-                        <div style="font-size: 14px;">No Turnstile cookies found</div>
+                        <div style="font-size: 14px;">${this._txt('advCommonNoCookiesFmt', 'No {0} cookies found', 'Turnstile')}</div>
                     </div>
                 `}
             </div>
         `;
 
-        this.bindCopyValueHandlers(modal, { defaultMessage: 'Copied' });
+        this.bindCopyValueHandlers(modal, { defaultMessage: this._txt('copiedNotification', 'Copied') });
         this.bindModalClose(modal);
         this.showToolModal(modal);
     };
@@ -80,8 +80,8 @@ TurnstileAdvanced.prototype.displayAnalysisModal = function(data) {
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Turnstile Scripts (${scripts.length})</h3>
-                    <button class="advanced-modal-close-btn">×</button>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${this._txt('advCommonScriptsTitleFmt', '{0} Scripts ({1})', 'Turnstile', scripts.length)}</h3>
+                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 12px;">
@@ -90,11 +90,11 @@ TurnstileAdvanced.prototype.displayAnalysisModal = function(data) {
                         return `
                             <div style="background: var(--bg-tertiary); padding: 14px; border-radius: 6px;">
                                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                    <span style="font-weight: 500;">Script ${idx + 1}</span>
+                                    <span style="font-weight: 500;">${this._txt('advCommonScript', 'Script')} ${idx + 1}</span>
                                     <span style="background: ${typeColor}; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 500;">Turnstile</span>
                                 </div>
-                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">URL</div>
-                                <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(script.url)}" style="font-size: 12px; color: var(--text-primary); word-break: break-all; font-family: monospace; background: var(--bg-primary); padding: 8px; border-radius: 4px; cursor: pointer; transition: background 0.2s;" title="Click to copy">${script.url}</div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">${this._txt('advCommonUrl', 'URL')}</div>
+                                <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(script.url)}" style="font-size: 12px; color: var(--text-primary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; cursor: pointer; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">${script.url}</div>
                             </div>
                         `;
                     }).join('')}
@@ -102,13 +102,13 @@ TurnstileAdvanced.prototype.displayAnalysisModal = function(data) {
 
                 ${scripts.length > 0 ? `
                     <button class="modal-export-code-btn" style="margin-top: 16px; width: 100%; padding: 10px; background: linear-gradient(135deg, #0074BF 0%, #0061B3 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">
-                        Export Code
+                        ${this._txt('advCommonExportCode', 'Export Code')}
                     </button>
                 ` : ''}
             </div>
         `;
 
-        this.bindCopyValueHandlers(modal, { defaultMessage: 'URL copied' });
+        this.bindCopyValueHandlers(modal, { defaultMessage: this._txt('advCommonUrlCopied', 'URL copied') });
         this.bindModalClose(modal);
 
         const exportBtn = modal.querySelector('.modal-export-code-btn');
@@ -124,41 +124,7 @@ TurnstileAdvanced.prototype.displayAnalysisModal = function(data) {
 
 
 TurnstileAdvanced.prototype.displayExportCodeModal = function(scripts) {
-        const modal = this.createToolModal({ zIndex: 10001 });
-
-        const languages = ['JavaScript', 'Python', 'Node.js', 'PHP', 'C#', 'Go'];
-
-        modal.innerHTML = `
-            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 700px; max-height: 80vh; overflow-y: auto; width: 95%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Export Code</h3>
-                    <button class="advanced-modal-close-btn">×</button>
-                </div>
-
-                <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
-                    ${languages.map(lang => `
-                        <button class="lang-tab-btn" data-lang="${lang}" style="padding: 8px 12px; border: none; background: var(--bg-tertiary); color: var(--text-primary); border-radius: 4px; cursor: pointer; font-size: 12px; transition: all 0.2s; ${lang === 'JavaScript' ? 'background: linear-gradient(135deg, #0074BF 0%, #0061B3 100%); color: white;' : ''}">
-                            ${lang}
-                        </button>
-                    `).join('')}
-                </div>
-
-                <div class="code-container" style="background: var(--bg-primary); border-radius: 6px; padding: 14px; overflow-x: auto; margin-bottom: 12px;">
-                    <pre style="margin: 0; font-family: monospace; font-size: 12px; color: var(--text-primary); white-space: pre-wrap; word-wrap: break-word;"><code id="codeContent"></code></pre>
-                </div>
-
-                <button class="copy-code-btn" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #0074BF 0%, #0061B3 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">
-                    Copy Code
-                </button>
-            </div>
-        `;
-
-        this.showToolModal(modal);
-
-        const tabs = modal.querySelectorAll('.lang-tab-btn');
-        const codeContent = modal.querySelector('#codeContent');
         const urls = scripts.map(s => s.url);
-
         const generateCode = (language) => {
             const templates = {
                 'JavaScript': `// Cloudflare Turnstile Scripts
@@ -257,35 +223,12 @@ ${urls.map(u => `        "${u}"`).join(',\n')}
     }
 }`
             };
-            return templates[language] || 'Not available';
+            return templates[language] || this._txt('advCommonCodeGenUnavailable', 'Code generation not available');
         };
 
-        const updateCode = (language) => {
-            codeContent.textContent = generateCode(language);
-
-            tabs.forEach(tab => {
-                if (tab.getAttribute('data-lang') === language) {
-                    tab.style.background = 'linear-gradient(135deg, #0074BF 0%, #0061B3 100%)';
-                    tab.style.color = 'white';
-                } else {
-                    tab.style.background = 'var(--bg-tertiary)';
-                    tab.style.color = 'var(--text-primary)';
-                }
-            });
-        };
-
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                updateCode(tab.getAttribute('data-lang'));
-            });
+        return AdvancedCodeDialog.open(this, {
+            title: this._txt('advCommonExportCode', 'Export Code'),
+            languages: ['JavaScript', 'Python', 'Node.js', 'PHP', 'C#', 'Go'].map(label => ({ id: label, label })),
+            getCode: (type, language) => generateCode(language)
         });
-
-        const copyBtn = modal.querySelector('.copy-code-btn');
-        copyBtn.addEventListener('click', () => {
-            AdvancedUtils.copyToClipboard(codeContent.textContent, copyBtn, { notificationMessage: 'Code copied' });
-        });
-
-        this.bindModalClose(modal);
-
-        updateCode('JavaScript');
     };

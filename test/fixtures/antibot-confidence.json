@@ -1,0 +1,601 @@
+{
+ "detect-akamai": {
+  "abck-cookie-name": {
+   "cookie": [
+    "_abck",
+    "truncated"
+   ]
+  },
+  "abck-sensor-cookie": {
+   "cookie": [
+    "_abck",
+    "68D1309F026260AE758FB2DD72720FEF~-1~YAAQ3W1lX0RagPKgAQ"
+   ]
+  },
+  "ak-bmsc-cookie": {
+   "cookie": [
+    "ak_bmsc",
+    "7BCCDFC532391C579E0AE5BB0EFCD7BC~000~YAAQ"
+   ]
+  },
+  "akam-pixel": {
+   "url": "https://www.example-shop.test/akam/13/pixel_26dcf39b"
+  },
+  "akam-sensor-script": {
+   "url": "https://www.walmart.com/akam/13/26dcf39b"
+  },
+  "akamai-edge-cookie": {
+   "cookie": [
+    "AKA_A2",
+    "A"
+   ]
+  },
+  "akamai-edge-server": {
+   "header": [
+    "server",
+    "AkamaiGHost"
+   ]
+  },
+  "bm-family-cookie": {
+   "cookie": [
+    "bm_mi",
+    "0130FAACEC582F14E125DE44492F7FF7~YAAQ"
+   ]
+  },
+  "bm-sz-cookie": {
+   "cookie": [
+    "bm_sz",
+    "BC8B72F9C991A5AD809FBFD17CCC7935~YAAQ3W1l"
+   ]
+  },
+  "bmak-object": {
+   "runtimeType": "object"
+  },
+  "bmak-reference": {
+   "source": "var t=window.bmak.sensor_data;"
+  },
+  "obfuscated-script-path": {
+   "url": "https://www.citi.com/S8C6PCek/7hz/8MW/KM2KEFEQaq/OkEwVwYf5zD3w2a3z1/S20SQQE/NEsGGT/ZSUWw"
+  },
+  "pixel-payload": {
+   "payload": {
+    "method": "POST",
+    "url": "https://www.example-shop.test/akam/13/pixel_26dcf39b",
+    "data": "ap=true&bt=0&fonts=1&jsv=3.6"
+   }
+  },
+  "pixel-variable": {
+   "source": "bazadebezolkohpepadr=\"123456789\""
+  },
+  "sbsd-cookie": {
+   "cookie": [
+    "sbsd",
+    "00000000"
+   ]
+  },
+  "sbsd-endpoint": {
+   "url": "https://www.example-shop.test/.well-known/sbsd/abc?v=1"
+  },
+  "sbsd-payload": {
+   "payload": {
+    "method": "POST",
+    "url": "https://www.example-shop.test/.well-known/sbsd/abc",
+    "data": "{\"body\":\"AAAA\"}"
+   }
+  },
+  "sensor-data-payload": {
+   "payload": {
+    "method": "POST",
+    "url": "https://www.walmart.com/akam/13/26dcf39b",
+    "data": "{\"sensor_data\":\"3;0;1;0;3290164;...\"}"
+   }
+  }
+ },
+ "detect-aws-waf": {
+  "aws-waf-integration-object": {
+   "runtimeType": "object"
+  },
+  "aws-waf-integration-reference": {
+   "source": "AwsWafIntegration.getToken().then(t => t);"
+  },
+  "aws-waf-token-cookie": {
+   "cookie": [
+    "aws-waf-token",
+    "d0f5c1b8-1a2b-4c3d-9e8f-0123456789ab:EAoAj"
+   ]
+  },
+  "captcha-host": {
+   "url": "https://fe4385362baa.ead381d8.eu-west-1.captcha.awswaf.com/fe4385362baa/306922cde096/8b22eb923d34/jsapi.js"
+  },
+  "cookie-domain-list": {
+   "runtimeType": "object"
+  },
+  "goku-props-object": {
+   "runtimeType": "object"
+  },
+  "goku-props-reference": {
+   "source": "window.gokuProps = {\"key\":\"AQIDAHjc\",\"iv\":\"CgAEaj\",\"context\":\"x\"};"
+  },
+  "token-host-endpoint": {
+   "url": "https://fe4385362baa.ead381d8.eu-west-1.token.awswaf.com/fe4385362baa/306922cde096/8b22eb923d34/inputs?client=browser"
+  },
+  "token-host-script": {
+   "url": "https://fe4385362baa.ead381d8.eu-west-1.token.awswaf.com/fe4385362baa/306922cde096/8b22eb923d34/challenge.js"
+  },
+  "waf-action-header": {
+   "header": [
+    "x-amzn-waf-action",
+    "challenge"
+   ]
+  },
+  "waf-challenge-id-header": {
+   "header": [
+    "x-amzn-waf-challenge-id",
+    "Root=1-6ac282d2-2194a6c628fe94635633071e"
+   ]
+  }
+ },
+ "detect-botguard": {
+  "bg-challenge-reference": {
+   "source": "ytcfg.set({\"bgChallenge\":{\"program\":\"x\"}});"
+  },
+  "bg-interpreter-reference": {
+   "source": "var c={interpreterUrl:'//www.google.com/js/th/x.js'};"
+  },
+  "botguard-interpreter": {
+   "url": "https://www.google.com/js/th/4IhPP34OrBw1XG3wWs6LNYyZaw07wNamlDlDq221_w0.js"
+  },
+  "trayride-object": {
+   "runtimeType": "object"
+  },
+  "waa-create": {
+   "url": "https://jnn-pa.googleapis.com/$rpc/google.internal.waa.v1.Waa/Create"
+  }
+ },
+ "detect-cheq": {
+  "cheq-ai-host": {
+   "url": "https://rti-eu.cheq.ai/v1/visit"
+  },
+  "cheq-callback-reference": {
+   "source": "function onCheqResponse(r){ return r; }"
+  },
+  "cheq-jsonp-tag": {
+   "dom": {
+    "tagName": "script",
+    "attributes": {
+     "data-jsonp": "onCheqResponse",
+     "src": "https://august.takingbackjuly.com/i/77e575fd2890c49f3e3880b68ac73551.js"
+    }
+   }
+  },
+  "cheq-sdk-object": {
+   "runtimeType": "object"
+  },
+  "cheq-sdk-reference": {
+   "source": "window.__CheqSdk && window.__CheqSdk.init();"
+  },
+  "cheq-tms-bootstrap": {
+   "url": "https://tms.cheq.ai/Cheq/prod/Bootstrap.js"
+  },
+  "cheqzone-host": {
+   "url": "https://ob.cheqzone.com/clicktrue_invocation.js"
+  },
+  "clicktrue-tag": {
+   "dom": {
+    "tagName": "script",
+    "attributes": {
+     "class": "ct_clicktrue_60961",
+     "src": "https://august.takingbackjuly.com/i/77e575fd2890c49f3e3880b68ac73551.js"
+    }
+   }
+  },
+  "cq-aux-cookie": {
+   "cookie": [
+    "_cq_session",
+    "1"
+   ]
+  },
+  "cq-id-cookie": {
+   "cookie": [
+    "_cq_duid",
+    "1.1759600000.abcdef"
+   ]
+  },
+  "cq-object": {
+   "runtimeType": "object"
+  }
+ },
+ "detect-cloudflare": {
+  "bot-management-script": {
+   "url": "https://www.example-shop.test/cdn-cgi/challenge-platform/scripts/jsd/main.js"
+  },
+  "cf-bm-cookie": {
+   "cookie": [
+    "__cf_bm",
+    "abc.def-1759600000-1.0.1.1-xyz"
+   ]
+  },
+  "cf-clearance-cookie": {
+   "cookie": [
+    "cf_clearance",
+    "abc-1759600000-1.2.1.1-xyz"
+   ]
+  },
+  "cf-mitigated-header": {
+   "header": [
+    "cf-mitigated",
+    "challenge"
+   ]
+  },
+  "cf-server-header": {
+   "header": [
+    "server",
+    "cloudflare"
+   ]
+  },
+  "challenge-orchestrator": {
+   "url": "https://www.example-shop.test/cdn-cgi/challenge-platform/h/b/orchestrate/chl_page/v1?ray=8c1"
+  },
+  "challenges-host": {
+   "url": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/if/ov2/av0/rcv/x"
+  },
+  "chl-opt-object": {
+   "runtimeType": "object"
+  },
+  "chl-opt-reference": {
+   "source": "window._cf_chl_opt={cvId:'3',cZone:'example-shop.test'};"
+  }
+ },
+ "detect-datadome": {
+  "datadome-block-page": {
+   "source": "var dd={'rt':'i','cid':'AHrlqAAAAAMAIDn-Fuc6in8AUyQTWg==','hsh':'D013AA'}"
+  },
+  "datadome-captcha": {
+   "url": "https://geo.captcha-delivery.com/captcha/?initialCid=AHrl&hash=D013AA"
+  },
+  "datadome-cid-header": {
+   "header": [
+    "x-datadome-cid",
+    "AHrlqAAAAAMAIDn-Fuc6in8AUyQTWg=="
+   ]
+  },
+  "datadome-cookie": {
+   "cookie": [
+    "datadome",
+    "~kQhG7w9T0yHq"
+   ]
+  },
+  "datadome-dd-b-header": {
+   "header": [
+    "x-dd-b",
+    "1"
+   ]
+  },
+  "datadome-first-party-tag": {
+   "url": "https://www.leboncoin.fr/tags.js"
+  },
+  "datadome-protected-header": {
+   "header": [
+    "x-datadome",
+    "protected"
+   ]
+  },
+  "datadome-server-header": {
+   "header": [
+    "server",
+    "DataDome"
+   ]
+  },
+  "datadome-tag": {
+   "url": "https://js.datadome.co/tags.js"
+  },
+  "ddjskey-reference": {
+   "source": "var ddjskey = 'B4AB2E5BBA6C6EB2'; var ddoptions = {};"
+  },
+  "ddjskey-variable": {
+   "runtimeType": "string"
+  }
+ },
+ "detect-f5": {
+  "asm-support-id": {
+   "source": "document.write('The requested URL was rejected. Your support ID is: 14563908526311840187');"
+  },
+  "bigip-server-cookie": {
+   "cookie": [
+    "BIGipServerpool_web",
+    "1677787402.20480.0000"
+   ]
+  },
+  "f5-avr-cookie": {
+   "cookie": [
+    "f5avraaaaaaaaaaaaaaaa_session_",
+    "ABCDEF"
+   ]
+  },
+  "ts-asm-cookie": {
+   "cookie": [
+    "TS01dc4fc6",
+    "0141cd5e11223e073fbfc53f11f4b21bd999e3b70b711d57b2f168283a4d80ee613"
+   ]
+  },
+  "ts-legacy-cookie": {
+   "cookie": [
+    "TS4a8b2c1d",
+    "08abcdef"
+   ]
+  }
+ },
+ "detect-incapsula": {
+  "imperva-cdn-header": {
+   "header": [
+    "x-cdn",
+    "Imperva"
+   ]
+  },
+  "impv-routing-cookie": {
+   "cookie": [
+    "_impv_routing",
+    "3299270436cfdf6ae564de3ed1906633|44e043a86861b109997cc70e7a6eba67"
+   ]
+  },
+  "incap-balancer-cookie": {
+   "cookie": [
+    "nlbi_2405640",
+    "AbCd"
+   ]
+  },
+  "incap-iinfo-header": {
+   "header": [
+    "x-iinfo",
+    "6-12345678-0 0NNN RT(1759600000 0) q(0 -1 -1 -1) r(0 -1)"
+   ]
+  },
+  "incap-session-cookie": {
+   "cookie": [
+    "incap_ses_315_2405640",
+    "AbCd=="
+   ]
+  },
+  "incap-visitor-cookie": {
+   "cookie": [
+    "visid_incap_2405640",
+    "AbCd=="
+   ]
+  },
+  "incapsula-reference": {
+   "source": "var r='/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3';"
+  },
+  "incapsula-resource": {
+   "url": "https://www.example-shop.test/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3"
+  },
+  "reese84-cookie": {
+   "cookie": [
+    "reese84",
+    "3:abc=="
+   ]
+  },
+  "utmvc-cookie": {
+   "cookie": [
+    "___utmvc",
+    "navigator%3Dtrue"
+   ]
+  }
+ },
+ "detect-kasada": {
+  "ips-script": {
+   "url": "https://www.hyatt.com/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/ips.js"
+  },
+  "kpsdk-aux-header": {
+   "header": [
+    "x-kpsdk-r",
+    "1-AB"
+   ]
+  },
+  "kpsdk-ct-header": {
+   "header": [
+    "x-kpsdk-ct",
+    "0GxAbc"
+   ]
+  },
+  "kpsdk-load-event": {
+   "source": "document.addEventListener('kpsdk-load', function(){});"
+  },
+  "kpsdk-object": {
+   "runtimeType": "object"
+  },
+  "kpsdk-query": {
+   "url": "https://www.realestate.com.au/?KP_UIDz=01WUSLr87FZ4BZz7"
+  },
+  "kpsdk-reference": {
+   "source": "KPSDK.configure([{protocol:'https:',method:'POST'}]);"
+  },
+  "tl-endpoint": {
+   "url": "https://www.nike.com/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/tl"
+  }
+ },
+ "detect-meetrics": {
+  "meetrics-global-object": {
+   "runtimeType": "object"
+  },
+  "meetrics-global-reference": {
+   "source": "if (window.meetricsGlobal) { meetricsGlobal.push(1); }"
+  },
+  "meetrics-host": {
+   "url": "https://www.meetrics.com/app.js"
+  },
+  "meetrics-serve": {
+   "url": "https://s232.mxcdn.net/bb-mx/serve/mtrcs_123456.js"
+  }
+ },
+ "detect-ocule": {
+  "ocule-host": {
+   "url": "https://api.ocule.co.uk/v1/check"
+  },
+  "ocule-proxy-script": {
+   "url": "https://proxy.ocule.co.uk/script.js"
+  },
+  "ocule-reference": {
+   "source": "s.src='https://proxy.ocule.co.uk/script.js';"
+  }
+ },
+ "detect-perimeterx": {
+  "px-appid-reference": {
+   "source": "window._pxAppId = 'PXu6b0qd2S';"
+  },
+  "px-appid-variable": {
+   "runtimeType": "string"
+  },
+  "px-aux-cookie": {
+   "cookie": [
+    "pxcts",
+    "5c1f3a2e-a12b"
+   ]
+  },
+  "px-captcha": {
+   "url": "https://captcha.px-cdn.net/PXu6b0qd2S/captcha.js?a=c"
+  },
+  "px-client-script": {
+   "url": "https://client.px-cloud.net/PXGWPp4wUS/main.min.js"
+  },
+  "px-collector": {
+   "url": "https://collector-pxu6b0qd2s.px-cloud.net/api/v2/collector"
+  },
+  "px-first-party-captcha": {
+   "url": "https://www.zillow.com/HYx10rg3/captcha/captcha.js?a=c&u=665079cb"
+  },
+  "px-first-party-script": {
+   "url": "https://www.walmart.com/px/PXu6b0qd2S/init.js"
+  },
+  "px-init-function": {
+   "runtimeType": "function"
+  },
+  "px3-cookie": {
+   "cookie": [
+    "_px3",
+    "abc:def"
+   ]
+  },
+  "pxhd-cookie": {
+   "cookie": [
+    "_pxhd",
+    "abc:def"
+   ]
+  },
+  "pxvid-cookie": {
+   "cookie": [
+    "_pxvid",
+    "5c1f3a2e-a12b"
+   ]
+  }
+ },
+ "detect-reblaze": {
+  "rbz-aux-cookie": {
+   "cookie": [
+    "rbzrdr",
+    "1"
+   ]
+  },
+  "rbz-bereshit-reference": {
+   "source": "var cfg={\"bereshit\":\"1\",\"storage\":3,\"seed\":\"6VOUjQEazSE\"};"
+  },
+  "rbz-session-cookie": {
+   "cookie": [
+    "rbzsessionid",
+    "abc"
+   ]
+  },
+  "rbzid-cookie": {
+   "cookie": [
+    "rbzid",
+    "abc"
+   ]
+  },
+  "rbzns-object": {
+   "runtimeType": "object"
+  },
+  "rbzns-reference": {
+   "source": "if (window.rbzns) { rbzns.seed = 1; }"
+  },
+  "reblaze-lib-script": {
+   "url": "https://www.elal.com/kramericaindustries.ac_v2.lib.js"
+  }
+ },
+ "detect-shapesecurity": {
+  "seeded-script": {
+   "url": "https://assets.targetimg1.com/ssx/ssx.mod.js?seed=AMACZQihAQAAI5_7SIGNL66-PTUUnAvyzPFZTpfj5iQVtZuYN2dfrszHMGw-"
+  },
+  "shape-loader-async": {
+   "url": "https://assets.targetimg1.com/ssx/ssx.mod.js?async"
+  },
+  "shape-marker-param": {
+   "url": "https://www.example-shop.test/app.js?v=1&X-GyJwza5Z--z=q"
+  },
+  "xr-bmobdb-object": {
+   "runtimeType": "function"
+  },
+  "xr-bmobdb-reference": {
+   "source": "window.__xr_bmobdb && window.__xr_bmobdb();"
+  }
+ },
+ "detect-sucuri": {
+  "sucuri-block-header": {
+   "header": [
+    "x-sucuri-block",
+    "XSS027"
+   ]
+  },
+  "sucuri-block-id": {
+   "source": "var reason='Block ID: XSS027';"
+  },
+  "sucuri-block-title": {
+   "source": "document.title='Sucuri WebSite Firewall - Access Denied';"
+  },
+  "sucuri-cache-header": {
+   "header": [
+    "x-sucuri-cache",
+    "MISS"
+   ]
+  },
+  "sucuri-challenge-script": {
+   "source": "var sucuri_cloudproxy_js='',S='abc';"
+  },
+  "sucuri-cloudproxy-cookie": {
+   "cookie": [
+    "sucuri_cloudproxy_uuid_6a9fb24dc",
+    "bb1f8a31b20e"
+   ]
+  },
+  "sucuri-id-header": {
+   "header": [
+    "x-sucuri-id",
+    "19012"
+   ]
+  },
+  "sucuri-server-header": {
+   "header": [
+    "server",
+    "Sucuri/Cloudproxy"
+   ]
+  }
+ },
+ "detect-threatmetrix": {
+  "tmx-check": {
+   "url": "https://h.online-metrix.net/fp/sym.map?module=k8vif92e&version=test&variant=2f4f681d3ad7"
+  },
+  "tmx-first-party-tags": {
+   "url": "https://fp.example-bank.test/fp/tags.js?org_id=k8vif92e&session_id=abc123"
+  },
+  "tmx-page-fingerprint": {
+   "runtimeType": "function"
+  },
+  "tmx-profiling-flag": {
+   "runtimeType": "boolean"
+  },
+  "tmx-profiling-reference": {
+   "source": "if (!window.tmx_profiling_started) { tmx_run_page_fingerprinting(); }"
+  },
+  "tmx-tags": {
+   "url": "https://h.online-metrix.net/fp/tags.js?org_id=k8vif92e&session_id=abc123"
+  }
+ }
+}

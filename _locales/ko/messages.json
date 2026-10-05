@@ -1,6 +1,84 @@
 {
+  "advToolReloadScriptsHint": { "message": "페이지를 새로고침하여 보호 스크립트 분석" },
+  "advToolResetScriptsHint": { "message": "보호 쿠키를 초기화하고 새로고침하여 스크립트 분석" },
+  "advToolReloadVersionHint": { "message": "페이지를 새로고침하여 보호 기능 버전 감지" },
+  "advToolCaptureResetHint": { "message": "보호 쿠키를 초기화하고 기록 시작" },
+  "advToolCookiesHint": { "message": "이 보호 기능이 사용하는 쿠키 검사" },
+  "advToolVersionHint": { "message": "사용 가능한 버전 정보 확인" },
+  "advToolSiteKeyHint": { "message": "이 페이지의 CAPTCHA 사이트 키 찾기" },
+  "advToolSelectorHint": { "message": "CAPTCHA 위젯의 선택자 찾기" },
+  "advToolCallbackHint": { "message": "CAPTCHA 콜백 검사" },
+  "advToolSensorHint": { "message": "보호 쿠키를 초기화하고 새로고침하여 센서 데이터 기록" },
+  "advToolCaptureHint": { "message": "이 페이지의 데이터 기록" },
+  "advToolStopCaptureHint": { "message": "이 페이지의 데이터 기록 중지" },
+  "advToolWorking": { "message": "처리 중…" },
+  "advToolActionFailedFmt": { "message": "이 작업을 완료하지 못했습니다: {0}", "description": "Advanced tool action failure. {0} = error details" },
+  "statsChartPrevious": { "message": "차트 이전 페이지" },
+  "statsChartNext": { "message": "차트 다음 페이지" },
+  "statsChartPage": { "message": "전체 {1}페이지 중 {0}페이지" },
+  "statsChartShowing": { "message": "전체 {2}개 중 {0}–{1}개 표시" },
+  "statsSectionsLabel": { "message": "통계 섹션" },
+  "statsSectionOverview": { "message": "개요" },
+  "statsSectionActivity": { "message": "활동" },
+  "statsSectionProtections": { "message": "보호 기능" },
+  "statsSectionDomains": { "message": "도메인" },
+  "statsSectionConfidence": { "message": "신뢰도" },
+  "statsExportCSV": { "message": "CSV 내보내기" },
+  "statsExportJSON": { "message": "JSON 내보내기" },
+  "statsExportPrivacy": { "message": "내보낸 파일에는 도메인과 탐지 요약이 포함되며, 쿠키, 페이지 내용 또는 URL 매개변수는 포함되지 않습니다." },
+  "statsExportScopeFmt": { "message": "선택한 기간 내보내기: 항목 {0}개" },
+  "statsExportStartedFmt": { "message": "다운로드 시작: {0}" },
+  "statsExportFailed": { "message": "데이터를 내보낼 수 없습니다. 다시 시도해 주세요." },
+  "statsLoadFailed": { "message": "기록을 불러올 수 없습니다. 이 페이지를 새로고침해 주세요." },
+  "statsRangeEmptyTitle": { "message": "이 기간에 항목이 없습니다" },
+  "statsRangeEmptyDesc": { "message": "저장된 기록을 살펴보려면 더 긴 기간을 선택하세요." },
+  "statsDetectionRate": { "message": "탐지가 있는 항목" },
+  "statsActiveDays": { "message": "활동 일수" },
+  "statsAverageConfidence": { "message": "평균 신뢰도" },
+  "statsDailyVisits": { "message": "일별 기록 항목" },
+  "statsActivityCalendar": { "message": "활동 달력" },
+  "statsActivityCalendarHint": { "message": "각 사각형은 현지 달력의 하루를 나타냅니다. 파란색이 진할수록 저장된 항목이 많습니다." },
+  "statsHourlyActivity": { "message": "시간대별 활동" },
+  "statsWeekdayActivity": { "message": "요일별 활동" },
+  "statsLocalTimeNote": { "message": "날짜와 시간은 현지 시간대를 사용합니다." },
+  "statsTimelineLimitFmt": { "message": "최근 {0}일이 표시됩니다. 합계와 내보내기에는 선택한 전체 기간이 포함됩니다." },
+  "statsProtectionRanking": { "message": "보호 기능 순위" },
+  "statsCategoryTrend": { "message": "시간에 따른 카테고리 변화" },
+  "statsCategoryOverlap": { "message": "함께 탐지된 카테고리" },
+  "statsCategoryOverlapHint": { "message": "두 카테고리를 모두 포함하는 기록 항목 수입니다. 대각선 셀은 해당 카테고리가 있는 항목을 보여줍니다." },
+  "statsProtectionDetails": { "message": "모든 보호 기능" },
+  "statsDomainRanking": { "message": "도메인 순위" },
+  "statsDomainMap": { "message": "방문 및 탐지" },
+  "statsDomainMapHint": { "message": "각 점은 도메인을 나타냅니다. 점이 클수록 서로 다른 보호 기능이 많습니다." },
+  "statsDomainDetails": { "message": "모든 도메인" },
+  "statsDomainSearch": { "message": "도메인 검색..." },
+  "statsDomainSortLabel": { "message": "도메인 정렬" },
+  "statsSortVisits": { "message": "방문 많은 순" },
+  "statsSortDetections": { "message": "탐지 많은 순" },
+  "statsSortConfidence": { "message": "신뢰도 높은 순" },
+  "statsSortName": { "message": "도메인 이름" },
+  "statsConfidenceDistribution": { "message": "신뢰도 분포" },
+  "statsConfidenceTrend": { "message": "시간에 따른 신뢰도 변화" },
+  "statsCategoryConfidence": { "message": "카테고리별 신뢰도" },
+  "statsConfidenceNote": { "message": "신뢰도는 저장된 탐지 근거의 강도를 나타내며, 핑거프린팅이나 진행 중인 챌린지의 존재를 입증하지는 않습니다." },
+  "statsConfidenceKnownFmt": { "message": "탐지 {0}개에 신뢰도 값이 있으며, {1}개에는 유효한 점수가 없습니다." },
+  "statsProtectionColumn": { "message": "보호 기능" },
+  "statsCategoryColumn": { "message": "카테고리" },
+  "statsDomainColumn": { "message": "도메인" },
+  "statsTableCountFmt": { "message": "전체 {1}행 중 {0}행" },
+  "statsTableMore": { "message": "더 보기" },
+  "statsNoMatchingDomains": { "message": "검색과 일치하는 도메인이 없습니다." },
+  "statsSelectionNote": { "message": "차트와 내보내기는 선택한 기간을 사용합니다. 기록 항목은 저장된 탐지를 나타내며, 모든 브라우저 방문을 나타내지는 않습니다." },
   "extensionName": {
     "message": "Scrapfly: 안티봇 탐지기"
+  },
+  "headerBrandName": {
+    "message": "ScrapFly: 안티봇 탐지기",
+    "description": "Brand + product name shown in the popup header (extensionName with the ScrapFly logo capitalisation; the manifest/store name stays extensionName)"
+  },
+  "headerBrandSuffix": {
+    "message": ": 안티봇 탐지기",
+    "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
   "extensionDescription": {
     "message": "웹사이트의 CAPTCHA, 안티봇 시스템 및 핑거프린팅 기술 감지"
@@ -29,14 +107,17 @@
   "analyzingPage": {
     "message": "페이지 분석 중"
   },
+  "detectionScanningTitle": {
+    "message": "페이지 검사 중"
+  },
+  "detectionScanningDescription": {
+    "message": "보호 기능의 흔적을 확인하고 있습니다."
+  },
+  "detectionScanningHint": {
+    "message": "검사가 끝나면 여기에 결과가 표시됩니다."
+  },
   "actionRemoveFromBlacklist": {
     "message": "블랙리스트에서 제거"
-  },
-  "advancedDomainBlacklisted": {
-    "message": "이 도메인에 대한 고급 도구가 비활성화됨"
-  },
-  "blacklistManageHint": {
-    "message": "또는 관리하려면 설정 → 탐지 → 블랙리스트 도메인으로 이동하세요."
   },
   "statDetections": {
     "message": "탐지"
@@ -137,9 +218,6 @@
   "rulesUpdateTitle": {
     "message": "탐지기 업데이트 확인"
   },
-  "rulesClearTitle": {
-    "message": "모든 규칙 지우기"
-  },
   "rulesAddTitle": {
     "message": "새 탐지기 추가"
   },
@@ -222,7 +300,7 @@
     "message": "디버그 모드"
   },
   "settingsCardDebugDesc": {
-    "message": "디버깅을 위한 콘솔 로깅 활성화"
+    "message": "검사한 페이지마다 읽기 쉬운 보고서를 서비스 워커 콘솔에 출력"
   },
   "settingsRowLogCollector": {
     "message": "로그 수집기"
@@ -320,6 +398,9 @@
   "advancedEmptyCapturesHint": {
     "message": "도구 탭을 사용하여 탐지된 시스템에서 데이터를 캡처하세요"
   },
+  "advancedCapturesStoredNote": {
+    "message": "캡처는 30분 동안 저장됩니다"
+  },
   "advancedNoResultsTitle": {
     "message": "캡처를 찾을 수 없음"
   },
@@ -360,7 +441,7 @@
     "message": "캡처된 데이터는 일시적으로(30분) 저장되며 전체 내보내기 기능이 있습니다"
   },
   "advancedFooterHint": {
-    "message": "신선한 데이터를 보장하기 위해 결과는 30분 후에 만료됩니다"
+    "message": "캡처는 30분 동안 보관됩니다."
   },
   "settings": {
     "message": "설정"
@@ -407,24 +488,6 @@
   "timeDaysAgoLongFmt": {
     "message": "{0}일 전"
   },
-  "timeOneWeekAgo": {
-    "message": "1주 전"
-  },
-  "timeWeeksAgoFmt": {
-    "message": "{0}주 전"
-  },
-  "timeOneMonthAgo": {
-    "message": "1개월 전"
-  },
-  "timeMonthsAgoFmt": {
-    "message": "{0}개월 전"
-  },
-  "timeOneYearAgo": {
-    "message": "1년 전"
-  },
-  "timeYearsAgoFmt": {
-    "message": "{0}년 전"
-  },
   "btnCancelSettings": {
     "message": "취소"
   },
@@ -445,6 +508,33 @@
   },
   "tagColors": {
     "message": "태그 색상"
+  },
+  "colorPickerTitle": {
+    "message": "색상 선택기"
+  },
+  "colorPickerArea": {
+    "message": "채도 및 명도"
+  },
+  "colorPickerSaturation": {
+    "message": "채도"
+  },
+  "colorPickerBrightness": {
+    "message": "명도"
+  },
+  "colorPickerHue": {
+    "message": "색조"
+  },
+  "colorPickerRed": {
+    "message": "빨강"
+  },
+  "colorPickerGreen": {
+    "message": "초록"
+  },
+  "colorPickerBlue": {
+    "message": "파랑"
+  },
+  "colorPickerPresets": {
+    "message": "기본 색상"
   },
   "cacheConfiguration": {
     "message": "캐시 구성"
@@ -475,6 +565,14 @@
   },
   "ruleMethodSettings": {
     "message": "탐지 메서드 설정"
+  },
+  "methodSettingsTitleFmt": {
+    "message": "{0} · 설정: {1}",
+    "description": "Method Settings modal title. {0} = detector name, {1} = readable detection method name (e.g. Headers)"
+  },
+  "methodSettingsTitleNoDetectorFmt": {
+    "message": "설정: {0}",
+    "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
   },
   "ruleConfidenceLevel": {
     "message": "신뢰도 수준"
@@ -559,9 +657,6 @@
   },
   "unknownDetection": {
     "message": "알 수 없는 감지"
-  },
-  "matchSingular": {
-    "message": "일치"
   },
   "matchPlural": {
     "message": "일치"
@@ -707,15 +802,6 @@
   "failedSaveSettingsFmt": {
     "message": "설정을 저장하지 못했습니다: {0}"
   },
-  "settingsResetToast": {
-    "message": "설정이 초기화되었습니다"
-  },
-  "dataClearedReloadNotice": {
-    "message": "모든 데이터가 성공적으로 지워졌습니다! 확장 프로그램이 다시 로드됩니다."
-  },
-  "failedClearDataFmt": {
-    "message": "데이터를 지우지 못했습니다: {0}"
-  },
   "failedExportLogs": {
     "message": "로그를 내보내지 못했습니다"
   },
@@ -764,8 +850,8 @@
   "importDetectorsTitle": {
     "message": "감지기 가져오기"
   },
-  "importMergeQuestion": {
-    "message": "기존 감지기와 병합하시겠습니까?"
+  "importDetectorsModeMessage": {
+    "message": "'병합'은 가져온 감지기를 기존 감지기에 추가합니다.<br>'모두 교체'는 사용자 지정 감지기를 먼저 삭제하며, 기본 제공 감지기는 유지됩니다."
   },
   "mergeOption": {
     "message": "병합"
@@ -790,9 +876,6 @@
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\"을(를) 삭제했습니다"
-  },
-  "allDetectorsCleared": {
-    "message": "모든 감지기가 지워졌습니다"
   },
   "failedClearDetectors": {
     "message": "감지기를 지우지 못했습니다"
@@ -842,29 +925,11 @@
   "importHistoryTitle": {
     "message": "기록 가져오기"
   },
-  "importHistoryMessageFmt": {
-    "message": "기록 항목 {0}개를 가져오시겠습니까? 현재 기록에 {1}개의 항목이 있습니다."
-  },
   "replaceOption": {
     "message": "교체"
   },
-  "settingsResetTitle": {
-    "message": "설정 초기화"
-  },
-  "settingsResetMessage": {
-    "message": "모든 설정을 기본값으로 초기화하시겠습니까? 이 작업은 취소할 수 없습니다."
-  },
-  "btnReset": {
-    "message": "초기화"
-  },
-  "clearAllDataTitle": {
-    "message": "모든 데이터 지우기"
-  },
-  "clearAllDataMessage": {
-    "message": "모든 확장 프로그램 데이터를 지우시겠습니까? 다음 항목이 제거됩니다:<br><br>• 모든 감지 기록<br>• 모든 감지기 규칙<br>• 모든 설정<br><br>이 작업은 취소할 수 없습니다!"
-  },
-  "clearEverythingBtn": {
-    "message": "모두 지우기"
+  "importHistoryModeMessageFmt": {
+    "message": "기록 항목 {0}개를 가져오시겠습니까? 현재 기록에 {1}개가 있습니다.<br>'병합'은 새 항목을 추가하고, '교체'는 현재 기록을 먼저 삭제합니다."
   },
   "clearLogsTitle": {
     "message": "로그 지우기"
@@ -889,15 +954,6 @@
   },
   "updateServiceNotAvailable": {
     "message": "업데이트 서비스를 사용할 수 없습니다"
-  },
-  "clearAllDetectorsTitle": {
-    "message": "모든 감지기 지우기"
-  },
-  "clearAllDetectorsMessage": {
-    "message": "모든 감지기가 제거됩니다. 계속하시겠습니까?"
-  },
-  "clearingAllDetectors": {
-    "message": "모든 감지기를 지우는 중..."
   },
   "deleteDetectorTitle": {
     "message": "감지기 삭제"
@@ -974,6 +1030,57 @@
   "settingsContentTypeDesc": {
     "message": "HTTP 콘텐츠 형식 헤더"
   },
+  "webhookCtHintJson": {
+    "message": "변수를 채운 템플릿을 JSON으로 보냅니다."
+  },
+  "webhookCtHintForm": {
+    "message": "템플릿 필드를 key=value 쌍으로 보냅니다. 중첩 필드는 detections[0][name] 형식."
+  },
+  "webhookCtHintMultipart": {
+    "message": "템플릿 필드를 form-data 파트로 보냅니다. boundary는 브라우저가 설정합니다."
+  },
+  "webhookCtHintText": {
+    "message": "변수를 채운 템플릿 텍스트를 그대로 보냅니다."
+  },
+  "webhookCtHintXml": {
+    "message": "템플릿 필드를 <webhook> XML 문서로 보냅니다. 감지 항목은 반복 요소입니다."
+  },
+  "webhookCtHintCsv": {
+    "message": "헤더 행 다음에 감지 항목마다 한 행(페이지 필드 반복)."
+  },
+  "webhookCtHintNdjson": {
+    "message": "한 줄에 JSON 객체 하나: 감지 항목마다 한 줄(페이지 필드 포함)."
+  },
+  "webhookCtHintCustom": {
+    "message": "직접 지정한 Content-Type(type/subtype). 본문은 JSON으로 보냅니다."
+  },
+  "webhookCtCustom": {
+    "message": "사용자 지정"
+  },
+  "webhookCtCustomLabel": {
+    "message": "사용자 지정 Content-Type"
+  },
+  "webhookCtInvalid": {
+    "message": "type/subtype을 입력하세요(예: application/vnd.example+json)"
+  },
+  "webhookAddHeader": {
+    "message": "헤더 추가"
+  },
+  "webhookNoHeaders": {
+    "message": "사용자 지정 헤더 없음"
+  },
+  "webhookHeaderName": {
+    "message": "헤더 이름"
+  },
+  "webhookHeaderValue": {
+    "message": "헤더 값"
+  },
+  "webhookRemoveHeader": {
+    "message": "헤더 제거"
+  },
+  "webhookSending": {
+    "message": "보내는 중..."
+  },
   "settingsCustomHeaders": {
     "message": "사용자 지정 헤더"
   },
@@ -984,7 +1091,58 @@
     "message": "페이로드 템플릿"
   },
   "settingsPayloadTemplateDesc": {
-    "message": "변수 사용: <SITEURL>, <HOSTNAME>, <TITLE>, <FAVICON>, <DETECTIONS>, <TIMESTAMP>, <DETECTION_COUNT>, <CATEGORIES>"
+    "message": "웹훅마다 보내는 본문입니다. 변수를 클릭하면 삽입됩니다."
+  },
+  "webhookVarsTitle": {
+    "message": "템플릿 변수"
+  },
+  "webhookVarsIntro": {
+    "message": "웹훅을 보낼 때 페이지 값으로 바뀝니다."
+  },
+  "webhookVarsInsertLabel": {
+    "message": "변수 삽입"
+  },
+  "webhookVarsInsertFmt": {
+    "message": "{0} 삽입"
+  },
+  "webhookVarsCopyFmt": {
+    "message": "{0} 복사"
+  },
+  "webhookVarsExample": {
+    "message": "예시"
+  },
+  "webhookVarSiteUrl": {
+    "message": "페이지 전체 URL"
+  },
+  "webhookVarHostname": {
+    "message": "페이지 호스트 이름"
+  },
+  "webhookVarTitle": {
+    "message": "페이지 제목"
+  },
+  "webhookVarFavicon": {
+    "message": "사이트 파비콘 URL"
+  },
+  "webhookVarDetections": {
+    "message": "감지 결과(JSON 배열)"
+  },
+  "webhookVarTimestamp": {
+    "message": "감지 시각(ISO 8601)"
+  },
+  "webhookVarDetectionCount": {
+    "message": "감지 수"
+  },
+  "webhookVarCategories": {
+    "message": "감지된 카테고리(쉼표로 구분)"
+  },
+  "webhookJsonValid": {
+    "message": "유효한 JSON"
+  },
+  "webhookJsonInvalidFmt": {
+    "message": "잘못된 JSON({0}번째 줄)"
+  },
+  "webhookResetTemplate": {
+    "message": "템플릿 초기화"
   },
   "settingsTestWebhook": {
     "message": "웹훅 테스트"
@@ -1005,10 +1163,7 @@
     "message": "기록 제한"
   },
   "settingsHistoryLimitNote": {
-    "message": "(0 = 무제한)"
-  },
-  "settingsAutoClearDays": {
-    "message": "자동 지우기 (일)"
+    "message": "(0 = 안전 한도 1,000개 항목)"
   },
   "settingsExportFormat": {
     "message": "내보내기 형식"
@@ -1125,7 +1280,7 @@
     "message": "기록 내보내기"
   },
   "settingsAvailableEvents": {
-    "message": "사용 가능한 이벤트:"
+    "message": "사용 가능한 이벤트"
   },
   "settingsApiEventReady": {
     "message": "확장 프로그램이 로드되고 초기화되었습니다"
@@ -1149,7 +1304,7 @@
     "message": "감지 오류가 발생했습니다"
   },
   "settingsUsageExample": {
-    "message": "사용 예시:"
+    "message": "사용 예시"
   },
   "detectionDisabledForDomain": {
     "message": "이 도메인에 대해 감지가 비활성화되어 있습니다"
@@ -1202,6 +1357,9 @@
   "detectionTitleBlockDomain": {
     "message": "이 도메인 차단"
   },
+  "detectionStatSite": {
+    "message": "사이트"
+  },
   "detectionStatDetections": {
     "message": "감지"
   },
@@ -1234,9 +1392,6 @@
   },
   "detectionModalDifficulty": {
     "message": "난이도"
-  },
-  "detectionModalMatchesFound": {
-    "message": "발견된 일치 항목"
   },
   "detectionModalAuthor": {
     "message": "작성자"
@@ -1421,44 +1576,11 @@
   "rulesDomSelectorHelper": {
     "message": "DOM 선택자 도우미"
   },
-  "rulesStartTypingSuggestions": {
-    "message": "제안을 보려면 입력을 시작하세요"
-  },
   "rulesUseSelectorBtn": {
     "message": "선택자 사용"
   },
   "rulesWindowPropertiesHelper": {
     "message": "Window 속성 도우미"
-  },
-  "rulesStepEnterKeyword": {
-    "message": "키워드 입력"
-  },
-  "rulesStepChooseProperty": {
-    "message": "속성 선택"
-  },
-  "rulesStepSelectCondition": {
-    "message": "조건 선택"
-  },
-  "rulesConditionExists": {
-    "message": "존재"
-  },
-  "rulesConditionGroupType": {
-    "message": "타입"
-  },
-  "rulesTypeofObject": {
-    "message": "Object"
-  },
-  "rulesTypeofFunction": {
-    "message": "Function"
-  },
-  "rulesTypeofString": {
-    "message": "String"
-  },
-  "rulesTypeofNumber": {
-    "message": "Number"
-  },
-  "rulesTypeofBoolean": {
-    "message": "Boolean"
   },
   "notifConfirmTitleDefault": {
     "message": "확인"
@@ -1468,12 +1590,6 @@
   },
   "notifLoadingDefault": {
     "message": "로드 중..."
-  },
-  "helperPatternStartTypingSuggestions": {
-    "message": "제안을 보려면 위에 입력을 시작하세요..."
-  },
-  "helperPatternStartTypingExamples": {
-    "message": "예시를 보려면 위에 입력을 시작하세요..."
   },
   "helpJsHooksTitle": {
     "message": "JavaScript 후크 감지"
@@ -1587,13 +1703,10 @@
     "message": "{0} 데이터 캡처를 시작하려면 위의 \"캡처 시작\"을 클릭하세요"
   },
   "advancedToolsHeading": {
-    "message": "고급 탐지 도구"
+    "message": "캡처 도구"
   },
   "advancedToolsSubtitle": {
-    "message": "보호 시스템을 캡처하고 분석"
-  },
-  "advancedToolsHelpTitle": {
-    "message": "도움말"
+    "message": "보호 시스템을 선택하여 도구를 여세요."
   },
   "advancedToolsStepSelect": {
     "message": "탐지 선택"
@@ -1601,11 +1714,8 @@
   "advancedToolsChooseDetection": {
     "message": "탐지를 선택하세요..."
   },
-  "advancedToolsStepLoadUse": {
-    "message": "도구 로드 및 사용"
-  },
   "advancedToolsLoadTools": {
-    "message": "도구 로드"
+    "message": "도구 열기"
   },
   "advancedToolsClearAll": {
     "message": "모두 지우기"
@@ -1631,9 +1741,6 @@
   "settingsLanguageAuto": {
     "message": "브라우저 언어 사용"
   },
-  "copiedJsonNotification": {
-    "message": "JSON 복사됨"
-  },
   "detectionEmptyTitle": {
     "message": "감지된 항목 없음"
   },
@@ -1658,19 +1765,2158 @@
   "rulesModalDetectorLabel": {
     "message": "탐지 규칙"
   },
-  "rulesAuthorHelpHint": {
-    "message": "이 탐지기를 만든 사람"
+  "rulesMoreActions": {
+    "message": "추가 작업"
   },
-  "rulesWindowConditionExamplesTitle": {
-    "message": "Window 조건 예시"
+  "advancedToolsNoDetections": {
+    "message": "이 페이지에 지원되는 탐지가 없습니다"
   },
-  "rulesWindowConditionExamplesHint": {
-    "message": "예시를 클릭하여 사용:"
+  "advancedToolsEmptyTitle": {
+    "message": "사용 가능한 도구 없음"
   },
-  "rulesBtnNextFmt": {
-    "message": "다음: {0}"
+  "advancedToolsEmptyDesc": {
+    "message": "이 페이지에서 지원되는 보호 기능을 찾지 못했습니다. 보호 기능이 감지되면 도구가 여기에 자동으로 표시됩니다."
   },
-  "rulesUsePropertyBtn": {
-    "message": "속성 사용"
+  "advancedToolsSupportedLabel": {
+    "message": "지원되는 보호 기능"
+  },
+  "advancedToolsOpenHistoryFmt": {
+    "message": "캡처 기록 보기({0})"
+  },
+  "detectionMethodJsHooks": {
+    "message": "JavaScript 후크"
+  },
+  "detectionMethodContent": {
+    "message": "콘텐츠"
+  },
+  "detectionMethodWindow": {
+    "message": "창 속성"
+  },
+  "detectionMethodDom": {
+    "message": "Dom"
+  },
+  "detectionMethodHeaders": {
+    "message": "헤더"
+  },
+  "detectionMethodCookies": {
+    "message": "쿠키"
+  },
+  "detectionMethodUrl": {
+    "message": "Url"
+  },
+  "detectionMethodPayload": {
+    "message": "페이로드"
+  },
+  "detectionEnableBtn": {
+    "message": "감지 활성화"
+  },
+  "historyMoreActions": {
+    "message": "추가 작업"
+  },
+  "historyCopyEntryTitle": {
+    "message": "데이터 복사"
+  },
+  "settingsHistoryAutoDelete": {
+    "message": "자동 삭제"
+  },
+  "settingsHistoryAutoDeleteDesc": {
+    "message": "오래된 기록 항목을 주기적으로 삭제합니다."
+  },
+  "settingsHistoryAutoDeleteOlderThan": {
+    "message": "다음보다 오래된 항목 삭제"
+  },
+  "settingsCacheDurationRangeFmt": {
+    "message": "허용 범위: 1–{0} {1}. 더 긴 기간은 더 큰 단위를 선택하세요."
+  },
+  "settingsCacheDurationRangeMaxFmt": {
+    "message": "허용 범위: 1–{0} {1}."
+  },
+  "settingsCacheDurationUnitNote": {
+    "message": "1개월은 30일, 1년은 365일로 계산됩니다."
+  },
+  "timeUnitMonths": {
+    "message": "개월"
+  },
+  "timeUnitYears": {
+    "message": "년"
+  },
+  "settingsHistoryStatsTitle": {
+    "message": "기록 통계"
+  },
+  "settingsHistoryStatsDesc": {
+    "message": "탐지 기록에서 로컬로 계산된 비공개 통계를 확인하세요."
+  },
+  "settingsOpenStats": {
+    "message": "통계 열기"
+  },
+  "settingsExportedToast": {
+    "message": "설정을 내보냈습니다"
+  },
+  "settingsExportFailedToast": {
+    "message": "설정을 내보내지 못했습니다"
+  },
+  "settingsImportedToast": {
+    "message": "설정을 가져왔습니다"
+  },
+  "settingsImportFailedToast": {
+    "message": "설정을 가져오지 못했습니다: 잘못된 파일"
+  },
+  "statsPrivacyNote": {
+    "message": "탐지 기록에서 로컬로 계산됩니다. 브라우저 밖으로 전송되지 않습니다."
+  },
+  "statsSubtitleFmt": {
+    "message": "기록 항목 {0}개에서 로컬로 계산됨. 브라우저 밖으로 전송되지 않습니다."
+  },
+  "statsRangeLabel": {
+    "message": "기간"
+  },
+  "statsRange7": {
+    "message": "7일"
+  },
+  "statsRange30": {
+    "message": "30일"
+  },
+  "statsRange90": {
+    "message": "90일"
+  },
+  "statsRangeAll": {
+    "message": "전체"
+  },
+  "statsEmptyTitle": {
+    "message": "아직 기록이 없습니다"
+  },
+  "statsEmptyDesc": {
+    "message": "탐지된 페이지가 기록에 저장되면 여기에 통계가 표시됩니다."
+  },
+  "statsEntries": {
+    "message": "기록 항목"
+  },
+  "statsUniqueDomains": {
+    "message": "고유 도메인"
+  },
+  "statsDetections": {
+    "message": "탐지"
+  },
+  "statsDistinctDetectors": {
+    "message": "고유 보호 시스템"
+  },
+  "statsOverTime": {
+    "message": "시간별 탐지"
+  },
+  "statsTopProtections": {
+    "message": "가장 많이 탐지된 보호 시스템"
+  },
+  "statsTopDomains": {
+    "message": "상위 도메인"
+  },
+  "statsByCategory": {
+    "message": "카테고리별"
+  },
+  "statsByDifficulty": {
+    "message": "난이도별"
+  },
+  "statsPagesUnit": {
+    "message": "페이지"
+  },
+  "statsVisitsUnit": {
+    "message": "방문"
+  },
+  "statsDetectionsUnit": {
+    "message": "탐지"
+  },
+  "statsCategoryOther": {
+    "message": "기타"
+  },
+  "statsDifficultyNone": {
+    "message": "탐지 없음"
+  },
+  "statsNoData": {
+    "message": "이 기간에 데이터가 없습니다"
+  },
+  "statsTipPagesFmt": {
+    "message": "{0}개 페이지"
+  },
+  "statsTipDomainsFmt": {
+    "message": "{0}개 도메인"
+  },
+  "statsTipVisitsFmt": {
+    "message": "{0}회 방문"
+  },
+  "statsTipDetectionsFmt": {
+    "message": "{0}개 탐지"
+  },
+  "historyCategoryShareFmt": {
+    "message": "{1}개 중 {0}개 · {2}%"
+  },
+  "statsTipEntriesFmt": {
+    "message": "{0}개 항목"
+  },
+  "statsWithDetectionsFmt": {
+    "message": "탐지 있음 {0}개"
+  },
+  "statsVisitsPerDomainFmt": {
+    "message": "도메인당 {0}회 방문"
+  },
+  "statsPerEntryFmt": {
+    "message": "항목당 {0}"
+  },
+  "statsAvgConfidenceFmt": {
+    "message": "평균 신뢰도 {0}%"
+  },
+  "statsTimelineMetaFmt": {
+    "message": "{0}개 탐지 · {1}일"
+  },
+  "deleteOfficialDetectorNote": {
+    "message": "Scrapfly 공식 감지기입니다. 업데이트로 다시 생기지 않으며, … 메뉴의 \"공식 감지기 복원\"으로 되돌릴 수 있습니다."
+  },
+  "restoreOfficialDetectors": {
+    "message": "공식 감지기 복원"
+  },
+  "officialDetectorsRestoredFmt": {
+    "message": "공식 감지기 {0}개를 복원했습니다"
+  },
+  "noOfficialDetectorsToRestore": {
+    "message": "삭제된 공식 감지기가 없습니다"
+  },
+  "failedRestoreOfficialDetectors": {
+    "message": "공식 감지기를 복원하지 못했습니다"
+  },
+  "authorReservedError": {
+    "message": "\"Scrapfly\"는 공식 탐지기 전용입니다. 다른 작성자 이름을 사용하세요."
+  },
+  "ruleFieldAuthorPlaceholder": {
+    "message": "이름"
+  },
+  "clearCustomDetectorsTitle": {
+    "message": "사용자 지정 탐지기 지우기"
+  },
+  "clearCustomDetectorsMessage": {
+    "message": "모든 사용자 지정 탐지기가 제거됩니다. Scrapfly 공식 탐지기는 유지됩니다(비활성화할 수 있음). 계속하시겠습니까?"
+  },
+  "clearingCustomDetectors": {
+    "message": "사용자 지정 탐지기를 지우는 중..."
+  },
+  "customDetectorsClearedFmt": {
+    "message": "사용자 지정 탐지기 {0}개를 제거했습니다"
+  },
+  "noCustomDetectorsToClear": {
+    "message": "지울 사용자 지정 탐지기가 없습니다"
+  },
+  "rhSuggestions": {
+    "message": "추천"
+  },
+  "rhResults": {
+    "message": "결과"
+  },
+  "rhCustomChip": {
+    "message": "사용자 지정"
+  },
+  "rhUseAsTyped": {
+    "message": "입력한 그대로 사용"
+  },
+  "rhNoResultsFmt": {
+    "message": "“{0}”과(와) 일치하는 항목 없음"
+  },
+  "rhNoResultsHint": {
+    "message": "사용자 지정 값으로 그대로 사용할 수 있습니다."
+  },
+  "rhPreview": {
+    "message": "미리보기"
+  },
+  "rhSearchWindow": {
+    "message": "속성 검색 (예: webdriver, chrome, cdc_)"
+  },
+  "rhSearchDom": {
+    "message": "선택자 검색 (예: captcha, iframe)"
+  },
+  "rhSearchRegex": {
+    "message": "일치시킬 텍스트 (예: bm_, token)"
+  },
+  "rhSearchSample": {
+    "message": "테스트할 값 입력"
+  },
+  "rhCondition": {
+    "message": "조건"
+  },
+  "rhConditionInvalid": {
+    "message": "알 수 없는 조건"
+  },
+  "rhAddProperty": {
+    "message": "속성 추가"
+  },
+  "rhChipAutomation": {
+    "message": "자동화"
+  },
+  "rhCondGroupType": {
+    "message": "유형"
+  },
+  "rhCondGroupExistence": {
+    "message": "존재"
+  },
+  "rhCondGroupCollections": {
+    "message": "컬렉션"
+  },
+  "rhCondGroupNumeric": {
+    "message": "숫자"
+  },
+  "rhCondGroupString": {
+    "message": "문자열"
+  },
+  "rhCondGroupBoolean": {
+    "message": "불리언"
+  },
+  "rhCondGroupCustom": {
+    "message": "현재 값"
+  },
+  "rhCondTypeObject": {
+    "message": "이(가) 객체"
+  },
+  "rhCondTypeFunction": {
+    "message": "이(가) 함수"
+  },
+  "rhCondTypeString": {
+    "message": "이(가) 문자열"
+  },
+  "rhCondTypeNumber": {
+    "message": "이(가) 숫자"
+  },
+  "rhCondTypeBoolean": {
+    "message": "이(가) 불리언"
+  },
+  "rhCondTypeSymbol": {
+    "message": "이(가) 심볼"
+  },
+  "rhCondTypeBigint": {
+    "message": "이(가) BigInt"
+  },
+  "rhCondExists": {
+    "message": "이(가) 페이지에 존재"
+  },
+  "rhCondTruthy": {
+    "message": "이(가) truthy"
+  },
+  "rhCondFalsy": {
+    "message": "이(가) falsy (빈 값, 0, false, null)"
+  },
+  "rhCondNotUndefined": {
+    "message": "이(가) undefined 아님"
+  },
+  "rhCondUndefined": {
+    "message": "이(가) undefined (없음)"
+  },
+  "rhCondNotNull": {
+    "message": "이(가) null 아님"
+  },
+  "rhCondNull": {
+    "message": "이(가) null"
+  },
+  "rhCondArray": {
+    "message": "이(가) 배열"
+  },
+  "rhCondNonEmptyArray": {
+    "message": "이(가) 항목이 있는 배열"
+  },
+  "rhCondEmptyArray": {
+    "message": "이(가) 빈 배열"
+  },
+  "rhCondHasLength": {
+    "message": "에 길이가 있음"
+  },
+  "rhCondHasKeys": {
+    "message": "이(가) 키가 있는 객체"
+  },
+  "rhCondEmptyObject": {
+    "message": "이(가) 빈 객체"
+  },
+  "rhCondGt0": {
+    "message": "이(가) 0보다 큼"
+  },
+  "rhCondGte0": {
+    "message": "이(가) 0 이상"
+  },
+  "rhCondEq0": {
+    "message": "이(가) 0과 같음"
+  },
+  "rhCondNe0": {
+    "message": "이(가) 0이 아님"
+  },
+  "rhCondGt1": {
+    "message": "이(가) 1보다 큼"
+  },
+  "rhCondGte1": {
+    "message": "이(가) 1 이상"
+  },
+  "rhCondLenGt0": {
+    "message": "이(가) 비어 있지 않음"
+  },
+  "rhCondLenEq0": {
+    "message": "이(가) 비어 있음"
+  },
+  "rhCondTrue": {
+    "message": "이(가) true"
+  },
+  "rhCondFalse": {
+    "message": "이(가) false"
+  },
+  "rhWindowIntro": {
+    "message": "페이지의 JavaScript 전역 변수(window.…)를 검사합니다. 변수를 고른 다음 만족해야 할 조건을 고르세요."
+  },
+  "rhWindowSentenceFmt": {
+    "message": "{0}{1}인 페이지와 일치"
+  },
+  "rhChipTemplate": {
+    "message": "템플릿"
+  },
+  "rhDomClass": {
+    "message": "클래스"
+  },
+  "rhDomId": {
+    "message": "ID"
+  },
+  "rhDomData": {
+    "message": "data 속성"
+  },
+  "rhDomClassContains": {
+    "message": "클래스에 포함"
+  },
+  "rhDomIdContains": {
+    "message": "ID에 포함"
+  },
+  "rhDomTag": {
+    "message": "HTML 태그"
+  },
+  "rhDomAttr": {
+    "message": "속성 있음"
+  },
+  "rhDomIframe": {
+    "message": "iframe URL에 포함"
+  },
+  "rhDomTitle": {
+    "message": "제목에 포함"
+  },
+  "rhDomAlt": {
+    "message": "대체 텍스트에 포함"
+  },
+  "rhDomCamel": {
+    "message": "camelCase 클래스"
+  },
+  "rhRegexTitle": {
+    "message": "정규식 도우미"
+  },
+  "rhUsePattern": {
+    "message": "패턴 사용"
+  },
+  "rhRegexStartsFmt": {
+    "message": "“{0}”(으)로 시작"
+  },
+  "rhRegexEndsFmt": {
+    "message": "“{0}”(으)로 끝남"
+  },
+  "rhRegexContainsFmt": {
+    "message": "어디든 “{0}” 포함"
+  },
+  "rhRegexWordFmt": {
+    "message": "전체 단어 “{0}”"
+  },
+  "rhRegexOrFmt": {
+    "message": "“{0}” 또는 다른 옵션"
+  },
+  "rhRegexStartsMoreFmt": {
+    "message": "“{0}”(으)로 시작하고 뒤에 텍스트가 더 있음"
+  },
+  "rhRegexEitherFmt": {
+    "message": "“{0}” 또는 “{1}”"
+  },
+  "rhExamplesForFmt": {
+    "message": "“{0}” 예시"
+  },
+  "rhExamples": {
+    "message": "예시"
+  },
+  "rhHowMatchesFmt": {
+    "message": "“{0}”의 일치 방식"
+  },
+  "rhQuickRef": {
+    "message": "빠른 참조"
+  },
+  "rhRefAny": {
+    "message": "모든 문자"
+  },
+  "rhRefZeroMore": {
+    "message": "0개 이상"
+  },
+  "rhRefOneMore": {
+    "message": "1개 이상"
+  },
+  "rhRefOptional": {
+    "message": "선택 사항"
+  },
+  "rhRefStart": {
+    "message": "시작"
+  },
+  "rhRefEnd": {
+    "message": "끝"
+  },
+  "rhRefDigit": {
+    "message": "숫자"
+  },
+  "rhRefWord": {
+    "message": "문자, 숫자 또는 _"
+  },
+  "rhRefSpace": {
+    "message": "공백"
+  },
+  "rhRefOr": {
+    "message": "a 또는 b"
+  },
+  "rhMatch": {
+    "message": "일치"
+  },
+  "rhNoMatch": {
+    "message": "불일치"
+  },
+  "rhWwIntro": {
+    "message": "텍스트가 더 긴 단어의 일부가 아니라 단독으로 있을 때만 일치합니다."
+  },
+  "rhWwExact": {
+    "message": "정확한 단어"
+  },
+  "rhWwJoinedBefore": {
+    "message": "앞 텍스트와 붙어 있음"
+  },
+  "rhWwJoinedAfter": {
+    "message": "뒤 텍스트와 붙어 있음"
+  },
+  "rhWwSpaces": {
+    "message": "공백으로 구분됨"
+  },
+  "rhCsIntro": {
+    "message": "켜면 대문자와 소문자를 다르게 취급합니다."
+  },
+  "rhCsOnTitle": {
+    "message": "대소문자 구분 켬"
+  },
+  "rhCsOffTitle": {
+    "message": "대소문자 구분 끔"
+  },
+  "rhWhatIsRegex": {
+    "message": "정규식이란?"
+  },
+  "rhWhatIsWholeWord": {
+    "message": "“전체 단어”란?"
+  },
+  "rhWhatIsCase": {
+    "message": "“대소문자 구분”이란?"
+  },
+  "rhRegexIntro": {
+    "message": "정규식(regex)은 정확한 문자가 아니라 패턴으로 텍스트를 찾습니다."
+  },
+  "rhWhenToUse": {
+    "message": "사용 시기"
+  },
+  "rhRegexUse1": {
+    "message": "특정 내용으로 시작하거나 끝나는 텍스트"
+  },
+  "rhRegexUse2": {
+    "message": "여러 변형을 한 번에 (| 사용)"
+  },
+  "rhRegexUse3": {
+    "message": "숫자 또는 특정 종류의 문자"
+  },
+  "rhRegexTip": {
+    "message": "정확한 텍스트에는 정규식이 필요 없습니다. “전체 단어”를 사용하세요."
+  },
+  "rhBestFor": {
+    "message": "적합한 용도"
+  },
+  "rhWwUse1": {
+    "message": "정확한 쿠키 이름"
+  },
+  "rhWwUse2": {
+    "message": "특정 헤더 이름"
+  },
+  "rhWwUse3": {
+    "message": "전체 클래스 또는 함수 이름"
+  },
+  "rhCsUse1": {
+    "message": "대소문자가 정확한 헤더와 쿠키"
+  },
+  "rhCsUse2": {
+    "message": "JavaScript 속성 이름"
+  },
+  "settingsApiEventsDesc": {
+    "message": "확장 프로그램이 페이지에 보내는 이벤트"
+  },
+  "settingsApiUsageDesc": {
+    "message": "직접 작성한 스크립트에서 이벤트 수신"
+  },
+  "settingsApiCopyCode": {
+    "message": "코드 복사"
+  },
+  "settingsApiCodeCopied": {
+    "message": "코드를 복사했습니다"
+  },
+  "settingsApiEventCopyTitle": {
+    "message": "이벤트 이름 복사"
+  },
+  "advCommonClickToCopy": {
+    "message": "클릭하여 복사"
+  },
+  "advCommonClickToCopyFull": {
+    "message": "클릭하여 전체 값 복사"
+  },
+  "advCommonDomainLabel": {
+    "message": "도메인:"
+  },
+  "advCommonCopy": {
+    "message": "복사"
+  },
+  "advCommonPage": {
+    "message": "페이지"
+  },
+  "advCommonExportCode": {
+    "message": "코드 내보내기"
+  },
+  "advCommonUrlCopied": {
+    "message": "URL이 복사되었습니다"
+  },
+  "advCommonCaptured": {
+    "message": "캡처 시각"
+  },
+  "advCommonScript": {
+    "message": "스크립트"
+  },
+  "advCommonUrl": {
+    "message": "URL"
+  },
+  "advCommonScriptUrl": {
+    "message": "스크립트 URL:"
+  },
+  "advCommonNoCaptureData": {
+    "message": "캡처 데이터가 없습니다"
+  },
+  "advCommonFailedCheckCookiesFmt": {
+    "message": "쿠키를 확인하지 못했습니다: {0}"
+  },
+  "advCommonFailedAnalyzeScriptsFmt": {
+    "message": "스크립트를 분석하지 못했습니다: {0}"
+  },
+  "advCommonFailedStartAnalysis": {
+    "message": "분석을 시작하지 못했습니다"
+  },
+  "advCommonFailedCheckVersionFmt": {
+    "message": "버전을 확인하지 못했습니다: {0}"
+  },
+  "advCommonFailedExtractFmt": {
+    "message": "추출하지 못했습니다: {0}"
+  },
+  "advCommonFailedStartExtractionFmt": {
+    "message": "추출을 시작하지 못했습니다: {0}"
+  },
+  "advCommonFailedOpenExportFmt": {
+    "message": "내보내기 창을 열지 못했습니다: {0}"
+  },
+  "advCommonNoScriptsToExport": {
+    "message": "내보낼 스크립트가 없습니다"
+  },
+  "advCommonCookiesTitleFmt": {
+    "message": "{0} 쿠키"
+  },
+  "advCommonNoCookiesFmt": {
+    "message": "{0} 쿠키를 찾을 수 없습니다"
+  },
+  "advCommonScriptsTitleFmt": {
+    "message": "{0} 스크립트 ({1})"
+  },
+  "advCommonAnalyzingReloadFmt": {
+    "message": "{0} 스크립트를 분석하는 중… 페이지가 새로고침됩니다"
+  },
+  "advCommonCodeGenUnavailable": {
+    "message": "코드 생성을 사용할 수 없습니다"
+  },
+  "advCommonCodeGenTitle": {
+    "message": "스크립트 파싱 코드 생성기"
+  },
+  "advCommonExportOptions": {
+    "message": "내보내기 옵션"
+  },
+  "advCommonAllTypes": {
+    "message": "모든 유형"
+  },
+  "advCommonFoundScriptsFmt": {
+    "message": "관련 스크립트 {0}개를 찾았습니다"
+  },
+  "advCommonScriptAnalysis": {
+    "message": "스크립트 분석"
+  },
+  "advCommonTotalScripts": {
+    "message": "전체 스크립트:"
+  },
+  "advCommonProtectionLevel": {
+    "message": "보호 수준:"
+  },
+  "advCommonCookiesFound": {
+    "message": "찾은 쿠키:"
+  },
+  "advCommonSiteKey": {
+    "message": "사이트 키"
+  },
+  "advCommonWebsiteUrl": {
+    "message": "웹사이트 URL"
+  },
+  "advCommonSiteUrl": {
+    "message": "사이트 URL"
+  },
+  "advCommonApiDomain": {
+    "message": "API 도메인"
+  },
+  "advCommonFound": {
+    "message": "발견됨"
+  },
+  "advCommonNotFound": {
+    "message": "찾을 수 없음"
+  },
+  "advCommonRequired": {
+    "message": "필요"
+  },
+  "advCommonYes": {
+    "message": "예"
+  },
+  "advCommonEnterprise": {
+    "message": "Enterprise"
+  },
+  "advCommonStandard": {
+    "message": "표준"
+  },
+  "advCommonNone": {
+    "message": "없음"
+  },
+  "advCodeDescBrowserParseFmt": {
+    "message": "{0} 스크립트를 가로채 파싱하는 브라우저 콘솔 코드"
+  },
+  "advCodeDescBrowserFetchFmt": {
+    "message": "{0} 스크립트를 가져오는 브라우저 콘솔 코드"
+  },
+  "advCodeDescPythonBs": {
+    "message": "requests와 BeautifulSoup을 사용하는 Python 스크립트"
+  },
+  "advCodeDescPython": {
+    "message": "requests 라이브러리를 사용하는 Python 스크립트"
+  },
+  "advCodeDescNodeCheerio": {
+    "message": "axios와 cheerio를 사용하는 Node.js 스크립트"
+  },
+  "advCodeDescNode": {
+    "message": "axios를 사용하는 Node.js 스크립트"
+  },
+  "advCodeDescPhpDom": {
+    "message": "cURL과 DOMDocument를 사용하는 PHP 스크립트"
+  },
+  "advCodeDescPhp": {
+    "message": "cURL을 사용하는 PHP 스크립트"
+  },
+  "advCodeDescCsharpHap": {
+    "message": "HttpClient와 HtmlAgilityPack을 사용하는 C#"
+  },
+  "advCodeDescCsharp": {
+    "message": "HttpClient를 사용하는 C#"
+  },
+  "advCodeDescGoQuery": {
+    "message": "net/http와 goquery를 사용하는 Go"
+  },
+  "advCodeDescGo": {
+    "message": "net/http를 사용하는 Go"
+  },
+  "pageNoticeCaptureActive": {
+    "message": "캡처 진행 중"
+  },
+  "pageNoticeReloadToCapture": {
+    "message": "페이지를 새로고침하면 캡처가 시작됩니다."
+  },
+  "pageNoticeEndsInFmt": {
+    "message": "{0}초 후 종료"
+  },
+  "pageNoticeRecaptchaStepReload": {
+    "message": "이 페이지를 새로고침"
+  },
+  "pageNoticeRecaptchaStepSolve": {
+    "message": "reCAPTCHA를 풀거나 클릭"
+  },
+  "pageNoticeRecaptchaStepWait": {
+    "message": "\"캡처 완료\"가 나올 때까지 대기"
+  },
+  "pageNoticeMonitoringStartedFmt": {
+    "message": "{0} 모니터링 시작됨"
+  },
+  "pageNoticeCollectingScripts": {
+    "message": "스크립트 URL을 수집하는 중입니다. 잠시 기다려 주세요…"
+  },
+  "pageNoticeAnalyzingScriptsFmt": {
+    "message": "{0} 스크립트 분석 중"
+  },
+  "pageNoticeCaptureCompleted": {
+    "message": "캡처 완료"
+  },
+  "pageNoticePageLoading": {
+    "message": "페이지 로드 중"
+  },
+  "pageNoticeWaitForLoad": {
+    "message": "페이지가 완전히 로드될 때까지 기다려 주세요…"
+  },
+  "advAkamaiNotDetectedToast": {
+    "message": "이 페이지에서 Akamai가 감지되지 않았습니다. _abck 쿠키가 없습니다."
+  },
+  "advAkamaiCaptureSuccess": {
+    "message": "Akamai 데이터를 캡처했습니다!"
+  },
+  "advAkamaiCaptureStopped": {
+    "message": "캡처가 중지되었습니다"
+  },
+  "advAkamaiStopCaptureFailedFmt": {
+    "message": "캡처를 중지하지 못했습니다: {0}"
+  },
+  "advAkamaiReloadingToAnalyze": {
+    "message": "Akamai 데이터를 분석하기 위해 페이지를 새로고침하는 중…"
+  },
+  "advAkamaiAnalyzeFailedFmt": {
+    "message": "콘텐츠를 분석하지 못했습니다: {0}"
+  },
+  "advAkamaiNoAbckCookie": {
+    "message": "_abck 쿠키를 찾을 수 없습니다"
+  },
+  "advAkamaiProcessFailedFmt": {
+    "message": "데이터를 처리하지 못했습니다: {0}"
+  },
+  "advAkamaiExtractingSensor": {
+    "message": "센서 정보를 추출하는 중…"
+  },
+  "advAkamaiExtractSensorFailedFmt": {
+    "message": "센서 정보를 추출하지 못했습니다: {0}"
+  },
+  "advAkamaiNoticeNotDetectedTitle": {
+    "message": "Akamai가 감지되지 않음"
+  },
+  "advAkamaiNoticeNoAbck": {
+    "message": "이 페이지에 _abck 쿠키가 없습니다."
+  },
+  "advAkamaiNoticeNotActive": {
+    "message": "여기서는 Akamai Bot Manager가 활성화되어 있지 않습니다."
+  },
+  "advAkamaiNoticeReloadToMonitor": {
+    "message": "페이지를 새로고침하면 센서 데이터와 요청 세부 정보 모니터링이 시작됩니다"
+  },
+  "advAkamaiNoticeSensorCaptured": {
+    "message": "Akamai sensor_data를 캡처했습니다"
+  },
+  "advAkamaiNoticeExtractingTitle": {
+    "message": "Akamai 센서 데이터 추출 중"
+  },
+  "advAkamaiNoticeWaitingSensor": {
+    "message": "센서 정보가 캡처되기를 기다리는 중…"
+  },
+  "advAkamaiNoticeAnalyzingTitle": {
+    "message": "Akamai 콘텐츠 분석 중"
+  },
+  "advAkamaiNoticeScanning": {
+    "message": "페이지에서 스크립트와 패턴을 검색하는 중…"
+  },
+  "advAkamaiNoticeExtractingSensorTitle": {
+    "message": "센서 데이터 추출 중"
+  },
+  "advAkamaiNoticeCapturingSensor": {
+    "message": "Akamai 센서 정보를 캡처하는 중…"
+  },
+  "advAkamaiLevelAdvancedSbsd": {
+    "message": "고급 (SBSD)"
+  },
+  "advAkamaiLevelBasic": {
+    "message": "기본"
+  },
+  "advAkamaiLevelEasy": {
+    "message": "쉬움"
+  },
+  "advAkamaiAbckLevelLabel": {
+    "message": "_abck 수준:"
+  },
+  "advAkamaiAnalysisTitle": {
+    "message": "Akamai 분석"
+  },
+  "advAkamaiScriptsLabel": {
+    "message": "Akamai 스크립트:"
+  },
+  "advAkamaiScriptsHeading": {
+    "message": "Akamai 스크립트"
+  },
+  "advAkamaiSensorDataUrlScript": {
+    "message": "센서 데이터 URL 스크립트"
+  },
+  "advAkamaiPixelHtmlVar": {
+    "message": "Pixel HTML 변수:"
+  },
+  "advAkamaiPixelChallengeUrls": {
+    "message": "Pixel 챌린지 URL:"
+  },
+  "advAkamaiPostUrl": {
+    "message": "POST URL:"
+  },
+  "advAkamaiPixelScriptVar": {
+    "message": "Pixel 스크립트 변수:"
+  },
+  "advAkamaiSbsdScriptUrl": {
+    "message": "SBSD 스크립트 URL"
+  },
+  "advAkamaiSensorDataUrls": {
+    "message": "센서 데이터 URL"
+  },
+  "advAkamaiEndpoint": {
+    "message": "Akamai 엔드포인트"
+  },
+  "advAkamaiTypeSensor": {
+    "message": "센서"
+  },
+  "advAkamaiExtractedSensorTitle": {
+    "message": "추출된 센서 정보"
+  },
+  "advAkamaiSensorDataCharsFmt": {
+    "message": "센서 데이터 ({0}자)"
+  },
+  "advAkamaiSensorDataNotCaptured": {
+    "message": "센서 데이터 (캡처되지 않음)"
+  },
+  "advAkamaiNoSensorData": {
+    "message": "캡처된 센서 데이터가 없습니다"
+  },
+  "advAkamaiSbsdDataCharsFmt": {
+    "message": "SBSD 데이터 ({0}자)"
+  },
+  "advAkamaiSensorScriptUrl": {
+    "message": "센서 스크립트 URL"
+  },
+  "advAkamaiCopyAllJson": {
+    "message": "모든 데이터를 JSON으로 복사"
+  },
+  "advAkamaiExtractSensorBtn": {
+    "message": "센서 정보 추출"
+  },
+  "advAkamaiAbckLevel": {
+    "message": "ABCK 수준"
+  },
+  "advAkamaiAbckCookie": {
+    "message": "ABCK 쿠키"
+  },
+  "advAkamaiVersionLabel": {
+    "message": "Akamai 버전"
+  },
+  "advAkamaiChallengeRequirements": {
+    "message": "필요한 챌린지"
+  },
+  "advAkamaiSbsdChallenge": {
+    "message": "SBSD 챌린지"
+  },
+  "advAkamaiSecCptChallenge": {
+    "message": "sec_cpt 챌린지"
+  },
+  "advAkamaiPixelChallenge": {
+    "message": "Pixel 챌린지"
+  },
+  "advImpervaEnableExtractionFailed": {
+    "message": "추출 모드를 활성화하지 못했습니다. 자세한 내용은 백그라운드 콘솔을 확인하세요."
+  },
+  "advImpervaSessionCookies": {
+    "message": "세션 쿠키"
+  },
+  "advImpervaSecurityComponents": {
+    "message": "보안 구성 요소"
+  },
+  "advImpervaCookieCountFmt": {
+    "message": "쿠키: {0}"
+  },
+  "advImpervaResourceDetection": {
+    "message": "리소스 감지"
+  },
+  "advImpervaResourceUrls": {
+    "message": "리소스 URL"
+  },
+  "advImpervaInterrogationUrls": {
+    "message": "인터로게이션 URL"
+  },
+  "advImpervaAnalysisTitle": {
+    "message": "Imperva 분석"
+  },
+  "advImpervaSensorUrl": {
+    "message": "센서 URL:"
+  },
+  "advImpervaScriptsHeading": {
+    "message": "Imperva 스크립트"
+  },
+  "advImpervaScriptTypeFmt": {
+    "message": "{0} 스크립트"
+  },
+  "advImpervaSensorPath": {
+    "message": "센서 경로:"
+  },
+  "advImpervaNoScripts": {
+    "message": "감지된 스크립트가 없습니다"
+  },
+  "advImpervaMayNotBePresent": {
+    "message": "이 페이지에는 Imperva가 없을 수 있습니다"
+  },
+  "advImpervaTypeOnlyFmt": {
+    "message": "{0}만"
+  },
+  "advImpervaLevelAdvanced": {
+    "message": "고급 (reese84 + utmvc)"
+  },
+  "advImpervaLevelBasicSession": {
+    "message": "기본 (세션)"
+  },
+  "advImpervaNoticeReloadToMonitor": {
+    "message": "페이지를 새로고침하면 Imperva 요청과 쿠키 모니터링이 시작됩니다"
+  },
+  "advImpervaNoticeCapturedItemsFmt": {
+    "message": "Imperva 데이터를 캡처했습니다 (항목: {0})"
+  },
+  "advImpervaNoticeCaptureComplete": {
+    "message": "Imperva 캡처 완료"
+  },
+  "advImpervaNoticeSensorCaptured": {
+    "message": "센서 데이터를 캡처했습니다"
+  },
+  "advImpervaNoticeExtractingTitle": {
+    "message": "Imperva 스크립트 추출 중"
+  },
+  "advImpervaNoticeMonitoringChallenge": {
+    "message": "챌린지 및 솔루션 데이터를 모니터링하는 중…"
+  },
+  "advRecaptchaCallbackTool": {
+    "message": "reCAPTCHA 콜백"
+  },
+  "advRecaptchaSelectorDetection": {
+    "message": "선택자 감지"
+  },
+  "advRecaptchaMethod": {
+    "message": "방법"
+  },
+  "advRecaptchaSelector": {
+    "message": "선택자"
+  },
+  "advRecaptchaSelectorCopied": {
+    "message": "선택자가 클립보드에 복사되었습니다!"
+  },
+  "advRecaptchaNoElements": {
+    "message": "reCAPTCHA 요소를 찾을 수 없습니다"
+  },
+  "advRecaptchaExecuteFailedFmt": {
+    "message": "grecaptcha.execute() 실패: {0}"
+  },
+  "advRecaptchaNoSiteKey": {
+    "message": "사이트 키를 찾을 수 없습니다"
+  },
+  "advRecaptchaExtractedSiteKey": {
+    "message": "추출된 사이트 키"
+  },
+  "advRecaptchaSiteKeyCopied": {
+    "message": "사이트 키가 클립보드에 복사되었습니다!"
+  },
+  "advRecaptchaSiteKeyCopiedShort": {
+    "message": "사이트 키가 복사되었습니다"
+  },
+  "advRecaptchaCallbacksTitle": {
+    "message": "reCAPTCHA 콜백"
+  },
+  "advRecaptchaClientsTitle": {
+    "message": "reCAPTCHA 클라이언트"
+  },
+  "advRecaptchaClientIdFmt": {
+    "message": "클라이언트 ID: {0}"
+  },
+  "advRecaptchaCopiedToClipboard": {
+    "message": "클립보드에 복사되었습니다!"
+  },
+  "advRecaptchaCallbackFunction": {
+    "message": "콜백 함수"
+  },
+  "advRecaptchaCallbackPath": {
+    "message": "콜백 경로"
+  },
+  "advRecaptchaNoCallback": {
+    "message": "정의된 콜백이 없습니다"
+  },
+  "advRecaptchaDomCallbacks": {
+    "message": "DOM 콜백"
+  },
+  "advRecaptchaScriptCallbacks": {
+    "message": "스크립트 콜백"
+  },
+  "advRecaptchaCallbackExamples": {
+    "message": "콜백 사용 예시"
+  },
+  "advRecaptchaInvisible": {
+    "message": "보이지 않음"
+  },
+  "advRecaptchaAction": {
+    "message": "액션"
+  },
+  "advRecaptchaVersionCopied": {
+    "message": "버전이 복사되었습니다"
+  },
+  "advRecaptchaActionCopied": {
+    "message": "액션이 복사되었습니다"
+  },
+  "advRecaptchaApiDomainCopied": {
+    "message": "API 도메인이 복사되었습니다"
+  },
+  "advRecaptchaRequiredCookie": {
+    "message": "필수 쿠키"
+  },
+  "advRecaptchaCookieCopied": {
+    "message": "쿠키가 복사되었습니다"
+  },
+  "advRecaptchaFeaturesDetected": {
+    "message": "감지된 기능"
+  },
+  "advRecaptchaSParamRequired": {
+    "message": "S 매개변수 필요"
+  },
+  "advRecaptchaHasSession": {
+    "message": "세션 있음"
+  },
+  "advRecaptchaCapturedLabel": {
+    "message": "캡처 시각:"
+  },
+  "advRecaptchaFailedClickFmt": {
+    "message": "클릭하지 못했습니다: {0}"
+  },
+  "advRecaptchaNoCallbacksFound": {
+    "message": "이 페이지에서 reCAPTCHA 콜백을 찾을 수 없습니다. reCAPTCHA가 로드되었는지 확인하세요."
+  },
+  "advRecaptchaFailedCaptureCallbackFmt": {
+    "message": "콜백을 캡처하지 못했습니다: {0}"
+  },
+  "pageNoticeRecaptchaReloadAndSolve": {
+    "message": "페이지를 새로고침하고 reCAPTCHA를 풀면 모니터링이 시작됩니다"
+  },
+  "pageNoticeRecaptchaPageReady": {
+    "message": "페이지 준비 완료"
+  },
+  "pageNoticeRecaptchaSolveNow": {
+    "message": "이제 reCAPTCHA를 풀어 데이터를 캡처하세요"
+  },
+  "pageNoticeRecaptchaDecodedFmt": {
+    "message": "캡처 및 디코딩된 요청: {0}"
+  },
+  "pageNoticeRecaptchaNoRequests": {
+    "message": "캡처된 reCAPTCHA 요청이 없습니다"
+  },
+  "pageNoticeRecaptchaSeen": {
+    "message": "reCAPTCHA 감지됨"
+  },
+  "pageNoticeRecaptchaSolveToFinish": {
+    "message": "챌린지를 풀면 캡처가 자동으로 끝납니다"
+  },
+  "pageNoticeRecaptchaTriggerNow": {
+    "message": "이제 reCAPTCHA를 실행하거나 클릭하세요"
+  },
+  "advShapeCookieLabel": {
+    "message": "쿠키"
+  },
+  "advShapeHeadersLabel": {
+    "message": "헤더"
+  },
+  "advShapeVersionTitle": {
+    "message": "Shape Security 버전"
+  },
+  "advShapeHeaderPattern": {
+    "message": "헤더 패턴"
+  },
+  "advShapeHeaderPatterns": {
+    "message": "헤더 패턴"
+  },
+  "advShapeCookieTitle": {
+    "message": "Shape 쿠키"
+  },
+  "advShapeMaxAgeInfoFmt": {
+    "message": "Max-Age: {0}초 (50년)"
+  },
+  "advShapeAnalysisTitle": {
+    "message": "Shape Security 분석"
+  },
+  "advShapeInitJsScriptsLabel": {
+    "message": "Init.js 스크립트:"
+  },
+  "advShapeSeedScriptsLabel": {
+    "message": "seed 스크립트:"
+  },
+  "advShapeScriptsHeading": {
+    "message": "Shape Security 스크립트"
+  },
+  "advShapeInitJsScript": {
+    "message": "Init.js 스크립트"
+  },
+  "advShapeInitJsScripts": {
+    "message": "Init.js 스크립트"
+  },
+  "advShapeSeedScript": {
+    "message": "seed 스크립트"
+  },
+  "advShapeSeedScripts": {
+    "message": "seed 스크립트"
+  },
+  "advShapeNoActiveTab": {
+    "message": "활성 탭을 찾을 수 없습니다"
+  },
+  "advShapeErrorFmt": {
+    "message": "오류: {0}"
+  },
+  "advShapeDetectedVersion": {
+    "message": "감지된 버전:"
+  },
+  "advShapeCaptureRequirements": {
+    "message": "캡처 요구 사항"
+  },
+  "advShapeCookieAndHeaders": {
+    "message": "쿠키 + 헤더"
+  },
+  "advShapeNoticeExtractingScripts": {
+    "message": "Shape Security 스크립트 추출 중"
+  },
+  "advShapeNoticeReloadToMonitor": {
+    "message": "페이지를 새로고침하면 Shape Security 헤더와 쿠키 모니터링이 시작됩니다"
+  },
+  "advShapeNoticeWaitBeforeActions": {
+    "message": "작업하기 전에 페이지가 완전히 로드될 때까지 기다려 주세요…"
+  },
+  "advShapeNoticeMonitoringActiveFmt": {
+    "message": "모니터링 중 ({0})"
+  },
+  "advShapeNoticeTriggerCookie": {
+    "message": "쿠키가 생성되도록 작업을 수행하세요"
+  },
+  "advShapeNoticeTriggerHeadersCookie": {
+    "message": "헤더와 쿠키가 생성되도록 작업을 수행하세요"
+  },
+  "advShapeNoticeTimeoutFmt": {
+    "message": "시간 초과 ({2}) - 쿠키: {0}, 헤더: {1}"
+  },
+  "advShapeNoticeV1SummaryFmt": {
+    "message": "{0} - 쿠키: {1}"
+  },
+  "advShapeNoticeV2SummaryFmt": {
+    "message": "{0} - 쿠키: {1} | 헤더: {2}"
+  },
+  "advShapeNoticeCapturedFmt": {
+    "message": "캡처됨 - 쿠키: {0}, 헤더: {1}"
+  },
+  "advHcaptchaDetectionTitle": {
+    "message": "hCaptcha 감지"
+  },
+  "advHcaptchaNotDetected": {
+    "message": "hCaptcha가 감지되지 않았습니다. hCaptcha가 로드된 상태로 페이지를 새로고침하세요."
+  },
+  "advHcaptchaVersionTitle": {
+    "message": "hCaptcha 버전"
+  },
+  "advHcaptchaEnterpriseMode": {
+    "message": "Enterprise 모드"
+  },
+  "advHcaptchaNo": {
+    "message": "아니요"
+  },
+  "advHcaptchaNoHistory": {
+    "message": "아직 캡처 기록이 없습니다"
+  },
+  "advHcaptchaNotAvailable": {
+    "message": "없음"
+  },
+  "advHcaptchaScriptNumberFmt": {
+    "message": "스크립트 {0}"
+  },
+  "advHcaptchaCheckingVersionReload": {
+    "message": "hCaptcha 버전 확인 중… 페이지가 새로고침됩니다"
+  },
+  "advHcaptchaVersionTimeout": {
+    "message": "hCaptcha 버전 감지 시간이 초과되었습니다"
+  },
+  "advHcaptchaFailedStartVersionCheck": {
+    "message": "버전 확인을 시작하지 못했습니다"
+  },
+  "advHcaptchaNoticeReloadToMonitor": {
+    "message": "페이지를 새로고침하면 hCaptcha 요청 모니터링이 시작됩니다"
+  },
+  "advHcaptchaNoticeCaptured": {
+    "message": "hCaptcha 데이터를 캡처했습니다"
+  },
+  "advHcaptchaNoticeCheckingVersion": {
+    "message": "hCaptcha 버전 확인 중"
+  },
+  "advHcaptchaNoticeAnalyzingPage": {
+    "message": "페이지를 분석하는 중입니다. 잠시 기다려 주세요…"
+  },
+  "advAwswafNoScripts": {
+    "message": "AWS WAF 스크립트를 찾을 수 없습니다"
+  },
+  "advAwswafDeleteCookieHint": {
+    "message": "aws-waf-token 쿠키를 삭제하고 새로고침하면 챌린지가 발생합니다"
+  },
+  "advAwswafTypeChallenge": {
+    "message": "챌린지"
+  },
+  "advAwswafClickToCopyUrl": {
+    "message": "클릭하여 URL 복사"
+  },
+  "advAwswafFetchCodeTitle": {
+    "message": "AWS WAF 스크립트 가져오기 코드"
+  },
+  "advAwswafScriptsLabel": {
+    "message": "AWS WAF 스크립트"
+  },
+  "advAwswafChallengeScript": {
+    "message": "챌린지 스크립트"
+  },
+  "advAwswafApiScript": {
+    "message": "API 스크립트 (jsapi.js)"
+  },
+  "advAwswafProblemEndpoint": {
+    "message": "문제 엔드포인트"
+  },
+  "advAwswafApiKey": {
+    "message": "API 키"
+  },
+  "advAwswafApiKeyCopied": {
+    "message": "API 키가 복사되었습니다"
+  },
+  "advAwswafToken": {
+    "message": "AWS WAF 토큰"
+  },
+  "advAwswafTokenCopied": {
+    "message": "토큰이 복사되었습니다"
+  },
+  "advAwswafDetectionIndicators": {
+    "message": "감지 지표"
+  },
+  "advAwswafStatus405": {
+    "message": "상태 405"
+  },
+  "advAwswafDetected": {
+    "message": "감지됨"
+  },
+  "advAwswafChallengeEndpoint": {
+    "message": "챌린지 엔드포인트"
+  },
+  "advAwswafDeletingCookieFmt": {
+    "message": "{0} 쿠키를 삭제하는 중… 페이지가 새로고침됩니다"
+  },
+  "advCloudflareExtractedSiteKey": {
+    "message": "추출된 Site Key"
+  },
+  "advCloudflareTypeLabel": {
+    "message": "유형"
+  },
+  "advCloudflareSiteKeyClickToCopy": {
+    "message": "Site Key (클릭하여 복사)"
+  },
+  "advCloudflareSiteKeyCopied": {
+    "message": "Site Key가 복사되었습니다"
+  },
+  "advCloudflareSitekeyLabel": {
+    "message": "Sitekey:"
+  },
+  "advCloudflareUrlLabel": {
+    "message": "URL:"
+  },
+  "advCloudflareTypeChallenge": {
+    "message": "챌린지"
+  },
+  "advCloudflareTypeAnalytics": {
+    "message": "분석"
+  },
+  "advCloudflareTypeBotManagement": {
+    "message": "봇 관리"
+  },
+  "advCloudflareCheckingVersion": {
+    "message": "Cloudflare 버전을 확인하는 중… 페이지가 새로고침됩니다"
+  },
+  "advCloudflareSiteKeyExtracted": {
+    "message": "Site Key를 추출했습니다"
+  },
+  "advCloudflareNoSitekey": {
+    "message": "페이지에서 sitekey를 찾을 수 없습니다"
+  },
+  "advCloudflareFailedExtractSitekey": {
+    "message": "sitekey를 추출하지 못했습니다"
+  },
+  "advDatadomeCookieCopied": {
+    "message": "쿠키가 복사되었습니다"
+  },
+  "advFuncaptchaPublicKey": {
+    "message": "공개 키"
+  },
+  "advFuncaptchaUserAgent": {
+    "message": "사용자 에이전트"
+  },
+  "advFuncaptchaBdaLabel": {
+    "message": "BDA(브라우저 데이터 배열)"
+  },
+  "advFuncaptchaBlobData": {
+    "message": "Blob 데이터"
+  },
+  "advFuncaptchaBlobDataNotCaptured": {
+    "message": "Blob 데이터(캡처되지 않음)"
+  },
+  "advFuncaptchaStatus": {
+    "message": "상태"
+  },
+  "advFuncaptchaNotCaptured": {
+    "message": "캡처되지 않음"
+  },
+  "advFuncaptchaReloadToMonitor": {
+    "message": "페이지를 새로고침하여 모니터링을 시작하고 FunCaptcha 챌린지를 발생시키세요(제한 시간 60초)"
+  },
+  "advFuncaptchaPageLoadingMsg": {
+    "message": "페이지를 로드하는 중입니다. 잠시 기다려 주세요…"
+  },
+  "advFuncaptchaCapturedTitle": {
+    "message": "FunCaptcha 캡처 성공"
+  },
+  "advFuncaptchaCapturedCountFmt": {
+    "message": "캡처된 챌린지: {0}"
+  },
+  "advFuncaptchaCaptureTimeout": {
+    "message": "캡처 시간 초과"
+  },
+  "advFuncaptchaNoChallenge": {
+    "message": "FunCaptcha 챌린지가 감지되지 않았습니다(제한 시간 60초)"
+  },
+  "advGeetestSourceInlineScript": {
+    "message": "인라인 스크립트"
+  },
+  "advGeetestSourceDomAttribute": {
+    "message": "DOM 속성"
+  },
+  "advGeetestSourceScriptUrl": {
+    "message": "스크립트 URL"
+  },
+  "advGeetestSourceJsonConfig": {
+    "message": "JSON 구성"
+  },
+  "advGeetestSourceLabel": {
+    "message": "출처:"
+  },
+  "advGeetestExtractedCaptchaId": {
+    "message": "추출된 captchaId"
+  },
+  "advGeetestClickToCopyCaptchaId": {
+    "message": "클릭하여 captchaId 복사"
+  },
+  "advGeetestProductLabel": {
+    "message": "제품:"
+  },
+  "advGeetestScriptSnippet": {
+    "message": "스크립트 조각"
+  },
+  "advGeetestExportParsingCode": {
+    "message": "파싱 코드 내보내기"
+  },
+  "advGeetestErrorFmt": {
+    "message": "오류: {0}"
+  },
+  "advGeetestDetectedVersionFmt": {
+    "message": "감지됨: Geetest {0}"
+  },
+  "advGeetestNoVersion": {
+    "message": "Geetest 버전이 감지되지 않았습니다"
+  },
+  "advGeetestParsingCodeCopied": {
+    "message": "파싱 코드가 클립보드에 복사되었습니다!"
+  },
+  "advGeetestTabNotFound": {
+    "message": "탭을 찾을 수 없습니다"
+  },
+  "advGeetestNoScriptsFound": {
+    "message": "Geetest 스크립트를 찾을 수 없습니다"
+  },
+  "advGeetestDetectingVersion": {
+    "message": "Geetest 버전을 감지하는 중…"
+  },
+  "advGeetestReloadCheckVersion": {
+    "message": "버전을 확인하기 위해 페이지를 새로고침하는 중"
+  },
+  "advGeetestAnalyzingScripts": {
+    "message": "스크립트를 분석하는 중…"
+  },
+  "advGeetestReloadExtractScripts": {
+    "message": "스크립트를 추출하기 위해 페이지를 새로고침하는 중"
+  },
+  "advPanelToolsNameFmt": {
+    "message": "{0} 도구"
+  },
+  "advPanelErrorLoadingTools": {
+    "message": "고급 도구를 불러오는 중 오류가 발생했습니다"
+  },
+  "advPanelCheckConsole": {
+    "message": "자세한 내용은 콘솔을 확인하세요"
+  },
+  "advPanelSelectDetectionFirst": {
+    "message": "먼저 탐지를 선택하세요"
+  },
+  "advPanelErrorLoadingCapturesFmt": {
+    "message": "캡처를 불러오는 중 오류 발생: {0}"
+  },
+  "advPanelCurrentSiteFmt": {
+    "message": "현재 사이트 ({0})"
+  },
+  "advPanelNoResultsText": {
+    "message": "필터나 검색어를 조정해 캡처를 찾아보세요."
+  },
+  "advPanelNoUrl": {
+    "message": "URL 없음"
+  },
+  "advPanelView": {
+    "message": "보기"
+  },
+  "advPanelBtnOk": {
+    "message": "확인"
+  },
+  "advPanelConfirmAction": {
+    "message": "작업 확인"
+  },
+  "advPanelBtnConfirm": {
+    "message": "확인"
+  },
+  "advPanelCopiedToClipboard": {
+    "message": "클립보드에 복사됨"
+  },
+  "advPanelToolsLoadedFmt": {
+    "message": "{0} 도구를 불러왔습니다"
+  },
+  "advPanelCookiesFoundFmt": {
+    "message": "쿠키 {0}/{1}개 발견"
+  },
+  "advPanelScriptsFoundFmt": {
+    "message": "발견된 스크립트: {0}"
+  },
+  "advPanelNoScriptsFmt": {
+    "message": "{0} 스크립트를 찾을 수 없습니다"
+  },
+  "advPanelVersionDetectedFmt": {
+    "message": "{0} 버전 감지됨: {1}"
+  },
+  "advPanelNoVersionFmt": {
+    "message": "{0} 버전이 감지되지 않았습니다"
+  },
+  "advPanelUnknownError": {
+    "message": "알 수 없는 오류"
+  },
+  "advPanelFailedStartCaptureFmt": {
+    "message": "캡처를 시작하지 못했습니다: {0}"
+  },
+  "advPanelFailedStopCaptureFmt": {
+    "message": "캡처를 중지하지 못했습니다: {0}"
+  },
+  "advPanelCaptureCountFmt": {
+    "message": "캡처: {0}"
+  },
+  "advPanelClearCapturedDataTitle": {
+    "message": "캡처된 모든 데이터 지우기"
+  },
+  "advPanelNotAvailable": {
+    "message": "없음"
+  },
+  "advPanelHistoryClearedFmt": {
+    "message": "{0} 캡처 기록을 지웠습니다"
+  },
+  "advPanelFailedClearHistory": {
+    "message": "기록을 지우지 못했습니다"
+  },
+  "advPanelCapturesPaginationFmt": {
+    "message": "캡처 {2}개 중 {0}-{1}개 표시"
+  },
+  "rulesUiNewDetectorName": {
+    "message": "새 탐지기"
+  },
+  "rulesUiAddDetectorTitleFmt": {
+    "message": "{0} 추가"
+  },
+  "rulesUiEditDetectorTitleFmt": {
+    "message": "{0} 편집"
+  },
+  "rulesUiScrapflyIconAlt": {
+    "message": "Scrapfly 아이콘"
+  },
+  "rulesUiDetectorIconAltFmt": {
+    "message": "{0} 아이콘"
+  },
+  "rulesUiChangeIcon": {
+    "message": "아이콘 변경"
+  },
+  "rulesUiChangeDetectorIcon": {
+    "message": "탐지기 아이콘 변경"
+  },
+  "rulesUiCustomColor": {
+    "message": "사용자 지정 색상"
+  },
+  "iconPickerTitle": {
+    "message": "아이콘 선택"
+  },
+  "iconPickerDefault": {
+    "message": "기본값"
+  },
+  "iconPickerUploadCustom": {
+    "message": "직접 업로드"
+  },
+  "iconPickerFileTooLarge": {
+    "message": "아이콘 파일은 100KB 미만이어야 합니다"
+  },
+  "rulesUiHelpJsHooks": {
+    "message": "JS 후크란?"
+  },
+  "rulesUiHelpWindow": {
+    "message": "창 속성이란?"
+  },
+  "rulesUiHelpUrl": {
+    "message": "URL 탐지란?"
+  },
+  "rulesUiHelpHeader": {
+    "message": "헤더 탐지란?"
+  },
+  "rulesUiHelpCookie": {
+    "message": "쿠키 탐지란?"
+  },
+  "rulesUiHelpContent": {
+    "message": "콘텐츠 탐지란?"
+  },
+  "rulesUiHelpDom": {
+    "message": "DOM 탐지란?"
+  },
+  "rulesUiHelpPayload": {
+    "message": "페이로드 탐지란?"
+  },
+  "rulesUiHelpGeneric": {
+    "message": "이 탐지 방법이란?"
+  },
+  "rulesUiValueOptionalPlaceholder": {
+    "message": "값 (선택 사항)"
+  },
+  "rulesUiDomSelectorPlaceholder": {
+    "message": "CSS 선택자 (예: .class, #id, [attr])"
+  },
+  "rulesUiContentTextPlaceholder": {
+    "message": "검색할 텍스트 또는 단어"
+  },
+  "rulesUiUrlPatternPlaceholder": {
+    "message": "URL 패턴"
+  },
+  "rulesUiJsHookTargetPlaceholder": {
+    "message": "JS 후크 대상 (예: navigator.webdriver)"
+  },
+  "rulesUiWindowPathPlaceholder": {
+    "message": "window 경로 (예: grecaptcha, _cf_chl_opt)"
+  },
+  "rulesUiWindowConditionPlaceholder": {
+    "message": "조건 (예: typeof object, typeof function)"
+  },
+  "rulesUiCookieNamePlaceholder": {
+    "message": "쿠키 이름 (예: __cf_bm, session_id)"
+  },
+  "rulesUiCookieValuePlaceholder": {
+    "message": "쿠키 값 패턴 (선택 사항)"
+  },
+  "rulesUiPayloadTextPlaceholder": {
+    "message": "텍스트 (예: sensor_data, challenge_token)"
+  },
+  "rulesUiPayloadUrlPlaceholder": {
+    "message": "/api/verify 또는 challenge.php"
+  },
+  "rulesUiNameSettings": {
+    "message": "이름 설정"
+  },
+  "rulesUiNameSettingsConfidenceFmt": {
+    "message": "이름 설정 (신뢰도: {0}%)"
+  },
+  "rulesUiValueSettings": {
+    "message": "값 설정"
+  },
+  "rulesUiDeleteMethod": {
+    "message": "패턴 삭제"
+  },
+  "rulesUiClearValue": {
+    "message": "값 지우기"
+  },
+  "rulesUiAddValue": {
+    "message": "값 추가"
+  },
+  "rulesUiPageOfFmt": {
+    "message": "{0} / {1} 페이지"
+  },
+  "rulesUiCompleteEmptyPattern": {
+    "message": "빈 패턴을 채운 후 다른 패턴을 추가하세요."
+  },
+  "rulesUiFillRequiredPatterns": {
+    "message": "저장하기 전에 패턴의 필수 필드를 모두 입력하세요."
+  },
+  "rulesUiEnterMethodTypePrompt": {
+    "message": "탐지 방법 유형을 입력하세요 (예: HEADERS, CONTENT, URLs):"
+  },
+  "rulesUiMethodFallback": {
+    "message": "방법"
+  },
+  "rulesUiUrlScopeHint": {
+    "message": "페이지 = 현재 URL | 스크립트 = 페이지 + 스크립트 | 모두 = 모든 요청"
+  },
+  "rulesUiLeaveEmptyAnyUrl": {
+    "message": "비워 두면 모든 URL과 일치합니다"
+  },
+  "ruleExampleMatches": {
+    "message": "✓ 일치:"
+  },
+  "ruleExampleWont": {
+    "message": "× 불일치:"
+  },
+  "ruleExampleWontMatch": {
+    "message": "× 일치하지 않음:"
+  },
+  "ruleExampleLiteralTextOnly": {
+    "message": "리터럴 텍스트만"
+  },
+  "ruleExampleExactCase": {
+    "message": "(대소문자 일치)"
+  },
+  "ruleExampleAlone": {
+    "message": "(단독)"
+  },
+  "ruleConditionGroupOther": {
+    "message": "기타"
+  },
+  "clipboardUrlFmt": {
+    "message": "URL: {0}"
+  },
+  "clipboardHostFmt": {
+    "message": "호스트: {0}"
+  },
+  "clipboardTitleFmt": {
+    "message": "제목: {0}"
+  },
+  "clipboardTimestampFmt": {
+    "message": "시각: {0}"
+  },
+  "clipboardSecuritySystemFmt": {
+    "message": "보안 시스템: {0}"
+  },
+  "clipboardCategoryFmt": {
+    "message": "카테고리: {0}"
+  },
+  "clipboardConfidenceFmt": {
+    "message": "신뢰도: {0}%"
+  },
+  "clipboardDetectionMethodsFmt": {
+    "message": "탐지 방법: {0}"
+  },
+  "clipboardDetectionMethodsHeading": {
+    "message": "탐지 방법:"
+  },
+  "clipboardDetectionsCountFmt": {
+    "message": "탐지 수: {0}"
+  },
+  "clipboardDetectionsListFmt": {
+    "message": "탐지 ({0}건):"
+  },
+  "clipboardDifficultyFmt": {
+    "message": "난이도: {0}"
+  },
+  "clipboardCacheScopeFmt": {
+    "message": "캐시 범위: {0}"
+  },
+  "clipboardCacheExpirationFmt": {
+    "message": "캐시 만료: {0}"
+  },
+  "clipboardMethodsFmt": {
+    "message": "방법: {0}"
+  },
+  "clipboardCopyFailed": {
+    "message": "클립보드에 복사하지 못했습니다"
+  },
+  "detectionUiCopyUrl": {
+    "message": "URL 복사"
+  },
+  "detectionUiCopyUrlFmt": {
+    "message": "URL 복사: {0}"
+  },
+  "detectionUiCopyCategory": {
+    "message": "카테고리 복사"
+  },
+  "detectionUiCopyCategoryFmt": {
+    "message": "카테고리 복사: {0}"
+  },
+  "detectionUiCopyMethod": {
+    "message": "방법 복사"
+  },
+  "detectionUiCopyMethodFmt": {
+    "message": "방법 복사: {0}"
+  },
+  "detectionUiCopyValue": {
+    "message": "값 복사"
+  },
+  "detectionUiCopyValueFmt": {
+    "message": "값 복사: {0}"
+  },
+  "detectionUiDurYearsFmt": {
+    "message": "{0}년"
+  },
+  "detectionUiDurMonthsFmt": {
+    "message": "{0}개월"
+  },
+  "detectionUiDurDaysFmt": {
+    "message": "{0}일"
+  },
+  "detectionUiDurHoursFmt": {
+    "message": "{0}시간"
+  },
+  "detectionUiDurMinutesFmt": {
+    "message": "{0}분"
+  },
+  "detectionUiDurPairFmt": {
+    "message": "{0} {1}"
+  },
+  "detectionUiDurUnderMinute": {
+    "message": "1분 미만"
+  },
+  "detectionUiNoDescription": {
+    "message": "이 탐지에 대한 추가 세부 정보가 없습니다."
+  },
+  "detectionUiNoMethodsRecorded": {
+    "message": "이 탐지기에 기록된 탐지 방법이 없습니다."
+  },
+  "detectionUiUnknownMethod": {
+    "message": "알 수 없는 방법"
+  },
+  "detectionUiUnknownValue": {
+    "message": "알 수 없음"
+  },
+  "historyUiUntitled": {
+    "message": "제목 없음"
+  },
+  "historyUiNoDetectionMethods": {
+    "message": "탐지 방법 없음"
+  },
+  "historyUiInvalidFileFormat": {
+    "message": "기록 파일 형식이 올바르지 않습니다"
+  },
+  "popupUiLogoAlt": {
+    "message": "Scrapfly 로봇"
+  },
+  "popupUiEnableFailedFmt": {
+    "message": "확장 프로그램을 사용 설정하지 못했습니다: {0}"
+  },
+  "popupUiDisableFailedFmt": {
+    "message": "확장 프로그램을 사용 중지하지 못했습니다: {0}"
+  },
+  "popupUiNativeErrorFmt": {
+    "message": "오류: {0}"
+  },
+  "settingsUiBlacklistEmpty": {
+    "message": "블랙리스트에 도메인이 없습니다"
+  },
+  "settingsUiBlacklistNoMatches": {
+    "message": "검색과 일치하는 도메인이 없습니다"
+  },
+  "settingsUiChecking": {
+    "message": "확인 중..."
+  },
+  "settingsUiErrHistoryLimit": {
+    "message": "기록 한도는 0(무제한)에서 10000 사이여야 합니다"
+  },
+  "settingsUiErrCacheDurationFmt": {
+    "message": "캐시 기간은 1에서 {0} 사이여야 합니다({1})"
+  },
+  "settingsUiErrAutoDeleteDays": {
+    "message": "자동 삭제 일수는 1에서 3650 사이여야 합니다"
+  },
+  "settingsUiErrDuplicateDuration": {
+    "message": "중복 기간은 1에서 999 사이여야 합니다"
+  },
+  "settingsUiExportJson": {
+    "message": "JSON 내보내기"
+  },
+  "settingsUiExportText": {
+    "message": "텍스트 내보내기"
+  },
+  "settingsUiLogsText": {
+    "message": "텍스트"
+  },
+  "settingsUiIncompatibleCountFmt": {
+    "message": "최신 확장 프로그램 버전이 필요한 탐지기 업데이트: {0}"
+  },
+  "settingsUiNeedsExtVersionFmt": {
+    "message": "v{0}(확장 프로그램 v{1} 필요)"
+  },
+  "statsUiTotals": {
+    "message": "합계"
+  },
+  "ruleSectionCombinations": {
+    "message": "조합"
+  },
+  "combinationsHint": {
+    "message": "패턴을 선택하고 몇 개가 일치해야 하는지 정하세요."
+  },
+  "combinationsEmpty": {
+    "message": "아직 조합이 없습니다."
+  },
+  "combinationAdd": {
+    "message": "조합 추가"
+  },
+  "combinationDefaultNameFmt": {
+    "message": "조합 {0}"
+  },
+  "combinationConfidence": {
+    "message": "일치할 때의 신뢰도"
+  },
+  "combinationConfidenceFromPatterns": {
+    "message": "비워 두면 일치하는 패턴의 신뢰도를 사용합니다"
+  },
+  "combinationDelete": {
+    "message": "조합 삭제"
+  },
+  "combinationDeleteConfirmFmt": {
+    "message": "조합 \"{0}\"을(를) 삭제할까요? 패턴은 규칙에 남습니다."
+  },
+  "combinationNotTitle": {
+    "message": "일치하면 안 됨"
+  },
+  "combinationNot": {
+    "message": "NOT"
+  },
+  "combinationRemove": {
+    "message": "제거"
+  },
+  "combinationEmptyPattern": {
+    "message": "(빈 패턴)"
+  },
+  "combinationAnyOfMethodFmt": {
+    "message": "모든 {0} 패턴"
+  },
+  "combinationGroupEmpty": {
+    "message": "아래에서 패턴을 추가하세요"
+  },
+  "combinationAddPattern": {
+    "message": "패턴 추가"
+  },
+  "combinationAnyPattern": {
+    "message": "아무 패턴"
+  },
+  "combinationPreviewAnd": {
+    "message": "그리고"
+  },
+  "combinationPreviewOr": {
+    "message": "또는"
+  },
+  "combinationPreviewNot": {
+    "message": "NOT"
+  },
+  "combinationPreviewEmpty": {
+    "message": "패턴을 추가해 조합을 만드세요"
+  },
+  "combinationInvalid": {
+    "message": "일치해야 하는 패턴을 선택하고 최소 일치 수를 확인하세요."
+  },
+  "combinationStrict": {
+    "message": "엄격"
+  },
+  "combinationStrictTitle": {
+    "message": "엄격: 이 패턴은 단독으로 탐지기를 작동시키지 않고 조합 안에서만 작동합니다"
+  },
+  "patternCombinationsOnlyBadge": {
+    "message": "조합 전용"
+  },
+  "detectionModalCombinations": {
+    "message": "일치한 조합"
+  },
+  "combinationNoPatterns": {
+    "message": "추가된 패턴 없음"
+  },
+  "combinationJoinTitle": {
+    "message": "그리고 / 또는 전환"
+  },
+  "combinationPickHint": {
+    "message": "추가할 패턴을 선택하세요"
+  },
+  "combinationAddSelectedFmt": {
+    "message": "선택한 {0}개 추가"
+  },
+  "combinationEditConditions": {
+    "message": "조건 편집"
+  },
+  "combinationRequireTogether": {
+    "message": "패턴을 조합에서만 사용"
+  },
+  "combinationRequireHint": {
+    "message": "이 규칙 전체에서 해당 패턴에 적용됩니다."
+  },
+  "combinationAutoConfidence": {
+    "message": "자동"
+  },
+  "combinationMatchAll": {
+    "message": "모든 조건이 일치"
+  },
+  "combinationMatchAny": {
+    "message": "하나 이상의 조건이 일치"
+  },
+  "combinationMatchAtLeast": {
+    "message": "최소…개 일치"
+  },
+  "combinationDetectWhen": {
+    "message": "감지 조건"
+  },
+  "combinationGroupExcluded": {
+    "message": "이 조건들은 일치하면 안 됩니다."
+  },
+  "combinationMinimum": {
+    "message": "최소 일치 수"
+  },
+  "combinationMatchState": {
+    "message": "패턴 조건"
+  },
+  "combinationMatches": {
+    "message": "일치함"
+  },
+  "combinationDoesNotMatch": {
+    "message": "일치하지 않음"
+  },
+  "combinationAtLeastSummaryFmt": {
+    "message": "최소 {0}개 조건이 일치"
+  },
+  "combinationChoosePatterns": {
+    "message": "패턴 선택"
+  },
+  "combinationSummaryAll": {
+    "message": "필수 조건이 모두 일치하면 감지합니다."
+  },
+  "combinationSummaryAny": {
+    "message": "하나 이상의 조건이 일치하면 감지합니다."
+  },
+  "combinationSummaryMinimumFmt": {
+    "message": "{1}개 조건 중 최소 {0}개가 일치하면 감지합니다."
+  },
+  "combinationSummaryExcluded": {
+    "message": "제외된 패턴은 일치하면 안 됩니다."
+  },
+  "combinationDecreaseMinimum": {
+    "message": "최소 일치 수 줄이기"
+  },
+  "combinationIncreaseMinimum": {
+    "message": "최소 일치 수 늘리기"
+  },
+  "detectionTipDetections": {
+    "message": "이 페이지에서 감지된 보호 기능의 수입니다."
+  },
+  "detectionTipConfidence": {
+    "message": "감지된 보호 기능의 평균 신뢰도입니다."
+  },
+  "detectionTipDifficulty": {
+    "message": "감지된 보호 기능을 우회하는 데 필요한 예상 난이도입니다."
+  },
+  "detectionTipCacheScope": {
+    "message": "캐시된 감지 결과를 재사용할 수 있는 페이지 범위입니다."
+  },
+  "detectionTipCacheExpiration": {
+    "message": "캐시된 감지 결과가 만료될 때까지 남은 시간입니다."
+  },
+  "tipCachedAt": {
+    "message": "저장됨"
+  },
+  "tipConfidenceAverageFmt": {
+    "message": "탐지 {0}개의 평균, {1}%~{2}%"
+  },
+  "tipConfidenceFromCombinations": {
+    "message": "일치한 조합 기준"
+  },
+  "tipConfidenceFromSignals": {
+    "message": "가장 강한 단일 신호가 점수를 정합니다"
+  },
+  "tipCountShareFmt": {
+    "message": "{0} · {1}%"
+  },
+  "tipCustomDetector": {
+    "message": "사용자 지정 감지기"
+  },
+  "tipDifficultyFromCategoryFmt": {
+    "message": "{0} 기본값"
+  },
+  "tipDifficultyFromRule": {
+    "message": "이 감지기가 설정"
+  },
+  "tipDifficultyHardestFmt": {
+    "message": "{0}이(가) 결정"
+  },
+  "tipDifficultyManyFmt": {
+    "message": "보호 기능 {0}개가 함께 있어 상승"
+  },
+  "tipLastUpdated": {
+    "message": "업데이트"
+  },
+  "tipMethodContent": {
+    "message": "페이지 또는 스크립트의 텍스트가 일치했습니다."
+  },
+  "tipMethodCookie": {
+    "message": "이 사이트의 쿠키가 일치했습니다."
+  },
+  "tipMethodDom": {
+    "message": "페이지 요소가 일치했습니다."
+  },
+  "tipMethodHeader": {
+    "message": "사이트가 보낸 응답 헤더가 일치했습니다."
+  },
+  "tipMethodJsHooks": {
+    "message": "이 감지기가 감시하는 브라우저 API를 페이지가 호출했습니다."
+  },
+  "tipMethodPayload": {
+    "message": "페이지가 요청으로 보낸 데이터가 일치했습니다."
+  },
+  "tipMethodUrl": {
+    "message": "페이지 또는 페이지의 요청이 알려진 주소와 일치했습니다."
+  },
+  "tipMethodWindow": {
+    "message": "페이지의 전역 JavaScript 객체가 일치했습니다."
+  },
+  "tipMoreFmt": {
+    "message": "외 {0}개"
+  },
+  "tipOfficialDetector": {
+    "message": "Scrapfly 공식 감지기"
+  },
+  "tipScopeDomain": {
+    "message": "이 도메인의 모든 페이지에서 결과를 재사용합니다."
+  },
+  "tipScopeFullUrl": {
+    "message": "쿼리를 포함한 이 URL에서만 결과를 재사용합니다."
+  },
+  "tipScopePath": {
+    "message": "쿼리와 관계없이 이 경로에서 결과를 재사용합니다."
+  },
+  "tipStatsActiveDays": {
+    "message": "페이지가 하나 이상 저장된 날입니다."
+  },
+  "tipStatsDetections": {
+    "message": "저장된 모든 페이지에서 찾은 보호 기능(중복 포함)입니다."
+  },
+  "tipStatsDetectors": {
+    "message": "확인된 서로 다른 보호 기능(각각 한 번씩 계산)입니다."
+  },
+  "tipStatsDomains": {
+    "message": "저장된 페이지 중 서로 다른 사이트입니다."
+  },
+  "tipStatsEntries": {
+    "message": "이 기간에 기록에 저장된 페이지입니다."
+  },
+  "tipStatsRateFmt": {
+    "message": "{1}개 중 {0}개 항목"
+  },
+  "tipPatterns": {
+    "message": "패턴"
+  },
+  "settingsRowVerboseLogs": {
+    "message": "상세 로그"
+  },
+  "settingsRowVerboseLogsTip": {
+    "message": "페이지별 보고서뿐 아니라 모든 규칙, 훅, 메시지도 기록합니다"
   }
 }

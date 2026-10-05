@@ -234,17 +234,19 @@ function hcaptchaStartCapture(tabId, captureUrl) {
     // Show in-page notification
     if (typeof showCaptureStarted === 'function') {
         showCaptureStarted(tabId, {
-            title: 'hCaptcha Monitoring Started',
-            message: 'Reload the page to begin monitoring hCaptcha requests',
+            module: 'hCaptcha',
+            title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'hCaptcha'),
+            message: pageText('advHcaptchaNoticeReloadToMonitor', 'Reload the page to begin monitoring hCaptcha requests'),
             duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
             Logger.error('NETWORK', '[hCaptcha-Capture] Failed to show notification:', err);
         });
     } else if (showNotification) {
         showNotification(tabId, {
+            module: 'hCaptcha',
             type: 'capture',
-            title: 'hCaptcha Monitoring Started',
-            message: 'Reload the page to begin monitoring hCaptcha requests',
+            title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'hCaptcha'),
+            message: pageText('advHcaptchaNoticeReloadToMonitor', 'Reload the page to begin monitoring hCaptcha requests'),
             duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
             Logger.error('NETWORK', '[hCaptcha-Capture] Failed to show notification:', err);
@@ -309,9 +311,10 @@ async function handleHCaptchaCaptureCompleted(tabId, captureData) {
         Logger.network('[hCaptcha-Capture] Showing success notification...');
         if (showNotification) {
             await showNotification(tabId, {
+                module: 'hCaptcha',
                 type: 'success',
-                title: 'Capture Completed',
-                message: 'hCaptcha data captured successfully',
+                title: pageText('pageNoticeCaptureCompleted', 'Capture Completed'),
+                message: pageText('advHcaptchaNoticeCaptured', 'hCaptcha data captured successfully'),
                 duration: 5000
             }).catch(err => {
                 Logger.error('NETWORK', '[hCaptcha-Capture] Failed to show notification:', err);
@@ -607,9 +610,10 @@ function handleHCaptchaMessage(request, sender, sendResponse, captureState) {
                 try {
                     if (typeof showNotification === 'function') {
                         await showNotification(request.tabId, {
+                            module: 'hCaptcha',
                             type: 'loading',
-                            title: 'Analyzing hCaptcha Scripts',
-                            message: 'Please wait while we collect script URLs...',
+                            title: pageText('pageNoticeAnalyzingScriptsFmt', 'Analyzing {0} Scripts', 'hCaptcha'),
+                            message: pageText('pageNoticeCollectingScripts', 'Please wait while we collect script URLs...'),
                             duration: 15000
                         });
                     }
@@ -625,9 +629,10 @@ function handleHCaptchaMessage(request, sender, sendResponse, captureState) {
                 try {
                     if (typeof showNotification === 'function') {
                         await showNotification(request.tabId, {
+                            module: 'hCaptcha',
                             type: 'loading',
-                            title: 'Checking hCaptcha Version',
-                            message: 'Please wait while we analyze the page...',
+                            title: pageText('advHcaptchaNoticeCheckingVersion', 'Checking hCaptcha Version'),
+                            message: pageText('advHcaptchaNoticeAnalyzingPage', 'Please wait while we analyze the page...'),
                             duration: 15000
                         });
                     }

@@ -1,16 +1,27 @@
 /**
- * Centralized Logging System
- * Routes logs from all extension contexts (background, content, main world)
- * to the Service Worker console for unified debugging.
+ * Logger: one readable line per event, from every extension context.
  *
- * Usage:
- *   Logger.cache('Cache hit detected', { url, expires });
- *   Logger.detection('Found 21 detectors');
- *   Logger.error('CACHE', 'Failed to read cache', error);
+ * Levels and when they print:
+ *   error / warn          always (they also reach chrome://extensions Errors)
+ *   info (category helpers: Logger.background(), .detection(), .ui() ...)
+ *                         Settings → Debug mode
+ *   debug / verbose       Debug mode + "Verbose logs": per-rule, per-hook and
+ *                         per-message traces
+ *
+ * Line format, in the service worker console:
+ *   [13:22:45.856] bg/scan  walmart.com: 7 detections in 4.6 s · cookies=15 dom=488
+ * Origin is bg (service worker), page (content script, relayed), main (page
+ * MAIN world, relayed) or popup (extension pages print to their own console).
+ * Data objects render as key=value, errors as "TypeError: message (file.js:12)".
+ *
+ * Every per-scan detail goes into one collapsible scan report per page
+ * (Logger.report, built by background/scan-report.js), not one line per rule.
+ *
+ * Bursts are capped (RATE_LIMIT_* per second) and repeats collapsed; both
+ * leave a notice ("37 lines skipped", "repeated 12 more times") instead of
+ * dropping lines silently.
  */
-
 class Logger {
-  // Log categories
   static CATEGORIES = {
     DETECTION: 'DETECTION',
     CACHE: 'CACHE',
@@ -25,10 +36,10 @@ class Logger {
     PERF: 'PERF',
     UI: 'UI',
     TAB: 'TAB',
-    BADGE: 'BADGE'
+    BADGE: 'BADGE',
+    SCAN: 'SCAN'
   };
 
-  // Log levels
   static LEVELS = {
     DEBUG: 'DEBUG',
     INFO: 'INFO',
@@ -36,526 +47,384 @@ class Logger {
     ERROR: 'ERROR'
   };
 
-  // Rate limit to prevent log storms
-  static RATE_LIMIT_WINDOW_MS = 1000;
-  static MAX_LOGS_PER_WINDOW = 30; // default per-level ceiling (see _getMaxLogsPerWindow)
+  // Short origin labels per context
+  static ORIGINS = { background: 'bg', content: 'page', main: 'main', popup: 'popup' };
+
+  // Per-second ceilings; the overflow is counted and reported once
+  static RATE_WINDOW_MS = 1000;
+  static RATE_LIMIT = { DEBUG: 60, INFO: 40, WARN: 20, ERROR: 10 };
+
+  // The same line more than MAX_REPEATS times within REPEAT_WINDOW_MS is collapsed
+  static REPEAT_WINDOW_MS = 2000;
+  static MAX_REPEATS = 3;
+  static MAX_REPEAT_KEYS = 200;
+
+  // Size caps for one line
+  static MAX_MESSAGE_LENGTH = 300;
+  static MAX_VALUE_LENGTH = 160;
+  static MAX_KEYS = 12;
+  static MAX_ITEMS = 6;
+  static MAX_STACK_FRAMES = 4;
+
+  // Content-script lines are sent to the worker in batches (one message per BATCH_MS)
+  static BATCH_MS = 250;
+  static MAX_BATCH = 50;
+
   static _rateWindowStart = 0;
-  static _rateCounts = {
-    DEBUG: 0,
-    INFO: 0,
-    WARN: 0,
-    ERROR: 0
-  };
-  static _rateDropped = {
-    DEBUG: 0,
-    INFO: 0,
-    WARN: 0,
-    ERROR: 0
-  };
+  static _rateCounts = { DEBUG: 0, INFO: 0, WARN: 0, ERROR: 0 };
+  static _skipped = 0;
+  static _repeats = new Map();
+  static _batch = [];
+  static _batchTimer = null;
 
-  // Payload safety limits (keep console/message passing cheap)
-  static MAX_MESSAGE_LENGTH = 800;
-  static MAX_STRING_LENGTH = 2000;
-  static MAX_OBJECT_KEYS = 20;
-  static MAX_ARRAY_LENGTH = 20;
-  static MAX_DEPTH = 2;
-
-  // Dedupe repeated WARN/ERROR spam
-  static DEDUPE_WINDOW_MS = 2000;
-  static MAX_DUPES_PER_WINDOW = 5;
-  static _dedupe = new Map();
-
-  // Visual icons for categories
-  static ICONS = {
-    DETECTION: '',
-    CACHE: '',
-    HOOKS: '',
-    NETWORK: '',
-    STORAGE: '',
-    DETECTOR: '',
-    POPUP: '',
-    CONTENT: '',
-    BACKGROUND: '',
-    ERROR: '',
-    PERF: '',
-    UI: '',
-    TAB: '',
-    BADGE: ''
-  };
-
-  /**
-   * Detect the current execution context
-   * @returns {string} 'background', 'content', or 'main'
-   */
+  /** 'background' | 'popup' | 'content' | 'main' */
   static get context() {
-    // Service Worker / Background Script
-    if (typeof ServiceWorkerGlobalScope !== 'undefined' &&
+    if (typeof ServiceWorkerGlobalScope !== 'undefined' && typeof self !== 'undefined' &&
         self instanceof ServiceWorkerGlobalScope) {
       return 'background';
     }
-
-    // Check if we have chrome.runtime (extension context)
     if (typeof chrome !== 'undefined' && chrome.runtime) {
-      // Background context has chrome.tabs
-      if (chrome.tabs) {
-        return 'background';
-      }
-      // Content script (ISOLATED world) has chrome.runtime but not chrome.tabs
+      // Popup, Statistics and other extension pages
+      if (typeof location !== 'undefined' && location.protocol === 'chrome-extension:') return 'popup';
       return 'content';
     }
-
-    // Main world (no chrome APIs)
     return 'main';
   }
 
-  /**
-   * Get debug mode from storage (with fallback)
-   * @returns {boolean}
-   */
+  static _flag(name) {
+    if (typeof globalThis !== 'undefined' && typeof globalThis[name] !== 'undefined') return globalThis[name] === true;
+    if (typeof self !== 'undefined' && typeof self[name] !== 'undefined') return self[name] === true;
+    return false;
+  }
+
+  /** Settings → Debug mode */
   static get debugMode() {
-    // Try to get from global debugMode variable
-    if (typeof globalThis.debugMode !== 'undefined') {
-      return globalThis.debugMode;
-    }
-    if (typeof window !== 'undefined' && typeof window.debugMode !== 'undefined') {
-      return window.debugMode;
-    }
-    if (typeof self !== 'undefined' && typeof self.debugMode !== 'undefined') {
-      return self.debugMode;
-    }
-    // Default to false
-    return false;
+    return Logger._flag('debugMode');
   }
 
-  /**
-   * Get log collector enabled flag from globals (if available)
-   * @returns {boolean}
-   */
+  /** Settings → Debug mode + Verbose logs */
+  static get verboseMode() {
+    return Logger._flag('debugMode') && Logger._flag('debugVerbose');
+  }
+
   static get logCollectorEnabled() {
-    if (typeof globalThis.logCollectorEnabled !== 'undefined') {
-      return globalThis.logCollectorEnabled;
-    }
-    if (typeof window !== 'undefined' && typeof window.logCollectorEnabled !== 'undefined') {
-      return window.logCollectorEnabled;
-    }
-    if (typeof self !== 'undefined' && typeof self.logCollectorEnabled !== 'undefined') {
-      return self.logCollectorEnabled;
-    }
-    return false;
+    return Logger._flag('logCollectorEnabled');
   }
 
-  static _truncateString(value, maxLength) {
-    if (typeof value !== 'string') return value;
-    if (value.length <= maxLength) return value;
-    return `${value.slice(0, maxLength)}...`;
+  // ==========================================================================
+  // Formatting
+  // ==========================================================================
+
+  static _cut(text, max) {
+    const s = String(text);
+    return s.length > max ? `${s.slice(0, max)}…` : s;
   }
 
-  static _safeToString(value) {
-    try {
-      return String(value);
-    } catch (e) {
-      return '[Unstringifiable]';
+  /** "file.js:12" for the first frame of a stack, or '' */
+  static _frame(stack, index = 0) {
+    const frames = String(stack || '').split('\n')
+      .map(line => line.match(/\(?((?:chrome-extension|https?|file):\/\/[^)\s]+?):(\d+):\d+\)?\s*$/))
+      .filter(Boolean)
+      .map(m => `${m[1].replace(/^chrome-extension:\/\/[^/]+\//, '').replace(/^[a-z]+:\/\/[^/]+\//, '')}:${m[2]}`);
+    return frames[index] || '';
+  }
+
+  /** "TypeError: message (file.js:12)"; verbose adds the next frames */
+  static formatError(error) {
+    if (!error) return '';
+    const name = error.name || 'Error';
+    const message = Logger._cut(error.message || String(error), Logger.MAX_VALUE_LENGTH);
+    const where = Logger._frame(error.stack);
+    let text = `${name}: ${message}${where ? ` (${where})` : ''}`;
+    if (Logger.verboseMode && error.stack) {
+      const more = [];
+      for (let i = 1; i < Logger.MAX_STACK_FRAMES; i++) {
+        const frame = Logger._frame(error.stack, i);
+        if (frame) more.push(frame);
+      }
+      if (more.length) text += ` ← ${more.join(' ← ')}`;
     }
+    return text;
   }
 
-  // Public helper: safe, size-limited representation for console + transport.
-  // Returns a value that is cheap to clone and unlikely to retain huge object graphs.
-  static sanitize(value) {
-    return Logger._sanitizeValue(value, 0);
+  static _isError(value) {
+    return value instanceof Error ||
+      (value && typeof value === 'object' && typeof value.message === 'string' && typeof value.stack === 'string');
   }
 
-  static _sanitizeValue(value, depth) {
-    if (value === null || value === undefined) return value;
-
+  /** One value, short: strings cut, arrays previewed, objects as {k=v} */
+  static formatValue(value, depth = 0) {
+    if (value === null) return 'null';
+    if (value === undefined) return 'undefined';
     const t = typeof value;
-    if (t === 'string') return Logger._truncateString(value, Logger.MAX_STRING_LENGTH);
-    if (t === 'number' || t === 'boolean' || t === 'bigint') return value;
-    if (t === 'symbol') return Logger._safeToString(value);
-    if (t === 'function') {
-      const name = value.name ? ` ${value.name}` : '';
-      return `[Function${name}]`;
+    if (t === 'string') {
+      const s = Logger._cut(value.replace(/\s+/g, ' '), Logger.MAX_VALUE_LENGTH);
+      return depth > 0 && (s === '' || /[\s=]/.test(s)) ? JSON.stringify(s) : s;
     }
-
-    // Errors: keep message + stack (trimmed) without extra attached data.
-    if (value instanceof Error) {
-      return {
-        type: 'Error',
-        name: value.name,
-        message: Logger._truncateString(value.message || '', Logger.MAX_STRING_LENGTH),
-        stack: Logger._truncateString(value.stack || '', Logger.MAX_STRING_LENGTH)
-      };
+    if (t === 'number' || t === 'boolean' || t === 'bigint') return String(value);
+    if (t === 'function') return `[fn ${value.name || 'anonymous'}]`;
+    if (t === 'symbol') return String(value);
+    if (Logger._isError(value)) return Logger.formatError(value);
+    try {
+      if (typeof Node !== 'undefined' && value instanceof Node) return `<${String(value.nodeName || 'node').toLowerCase()}>`;
+      if (typeof Event !== 'undefined' && value instanceof Event) return `[event ${value.type}]`;
+    } catch (e) { /* cross-realm objects */ }
+    if (value instanceof Date) return value.toISOString();
+    if (value instanceof Map) return `Map(${value.size})`;
+    if (value instanceof Set) return Logger.formatValue(Array.from(value), depth);
+    if (typeof ArrayBuffer !== 'undefined' && (value instanceof ArrayBuffer || ArrayBuffer.isView(value))) {
+      return `[${value.constructor?.name || 'buffer'} ${value.byteLength} bytes]`;
     }
-
-    // Guard: avoid deep/recursive structures.
-    if (depth >= Logger.MAX_DEPTH) {
-      if (Array.isArray(value)) return `[Array(${value.length})]`;
-      const ctorName = value?.constructor?.name;
-      return `[${ctorName || 'Object'}]`;
-    }
-
     if (Array.isArray(value)) {
-      const preview = value.slice(0, Logger.MAX_ARRAY_LENGTH).map((v) => Logger._sanitizeValue(v, depth + 1));
-      if (value.length > Logger.MAX_ARRAY_LENGTH) {
-        return {
-          type: 'Array',
-          length: value.length,
-          preview,
-          truncated: true
-        };
-      }
-      return preview;
+      if (depth >= 2) return `[${value.length}]`;
+      const items = value.slice(0, Logger.MAX_ITEMS).map(v => Logger.formatValue(v, depth + 1));
+      if (value.length > Logger.MAX_ITEMS) items.push(`+${value.length - Logger.MAX_ITEMS}`);
+      return `[${items.join(', ')}]`;
     }
-
     if (t === 'object') {
-      // Handle DOM-like objects defensively without retaining them.
-      try {
-        if (typeof Node !== 'undefined' && value instanceof Node) {
-          return `[Node ${value.nodeName || 'unknown'}]`;
-        }
-      } catch (e) {
-        // ignore
-      }
-      try {
-        if (typeof Event !== 'undefined' && value instanceof Event) {
-          return `[Event ${value.type || 'unknown'}]`;
-        }
-      } catch (e) {
-        // ignore
-      }
-
-      // Typed arrays / ArrayBuffers can be enormous; never enumerate keys.
-      try {
-        if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
-          return `[ArrayBuffer(${value.byteLength} bytes)]`;
-        }
-      } catch (e) {
-        // ignore
-      }
-      try {
-        if (typeof ArrayBuffer !== 'undefined' && typeof ArrayBuffer.isView === 'function' && ArrayBuffer.isView(value)) {
-          const name = value?.constructor?.name || 'TypedArray';
-          const len = typeof value.length === 'number' ? value.length : undefined;
-          const bytes = typeof value.byteLength === 'number' ? value.byteLength : undefined;
-          if (typeof len === 'number' && typeof bytes === 'number') return `[${name}(${len}) ${bytes} bytes]`;
-          if (typeof bytes === 'number') return `[${name} ${bytes} bytes]`;
-          if (typeof len === 'number') return `[${name}(${len})]`;
-          return `[${name}]`;
-        }
-      } catch (e) {
-        // ignore
-      }
-
-      if (value instanceof Map) return `[Map(${value.size})]`;
-      if (value instanceof Set) return `[Set(${value.size})]`;
-      if (value instanceof Date) return value.toISOString();
-
-      let keys = [];
-      try {
-        keys = Object.keys(value);
-      } catch (e) {
-        return '[Object]';
-      }
-
-      const out = {};
-      const limited = keys.slice(0, Logger.MAX_OBJECT_KEYS);
-      for (const k of limited) {
-        try {
-          out[k] = Logger._sanitizeValue(value[k], depth + 1);
-        } catch (e) {
-          out[k] = '[Unavailable]';
-        }
-      }
-      if (keys.length > Logger.MAX_OBJECT_KEYS) {
-        out.__truncated__ = `${keys.length - Logger.MAX_OBJECT_KEYS} more keys`;
-      }
-      const ctorName = value?.constructor?.name;
-      if (ctorName && ctorName !== 'Object') {
-        out.__type__ = ctorName;
-      }
-      return out;
+      if (depth >= 2) return '{…}';
+      const pairs = Logger.formatPairs(value, depth + 1);
+      return depth === 0 ? pairs : `{${pairs}}`;
     }
-
-    return Logger._safeToString(value);
+    return String(value);
   }
 
-  static _getMaxLogsPerWindow(level) {
-    const base = Logger.MAX_LOGS_PER_WINDOW;
-    // Default per-level ceilings tuned for stability.
-    let max = base;
-    if (level === Logger.LEVELS.DEBUG || level === Logger.LEVELS.INFO) max = base;
-    if (level === Logger.LEVELS.WARN) max = Math.max(10, Math.floor(base * 0.7));
-    if (level === Logger.LEVELS.ERROR) max = Math.max(5, Math.floor(base * 0.4));
-
-    // When log collector is enabled, be extra conservative.
-    if (Logger.logCollectorEnabled) {
-      if (level === Logger.LEVELS.DEBUG || level === Logger.LEVELS.INFO) max = Math.min(max, 15);
-      if (level === Logger.LEVELS.WARN) max = Math.min(max, 12);
-      if (level === Logger.LEVELS.ERROR) max = Math.min(max, 8);
+  /** "a=1 b=two c=[x, y]" for a plain object */
+  static formatPairs(object, depth = 1) {
+    let keys;
+    try { keys = Object.keys(object); } catch (e) { return '{unreadable}'; }
+    const parts = [];
+    for (const key of keys.slice(0, Logger.MAX_KEYS)) {
+      let value;
+      try { value = object[key]; } catch (e) { value = '?'; }
+      if (value === undefined) continue;
+      parts.push(`${key}=${Logger.formatValue(value, depth)}`);
     }
-
-    return Math.max(1, max);
+    if (keys.length > Logger.MAX_KEYS) parts.push(`+${keys.length - Logger.MAX_KEYS} more`);
+    return parts.join(' ');
   }
 
-  static _shouldDedupe(category, level, message) {
-    if (level !== Logger.LEVELS.WARN && level !== Logger.LEVELS.ERROR) return false;
-
-    const key = `${category}|${level}|${message}`;
-    const now = Date.now();
-    const entry = Logger._dedupe.get(key);
-    if (!entry || now - entry.windowStart >= Logger.DEDUPE_WINDOW_MS) {
-      Logger._dedupe.set(key, { windowStart: now, count: 1 });
-      return false;
-    }
-
-    entry.count += 1;
-    if (entry.count > Logger.MAX_DUPES_PER_WINDOW) {
-      return true;
-    }
-
-    return false;
+  /** Message and data as one line */
+  static formatLine(message, data) {
+    let text = Logger._cut(String(message ?? ''), Logger.MAX_MESSAGE_LENGTH);
+    if (data === null || data === undefined || data === '') return text;
+    const rendered = Logger.formatValue(data, 0);
+    if (!rendered) return text;
+    if (!text) return rendered;
+    return /[:=]$/.test(text) ? `${text} ${rendered}` : `${text} · ${rendered}`;
   }
 
-  static _checkRateLimit(level) {
-    const now = Date.now();
-    if (now - Logger._rateWindowStart >= Logger.RATE_LIMIT_WINDOW_MS) {
+  /** "walmart.com" for a URL (www. dropped), or the input cut short */
+  static hostOf(url) {
+    try {
+      return new URL(url).hostname.replace(/^www\./, '');
+    } catch (e) {
+      return Logger._cut(String(url || ''), 60);
+    }
+  }
+
+  static _time(timestamp) {
+    const d = new Date(timestamp);
+    const pad = (n, w = 2) => String(n).padStart(w, '0');
+    return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}.${pad(d.getMilliseconds(), 3)}`;
+  }
+
+  /** Back-compat: callers that want a cheap, cloneable copy of a value */
+  static sanitize(value) {
+    return Logger.formatValue(value, 0);
+  }
+
+  // ==========================================================================
+  // Flow control
+  // ==========================================================================
+
+  /** false when the per-second ceiling is hit (the line is counted as skipped) */
+  static _admit(level, now) {
+    const notices = [];
+    if (now - Logger._rateWindowStart >= Logger.RATE_WINDOW_MS) {
+      if (Logger._skipped > 0) notices.push(`${Logger._skipped} log lines skipped (more than ${Logger.RATE_LIMIT.INFO}/s)`);
       Logger._rateWindowStart = now;
       Logger._rateCounts = { DEBUG: 0, INFO: 0, WARN: 0, ERROR: 0 };
-      Logger._rateDropped = { DEBUG: 0, INFO: 0, WARN: 0, ERROR: 0 };
+      Logger._skipped = 0;
     }
-
-    const maxPerWindow = Logger._getMaxLogsPerWindow(level);
+    for (const notice of notices) Logger._emit({ timestamp: now, context: Logger.context, category: 'LOG', level: Logger.LEVELS.WARN, message: notice });
     Logger._rateCounts[level] = (Logger._rateCounts[level] || 0) + 1;
-    if (Logger._rateCounts[level] > maxPerWindow) {
-      Logger._rateDropped[level] = (Logger._rateDropped[level] || 0) + 1;
+    if (Logger._rateCounts[level] > (Logger.RATE_LIMIT[level] || Logger.RATE_LIMIT.INFO)) {
+      Logger._skipped += 1;
       return false;
     }
     return true;
   }
 
-  /**
-   * Core logging method
-   * @param {string} category - Log category (DETECTION, CACHE, etc.)
-   * @param {string} level - Log level (DEBUG, INFO, WARN, ERROR)
-   * @param {string} message - Log message
-   * @param {*} data - Optional data to log
-   */
+  /** false while the same line repeats; reports the count once the burst ends */
+  static _admitRepeat(key, now) {
+    const entry = Logger._repeats.get(key);
+    if (entry && now - entry.start < Logger.REPEAT_WINDOW_MS) {
+      entry.count += 1;
+      if (entry.count > Logger.MAX_REPEATS) {
+        entry.hidden += 1;
+        return false;
+      }
+      return true;
+    }
+    if (entry && entry.hidden > 0) {
+      Logger._emit({ ...entry.log, timestamp: now, message: `${entry.log.message} (repeated ${entry.hidden} more times)` });
+    }
+    if (Logger._repeats.size >= Logger.MAX_REPEAT_KEYS) Logger._repeats.clear();
+    Logger._repeats.set(key, { start: now, count: 1, hidden: 0, log: null });
+    return true;
+  }
+
+  // ==========================================================================
+  // Core
+  // ==========================================================================
+
+  static _shouldPrint(level) {
+    if (level === Logger.LEVELS.ERROR || level === Logger.LEVELS.WARN) return true;
+    if (level === Logger.LEVELS.INFO) return Logger.debugMode;
+    return Logger.verboseMode;
+  }
+
   static _log(category, level, message, data = null) {
-    // Skip noisy logs when not in debug mode
-    if (!Logger.debugMode && (level === Logger.LEVELS.DEBUG || level === Logger.LEVELS.INFO)) {
-      return;
-    }
+    // Free when the level is off: no formatting, no clock read
+    if (!Logger._shouldPrint(level)) return;
 
-    const safeMessage = Logger._truncateString(Logger._safeToString(message), Logger.MAX_MESSAGE_LENGTH);
-    const safeData = (data === null || data === undefined) ? null : Logger._sanitizeValue(data, 0);
+    const now = Date.now();
+    const text = Logger.formatLine(message, data);
+    const log = { timestamp: now, context: Logger.context, category, level, message: text };
 
-    // Rate limit ALL levels (WARN/ERROR included) to avoid crashing the browser on log storms.
-    if (!Logger._checkRateLimit(level)) {
-      return;
-    }
+    const key = `${category}|${level}|${text}`;
+    if (!Logger._admitRepeat(key, now)) return;
+    const entry = Logger._repeats.get(key);
+    if (entry && !entry.log) entry.log = log;
+    if (!Logger._admit(level, now)) return;
 
-    // Dedupe repeated WARN/ERROR spam (common failure mode when a hook triggers repeatedly).
-    if (Logger._shouldDedupe(category, level, safeMessage)) {
-      return;
-    }
-
-    const log = {
-      timestamp: new Date().toISOString(),
-      context: Logger.context,
-      category: category,
-      level: level,
-      message: safeMessage,
-      data: safeData
-    };
-
-    // Route based on context
-    if (Logger.context === 'background') {
-      // Direct output to console in background
-      Logger._outputToConsole(log);
-    } else if (Logger.context === 'content') {
-      // Send to background via chrome.runtime.sendMessage
-      Logger._sendToBackground(log);
-    } else if (Logger.context === 'main') {
-      // Send to content script via postMessage
-      Logger._sendToContent(log);
-    }
+    Logger._route(log);
   }
 
-  /**
-   * Output log to console with formatting
-   * @param {Object} log - Log object
-   */
+  static _route(log) {
+    if (log.context === 'content') Logger._sendToBackground(log);
+    else if (log.context === 'main') Logger._sendToContent(log);
+    else Logger._emit(log);
+  }
+
+  static _emit(log) {
+    if (log.context === 'content') return Logger._sendToBackground(log);
+    if (log.context === 'main') return Logger._sendToContent(log);
+    Logger._outputToConsole(log);
+  }
+
+  /** The printed line for a log record (also used for relayed records) */
+  static formatRecord(log) {
+    const origin = Logger.ORIGINS[log.context] || log.context || '?';
+    const area = String(log.category || '').toLowerCase();
+    return `[${Logger._time(log.timestamp || Date.now())}] ${origin}/${area}  ${log.message ?? ''}`;
+  }
+
   static _outputToConsole(log) {
-    const icon = Logger.ICONS[log.category] || '';
-    const time = new Date(log.timestamp).toLocaleTimeString('en-US', {
-      hour12: false,
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      fractionalSecondDigits: 3
-    });
+    if (!log) return;
+    const line = Logger.formatRecord(log);
+    const body = Array.isArray(log.lines) && log.lines.length ? log.lines.map(l => `  ${l}`).join('\n') : '';
 
-    const prefix = `[${time}] [${log.context.toUpperCase()}] [${log.category}] [${log.level}]`;
-    const fullMessage = `${prefix} ${icon} ${log.message}`;
-
-    // Stringify data into message so it's readable on extension error pages
-    // (which show [object Object] for separate console arguments)
-    let dataStr = '';
-    if (log.data !== null && log.data !== undefined) {
-      try {
-        dataStr = typeof log.data === 'string' ? ` ${log.data}` : ` ${JSON.stringify(log.data)}`;
-      } catch (e) {
-        dataStr = ' [Unstringifiable data]';
-      }
-    }
-    const messageWithData = fullMessage + dataStr;
-
-    // If LogCollector is enabled in the service worker, prefer storing over printing:
-    // printing high-volume logs to the SW console can retain object graphs and crash Chrome.
-    const collector = (typeof globalThis !== 'undefined' && globalThis.logCollector && typeof globalThis.logCollector.addLog === 'function')
-      ? globalThis.logCollector
-      : null;
-    const collectorActive = !!(collector && collector.enabled);
-    if (collectorActive && log.level !== Logger.LEVELS.WARN && log.level !== Logger.LEVELS.ERROR) {
-      try {
-        // Keep INFO/DEBUG inside the collector and avoid console spam.
-        collector.addLog(log.level === Logger.LEVELS.DEBUG ? 'debug' : 'info', [messageWithData]);
-      } catch (e) {
-        // ignore
-      }
+    // With the Log Collector on, info/debug lines go to the collector only:
+    // high-volume console output is what used to slow Chrome down.
+    const collector = typeof globalThis !== 'undefined' && globalThis.logCollector &&
+      typeof globalThis.logCollector.addLog === 'function' && globalThis.logCollector.enabled
+      ? globalThis.logCollector : null;
+    const loud = log.level === Logger.LEVELS.WARN || log.level === Logger.LEVELS.ERROR;
+    if (collector && !loud) {
+      try { collector.addLog(log.level === Logger.LEVELS.DEBUG ? 'debug' : 'info', [body ? `${line}\n${body}` : line]); } catch (e) { /* ignore */ }
       return;
     }
 
-    // Choose console method based on level
-    if (log.level === Logger.LEVELS.ERROR) {
-      console.error(messageWithData);
-    } else if (log.level === Logger.LEVELS.WARN) {
-      console.warn(messageWithData);
-    } else {
-      console.log(messageWithData);
+    if (body && typeof console.groupCollapsed === 'function' && !loud) {
+      console.groupCollapsed(line);
+      console.log(body);
+      console.groupEnd();
+      return;
     }
+    const text = body ? `${line}\n${body}` : line;
+    if (log.level === Logger.LEVELS.ERROR) console.error(text);
+    else if (log.level === Logger.LEVELS.WARN) console.warn(text);
+    else if (log.level === Logger.LEVELS.DEBUG) (console.debug || console.log)(text);
+    else console.log(text);
   }
 
-  /**
-   * Send log to background script from content script
-   * @param {Object} log - Log object
-   */
+  /** Content script: queue the line, send the queue to the worker once per BATCH_MS */
   static _sendToBackground(log) {
-    // Early exit if chrome APIs not available
-    if (typeof chrome === 'undefined' || !chrome.runtime) {
-      return;
-    }
+    if (typeof chrome === 'undefined' || !chrome.runtime) return;
+    Logger._batch.push(log);
+    if (Logger._batch.length > Logger.MAX_BATCH) Logger._batch.shift();
+    if (Logger._batchTimer) return;
+    Logger._batchTimer = setTimeout(Logger.flush, Logger.BATCH_MS);
+  }
 
+  /** Send queued content-script lines now */
+  static flush() {
+    Logger._batchTimer = null;
+    const logs = Logger._batch.splice(0);
+    if (!logs.length || typeof chrome === 'undefined' || !chrome.runtime) return;
     try {
-      // More robust context validation - getURL throws if context is invalid
-      try {
-        if (!chrome.runtime.id) {
-          return;
-        }
-        // This call will throw synchronously if context is invalidated
-        chrome.runtime.getURL('');
-      } catch (contextError) {
-        // Context invalidated, silently exit
-        return;
-      }
-
-      // Now safe to attempt message - wrap in another try-catch for safety
-      try {
-        const sendPromise = chrome.runtime.sendMessage({
-          type: 'LOG',
-          log: log
-        });
-
-        // Handle promise rejection if sendMessage returned a promise
-        if (sendPromise && typeof sendPromise.catch === 'function') {
-          sendPromise.catch(() => {
-            // Silently fail if background isn't available
-          });
-        }
-      } catch (sendError) {
-        // Silently fail - sendMessage threw synchronously
-      }
+      if (!chrome.runtime.id) return; // extension reloaded: this page's script is orphaned
+      const sent = chrome.runtime.sendMessage({ type: 'LOG', logs });
+      if (sent && typeof sent.catch === 'function') sent.catch(() => {});
     } catch (e) {
-      // Silently fail - extension context invalidated
+      // Worker unavailable or context invalidated
     }
   }
 
-  /**
-   * Send log to content script from main world.
-   * MAIN/ISOLATED internals use the authenticated Scrapfly bridge; do not
-   * fall back to public window.postMessage here.
-   * @param {Object} log - Log object
-   */
+  /** MAIN world: only the authenticated bridge, never window.postMessage */
   static _sendToContent(log) {
     if (typeof window !== 'undefined' && typeof window.__scrapflySendLogToContent === 'function') {
       window.__scrapflySendLogToContent(log);
     }
   }
 
-  // ============================================================================
-  // Convenience Methods (Category-Specific)
-  // ============================================================================
-
-  static cache(message, data = null) {
-    Logger._log(Logger.CATEGORIES.CACHE, Logger.LEVELS.INFO, message, data);
+  /**
+   * One collapsible block: the title line plus indented detail lines
+   * (Debug mode). Used for the per-page scan report.
+   * @param {string} category
+   * @param {string} title
+   * @param {string[]} lines
+   */
+  static report(category, title, lines = []) {
+    if (!Logger.debugMode) return;
+    const log = {
+      timestamp: Date.now(), context: Logger.context, category, level: Logger.LEVELS.INFO,
+      message: Logger._cut(String(title), Logger.MAX_MESSAGE_LENGTH),
+      lines: (Array.isArray(lines) ? lines : []).map(l => Logger._cut(String(l), Logger.MAX_MESSAGE_LENGTH))
+    };
+    Logger._route(log);
   }
 
-  static detection(message, data = null) {
-    Logger._log(Logger.CATEGORIES.DETECTION, Logger.LEVELS.INFO, message, data);
-  }
+  // ==========================================================================
+  // Category helpers (info level: Debug mode)
+  // ==========================================================================
 
-  static hooks(message, data = null) {
-    Logger._log(Logger.CATEGORIES.HOOKS, Logger.LEVELS.INFO, message, data);
-  }
+  static cache(message, data = null) { Logger._log(Logger.CATEGORIES.CACHE, Logger.LEVELS.INFO, message, data); }
+  static detection(message, data = null) { Logger._log(Logger.CATEGORIES.DETECTION, Logger.LEVELS.INFO, message, data); }
+  static hooks(message, data = null) { Logger._log(Logger.CATEGORIES.HOOKS, Logger.LEVELS.INFO, message, data); }
+  static network(message, data = null) { Logger._log(Logger.CATEGORIES.NETWORK, Logger.LEVELS.INFO, message, data); }
+  static storage(message, data = null) { Logger._log(Logger.CATEGORIES.STORAGE, Logger.LEVELS.INFO, message, data); }
+  static popup(message, data = null) { Logger._log(Logger.CATEGORIES.POPUP, Logger.LEVELS.INFO, message, data); }
+  static content(message, data = null) { Logger._log(Logger.CATEGORIES.CONTENT, Logger.LEVELS.INFO, message, data); }
+  static background(message, data = null) { Logger._log(Logger.CATEGORIES.BACKGROUND, Logger.LEVELS.INFO, message, data); }
+  static ui(message, data = null) { Logger._log(Logger.CATEGORIES.UI, Logger.LEVELS.INFO, message, data); }
 
-  static network(message, data = null) {
-    Logger._log(Logger.CATEGORIES.NETWORK, Logger.LEVELS.INFO, message, data);
-  }
+  // ==========================================================================
+  // Level helpers
+  // ==========================================================================
 
-  static storage(message, data = null) {
-    Logger._log(Logger.CATEGORIES.STORAGE, Logger.LEVELS.INFO, message, data);
-  }
-
-  static popup(message, data = null) {
-    Logger._log(Logger.CATEGORIES.POPUP, Logger.LEVELS.INFO, message, data);
-  }
-
-  static content(message, data = null) {
-    Logger._log(Logger.CATEGORIES.CONTENT, Logger.LEVELS.INFO, message, data);
-  }
-
-  static background(message, data = null) {
-    Logger._log(Logger.CATEGORIES.BACKGROUND, Logger.LEVELS.INFO, message, data);
-  }
-
-  static ui(message, data = null) {
-    Logger._log(Logger.CATEGORIES.UI, Logger.LEVELS.INFO, message, data);
-  }
-
-  // ============================================================================
-  // Generic Methods (Level-Specific)
-  // ============================================================================
-
-  static warn(category, message, data = null) {
-    Logger._log(category, Logger.LEVELS.WARN, message, data);
-  }
-
-  static error(category, message, data = null) {
-    Logger._log(category, Logger.LEVELS.ERROR, message, data);
-  }
-
-  static debug(category, message, data = null) {
-    Logger._log(category, Logger.LEVELS.DEBUG, message, data);
-  }
+  static warn(category, message, data = null) { Logger._log(category, Logger.LEVELS.WARN, message, data); }
+  static error(category, message, data = null) { Logger._log(category, Logger.LEVELS.ERROR, message, data); }
+  /** Verbose tier: Debug mode + Verbose logs */
+  static debug(category, message, data = null) { Logger._log(category, Logger.LEVELS.DEBUG, message, data); }
+  static verbose(category, message, data = null) { Logger._log(category, Logger.LEVELS.DEBUG, message, data); }
 }
 
-// Make Logger globally available in all contexts
-// This ensures Logger is accessible regardless of module system or environment
-if (typeof globalThis !== 'undefined') {
-  globalThis.Logger = Logger;
-}
-if (typeof window !== 'undefined') {
-  window.Logger = Logger;
-}
-if (typeof self !== 'undefined') {
-  self.Logger = Logger;
-}
+if (typeof globalThis !== 'undefined') globalThis.Logger = Logger;
+if (typeof window !== 'undefined') window.Logger = Logger;
+if (typeof self !== 'undefined') self.Logger = Logger;
+
+// Node test export (no-op in the extension, where `module` is undefined)
+if (typeof module !== 'undefined' && module.exports) { module.exports = Logger; }

@@ -141,13 +141,6 @@ Rules.prototype.setupMethodSettingsModal = function() {
             }
           }
 
-          // Handle wizard dropdown (window helper modal)
-          const helperHidden = document.querySelector('#windowConditionSelect');
-          if (helperHidden && dropdown.id === 'conditionDropdownContainer') {
-            helperHidden.value = value;
-            this.updateWindowRulePreview?.();
-          }
-
           dropdown.classList.remove('open');
           const trigger = dropdown.querySelector('.condition-dropdown-trigger');
           if (trigger) trigger.setAttribute('aria-expanded', 'false');
@@ -314,24 +307,14 @@ Rules.prototype.getMethodItemType = function(methodItem) {
 };
 
 Rules.prototype.formatMethodSettingsMethodName = function(methodType) {
-    const labels = {
-      url: 'URL',
-      dom: 'DOM',
-      js_hooks: 'JS Hooks',
-      header: 'Header',
-      cookie: 'Cookie',
-      content: 'Content',
-      window: 'Window',
-      payload: 'Payload'
-    };
-
-    if (labels[methodType]) {
-      return labels[methodType];
+    // Same readable, translated label as the method chips (e.g. "Cabeceras")
+    if (methodType && typeof this.getMethodLabel === 'function') {
+      return this.getMethodLabel(methodType);
     }
 
     return methodType
       ? methodType.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())
-      : 'Method';
+      : ((typeof I18n !== 'undefined' && I18n.get('rulesUiMethodFallback')) || 'Method');
 };
 
 Rules.prototype.updateMethodSettingsTitle = function(methodType) {
@@ -342,10 +325,13 @@ Rules.prototype.updateMethodSettingsTitle = function(methodType) {
     const activeName = document.querySelector('#detectorNameInput')?.value.trim();
     const detectorName = activeName || detector.displayName || detector.name || this.currentEditDetector?.detectorName || '';
     const methodName = this.formatMethodSettingsMethodName(methodType);
+    const _t = (typeof I18n !== 'undefined') ? I18n : null;
 
+    // textContent keeps the user-entered detector name inert
     title.textContent = detectorName
-      ? `${detectorName} ${methodName} Settings`
-      : `${methodName} Settings`;
+      ? ((_t && _t.format('methodSettingsTitleFmt', detectorName, methodName)) || `${detectorName} · ${methodName} settings`)
+      : ((_t && _t.format('methodSettingsTitleNoDetectorFmt', methodName)) || `${methodName} settings`);
+    title.title = title.textContent;
 };
 
 Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name') {
@@ -590,6 +576,11 @@ Rules.prototype.updateMethodIndicators = function(methodItem) {
         nameIndicator.innerHTML = indicators.map(ind =>
           `<span class="indicator-badge" data-type="${ind}">${ind}</span>`
         ).join('');
+        if (methodItem.dataset.standalone === 'false') {
+          const label = (typeof I18n !== 'undefined' && I18n.tr) ? I18n.tr('patternCombinationsOnlyBadge', 'Combinations only') : 'Combinations only';
+          nameIndicator.insertAdjacentHTML('beforeend',
+            `<span class="indicator-badge indicator-badge-combo" data-type="COMBO">${FormatUtils.escapeHtml(label)}</span>`);
+        }
       }
     }
 
@@ -716,7 +707,8 @@ Rules.prototype.saveMethodSettings = function() {
       } else {
         nameSettingsBtn.classList.remove('has-custom-settings');
       }
-      nameSettingsBtn.title = `Name Settings (Confidence: ${confidence}%)`;
+      nameSettingsBtn.title = (typeof I18n !== 'undefined' && I18n.format('rulesUiNameSettingsConfidenceFmt', confidence))
+        || `Name Settings (Confidence: ${confidence}%)`;
     }
 
     if (valueSettingsBtn) {
@@ -725,7 +717,7 @@ Rules.prototype.saveMethodSettings = function() {
       } else {
         valueSettingsBtn.classList.remove('has-custom-settings');
       }
-      valueSettingsBtn.title = `Value Settings`;
+      valueSettingsBtn.title = (typeof I18n !== 'undefined' && I18n.get('rulesUiValueSettings')) || 'Value Settings';
     }
 
     // Update input indicators
@@ -733,17 +725,4 @@ Rules.prototype.saveMethodSettings = function() {
 
     // Close modal
     this.closeMethodSettingsModal();
-  };
-
-Rules.prototype.updateHttpMethodColor = function(selectElement) {
-    if (!selectElement) return;
-
-    // Remove all method classes
-    selectElement.classList.remove('method-get', 'method-post', 'method-put', 'method-patch', 'method-delete');
-
-    // Add appropriate class based on selected value
-    const value = selectElement.value.toLowerCase();
-    if (value) {
-      selectElement.classList.add(`method-${value}`);
-    }
   };

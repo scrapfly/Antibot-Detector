@@ -5,76 +5,207 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2024-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-05",
+  "version": "2.0.0",
   "website": "https://www.cloudflare.com/products/bot-management/",
   "icon": "cloudflare_official.png",
   "description": "AI-powered bot detection and mitigation with global CDN integration",
   "detection": {
     "cookie": [
       {
-        "name": "__cf_bm",
-        "confidence": 50,
-        "description": "Bot management cookie",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "id": "cf-clearance-cookie",
+        "name": "^cf_clearance$",
+        "nameRegex": true,
+        "confidence": 80,
+        "description": "Challenge clearance cookie, set after passing a Cloudflare challenge",
         "nameScope": "all",
         "valueScope": "all"
       },
       {
-        "name": "cf_clearance",
-        "confidence": 100,
-        "description": "Challenge clearance cookie",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "id": "cf-bm-cookie",
+        "name": "^__cf_bm$",
+        "nameRegex": true,
+        "confidence": 50,
+        "description": "Bot Management cookie; Cloudflare sets it on many zones, even without an active challenge",
         "nameScope": "all",
         "valueScope": "all"
       }
     ],
-    "header": [],
+    "header": [
+      {
+        "id": "cf-mitigated-header",
+        "name": "^cf-mitigated$",
+        "nameRegex": true,
+        "value": "^challenge$",
+        "valueRegex": true,
+        "confidence": 90,
+        "description": "Response header Cloudflare sends when it served a challenge page",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "cf-server-header",
+        "name": "^server$",
+        "nameRegex": true,
+        "value": "^cloudflare$",
+        "valueRegex": true,
+        "confidence": 15,
+        "standalone": false,
+        "description": "Served through Cloudflare; CDN delivery, not bot management on its own",
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
     "url": [
       {
-        "confidence": 90,
-        "description": "Cloudflare CDN endpoint",
-        "text": "cdn-cgi/challenge-platform/h/g/orchestrate/chl_page/",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "challenge-orchestrator",
+        "confidence": 85,
+        "description": "Challenge page orchestrator under /cdn-cgi/challenge-platform/",
+        "text": "^https?://[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?orchestrate/(?:chl_page|managed|jsch|captcha)/",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "confidence": 100,
-        "text": "challenges.cloudflare.com",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "bot-management-script",
+        "confidence": 60,
+        "description": "Bot Management JavaScript detections script",
+        "text": "^https?://[^/?#]+/cdn-cgi/challenge-platform/scripts/jsd/main\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "challenges-host",
+        "confidence": 40,
+        "standalone": false,
+        "description": "Request to challenges.cloudflare.com; also used by Turnstile, so corroboration only",
+        "text": "^https://challenges\\.cloudflare\\.com/",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       }
     ],
-    "content": [],
+    "content": [
+      {
+        "id": "chl-opt-reference",
+        "confidence": 20,
+        "description": "Script reference to the _cf_chl_opt challenge options object",
+        "text": "_cf_chl_opt",
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ],
     "window": [
       {
+        "id": "chl-opt-object",
         "path": "_cf_chl_opt",
         "condition": "typeof object",
-        "confidence": 95,
-        "description": "Cloudflare challenge options object"
-      },
-      {
-        "path": "turnstile",
-        "condition": "typeof object",
-        "confidence": 95,
-        "description": "Cloudflare Turnstile CAPTCHA object"
+        "confidence": 85,
+        "description": "Challenge options object present on a Cloudflare challenge page"
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "cloudflare-challenge-page",
+      "name": "Challenge page orchestrator and challenge options object",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "challenge-orchestrator"
+              },
+              {
+                "pattern": "cf-mitigated-header"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "chl-opt-object"
+              },
+              {
+                "pattern": "chl-opt-reference"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "cloudflare-cleared-session",
+      "name": "Clearance cookie with Bot Management cookie",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "pattern": "cf-clearance-cookie"
+          },
+          {
+            "any": [
+              {
+                "pattern": "cf-bm-cookie"
+              },
+              {
+                "pattern": "cf-server-header"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "cloudflare-bot-management",
+      "name": "Bot Management script on a Cloudflare zone",
+      "confidence": 75,
+      "when": {
+        "all": [
+          {
+            "pattern": "bot-management-script"
+          },
+          {
+            "any": [
+              {
+                "pattern": "cf-bm-cookie"
+              },
+              {
+                "pattern": "cf-server-header"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "cloudflare-challenge-host",
+      "name": "Challenge host request on a Cloudflare zone with a challenge signal",
+      "confidence": 80,
+      "when": {
+        "all": [
+          {
+            "pattern": "challenges-host"
+          },
+          {
+            "any": [
+              {
+                "pattern": "cf-clearance-cookie"
+              },
+              {
+                "pattern": "chl-opt-object"
+              },
+              {
+                "pattern": "challenge-orchestrator"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

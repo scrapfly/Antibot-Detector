@@ -18,18 +18,19 @@ FunCaptchaAdvanced.prototype.analyzeScripts = async function() {
             });
 
             if (response && response.status === 'started') {
-                NotificationHelper.info('Analyzing FunCaptcha... Page will reload');
+                NotificationHelper.info(this._txt('advCommonAnalyzingReloadFmt', 'Analyzing {0} scripts... Page will reload', 'FunCaptcha'));
 
-                setTimeout(async () => {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                {
                     await AdvancedUtils.sendMessage({
                         type: 'FUNCAPTCHA_SHOW_ANALYZING_NOTIFICATION',
                         tabId: this.tabInfo.id
                     });
 
                     await chrome.tabs.reload(this.tabInfo.id);
-                }, 500);
+                }
             }
         } catch (error) {
-            NotificationHelper.error('Failed to analyze scripts: ' + error.message);
+            NotificationHelper.error(this._txt('advCommonFailedAnalyzeScriptsFmt', 'Failed to analyze scripts: {0}', error.message));
         }
     };

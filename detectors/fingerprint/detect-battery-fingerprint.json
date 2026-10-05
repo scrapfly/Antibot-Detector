@@ -5,58 +5,126 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2025-01-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API",
   "icon": "battery_fingerprint.png",
-  "description": "Battery Status API used for device fingerprinting via battery level and charging state",
+  "description": "Battery API references, calls and property reads; fingerprinting intent and returned values are unconfirmed",
   "detection": {
     "js_hooks": [
       {
-        "description": "Gets battery status object for fingerprinting",
+        "id": "battery-request",
+        "description": "Attempts to obtain a battery status object (result and intent unconfirmed)",
         "enabled": true,
-        "confidence": 65,
+        "standalone": true,
+        "confidence": 25,
         "target": "Navigator.prototype.getBattery"
       },
       {
-        "description": "Listens to battery status changes",
+        "id": "battery-level-read",
+        "description": "Reads the battery level property (value and intent unconfirmed)",
         "enabled": true,
-        "confidence": 65,
-        "target": "EventTarget.prototype.addEventListener",
-        "windowPath": "BatteryManager"
-      }
-    ],
-    "window": [
-      {
-        "path": "navigator.getBattery",
-        "description": "Battery Status API access point",
-        "condition": "typeof function"
+        "standalone": true,
+        "confidence": 10,
+        "target": "BatteryManager.prototype.level",
+        "optional": true
       },
       {
-        "path": "navigator.battery",
-        "description": "Deprecated battery property",
-        "condition": "typeof object"
+        "id": "battery-charging-read",
+        "description": "Reads the battery charging state (value and intent unconfirmed)",
+        "enabled": true,
+        "standalone": true,
+        "confidence": 5,
+        "target": "BatteryManager.prototype.charging",
+        "optional": true
+      },
+      {
+        "id": "battery-charging-time-read",
+        "description": "Reads the battery charging time property (value and intent unconfirmed)",
+        "enabled": true,
+        "standalone": true,
+        "confidence": 10,
+        "target": "BatteryManager.prototype.chargingTime",
+        "optional": true
+      },
+      {
+        "id": "battery-discharging-time-read",
+        "description": "Reads the battery discharging time property (value and intent unconfirmed)",
+        "enabled": true,
+        "standalone": true,
+        "confidence": 10,
+        "target": "BatteryManager.prototype.dischargingTime",
+        "optional": true
       }
     ],
     "content": [
       {
+        "id": "battery-request-reference",
         "text": "getBattery",
         "scope": "scripts",
-        "description": "Battery API usage in scripts",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to getBattery (usage and intent unconfirmed)",
+        "confidence": 10,
         "textRegex": false,
-        "textWholeWord": false,
+        "textWholeWord": true,
         "textCaseSensitive": false
       },
       {
+        "id": "battery-manager-reference",
         "text": "batteryManager",
         "scope": "scripts",
-        "description": "Battery manager references",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to batteryManager (usage and intent unconfirmed)",
+        "confidence": 5,
         "textRegex": false,
-        "textWholeWord": false,
+        "textWholeWord": true,
         "textCaseSensitive": false
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "battery-script-references",
+      "name": "Battery request and manager references (execution unconfirmed)",
+      "confidence": 15,
+      "when": {
+        "all": [
+          { "pattern": "battery-request-reference" },
+          { "pattern": "battery-manager-reference" }
+        ]
+      }
+    },
+    {
+      "id": "battery-status-reads",
+      "name": "Battery request with level and charging-state reads (intent unconfirmed)",
+      "confidence": 30,
+      "when": {
+        "all": [
+          { "pattern": "battery-request" },
+          { "pattern": "battery-level-read" },
+          { "pattern": "battery-charging-read" }
+        ]
+      }
+    },
+    {
+      "id": "battery-status-and-time-reads",
+      "name": "Battery request with status and time-property reads (intent unconfirmed)",
+      "confidence": 35,
+      "when": {
+        "all": [
+          { "pattern": "battery-request" },
+          { "pattern": "battery-level-read" },
+          { "pattern": "battery-charging-read" },
+          {
+            "any": [
+              { "pattern": "battery-charging-time-read" },
+              { "pattern": "battery-discharging-time-read" }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

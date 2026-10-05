@@ -1,9 +1,20 @@
 /**
- * Pattern Helper Modals - Regex, Whole Word, Case Sensitive
- * Merges 3 identical helper files into one data-driven module.
+ * Pattern helper modals - Regex, Whole Word, Case Sensitive.
  *
- * Dependencies: rules-modal-lifecycle.js, rules.js
+ * All three use the shared single-screen helper pattern (RuleHelperKit):
+ * pinned search bar, compact rows with outlined chips, pinned footer, and a
+ * useful default state (never an empty "start typing" box).
+ *   - Regex: pick a generated pattern (or type your own) -> "Use pattern".
+ *   - Whole word / Case sensitive: live match examples for a typed value.
+ *
+ * Dependencies: rules-modal-lifecycle.js, rules.js, helpers/helper-kit.js
  */
+
+const PATTERN_HELPER_SAMPLES = {
+  regex: 'token',
+  wholeWord: '_abck',
+  caseSensitive: 'Akamai'
+};
 
 // ============================================
 // Shared factory for pattern helper modals
@@ -22,26 +33,20 @@ Rules.prototype._setupPatternHelper = function(config) {
   const input = document.querySelector(config.inputSelector);
   if (input) {
     input.addEventListener('input', (e) => {
-      const keyword = e.target.value.toLowerCase().trim();
-      config.filterFn.call(this, keyword);
+      config.filterFn.call(this, e.target.value.trim());
     });
   }
 
   modal.onOpen = () => {
-    if (input) {
-      input.value = '';
-      input.focus();
-    }
-    if (config.stepSelectors) {
-      const step1 = document.querySelector(config.stepSelectors[0]);
-      const step2 = document.querySelector(config.stepSelectors[1]);
-      if (step1) step1.classList.add('active');
-      if (step2) step2.classList.remove('active');
-    }
-    config.filterFn.call(this, '');
+    if (input) input.value = '';
     config.onOpen?.call(this);
+    config.filterFn.call(this, '');
+    const body = modal.getModal()?.querySelector('.rule-modal-body');
+    if (body) body.scrollTop = 0;
+    input?.focus();
   };
 
+  RuleHelperKit.onEscape(config.modalSelector, () => modal.close());
   return modal;
 };
 
@@ -50,43 +55,95 @@ Rules.prototype._setupPatternHelper = function(config) {
 // ============================================
 
 Rules.prototype.generateDynamicRegexPatterns = function(input) {
+  const fmt = RuleHelperKit.fmt;
   const escaped = input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return [
-    { pattern: `^${escaped}`, description: `Starts with "${input}"` },
-    { pattern: `${escaped}$`, description: `Ends with "${input}"` },
-    { pattern: `.*${escaped}.*`, description: `Contains "${input}" anywhere` },
-    { pattern: `\\b${escaped}\\b`, description: `Whole word match "${input}"` },
-    { pattern: `(${escaped}|alternative)`, description: `"${input}" OR another option` },
-    { pattern: `^${escaped}.+$`, description: `Starts with "${input}" + more characters` }
+    { pattern: `^${escaped}`, description: fmt('rhRegexStartsFmt', 'Starts with “{0}”', input) },
+    { pattern: `${escaped}$`, description: fmt('rhRegexEndsFmt', 'Ends with “{0}”', input) },
+    { pattern: `.*${escaped}.*`, description: fmt('rhRegexContainsFmt', 'Contains “{0}” anywhere', input) },
+    { pattern: `\\b${escaped}\\b`, description: fmt('rhRegexWordFmt', 'Whole word “{0}”', input) },
+    { pattern: `(${escaped}|alternative)`, description: fmt('rhRegexOrFmt', '“{0}” or another option', input) },
+    { pattern: `^${escaped}.+$`, description: fmt('rhRegexStartsMoreFmt', 'Starts with “{0}” followed by more text', input) }
   ];
 };
 
+const REGEX_QUICK_REFERENCE = [
+  ['.', 'rhRefAny', 'any character'],
+  ['*', 'rhRefZeroMore', '0 or more'],
+  ['+', 'rhRefOneMore', '1 or more'],
+  ['?', 'rhRefOptional', 'optional'],
+  ['^', 'rhRefStart', 'start'],
+  ['$', 'rhRefEnd', 'end'],
+  ['\\d', 'rhRefDigit', 'digit'],
+  ['\\w', 'rhRefWord', 'letter, digit or _'],
+  ['\\s', 'rhRefSpace', 'whitespace'],
+  ['(a|b)', 'rhRefOr', 'a or b']
+];
+
+/** Render the regex quick reference card (used by the helper and the explanation). */
+Rules.prototype.renderRegexQuickReference = function(container) {
+  if (!container) return;
+  const el = RuleHelperKit.el;
+  container.replaceChildren();
+  const grid = el('dl', 'rh-ref');
+  REGEX_QUICK_REFERENCE.forEach(([token, key, fallback]) => {
+    const item = el('div', 'rh-ref-item');
+    item.appendChild(el('dt', 'rh-ref-token', token));
+    item.appendChild(el('dd', 'rh-ref-text', RuleHelperKit.tr(key, fallback)));
+    grid.appendChild(item);
+  });
+  container.appendChild(grid);
+};
+
 Rules.prototype.filterRegexPatterns = function(keyword) {
-  const suggestionsContainer = document.querySelector('#regexSuggestions');
-  if (!suggestionsContainer) return;
+  const state = this._regexHelperState || (this._regexHelperState = { pattern: '' });
+  const query = String(keyword || '').trim();
+  const sample = query || PATTERN_HELPER_SAMPLES.regex;
 
-  if (!keyword) {
-    const _t = (typeof I18n !== 'undefined') ? I18n : null;
-    const msg = (_t && _t.get('helperPatternStartTypingSuggestions')) || 'Start typing above to see suggestions...';
-    const div = document.createElement('div');
-    div.style.cssText = 'text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;';
-    div.textContent = msg;
-    suggestionsContainer.replaceChildren(div);
-    return;
+  const items = this.generateDynamicRegexPatterns(sample).map((p) => ({
+    value: p.pattern,
+    desc: p.description
+  }));
+  if (query) items.push(RuleHelperKit.customItem(query));
+
+  RuleHelperKit.setSectionHead(
+    document.querySelector('#regexSuggestionsHead'),
+    query
+      ? RuleHelperKit.tr('rhResults', 'Results')
+      : RuleHelperKit.fmt('rhExamplesForFmt', 'Examples for “{0}”', sample),
+    null,
+    { plain: !query }
+  );
+
+  if (!items.some((item) => item.value === state.pattern)) state.pattern = '';
+  this._regexHelperList?.render(items, { selectedValue: state.pattern || null });
+  if (query && this._regexHelperList?.interactiveCount()) this._regexHelperList.setActive(0, false);
+  this.updateRegexPatternPreview();
+};
+
+Rules.prototype.selectRegexPattern = function(item) {
+  if (!item) return;
+  this._regexHelperState.pattern = item.value;
+  this._regexHelperList?.setSelected(item.value);
+  this.updateRegexPatternPreview();
+};
+
+Rules.prototype.updateRegexPatternPreview = function() {
+  const pattern = this._regexHelperState?.pattern || '';
+  const dock = document.querySelector('#regexPreviewSection');
+  if (dock) dock.hidden = !pattern;
+  RuleHelperKit.renderCode(document.querySelector('#regexPreviewContent'),
+    pattern ? [{ text: pattern, cls: 'tok-cond' }] : []);
+  const useBtn = document.querySelector('#useRegexPattern');
+  if (useBtn) useBtn.disabled = !pattern;
+};
+
+Rules.prototype.useRegexPattern = function(patternText) {
+  const pattern = String(patternText || this._regexHelperState?.pattern || '');
+  if (!pattern) return;
+  if (this.applyRegexHelperPattern(pattern)) {
+    this._regexHelperModal?.close();
   }
-
-  const patterns = this.generateDynamicRegexPatterns(keyword);
-  const safeHtml = patterns.map(p => {
-    const safePattern = FormatUtils.escapeHtml(p.pattern);
-    const safeDescription = FormatUtils.escapeHtml(p.description);
-    return `
-    <div class="regex-pattern" data-pattern="${safePattern}">
-      <div class="template-code">${safePattern}</div>
-      <div class="template-description">${safeDescription}</div>
-    </div>
-  `;
-  }).join('');
-  suggestionsContainer.innerHTML = safeHtml;
 };
 
 Rules.prototype.setRegexHelperTargetEnabled = function(target) {
@@ -136,52 +193,38 @@ Rules.prototype.applyRegexHelperPattern = function(patternText) {
 };
 
 Rules.prototype.setupRegexHelperModal = function() {
+  this._regexHelperState = { pattern: '' };
+  this._regexHelperList = new RuleHelperKit.List({
+    listEl: document.querySelector('#regexSuggestions'),
+    input: document.querySelector('#regexKeywordInput'),
+    onSelect: (item) => this.selectRegexPattern(item),
+    onApply: (item) => this.useRegexPattern(item.value)
+  });
+
   this._regexHelperModal = this._setupPatternHelper({
     modalSelector: '#regexHelperModal',
     closeSelectors: ['#closeRegexHelper', '#closeRegexHelperBtn'],
     inputSelector: '#regexKeywordInput',
-    stepSelectors: ['#regexStep1', '#regexStep2'],
     filterFn: this.filterRegexPatterns,
     onOpen: function() {
-      this.setRegexHelperTargetEnabled(this.currentPatternHelperTarget || this.currentFieldType || 'name');
+      this._regexHelperState.pattern = '';
+      this.renderRegexQuickReference(document.querySelector('#regexQuickRef'));
     }
   });
 
-  // Regex-specific: Enter key selects first pattern
-  const keywordInput = document.querySelector('#regexKeywordInput');
-  if (keywordInput) {
-    keywordInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        const firstPattern = document.querySelector('.regex-pattern');
-        if (firstPattern) firstPattern.click();
-      }
-    });
-  }
+  document.querySelector('#useRegexPattern')?.addEventListener('click', () => this.useRegexPattern());
 
-  // Regex-specific: Event delegation for open buttons and pattern clicks
+  // Open buttons remember which field the pattern goes to.
   document.addEventListener('click', (e) => {
     const helperBtn = e.target.closest('#regexHelperBtn, #regexHelperBtnValue, #payloadUrlRegexHelperBtn');
-    if (helperBtn) {
-      e.stopPropagation();
-      this.currentPatternHelperTarget = helperBtn.id === 'regexHelperBtnValue'
-        ? 'value'
-        : helperBtn.id === 'payloadUrlRegexHelperBtn'
-          ? 'payloadUrl'
-          : 'name';
-      this._regexHelperModal.open();
-    }
-
-    if (e.target.closest('.regex-pattern')) {
-      e.stopPropagation();
-      const pattern = e.target.closest('.regex-pattern');
-      const patternText = pattern.dataset.pattern;
-
-      if (patternText && this.applyRegexHelperPattern(patternText)) {
-        NotificationHelper.success('Pattern applied');
-        this._regexHelperModal.close();
-      }
-    }
+    if (!helperBtn) return;
+    e.stopPropagation();
+    this.currentPatternHelperTarget = helperBtn.id === 'regexHelperBtnValue'
+      ? 'value'
+      : helperBtn.id === 'payloadUrlRegexHelperBtn'
+        ? 'payloadUrl'
+        : 'name';
+    this._regexHelperModal.open();
   });
 };
 
@@ -190,49 +233,37 @@ Rules.prototype.setupRegexHelperModal = function() {
 // ============================================
 
 Rules.prototype.generateWholeWordExamples = function(input) {
+  const tr = RuleHelperKit.tr;
   return [
-    { text: input, match: true, reason: 'Exact word, surrounded by boundaries' },
-    { text: `test${input}`, match: false, reason: 'Connected to "test", not isolated' },
-    { text: `${input}More`, match: false, reason: 'Connected to "More", not isolated' },
-    { text: `test ${input} more`, match: true, reason: 'Separated by spaces (word boundaries)' }
+    { text: input, match: true, reason: tr('rhWwExact', 'Exact word') },
+    { text: `test${input}`, match: false, reason: tr('rhWwJoinedBefore', 'Joined to the text before') },
+    { text: `${input}More`, match: false, reason: tr('rhWwJoinedAfter', 'Joined to the text after') },
+    { text: `test ${input} more`, match: true, reason: tr('rhWwSpaces', 'Separated by spaces') }
   ];
 };
 
+function patternHelperMatchChip(match) {
+  return match
+    ? { text: '✓ ' + RuleHelperKit.tr('rhMatch', 'Match'), tone: 'success' }
+    : { text: '\u00D7 ' + RuleHelperKit.tr('rhNoMatch', 'No match'), tone: 'danger' };
+}
+
+/** Rows showing how whole-word matching treats `sample`. */
+Rules.prototype.renderWholeWordExamples = function(listEl, sample) {
+  if (!listEl) return;
+  const list = new RuleHelperKit.List({ listEl });
+  list.render(this.generateWholeWordExamples(sample).map((example) => ({
+    value: example.text,
+    desc: example.reason,
+    chips: [patternHelperMatchChip(example.match)]
+  })), { staticRows: true });
+};
+
 Rules.prototype.filterWholeWordPatterns = function(keyword) {
-  const examplesContainer = document.querySelector('#wholeWordExamples');
-  if (!examplesContainer) return;
-
-  if (!keyword) {
-    const _t = (typeof I18n !== 'undefined') ? I18n : null;
-    const msg = (_t && _t.get('helperPatternStartTypingExamples')) || 'Start typing above to see examples...';
-    const div = document.createElement('div');
-    div.style.cssText = 'text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;';
-    div.textContent = msg;
-    examplesContainer.replaceChildren(div);
-    return;
-  }
-
-  const examples = this.generateWholeWordExamples(keyword);
-  const safeKeyword = FormatUtils.escapeHtml(keyword);
-  examplesContainer.innerHTML = `
-    <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 6px;">
-      <div style="font-weight: 600; color: var(--success); margin-bottom: 8px;">Pattern: ${safeKeyword}</div>
-      <table style="font-size: 10px; width: 100%; border-collapse: collapse;">
-        <tr style="background: var(--bg-tertiary);">
-          <td style="padding: 6px; border: 1px solid var(--border);">Text</td>
-          <td style="padding: 6px; border: 1px solid var(--border);">Match?</td>
-          <td style="padding: 6px; border: 1px solid var(--border);">Reason</td>
-        </tr>
-        ${examples.map(e => `
-          <tr>
-            <td style="padding: 6px; border: 1px solid var(--border); color: var(--accent); font-family: monospace;">${FormatUtils.escapeHtml(e.text)}</td>
-            <td style="padding: 6px; border: 1px solid var(--border); color: ${e.match ? 'var(--success)' : 'var(--danger)'};">${e.match ? '\u2713 Match' : '\u2717 No match'}</td>
-            <td style="padding: 6px; border: 1px solid var(--border);">${FormatUtils.escapeHtml(e.reason)}</td>
-          </tr>
-        `).join('')}
-      </table>
-    </div>
-  `;
+  const sample = String(keyword || '').trim() || PATTERN_HELPER_SAMPLES.wholeWord;
+  RuleHelperKit.setSectionHead(document.querySelector('#wholeWordExamplesHead'),
+    RuleHelperKit.fmt('rhHowMatchesFmt', 'How “{0}” matches', sample), null, { plain: true });
+  this.renderWholeWordExamples(document.querySelector('#wholeWordExamples'), sample);
 };
 
 Rules.prototype.setupWholeWordHelperModal = function() {
@@ -241,7 +272,6 @@ Rules.prototype.setupWholeWordHelperModal = function() {
     closeSelectors: ['#closeWholeWordHelper', '#closeWholeWordHelperBtn'],
     openSelectors: ['#wholeWordHelperBtn', '#wholeWordHelperBtnValue'],
     inputSelector: '#wholeWordKeywordInput',
-    stepSelectors: ['#wholeWordStep1', '#wholeWordStep2'],
     filterFn: this.filterWholeWordPatterns
   });
 };
@@ -273,41 +303,37 @@ Rules.prototype.generateCaseSensitiveExamples = function(input) {
   return variations;
 };
 
+/**
+ * Two groups of rows (case sensitive on / off) for `sample`, rendered into
+ * `container` with the shared section head + list markup.
+ */
+Rules.prototype.renderCaseSensitiveExamples = function(container, sample) {
+  if (!container) return;
+  const el = RuleHelperKit.el;
+  const examples = this.generateCaseSensitiveExamples(sample);
+  container.replaceChildren();
+
+  [
+    ['sensitive', 'rhCsOnTitle', 'With Case sensitive on'],
+    ['insensitive', 'rhCsOffTitle', 'With Case sensitive off']
+  ].forEach(([field, key, fallback]) => {
+    const section = el('div', 'rh-section');
+    section.appendChild(el('div', 'rh-subtitle', RuleHelperKit.tr(key, fallback)));
+    const listEl = el('div', 'rh-list');
+    section.appendChild(listEl);
+    container.appendChild(section);
+    new RuleHelperKit.List({ listEl }).render(examples.map((example) => ({
+      value: example.text,
+      chips: [patternHelperMatchChip(example[field])]
+    })), { staticRows: true });
+  });
+};
+
 Rules.prototype.filterCaseSensitivePatterns = function(keyword) {
-  const examplesContainer = document.querySelector('#caseSensitiveExamples');
-  if (!examplesContainer) return;
-
-  if (!keyword) {
-    const _t = (typeof I18n !== 'undefined') ? I18n : null;
-    const msg = (_t && _t.get('helperPatternStartTypingExamples')) || 'Start typing above to see examples...';
-    const div = document.createElement('div');
-    div.style.cssText = 'text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;';
-    div.textContent = msg;
-    examplesContainer.replaceChildren(div);
-    return;
-  }
-
-  const examples = this.generateCaseSensitiveExamples(keyword);
-  const safeKeyword = FormatUtils.escapeHtml(keyword);
-  examplesContainer.innerHTML = `
-    <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 6px;">
-      <div style="font-weight: 600; color: var(--danger); margin-bottom: 8px;">Pattern: ${safeKeyword}</div>
-      <table style="font-size: 10px; width: 100%; border-collapse: collapse;">
-        <tr style="background: var(--bg-tertiary);">
-          <td style="padding: 6px; border: 1px solid var(--border); font-weight: 600;">Text Found</td>
-          <td style="padding: 6px; border: 1px solid var(--border); font-weight: 600;">Case Sensitive</td>
-          <td style="padding: 6px; border: 1px solid var(--border); font-weight: 600;">Case Insensitive</td>
-        </tr>
-        ${examples.map(e => `
-          <tr>
-            <td style="padding: 6px; border: 1px solid var(--border); color: var(--accent); font-family: monospace;">${FormatUtils.escapeHtml(e.text)}</td>
-            <td style="padding: 6px; border: 1px solid var(--border); color: ${e.sensitive ? 'var(--success)' : 'var(--danger)'};">${e.sensitive ? '\u2713 Match' : '\u2717 No match'}</td>
-            <td style="padding: 6px; border: 1px solid var(--border); color: ${e.insensitive ? 'var(--success)' : 'var(--danger)'};">${e.insensitive ? '\u2713 Match' : '\u2717 No match'}</td>
-          </tr>
-        `).join('')}
-      </table>
-    </div>
-  `;
+  const sample = String(keyword || '').trim() || PATTERN_HELPER_SAMPLES.caseSensitive;
+  RuleHelperKit.setSectionHead(document.querySelector('#caseSensitiveExamplesHead'),
+    RuleHelperKit.fmt('rhHowMatchesFmt', 'How “{0}” matches', sample), null, { plain: true });
+  this.renderCaseSensitiveExamples(document.querySelector('#caseSensitiveExamples'), sample);
 };
 
 Rules.prototype.setupCaseSensitiveHelperModal = function() {
@@ -316,7 +342,6 @@ Rules.prototype.setupCaseSensitiveHelperModal = function() {
     closeSelectors: ['#closeCaseSensitiveHelper', '#closeCaseSensitiveHelperBtn'],
     openSelectors: ['#caseSensitiveHelperBtn', '#caseSensitiveHelperBtnValue', '#payloadUrlCaseHelperBtn'],
     inputSelector: '#caseSensitiveKeywordInput',
-    stepSelectors: ['#caseSensitiveStep1', '#caseSensitiveStep2'],
     filterFn: this.filterCaseSensitivePatterns
   });
 };

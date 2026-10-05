@@ -84,6 +84,9 @@ class Rules {
     // Button event listeners
     this.setupButtonListeners();
 
+    // "More" menus (toolbar and per-card)
+    this.setupMenuListeners();
+
     // Modal functionality
     this.setupModalEventListeners();
 
@@ -126,6 +129,12 @@ class Rules {
       clearBtn.addEventListener('click', () => this.handleClear());
     }
 
+    // Restore deleted official detectors
+    const restoreBtn = document.querySelector('#restoreOfficialRulesBtn');
+    if (restoreBtn) {
+      restoreBtn.addEventListener('click', () => this.handleRestoreOfficial());
+    }
+
     // Add button
     const addBtn = document.querySelector('#addDetectorBtn');
     if (addBtn) {
@@ -143,17 +152,79 @@ class Rules {
   }
 
   /**
+   * Setup the "more" (…) menus: the toolbar menu holding Import/Export/Clear
+   * and the per-card menu holding Delete. Listens in the capture phase because
+   * card actions stop click propagation before it reaches the document.
+   */
+  setupMenuListeners() {
+    document.addEventListener('click', (e) => {
+      const trigger = e.target.closest('#rulesTab .rules-menu-trigger');
+      if (trigger) {
+        const menu = trigger.closest('.rules-menu');
+        const wasOpen = menu.classList.contains('open');
+        this.closeMenus();
+        if (!wasOpen) this.openMenu(menu);
+        return;
+      }
+      // Any other click (including picking an item) closes open menus
+      this.closeMenus();
+    }, true);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') this.closeMenus();
+    });
+
+    // A fixed-position menu would drift away from its trigger on scroll
+    const rulesList = document.querySelector('#rulesList');
+    if (rulesList) {
+      rulesList.addEventListener('scroll', () => this.closeMenus());
+    }
+  }
+
+  /**
+   * Open a menu, anchored under its trigger (or above it near the bottom edge)
+   * @param {HTMLElement} menu - The .rules-menu container
+   */
+  openMenu(menu) {
+    const trigger = menu.querySelector('.rules-menu-trigger');
+    const list = menu.querySelector('.rules-menu-list');
+    if (!trigger || !list) return;
+
+    menu.classList.add('open');
+    trigger.setAttribute('aria-expanded', 'true');
+
+    const rect = trigger.getBoundingClientRect();
+    const listHeight = list.offsetHeight;
+    const gap = 4;
+    const openUp = rect.bottom + gap + listHeight > window.innerHeight && rect.top - gap - listHeight > 0;
+
+    list.style.top = `${openUp ? rect.top - gap - listHeight : rect.bottom + gap}px`;
+    list.style.left = `${Math.max(8, rect.right - list.offsetWidth)}px`;
+  }
+
+  /**
+   * Close every open rules menu
+   */
+  closeMenus() {
+    document.querySelectorAll('#rulesTab .rules-menu.open').forEach(menu => {
+      menu.classList.remove('open');
+      const trigger = menu.querySelector('.rules-menu-trigger');
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  /**
    * Initialize color manager
    */
   initializeColorManager() {
     this.colorManager = new ColorManager();
     this.colorManager.initialize({
       onColorSelect: (color) => {
-        Logger.ui('Color selected:', color);
+        Logger.debug('UI', 'Color selected:', color);
         // Note: Colors are managed by CategoryManager in Settings, not stored per detector
       },
       onColorChange: (color) => {
-        Logger.ui('Color changed:', color);
+        Logger.debug('UI', 'Color changed:', color);
       }
     });
   }
@@ -172,7 +243,7 @@ class Rules {
         // CRITICAL: Notify background.js to reload detectors
         // This ensures JS hooks use the updated enabled state on next page load
         chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
-          Logger.ui(`Detectors reloaded in background after ${enabled ? 'enabling' : 'disabling'} ${detectorName}:`, response);
+          Logger.debug('UI', `Detectors reloaded in background after ${enabled ? 'enabling' : 'disabling'} ${detectorName}:`, response);
         });
 
         Logger.ui(`Detector ${detectorName} ${enabled ? 'enabled' : 'disabled'}`);

@@ -1,197 +1,163 @@
 /**
- * Rules helper modal extension methods.
- * Dependencies: `sections/rules/rules.js` must be loaded first.
+ * Window property helper (rule editor, WINDOW method).
+ *
+ * One compact screen built on RuleHelperKit: search box -> suggestion rows
+ * (popular bot-detection properties from the loaded detectors plus common
+ * automation markers, filtered as you type, with the typed value usable as a
+ * custom property) -> inline condition picker using the canonical presets of
+ * window-condition-language.js with a live preview -> "Add property".
+ *
+ * Dependencies: rules.js, helpers/helper-kit.js, rules-condition-ui.js
  */
 
-const rulesHelperTr = (key, fallback) => (
-  typeof I18n !== 'undefined' ? I18n.tr(key, fallback) : fallback
-);
+const rulesHelperTr = (key, fallback) => RuleHelperKit.tr(key, fallback);
 
-const rulesHelperFormat = (key, fallback, ...args) => {
-  if (typeof I18n !== 'undefined' && typeof I18n.format === 'function') {
-    const formatted = I18n.format(key, ...args);
-    if (formatted !== null) return formatted;
-  }
-  let msg = fallback;
-  for (let i = 0; i < args.length; i++) {
-    msg = msg.split('{' + i + '}').join(String(args[i]));
-  }
-  return msg;
+// Canonical condition presets. The runtime list comes from
+// ScrapflyWindowConditionLanguage; this fallback must mirror PRESET_GROUPS in
+// modules/detection/hooks/window-condition-language.js (drift-guarded by
+// test/window-condition-fallback-parity.test.js).
+const WINDOW_CONDITION_FALLBACK_GROUPS = [
+  { label: 'Type', values: ['typeof object', 'typeof function', 'typeof string', 'typeof number', 'typeof boolean', 'typeof symbol', 'typeof bigint'] },
+  { label: 'Existence', values: ['exists', 'truthy', 'falsy', '!== undefined', '=== undefined', '!== null', '=== null'] },
+  { label: 'Collections', values: ['array', 'non-empty array', 'empty array', 'has length', 'has keys', 'empty object'] },
+  { label: 'Numeric', values: ['> 0', '>= 0', '=== 0', '!== 0', '> 1', '>= 1'] },
+  { label: 'String', values: ['length > 0', 'length === 0'] },
+  { label: 'Boolean', values: ['=== true', '=== false'] }
+];
+
+// Plain-language label per canonical condition (rhCond<Slug> keys)
+const WINDOW_CONDITION_LABEL_KEYS = {
+  'typeof object': 'rhCondTypeObject',
+  'typeof function': 'rhCondTypeFunction',
+  'typeof string': 'rhCondTypeString',
+  'typeof number': 'rhCondTypeNumber',
+  'typeof boolean': 'rhCondTypeBoolean',
+  'typeof symbol': 'rhCondTypeSymbol',
+  'typeof bigint': 'rhCondTypeBigint',
+  'exists': 'rhCondExists',
+  'truthy': 'rhCondTruthy',
+  'falsy': 'rhCondFalsy',
+  '!== undefined': 'rhCondNotUndefined',
+  '=== undefined': 'rhCondUndefined',
+  '!== null': 'rhCondNotNull',
+  '=== null': 'rhCondNull',
+  'array': 'rhCondArray',
+  'non-empty array': 'rhCondNonEmptyArray',
+  'empty array': 'rhCondEmptyArray',
+  'has length': 'rhCondHasLength',
+  'has keys': 'rhCondHasKeys',
+  'empty object': 'rhCondEmptyObject',
+  '> 0': 'rhCondGt0',
+  '>= 0': 'rhCondGte0',
+  '=== 0': 'rhCondEq0',
+  '!== 0': 'rhCondNe0',
+  '> 1': 'rhCondGt1',
+  '>= 1': 'rhCondGte1',
+  'length > 0': 'rhCondLenGt0',
+  'length === 0': 'rhCondLenEq0',
+  '=== true': 'rhCondTrue',
+  '=== false': 'rhCondFalse'
 };
 
-Rules.prototype.openConditionHelperModal = function(methodItem, inputIndex) {
-  // Store reference to current method item
-  this.currentConditionMethodItem = methodItem;
+/** "is an object" for 'typeof object'; the raw condition when it has no label. */
+Rules.prototype.windowConditionLabel = function(condition) {
+  const key = WINDOW_CONDITION_LABEL_KEYS[condition];
+  return key ? rulesHelperTr(key, condition) : condition;
+};
 
-  // Hide parent modal backdrop to prevent blur stacking
-  const editBackdrop = document.querySelector('#editRuleModal .rule-modal-backdrop');
-  if (editBackdrop) editBackdrop.style.display = 'none';
+const WINDOW_CONDITION_GROUP_KEYS = {
+  Type: ['rhCondGroupType', 'Type'],
+  Existence: ['rhCondGroupExistence', 'Existence'],
+  Collections: ['rhCondGroupCollections', 'Collections'],
+  Numeric: ['rhCondGroupNumeric', 'Numeric'],
+  String: ['rhCondGroupString', 'String'],
+  Boolean: ['rhCondGroupBoolean', 'Boolean']
+};
 
-  const describeCondition = (value) => {
-    const v = (value || '').trim();
-    if (!v) return 'Truthy (default)';
-    if (v === 'exists' || v === '!== undefined' || v === 'not undefined') return 'Property is defined (not undefined)';
-    if (v === '=== undefined') return 'Property is undefined';
-    if (v === '!== null' || v === 'not null') return 'Property is not null';
-    if (v === '=== null') return 'Property is null';
-    if (v === 'truthy') return 'Property is truthy';
-    if (v === 'falsy') return 'Property is falsy';
-    if (v.startsWith('typeof ')) return `Type check: ${v}`;
-    if (v === 'array') return 'Property is an array';
-    if (v === 'non-empty array') return 'Array has items';
-    if (v === 'empty array') return 'Array is empty';
-    if (v === 'has keys') return 'Object has at least one key';
-    if (v === 'empty object') return 'Object has no keys';
-    if (v === 'has length') return 'Value has a numeric length';
-    if (v.startsWith('length ')) return `Length comparison: ${v}`;
-    if (/^(>=|<=|>|<|===|!==)\\s*-?\\d/.test(v)) return `Numeric comparison: ${v}`;
-    return 'Condition';
-  };
+// Common automation / headless markers that no bundled detector covers.
+// Descriptions are tool names (not translated); the chip is localised.
+const WINDOW_AUTOMATION_PROPERTIES = [
+  { value: 'navigator.webdriver', desc: 'WebDriver', condition: '=== true' },
+  { value: 'cdc_adoQpoasnfa76pfcZLmcfl_Array', desc: 'ChromeDriver', condition: 'exists' },
+  { value: 'cdc_adoQpoasnfa76pfcZLmcfl_Promise', desc: 'ChromeDriver', condition: 'exists' },
+  { value: '__playwright__binding__', desc: 'Playwright', condition: 'exists' },
+  { value: '__pwInitScripts', desc: 'Playwright', condition: 'exists' },
+  { value: '__selenium_unwrapped', desc: 'Selenium', condition: 'exists' },
+  { value: '__webdriver_evaluate', desc: 'Selenium', condition: 'exists' },
+  { value: '__fxdriver_unwrapped', desc: 'Selenium (Firefox)', condition: 'exists' },
+  { value: 'domAutomation', desc: 'Chromium automation', condition: 'exists' },
+  { value: 'domAutomationController', desc: 'Chromium automation', condition: 'exists' },
+  { value: 'callPhantom', desc: 'PhantomJS', condition: 'typeof function' },
+  { value: '_phantom', desc: 'PhantomJS', condition: 'exists' },
+  { value: '__nightmare', desc: 'Nightmare', condition: 'exists' },
+  { value: 'Buffer', desc: 'Node.js / Electron', condition: 'exists' },
+  { value: 'navigator.plugins', desc: 'Headless Chrome', condition: 'length === 0' },
+  { value: 'chrome', desc: 'Headless Chrome', condition: '=== undefined' }
+];
 
-  // Condition examples for WINDOW method (prefer shared language presets)
+Rules.prototype.getWindowConditionPresetGroups = function() {
   const lang = globalThis.ScrapflyWindowConditionLanguage;
-  const values = (lang && typeof lang.getPresetValues === 'function')
-    ? lang.getPresetValues()
-    // Fallback must mirror PRESET_GROUPS in window-condition-language.js
-    : [
-        'typeof object',
-        'typeof function',
-        'typeof string',
-        'typeof number',
-        'typeof boolean',
-        'typeof symbol',
-        'typeof bigint',
-        'exists',
-        'truthy',
-        'falsy',
-        '!== undefined',
-        '=== undefined',
-        '!== null',
-        '=== null',
-        'array',
-        'non-empty array',
-        'empty array',
-        'has length',
-        'has keys',
-        'empty object',
-        '> 0',
-        '>= 0',
-        '=== 0',
-        '!== 0',
-        '> 1',
-        '>= 1',
-        'length > 0',
-        'length === 0',
-        '=== true',
-        '=== false'
-      ];
+  if (lang && typeof lang.getPresetGroups === 'function') return lang.getPresetGroups();
+  return WINDOW_CONDITION_FALLBACK_GROUPS;
+};
 
-  const conditionExamples = values.map((value) => ({ value, description: describeCondition(value) }));
+Rules.prototype.isValidWindowCondition = function(condition) {
+  const lang = globalThis.ScrapflyWindowConditionLanguage;
+  if (!lang || typeof lang.compile !== 'function') return !!String(condition || '').trim();
+  try {
+    return !!lang.compile(condition).ok;
+  } catch (e) {
+    return false;
+  }
+};
 
-  // Create modal using DOM methods
-  const modalContainer = document.createElement('div');
-  modalContainer.classList.add('condition-helper-modal-container');
+/**
+ * Popular window properties: the automation markers above plus every window
+ * path used by the loaded detectors (detector name as description, detector
+ * category as chip, detector condition as the suggested condition).
+ */
+Rules.prototype.getWindowPropertyCatalog = function() {
+  const automationChip = rulesHelperTr('rhChipAutomation', 'Automation');
+  const items = WINDOW_AUTOMATION_PROPERTIES.map((entry) => ({
+    value: entry.value,
+    desc: entry.desc,
+    chip: automationChip,
+    condition: entry.condition
+  }));
 
-  const modal = document.createElement('div');
-  modal.className = 'condition-helper-modal';
-  modal.style.cssText = 'display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(2px);';
-
-  const content = document.createElement('div');
-  content.className = 'condition-helper-content';
-  content.style.cssText = 'background: var(--bg-primary); border-radius: 12px; padding: 24px; max-width: 500px; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.5);';
-
-  const title = document.createElement('h3');
-  title.textContent = rulesHelperTr('rulesWindowConditionExamplesTitle', 'Window Condition Examples');
-  title.style.cssText = 'margin: 0 0 16px 0; font-size: 16px; color: var(--text-primary);';
-
-  const description = document.createElement('p');
-  description.textContent = rulesHelperTr('rulesWindowConditionExamplesHint', 'Click on an example to use it:');
-  description.style.cssText = 'margin: 0 0 16px 0; font-size: 12px; color: var(--text-secondary);';
-
-  const examplesContainer = document.createElement('div');
-  examplesContainer.className = 'condition-examples';
-  examplesContainer.style.cssText = 'display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;';
-
-  // Create example elements
-  conditionExamples.forEach(example => {
-    const exampleDiv = document.createElement('div');
-    exampleDiv.className = 'condition-example';
-    exampleDiv.dataset.value = example.value;
-    exampleDiv.style.cssText = 'cursor: pointer; padding: 10px 12px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; transition: all 0.2s;';
-
-    const valueDiv = document.createElement('div');
-    valueDiv.textContent = example.value;
-    valueDiv.style.cssText = 'font-size: 12px; font-weight: 600; color: var(--accent); margin-bottom: 2px; font-family: Monaco, Courier New, monospace;';
-
-    const descDiv = document.createElement('div');
-    descDiv.textContent = example.description;
-    descDiv.style.cssText = 'font-size: 11px; color: var(--text-muted);';
-
-    exampleDiv.appendChild(valueDiv);
-    exampleDiv.appendChild(descDiv);
-    examplesContainer.appendChild(exampleDiv);
-
-    // Add hover and click handlers
-    exampleDiv.addEventListener('mouseenter', () => {
-      exampleDiv.style.borderColor = 'var(--accent)';
-      exampleDiv.style.background = 'var(--bg-tertiary)';
-      exampleDiv.style.transform = 'translateX(4px)';
-    });
-    exampleDiv.addEventListener('mouseleave', () => {
-      exampleDiv.style.borderColor = 'var(--border)';
-      exampleDiv.style.background = 'var(--bg-secondary)';
-      exampleDiv.style.transform = 'translateX(0)';
-    });
-    exampleDiv.addEventListener('click', () => {
-      const conditionValue = exampleDiv.dataset.value;
-      if (this.currentConditionMethodItem) {
-        const valueInput = this.currentConditionMethodItem.querySelector('.method-input.method-value');
-        if (valueInput) {
-          valueInput.value = conditionValue;
-        }
-        this.syncInlineConditionDropdown?.(this.currentConditionMethodItem);
-        this.updateMethodIndicators?.(this.currentConditionMethodItem);
+  const detectors = this.detectorManager?.getAllDetectors?.() || {};
+  const fromDetectors = [];
+  for (const [category, categoryDetectors] of Object.entries(detectors)) {
+    for (const detector of Object.values(categoryDetectors || {})) {
+      const windowChecks = detector?.detection?.window;
+      if (!Array.isArray(windowChecks)) continue;
+      for (const check of windowChecks) {
+        const path = String(check?.path || check?.name || '').trim();
+        if (!path) continue;
+        fromDetectors.push({
+          value: path,
+          desc: detector.name || '',
+          chip: this.getCategoryLabel ? this.getCategoryLabel(category) : category,
+          condition: check.condition || 'exists',
+          title: check.description || ''
+        });
       }
-      document.body.removeChild(modalContainer);
-      this.currentConditionMethodItem = null;
-      // Restore parent modal backdrop
-      const editBackdrop = document.querySelector('#editRuleModal .rule-modal-backdrop');
-      if (editBackdrop) editBackdrop.style.display = '';
-    });
-  });
-
-  const closeBtn = document.createElement('button');
-  closeBtn.id = 'closeConditionHelper';
-  closeBtn.textContent = rulesHelperTr('btnClose', 'Close');
-  closeBtn.style.cssText = 'width: 100%; padding: 10px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;';
-  closeBtn.addEventListener('click', () => {
-    document.body.removeChild(modalContainer);
-    this.currentConditionMethodItem = null;
-    // Restore parent modal backdrop
-    const editBackdrop = document.querySelector('#editRuleModal .rule-modal-backdrop');
-    if (editBackdrop) editBackdrop.style.display = '';
-  });
-
-  // Assemble modal
-  content.appendChild(title);
-  content.appendChild(description);
-  content.appendChild(examplesContainer);
-  content.appendChild(closeBtn);
-  modal.appendChild(content);
-  modalContainer.appendChild(modal);
-
-  // Close on backdrop click
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      document.body.removeChild(modalContainer);
-      this.currentConditionMethodItem = null;
-      // Restore parent modal backdrop
-      const editBackdrop = document.querySelector('#editRuleModal .rule-modal-backdrop');
-      if (editBackdrop) editBackdrop.style.display = '';
     }
-  });
+  }
+  fromDetectors.sort((a, b) => a.desc.localeCompare(b.desc) || a.value.localeCompare(b.value));
 
-  document.body.appendChild(modalContainer);
+  return RuleHelperKit.uniqueByValue(items.concat(fromDetectors));
+};
+
+// ============================================
+// Condition helper (kept entry point): opens the property helper with the
+// item's current property preselected and focuses the condition picker.
+// ============================================
+
+Rules.prototype.openConditionHelperModal = function(methodItem, inputIndex) {
+  this.openWindowHelperModal(methodItem, inputIndex);
+  const select = document.querySelector('#windowConditionSelect');
+  if (select && this._windowHelperState?.property) select.focus();
 };
 
 // ============================================
@@ -200,218 +166,180 @@ Rules.prototype.openConditionHelperModal = function(methodItem, inputIndex) {
 
 Rules.prototype.setupWindowHelperModal = function() {
   const modal = document.querySelector('#windowHelperModal');
-  const closeBtn = document.querySelector('#closeWindowHelper');
-  const cancelBtn = document.querySelector('#cancelWindowHelper');
-  const useBtn = document.querySelector('#useWindowProperty');
-  const backBtn = document.querySelector('#backWindowHelper');
-  const backdrop = modal?.querySelector('.rule-modal-backdrop');
+  if (!modal) return;
+
   const keywordInput = document.querySelector('#windowKeywordInput');
-  const customInput = document.querySelector('#windowCustomInput');
+  const conditionSelect = document.querySelector('#windowConditionSelect');
+  const useBtn = document.querySelector('#useWindowProperty');
 
-  // Close modal events
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => this.closeWindowHelperModal());
-  }
-  if (cancelBtn) {
-    cancelBtn.addEventListener('click', () => this.closeWindowHelperModal());
-  }
-  if (backdrop) {
-    backdrop.addEventListener('click', () => this.closeWindowHelperModal());
-  }
+  this._windowHelperState = { property: '', catalog: [] };
 
-  // Back button
-  if (backBtn) {
-    backBtn.addEventListener('click', () => this.goBackWindowHelper());
-  }
-
-  // Use property button
-  if (useBtn) {
-    useBtn.addEventListener('click', () => this.useWindowProperty());
-  }
-
-  // Custom input - update preview on change
-  if (customInput) {
-    customInput.addEventListener('input', () => this.updateWindowRulePreview());
-  }
-
-  // Keyword input for filtering suggestions
-  if (keywordInput) {
-    keywordInput.addEventListener('input', (e) => {
-      const keyword = e.target.value.trim();
-      this.displayWindowSuggestions(keyword);
-      this.updateWindowHelperSteps(keyword.length > 0 ? 2 : 1);
-    });
-  }
-
-  // Setup click handlers for suggestions (using event delegation)
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('.window-suggestion')) {
-      e.stopPropagation();
-      const suggestion = e.target.closest('.window-suggestion');
-      const property = suggestion.dataset.property;
-      const customInput = document.querySelector('#windowCustomInput');
-      if (property && customInput) {
-        customInput.value = property;
-        // Advance to step 3 (condition selection)
-        this.updateWindowHelperSteps(3);
-      }
+  this._windowHelperList = new RuleHelperKit.List({
+    listEl: document.querySelector('#windowSuggestions'),
+    input: keywordInput,
+    onSelect: (item) => this.selectWindowProperty(item),
+    onApply: (item) => {
+      this.selectWindowProperty(item);
+      this.useWindowProperty();
     }
   });
+
+  ['#closeWindowHelper', '#cancelWindowHelper'].forEach((selector) => {
+    document.querySelector(selector)?.addEventListener('click', () => this.closeWindowHelperModal());
+  });
+  modal.querySelector('.rule-modal-backdrop')?.addEventListener('click', () => this.closeWindowHelperModal());
+  useBtn?.addEventListener('click', () => this.useWindowProperty());
+
+  keywordInput?.addEventListener('input', (e) => this.displayWindowSuggestions(e.target.value));
+
+  conditionSelect?.addEventListener('change', () => this.updateWindowRulePreview());
+  conditionSelect?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !useBtn?.disabled) {
+      e.preventDefault();
+      this.useWindowProperty();
+    }
+  });
+
+  RuleHelperKit.onEscape('#windowHelperModal', () => this.closeWindowHelperModal());
 };
 
-Rules.prototype.updateWindowHelperSteps = function(activeStep) {
-  const stepsContainer = document.querySelector('#windowHelperModal .dom-helper-steps');
-  const step1 = document.querySelector('#windowStep1');
-  const step2 = document.querySelector('#windowStep2');
-  const step3 = document.querySelector('#windowStep3');
-  const conditionSection = document.querySelector('#windowConditionSection');
-  const backBtn = document.querySelector('#backWindowHelper');
-  const useBtn = document.querySelector('#useWindowProperty');
+/**
+ * (Re)build the condition <select> from the canonical preset groups, keeping
+ * a non-canonical current value available under its own group.
+ */
+Rules.prototype.renderWindowConditionSelect = function(selectedValue) {
+  const select = document.querySelector('#windowConditionSelect');
+  if (!select) return;
 
-  if (step1 && step2 && step3 && stepsContainer) {
-    // Update progress indicator
-    stepsContainer.setAttribute('data-progress', activeStep);
+  const selected = String(selectedValue || '').trim() || 'exists';
+  const groups = this.getWindowConditionPresetGroups();
+  const known = new Set();
+  select.replaceChildren();
 
-    // Step 1
-    step1.classList.toggle('active', activeStep === 1);
-    step1.classList.toggle('completed', activeStep > 1);
+  groups.forEach((group) => {
+    const labelInfo = WINDOW_CONDITION_GROUP_KEYS[group.label];
+    const optgroup = document.createElement('optgroup');
+    optgroup.label = labelInfo ? rulesHelperTr(labelInfo[0], labelInfo[1]) : group.label;
+    group.values.forEach((value) => {
+      known.add(value);
+      const option = document.createElement('option');
+      option.value = value;
+      // Plain words first, the stored condition after it for people who know the syntax
+      const label = this.windowConditionLabel(value);
+      option.textContent = label === value ? value : `${label}  (${value})`;
+      optgroup.appendChild(option);
+    });
+    select.appendChild(optgroup);
+  });
 
-    // Step 2
-    step2.classList.toggle('active', activeStep === 2);
-    step2.classList.toggle('completed', activeStep > 2);
-
-    // Step 3
-    step3.classList.toggle('active', activeStep === 3);
-    step3.classList.remove('completed'); // Last step never shows completed
-
-    // Show/hide condition section
-    if (conditionSection) {
-      conditionSection.style.display = activeStep === 3 ? 'block' : 'none';
-    }
-
-    // Update back button visibility
-    if (backBtn) {
-      backBtn.classList.toggle('hidden', activeStep === 1);
-    }
-
-    // Update button text based on step
-    if (useBtn) {
-      switch (activeStep) {
-        case 1:
-          useBtn.textContent = rulesHelperFormat(
-            'rulesBtnNextFmt',
-            'Next: {0}',
-            rulesHelperTr('rulesStepChooseProperty', 'Choose Property')
-          );
-          break;
-        case 2:
-          useBtn.textContent = rulesHelperFormat(
-            'rulesBtnNextFmt',
-            'Next: {0}',
-            rulesHelperTr('rulesStepSelectCondition', 'Select Condition')
-          );
-          break;
-        case 3:
-          useBtn.textContent = rulesHelperTr('rulesUsePropertyBtn', 'Use Property');
-          break;
-      }
-    }
-
-    // Update preview
-    this.updateWindowRulePreview();
+  if (!known.has(selected)) {
+    const optgroup = document.createElement('optgroup');
+    optgroup.label = rulesHelperTr('rhCondGroupCustom', 'Current value');
+    const option = document.createElement('option');
+    option.value = selected;
+    option.textContent = selected;
+    optgroup.appendChild(option);
+    select.insertBefore(optgroup, select.firstChild);
   }
-};
 
-Rules.prototype.updateWindowRulePreview = function() {
-  const customInput = document.querySelector('#windowCustomInput');
-  const conditionSelect = document.querySelector('#windowConditionSelect');
-  const previewContent = document.querySelector('#windowPreviewContent');
-
-  if (customInput && previewContent) {
-    const property = customInput.value.trim();
-    const condition = conditionSelect?.value || 'exists';
-
-    if (property) {
-      previewContent.textContent = `Window: "${property}" (${condition})`;
-      previewContent.style.color = '';
-    } else {
-      previewContent.textContent = '';
-    }
-  }
-};
-
-Rules.prototype.goBackWindowHelper = function() {
-  const step2 = document.querySelector('#windowStep2');
-  const step3 = document.querySelector('#windowStep3');
-
-  if (step3?.classList.contains('active')) {
-    this.updateWindowHelperSteps(2);
-  } else if (step2?.classList.contains('active')) {
-    this.updateWindowHelperSteps(1);
-    const keywordInput = document.querySelector('#windowKeywordInput');
-    if (keywordInput) {
-      keywordInput.focus();
-    }
-  }
-};
-
-Rules.prototype.generateWindowTemplates = function(keyword) {
-  if (!keyword || keyword.trim() === '') return [];
-
-  const cssKeyword = keyword.replace(/\s+/g, '-').toLowerCase();
-
-  const templates = [
-    { property: cssKeyword, label: `Property "${keyword}"` },
-    { property: `window.${cssKeyword}`, label: `window.${cssKeyword}` },
-    { property: `navigator.${cssKeyword}`, label: `navigator.${cssKeyword}` },
-    { property: `document.${cssKeyword}`, label: `document.${cssKeyword}` },
-    { property: `globalThis.${cssKeyword}`, label: `globalThis.${cssKeyword}` }
-  ];
-
-  return templates;
+  select.value = selected;
 };
 
 Rules.prototype.displayWindowSuggestions = function(keyword) {
-  const suggestionsContainer = document.querySelector('#windowSuggestions');
-  if (!suggestionsContainer) return;
+  const state = this._windowHelperState;
+  if (!state || !this._windowHelperList) return;
 
-  suggestionsContainer.innerHTML = '';
+  const query = String(keyword || '').trim();
+  const ranked = RuleHelperKit.rankItems(state.catalog, query);
+  let items = ranked;
 
-  if (!keyword || keyword.trim() === '') {
-    suggestionsContainer.innerHTML = `
-      <div class="suggestions-empty-state">
-        <svg class="empty-icon" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
-        </svg>
-        <div class="empty-title">Start typing to see suggestions</div>
-        <div class="empty-hint">We'll show common window properties matching your search</div>
-        <div class="empty-examples">
-          Try: <code>chrome</code> <code>webkit</code> <code>eval</code> <code>cdc_</code>
-        </div>
-      </div>
-    `;
-    return;
+  const exact = state.catalog.some((item) => item.value === query);
+  if (query && !exact) {
+    // The typed value stays usable: last when there are matches, alone otherwise.
+    items = ranked.concat([RuleHelperKit.customItem(query)]);
+  } else if (!query && state.property && !state.catalog.some((item) => item.value === state.property)) {
+    items = [RuleHelperKit.customItem(state.property)].concat(ranked);
   }
 
-  const templates = this.generateWindowTemplates(keyword);
+  const head = document.querySelector('#windowSuggestionsHead');
+  const noMatches = query && ranked.length === 0;
+  RuleHelperKit.setSectionHead(
+    head,
+    query ? rulesHelperTr('rhResults', 'Results') : rulesHelperTr('rhSuggestions', 'Suggestions'),
+    ranked.length
+  );
 
-  templates.forEach(template => {
-    const suggestionDiv = document.createElement('div');
-    suggestionDiv.className = 'window-suggestion';
-    suggestionDiv.dataset.property = template.property;
-    suggestionDiv.style.cssText = 'padding: 10px 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s;';
-    suggestionDiv.innerHTML = `
-      <div style="font-family: 'Monaco', 'Courier New', monospace; font-size: 12px; color: var(--accent); font-weight: 500;">${FormatUtils.escapeHtml(template.property)}</div>
-      <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">${template.label}</div>
-    `;
-    suggestionDiv.addEventListener('mouseenter', () => {
-      suggestionDiv.style.background = 'var(--bg-secondary)';
-    });
-    suggestionDiv.addEventListener('mouseleave', () => {
-      suggestionDiv.style.background = 'var(--bg-tertiary)';
-    });
-    suggestionsContainer.appendChild(suggestionDiv);
-  });
+  const emptyEl = document.querySelector('#windowNoResults');
+  if (emptyEl) {
+    emptyEl.replaceChildren();
+    if (noMatches) {
+      emptyEl.appendChild(RuleHelperKit.renderEmpty(
+        RuleHelperKit.fmt('rhNoResultsFmt', 'No matches for “{0}”', query),
+        rulesHelperTr('rhNoResultsHint', 'You can still use it as a custom value.')
+      ));
+    }
+    emptyEl.hidden = !noMatches;
+  }
+
+  this._windowHelperList.render(items, { selectedValue: state.property || null });
+  if (query && this._windowHelperList.interactiveCount()) {
+    this._windowHelperList.setActive(0, false);
+  }
+};
+
+Rules.prototype.selectWindowProperty = function(item) {
+  if (!item) return;
+  const state = this._windowHelperState;
+  const isNew = state.property !== item.value;
+  state.property = item.value;
+
+  const customInput = document.querySelector('#windowCustomInput');
+  if (customInput) customInput.value = item.value;
+
+  // A catalog entry suggests the condition its detector uses.
+  if (isNew && item.condition) {
+    this.renderWindowConditionSelect(item.condition);
+  }
+
+  this._windowHelperList?.setSelected(item.value);
+  this.updateWindowRulePreview();
+};
+
+Rules.prototype.updateWindowRulePreview = function() {
+  const property = (document.querySelector('#windowCustomInput')?.value || '').trim();
+  const condition = (document.querySelector('#windowConditionSelect')?.value || 'exists').trim();
+  const dock = document.querySelector('#windowConditionSection');
+  const sentence = document.querySelector('#windowRuleSentence');
+  const status = document.querySelector('#windowConditionStatus');
+  const useBtn = document.querySelector('#useWindowProperty');
+
+  const conditionOk = this.isValidWindowCondition(condition);
+  const valid = !!property && conditionOk;
+
+  if (dock) dock.hidden = !property;
+
+  // "Matches pages where window.__nightmare exists on the page", with the parts highlighted
+  if (sentence) {
+    sentence.replaceChildren();
+    if (property) {
+      const prop = RuleHelperKit.el('code', 'tok-prop', `window.${property.replace(/^window\./, '')}`);
+      const cond = RuleHelperKit.el('strong', 'tok-cond', this.windowConditionLabel(condition));
+      const template = rulesHelperTr('rhWindowSentenceFmt', 'Matches pages where {0} {1}');
+      template.split(/(\{[01]\})/).forEach((part) => {
+        if (part === '{0}') sentence.appendChild(prop);
+        else if (part === '{1}') sentence.appendChild(cond);
+        else if (part) sentence.appendChild(document.createTextNode(part));
+      });
+    }
+  }
+
+  // Only speak up when something is wrong; a preset is always valid
+  if (status) {
+    status.hidden = conditionOk;
+    status.textContent = conditionOk ? '' : rulesHelperTr('rhConditionInvalid', 'Unknown condition');
+  }
+
+  if (useBtn) useBtn.disabled = !valid;
 };
 
 Rules.prototype.openWindowHelperModal = function(methodItem, inputIndex) {
@@ -420,26 +348,21 @@ Rules.prototype.openWindowHelperModal = function(methodItem, inputIndex) {
 
   this.currentWindowMethodItem = methodItem;
 
-  const nameInput = methodItem.querySelector('.method-input.method-name');
-  const currentValue = nameInput?.value || '';
+  const currentProperty = (methodItem?.querySelector('.method-input.method-name')?.value || '').trim();
+  const currentCondition = (methodItem?.querySelector('.method-input.method-value')?.value || '').trim();
 
-  // Clear keyword input FIRST (existing value goes only in custom input, not here)
-  const keywordInput = document.querySelector('#windowKeywordInput');
-  if (keywordInput) {
-    keywordInput.value = '';
-  }
+  const state = this._windowHelperState || (this._windowHelperState = { property: '', catalog: [] });
+  state.catalog = this.getWindowPropertyCatalog();
+  state.property = currentProperty;
 
-  // Set custom input to current value (existing property goes here)
   const customInput = document.querySelector('#windowCustomInput');
-  if (customInput) {
-    customInput.value = currentValue;
-  }
+  if (customInput) customInput.value = currentProperty;
 
+  const keywordInput = document.querySelector('#windowKeywordInput');
+  if (keywordInput) keywordInput.value = '';
+
+  this.renderWindowConditionSelect(currentCondition || 'exists');
   this.displayWindowSuggestions('');
-  this.updateWindowHelperSteps(1);
-  this.resetConditionDropdown();
-
-  // Update preview if there's an existing value
   this.updateWindowRulePreview();
 
   // Hide parent modal backdrop to prevent blur stacking
@@ -449,57 +372,22 @@ Rules.prototype.openWindowHelperModal = function(methodItem, inputIndex) {
   modal.style.display = 'flex';
   document.body.style.overflow = 'hidden';
 
-  // Focus keyword input after modal is visible
-  if (keywordInput) {
-    keywordInput.focus();
-  }
-};
+  const body = modal.querySelector('.rule-modal-body');
+  if (body) body.scrollTop = 0;
+  const selectedRow = modal.querySelector('.rh-row[aria-selected="true"]');
+  if (selectedRow) selectedRow.scrollIntoView({ block: 'nearest' });
 
-Rules.prototype.resetConditionDropdown = function() {
-  const container = document.querySelector('#conditionDropdownContainer');
-  const hiddenInput = document.querySelector('#windowConditionSelect');
-  const selectedText = document.querySelector('.condition-selected-text');
-  const menu = document.querySelector('#conditionDropdownMenu');
-
-  if (hiddenInput) {
-    hiddenInput.value = 'exists';
-  }
-
-  if (selectedText) {
-    selectedText.textContent = rulesHelperTr('rulesConditionExists', 'Exists');
-  }
-
-  if (menu) {
-    menu.querySelectorAll('.condition-option').forEach(opt => {
-      opt.classList.toggle('selected', opt.dataset.value === 'exists');
-    });
-  }
-
-  if (container) {
-    container.classList.remove('open');
-  }
+  keywordInput?.focus();
 };
 
 Rules.prototype.useWindowProperty = function() {
-  const customInput = document.querySelector('#windowCustomInput');
-  const property = customInput?.value.trim();
-  const step3 = document.querySelector('#windowStep3');
-  const isOnStep3 = step3?.classList.contains('active');
+  const property = (document.querySelector('#windowCustomInput')?.value || '').trim();
+  const condition = (document.querySelector('#windowConditionSelect')?.value || 'exists').trim() || 'exists';
 
-  if (!property) {
-    alert('Please select or enter a property');
+  if (!property || !this.isValidWindowCondition(condition)) {
+    this.updateWindowRulePreview();
     return;
   }
-
-  // If we're not on step 3 yet, move to step 3 (condition selection)
-  if (!isOnStep3) {
-    this.updateWindowHelperSteps(3);
-    return;
-  }
-
-  // We're on step 3, now apply both property and condition
-  const conditionSelect = document.querySelector('#windowConditionSelect');
-  const condition = conditionSelect?.value || 'exists';
 
   if (this.currentWindowMethodItem) {
     const nameInput = this.currentWindowMethodItem.querySelector('.method-input.method-name');
@@ -507,13 +395,12 @@ Rules.prototype.useWindowProperty = function() {
 
     if (nameInput) {
       nameInput.value = property;
+      nameInput.dispatchEvent(new Event('input', { bubbles: true }));
     }
-    if (valueInput) {
-      valueInput.value = condition;
-    }
+    if (valueInput) valueInput.value = condition;
 
     this.syncInlineConditionDropdown?.(this.currentWindowMethodItem);
-    this.updateMethodIndicators(this.currentWindowMethodItem);
+    this.updateMethodIndicators?.(this.currentWindowMethodItem);
   }
 
   this.closeWindowHelperModal();
@@ -521,17 +408,12 @@ Rules.prototype.useWindowProperty = function() {
 
 Rules.prototype.closeWindowHelperModal = function() {
   const modal = document.querySelector('#windowHelperModal');
-  if (modal) {
-    modal.style.display = 'none';
-    document.body.style.overflow = '';
-    this.currentWindowMethodItem = null;
+  if (!modal) return;
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
+  this.currentWindowMethodItem = null;
 
-    // Restore parent modal backdrop
-    const editBackdrop = document.querySelector('#editRuleModal .rule-modal-backdrop');
-    if (editBackdrop) editBackdrop.style.display = '';
-  }
+  // Restore parent modal backdrop
+  const editBackdrop = document.querySelector('#editRuleModal .rule-modal-backdrop');
+  if (editBackdrop) editBackdrop.style.display = '';
 };
-
-// ============================================
-// Regex Helper Modal
-// ============================================

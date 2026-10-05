@@ -94,22 +94,19 @@ Rules.prototype.openIconPicker = function() {
 
   // Create modal HTML with Default option first, then Custom, then others
   const scrapflyIcon = chrome.runtime.getURL('icons/icon128.png');
+  const _tr = (key, fallback) => FormatUtils.escapeHtml((typeof I18n !== 'undefined' && I18n.get(key)) || fallback);
   const modalHtml = `
     <div class="icon-picker-modal rule-modal">
       <div class="icon-picker-backdrop rule-modal-backdrop"></div>
       <div class="icon-picker-content rule-modal-content">
         <div class="icon-picker-header rule-modal-header">
-          <h2>Choose Icon</h2>
-          <button class="icon-picker-close rule-modal-close" aria-label="Close icon picker" type="button">
-            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-            </svg>
-          </button>
+          <h2>${_tr('iconPickerTitle', 'Choose Icon')}</h2>
+          ${CloseButton.html({ className: 'icon-picker-close' })}
         </div>
         <div class="icon-picker-body rule-modal-body">
           <div class="icon-grid">
             ${[
-              { icon: 'default', label: 'Default', image: scrapflyIcon, className: 'icon-option icon-option-default icon-option-special', isFingerprint: false },
+              { icon: 'default', label: _tr('iconPickerDefault', 'Default'), image: scrapflyIcon, className: 'icon-option icon-option-default icon-option-special', isFingerprint: false },
               ...availableIcons.map(icon => ({ icon, label: icon.replace('_official.png', '').replace('_fingerprint.png', '').replace('.png', ''), image: chrome.runtime.getURL('detectors/icons/' + icon), className: 'icon-option', isFingerprint: isFingerprint(icon), svg: fingerprintSvgIcons[icon] }))
             ].map(({ icon, label, image, className, isFingerprint: isFp, svg }) => `
               <div class="${className}" data-icon="${icon}">
@@ -122,10 +119,10 @@ Rules.prototype.openIconPicker = function() {
         <div class="icon-picker-footer rule-modal-footer">
           <button id="uploadCustomIcon" class="icon-picker-upload-btn" type="button">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            Upload Custom
+            ${_tr('iconPickerUploadCustom', 'Upload Custom')}
           </button>
           <button id="cancelIconPicker" class="icon-picker-cancel-btn rule-btn rule-btn-cancel" type="button">
-            Cancel
+            ${_tr('btnCancel', 'Cancel')}
           </button>
         </div>
       </div>
@@ -254,7 +251,7 @@ Rules.prototype.uploadCustomIcon = function() {
     if (file) {
       // Check file size (limit to 100KB)
       if (file.size > 100 * 1024) {
-        NotificationHelper.error('Icon file size must be less than 100KB');
+        NotificationHelper.error((typeof I18n !== 'undefined' && I18n.get('iconPickerFileTooLarge')) || 'Icon file size must be less than 100KB');
         return;
       }
 

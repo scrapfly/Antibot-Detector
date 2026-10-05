@@ -1,7 +1,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert');
 
-globalThis.Logger = globalThis.Logger || { background() {}, warn() {} };
+globalThis.Logger = globalThis.Logger || { background() {}, debug() {}, warn() {} };
 globalThis.Constants = globalThis.Constants || { KEEPALIVE_PERIOD_MS: 20000, STALE_OPERATION_MS: 120000 };
 globalThis.chrome = globalThis.chrome || { runtime: { getPlatformInfo: async () => ({}) } };
 

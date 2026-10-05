@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "2.7",
+  "version": "2.8",
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
 
@@ -47,8 +47,11 @@
     {
       "matches": ["http://*/*", "https://*/*"],
       "js": [
+        "modules/core/bridge-protocol.js",
         "modules/core/logger.js",
         "modules/core/constants.js",
+        "modules/core/hooks-config.js",
+        "modules/detection/window-condition-grammar.js",
         "utils/format-utils.js",
         "utils/url-utils.js",
         "utils/detection-utils.js",
@@ -56,6 +59,7 @@
         "utils/pattern-cache.js",
         "modules/core/storage-manager.js",
         "modules/detection/managers/confidence-manager.js",
+        "modules/detection/detection-combinations.js",
         "modules/detection/engine/detection-engine-analysis.js",
         "modules/detection/engine/detection-engine-extractors.js",
         "modules/detection/engine/detection-engine-matching.js",

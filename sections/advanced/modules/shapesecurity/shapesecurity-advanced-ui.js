@@ -48,14 +48,7 @@ ShapeSecurityAdvanced.prototype.renderTools = function() {
      * Setup Shape Security specific tool listeners
      */
 ShapeSecurityAdvanced.prototype.setupToolListeners = function() {
-        // Prevent duplicate listener setup
-        if (this.listenersSetup) {
-            Logger.network('[ShapeSecurity] Listeners already setup, skipping...');
-            return;
-        }
-
         Logger.network('[ShapeSecurity] Setting up tool listeners...');
-        this.listenersSetup = true;
 
         this.bindToolActions([
             { id: 'shapesecurityCheckVersion', method: () => this.checkVersion() },
@@ -101,9 +94,9 @@ ShapeSecurityAdvanced.prototype.renderCaptureHistoryItems = function(items) {
                                 <span class="capture-time">${timeAgo}</span>
                             </div>
                             <div class="capture-type-row">
-                                <span class="capture-type-label">Cookie</span>
+                                <span class="capture-type-label">${shapeSecurityText('advShapeCookieLabel', 'Cookie')}</span>
                                 <span class="capture-type-value">${cookie ? 1 : 0}</span>
-                                <span class="capture-type-label">Headers</span>
+                                <span class="capture-type-label">${shapeSecurityText('advShapeHeadersLabel', 'Headers')}</span>
                                 <span class="capture-type-value">${headers.length}</span>
                             </div>
                         </div>
@@ -129,14 +122,15 @@ ShapeSecurityAdvanced.prototype.renderCaptureHistoryItems = function(items) {
      */
 ShapeSecurityAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
         if (!capture || !capture.captureData) {
-            return '<div class="advanced-modal-section"><span class="advanced-modal-error">No capture data available</span></div>';
+            return `<div class="advanced-modal-section"><span class="advanced-modal-error">${shapeSecurityText('advCommonNoCaptureData', 'No capture data available')}</span></div>`;
         }
 
         const data = capture.captureData;
         const headers = data.headers || [];
         const cookie = data.cookie || null;
         const version = data.version || 'v2';
-        const timestamp = new Date(capture.timestamp).toLocaleString();
+        const timestamp = shapeSecurityDateTime(capture.timestamp);
+        const clickToCopy = AdvancedUtils.escapeHtml(shapeSecurityText('advCommonClickToCopy', 'Click to copy'));
 
         // Extract unique header patterns (extract middle 8 characters)
         // e.g., "X-DQ7Hy5L1-z" -> "DQ7Hy5L1"
@@ -151,29 +145,29 @@ ShapeSecurityAdvanced.prototype.renderCaptureDetailsContent = function(capture) 
 
         return `
             <div class="advanced-modal-section">
-                <label class="advanced-modal-label">Shape Security Version</label>
-                <div class="advanced-modal-code-block" data-copy="${version.toUpperCase()}" style="cursor: pointer;" title="Click to copy">${version.toUpperCase()}</div>
+                <label class="advanced-modal-label">${shapeSecurityText('advShapeVersionTitle', 'Shape Security Version')}</label>
+                <div class="advanced-modal-code-block" data-copy="${version.toUpperCase()}" style="cursor: pointer;" title="${clickToCopy}">${version.toUpperCase()}</div>
             </div>
 
             ${headerPatterns.length > 0 ? `
             <div class="advanced-modal-section">
-                <label class="advanced-modal-label">Header Pattern${headerPatterns.length > 1 ? 's' : ''}</label>
+                <label class="advanced-modal-label">${headerPatterns.length > 1 ? shapeSecurityText('advShapeHeaderPatterns', 'Header Patterns') : shapeSecurityText('advShapeHeaderPattern', 'Header Pattern')}</label>
                 ${headerPatterns.map(pattern => `
-                    <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(pattern)}" style="cursor: pointer; margin-bottom: 8px;" title="Click to copy">${AdvancedUtils.escapeHtml(pattern)}</div>
+                    <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(pattern)}" style="cursor: pointer; margin-bottom: 8px;" title="${clickToCopy}">${AdvancedUtils.escapeHtml(pattern)}</div>
                 `).join('')}
             </div>
             ` : ''}
 
             ${cookie ? `
             <div class="advanced-modal-section">
-                <label class="advanced-modal-label">Shape Cookie</label>
-                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(cookie.name)}" style="cursor: pointer;" title="Click to copy">${AdvancedUtils.escapeHtml(cookie.name)}</div>
+                <label class="advanced-modal-label">${shapeSecurityText('advShapeCookieTitle', 'Shape Cookie')}</label>
+                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(cookie.name)}" style="cursor: pointer;" title="${clickToCopy}">${AdvancedUtils.escapeHtml(cookie.name)}</div>
             </div>
             ` : ''}
 
             <div class="advanced-modal-section">
                 <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">Captured</span>
+                    <span class="advanced-modal-info-label">${shapeSecurityText('advCommonCaptured', 'Captured')}</span>
                     <span class="advanced-modal-info-value">${timestamp}</span>
                 </div>
             </div>
@@ -192,12 +186,14 @@ ShapeSecurityAdvanced.prototype.displayCookieResults = function(cookieData) {
         const modal = this.createToolModal();
 
         const cookieFound = cookieData ? 1 : 0;
+        const valueCopied = shapeSecurityText('advValueCopied', 'Value copied');
+        const valueCopiedAttr = AdvancedUtils.escapeHtml(valueCopied);
 
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Shape Security Cookies</h3>
-                    <button class="advanced-modal-close-btn">×</button>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${shapeSecurityText('advCommonCookiesTitleFmt', '{0} Cookies', 'Shape Security')}</h3>
+                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
                 </div>
 
                 ${this.buildCookieStatusSummary(cookieFound, 1)}
@@ -205,23 +201,23 @@ ShapeSecurityAdvanced.prototype.displayCookieResults = function(cookieData) {
                 ${cookieData ? `
                     <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(cookieData.name)}" data-copy-message="Value copied" style="font-weight: 500; color: var(--text-primary); font-family: monospace; cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="Click to copy">${AdvancedUtils.escapeHtml(cookieData.name)}</div>
+                            <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(cookieData.name)}" data-copy-message="${valueCopiedAttr}" style="font-weight: 500; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="${AdvancedUtils.escapeHtml(shapeSecurityText('advCommonClickToCopy', 'Click to copy'))}">${AdvancedUtils.escapeHtml(cookieData.name)}</div>
                             <div style="display: flex; gap: 6px;">
                                 <span style="font-size: 10px; background: var(--success); color: white; padding: 2px 6px; border-radius: 3px;">SECURE</span>
                             </div>
                         </div>
-                        <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(cookieData.value)}" data-copy-message="Value copied" style="font-size: 11px; color: var(--text-secondary); word-break: break-all; font-family: monospace; background: var(--bg-primary); padding: 8px; border-radius: 4px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s;" title="Click to copy full value">${AdvancedUtils.escapeHtml(cookieData.value.substring(0, 60))}${cookieData.value.length > 60 ? '...' : ''}</div>
-                        <div style="font-size: 11px; color: var(--text-muted);">Max-Age: 1577847600 seconds (50 years)</div>
+                        <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(cookieData.value)}" data-copy-message="${valueCopiedAttr}" style="font-size: 11px; color: var(--text-secondary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s;" title="${AdvancedUtils.escapeHtml(shapeSecurityText('advCommonClickToCopyFull', 'Click to copy full value'))}">${AdvancedUtils.escapeHtml(cookieData.value.substring(0, 60))}${cookieData.value.length > 60 ? '...' : ''}</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">${shapeSecurityText('advShapeMaxAgeInfoFmt', 'Max-Age: {0} seconds (50 years)', 1577847600)}</div>
                     </div>
                 ` : `
                     <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
-                        <div style="font-size: 14px;">No Shape Security cookies found</div>
+                        <div style="font-size: 14px;">${shapeSecurityText('advCommonNoCookiesFmt', 'No {0} cookies found', 'Shape Security')}</div>
                     </div>
                 `}
             </div>
         `;
 
-        this.bindCopyValueHandlers(modal, { defaultMessage: 'Value copied' });
+        this.bindCopyValueHandlers(modal, { defaultMessage: valueCopied });
         this.bindModalClose(modal);
         this.showToolModal(modal);
 
@@ -254,23 +250,23 @@ ShapeSecurityAdvanced.prototype.displayScriptDataModal = function(data) {
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 400px; max-height: 90vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <h3 style="margin: 0; font-size: 16px; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 20px;">🟠</span> Shape Security Analysis
+                        <span style="font-size: 20px;">🟠</span> ${shapeSecurityText('advShapeAnalysisTitle', 'Shape Security Analysis')}
                     </h3>
-                    <button class="advanced-modal-close-btn">×</button>
+                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
                 </div>
 
                 <!-- Summary Stats -->
                 <div style="background: var(--bg-tertiary); border-radius: 6px; padding: 12px; margin-bottom: 16px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">Total Scripts:</span>
+                        <span style="color: var(--text-secondary); font-size: 13px;">${shapeSecurityText('advCommonTotalScripts', 'Total Scripts:')}</span>
                         <span style="color: var(--text-primary); font-weight: 600; font-size: 14px;">${totalScripts}</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">Init.js Scripts:</span>
+                        <span style="color: var(--text-secondary); font-size: 13px;">${shapeSecurityText('advShapeInitJsScriptsLabel', 'Init.js Scripts:')}</span>
                         <span style="color: var(--text-primary); font-weight: 600; font-size: 14px;">${initJsScripts.length}</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">Seed Scripts:</span>
+                        <span style="color: var(--text-secondary); font-size: 13px;">${shapeSecurityText('advShapeSeedScriptsLabel', 'Seed Scripts:')}</span>
                         <span style="color: var(--text-primary); font-weight: 600; font-size: 14px;">${seedScripts.length}</span>
                     </div>
                 </div>
@@ -279,25 +275,25 @@ ShapeSecurityAdvanced.prototype.displayScriptDataModal = function(data) {
                 <div style="background: var(--bg-tertiary); border-radius: 6px; padding: 16px; margin-bottom: 16px;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
                         <span style="font-size: 18px;">🟠</span>
-                        <h4 style="margin: 0; font-size: 13px; color: var(--text-primary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Shape Security Scripts</h4>
+                        <h4 style="margin: 0; font-size: 13px; color: var(--text-primary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">${shapeSecurityText('advShapeScriptsHeading', 'Shape Security Scripts')}</h4>
                     </div>
 
                     <div style="margin-bottom: 12px;">
                         <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
-                                <span style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">Script Analysis</span>
+                                <span style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">${shapeSecurityText('advCommonScriptAnalysis', 'Script Analysis')}</span>
                         </div>
                         <div style="font-size: 11px; color: var(--text-muted); margin-left: 22px;">
-                            Found ${totalScripts} relevant script${totalScripts !== 1 ? 's' : ''}
+                            ${shapeSecurityText('advCommonFoundScriptsFmt', 'Found {0} relevant script(s)', totalScripts)}
                         </div>
                     </div>
 
                     ${initJsScripts.length > 0 ? `
                     <div style="margin-bottom: 12px;">
-                        <div style="font-weight: 500; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">Init.js Script${initJsScripts.length > 1 ? 's' : ''}</div>
+                        <div style="font-weight: 500; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">${initJsScripts.length > 1 ? shapeSecurityText('advShapeInitJsScripts', 'Init.js Scripts') : shapeSecurityText('advShapeInitJsScript', 'Init.js Script')}</div>
                         ${initJsScripts.map((url, index) => `
                             <div style="background: var(--bg-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; ${index > 0 ? 'margin-top: 8px;' : ''}">
-                                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">Script URL:</div>
-                                <div style="font-family: monospace; font-size: 11px; color: var(--text-primary); word-break: break-all; line-height: 1.4;">
+                                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">${shapeSecurityText('advCommonScriptUrl', 'Script URL:')}</div>
+                                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-primary); word-break: break-all; line-height: 1.4;">
                                     ${AdvancedUtils.escapeHtml(url)}
                                 </div>
                             </div>
@@ -307,11 +303,11 @@ ShapeSecurityAdvanced.prototype.displayScriptDataModal = function(data) {
 
                     ${seedScripts.length > 0 ? `
                     <div style="margin-top: 12px;">
-                        <div style="font-weight: 500; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">Seed Script${seedScripts.length > 1 ? 's' : ''}</div>
+                        <div style="font-weight: 500; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">${seedScripts.length > 1 ? shapeSecurityText('advShapeSeedScripts', 'Seed Scripts') : shapeSecurityText('advShapeSeedScript', 'Seed Script')}</div>
                         ${seedScripts.map((url, index) => `
                             <div style="background: var(--bg-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; ${index > 0 ? 'margin-top: 8px;' : ''}">
-                                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">Script URL:</div>
-                                <div style="font-family: monospace; font-size: 11px; color: var(--text-primary); word-break: break-all; line-height: 1.4;">
+                                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">${shapeSecurityText('advCommonScriptUrl', 'Script URL:')}</div>
+                                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-primary); word-break: break-all; line-height: 1.4;">
                                     ${AdvancedUtils.escapeHtml(url)}
                                 </div>
                             </div>
@@ -325,7 +321,7 @@ ShapeSecurityAdvanced.prototype.displayScriptDataModal = function(data) {
                     id="exportCodeBtn"
                     style="width: 100%; background: #2196F3; color: white; border: none; border-radius: 6px; padding: 12px; font-size: 13px; cursor: pointer; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px;"
                 >
-                    Export Code
+                    ${shapeSecurityText('advCommonExportCode', 'Export Code')}
                 </button>
             </div>
         `;
@@ -364,7 +360,7 @@ ShapeSecurityAdvanced.prototype.displayScriptDataModal = function(data) {
 
                 if (scripts.length === 0) {
                     Logger.error('NETWORK', '[ShapeSecurity] No scripts to export!');
-                    NotificationHelper.warning('No scripts available to export');
+                    NotificationHelper.warning(shapeSecurityText('advCommonNoScriptsToExport', 'No scripts available to export'));
                     return;
                 }
 
@@ -374,7 +370,7 @@ ShapeSecurityAdvanced.prototype.displayScriptDataModal = function(data) {
                     Logger.network('[ShapeSecurity] displayExportCodeModal called successfully');
                 } catch (error) {
                     Logger.error('NETWORK', '[ShapeSecurity] Error calling displayExportCodeModal:', error);
-                    NotificationHelper.error('Failed to open export modal: ' + error.message);
+                    NotificationHelper.error(shapeSecurityText('advCommonFailedOpenExportFmt', 'Failed to open export modal: {0}', error.message));
                 }
             });
             Logger.network('[ShapeSecurity] Click listener added successfully');
@@ -389,185 +385,35 @@ ShapeSecurityAdvanced.prototype.displayScriptDataModal = function(data) {
      * Display export code modal with script URL parsers
      */
 ShapeSecurityAdvanced.prototype.displayExportCodeModal = function(scripts) {
-        const exportModal = this.createToolModal({ zIndex: 10001 });
-        exportModal.classList.add('export-code-modal');
-
-        // Categorize scripts like in analyze scripts
         const seedScripts = scripts.filter(s => s.hasSeed);
         const initJsScripts = [];
-
-        // Derive init scripts from seed scripts (same URL without ?seed=xxx)
         seedScripts.forEach(seedScript => {
             const initUrl = seedScript.url.split('?seed')[0];
             if (scripts.some(s => s.url === initUrl) && !initJsScripts.some(i => i.url === initUrl)) {
                 initJsScripts.push({ url: initUrl, isInitJs: true });
             }
         });
-
-        // Also include ?async scripts as init
         scripts.forEach(s => {
-            if (s.url.includes('?async') && !initJsScripts.some(i => i.url === s.url)) {
-                initJsScripts.push(s);
-            }
+            if (s.url.includes('?async') && !initJsScripts.some(i => i.url === s.url)) initJsScripts.push(s);
         });
-
-        const scriptCategories = {
-            init: initJsScripts,
-            seed: seedScripts
-        };
-
         const hasInitJs = initJsScripts.length > 0;
         const hasSeeds = seedScripts.length > 0;
-
-        // Generate code for each language (default: 'all')
-        let currentExportType = 'all';
-        const generateCode = (exportType) => {
-            return this.generateParsingCode(scripts, { hasInitJs, hasSeeds, scriptType: exportType });
+        const types = [{ id: 'all', label: shapeSecurityText('advCommonAllTypes', 'All Types') }];
+        if (hasInitJs) types.push({ id: 'init', label: 'Init' });
+        if (hasSeeds) types.push({ id: 'seed', label: 'Seed' });
+        const descriptions = {
+            javascript: shapeSecurityText('advCodeDescBrowserParseFmt', 'Browser console code for intercepting and parsing {0} scripts', 'Shape Security'),
+            python: shapeSecurityText('advCodeDescPythonBs', 'Python script with requests and BeautifulSoup'),
+            nodejs: shapeSecurityText('advCodeDescNodeCheerio', 'Node.js script with axios and cheerio'),
+            php: shapeSecurityText('advCodeDescPhpDom', 'PHP script with cURL and DOMDocument'),
+            go: shapeSecurityText('advCodeDescGoQuery', 'Go with net/http and goquery')
         };
-        let parsingCodes = generateCode(currentExportType);
-
-        exportModal.innerHTML = `
-            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 900px; max-height: 90vh; overflow: hidden; width: 95%; display: flex; flex-direction: column;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-shrink: 0;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Script Parsing Code Generator</h3>
-                    <button class="advanced-modal-close-btn">×</button>
-                </div>
-
-                <!-- Export Options -->
-                <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px; margin-bottom: 16px; flex-shrink: 0;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                        <div style="color: var(--text-primary); font-size: 14px; font-weight: 600;">Export Options</div>
-                        <div style="display: flex; gap: 8px;">
-                            <button class="export-type-btn active" data-type="all" style="background: var(--accent); color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer;">All Types</button>
-                            ${hasInitJs ? '<button class="export-type-btn" data-type="init" style="background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer;">Init</button>' : ''}
-                            ${hasSeeds ? '<button class="export-type-btn" data-type="seed" style="background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer;">Seed</button>' : ''}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Language Tabs -->
-                <div style="display: flex; gap: 4px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; flex-shrink: 0; flex-wrap: wrap;">
-                    <button class="lang-tab active" data-lang="javascript" style="padding: 6px 12px; border: none; background: var(--accent); color: white; border-radius: 4px; cursor: pointer; font-size: 11px;">JavaScript</button>
-                    <button class="lang-tab" data-lang="python" style="padding: 6px 12px; border: none; background: var(--bg-secondary); color: var(--text-primary); border-radius: 4px; cursor: pointer; font-size: 11px;">Python</button>
-                    <button class="lang-tab" data-lang="nodejs" style="padding: 6px 12px; border: none; background: var(--bg-secondary); color: var(--text-primary); border-radius: 4px; cursor: pointer; font-size: 11px;">Node.js</button>
-                    <button class="lang-tab" data-lang="php" style="padding: 6px 12px; border: none; background: var(--bg-secondary); color: var(--text-primary); border-radius: 4px; cursor: pointer; font-size: 11px;">PHP</button>
-                    <button class="lang-tab" data-lang="go" style="padding: 6px 12px; border: none; background: var(--bg-secondary); color: var(--text-primary); border-radius: 4px; cursor: pointer; font-size: 11px;">Go</button>
-                </div>
-
-                <!-- Code Areas -->
-                <div style="position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column;">
-                    <div class="code-container" data-lang="javascript" style="display: flex; flex-direction: column; height: 100%;">
-                        <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.javascript}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">Browser console code for intercepting and parsing Shape Security scripts</div>
-                    </div>
-
-                    <div class="code-container" data-lang="python" style="display: none; flex-direction: column; height: 100%;">
-                        <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.python}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">Python script with requests and BeautifulSoup</div>
-                    </div>
-
-                    <div class="code-container" data-lang="nodejs" style="display: none; flex-direction: column; height: 100%;">
-                        <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.nodejs}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">Node.js script with axios and cheerio</div>
-                    </div>
-
-                    <div class="code-container" data-lang="php" style="display: none; flex-direction: column; height: 100%;">
-                        <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.php}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">PHP script with cURL and DOMDocument</div>
-                    </div>
-
-                    <div class="code-container" data-lang="go" style="display: none; flex-direction: column; height: 100%;">
-                        <textarea readonly class="parsing-code-area" style="flex: 1; min-height: 250px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing: border-box;">${parsingCodes.go}</textarea>
-                        <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); flex-shrink: 0;">Go with net/http and goquery</div>
-                    </div>
-
-                    <!-- Copy Button -->
-                    <button class="copy-parsing-code advanced-modal-copy-btn" style="position: absolute; top: 8px; right: 8px; z-index: 10; padding: 4px 10px; font-size: 11px;">Copy Code</button>
-                </div>
-            </div>
-        `;
-
-        this.bindModalClose(exportModal);
-        this.showToolModal(exportModal);
-
-        // Export type buttons
-        exportModal.querySelectorAll('.export-type-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const exportType = btn.getAttribute('data-type');
-
-                // Update button styles
-                exportModal.querySelectorAll('.export-type-btn').forEach(b => {
-                    b.style.background = 'var(--bg-secondary)';
-                    b.style.color = 'var(--text-primary)';
-                    b.style.border = '1px solid var(--border)';
-                    b.classList.remove('active');
-                });
-                btn.style.background = 'var(--accent)';
-                btn.style.color = 'white';
-                btn.style.border = 'none';
-                btn.classList.add('active');
-
-                // Regenerate code with new export type
-                currentExportType = exportType;
-                parsingCodes = generateCode(currentExportType);
-
-                // Update all code displays
-                Object.entries(parsingCodes).forEach(([lang, code]) => {
-                    const textarea = exportModal.querySelector(`.code-container[data-lang="${lang}"] textarea`);
-                    if (textarea) {
-                        textarea.value = code;
-                    }
-                });
-            });
+        return AdvancedCodeDialog.open(this, {
+            title: shapeSecurityText('advCommonCodeGenTitle', 'Script Parsing Code Generator'), types,
+            languages: [{ id: 'javascript', label: 'JavaScript' }, { id: 'python', label: 'Python' }, { id: 'nodejs', label: 'Node.js' }, { id: 'php', label: 'PHP' }, { id: 'go', label: 'Go' }],
+            getCodes: type => this.generateParsingCode(scripts, { hasInitJs, hasSeeds, scriptType: type }),
+            description: (type, language) => descriptions[language]
         });
-
-        // Language tab switching
-        exportModal.querySelectorAll('.lang-tab').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const lang = btn.getAttribute('data-lang');
-
-                // Update button styles
-                exportModal.querySelectorAll('.lang-tab').forEach(b => {
-                    b.style.background = 'var(--bg-secondary)';
-                    b.style.color = 'var(--text-primary)';
-                    b.classList.remove('active');
-                });
-                btn.style.background = 'var(--accent)';
-                btn.style.color = 'white';
-                btn.classList.add('active');
-
-                // Show/hide code containers
-                exportModal.querySelectorAll('.code-container').forEach(container => {
-                    container.style.display = container.getAttribute('data-lang') === lang ? 'flex' : 'none';
-                });
-            });
-        });
-
-        // Copy code button
-        const copyBtn = exportModal.querySelector('.copy-parsing-code');
-        if (copyBtn) {
-            copyBtn.addEventListener('click', () => {
-                const visibleContainer = exportModal.querySelector('.code-container[style*="display: flex"]') ||
-                                        exportModal.querySelector('.code-container[data-lang="javascript"]');
-                const textarea = visibleContainer?.querySelector('textarea');
-
-                if (textarea) {
-                    AdvancedUtils.copyToClipboard(textarea.value, copyBtn, {
-                        notificationMessage: 'Code copied'
-                    });
-                }
-            });
-        }
     };
 
 
-    /**
-     * Display extraction results
-     */
-ShapeSecurityAdvanced.prototype.displayExtractionResults = function(extractedData) {
-        Logger.network('[ShapeSecurity] Displaying extraction results:', extractedData);
-        NotificationHelper.success('Shape Security data extracted successfully!');
-
-        // Refresh the capture history to show new data
-        this.renderCapturedDataSection();
-    };

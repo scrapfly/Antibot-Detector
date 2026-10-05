@@ -11,19 +11,18 @@ class Utils {
    * @param {object} settings
    */
   static applyDebugMode(settings) {
-    const enabled = !!settings?.debugMode;
-    const logCollectorEnabled = !!settings?.logCollectorEnabled;
-    if (typeof globalThis !== 'undefined') {
-      globalThis.debugMode = enabled;
-      globalThis.logCollectorEnabled = logCollectorEnabled;
-    }
-    if (typeof window !== 'undefined') {
-      window.debugMode = enabled;
-      window.logCollectorEnabled = logCollectorEnabled;
-    }
-    if (typeof self !== 'undefined') {
-      self.debugMode = enabled;
-      self.logCollectorEnabled = logCollectorEnabled;
+    const flags = {
+      debugMode: !!settings?.debugMode,
+      // Verbose logs only apply while Debug mode is on
+      debugVerbose: !!settings?.debugMode && !!settings?.debugVerbose,
+      logCollectorEnabled: !!settings?.logCollectorEnabled
+    };
+    for (const root of [
+      typeof globalThis !== 'undefined' ? globalThis : null,
+      typeof window !== 'undefined' ? window : null,
+      typeof self !== 'undefined' ? self : null
+    ]) {
+      if (root) Object.assign(root, flags);
     }
   }
 
@@ -236,7 +235,8 @@ class Utils {
         externalContent: pageData.externalContent,
         responseCookies: pageData.responseCookies,
         requestHeaders: pageData.requestHeaders,
-        pageHTML: pageData.pageHTML
+        pageHTML: pageData.pageHTML,
+        collectMs: pageData.collectMs
       };
 
       if (!isExtensionContextValid()) {
@@ -353,7 +353,6 @@ class Utils {
 
     return {
       historyLimit: historySettings.historyLimit ?? settings.historyLimit ?? 0,
-      autoClearDays: historySettings.autoClearDays ?? settings.autoClearDays ?? 30,
       exportFormat: historySettings.exportFormat || settings.exportFormat || 'json',
       includeTimestamps: historySettings.includeTimestamps ?? settings.includeTimestamps ?? true,
       historyBypassCache: historySettings.historyBypassCache ?? settings.historyBypassCache ?? false,

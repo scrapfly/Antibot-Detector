@@ -5,66 +5,47 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2024-01-15",
-  "version": "1.0",
-  "website": "https://www.perimeterx.com/",
+  "lastUpdated": "2026-10-05",
+  "version": "2.0.0",
+  "website": "https://www.humansecurity.com/",
   "icon": "perimeterx_official.png",
-  "description": "Behavioral-based bot detection with real-time risk scoring",
+  "description": "Behavioral-based bot detection with real-time risk scoring (HUMAN Security)",
   "detection": {
     "cookie": [
       {
-        "name": "_px2",
-        "confidence": 100,
-        "description": "PerimeterX tracking cookie v2",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "id": "px3-cookie",
+        "name": "^_px[23]$",
+        "nameRegex": true,
+        "confidence": 85,
+        "description": "PerimeterX risk token cookie (_px2 or _px3)",
         "nameScope": "all",
         "valueScope": "all"
       },
       {
-        "name": "_px3",
-        "confidence": 100,
-        "description": "PerimeterX tracking cookie v3",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "id": "pxhd-cookie",
+        "name": "^_pxhd$",
+        "nameRegex": true,
+        "confidence": 75,
+        "description": "PerimeterX first-party server cookie",
         "nameScope": "all",
         "valueScope": "all"
       },
       {
-        "name": "_pxhd",
-        "confidence": 100,
-        "description": "PerimeterX header data",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "id": "pxvid-cookie",
+        "name": "^_pxvid$",
+        "nameRegex": true,
+        "confidence": 70,
+        "description": "PerimeterX visitor ID cookie",
         "nameScope": "all",
         "valueScope": "all"
       },
       {
-        "name": "_pxvid",
-        "confidence": 100,
-        "description": "PerimeterX visitor ID",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "id": "px-aux-cookie",
+        "name": "^(?:pxcts|_pxde|_pxff_[A-Za-z0-9_]+)$",
+        "nameRegex": true,
+        "confidence": 50,
+        "standalone": false,
+        "description": "Auxiliary PerimeterX cookies (pxcts, _pxde, _pxff_*)",
         "nameScope": "all",
         "valueScope": "all"
       }
@@ -72,69 +53,174 @@
     "header": [],
     "url": [
       {
-        "confidence": 100,
-        "description": "Data collector endpoint",
-        "text": "collector-*.perimeterx.net",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "px-client-script",
+        "confidence": 75,
+        "description": "PerimeterX client script on its own hosts, keyed by the PX app ID",
+        "text": "^https://client\\.(?:px-cloud\\.net|perimeterx\\.net)/PX[A-Za-z0-9]{6,10}/main\\.min\\.js(?:[?#]|$)",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "confidence": 95,
-        "description": "Collector API endpoint",
-        "text": "/api/v*/collector",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "px-first-party-script",
+        "confidence": 75,
+        "description": "First-party PerimeterX script (/PXxxxx/init.js or under a proxy prefix such as /px/PXxxxx/init.js)",
+        "text": "^https?://[^/?#]+/(?:[a-z0-9]{1,12}/)?PX[A-Za-z0-9]{6,10}/(?:init|main\\.min)\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      },
+      {
+        "id": "px-collector",
+        "confidence": 80,
+        "description": "PerimeterX collector endpoint",
+        "text": "^https://collector-(?:PX[A-Za-z0-9]{6,10}|[a-z])\\.(?:px-cloud\\.net|perimeterx\\.net)/",
+        "textRegex": true,
         "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "px-captcha",
+        "confidence": 80,
+        "description": "PerimeterX challenge (Press & Hold) script host",
+        "text": "^https://captcha\\.px-cdn\\.net/PX[A-Za-z0-9]{6,10}/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "px-first-party-captcha",
+        "confidence": 30,
+        "standalone": false,
+        "description": "First-party PerimeterX captcha script on an app-id path without the PX prefix (/HYx10rg3/captcha/captcha.js)",
+        "text": "^https?://[^/?#]+/[A-Za-z0-9]{8}/captcha/captcha\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": true,
         "textScope": "all"
       }
     ],
     "content": [
       {
-        "confidence": 50,
-        "description": "PerimeterX application ID",
-        "text": "window._pxAppId",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "description": "PerimeterX initialization function",
-        "text": "pxInit",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "text": "_pxAction",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "id": "px-appid-reference",
+        "confidence": 25,
+        "description": "Script assigning the PerimeterX app ID (window._pxAppId)",
+        "text": "_pxAppId",
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
       }
     ],
-    "dom": [],
     "window": [
       {
+        "id": "px-appid-variable",
         "path": "_pxAppId",
         "condition": "typeof string",
-        "confidence": 100,
+        "confidence": 70,
         "description": "PerimeterX application ID"
       },
       {
+        "id": "px-init-function",
         "path": "pxInit",
         "condition": "typeof function",
-        "confidence": 95,
-        "description": "PerimeterX initialization function"
-      },
-      {
-        "path": "_pxAction",
-        "condition": "typeof string",
-        "confidence": 90,
-        "description": "PerimeterX action identifier"
+        "confidence": 30,
+        "standalone": false,
+        "description": "Optional PerimeterX init callback defined by the site"
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "perimeterx-script-session",
+      "name": "PerimeterX script or app ID with its cookies",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "px-client-script"
+              },
+              {
+                "pattern": "px-first-party-script"
+              },
+              {
+                "pattern": "px-appid-variable"
+              },
+              {
+                "pattern": "px-collector"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "px3-cookie"
+              },
+              {
+                "pattern": "pxhd-cookie"
+              },
+              {
+                "pattern": "pxvid-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "perimeterx-cookie-set",
+      "name": "Several PerimeterX cookies together",
+      "confidence": 90,
+      "when": {
+        "atLeast": 2,
+        "of": [
+          {
+            "pattern": "px3-cookie"
+          },
+          {
+            "pattern": "pxhd-cookie"
+          },
+          {
+            "pattern": "pxvid-cookie"
+          },
+          {
+            "pattern": "px-aux-cookie"
+          }
+        ]
+      }
+    },
+    {
+      "id": "perimeterx-challenge",
+      "name": "PerimeterX challenge with the app ID",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "px-captcha"
+              },
+              {
+                "pattern": "px-first-party-captcha"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "px-appid-variable"
+              },
+              {
+                "pattern": "px-appid-reference"
+              },
+              {
+                "pattern": "px-init-function"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

@@ -24,7 +24,201 @@
 /* ============================================
    DESIGN TOKENS
    ============================================ */
+/* ============================================
+   FONTS — IBM Plex, the Scrapfly brand typeface (SIL OFL 1.1, see assets/fonts/)
+   ============================================ */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('../../assets/fonts/IBMPlexSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('../../assets/fonts/IBMPlexSans-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('../../assets/fonts/IBMPlexSans-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('../../assets/fonts/IBMPlexSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('../../assets/fonts/IBMPlexMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('../../assets/fonts/IBMPlexMono-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+}
+
+/* Non-Latin scripts: the official IBM Plex families for each script (same
+   OFL licence). unicode-range keeps them off the network for Latin text, so
+   a Latin-only UI never loads them. The CJK files are 0.4-4 MB each, so they
+   ship two weights: 400 serves 100-500 and 600 serves 600-900. */
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('../../assets/fonts/IBMPlexSansArabic-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('../../assets/fonts/IBMPlexSansArabic-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('../../assets/fonts/IBMPlexSansArabic-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('../../assets/fonts/IBMPlexSansArabic-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Devanagari';
+  src: url('../../assets/fonts/IBMPlexSansDevanagari-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+0900-097F, U+1CD0-1CFF, U+A8E0-A8FF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Devanagari';
+  src: url('../../assets/fonts/IBMPlexSansDevanagari-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+0900-097F, U+1CD0-1CFF, U+A8E0-A8FF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Devanagari';
+  src: url('../../assets/fonts/IBMPlexSansDevanagari-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+0900-097F, U+1CD0-1CFF, U+A8E0-A8FF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Devanagari';
+  src: url('../../assets/fonts/IBMPlexSansDevanagari-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+0900-097F, U+1CD0-1CFF, U+A8E0-A8FF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans JP';
+  src: url('../../assets/fonts/IBMPlexSansJP-Regular.woff2') format('woff2');
+  font-weight: 100 500;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+3000-30FF, U+31F0-31FF, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FF00-FFEF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans JP';
+  src: url('../../assets/fonts/IBMPlexSansJP-SemiBold.woff2') format('woff2');
+  font-weight: 600 900;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+3000-30FF, U+31F0-31FF, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FF00-FFEF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans KR';
+  src: url('../../assets/fonts/IBMPlexSansKR-Regular.woff2') format('woff2');
+  font-weight: 100 500;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+1100-11FF, U+3130-318F, U+A960-A97F, U+AC00-D7AF, U+D7B0-D7FF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans KR';
+  src: url('../../assets/fonts/IBMPlexSansKR-SemiBold.woff2') format('woff2');
+  font-weight: 600 900;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+1100-11FF, U+3130-318F, U+A960-A97F, U+AC00-D7AF, U+D7B0-D7FF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans SC';
+  src: url('../../assets/fonts/IBMPlexSansSC-Regular.woff2') format('woff2');
+  font-weight: 100 500;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FF00-FFEF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans SC';
+  src: url('../../assets/fonts/IBMPlexSansSC-SemiBold.woff2') format('woff2');
+  font-weight: 600 900;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FF00-FFEF;
+}
+
 :root {
+  /* Typography (matches scrapfly.io) */
+  /* Script order after Latin: Arabic, Devanagari, Japanese, Korean,
+     Simplified Chinese. Han characters take the Japanese glyph forms,
+     except in Chinese text, which puts SC before JP. */
+  --font-sans-ja: 'IBM Plex Sans', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'IBM Plex Sans SC', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans-zh: 'IBM Plex Sans', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans SC', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: var(--font-sans-ja);
+  /* Mono has no non-Latin glyphs either: the same script families follow */
+  --font-mono-ja: 'IBM Plex Mono', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'IBM Plex Sans SC', 'SF Mono', Consolas, 'Liberation Mono', monospace;
+  --font-mono-zh: 'IBM Plex Mono', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans SC', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'SF Mono', Consolas, 'Liberation Mono', monospace;
+  --font-mono: var(--font-mono-ja);
+
   /* Background Colors */
   --bg-primary: #1a1a1a;
   --bg-secondary: #2d2d2d;
@@ -56,7 +250,7 @@
   --green-dark: #16a34a;
 
   /* Border Colors */
-  --border: #404040;
+  --border: #4b4b4b;
   --border-light: #525252;
 
   /* Shadows */
@@ -77,6 +271,23 @@
   --badge-fingerprint: #3b82f6;
 }
 
+/* Chinese UI (<html lang> is set by I18n) and text tagged with its own
+   language, like the names in the language picker. */
+:root:lang(zh) {
+  --font-sans: var(--font-sans-zh);
+  --font-mono: var(--font-mono-zh);
+}
+
+[lang|="zh"]:not(:root) {
+  --font-sans: var(--font-sans-zh);
+  font-family: var(--font-sans);
+}
+
+[lang|="ja"]:not(:root) {
+  --font-sans: var(--font-sans-ja);
+  font-family: var(--font-sans);
+}
+
 /* ============================================
    GLOBAL RESET
    ============================================ */
@@ -84,6 +295,17 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+/* Form controls don't inherit the body font by default */
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+/* The UA stylesheet gives these the generic `monospace` (Consolas on
+   Windows); keep them on the brand mono face */
+code, kbd, pre, samp {
+  font-family: var(--font-mono);
 }
 
 /* ============================================
@@ -108,41 +330,92 @@
 }
 
 /* ============================================
-   CLOSE BUTTON (shared across all modals)
+   CLOSE BUTTON — the ONE close (✕) control for every modal, overlay and toast
    --------------------------------------------
+   Markup: <button class="btn-close" title/aria-label="btnClose">
+             <svg class="btn-close-icon">…</svg></button>
+   JS-built UIs get the identical element from CloseButton.create()/.html()
+   (modules/ui/close-button.js). Toasts add the .btn-close--sm modifier.
+   Neutral at rest (same chrome as the 28px rule-card icon buttons); hover is
+   a quiet red tint, never a solid red fill.
+
    CANONICAL MODAL-HEADER PATTERN — keep every modal on this shape:
-     .modal-header  -> display:flex; gap; (NO position:relative)
-       .header-content / title -> flex:1; min-width:0; (text wraps here)
-       .close-btn               -> flex-shrink:0; (always reserves its slot)
+     header     -> display:flex; align-items:center; gap:12px;
+                   padding: var(--modal-header-padding);
+                   min-height: var(--modal-header-min-height);
+                   border-bottom: 1px solid var(--border);  (NO position:relative)
+       title    -> flex:1; min-width:0; var(--modal-title-*) (text wraps here)
+       .btn-close -> flex-shrink:0; (always reserves its top-right slot)
    NEVER position:absolute the close button — that lets longer translated
    or RTL header text slide underneath and clip the X. Enforced by
    scripts/check-structure.js.
    ============================================ */
-.close-btn,
-.detection-modal-close,
-.history-modal-close {
-  background: rgba(239, 68, 68, 0.15);
-  border: none;
-  color: var(--danger);
-  cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  align-self: flex-start;
-  line-height: 1;
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
+:root {
+  --modal-header-padding: 10px 12px 10px 14px;
+  --modal-header-min-height: 48px;
+  --modal-title-size: 15px;
+  --modal-title-weight: 600;
+  --modal-title-line: 20px;
 }
 
-.close-btn:hover,
-.detection-modal-close:hover,
-.history-modal-close:hover {
-  background: var(--danger);
-  color: white;
-  transform: scale(1.05);
+.btn-close {
+  --btn-close-size: 28px;
+  --btn-close-icon: 14px;
+  appearance: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  align-self: center;
+  width: var(--btn-close-size);
+  height: var(--btn-close-size);
+  margin: 0;
+  padding: 0;
+  background: #363636;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: #e0e0e0;
+  font: inherit;
+  line-height: 0;
+  cursor: pointer;
+  transition: background-color 140ms ease, border-color 140ms ease,
+    color 140ms ease, box-shadow 140ms ease;
+}
+
+.btn-close-icon {
+  display: block;
+  width: var(--btn-close-icon);
+  height: var(--btn-close-icon);
+  pointer-events: none;
+}
+
+.btn-close:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.45);
+  color: var(--danger-light);
+}
+
+.btn-close:active {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.6);
+  color: var(--danger-light);
+}
+
+.btn-close:focus {
+  outline: none;
+}
+
+.btn-close:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-secondary), 0 0 0 4px var(--accent);
+}
+
+/* Toast-sized variant: same glyph, colours and states, smaller footprint */
+.btn-close--sm {
+  --btn-close-size: 22px;
+  --btn-close-icon: 12px;
+  border-radius: 6px;
 }
 
 /* Unblock control on disabled card — only when domain is blacklisted (.visible) */
@@ -179,7 +452,6 @@
   border-radius: 6px;
   font-size: 9px;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.3px;
   white-space: nowrap;
   transition: all 0.2s ease;
@@ -250,21 +522,6 @@
   text-align: center;
 }
 
-.confidence-high {
-  background: var(--success);
-  color: white;
-}
-
-.confidence-medium {
-  background: var(--warning);
-  color: white;
-}
-
-.confidence-low {
-  background: var(--danger);
-  color: white;
-}
-
 /* ============================================
    PAGINATION (shared across detection, history, rules)
    ============================================ */
@@ -296,13 +553,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.pagination-info .static-label {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 18px;
 }
 
 .pagination-info .pagination-count {
@@ -367,7 +617,7 @@
   background: var(--bg-tertiary);
   border: 1px solid var(--border);
   border-radius: 6px;
-  color: var(--text-secondary);
+  color: #e0e0e0;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -379,7 +629,7 @@
 }
 
 .pagination-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
@@ -536,3 +786,212 @@ input:checked + .slider:before {
   border-color: rgba(16, 185, 129, 0.6) !important;
   font-weight: 600 !important;
 }
+
+/* Confidence as 2.8 shows it (FormatUtils.confidenceHtml): dial + coloured % */
+.conf-metric {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 14px;
+  white-space: nowrap;
+  color: var(--tone, var(--text-primary));
+  font-variant-numeric: tabular-nums;
+}
+
+.conf-metric svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+/* Confidence uses the same solid colours as difficulty in every view. */
+.conf-metric.tone-green,
+.overall-confidence .tone-green,
+.history-stat-confidence .tone-green,
+.hm-metric-confidence .tone-green {
+  --tone: var(--green);
+}
+
+.conf-metric.tone-amber,
+.overall-confidence .tone-amber,
+.history-stat-confidence .tone-amber,
+.hm-metric-confidence .tone-amber {
+  --tone: var(--warning);
+}
+
+.conf-metric.tone-red,
+.overall-confidence .tone-red,
+.history-stat-confidence .tone-red,
+.hm-metric-confidence .tone-red {
+  --tone: var(--danger);
+}
+
+/* ============================================
+   Square icon buttons: one press animation (2.8)
+   Same as the History card "…": shrink to 95% while pressed.
+   ============================================ */
+.history-square-btn,
+.history-item-action-btn,
+.rules-more-btn,
+.detector-more-btn,
+.url-action-btn,
+.method-action-btn,
+.pagination-btn,
+.settings-btn,
+.btn-close,
+.history-modal-expand-btn,
+.edit-btn,
+.rules-add-btn {
+  transition-property: background, border-color, color, box-shadow, transform;
+  transition-duration: 0.15s;
+  transition-timing-function: ease;
+}
+
+.history-square-btn:active:not(:disabled),
+.history-item-action-btn:active:not(:disabled),
+.rules-more-btn:active:not(:disabled),
+.detector-more-btn:active:not(:disabled),
+.url-action-btn:active:not(:disabled),
+.method-action-btn:active:not(:disabled),
+.pagination-btn:active:not(:disabled),
+.settings-btn:active:not(:disabled),
+.btn-close:active:not(:disabled),
+.edit-btn:active:not(:disabled),
+.rules-add-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+/* "…" menus open with a short fade + drop, the same in History and Rules */
+@keyframes ui-menu-in {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+.history-menu:not([hidden]),
+.rules-menu.open .rules-menu-list {
+  animation: ui-menu-in 0.14s ease-out;
+  transform-origin: top right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .history-menu:not([hidden]),
+  .rules-menu.open .rules-menu-list {
+    animation: none;
+  }
+}
+
+/* Difficulty names share their level colours across cards and summaries. */
+.diff-metric {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+
+.diff-metric.tone-green {
+  color: var(--green);
+}
+
+.diff-metric.tone-amber {
+  color: var(--warning);
+}
+
+.diff-metric.tone-red {
+  color: var(--danger);
+}
+
+/* Shared hover tip (modules/ui/tooltip.js): any element with data-tip */
+.ui-tip {
+  position: fixed;
+  z-index: 10050;
+  pointer-events: none;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(300px, calc(100vw - 12px));
+  max-height: calc(100vh - 12px);
+  overflow: hidden;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  padding: 5px 8px;
+  background: #1f1f1f;
+  border: 1px solid #424242;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  font-size: 11px;
+  line-height: 15px;
+  color: var(--text-primary);
+}
+
+.ui-tip[hidden] {
+  display: none;
+}
+
+.ui-tip-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
+.ui-tip-label {
+  min-width: 0;
+}
+
+.ui-tip-dot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 2px;
+  background: var(--cat, var(--accent));
+}
+
+.ui-tip-detail {
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Optional breakdown (data-tip-rows): label left, value right */
+.ui-tip-rows {
+  display: grid;
+  gap: 1px;
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid #383838;
+}
+
+.ui-tip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  color: var(--text-secondary);
+}
+
+.ui-tip-row-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ui-tip-row-value {
+  flex-shrink: 0;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-tip-row-value.tone-green { color: var(--green); }
+.ui-tip-row-value.tone-amber { color: var(--warning); }
+.ui-tip-row-value.tone-red { color: var(--danger); }
+
+/* Category dots in tips also on pages without history.css (Statistics) */
+.ui-tip .cat-antibot { --cat: #ff5733; }
+.ui-tip .cat-captcha { --cat: #33c3ff; }
+.ui-tip .cat-fingerprint { --cat: var(--accent-light); }
+.ui-tip .cat-other { --cat: #8b8b8b; }

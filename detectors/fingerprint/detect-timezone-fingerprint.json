@@ -5,57 +5,27 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2025-01-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl",
   "icon": "timezone_fingerprint.png",
-  "description": "Timezone and internationalization API detection for locale-based fingerprinting",
+  "description": "Timezone and internationalization API observations, also common in date formatting and locale-aware applications",
   "detection": {
     "js_hooks": [
-      {
-        "description": "Gets timezone and locale information",
-        "enabled": true,
-        "confidence": 65,
-        "target": "Intl.DateTimeFormat.prototype.resolvedOptions"
-      },
-      {
-        "description": "Compares strings based on locale",
-        "enabled": true,
-        "confidence": 65,
-        "target": "Intl.Collator.prototype.compare"
-      }
-    ],
-    "window": [
-      {
-        "path": "Intl",
-        "description": "Internationalization API",
-        "condition": "typeof object"
-      },
-      {
-        "path": "Intl.DateTimeFormat",
-        "description": "Date and time formatting",
-        "condition": "typeof function"
-      }
+      { "id": "timezone-resolved-options", "description": "Reads date formatter resolved options; returned fields are not observed", "enabled": true, "confidence": 20, "target": "Intl.DateTimeFormat.prototype.resolvedOptions", "standalone": true },
+      { "id": "timezone-collator-compare", "description": "Accesses the locale-aware string comparison function", "enabled": true, "confidence": 5, "target": "Intl.Collator.prototype.compare", "standalone": true },
+      { "id": "timezone-offset", "description": "Reads a date's timezone offset; date and returned offset are not observed", "enabled": true, "confidence": 15, "target": "Date.prototype.getTimezoneOffset", "standalone": true }
     ],
     "content": [
-      {
-        "text": "Intl.DateTimeFormat",
-        "scope": "scripts",
-        "description": "Timezone detection via Intl",
-        "confidence": 50,
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "text": "resolvedOptions",
-        "scope": "scripts",
-        "description": "Getting locale and timezone info",
-        "confidence": 50,
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      }
+      { "id": "timezone-datetime-source", "text": "Intl.DateTimeFormat", "scope": "scripts", "checkScripts": true, "description": "Script reference to Intl.DateTimeFormat; execution and intent unconfirmed", "confidence": 10, "standalone": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
+      { "id": "timezone-resolved-source", "text": "resolvedOptions", "scope": "scripts", "checkScripts": true, "description": "Script reference to resolvedOptions; formatter type, execution and intent unconfirmed", "confidence": 10, "standalone": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
+      { "id": "timezone-offset-source", "text": "getTimezoneOffset", "scope": "scripts", "checkScripts": true, "description": "Script reference to getTimezoneOffset; execution and intent unconfirmed", "confidence": 10, "standalone": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true }
     ]
-  }
+  },
+  "combinations": [
+    { "id": "timezone-source-lookups", "name": "Script references date formatting and offset lookup", "confidence": 15, "when": { "all": [ { "pattern": "timezone-datetime-source" }, { "pattern": "timezone-offset-source" } ] } },
+    { "id": "timezone-locale-operations", "name": "Uses a timezone-related API and locale comparison", "confidence": 25, "when": { "all": [ { "any": [ { "pattern": "timezone-resolved-options" }, { "pattern": "timezone-offset" } ] }, { "pattern": "timezone-collator-compare" } ] } },
+    { "id": "timezone-dual-lookups", "name": "Reads date formatter options and date offset through related APIs", "confidence": 25, "when": { "all": [ { "pattern": "timezone-resolved-options" }, { "pattern": "timezone-offset" } ] } },
+    { "id": "timezone-locale-profile", "name": "Reads formatter options and date offset with locale comparison", "confidence": 35, "when": { "all": [ { "pattern": "timezone-resolved-options" }, { "pattern": "timezone-offset" }, { "pattern": "timezone-collator-compare" } ] } }
+  ]
 }

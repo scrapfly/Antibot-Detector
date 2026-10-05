@@ -5,63 +5,101 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2025-01-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API",
   "icon": "indexeddb_fingerprint.png",
-  "description": "IndexedDB API access for local storage-based fingerprinting and database enumeration",
+  "description": "IndexedDB access and database enumeration signals. Ordinary application storage is common, so evidence strengths remain low and do not establish fingerprinting intent.",
   "detection": {
     "js_hooks": [
       {
-        "description": "Opens IndexedDB database for fingerprinting",
+        "id": "js_hooks-1",
+        "description": "Calls IndexedDB database open; success, database name and purpose are unknown",
         "enabled": true,
-        "confidence": 80,
+        "standalone": true,
+        "confidence": 10,
         "target": "IDBFactory.prototype.open"
       },
       {
-        "description": "Enumerates available IndexedDB databases",
+        "id": "js_hooks-2",
+        "description": "Requests database enumeration; returned names and collection purpose are unknown",
         "enabled": true,
-        "confidence": 80,
+        "standalone": true,
+        "confidence": 20,
         "target": "IDBFactory.prototype.databases"
       },
       {
-        "description": "Creates transactions for database access",
+        "id": "js_hooks-3",
+        "description": "Requests a database transaction; mode, contents and success are unknown",
         "enabled": true,
-        "confidence": 80,
+        "standalone": true,
+        "confidence": 5,
         "target": "IDBDatabase.prototype.transaction"
-      }
-    ],
-    "window": [
-      {
-        "path": "indexedDB",
-        "description": "IndexedDB API access point",
-        "condition": "typeof object"
-      },
-      {
-        "path": "indexedDB.databases",
-        "description": "Method to list available databases",
-        "condition": "typeof function"
       }
     ],
     "content": [
       {
+        "id": "content-1",
         "text": "indexedDB.open",
         "scope": "scripts",
-        "description": "IndexedDB database opening",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to indexedDB.open; execution and purpose unconfirmed",
+        "confidence": 5,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true
       },
       {
+        "id": "content-2",
         "text": "IDBDatabase",
         "scope": "scripts",
-        "description": "IndexedDB database interface usage",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to IDBDatabase; execution and purpose unconfirmed",
+        "confidence": 5,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true
+      },
+      {
+        "id": "content-database-enumeration",
+        "text": "indexedDB.databases",
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to database enumeration; execution and purpose unconfirmed",
+        "confidence": 10,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "indexeddb-source-access",
+      "name": "Database access and enumeration references",
+      "confidence": 10,
+      "when": { "all": [{ "pattern": "content-1" }, { "pattern": "content-database-enumeration" }] }
+    },
+    {
+      "id": "indexeddb-open-transaction",
+      "name": "Database opening and transaction use",
+      "confidence": 15,
+      "when": { "all": [{ "pattern": "js_hooks-1" }, { "pattern": "js_hooks-3" }] }
+    },
+    {
+      "id": "indexeddb-enumeration-access",
+      "name": "Database enumeration and access",
+      "confidence": 25,
+      "when": { "all": [{ "pattern": "js_hooks-2" }, { "any": [{ "pattern": "js_hooks-1" }, { "pattern": "js_hooks-3" }] }] }
+    },
+    {
+      "id": "indexeddb-enumeration-open-transaction",
+      "name": "Enumeration with opening and transactions",
+      "confidence": 30,
+      "when": { "all": [{ "pattern": "js_hooks-1" }, { "pattern": "js_hooks-2" }, { "pattern": "js_hooks-3" }] }
+    }
+  ]
 }

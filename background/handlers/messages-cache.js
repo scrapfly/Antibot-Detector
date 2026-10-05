@@ -11,21 +11,21 @@ function registerCacheHandlers(registry, context) {
         (async () => {
             try {
                 const { url } = request;
-                Logger.background('[Background] [Early Cache] Checking cache for:', url);
+                Logger.debug('CACHE', `Early check: ${url}`);
                 const cachedData = await DetectionEngineManager.getStoredDetection(url);
 
                 if (cachedData) {
-                    Logger.background('[Background] [Early Cache] HIT - returning cached data');
+                    Logger.detection(`${Logger.hostOf(url)}: cached result reused`);
                     if (sender.tab?.id) {
                         tabsUsingCache.add(sender.tab.id);
-                        Logger.background(`[Background] [Early Cache] Marked tab ${sender.tab.id} as using cache`);
+                        Logger.debug('BACKGROUND', `[Background] [Early Cache] Marked tab ${sender.tab.id} as using cache`);
                     }
                     sendResponse({
                         cacheHit: true,
                         detectionData: cachedData
                     });
                 } else {
-                    Logger.background('[Background] [Early Cache] MISS - detection needed');
+                    Logger.debug('CACHE', `Early check miss: ${url}`);
                     if (sender.tab?.id) {
                         tabsUsingCache.delete(sender.tab.id);
                     }
@@ -54,7 +54,7 @@ function registerCacheHandlers(registry, context) {
                 const { url, detectionData } = request;
                 const tabId = sender.tab?.id;
 
-                Logger.background('[Background] [Early Cache] Content script exited early due to cache hit for:', url);
+                Logger.debug('BACKGROUND', '[Background] [Early Cache] Content script exited early due to cache hit for:', url);
 
                 if (detectionData && tabId) {
                     const detectionCount = detectionData.detectionCount || 0;
@@ -63,18 +63,9 @@ function registerCacheHandlers(registry, context) {
                     if (detectionCount > 0) {
                         const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
                         const count = detectionCount.toString();
-                        let color;
-                        if (detections.length > 0) {
-                            const avgConfidence = DetectionUtils.computeAverageConfidence(detections);
-                            const difficulty = DetectionUtils.getDifficultyLevel(detections, avgConfidence);
-                            color = difficulty === 'High' ? badgeColors.high :
-                                   difficulty === 'Medium' ? badgeColors.medium :
-                                   badgeColors.low;
-                        } else {
-                            // Fallback for older cache payloads without detectionResults
-                            color = detectionCount >= BADGE.THRESHOLDS.MEDIUM ? badgeColors.medium : badgeColors.low;
-                        }
+                        const color = DetectionUtils.getBadgeColor(detections, badgeColors);
 
+                        await setBadgeTextColor(tabId, false, color);
                         await chrome.action.setBadgeText({
                             text: count,
                             tabId: tabId
@@ -83,8 +74,9 @@ function registerCacheHandlers(registry, context) {
                             color: color,
                             tabId: tabId
                         });
-                        Logger.background(`[Background] [Early Cache] Badge updated: ${detectionCount} detections from cache`);
+                        Logger.debug('BACKGROUND', `[Background] [Early Cache] Badge updated: ${detectionCount} detections from cache`);
                     } else {
+                        await setBadgeTextColor(tabId);
                         await chrome.action.setBadgeText({
                             text: BADGE.TEXT.CLEAN,
                             tabId: tabId
@@ -93,7 +85,7 @@ function registerCacheHandlers(registry, context) {
                             color: BADGE.COLORS.CLEAN,
                             tabId: tabId
                         });
-                        Logger.background('[Background] [Early Cache] Badge: clean page (no detections)');
+                        Logger.debug('BACKGROUND', '[Background] [Early Cache] Badge: clean page (no detections)');
                     }
                 }
 
@@ -101,7 +93,7 @@ function registerCacheHandlers(registry, context) {
             } catch (error) {
                 // Expected: tab may have closed
                 if (error.message && error.message.includes('No tab with id')) {
-                    Logger.background('[Background] [Early Cache] Tab closed, skipping badge update');
+                    Logger.debug('BACKGROUND', '[Background] [Early Cache] Tab closed, skipping badge update');
                     sendResponse({ status: 'acknowledged' }); // Still acknowledge
                 } else {
                     Logger.error('BACKGROUND', '[Background] [Early Cache] Error updating badge:', error);
@@ -123,12 +115,12 @@ function registerCacheHandlers(registry, context) {
             if (request.tabId) {
                 if (detectionStates.has(request.tabId)) {
                     detectionStates.delete(request.tabId);
-                    Logger.background(`[Background] Cleared detectionStates for tab ${request.tabId}`);
+                    Logger.debug('BACKGROUND', `[Background] Cleared detectionStates for tab ${request.tabId}`);
                 }
 
                 if (activeDetections.has(request.tabId)) {
                     activeDetections.delete(request.tabId);
-                    Logger.background(`[Background] Cleared activeDetections for tab ${request.tabId}`);
+                    Logger.debug('BACKGROUND', `[Background] Cleared activeDetections for tab ${request.tabId}`);
                 }
 
                 headersStore.delete(request.tabId);
@@ -141,21 +133,22 @@ function registerCacheHandlers(registry, context) {
                 recentlyClearedTabs.add(request.tabId);
                 setTimeout(() => {
                     recentlyClearedTabs.delete(request.tabId);
-                    Logger.background(`[Background] Tab ${request.tabId} removed from recently cleared list`);
+                    Logger.debug('BACKGROUND', `[Background] Tab ${request.tabId} removed from recently cleared list`);
                 }, Constants.RECENTLY_CLEARED_TAB_TIMEOUT);
 
                 try {
+                    await setBadgeTextColor(request.tabId, false, BADGE.COLORS.CLEARED);
                     await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: request.tabId });
                     await chrome.action.setBadgeBackgroundColor({
                         color: BADGE.COLORS.CLEARED,
                         tabId: request.tabId
                     });
-                    Logger.background(`[Background] Badge set to CLR for tab ${request.tabId}`);
+                    Logger.debug('BACKGROUND', `[Background] Badge set to CLR for tab ${request.tabId}`);
                 } catch (badgeError) {
                     Logger.warn('BACKGROUND', `[Background] Could not update badge for tab ${request.tabId}:`, badgeError);
                 }
 
-                Logger.background(`[Background] Complete cache clear for tab ${request.tabId} - all memory and storage cleared`);
+                Logger.debug('BACKGROUND', `[Background] Complete cache clear for tab ${request.tabId} - all memory and storage cleared`);
             }
         })();
         return true; // Async response

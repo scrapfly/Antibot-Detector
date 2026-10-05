@@ -4,6 +4,15 @@
  */
 const DetectionModals = (typeof self !== 'undefined' && self.DetectionModals) ? self.DetectionModals : {};
 
+// Localised text with {0} placeholders (English fallback when i18n is not loaded)
+const _dmText = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+const _dmUnknown = () => _dmText('timeUnknown', 'Unknown');
+// Difficulty is computed as Low/Medium/High; show it in the UI language
+const _dmDifficulty = (value) => {
+    const key = { Low: 'difficultyLow', Medium: 'difficultyMedium', High: 'difficultyHigh' }[value];
+    return key ? _dmText(key, value) : value;
+};
+
 DetectionModals.copyDetection = function(indexOrDetection, triggerElement = null) {
     const detection = typeof indexOrDetection === 'object'
       ? indexOrDetection
@@ -12,17 +21,17 @@ DetectionModals.copyDetection = function(indexOrDetection, triggerElement = null
     if (!detection) {
       return;
     }
-    const detailsText = `
-Security System: ${detection.detector?.name || 'Unknown'}
-Category: ${detection.category || 'Unknown'}
-Confidence: ${detection.confidence || 0}%
-Detection Methods: ${detection.matches?.map(m => `${m.type}: ${m.pattern || m.name || m.selector}`).join(', ') || 'Unknown'}
-    `.trim();
+    const methods = detection.matches?.map(m => `${m.type}: ${m.pattern || m.name || m.selector}`).join(', ');
+    const detailsText = [
+      _dmText('clipboardSecuritySystemFmt', 'Security System: {0}', detection.detector?.name || _dmUnknown()),
+      _dmText('clipboardCategoryFmt', 'Category: {0}', detection.category || _dmUnknown()),
+      _dmText('clipboardConfidenceFmt', 'Confidence: {0}%', detection.confidence || 0),
+      _dmText('clipboardDetectionMethodsFmt', 'Detection Methods: {0}', methods || _dmUnknown())
+    ].join('\n');
 
+    // Default toast / inline texts of copyToClipboard are already localised
     FormatUtils.copyToClipboard(detailsText, {
-      element: triggerElement,
-      notificationMessage: 'Copied',
-      inlineMessage: '✓ Copied!'
+      element: triggerElement
     });
 };
 
@@ -71,44 +80,63 @@ DetectionModals.copyDetectionOverview = async function() {
     const sortedDetections = this.sortDetectionsByCategory(detections);
 
     let text = '';
-    text += `URL: ${url || host || 'Unknown'}\n`;
+    text += _dmText('clipboardUrlFmt', 'URL: {0}', url || host || _dmUnknown()) + '\n';
     if (url && host && url !== host) {
-      text += `Host: ${host}\n`;
+      text += _dmText('clipboardHostFmt', 'Host: {0}', host) + '\n';
     }
-    text += `Detections: ${totalDetections}\n`;
-    text += `Confidence: ${avgConfidence}%\n`;
-    text += `Difficulty: ${difficulty}\n`;
-    if (cacheScope && cacheScope !== '-') text += `Cache Scope: ${cacheScope}\n`;
-    if (cacheExpiry && cacheExpiry !== '-') text += `Cache Expiration: ${cacheExpiry}\n`;
+    text += _dmText('clipboardDetectionsCountFmt', 'Detections: {0}', totalDetections) + '\n';
+    text += _dmText('clipboardConfidenceFmt', 'Confidence: {0}%', avgConfidence) + '\n';
+    text += _dmText('clipboardDifficultyFmt', 'Difficulty: {0}', _dmDifficulty(difficulty)) + '\n';
+    if (cacheScope && cacheScope !== '-') text += _dmText('clipboardCacheScopeFmt', 'Cache Scope: {0}', cacheScope) + '\n';
+    if (cacheExpiry && cacheExpiry !== '-') text += _dmText('clipboardCacheExpirationFmt', 'Cache Expiration: {0}', cacheExpiry) + '\n';
 
     if (sortedDetections.length > 0) {
-      text += `\nDetections (${sortedDetections.length}):\n`;
+      text += '\n' + _dmText('clipboardDetectionsListFmt', 'Detections ({0}):', sortedDetections.length) + '\n';
       text += `${'-'.repeat(50)}\n\n`;
 
       sortedDetections.forEach((detection, index) => {
-        const name = detection?.detector?.name || detection?.detector || detection?.name || 'Unknown';
+        const name = detection?.detector?.name || detection?.detector || detection?.name || _dmUnknown();
         const category = detection?.category || detection?.detector?.category || '';
         const confidence = detection?.confidence || 0;
         const methods = formatMethodCounts(detection);
 
         text += `${index + 1}. ${name}\n`;
-        if (category) text += `   Category: ${category}\n`;
-        text += `   Confidence: ${confidence}%\n`;
-        if (methods) text += `   Methods: ${methods}\n`;
+        if (category) text += '   ' + _dmText('clipboardCategoryFmt', 'Category: {0}', category) + '\n';
+        text += '   ' + _dmText('clipboardConfidenceFmt', 'Confidence: {0}%', confidence) + '\n';
+        if (methods) text += '   ' + _dmText('clipboardMethodsFmt', 'Methods: {0}', methods) + '\n';
         text += '\n';
       });
     }
 
-    await FormatUtils.copyToClipboard(text.trim(), { notificationMessage: 'Copied' });
+    await FormatUtils.copyToClipboard(text.trim());
 };
 
 DetectionModals.copyMethodValue = function(value, type, triggerElement = null) {
     const textToCopy = `[${type}] ${value}`;
     FormatUtils.copyToClipboard(textToCopy, {
-      element: triggerElement,
-      notificationMessage: 'Copied',
-      inlineMessage: '✓ Copied!'
+      element: triggerElement
     });
+};
+
+/**
+ * The detector a detection came from, with its author. Results cached before
+ * detections carried `detector.author` are completed from the loaded detector
+ * definitions by id.
+ */
+DetectionModals.resolveDetectorDefinition = function(detection) {
+    const detector = detection?.detector || {};
+    if (typeof detector.author === 'string' && detector.author.trim()) {
+      return detector;
+    }
+    const all = this.detectorManager?.getAllDetectors?.() || {};
+    for (const category of Object.values(all)) {
+      for (const [key, definition] of Object.entries(category || {})) {
+        if ((definition?.id || key) === detector.id) {
+          return { ...detector, id: detector.id, author: definition.author };
+        }
+      }
+    }
+    return detector;
 };
 
 DetectionModals.getDetectionByIndex = function(index) {
@@ -155,10 +183,14 @@ DetectionModals.initializeModalElements = function() {
       name: modal.querySelector('#detectionModalName'),
       categories: modal.querySelector('#detectionModalCategories'),
       confidence: modal.querySelector('#detectionModalConfidence'),
+      confidenceIcon: modal.querySelector('#detectionModalConfidenceIcon'),
+      difficultyIcon: modal.querySelector('#detectionModalDifficultyIcon'),
       detections: modal.querySelector('#detectionModalDetections'),
       difficulty: modal.querySelector('#detectionModalDifficulty'),
       description: modal.querySelector('#detectionModalDescription'),
-      methods: modal.querySelector('#detectionModalMethods')
+      methods: modal.querySelector('#detectionModalMethods'),
+      combinationsSection: modal.querySelector('#detectionModalCombinationsSection'),
+      combinations: modal.querySelector('#detectionModalCombinations')
     };
 
     const closeHandler = () => this.closeDetectionModal();
@@ -229,9 +261,6 @@ DetectionModals.renderDetectionModalContent = function(detection) {
     }
 
     const confidence = detection.confidence || 0;
-    let confidenceClass = 'confidence-low';
-    if (confidence >= 90) confidenceClass = 'confidence-high';
-    else if (confidence >= 70) confidenceClass = 'confidence-medium';
 
     const difficultyInfo = this.getDifficultyInfo([detection], confidence);
     const manualDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.normalizeDifficulty === 'function')
@@ -244,44 +273,79 @@ DetectionModals.renderDetectionModalContent = function(detection) {
     }
 
     if (this.modalElements.name) {
-      this.modalElements.name.textContent = detection.detector?.name || detection.detector || 'Unknown Detection';
+      this.modalElements.name.textContent = detection.detector?.name || detection.detector || _dmText('unknownDetection', 'Unknown Detection');
     }
 
     if (this.modalElements.categories) {
       this.modalElements.categories.innerHTML = this.getCategoryBadges(detection);
     }
 
+    const confidenceTone = FormatUtils.confidenceTone(confidence);
+    const difficultyTone = { High: 'red', Medium: 'amber', Low: 'green' }[difficulty] || 'green';
+
     if (this.modalElements.confidence) {
       this.modalElements.confidence.textContent = `${confidence}%`;
-      this.modalElements.confidence.className = `meta-value ${confidenceClass}`;
+      this.modalElements.confidence.className = `history-stat-value tone-${confidenceTone}`;
+      // Where the score comes from: the matched combinations, or the strongest signals
+      const combos = Array.isArray(detection.combinations) ? detection.combinations : [];
+      const matches = Array.isArray(detection.matches) ? detection.matches : [];
+      const scoreOf = (match) => Math.round(Number(match.baseConfidence ?? match.confidence) || 0);
+      const rows = combos.length
+        ? combos.slice(0, 4).map(combo => ({ label: combo.name || _dmText('combinationDefaultNameFmt', 'Combination {0}', 1),
+          value: `${Math.round(Number(combo.confidence) || 0)}%`, tone: FormatUtils.confidenceTone(combo.confidence) }))
+        : matches.slice().sort((a, b) => scoreOf(b) - scoreOf(a)).slice(0, 4).map(match => ({
+          label: (typeof DetectionUI !== 'undefined' ? DetectionUI.getMethodLabel(String(match.type || 'unknown').toLowerCase()) : match.type),
+          value: `${scoreOf(match)}%`, tone: FormatUtils.confidenceTone(scoreOf(match)) }));
+      const tile = this.modalElements.confidence.closest('.history-stat-inline');
+      FormatUtils.setTip(tile, _dmText('clipboardConfidenceFmt', 'Confidence: {0}%', confidence),
+        combos.length ? _dmText('tipConfidenceFromCombinations', 'From the matched combinations')
+          : _dmText('tipConfidenceFromSignals', 'The strongest single signal sets the score'), rows);
+    }
+    if (this.modalElements.confidenceIcon) {
+      this.modalElements.confidenceIcon.className = `history-stat-icon tone-${confidenceTone}`;
     }
 
     if (this.modalElements.detections) {
-      const matchCount = Array.isArray(detection.matches) ? detection.matches.length : 0;
-      if (matchCount > 0) {
-        const matchKey = matchCount === 1 ? 'matchSingular' : 'matchPlural';
-        const matchFallback = matchCount === 1 ? 'match' : 'matches';
-        const matchLabel = (typeof I18n !== 'undefined')
-          ? I18n.tr(matchKey, matchFallback)
-          : matchFallback;
-        this.modalElements.detections.textContent = `${matchCount} ${matchLabel}`;
-      } else {
-        this.modalElements.detections.textContent = (typeof I18n !== 'undefined')
-          ? I18n.tr('noMatchesRecorded', 'No matches recorded')
-          : 'No matches recorded';
-      }
+      const matchList = Array.isArray(detection.matches) ? detection.matches : [];
+      const matchCount = matchList.length;
+      this.modalElements.detections.textContent = String(matchCount);
+      const matchTip = matchCount === 1
+        ? _dmText('historyOneMatch', '1 match')
+        : (matchCount > 1
+          ? _dmText('historyMatchCountFmt', '{0} matches', matchCount)
+          : _dmText('noMatchesRecorded', 'No matches recorded'));
+      // Matches per detection method
+      const byMethod = new Map();
+      matchList.forEach(match => {
+        const key = String(match.type || 'unknown').toLowerCase();
+        byMethod.set(key, (byMethod.get(key) || 0) + 1);
+      });
+      const rows = [...byMethod.entries()].sort((a, b) => b[1] - a[1]).map(([key, count]) => ({
+        label: typeof DetectionUI !== 'undefined' ? DetectionUI.getMethodLabel(key) : key, value: String(count)
+      }));
+      FormatUtils.setTip(this.modalElements.detections.closest('.history-stat-inline'), matchTip, '', rows);
     }
 
     if (this.modalElements.difficulty) {
-      const difficultyClass = `difficulty-${difficulty.toLowerCase()}`;
-      this.modalElements.difficulty.textContent = difficulty;
-      this.modalElements.difficulty.className = `meta-value ${difficultyClass}`;
+      const difficultyText = _dmDifficulty(difficulty);
+      this.modalElements.difficulty.textContent = difficultyText;
+      this.modalElements.difficulty.className = `history-stat-value tone-${difficultyTone}`;
+      FormatUtils.setTip(this.modalElements.difficulty.closest('.history-stat-inline'),
+        _dmText('clipboardDifficultyFmt', 'Difficulty: {0}', difficultyText),
+        manualDifficulty
+          ? _dmText('tipDifficultyFromRule', 'Set by this detector')
+          : _dmText('tipDifficultyFromCategoryFmt', 'Default for {0}', FormatUtils.categoryLabel(FormatUtils.categoryKey(detection))));
+    }
+    if (this.modalElements.difficultyIcon) {
+      this.modalElements.difficultyIcon.className = `history-stat-icon tone-${difficultyTone}`;
     }
 
-    // Populate author field
+    // Populate author field. Detections cached before the author was carried
+    // on detection.detector fall back to the loaded detector definition.
     const authorElement = document.querySelector('#detectionModalAuthor');
     if (authorElement) {
-      const author = detection.detector?.author || 'Scrapfly';
+      const detectorForAuthor = DetectionModals.resolveDetectorDefinition.call(this, detection);
+      const author = (typeof detectorForAuthor?.author === 'string' && detectorForAuthor.author.trim()) || '—';
 
       // Clear previous content
       authorElement.textContent = '';
@@ -289,20 +353,29 @@ DetectionModals.renderDetectionModalContent = function(detection) {
       // Add author text (using textContent to prevent XSS)
       const authorText = document.createTextNode(author);
       authorElement.appendChild(authorText);
-
-      // Add verified badge for official scrapfly detectors
-      if (author.toLowerCase() === 'scrapfly') {
-        const verifiedBadge = document.createElement('i');
-        verifiedBadge.className = 'fas fa-check-circle verified-badge';
-        verifiedBadge.title = 'Official Scrapfly detector';
-        verifiedBadge.style.marginLeft = '6px';
-        authorElement.appendChild(verifiedBadge);
-      }
+      const definition = DetectionModals.findDetectorDefinition.call(this, detection) || {};
+      const official = typeof DetectionUtils !== 'undefined' && DetectionUtils.isOfficialDetector
+        && DetectionUtils.isOfficialDetector({ id: detection?.detector?.id, author });
+      const rows = [];
+      if (definition.version) rows.push({ label: _dmText('ruleFieldVersion', 'Version'), value: String(definition.version) });
+      if (definition.lastUpdated) rows.push({ label: _dmText('tipLastUpdated', 'Updated'), value: String(definition.lastUpdated).slice(0, 10) });
+      FormatUtils.setTip(authorElement.closest('.history-stat-inline'), `${_dmText('detectionModalAuthor', 'Author')}: ${author}`,
+        official ? _dmText('tipOfficialDetector', 'Official Scrapfly detector') : _dmText('tipCustomDetector', 'Custom detector'), rows);
     }
 
     if (this.modalElements.description) {
-      const description = detection.detector?.description || 'No additional details provided for this detection.';
+      const description = detection.detector?.description
+        || _dmText('detectionUiNoDescription', 'No additional details provided for this detection.');
       this.modalElements.description.textContent = description;
+    }
+
+    // Combinations of the detector that matched (see DetectionCombinations),
+    // shown like the method rows: chip, the rule as text, confidence
+    if (this.modalElements.combinations && this.modalElements.combinationsSection) {
+      const matched = Array.isArray(detection.combinations) ? detection.combinations : [];
+      this.modalElements.combinationsSection.hidden = matched.length === 0;
+      this.modalElements.combinations.innerHTML = DetectionModals.getCombinationRows.call(this, detection, matched);
+      DetectionModals.attachCombinationCopyHandlers.call(this);
     }
 
     if (this.modalElements.methods) {
@@ -310,9 +383,64 @@ DetectionModals.renderDetectionModalContent = function(detection) {
         this.modalElements.methods.innerHTML = this.getMethodBadges(detection.matches);
         this.attachModalMethodHandlers();
       } else {
-        this.modalElements.methods.innerHTML = '<div class="detection-modal-empty">No detection methods recorded for this detector.</div>';
+        const empty = document.createElement('div');
+        empty.className = 'detection-modal-empty';
+        empty.textContent = _dmText('detectionUiNoMethodsRecorded', 'No detection methods recorded for this detector.');
+        this.modalElements.methods.replaceChildren(empty);
       }
     }
+};
+
+/** The detector definition (with its patterns) behind a detection, if loaded. */
+DetectionModals.findDetectorDefinition = function(detection) {
+    const id = detection?.detector?.id;
+    const all = this.detectorManager?.getAllDetectors?.() || {};
+    for (const category of Object.values(all)) {
+      for (const [key, definition] of Object.entries(category || {})) {
+        if ((definition?.id || key) === id) return definition;
+      }
+    }
+    return detection?.detector || null;
+};
+
+/** Rows for matched combinations, in the method-card layout. */
+DetectionModals.getCombinationRows = function(detection, matched) {
+    const definition = DetectionModals.findDetectorDefinition.call(this, detection) || {};
+    const label = (m) => (typeof DetectionUI !== 'undefined' ? DetectionUI.getMethodLabel(m) : m);
+    const words = {
+      and: _dmText('combinationPreviewAnd', 'AND'),
+      or: _dmText('combinationPreviewOr', 'OR'),
+      not: _dmText('combinationPreviewNot', 'NOT'),
+      method: label,
+      any: (m) => (typeof I18n !== 'undefined' && I18n.format('combinationAnyOfMethodFmt', label(m))) || `Any ${label(m)} pattern`
+    };
+    const clickToCopy = FormatUtils.escapeAttr(_dmText('advCommonClickToCopy', 'Click to copy'));
+    return matched.map((combo, i) => {
+      const name = combo.name || (typeof I18n !== 'undefined' && I18n.format('combinationDefaultNameFmt', String(i + 1))) || `Combination ${i + 1}`;
+      const chip = FormatUtils.escapeHtml(name);
+      const confidence = Math.round(Number(combo.confidence) || 0);
+      const rule = (combo.when && typeof DetectionCombinations !== 'undefined')
+        ? DetectionCombinations.describe(definition, combo.when, words)
+        : (combo.name || '');
+      const text = rule || name;
+      return `
+        <div class="method-item-card method-combination" data-copy-value="${encodeURIComponent(text)}" title="${clickToCopy}">
+          <span class="method-type-badge method-type-badge--combination" title="${FormatUtils.escapeAttr(name)}">${chip}</span>
+          <button type="button" class="method-value-btn" title="${FormatUtils.escapeAttr(text)}">${FormatUtils.escapeHtml(text)}</button>
+          ${FormatUtils.confidenceHtml(confidence, 'method-confidence')}
+        </div>`;
+    }).join('');
+};
+
+DetectionModals.attachCombinationCopyHandlers = function() {
+    document.querySelectorAll('#detectionModalCombinations .method-item-card').forEach(card => {
+      const value = decodeURIComponent(card.getAttribute('data-copy-value') || '');
+      const button = card.querySelector('.method-value-btn');
+      card.addEventListener('click', () => {
+        if (!value) return;
+        FormatUtils.copyToClipboard(value, { element: button || card });
+      });
+    });
 };
 
 DetectionModals.attachModalMethodHandlers = function() {

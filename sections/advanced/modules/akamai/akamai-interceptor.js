@@ -71,13 +71,13 @@ function akamaiStartCapture(tabId, captureUrl) {
     // Auto-stop after 60 seconds
     if (typeof setCaptureTimeout === 'function') {
         setCaptureTimeout(akamaiCaptureStateRef, tabId, Constants.CAPTURE_AUTO_STOP_TIMEOUT, () => {
-            Logger.network(`[Akamai Debug] Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
+            Logger.debug('NETWORK', `[Akamai Debug] Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
             akamaiStopCapture(tabId);
         });
     } else {
         const state = akamaiCaptureStateRef.get(tabId);
         state.timeout = setTimeout(() => {
-            Logger.network(`[Akamai Debug] Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
+            Logger.debug('NETWORK', `[Akamai Debug] Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
             akamaiStopCapture(tabId);
         }, Constants.CAPTURE_AUTO_STOP_TIMEOUT);
     }
@@ -85,17 +85,19 @@ function akamaiStartCapture(tabId, captureUrl) {
     // Show standardized in-page notification
     if (typeof showCaptureStarted === 'function') {
         showCaptureStarted(tabId, {
-            title: 'Akamai Monitoring Started',
-            message: 'Reload the page to begin monitoring for sensor data and request details',
+            module: 'Akamai',
+            title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'Akamai'),
+            message: pageText('advAkamaiNoticeReloadToMonitor', 'Reload the page to begin monitoring for sensor data and request details'),
             duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
             Logger.error('NETWORK', '[AKAMAI-CAPTURE] Failed to show notification:', err);
         });
     } else if (showNotification) {
         showNotification(tabId, {
+            module: 'Akamai',
             type: 'capture',
-            title: 'Akamai Monitoring Started',
-            message: 'Reload the page to begin monitoring for sensor data and request details',
+            title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'Akamai'),
+            message: pageText('advAkamaiNoticeReloadToMonitor', 'Reload the page to begin monitoring for sensor data and request details'),
             duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
             Logger.error('NETWORK', '[AKAMAI-CAPTURE] Failed to show notification:', err);
@@ -374,9 +376,10 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
         Logger.network('[AKAMAI-CAPTURE] Step 10: Showing success notification in page...');
         if (showNotification) {
             await showNotification(tabId, {
+                module: 'Akamai',
                 type: 'success',
-                title: 'Capture Completed',
-                message: 'Akamai sensor_data captured successfully',
+                title: pageText('pageNoticeCaptureCompleted', 'Capture Completed'),
+                message: pageText('advAkamaiNoticeSensorCaptured', 'Akamai sensor_data captured successfully'),
                 duration: 5000
             }).catch(err => {
                 Logger.error('NETWORK', '[AKAMAI-CAPTURE] Failed to show notification:', err);
@@ -493,9 +496,10 @@ async function akamaiStartExtraction(tabId) {
             if (typeof showNotification === 'function') {
                 Logger.network('[AKAMAI-EXTRACT] Showing analyzing notification...');
                 await showNotification(tabId, {
+                    module: 'Akamai',
                     type: 'loading',
-                    title: 'Extracting Akamai Sensor Data',
-                    message: 'Waiting for sensor information to be captured...',
+                    title: pageText('advAkamaiNoticeExtractingTitle', 'Extracting Akamai Sensor Data'),
+                    message: pageText('advAkamaiNoticeWaitingSensor', 'Waiting for sensor information to be captured…'),
                     duration: 30000 // Longer duration since extraction can take time
                 });
                 Logger.network('[AKAMAI-EXTRACT] Notification shown successfully');
@@ -513,59 +517,6 @@ async function akamaiStartExtraction(tabId) {
         Logger.error('NETWORK', '[AKAMAI-EXTRACT] Error:', error);
         Logger.error('NETWORK', '[AKAMAI-EXTRACT] Stack:', error.stack);
         throw error;
-    }
-}
-
-/**
- * Handle extraction completion
- * @param {number} tabId - Tab ID
- * @param {object} extractedData - Extracted sensor data
- */
-async function akamaiHandleExtractionCompleted(tabId, extractedData) {
-    Logger.network('[AKAMAI-EXTRACT] ========== EXTRACTION COMPLETED ==========');
-    try {
-        Logger.network('[AKAMAI-EXTRACT] Tab ID:', tabId);
-        Logger.network('[AKAMAI-EXTRACT] Extracted data:', {
-            hasSensorData: !!extractedData?.sensorData,
-            hasSbsdData: !!extractedData?.sbsdData,
-            hasSecData: !!extractedData?.secData,
-            scriptUrl: extractedData?.scriptUrl,
-            endpointsCount: extractedData?.endpoints?.length || 0
-        });
-
-        // Stop capture
-        Logger.network('[AKAMAI-EXTRACT] Step 1: Stopping capture state...');
-        if (akamaiCaptureStateRef) {
-            const state = (typeof getCaptureState === 'function')
-                ? getCaptureState(akamaiCaptureStateRef, tabId)
-                : akamaiCaptureStateRef.get(tabId);
-            Logger.network('[AKAMAI-EXTRACT] Current state:', state);
-            if (typeof removeCaptureState === 'function') {
-                removeCaptureState(akamaiCaptureStateRef, tabId);
-                Logger.network('[AKAMAI-EXTRACT] Timeout cleared');
-            } else {
-                if (state && state.timeout) {
-                    clearTimeout(state.timeout);
-                    Logger.network('[AKAMAI-EXTRACT] Timeout cleared');
-                }
-                akamaiCaptureStateRef.delete(tabId);
-            }
-            Logger.network('[AKAMAI-EXTRACT] State deleted for tab:', tabId);
-        }
-
-        Logger.network('[AKAMAI-EXTRACT] ========== EXTRACTION COMPLETED SUCCESSFULLY ==========');
-    } catch (error) {
-        Logger.error('NETWORK', '[AKAMAI-EXTRACT] Error handling extraction completion:', error);
-        Logger.error('NETWORK', '[AKAMAI-EXTRACT] Error stack:', error.stack);
-
-        // Clean up on error
-        if (akamaiCaptureStateRef && akamaiCaptureStateRef.has(tabId)) {
-            if (typeof removeCaptureState === 'function') {
-                removeCaptureState(akamaiCaptureStateRef, tabId);
-            } else {
-                akamaiCaptureStateRef.delete(tabId);
-            }
-        }
     }
 }
 
@@ -995,20 +946,6 @@ function akamaiHandleMessage(request, sendResponse) {
                 });
             return true; // Async response
 
-        case 'AKAMAI_EXTRACTION_COMPLETED':
-            // Handle async operation without making the whole function async
-            (async () => {
-                try {
-                    const { tabId, extractedData } = request;
-                    await akamaiHandleExtractionCompleted(tabId, extractedData);
-                    sendResponse({ status: 'success' });
-                } catch (error) {
-                    Logger.error('NETWORK', '[AKAMAI-EXTRACT] Error handling extraction completion', error);
-                    sendResponse({ status: 'error', error: error.message });
-                }
-            })();
-            return true; // Async response
-
         case 'AKAMAI_SHOW_ANALYZING_NOTIFICATION':
             // Show analyzing notification for content analysis
             (async () => {
@@ -1016,9 +953,10 @@ function akamaiHandleMessage(request, sendResponse) {
                     if (typeof showNotification === 'function') {
                         Logger.network('[AKAMAI] Showing analyzing notification...');
                         await showNotification(request.tabId, {
+                            module: 'Akamai',
                             type: 'loading',
-                            title: 'Analyzing Akamai Content',
-                            message: 'Scanning page for scripts and patterns...',
+                            title: pageText('advAkamaiNoticeAnalyzingTitle', 'Analyzing Akamai Content'),
+                            message: pageText('advAkamaiNoticeScanning', 'Scanning page for scripts and patterns…'),
                             duration: 10000
                         });
                         Logger.network('[AKAMAI] Notification shown successfully');
@@ -1040,9 +978,10 @@ function akamaiHandleMessage(request, sendResponse) {
                     if (typeof showNotification === 'function') {
                         Logger.network('[AKAMAI] Showing extracting sensor notification...');
                         await showNotification(request.tabId, {
+                            module: 'Akamai',
                             type: 'loading',
-                            title: 'Extracting Sensor Data',
-                            message: 'Capturing Akamai sensor information...',
+                            title: pageText('advAkamaiNoticeExtractingSensorTitle', 'Extracting Sensor Data'),
+                            message: pageText('advAkamaiNoticeCapturingSensor', 'Capturing Akamai sensor information…'),
                             duration: 15000 // Longer duration to persist through reload
                         });
                         Logger.network('[AKAMAI] Notification shown successfully');

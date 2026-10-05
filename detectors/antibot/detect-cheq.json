@@ -5,103 +5,212 @@
   "enabled": true,
   "category": "ANTIBOT",
   "difficulty": "Medium",
-  "lastUpdated": "2024-10-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-05",
+  "version": "2.0.0",
   "website": "https://cheq.ai/",
   "icon": "custom.png",
   "description": "Cheq bot detection and prevention with light obfuscation",
   "detection": {
-    "content": [
+    "cookie": [
       {
+        "id": "cq-id-cookie",
+        "name": "^_cq_(?:duid|suid)$",
+        "nameRegex": true,
         "confidence": 50,
-        "description": "Cheq SDK main object",
-        "text": "CheqSdk",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "description": "CHEQ visitor/session id cookie",
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
-        "confidence": 50,
-        "description": "Cheq identifier string",
-        "text": "\"CHEQ\"",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "description": "Cheq invalid user detection",
-        "text": "cheq_invalidUsers",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "description": "Cheq reference",
-        "text": "cheq",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "id": "cq-aux-cookie",
+        "name": "^(?:_cq_session|_cq_rti|_cheq_rti)$",
+        "nameRegex": true,
+        "confidence": 30,
+        "standalone": false,
+        "description": "Other CHEQ cookies",
+        "nameScope": "all",
+        "valueScope": "all"
       }
     ],
     "url": [
       {
-        "confidence": 100,
-        "description": "Cheq clicktrue invocation script",
-        "text": "clicktrue_invocation.js",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "cheq-tms-bootstrap",
+        "confidence": 75,
+        "description": "CHEQ tag manager bootstrap (tms.cheq.ai)",
+        "text": "^https://tms\\.cheq\\.ai/",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "confidence": 100,
-        "description": "Cheq zone domain",
-        "text": "cheqzone.com",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "cheqzone-host",
+        "confidence": 70,
+        "description": "CHEQ ClickTrue host (cheqzone.com)",
+        "text": "^https://(?:[a-z0-9-]{1,63}\\.){0,4}cheqzone\\.com/",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "confidence": 100,
-        "description": "Cheq obfuscation server",
-        "text": "ob.cheqzone.com",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
-      },
-      {
-        "confidence": 95,
-        "description": "Cheq main domain",
-        "text": "cheq.ai",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "cheq-ai-host",
+        "confidence": 50,
+        "standalone": false,
+        "description": "Other cheq.ai service host",
+        "text": "^https://(?:[a-z0-9-]{1,63}\\.){0,4}cheq\\.ai/",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       }
     ],
+    "dom": [
+      {
+        "id": "clicktrue-tag",
+        "selector": "script[class^=\"ct_clicktrue_\"]",
+        "confidence": 80,
+        "description": "ClickTrue tag; served from a disguised random host, identified by its class"
+      },
+      {
+        "id": "cheq-jsonp-tag",
+        "selector": "script[data-jsonp=\"onCheqResponse\"]",
+        "confidence": 80,
+        "description": "CHEQ tag with its JSONP callback attribute"
+      }
+    ],
+    "content": [
+      {
+        "id": "cheq-callback-reference",
+        "confidence": 10,
+        "description": "CHEQ JSONP callback name",
+        "text": "onCheqResponse",
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      },
+      {
+        "id": "cheq-sdk-reference",
+        "confidence": 10,
+        "description": "CHEQ SDK global reference",
+        "text": "__CheqSdk",
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ],
     "window": [
       {
-        "path": "CheqSdk",
-        "condition": "typeof object",
-        "confidence": 100,
-        "description": "Cheq SDK object"
+        "id": "cheq-sdk-object",
+        "path": "__CheqSdk",
+        "condition": "exists",
+        "confidence": 75,
+        "description": "CHEQ SDK global"
       },
       {
-        "path": "window.CheqSdk",
+        "id": "cq-object",
+        "path": "_cq",
         "condition": "typeof object",
-        "confidence": 100,
-        "description": "Window-level Cheq SDK"
-      },
-      {
-        "path": "cheq_invalidUsers",
-        "condition": "typeof function",
-        "confidence": 95,
-        "description": "Cheq invalid users checker"
+        "confidence": 40,
+        "standalone": false,
+        "description": "CHEQ queue object (_cq)"
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "cheq-tag-runtime",
+      "name": "CHEQ tag with its runtime or cookies",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "clicktrue-tag"
+              },
+              {
+                "pattern": "cheq-jsonp-tag"
+              },
+              {
+                "pattern": "cheq-tms-bootstrap"
+              },
+              {
+                "pattern": "cheqzone-host"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "cheq-sdk-object"
+              },
+              {
+                "pattern": "cq-object"
+              },
+              {
+                "pattern": "cq-id-cookie"
+              },
+              {
+                "pattern": "cq-aux-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "cheq-cookies-runtime",
+      "name": "CHEQ cookies with its queue",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "cq-id-cookie"
+              },
+              {
+                "pattern": "cq-aux-cookie"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "cq-object"
+              },
+              {
+                "pattern": "cheq-callback-reference"
+              },
+              {
+                "pattern": "cheq-sdk-reference"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "cheq-host-cookies",
+      "name": "cheq.ai service host with CHEQ cookie",
+      "confidence": 80,
+      "when": {
+        "all": [
+          {
+            "pattern": "cheq-ai-host"
+          },
+          {
+            "any": [
+              {
+                "pattern": "cq-id-cookie"
+              },
+              {
+                "pattern": "cq-aux-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

@@ -16,7 +16,10 @@ var initializationPromise = null;
 importScripts(
     // Core utilities
     './modules/core/logger.js',
+    './modules/core/i18n.js',
     './modules/core/constants.js',
+    './modules/core/hooks-config.js',
+    './modules/core/bridge-protocol.js',
     './modules/core/badge-constants.js',
     './modules/core/message-types.js',
     './modules/core/log-collector.js',
@@ -31,6 +34,7 @@ importScripts(
     './modules/detection/managers/category-manager.js',
     './modules/detection/managers/detector-manager.js',
     './modules/detection/managers/confidence-manager.js',
+    './modules/detection/detection-combinations.js',
     './modules/detection/engine/detection-engine-analysis.js',
     './modules/detection/engine/detection-engine-extractors.js',
     './modules/detection/engine/detection-engine-matching.js',
@@ -40,7 +44,9 @@ importScripts(
     './modules/ui/notification-manager.js',
     './modules/core/update-manager.js',
     './modules/detection/hooks/worker-keepalive-manager.js',
+    './modules/core/history-store.js',
     './sections/history/history.js',
+    './modules/core/webhook-body.js',
     './sections/settings/settings-runtime.js',
     // Interceptors
     './sections/advanced/base-interceptor-helpers.js',
@@ -61,6 +67,7 @@ importScripts(
     // Background runtime modules
     './background/header-capture.js',
     './background/utilities.js',
+    './background/scan-report.js',
     './background/detection-lifecycle.js',
     './background/handlers/router-utils.js',
     './background/handlers/messages-logging.js',
@@ -72,6 +79,8 @@ importScripts(
     './background/handlers/router-registry.js',
     './background/handlers/message-router.js',
     './background/tab-events.js',
+    './background/history-retention.js',
+    './background/detection-cache-retention.js',
     './background/init.js'
 );
 
@@ -136,6 +145,27 @@ async function isExtensionEnabled() {
     return cachedEnabledState.value;
 }
 
+// ─── JS Hooks Config Cache ───────────────────────────────────────────────────
+// Same resolution the content script sends to the MAIN world, so the hooks
+// deadline here always matches the page's MAX_DETECTION_MS (overrides included).
+
+let cachedHooksConfig = HooksConfig.defaults;
+
+// Utils.getSettings also refreshes the Logger flags (debug, verbose, collector),
+// so every settings change reaches the worker's logging without a storage read per line
+async function refreshHooksConfig() {
+    try {
+        cachedHooksConfig = HooksConfig.fromSettings(await Utils.getSettings(chrome));
+    } catch (error) {
+        cachedHooksConfig = HooksConfig.defaults;
+    }
+}
+refreshHooksConfig();
+
+function getHooksDeadline(startTime) {
+    return startTime + cachedHooksConfig.MAX_DETECTION_MS + Constants.HOOKS_DEADLINE_BUFFER_MS;
+}
+
 chrome.storage.onChanged.addListener((changes, namespace) => {
     if (namespace === 'local' && changes.scrapfly_enabled) {
         cachedEnabledState = {
@@ -143,37 +173,35 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
             timestamp: Date.now()
         };
     }
+    if (namespace === 'local' && changes.scrapfly_settings) {
+        refreshHooksConfig();
+    }
 });
 
 // ─── Detection State Constants & Helpers ────────────────────────────────────
 
 
 async function ensureHooksDeadline(state) {
-    if (!state) return Date.now() + Constants.DEFAULT_HOOKS_MAX_DETECTION_MS + Constants.HOOKS_DEADLINE_BUFFER_MS;
+    if (!state) return getHooksDeadline(Date.now());
     if (state.hooksDeadline) {
         return state.hooksDeadline;
     }
 
     const startTime = state.startTime || Date.now();
-    state.hooksMaxMs = Constants.DEFAULT_HOOKS_MAX_DETECTION_MS;
-    state.hooksDeadline = startTime + Constants.DEFAULT_HOOKS_MAX_DETECTION_MS + Constants.HOOKS_DEADLINE_BUFFER_MS;
+    state.hooksMaxMs = cachedHooksConfig.MAX_DETECTION_MS;
+    state.hooksDeadline = getHooksDeadline(startTime);
     state.hooksDeadlineSource = 'default';
     return state.hooksDeadline;
 }
 
-async function ensureDebugMode(state) {
-    if (!state) return false;
-    if (typeof state.debugMode === 'boolean') return state.debugMode;
-    try {
-        const settings = await Utils.getSettings(chrome);
-        state.debugMode = settings?.debugMode || false;
-    } catch (error) {
-        state.debugMode = false;
-    }
-    return state.debugMode;
+function generateMatchKey(match) {
+    // Combination detectors: two rows can match the same cookie or header
+    // and each is its own condition, so the row is part of the key
+    const key = generateMatchKeyByValue(match);
+    return match.patternId ? `${match.patternId}|${key}` : key;
 }
 
-function generateMatchKey(match) {
+function generateMatchKeyByValue(match) {
     const matchType = (match.type || '').toLowerCase();
 
     switch (matchType) {
@@ -238,8 +266,8 @@ function getOrCreateDetectionState(tabId, url) {
             windowPropertiesComplete: false,
             lastHookBatchTime: 0,
             startTime: startTime,
-            hooksDeadline: startTime + Constants.DEFAULT_HOOKS_MAX_DETECTION_MS + Constants.HOOKS_DEADLINE_BUFFER_MS,
-            hooksMaxMs: Constants.DEFAULT_HOOKS_MAX_DETECTION_MS,
+            hooksDeadline: getHooksDeadline(startTime),
+            hooksMaxMs: cachedHooksConfig.MAX_DETECTION_MS,
             hooksDeadlineSource: 'default',
             hooksTimedOut: false,
             hooksCompletionReason: null,

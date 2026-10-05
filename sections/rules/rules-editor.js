@@ -11,6 +11,76 @@
 
 const METHOD_PATTERNS_PER_PAGE = 3;
 
+// UI text of the pattern rows, in the UI language. Every value is
+// attribute-escaped because the rows are built as HTML strings.
+const rulesEditorText = (key, fallback) => {
+  const value = (typeof I18n !== 'undefined' && I18n.get(key)) || fallback;
+  return FormatUtils.escapeAttr(value);
+};
+
+const rulesEditorFormat = (key, fallback, ...args) => {
+  const formatted = (typeof I18n !== 'undefined') ? I18n.format(key, ...args) : null;
+  let value = formatted;
+  if (value === null || value === undefined) {
+    value = fallback;
+    args.forEach((arg, i) => { value = value.split('{' + i + '}').join(String(arg)); });
+  }
+  return FormatUtils.escapeAttr(value);
+};
+
+// "?" button title of each method section
+const RULES_EDITOR_HELP_TITLES = {
+  js_hooks: ['rulesUiHelpJsHooks', 'What are JS hooks?'],
+  window: ['rulesUiHelpWindow', 'What are Window properties?'],
+  url: ['rulesUiHelpUrl', 'What is URL detection?'],
+  header: ['rulesUiHelpHeader', 'What is Header detection?'],
+  cookie: ['rulesUiHelpCookie', 'What is Cookie detection?'],
+  content: ['rulesUiHelpContent', 'What is Content detection?'],
+  dom: ['rulesUiHelpDom', 'What is DOM detection?'],
+  payload: ['rulesUiHelpPayload', 'What is Payload detection?']
+};
+
+Rules.prototype.getMethodHelpButtonTitle = function(methodType) {
+    const entry = RULES_EDITOR_HELP_TITLES[methodType] || ['rulesUiHelpGeneric', 'What is this detection method?'];
+    return rulesEditorText(entry[0], entry[1]);
+  };
+
+// Placeholders of the name and value inputs of a pattern row
+Rules.prototype.getMethodInputPlaceholders = function(methodType) {
+    let name = rulesEditorText('ruleFieldName', 'Name');
+    let value = rulesEditorText('rulesUiValueOptionalPlaceholder', 'Value (optional)');
+    if (methodType === 'dom') name = rulesEditorText('rulesUiDomSelectorPlaceholder', 'CSS Selector (e.g., .class, #id, [attr])');
+    else if (methodType === 'content') name = rulesEditorText('rulesUiContentTextPlaceholder', 'Text/Word to search');
+    else if (methodType === 'url' || methodType === 'urls') name = rulesEditorText('rulesUiUrlPatternPlaceholder', 'URL Pattern');
+    else if (methodType === 'js_hooks') name = rulesEditorText('rulesUiJsHookTargetPlaceholder', 'JS Hook Target (e.g., navigator.webdriver)');
+    else if (methodType === 'window') {
+      name = rulesEditorText('rulesUiWindowPathPlaceholder', 'Window Path (e.g., grecaptcha, _cf_chl_opt)');
+      value = rulesEditorText('rulesUiWindowConditionPlaceholder', 'Condition (e.g., typeof object, typeof function)');
+    } else if (methodType === 'cookie') {
+      name = rulesEditorText('rulesUiCookieNamePlaceholder', 'Cookie Name (e.g., __cf_bm, session_id)');
+      value = rulesEditorText('rulesUiCookieValuePlaceholder', 'Cookie Value Pattern (optional)');
+    } else if (methodType === 'payload') name = rulesEditorText('rulesUiPayloadTextPlaceholder', 'Text (e.g., sensor_data, challenge_token)');
+    return { name, value };
+  };
+
+// Button titles and labels shared by every pattern row and section
+Rules.prototype.getMethodRowTexts = function() {
+    return {
+      nameSettings: rulesEditorText('rulesUiNameSettings', 'Name Settings'),
+      valueSettings: rulesEditorText('rulesUiValueSettings', 'Value Settings'),
+      deleteMethod: rulesEditorText('rulesUiDeleteMethod', 'Delete Method'),
+      clearValue: rulesEditorText('rulesUiClearValue', 'Clear Value'),
+      addValue: rulesEditorText('rulesUiAddValue', 'Add Value'),
+      previousPage: rulesEditorText('paginationPrev', 'Previous page'),
+      nextPage: rulesEditorText('paginationNext', 'Next page'),
+      searchPatterns: rulesEditorText('methodSearchPatterns', 'Search patterns...'),
+      addPattern: rulesEditorText('methodAddPattern', 'Add Pattern'),
+      emptyPagination: rulesEditorFormat('paginationShowingItems', 'Showing {0}-{1} of {2} {3}', 0, 0, 0,
+        (typeof I18n !== 'undefined' && I18n.get('methodSuffixPatterns')) || 'patterns'),
+      firstPage: rulesEditorFormat('rulesUiPageOfFmt', 'Page {0} / {1}', 1, 1)
+    };
+  };
+
 Rules.prototype.populateDetectionMethods = function(detector) {
     const container = document.querySelector('#detectionMethodsContainer');
     if (!container) return;
@@ -30,39 +100,10 @@ Rules.prototype.populateDetectionMethods = function(detector) {
     const allMethodTypes = ['url', 'header', 'cookie', 'content', 'dom', 'js_hooks', 'window', 'payload'];
 
     const _t = (typeof I18n !== 'undefined') ? I18n : null;
-    const methodLabelKey = {
-      url: 'methodLabelUrl', header: 'methodLabelHeader', cookie: 'methodLabelCookie',
-      content: 'methodLabelContent', dom: 'methodLabelDom', js_hooks: 'methodLabelJsHooks',
-      window: 'methodLabelWindow', payload: 'methodLabelPayload'
-    };
-    const methodLabelFallback = {
-      url: 'URL', header: 'HEADER', cookie: 'COOKIE', content: 'CONTENT', dom: 'DOM',
-      js_hooks: 'JS HOOKS', window: 'WINDOW', payload: 'PAYLOAD'
-    };
-
+    const rowTexts = this.getMethodRowTexts();
     allMethodTypes.forEach(methodType => {
       const methodsData = detector.detection?.[methodType];
-      const displayName = _t
-        ? _t.get(methodLabelKey[methodType] || '') || (methodLabelFallback[methodType] || methodType.toUpperCase())
-        : (methodLabelFallback[methodType] || methodType.toUpperCase());
-
-      const tagColor = this.detectorManager.categoryManager.getTagColor(methodType);
-      const backgroundColor = (tagColor && tagColor !== '#666666') ? tagColor : '#666666';
-
-      const methodHex = backgroundColor.replace('#', '');
-      const methodR = parseInt(methodHex.substring(0, 2), 16) || 102;
-      const methodG = parseInt(methodHex.substring(2, 4), 16) || 102;
-      const methodB = parseInt(methodHex.substring(4, 6), 16) || 102;
-
-      const helpButtonTitle = methodType === 'js_hooks' ? 'What are JS hooks?' :
-                             methodType === 'window' ? 'What are Window properties?' :
-                             methodType === 'url' ? 'What is URL detection?' :
-                             methodType === 'header' ? 'What is Header detection?' :
-                             methodType === 'cookie' ? 'What is Cookie detection?' :
-                             methodType === 'content' ? 'What is Content detection?' :
-                             methodType === 'dom' ? 'What is DOM detection?' :
-                             methodType === 'payload' ? 'What is Payload detection?' :
-                             'What is this detection method?';
+      const helpButtonTitle = this.getMethodHelpButtonTitle(methodType);
 
       const methodHelper = `
             <button class="method-help-btn" type="button" data-method-help="${methodType}" title="${helpButtonTitle}">?</button>
@@ -80,7 +121,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
               <svg class="method-collapse-icon" width="16" height="16" viewBox="0 0 24 24">
                 <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" fill="currentColor"/>
               </svg>
-              <div class="method-title" style="background: rgba(${methodR}, ${methodG}, ${methodB}, 0.2); color: ${backgroundColor}; border: 1px solid rgba(${methodR}, ${methodG}, ${methodB}, 0.35); padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; display: inline-block;">${displayName}</div>
+              ${this.renderMethodChip(methodType, 'method-title')}
             </div>
             <span class="method-pattern-count">${patternCountText}</span>
             ${methodHelper}
@@ -120,6 +161,10 @@ Rules.prototype.populateDetectionMethods = function(detector) {
             }
 
             const confidence = method.confidence || 100;
+            // Stable id combinations refer to, and whether the pattern may fire alone
+            const patternId = ((typeof DetectionCombinations !== 'undefined') && DetectionCombinations.idOf(detector, method))
+              || `${methodType}-${index + 1}`;
+            const standalone = method.standalone === false ? 'false' : 'true';
 
             let nameRegex = false, nameWholeWord = false, nameCaseSensitive = false;
             let valueRegex = false, valueWholeWord = false, valueCaseSensitive = false;
@@ -178,21 +223,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
             const singleInputTypes = ['url', 'content', 'dom', 'js_hooks', 'payload'];
             const isSingleInput = singleInputTypes.includes(methodType);
 
-            let inputPlaceholder = 'Name';
-            let valuePlaceholder = 'Value (optional)';
-            if (methodType === 'dom') inputPlaceholder = 'CSS Selector (e.g., .class, #id, [attr])';
-            else if (methodType === 'content') inputPlaceholder = 'Text/Word to search';
-            else if (methodType === 'url') inputPlaceholder = 'URL Pattern';
-            else if (methodType === 'js_hooks') inputPlaceholder = 'JS Hook Target (e.g., navigator.webdriver)';
-            else if (methodType === 'window') {
-              inputPlaceholder = 'Window Path (e.g., grecaptcha, _cf_chl_opt)';
-              valuePlaceholder = 'Condition (e.g., typeof object, typeof function)';
-            }
-            else if (methodType === 'cookie') {
-              inputPlaceholder = 'Cookie Name (e.g., __cf_bm, session_id)';
-              valuePlaceholder = 'Cookie Value Pattern (optional)';
-            }
-            else if (methodType === 'payload') inputPlaceholder = 'Text (e.g., sensor_data, challenge_token)';
+            const { name: inputPlaceholder, value: valuePlaceholder } = this.getMethodInputPlaceholders(methodType);
 
             const hasNameCustomSettings = nameRegex || nameWholeWord || nameCaseSensitive ||
                                           (methodType === 'content' && checkScripts === true);
@@ -208,6 +239,8 @@ Rules.prototype.populateDetectionMethods = function(detector) {
             methodsHtml += `
               <div class="method-item"
                 data-method-order="${index}"
+                data-pattern-id="${FormatUtils.escapeAttr(patternId)}"
+                data-standalone="${standalone}"
                 data-confidence="${confidence}"
                 data-name-regex="${nameRegex}"
                 data-name-wholeword="${nameWholeWord}"
@@ -228,17 +261,17 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                     <div class="input-with-indicators">
                       <div class="input-row">
                         <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="${name}" data-method-key="${methodType}" data-item-index="${index}">
-                        ${methodType === 'dom' ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="${index}">?</button>` : ''}
-                        ${methodType === 'window' ? `<button class="window-helper-btn" title="Window Property Examples" data-input-index="${index}">?</button>` : ''}
+                        ${methodType === 'dom' ? `<button class="dom-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesDomSelectorHelper', 'DOM Selector Helper'))}" data-input-index="${index}">?</button>` : ''}
+                        ${methodType === 'window' ? `<button class="window-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesWindowPropertiesHelper', 'Window Properties Helper'))}" data-input-index="${index}">?</button>` : ''}
                         <div class="field-actions" data-field-type="name">
                           ${showNameSettings ? `
-                          <button class="method-action-btn settings ${hasNameCustomSettings ? 'has-custom-settings' : ''}" title="Name Settings">
+                          <button class="method-action-btn settings ${hasNameCustomSettings ? 'has-custom-settings' : ''}" title="${rowTexts.nameSettings}">
                             <svg width="14" height="14" viewBox="0 0 24 24">
                               <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
                             </svg>
                           </button>
                           ` : ''}
-                          <button class="method-action-btn delete" title="Delete Method">
+                          <button class="method-action-btn delete" title="${rowTexts.deleteMethod}">
                             <svg width="14" height="14" viewBox="0 0 24 24">
                               <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
                             </svg>
@@ -258,12 +291,12 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                         }
                         ${showValueActions ? `
                         <div class="field-actions" data-field-type="value">
-                          <button class="method-action-btn settings ${hasValueCustomSettings ? 'has-custom-settings' : ''}" title="Value Settings">
+                          <button class="method-action-btn settings ${hasValueCustomSettings ? 'has-custom-settings' : ''}" title="${rowTexts.valueSettings}">
                             <svg width="14" height="14" viewBox="0 0 24 24">
                               <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
                             </svg>
                           </button>
-                          <button class="method-action-btn delete" title="Clear Value">
+                          <button class="method-action-btn delete" title="${rowTexts.clearValue}">
                             <svg width="14" height="14" viewBox="0 0 24 24">
                               <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
                             </svg>
@@ -279,7 +312,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                       <svg width="12" height="12" viewBox="0 0 24 24">
                         <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
                       </svg>
-                      Add Value
+                      ${rowTexts.addValue}
                     </button>
                     ` : ''}
                   </div>
@@ -292,15 +325,15 @@ Rules.prototype.populateDetectionMethods = function(detector) {
       methodsHtml += `
           </div>
           <div class="method-pagination" data-method-pagination="${methodType}">
-            <span class="method-pagination-info">Showing 0-0 of 0 patterns</span>
+            <span class="method-pagination-info">${rowTexts.emptyPagination}</span>
             <div class="method-pagination-controls">
-              <button type="button" class="method-pagination-btn prev" title="Previous page" disabled>
+              <button type="button" class="method-pagination-btn prev" title="${rowTexts.previousPage}" disabled>
                 <svg width="12" height="12" viewBox="0 0 24 24">
                   <path d="M15.41,7.41L14,6L8,12L14,18L15.41,16.59L10.83,12L15.41,7.41Z" fill="currentColor"/>
                 </svg>
               </button>
-              <span class="method-pagination-page">Page 1 / 1</span>
-              <button type="button" class="method-pagination-btn next" title="Next page" disabled>
+              <span class="method-pagination-page">${rowTexts.firstPage}</span>
+              <button type="button" class="method-pagination-btn next" title="${rowTexts.nextPage}" disabled>
                 <svg width="12" height="12" viewBox="0 0 24 24">
                   <path d="M8.59,16.59L10,18L16,12L10,6L8.59,7.41L13.17,12L8.59,16.59Z" fill="currentColor"/>
                 </svg>
@@ -342,7 +375,8 @@ Rules.prototype.populateDetectionMethods = function(detector) {
         item.dataset.nameCase === 'true' ||
         item.dataset.valueRegex === 'true' ||
         item.dataset.valueWholeword === 'true' ||
-        item.dataset.valueCase === 'true';
+        item.dataset.valueCase === 'true' ||
+        item.dataset.standalone === 'false';
 
       if (hasSettings) {
         this.updateMethodIndicators(item);
@@ -378,11 +412,7 @@ Rules.prototype.getMethodSectionType = function(section) {
     const buttonType = section.querySelector('.add-method-btn')?.dataset.methodType;
     if (buttonType) return buttonType;
 
-    const methodTitle = section.querySelector('.method-title')?.textContent?.trim().toLowerCase();
-    if (!methodTitle) return '';
-
-    if (methodTitle === 'js hooks') return 'js_hooks';
-    return methodTitle;
+    return '';
   };
 
 Rules.prototype.updateMethodPatternCount = function(section) {
@@ -534,7 +564,8 @@ Rules.prototype.updateMethodSectionPagination = function(section, options = {}) 
     }
 
     if (pageEl) {
-      pageEl.textContent = `Page ${currentPage} / ${totalPages}`;
+      pageEl.textContent = (typeof I18n !== 'undefined' && I18n.format('rulesUiPageOfFmt', currentPage, totalPages))
+        || `Page ${currentPage} / ${totalPages}`;
     }
 
     if (prevBtn) {
@@ -575,7 +606,8 @@ Rules.prototype.updateAddPatternButtonState = function(section) {
     addPatternBtn.setAttribute('aria-disabled', hasEmptyRequiredPattern ? 'true' : 'false');
 
     if (hasEmptyRequiredPattern) {
-      addPatternBtn.title = 'Complete the current empty pattern before adding another.';
+      addPatternBtn.title = (typeof I18n !== 'undefined' && I18n.get('rulesUiCompleteEmptyPattern'))
+        || 'Complete the current empty pattern before adding another.';
     } else {
       addPatternBtn.removeAttribute('title');
     }
@@ -698,9 +730,9 @@ Rules.prototype.revealAndFocusInvalidRow = function(invalidRow) {
 Rules.prototype.addNewMethodItem = function(button) {
     const methodSection = button.closest('.method-section');
     const methodItems = methodSection.querySelector('.method-items');
-    let methodKey = methodSection.querySelector('.method-title').textContent.toLowerCase();
-
-    if (methodKey === 'js hooks') methodKey = 'js_hooks';
+    // The chip shows a translated label, so the key comes from the section's data attribute
+    const methodKey = this.getMethodSectionType(methodSection);
+    const rowTexts = this.getMethodRowTexts();
 
     const itemIndex = `new-${Date.now()}`;
     const singleInputTypes = ['url', 'content', 'dom', 'js_hooks', 'payload'];
@@ -708,27 +740,20 @@ Rules.prototype.addNewMethodItem = function(button) {
     const isDom = methodKey === 'dom';
     const isWindow = methodKey === 'window';
 
-    let inputPlaceholder = 'Name';
-    let valuePlaceholder = 'Value (optional)';
-    if (methodKey === 'dom') inputPlaceholder = 'CSS Selector (e.g., .class, #id, [attr])';
-    else if (methodKey === 'content') inputPlaceholder = 'Text/Word to search';
-    else if (methodKey === 'urls' || methodKey === 'url') inputPlaceholder = 'URL Pattern';
-    else if (methodKey === 'js_hooks') inputPlaceholder = 'JS Hook Target (e.g., navigator.webdriver)';
-    else if (methodKey === 'window') {
-      inputPlaceholder = 'Window Path (e.g., grecaptcha, _cf_chl_opt)';
-      valuePlaceholder = 'Condition (e.g., typeof object, typeof function)';
-    }
-    else if (methodKey === 'payload') inputPlaceholder = 'Text (e.g., sensor_data, challenge_token)';
+    const { name: inputPlaceholder, value: valuePlaceholder } = this.getMethodInputPlaceholders(methodKey);
 
     const windowConditionDropdown = isWindow ? this.renderInlineConditionDropdown('exists', methodKey, itemIndex) : '';
     const showValueRow = isWindow;
     const showNameSettings = true;
     const showValueActions = !isWindow;
     const methodOrder = methodItems.querySelectorAll('.method-item').length;
+    const patternId = this.nextPatternId(methodKey);
 
     const newMethodHtml = `
       <div class="method-item"
         data-method-order="${methodOrder}"
+        data-pattern-id="${patternId}"
+        data-standalone="true"
         data-confidence="100"
         data-name-regex="false"
         data-name-wholeword="false"
@@ -745,17 +770,17 @@ Rules.prototype.addNewMethodItem = function(button) {
             <div class="input-with-indicators">
               <div class="input-row">
                 <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="" data-method-key="${methodKey}" data-item-index="${itemIndex}">
-                ${isDom ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="${itemIndex}">?</button>` : ''}
-                ${isWindow ? `<button class="window-helper-btn" title="Window Property Examples" data-input-index="${itemIndex}">?</button>` : ''}
+                ${isDom ? `<button class="dom-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesDomSelectorHelper', 'DOM Selector Helper'))}" data-input-index="${itemIndex}">?</button>` : ''}
+                ${isWindow ? `<button class="window-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesWindowPropertiesHelper', 'Window Properties Helper'))}" data-input-index="${itemIndex}">?</button>` : ''}
                 <div class="field-actions" data-field-type="name">
                   ${showNameSettings ? `
-                  <button class="method-action-btn settings" title="Name Settings">
+                  <button class="method-action-btn settings" title="${rowTexts.nameSettings}">
                     <svg width="14" height="14" viewBox="0 0 24 24">
                       <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
                     </svg>
                   </button>
                   ` : ''}
-                  <button class="method-action-btn delete" title="Delete Method">
+                  <button class="method-action-btn delete" title="${rowTexts.deleteMethod}">
                     <svg width="14" height="14" viewBox="0 0 24 24">
                       <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
                     </svg>
@@ -775,12 +800,12 @@ Rules.prototype.addNewMethodItem = function(button) {
                     }
                     ${showValueActions ? `
                     <div class="field-actions" data-field-type="value">
-                  <button class="method-action-btn settings" title="Value Settings">
+                  <button class="method-action-btn settings" title="${rowTexts.valueSettings}">
                     <svg width="14" height="14" viewBox="0 0 24 24">
                       <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
                     </svg>
                   </button>
-                  <button class="method-action-btn delete" title="Clear Value">
+                  <button class="method-action-btn delete" title="${rowTexts.clearValue}">
                     <svg width="14" height="14" viewBox="0 0 24 24">
                       <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
                     </svg>
@@ -796,7 +821,7 @@ Rules.prototype.addNewMethodItem = function(button) {
               <svg width="12" height="12" viewBox="0 0 24 24">
                 <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
               </svg>
-              Add Value
+              ${rowTexts.addValue}
             </button>
             ` : ''}
           </div>
@@ -818,8 +843,9 @@ Rules.prototype.addNewMethodSection = function() {
     const container = document.querySelector('#detectionMethodsContainer');
     const addSectionBtn = container.querySelector('.add-section-btn');
 
-    const methodType = prompt('Enter detection method type (e.g., HEADERS, CONTENT, URLs):');
+    const methodType = prompt((typeof I18n !== 'undefined' && I18n.get('rulesUiEnterMethodTypePrompt')) || 'Enter detection method type (e.g., HEADERS, CONTENT, URLs):');
     if (!methodType) return;
+    const rowTexts = this.getMethodRowTexts();
 
     const methodKey = methodType.toLowerCase();
     const singleInputTypes = ['url', 'content', 'dom', 'js_hooks', 'payload'];
@@ -827,11 +853,7 @@ Rules.prototype.addNewMethodSection = function() {
     const isDom = methodKey === 'dom';
     const isWindow = methodKey === 'window';
 
-    let inputPlaceholder = 'Name';
-    if (methodKey === 'dom') inputPlaceholder = 'CSS Selector (e.g., .class, #id, [attr])';
-    else if (methodKey === 'content') inputPlaceholder = 'Text/Word to search';
-    else if (methodKey === 'urls' || methodKey === 'url') inputPlaceholder = 'URL Pattern';
-    else if (methodKey === 'window') inputPlaceholder = 'Window Path (e.g., grecaptcha, _cf_chl_opt)';
+    const { name: inputPlaceholder, value: valuePlaceholder } = this.getMethodInputPlaceholders(methodKey);
 
     const windowConditionDropdown = isWindow ? this.renderInlineConditionDropdown('exists', methodKey, 'new') : '';
     const showValueRow = isWindow;
@@ -841,14 +863,14 @@ Rules.prototype.addNewMethodSection = function() {
     const newSectionHtml = `
       <div class="method-section" data-method-type="${methodKey}">
         <div class="method-header">
-          <div class="method-title">${methodType.toUpperCase()}</div>
+          ${this.renderMethodChip(methodKey, 'method-title')}
         </div>
         <div class="method-search-row">
           <input
             type="text"
             class="method-search-input"
             data-method-search="${methodKey}"
-            placeholder="Search patterns..."
+            placeholder="${rowTexts.searchPatterns}"
           >
         </div>
         <div class="method-items">
@@ -866,17 +888,17 @@ Rules.prototype.addNewMethodSection = function() {
                 <div class="input-with-indicators">
                   <div class="input-row">
                     <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="" data-method-key="${methodKey}" data-item-index="new">
-                    ${isDom ? `<button class="dom-helper-btn" title="DOM Selector Examples" data-input-index="new">?</button>` : ''}
-                    ${isWindow ? `<button class="window-helper-btn" title="Window Property Examples" data-input-index="new">?</button>` : ''}
+                    ${isDom ? `<button class="dom-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesDomSelectorHelper', 'DOM Selector Helper'))}" data-input-index="new">?</button>` : ''}
+                    ${isWindow ? `<button class="window-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesWindowPropertiesHelper', 'Window Properties Helper'))}" data-input-index="new">?</button>` : ''}
                     <div class="field-actions" data-field-type="name">
                       ${showNameSettings ? `
-                      <button class="method-action-btn settings" title="Name Settings">
+                      <button class="method-action-btn settings" title="${rowTexts.nameSettings}">
                         <svg width="14" height="14" viewBox="0 0 24 24">
                           <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
                         </svg>
                       </button>
                       ` : ''}
-                      <button class="method-action-btn delete" title="Delete Method">
+                      <button class="method-action-btn delete" title="${rowTexts.deleteMethod}">
                         <svg width="14" height="14" viewBox="0 0 24 24">
                           <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
                         </svg>
@@ -892,16 +914,16 @@ Rules.prototype.addNewMethodSection = function() {
                   <div class="input-row">
                     ${isWindow
                       ? windowConditionDropdown
-                      : `<input type="text" class="method-input method-value" placeholder="Value (optional)" value="" data-method-key="${methodKey}" data-item-index="new">`
+                      : `<input type="text" class="method-input method-value" placeholder="${valuePlaceholder}" value="" data-method-key="${methodKey}" data-item-index="new">`
                     }
                     ${showValueActions ? `
                     <div class="field-actions" data-field-type="value">
-                      <button class="method-action-btn settings" title="Value Settings">
+                      <button class="method-action-btn settings" title="${rowTexts.valueSettings}">
                         <svg width="14" height="14" viewBox="0 0 24 24">
                           <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
                         </svg>
                       </button>
-                      <button class="method-action-btn delete" title="Clear Value">
+                      <button class="method-action-btn delete" title="${rowTexts.clearValue}">
                         <svg width="14" height="14" viewBox="0 0 24 24">
                           <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
                         </svg>
@@ -917,7 +939,7 @@ Rules.prototype.addNewMethodSection = function() {
                   <svg width="12" height="12" viewBox="0 0 24 24">
                     <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
                   </svg>
-                  Add Value
+                  ${rowTexts.addValue}
                 </button>
                 ` : ''}
               </div>
@@ -925,15 +947,15 @@ Rules.prototype.addNewMethodSection = function() {
           </div>
         </div>
         <div class="method-pagination" data-method-pagination="${methodKey}">
-          <span class="method-pagination-info">Showing 0-0 of 0 patterns</span>
+          <span class="method-pagination-info">${rowTexts.emptyPagination}</span>
           <div class="method-pagination-controls">
-            <button type="button" class="method-pagination-btn prev" title="Previous page" disabled>
+            <button type="button" class="method-pagination-btn prev" title="${rowTexts.previousPage}" disabled>
               <svg width="12" height="12" viewBox="0 0 24 24">
                 <path d="M15.41,7.41L14,6L8,12L14,18L15.41,16.59L10.83,12L15.41,7.41Z" fill="currentColor"/>
               </svg>
             </button>
-            <span class="method-pagination-page">Page 1 / 1</span>
-            <button type="button" class="method-pagination-btn next" title="Next page" disabled>
+            <span class="method-pagination-page">${rowTexts.firstPage}</span>
+            <button type="button" class="method-pagination-btn next" title="${rowTexts.nextPage}" disabled>
               <svg width="12" height="12" viewBox="0 0 24 24">
                 <path d="M8.59,16.59L10,18L16,12L10,6L8.59,7.41L13.17,12L8.59,16.59Z" fill="currentColor"/>
               </svg>
@@ -944,7 +966,7 @@ Rules.prototype.addNewMethodSection = function() {
           <svg width="12" height="12" viewBox="0 0 24 24">
             <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
           </svg>
-          ${(typeof I18n !== 'undefined') ? I18n.get('methodAddPattern') : 'Add Pattern'}
+          ${rowTexts.addPattern}
         </button>
       </div>
     `;
@@ -966,6 +988,15 @@ Rules.prototype.addNewMethodSection = function() {
 // Data Collection & Saving
 // ============================================
 
+// First unused `<method>-<n>` id among the rows of the editor
+Rules.prototype.nextPatternId = function(methodType) {
+    const used = new Set([...document.querySelectorAll('#detectionMethodsContainer .method-item[data-pattern-id]')]
+      .map(item => item.dataset.patternId));
+    let n = 1;
+    while (used.has(`${methodType}-${n}`)) n++;
+    return `${methodType}-${n}`;
+  };
+
 Rules.prototype._collectDetectionFromForm = function() {
     const methodsContainer = document.querySelector('#detectionMethodsContainer');
     if (!methodsContainer) return {};
@@ -974,13 +1005,9 @@ Rules.prototype._collectDetectionFromForm = function() {
     const methodSections = methodsContainer.querySelectorAll('.method-section');
 
     methodSections.forEach(section => {
-      const methodTitle = section.querySelector('.method-title')?.textContent.toLowerCase();
-      if (!methodTitle) return;
-
-      let methodType = methodTitle;
-      if (methodTitle === 'js hooks') {
-        methodType = 'js_hooks';
-      }
+      // The chip shows a translated label, so the key comes from the section's data attribute
+      const methodType = this.getMethodSectionType(section);
+      if (!methodType) return;
 
       const methods = [];
       const methodItems = section.querySelectorAll('.method-item');
@@ -1069,6 +1096,9 @@ Rules.prototype._collectDetectionFromForm = function() {
             }
           }
 
+          if (item.dataset.patternId) methodData.id = item.dataset.patternId;
+          if (item.dataset.standalone === 'false') methodData.standalone = false;
+
           methods.push(methodData);
         }
       });
@@ -1104,10 +1134,34 @@ Rules.prototype.saveRule = function() {
       this.markPatternValidationState(patternValidation.invalidRows);
       this.revealAndFocusInvalidRow(patternValidation.invalidRows[0]);
 
+      const requiredMessage = (typeof I18n !== 'undefined' && I18n.get('rulesUiFillRequiredPatterns'))
+        || 'Please fill all required pattern fields before saving.';
       if (typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.warning === 'function') {
-        NotificationHelper.warning('Please fill all required pattern fields before saving.');
+        NotificationHelper.warning(requiredMessage);
       } else {
-        alert('Please fill all required pattern fields before saving.');
+        alert(requiredMessage);
+      }
+      return;
+    }
+
+    // Combinations: each needs something that must match; references to
+    // patterns that are not saved (empty rows) are dropped
+    const combinationResult = this.buildCombinationsForSave(this._collectDetectionFromForm());
+    if (combinationResult.invalidIndex >= 0) {
+      this.reportInvalidCombination(combinationResult.invalidIndex);
+      return;
+    }
+
+    // Anti-spoof: only the shipped detectors may be authored by "Scrapfly"
+    this.clearAuthorError();
+    const authorField = document.querySelector('#detectorAuthorInput');
+    if (authorField && !this.currentEditDetector.isOfficial && DetectionUtils.isReservedAuthor(authorField.value)) {
+      const _t = (typeof I18n !== 'undefined') ? I18n : null;
+      const message = (_t && _t.get('authorReservedError')) ||
+        '"Scrapfly" is reserved for official detectors. Use a different author name.';
+      this.showAuthorError(message);
+      if (typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.warning === 'function') {
+        NotificationHelper.warning(message);
       }
       return;
     }
@@ -1117,8 +1171,12 @@ Rules.prototype.saveRule = function() {
     const difficultySelect = document.querySelector('#detectorDifficultySelect');
 
     if (nameInput) {
-      this.currentEditDetector.detector.name = nameInput.value;
-      this.currentEditDetector.detector.displayName = nameInput.value;
+      // Never stores the English default: an empty field becomes the default
+      // name in the UI language, and an untouched legacy "New Detector" keeps
+      // its stored name (see resolveDetectorNameForSave in rules-formatters.js)
+      const detectorName = this.resolveDetectorNameForSave(nameInput.value, this.currentEditDetector.detector.name);
+      this.currentEditDetector.detector.name = detectorName;
+      this.currentEditDetector.detector.displayName = detectorName;
     }
 
     if (categorySelect) {
@@ -1136,10 +1194,17 @@ Rules.prototype.saveRule = function() {
       this.currentEditDetector.detector.difficulty = normalizedDifficulty || defaultDifficulty;
     }
 
+    // Every detector's author is editable; custom ones may not claim "Scrapfly"
+    // (checked above). Renaming an official detector's author makes it a
+    // regular, deletable rule, since official = shipped id + Scrapfly author.
     const authorInput = document.querySelector('#detectorAuthorInput');
     if (authorInput) {
-      const author = authorInput.value.trim() || 'scrapfly';
-      this.currentEditDetector.detector.author = author;
+      const author = authorInput.value.trim();
+      if (author) {
+        this.currentEditDetector.detector.author = author;
+      } else {
+        delete this.currentEditDetector.detector.author;
+      }
     }
 
     if (this.currentEditDetector.customIcon) {
@@ -1149,15 +1214,23 @@ Rules.prototype.saveRule = function() {
     const detectionMethods = this._collectDetectionFromForm();
     if (Object.keys(detectionMethods).length > 0) {
       this.currentEditDetector.detector.detection = detectionMethods;
-      Logger.ui('Updated detection methods:', detectionMethods);
+      Logger.debug('UI', 'Updated detection methods:', detectionMethods);
     }
 
-    Logger.ui('Saving rule for:', this.currentEditDetector.detector.displayName);
+    const combinations = combinationResult.combinations;
+    if (combinations.length > 0) {
+      this.currentEditDetector.detector.combinations = combinations;
+    } else {
+      delete this.currentEditDetector.detector.combinations;
+    }
+
+    Logger.debug('UI', 'Saving rule for:', this.currentEditDetector.detector.displayName);
 
     const originalDetection = this.currentEditDetector.originalDetection || {};
     const currentDetection = this.currentEditDetector.detector.detection || {};
     const hasChanges = this.currentEditDetector.isNew ||
-      JSON.stringify(originalDetection) !== JSON.stringify(currentDetection);
+      JSON.stringify(originalDetection) !== JSON.stringify(currentDetection) ||
+      JSON.stringify(this.currentEditDetector.originalCombinations || []) !== JSON.stringify(combinations);
 
     if (hasChanges) {
       const now = new Date();
@@ -1179,10 +1252,10 @@ Rules.prototype.saveRule = function() {
         const versionNum = parseFloat(currentVersion) || 1.0;
         const newVersion = (versionNum + 0.1).toFixed(1);
         this.currentEditDetector.detector.version = newVersion;
-        Logger.ui(`Version incremented: ${currentVersion} → ${newVersion}`);
+        Logger.debug('UI', `Version incremented: ${currentVersion} → ${newVersion}`);
       }
     } else {
-      Logger.ui('No changes detected, version and timestamp unchanged');
+      Logger.debug('UI', 'No changes detected, version and timestamp unchanged');
     }
 
     if (this.currentEditDetector.isNew) {
@@ -1200,7 +1273,7 @@ Rules.prototype.saveRule = function() {
         if (success) {
           Logger.ui('New detector added successfully');
           chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
-            Logger.ui('Detectors reloaded in background:', response);
+            Logger.debug('UI', 'Detectors reloaded in background:', response);
           });
           this.displayRules();
         }
@@ -1219,12 +1292,12 @@ Rules.prototype.saveRule = function() {
         };
         categoryDetectors[this.currentEditDetector.detectorName] = updatedDetector;
 
-        Logger.ui('Detector updated, lastUpdated:', updatedDetector.lastUpdated);
+        Logger.debug('UI', 'Detector updated, lastUpdated:', updatedDetector.lastUpdated);
 
         this.detectorManager.saveDetectorsToStorage().then(() => {
-          Logger.ui('Detector saved to storage successfully');
+          Logger.debug('UI', 'Detector saved to storage successfully');
           chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
-            Logger.ui('Detectors reloaded in background:', response);
+            Logger.debug('UI', 'Detectors reloaded in background:', response);
           });
         }).catch(error => {
           Logger.error('UI', 'Failed to save detector:', error);

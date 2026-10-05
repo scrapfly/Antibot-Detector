@@ -12,13 +12,22 @@
   padding-bottom: 0;
 }
 
+/* Controls do not inherit the page font by default */
+.rules-header button,
+.rules-header input,
+.rules-list button,
+#rulesPagination button,
+#rulesPagination input {
+  font-family: inherit;
+}
+
 /* Rules Header Layout */
 .rules-header {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 7px;
-  margin-bottom: 4px;
+  gap: 10px;
+  margin-bottom: 12px;
   width: 100%;
   flex-shrink: 0;
 }
@@ -26,25 +35,24 @@
 .rules-header .search-container {
   position: relative;
   width: 100%;
-}
-
-.action-buttons {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
-  flex-shrink: 0;
-  margin: 5px 0 0;
+  margin: 0;
 }
 
 .rules-header .search-input {
   width: 100%;
-  padding: 14px;
-  font-size: 13px;
-  border: 2px solid var(--border);
-  border-radius: 10px;
+  height: 34px;
+  padding: 0 11px;
+  font-size: 11.5px;
+  border: 1px solid #4b4b4b;
+  border-radius: 8px;
   background: var(--bg-secondary);
   color: var(--text-primary);
-  transition: all 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.rules-header .search-input::placeholder {
+  color: var(--text-secondary);
+  font-size: 11.5px;
 }
 
 .rules-header .search-input:focus {
@@ -53,8 +61,157 @@
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
 }
 
-/* Import/Export Button Styles */
-.import-btn-small, .export-btn-small, .clear-btn-small, .add-btn, .check-updates-btn {
+/* Toolbar: Add + Update, then the square "more" menu (Import/Export/Clear) */
+.rules-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 32px;
+  gap: 6px;
+  flex-shrink: 0;
+  margin: 6px 0 0;
+}
+
+.rules-toolbar .rules-add-btn,
+.rules-toolbar .check-updates-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.rules-toolbar .rules-add-btn {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: white;
+}
+
+.rules-toolbar .rules-add-btn:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.rules-toolbar .check-updates-btn {
+  background: #1d232d;
+  border: 1px solid #2f4563;
+  color: #93c5fd;
+}
+
+.rules-toolbar .check-updates-btn:hover {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: rgba(59, 130, 246, 0.6);
+  color: white;
+}
+
+.rules-toolbar .rules-add-btn svg,
+.rules-toolbar .check-updates-btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* Square "more" (…) buttons: toolbar and detector card */
+.rules-more-btn,
+.detector-more-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: #242424;
+  border: 1px solid #4b4b4b;
+  border-radius: 7px;
+  color: #e0e0e0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rules-more-btn:hover,
+.detector-more-btn:hover,
+.rules-menu.open .rules-menu-trigger {
+  background: var(--bg-tertiary);
+  border-color: var(--border-light);
+}
+
+/* Dropdown menu (positioned by Rules.openMenu next to its trigger) */
+.rules-menu {
+  position: relative;
+}
+
+.rules-menu-list {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  min-width: 150px;
+  padding: 4px;
+  background: var(--bg-secondary);
+  border: 1px solid #4b4b4b;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.rules-menu.open .rules-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rules-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 10px;
+  background: none;
+  border: none;
+  border-radius: 5px;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.rules-menu-item svg {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+.rules-menu-item:hover {
+  background: var(--bg-tertiary);
+}
+
+.rules-menu-item-danger,
+.rules-menu-item-danger svg {
+  color: var(--danger-light);
+}
+
+.rules-menu-item-danger:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* The card menu's Delete item keeps the .delete-btn hook; drop that button look */
+.rules-menu-item.delete-btn {
+  justify-content: flex-start;
+  padding: 7px 10px;
+  background: none;
+  border: none;
+}
+
+.rules-menu-item.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* Import/Export/Clear Button Styles (also used by the History tab) */
+.import-btn-small, .export-btn-small, .clear-btn-small {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -71,56 +228,11 @@
   color: #d1d5db;
 }
 
-
-.import-btn-small {
-  background: rgba(59, 130, 246, 0.18);
-  border-color: rgba(59, 130, 246, 0.35);
-  color: #93c5fd;
-}
-
-.import-btn-small:hover {
-  background: rgba(59, 130, 246, 0.28);
-  color: #bfdbfe;
-}
-
-.export-btn-small {
-  background: rgba(148, 163, 184, 0.18);
-  border-color: rgba(148, 163, 184, 0.32);
-  color: #d1d5db;
-}
-
-.export-btn-small:hover {
-  background: rgba(148, 163, 184, 0.28);
-  color: #f8fafc;
-}
-
-.clear-btn-small {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.35);
-  color: var(--danger-light);
-}
-
-.clear-btn-small:hover {
-  background: rgba(239, 68, 68, 0.32);
-  color: var(--danger-lightest);
-}
-
-.add-btn {
-  background: rgba(34, 197, 94, 0.22);
-  border-color: rgba(34, 197, 94, 0.32);
-  color: #bbf7d0;
-}
-
-.add-btn:hover {
-  background: rgba(34, 197, 94, 0.32);
-  color: #dcfce7;
-}
-
 /* Rules List Container */
 .rules-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
   margin-bottom: 0;
   flex: 1;
   overflow-y: auto;
@@ -148,7 +260,7 @@
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.1);
-  border-radius: 14px;
+  border-radius: 8px;
   pointer-events: none;
 }
 
@@ -165,10 +277,9 @@
   display: flex;
   flex-direction: column;
   background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-top: 3px solid var(--accent);
-  border-radius: 9px;
-  padding: 14px 16px 16px 16px;
+  border: 1px solid #4b4b4b;
+  border-radius: 8px;
+  padding: 11px 12px;
   min-height: auto;
   height: auto;
   width: 100%;
@@ -176,34 +287,29 @@
   transition: all 0.2s ease;
   position: relative;
   overflow: visible;
-  margin-bottom: 12px;
+  flex-shrink: 0;
 }
 
-.detector-card:last-child {
-  margin-bottom: 0;
-}
-
+/* No transform on hover: it would re-anchor the fixed-position card menu */
 .detector-card:hover {
-  border-color: var(--accent);
-  border-top-color: var(--accent-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+  border-color: rgba(59, 130, 246, 0.6);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
 }
 
 .detector-header {
   display: flex;
   align-items: flex-start;
   gap: 7px;
-  margin-bottom: 5px;
+  margin-bottom: 0;
   width: 100%;
   min-width: 0;
 }
 
 .detector-icon {
-  font-size: 26px;
-  width: 38px;
-  min-width: 38px;
-  height: 38px;
+  font-size: 22px;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -211,29 +317,29 @@
 }
 
 .detector-icon-img {
-  width: 38px;
-  height: 38px;
-  border-radius: 7px;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
   object-fit: contain;
 }
 
 /* Fingerprint SVG icons */
 .detector-icon-svg {
-  width: 38px;
-  height: 38px;
-  border-radius: 7px;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px;
+  padding: 7px;
   box-sizing: border-box;
 }
 
 /* .fingerprint-icon base gradient now in common.css */
 
 .detector-icon-svg.fingerprint-icon svg {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
 }
 
 .detector-info {
@@ -241,7 +347,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .detector-name-row {
@@ -254,14 +360,21 @@
 }
 
 .detector-name {
+  padding-bottom: 2px;
   font-weight: 600;
-  font-size: 13.6px;
+  font-size: 13.5px;
   color: var(--text-primary);
   line-height: 1.24;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* 2.8 sits the card title 2 px above the centre of the 28 px action row */
+#rulesList .detector-name {
+  position: relative;
+  top: -2px;
 }
 
 .detector-actions {
@@ -278,7 +391,7 @@
   gap: 0;
   min-width: 0;
   width: 100%;
-  margin-top: 6px;
+  margin-top: 13px;
 }
 
 /* Detection Method Tags - Synced with Detection section solid style */
@@ -288,16 +401,16 @@
   gap: 6px;
   width: 100%;
   min-width: 0;
-  margin-top: 2px;
 }
 
+/* v2.8: outlined sentence-case chips with human-readable labels */
 .method-tag {
-  font-size: 10px;
+  font-size: 9.7px; /* matches the 2.8 chip text widths as rendered on Windows */
   font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.35px;
+  height: 20px;
+  line-height: 18px;
+  padding: 0 7px;
+  border-radius: 5px;
   display: inline-block;
   white-space: nowrap;
   flex-shrink: 0;
@@ -339,23 +452,61 @@
   border: 1px solid rgba(59, 130, 246, 0.35);
 }
 
-/* Edit Button */
-.edit-btn {
-  background: var(--bg-tertiary);
-  border: 1px solid rgba(59, 130, 246, 0.4);
-  border-radius: 6px;
-  padding: 5px;
-  color: var(--accent);
+/* Edit action: a quiet accent tile with a crisp outline pencil. */
+.detector-card .edit-btn {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(96, 165, 250, 0.28);
+  border-radius: 8px;
+  padding: 0;
+  color: var(--accent-light);
   cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-.edit-btn:hover {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: var(--accent);
+.detector-card .edit-btn svg {
+  flex: none;
+  pointer-events: none;
+}
+
+.detector-card .edit-btn:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(96, 165, 250, 0.6);
+  color: var(--text-primary);
+}
+
+.detector-card .edit-btn:active:not(:disabled) {
+  background: rgba(59, 130, 246, 0.26);
+  border-color: var(--accent-light);
+}
+
+.detector-card .edit-btn:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 2px;
+}
+
+.detector-card .edit-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Per-card "more" (…) button: same footprint as the edit button */
+.detector-card .detector-more-btn {
+  width: 28px;
+  height: 28px;
+  background: #363636;
+  border-radius: 6px;
+}
+
+.detector-card .detector-more-btn:hover,
+.detector-card .rules-menu.open .rules-menu-trigger {
+  background: var(--bg-tertiary);
+  border-color: var(--border-light);
 }
 
 /* Delete Button */
@@ -425,52 +576,49 @@
 }
 
 /* Scripts Info Section - Bottom area with Last Updated and Toggle */
+/* Footer: "time • version | author" on one line, toggle on the right */
 .scripts-info {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-top: 8px;
-  padding-top: 8px;
-  padding-bottom: 2px;
-  border-top: 1px solid var(--border);
-  gap: 12px;
+  align-items: center;
+  margin-top: 7px;
+  padding-top: 7px;
+  border-top: 1px solid #3c3c3c;
+  gap: 10px;
 }
 
 .scripts-info-left {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
-}
-
-.last-updated {
-  display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 7px;
+  flex: 1;
+  min-width: 0;
+  font-size: 11.3px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .last-updated-value {
-  font-size: 11px;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scripts-info-sep {
+  margin: 0 2px 0 -1px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.scripts-info-left .version-author {
+  color: var(--accent);
+  flex-shrink: 0;
 }
 
 .detector-toggle:checked + .toggle-slider-small:before {
   transform: translateX(21px) translateY(-50%);
   background-color: white;
-}
-
-
-.stat-label {
-  color: var(--text-muted);
-  margin-bottom: 2px;
-  text-transform: uppercase;
-  letter-spacing: 0.45px;
-}
-
-.stat-value {
-  color: var(--text-primary);
-  font-weight: 500;
 }
 
 /* Pagination base styles now in common.css */
@@ -480,16 +628,59 @@
   padding: 5px 8px;
 }
 
+/* v2.8 footer: "Showing 1-2 of 45" inline with blue numbers */
+/* Block (not flex) so the spaces around the counts are kept */
+#rulesTab .pagination-info {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+#rulesTab .pagination-info .pagination-count {
+  min-width: 0;
+  padding: 0;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+#rulesTab .pagination-controls {
+  gap: 6px;
+}
+
+#rulesTab .page-info {
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+#rulesTab .total-pages {
+  display: inline-block;
+  min-width: 40px;
+  font-size: 12px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* v2.8 chevrons are light grey; disabled ones fade less than the shared 0.5 */
+#rulesTab .pagination-btn {
+  color: #e0e0e0;
+}
+
+#rulesTab .pagination-btn:disabled {
+  opacity: 0.65;
+}
+
 /* Rules-specific page-input overrides */
 #rulesTab .page-input {
   width: 28px;
   padding: 2px 4px;
   border-radius: 3px;
   color: var(--accent);
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
 }
-
 
 /* ============================================
    Modern Modal Card Styles
@@ -824,27 +1015,22 @@
 
 .confidence-display {
   display: flex;
-  align-items: center;
-  gap: 4px;
+  align-items: baseline;
   margin-bottom: 12px;
 }
 
 .confidence-label {
   font-size: 12px;
   color: var(--text-secondary);
+  margin-right: 6px;
 }
 
-.confidence-value {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--accent);
-  min-width: 32px;
-  text-align: right;
-}
-
+/* Value and % read as one token: same size, weight and baseline, no gap */
+.confidence-value,
 .confidence-percent {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
+  line-height: 1;
   color: var(--accent);
 }
 
@@ -889,10 +1075,11 @@
 
 .rule-modal-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 16px 24px;
+  min-height: var(--modal-header-min-height);
+  padding: var(--modal-header-padding);
   border-bottom: 1px solid var(--border);
   background: transparent;
   border-top-left-radius: 12px;
@@ -900,54 +1087,26 @@
   flex-shrink: 0;
 }
 
-.rule-modal-header h2 {
-  font-size: 18px;
-  font-weight: 600;
+.rule-modal-header h2,
+.rule-modal-header h3 {
+  font-size: var(--modal-title-size);
+  font-weight: var(--modal-title-weight);
   margin: 0;
   color: var(--text-primary);
-  line-height: 1.25;
+  line-height: var(--modal-title-line);
   flex: 1;
   min-width: 0;
   overflow-wrap: anywhere;
 }
 
 .rule-modal-action {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: var(--modal-title-size);
+  font-weight: var(--modal-title-weight);
   color: var(--text-primary);
-  line-height: 1.2;
+  line-height: var(--modal-title-line);
   flex: 1;
   min-width: 0;
   overflow-wrap: anywhere;
-}
-
-/* Close button is a normal flex sibling that always reserves its slot —
-   never position:absolute (that lets header text slide under it). */
-.rule-modal-close {
-  background: rgba(239, 68, 68, 0.15);
-  border: none;
-  color: var(--danger);
-  cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 26px;
-  height: 26px;
-}
-
-.rule-modal-close:hover {
-  background: var(--danger);
-  color: white;
-  transform: scale(1.05);
-}
-
-.rule-modal-close svg {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
 }
 
 .rule-modal-body {
@@ -1299,9 +1458,6 @@
   margin-right: 8px;
 }
 
-
-
-
 .method-help-btn {
   width: 22px;
   height: 22px;
@@ -1328,7 +1484,6 @@
   font-size: 16px;
   font-weight: 700;
   color: white;
-  text-transform: uppercase;
   letter-spacing: 1px;
   border: none;
   outline: none;
@@ -1641,10 +1796,6 @@
   color: var(--danger);
 }
 
-.method-action-btn:hover {
-  transform: none;
-}
-
 .method-action-btn.settings.has-custom-settings {
   background: rgba(59, 130, 246, 0.15);
 }
@@ -1938,17 +2089,6 @@
   animation: slideDown 0.3s ease;
 }
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .example-match {
   color: var(--success);
   font-weight: 500;
@@ -1994,7 +2134,7 @@
 .payload-url-input {
   width: 100%;
   margin-bottom: 16px;
-  font-family: 'Monaco', 'Courier New', monospace;
+  font-family: var(--font-mono);
   box-sizing: border-box;
 }
 
@@ -2320,424 +2460,6 @@
   transform: scale(0.95);
 }
 
-/* Regex Pattern Items */
-.regex-pattern {
-  padding: 10px 12px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.regex-pattern:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
-}
-
-.regex-pattern:hover .template-code {
-  color: white;
-}
-
-.regex-pattern:hover .template-description {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-/* DOM Helper Modal */
-#domHelperModal .rule-modal-content {
-  /* Uses base width: 90%, max-width: 520px */
-}
-
-/* Helper Modals - Higher z-index to properly stack above parent modals */
-#domHelperModal,
-#windowHelperModal,
-#regexHelperModal,
-#conditionHelperModal,
-#wholeWordHelperModal,
-#caseSensitiveHelperModal {
-  z-index: 1002;
-}
-
-/* Helper Modal Backdrops - Own blur (parent backdrop hidden via JS when helper opens) */
-#domHelperModal .rule-modal-backdrop,
-#windowHelperModal .rule-modal-backdrop,
-#regexHelperModal .rule-modal-backdrop,
-#conditionHelperModal .rule-modal-backdrop,
-#wholeWordHelperModal .rule-modal-backdrop,
-#caseSensitiveHelperModal .rule-modal-backdrop {
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(2px);
-}
-
-/* Helper Modal Bodies - Adjusted height to account for footer buttons */
-#domHelperModal .rule-modal-body,
-#windowHelperModal .rule-modal-body,
-#regexHelperModal .rule-modal-body,
-#conditionHelperModal .rule-modal-body,
-#wholeWordHelperModal .rule-modal-body,
-#caseSensitiveHelperModal .rule-modal-body {
-  height: auto;
-  min-height: 0;
-  max-height: none;
-  flex: 1 1 auto;
-  overflow-y: auto;
-}
-
-/* Helper Modals - Match Method Settings modal size */
-#domHelperModal .rule-modal-content,
-#windowHelperModal .rule-modal-content,
-#regexHelperModal .rule-modal-content,
-#conditionHelperModal .rule-modal-content,
-#wholeWordHelperModal .rule-modal-content,
-#caseSensitiveHelperModal .rule-modal-content {
-  min-height: min(500px, 85vh);
-}
-
-/* Step Indicators (shared by helper modals) */
-.dom-helper-steps {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  position: relative;
-}
-
-.dom-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-  z-index: 2;
-}
-
-.dom-step-number {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--bg-tertiary);
-  border: 2px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 16px;
-  color: var(--text-muted);
-  transition: all 0.3s;
-  position: relative;
-}
-
-.dom-step.active .dom-step-number {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
-}
-
-.dom-step.completed .dom-step-number {
-  background: var(--success);
-  border-color: var(--success);
-  color: white;
-}
-
-.dom-step.completed .dom-step-number span {
-  display: none;
-}
-
-.dom-step.completed .dom-step-number::after {
-  content: '';
-  display: block;
-  width: 10px;
-  height: 6px;
-  border-left: 2.5px solid white;
-  border-bottom: 2.5px solid white;
-  transform: rotate(-45deg) translateY(-1px);
-}
-
-.dom-step.completed .dom-step-label {
-  color: var(--success);
-  font-weight: 600;
-}
-
-.dom-step-label {
-  font-size: 12px;
-  color: var(--text-muted);
-  text-align: center;
-  max-width: 90px;
-}
-
-.dom-step.active .dom-step-label {
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-.dom-helper-steps::before {
-  content: '';
-  position: absolute;
-  top: 20px;
-  left: 16%;
-  right: 16%;
-  height: 3px;
-  background: var(--border);
-  border-radius: 2px;
-  z-index: 1;
-}
-
-.dom-helper-steps::after {
-  content: '';
-  position: absolute;
-  top: 20px;
-  left: 16%;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--success));
-  border-radius: 2px;
-  z-index: 1;
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  width: 0%;
-}
-
-.dom-helper-steps.two-steps[data-progress="1"]::after {
-  width: 0%;
-}
-
-.dom-helper-steps.two-steps[data-progress="2"]::after {
-  width: 68%;
-}
-
-.dom-helper-steps.three-steps[data-progress="1"]::after {
-  width: 0%;
-}
-
-.dom-helper-steps.three-steps[data-progress="2"]::after {
-  width: 34%;
-}
-
-.dom-helper-steps.three-steps[data-progress="3"]::after {
-  width: 68%;
-}
-
-/* Keyword Input Section */
-#domKeywordInput {
-  width: 100%;
-  padding: 12px 14px;
-  background: var(--bg-primary);
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  color: var(--text-primary);
-  font-size: 14px;
-  margin-bottom: 16px;
-  transition: all 0.2s;
-}
-
-#domKeywordInput:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-#domKeywordInput::placeholder {
-  color: var(--text-muted);
-  opacity: 0.7;
-}
-
-/* Window Properties Keyword Input */
-#windowKeywordInput {
-  width: 100%;
-  padding: 12px 14px;
-  background: var(--bg-primary);
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  color: var(--text-primary);
-  font-size: 14px;
-  margin-bottom: 16px;
-  transition: all 0.2s;
-}
-
-#windowKeywordInput:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-#windowKeywordInput::placeholder {
-  color: var(--text-muted);
-  opacity: 0.7;
-}
-
-/* Regex Keyword Input */
-#regexKeywordInput {
-  width: 100%;
-  padding: 12px 14px;
-  background: var(--bg-primary);
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  color: var(--text-primary);
-  font-size: 14px;
-  margin-bottom: 16px;
-  transition: all 0.2s;
-}
-
-#regexKeywordInput:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-#regexKeywordInput::placeholder {
-  color: var(--text-muted);
-  opacity: 0.7;
-}
-
-/* Whole Word Keyword Input */
-#wholeWordKeywordInput {
-  width: 100%;
-  padding: 12px 14px;
-  background: var(--bg-primary);
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  color: var(--text-primary);
-  font-size: 14px;
-  margin-bottom: 16px;
-  transition: all 0.2s;
-}
-
-#wholeWordKeywordInput:focus {
-  outline: none;
-  border-color: var(--success);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-}
-
-#wholeWordKeywordInput::placeholder {
-  color: var(--text-muted);
-  opacity: 0.7;
-}
-
-/* Case Sensitive Keyword Input */
-#caseSensitiveKeywordInput {
-  width: 100%;
-  padding: 12px 14px;
-  background: var(--bg-primary);
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  color: var(--text-primary);
-  font-size: 14px;
-  margin-bottom: 16px;
-  transition: all 0.2s;
-}
-
-#caseSensitiveKeywordInput:focus {
-  outline: none;
-  border-color: var(--danger);
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-}
-
-#caseSensitiveKeywordInput::placeholder {
-  color: var(--text-muted);
-  opacity: 0.7;
-}
-
-/* Suggestions Container */
-.dom-templates {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-  margin-bottom: 16px;
-  max-height: 300px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-/* dom-templates scrollbar inherited from common.css */
-
-/* Suggestion Items */
-.dom-suggestion {
-  padding: 12px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.dom-suggestion:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
-  transform: translateX(4px);
-}
-
-.dom-suggestion-selector {
-  font-family: 'Monaco', 'Courier New', monospace;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
-  word-break: break-all;
-}
-
-.dom-suggestion:hover .dom-suggestion-selector {
-  color: white;
-}
-
-.dom-suggestion-label {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.dom-suggestion:hover .dom-suggestion-label {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-/* Custom Input Section */
-.dom-custom-section {
-  border-top: 1px solid var(--border);
-  padding-top: 16px;
-  margin-top: 16px;
-}
-
-.dom-template {
-  padding: 10px 12px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.dom-template:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
-}
-
-.dom-template:hover .template-code {
-  color: white;
-}
-
-.dom-template:hover .template-description {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.template-code {
-  font-family: 'Monaco', 'Courier New', monospace;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.template-description {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
 /* Condition Option (for WINDOW property conditions) */
 .condition-option {
   padding: 10px 12px;
@@ -2756,197 +2478,6 @@
   background: var(--accent);
   border-color: var(--accent);
   color: white;
-}
-
-.condition-option:hover .template-code {
-  color: white;
-}
-
-.condition-option:hover .template-description {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-/* ==================== */
-/* Helper Modal UX Improvements */
-/* ==================== */
-
-/* Footer with Back Button Layout */
-.rule-modal-footer.has-back {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.rule-modal-footer .footer-left {
-  display: flex;
-  gap: 8px;
-}
-
-.rule-modal-footer .footer-right {
-  display: flex;
-  gap: 8px;
-}
-
-/* Back Button */
-.rule-btn-back {
-  background: transparent;
-  color: var(--text-secondary);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 13px;
-}
-
-.rule-btn-back:hover {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-  border-color: var(--text-muted);
-}
-
-.rule-btn-back svg {
-  width: 14px;
-  height: 14px;
-}
-
-.rule-btn-back.hidden {
-  display: none;
-}
-
-/* Contextual Tips (inline within step) */
-.step-contextual-tip {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 10px 12px;
-  background: rgba(59, 130, 246, 0.08);
-  border-radius: 6px;
-  margin-bottom: 12px;
-  border: 1px solid rgba(59, 130, 246, 0.2);
-}
-
-.step-contextual-tip .tip-icon {
-  flex-shrink: 0;
-  width: 18px;
-  height: 18px;
-  color: var(--accent);
-}
-
-.step-contextual-tip .tip-content {
-  font-size: 11px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-.step-contextual-tip .tip-content strong {
-  color: var(--text-primary);
-}
-
-/* Improved Empty State for Suggestions */
-.suggestions-empty-state {
-  text-align: center;
-  padding: 30px 20px;
-  color: var(--text-muted);
-}
-
-.suggestions-empty-state .empty-icon {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 12px;
-  opacity: 0.5;
-  color: var(--text-muted);
-}
-
-.suggestions-empty-state .empty-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 6px;
-}
-
-.suggestions-empty-state .empty-hint {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.suggestions-empty-state .empty-examples {
-  margin-top: 12px;
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.suggestions-empty-state .empty-examples code {
-  background: var(--bg-tertiary);
-  padding: 2px 6px;
-  border-radius: 3px;
-  margin: 0 2px;
-  color: var(--accent);
-}
-
-/* Network Request Modal Styles */
-.network-form-group {
-  margin-bottom: 20px;
-}
-
-.network-form-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  font-size: 14px;
-  color: var(--text-primary);
-}
-
-.network-form-input {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-size: 14px;
-  transition: border-color 0.2s;
-}
-
-.network-form-input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.network-checkbox-group {
-  display: flex;
-  gap: 15px;
-  margin-top: 8px;
-  font-size: 13px;
-}
-
-.network-checkbox-group label {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.network-checkbox-group input[type="checkbox"] {
-  cursor: pointer;
-}
-
-.rule-btn-primary {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
-  color: white;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-  font-weight: 600;
-}
-
-.rule-btn-primary:hover {
-  background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent-dark) 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
 /* Scope Select Dropdowns */
@@ -3119,28 +2650,6 @@
   font-weight: 600;
 }
 
-
-/* HTTP Method Select Dropdown Colors */
-select.method-get {
-  color: var(--green);
-}
-
-select.method-post {
-  color: var(--purple-light);
-}
-
-select.method-put {
-  color: var(--purple-light);
-}
-
-select.method-patch {
-  color: var(--purple-light);
-}
-
-select.method-delete {
-  color: var(--danger);
-}
-
 /* ============================================
    Update Button
    ============================================ */
@@ -3186,11 +2695,6 @@ select.method-delete {
   overflow: visible;
 }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
 .check-updates-btn.has-updates {
   background: rgba(245, 158, 11, 0.2);
   border-color: rgba(245, 158, 11, 0.5);
@@ -3226,11 +2730,6 @@ select.method-delete {
   animation: pulse 2s infinite;
 }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-
 /* Author Display in Detector Card */
 .detector-author {
   font-size: 11px;
@@ -3239,21 +2738,6 @@ select.method-delete {
   align-items: center;
   gap: 4px;
   margin: 0;
-}
-
-.detector-author .version-author {
-  color: var(--accent);
-}
-
-.detector-author i.fa-user {
-  font-size: 0.75rem;
-}
-
-/* Verified Badge for Official Scrapfly Detectors */
-.verified-badge {
-  color: #1da1f2;  /* Twitter-like verified blue */
-  font-size: 0.9rem;
-  margin-left: 2px;
 }
 
 /* Read-only Author Input Field Styling */
@@ -3291,30 +2775,6 @@ select.method-delete {
   background-position: right 6px center;
   min-width: 120px;
   max-width: 140px;
-}
-
-.condition-select:hover {
-  border-color: var(--accent);
-}
-
-.condition-select:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
-}
-
-.condition-select optgroup {
-  background: var(--bg-secondary);
-  color: var(--accent);
-  font-weight: 600;
-  font-size: 10px;
-}
-
-.condition-select option {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  padding: 4px 8px;
-  font-size: 11px;
 }
 
 /* ============================================
@@ -3445,7 +2905,6 @@ select.method-delete {
   box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.15);
 }
 
-
 .inline-condition-dropdown .condition-dropdown-menu {
   min-width: 160px;
   max-height: 200px;
@@ -3461,3 +2920,1337 @@ select.method-delete {
   font-size: 9px;
 }
 
+/* ============================================
+   RULE EDITOR (2.8 LAYOUT)
+   Edit / Add rule modal and the per-pattern Method Settings modal, restyled
+   to match the Settings modal: #323232 cards with #4b4b4b borders and 8px
+   radii, card headers like Settings rows (accent icon + bold title),
+   left-aligned small labels, 32px controls, 28px square icon buttons,
+   outlined chips and IBM Plex Mono for patterns. Scoped to the two modal
+   ids so the generic .rule-modal / .modal-card classes used by the helper
+   modals keep their look.
+   ============================================ */
+#editRuleModal,
+#methodSettingsModal {
+  --re-border: #4b4b4b;
+  --re-card-bg: #323232;
+  --re-field-bg: #262626;
+  --re-btn-bg: #363636;
+  --re-text: #e0e0e0;
+  --re-text-dim: #b3b3b3;
+}
+
+/* ---------- Shell ---------- */
+#editRuleModal .rule-modal-content,
+#methodSettingsModal .rule-modal-content {
+  width: 376px;
+  max-width: calc(100% - 24px);
+  max-height: calc(100% - 28px);
+  background: var(--bg-secondary);
+  border: 1px solid var(--re-border);
+  border-radius: 12px;
+}
+
+#editRuleModal .rule-modal-content {
+  height: 552px;
+}
+
+/* Header geometry comes from the shared .rule-modal-header (common.css
+   modal-header tokens); only the single-line title treatment is local. */
+#editRuleModal .rule-modal-action,
+#methodSettingsModal .rule-modal-header h2 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: normal;
+}
+
+/* "<detector> · <readable method> settings" can outgrow one line in long
+   locales: wrap to at most two lines instead of cutting the method name */
+#methodSettingsModal .rule-modal-header h2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+#editRuleModal .rule-modal-body,
+#methodSettingsModal .rule-modal-body {
+  height: auto;
+  max-height: none;
+  flex: 1 1 auto;
+  padding: 10px 10px 12px 12px;
+  scrollbar-gutter: stable;
+}
+
+#editRuleModal .rule-modal-footer,
+#methodSettingsModal .rule-modal-footer {
+  justify-content: flex-end;
+  gap: 6px;
+  height: 48px;
+  min-height: 48px;
+  padding: 0 12px;
+  background: none;
+  border-top: 1px solid var(--re-border);
+  border-radius: 0 0 12px 12px;
+}
+
+#editRuleModal .rule-btn,
+#methodSettingsModal .rule-btn {
+  height: 30px;
+  padding: 0 12px 1px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  transform: none;
+}
+
+#editRuleModal .rule-btn-save,
+#methodSettingsModal .rule-btn-save {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  box-shadow: none;
+}
+
+#editRuleModal .rule-btn-save:hover,
+#methodSettingsModal .rule-btn-save:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  box-shadow: none;
+  transform: none;
+}
+
+#editRuleModal .rule-btn-cancel,
+#methodSettingsModal .rule-btn-cancel {
+  background: #3d3d3d;
+  border: 1px solid var(--re-border);
+  color: var(--re-text);
+}
+
+#editRuleModal .rule-btn-cancel:hover,
+#methodSettingsModal .rule-btn-cancel:hover {
+  background: #464646;
+  color: #ffffff;
+}
+
+/* ---------- Section cards (Settings card + row-title header) ---------- */
+#editRuleModal .modal-card,
+#methodSettingsModal .modal-card {
+  background: var(--re-card-bg);
+  border: 1px solid var(--re-border);
+  border-radius: 8px;
+  margin: 0 0 10px;
+  overflow: visible;
+}
+
+#editRuleModal .modal-card:last-child,
+#methodSettingsModal .modal-card:last-child {
+  margin-bottom: 0;
+}
+
+#editRuleModal .modal-card-header,
+#methodSettingsModal .modal-card-header {
+  gap: 7px;
+  padding: 9px 11px;
+  background: none;
+  border-bottom: 1px solid var(--re-border);
+  border-radius: 8px 8px 0 0;
+}
+
+#editRuleModal .modal-card-header .card-icon,
+#methodSettingsModal .modal-card-header .card-icon,
+#editRuleModal .modal-card-header .card-icon svg,
+#methodSettingsModal .modal-card-header .card-icon svg {
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
+  background: none;
+}
+
+#editRuleModal .modal-card-header h3,
+#methodSettingsModal .modal-card-header h3 {
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 15px;
+  color: #ffffff;
+}
+
+#editRuleModal .modal-card-body,
+#methodSettingsModal .modal-card-body {
+  padding: 10px 11px 11px;
+  text-align: left;
+  overflow: visible;
+}
+
+/* ---------- Detector information form ---------- */
+#editRuleModal .form-group {
+  margin: 0 0 9px;
+  min-width: 0;
+}
+
+#editRuleModal .form-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+  margin: 0 0 9px;
+}
+
+#editRuleModal .form-row:last-child,
+#editRuleModal .form-row .form-group {
+  margin-bottom: 0;
+}
+
+#editRuleModal .form-row-icon-version-author {
+  grid-template-columns: 32px auto minmax(0, 1fr);
+  align-items: end;
+  gap: 10px;
+}
+
+#editRuleModal .form-row-icon-version-author .form-group-author {
+  grid-column: auto;
+}
+
+#editRuleModal .form-label {
+  display: block;
+  margin: 0 0 4px 1px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 14px;
+  color: var(--re-text-dim);
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#editRuleModal .form-input,
+#editRuleModal .form-select {
+  height: 32px;
+  padding: 0 10px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--re-border);
+  border-radius: 6px;
+  color: var(--re-text);
+  font-family: inherit;
+  font-size: 12.5px;
+  line-height: 30px;
+  box-shadow: none;
+  transition: border-color 0.15s ease;
+}
+
+#editRuleModal .form-select {
+  padding-right: 26px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1.2 1.5L5 5.3l3.8-3.8' fill='none' stroke='%23e0e0e0' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: right 10px center;
+}
+
+#editRuleModal .form-select option {
+  background: var(--bg-secondary);
+  color: var(--re-text);
+}
+
+#editRuleModal .form-input:hover:not(:focus):not(.form-input-readonly),
+#editRuleModal .form-select:hover:not(:focus) {
+  border-color: #5c5c5c;
+}
+
+#editRuleModal .form-input:focus,
+#editRuleModal .form-select:focus {
+  border-color: var(--accent);
+  box-shadow: none;
+}
+
+/* Icon: square 32px button like the Settings icon buttons */
+#editRuleModal .form-row-icon-version-author .form-group-icon .icon-selector-row {
+  justify-content: flex-start;
+}
+
+#editRuleModal .icon-preview,
+#editRuleModal .icon-preview.fingerprint-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--re-btn-bg);
+  border: 1px solid var(--re-border);
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+#editRuleModal .icon-preview.icon-preview-trigger:hover {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.12);
+  transform: none;
+}
+
+#editRuleModal .icon-preview img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Version is read-only but shares the 32px field look of Name / Author so the row lines up */
+#editRuleModal .form-group-version .form-input-readonly {
+  display: block;
+  width: 60px;
+  height: 32px;
+  margin: 0;
+  padding: 0 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--re-border);
+  border-radius: 6px;
+  color: var(--re-text);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 30px;
+  text-align: center;
+  opacity: 1;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ---------- Badge colour ---------- */
+/* Lives in the Detector Information card, as its last field */
+#editRuleModal .form-group-badge-color {
+  margin: 0;
+}
+
+#editRuleModal .color-picker-card {
+  display: block;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+}
+
+#editRuleModal .color-picker-grid {
+  grid-template-columns: repeat(8, 28px);
+  gap: 8px;
+  padding: 1px;
+  justify-content: start;
+}
+
+#editRuleModal .color-option {
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  box-shadow: none;
+  transform: none;
+}
+
+#editRuleModal .color-option:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: none;
+  transform: none;
+}
+
+#editRuleModal .color-option:focus,
+#editRuleModal .color-option:focus-visible,
+#editRuleModal .color-option.selected {
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 0 0 2px var(--re-card-bg), 0 0 0 3px var(--re-text);
+  transform: none;
+}
+
+#editRuleModal .color-option.selected::after {
+  display: none;
+}
+
+/* ---------- Detection methods ---------- */
+#editRuleModal .modal-card-body-methods {
+  padding: 8px;
+}
+
+#editRuleModal #detectionMethodsContainer {
+  gap: 6px;
+}
+
+#editRuleModal .method-section {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--re-border);
+  border-radius: 8px;
+}
+
+#editRuleModal .method-section:not(.collapsed) {
+  padding-bottom: 8px;
+}
+
+#editRuleModal .method-section > :not(.method-header) {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+#editRuleModal .method-header {
+  gap: 8px;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 7px 0 6px;
+  border-radius: 8px;
+}
+
+#editRuleModal .method-header:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+#editRuleModal .method-header-left {
+  gap: 6px;
+  min-width: 0;
+}
+
+/* Chevron points right when collapsed and down when open */
+#editRuleModal .method-collapse-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--re-text-dim);
+  transform: rotate(90deg);
+}
+
+#editRuleModal .method-section.collapsed .method-collapse-icon {
+  transform: rotate(0deg);
+}
+
+/* Method name: the same readable chip as the Rules/Detection cards (.method-tag);
+   colours come inline from the method's tag colour */
+#editRuleModal .method-title {
+  display: inline-block;
+  min-width: 0;
+  max-width: 100%;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 6px;
+  box-shadow: none;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#editRuleModal .method-pattern-count {
+  flex-shrink: 0;
+  height: 26px;
+  margin: 0 0 0 auto;
+  padding: 0 9px;
+  background: none;
+  border: 1px solid var(--re-border);
+  border-radius: 6px;
+  color: var(--re-text-dim);
+  font-size: 11.5px;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+#editRuleModal .method-help-btn,
+#editRuleModal .dom-helper-btn,
+#editRuleModal .window-helper-btn,
+#editRuleModal .method-action-btn,
+#editRuleModal .method-pagination-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: var(--re-btn-bg);
+  border: 1px solid var(--re-border);
+  border-radius: 6px;
+  color: var(--re-text);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: none;
+  transform: none;
+}
+
+#editRuleModal .method-help-btn {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  font-size: 12px;
+}
+
+#editRuleModal .method-pagination-btn {
+  width: 24px;
+  height: 24px;
+}
+
+#editRuleModal .method-action-btn.settings {
+  color: var(--accent-light);
+}
+
+#editRuleModal .method-action-btn.settings.has-custom-settings {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: rgba(59, 130, 246, 0.45);
+}
+
+#editRuleModal .method-action-btn.delete {
+  color: var(--danger-light);
+}
+
+#editRuleModal .method-help-btn:hover,
+#editRuleModal .dom-helper-btn:hover,
+#editRuleModal .window-helper-btn:hover,
+#editRuleModal .method-action-btn.settings:hover,
+#editRuleModal .method-pagination-btn:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+#editRuleModal .method-action-btn.delete:hover {
+  background: rgba(239, 68, 68, 0.14);
+  border-color: var(--danger);
+  color: #ffffff;
+}
+
+#editRuleModal .method-search-row {
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+
+#editRuleModal .method-search-input,
+#editRuleModal .method-input {
+  height: 30px;
+  padding: 0 8px;
+  background: var(--re-field-bg);
+  border: 1px solid var(--re-border);
+  border-radius: 6px;
+  color: var(--re-text);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+#editRuleModal .method-input {
+  font-family: var(--font-mono);
+}
+
+#editRuleModal .method-search-input:focus,
+#editRuleModal .method-input:focus {
+  background: var(--re-field-bg);
+  border-color: var(--accent);
+}
+
+#editRuleModal .method-input:hover:not(:focus) {
+  border-color: #5c5c5c;
+}
+
+#editRuleModal .method-input::placeholder,
+#editRuleModal .method-search-input::placeholder {
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  color: #8a8a8a;
+}
+
+#editRuleModal .method-items {
+  gap: 6px;
+}
+
+#editRuleModal .method-item {
+  padding: 0;
+  background: none;
+  border-radius: 0;
+}
+
+#editRuleModal .method-item + .method-item {
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#editRuleModal .method-item-content,
+#editRuleModal .input-row,
+#editRuleModal .field-actions {
+  gap: 4px;
+}
+
+#editRuleModal .add-value-btn {
+  height: 26px;
+  margin-top: 4px;
+  padding: 0 8px;
+  background: none;
+  border: 1px dashed var(--re-border);
+  border-radius: 6px;
+  color: var(--re-text-dim);
+  font-size: 11px;
+}
+
+#editRuleModal .add-value-btn:hover {
+  background: none;
+  border-color: var(--accent);
+  border-style: dashed;
+  color: var(--accent-light);
+}
+
+#editRuleModal .add-method-btn {
+  justify-content: center;
+  width: calc(100% - 16px);
+  height: 30px;
+  margin-top: 8px;
+  padding: 0 10px;
+  background: var(--re-btn-bg);
+  border: 1px solid var(--re-border);
+  border-radius: 6px;
+  color: var(--re-text);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+#editRuleModal .add-method-btn:hover {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+#editRuleModal .method-pagination {
+  margin-top: 6px;
+  padding: 6px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#editRuleModal .method-pagination-page {
+  min-width: 0;
+}
+
+/* ---------- Method Settings modal content ---------- */
+#methodSettingsModal .card-description,
+#methodSettingsModal .option-hint {
+  color: var(--re-text-dim);
+}
+
+#methodSettingsModal .settings-options {
+  gap: 6px;
+}
+
+#methodSettingsModal .setting-option {
+  gap: 10px;
+  margin: 0;
+  padding: 8px 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--re-border);
+  border-radius: 6px;
+}
+
+#methodSettingsModal .setting-option:has(.scope-select) {
+  gap: 8px;
+}
+
+#methodSettingsModal .setting-label {
+  margin-bottom: 1px;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 16px;
+  color: #ffffff;
+}
+
+#methodSettingsModal .option-hint {
+  font-size: 11px;
+  line-height: 14px;
+}
+
+#methodSettingsModal .scope-select,
+#methodSettingsModal .method-input {
+  height: 32px;
+  padding: 0 26px 0 10px;
+  background-color: var(--re-field-bg);
+  border: 1px solid var(--re-border);
+  border-radius: 6px;
+  color: var(--re-text);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 400;
+  box-shadow: none;
+}
+
+#methodSettingsModal .scope-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1.2 1.5L5 5.3l3.8-3.8' fill='none' stroke='%23e0e0e0' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: right 10px center;
+}
+
+#methodSettingsModal .method-input {
+  padding-right: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+#methodSettingsModal .scope-select:focus,
+#methodSettingsModal .method-input:focus {
+  border-color: var(--accent);
+  box-shadow: none;
+}
+
+/* ? / i helpers: small square icon buttons with a coloured glyph */
+#methodSettingsModal .regex-helper-btn,
+#methodSettingsModal .pattern-helper-btn,
+#methodSettingsModal .explanation-helper-btn {
+  width: 22px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0;
+  background: var(--re-btn-bg);
+  border: 1px solid var(--re-border);
+  border-radius: 5px;
+  color: var(--accent-light);
+  box-shadow: none;
+  transform: none;
+}
+
+#methodSettingsModal .explanation-helper-btn {
+  color: var(--success-light);
+}
+
+#methodSettingsModal .regex-helper-btn:hover,
+#methodSettingsModal .pattern-helper-btn:hover,
+#methodSettingsModal .explanation-helper-btn:hover {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: var(--accent);
+  color: #ffffff;
+  box-shadow: none;
+  transform: none;
+}
+
+#methodSettingsModal .option-examples {
+  background: var(--re-field-bg);
+  border-color: var(--re-border);
+  font-family: var(--font-mono);
+}
+
+#methodSettingsModal .confidence-display {
+  margin-bottom: 8px;
+}
+
+#methodSettingsModal .confidence-label {
+  font-size: 12px;
+  color: var(--re-text-dim);
+}
+
+/* ============================================
+   Official (shipped) Scrapfly detectors
+   ============================================ */
+
+/* Card menu: Delete is shown but locked for official detectors */
+.rules-menu-item.delete-btn.is-disabled,
+.rules-menu-item.delete-btn.is-disabled svg {
+  color: var(--text-muted);
+}
+
+.rules-menu-item.delete-btn.is-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.rules-menu-item.delete-btn.is-disabled:hover {
+  background: none;
+}
+
+.rules-menu-note {
+  max-width: 190px;
+  margin: 0;
+  padding: 2px 10px 6px;
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.35;
+  white-space: normal;
+}
+
+/* Editor: author validation (reserved "Scrapfly" name on a custom rule) */
+#editRuleModal .form-input.form-input-invalid,
+#editRuleModal .form-input.form-input-invalid:focus {
+  border-color: var(--danger);
+}
+
+.form-field-error {
+  margin: 6px 0 0 1px;
+  color: var(--danger-light);
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.form-field-error[hidden] {
+  display: none;
+}
+
+/* ============================================
+   Combinations: readable conditions inside the popup
+   ============================================ */
+.combinations-hint {
+  margin: 0 0 12px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.combinations-empty, .combo-group-empty {
+  margin: 0;
+  padding: 12px;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.add-combination-btn, .combo-picker-add {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.add-combination-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.add-combination-btn:hover, .combo-picker-add:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.combo-card {
+  min-width: 0;
+  margin-bottom: 10px;
+  border: 1px solid var(--re-border, var(--border));
+  border-radius: 8px;
+  background: var(--bg-secondary);
+}
+
+.combo-card.combo-invalid {
+  border-color: var(--danger);
+}
+
+.combo-summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 10px 8px;
+}
+
+.combo-summary-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.combo-summary-name {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--re-border, var(--border));
+  border-radius: 6px;
+  background: var(--re-field-bg, var(--bg-primary));
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.combo-summary-count {
+  align-self: flex-start;
+  padding: 0 2px;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 11px;
+  line-height: 1.4;
+  text-align: start;
+  cursor: pointer;
+}
+
+.combo-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.combo-collapse-icon {
+  transform: rotate(90deg);
+  transition: transform 0.15s;
+}
+
+.combo-card.collapsed .combo-collapse-icon {
+  transform: rotate(0);
+}
+
+.combo-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 10px 12px;
+}
+
+.combo-card.collapsed .combo-body {
+  display: none;
+}
+
+.combo-group {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.combo-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.combo-group select {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--re-border, var(--border));
+  border-radius: 6px;
+  background: var(--re-field-bg, var(--bg-primary));
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.combo-mode > select {
+  width: 100%;
+  min-height: 34px;
+}
+
+.combo-items {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.combo-item {
+  min-width: 0;
+}
+
+.combo-item-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  padding: 9px;
+  border: 1px solid var(--re-border, var(--border));
+  border-radius: 6px;
+  background: var(--bg-primary);
+}
+
+.combo-item.is-not > .combo-item-row {
+  border-color: var(--danger);
+}
+
+.combo-item-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.combo-item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+#editRuleModal .combo-chip, .combo-chip {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.combo-item-meta select {
+  font-size: 11px;
+  padding: 3px 5px;
+  min-height: 26px;
+  flex: 0 1 auto;
+}
+
+.combo-leaf-text {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.combo-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--re-border, var(--border));
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.combo-remove:hover {
+  border-color: var(--danger);
+  color: var(--danger-light);
+}
+
+.combo-group-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.combo-add-btn {
+  flex: 1 1 120px;
+  min-height: 32px;
+  padding: 6px 8px;
+  border: 1px dashed var(--accent);
+  border-radius: 6px;
+  background: rgba(59,130,246,0.08);
+  color: var(--accent-light);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.combo-add-btn:hover {
+  border-style: solid;
+  background: rgba(59,130,246,0.15);
+}
+
+.combo-alternatives {
+  padding: 8px;
+  border-radius: 6px;
+  background: var(--bg-primary);
+}
+
+.combo-alternative-hint {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.combo-threshold {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.combo-threshold input, .combo-confidence input {
+  box-sizing: border-box;
+  width: 55px;
+  min-height: 30px;
+  padding: 5px;
+  border: 1px solid var(--re-border, var(--border));
+  border-radius: 5px;
+  background: var(--re-field-bg, var(--bg-primary));
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 12px;
+  text-align: center;
+}
+
+.combo-number-stepper {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: stretch;
+  border: 1px solid var(--re-border, var(--border));
+  border-radius: 6px;
+  background: var(--re-field-bg, var(--bg-primary));
+}
+
+.combo-number-stepper:focus-within {
+  border-color: var(--accent);
+}
+
+.combo-number-stepper input {
+  width: 36px;
+  min-height: 32px;
+  padding: 4px 2px;
+  border: 0;
+  border-inline: 1px solid var(--re-border, var(--border));
+  border-radius: 0;
+  background: transparent;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.combo-number-stepper input::-webkit-inner-spin-button,
+.combo-number-stepper input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.combo-number-stepper button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.combo-number-stepper button:hover:not(:disabled) {
+  background: var(--re-btn-bg, var(--bg-secondary));
+  color: var(--text-primary);
+}
+
+.combo-number-stepper button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.combo-excluded-group {
+  margin: 0;
+  font-size: 12px;
+  color: var(--danger-light);
+}
+
+.combo-require {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  cursor: pointer;
+}
+
+.combo-require input {
+  margin: 2px 0 0;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+
+.combo-require strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.combo-require small {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.combo-confidence {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.combo-confidence > span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.combo-confidence input::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+.combo-preview {
+  margin: 6px 0 0;
+  padding: 8px;
+  border-radius: 5px;
+  background: rgba(59,130,246,0.08);
+  font-size: 11px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.combo-picker {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: var(--bg-primary);
+}
+
+.combo-picker-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.combo-picker-search {
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+  height: 32px;
+}
+
+.combo-picker-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 210px;
+  overflow-y: auto;
+}
+
+.combo-picker-method {
+  min-width: 0;
+  padding: 5px;
+  border-radius: 5px;
+  background: var(--bg-secondary);
+}
+
+.combo-picker-method-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 26px;
+}
+
+.combo-picker-any {
+  margin-inline-start: auto;
+  padding: 4px 6px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.combo-picker-none {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.combo-picker-pattern {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 3px;
+  padding: 7px 5px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-primary);
+  text-align: start;
+  cursor: pointer;
+}
+
+.combo-picker-pattern:hover:not(:disabled), .combo-picker-pattern.selected {
+  background: rgba(59,130,246,0.15);
+}
+
+.combo-picker-any:disabled, .combo-picker-pattern:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.combo-picker-check {
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 15px;
+  height: 15px;
+  margin-top: 1px;
+  border: 1px solid var(--text-muted);
+  border-radius: 3px;
+}
+
+.combo-picker-pattern.selected .combo-picker-check {
+  background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E") center / 12px no-repeat;
+  border-color: var(--accent);
+}
+
+.combo-picker-text {
+  flex: 1;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.combo-picker-pattern[hidden], .combo-picker-method[hidden] {
+  display: none;
+}
+
+.combo-picker-add {
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.combo-picker-add:disabled {
+  border-color: var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.combo-card button:focus-visible, .combo-card select:focus-visible, .combo-card input:focus-visible, .combo-card summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+
+.indicator-badge-combo {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent-light);
+}

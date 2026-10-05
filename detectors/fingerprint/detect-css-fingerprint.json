@@ -5,52 +5,103 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2025-01-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://en.wikipedia.org/wiki/CSS_fingerprinting",
   "icon": "css_fingerprint.png",
-  "description": "CSS property support and computed style detection for device fingerprinting",
+  "description": "CSS declaration inspection and script references; fingerprint collection is unconfirmed",
   "detection": {
     "js_hooks": [
       {
-        "description": "Retrieves computed CSS styles for fingerprinting (disabled - getComputedStyle is on window object, not Window.prototype)",
+        "id": "css-computed-style",
+        "description": "Disabled: getComputedStyle is not an own method on Window.prototype",
         "enabled": false,
-        "confidence": 80,
+        "confidence": 5,
+        "standalone": true,
         "target": "Window.prototype.getComputedStyle"
       },
       {
-        "description": "Gets CSS property values for feature detection",
+        "id": "css-property-value",
+        "description": "Reads a CSS declaration value; ordinary styling also uses this API",
         "enabled": true,
-        "confidence": 80,
+        "confidence": 10,
+        "standalone": true,
         "target": "CSSStyleDeclaration.prototype.getPropertyValue"
-      }
-    ],
-    "window": [
+      },
       {
-        "path": "CSS.supports",
-        "description": "CSS.supports() method for CSS feature detection",
-        "condition": "typeof function"
+        "id": "css-property-priority",
+        "description": "Reads a CSS declaration priority; styling intent and returned value are unknown",
+        "enabled": true,
+        "confidence": 5,
+        "standalone": true,
+        "target": "CSSStyleDeclaration.prototype.getPropertyPriority"
+      },
+      {
+        "id": "css-property-item",
+        "description": "Requests a CSS declaration name by index; enumeration extent is unknown",
+        "enabled": true,
+        "confidence": 10,
+        "standalone": true,
+        "target": "CSSStyleDeclaration.prototype.item"
       }
     ],
     "content": [
       {
-        "text": "CSS.supports(",
+        "id": "css-supports-source",
+        "text": "CSS.supports",
         "scope": "scripts",
-        "description": "CSS feature detection in scripts",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to CSS support queries; execution is unconfirmed",
+        "confidence": 10,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true
       },
       {
+        "id": "css-computed-style-source",
         "text": "getComputedStyle",
         "scope": "scripts",
-        "description": "Computing element styles for fingerprinting",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to computed style access; execution is unconfirmed",
+        "confidence": 10,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true
+      },
+      {
+        "id": "css-property-value-source",
+        "text": "getPropertyValue",
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to CSS declaration value access; execution is unconfirmed",
+        "confidence": 5,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "css-source-profile",
+      "name": "CSS support and computed style script references",
+      "confidence": 15,
+      "when": { "all": [{ "pattern": "css-supports-source" }, { "pattern": "css-computed-style-source" }] }
+    },
+    {
+      "id": "css-declaration-inspection",
+      "name": "CSS declaration names and values accessed",
+      "confidence": 20,
+      "when": { "all": [{ "pattern": "css-property-item" }, { "pattern": "css-property-value" }] }
+    },
+    {
+      "id": "css-declaration-profile",
+      "name": "CSS declaration names, values and priorities accessed",
+      "confidence": 30,
+      "when": { "all": [{ "pattern": "css-property-item" }, { "pattern": "css-property-value" }, { "pattern": "css-property-priority" }] }
+    }
+  ]
 }

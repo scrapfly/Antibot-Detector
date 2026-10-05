@@ -5,122 +5,145 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "High",
-  "lastUpdated": "2024-10-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-04",
+  "version": "1.2.0",
   "website": "https://friendlycaptcha.com/",
   "icon": "custom.png",
   "description": "Privacy-first GDPR-compliant CAPTCHA service with no cookies or tracking",
   "detection": {
     "url": [
       {
-        "confidence": 100,
-        "description": "Friendly Captcha domain",
-        "text": "friendlycaptcha.com",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "frc-v1-sdk-url",
+        "confidence": 40,
+        "description": "Official v1 CDN widget resource",
+        "text": "^https://cdn\\.jsdelivr\\.net/npm/friendly-challenge(?:@[^/?#]+)?/widget(?:\\.module|\\.polyfilled)?\\.min\\.js(?:[?#]|$)",
+        "textRegex": true,
         "textCaseSensitive": false,
-        "textScope": "all"
+        "textScope": "all",
+        "standalone": true
       },
       {
-        "confidence": 95,
-        "description": "Friendly Captcha puzzle endpoint",
-        "text": "/api/v1/puzzle",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "frc-v2-sdk-url",
+        "confidence": 40,
+        "description": "Official v2 CDN site resource",
+        "text": "^https://cdn\\.jsdelivr\\.net/npm/@friendlycaptcha/sdk(?:@[^/?#]+)?/site(?:\\.compat)?\\.min\\.js(?:[?#]|$)",
+        "textRegex": true,
         "textCaseSensitive": false,
-        "textScope": "all"
+        "textScope": "all",
+        "standalone": true
       },
       {
-        "confidence": 95,
-        "description": "Friendly Captcha script delivery",
-        "text": "friendly-js.pages.dev",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "frc-v1-puzzle-url",
+        "confidence": 60,
+        "description": "Official v1 puzzle endpoint resource",
+        "text": "^https://(?:api\\.friendlycaptcha\\.com|eu-api\\.friendlycaptcha\\.eu)/api/v1/puzzle(?:[?#]|$)",
+        "textRegex": true,
         "textCaseSensitive": false,
-        "textScope": "all"
+        "textScope": "all",
+        "standalone": true
+      },
+      {
+        "id": "frc-v2-captcha-url",
+        "confidence": 60,
+        "description": "v2 captcha endpoint on the global or EU host named by the SDK's region map",
+        "text": "^https://(?:global|eu)\\.frcapi\\.com/api/v2/captcha(?:/|[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": true
       }
     ],
     "content": [
       {
-        "confidence": 50,
-        "description": "Friendly Captcha container class",
-        "text": "frc-captcha",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "description": "Friendly Captcha JavaScript object",
+        "id": "frc-v1-script-reference",
+        "confidence": 10,
+        "description": "v1 namespace reference in script source, not execution",
         "text": "friendlyChallenge",
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
       },
       {
-        "confidence": 50,
-        "description": "Friendly Captcha element identifier",
-        "text": "friendly-challenge",
+        "id": "frc-v2-script-reference",
+        "confidence": 10,
+        "description": "v2 SDK constructor reference in script source, not execution",
+        "text": "FriendlyCaptchaSDK",
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "description": "Friendly Captcha constructor reference",
-        "text": "FriendlyCaptcha",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
       }
     ],
     "dom": [
       {
+        "id": "frc-container",
         "selector": ".frc-captcha",
-        "confidence": 100,
-        "description": "Friendly Captcha container",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
+        "confidence": 20,
+        "description": "Vendor widget container, possibly unconfigured",
+        "standalone": true
       },
       {
-        "selector": "div[data-sitekey]",
-        "confidence": 85,
-        "description": "Friendly Captcha widget with sitekey",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
+        "id": "frc-configured-widget",
+        "selector": ".frc-captcha[data-sitekey]",
+        "confidence": 45,
+        "description": "Vendor class and sitekey attribute presence, not key validity",
+        "standalone": true
       },
       {
-        "selector": "iframe[src*='friendlycaptcha.com']",
-        "confidence": 95,
-        "description": "Friendly Captcha iframe",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
+        "id": "frc-v1-solution-field",
+        "selector": "input[type='hidden'][name='frc-captcha-solution']",
+        "confidence": 50,
+        "description": "v1 hidden solution-field name presence, not generation or validation",
+        "standalone": true
       },
       {
-        "selector": "script[src*='friendlycaptcha']",
-        "confidence": 95,
-        "description": "Friendly Captcha script tag",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
+        "id": "frc-v2-response-field",
+        "selector": "input[type='hidden'][name='frc-captcha-response']",
+        "confidence": 50,
+        "description": "v2 hidden response-field name presence, not generation or validation",
+        "standalone": true
       }
     ],
     "window": [
       {
-        "path": "friendlyChallenge",
-        "condition": "typeof object",
-        "confidence": 95,
-        "description": "Friendly Captcha main object"
-      },
-      {
-        "path": "friendlyChallenge.render",
+        "id": "frc-v1-widget-constructor",
+        "path": "friendlyChallenge.WidgetInstance",
         "condition": "typeof function",
-        "confidence": 90,
-        "description": "Friendly Captcha render function"
+        "confidence": 50,
+        "description": "Documented v1 widget constructor presence, not execution",
+        "standalone": true
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "frc-v1-configured-runtime",
+      "name": "Configured widget and v1 constructor presence",
+      "when": { "all": [{ "pattern": "frc-configured-widget" }, { "pattern": "frc-v1-widget-constructor" }] },
+      "confidence": 70
+    },
+    {
+      "id": "frc-configured-resource",
+      "name": "Configured widget and official vendor resource",
+      "when": { "all": [{ "pattern": "frc-configured-widget" }, { "any": [{ "pattern": "frc-v1-sdk-url" }, { "pattern": "frc-v2-sdk-url" }, { "pattern": "frc-v1-puzzle-url" }, { "pattern": "frc-v2-captcha-url" }] }] },
+      "confidence": 80
+    },
+    {
+      "id": "frc-v1-configured-resource-runtime",
+      "name": "Heuristic v1 integration: widget attributes, resource and constructor presence",
+      "when": { "all": [{ "pattern": "frc-configured-widget" }, { "any": [{ "pattern": "frc-v1-sdk-url" }, { "pattern": "frc-v1-puzzle-url" }] }, { "pattern": "frc-v1-widget-constructor" }] },
+      "confidence": 90
+    },
+    {
+      "id": "frc-v2-configured-resource-response",
+      "name": "Heuristic v2 integration: widget attributes, resource and response-field presence",
+      "when": { "all": [{ "pattern": "frc-configured-widget" }, { "any": [{ "pattern": "frc-v2-sdk-url" }, { "pattern": "frc-v2-captcha-url" }] }, { "pattern": "frc-v2-response-field" }] },
+      "confidence": 90
+    }
+  ]
 }

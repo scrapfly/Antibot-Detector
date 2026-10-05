@@ -37,12 +37,31 @@ async function getCurrentTabDetectionData() {
 // forgets to stop it). stopBadgeSpinner() also stops it immediately.
 const badgeSpinnerTimers = new Map();
 
+// One spinner frame. Text, background and text colour are always written
+// together: Chrome drops a tab's badge colours when it navigates, so a frame
+// that only updates the text falls back to the default colours mid-scan.
+// Text colour is best-effort (Chrome 110+); only text/background failures,
+// such as a closed tab, reject and stop the spinner.
+function paintSpinnerFrame(tabId, text) {
+    if (typeof chrome.action.setBadgeTextColor === 'function') {
+        try {
+            Promise.resolve(chrome.action.setBadgeTextColor({ color: BADGE.TEXT_COLORS.LOADING, tabId })).catch(() => {});
+        } catch (_) {
+            // Unsupported in this browser; the frame still paints.
+        }
+    }
+    return Promise.all([
+        chrome.action.setBadgeText({ text, tabId }),
+        chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.LOADING, tabId })
+    ]);
+}
+
 function startBadgeSpinner(tabId) {
     stopBadgeSpinner(tabId);
     const frames = BADGE.SPINNER_FRAMES;
     let i = 0;
-    chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.LOADING, tabId }).catch(() => {});
-    chrome.action.setBadgeText({ text: frames[0], tabId }).catch(() => {});
+    setPausedIcon(tabId, false);
+    paintSpinnerFrame(tabId, frames[0]).catch(() => {});
     const timer = setInterval(() => {
         // Self-terminate once the tab no longer has an active detection.
         const state = (typeof detectionStates !== 'undefined') ? detectionStates.get(tabId) : null;
@@ -50,7 +69,7 @@ function startBadgeSpinner(tabId) {
         const stillLoading = active || (state && !state.finalized);
         if (!stillLoading) { stopBadgeSpinner(tabId); return; }
         i = (i + 1) % frames.length;
-        chrome.action.setBadgeText({ text: frames[i], tabId }).catch(() => stopBadgeSpinner(tabId));
+        paintSpinnerFrame(tabId, frames[i]).catch(() => stopBadgeSpinner(tabId));
     }, 120); // 120ms/frame; runs only during active detection (worker kept alive by keepalive)
     badgeSpinnerTimers.set(tabId, timer);
 }
@@ -71,6 +90,8 @@ async function setBadgeForDetections(tabId, url, detectionResults) {
     // and the toolbar icon shows a detection count for a disabled extension.
     if (!(await isExtensionEnabled())) {
         await Promise.all([
+            setPausedIcon(tabId, false),
+            setBadgeTextColor(tabId, false, BADGE.COLORS.DISABLED),
             chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId }),
             chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId })
         ]).catch(() => {});
@@ -78,27 +99,25 @@ async function setBadgeForDetections(tabId, url, detectionResults) {
     }
     try {
         const detectionCount = detectionResults.length;
-        if (detectionCount > 0) {
-            const isBlacklisted = url ? await Utils.isUrlBlacklisted(url) : false;
-            if (!isBlacklisted) {
-                const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
-                const avgConfidence = DetectionUtils.computeAverageConfidence(detectionResults);
-                const difficulty = DetectionUtils.getDifficultyLevel(detectionResults, avgConfidence);
-                const color = difficulty === 'High' ? badgeColors.high :
-                             difficulty === 'Medium' ? badgeColors.medium :
-                             badgeColors.low;
-                await Promise.all([
-                    chrome.action.setBadgeText({ text: detectionCount.toString(), tabId }),
-                    chrome.action.setBadgeBackgroundColor({ color, tabId })
-                ]);
-            } else {
-                await Promise.all([
-                    chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId }),
-                    chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId })
-                ]);
-            }
+        const isBlacklisted = url ? await Utils.isUrlBlacklisted(url) : false;
+        await setPausedIcon(tabId, isBlacklisted);
+        if (isBlacklisted) {
+            await Promise.all([
+                setBadgeTextColor(tabId, true),
+                chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId }),
+                chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId })
+            ]);
+        } else if (detectionCount > 0) {
+            const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
+            const color = DetectionUtils.getBadgeColor(detectionResults, badgeColors);
+            await Promise.all([
+                setBadgeTextColor(tabId, false, color),
+                chrome.action.setBadgeText({ text: detectionCount.toString(), tabId }),
+                chrome.action.setBadgeBackgroundColor({ color, tabId })
+            ]);
         } else {
             await Promise.all([
+                setBadgeTextColor(tabId),
                 chrome.action.setBadgeText({ text: BADGE.TEXT.CLEAN, tabId }),
                 chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId })
             ]);

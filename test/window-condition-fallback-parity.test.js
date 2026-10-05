@@ -8,6 +8,7 @@ const path = require('node:path');
 // bug the project hit before (fallbacks missing typeof symbol/bigint/has length/!== 0
 // and carrying stale "not undefined"/"not null" aliases).
 
+require('../modules/detection/window-condition-grammar.js');
 require('../modules/detection/hooks/window-condition-language.js');
 const canonical = globalThis.ScrapflyWindowConditionLanguage.getPresetValues();
 

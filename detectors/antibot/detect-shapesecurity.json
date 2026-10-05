@@ -5,152 +5,127 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2025-12-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-05",
+  "version": "2.0.0",
   "website": "https://www.shapesecurity.com/products/bot-manager",
   "icon": "shape_security_official.png",
   "description": "Enterprise-grade bot management solution providing real-time detection and mitigation",
   "detection": {
-    "cookie": [
-      {
-        "name": "^[A-Za-z0-9]{8}$",
-        "value": "\\|1\\|[01]\\|",
-        "nameRegex": true,
-        "valueRegex": true,
-        "confidence": 95,
-        "description": "Shape Security cookie (exact 8-char name; value contains |1|0| or |1|1| marker)",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "all",
-        "valueScope": "all"
-      }
-    ],
-    "header": [
-      {
-        "name": "^x-[a-z0-9]{8}-a$",
-        "nameRegex": true,
-        "confidence": 100,
-        "description": "Shape Security dynamic header pattern (suffix -a)",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      },
-      {
-        "name": "^x-[a-z0-9]{8}-b$",
-        "nameRegex": true,
-        "confidence": 100,
-        "description": "Shape Security dynamic header pattern (suffix -b)",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      },
-      {
-        "name": "^x-[a-z0-9]{8}-c$",
-        "nameRegex": true,
-        "confidence": 100,
-        "description": "Shape Security dynamic header pattern (suffix -c)",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      },
-      {
-        "name": "^x-[a-z0-9]{8}-d$",
-        "nameRegex": true,
-        "confidence": 100,
-        "description": "Shape Security dynamic header pattern (suffix -d)",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      },
-      {
-        "name": "^x-[a-z0-9]{8}-f$",
-        "nameRegex": true,
-        "confidence": 100,
-        "description": "Shape Security dynamic header pattern (suffix -f)",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      },
-      {
-        "name": "^x-[a-z0-9]{8}-z$",
-        "nameRegex": true,
-        "confidence": 100,
-        "description": "Shape Security dynamic header pattern (suffix -z)",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "response",
-        "valueScope": "response"
-      }
-    ],
     "url": [
       {
-        "confidence": 100,
-        "description": "Shape Security seed parameter (primary indicator)",
-        "text": "\\?seed=[A-Za-z0-9_\\-]+",
+        "id": "seeded-script",
+        "confidence": 85,
+        "description": "Shape loader with its long seed parameter (ssx.mod.js?seed=...)",
+        "text": "^https?://[^/?#]+/[A-Za-z0-9/_.-]{1,80}\\.js\\?(?:[^#]*&)?seed=[A-Za-z0-9_-]{40,}",
         "textRegex": true,
-        "textWholeWord": false,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      },
+      {
+        "id": "shape-loader-async",
+        "confidence": 60,
+        "standalone": false,
+        "description": "Shape ssx.mod.js loader (Target, Nordstrom)",
+        "text": "^https?://[^/?#]+/[A-Za-z0-9/_.-]{0,60}/ssx\\.mod\\.js(?:\\?async)?(?:#|$)",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "confidence": 100,
-        "description": "Shape Security seed parameter (not first query param)",
-        "text": "&seed=[A-Za-z0-9_\\-]+",
+        "id": "shape-marker-param",
+        "confidence": 50,
+        "standalone": false,
+        "description": "Shape seeded-script marker parameter (X-xxxxxxxx--z=q)",
+        "text": "^https?://[^/?#]+/[A-Za-z0-9/_.-]{1,80}\\.js\\?(?:[^#]*&)?X-[A-Za-z0-9]{6,10}--z=q(?:&|#|$)",
         "textRegex": true,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
+        "textCaseSensitive": true,
         "textScope": "all"
       }
     ],
     "content": [
       {
-        "confidence": 50,
-        "description": "Shape Security namespace",
-        "text": "shapesecurity",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "id": "xr-bmobdb-reference",
+        "confidence": 10,
+        "description": "Shape runtime global reference",
+        "text": "__xr_bmobdb",
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
       }
     ],
-    "dom": [],
     "window": [
       {
+        "id": "xr-bmobdb-object",
         "path": "__xr_bmobdb",
-        "condition": "typeof function",
-        "confidence": 100,
-        "description": "Shape Security browser monitoring database"
+        "condition": "exists",
+        "confidence": 80,
+        "description": "Shape runtime global (__xr_bmobdb)"
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "shape-seeded-runtime",
+      "name": "Seeded loader with its runtime",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "seeded-script"
+          },
+          {
+            "any": [
+              {
+                "pattern": "xr-bmobdb-object"
+              },
+              {
+                "pattern": "xr-bmobdb-reference"
+              },
+              {
+                "pattern": "shape-marker-param"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "shape-loader-runtime",
+      "name": "ssx.mod.js loader with the Shape runtime",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "pattern": "shape-loader-async"
+          },
+          {
+            "any": [
+              {
+                "pattern": "xr-bmobdb-object"
+              },
+              {
+                "pattern": "seeded-script"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "shape-loader-marker",
+      "name": "ssx.mod.js loader with the seeded-script marker",
+      "confidence": 80,
+      "when": {
+        "all": [
+          {
+            "pattern": "shape-loader-async"
+          },
+          {
+            "pattern": "shape-marker-param"
+          }
+        ]
+      }
+    }
+  ]
 }

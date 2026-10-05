@@ -25,7 +25,7 @@ DataDomeAdvanced.prototype.checkCookies = async function() {
             this.displayCookiesModal(dataDomeCookie);
         } catch (error) {
             Logger.error('NETWORK', '[DataDome] Failed to check cookies:', error);
-            NotificationHelper.error('Failed to check cookies: ' + error.message);
+            NotificationHelper.error(this._txt('advCommonFailedCheckCookiesFmt', 'Failed to check cookies: {0}', error.message));
         }
     };
 
@@ -63,10 +63,11 @@ DataDomeAdvanced.prototype.analyzeScripts = async function() {
 
             if (response && response.status === 'started') {
                 // Show notification about reload
-                NotificationHelper.info('Analyzing DataDome scripts... Page will reload');
+                NotificationHelper.info(this._txt('advCommonAnalyzingReloadFmt', 'Analyzing {0} scripts... Page will reload', 'DataDome'));
 
                 // Reload page to capture DataDome scripts (keep existing cookie)
-                setTimeout(async () => {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                {
                     try {
                         Logger.network('[DataDome] Reloading page to capture scripts (keeping datadome cookie)...');
 
@@ -83,14 +84,14 @@ DataDomeAdvanced.prototype.analyzeScripts = async function() {
                     // Reload page - Background's webNavigation listener will capture scripts
                     // DataDome cookie is preserved, no deletion occurs
                     await chrome.tabs.reload(this.tabInfo.id);
-                }, 500);
+                }
             } else {
                 chrome.runtime.onMessage.removeListener(analysisListener);
-                NotificationHelper.error('Failed to start analysis');
+                NotificationHelper.error(this._txt('advCommonFailedStartAnalysis', 'Failed to start analysis'));
             }
         } catch (error) {
             Logger.error('NETWORK', '[DataDome] Failed to analyze scripts:', error);
-            NotificationHelper.error('Failed to analyze scripts: ' + error.message);
+            NotificationHelper.error(this._txt('advCommonFailedAnalyzeScriptsFmt', 'Failed to analyze scripts: {0}', error.message));
         }
     };
 
@@ -320,5 +321,5 @@ func fetchDataDomeScripts() {
 }`
         };
 
-        return templates[language] ? templates[language]() : 'Code generation not available';
+        return templates[language] ? templates[language]() : this._txt('advCommonCodeGenUnavailable', 'Code generation not available');
     };

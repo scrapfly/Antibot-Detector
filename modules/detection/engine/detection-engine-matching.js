@@ -137,7 +137,106 @@ function demEscapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+// The background has flat element records, not a document. Match the simple
+// compound selectors used by detector definitions without pretending to support
+// ancestry, pseudo-classes or escaped CSS identifiers. Unsupported syntax fails
+// closed, including when it occurs in another branch of a selector list.
+function demParseDOMSelector(selector) {
+    if (typeof selector !== 'string' || !selector.trim() || selector.includes('\\')) return null;
+    const groups = [];
+    let start = 0;
+    let bracket = false;
+    let quote = '';
+    for (let index = 0; index < selector.length; index++) {
+        const character = selector[index];
+        if (quote) {
+            if (character === quote) quote = '';
+        } else if (bracket && (character === '"' || character === "'")) {
+            quote = character;
+        } else if (character === '[') {
+            if (bracket) return null;
+            bracket = true;
+        } else if (character === ']') {
+            if (!bracket) return null;
+            bracket = false;
+        } else if (character === ',' && !bracket) {
+            groups.push(selector.slice(start, index).trim());
+            start = index + 1;
+        }
+    }
+    if (bracket || quote) return null;
+    groups.push(selector.slice(start).trim());
+
+    const parsed = [];
+    for (const group of groups) {
+        if (!group) return null;
+        const tag = group.match(/^(\*|[a-zA-Z][\w-]*)/);
+        let remaining = tag ? group.slice(tag[0].length) : group;
+        const tokens = [];
+        while (remaining) {
+            const identity = remaining.match(/^([.#])([a-zA-Z_-][\w-]*)/);
+            if (identity) {
+                tokens.push({ attribute: identity[1] === '#' ? 'id' : 'class',
+                    operator: identity[1] === '#' ? '=' : '~=', value: identity[2] });
+                remaining = remaining.slice(identity[0].length);
+                continue;
+            }
+            const attribute = remaining.match(/^\[\s*([a-zA-Z_][\w-]*)\s*(?:(~=|\|=|\^=|\$=|\*=|=)\s*(?:"([^"\n\r\f]*)"|'([^'\n\r\f]*)'|([a-zA-Z_-][\w-]*))\s*(?:([isIS])\s*)?)?\]/);
+            if (!attribute) return null;
+            tokens.push({ attribute: attribute[1].toLowerCase(), operator: attribute[2] || '',
+                value: attribute[3] ?? attribute[4] ?? attribute[5] ?? '',
+                insensitive: attribute[6] ? attribute[6].toLowerCase() === 'i' : undefined });
+            remaining = remaining.slice(attribute[0].length);
+        }
+        if (!tag && !tokens.length) return null;
+        parsed.push({ tag: tag && tag[0].toLowerCase(), tokens });
+    }
+    return parsed;
+}
+
+function demMatchDOMSelector(selector, element) {
+    return demMatchDOMGroups(demParseDOMSelector(selector), element);
+}
+
+function demMatchDOMGroups(groups, element) {
+    if (!groups || !element || typeof element !== 'object') return false;
+    const tag = String(element.tagName || element.selector || '').toLowerCase();
+    if (!/^[a-z][\w-]*$/.test(tag)) return false;
+
+    // src/class/id may have complete top-level values while the serialized
+    // attribute copy is truncated. Never treat an absent value as an attribute.
+    const attributeValue = name => {
+        const present = element.attributes && Object.hasOwn(element.attributes, name);
+        if (Object.hasOwn(element, name) && element[name] !== null && element[name] !== undefined &&
+            (present || String(element[name]) !== '')) return String(element[name]);
+        if (present) return String(element.attributes[name]);
+        return null;
+    };
+    return groups.some(group => (!group.tag || group.tag === '*' || group.tag === tag) && group.tokens.every(token => {
+        let actual = attributeValue(token.attribute);
+        if (actual === null) return false;
+        if (!token.operator) return true;
+        let expected = token.value;
+        // HTML type values, including input's hidden state, are ASCII-insensitive
+        // unless a selector explicitly asks for sensitive matching.
+        if (token.insensitive === true || (token.insensitive !== false && token.attribute === 'type')) {
+            actual = actual.replace(/[A-Z]/g, character => character.toLowerCase());
+            expected = expected.replace(/[A-Z]/g, character => character.toLowerCase());
+        }
+        switch (token.operator) {
+            case '=': return actual === expected;
+            case '~=': return !!expected && !/[\t\n\f\r ]/.test(expected) && actual.split(/[\t\n\f\r ]+/).includes(expected);
+            case '|=': return actual === expected || actual.startsWith(expected + '-');
+            case '^=': return !!expected && actual.startsWith(expected);
+            case '$=': return !!expected && actual.endsWith(expected);
+            case '*=': return !!expected && actual.includes(expected);
+            default: return false;
+        }
+    }));
+}
+
 // Node test export (no-op in the browser, where `module` is undefined).
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { demMatchPattern, demMatchPatternWithCapture, demMatchCookieName, demEscapeRegExp };
+    module.exports = { demMatchPattern, demMatchPatternWithCapture, demMatchCookieName, demEscapeRegExp,
+        demParseDOMSelector, demMatchDOMSelector, demMatchDOMGroups };
 }

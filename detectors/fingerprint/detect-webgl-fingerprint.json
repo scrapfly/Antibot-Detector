@@ -5,55 +5,41 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-02-04",
-  "version": "1.0.1",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://en.wikipedia.org/wiki/WebGL",
   "icon": "webgl_fingerprint.png",
-  "description": "WebGL-based graphics hardware and driver fingerprinting",
+  "description": "WebGL capability queries and pixel readback, also used by graphics applications",
   "detection": {
     "js_hooks": [
-      {
-        "description": "Retrieves WebGL parameters for hardware fingerprinting",
-        "enabled": true,
-        "confidence": 100,
-        "target": "WebGLRenderingContext.prototype.getParameter"
-      },
-      {
-        "description": "Lists supported WebGL extensions",
-        "enabled": true,
-        "confidence": 100,
-        "target": "WebGLRenderingContext.prototype.getSupportedExtensions"
-      },
-      {
-        "description": "Gets specific WebGL extension for fingerprinting",
-        "enabled": true,
-        "confidence": 85,
-        "target": "WebGLRenderingContext.prototype.getExtension"
-      },
-      {
-        "description": "Retrieves WebGL2 parameters",
-        "enabled": true,
-        "confidence": 100,
-        "target": "WebGL2RenderingContext.prototype.getParameter"
-      },
-      {
-        "description": "Uploads buffer data for WebGL fingerprinting",
-        "enabled": false,
-        "confidence": 75,
-        "target": "WebGLRenderingContext.prototype.bufferData"
-      },
-      {
-        "description": "Uploads buffer data for WebGL2 fingerprinting",
-        "enabled": false,
-        "confidence": 75,
-        "target": "WebGL2RenderingContext.prototype.bufferData"
-      },
-      {
-        "description": "Reads pixel data from WebGL2 framebuffer",
-        "enabled": true,
-        "confidence": 100,
-        "target": "WebGL2RenderingContext.prototype.readPixels"
-      }
+      { "id": "webgl-parameters", "description": "Queries a WebGL parameter; requested parameter unobserved", "enabled": true, "confidence": 15, "target": "WebGLRenderingContext.prototype.getParameter", "standalone": true },
+      { "id": "webgl-extensions", "description": "Lists supported WebGL extensions", "enabled": true, "confidence": 20, "target": "WebGLRenderingContext.prototype.getSupportedExtensions", "standalone": true },
+      { "id": "webgl-extension", "description": "Requests a WebGL extension; extension name unobserved", "enabled": true, "confidence": 10, "target": "WebGLRenderingContext.prototype.getExtension", "standalone": true },
+      { "id": "webgl-precision", "description": "Queries WebGL shader numeric precision", "enabled": true, "confidence": 20, "target": "WebGLRenderingContext.prototype.getShaderPrecisionFormat", "standalone": true },
+      { "id": "webgl-pixels", "description": "Reads WebGL framebuffer pixels; data and purpose unobserved", "enabled": true, "confidence": 25, "target": "WebGLRenderingContext.prototype.readPixels", "standalone": true },
+      { "id": "webgl2-parameters", "description": "Queries a WebGL2 parameter; requested parameter unobserved", "enabled": true, "confidence": 15, "target": "WebGL2RenderingContext.prototype.getParameter", "standalone": true },
+      { "id": "webgl2-extensions", "description": "Lists supported WebGL2 extensions", "enabled": true, "confidence": 20, "target": "WebGL2RenderingContext.prototype.getSupportedExtensions", "standalone": true },
+      { "id": "webgl2-extension", "description": "Requests a WebGL2 extension; extension name unobserved", "enabled": true, "confidence": 10, "target": "WebGL2RenderingContext.prototype.getExtension", "standalone": true },
+      { "id": "webgl2-precision", "description": "Queries WebGL2 shader numeric precision", "enabled": true, "confidence": 20, "target": "WebGL2RenderingContext.prototype.getShaderPrecisionFormat", "standalone": true },
+      { "id": "webgl-buffer", "description": "Uploads WebGL buffer data", "enabled": false, "confidence": 5, "target": "WebGLRenderingContext.prototype.bufferData", "standalone": false },
+      { "id": "webgl2-buffer", "description": "Uploads WebGL2 buffer data", "enabled": false, "confidence": 5, "target": "WebGL2RenderingContext.prototype.bufferData", "standalone": false },
+      { "id": "webgl2-pixels", "description": "Reads WebGL2 framebuffer pixels; data and purpose unobserved", "enabled": true, "confidence": 25, "target": "WebGL2RenderingContext.prototype.readPixels", "standalone": true }
+    ],
+    "content": [
+      { "id": "webgl-source", "text": "WebGLRenderingContext", "scope": "scripts", "checkScripts": true, "standalone": true, "description": "Script reference to WebGLRenderingContext; usage unconfirmed", "confidence": 10, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
+      { "id": "webgl2-source", "text": "WebGL2RenderingContext", "scope": "scripts", "checkScripts": true, "standalone": true, "description": "Script reference to WebGL2RenderingContext; usage unconfirmed", "confidence": 10, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
+      { "id": "webgl-debug-source", "text": "WEBGL_debug_renderer_info", "scope": "scripts", "checkScripts": true, "standalone": true, "description": "Script reference to renderer information extension; usage unconfirmed", "confidence": 10, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
+      { "id": "webgl-precision-source", "text": "getShaderPrecisionFormat", "scope": "scripts", "checkScripts": true, "standalone": true, "description": "Script reference to shader precision query; usage unconfirmed", "confidence": 10, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true }
     ]
-  }
+  },
+  "combinations": [
+    { "id": "webgl-capabilities", "name": "WebGL parameter and extension enumeration", "confidence": 30, "when": { "all": [{ "pattern": "webgl-parameters" }, { "pattern": "webgl-extensions" }] } },
+    { "id": "webgl2-capabilities", "name": "WebGL2 parameter and extension enumeration", "confidence": 30, "when": { "all": [{ "pattern": "webgl2-parameters" }, { "pattern": "webgl2-extensions" }] } },
+    { "id": "webgl-numeric-profile", "name": "WebGL capabilities and shader precision queries", "confidence": 45, "when": { "all": [{ "pattern": "webgl-parameters" }, { "pattern": "webgl-extensions" }, { "pattern": "webgl-precision" }] } },
+    { "id": "webgl2-numeric-profile", "name": "WebGL2 capabilities and shader precision queries", "confidence": 45, "when": { "all": [{ "pattern": "webgl2-parameters" }, { "pattern": "webgl2-extensions" }, { "pattern": "webgl2-precision" }] } },
+    { "id": "webgl1-profile", "name": "WebGL capability enumeration and pixel readback", "confidence": 55, "when": { "all": [{ "pattern": "webgl-parameters" }, { "pattern": "webgl-extensions" }, { "pattern": "webgl-pixels" }] } },
+    { "id": "webgl2-profile", "name": "WebGL2 capability enumeration and pixel readback", "confidence": 55, "when": { "all": [{ "pattern": "webgl2-parameters" }, { "pattern": "webgl2-extensions" }, { "pattern": "webgl2-pixels" }] } },
+    { "id": "webgl1-rich-profile", "name": "WebGL capabilities, numeric precision and pixel readback", "confidence": 65, "when": { "all": [{ "pattern": "webgl-parameters" }, { "pattern": "webgl-extensions" }, { "pattern": "webgl-precision" }, { "pattern": "webgl-pixels" }] } },
+    { "id": "webgl2-rich-profile", "name": "WebGL2 capabilities, numeric precision and pixel readback", "confidence": 65, "when": { "all": [{ "pattern": "webgl2-parameters" }, { "pattern": "webgl2-extensions" }, { "pattern": "webgl2-precision" }, { "pattern": "webgl2-pixels" }] } }
+  ]
 }

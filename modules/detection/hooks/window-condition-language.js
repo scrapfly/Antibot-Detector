@@ -2,12 +2,15 @@
  * Scrapfly Window Condition Language
  *
  * Shared, safe condition evaluation used by:
- * - MAIN world window-property checks (content-main-world.js)
- * - WindowPropertyTracker (modules/detection/hooks/window-property-tracker.js)
- * - Rules UI condition dropdowns (sections/rules/*.js)
+ * - WindowPropertyTracker (modules/detection/hooks/window-property-tracker.js), MAIN world
+ * - Rules UI condition dropdowns (sections/rules/*.js), popup
  *
- * NOTE:
- * - Canonical location: modules/detection/hooks/window-condition-language.js (loaded by popup + MAIN world).
+ * This file is the evaluator only: predicates and comparisons addressed by
+ * name. Which condition strings exist and what they mean is the grammar
+ * (modules/detection/window-condition-grammar.js). The popup and the tests load
+ * the grammar first and it is adopted here at load; in the MAIN world it
+ * arrives with the bridge bootstrap and content-main-world.js calls
+ * configure(). The first grammar adopted is kept.
  *
  * IMPORTANT:
  * - Conditions come from detector JSON and user-created rules.
@@ -20,87 +23,87 @@
   const root = (typeof globalThis !== 'undefined') ? globalThis : window;
   if (root.ScrapflyWindowConditionLanguage) return;
 
-  const PRESET_GROUPS = Object.freeze([
-    {
-      label: 'Type',
-      values: Object.freeze([
-        'typeof object',
-        'typeof function',
-        'typeof string',
-        'typeof number',
-        'typeof boolean',
-        'typeof symbol',
-        'typeof bigint'
-      ])
-    },
-    {
-      label: 'Existence',
-      values: Object.freeze([
-        'exists',
-        'truthy',
-        'falsy',
-        '!== undefined',
-        '=== undefined',
-        '!== null',
-        '=== null'
-      ])
-    },
-    {
-      label: 'Collections',
-      values: Object.freeze([
-        'array',
-        'non-empty array',
-        'empty array',
-        'has length',
-        'has keys',
-        'empty object'
-      ])
-    },
-    {
-      label: 'Numeric',
-      values: Object.freeze([
-        '> 0',
-        '>= 0',
-        '=== 0',
-        '!== 0',
-        '> 1',
-        '>= 1'
-      ])
-    },
-    {
-      label: 'String',
-      values: Object.freeze([
-        'length > 0',
-        'length === 0'
-      ])
-    },
-    {
-      label: 'Boolean',
-      values: Object.freeze([
-        '=== true',
-        '=== false'
-      ])
-    }
-  ]);
-
-  const ALIASES = Object.freeze({
-    'not undefined': '!== undefined',
-    'not null': '!== null',
-    'defined': '!== undefined',
-    'present': '!== undefined'
+  // Predicates the grammar's EXACT table refers to by name
+  const PREDICATES = Object.freeze({
+    DEFINED: (v) => v !== undefined,
+    UNDEFINED: (v) => v === undefined,
+    NOT_NULL: (v) => v !== null,
+    NULL: (v) => v === null,
+    TRUTHY: (v) => !!v,
+    FALSY: (v) => !v,
+    ARRAY: (v) => Array.isArray(v),
+    EMPTY_ARRAY: (v) => Array.isArray(v) && v.length === 0,
+    NON_EMPTY_ARRAY: (v) => Array.isArray(v) && v.length > 0,
+    HAS_LENGTH: (v) => v != null && typeof v.length === 'number',
+    HAS_KEYS: (v) => v != null && typeof v === 'object' && Object.keys(v).length > 0,
+    EMPTY_OBJECT: (v) => v != null && typeof v === 'object' && Object.keys(v).length === 0
   });
 
-  // condition -> compiled. LRU-capped to prevent unbounded growth from
-  // many unique conditions across many detectors.
-  const _CACHE_CAP = 500;
-  const cache = new Map();
-  const _originalCacheSet = cache.set.bind(cache);
-  cache.set = function (key, value) {
-    if (this.size >= _CACHE_CAP && !this.has(key)) {
-      this.delete(this.keys().next().value);
+  // Comparators the grammar's OPERATORS table refers to by name
+  const COMPARATORS = Object.freeze({
+    GT: (left, right) => left > right,
+    GTE: (left, right) => left >= right,
+    LT: (left, right) => left < right,
+    LTE: (left, right) => left <= right,
+    EQ: (left, right) => left === right,
+    NE: (left, right) => left !== right
+  });
+
+  let grammar = null;
+  let patterns = null;
+
+  function deepFreeze(value) {
+    if (value && typeof value === 'object' && !Object.isFrozen(value)) {
+      for (const key of Object.keys(value)) deepFreeze(value[key]);
+      Object.freeze(value);
     }
-    return _originalCacheSet(key, value);
-  };
+    return value;
+  }
+
+  function isGrammarShape(g) {
+    return !!g && typeof g === 'object' && typeof g.DEFAULT_CONDITION === 'string' &&
+      Array.isArray(g.PRESET_GROUPS) && !!g.ALIASES && !!g.EXACT && !!g.OPERATORS && !!g.BOOLEANS &&
+      !!g.REASONS && typeof g.SPACE === 'string' && typeof g.DESCRIPTION === 'string' &&
+      typeof g.COMPILE_CACHE_MAX_ENTRIES === 'number' && !!g.WHITESPACE && !!g.PATTERNS &&
+      !!g.PATTERNS.TYPEOF && !!g.PATTERNS.LENGTH_COMPARISON && !!g.PATTERNS.BOOLEAN_EQUALITY &&
+      !!g.PATTERNS.NUMBER_COMPARISON;
+  }
+
+  /**
+   * Adopt the grammar (first valid one wins; later calls change nothing).
+   * @returns {boolean} whether this call adopted it
+   */
+  function configure(candidate) {
+    if (grammar || !isGrammarShape(candidate)) return false;
+    try {
+      const copy = deepFreeze(JSON.parse(JSON.stringify(candidate)));
+      const toRegExp = ({ source, flags }) => new RegExp(source, flags);
+      const compiledPatterns = Object.freeze({
+        WHITESPACE: toRegExp(copy.WHITESPACE),
+        TYPEOF: toRegExp(copy.PATTERNS.TYPEOF),
+        LENGTH_COMPARISON: toRegExp(copy.PATTERNS.LENGTH_COMPARISON),
+        BOOLEAN_EQUALITY: toRegExp(copy.PATTERNS.BOOLEAN_EQUALITY),
+        NUMBER_COMPARISON: toRegExp(copy.PATTERNS.NUMBER_COMPARISON)
+      });
+      grammar = copy;
+      patterns = compiledPatterns;
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // condition -> compiled, capped (oldest dropped first) so many unique
+  // conditions across many detectors cannot grow it without bound
+  const cache = new Map();
+
+  function remember(key, compiled) {
+    if (cache.size >= grammar.COMPILE_CACHE_MAX_ENTRIES && !cache.has(key)) {
+      cache.delete(cache.keys().next().value);
+    }
+    cache.set(key, compiled);
+    return compiled;
+  }
 
   function _toString(value) {
     try {
@@ -112,155 +115,82 @@
 
   function normalize(condition) {
     const raw = (condition == null) ? '' : _toString(condition);
-    const trimmed = raw.trim().replace(/\s+/g, ' ');
+    const trimmed = raw.trim().replace(patterns.WHITESPACE, grammar.SPACE);
     if (!trimmed) return '';
-    const alias = ALIASES[trimmed];
+    const alias = grammar.ALIASES[trimmed];
     return alias ? alias : trimmed;
   }
 
-  function _compare(op, left, right) {
-    switch (op) {
-      case '>': return left > right;
-      case '>=': return left >= right;
-      case '<': return left < right;
-      case '<=': return left <= right;
-      case '===': return left === right;
-      case '!==': return left !== right;
-      default: return false;
-    }
+  const has = (table, key) => Object.prototype.hasOwnProperty.call(table, key);
+
+  function compare(op, left, right) {
+    const comparator = has(grammar.OPERATORS, op) ? COMPARATORS[grammar.OPERATORS[op]] : null;
+    return comparator ? comparator(left, right) : false;
   }
 
-  function compile(condition) {
-    const normalized = normalize(condition);
+  function compileNormalized(normalized) {
+    const { REASONS } = grammar;
 
-    if (cache.has(normalized)) return cache.get(normalized);
-
-    /** @type {{ok:boolean, normalized:string, reason?:string, fn?:Function}} */
-    let compiled;
-
-    // Empty means "truthy" in our engines.
+    // Empty means the default condition
     if (!normalized) {
-      compiled = { ok: true, normalized: 'truthy', fn: (v) => !!v };
-      cache.set(normalized, compiled);
-      return compiled;
+      return { ok: true, normalized: grammar.DEFAULT_CONDITION, fn: PREDICATES.TRUTHY };
     }
 
     // Exact matches first
-    switch (normalized) {
-      case 'exists':
-      case '!== undefined':
-        compiled = { ok: true, normalized, fn: (v) => v !== undefined };
-        cache.set(normalized, compiled);
-        return compiled;
-      case '=== undefined':
-        compiled = { ok: true, normalized, fn: (v) => v === undefined };
-        cache.set(normalized, compiled);
-        return compiled;
-      case '!== null':
-        compiled = { ok: true, normalized, fn: (v) => v !== null };
-        cache.set(normalized, compiled);
-        return compiled;
-      case '=== null':
-        compiled = { ok: true, normalized, fn: (v) => v === null };
-        cache.set(normalized, compiled);
-        return compiled;
-      case 'truthy':
-        compiled = { ok: true, normalized, fn: (v) => !!v };
-        cache.set(normalized, compiled);
-        return compiled;
-      case 'falsy':
-        compiled = { ok: true, normalized, fn: (v) => !v };
-        cache.set(normalized, compiled);
-        return compiled;
-      case 'array':
-        compiled = { ok: true, normalized, fn: (v) => Array.isArray(v) };
-        cache.set(normalized, compiled);
-        return compiled;
-      case 'empty array':
-        compiled = { ok: true, normalized, fn: (v) => Array.isArray(v) && v.length === 0 };
-        cache.set(normalized, compiled);
-        return compiled;
-      case 'non-empty array':
-        compiled = { ok: true, normalized, fn: (v) => Array.isArray(v) && v.length > 0 };
-        cache.set(normalized, compiled);
-        return compiled;
-      case 'has length':
-        compiled = { ok: true, normalized, fn: (v) => v != null && typeof v.length === 'number' };
-        cache.set(normalized, compiled);
-        return compiled;
-      case 'has keys':
-        compiled = { ok: true, normalized, fn: (v) => v != null && typeof v === 'object' && Object.keys(v).length > 0 };
-        cache.set(normalized, compiled);
-        return compiled;
-      case 'empty object':
-        compiled = { ok: true, normalized, fn: (v) => v != null && typeof v === 'object' && Object.keys(v).length === 0 };
-        cache.set(normalized, compiled);
-        return compiled;
-      default:
-        break;
+    if (has(grammar.EXACT, normalized) && PREDICATES[grammar.EXACT[normalized]]) {
+      return { ok: true, normalized, fn: PREDICATES[grammar.EXACT[normalized]] };
     }
 
     // typeof <type>
-    const typeofMatch = /^typeof\s+([a-z]+)$/i.exec(normalized);
+    const typeofMatch = patterns.TYPEOF.exec(normalized);
     if (typeofMatch) {
       const t = typeofMatch[1].toLowerCase();
       if (t === 'object') {
-        compiled = { ok: true, normalized, fn: (v) => typeof v === 'object' && v !== null };
-        cache.set(normalized, compiled);
-        return compiled;
+        return { ok: true, normalized, fn: (v) => typeof v === 'object' && v !== null };
       }
-      compiled = { ok: true, normalized, fn: (v) => typeof v === t };
-      cache.set(normalized, compiled);
-      return compiled;
+      return { ok: true, normalized, fn: (v) => typeof v === t };
     }
 
     // length <op> <number>
-    const lengthMatch = /^length\s*(>=|<=|>|<|===|!==)\s*(-?\d+(?:\.\d+)?)$/i.exec(normalized);
+    const lengthMatch = patterns.LENGTH_COMPARISON.exec(normalized);
     if (lengthMatch) {
-      const op = lengthMatch[1];
-      const n = Number(lengthMatch[2]);
+      const [, op, operand] = lengthMatch;
+      const n = Number(operand);
       if (!Number.isFinite(n)) {
-        compiled = { ok: false, normalized, reason: 'INVALID_NUMBER' };
-        cache.set(normalized, compiled);
-        return compiled;
+        return { ok: false, normalized, reason: REASONS.INVALID_NUMBER };
       }
-      compiled = {
-        ok: true,
-        normalized,
-        fn: (v) => v != null && typeof v.length === 'number' && _compare(op, v.length, n)
-      };
-      cache.set(normalized, compiled);
-      return compiled;
+      return { ok: true, normalized, fn: (v) => v != null && typeof v.length === 'number' && compare(op, v.length, n) };
     }
 
     // boolean equality
-    const boolEqMatch = /^(===|!==)\s*(true|false)$/i.exec(normalized);
+    const boolEqMatch = patterns.BOOLEAN_EQUALITY.exec(normalized);
     if (boolEqMatch) {
-      const op = boolEqMatch[1];
-      const b = boolEqMatch[2].toLowerCase() === 'true';
-      compiled = { ok: true, normalized, fn: (v) => _compare(op, v, b) };
-      cache.set(normalized, compiled);
-      return compiled;
+      const [, op, word] = boolEqMatch;
+      const b = grammar.BOOLEANS[word.toLowerCase()];
+      return { ok: true, normalized, fn: (v) => compare(op, v, b) };
     }
 
     // numeric comparisons: <op> <number>
-    const numMatch = /^(>=|<=|>|<|===|!==)\s*(-?\d+(?:\.\d+)?)$/i.exec(normalized);
+    const numMatch = patterns.NUMBER_COMPARISON.exec(normalized);
     if (numMatch) {
-      const op = numMatch[1];
-      const n = Number(numMatch[2]);
+      const [, op, operand] = numMatch;
+      const n = Number(operand);
       if (!Number.isFinite(n)) {
-        compiled = { ok: false, normalized, reason: 'INVALID_NUMBER' };
-        cache.set(normalized, compiled);
-        return compiled;
+        return { ok: false, normalized, reason: REASONS.INVALID_NUMBER };
       }
-      compiled = { ok: true, normalized, fn: (v) => typeof v === 'number' && _compare(op, v, n) };
-      cache.set(normalized, compiled);
-      return compiled;
+      return { ok: true, normalized, fn: (v) => typeof v === 'number' && compare(op, v, n) };
     }
 
-    compiled = { ok: false, normalized, reason: 'UNSUPPORTED_CONDITION' };
-    cache.set(normalized, compiled);
-    return compiled;
+    return { ok: false, normalized, reason: REASONS.UNSUPPORTED_CONDITION };
+  }
+
+  /** @returns {{ok:boolean, normalized:string, reason?:string, fn?:Function}} */
+  function compile(condition) {
+    // Without a grammar nothing is supported (reason undefined: there is no vocabulary yet)
+    if (!grammar) return { ok: false, normalized: _toString(condition ?? '') };
+    const normalized = normalize(condition);
+    if (cache.has(normalized)) return cache.get(normalized);
+    return remember(normalized, compileNormalized(normalized));
   }
 
   function evaluate(value, condition) {
@@ -274,23 +204,28 @@
   }
 
   function getPresetGroups() {
-    // Safe shallow copy; values are primitive strings.
-    return PRESET_GROUPS.map((g) => ({ label: g.label, values: Array.from(g.values) }));
+    if (!grammar) return [];
+    // Safe copy; values are primitive strings.
+    return grammar.PRESET_GROUPS.map((g) => ({ label: g.label, values: Array.from(g.values) }));
   }
 
   function getPresetValues() {
-    const out = [];
-    for (const group of PRESET_GROUPS) {
-      for (const value of group.values) out.push(value);
-    }
-    return out;
+    return getPresetGroups().flatMap((group) => group.values);
   }
 
   function describe() {
-    return 'Supported: exists/truthy/falsy, typeof <type>, numeric comparisons (<op> N), length comparisons (length <op> N), arrays/objects helpers.';
+    return grammar ? grammar.DESCRIPTION : '';
   }
 
+  // Popup and tests load the grammar before this file
+  configure(root.ScrapflyWindowConditionGrammar);
+
   root.ScrapflyWindowConditionLanguage = Object.freeze({
+    // What an empty/missing condition means (undefined until a grammar is adopted)
+    get DEFAULT_CONDITION() {
+      return grammar ? grammar.DEFAULT_CONDITION : undefined;
+    },
+    configure,
     compile,
     evaluate,
     getPresetGroups,

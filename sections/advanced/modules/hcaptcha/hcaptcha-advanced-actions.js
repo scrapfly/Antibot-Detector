@@ -22,7 +22,7 @@ HCaptchaAdvanced.prototype.checkVersion = async function() {
             Logger.network('[hCaptcha] Check version initiated:', response);
 
             if (response && response.status === 'started') {
-                NotificationHelper.info('Checking hCaptcha version... Page will reload');
+                NotificationHelper.info(hcaptchaText('advHcaptchaCheckingVersionReload', 'Checking hCaptcha version... Page will reload'));
 
                 // Send page notification before reload
                 await AdvancedUtils.sendMessage({
@@ -36,15 +36,15 @@ HCaptchaAdvanced.prototype.checkVersion = async function() {
                 // Timeout after 15 seconds
                 setTimeout(() => {
                     chrome.runtime.onMessage.removeListener(versionListener);
-                    NotificationHelper.error('hCaptcha version detection timeout');
+                    NotificationHelper.error(hcaptchaText('advHcaptchaVersionTimeout', 'hCaptcha version detection timeout'));
                 }, 15000);
             } else {
-                NotificationHelper.error('Failed to start version check');
+                NotificationHelper.error(hcaptchaText('advHcaptchaFailedStartVersionCheck', 'Failed to start version check'));
                 chrome.runtime.onMessage.removeListener(versionListener);
             }
         } catch (error) {
             Logger.error('NETWORK', '[hCaptcha] Failed to check version:', error);
-            NotificationHelper.error('Failed to check version: ' + error.message);
+            NotificationHelper.error(hcaptchaText('advCommonFailedCheckVersionFmt', 'Failed to check version: {0}', error.message));
         }
     };
 
@@ -69,18 +69,19 @@ HCaptchaAdvanced.prototype.analyzeScripts = async function() {
             });
 
             if (response && response.status === 'started') {
-                NotificationHelper.info('Analyzing hCaptcha... Page will reload');
+                NotificationHelper.info(hcaptchaText('advCommonAnalyzingReloadFmt', 'Analyzing {0} scripts... Page will reload', 'hCaptcha'));
 
-                setTimeout(async () => {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                {
                     await AdvancedUtils.sendMessage({
                         type: 'HCAPTCHA_SHOW_ANALYZING_NOTIFICATION',
                         tabId: this.tabInfo.id
                     });
 
                     await chrome.tabs.reload(this.tabInfo.id);
-                }, 500);
+                }
             }
         } catch (error) {
-            NotificationHelper.error('Failed to analyze scripts: ' + error.message);
+            NotificationHelper.error(hcaptchaText('advCommonFailedAnalyzeScriptsFmt', 'Failed to analyze scripts: {0}', error.message));
         }
     };

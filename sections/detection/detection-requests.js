@@ -33,7 +33,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
 
     // Prevent duplicate concurrent requests
     if (detection.isRequestingDetection) {
-      if (detection.debugMode) Logger.ui('Detection: Already requesting detection, skipping duplicate request');
+      if (detection.debugMode) Logger.debug('UI', 'Detection: Already requesting detection, skipping duplicate request');
       return;
     }
 
@@ -51,13 +51,16 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
       }
 
       // Check if extension is enabled
+      detection.viewedTabId = tab.id;
+      detection.viewedTabUrl = tab.url || '';
       const result = await chrome.storage.local.get(['scrapfly_enabled']);
       const isEnabled = result.scrapfly_enabled !== false;
       detection.setExtensionEnabled(isEnabled);
       if (!isEnabled) {
-        if (this.debugMode) Logger.ui('Detection: Extension is disabled');
+        if (this.debugMode) Logger.debug('UI', 'Detection: Extension is disabled');
         // Check if domain is also blacklisted to show the indicator
         const isBlacklisted = await Utils.isUrlBlacklisted(tab.url);
+        detection.blacklistedDomain = isBlacklisted ? new URL(tab.url).hostname : null;
         detection.showDisabledState(isBlacklisted);
         detection.isRequestingDetection = false;
         return;
@@ -65,13 +68,14 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
 
       // Check if URL is blacklisted
       if (await Utils.isUrlBlacklisted(tab.url)) {
-        if (this.debugMode) Logger.ui('Detection: URL is blacklisted');
+        if (this.debugMode) Logger.debug('UI', 'Detection: URL is blacklisted');
         const url = new URL(tab.url);
         detection.showBlacklistState(url.hostname);
         detection.isRequestingDetection = false;
         return;
       }
 
+      detection.blacklistedDomain = null;
       // Request detection data from background
       chrome.runtime.sendMessage(
         { type: 'GET_DETECTION_DATA', tabId: tab.id },
@@ -87,16 +91,16 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
 
           // Let badge check determine state when response is null
           if (!response) {
-            if (this.debugMode) Logger.ui('Detection: No response yet, continuing to badge check...');
+            if (this.debugMode) Logger.debug('UI', 'Detection: No response yet, continuing to badge check...');
             // Don't return - let badge check handle state
           }
 
           if (response && response.status === 'pending') {
-            if (this.debugMode) Logger.ui('Detection: Detection still running - checking if cached data exists first');
+            if (this.debugMode) Logger.debug('UI', 'Detection: Detection still running - checking if cached data exists first');
 
             // Race condition: detection may have completed while status still says pending
             if (response.data && response.data.detectionResults?.length > 0) {
-              if (this.debugMode) Logger.ui('Detection: Found cached results despite pending status - displaying');
+              if (this.debugMode) Logger.debug('UI', 'Detection: Found cached results despite pending status - displaying');
               await processDetectionDataCallback(response.data);
               return;
             }
@@ -106,7 +110,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
             const isNumericBadge = /^\d+\+?$/.test(badgeStatus.trimmed);
 
             if (isNumericBadge && !response.data) {
-              Logger.ui('Detection: Badge shows count but no data yet - retrying in 500ms', { badge: badgeStatus.trimmed });
+              Logger.debug('UI', 'Detection: Badge shows count but no data yet - retrying in 500ms', { badge: badgeStatus.trimmed });
               // Wait for cache to be ready, then retry (increased from 300ms for slower cache writes)
               await new Promise(resolve => setTimeout(resolve, 500));
               const retryResponse = await new Promise((resolve) => {
@@ -117,7 +121,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
               });
 
               if (retryResponse && retryResponse.data && retryResponse.data.detectionResults?.length > 0) {
-                Logger.ui('Detection: Retry successful - displaying results');
+                Logger.debug('UI', 'Detection: Retry successful - displaying results');
                 await processDetectionDataCallback(retryResponse.data);
                 return;
               }
@@ -132,7 +136,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
               });
 
               if (retryResponse2 && retryResponse2.data && retryResponse2.data.detectionResults?.length > 0) {
-                Logger.ui('Detection: Second retry successful - displaying results');
+                Logger.debug('UI', 'Detection: Second retry successful - displaying results');
                 await processDetectionDataCallback(retryResponse2.data);
                 return;
               }
@@ -142,30 +146,18 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
             }
 
             // No cached data, truly still running - show analyzing state
-            if (this.debugMode) Logger.ui('Detection: No cached data, showing analyzing state');
+            if (this.debugMode) Logger.debug('UI', 'Detection: No cached data, showing analyzing state');
 
             // Skip re-render if already analyzing (prevents UI flicker on popup reopen)
             if (!detection.isShowingAnalyzing) {
               detection.showAnalyzingState();
-            } else {
-              if (detection.debugMode) Logger.ui('Detection: Already showing analyzing, updating progress only');
-              if (!detection.analysisSteps || detection.analysisSteps.length === 0) {
-                detection.analysisSteps = detection.createAnalysisSteps();
-                detection.renderAnalysisSteps();
-              }
-            }
-
-            // Color completed steps immediately (one-by-one progress)
-            if (response.progress && response.progress.completedMethods) {
-              const lastMethod = response.progress.method || response.progress.completedMethods[response.progress.completedMethods.length - 1];
-              detection.updateMethodStatus(lastMethod, response.progress.completedMethods);
             }
 
             return;
           }
 
           if (response && response.status === 'interrupted') {
-            if (this.debugMode) Logger.ui('Detection: Detection status interrupted with no data - showing empty state');
+            if (this.debugMode) Logger.debug('UI', 'Detection: Detection status interrupted with no data - showing empty state');
             detection.showEmptyState();
             return;
           }
@@ -180,7 +172,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
           const badgeStatus = await Detection.getBadgeStatus(tab.id);
 
           if (badgeStatus.isLoading) {
-            if (this.debugMode) Logger.ui('Detection: Badge shows hourglass - checking if cache exists before showing loading');
+            if (this.debugMode) Logger.debug('UI', 'Detection: Badge shows hourglass - checking if cache exists before showing loading');
 
             // Badge shows loading - but check cache first in case detection completed
             // and we're in a race condition where badge wasn't updated yet
@@ -202,7 +194,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
                   await processDetectionDataCallback(response.data);
                 } else {
                   // No cache yet, truly still loading
-                  if (this.debugMode) Logger.ui('Detection: No cache found, showing analyzing state');
+                  if (this.debugMode) Logger.debug('UI', 'Detection: No cache found, showing analyzing state');
                   if (!detection.wasInterrupted) {
                     detection.showAnalyzingState();
                   }
@@ -214,36 +206,30 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
 
           // Gray "CLR" badge = cache was cleared; show empty state
           if (badgeStatus.isCleared) {
-            if (this.debugMode) Logger.ui('Detection: Badge indicates cache cleared, showing empty state');
+            if (this.debugMode) Logger.debug('UI', 'Detection: Badge indicates cache cleared, showing empty state');
             detection.showEmptyState();
             return;
           }
 
           // Show interrupted only when no valid data (badge may be stale)
           if (badgeStatus.isInterrupted && (!response || !response.data)) {
-            if (this.debugMode) Logger.ui('Detection: Badge indicates interruption with no data, showing empty state');
+            if (this.debugMode) Logger.debug('UI', 'Detection: Badge indicates interruption with no data, showing empty state');
             detection.showEmptyState();
             return;
           }
 
           if (response && response.data) {
-            // Update step colors from completed methods
-            if (response.progress && response.progress.completedMethods) {
-              const lastMethod = response.progress.method || response.progress.completedMethods[response.progress.completedMethods.length - 1];
-              detection.updateMethodStatus(lastMethod, response.progress.completedMethods);
-            }
-
             await processDetectionDataCallback(response.data);
           } else {
             // Keep analyzing state while detection is in progress
             const currentBadgeStatus = await Detection.getBadgeStatus(tab.id);
             if (currentBadgeStatus.isLoading) {
-              if (this.debugMode) Logger.ui('Detection: No data yet but detection in progress, keeping analyzing state');
+              if (this.debugMode) Logger.debug('UI', 'Detection: No data yet but detection in progress, keeping analyzing state');
               if (!detection.isShowingAnalyzing) {
                 detection.showAnalyzingState();
               }
             } else {
-              if (this.debugMode) Logger.ui('Detection: No detection data available');
+              if (this.debugMode) Logger.debug('UI', 'Detection: No detection data available');
               detection.showEmptyState();
             }
           }
@@ -259,7 +245,7 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
     const { detection, detectionEngine, detectorManager, history } = context;
 
     if (detection.debugMode) {
-      Logger.ui('[DEBUG processDetectionData] Called with:', {
+      Logger.debug('UI', '[DEBUG processDetectionData] Called with:', {
         hasDetectionData: !!detectionData,
         dataKeys: detectionData ? Object.keys(detectionData) : null,
         hasDetectionResults: !!detectionData?.detectionResults,
@@ -275,7 +261,7 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
 
       if (!detectionData) {
         if (detection.debugMode) {
-          Logger.ui('[DEBUG processDetectionData] No detection data provided - showing empty state');
+          Logger.debug('UI', '[DEBUG processDetectionData] No detection data provided - showing empty state');
         }
         detection.showEmptyState();
         return;
@@ -289,7 +275,7 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
       // Check if we have pre-processed detection results
       if (detectionData.detectionResults) {
         if (detection.debugMode) {
-          Logger.ui('[DEBUG processDetectionData] Using pre-processed results:', detectionData.detectionResults.length);
+          Logger.debug('UI', '[DEBUG processDetectionData] Using pre-processed results:', detectionData.detectionResults.length);
         }
         detections = detectionData.detectionResults;
 
@@ -329,8 +315,8 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
           return detection;
         });
       } else if (detectionData.pageData) {
-        if (this.debugMode) Logger.ui('Detection: Running detection on raw page data');
-        detections = detectionEngine.detectOnPage(detectionData.pageData);
+        if (this.debugMode) Logger.debug('UI', 'Detection: Running detection on raw page data');
+        detections = await detectionEngine.detectOnPage(detectionData.pageData);
       } else {
         if (this.debugMode) Logger.debug('UI', 'Detection: No valid data format in detectionData');
         detection.showEmptyState();
@@ -338,22 +324,25 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
       }
 
       if (detection.debugMode) {
-        Logger.ui(`[DEBUG processDetectionData] Found ${detections.length} security systems, calling displayResults()`);
+        Logger.debug('UI', `[DEBUG processDetectionData] Found ${detections.length} security systems, calling displayResults()`);
       }
 
       // Display results with metadata
-      // Construct cacheMetadata from available fields
-      const cacheMetadata = detectionData.expiry ? {
-        expiry: detectionData.expiry,
-        url: detectionData.url,
-        timestamp: detectionData.timestamp,
-        favicon: detectionData.favicon,
-        cacheScope: detectionData.cacheScope
+      // Construct cacheMetadata from available fields. Callers pass them either at
+      // the top level (storage reads) or nested in cacheMetadata (live messages).
+      const nestedMeta = detectionData.cacheMetadata || {};
+      const expiry = detectionData.expiry ?? nestedMeta.expiry;
+      const cacheMetadata = expiry ? {
+        expiry,
+        url: detectionData.url ?? nestedMeta.url,
+        timestamp: detectionData.timestamp ?? nestedMeta.timestamp,
+        favicon: detectionData.favicon ?? nestedMeta.favicon,
+        cacheScope: detectionData.cacheScope ?? nestedMeta.cacheScope
       } : null;
 
       if (detection.debugMode) {
-        Logger.ui('[DEBUG processDetectionData] Cache metadata:', cacheMetadata);
-        Logger.ui('[DEBUG processDetectionData] From storage:', detectionData.fromStorage);
+        Logger.debug('UI', '[DEBUG processDetectionData] Cache metadata:', cacheMetadata);
+        Logger.debug('UI', '[DEBUG processDetectionData] From storage:', detectionData.fromStorage);
       }
 
       await detection.displayResults(detections, {
@@ -362,12 +351,12 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
       });
 
       if (detection.debugMode) {
-        Logger.ui('[DEBUG processDetectionData] displayResults() completed');
+        Logger.debug('UI', '[DEBUG processDetectionData] displayResults() completed');
       }
 
       // Update history if we have detections
       if (detections.length > 0 && history && typeof history.loadHistory === 'function') {
-        if (this.debugMode) Logger.ui('Detection: Updating history');
+        if (this.debugMode) Logger.debug('UI', 'Detection: Updating history');
         await history.loadHistory();
       }
     } catch (error) {
@@ -424,4 +413,3 @@ DetectionRequests.getBadgeBackgroundColor = async function(tabId) {
 if (typeof self !== 'undefined') {
     self.DetectionRequests = DetectionRequests;
 }
-

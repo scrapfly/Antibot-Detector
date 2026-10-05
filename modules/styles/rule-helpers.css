@@ -1,0 +1,723 @@
+/* ============================================
+   RULE HELPER MODALS (.rh-modal)
+   One shared look for every helper opened from the rule editor: window
+   property, DOM selector, regex, whole word, case sensitive, the
+   "What is ...?" explanations and the detection method help.
+
+   Structure (sections/rules/rules.html):
+     .rule-modal.rh-modal
+       .rule-modal-content          376 x 552 like the rule editor
+         .rule-modal-header          pinned: title + .btn-close
+         .rh-toolbar                 pinned: search field with icon
+         .rule-modal-body.rh-body    the only scrolling area
+           .rh-section > .rh-section-head + .rh-list > .rh-row ...
+         .rh-dock                    pinned: condition picker / preview
+         .rule-modal-footer          pinned: secondary + primary button
+
+   Behaviour: sections/rules/helpers/helper-kit.js (RuleHelperKit).
+   Look: the 2.8 Settings / compact rule editor system - #323232 cards with
+   #4b4b4b borders, 8px radii, 11px labels over 32px controls, uppercase
+   muted section titles, outlined chips, IBM Plex Mono for values.
+   ============================================ */
+
+.rh-modal {
+  --rh-border: var(--border);
+  --rh-border-hover: #5c5c5c;
+  --rh-card-bg: #323232;
+  --rh-card-hover: #383838;
+  --rh-field-bg: #262626;
+  --rh-code-bg: #1f1f1f;
+  --rh-text: #e0e0e0;
+  --rh-text-dim: #b3b3b3;
+  --rh-text-muted: #8f8f8f;
+  z-index: 1002;
+  font-family: var(--font-sans);
+}
+
+/* ---------- Shell ---------- */
+.rh-modal .rule-modal-backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+.rh-modal .rule-modal-content {
+  width: 376px;
+  max-width: calc(100% - 24px);
+  height: 552px;
+  max-height: calc(100% - 28px);
+  background: var(--bg-secondary);
+  border: 1px solid var(--rh-border);
+  border-radius: 12px;
+}
+
+.rh-modal .rule-modal-header h2 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: normal;
+}
+
+.rh-modal .rule-modal-body.rh-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: auto;
+  max-height: none;
+  min-height: 0;
+  flex: 1 1 auto;
+  padding: 10px 10px 12px 12px;
+  scrollbar-gutter: stable;
+}
+
+.rh-modal .rule-modal-footer {
+  justify-content: flex-end;
+  gap: 6px;
+  height: 48px;
+  min-height: 48px;
+  padding: 0 12px;
+  background: none;
+  border-top: 1px solid var(--rh-border);
+  border-radius: 0 0 12px 12px;
+}
+
+.rh-modal .rule-btn {
+  height: 30px;
+  padding: 0 12px 1px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  transform: none;
+}
+
+.rh-modal .rule-btn-save {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.rh-modal .rule-btn-save:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  box-shadow: none;
+  transform: none;
+}
+
+.rh-modal .rule-btn-save:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.rh-modal .rule-btn-cancel {
+  background: #3d3d3d;
+  border: 1px solid var(--rh-border);
+  color: var(--rh-text);
+}
+
+.rh-modal .rule-btn-cancel:hover {
+  background: #464646;
+  color: #ffffff;
+}
+
+.rh-modal .rule-btn:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 1px;
+}
+
+/* Keyboard hint (symbols only) on the left of the footer */
+.rh-kbd {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-right: auto;
+  color: var(--rh-text-muted);
+}
+
+.rh-kbd-icon {
+  display: block;
+}
+
+.rh-kbd kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border: 1px solid var(--rh-border);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1;
+  color: var(--rh-text-dim);
+}
+
+/* Method help is short prose: let it size to its content */
+#methodHelpModal .rule-modal-content {
+  height: auto;
+}
+
+#methodHelpModal .rule-modal-body.rh-body {
+  flex: 0 1 auto;
+}
+
+/* ---------- Pagination: the shared .pagination bar (common.css, 2.8 look
+   from detection.css), pinned between the list and the dock/footer ---------- */
+.rh-modal .rh-pagination {
+  width: auto;
+  margin: 0 10px 8px;
+  padding: 5px 6px 5px 8px;
+}
+
+/* The modal is narrower than the Detection tab: slightly smaller square
+   controls and a page total as wide as its digits, so "Showing 13-16 of 67"
+   is never cut off */
+.rh-modal .rh-pagination .pagination-controls {
+  gap: 4px;
+}
+
+.rh-modal .rh-pagination .pagination-btn,
+.rh-modal .rh-pagination .page-input {
+  width: 30px;
+  height: 30px;
+}
+
+.rh-modal .rh-pagination .page-info .total-pages {
+  min-width: 20px;
+}
+
+/* ---------- Search toolbar ---------- */
+.rh-toolbar {
+  flex-shrink: 0;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--rh-border);
+}
+
+.rh-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.rh-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--rh-text-dim);
+  pointer-events: none;
+}
+
+.rh-search-input {
+  width: 100%;
+  height: 32px;
+  padding: 0 10px 0 31px;
+  background: var(--rh-field-bg);
+  border: 1px solid var(--rh-border);
+  border-radius: 6px;
+  color: var(--rh-text);
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 30px;
+  outline: none;
+  box-shadow: none;
+  transition: border-color 0.15s ease;
+}
+
+.rh-search-input.is-mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.rh-search-input::placeholder {
+  color: var(--rh-text-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+.rh-search-input:hover:not(:focus) {
+  border-color: var(--rh-border-hover);
+}
+
+.rh-search-input:focus {
+  border-color: var(--accent);
+}
+
+/* ---------- Sections ---------- */
+.rh-section {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rh-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 1px 6px;
+}
+
+.rh-section-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rh-text-muted);
+}
+
+.rh-section-head.is-plain .rh-section-title {
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--rh-text-dim);
+}
+
+.rh-section-count {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--rh-text-muted);
+}
+
+.rh-subtitle {
+  margin: 0 1px 5px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 14px;
+  color: var(--rh-text-dim);
+}
+
+.rh-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ---------- Rows ---------- */
+.rh-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rh-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 5px 8px 5px 10px;
+  background: var(--rh-card-bg);
+  border: 1px solid var(--rh-border);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.12s ease, background-color 0.12s ease;
+}
+
+.rh-row:hover {
+  background: var(--rh-card-hover);
+  border-color: var(--rh-border-hover);
+}
+
+.rh-row.is-active {
+  background: var(--rh-card-hover);
+  border-color: #7a7a7a;
+}
+
+.rh-row[aria-selected="true"] {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: var(--accent);
+}
+
+.rh-row.is-static {
+  cursor: default;
+}
+
+.rh-row.is-static:hover {
+  background: var(--rh-card-bg);
+  border-color: var(--rh-border);
+}
+
+.rh-row-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.rh-row-value,
+.rh-row-desc {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rh-row-value {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--rh-text);
+}
+
+.rh-row[aria-selected="true"] .rh-row-value {
+  color: var(--accent-light);
+}
+
+.rh-row-desc {
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--rh-text-muted);
+}
+
+.rh-row.is-custom .rh-row-value {
+  color: var(--accent-light);
+}
+
+/* ---------- Chips ---------- */
+.rh-chip {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  max-width: 116px;
+  height: 18px;
+  padding: 0 7px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border: 1px solid var(--rh-border);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--rh-text-dim);
+}
+
+.rh-chip.tone-accent {
+  border-color: rgba(59, 130, 246, 0.6);
+  color: var(--accent-light);
+}
+
+.rh-chip.tone-success {
+  border-color: rgba(16, 185, 129, 0.55);
+  color: var(--success-light);
+}
+
+.rh-chip.tone-danger {
+  border-color: rgba(239, 68, 68, 0.55);
+  color: var(--danger-light);
+}
+
+/* ---------- Empty / no results ---------- */
+.rh-no-results[hidden] {
+  display: none;
+}
+
+.rh-empty {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 9px 11px;
+  border: 1px dashed var(--rh-border);
+  border-radius: 8px;
+}
+
+.rh-empty-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--rh-text-muted);
+}
+
+.rh-empty-title {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--rh-text);
+  overflow-wrap: anywhere;
+}
+
+.rh-empty-hint {
+  font-size: 11px;
+  line-height: 15px;
+  color: var(--rh-text-dim);
+}
+
+/* ---------- Cards, notes, prose ---------- */
+.rh-card {
+  margin: 0;
+  padding: 10px 11px;
+  background: var(--rh-card-bg);
+  border: 1px solid var(--rh-border);
+  border-radius: 8px;
+}
+
+.rh-note {
+  margin: 0;
+  padding: 8px 10px;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-radius: 8px;
+  font-size: 11.5px;
+  line-height: 16px;
+  color: var(--rh-text-dim);
+}
+
+.rh-note.tone-warning {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.rh-note strong {
+  color: var(--rh-text);
+  font-weight: 600;
+}
+
+.rh-note.tone-warning strong {
+  color: var(--warning-light);
+}
+
+.rh-prose p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--rh-text);
+}
+
+.rh-modal code:not(.rh-code) {
+  padding: 0 4px;
+  background: var(--rh-code-bg);
+  border: 1px solid var(--rh-border);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent-light);
+}
+
+.rh-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  list-style: none;
+}
+
+.rh-bullets li {
+  position: relative;
+  padding-left: 12px;
+  font-size: 11.5px;
+  line-height: 16px;
+  color: var(--rh-text-dim);
+}
+
+.rh-bullets li::before {
+  content: '';
+  position: absolute;
+  left: 1px;
+  top: 6px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Regex quick reference */
+.rh-ref {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 12px;
+  margin: 0;
+}
+
+.rh-ref-item {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  min-width: 0;
+}
+
+.rh-ref-token {
+  flex-shrink: 0;
+  min-width: 34px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--accent-light);
+}
+
+.rh-ref-text {
+  margin: 0;
+  min-width: 0;
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--rh-text-dim);
+}
+
+/* ---------- Dock: condition picker + live preview ---------- */
+.rh-dock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 10px 12px;
+  border-top: 1px solid var(--rh-border);
+}
+
+.rh-dock[hidden] {
+  display: none;
+}
+
+.rh-dock-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 8px;
+}
+
+.rh-field {
+  min-width: 0;
+}
+
+.rh-field-label {
+  display: block;
+  margin: 0 0 4px 1px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 14px;
+  color: var(--rh-text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rh-select {
+  width: 100%;
+  height: 32px;
+  padding: 0 26px 0 10px;
+  background-color: var(--rh-field-bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1.2 1.5L5 5.3l3.8-3.8' fill='none' stroke='%23e0e0e0' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  border: 1px solid var(--rh-border);
+  border-radius: 6px;
+  color: var(--rh-text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.rh-select:hover:not(:focus) {
+  border-color: var(--rh-border-hover);
+}
+
+.rh-select:focus {
+  border-color: var(--accent);
+}
+
+.rh-select option,
+.rh-select optgroup {
+  background: var(--bg-secondary);
+  color: var(--rh-text);
+  font-family: var(--font-sans);
+}
+
+.rh-code {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 6px;
+  min-height: 32px;
+  padding: 6px 10px;
+  background: var(--rh-code-bg);
+  border: 1px solid var(--rh-border);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--rh-text);
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+
+.rh-code .tok-prop {
+  color: var(--accent-light);
+}
+
+.rh-code .tok-cond {
+  color: var(--warning-light);
+}
+
+/* One-line explanation above the search (window helper) */
+.rh-intro {
+  margin: 0 1px 8px;
+  font-size: 11.5px;
+  line-height: 15px;
+  color: var(--rh-text-dim);
+}
+
+/* The rule in plain words: "Matches pages where window.x exists on the page" */
+.rh-sentence {
+  margin: 0;
+  padding: 8px 10px;
+  background: var(--rh-code-bg);
+  border: 1px solid var(--rh-border);
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 17px;
+  color: var(--rh-text);
+  overflow-wrap: anywhere;
+}
+
+.rh-sentence:empty {
+  display: none;
+}
+
+.rh-sentence .tok-prop {
+  font-family: var(--font-mono);
+  color: var(--accent-light);
+}
+
+.rh-sentence .tok-cond {
+  font-weight: 600;
+  color: var(--warning-light);
+}
+
+.rh-select--plain {
+  font-family: var(--font-sans);
+}
+
+.rh-status[hidden] {
+  display: none;
+}
+
+.rh-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--success-light);
+}
+
+.rh-status::before {
+  content: '✓';
+  font-weight: 700;
+}
+
+.rh-status.is-invalid {
+  color: var(--danger-light);
+}
+
+.rh-status.is-invalid::before {
+  content: '\00D7';
+}

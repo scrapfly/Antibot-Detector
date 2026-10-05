@@ -137,3 +137,5 @@ assets/
 assets/*
 !assets/store-screenshots/
 !assets/store-screenshots/**
+!assets/fonts/
+!assets/fonts/**

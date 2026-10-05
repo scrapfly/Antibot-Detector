@@ -14,7 +14,7 @@
  * - renderCaptureHistoryItems() - Optional: custom history item rendering
  */
 
-Logger.ui('[BaseAdvancedModule] Loading...');
+Logger.debug('UI', '[BaseAdvancedModule] Loading...');
 
 class BaseAdvancedModule {
     /** Display name map: moduleName → human-readable name for notifications */
@@ -31,6 +31,27 @@ class BaseAdvancedModule {
         'shapesecurity': 'Shape Security',
         'turnstile': 'Turnstile'
     };
+
+    /**
+     * i18n lookup with an inline English fallback.
+     * @param {string} key
+     * @param {string} fallback
+     * @returns {string}
+     */
+    static _tr(key, fallback) {
+        return (typeof I18n !== 'undefined' && I18n.get(key)) || fallback;
+    }
+
+    /**
+     * i18n format ({0}, {1}…) with an inline English fallback.
+     * @param {string} key
+     * @param {string} fallback
+     * @param {...*} args
+     * @returns {string}
+     */
+    static _fmt(key, fallback, ...args) {
+        return (typeof I18n !== 'undefined' && I18n.format(key, ...args)) || fallback;
+    }
 
     /**
      * Constructor
@@ -50,6 +71,7 @@ class BaseAdvancedModule {
         this.captureHistoryPagination = null;
         this.currentCaptureHistory = [];
         this.isCapturing = false;
+        this.captureStateRevision = 0;
     }
 
     // ========================================================================
@@ -95,6 +117,7 @@ class BaseAdvancedModule {
      * @returns {Promise<object>} Capture state
      */
     async checkCaptureState() {
+        const revision = this.captureStateRevision;
         try {
             const messageType = `${this.moduleName.toUpperCase()}_GET_CAPTURE_STATE`;
             const response = await this.sendMessage({
@@ -102,9 +125,9 @@ class BaseAdvancedModule {
                 tabId: this.tabInfo.id
             });
 
-            if (response && response.isCapturing) {
-                this.isCapturing = true;
-                this.updateCaptureButtonState(true);
+            // An initial state query must not overwrite a newer confirmed start/stop.
+            if (revision === this.captureStateRevision && response && typeof response.isCapturing === 'boolean') {
+                this.updateCaptureButtonState(response.isCapturing);
             }
 
             return response;
@@ -136,8 +159,20 @@ class BaseAdvancedModule {
      */
     async afterCaptureStart(response) {
         if (response && (response.status === 'started' || response.status === 'already_capturing')) {
-            await AdvancedUtils.showCaptureStartNotification(this.displayName);
+            // The page shows a Scrapfly notice with the next steps; close the popup
+            // so the user can reload and act on the page right away.
+            BaseAdvancedModule.closePopupSoon();
         }
+    }
+
+    /**
+     * Close the extension popup after a short beat (so a click feels
+     * acknowledged). No-op where there is no popup window (tests, side panel).
+     * @param {number} [delayMs]
+     */
+    static closePopupSoon(delayMs = 250) {
+        if (typeof window === 'undefined' || typeof window.close !== 'function') return;
+        setTimeout(() => window.close(), delayMs);
     }
 
     /**
@@ -147,7 +182,7 @@ class BaseAdvancedModule {
     async startCapturing() {
         // If already capturing, stop instead
         if (this.isCapturing) {
-            Logger.ui(`[${this.moduleName}] Already capturing, calling stopCapturing()`);
+            Logger.debug('UI', `[${this.moduleName}] Already capturing, calling stopCapturing()`);
             await this.stopCapturing();
             return;
         }
@@ -156,7 +191,7 @@ class BaseAdvancedModule {
             // Hook: beforeCapture - allows validation and preparation
             const shouldProceed = await this.beforeCapture();
             if (shouldProceed === false) {
-                Logger.ui(`[${this.moduleName}] Capture cancelled by beforeCapture hook`);
+                Logger.debug('UI', `[${this.moduleName}] Capture cancelled by beforeCapture hook`);
                 return;
             }
 
@@ -175,11 +210,12 @@ class BaseAdvancedModule {
                 // Hook: afterCaptureStart - allows custom notifications and UI updates
                 await this.afterCaptureStart(response);
             } else if (response && response.status === 'error') {
-                NotificationHelper.error(`Failed to start capture: ${response.error || 'Unknown error'}`);
+                const reason = response.error || BaseAdvancedModule._tr('advPanelUnknownError', 'Unknown error');
+                NotificationHelper.error(BaseAdvancedModule._fmt('advPanelFailedStartCaptureFmt', `Failed to start capture: ${reason}`, reason));
             }
         } catch (error) {
             Logger.error('UI', `[${this.moduleName}] Failed to start capturing:`, error);
-            NotificationHelper.error('Failed to start capture: ' + error.message);
+            NotificationHelper.error(BaseAdvancedModule._fmt('advPanelFailedStartCaptureFmt', 'Failed to start capture: ' + error.message, error.message));
         }
     }
 
@@ -194,7 +230,9 @@ class BaseAdvancedModule {
                 tabId: this.tabInfo.id
             });
 
-            this.isCapturing = false;
+            if (!response || !['stopped', 'not_capturing'].includes(response.status)) {
+                throw new Error((response && response.error) || BaseAdvancedModule._tr('advPanelNotAvailable', 'No confirmed response'));
+            }
             this.updateCaptureButtonState(false);
 
             // Reload capture history after stopping
@@ -202,95 +240,291 @@ class BaseAdvancedModule {
 
         } catch (error) {
             Logger.error('UI', `[${this.moduleName}] Failed to stop capturing:`, error);
-            NotificationHelper.error('Failed to stop capture: ' + error.message);
+            NotificationHelper.error(BaseAdvancedModule._fmt('advPanelFailedStopCaptureFmt', 'Failed to stop capture: ' + error.message, error.message));
         }
     }
 
     /**
      * Update capture button state
      * @param {boolean} isCapturing - Whether currently capturing
+     * @param {boolean} confirmed - False only for presentation-only redraws
      */
-    updateCaptureButtonState(isCapturing) {
+    updateCaptureButtonState(isCapturing, confirmed = true) {
+        if (confirmed) this.captureStateRevision++;
+        this.isCapturing = Boolean(isCapturing);
         const btn = document.querySelector(`#${this.moduleName}StartCapture`);
         if (!btn) return;
-
-        const _t = (typeof I18n !== 'undefined') ? I18n : null;
         const label = btn.querySelector('.advanced-tool-label, .tool-btn-label');
-        if (isCapturing) {
-            btn.classList.add('capturing');
-            if (label) label.textContent = (_t && _t.get('btnStopCapturing')) || 'Stop Capturing';
-        } else {
-            btn.classList.remove('capturing');
-            if (label) label.textContent = (_t && _t.get('btnStartCapturing')) || 'Start Capturing';
-        }
+        const hint = btn.querySelector('.advanced-tool-hint');
+        const icon = btn.querySelector('.advanced-tool-icon');
+        btn.classList.toggle('capturing', this.isCapturing);
+        btn.setAttribute('aria-pressed', String(this.isCapturing));
+        if (label) label.textContent = this.isCapturing
+            ? BaseAdvancedModule._tr('btnStopCapturing', 'Stop Capturing')
+            : BaseAdvancedModule._tr('btnStartCapturing', 'Start Capturing');
+        if (hint) hint.textContent = this.getToolHint('capture', this.isCapturing);
+        if (icon) icon.innerHTML = BaseAdvancedModule.toolIcon(this.isCapturing ? 'stop' : 'capture');
     }
 
-    /**
-     * Resolve semantic icon tone for tool actions.
-     * @param {{id?:string,label?:string,kind?:string}} tool
-     * @returns {'blue'|'green'|'purple'|'red'}
-     */
+    /** Stable action IDs, not translated labels, determine presentation. */
+    resolveToolAction(tool = {}) {
+        const id = typeof tool.id === 'string' ? tool.id.toLowerCase() : '';
+        if (tool.kind === 'capture' || id.endsWith('startcapture')) return 'capture';
+        if (id.endsWith('checkcookies')) return 'cookies';
+        if (id.endsWith('extractsensor')) return 'sensor';
+        if (id.endsWith('version')) return 'version';
+        if (id === 'recaptchaclick') return 'selector';
+        if (id === 'recaptchaextract' || id.endsWith('extractsitekey')) return 'sitekey';
+        if (id.endsWith('callback')) return 'callback';
+        if (id.includes('analyze')) return 'scripts';
+        return 'inspect';
+    }
+
     resolveToolTone(tool = {}) {
-        const toolId = typeof tool.id === 'string' ? tool.id.toLowerCase() : '';
-        const toolLabel = typeof tool.label === 'string' ? tool.label.toLowerCase() : '';
-        const isCaptureAction = tool.kind === 'capture' || toolId.includes('startcapture');
-
-        if (isCaptureAction) {
-            return 'red';
-        }
-
-        if (toolId.includes('checkcookies') || toolLabel.includes('check cookies')) {
-            return 'green';
-        }
-
-        if (toolId.includes('extract') || toolLabel.includes('extract')) {
-            return 'purple';
-        }
-
+        const action = this.resolveToolAction(tool);
+        if (action === 'cookies') return 'green';
+        if (action === 'sensor' || action === 'sitekey') return 'purple';
         return 'blue';
     }
 
-    /**
-     * Render a normalized tools grid for Advanced modules.
-     * @param {Array<{id:string,label:string,iconSvg:string,kind?:'default'|'capture'}>} tools
-     * @param {{columns?:number, className?:string}} options
-     * @returns {string}
-     */
-    renderToolGrid(tools = [], options = {}) {
-        const columns = Number.isInteger(options.columns) && options.columns > 0 ? options.columns : 2;
-        const extraClass = options.className ? ` ${options.className}` : '';
-        const columnClass = `advanced-tool-grid--${columns}`;
+    getToolHint(action, stopping = false) {
+        const hints = {
+            cookies: ['advToolCookiesHint', 'Inspect cookies used by this protection'],
+            scripts: ['advToolReloadScriptsHint', 'Reload the page to analyze protection scripts'],
+            version: ['advToolVersionHint', 'Read available version information'],
+            sitekey: ['advToolSiteKeyHint', 'Find the CAPTCHA site key on this page'],
+            selector: ['advToolSelectorHint', 'Find a selector for the CAPTCHA widget'],
+            callback: ['advToolCallbackHint', 'Inspect CAPTCHA callbacks'],
+            sensor: ['advToolSensorHint', 'Reset protection cookies and reload to record sensor data'],
+            capture: stopping
+                ? ['advToolStopCaptureHint', 'Stop recording data from this page']
+                : ['advToolCaptureHint', 'Record data from this page']
+        };
+        if (action === 'scripts' && ['awswaf', 'imperva', 'turnstile'].includes(this.moduleName)) {
+            hints.scripts = ['advToolResetScriptsHint', 'Reset protection cookies and reload to analyze scripts'];
+        }
+        if (action === 'version' && ['cloudflare', 'hcaptcha', 'geetest'].includes(this.moduleName)) {
+            hints.version = ['advToolReloadVersionHint', 'Reload the page to detect the protection version'];
+        }
+        if (action === 'capture' && !stopping && this.moduleName === 'akamai') {
+            hints.capture = ['advToolCaptureResetHint', 'Reset the protection cookie and start recording'];
+        }
+        const hint = hints[action];
+        return hint ? BaseAdvancedModule._tr(...hint) : '';
+    }
 
-        const items = tools.map((tool) => {
-            const kind = tool.kind === 'capture' ? 'capture' : 'default';
-            const tone = this.resolveToolTone(tool);
-            return `
-                <button class="advanced-tool-card" id="${tool.id}" data-tool-kind="${kind}">
-                    <div class="advanced-tool-icon advanced-tool-icon--${tone}">
-                        ${tool.iconSvg}
-                    </div>
-                    <div class="advanced-tool-label">${tool.label}</div>
-                </button>
-            `;
-        }).join('');
-
-        return `<div class="advanced-tool-grid ${columnClass}${extraClass}">${items}</div>`;
+    /** All action glyphs share an outline vocabulary and are decorative. */
+    static toolIcon(action) {
+        const shapes = {
+            cookies: '<path d="M21 12a9 9 0 1 1-9-9 4 4 0 0 0 4 4 4 4 0 0 0 5 5Z"/><circle cx="8" cy="9" r=".8"/><circle cx="8" cy="15" r=".8"/><circle cx="14" cy="14" r=".8"/>',
+            scripts: '<path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-14-2 18"/>',
+            version: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v.1"/>',
+            sitekey: '<circle cx="8" cy="15" r="4"/><path d="m11 12 9-9m-2 2 3 3m-6 0 3 3"/>',
+            selector: '<path d="M4 8V4h4m8 0h4v4m0 8v4h-4m-8 0H4v-4m5-7 7 3-3 1-1 3-3-7Z"/>',
+            callback: '<path d="M7 7h10v5m-3-3 3 3 3-3M17 17H7v-5m3 3-3-3-3 3"/>',
+            sensor: '<path d="M4 4v16h16M8 16v-5m5 5V7m5 9v-3"/>',
+            capture: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/>',
+            stop: '<rect x="5" y="5" width="14" height="14" rx="2"/>',
+            inspect: '<circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/>',
+            next: '<path d="m9 5 7 7-7 7"/>'
+        };
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${shapes[action] || shapes.inspect}</svg>`;
     }
 
     /**
-     * Bind click actions for normalized tools.
-     * @param {Array<{id:string, handler?:Function, method?:Function}>} actions
+     * Same tools, with capture actions moved to the end (stable for the rest).
+     * @param {Array<object>} tools
+     * @param {function(object): string} actionOf
      */
+    static captureLast(tools, actionOf) {
+        const list = Array.isArray(tools) ? tools : [];
+        return [...list.filter(tool => actionOf(tool) !== 'capture'), ...list.filter(tool => actionOf(tool) === 'capture')];
+    }
+
+    /** Render full-width rows without changing vendor action identifiers. */
+    renderToolGrid(tools = [], options = {}) {
+        const esc = FormatUtils.escapeHtml;
+        const extraClass = options.className ? ` ${FormatUtils.escapeAttr(options.className)}` : '';
+        // The capture action is always the last row, for every vendor
+        const ordered = BaseAdvancedModule.captureLast(tools, tool => this.resolveToolAction(tool));
+        const items = ordered.map(tool => {
+            const action = this.resolveToolAction(tool);
+            const capture = action === 'capture';
+            const stopping = capture && this.isCapturing;
+            const kind = capture ? 'capture' : 'default';
+            const label = stopping ? BaseAdvancedModule._tr('btnStopCapturing', 'Stop Capturing') : tool.label;
+            const hint = tool.hint || this.getToolHint(action, stopping);
+            return `
+                <button type="button" class="advanced-tool-card${stopping ? ' capturing' : ''}" id="${FormatUtils.escapeAttr(tool.id)}" data-tool-kind="${kind}" data-tool-action="${action}"${capture ? ` aria-pressed="${Boolean(stopping)}"` : ''}>
+                    <span class="advanced-tool-icon advanced-tool-icon--${this.resolveToolTone(tool)}" data-icon-style="outline" aria-hidden="true">${BaseAdvancedModule.toolIcon(stopping ? 'stop' : action)}</span>
+                    <span class="advanced-tool-copy">
+                        <span class="advanced-tool-label">${esc(label)}</span>
+                        <span class="advanced-tool-hint" aria-live="polite">${esc(hint)}</span>
+                    </span>
+                    <span class="advanced-tool-indicator" aria-hidden="true">${BaseAdvancedModule.toolIcon('next')}</span>
+                </button>
+            `;
+        }).join('');
+        return `<div class="advanced-tool-grid${extraClass}">${items}</div>`;
+    }
+
+    /** Bind each node once and wait for the actual vendor action to finish. */
     bindToolActions(actions = []) {
+        if (!this.toolActionBindings) this.toolActionBindings = new WeakMap();
+        if (!this.pendingToolActions) this.pendingToolActions = new Set();
         actions.forEach(({ id, handler, method }) => {
-            if (!id) return;
             const fn = typeof handler === 'function' ? handler : method;
-            if (typeof fn !== 'function') return;
+            if (!id || typeof fn !== 'function') return;
             const btn = document.querySelector(`#${id}`);
-            if (btn) {
-                btn.addEventListener('click', fn);
-            }
+            if (!btn) return;
+            const previous = this.toolActionBindings.get(btn);
+            if (previous) btn.removeEventListener('click', previous);
+            const listener = async event => {
+                if (btn.disabled || this.pendingToolActions.has(id)) return;
+                this.pendingToolActions.add(id);
+                const hint = btn.querySelector('.advanced-tool-hint');
+                const originalHint = hint ? hint.textContent : '';
+                btn.disabled = true;
+                btn.classList.add('is-working');
+                btn.setAttribute('aria-busy', 'true');
+                if (hint) hint.textContent = BaseAdvancedModule._tr('advToolWorking', 'Working…');
+                try {
+                    await fn.call(this, event);
+                } catch (error) {
+                    Logger.error('UI', `[${this.moduleName}] Tool action failed:`, error);
+                    const reason = error && error.message ? error.message : String(error);
+                    NotificationHelper.error(BaseAdvancedModule._fmt('advToolActionFailedFmt', `Could not complete this action: ${reason}`, reason));
+                } finally {
+                    this.pendingToolActions.delete(id);
+                    btn.disabled = false;
+                    btn.classList.remove('is-working');
+                    btn.removeAttribute('aria-busy');
+                    if (hint) hint.textContent = originalHint;
+                    if (id === `${this.moduleName}StartCapture`) this.updateCaptureButtonState(this.isCapturing, false);
+                }
+            };
+            this.toolActionBindings.set(btn, listener);
+            btn.addEventListener('click', listener);
         });
+    }
+
+    // ========================================================================
+    // MODAL KIT (shared by every module's result dialogs)
+    // ========================================================================
+
+    /**
+     * Open a result dialog in the shared 2.8 look: header with an icon tile,
+     * title and subtitle, a scrolling body, and the shared close button.
+     * Escape, the close button and a click outside close it. Copy rows inside
+     * (data-copy) copy with inline feedback.
+     * @param {object} opts
+     * @param {string} opts.title
+     * @param {string} [opts.subtitle]
+     * @param {string} [opts.iconSvg] - SVG markup for the header tile
+     * @param {string} opts.body - HTML from the kit helpers below
+     * @param {string} [opts.copiedMessage]
+     * @returns {HTMLElement} the overlay
+     */
+    openKitModal({ title, subtitle = '', iconSvg = '', body = '', copiedMessage } = {}) {
+        const esc = FormatUtils.escapeHtml;
+        const overlay = document.createElement('div');
+        overlay.className = 'adv-kit-overlay';
+        overlay.innerHTML = `
+            <div class="adv-kit-modal" role="dialog" aria-modal="true" aria-label="${FormatUtils.escapeAttr(title)}">
+                <div class="adv-kit-header">
+                    ${iconSvg ? `<span class="adv-kit-header-icon" aria-hidden="true">${iconSvg}</span>` : ''}
+                    <div class="adv-kit-header-text">
+                        <h3 class="adv-kit-title">${esc(title)}</h3>
+                        ${subtitle ? `<p class="adv-kit-subtitle">${esc(subtitle)}</p>` : ''}
+                    </div>
+                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
+                </div>
+                <div class="adv-kit-body">${body}</div>
+            </div>`;
+        const close = () => {
+            document.removeEventListener('keydown', onKey, true);
+            overlay.classList.remove('show');
+            setTimeout(() => overlay.remove(), 180);
+        };
+        const onKey = (e) => {
+            const overlays = document.querySelectorAll('.tool-modal, .adv-kit-overlay, .advanced-modal-overlay');
+            if (e.key === 'Escape' && overlays[overlays.length - 1] === overlay) {
+                e.stopPropagation();
+                close();
+            }
+        };
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+        overlay.querySelector('.advanced-modal-close-btn').addEventListener('click', close);
+        document.addEventListener('keydown', onKey, true);
+        this.bindCopyValueHandlers(overlay, {
+            defaultMessage: copiedMessage || BaseAdvancedModule._tr('advPanelCopiedToClipboard', 'Copied to clipboard'),
+            selector: '[data-copy]'
+        });
+        document.body.appendChild(overlay);
+        requestAnimationFrame(() => overlay.classList.add('show'));
+        return overlay;
+    }
+
+    /** A titled group inside a kit modal; `meta` shows on the right (e.g. a count). */
+    static kitSection(title, inner, meta = '') {
+        if (!inner) return '';
+        return `
+            <section class="adv-kit-section">
+                <div class="adv-kit-section-head">
+                    <h4>${FormatUtils.escapeHtml(title)}</h4>
+                    ${meta !== '' ? `<span class="adv-kit-count">${FormatUtils.escapeHtml(String(meta))}</span>` : ''}
+                </div>
+                ${inner}
+            </section>`;
+    }
+
+    /** A card grouping several fields (one client, one capture…), with an optional chip row on top. */
+    static kitCard(inner, head = '') {
+        return `<div class="adv-kit-card">${head ? `<div class="adv-kit-card-head">${head}</div>` : ''}${inner}</div>`;
+    }
+
+    /** A small label chip; tone: blue | purple | green | amber | red | neutral. */
+    static kitChip(text, tone = 'neutral') {
+        return `<span class="adv-kit-chip adv-kit-chip--${tone}">${FormatUtils.escapeHtml(String(text))}</span>`;
+    }
+
+    /**
+     * Label + one-line value that copies on click (the whole row is the button).
+     * @param {string} label
+     * @param {string} value
+     * @param {object} [opts] - { mono: true, wrap: false }
+     */
+    static kitField(label, value, { mono = true, wrap = false } = {}) {
+        if (value === undefined || value === null || value === '') return '';
+        const text = String(value);
+        const copy = BaseAdvancedModule._tr('advCommonClickToCopy', 'Click to copy');
+        return `
+            <div class="adv-kit-field">
+                <span class="adv-kit-label">${FormatUtils.escapeHtml(label)}</span>
+                <button type="button" class="adv-kit-value${mono ? ' is-mono' : ''}${wrap ? ' is-wrap' : ''}" data-copy="${FormatUtils.escapeAttr(text)}" title="${FormatUtils.escapeAttr(copy)}">
+                    <span class="adv-kit-value-text">${FormatUtils.escapeHtml(text)}</span>
+                    <svg class="adv-kit-copy-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>
+                </button>
+            </div>`;
+    }
+
+    /** Multi-line code with a Copy button in its header. */
+    static kitCode(label, code) {
+        if (!code) return '';
+        const copyLabel = BaseAdvancedModule._tr('advCommonCopy', 'Copy');
+        return `
+            <div class="adv-kit-code">
+                <div class="adv-kit-code-head">
+                    <span class="adv-kit-label">${FormatUtils.escapeHtml(label)}</span>
+                    <button type="button" class="adv-kit-code-copy" data-copy="${FormatUtils.escapeAttr(code)}">${FormatUtils.escapeHtml(copyLabel)}</button>
+                </div>
+                <pre><code>${FormatUtils.escapeHtml(code)}</code></pre>
+            </div>`;
+    }
+
+    /** Muted line for "nothing here" / errors inside a section. */
+    static kitNote(text, tone = 'muted') {
+        return `<p class="adv-kit-note adv-kit-note--${tone}">${FormatUtils.escapeHtml(text)}</p>`;
     }
 
     /**
@@ -404,7 +638,7 @@ class BaseAdvancedModule {
         if (!container) return;
 
         const {
-            defaultMessage = 'Value copied',
+            defaultMessage = BaseAdvancedModule._tr('advValueCopied', 'Value copied'),
             selector = '.copy-value[data-copy], .clickable-copy-value[data-copy]'
         } = options;
 
@@ -430,7 +664,7 @@ class BaseAdvancedModule {
         return `
             <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 16px;">
                 <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--text-secondary); font-size: 13px;">Cookies Found:</span>
+                    <span style="color: var(--text-secondary); font-size: 13px;">${BaseAdvancedModule._tr('advCommonCookiesFound', 'Cookies Found:')}</span>
                     <span style="color: var(--text-primary); font-weight: 500;">${foundCount}/${totalCount}</span>
                 </div>
             </div>
@@ -464,7 +698,7 @@ class BaseAdvancedModule {
         const currentHostname = new URL(this.tabInfo.url).hostname;
         const history = await this.loadCaptureHistory(currentHostname);
 
-        Logger.ui(`[${this.moduleName}] renderCaptureHistoryHTML - Total items: ${history.length}`);
+        Logger.debug('UI', `[${this.moduleName}] renderCaptureHistoryHTML - Total items: ${history.length}`);
 
         // Store filtered history for pagination
         this.currentCaptureHistory = history;
@@ -475,7 +709,7 @@ class BaseAdvancedModule {
         } else {
             // Show first 3 items (pagination will handle the rest)
             const itemsToRender = history.slice(0, 3);
-            Logger.ui(`[${this.moduleName}] Rendering first ${itemsToRender.length} items of ${history.length} total`);
+            Logger.debug('UI', `[${this.moduleName}] Rendering first ${itemsToRender.length} items of ${history.length} total`);
             historyItems = this.renderCaptureHistoryItems(itemsToRender);
         }
 
@@ -491,9 +725,9 @@ class BaseAdvancedModule {
                         <h3>${((typeof I18n !== 'undefined' && I18n.get('advCapturedDataSection')) || 'Captured Data')}</h3>
                     </div>
                     <div class="header-right">
-                        <span class="history-count">${history.length} capture${history.length !== 1 ? 's' : ''}</span>
+                        <span class="history-count">${BaseAdvancedModule._fmt('advPanelCaptureCountFmt', `Captures: ${history.length}`, history.length)}</span>
                         ${history.length > 0 ? `
-                            <button class="clear-history-btn" id="clear${this.moduleName.charAt(0).toUpperCase() + this.moduleName.slice(1)}History" title="Clear all captured data">
+                            <button class="clear-history-btn" id="clear${this.moduleName.charAt(0).toUpperCase() + this.moduleName.slice(1)}History" title="${FormatUtils.escapeHtml(BaseAdvancedModule._tr('advPanelClearCapturedDataTitle', 'Clear all captured data'))}" aria-label="${FormatUtils.escapeHtml(BaseAdvancedModule._tr('advPanelClearCapturedDataTitle', 'Clear all captured data'))}">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
                                 </svg>
@@ -506,7 +740,7 @@ class BaseAdvancedModule {
                 </div>
                 ${history.length > 3 ? `
                     <div id="${this.moduleName}HistoryPagination" class="pagination">
-                        <div class="pagination-info">Showing 1-3 of ${history.length}</div>
+                        <div class="pagination-info">${BaseAdvancedModule._fmt('paginationShowingFmt', `Showing 1-3 of ${history.length}`, 1, 3, history.length)}</div>
                         <div class="pagination-controls">
                             <button class="pagination-btn pagination-btn-prev" disabled>
                                 <svg width="16" height="16" viewBox="0 0 24 24">
@@ -548,7 +782,7 @@ class BaseAdvancedModule {
                         </svg>
                     </div>
                     <h4 class="empty-capture-title">${((typeof I18n !== 'undefined' && I18n.get('advNoCapturesYet')) || 'No captures yet')}</h4>
-                    <p class="empty-capture-text">${((typeof I18n !== 'undefined' && I18n.format('advNoCapturesHintFmt', this.moduleName)) || `Click "Start Capturing" above to begin capturing ${this.moduleName} data`)}</p>
+                    <p class="empty-capture-text">${((typeof I18n !== 'undefined' && I18n.format('advNoCapturesHintFmt', this.displayName)) || `Click "Start Capturing" above to begin capturing ${this.displayName} data`)}</p>
                 </div>
             </div>
         `;
@@ -590,7 +824,7 @@ class BaseAdvancedModule {
      * Setup capture history event listeners
      */
     setupCaptureHistoryListeners() {
-        Logger.ui(`[${this.moduleName}] setupCaptureHistoryListeners - Items: ${this.currentCaptureHistory?.length || 0}`);
+        Logger.debug('UI', `[${this.moduleName}] setupCaptureHistoryListeners - Items: ${this.currentCaptureHistory?.length || 0}`);
 
         // Clear history button
         const clearBtnId = `clear${this.moduleName.charAt(0).toUpperCase() + this.moduleName.slice(1)}History`;
@@ -601,13 +835,13 @@ class BaseAdvancedModule {
 
         // Setup pagination if we have history items
         if (this.currentCaptureHistory && this.currentCaptureHistory.length > 3) {
-            Logger.ui(`[${this.moduleName}] Setting up pagination for ${this.currentCaptureHistory.length} items`);
+            Logger.debug('UI', `[${this.moduleName}] Setting up pagination for ${this.currentCaptureHistory.length} items`);
             this.setupCaptureHistoryPagination();
             return; // Pagination will handle expand listeners
         }
 
         // Otherwise setup expand listeners directly
-        Logger.ui(`[${this.moduleName}] No pagination needed, setting up expand listeners directly`);
+        Logger.debug('UI', `[${this.moduleName}] No pagination needed, setting up expand listeners directly`);
         this.setupExpandListeners();
     }
 
@@ -659,18 +893,18 @@ class BaseAdvancedModule {
             return;
         }
 
-        Logger.ui(`[${this.moduleName}] Creating PaginationManager for #${paginationId} with ${this.currentCaptureHistory.length} items`);
+        Logger.debug('UI', `[${this.moduleName}] Creating PaginationManager for #${paginationId} with ${this.currentCaptureHistory.length} items`);
 
         this.captureHistoryPagination = new PaginationManager(paginationId, {
             itemsPerPage: 3,
             onPageChange: (page, items) => {
-                Logger.ui(`[${this.moduleName}] Page changed to ${page}, showing ${items.length} items`);
+                Logger.debug('UI', `[${this.moduleName}] Page changed to ${page}, showing ${items.length} items`);
                 this.renderCaptureHistoryPage(items);
             }
         });
 
         this.captureHistoryPagination.setItems(this.currentCaptureHistory);
-        Logger.ui(`[${this.moduleName}] Pagination setup complete`);
+        Logger.debug('UI', `[${this.moduleName}] Pagination setup complete`);
     }
 
     /**
@@ -699,17 +933,23 @@ class BaseAdvancedModule {
      */
     renderCaptureDetailsContent(capture) {
         // Default implementation - shows basic capture info
-        const url = AdvancedUtils.escapeHtml(capture.url || 'N/A');
-        const timestamp = new Date(capture.timestamp).toLocaleString();
+        const url = AdvancedUtils.escapeHtml(capture.url || BaseAdvancedModule._tr('advPanelNotAvailable', 'N/A'));
+        const uiLocale = (typeof I18n !== 'undefined' && typeof I18n.locale === 'function') ? I18n.locale() : undefined;
+        let timestamp;
+        try {
+            timestamp = new Date(capture.timestamp).toLocaleString(uiLocale);
+        } catch (_) {
+            timestamp = new Date(capture.timestamp).toLocaleString();
+        }
 
         return `
             <div class="advanced-modal-section">
-                <label class="advanced-modal-label">URL</label>
+                <label class="advanced-modal-label">${BaseAdvancedModule._tr('advCommonUrl', 'URL')}</label>
                 <div class="advanced-modal-code-block">${url}</div>
             </div>
             <div class="advanced-modal-section">
                 <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">Captured</span>
+                    <span class="advanced-modal-info-label">${BaseAdvancedModule._tr('advCommonCaptured', 'Captured')}</span>
                     <span class="advanced-modal-info-value">${timestamp}</span>
                 </div>
             </div>
@@ -752,9 +992,7 @@ class BaseAdvancedModule {
         titleSpan.textContent = ' ' + ((_tCD && _tCD.get('advCaptureDetails')) || 'Capture Details');
         title.appendChild(titleSpan);
 
-        const closeBtn = document.createElement('button');
-        closeBtn.className = 'advanced-modal-close-btn';
-        closeBtn.textContent = '×';
+        const closeBtn = CloseButton.create({ className: 'advanced-modal-close-btn' });
         closeBtn.onclick = () => overlay.remove();
 
         header.appendChild(title);
@@ -882,10 +1120,10 @@ class BaseAdvancedModule {
             await AdvancedHistoryStore.clear(this.moduleName);
 
             await this.renderCapturedDataSection();
-            NotificationHelper.success(`${this.moduleName} capture history cleared`);
+            NotificationHelper.success(BaseAdvancedModule._fmt('advPanelHistoryClearedFmt', `${this.displayName} capture history cleared`, this.displayName));
         } catch (error) {
             Logger.error('UI', `[${this.moduleName}] Failed to clear history:`, error);
-            NotificationHelper.error('Failed to clear history');
+            NotificationHelper.error(BaseAdvancedModule._tr('advPanelFailedClearHistory', 'Failed to clear history'));
         }
     }
 
@@ -957,5 +1195,5 @@ class BaseAdvancedModule {
 
 if (typeof window !== 'undefined') {
     window.BaseAdvancedModule = BaseAdvancedModule;
-    Logger.ui('[BaseAdvancedModule] ✓ Loaded and exported to window.BaseAdvancedModule');
+    Logger.debug('UI', '[BaseAdvancedModule] ✓ Loaded and exported to window.BaseAdvancedModule');
 }

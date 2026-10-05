@@ -5,27 +5,53 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "High",
-  "lastUpdated": "2025-01-11",
-  "version": "1.0",
+  "lastUpdated": "2026-10-03",
+  "version": "1.1.0",
   "website": "https://www.aliexpress.com/",
   "icon": "custom.png",
-  "description": "AliExpress security challenge page with x5sec verification",
+  "description": "AliExpress x5sec challenge routing evidence; does not confirm a visible CAPTCHA or successful verification",
   "detection": {
     "url": [
       {
-        "confidence": 100,
-        "description": "AliExpress security challenge URL",
-        "text": "punish?x5secdata",
-        "textRegex": false,
+        "id": "aliexpress-punish-route",
+        "confidence": 25,
+        "standalone": true,
+        "description": "Punish route on a genuine AliExpress authority",
+        "text": "^https?://(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)*aliexpress\\.com(?::[0-9]+)?/+(?:bx/)?(?:_____tmd_____/)?punish(?:[?#]|$)",
+        "textRegex": true,
         "textWholeWord": false,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "confidence": 100,
-        "description": "AliExpress x5sec verification",
-        "text": "punish\\?x5secdata",
-        "textRegex": false,
+        "id": "aliexpress-punish-data",
+        "confidence": 40,
+        "standalone": true,
+        "description": "AliExpress punish route with a nonempty x5secdata query parameter",
+        "text": "^https?://(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)*aliexpress\\.com(?::[0-9]+)?/+(?:bx/)?(?:_____tmd_____/)?punish\\?(?:[^#]*&)?x5secdata=[^&#]+(?:[&#]|$)",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "aliexpress-punish-step",
+        "confidence": 10,
+        "standalone": false,
+        "description": "AliExpress punish route with the observed x5step=1 query parameter; routing refinement, not independent runtime evidence",
+        "text": "^https?://(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)*aliexpress\\.com(?::[0-9]+)?/+(?:bx/)?(?:_____tmd_____/)?punish\\?(?:[^#]*&)?x5step=1(?:[&#]|$)",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "aliexpress-punish-script-url",
+        "confidence": 10,
+        "standalone": true,
+        "description": "Observed Alibaba shared punish-page script resource; not AliExpress-specific without an AliExpress route",
+        "text": "^https?://g\\.alicdn\\.com(?::[0-9]+)?/bsop-static/sufei-punish/[0-9]+\\.[0-9]+\\.[0-9]+/build/punishpage\\.min\\.js(?:[?#]|$)",
+        "textRegex": true,
         "textWholeWord": false,
         "textCaseSensitive": false,
         "textScope": "all"
@@ -33,21 +59,53 @@
     ],
     "content": [
       {
-        "confidence": 50,
-        "description": "x5sec data parameter",
+        "id": "aliexpress-source-x5secdata",
+        "confidence": 5,
+        "standalone": true,
+        "description": "Script reference to shared x5secdata parameter; vendor and execution unconfirmed",
         "text": "x5secdata",
+        "scope": "scripts",
+        "checkScripts": true,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "description": "AliExpress punish endpoint",
-        "text": "aliexpress.com/punish",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "aliexpress-route-resource",
+      "name": "AliExpress punish route and shared punish-page resource",
+      "confidence": 45,
+      "when": {
+        "all": [
+          { "pattern": "aliexpress-punish-route" },
+          { "pattern": "aliexpress-punish-script-url" }
+        ]
+      }
+    },
+    {
+      "id": "aliexpress-data-resource",
+      "name": "Parameterized AliExpress punish route and shared punish-page resource",
+      "confidence": 55,
+      "when": {
+        "all": [
+          { "pattern": "aliexpress-punish-data" },
+          { "pattern": "aliexpress-punish-script-url" }
+        ]
+      }
+    },
+    {
+      "id": "aliexpress-step-data-resource",
+      "name": "AliExpress x5secdata and first-step routing with punish-page resource",
+      "confidence": 60,
+      "when": {
+        "all": [
+          { "pattern": "aliexpress-punish-data" },
+          { "pattern": "aliexpress-punish-step" },
+          { "pattern": "aliexpress-punish-script-url" }
+        ]
+      }
+    }
+  ]
 }

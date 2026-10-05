@@ -5,141 +5,171 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "High",
-  "lastUpdated": "2024-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-04",
+  "version": "1.2.0",
   "website": "https://www.google.com/recaptcha/",
   "icon": "recaptcha_official.png",
   "description": "Google's CAPTCHA service for protecting websites from spam and abuse",
   "detection": {
     "url": [
       {
-        "text": "recaptcha/api",
-        "confidence": 100,
-        "description": "reCAPTCHA API endpoint",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "google-sdk",
+        "text": "^https://www\\.(?:google\\.com|recaptcha\\.net)/recaptcha/(?:api|enterprise)\\.js(?:[?#]|$)",
+        "confidence": 50,
+        "standalone": true,
+        "description": "Official standard or Enterprise SDK resource",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "text": "gstatic.com/recaptcha",
-        "confidence": 100,
-        "description": "Static resources",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "configured-sdk",
+        "text": "^https://www\\.(?:google\\.com|recaptcha\\.net)/recaptcha/api\\.js\\?(?:[^#]*&)?render=(?!(?:explicit|onload)(?:[&#]|$))[A-Za-z0-9_-]+(?:[&#]|$)",
+        "confidence": 60,
+        "standalone": true,
+        "description": "Official score-based SDK URL with a nonempty site-key render parameter",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "text": "google.com/recaptcha",
-        "confidence": 100,
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "configured-enterprise-sdk",
+        "text": "^https://www\\.(?:google\\.com|recaptcha\\.net)/recaptcha/enterprise\\.js\\?(?:[^#]*&)?render=(?!(?:explicit|onload)(?:[&#]|$))[A-Za-z0-9_-]+(?:[&#]|$)",
+        "confidence": 60,
+        "standalone": true,
+        "description": "Official Enterprise score-based SDK URL with a nonempty site-key render parameter",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "text": "recaptcha.net",
-        "confidence": 100,
-        "description": "Alternative domain",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
+        "id": "google-runtime",
+        "text": "^https://www\\.gstatic\\.(?:com|cn)/recaptcha/releases/[A-Za-z0-9_-]+/recaptcha__[a-z]{2,3}(?:[_-][A-Za-z]{2,4})?\\.js(?:[?#]|$)",
+        "confidence": 50,
+        "standalone": true,
+        "description": "Versioned reCAPTCHA runtime that the official loader injects from gstatic",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      },
+      {
+        "id": "google-frame-request",
+        "text": "^https://(?:www\\.google\\.com|www\\.recaptcha\\.net|recaptcha\\.google\\.com)/recaptcha/(?:api2|enterprise)/(?:anchor|bframe)\\?",
+        "confidence": 60,
+        "standalone": true,
+        "description": "Anchor or challenge frame request in the reCAPTCHA namespace, including invisible widgets",
+        "textRegex": true,
+        "textCaseSensitive": true,
         "textScope": "all"
       }
     ],
     "content": [
       {
+        "id": "grecaptcha-reference",
         "text": "grecaptcha",
-        "confidence": 50,
-        "description": "Global reCAPTCHA object",
+        "confidence": 10,
+        "standalone": true,
+        "description": "Script reference only, also used by hCaptcha compatibility",
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
       },
       {
-        "text": "recaptcha",
-        "confidence": 50,
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
+        "id": "widget-reference",
         "text": "g-recaptcha",
-        "confidence": 50,
-        "description": "reCAPTCHA container class",
+        "confidence": 10,
+        "standalone": true,
+        "description": "Script reference to the documented widget class, not a configured widget",
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "text": "grecaptcha.execute",
-        "confidence": 50,
-        "description": "v3 execution",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "text": "grecaptcha.render",
-        "confidence": 50,
-        "description": "v2 rendering",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
       }
     ],
     "dom": [
       {
-        "selector": ".g-recaptcha",
-        "confidence": 100,
-        "description": "reCAPTCHA container",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
+        "id": "configured-widget",
+        "selector": ".g-recaptcha[data-sitekey]",
+        "confidence": 40,
+        "standalone": true,
+        "description": "Documented widget class with a site-key configuration attribute"
       },
       {
-        "selector": "[data-sitekey]",
-        "confidence": 50,
-        "description": "Site key attribute",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
-      },
-      {
-        "selector": "iframe[src*='recaptcha']",
-        "confidence": 100,
-        "description": "reCAPTCHA iframe",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
+        "id": "google-frame",
+        "selector": "iframe[src^='https://www.google.com/recaptcha/'], iframe[src^='https://recaptcha.google.com/recaptcha/'], iframe[src^='https://www.recaptcha.net/recaptcha/']",
+        "confidence": 60,
+        "standalone": true,
+        "description": "Frame in the authority-safe reCAPTCHA namespace documented by Google's CSP guidance and alternative-host FAQ"
       }
     ],
     "window": [
       {
-        "path": "grecaptcha",
-        "condition": "typeof object",
-        "confidence": 100,
-        "description": "Google reCAPTCHA main object"
-      },
-      {
-        "path": "grecaptcha.ready",
+        "id": "standard-render-api",
+        "path": "grecaptcha.render",
         "condition": "typeof function",
-        "confidence": 100,
-        "description": "reCAPTCHA ready function"
+        "confidence": 10,
+        "standalone": false,
+        "description": "Compatible render API presence only, not vendor identity or execution"
       },
       {
+        "id": "standard-execute-api",
         "path": "grecaptcha.execute",
         "condition": "typeof function",
-        "confidence": 100,
-        "description": "reCAPTCHA execute function"
+        "confidence": 10,
+        "standalone": false,
+        "description": "Compatible execute API presence only, not vendor identity or execution"
       },
       {
-        "path": "___grecaptcha_cfg",
-        "condition": "typeof object",
-        "confidence": 100,
-        "description": "reCAPTCHA configuration object"
+        "id": "enterprise-render-api",
+        "path": "grecaptcha.enterprise.render",
+        "condition": "typeof function",
+        "confidence": 10,
+        "standalone": false,
+        "description": "Documented Enterprise render API presence, requires Google resource corroboration"
+      },
+      {
+        "id": "enterprise-execute-api",
+        "path": "grecaptcha.enterprise.execute",
+        "condition": "typeof function",
+        "confidence": 10,
+        "standalone": false,
+        "description": "Documented Enterprise execute API presence, not execution or assessment success"
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "sdk-configured-widget",
+      "name": "Official SDK with configured widget",
+      "when": { "all": [{ "pattern": "google-sdk" }, { "pattern": "configured-widget" }] },
+      "confidence": 70
+    },
+    {
+      "id": "configured-score-sdk-api",
+      "name": "Site-key SDK with compatible score API",
+      "when": { "any": [{ "all": [{ "pattern": "configured-sdk" }, { "pattern": "standard-execute-api" }] }, { "all": [{ "pattern": "configured-enterprise-sdk" }, { "pattern": "enterprise-execute-api" }] }] },
+      "confidence": 80
+    },
+    {
+      "id": "sdk-runtime-frame",
+      "name": "Official loader, gstatic runtime and a reCAPTCHA frame request",
+      "when": { "all": [{ "pattern": "google-sdk" }, { "pattern": "google-runtime" }, { "any": [{ "pattern": "google-frame" }, { "pattern": "google-frame-request" }] }] },
+      "confidence": 85
+    },
+    {
+      "id": "sdk-widget-api",
+      "name": "Official SDK, configured widget and compatible API",
+      "when": { "all": [{ "pattern": "google-sdk" }, { "pattern": "configured-widget" }, { "any": [{ "pattern": "standard-render-api" }, { "pattern": "standard-execute-api" }, { "pattern": "enterprise-render-api" }, { "pattern": "enterprise-execute-api" }] }] },
+      "confidence": 90
+    },
+    {
+      "id": "sdk-widget-frame-api",
+      "name": "Official SDK, configured widget, Google frame and compatible API",
+      "when": { "all": [{ "pattern": "google-sdk" }, { "pattern": "configured-widget" }, { "pattern": "google-frame" }, { "any": [{ "pattern": "standard-render-api" }, { "pattern": "standard-execute-api" }, { "pattern": "enterprise-render-api" }, { "pattern": "enterprise-execute-api" }] }] },
+      "confidence": 95
+    }
+  ]
 }

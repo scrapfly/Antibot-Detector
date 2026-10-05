@@ -59,7 +59,7 @@ class ColorManager {
           if (colorOption.dataset.customColor) {
             this.currentColor = colorOption.dataset.customColor;
             // Parse the color for the picker
-            const rgb = this.hexToRgb(this.currentColor);
+            const rgb = FormatUtils.hexToRgb(this.currentColor);
             if (rgb) {
               this.selectedColor = rgb;
             }
@@ -181,7 +181,7 @@ class ColorManager {
     const bInput = document.querySelector('#bInput');
 
     if (!this.selectedColor) {
-      this.selectedColor = this.hexToRgb(this.currentColor) || { r: 255, g: 0, b: 0 };
+      this.selectedColor = FormatUtils.hexToRgb(this.currentColor) || { r: 255, g: 0, b: 0 };
     }
 
     this.updateColorDisplay(this.selectedColor, colorPreview, rInput, gInput, bInput);
@@ -258,7 +258,7 @@ class ColorManager {
 
     // Initialize selectedColor from current color if not set
     if (!this.selectedColor || !this.selectedColor.r) {
-      this.selectedColor = this.hexToRgb(this.currentColor) || { r: 255, g: 0, b: 0 };
+      this.selectedColor = FormatUtils.hexToRgb(this.currentColor) || { r: 255, g: 0, b: 0 };
     }
 
     // Draw hue strip
@@ -585,20 +585,6 @@ class ColorManager {
     const g = Math.max(0, Math.min(255, Math.round(rgb.g)));
     const b = Math.max(0, Math.min(255, Math.round(rgb.b)));
     return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-  }
-
-  /**
-   * Convert Hex to RGB
-   * @param {string} hex - Hex color value
-   * @returns {Object} RGB color object
-   */
-  hexToRgb(hex) {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : null;
   }
 
   /**

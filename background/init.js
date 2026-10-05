@@ -58,6 +58,7 @@ async function initialize(reason = 'startup', previousVersion = null) {
         if (!isEnabled) {
             for (const tab of tabs) {
                 chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tab.id }).catch(() => {});
+                setBadgeTextColor(tab.id, false, BADGE.COLORS.DISABLED);
                 chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tab.id }).catch(() => {});
             }
         } else {
@@ -97,6 +98,23 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
 // Register periodic update alarm listener once during init
 UpdateManager.setupAlarmListener();
+
+// History retention (auto-delete + 1,000-entry safety cap). Registers its
+// storage/alarm listeners in the worker's first turn and prunes once on every
+// service-worker start.
+HistoryRetention.init();
+
+// When a history write hits the 10 MB storage quota, the detection cache
+// (rebuilt on the next visit) gives up space before any history entry does.
+HistoryStore.setQuotaRelief(() => DetectionEngineManager.shedStoredDetections());
+
+// In-page notices are drawn by the worker: load the chosen UI language (and
+// follow changes) so their text matches the popup.
+I18n.syncOverrideFromStorage();
+
+// Detection cache retention: expired entries out, 500-entry cap. Prunes on
+// every service-worker start and hourly through chrome.alarms.
+DetectionCacheRetention.init();
 
 
 chrome.runtime.onStartup.addListener(async () => {

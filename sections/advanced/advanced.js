@@ -3,70 +3,81 @@
     'recaptcha': {
       name: 'ReCaptchaAdvanced',
       file: 'ReCaptcha/ReCaptchaAdvanced.js',
-      displayName: 'reCAPTCHA Detection Tools',
+      productName: 'reCAPTCHA',
       icon: '🔴'
     },
     'akamai': {
       name: 'AkamaiAdvanced',
       file: 'Akamai/AkamaiAdvanced.js',
-      displayName: 'Akamai Bot Manager Tools',
+      productName: 'Akamai Bot Manager',
       icon: '🔷'
     },
     'shapesecurity': {
       name: 'ShapeSecurityAdvanced',
       file: 'shapesecurity/shapesecurity-advanced.js',
-      displayName: 'Shape Security Tools',
+      productName: 'Shape Security',
       icon: '🔶'
     },
     'incapsula': {
       name: 'ImpervaAdvanced',
       file: 'imperva/imperva-advanced.js',
-      displayName: 'Imperva/Incapsula Tools',
+      productName: 'Imperva/Incapsula',
       icon: '🔷'
     },
     'aws-waf': {
       name: 'AwsWafAdvanced',
       file: 'awswaf/awswaf-advanced.js',
-      displayName: 'AWS WAF Tools',
+      productName: 'AWS WAF',
       icon: '🟠'
     },
     'geetest': {
       name: 'GeetestAdvanced',
       file: 'geetest/geetest-advanced.js',
-      displayName: 'GeeTest Tools',
+      productName: 'GeeTest',
       icon: '🟣'
     },
     'datadome': {
       name: 'DataDomeAdvanced',
       file: 'datadome/datadome-advanced.js',
-      displayName: 'DataDome Tools',
+      productName: 'DataDome',
       icon: '🟢'
     },
     'cloudflare': {
       name: 'CloudflareAdvanced',
       file: 'cloudflare/cloudflare-advanced.js',
-      displayName: 'Cloudflare Tools',
+      productName: 'Cloudflare',
       icon: '🟠'
     },
     'turnstile': {
       name: 'TurnstileAdvanced',
       file: 'turnstile/turnstile-advanced.js',
-      displayName: 'Turnstile Tools',
+      productName: 'Turnstile',
       icon: '🔵'
     },
     'hcaptcha': {
       name: 'HCaptchaAdvanced',
       file: 'hcaptcha/hcaptcha-advanced.js',
-      displayName: 'hCaptcha Tools',
+      productName: 'hCaptcha',
       icon: '🔷'
     },
     'funcaptcha': {
       name: 'FunCaptchaAdvanced',
       file: 'funcaptcha/funcaptcha-advanced.js',
-      displayName: 'FunCaptcha Tools',
+      productName: 'FunCaptcha',
       icon: '🟣'
     },
   };
+
+  /**
+   * Localised "<product> Tools" label for a module entry. The product name
+   * itself is never translated.
+   * @param {{productName:string}} moduleInfo - Entry from AVAILABLE_MODULES
+   * @returns {string}
+   */
+  static toolsDisplayName(moduleInfo) {
+    const name = (moduleInfo && moduleInfo.productName) || '';
+    return (typeof I18n !== 'undefined' && I18n.format('advPanelToolsNameFmt', name)) || `${name} Tools`;
+  }
 
   constructor(detectorManager, detectionSection) {
     this.detectorManager = detectorManager;
@@ -86,7 +97,7 @@
    */
   async initialize() {
     await this.loadHTML();
-    Logger.ui('Advanced section initialized');
+    Logger.debug('UI', 'Advanced section initialized');
   }
 
 

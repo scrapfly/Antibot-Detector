@@ -8,7 +8,11 @@
  * NOTE: Many utility functions delegate to Utils.js to avoid duplication.
  */
 
-Logger.ui('[AdvancedUtils] Loading...');
+Logger.debug('UI', '[AdvancedUtils] Loading...');
+
+/** i18n lookups with an inline English fallback (I18n may be absent in tests). */
+const _advUtilsTr = (key, fallback) => (typeof I18n !== 'undefined' && I18n.get(key)) || fallback;
+const _advUtilsFmt = (key, fallback, ...args) => (typeof I18n !== 'undefined' && I18n.format(key, ...args)) || fallback;
 
 const AdvancedUtils = {
     /**
@@ -57,10 +61,10 @@ const AdvancedUtils = {
      */
     showConfirmationModal(options = {}) {
         const {
-            title = 'Confirm Action',
-            message = 'Are you sure?',
-            confirmText = 'Confirm',
-            cancelText = 'Cancel',
+            title = _advUtilsTr('advPanelConfirmAction', 'Confirm Action'),
+            message = _advUtilsTr('notifConfirmMessageDefault', 'Are you sure?'),
+            confirmText = _advUtilsTr('advPanelBtnConfirm', 'Confirm'),
+            cancelText = _advUtilsTr('btnCancel', 'Cancel'),
             confirmClass = 'danger' // 'danger', 'primary', 'success'
         } = options;
 
@@ -213,8 +217,8 @@ const AdvancedUtils = {
     async copyToClipboard(text, button = null, options = {}) {
         return FormatUtils.copyToClipboard(text, {
             element: button,
-            notificationMessage: options.notificationMessage || 'Copied to clipboard',
-            inlineMessage: options.inlineMessage || '✓ Copied!',
+            notificationMessage: options.notificationMessage || _advUtilsTr('advPanelCopiedToClipboard', 'Copied to clipboard'),
+            inlineMessage: options.inlineMessage || _advUtilsTr('copiedInlineMsg', '✓ Copied!'),
             revertDelay: options.revertDelay || 1600,
             notify: options.notify !== undefined ? options.notify : true
         });
@@ -240,22 +244,6 @@ const AdvancedUtils = {
                 reject(error);
             }
         });
-    },
-
-    /**
-     * Show capture start notification with Scrapfly logo
-     * @param {string} moduleName - Name of the module (e.g., 'reCAPTCHA', 'Akamai')
-     * @returns {Promise<void>}
-     */
-    async showCaptureStartNotification(moduleName) {
-        const logoUrl = chrome.runtime.getURL('icons/icon128.png');
-        const message = `${moduleName} monitoring started. Reload the page to begin capture.`;
-
-        // Show notification with logo
-        NotificationHelper.info(message);
-
-        // Optionally show in-page notification with logo for better UX
-        // This creates a branded notification experience
     },
 
     /**
@@ -289,31 +277,31 @@ const AdvancedUtils = {
          * @param {string} moduleName - Name of the module (e.g., "Shape Security")
          * @returns {string} Notification message
          */
-        moduleLoaded: (moduleName) => `${moduleName} tools loaded`,
+        moduleLoaded: (moduleName) => _advUtilsFmt('advPanelToolsLoadedFmt', `${moduleName} tools loaded`, moduleName),
 
         /**
          * Check cookies operation notifications
          */
         checkCookies: {
-            success: (count, total) => `Found ${count}/${total} cookies`,
-            none: (moduleName) => `No ${moduleName} cookies found`
+            success: (count, total) => _advUtilsFmt('advPanelCookiesFoundFmt', `Found ${count}/${total} cookies`, count, total),
+            none: (moduleName) => _advUtilsFmt('advCommonNoCookiesFmt', `No ${moduleName} cookies found`, moduleName)
         },
 
         /**
          * Analyze/Extract scripts operation notifications
          */
         analyzeScripts: {
-            start: (moduleName) => `Analyzing ${moduleName} scripts... Page will reload`,
-            success: (count) => `Found ${count} script${count !== 1 ? 's' : ''}`,
-            none: (moduleName) => `No ${moduleName} scripts found`
+            start: (moduleName) => _advUtilsFmt('advCommonAnalyzingReloadFmt', `Analyzing ${moduleName} scripts... Page will reload`, moduleName),
+            success: (count) => _advUtilsFmt('advPanelScriptsFoundFmt', `Scripts found: ${count}`, count),
+            none: (moduleName) => _advUtilsFmt('advPanelNoScriptsFmt', `No ${moduleName} scripts found`, moduleName)
         },
 
         /**
          * Check version operation notifications
          */
         checkVersion: {
-            success: (moduleName, version) => `${moduleName} version detected: ${version}`,
-            none: (moduleName) => `No ${moduleName} version detected`
+            success: (moduleName, version) => _advUtilsFmt('advPanelVersionDetectedFmt', `${moduleName} version detected: ${version}`, moduleName, version),
+            none: (moduleName) => _advUtilsFmt('advPanelNoVersionFmt', `No ${moduleName} version detected`, moduleName)
         }
     }
 };
@@ -321,7 +309,7 @@ const AdvancedUtils = {
 // Export to window
 if (typeof window !== 'undefined') {
     window.AdvancedUtils = AdvancedUtils;
-    Logger.ui('[AdvancedUtils] Loaded and exported to window.AdvancedUtils');
+    Logger.debug('UI', '[AdvancedUtils] Loaded and exported to window.AdvancedUtils');
 
     // CSP-compliant global event delegation for copy-value elements
     document.addEventListener('click', (e) => {
@@ -329,7 +317,7 @@ if (typeof window !== 'undefined') {
         if (copyEl) {
             e.stopPropagation();
             const value = copyEl.dataset.copy;
-            const message = copyEl.dataset.copyMessage || 'Copied';
+            const message = copyEl.dataset.copyMessage || _advUtilsTr('copiedNotification', 'Copied');
             AdvancedUtils.copyToClipboard(value, copyEl, { notificationMessage: message });
         }
     });

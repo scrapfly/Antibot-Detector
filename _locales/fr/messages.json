@@ -1,6 +1,84 @@
 {
+  "advToolReloadScriptsHint": { "message": "Recharger la page pour analyser les scripts de protection" },
+  "advToolResetScriptsHint": { "message": "Réinitialiser les cookies de protection et recharger pour analyser les scripts" },
+  "advToolReloadVersionHint": { "message": "Recharger la page pour détecter la version de la protection" },
+  "advToolCaptureResetHint": { "message": "Réinitialiser le cookie de protection et démarrer l’enregistrement" },
+  "advToolCookiesHint": { "message": "Inspecter les cookies utilisés par cette protection" },
+  "advToolVersionHint": { "message": "Consulter les informations de version disponibles" },
+  "advToolSiteKeyHint": { "message": "Trouver la clé de site du CAPTCHA sur cette page" },
+  "advToolSelectorHint": { "message": "Trouver un sélecteur pour le widget CAPTCHA" },
+  "advToolCallbackHint": { "message": "Inspecter les fonctions de rappel du CAPTCHA" },
+  "advToolSensorHint": { "message": "Réinitialiser les cookies de protection et recharger pour enregistrer les données du capteur" },
+  "advToolCaptureHint": { "message": "Enregistrer les données de cette page" },
+  "advToolStopCaptureHint": { "message": "Arrêter l’enregistrement des données de cette page" },
+  "advToolWorking": { "message": "Traitement en cours…" },
+  "advToolActionFailedFmt": { "message": "Impossible de terminer cette action : {0}", "description": "Advanced tool action failure. {0} = error details" },
+  "statsChartPrevious": { "message": "Page précédente du graphique" },
+  "statsChartNext": { "message": "Page suivante du graphique" },
+  "statsChartPage": { "message": "Page {0} sur {1}" },
+  "statsChartShowing": { "message": "Affichage de {0}–{1} sur {2}" },
+  "statsSectionsLabel": { "message": "Sections des statistiques" },
+  "statsSectionOverview": { "message": "Vue d’ensemble" },
+  "statsSectionActivity": { "message": "Activité" },
+  "statsSectionProtections": { "message": "Protections" },
+  "statsSectionDomains": { "message": "Domaines" },
+  "statsSectionConfidence": { "message": "Confiance" },
+  "statsExportCSV": { "message": "Exporter en CSV" },
+  "statsExportJSON": { "message": "Exporter en JSON" },
+  "statsExportPrivacy": { "message": "Les exports contiennent des domaines et des résumés de détection, sans cookies, contenu des pages ni paramètres d’URL." },
+  "statsExportScopeFmt": { "message": "Exporter la période sélectionnée : {0} entrées" },
+  "statsExportStartedFmt": { "message": "Téléchargement lancé : {0}" },
+  "statsExportFailed": { "message": "Impossible d’exporter les données. Veuillez réessayer." },
+  "statsLoadFailed": { "message": "Impossible de charger l’historique. Veuillez recharger cette page." },
+  "statsRangeEmptyTitle": { "message": "Aucune entrée sur cette période" },
+  "statsRangeEmptyDesc": { "message": "Choisissez une période plus longue pour explorer votre historique enregistré." },
+  "statsDetectionRate": { "message": "Entrées avec détections" },
+  "statsActiveDays": { "message": "Jours actifs" },
+  "statsAverageConfidence": { "message": "Confiance moyenne" },
+  "statsDailyVisits": { "message": "Entrées quotidiennes de l’historique" },
+  "statsActivityCalendar": { "message": "Calendrier d’activité" },
+  "statsActivityCalendarHint": { "message": "Chaque carré représente un jour du calendrier local. Un bleu plus foncé indique davantage d’entrées enregistrées." },
+  "statsHourlyActivity": { "message": "Activité par heure" },
+  "statsWeekdayActivity": { "message": "Activité par jour de la semaine" },
+  "statsLocalTimeNote": { "message": "Les dates et les heures utilisent votre fuseau horaire local." },
+  "statsTimelineLimitFmt": { "message": "Les {0} derniers jours sont affichés. Les totaux et les exports couvrent toute la période sélectionnée." },
+  "statsProtectionRanking": { "message": "Classement des protections" },
+  "statsCategoryTrend": { "message": "Évolution des catégories" },
+  "statsCategoryOverlap": { "message": "Catégories détectées ensemble" },
+  "statsCategoryOverlapHint": { "message": "Nombre d’entrées de l’historique avec les deux catégories. Les cellules diagonales indiquent les entrées avec cette catégorie." },
+  "statsProtectionDetails": { "message": "Toutes les protections" },
+  "statsDomainRanking": { "message": "Classement des domaines" },
+  "statsDomainMap": { "message": "Visites et détections" },
+  "statsDomainMapHint": { "message": "Chaque point représente un domaine. Les points plus grands ont davantage de protections distinctes." },
+  "statsDomainDetails": { "message": "Tous les domaines" },
+  "statsDomainSearch": { "message": "Rechercher des domaines..." },
+  "statsDomainSortLabel": { "message": "Trier les domaines" },
+  "statsSortVisits": { "message": "Le plus de visites" },
+  "statsSortDetections": { "message": "Le plus de détections" },
+  "statsSortConfidence": { "message": "Confiance la plus élevée" },
+  "statsSortName": { "message": "Nom de domaine" },
+  "statsConfidenceDistribution": { "message": "Distribution de la confiance" },
+  "statsConfidenceTrend": { "message": "Évolution de la confiance" },
+  "statsCategoryConfidence": { "message": "Confiance par catégorie" },
+  "statsConfidenceNote": { "message": "La confiance décrit la solidité des indices de détection enregistrés, sans prouver la présence de fingerprinting ou d’un défi actif." },
+  "statsConfidenceKnownFmt": { "message": "{0} détections ont des valeurs de confiance ; {1} n’ont pas de score valide." },
+  "statsProtectionColumn": { "message": "Protection" },
+  "statsCategoryColumn": { "message": "Catégorie" },
+  "statsDomainColumn": { "message": "Domaine" },
+  "statsTableCountFmt": { "message": "{0} lignes sur {1}" },
+  "statsTableMore": { "message": "Afficher plus" },
+  "statsNoMatchingDomains": { "message": "Aucun domaine ne correspond à votre recherche." },
+  "statsSelectionNote": { "message": "Les graphiques et les exports utilisent la période sélectionnée. Les entrées de l’historique représentent les détections enregistrées, pas chaque visite dans le navigateur." },
   "extensionName": {
     "message": "Scrapfly : détecteur anti-bot"
+  },
+  "headerBrandName": {
+    "message": "ScrapFly : détecteur anti-bot",
+    "description": "Brand + product name shown in the popup header (extensionName with the ScrapFly logo capitalisation; the manifest/store name stays extensionName)"
+  },
+  "headerBrandSuffix": {
+    "message": " : détecteur anti-bot",
+    "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
   "extensionDescription": {
     "message": "Détecte les CAPTCHAs, les systèmes anti-bot et les technologies de fingerprinting sur les sites web"
@@ -29,14 +107,17 @@
   "analyzingPage": {
     "message": "Analyse de la page"
   },
+  "detectionScanningTitle": {
+    "message": "Recherche de protections"
+  },
+  "detectionScanningDescription": {
+    "message": "Recherche de signaux de protection."
+  },
+  "detectionScanningHint": {
+    "message": "Les résultats s’afficheront ici une fois prêts."
+  },
   "actionRemoveFromBlacklist": {
     "message": "Retirer de la liste noire"
-  },
-  "advancedDomainBlacklisted": {
-    "message": "Outils avancés désactivés pour ce domaine"
-  },
-  "blacklistManageHint": {
-    "message": "Ou allez dans Paramètres → Détection → Domaines en liste noire pour gérer."
   },
   "statDetections": {
     "message": "Détections"
@@ -137,9 +218,6 @@
   "rulesUpdateTitle": {
     "message": "Vérifier les mises à jour des détecteurs"
   },
-  "rulesClearTitle": {
-    "message": "Effacer toutes les règles"
-  },
   "rulesAddTitle": {
     "message": "Ajouter un nouveau détecteur"
   },
@@ -222,7 +300,7 @@
     "message": "Mode débogage"
   },
   "settingsCardDebugDesc": {
-    "message": "Activer la journalisation console pour le débogage"
+    "message": "Un rapport lisible par page analysée dans la console du service worker"
   },
   "settingsRowLogCollector": {
     "message": "Collecteur de logs"
@@ -320,6 +398,9 @@
   "advancedEmptyCapturesHint": {
     "message": "Utilisez l'onglet Outils pour capturer des données des systèmes détectés"
   },
+  "advancedCapturesStoredNote": {
+    "message": "Les captures sont conservées pendant 30 minutes"
+  },
   "advancedNoResultsTitle": {
     "message": "Aucune capture trouvée"
   },
@@ -360,7 +441,7 @@
     "message": "Les données capturées sont stockées temporairement (30 minutes) avec des capacités d'exportation complètes"
   },
   "advancedFooterHint": {
-    "message": "Les résultats expirent après 30 minutes pour garantir des données fraîches"
+    "message": "Les captures sont conservées pendant 30 minutes."
   },
   "settings": {
     "message": "Paramètres"
@@ -407,24 +488,6 @@
   "timeDaysAgoLongFmt": {
     "message": "il y a {0} jours"
   },
-  "timeOneWeekAgo": {
-    "message": "il y a 1 semaine"
-  },
-  "timeWeeksAgoFmt": {
-    "message": "il y a {0} semaines"
-  },
-  "timeOneMonthAgo": {
-    "message": "il y a 1 mois"
-  },
-  "timeMonthsAgoFmt": {
-    "message": "il y a {0} mois"
-  },
-  "timeOneYearAgo": {
-    "message": "il y a 1 an"
-  },
-  "timeYearsAgoFmt": {
-    "message": "il y a {0} ans"
-  },
   "btnCancelSettings": {
     "message": "Annuler"
   },
@@ -445,6 +508,33 @@
   },
   "tagColors": {
     "message": "Couleurs des tags"
+  },
+  "colorPickerTitle": {
+    "message": "Sélecteur de couleur"
+  },
+  "colorPickerArea": {
+    "message": "Saturation et luminosité"
+  },
+  "colorPickerSaturation": {
+    "message": "Saturation"
+  },
+  "colorPickerBrightness": {
+    "message": "Luminosité"
+  },
+  "colorPickerHue": {
+    "message": "Teinte"
+  },
+  "colorPickerRed": {
+    "message": "Rouge"
+  },
+  "colorPickerGreen": {
+    "message": "Vert"
+  },
+  "colorPickerBlue": {
+    "message": "Bleu"
+  },
+  "colorPickerPresets": {
+    "message": "Couleurs prédéfinies"
   },
   "cacheConfiguration": {
     "message": "Configuration du cache"
@@ -475,6 +565,14 @@
   },
   "ruleMethodSettings": {
     "message": "Paramètres de méthode de détection"
+  },
+  "methodSettingsTitleFmt": {
+    "message": "{0} · Paramètres : {1}",
+    "description": "Method Settings modal title. {0} = detector name, {1} = readable detection method name (e.g. Headers)"
+  },
+  "methodSettingsTitleNoDetectorFmt": {
+    "message": "Paramètres : {0}",
+    "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
   },
   "ruleConfidenceLevel": {
     "message": "Niveau de confiance"
@@ -559,9 +657,6 @@
   },
   "unknownDetection": {
     "message": "Détection inconnue"
-  },
-  "matchSingular": {
-    "message": "correspondance"
   },
   "matchPlural": {
     "message": "correspondances"
@@ -707,15 +802,6 @@
   "failedSaveSettingsFmt": {
     "message": "Échec de l'enregistrement des paramètres : {0}"
   },
-  "settingsResetToast": {
-    "message": "Paramètres réinitialisés"
-  },
-  "dataClearedReloadNotice": {
-    "message": "Toutes les données ont été effacées avec succès ! L'extension va se recharger."
-  },
-  "failedClearDataFmt": {
-    "message": "Échec de l'effacement des données : {0}"
-  },
   "failedExportLogs": {
     "message": "Échec de l'exportation des journaux"
   },
@@ -764,8 +850,8 @@
   "importDetectorsTitle": {
     "message": "Importer des détecteurs"
   },
-  "importMergeQuestion": {
-    "message": "Voulez-vous fusionner avec les détecteurs existants ?"
+  "importDetectorsModeMessage": {
+    "message": "« Fusionner » ajoute les détecteurs importés aux vôtres.<br>« Tout remplacer » supprime d'abord vos détecteurs personnalisés ; les détecteurs intégrés sont conservés."
   },
   "mergeOption": {
     "message": "Fusionner"
@@ -790,9 +876,6 @@
   },
   "detectorDeletedFmt": {
     "message": "« {0} » supprimé"
-  },
-  "allDetectorsCleared": {
-    "message": "Tous les détecteurs ont été supprimés"
   },
   "failedClearDetectors": {
     "message": "Échec de la suppression des détecteurs"
@@ -842,29 +925,11 @@
   "importHistoryTitle": {
     "message": "Importer l'historique"
   },
-  "importHistoryMessageFmt": {
-    "message": "Importer {0} éléments d'historique ? L'historique actuel contient {1} éléments."
-  },
   "replaceOption": {
     "message": "Remplacer"
   },
-  "settingsResetTitle": {
-    "message": "Réinitialiser les paramètres"
-  },
-  "settingsResetMessage": {
-    "message": "Êtes-vous sûr de vouloir réinitialiser tous les paramètres à leurs valeurs par défaut ? Cette action est irréversible."
-  },
-  "btnReset": {
-    "message": "Réinitialiser"
-  },
-  "clearAllDataTitle": {
-    "message": "Effacer toutes les données"
-  },
-  "clearAllDataMessage": {
-    "message": "Êtes-vous sûr de vouloir effacer TOUTES les données de l'extension ? Cela supprimera :<br><br>• Tout l'historique des détections<br>• Toutes les règles de détecteurs<br>• Tous les paramètres<br><br>Cette action est irréversible !"
-  },
-  "clearEverythingBtn": {
-    "message": "Tout effacer"
+  "importHistoryModeMessageFmt": {
+    "message": "Importer {0} éléments d'historique ? Votre historique actuel en contient {1}.<br>« Fusionner » y ajoute les nouveaux éléments. « Remplacer » le supprime d'abord."
   },
   "clearLogsTitle": {
     "message": "Vider les journaux"
@@ -889,15 +954,6 @@
   },
   "updateServiceNotAvailable": {
     "message": "Service de mise à jour indisponible"
-  },
-  "clearAllDetectorsTitle": {
-    "message": "Supprimer tous les détecteurs"
-  },
-  "clearAllDetectorsMessage": {
-    "message": "Cela supprimera TOUS les détecteurs. Êtes-vous sûr ?"
-  },
-  "clearingAllDetectors": {
-    "message": "Suppression de tous les détecteurs..."
   },
   "deleteDetectorTitle": {
     "message": "Supprimer le détecteur"
@@ -974,6 +1030,57 @@
   "settingsContentTypeDesc": {
     "message": "En-tête HTTP de type de contenu"
   },
+  "webhookCtHintJson": {
+    "message": "Le modèle en JSON, avec les variables remplacées."
+  },
+  "webhookCtHintForm": {
+    "message": "Champs du modèle en paires clé=valeur ; imbriqués en detections[0][name]."
+  },
+  "webhookCtHintMultipart": {
+    "message": "Champs du modèle en parties form-data ; le navigateur fixe la boundary."
+  },
+  "webhookCtHintText": {
+    "message": "Le texte du modèle tel quel, avec les variables remplacées."
+  },
+  "webhookCtHintXml": {
+    "message": "Champs du modèle en document XML <webhook> ; détections en éléments répétés."
+  },
+  "webhookCtHintCsv": {
+    "message": "Une ligne d’en-tête, puis une ligne par détection avec les champs de la page répétés."
+  },
+  "webhookCtHintNdjson": {
+    "message": "Un objet JSON par ligne : une ligne par détection, avec les champs de la page."
+  },
+  "webhookCtHintCustom": {
+    "message": "Votre propre Content-Type (type/sous-type) ; le corps est envoyé en JSON."
+  },
+  "webhookCtCustom": {
+    "message": "Personnalisé"
+  },
+  "webhookCtCustomLabel": {
+    "message": "Content-Type personnalisé"
+  },
+  "webhookCtInvalid": {
+    "message": "Saisissez un type/sous-type, p. ex. application/vnd.example+json"
+  },
+  "webhookAddHeader": {
+    "message": "Ajouter un en-tête"
+  },
+  "webhookNoHeaders": {
+    "message": "Aucun en-tête personnalisé"
+  },
+  "webhookHeaderName": {
+    "message": "Nom de l’en-tête"
+  },
+  "webhookHeaderValue": {
+    "message": "Valeur de l’en-tête"
+  },
+  "webhookRemoveHeader": {
+    "message": "Supprimer l’en-tête"
+  },
+  "webhookSending": {
+    "message": "Envoi..."
+  },
   "settingsCustomHeaders": {
     "message": "En-têtes personnalisés"
   },
@@ -984,7 +1091,58 @@
     "message": "Modèle de charge utile"
   },
   "settingsPayloadTemplateDesc": {
-    "message": "Utilisez les variables : <SITEURL>, <HOSTNAME>, <TITLE>, <FAVICON>, <DETECTIONS>, <TIMESTAMP>, <DETECTION_COUNT>, <CATEGORIES>"
+    "message": "Corps envoyé avec chaque webhook. Cliquez sur une variable pour l’insérer."
+  },
+  "webhookVarsTitle": {
+    "message": "Variables du modèle"
+  },
+  "webhookVarsIntro": {
+    "message": "Remplacées par les valeurs de la page à l’envoi du webhook."
+  },
+  "webhookVarsInsertLabel": {
+    "message": "Insérer une variable"
+  },
+  "webhookVarsInsertFmt": {
+    "message": "Insérer {0}"
+  },
+  "webhookVarsCopyFmt": {
+    "message": "Copier {0}"
+  },
+  "webhookVarsExample": {
+    "message": "Exemple"
+  },
+  "webhookVarSiteUrl": {
+    "message": "URL complète de la page"
+  },
+  "webhookVarHostname": {
+    "message": "Nom d’hôte de la page"
+  },
+  "webhookVarTitle": {
+    "message": "Titre de la page"
+  },
+  "webhookVarFavicon": {
+    "message": "URL du favicon du site"
+  },
+  "webhookVarDetections": {
+    "message": "Détections sous forme de tableau JSON"
+  },
+  "webhookVarTimestamp": {
+    "message": "Heure de la détection (ISO 8601)"
+  },
+  "webhookVarDetectionCount": {
+    "message": "Nombre de détections"
+  },
+  "webhookVarCategories": {
+    "message": "Catégories détectées, séparées par des virgules"
+  },
+  "webhookJsonValid": {
+    "message": "JSON valide"
+  },
+  "webhookJsonInvalidFmt": {
+    "message": "JSON invalide (ligne {0})"
+  },
+  "webhookResetTemplate": {
+    "message": "Réinitialiser le modèle"
   },
   "settingsTestWebhook": {
     "message": "Tester le webhook"
@@ -1005,10 +1163,7 @@
     "message": "Limite de l'historique"
   },
   "settingsHistoryLimitNote": {
-    "message": "(0 = illimité)"
-  },
-  "settingsAutoClearDays": {
-    "message": "Effacement automatique (jours)"
+    "message": "(0 = limite de sécurité de 1 000 entrées)"
   },
   "settingsExportFormat": {
     "message": "Format d'exportation"
@@ -1125,7 +1280,7 @@
     "message": "Exporter l'historique"
   },
   "settingsAvailableEvents": {
-    "message": "Événements disponibles :"
+    "message": "Événements disponibles"
   },
   "settingsApiEventReady": {
     "message": "Extension chargée et initialisée"
@@ -1149,7 +1304,7 @@
     "message": "Une erreur de détection s'est produite"
   },
   "settingsUsageExample": {
-    "message": "Exemple d'utilisation :"
+    "message": "Exemple d'utilisation"
   },
   "detectionDisabledForDomain": {
     "message": "Détection désactivée pour ce domaine"
@@ -1202,6 +1357,9 @@
   "detectionTitleBlockDomain": {
     "message": "Bloquer ce domaine"
   },
+  "detectionStatSite": {
+    "message": "SITE"
+  },
   "detectionStatDetections": {
     "message": "DÉTECTIONS"
   },
@@ -1234,9 +1392,6 @@
   },
   "detectionModalDifficulty": {
     "message": "Difficulté"
-  },
-  "detectionModalMatchesFound": {
-    "message": "Correspondances trouvées"
   },
   "detectionModalAuthor": {
     "message": "Auteur"
@@ -1421,44 +1576,11 @@
   "rulesDomSelectorHelper": {
     "message": "Assistant de sélecteur DOM"
   },
-  "rulesStartTypingSuggestions": {
-    "message": "Commencez à taper pour voir des suggestions"
-  },
   "rulesUseSelectorBtn": {
     "message": "Utiliser le sélecteur"
   },
   "rulesWindowPropertiesHelper": {
     "message": "Assistant de propriétés de fenêtre"
-  },
-  "rulesStepEnterKeyword": {
-    "message": "Saisir un mot-clé"
-  },
-  "rulesStepChooseProperty": {
-    "message": "Choisir une propriété"
-  },
-  "rulesStepSelectCondition": {
-    "message": "Sélectionner une condition"
-  },
-  "rulesConditionExists": {
-    "message": "Existe"
-  },
-  "rulesConditionGroupType": {
-    "message": "Type"
-  },
-  "rulesTypeofObject": {
-    "message": "Object"
-  },
-  "rulesTypeofFunction": {
-    "message": "Function"
-  },
-  "rulesTypeofString": {
-    "message": "String"
-  },
-  "rulesTypeofNumber": {
-    "message": "Number"
-  },
-  "rulesTypeofBoolean": {
-    "message": "Boolean"
   },
   "notifConfirmTitleDefault": {
     "message": "Confirmer"
@@ -1468,12 +1590,6 @@
   },
   "notifLoadingDefault": {
     "message": "Chargement..."
-  },
-  "helperPatternStartTypingSuggestions": {
-    "message": "Commencez à taper ci-dessus pour voir des suggestions..."
-  },
-  "helperPatternStartTypingExamples": {
-    "message": "Commencez à taper ci-dessus pour voir des exemples..."
   },
   "helpJsHooksTitle": {
     "message": "Détection par hooks JavaScript"
@@ -1587,13 +1703,10 @@
     "message": "Cliquez sur « Démarrer la capture » ci-dessus pour commencer à capturer les données {0}"
   },
   "advancedToolsHeading": {
-    "message": "Outils de détection avancés"
+    "message": "Outils de capture"
   },
   "advancedToolsSubtitle": {
-    "message": "Capturer et analyser les systèmes de protection"
-  },
-  "advancedToolsHelpTitle": {
-    "message": "Aide"
+    "message": "Choisissez une protection pour ouvrir ses outils."
   },
   "advancedToolsStepSelect": {
     "message": "Sélectionner une détection"
@@ -1601,11 +1714,8 @@
   "advancedToolsChooseDetection": {
     "message": "Choisissez une détection..."
   },
-  "advancedToolsStepLoadUse": {
-    "message": "Charger et utiliser les outils"
-  },
   "advancedToolsLoadTools": {
-    "message": "Charger les outils"
+    "message": "Ouvrir les outils"
   },
   "advancedToolsClearAll": {
     "message": "Tout effacer"
@@ -1631,9 +1741,6 @@
   "settingsLanguageAuto": {
     "message": "Utiliser la langue du navigateur"
   },
-  "copiedJsonNotification": {
-    "message": "JSON copié"
-  },
   "detectionEmptyTitle": {
     "message": "Rien détecté"
   },
@@ -1658,19 +1765,2158 @@
   "rulesModalDetectorLabel": {
     "message": "Règle de détection"
   },
-  "rulesAuthorHelpHint": {
-    "message": "Qui a créé ce détecteur"
+  "rulesMoreActions": {
+    "message": "Plus d'actions"
   },
-  "rulesWindowConditionExamplesTitle": {
-    "message": "Exemples de conditions window"
+  "advancedToolsNoDetections": {
+    "message": "Aucune détection prise en charge sur cette page"
   },
-  "rulesWindowConditionExamplesHint": {
-    "message": "Cliquez sur un exemple pour l'utiliser :"
+  "advancedToolsEmptyTitle": {
+    "message": "Aucun outil disponible"
   },
-  "rulesBtnNextFmt": {
-    "message": "Suivant : {0}"
+  "advancedToolsEmptyDesc": {
+    "message": "Aucune protection prise en charge n’a été trouvée sur cette page. Les outils apparaîtront ici automatiquement dès qu’une protection sera détectée."
   },
-  "rulesUsePropertyBtn": {
-    "message": "Utiliser la propriété"
+  "advancedToolsSupportedLabel": {
+    "message": "Protections prises en charge"
+  },
+  "advancedToolsOpenHistoryFmt": {
+    "message": "Voir l’historique des captures ({0})"
+  },
+  "detectionMethodJsHooks": {
+    "message": "Intercepteurs JavaScript"
+  },
+  "detectionMethodContent": {
+    "message": "Contenu"
+  },
+  "detectionMethodWindow": {
+    "message": "Propriétés de la fenêtre"
+  },
+  "detectionMethodDom": {
+    "message": "Dom"
+  },
+  "detectionMethodHeaders": {
+    "message": "En-têtes"
+  },
+  "detectionMethodCookies": {
+    "message": "Cookies"
+  },
+  "detectionMethodUrl": {
+    "message": "Url"
+  },
+  "detectionMethodPayload": {
+    "message": "Charge utile"
+  },
+  "detectionEnableBtn": {
+    "message": "Activer la détection"
+  },
+  "historyMoreActions": {
+    "message": "Plus d'actions"
+  },
+  "historyCopyEntryTitle": {
+    "message": "Copier les données"
+  },
+  "settingsHistoryAutoDelete": {
+    "message": "Suppression automatique"
+  },
+  "settingsHistoryAutoDeleteDesc": {
+    "message": "Supprime régulièrement les anciennes entrées de l’historique."
+  },
+  "settingsHistoryAutoDeleteOlderThan": {
+    "message": "Supprimer les éléments de plus de"
+  },
+  "settingsCacheDurationRangeFmt": {
+    "message": "Plage autorisée : 1–{0} {1}. Choisissez une unité plus grande pour des périodes plus longues."
+  },
+  "settingsCacheDurationRangeMaxFmt": {
+    "message": "Plage autorisée : 1–{0} {1}."
+  },
+  "settingsCacheDurationUnitNote": {
+    "message": "Un mois compte 30 jours ; une année, 365 jours."
+  },
+  "timeUnitMonths": {
+    "message": "Mois"
+  },
+  "timeUnitYears": {
+    "message": "Années"
+  },
+  "settingsHistoryStatsTitle": {
+    "message": "Statistiques de l’historique"
+  },
+  "settingsHistoryStatsDesc": {
+    "message": "Consultez des statistiques privées calculées localement à partir de l’historique des détections."
+  },
+  "settingsOpenStats": {
+    "message": "Ouvrir les statistiques"
+  },
+  "settingsExportedToast": {
+    "message": "Paramètres exportés"
+  },
+  "settingsExportFailedToast": {
+    "message": "Échec de l’exportation des paramètres"
+  },
+  "settingsImportedToast": {
+    "message": "Paramètres importés"
+  },
+  "settingsImportFailedToast": {
+    "message": "Échec de l’importation des paramètres : fichier non valide"
+  },
+  "statsPrivacyNote": {
+    "message": "Calculées localement à partir de l’historique des détections. Rien ne quitte votre navigateur."
+  },
+  "statsSubtitleFmt": {
+    "message": "Calculées localement à partir de {0} entrées de l’historique. Rien ne quitte votre navigateur."
+  },
+  "statsRangeLabel": {
+    "message": "Période"
+  },
+  "statsRange7": {
+    "message": "7 jours"
+  },
+  "statsRange30": {
+    "message": "30 jours"
+  },
+  "statsRange90": {
+    "message": "90 jours"
+  },
+  "statsRangeAll": {
+    "message": "Tout"
+  },
+  "statsEmptyTitle": {
+    "message": "Pas encore d’historique"
+  },
+  "statsEmptyDesc": {
+    "message": "Les statistiques apparaîtront ici dès que des pages avec détections seront enregistrées dans l’historique."
+  },
+  "statsEntries": {
+    "message": "Entrées de l’historique"
+  },
+  "statsUniqueDomains": {
+    "message": "Domaines uniques"
+  },
+  "statsDetections": {
+    "message": "Détections"
+  },
+  "statsDistinctDetectors": {
+    "message": "Protections distinctes"
+  },
+  "statsOverTime": {
+    "message": "Détections dans le temps"
+  },
+  "statsTopProtections": {
+    "message": "Protections les plus détectées"
+  },
+  "statsTopDomains": {
+    "message": "Principaux domaines"
+  },
+  "statsByCategory": {
+    "message": "Par catégorie"
+  },
+  "statsByDifficulty": {
+    "message": "Par difficulté"
+  },
+  "statsPagesUnit": {
+    "message": "pages"
+  },
+  "statsVisitsUnit": {
+    "message": "visites"
+  },
+  "statsDetectionsUnit": {
+    "message": "détections"
+  },
+  "statsCategoryOther": {
+    "message": "Autres"
+  },
+  "statsDifficultyNone": {
+    "message": "Aucune détection"
+  },
+  "statsNoData": {
+    "message": "Aucune donnée sur cette période"
+  },
+  "statsTipPagesFmt": {
+    "message": "{0} pages"
+  },
+  "statsTipDomainsFmt": {
+    "message": "{0} domaines"
+  },
+  "statsTipVisitsFmt": {
+    "message": "{0} visites"
+  },
+  "statsTipDetectionsFmt": {
+    "message": "{0} détections"
+  },
+  "historyCategoryShareFmt": {
+    "message": "{0} sur {1} détections · {2}%"
+  },
+  "statsTipEntriesFmt": {
+    "message": "{0} entrées"
+  },
+  "statsWithDetectionsFmt": {
+    "message": "{0} avec détections"
+  },
+  "statsVisitsPerDomainFmt": {
+    "message": "{0} visites par domaine"
+  },
+  "statsPerEntryFmt": {
+    "message": "{0} par entrée"
+  },
+  "statsAvgConfidenceFmt": {
+    "message": "{0} % de confiance moyenne"
+  },
+  "statsTimelineMetaFmt": {
+    "message": "{0} détections · {1} jours"
+  },
+  "deleteOfficialDetectorNote": {
+    "message": "Ceci est un détecteur officiel Scrapfly. Les mises à jour ne le rétabliront pas ; utilisez « Restaurer les détecteurs officiels » dans le menu … pour le récupérer."
+  },
+  "restoreOfficialDetectors": {
+    "message": "Restaurer les détecteurs officiels"
+  },
+  "officialDetectorsRestoredFmt": {
+    "message": "{0} détecteurs officiels restaurés"
+  },
+  "noOfficialDetectorsToRestore": {
+    "message": "Aucun détecteur officiel n'a été supprimé"
+  },
+  "failedRestoreOfficialDetectors": {
+    "message": "Impossible de restaurer les détecteurs officiels"
+  },
+  "authorReservedError": {
+    "message": "« Scrapfly » est réservé aux détecteurs officiels. Utilisez un autre nom d'auteur."
+  },
+  "ruleFieldAuthorPlaceholder": {
+    "message": "Votre nom"
+  },
+  "clearCustomDetectorsTitle": {
+    "message": "Effacer les détecteurs personnalisés"
+  },
+  "clearCustomDetectorsMessage": {
+    "message": "Cela supprimera tous vos détecteurs personnalisés. Les détecteurs officiels Scrapfly sont conservés (vous pouvez les désactiver). Êtes-vous sûr ?"
+  },
+  "clearingCustomDetectors": {
+    "message": "Suppression des détecteurs personnalisés..."
+  },
+  "customDetectorsClearedFmt": {
+    "message": "{0} détecteurs personnalisés supprimés"
+  },
+  "noCustomDetectorsToClear": {
+    "message": "Aucun détecteur personnalisé à effacer"
+  },
+  "rhSuggestions": {
+    "message": "Suggestions"
+  },
+  "rhResults": {
+    "message": "Résultats"
+  },
+  "rhCustomChip": {
+    "message": "Personnalisé"
+  },
+  "rhUseAsTyped": {
+    "message": "Utiliser tel quel"
+  },
+  "rhNoResultsFmt": {
+    "message": "Aucun résultat pour « {0} »"
+  },
+  "rhNoResultsHint": {
+    "message": "Vous pouvez quand même l’utiliser comme valeur personnalisée."
+  },
+  "rhPreview": {
+    "message": "Aperçu"
+  },
+  "rhSearchWindow": {
+    "message": "Rechercher des propriétés, ex. webdriver, chrome, cdc_"
+  },
+  "rhSearchDom": {
+    "message": "Rechercher des sélecteurs, ex. captcha, iframe"
+  },
+  "rhSearchRegex": {
+    "message": "Texte à trouver, ex. bm_ ou token"
+  },
+  "rhSearchSample": {
+    "message": "Saisissez une valeur à tester"
+  },
+  "rhCondition": {
+    "message": "Condition"
+  },
+  "rhConditionInvalid": {
+    "message": "Condition inconnue"
+  },
+  "rhAddProperty": {
+    "message": "Ajouter la propriété"
+  },
+  "rhChipAutomation": {
+    "message": "Automatisation"
+  },
+  "rhCondGroupType": {
+    "message": "Type"
+  },
+  "rhCondGroupExistence": {
+    "message": "Existence"
+  },
+  "rhCondGroupCollections": {
+    "message": "Collections"
+  },
+  "rhCondGroupNumeric": {
+    "message": "Numérique"
+  },
+  "rhCondGroupString": {
+    "message": "Chaîne"
+  },
+  "rhCondGroupBoolean": {
+    "message": "Booléen"
+  },
+  "rhCondGroupCustom": {
+    "message": "Valeur actuelle"
+  },
+  "rhCondTypeObject": {
+    "message": "est un objet"
+  },
+  "rhCondTypeFunction": {
+    "message": "est une fonction"
+  },
+  "rhCondTypeString": {
+    "message": "est une chaîne"
+  },
+  "rhCondTypeNumber": {
+    "message": "est un nombre"
+  },
+  "rhCondTypeBoolean": {
+    "message": "est un booléen"
+  },
+  "rhCondTypeSymbol": {
+    "message": "est un symbole"
+  },
+  "rhCondTypeBigint": {
+    "message": "est un BigInt"
+  },
+  "rhCondExists": {
+    "message": "existe sur la page"
+  },
+  "rhCondTruthy": {
+    "message": "est vrai (truthy)"
+  },
+  "rhCondFalsy": {
+    "message": "est faux (vide, 0, false ou null)"
+  },
+  "rhCondNotUndefined": {
+    "message": "n'est pas undefined"
+  },
+  "rhCondUndefined": {
+    "message": "est undefined (absent)"
+  },
+  "rhCondNotNull": {
+    "message": "n'est pas null"
+  },
+  "rhCondNull": {
+    "message": "est null"
+  },
+  "rhCondArray": {
+    "message": "est un tableau"
+  },
+  "rhCondNonEmptyArray": {
+    "message": "est un tableau non vide"
+  },
+  "rhCondEmptyArray": {
+    "message": "est un tableau vide"
+  },
+  "rhCondHasLength": {
+    "message": "a une longueur"
+  },
+  "rhCondHasKeys": {
+    "message": "est un objet avec des clés"
+  },
+  "rhCondEmptyObject": {
+    "message": "est un objet vide"
+  },
+  "rhCondGt0": {
+    "message": "est supérieur à 0"
+  },
+  "rhCondGte0": {
+    "message": "vaut 0 ou plus"
+  },
+  "rhCondEq0": {
+    "message": "est égal à 0"
+  },
+  "rhCondNe0": {
+    "message": "n'est pas 0"
+  },
+  "rhCondGt1": {
+    "message": "est supérieur à 1"
+  },
+  "rhCondGte1": {
+    "message": "vaut 1 ou plus"
+  },
+  "rhCondLenGt0": {
+    "message": "n'est pas vide"
+  },
+  "rhCondLenEq0": {
+    "message": "est vide"
+  },
+  "rhCondTrue": {
+    "message": "est true"
+  },
+  "rhCondFalse": {
+    "message": "est false"
+  },
+  "rhWindowIntro": {
+    "message": "Vérifie une variable globale JavaScript de la page (window.…). Choisissez-en une, puis ce qu'elle doit être."
+  },
+  "rhWindowSentenceFmt": {
+    "message": "Détecte les pages où {0} {1}"
+  },
+  "rhChipTemplate": {
+    "message": "Modèle"
+  },
+  "rhDomClass": {
+    "message": "Classe"
+  },
+  "rhDomId": {
+    "message": "ID"
+  },
+  "rhDomData": {
+    "message": "Attribut data"
+  },
+  "rhDomClassContains": {
+    "message": "La classe contient"
+  },
+  "rhDomIdContains": {
+    "message": "L’ID contient"
+  },
+  "rhDomTag": {
+    "message": "Balise HTML"
+  },
+  "rhDomAttr": {
+    "message": "Possède l’attribut"
+  },
+  "rhDomIframe": {
+    "message": "L’URL de l’iframe contient"
+  },
+  "rhDomTitle": {
+    "message": "Le titre contient"
+  },
+  "rhDomAlt": {
+    "message": "Le texte alt contient"
+  },
+  "rhDomCamel": {
+    "message": "Classe en camelCase"
+  },
+  "rhRegexTitle": {
+    "message": "Assistant regex"
+  },
+  "rhUsePattern": {
+    "message": "Utiliser le motif"
+  },
+  "rhRegexStartsFmt": {
+    "message": "Commence par « {0} »"
+  },
+  "rhRegexEndsFmt": {
+    "message": "Se termine par « {0} »"
+  },
+  "rhRegexContainsFmt": {
+    "message": "Contient « {0} » n’importe où"
+  },
+  "rhRegexWordFmt": {
+    "message": "Mot entier « {0} »"
+  },
+  "rhRegexOrFmt": {
+    "message": "« {0} » ou une autre option"
+  },
+  "rhRegexStartsMoreFmt": {
+    "message": "Commence par « {0} » suivi d’autre texte"
+  },
+  "rhRegexEitherFmt": {
+    "message": "« {0} » ou « {1} »"
+  },
+  "rhExamplesForFmt": {
+    "message": "Exemples pour « {0} »"
+  },
+  "rhExamples": {
+    "message": "Exemples"
+  },
+  "rhHowMatchesFmt": {
+    "message": "Comment « {0} » correspond"
+  },
+  "rhQuickRef": {
+    "message": "Aide-mémoire"
+  },
+  "rhRefAny": {
+    "message": "n’importe quel caractère"
+  },
+  "rhRefZeroMore": {
+    "message": "0 ou plus"
+  },
+  "rhRefOneMore": {
+    "message": "1 ou plus"
+  },
+  "rhRefOptional": {
+    "message": "facultatif"
+  },
+  "rhRefStart": {
+    "message": "début"
+  },
+  "rhRefEnd": {
+    "message": "fin"
+  },
+  "rhRefDigit": {
+    "message": "chiffre"
+  },
+  "rhRefWord": {
+    "message": "lettre, chiffre ou _"
+  },
+  "rhRefSpace": {
+    "message": "espace"
+  },
+  "rhRefOr": {
+    "message": "a ou b"
+  },
+  "rhMatch": {
+    "message": "Correspond"
+  },
+  "rhNoMatch": {
+    "message": "Ne correspond pas"
+  },
+  "rhWwIntro": {
+    "message": "Ne correspond que si le texte est isolé, pas au sein d’un mot plus long."
+  },
+  "rhWwExact": {
+    "message": "Mot exact"
+  },
+  "rhWwJoinedBefore": {
+    "message": "Collé au texte qui précède"
+  },
+  "rhWwJoinedAfter": {
+    "message": "Collé au texte qui suit"
+  },
+  "rhWwSpaces": {
+    "message": "Séparé par des espaces"
+  },
+  "rhCsIntro": {
+    "message": "Activé, majuscules et minuscules sont considérées comme différentes."
+  },
+  "rhCsOnTitle": {
+    "message": "Respect de la casse activé"
+  },
+  "rhCsOffTitle": {
+    "message": "Respect de la casse désactivé"
+  },
+  "rhWhatIsRegex": {
+    "message": "Qu’est-ce qu’une expression régulière ?"
+  },
+  "rhWhatIsWholeWord": {
+    "message": "Qu’est-ce que « Mot entier » ?"
+  },
+  "rhWhatIsCase": {
+    "message": "Qu’est-ce que « Respect de la casse » ?"
+  },
+  "rhRegexIntro": {
+    "message": "Une expression régulière (regex) trouve du texte par motif plutôt que par caractères exacts."
+  },
+  "rhWhenToUse": {
+    "message": "Quand l’utiliser"
+  },
+  "rhRegexUse1": {
+    "message": "Un texte qui commence ou finit par quelque chose de précis"
+  },
+  "rhRegexUse2": {
+    "message": "Plusieurs variantes à la fois (avec |)"
+  },
+  "rhRegexUse3": {
+    "message": "Des nombres ou des types de caractères précis"
+  },
+  "rhRegexTip": {
+    "message": "Pour un texte exact, pas besoin de regex : utilisez « Mot entier »."
+  },
+  "rhBestFor": {
+    "message": "Idéal pour"
+  },
+  "rhWwUse1": {
+    "message": "Noms de cookies exacts"
+  },
+  "rhWwUse2": {
+    "message": "Noms d’en-têtes précis"
+  },
+  "rhWwUse3": {
+    "message": "Noms complets de classes ou de fonctions"
+  },
+  "rhCsUse1": {
+    "message": "En-têtes et cookies avec la casse exacte"
+  },
+  "rhCsUse2": {
+    "message": "Noms de propriétés JavaScript"
+  },
+  "settingsApiEventsDesc": {
+    "message": "Événements que l'extension émet sur la page"
+  },
+  "settingsApiUsageDesc": {
+    "message": "Écoutez les événements depuis votre propre script"
+  },
+  "settingsApiCopyCode": {
+    "message": "Copier le code"
+  },
+  "settingsApiCodeCopied": {
+    "message": "Code copié"
+  },
+  "settingsApiEventCopyTitle": {
+    "message": "Copier le nom de l'événement"
+  },
+  "advCommonClickToCopy": {
+    "message": "Cliquer pour copier"
+  },
+  "advCommonClickToCopyFull": {
+    "message": "Cliquer pour copier la valeur complète"
+  },
+  "advCommonDomainLabel": {
+    "message": "Domaine :"
+  },
+  "advCommonCopy": {
+    "message": "Copier"
+  },
+  "advCommonPage": {
+    "message": "Page"
+  },
+  "advCommonExportCode": {
+    "message": "Exporter le code"
+  },
+  "advCommonUrlCopied": {
+    "message": "URL copiée"
+  },
+  "advCommonCaptured": {
+    "message": "Capturé"
+  },
+  "advCommonScript": {
+    "message": "Script"
+  },
+  "advCommonUrl": {
+    "message": "URL"
+  },
+  "advCommonScriptUrl": {
+    "message": "URL du script :"
+  },
+  "advCommonNoCaptureData": {
+    "message": "Aucune donnée de capture disponible"
+  },
+  "advCommonFailedCheckCookiesFmt": {
+    "message": "Impossible de vérifier les cookies : {0}"
+  },
+  "advCommonFailedAnalyzeScriptsFmt": {
+    "message": "Impossible d'analyser les scripts : {0}"
+  },
+  "advCommonFailedStartAnalysis": {
+    "message": "Impossible de lancer l'analyse"
+  },
+  "advCommonFailedCheckVersionFmt": {
+    "message": "Impossible de vérifier la version : {0}"
+  },
+  "advCommonFailedExtractFmt": {
+    "message": "Échec de l'extraction : {0}"
+  },
+  "advCommonFailedStartExtractionFmt": {
+    "message": "Impossible de lancer l'extraction : {0}"
+  },
+  "advCommonFailedOpenExportFmt": {
+    "message": "Impossible d'ouvrir la fenêtre d'export : {0}"
+  },
+  "advCommonNoScriptsToExport": {
+    "message": "Aucun script à exporter"
+  },
+  "advCommonCookiesTitleFmt": {
+    "message": "Cookies {0}"
+  },
+  "advCommonNoCookiesFmt": {
+    "message": "Aucun cookie {0} trouvé"
+  },
+  "advCommonScriptsTitleFmt": {
+    "message": "Scripts {0} ({1})"
+  },
+  "advCommonAnalyzingReloadFmt": {
+    "message": "Analyse des scripts {0}… La page va se recharger"
+  },
+  "advCommonCodeGenUnavailable": {
+    "message": "Génération de code indisponible"
+  },
+  "advCommonCodeGenTitle": {
+    "message": "Générateur de code d'analyse de scripts"
+  },
+  "advCommonExportOptions": {
+    "message": "Options d'export"
+  },
+  "advCommonAllTypes": {
+    "message": "Tous les types"
+  },
+  "advCommonFoundScriptsFmt": {
+    "message": "Scripts pertinents trouvés : {0}"
+  },
+  "advCommonScriptAnalysis": {
+    "message": "Analyse des scripts"
+  },
+  "advCommonTotalScripts": {
+    "message": "Total des scripts :"
+  },
+  "advCommonProtectionLevel": {
+    "message": "Niveau de protection :"
+  },
+  "advCommonCookiesFound": {
+    "message": "Cookies trouvés :"
+  },
+  "advCommonSiteKey": {
+    "message": "Clé de site"
+  },
+  "advCommonWebsiteUrl": {
+    "message": "URL du site web"
+  },
+  "advCommonSiteUrl": {
+    "message": "URL du site"
+  },
+  "advCommonApiDomain": {
+    "message": "Domaine de l'API"
+  },
+  "advCommonFound": {
+    "message": "Trouvé"
+  },
+  "advCommonNotFound": {
+    "message": "Introuvable"
+  },
+  "advCommonRequired": {
+    "message": "Requis"
+  },
+  "advCommonYes": {
+    "message": "Oui"
+  },
+  "advCommonEnterprise": {
+    "message": "Enterprise"
+  },
+  "advCommonStandard": {
+    "message": "Standard"
+  },
+  "advCommonNone": {
+    "message": "Aucun"
+  },
+  "advCodeDescBrowserParseFmt": {
+    "message": "Code pour la console du navigateur qui intercepte et analyse les scripts {0}"
+  },
+  "advCodeDescBrowserFetchFmt": {
+    "message": "Code pour la console du navigateur qui récupère les scripts {0}"
+  },
+  "advCodeDescPythonBs": {
+    "message": "Script Python avec requests et BeautifulSoup"
+  },
+  "advCodeDescPython": {
+    "message": "Script Python avec la bibliothèque requests"
+  },
+  "advCodeDescNodeCheerio": {
+    "message": "Script Node.js avec axios et cheerio"
+  },
+  "advCodeDescNode": {
+    "message": "Script Node.js avec axios"
+  },
+  "advCodeDescPhpDom": {
+    "message": "Script PHP avec cURL et DOMDocument"
+  },
+  "advCodeDescPhp": {
+    "message": "Script PHP avec cURL"
+  },
+  "advCodeDescCsharpHap": {
+    "message": "C# avec HttpClient et HtmlAgilityPack"
+  },
+  "advCodeDescCsharp": {
+    "message": "C# avec HttpClient"
+  },
+  "advCodeDescGoQuery": {
+    "message": "Go avec net/http et goquery"
+  },
+  "advCodeDescGo": {
+    "message": "Go avec net/http"
+  },
+  "pageNoticeCaptureActive": {
+    "message": "Capture active"
+  },
+  "pageNoticeReloadToCapture": {
+    "message": "Rechargez la page pour lancer la capture."
+  },
+  "pageNoticeEndsInFmt": {
+    "message": "Se termine dans {0} s"
+  },
+  "pageNoticeRecaptchaStepReload": {
+    "message": "Rechargez cette page"
+  },
+  "pageNoticeRecaptchaStepSolve": {
+    "message": "Résolvez ou cliquez sur le reCAPTCHA"
+  },
+  "pageNoticeRecaptchaStepWait": {
+    "message": "Attendez « Capture terminée »"
+  },
+  "pageNoticeMonitoringStartedFmt": {
+    "message": "Surveillance {0} démarrée"
+  },
+  "pageNoticeCollectingScripts": {
+    "message": "Patientez pendant la collecte des URL des scripts…"
+  },
+  "pageNoticeAnalyzingScriptsFmt": {
+    "message": "Analyse des scripts {0}"
+  },
+  "pageNoticeCaptureCompleted": {
+    "message": "Capture terminée"
+  },
+  "pageNoticePageLoading": {
+    "message": "Chargement de la page"
+  },
+  "pageNoticeWaitForLoad": {
+    "message": "Patientez jusqu'au chargement complet de la page…"
+  },
+  "advAkamaiNotDetectedToast": {
+    "message": "Akamai non détecté sur cette page. Le cookie _abck est absent."
+  },
+  "advAkamaiCaptureSuccess": {
+    "message": "Données Akamai capturées avec succès !"
+  },
+  "advAkamaiCaptureStopped": {
+    "message": "Capture arrêtée"
+  },
+  "advAkamaiStopCaptureFailedFmt": {
+    "message": "Impossible d’arrêter la capture : {0}"
+  },
+  "advAkamaiReloadingToAnalyze": {
+    "message": "Rechargement de la page pour analyser les données Akamai…"
+  },
+  "advAkamaiAnalyzeFailedFmt": {
+    "message": "Impossible d’analyser le contenu : {0}"
+  },
+  "advAkamaiNoAbckCookie": {
+    "message": "Aucun cookie _abck trouvé"
+  },
+  "advAkamaiProcessFailedFmt": {
+    "message": "Impossible de traiter les données : {0}"
+  },
+  "advAkamaiExtractingSensor": {
+    "message": "Extraction des informations du capteur…"
+  },
+  "advAkamaiExtractSensorFailedFmt": {
+    "message": "Impossible d’extraire les informations du capteur : {0}"
+  },
+  "advAkamaiNoticeNotDetectedTitle": {
+    "message": "Akamai non détecté"
+  },
+  "advAkamaiNoticeNoAbck": {
+    "message": "Le cookie _abck est absent de cette page."
+  },
+  "advAkamaiNoticeNotActive": {
+    "message": "Akamai Bot Manager n’est pas actif ici."
+  },
+  "advAkamaiNoticeReloadToMonitor": {
+    "message": "Rechargez la page pour commencer à surveiller les données du capteur et les détails des requêtes"
+  },
+  "advAkamaiNoticeSensorCaptured": {
+    "message": "sensor_data Akamai capturé avec succès"
+  },
+  "advAkamaiNoticeExtractingTitle": {
+    "message": "Extraction des données du capteur Akamai"
+  },
+  "advAkamaiNoticeWaitingSensor": {
+    "message": "En attente de la capture des informations du capteur…"
+  },
+  "advAkamaiNoticeAnalyzingTitle": {
+    "message": "Analyse du contenu Akamai"
+  },
+  "advAkamaiNoticeScanning": {
+    "message": "Recherche de scripts et de motifs dans la page…"
+  },
+  "advAkamaiNoticeExtractingSensorTitle": {
+    "message": "Extraction des données du capteur"
+  },
+  "advAkamaiNoticeCapturingSensor": {
+    "message": "Capture des informations du capteur Akamai…"
+  },
+  "advAkamaiLevelAdvancedSbsd": {
+    "message": "Avancé (SBSD)"
+  },
+  "advAkamaiLevelBasic": {
+    "message": "Basique"
+  },
+  "advAkamaiLevelEasy": {
+    "message": "Facile"
+  },
+  "advAkamaiAbckLevelLabel": {
+    "message": "Niveau _abck :"
+  },
+  "advAkamaiAnalysisTitle": {
+    "message": "Analyse Akamai"
+  },
+  "advAkamaiScriptsLabel": {
+    "message": "Scripts Akamai :"
+  },
+  "advAkamaiScriptsHeading": {
+    "message": "Scripts Akamai"
+  },
+  "advAkamaiSensorDataUrlScript": {
+    "message": "Script de l’URL des données du capteur"
+  },
+  "advAkamaiPixelHtmlVar": {
+    "message": "Variable HTML Pixel :"
+  },
+  "advAkamaiPixelChallengeUrls": {
+    "message": "URL du défi Pixel :"
+  },
+  "advAkamaiPostUrl": {
+    "message": "URL POST :"
+  },
+  "advAkamaiPixelScriptVar": {
+    "message": "Variable du script Pixel :"
+  },
+  "advAkamaiSbsdScriptUrl": {
+    "message": "URL du script SBSD"
+  },
+  "advAkamaiSensorDataUrls": {
+    "message": "URL des données du capteur"
+  },
+  "advAkamaiEndpoint": {
+    "message": "Point de terminaison Akamai"
+  },
+  "advAkamaiTypeSensor": {
+    "message": "Capteur"
+  },
+  "advAkamaiExtractedSensorTitle": {
+    "message": "Informations du capteur extraites"
+  },
+  "advAkamaiSensorDataCharsFmt": {
+    "message": "Données du capteur ({0} caractères)"
+  },
+  "advAkamaiSensorDataNotCaptured": {
+    "message": "Données du capteur (non capturées)"
+  },
+  "advAkamaiNoSensorData": {
+    "message": "Aucune donnée de capteur capturée"
+  },
+  "advAkamaiSbsdDataCharsFmt": {
+    "message": "Données SBSD ({0} caractères)"
+  },
+  "advAkamaiSensorScriptUrl": {
+    "message": "URL du script du capteur"
+  },
+  "advAkamaiCopyAllJson": {
+    "message": "Copier toutes les données en JSON"
+  },
+  "advAkamaiExtractSensorBtn": {
+    "message": "Extraire les infos du capteur"
+  },
+  "advAkamaiAbckLevel": {
+    "message": "Niveau ABCK"
+  },
+  "advAkamaiAbckCookie": {
+    "message": "Cookie ABCK"
+  },
+  "advAkamaiVersionLabel": {
+    "message": "Version d’Akamai"
+  },
+  "advAkamaiChallengeRequirements": {
+    "message": "Défis requis"
+  },
+  "advAkamaiSbsdChallenge": {
+    "message": "Défi SBSD"
+  },
+  "advAkamaiSecCptChallenge": {
+    "message": "Défi sec_cpt"
+  },
+  "advAkamaiPixelChallenge": {
+    "message": "Défi Pixel"
+  },
+  "advImpervaEnableExtractionFailed": {
+    "message": "Impossible d’activer le mode extraction. Consultez la console d’arrière-plan pour plus de détails."
+  },
+  "advImpervaSessionCookies": {
+    "message": "Cookies de session"
+  },
+  "advImpervaSecurityComponents": {
+    "message": "Composants de sécurité"
+  },
+  "advImpervaCookieCountFmt": {
+    "message": "Cookies : {0}"
+  },
+  "advImpervaResourceDetection": {
+    "message": "Détection des ressources"
+  },
+  "advImpervaResourceUrls": {
+    "message": "URL des ressources"
+  },
+  "advImpervaInterrogationUrls": {
+    "message": "URL d’interrogation"
+  },
+  "advImpervaAnalysisTitle": {
+    "message": "Analyse Imperva"
+  },
+  "advImpervaSensorUrl": {
+    "message": "URL du capteur :"
+  },
+  "advImpervaScriptsHeading": {
+    "message": "Scripts Imperva"
+  },
+  "advImpervaScriptTypeFmt": {
+    "message": "Script {0}"
+  },
+  "advImpervaSensorPath": {
+    "message": "Chemin du capteur :"
+  },
+  "advImpervaNoScripts": {
+    "message": "Aucun script détecté"
+  },
+  "advImpervaMayNotBePresent": {
+    "message": "Imperva n’est peut-être pas présent sur cette page"
+  },
+  "advImpervaTypeOnlyFmt": {
+    "message": "{0} uniquement"
+  },
+  "advImpervaLevelAdvanced": {
+    "message": "Avancé (reese84 + utmvc)"
+  },
+  "advImpervaLevelBasicSession": {
+    "message": "Basique (session)"
+  },
+  "advImpervaNoticeReloadToMonitor": {
+    "message": "Rechargez la page pour commencer à surveiller les requêtes et cookies Imperva"
+  },
+  "advImpervaNoticeCapturedItemsFmt": {
+    "message": "Données Imperva capturées (éléments : {0})"
+  },
+  "advImpervaNoticeCaptureComplete": {
+    "message": "Capture Imperva terminée"
+  },
+  "advImpervaNoticeSensorCaptured": {
+    "message": "Données du capteur capturées avec succès"
+  },
+  "advImpervaNoticeExtractingTitle": {
+    "message": "Extraction des scripts Imperva"
+  },
+  "advImpervaNoticeMonitoringChallenge": {
+    "message": "Surveillance des données du défi et de la solution…"
+  },
+  "advRecaptchaCallbackTool": {
+    "message": "Callback reCAPTCHA"
+  },
+  "advRecaptchaSelectorDetection": {
+    "message": "Détection du sélecteur"
+  },
+  "advRecaptchaMethod": {
+    "message": "Méthode"
+  },
+  "advRecaptchaSelector": {
+    "message": "Sélecteur"
+  },
+  "advRecaptchaSelectorCopied": {
+    "message": "Sélecteur copié dans le presse-papiers !"
+  },
+  "advRecaptchaNoElements": {
+    "message": "Aucun élément reCAPTCHA trouvé"
+  },
+  "advRecaptchaExecuteFailedFmt": {
+    "message": "Échec de grecaptcha.execute() : {0}"
+  },
+  "advRecaptchaNoSiteKey": {
+    "message": "Aucune clé de site trouvée"
+  },
+  "advRecaptchaExtractedSiteKey": {
+    "message": "Clé de site extraite"
+  },
+  "advRecaptchaSiteKeyCopied": {
+    "message": "Clé de site copiée dans le presse-papiers !"
+  },
+  "advRecaptchaSiteKeyCopiedShort": {
+    "message": "Clé de site copiée"
+  },
+  "advRecaptchaCallbacksTitle": {
+    "message": "Callbacks reCAPTCHA"
+  },
+  "advRecaptchaClientsTitle": {
+    "message": "Clients reCAPTCHA"
+  },
+  "advRecaptchaClientIdFmt": {
+    "message": "ID client : {0}"
+  },
+  "advRecaptchaCopiedToClipboard": {
+    "message": "Copié dans le presse-papiers !"
+  },
+  "advRecaptchaCallbackFunction": {
+    "message": "Fonction de callback"
+  },
+  "advRecaptchaCallbackPath": {
+    "message": "Chemin du callback"
+  },
+  "advRecaptchaNoCallback": {
+    "message": "Aucun callback défini"
+  },
+  "advRecaptchaDomCallbacks": {
+    "message": "Callbacks du DOM"
+  },
+  "advRecaptchaScriptCallbacks": {
+    "message": "Callbacks dans les scripts"
+  },
+  "advRecaptchaCallbackExamples": {
+    "message": "Exemples d'utilisation du callback"
+  },
+  "advRecaptchaInvisible": {
+    "message": "Invisible"
+  },
+  "advRecaptchaAction": {
+    "message": "Action"
+  },
+  "advRecaptchaVersionCopied": {
+    "message": "Version copiée"
+  },
+  "advRecaptchaActionCopied": {
+    "message": "Action copiée"
+  },
+  "advRecaptchaApiDomainCopied": {
+    "message": "Domaine de l'API copié"
+  },
+  "advRecaptchaRequiredCookie": {
+    "message": "Cookie requis"
+  },
+  "advRecaptchaCookieCopied": {
+    "message": "Cookie copié"
+  },
+  "advRecaptchaFeaturesDetected": {
+    "message": "Caractéristiques détectées"
+  },
+  "advRecaptchaSParamRequired": {
+    "message": "Paramètre S requis"
+  },
+  "advRecaptchaHasSession": {
+    "message": "Avec session"
+  },
+  "advRecaptchaCapturedLabel": {
+    "message": "Capturé :"
+  },
+  "advRecaptchaFailedClickFmt": {
+    "message": "Échec du clic : {0}"
+  },
+  "advRecaptchaNoCallbacksFound": {
+    "message": "Aucun callback reCAPTCHA trouvé sur cette page. Vérifiez que reCAPTCHA est chargé."
+  },
+  "advRecaptchaFailedCaptureCallbackFmt": {
+    "message": "Impossible de capturer le callback : {0}"
+  },
+  "pageNoticeRecaptchaReloadAndSolve": {
+    "message": "Rechargez la page et résolvez un défi reCAPTCHA pour lancer la surveillance"
+  },
+  "pageNoticeRecaptchaPageReady": {
+    "message": "Page prête"
+  },
+  "pageNoticeRecaptchaSolveNow": {
+    "message": "Résolvez maintenant le défi reCAPTCHA pour capturer les données"
+  },
+  "pageNoticeRecaptchaDecodedFmt": {
+    "message": "Requêtes capturées et décodées : {0}"
+  },
+  "pageNoticeRecaptchaNoRequests": {
+    "message": "Aucune requête reCAPTCHA capturée"
+  },
+  "pageNoticeRecaptchaSeen": {
+    "message": "reCAPTCHA détecté"
+  },
+  "pageNoticeRecaptchaSolveToFinish": {
+    "message": "Résolvez le défi ; la capture se termine toute seule"
+  },
+  "pageNoticeRecaptchaTriggerNow": {
+    "message": "Déclenchez ou cliquez maintenant sur le reCAPTCHA"
+  },
+  "advShapeCookieLabel": {
+    "message": "Cookie"
+  },
+  "advShapeHeadersLabel": {
+    "message": "En-têtes"
+  },
+  "advShapeVersionTitle": {
+    "message": "Version de Shape Security"
+  },
+  "advShapeHeaderPattern": {
+    "message": "Motif d'en-tête"
+  },
+  "advShapeHeaderPatterns": {
+    "message": "Motifs d'en-tête"
+  },
+  "advShapeCookieTitle": {
+    "message": "Cookie Shape"
+  },
+  "advShapeMaxAgeInfoFmt": {
+    "message": "Max-Age : {0} secondes (50 ans)"
+  },
+  "advShapeAnalysisTitle": {
+    "message": "Analyse Shape Security"
+  },
+  "advShapeInitJsScriptsLabel": {
+    "message": "Scripts Init.js :"
+  },
+  "advShapeSeedScriptsLabel": {
+    "message": "Scripts avec seed :"
+  },
+  "advShapeScriptsHeading": {
+    "message": "Scripts Shape Security"
+  },
+  "advShapeInitJsScript": {
+    "message": "Script Init.js"
+  },
+  "advShapeInitJsScripts": {
+    "message": "Scripts Init.js"
+  },
+  "advShapeSeedScript": {
+    "message": "Script avec seed"
+  },
+  "advShapeSeedScripts": {
+    "message": "Scripts avec seed"
+  },
+  "advShapeNoActiveTab": {
+    "message": "Aucun onglet actif trouvé"
+  },
+  "advShapeErrorFmt": {
+    "message": "Erreur : {0}"
+  },
+  "advShapeDetectedVersion": {
+    "message": "Version détectée :"
+  },
+  "advShapeCaptureRequirements": {
+    "message": "Éléments requis pour la capture"
+  },
+  "advShapeCookieAndHeaders": {
+    "message": "Cookie + en-têtes"
+  },
+  "advShapeNoticeExtractingScripts": {
+    "message": "Extraction des scripts Shape Security"
+  },
+  "advShapeNoticeReloadToMonitor": {
+    "message": "Rechargez la page pour lancer la surveillance des en-têtes et cookies Shape Security"
+  },
+  "advShapeNoticeWaitBeforeActions": {
+    "message": "Patientez jusqu'au chargement complet de la page avant d'effectuer des actions…"
+  },
+  "advShapeNoticeMonitoringActiveFmt": {
+    "message": "Surveillance active ({0})"
+  },
+  "advShapeNoticeTriggerCookie": {
+    "message": "Effectuez des actions pour déclencher le cookie"
+  },
+  "advShapeNoticeTriggerHeadersCookie": {
+    "message": "Effectuez des actions pour déclencher les en-têtes et le cookie"
+  },
+  "advShapeNoticeTimeoutFmt": {
+    "message": "Délai dépassé ({2}) – cookies : {0}, en-têtes : {1}"
+  },
+  "advShapeNoticeV1SummaryFmt": {
+    "message": "{0} – Cookie : {1}"
+  },
+  "advShapeNoticeV2SummaryFmt": {
+    "message": "{0} – Cookie : {1} | En-têtes : {2}"
+  },
+  "advShapeNoticeCapturedFmt": {
+    "message": "Capturé – cookies : {0}, en-têtes : {1}"
+  },
+  "advHcaptchaDetectionTitle": {
+    "message": "Détection hCaptcha"
+  },
+  "advHcaptchaNotDetected": {
+    "message": "hCaptcha non détecté. Rechargez la page avec hCaptcha chargé."
+  },
+  "advHcaptchaVersionTitle": {
+    "message": "Version hCaptcha"
+  },
+  "advHcaptchaEnterpriseMode": {
+    "message": "Mode Enterprise"
+  },
+  "advHcaptchaNo": {
+    "message": "Non"
+  },
+  "advHcaptchaNoHistory": {
+    "message": "Aucun historique de capture pour l'instant"
+  },
+  "advHcaptchaNotAvailable": {
+    "message": "N/D"
+  },
+  "advHcaptchaScriptNumberFmt": {
+    "message": "Script {0}"
+  },
+  "advHcaptchaCheckingVersionReload": {
+    "message": "Vérification de la version hCaptcha… La page va se recharger"
+  },
+  "advHcaptchaVersionTimeout": {
+    "message": "Délai dépassé pour la détection de la version hCaptcha"
+  },
+  "advHcaptchaFailedStartVersionCheck": {
+    "message": "Impossible de lancer la vérification de la version"
+  },
+  "advHcaptchaNoticeReloadToMonitor": {
+    "message": "Rechargez la page pour lancer la surveillance des requêtes hCaptcha"
+  },
+  "advHcaptchaNoticeCaptured": {
+    "message": "Données hCaptcha capturées avec succès"
+  },
+  "advHcaptchaNoticeCheckingVersion": {
+    "message": "Vérification de la version hCaptcha"
+  },
+  "advHcaptchaNoticeAnalyzingPage": {
+    "message": "Patientez pendant l'analyse de la page…"
+  },
+  "advAwswafNoScripts": {
+    "message": "Aucun script AWS WAF trouvé"
+  },
+  "advAwswafDeleteCookieHint": {
+    "message": "Supprimez le cookie aws-waf-token et rechargez pour déclencher le défi"
+  },
+  "advAwswafTypeChallenge": {
+    "message": "Défi"
+  },
+  "advAwswafClickToCopyUrl": {
+    "message": "Cliquer pour copier l'URL"
+  },
+  "advAwswafFetchCodeTitle": {
+    "message": "Code de récupération des scripts AWS WAF"
+  },
+  "advAwswafScriptsLabel": {
+    "message": "Scripts AWS WAF"
+  },
+  "advAwswafChallengeScript": {
+    "message": "Script du défi"
+  },
+  "advAwswafApiScript": {
+    "message": "Script de l'API (jsapi.js)"
+  },
+  "advAwswafProblemEndpoint": {
+    "message": "Point de terminaison du problème"
+  },
+  "advAwswafApiKey": {
+    "message": "Clé API"
+  },
+  "advAwswafApiKeyCopied": {
+    "message": "Clé API copiée"
+  },
+  "advAwswafToken": {
+    "message": "Jeton AWS WAF"
+  },
+  "advAwswafTokenCopied": {
+    "message": "Jeton copié"
+  },
+  "advAwswafDetectionIndicators": {
+    "message": "Indicateurs de détection"
+  },
+  "advAwswafStatus405": {
+    "message": "Statut 405"
+  },
+  "advAwswafDetected": {
+    "message": "Détecté"
+  },
+  "advAwswafChallengeEndpoint": {
+    "message": "Point de terminaison du défi"
+  },
+  "advAwswafDeletingCookieFmt": {
+    "message": "Suppression du cookie {0}… La page va se recharger"
+  },
+  "advCloudflareExtractedSiteKey": {
+    "message": "Site Key extraite"
+  },
+  "advCloudflareTypeLabel": {
+    "message": "Type"
+  },
+  "advCloudflareSiteKeyClickToCopy": {
+    "message": "Site Key (cliquer pour copier)"
+  },
+  "advCloudflareSiteKeyCopied": {
+    "message": "Site Key copiée"
+  },
+  "advCloudflareSitekeyLabel": {
+    "message": "Sitekey :"
+  },
+  "advCloudflareUrlLabel": {
+    "message": "URL :"
+  },
+  "advCloudflareTypeChallenge": {
+    "message": "Défi"
+  },
+  "advCloudflareTypeAnalytics": {
+    "message": "Analytique"
+  },
+  "advCloudflareTypeBotManagement": {
+    "message": "Gestion des bots"
+  },
+  "advCloudflareCheckingVersion": {
+    "message": "Vérification de la version de Cloudflare… La page va se recharger"
+  },
+  "advCloudflareSiteKeyExtracted": {
+    "message": "Site Key extraite avec succès"
+  },
+  "advCloudflareNoSitekey": {
+    "message": "Aucune sitekey trouvée sur la page"
+  },
+  "advCloudflareFailedExtractSitekey": {
+    "message": "Impossible d'extraire la sitekey"
+  },
+  "advDatadomeCookieCopied": {
+    "message": "Cookie copié"
+  },
+  "advFuncaptchaPublicKey": {
+    "message": "Clé publique"
+  },
+  "advFuncaptchaUserAgent": {
+    "message": "User-Agent"
+  },
+  "advFuncaptchaBdaLabel": {
+    "message": "BDA (tableau de données du navigateur)"
+  },
+  "advFuncaptchaBlobData": {
+    "message": "Données du blob"
+  },
+  "advFuncaptchaBlobDataNotCaptured": {
+    "message": "Données du blob (non capturées)"
+  },
+  "advFuncaptchaStatus": {
+    "message": "Statut"
+  },
+  "advFuncaptchaNotCaptured": {
+    "message": "Non capturé"
+  },
+  "advFuncaptchaReloadToMonitor": {
+    "message": "Rechargez la page pour démarrer la surveillance et déclenchez un défi FunCaptcha (délai de 60 s)"
+  },
+  "advFuncaptchaPageLoadingMsg": {
+    "message": "Chargement de la page, veuillez patienter…"
+  },
+  "advFuncaptchaCapturedTitle": {
+    "message": "FunCaptcha capturé avec succès"
+  },
+  "advFuncaptchaCapturedCountFmt": {
+    "message": "Défis capturés : {0}"
+  },
+  "advFuncaptchaCaptureTimeout": {
+    "message": "Délai de capture dépassé"
+  },
+  "advFuncaptchaNoChallenge": {
+    "message": "Aucun défi FunCaptcha détecté (délai de 60 s)"
+  },
+  "advGeetestSourceInlineScript": {
+    "message": "Script intégré"
+  },
+  "advGeetestSourceDomAttribute": {
+    "message": "Attribut DOM"
+  },
+  "advGeetestSourceScriptUrl": {
+    "message": "URL du script"
+  },
+  "advGeetestSourceJsonConfig": {
+    "message": "Configuration JSON"
+  },
+  "advGeetestSourceLabel": {
+    "message": "Source :"
+  },
+  "advGeetestExtractedCaptchaId": {
+    "message": "captchaId extrait"
+  },
+  "advGeetestClickToCopyCaptchaId": {
+    "message": "Cliquer pour copier le captchaId"
+  },
+  "advGeetestProductLabel": {
+    "message": "Produit :"
+  },
+  "advGeetestScriptSnippet": {
+    "message": "Extrait du script"
+  },
+  "advGeetestExportParsingCode": {
+    "message": "Exporter le code d'analyse"
+  },
+  "advGeetestErrorFmt": {
+    "message": "Erreur : {0}"
+  },
+  "advGeetestDetectedVersionFmt": {
+    "message": "Détecté : Geetest {0}"
+  },
+  "advGeetestNoVersion": {
+    "message": "Aucune version de Geetest détectée"
+  },
+  "advGeetestParsingCodeCopied": {
+    "message": "Code d'analyse copié dans le presse-papiers !"
+  },
+  "advGeetestTabNotFound": {
+    "message": "Onglet introuvable"
+  },
+  "advGeetestNoScriptsFound": {
+    "message": "Aucun script Geetest trouvé"
+  },
+  "advGeetestDetectingVersion": {
+    "message": "Détection de la version de Geetest…"
+  },
+  "advGeetestReloadCheckVersion": {
+    "message": "Rechargement de la page pour vérifier la version"
+  },
+  "advGeetestAnalyzingScripts": {
+    "message": "Analyse des scripts…"
+  },
+  "advGeetestReloadExtractScripts": {
+    "message": "Rechargement de la page pour extraire les scripts"
+  },
+  "advPanelToolsNameFmt": {
+    "message": "Outils {0}"
+  },
+  "advPanelErrorLoadingTools": {
+    "message": "Erreur lors du chargement des outils avancés"
+  },
+  "advPanelCheckConsole": {
+    "message": "Consultez la console pour plus de détails"
+  },
+  "advPanelSelectDetectionFirst": {
+    "message": "Veuillez d'abord sélectionner une détection"
+  },
+  "advPanelErrorLoadingCapturesFmt": {
+    "message": "Erreur lors du chargement des captures : {0}"
+  },
+  "advPanelCurrentSiteFmt": {
+    "message": "Site actuel ({0})"
+  },
+  "advPanelNoResultsText": {
+    "message": "Essayez de modifier vos filtres ou votre recherche pour trouver des captures."
+  },
+  "advPanelNoUrl": {
+    "message": "Aucune URL"
+  },
+  "advPanelView": {
+    "message": "Voir"
+  },
+  "advPanelBtnOk": {
+    "message": "OK"
+  },
+  "advPanelConfirmAction": {
+    "message": "Confirmer l'action"
+  },
+  "advPanelBtnConfirm": {
+    "message": "Confirmer"
+  },
+  "advPanelCopiedToClipboard": {
+    "message": "Copié dans le presse-papiers"
+  },
+  "advPanelToolsLoadedFmt": {
+    "message": "Outils {0} chargés"
+  },
+  "advPanelCookiesFoundFmt": {
+    "message": "{0}/{1} cookies trouvés"
+  },
+  "advPanelScriptsFoundFmt": {
+    "message": "Scripts trouvés : {0}"
+  },
+  "advPanelNoScriptsFmt": {
+    "message": "Aucun script {0} trouvé"
+  },
+  "advPanelVersionDetectedFmt": {
+    "message": "Version {0} détectée : {1}"
+  },
+  "advPanelNoVersionFmt": {
+    "message": "Aucune version de {0} détectée"
+  },
+  "advPanelUnknownError": {
+    "message": "Erreur inconnue"
+  },
+  "advPanelFailedStartCaptureFmt": {
+    "message": "Impossible de démarrer la capture : {0}"
+  },
+  "advPanelFailedStopCaptureFmt": {
+    "message": "Impossible d'arrêter la capture : {0}"
+  },
+  "advPanelCaptureCountFmt": {
+    "message": "Captures : {0}"
+  },
+  "advPanelClearCapturedDataTitle": {
+    "message": "Effacer toutes les données capturées"
+  },
+  "advPanelNotAvailable": {
+    "message": "N/D"
+  },
+  "advPanelHistoryClearedFmt": {
+    "message": "Historique des captures {0} effacé"
+  },
+  "advPanelFailedClearHistory": {
+    "message": "Impossible d'effacer l'historique"
+  },
+  "advPanelCapturesPaginationFmt": {
+    "message": "{0}-{1} sur {2} captures"
+  },
+  "rulesUiNewDetectorName": {
+    "message": "Nouveau détecteur"
+  },
+  "rulesUiAddDetectorTitleFmt": {
+    "message": "Ajouter {0}"
+  },
+  "rulesUiEditDetectorTitleFmt": {
+    "message": "Modifier {0}"
+  },
+  "rulesUiScrapflyIconAlt": {
+    "message": "Icône Scrapfly"
+  },
+  "rulesUiDetectorIconAltFmt": {
+    "message": "Icône de {0}"
+  },
+  "rulesUiChangeIcon": {
+    "message": "Changer l’icône"
+  },
+  "rulesUiChangeDetectorIcon": {
+    "message": "Changer l’icône du détecteur"
+  },
+  "rulesUiCustomColor": {
+    "message": "Couleur personnalisée"
+  },
+  "iconPickerTitle": {
+    "message": "Choisir une icône"
+  },
+  "iconPickerDefault": {
+    "message": "Par défaut"
+  },
+  "iconPickerUploadCustom": {
+    "message": "Importer une image"
+  },
+  "iconPickerFileTooLarge": {
+    "message": "Le fichier de l’icône doit faire moins de 100 Ko"
+  },
+  "rulesUiHelpJsHooks": {
+    "message": "Que sont les intercepteurs JS ?"
+  },
+  "rulesUiHelpWindow": {
+    "message": "Que sont les propriétés de la fenêtre ?"
+  },
+  "rulesUiHelpUrl": {
+    "message": "Qu’est-ce que la détection par URL ?"
+  },
+  "rulesUiHelpHeader": {
+    "message": "Qu’est-ce que la détection par en-têtes ?"
+  },
+  "rulesUiHelpCookie": {
+    "message": "Qu’est-ce que la détection par cookies ?"
+  },
+  "rulesUiHelpContent": {
+    "message": "Qu’est-ce que la détection par contenu ?"
+  },
+  "rulesUiHelpDom": {
+    "message": "Qu’est-ce que la détection par DOM ?"
+  },
+  "rulesUiHelpPayload": {
+    "message": "Qu’est-ce que la détection par charge utile ?"
+  },
+  "rulesUiHelpGeneric": {
+    "message": "Qu’est-ce que cette méthode de détection ?"
+  },
+  "rulesUiValueOptionalPlaceholder": {
+    "message": "Valeur (facultatif)"
+  },
+  "rulesUiDomSelectorPlaceholder": {
+    "message": "Sélecteur CSS (ex. .class, #id, [attr])"
+  },
+  "rulesUiContentTextPlaceholder": {
+    "message": "Texte ou mot à rechercher"
+  },
+  "rulesUiUrlPatternPlaceholder": {
+    "message": "Motif d’URL"
+  },
+  "rulesUiJsHookTargetPlaceholder": {
+    "message": "Cible de l’intercepteur JS (ex. navigator.webdriver)"
+  },
+  "rulesUiWindowPathPlaceholder": {
+    "message": "Chemin dans window (ex. grecaptcha, _cf_chl_opt)"
+  },
+  "rulesUiWindowConditionPlaceholder": {
+    "message": "Condition (ex. typeof object, typeof function)"
+  },
+  "rulesUiCookieNamePlaceholder": {
+    "message": "Nom du cookie (ex. __cf_bm, session_id)"
+  },
+  "rulesUiCookieValuePlaceholder": {
+    "message": "Motif de la valeur du cookie (facultatif)"
+  },
+  "rulesUiPayloadTextPlaceholder": {
+    "message": "Texte (ex. sensor_data, challenge_token)"
+  },
+  "rulesUiPayloadUrlPlaceholder": {
+    "message": "/api/verify ou challenge.php"
+  },
+  "rulesUiNameSettings": {
+    "message": "Paramètres du nom"
+  },
+  "rulesUiNameSettingsConfidenceFmt": {
+    "message": "Paramètres du nom (confiance : {0} %)"
+  },
+  "rulesUiValueSettings": {
+    "message": "Paramètres de la valeur"
+  },
+  "rulesUiDeleteMethod": {
+    "message": "Supprimer le motif"
+  },
+  "rulesUiClearValue": {
+    "message": "Effacer la valeur"
+  },
+  "rulesUiAddValue": {
+    "message": "Ajouter une valeur"
+  },
+  "rulesUiPageOfFmt": {
+    "message": "Page {0} / {1}"
+  },
+  "rulesUiCompleteEmptyPattern": {
+    "message": "Remplissez le motif vide avant d’en ajouter un autre."
+  },
+  "rulesUiFillRequiredPatterns": {
+    "message": "Remplissez tous les champs obligatoires des motifs avant d’enregistrer."
+  },
+  "rulesUiEnterMethodTypePrompt": {
+    "message": "Saisissez le type de méthode de détection (ex. HEADERS, CONTENT, URLs) :"
+  },
+  "rulesUiMethodFallback": {
+    "message": "Méthode"
+  },
+  "rulesUiUrlScopeHint": {
+    "message": "Page = URL actuelle | Scripts = page + scripts | Toutes = toutes les requêtes"
+  },
+  "rulesUiLeaveEmptyAnyUrl": {
+    "message": "Laissez vide pour accepter toutes les URL"
+  },
+  "ruleExampleMatches": {
+    "message": "✓ Correspond :"
+  },
+  "ruleExampleWont": {
+    "message": "× Non :"
+  },
+  "ruleExampleWontMatch": {
+    "message": "× Ne correspond pas :"
+  },
+  "ruleExampleLiteralTextOnly": {
+    "message": "texte littéral uniquement"
+  },
+  "ruleExampleExactCase": {
+    "message": "(casse exacte)"
+  },
+  "ruleExampleAlone": {
+    "message": "(seul)"
+  },
+  "ruleConditionGroupOther": {
+    "message": "Autres"
+  },
+  "clipboardUrlFmt": {
+    "message": "URL : {0}"
+  },
+  "clipboardHostFmt": {
+    "message": "Hôte : {0}"
+  },
+  "clipboardTitleFmt": {
+    "message": "Titre : {0}"
+  },
+  "clipboardTimestampFmt": {
+    "message": "Horodatage : {0}"
+  },
+  "clipboardSecuritySystemFmt": {
+    "message": "Système de sécurité : {0}"
+  },
+  "clipboardCategoryFmt": {
+    "message": "Catégorie : {0}"
+  },
+  "clipboardConfidenceFmt": {
+    "message": "Confiance : {0} %"
+  },
+  "clipboardDetectionMethodsFmt": {
+    "message": "Méthodes de détection : {0}"
+  },
+  "clipboardDetectionMethodsHeading": {
+    "message": "Méthodes de détection :"
+  },
+  "clipboardDetectionsCountFmt": {
+    "message": "Détections : {0}"
+  },
+  "clipboardDetectionsListFmt": {
+    "message": "Détections ({0}) :"
+  },
+  "clipboardDifficultyFmt": {
+    "message": "Difficulté : {0}"
+  },
+  "clipboardCacheScopeFmt": {
+    "message": "Portée du cache : {0}"
+  },
+  "clipboardCacheExpirationFmt": {
+    "message": "Expiration du cache : {0}"
+  },
+  "clipboardMethodsFmt": {
+    "message": "Méthodes : {0}"
+  },
+  "clipboardCopyFailed": {
+    "message": "Échec de la copie dans le presse-papiers"
+  },
+  "detectionUiCopyUrl": {
+    "message": "Copier l'URL"
+  },
+  "detectionUiCopyUrlFmt": {
+    "message": "Copier l'URL : {0}"
+  },
+  "detectionUiCopyCategory": {
+    "message": "Copier la catégorie"
+  },
+  "detectionUiCopyCategoryFmt": {
+    "message": "Copier la catégorie : {0}"
+  },
+  "detectionUiCopyMethod": {
+    "message": "Copier la méthode"
+  },
+  "detectionUiCopyMethodFmt": {
+    "message": "Copier la méthode : {0}"
+  },
+  "detectionUiCopyValue": {
+    "message": "Copier la valeur"
+  },
+  "detectionUiCopyValueFmt": {
+    "message": "Copier la valeur : {0}"
+  },
+  "detectionUiDurYearsFmt": {
+    "message": "{0} a"
+  },
+  "detectionUiDurMonthsFmt": {
+    "message": "{0} mois"
+  },
+  "detectionUiDurDaysFmt": {
+    "message": "{0} j"
+  },
+  "detectionUiDurHoursFmt": {
+    "message": "{0} h"
+  },
+  "detectionUiDurMinutesFmt": {
+    "message": "{0} min"
+  },
+  "detectionUiDurPairFmt": {
+    "message": "{0} {1}"
+  },
+  "detectionUiDurUnderMinute": {
+    "message": "<1 min"
+  },
+  "detectionUiNoDescription": {
+    "message": "Aucun détail supplémentaire n'est fourni pour cette détection."
+  },
+  "detectionUiNoMethodsRecorded": {
+    "message": "Aucune méthode de détection n'est enregistrée pour ce détecteur."
+  },
+  "detectionUiUnknownMethod": {
+    "message": "Méthode inconnue"
+  },
+  "detectionUiUnknownValue": {
+    "message": "inconnu"
+  },
+  "historyUiUntitled": {
+    "message": "Sans titre"
+  },
+  "historyUiNoDetectionMethods": {
+    "message": "Aucune méthode de détection"
+  },
+  "historyUiInvalidFileFormat": {
+    "message": "Format de fichier d’historique non valide"
+  },
+  "popupUiLogoAlt": {
+    "message": "Robot Scrapfly"
+  },
+  "popupUiEnableFailedFmt": {
+    "message": "Échec de l'activation de l'extension : {0}"
+  },
+  "popupUiDisableFailedFmt": {
+    "message": "Échec de la désactivation de l'extension : {0}"
+  },
+  "popupUiNativeErrorFmt": {
+    "message": "Erreur : {0}"
+  },
+  "settingsUiBlacklistEmpty": {
+    "message": "Aucun domaine sur la liste noire"
+  },
+  "settingsUiBlacklistNoMatches": {
+    "message": "Aucun domaine ne correspond à votre recherche"
+  },
+  "settingsUiChecking": {
+    "message": "Vérification..."
+  },
+  "settingsUiErrHistoryLimit": {
+    "message": "La limite de l'historique doit être comprise entre 0 (illimité) et 10000"
+  },
+  "settingsUiErrCacheDurationFmt": {
+    "message": "La durée du cache doit être comprise entre 1 et {0} ({1})"
+  },
+  "settingsUiErrAutoDeleteDays": {
+    "message": "Le nombre de jours avant suppression automatique doit être compris entre 1 et 3650"
+  },
+  "settingsUiErrDuplicateDuration": {
+    "message": "La durée des doublons doit être comprise entre 1 et 999"
+  },
+  "settingsUiExportJson": {
+    "message": "Exporter en JSON"
+  },
+  "settingsUiExportText": {
+    "message": "Exporter en texte"
+  },
+  "settingsUiLogsText": {
+    "message": "Texte"
+  },
+  "settingsUiIncompatibleCountFmt": {
+    "message": "Mises à jour de détecteurs nécessitant une version plus récente de l'extension : {0}"
+  },
+  "settingsUiNeedsExtVersionFmt": {
+    "message": "v{0} (nécessite ext. v{1})"
+  },
+  "statsUiTotals": {
+    "message": "Totaux"
+  },
+  "ruleSectionCombinations": {
+    "message": "Combinaisons"
+  },
+  "combinationsHint": {
+    "message": "Choisissez les motifs, puis combien doivent correspondre."
+  },
+  "combinationsEmpty": {
+    "message": "Aucune combinaison pour l'instant."
+  },
+  "combinationAdd": {
+    "message": "Ajouter une combinaison"
+  },
+  "combinationDefaultNameFmt": {
+    "message": "Combinaison {0}"
+  },
+  "combinationConfidence": {
+    "message": "Confiance en cas de correspondance"
+  },
+  "combinationConfidenceFromPatterns": {
+    "message": "Laissez vide pour utiliser la confiance des motifs qui correspondent"
+  },
+  "combinationDelete": {
+    "message": "Supprimer la combinaison"
+  },
+  "combinationDeleteConfirmFmt": {
+    "message": "Supprimer la combinaison « {0} » ? Ses motifs restent dans la règle."
+  },
+  "combinationNotTitle": {
+    "message": "Ne doit PAS correspondre"
+  },
+  "combinationNot": {
+    "message": "NON"
+  },
+  "combinationRemove": {
+    "message": "Retirer"
+  },
+  "combinationEmptyPattern": {
+    "message": "(motif vide)"
+  },
+  "combinationAnyOfMethodFmt": {
+    "message": "N'importe quel motif {0}"
+  },
+  "combinationGroupEmpty": {
+    "message": "Ajoutez un motif ci-dessous"
+  },
+  "combinationAddPattern": {
+    "message": "Ajouter un motif"
+  },
+  "combinationAnyPattern": {
+    "message": "n'importe quel motif"
+  },
+  "combinationPreviewAnd": {
+    "message": "ET"
+  },
+  "combinationPreviewOr": {
+    "message": "OU"
+  },
+  "combinationPreviewNot": {
+    "message": "NON"
+  },
+  "combinationPreviewEmpty": {
+    "message": "Ajoutez des motifs pour construire cette combinaison"
+  },
+  "combinationInvalid": {
+    "message": "Choisissez les motifs devant correspondre et vérifiez le nombre minimal de correspondances."
+  },
+  "combinationStrict": {
+    "message": "Strict"
+  },
+  "combinationStrictTitle": {
+    "message": "Strict : ce motif ne déclenche pas le détecteur seul, uniquement dans des combinaisons"
+  },
+  "patternCombinationsOnlyBadge": {
+    "message": "Combinaisons seulement"
+  },
+  "detectionModalCombinations": {
+    "message": "Combinaisons correspondantes"
+  },
+  "combinationNoPatterns": {
+    "message": "Aucun motif ajouté"
+  },
+  "combinationJoinTitle": {
+    "message": "Basculer entre ET et OU"
+  },
+  "combinationPickHint": {
+    "message": "Cochez les motifs à ajouter"
+  },
+  "combinationAddSelectedFmt": {
+    "message": "Ajouter {0} sélectionnés"
+  },
+  "combinationEditConditions": {
+    "message": "Modifier les conditions"
+  },
+  "combinationRequireTogether": {
+    "message": "Utiliser les motifs uniquement dans les combinaisons"
+  },
+  "combinationRequireHint": {
+    "message": "S’applique à ces motifs dans toute cette règle."
+  },
+  "combinationAutoConfidence": {
+    "message": "Auto"
+  },
+  "combinationMatchAll": {
+    "message": "Toutes les conditions correspondent"
+  },
+  "combinationMatchAny": {
+    "message": "Au moins une condition correspond"
+  },
+  "combinationMatchAtLeast": {
+    "message": "Au moins… correspondent"
+  },
+  "combinationDetectWhen": {
+    "message": "Détecter lorsque"
+  },
+  "combinationGroupExcluded": {
+    "message": "Ces conditions ne doivent pas correspondre."
+  },
+  "combinationMinimum": {
+    "message": "Correspondances minimales"
+  },
+  "combinationMatchState": {
+    "message": "Condition du motif"
+  },
+  "combinationMatches": {
+    "message": "Correspond"
+  },
+  "combinationDoesNotMatch": {
+    "message": "Ne correspond pas"
+  },
+  "combinationAtLeastSummaryFmt": {
+    "message": "Au moins {0} conditions correspondent"
+  },
+  "combinationChoosePatterns": {
+    "message": "Choisir les motifs"
+  },
+  "combinationSummaryAll": {
+    "message": "Détecter lorsque toutes les conditions requises correspondent."
+  },
+  "combinationSummaryAny": {
+    "message": "Détecter lorsqu’au moins une condition correspond."
+  },
+  "combinationSummaryMinimumFmt": {
+    "message": "Détecter lorsqu’au moins {0} conditions sur {1} correspondent."
+  },
+  "combinationSummaryExcluded": {
+    "message": "Les motifs exclus ne doivent pas correspondre."
+  },
+  "combinationDecreaseMinimum": {
+    "message": "Réduire le minimum de correspondances"
+  },
+  "combinationIncreaseMinimum": {
+    "message": "Augmenter le minimum de correspondances"
+  },
+  "detectionTipDetections": {
+    "message": "Nombre de protections détectées sur cette page."
+  },
+  "detectionTipConfidence": {
+    "message": "Confiance moyenne des protections détectées."
+  },
+  "detectionTipDifficulty": {
+    "message": "Difficulté estimée pour contourner les protections détectées."
+  },
+  "detectionTipCacheScope": {
+    "message": "Pages pouvant réutiliser ces résultats de détection en cache."
+  },
+  "detectionTipCacheExpiration": {
+    "message": "Temps restant avant l’expiration de ces résultats de détection en cache."
+  },
+  "tipCachedAt": {
+    "message": "Enregistré"
+  },
+  "tipConfidenceAverageFmt": {
+    "message": "Moyenne de {0} détections, de {1} % à {2} %"
+  },
+  "tipConfidenceFromCombinations": {
+    "message": "D'après les combinaisons correspondantes"
+  },
+  "tipConfidenceFromSignals": {
+    "message": "Le signal unique le plus fort fixe le score"
+  },
+  "tipCountShareFmt": {
+    "message": "{0} · {1} %"
+  },
+  "tipCustomDetector": {
+    "message": "Détecteur personnalisé"
+  },
+  "tipDifficultyFromCategoryFmt": {
+    "message": "Valeur par défaut pour {0}"
+  },
+  "tipDifficultyFromRule": {
+    "message": "Fixée par ce détecteur"
+  },
+  "tipDifficultyHardestFmt": {
+    "message": "Fixée par {0}"
+  },
+  "tipDifficultyManyFmt": {
+    "message": "Augmentée par {0} protections ensemble"
+  },
+  "tipLastUpdated": {
+    "message": "Mis à jour"
+  },
+  "tipMethodContent": {
+    "message": "Du texte de la page ou de ses scripts correspondait."
+  },
+  "tipMethodCookie": {
+    "message": "Un cookie de ce site correspondait."
+  },
+  "tipMethodDom": {
+    "message": "Un élément de la page correspondait."
+  },
+  "tipMethodHeader": {
+    "message": "Un en-tête de réponse envoyé par le site correspondait."
+  },
+  "tipMethodJsHooks": {
+    "message": "La page a appelé une API du navigateur surveillée par ce détecteur."
+  },
+  "tipMethodPayload": {
+    "message": "Des données envoyées par la page dans une requête correspondaient."
+  },
+  "tipMethodUrl": {
+    "message": "La page ou une de ses requêtes correspondait à une adresse connue."
+  },
+  "tipMethodWindow": {
+    "message": "Un objet JavaScript global de la page correspondait."
+  },
+  "tipMoreFmt": {
+    "message": "+{0} de plus"
+  },
+  "tipOfficialDetector": {
+    "message": "Détecteur officiel Scrapfly"
+  },
+  "tipScopeDomain": {
+    "message": "Les résultats sont réutilisés pour toutes les pages de ce domaine."
+  },
+  "tipScopeFullUrl": {
+    "message": "Les résultats ne sont réutilisés que pour cette URL exacte, requête comprise."
+  },
+  "tipScopePath": {
+    "message": "Les résultats sont réutilisés pour ce chemin exact, quelle que soit la requête."
+  },
+  "tipStatsActiveDays": {
+    "message": "Jours avec au moins une page enregistrée."
+  },
+  "tipStatsDetections": {
+    "message": "Protections trouvées sur toutes les pages enregistrées, répétitions comprises."
+  },
+  "tipStatsDetectors": {
+    "message": "Protections différentes vues, chacune comptée une fois."
+  },
+  "tipStatsDomains": {
+    "message": "Sites différents parmi les pages enregistrées."
+  },
+  "tipStatsEntries": {
+    "message": "Pages enregistrées dans l'historique sur cette période."
+  },
+  "tipStatsRateFmt": {
+    "message": "{0} sur {1} entrées"
+  },
+  "tipPatterns": {
+    "message": "Motifs"
+  },
+  "settingsRowVerboseLogs": {
+    "message": "Logs détaillés"
+  },
+  "settingsRowVerboseLogsTip": {
+    "message": "Journalise aussi chaque règle, hook et message, pas seulement un rapport par page"
   }
 }

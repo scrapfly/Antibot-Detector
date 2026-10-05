@@ -4,54 +4,21 @@
  */
 const DetectionUI = (typeof self !== 'undefined' && self.DetectionUI) ? self.DetectionUI : {};
 
-DetectionUI.createAnalysisSteps = function() {
-    return [
-      {
-        emoji: '',
-        title: 'Cookies',
-        description: 'Checking browser cookies for anti-bot signatures',
-        method: 'cookies',
-        status: 'pending' // pending | in_progress | completed
-      },
-      {
-        emoji: '',
-        title: 'Headers',
-        description: 'Analyzing HTTP response headers',
-        method: 'headers',
-        status: 'pending'
-      },
-      {
-        emoji: '',
-        title: 'URL',
-        description: 'Checking URL patterns',
-        method: 'url',
-        status: 'pending'
-      },
-      {
-        emoji: '',
-        title: 'DOM',
-        description: 'Scanning DOM elements',
-        method: 'dom',
-        status: 'pending'
-      },
-      {
-        emoji: '',
-        title: 'JS Hooks',
-        description: 'Monitoring JavaScript API calls',
-        method: 'jsHooks',
-        status: 'pending'
-      },
-      {
-        emoji: '',
-        title: 'Window Properties',
-        description: 'Checking window object properties',
-        method: 'windowProperties',
-        status: 'pending'
-      }
-    ];
+// Late cache responses and progress events must preserve a disabled view.
+DetectionUI.showUnavailableState = function() {
+    if (!this.isExtensionEnabled) {
+      this.showDisabledState();
+      return true;
+    }
+    if (this.blacklistedDomain) {
+      this.showBlacklistState(this.blacklistedDomain);
+      return true;
+    }
+    return false;
 };
 
 DetectionUI.showLoadingState = function(message = 'Analyzing page…') {
+    if (DetectionUI.showUnavailableState.call(this)) return;
     this.isShowingResults = false;
     if (this.uiStateMachine) {
       if (this.uiStateMachine.getState() !== this.uiStates.ANALYZING) {
@@ -62,6 +29,7 @@ DetectionUI.showLoadingState = function(message = 'Analyzing page…') {
     const emptyState = document.querySelector('#emptyState');
     const detectionResults = document.querySelector('#detectionResults');
     const disabledState = document.querySelector('#disabledState');
+    const blacklistWarning = document.querySelector('#blacklistWarning');
     const interruptedState = document.querySelector('#interruptedState');
     const detectionPagination = document.querySelector('#detectionPagination');
 
@@ -71,105 +39,26 @@ DetectionUI.showLoadingState = function(message = 'Analyzing page…') {
     if (emptyState) emptyState.style.display = 'none';
     if (detectionResults) detectionResults.style.display = 'none';
     if (disabledState) disabledState.style.display = 'none';
+    if (blacklistWarning) blacklistWarning.style.display = 'none';
     if (interruptedState) interruptedState.style.display = 'none';
     if (detectionPagination) detectionPagination.style.display = 'none';
 };
 
-DetectionUI.renderAnalysisSteps = function() {
-    // No-op: #analysisStepsList element does not exist in the HTML
-};
-
+// Arm the stuck-detection timeout for the analyzing state
 DetectionUI.startAnalysisProgress = function() {
-    this.stopAnalysisProgress();
-    this.clearLoadingTimeout(); // Clear any existing timeout
-    this.analysisStepIndex = 0;
-    this.updateAnalysisStepStates();
-
-    // Set timeout for stuck detection
+    this.clearLoadingTimeout();
     this.loadingTimeout = setTimeout(() => {
       this.handleLoadingTimeout();
     }, this.loadingTimeoutDuration);
 };
 
-DetectionUI.updateAnalysisStepStates = function(forceComplete = false) {
-    if (forceComplete) {
-      // Mark all steps as completed
-      this.analysisSteps.forEach(step => {
-        step.status = 'completed';
-      });
-      // Re-render to apply status-completed classes with green background
-      this.renderAnalysisSteps();
-      return;
-    }
-
-    // Update status based on current step index
-    this.analysisSteps.forEach((step, index) => {
-      if (index < this.analysisStepIndex) {
-        step.status = 'completed';
-      } else if (index === this.analysisStepIndex) {
-        step.status = 'in_progress';
-      } else {
-        step.status = 'pending';
-      }
-    });
-
-    // Re-render to apply proper status classes
-    this.renderAnalysisSteps();
-};
-
-DetectionUI.updateAnalysisPercent = function(forceValue = null) {
-    // No-op: #progressBarFill element does not exist in the HTML
-};
-
-DetectionUI.stopAnalysisProgress = function({ markComplete = false } = {}) {
-    if (this.analysisProgressInterval) {
-      clearInterval(this.analysisProgressInterval);
-      this.analysisProgressInterval = null;
-    }
-
-    if (markComplete) {
-      this.updateAnalysisPercent(100);
-      this.updateAnalysisStepStates(true);
-    }
-};
-
-DetectionUI.updateRealProgress = function(progress) {
-    if (!progress) return;
-
-    const { method, completedMethods } = progress;
-
-    // Update method status in analysis steps
-    if (method && completedMethods) {
-      this.updateMethodStatus(method, completedMethods);
-    }
-};
-
-DetectionUI.updateMethodStatus = function(currentMethod, completedMethods) {
-    // Update the step states based on which methods are complete
-    this.analysisSteps.forEach((step, index) => {
-      if (completedMethods.includes(step.method)) {
-        step.status = 'completed';
-      } else if (step.method === currentMethod) {
-        step.status = 'in_progress';
-      } else {
-        step.status = 'pending';
-      }
-    });
-
-    // Re-render the steps with updated status
-    this.renderAnalysisSteps();
-};
-
 DetectionUI.handleLoadingTimeout = function() {
-    if (this.debugMode) Logger.ui('[Detection] Loading timeout reached - checking if detection completed');
+    if (this.debugMode) Logger.debug('UI', '[Detection] Loading timeout reached - checking if detection completed');
 
     if (this.isShowingResults && this.currentResults?.length > 0) {
       this.loadingTimeout = null;
       return;
     }
-
-    // Clear any existing intervals
-    this.stopAnalysisProgress();
 
     // Clear the timeout itself
     if (this.loadingTimeout) {
@@ -200,7 +89,7 @@ DetectionUI.handleLoadingTimeout = function() {
 
               if (response?.data?.detectionResults?.length > 0) {
                 // Detection completed! Show results instead of interrupted state
-                if (this.debugMode) Logger.ui('[Detection] Timeout but results exist - showing results instead of interrupted state');
+                if (this.debugMode) Logger.debug('UI', '[Detection] Timeout but results exist - showing results instead of interrupted state');
                 await Detection.processDetectionData(
                   {
                     detection: this,
@@ -221,11 +110,11 @@ DetectionUI.handleLoadingTimeout = function() {
 
                 if (isNumericBadge) {
                   // Badge shows completion but no data yet - retry instead of showing interrupted
-                  if (this.debugMode) Logger.ui('[Detection] Timeout but badge shows completion - retrying fetch...');
+                  if (this.debugMode) Logger.debug('UI', '[Detection] Timeout but badge shows completion - retrying fetch...');
                   await this.refreshAnalysis();
                 } else {
                   // Truly stuck/no data - normalize to empty state
-                  if (this.debugMode) Logger.ui('[Detection] Timeout with no results - showing empty state');
+                  if (this.debugMode) Logger.debug('UI', '[Detection] Timeout with no results - showing empty state');
                   if (!this.isShowingResults || this.currentResults.length === 0) {
                     this.showEmptyState();
                   }
@@ -251,7 +140,6 @@ DetectionUI.clearLoadingTimeout = function() {
 };
 
 DetectionUI.hideLoadingState = function() {
-    this.stopAnalysisProgress({ markComplete: true });
     this.clearLoadingTimeout(); // Clear timeout when loading completes
     this.isShowingAnalyzing = false; // Reset flag when hiding analyzing state
     const loadingState = document.querySelector('#loadingState');
@@ -259,13 +147,17 @@ DetectionUI.hideLoadingState = function() {
 };
 
 DetectionUI.showAnalyzingState = function(message = 'Analyzing page…') {
-    if (!this.isExtensionEnabled) {
+    if (!this.isExtensionEnabled || this.blacklistedDomain) {
       return;
     }
 
-    // Prevent re-render flicker if already in analyzing state
-    if (this.isShowingAnalyzing) {
-      if (this.debugMode) Logger.ui('Detection: Already showing analyzing state, skipping re-render');
+    // Prevent re-render flicker only when the scan card is really on screen.
+    // The flag alone can be stale: progress can arrive before detection.html
+    // is injected, and loadHTML() replaces the DOM with every state hidden.
+    const loadingState = document.querySelector('#loadingState');
+    const loadingVisible = !!loadingState && loadingState.style.display !== 'none';
+    if (this.isShowingAnalyzing && loadingVisible) {
+      if (this.debugMode) Logger.debug('UI', 'Detection: Already showing analyzing state, skipping re-render');
       return;
     }
 
@@ -273,9 +165,7 @@ DetectionUI.showAnalyzingState = function(message = 'Analyzing page…') {
       this.uiStateMachine.setState(this.uiStates.ANALYZING, { message });
     }
     this.wasInterrupted = false; // Reset flag when starting new analysis
-    this.isShowingAnalyzing = true; // Track that we're showing analyzing state
-    this.analysisSteps = this.createAnalysisSteps();
-    this.renderAnalysisSteps();
+    this.isShowingAnalyzing = !!loadingState; // Only true once the scan card exists
     this.showLoadingState(message);
     this.startAnalysisProgress();
 };
@@ -346,27 +236,8 @@ DetectionUI.applyDisabledStateCopy = function() {
     }
 };
 
-DetectionUI.refreshEmptyStateI18n = function() {
-    const emptyState = document.querySelector('#emptyState');
-    if (!emptyState || emptyState.style.display === 'none' || !this._lastEmptyStateOptions) {
-      return;
-    }
-    DetectionUI.applyEmptyStateCopy.call(this, this._lastEmptyStateOptions);
-};
-
-DetectionUI.refreshDetectionStateI18n = function() {
-    DetectionUI.refreshEmptyStateI18n.call(this);
-    const disabledState = document.querySelector('#disabledState');
-    if (disabledState && disabledState.style.display !== 'none') {
-      DetectionUI.applyDisabledStateCopy.call(this);
-    }
-};
-
 DetectionUI.showEmptyState = function(options = {}) {
-    if (!this.isExtensionEnabled) {
-      this.showDisabledState();
-      return;
-    }
+    if (DetectionUI.showUnavailableState.call(this)) return;
 
     if (this.uiStateMachine) {
       this.uiStateMachine.setState(this.uiStates.EMPTY);
@@ -390,6 +261,7 @@ DetectionUI.showEmptyState = function(options = {}) {
     const emptyStateFooter = emptyState?.querySelector('.state-card-badges');
     const detectionResults = document.querySelector('#detectionResults');
     const disabledState = document.querySelector('#disabledState');
+    const blacklistWarning = document.querySelector('#blacklistWarning');
     const detectionPagination = document.querySelector('#detectionPagination');
     const interruptedState = document.querySelector('#interruptedState');
 
@@ -398,21 +270,24 @@ DetectionUI.showEmptyState = function(options = {}) {
       emptyStateIcon.alt = 'Scrapfly';
     }
 
-    this._lastEmptyStateOptions = { ...options };
     DetectionUI.applyEmptyStateCopy.call(this, options);
 
     if (emptyStateFooter) {
       emptyStateFooter.style.display = options.showBadges === false ? 'none' : 'flex';
     }
 
+    // No cached scan: neutral (blue, no check badge) instead of the green all-clear
+    emptyState?.querySelector('.state-card')?.classList.toggle('state-card--pending', !!options.noCache);
+
     if (emptyState) emptyState.style.display = 'flex';
     if (detectionResults) detectionResults.style.display = 'none';
     if (disabledState) disabledState.style.display = 'none';
+    if (blacklistWarning) blacklistWarning.style.display = 'none';
     if (detectionPagination) detectionPagination.style.display = 'none';
     if (interruptedState) interruptedState.style.display = 'none';
 };
 
-DetectionUI.showDisabledState = function(isBlacklisted = false) {
+DetectionUI.showDisabledState = function(isBlacklisted = !!this.blacklistedDomain) {
     this.setExtensionEnabled(false);
 
     if (this.uiStateMachine) {
@@ -420,9 +295,14 @@ DetectionUI.showDisabledState = function(isBlacklisted = false) {
     }
     this.wasInterrupted = false; // Reset flag when showing disabled state
     this.isShowingResults = false;
+    this.currentResults = [];
+    this.cacheMetadata = null;
+    this.displayOptions = {};
+    this.closeDetectionModal();
     this.hideLoadingState();
     this.clearLoadingTimeout(); // Clear timeout when showing disabled state
     const disabledState = document.querySelector('#disabledState');
+    const blacklistWarning = document.querySelector('#blacklistWarning');
     const emptyState = document.querySelector('#emptyState');
     const detectionResults = document.querySelector('#detectionResults');
     const detectionPagination = document.querySelector('#detectionPagination');
@@ -430,6 +310,7 @@ DetectionUI.showDisabledState = function(isBlacklisted = false) {
     const disabledBlacklistBtn = document.querySelector('#disabledBlacklistBtn');
 
     if (disabledState) disabledState.style.display = 'flex';
+    if (blacklistWarning) blacklistWarning.style.display = 'none';
     if (emptyState) emptyState.style.display = 'none';
     if (detectionResults) detectionResults.style.display = 'none';
     if (detectionPagination) detectionPagination.style.display = 'none';
@@ -445,19 +326,17 @@ DetectionUI.showDisabledState = function(isBlacklisted = false) {
 };
 
 DetectionUI.displayResults = async function(detections = [], options = {}) {
-    if (!this.isExtensionEnabled) {
-      this.showDisabledState();
-      return;
-    }
+    if (DetectionUI.showUnavailableState.call(this)) return;
 
-    if (this.debugMode) Logger.ui('Detection.displayResults called with:', detections, options);
-    if (this.uiStateMachine) {
-      this.uiStateMachine.setState(this.uiStates.RESULTS, { count: detections?.length || 0 });
-    }
-
+    if (this.debugMode) Logger.debug('UI', 'Detection.displayResults called with:', detections, options);
     // Ensure HTML is loaded
     if (!this.initialized) {
       await this.initialize();
+    }
+
+    if (DetectionUI.showUnavailableState.call(this)) return;
+    if (this.uiStateMachine) {
+      this.uiStateMachine.setState(this.uiStates.RESULTS, { count: detections?.length || 0 });
     }
 
     this.wasInterrupted = false; // Reset flag when successfully displaying results
@@ -466,12 +345,12 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     this.displayOptions = options;
     this.cacheMetadata = options.cacheMetadata || null;
     if (this.debugMode) {
-      Logger.ui('[DEBUG Detection] currentResults stored:', this.currentResults.length, 'detections');
+      Logger.debug('UI', '[DEBUG Detection] currentResults stored:', this.currentResults.length, 'detections');
     }
 
     // Notify Advanced section that detection data is ready (fixes timing race condition)
     if (this.advancedSection && typeof this.advancedSection.onDetectionDataReady === 'function') {
-      Logger.ui('[Detection] Notifying Advanced section of detection data');
+      Logger.debug('UI', '[Detection] Notifying Advanced section of detection data');
       this.advancedSection.onDetectionDataReady(detections);
     }
 
@@ -486,12 +365,14 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     const detectionResults = document.querySelector('#detectionResults');
     const emptyState = document.querySelector('#emptyState');
     const disabledState = document.querySelector('#disabledState');
+    const blacklistWarning = document.querySelector('#blacklistWarning');
+    const interruptedState = document.querySelector('#interruptedState');
 
     // Check if cache is expired - don't show stale data
     if (options.fromStorage && options.cacheMetadata?.expiry) {
       const isExpired = Date.now() > options.cacheMetadata.expiry;
       if (isExpired) {
-        Logger.ui('[Detection] Cache expired, showing empty state instead of stale data');
+        Logger.debug('UI', '[Detection] Cache expired, showing empty state instead of stale data');
         this.showEmptyState();
         return;
       }
@@ -503,35 +384,12 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
       return;
     }
 
-    // Badge is now handled by background script for real-time updates
-    const totalDetections = detections.length;
-
-    // DISABLED: Toast notification for detections (per user request)
-    // Keeping the code commented in case it needs to be re-enabled
-    /*
-    // Show toast notification ONLY for fresh detections (not when opening popup with cached data)
-    if (totalDetections > 0 && options.fromStorage === false) {
-      const now = Date.now();
-
-      // Only show notification if enough time has passed since last one
-      if (now - this.lastNotificationTime > this.notificationDebounceTime) {
-        const detectionMessage = totalDetections === 1
-          ? '1 security system detected'
-          : `${totalDetections} security systems detected`;
-
-        NotificationHelper.info(detectionMessage, {
-          duration: 3000
-        });
-
-        this.lastNotificationTime = now;
-      }
-    }
-    */
-
     // Show results container
     if (detectionResults) detectionResults.style.display = 'flex';
     if (emptyState) emptyState.style.display = 'none';
     if (disabledState) disabledState.style.display = 'none';
+    if (blacklistWarning) blacklistWarning.style.display = 'none';
+    if (interruptedState) interruptedState.style.display = 'none';
 
     // Update URL display
     this.updateUrlDisplay(options);
@@ -570,23 +428,19 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
 
         // Get badge colors from CategoryManager
         const badgeColors = await CategoryManager.getBadgeColors();
+        if (!this.isShowingResults || !this.isExtensionEnabled || this.blacklistedDomain) return;
 
         // Badge color should match the UI difficulty (not raw detection count)
         const count = detectionCount.toString();
-        const avgConfidence = detectionCount > 0
-          ? Math.round(detections.reduce((sum, d) => sum + (d.confidence || 0), 0) / detectionCount)
-          : 0;
-        const { difficulty } = this.getDifficultyInfo(detections, avgConfidence);
-        const color = difficulty === 'High' ? badgeColors.high :
-                     difficulty === 'Medium' ? badgeColors.medium :
-                     badgeColors.low;
+        const color = DetectionUtils.getBadgeColor(detections, badgeColors);
 
         // Update badge text and color
+        await setBadgeTextColor(tabs[0].id, false, color);
         await chrome.action.setBadgeText({ text: count, tabId: tabs[0].id });
         await chrome.action.setBadgeBackgroundColor({ color: color, tabId: tabs[0].id });
 
         if (this.debugMode) {
-          Logger.ui(`[Detection] Badge updated to ${count} with color ${color}`);
+          Logger.debug('UI', `[Detection] Badge updated to ${count} with color ${color}`);
         }
       }
     } catch (error) {
@@ -607,19 +461,60 @@ DetectionUI.updateStats = function(detections) {
       : 0;
 
     // Determine difficulty level based on detections mix + confidence
-    const { difficulty, difficultyColor } = this.getDifficultyInfo(detections, avgConfidence);
+    const { difficulty } = this.getDifficultyInfo(detections, avgConfidence);
 
     // Update UI elements
+    // Difficulty is computed as Low/Medium/High; show it in the UI language
+    const difficultyKeyByValue = { Low: 'difficultyLow', Medium: 'difficultyMedium', High: 'difficultyHigh' };
+    const difficultyText = (typeof I18n !== 'undefined' && difficultyKeyByValue[difficulty])
+      ? I18n.tr(difficultyKeyByValue[difficulty], difficulty)
+      : difficulty;
+
     if (detectionsCount) detectionsCount.textContent = totalDetections;
-    if (overallConfidence) overallConfidence.textContent = `${avgConfidence}%`;
+    const confidenceTone = FormatUtils.confidenceTone(avgConfidence);
+    const toneClasses = ['tone-green', 'tone-amber', 'tone-red'];
+    if (overallConfidence) {
+      overallConfidence.textContent = `${avgConfidence}%`;
+      overallConfidence.classList.remove(...toneClasses);
+      if (totalDetections > 0) overallConfidence.classList.add(`tone-${confidenceTone}`);
+    }
+    const confidenceIcon = document.querySelector('.overall-confidence .stat-icon-inline');
+    if (confidenceIcon) {
+      confidenceIcon.classList.remove(...toneClasses);
+      if (totalDetections > 0) confidenceIcon.classList.add(`tone-${confidenceTone}`);
+    }
+    // Difficulty uses the History tones too: High red, Medium amber, Low green
+    const difficultyTone = { High: 'red', Medium: 'amber', Low: 'green' }[difficulty] || 'green';
     if (difficultyLevel) {
-      difficultyLevel.textContent = difficulty;
-      difficultyLevel.style.color = difficultyColor;
+      difficultyLevel.textContent = difficultyText;
+      difficultyLevel.style.color = '';
+      difficultyLevel.classList.remove(...toneClasses);
+      difficultyLevel.classList.add(`tone-${difficultyTone}`);
+    }
+    const difficultyIcon = document.querySelector('#difficultyIcon');
+    if (difficultyIcon) {
+      difficultyIcon.classList.remove(...toneClasses);
+      difficultyIcon.classList.add(`tone-${difficultyTone}`);
     }
 
-    this.setCopyableValue(detectionsCount?.closest('.stat-inline') || detectionsCount, String(totalDetections), 'detections');
-    this.setCopyableValue(overallConfidence?.closest('.stat-inline') || overallConfidence, `${avgConfidence}%`, 'confidence');
-    this.setCopyableValue(difficultyLevel?.closest('.stat-inline') || difficultyLevel, difficulty, 'difficulty');
+    // Hover breakdowns on the three tiles, the same ones History shows
+    const tile = (element) => element && element.closest('.stat-inline');
+    if (totalDetections > 0) {
+      const t = (key, fallback) => (typeof I18n !== 'undefined' ? I18n.tr(key, fallback) : fallback);
+      const detectionsTip = FormatUtils.detectionsTip(detections, t('statDetections', 'Detections'));
+      const confidenceTip = FormatUtils.confidenceTip(detections, `${t('statConfidence', 'Confidence')}: ${avgConfidence}%`);
+      const difficultyTip = FormatUtils.difficultyTip(detections, difficulty, `${t('statDifficulty', 'Difficulty')}: ${difficultyText}`);
+      FormatUtils.setTip(tile(detectionsCount), detectionsTip.title, detectionsTip.detail, detectionsTip.rows);
+      FormatUtils.setTip(tile(overallConfidence), confidenceTip.title, confidenceTip.detail, confidenceTip.rows);
+      FormatUtils.setTip(tile(difficultyLevel), difficultyTip.title, difficultyTip.detail, difficultyTip.rows);
+    } else {
+      // No detections: the tiles keep their one-line explanations
+      const t = (key, fallback) => (typeof I18n !== 'undefined' ? I18n.tr(key, fallback) : fallback);
+      FormatUtils.setTip(tile(detectionsCount), t('detectionTipDetections', 'Number of protections detected on this page.'));
+      FormatUtils.setTip(tile(overallConfidence), t('detectionTipConfidence', 'Average confidence across detected protections.'));
+      FormatUtils.setTip(tile(difficultyLevel), t('detectionTipDifficulty', 'Estimated difficulty of bypassing the detected protections.'));
+    }
+
 };
 
 DetectionUI.updateUrlDisplay = function(options = {}) {
@@ -710,6 +605,8 @@ DetectionUI.updateCacheInfo = function() {
     }
 
     // Update cache expiry time
+    const expiryTile = cacheExpiry.closest('.stat-inline');
+    const tipText = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
     if (this.cacheMetadata && this.cacheMetadata.expiry) {
       const expiryDate = new Date(this.cacheMetadata.expiry);
       const now = new Date();
@@ -722,51 +619,82 @@ DetectionUI.updateCacheInfo = function() {
           ? I18n.tr('cacheExpiredLabel', 'Expired')
           : 'Expired';
       }
+      // When it was saved and when it runs out, as dates
+      const rows = [];
+      if (this.cacheMetadata.timestamp) {
+        rows.push({ label: tipText('tipCachedAt', 'Saved'), value: FormatUtils.formatDateTime(this.cacheMetadata.timestamp) });
+      }
+      // The title carries the fixed expiry date, so it never shows a stale countdown
+      FormatUtils.setTip(expiryTile,
+        tipText('clipboardCacheExpirationFmt', 'Cache Expiration: {0}', FormatUtils.formatDateTime(this.cacheMetadata.expiry)),
+        tipText('detectionTipCacheExpiration', 'Time remaining before these cached detection results expire.'), rows);
     } else {
       cacheExpiry.textContent = '-';
+      FormatUtils.setTip(expiryTile, tipText('detectionTipCacheExpiration', 'Time remaining before these cached detection results expire.'));
     }
-    this.setCopyableValue(cacheExpiry.closest('.stat-inline') || cacheExpiry, cacheExpiry.textContent, 'cache expiration');
 
-    // Update cache scope display
+    // Update cache scope display (the stat tiles are display-only, not copyable)
     if (cacheScopeDisplay) {
+      const scopeTr = (key, fallback) => (
+        typeof I18n !== 'undefined' ? I18n.tr(key, fallback) : fallback
+      );
+      const scopeDisplayNames = {
+        'domain': scopeTr('scopeDomain', 'Domain'),
+        'path': scopeTr('scopePath', 'Path'),
+        'full': scopeTr('scopeFullUrl', 'Full URL')
+      };
+      // Title is the scope; the detail says which pages reuse the results
+      const scopeHints = {
+        'domain': scopeTr('tipScopeDomain', 'Results are reused for every page on this domain.'),
+        'path': scopeTr('tipScopePath', 'Results are reused for this exact path, whatever the query.'),
+        'full': scopeTr('tipScopeFullUrl', 'Results are reused only for this exact URL, including the query.')
+      };
+      const scopeTile = cacheScopeDisplay.closest('.stat-inline');
+      const showScope = (scope) => {
+        const key = scopeDisplayNames[scope] ? scope : 'path';
+        cacheScopeDisplay.textContent = scopeDisplayNames[key];
+        FormatUtils.setTip(scopeTile, `${scopeTr('statCacheScope', 'Cache Scope')}: ${scopeDisplayNames[key]}`, scopeHints[key]);
+      };
       if (this.cacheMetadata && this.cacheMetadata.cacheScope) {
-        // Map scope values to user-friendly display names
-        const scopeTr = (key, fallback) => (
-          typeof I18n !== 'undefined' ? I18n.tr(key, fallback) : fallback
-        );
-        const scopeDisplayNames = {
-          'domain': scopeTr('scopeDomain', 'Domain'),
-          'path': scopeTr('scopePath', 'Path'),
-          'full': scopeTr('scopeFullUrl', 'Full URL')
-        };
-        cacheScopeDisplay.textContent = scopeDisplayNames[this.cacheMetadata.cacheScope] || 'Path';
-        this.setCopyableValue(cacheScopeDisplay.closest('.stat-inline') || cacheScopeDisplay, cacheScopeDisplay.textContent, 'cache scope');
+        showScope(this.cacheMetadata.cacheScope);
       } else {
         // Fallback: read current setting from storage
         Utils.getSettings().then((settings) => {
-          const cacheScope = settings.cacheScope || settings.detection?.cacheScope || 'path';
-
-          const scopeDisplayNames = {
-            'domain': 'Domain',
-            'path': 'Path',
-            'full': 'Full URL'
-          };
-          cacheScopeDisplay.textContent = scopeDisplayNames[cacheScope] || 'Path';
-          this.setCopyableValue(cacheScopeDisplay.closest('.stat-inline') || cacheScopeDisplay, cacheScopeDisplay.textContent, 'cache scope');
+          showScope(settings.cacheScope || settings.detection?.cacheScope || 'path');
         }).catch(() => {});
       }
     }
 };
 
 DetectionUI.formatExpiryRemaining = function(msRemaining) {
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
     const ms = Number(msRemaining);
-    if (!Number.isFinite(ms) || ms <= 0) return 'Expired';
+    if (!Number.isFinite(ms) || ms <= 0) return (t && t.get('cacheExpiredLabel')) || 'Expired';
 
     const MINUTE = 60 * 1000;
     const HOUR = 60 * MINUTE;
     const DAY = 24 * HOUR;
     const MONTH = 30 * DAY; // Approximation is fine for TTL display
     const YEAR = 365 * DAY;
+
+    // Compact unit suffixes come from the locale ("3h 5m", "3 h 5 min",
+    // "3時間5分"). Keys rather than Intl: narrow Intl units write months and
+    // minutes the same way ("2m") in several languages.
+    const UNIT_FORMATS = {
+      y: ['detectionUiDurYearsFmt', '{0}y'],
+      mo: ['detectionUiDurMonthsFmt', '{0}mo'],
+      d: ['detectionUiDurDaysFmt', '{0}d'],
+      h: ['detectionUiDurHoursFmt', '{0}h'],
+      m: ['detectionUiDurMinutesFmt', '{0}m']
+    };
+    const unit = (value, label) => {
+      const [key, fallback] = UNIT_FORMATS[label];
+      return (t && t.format(key, value)) || fallback.replace('{0}', String(value));
+    };
+    const joinParts = (parts) => {
+      if (parts.length < 2) return parts[0];
+      return (t && t.format('detectionUiDurPairFmt', parts[0], parts[1])) || `${parts[0]} ${parts[1]}`;
+    };
 
     // Prefer large units when applicable:
     // - >= 1 year: y + mo
@@ -778,8 +706,9 @@ DetectionUI.formatExpiryRemaining = function(msRemaining) {
 
     const parts = [];
     const push = (value, label) => {
-      if (value > 0) parts.push(`${value}${label}`);
+      if (value > 0) parts.push(unit(value, label));
     };
+    const done = () => (parts.length ? joinParts(parts.slice(0, 2)) : unit(0, 'm'));
 
     if (remaining >= YEAR) {
       const years = Math.floor(remaining / YEAR);
@@ -788,7 +717,7 @@ DetectionUI.formatExpiryRemaining = function(msRemaining) {
 
       const months = Math.floor(remaining / MONTH);
       push(months, 'mo');
-      return parts.length ? parts.slice(0, 2).join(' ') : '0m';
+      return done();
     }
 
     if (remaining >= MONTH) {
@@ -798,7 +727,7 @@ DetectionUI.formatExpiryRemaining = function(msRemaining) {
 
       const days = Math.floor(remaining / DAY);
       push(days, 'd');
-      return parts.length ? parts.slice(0, 2).join(' ') : '0m';
+      return done();
     }
 
     if (remaining >= DAY) {
@@ -808,7 +737,7 @@ DetectionUI.formatExpiryRemaining = function(msRemaining) {
 
       const hours = Math.floor(remaining / HOUR);
       push(hours, 'h');
-      return parts.length ? parts.slice(0, 2).join(' ') : '0m';
+      return done();
     }
 
     if (remaining >= HOUR) {
@@ -818,12 +747,12 @@ DetectionUI.formatExpiryRemaining = function(msRemaining) {
 
       const minutes = Math.floor(remaining / MINUTE);
       push(minutes, 'm');
-      return parts.length ? parts.slice(0, 2).join(' ') : '0m';
+      return done();
     }
 
-    if (remaining < MINUTE) return '<1m';
+    if (remaining < MINUTE) return (t && t.get('detectionUiDurUnderMinute')) || '<1m';
     const minutes = Math.floor(remaining / MINUTE);
-    return `${minutes}m`;
+    return unit(minutes, 'm');
 };
 
 DetectionUI.setCopyableValue = function(element, value, label = 'value') {
@@ -847,8 +776,28 @@ DetectionUI.setCopyableValue = function(element, value, label = 'value') {
     element.dataset.copyLabel = label;
     element.setAttribute('role', 'button');
     element.setAttribute('tabindex', '0');
-    element.setAttribute('aria-label', `Copy ${label}`);
-    element.title = element.id === 'siteUrl' ? copyValue : `Copy ${label}: ${copyValue}`;
+    const copyText = DetectionUI.copyLabelText(label, copyValue);
+    element.setAttribute('aria-label', copyText.action);
+    element.title = element.id === 'siteUrl' ? copyValue : copyText.withValue;
+};
+
+// Localised "Copy URL" / "Copy URL: …" texts for a copyable value. `label`
+// is the internal kind ('URL', 'category', 'method', 'value').
+DetectionUI.COPY_LABEL_KEYS = {
+    url: ['detectionUiCopyUrl', 'Copy URL', 'detectionUiCopyUrlFmt', 'Copy URL: {0}'],
+    category: ['detectionUiCopyCategory', 'Copy category', 'detectionUiCopyCategoryFmt', 'Copy category: {0}'],
+    method: ['detectionUiCopyMethod', 'Copy method', 'detectionUiCopyMethodFmt', 'Copy method: {0}'],
+    value: ['detectionUiCopyValue', 'Copy value', 'detectionUiCopyValueFmt', 'Copy value: {0}']
+};
+
+DetectionUI.copyLabelText = function(label, value) {
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
+    const entry = DetectionUI.COPY_LABEL_KEYS[String(label || 'value').toLowerCase()] || DetectionUI.COPY_LABEL_KEYS.value;
+    const [actionKey, actionFallback, valueKey, valueFallback] = entry;
+    return {
+      action: (t && t.get(actionKey)) || actionFallback,
+      withValue: (t && t.format(valueKey, value)) || valueFallback.replace('{0}', String(value))
+    };
 };
 
 DetectionUI.copyCopyableValue = async function(element) {
@@ -859,7 +808,7 @@ DetectionUI.copyCopyableValue = async function(element) {
 
     const copied = await FormatUtils.copyToClipboard(value, {
       notify: true,
-      notificationMessage: 'Copied',
+      notificationMessage: (typeof I18n !== 'undefined' && I18n.get('copiedNotification')) || 'Copied',
       element: null
     });
 
@@ -907,14 +856,94 @@ DetectionUI.handleCopyableValueKeyDown = function(event) {
     this.copyCopyableValue(target);
 };
 
+/**
+ * Build the HTML of one detection card
+ * @param {Object} detection - Detection to render
+ * @param {number} index - Index within the rendered page (fallback for the global index)
+ * @param {boolean} isSingleResult - Whether the page shows a single card
+ * @returns {string} Card HTML
+ */
+DetectionUI.buildDetectionCardHtml = function(detection, index, isSingleResult = false) {
+    const confidence = detection.confidence || 0;
+
+    const detectorIcon = this.getDetectorIcon(detection);
+    const detectorName = detection.detector?.name || detection.detector
+      || ((typeof I18n !== 'undefined' && I18n.get('timeUnknown')) || 'Unknown');
+    const safeDetectorName = FormatUtils.escapeHtml(detectorName);
+
+    // Get category badges (plain on the list cards: the whole card opens the detail modal)
+    const categoryBadges = this.getCategoryBadges(detection, { copyable: false });
+
+    const globalIndex = this.getGlobalDetectionIndex(detection, index);
+
+    // Difficulty under the confidence, coloured like the History cards (High red, Medium amber, Low green)
+    const difficulty = DetectionUtils.normalizeDifficulty(detection.difficulty || detection.detector?.difficulty)
+      || DetectionUtils.defaultDifficultyForCategory(detection.category || detection.detector?.category);
+    const difficultyText = (typeof I18n !== 'undefined')
+      ? I18n.tr(`difficulty${difficulty}`, difficulty)
+      : difficulty;
+
+    // Hover: how the score was reached (matched combinations or the strongest
+    // single signal) and where the difficulty comes from
+    const matchList = Array.isArray(detection.matches) ? detection.matches : [];
+    const combos = Array.isArray(detection.combinations) ? detection.combinations : [];
+    const confidenceRows = combos.length
+      ? combos.slice(0, 3).map(combo => ({
+        label: combo.name || FormatUtils.t('combinationDefaultNameFmt', 'Combination {0}', 1),
+        value: `${Math.round(Number(combo.confidence) || 0)}%`, tone: FormatUtils.confidenceTone(combo.confidence)
+      }))
+      : matchList.slice().sort((a, b) => (Number(b.baseConfidence ?? b.confidence) || 0) - (Number(a.baseConfidence ?? a.confidence) || 0))
+        .slice(0, 3).map(match => ({
+          label: DetectionUI.getMethodLabel(String(match.type || 'unknown').toLowerCase()),
+          value: `${Math.round(Number(match.baseConfidence ?? match.confidence) || 0)}%`,
+          tone: FormatUtils.confidenceTone(match.baseConfidence ?? match.confidence)
+        }));
+    const confidenceTip = {
+      title: `${FormatUtils.t('statConfidence', 'Confidence')}: ${Math.round(confidence)}%`,
+      detail: combos.length
+        ? FormatUtils.t('tipConfidenceFromCombinations', 'From the matched combinations')
+        : (matchList.length === 1
+          ? FormatUtils.t('historyOneMatch', '1 match')
+          : FormatUtils.t('historyMatchCountFmt', '{0} matches', matchList.length)),
+      rows: confidenceRows
+    };
+    const ownDifficulty = DetectionUtils.normalizeDifficulty(detection.difficulty || detection.detector?.difficulty);
+    const difficultyTip = {
+      title: `${FormatUtils.t('statDifficulty', 'Difficulty')}: ${difficultyText}`,
+      detail: ownDifficulty
+        ? FormatUtils.t('tipDifficultyFromRule', 'Set by this detector')
+        : FormatUtils.t('tipDifficultyFromCategoryFmt', 'Default for {0}', FormatUtils.categoryLabel(FormatUtils.categoryKey(detection)))
+    };
+
+    return `
+      <div class="detection-card ${isSingleResult ? 'single-result' : ''}" data-detection-index="${globalIndex}">
+        <div class="card-header">
+          <div class="card-icon-section">
+            ${detectorIcon}
+          </div>
+          <div class="card-info">
+            <h3 class="detector-name">${safeDetectorName}</h3>
+            <div class="category-badges">
+              ${categoryBadges}
+            </div>
+          </div>
+          <div class="card-actions">
+            ${FormatUtils.confidenceHtml(confidence, 'card-confidence', confidenceTip)}
+            ${FormatUtils.difficultyHtml(difficulty, difficultyText, 'card-difficulty', difficultyTip)}
+          </div>
+        </div>
+      </div>
+    `;
+};
+
 DetectionUI.renderDetectionsPage = function(detections) {
-    Logger.ui(`[renderDetectionsPage] Called with ${detections?.length || 0} detections`);
+    Logger.debug('UI', `[renderDetectionsPage] Called with ${detections?.length || 0} detections`);
     const resultsList = document.querySelector('#resultsList');
     if (!resultsList) {
       Logger.error('UI', '[renderDetectionsPage] resultsList not found!');
       return;
     }
-    Logger.ui('[renderDetectionsPage] resultsList found, rendering...');
+    Logger.debug('UI', '[renderDetectionsPage] resultsList found, rendering...');
 
     const totalItems = this.paginationManager?.filteredItems?.length ?? detections.length;
     const shouldUseExpandedLayout = totalItems === 2;
@@ -923,47 +952,7 @@ DetectionUI.renderDetectionsPage = function(detections) {
     // Check if we're displaying only 1 detection result for enhanced styling
     const isSingleResult = detections.length === 1;
 
-    const buildCardHtml = (detection, index) => {
-      const confidence = detection.confidence || 0;
-      let confidenceClass = 'confidence-low';
-      if (confidence >= 90) confidenceClass = 'confidence-high';
-      else if (confidence >= 70) confidenceClass = 'confidence-medium';
-
-      const detectorIcon = this.getDetectorIcon(detection);
-      const detectorName = detection.detector?.name || detection.detector || 'Unknown';
-      const safeDetectorName = FormatUtils.escapeHtml(detectorName);
-      const copyDetectorName = FormatUtils.escapeAttr(detectorName);
-      const copyConfidence = FormatUtils.escapeAttr(`${confidence}%`);
-
-      // Get category badges
-      const categoryBadges = this.getCategoryBadges(detection);
-
-      const globalIndex = this.getGlobalDetectionIndex(detection, index);
-
-      return `
-        <div class="detection-card ${isSingleResult ? 'single-result' : ''}" data-detection-index="${globalIndex}">
-          <div class="card-header">
-            <div class="card-icon-section">
-              ${detectorIcon}
-            </div>
-            <div class="card-info">
-              <h3 class="detector-name copyable-value" data-copy-value="${copyDetectorName}" data-copy-label="detector name" role="button" tabindex="0" title="Copy detector name: ${copyDetectorName}">${safeDetectorName}</h3>
-              <div class="category-badges">
-                ${categoryBadges}
-              </div>
-            </div>
-            <div class="card-actions">
-              <span class="confidence-display ${confidenceClass} copyable-value" data-copy-value="${copyConfidence}" data-copy-label="confidence" role="button" tabindex="0" title="Copy confidence: ${copyConfidence}">${confidence}%</span>
-              <button class="copy-btn" data-detection-index="${globalIndex}" title="Copy detection details">
-                <svg width="14" height="14" viewBox="0 0 24 24">
-                  <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" fill="currentColor"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-    };
+    const buildCardHtml = (detection, index) => DetectionUI.buildDetectionCardHtml.call(this, detection, index, isSingleResult);
 
     const finalizeRender = () => {
       if (renderToken !== this._detectionsRenderToken) {
@@ -972,30 +961,18 @@ DetectionUI.renderDetectionsPage = function(detections) {
 
       // Add click handlers for expandable cards
       const cards = document.querySelectorAll('.detection-card');
-      Logger.ui(`[renderDetectionsPage] Found ${cards.length} detection cards`);
+      Logger.debug('UI', `[renderDetectionsPage] Found ${cards.length} detection cards`);
 
       cards.forEach(card => {
         card.addEventListener('click', (e) => {
-          Logger.ui('[renderDetectionsPage] Card clicked');
-          if (e.target.closest('.copy-btn') || e.target.closest('[data-copy-value]')) {
-            return;
-          }
+          Logger.debug('UI', '[renderDetectionsPage] Card clicked');
 
           const indexAttr = card.getAttribute('data-detection-index');
           const parsedIndex = parseInt(indexAttr, 10);
-          Logger.ui('[renderDetectionsPage] Opening modal for index', parsedIndex);
+          Logger.debug('UI', '[renderDetectionsPage] Opening modal for index', parsedIndex);
           if (!Number.isNaN(parsedIndex)) {
             this.openDetectionModal(parsedIndex);
           }
-        });
-      });
-
-      // Add click handlers for copy buttons
-      document.querySelectorAll('.copy-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const index = parseInt(btn.getAttribute('data-detection-index'));
-          this.copyDetection(index, btn);
         });
       });
     };
@@ -1003,6 +980,10 @@ DetectionUI.renderDetectionsPage = function(detections) {
     this._detectionsRenderToken = (this._detectionsRenderToken || 0) + 1;
     const renderToken = this._detectionsRenderToken;
     const shouldBatchRender = detections.length > 20;
+    // A page change starts the shared content scrollport at its summary and first card.
+    const main = document.querySelector('#app > .main');
+    if (main) main.scrollTop = 0;
+    resultsList.scrollTop = 0;
 
     if (!shouldBatchRender) {
       let resultsHtml = '';
@@ -1041,24 +1022,156 @@ DetectionUI.renderDetectionsPage = function(detections) {
     renderBatch();
 };
 
-DetectionUI.getCategoryBadges = function(detection) {
+/**
+ * Page sizer for the detection list: lays every card out once at the list's
+ * real width and packs cards against the shared main viewport height. The
+ * summary, search and cards scroll together, so content height must never be
+ * used as the page budget (min 1 card per page).
+ * @param {Array} items - Filtered, sorted detections
+ * @returns {Array<number>|null} Page start indexes, or null while the list is
+ *   not laid out (hidden tab) so pagination falls back to fixed-size pages
+ */
+DetectionUI.measurePageStarts = function(items) {
+    const resultsList = document.querySelector('#resultsList');
+    const main = document.querySelector('#app > .main');
+    if (!resultsList || !main || !items.length || !(resultsList.getBoundingClientRect().width > 0)) {
+      return null;
+    }
+
+    // Same rule renderDetectionsPage applies, so the padding measured here matches
+    resultsList.classList.toggle('expanded-results', items.length === 2);
+    const listStyle = getComputedStyle(resultsList);
+    const available = main.clientHeight
+      - parseFloat(listStyle.paddingTop) - parseFloat(listStyle.paddingBottom);
+    if (!(available > 0)) {
+      return null;
+    }
+    const gap = parseFloat(listStyle.rowGap) || 0;
+
+    // Cards share the main scrollbar gutter and measure at their final list width.
+    resultsList.innerHTML = items
+      .map((detection, index) => DetectionUI.buildDetectionCardHtml.call(this, detection, index))
+      .join('');
+    const heights = Array.from(resultsList.children, card => card.getBoundingClientRect().height);
+    this._detectionListHeight = available;
+
+    // Include the card crossing the viewport budget, then start the next page.
+    // The shared scrollport reveals the summary and every card on this page.
+    const starts = [0];
+    let used = 0;
+    heights.forEach((height, index) => {
+      if (index === starts[starts.length - 1]) {
+        used = height;
+      } else if (used + gap >= available) {
+        starts.push(index);
+        used = height;
+      } else {
+        used += gap + height;
+      }
+    });
+    return starts;
+};
+
+/**
+ * Re-pack detection pages when the shared viewport changes, never when a
+ * rendered page changes the list's natural content height.
+ */
+DetectionUI.observeResultsListSize = function() {
+    const resultsList = document.querySelector('#resultsList');
+    const main = document.querySelector('#app > .main');
+    if (this._resultsListObserver) {
+      this._resultsListObserver.disconnect();
+    }
+    if (!resultsList || !main || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    this._resultsListObserver = new ResizeObserver(() => {
+      if (this._resultsListRefitFrame) {
+        return;
+      }
+      this._resultsListRefitFrame = requestAnimationFrame(() => {
+        this._resultsListRefitFrame = null;
+        const pagination = this.paginationManager;
+        if (!pagination || !pagination.filteredItems.length || !resultsList.isConnected
+          || !(resultsList.getBoundingClientRect().width > 0)) {
+          return;
+        }
+        const listStyle = getComputedStyle(resultsList);
+        const available = main.clientHeight
+          - parseFloat(listStyle.paddingTop) - parseFloat(listStyle.paddingBottom);
+        if (available > 0 && Math.abs(available - (this._detectionListHeight || 0)) > 0.5) {
+          pagination.refit();
+        }
+      });
+    });
+    this._resultsListObserver.observe(main);
+};
+
+// Localized category names, shared by the detection cards, History and Rules
+DetectionUI.CATEGORY_LABELS = {
+    antibot: ['categoryAntibot', 'Anti-bot'],
+    'anti-bot': ['categoryAntibot', 'Anti-bot'],
+    captcha: ['categoryCaptcha', 'Captcha'],
+    fingerprint: ['categoryFingerprint', 'Fingerprint'],
+    fingerprinting: ['categoryFingerprint', 'Fingerprint']
+};
+
+DetectionUI.categoryLabel = function(category) {
+    const raw = String(category || '');
+    const entry = DetectionUI.CATEGORY_LABELS[raw.toLowerCase()];
+    if (!entry) return raw.charAt(0).toUpperCase() + raw.slice(1);
+    return typeof I18n !== 'undefined' ? I18n.tr(entry[0], entry[1]) : entry[1];
+};
+
+// Human-readable, localized names for the detection method chips on each card
+DetectionUI.METHOD_LABELS = {
+    js_hooks: ['detectionMethodJsHooks', 'JavaScript hooks'],
+    content: ['detectionMethodContent', 'Content'],
+    window: ['detectionMethodWindow', 'Window properties'],
+    dom: ['detectionMethodDom', 'Dom'],
+    header: ['detectionMethodHeaders', 'Headers'],
+    headers: ['detectionMethodHeaders', 'Headers'],
+    cookie: ['detectionMethodCookies', 'Cookies'],
+    cookies: ['detectionMethodCookies', 'Cookies'],
+    url: ['detectionMethodUrl', 'Url'],
+    urls: ['detectionMethodUrl', 'Url'],
+    payload: ['detectionMethodPayload', 'Payload'],
+    unknown: ['timeUnknown', 'Unknown']
+};
+
+DetectionUI.getMethodLabel = function(typeName) {
+    const entry = DetectionUI.METHOD_LABELS[typeName];
+    if (!entry) {
+      return typeName.replace(/_/g, ' ').toUpperCase();
+    }
+    return typeof I18n !== 'undefined' ? I18n.tr(entry[0], entry[1]) : entry[1];
+};
+
+DetectionUI.getCategoryBadges = function(detection, { copyable = true } = {}) {
     const badges = [];
+    // Copy-on-click attributes; the list cards pass copyable: false and render plain chips
+    const copyClass = copyable ? ' copyable-value' : '';
+    // value arrives attribute-escaped; the title is built from the raw text and escaped once
+    const copyAttrs = (value, label, rawValue) => (copyable
+      ? ` data-copy-value="${value}" data-copy-label="${label}" role="button" tabindex="0" title="${FormatUtils.escapeAttr(DetectionUI.copyLabelText(label, rawValue).withValue)}"`
+      : '');
 
     // Main category badge with dynamic color from storage (muted style)
     if (detection.category) {
       const categoryInfo = this.detectorManager.getCategoryInfo(detection.category.toLowerCase());
       const categoryColor = categoryInfo?.colour || '#666666';
-      const categoryName = detection.category.charAt(0).toUpperCase() + detection.category.slice(1);
+      const categoryName = DetectionUI.categoryLabel(detection.category);
       const safeCategoryName = FormatUtils.escapeHtml(categoryName);
       const copyCategoryName = FormatUtils.escapeAttr(categoryName);
-      const rgb = this.hexToRgb(categoryColor);
+      const rgb = FormatUtils.hexToRgb(categoryColor);
       // In the rgb branch categoryColor passed hexToRgb so it is a valid hex.
       // In the fallback branch use a constant — never interpolate an
       // unvalidated color into the style attribute.
       const bgStyle = rgb
         ? `background: rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.35);`
         : `background: #666666; color: white;`;
-      badges.push(`<span class="badge copyable-value" style="${bgStyle}" data-copy-value="${copyCategoryName}" data-copy-label="category" role="button" tabindex="0" title="Copy category: ${copyCategoryName}">${safeCategoryName}</span>`);
+      badges.push(`<span class="badge${copyClass}" style="${bgStyle}"${copyAttrs(copyCategoryName, 'category', categoryName)}>${safeCategoryName}</span>`);
     }
 
     // Add detection method badges based on actual matches (with counts)
@@ -1074,25 +1187,25 @@ DetectionUI.getCategoryBadges = function(detection) {
       // Convert method types to badges with counts and dynamic colors from CategoryManager
       methodCounts.forEach((count, type) => {
         const typeName = type.toLowerCase();
-        const methodName = typeName.replace(/_/g, ' ').toUpperCase();
+        const methodName = DetectionUI.getMethodLabel(typeName);
         const displayText = count > 1 ? `${methodName} (${count})` : methodName;
         const tagColor = this.detectorManager.categoryManager.getTagColor(typeName);
 
         if (tagColor && tagColor !== '#666666') {
           // Use muted/transparent background with colored text
-          const rgb = this.hexToRgb(tagColor);
+          const rgb = FormatUtils.hexToRgb(tagColor);
           const bgStyle = rgb
             ? `background: rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15); color: ${tagColor}; border: 1px solid rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3);`
             : `background: ${tagColor}; color: white;`;
           const safeDisplayText = FormatUtils.escapeHtml(displayText);
           const copyDisplayText = FormatUtils.escapeAttr(displayText);
-          badges.push(`<span class="badge copyable-value" style="${bgStyle}" data-copy-value="${copyDisplayText}" data-copy-label="method" role="button" tabindex="0" title="Copy method: ${copyDisplayText}">${safeDisplayText}</span>`);
+          badges.push(`<span class="badge badge-method${copyClass}" style="${bgStyle}"${copyAttrs(copyDisplayText, 'method', displayText)}>${safeDisplayText}</span>`);
         } else {
           // Fallback to CSS class (use typeName for CSS class)
           const methodClass = `badge-${typeName}`;
           const safeDisplayText = FormatUtils.escapeHtml(displayText);
           const copyDisplayText = FormatUtils.escapeAttr(displayText);
-          badges.push(`<span class="badge ${methodClass} copyable-value" data-copy-value="${copyDisplayText}" data-copy-label="method" role="button" tabindex="0" title="Copy method: ${copyDisplayText}">${safeDisplayText}</span>`);
+          badges.push(`<span class="badge badge-method ${methodClass}${copyClass}"${copyAttrs(copyDisplayText, 'method', displayText)}>${safeDisplayText}</span>`);
         }
       });
     }
@@ -1102,8 +1215,13 @@ DetectionUI.getCategoryBadges = function(detection) {
 
 DetectionUI.getMethodBadges = function(matches) {
     if (!matches || matches.length === 0) {
-      return '<div class="method-item-card">Unknown method</div>';
+      const unknownMethod = (typeof I18n !== 'undefined' && I18n.get('detectionUiUnknownMethod')) || 'Unknown method';
+      return `<div class="method-item-card">${FormatUtils.escapeHtml(unknownMethod)}</div>`;
     }
+
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
+    const clickToCopy = (t && t.get('advCommonClickToCopy')) || 'Click to copy';
+    const unknownValue = (t && t.get('detectionUiUnknownValue')) || 'unknown';
 
     // Show all methods as individual cards
     const badges = matches.map((match, index) => {
@@ -1121,39 +1239,39 @@ DetectionUI.getMethodBadges = function(matches) {
         case 'cookie':
         case 'cookies':
           // Show: name=value format if available, otherwise just name
-          displayValue = match.value || match.name || 'unknown';
+          displayValue = match.value || match.name || unknownValue;
           copyValue = displayValue;
           break;
 
         case 'header':
         case 'headers':
           // Show: name: value format if available, otherwise just name
-          displayValue = match.value || match.name || 'unknown';
+          displayValue = match.value || match.name || unknownValue;
           copyValue = displayValue;
           break;
 
         case 'content':
         case 'script':
           // Show: pattern first (e.g., "recaptcha"), then value (location)
-          displayValue = match.pattern || match.content || match.value || 'unknown';
+          displayValue = match.pattern || match.content || match.value || unknownValue;
           copyValue = displayValue;
           break;
 
         case 'url':
         case 'urls':
           // Show: full URL inline (like cookie format)
-          displayValue = match.fullUrl || match.value || match.pattern || 'unknown';
+          displayValue = match.fullUrl || match.value || match.pattern || unknownValue;
           copyValue = displayValue;
           break;
 
         case 'dom':
           // Show: selector=text format if available, otherwise just selector
-          displayValue = match.value || match.selector || match.pattern || 'unknown';
+          displayValue = match.value || match.selector || match.pattern || unknownValue;
           copyValue = displayValue;
           break;
 
         default:
-          displayValue = match.pattern || match.name || match.value || match.selector || 'unknown';
+          displayValue = match.pattern || match.name || match.value || match.selector || unknownValue;
           copyValue = displayValue;
       }
 
@@ -1162,15 +1280,10 @@ DetectionUI.getMethodBadges = function(matches) {
 
       // Use muted/transparent background with colored text
       const effectiveColor = (tagColor && tagColor !== '#666666') ? tagColor : '#666666';
-      const rgb = this.hexToRgb(effectiveColor);
+      const rgb = FormatUtils.hexToRgb(effectiveColor);
       const badgeStyle = rgb
         ? `style="background: rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15); color: ${effectiveColor}; border: 1px solid rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3);"`
         : `style="background: ${effectiveColor}; color: white; border: none;"`;
-
-      // Confidence badge color
-      let confidenceClass = 'confidence-low';
-      if (confidence >= 90) confidenceClass = 'confidence-high';
-      else if (confidence >= 70) confidenceClass = 'confidence-medium';
 
       // Normalize method type for CSS class using original matchType (preserves underscores/hyphens)
       // Replace underscores with hyphens for CSS compatibility, then handle plural to singular
@@ -1181,10 +1294,10 @@ DetectionUI.getMethodBadges = function(matches) {
       const safeFullValue = FormatUtils.escapeHtml(copyValue);
 
       return `
-        <div class="method-item-card method-${methodClass}" data-copy-value="${encodedValue}" data-method-type="${methodType}" title="Click to copy">
-          <span class="method-type-badge" ${badgeStyle}>${methodType}</span>
+        <div class="method-item-card method-${methodClass}" data-copy-value="${encodedValue}" data-method-type="${methodType}" title="${FormatUtils.escapeAttr(clickToCopy)}">
+          <span class="method-type-badge" ${badgeStyle}>${FormatUtils.escapeHtml(DetectionUI.getMethodLabel(matchType || 'unknown'))}</span>
           <button type="button" class="method-value-btn" data-copy-target="value" title="${safeFullValue}">${safeDisplayValue}</button>
-          <span class="method-confidence ${confidenceClass}">${confidence}%</span>
+          ${FormatUtils.confidenceHtml(confidence, 'method-confidence')}
         </div>
       `;
     });
@@ -1250,7 +1363,8 @@ DetectionUI.handleSearch = function(query) {
 };
 
 DetectionUI.getDetectorIcon = function(detection) {
-    const escapeAlt = (text) => FormatUtils.escapeAttr(text || 'Icon');
+    const iconAlt = (typeof I18n !== 'undefined' && I18n.get('ruleFieldIcon')) || 'Icon';
+    const escapeAlt = (text) => FormatUtils.escapeAttr(text || iconAlt);
     const normalizedCategory = String(detection?.category || detection?.detector?.category || '')
       .toLowerCase()
       .replace(/[^a-z]/g, '');
@@ -1346,20 +1460,14 @@ DetectionUI.clearBadgeForEmptyState = async function() {
     try {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
       if (tabs && tabs[0]) {
+        // A late empty result must not erase the blocked or globally disabled badge.
+        const { scrapfly_enabled: enabled } = await chrome.storage.local.get('scrapfly_enabled');
+        if (enabled === false || await Utils.isUrlBlacklisted(tabs[0].url)) return;
         await chrome.action.setBadgeText({ text: '', tabId: tabs[0].id });
       }
     } catch (error) {
       // Silently fail if tab no longer exists
     }
-};
-
-DetectionUI.hexToRgb = function(hex) {
-    const result = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : null;
 };
 
 DetectionUI.getDifficultyInfo = function(detections = [], avgConfidence = 0) {
