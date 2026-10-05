@@ -5,7 +5,7 @@
 ![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)
 ![Manifest V3](https://img.shields.io/badge/Manifest-V3-green?style=for-the-badge)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![Version](https://img.shields.io/badge/Version-2.7-blue?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-2.8-blue?style=for-the-badge)
 
 <br>
 
@@ -120,130 +120,9 @@ Scrapfly Anti-bot Detector is a Manifest V3 Chrome extension that helps security
 - **URL Blacklist**: Exclude specific domains from detection
 - **Debug Mode**: One readable report per scanned page in the Service Worker console. **Verbose logs** adds every step.
 - **Auto-cleanup**: Automatic history expiration
+ 
 
-## Architecture
-
-### Project Structure
-
-```
-core/
-├── manifest.json              # Extension configuration (Manifest V3)
-├── background.js              # Service worker (message handling, detection)
-├── content.js                 # Content script (ISOLATED world - orchestration)
-├── content-main-world.js      # JS hooks installer (MAIN world - API interception)
-├── popup.js/html/css          # Extension popup UI
-│
-├── detectors/                 # JSON detector definitions
-│   ├── antibot/              # Cloudflare, Akamai, DataDome, Imperva, etc.
-│   ├── captcha/              # reCAPTCHA, hCaptcha, FunCaptcha, GeeTest, Turnstile
-│   ├── fingerprint/          # Canvas, WebGL, Audio, Performance (21 detectors)
-│   └── index.json            # Category configuration
-│
-├── modules/                   # Core managers & helpers (singleton pattern)
-│   ├── core/                 # logger, storage-manager, ttl-map, badge-constants,
-│   │                         #   log-collector, update-manager
-│   ├── detection/
-│   │   ├── engine/           # DetectionEngineManager + analysis/extractors/
-│   │   │                     #   matching/hooks helpers (orchestration & batching)
-│   │   ├── managers/         # detector-manager, category-manager, confidence-manager
-│   │   └── hooks/            # hook-resilience-manager, window-condition-language,
-│   │                         #   window-property-tracker, worker-keepalive-manager
-│   ├── ui/                   # color-manager, notification-manager, pagination-manager
-│   └── styles/               # CSS stylesheets (popup, detection, rules, settings, …)
-│
-├── sections/                  # UI sections (modular architecture)
-│   ├── detection/            # Detection results tab
-│   ├── history/              # Detection history tab
-│   ├── rules/                # Detector rules editor
-│   ├── settings/             # Settings & configuration
-│   └── advanced/             # Advanced capture tools
-│       ├── base-interceptor-helpers.js    # Service worker utilities
-│       ├── advanced-utils.js              # Popup UI utilities
-│       ├── base-advanced-module.js        # Base class for modules
-│       └── modules/                        # Detector-specific tools
-│           ├── recaptcha/
-│           ├── akamai/
-│           ├── imperva/
-│           ├── shapesecurity/
-│           ├── awswaf/
-│           ├── hcaptcha/
-│           ├── funcaptcha/
-│           ├── geetest/
-│           ├── datadome/
-│           └── cloudflare/
-│
-└── utils/                     # Utility functions
-    ├── utils.js              # Core utilities (data collection, URL handling)
-    ├── format-utils.js       # HTML escaping & formatting helpers
-    ├── url-utils.js          # URL hashing, favicon & locale-flag helpers
-    ├── detection-utils.js    # Detection/difficulty helpers
-    └── pattern-cache.js      # LRU compiled-regex cache (ReDoS-guarded)
-```
-
-> Tooling lives in `scripts/` (verification checks) and `test/` (unit tests). Both stay in the repo for CI but are excluded from the packaged extension. Internal planning notes (`plans/`) are git-ignored.
-
-### Detection Flow
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  1. Page Load (document_start)                              │
-│     └─> content-main-world.js installs JS hooks             │
-│         • Detector-driven fingerprinting API hooks          │
-│         • Must install BEFORE page scripts execute          │
-└─────────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────────┐
-│  2. Cache Check                                             │
-│     └─> background.js cache check (async)                   │
-│         • If cache hit: Skip detection, show cached results │
-│         • If cache miss: Proceed to data collection         │
-└─────────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────────┐
-│  3. Data Collection (content.js - ISOLATED world)           │
-│     └─> DetectionEngineManager.collectPageData()            │
-│         • DOM elements, scripts, classes                    │
-│         • Cookies, headers (via background.js)              │
-│         • Window properties (via authenticated bridge)      │
-│         • JS hooks (via authenticated bridge)               │
-│         • Request payloads (via background.js)              │
-└─────────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────────┐
-│  4. Hook Completion (content-main-world.js)                 │
-│     └─> Completion triggers:                                │
-│         • 2-second inactivity timeout (no hook activity)    │
-│         • 8-second maximum window (absolute cap)            │
-│     └─> Hooks uninstalled immediately after firing          │
-└─────────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────────┐
-│  5. Detection (background.js)                               │
-│     └─> DetectionEngineManager.detectOnPage()               │
-│         • Pattern matching against enabled detectors        │
-│         • Confidence score calculation                      │
-│         • Results aggregation & deduplication               │
-└─────────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────────┐
-│  6. Storage & Display                                       │
-│     └─> Cache results (12-hour expiry)                      │
-│     └─> Update badge with detection count                   │
-│     └─> Update popup UI with detections                     │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Key Design Patterns
-
-- **Singleton Managers**: DetectorManager, CategoryManager, StorageManager for centralized state
-- **Event-Driven Communication**: authenticated bridge events for MAIN <-> ISOLATED world communication
-- **Modular Sections**: Each UI section is self-contained (JS + HTML + CSS)
-- **JSON-Driven Detectors**: All detection rules stored in JSON for easy updates
-- **LRU Caching**: Pattern cache, URL hash cache for performance
-- **Centralized Logging**: One-line entries from every context in the Service Worker console via the Logger module, with a per-page scan report
-- **CSP Compliance**: Event delegation instead of inline handlers
-
-
+ 
 ## Development
 
 No build step — it's pure JavaScript. Load the `src/` folder as an unpacked extension:
