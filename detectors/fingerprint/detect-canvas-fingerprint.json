@@ -5,43 +5,227 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-02-04",
-  "version": "1.0.1",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://en.wikipedia.org/wiki/Canvas_fingerprinting",
   "icon": "canvas_fingerprint.png",
-  "description": "HTML5 Canvas-based browser and device fingerprinting",
+  "description": "Canvas text, geometry and readback API profiles; fingerprinting intent is not confirmed by API calls alone",
   "detection": {
     "js_hooks": [
       {
-        "description": "Converts canvas to data URL for fingerprinting",
+        "description": "Requests a canvas data URL; also used for image export",
         "enabled": true,
-        "confidence": 100,
-        "target": "HTMLCanvasElement.prototype.toDataURL"
+        "confidence": 25,
+        "target": "HTMLCanvasElement.prototype.toDataURL",
+        "id": "canvas-export",
+        "standalone": true
       },
       {
-        "description": "Extracts pixel data from canvas",
+        "description": "Requests canvas pixel data; also used for image processing",
         "enabled": true,
-        "confidence": 100,
-        "target": "CanvasRenderingContext2D.prototype.getImageData"
+        "confidence": 30,
+        "target": "CanvasRenderingContext2D.prototype.getImageData",
+        "id": "canvas-pixels",
+        "standalone": true
       },
       {
-        "description": "Converts canvas to blob for fingerprinting",
+        "description": "Requests a canvas blob; also used for image export",
         "enabled": true,
-        "confidence": 85,
-        "target": "HTMLCanvasElement.prototype.toBlob"
+        "confidence": 15,
+        "target": "HTMLCanvasElement.prototype.toBlob",
+        "id": "canvas-blob",
+        "standalone": true
       },
       {
-        "description": "Measures text dimensions for font fingerprinting",
+        "description": "Measures text dimensions; also used for ordinary text layout",
         "enabled": true,
-        "confidence": 85,
-        "target": "CanvasRenderingContext2D.prototype.measureText"
+        "confidence": 10,
+        "target": "CanvasRenderingContext2D.prototype.measureText",
+        "id": "canvas-text",
+        "standalone": true
       },
       {
-        "description": "Creates offscreen canvas context for hidden fingerprinting",
+        "description": "Requests an offscreen drawing context; context type and purpose are unconfirmed",
         "enabled": true,
-        "confidence": 100,
-        "target": "OffscreenCanvas.prototype.getContext"
+        "confidence": 5,
+        "target": "OffscreenCanvas.prototype.getContext",
+        "id": "canvas-offscreen",
+        "optional": true,
+        "standalone": true
+      },
+      {
+        "description": "Draws filled text; text, font and purpose are unconfirmed",
+        "enabled": true,
+        "confidence": 15,
+        "target": "CanvasRenderingContext2D.prototype.fillText",
+        "id": "canvas-text-fill",
+        "standalone": true
+      },
+      {
+        "description": "Draws outlined text; text, font and purpose are unconfirmed",
+        "enabled": true,
+        "confidence": 15,
+        "target": "CanvasRenderingContext2D.prototype.strokeText",
+        "id": "canvas-text-stroke",
+        "standalone": true
+      },
+      {
+        "description": "Tests whether a point is inside a path; winding rule and purpose are unconfirmed",
+        "enabled": true,
+        "confidence": 5,
+        "target": "CanvasRenderingContext2D.prototype.isPointInPath",
+        "id": "canvas-path-test",
+        "standalone": true
+      }
+    ],
+    "content": [
+      {
+        "id": "canvas-source-export",
+        "text": "toDataURL",
+        "scope": "scripts",
+        "checkScripts": true,
+        "description": "Script reference to canvas image export; runtime usage and intent unconfirmed",
+        "confidence": 10,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "standalone": true
+      },
+      {
+        "id": "canvas-source-pixels",
+        "text": "getImageData",
+        "scope": "scripts",
+        "checkScripts": true,
+        "description": "Script reference to canvas pixel access; runtime usage and intent unconfirmed",
+        "confidence": 10,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "standalone": true
+      },
+      {
+        "id": "canvas-source-text",
+        "text": "measureText",
+        "scope": "scripts",
+        "checkScripts": true,
+        "description": "Script reference to text measurement; runtime usage and intent unconfirmed",
+        "confidence": 5,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "standalone": true
+      },
+      {
+        "id": "canvas-source-probe-text",
+        "text": "Cwm fjordbank gly",
+        "scope": "scripts",
+        "checkScripts": true,
+        "description": "Characteristic canvas test text in script source; execution and collector identity unconfirmed",
+        "confidence": 10,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "standalone": true
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "canvas-profile",
+      "name": "Text measurement and canvas readback API use",
+      "confidence": 40,
+      "when": {
+        "all": [
+          { "pattern": "canvas-text" },
+          {
+            "any": [
+              { "pattern": "canvas-export" },
+              { "pattern": "canvas-pixels" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "canvas-text-render-profile",
+      "name": "Text drawing and canvas readback API use",
+      "confidence": 50,
+      "when": {
+        "all": [
+          {
+            "any": [
+              { "pattern": "canvas-text-fill" },
+              { "pattern": "canvas-text-stroke" }
+            ]
+          },
+          {
+            "any": [
+              { "pattern": "canvas-export" },
+              { "pattern": "canvas-pixels" },
+              { "pattern": "canvas-blob" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "canvas-text-metrics-profile",
+      "name": "Text measurement, drawing and canvas readback API use",
+      "confidence": 55,
+      "when": {
+        "all": [
+          { "pattern": "canvas-text" },
+          {
+            "any": [
+              { "pattern": "canvas-text-fill" },
+              { "pattern": "canvas-text-stroke" }
+            ]
+          },
+          {
+            "any": [
+              { "pattern": "canvas-export" },
+              { "pattern": "canvas-pixels" },
+              { "pattern": "canvas-blob" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "canvas-path-render-profile",
+      "name": "Path testing, text drawing and canvas readback API use",
+      "confidence": 60,
+      "when": {
+        "all": [
+          { "pattern": "canvas-path-test" },
+          {
+            "any": [
+              { "pattern": "canvas-text-fill" },
+              { "pattern": "canvas-text-stroke" }
+            ]
+          },
+          {
+            "any": [
+              { "pattern": "canvas-export" },
+              { "pattern": "canvas-pixels" },
+              { "pattern": "canvas-blob" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "canvas-characteristic-probe",
+      "name": "Characteristic test-text source with drawing, path-test and export APIs",
+      "confidence": 70,
+      "when": {
+        "all": [
+          { "pattern": "canvas-source-probe-text" },
+          { "pattern": "canvas-text-fill" },
+          { "pattern": "canvas-path-test" },
+          { "pattern": "canvas-export" }
+        ]
+      }
+    }
+  ]
 }

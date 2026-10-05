@@ -56,12 +56,12 @@ SettingsUI._setupLogListeners = function() {
 
         if (e.target.checked) {
           chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_ENABLE' }).catch(() => {
-            Logger.ui('Failed to enable log collection');
+            Logger.debug('UI', 'Failed to enable log collection');
           });
           this.startLogCountUpdate();
         } else {
           chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_DISABLE' }).catch(() => {
-            Logger.ui('Failed to disable log collection');
+            Logger.debug('UI', 'Failed to disable log collection');
           });
           this.stopLogCountUpdate();
         }
@@ -96,6 +96,7 @@ SettingsUI._setupLogListeners = function() {
           title: _trLog('clearLogsTitle', 'Clear Logs'),
           message: _trLog('clearLogsMessage', 'Are you sure you want to clear all collected logs? This action cannot be undone.'),
           type: 'warning',
+          tone: 'danger',
           confirmText: _trLog('btnClear', 'Clear'),
           cancelText: _trLog('btnCancel', 'Cancel')
         });
@@ -126,7 +127,7 @@ SettingsUI._setupLogListeners = function() {
           logCountMax.textContent = maxLogs;
         }
         chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_SET_MAX_LOGS', maxLogs: maxLogs }).catch(() => {
-          Logger.ui('Failed to set max logs');
+          Logger.debug('UI', 'Failed to set max logs');
         });
       });
     }

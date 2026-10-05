@@ -5,51 +5,51 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "High",
-  "lastUpdated": "2024-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-04",
+  "version": "1.2.0",
   "website": "https://www.arkoselabs.com/",
   "icon": "funcaptcha_official.png",
   "description": "Interactive game-based CAPTCHA by Arkose Labs",
   "detection": {
-    "cookie": [
-      
-    ],
-    "header": [
-     
-    ],
+    "cookie": [],
+    "header": [],
     "url": [
       {
-        "confidence": 100,
-        "description": "Arkose Labs API endpoint",
-        "text": "client-api.arkoselabs.com",
-        "textRegex": false,
+        "id": "arkose-client-api",
+        "confidence": 60,
+        "description": "Official personalized Arkose client API resource; execution unconfirmed",
+        "text": "^https?://[a-z0-9](?:[a-z0-9-]*[a-z0-9])?-api\\.arkoselabs\\.com/v2/[a-z0-9_-]+/api\\.js(?:[?#]|$)",
+        "textRegex": true,
         "textWholeWord": false,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "confidence": 100,
-        "description": "Legacy FunCaptcha API",
-        "text": "api.funcaptcha.com",
-        "textRegex": false,
+        "id": "funcaptcha-legacy-api",
+        "confidence": 40,
+        "description": "Legacy vendor-bound FunCaptcha API resource",
+        "text": "^https?://api\\.funcaptcha\\.com/fc/(?:api/nojs/|gt2/)",
+        "textRegex": true,
         "textWholeWord": false,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "confidence": 95,
-        "description": "FunCaptcha no-JS API",
-        "text": "/fc/api/nojs/",
-        "textRegex": false,
+        "id": "arkose-enforcement-frame",
+        "confidence": 60,
+        "description": "Versioned enforcement frame document the client API loads from an Arkose host",
+        "text": "^https://[a-z0-9](?:[a-z0-9-]*[a-z0-9])?-api\\.arkoselabs\\.com/v2/[0-9]+\\.[0-9]+\\.[0-9]+/enforcement\\.[a-f0-9]+\\.html(?:[?#]|$)",
+        "textRegex": true,
         "textWholeWord": false,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "confidence": 90,
-        "description": "Arkose enforcement script",
-        "text": "/enforcement.*.js",
-        "textRegex": false,
+        "id": "arkose-session-request",
+        "confidence": 50,
+        "description": "Session token request to the gt2 public-key route on an Arkose host",
+        "text": "^https://[a-z0-9](?:[a-z0-9-]*[a-z0-9])?-api\\.arkoselabs\\.com/fc/gt2/public_key/[A-Za-z0-9-]+(?:[/?#]|$)",
+        "textRegex": true,
         "textWholeWord": false,
         "textCaseSensitive": false,
         "textScope": "all"
@@ -57,81 +57,64 @@
     ],
     "content": [
       {
-        "confidence": 50,
-        "description": "Arkose callback function",
-        "text": "window.arkoseCallback",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "description": "Arkose enforcement object",
-        "text": "ArkoseEnforce",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
+        "id": "funcaptcha-source-reference",
+        "confidence": 10,
+        "description": "Script identifier reference only, not execution or vendor verification",
         "text": "funcaptcha",
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "text": "setupEnforcement",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": false,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
       }
     ],
     "dom": [
       {
-        "selector": "[data-arkose]",
-        "confidence": 100,
-        "description": "Arkose data attribute",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
-      },
-      {
-        "selector": ".arkose-labs",
-        "confidence": 95,
-        "description": "Arkose CSS class",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
-      },
-      {
+        "id": "funcaptcha-container",
         "selector": "#FunCaptcha",
-        "confidence": 90,
-        "description": "FunCaptcha container ID",
+        "confidence": 20,
+        "description": "Legacy vendor-named container; copyable markup, not challenge visibility",
         "selectorRegex": false,
         "selectorWholeWord": false,
-        "selectorCaseSensitive": false
+        "selectorCaseSensitive": true
+      },
+      {
+        "id": "funcaptcha-challenge-frame",
+        "selector": "iframe[src^='https://client-api.arkoselabs.com/fc/'], iframe[src^='http://client-api.arkoselabs.com/fc/'], iframe[src^='//client-api.arkoselabs.com/fc/'], iframe[src^='https://api.funcaptcha.com/fc/'], iframe[src^='http://api.funcaptcha.com/fc/'], iframe[src^='//api.funcaptcha.com/fc/']",
+        "confidence": 50,
+        "description": "Vendor-authority challenge frame markup; loading and visibility unconfirmed",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": true
       }
     ],
-    "window": [
-      {
-        "path": "ArkoseEnforce",
-        "condition": "typeof object",
-        "confidence": 100,
-        "description": "Arkose enforcement object"
-      },
-      {
-        "path": "arkoseCallback",
-        "condition": "typeof function",
-        "confidence": 95,
-        "description": "Arkose callback function"
-      },
-      {
-        "path": "setupEnforcement",
-        "condition": "typeof function",
-        "confidence": 85,
-        "description": "Arkose setup enforcement function"
-      }
-    ]
-  }
+    "window": []
+  },
+  "combinations": [
+    {
+      "id": "arkose-resource-container",
+      "name": "Official client API and vendor-named container",
+      "confidence": 65,
+      "when": { "all": [{ "pattern": "arkose-client-api" }, { "pattern": "funcaptcha-container" }] }
+    },
+    {
+      "id": "arkose-resource-session",
+      "name": "Official client API and an Arkose session token request",
+      "confidence": 75,
+      "when": { "all": [{ "pattern": "arkose-client-api" }, { "pattern": "arkose-session-request" }] }
+    },
+    {
+      "id": "arkose-resource-frame",
+      "name": "Official client API and an Arkose challenge or enforcement frame",
+      "confidence": 80,
+      "when": { "all": [{ "pattern": "arkose-client-api" }, { "any": [{ "pattern": "funcaptcha-challenge-frame" }, { "pattern": "arkose-enforcement-frame" }] }] }
+    },
+    {
+      "id": "arkose-resource-frame-container",
+      "name": "Official client API, enforcement frame and session token request",
+      "confidence": 90,
+      "when": { "all": [{ "pattern": "arkose-client-api" }, { "pattern": "arkose-enforcement-frame" }, { "pattern": "arkose-session-request" }] }
+    }
+  ]
 }

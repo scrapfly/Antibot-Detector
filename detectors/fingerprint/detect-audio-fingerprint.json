@@ -5,37 +5,195 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-02-04",
-  "version": "1.0.1",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://webaudio.github.io/web-audio-api/",
   "icon": "audio_fingerprint.png",
-  "description": "Web Audio API-based device and system fingerprinting",
+  "description": "Web Audio API usage and offline rendering profiles; fingerprinting intent is not confirmed by API calls alone",
   "detection": {
     "js_hooks": [
       {
-        "description": "Reads audio channel data for fingerprinting",
+        "description": "Requests audio channel samples; also used for ordinary audio processing",
         "enabled": true,
-        "confidence": 100,
-        "target": "AudioBuffer.prototype.getChannelData"
+        "confidence": 25,
+        "target": "AudioBuffer.prototype.getChannelData",
+        "id": "audio-samples",
+        "standalone": true
       },
       {
-        "description": "Analyzes audio frequency data",
+        "description": "Requests frequency analysis data; also used by audio visualizers",
         "enabled": true,
-        "confidence": 100,
-        "target": "AnalyserNode.prototype.getFloatFrequencyData"
+        "confidence": 15,
+        "target": "AnalyserNode.prototype.getFloatFrequencyData",
+        "id": "audio-frequencies",
+        "standalone": true
       },
       {
-        "description": "Creates audio oscillator for signal generation",
+        "description": "Creates an oscillator; signal parameters and purpose are unconfirmed",
         "enabled": true,
-        "confidence": 85,
-        "target": "BaseAudioContext.prototype.createOscillator"
+        "confidence": 10,
+        "target": "BaseAudioContext.prototype.createOscillator",
+        "id": "audio-oscillator",
+        "standalone": true
       },
       {
-        "description": "Connects audio nodes for fingerprinting chain",
+        "description": "Connects audio nodes",
         "enabled": false,
-        "confidence": 70,
-        "target": "AudioNode.prototype.connect"
+        "confidence": 5,
+        "target": "AudioNode.prototype.connect",
+        "id": "audio-connect",
+        "standalone": false
+      },
+      {
+        "description": "Creates a dynamics compressor; also used for ordinary audio effects",
+        "enabled": true,
+        "confidence": 10,
+        "target": "BaseAudioContext.prototype.createDynamicsCompressor",
+        "id": "audio-compressor",
+        "standalone": true
+      },
+      {
+        "description": "Starts offline audio rendering; rendering success and purpose are unconfirmed",
+        "enabled": true,
+        "confidence": 30,
+        "target": "OfflineAudioContext.prototype.startRendering",
+        "id": "audio-offline-render",
+        "optional": true,
+        "standalone": true
+      },
+      {
+        "description": "Requests a copy of audio channel samples; also used by audio editors",
+        "enabled": true,
+        "confidence": 25,
+        "target": "AudioBuffer.prototype.copyFromChannel",
+        "id": "audio-samples-copy",
+        "standalone": true
+      }
+    ],
+    "content": [
+      {
+        "id": "audio-source-offline-context",
+        "text": "OfflineAudioContext",
+        "scope": "scripts",
+        "checkScripts": true,
+        "description": "Script reference to offline audio rendering; runtime usage and intent unconfirmed",
+        "confidence": 5,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "standalone": true
+      },
+      {
+        "id": "audio-source-samples",
+        "text": "getChannelData",
+        "scope": "scripts",
+        "checkScripts": true,
+        "description": "Script reference to audio sample access; runtime usage and intent unconfirmed",
+        "confidence": 10,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "standalone": true
+      },
+      {
+        "id": "audio-source-samples-copy",
+        "text": "copyFromChannel",
+        "scope": "scripts",
+        "checkScripts": true,
+        "description": "Script reference to copying audio samples; runtime usage and intent unconfirmed",
+        "confidence": 10,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "standalone": true
+      },
+      {
+        "id": "audio-source-compressor",
+        "text": "createDynamicsCompressor",
+        "scope": "scripts",
+        "checkScripts": true,
+        "description": "Script reference to audio compression; runtime usage and intent unconfirmed",
+        "confidence": 5,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "standalone": true
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "audio-signal-analysis",
+      "name": "Oscillator and frequency-analysis API use",
+      "confidence": 30,
+      "when": {
+        "all": [
+          { "pattern": "audio-oscillator" },
+          { "pattern": "audio-frequencies" }
+        ]
+      }
+    },
+    {
+      "id": "audio-profile",
+      "name": "Oscillator and channel-sample API use",
+      "confidence": 40,
+      "when": {
+        "all": [
+          { "pattern": "audio-oscillator" },
+          { "pattern": "audio-samples" }
+        ]
+      }
+    },
+    {
+      "id": "audio-offline-profile",
+      "name": "Offline rendering and channel-sample API use",
+      "confidence": 50,
+      "when": {
+        "all": [
+          { "pattern": "audio-offline-render" },
+          {
+            "any": [
+              { "pattern": "audio-samples" },
+              { "pattern": "audio-samples-copy" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "audio-offline-synthesis",
+      "name": "Offline rendering, oscillator and channel-sample API use",
+      "confidence": 60,
+      "when": {
+        "all": [
+          { "pattern": "audio-offline-render" },
+          { "pattern": "audio-oscillator" },
+          {
+            "any": [
+              { "pattern": "audio-samples" },
+              { "pattern": "audio-samples-copy" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "audio-offline-compression",
+      "name": "Offline rendering, oscillator, compressor and sample APIs",
+      "confidence": 65,
+      "when": {
+        "all": [
+          { "pattern": "audio-offline-render" },
+          { "pattern": "audio-oscillator" },
+          { "pattern": "audio-compressor" },
+          {
+            "any": [
+              { "pattern": "audio-samples" },
+              { "pattern": "audio-samples-copy" }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

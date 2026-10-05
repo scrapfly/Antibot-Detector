@@ -84,11 +84,4 @@ Rules.prototype.setupModalEventListeners = function() {
     this.setupCaseSensitiveHelperModal();
     this.setupExplanationModals();
     this.setupMethodHelpModal();
-
-    // Setup HTTP method color for network request modal dropdown
-    const networkMethod = document.querySelector('#networkMethod');
-    if (networkMethod) {
-      this.updateHttpMethodColor(networkMethod);
-      networkMethod.addEventListener('change', () => this.updateHttpMethodColor(networkMethod));
-    }
   };

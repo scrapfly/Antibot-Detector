@@ -14,19 +14,31 @@ GeetestAdvanced.prototype.checkVersion = async function() {
             });
 
             if (response && response.error) {
-                NotificationHelper.error('Error: ' + response.error);
+                NotificationHelper.error(this._txt('advGeetestErrorFmt', 'Error: {0}', this.geetestErrorText(response.error)));
                 return;
             }
 
             if (response && response.version) {
                 const versionName = response.version === 'v4' ? 'V4' : 'V3';
-                NotificationHelper.success(`Detected: Geetest ${versionName}`);
+                NotificationHelper.success(this._txt('advGeetestDetectedVersionFmt', 'Detected: Geetest {0}', versionName));
             } else {
-                NotificationHelper.warning('No Geetest version detected');
+                NotificationHelper.warning(this._txt('advGeetestNoVersion', 'No Geetest version detected'));
             }
         } catch (error) {
-            NotificationHelper.error('Failed to check version: ' + error.message);
+            NotificationHelper.error(this._txt('advCommonFailedCheckVersionFmt', 'Failed to check version: {0}', error.message));
         }
+    };
+
+
+    /**
+     * UI-language text for the fixed English errors the worker replies with
+     */
+GeetestAdvanced.prototype.geetestErrorText = function(error) {
+        const labels = {
+            'Tab not found': () => this._txt('advGeetestTabNotFound', 'Tab not found'),
+            'No Geetest scripts found': () => this._txt('advGeetestNoScriptsFound', 'No Geetest scripts found')
+        };
+        return labels[error] ? labels[error]() : error;
     };
 
 
@@ -48,7 +60,7 @@ GeetestAdvanced.prototype.analyzeScripts = async function() {
             });
 
             if (response && response.error) {
-                NotificationHelper.error('Error: ' + response.error);
+                NotificationHelper.error(this._txt('advGeetestErrorFmt', 'Error: {0}', this.geetestErrorText(response.error)));
                 return;
             }
 
@@ -59,7 +71,7 @@ GeetestAdvanced.prototype.analyzeScripts = async function() {
                 NotificationHelper.warning(AdvancedUtils.notifications.analyzeScripts.none('Geetest'));
             }
         } catch (error) {
-            NotificationHelper.error('Failed to analyze scripts: ' + error.message);
+            NotificationHelper.error(this._txt('advCommonFailedAnalyzeScriptsFmt', 'Failed to analyze scripts: {0}', error.message));
         }
     };
 
@@ -120,7 +132,9 @@ if (match) {
     Logger.network('No Geetest V3 found');
 }`;
 
-        // Copy to clipboard
-        AdvancedUtils.copyToClipboard(parsingCode);
-        NotificationHelper.success('Parsing code copied to clipboard!');
+        return AdvancedCodeDialog.open(this, {
+            title: this._txt('advGeetestExportParsingCode', 'Export Parsing Code'),
+            languages: [{ id: 'javascript', label: 'JavaScript' }],
+            getCodes: () => ({ javascript: parsingCode })
+        });
     };

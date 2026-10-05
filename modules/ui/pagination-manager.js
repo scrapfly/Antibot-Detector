@@ -5,6 +5,11 @@ class PaginationManager {
     this.itemsPerPage = options.itemsPerPage || 10;
     this.filteredItems = [];
     this.onPageChange = options.onPageChange || (() => {});
+    this.showWhenEmpty = options.showWhenEmpty === true;
+    // Optional pageSizer(items) -> array of page start indexes (variable-size pages),
+    // or null to fall back to fixed itemsPerPage pages
+    this.pageSizer = options.pageSizer || null;
+    this.pageStarts = null;
   }
 
   /**
@@ -14,7 +19,40 @@ class PaginationManager {
   setItems(items) {
     this.filteredItems = items;
     this.currentPage = 1;
+    this.pageStarts = this.pageSizer ? this.pageSizer(items) : null;
     this.render();
+  }
+
+  /**
+   * Recompute variable page sizes (e.g. after a resize), staying on the page
+   * that holds the first item currently shown
+   */
+  refit() {
+    if (!this.pageSizer) return;
+    const [firstShown] = this.getPageRange(this.currentPage);
+    this.pageStarts = this.pageSizer(this.filteredItems);
+    let page = 1;
+    while (page < this.getTotalPages() && this.getPageRange(page + 1)[0] <= firstShown) {
+      page++;
+    }
+    this.currentPage = page;
+    this.render();
+  }
+
+  /**
+   * Get the [start, end) item indexes of a page
+   * @param {number} page - Page number
+   * @returns {Array<number>} Start (inclusive) and end (exclusive) indexes
+   */
+  getPageRange(page) {
+    const total = this.filteredItems.length;
+    if (this.pageStarts) {
+      const start = this.pageStarts[page - 1] ?? total;
+      const end = this.pageStarts[page] ?? total;
+      return [start, end];
+    }
+    const start = (page - 1) * this.itemsPerPage;
+    return [start, Math.min(start + this.itemsPerPage, total)];
   }
 
   /**
@@ -22,6 +60,9 @@ class PaginationManager {
    * @returns {number} Total pages
    */
   getTotalPages() {
+    if (this.pageStarts) {
+      return this.pageStarts.length;
+    }
     return Math.ceil(this.filteredItems.length / this.itemsPerPage);
   }
 
@@ -30,8 +71,7 @@ class PaginationManager {
    * @returns {Array} Items for current page
    */
   getCurrentPageItems() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
+    const [startIndex, endIndex] = this.getPageRange(this.currentPage);
     return this.filteredItems.slice(startIndex, endIndex);
   }
 
@@ -73,8 +113,9 @@ class PaginationManager {
     }
 
     const totalPages = this.getTotalPages();
-    const startItem = (this.currentPage - 1) * this.itemsPerPage + 1;
-    const endItem = Math.min(this.currentPage * this.itemsPerPage, this.filteredItems.length);
+    const [startIndex, endItem] = this.getPageRange(this.currentPage);
+    const totalItems = this.filteredItems.length;
+    const startItem = totalItems > 0 ? startIndex + 1 : 0;
 
     // Update page info
     const pageInput = container.querySelector('.page-input');
@@ -82,7 +123,8 @@ class PaginationManager {
     const paginationInfo = container.querySelector('.pagination-info');
 
     if (pageInput) {
-      pageInput.value = this.currentPage;
+      pageInput.value = totalItems > 0 ? this.currentPage : 0;
+      pageInput.disabled = totalItems === 0;
     }
     if (totalPagesSpan) {
       totalPagesSpan.textContent = totalPages;
@@ -90,9 +132,8 @@ class PaginationManager {
 
     // Update the "Showing X-Y of Z" text (locale-aware)
     if (paginationInfo) {
-      const totalItems = this.filteredItems.length;
       const _t = (typeof I18n !== 'undefined') ? I18n : null;
-      if (totalItems === 0) {
+      if (totalItems === 0 && !this.showWhenEmpty) {
         paginationInfo.textContent = (_t && _t.get('paginationNoItems')) || 'No items to display';
       } else {
         const tpl = (_t && _t.get('paginationShowingFmt')) || 'Showing {0}-{1} of {2}';
@@ -126,20 +167,15 @@ class PaginationManager {
       pageInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
           const page = parseInt(e.target.value);
-          if (page >= 1 && page <= totalPages) {
+          if (page >= 1 && page <= this.getTotalPages()) {
             this.goToPage(page);
           }
         }
       });
     }
 
-    // Show/hide pagination based on whether pagination is needed
-    // Hide only if no items
-    if (this.filteredItems.length === 0) {
-      container.style.display = 'none';
-    } else {
-      container.style.display = 'flex';
-    }
+    // Searchable lists can retain a stable footer when a query has no matches.
+    container.style.display = totalItems > 0 || this.showWhenEmpty ? 'flex' : 'none';
 
     // Trigger page change callback
     this.onPageChange(this.currentPage, this.getCurrentPageItems());

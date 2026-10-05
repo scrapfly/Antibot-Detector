@@ -309,6 +309,7 @@ class LogCollector {
         }
 
         this.storageWriteTimer = setTimeout(() => {
+            this.storageWriteTimer = null;
             try {
                 const persistedLogs = this._getLastNLogs(this.MAX_PERSISTED_LOGS);
                 chrome.storage.local.set({ [this.storageKey]: persistedLogs });
@@ -510,19 +511,20 @@ class LogCollector {
             return;
         }
 
+        // One compact entry: the formatted line only (Logger lines arrive
+        // already readable; object arguments are previewed as key=value)
         const entry = {
             timestamp: now,
             relativeTime: now - this.startTime,
             level: level,
-            message: this.truncateString(this.formatArgs(args), 2000),
-            rawArgs: args.slice(0, 5).map(arg => this.truncateArg(this.serializeArg(arg)))
+            message: this.truncateString(this.formatArgs(args), 2000)
         };
 
         // Ring buffer - O(1) append, bounded memory
         this._writeEntry(entry);
 
-        // Save to storage (debounced)
-        this.saveLogsToStorage();
+        // At most one storage write per 5 s of activity
+        if (!this.storageWriteTimer) this.saveLogsToStorage();
     }
 
     /**
@@ -530,14 +532,9 @@ class LogCollector {
      */
     formatArgs(args) {
         return args.map(arg => {
-            if (typeof arg === 'object') {
-                if (arg instanceof Error) {
-                    return `Error(${arg.message})`;
-                }
-                if (Array.isArray(arg)) {
-                    return `[Array(${arg.length})]`;
-                }
-                return '[Object]';
+            if (typeof arg === 'string') return arg;
+            if (typeof Logger !== 'undefined' && typeof Logger.formatValue === 'function') {
+                return Logger.formatValue(arg, 0);
             }
             return String(arg);
         }).join(' ');
@@ -547,68 +544,6 @@ class LogCollector {
         if (typeof value !== 'string') return value;
         if (value.length <= maxLength) return value;
         return `${value.slice(0, maxLength)}...`;
-    }
-
-    truncateArg(arg) {
-        if (typeof arg === 'string') {
-            return this.truncateString(arg, 2000);
-        }
-        if (arg && typeof arg === 'object') {
-            try {
-                const serialized = JSON.stringify(arg);
-                return this.truncateString(serialized, 2000);
-            } catch (e) {
-                return String(arg);
-            }
-        }
-        return arg;
-    }
-
-    /**
-     * Serialize argument for storage
-     */
-    serializeArg(arg) {
-        if (arg === null) return null;
-        if (arg === undefined) return undefined;
-
-        if (typeof arg === 'object') {
-            if (arg instanceof Error) {
-                return { type: 'Error', message: arg.message };
-            }
-            if (Array.isArray(arg)) {
-                return { type: 'Array', length: arg.length };
-            }
-            try {
-                if (typeof ArrayBuffer !== 'undefined' && arg instanceof ArrayBuffer) {
-                    return { type: 'ArrayBuffer', byteLength: arg.byteLength };
-                }
-            } catch (e) {
-                // ignore
-            }
-            try {
-                if (typeof ArrayBuffer !== 'undefined' && typeof ArrayBuffer.isView === 'function' && ArrayBuffer.isView(arg)) {
-                    return {
-                        type: 'TypedArray',
-                        name: arg?.constructor?.name || 'TypedArray',
-                        length: typeof arg.length === 'number' ? arg.length : undefined,
-                        byteLength: typeof arg.byteLength === 'number' ? arg.byteLength : undefined
-                    };
-                }
-            } catch (e) {
-                // ignore
-            }
-            if (arg instanceof Map) return { type: 'Map', size: arg.size };
-            if (arg instanceof Set) return { type: 'Set', size: arg.size };
-            if (arg instanceof Date) return { type: 'Date', value: arg.toISOString() };
-            try {
-                const keys = Object.keys(arg).slice(0, 10);
-                return { type: 'Object', keys };
-            } catch (e) {
-                return String(arg);
-            }
-        }
-
-        return arg;
     }
 
     /**

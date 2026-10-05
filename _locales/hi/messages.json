@@ -1,6 +1,84 @@
 {
+  "advToolReloadScriptsHint": { "message": "सुरक्षा स्क्रिप्ट का विश्लेषण करने के लिए पेज फिर से लोड करें" },
+  "advToolResetScriptsHint": { "message": "स्क्रिप्ट का विश्लेषण करने के लिए सुरक्षा कुकीज़ रीसेट करें और पेज फिर से लोड करें" },
+  "advToolReloadVersionHint": { "message": "सुरक्षा का संस्करण पहचानने के लिए पेज फिर से लोड करें" },
+  "advToolCaptureResetHint": { "message": "सुरक्षा कुकी रीसेट करें और रिकॉर्डिंग शुरू करें" },
+  "advToolCookiesHint": { "message": "इस सुरक्षा द्वारा उपयोग की जाने वाली कुकीज़ की जाँच करें" },
+  "advToolVersionHint": { "message": "उपलब्ध संस्करण जानकारी पढ़ें" },
+  "advToolSiteKeyHint": { "message": "इस पेज पर CAPTCHA साइट कुंजी खोजें" },
+  "advToolSelectorHint": { "message": "CAPTCHA विजेट के लिए सेलेक्टर खोजें" },
+  "advToolCallbackHint": { "message": "CAPTCHA कॉलबैक की जाँच करें" },
+  "advToolSensorHint": { "message": "सेंसर डेटा रिकॉर्ड करने के लिए सुरक्षा कुकीज़ रीसेट करें और पेज फिर से लोड करें" },
+  "advToolCaptureHint": { "message": "इस पेज से डेटा रिकॉर्ड करें" },
+  "advToolStopCaptureHint": { "message": "इस पेज से डेटा रिकॉर्ड करना रोकें" },
+  "advToolWorking": { "message": "कार्य जारी है…" },
+  "advToolActionFailedFmt": { "message": "यह कार्रवाई पूरी नहीं हो सकी: {0}", "description": "Advanced tool action failure. {0} = error details" },
+  "statsChartPrevious": { "message": "चार्ट का पिछला पेज" },
+  "statsChartNext": { "message": "चार्ट का अगला पेज" },
+  "statsChartPage": { "message": "{1} में से पेज {0}" },
+  "statsChartShowing": { "message": "{2} में से {0}–{1} दिखाए जा रहे हैं" },
+  "statsSectionsLabel": { "message": "आँकड़ों के अनुभाग" },
+  "statsSectionOverview": { "message": "सारांश" },
+  "statsSectionActivity": { "message": "गतिविधि" },
+  "statsSectionProtections": { "message": "सुरक्षा उपाय" },
+  "statsSectionDomains": { "message": "डोमेन" },
+  "statsSectionConfidence": { "message": "विश्वसनीयता" },
+  "statsExportCSV": { "message": "CSV निर्यात करें" },
+  "statsExportJSON": { "message": "JSON निर्यात करें" },
+  "statsExportPrivacy": { "message": "निर्यात में डोमेन और पहचान के सारांश होते हैं, कुकीज़, पेज की सामग्री या URL पैरामीटर नहीं।" },
+  "statsExportScopeFmt": { "message": "चुनी गई अवधि निर्यात करें: {0} प्रविष्टियाँ" },
+  "statsExportStartedFmt": { "message": "डाउनलोड शुरू हुआ: {0}" },
+  "statsExportFailed": { "message": "डेटा निर्यात नहीं हो सका। कृपया फिर से कोशिश करें।" },
+  "statsLoadFailed": { "message": "इतिहास लोड नहीं हो सका। कृपया यह पेज फिर से लोड करें।" },
+  "statsRangeEmptyTitle": { "message": "इस अवधि में कोई प्रविष्टि नहीं है" },
+  "statsRangeEmptyDesc": { "message": "अपना सहेजा गया इतिहास देखने के लिए लंबी तारीख सीमा चुनें।" },
+  "statsDetectionRate": { "message": "पहचान वाली प्रविष्टियाँ" },
+  "statsActiveDays": { "message": "सक्रिय दिन" },
+  "statsAverageConfidence": { "message": "औसत विश्वसनीयता" },
+  "statsDailyVisits": { "message": "इतिहास की दैनिक प्रविष्टियाँ" },
+  "statsActivityCalendar": { "message": "गतिविधि कैलेंडर" },
+  "statsActivityCalendarHint": { "message": "हर वर्ग स्थानीय कैलेंडर का एक दिन दर्शाता है। गहरा नीला रंग अधिक सहेजी गई प्रविष्टियाँ दर्शाता है।" },
+  "statsHourlyActivity": { "message": "घंटे के अनुसार गतिविधि" },
+  "statsWeekdayActivity": { "message": "सप्ताह के दिन के अनुसार गतिविधि" },
+  "statsLocalTimeNote": { "message": "तारीखें और घंटे आपके स्थानीय समय क्षेत्र के अनुसार हैं।" },
+  "statsTimelineLimitFmt": { "message": "पिछले {0} दिन दिखाए गए हैं। कुल आँकड़ों और निर्यात में पूरी चुनी गई अवधि शामिल है।" },
+  "statsProtectionRanking": { "message": "सुरक्षा उपायों की रैंकिंग" },
+  "statsCategoryTrend": { "message": "समय के साथ श्रेणियाँ" },
+  "statsCategoryOverlap": { "message": "एक साथ मिली श्रेणियाँ" },
+  "statsCategoryOverlapHint": { "message": "दोनों श्रेणियों वाली इतिहास प्रविष्टियों की संख्या। विकर्ण खानों में उस श्रेणी वाली प्रविष्टियाँ दिखती हैं।" },
+  "statsProtectionDetails": { "message": "सभी सुरक्षा उपाय" },
+  "statsDomainRanking": { "message": "डोमेन की रैंकिंग" },
+  "statsDomainMap": { "message": "विज़िट और पहचान" },
+  "statsDomainMapHint": { "message": "हर बिंदु एक डोमेन है। बड़े बिंदुओं में अधिक अलग-अलग सुरक्षा उपाय हैं।" },
+  "statsDomainDetails": { "message": "सभी डोमेन" },
+  "statsDomainSearch": { "message": "डोमेन खोजें..." },
+  "statsDomainSortLabel": { "message": "डोमेन क्रमबद्ध करें" },
+  "statsSortVisits": { "message": "सबसे अधिक विज़िट" },
+  "statsSortDetections": { "message": "सबसे अधिक पहचान" },
+  "statsSortConfidence": { "message": "सबसे अधिक विश्वसनीयता" },
+  "statsSortName": { "message": "डोमेन का नाम" },
+  "statsConfidenceDistribution": { "message": "विश्वसनीयता का वितरण" },
+  "statsConfidenceTrend": { "message": "समय के साथ विश्वसनीयता" },
+  "statsCategoryConfidence": { "message": "श्रेणी के अनुसार विश्वसनीयता" },
+  "statsConfidenceNote": { "message": "विश्वसनीयता सहेजे गए पहचान साक्ष्यों की मजबूती बताती है, यह फिंगरप्रिंटिंग या किसी सक्रिय चुनौती का प्रमाण नहीं है।" },
+  "statsConfidenceKnownFmt": { "message": "{0} पहचानों में विश्वसनीयता के मान हैं; {1} में मान्य स्कोर नहीं है।" },
+  "statsProtectionColumn": { "message": "सुरक्षा उपाय" },
+  "statsCategoryColumn": { "message": "श्रेणी" },
+  "statsDomainColumn": { "message": "डोमेन" },
+  "statsTableCountFmt": { "message": "{1} में से {0} पंक्तियाँ" },
+  "statsTableMore": { "message": "और दिखाएँ" },
+  "statsNoMatchingDomains": { "message": "आपकी खोज से कोई डोमेन मेल नहीं खाता।" },
+  "statsSelectionNote": { "message": "चार्ट और निर्यात चुनी गई तारीख सीमा का उपयोग करते हैं। इतिहास की प्रविष्टियाँ सहेजी गई पहचानों को दर्शाती हैं, ब्राउज़र की हर विज़िट को नहीं।" },
   "extensionName": {
     "message": "Scrapfly: एंटी-बॉट डिटेक्टर"
+  },
+  "headerBrandName": {
+    "message": "ScrapFly: एंटी-बॉट डिटेक्टर",
+    "description": "Brand + product name shown in the popup header (extensionName with the ScrapFly logo capitalisation; the manifest/store name stays extensionName)"
+  },
+  "headerBrandSuffix": {
+    "message": ": एंटी-बॉट डिटेक्टर",
+    "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
   "extensionDescription": {
     "message": "वेबसाइटों पर CAPTCHA, एंटी-बॉट सिस्टम और फ़िंगरप्रिंटिंग तकनीकों का पता लगाएं"
@@ -29,14 +107,17 @@
   "analyzingPage": {
     "message": "पृष्ठ का विश्लेषण किया जा रहा है"
   },
+  "detectionScanningTitle": {
+    "message": "इस पृष्ठ की जाँच जारी है"
+  },
+  "detectionScanningDescription": {
+    "message": "सुरक्षा के संकेत खोजे जा रहे हैं।"
+  },
+  "detectionScanningHint": {
+    "message": "जाँच पूरी होने पर परिणाम यहाँ दिखेंगे।"
+  },
   "actionRemoveFromBlacklist": {
     "message": "ब्लैकलिस्ट से हटाएं"
-  },
-  "advancedDomainBlacklisted": {
-    "message": "इस डोमेन के लिए उन्नत टूल अक्षम हैं"
-  },
-  "blacklistManageHint": {
-    "message": "या प्रबंधन के लिए सेटिंग्स → जांच → ब्लैकलिस्टेड डोमेन पर जाएं।"
   },
   "statDetections": {
     "message": "जांच"
@@ -137,9 +218,6 @@
   "rulesUpdateTitle": {
     "message": "डिटेक्टर अद्यतन की जांच करें"
   },
-  "rulesClearTitle": {
-    "message": "सभी नियम साफ़ करें"
-  },
   "rulesAddTitle": {
     "message": "नया डिटेक्टर जोड़ें"
   },
@@ -222,7 +300,7 @@
     "message": "डीबग मोड"
   },
   "settingsCardDebugDesc": {
-    "message": "डीबगिंग के लिए कंसोल लॉगिंग सक्षम करें"
+    "message": "सर्विस वर्कर कंसोल में हर स्कैन किए गए पेज की एक पढ़ने योग्य रिपोर्ट"
   },
   "settingsRowLogCollector": {
     "message": "लॉग कलेक्टर"
@@ -320,6 +398,9 @@
   "advancedEmptyCapturesHint": {
     "message": "पता लगाई गई प्रणालियों से डेटा कैप्चर करने के लिए टूल टैब का उपयोग करें"
   },
+  "advancedCapturesStoredNote": {
+    "message": "कैप्चर 30 मिनट तक सहेजे जाते हैं"
+  },
   "advancedNoResultsTitle": {
     "message": "कोई कैप्चर नहीं मिला"
   },
@@ -360,7 +441,7 @@
     "message": "कैप्चर किया गया डेटा अस्थायी रूप से (30 मिनट) पूर्ण निर्यात क्षमताओं के साथ संग्रहीत किया जाता है"
   },
   "advancedFooterHint": {
-    "message": "ताज़ा डेटा सुनिश्चित करने के लिए परिणाम 30 मिनट के बाद समाप्त हो जाते हैं"
+    "message": "कैप्चर 30 मिनट तक रखे जाते हैं।"
   },
   "settings": {
     "message": "सेटिंग्स"
@@ -407,24 +488,6 @@
   "timeDaysAgoLongFmt": {
     "message": "{0} दिन पहले"
   },
-  "timeOneWeekAgo": {
-    "message": "1 सप्ताह पहले"
-  },
-  "timeWeeksAgoFmt": {
-    "message": "{0} सप्ताह पहले"
-  },
-  "timeOneMonthAgo": {
-    "message": "1 महीना पहले"
-  },
-  "timeMonthsAgoFmt": {
-    "message": "{0} महीने पहले"
-  },
-  "timeOneYearAgo": {
-    "message": "1 साल पहले"
-  },
-  "timeYearsAgoFmt": {
-    "message": "{0} साल पहले"
-  },
   "btnCancelSettings": {
     "message": "रद्द करें"
   },
@@ -445,6 +508,33 @@
   },
   "tagColors": {
     "message": "टैग रंग"
+  },
+  "colorPickerTitle": {
+    "message": "रंग चयनकर्ता"
+  },
+  "colorPickerArea": {
+    "message": "संतृप्ति और चमक"
+  },
+  "colorPickerSaturation": {
+    "message": "संतृप्ति"
+  },
+  "colorPickerBrightness": {
+    "message": "चमक"
+  },
+  "colorPickerHue": {
+    "message": "ह्यू"
+  },
+  "colorPickerRed": {
+    "message": "लाल"
+  },
+  "colorPickerGreen": {
+    "message": "हरा"
+  },
+  "colorPickerBlue": {
+    "message": "नीला"
+  },
+  "colorPickerPresets": {
+    "message": "पूर्वनिर्धारित रंग"
   },
   "cacheConfiguration": {
     "message": "कैश कॉन्फ़िगरेशन"
@@ -475,6 +565,14 @@
   },
   "ruleMethodSettings": {
     "message": "जांच विधि सेटिंग्स"
+  },
+  "methodSettingsTitleFmt": {
+    "message": "{0} · सेटिंग्स: {1}",
+    "description": "Method Settings modal title. {0} = detector name, {1} = readable detection method name (e.g. Headers)"
+  },
+  "methodSettingsTitleNoDetectorFmt": {
+    "message": "सेटिंग्स: {0}",
+    "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
   },
   "ruleConfidenceLevel": {
     "message": "विश्वास स्तर"
@@ -559,9 +657,6 @@
   },
   "unknownDetection": {
     "message": "अज्ञात डिटेक्शन"
-  },
-  "matchSingular": {
-    "message": "मिलान"
   },
   "matchPlural": {
     "message": "मिलान"
@@ -707,15 +802,6 @@
   "failedSaveSettingsFmt": {
     "message": "सेटिंग्स सहेजने में विफल: {0}"
   },
-  "settingsResetToast": {
-    "message": "सेटिंग्स रीसेट कर दी गईं"
-  },
-  "dataClearedReloadNotice": {
-    "message": "सारा डेटा सफलतापूर्वक साफ़ हो गया! एक्सटेंशन फिर से लोड होगा।"
-  },
-  "failedClearDataFmt": {
-    "message": "डेटा साफ़ करने में विफल: {0}"
-  },
   "failedExportLogs": {
     "message": "लॉग एक्सपोर्ट करने में विफल"
   },
@@ -764,8 +850,8 @@
   "importDetectorsTitle": {
     "message": "डिटेक्टर इम्पोर्ट करें"
   },
-  "importMergeQuestion": {
-    "message": "क्या आप मौजूदा डिटेक्टरों के साथ मर्ज करना चाहते हैं?"
+  "importDetectorsModeMessage": {
+    "message": "“मर्ज करें” इम्पोर्ट किए गए डिटेक्टर आपके डिटेक्टरों में जोड़ता है।<br>“सभी को बदलें” पहले आपके कस्टम डिटेक्टर हटाता है; बिल्ट-इन डिटेक्टर बने रहते हैं।"
   },
   "mergeOption": {
     "message": "मर्ज करें"
@@ -790,9 +876,6 @@
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" हटा दिया गया"
-  },
-  "allDetectorsCleared": {
-    "message": "सभी डिटेक्टर साफ़ कर दिए गए"
   },
   "failedClearDetectors": {
     "message": "डिटेक्टर साफ़ करने में विफल"
@@ -842,29 +925,11 @@
   "importHistoryTitle": {
     "message": "इतिहास इम्पोर्ट करें"
   },
-  "importHistoryMessageFmt": {
-    "message": "{0} इतिहास आइटम इम्पोर्ट करें? वर्तमान इतिहास में {1} आइटम हैं।"
-  },
   "replaceOption": {
     "message": "बदलें"
   },
-  "settingsResetTitle": {
-    "message": "सेटिंग्स रीसेट करें"
-  },
-  "settingsResetMessage": {
-    "message": "क्या आप वाकई सभी सेटिंग्स को उनके डिफ़ॉल्ट मानों पर रीसेट करना चाहते हैं? यह क्रिया वापस नहीं की जा सकती।"
-  },
-  "btnReset": {
-    "message": "रीसेट करें"
-  },
-  "clearAllDataTitle": {
-    "message": "सारा डेटा साफ़ करें"
-  },
-  "clearAllDataMessage": {
-    "message": "क्या आप वाकई एक्सटेंशन का सारा डेटा साफ़ करना चाहते हैं? यह हटा देगा:<br><br>• सारा डिटेक्शन इतिहास<br>• सभी डिटेक्टर नियम<br>• सभी सेटिंग्स<br><br>यह क्रिया वापस नहीं की जा सकती!"
-  },
-  "clearEverythingBtn": {
-    "message": "सब कुछ साफ़ करें"
+  "importHistoryModeMessageFmt": {
+    "message": "{0} इतिहास आइटम इम्पोर्ट करें? आपके मौजूदा इतिहास में {1} आइटम हैं।<br>“मर्ज करें” नए आइटम जोड़ता है। “बदलें” पहले मौजूदा इतिहास हटा देता है।"
   },
   "clearLogsTitle": {
     "message": "लॉग साफ़ करें"
@@ -889,15 +954,6 @@
   },
   "updateServiceNotAvailable": {
     "message": "अपडेट सेवा उपलब्ध नहीं है"
-  },
-  "clearAllDetectorsTitle": {
-    "message": "सभी डिटेक्टर साफ़ करें"
-  },
-  "clearAllDetectorsMessage": {
-    "message": "इससे सभी डिटेक्टर हट जाएँगे। क्या आप सुनिश्चित हैं?"
-  },
-  "clearingAllDetectors": {
-    "message": "सभी डिटेक्टर साफ़ किए जा रहे हैं..."
   },
   "deleteDetectorTitle": {
     "message": "डिटेक्टर हटाएँ"
@@ -974,6 +1030,57 @@
   "settingsContentTypeDesc": {
     "message": "HTTP कंटेंट टाइप हेडर"
   },
+  "webhookCtHintJson": {
+    "message": "टेम्पलेट JSON के रूप में, वेरिएबल भरे हुए।"
+  },
+  "webhookCtHintForm": {
+    "message": "टेम्पलेट फ़ील्ड key=value जोड़ों के रूप में; नेस्टेड फ़ील्ड detections[0][name] जैसे।"
+  },
+  "webhookCtHintMultipart": {
+    "message": "टेम्पलेट फ़ील्ड form-data भागों के रूप में; boundary ब्राउज़र सेट करता है।"
+  },
+  "webhookCtHintText": {
+    "message": "टेम्पलेट का टेक्स्ट जैसा है, वेरिएबल भरे हुए।"
+  },
+  "webhookCtHintXml": {
+    "message": "टेम्पलेट फ़ील्ड <webhook> XML दस्तावेज़ के रूप में; डिटेक्शन दोहराए गए एलिमेंट के रूप में।"
+  },
+  "webhookCtHintCsv": {
+    "message": "एक हेडर पंक्ति, फिर हर डिटेक्शन की एक पंक्ति, पेज फ़ील्ड दोहराते हुए।"
+  },
+  "webhookCtHintNdjson": {
+    "message": "हर पंक्ति में एक JSON ऑब्जेक्ट: हर डिटेक्शन की एक पंक्ति, पेज फ़ील्ड सहित।"
+  },
+  "webhookCtHintCustom": {
+    "message": "अपना Content-Type (type/subtype); बॉडी JSON के रूप में भेजी जाती है।"
+  },
+  "webhookCtCustom": {
+    "message": "कस्टम"
+  },
+  "webhookCtCustomLabel": {
+    "message": "कस्टम Content-Type"
+  },
+  "webhookCtInvalid": {
+    "message": "type/subtype दर्ज करें, जैसे application/vnd.example+json"
+  },
+  "webhookAddHeader": {
+    "message": "हेडर जोड़ें"
+  },
+  "webhookNoHeaders": {
+    "message": "कोई कस्टम हेडर नहीं"
+  },
+  "webhookHeaderName": {
+    "message": "हेडर का नाम"
+  },
+  "webhookHeaderValue": {
+    "message": "हेडर का मान"
+  },
+  "webhookRemoveHeader": {
+    "message": "हेडर हटाएँ"
+  },
+  "webhookSending": {
+    "message": "भेजा जा रहा है..."
+  },
   "settingsCustomHeaders": {
     "message": "कस्टम हेडर"
   },
@@ -984,7 +1091,58 @@
     "message": "पेलोड टेम्पलेट"
   },
   "settingsPayloadTemplateDesc": {
-    "message": "वेरिएबल का उपयोग करें: <SITEURL>, <HOSTNAME>, <TITLE>, <FAVICON>, <DETECTIONS>, <TIMESTAMP>, <DETECTION_COUNT>, <CATEGORIES>"
+    "message": "हर webhook के साथ भेजी जाने वाली बॉडी। वेरिएबल डालने के लिए उस पर क्लिक करें।"
+  },
+  "webhookVarsTitle": {
+    "message": "टेम्पलेट वेरिएबल"
+  },
+  "webhookVarsIntro": {
+    "message": "webhook भेजते समय पेज के मानों से बदल दिए जाते हैं।"
+  },
+  "webhookVarsInsertLabel": {
+    "message": "वेरिएबल डालें"
+  },
+  "webhookVarsInsertFmt": {
+    "message": "{0} डालें"
+  },
+  "webhookVarsCopyFmt": {
+    "message": "{0} कॉपी करें"
+  },
+  "webhookVarsExample": {
+    "message": "उदाहरण"
+  },
+  "webhookVarSiteUrl": {
+    "message": "पेज का पूरा URL"
+  },
+  "webhookVarHostname": {
+    "message": "पेज का होस्टनेम"
+  },
+  "webhookVarTitle": {
+    "message": "पेज का शीर्षक"
+  },
+  "webhookVarFavicon": {
+    "message": "साइट के फ़ेविकॉन का URL"
+  },
+  "webhookVarDetections": {
+    "message": "डिटेक्शन JSON ऐरे के रूप में"
+  },
+  "webhookVarTimestamp": {
+    "message": "डिटेक्शन का समय (ISO 8601)"
+  },
+  "webhookVarDetectionCount": {
+    "message": "डिटेक्शन की संख्या"
+  },
+  "webhookVarCategories": {
+    "message": "पहचानी गई श्रेणियाँ, कॉमा से अलग"
+  },
+  "webhookJsonValid": {
+    "message": "मान्य JSON"
+  },
+  "webhookJsonInvalidFmt": {
+    "message": "अमान्य JSON (पंक्ति {0})"
+  },
+  "webhookResetTemplate": {
+    "message": "टेम्पलेट रीसेट करें"
   },
   "settingsTestWebhook": {
     "message": "Webhook परीक्षण करें"
@@ -1005,10 +1163,7 @@
     "message": "इतिहास सीमा"
   },
   "settingsHistoryLimitNote": {
-    "message": "(0 = असीमित)"
-  },
-  "settingsAutoClearDays": {
-    "message": "स्वतः साफ़ करें (दिन)"
+    "message": "(0 = 1,000 प्रविष्टियों की सुरक्षा सीमा)"
   },
   "settingsExportFormat": {
     "message": "एक्सपोर्ट फ़ॉर्मेट"
@@ -1125,7 +1280,7 @@
     "message": "इतिहास एक्सपोर्ट करें"
   },
   "settingsAvailableEvents": {
-    "message": "उपलब्ध इवेंट्स:"
+    "message": "उपलब्ध इवेंट्स"
   },
   "settingsApiEventReady": {
     "message": "एक्सटेंशन लोड और इनिशियलाइज़ हो गया"
@@ -1149,7 +1304,7 @@
     "message": "डिटेक्शन त्रुटि हुई"
   },
   "settingsUsageExample": {
-    "message": "उपयोग उदाहरण:"
+    "message": "उपयोग उदाहरण"
   },
   "detectionDisabledForDomain": {
     "message": "इस डोमेन के लिए डिटेक्शन अक्षम है"
@@ -1202,6 +1357,9 @@
   "detectionTitleBlockDomain": {
     "message": "इस डोमेन को ब्लॉक करें"
   },
+  "detectionStatSite": {
+    "message": "साइट"
+  },
   "detectionStatDetections": {
     "message": "डिटेक्शन"
   },
@@ -1234,9 +1392,6 @@
   },
   "detectionModalDifficulty": {
     "message": "कठिनाई"
-  },
-  "detectionModalMatchesFound": {
-    "message": "मिलान मिले"
   },
   "detectionModalAuthor": {
     "message": "लेखक"
@@ -1421,44 +1576,11 @@
   "rulesDomSelectorHelper": {
     "message": "DOM सेलेक्टर सहायक"
   },
-  "rulesStartTypingSuggestions": {
-    "message": "सुझाव देखने के लिए टाइप करना शुरू करें"
-  },
   "rulesUseSelectorBtn": {
     "message": "सेलेक्टर का उपयोग करें"
   },
   "rulesWindowPropertiesHelper": {
     "message": "विंडो प्रॉपर्टीज़ सहायक"
-  },
-  "rulesStepEnterKeyword": {
-    "message": "कीवर्ड दर्ज करें"
-  },
-  "rulesStepChooseProperty": {
-    "message": "प्रॉपर्टी चुनें"
-  },
-  "rulesStepSelectCondition": {
-    "message": "शर्त चुनें"
-  },
-  "rulesConditionExists": {
-    "message": "मौजूद है"
-  },
-  "rulesConditionGroupType": {
-    "message": "प्रकार"
-  },
-  "rulesTypeofObject": {
-    "message": "ऑब्जेक्ट"
-  },
-  "rulesTypeofFunction": {
-    "message": "फ़ंक्शन"
-  },
-  "rulesTypeofString": {
-    "message": "स्ट्रिंग"
-  },
-  "rulesTypeofNumber": {
-    "message": "संख्या"
-  },
-  "rulesTypeofBoolean": {
-    "message": "बूलियन"
   },
   "notifConfirmTitleDefault": {
     "message": "पुष्टि करें"
@@ -1468,12 +1590,6 @@
   },
   "notifLoadingDefault": {
     "message": "लोड हो रहा है..."
-  },
-  "helperPatternStartTypingSuggestions": {
-    "message": "सुझाव देखने के लिए ऊपर टाइप करना शुरू करें..."
-  },
-  "helperPatternStartTypingExamples": {
-    "message": "उदाहरण देखने के लिए ऊपर टाइप करना शुरू करें..."
   },
   "helpJsHooksTitle": {
     "message": "JavaScript हुक्स डिटेक्शन"
@@ -1587,13 +1703,10 @@
     "message": "{0} डेटा कैप्चर करना शुरू करने के लिए ऊपर \"कैप्चरिंग शुरू करें\" पर क्लिक करें"
   },
   "advancedToolsHeading": {
-    "message": "उन्नत डिटेक्शन टूल्स"
+    "message": "कैप्चर टूल"
   },
   "advancedToolsSubtitle": {
-    "message": "सुरक्षा सिस्टम को कैप्चर और विश्लेषण करें"
-  },
-  "advancedToolsHelpTitle": {
-    "message": "सहायता"
+    "message": "टूल खोलने के लिए सुरक्षा प्रणाली चुनें।"
   },
   "advancedToolsStepSelect": {
     "message": "डिटेक्शन चुनें"
@@ -1601,11 +1714,8 @@
   "advancedToolsChooseDetection": {
     "message": "एक डिटेक्शन चुनें..."
   },
-  "advancedToolsStepLoadUse": {
-    "message": "टूल्स लोड करें और उपयोग करें"
-  },
   "advancedToolsLoadTools": {
-    "message": "टूल्स लोड करें"
+    "message": "टूल खोलें"
   },
   "advancedToolsClearAll": {
     "message": "सभी साफ़ करें"
@@ -1631,9 +1741,6 @@
   "settingsLanguageAuto": {
     "message": "ब्राउज़र की भाषा का उपयोग करें"
   },
-  "copiedJsonNotification": {
-    "message": "JSON कॉपी किया गया"
-  },
   "detectionEmptyTitle": {
     "message": "कुछ नहीं मिला"
   },
@@ -1658,19 +1765,2158 @@
   "rulesModalDetectorLabel": {
     "message": "डिटेक्शन नियम"
   },
-  "rulesAuthorHelpHint": {
-    "message": "इस डिटेक्टर को किसने बनाया"
+  "rulesMoreActions": {
+    "message": "और कार्रवाइयाँ"
   },
-  "rulesWindowConditionExamplesTitle": {
-    "message": "Window शर्त के उदाहरण"
+  "advancedToolsNoDetections": {
+    "message": "इस पृष्ठ पर कोई समर्थित पहचान नहीं है"
   },
-  "rulesWindowConditionExamplesHint": {
-    "message": "उपयोग के लिए किसी उदाहरण पर क्लिक करें:"
+  "advancedToolsEmptyTitle": {
+    "message": "कोई टूल उपलब्ध नहीं"
   },
-  "rulesBtnNextFmt": {
-    "message": "अगला: {0}"
+  "advancedToolsEmptyDesc": {
+    "message": "इस पेज पर कोई समर्थित सुरक्षा नहीं मिली। किसी सुरक्षा के पहचाने जाते ही टूल यहाँ अपने-आप दिखेंगे।"
   },
-  "rulesUsePropertyBtn": {
-    "message": "प्रॉपर्टी उपयोग करें"
+  "advancedToolsSupportedLabel": {
+    "message": "समर्थित सुरक्षा प्रणालियाँ"
+  },
+  "advancedToolsOpenHistoryFmt": {
+    "message": "कैप्चर इतिहास देखें ({0})"
+  },
+  "detectionMethodJsHooks": {
+    "message": "JavaScript हुक"
+  },
+  "detectionMethodContent": {
+    "message": "सामग्री"
+  },
+  "detectionMethodWindow": {
+    "message": "विंडो गुण"
+  },
+  "detectionMethodDom": {
+    "message": "Dom"
+  },
+  "detectionMethodHeaders": {
+    "message": "हेडर"
+  },
+  "detectionMethodCookies": {
+    "message": "कुकीज़"
+  },
+  "detectionMethodUrl": {
+    "message": "Url"
+  },
+  "detectionMethodPayload": {
+    "message": "पेलोड"
+  },
+  "detectionEnableBtn": {
+    "message": "पहचान सक्षम करें"
+  },
+  "historyMoreActions": {
+    "message": "और कार्रवाइयाँ"
+  },
+  "historyCopyEntryTitle": {
+    "message": "डेटा कॉपी करें"
+  },
+  "settingsHistoryAutoDelete": {
+    "message": "स्वतः हटाएँ"
+  },
+  "settingsHistoryAutoDeleteDesc": {
+    "message": "पुरानी इतिहास प्रविष्टियों को समय-समय पर हटाता है।"
+  },
+  "settingsHistoryAutoDeleteOlderThan": {
+    "message": "इससे पुराने आइटम हटाएँ"
+  },
+  "settingsCacheDurationRangeFmt": {
+    "message": "अनुमत सीमा: 1–{0} {1}। लंबी अवधि के लिए बड़ी इकाई चुनें।"
+  },
+  "settingsCacheDurationRangeMaxFmt": {
+    "message": "अनुमत सीमा: 1–{0} {1}।"
+  },
+  "settingsCacheDurationUnitNote": {
+    "message": "महीने 30 दिन और वर्ष 365 दिन के माने जाते हैं।"
+  },
+  "timeUnitMonths": {
+    "message": "महीने"
+  },
+  "timeUnitYears": {
+    "message": "वर्ष"
+  },
+  "settingsHistoryStatsTitle": {
+    "message": "इतिहास आँकड़े"
+  },
+  "settingsHistoryStatsDesc": {
+    "message": "अपने डिटेक्शन इतिहास से स्थानीय रूप से गणना किए गए निजी आँकड़े देखें।"
+  },
+  "settingsOpenStats": {
+    "message": "आँकड़े खोलें"
+  },
+  "settingsExportedToast": {
+    "message": "सेटिंग्स निर्यात की गईं"
+  },
+  "settingsExportFailedToast": {
+    "message": "सेटिंग्स निर्यात नहीं हो सकीं"
+  },
+  "settingsImportedToast": {
+    "message": "सेटिंग्स आयात की गईं"
+  },
+  "settingsImportFailedToast": {
+    "message": "सेटिंग्स आयात नहीं हो सकीं: अमान्य फ़ाइल"
+  },
+  "statsPrivacyNote": {
+    "message": "आपके डिटेक्शन इतिहास से स्थानीय रूप से गणना की गई। कुछ भी आपके ब्राउज़र से बाहर नहीं जाता।"
+  },
+  "statsSubtitleFmt": {
+    "message": "{0} इतिहास प्रविष्टियों से स्थानीय रूप से गणना की गई। कुछ भी आपके ब्राउज़र से बाहर नहीं जाता।"
+  },
+  "statsRangeLabel": {
+    "message": "समय सीमा"
+  },
+  "statsRange7": {
+    "message": "7 दिन"
+  },
+  "statsRange30": {
+    "message": "30 दिन"
+  },
+  "statsRange90": {
+    "message": "90 दिन"
+  },
+  "statsRangeAll": {
+    "message": "सभी"
+  },
+  "statsEmptyTitle": {
+    "message": "अभी कोई इतिहास नहीं"
+  },
+  "statsEmptyDesc": {
+    "message": "डिटेक्शन वाले पेज इतिहास में सहेजे जाने पर आँकड़े यहाँ दिखेंगे।"
+  },
+  "statsEntries": {
+    "message": "इतिहास प्रविष्टियाँ"
+  },
+  "statsUniqueDomains": {
+    "message": "अद्वितीय डोमेन"
+  },
+  "statsDetections": {
+    "message": "डिटेक्शन"
+  },
+  "statsDistinctDetectors": {
+    "message": "विभिन्न सुरक्षा"
+  },
+  "statsOverTime": {
+    "message": "समय के साथ डिटेक्शन"
+  },
+  "statsTopProtections": {
+    "message": "सबसे अधिक पहचानी गई सुरक्षा"
+  },
+  "statsTopDomains": {
+    "message": "शीर्ष डोमेन"
+  },
+  "statsByCategory": {
+    "message": "श्रेणी के अनुसार"
+  },
+  "statsByDifficulty": {
+    "message": "कठिनाई के अनुसार"
+  },
+  "statsPagesUnit": {
+    "message": "पेज"
+  },
+  "statsVisitsUnit": {
+    "message": "विज़िट"
+  },
+  "statsDetectionsUnit": {
+    "message": "डिटेक्शन"
+  },
+  "statsCategoryOther": {
+    "message": "अन्य"
+  },
+  "statsDifficultyNone": {
+    "message": "कोई डिटेक्शन नहीं"
+  },
+  "statsNoData": {
+    "message": "इस अवधि में कोई डेटा नहीं"
+  },
+  "statsTipPagesFmt": {
+    "message": "{0} पेज"
+  },
+  "statsTipDomainsFmt": {
+    "message": "{0} डोमेन"
+  },
+  "statsTipVisitsFmt": {
+    "message": "{0} विज़िट"
+  },
+  "statsTipDetectionsFmt": {
+    "message": "{0} डिटेक्शन"
+  },
+  "historyCategoryShareFmt": {
+    "message": "{1} में से {0} डिटेक्शन · {2}%"
+  },
+  "statsTipEntriesFmt": {
+    "message": "{0} प्रविष्टियाँ"
+  },
+  "statsWithDetectionsFmt": {
+    "message": "{0} डिटेक्शन सहित"
+  },
+  "statsVisitsPerDomainFmt": {
+    "message": "प्रति डोमेन {0} विज़िट"
+  },
+  "statsPerEntryFmt": {
+    "message": "प्रति प्रविष्टि {0}"
+  },
+  "statsAvgConfidenceFmt": {
+    "message": "{0}% औसत विश्वास"
+  },
+  "statsTimelineMetaFmt": {
+    "message": "{0} डिटेक्शन · {1} दिन"
+  },
+  "deleteOfficialDetectorNote": {
+    "message": "यह Scrapfly का आधिकारिक डिटेक्टर है। अपडेट इसे वापस नहीं लाएंगे; इसे वापस पाने के लिए … मेनू में \"आधिकारिक डिटेक्टर पुनर्स्थापित करें\" का उपयोग करें।"
+  },
+  "restoreOfficialDetectors": {
+    "message": "आधिकारिक डिटेक्टर पुनर्स्थापित करें"
+  },
+  "officialDetectorsRestoredFmt": {
+    "message": "{0} आधिकारिक डिटेक्टर पुनर्स्थापित किए गए"
+  },
+  "noOfficialDetectorsToRestore": {
+    "message": "कोई आधिकारिक डिटेक्टर हटाया नहीं गया"
+  },
+  "failedRestoreOfficialDetectors": {
+    "message": "आधिकारिक डिटेक्टर पुनर्स्थापित नहीं हो सके"
+  },
+  "authorReservedError": {
+    "message": "\"Scrapfly\" आधिकारिक डिटेक्टरों के लिए आरक्षित है। कोई दूसरा लेखक नाम उपयोग करें।"
+  },
+  "ruleFieldAuthorPlaceholder": {
+    "message": "आपका नाम"
+  },
+  "clearCustomDetectorsTitle": {
+    "message": "कस्टम डिटेक्टर साफ़ करें"
+  },
+  "clearCustomDetectorsMessage": {
+    "message": "इससे आपके सभी कस्टम डिटेक्टर हट जाएंगे। आधिकारिक Scrapfly डिटेक्टर बने रहेंगे (आप उन्हें अक्षम कर सकते हैं)। क्या आप निश्चित हैं?"
+  },
+  "clearingCustomDetectors": {
+    "message": "कस्टम डिटेक्टर साफ़ किए जा रहे हैं..."
+  },
+  "customDetectorsClearedFmt": {
+    "message": "{0} कस्टम डिटेक्टर हटाए गए"
+  },
+  "noCustomDetectorsToClear": {
+    "message": "साफ़ करने के लिए कोई कस्टम डिटेक्टर नहीं है"
+  },
+  "rhSuggestions": {
+    "message": "सुझाव"
+  },
+  "rhResults": {
+    "message": "परिणाम"
+  },
+  "rhCustomChip": {
+    "message": "कस्टम"
+  },
+  "rhUseAsTyped": {
+    "message": "जैसा लिखा है वैसा ही उपयोग करें"
+  },
+  "rhNoResultsFmt": {
+    "message": "“{0}” के लिए कोई मिलान नहीं"
+  },
+  "rhNoResultsHint": {
+    "message": "आप इसे फिर भी कस्टम मान के रूप में उपयोग कर सकते हैं।"
+  },
+  "rhPreview": {
+    "message": "पूर्वावलोकन"
+  },
+  "rhSearchWindow": {
+    "message": "प्रॉपर्टी खोजें, जैसे webdriver, chrome, cdc_"
+  },
+  "rhSearchDom": {
+    "message": "सेलेक्टर खोजें, जैसे captcha, iframe"
+  },
+  "rhSearchRegex": {
+    "message": "मिलान करने वाला टेक्स्ट, जैसे bm_ या token"
+  },
+  "rhSearchSample": {
+    "message": "परीक्षण के लिए मान लिखें"
+  },
+  "rhCondition": {
+    "message": "शर्त"
+  },
+  "rhConditionInvalid": {
+    "message": "अज्ञात शर्त"
+  },
+  "rhAddProperty": {
+    "message": "प्रॉपर्टी जोड़ें"
+  },
+  "rhChipAutomation": {
+    "message": "ऑटोमेशन"
+  },
+  "rhCondGroupType": {
+    "message": "प्रकार"
+  },
+  "rhCondGroupExistence": {
+    "message": "अस्तित्व"
+  },
+  "rhCondGroupCollections": {
+    "message": "संग्रह"
+  },
+  "rhCondGroupNumeric": {
+    "message": "संख्यात्मक"
+  },
+  "rhCondGroupString": {
+    "message": "स्ट्रिंग"
+  },
+  "rhCondGroupBoolean": {
+    "message": "बूलियन"
+  },
+  "rhCondGroupCustom": {
+    "message": "मौजूदा मान"
+  },
+  "rhCondTypeObject": {
+    "message": "एक ऑब्जेक्ट है"
+  },
+  "rhCondTypeFunction": {
+    "message": "एक फ़ंक्शन है"
+  },
+  "rhCondTypeString": {
+    "message": "एक स्ट्रिंग है"
+  },
+  "rhCondTypeNumber": {
+    "message": "एक संख्या है"
+  },
+  "rhCondTypeBoolean": {
+    "message": "एक बूलियन है"
+  },
+  "rhCondTypeSymbol": {
+    "message": "एक सिंबल है"
+  },
+  "rhCondTypeBigint": {
+    "message": "एक BigInt है"
+  },
+  "rhCondExists": {
+    "message": "पेज पर मौजूद है"
+  },
+  "rhCondTruthy": {
+    "message": "truthy है"
+  },
+  "rhCondFalsy": {
+    "message": "falsy है (खाली, 0, false या null)"
+  },
+  "rhCondNotUndefined": {
+    "message": "undefined नहीं है"
+  },
+  "rhCondUndefined": {
+    "message": "undefined है (मौजूद नहीं)"
+  },
+  "rhCondNotNull": {
+    "message": "null नहीं है"
+  },
+  "rhCondNull": {
+    "message": "null है"
+  },
+  "rhCondArray": {
+    "message": "एक ऐरे है"
+  },
+  "rhCondNonEmptyArray": {
+    "message": "आइटम वाला ऐरे है"
+  },
+  "rhCondEmptyArray": {
+    "message": "खाली ऐरे है"
+  },
+  "rhCondHasLength": {
+    "message": "की लंबाई है"
+  },
+  "rhCondHasKeys": {
+    "message": "कुंजियों वाला ऑब्जेक्ट है"
+  },
+  "rhCondEmptyObject": {
+    "message": "खाली ऑब्जेक्ट है"
+  },
+  "rhCondGt0": {
+    "message": "0 से बड़ा है"
+  },
+  "rhCondGte0": {
+    "message": "0 या अधिक है"
+  },
+  "rhCondEq0": {
+    "message": "0 के बराबर है"
+  },
+  "rhCondNe0": {
+    "message": "0 नहीं है"
+  },
+  "rhCondGt1": {
+    "message": "1 से बड़ा है"
+  },
+  "rhCondGte1": {
+    "message": "1 या अधिक है"
+  },
+  "rhCondLenGt0": {
+    "message": "खाली नहीं है"
+  },
+  "rhCondLenEq0": {
+    "message": "खाली है"
+  },
+  "rhCondTrue": {
+    "message": "true है"
+  },
+  "rhCondFalse": {
+    "message": "false है"
+  },
+  "rhWindowIntro": {
+    "message": "पेज पर एक JavaScript ग्लोबल (window.…) जाँचता है। एक चुनें, फिर चुनें कि वह क्या होना चाहिए।"
+  },
+  "rhWindowSentenceFmt": {
+    "message": "उन पेजों से मेल खाता है जहाँ {0} {1}"
+  },
+  "rhChipTemplate": {
+    "message": "टेम्पलेट"
+  },
+  "rhDomClass": {
+    "message": "क्लास"
+  },
+  "rhDomId": {
+    "message": "ID"
+  },
+  "rhDomData": {
+    "message": "data एट्रिब्यूट"
+  },
+  "rhDomClassContains": {
+    "message": "क्लास में शामिल"
+  },
+  "rhDomIdContains": {
+    "message": "ID में शामिल"
+  },
+  "rhDomTag": {
+    "message": "HTML टैग"
+  },
+  "rhDomAttr": {
+    "message": "एट्रिब्यूट है"
+  },
+  "rhDomIframe": {
+    "message": "iframe URL में शामिल"
+  },
+  "rhDomTitle": {
+    "message": "शीर्षक में शामिल"
+  },
+  "rhDomAlt": {
+    "message": "alt टेक्स्ट में शामिल"
+  },
+  "rhDomCamel": {
+    "message": "camelCase क्लास"
+  },
+  "rhRegexTitle": {
+    "message": "Regex सहायक"
+  },
+  "rhUsePattern": {
+    "message": "पैटर्न उपयोग करें"
+  },
+  "rhRegexStartsFmt": {
+    "message": "“{0}” से शुरू होता है"
+  },
+  "rhRegexEndsFmt": {
+    "message": "“{0}” पर खत्म होता है"
+  },
+  "rhRegexContainsFmt": {
+    "message": "कहीं भी “{0}” शामिल है"
+  },
+  "rhRegexWordFmt": {
+    "message": "पूरा शब्द “{0}”"
+  },
+  "rhRegexOrFmt": {
+    "message": "“{0}” या कोई अन्य विकल्प"
+  },
+  "rhRegexStartsMoreFmt": {
+    "message": "“{0}” से शुरू और आगे और टेक्स्ट"
+  },
+  "rhRegexEitherFmt": {
+    "message": "“{0}” या “{1}”"
+  },
+  "rhExamplesForFmt": {
+    "message": "“{0}” के उदाहरण"
+  },
+  "rhExamples": {
+    "message": "उदाहरण"
+  },
+  "rhHowMatchesFmt": {
+    "message": "“{0}” कैसे मिलान होता है"
+  },
+  "rhQuickRef": {
+    "message": "त्वरित संदर्भ"
+  },
+  "rhRefAny": {
+    "message": "कोई भी अक्षर"
+  },
+  "rhRefZeroMore": {
+    "message": "0 या अधिक"
+  },
+  "rhRefOneMore": {
+    "message": "1 या अधिक"
+  },
+  "rhRefOptional": {
+    "message": "वैकल्पिक"
+  },
+  "rhRefStart": {
+    "message": "शुरुआत"
+  },
+  "rhRefEnd": {
+    "message": "अंत"
+  },
+  "rhRefDigit": {
+    "message": "अंक"
+  },
+  "rhRefWord": {
+    "message": "अक्षर, अंक या _"
+  },
+  "rhRefSpace": {
+    "message": "रिक्त स्थान"
+  },
+  "rhRefOr": {
+    "message": "a या b"
+  },
+  "rhMatch": {
+    "message": "मिलान"
+  },
+  "rhNoMatch": {
+    "message": "मिलान नहीं"
+  },
+  "rhWwIntro": {
+    "message": "केवल तब मिलान होता है जब टेक्स्ट अकेला हो, किसी लंबे शब्द का हिस्सा न हो।"
+  },
+  "rhWwExact": {
+    "message": "सटीक शब्द"
+  },
+  "rhWwJoinedBefore": {
+    "message": "पहले वाले टेक्स्ट से जुड़ा"
+  },
+  "rhWwJoinedAfter": {
+    "message": "बाद वाले टेक्स्ट से जुड़ा"
+  },
+  "rhWwSpaces": {
+    "message": "स्पेस से अलग"
+  },
+  "rhCsIntro": {
+    "message": "चालू होने पर बड़े और छोटे अक्षर अलग माने जाते हैं।"
+  },
+  "rhCsOnTitle": {
+    "message": "केस सेंसिटिव चालू होने पर"
+  },
+  "rhCsOffTitle": {
+    "message": "केस सेंसिटिव बंद होने पर"
+  },
+  "rhWhatIsRegex": {
+    "message": "रेगुलर एक्सप्रेशन क्या है?"
+  },
+  "rhWhatIsWholeWord": {
+    "message": "“पूरा शब्द” क्या है?"
+  },
+  "rhWhatIsCase": {
+    "message": "“केस सेंसिटिव” क्या है?"
+  },
+  "rhRegexIntro": {
+    "message": "रेगुलर एक्सप्रेशन (regex) सटीक अक्षरों के बजाय पैटर्न से टेक्स्ट मिलाता है।"
+  },
+  "rhWhenToUse": {
+    "message": "कब उपयोग करें"
+  },
+  "rhRegexUse1": {
+    "message": "ऐसा टेक्स्ट जो किसी खास चीज़ से शुरू या खत्म हो"
+  },
+  "rhRegexUse2": {
+    "message": "एक साथ कई रूप (| के साथ)"
+  },
+  "rhRegexUse3": {
+    "message": "संख्याएँ या खास तरह के अक्षर"
+  },
+  "rhRegexTip": {
+    "message": "सटीक टेक्स्ट के लिए regex की ज़रूरत नहीं: “पूरा शब्द” का उपयोग करें।"
+  },
+  "rhBestFor": {
+    "message": "इसके लिए सबसे अच्छा"
+  },
+  "rhWwUse1": {
+    "message": "सटीक कुकी नाम"
+  },
+  "rhWwUse2": {
+    "message": "खास हेडर नाम"
+  },
+  "rhWwUse3": {
+    "message": "पूरे क्लास या फ़ंक्शन नाम"
+  },
+  "rhCsUse1": {
+    "message": "सटीक केस वाले हेडर और कुकी"
+  },
+  "rhCsUse2": {
+    "message": "JavaScript प्रॉपर्टी नाम"
+  },
+  "settingsApiEventsDesc": {
+    "message": "एक्सटेंशन पेज पर भेजे जाने वाले इवेंट"
+  },
+  "settingsApiUsageDesc": {
+    "message": "अपनी स्क्रिप्ट से इवेंट सुनें"
+  },
+  "settingsApiCopyCode": {
+    "message": "कोड कॉपी करें"
+  },
+  "settingsApiCodeCopied": {
+    "message": "कोड कॉपी हो गया"
+  },
+  "settingsApiEventCopyTitle": {
+    "message": "इवेंट का नाम कॉपी करें"
+  },
+  "advCommonClickToCopy": {
+    "message": "कॉपी करने के लिए क्लिक करें"
+  },
+  "advCommonClickToCopyFull": {
+    "message": "पूरा मान कॉपी करने के लिए क्लिक करें"
+  },
+  "advCommonDomainLabel": {
+    "message": "डोमेन:"
+  },
+  "advCommonCopy": {
+    "message": "कॉपी करें"
+  },
+  "advCommonPage": {
+    "message": "पेज"
+  },
+  "advCommonExportCode": {
+    "message": "कोड निर्यात करें"
+  },
+  "advCommonUrlCopied": {
+    "message": "URL कॉपी हो गया"
+  },
+  "advCommonCaptured": {
+    "message": "कैप्चर किया गया"
+  },
+  "advCommonScript": {
+    "message": "स्क्रिप्ट"
+  },
+  "advCommonUrl": {
+    "message": "URL"
+  },
+  "advCommonScriptUrl": {
+    "message": "स्क्रिप्ट URL:"
+  },
+  "advCommonNoCaptureData": {
+    "message": "कोई कैप्चर डेटा उपलब्ध नहीं है"
+  },
+  "advCommonFailedCheckCookiesFmt": {
+    "message": "कुकी जाँच नहीं हो सकी: {0}"
+  },
+  "advCommonFailedAnalyzeScriptsFmt": {
+    "message": "स्क्रिप्ट का विश्लेषण नहीं हो सका: {0}"
+  },
+  "advCommonFailedStartAnalysis": {
+    "message": "विश्लेषण शुरू नहीं हो सका"
+  },
+  "advCommonFailedCheckVersionFmt": {
+    "message": "संस्करण जाँचा नहीं जा सका: {0}"
+  },
+  "advCommonFailedExtractFmt": {
+    "message": "निकाला नहीं जा सका: {0}"
+  },
+  "advCommonFailedStartExtractionFmt": {
+    "message": "निष्कर्षण शुरू नहीं हो सका: {0}"
+  },
+  "advCommonFailedOpenExportFmt": {
+    "message": "निर्यात विंडो नहीं खुल सकी: {0}"
+  },
+  "advCommonNoScriptsToExport": {
+    "message": "निर्यात करने के लिए कोई स्क्रिप्ट नहीं है"
+  },
+  "advCommonCookiesTitleFmt": {
+    "message": "{0} कुकी"
+  },
+  "advCommonNoCookiesFmt": {
+    "message": "कोई {0} कुकी नहीं मिली"
+  },
+  "advCommonScriptsTitleFmt": {
+    "message": "{0} स्क्रिप्ट ({1})"
+  },
+  "advCommonAnalyzingReloadFmt": {
+    "message": "{0} स्क्रिप्ट का विश्लेषण हो रहा है… पेज फिर से लोड होगा"
+  },
+  "advCommonCodeGenUnavailable": {
+    "message": "कोड जनरेशन उपलब्ध नहीं है"
+  },
+  "advCommonCodeGenTitle": {
+    "message": "स्क्रिप्ट पार्सिंग कोड जनरेटर"
+  },
+  "advCommonExportOptions": {
+    "message": "निर्यात विकल्प"
+  },
+  "advCommonAllTypes": {
+    "message": "सभी प्रकार"
+  },
+  "advCommonFoundScriptsFmt": {
+    "message": "{0} संबंधित स्क्रिप्ट मिलीं"
+  },
+  "advCommonScriptAnalysis": {
+    "message": "स्क्रिप्ट विश्लेषण"
+  },
+  "advCommonTotalScripts": {
+    "message": "कुल स्क्रिप्ट:"
+  },
+  "advCommonProtectionLevel": {
+    "message": "सुरक्षा स्तर:"
+  },
+  "advCommonCookiesFound": {
+    "message": "मिली कुकी:"
+  },
+  "advCommonSiteKey": {
+    "message": "साइट कुंजी"
+  },
+  "advCommonWebsiteUrl": {
+    "message": "वेबसाइट URL"
+  },
+  "advCommonSiteUrl": {
+    "message": "साइट URL"
+  },
+  "advCommonApiDomain": {
+    "message": "API डोमेन"
+  },
+  "advCommonFound": {
+    "message": "मिला"
+  },
+  "advCommonNotFound": {
+    "message": "नहीं मिला"
+  },
+  "advCommonRequired": {
+    "message": "आवश्यक"
+  },
+  "advCommonYes": {
+    "message": "हाँ"
+  },
+  "advCommonEnterprise": {
+    "message": "Enterprise"
+  },
+  "advCommonStandard": {
+    "message": "मानक"
+  },
+  "advCommonNone": {
+    "message": "कोई नहीं"
+  },
+  "advCodeDescBrowserParseFmt": {
+    "message": "{0} स्क्रिप्ट को इंटरसेप्ट और पार्स करने वाला ब्राउज़र कंसोल कोड"
+  },
+  "advCodeDescBrowserFetchFmt": {
+    "message": "{0} स्क्रिप्ट लाने वाला ब्राउज़र कंसोल कोड"
+  },
+  "advCodeDescPythonBs": {
+    "message": "requests और BeautifulSoup वाली Python स्क्रिप्ट"
+  },
+  "advCodeDescPython": {
+    "message": "requests लाइब्रेरी वाली Python स्क्रिप्ट"
+  },
+  "advCodeDescNodeCheerio": {
+    "message": "axios और cheerio वाली Node.js स्क्रिप्ट"
+  },
+  "advCodeDescNode": {
+    "message": "axios वाली Node.js स्क्रिप्ट"
+  },
+  "advCodeDescPhpDom": {
+    "message": "cURL और DOMDocument वाली PHP स्क्रिप्ट"
+  },
+  "advCodeDescPhp": {
+    "message": "cURL वाली PHP स्क्रिप्ट"
+  },
+  "advCodeDescCsharpHap": {
+    "message": "HttpClient और HtmlAgilityPack वाला C#"
+  },
+  "advCodeDescCsharp": {
+    "message": "HttpClient वाला C#"
+  },
+  "advCodeDescGoQuery": {
+    "message": "net/http और goquery वाला Go"
+  },
+  "advCodeDescGo": {
+    "message": "net/http वाला Go"
+  },
+  "pageNoticeCaptureActive": {
+    "message": "कैप्चर सक्रिय है"
+  },
+  "pageNoticeReloadToCapture": {
+    "message": "कैप्चर शुरू करने के लिए पेज फिर से लोड करें।"
+  },
+  "pageNoticeEndsInFmt": {
+    "message": "{0} सेकंड में समाप्त"
+  },
+  "pageNoticeRecaptchaStepReload": {
+    "message": "यह पेज रीलोड करें"
+  },
+  "pageNoticeRecaptchaStepSolve": {
+    "message": "reCAPTCHA हल करें या क्लिक करें"
+  },
+  "pageNoticeRecaptchaStepWait": {
+    "message": "\"कैप्चर पूर्ण\" का इंतज़ार करें"
+  },
+  "pageNoticeMonitoringStartedFmt": {
+    "message": "{0} निगरानी शुरू हुई"
+  },
+  "pageNoticeCollectingScripts": {
+    "message": "कृपया प्रतीक्षा करें, स्क्रिप्ट URL एकत्र किए जा रहे हैं…"
+  },
+  "pageNoticeAnalyzingScriptsFmt": {
+    "message": "{0} स्क्रिप्ट का विश्लेषण हो रहा है"
+  },
+  "pageNoticeCaptureCompleted": {
+    "message": "कैप्चर पूरा हुआ"
+  },
+  "pageNoticePageLoading": {
+    "message": "पेज लोड हो रहा है"
+  },
+  "pageNoticeWaitForLoad": {
+    "message": "कृपया पेज पूरी तरह लोड होने तक प्रतीक्षा करें…"
+  },
+  "advAkamaiNotDetectedToast": {
+    "message": "इस पेज पर Akamai नहीं मिला। _abck कुकी मौजूद नहीं है।"
+  },
+  "advAkamaiCaptureSuccess": {
+    "message": "Akamai डेटा सफलतापूर्वक कैप्चर हो गया!"
+  },
+  "advAkamaiCaptureStopped": {
+    "message": "कैप्चर रोक दिया गया"
+  },
+  "advAkamaiStopCaptureFailedFmt": {
+    "message": "कैप्चर रोका नहीं जा सका: {0}"
+  },
+  "advAkamaiReloadingToAnalyze": {
+    "message": "Akamai डेटा का विश्लेषण करने के लिए पेज फिर से लोड हो रहा है…"
+  },
+  "advAkamaiAnalyzeFailedFmt": {
+    "message": "सामग्री का विश्लेषण नहीं हो सका: {0}"
+  },
+  "advAkamaiNoAbckCookie": {
+    "message": "_abck कुकी नहीं मिली"
+  },
+  "advAkamaiProcessFailedFmt": {
+    "message": "डेटा प्रोसेस नहीं हो सका: {0}"
+  },
+  "advAkamaiExtractingSensor": {
+    "message": "सेंसर जानकारी निकाली जा रही है…"
+  },
+  "advAkamaiExtractSensorFailedFmt": {
+    "message": "सेंसर जानकारी नहीं निकाली जा सकी: {0}"
+  },
+  "advAkamaiNoticeNotDetectedTitle": {
+    "message": "Akamai नहीं मिला"
+  },
+  "advAkamaiNoticeNoAbck": {
+    "message": "इस पेज पर _abck कुकी मौजूद नहीं है।"
+  },
+  "advAkamaiNoticeNotActive": {
+    "message": "यहाँ Akamai Bot Manager सक्रिय नहीं है।"
+  },
+  "advAkamaiNoticeReloadToMonitor": {
+    "message": "सेंसर डेटा और अनुरोध विवरण की निगरानी शुरू करने के लिए पेज फिर से लोड करें"
+  },
+  "advAkamaiNoticeSensorCaptured": {
+    "message": "Akamai sensor_data सफलतापूर्वक कैप्चर हो गया"
+  },
+  "advAkamaiNoticeExtractingTitle": {
+    "message": "Akamai सेंसर डेटा निकाला जा रहा है"
+  },
+  "advAkamaiNoticeWaitingSensor": {
+    "message": "सेंसर जानकारी कैप्चर होने की प्रतीक्षा की जा रही है…"
+  },
+  "advAkamaiNoticeAnalyzingTitle": {
+    "message": "Akamai सामग्री का विश्लेषण हो रहा है"
+  },
+  "advAkamaiNoticeScanning": {
+    "message": "पेज में स्क्रिप्ट और पैटर्न खोजे जा रहे हैं…"
+  },
+  "advAkamaiNoticeExtractingSensorTitle": {
+    "message": "सेंसर डेटा निकाला जा रहा है"
+  },
+  "advAkamaiNoticeCapturingSensor": {
+    "message": "Akamai सेंसर जानकारी कैप्चर की जा रही है…"
+  },
+  "advAkamaiLevelAdvancedSbsd": {
+    "message": "उन्नत (SBSD)"
+  },
+  "advAkamaiLevelBasic": {
+    "message": "बुनियादी"
+  },
+  "advAkamaiLevelEasy": {
+    "message": "आसान"
+  },
+  "advAkamaiAbckLevelLabel": {
+    "message": "_abck स्तर:"
+  },
+  "advAkamaiAnalysisTitle": {
+    "message": "Akamai विश्लेषण"
+  },
+  "advAkamaiScriptsLabel": {
+    "message": "Akamai स्क्रिप्ट:"
+  },
+  "advAkamaiScriptsHeading": {
+    "message": "Akamai स्क्रिप्ट"
+  },
+  "advAkamaiSensorDataUrlScript": {
+    "message": "सेंसर डेटा URL स्क्रिप्ट"
+  },
+  "advAkamaiPixelHtmlVar": {
+    "message": "Pixel HTML वेरिएबल:"
+  },
+  "advAkamaiPixelChallengeUrls": {
+    "message": "Pixel चुनौती URL:"
+  },
+  "advAkamaiPostUrl": {
+    "message": "POST URL:"
+  },
+  "advAkamaiPixelScriptVar": {
+    "message": "Pixel स्क्रिप्ट वेरिएबल:"
+  },
+  "advAkamaiSbsdScriptUrl": {
+    "message": "SBSD स्क्रिप्ट URL"
+  },
+  "advAkamaiSensorDataUrls": {
+    "message": "सेंसर डेटा URL"
+  },
+  "advAkamaiEndpoint": {
+    "message": "Akamai एंडपॉइंट"
+  },
+  "advAkamaiTypeSensor": {
+    "message": "सेंसर"
+  },
+  "advAkamaiExtractedSensorTitle": {
+    "message": "निकाली गई सेंसर जानकारी"
+  },
+  "advAkamaiSensorDataCharsFmt": {
+    "message": "सेंसर डेटा ({0} वर्ण)"
+  },
+  "advAkamaiSensorDataNotCaptured": {
+    "message": "सेंसर डेटा (कैप्चर नहीं हुआ)"
+  },
+  "advAkamaiNoSensorData": {
+    "message": "कोई सेंसर डेटा कैप्चर नहीं हुआ"
+  },
+  "advAkamaiSbsdDataCharsFmt": {
+    "message": "SBSD डेटा ({0} वर्ण)"
+  },
+  "advAkamaiSensorScriptUrl": {
+    "message": "सेंसर स्क्रिप्ट URL"
+  },
+  "advAkamaiCopyAllJson": {
+    "message": "सारा डेटा JSON के रूप में कॉपी करें"
+  },
+  "advAkamaiExtractSensorBtn": {
+    "message": "सेंसर जानकारी निकालें"
+  },
+  "advAkamaiAbckLevel": {
+    "message": "ABCK स्तर"
+  },
+  "advAkamaiAbckCookie": {
+    "message": "ABCK कुकी"
+  },
+  "advAkamaiVersionLabel": {
+    "message": "Akamai संस्करण"
+  },
+  "advAkamaiChallengeRequirements": {
+    "message": "आवश्यक चुनौतियाँ"
+  },
+  "advAkamaiSbsdChallenge": {
+    "message": "SBSD चुनौती"
+  },
+  "advAkamaiSecCptChallenge": {
+    "message": "sec_cpt चुनौती"
+  },
+  "advAkamaiPixelChallenge": {
+    "message": "Pixel चुनौती"
+  },
+  "advImpervaEnableExtractionFailed": {
+    "message": "एक्सट्रैक्शन मोड चालू नहीं हो सका। विवरण के लिए बैकग्राउंड कंसोल देखें।"
+  },
+  "advImpervaSessionCookies": {
+    "message": "सेशन कुकी"
+  },
+  "advImpervaSecurityComponents": {
+    "message": "सुरक्षा घटक"
+  },
+  "advImpervaCookieCountFmt": {
+    "message": "कुकी: {0}"
+  },
+  "advImpervaResourceDetection": {
+    "message": "संसाधन पहचान"
+  },
+  "advImpervaResourceUrls": {
+    "message": "संसाधन URL"
+  },
+  "advImpervaInterrogationUrls": {
+    "message": "इंटरोगेशन URL"
+  },
+  "advImpervaAnalysisTitle": {
+    "message": "Imperva विश्लेषण"
+  },
+  "advImpervaSensorUrl": {
+    "message": "सेंसर URL:"
+  },
+  "advImpervaScriptsHeading": {
+    "message": "Imperva स्क्रिप्ट"
+  },
+  "advImpervaScriptTypeFmt": {
+    "message": "{0} स्क्रिप्ट"
+  },
+  "advImpervaSensorPath": {
+    "message": "सेंसर पथ:"
+  },
+  "advImpervaNoScripts": {
+    "message": "कोई स्क्रिप्ट नहीं मिली"
+  },
+  "advImpervaMayNotBePresent": {
+    "message": "हो सकता है इस पेज पर Imperva मौजूद न हो"
+  },
+  "advImpervaTypeOnlyFmt": {
+    "message": "केवल {0}"
+  },
+  "advImpervaLevelAdvanced": {
+    "message": "उन्नत (reese84 + utmvc)"
+  },
+  "advImpervaLevelBasicSession": {
+    "message": "बुनियादी (सेशन)"
+  },
+  "advImpervaNoticeReloadToMonitor": {
+    "message": "Imperva अनुरोधों और कुकी की निगरानी शुरू करने के लिए पेज फिर से लोड करें"
+  },
+  "advImpervaNoticeCapturedItemsFmt": {
+    "message": "Imperva डेटा कैप्चर हो गया (आइटम: {0})"
+  },
+  "advImpervaNoticeCaptureComplete": {
+    "message": "Imperva कैप्चर पूरा हुआ"
+  },
+  "advImpervaNoticeSensorCaptured": {
+    "message": "सेंसर डेटा सफलतापूर्वक कैप्चर हो गया"
+  },
+  "advImpervaNoticeExtractingTitle": {
+    "message": "Imperva स्क्रिप्ट निकाली जा रही हैं"
+  },
+  "advImpervaNoticeMonitoringChallenge": {
+    "message": "चुनौती और समाधान डेटा की निगरानी की जा रही है…"
+  },
+  "advRecaptchaCallbackTool": {
+    "message": "reCAPTCHA कॉलबैक"
+  },
+  "advRecaptchaSelectorDetection": {
+    "message": "सेलेक्टर पहचान"
+  },
+  "advRecaptchaMethod": {
+    "message": "तरीका"
+  },
+  "advRecaptchaSelector": {
+    "message": "सेलेक्टर"
+  },
+  "advRecaptchaSelectorCopied": {
+    "message": "सेलेक्टर क्लिपबोर्ड पर कॉपी हो गया!"
+  },
+  "advRecaptchaNoElements": {
+    "message": "कोई reCAPTCHA तत्व नहीं मिला"
+  },
+  "advRecaptchaExecuteFailedFmt": {
+    "message": "grecaptcha.execute() विफल: {0}"
+  },
+  "advRecaptchaNoSiteKey": {
+    "message": "कोई साइट कुंजी नहीं मिली"
+  },
+  "advRecaptchaExtractedSiteKey": {
+    "message": "निकाली गई साइट कुंजी"
+  },
+  "advRecaptchaSiteKeyCopied": {
+    "message": "साइट कुंजी क्लिपबोर्ड पर कॉपी हो गई!"
+  },
+  "advRecaptchaSiteKeyCopiedShort": {
+    "message": "साइट कुंजी कॉपी हो गई"
+  },
+  "advRecaptchaCallbacksTitle": {
+    "message": "reCAPTCHA कॉलबैक"
+  },
+  "advRecaptchaClientsTitle": {
+    "message": "reCAPTCHA क्लाइंट"
+  },
+  "advRecaptchaClientIdFmt": {
+    "message": "क्लाइंट ID: {0}"
+  },
+  "advRecaptchaCopiedToClipboard": {
+    "message": "क्लिपबोर्ड पर कॉपी हो गया!"
+  },
+  "advRecaptchaCallbackFunction": {
+    "message": "कॉलबैक फ़ंक्शन"
+  },
+  "advRecaptchaCallbackPath": {
+    "message": "कॉलबैक पाथ"
+  },
+  "advRecaptchaNoCallback": {
+    "message": "कोई कॉलबैक परिभाषित नहीं है"
+  },
+  "advRecaptchaDomCallbacks": {
+    "message": "DOM कॉलबैक"
+  },
+  "advRecaptchaScriptCallbacks": {
+    "message": "स्क्रिप्ट कॉलबैक"
+  },
+  "advRecaptchaCallbackExamples": {
+    "message": "कॉलबैक उपयोग के उदाहरण"
+  },
+  "advRecaptchaInvisible": {
+    "message": "अदृश्य"
+  },
+  "advRecaptchaAction": {
+    "message": "एक्शन"
+  },
+  "advRecaptchaVersionCopied": {
+    "message": "संस्करण कॉपी हो गया"
+  },
+  "advRecaptchaActionCopied": {
+    "message": "एक्शन कॉपी हो गया"
+  },
+  "advRecaptchaApiDomainCopied": {
+    "message": "API डोमेन कॉपी हो गया"
+  },
+  "advRecaptchaRequiredCookie": {
+    "message": "आवश्यक कुकी"
+  },
+  "advRecaptchaCookieCopied": {
+    "message": "कुकी कॉपी हो गई"
+  },
+  "advRecaptchaFeaturesDetected": {
+    "message": "पहचानी गई सुविधाएँ"
+  },
+  "advRecaptchaSParamRequired": {
+    "message": "S पैरामीटर आवश्यक"
+  },
+  "advRecaptchaHasSession": {
+    "message": "सेशन मौजूद"
+  },
+  "advRecaptchaCapturedLabel": {
+    "message": "कैप्चर किया गया:"
+  },
+  "advRecaptchaFailedClickFmt": {
+    "message": "क्लिक नहीं हो सका: {0}"
+  },
+  "advRecaptchaNoCallbacksFound": {
+    "message": "इस पेज पर कोई reCAPTCHA कॉलबैक नहीं मिला। सुनिश्चित करें कि reCAPTCHA लोड हो गया है।"
+  },
+  "advRecaptchaFailedCaptureCallbackFmt": {
+    "message": "कॉलबैक कैप्चर नहीं हो सका: {0}"
+  },
+  "pageNoticeRecaptchaReloadAndSolve": {
+    "message": "निगरानी शुरू करने के लिए पेज फिर से लोड करें और reCAPTCHA चुनौती हल करें"
+  },
+  "pageNoticeRecaptchaPageReady": {
+    "message": "पेज तैयार है"
+  },
+  "pageNoticeRecaptchaSolveNow": {
+    "message": "डेटा कैप्चर करने के लिए अब reCAPTCHA चुनौती हल करें"
+  },
+  "pageNoticeRecaptchaDecodedFmt": {
+    "message": "कैप्चर और डिकोड किए गए अनुरोध: {0}"
+  },
+  "pageNoticeRecaptchaNoRequests": {
+    "message": "कोई reCAPTCHA अनुरोध कैप्चर नहीं हुआ"
+  },
+  "pageNoticeRecaptchaSeen": {
+    "message": "reCAPTCHA मिला"
+  },
+  "pageNoticeRecaptchaSolveToFinish": {
+    "message": "चुनौती हल करें; कैप्चर अपने आप पूरा होगा"
+  },
+  "pageNoticeRecaptchaTriggerNow": {
+    "message": "अब reCAPTCHA ट्रिगर करें या उस पर क्लिक करें"
+  },
+  "advShapeCookieLabel": {
+    "message": "कुकी"
+  },
+  "advShapeHeadersLabel": {
+    "message": "हेडर"
+  },
+  "advShapeVersionTitle": {
+    "message": "Shape Security संस्करण"
+  },
+  "advShapeHeaderPattern": {
+    "message": "हेडर पैटर्न"
+  },
+  "advShapeHeaderPatterns": {
+    "message": "हेडर पैटर्न"
+  },
+  "advShapeCookieTitle": {
+    "message": "Shape कुकी"
+  },
+  "advShapeMaxAgeInfoFmt": {
+    "message": "Max-Age: {0} सेकंड (50 वर्ष)"
+  },
+  "advShapeAnalysisTitle": {
+    "message": "Shape Security विश्लेषण"
+  },
+  "advShapeInitJsScriptsLabel": {
+    "message": "Init.js स्क्रिप्ट:"
+  },
+  "advShapeSeedScriptsLabel": {
+    "message": "seed वाली स्क्रिप्ट:"
+  },
+  "advShapeScriptsHeading": {
+    "message": "Shape Security स्क्रिप्ट"
+  },
+  "advShapeInitJsScript": {
+    "message": "Init.js स्क्रिप्ट"
+  },
+  "advShapeInitJsScripts": {
+    "message": "Init.js स्क्रिप्ट"
+  },
+  "advShapeSeedScript": {
+    "message": "seed वाली स्क्रिप्ट"
+  },
+  "advShapeSeedScripts": {
+    "message": "seed वाली स्क्रिप्ट"
+  },
+  "advShapeNoActiveTab": {
+    "message": "कोई सक्रिय टैब नहीं मिला"
+  },
+  "advShapeErrorFmt": {
+    "message": "त्रुटि: {0}"
+  },
+  "advShapeDetectedVersion": {
+    "message": "पहचाना गया संस्करण:"
+  },
+  "advShapeCaptureRequirements": {
+    "message": "कैप्चर की आवश्यकताएँ"
+  },
+  "advShapeCookieAndHeaders": {
+    "message": "कुकी + हेडर"
+  },
+  "advShapeNoticeExtractingScripts": {
+    "message": "Shape Security स्क्रिप्ट निकाली जा रही हैं"
+  },
+  "advShapeNoticeReloadToMonitor": {
+    "message": "Shape Security हेडर और कुकी की निगरानी शुरू करने के लिए पेज फिर से लोड करें"
+  },
+  "advShapeNoticeWaitBeforeActions": {
+    "message": "कोई भी कार्रवाई करने से पहले पेज के पूरी तरह लोड होने की प्रतीक्षा करें…"
+  },
+  "advShapeNoticeMonitoringActiveFmt": {
+    "message": "निगरानी सक्रिय ({0})"
+  },
+  "advShapeNoticeTriggerCookie": {
+    "message": "कुकी ट्रिगर करने के लिए कार्रवाइयाँ करें"
+  },
+  "advShapeNoticeTriggerHeadersCookie": {
+    "message": "हेडर और कुकी ट्रिगर करने के लिए कार्रवाइयाँ करें"
+  },
+  "advShapeNoticeTimeoutFmt": {
+    "message": "समय समाप्त ({2}) - कुकी: {0}, हेडर: {1}"
+  },
+  "advShapeNoticeV1SummaryFmt": {
+    "message": "{0} - कुकी: {1}"
+  },
+  "advShapeNoticeV2SummaryFmt": {
+    "message": "{0} - कुकी: {1} | हेडर: {2}"
+  },
+  "advShapeNoticeCapturedFmt": {
+    "message": "कैप्चर किया गया - कुकी: {0}, हेडर: {1}"
+  },
+  "advHcaptchaDetectionTitle": {
+    "message": "hCaptcha पहचान"
+  },
+  "advHcaptchaNotDetected": {
+    "message": "hCaptcha नहीं मिला। कृपया hCaptcha लोड होने के साथ पेज फिर से लोड करें।"
+  },
+  "advHcaptchaVersionTitle": {
+    "message": "hCaptcha संस्करण"
+  },
+  "advHcaptchaEnterpriseMode": {
+    "message": "Enterprise मोड"
+  },
+  "advHcaptchaNo": {
+    "message": "नहीं"
+  },
+  "advHcaptchaNoHistory": {
+    "message": "अभी तक कोई कैप्चर इतिहास नहीं"
+  },
+  "advHcaptchaNotAvailable": {
+    "message": "उपलब्ध नहीं"
+  },
+  "advHcaptchaScriptNumberFmt": {
+    "message": "स्क्रिप्ट {0}"
+  },
+  "advHcaptchaCheckingVersionReload": {
+    "message": "hCaptcha संस्करण जाँचा जा रहा है… पेज फिर से लोड होगा"
+  },
+  "advHcaptchaVersionTimeout": {
+    "message": "hCaptcha संस्करण पहचान का समय समाप्त हुआ"
+  },
+  "advHcaptchaFailedStartVersionCheck": {
+    "message": "संस्करण जाँच शुरू नहीं हो सकी"
+  },
+  "advHcaptchaNoticeReloadToMonitor": {
+    "message": "hCaptcha अनुरोधों की निगरानी शुरू करने के लिए पेज फिर से लोड करें"
+  },
+  "advHcaptchaNoticeCaptured": {
+    "message": "hCaptcha डेटा सफलतापूर्वक कैप्चर हुआ"
+  },
+  "advHcaptchaNoticeCheckingVersion": {
+    "message": "hCaptcha संस्करण जाँचा जा रहा है"
+  },
+  "advHcaptchaNoticeAnalyzingPage": {
+    "message": "कृपया प्रतीक्षा करें, पेज का विश्लेषण हो रहा है…"
+  },
+  "advAwswafNoScripts": {
+    "message": "कोई AWS WAF स्क्रिप्ट नहीं मिली"
+  },
+  "advAwswafDeleteCookieHint": {
+    "message": "चैलेंज ट्रिगर करने के लिए aws-waf-token कुकी हटाएँ और पेज फिर से लोड करें"
+  },
+  "advAwswafTypeChallenge": {
+    "message": "चैलेंज"
+  },
+  "advAwswafClickToCopyUrl": {
+    "message": "URL कॉपी करने के लिए क्लिक करें"
+  },
+  "advAwswafFetchCodeTitle": {
+    "message": "AWS WAF स्क्रिप्ट प्राप्त करने का कोड"
+  },
+  "advAwswafScriptsLabel": {
+    "message": "AWS WAF स्क्रिप्ट"
+  },
+  "advAwswafChallengeScript": {
+    "message": "चैलेंज स्क्रिप्ट"
+  },
+  "advAwswafApiScript": {
+    "message": "API स्क्रिप्ट (jsapi.js)"
+  },
+  "advAwswafProblemEndpoint": {
+    "message": "प्रॉब्लम एंडपॉइंट"
+  },
+  "advAwswafApiKey": {
+    "message": "API कुंजी"
+  },
+  "advAwswafApiKeyCopied": {
+    "message": "API कुंजी कॉपी हो गई"
+  },
+  "advAwswafToken": {
+    "message": "AWS WAF टोकन"
+  },
+  "advAwswafTokenCopied": {
+    "message": "टोकन कॉपी हो गया"
+  },
+  "advAwswafDetectionIndicators": {
+    "message": "पहचान संकेतक"
+  },
+  "advAwswafStatus405": {
+    "message": "स्टेटस 405"
+  },
+  "advAwswafDetected": {
+    "message": "पहचाना गया"
+  },
+  "advAwswafChallengeEndpoint": {
+    "message": "चैलेंज एंडपॉइंट"
+  },
+  "advAwswafDeletingCookieFmt": {
+    "message": "{0} कुकी हटाई जा रही है… पेज फिर से लोड होगा"
+  },
+  "advCloudflareExtractedSiteKey": {
+    "message": "निकाली गई Site Key"
+  },
+  "advCloudflareTypeLabel": {
+    "message": "प्रकार"
+  },
+  "advCloudflareSiteKeyClickToCopy": {
+    "message": "Site Key (कॉपी करने के लिए क्लिक करें)"
+  },
+  "advCloudflareSiteKeyCopied": {
+    "message": "Site Key कॉपी हो गई"
+  },
+  "advCloudflareSitekeyLabel": {
+    "message": "Sitekey:"
+  },
+  "advCloudflareUrlLabel": {
+    "message": "URL:"
+  },
+  "advCloudflareTypeChallenge": {
+    "message": "चैलेंज"
+  },
+  "advCloudflareTypeAnalytics": {
+    "message": "एनालिटिक्स"
+  },
+  "advCloudflareTypeBotManagement": {
+    "message": "बॉट प्रबंधन"
+  },
+  "advCloudflareCheckingVersion": {
+    "message": "Cloudflare संस्करण जाँचा जा रहा है… पेज फिर से लोड होगा"
+  },
+  "advCloudflareSiteKeyExtracted": {
+    "message": "Site Key सफलतापूर्वक निकाली गई"
+  },
+  "advCloudflareNoSitekey": {
+    "message": "पेज पर कोई sitekey नहीं मिली"
+  },
+  "advCloudflareFailedExtractSitekey": {
+    "message": "sitekey नहीं निकाली जा सकी"
+  },
+  "advDatadomeCookieCopied": {
+    "message": "कुकी कॉपी हो गई"
+  },
+  "advFuncaptchaPublicKey": {
+    "message": "सार्वजनिक कुंजी"
+  },
+  "advFuncaptchaUserAgent": {
+    "message": "यूज़र एजेंट"
+  },
+  "advFuncaptchaBdaLabel": {
+    "message": "BDA (ब्राउज़र डेटा ऐरे)"
+  },
+  "advFuncaptchaBlobData": {
+    "message": "Blob डेटा"
+  },
+  "advFuncaptchaBlobDataNotCaptured": {
+    "message": "Blob डेटा (कैप्चर नहीं हुआ)"
+  },
+  "advFuncaptchaStatus": {
+    "message": "स्थिति"
+  },
+  "advFuncaptchaNotCaptured": {
+    "message": "कैप्चर नहीं हुआ"
+  },
+  "advFuncaptchaReloadToMonitor": {
+    "message": "निगरानी शुरू करने के लिए पेज फिर से लोड करें और FunCaptcha चैलेंज ट्रिगर करें (60 सेकंड टाइमआउट)"
+  },
+  "advFuncaptchaPageLoadingMsg": {
+    "message": "पेज लोड हो रहा है, कृपया प्रतीक्षा करें…"
+  },
+  "advFuncaptchaCapturedTitle": {
+    "message": "FunCaptcha सफलतापूर्वक कैप्चर हुआ"
+  },
+  "advFuncaptchaCapturedCountFmt": {
+    "message": "कैप्चर किए गए चैलेंज: {0}"
+  },
+  "advFuncaptchaCaptureTimeout": {
+    "message": "कैप्चर का समय समाप्त"
+  },
+  "advFuncaptchaNoChallenge": {
+    "message": "कोई FunCaptcha चैलेंज नहीं मिला (60 सेकंड टाइमआउट)"
+  },
+  "advGeetestSourceInlineScript": {
+    "message": "इनलाइन स्क्रिप्ट"
+  },
+  "advGeetestSourceDomAttribute": {
+    "message": "DOM एट्रिब्यूट"
+  },
+  "advGeetestSourceScriptUrl": {
+    "message": "स्क्रिप्ट URL"
+  },
+  "advGeetestSourceJsonConfig": {
+    "message": "JSON कॉन्फ़िग"
+  },
+  "advGeetestSourceLabel": {
+    "message": "स्रोत:"
+  },
+  "advGeetestExtractedCaptchaId": {
+    "message": "निकाला गया captchaId"
+  },
+  "advGeetestClickToCopyCaptchaId": {
+    "message": "captchaId कॉपी करने के लिए क्लिक करें"
+  },
+  "advGeetestProductLabel": {
+    "message": "प्रोडक्ट:"
+  },
+  "advGeetestScriptSnippet": {
+    "message": "स्क्रिप्ट अंश"
+  },
+  "advGeetestExportParsingCode": {
+    "message": "पार्सिंग कोड निर्यात करें"
+  },
+  "advGeetestErrorFmt": {
+    "message": "त्रुटि: {0}"
+  },
+  "advGeetestDetectedVersionFmt": {
+    "message": "पहचाना गया: Geetest {0}"
+  },
+  "advGeetestNoVersion": {
+    "message": "कोई Geetest संस्करण नहीं मिला"
+  },
+  "advGeetestParsingCodeCopied": {
+    "message": "पार्सिंग कोड क्लिपबोर्ड पर कॉपी हो गया!"
+  },
+  "advGeetestTabNotFound": {
+    "message": "टैब नहीं मिला"
+  },
+  "advGeetestNoScriptsFound": {
+    "message": "कोई Geetest स्क्रिप्ट नहीं मिली"
+  },
+  "advGeetestDetectingVersion": {
+    "message": "Geetest संस्करण पहचाना जा रहा है…"
+  },
+  "advGeetestReloadCheckVersion": {
+    "message": "संस्करण जाँचने के लिए पेज फिर से लोड हो रहा है"
+  },
+  "advGeetestAnalyzingScripts": {
+    "message": "स्क्रिप्ट का विश्लेषण हो रहा है…"
+  },
+  "advGeetestReloadExtractScripts": {
+    "message": "स्क्रिप्ट निकालने के लिए पेज फिर से लोड हो रहा है"
+  },
+  "advPanelToolsNameFmt": {
+    "message": "{0} टूल्स"
+  },
+  "advPanelErrorLoadingTools": {
+    "message": "उन्नत टूल्स लोड करने में त्रुटि"
+  },
+  "advPanelCheckConsole": {
+    "message": "विवरण के लिए कंसोल देखें"
+  },
+  "advPanelSelectDetectionFirst": {
+    "message": "कृपया पहले एक डिटेक्शन चुनें"
+  },
+  "advPanelErrorLoadingCapturesFmt": {
+    "message": "कैप्चर लोड करने में त्रुटि: {0}"
+  },
+  "advPanelCurrentSiteFmt": {
+    "message": "वर्तमान साइट ({0})"
+  },
+  "advPanelNoResultsText": {
+    "message": "कैप्चर खोजने के लिए अपने फ़िल्टर या खोज क्वेरी बदलकर देखें।"
+  },
+  "advPanelNoUrl": {
+    "message": "कोई URL नहीं"
+  },
+  "advPanelView": {
+    "message": "देखें"
+  },
+  "advPanelBtnOk": {
+    "message": "ठीक है"
+  },
+  "advPanelConfirmAction": {
+    "message": "कार्रवाई की पुष्टि करें"
+  },
+  "advPanelBtnConfirm": {
+    "message": "पुष्टि करें"
+  },
+  "advPanelCopiedToClipboard": {
+    "message": "क्लिपबोर्ड पर कॉपी किया गया"
+  },
+  "advPanelToolsLoadedFmt": {
+    "message": "{0} टूल्स लोड हो गए"
+  },
+  "advPanelCookiesFoundFmt": {
+    "message": "{0}/{1} कुकीज़ मिलीं"
+  },
+  "advPanelScriptsFoundFmt": {
+    "message": "मिली स्क्रिप्ट्स: {0}"
+  },
+  "advPanelNoScriptsFmt": {
+    "message": "कोई {0} स्क्रिप्ट नहीं मिली"
+  },
+  "advPanelVersionDetectedFmt": {
+    "message": "{0} संस्करण पहचाना गया: {1}"
+  },
+  "advPanelNoVersionFmt": {
+    "message": "कोई {0} संस्करण नहीं पहचाना गया"
+  },
+  "advPanelUnknownError": {
+    "message": "अज्ञात त्रुटि"
+  },
+  "advPanelFailedStartCaptureFmt": {
+    "message": "कैप्चर शुरू करने में विफल: {0}"
+  },
+  "advPanelFailedStopCaptureFmt": {
+    "message": "कैप्चर रोकने में विफल: {0}"
+  },
+  "advPanelCaptureCountFmt": {
+    "message": "कैप्चर: {0}"
+  },
+  "advPanelClearCapturedDataTitle": {
+    "message": "सारा कैप्चर किया गया डेटा साफ़ करें"
+  },
+  "advPanelNotAvailable": {
+    "message": "उपलब्ध नहीं"
+  },
+  "advPanelHistoryClearedFmt": {
+    "message": "{0} कैप्चर इतिहास साफ़ किया गया"
+  },
+  "advPanelFailedClearHistory": {
+    "message": "इतिहास साफ़ करने में विफल"
+  },
+  "advPanelCapturesPaginationFmt": {
+    "message": "{2} में से {0}-{1} कैप्चर दिखाए जा रहे हैं"
+  },
+  "rulesUiNewDetectorName": {
+    "message": "नया डिटेक्टर"
+  },
+  "rulesUiAddDetectorTitleFmt": {
+    "message": "{0} जोड़ें"
+  },
+  "rulesUiEditDetectorTitleFmt": {
+    "message": "{0} संपादित करें"
+  },
+  "rulesUiScrapflyIconAlt": {
+    "message": "Scrapfly आइकन"
+  },
+  "rulesUiDetectorIconAltFmt": {
+    "message": "{0} आइकन"
+  },
+  "rulesUiChangeIcon": {
+    "message": "आइकन बदलें"
+  },
+  "rulesUiChangeDetectorIcon": {
+    "message": "डिटेक्टर का आइकन बदलें"
+  },
+  "rulesUiCustomColor": {
+    "message": "कस्टम रंग"
+  },
+  "iconPickerTitle": {
+    "message": "आइकन चुनें"
+  },
+  "iconPickerDefault": {
+    "message": "डिफ़ॉल्ट"
+  },
+  "iconPickerUploadCustom": {
+    "message": "अपना आइकन अपलोड करें"
+  },
+  "iconPickerFileTooLarge": {
+    "message": "आइकन फ़ाइल 100 KB से छोटी होनी चाहिए"
+  },
+  "rulesUiHelpJsHooks": {
+    "message": "JS हुक क्या हैं?"
+  },
+  "rulesUiHelpWindow": {
+    "message": "विंडो गुण क्या हैं?"
+  },
+  "rulesUiHelpUrl": {
+    "message": "URL पहचान क्या है?"
+  },
+  "rulesUiHelpHeader": {
+    "message": "हेडर पहचान क्या है?"
+  },
+  "rulesUiHelpCookie": {
+    "message": "कुकी पहचान क्या है?"
+  },
+  "rulesUiHelpContent": {
+    "message": "सामग्री पहचान क्या है?"
+  },
+  "rulesUiHelpDom": {
+    "message": "DOM पहचान क्या है?"
+  },
+  "rulesUiHelpPayload": {
+    "message": "पेलोड पहचान क्या है?"
+  },
+  "rulesUiHelpGeneric": {
+    "message": "यह पहचान विधि क्या है?"
+  },
+  "rulesUiValueOptionalPlaceholder": {
+    "message": "मान (वैकल्पिक)"
+  },
+  "rulesUiDomSelectorPlaceholder": {
+    "message": "CSS सेलेक्टर (जैसे .class, #id, [attr])"
+  },
+  "rulesUiContentTextPlaceholder": {
+    "message": "खोजने के लिए टेक्स्ट या शब्द"
+  },
+  "rulesUiUrlPatternPlaceholder": {
+    "message": "URL पैटर्न"
+  },
+  "rulesUiJsHookTargetPlaceholder": {
+    "message": "JS हुक लक्ष्य (जैसे navigator.webdriver)"
+  },
+  "rulesUiWindowPathPlaceholder": {
+    "message": "window पथ (जैसे grecaptcha, _cf_chl_opt)"
+  },
+  "rulesUiWindowConditionPlaceholder": {
+    "message": "शर्त (जैसे typeof object, typeof function)"
+  },
+  "rulesUiCookieNamePlaceholder": {
+    "message": "कुकी का नाम (जैसे __cf_bm, session_id)"
+  },
+  "rulesUiCookieValuePlaceholder": {
+    "message": "कुकी मान पैटर्न (वैकल्पिक)"
+  },
+  "rulesUiPayloadTextPlaceholder": {
+    "message": "टेक्स्ट (जैसे sensor_data, challenge_token)"
+  },
+  "rulesUiPayloadUrlPlaceholder": {
+    "message": "/api/verify या challenge.php"
+  },
+  "rulesUiNameSettings": {
+    "message": "नाम की सेटिंग्स"
+  },
+  "rulesUiNameSettingsConfidenceFmt": {
+    "message": "नाम की सेटिंग्स (विश्वसनीयता: {0}%)"
+  },
+  "rulesUiValueSettings": {
+    "message": "मान की सेटिंग्स"
+  },
+  "rulesUiDeleteMethod": {
+    "message": "पैटर्न हटाएँ"
+  },
+  "rulesUiClearValue": {
+    "message": "मान साफ़ करें"
+  },
+  "rulesUiAddValue": {
+    "message": "मान जोड़ें"
+  },
+  "rulesUiPageOfFmt": {
+    "message": "पृष्ठ {0} / {1}"
+  },
+  "rulesUiCompleteEmptyPattern": {
+    "message": "दूसरा पैटर्न जोड़ने से पहले मौजूदा खाली पैटर्न भरें।"
+  },
+  "rulesUiFillRequiredPatterns": {
+    "message": "सहेजने से पहले पैटर्न के सभी ज़रूरी फ़ील्ड भरें।"
+  },
+  "rulesUiEnterMethodTypePrompt": {
+    "message": "पहचान विधि का प्रकार दर्ज करें (जैसे HEADERS, CONTENT, URLs):"
+  },
+  "rulesUiMethodFallback": {
+    "message": "विधि"
+  },
+  "rulesUiUrlScopeHint": {
+    "message": "पेज = मौजूदा URL | स्क्रिप्ट = पेज + स्क्रिप्ट | सभी = सभी अनुरोध"
+  },
+  "rulesUiLeaveEmptyAnyUrl": {
+    "message": "किसी भी URL से मिलान के लिए खाली छोड़ें"
+  },
+  "ruleExampleMatches": {
+    "message": "✓ मिलान:"
+  },
+  "ruleExampleWont": {
+    "message": "× नहीं:"
+  },
+  "ruleExampleWontMatch": {
+    "message": "× मिलान नहीं:"
+  },
+  "ruleExampleLiteralTextOnly": {
+    "message": "केवल शाब्दिक टेक्स्ट"
+  },
+  "ruleExampleExactCase": {
+    "message": "(सटीक केस)"
+  },
+  "ruleExampleAlone": {
+    "message": "(अकेले)"
+  },
+  "ruleConditionGroupOther": {
+    "message": "अन्य"
+  },
+  "clipboardUrlFmt": {
+    "message": "URL: {0}"
+  },
+  "clipboardHostFmt": {
+    "message": "होस्ट: {0}"
+  },
+  "clipboardTitleFmt": {
+    "message": "शीर्षक: {0}"
+  },
+  "clipboardTimestampFmt": {
+    "message": "समय: {0}"
+  },
+  "clipboardSecuritySystemFmt": {
+    "message": "सुरक्षा प्रणाली: {0}"
+  },
+  "clipboardCategoryFmt": {
+    "message": "श्रेणी: {0}"
+  },
+  "clipboardConfidenceFmt": {
+    "message": "विश्वास: {0}%"
+  },
+  "clipboardDetectionMethodsFmt": {
+    "message": "जांच विधियां: {0}"
+  },
+  "clipboardDetectionMethodsHeading": {
+    "message": "जांच विधियां:"
+  },
+  "clipboardDetectionsCountFmt": {
+    "message": "पहचान: {0}"
+  },
+  "clipboardDetectionsListFmt": {
+    "message": "पहचान ({0}):"
+  },
+  "clipboardDifficultyFmt": {
+    "message": "कठिनाई: {0}"
+  },
+  "clipboardCacheScopeFmt": {
+    "message": "कैश दायरा: {0}"
+  },
+  "clipboardCacheExpirationFmt": {
+    "message": "कैश समाप्ति: {0}"
+  },
+  "clipboardMethodsFmt": {
+    "message": "विधियां: {0}"
+  },
+  "clipboardCopyFailed": {
+    "message": "क्लिपबोर्ड पर कॉपी करने में विफल"
+  },
+  "detectionUiCopyUrl": {
+    "message": "URL कॉपी करें"
+  },
+  "detectionUiCopyUrlFmt": {
+    "message": "URL कॉपी करें: {0}"
+  },
+  "detectionUiCopyCategory": {
+    "message": "श्रेणी कॉपी करें"
+  },
+  "detectionUiCopyCategoryFmt": {
+    "message": "श्रेणी कॉपी करें: {0}"
+  },
+  "detectionUiCopyMethod": {
+    "message": "विधि कॉपी करें"
+  },
+  "detectionUiCopyMethodFmt": {
+    "message": "विधि कॉपी करें: {0}"
+  },
+  "detectionUiCopyValue": {
+    "message": "मान कॉपी करें"
+  },
+  "detectionUiCopyValueFmt": {
+    "message": "मान कॉपी करें: {0}"
+  },
+  "detectionUiDurYearsFmt": {
+    "message": "{0} व"
+  },
+  "detectionUiDurMonthsFmt": {
+    "message": "{0} माह"
+  },
+  "detectionUiDurDaysFmt": {
+    "message": "{0} दि"
+  },
+  "detectionUiDurHoursFmt": {
+    "message": "{0} घं"
+  },
+  "detectionUiDurMinutesFmt": {
+    "message": "{0} मि"
+  },
+  "detectionUiDurPairFmt": {
+    "message": "{0} {1}"
+  },
+  "detectionUiDurUnderMinute": {
+    "message": "<1 मि"
+  },
+  "detectionUiNoDescription": {
+    "message": "इस पहचान के लिए कोई अतिरिक्त विवरण नहीं है।"
+  },
+  "detectionUiNoMethodsRecorded": {
+    "message": "इस डिटेक्टर के लिए कोई जांच विधि दर्ज नहीं है।"
+  },
+  "detectionUiUnknownMethod": {
+    "message": "अज्ञात विधि"
+  },
+  "detectionUiUnknownValue": {
+    "message": "अज्ञात"
+  },
+  "historyUiUntitled": {
+    "message": "शीर्षकहीन"
+  },
+  "historyUiNoDetectionMethods": {
+    "message": "कोई जांच विधि नहीं"
+  },
+  "historyUiInvalidFileFormat": {
+    "message": "इतिहास फ़ाइल का प्रारूप अमान्य है"
+  },
+  "popupUiLogoAlt": {
+    "message": "Scrapfly रोबोट"
+  },
+  "popupUiEnableFailedFmt": {
+    "message": "एक्सटेंशन सक्षम करने में विफल: {0}"
+  },
+  "popupUiDisableFailedFmt": {
+    "message": "एक्सटेंशन अक्षम करने में विफल: {0}"
+  },
+  "popupUiNativeErrorFmt": {
+    "message": "त्रुटि: {0}"
+  },
+  "settingsUiBlacklistEmpty": {
+    "message": "ब्लैकलिस्ट में कोई डोमेन नहीं है"
+  },
+  "settingsUiBlacklistNoMatches": {
+    "message": "आपकी खोज से कोई डोमेन मेल नहीं खाता"
+  },
+  "settingsUiChecking": {
+    "message": "जांच हो रही है..."
+  },
+  "settingsUiErrHistoryLimit": {
+    "message": "इतिहास सीमा 0 (असीमित) और 10000 के बीच होनी चाहिए"
+  },
+  "settingsUiErrCacheDurationFmt": {
+    "message": "कैश अवधि 1 और {0} के बीच होनी चाहिए ({1})"
+  },
+  "settingsUiErrAutoDeleteDays": {
+    "message": "स्वतः हटाने के दिन 1 और 3650 के बीच होने चाहिए"
+  },
+  "settingsUiErrDuplicateDuration": {
+    "message": "डुप्लिकेट अवधि 1 और 999 के बीच होनी चाहिए"
+  },
+  "settingsUiExportJson": {
+    "message": "JSON निर्यात करें"
+  },
+  "settingsUiExportText": {
+    "message": "टेक्स्ट निर्यात करें"
+  },
+  "settingsUiLogsText": {
+    "message": "टेक्स्ट"
+  },
+  "settingsUiIncompatibleCountFmt": {
+    "message": "नए एक्सटेंशन संस्करण की ज़रूरत वाले डिटेक्टर अपडेट: {0}"
+  },
+  "settingsUiNeedsExtVersionFmt": {
+    "message": "v{0} (एक्सटेंशन v{1} आवश्यक)"
+  },
+  "statsUiTotals": {
+    "message": "कुल योग"
+  },
+  "ruleSectionCombinations": {
+    "message": "संयोजन"
+  },
+  "combinationsHint": {
+    "message": "पैटर्न चुनें और तय करें कि कितने मेल खाने चाहिए।"
+  },
+  "combinationsEmpty": {
+    "message": "अभी कोई संयोजन नहीं।"
+  },
+  "combinationAdd": {
+    "message": "संयोजन जोड़ें"
+  },
+  "combinationDefaultNameFmt": {
+    "message": "संयोजन {0}"
+  },
+  "combinationConfidence": {
+    "message": "मेल खाने पर कॉन्फ़िडेंस"
+  },
+  "combinationConfidenceFromPatterns": {
+    "message": "खाली छोड़ें ताकि मेल खाने वाले पैटर्न का कॉन्फ़िडेंस इस्तेमाल हो"
+  },
+  "combinationDelete": {
+    "message": "संयोजन हटाएँ"
+  },
+  "combinationDeleteConfirmFmt": {
+    "message": "संयोजन \"{0}\" हटाएं? इसके पैटर्न नियम में बने रहेंगे।"
+  },
+  "combinationNotTitle": {
+    "message": "मेल नहीं होना चाहिए"
+  },
+  "combinationNot": {
+    "message": "नहीं"
+  },
+  "combinationRemove": {
+    "message": "हटाएँ"
+  },
+  "combinationEmptyPattern": {
+    "message": "(खाली पैटर्न)"
+  },
+  "combinationAnyOfMethodFmt": {
+    "message": "कोई भी {0} पैटर्न"
+  },
+  "combinationGroupEmpty": {
+    "message": "नीचे एक पैटर्न जोड़ें"
+  },
+  "combinationAddPattern": {
+    "message": "पैटर्न जोड़ें"
+  },
+  "combinationAnyPattern": {
+    "message": "कोई भी पैटर्न"
+  },
+  "combinationPreviewAnd": {
+    "message": "और"
+  },
+  "combinationPreviewOr": {
+    "message": "या"
+  },
+  "combinationPreviewNot": {
+    "message": "नहीं"
+  },
+  "combinationPreviewEmpty": {
+    "message": "यह संयोजन बनाने के लिए पैटर्न जोड़ें"
+  },
+  "combinationInvalid": {
+    "message": "मेल खाने वाले पैटर्न चुनें और न्यूनतम मिलान की संख्या जाँचें।"
+  },
+  "combinationStrict": {
+    "message": "सख़्त"
+  },
+  "combinationStrictTitle": {
+    "message": "सख़्त: यह पैटर्न अकेले डिटेक्टर को ट्रिगर नहीं करता, केवल संयोजनों के अंदर"
+  },
+  "patternCombinationsOnlyBadge": {
+    "message": "केवल संयोजन"
+  },
+  "detectionModalCombinations": {
+    "message": "मिले संयोजन"
+  },
+  "combinationNoPatterns": {
+    "message": "कोई पैटर्न नहीं जोड़ा गया"
+  },
+  "combinationJoinTitle": {
+    "message": "और / या के बीच बदलें"
+  },
+  "combinationPickHint": {
+    "message": "जोड़ने के लिए पैटर्न चुनें"
+  },
+  "combinationAddSelectedFmt": {
+    "message": "{0} चुने हुए जोड़ें"
+  },
+  "combinationEditConditions": {
+    "message": "शर्तें संपादित करें"
+  },
+  "combinationRequireTogether": {
+    "message": "पैटर्न का उपयोग केवल संयोजनों में करें"
+  },
+  "combinationRequireHint": {
+    "message": "इस नियम में हर जगह इन पैटर्न पर लागू होता है।"
+  },
+  "combinationAutoConfidence": {
+    "message": "स्वतः"
+  },
+  "combinationMatchAll": {
+    "message": "सभी शर्तें मेल खाती हैं"
+  },
+  "combinationMatchAny": {
+    "message": "कोई भी शर्त मेल खाती है"
+  },
+  "combinationMatchAtLeast": {
+    "message": "कम से कम… मेल खाती हैं"
+  },
+  "combinationDetectWhen": {
+    "message": "इस स्थिति में पहचानें"
+  },
+  "combinationGroupExcluded": {
+    "message": "ये शर्तें मेल नहीं खानी चाहिए।"
+  },
+  "combinationMinimum": {
+    "message": "न्यूनतम मिलान"
+  },
+  "combinationMatchState": {
+    "message": "पैटर्न की शर्त"
+  },
+  "combinationMatches": {
+    "message": "मेल खाता है"
+  },
+  "combinationDoesNotMatch": {
+    "message": "मेल नहीं खाता"
+  },
+  "combinationAtLeastSummaryFmt": {
+    "message": "कम से कम {0} शर्तें मेल खाती हैं"
+  },
+  "combinationChoosePatterns": {
+    "message": "पैटर्न चुनें"
+  },
+  "combinationSummaryAll": {
+    "message": "सभी आवश्यक शर्तें मेल खाने पर पहचानें।"
+  },
+  "combinationSummaryAny": {
+    "message": "कम से कम एक शर्त मेल खाने पर पहचानें।"
+  },
+  "combinationSummaryMinimumFmt": {
+    "message": "{1} में से कम से कम {0} शर्तें मेल खाने पर पहचानें।"
+  },
+  "combinationSummaryExcluded": {
+    "message": "हटाए गए पैटर्न मेल नहीं खाने चाहिए।"
+  },
+  "combinationDecreaseMinimum": {
+    "message": "न्यूनतम मिलान घटाएँ"
+  },
+  "combinationIncreaseMinimum": {
+    "message": "न्यूनतम मिलान बढ़ाएँ"
+  },
+  "detectionTipDetections": {
+    "message": "इस पेज पर पहचानी गई सुरक्षा प्रणालियों की संख्या।"
+  },
+  "detectionTipConfidence": {
+    "message": "पहचानी गई सुरक्षा प्रणालियों का औसत विश्वास स्तर।"
+  },
+  "detectionTipDifficulty": {
+    "message": "पहचानी गई सुरक्षा प्रणालियों को पार करने की अनुमानित कठिनाई।"
+  },
+  "detectionTipCacheScope": {
+    "message": "कौन से पेज कैश में सहेजे गए इन पहचान परिणामों का दोबारा उपयोग कर सकते हैं।"
+  },
+  "detectionTipCacheExpiration": {
+    "message": "कैश में सहेजे गए इन पहचान परिणामों की समय-सीमा समाप्त होने तक बचा समय।"
+  },
+  "tipCachedAt": {
+    "message": "सहेजा गया"
+  },
+  "tipConfidenceAverageFmt": {
+    "message": "{0} डिटेक्शन का औसत, {1}% से {2}% तक"
+  },
+  "tipConfidenceFromCombinations": {
+    "message": "मिलते संयोजनों से"
+  },
+  "tipConfidenceFromSignals": {
+    "message": "सबसे मज़बूत एकल संकेत स्कोर तय करता है"
+  },
+  "tipCountShareFmt": {
+    "message": "{0} · {1}%"
+  },
+  "tipCustomDetector": {
+    "message": "कस्टम डिटेक्टर"
+  },
+  "tipDifficultyFromCategoryFmt": {
+    "message": "{0} के लिए डिफ़ॉल्ट"
+  },
+  "tipDifficultyFromRule": {
+    "message": "इस डिटेक्टर द्वारा तय"
+  },
+  "tipDifficultyHardestFmt": {
+    "message": "{0} द्वारा तय"
+  },
+  "tipDifficultyManyFmt": {
+    "message": "{0} सुरक्षा प्रणालियों के साथ होने से बढ़ी"
+  },
+  "tipLastUpdated": {
+    "message": "अपडेट किया गया"
+  },
+  "tipMethodContent": {
+    "message": "पेज या उसकी स्क्रिप्ट का कोई टेक्स्ट मेल खाया।"
+  },
+  "tipMethodCookie": {
+    "message": "इस साइट की कोई कुकी मेल खाई।"
+  },
+  "tipMethodDom": {
+    "message": "पेज का कोई एलिमेंट मेल खाया।"
+  },
+  "tipMethodHeader": {
+    "message": "साइट का भेजा कोई रिस्पॉन्स हेडर मेल खाया।"
+  },
+  "tipMethodJsHooks": {
+    "message": "पेज ने ब्राउज़र का वह API बुलाया जिस पर यह डिटेक्टर नज़र रखता है।"
+  },
+  "tipMethodPayload": {
+    "message": "पेज द्वारा किसी अनुरोध में भेजा डेटा मेल खाया।"
+  },
+  "tipMethodUrl": {
+    "message": "पेज या उसका कोई अनुरोध किसी ज्ञात पते से मेल खाया।"
+  },
+  "tipMethodWindow": {
+    "message": "पेज का कोई ग्लोबल JavaScript ऑब्जेक्ट मेल खाया।"
+  },
+  "tipMoreFmt": {
+    "message": "+{0} और"
+  },
+  "tipOfficialDetector": {
+    "message": "आधिकारिक Scrapfly डिटेक्टर"
+  },
+  "tipScopeDomain": {
+    "message": "परिणाम इस डोमेन के हर पेज के लिए दोबारा उपयोग होते हैं।"
+  },
+  "tipScopeFullUrl": {
+    "message": "परिणाम सिर्फ़ इसी URL के लिए, क्वेरी सहित, दोबारा उपयोग होते हैं।"
+  },
+  "tipScopePath": {
+    "message": "परिणाम इसी पथ के लिए दोबारा उपयोग होते हैं, क्वेरी कोई भी हो।"
+  },
+  "tipStatsActiveDays": {
+    "message": "वे दिन जिनमें कम से कम एक पेज सहेजा गया।"
+  },
+  "tipStatsDetections": {
+    "message": "सभी सहेजे गए पेजों पर मिली सुरक्षा, दोहराव सहित।"
+  },
+  "tipStatsDetectors": {
+    "message": "देखी गई अलग-अलग सुरक्षा, हर एक एक बार गिनी गई।"
+  },
+  "tipStatsDomains": {
+    "message": "सहेजे गए पेजों में अलग-अलग साइटें।"
+  },
+  "tipStatsEntries": {
+    "message": "इस अवधि में इतिहास में सहेजे गए पेज।"
+  },
+  "tipStatsRateFmt": {
+    "message": "{1} में से {0} प्रविष्टियाँ"
+  },
+  "tipPatterns": {
+    "message": "पैटर्न"
+  },
+  "settingsRowVerboseLogs": {
+    "message": "विस्तृत लॉग"
+  },
+  "settingsRowVerboseLogsTip": {
+    "message": "हर पेज की एक रिपोर्ट के साथ हर नियम, हुक और संदेश भी लॉग करें"
   }
 }

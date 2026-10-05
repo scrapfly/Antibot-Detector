@@ -7,7 +7,7 @@ AkamaiAdvanced.prototype.analyzeContent = async function() {
                 throw new Error('Tab information not available');
             }
 
-            NotificationHelper.info('Reloading page to analyze Akamai data...');
+            NotificationHelper.info(AkamaiAdvanced.tr('advAkamaiReloadingToAnalyze', 'Reloading page to analyze Akamai data…'));
 
             // Send message to background to show analyzing notification BEFORE reload
             await this.sendMessage({
@@ -685,69 +685,69 @@ func main() {
                 analysis.requiresSbsd = !!(sbsdCookie || sbsdOCookie);
 
                 // Console log all captured data
-                Logger.network('[Akamai Debug] ========== ANALYZE CONTENT - FULL DATA ==========');
-                Logger.network('[Akamai Debug] COOKIES:');
-                Logger.network('[Akamai Debug]   _abck:', abckCookie ? {
+                Logger.debug('NETWORK', '[Akamai Debug] ========== ANALYZE CONTENT - FULL DATA ==========');
+                Logger.debug('NETWORK', '[Akamai Debug] COOKIES:');
+                Logger.debug('NETWORK', '[Akamai Debug]   _abck:', abckCookie ? {
                     value: abckCookie.value,
                     length: abckCookie.value.length,
                     domain: abckCookie.domain
                 } : 'NOT FOUND');
-                Logger.network('[Akamai Debug]   sbsd:', sbsdCookie ? sbsdCookie.value : 'NOT FOUND');
-                Logger.network('[Akamai Debug]   sbsd_o:', sbsdOCookie ? sbsdOCookie.value : 'NOT FOUND');
-                Logger.network('[Akamai Debug]   ak_bmsc:', akBmscCookie ? 'FOUND' : 'NOT FOUND');
-                Logger.network('[Akamai Debug]   bm_sz:', bmSzCookie ? 'FOUND' : 'NOT FOUND');
+                Logger.debug('NETWORK', '[Akamai Debug]   sbsd:', sbsdCookie ? sbsdCookie.value : 'NOT FOUND');
+                Logger.debug('NETWORK', '[Akamai Debug]   sbsd_o:', sbsdOCookie ? sbsdOCookie.value : 'NOT FOUND');
+                Logger.debug('NETWORK', '[Akamai Debug]   ak_bmsc:', akBmscCookie ? 'FOUND' : 'NOT FOUND');
+                Logger.debug('NETWORK', '[Akamai Debug]   bm_sz:', bmSzCookie ? 'FOUND' : 'NOT FOUND');
 
-                Logger.network('[Akamai Debug] MODE DETECTION:');
-                Logger.network('[Akamai Debug]   Easy Mode:', analysis.isEasyMode);
-                Logger.network('[Akamai Debug]   SBSD Required:', analysis.requiresSbsd);
-                Logger.network('[Akamai Debug]   sec_cpt Required:', analysis.requiresSecCpt);
-                Logger.network('[Akamai Debug]   Pixel Challenge:', analysis.requiresPixel);
+                Logger.debug('NETWORK', '[Akamai Debug] MODE DETECTION:');
+                Logger.debug('NETWORK', '[Akamai Debug]   Easy Mode:', analysis.isEasyMode);
+                Logger.debug('NETWORK', '[Akamai Debug]   SBSD Required:', analysis.requiresSbsd);
+                Logger.debug('NETWORK', '[Akamai Debug]   sec_cpt Required:', analysis.requiresSecCpt);
+                Logger.debug('NETWORK', '[Akamai Debug]   Pixel Challenge:', analysis.requiresPixel);
 
-                Logger.network('[Akamai Debug] PIXEL CHALLENGE DATA:');
-                Logger.network('[Akamai Debug]   HTML Var (bazadebezolkohpepadr):', analysis.pixelHtmlVar || 'NOT FOUND');
-                Logger.network('[Akamai Debug]   Script URL:', analysis.pixelScriptUrls?.scriptUrl || 'NOT FOUND');
-                Logger.network('[Akamai Debug]   Post URL:', analysis.pixelScriptUrls?.postUrl || 'NOT FOUND');
-                Logger.network('[Akamai Debug]   Script Var:', analysis.pixelScriptVar || 'NOT FOUND');
+                Logger.debug('NETWORK', '[Akamai Debug] PIXEL CHALLENGE DATA:');
+                Logger.debug('NETWORK', '[Akamai Debug]   HTML Var (bazadebezolkohpepadr):', analysis.pixelHtmlVar || 'NOT FOUND');
+                Logger.debug('NETWORK', '[Akamai Debug]   Script URL:', analysis.pixelScriptUrls?.scriptUrl || 'NOT FOUND');
+                Logger.debug('NETWORK', '[Akamai Debug]   Post URL:', analysis.pixelScriptUrls?.postUrl || 'NOT FOUND');
+                Logger.debug('NETWORK', '[Akamai Debug]   Script Var:', analysis.pixelScriptVar || 'NOT FOUND');
 
-                Logger.network('[Akamai Debug] SCRIPTS:');
-                Logger.network('[Akamai Debug]   Total Scripts:', analysis.scriptCount);
-                Logger.network('[Akamai Debug]   Akamai Scripts:', analysis.scripts.length);
-                Logger.network('[Akamai Debug]   Script Path:', analysis.akamaiScriptPath || 'NOT FOUND');
+                Logger.debug('NETWORK', '[Akamai Debug] SCRIPTS:');
+                Logger.debug('NETWORK', '[Akamai Debug]   Total Scripts:', analysis.scriptCount);
+                Logger.debug('NETWORK', '[Akamai Debug]   Akamai Scripts:', analysis.scripts.length);
+                Logger.debug('NETWORK', '[Akamai Debug]   Script Path:', analysis.akamaiScriptPath || 'NOT FOUND');
 
-                Logger.network('[Akamai Debug] DETECTED PATTERNS:');
-                Logger.network('[Akamai Debug]   bmak API:', analysis.patterns.bmak);
-                Logger.network('[Akamai Debug]   sensor_data:', analysis.patterns.sensorData);
-                Logger.network('[Akamai Debug]   _abck variable:', analysis.patterns.abckVariable);
-                Logger.network('[Akamai Debug]   Pixel in content:', analysis.patterns.pixelChallenge);
-                Logger.network('[Akamai Debug]   sec_cpt in content:', analysis.patterns.secCpt);
+                Logger.debug('NETWORK', '[Akamai Debug] DETECTED PATTERNS:');
+                Logger.debug('NETWORK', '[Akamai Debug]   bmak API:', analysis.patterns.bmak);
+                Logger.debug('NETWORK', '[Akamai Debug]   sensor_data:', analysis.patterns.sensorData);
+                Logger.debug('NETWORK', '[Akamai Debug]   _abck variable:', analysis.patterns.abckVariable);
+                Logger.debug('NETWORK', '[Akamai Debug]   Pixel in content:', analysis.patterns.pixelChallenge);
+                Logger.debug('NETWORK', '[Akamai Debug]   sec_cpt in content:', analysis.patterns.secCpt);
 
-                Logger.network('[Akamai Debug] SENSOR ELEMENTS:', analysis.sensorElements.length > 0 ? analysis.sensorElements : 'NONE FOUND');
+                Logger.debug('NETWORK', '[Akamai Debug] SENSOR ELEMENTS:', analysis.sensorElements.length > 0 ? analysis.sensorElements : 'NONE FOUND');
 
-                Logger.network('[Akamai Debug] SENSOR DATA URLS:');
+                Logger.debug('NETWORK', '[Akamai Debug] SENSOR DATA URLS:');
                 if (analysis.sensorDataUrls && analysis.sensorDataUrls.length > 0) {
                     analysis.sensorDataUrls.forEach((url, idx) => {
-                        Logger.network(`[Akamai Debug]   ${idx + 1}. ${url}`);
+                        Logger.debug('NETWORK', `[Akamai Debug]   ${idx + 1}. ${url}`);
                     });
                 } else {
-                    Logger.network('[Akamai Debug]   NONE FOUND');
+                    Logger.debug('NETWORK', '[Akamai Debug]   NONE FOUND');
                 }
 
                 if (analysis.parsingCodes) {
-                    Logger.network('[Akamai Debug] MULTI-LANGUAGE PARSING CODE GENERATED');
-                    Logger.network('[Akamai Debug] Available languages: JavaScript, Python, Node.js, PHP, C#, Go');
-                    Logger.network('[Akamai Debug] JavaScript (Browser):');
+                    Logger.debug('NETWORK', '[Akamai Debug] MULTI-LANGUAGE PARSING CODE GENERATED');
+                    Logger.debug('NETWORK', '[Akamai Debug] Available languages: JavaScript, Python, Node.js, PHP, C#, Go');
+                    Logger.debug('NETWORK', '[Akamai Debug] JavaScript (Browser):');
                     Logger.network(analysis.parsingCodes.javascript);
-                    Logger.network('[Akamai Debug] Python (Requests + BeautifulSoup):');
+                    Logger.debug('NETWORK', '[Akamai Debug] Python (Requests + BeautifulSoup):');
                     Logger.network(analysis.parsingCodes.python);
                 }
 
-                Logger.network('[Akamai Debug] ========================================');
+                Logger.debug('NETWORK', '[Akamai Debug] ========================================');
 
                 this.displayAnalysisModal(analysis);
             }
         } catch (error) {
             Logger.error('NETWORK', 'Failed to analyze content:', error);
-            NotificationHelper.error('Failed to analyze content: ' + error.message);
+            NotificationHelper.error(AkamaiAdvanced.fmt('advAkamaiAnalyzeFailedFmt', 'Failed to analyze content: {0}', error.message));
         }
     };
 
@@ -1464,7 +1464,7 @@ AkamaiAdvanced.prototype.processCapturedData = async function(interceptedData) {
             const sbsdOCookie = cookies.find(c => c.name === 'sbsd_o');
 
             if (!abckCookie) {
-                NotificationHelper.error('No _abck cookie found');
+                NotificationHelper.error(AkamaiAdvanced.tr('advAkamaiNoAbckCookie', 'No _abck cookie found'));
                 return;
             }
 
@@ -1592,7 +1592,7 @@ AkamaiAdvanced.prototype.processCapturedData = async function(interceptedData) {
             }
         } catch (error) {
             Logger.error('NETWORK', 'Failed to process captured data:', error);
-            NotificationHelper.error('Failed to process data: ' + error.message);
+            NotificationHelper.error(AkamaiAdvanced.fmt('advAkamaiProcessFailedFmt', 'Failed to process data: {0}', error.message));
         }
     };
 
@@ -1607,7 +1607,7 @@ AkamaiAdvanced.prototype.processCapturedData = async function(interceptedData) {
      */
 AkamaiAdvanced.prototype.extractSensorInformation = async function() {
         Logger.network('[AKAMAI-EXTRACT] ========== STARTING EXTRACTION ==========');
-        NotificationHelper.info('Extracting sensor information...');
+        NotificationHelper.info(AkamaiAdvanced.tr('advAkamaiExtractingSensor', 'Extracting sensor information…'));
         try {
             Logger.network('[AKAMAI-EXTRACT] Step 1: Getting current tab...');
 
@@ -1695,7 +1695,7 @@ AkamaiAdvanced.prototype.extractSensorInformation = async function() {
         } catch (error) {
             Logger.error('NETWORK', '[AKAMAI-EXTRACT] ERROR:', error);
             Logger.error('NETWORK', '[AKAMAI-EXTRACT] Stack trace:', error.stack);
-            NotificationHelper.error('Failed to extract sensor information: ' + error.message);
+            NotificationHelper.error(AkamaiAdvanced.fmt('advAkamaiExtractSensorFailedFmt', 'Failed to extract sensor information: {0}', error.message));
             this.isExtracting = false;
             Logger.network('[AKAMAI-EXTRACT] ========== EXTRACTION FAILED ==========');
         }

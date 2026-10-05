@@ -8,7 +8,8 @@
  * - Method Help modal (detection method descriptions)
  *
  * These methods are added to the Rules prototype.
- * Dependencies: rules-modal-lifecycle.js, rules.js
+ * Dependencies: rules-modal-lifecycle.js, rules.js, helpers/helper-kit.js,
+ *               helpers/pattern-helpers.js (example renderers, used at open time)
  */
 
 // ============================================
@@ -21,38 +22,142 @@ const EXPLANATION_MODAL_CONFIGS = [
     btn: '#regexExplanationBtn',
     btnAlt: '#regexExplanationBtnValue',
     buttons: ['#payloadUrlRegexExplanationBtn'],
-    close: '#closeRegexExplanation'
+    close: ['#closeRegexExplanation', '#closeRegexExplanationBtn'],
+    body: '#regexExplanationBody',
+    render: 'renderRegexExplanation'
   },
   {
     modal: '#wholeWordExplanationModal',
     btn: '#wholeWordExplanationBtn',
     btnAlt: '#wholeWordExplanationBtnValue',
-    close: '#closeWholeWordExplanation'
+    close: ['#closeWholeWordExplanation', '#closeWholeWordExplanationBtn'],
+    body: '#wholeWordExplanationBody',
+    render: 'renderWholeWordExplanation'
   },
   {
     modal: '#caseSensitiveExplanationModal',
     btn: '#caseSensitiveExplanationBtn',
     btnAlt: '#caseSensitiveExplanationBtnValue',
     buttons: ['#payloadUrlCaseExplanationBtn'],
-    close: '#closeCaseSensitiveExplanation'
+    close: ['#closeCaseSensitiveExplanation', '#closeCaseSensitiveExplanationBtn'],
+    body: '#caseSensitiveExplanationBody',
+    render: 'renderCaseSensitiveExplanation'
   }
 ];
 
 /**
- * Setup all explanation modals (regex, wholeWord, caseSensitive)
- * Replaces setupRegexExplanationModal, setupWholeWordExplanationModal, setupCaseSensitiveExplanationModal
+ * Setup all explanation modals (regex, wholeWord, caseSensitive).
+ * Their bodies are built from the same RuleHelperKit rows/cards as the
+ * helper modals, so every string is localised and the look is shared.
  */
 Rules.prototype.setupExplanationModals = function() {
   this._explanationModals = {};
 
   for (const config of EXPLANATION_MODAL_CONFIGS) {
     const modal = new RulesModalLifecycle(config.modal);
-    modal.setupCloseListeners(config.close);
+    modal.setupCloseListeners(...config.close);
     [config.btn, config.btnAlt, ...(config.buttons || [])]
       .filter(Boolean)
       .forEach((selector) => modal.setupOpenListener(selector));
+    modal.onOpen = () => {
+      const body = document.querySelector(config.body);
+      if (body) {
+        this[config.render](body);
+        body.scrollTop = 0;
+      }
+    };
+    RuleHelperKit.onEscape(config.modal, () => modal.close());
     this._explanationModals[config.modal] = modal;
   }
+};
+
+/** Shared explanation building blocks. */
+function explanationNote(text) {
+  return RuleHelperKit.el('p', 'rh-note', text);
+}
+
+function explanationSection(title, plain) {
+  const el = RuleHelperKit.el;
+  const section = el('div', 'rh-section');
+  const head = el('div', 'rh-section-head' + (plain ? ' is-plain' : ''));
+  head.appendChild(el('span', 'rh-section-title', title));
+  section.appendChild(head);
+  return section;
+}
+
+function explanationBullets(title, items) {
+  const section = explanationSection(title);
+  const list = RuleHelperKit.el('ul', 'rh-card rh-bullets');
+  items.forEach(([key, fallback]) => list.appendChild(RuleHelperKit.el('li', '', RuleHelperKit.tr(key, fallback))));
+  section.appendChild(list);
+  return section;
+}
+
+Rules.prototype.renderRegexExplanation = function(body) {
+  const tr = RuleHelperKit.tr;
+  const fmt = RuleHelperKit.fmt;
+  body.replaceChildren();
+  body.appendChild(explanationNote(tr('rhRegexIntro', 'A regular expression (regex) matches text by pattern instead of exact characters.')));
+
+  const examples = explanationSection(tr('rhExamples', 'Examples'));
+  const listEl = RuleHelperKit.el('div', 'rh-list');
+  examples.appendChild(listEl);
+  new RuleHelperKit.List({ listEl }).render([
+    { value: '^_ab', desc: fmt('rhRegexStartsFmt', 'Starts with “{0}”', '_ab') },
+    { value: 'ck$', desc: fmt('rhRegexEndsFmt', 'Ends with “{0}”', 'ck') },
+    { value: '.*token.*', desc: fmt('rhRegexContainsFmt', 'Contains “{0}” anywhere', 'token') },
+    { value: '(akamai|datadome)', desc: fmt('rhRegexEitherFmt', '“{0}” or “{1}”', 'akamai', 'datadome') }
+  ], { staticRows: true });
+  body.appendChild(examples);
+
+  body.appendChild(explanationBullets(tr('rhWhenToUse', 'When to use it'), [
+    ['rhRegexUse1', 'Text that starts or ends with something specific'],
+    ['rhRegexUse2', 'Several variations at once (with |)'],
+    ['rhRegexUse3', 'Numbers or specific kinds of characters']
+  ]));
+
+  const ref = explanationSection(tr('rhQuickRef', 'Quick reference'));
+  const refCard = RuleHelperKit.el('div', 'rh-card');
+  this.renderRegexQuickReference(refCard);
+  ref.appendChild(refCard);
+  body.appendChild(ref);
+
+  body.appendChild(explanationNote(tr('rhRegexTip', 'To match exact text you do not need regex: use “Whole word” instead.')));
+};
+
+Rules.prototype.renderWholeWordExplanation = function(body) {
+  const tr = RuleHelperKit.tr;
+  body.replaceChildren();
+  body.appendChild(explanationNote(tr('rhWwIntro', 'Matches only when the text stands alone, not as part of a longer word.')));
+
+  const examples = explanationSection(RuleHelperKit.fmt('rhHowMatchesFmt', 'How “{0}” matches', '_abck'), true);
+  const listEl = RuleHelperKit.el('div', 'rh-list');
+  examples.appendChild(listEl);
+  body.appendChild(examples);
+  this.renderWholeWordExamples(listEl, '_abck');
+
+  body.appendChild(explanationBullets(tr('rhBestFor', 'Best for'), [
+    ['rhWwUse1', 'Exact cookie names'],
+    ['rhWwUse2', 'Specific header names'],
+    ['rhWwUse3', 'Complete class or function names']
+  ]));
+};
+
+Rules.prototype.renderCaseSensitiveExplanation = function(body) {
+  const tr = RuleHelperKit.tr;
+  body.replaceChildren();
+  body.appendChild(explanationNote(tr('rhCsIntro', 'When on, uppercase and lowercase letters count as different.')));
+
+  const examples = explanationSection(RuleHelperKit.fmt('rhHowMatchesFmt', 'How “{0}” matches', 'Akamai'), true);
+  const groups = RuleHelperKit.el('div', 'rh-stack');
+  examples.appendChild(groups);
+  body.appendChild(examples);
+  this.renderCaseSensitiveExamples(groups, 'Akamai');
+
+  body.appendChild(explanationBullets(tr('rhBestFor', 'Best for'), [
+    ['rhCsUse1', 'Headers and cookies with exact capitalization'],
+    ['rhCsUse2', 'JavaScript property names']
+  ]));
 };
 
 // ============================================
@@ -66,7 +171,8 @@ Rules.prototype.setupMethodHelpModal = function() {
   this._methodHelpModal = new RulesModalLifecycle('#methodHelpModal', {
     hideParentOnOpen: false
   });
-  this._methodHelpModal.setupCloseListeners('#closeMethodHelp');
+  this._methodHelpModal.setupCloseListeners('#closeMethodHelp', '#closeMethodHelpBtn');
+  RuleHelperKit.onEscape('#methodHelpModal', () => this._methodHelpModal.close());
 };
 
 /**
@@ -130,7 +236,7 @@ Rules.prototype.getMethodHelpContent = function(methodType) {
   if (!content) {
     return {
       title: _tr('detectionMethodTitle', 'Detection Method'),
-      html: `<p>${_tr('noHelpContentAvailable', 'No help content available for this method type.')}</p>`
+      html: `<p class="rh-note">${_tr('noHelpContentAvailable', 'No help content available for this method type.')}</p>`
     };
   }
 
@@ -139,9 +245,9 @@ Rules.prototype.getMethodHelpContent = function(methodType) {
   return {
     title: content.title,
     html: `
-      <p>${content.description}</p>
-      ${content.warning ? `<p style="color: var(--warning); margin-top: 12px;"><strong>${warningLabel}</strong> ${content.warning}</p>` : ''}
-      ${content.tip ? `<p style="color: var(--accent-light); margin-top: 12px;"><strong>${tipLabel}</strong> ${content.tip}</p>` : ''}
+      <div class="rh-card rh-prose"><p>${content.description}</p></div>
+      ${content.warning ? `<p class="rh-note tone-warning"><strong>${warningLabel}</strong> ${content.warning}</p>` : ''}
+      ${content.tip ? `<p class="rh-note"><strong>${tipLabel}</strong> ${content.tip}</p>` : ''}
     `
   };
 };

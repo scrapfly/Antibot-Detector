@@ -1,7 +1,85 @@
 {
+  "advToolReloadScriptsHint": { "message": "Reload the page to analyze protection scripts" },
+  "advToolResetScriptsHint": { "message": "Reset protection cookies and reload to analyze scripts" },
+  "advToolReloadVersionHint": { "message": "Reload the page to detect the protection version" },
+  "advToolCaptureResetHint": { "message": "Reset the protection cookie and start recording" },
+  "advToolCookiesHint": { "message": "Inspect cookies used by this protection" },
+  "advToolVersionHint": { "message": "Read available version information" },
+  "advToolSiteKeyHint": { "message": "Find the CAPTCHA site key on this page" },
+  "advToolSelectorHint": { "message": "Find a selector for the CAPTCHA widget" },
+  "advToolCallbackHint": { "message": "Inspect CAPTCHA callbacks" },
+  "advToolSensorHint": { "message": "Reset protection cookies and reload to record sensor data" },
+  "advToolCaptureHint": { "message": "Record data from this page" },
+  "advToolStopCaptureHint": { "message": "Stop recording data from this page" },
+  "advToolWorking": { "message": "Working…" },
+  "advToolActionFailedFmt": { "message": "Could not complete this action: {0}", "description": "Advanced tool action failure. {0} = error details" },
+  "statsChartPrevious": { "message": "Previous chart page" },
+  "statsChartNext": { "message": "Next chart page" },
+  "statsChartPage": { "message": "Page {0} of {1}" },
+  "statsChartShowing": { "message": "Showing {0}–{1} of {2}" },
+  "statsSectionsLabel": { "message": "Statistics sections" },
+  "statsSectionOverview": { "message": "Overview" },
+  "statsSectionActivity": { "message": "Activity" },
+  "statsSectionProtections": { "message": "Protections" },
+  "statsSectionDomains": { "message": "Domains" },
+  "statsSectionConfidence": { "message": "Confidence" },
+  "statsExportCSV": { "message": "Export CSV" },
+  "statsExportJSON": { "message": "Export JSON" },
+  "statsExportPrivacy": { "message": "Exports contain domains and detection summaries, not cookies, page contents or URL parameters." },
+  "statsExportScopeFmt": { "message": "Export the selected range: {0} entries" },
+  "statsExportStartedFmt": { "message": "Download started: {0}" },
+  "statsExportFailed": { "message": "Could not export the data. Please try again." },
+  "statsLoadFailed": { "message": "Could not load the history. Please reload this page." },
+  "statsRangeEmptyTitle": { "message": "No entries in this range" },
+  "statsRangeEmptyDesc": { "message": "Choose a longer date range to explore your saved history." },
+  "statsDetectionRate": { "message": "Entries with detections" },
+  "statsActiveDays": { "message": "Active days" },
+  "statsAverageConfidence": { "message": "Average confidence" },
+  "statsDailyVisits": { "message": "Daily history entries" },
+  "statsActivityCalendar": { "message": "Activity calendar" },
+  "statsActivityCalendarHint": { "message": "Each square represents one local calendar day. Darker blue means more saved entries." },
+  "statsHourlyActivity": { "message": "Activity by hour" },
+  "statsWeekdayActivity": { "message": "Activity by weekday" },
+  "statsLocalTimeNote": { "message": "Dates and hours use your local time zone." },
+  "statsTimelineLimitFmt": { "message": "The latest {0} days are shown. Totals and exports include the entire selected range." },
+  "statsProtectionRanking": { "message": "Protection ranking" },
+  "statsCategoryTrend": { "message": "Categories over time" },
+  "statsCategoryOverlap": { "message": "Categories found together" },
+  "statsCategoryOverlapHint": { "message": "Number of history entries with both categories. Diagonal cells show entries with that category." },
+  "statsProtectionDetails": { "message": "All protections" },
+  "statsDomainRanking": { "message": "Domain ranking" },
+  "statsDomainMap": { "message": "Visits and detections" },
+  "statsDomainMapHint": { "message": "Each point is a domain. Larger points have more distinct protections." },
+  "statsDomainDetails": { "message": "All domains" },
+  "statsDomainSearch": { "message": "Search domains..." },
+  "statsDomainSortLabel": { "message": "Sort domains" },
+  "statsSortVisits": { "message": "Most visits" },
+  "statsSortDetections": { "message": "Most detections" },
+  "statsSortConfidence": { "message": "Highest confidence" },
+  "statsSortName": { "message": "Domain name" },
+  "statsConfidenceDistribution": { "message": "Confidence distribution" },
+  "statsConfidenceTrend": { "message": "Confidence over time" },
+  "statsCategoryConfidence": { "message": "Confidence by category" },
+  "statsConfidenceNote": { "message": "Confidence describes the strength of saved detection evidence, not proof of fingerprinting or an active challenge." },
+  "statsConfidenceKnownFmt": { "message": "{0} detections have confidence values; {1} have no valid score." },
+  "statsProtectionColumn": { "message": "Protection" },
+  "statsCategoryColumn": { "message": "Category" },
+  "statsDomainColumn": { "message": "Domain" },
+  "statsTableCountFmt": { "message": "{0} of {1} rows" },
+  "statsTableMore": { "message": "Show more" },
+  "statsNoMatchingDomains": { "message": "No domains match your search." },
+  "statsSelectionNote": { "message": "Charts and exports use the selected date range. History entries represent saved detections, not every browser visit." },
   "extensionName": {
     "message": "Scrapfly: anti-bot detector",
     "description": "Extension name"
+  },
+  "headerBrandName": {
+    "message": "ScrapFly: anti-bot detector",
+    "description": "Brand + product name shown in the popup header (extensionName with the ScrapFly logo capitalisation; the manifest/store name stays extensionName)"
+  },
+  "headerBrandSuffix": {
+    "message": ": anti-bot detector",
+    "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
   "extensionDescription": {
     "message": "Detect CAPTCHAs, anti-bot systems and fingerprinting technologies on websites",
@@ -31,14 +109,17 @@
   "analyzingPage": {
     "message": "Analyzing Page"
   },
+  "detectionScanningTitle": {
+    "message": "Scanning this page"
+  },
+  "detectionScanningDescription": {
+    "message": "Looking for protection signals."
+  },
+  "detectionScanningHint": {
+    "message": "Results will appear here when ready."
+  },
   "actionRemoveFromBlacklist": {
     "message": "Remove from Blacklist"
-  },
-  "advancedDomainBlacklisted": {
-    "message": "Advanced tools disabled for this domain"
-  },
-  "blacklistManageHint": {
-    "message": "Or go to Settings → Detection → Blacklisted Domains to manage."
   },
   "statDetections": {
     "message": "Detections"
@@ -139,9 +220,6 @@
   "rulesUpdateTitle": {
     "message": "Check for detector updates"
   },
-  "rulesClearTitle": {
-    "message": "Clear All Rules"
-  },
   "rulesAddTitle": {
     "message": "Add New Detector"
   },
@@ -167,7 +245,7 @@
     "message": "Category"
   },
   "categoryAntibot": {
-    "message": "Anti-Bot"
+    "message": "Anti-bot"
   },
   "categoryCaptcha": {
     "message": "Captcha"
@@ -224,7 +302,7 @@
     "message": "Debug Mode"
   },
   "settingsCardDebugDesc": {
-    "message": "Enable console logging for debugging"
+    "message": "One readable report per scanned page in the service worker console"
   },
   "settingsRowLogCollector": {
     "message": "Log Collector"
@@ -322,6 +400,9 @@
   "advancedEmptyCapturesHint": {
     "message": "Use the Tools tab to capture data from detected systems"
   },
+  "advancedCapturesStoredNote": {
+    "message": "Captures are stored for 30 minutes"
+  },
   "advancedNoResultsTitle": {
     "message": "No captures found"
   },
@@ -362,7 +443,7 @@
     "message": "Captured data is stored temporarily (30 minutes) with full export capabilities"
   },
   "advancedFooterHint": {
-    "message": "Results expire after 30 minutes to ensure fresh data"
+    "message": "Captures are kept for 30 minutes."
   },
   "settings": {
     "message": "Settings"
@@ -409,24 +490,6 @@
   "timeDaysAgoLongFmt": {
     "message": "{0} days ago"
   },
-  "timeOneWeekAgo": {
-    "message": "1 week ago"
-  },
-  "timeWeeksAgoFmt": {
-    "message": "{0} weeks ago"
-  },
-  "timeOneMonthAgo": {
-    "message": "1 month ago"
-  },
-  "timeMonthsAgoFmt": {
-    "message": "{0} months ago"
-  },
-  "timeOneYearAgo": {
-    "message": "1 year ago"
-  },
-  "timeYearsAgoFmt": {
-    "message": "{0} years ago"
-  },
   "btnCancelSettings": {
     "message": "Cancel"
   },
@@ -447,6 +510,33 @@
   },
   "tagColors": {
     "message": "Tag Colors"
+  },
+  "colorPickerTitle": {
+    "message": "Color picker"
+  },
+  "colorPickerArea": {
+    "message": "Saturation and brightness"
+  },
+  "colorPickerSaturation": {
+    "message": "Saturation"
+  },
+  "colorPickerBrightness": {
+    "message": "Brightness"
+  },
+  "colorPickerHue": {
+    "message": "Hue"
+  },
+  "colorPickerRed": {
+    "message": "Red"
+  },
+  "colorPickerGreen": {
+    "message": "Green"
+  },
+  "colorPickerBlue": {
+    "message": "Blue"
+  },
+  "colorPickerPresets": {
+    "message": "Preset colors"
   },
   "cacheConfiguration": {
     "message": "Cache Configuration"
@@ -477,6 +567,14 @@
   },
   "ruleMethodSettings": {
     "message": "Detection Method Settings"
+  },
+  "methodSettingsTitleFmt": {
+    "message": "{0} · {1} settings",
+    "description": "Method Settings modal title. {0} = detector name, {1} = readable detection method name (e.g. Headers)"
+  },
+  "methodSettingsTitleNoDetectorFmt": {
+    "message": "{0} settings",
+    "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
   },
   "ruleConfidenceLevel": {
     "message": "Confidence Level"
@@ -561,9 +659,6 @@
   },
   "unknownDetection": {
     "message": "Unknown Detection"
-  },
-  "matchSingular": {
-    "message": "match"
   },
   "matchPlural": {
     "message": "matches"
@@ -709,15 +804,6 @@
   "failedSaveSettingsFmt": {
     "message": "Failed to save settings: {0}"
   },
-  "settingsResetToast": {
-    "message": "Settings reset"
-  },
-  "dataClearedReloadNotice": {
-    "message": "All data cleared successfully! The extension will reload."
-  },
-  "failedClearDataFmt": {
-    "message": "Failed to clear data: {0}"
-  },
   "failedExportLogs": {
     "message": "Failed to export logs"
   },
@@ -766,8 +852,9 @@
   "importDetectorsTitle": {
     "message": "Import Detectors"
   },
-  "importMergeQuestion": {
-    "message": "Do you want to merge with existing detectors?"
+  "importDetectorsModeMessage": {
+    "message": "Merge adds the imported detectors to yours.<br>Replace All deletes your custom detectors first; built-in detectors stay.",
+    "description": "Import-detectors dialog body. Buttons: Cancel, Replace All (replaceAllOption), Merge (mergeOption) — name them the same way."
   },
   "mergeOption": {
     "message": "Merge"
@@ -792,9 +879,6 @@
   },
   "detectorDeletedFmt": {
     "message": "Deleted \"{0}\""
-  },
-  "allDetectorsCleared": {
-    "message": "All detectors cleared"
   },
   "failedClearDetectors": {
     "message": "Failed to clear detectors"
@@ -844,29 +928,12 @@
   "importHistoryTitle": {
     "message": "Import History"
   },
-  "importHistoryMessageFmt": {
-    "message": "Import {0} history items? Current history has {1} items."
-  },
   "replaceOption": {
     "message": "Replace"
   },
-  "settingsResetTitle": {
-    "message": "Reset Settings"
-  },
-  "settingsResetMessage": {
-    "message": "Are you sure you want to reset all settings to their default values? This action cannot be undone."
-  },
-  "btnReset": {
-    "message": "Reset"
-  },
-  "clearAllDataTitle": {
-    "message": "Clear All Data"
-  },
-  "clearAllDataMessage": {
-    "message": "Are you sure you want to clear ALL extension data? This will remove:<br><br>• All detection history<br>• All detector rules<br>• All settings<br><br>This action cannot be undone!"
-  },
-  "clearEverythingBtn": {
-    "message": "Clear Everything"
+  "importHistoryModeMessageFmt": {
+    "message": "Import {0} history items? Your current history has {1}.<br>Merge adds the new items to it. Replace deletes it first.",
+    "description": "Import-history dialog body. {0} = items in the file, {1} = items stored now. Buttons: Cancel, Replace (replaceOption), Merge (mergeOption) — name them the same way."
   },
   "clearLogsTitle": {
     "message": "Clear Logs"
@@ -891,15 +958,6 @@
   },
   "updateServiceNotAvailable": {
     "message": "Update service not available"
-  },
-  "clearAllDetectorsTitle": {
-    "message": "Clear All Detectors"
-  },
-  "clearAllDetectorsMessage": {
-    "message": "This will remove ALL detectors. Are you sure?"
-  },
-  "clearingAllDetectors": {
-    "message": "Clearing all detectors..."
   },
   "deleteDetectorTitle": {
     "message": "Delete Detector"
@@ -976,6 +1034,57 @@
   "settingsContentTypeDesc": {
     "message": "HTTP content type header"
   },
+  "webhookCtHintJson": {
+    "message": "The template as JSON, with the variables filled in."
+  },
+  "webhookCtHintForm": {
+    "message": "Template fields as key=value pairs; nested fields as detections[0][name]."
+  },
+  "webhookCtHintMultipart": {
+    "message": "Template fields as form-data parts; the browser sets the boundary."
+  },
+  "webhookCtHintText": {
+    "message": "The template text as is, with the variables filled in."
+  },
+  "webhookCtHintXml": {
+    "message": "Template fields as a <webhook> XML document; detections as repeated elements."
+  },
+  "webhookCtHintCsv": {
+    "message": "A header row, then one row per detection with the page fields repeated."
+  },
+  "webhookCtHintNdjson": {
+    "message": "One JSON object per line: one line per detection, with the page fields."
+  },
+  "webhookCtHintCustom": {
+    "message": "Your own Content-Type (type/subtype); the body is sent as JSON."
+  },
+  "webhookCtCustom": {
+    "message": "Custom"
+  },
+  "webhookCtCustomLabel": {
+    "message": "Custom Content-Type"
+  },
+  "webhookCtInvalid": {
+    "message": "Enter a type/subtype, e.g. application/vnd.example+json"
+  },
+  "webhookAddHeader": {
+    "message": "Add Header"
+  },
+  "webhookNoHeaders": {
+    "message": "No custom headers configured"
+  },
+  "webhookHeaderName": {
+    "message": "Header name"
+  },
+  "webhookHeaderValue": {
+    "message": "Header value"
+  },
+  "webhookRemoveHeader": {
+    "message": "Remove header"
+  },
+  "webhookSending": {
+    "message": "Sending..."
+  },
   "settingsCustomHeaders": {
     "message": "Custom Headers"
   },
@@ -986,7 +1095,58 @@
     "message": "Payload Template"
   },
   "settingsPayloadTemplateDesc": {
-    "message": "Use variables: <SITEURL>, <HOSTNAME>, <TITLE>, <FAVICON>, <DETECTIONS>, <TIMESTAMP>, <DETECTION_COUNT>, <CATEGORIES>"
+    "message": "Body sent with each webhook. Click a variable to insert it."
+  },
+  "webhookVarsTitle": {
+    "message": "Template variables"
+  },
+  "webhookVarsIntro": {
+    "message": "Replaced with the page values when the webhook is sent."
+  },
+  "webhookVarsInsertLabel": {
+    "message": "Insert variable"
+  },
+  "webhookVarsInsertFmt": {
+    "message": "Insert {0}"
+  },
+  "webhookVarsCopyFmt": {
+    "message": "Copy {0}"
+  },
+  "webhookVarsExample": {
+    "message": "Example"
+  },
+  "webhookVarSiteUrl": {
+    "message": "Full URL of the page"
+  },
+  "webhookVarHostname": {
+    "message": "Host name of the page"
+  },
+  "webhookVarTitle": {
+    "message": "Page title"
+  },
+  "webhookVarFavicon": {
+    "message": "Favicon URL of the site"
+  },
+  "webhookVarDetections": {
+    "message": "Detections as a JSON array"
+  },
+  "webhookVarTimestamp": {
+    "message": "Time of the detection (ISO 8601)"
+  },
+  "webhookVarDetectionCount": {
+    "message": "Number of detections"
+  },
+  "webhookVarCategories": {
+    "message": "Detected categories, comma-separated"
+  },
+  "webhookJsonValid": {
+    "message": "Valid JSON"
+  },
+  "webhookJsonInvalidFmt": {
+    "message": "Invalid JSON (line {0})"
+  },
+  "webhookResetTemplate": {
+    "message": "Reset template"
   },
   "settingsTestWebhook": {
     "message": "Test Webhook"
@@ -1007,10 +1167,7 @@
     "message": "History Limit"
   },
   "settingsHistoryLimitNote": {
-    "message": "(0 = unlimited)"
-  },
-  "settingsAutoClearDays": {
-    "message": "Auto Clear (days)"
+    "message": "(0 = 1,000-entry safety limit)"
   },
   "settingsExportFormat": {
     "message": "Export Format"
@@ -1127,7 +1284,7 @@
     "message": "Export History"
   },
   "settingsAvailableEvents": {
-    "message": "Available Events:"
+    "message": "Available Events"
   },
   "settingsApiEventReady": {
     "message": "Extension loaded and initialized"
@@ -1151,7 +1308,7 @@
     "message": "Detection error occurred"
   },
   "settingsUsageExample": {
-    "message": "Usage Example:"
+    "message": "Usage Example"
   },
   "detectionDisabledForDomain": {
     "message": "Detection disabled for this domain"
@@ -1204,6 +1361,9 @@
   "detectionTitleBlockDomain": {
     "message": "Block this domain"
   },
+  "detectionStatSite": {
+    "message": "SITE"
+  },
   "detectionStatDetections": {
     "message": "DETECTIONS"
   },
@@ -1236,9 +1396,6 @@
   },
   "detectionModalDifficulty": {
     "message": "Difficulty"
-  },
-  "detectionModalMatchesFound": {
-    "message": "Matches Found"
   },
   "detectionModalAuthor": {
     "message": "Author"
@@ -1423,44 +1580,11 @@
   "rulesDomSelectorHelper": {
     "message": "DOM Selector Helper"
   },
-  "rulesStartTypingSuggestions": {
-    "message": "Start typing to see suggestions"
-  },
   "rulesUseSelectorBtn": {
     "message": "Use Selector"
   },
   "rulesWindowPropertiesHelper": {
     "message": "Window Properties Helper"
-  },
-  "rulesStepEnterKeyword": {
-    "message": "Enter Keyword"
-  },
-  "rulesStepChooseProperty": {
-    "message": "Choose Property"
-  },
-  "rulesStepSelectCondition": {
-    "message": "Select Condition"
-  },
-  "rulesConditionExists": {
-    "message": "Exists"
-  },
-  "rulesConditionGroupType": {
-    "message": "Type"
-  },
-  "rulesTypeofObject": {
-    "message": "Object"
-  },
-  "rulesTypeofFunction": {
-    "message": "Function"
-  },
-  "rulesTypeofString": {
-    "message": "String"
-  },
-  "rulesTypeofNumber": {
-    "message": "Number"
-  },
-  "rulesTypeofBoolean": {
-    "message": "Boolean"
   },
   "notifConfirmTitleDefault": {
     "message": "Confirm"
@@ -1470,12 +1594,6 @@
   },
   "notifLoadingDefault": {
     "message": "Loading..."
-  },
-  "helperPatternStartTypingSuggestions": {
-    "message": "Start typing above to see suggestions..."
-  },
-  "helperPatternStartTypingExamples": {
-    "message": "Start typing above to see examples..."
   },
   "helpJsHooksTitle": {
     "message": "JavaScript Hooks Detection"
@@ -1589,13 +1707,10 @@
     "message": "Click \"Start Capturing\" above to begin capturing {0} data"
   },
   "advancedToolsHeading": {
-    "message": "Advanced Detection Tools"
+    "message": "Capture tools"
   },
   "advancedToolsSubtitle": {
-    "message": "Capture and analyze protection systems"
-  },
-  "advancedToolsHelpTitle": {
-    "message": "Help"
+    "message": "Choose a protection to open its tools."
   },
   "advancedToolsStepSelect": {
     "message": "Select Detection"
@@ -1603,11 +1718,8 @@
   "advancedToolsChooseDetection": {
     "message": "Choose a detection..."
   },
-  "advancedToolsStepLoadUse": {
-    "message": "Load & Use Tools"
-  },
   "advancedToolsLoadTools": {
-    "message": "Load Tools"
+    "message": "Open tools"
   },
   "advancedToolsClearAll": {
     "message": "Clear All"
@@ -1633,9 +1745,6 @@
   "settingsLanguageAuto": {
     "message": "Use browser language"
   },
-  "copiedJsonNotification": {
-    "message": "Copied JSON"
-  },
   "detectionEmptyTitle": {
     "message": "Nothing Detected"
   },
@@ -1660,19 +1769,2449 @@
   "rulesModalDetectorLabel": {
     "message": "Detection Rule"
   },
-  "rulesAuthorHelpHint": {
-    "message": "Who created this detector"
+  "rulesMoreActions": {
+    "message": "More actions"
   },
-  "rulesWindowConditionExamplesTitle": {
-    "message": "Window Condition Examples"
+  "advancedToolsNoDetections": {
+    "message": "No supported detections on this page"
   },
-  "rulesWindowConditionExamplesHint": {
-    "message": "Click on an example to use it:"
+  "advancedToolsEmptyTitle": {
+    "message": "No tools available"
   },
-  "rulesBtnNextFmt": {
-    "message": "Next: {0}"
+  "advancedToolsEmptyDesc": {
+    "message": "No supported protection was found on this page. Tools appear here automatically when one is detected."
   },
-  "rulesUsePropertyBtn": {
-    "message": "Use Property"
+  "advancedToolsSupportedLabel": {
+    "message": "Supported protections"
+  },
+  "advancedToolsOpenHistoryFmt": {
+    "message": "View capture history ({0})"
+  },
+  "detectionMethodJsHooks": {
+    "message": "JavaScript hooks"
+  },
+  "detectionMethodContent": {
+    "message": "Content"
+  },
+  "detectionMethodWindow": {
+    "message": "Window properties"
+  },
+  "detectionMethodDom": {
+    "message": "Dom"
+  },
+  "detectionMethodHeaders": {
+    "message": "Headers"
+  },
+  "detectionMethodCookies": {
+    "message": "Cookies"
+  },
+  "detectionMethodUrl": {
+    "message": "Url"
+  },
+  "detectionMethodPayload": {
+    "message": "Payload"
+  },
+  "detectionEnableBtn": {
+    "message": "Enable detection"
+  },
+  "historyMoreActions": {
+    "message": "More actions"
+  },
+  "historyCopyEntryTitle": {
+    "message": "Copy data"
+  },
+  "settingsHistoryAutoDelete": {
+    "message": "Auto-delete"
+  },
+  "settingsHistoryAutoDeleteDesc": {
+    "message": "Periodically removes old history entries."
+  },
+  "settingsHistoryAutoDeleteOlderThan": {
+    "message": "Delete items older than"
+  },
+  "settingsCacheDurationRangeFmt": {
+    "message": "Allowed range: 1–{0} {1}. Choose a larger unit for longer periods."
+  },
+  "settingsCacheDurationRangeMaxFmt": {
+    "message": "Allowed range: 1–{0} {1}."
+  },
+  "settingsCacheDurationUnitNote": {
+    "message": "Months count as 30 days; years as 365 days."
+  },
+  "timeUnitMonths": {
+    "message": "Months"
+  },
+  "timeUnitYears": {
+    "message": "Years"
+  },
+  "settingsHistoryStatsTitle": {
+    "message": "History statistics"
+  },
+  "settingsHistoryStatsDesc": {
+    "message": "View private statistics computed locally from your detection history."
+  },
+  "settingsOpenStats": {
+    "message": "Open statistics"
+  },
+  "settingsExportedToast": {
+    "message": "Settings exported"
+  },
+  "settingsExportFailedToast": {
+    "message": "Failed to export settings"
+  },
+  "settingsImportedToast": {
+    "message": "Settings imported"
+  },
+  "settingsImportFailedToast": {
+    "message": "Failed to import settings: invalid file"
+  },
+  "statsPrivacyNote": {
+    "message": "Computed locally from your detection history. Nothing leaves your browser."
+  },
+  "statsSubtitleFmt": {
+    "message": "Computed locally from {0} history entries. Nothing leaves your browser."
+  },
+  "statsRangeLabel": {
+    "message": "Time range"
+  },
+  "statsRange7": {
+    "message": "7 days"
+  },
+  "statsRange30": {
+    "message": "30 days"
+  },
+  "statsRange90": {
+    "message": "90 days"
+  },
+  "statsRangeAll": {
+    "message": "All"
+  },
+  "statsEmptyTitle": {
+    "message": "No history yet"
+  },
+  "statsEmptyDesc": {
+    "message": "Statistics appear here once pages with detections are saved to the history."
+  },
+  "statsEntries": {
+    "message": "History entries"
+  },
+  "statsUniqueDomains": {
+    "message": "Unique domains"
+  },
+  "statsDetections": {
+    "message": "Detections"
+  },
+  "statsDistinctDetectors": {
+    "message": "Distinct protections"
+  },
+  "statsOverTime": {
+    "message": "Detections over time"
+  },
+  "statsTopProtections": {
+    "message": "Most detected protections"
+  },
+  "statsTopDomains": {
+    "message": "Top domains"
+  },
+  "statsByCategory": {
+    "message": "By category"
+  },
+  "statsByDifficulty": {
+    "message": "By difficulty"
+  },
+  "statsPagesUnit": {
+    "message": "pages"
+  },
+  "statsVisitsUnit": {
+    "message": "visits"
+  },
+  "statsDetectionsUnit": {
+    "message": "detections"
+  },
+  "statsCategoryOther": {
+    "message": "Other"
+  },
+  "statsDifficultyNone": {
+    "message": "No detections"
+  },
+  "statsNoData": {
+    "message": "No data in this range"
+  },
+  "statsTipPagesFmt": {
+    "message": "{0} pages"
+  },
+  "statsTipDomainsFmt": {
+    "message": "{0} domains"
+  },
+  "statsTipVisitsFmt": {
+    "message": "{0} visits"
+  },
+  "statsTipDetectionsFmt": {
+    "message": "{0} detections"
+  },
+  "historyCategoryShareFmt": {
+    "message": "{0} of {1} detections · {2}%"
+  },
+  "statsTipEntriesFmt": {
+    "message": "{0} entries"
+  },
+  "statsWithDetectionsFmt": {
+    "message": "{0} with detections"
+  },
+  "statsVisitsPerDomainFmt": {
+    "message": "{0} visits per domain"
+  },
+  "statsPerEntryFmt": {
+    "message": "{0} per entry"
+  },
+  "statsAvgConfidenceFmt": {
+    "message": "{0}% average confidence"
+  },
+  "statsTimelineMetaFmt": {
+    "message": "{0} detections · {1} days"
+  },
+  "deleteOfficialDetectorNote": {
+    "message": "This is an official Scrapfly detector. Updates will not bring it back; use \"Restore official detectors\" in the … menu to get it again."
+  },
+  "restoreOfficialDetectors": {
+    "message": "Restore official detectors"
+  },
+  "officialDetectorsRestoredFmt": {
+    "message": "{0} official detectors restored"
+  },
+  "noOfficialDetectorsToRestore": {
+    "message": "No official detectors were deleted"
+  },
+  "failedRestoreOfficialDetectors": {
+    "message": "Failed to restore official detectors"
+  },
+  "authorReservedError": {
+    "message": "\"Scrapfly\" is reserved for official detectors. Use a different author name."
+  },
+  "ruleFieldAuthorPlaceholder": {
+    "message": "Your name"
+  },
+  "clearCustomDetectorsTitle": {
+    "message": "Clear custom detectors"
+  },
+  "clearCustomDetectorsMessage": {
+    "message": "This will remove all your custom detectors. Official Scrapfly detectors are kept (you can disable them instead). Are you sure?"
+  },
+  "clearingCustomDetectors": {
+    "message": "Clearing custom detectors..."
+  },
+  "customDetectorsClearedFmt": {
+    "message": "{0} custom detectors removed"
+  },
+  "noCustomDetectorsToClear": {
+    "message": "There are no custom detectors to clear"
+  },
+  "rhSuggestions": {
+    "message": "Suggestions"
+  },
+  "rhResults": {
+    "message": "Results"
+  },
+  "rhCustomChip": {
+    "message": "Custom"
+  },
+  "rhUseAsTyped": {
+    "message": "Use exactly as typed"
+  },
+  "rhNoResultsFmt": {
+    "message": "No matches for “{0}”"
+  },
+  "rhNoResultsHint": {
+    "message": "You can still use it as a custom value."
+  },
+  "rhPreview": {
+    "message": "Preview"
+  },
+  "rhSearchWindow": {
+    "message": "Search properties, e.g. webdriver, chrome, cdc_"
+  },
+  "rhSearchDom": {
+    "message": "Search selectors, e.g. captcha, iframe"
+  },
+  "rhSearchRegex": {
+    "message": "Text to match, e.g. bm_ or token"
+  },
+  "rhSearchSample": {
+    "message": "Type a value to test"
+  },
+  "rhCondition": {
+    "message": "Condition"
+  },
+  "rhConditionInvalid": {
+    "message": "Unknown condition"
+  },
+  "rhAddProperty": {
+    "message": "Add property"
+  },
+  "rhChipAutomation": {
+    "message": "Automation"
+  },
+  "rhCondGroupType": {
+    "message": "Type"
+  },
+  "rhCondGroupExistence": {
+    "message": "Existence"
+  },
+  "rhCondGroupCollections": {
+    "message": "Collections"
+  },
+  "rhCondGroupNumeric": {
+    "message": "Numeric"
+  },
+  "rhCondGroupString": {
+    "message": "String"
+  },
+  "rhCondGroupBoolean": {
+    "message": "Boolean"
+  },
+  "rhCondGroupCustom": {
+    "message": "Current value"
+  },
+  "rhCondTypeObject": {
+    "message": "is an object"
+  },
+  "rhCondTypeFunction": {
+    "message": "is a function"
+  },
+  "rhCondTypeString": {
+    "message": "is a string"
+  },
+  "rhCondTypeNumber": {
+    "message": "is a number"
+  },
+  "rhCondTypeBoolean": {
+    "message": "is a boolean"
+  },
+  "rhCondTypeSymbol": {
+    "message": "is a symbol"
+  },
+  "rhCondTypeBigint": {
+    "message": "is a BigInt"
+  },
+  "rhCondExists": {
+    "message": "exists on the page"
+  },
+  "rhCondTruthy": {
+    "message": "is truthy"
+  },
+  "rhCondFalsy": {
+    "message": "is falsy (empty, 0, false or null)"
+  },
+  "rhCondNotUndefined": {
+    "message": "is not undefined"
+  },
+  "rhCondUndefined": {
+    "message": "is undefined (missing)"
+  },
+  "rhCondNotNull": {
+    "message": "is not null"
+  },
+  "rhCondNull": {
+    "message": "is null"
+  },
+  "rhCondArray": {
+    "message": "is an array"
+  },
+  "rhCondNonEmptyArray": {
+    "message": "is an array with items"
+  },
+  "rhCondEmptyArray": {
+    "message": "is an empty array"
+  },
+  "rhCondHasLength": {
+    "message": "has a length"
+  },
+  "rhCondHasKeys": {
+    "message": "is an object with keys"
+  },
+  "rhCondEmptyObject": {
+    "message": "is an empty object"
+  },
+  "rhCondGt0": {
+    "message": "is greater than 0"
+  },
+  "rhCondGte0": {
+    "message": "is 0 or more"
+  },
+  "rhCondEq0": {
+    "message": "equals 0"
+  },
+  "rhCondNe0": {
+    "message": "is not 0"
+  },
+  "rhCondGt1": {
+    "message": "is greater than 1"
+  },
+  "rhCondGte1": {
+    "message": "is 1 or more"
+  },
+  "rhCondLenGt0": {
+    "message": "is not empty"
+  },
+  "rhCondLenEq0": {
+    "message": "is empty"
+  },
+  "rhCondTrue": {
+    "message": "is true"
+  },
+  "rhCondFalse": {
+    "message": "is false"
+  },
+  "rhWindowIntro": {
+    "message": "Checks a JavaScript global on the page (window.…). Pick one, then choose what it must be."
+  },
+  "rhWindowSentenceFmt": {
+    "message": "Matches pages where {0} {1}"
+  },
+  "rhChipTemplate": {
+    "message": "Template"
+  },
+  "rhDomClass": {
+    "message": "Class"
+  },
+  "rhDomId": {
+    "message": "ID"
+  },
+  "rhDomData": {
+    "message": "Data attribute"
+  },
+  "rhDomClassContains": {
+    "message": "Class contains"
+  },
+  "rhDomIdContains": {
+    "message": "ID contains"
+  },
+  "rhDomTag": {
+    "message": "HTML tag"
+  },
+  "rhDomAttr": {
+    "message": "Has attribute"
+  },
+  "rhDomIframe": {
+    "message": "Iframe URL contains"
+  },
+  "rhDomTitle": {
+    "message": "Title contains"
+  },
+  "rhDomAlt": {
+    "message": "Alt text contains"
+  },
+  "rhDomCamel": {
+    "message": "camelCase class"
+  },
+  "rhRegexTitle": {
+    "message": "Regex helper"
+  },
+  "rhUsePattern": {
+    "message": "Use pattern"
+  },
+  "rhRegexStartsFmt": {
+    "message": "Starts with “{0}”"
+  },
+  "rhRegexEndsFmt": {
+    "message": "Ends with “{0}”"
+  },
+  "rhRegexContainsFmt": {
+    "message": "Contains “{0}” anywhere"
+  },
+  "rhRegexWordFmt": {
+    "message": "Whole word “{0}”"
+  },
+  "rhRegexOrFmt": {
+    "message": "“{0}” or another option"
+  },
+  "rhRegexStartsMoreFmt": {
+    "message": "Starts with “{0}” followed by more text"
+  },
+  "rhRegexEitherFmt": {
+    "message": "“{0}” or “{1}”"
+  },
+  "rhExamplesForFmt": {
+    "message": "Examples for “{0}”"
+  },
+  "rhExamples": {
+    "message": "Examples"
+  },
+  "rhHowMatchesFmt": {
+    "message": "How “{0}” matches"
+  },
+  "rhQuickRef": {
+    "message": "Quick reference"
+  },
+  "rhRefAny": {
+    "message": "any character"
+  },
+  "rhRefZeroMore": {
+    "message": "0 or more"
+  },
+  "rhRefOneMore": {
+    "message": "1 or more"
+  },
+  "rhRefOptional": {
+    "message": "optional"
+  },
+  "rhRefStart": {
+    "message": "start"
+  },
+  "rhRefEnd": {
+    "message": "end"
+  },
+  "rhRefDigit": {
+    "message": "digit"
+  },
+  "rhRefWord": {
+    "message": "letter, digit or _"
+  },
+  "rhRefSpace": {
+    "message": "whitespace"
+  },
+  "rhRefOr": {
+    "message": "a or b"
+  },
+  "rhMatch": {
+    "message": "Match"
+  },
+  "rhNoMatch": {
+    "message": "No match"
+  },
+  "rhWwIntro": {
+    "message": "Matches only when the text stands alone, not as part of a longer word."
+  },
+  "rhWwExact": {
+    "message": "Exact word"
+  },
+  "rhWwJoinedBefore": {
+    "message": "Joined to the text before"
+  },
+  "rhWwJoinedAfter": {
+    "message": "Joined to the text after"
+  },
+  "rhWwSpaces": {
+    "message": "Separated by spaces"
+  },
+  "rhCsIntro": {
+    "message": "When on, uppercase and lowercase letters count as different."
+  },
+  "rhCsOnTitle": {
+    "message": "With Case sensitive on"
+  },
+  "rhCsOffTitle": {
+    "message": "With Case sensitive off"
+  },
+  "rhWhatIsRegex": {
+    "message": "What is a regular expression?"
+  },
+  "rhWhatIsWholeWord": {
+    "message": "What is “Whole word”?"
+  },
+  "rhWhatIsCase": {
+    "message": "What is “Case sensitive”?"
+  },
+  "rhRegexIntro": {
+    "message": "A regular expression (regex) matches text by pattern instead of exact characters."
+  },
+  "rhWhenToUse": {
+    "message": "When to use it"
+  },
+  "rhRegexUse1": {
+    "message": "Text that starts or ends with something specific"
+  },
+  "rhRegexUse2": {
+    "message": "Several variations at once (with |)"
+  },
+  "rhRegexUse3": {
+    "message": "Numbers or specific kinds of characters"
+  },
+  "rhRegexTip": {
+    "message": "To match exact text you do not need regex: use “Whole word” instead."
+  },
+  "rhBestFor": {
+    "message": "Best for"
+  },
+  "rhWwUse1": {
+    "message": "Exact cookie names"
+  },
+  "rhWwUse2": {
+    "message": "Specific header names"
+  },
+  "rhWwUse3": {
+    "message": "Complete class or function names"
+  },
+  "rhCsUse1": {
+    "message": "Headers and cookies with exact capitalization"
+  },
+  "rhCsUse2": {
+    "message": "JavaScript property names"
+  },
+  "settingsApiEventsDesc": {
+    "message": "Events the extension dispatches on the page"
+  },
+  "settingsApiUsageDesc": {
+    "message": "Listen to the events from your own script"
+  },
+  "settingsApiCopyCode": {
+    "message": "Copy code"
+  },
+  "settingsApiCodeCopied": {
+    "message": "Code copied"
+  },
+  "settingsApiEventCopyTitle": {
+    "message": "Copy event name"
+  },
+  "advCommonClickToCopy": {
+    "message": "Click to copy"
+  },
+  "advCommonClickToCopyFull": {
+    "message": "Click to copy full value"
+  },
+  "advCommonDomainLabel": {
+    "message": "Domain:",
+    "description": "Label before a cookie domain"
+  },
+  "advCommonCopy": {
+    "message": "Copy",
+    "description": "Button that copies a value"
+  },
+  "advCommonPage": {
+    "message": "Page"
+  },
+  "advCommonExportCode": {
+    "message": "Export Code"
+  },
+  "advCommonUrlCopied": {
+    "message": "URL copied"
+  },
+  "advCommonCaptured": {
+    "message": "Captured",
+    "description": "Label before the capture date"
+  },
+  "advCommonScript": {
+    "message": "Script",
+    "description": "Label of a script entry"
+  },
+  "advCommonUrl": {
+    "message": "URL"
+  },
+  "advCommonScriptUrl": {
+    "message": "Script URL:"
+  },
+  "advCommonNoCaptureData": {
+    "message": "No capture data available"
+  },
+  "advCommonFailedCheckCookiesFmt": {
+    "message": "Failed to check cookies: {0}",
+    "description": "{0} = error message"
+  },
+  "advCommonFailedAnalyzeScriptsFmt": {
+    "message": "Failed to analyze scripts: {0}",
+    "description": "{0} = error message"
+  },
+  "advCommonFailedStartAnalysis": {
+    "message": "Failed to start analysis"
+  },
+  "advCommonFailedCheckVersionFmt": {
+    "message": "Failed to check version: {0}",
+    "description": "{0} = error message"
+  },
+  "advCommonFailedExtractFmt": {
+    "message": "Failed to extract: {0}",
+    "description": "{0} = error message"
+  },
+  "advCommonFailedStartExtractionFmt": {
+    "message": "Failed to start extraction: {0}",
+    "description": "{0} = error message"
+  },
+  "advCommonFailedOpenExportFmt": {
+    "message": "Failed to open export modal: {0}",
+    "description": "{0} = error message"
+  },
+  "advCommonNoScriptsToExport": {
+    "message": "No scripts available to export"
+  },
+  "advCommonCookiesTitleFmt": {
+    "message": "{0} Cookies",
+    "description": "Modal title. {0} = anti-bot product name (Akamai, DataDome…)"
+  },
+  "advCommonNoCookiesFmt": {
+    "message": "No {0} cookies found",
+    "description": "{0} = anti-bot product name"
+  },
+  "advCommonScriptsTitleFmt": {
+    "message": "{0} Scripts ({1})",
+    "description": "Modal title. {0} = anti-bot product name, {1} = number of scripts"
+  },
+  "advCommonAnalyzingReloadFmt": {
+    "message": "Analyzing {0} scripts... Page will reload",
+    "description": "Toast. {0} = anti-bot product name"
+  },
+  "advCommonCodeGenUnavailable": {
+    "message": "Code generation not available"
+  },
+  "advCommonCodeGenTitle": {
+    "message": "Script Parsing Code Generator"
+  },
+  "advCommonExportOptions": {
+    "message": "Export Options"
+  },
+  "advCommonAllTypes": {
+    "message": "All Types"
+  },
+  "advCommonFoundScriptsFmt": {
+    "message": "Found {0} relevant script(s)",
+    "description": "{0} = number of scripts"
+  },
+  "advCommonScriptAnalysis": {
+    "message": "Script Analysis"
+  },
+  "advCommonTotalScripts": {
+    "message": "Total Scripts:"
+  },
+  "advCommonProtectionLevel": {
+    "message": "Protection Level:"
+  },
+  "advCommonCookiesFound": {
+    "message": "Cookies Found:"
+  },
+  "advCommonSiteKey": {
+    "message": "Site Key"
+  },
+  "advCommonWebsiteUrl": {
+    "message": "Website URL"
+  },
+  "advCommonSiteUrl": {
+    "message": "Site URL"
+  },
+  "advCommonApiDomain": {
+    "message": "API Domain"
+  },
+  "advCommonFound": {
+    "message": "Found",
+    "description": "Status value: the item was found"
+  },
+  "advCommonNotFound": {
+    "message": "Not found",
+    "description": "Status value: the item was not found"
+  },
+  "advCommonRequired": {
+    "message": "Required",
+    "description": "Status value: the challenge is required"
+  },
+  "advCommonYes": {
+    "message": "Yes"
+  },
+  "advCommonEnterprise": {
+    "message": "Enterprise",
+    "description": "reCAPTCHA/hCaptcha Enterprise edition badge"
+  },
+  "advCommonStandard": {
+    "message": "Standard",
+    "description": "Protection/version value"
+  },
+  "advCommonNone": {
+    "message": "None",
+    "description": "Protection level value"
+  },
+  "advCodeDescBrowserParseFmt": {
+    "message": "Browser console code for intercepting and parsing {0} scripts",
+    "description": "{0} = anti-bot product name"
+  },
+  "advCodeDescBrowserFetchFmt": {
+    "message": "Browser console code for fetching {0} scripts",
+    "description": "{0} = anti-bot product name"
+  },
+  "advCodeDescPythonBs": {
+    "message": "Python script with requests and BeautifulSoup"
+  },
+  "advCodeDescPython": {
+    "message": "Python script with requests library"
+  },
+  "advCodeDescNodeCheerio": {
+    "message": "Node.js script with axios and cheerio"
+  },
+  "advCodeDescNode": {
+    "message": "Node.js script with axios"
+  },
+  "advCodeDescPhpDom": {
+    "message": "PHP script with cURL and DOMDocument"
+  },
+  "advCodeDescPhp": {
+    "message": "PHP script with cURL"
+  },
+  "advCodeDescCsharpHap": {
+    "message": "C# with HttpClient and HtmlAgilityPack"
+  },
+  "advCodeDescCsharp": {
+    "message": "C# with HttpClient"
+  },
+  "advCodeDescGoQuery": {
+    "message": "Go with net/http and goquery"
+  },
+  "advCodeDescGo": {
+    "message": "Go with net/http"
+  },
+  "pageNoticeCaptureActive": {
+    "message": "Capture Active",
+    "description": "In-page notice title"
+  },
+  "pageNoticeReloadToCapture": {
+    "message": "Reload the page to trigger capture.",
+    "description": "In-page notice"
+  },
+  "pageNoticeEndsInFmt": {
+    "message": "Ends in {0}s"
+  },
+  "pageNoticeRecaptchaStepReload": {
+    "message": "Reload this page"
+  },
+  "pageNoticeRecaptchaStepSolve": {
+    "message": "Solve or click the reCAPTCHA"
+  },
+  "pageNoticeRecaptchaStepWait": {
+    "message": "Wait for \"Capture Completed\""
+  },
+  "pageNoticeMonitoringStartedFmt": {
+    "message": "{0} Monitoring Started",
+    "description": "In-page notice title. {0} = anti-bot product name"
+  },
+  "pageNoticeCollectingScripts": {
+    "message": "Please wait while we collect script URLs...",
+    "description": "In-page notice"
+  },
+  "pageNoticeAnalyzingScriptsFmt": {
+    "message": "Analyzing {0} Scripts",
+    "description": "In-page notice title. {0} = anti-bot product name"
+  },
+  "pageNoticeCaptureCompleted": {
+    "message": "Capture Completed",
+    "description": "In-page notice title"
+  },
+  "pageNoticePageLoading": {
+    "message": "Page Loading",
+    "description": "In-page notice title"
+  },
+  "pageNoticeWaitForLoad": {
+    "message": "Please wait for the page to fully load...",
+    "description": "In-page notice"
+  },
+  "advAkamaiNotDetectedToast": {
+    "message": "No Akamai detected on this page. The _abck cookie is not present.",
+    "description": "Toast when starting an Akamai capture on a page without the _abck cookie. _abck is a cookie name."
+  },
+  "advAkamaiCaptureSuccess": {
+    "message": "Akamai data captured successfully!"
+  },
+  "advAkamaiCaptureStopped": {
+    "message": "Capture stopped"
+  },
+  "advAkamaiStopCaptureFailedFmt": {
+    "message": "Failed to stop capturing: {0}",
+    "description": "{0} = error message"
+  },
+  "advAkamaiReloadingToAnalyze": {
+    "message": "Reloading page to analyze Akamai data…"
+  },
+  "advAkamaiAnalyzeFailedFmt": {
+    "message": "Failed to analyze content: {0}",
+    "description": "{0} = error message"
+  },
+  "advAkamaiNoAbckCookie": {
+    "message": "No _abck cookie found",
+    "description": "_abck is a cookie name"
+  },
+  "advAkamaiProcessFailedFmt": {
+    "message": "Failed to process data: {0}",
+    "description": "{0} = error message"
+  },
+  "advAkamaiExtractingSensor": {
+    "message": "Extracting sensor information…"
+  },
+  "advAkamaiExtractSensorFailedFmt": {
+    "message": "Failed to extract sensor information: {0}",
+    "description": "{0} = error message"
+  },
+  "advAkamaiNoticeNotDetectedTitle": {
+    "message": "No Akamai Detected",
+    "description": "Title of an in-page notice"
+  },
+  "advAkamaiNoticeNoAbck": {
+    "message": "The _abck cookie is not present on this page.",
+    "description": "_abck is a cookie name"
+  },
+  "advAkamaiNoticeNotActive": {
+    "message": "Akamai Bot Manager is not active here.",
+    "description": "Akamai Bot Manager is a product name"
+  },
+  "advAkamaiNoticeReloadToMonitor": {
+    "message": "Reload the page to begin monitoring for sensor data and request details"
+  },
+  "advAkamaiNoticeSensorCaptured": {
+    "message": "Akamai sensor_data captured successfully",
+    "description": "sensor_data is a technical field name"
+  },
+  "advAkamaiNoticeExtractingTitle": {
+    "message": "Extracting Akamai Sensor Data"
+  },
+  "advAkamaiNoticeWaitingSensor": {
+    "message": "Waiting for sensor information to be captured…"
+  },
+  "advAkamaiNoticeAnalyzingTitle": {
+    "message": "Analyzing Akamai Content"
+  },
+  "advAkamaiNoticeScanning": {
+    "message": "Scanning page for scripts and patterns…"
+  },
+  "advAkamaiNoticeExtractingSensorTitle": {
+    "message": "Extracting Sensor Data"
+  },
+  "advAkamaiNoticeCapturingSensor": {
+    "message": "Capturing Akamai sensor information…"
+  },
+  "advAkamaiLevelAdvancedSbsd": {
+    "message": "Advanced (SBSD)",
+    "description": "Protection level value; SBSD is a technical name"
+  },
+  "advAkamaiLevelBasic": {
+    "message": "Basic",
+    "description": "Protection level value"
+  },
+  "advAkamaiLevelEasy": {
+    "message": "Easy",
+    "description": "Level of the _abck cookie (easy vs standard)"
+  },
+  "advAkamaiAbckLevelLabel": {
+    "message": "_abck level:",
+    "description": "_abck is a cookie name"
+  },
+  "advAkamaiAnalysisTitle": {
+    "message": "Akamai Analysis"
+  },
+  "advAkamaiScriptsLabel": {
+    "message": "Akamai Scripts:",
+    "description": "Label followed by a count"
+  },
+  "advAkamaiScriptsHeading": {
+    "message": "Akamai Scripts",
+    "description": "Section heading"
+  },
+  "advAkamaiSensorDataUrlScript": {
+    "message": "Sensor Data URL Script",
+    "description": "Heading: the script that holds the sensor-data URL"
+  },
+  "advAkamaiPixelHtmlVar": {
+    "message": "Pixel HTML Variable:",
+    "description": "Pixel is the name of an Akamai challenge"
+  },
+  "advAkamaiPixelChallengeUrls": {
+    "message": "Pixel Challenge URLs:",
+    "description": "Pixel is the name of an Akamai challenge"
+  },
+  "advAkamaiPostUrl": {
+    "message": "POST URL:",
+    "description": "URL that receives a POST request (POST is an HTTP method)"
+  },
+  "advAkamaiPixelScriptVar": {
+    "message": "Pixel Script Variable:",
+    "description": "Pixel is the name of an Akamai challenge"
+  },
+  "advAkamaiSbsdScriptUrl": {
+    "message": "SBSD Script URL",
+    "description": "SBSD is a technical name"
+  },
+  "advAkamaiSensorDataUrls": {
+    "message": "Sensor Data URLs",
+    "description": "Section heading"
+  },
+  "advAkamaiEndpoint": {
+    "message": "Akamai Endpoint",
+    "description": "An Akamai network endpoint"
+  },
+  "advAkamaiTypeSensor": {
+    "message": "Sensor",
+    "description": "Export filter button: sensor scripts"
+  },
+  "advAkamaiExtractedSensorTitle": {
+    "message": "Extracted Sensor Information"
+  },
+  "advAkamaiSensorDataCharsFmt": {
+    "message": "Sensor Data ({0} chars)",
+    "description": "{0} = number of characters"
+  },
+  "advAkamaiSensorDataNotCaptured": {
+    "message": "Sensor Data (Not captured)"
+  },
+  "advAkamaiNoSensorData": {
+    "message": "No sensor data captured",
+    "description": "Placeholder of an empty text area"
+  },
+  "advAkamaiSbsdDataCharsFmt": {
+    "message": "SBSD Data ({0} chars)",
+    "description": "{0} = number of characters; SBSD is a technical name"
+  },
+  "advAkamaiSensorScriptUrl": {
+    "message": "Sensor Script URL"
+  },
+  "advAkamaiCopyAllJson": {
+    "message": "Copy All Data as JSON",
+    "description": "Button"
+  },
+  "advAkamaiExtractSensorBtn": {
+    "message": "Extract Sensor Information",
+    "description": "Tool button"
+  },
+  "advAkamaiAbckLevel": {
+    "message": "ABCK Level",
+    "description": "ABCK refers to the _abck cookie"
+  },
+  "advAkamaiAbckCookie": {
+    "message": "ABCK Cookie",
+    "description": "ABCK refers to the _abck cookie"
+  },
+  "advAkamaiVersionLabel": {
+    "message": "Akamai Version"
+  },
+  "advAkamaiChallengeRequirements": {
+    "message": "Challenge Requirements",
+    "description": "Section heading: which challenges the site requires"
+  },
+  "advAkamaiSbsdChallenge": {
+    "message": "SBSD Challenge",
+    "description": "SBSD is a technical name"
+  },
+  "advAkamaiSecCptChallenge": {
+    "message": "sec_cpt Challenge",
+    "description": "sec_cpt is a technical name"
+  },
+  "advAkamaiPixelChallenge": {
+    "message": "Pixel Challenge",
+    "description": "Pixel is the name of an Akamai challenge"
+  },
+  "advImpervaEnableExtractionFailed": {
+    "message": "Failed to enable extraction mode. Check background console for details."
+  },
+  "advImpervaSessionCookies": {
+    "message": "Session Cookies"
+  },
+  "advImpervaSecurityComponents": {
+    "message": "Security Components"
+  },
+  "advImpervaCookieCountFmt": {
+    "message": "Cookies: {0}",
+    "description": "{0} = number of cookies"
+  },
+  "advImpervaResourceDetection": {
+    "message": "Resource Detection"
+  },
+  "advImpervaResourceUrls": {
+    "message": "Resource URLs"
+  },
+  "advImpervaInterrogationUrls": {
+    "message": "Interrogation URLs",
+    "description": "Imperva interrogation (challenge) endpoints"
+  },
+  "advImpervaAnalysisTitle": {
+    "message": "Imperva Analysis"
+  },
+  "advImpervaSensorUrl": {
+    "message": "Sensor URL:",
+    "description": "Label followed by a count"
+  },
+  "advImpervaScriptsHeading": {
+    "message": "Imperva Scripts",
+    "description": "Section heading (shown in upper case)"
+  },
+  "advImpervaScriptTypeFmt": {
+    "message": "{0} Script",
+    "description": "{0} = script type name (Reese84, UTMVC)"
+  },
+  "advImpervaSensorPath": {
+    "message": "Sensor Path:"
+  },
+  "advImpervaNoScripts": {
+    "message": "No scripts detected"
+  },
+  "advImpervaMayNotBePresent": {
+    "message": "Imperva may not be present on this page"
+  },
+  "advImpervaTypeOnlyFmt": {
+    "message": "{0} Only",
+    "description": "Export filter button; {0} = script type name (Reese84, UTMVC)"
+  },
+  "advImpervaLevelAdvanced": {
+    "message": "Advanced (reese84 + utmvc)",
+    "description": "Protection level value; reese84 and utmvc are technical names"
+  },
+  "advImpervaLevelBasicSession": {
+    "message": "Basic (Session)",
+    "description": "Protection level value"
+  },
+  "advImpervaNoticeReloadToMonitor": {
+    "message": "Reload the page to begin monitoring Imperva requests and cookies"
+  },
+  "advImpervaNoticeCapturedItemsFmt": {
+    "message": "Imperva data captured (items: {0})",
+    "description": "{0} = number of captured items"
+  },
+  "advImpervaNoticeCaptureComplete": {
+    "message": "Imperva Capture Complete"
+  },
+  "advImpervaNoticeSensorCaptured": {
+    "message": "Sensor data captured successfully"
+  },
+  "advImpervaNoticeExtractingTitle": {
+    "message": "Extracting Imperva Scripts"
+  },
+  "advImpervaNoticeMonitoringChallenge": {
+    "message": "Monitoring for challenge and solution data…"
+  },
+  "advRecaptchaCallbackTool": {
+    "message": "reCAPTCHA callback",
+    "description": "Tool button that lists the reCAPTCHA callback functions"
+  },
+  "advRecaptchaSelectorDetection": {
+    "message": "Selector Detection",
+    "description": "Modal title: result of clicking the reCAPTCHA and finding its CSS selector"
+  },
+  "advRecaptchaMethod": {
+    "message": "Method",
+    "description": "Label: how the reCAPTCHA was clicked"
+  },
+  "advRecaptchaSelector": {
+    "message": "Selector",
+    "description": "Label: CSS selector"
+  },
+  "advRecaptchaSelectorCopied": {
+    "message": "Selector copied to clipboard!"
+  },
+  "advRecaptchaNoElements": {
+    "message": "No reCAPTCHA elements found"
+  },
+  "advRecaptchaExecuteFailedFmt": {
+    "message": "grecaptcha.execute() failed: {0}",
+    "description": "{0} = raw error message"
+  },
+  "advRecaptchaNoSiteKey": {
+    "message": "No sitekey found"
+  },
+  "advRecaptchaExtractedSiteKey": {
+    "message": "Extracted SiteKey",
+    "description": "Modal title"
+  },
+  "advRecaptchaSiteKeyCopied": {
+    "message": "SiteKey copied to clipboard!"
+  },
+  "advRecaptchaSiteKeyCopiedShort": {
+    "message": "Site Key copied"
+  },
+  "advRecaptchaCallbacksTitle": {
+    "message": "reCAPTCHA Callbacks",
+    "description": "Modal title"
+  },
+  "advRecaptchaClientsTitle": {
+    "message": "reCAPTCHA Clients",
+    "description": "Section heading: reCAPTCHA widget instances found on the page"
+  },
+  "advRecaptchaClientIdFmt": {
+    "message": "Client ID: {0}",
+    "description": "{0} = numeric client id"
+  },
+  "advRecaptchaCopiedToClipboard": {
+    "message": "Copied to clipboard!"
+  },
+  "advRecaptchaCallbackFunction": {
+    "message": "Callback Function",
+    "description": "Label: name of the JavaScript function called when reCAPTCHA is solved"
+  },
+  "advRecaptchaCallbackPath": {
+    "message": "Callback Path",
+    "description": "Label: JavaScript path to the callback"
+  },
+  "advRecaptchaNoCallback": {
+    "message": "No callback defined"
+  },
+  "advRecaptchaDomCallbacks": {
+    "message": "DOM Callbacks",
+    "description": "Section heading: callbacks found in data-callback attributes"
+  },
+  "advRecaptchaScriptCallbacks": {
+    "message": "Script Callbacks",
+    "description": "Section heading: callbacks found in page scripts"
+  },
+  "advRecaptchaCallbackExamples": {
+    "message": "Callback Usage Examples",
+    "description": "Section heading"
+  },
+  "advRecaptchaInvisible": {
+    "message": "Invisible",
+    "description": "reCAPTCHA v2 variant with no visible checkbox"
+  },
+  "advRecaptchaAction": {
+    "message": "Action",
+    "description": "Label: reCAPTCHA action name"
+  },
+  "advRecaptchaVersionCopied": {
+    "message": "Version copied"
+  },
+  "advRecaptchaActionCopied": {
+    "message": "Action copied"
+  },
+  "advRecaptchaApiDomainCopied": {
+    "message": "API Domain copied"
+  },
+  "advRecaptchaRequiredCookie": {
+    "message": "Required Cookie",
+    "description": "Label: cookie that must be sent"
+  },
+  "advRecaptchaCookieCopied": {
+    "message": "Cookie copied"
+  },
+  "advRecaptchaFeaturesDetected": {
+    "message": "Features Detected",
+    "description": "Section heading"
+  },
+  "advRecaptchaSParamRequired": {
+    "message": "S Parameter Required",
+    "description": "Feature badge: the \"s\" request parameter is required. Keep \"S\" as is."
+  },
+  "advRecaptchaHasSession": {
+    "message": "Has Session",
+    "description": "Feature badge: reCAPTCHA runs in session mode"
+  },
+  "advRecaptchaCapturedLabel": {
+    "message": "Captured:",
+    "description": "Label before the capture date and time"
+  },
+  "advRecaptchaFailedClickFmt": {
+    "message": "Failed to click: {0}",
+    "description": "{0} = raw error message"
+  },
+  "advRecaptchaNoCallbacksFound": {
+    "message": "No reCAPTCHA callbacks found on this page. Make sure reCAPTCHA is loaded."
+  },
+  "advRecaptchaFailedCaptureCallbackFmt": {
+    "message": "Failed to capture callback: {0}",
+    "description": "{0} = raw error message"
+  },
+  "pageNoticeRecaptchaReloadAndSolve": {
+    "message": "Reload the page and solve a reCAPTCHA challenge to begin monitoring",
+    "description": "In-page notice"
+  },
+  "pageNoticeRecaptchaPageReady": {
+    "message": "Page Ready",
+    "description": "In-page notice title"
+  },
+  "pageNoticeRecaptchaSolveNow": {
+    "message": "Now solve the reCAPTCHA challenge to capture data",
+    "description": "In-page notice"
+  },
+  "pageNoticeRecaptchaDecodedFmt": {
+    "message": "Requests captured and decoded: {0}",
+    "description": "In-page notice. {0} = number of reCAPTCHA requests"
+  },
+  "pageNoticeRecaptchaNoRequests": {
+    "message": "No reCAPTCHA requests captured",
+    "description": "In-page notice"
+  },
+  "pageNoticeRecaptchaSeen": {
+    "message": "reCAPTCHA detected"
+  },
+  "pageNoticeRecaptchaSolveToFinish": {
+    "message": "Solve the challenge; the capture finishes on its own"
+  },
+  "pageNoticeRecaptchaTriggerNow": {
+    "message": "Now trigger or click the reCAPTCHA",
+    "description": "In-page notice"
+  },
+  "advShapeCookieLabel": {
+    "message": "Cookie",
+    "description": "Capture card label, followed by a count"
+  },
+  "advShapeHeadersLabel": {
+    "message": "Headers",
+    "description": "Capture card label, followed by a count"
+  },
+  "advShapeVersionTitle": {
+    "message": "Shape Security Version"
+  },
+  "advShapeHeaderPattern": {
+    "message": "Header Pattern",
+    "description": "Label: the 8-character part shared by the dynamic headers"
+  },
+  "advShapeHeaderPatterns": {
+    "message": "Header Patterns",
+    "description": "Label (plural): the 8-character parts shared by the dynamic headers"
+  },
+  "advShapeCookieTitle": {
+    "message": "Shape Cookie",
+    "description": "Label: the Shape Security cookie name"
+  },
+  "advShapeMaxAgeInfoFmt": {
+    "message": "Max-Age: {0} seconds (50 years)",
+    "description": "{0} = number of seconds. Keep \"Max-Age\" (cookie attribute name)."
+  },
+  "advShapeAnalysisTitle": {
+    "message": "Shape Security Analysis",
+    "description": "Modal title"
+  },
+  "advShapeInitJsScriptsLabel": {
+    "message": "Init.js Scripts:",
+    "description": "Count label. Keep \"Init.js\" (file name)."
+  },
+  "advShapeSeedScriptsLabel": {
+    "message": "Seed Scripts:",
+    "description": "Count label. Scripts loaded with a seed= parameter."
+  },
+  "advShapeScriptsHeading": {
+    "message": "Shape Security Scripts",
+    "description": "Section heading"
+  },
+  "advShapeInitJsScript": {
+    "message": "Init.js Script",
+    "description": "Heading above one script URL. Keep \"Init.js\" (file name)."
+  },
+  "advShapeInitJsScripts": {
+    "message": "Init.js Scripts",
+    "description": "Heading above several script URLs. Keep \"Init.js\" (file name)."
+  },
+  "advShapeSeedScript": {
+    "message": "Seed Script",
+    "description": "Heading above one script URL loaded with a seed= parameter"
+  },
+  "advShapeSeedScripts": {
+    "message": "Seed Scripts",
+    "description": "Heading above several script URLs loaded with a seed= parameter"
+  },
+  "advShapeNoActiveTab": {
+    "message": "No active tab found"
+  },
+  "advShapeErrorFmt": {
+    "message": "Error: {0}",
+    "description": "{0} = raw error message"
+  },
+  "advShapeDetectedVersion": {
+    "message": "Detected Version:"
+  },
+  "advShapeCaptureRequirements": {
+    "message": "Capture Requirements",
+    "description": "Section heading: what a capture must collect"
+  },
+  "advShapeCookieAndHeaders": {
+    "message": "Cookie + Headers",
+    "description": "What must be captured: the cookie plus the dynamic headers"
+  },
+  "advShapeNoticeExtractingScripts": {
+    "message": "Extracting Shape Security Scripts",
+    "description": "In-page notice title"
+  },
+  "advShapeNoticeReloadToMonitor": {
+    "message": "Reload the page to begin monitoring Shape Security headers and cookies",
+    "description": "In-page notice"
+  },
+  "advShapeNoticeWaitBeforeActions": {
+    "message": "Please wait for the page to fully load before performing actions...",
+    "description": "In-page notice"
+  },
+  "advShapeNoticeMonitoringActiveFmt": {
+    "message": "Monitoring Active ({0})",
+    "description": "In-page notice title. {0} = Shape Security version (V1/V2)"
+  },
+  "advShapeNoticeTriggerCookie": {
+    "message": "Perform actions to trigger cookie",
+    "description": "In-page notice"
+  },
+  "advShapeNoticeTriggerHeadersCookie": {
+    "message": "Perform actions to trigger headers + cookie",
+    "description": "In-page notice"
+  },
+  "advShapeNoticeTimeoutFmt": {
+    "message": "Timeout ({2}) - cookies: {0}, headers: {1}",
+    "description": "In-page notice. {0} = cookie count, {1} = header count, {2} = version (V1/V2)"
+  },
+  "advShapeNoticeV1SummaryFmt": {
+    "message": "{0} - Cookie: {1}",
+    "description": "In-page notice. {0} = version (V1), {1} = cookie name or \"None\""
+  },
+  "advShapeNoticeV2SummaryFmt": {
+    "message": "{0} - Cookie: {1} | Headers: {2}",
+    "description": "In-page notice. {0} = version (V2), {1} = cookie name or \"None\", {2} = header count"
+  },
+  "advShapeNoticeCapturedFmt": {
+    "message": "Captured - cookies: {0}, headers: {1}",
+    "description": "In-page notice. {0} = cookie count, {1} = header count"
+  },
+  "advHcaptchaDetectionTitle": {
+    "message": "hCaptcha Detection",
+    "description": "Modal title"
+  },
+  "advHcaptchaNotDetected": {
+    "message": "hCaptcha not detected. Please reload the page with hCaptcha loaded."
+  },
+  "advHcaptchaVersionTitle": {
+    "message": "hCaptcha Version",
+    "description": "Modal title"
+  },
+  "advHcaptchaEnterpriseMode": {
+    "message": "Enterprise Mode",
+    "description": "Label, followed by Yes/No"
+  },
+  "advHcaptchaNo": {
+    "message": "No",
+    "description": "Answer to a yes/no field (pairs with advCommonYes)"
+  },
+  "advHcaptchaNoHistory": {
+    "message": "No capture history yet",
+    "description": "Empty state"
+  },
+  "advHcaptchaNotAvailable": {
+    "message": "N/A",
+    "description": "Shown when a value is missing"
+  },
+  "advHcaptchaScriptNumberFmt": {
+    "message": "Script {0}",
+    "description": "{0} = script number in a list"
+  },
+  "advHcaptchaCheckingVersionReload": {
+    "message": "Checking hCaptcha version... Page will reload"
+  },
+  "advHcaptchaVersionTimeout": {
+    "message": "hCaptcha version detection timeout"
+  },
+  "advHcaptchaFailedStartVersionCheck": {
+    "message": "Failed to start version check"
+  },
+  "advHcaptchaNoticeReloadToMonitor": {
+    "message": "Reload the page to begin monitoring hCaptcha requests",
+    "description": "In-page notice"
+  },
+  "advHcaptchaNoticeCaptured": {
+    "message": "hCaptcha data captured successfully",
+    "description": "In-page notice"
+  },
+  "advHcaptchaNoticeCheckingVersion": {
+    "message": "Checking hCaptcha Version",
+    "description": "In-page notice title"
+  },
+  "advHcaptchaNoticeAnalyzingPage": {
+    "message": "Please wait while we analyze the page...",
+    "description": "In-page notice"
+  },
+  "advAwswafNoScripts": {
+    "message": "No AWS WAF scripts found"
+  },
+  "advAwswafDeleteCookieHint": {
+    "message": "Delete aws-waf-token cookie and reload to trigger challenge",
+    "description": "Empty-state hint. aws-waf-token is a cookie name (do not translate)"
+  },
+  "advAwswafTypeChallenge": {
+    "message": "Challenge",
+    "description": "Badge: script type (AWS WAF challenge script)"
+  },
+  "advAwswafClickToCopyUrl": {
+    "message": "Click to copy URL"
+  },
+  "advAwswafFetchCodeTitle": {
+    "message": "AWS WAF Script Fetching Code",
+    "description": "Modal title"
+  },
+  "advAwswafScriptsLabel": {
+    "message": "AWS WAF Scripts",
+    "description": "Section label in capture details"
+  },
+  "advAwswafChallengeScript": {
+    "message": "Challenge Script"
+  },
+  "advAwswafApiScript": {
+    "message": "API Script (jsapi.js)",
+    "description": "jsapi.js is a file name (do not translate)"
+  },
+  "advAwswafProblemEndpoint": {
+    "message": "Problem Endpoint",
+    "description": "AWS WAF \"problem\" endpoint (the endpoint that serves the puzzle)"
+  },
+  "advAwswafApiKey": {
+    "message": "API Key"
+  },
+  "advAwswafApiKeyCopied": {
+    "message": "API Key copied"
+  },
+  "advAwswafToken": {
+    "message": "AWS WAF Token"
+  },
+  "advAwswafTokenCopied": {
+    "message": "Token copied"
+  },
+  "advAwswafDetectionIndicators": {
+    "message": "Detection Indicators"
+  },
+  "advAwswafStatus405": {
+    "message": "Status 405",
+    "description": "HTTP status code 405 seen"
+  },
+  "advAwswafDetected": {
+    "message": "Detected",
+    "description": "Value next to an indicator"
+  },
+  "advAwswafChallengeEndpoint": {
+    "message": "Challenge Endpoint"
+  },
+  "advAwswafDeletingCookieFmt": {
+    "message": "Deleting {0} cookie... Page will reload",
+    "description": "Toast (AWS WAF and Turnstile). {0} = cookie name (aws-waf-token, cf_clearance)"
+  },
+  "advCloudflareExtractedSiteKey": {
+    "message": "Extracted Site Key",
+    "description": "Modal title"
+  },
+  "advCloudflareTypeLabel": {
+    "message": "Type",
+    "description": "Label: kind of Cloudflare protection (Turnstile, Challenge…)"
+  },
+  "advCloudflareSiteKeyClickToCopy": {
+    "message": "Site Key (Click to copy)"
+  },
+  "advCloudflareSiteKeyCopied": {
+    "message": "Site Key copied"
+  },
+  "advCloudflareSitekeyLabel": {
+    "message": "Sitekey:",
+    "description": "Label before a site key value"
+  },
+  "advCloudflareUrlLabel": {
+    "message": "URL:",
+    "description": "Label before a URL value"
+  },
+  "advCloudflareTypeChallenge": {
+    "message": "Challenge",
+    "description": "Cloudflare protection/script type: challenge page"
+  },
+  "advCloudflareTypeAnalytics": {
+    "message": "Analytics",
+    "description": "Cloudflare script type: web analytics"
+  },
+  "advCloudflareTypeBotManagement": {
+    "message": "Bot Management",
+    "description": "Cloudflare script type"
+  },
+  "advCloudflareCheckingVersion": {
+    "message": "Checking Cloudflare version... Page will reload",
+    "description": "Toast"
+  },
+  "advCloudflareSiteKeyExtracted": {
+    "message": "Site Key extracted successfully"
+  },
+  "advCloudflareNoSitekey": {
+    "message": "No sitekey found on page"
+  },
+  "advCloudflareFailedExtractSitekey": {
+    "message": "Failed to extract sitekey"
+  },
+  "advDatadomeCookieCopied": {
+    "message": "Cookie copied"
+  },
+  "advFuncaptchaPublicKey": {
+    "message": "Public Key",
+    "description": "FunCaptcha public key (site key)"
+  },
+  "advFuncaptchaUserAgent": {
+    "message": "User Agent"
+  },
+  "advFuncaptchaBdaLabel": {
+    "message": "BDA (Browser Data Array)",
+    "description": "BDA is a technical name (keep); translate the words in parentheses"
+  },
+  "advFuncaptchaBlobData": {
+    "message": "Blob Data"
+  },
+  "advFuncaptchaBlobDataNotCaptured": {
+    "message": "Blob Data (Not Captured)"
+  },
+  "advFuncaptchaStatus": {
+    "message": "Status"
+  },
+  "advFuncaptchaNotCaptured": {
+    "message": "Not captured"
+  },
+  "advFuncaptchaReloadToMonitor": {
+    "message": "Reload the page to begin monitoring and trigger a FunCaptcha challenge (60s timeout)",
+    "description": "In-page notice"
+  },
+  "advFuncaptchaPageLoadingMsg": {
+    "message": "Page is loading, please wait...",
+    "description": "In-page notice"
+  },
+  "advFuncaptchaCapturedTitle": {
+    "message": "FunCaptcha Captured Successfully",
+    "description": "In-page notice title"
+  },
+  "advFuncaptchaCapturedCountFmt": {
+    "message": "Challenges captured: {0}",
+    "description": "In-page notice. {0} = number of challenges captured"
+  },
+  "advFuncaptchaCaptureTimeout": {
+    "message": "Capture Timeout",
+    "description": "In-page notice title"
+  },
+  "advFuncaptchaNoChallenge": {
+    "message": "No FunCaptcha challenge detected (60s timeout)",
+    "description": "In-page notice"
+  },
+  "advGeetestSourceInlineScript": {
+    "message": "Inline Script",
+    "description": "Where a Geetest config was found"
+  },
+  "advGeetestSourceDomAttribute": {
+    "message": "DOM Attribute",
+    "description": "Where a Geetest config was found"
+  },
+  "advGeetestSourceScriptUrl": {
+    "message": "Script URL",
+    "description": "Where a Geetest config was found"
+  },
+  "advGeetestSourceJsonConfig": {
+    "message": "JSON Config",
+    "description": "Where a Geetest config was found"
+  },
+  "advGeetestSourceLabel": {
+    "message": "Source:",
+    "description": "Label before where a value was found"
+  },
+  "advGeetestExtractedCaptchaId": {
+    "message": "Extracted captchaId",
+    "description": "captchaId is a parameter name (do not translate)"
+  },
+  "advGeetestClickToCopyCaptchaId": {
+    "message": "Click to copy captchaId",
+    "description": "captchaId is a parameter name (do not translate)"
+  },
+  "advGeetestProductLabel": {
+    "message": "Product:",
+    "description": "Label before the Geetest product mode (float, popup, bind…)"
+  },
+  "advGeetestScriptSnippet": {
+    "message": "Script Snippet"
+  },
+  "advGeetestExportParsingCode": {
+    "message": "Export Parsing Code",
+    "description": "Button"
+  },
+  "advGeetestErrorFmt": {
+    "message": "Error: {0}",
+    "description": "Toast. {0} = error text"
+  },
+  "advGeetestDetectedVersionFmt": {
+    "message": "Detected: Geetest {0}",
+    "description": "Toast. {0} = Geetest version (V3 or V4)"
+  },
+  "advGeetestNoVersion": {
+    "message": "No Geetest version detected"
+  },
+  "advGeetestParsingCodeCopied": {
+    "message": "Parsing code copied to clipboard!"
+  },
+  "advGeetestTabNotFound": {
+    "message": "Tab not found",
+    "description": "Error: the browser tab no longer exists"
+  },
+  "advGeetestNoScriptsFound": {
+    "message": "No Geetest scripts found"
+  },
+  "advGeetestDetectingVersion": {
+    "message": "Detecting Geetest Version...",
+    "description": "In-page notice title"
+  },
+  "advGeetestReloadCheckVersion": {
+    "message": "Reloading page to check version",
+    "description": "In-page notice"
+  },
+  "advGeetestAnalyzingScripts": {
+    "message": "Analyzing Scripts...",
+    "description": "In-page notice title"
+  },
+  "advGeetestReloadExtractScripts": {
+    "message": "Reloading page to extract scripts",
+    "description": "In-page notice"
+  },
+  "advPanelToolsNameFmt": {
+    "message": "{0} Tools",
+    "description": "{0} = protection product name (e.g. Akamai Bot Manager, reCAPTCHA); label of its Advanced tool set"
+  },
+  "advPanelErrorLoadingTools": {
+    "message": "Error loading Advanced tools"
+  },
+  "advPanelCheckConsole": {
+    "message": "Check console for details"
+  },
+  "advPanelSelectDetectionFirst": {
+    "message": "Please select a detection first"
+  },
+  "advPanelErrorLoadingCapturesFmt": {
+    "message": "Error loading captures: {0}",
+    "description": "{0} = raw error message"
+  },
+  "advPanelCurrentSiteFmt": {
+    "message": "Current Site ({0})",
+    "description": "{0} = hostname of the current tab; site filter option"
+  },
+  "advPanelNoResultsText": {
+    "message": "Try adjusting your filters or search query to find captures."
+  },
+  "advPanelNoUrl": {
+    "message": "No URL",
+    "description": "Shown instead of a URL when a capture has none"
+  },
+  "advPanelView": {
+    "message": "View",
+    "description": "Button: open the capture details"
+  },
+  "advPanelBtnOk": {
+    "message": "OK",
+    "description": "Button that accepts a confirmation dialog"
+  },
+  "advPanelConfirmAction": {
+    "message": "Confirm Action",
+    "description": "Default title of a confirmation dialog"
+  },
+  "advPanelBtnConfirm": {
+    "message": "Confirm",
+    "description": "Default confirm button (verb) in a confirmation dialog"
+  },
+  "advPanelCopiedToClipboard": {
+    "message": "Copied to clipboard"
+  },
+  "advPanelToolsLoadedFmt": {
+    "message": "{0} tools loaded",
+    "description": "{0} = detector / product name"
+  },
+  "advPanelCookiesFoundFmt": {
+    "message": "Found {0}/{1} cookies",
+    "description": "{0} = cookies found, {1} = cookies checked"
+  },
+  "advPanelScriptsFoundFmt": {
+    "message": "Scripts found: {0}",
+    "description": "{0} = number of scripts found"
+  },
+  "advPanelNoScriptsFmt": {
+    "message": "No {0} scripts found",
+    "description": "{0} = protection product name"
+  },
+  "advPanelVersionDetectedFmt": {
+    "message": "{0} version detected: {1}",
+    "description": "{0} = protection product name, {1} = version string"
+  },
+  "advPanelNoVersionFmt": {
+    "message": "No {0} version detected",
+    "description": "{0} = protection product name"
+  },
+  "advPanelUnknownError": {
+    "message": "Unknown error"
+  },
+  "advPanelFailedStartCaptureFmt": {
+    "message": "Failed to start capture: {0}",
+    "description": "{0} = raw error message"
+  },
+  "advPanelFailedStopCaptureFmt": {
+    "message": "Failed to stop capture: {0}",
+    "description": "{0} = raw error message"
+  },
+  "advPanelCaptureCountFmt": {
+    "message": "Captures: {0}",
+    "description": "{0} = number of stored captures"
+  },
+  "advPanelClearCapturedDataTitle": {
+    "message": "Clear all captured data",
+    "description": "Tooltip of the button that clears this module's captures"
+  },
+  "advPanelNotAvailable": {
+    "message": "N/A",
+    "description": "Placeholder when a value is not available (N/A)"
+  },
+  "advPanelHistoryClearedFmt": {
+    "message": "{0} capture history cleared",
+    "description": "{0} = protection product name"
+  },
+  "advPanelFailedClearHistory": {
+    "message": "Failed to clear history"
+  },
+  "advPanelCapturesPaginationFmt": {
+    "message": "Showing {0}-{1} of {2} captures",
+    "description": "{0}-{1} = range shown, {2} = total captures"
+  },
+  "rulesUiNewDetectorName": {
+    "message": "New detector",
+    "description": "Default name of a detector the user has just added and not named yet"
+  },
+  "rulesUiAddDetectorTitleFmt": {
+    "message": "Add {0}",
+    "description": "Rule editor title when adding a detector. {0} = detector name"
+  },
+  "rulesUiEditDetectorTitleFmt": {
+    "message": "Edit {0}",
+    "description": "Rule editor title when editing a detector. {0} = detector name"
+  },
+  "rulesUiScrapflyIconAlt": {
+    "message": "Scrapfly Icon",
+    "description": "Alt text of the default Scrapfly logo used as detector icon"
+  },
+  "rulesUiDetectorIconAltFmt": {
+    "message": "{0} Icon",
+    "description": "Alt text of a detector icon. {0} = detector name"
+  },
+  "rulesUiChangeIcon": {
+    "message": "Change icon",
+    "description": "Tooltip of the detector icon button in the rule editor"
+  },
+  "rulesUiChangeDetectorIcon": {
+    "message": "Change detector icon",
+    "description": "Screen-reader label of the detector icon button"
+  },
+  "rulesUiCustomColor": {
+    "message": "Custom Color",
+    "description": "Tooltip of the rainbow swatch that opens the custom colour picker"
+  },
+  "iconPickerTitle": {
+    "message": "Choose Icon"
+  },
+  "iconPickerDefault": {
+    "message": "Default",
+    "description": "Icon picker option: the default (Scrapfly) icon"
+  },
+  "iconPickerUploadCustom": {
+    "message": "Upload Custom",
+    "description": "Button that uploads the user’s own image as detector icon"
+  },
+  "iconPickerFileTooLarge": {
+    "message": "Icon file size must be less than 100KB"
+  },
+  "rulesUiHelpJsHooks": {
+    "message": "What are JS hooks?"
+  },
+  "rulesUiHelpWindow": {
+    "message": "What are Window properties?"
+  },
+  "rulesUiHelpUrl": {
+    "message": "What is URL detection?"
+  },
+  "rulesUiHelpHeader": {
+    "message": "What is Header detection?"
+  },
+  "rulesUiHelpCookie": {
+    "message": "What is Cookie detection?"
+  },
+  "rulesUiHelpContent": {
+    "message": "What is Content detection?"
+  },
+  "rulesUiHelpDom": {
+    "message": "What is DOM detection?"
+  },
+  "rulesUiHelpPayload": {
+    "message": "What is Payload detection?"
+  },
+  "rulesUiHelpGeneric": {
+    "message": "What is this detection method?"
+  },
+  "rulesUiValueOptionalPlaceholder": {
+    "message": "Value (optional)",
+    "description": "Placeholder of the optional value field of a pattern"
+  },
+  "rulesUiDomSelectorPlaceholder": {
+    "message": "CSS Selector (e.g., .class, #id, [attr])",
+    "description": "Placeholder; keep the selector examples .class, #id, [attr] unchanged"
+  },
+  "rulesUiContentTextPlaceholder": {
+    "message": "Text/Word to search",
+    "description": "Placeholder of a Content pattern"
+  },
+  "rulesUiUrlPatternPlaceholder": {
+    "message": "URL Pattern",
+    "description": "Placeholder of a URL pattern"
+  },
+  "rulesUiJsHookTargetPlaceholder": {
+    "message": "JS Hook Target (e.g., navigator.webdriver)",
+    "description": "Placeholder; keep navigator.webdriver unchanged"
+  },
+  "rulesUiWindowPathPlaceholder": {
+    "message": "Window Path (e.g., grecaptcha, _cf_chl_opt)",
+    "description": "Placeholder; keep grecaptcha and _cf_chl_opt unchanged"
+  },
+  "rulesUiWindowConditionPlaceholder": {
+    "message": "Condition (e.g., typeof object, typeof function)",
+    "description": "Placeholder; keep the code \"typeof object\" / \"typeof function\" unchanged"
+  },
+  "rulesUiCookieNamePlaceholder": {
+    "message": "Cookie Name (e.g., __cf_bm, session_id)",
+    "description": "Placeholder; keep the cookie names __cf_bm and session_id unchanged"
+  },
+  "rulesUiCookieValuePlaceholder": {
+    "message": "Cookie Value Pattern (optional)"
+  },
+  "rulesUiPayloadTextPlaceholder": {
+    "message": "Text (e.g., sensor_data, challenge_token)",
+    "description": "Placeholder; keep sensor_data and challenge_token unchanged"
+  },
+  "rulesUiPayloadUrlPlaceholder": {
+    "message": "/api/verify or challenge.php",
+    "description": "Placeholder of the payload URL filter; keep the paths unchanged"
+  },
+  "rulesUiNameSettings": {
+    "message": "Name Settings",
+    "description": "Tooltip of the settings button of a pattern’s name field"
+  },
+  "rulesUiNameSettingsConfidenceFmt": {
+    "message": "Name Settings (Confidence: {0}%)",
+    "description": "Tooltip of the name settings button. {0} = confidence percentage (number)"
+  },
+  "rulesUiValueSettings": {
+    "message": "Value Settings",
+    "description": "Tooltip of the settings button of a pattern’s value field"
+  },
+  "rulesUiDeleteMethod": {
+    "message": "Delete Method",
+    "description": "Tooltip of the button that removes a pattern row"
+  },
+  "rulesUiClearValue": {
+    "message": "Clear Value",
+    "description": "Tooltip of the button that empties a pattern’s value field"
+  },
+  "rulesUiAddValue": {
+    "message": "Add Value",
+    "description": "Button that shows the optional value field of a pattern"
+  },
+  "rulesUiPageOfFmt": {
+    "message": "Page {0} / {1}",
+    "description": "Pattern list pagination. {0} = current page, {1} = number of pages"
+  },
+  "rulesUiCompleteEmptyPattern": {
+    "message": "Complete the current empty pattern before adding another.",
+    "description": "Tooltip of the disabled Add Pattern button"
+  },
+  "rulesUiFillRequiredPatterns": {
+    "message": "Please fill all required pattern fields before saving."
+  },
+  "rulesUiEnterMethodTypePrompt": {
+    "message": "Enter detection method type (e.g., HEADERS, CONTENT, URLs):",
+    "description": "Browser prompt; keep HEADERS, CONTENT, URLs unchanged (they are typed as-is)"
+  },
+  "rulesUiMethodFallback": {
+    "message": "Method",
+    "description": "Generic name of a detection method when its type is unknown"
+  },
+  "rulesUiUrlScopeHint": {
+    "message": "Page = current URL | Scripts = page + scripts | All = all requests",
+    "description": "Explains the three URL scope options (Page, Scripts, All)"
+  },
+  "rulesUiLeaveEmptyAnyUrl": {
+    "message": "Leave empty to match any URL"
+  },
+  "ruleExampleMatches": {
+    "message": "✓ Matches:",
+    "description": "Label before an example that the option matches; keep the ✓ mark"
+  },
+  "ruleExampleWont": {
+    "message": "× Won't:",
+    "description": "Short label before an example that the option does not match; keep the × mark"
+  },
+  "ruleExampleWontMatch": {
+    "message": "× Won't match:",
+    "description": "Label before an example that the option does not match; keep the × mark"
+  },
+  "ruleExampleLiteralTextOnly": {
+    "message": "literal text only",
+    "description": "Example of what a regex option does not match: plain literal text"
+  },
+  "ruleExampleExactCase": {
+    "message": "(exact case)",
+    "description": "Shown after an example value, e.g. \"Test (exact case)\""
+  },
+  "ruleExampleAlone": {
+    "message": "(alone)",
+    "description": "Shown after an example value, e.g. \"_abck (alone)\": the word on its own"
+  },
+  "ruleConditionGroupOther": {
+    "message": "Other",
+    "description": "Heading of the condition dropdown group holding conditions outside the standard groups"
+  },
+  "clipboardUrlFmt": {
+    "message": "URL: {0}",
+    "description": "Line of a copied text report. {0} = page URL"
+  },
+  "clipboardHostFmt": {
+    "message": "Host: {0}",
+    "description": "Line of a copied text report. {0} = host name"
+  },
+  "clipboardTitleFmt": {
+    "message": "Title: {0}",
+    "description": "Line of a copied text report. {0} = page title"
+  },
+  "clipboardTimestampFmt": {
+    "message": "Timestamp: {0}",
+    "description": "Line of a copied text report. {0} = date and time"
+  },
+  "clipboardSecuritySystemFmt": {
+    "message": "Security System: {0}",
+    "description": "Line of a copied text report. {0} = detector name (e.g. Akamai)"
+  },
+  "clipboardCategoryFmt": {
+    "message": "Category: {0}",
+    "description": "Line of a copied text report. {0} = category (antibot, captcha, fingerprint)"
+  },
+  "clipboardConfidenceFmt": {
+    "message": "Confidence: {0}%",
+    "description": "Line of a copied text report. {0} = percentage number (the % sign follows)"
+  },
+  "clipboardDetectionMethodsFmt": {
+    "message": "Detection Methods: {0}",
+    "description": "Line of a copied text report. {0} = comma-separated list of methods"
+  },
+  "clipboardDetectionMethodsHeading": {
+    "message": "Detection Methods:",
+    "description": "Heading in a copied text report, followed by one method per line"
+  },
+  "clipboardDetectionsCountFmt": {
+    "message": "Detections: {0}",
+    "description": "Line of a copied text report. {0} = number of detections"
+  },
+  "clipboardDetectionsListFmt": {
+    "message": "Detections ({0}):",
+    "description": "Heading in a copied text report, followed by the numbered list. {0} = number of detections"
+  },
+  "clipboardDifficultyFmt": {
+    "message": "Difficulty: {0}",
+    "description": "Line of a copied text report. {0} = Low / Medium / High (already translated)"
+  },
+  "clipboardCacheScopeFmt": {
+    "message": "Cache Scope: {0}",
+    "description": "Line of a copied text report. {0} = Domain / Path / Full URL (already translated)"
+  },
+  "clipboardCacheExpirationFmt": {
+    "message": "Cache Expiration: {0}",
+    "description": "Line of a copied text report. {0} = remaining time such as \"3h 5m\""
+  },
+  "clipboardMethodsFmt": {
+    "message": "Methods: {0}",
+    "description": "Line of a copied text report. {0} = method names with counts"
+  },
+  "clipboardCopyFailed": {
+    "message": "Failed to copy to clipboard"
+  },
+  "detectionUiCopyUrl": {
+    "message": "Copy URL",
+    "description": "Accessible label of the clickable page URL"
+  },
+  "detectionUiCopyUrlFmt": {
+    "message": "Copy URL: {0}",
+    "description": "Tooltip. {0} = the URL"
+  },
+  "detectionUiCopyCategory": {
+    "message": "Copy category",
+    "description": "Accessible label of a clickable category chip"
+  },
+  "detectionUiCopyCategoryFmt": {
+    "message": "Copy category: {0}",
+    "description": "Tooltip. {0} = category name"
+  },
+  "detectionUiCopyMethod": {
+    "message": "Copy method",
+    "description": "Accessible label of a clickable detection-method chip"
+  },
+  "detectionUiCopyMethodFmt": {
+    "message": "Copy method: {0}",
+    "description": "Tooltip. {0} = method name, e.g. \"Cookies (2)\""
+  },
+  "detectionUiCopyValue": {
+    "message": "Copy value",
+    "description": "Accessible label of a clickable value"
+  },
+  "detectionUiCopyValueFmt": {
+    "message": "Copy value: {0}",
+    "description": "Tooltip. {0} = the value"
+  },
+  "detectionUiDurYearsFmt": {
+    "message": "{0}y",
+    "description": "Compact duration unit in the cache-expiry tile. {0} = number of years (English \"1y\")"
+  },
+  "detectionUiDurMonthsFmt": {
+    "message": "{0}mo",
+    "description": "Compact duration unit in the cache-expiry tile. {0} = number of months (English \"2mo\"; must not look like minutes)"
+  },
+  "detectionUiDurDaysFmt": {
+    "message": "{0}d",
+    "description": "Compact duration unit in the cache-expiry tile. {0} = number of days (English \"4d\")"
+  },
+  "detectionUiDurHoursFmt": {
+    "message": "{0}h",
+    "description": "Compact duration unit in the cache-expiry tile. {0} = number of hours (English \"3h\")"
+  },
+  "detectionUiDurMinutesFmt": {
+    "message": "{0}m",
+    "description": "Compact duration unit in the cache-expiry tile. {0} = number of minutes (English \"5m\")"
+  },
+  "detectionUiDurPairFmt": {
+    "message": "{0} {1}",
+    "description": "Joins two compact duration parts, e.g. \"3h\" + \"5m\" = \"3h 5m\""
+  },
+  "detectionUiDurUnderMinute": {
+    "message": "<1m",
+    "description": "Cache expiry when less than one minute remains (English \"<1m\")"
+  },
+  "detectionUiNoDescription": {
+    "message": "No additional details provided for this detection."
+  },
+  "detectionUiNoMethodsRecorded": {
+    "message": "No detection methods recorded for this detector."
+  },
+  "detectionUiUnknownMethod": {
+    "message": "Unknown method"
+  },
+  "detectionUiUnknownValue": {
+    "message": "unknown",
+    "description": "Shown in place of a matched value that was not recorded (lowercase in English)"
+  },
+  "historyUiUntitled": {
+    "message": "Untitled",
+    "description": "Shown for a history entry whose page had no title"
+  },
+  "historyUiNoDetectionMethods": {
+    "message": "No detection methods"
+  },
+  "historyUiInvalidFileFormat": {
+    "message": "Invalid history file format",
+    "description": "Reason shown after \"Failed to import history:\""
+  },
+  "popupUiLogoAlt": {
+    "message": "Scrapfly Robot",
+    "description": "Alt text of the Scrapfly robot logo in the popup header"
+  },
+  "popupUiEnableFailedFmt": {
+    "message": "Failed to enable extension: {0}",
+    "description": "{0} = error message"
+  },
+  "popupUiDisableFailedFmt": {
+    "message": "Failed to disable extension: {0}",
+    "description": "{0} = error message"
+  },
+  "popupUiNativeErrorFmt": {
+    "message": "Error: {0}",
+    "description": "Browser alert shown only when the in-page notification UI is missing. {0} = error message"
+  },
+  "settingsUiBlacklistEmpty": {
+    "message": "No domains blacklisted"
+  },
+  "settingsUiBlacklistNoMatches": {
+    "message": "No domains match your search"
+  },
+  "settingsUiChecking": {
+    "message": "Checking...",
+    "description": "Button label while checking for detector updates"
+  },
+  "settingsUiErrHistoryLimit": {
+    "message": "History limit must be between 0 (unlimited) and 10000",
+    "description": "Validation error shown in the \"Invalid settings:\" toast"
+  },
+  "settingsUiErrCacheDurationFmt": {
+    "message": "Cache duration must be between 1 and {0} {1}",
+    "description": "Validation error shown in the \"Invalid settings:\" toast. {0} = maximum number, {1} = unit (Minutes, Hours, Days, Months or Years, already translated)"
+  },
+  "settingsUiErrAutoDeleteDays": {
+    "message": "Auto-delete days must be between 1 and 3650",
+    "description": "Validation error shown in the \"Invalid settings:\" toast"
+  },
+  "settingsUiErrDuplicateDuration": {
+    "message": "Duplicate duration must be between 1 and 999",
+    "description": "Validation error shown in the \"Invalid settings:\" toast"
+  },
+  "settingsUiExportJson": {
+    "message": "Export JSON",
+    "description": "Tooltip of the logs \"JSON\" export button"
+  },
+  "settingsUiExportText": {
+    "message": "Export Text",
+    "description": "Tooltip of the logs \"Text\" export button"
+  },
+  "settingsUiLogsText": {
+    "message": "Text",
+    "description": "Label of the logs export button that saves plain text (next to \"JSON\")"
+  },
+  "settingsUiIncompatibleCountFmt": {
+    "message": "Detector updates that need a newer extension version: {0}",
+    "description": "{0} = number of detector updates that need a newer extension version"
+  },
+  "settingsUiNeedsExtVersionFmt": {
+    "message": "v{0} (needs ext v{1})",
+    "description": "Version pair in the incompatible-updates list. {0} = detector version, {1} = required extension version"
+  },
+  "statsUiTotals": {
+    "message": "Totals",
+    "description": "Accessible label of the row of total counters on the statistics page"
+  },
+  "ruleSectionCombinations": {
+    "message": "Combinations"
+  },
+  "combinationsHint": {
+    "message": "Choose patterns, then choose how many must match."
+  },
+  "combinationsEmpty": {
+    "message": "No combinations yet."
+  },
+  "combinationAdd": {
+    "message": "Add combination"
+  },
+  "combinationDefaultNameFmt": {
+    "message": "Combination {0}"
+  },
+  "combinationConfidence": {
+    "message": "Confidence when it matches"
+  },
+  "combinationConfidenceFromPatterns": {
+    "message": "Leave empty to use the confidence of the patterns that match"
+  },
+  "combinationDelete": {
+    "message": "Delete combination"
+  },
+  "combinationDeleteConfirmFmt": {
+    "message": "Delete the combination \"{0}\"? Its patterns stay in the rule."
+  },
+  "combinationNotTitle": {
+    "message": "Must NOT match"
+  },
+  "combinationNot": {
+    "message": "NOT"
+  },
+  "combinationRemove": {
+    "message": "Remove"
+  },
+  "combinationEmptyPattern": {
+    "message": "(empty pattern)"
+  },
+  "combinationAnyOfMethodFmt": {
+    "message": "Any {0} pattern"
+  },
+  "combinationGroupEmpty": {
+    "message": "Add a pattern below"
+  },
+  "combinationAddPattern": {
+    "message": "Add pattern"
+  },
+  "combinationAnyPattern": {
+    "message": "any pattern"
+  },
+  "combinationPreviewAnd": {
+    "message": "AND"
+  },
+  "combinationPreviewOr": {
+    "message": "OR"
+  },
+  "combinationPreviewNot": {
+    "message": "NOT"
+  },
+  "combinationPreviewEmpty": {
+    "message": "Add patterns to build this combination"
+  },
+  "combinationInvalid": {
+    "message": "Choose patterns that must match and check the minimum match count."
+  },
+  "combinationStrict": {
+    "message": "Strict"
+  },
+  "combinationStrictTitle": {
+    "message": "Strict: this pattern does not fire the detector on its own, only inside combinations"
+  },
+  "patternCombinationsOnlyBadge": {
+    "message": "Combinations only"
+  },
+  "detectionModalCombinations": {
+    "message": "Matched combinations"
+  },
+  "combinationNoPatterns": {
+    "message": "No patterns added"
+  },
+  "combinationJoinTitle": {
+    "message": "Switch between AND and OR"
+  },
+  "combinationPickHint": {
+    "message": "Tick the patterns to add"
+  },
+  "combinationAddSelectedFmt": {
+    "message": "Add {0} selected"
+  },
+  "combinationEditConditions": {
+    "message": "Edit conditions"
+  },
+  "combinationRequireTogether": {
+    "message": "Use patterns only in combinations"
+  },
+  "combinationRequireHint": {
+    "message": "Applies to these patterns everywhere in this rule."
+  },
+  "combinationAutoConfidence": {
+    "message": "Auto"
+  },
+  "combinationMatchAll": {
+    "message": "All conditions match"
+  },
+  "combinationMatchAny": {
+    "message": "Any condition matches"
+  },
+  "combinationMatchAtLeast": {
+    "message": "At least… match"
+  },
+  "combinationDetectWhen": {
+    "message": "Detect when"
+  },
+  "combinationGroupExcluded": {
+    "message": "These conditions must not match."
+  },
+  "combinationMinimum": {
+    "message": "Minimum matches"
+  },
+  "combinationMatchState": {
+    "message": "Pattern condition"
+  },
+  "combinationMatches": {
+    "message": "Matches"
+  },
+  "combinationDoesNotMatch": {
+    "message": "Does not match"
+  },
+  "combinationAtLeastSummaryFmt": {
+    "message": "At least {0} conditions match"
+  },
+  "combinationChoosePatterns": {
+    "message": "Choose patterns"
+  },
+  "combinationSummaryAll": {
+    "message": "Detect when all required conditions match."
+  },
+  "combinationSummaryAny": {
+    "message": "Detect when at least one condition matches."
+  },
+  "combinationSummaryMinimumFmt": {
+    "message": "Detect when at least {0} of {1} conditions match."
+  },
+  "combinationSummaryExcluded": {
+    "message": "Excluded patterns must be absent."
+  },
+  "combinationDecreaseMinimum": {
+    "message": "Decrease minimum matches"
+  },
+  "combinationIncreaseMinimum": {
+    "message": "Increase minimum matches"
+  },
+  "detectionTipDetections": {
+    "message": "Number of protections detected on this page."
+  },
+  "detectionTipConfidence": {
+    "message": "Average confidence across detected protections."
+  },
+  "detectionTipDifficulty": {
+    "message": "Estimated difficulty of bypassing the detected protections."
+  },
+  "detectionTipCacheScope": {
+    "message": "Which pages can reuse these cached detection results."
+  },
+  "detectionTipCacheExpiration": {
+    "message": "Time remaining before these cached detection results expire."
+  },
+  "tipCachedAt": {
+    "message": "Saved"
+  },
+  "tipConfidenceAverageFmt": {
+    "message": "Average of {0} detections, from {1}% to {2}%"
+  },
+  "tipConfidenceFromCombinations": {
+    "message": "From the matched combinations"
+  },
+  "tipConfidenceFromSignals": {
+    "message": "The strongest single signal sets the score"
+  },
+  "tipCountShareFmt": {
+    "message": "{0} · {1}%"
+  },
+  "tipCustomDetector": {
+    "message": "Custom detector"
+  },
+  "tipDifficultyFromCategoryFmt": {
+    "message": "Default for {0}"
+  },
+  "tipDifficultyFromRule": {
+    "message": "Set by this detector"
+  },
+  "tipDifficultyHardestFmt": {
+    "message": "Set by {0}"
+  },
+  "tipDifficultyManyFmt": {
+    "message": "Raised by {0} protections together"
+  },
+  "tipLastUpdated": {
+    "message": "Updated"
+  },
+  "tipMethodContent": {
+    "message": "Text found in the page or its scripts matched."
+  },
+  "tipMethodCookie": {
+    "message": "A cookie set on this site matched."
+  },
+  "tipMethodDom": {
+    "message": "An element on the page matched."
+  },
+  "tipMethodHeader": {
+    "message": "A response header sent by the site matched."
+  },
+  "tipMethodJsHooks": {
+    "message": "The page called a browser API that this detector watches."
+  },
+  "tipMethodPayload": {
+    "message": "Data the page sent in a request matched."
+  },
+  "tipMethodUrl": {
+    "message": "The page or a request it made matched a known address."
+  },
+  "tipMethodWindow": {
+    "message": "A global JavaScript object on the page matched."
+  },
+  "tipMoreFmt": {
+    "message": "+{0} more"
+  },
+  "tipOfficialDetector": {
+    "message": "Official Scrapfly detector"
+  },
+  "tipScopeDomain": {
+    "message": "Results are reused for every page on this domain."
+  },
+  "tipScopeFullUrl": {
+    "message": "Results are reused only for this exact URL, including the query."
+  },
+  "tipScopePath": {
+    "message": "Results are reused for this exact path, whatever the query."
+  },
+  "tipStatsActiveDays": {
+    "message": "Days with at least one saved page."
+  },
+  "tipStatsDetections": {
+    "message": "Protections found across all saved pages, counting repeats."
+  },
+  "tipStatsDetectors": {
+    "message": "Different protections seen, each counted once."
+  },
+  "tipStatsDomains": {
+    "message": "Different sites among the saved pages."
+  },
+  "tipStatsEntries": {
+    "message": "Pages saved to History in this range."
+  },
+  "tipStatsRateFmt": {
+    "message": "{0} of {1} entries"
+  },
+  "tipPatterns": {
+    "message": "Patterns"
+  },
+  "settingsRowVerboseLogs": {
+    "message": "Verbose logs"
+  },
+  "settingsRowVerboseLogsTip": {
+    "message": "Also log every rule, hook and message, not just one report per page"
   }
 }

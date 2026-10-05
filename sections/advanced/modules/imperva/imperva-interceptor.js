@@ -90,17 +90,19 @@ function impervaStartCapture(tabId, captureUrl) {
     // Show in-page notification
     if (typeof showCaptureStarted === 'function') {
         showCaptureStarted(tabId, {
-            title: 'Imperva Monitoring Started',
-            message: 'Reload the page to begin monitoring Imperva requests and cookies',
+            module: 'Imperva',
+            title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'Imperva'),
+            message: pageText('advImpervaNoticeReloadToMonitor', 'Reload the page to begin monitoring Imperva requests and cookies'),
             duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
             Logger.error('NETWORK', '[IMPERVA-CAPTURE] Failed to show notification:', err);
         });
     } else if (showNotification) {
         showNotification(tabId, {
+            module: 'Imperva',
             type: 'capture',
-            title: 'Imperva Monitoring Started',
-            message: 'Reload the page to begin monitoring Imperva requests and cookies',
+            title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'Imperva'),
+            message: pageText('advImpervaNoticeReloadToMonitor', 'Reload the page to begin monitoring Imperva requests and cookies'),
             duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT // Show for 60 seconds (until auto-stop)
         }).catch(err => {
             Logger.error('NETWORK', '[IMPERVA-CAPTURE] Failed to show notification:', err);
@@ -197,9 +199,10 @@ function impervaStopCapture(tabId) {
                                   state.foundCookies.incapSes.length + state.foundCookies.nlbi.length +
                                   state.foundCookies.visid.length;
             showNotification(tabId, {
+                module: 'Imperva',
                 type: 'success',
-                title: 'Capture Completed',
-                message: `Imperva data captured (${capturedItems} items)`,
+                title: pageText('pageNoticeCaptureCompleted', 'Capture Completed'),
+                message: pageText('advImpervaNoticeCapturedItemsFmt', 'Imperva data captured (items: {0})', capturedItems),
                 duration: 5000
             }).catch(err => {
                 Logger.error('NETWORK', '[IMPERVA-CAPTURE] Failed to show notification:', err);
@@ -512,9 +515,10 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
         if (typeof showNotification === 'function') {
             try {
                 await showNotification(tabId, {
+                    module: 'Imperva',
                     type: 'success',
-                    title: 'Imperva Capture Complete',
-                    message: 'Sensor data captured successfully',
+                    title: pageText('advImpervaNoticeCaptureComplete', 'Imperva Capture Complete'),
+                    message: pageText('advImpervaNoticeSensorCaptured', 'Sensor data captured successfully'),
                     duration: 3000
                 });
             } catch (error) {
@@ -922,9 +926,10 @@ function impervaHandleMessage(request, sendResponse) {
                     if (typeof showNotification === 'function') {
                         Logger.network('[IMPERVA] Showing analyzing notification...');
                         await showNotification(request.tabId, {
+                            module: 'Imperva',
                             type: 'loading',
-                            title: 'Extracting Imperva Scripts',
-                            message: 'Monitoring for challenge and solution data...',
+                            title: pageText('advImpervaNoticeExtractingTitle', 'Extracting Imperva Scripts'),
+                            message: pageText('advImpervaNoticeMonitoringChallenge', 'Monitoring for challenge and solution data…'),
                             duration: 10000
                         });
                         Logger.network('[IMPERVA] Notification shown successfully');

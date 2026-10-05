@@ -6,35 +6,31 @@
         <h2 data-i18n="settingsTitle">Settings</h2>
         <p class="modal-subtitle" data-i18n="settingsSubtitle">Configure your extension preferences</p>
       </div>
-      <button id="closeSettingsModal" class="close-btn" aria-label="Close" data-i18n-aria-label="btnClose">
-        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/>
-        </svg>
-      </button>
+      <button type="button" id="closeSettingsModal" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
     </div>
 
-    <!-- Tab Navigation -->
+    <!-- Tab Navigation: four equal buttons, icon above label -->
     <div class="settings-tabs">
       <button class="settings-tab-btn active" data-settings-tab="general">
-        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" fill="currentColor"/>
+        <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.430,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.730L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" fill="currentColor"/>
         </svg>
         <span data-i18n="settingsTabGeneral">General</span>
       </button>
       <button class="settings-tab-btn" data-settings-tab="detection">
-        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+        <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10M10,22C9.75,22 9.54,21.82 9.5,21.58L9.13,18.93C8.5,18.68 7.96,18.34 7.44,17.94L4.95,18.95C4.73,19.03 4.46,18.95 4.34,18.73L2.34,15.27C2.21,15.05 2.27,14.78 2.46,14.63L4.57,12.97L4.5,12L4.57,11L2.46,9.37C2.27,9.22 2.21,8.95 2.34,8.73L4.34,5.27C4.46,5.05 4.73,4.96 4.95,5.05L7.44,6.05C7.96,5.66 8.5,5.32 9.13,5.07L9.5,2.42C9.54,2.18 9.75,2 10,2H14C14.25,2 14.46,2.18 14.5,2.42L14.87,5.07C15.5,5.32 16.04,5.66 16.56,6.05L19.05,5.05C19.27,4.96 19.54,5.05 19.66,5.27L21.66,8.73C21.79,8.95 21.73,9.22 21.54,9.37L19.43,11L19.5,12L19.43,13L21.54,14.63C21.73,14.78 21.79,15.05 21.66,15.27L19.66,18.73C19.54,18.95 19.27,19.04 19.05,18.95L16.56,17.95C16.04,18.34 15.5,18.68 14.87,18.93L14.5,21.58C14.46,21.82 14.25,22 14,22H10M11.25,4L10.88,6.61C9.68,6.86 8.62,7.5 7.85,8.39L5.44,7.35L4.69,8.65L6.8,10.2C6.4,11.37 6.4,12.64 6.8,13.8L4.68,15.36L5.43,16.66L7.86,15.62C8.63,16.5 9.68,17.14 10.87,17.38L11.24,20H12.76L13.13,17.39C14.32,17.14 15.37,16.5 16.14,15.62L18.57,16.66L19.32,15.36L17.2,13.81C17.6,12.64 17.6,11.37 17.2,10.2L19.31,8.65L18.56,7.35L16.15,8.39C15.38,7.5 14.32,6.86 13.12,6.62L12.75,4H11.25Z" fill="currentColor"/>
         </svg>
         <span data-i18n="settingsTabDetection">Detection</span>
       </button>
       <button class="settings-tab-btn" data-settings-tab="history">
-        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M13.5,8H12V13L16.28,15.54L17,14.33L13.5,12.25V8M13,3A9,9 0 0,0 4,12H1L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z" fill="currentColor"/>
+        <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M13.5,8H12V13L16.28,15.54L17,14.33L13.5,12.25V8M13,3A9,9 0 0,0 4,12H1L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.270,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z" fill="currentColor"/>
         </svg>
         <span data-i18n="settingsTabHistory">History</span>
       </button>
       <button class="settings-tab-btn" data-settings-tab="data">
-        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+        <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z" fill="currentColor"/>
         </svg>
         <span data-i18n="settingsTabData">Data</span>
@@ -45,71 +41,72 @@
       <!-- General Settings Tab -->
       <div class="settings-tab-content active" data-tab-content="general">
 
-        <!-- Core Settings Group -->
+        <!-- Core Settings: one card, one divider row per setting -->
         <div class="settings-card-group">
           <div class="settings-card-group-title" data-i18n="settingsGroupCoreSettings">Core Settings</div>
 
-          <!-- Notifications Card -->
           <div class="settings-card">
-            <div class="settings-card-header">
-              <div class="settings-card-title">
-                <h4>
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21,19V20H3V19L5,17V11C5,7.9 7.03,5.17 10,4.29C10,4.19 10,4.1 10,4A2,2 0 0,1 12,2A2,2 0 0,1 14,4C14,4.1 14,4.19 14,4.29C16.97,5.17 19,7.9 19,11V17L21,19M14,21A2,2 0 0,1 12,23A2,2 0 0,1 10,21"/></svg>
+            <!-- Notifications -->
+            <div class="settings-row settings-row--notifications">
+              <div class="settings-row-text">
+                <div class="settings-row-title">
+                  <svg class="settings-icon-bell" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21,19V20H3V19L5,17V11C5,7.9 7.03,5.17 10,4.29C10,4.19 10,4.1 10,4A2,2 0 0,1 12,2A2,2 0 0,1 14,4C14,4.1 14,4.19 14,4.29C16.97,5.17 19,7.9 19,11V17L21,19M14,21A2,2 0 0,1 12,23A2,2 0 0,1 10,21"/></svg>
                   <span data-i18n="settingsCardNotifications">Notifications</span>
-                </h4>
-                <p data-i18n="settingsCardNotificationsDesc">Show alerts when security systems are detected</p>
+                </div>
+                <p class="settings-row-desc" data-i18n="settingsCardNotificationsDesc">Show alerts when security systems are detected</p>
               </div>
               <label class="switch switch-sm">
                 <input type="checkbox" id="notificationsEnabled">
                 <span class="slider"></span>
               </label>
             </div>
-          </div>
 
-          <!-- Language Card -->
-          <div class="settings-card settings-card--language">
-            <div class="settings-card-header settings-card-header--static">
-              <div class="settings-card-title">
-                <h4>
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.87,15.07L10.33,12.56L10.36,12.53C12.1,10.59 13.34,8.36 14.07,6H17V4H10V2H8V4H1V6H12.17C11.5,7.92 10.44,9.75 9,11.35C8.07,10.32 7.3,9.19 6.69,8H4.69C5.42,9.63 6.42,11.17 7.67,12.56L2.58,17.58L4,19L9,14L12.11,17.11L12.87,15.07M18.5,10H16.5L12,22H14L15.12,19H19.87L21,22H23L18.5,10M15.88,17L17.5,12.67L19.12,17H15.88Z"/></svg>
+            <!-- Language -->
+            <div class="settings-row settings-row--language">
+              <div class="settings-row-text">
+                <div class="settings-row-title">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.87,15.07L10.33,12.56L10.36,12.53C12.1,10.59 13.34,8.36 14.07,6H17V4H10V2H8V4H1V6H12.17C11.5,7.92 10.44,9.75 9,11.35C8.07,10.32 7.3,9.19 6.69,8H4.69C5.42,9.63 6.42,11.17 7.67,12.56L2.58,17.58L4,19L9,14L12.11,17.11L12.87,15.07M18.5,10H16.5L12,22H14L15.12,19H19.87L21,22H23L18.5,10M15.88,17L17.5,12.67L19.12,17H15.88Z"/></svg>
                   <span data-i18n="settingsLanguageTitle">Language</span>
-                </h4>
-                <p data-i18n="settingsLanguageDesc">Override the extension UI language. Default follows your browser.</p>
+                </div>
+                <p class="settings-row-desc" data-i18n="settingsLanguageDesc">Override the extension UI language. Default follows your browser.</p>
               </div>
-            </div>
-            <div class="settings-card-body settings-card-body--language">
               <div class="language-picker" id="languagePicker">
                 <input type="hidden" id="languageOverride" value="auto">
-                <button type="button" class="language-picker-trigger" id="languagePickerTrigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Language">
+                <button type="button" class="language-picker-trigger" id="languagePickerTrigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Language" data-i18n-aria-label="settingsLanguageTitle">
                   <span class="language-picker-flag-slot" id="languagePickerFlagSlot" aria-hidden="true"></span>
                   <span class="language-picker-label" id="languagePickerLabel"></span>
                   <svg class="language-picker-chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-                    <path d="M2.5 4.5L6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2.5 5L6 8l3.5-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </button>
                 <ul class="language-picker-menu" id="languagePickerMenu" role="listbox" hidden></ul>
               </div>
             </div>
-          </div>
 
-          <!-- Debug Mode Card -->
-          <div class="settings-card">
-            <div class="settings-card-header">
-              <div class="settings-card-title">
-                <h4>
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14,12H10V10H14M14,16H10V14H14M20,8H17.19C16.74,7.22 16.12,6.55 15.37,6.04L17,4.41L15.59,3L13.42,5.17C12.96,5.06 12.5,5 12,5C11.5,5 11.04,5.06 10.59,5.17L8.41,3L7,4.41L8.62,6.04C7.88,6.55 7.26,7.22 6.81,8H4V10H6.09C6.04,10.33 6,10.66 6,11V12H4V14H6V15C6,15.34 6.04,15.67 6.09,16H4V18H6.81C7.85,19.79 9.78,21 12,21C14.22,21 16.15,19.79 17.19,18H20V16H17.91C17.96,15.67 18,15.34 18,15V14H20V12H18V11C18,10.66 17.96,10.33 17.91,10H20V8M16,15A4,4 0 0,1 12,19A4,4 0 0,1 8,15V11A4,4 0 0,1 12,7A4,4 0 0,1 16,11V15Z"/></svg>
+            <!-- Debug Mode -->
+            <div class="settings-row">
+              <div class="settings-row-text">
+                <div class="settings-row-title">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14,12H10V10H14M14,16H10V14H14M20,8H17.19C16.74,7.22 16.12,6.55 15.37,6.04L17,4.41L15.59,3L13.42,5.17C12.96,5.06 12.5,5 12,5C11.5,5 11.04,5.06 10.59,5.17L8.41,3L7,4.41L8.62,6.04C7.88,6.55 7.26,7.22 6.81,8H4V10H6.09C6.04,10.33 6,10.66 6,11V12H4V14H6V15C6,15.34 6.04,15.67 6.09,16H4V18H6.81C7.85,19.79 9.78,21 12,21C14.22,21 16.15,19.79 17.19,18H20V16H17.91C17.96,15.67 18,15.34 18,15V14H20V12H18V11C18,10.66 17.96,10.33 17.91,10H20V8M16,15A4,4 0 0,1 12,19A4,4 0 0,1 8,15V11A4,4 0 0,1 12,7A4,4 0 0,1 16,11V15Z"/></svg>
                   <span data-i18n="settingsCardDebug">Debug Mode</span>
-                </h4>
-                <p data-i18n="settingsCardDebugDesc">Enable console logging for debugging</p>
+                </div>
+                <p class="settings-row-desc" data-i18n="settingsCardDebugDesc">Enable console logging for debugging</p>
               </div>
               <label class="switch switch-sm">
                 <input type="checkbox" id="debugModeGeneral">
                 <span class="slider"></span>
               </label>
             </div>
-            <!-- Log Collector Section (Only visible when Debug Mode is enabled) -->
+            <!-- Log Collector (only visible when Debug Mode is enabled) -->
             <div id="logCollectorSection" class="settings-card-body" style="display: none;">
-              <div class="setting-row">
+              <div class="setting-row setting-row--inline setting-row--toggle">
+                <span class="setting-row-label" data-i18n="settingsRowVerboseLogs" title="Also log every rule, hook and message, not just one report per page" data-i18n-title="settingsRowVerboseLogsTip">Verbose logs</span>
+                <label class="switch switch-sm">
+                  <input type="checkbox" id="debugVerbose">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="setting-row setting-row--inline setting-row--toggle">
                 <span class="setting-row-label" data-i18n="settingsRowLogCollector">Log Collector</span>
                 <label class="switch switch-sm">
                   <input type="checkbox" id="logCollectorEnabled">
@@ -117,24 +114,24 @@
                 </label>
               </div>
               <div id="logCollectorControls" style="display: none;">
-                <div class="setting-row">
+                <div class="setting-row setting-row--inline">
                   <span class="setting-row-label" data-i18n="settingsRowMaxLogs">Max Logs</span>
                   <input type="number" id="logCollectorMaxLogs" class="input-field" min="100" max="5000" step="100" value="5000">
                 </div>
-                <div class="setting-row">
+                <div class="setting-row setting-row--inline">
                   <span class="setting-row-label" data-i18n="settingsRowCollected">Collected</span>
                   <span class="settings-info-badge"><span id="logCountValue">0</span> / <span id="logCountMax">5000</span></span>
                 </div>
                 <div class="settings-action-row">
-                  <button id="exportLogsJsonBtn" class="action-btn" title="Export JSON">
+                  <button id="exportLogsJsonBtn" class="action-btn" title="Export JSON" data-i18n-title="settingsUiExportJson">
                     <svg width="14" height="14" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z" fill="currentColor"/></svg>
                     JSON
                   </button>
-                  <button id="exportLogsTextBtn" class="action-btn" title="Export Text">
+                  <button id="exportLogsTextBtn" class="action-btn" title="Export Text" data-i18n-title="settingsUiExportText">
                     <svg width="14" height="14" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M8,15.5H16V17H8V15.5M8,11.5H16V13H8V11.5Z" fill="currentColor"/></svg>
-                    Text
+                    <span data-i18n="settingsUiLogsText">Text</span>
                   </button>
-                  <button id="clearLogsBtn" class="action-btn" style="background-color: rgba(239,68,68,0.15); color: #ef4444;" title="Clear">
+                  <button id="clearLogsBtn" class="action-btn action-btn-danger" title="Clear" data-i18n-title="btnClear" aria-label="Clear" data-i18n-aria-label="btnClear">
                     <svg width="14" height="14" viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/></svg>
                   </button>
                 </div>
@@ -148,13 +145,13 @@
           <div class="settings-card-group-title" data-i18n="settingsGroupDetectorUpdates">Detector Updates</div>
 
           <div class="settings-card">
-            <div class="settings-card-header">
-              <div class="settings-card-title">
-                <h4>
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21,10.12H14.22L16.96,7.3C14.23,4.6 9.81,4.5 7.08,7.2C4.35,9.91 4.35,14.28 7.08,17C9.81,19.7 14.23,19.7 16.96,17C18.32,15.65 19,14.08 19,12.1H21C21,14.08 20.12,16.65 18.36,18.39C14.85,21.87 9.15,21.87 5.64,18.39C2.14,14.92 2.11,9.28 5.62,5.81C9.13,2.34 14.76,2.34 18.27,5.81L21,3V10.12M12.5,8V12.25L16,14.33L15.28,15.54L11,13V8H12.5Z"/></svg>
+            <div class="settings-row settings-row--auto-update">
+              <div class="settings-row-text">
+                <div class="settings-row-title">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21,10.12H14.22L16.96,7.3C14.23,4.6 9.81,4.5 7.08,7.2C4.35,9.91 4.35,14.28 7.08,17C9.81,19.7 14.23,19.7 16.96,17C18.32,15.65 19,14.08 19,12.1H21C21,14.08 20.12,16.65 18.36,18.39C14.85,21.87 9.15,21.87 5.64,18.39C2.14,14.92 2.11,9.28 5.62,5.81C9.13,2.34 14.76,2.34 18.27,5.81L21,3V10.12M12.5,8V12.25L16,14.33L15.28,15.54L11,13V8H12.5Z"/></svg>
                   <span data-i18n="settingsCardAutoUpdate">Auto-check for Updates</span>
-                </h4>
-                <p data-i18n="settingsCardAutoUpdateDesc">Automatically check for new detector definitions</p>
+                </div>
+                <p class="settings-row-desc" data-i18n="settingsCardAutoUpdateDesc">Automatically check for new detector definitions</p>
               </div>
               <label class="switch switch-sm">
                 <input type="checkbox" id="autoUpdate">
@@ -162,7 +159,7 @@
               </label>
             </div>
             <div class="settings-card-body" id="updateIntervalGroup">
-              <div class="setting-row">
+              <div class="setting-row setting-row--inline">
                 <span class="setting-row-label" data-i18n="settingsRowCheckInterval">Check Interval</span>
                 <select id="checkIntervalHours" class="select-field">
                   <option value="6" data-i18n="interval6Hours">6 hours</option>
@@ -172,10 +169,10 @@
                   <option value="168" data-i18n="interval1Week">1 week</option>
                 </select>
               </div>
-              <div class="setting-row">
-                <span class="setting-row-label"><span data-i18n="settingsRowLastCheck">Last Check</span>: <span id="lastUpdateCheckTime" style="color: var(--text-muted);">Never</span></span>
-                <button id="checkUpdatesNowBtn" class="action-btn" style="padding: 6px 12px;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" fill="currentColor"/></svg>
+              <div class="setting-row setting-row--inline">
+                <span class="setting-row-label"><span data-i18n="settingsRowLastCheck">Last Check</span>: <span id="lastUpdateCheckTime" class="setting-row-muted">Never</span></span>
+                <button id="checkUpdatesNowBtn" class="action-btn action-btn-sm">
+                  <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.650C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" fill="currentColor"/></svg>
                   <span data-i18n="settingsBtnCheckNow">Check Now</span>
                 </button>
               </div>
@@ -190,11 +187,9 @@
                 </div>
                 <div class="warning-content">
                   <div class="warning-title" data-i18n="settingsExtensionUpdateRequired">Extension Update Required</div>
-                  <div class="warning-message">
-                    <span id="incompatibleCount">0</span> detector update(s) require a newer extension version.
-                  </div>
+                  <div class="warning-message" id="incompatibleMessage" data-i18n-fmt="settingsUiIncompatibleCountFmt" data-i18n-args="0">Detector updates that need a newer extension version: 0</div>
                   <a href="https://chromewebstore.google.com/detail/scrapfly-anti-bot-detecto/gpmmeepmabklpickfnjpmnbbonjhjhmn"
-                     target="_blank" class="action-btn action-btn-warning" style="margin-top: 8px; font-size: 12px; padding: 6px 12px;">
+                     target="_blank" class="action-btn action-btn-warning action-btn-sm">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
                     </svg>
@@ -211,66 +206,62 @@
         <div class="settings-card-group">
           <div class="settings-card-group-title" data-i18n="settingsGroupBadgeColors">Badge Colors</div>
 
-          <div class="settings-card">
-            <div class="settings-card-body settings-card-body--no-border" style="padding-top: 14px;">
-              <div class="color-row">
-                <span class="color-row-label" data-i18n="settingsBadgeColorLow">Low</span>
-                <div class="color-picker-container">
-                  <input type="color" id="colorBadgeLow" class="color-field" value="#4CAF50">
-                  <span class="color-hex-display" id="hexBadgeLow">#4CAF50</span>
-                </div>
+          <div class="settings-card settings-card--colors">
+            <div class="color-row">
+              <span class="color-row-label" data-i18n="settingsBadgeColorLow">Low</span>
+              <div class="color-picker-container">
+                <input type="color" id="colorBadgeLow" class="color-field" value="#4CAF50">
+                <span class="color-hex-display" id="hexBadgeLow">#4CAF50</span>
               </div>
-              <div class="color-row">
-                <span class="color-row-label" data-i18n="settingsBadgeColorMedium">Medium</span>
-                <div class="color-picker-container">
-                  <input type="color" id="colorBadgeMedium" class="color-field" value="#FFA500">
-                  <span class="color-hex-display" id="hexBadgeMedium">#FFA500</span>
-                </div>
+            </div>
+            <div class="color-row">
+              <span class="color-row-label" data-i18n="settingsBadgeColorMedium">Medium</span>
+              <div class="color-picker-container">
+                <input type="color" id="colorBadgeMedium" class="color-field" value="#FFA500">
+                <span class="color-hex-display" id="hexBadgeMedium">#FFA500</span>
               </div>
-              <div class="color-row">
-                <span class="color-row-label" data-i18n="settingsBadgeColorHigh">High</span>
-                <div class="color-picker-container">
-                  <input type="color" id="colorBadgeHigh" class="color-field" value="#FF4444">
-                  <span class="color-hex-display" id="hexBadgeHigh">#FF4444</span>
-                </div>
+            </div>
+            <div class="color-row">
+              <span class="color-row-label" data-i18n="settingsBadgeColorHigh">High</span>
+              <div class="color-picker-container">
+                <input type="color" id="colorBadgeHigh" class="color-field" value="#FF4444">
+                <span class="color-hex-display" id="hexBadgeHigh">#FF4444</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Category Colors Card -->
+        <!-- Category Colors Group -->
         <div class="settings-card-group">
           <div class="settings-card-group-title">
             <span data-i18n="categoryColors">Category Colors</span>
           </div>
-          <div class="settings-card">
-            <div class="settings-card-body settings-card-body--no-border" style="padding-top: 14px;">
-              <div class="color-row">
-                <span class="color-row-badge color-row-badge--category" data-color-for="colorAntibot" data-i18n="categoryAntibot">Anti-bot</span>
-                <div class="color-picker-container">
-                  <input type="color" id="colorAntibot" class="color-field" value="#FF5733">
-                  <span class="color-hex-display" id="hexAntibot">#FF5733</span>
-                </div>
+          <div class="settings-card settings-card--colors">
+            <div class="color-row">
+              <span class="color-row-badge color-row-badge--category" data-color-for="colorAntibot" data-i18n="categoryAntibot">Anti-bot</span>
+              <div class="color-picker-container">
+                <input type="color" id="colorAntibot" class="color-field" value="#FF5733">
+                <span class="color-hex-display" id="hexAntibot">#FF5733</span>
               </div>
-              <div class="color-row">
-                <span class="color-row-badge color-row-badge--category" data-color-for="colorCaptcha" data-i18n="categoryCaptcha">Captcha</span>
-                <div class="color-picker-container">
-                  <input type="color" id="colorCaptcha" class="color-field" value="#33C3FF">
-                  <span class="color-hex-display" id="hexCaptcha">#33C3FF</span>
-                </div>
+            </div>
+            <div class="color-row">
+              <span class="color-row-badge color-row-badge--category" data-color-for="colorCaptcha" data-i18n="categoryCaptcha">Captcha</span>
+              <div class="color-picker-container">
+                <input type="color" id="colorCaptcha" class="color-field" value="#33C3FF">
+                <span class="color-hex-display" id="hexCaptcha">#33C3FF</span>
               </div>
-              <div class="color-row">
-                <span class="color-row-badge color-row-badge--category" data-color-for="colorFingerprint" data-i18n="categoryFingerprint">Fingerprint</span>
-                <div class="color-picker-container">
-                  <input type="color" id="colorFingerprint" class="color-field" value="#3b82f6">
-                  <span class="color-hex-display" id="hexFingerprint">#3b82f6</span>
-                </div>
+            </div>
+            <div class="color-row">
+              <span class="color-row-badge color-row-badge--category" data-color-for="colorFingerprint" data-i18n="categoryFingerprint">Fingerprint</span>
+              <div class="color-picker-container">
+                <input type="color" id="colorFingerprint" class="color-field" value="#3b82f6">
+                <span class="color-hex-display" id="hexFingerprint">#3b82f6</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Tag Colors Card with Pagination -->
+        <!-- Tag Colors Group with Pagination -->
         <div class="settings-card-group">
           <div class="settings-card-group-title">
             <span data-i18n="tagColors">Tag Colors</span>
@@ -291,28 +282,26 @@
           <div id="colorPagesContainer">
             <!-- Page 1: Tag Colors (Part 1) -->
             <div class="color-page" data-page="1">
-              <div class="settings-card">
-                <div class="settings-card-body settings-card-body--no-border" style="padding-top: 14px;">
-                  <div class="color-row">
-                    <span class="color-row-badge" data-color-for="colorTagDOM" data-i18n="methodLabelDom">DOM</span>
-                    <div class="color-picker-container">
-                      <input type="color" id="colorTagDOM" class="color-field" value="#8D33FF">
-                      <span class="color-hex-display" id="hexTagDOM">#8D33FF</span>
-                    </div>
+              <div class="settings-card settings-card--colors">
+                <div class="color-row">
+                  <span class="color-row-badge" data-color-for="colorTagDOM" data-i18n="methodLabelDom">DOM</span>
+                  <div class="color-picker-container">
+                    <input type="color" id="colorTagDOM" class="color-field" value="#8D33FF">
+                    <span class="color-hex-display" id="hexTagDOM">#8D33FF</span>
                   </div>
-                  <div class="color-row">
-                    <span class="color-row-badge" data-color-for="colorTagHeaders" data-i18n="methodLabelHeader">HEADER</span>
-                    <div class="color-picker-container">
-                      <input type="color" id="colorTagHeaders" class="color-field" value="#FF33A8">
-                      <span class="color-hex-display" id="hexTagHeaders">#FF33A8</span>
-                    </div>
+                </div>
+                <div class="color-row">
+                  <span class="color-row-badge" data-color-for="colorTagHeaders" data-i18n="methodLabelHeader">HEADER</span>
+                  <div class="color-picker-container">
+                    <input type="color" id="colorTagHeaders" class="color-field" value="#FF33A8">
+                    <span class="color-hex-display" id="hexTagHeaders">#FF33A8</span>
                   </div>
-                  <div class="color-row">
-                    <span class="color-row-badge" data-color-for="colorTagCookies" data-i18n="methodLabelCookie">COOKIE</span>
-                    <div class="color-picker-container">
-                      <input type="color" id="colorTagCookies" class="color-field" value="#FFC133">
-                      <span class="color-hex-display" id="hexTagCookies">#FFC133</span>
-                    </div>
+                </div>
+                <div class="color-row">
+                  <span class="color-row-badge" data-color-for="colorTagCookies" data-i18n="methodLabelCookie">COOKIE</span>
+                  <div class="color-picker-container">
+                    <input type="color" id="colorTagCookies" class="color-field" value="#FFC133">
+                    <span class="color-hex-display" id="hexTagCookies">#FFC133</span>
                   </div>
                 </div>
               </div>
@@ -320,28 +309,26 @@
 
             <!-- Page 2: Tag Colors (Part 2) -->
             <div class="color-page" data-page="2" style="display: none;">
-              <div class="settings-card">
-                <div class="settings-card-body settings-card-body--no-border" style="padding-top: 14px;">
-                  <div class="color-row">
-                    <span class="color-row-badge" data-color-for="colorTagContent" data-i18n="methodLabelContent">CONTENT</span>
-                    <div class="color-picker-container">
-                      <input type="color" id="colorTagContent" class="color-field" value="#33FFF3">
-                      <span class="color-hex-display" id="hexTagContent">#33FFF3</span>
-                    </div>
+              <div class="settings-card settings-card--colors">
+                <div class="color-row">
+                  <span class="color-row-badge" data-color-for="colorTagContent" data-i18n="methodLabelContent">CONTENT</span>
+                  <div class="color-picker-container">
+                    <input type="color" id="colorTagContent" class="color-field" value="#33FFF3">
+                    <span class="color-hex-display" id="hexTagContent">#33FFF3</span>
                   </div>
-                  <div class="color-row">
-                    <span class="color-row-badge" data-color-for="colorTagURLs" data-i18n="methodLabelUrl">URL</span>
-                    <div class="color-picker-container">
-                      <input type="color" id="colorTagURLs" class="color-field" value="#00BCD4">
-                      <span class="color-hex-display" id="hexTagURLs">#00BCD4</span>
-                    </div>
+                </div>
+                <div class="color-row">
+                  <span class="color-row-badge" data-color-for="colorTagURLs" data-i18n="methodLabelUrl">URL</span>
+                  <div class="color-picker-container">
+                    <input type="color" id="colorTagURLs" class="color-field" value="#00BCD4">
+                    <span class="color-hex-display" id="hexTagURLs">#00BCD4</span>
                   </div>
-                  <div class="color-row">
-                    <span class="color-row-badge" data-color-for="colorTagJSHooks" data-i18n="methodLabelJsHooks">JS HOOKS</span>
-                    <div class="color-picker-container">
-                      <input type="color" id="colorTagJSHooks" class="color-field" value="#00E5FF">
-                      <span class="color-hex-display" id="hexTagJSHooks">#00E5FF</span>
-                    </div>
+                </div>
+                <div class="color-row">
+                  <span class="color-row-badge" data-color-for="colorTagJSHooks" data-i18n="methodLabelJsHooks">JS HOOKS</span>
+                  <div class="color-picker-container">
+                    <input type="color" id="colorTagJSHooks" class="color-field" value="#00E5FF">
+                    <span class="color-hex-display" id="hexTagJSHooks">#00E5FF</span>
                   </div>
                 </div>
               </div>
@@ -349,21 +336,19 @@
 
             <!-- Page 3: Tag Colors (Part 3) -->
             <div class="color-page" data-page="3" style="display: none;">
-              <div class="settings-card">
-                <div class="settings-card-body settings-card-body--no-border" style="padding-top: 14px;">
-                  <div class="color-row">
-                    <span class="color-row-badge" data-color-for="colorTagWindow" data-i18n="methodLabelWindow">WINDOW</span>
-                    <div class="color-picker-container">
-                      <input type="color" id="colorTagWindow" class="color-field" value="#4CAF50">
-                      <span class="color-hex-display" id="hexTagWindow">#4CAF50</span>
-                    </div>
+              <div class="settings-card settings-card--colors">
+                <div class="color-row">
+                  <span class="color-row-badge" data-color-for="colorTagWindow" data-i18n="methodLabelWindow">WINDOW</span>
+                  <div class="color-picker-container">
+                    <input type="color" id="colorTagWindow" class="color-field" value="#4CAF50">
+                    <span class="color-hex-display" id="hexTagWindow">#4CAF50</span>
                   </div>
-                  <div class="color-row">
-                    <span class="color-row-badge" data-color-for="colorTagPayload" data-i18n="methodLabelPayload">PAYLOAD</span>
-                    <div class="color-picker-container">
-                      <input type="color" id="colorTagPayload" class="color-field" value="#9C27B0">
-                      <span class="color-hex-display" id="hexTagPayload">#9C27B0</span>
-                    </div>
+                </div>
+                <div class="color-row">
+                  <span class="color-row-badge" data-color-for="colorTagPayload" data-i18n="methodLabelPayload">PAYLOAD</span>
+                  <div class="color-picker-container">
+                    <input type="color" id="colorTagPayload" class="color-field" value="#9C27B0">
+                    <span class="color-hex-display" id="hexTagPayload">#9C27B0</span>
                   </div>
                 </div>
               </div>
@@ -380,35 +365,35 @@
           <div class="settings-card-group-title" data-i18n="cacheConfiguration">Cache Configuration</div>
 
           <div class="settings-card">
-            <div class="settings-card-header settings-card-header--static">
-              <div class="settings-card-title">
-                <h4>
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z"/></svg>
-                  <span data-i18n="settingsCardCacheSettings">Cache Settings</span>
-                </h4>
-              </div>
+            <div class="settings-card-head">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z"/></svg>
+              <span data-i18n="settingsCardCacheSettings">Cache Settings</span>
             </div>
             <div class="settings-card-body">
               <div class="setting-row">
-                <span class="setting-row-label" data-i18n="cacheDuration">Cache Duration</span>
+                <label class="setting-row-label" for="cacheDuration" data-i18n="cacheDuration">Cache Duration</label>
                 <div class="setting-row-controls">
-                  <input type="number" id="cacheDuration" class="input-field" min="1" value="12" style="width: 60px; max-width: 80px; flex: 0 0 60px;">
-                  <select id="cacheUnit" class="select-field" style="min-width: 0;">
+                  <input type="number" id="cacheDuration" class="input-field input-field--short" min="1" max="24" value="12">
+                  <select id="cacheUnit" class="select-field">
                     <option value="minutes" data-i18n="timeUnitMinutes">Minutes</option>
                     <option value="hours" selected data-i18n="timeUnitHours">Hours</option>
                     <option value="days" data-i18n="timeUnitDays">Days</option>
+                    <option value="months" data-i18n="timeUnitMonths">Months</option>
+                    <option value="years" data-i18n="timeUnitYears">Years</option>
                   </select>
+                </div>
+                <div class="setting-row-help">
+                  <p id="cacheDurationRangeHint">Allowed range: 1–24 Hours. Choose a larger unit for longer periods.</p>
+                  <p data-i18n="settingsCacheDurationUnitNote">Months count as 30 days; years as 365 days.</p>
                 </div>
               </div>
               <div class="setting-row">
-                <span class="setting-row-label" data-i18n="statCacheScope">Cache Scope</span>
-                <div class="setting-row-controls">
-                  <select id="cacheScope" class="select-field">
-                    <option value="domain" data-i18n="scopeDomain">Domain</option>
-                    <option value="path" data-i18n="scopePath">Path</option>
-                    <option value="full" data-i18n="scopeFullUrl">Full URL</option>
-                  </select>
-                </div>
+                <label class="setting-row-label" for="cacheScope" data-i18n="statCacheScope">Cache Scope</label>
+                <select id="cacheScope" class="select-field">
+                  <option value="domain" data-i18n="scopeDomain">Domain</option>
+                  <option value="path" data-i18n="scopePath">Path</option>
+                  <option value="full" data-i18n="scopeFullUrl">Full URL</option>
+                </select>
               </div>
             </div>
           </div>
@@ -419,27 +404,26 @@
           <div class="settings-card-group-title" data-i18n="blacklistedDomains">Blacklisted Domains</div>
 
           <div class="settings-card">
-            <div class="settings-card-header settings-card-header--static">
-              <div class="settings-card-title">
-                <h4>
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C17.5,2 22,6.5 22,12C22,17.5 17.5,22 12,22C6.5,22 2,17.5 2,12C2,6.5 6.5,2 12,2M12,4C7.58,4 4,7.58 4,12C4,16.42 7.58,20 12,20C16.42,20 20,16.42 20,12C20,7.58 16.42,4 12,4M16.95,5.63L18.37,7.05L7.05,18.37L5.63,16.95L16.95,5.63Z"/></svg>
+            <div class="settings-row settings-row--head">
+              <div class="settings-row-text">
+                <div class="settings-row-title">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12,2C17.5,2 22,6.5 22,12C22,17.5 17.5,22 12,22C6.5,22 2,17.5 2,12C2,6.5 6.5,2 12,2M12,4C7.58,4 4,7.58 4,12C4,16.42 7.58,20 12,20C16.42,20 20,16.42 20,12C20,7.58 16.42,4 12,4M16.95,5.63L18.37,7.05L7.05,18.37L5.63,16.95L16.95,5.63Z"/></svg>
                   <span data-i18n="settingsCardSkipDomains">Skip Domains</span>
-                </h4>
-                <p data-i18n="blacklistedDomainsDesc">Domains where detection is completely skipped</p>
+                </div>
+                <p class="settings-row-desc" data-i18n="blacklistedDomainsDesc">Domains where detection is completely skipped</p>
               </div>
             </div>
-            <div class="settings-card-body">
-              <button id="addCurrentDomainBtn" class="action-btn" style="width: 100%;">
-                <svg width="14" height="14" viewBox="0 0 24 24">
+            <div class="settings-card-body settings-card-body--blacklist">
+              <button id="addCurrentDomainBtn" class="action-btn action-btn-block">
+                <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
                 </svg>
                 <span data-i18n="settingsAddCurrentPage">Add Current Page</span>
               </button>
-              <!-- Search input -->
-              <div class="blacklist-search-container" style="margin-top: 10px;">
-                <input type="text" id="blacklistSearchInput" class="input-field" placeholder="Search domains..." data-i18n-placeholder="settingsSearchDomainsPlaceholder" style="width: 100%; max-width: 100%;">
+              <div class="blacklist-search-container">
+                <input type="text" id="blacklistSearchInput" class="input-field" placeholder="Search domains..." data-i18n-placeholder="settingsSearchDomainsPlaceholder">
               </div>
-              <div id="blacklistContainer" style="width: 100%; margin-top: 10px;">
+              <div id="blacklistContainer" class="blacklist-container">
                 <!-- Blacklisted domains will be displayed here -->
               </div>
               <!-- Pagination controls -->
@@ -463,13 +447,13 @@
           <div class="settings-card-group-title" data-i18n="jsApiEvents">JS API Events</div>
 
           <div class="settings-card">
-            <div class="settings-card-header">
-              <div class="settings-card-title">
-                <h4>
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,14H13V16H11V14M11,8H13V12H11V8Z"/></svg>
+            <div class="settings-row">
+              <div class="settings-row-text">
+                <div class="settings-row-title">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,14H13V16H11V14M11,8H13V12H11V8Z"/></svg>
                   <span data-i18n="settingsEnableJsApi">Enable JS API Events</span>
-                </h4>
-                <p data-i18n="jsApiEventsDesc">Dispatch custom events to page window</p>
+                </div>
+                <p class="settings-row-desc" data-i18n="jsApiEventsDesc">Dispatch custom events to page window</p>
               </div>
               <label class="switch switch-sm">
                 <input type="checkbox" id="enableJsApi">
@@ -478,38 +462,60 @@
             </div>
             <div class="settings-card-body" id="jsApiSettings">
               <div class="api-info-box">
-                <div class="api-info-title" data-i18n="settingsAvailableEvents">Available Events:</div>
-                <div class="api-event-item">
-                  <code>scrapfly:ready</code>
-                  <span data-i18n="settingsApiEventReady">Extension loaded and initialized</span>
+                <div class="api-collapsible">
+                  <button type="button" class="api-collapsible-header" aria-expanded="false" aria-controls="jsApiEventsList">
+                    <span class="api-collapsible-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg></span>
+                    <span class="api-collapsible-text">
+                      <span class="api-info-title" data-i18n="settingsAvailableEvents">Available events</span>
+                      <span class="api-collapsible-desc" data-i18n="settingsApiEventsDesc">Events the extension dispatches on the page</span>
+                    </span>
+                    <span class="api-collapsible-count" id="jsApiEventsCount"></span>
+                    <span class="api-collapsible-toggle" aria-hidden="true"><svg class="api-collapsible-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+                  </button>
+                  <div class="api-collapsible-body" id="jsApiEventsList" hidden>
+                    <div class="api-event-item">
+                      <code>scrapfly:ready</code>
+                      <span data-i18n="settingsApiEventReady">Extension loaded and initialized</span>
+                    </div>
+                    <div class="api-event-item">
+                      <code>scrapfly:onStart</code>
+                      <span data-i18n="settingsApiEventOnStart">Detection started (cache miss / manual)</span>
+                    </div>
+                    <div class="api-event-item">
+                      <code>scrapfly:onProgress</code>
+                      <span data-i18n="settingsApiEventOnProgress">Detection progress updates (method-level)</span>
+                    </div>
+                    <div class="api-event-item">
+                      <code>scrapfly:onHooksComplete</code>
+                      <span data-i18n="settingsApiEventOnHooksComplete">JS hooks monitoring completed</span>
+                    </div>
+                    <div class="api-event-item">
+                      <code>scrapfly:onWindowPropsComplete</code>
+                      <span data-i18n="settingsApiEventOnWindowPropsComplete">Window property monitoring completed</span>
+                    </div>
+                    <div class="api-event-item">
+                      <code>scrapfly:onDetection</code>
+                      <span data-i18n="settingsApiEventOnDetection">Detection completed with results</span>
+                    </div>
+                    <div class="api-event-item">
+                      <code>scrapfly:onError</code>
+                      <span data-i18n="settingsApiEventOnError">Detection error occurred</span>
+                    </div>
+                  </div>
                 </div>
-                <div class="api-event-item">
-                  <code>scrapfly:onStart</code>
-                  <span data-i18n="settingsApiEventOnStart">Detection started (cache miss / manual)</span>
-                </div>
-                <div class="api-event-item">
-                  <code>scrapfly:onProgress</code>
-                  <span data-i18n="settingsApiEventOnProgress">Detection progress updates (method-level)</span>
-                </div>
-                <div class="api-event-item">
-                  <code>scrapfly:onHooksComplete</code>
-                  <span data-i18n="settingsApiEventOnHooksComplete">JS hooks monitoring completed</span>
-                </div>
-                <div class="api-event-item">
-                  <code>scrapfly:onWindowPropsComplete</code>
-                  <span data-i18n="settingsApiEventOnWindowPropsComplete">Window property monitoring completed</span>
-                </div>
-                <div class="api-event-item">
-                  <code>scrapfly:onDetection</code>
-                  <span data-i18n="settingsApiEventOnDetection">Detection completed with results</span>
-                </div>
-                <div class="api-event-item">
-                  <code>scrapfly:onError</code>
-                  <span data-i18n="settingsApiEventOnError">Detection error occurred</span>
-                </div>
-                <div class="api-usage-example">
-                  <strong data-i18n="settingsUsageExample">Usage Example:</strong>
-                  <pre id="jsApiUsageCode" class="click-to-copy" title="Click to copy">window.addEventListener('scrapfly:onStart', (e) => {
+                <div class="api-collapsible api-usage-example">
+                  <button type="button" class="api-collapsible-header" aria-expanded="false" aria-controls="jsApiUsageBody">
+                    <span class="api-collapsible-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></span>
+                    <span class="api-collapsible-text">
+                      <span class="api-info-title" data-i18n="settingsUsageExample">Usage example</span>
+                      <span class="api-collapsible-desc" data-i18n="settingsApiUsageDesc">Listen to the events from your own script</span>
+                    </span>
+                    <span class="api-collapsible-toggle" aria-hidden="true"><svg class="api-collapsible-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+                  </button>
+                  <div class="api-collapsible-body" id="jsApiUsageBody" hidden>
+                    <div class="api-code-block">
+                    <button type="button" class="api-code-copy" id="jsApiCopyCodeBtn"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span data-i18n="settingsApiCopyCode">Copy code</span></button>
+                    <pre id="jsApiUsageCode">window.addEventListener('scrapfly:onStart', (e) => {
   console.log('Detection started:', e.detail.url);
 });
 
@@ -517,6 +523,8 @@ window.addEventListener('scrapfly:onDetection', (e) => {
   console.log('Detections:', e.detail.detections);
   console.log('URL:', e.detail.url);
 });</pre>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -528,13 +536,13 @@ window.addEventListener('scrapfly:onDetection', (e) => {
           <div class="settings-card-group-title" data-i18n="settingsCardWebhookIntegration">Webhook Integration</div>
 
           <div class="settings-card">
-            <div class="settings-card-header">
-              <div class="settings-card-title">
-                <h4>
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16,18C16,18.55 16.45,19 17,19H21V17H17C16.45,17 16,17.45 16,18M13,18C13,18.55 13.45,19 14,19H14.18C14.61,17.84 15.71,17 17,17H21V13H17C14.24,13 12,15.24 12,18C12,18.55 12.45,19 13,19M19,3H5C3.9,3 3,3.9 3,5V19C3,20.1 3.9,21 5,21H11.11C11.04,20.67 11,20.34 11,20C11,19.66 11.04,19.33 11.11,19H5V5H19V11.11C19.33,11.04 19.66,11 20,11C20.34,11 20.67,11.04 21,11.11V5C21,3.9 20.1,3 19,3M17,7H7V9H17V7M14,11H7V13H14V11Z"/></svg>
+            <div class="settings-row">
+              <div class="settings-row-text">
+                <div class="settings-row-title">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16,18C16,18.55 16.45,19 17,19H21V17H17C16.45,17 16,17.45 16,18M13,18C13,18.55 13.45,19 14,19H14.18C14.61,17.84 15.71,17 17,17H21V13H17C14.24,13 12,15.24 12,18C12,18.55 12.45,19 13,19M19,3H5C3.9,3 3,3.9 3,5V19C3,20.1 3.9,21 5,21H11.11C11.04,20.67 11,20.34 11,20C11,19.66 11.04,19.33 11.11,19H5V5H19V11.11C19.33,11.04 19.66,11 20,11C20.34,11 20.67,11.04 21,11.11V5C21,3.9 20.1,3 19,3M17,7H7V9H17V7M14,11H7V13H14V11Z"/></svg>
                   <span data-i18n="settingsEnableWebhook">Enable Webhook</span>
-                </h4>
-                <p data-i18n="settingsEnableWebhookDesc">Send HTTP requests on detection</p>
+                </div>
+                <p class="settings-row-desc" data-i18n="settingsEnableWebhookDesc">Send HTTP requests on detection</p>
               </div>
               <label class="switch switch-sm">
                 <input type="checkbox" id="enableWebhook">
@@ -542,7 +550,7 @@ window.addEventListener('scrapfly:onDetection', (e) => {
               </label>
             </div>
             <div class="settings-card-body" id="webhookOnCacheGroup">
-              <div class="setting-row">
+              <div class="setting-row setting-row--inline setting-row--toggle">
                 <span class="setting-row-label" data-i18n="settingsBypassCache">Send on every page load (bypass cache)</span>
                 <label class="switch switch-sm">
                   <input type="checkbox" id="webhookOnCache">
@@ -555,11 +563,11 @@ window.addEventListener('scrapfly:onDetection', (e) => {
           <div id="webhookSettings" class="webhook-settings-container">
               <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
-                  <span data-i18n="settingsHttpMethod">HTTP Method</span>
+                  <span id="webhookMethodLabel" data-i18n="settingsHttpMethod">HTTP Method</span>
                   <span class="setting-description" data-i18n="settingsHttpMethodDesc">Select the HTTP method for webhook requests</span>
                 </label>
                 <input type="hidden" id="webhookMethod" value="POST">
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; margin-top: 8px;">
+                <div class="http-method-grid webhook-method-group" role="radiogroup" aria-labelledby="webhookMethodLabel">
                   <!-- GET -->
                   <label class="http-method-badge" data-method="GET">
                     <input type="radio" name="webhookMethodRadio" value="GET">
@@ -596,7 +604,7 @@ window.addEventListener('scrapfly:onDetection', (e) => {
                     </span>
                   </label>
                   <!-- Custom -->
-                  <label class="http-method-badge" data-method="CUSTOM">
+                  <label class="http-method-badge webhook-method-custom" data-method="CUSTOM">
                     <input type="radio" name="webhookMethodRadio" value="CUSTOM">
                     <span class="method-badge-content">
                       <span class="method-text" data-i18n="settingsCustomMethod">Custom</span>
@@ -604,8 +612,8 @@ window.addEventListener('scrapfly:onDetection', (e) => {
                   </label>
                 </div>
                 <!-- Custom Method Input -->
-                <div id="webhookCustomMethodContainer" style="display: none; margin-top: 10px; width: 100%;">
-                  <input type="text" id="webhookCustomMethod" class="input-field" placeholder="Enter custom method (e.g., OPTIONS, HEAD)" data-i18n-placeholder="settingsCustomMethodPlaceholder" style="width: 100%; font-size: 14px; padding: 10px;">
+                <div id="webhookCustomMethodContainer" class="webhook-custom-method" style="display: none;">
+                  <input type="text" id="webhookCustomMethod" class="input-field" placeholder="Enter custom method (e.g., OPTIONS, HEAD)" data-i18n-placeholder="settingsCustomMethodPlaceholder">
                 </div>
               </div>
 
@@ -614,11 +622,11 @@ window.addEventListener('scrapfly:onDetection', (e) => {
                   <span data-i18n="settingsWebhookUrl">Webhook URL</span>
                   <span class="setting-description" id="webhookUrlDescription" data-i18n="settingsWebhookUrlDesc">Complete endpoint URL (https://api.example.com/webhook)</span>
                 </label>
-                <input type="url" id="webhookUrl" class="input-field" placeholder="https://api.example.com/webhook" style="width: 100%;">
+                <input type="url" id="webhookUrl" class="input-field" placeholder="https://api.example.com/webhook">
                 <div class="webhook-url-hint" id="webhookUrlHint" style="display: none;">
                   <strong data-i18n="settingsAvailableVariables">Available variables:</strong>
                   <code>&lt;SITEURL&gt;</code>, <code>&lt;HOSTNAME&gt;</code>, <code>&lt;TIMESTAMP&gt;</code>, <code>&lt;DETECTION_COUNT&gt;</code>, <code>&lt;CATEGORIES&gt;</code>
-                  <div style="margin-top: 6px; font-size: 11px; opacity: 0.8;" data-i18n="settingsWebhookUrlExample">
+                  <div class="webhook-url-hint-example" data-i18n="settingsWebhookUrlExample">
                     Example: https://api.example.com/webhook?url=&lt;SITEURL&gt;&count=&lt;DETECTION_COUNT&gt;&time=&lt;TIMESTAMP&gt;
                   </div>
                 </div>
@@ -629,11 +637,15 @@ window.addEventListener('scrapfly:onDetection', (e) => {
                   <span data-i18n="settingsContentType">Content-Type</span>
                   <span class="setting-description" data-i18n="settingsContentTypeDesc">HTTP content type header</span>
                 </label>
-                <select id="webhookContentType" class="input-field select-field">
+                <!-- Options come from WebhookBody.CONTENT_TYPES (settings-ui-webhook.js) -->
+                <select id="webhookContentType" class="select-field" aria-describedby="webhookContentTypeHint">
                   <option value="application/json" selected>application/json</option>
-                  <option value="application/x-www-form-urlencoded">x-www-form-urlencoded</option>
-                  <option value="text/plain">text/plain</option>
                 </select>
+                <div id="webhookCustomContentTypeContainer" class="webhook-custom-ct" hidden>
+                  <input type="text" id="webhookCustomContentType" class="input-field" placeholder="application/vnd.example+json" spellcheck="false" autocomplete="off" aria-label="Custom Content-Type" data-i18n-aria-label="webhookCtCustomLabel" aria-describedby="webhookCustomContentTypeError">
+                  <p id="webhookCustomContentTypeError" class="webhook-field-error" data-i18n="webhookCtInvalid" hidden>Enter a type/subtype, e.g. application/vnd.example+json</p>
+                </div>
+                <p id="webhookContentTypeHint" class="webhook-ct-hint"></p>
               </div>
 
               <div class="setting-group setting-group--stacked" id="webhookHeadersGroup">
@@ -641,23 +653,32 @@ window.addEventListener('scrapfly:onDetection', (e) => {
                   <span data-i18n="settingsCustomHeaders">Custom Headers</span>
                   <span class="setting-description" data-i18n="settingsCustomHeadersDesc">Add custom HTTP headers to the webhook request</span>
                 </label>
-                <div id="webhookHeadersContainer" style="margin-top: 8px;">
+                <div id="webhookHeadersContainer">
                   <!-- Custom headers will be rendered here -->
                 </div>
-                <button type="button" id="addWebhookHeaderBtn" class="action-btn" style="margin-top: 8px;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" style="margin-right: 6px;">
+                <button type="button" id="addWebhookHeaderBtn" class="action-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24">
                     <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
                   </svg>
-                  Add Header
+                  <span data-i18n="webhookAddHeader">Add Header</span>
                 </button>
               </div>
 
               <div class="setting-group setting-group--stacked" id="webhookPayloadGroup">
-                <label class="setting-label">
-                  <span data-i18n="settingsPayloadTemplate">Payload Template</span>
-                  <span class="setting-description" data-i18n="settingsPayloadTemplateDesc">Use variables: &lt;SITEURL&gt;, &lt;HOSTNAME&gt;, &lt;TITLE&gt;, &lt;FAVICON&gt;, &lt;DETECTIONS&gt;, &lt;TIMESTAMP&gt;, &lt;DETECTION_COUNT&gt;, &lt;CATEGORIES&gt;</span>
-                </label>
-                <textarea id="webhookPayload" class="textarea-field" rows="6" style="font-family: monospace;" placeholder='{"url": "<SITEURL>", "hostname": "<HOSTNAME>", "title": "<TITLE>", "favicon": "<FAVICON>", "detections": <DETECTIONS>, "timestamp": "<TIMESTAMP>", "count": <DETECTION_COUNT>, "categories": "<CATEGORIES>"}'></textarea>
+                <div class="setting-label">
+                  <span class="webhook-title-row">
+                    <label for="webhookPayload" data-i18n="settingsPayloadTemplate">Payload Template</label>
+                    <button type="button" id="webhookVariablesHelpBtn" class="webhook-help-btn" aria-haspopup="dialog" title="Template variables" aria-label="Template variables" data-i18n-title="webhookVarsTitle" data-i18n-aria-label="webhookVarsTitle">?</button>
+                  </span>
+                  <span class="setting-description" data-i18n="settingsPayloadTemplateDesc">Body sent with each webhook. Click a variable to insert it.</span>
+                </div>
+                <!-- Chips come from WebhookBody.VARIABLES (settings-ui-webhook.js) -->
+                <div id="webhookVariableChips" class="webhook-var-chips" role="toolbar" aria-label="Insert variable" data-i18n-aria-label="webhookVarsInsertLabel"></div>
+                <textarea id="webhookPayload" class="textarea-field textarea-field--mono" rows="6" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-describedby="webhookPayloadStatus"></textarea>
+                <div class="webhook-payload-foot">
+                  <span id="webhookPayloadStatus" class="webhook-json-status" role="status" aria-live="polite" hidden></span>
+                  <button type="button" id="webhookPayloadResetBtn" class="webhook-link-btn" data-i18n="webhookResetTemplate">Reset template</button>
+                </div>
               </div>
 
               <div class="setting-group setting-group--stacked">
@@ -683,39 +704,46 @@ window.addEventListener('scrapfly:onDetection', (e) => {
           <div class="settings-card-group-title" data-i18n="settingsCardHistoryConfig">History Configuration</div>
 
           <div class="settings-card">
-            <div class="settings-card-header settings-card-header--static">
-              <div class="settings-card-title">
-                <h4>
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5,8H12V13L16.28,15.54L17,14.33L13.5,12.25V8M13,3A9,9 0 0,0 4,12H1L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z"/></svg>
-                  <span data-i18n="settingsHistorySettings">History Settings</span>
-                </h4>
-              </div>
+            <div class="settings-card-head">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5,8H12V13L16.28,15.54L17,14.33L13.5,12.25V8M13,3A9,9 0 0,0 4,12H1L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z"/></svg>
+              <span data-i18n="settingsHistorySettings">History Settings</span>
             </div>
-            <div class="settings-card-body">
-              <div class="setting-row">
-                <span class="setting-row-label"><span data-i18n="settingsHistoryLimit">History Limit</span> <span style="color: var(--text-muted); font-size: 10px;" data-i18n="settingsHistoryLimitNote">(0 = unlimited)</span></span>
-                <input type="number" id="historyLimit" class="input-field" min="0" max="1000" value="100">
+            <div class="settings-card-body settings-card-body--history">
+              <div class="setting-row setting-row--inline setting-row--limit">
+                <label class="setting-row-label" for="historyLimit"><span data-i18n="settingsHistoryLimit">History Limit</span> <span class="setting-row-note" data-i18n="settingsHistoryLimitNote">(0 = 1,000-entry safety limit)</span></label>
+                <input type="number" id="historyLimit" class="input-field" min="0" max="10000" value="0">
               </div>
-              <div class="setting-row">
-                <span class="setting-row-label" data-i18n="settingsAutoClearDays">Auto Clear (days)</span>
-                <input type="number" id="autoClearDays" class="input-field" min="0" max="365" value="30">
+              <div class="setting-row setting-row--switch-below">
+                <span class="setting-row-label" data-i18n="settingsHistoryAutoDelete">Auto-delete</span>
+                <p class="setting-row-desc" data-i18n="settingsHistoryAutoDeleteDesc">Periodically removes old history entries.</p>
+                <label class="switch switch-sm">
+                  <input type="checkbox" id="historyAutoDelete">
+                  <span class="slider"></span>
+                </label>
               </div>
-              <div class="setting-row">
-                <span class="setting-row-label" data-i18n="settingsExportFormat">Export Format</span>
+              <div class="setting-row setting-row--inline setting-row--sub" id="historyAutoDeleteDaysRow">
+                <label class="setting-row-label" for="historyAutoDeleteDays" data-i18n="settingsHistoryAutoDeleteOlderThan">Delete items older than</label>
+                <div class="setting-row-controls setting-row-controls--days">
+                  <input type="number" id="historyAutoDeleteDays" class="input-field input-field--center" min="1" max="3650" value="30">
+                  <span class="setting-row-unit" data-i18n="timeUnitDays">Days</span>
+                </div>
+              </div>
+              <div class="setting-row setting-row--inline">
+                <label class="setting-row-label" for="exportFormat" data-i18n="settingsExportFormat">Export Format</label>
                 <select id="exportFormat" class="select-field">
                   <option value="json">JSON</option>
                   <option value="csv">CSV</option>
                   <option value="txt" data-i18n="settingsExportFormatPlainText">Plain Text</option>
                 </select>
               </div>
-              <div class="setting-row">
+              <div class="setting-row setting-row--inline setting-row--toggle">
                 <span class="setting-row-label" data-i18n="settingsIncludeTimestamps">Include Timestamps</span>
                 <label class="switch switch-sm">
                   <input type="checkbox" id="includeTimestamps" checked>
                   <span class="slider"></span>
                 </label>
               </div>
-              <div class="setting-row">
+              <div class="setting-row setting-row--inline setting-row--toggle">
                 <span class="setting-row-label" data-i18n="settingsSaveOnCacheHits">Save on Cache Hits</span>
                 <label class="switch switch-sm">
                   <input type="checkbox" id="historyBypassCache">
@@ -731,13 +759,13 @@ window.addEventListener('scrapfly:onDetection', (e) => {
           <div class="settings-card-group-title" data-i18n="settingsCardDuplicatePrevention">Duplicate Prevention</div>
 
           <div class="settings-card">
-            <div class="settings-card-header">
-              <div class="settings-card-title">
-                <h4>
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>
+            <div class="settings-row">
+              <div class="settings-row-text">
+                <div class="settings-row-title">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>
                   <span data-i18n="settingsEnableDuplicatePrevention">Enable Duplicate Prevention</span>
-                </h4>
-                <p data-i18n="settingsDuplicatePreventionDesc">Block duplicate history entries within a time window</p>
+                </div>
+                <p class="settings-row-desc" data-i18n="settingsDuplicatePreventionDesc">Block duplicate history entries within a time window</p>
               </div>
               <label class="switch switch-sm">
                 <input type="checkbox" id="preventDuplicates">
@@ -746,27 +774,25 @@ window.addEventListener('scrapfly:onDetection', (e) => {
             </div>
             <div class="settings-card-body" id="duplicateSettingsContainer" style="display: none;">
               <div class="setting-row">
-                <span class="setting-row-label" data-i18n="settingsDuplicateScope">Scope</span>
-                <div class="setting-row-controls">
-                  <select id="duplicateScope" class="select-field">
-                    <option value="full_url" data-i18n="settingsDuplicateScopeFullUrl">Full URL</option>
-                    <option value="domain" data-i18n="settingsDuplicateScopeDomain">Domain</option>
-                    <option value="path" data-i18n="settingsDuplicateScopePath">Path</option>
-                  </select>
-                </div>
+                <label class="setting-row-label" for="duplicateScope" data-i18n="settingsDuplicateScope">Scope</label>
+                <select id="duplicateScope" class="select-field">
+                  <option value="full_url" data-i18n="settingsDuplicateScopeFullUrl">Full URL</option>
+                  <option value="domain" data-i18n="settingsDuplicateScopeDomain">Domain</option>
+                  <option value="path" data-i18n="settingsDuplicateScopePath">Path</option>
+                </select>
               </div>
               <div class="setting-row">
-                <span class="setting-row-label" data-i18n="settingsTimeWindow">Time Window</span>
+                <label class="setting-row-label" for="duplicateDuration" data-i18n="settingsTimeWindow">Time Window</label>
                 <div class="setting-row-controls">
-                  <input type="number" id="duplicateDuration" class="input-field" min="1" max="999" value="1" style="width: 60px; max-width: 80px; flex: 0 0 60px;">
-                  <select id="duplicateUnit" class="select-field" style="min-width: 0;">
+                  <input type="number" id="duplicateDuration" class="input-field input-field--short" min="1" max="999" value="1">
+                  <select id="duplicateUnit" class="select-field">
                     <option value="minutes" data-i18n="settingsTimeMinutes">Minutes</option>
                     <option value="hours" data-i18n="settingsTimeHours">Hours</option>
                     <option value="days" data-i18n="settingsTimeDays">Days</option>
                   </select>
                 </div>
               </div>
-              <div class="duplicate-info-box" style="margin-top: 12px;">
+              <div class="duplicate-info-box">
                 <strong data-i18n="settingsHowItWorks">How it works:</strong>
                 <p data-i18n="settingsHowItWorksDesc">Prevents duplicate history entries for the same URL within the time window.</p>
                 <ul>
@@ -782,51 +808,81 @@ window.addEventListener('scrapfly:onDetection', (e) => {
 
       <!-- Data Management Tab -->
       <div class="settings-tab-content" data-tab-content="data">
+        <!-- History Statistics: opens the local statistics page -->
+        <div class="settings-card-group">
+          <div class="settings-card settings-card--stats">
+            <div class="settings-stats-head">
+              <div class="settings-stats-title" data-i18n="settingsHistoryStatsTitle">History statistics</div>
+              <p class="settings-stats-desc" data-i18n="settingsHistoryStatsDesc">View private statistics computed locally from your detection history.</p>
+            </div>
+            <div class="settings-stats-body">
+              <button type="button" id="openHistoryStatsBtn" class="action-btn action-btn-block action-btn-outline" data-i18n="settingsOpenStats">Open statistics</button>
+            </div>
+          </div>
+        </div>
+
         <!-- Export/Import Group -->
         <div class="settings-card-group">
-          <div class="settings-card-group-title" data-i18n="settingsDataExportImport">Export & Import</div>
+          <div class="settings-card-group-title settings-card-group-title--rule" data-i18n="settingsDataExportImport">Export & Import</div>
 
-          <div class="settings-card">
-            <div class="settings-card-header settings-card-header--static">
-              <div class="settings-card-title">
-                <h4>
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z"/></svg>
-                  <span data-i18n="settingsDataManagement">Data Management</span>
-                </h4>
-                <p data-i18n="settingsDataManagementDesc">Export or import your extension data</p>
+          <div class="settings-card settings-card--data">
+            <div class="data-card-head">
+              <span class="data-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z"/></svg>
+              </span>
+              <div class="data-card-head-text">
+                <div class="data-card-title" data-i18n="settingsDataManagement">Data Management</div>
+                <p class="data-card-desc" data-i18n="settingsDataManagementDesc">Export or import your extension data</p>
               </div>
             </div>
-            <div class="settings-card-body">
-              <div class="setting-row">
-                <div style="flex: 1;">
-                  <span class="setting-row-label" style="display: block; margin-bottom: 2px;" data-i18n="settingsDataSettingsRow">Settings</span>
-                  <span style="font-size: 10px; color: var(--text-muted);" data-i18n="settingsDataSettingsRowDesc">Export or import extension settings</span>
+            <div class="data-card-body">
+              <!-- Settings (JSON) -->
+              <div class="data-item">
+                <div class="data-item-head">
+                  <span class="data-item-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8,13C6.14,13 4.59,14.28 4.14,16H2V18H4.14C4.59,19.72 6.14,21 8,21C9.86,21 11.41,19.72 11.86,18H22V16H11.86C11.41,14.28 9.86,13 8,13M8,19A2,2 0 0,1 6,17A2,2 0 0,1 8,15A2,2 0 0,1 10,17A2,2 0 0,1 8,19M19.86,6C19.41,4.28 17.86,3 16,3C14.14,3 12.59,4.28 12.14,6H2V8H12.14C12.59,9.72 14.14,11 16,11C17.86,11 19.41,9.72 19.86,8H22V6H19.86M16,9A2,2 0 0,1 14,7A2,2 0 0,1 16,5A2,2 0 0,1 18,7A2,2 0 0,1 16,9Z"/></svg>
+                  </span>
+                  <div class="data-item-text">
+                    <div class="data-item-title" data-i18n="settingsDataSettingsRow">Settings</div>
+                    <p class="data-item-desc" data-i18n="settingsDataSettingsRowDesc">Export or import extension settings</p>
+                  </div>
+                  <span class="data-item-format">JSON</span>
                 </div>
-                <div class="data-actions-row">
-                  <button id="exportSettingsBtn" class="data-icon-btn data-export-btn" title="Export Settings" data-i18n-title="settingsDataExportSettingsTitle">
-                    <svg width="16" height="16" viewBox="0 0 24 24">
-                      <path d="M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M12,19L8,15H10.5V12H13.5V15H16L12,19Z" fill="currentColor"/>
-                    </svg>
+                <div class="data-item-actions">
+                  <button id="exportSettingsBtn" class="data-btn data-export-btn" title="Export Settings" data-i18n-title="settingsDataExportSettingsTitle">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,12L16,16H13.5V19H10.5V16H8L12,12Z" fill="currentColor"/></svg>
+                    <span data-i18n="btnExport">Export</span>
                   </button>
-                  <button id="importSettingsBtn" class="data-icon-btn data-import-btn" title="Import Settings" data-i18n-title="settingsDataImportSettingsTitle">
-                    <svg width="16" height="16" viewBox="0 0 24 24">
-                      <path d="M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M12,12L16,16H13.5V19H10.5V16H8L12,12Z" fill="currentColor"/>
-                    </svg>
+                  <button id="importSettingsBtn" class="data-btn data-import-btn" title="Import Settings" data-i18n-title="settingsDataImportSettingsTitle">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,12L16,16H13.5V19H10.5V16H8L12,12Z" fill="currentColor"/></svg>
+                    <span data-i18n="btnImport">Import</span>
                   </button>
-                  <input type="file" id="importFile" accept=".json" style="display: none;">
+                  <input type="file" id="importFile" accept=".json,application/json" hidden>
                 </div>
               </div>
-              <div class="setting-row">
-                <div style="flex: 1;">
-                  <span class="setting-row-label" style="display: block; margin-bottom: 2px;" data-i18n="settingsDataHistoryRow">Detection History</span>
-                  <span style="font-size: 10px; color: var(--text-muted);" data-i18n="settingsDataHistoryRowDesc">Export detection history as CSV</span>
+
+              <!-- Detection History (CSV) -->
+              <div class="data-item">
+                <div class="data-item-head">
+                  <span class="data-item-icon" aria-hidden="true">
+                    <svg class="data-item-icon-cal" viewBox="0 0 12 12" fill="currentColor"><path fill-rule="evenodd" d="M1 1.62h9a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V2.62a1 1 0 0 1 1-1zM1 3.62V11h9V3.62z"/><path d="M2 1.1h1v1H2zM8 0.9h1v1H8zM2.75 5.38h2.37v1H2.75zM2.6 7.88h5.65v1H2.6z"/></svg>
+                  </span>
+                  <div class="data-item-text">
+                    <div class="data-item-title" data-i18n="settingsDataHistoryRow">Detection History</div>
+                    <p class="data-item-desc" data-i18n="settingsDataHistoryRowDesc">Export detection history as CSV</p>
+                  </div>
+                  <span class="data-item-format">CSV</span>
                 </div>
-                <div class="data-actions-row">
-                  <button id="exportHistoryBtn" class="data-icon-btn data-export-btn" title="Export History" data-i18n-title="settingsDataExportHistoryTitle">
-                    <svg width="16" height="16" viewBox="0 0 24 24">
-                      <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M10,19L12,15H10V11H14V15H12L14,19H10Z" fill="currentColor"/>
-                    </svg>
+                <div class="data-item-actions">
+                  <button id="settingsExportHistoryBtn" class="data-btn data-export-btn" title="Export History" data-i18n-title="settingsDataExportHistoryTitle">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,12L16,16H13.5V19H10.5V16H8L12,12Z" fill="currentColor"/></svg>
+                    <span data-i18n="btnExport">Export</span>
                   </button>
+                  <button id="settingsImportHistoryBtn" class="data-btn data-import-btn" title="Import history" data-i18n-title="historyImportTitle">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,12L16,16H13.5V19H10.5V16H8L12,12Z" fill="currentColor"/></svg>
+                    <span data-i18n="btnImport">Import</span>
+                  </button>
+                  <input type="file" id="settingsImportHistoryFile" accept=".json,application/json" hidden>
                 </div>
               </div>
             </div>
@@ -836,12 +892,12 @@ window.addEventListener('scrapfly:onDetection', (e) => {
     </div>
 
     <div class="modal-footer">
+      <div class="powered-by">
+        <span data-i18n="poweredBy">Powered by</span> <a href="https://scrapfly.io" target="_blank" rel="noopener noreferrer">Scrapfly</a>
+      </div>
       <div class="modal-footer-buttons">
         <button id="saveSettingsBtn" class="primary-btn" data-i18n="btnSaveSettings">Save Settings</button>
         <button id="cancelSettingsBtn" class="secondary-btn" data-i18n="btnCancelSettings">Cancel</button>
-      </div>
-      <div class="powered-by">
-        <span data-i18n="poweredBy">Powered by</span> <a href="https://scrapfly.io" target="_blank" rel="noopener noreferrer">Scrapfly</a>
       </div>
     </div>
 </div>

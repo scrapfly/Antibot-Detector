@@ -1,6 +1,84 @@
 {
+  "advToolReloadScriptsHint": { "message": "Перезагрузить страницу для анализа скриптов защиты" },
+  "advToolResetScriptsHint": { "message": "Сбросить файлы cookie защиты и перезагрузить страницу для анализа скриптов" },
+  "advToolReloadVersionHint": { "message": "Перезагрузить страницу для определения версии защиты" },
+  "advToolCaptureResetHint": { "message": "Сбросить файл cookie защиты и начать запись" },
+  "advToolCookiesHint": { "message": "Проверить файлы cookie, используемые этой защитой" },
+  "advToolVersionHint": { "message": "Посмотреть доступную информацию о версии" },
+  "advToolSiteKeyHint": { "message": "Найти ключ сайта CAPTCHA на этой странице" },
+  "advToolSelectorHint": { "message": "Найти селектор виджета CAPTCHA" },
+  "advToolCallbackHint": { "message": "Проверить функции обратного вызова CAPTCHA" },
+  "advToolSensorHint": { "message": "Сбросить файлы cookie защиты и перезагрузить страницу для записи данных сенсора" },
+  "advToolCaptureHint": { "message": "Записать данные с этой страницы" },
+  "advToolStopCaptureHint": { "message": "Остановить запись данных с этой страницы" },
+  "advToolWorking": { "message": "Обработка…" },
+  "advToolActionFailedFmt": { "message": "Не удалось выполнить это действие: {0}", "description": "Advanced tool action failure. {0} = error details" },
+  "statsChartPrevious": { "message": "Предыдущая страница графика" },
+  "statsChartNext": { "message": "Следующая страница графика" },
+  "statsChartPage": { "message": "Страница {0} из {1}" },
+  "statsChartShowing": { "message": "Показано {0}–{1} из {2}" },
+  "statsSectionsLabel": { "message": "Разделы статистики" },
+  "statsSectionOverview": { "message": "Обзор" },
+  "statsSectionActivity": { "message": "Активность" },
+  "statsSectionProtections": { "message": "Защиты" },
+  "statsSectionDomains": { "message": "Домены" },
+  "statsSectionConfidence": { "message": "Достоверность" },
+  "statsExportCSV": { "message": "Экспорт CSV" },
+  "statsExportJSON": { "message": "Экспорт JSON" },
+  "statsExportPrivacy": { "message": "Экспорт содержит домены и сводки обнаружений, но не файлы cookie, содержимое страниц или параметры URL." },
+  "statsExportScopeFmt": { "message": "Экспорт выбранного периода: {0} записей" },
+  "statsExportStartedFmt": { "message": "Загрузка началась: {0}" },
+  "statsExportFailed": { "message": "Не удалось экспортировать данные. Попробуйте ещё раз." },
+  "statsLoadFailed": { "message": "Не удалось загрузить историю. Обновите эту страницу." },
+  "statsRangeEmptyTitle": { "message": "Нет записей за этот период" },
+  "statsRangeEmptyDesc": { "message": "Выберите более длительный период, чтобы просмотреть сохранённую историю." },
+  "statsDetectionRate": { "message": "Записи с обнаружениями" },
+  "statsActiveDays": { "message": "Активные дни" },
+  "statsAverageConfidence": { "message": "Средняя достоверность" },
+  "statsDailyVisits": { "message": "Записи истории по дням" },
+  "statsActivityCalendar": { "message": "Календарь активности" },
+  "statsActivityCalendarHint": { "message": "Каждый квадрат обозначает один день по местному календарю. Чем темнее синий цвет, тем больше сохранённых записей." },
+  "statsHourlyActivity": { "message": "Активность по часам" },
+  "statsWeekdayActivity": { "message": "Активность по дням недели" },
+  "statsLocalTimeNote": { "message": "Даты и часы указаны в вашем местном часовом поясе." },
+  "statsTimelineLimitFmt": { "message": "Показаны последние {0} дней. Итоги и экспорт включают весь выбранный период." },
+  "statsProtectionRanking": { "message": "Рейтинг защит" },
+  "statsCategoryTrend": { "message": "Категории во времени" },
+  "statsCategoryOverlap": { "message": "Категории, обнаруженные вместе" },
+  "statsCategoryOverlapHint": { "message": "Число записей истории с обеими категориями. Ячейки по диагонали показывают записи с данной категорией." },
+  "statsProtectionDetails": { "message": "Все защиты" },
+  "statsDomainRanking": { "message": "Рейтинг доменов" },
+  "statsDomainMap": { "message": "Посещения и обнаружения" },
+  "statsDomainMapHint": { "message": "Каждая точка обозначает домен. У более крупных точек больше различных защит." },
+  "statsDomainDetails": { "message": "Все домены" },
+  "statsDomainSearch": { "message": "Поиск доменов..." },
+  "statsDomainSortLabel": { "message": "Сортировка доменов" },
+  "statsSortVisits": { "message": "Больше посещений" },
+  "statsSortDetections": { "message": "Больше обнаружений" },
+  "statsSortConfidence": { "message": "Наивысшая достоверность" },
+  "statsSortName": { "message": "Имя домена" },
+  "statsConfidenceDistribution": { "message": "Распределение достоверности" },
+  "statsConfidenceTrend": { "message": "Достоверность во времени" },
+  "statsCategoryConfidence": { "message": "Достоверность по категориям" },
+  "statsConfidenceNote": { "message": "Достоверность описывает убедительность сохранённых признаков обнаружения, но не доказывает наличие цифрового отпечатка или активной проверки." },
+  "statsConfidenceKnownFmt": { "message": "У {0} обнаружений есть значения достоверности; у {1} нет корректной оценки." },
+  "statsProtectionColumn": { "message": "Защита" },
+  "statsCategoryColumn": { "message": "Категория" },
+  "statsDomainColumn": { "message": "Домен" },
+  "statsTableCountFmt": { "message": "{0} из {1} строк" },
+  "statsTableMore": { "message": "Показать ещё" },
+  "statsNoMatchingDomains": { "message": "Нет доменов, соответствующих вашему запросу." },
+  "statsSelectionNote": { "message": "Графики и экспорт используют выбранный период. Записи истории отражают сохранённые обнаружения, а не каждое посещение в браузере." },
   "extensionName": {
     "message": "Scrapfly: детектор анти-бот"
+  },
+  "headerBrandName": {
+    "message": "ScrapFly: детектор анти-бот",
+    "description": "Brand + product name shown in the popup header (extensionName with the ScrapFly logo capitalisation; the manifest/store name stays extensionName)"
+  },
+  "headerBrandSuffix": {
+    "message": ": детектор анти-бот",
+    "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
   "extensionDescription": {
     "message": "Обнаружение CAPTCHA, систем анти-бот и технологий снятия отпечатков на сайтах"
@@ -29,14 +107,17 @@
   "analyzingPage": {
     "message": "Анализ страницы"
   },
+  "detectionScanningTitle": {
+    "message": "Сканирование страницы"
+  },
+  "detectionScanningDescription": {
+    "message": "Поиск признаков защиты."
+  },
+  "detectionScanningHint": {
+    "message": "Результаты появятся здесь после проверки."
+  },
   "actionRemoveFromBlacklist": {
     "message": "Удалить из чёрного списка"
-  },
-  "advancedDomainBlacklisted": {
-    "message": "Расширенные инструменты отключены для этого домена"
-  },
-  "blacklistManageHint": {
-    "message": "Или перейдите в Настройки → Обнаружение → Чёрный список доменов для управления."
   },
   "statDetections": {
     "message": "Обнаружения"
@@ -137,9 +218,6 @@
   "rulesUpdateTitle": {
     "message": "Проверить обновления детекторов"
   },
-  "rulesClearTitle": {
-    "message": "Очистить все правила"
-  },
   "rulesAddTitle": {
     "message": "Добавить новый детектор"
   },
@@ -222,7 +300,7 @@
     "message": "Режим отладки"
   },
   "settingsCardDebugDesc": {
-    "message": "Включить логирование консоли для отладки"
+    "message": "Один понятный отчёт по каждой проверенной странице в консоли service worker"
   },
   "settingsRowLogCollector": {
     "message": "Сборщик логов"
@@ -320,6 +398,9 @@
   "advancedEmptyCapturesHint": {
     "message": "Используйте вкладку Инструменты для захвата данных из обнаруженных систем"
   },
+  "advancedCapturesStoredNote": {
+    "message": "Захваты хранятся 30 минут"
+  },
   "advancedNoResultsTitle": {
     "message": "Захваты не найдены"
   },
@@ -360,7 +441,7 @@
     "message": "Захваченные данные хранятся временно (30 минут) с полными возможностями экспорта"
   },
   "advancedFooterHint": {
-    "message": "Результаты истекают через 30 минут для обеспечения свежих данных"
+    "message": "Захваченные данные хранятся 30 минут."
   },
   "settings": {
     "message": "Настройки"
@@ -407,24 +488,6 @@
   "timeDaysAgoLongFmt": {
     "message": "{0} дней назад"
   },
-  "timeOneWeekAgo": {
-    "message": "1 неделю назад"
-  },
-  "timeWeeksAgoFmt": {
-    "message": "{0} недель назад"
-  },
-  "timeOneMonthAgo": {
-    "message": "1 месяц назад"
-  },
-  "timeMonthsAgoFmt": {
-    "message": "{0} месяцев назад"
-  },
-  "timeOneYearAgo": {
-    "message": "1 год назад"
-  },
-  "timeYearsAgoFmt": {
-    "message": "{0} лет назад"
-  },
   "btnCancelSettings": {
     "message": "Отмена"
   },
@@ -445,6 +508,33 @@
   },
   "tagColors": {
     "message": "Цвета меток"
+  },
+  "colorPickerTitle": {
+    "message": "Выбор цвета"
+  },
+  "colorPickerArea": {
+    "message": "Насыщенность и яркость"
+  },
+  "colorPickerSaturation": {
+    "message": "Насыщенность"
+  },
+  "colorPickerBrightness": {
+    "message": "Яркость"
+  },
+  "colorPickerHue": {
+    "message": "Оттенок"
+  },
+  "colorPickerRed": {
+    "message": "Красный"
+  },
+  "colorPickerGreen": {
+    "message": "Зелёный"
+  },
+  "colorPickerBlue": {
+    "message": "Синий"
+  },
+  "colorPickerPresets": {
+    "message": "Готовые цвета"
   },
   "cacheConfiguration": {
     "message": "Конфигурация кэша"
@@ -475,6 +565,14 @@
   },
   "ruleMethodSettings": {
     "message": "Настройки метода обнаружения"
+  },
+  "methodSettingsTitleFmt": {
+    "message": "{0} · Настройки: {1}",
+    "description": "Method Settings modal title. {0} = detector name, {1} = readable detection method name (e.g. Headers)"
+  },
+  "methodSettingsTitleNoDetectorFmt": {
+    "message": "Настройки: {0}",
+    "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
   },
   "ruleConfidenceLevel": {
     "message": "Уровень уверенности"
@@ -559,9 +657,6 @@
   },
   "unknownDetection": {
     "message": "Неизвестное обнаружение"
-  },
-  "matchSingular": {
-    "message": "совпадение"
   },
   "matchPlural": {
     "message": "совпадений"
@@ -707,15 +802,6 @@
   "failedSaveSettingsFmt": {
     "message": "Не удалось сохранить настройки: {0}"
   },
-  "settingsResetToast": {
-    "message": "Настройки сброшены"
-  },
-  "dataClearedReloadNotice": {
-    "message": "Все данные успешно очищены! Расширение будет перезагружено."
-  },
-  "failedClearDataFmt": {
-    "message": "Не удалось очистить данные: {0}"
-  },
   "failedExportLogs": {
     "message": "Не удалось экспортировать журналы"
   },
@@ -764,8 +850,8 @@
   "importDetectorsTitle": {
     "message": "Импорт детекторов"
   },
-  "importMergeQuestion": {
-    "message": "Объединить с существующими детекторами?"
+  "importDetectorsModeMessage": {
+    "message": "«Объединить» добавит импортированные детекторы к вашим.<br>«Заменить все» сначала удалит ваши собственные детекторы; встроенные останутся."
   },
   "mergeOption": {
     "message": "Объединить"
@@ -790,9 +876,6 @@
   },
   "detectorDeletedFmt": {
     "message": "Удалён \"{0}\""
-  },
-  "allDetectorsCleared": {
-    "message": "Все детекторы удалены"
   },
   "failedClearDetectors": {
     "message": "Не удалось удалить детекторы"
@@ -842,29 +925,11 @@
   "importHistoryTitle": {
     "message": "Импорт истории"
   },
-  "importHistoryMessageFmt": {
-    "message": "Импортировать записей истории: {0}? В текущей истории записей: {1}."
-  },
   "replaceOption": {
     "message": "Заменить"
   },
-  "settingsResetTitle": {
-    "message": "Сбросить настройки"
-  },
-  "settingsResetMessage": {
-    "message": "Вы уверены, что хотите сбросить все настройки к значениям по умолчанию? Это действие нельзя отменить."
-  },
-  "btnReset": {
-    "message": "Сбросить"
-  },
-  "clearAllDataTitle": {
-    "message": "Очистить все данные"
-  },
-  "clearAllDataMessage": {
-    "message": "Вы уверены, что хотите очистить ВСЕ данные расширения? Будут удалены:<br><br>• Вся история обнаружений<br>• Все правила детекторов<br>• Все настройки<br><br>Это действие нельзя отменить!"
-  },
-  "clearEverythingBtn": {
-    "message": "Очистить всё"
+  "importHistoryModeMessageFmt": {
+    "message": "Импортировать записей истории: {0}? Сейчас в истории записей: {1}.<br>«Объединить» добавит новые записи. «Заменить» сначала удалит текущую историю."
   },
   "clearLogsTitle": {
     "message": "Очистить журналы"
@@ -889,15 +954,6 @@
   },
   "updateServiceNotAvailable": {
     "message": "Служба обновлений недоступна"
-  },
-  "clearAllDetectorsTitle": {
-    "message": "Удалить все детекторы"
-  },
-  "clearAllDetectorsMessage": {
-    "message": "Это удалит ВСЕ детекторы. Вы уверены?"
-  },
-  "clearingAllDetectors": {
-    "message": "Удаление всех детекторов..."
   },
   "deleteDetectorTitle": {
     "message": "Удалить детектор"
@@ -974,6 +1030,57 @@
   "settingsContentTypeDesc": {
     "message": "Заголовок HTTP Content-Type"
   },
+  "webhookCtHintJson": {
+    "message": "Шаблон в формате JSON с подставленными переменными."
+  },
+  "webhookCtHintForm": {
+    "message": "Поля шаблона как пары ключ=значение; вложенные — detections[0][name]."
+  },
+  "webhookCtHintMultipart": {
+    "message": "Поля шаблона как части form-data; boundary задаёт браузер."
+  },
+  "webhookCtHintText": {
+    "message": "Текст шаблона как есть, с подставленными переменными."
+  },
+  "webhookCtHintXml": {
+    "message": "Поля шаблона как XML-документ <webhook>; обнаружения — повторяющиеся элементы."
+  },
+  "webhookCtHintCsv": {
+    "message": "Строка заголовков, затем по строке на обнаружение с повтором полей страницы."
+  },
+  "webhookCtHintNdjson": {
+    "message": "Один JSON-объект на строку: строка на обнаружение, с полями страницы."
+  },
+  "webhookCtHintCustom": {
+    "message": "Свой Content-Type (тип/подтип); тело отправляется как JSON."
+  },
+  "webhookCtCustom": {
+    "message": "Свой"
+  },
+  "webhookCtCustomLabel": {
+    "message": "Свой Content-Type"
+  },
+  "webhookCtInvalid": {
+    "message": "Введите тип/подтип, например application/vnd.example+json"
+  },
+  "webhookAddHeader": {
+    "message": "Добавить заголовок"
+  },
+  "webhookNoHeaders": {
+    "message": "Пользовательских заголовков нет"
+  },
+  "webhookHeaderName": {
+    "message": "Имя заголовка"
+  },
+  "webhookHeaderValue": {
+    "message": "Значение заголовка"
+  },
+  "webhookRemoveHeader": {
+    "message": "Удалить заголовок"
+  },
+  "webhookSending": {
+    "message": "Отправка..."
+  },
   "settingsCustomHeaders": {
     "message": "Пользовательские заголовки"
   },
@@ -984,7 +1091,58 @@
     "message": "Шаблон полезной нагрузки"
   },
   "settingsPayloadTemplateDesc": {
-    "message": "Используйте переменные: <SITEURL>, <HOSTNAME>, <TITLE>, <FAVICON>, <DETECTIONS>, <TIMESTAMP>, <DETECTION_COUNT>, <CATEGORIES>"
+    "message": "Тело каждого вебхука. Нажмите на переменную, чтобы вставить её."
+  },
+  "webhookVarsTitle": {
+    "message": "Переменные шаблона"
+  },
+  "webhookVarsIntro": {
+    "message": "При отправке вебхука заменяются значениями страницы."
+  },
+  "webhookVarsInsertLabel": {
+    "message": "Вставить переменную"
+  },
+  "webhookVarsInsertFmt": {
+    "message": "Вставить {0}"
+  },
+  "webhookVarsCopyFmt": {
+    "message": "Копировать {0}"
+  },
+  "webhookVarsExample": {
+    "message": "Пример"
+  },
+  "webhookVarSiteUrl": {
+    "message": "Полный URL страницы"
+  },
+  "webhookVarHostname": {
+    "message": "Имя хоста страницы"
+  },
+  "webhookVarTitle": {
+    "message": "Заголовок страницы"
+  },
+  "webhookVarFavicon": {
+    "message": "URL значка сайта"
+  },
+  "webhookVarDetections": {
+    "message": "Обнаружения в виде JSON-массива"
+  },
+  "webhookVarTimestamp": {
+    "message": "Время обнаружения (ISO 8601)"
+  },
+  "webhookVarDetectionCount": {
+    "message": "Количество обнаружений"
+  },
+  "webhookVarCategories": {
+    "message": "Обнаруженные категории через запятую"
+  },
+  "webhookJsonValid": {
+    "message": "Корректный JSON"
+  },
+  "webhookJsonInvalidFmt": {
+    "message": "Некорректный JSON (строка {0})"
+  },
+  "webhookResetTemplate": {
+    "message": "Сбросить шаблон"
   },
   "settingsTestWebhook": {
     "message": "Проверить вебхук"
@@ -1005,10 +1163,7 @@
     "message": "Лимит истории"
   },
   "settingsHistoryLimitNote": {
-    "message": "(0 = без ограничений)"
-  },
-  "settingsAutoClearDays": {
-    "message": "Автоочистка (дней)"
+    "message": "(0 = защитный предел в 1 000 записей)"
   },
   "settingsExportFormat": {
     "message": "Формат экспорта"
@@ -1125,7 +1280,7 @@
     "message": "Экспорт истории"
   },
   "settingsAvailableEvents": {
-    "message": "Доступные события:"
+    "message": "Доступные события"
   },
   "settingsApiEventReady": {
     "message": "Расширение загружено и инициализировано"
@@ -1149,7 +1304,7 @@
     "message": "Произошла ошибка обнаружения"
   },
   "settingsUsageExample": {
-    "message": "Пример использования:"
+    "message": "Пример использования"
   },
   "detectionDisabledForDomain": {
     "message": "Обнаружение отключено для этого домена"
@@ -1202,6 +1357,9 @@
   "detectionTitleBlockDomain": {
     "message": "Заблокировать этот домен"
   },
+  "detectionStatSite": {
+    "message": "САЙТ"
+  },
   "detectionStatDetections": {
     "message": "ОБНАРУЖЕНИЯ"
   },
@@ -1234,9 +1392,6 @@
   },
   "detectionModalDifficulty": {
     "message": "Сложность"
-  },
-  "detectionModalMatchesFound": {
-    "message": "Найдено совпадений"
   },
   "detectionModalAuthor": {
     "message": "Автор"
@@ -1421,44 +1576,11 @@
   "rulesDomSelectorHelper": {
     "message": "Помощник по DOM-селекторам"
   },
-  "rulesStartTypingSuggestions": {
-    "message": "Начните вводить, чтобы увидеть подсказки"
-  },
   "rulesUseSelectorBtn": {
     "message": "Использовать селектор"
   },
   "rulesWindowPropertiesHelper": {
     "message": "Помощник по свойствам window"
-  },
-  "rulesStepEnterKeyword": {
-    "message": "Введите ключевое слово"
-  },
-  "rulesStepChooseProperty": {
-    "message": "Выберите свойство"
-  },
-  "rulesStepSelectCondition": {
-    "message": "Выберите условие"
-  },
-  "rulesConditionExists": {
-    "message": "Существует"
-  },
-  "rulesConditionGroupType": {
-    "message": "Тип"
-  },
-  "rulesTypeofObject": {
-    "message": "Object"
-  },
-  "rulesTypeofFunction": {
-    "message": "Function"
-  },
-  "rulesTypeofString": {
-    "message": "String"
-  },
-  "rulesTypeofNumber": {
-    "message": "Number"
-  },
-  "rulesTypeofBoolean": {
-    "message": "Boolean"
   },
   "notifConfirmTitleDefault": {
     "message": "Подтвердите"
@@ -1468,12 +1590,6 @@
   },
   "notifLoadingDefault": {
     "message": "Загрузка..."
-  },
-  "helperPatternStartTypingSuggestions": {
-    "message": "Начните вводить выше, чтобы увидеть подсказки..."
-  },
-  "helperPatternStartTypingExamples": {
-    "message": "Начните вводить выше, чтобы увидеть примеры..."
   },
   "helpJsHooksTitle": {
     "message": "Обнаружение через JavaScript-хуки"
@@ -1587,13 +1703,10 @@
     "message": "Нажмите «Начать захват» выше, чтобы начать захват данных {0}"
   },
   "advancedToolsHeading": {
-    "message": "Расширенные инструменты обнаружения"
+    "message": "Инструменты захвата"
   },
   "advancedToolsSubtitle": {
-    "message": "Захват и анализ систем защиты"
-  },
-  "advancedToolsHelpTitle": {
-    "message": "Справка"
+    "message": "Выберите защиту, чтобы открыть её инструменты."
   },
   "advancedToolsStepSelect": {
     "message": "Выберите обнаружение"
@@ -1601,11 +1714,8 @@
   "advancedToolsChooseDetection": {
     "message": "Выберите обнаружение..."
   },
-  "advancedToolsStepLoadUse": {
-    "message": "Загрузить и использовать инструменты"
-  },
   "advancedToolsLoadTools": {
-    "message": "Загрузить инструменты"
+    "message": "Открыть инструменты"
   },
   "advancedToolsClearAll": {
     "message": "Очистить всё"
@@ -1631,9 +1741,6 @@
   "settingsLanguageAuto": {
     "message": "Использовать язык браузера"
   },
-  "copiedJsonNotification": {
-    "message": "JSON скопирован"
-  },
   "detectionEmptyTitle": {
     "message": "Ничего не обнаружено"
   },
@@ -1658,19 +1765,2158 @@
   "rulesModalDetectorLabel": {
     "message": "Правило обнаружения"
   },
-  "rulesAuthorHelpHint": {
-    "message": "Кто создал этот детектор"
+  "rulesMoreActions": {
+    "message": "Другие действия"
   },
-  "rulesWindowConditionExamplesTitle": {
-    "message": "Примеры условий window"
+  "advancedToolsNoDetections": {
+    "message": "На этой странице нет поддерживаемых обнаружений"
   },
-  "rulesWindowConditionExamplesHint": {
-    "message": "Нажмите на пример, чтобы использовать его:"
+  "advancedToolsEmptyTitle": {
+    "message": "Нет доступных инструментов"
   },
-  "rulesBtnNextFmt": {
-    "message": "Далее: {0}"
+  "advancedToolsEmptyDesc": {
+    "message": "На этой странице не найдено поддерживаемой защиты. Инструменты появятся здесь автоматически, как только она будет обнаружена."
   },
-  "rulesUsePropertyBtn": {
-    "message": "Использовать свойство"
+  "advancedToolsSupportedLabel": {
+    "message": "Поддерживаемые системы защиты"
+  },
+  "advancedToolsOpenHistoryFmt": {
+    "message": "История захватов ({0})"
+  },
+  "detectionMethodJsHooks": {
+    "message": "Перехватчики JavaScript"
+  },
+  "detectionMethodContent": {
+    "message": "Содержимое"
+  },
+  "detectionMethodWindow": {
+    "message": "Свойства окна"
+  },
+  "detectionMethodDom": {
+    "message": "Dom"
+  },
+  "detectionMethodHeaders": {
+    "message": "Заголовки"
+  },
+  "detectionMethodCookies": {
+    "message": "Файлы cookie"
+  },
+  "detectionMethodUrl": {
+    "message": "Url"
+  },
+  "detectionMethodPayload": {
+    "message": "Полезная нагрузка"
+  },
+  "detectionEnableBtn": {
+    "message": "Включить обнаружение"
+  },
+  "historyMoreActions": {
+    "message": "Другие действия"
+  },
+  "historyCopyEntryTitle": {
+    "message": "Копировать данные"
+  },
+  "settingsHistoryAutoDelete": {
+    "message": "Автоудаление"
+  },
+  "settingsHistoryAutoDeleteDesc": {
+    "message": "Периодически удаляет старые записи истории."
+  },
+  "settingsHistoryAutoDeleteOlderThan": {
+    "message": "Удалять записи старше"
+  },
+  "settingsCacheDurationRangeFmt": {
+    "message": "Допустимый диапазон: 1–{0} {1}. Для более длительных периодов выберите более крупную единицу."
+  },
+  "settingsCacheDurationRangeMaxFmt": {
+    "message": "Допустимый диапазон: 1–{0} {1}."
+  },
+  "settingsCacheDurationUnitNote": {
+    "message": "Месяц считается равным 30 дням, год — 365 дням."
+  },
+  "timeUnitMonths": {
+    "message": "Месяцы"
+  },
+  "timeUnitYears": {
+    "message": "Годы"
+  },
+  "settingsHistoryStatsTitle": {
+    "message": "Статистика истории"
+  },
+  "settingsHistoryStatsDesc": {
+    "message": "Просматривайте личную статистику, рассчитанную локально по истории обнаружений."
+  },
+  "settingsOpenStats": {
+    "message": "Открыть статистику"
+  },
+  "settingsExportedToast": {
+    "message": "Настройки экспортированы"
+  },
+  "settingsExportFailedToast": {
+    "message": "Не удалось экспортировать настройки"
+  },
+  "settingsImportedToast": {
+    "message": "Настройки импортированы"
+  },
+  "settingsImportFailedToast": {
+    "message": "Не удалось импортировать настройки: неверный файл"
+  },
+  "statsPrivacyNote": {
+    "message": "Рассчитано локально по истории обнаружений. Данные не покидают браузер."
+  },
+  "statsSubtitleFmt": {
+    "message": "Рассчитано локально по {0} записям истории. Данные не покидают браузер."
+  },
+  "statsRangeLabel": {
+    "message": "Период"
+  },
+  "statsRange7": {
+    "message": "7 дней"
+  },
+  "statsRange30": {
+    "message": "30 дней"
+  },
+  "statsRange90": {
+    "message": "90 дней"
+  },
+  "statsRangeAll": {
+    "message": "Всё"
+  },
+  "statsEmptyTitle": {
+    "message": "История пока пуста"
+  },
+  "statsEmptyDesc": {
+    "message": "Статистика появится здесь, когда страницы с обнаружениями будут сохранены в историю."
+  },
+  "statsEntries": {
+    "message": "Записи истории"
+  },
+  "statsUniqueDomains": {
+    "message": "Уникальные домены"
+  },
+  "statsDetections": {
+    "message": "Обнаружения"
+  },
+  "statsDistinctDetectors": {
+    "message": "Разные системы защиты"
+  },
+  "statsOverTime": {
+    "message": "Обнаружения по времени"
+  },
+  "statsTopProtections": {
+    "message": "Самые частые системы защиты"
+  },
+  "statsTopDomains": {
+    "message": "Основные домены"
+  },
+  "statsByCategory": {
+    "message": "По категориям"
+  },
+  "statsByDifficulty": {
+    "message": "По сложности"
+  },
+  "statsPagesUnit": {
+    "message": "страницы"
+  },
+  "statsVisitsUnit": {
+    "message": "посещения"
+  },
+  "statsDetectionsUnit": {
+    "message": "обнаружения"
+  },
+  "statsCategoryOther": {
+    "message": "Другое"
+  },
+  "statsDifficultyNone": {
+    "message": "Без обнаружений"
+  },
+  "statsNoData": {
+    "message": "Нет данных за этот период"
+  },
+  "statsTipPagesFmt": {
+    "message": "Страниц: {0}"
+  },
+  "statsTipDomainsFmt": {
+    "message": "Доменов: {0}"
+  },
+  "statsTipVisitsFmt": {
+    "message": "Посещений: {0}"
+  },
+  "statsTipDetectionsFmt": {
+    "message": "Обнаружений: {0}"
+  },
+  "historyCategoryShareFmt": {
+    "message": "{0} из {1} обнаружений · {2}%"
+  },
+  "statsTipEntriesFmt": {
+    "message": "Записей: {0}"
+  },
+  "statsWithDetectionsFmt": {
+    "message": "С обнаружениями: {0}"
+  },
+  "statsVisitsPerDomainFmt": {
+    "message": "{0} посещ. на домен"
+  },
+  "statsPerEntryFmt": {
+    "message": "{0} на запись"
+  },
+  "statsAvgConfidenceFmt": {
+    "message": "Средняя уверенность {0}%"
+  },
+  "statsTimelineMetaFmt": {
+    "message": "Обнаружений: {0} · дней: {1}"
+  },
+  "deleteOfficialDetectorNote": {
+    "message": "Это официальный детектор Scrapfly. Обновления не вернут его; используйте «Восстановить официальные детекторы» в меню …, чтобы вернуть его."
+  },
+  "restoreOfficialDetectors": {
+    "message": "Восстановить официальные детекторы"
+  },
+  "officialDetectorsRestoredFmt": {
+    "message": "Восстановлено официальных детекторов: {0}"
+  },
+  "noOfficialDetectorsToRestore": {
+    "message": "Официальные детекторы не удалялись"
+  },
+  "failedRestoreOfficialDetectors": {
+    "message": "Не удалось восстановить официальные детекторы"
+  },
+  "authorReservedError": {
+    "message": "Имя «Scrapfly» зарезервировано для официальных детекторов. Укажите другое имя автора."
+  },
+  "ruleFieldAuthorPlaceholder": {
+    "message": "Ваше имя"
+  },
+  "clearCustomDetectorsTitle": {
+    "message": "Очистить пользовательские детекторы"
+  },
+  "clearCustomDetectorsMessage": {
+    "message": "Все ваши пользовательские детекторы будут удалены. Официальные детекторы Scrapfly сохранятся (их можно отключить). Вы уверены?"
+  },
+  "clearingCustomDetectors": {
+    "message": "Удаление пользовательских детекторов..."
+  },
+  "customDetectorsClearedFmt": {
+    "message": "Удалено пользовательских детекторов: {0}"
+  },
+  "noCustomDetectorsToClear": {
+    "message": "Нет пользовательских детекторов для удаления"
+  },
+  "rhSuggestions": {
+    "message": "Подсказки"
+  },
+  "rhResults": {
+    "message": "Результаты"
+  },
+  "rhCustomChip": {
+    "message": "Своё"
+  },
+  "rhUseAsTyped": {
+    "message": "Использовать как введено"
+  },
+  "rhNoResultsFmt": {
+    "message": "Нет совпадений для «{0}»"
+  },
+  "rhNoResultsHint": {
+    "message": "Его всё равно можно использовать как своё значение."
+  },
+  "rhPreview": {
+    "message": "Предпросмотр"
+  },
+  "rhSearchWindow": {
+    "message": "Поиск свойств, напр. webdriver, chrome, cdc_"
+  },
+  "rhSearchDom": {
+    "message": "Поиск селекторов, напр. captcha, iframe"
+  },
+  "rhSearchRegex": {
+    "message": "Текст для поиска, напр. bm_ или token"
+  },
+  "rhSearchSample": {
+    "message": "Введите значение для проверки"
+  },
+  "rhCondition": {
+    "message": "Условие"
+  },
+  "rhConditionInvalid": {
+    "message": "Неизвестное условие"
+  },
+  "rhAddProperty": {
+    "message": "Добавить свойство"
+  },
+  "rhChipAutomation": {
+    "message": "Автоматизация"
+  },
+  "rhCondGroupType": {
+    "message": "Тип"
+  },
+  "rhCondGroupExistence": {
+    "message": "Наличие"
+  },
+  "rhCondGroupCollections": {
+    "message": "Коллекции"
+  },
+  "rhCondGroupNumeric": {
+    "message": "Числа"
+  },
+  "rhCondGroupString": {
+    "message": "Строка"
+  },
+  "rhCondGroupBoolean": {
+    "message": "Логическое"
+  },
+  "rhCondGroupCustom": {
+    "message": "Текущее значение"
+  },
+  "rhCondTypeObject": {
+    "message": "является объектом"
+  },
+  "rhCondTypeFunction": {
+    "message": "является функцией"
+  },
+  "rhCondTypeString": {
+    "message": "является строкой"
+  },
+  "rhCondTypeNumber": {
+    "message": "является числом"
+  },
+  "rhCondTypeBoolean": {
+    "message": "является boolean"
+  },
+  "rhCondTypeSymbol": {
+    "message": "является символом"
+  },
+  "rhCondTypeBigint": {
+    "message": "является BigInt"
+  },
+  "rhCondExists": {
+    "message": "существует на странице"
+  },
+  "rhCondTruthy": {
+    "message": "истинно (truthy)"
+  },
+  "rhCondFalsy": {
+    "message": "ложно (пусто, 0, false или null)"
+  },
+  "rhCondNotUndefined": {
+    "message": "не undefined"
+  },
+  "rhCondUndefined": {
+    "message": "undefined (отсутствует)"
+  },
+  "rhCondNotNull": {
+    "message": "не null"
+  },
+  "rhCondNull": {
+    "message": "равно null"
+  },
+  "rhCondArray": {
+    "message": "является массивом"
+  },
+  "rhCondNonEmptyArray": {
+    "message": "непустой массив"
+  },
+  "rhCondEmptyArray": {
+    "message": "пустой массив"
+  },
+  "rhCondHasLength": {
+    "message": "имеет длину"
+  },
+  "rhCondHasKeys": {
+    "message": "объект с ключами"
+  },
+  "rhCondEmptyObject": {
+    "message": "пустой объект"
+  },
+  "rhCondGt0": {
+    "message": "больше 0"
+  },
+  "rhCondGte0": {
+    "message": "0 или больше"
+  },
+  "rhCondEq0": {
+    "message": "равно 0"
+  },
+  "rhCondNe0": {
+    "message": "не равно 0"
+  },
+  "rhCondGt1": {
+    "message": "больше 1"
+  },
+  "rhCondGte1": {
+    "message": "1 или больше"
+  },
+  "rhCondLenGt0": {
+    "message": "не пусто"
+  },
+  "rhCondLenEq0": {
+    "message": "пусто"
+  },
+  "rhCondTrue": {
+    "message": "равно true"
+  },
+  "rhCondFalse": {
+    "message": "равно false"
+  },
+  "rhWindowIntro": {
+    "message": "Проверяет глобальную переменную JavaScript на странице (window.…). Выберите её, затем каким должно быть значение."
+  },
+  "rhWindowSentenceFmt": {
+    "message": "Срабатывает на страницах, где {0} {1}"
+  },
+  "rhChipTemplate": {
+    "message": "Шаблон"
+  },
+  "rhDomClass": {
+    "message": "Класс"
+  },
+  "rhDomId": {
+    "message": "ID"
+  },
+  "rhDomData": {
+    "message": "Атрибут data"
+  },
+  "rhDomClassContains": {
+    "message": "Класс содержит"
+  },
+  "rhDomIdContains": {
+    "message": "ID содержит"
+  },
+  "rhDomTag": {
+    "message": "HTML-тег"
+  },
+  "rhDomAttr": {
+    "message": "Есть атрибут"
+  },
+  "rhDomIframe": {
+    "message": "URL iframe содержит"
+  },
+  "rhDomTitle": {
+    "message": "Заголовок содержит"
+  },
+  "rhDomAlt": {
+    "message": "Текст alt содержит"
+  },
+  "rhDomCamel": {
+    "message": "Класс в camelCase"
+  },
+  "rhRegexTitle": {
+    "message": "Помощник regex"
+  },
+  "rhUsePattern": {
+    "message": "Использовать шаблон"
+  },
+  "rhRegexStartsFmt": {
+    "message": "Начинается с «{0}»"
+  },
+  "rhRegexEndsFmt": {
+    "message": "Заканчивается на «{0}»"
+  },
+  "rhRegexContainsFmt": {
+    "message": "Содержит «{0}» в любом месте"
+  },
+  "rhRegexWordFmt": {
+    "message": "Целое слово «{0}»"
+  },
+  "rhRegexOrFmt": {
+    "message": "«{0}» или другой вариант"
+  },
+  "rhRegexStartsMoreFmt": {
+    "message": "Начинается с «{0}», далее другой текст"
+  },
+  "rhRegexEitherFmt": {
+    "message": "«{0}» или «{1}»"
+  },
+  "rhExamplesForFmt": {
+    "message": "Примеры для «{0}»"
+  },
+  "rhExamples": {
+    "message": "Примеры"
+  },
+  "rhHowMatchesFmt": {
+    "message": "Как совпадает «{0}»"
+  },
+  "rhQuickRef": {
+    "message": "Краткая справка"
+  },
+  "rhRefAny": {
+    "message": "любой символ"
+  },
+  "rhRefZeroMore": {
+    "message": "0 или больше"
+  },
+  "rhRefOneMore": {
+    "message": "1 или больше"
+  },
+  "rhRefOptional": {
+    "message": "необязательно"
+  },
+  "rhRefStart": {
+    "message": "начало"
+  },
+  "rhRefEnd": {
+    "message": "конец"
+  },
+  "rhRefDigit": {
+    "message": "цифра"
+  },
+  "rhRefWord": {
+    "message": "буква, цифра или _"
+  },
+  "rhRefSpace": {
+    "message": "пробел"
+  },
+  "rhRefOr": {
+    "message": "a или b"
+  },
+  "rhMatch": {
+    "message": "Совпадает"
+  },
+  "rhNoMatch": {
+    "message": "Нет совпадения"
+  },
+  "rhWwIntro": {
+    "message": "Совпадает, только если текст стоит отдельно, а не внутри более длинного слова."
+  },
+  "rhWwExact": {
+    "message": "Точное слово"
+  },
+  "rhWwJoinedBefore": {
+    "message": "Слито с текстом перед ним"
+  },
+  "rhWwJoinedAfter": {
+    "message": "Слито с текстом после него"
+  },
+  "rhWwSpaces": {
+    "message": "Отделено пробелами"
+  },
+  "rhCsIntro": {
+    "message": "Если включено, заглавные и строчные буквы различаются."
+  },
+  "rhCsOnTitle": {
+    "message": "С учётом регистра"
+  },
+  "rhCsOffTitle": {
+    "message": "Без учёта регистра"
+  },
+  "rhWhatIsRegex": {
+    "message": "Что такое регулярное выражение?"
+  },
+  "rhWhatIsWholeWord": {
+    "message": "Что такое «Целое слово»?"
+  },
+  "rhWhatIsCase": {
+    "message": "Что такое «Учёт регистра»?"
+  },
+  "rhRegexIntro": {
+    "message": "Регулярное выражение (regex) ищет текст по шаблону, а не по точным символам."
+  },
+  "rhWhenToUse": {
+    "message": "Когда использовать"
+  },
+  "rhRegexUse1": {
+    "message": "Текст, который начинается или заканчивается чем-то определённым"
+  },
+  "rhRegexUse2": {
+    "message": "Несколько вариантов сразу (через |)"
+  },
+  "rhRegexUse3": {
+    "message": "Числа или определённые типы символов"
+  },
+  "rhRegexTip": {
+    "message": "Для точного текста regex не нужен: используйте «Целое слово»."
+  },
+  "rhBestFor": {
+    "message": "Лучше всего для"
+  },
+  "rhWwUse1": {
+    "message": "Точные имена cookie"
+  },
+  "rhWwUse2": {
+    "message": "Конкретные имена заголовков"
+  },
+  "rhWwUse3": {
+    "message": "Полные имена классов или функций"
+  },
+  "rhCsUse1": {
+    "message": "Заголовки и cookie с точным регистром"
+  },
+  "rhCsUse2": {
+    "message": "Имена свойств JavaScript"
+  },
+  "settingsApiEventsDesc": {
+    "message": "События, которые расширение отправляет на страницу"
+  },
+  "settingsApiUsageDesc": {
+    "message": "Подпишитесь на события в своём скрипте"
+  },
+  "settingsApiCopyCode": {
+    "message": "Копировать код"
+  },
+  "settingsApiCodeCopied": {
+    "message": "Код скопирован"
+  },
+  "settingsApiEventCopyTitle": {
+    "message": "Копировать имя события"
+  },
+  "advCommonClickToCopy": {
+    "message": "Нажмите, чтобы скопировать"
+  },
+  "advCommonClickToCopyFull": {
+    "message": "Нажмите, чтобы скопировать полное значение"
+  },
+  "advCommonDomainLabel": {
+    "message": "Домен:"
+  },
+  "advCommonCopy": {
+    "message": "Копировать"
+  },
+  "advCommonPage": {
+    "message": "Страница"
+  },
+  "advCommonExportCode": {
+    "message": "Экспорт кода"
+  },
+  "advCommonUrlCopied": {
+    "message": "URL скопирован"
+  },
+  "advCommonCaptured": {
+    "message": "Захвачено"
+  },
+  "advCommonScript": {
+    "message": "Скрипт"
+  },
+  "advCommonUrl": {
+    "message": "URL"
+  },
+  "advCommonScriptUrl": {
+    "message": "URL скрипта:"
+  },
+  "advCommonNoCaptureData": {
+    "message": "Нет данных захвата"
+  },
+  "advCommonFailedCheckCookiesFmt": {
+    "message": "Не удалось проверить cookie: {0}"
+  },
+  "advCommonFailedAnalyzeScriptsFmt": {
+    "message": "Не удалось проанализировать скрипты: {0}"
+  },
+  "advCommonFailedStartAnalysis": {
+    "message": "Не удалось начать анализ"
+  },
+  "advCommonFailedCheckVersionFmt": {
+    "message": "Не удалось проверить версию: {0}"
+  },
+  "advCommonFailedExtractFmt": {
+    "message": "Не удалось извлечь: {0}"
+  },
+  "advCommonFailedStartExtractionFmt": {
+    "message": "Не удалось начать извлечение: {0}"
+  },
+  "advCommonFailedOpenExportFmt": {
+    "message": "Не удалось открыть окно экспорта: {0}"
+  },
+  "advCommonNoScriptsToExport": {
+    "message": "Нет скриптов для экспорта"
+  },
+  "advCommonCookiesTitleFmt": {
+    "message": "Cookie {0}"
+  },
+  "advCommonNoCookiesFmt": {
+    "message": "Cookie {0} не найдены"
+  },
+  "advCommonScriptsTitleFmt": {
+    "message": "Скрипты {0} ({1})"
+  },
+  "advCommonAnalyzingReloadFmt": {
+    "message": "Анализ скриптов {0}… Страница будет перезагружена"
+  },
+  "advCommonCodeGenUnavailable": {
+    "message": "Генерация кода недоступна"
+  },
+  "advCommonCodeGenTitle": {
+    "message": "Генератор кода для разбора скриптов"
+  },
+  "advCommonExportOptions": {
+    "message": "Параметры экспорта"
+  },
+  "advCommonAllTypes": {
+    "message": "Все типы"
+  },
+  "advCommonFoundScriptsFmt": {
+    "message": "Найдено подходящих скриптов: {0}"
+  },
+  "advCommonScriptAnalysis": {
+    "message": "Анализ скриптов"
+  },
+  "advCommonTotalScripts": {
+    "message": "Всего скриптов:"
+  },
+  "advCommonProtectionLevel": {
+    "message": "Уровень защиты:"
+  },
+  "advCommonCookiesFound": {
+    "message": "Найдено cookie:"
+  },
+  "advCommonSiteKey": {
+    "message": "Ключ сайта"
+  },
+  "advCommonWebsiteUrl": {
+    "message": "URL сайта"
+  },
+  "advCommonSiteUrl": {
+    "message": "URL сайта"
+  },
+  "advCommonApiDomain": {
+    "message": "Домен API"
+  },
+  "advCommonFound": {
+    "message": "Найдено"
+  },
+  "advCommonNotFound": {
+    "message": "Не найдено"
+  },
+  "advCommonRequired": {
+    "message": "Требуется"
+  },
+  "advCommonYes": {
+    "message": "Да"
+  },
+  "advCommonEnterprise": {
+    "message": "Enterprise"
+  },
+  "advCommonStandard": {
+    "message": "Стандартный"
+  },
+  "advCommonNone": {
+    "message": "Нет"
+  },
+  "advCodeDescBrowserParseFmt": {
+    "message": "Код для консоли браузера, который перехватывает и разбирает скрипты {0}"
+  },
+  "advCodeDescBrowserFetchFmt": {
+    "message": "Код для консоли браузера, который загружает скрипты {0}"
+  },
+  "advCodeDescPythonBs": {
+    "message": "Скрипт на Python с requests и BeautifulSoup"
+  },
+  "advCodeDescPython": {
+    "message": "Скрипт на Python с библиотекой requests"
+  },
+  "advCodeDescNodeCheerio": {
+    "message": "Скрипт на Node.js с axios и cheerio"
+  },
+  "advCodeDescNode": {
+    "message": "Скрипт на Node.js с axios"
+  },
+  "advCodeDescPhpDom": {
+    "message": "Скрипт на PHP с cURL и DOMDocument"
+  },
+  "advCodeDescPhp": {
+    "message": "Скрипт на PHP с cURL"
+  },
+  "advCodeDescCsharpHap": {
+    "message": "C# с HttpClient и HtmlAgilityPack"
+  },
+  "advCodeDescCsharp": {
+    "message": "C# с HttpClient"
+  },
+  "advCodeDescGoQuery": {
+    "message": "Go с net/http и goquery"
+  },
+  "advCodeDescGo": {
+    "message": "Go с net/http"
+  },
+  "pageNoticeCaptureActive": {
+    "message": "Захват активен"
+  },
+  "pageNoticeReloadToCapture": {
+    "message": "Перезагрузите страницу, чтобы начать захват."
+  },
+  "pageNoticeEndsInFmt": {
+    "message": "Завершится через {0} с"
+  },
+  "pageNoticeRecaptchaStepReload": {
+    "message": "Перезагрузите страницу"
+  },
+  "pageNoticeRecaptchaStepSolve": {
+    "message": "Пройдите или нажмите reCAPTCHA"
+  },
+  "pageNoticeRecaptchaStepWait": {
+    "message": "Дождитесь «Захват завершён»"
+  },
+  "pageNoticeMonitoringStartedFmt": {
+    "message": "Мониторинг {0} запущен"
+  },
+  "pageNoticeCollectingScripts": {
+    "message": "Подождите, собираем URL скриптов…"
+  },
+  "pageNoticeAnalyzingScriptsFmt": {
+    "message": "Анализ скриптов {0}"
+  },
+  "pageNoticeCaptureCompleted": {
+    "message": "Захват завершён"
+  },
+  "pageNoticePageLoading": {
+    "message": "Загрузка страницы"
+  },
+  "pageNoticeWaitForLoad": {
+    "message": "Дождитесь полной загрузки страницы…"
+  },
+  "advAkamaiNotDetectedToast": {
+    "message": "Akamai на этой странице не обнаружен. Cookie _abck отсутствует."
+  },
+  "advAkamaiCaptureSuccess": {
+    "message": "Данные Akamai успешно захвачены!"
+  },
+  "advAkamaiCaptureStopped": {
+    "message": "Захват остановлен"
+  },
+  "advAkamaiStopCaptureFailedFmt": {
+    "message": "Не удалось остановить захват: {0}"
+  },
+  "advAkamaiReloadingToAnalyze": {
+    "message": "Перезагрузка страницы для анализа данных Akamai…"
+  },
+  "advAkamaiAnalyzeFailedFmt": {
+    "message": "Не удалось проанализировать содержимое: {0}"
+  },
+  "advAkamaiNoAbckCookie": {
+    "message": "Cookie _abck не найден"
+  },
+  "advAkamaiProcessFailedFmt": {
+    "message": "Не удалось обработать данные: {0}"
+  },
+  "advAkamaiExtractingSensor": {
+    "message": "Извлечение данных сенсора…"
+  },
+  "advAkamaiExtractSensorFailedFmt": {
+    "message": "Не удалось извлечь данные сенсора: {0}"
+  },
+  "advAkamaiNoticeNotDetectedTitle": {
+    "message": "Akamai не обнаружен"
+  },
+  "advAkamaiNoticeNoAbck": {
+    "message": "Cookie _abck на этой странице отсутствует."
+  },
+  "advAkamaiNoticeNotActive": {
+    "message": "Akamai Bot Manager здесь не активен."
+  },
+  "advAkamaiNoticeReloadToMonitor": {
+    "message": "Перезагрузите страницу, чтобы начать отслеживание данных сенсора и сведений о запросах"
+  },
+  "advAkamaiNoticeSensorCaptured": {
+    "message": "sensor_data Akamai успешно захвачены"
+  },
+  "advAkamaiNoticeExtractingTitle": {
+    "message": "Извлечение данных сенсора Akamai"
+  },
+  "advAkamaiNoticeWaitingSensor": {
+    "message": "Ожидание захвата данных сенсора…"
+  },
+  "advAkamaiNoticeAnalyzingTitle": {
+    "message": "Анализ содержимого Akamai"
+  },
+  "advAkamaiNoticeScanning": {
+    "message": "Поиск скриптов и шаблонов на странице…"
+  },
+  "advAkamaiNoticeExtractingSensorTitle": {
+    "message": "Извлечение данных сенсора"
+  },
+  "advAkamaiNoticeCapturingSensor": {
+    "message": "Захват данных сенсора Akamai…"
+  },
+  "advAkamaiLevelAdvancedSbsd": {
+    "message": "Расширенный (SBSD)"
+  },
+  "advAkamaiLevelBasic": {
+    "message": "Базовый"
+  },
+  "advAkamaiLevelEasy": {
+    "message": "Лёгкий"
+  },
+  "advAkamaiAbckLevelLabel": {
+    "message": "Уровень _abck:"
+  },
+  "advAkamaiAnalysisTitle": {
+    "message": "Анализ Akamai"
+  },
+  "advAkamaiScriptsLabel": {
+    "message": "Скрипты Akamai:"
+  },
+  "advAkamaiScriptsHeading": {
+    "message": "Скрипты Akamai"
+  },
+  "advAkamaiSensorDataUrlScript": {
+    "message": "Скрипт URL данных сенсора"
+  },
+  "advAkamaiPixelHtmlVar": {
+    "message": "HTML-переменная Pixel:"
+  },
+  "advAkamaiPixelChallengeUrls": {
+    "message": "URL проверки Pixel:"
+  },
+  "advAkamaiPostUrl": {
+    "message": "URL для POST:"
+  },
+  "advAkamaiPixelScriptVar": {
+    "message": "Переменная скрипта Pixel:"
+  },
+  "advAkamaiSbsdScriptUrl": {
+    "message": "URL скрипта SBSD"
+  },
+  "advAkamaiSensorDataUrls": {
+    "message": "URL данных сенсора"
+  },
+  "advAkamaiEndpoint": {
+    "message": "Конечная точка Akamai"
+  },
+  "advAkamaiTypeSensor": {
+    "message": "Сенсор"
+  },
+  "advAkamaiExtractedSensorTitle": {
+    "message": "Извлечённые данные сенсора"
+  },
+  "advAkamaiSensorDataCharsFmt": {
+    "message": "Данные сенсора (символов: {0})"
+  },
+  "advAkamaiSensorDataNotCaptured": {
+    "message": "Данные сенсора (не захвачены)"
+  },
+  "advAkamaiNoSensorData": {
+    "message": "Данные сенсора не захвачены"
+  },
+  "advAkamaiSbsdDataCharsFmt": {
+    "message": "Данные SBSD (символов: {0})"
+  },
+  "advAkamaiSensorScriptUrl": {
+    "message": "URL скрипта сенсора"
+  },
+  "advAkamaiCopyAllJson": {
+    "message": "Скопировать все данные в JSON"
+  },
+  "advAkamaiExtractSensorBtn": {
+    "message": "Извлечь данные сенсора"
+  },
+  "advAkamaiAbckLevel": {
+    "message": "Уровень ABCK"
+  },
+  "advAkamaiAbckCookie": {
+    "message": "Cookie ABCK"
+  },
+  "advAkamaiVersionLabel": {
+    "message": "Версия Akamai"
+  },
+  "advAkamaiChallengeRequirements": {
+    "message": "Требуемые проверки"
+  },
+  "advAkamaiSbsdChallenge": {
+    "message": "Проверка SBSD"
+  },
+  "advAkamaiSecCptChallenge": {
+    "message": "Проверка sec_cpt"
+  },
+  "advAkamaiPixelChallenge": {
+    "message": "Проверка Pixel"
+  },
+  "advImpervaEnableExtractionFailed": {
+    "message": "Не удалось включить режим извлечения. Подробности см. в фоновой консоли."
+  },
+  "advImpervaSessionCookies": {
+    "message": "Сессионные cookie"
+  },
+  "advImpervaSecurityComponents": {
+    "message": "Компоненты защиты"
+  },
+  "advImpervaCookieCountFmt": {
+    "message": "Cookie: {0}"
+  },
+  "advImpervaResourceDetection": {
+    "message": "Обнаружение ресурсов"
+  },
+  "advImpervaResourceUrls": {
+    "message": "URL ресурсов"
+  },
+  "advImpervaInterrogationUrls": {
+    "message": "URL опроса"
+  },
+  "advImpervaAnalysisTitle": {
+    "message": "Анализ Imperva"
+  },
+  "advImpervaSensorUrl": {
+    "message": "URL сенсора:"
+  },
+  "advImpervaScriptsHeading": {
+    "message": "Скрипты Imperva"
+  },
+  "advImpervaScriptTypeFmt": {
+    "message": "Скрипт {0}"
+  },
+  "advImpervaSensorPath": {
+    "message": "Путь сенсора:"
+  },
+  "advImpervaNoScripts": {
+    "message": "Скрипты не обнаружены"
+  },
+  "advImpervaMayNotBePresent": {
+    "message": "Возможно, Imperva на этой странице нет"
+  },
+  "advImpervaTypeOnlyFmt": {
+    "message": "Только {0}"
+  },
+  "advImpervaLevelAdvanced": {
+    "message": "Расширенный (reese84 + utmvc)"
+  },
+  "advImpervaLevelBasicSession": {
+    "message": "Базовый (сессия)"
+  },
+  "advImpervaNoticeReloadToMonitor": {
+    "message": "Перезагрузите страницу, чтобы начать отслеживание запросов и cookie Imperva"
+  },
+  "advImpervaNoticeCapturedItemsFmt": {
+    "message": "Данные Imperva захвачены (элементов: {0})"
+  },
+  "advImpervaNoticeCaptureComplete": {
+    "message": "Захват Imperva завершён"
+  },
+  "advImpervaNoticeSensorCaptured": {
+    "message": "Данные сенсора успешно захвачены"
+  },
+  "advImpervaNoticeExtractingTitle": {
+    "message": "Извлечение скриптов Imperva"
+  },
+  "advImpervaNoticeMonitoringChallenge": {
+    "message": "Отслеживание данных проверки и решения…"
+  },
+  "advRecaptchaCallbackTool": {
+    "message": "Callback reCAPTCHA"
+  },
+  "advRecaptchaSelectorDetection": {
+    "message": "Определение селектора"
+  },
+  "advRecaptchaMethod": {
+    "message": "Метод"
+  },
+  "advRecaptchaSelector": {
+    "message": "Селектор"
+  },
+  "advRecaptchaSelectorCopied": {
+    "message": "Селектор скопирован в буфер обмена!"
+  },
+  "advRecaptchaNoElements": {
+    "message": "Элементы reCAPTCHA не найдены"
+  },
+  "advRecaptchaExecuteFailedFmt": {
+    "message": "Ошибка grecaptcha.execute(): {0}"
+  },
+  "advRecaptchaNoSiteKey": {
+    "message": "Ключ сайта не найден"
+  },
+  "advRecaptchaExtractedSiteKey": {
+    "message": "Извлечённый ключ сайта"
+  },
+  "advRecaptchaSiteKeyCopied": {
+    "message": "Ключ сайта скопирован в буфер обмена!"
+  },
+  "advRecaptchaSiteKeyCopiedShort": {
+    "message": "Ключ сайта скопирован"
+  },
+  "advRecaptchaCallbacksTitle": {
+    "message": "Callback-функции reCAPTCHA"
+  },
+  "advRecaptchaClientsTitle": {
+    "message": "Клиенты reCAPTCHA"
+  },
+  "advRecaptchaClientIdFmt": {
+    "message": "ID клиента: {0}"
+  },
+  "advRecaptchaCopiedToClipboard": {
+    "message": "Скопировано в буфер обмена!"
+  },
+  "advRecaptchaCallbackFunction": {
+    "message": "Callback-функция"
+  },
+  "advRecaptchaCallbackPath": {
+    "message": "Путь к callback-функции"
+  },
+  "advRecaptchaNoCallback": {
+    "message": "Callback-функция не задана"
+  },
+  "advRecaptchaDomCallbacks": {
+    "message": "Callback-функции в DOM"
+  },
+  "advRecaptchaScriptCallbacks": {
+    "message": "Callback-функции в скриптах"
+  },
+  "advRecaptchaCallbackExamples": {
+    "message": "Примеры использования callback-функции"
+  },
+  "advRecaptchaInvisible": {
+    "message": "Невидимая"
+  },
+  "advRecaptchaAction": {
+    "message": "Действие"
+  },
+  "advRecaptchaVersionCopied": {
+    "message": "Версия скопирована"
+  },
+  "advRecaptchaActionCopied": {
+    "message": "Действие скопировано"
+  },
+  "advRecaptchaApiDomainCopied": {
+    "message": "Домен API скопирован"
+  },
+  "advRecaptchaRequiredCookie": {
+    "message": "Обязательный cookie"
+  },
+  "advRecaptchaCookieCopied": {
+    "message": "Cookie скопирован"
+  },
+  "advRecaptchaFeaturesDetected": {
+    "message": "Обнаруженные особенности"
+  },
+  "advRecaptchaSParamRequired": {
+    "message": "Требуется параметр S"
+  },
+  "advRecaptchaHasSession": {
+    "message": "Есть сессия"
+  },
+  "advRecaptchaCapturedLabel": {
+    "message": "Захвачено:"
+  },
+  "advRecaptchaFailedClickFmt": {
+    "message": "Не удалось нажать: {0}"
+  },
+  "advRecaptchaNoCallbacksFound": {
+    "message": "На этой странице не найдены callback-функции reCAPTCHA. Убедитесь, что reCAPTCHA загружена."
+  },
+  "advRecaptchaFailedCaptureCallbackFmt": {
+    "message": "Не удалось получить callback-функцию: {0}"
+  },
+  "pageNoticeRecaptchaReloadAndSolve": {
+    "message": "Перезагрузите страницу и пройдите проверку reCAPTCHA, чтобы начать мониторинг"
+  },
+  "pageNoticeRecaptchaPageReady": {
+    "message": "Страница готова"
+  },
+  "pageNoticeRecaptchaSolveNow": {
+    "message": "Теперь пройдите проверку reCAPTCHA, чтобы захватить данные"
+  },
+  "pageNoticeRecaptchaDecodedFmt": {
+    "message": "Захвачено и декодировано запросов: {0}"
+  },
+  "pageNoticeRecaptchaNoRequests": {
+    "message": "Запросы reCAPTCHA не захвачены"
+  },
+  "pageNoticeRecaptchaSeen": {
+    "message": "reCAPTCHA обнаружена"
+  },
+  "pageNoticeRecaptchaSolveToFinish": {
+    "message": "Пройдите проверку — захват завершится сам"
+  },
+  "pageNoticeRecaptchaTriggerNow": {
+    "message": "Теперь запустите reCAPTCHA или нажмите на неё"
+  },
+  "advShapeCookieLabel": {
+    "message": "Cookie"
+  },
+  "advShapeHeadersLabel": {
+    "message": "Заголовки"
+  },
+  "advShapeVersionTitle": {
+    "message": "Версия Shape Security"
+  },
+  "advShapeHeaderPattern": {
+    "message": "Шаблон заголовка"
+  },
+  "advShapeHeaderPatterns": {
+    "message": "Шаблоны заголовков"
+  },
+  "advShapeCookieTitle": {
+    "message": "Cookie Shape"
+  },
+  "advShapeMaxAgeInfoFmt": {
+    "message": "Max-Age: {0} с (50 лет)"
+  },
+  "advShapeAnalysisTitle": {
+    "message": "Анализ Shape Security"
+  },
+  "advShapeInitJsScriptsLabel": {
+    "message": "Скрипты Init.js:"
+  },
+  "advShapeSeedScriptsLabel": {
+    "message": "Скрипты с seed:"
+  },
+  "advShapeScriptsHeading": {
+    "message": "Скрипты Shape Security"
+  },
+  "advShapeInitJsScript": {
+    "message": "Скрипт Init.js"
+  },
+  "advShapeInitJsScripts": {
+    "message": "Скрипты Init.js"
+  },
+  "advShapeSeedScript": {
+    "message": "Скрипт с seed"
+  },
+  "advShapeSeedScripts": {
+    "message": "Скрипты с seed"
+  },
+  "advShapeNoActiveTab": {
+    "message": "Активная вкладка не найдена"
+  },
+  "advShapeErrorFmt": {
+    "message": "Ошибка: {0}"
+  },
+  "advShapeDetectedVersion": {
+    "message": "Обнаруженная версия:"
+  },
+  "advShapeCaptureRequirements": {
+    "message": "Требования к захвату"
+  },
+  "advShapeCookieAndHeaders": {
+    "message": "Cookie + заголовки"
+  },
+  "advShapeNoticeExtractingScripts": {
+    "message": "Извлечение скриптов Shape Security"
+  },
+  "advShapeNoticeReloadToMonitor": {
+    "message": "Перезагрузите страницу, чтобы начать мониторинг заголовков и cookie Shape Security"
+  },
+  "advShapeNoticeWaitBeforeActions": {
+    "message": "Дождитесь полной загрузки страницы, прежде чем выполнять действия…"
+  },
+  "advShapeNoticeMonitoringActiveFmt": {
+    "message": "Мониторинг активен ({0})"
+  },
+  "advShapeNoticeTriggerCookie": {
+    "message": "Выполните действия, чтобы получить cookie"
+  },
+  "advShapeNoticeTriggerHeadersCookie": {
+    "message": "Выполните действия, чтобы получить заголовки и cookie"
+  },
+  "advShapeNoticeTimeoutFmt": {
+    "message": "Время истекло ({2}) — cookie: {0}, заголовки: {1}"
+  },
+  "advShapeNoticeV1SummaryFmt": {
+    "message": "{0} — Cookie: {1}"
+  },
+  "advShapeNoticeV2SummaryFmt": {
+    "message": "{0} — Cookie: {1} | Заголовки: {2}"
+  },
+  "advShapeNoticeCapturedFmt": {
+    "message": "Захвачено — cookie: {0}, заголовки: {1}"
+  },
+  "advHcaptchaDetectionTitle": {
+    "message": "Обнаружение hCaptcha"
+  },
+  "advHcaptchaNotDetected": {
+    "message": "hCaptcha не обнаружена. Перезагрузите страницу с загруженной hCaptcha."
+  },
+  "advHcaptchaVersionTitle": {
+    "message": "Версия hCaptcha"
+  },
+  "advHcaptchaEnterpriseMode": {
+    "message": "Режим Enterprise"
+  },
+  "advHcaptchaNo": {
+    "message": "Нет"
+  },
+  "advHcaptchaNoHistory": {
+    "message": "История захватов пока пуста"
+  },
+  "advHcaptchaNotAvailable": {
+    "message": "Н/Д"
+  },
+  "advHcaptchaScriptNumberFmt": {
+    "message": "Скрипт {0}"
+  },
+  "advHcaptchaCheckingVersionReload": {
+    "message": "Проверка версии hCaptcha… Страница будет перезагружена"
+  },
+  "advHcaptchaVersionTimeout": {
+    "message": "Истекло время определения версии hCaptcha"
+  },
+  "advHcaptchaFailedStartVersionCheck": {
+    "message": "Не удалось начать проверку версии"
+  },
+  "advHcaptchaNoticeReloadToMonitor": {
+    "message": "Перезагрузите страницу, чтобы начать мониторинг запросов hCaptcha"
+  },
+  "advHcaptchaNoticeCaptured": {
+    "message": "Данные hCaptcha успешно захвачены"
+  },
+  "advHcaptchaNoticeCheckingVersion": {
+    "message": "Проверка версии hCaptcha"
+  },
+  "advHcaptchaNoticeAnalyzingPage": {
+    "message": "Подождите, анализируем страницу…"
+  },
+  "advAwswafNoScripts": {
+    "message": "Скрипты AWS WAF не найдены"
+  },
+  "advAwswafDeleteCookieHint": {
+    "message": "Удалите куки aws-waf-token и перезагрузите страницу, чтобы вызвать проверку"
+  },
+  "advAwswafTypeChallenge": {
+    "message": "Проверка"
+  },
+  "advAwswafClickToCopyUrl": {
+    "message": "Нажмите, чтобы скопировать URL"
+  },
+  "advAwswafFetchCodeTitle": {
+    "message": "Код загрузки скриптов AWS WAF"
+  },
+  "advAwswafScriptsLabel": {
+    "message": "Скрипты AWS WAF"
+  },
+  "advAwswafChallengeScript": {
+    "message": "Скрипт проверки"
+  },
+  "advAwswafApiScript": {
+    "message": "Скрипт API (jsapi.js)"
+  },
+  "advAwswafProblemEndpoint": {
+    "message": "Эндпоинт задачи"
+  },
+  "advAwswafApiKey": {
+    "message": "Ключ API"
+  },
+  "advAwswafApiKeyCopied": {
+    "message": "Ключ API скопирован"
+  },
+  "advAwswafToken": {
+    "message": "Токен AWS WAF"
+  },
+  "advAwswafTokenCopied": {
+    "message": "Токен скопирован"
+  },
+  "advAwswafDetectionIndicators": {
+    "message": "Признаки обнаружения"
+  },
+  "advAwswafStatus405": {
+    "message": "Статус 405"
+  },
+  "advAwswafDetected": {
+    "message": "Обнаружено"
+  },
+  "advAwswafChallengeEndpoint": {
+    "message": "Эндпоинт проверки"
+  },
+  "advAwswafDeletingCookieFmt": {
+    "message": "Удаление куки {0}… Страница будет перезагружена"
+  },
+  "advCloudflareExtractedSiteKey": {
+    "message": "Извлечённый Site Key"
+  },
+  "advCloudflareTypeLabel": {
+    "message": "Тип"
+  },
+  "advCloudflareSiteKeyClickToCopy": {
+    "message": "Site Key (нажмите, чтобы скопировать)"
+  },
+  "advCloudflareSiteKeyCopied": {
+    "message": "Site Key скопирован"
+  },
+  "advCloudflareSitekeyLabel": {
+    "message": "Sitekey:"
+  },
+  "advCloudflareUrlLabel": {
+    "message": "URL:"
+  },
+  "advCloudflareTypeChallenge": {
+    "message": "Проверка"
+  },
+  "advCloudflareTypeAnalytics": {
+    "message": "Аналитика"
+  },
+  "advCloudflareTypeBotManagement": {
+    "message": "Управление ботами"
+  },
+  "advCloudflareCheckingVersion": {
+    "message": "Проверка версии Cloudflare… Страница будет перезагружена"
+  },
+  "advCloudflareSiteKeyExtracted": {
+    "message": "Site Key успешно извлечён"
+  },
+  "advCloudflareNoSitekey": {
+    "message": "Sitekey на странице не найден"
+  },
+  "advCloudflareFailedExtractSitekey": {
+    "message": "Не удалось извлечь sitekey"
+  },
+  "advDatadomeCookieCopied": {
+    "message": "Куки скопированы"
+  },
+  "advFuncaptchaPublicKey": {
+    "message": "Публичный ключ"
+  },
+  "advFuncaptchaUserAgent": {
+    "message": "User-Agent"
+  },
+  "advFuncaptchaBdaLabel": {
+    "message": "BDA (массив данных браузера)"
+  },
+  "advFuncaptchaBlobData": {
+    "message": "Данные blob"
+  },
+  "advFuncaptchaBlobDataNotCaptured": {
+    "message": "Данные blob (не захвачены)"
+  },
+  "advFuncaptchaStatus": {
+    "message": "Статус"
+  },
+  "advFuncaptchaNotCaptured": {
+    "message": "Не захвачено"
+  },
+  "advFuncaptchaReloadToMonitor": {
+    "message": "Перезагрузите страницу, чтобы начать мониторинг, и вызовите проверку FunCaptcha (тайм-аут 60 с)"
+  },
+  "advFuncaptchaPageLoadingMsg": {
+    "message": "Страница загружается, подождите…"
+  },
+  "advFuncaptchaCapturedTitle": {
+    "message": "FunCaptcha успешно захвачен"
+  },
+  "advFuncaptchaCapturedCountFmt": {
+    "message": "Захвачено проверок: {0}"
+  },
+  "advFuncaptchaCaptureTimeout": {
+    "message": "Время захвата истекло"
+  },
+  "advFuncaptchaNoChallenge": {
+    "message": "Проверка FunCaptcha не обнаружена (тайм-аут 60 с)"
+  },
+  "advGeetestSourceInlineScript": {
+    "message": "Встроенный скрипт"
+  },
+  "advGeetestSourceDomAttribute": {
+    "message": "Атрибут DOM"
+  },
+  "advGeetestSourceScriptUrl": {
+    "message": "URL скрипта"
+  },
+  "advGeetestSourceJsonConfig": {
+    "message": "Конфигурация JSON"
+  },
+  "advGeetestSourceLabel": {
+    "message": "Источник:"
+  },
+  "advGeetestExtractedCaptchaId": {
+    "message": "Извлечённый captchaId"
+  },
+  "advGeetestClickToCopyCaptchaId": {
+    "message": "Нажмите, чтобы скопировать captchaId"
+  },
+  "advGeetestProductLabel": {
+    "message": "Продукт:"
+  },
+  "advGeetestScriptSnippet": {
+    "message": "Фрагмент скрипта"
+  },
+  "advGeetestExportParsingCode": {
+    "message": "Экспорт кода разбора"
+  },
+  "advGeetestErrorFmt": {
+    "message": "Ошибка: {0}"
+  },
+  "advGeetestDetectedVersionFmt": {
+    "message": "Обнаружено: Geetest {0}"
+  },
+  "advGeetestNoVersion": {
+    "message": "Версия Geetest не обнаружена"
+  },
+  "advGeetestParsingCodeCopied": {
+    "message": "Код разбора скопирован в буфер обмена!"
+  },
+  "advGeetestTabNotFound": {
+    "message": "Вкладка не найдена"
+  },
+  "advGeetestNoScriptsFound": {
+    "message": "Скрипты Geetest не найдены"
+  },
+  "advGeetestDetectingVersion": {
+    "message": "Определение версии Geetest…"
+  },
+  "advGeetestReloadCheckVersion": {
+    "message": "Перезагрузка страницы для проверки версии"
+  },
+  "advGeetestAnalyzingScripts": {
+    "message": "Анализ скриптов…"
+  },
+  "advGeetestReloadExtractScripts": {
+    "message": "Перезагрузка страницы для извлечения скриптов"
+  },
+  "advPanelToolsNameFmt": {
+    "message": "Инструменты {0}"
+  },
+  "advPanelErrorLoadingTools": {
+    "message": "Ошибка загрузки расширенных инструментов"
+  },
+  "advPanelCheckConsole": {
+    "message": "Подробности смотрите в консоли"
+  },
+  "advPanelSelectDetectionFirst": {
+    "message": "Сначала выберите обнаружение"
+  },
+  "advPanelErrorLoadingCapturesFmt": {
+    "message": "Ошибка загрузки захватов: {0}"
+  },
+  "advPanelCurrentSiteFmt": {
+    "message": "Текущий сайт ({0})"
+  },
+  "advPanelNoResultsText": {
+    "message": "Попробуйте изменить фильтры или поисковый запрос, чтобы найти захваты."
+  },
+  "advPanelNoUrl": {
+    "message": "Нет URL"
+  },
+  "advPanelView": {
+    "message": "Просмотр"
+  },
+  "advPanelBtnOk": {
+    "message": "ОК"
+  },
+  "advPanelConfirmAction": {
+    "message": "Подтвердите действие"
+  },
+  "advPanelBtnConfirm": {
+    "message": "Подтвердить"
+  },
+  "advPanelCopiedToClipboard": {
+    "message": "Скопировано в буфер обмена"
+  },
+  "advPanelToolsLoadedFmt": {
+    "message": "Инструменты {0} загружены"
+  },
+  "advPanelCookiesFoundFmt": {
+    "message": "Найдено cookie: {0}/{1}"
+  },
+  "advPanelScriptsFoundFmt": {
+    "message": "Найдено скриптов: {0}"
+  },
+  "advPanelNoScriptsFmt": {
+    "message": "Скрипты {0} не найдены"
+  },
+  "advPanelVersionDetectedFmt": {
+    "message": "Обнаружена версия {0}: {1}"
+  },
+  "advPanelNoVersionFmt": {
+    "message": "Версия {0} не обнаружена"
+  },
+  "advPanelUnknownError": {
+    "message": "Неизвестная ошибка"
+  },
+  "advPanelFailedStartCaptureFmt": {
+    "message": "Не удалось начать захват: {0}"
+  },
+  "advPanelFailedStopCaptureFmt": {
+    "message": "Не удалось остановить захват: {0}"
+  },
+  "advPanelCaptureCountFmt": {
+    "message": "Захваты: {0}"
+  },
+  "advPanelClearCapturedDataTitle": {
+    "message": "Очистить все захваченные данные"
+  },
+  "advPanelNotAvailable": {
+    "message": "Н/Д"
+  },
+  "advPanelHistoryClearedFmt": {
+    "message": "История захватов {0} очищена"
+  },
+  "advPanelFailedClearHistory": {
+    "message": "Не удалось очистить историю"
+  },
+  "advPanelCapturesPaginationFmt": {
+    "message": "Показано {0}–{1} из {2} захватов"
+  },
+  "rulesUiNewDetectorName": {
+    "message": "Новый детектор"
+  },
+  "rulesUiAddDetectorTitleFmt": {
+    "message": "Добавить: {0}"
+  },
+  "rulesUiEditDetectorTitleFmt": {
+    "message": "Редактирование: {0}"
+  },
+  "rulesUiScrapflyIconAlt": {
+    "message": "Значок Scrapfly"
+  },
+  "rulesUiDetectorIconAltFmt": {
+    "message": "Значок {0}"
+  },
+  "rulesUiChangeIcon": {
+    "message": "Изменить значок"
+  },
+  "rulesUiChangeDetectorIcon": {
+    "message": "Изменить значок детектора"
+  },
+  "rulesUiCustomColor": {
+    "message": "Свой цвет"
+  },
+  "iconPickerTitle": {
+    "message": "Выбор значка"
+  },
+  "iconPickerDefault": {
+    "message": "По умолчанию"
+  },
+  "iconPickerUploadCustom": {
+    "message": "Загрузить свой"
+  },
+  "iconPickerFileTooLarge": {
+    "message": "Файл значка должен быть меньше 100 КБ"
+  },
+  "rulesUiHelpJsHooks": {
+    "message": "Что такое перехватчики JS?"
+  },
+  "rulesUiHelpWindow": {
+    "message": "Что такое свойства окна?"
+  },
+  "rulesUiHelpUrl": {
+    "message": "Что такое обнаружение по URL?"
+  },
+  "rulesUiHelpHeader": {
+    "message": "Что такое обнаружение по заголовкам?"
+  },
+  "rulesUiHelpCookie": {
+    "message": "Что такое обнаружение по файлам cookie?"
+  },
+  "rulesUiHelpContent": {
+    "message": "Что такое обнаружение по содержимому?"
+  },
+  "rulesUiHelpDom": {
+    "message": "Что такое обнаружение по DOM?"
+  },
+  "rulesUiHelpPayload": {
+    "message": "Что такое обнаружение по полезной нагрузке?"
+  },
+  "rulesUiHelpGeneric": {
+    "message": "Что это за метод обнаружения?"
+  },
+  "rulesUiValueOptionalPlaceholder": {
+    "message": "Значение (необязательно)"
+  },
+  "rulesUiDomSelectorPlaceholder": {
+    "message": "CSS-селектор (напр. .class, #id, [attr])"
+  },
+  "rulesUiContentTextPlaceholder": {
+    "message": "Текст или слово для поиска"
+  },
+  "rulesUiUrlPatternPlaceholder": {
+    "message": "Шаблон URL"
+  },
+  "rulesUiJsHookTargetPlaceholder": {
+    "message": "Цель перехватчика JS (напр. navigator.webdriver)"
+  },
+  "rulesUiWindowPathPlaceholder": {
+    "message": "Путь в window (напр. grecaptcha, _cf_chl_opt)"
+  },
+  "rulesUiWindowConditionPlaceholder": {
+    "message": "Условие (напр. typeof object, typeof function)"
+  },
+  "rulesUiCookieNamePlaceholder": {
+    "message": "Имя файла cookie (напр. __cf_bm, session_id)"
+  },
+  "rulesUiCookieValuePlaceholder": {
+    "message": "Шаблон значения cookie (необязательно)"
+  },
+  "rulesUiPayloadTextPlaceholder": {
+    "message": "Текст (напр. sensor_data, challenge_token)"
+  },
+  "rulesUiPayloadUrlPlaceholder": {
+    "message": "/api/verify или challenge.php"
+  },
+  "rulesUiNameSettings": {
+    "message": "Настройки имени"
+  },
+  "rulesUiNameSettingsConfidenceFmt": {
+    "message": "Настройки имени (достоверность: {0}%)"
+  },
+  "rulesUiValueSettings": {
+    "message": "Настройки значения"
+  },
+  "rulesUiDeleteMethod": {
+    "message": "Удалить шаблон"
+  },
+  "rulesUiClearValue": {
+    "message": "Очистить значение"
+  },
+  "rulesUiAddValue": {
+    "message": "Добавить значение"
+  },
+  "rulesUiPageOfFmt": {
+    "message": "Страница {0} / {1}"
+  },
+  "rulesUiCompleteEmptyPattern": {
+    "message": "Заполните пустой шаблон, прежде чем добавлять новый."
+  },
+  "rulesUiFillRequiredPatterns": {
+    "message": "Перед сохранением заполните все обязательные поля шаблонов."
+  },
+  "rulesUiEnterMethodTypePrompt": {
+    "message": "Введите тип метода обнаружения (напр. HEADERS, CONTENT, URLs):"
+  },
+  "rulesUiMethodFallback": {
+    "message": "Метод"
+  },
+  "rulesUiUrlScopeHint": {
+    "message": "Страница = текущий URL | Скрипты = страница + скрипты | Все = все запросы"
+  },
+  "rulesUiLeaveEmptyAnyUrl": {
+    "message": "Оставьте пустым, чтобы подходил любой URL"
+  },
+  "ruleExampleMatches": {
+    "message": "✓ Совпадает:"
+  },
+  "ruleExampleWont": {
+    "message": "× Нет:"
+  },
+  "ruleExampleWontMatch": {
+    "message": "× Не совпадает:"
+  },
+  "ruleExampleLiteralTextOnly": {
+    "message": "только буквальный текст"
+  },
+  "ruleExampleExactCase": {
+    "message": "(точный регистр)"
+  },
+  "ruleExampleAlone": {
+    "message": "(отдельно)"
+  },
+  "ruleConditionGroupOther": {
+    "message": "Другие"
+  },
+  "clipboardUrlFmt": {
+    "message": "URL: {0}"
+  },
+  "clipboardHostFmt": {
+    "message": "Хост: {0}"
+  },
+  "clipboardTitleFmt": {
+    "message": "Заголовок: {0}"
+  },
+  "clipboardTimestampFmt": {
+    "message": "Время: {0}"
+  },
+  "clipboardSecuritySystemFmt": {
+    "message": "Система защиты: {0}"
+  },
+  "clipboardCategoryFmt": {
+    "message": "Категория: {0}"
+  },
+  "clipboardConfidenceFmt": {
+    "message": "Уверенность: {0}%"
+  },
+  "clipboardDetectionMethodsFmt": {
+    "message": "Методы обнаружения: {0}"
+  },
+  "clipboardDetectionMethodsHeading": {
+    "message": "Методы обнаружения:"
+  },
+  "clipboardDetectionsCountFmt": {
+    "message": "Обнаружения: {0}"
+  },
+  "clipboardDetectionsListFmt": {
+    "message": "Обнаружения ({0}):"
+  },
+  "clipboardDifficultyFmt": {
+    "message": "Сложность: {0}"
+  },
+  "clipboardCacheScopeFmt": {
+    "message": "Область кэша: {0}"
+  },
+  "clipboardCacheExpirationFmt": {
+    "message": "Срок действия кэша: {0}"
+  },
+  "clipboardMethodsFmt": {
+    "message": "Методы: {0}"
+  },
+  "clipboardCopyFailed": {
+    "message": "Не удалось скопировать в буфер обмена"
+  },
+  "detectionUiCopyUrl": {
+    "message": "Копировать URL"
+  },
+  "detectionUiCopyUrlFmt": {
+    "message": "Копировать URL: {0}"
+  },
+  "detectionUiCopyCategory": {
+    "message": "Копировать категорию"
+  },
+  "detectionUiCopyCategoryFmt": {
+    "message": "Копировать категорию: {0}"
+  },
+  "detectionUiCopyMethod": {
+    "message": "Копировать метод"
+  },
+  "detectionUiCopyMethodFmt": {
+    "message": "Копировать метод: {0}"
+  },
+  "detectionUiCopyValue": {
+    "message": "Копировать значение"
+  },
+  "detectionUiCopyValueFmt": {
+    "message": "Копировать значение: {0}"
+  },
+  "detectionUiDurYearsFmt": {
+    "message": "{0} г."
+  },
+  "detectionUiDurMonthsFmt": {
+    "message": "{0} мес."
+  },
+  "detectionUiDurDaysFmt": {
+    "message": "{0} д."
+  },
+  "detectionUiDurHoursFmt": {
+    "message": "{0} ч"
+  },
+  "detectionUiDurMinutesFmt": {
+    "message": "{0} мин"
+  },
+  "detectionUiDurPairFmt": {
+    "message": "{0} {1}"
+  },
+  "detectionUiDurUnderMinute": {
+    "message": "<1 мин"
+  },
+  "detectionUiNoDescription": {
+    "message": "Дополнительные сведения для этого обнаружения отсутствуют."
+  },
+  "detectionUiNoMethodsRecorded": {
+    "message": "Для этого детектора не записано методов обнаружения."
+  },
+  "detectionUiUnknownMethod": {
+    "message": "Неизвестный метод"
+  },
+  "detectionUiUnknownValue": {
+    "message": "неизвестно"
+  },
+  "historyUiUntitled": {
+    "message": "Без названия"
+  },
+  "historyUiNoDetectionMethods": {
+    "message": "Нет методов обнаружения"
+  },
+  "historyUiInvalidFileFormat": {
+    "message": "Неверный формат файла истории"
+  },
+  "popupUiLogoAlt": {
+    "message": "Робот Scrapfly"
+  },
+  "popupUiEnableFailedFmt": {
+    "message": "Не удалось включить расширение: {0}"
+  },
+  "popupUiDisableFailedFmt": {
+    "message": "Не удалось отключить расширение: {0}"
+  },
+  "popupUiNativeErrorFmt": {
+    "message": "Ошибка: {0}"
+  },
+  "settingsUiBlacklistEmpty": {
+    "message": "В чёрном списке нет доменов"
+  },
+  "settingsUiBlacklistNoMatches": {
+    "message": "Нет доменов, соответствующих запросу"
+  },
+  "settingsUiChecking": {
+    "message": "Проверка..."
+  },
+  "settingsUiErrHistoryLimit": {
+    "message": "Лимит истории должен быть от 0 (без ограничений) до 10000"
+  },
+  "settingsUiErrCacheDurationFmt": {
+    "message": "Длительность кэша должна быть от 1 до {0} ({1})"
+  },
+  "settingsUiErrAutoDeleteDays": {
+    "message": "Срок автоудаления должен быть от 1 до 3650 дней"
+  },
+  "settingsUiErrDuplicateDuration": {
+    "message": "Период дубликатов должен быть от 1 до 999"
+  },
+  "settingsUiExportJson": {
+    "message": "Экспорт в JSON"
+  },
+  "settingsUiExportText": {
+    "message": "Экспорт в текст"
+  },
+  "settingsUiLogsText": {
+    "message": "Текст"
+  },
+  "settingsUiIncompatibleCountFmt": {
+    "message": "Обновления детекторов, требующие более новой версии расширения: {0}"
+  },
+  "settingsUiNeedsExtVersionFmt": {
+    "message": "v{0} (нужно расш. v{1})"
+  },
+  "statsUiTotals": {
+    "message": "Итоги"
+  },
+  "ruleSectionCombinations": {
+    "message": "Комбинации"
+  },
+  "combinationsHint": {
+    "message": "Выберите шаблоны и сколько из них должны совпадать."
+  },
+  "combinationsEmpty": {
+    "message": "Комбинаций пока нет."
+  },
+  "combinationAdd": {
+    "message": "Добавить комбинацию"
+  },
+  "combinationDefaultNameFmt": {
+    "message": "Комбинация {0}"
+  },
+  "combinationConfidence": {
+    "message": "Уверенность при совпадении"
+  },
+  "combinationConfidenceFromPatterns": {
+    "message": "Оставьте пустым, чтобы взять уверенность совпавших шаблонов"
+  },
+  "combinationDelete": {
+    "message": "Удалить комбинацию"
+  },
+  "combinationDeleteConfirmFmt": {
+    "message": "Удалить комбинацию «{0}»? Её шаблоны останутся в правиле."
+  },
+  "combinationNotTitle": {
+    "message": "НЕ должно совпадать"
+  },
+  "combinationNot": {
+    "message": "НЕ"
+  },
+  "combinationRemove": {
+    "message": "Убрать"
+  },
+  "combinationEmptyPattern": {
+    "message": "(пустой шаблон)"
+  },
+  "combinationAnyOfMethodFmt": {
+    "message": "Любой шаблон: {0}"
+  },
+  "combinationGroupEmpty": {
+    "message": "Добавьте шаблон ниже"
+  },
+  "combinationAddPattern": {
+    "message": "Добавить шаблон"
+  },
+  "combinationAnyPattern": {
+    "message": "любой шаблон"
+  },
+  "combinationPreviewAnd": {
+    "message": "И"
+  },
+  "combinationPreviewOr": {
+    "message": "ИЛИ"
+  },
+  "combinationPreviewNot": {
+    "message": "НЕ"
+  },
+  "combinationPreviewEmpty": {
+    "message": "Добавьте шаблоны, чтобы собрать комбинацию"
+  },
+  "combinationInvalid": {
+    "message": "Выберите шаблоны, которые должны совпадать, и проверьте минимальное число совпадений."
+  },
+  "combinationStrict": {
+    "message": "Строго"
+  },
+  "combinationStrictTitle": {
+    "message": "Строго: этот шаблон не срабатывает сам по себе, только внутри комбинаций"
+  },
+  "patternCombinationsOnlyBadge": {
+    "message": "Только комбинации"
+  },
+  "detectionModalCombinations": {
+    "message": "Совпавшие комбинации"
+  },
+  "combinationNoPatterns": {
+    "message": "Шаблоны не добавлены"
+  },
+  "combinationJoinTitle": {
+    "message": "Переключить И / ИЛИ"
+  },
+  "combinationPickHint": {
+    "message": "Отметьте шаблоны для добавления"
+  },
+  "combinationAddSelectedFmt": {
+    "message": "Добавить выбранные: {0}"
+  },
+  "combinationEditConditions": {
+    "message": "Изменить условия"
+  },
+  "combinationRequireTogether": {
+    "message": "Использовать шаблоны только в комбинациях"
+  },
+  "combinationRequireHint": {
+    "message": "Применяется к этим шаблонам во всём правиле."
+  },
+  "combinationAutoConfidence": {
+    "message": "Авто"
+  },
+  "combinationMatchAll": {
+    "message": "Все условия совпадают"
+  },
+  "combinationMatchAny": {
+    "message": "Любое условие совпадает"
+  },
+  "combinationMatchAtLeast": {
+    "message": "Совпадает не менее…"
+  },
+  "combinationDetectWhen": {
+    "message": "Обнаруживать, когда"
+  },
+  "combinationGroupExcluded": {
+    "message": "Эти условия не должны совпадать."
+  },
+  "combinationMinimum": {
+    "message": "Минимум совпадений"
+  },
+  "combinationMatchState": {
+    "message": "Условие шаблона"
+  },
+  "combinationMatches": {
+    "message": "Совпадает"
+  },
+  "combinationDoesNotMatch": {
+    "message": "Не совпадает"
+  },
+  "combinationAtLeastSummaryFmt": {
+    "message": "Совпадает не менее {0} условий"
+  },
+  "combinationChoosePatterns": {
+    "message": "Выбрать шаблоны"
+  },
+  "combinationSummaryAll": {
+    "message": "Обнаруживать, когда совпадают все необходимые условия."
+  },
+  "combinationSummaryAny": {
+    "message": "Обнаруживать, когда совпадает хотя бы одно условие."
+  },
+  "combinationSummaryMinimumFmt": {
+    "message": "Обнаруживать, когда совпадает не менее {0} из {1} условий."
+  },
+  "combinationSummaryExcluded": {
+    "message": "Исключённые шаблоны не должны совпадать."
+  },
+  "combinationDecreaseMinimum": {
+    "message": "Уменьшить минимум совпадений"
+  },
+  "combinationIncreaseMinimum": {
+    "message": "Увеличить минимум совпадений"
+  },
+  "detectionTipDetections": {
+    "message": "Количество защит, обнаруженных на этой странице."
+  },
+  "detectionTipConfidence": {
+    "message": "Средняя уверенность в обнаруженных защитах."
+  },
+  "detectionTipDifficulty": {
+    "message": "Оценка сложности обхода обнаруженных защит."
+  },
+  "detectionTipCacheScope": {
+    "message": "Какие страницы могут использовать эти сохранённые результаты обнаружения."
+  },
+  "detectionTipCacheExpiration": {
+    "message": "Время до истечения срока хранения этих результатов обнаружения в кэше."
+  },
+  "tipCachedAt": {
+    "message": "Сохранено"
+  },
+  "tipConfidenceAverageFmt": {
+    "message": "Среднее по {0} обнаружениям, от {1}% до {2}%"
+  },
+  "tipConfidenceFromCombinations": {
+    "message": "По совпавшим комбинациям"
+  },
+  "tipConfidenceFromSignals": {
+    "message": "Оценку задаёт самый сильный отдельный сигнал"
+  },
+  "tipCountShareFmt": {
+    "message": "{0} · {1}%"
+  },
+  "tipCustomDetector": {
+    "message": "Пользовательский детектор"
+  },
+  "tipDifficultyFromCategoryFmt": {
+    "message": "По умолчанию для категории {0}"
+  },
+  "tipDifficultyFromRule": {
+    "message": "Задана этим детектором"
+  },
+  "tipDifficultyHardestFmt": {
+    "message": "Задаётся защитой {0}"
+  },
+  "tipDifficultyManyFmt": {
+    "message": "Повышена из-за {0} защит вместе"
+  },
+  "tipLastUpdated": {
+    "message": "Обновлено"
+  },
+  "tipMethodContent": {
+    "message": "Совпал текст страницы или её скриптов."
+  },
+  "tipMethodCookie": {
+    "message": "Совпал cookie этого сайта."
+  },
+  "tipMethodDom": {
+    "message": "Совпал элемент страницы."
+  },
+  "tipMethodHeader": {
+    "message": "Совпал заголовок ответа, отправленный сайтом."
+  },
+  "tipMethodJsHooks": {
+    "message": "Страница вызвала API браузера, за которым следит этот детектор."
+  },
+  "tipMethodPayload": {
+    "message": "Совпали данные, которые страница отправила в запросе."
+  },
+  "tipMethodUrl": {
+    "message": "Страница или её запрос совпали с известным адресом."
+  },
+  "tipMethodWindow": {
+    "message": "Совпал глобальный объект JavaScript на странице."
+  },
+  "tipMoreFmt": {
+    "message": "Ещё {0}"
+  },
+  "tipOfficialDetector": {
+    "message": "Официальный детектор Scrapfly"
+  },
+  "tipScopeDomain": {
+    "message": "Результаты используются для всех страниц этого домена."
+  },
+  "tipScopeFullUrl": {
+    "message": "Результаты используются только для этого URL вместе с запросом."
+  },
+  "tipScopePath": {
+    "message": "Результаты используются для этого пути при любом запросе."
+  },
+  "tipStatsActiveDays": {
+    "message": "Дни, когда сохранена хотя бы одна страница."
+  },
+  "tipStatsDetections": {
+    "message": "Защиты, найденные на всех сохранённых страницах, с повторами."
+  },
+  "tipStatsDetectors": {
+    "message": "Разные встреченные защиты, каждая учитывается один раз."
+  },
+  "tipStatsDomains": {
+    "message": "Разные сайты среди сохранённых страниц."
+  },
+  "tipStatsEntries": {
+    "message": "Страницы, сохранённые в истории за этот период."
+  },
+  "tipStatsRateFmt": {
+    "message": "{0} из {1} записей"
+  },
+  "tipPatterns": {
+    "message": "Шаблоны"
+  },
+  "settingsRowVerboseLogs": {
+    "message": "Подробные логи"
+  },
+  "settingsRowVerboseLogsTip": {
+    "message": "Записывать также каждое правило, хук и сообщение, а не только отчёт по странице"
   }
 }

@@ -31,7 +31,8 @@
         "detect-funcaptcha",
         "detect-aliexpress",
         "detect-friendlycaptcha",
-        "detect-captchaeu"
+        "detect-captchaeu",
+        "detect-turnstile"
     ]
 },
 "fingerprint": {

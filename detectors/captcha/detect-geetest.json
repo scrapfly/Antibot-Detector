@@ -5,93 +5,135 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "High",
-  "lastUpdated": "2024-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-04",
+  "version": "1.2.0",
   "website": "https://www.geetest.com/",
   "icon": "geetest_official.png",
   "description": "AI-powered behavioral CAPTCHA with slide verification",
   "detection": {
-    "cookie": [
-      
-    ],
-    "header": [
-     
-    ],
+    "cookie": [],
+    "header": [],
     "url": [
       {
-        "confidence": 100,
-        "description": "GeeTest API endpoint",
-        "text": "api.geetest.com",
-        "textRegex": false,
+        "id": "geetest-v3-resource",
+        "confidence": 60,
+        "standalone": true,
+        "description": "GeeTest v3 loader or challenge library (fullpage, slide, click, beeline, voice) on an official static host",
+        "text": "^https?://static\\.(?:geetest|geevisit)\\.com/static/(?:js/(?:gt|fullpage|slide|click|geetest|beeline|voice)(?:\\.[A-Za-z0-9._-]+)?|tools/gt)\\.js(?:[?#]|$)",
+        "textRegex": true,
         "textWholeWord": false,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "confidence": 100,
-        "description": "GeeTest static resources",
-        "text": "static.geetest.com",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
-      },
-      {
-        "confidence": 100,
-        "description": "GeeTest type endpoint",
-        "text": "/gettype.php",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
-      },
-      {
+        "id": "geetest-v3-api",
         "confidence": 50,
-        "description": "GeeTest challenge endpoint",
-        "text": "/get.php",
-        "textRegex": false,
+        "standalone": true,
+        "description": "GeeTest v3 API routes bounded to the documented API host",
+        "text": "^https?://api\\.geetest\\.com/(?:gettype|get|ajax)\\.php(?:[?#]|$)",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "geetest-v4-resource",
+        "confidence": 60,
+        "standalone": true,
+        "description": "GeeTest v4 loader or challenge library on an official static host",
+        "text": "^https?://static\\.(?:geetest|geevisit)\\.com/v4/(?:gt4\\.js|static/[A-Za-z0-9._-]+/js/gcaptcha4\\.js)(?:[?#]|$)",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "geetest-v4-api",
+        "confidence": 50,
+        "standalone": true,
+        "description": "GeeTest v4 challenge API on loader-defined official hosts",
+        "text": "^https?://gcaptcha4\\.(?:geetest\\.com|geevisit\\.com|gsensebot\\.com)/(?:load|verify)(?:[?#]|$)",
+        "textRegex": true,
         "textWholeWord": false,
         "textCaseSensitive": false,
         "textScope": "all"
       }
-      
     ],
     "content": [
       {
-        "confidence": 50,
-        "description": "GeeTest initialization function",
-        "text": "window.initGeetest",
+        "id": "geetest-v3-init-reference",
+        "confidence": 10,
+        "standalone": true,
+        "description": "Script reference to the documented v3 initializer, not execution",
+        "text": "initGeetest",
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "textScope": "scripts",
+        "scope": "scripts",
+        "checkScripts": true
       },
       {
-        "confidence": 50,
-        "text": "geetest",
+        "id": "geetest-v4-init-reference",
+        "confidence": 10,
+        "standalone": true,
+        "description": "Script reference to the documented v4 initializer, not execution",
+        "text": "initGeetest4",
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "text": "getGeetest",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "text": "geetestUtils",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "textScope": "scripts",
+        "scope": "scripts",
+        "checkScripts": true
       }
     ],
     "dom": [
-     
+      {
+        "id": "geetest-v3-widget",
+        "selector": ".geetest_holder.geetest_wind",
+        "confidence": 45,
+        "standalone": true,
+        "description": "Native v3 widget shell, including fallback mode; presence only",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": true
+      },
+      {
+        "id": "geetest-v4-widget",
+        "selector": ".geetest_box, .geetest_captcha",
+        "confidence": 45,
+        "standalone": true,
+        "description": "Vendor v4 challenge or captcha shell; presence does not imply visibility",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": true
+      }
     ],
     "window": [
-
+      {
+        "id": "geetest-v3-init-runtime",
+        "path": "initGeetest",
+        "condition": "typeof function",
+        "confidence": 40,
+        "standalone": true,
+        "description": "Documented v3 initializer function is present, not necessarily called"
+      },
+      {
+        "id": "geetest-v4-init-runtime",
+        "path": "initGeetest4",
+        "condition": "typeof function",
+        "confidence": 40,
+        "standalone": true,
+        "description": "Documented v4 initializer function is present, not necessarily called"
+      }
     ]
-  }
+  },
+  "combinations": [
+    { "id": "geetest-v3-loaded-api", "name": "v3 library and initializer present", "confidence": 70, "when": { "all": [{ "pattern": "geetest-v3-resource" }, { "pattern": "geetest-v3-init-runtime" }] } },
+    { "id": "geetest-v3-widget-resource", "name": "v3 library and native widget markup", "confidence": 85, "when": { "all": [{ "pattern": "geetest-v3-resource" }, { "pattern": "geetest-v3-widget" }] } },
+    { "id": "geetest-v3-integrated", "name": "v3 library, widget and initializer present", "confidence": 95, "when": { "all": [{ "pattern": "geetest-v3-resource" }, { "pattern": "geetest-v3-widget" }, { "pattern": "geetest-v3-init-runtime" }] } },
+    { "id": "geetest-v4-loaded-api", "name": "v4 library and initializer present", "confidence": 70, "when": { "all": [{ "pattern": "geetest-v4-resource" }, { "pattern": "geetest-v4-init-runtime" }] } },
+    { "id": "geetest-v4-widget-resource", "name": "v4 library and native widget markup", "confidence": 85, "when": { "all": [{ "pattern": "geetest-v4-resource" }, { "pattern": "geetest-v4-widget" }] } },
+    { "id": "geetest-v4-integrated", "name": "v4 library, widget and initializer present", "confidence": 95, "when": { "all": [{ "pattern": "geetest-v4-resource" }, { "pattern": "geetest-v4-widget" }, { "pattern": "geetest-v4-init-runtime" }] } }
+  ]
 }

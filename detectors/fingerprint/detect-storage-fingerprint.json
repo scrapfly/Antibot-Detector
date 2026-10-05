@@ -5,72 +5,133 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2025-01-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API",
   "icon": "storage_fingerprint.png",
-  "description": "Web Storage API (localStorage/sessionStorage) detection for persistent fingerprinting",
+  "description": "Web Storage read, write and key enumeration signals. Routine application storage is common, so evidence strengths remain low and do not establish identifier persistence or fingerprinting intent.",
   "detection": {
     "js_hooks": [
       {
-        "description": "Stores data in localStorage/sessionStorage",
+        "id": "js_hooks-1",
+        "description": "Calls a Web Storage write; storage area, key, value and success are unknown",
         "enabled": true,
-        "confidence": 80,
+        "standalone": true,
+        "confidence": 10,
         "target": "Storage.prototype.setItem"
       },
       {
-        "description": "Retrieves stored data",
+        "id": "js_hooks-2",
+        "description": "Calls a Web Storage read; storage area, returned value and purpose are unknown",
         "enabled": true,
-        "confidence": 80,
+        "standalone": true,
+        "confidence": 10,
         "target": "Storage.prototype.getItem"
       },
       {
-        "description": "Clears all stored data",
+        "id": "js_hooks-3",
+        "description": "Requests storage clearing; does not establish a capability probe or identifier reset",
         "enabled": true,
-        "confidence": 80,
+        "standalone": true,
+        "confidence": 5,
         "target": "Storage.prototype.clear"
-      }
-    ],
-    "window": [
-      {
-        "path": "localStorage",
-        "description": "Persistent local storage",
-        "condition": "typeof object"
       },
       {
-        "path": "sessionStorage",
-        "description": "Session storage",
-        "condition": "typeof object"
+        "id": "hook-storage-key",
+        "description": "Requests a storage key by index; count, returned key and enumeration intent are unknown",
+        "enabled": true,
+        "standalone": true,
+        "confidence": 10,
+        "target": "Storage.prototype.key"
       }
     ],
     "content": [
       {
+        "id": "content-1",
         "text": "localStorage.setItem",
         "scope": "scripts",
-        "description": "Local storage usage for fingerprinting",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to localStorage.setItem; execution and purpose unconfirmed",
+        "confidence": 5,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true
       },
       {
+        "id": "content-2",
         "text": "sessionStorage",
         "scope": "scripts",
-        "description": "Session storage access",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to sessionStorage; execution and purpose unconfirmed",
+        "confidence": 5,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true
       },
       {
+        "id": "content-3",
         "text": "Storage.prototype",
         "scope": "scripts",
-        "description": "Storage API usage",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to Storage.prototype; execution and purpose unconfirmed",
+        "confidence": 5,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true
+      },
+      {
+        "id": "content-local-storage-read",
+        "text": "localStorage.getItem",
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to localStorage.getItem; execution and purpose unconfirmed",
+        "confidence": 5,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true
+      },
+      {
+        "id": "content-local-storage-key",
+        "text": "localStorage.key",
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to localStorage.key; execution and purpose unconfirmed",
+        "confidence": 5,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "storage-source-read-write",
+      "name": "Storage read and write references",
+      "confidence": 10,
+      "when": { "all": [{ "pattern": "content-1" }, { "pattern": "content-local-storage-read" }] }
+    },
+    {
+      "id": "storage-read-write",
+      "name": "Storage read and write calls",
+      "confidence": 15,
+      "when": { "all": [{ "pattern": "js_hooks-1" }, { "pattern": "js_hooks-2" }] }
+    },
+    {
+      "id": "storage-key-read",
+      "name": "Storage key lookup and read calls",
+      "confidence": 20,
+      "when": { "all": [{ "pattern": "hook-storage-key" }, { "pattern": "js_hooks-2" }] }
+    },
+    {
+      "id": "storage-key-read-write",
+      "name": "Storage key lookup with reads and writes",
+      "confidence": 25,
+      "when": { "all": [{ "pattern": "hook-storage-key" }, { "pattern": "js_hooks-1" }, { "pattern": "js_hooks-2" }] }
+    }
+  ]
 }

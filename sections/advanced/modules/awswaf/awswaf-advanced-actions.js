@@ -25,7 +25,7 @@ AwsWafAdvanced.prototype.checkCookies = async function() {
             this.displayCookiesModal(awsWafToken);
         } catch (error) {
             Logger.error('NETWORK', '[AwsWaf] Failed to check cookies:', error);
-            NotificationHelper.error('Failed to check cookies: ' + error.message);
+            NotificationHelper.error(this._txt('advCommonFailedCheckCookiesFmt', 'Failed to check cookies: {0}', error.message));
         }
     };
 
@@ -63,10 +63,11 @@ AwsWafAdvanced.prototype.analyzeScripts = async function() {
 
             if (response && response.status === 'started') {
                 // Show notification about cookie deletion and reload
-                NotificationHelper.info('Deleting aws-waf-token cookie... Page will reload');
+                NotificationHelper.info(this._txt('advAwswafDeletingCookieFmt', 'Deleting {0} cookie... Page will reload', 'aws-waf-token'));
 
                 // Delete aws-waf-token cookie before reload to trigger challenge/captcha scripts (like Akamai)
-                setTimeout(async () => {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                {
                     try {
                         // Get all aws-waf-token cookies for this URL
                         const cookies = await chrome.cookies.getAll({
@@ -100,14 +101,14 @@ AwsWafAdvanced.prototype.analyzeScripts = async function() {
                     // Reload page to trigger challenge.js or captcha.js
                     // Background's webNavigation listener will capture scripts after reload
                     await chrome.tabs.reload(this.tabInfo.id);
-                }, 500);
+                }
             } else {
                 chrome.runtime.onMessage.removeListener(analysisListener);
-                NotificationHelper.error('Failed to start analysis');
+                NotificationHelper.error(this._txt('advCommonFailedStartAnalysis', 'Failed to start analysis'));
             }
         } catch (error) {
             Logger.error('NETWORK', '[AwsWaf] Failed to analyze scripts:', error);
-            NotificationHelper.error('Failed to analyze scripts: ' + error.message);
+            NotificationHelper.error(this._txt('advCommonFailedAnalyzeScriptsFmt', 'Failed to analyze scripts: {0}', error.message));
         }
     };
 

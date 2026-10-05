@@ -5,37 +5,166 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2025-01-29",
-  "version": "1.0",
+  "lastUpdated": "2026-10-05",
+  "version": "2.0.0",
   "website": "https://www.kasada.io/",
   "icon": "custom.png",
   "description": "Advanced bot detection and mitigation platform using behavioral analysis and threat intelligence",
   "detection": {
-    "cookie": [],
-    "header": [],
+    "header": [
+      {
+        "id": "kpsdk-ct-header",
+        "name": "^x-kpsdk-ct$",
+        "nameRegex": true,
+        "confidence": 80,
+        "description": "Kasada client token header on protected responses",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "kpsdk-aux-header",
+        "name": "^x-kpsdk-(?:r|cd|st|im|v|h)$",
+        "nameRegex": true,
+        "confidence": 40,
+        "standalone": false,
+        "description": "Other Kasada response headers",
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
     "url": [
       {
-        "confidence": 95,
-        "description": "Kasada IPS script",
-        "text": "ips.js",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "ips-script",
+        "confidence": 80,
+        "description": "Kasada client script on its double-UUID first-party path (ips.js or p.js)",
+        "text": "^https?://[^/?#]+/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/(?:ips|p)\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "kpsdk-query",
+        "confidence": 40,
+        "standalone": false,
+        "description": "Kasada interstitial query parameters (KP_UIDz, x-kpsdk-im)",
+        "text": "^https?://[^/?#]+/(?:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[a-z]{1,8}(?:\\.js)?)?\\?(?:[^#]*&)?(?:x-kpsdk-im|KP_UIDz)=",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "tl-endpoint",
+        "confidence": 75,
+        "description": "Kasada telemetry or fingerprint endpoint on the double-UUID path",
+        "text": "^https?://[^/?#]+/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/(?:tl|fp|mfc)(?:[?#]|$)",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       }
     ],
     "content": [
       {
-        "text": "kasada",
-        "confidence": 50,
-        "description": "Kasada namespace reference",
-        "checkScripts": false,
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "id": "kpsdk-reference",
+        "confidence": 10,
+        "description": "KPSDK API call in page scripts",
+        "text": "KPSDK\\.(?:configure|start|now)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      },
+      {
+        "id": "kpsdk-load-event",
+        "confidence": 10,
+        "description": "Kasada load event name",
+        "text": "kpsdk-load",
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
       }
     ],
-    "dom": [],
-    "window": []
-  }
+    "window": [
+      {
+        "id": "kpsdk-object",
+        "path": "KPSDK",
+        "condition": "typeof object",
+        "confidence": 75,
+        "description": "Kasada KPSDK object"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "kasada-script-runtime",
+      "name": "Client script with KPSDK running",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "ips-script"
+          },
+          {
+            "any": [
+              {
+                "pattern": "kpsdk-object"
+              },
+              {
+                "pattern": "kpsdk-reference"
+              },
+              {
+                "pattern": "kpsdk-load-event"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "kasada-protected-response",
+      "name": "Kasada token headers with its script or interstitial",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "kpsdk-ct-header"
+              },
+              {
+                "pattern": "kpsdk-aux-header"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "ips-script"
+              },
+              {
+                "pattern": "kpsdk-query"
+              },
+              {
+                "pattern": "tl-endpoint"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "kasada-interstitial",
+      "name": "Interstitial script with KPSDK query",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "pattern": "ips-script"
+          },
+          {
+            "pattern": "kpsdk-query"
+          }
+        ]
+      }
+    }
+  ]
 }

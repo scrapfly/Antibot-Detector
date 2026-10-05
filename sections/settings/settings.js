@@ -35,12 +35,6 @@ class Settings {
   validateSettings(...args) {
     return SettingsUI.validateSettings.apply(this, args);
   }
-  async resetToDefaults(...args) {
-    return await SettingsUI.resetToDefaults.apply(this, args);
-  }
-  async clearAllData(...args) {
-    return await SettingsUI.clearAllData.apply(this, args);
-  }
   setupEventListeners(...args) {
     return SettingsUI.setupEventListeners.apply(this, args);
   }
@@ -94,12 +88,12 @@ class Settings {
    * Initialize settings section
    */
   async initialize() {
-    Logger.ui('Settings section initializing...');
+    Logger.debug('UI', 'Settings section initializing...');
     await this.loadDefaults();
     await this.loadHTML();
     this.setupEventListeners();
     await this.loadSettings();
-    Logger.ui('Settings section initialized');
+    Logger.debug('UI', 'Settings section initialized');
   }
 
   /**
@@ -107,15 +101,15 @@ class Settings {
    */
   async loadHTML() {
     try {
-      Logger.ui('Loading settings HTML from:', chrome.runtime.getURL('sections/settings/settings.html'));
+      Logger.debug('UI', 'Loading settings HTML from:', chrome.runtime.getURL('sections/settings/settings.html'));
       const response = await fetch(chrome.runtime.getURL('sections/settings/settings.html'));
       const html = await response.text();
-      Logger.ui('Settings HTML fetched, length:', html.length);
+      Logger.debug('UI', 'Settings HTML fetched, length:', html.length);
 
       const settingsModal = document.querySelector('#settingsModal');
       if (settingsModal) {
         settingsModal.innerHTML = html;
-        Logger.ui('Settings HTML inserted into modal');
+        Logger.debug('UI', 'Settings HTML inserted into modal');
 
         if (typeof I18n !== 'undefined') {
           I18n.apply(settingsModal);
@@ -130,7 +124,7 @@ class Settings {
         // Verify critical elements exist
         const saveBtn = document.querySelector('#saveSettingsBtn');
         const cancelBtn = document.querySelector('#cancelSettingsBtn');
-        Logger.ui('Save button found:', !!saveBtn, 'Cancel button found:', !!cancelBtn);
+        Logger.debug('UI', 'Save button found:', !!saveBtn, 'Cancel button found:', !!cancelBtn);
       } else {
         Logger.error('UI', 'Settings modal container #settingsModal not found in DOM');
       }
@@ -156,23 +150,20 @@ class Settings {
   static async handleEnableToggle(...args) {
     return await SettingsRuntime.handleEnableToggle.apply(this, args);
   }
-  static async handleSettingsUpdated(...args) {
-    return await SettingsRuntime.handleSettingsUpdated.apply(this, args);
-  }
-  static async sendWebhookIfEnabled(...args) {
-    return await SettingsRuntime.sendWebhookIfEnabled.apply(this, args);
-  }
-  static async dispatchJsApiEvent(...args) {
-    return await SettingsRuntime.dispatchJsApiEvent.apply(this, args);
-  }
-  static async dispatchReadyEvent(...args) {
-    return await SettingsRuntime.dispatchReadyEvent.apply(this, args);
-  }
   setupWebhookMethodRadios(...args) {
     return SettingsUI.setupWebhookMethodRadios.apply(this, args);
   }
   async handleTestWebhook(...args) {
     return await SettingsUI.handleTestWebhook.apply(this, args);
+  }
+  setupWebhookContentType(...args) {
+    return SettingsUI.setupWebhookContentType.apply(this, args);
+  }
+  refreshWebhookContentTypeUI(...args) {
+    return SettingsUI.refreshWebhookContentTypeUI.apply(this, args);
+  }
+  getWebhookContentTypeValue(...args) {
+    return SettingsUI.getWebhookContentTypeValue.apply(this, args);
   }
   async updateIncompatibleUpdatesDisplay(...args) {
     return await SettingsUI.updateIncompatibleUpdatesDisplay.apply(this, args);

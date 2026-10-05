@@ -1,0 +1,113 @@
+{
+  "id": "detect-turnstile",
+  "name": "Cloudflare Turnstile",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "difficulty": "High",
+  "lastUpdated": "2026-10-04",
+  "version": "1.0.0",
+  "website": "https://www.cloudflare.com/products/turnstile/",
+  "icon": "cloudflare_official.png",
+  "description": "Cloudflare's CAPTCHA alternative, embedded as a widget on any site, Cloudflare-proxied or not",
+  "detection": {
+    "url": [
+      {
+        "id": "turnstile-api-resource",
+        "confidence": 60,
+        "description": "Official Turnstile JavaScript API resource on Cloudflare's challenge hosts",
+        "text": "^https://challenges\\.(?:cloudflare\\.com|cloudflare-cn\\.com|fed\\.cloudflare\\.com)/turnstile/v0/(?:b/[a-f0-9]+/)?api\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": true,
+        "textScope": "all",
+        "standalone": true
+      },
+      {
+        "id": "turnstile-widget-frame-url",
+        "confidence": 60,
+        "description": "Turnstile widget frame request on a Cloudflare challenge host",
+        "text": "^https://challenges\\.(?:cloudflare\\.com|cloudflare-cn\\.com|fed\\.cloudflare\\.com)/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?turnstile/(?:if|f)/",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": true,
+        "textScope": "all",
+        "standalone": true
+      }
+    ],
+    "content": [
+      {
+        "id": "turnstile-script-reference",
+        "confidence": 10,
+        "description": "Script reference to the turnstile namespace; integration and execution unconfirmed",
+        "text": "turnstile",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
+      }
+    ],
+    "dom": [
+      {
+        "id": "turnstile-configured-widget",
+        "selector": ".cf-turnstile[data-sitekey]",
+        "confidence": 40,
+        "description": "Documented implicit-render container with a sitekey attribute; key validity unconfirmed",
+        "standalone": true
+      },
+      {
+        "id": "turnstile-response-field",
+        "selector": "input[type='hidden'][name='cf-turnstile-response']",
+        "confidence": 50,
+        "description": "Hidden response field the API adds outside its closed shadow root; token value is never read",
+        "standalone": true
+      }
+    ],
+    "window": [
+      {
+        "id": "turnstile-runtime-render",
+        "path": "turnstile.render",
+        "condition": "typeof function",
+        "confidence": 30,
+        "description": "Turnstile render API presence, not execution",
+        "standalone": true
+      },
+      {
+        "id": "turnstile-runtime-execute",
+        "path": "turnstile.execute",
+        "condition": "typeof function",
+        "confidence": 30,
+        "description": "Turnstile execute API presence, not execution",
+        "standalone": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "turnstile-resource-widget",
+      "name": "Official API resource and configured widget container",
+      "when": { "all": [{ "pattern": "turnstile-api-resource" }, { "pattern": "turnstile-configured-widget" }] },
+      "confidence": 75
+    },
+    {
+      "id": "turnstile-resource-runtime",
+      "name": "Official API resource and Turnstile runtime API",
+      "when": { "all": [{ "pattern": "turnstile-api-resource" }, { "any": [{ "pattern": "turnstile-runtime-render" }, { "pattern": "turnstile-runtime-execute" }] }] },
+      "confidence": 80
+    },
+    {
+      "id": "turnstile-resource-frame",
+      "name": "Official API resource and a Turnstile widget frame request",
+      "when": { "all": [{ "pattern": "turnstile-api-resource" }, { "pattern": "turnstile-widget-frame-url" }] },
+      "confidence": 85
+    },
+    {
+      "id": "turnstile-complete-integration",
+      "name": "Official API resource, widget frame and response field",
+      "when": { "all": [{ "pattern": "turnstile-api-resource" }, { "pattern": "turnstile-widget-frame-url" }, { "pattern": "turnstile-response-field" }] },
+      "confidence": 95
+    }
+  ]
+}

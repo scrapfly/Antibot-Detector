@@ -1,5 +1,8 @@
 // Popup script for Scrapfly Security Detection Extension
 
+// Bridge protocol message types (modules/core/bridge-protocol.js)
+const POPUP_BRIDGE_TYPES = globalThis.ScrapflyBridgeProtocol.MESSAGE_TYPES;
+
 class ScrapflyPopup {
   constructor() {
     this.categoryManager = new CategoryManager();
@@ -42,8 +45,10 @@ class ScrapflyPopup {
 
       await this.initializeSections();
 
-      // Load and show default tab from settings
-      await this.loadAndApplyDefaultTab();
+      // Back where the user was after a language change, else the default tab
+      if (!(await this.restoreAfterLanguageChange())) {
+        await this.loadAndApplyDefaultTab();
+      }
 
     } catch (error) {
       Logger.error('UI', 'Failed to initialize popup:', error);
@@ -94,6 +99,30 @@ class ScrapflyPopup {
     } else {
       Logger.error('UI', 'Popup: Enable toggle element NOT found (#enableToggle)');
     }
+  }
+
+  /**
+   * After SettingsUI.reloadForLanguageChange(): reopen the tab and the
+   * Settings sub-tab the user was on. Returns false when there is nothing
+   * to restore.
+   * @returns {Promise<boolean>}
+   */
+  async restoreAfterLanguageChange() {
+    let state = null;
+    try {
+      const key = (typeof SettingsUI !== 'undefined' && SettingsUI.RELOAD_STATE_KEY) || 'scrapfly_reopen_after_language';
+      const raw = sessionStorage.getItem(key);
+      sessionStorage.removeItem(key);
+      state = raw ? JSON.parse(raw) : null;
+    } catch (_) {
+      state = null;
+    }
+    if (!state) return false;
+    const tabs = ['detection', 'history', 'rules', 'advanced'];
+    await this.switchTab(tabs.includes(state.tab) ? state.tab : 'detection');
+    this.settings.showSettings();
+    if (state.settingsTab) this.settings.switchTab(state.settingsTab);
+    return true;
   }
 
   /**
@@ -160,7 +189,9 @@ class ScrapflyPopup {
       Logger.error('UI', 'Popup: Error handling toggle change:', error);
       // Show error to user
       if (typeof NotificationHelper !== 'undefined') {
-        NotificationHelper.error(`Failed to ${enabled ? 'enable' : 'disable'} extension: ${error.message}`);
+        NotificationHelper.error(enabled
+          ? FormatUtils.t('popupUiEnableFailedFmt', 'Failed to enable extension: {0}', error.message)
+          : FormatUtils.t('popupUiDisableFailedFmt', 'Failed to disable extension: {0}', error.message));
       }
     }
   }
@@ -213,6 +244,8 @@ class ScrapflyPopup {
         this.detection.showBlacklistState(url.hostname);
         return;
       }
+
+      this.detection.blacklistedDomain = null;
 
       // Get existing detection data (cache or completed detection)
       chrome.runtime.sendMessage(
@@ -458,16 +491,13 @@ class ScrapflyPopup {
         }
 
         // Internal messages between content scripts and background (silently ignore)
-        case 'WINDOW_DETECTIONS':
-        case 'WINDOW_PROPS_COMPLETE':
-        case 'SCRAPFLY_DEBUG_LOG':
-        case 'DEBUG_LOG':
+        case POPUP_BRIDGE_TYPES.WINDOW_DETECTIONS:
+        case POPUP_BRIDGE_TYPES.WINDOW_PROPS_COMPLETE:
+        case POPUP_BRIDGE_TYPES.DEBUG_LOG:
         case 'LOG':
-        case 'JS_HOOK_DETECTION_BATCH':
-        case 'JS_HOOKS_COMPLETE':
-        case 'HOOK_FAILURE_REPORT':
-        case 'HOOK_TAMPERING_DETECTED':
-        case 'HOOK_RECOVERY_RESULT':
+        case POPUP_BRIDGE_TYPES.JS_HOOK_DETECTION_BATCH:
+        case POPUP_BRIDGE_TYPES.JS_HOOKS_COMPLETE:
+        case POPUP_BRIDGE_TYPES.HOOK_FAILURE_REPORT:
         case 'GET_DETECTORS':
         case 'CHECK_CACHE_EARLY':
         case 'CONTENT_SCRIPT_READY':
@@ -561,6 +591,10 @@ class ScrapflyPopup {
     } else {
       Logger.error('UI', 'Could not find tab content for:', tabName);
     }
+
+    // A newly selected tab starts at its toolbar, not another tab's scroll offset.
+    const main = document.querySelector('#app > .main');
+    if (main) main.scrollTop = 0;
 
     // Lazy-load sections on first access
     // Handle section-specific logic when tabs are clicked
@@ -699,6 +733,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         await I18n.loadOverride(override);
       }
       I18n.startAutoApply();
+      // i18n.js has no data-i18n-alt, so the header logo's alt text is set here
+      const logo = document.querySelector('.logo-icon');
+      if (logo) logo.alt = I18n.tr('popupUiLogoAlt', 'Scrapfly Robot');
     } catch (e) { /* i18n is best-effort */ }
   }
 

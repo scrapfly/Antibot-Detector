@@ -8,9 +8,6 @@ class Detection {
     this.initializingPromise = null;
     this.htmlLoaded = false;
     this.paginationManager = null;
-    this.analysisSteps = this.createAnalysisSteps();
-    this.analysisStepIndex = 0;
-    this.analysisProgressInterval = null;
     this.loadingTimeout = null;
     this.loadingTimeoutDuration = 10000; // 10 seconds timeout
     this.modalElements = null;
@@ -21,6 +18,7 @@ class Detection {
     this.isShowingAnalyzing = false; // Prevents UI flicker
     this.isShowingResults = false; // Prevents message listeners from overriding results
     this.isExtensionEnabled = true;
+    this.blacklistedDomain = null;
     this.viewedTabId = null;
     this.viewedTabUrl = null;
     this.cacheCleared = false; // Refresh when tab becomes visible
@@ -68,10 +66,10 @@ class Detection {
         return;
       }
       if (changeInfo.status === 'loading' && changeInfo.url) {
-        if (this.debugMode) Logger.ui('[Detection] Tab navigated to:', changeInfo.url);
+        if (this.debugMode) Logger.debug('UI', '[Detection] Tab navigated to:', changeInfo.url);
         chrome.action.getBadgeText({ tabId }, (badgeText) => {
           if (badgeText && badgeText.endsWith('%')) {
-            if (this.debugMode) Logger.ui('[Detection] Navigation detected, badge shows progress, transitioning to analyzing state');
+            if (this.debugMode) Logger.debug('UI', '[Detection] Navigation detected, badge shows progress, transitioning to analyzing state');
             if (!this.wasInterrupted && !this.isShowingResults && this.isExtensionEnabled !== false) {
               this.showAnalyzingState();
             }
@@ -97,18 +95,16 @@ class Detection {
         if (this.viewedTabId !== null && message.tabId !== this.viewedTabId) {
           return false;
         }
-        if (this.debugMode) Logger.ui('[Detection] Received progress update:', message.progress);
+        if (this.debugMode) Logger.debug('UI', '[Detection] Received progress update:', message.progress);
 
         // Transition to analyzing if not already showing results
         const loadingState = document.querySelector('#loadingState');
         if (!loadingState || loadingState.style.display === 'none') {
-          if (this.debugMode) Logger.ui('[Detection] Progress received but not in analyzing state - transitioning now');
+          if (this.debugMode) Logger.debug('UI', '[Detection] Progress received but not in analyzing state - transitioning now');
           if (!this.wasInterrupted && !this.isShowingResults) {
             this.showAnalyzingState();
           }
         }
-
-        this.updateRealProgress(message.progress);
       }
 
       // Listen for detection completion
@@ -122,11 +118,11 @@ class Detection {
         if (window.popupInstance) {
           return false;
         }
-        if (this.debugMode) Logger.ui('[Detection] Received detection completion for tab:', message.tabId);
+        if (this.debugMode) Logger.debug('UI', '[Detection] Received detection completion for tab:', message.tabId);
 
         // Guard: Don't auto-refresh if we just cleared cache and are showing empty state
         if (this.justClearedCache) {
-          Logger.ui('[Detection] Ignoring NEW_DETECTION_DATA - showing empty state after cache clear');
+          Logger.debug('UI', '[Detection] Ignoring NEW_DETECTION_DATA - showing empty state after cache clear');
           // Reset the flag after 5.5 seconds to allow future updates (after re-detection starts)
           if (!this.clearCacheResetTimer) {
             this.clearCacheResetTimer = setTimeout(() => {
@@ -139,12 +135,11 @@ class Detection {
 
         // Clear loading timeout and stop progress animation
         this.clearLoadingTimeout();
-        this.stopAnalysisProgress({ markComplete: true });
 
         // Request the completed detection data and display it
         chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
           if (tabs[0] && tabs[0].id === message.tabId) {
-            if (this.debugMode) Logger.ui('[Detection] Fetching completed detection data...');
+            if (this.debugMode) Logger.debug('UI', '[Detection] Fetching completed detection data...');
 
             chrome.runtime.sendMessage(
               { type: 'GET_DETECTION_DATA', tabId: message.tabId },
@@ -183,7 +178,7 @@ class Detection {
       // Listen for cache scope changes from Settings
       if (message.type === 'DETECTION_CLEAR_CACHE') {
         (async () => {
-          Logger.ui('[Detection] Cache scope changed - checking for cached data with new scope');
+          Logger.debug('UI', '[Detection] Cache scope changed - checking for cached data with new scope');
 
           // Clear current results display
           this.currentResults = [];
@@ -216,10 +211,11 @@ class Detection {
               { type: 'GET_DETECTION_DATA', tabId: tabs[0].id },
               async (response) => {
                 if (chrome.runtime.lastError) {
-                  Logger.ui('[Detection] No cached data for new scope - showing empty state');
+                  Logger.debug('UI', '[Detection] No cached data for new scope - showing empty state');
                   this.showEmptyState();
                   // Set badge to CLR (cleared)
                   try {
+                    await setBadgeTextColor(tabs[0].id, false, BADGE.COLORS.CLEARED);
                     await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tabs[0].id });
                     await chrome.action.setBadgeBackgroundColor({
                       color: BADGE.COLORS.CLEARED,
@@ -231,7 +227,7 @@ class Detection {
 
                 if (response && response.data) {
                   // Found cached data for new scope - display it
-                  Logger.ui('[Detection] Found cached data for new scope - displaying');
+                  Logger.debug('UI', '[Detection] Found cached data for new scope - displaying');
 
                   // Use ScrapflyPopup's processDetectionData to display results
                   if (window.popupInstance) {
@@ -242,10 +238,11 @@ class Detection {
                   }
                 } else {
                   // No cached data for new scope - show empty state
-                  Logger.ui('[Detection] No cached data for new scope - showing empty state');
+                  Logger.debug('UI', '[Detection] No cached data for new scope - showing empty state');
                   this.showEmptyState();
                   // Set badge to CLR (cleared)
                   try {
+                    await setBadgeTextColor(tabs[0].id, false, BADGE.COLORS.CLEARED);
                     await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tabs[0].id });
                     await chrome.action.setBadgeBackgroundColor({
                       color: BADGE.COLORS.CLEARED,
@@ -279,32 +276,11 @@ class Detection {
   static async getBadgeStatus(...args) {
     return await DetectionRequests.getBadgeStatus.apply(this, args);
   }
-  createAnalysisSteps(...args) {
-    return DetectionUI.createAnalysisSteps.apply(this, args);
-  }
   showLoadingState(...args) {
     return DetectionUI.showLoadingState.apply(this, args);
   }
-  renderAnalysisSteps(...args) {
-    return DetectionUI.renderAnalysisSteps.apply(this, args);
-  }
   startAnalysisProgress(...args) {
     return DetectionUI.startAnalysisProgress.apply(this, args);
-  }
-  updateAnalysisStepStates(...args) {
-    return DetectionUI.updateAnalysisStepStates.apply(this, args);
-  }
-  updateAnalysisPercent(...args) {
-    return DetectionUI.updateAnalysisPercent.apply(this, args);
-  }
-  stopAnalysisProgress(...args) {
-    return DetectionUI.stopAnalysisProgress.apply(this, args);
-  }
-  updateRealProgress(...args) {
-    return DetectionUI.updateRealProgress.apply(this, args);
-  }
-  updateMethodStatus(...args) {
-    return DetectionUI.updateMethodStatus.apply(this, args);
   }
   handleLoadingTimeout(...args) {
     return DetectionUI.handleLoadingTimeout.apply(this, args);
@@ -320,12 +296,6 @@ class Detection {
   }
   showEmptyState(...args) {
     return DetectionUI.showEmptyState.apply(this, args);
-  }
-  refreshEmptyStateI18n(...args) {
-    return DetectionUI.refreshEmptyStateI18n.apply(this, args);
-  }
-  refreshDetectionStateI18n(...args) {
-    return DetectionUI.refreshDetectionStateI18n.apply(this, args);
   }
   showDisabledState(...args) {
     return DetectionUI.showDisabledState.apply(this, args);
@@ -464,6 +434,9 @@ class Detection {
   setupPagination() {
     this.paginationManager = new PaginationManager('detectionPagination', {
       itemsPerPage: 2,
+      showWhenEmpty: true,
+      // Pages hold as many whole cards as fit the list height (see measurePageStarts)
+      pageSizer: (items) => DetectionUI.measurePageStarts.call(this, items),
       onPageChange: (page, items) => {
         this.renderDetectionsPage(items);
       }
@@ -482,21 +455,16 @@ class Detection {
       if (detectionTab) {
         detectionTab.innerHTML = html;
         this.htmlLoaded = true;
+        // The fresh template has every state hidden, so no state is on screen.
+        this.isShowingAnalyzing = false;
+        this.isShowingResults = false;
         if (typeof I18n !== 'undefined') {
           I18n.apply(detectionTab);
         }
-        this.renderAnalysisSteps();
         const loadingState = document.querySelector('#loadingState');
         if (loadingState && loadingState.style.display !== 'none') {
-          // Initialize UI for real progress updates (not old step-animation)
-          this.stopAnalysisProgress();
-          this.clearLoadingTimeout();
-          this.analysisStepIndex = 0;
-          this.updateAnalysisStepStates();
-          this.updateAnalysisPercent(0);
-          this.loadingTimeout = setTimeout(() => {
-            this.handleLoadingTimeout();
-          }, this.loadingTimeoutDuration);
+          // Re-arm the stuck-detection timeout for the analyzing state
+          this.startAnalysisProgress();
 
           // Sync popup progress with current badge percentage
           chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
@@ -617,6 +585,21 @@ class Detection {
       });
     }
 
+    // Disabled state "Enable detection" button - flips the header toggle so the
+    // popup's existing enable flow (storage, badge, re-detection) runs unchanged
+    const enableDetectionBtn = document.querySelector('#enableDetectionBtn');
+    if (enableDetectionBtn) {
+      enableDetectionBtn.addEventListener('click', () => {
+        const enableToggle = document.querySelector('#enableToggle');
+        if (!enableToggle || enableToggle.checked) return;
+        enableToggle.checked = true;
+        enableToggle.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+    }
+
+    // Re-pack the pages whenever the list's height changes
+    DetectionUI.observeResultsListSize.call(this);
+
     // NOTE: Message listeners are now set up in setupMessageListeners() called from constructor
     // This ensures they're active even before tab initialization
 
@@ -645,9 +628,6 @@ class Detection {
   }
   async clearBadgeForEmptyState(...args) {
     return await DetectionUI.clearBadgeForEmptyState.apply(this, args);
-  }
-  hexToRgb(...args) {
-    return DetectionUI.hexToRgb.apply(this, args);
   }
   getDifficultyInfo(...args) {
     return DetectionUI.getDifficultyInfo.apply(this, args);

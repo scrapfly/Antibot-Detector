@@ -1,33 +1,61 @@
 /* Settings → General language picker (loaded after settings.css) */
 
-.settings-card--language {
+/* Language row: description on the left, compact flag dropdown on the right */
+#settingsModal .settings-row--language {
   position: relative;
-  margin-top: 10px;
-  margin-bottom: 16px;
 }
 
-.settings-card--language .settings-card-header--static {
-  padding: 16px 18px 0;
-}
-
-.settings-card--language .settings-card-title p {
-  margin: 6px 0 0 0;
-  padding-bottom: 0;
-  line-height: 1.45;
-}
-
-.settings-card--language .language-picker {
-  margin-top: 14px;
-}
-
-/* Must follow .settings-card-body in settings.css (cascade fix) */
-.settings-card--language .settings-card-body.settings-card-body--language {
-  border-top: none;
-  padding: 0 18px 18px;
-}
-
-.settings-card--language.is-picker-open {
+#settingsModal .settings-row--language.is-picker-open {
   z-index: 120;
+}
+
+#settingsModal .settings-row--language .language-picker {
+  flex: 0 0 118px;
+  width: 118px;
+  top: 1px;
+  margin-right: -1px;
+}
+
+#settingsModal .settings-row--language .language-picker-trigger {
+  gap: 8px;
+  min-height: 0;
+  height: 36px;
+  padding: 0 10px 0 9px;
+  background: #3d3d3d;
+  border-color: var(--settings-border);
+  border-radius: 7px;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+#settingsModal .settings-row--language .language-picker-flag-slot {
+  width: 18px;
+  min-width: 18px;
+}
+
+#settingsModal .settings-row--language .language-picker-flag {
+  width: 18px;
+  height: 13px;
+  margin-top: -1px;
+}
+
+#settingsModal .settings-row--language .language-picker-label {
+  padding-right: 0;
+}
+
+#settingsModal .settings-row--language .language-picker-chevron {
+  width: 11.5px;
+  height: 11.5px;
+  position: relative;
+  top: -1px;
+  color: var(--settings-text);
+}
+
+#settingsModal .settings-row--language .language-picker-menu {
+  left: auto;
+  right: 0;
+  width: 200px;
+  max-width: none;
 }
 
 .language-picker {

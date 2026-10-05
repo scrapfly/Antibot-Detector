@@ -15,56 +15,90 @@
 // ============================================
 
 /**
- * Get relative time string from a date
- * @param {Date} date - Date object
- * @returns {string} Relative time string
+ * BCP 47 tag of the UI language (I18n.locale()), for the Intl formatters.
+ * Undefined when unknown, which lets Intl use the browser default.
+ * @returns {string|undefined}
  */
-Rules.prototype.getRelativeTime = function(date) {
-  const now = new Date();
-  const diffMs = now - date;
-  const diffSeconds = Math.floor(diffMs / 1000);
+Rules.prototype.getUiLocale = function() {
+  try {
+    if (typeof I18n !== 'undefined' && typeof I18n.locale === 'function') {
+      const locale = I18n.locale();
+      if (typeof locale === 'string' && locale) return locale;
+    }
+  } catch (e) {
+    // Fall through to the browser default
+  }
+  return undefined;
+};
+
+/**
+ * Split an elapsed time into the largest whole unit that fits
+ * ("3 hours", "1 week"), the same buckets the cards have always used.
+ * @param {number} diffMs - Elapsed milliseconds (negative is treated as 0)
+ * @returns {{unit: string, value: number}}
+ */
+Rules.prototype.getRelativeTimeParts = function(diffMs) {
+  const diffSeconds = Math.max(0, Math.floor(diffMs / 1000));
   const diffMinutes = Math.floor(diffSeconds / 60);
   const diffHours = Math.floor(diffMinutes / 60);
   const diffDays = Math.floor(diffHours / 24);
   const diffWeeks = Math.floor(diffDays / 7);
-  const diffMonths = Math.floor(diffDays / 30);
-  const diffYears = Math.floor(diffDays / 365);
 
-  if (diffSeconds < 60) {
-    return 'just now';
-  } else if (diffMinutes < 60) {
-    return diffMinutes === 1
-      ? (((typeof I18n !== 'undefined') && I18n.get('timeOneMinuteAgo')) || '1 minute ago')
-      : (((typeof I18n !== 'undefined') && I18n.format('timeMinutesAgoLongFmt', diffMinutes)) || `${diffMinutes} minutes ago`);
-  } else if (diffHours < 24) {
-    return diffHours === 1
-      ? (((typeof I18n !== 'undefined') && I18n.get('timeOneHourAgo')) || '1h ago')
-      : (((typeof I18n !== 'undefined') && I18n.format('timeHoursAgoLongFmt', diffHours)) || `${diffHours}h ago`);
-  } else if (diffDays < 7) {
-    return diffDays === 1
-      ? (((typeof I18n !== 'undefined') && I18n.get('timeOneDayAgo')) || '1 day ago')
-      : (((typeof I18n !== 'undefined') && I18n.format('timeDaysAgoLongFmt', diffDays)) || `${diffDays} days ago`);
-  } else if (diffWeeks < 4) {
-    return diffWeeks === 1
-      ? (((typeof I18n !== 'undefined') && I18n.get('timeOneWeekAgo')) || '1 week ago')
-      : (((typeof I18n !== 'undefined') && I18n.format('timeWeeksAgoFmt', diffWeeks)) || `${diffWeeks} weeks ago`);
-  } else if (diffMonths < 12) {
-    return diffMonths === 1
-      ? (((typeof I18n !== 'undefined') && I18n.get('timeOneMonthAgo')) || '1 month ago')
-      : (((typeof I18n !== 'undefined') && I18n.format('timeMonthsAgoFmt', diffMonths)) || `${diffMonths} months ago`);
-  } else {
-    return diffYears === 1
-      ? (((typeof I18n !== 'undefined') && I18n.get('timeOneYearAgo')) || '1 year ago')
-      : (((typeof I18n !== 'undefined') && I18n.format('timeYearsAgoFmt', diffYears)) || `${diffYears} years ago`);
-  }
+  if (diffSeconds < 60) return { unit: 'second', value: diffSeconds };
+  if (diffMinutes < 60) return { unit: 'minute', value: diffMinutes };
+  if (diffHours < 24) return { unit: 'hour', value: diffHours };
+  if (diffDays < 7) return { unit: 'day', value: diffDays };
+  if (diffWeeks < 4) return { unit: 'week', value: diffWeeks };
+  // 28-29 days is past the week bucket but not a full 30-day month yet
+  const diffMonths = Math.max(1, Math.floor(diffDays / 30));
+  if (diffMonths < 12) return { unit: 'month', value: diffMonths };
+  return { unit: 'year', value: Math.max(1, Math.floor(diffDays / 365)) };
 };
 
 /**
- * Format date in compact style
+ * Get relative time string from a date, in the UI language
+ * (Intl.RelativeTimeFormat with numeric: 'auto', so it reads "now",
+ * "yesterday", "last week" ...). English when Intl is unavailable.
+ * @param {Date} date - Date object
+ * @param {Date} [now] - Reference time (defaults to the current time)
+ * @returns {string} Relative time string
+ */
+Rules.prototype.getRelativeTime = function(date, now = new Date()) {
+  const { unit, value } = this.getRelativeTimeParts(now - date);
+
+  if (typeof Intl !== 'undefined' && typeof Intl.RelativeTimeFormat === 'function') {
+    const locale = this.getUiLocale();
+    for (const candidate of (locale ? [locale, undefined] : [undefined])) {
+      try {
+        return new Intl.RelativeTimeFormat(candidate, { numeric: 'auto' }).format(-value, unit);
+      } catch (e) {
+        // Unsupported tag: retry with the browser default, then English
+      }
+    }
+  }
+
+  if (unit === 'second') return 'just now';
+  return value === 1 ? `1 ${unit} ago` : `${value} ${unit}s ago`;
+};
+
+/**
+ * Format date in compact style ("30 Sept 2026, 14:05"), in the UI language
  * @param {Date} date - Date object
  * @returns {string} Formatted date string
  */
 Rules.prototype.formatCompactDate = function(date) {
+  if (typeof Intl !== 'undefined' && typeof Intl.DateTimeFormat === 'function') {
+    const locale = this.getUiLocale();
+    const options = { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' };
+    for (const candidate of (locale ? [locale, undefined] : [undefined])) {
+      try {
+        return new Intl.DateTimeFormat(candidate, options).format(date);
+      } catch (e) {
+        // Unsupported tag: retry with the browser default, then the manual format
+      }
+    }
+  }
+
   const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
   const day = date.getDate();
   const month = months[date.getMonth()];
@@ -81,7 +115,7 @@ Rules.prototype.formatCompactDate = function(date) {
  */
 Rules.prototype.formatLastUpdated = function(rawTimestamp) {
   if (!rawTimestamp) {
-    return 'Unknown';
+    return (typeof I18n !== 'undefined' && I18n.get('timeUnknown')) || 'Unknown';
   }
 
   let parsedDate = null;
@@ -159,6 +193,61 @@ Rules.prototype.getSortTimestamp = function(rawTimestamp) {
 };
 
 // ============================================
+// Detector Names
+// ============================================
+
+/**
+ * English name that older versions stored for a new detector the user never
+ * renamed. Kept only to recognise it: it is displayed in the UI language and
+ * never written again.
+ */
+Rules.LEGACY_DEFAULT_DETECTOR_NAME = 'New Detector';
+
+/**
+ * Default name of a new detector, in the UI language ("New detector").
+ * @returns {string}
+ */
+Rules.prototype.getDefaultDetectorName = function() {
+  return (typeof I18n !== 'undefined' && I18n.get('rulesUiNewDetectorName')) || 'New detector';
+};
+
+/**
+ * Name to show for a stored detector name. The legacy English default
+ * ("New Detector") shows as the localised default; storage is not rewritten.
+ * @param {string} name - Stored name
+ * @returns {string} Name to display ('' when there is none)
+ */
+Rules.prototype.getDetectorDisplayName = function(name) {
+  if (typeof name !== 'string') return '';
+  if (name.trim() === Rules.LEGACY_DEFAULT_DETECTOR_NAME) return this.getDefaultDetectorName();
+  return name;
+};
+
+/**
+ * Name to store when the editor is saved.
+ * - An empty name becomes the localised default (never the English one), so a
+ *   saved detector always has a name and the id slug keeps working.
+ * - A detector still stored as the legacy "New Detector" whose name field
+ *   still shows the localised default the editor put there keeps its stored
+ *   name (display-time mapping only; saving does not rewrite it).
+ * @param {string} inputValue - Value of the name field
+ * @param {string} storedName - Name the detector had when the editor opened
+ * @returns {string}
+ */
+Rules.prototype.resolveDetectorNameForSave = function(inputValue, storedName) {
+  const value = typeof inputValue === 'string' ? inputValue : '';
+  const trimmed = value.trim();
+  const defaultName = this.getDefaultDetectorName();
+  const storedTrimmed = typeof storedName === 'string' ? storedName.trim() : '';
+
+  if (storedTrimmed === Rules.LEGACY_DEFAULT_DETECTOR_NAME && (!trimmed || trimmed === defaultName)) {
+    return storedName;
+  }
+  if (!trimmed) return defaultName;
+  return value;
+};
+
+// ============================================
 // Detection Methods Display
 // ============================================
 
@@ -183,26 +272,20 @@ Rules.prototype.getDetectionMethods = function(detector) {
   if (detectionMethods && Array.isArray(detectionMethods)) {
     detectionMethods.forEach((method) => {
       const methodStr = typeof method === 'string' ? method : method.name || method.type || 'Unknown';
-
-      // Get dynamic color from CategoryManager tags using original methodStr (preserve underscores)
-      const tagColor = this.categoryManager.getTagColor(methodStr);
-
-      // Format the name for display only (replace underscores and uppercase)
-      const methodName = methodStr.replace(/_/g, ' ').toUpperCase();
-
-      if (tagColor && tagColor !== '#666666') {
-        // Parse hex color to RGB for semi-transparent background
-        const hex = tagColor.replace('#', '');
-        const r = parseInt(hex.substring(0, 2), 16);
-        const g = parseInt(hex.substring(2, 4), 16);
-        const b = parseInt(hex.substring(4, 6), 16);
-        // Use muted/subtle style: semi-transparent background with colored text
-        methodsHtml += `<span class="method-tag" style="background: rgba(${r}, ${g}, ${b}, 0.25); color: ${tagColor}; border: 1px solid rgba(${r}, ${g}, ${b}, 0.4);">${methodName}</span>`;
-      } else {
-        // Fallback to CSS class
-        const badgeClass = this.getMethodBadgeClass(methodStr);
-        methodsHtml += `<span class="method-tag ${badgeClass}">${methodName}</span>`;
-      }
+      // Hover: what the method checks, how many patterns it has, and how many are combination-only
+      const rules = Array.isArray(detector.detection?.[methodStr]) ? detector.detection[methodStr] : [];
+      const comboOnly = rules.filter(rule => rule && rule.standalone === false).length;
+      const count = rules.length === 1
+        ? FormatUtils.t('methodOnePattern', '1 pattern')
+        : FormatUtils.t('methodPatternsFmt', '{0} patterns', rules.length);
+      const tipRows = comboOnly > 0
+        ? [{ label: FormatUtils.t('patternCombinationsOnlyBadge', 'Combinations only'), value: String(comboOnly) }]
+        : [];
+      methodsHtml += this.renderMethodChip(methodStr, '', {
+        title: `${this.getMethodLabel(methodStr)} · ${count}`,
+        detail: FormatUtils.methodHint(methodStr),
+        rows: tipRows
+      });
     });
   } else {
     // Fallback: create detection methods based on category and add detector name
@@ -232,7 +315,80 @@ Rules.prototype.getDetectionMethods = function(detector) {
  * @returns {string} Detection method name
  */
 Rules.prototype.getCategoryMethod = function(category) {
-  return this.categoryManager.getCategoryDisplayName(category) || 'Detection';
+  return this.categoryManager.getCategoryDisplayName(category) ||
+    ((typeof I18n !== 'undefined' && I18n.get('tabDetection')) || 'Detection');
+};
+
+/**
+ * Get the sentence-case category label shown on detector cards
+ * ("Fingerprint" for fingerprint), falling back to the category display name
+ * @param {string} category - Category name
+ * @returns {string} Category label
+ */
+Rules.prototype.getCategoryLabel = function(category) {
+  const labelKey = {
+    antibot: 'categoryAntibot',
+    captcha: 'categoryCaptcha',
+    fingerprint: 'categoryFingerprint'
+  };
+  const labelFallback = { antibot: 'Anti-bot', captcha: 'Captcha', fingerprint: 'Fingerprint' };
+  const name = category?.toLowerCase();
+  const translated = (labelKey[name] && typeof I18n !== 'undefined') ? I18n.get(labelKey[name]) : null;
+  return translated || labelFallback[name] || this.getCategoryMethod(category);
+};
+
+/**
+ * Get the human-readable label of a detection method shown on detector cards
+ * @param {string} method - Method key (url, header, cookie, content, dom, js_hooks, window, payload)
+ * @returns {string} Method label
+ */
+Rules.prototype.getMethodLabel = function(method) {
+  const labelKey = {
+    url: 'detectionMethodUrl', header: 'detectionMethodHeaders', cookie: 'detectionMethodCookies',
+    content: 'detectionMethodContent', dom: 'detectionMethodDom', js_hooks: 'detectionMethodJsHooks',
+    window: 'detectionMethodWindow', payload: 'detectionMethodPayload'
+  };
+  const labelFallback = {
+    url: 'Url', header: 'Headers', cookie: 'Cookies', content: 'Content', dom: 'Dom',
+    js_hooks: 'JavaScript hooks', window: 'Window properties', payload: 'Payload'
+  };
+  const name = method?.toLowerCase();
+  const translated = (labelKey[name] && typeof I18n !== 'undefined') ? I18n.get(labelKey[name]) : null;
+  if (translated) return translated;
+  if (labelFallback[name]) return labelFallback[name];
+  // Unknown method: "some_method" -> "Some method"
+  const words = String(method || '').replace(/_/g, ' ').trim();
+  return words.charAt(0).toUpperCase() + words.slice(1);
+};
+
+/**
+ * Render a detection-method chip: the readable, translated label (e.g.
+ * "JavaScript hooks") in the method's tag colour, styled like the Detection
+ * list card chips. Shared by the Rules cards and the rule editor so both look
+ * identical.
+ * @param {string} method - Method key (url, header, cookie, content, dom, js_hooks, window, payload)
+ * @param {string} [extraClass] - Additional class names for the chip
+ * @param {{title:string, detail?:string, rows?:Array}} [tip] - Optional hover tip
+ * @returns {string} HTML for the chip
+ */
+Rules.prototype.renderMethodChip = function(method, extraClass = '', tip = null) {
+  const label = FormatUtils.escapeHtml(this.getMethodLabel(method));
+  const classes = extraClass ? ` ${extraClass}` : '';
+  const tipAttrs = tip && tip.title ? ` ${FormatUtils.tipAttrs(tip.title, tip.detail, tip.rows)}` : '';
+  const categoryManager = this.categoryManager || this.detectorManager?.categoryManager;
+  const tagColor = categoryManager?.getTagColor(method);
+
+  // Only interpolate a validated #rrggbb colour into the style attribute
+  if (tagColor && tagColor !== '#666666' && /^#[0-9a-f]{6}$/i.test(tagColor)) {
+    const r = parseInt(tagColor.substring(1, 3), 16);
+    const g = parseInt(tagColor.substring(3, 5), 16);
+    const b = parseInt(tagColor.substring(5, 7), 16);
+    // Same muted fill/border as the Detection list card chips
+    return `<span class="method-tag${classes}" style="background: rgba(${r}, ${g}, ${b}, 0.15); color: ${tagColor}; border: 1px solid rgba(${r}, ${g}, ${b}, 0.3);"${tipAttrs}>${label}</span>`;
+  }
+
+  // Fallback to CSS class
+  return `<span class="method-tag ${this.getMethodBadgeClass(method)}${classes}"${tipAttrs}>${label}</span>`;
 };
 
 /**
@@ -309,6 +465,16 @@ Rules.prototype.getDetectorIcon = function(detector, category = '') {
     'webrtc_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 10l5-5M20 10V5h-5"/><path d="M9 14l-5 5M4 14v5h5"/><circle cx="12" cy="12" r="3"/></svg>'
   };
 
+  // Image alt texts in the UI language (attribute-escaped: the detector name is user input)
+  const escAttr = (value) => (typeof FormatUtils !== 'undefined' && typeof FormatUtils.escapeAttr === 'function')
+    ? FormatUtils.escapeAttr(value)
+    : String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const i18n = (typeof I18n !== 'undefined') ? I18n : null;
+  const iconAlt = escAttr((i18n && i18n.get('ruleFieldIcon')) || 'Icon');
+  const scrapflyAlt = escAttr((i18n && i18n.get('rulesUiScrapflyIconAlt')) || 'Scrapfly Icon');
+  const iconOwnerName = this.getDetectorDisplayName ? this.getDetectorDisplayName(detector.displayName || detector.name) : (detector.displayName || detector.name);
+  const namedIconAlt = escAttr((i18n && i18n.format('rulesUiDetectorIconAltFmt', iconOwnerName)) || `${iconOwnerName} Icon`);
+
   const wrapFingerprintImage = (src, alt, sourceType, fallback) => {
     const fallbackAttr = fallback ? ` data-fallback="${fallback}"` : '';
     return `
@@ -321,9 +487,9 @@ Rules.prototype.getDetectorIcon = function(detector, category = '') {
   // Check for custom uploaded icon first
   if (detector.customIcon) {
     if (isFingerprintCategory) {
-      return wrapFingerprintImage(detector.customIcon, 'Icon', 'custom', scrapflyIcon);
+      return wrapFingerprintImage(detector.customIcon, iconAlt, 'custom', scrapflyIcon);
     }
-    return `<img src="${detector.customIcon}" alt="Icon" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
+    return `<img src="${detector.customIcon}" alt="${iconAlt}" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
   }
 
   // Try to get real icon from detector data
@@ -332,16 +498,16 @@ Rules.prototype.getDetectorIcon = function(detector, category = '') {
 
     if (lowerIcon === 'default') {
       if (isFingerprintCategory) {
-        return wrapFingerprintImage(scrapflyIcon, 'Scrapfly Icon', 'default', '');
+        return wrapFingerprintImage(scrapflyIcon, scrapflyAlt, 'default', '');
       }
-      return `<img src="${scrapflyIcon}" alt="Scrapfly Icon" class="detector-icon-img">`;
+      return `<img src="${scrapflyIcon}" alt="${scrapflyAlt}" class="detector-icon-img">`;
     }
     // If icon is "custom.png" or "custom", use scrapfly icon directly
     if (detector.icon === 'custom.png' || detector.icon === 'custom') {
       if (isFingerprintCategory) {
-        return wrapFingerprintImage(scrapflyIcon, 'Scrapfly Icon', 'default', '');
+        return wrapFingerprintImage(scrapflyIcon, scrapflyAlt, 'default', '');
       }
-      return `<img src="${scrapflyIcon}" alt="Scrapfly Icon" class="detector-icon-img">`;
+      return `<img src="${scrapflyIcon}" alt="${scrapflyAlt}" class="detector-icon-img">`;
     }
 
     // Check for fingerprint SVG icons
@@ -352,16 +518,16 @@ Rules.prototype.getDetectorIcon = function(detector, category = '') {
     // If it's a URL, return as image
     if (detector.icon.startsWith('http') || detector.icon.startsWith('/')) {
       if (isFingerprintCategory) {
-        return wrapFingerprintImage(detector.icon, 'Icon', 'builtin', scrapflyIcon);
+        return wrapFingerprintImage(detector.icon, iconAlt, 'builtin', scrapflyIcon);
       }
-      return `<img src="${detector.icon}" alt="Icon" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
+      return `<img src="${detector.icon}" alt="${iconAlt}" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
     }
     // If it's a filename, construct the path to the detectors/icons folder
     if (detector.icon.includes('.png') || detector.icon.includes('.jpg') || detector.icon.includes('.svg') || detector.icon.includes('.webp')) {
       if (isFingerprintCategory) {
-        return wrapFingerprintImage(`detectors/icons/${detector.icon}`, `${detector.displayName || detector.name} Icon`, 'builtin', scrapflyIcon);
+        return wrapFingerprintImage(`detectors/icons/${detector.icon}`, namedIconAlt, 'builtin', scrapflyIcon);
       }
-      return `<img src="detectors/icons/${detector.icon}" alt="${detector.displayName || detector.name} Icon" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
+      return `<img src="detectors/icons/${detector.icon}" alt="${namedIconAlt}" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
     }
     // Otherwise return as emoji or text
     return detector.icon;
@@ -369,7 +535,7 @@ Rules.prototype.getDetectorIcon = function(detector, category = '') {
 
   // Fallback to Scrapfly default icon
   if (isFingerprintCategory) {
-    return wrapFingerprintImage(scrapflyIcon, 'Scrapfly Icon', 'default', '');
+    return wrapFingerprintImage(scrapflyIcon, scrapflyAlt, 'default', '');
   }
-  return `<img src="${scrapflyIcon}" alt="Scrapfly Icon" class="detector-icon-img">`;
+  return `<img src="${scrapflyIcon}" alt="${scrapflyAlt}" class="detector-icon-img">`;
 };

@@ -1,5 +1,7 @@
 class DetectorManager {
     static DETECTOR_ID_PREFIX = 'detect-';
+    // Official detector IDs the user deleted; Update skips them until restored
+    static DELETED_OFFICIAL_KEY = 'scrapfly_deleted_official_detectors';
     constructor(categoryManager) {
         this.categoryManager = categoryManager || new CategoryManager();
         this.detectors = {};
@@ -229,6 +231,8 @@ class DetectorManager {
             if (!this.categoryManager.initialized) {
                 await this.categoryManager.initialize();
             }
+
+            await this.loadOfficialDetectorIds();
 
             const storageLoaded = await this.loadFromStorage();
 
@@ -666,6 +670,197 @@ class DetectorManager {
     }
 
     /**
+     * Register the IDs of the detectors bundled in detectors/index.json, which
+     * DetectionUtils.isOfficialDetector() uses to tell shipped detectors from
+     * custom or imported ones. Falls back to the packaged index copy.
+     */
+    async loadOfficialDetectorIds() {
+        const collect = (index) => {
+            const ids = [];
+            for (const value of Object.values(index || {})) {
+                if (value && Array.isArray(value.detectors)) {
+                    ids.push(...value.detectors);
+                }
+            }
+            return ids;
+        };
+
+        let ids = [];
+        try {
+            const response = await fetch(chrome.runtime.getURL('detectors/index.json'));
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            ids = collect(await response.json());
+        } catch (error) {
+            Logger.warn('DETECTOR', 'Could not read detectors/index.json, using packaged index for official IDs', error);
+        }
+        if (ids.length === 0 && typeof CategoryManager !== 'undefined' && typeof CategoryManager.getPackagedFallbackIndex === 'function') {
+            ids = collect(CategoryManager.getPackagedFallbackIndex());
+        }
+        DetectionUtils.setOfficialDetectorIds(ids);
+    }
+
+    /**
+     * Whether a stored detector is an official (shipped) one.
+     * @param {object} detector
+     * @returns {boolean}
+     */
+    isOfficialDetector(detector) {
+        return DetectionUtils.isOfficialDetector(detector);
+    }
+
+    /**
+     * Delete one detector. Deleting an official (shipped) detector also records
+     * its ID in DELETED_OFFICIAL_KEY so "Update" does not bring it back; use
+     * restoreOfficialDetectors() to get it again.
+     * @param {string} category
+     * @param {string} detectorName - Detector key (ID)
+     * @returns {Promise<{deleted: boolean, official: boolean, reason: (null|'not_found')}>}
+     */
+    async deleteDetector(category, detectorName) {
+        const detector = this.detectors[category]?.[detectorName];
+        if (!detector) {
+            return { deleted: false, official: false, reason: 'not_found' };
+        }
+        const official = DetectionUtils.isOfficialDetector(detector);
+        delete this.detectors[category][detectorName];
+        await this.saveDetectorsToStorage();
+        if (official) {
+            await DetectorManager.markOfficialDeleted(detector.id || detectorName, true);
+        }
+        return { deleted: true, official, reason: null };
+    }
+
+    /** IDs of official detectors the user deleted (kept out of updates). */
+    static async getDeletedOfficialIds() {
+        try {
+            const stored = await chrome.storage.local.get(DetectorManager.DELETED_OFFICIAL_KEY);
+            const list = stored[DetectorManager.DELETED_OFFICIAL_KEY];
+            return Array.isArray(list) ? list.filter(id => typeof id === 'string') : [];
+        } catch (_) {
+            return [];
+        }
+    }
+
+    static async markOfficialDeleted(id, deleted) {
+        const ids = new Set(await DetectorManager.getDeletedOfficialIds());
+        if (deleted) ids.add(id); else ids.delete(id);
+        await chrome.storage.local.set({ [DetectorManager.DELETED_OFFICIAL_KEY]: [...ids] });
+    }
+
+    /**
+     * Bring back every official detector the user deleted, from the packaged
+     * files, and forget the deletions.
+     * @returns {Promise<number>} Number of detectors restored
+     */
+    async restoreOfficialDetectors() {
+        const deleted = await DetectorManager.getDeletedOfficialIds();
+        if (deleted.length === 0) return 0;
+        const categories = this.categoryManager.getAllCategories();
+        let restored = 0;
+        for (const [categoryName, categoryData] of Object.entries(categories || {})) {
+            const ids = Array.isArray(categoryData?.detectors) ? categoryData.detectors : [];
+            for (const id of ids) {
+                if (!deleted.includes(id) || this.detectors[categoryName]?.[id]) continue;
+                if (!this.detectors[categoryName]) this.detectors[categoryName] = {};
+                await this.loadDetectorFile(categoryName, id);
+                if (this.detectors[categoryName][id]) restored++;
+            }
+        }
+        await chrome.storage.local.set({ [DetectorManager.DELETED_OFFICIAL_KEY]: [] });
+        if (restored > 0) await this.saveDetectorsToStorage();
+        return restored;
+    }
+
+    /**
+     * Remove every custom (non-official) detector; official ones are kept.
+     * @returns {Promise<number>} Number of detectors removed
+     */
+    async clearCustomDetectors() {
+        let removed = 0;
+        for (const categoryDetectors of Object.values(this.detectors)) {
+            for (const [key, detector] of Object.entries(categoryDetectors || {})) {
+                if (!DetectionUtils.isOfficialDetector(detector)) {
+                    delete categoryDetectors[key];
+                    removed++;
+                }
+            }
+        }
+        if (removed > 0) {
+            await this.saveDetectorsToStorage();
+        }
+        return removed;
+    }
+
+    /**
+     * Export all detectors as a JSON-serialisable object.
+     * @returns {{version: string, exportedAt: string, detectors: object}}
+     */
+    exportDetectors() {
+        const detectors = JSON.parse(JSON.stringify(this.detectors));
+        for (const category of Object.values(detectors)) {
+            for (const detector of Object.values(category || {})) {
+                if (detector) delete detector._searchStrings;
+            }
+        }
+        return { version: '1.0', exportedAt: new Date().toISOString(), detectors };
+    }
+
+    /**
+     * Import detectors from an exported file ({detectors: {category: {id: detector}}}
+     * or the bare category map). Official detectors are never removed or
+     * overwritten by an import - only their enabled state is taken from the
+     * file. "Replace all" (merge = false) removes the custom detectors only.
+     * @param {object} data
+     * @param {boolean} merge
+     * @returns {Promise<boolean>} Success status
+     */
+    async importDetectors(data, merge = true) {
+        const source = (data && typeof data.detectors === 'object' && data.detectors) ? data.detectors : data;
+        if (!source || typeof source !== 'object' || Array.isArray(source)) {
+            return false;
+        }
+
+        const incoming = [];
+        for (const [category, categoryDetectors] of Object.entries(source)) {
+            if (!categoryDetectors || typeof categoryDetectors !== 'object' || Array.isArray(categoryDetectors)) continue;
+            for (const [key, detector] of Object.entries(categoryDetectors)) {
+                const normalized = DetectorManager.normalizeDetectorSchema(
+                    JSON.parse(JSON.stringify(detector || null)),
+                    { categoryName: category, detectorName: detector?.id || key, source: 'import' }
+                );
+                if (normalized) incoming.push({ category, detector: normalized });
+            }
+        }
+        if (incoming.length === 0) {
+            return false;
+        }
+
+        if (!merge) {
+            for (const categoryDetectors of Object.values(this.detectors)) {
+                for (const [key, detector] of Object.entries(categoryDetectors || {})) {
+                    if (!DetectionUtils.isOfficialDetector(detector)) delete categoryDetectors[key];
+                }
+            }
+        }
+
+        for (const { category, detector } of incoming) {
+            const existing = this.findDetectorById(detector.id);
+            if (existing && DetectionUtils.isOfficialDetector(existing)) {
+                if (typeof detector.enabled === 'boolean') existing.enabled = detector.enabled;
+                continue;
+            }
+            for (const categoryDetectors of Object.values(this.detectors)) {
+                if (categoryDetectors && categoryDetectors[detector.id]) delete categoryDetectors[detector.id];
+            }
+            if (!this.detectors[category]) this.detectors[category] = {};
+            this.detectors[category][detector.id] = detector;
+        }
+
+        await this.saveDetectorsToStorage();
+        return true;
+    }
+
+    /**
      * Get the CategoryManager instance
      * @returns {CategoryManager} The category manager instance
      */
@@ -677,3 +872,6 @@ class DetectorManager {
 if (typeof window !== 'undefined') {
   window.DetectorManager = DetectorManager;
 }
+
+// Node test export (no-op in the browser, where `module` is undefined).
+if (typeof module !== 'undefined' && module.exports) { module.exports = DetectorManager; }

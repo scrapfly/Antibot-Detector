@@ -68,9 +68,7 @@ SettingsUI.loadSettings = async function() {
           ? StorageManager.normalizeSettings(result.scrapfly_settings)
           : (savedSettings.settings || savedSettings);
 
-        Logger.ui('Loading settings - raw:', result.scrapfly_settings);
-        Logger.ui('Loading settings - parsed:', savedSettings);
-        Logger.ui('Loading settings - extracted:', loadedSettings);
+        Logger.debug('UI', 'Settings read', { keys: Object.keys(loadedSettings || {}).length });
 
         if (typeof loadedSettings === 'object' && loadedSettings !== null) {
           this.settings = this.deepMerge(this.settings, loadedSettings);
@@ -108,7 +106,7 @@ SettingsUI.loadSettings = async function() {
           delete this.settings.blacklistedDomains;
         }
       } else {
-        Logger.ui('No saved settings found, using defaults');
+        Logger.debug('UI', 'No saved settings found, using defaults');
       }
 
       if (typeof Utils !== 'undefined' && typeof Utils.applyDebugMode === 'function') {
@@ -134,7 +132,7 @@ SettingsUI.loadSettings = async function() {
       }
 
       this.updateSettingsUI();
-      Logger.ui('Settings loaded and UI updated:', this.settings);
+      Logger.debug('UI', 'Settings loaded');
 
     } catch (error) {
       Logger.error('UI', 'Failed to load settings:', error);
@@ -232,13 +230,13 @@ SettingsUI.saveSettings = async function(options = {}) {
         Utils.applyDebugMode(this.settings);
       }
 
-      Logger.ui('Settings saved:', this.settings);
+      Logger.debug('UI', 'Settings saved:', this.settings);
 
       const newCacheScope = this.settings.cacheScope || this.settings.detection?.cacheScope || 'domain';
       const cacheScopeChanged = oldCacheScope && oldCacheScope !== newCacheScope;
 
       if (cacheScopeChanged) {
-        Logger.ui(`[Settings] Cache scope changed from "${oldCacheScope}" to "${newCacheScope}" - preserving cache data, invalidating current view`);
+        Logger.debug('UI', `[Settings] Cache scope changed from "${oldCacheScope}" to "${newCacheScope}" - preserving cache data, invalidating current view`);
 
         UrlUtils.clearUrlHashCache();
 
@@ -264,7 +262,7 @@ SettingsUI.saveSettings = async function(options = {}) {
         if (chrome.runtime.lastError) {
           Logger.debug('UI', 'Failed to notify background of settings update:', chrome.runtime.lastError.message);
         } else {
-          Logger.ui('Background notified of settings update:', response);
+          Logger.debug('UI', 'Background notified of settings update:', response);
         }
       });
 
@@ -272,7 +270,7 @@ SettingsUI.saveSettings = async function(options = {}) {
         if (chrome.runtime.lastError) {
           Logger.debug('UI', 'Failed to sync category colors:', chrome.runtime.lastError.message);
         } else {
-          Logger.ui('Category colors synced:', response);
+          Logger.debug('UI', 'Category colors synced:', response);
         }
       });
 
@@ -301,6 +299,11 @@ SettingsUI.updateSettingsUI = function() {
     const logCollectorSection = document.querySelector('#logCollectorSection');
     if (logCollectorSection) {
       logCollectorSection.style.display = (this.settings.debugMode ?? false) ? 'block' : 'none';
+    }
+
+    const debugVerboseToggle = document.querySelector('#debugVerbose');
+    if (debugVerboseToggle) {
+      debugVerboseToggle.checked = this.settings.debugVerbose ?? false;
     }
 
     const logCollectorToggle = document.querySelector('#logCollectorEnabled');
@@ -389,18 +392,25 @@ SettingsUI.updateSettingsUI = function() {
       const cacheScopeSelect = document.querySelector('#cacheScope');
       if (cacheScopeSelect) {
         cacheScopeSelect.value = this.settings.detection.cacheScope || 'domain';
-        Logger.ui('Cache scope loaded:', this.settings.detection.cacheScope);
+        Logger.debug('UI', 'Cache scope loaded:', this.settings.detection.cacheScope);
       }
 
+      // Values saved before the per-unit ranges existed (e.g. 48 hours) are
+      // shown and kept in their equivalent in-range form (2 days), so saving
+      // never fails on a pre-existing setting.
+      const cacheDisplay = SettingsUI.getCacheDurationDisplay(this.settings.detection);
+      this.settings.detection.cacheDuration = cacheDisplay.duration;
+      this.settings.detection.cacheUnit = cacheDisplay.unit;
       const cacheDurationInput = document.querySelector('#cacheDuration');
       if (cacheDurationInput) {
-        cacheDurationInput.value = this.settings.detection.cacheDuration || 12;
+        cacheDurationInput.value = cacheDisplay.duration;
       }
 
       const cacheUnitSelect = document.querySelector('#cacheUnit');
       if (cacheUnitSelect) {
-        cacheUnitSelect.value = this.settings.detection.cacheUnit || 'hours';
+        cacheUnitSelect.value = cacheDisplay.unit;
       }
+      SettingsUI.updateCacheDurationHint();
 
         this.renderBlacklistUI();
       this.setupBlacklistEventListeners();
@@ -474,12 +484,11 @@ SettingsUI.updateSettingsUI = function() {
     const webhookUrl = document.querySelector('#webhookUrl');
     if (webhookUrl) webhookUrl.value = webhookSettings.webhookUrl || '';
 
-    const webhookContentType = document.querySelector('#webhookContentType');
-    if (webhookContentType) webhookContentType.value = webhookSettings.webhookContentType || 'application/json';
+    this.setupWebhookContentType(webhookSettings.webhookContentType || 'application/json');
 
     const webhookPayload = document.querySelector('#webhookPayload');
-    const defaultPayload = '{"url": "<SITEURL>", "hostname": "<HOSTNAME>", "title": "<TITLE>", "favicon": "<FAVICON>", "detections": <DETECTIONS>, "timestamp": "<TIMESTAMP>", "count": <DETECTION_COUNT>, "categories": "<CATEGORIES>"}';
-    if (webhookPayload) webhookPayload.value = webhookSettings.webhookPayload || defaultPayload;
+    if (webhookPayload) webhookPayload.value = webhookSettings.webhookPayload || WebhookBody.DEFAULT_TEMPLATE;
+    SettingsUI.setupWebhookPayloadUI.call(this);
 
     this.renderWebhookHeadersUI();
 
@@ -488,8 +497,12 @@ SettingsUI.updateSettingsUI = function() {
       const historyLimitInput = document.querySelector('#historyLimit');
       if (historyLimitInput) historyLimitInput.value = this.settings.history.historyLimit ?? 0;
 
-      const autoClearDays = document.querySelector('#autoClearDays');
-      if (autoClearDays) autoClearDays.value = this.settings.history.autoClearDays ?? 30;
+      const historyAutoDelete = document.querySelector('#historyAutoDelete');
+      if (historyAutoDelete) historyAutoDelete.checked = this.settings.history.historyAutoDelete ?? false;
+
+      const historyAutoDeleteDays = document.querySelector('#historyAutoDeleteDays');
+      if (historyAutoDeleteDays) historyAutoDeleteDays.value = this.settings.history.historyAutoDeleteDays ?? 30;
+      SettingsUI.syncHistoryAutoDeleteRow();
 
       const exportFormat = document.querySelector('#exportFormat');
       if (exportFormat) exportFormat.value = this.settings.history.exportFormat || 'json';
@@ -555,14 +568,6 @@ SettingsUI.updateSettingsUI = function() {
 
 SettingsUI.getSettingsFromUI = function() {
     const settings = {};
-    const readNumber = (selector, fallback) => {
-      const raw = document.querySelector(selector)?.value;
-      if (raw === undefined || raw === null || raw === '') {
-        return fallback;
-      }
-      const value = Number(raw);
-      return Number.isFinite(value) ? value : fallback;
-    };
 
     // ========== GENERAL TAB ==========
     const notificationsToggle = document.querySelector('#notificationsEnabled');
@@ -571,6 +576,7 @@ SettingsUI.getSettingsFromUI = function() {
     const logCollectorMaxLogsInput = document.querySelector('#logCollectorMaxLogs');
     settings.notificationsEnabled = notificationsToggle?.checked ?? this.settings.notificationsEnabled ?? true;
     settings.debugMode = debugModeToggle?.checked ?? this.settings.debugMode ?? false;
+    settings.debugVerbose = document.querySelector('#debugVerbose')?.checked ?? this.settings.debugVerbose ?? false;
     settings.logCollectorEnabled = logCollectorToggle?.checked ?? this.settings.logCollectorEnabled ?? false;
     const rawMaxLogs = parseInt(logCollectorMaxLogsInput?.value ?? this.settings.logCollectorMaxLogs ?? 5000);
     settings.logCollectorMaxLogs = Math.min(Math.max(rawMaxLogs, 100), 5000);
@@ -622,7 +628,7 @@ SettingsUI.getSettingsFromUI = function() {
       webhookOnCache: document.querySelector('#webhookOnCache')?.checked ?? this.settings.webhook?.webhookOnCache ?? false,
       webhookMethod: document.querySelector('#webhookMethod')?.value ?? this.settings.webhook?.webhookMethod ?? 'POST',
       webhookUrl: document.querySelector('#webhookUrl')?.value ?? this.settings.webhook?.webhookUrl ?? '',
-      webhookContentType: document.querySelector('#webhookContentType')?.value ?? this.settings.webhook?.webhookContentType ?? 'application/json',
+      webhookContentType: this.getWebhookContentTypeValue() ?? this.settings.webhook?.webhookContentType ?? 'application/json',
       webhookPayload: document.querySelector('#webhookPayload')?.value ?? this.settings.webhook?.webhookPayload ?? '',
       webhookHeaders: this.settings.webhook?.webhookHeaders || []
     };
@@ -630,7 +636,8 @@ SettingsUI.getSettingsFromUI = function() {
     // ========== HISTORY TAB ==========
     settings.history = {
       historyLimit: parseInt(document.querySelector('#historyLimit')?.value ?? this.settings.history?.historyLimit ?? 0),
-      autoClearDays: parseInt(document.querySelector('#autoClearDays')?.value ?? this.settings.history?.autoClearDays ?? 30),
+      historyAutoDelete: document.querySelector('#historyAutoDelete')?.checked ?? this.settings.history?.historyAutoDelete ?? false,
+      historyAutoDeleteDays: parseInt(document.querySelector('#historyAutoDeleteDays')?.value ?? this.settings.history?.historyAutoDeleteDays ?? 30),
       exportFormat: document.querySelector('#exportFormat')?.value ?? this.settings.history?.exportFormat ?? 'json',
       includeTimestamps: document.querySelector('#includeTimestamps')?.checked ?? this.settings.history?.includeTimestamps ?? true,
       historyBypassCache: document.querySelector('#historyBypassCache')?.checked ?? this.settings.history?.historyBypassCache ?? false
@@ -656,28 +663,42 @@ SettingsUI.getSettingsFromUI = function() {
 
 SettingsUI.validateSettings = function(settings) {
     const errors = [];
+    // Messages surface in the "Invalid settings: …" toast, so they follow the UI language
+    const text = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+    const UNIT_LABEL_KEYS = {
+      minutes: ['timeUnitMinutes', 'Minutes'],
+      hours: ['timeUnitHours', 'Hours'],
+      days: ['timeUnitDays', 'Days'],
+      months: ['timeUnitMonths', 'Months'],
+      years: ['timeUnitYears', 'Years']
+    };
 
     if (settings.history && settings.history.historyLimit !== undefined) {
       if (settings.history.historyLimit < 0 || settings.history.historyLimit > 10000) {
-        errors.push('History limit must be between 0 (unlimited) and 10000');
+        errors.push(text('settingsUiErrHistoryLimit', 'History limit must be between 0 (unlimited) and 10000'));
       }
     }
 
     if (settings.detection && settings.detection.cacheDuration !== undefined) {
-      if (settings.detection.cacheDuration < 1 || settings.detection.cacheDuration > 9999) {
-        errors.push('Cache duration must be between 1 and 9999');
+      const { cacheDuration, cacheUnit } = settings.detection;
+      const max = FormatUtils.CACHE_UNIT_MAX[cacheUnit] || 24;
+      if (!Number.isInteger(cacheDuration) || cacheDuration < 1 || cacheDuration > max) {
+        const unitEntry = UNIT_LABEL_KEYS[cacheUnit];
+        const unitLabel = unitEntry ? text(unitEntry[0], unitEntry[1]) : String(cacheUnit);
+        errors.push(text('settingsUiErrCacheDurationFmt', 'Cache duration must be between 1 and {0} {1}', max, unitLabel));
       }
     }
 
-    if (settings.history && settings.history.autoClearDays !== undefined) {
-      if (settings.history.autoClearDays < 0 || settings.history.autoClearDays > 365) {
-        errors.push('Auto clear days must be between 0 and 365');
+    if (settings.history && settings.history.historyAutoDeleteDays !== undefined) {
+      const days = settings.history.historyAutoDeleteDays;
+      if (!Number.isFinite(days) || days < 1 || days > 3650) {
+        errors.push(text('settingsUiErrAutoDeleteDays', 'Auto-delete days must be between 1 and 3650'));
       }
     }
 
     if (settings.duplicatePrevention && settings.duplicatePrevention.duplicateDuration !== undefined) {
       if (settings.duplicatePrevention.duplicateDuration < 1 || settings.duplicatePrevention.duplicateDuration > 999) {
-        errors.push('Duplicate duration must be between 1 and 999');
+        errors.push(text('settingsUiErrDuplicateDuration', 'Duplicate duration must be between 1 and 999'));
       }
     }
 
@@ -702,7 +723,7 @@ SettingsUI.setupEventListeners = function() {
 
     const saveSettingsBtn = document.querySelector('#saveSettingsBtn');
     if (saveSettingsBtn) {
-      Logger.ui('Save settings button found, attaching event listener');
+      Logger.debug('UI', 'Save settings button found, attaching event listener');
       saveSettingsBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         Logger.ui('Save settings button clicked');
@@ -787,18 +808,37 @@ SettingsUI.setupEventListeners = function() {
       });
     }
 
+    // JS API card: "Available Events" / "Usage Example" are collapsed by default
+    document.querySelectorAll('#settingsModal .api-collapsible-header').forEach((header) => {
+      if (header.dataset.collapsibleReady) return;
+      header.dataset.collapsibleReady = '1';
+      const body = document.getElementById(header.getAttribute('aria-controls'));
+      header.addEventListener('click', () => {
+        const expanded = header.getAttribute('aria-expanded') === 'true';
+        header.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        if (body) body.hidden = expanded;
+      });
+    });
+
+    const apiTr = (key, fallback) => (typeof I18n !== 'undefined' ? I18n.tr(key, fallback) : fallback);
+
+    const jsApiEventsCount = document.querySelector('#jsApiEventsCount');
+    if (jsApiEventsCount) {
+      jsApiEventsCount.textContent = String(document.querySelectorAll('#jsApiEventsList .api-event-item').length);
+    }
+
     const jsApiCodeBlock = document.querySelector('#jsApiUsageCode');
-    if (jsApiCodeBlock) {
-      jsApiCodeBlock.addEventListener('click', () => {
-        FormatUtils.copyToClipboard(jsApiCodeBlock.textContent, { notificationMessage: 'Code copied' });
+    const jsApiCopyCodeBtn = document.querySelector('#jsApiCopyCodeBtn');
+    if (jsApiCodeBlock && jsApiCopyCodeBtn) {
+      jsApiCopyCodeBtn.addEventListener('click', () => {
+        FormatUtils.copyToClipboard(jsApiCodeBlock.textContent, { notificationMessage: apiTr('settingsApiCodeCopied', 'Code copied') });
       });
     }
 
     document.querySelectorAll('.api-event-item code').forEach(codeEl => {
-      codeEl.style.cursor = 'pointer';
-      codeEl.title = 'Click to copy';
+      codeEl.title = apiTr('settingsApiEventCopyTitle', 'Copy event name');
       codeEl.addEventListener('click', () => {
-        FormatUtils.copyToClipboard(codeEl.textContent, { notificationMessage: 'Copied' });
+        FormatUtils.copyToClipboard(codeEl.textContent, { notificationMessage: apiTr('copiedNotification', 'Copied') });
       });
     });
 
@@ -813,6 +853,21 @@ SettingsUI.setupEventListeners = function() {
       SettingsUI.setToggleControlledVisibility(enableJsApiToggle, [
         { element: jsApiSettingsContainer, onDisplay: 'flex' }
       ]);
+    }
+
+    const cacheUnitSelect = document.querySelector('#cacheUnit');
+    if (cacheUnitSelect) {
+      cacheUnitSelect.addEventListener('change', () => SettingsUI.updateCacheDurationHint());
+    }
+
+    const historyAutoDeleteToggle = document.querySelector('#historyAutoDelete');
+    if (historyAutoDeleteToggle) {
+      historyAutoDeleteToggle.addEventListener('change', () => SettingsUI.syncHistoryAutoDeleteRow());
+    }
+
+    const openHistoryStatsBtn = document.querySelector('#openHistoryStatsBtn');
+    if (openHistoryStatsBtn) {
+      openHistoryStatsBtn.addEventListener('click', () => SettingsUI.openHistoryStats());
     }
 
     const preventDuplicatesToggle = document.querySelector('#preventDuplicates');
@@ -872,6 +927,54 @@ SettingsUI.setupEventListeners = function() {
     this.setupColorPagination();
     if (typeof SettingsUI._setupColorListeners === 'function') {
       SettingsUI._setupColorListeners();
+    }
+};
+
+// ========== CACHE DURATION UNITS ==========
+// Ranges and conversions live in FormatUtils so the detection engine reads the
+// stored value exactly as this UI shows it.
+SettingsUI.getCacheDurationDisplay = function(detection = {}) {
+    return FormatUtils.normalizeCacheDuration(detection.cacheDuration ?? 12, detection.cacheUnit || 'hours');
+};
+
+SettingsUI.updateCacheDurationHint = function() {
+    const unitSelect = document.querySelector('#cacheUnit');
+    const hint = document.querySelector('#cacheDurationRangeHint');
+    const input = document.querySelector('#cacheDuration');
+    if (!unitSelect || !hint) return;
+
+    const unit = unitSelect.value;
+    const max = FormatUtils.CACHE_UNIT_MAX[unit] || 24;
+    const unitLabel = unitSelect.options[unitSelect.selectedIndex]?.textContent?.trim() || unit;
+    if (input) input.max = String(max);
+
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
+    const isLargestUnit = unit === 'years';
+    const key = isLargestUnit ? 'settingsCacheDurationRangeMaxFmt' : 'settingsCacheDurationRangeFmt';
+    const fallback = isLargestUnit
+      ? `Allowed range: 1–${max} ${unitLabel}.`
+      : `Allowed range: 1–${max} ${unitLabel}. Choose a larger unit for longer periods.`;
+    hint.textContent = (t && t.format(key, max, unitLabel)) || fallback;
+};
+
+// ========== HISTORY AUTO-DELETE ==========
+SettingsUI.syncHistoryAutoDeleteRow = function() {
+    const toggle = document.querySelector('#historyAutoDelete');
+    const row = document.querySelector('#historyAutoDeleteDaysRow');
+    const input = document.querySelector('#historyAutoDeleteDays');
+    const enabled = !!(toggle && toggle.checked);
+    if (row) row.classList.toggle('is-disabled', !enabled);
+    if (input) input.disabled = !enabled;
+};
+
+// ========== HISTORY STATISTICS ==========
+SettingsUI.openHistoryStats = function() {
+    const url = chrome.runtime.getURL('sections/stats/stats.html');
+    try {
+      chrome.tabs.create({ url });
+    } catch (error) {
+      Logger.error('UI', 'Failed to open history statistics:', error);
+      window.open(url, '_blank', 'noopener');
     }
 };
 

@@ -38,7 +38,7 @@ class History {
    * Display history items from storage
    */
   async displayHistory() {
-    Logger.ui('History.displayHistory called');
+    Logger.debug('UI', 'History.displayHistory called');
 
     // Ensure HTML is loaded
     if (!this.initialized) {
@@ -61,18 +61,11 @@ class History {
    */
   async loadHistoryFromStorage() {
     try {
-      const result = await chrome.storage.local.get(['scrapfly_history']);
-
-      if (result.scrapfly_history) {
-        const historyData = JSON.parse(result.scrapfly_history);
-        this.historyItems = historyData.items || [];
-        if (this.historyLimit > 0 && this.historyItems.length > this.historyLimit) {
-          this.historyItems = this.historyItems.slice(0, this.historyLimit);
-        }
-        Logger.ui('Loaded history items:', this.historyItems.length);
-      } else {
-        this.historyItems = [];
+      this.historyItems = await HistoryStore.read(chrome.storage.local);
+      if (this.historyLimit > 0 && this.historyItems.length > this.historyLimit) {
+        this.historyItems = this.historyItems.slice(0, this.historyLimit);
       }
+      Logger.debug('UI', 'Loaded history items:', this.historyItems.length);
     } catch (error) {
       Logger.warn('UI', '[History] Storage load failed', error);
       this.historyItems = [];
@@ -80,23 +73,34 @@ class History {
   }
 
   /**
-   * Save history to Chrome storage
+   * Ask the service worker to change the stored history. The popup never
+   * writes `scrapfly_history` itself: its copy is only for display, and writing
+   * it back would drop entries the worker saved since the popup opened.
+   * @param {object} message - One of the HistoryStore.Messages requests
+   * @returns {Promise<object>} Worker response ({ status: 'ok', ... })
    */
-  async saveHistoryToStorage() {
-    try {
-      const historyData = {
-        timestamp: new Date().toISOString(),
-        items: this.historyItems
-      };
-
-      await chrome.storage.local.set({
-        'scrapfly_history': JSON.stringify(historyData, null, 2)
-      });
-
-      Logger.ui('History saved to storage');
-    } catch (error) {
-      Logger.warn('UI', '[History] Storage save failed', error);
+  async sendHistoryChange(message) {
+    const response = await chrome.runtime.sendMessage(message);
+    if (!response || response.status !== 'ok') {
+      throw new Error((response && response.error) || 'History update failed');
     }
+    return response;
+  }
+
+  /**
+   * Import: let the worker merge / replace against the stored list, then reload.
+   * @param {Array<object>} items - Imported items
+   * @param {'merge'|'replace'} mode
+   */
+  async saveHistoryToStorage(items = this.historyItems, mode = 'replace') {
+    await this.sendHistoryChange({
+      type: HistoryStore.Messages.REPLACE_ITEMS,
+      items,
+      mode,
+      limit: this.historyLimit
+    });
+    await this.loadHistoryFromStorage();
+    Logger.debug('UI', 'History saved to storage');
   }
 
   /**
@@ -138,62 +142,68 @@ class History {
 
     historyList.style.display = 'block';
 
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
+    const _tr = (key, fallback) => (t && t.get(key)) || fallback;
+    const moreLabel = FormatUtils.escapeHtml(_tr('historyMoreActions', 'More actions'));
+    const untitledLabel = _tr('historyUiUntitled', 'Untitled');
+    const unknownLabel = _tr('timeUnknown', 'Unknown');
+
     const buildHistoryItemHtml = (item) => {
       const timeAgo = this.getTimeAgo(new Date(item.timestamp));
-      const domain = this.getDomainFromUrl(item.url);
-      const safeTitle = FormatUtils.escapeHtml(item.title || 'Untitled');
+      // getDomainFromUrl answers 'Unknown' (English, also used in filenames) without a URL
+      const domain = item.url ? this.getDomainFromUrl(item.url) : unknownLabel;
+      // Page title on top, domain underneath; entries saved without a real title fall back to the domain
+      // ('Untitled' is the value stored for pages without a title)
+      const rawTitle = (item.title && item.title !== 'Untitled') ? item.title : (domain || untitledLabel);
+      const safeTitle = FormatUtils.escapeHtml(rawTitle);
       const safeUrl = FormatUtils.escapeHtml(item.url || '');
       const safeDomain = FormatUtils.escapeHtml(domain);
 
       const faviconSrc = UrlUtils.resolveDisplayFavicon(item.favicon, item.url || item.hostname);
+      const summary = this.getHistorySummary(item);
+      const cardDetections = item.detections || [];
+      const hasCardDetections = summary.totalDetections > 0;
+      // Breakdown tips, the same ones the detail modal shows
+      const detectionsTip = hasCardDetections ? FormatUtils.detectionsTip(cardDetections, summary.labels.detections) : null;
+      const confidenceTip = hasCardDetections ? FormatUtils.confidenceTip(cardDetections, `${summary.labels.confidence}: ${summary.avgConfidence}%`) : null;
+      const difficultyTip = hasCardDetections ? FormatUtils.difficultyTip(cardDetections, summary.difficulty, `${summary.labels.difficulty}: ${summary.difficultyDisplay}`) : null;
 
       return `
         <div class="history-item" data-history-id="${item.id}">
           <div class="history-item-top">
+            <span class="history-favicon-tile">
+              <img src="${faviconSrc}" alt="" class="history-favicon" data-fallback="${chrome.runtime.getURL('icons/icon16.png')}">
+            </span>
             <div class="history-item-content">
-              <div class="history-header-info">
-                <img src="${faviconSrc}" alt="Favicon" class="history-favicon" data-fallback="${chrome.runtime.getURL('icons/icon16.png')}">
-                <div class="history-url" title="${safeUrl}">${safeDomain}</div>
-              </div>
               <div class="history-title" title="${safeTitle}">${safeTitle}</div>
-            </div>
-            <div class="history-item-right">
-              <div class="history-item-actions">
-                <button class="history-item-action-btn history-clear-cache-btn" data-action="clear-cache" title="Clear cache" aria-label="Clear cache for this entry">
-                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
-                  </svg>
-                </button>
-                <button class="history-item-action-btn history-copy-btn" data-action="copy" title="Copy data" aria-label="Copy detection data for this entry">
-                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" fill="currentColor"/>
-                  </svg>
-                </button>
-                <button class="history-item-action-btn history-export-btn" data-action="export" title="Export item" aria-label="Export this history entry as JSON">
-                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z" fill="currentColor"/>
-                  </svg>
-                </button>
-                <button class="history-item-action-btn history-blacklist-btn" data-action="blacklist" title="Add to blacklist" aria-label="Add this domain to the blacklist">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M4.93 4.93l14.14 14.14"/>
-                  </svg>
-                </button>
-                <button class="history-item-action-btn history-delete-btn" data-action="delete" title="Delete item" aria-label="Delete this history entry">
-                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
-                  </svg>
-                </button>
+              <div class="history-subline">
+                <span class="history-url" title="${safeUrl}">${safeDomain}</span>
+                <span class="history-subline-dot" aria-hidden="true">•</span>
+                <span class="history-metrics">
+                  <span class="history-metric" ${detectionsTip
+                    ? FormatUtils.tipAttrs(detectionsTip.title, detectionsTip.detail, detectionsTip.rows)
+                    : `data-tip="${FormatUtils.escapeAttr(summary.labels.detections)}"`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/></svg>
+                    <span class="history-metric-value">${summary.totalDetections}</span>
+                  </span>
+                  ${FormatUtils.confidenceHtml(summary.avgConfidence, 'history-metric', confidenceTip)}
+                  ${FormatUtils.difficultyHtml(summary.difficulty, summary.difficultyDisplay, 'history-difficulty-pill', difficultyTip)}
+                </span>
               </div>
             </div>
+            <button class="history-item-action-btn history-more-btn" data-action="menu" title="${moreLabel}" aria-label="${moreLabel}" aria-haspopup="menu" aria-expanded="false">
+              <svg width="14" height="4" viewBox="0 0 14 4" aria-hidden="true">
+                <circle cx="1.8" cy="2" r="1.2" fill="currentColor"/>
+                <circle cx="7" cy="2" r="1.2" fill="currentColor"/>
+                <circle cx="12.2" cy="2" r="1.2" fill="currentColor"/>
+              </svg>
+            </button>
           </div>
-          ${this.renderHistoryStats(item)}
           <div class="history-item-bottom">
             <div class="history-detections">
               ${this.renderHistoryDetections(item.detections || [], item.id)}
             </div>
-            <div class="history-timestamp">${timeAgo}</div>
+            <span class="history-timestamp" data-tip="${FormatUtils.escapeAttr(FormatUtils.formatDateTime(item.timestamp))}">${FormatUtils.escapeHtml(timeAgo)}</span>
           </div>
         </div>
       `;
@@ -264,11 +274,13 @@ class History {
    */
   renderHistoryDetections(detections, itemId) {
     if (!detections || detections.length === 0) {
-      return '<span class="history-detection-tag">No detections</span>';
+      const noDetections = FormatUtils.t('historyNoDetections', 'No detections');
+      return `<span class="history-detection-tag">${FormatUtils.escapeHtml(noDetections)}</span>`;
     }
+    const unknownName = FormatUtils.t('timeUnknown', 'Unknown');
 
     let tagsHtml = '';
-    const maxTags = 6; // Show 6 icons + "+N" badge to fit in one row
+    const maxTags = 4; // 4 icons + "+N" leave room for the detections / confidence metrics
 
     // Sort detections by priority: Anti-Bot > CAPTCHA > Fingerprinting
     const categoryPriority = {
@@ -300,17 +312,23 @@ class History {
     };
 
     sortedDetections.slice(0, maxTags).forEach(detection => {
-      const name = detection.detector?.name || detection.detector || 'Unknown';
+      const rawName = detection.detector?.name || detection.detector || '';
+      const name = rawName || unknownName;
       const category = detection.category || '';
       const categoryColor = getCategoryColor(category);
-      const tooltipText = FormatUtils.escapeHtml(`${name}${category ? ' (' + category + ')' : ''}`);
+      const categoryKey = FormatUtils.categoryKey(detection);
+      const confidenceValue = Math.round(Number(detection.confidence) || 0);
+      // Same hover card as elsewhere: name with its category dot, category and confidence
+      const tooltipAttrs = FormatUtils.tipAttrs(name,
+        `${FormatUtils.categoryLabel(categoryKey)} · ${FormatUtils.t('clipboardConfidenceFmt', 'Confidence: {0}%', confidenceValue)}`,
+        [], `cat-${categoryKey}`);
       const safeName = FormatUtils.escapeHtml(name);
 
       // Get detector object to retrieve icon
       let detectorObj = null;
       let iconHtml = '';
 
-      if (this.detectorManager && category && name !== 'Unknown') {
+      if (this.detectorManager && category && rawName) {
         detectorObj = this.detectorManager.getDetectorByName(category, name);
 
         if (!detectorObj) {
@@ -357,20 +375,25 @@ class History {
           iconHtml = `<div class="detection-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${scrapflyIconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--default history-fingerprint-image"></div>`;
           isFingerprint = true;
         } else {
-          iconHtml = `<img src="${scrapflyIconUrl}" alt="${safeName}" class="detection-icon">`;
+          // No vendor logo: the Scrapfly mark sits bare on the chip (no white plate)
+          iconHtml = `<img src="${chrome.runtime.getURL('icons/icon48.png')}" alt="${safeName}" class="detection-icon detection-icon--default">`;
         }
       }
 
       const badgeClass = isFingerprint ? 'history-detection-tag icon-badge fingerprint-badge' : 'history-detection-tag icon-badge';
-      tagsHtml += `<span class="${badgeClass}" title="${tooltipText}" style="border-color: ${categoryColor};">${iconHtml}</span>`;
+      tagsHtml += `<span class="${badgeClass}" ${tooltipAttrs} style="border-color: ${categoryColor};">${iconHtml}</span>`;
     });
 
     if (sortedDetections.length > maxTags) {
       const hiddenDetections = sortedDetections.slice(maxTags);
-      const hiddenSummary = FormatUtils.escapeHtml(hiddenDetections
-        .map(d => d.detector?.name || d.detector || 'Unknown')
-        .join(', '));
-      const tooltipAttr = hiddenSummary ? ` title="${hiddenSummary}"` : '';
+      // The hidden ones, each with its category dot and confidence
+      const rows = hiddenDetections.slice(0, 8).map(d => {
+        const key = FormatUtils.categoryKey(d);
+        const value = Math.round(Number(d.confidence) || 0);
+        return { label: d.detector?.name || d.detector || unknownName, dot: `cat-${key}`, value: `${value}%`, tone: FormatUtils.confidenceTone(value) };
+      });
+      if (hiddenDetections.length > 8) rows.push({ label: FormatUtils.t('tipMoreFmt', '+{0} more', hiddenDetections.length - 8) });
+      const tooltipAttr = ` ${FormatUtils.tipAttrs(FormatUtils.t('tipMoreFmt', '+{0} more', hiddenDetections.length), '', rows)}`;
 
       tagsHtml += `<span class="history-detection-tag more-detections" data-history-item-id="${itemId}"${tooltipAttr}>+${hiddenDetections.length}</span>`;
     }
@@ -410,95 +433,124 @@ class History {
   }
 
   /**
-   * Render stats row for a history item
+   * Display-ready summary of a history entry, shared by the card and the detail modal
    * @param {Object} item - History item with detections and cacheScope
-   * @returns {string} HTML string for stats row
+   * @returns {Object} counts, tones and localized labels
    */
-  renderHistoryStats(item) {
+  getHistorySummary(item) {
     const detections = item.detections || [];
     const stats = this.calculateHistoryStats(detections);
+    const _tr = (key, fallback) => FormatUtils.t(key, fallback);
 
-    // Cache scope display names — resolve via i18n so they match the user's locale.
-    const t = (typeof I18n !== 'undefined') ? I18n : null;
-    const _tr = (key, fallback) => (t && t.get(key)) || fallback;
-    const scopeKeyByValue = {
-      'domain': 'scopeDomain',
-      'path': 'scopePath',
-      'url': 'scopeFullUrl',
-      'full': 'scopeFullUrl',
-      'full_url': 'scopeFullUrl'
-    };
-    const scopeFallback = { 'domain': 'Domain', 'path': 'Path', 'url': 'Full URL', 'full': 'Full URL', 'full_url': 'Full URL' };
+    const scopeKeyByValue = { domain: 'scopeDomain', path: 'scopePath', url: 'scopeFullUrl', full: 'scopeFullUrl', full_url: 'scopeFullUrl' };
+    const scopeFallback = { domain: 'Domain', path: 'Path', url: 'Full URL', full: 'Full URL', full_url: 'Full URL' };
     const cacheScope = String(item.cacheScope || 'domain').toLowerCase();
-    const scopeKey = scopeKeyByValue[cacheScope] || 'scopeDomain';
-    const cacheScopeDisplay = _tr(scopeKey, scopeFallback[cacheScope] || 'Domain');
+    const scopeDisplay = _tr(scopeKeyByValue[cacheScope] || 'scopeDomain', scopeFallback[cacheScope] || 'Domain');
 
-    // Translated stat labels (CSS renders them uppercase via text-transform).
-    const lblDetections = _tr('statDetections', 'Detections');
-    const lblConfidence = _tr('statConfidence', 'Confidence');
-    const lblDifficulty = _tr('statDifficulty', 'Difficulty');
-    const lblScope = _tr('statCacheScope', 'Scope');
-
-    // Translated difficulty value (Low/Medium/High → localized).
-    const difficultyKeyByValue = { 'Low': 'difficultyLow', 'Medium': 'difficultyMedium', 'High': 'difficultyHigh' };
+    const difficultyKeyByValue = { Low: 'difficultyLow', Medium: 'difficultyMedium', High: 'difficultyHigh' };
     const difficultyKey = difficultyKeyByValue[stats.difficulty];
     const difficultyDisplay = difficultyKey ? _tr(difficultyKey, stats.difficulty || '') : (stats.difficulty || '');
 
+    const confidenceTone = FormatUtils.confidenceTone(stats.avgConfidence);
+    const difficultyTone = { High: 'red', Medium: 'amber', Low: 'green' }[stats.difficulty] || 'green';
+
+    // Per-category counts for the modal breakdown (Anti-bot, Captcha, Fingerprint, other)
+    const categoryCounts = { antibot: 0, captcha: 0, fingerprint: 0, other: 0 };
+    detections.forEach(d => {
+      const cat = String(d.category || '').toLowerCase().replace(/[^a-z]/g, '');
+      if (cat.includes('antibot')) categoryCounts.antibot++;
+      else if (cat.includes('captcha')) categoryCounts.captcha++;
+      else if (cat.includes('fingerprint')) categoryCounts.fingerprint++;
+      else categoryCounts.other++;
+    });
+
+    return {
+      ...stats,
+      difficultyDisplay,
+      difficultyTone,
+      confidenceTone,
+      scopeDisplay,
+      categoryCounts,
+      labels: {
+        detections: _tr('statDetections', 'Detections'),
+        confidence: _tr('statConfidence', 'Confidence'),
+        difficulty: _tr('statDifficulty', 'Difficulty'),
+        scope: _tr('statCacheScope', 'Cache Scope')
+      }
+    };
+  }
+
+  /**
+   * Summary block of the detail modal: three metric tiles, then a category bar
+   * @param {Object} item - History item
+   * @returns {string} HTML
+   */
+  renderHistoryModalSummary(item) {
+    const s = this.getHistorySummary(item);
+    const esc = FormatUtils.escapeHtml;
+    const detections = item.detections || [];
+    // Same hover card as the category bar: a title, what the number means and a breakdown
+    const tipFor = (tip) => (tip ? ` tabindex="0" ${FormatUtils.tipAttrs(tip.title, tip.detail, tip.rows)}` : '');
+    const tile = (cls, label, value, tone = '', tip = null) => `
+      <div class="hm-metric ${cls}"${tipFor(tip)}>
+        <div class="hm-metric-label">${esc(label)}</div>
+        <div class="hm-metric-value${tone ? ` tone-${tone}` : ''}">${esc(String(value))}</div>
+      </div>`;
+    const hasDetections = s.totalDetections > 0;
+    const detectionsTip = hasDetections ? FormatUtils.detectionsTip(detections, s.labels.detections) : null;
+    const confidenceTip = hasDetections ? FormatUtils.confidenceTip(detections, `${s.labels.confidence}: ${s.avgConfidence}%`) : null;
+    const difficultyTip = hasDetections ? FormatUtils.difficultyTip(detections, s.difficulty, `${s.labels.difficulty}: ${s.difficultyDisplay}`) : null;
+
+    const segments = [
+      { key: 'antibot', label: FormatUtils.t('categoryAntibot', 'Anti-bot') },
+      { key: 'captcha', label: FormatUtils.t('categoryCaptcha', 'Captcha') },
+      { key: 'fingerprint', label: FormatUtils.t('categoryFingerprint', 'Fingerprint') },
+      { key: 'other', label: FormatUtils.t('statsCategoryOther', 'Other') }
+    ].filter(seg => s.categoryCounts[seg.key] > 0);
+
+    const bar = s.totalDetections > 0 ? `
+      <div class="hm-breakdown">
+        <div class="hm-bar">
+          ${segments.map(seg => {
+            const count = s.categoryCounts[seg.key];
+            const pct = Math.round((count / s.totalDetections) * 100);
+            const detail = FormatUtils.t('historyCategoryShareFmt', '{0} of {1} detections · {2}%', count, s.totalDetections, pct);
+            return `<span class="hm-bar-seg cat-${seg.key}" style="flex: ${count}" role="img" aria-label="${FormatUtils.escapeAttr(`${seg.label}: ${detail}`)}" data-tip="${FormatUtils.escapeAttr(seg.label)}" data-tip-detail="${FormatUtils.escapeAttr(detail)}" data-tip-dot="cat-${seg.key}"></span>`;
+          }).join('')}
+        </div>
+        <div class="hm-legend">
+          ${segments.map(seg => {
+            const count = s.categoryCounts[seg.key];
+            const pct = Math.round((count / s.totalDetections) * 100);
+            const detail = FormatUtils.t('historyCategoryShareFmt', '{0} of {1} detections · {2}%', count, s.totalDetections, pct);
+            return `<span class="hm-legend-item" ${FormatUtils.tipAttrs(seg.label, detail, [], `cat-${seg.key}`)}><i class="hm-dot cat-${seg.key}"></i>${esc(seg.label)}<b>${count}</b></span>`;
+          }).join('')}
+          <span class="hm-legend-scope" ${FormatUtils.tipAttrs(`${s.labels.scope}: ${s.scopeDisplay}`, this.getScopeHint(item.cacheScope))}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a13 13 0 0 0 0 18a13 13 0 0 0 0-18M3 12h18"/></svg>${esc(s.scopeDisplay)}
+          </span>
+        </div>
+      </div>` : '';
+
     return `
-      <div class="history-stats-line">
-        <div class="history-stat-inline history-stat-detections">
-          <div class="history-stat-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M12 6v6l4 2"/>
-            </svg>
-          </div>
-          <div class="history-stat-content">
-            <div class="history-stat-label">${lblDetections}</div>
-            <div class="history-stat-value">${stats.totalDetections}</div>
-          </div>
-        </div>
-        <div class="history-stat-inline history-stat-confidence">
-          <div class="history-stat-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-              <polyline points="22 4 12 14.01 9 11.01"/>
-            </svg>
-          </div>
-          <div class="history-stat-content">
-            <div class="history-stat-label">${lblConfidence}</div>
-            <div class="history-stat-value">${stats.avgConfidence}%</div>
-          </div>
-        </div>
-        <div class="history-stat-inline history-stat-difficulty">
-          <div class="history-stat-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-              <line x1="12" y1="9" x2="12" y2="13"/>
-              <line x1="12" y1="17" x2="12.01" y2="17"/>
-            </svg>
-          </div>
-          <div class="history-stat-content">
-            <div class="history-stat-label">${lblDifficulty}</div>
-            <div class="history-stat-value" style="color: ${stats.difficultyColor}">${difficultyDisplay}</div>
-          </div>
-        </div>
-        <div class="history-stat-inline history-stat-cache-scope">
-          <div class="history-stat-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M2 12h20"/>
-              <path d="M12 2a15 15 0 0 1 0 20" opacity="0.7"/>
-              <path d="M12 2a15 15 0 0 0 0 20" opacity="0.7"/>
-            </svg>
-          </div>
-          <div class="history-stat-content">
-            <div class="history-stat-label">${lblScope}</div>
-            <div class="history-stat-value">${cacheScopeDisplay}</div>
-          </div>
-        </div>
+      <div class="hm-metrics">
+        ${tile('hm-metric-detections', s.labels.detections, s.totalDetections, '', detectionsTip)}
+        ${tile('hm-metric-confidence', s.labels.confidence, `${s.avgConfidence}%`, s.confidenceTone, confidenceTip)}
+        ${tile('hm-metric-difficulty', s.labels.difficulty, s.difficultyDisplay, s.difficultyTone, difficultyTip)}
       </div>
+      ${bar}
     `;
+  }
+
+  /**
+   * What a cache scope means, for its hover tip.
+   * @param {string} scope - domain | path | full
+   * @returns {string}
+   */
+  getScopeHint(scope) {
+    const value = String(scope || 'domain').toLowerCase();
+    if (value === 'path') return FormatUtils.t('tipScopePath', 'Results are reused for this exact path, whatever the query.');
+    if (value === 'full' || value === 'url' || value === 'full_url') return FormatUtils.t('tipScopeFullUrl', 'Results are reused only for this exact URL, including the query.');
+    return FormatUtils.t('tipScopeDomain', 'Results are reused for every page on this domain.');
   }
 
   /**
@@ -529,17 +581,17 @@ class History {
       const methods = card.querySelector('.history-modal-detection-methods');
 
       if (header && methods) {
-        // Toggle expand/collapse on header click
-        header.style.cursor = 'pointer';
-        header.addEventListener('click', () => {
-          const isExpanded = card.classList.contains('expanded');
-
-          if (isExpanded) {
-            card.classList.remove('expanded');
-            methods.style.display = 'none';
-          } else {
-            card.classList.add('expanded');
-            methods.style.display = 'flex';
+        // Toggle expand/collapse on header click or Enter / Space
+        const toggle = () => {
+          const isExpanded = card.classList.toggle('expanded');
+          methods.style.display = isExpanded ? 'flex' : 'none';
+          header.setAttribute('aria-expanded', String(isExpanded));
+        };
+        header.addEventListener('click', toggle);
+        header.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggle();
           }
         });
 
@@ -570,8 +622,8 @@ class History {
     const _tr = (key, fallback) => (t && t.get(key)) || fallback;
     const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
     try {
+      await this.sendHistoryChange({ type: HistoryStore.Messages.CLEAR });
       this.historyItems = [];
-      await chrome.storage.local.remove(['scrapfly_history']);
       this.showEmptyState();
       Logger.ui('History cleared');
       NotificationHelper.success(_tr('notificationHistoryCleared', 'History cleared'));
@@ -614,8 +666,8 @@ class History {
    * Setup click handlers for history items
    */
   setupHistoryItemHandlers() {
-    // Handle action button clicks (clear cache/copy/export/blacklist/delete)
-    document.querySelectorAll('.history-item-action-btn').forEach(btn => {
+    // Card buttons: copy acts directly, "…" opens the shared per-entry menu
+    document.querySelectorAll('#historyList .history-item-action-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const action = e.currentTarget.dataset.action;
@@ -625,16 +677,16 @@ class History {
 
         if (!item) return;
 
-        if (action === 'clear-cache') {
-          this.clearHistoryItemCache(item);
-        } else if (action === 'copy') {
+        if (action === 'copy') {
           this.copyHistoryItem(item);
-        } else if (action === 'export') {
-          this.exportHistoryItem(item);
-        } else if (action === 'blacklist') {
-          this.addHistoryItemToBlacklist(item);
-        } else if (action === 'delete') {
-          this.deleteHistoryItem(item);
+        } else if (action === 'menu') {
+          const menu = document.querySelector('#historyItemMenu');
+          if (this._openMenu && this._openMenu.anchor === e.currentTarget) {
+            this.closeMenus();
+          } else if (menu) {
+            this.openMenu(menu, e.currentTarget);
+            this._menuItemId = historyId;
+          }
         }
       });
     });
@@ -657,7 +709,7 @@ class History {
    * @param {object} historyItem - History item object
    */
   showHistoryItemDetails(historyItem) {
-    Logger.ui('Showing details for history item:', historyItem);
+    Logger.debug('UI', 'Showing details for history item:', historyItem);
 
     const modal = document.querySelector('#historyDetailModal');
     if (!modal) {
@@ -680,19 +732,26 @@ class History {
         favicon.src = chrome.runtime.getURL('icons/icon16.png');
       };
     }
-    if (title) title.textContent = historyItem.title || 'Untitled';
+    if (title) {
+      title.textContent = (historyItem.title && historyItem.title !== 'Untitled')
+        ? historyItem.title
+        : FormatUtils.t('historyUiUntitled', 'Untitled');
+    }
     if (url) {
-      url.textContent = historyItem.url;
+      url.textContent = this.getDomainFromUrl(historyItem.url || '') || historyItem.url;
       url.href = historyItem.url;
+      url.title = historyItem.url || '';
     }
     if (timestamp) {
       const timeAgo = this.getTimeAgo(new Date(historyItem.timestamp));
-      const fullDate = new Date(historyItem.timestamp).toLocaleString();
-      timestamp.innerHTML = `<span class="time-ago">${FormatUtils.escapeHtml(timeAgo)}</span><span class="time-full">(${FormatUtils.escapeHtml(fullDate)})</span>`;
+      const fullDate = FormatUtils.formatDateTime(historyItem.timestamp);
+      timestamp.textContent = timeAgo;
+      timestamp.title = fullDate;
     }
     if (modalStats) {
-      modalStats.innerHTML = this.renderHistoryStats(historyItem);
+      modalStats.innerHTML = this.renderHistoryModalSummary(historyItem);
     }
+    this._modalItemId = historyItem.id;
 
     // Render detections in modal
     if (content) {
@@ -727,26 +786,31 @@ class History {
    * @returns {string} Formatted text
    */
   formatHistoryItemText(historyItem) {
-    let text = `URL: ${historyItem.url}\n`;
-    text += `Title: ${historyItem.title || 'Untitled'}\n`;
-    text += `Timestamp: ${new Date(historyItem.timestamp).toLocaleString()}\n`;
-    text += `\nDetections (${historyItem.detections?.length || 0}):\n`;
+    const L = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+    const title = (historyItem.title && historyItem.title !== 'Untitled')
+      ? historyItem.title
+      : L('historyUiUntitled', 'Untitled');
+    let text = L('clipboardUrlFmt', 'URL: {0}', historyItem.url) + '\n';
+    text += L('clipboardTitleFmt', 'Title: {0}', title) + '\n';
+    text += L('clipboardTimestampFmt', 'Timestamp: {0}', FormatUtils.formatDateTime(historyItem.timestamp)) + '\n';
+    text += '\n' + L('clipboardDetectionsListFmt', 'Detections ({0}):', historyItem.detections?.length || 0) + '\n';
     text += '─'.repeat(50) + '\n\n';
 
+    const unknownValue = L('detectionUiUnknownValue', 'unknown');
     (historyItem.detections || []).forEach((detection, index) => {
-      const name = detection.detector?.name || detection.detector || 'Unknown';
+      const name = detection.detector?.name || detection.detector || L('timeUnknown', 'Unknown');
       const category = detection.category || '';
       const confidence = detection.confidence || 0;
 
       text += `${index + 1}. ${name}\n`;
-      text += `   Category: ${category}\n`;
-      text += `   Confidence: ${confidence}%\n`;
+      text += '   ' + L('clipboardCategoryFmt', 'Category: {0}', category) + '\n';
+      text += '   ' + L('clipboardConfidenceFmt', 'Confidence: {0}%', confidence) + '\n';
 
       if (detection.matches && detection.matches.length > 0) {
-        text += `   Detection Methods:\n`;
+        text += '   ' + L('clipboardDetectionMethodsHeading', 'Detection Methods:') + '\n';
         detection.matches.forEach(match => {
           const methodType = (match.type || 'unknown').replace(/_/g, ' ').toUpperCase();
-          const value = match.fullUrl || match.value || match.name || match.selector || match.pattern || 'unknown';
+          const value = match.fullUrl || match.value || match.name || match.selector || match.pattern || unknownValue;
           text += `     - ${methodType}: ${value} (${match.confidence || 0}%)\n`;
         });
       }
@@ -798,6 +862,7 @@ class History {
         title: _tr('dialogClearCacheTitle', 'Clear Cache'),
         message: _fmt('dialogClearCacheMessageFmt', `Clear cached detection data for ${domain}? The history entry will be kept.`, domain),
         type: 'warning',
+        tone: 'danger',
         confirmText: _tr('buttonClearCache', 'Clear Cache'),
         cancelText: _tr('btnCancel', 'Cancel'),
         emphasizeAction: true
@@ -921,26 +986,14 @@ class History {
 
       if (!confirmed) return;
 
-      // Remove from array
-      const index = this.historyItems.findIndex(h => h.id === historyItem.id);
-      if (index > -1) {
-        this.historyItems.splice(index, 1);
+      // The worker removes it from the stored list; then reload so entries it
+      // saved since the popup opened show up instead of being overwritten.
+      await this.sendHistoryChange({ type: HistoryStore.Messages.DELETE_ITEMS, ids: [historyItem.id] });
+      await this.loadHistoryFromStorage();
+      this.renderHistory();
 
-        // Save updated history to storage
-        const historyData = {
-          items: this.historyItems,
-          lastUpdated: Date.now()
-        };
-        await chrome.storage.local.set({
-          'scrapfly_history': JSON.stringify(historyData)
-        });
-
-        // Re-render the history
-        this.renderHistory();
-
-        NotificationHelper.success(_tr('notificationHistoryItemDeleted', 'History item deleted'));
-        Logger.ui('History: Item deleted successfully');
-      }
+      NotificationHelper.success(_tr('notificationHistoryItemDeleted', 'History item deleted'));
+      Logger.debug('UI', 'History: Item deleted successfully');
     } catch (error) {
       Logger.warn('UI', '[History] Delete failed', error);
       NotificationHelper.error(_tr('notificationDeleteHistoryItemFailed', 'Failed to delete history item'));
@@ -965,100 +1018,87 @@ class History {
       'captcha': 'categoryCaptcha',
       'fingerprint': 'categoryFingerprint', 'fingerprinting': 'categoryFingerprint'
     };
+    const categoryClass = (category) => {
+      const cat = String(category || '').toLowerCase().replace(/[^a-z]/g, '');
+      if (cat.includes('antibot')) return 'antibot';
+      if (cat.includes('captcha')) return 'captcha';
+      if (cat.includes('fingerprint')) return 'fingerprint';
+      return 'other';
+    };
+    const categoryOrder = { antibot: 0, captcha: 1, fingerprint: 2, other: 3 };
 
-    return detections.map((detection, index) => {
-      const name = detection.detector?.name || detection.detector || _tr('unknownDetection', 'Unknown');
+    // Anti-bot first, then captcha, then fingerprint; strongest confidence first in each group.
+    // The original index is kept so data-detection-index still points into the stored array.
+    const ordered = detections
+      .map((detection, index) => ({ detection, index }))
+      .sort((a, b) => (categoryOrder[categoryClass(a.detection.category)] - categoryOrder[categoryClass(b.detection.category)])
+        || ((b.detection.confidence || 0) - (a.detection.confidence || 0)));
+
+    return ordered.map(({ detection, index }) => {
+      const rawName = detection.detector?.name || detection.detector || '';
+      const name = rawName || _tr('unknownDetection', 'Unknown Detection');
       const safeName = FormatUtils.escapeHtml(name);
       const category = detection.category || '';
       const categoryKey = categoryKeyByValue[String(category).toLowerCase()] || null;
       const translatedCategory = categoryKey ? _tr(categoryKey, category) : category;
       const safeCategory = FormatUtils.escapeHtml(translatedCategory);
-      const confidence = detection.confidence || 0;
+      const catClass = categoryClass(category);
+      const confidence = Math.round(Number(detection.confidence) || 0);
       const hasMethods = detection.matches && detection.matches.length > 0;
 
-      // Get detector object and color from storage
       let detectorObj = null;
-      let detectorColor = '#666666';
-      if (this.detectorManager && category && name !== 'Unknown') {
+      if (this.detectorManager && category && rawName) {
         detectorObj = this.detectorManager.getDetectorByName(category, name);
-        if (detectorObj && detectorObj.color) {
-          detectorColor = detectorObj.color;
-        }
       }
+      const isFingerprintCategory = catClass === 'fingerprint';
 
-      // Get category color from CategoryManager
-      let categoryColor = '#666666';
-      if (this.detectorManager?.categoryManager && category) {
-        const normalizedCategory = this.detectorManager.normalizeCategoryName(category);
-        categoryColor = this.detectorManager.categoryManager.getCategoryColor(normalizedCategory) || categoryColor;
-      }
-      const categoryRgb = this.hexToRgb(categoryColor);
-      const categoryStyle = categoryRgb
-        ? `background: rgba(${categoryRgb.r}, ${categoryRgb.g}, ${categoryRgb.b}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${categoryRgb.r}, ${categoryRgb.g}, ${categoryRgb.b}, 0.35);`
-        : `background: ${categoryColor}; color: white;`;
-
-      const normalizedDetectionCategory = String(category || detectorObj?.category || '')
-        .toLowerCase()
-        .replace(/[^a-z]/g, '');
-      const isFingerprintCategory = normalizedDetectionCategory === 'fingerprint' || normalizedDetectionCategory.includes('fingerprint');
-
-      // Generate detector icon HTML
+      // Detector icon: vendor logo on a white plate, fingerprint glyphs tinted blue
       let detectorIconHtml = '';
       if (detectorObj && detectorObj.icon) {
         const iconName = detectorObj.icon.toLowerCase();
-        // Check if it's a fingerprint SVG icon
         if (FINGERPRINT_ICONS[iconName]) {
           detectorIconHtml = `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell">${FINGERPRINT_ICONS[iconName]}</div>`;
         } else {
           const iconUrl = chrome.runtime.getURL(`detectors/icons/${detectorObj.icon}`);
-          if (isFingerprintCategory) {
-            detectorIconHtml = `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${iconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--builtin history-modal-fingerprint-image"></div>`;
-          } else {
-            detectorIconHtml = `<img src="${iconUrl}" alt="${safeName}" class="modal-detector-icon">`;
-          }
+          detectorIconHtml = isFingerprintCategory
+            ? `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${iconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--builtin history-modal-fingerprint-image"></div>`
+            : `<img src="${iconUrl}" alt="${safeName}" class="modal-detector-icon">`;
         }
       } else {
-        // Fallback: Use Scrapfly icon for all detectors without official icons
         const scrapflyIconUrl = chrome.runtime.getURL('icons/icon32.png');
-        if (isFingerprintCategory) {
-          detectorIconHtml = `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${scrapflyIconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--default history-modal-fingerprint-image"></div>`;
-        } else {
-          detectorIconHtml = `<img src="${scrapflyIconUrl}" alt="${safeName}" class="modal-detector-icon">`;
-        }
+        detectorIconHtml = isFingerprintCategory
+          ? `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${scrapflyIconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--default history-modal-fingerprint-image"></div>`
+          : `<img src="${scrapflyIconUrl}" alt="${safeName}" class="modal-detector-icon modal-detector-icon--default">`;
       }
 
-      // Confidence class
-      let confidenceClass = 'confidence-low';
-      if (confidence >= 90) confidenceClass = 'confidence-high';
-      else if (confidence >= 70) confidenceClass = 'confidence-medium';
-
-      // Render detection methods
       const methodsHtml = this.renderDetectionMethods(detection.matches || []);
-
-      // Get match count and method type badges for expanded view
       const matchCount = detection.matches?.length || 0;
       const methodTypeBadges = this.renderMethodTypeBadges(detection.matches || []);
+      const expandLabel = FormatUtils.escapeAttr(_tr('detectionModalDetectionMethods', 'Detection methods'));
 
       return `
-        <div class="history-modal-detection-card ${hasMethods ? 'has-methods' : ''}" data-detection-index="${index}">
-          <div class="history-modal-detection-header">
-            ${detectorIconHtml}
+        <div class="history-modal-detection-card cat-${catClass} ${hasMethods ? 'has-methods' : ''}" data-detection-index="${index}">
+          <div class="history-modal-detection-header"${hasMethods ? ` role="button" tabindex="0" aria-expanded="false" aria-label="${expandLabel}"` : ''}>
+            <div class="history-modal-detection-icon icon-${catClass}">${detectorIconHtml}</div>
             <div class="history-modal-detection-content">
-              <div class="history-modal-detection-name">${safeName}</div>
+              <div class="history-modal-detection-title">
+                <span class="history-modal-detection-name" title="${FormatUtils.escapeAttr(name)}">${safeName}</span>
+                ${safeCategory ? `<span class="history-modal-badge cat-${catClass}">${safeCategory}</span>` : ''}
+              </div>
+              <div class="history-modal-detection-chips">${methodTypeBadges}</div>
             </div>
             <div class="history-modal-detection-right">
-              <span class="history-modal-confidence ${confidenceClass}">${confidence}%</span>
-              ${hasMethods ? '<span class="history-modal-expand-icon">▼</span>' : ''}
+              ${FormatUtils.confidenceHtml(confidence, 'history-modal-score')}
+              ${hasMethods ? `
+                <span class="history-modal-expand-btn" aria-hidden="true">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </span>
+              ` : ''}
             </div>
           </div>
           ${hasMethods ? `
             <div class="history-modal-detection-details">
-              <div class="history-modal-detection-meta">
-                <span class="history-modal-badge" style="${categoryStyle}">${safeCategory}</span>
-                ${methodTypeBadges ? `<span class="history-modal-meta-separator">•</span><span class="history-modal-method-types">${methodTypeBadges}</span>` : ''}
-                <span class="history-modal-meta-separator">•</span>
-                <span class="history-modal-match-count">${matchCount === 1 ? _tr('historyOneMatch', '1 match') : _fmt('historyMatchCountFmt', `${matchCount} matches`, matchCount)}</span>
-              </div>
+              <div class="history-modal-match-count">${matchCount === 1 ? _tr('historyOneMatch', '1 match') : _fmt('historyMatchCountFmt', `${matchCount} matches`, matchCount)}</div>
               <div class="history-modal-detection-methods">
                 ${methodsHtml}
               </div>
@@ -1089,6 +1129,18 @@ class History {
   }
 
   /**
+   * Readable, localized method name ("JavaScript hooks"), shared with the Detection cards
+   * @param {string} typeKey - Lowercase method type
+   * @returns {string} Label
+   */
+  getMethodLabel(typeKey) {
+    if (typeof DetectionUI !== 'undefined' && typeof DetectionUI.getMethodLabel === 'function') {
+      return DetectionUI.getMethodLabel(typeKey);
+    }
+    return typeKey.replace(/_/g, ' ').toUpperCase();
+  }
+
+  /**
    * Render method type badges for modal meta row
    * @param {Array} matches - Array of match objects
    * @returns {string} HTML string
@@ -1097,36 +1149,52 @@ class History {
     const typeKeys = this.getUniqueMethodTypes(matches);
     if (!typeKeys.length) return '';
 
-    const t = (typeof I18n !== 'undefined') ? I18n : null;
-    const _tr = (key, fallback) => (t && t.get(key)) || fallback;
-    const methodLabelKey = {
-      url: 'methodLabelUrl', header: 'methodLabelHeader', cookie: 'methodLabelCookie',
-      content: 'methodLabelContent', dom: 'methodLabelDom', js_hooks: 'methodLabelJsHooks',
-      window: 'methodLabelWindow', payload: 'methodLabelPayload'
-    };
+    const typeCounts = new Map();
+    matches.forEach((match) => {
+      const typeKey = (match.type || 'unknown').toLowerCase();
+      typeCounts.set(typeKey, (typeCounts.get(typeKey) || 0) + 1);
+    });
 
     const visibleTypes = typeKeys.slice(0, 4);
     const overflowCount = typeKeys.length - visibleTypes.length;
 
     const badgesHtml = visibleTypes.map(typeKey => {
-      const fallbackLabel = typeKey.replace(/_/g, ' ').toUpperCase();
-      const label = methodLabelKey[typeKey] ? _tr(methodLabelKey[typeKey], fallbackLabel) : fallbackLabel;
+      const count = typeCounts.get(typeKey) || 0;
+      const label = FormatUtils.escapeHtml(this.getMethodLabel(typeKey) + (count > 1 ? ` (${count})` : ''));
 
       // Get tag color (use original key for lookup)
       let tagColor = '#666666';
       if (this.detectorManager?.categoryManager) {
         tagColor = this.detectorManager.categoryManager.getTagColor(typeKey) || '#666666';
       }
-      const tagRgb = this.hexToRgb(tagColor);
+      const tagRgb = FormatUtils.hexToRgb(tagColor);
       const badgeStyle = tagRgb
         ? `background: rgba(${tagRgb.r}, ${tagRgb.g}, ${tagRgb.b}, 0.18); color: ${tagColor}; border: 1px solid rgba(${tagRgb.r}, ${tagRgb.g}, ${tagRgb.b}, 0.35);`
         : `background: ${tagColor}; color: white;`;
 
-      return `<span class="history-modal-method-type-badge" style="${badgeStyle}">${label}</span>`;
+      // Hover: the method, what it checks and the values it matched
+      const values = matches
+        .filter(match => (match.type || 'unknown').toLowerCase() === typeKey)
+        .map(match => ({
+          label: String(match.fullUrl || match.value || match.name || match.selector || match.pattern || ''),
+          value: `${Math.round(Number(match.confidence) || 0)}%`,
+          tone: FormatUtils.confidenceTone(match.confidence)
+        }))
+        .filter(row => row.label);
+      const rows = values.slice(0, 4).map(row => ({ ...row, label: row.label.length > 48 ? `${row.label.slice(0, 47)}…` : row.label }));
+      if (values.length > 4) rows.push({ label: FormatUtils.t('tipMoreFmt', '+{0} more', values.length - 4) });
+      const title = count === 1 ? FormatUtils.t('historyOneMatch', '1 match') : FormatUtils.t('historyMatchCountFmt', '{0} matches', count);
+      const tip = FormatUtils.tipAttrs(`${this.getMethodLabel(typeKey)} · ${title}`, FormatUtils.methodHint(typeKey), rows);
+
+      return `<span class="history-modal-method-type-badge" style="${badgeStyle}" ${tip}>${label}</span>`;
     }).join('');
 
+    const hiddenTypes = typeKeys.slice(visibleTypes.length);
     const overflowHtml = overflowCount > 0
-      ? `<span class="history-modal-method-type-badge history-modal-method-type-overflow">+${overflowCount}</span>`
+      ? `<span class="history-modal-method-type-badge history-modal-method-type-overflow" ${FormatUtils.tipAttrs(
+        FormatUtils.t('tipMoreFmt', '+{0} more', overflowCount),
+        '',
+        hiddenTypes.map(typeKey => ({ label: this.getMethodLabel(typeKey), value: String(typeCounts.get(typeKey) || 0) })))}>+${overflowCount}</span>`
       : '';
 
     return badgesHtml + overflowHtml;
@@ -1139,12 +1207,16 @@ class History {
    */
   renderDetectionMethods(matches) {
     if (!matches || matches.length === 0) {
-      return '<div class="history-modal-no-methods">No detection methods</div>';
+      const noMethods = FormatUtils.t('historyUiNoDetectionMethods', 'No detection methods');
+      return `<div class="history-modal-no-methods">${FormatUtils.escapeHtml(noMethods)}</div>`;
     }
+    const unknownValue = FormatUtils.t('detectionUiUnknownValue', 'unknown');
+    const clickToCopy = FormatUtils.escapeAttr(FormatUtils.t('advCommonClickToCopy', 'Click to copy'));
 
     return matches.map(match => {
       const originalType = match.type || 'unknown';
       const methodType = originalType.replace(/_/g, ' ').toUpperCase();
+      const methodLabel = FormatUtils.escapeHtml(this.getMethodLabel(originalType.toLowerCase()));
       const confidence = match.confidence || 0;
 
       // Determine display value based on method type
@@ -1152,25 +1224,25 @@ class History {
       switch (match.type?.toLowerCase()) {
         case 'cookie':
         case 'cookies':
-          displayValue = match.value || match.name || 'unknown';
+          displayValue = match.value || match.name || unknownValue;
           break;
         case 'header':
         case 'headers':
-          displayValue = match.value || match.name || 'unknown';
+          displayValue = match.value || match.name || unknownValue;
           break;
         case 'content':
         case 'script':
-          displayValue = match.content || match.value || match.pattern || 'unknown';
+          displayValue = match.content || match.value || match.pattern || unknownValue;
           break;
         case 'url':
         case 'urls':
-          displayValue = match.fullUrl || match.value || match.pattern || 'unknown';
+          displayValue = match.fullUrl || match.value || match.pattern || unknownValue;
           break;
         case 'dom':
-          displayValue = match.value || match.selector || match.pattern || 'unknown';
+          displayValue = match.value || match.selector || match.pattern || unknownValue;
           break;
         default:
-          displayValue = match.value || match.name || match.selector || match.pattern || 'unknown';
+          displayValue = match.value || match.name || match.selector || match.pattern || unknownValue;
       }
 
       // Get tag color (use originalType to preserve underscores for lookup)
@@ -1178,15 +1250,10 @@ class History {
       if (this.detectorManager?.categoryManager) {
         tagColor = this.detectorManager.categoryManager.getTagColor(originalType.toLowerCase()) || '#666666';
       }
-      const tagRgb = this.hexToRgb(tagColor);
+      const tagRgb = FormatUtils.hexToRgb(tagColor);
       const badgeStyle = tagRgb
         ? `background: rgba(${tagRgb.r}, ${tagRgb.g}, ${tagRgb.b}, 0.15); color: ${tagColor}; border: 1px solid rgba(${tagRgb.r}, ${tagRgb.g}, ${tagRgb.b}, 0.3);`
         : `background: ${tagColor}; color: white;`;
-
-      // Confidence class
-      let confidenceClass = 'confidence-low';
-      if (confidence >= 90) confidenceClass = 'confidence-high';
-      else if (confidence >= 70) confidenceClass = 'confidence-medium';
 
       const copyPayload = JSON.stringify({
         rawValue: displayValue,
@@ -1197,10 +1264,10 @@ class History {
       const safeDisplayValue = FormatUtils.escapeHtml(displayValue);
 
       return `
-        <div class="history-modal-method-item" data-copy-payload="${encodeURIComponent(copyPayload)}" title="Click to copy">
-          <span class="history-modal-method-badge" style="${badgeStyle}">${methodType}</span>
+        <div class="history-modal-method-item" data-copy-payload="${encodeURIComponent(copyPayload)}" title="${clickToCopy}">
+          <span class="history-modal-method-badge" style="${badgeStyle}">${methodLabel}</span>
           <span class="history-modal-method-value">${safeDisplayValue}</span>
-          <span class="history-modal-method-confidence ${confidenceClass}">${confidence}%</span>
+          ${FormatUtils.confidenceHtml(confidence, 'history-modal-method-confidence')}
         </div>
       `;
     }).join('');
@@ -1221,6 +1288,15 @@ class History {
 
     if (closeBtn) {
       closeBtn.onclick = closeModal;
+    }
+
+    const copyBtn = document.querySelector('#historyModalCopy');
+    if (copyBtn) {
+      copyBtn.onclick = (e) => {
+        e.stopPropagation();
+        const item = this.historyItems.find(h => h.id === this._modalItemId);
+        if (item) this.copyHistoryItem(item);
+      };
     }
 
     if (overlay) {
@@ -1273,10 +1349,10 @@ class History {
         }
 
         const textToCopy = `[${payload.methodType || 'METHOD'}] ${value}`;
+        // Default toast / inline texts of copyToClipboard are already localised
+        // Feedback goes on the value field only, so the row keeps its size
         FormatUtils.copyToClipboard(textToCopy, {
-          element: item,
-          notificationMessage: 'Copied',
-          inlineMessage: '✓ Copied!'
+          element: item.querySelector('.history-modal-method-value') || item
         });
 
         item.classList.add('copy-feedback');
@@ -1358,37 +1434,33 @@ class History {
       const data = JSON.parse(text);
 
       if (!data.items || !Array.isArray(data.items)) {
-        throw new Error('Invalid history file format');
+        throw new Error(FormatUtils.t('historyUiInvalidFileFormat', 'Invalid history file format'));
       }
 
-      const shouldMerge = await NotificationHelper.confirm({
+      const mode = await NotificationHelper.chooseImportMode({
         title: _tr('importHistoryTitle', 'Import History'),
-        message: _fmt('importHistoryMessageFmt', `Import ${data.items.length} history items? Current history has ${this.historyItems.length} items.`, data.items.length, this.historyItems.length),
-        type: 'info',
-        confirmText: _tr('mergeOption', 'Merge'),
-        cancelText: _tr('replaceOption', 'Replace')
+        message: _fmt('importHistoryModeMessageFmt', `Import ${data.items.length} history items? Your current history has ${this.historyItems.length}.<br>Merge adds the new items to it. Replace deletes it first.`, data.items.length, this.historyItems.length),
+        replaceText: _tr('replaceOption', 'Replace')
       });
 
-      if (shouldMerge) {
-        const existingIds = new Set(this.historyItems.map(item => item.id));
-        const newItems = data.items.filter(item => !existingIds.has(item.id));
-        this.historyItems = [...newItems, ...this.historyItems];
-
-        this.historyItems.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-        if (this.historyLimit > 0 && this.historyItems.length > this.historyLimit) {
-          this.historyItems = this.historyItems.slice(0, this.historyLimit);
-        }
-
-        NotificationHelper.success(_fmt('notificationHistoryMergedFmt', `Merged ${newItems.length} new history items`, newItems.length));
-      } else {
-        this.historyItems = this.historyLimit > 0
-          ? data.items.slice(0, this.historyLimit)
-          : data.items;
-        NotificationHelper.success(_fmt('notificationHistoryReplacedFmt', `Replaced history with ${this.historyItems.length} items`, this.historyItems.length));
+      // Cancel, ✕, Escape and the backdrop: leave the stored history alone
+      if (mode === 'cancel') {
+        event.target.value = '';
+        return;
       }
 
-      await this.saveHistoryToStorage();
+      // Preview locally (same rule the worker applies), then let the worker
+      // apply it to the stored list so entries saved meanwhile are kept.
+      const before = this.historyItems.length;
+      this.historyItems = HistoryStore.applyImport(this.historyItems, data.items, mode, this.historyLimit);
+      const added = Math.max(0, this.historyItems.length - before);
+      await this.saveHistoryToStorage(data.items, mode);
+
+      if (mode === 'merge') {
+        NotificationHelper.success(_fmt('notificationHistoryMergedFmt', `Merged ${added} new history items`, added));
+      } else {
+        NotificationHelper.success(_fmt('notificationHistoryReplacedFmt', `Replaced history with ${this.historyItems.length} items`, this.historyItems.length));
+      }
       this.renderHistory();
     } catch (error) {
       NotificationHelper.error(_fmt('notificationImportHistoryFailedFmt', 'Failed to import history: ' + error.message, error.message));
@@ -1424,7 +1496,7 @@ class History {
       const newLimit = Number.isFinite(parsedLimit) && parsedLimit >= 0 ? parsedLimit : 0; // 0 = unlimited
 
       if (newLimit !== this.historyLimit) {
-        Logger.ui(`History: Updating history limit from ${this.historyLimit} to ${newLimit}`);
+        Logger.debug('UI', `History: Updating history limit from ${this.historyLimit} to ${newLimit}`);
         this.historyLimit = newLimit;
       }
     } catch (error) {
@@ -1494,8 +1566,61 @@ class History {
       });
     }
 
+    // Toolbar "…" menu (import / export / clear)
+    const menuBtn = document.querySelector('#historyMenuBtn');
+    const toolbarMenu = document.querySelector('#historyMenu');
+    if (menuBtn && toolbarMenu) {
+      menuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (this._openMenu && this._openMenu.menu === toolbarMenu) {
+          this.closeMenus();
+        } else {
+          this.openMenu(toolbarMenu, menuBtn);
+        }
+      });
+      // Each toolbar action closes the menu before running its own handler below
+      toolbarMenu.addEventListener('click', () => this.closeMenus());
+    }
+
+    // Per-entry "…" menu: dispatch to the entry it was opened from
+    const itemMenu = document.querySelector('#historyItemMenu');
+    if (itemMenu) {
+      itemMenu.addEventListener('click', (e) => {
+        const btn = e.target.closest('.history-menu-item');
+        if (!btn) return;
+        const item = this.historyItems.find(h => h.id === this._menuItemId);
+        const action = btn.dataset.action;
+        this.closeMenus();
+        if (!item) return;
+
+        if (action === 'copy') {
+          this.copyHistoryItem(item);
+        } else if (action === 'clear-cache') {
+          this.clearHistoryItemCache(item);
+        } else if (action === 'export') {
+          this.exportHistoryItem(item);
+        } else if (action === 'blacklist') {
+          this.addHistoryItemToBlacklist(item);
+        } else if (action === 'delete') {
+          this.deleteHistoryItem(item);
+        }
+      });
+    }
+
+    // Close an open menu on outside click, Escape, or list scroll
+    document.addEventListener('click', (e) => {
+      if (this._openMenu && !this._openMenu.menu.contains(e.target)) this.closeMenus();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') this.closeMenus();
+    });
+    const historyList = document.querySelector('#historyList');
+    if (historyList) {
+      historyList.addEventListener('scroll', () => this.closeMenus(), { passive: true });
+    }
+
     // Setup clear history button
-    const clearBtn = document.querySelector('#clearHistoryBtn');
+    const clearBtn = document.querySelector('#historyTab #clearHistoryBtn');
     if (clearBtn) {
       clearBtn.addEventListener('click', async () => {
         const t = (typeof I18n !== 'undefined') ? I18n : null;
@@ -1516,18 +1641,57 @@ class History {
     }
 
     // Setup export button
-    const exportBtn = document.querySelector('#exportHistoryBtn');
+    const exportBtn = document.querySelector('#historyTab #exportHistoryBtn');
     if (exportBtn) {
       exportBtn.addEventListener('click', () => this.exportHistory());
     }
 
     // Setup import button and file input
-    const importBtn = document.querySelector('#importHistoryBtn');
-    const importFile = document.querySelector('#importHistoryFile');
+    const importBtn = document.querySelector('#historyTab #importHistoryBtn');
+    const importFile = document.querySelector('#historyTab #importHistoryFile');
     if (importBtn && importFile) {
       importBtn.addEventListener('click', () => importFile.click());
       importFile.addEventListener('change', (e) => this.handleImport(e));
     }
+  }
+
+  /**
+   * Open a "…" dropdown under its anchor button. Menus are fixed-positioned so the
+   * scrolling list never clips them, and flip above the anchor near the popup bottom.
+   * @param {HTMLElement} menu - .history-menu element
+   * @param {HTMLElement} anchor - Button that opened it
+   */
+  openMenu(menu, anchor) {
+    this.closeMenus();
+    menu.hidden = false;
+    const anchorRect = anchor.getBoundingClientRect();
+    const menuRect = menu.getBoundingClientRect();
+    const viewportWidth = document.documentElement.clientWidth;
+    const viewportHeight = document.documentElement.clientHeight;
+
+    let top = anchorRect.bottom + 4;
+    if (top + menuRect.height > viewportHeight - 4) {
+      top = Math.max(4, anchorRect.top - 4 - menuRect.height);
+    }
+    const left = Math.min(Math.max(4, anchorRect.right - menuRect.width), viewportWidth - menuRect.width - 4);
+
+    menu.style.top = `${top}px`;
+    menu.style.left = `${left}px`;
+    anchor.setAttribute('aria-expanded', 'true');
+    anchor.classList.add('active');
+    this._openMenu = { menu, anchor };
+  }
+
+  /**
+   * Close whichever "…" menu is open
+   */
+  closeMenus() {
+    if (!this._openMenu) return;
+    const { menu, anchor } = this._openMenu;
+    menu.hidden = true;
+    anchor.setAttribute('aria-expanded', 'false');
+    anchor.classList.remove('active');
+    this._openMenu = null;
   }
 
   /**
@@ -1628,24 +1792,7 @@ class History {
       }
 
       // Get existing history
-      const result = await chrome.storage.local.get(['scrapfly_history']);
-      let history = [];
-
-      if (result.scrapfly_history) {
-        if (typeof result.scrapfly_history === 'string') {
-          try {
-            const parsed = JSON.parse(result.scrapfly_history);
-            history = parsed.items || [];
-          } catch (parseError) {
-            Logger.warn('UI', '[History] JSON parse failed in duplicate check', parseError);
-            return true; // On error, allow save
-          }
-        } else if (Array.isArray(result.scrapfly_history)) {
-          history = result.scrapfly_history;
-        } else if (result.scrapfly_history.items) {
-          history = result.scrapfly_history.items || [];
-        }
-      }
+      const history = await HistoryStore.read(chrome.storage.local);
 
       if (!Array.isArray(history) || history.length === 0) {
         return true; // No history, always save
@@ -1673,7 +1820,7 @@ class History {
       const isDuplicate = this.isDuplicateHistoryEntry(history, normalizedKey, cutoffTime, duplicateScope);
 
       if (isDuplicate) {
-        Logger.ui(`History: Skipping duplicate URL within ${duplicateDuration} ${duplicateUnit} (scope: ${duplicateScope}, source: precheck): ${normalizedKey}`);
+        Logger.debug('UI', `History: Skipping duplicate URL within ${duplicateDuration} ${duplicateUnit} (scope: ${duplicateScope}, source: precheck): ${normalizedKey}`);
         return false;
       }
 
@@ -1696,15 +1843,7 @@ class History {
    * @returns {Promise<boolean>} Success status
    */
   static saveDetectionToHistory(tabId, pageData, detectionResults, chrome, options = {}) {
-    // Serialize all writes: each call awaits the previous, eliminating the
-    // get-modify-set race that could lose history entries when two detections
-    // finish back-to-back.
-    if (!History._saveQueue) History._saveQueue = Promise.resolve();
-    const work = History._saveQueue
-      .catch(() => undefined)
-      .then(() => History._doSaveDetectionToHistory(tabId, pageData, detectionResults, chrome, options));
-    History._saveQueue = work.catch(() => undefined);
-    return work;
+    return History._doSaveDetectionToHistory(tabId, pageData, detectionResults, chrome, options);
   }
 
   static async _doSaveDetectionToHistory(tabId, pageData, detectionResults, chrome, options = {}) {
@@ -1714,128 +1853,99 @@ class History {
     } = options || {};
 
     try {
-      // Get existing history
-      const result = await chrome.storage.local.get(['scrapfly_history']);
-      let history = [];
-
-      // Handle different storage formats for backward compatibility
-      if (result.scrapfly_history) {
-        if (typeof result.scrapfly_history === 'string') {
-          // History.js stores as JSON string with { items: [], lastUpdated: ... }
-          try {
-            const parsed = JSON.parse(result.scrapfly_history);
-            history = parsed.items || [];
-            Logger.ui('History: Parsed history from JSON string format');
-          } catch (parseError) {
-            Logger.warn('UI', '[History] JSON parse failed', parseError);
-            history = [];
-          }
-        } else if (Array.isArray(result.scrapfly_history)) {
-          // Direct array format
-          history = result.scrapfly_history;
-        } else if (result.scrapfly_history.items) {
-          // Object with items array
-          history = result.scrapfly_history.items || [];
-        } else {
-          Logger.warn('UI', 'History: Unknown history format, starting fresh');
-          history = [];
-        }
-      }
-
-      // Ensure history is an array
-      if (!Array.isArray(history)) {
-        Logger.warn('UI', 'History: History is not an array, resetting');
-        history = [];
-      }
-
+      // Slow lookups first, outside the write queue
       const settings = historySettings || await Utils.getHistorySettings();
       const duplicateScope = settings.duplicateScope || 'full_url';
       const duplicateDuration = Number.isFinite(parseInt(settings.duplicateDuration, 10))
         ? parseInt(settings.duplicateDuration, 10)
         : 1;
       const duplicateUnit = settings.duplicateUnit || 'hours';
-
-      if (settings.preventDuplicates) {
-        const durationMs = FormatUtils.convertToMilliseconds(duplicateDuration, duplicateUnit);
-        const cutoffTime = Date.now() - durationMs;
-        const normalizedKey = this.normalizeDuplicateKey(pageData.url, pageData.hostname, duplicateScope);
-
-        if (!normalizedKey) {
-          Logger.debug('UI', `[History] Duplicate save-check could not normalize key (scope: ${duplicateScope}, source: ${source}), allowing save`);
-        } else if (this.isDuplicateHistoryEntry(history, normalizedKey, cutoffTime, duplicateScope)) {
-          Logger.ui(`History: Skipping duplicate history save within ${duplicateDuration} ${duplicateUnit} (scope: ${duplicateScope}, source: ${source}): ${normalizedKey}`);
-          return false;
-        }
-      }
-
       const historyLimit = Number.isFinite(parseInt(settings.historyLimit, 10))
         ? parseInt(settings.historyLimit, 10)
         : 0; // 0 = unlimited
-      // Get current cache scope setting
       const cacheScope = await Utils.getCacheScope();
       const normalizedFavicon = UrlUtils.normalizeFaviconForStorage(
         pageData.favicon,
         pageData.url || pageData.hostname
       );
-
-      // Create history entry
       const entryUrl = pageData.url || '';
       const entryHostname = pageData.hostname || UrlUtils.getHostnameFromUrl(entryUrl);
-      const historyEntry = {
-        id: `detection_${Date.now()}_${tabId}`,
-        url: entryUrl,
-        hostname: entryHostname,
-        title: pageData.tabTitle || pageData.title || 'Untitled',
-        favicon: normalizedFavicon,
-        timestamp: Date.now(),
-        detections: detectionResults,
-        detectionCount: detectionResults.length,
-        categories: [...new Set(detectionResults.map(d => d.category))],
-        cacheScope: cacheScope
-      };
-
-      // Add to history (newest first)
-      history.unshift(historyEntry);
-
-      // Apply rolling window limit (remove oldest items)
-      if (historyLimit > 0 && history.length > historyLimit) {
-        history = history.slice(0, historyLimit);
+      const entryTitle = await History.resolveEntryTitle(tabId, pageData, entryHostname, chrome);
+      const duplicateKey = settings.preventDuplicates
+        ? this.normalizeDuplicateKey(pageData.url, pageData.hostname, duplicateScope)
+        : null;
+      if (settings.preventDuplicates && !duplicateKey) {
+        Logger.debug('UI', `[History] Duplicate save-check could not normalize key (scope: ${duplicateScope}, source: ${source}), allowing save`);
       }
 
-      // Save back to storage in the format History.js expects
-      const historyData = {
-        items: history,
-        lastUpdated: Date.now()
-      };
+      // One serialized read-modify-write through the shared store
+      const { changed } = await HistoryStore.mutate((history) => {
+        if (duplicateKey) {
+          const cutoffTime = Date.now() - FormatUtils.convertToMilliseconds(duplicateDuration, duplicateUnit);
+          if (this.isDuplicateHistoryEntry(history, duplicateKey, cutoffTime, duplicateScope)) {
+            Logger.debug('UI', `History: Skipping duplicate history save within ${duplicateDuration} ${duplicateUnit} (scope: ${duplicateScope}, source: ${source}): ${duplicateKey}`);
+            return undefined;
+          }
+        }
 
-      await chrome.storage.local.set({
-        scrapfly_history: JSON.stringify(historyData, null, 2)
-      });
+        const historyEntry = {
+          id: `detection_${Date.now()}_${tabId}`,
+          url: entryUrl,
+          hostname: entryHostname,
+          title: entryTitle,
+          favicon: normalizedFavicon,
+          timestamp: Date.now(),
+          detections: detectionResults,
+          detectionCount: detectionResults.length,
+          categories: [...new Set(detectionResults.map(d => d.category))],
+          cacheScope: cacheScope
+        };
 
-      Logger.ui(`History: Saved detection to history for ${pageData.url}`);
-      return true;
+        // Newest first, then the rolling window limit
+        const next = [historyEntry, ...history];
+        return historyLimit > 0 && next.length > historyLimit ? next.slice(0, historyLimit) : next;
+      }, chrome.storage.local);
+
+      if (changed) Logger.ui(`History: Saved detection to history for ${pageData.url}`);
+      return changed;
     } catch (error) {
-      Logger.error('UI', '[History] Detection save failed', error);
+      if (typeof HistoryStore !== 'undefined' && HistoryStore.isQuotaError && HistoryStore.isQuotaError(error)) {
+        Logger.warn('UI', '[History] Storage is full; this page was not added to History');
+      } else {
+        Logger.error('UI', '[History] Detection save failed', error);
+      }
       return false;
     }
   }
 
   /**
-   * Convert hex color to RGB object
-   * @param {string} hex - Hex color value (e.g., "#FF5733" or "FF5733")
-   * @returns {Object|null} RGB object {r, g, b} or null if invalid
+   * Pick the page title for a history entry. The title captured with the first detection
+   * message is often still the URL (the tab is loading), so prefer the tab's live title
+   * when the tab still shows the same host and has a real title by now.
+   * @param {number} tabId - Tab ID
+   * @param {Object} pageData - Page data (tabTitle / title)
+   * @param {string} hostname - Entry hostname
+   * @param {Object} chrome - Chrome API object
+   * @returns {Promise<string>} Title to store
    */
-  hexToRgb(hex) {
-    if (!hex || typeof hex !== 'string') {
-      return null;
+  static async resolveEntryTitle(tabId, pageData, hostname, chrome) {
+    const stored = pageData.tabTitle || pageData.title || '';
+    const looksLikeUrl = (value) => !value || value === hostname || /^[a-z]+:\/\//i.test(value) || value.startsWith(`${hostname}/`);
+
+    if (Number.isInteger(tabId) && tabId >= 0 && chrome?.tabs?.get) {
+      try {
+        const tab = await chrome.tabs.get(tabId);
+        const sameHost = tab && tab.url && UrlUtils.getHostnameFromUrl(tab.url) === hostname;
+        if (sameHost && tab.title && !looksLikeUrl(tab.title)) {
+          return tab.title;
+        }
+      } catch (error) {
+        // Tab already closed: keep the title captured during detection
+      }
     }
-    const result = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : null;
+    return stored || 'Untitled';
   }
+
 }
 
 if (typeof window !== 'undefined') {

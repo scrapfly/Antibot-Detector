@@ -1,24 +1,54 @@
 <!-- Rules Tab Template -->
   <div class="rules-header">
-    <!-- Action Buttons -->
-    <div class="action-buttons">
+    <!-- Action Buttons: Add + Update, with Import/Export/Clear in the "more" menu -->
+    <div class="rules-toolbar">
+      <button id="addDetectorBtn" class="rules-add-btn" title="Add New Detector" data-i18n-title="rulesAddTitle">
+        <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
+        </svg>
+        <span data-i18n="btnAdd">Add</span>
+      </button>
       <button id="checkUpdatesBtn" class="check-updates-btn" title="Check for detector updates" data-i18n-title="rulesUpdateTitle">
+        <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" fill="currentColor"/>
+        </svg>
         <span id="checkUpdatesBtnText" data-i18n="btnUpdate">Update</span>
         <span id="updatesBadge" class="updates-badge" style="display: none;">0</span>
       </button>
-      <button id="importRulesBtn" class="import-btn-small" title="Import" data-i18n-title="btnImport">
-        <span data-i18n="btnImport">Import</span>
-      </button>
+      <div class="rules-menu">
+        <button id="rulesMoreBtn" class="rules-menu-trigger rules-more-btn" aria-haspopup="menu" aria-expanded="false" title="More actions" data-i18n-title="rulesMoreActions" aria-label="More actions" data-i18n-aria-label="rulesMoreActions">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6,10.25A1.75,1.75 0 1,1 6,13.75A1.75,1.75 0 1,1 6,10.25M12,10.25A1.75,1.75 0 1,1 12,13.75A1.75,1.75 0 1,1 12,10.25M18,10.25A1.75,1.75 0 1,1 18,13.75A1.75,1.75 0 1,1 18,10.25Z" fill="currentColor"/>
+          </svg>
+        </button>
+        <div class="rules-menu-list" role="menu">
+          <button id="importRulesBtn" class="rules-menu-item" role="menuitem" title="Import" data-i18n-title="btnImport">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" fill="currentColor"/>
+            </svg>
+            <span data-i18n="btnImport">Import</span>
+          </button>
+          <button id="exportRulesBtn" class="rules-menu-item" role="menuitem" title="Export" data-i18n-title="btnExport">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z" fill="currentColor"/>
+            </svg>
+            <span data-i18n="btnExport">Export</span>
+          </button>
+          <button id="restoreOfficialRulesBtn" class="rules-menu-item" role="menuitem" title="Restore official detectors" data-i18n-title="restoreOfficialDetectors">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z" fill="currentColor"/>
+            </svg>
+            <span data-i18n="restoreOfficialDetectors">Restore official detectors</span>
+          </button>
+          <button id="clearRulesBtn" class="rules-menu-item rules-menu-item-danger" role="menuitem" title="Clear custom detectors" data-i18n-title="clearCustomDetectorsTitle">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
+            </svg>
+            <span data-i18n="btnClear">Clear</span>
+          </button>
+        </div>
+      </div>
       <input type="file" id="importRulesFile" accept=".json" style="display: none;">
-      <button id="exportRulesBtn" class="export-btn-small" title="Export" data-i18n-title="btnExport">
-        <span data-i18n="btnExport">Export</span>
-      </button>
-      <button id="clearRulesBtn" class="clear-btn-small" title="Clear All Rules" data-i18n-title="rulesClearTitle">
-        <span data-i18n="btnClear">Clear</span>
-      </button>
-      <button id="addDetectorBtn" class="add-btn" title="Add New Detector" data-i18n-title="rulesAddTitle">
-        <span data-i18n="btnAdd">Add</span>
-      </button>
     </div>
 
     <!-- Search Bar -->
@@ -65,11 +95,7 @@
     <div class="rule-modal-content">
       <div class="rule-modal-header">
         <span id="editRuleModalAction" class="rule-modal-action" data-i18n="ruleModalActionEdit">Edit</span>
-        <button id="closeRuleModal" class="rule-modal-close" aria-label="Close" data-i18n-aria-label="btnClose">
-          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-          </svg>
-        </button>
+        <button type="button" id="closeRuleModal" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
       </div>
 
       <div class="rule-modal-body">
@@ -83,87 +109,77 @@
             </span>
             <h3 data-i18n="ruleSectionDetectorInfo">Detector Information</h3>
           </div>
-          <div class="modal-card-body">
+          <div class="modal-card-body rule-info-body">
+            <div class="form-group form-group-name">
+              <label class="form-label" for="detectorNameInput" data-i18n="ruleFieldName">Name</label>
+              <input type="text" id="detectorNameInput" class="form-input" placeholder="Detector name" data-i18n-placeholder="ruleFieldNamePlaceholder">
+            </div>
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label" data-i18n="ruleFieldName">Name</label>
-                <input type="text" id="detectorNameInput" class="form-input" placeholder="Detector name" data-i18n-placeholder="ruleFieldNamePlaceholder">
-              </div>
-              <div class="form-group">
-                <label class="form-label" data-i18n="ruleFieldCategory">Category</label>
+                <label class="form-label" for="detectorCategorySelect" data-i18n="ruleFieldCategory">Category</label>
                 <select id="detectorCategorySelect" class="form-select">
                   <option value="antibot" data-i18n="categoryAntibot">Anti-Bot</option>
                   <option value="captcha" data-i18n="categoryCaptcha">Captcha</option>
                   <option value="fingerprint" data-i18n="categoryFingerprint">Fingerprint</option>
                 </select>
               </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label" data-i18n="ruleFieldDifficulty">Difficulty</label>
-              <select id="detectorDifficultySelect" class="form-select">
-                <option value="Low" data-i18n="difficultyLow">Low</option>
-                <option value="Medium" data-i18n="difficultyMedium">Medium</option>
-                <option value="High" data-i18n="difficultyHigh">High</option>
-              </select>
+              <div class="form-group">
+                <label class="form-label" for="detectorDifficultySelect" data-i18n="ruleFieldDifficulty">Difficulty</label>
+                <select id="detectorDifficultySelect" class="form-select">
+                  <option value="Low" data-i18n="difficultyLow">Low</option>
+                  <option value="Medium" data-i18n="difficultyMedium">Medium</option>
+                  <option value="High" data-i18n="difficultyHigh">High</option>
+                </select>
+              </div>
             </div>
             <div class="form-row form-row-icon-version-author">
               <div class="form-group form-group-icon">
                 <label class="form-label" data-i18n="ruleFieldIcon">Icon</label>
                 <div class="icon-selector-row">
-                  <button type="button" id="openIconPickerBtn" class="icon-preview icon-preview-trigger" title="Change icon" aria-label="Change detector icon">
+                  <button type="button" id="openIconPickerBtn" class="icon-preview icon-preview-trigger" title="Change icon" aria-label="Change detector icon" data-i18n-title="rulesUiChangeIcon" data-i18n-aria-label="rulesUiChangeDetectorIcon">
                     <img id="currentDetectorIcon" src="" alt="Icon">
                   </button>
                 </div>
               </div>
               <div class="form-group form-group-version">
-                <label class="form-label" data-i18n="ruleFieldVersion">Version</label>
-                <input type="text" id="detectorVersionInput" class="form-input form-input-readonly" value="1.0" readonly>
+                <label class="form-label" for="detectorVersionInput" data-i18n="ruleFieldVersion">Version</label>
+                <input type="text" id="detectorVersionInput" class="form-input form-input-readonly" value="1.0" readonly tabindex="-1">
               </div>
               <div class="form-group form-group-author">
-                <label class="form-label" data-i18n="ruleFieldAuthor">Author</label>
-                <input type="text" id="detectorAuthorInput" class="form-input" placeholder="scrapfly" maxlength="50">
+                <label class="form-label" for="detectorAuthorInput" data-i18n="ruleFieldAuthor">Author</label>
+                <input type="text" id="detectorAuthorInput" class="form-input" placeholder="Your name" data-i18n-placeholder="ruleFieldAuthorPlaceholder" maxlength="50" aria-describedby="detectorAuthorError">
               </div>
             </div>
-          </div>
-        </div>
-
-        <!-- Badge Color Card -->
-        <div class="modal-card">
-          <div class="modal-card-header">
-            <span class="card-icon icon-color" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24">
-                <path d="M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21H13A2,2 0 0,0 15,19C15,18.47 14.79,17.96 14.41,17.59C14.04,17.21 13.53,17 13,17H12A2,2 0 0,1 10,15A2,2 0 0,1 12,13H17A4,4 0 0,0 21,9A6,6 0 0,0 12,3M6.5,11A1.5,1.5 0 0,1 5,9.5A1.5,1.5 0 0,1 6.5,8A1.5,1.5 0 0,1 8,9.5A1.5,1.5 0 0,1 6.5,11M9.5,7A1.5,1.5 0 0,1 8,5.5A1.5,1.5 0 0,1 9.5,4A1.5,1.5 0 0,1 11,5.5A1.5,1.5 0 0,1 9.5,7M14.5,7A1.5,1.5 0 0,1 13,5.5A1.5,1.5 0 0,1 14.5,4A1.5,1.5 0 0,1 16,5.5A1.5,1.5 0 0,1 14.5,7M17.5,11A1.5,1.5 0 0,1 16,9.5A1.5,1.5 0 0,1 17.5,8A1.5,1.5 0 0,1 19,9.5A1.5,1.5 0 0,1 17.5,11Z" fill="currentColor"/>
-              </svg>
-            </span>
-            <h3 data-i18n="ruleSectionBadgeColor">Badge Color</h3>
-          </div>
-          <div class="modal-card-body">
-            <div class="color-picker-card">
-              <div class="color-picker-grid">
-                <div class="color-option" style="background: #3b82f6;" data-color="#3b82f6"></div>
-                <div class="color-option" style="background: #10b981;" data-color="#10b981"></div>
-                <div class="color-option" style="background: #ef4444;" data-color="#ef4444"></div>
-                <div class="color-option" style="background: #f59e0b;" data-color="#f59e0b"></div>
-                <div class="color-option" style="background: #8b5cf6;" data-color="#8b5cf6"></div>
-                <div class="color-option" style="background: #ec4899;" data-color="#ec4899"></div>
-                <div class="color-option" style="background: #eab308;" data-color="#eab308"></div>
-                <div class="color-option rainbow-picker" id="rainbowPicker" title="Custom Color">
-                  <span class="custom-color-hex"></span>
-                  <svg width="16" height="16" viewBox="0 0 24 24">
-                    <defs>
-                      <linearGradient id="rainbow" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#ff0000"/>
-                        <stop offset="16.66%" style="stop-color:#ff8800"/>
-                        <stop offset="33.33%" style="stop-color:#ffff00"/>
-                        <stop offset="50%" style="stop-color:#00ff00"/>
-                        <stop offset="66.66%" style="stop-color:#0088ff"/>
-                        <stop offset="83.33%" style="stop-color:#8800ff"/>
-                        <stop offset="100%" style="stop-color:#ff00ff"/>
-                      </linearGradient>
-                    </defs>
-                    <rect x="2" y="2" width="20" height="20" rx="4" fill="url(#rainbow)"/>
-                    <path d="M12,17.5L8,14L10,9L12,11L14,9L16,14L12,17.5Z" fill="white" opacity="0.8"/>
-                  </svg>
+            <p id="detectorAuthorError" class="form-field-error" role="alert" hidden></p>
+            <div class="form-group form-group-badge-color">
+              <span class="form-label" id="badgeColorLabel" data-i18n="ruleSectionBadgeColor">Badge Color</span>
+              <div class="color-picker-card">
+                <div class="color-picker-grid" role="group" aria-labelledby="badgeColorLabel">
+                  <div class="color-option" style="background: #3b82f6;" data-color="#3b82f6"></div>
+                  <div class="color-option" style="background: #10b981;" data-color="#10b981"></div>
+                  <div class="color-option" style="background: #ef4444;" data-color="#ef4444"></div>
+                  <div class="color-option" style="background: #f59e0b;" data-color="#f59e0b"></div>
+                  <div class="color-option" style="background: #8b5cf6;" data-color="#8b5cf6"></div>
+                  <div class="color-option" style="background: #ec4899;" data-color="#ec4899"></div>
+                  <div class="color-option" style="background: #eab308;" data-color="#eab308"></div>
+                  <div class="color-option rainbow-picker" id="rainbowPicker" title="Custom Color" data-i18n-title="rulesUiCustomColor">
+                    <span class="custom-color-hex"></span>
+                    <svg width="16" height="16" viewBox="0 0 24 24">
+                      <defs>
+                        <linearGradient id="rainbow" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" style="stop-color:#ff0000"/>
+                          <stop offset="16.66%" style="stop-color:#ff8800"/>
+                          <stop offset="33.33%" style="stop-color:#ffff00"/>
+                          <stop offset="50%" style="stop-color:#00ff00"/>
+                          <stop offset="66.66%" style="stop-color:#0088ff"/>
+                          <stop offset="83.33%" style="stop-color:#8800ff"/>
+                          <stop offset="100%" style="stop-color:#ff00ff"/>
+                        </linearGradient>
+                      </defs>
+                      <rect x="2" y="2" width="20" height="20" rx="4" fill="url(#rainbow)"/>
+                      <path d="M12,17.5L8,14L10,9L12,11L14,9L16,14L12,17.5Z" fill="white" opacity="0.8"/>
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
@@ -182,6 +198,28 @@
           </div>
           <div class="modal-card-body modal-card-body-methods">
             <div id="detectionMethodsContainer"></div>
+          </div>
+        </div>
+
+        <!-- Combinations Card: patterns that must match together -->
+        <div class="modal-card" id="combinationsCard">
+          <div class="modal-card-header">
+            <span class="card-icon icon-search" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M10.59,13.41C11,13.8 11,14.44 10.59,14.83C10.2,15.22 9.56,15.22 9.17,14.83C7.22,12.88 7.22,9.71 9.17,7.76L12.71,4.22C14.66,2.27 17.83,2.27 19.78,4.22C21.73,6.17 21.73,9.34 19.78,11.29L18.29,12.78C18.3,11.96 18.17,11.14 17.89,10.36L18.36,9.88C19.54,8.71 19.54,6.81 18.36,5.64C17.19,4.46 15.29,4.46 14.12,5.64L10.59,9.17C9.41,10.34 9.41,12.24 10.59,13.41M13.41,9.17C13.8,8.78 14.44,8.78 14.83,9.17C16.78,11.12 16.78,14.29 14.83,16.24L11.29,19.78C9.34,21.73 6.17,21.73 4.22,19.78C2.27,17.83 2.27,14.66 4.22,12.71L5.71,11.22C5.7,12.04 5.83,12.86 6.11,13.65L5.64,14.12C4.46,15.29 4.46,17.19 5.64,18.36C6.81,19.54 8.71,19.54 9.88,18.36L13.41,14.83C14.59,13.66 14.59,11.76 13.41,10.59C13,10.2 13,9.56 13.41,9.17Z" fill="currentColor"/>
+              </svg>
+            </span>
+            <h3 data-i18n="ruleSectionCombinations">Combinations</h3>
+          </div>
+          <div class="modal-card-body">
+            <p class="combinations-hint" data-i18n="combinationsHint">Choose patterns, then choose how many must match.</p>
+            <div id="combinationsContainer"></div>
+            <button type="button" class="add-combination-btn" id="addCombinationBtn">
+              <svg width="12" height="12" viewBox="0 0 24 24">
+                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
+              </svg>
+              <span data-i18n="combinationAdd">Add combination</span>
+            </button>
           </div>
         </div>
       </div>
@@ -244,11 +282,7 @@
     <div class="rule-modal-content method-settings-modal">
       <div class="rule-modal-header">
         <h2 id="methodSettingsTitle" data-i18n="ruleMethodSettings">Detection Method Settings</h2>
-        <button id="closeMethodSettings" class="rule-modal-close">
-          <svg width="16" height="16" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-          </svg>
-        </button>
+        <button type="button" id="closeMethodSettings" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
       </div>
 
       <div class="rule-modal-body">
@@ -360,7 +394,7 @@
               <div class="setting-option">
                 <div class="option-content">
                   <span class="setting-label" data-i18n="rulesUrlScopeLabel">URL Scope</span>
-                  <p class="option-hint">Page = current URL | Scripts = page + scripts | All = all requests</p>
+                  <p class="option-hint" data-i18n="rulesUiUrlScopeHint">Page = current URL | Scripts = page + scripts | All = all requests</p>
                 </div>
                 <select id="textScope" class="scope-select">
                   <option value="page_only" data-i18n="rulesUrlScopePageOnly">Page</option>
@@ -388,9 +422,7 @@
             <div class="setting-option payload-url-pattern-option">
               <div class="option-content">
                 <span class="setting-label" data-i18n="rulesUrlPatternOptional">URL Pattern (optional)</span>
-                <div class="option-examples">
-                  Leave empty to match any URL
-                </div>
+                <div class="option-examples" data-i18n="rulesUiLeaveEmptyAnyUrl">Leave empty to match any URL</div>
               </div>
             </div>
             <input
@@ -398,6 +430,7 @@
               id="payloadUrlPattern"
               class="method-input payload-url-input"
               placeholder="/api/verify or challenge.php"
+              data-i18n-placeholder="rulesUiPayloadUrlPlaceholder"
             >
 
             <!-- URL Regex Toggle -->
@@ -405,13 +438,13 @@
               <div class="option-content">
                 <div style="display: flex; align-items: center; gap: 8px;">
                   <span class="setting-label" data-i18n="rulesUrlRegex">URL Regular Expression (Regex)</span>
-                  <button id="payloadUrlRegexHelperBtn" class="regex-helper-btn" title="URL Regex Helper">?</button>
-                  <button id="payloadUrlRegexExplanationBtn" class="explanation-helper-btn" title="What is Regex?">ℹ</button>
+                  <button id="payloadUrlRegexHelperBtn" class="regex-helper-btn" title="Regex helper" data-i18n-title="rhRegexTitle">?</button>
+                  <button id="payloadUrlRegexExplanationBtn" class="explanation-helper-btn" title="What is a regular expression?" data-i18n-title="rhWhatIsRegex"><svg class="explanation-helper-icon" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><circle cx="8" cy="3.4" r="1.7" fill="currentColor"/><rect x="6.5" y="6.4" width="3" height="8" rx="1.2" fill="currentColor"/></svg></button>
                 </div>
                 <div class="option-examples">
-                  <span class="example-match">✓ Matches:</span> /api/(verify|check)
+                  <span class="example-match" data-i18n="ruleExampleMatches">✓ Matches:</span> /api/(verify|check)
                   <span class="example-separator">|</span>
-                  <span class="example-nomatch">✗ Won't:</span> literal text only
+                  <span class="example-nomatch" data-i18n="ruleExampleWont">× Won't:</span> <span data-i18n="ruleExampleLiteralTextOnly">literal text only</span>
                 </div>
               </div>
               <label class="toggle-switch" for="payloadUrlRegex">
@@ -425,13 +458,13 @@
               <div class="option-content">
                 <div style="display: flex; align-items: center; gap: 8px;">
                   <span class="setting-label" data-i18n="rulesUrlCaseSensitive">URL Case Sensitive</span>
-                  <button id="payloadUrlCaseHelperBtn" class="pattern-helper-btn" title="Case Sensitive Helper">?</button>
-                  <button id="payloadUrlCaseExplanationBtn" class="explanation-helper-btn" title="What is Case Sensitive?">ℹ</button>
+                  <button id="payloadUrlCaseHelperBtn" class="pattern-helper-btn" title="Case Sensitive" data-i18n-title="rulesPatternCaseSensitive">?</button>
+                  <button id="payloadUrlCaseExplanationBtn" class="explanation-helper-btn" title="What is “Case sensitive”?" data-i18n-title="rhWhatIsCase"><svg class="explanation-helper-icon" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><circle cx="8" cy="3.4" r="1.7" fill="currentColor"/><rect x="6.5" y="6.4" width="3" height="8" rx="1.2" fill="currentColor"/></svg></button>
                 </div>
                 <div class="option-examples">
-                  <span class="example-match">✓ Matches:</span> /API/Verify (exact case)
+                  <span class="example-match" data-i18n="ruleExampleMatches">✓ Matches:</span> /API/Verify <span data-i18n="ruleExampleExactCase">(exact case)</span>
                   <span class="example-separator">|</span>
-                  <span class="example-nomatch">✗ Won't:</span> /api/verify
+                  <span class="example-nomatch" data-i18n="ruleExampleWont">× Won't:</span> /api/verify
                 </div>
               </div>
               <label class="toggle-switch" for="payloadUrlCaseSensitive">
@@ -523,13 +556,13 @@
                 <div class="option-content">
                   <div class="setting-label-row">
                     <span class="setting-label" data-i18n="rulesPatternRegex">Regular Expression (Regex)</span>
-                    <button id="regexHelperBtn" class="regex-helper-btn" title="Regex Pattern Helper">?</button>
-                    <button id="regexExplanationBtn" class="explanation-helper-btn" title="What is Regex?">ℹ</button>
+                    <button id="regexHelperBtn" class="regex-helper-btn" title="Regex helper" data-i18n-title="rhRegexTitle">?</button>
+                    <button id="regexExplanationBtn" class="explanation-helper-btn" title="What is a regular expression?" data-i18n-title="rhWhatIsRegex"><svg class="explanation-helper-icon" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><circle cx="8" cy="3.4" r="1.7" fill="currentColor"/><rect x="6.5" y="6.4" width="3" height="8" rx="1.2" fill="currentColor"/></svg></button>
                   </div>
                   <div class="option-examples" id="nameRegexExamples">
-                    <span class="example-match">✓ Matches:</span> _ab.*, _abck$, ^bm_
+                    <span class="example-match" data-i18n="ruleExampleMatches">✓ Matches:</span> _ab.*, _abck$, ^bm_
                     <span class="example-separator">|</span>
-                    <span class="example-nomatch">✗ Won't match:</span> literal text only
+                    <span class="example-nomatch" data-i18n="ruleExampleWontMatch">× Won't match:</span> <span data-i18n="ruleExampleLiteralTextOnly">literal text only</span>
                   </div>
                 </div>
                 <label class="toggle-switch" for="nameRegex">
@@ -541,13 +574,13 @@
                 <div class="option-content">
                   <div class="setting-label-row">
                     <span class="setting-label" data-i18n="rulesPatternWholeWord">Whole Word</span>
-                    <button id="wholeWordHelperBtn" class="pattern-helper-btn" title="Whole Word Helper">?</button>
-                    <button id="wholeWordExplanationBtn" class="explanation-helper-btn" title="What is Whole Word?">ℹ</button>
+                    <button id="wholeWordHelperBtn" class="pattern-helper-btn" title="Whole Word" data-i18n-title="rulesPatternWholeWord">?</button>
+                    <button id="wholeWordExplanationBtn" class="explanation-helper-btn" title="What is “Whole word”?" data-i18n-title="rhWhatIsWholeWord"><svg class="explanation-helper-icon" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><circle cx="8" cy="3.4" r="1.7" fill="currentColor"/><rect x="6.5" y="6.4" width="3" height="8" rx="1.2" fill="currentColor"/></svg></button>
                   </div>
                   <div class="option-examples" id="nameWholeWordExamples">
-                    <span class="example-match">✓ Matches:</span> _abck (alone)
+                    <span class="example-match" data-i18n="ruleExampleMatches">✓ Matches:</span> _abck <span data-i18n="ruleExampleAlone">(alone)</span>
                     <span class="example-separator">|</span>
-                    <span class="example-nomatch">✗ Won't match:</span> test_abck, _abckTest
+                    <span class="example-nomatch" data-i18n="ruleExampleWontMatch">× Won't match:</span> test_abck, _abckTest
                   </div>
                 </div>
                 <label class="toggle-switch" for="nameWholeWord">
@@ -559,13 +592,13 @@
                 <div class="option-content">
                   <div class="setting-label-row">
                     <span class="setting-label" data-i18n="rulesPatternCaseSensitive">Case Sensitive</span>
-                    <button id="caseSensitiveHelperBtn" class="pattern-helper-btn" title="Case Sensitive Helper">?</button>
-                    <button id="caseSensitiveExplanationBtn" class="explanation-helper-btn" title="What is Case Sensitive?">ℹ</button>
+                    <button id="caseSensitiveHelperBtn" class="pattern-helper-btn" title="Case Sensitive" data-i18n-title="rulesPatternCaseSensitive">?</button>
+                    <button id="caseSensitiveExplanationBtn" class="explanation-helper-btn" title="What is “Case sensitive”?" data-i18n-title="rhWhatIsCase"><svg class="explanation-helper-icon" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><circle cx="8" cy="3.4" r="1.7" fill="currentColor"/><rect x="6.5" y="6.4" width="3" height="8" rx="1.2" fill="currentColor"/></svg></button>
                   </div>
                   <div class="option-examples" id="nameCaseExamples">
-                    <span class="example-match">✓ Matches:</span> Test (exact case)
+                    <span class="example-match" data-i18n="ruleExampleMatches">✓ Matches:</span> Test <span data-i18n="ruleExampleExactCase">(exact case)</span>
                     <span class="example-separator">|</span>
-                    <span class="example-nomatch">✗ Won't match:</span> test, TEST
+                    <span class="example-nomatch" data-i18n="ruleExampleWontMatch">× Won't match:</span> test, TEST
                   </div>
                 </div>
                 <label class="toggle-switch" for="nameCaseSensitive">
@@ -593,8 +626,8 @@
                 <div class="option-content">
                   <div class="setting-label-row">
                     <span class="setting-label" data-i18n="rulesPatternRegex">Regular Expression (Regex)</span>
-                    <button id="regexHelperBtnValue" class="regex-helper-btn" title="Regex Pattern Helper">?</button>
-                    <button id="regexExplanationBtnValue" class="explanation-helper-btn" title="What is Regex?">ℹ</button>
+                    <button id="regexHelperBtnValue" class="regex-helper-btn" title="Regex helper" data-i18n-title="rhRegexTitle">?</button>
+                    <button id="regexExplanationBtnValue" class="explanation-helper-btn" title="What is a regular expression?" data-i18n-title="rhWhatIsRegex"><svg class="explanation-helper-icon" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><circle cx="8" cy="3.4" r="1.7" fill="currentColor"/><rect x="6.5" y="6.4" width="3" height="8" rx="1.2" fill="currentColor"/></svg></button>
                   </div>
                 </div>
                 <label class="toggle-switch" for="valueRegex">
@@ -606,8 +639,8 @@
                 <div class="option-content">
                   <div class="setting-label-row">
                     <span class="setting-label" data-i18n="rulesPatternWholeWord">Whole Word</span>
-                    <button id="wholeWordHelperBtnValue" class="pattern-helper-btn" title="Whole Word Helper">?</button>
-                    <button id="wholeWordExplanationBtnValue" class="explanation-helper-btn" title="What is Whole Word?">ℹ</button>
+                    <button id="wholeWordHelperBtnValue" class="pattern-helper-btn" title="Whole Word" data-i18n-title="rulesPatternWholeWord">?</button>
+                    <button id="wholeWordExplanationBtnValue" class="explanation-helper-btn" title="What is “Whole word”?" data-i18n-title="rhWhatIsWholeWord"><svg class="explanation-helper-icon" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><circle cx="8" cy="3.4" r="1.7" fill="currentColor"/><rect x="6.5" y="6.4" width="3" height="8" rx="1.2" fill="currentColor"/></svg></button>
                   </div>
                 </div>
                 <label class="toggle-switch" for="valueWholeWord">
@@ -619,8 +652,8 @@
                 <div class="option-content">
                   <div class="setting-label-row">
                     <span class="setting-label" data-i18n="rulesPatternCaseSensitive">Case Sensitive</span>
-                    <button id="caseSensitiveHelperBtnValue" class="pattern-helper-btn" title="Case Sensitive Helper">?</button>
-                    <button id="caseSensitiveExplanationBtnValue" class="explanation-helper-btn" title="What is Case Sensitive?">ℹ</button>
+                    <button id="caseSensitiveHelperBtnValue" class="pattern-helper-btn" title="Case Sensitive" data-i18n-title="rulesPatternCaseSensitive">?</button>
+                    <button id="caseSensitiveExplanationBtnValue" class="explanation-helper-btn" title="What is “Case sensitive”?" data-i18n-title="rhWhatIsCase"><svg class="explanation-helper-icon" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><circle cx="8" cy="3.4" r="1.7" fill="currentColor"/><rect x="6.5" y="6.4" width="3" height="8" rx="1.2" fill="currentColor"/></svg></button>
                   </div>
                 </div>
                 <label class="toggle-switch" for="valueCaseSensitive">
@@ -641,879 +674,292 @@
   </div>
 
   <!-- DOM Selector Helper Modal -->
-  <div id="domHelperModal" class="rule-modal" style="display: none;">
+  <div id="domHelperModal" class="rule-modal rh-modal" style="display: none;">
     <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content" style="max-width: 600px;">
+    <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="domHelperTitle">
       <div class="rule-modal-header">
-        <h2 data-i18n="rulesDomSelectorHelper">DOM Selector Helper</h2>
-        <button id="closeDomHelper" class="rule-modal-close">
-          <svg width="16" height="16" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-          </svg>
-        </button>
+        <h2 id="domHelperTitle" data-i18n="rulesDomSelectorHelper">DOM Selector Helper</h2>
+        <button type="button" id="closeDomHelper" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
       </div>
-
-      <div class="rule-modal-body">
-        <!-- Contextual Tip -->
-        <div class="step-contextual-tip">
-          <svg class="tip-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,22H14A1,1 0 0,0 15,21V20H9V21Z"/>
-          </svg>
-          <div class="tip-content">
-            <strong>Tip:</strong> Type keywords like "recaptcha", "captcha", "cloudflare" for common selectors, or element types like "button", "iframe", "canvas".
+      <div class="rh-toolbar">
+        <label class="rh-search">
+          <svg class="rh-search-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="text" id="domKeywordInput" class="rh-search-input" placeholder="Search selectors, e.g. captcha, iframe" data-i18n-placeholder="rhSearchDom" aria-label="Search selectors, e.g. captcha, iframe" data-i18n-aria-label="rhSearchDom" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="domSuggestions">
+        </label>
+      </div>
+      <div class="rule-modal-body rh-body">
+        <div id="domNoResults" class="rh-no-results" hidden></div>
+        <div class="rh-section">
+          <div class="rh-section-head" id="domSuggestionsHead">
+            <span class="rh-section-title"></span>
+            <span class="rh-section-count"></span>
           </div>
-        </div>
-
-        <!-- Step 1: Keyword Input -->
-        <div class="dom-step-content">
-          <h4 style="margin-top: 0; color: var(--text-primary); font-size: 14px; font-weight: 600;">
-            What are you looking for?
-          </h4>
-          <input type="text" id="domKeywordInput"
-                 placeholder="Type a keyword (e.g., recaptcha, cloudflare, button, canvas)"
-                 autocomplete="off">
-        </div>
-
-        <!-- Step 2: Suggestions -->
-        <div class="dom-suggestions-section" style="margin-top: 20px;">
-          <h4 style="color: var(--text-primary); font-size: 14px; font-weight: 600; margin-bottom: 12px;">
-            Suggested Selectors
-          </h4>
-          <div id="domSuggestions" class="dom-templates">
-            <div class="suggestions-empty-state">
-              <svg class="empty-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M15.5,12C18,12 20,14 20,16.5C20,17.38 19.75,18.21 19.31,18.9L22.39,22L21,23.39L17.88,20.32C17.19,20.75 16.37,21 15.5,21C13,21 11,19 11,16.5C11,14 13,12 15.5,12M15.5,14A2.5,2.5 0 0,0 13,16.5A2.5,2.5 0 0,0 15.5,19A2.5,2.5 0 0,0 18,16.5A2.5,2.5 0 0,0 15.5,14M5,3H19A2,2 0 0,1 21,5V13.03C20.5,12.23 19.81,11.54 19,11V5H5V19H9.5C9.81,19.75 10.26,20.42 10.81,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M7,7H17V9H7V7M7,11H12.03C11.23,11.5 10.54,12.19 10,13H7V11M7,15H9.17C9.06,15.5 9,16 9,16.5V17H7V15Z"/>
-              </svg>
-              <div class="empty-title" data-i18n="rulesStartTypingSuggestions">Start typing to see suggestions</div>
-              <div class="empty-hint">We'll show common selectors matching your search</div>
-              <div class="empty-examples">
-                Try: <code>recaptcha</code> <code>iframe</code> <code>canvas</code> <code>button</code>
-              </div>
-            </div>
-          </div>
+          <div id="domSuggestions" class="rh-list"></div>
         </div>
       </div>
-
+      <div id="domSuggestionsPagination" class="pagination rh-pagination" style="display: none;">
+        <div class="pagination-info"></div>
+        <div class="pagination-controls">
+          <button type="button" class="pagination-btn pagination-btn-prev" disabled title="Previous" aria-label="Previous" data-i18n-title="paginationPrev" data-i18n-aria-label="paginationPrev">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/></svg>
+          </button>
+          <div class="page-info">
+            <span data-i18n="paginationPage">Page</span>
+            <input type="text" class="page-input" value="1" inputmode="numeric" aria-label="Page" data-i18n-aria-label="paginationPage">
+            <span data-i18n="paginationOf">of</span>
+            <span class="total-pages">1</span>
+          </div>
+          <button type="button" class="pagination-btn pagination-btn-next" disabled title="Next" aria-label="Next" data-i18n-title="paginationNext" data-i18n-aria-label="paginationNext">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/></svg>
+          </button>
+        </div>
+      </div>
+      <div id="domPreviewSection" class="rh-dock" hidden>
+        <span class="rh-field-label" data-i18n="rhPreview">Preview</span>
+        <code id="domPreviewContent" class="rh-code"></code>
+      </div>
       <div class="rule-modal-footer">
-        <button id="cancelDomHelper" class="rule-btn rule-btn-cancel" data-i18n="rulesColorPickerCancel">Cancel</button>
-        <button id="useDomSelector" class="rule-btn rule-btn-save" data-i18n="rulesUseSelectorBtn">Use Selector</button>
+        <span class="rh-kbd" aria-hidden="true"><kbd>↑</kbd><kbd>↓</kbd><kbd><svg class="rh-kbd-icon" viewBox="0 0 12 12" width="10" height="10" fill="none" aria-hidden="true" focusable="false"><path d="M10 2.5V6.5H2.5M2.5 6.5L5 4M2.5 6.5L5 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></kbd><kbd>Esc</kbd></span>
+        <button type="button" id="cancelDomHelper" class="rule-btn rule-btn-cancel" data-i18n="btnCancel">Cancel</button>
+        <button type="button" id="useDomSelector" class="rule-btn rule-btn-save" data-i18n="rulesUseSelectorBtn" disabled>Use selector</button>
       </div>
     </div>
   </div>
 
   <!-- Window Properties Helper Modal -->
-  <div id="windowHelperModal" class="rule-modal" style="display: none;">
+  <div id="windowHelperModal" class="rule-modal rh-modal" style="display: none;">
     <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content">
+    <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="windowHelperTitle">
       <div class="rule-modal-header">
-        <h2 data-i18n="rulesWindowPropertiesHelper">Window Properties Helper</h2>
-        <button id="closeWindowHelper" class="rule-modal-close">
-          <svg width="16" height="16" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-          </svg>
-        </button>
+        <h2 id="windowHelperTitle" data-i18n="rulesWindowPropertiesHelper">Window Properties Helper</h2>
+        <button type="button" id="closeWindowHelper" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
       </div>
-
-      <div class="rule-modal-body">
-        <!-- Step Indicators -->
-        <div class="dom-helper-steps three-steps" data-progress="1">
-          <div class="dom-step active" id="windowStep1">
-            <div class="dom-step-number"><span>1</span></div>
-            <div class="dom-step-label" data-i18n="rulesStepEnterKeyword">Enter Keyword</div>
+      <div class="rh-toolbar">
+        <p class="rh-intro" data-i18n="rhWindowIntro">Checks a JavaScript global on the page (window.…). Pick one, then choose what it must be.</p>
+        <label class="rh-search">
+          <svg class="rh-search-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="text" id="windowKeywordInput" class="rh-search-input" placeholder="Search properties, e.g. webdriver, chrome, cdc_" data-i18n-placeholder="rhSearchWindow" aria-label="Search properties, e.g. webdriver, chrome, cdc_" data-i18n-aria-label="rhSearchWindow" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="windowSuggestions">
+        </label>
+      </div>
+      <div class="rule-modal-body rh-body">
+        <div id="windowNoResults" class="rh-no-results" hidden></div>
+        <div class="rh-section">
+          <div class="rh-section-head" id="windowSuggestionsHead">
+            <span class="rh-section-title"></span>
+            <span class="rh-section-count"></span>
           </div>
-          <div class="dom-step" id="windowStep2">
-            <div class="dom-step-number"><span>2</span></div>
-            <div class="dom-step-label" data-i18n="rulesStepChooseProperty">Choose Property</div>
-          </div>
-          <div class="dom-step" id="windowStep3">
-            <div class="dom-step-number"><span>3</span></div>
-            <div class="dom-step-label" data-i18n="rulesStepSelectCondition">Select Condition</div>
-          </div>
+          <div id="windowSuggestions" class="rh-list"></div>
         </div>
-
-        <!-- Contextual Tip -->
-        <div class="step-contextual-tip">
-          <svg class="tip-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,22H14A1,1 0 0,0 15,21V20H9V21Z"/>
-          </svg>
-          <div class="tip-content">
-            <strong>Tip:</strong> Type keywords like "chrome", "webkit", "eval", "cdc_" to find common bot-detection properties.
-          </div>
-        </div>
-
-        <!-- Step 1: Keyword Input -->
-        <div class="dom-step-content">
-          <h4 style="margin-top: 0; color: var(--text-primary); font-size: 14px; font-weight: 600;">
-            What property are you looking for?
-          </h4>
-          <input type="text" id="windowKeywordInput"
-                 placeholder="Type a keyword (e.g., chrome, webkit, eval, Function)"
-                 autocomplete="off">
-        </div>
-
-        <!-- Step 2: Suggestions -->
-        <div class="dom-suggestions-section" style="margin-top: 20px;">
-          <h4 style="color: var(--text-primary); font-size: 14px; font-weight: 600; margin-bottom: 12px;">
-            Suggested Properties
-          </h4>
-          <div id="windowSuggestions" class="dom-templates">
-            <div class="suggestions-empty-state">
-              <svg class="empty-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
-              </svg>
-              <div class="empty-title" data-i18n="rulesStartTypingSuggestions">Start typing to see suggestions</div>
-              <div class="empty-hint">We'll show common window properties matching your search</div>
-              <div class="empty-examples">
-                Try: <code>chrome</code> <code>webkit</code> <code>eval</code> <code>cdc_</code>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Hidden input to store selected property -->
+        <!-- Selected property (kept id: read by useWindowProperty / preview) -->
         <input type="hidden" id="windowCustomInput" value="">
-
-        <!-- Step 3: Condition Selection -->
-        <div id="windowConditionSection" class="dom-custom-section" style="display: none; margin-top: 20px;">
-          <h4 style="color: var(--text-primary); font-size: 14px; font-weight: 600; margin-bottom: 12px;">
-            Select Condition Type
-          </h4>
-          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">
-            Choose how to check the property value:
-          </p>
-          <div class="condition-dropdown" id="conditionDropdownContainer">
-            <button type="button" class="condition-dropdown-trigger" id="conditionDropdownTrigger">
-              <span class="condition-selected-text" data-i18n="rulesConditionExists">Exists</span>
-              <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                <path d="M6 8L1 3h10z"/>
-              </svg>
-            </button>
-            <div class="condition-dropdown-menu" id="conditionDropdownMenu">
-              <div class="condition-group">
-                <div class="condition-group-label" data-i18n="rulesConditionGroupType">Type</div>
-                <div class="condition-option" data-value="typeof object" data-i18n="rulesTypeofObject">Object</div>
-                <div class="condition-option" data-value="typeof function" data-i18n="rulesTypeofFunction">Function</div>
-                <div class="condition-option" data-value="typeof string" data-i18n="rulesTypeofString">String</div>
-                <div class="condition-option" data-value="typeof number" data-i18n="rulesTypeofNumber">Number</div>
-                <div class="condition-option" data-value="typeof boolean" data-i18n="rulesTypeofBoolean">Boolean</div>
-              </div>
-              <div class="condition-group">
-                <div class="condition-group-label">Existence</div>
-                <div class="condition-option selected" data-value="exists">Exists</div>
-                <div class="condition-option" data-value="truthy">Truthy</div>
-                <div class="condition-option" data-value="falsy">Falsy</div>
-              </div>
-              <div class="condition-group">
-                <div class="condition-group-label">Collections</div>
-                <div class="condition-option" data-value="array">Array</div>
-                <div class="condition-option" data-value="has keys">Has keys</div>
-              </div>
-            </div>
-            <input type="hidden" id="windowConditionSelect" value="exists">
-          </div>
-        </div>
-
       </div>
-
-      <div class="rule-modal-footer has-back">
-        <div class="footer-left">
-          <button id="backWindowHelper" class="rule-btn rule-btn-back hidden">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-            </svg>
-            Back
+      <div id="windowSuggestionsPagination" class="pagination rh-pagination" style="display: none;">
+        <div class="pagination-info"></div>
+        <div class="pagination-controls">
+          <button type="button" class="pagination-btn pagination-btn-prev" disabled title="Previous" aria-label="Previous" data-i18n-title="paginationPrev" data-i18n-aria-label="paginationPrev">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/></svg>
+          </button>
+          <div class="page-info">
+            <span data-i18n="paginationPage">Page</span>
+            <input type="text" class="page-input" value="1" inputmode="numeric" aria-label="Page" data-i18n-aria-label="paginationPage">
+            <span data-i18n="paginationOf">of</span>
+            <span class="total-pages">1</span>
+          </div>
+          <button type="button" class="pagination-btn pagination-btn-next" disabled title="Next" aria-label="Next" data-i18n-title="paginationNext" data-i18n-aria-label="paginationNext">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/></svg>
           </button>
         </div>
-        <div class="footer-right">
-          <button id="cancelWindowHelper" class="rule-btn rule-btn-cancel">Cancel</button>
-          <button id="useWindowProperty" class="rule-btn rule-btn-save">Next: Choose Property</button>
+      </div>
+      <div id="windowConditionSection" class="rh-dock" hidden>
+        <div class="rh-field">
+          <label class="rh-field-label" for="windowConditionSelect" data-i18n="rhCondition">Condition</label>
+          <select id="windowConditionSelect" class="rh-select rh-select--plain"></select>
         </div>
+        <p id="windowRuleSentence" class="rh-sentence" role="status"></p>
+        <div id="windowConditionStatus" class="rh-status is-invalid" role="alert" hidden></div>
+      </div>
+      <div class="rule-modal-footer">
+        <span class="rh-kbd" aria-hidden="true"><kbd>↑</kbd><kbd>↓</kbd><kbd><svg class="rh-kbd-icon" viewBox="0 0 12 12" width="10" height="10" fill="none" aria-hidden="true" focusable="false"><path d="M10 2.5V6.5H2.5M2.5 6.5L5 4M2.5 6.5L5 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></kbd><kbd>Esc</kbd></span>
+        <button type="button" id="cancelWindowHelper" class="rule-btn rule-btn-cancel" data-i18n="btnCancel">Cancel</button>
+        <button type="button" id="useWindowProperty" class="rule-btn rule-btn-save" data-i18n="rhAddProperty" disabled>Add property</button>
       </div>
     </div>
   </div>
 
-  <!-- Regex Helper Modal (2-Step) -->
-  <div id="regexHelperModal" class="rule-modal" style="display: none;">
+  <!-- Regex Helper Modal -->
+  <div id="regexHelperModal" class="rule-modal rh-modal" style="display: none;">
     <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content">
+    <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="regexHelperTitle">
       <div class="rule-modal-header">
-        <h2>Regular Expression Helper</h2>
-        <button id="closeRegexHelper" class="rule-modal-close">
-          <svg width="16" height="16" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-          </svg>
-        </button>
+        <h2 id="regexHelperTitle" data-i18n="rhRegexTitle">Regex helper</h2>
+        <button type="button" id="closeRegexHelper" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
       </div>
-
-      <div class="rule-modal-body">
-        <!-- Step Indicators -->
-        <div class="dom-helper-steps two-steps" data-progress="1">
-          <div class="dom-step active" id="regexStep1">
-            <div class="dom-step-number"><span>1</span></div>
-            <div class="dom-step-label">What do you need?</div>
+      <div class="rh-toolbar">
+        <label class="rh-search">
+          <svg class="rh-search-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="text" id="regexKeywordInput" class="rh-search-input is-mono" placeholder="Text to match, e.g. bm_ or token" data-i18n-placeholder="rhSearchRegex" aria-label="Text to match, e.g. bm_ or token" data-i18n-aria-label="rhSearchRegex" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="regexSuggestions">
+        </label>
+      </div>
+      <div class="rule-modal-body rh-body">
+        <div class="rh-section">
+          <div class="rh-section-head" id="regexSuggestionsHead">
+            <span class="rh-section-title"></span>
+            <span class="rh-section-count"></span>
           </div>
-          <div class="dom-step" id="regexStep2">
-            <div class="dom-step-number"><span>2</span></div>
-            <div class="dom-step-label">Choose Pattern</div>
+          <div id="regexSuggestions" class="rh-list"></div>
+        </div>
+        <div class="rh-section">
+          <div class="rh-section-head"><span class="rh-section-title" data-i18n="rhQuickRef">Quick reference</span></div>
+          <div id="regexQuickRef" class="rh-card"></div>
+        </div>
+      </div>
+      <div id="regexSuggestionsPagination" class="pagination rh-pagination" style="display: none;">
+        <div class="pagination-info"></div>
+        <div class="pagination-controls">
+          <button type="button" class="pagination-btn pagination-btn-prev" disabled title="Previous" aria-label="Previous" data-i18n-title="paginationPrev" data-i18n-aria-label="paginationPrev">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/></svg>
+          </button>
+          <div class="page-info">
+            <span data-i18n="paginationPage">Page</span>
+            <input type="text" class="page-input" value="1" inputmode="numeric" aria-label="Page" data-i18n-aria-label="paginationPage">
+            <span data-i18n="paginationOf">of</span>
+            <span class="total-pages">1</span>
           </div>
+          <button type="button" class="pagination-btn pagination-btn-next" disabled title="Next" aria-label="Next" data-i18n-title="paginationNext" data-i18n-aria-label="paginationNext">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/></svg>
+          </button>
         </div>
-
-        <!-- Contextual Tip -->
-        <div class="step-contextual-tip">
-          <svg class="tip-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,22H14A1,1 0 0,0 15,21V20H9V21Z"/>
-          </svg>
-          <div class="tip-content">
-            <strong>Tip:</strong> Describe what you want to match: "starts with", "ends with", "digits only", "contains word", etc.
-          </div>
-        </div>
-
-        <!-- Step 1: Keyword Input -->
-        <div class="dom-step-content">
-          <h4 style="margin-top: 0; color: var(--text-primary); font-size: 14px; font-weight: 600;">
-            What pattern do you need?
-          </h4>
-          <input type="text" id="regexKeywordInput"
-                 placeholder="e.g., starts with, ends with, digits, contains, any text"
-                 autocomplete="off">
-        </div>
-
-        <!-- Step 2: Suggestions -->
-        <div class="dom-suggestions-section" style="margin-top: 20px;">
-          <h4 style="color: var(--text-primary); font-size: 14px; font-weight: 600; margin-bottom: 12px;">
-            Suggested Patterns
-          </h4>
-          <div id="regexSuggestions" class="dom-templates">
-            <div class="suggestions-empty-state">
-              <svg class="empty-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19,19H5V5H19M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M17,17H7V14L10,11L7,8V5H17V8L14,11L17,14V17Z"/>
-              </svg>
-              <div class="empty-title">Start typing to see suggestions</div>
-              <div class="empty-hint">We'll show regex patterns matching your description</div>
-              <div class="empty-examples">
-                Try: <code>starts with</code> <code>ends with</code> <code>digits</code> <code>url</code>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-top: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border);">
-          <div style="font-weight: 600; font-size: 11px; margin-bottom: 8px; color: var(--text-primary);">Quick Reference:</div>
-          <div style="font-size: 10px; color: var(--text-muted); line-height: 1.6;">
-            <code>.</code> = any character &nbsp;|&nbsp;
-            <code>*</code> = 0 or more &nbsp;|&nbsp;
-            <code>+</code> = 1 or more &nbsp;|&nbsp;
-            <code>?</code> = optional &nbsp;|&nbsp;
-            <code>^</code> = start &nbsp;|&nbsp;
-            <code>$</code> = end<br>
-            <code>\d</code> = digit &nbsp;|&nbsp;
-            <code>\w</code> = word char &nbsp;|&nbsp;
-            <code>\s</code> = whitespace &nbsp;|&nbsp;
-            <code>[abc]</code> = a, b, or c &nbsp;|&nbsp;
-            <code>(a|b)</code> = a OR b
-          </div>
-        </div>
+      </div>
+      <div id="regexPreviewSection" class="rh-dock" hidden>
+        <span class="rh-field-label" data-i18n="rhPreview">Preview</span>
+        <code id="regexPreviewContent" class="rh-code"></code>
+      </div>
+      <div class="rule-modal-footer">
+        <span class="rh-kbd" aria-hidden="true"><kbd>↑</kbd><kbd>↓</kbd><kbd><svg class="rh-kbd-icon" viewBox="0 0 12 12" width="10" height="10" fill="none" aria-hidden="true" focusable="false"><path d="M10 2.5V6.5H2.5M2.5 6.5L5 4M2.5 6.5L5 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></kbd><kbd>Esc</kbd></span>
+        <button type="button" id="closeRegexHelperBtn" class="rule-btn rule-btn-cancel" data-i18n="btnCancel">Cancel</button>
+        <button type="button" id="useRegexPattern" class="rule-btn rule-btn-save" data-i18n="rhUsePattern" disabled>Use pattern</button>
       </div>
     </div>
   </div>
 
   <!-- Regex Explanation Modal (What is Regex?) -->
-  <div id="regexExplanationModal" class="rule-modal" style="display: none;">
+  <div id="regexExplanationModal" class="rule-modal rh-modal" style="display: none;">
     <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content" style="max-width: 600px;">
+    <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="regexExplanationTitle">
       <div class="rule-modal-header">
-        <h2>What is Regular Expression?</h2>
-        <button id="closeRegexExplanation" class="rule-modal-close">
-          <svg width="16" height="16" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-          </svg>
-        </button>
+        <h2 id="regexExplanationTitle" data-i18n="rhWhatIsRegex">What is a regular expression?</h2>
+        <button type="button" id="closeRegexExplanation" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
       </div>
-
-      <div class="rule-modal-body">
-        <p style="font-size: 12px; color: var(--text-muted); margin: 0 0 16px 0;">
-          A regular expression (regex) is a powerful pattern matching tool that lets you search for complex text patterns instead of just exact matches.
-        </p>
-
-        <h3 style="margin: 0 0 12px 0; color: var(--text-primary); font-size: 13px; font-weight: 600;">Basic Examples:</h3>
-        <div style="margin-bottom: 16px;">
-          <div style="margin-bottom: 10px;">
-            <div style="font-family: 'Monaco', 'Courier New', monospace; font-size: 11px; color: var(--accent); margin-bottom: 4px;">^_ab</div>
-            <div style="font-size: 11px; color: var(--text-muted);">Starts with "_ab" (the ^ means beginning)</div>
-          </div>
-          <div style="margin-bottom: 10px;">
-            <div style="font-family: 'Monaco', 'Courier New', monospace; font-size: 11px; color: var(--accent); margin-bottom: 4px;">ck$</div>
-            <div style="font-size: 11px; color: var(--text-muted);">Ends with "ck" (the $ means end)</div>
-          </div>
-          <div style="margin-bottom: 10px;">
-            <div style="font-family: 'Monaco', 'Courier New', monospace; font-size: 11px; color: var(--accent); margin-bottom: 4px;">.*token.*</div>
-            <div style="font-size: 11px; color: var(--text-muted);">Contains "token" anywhere (the .* means any characters)</div>
-          </div>
-          <div>
-            <div style="font-family: 'Monaco', 'Courier New', monospace; font-size: 11px; color: var(--accent); margin-bottom: 4px;">(akamai|datadome)</div>
-            <div style="font-size: 11px; color: var(--text-muted);">Matches "akamai" OR "datadome" (the | means OR)</div>
-          </div>
-        </div>
-
-        <div style="margin-bottom: 16px; padding: 12px; background: rgba(59,130,246,0.08); border-left: 3px solid var(--accent); border-radius: 4px;">
-          <p style="font-size: 11px; color: var(--text-primary); margin: 0 0 6px 0; font-weight: 500;">When to use Regex:</p>
-          <ul style="font-size: 10px; color: var(--text-muted); margin: 0; padding-left: 20px;">
-            <li>Matching patterns that start or end with specific text</li>
-            <li>Finding multiple variations (using OR: |)</li>
-            <li>Matching numbers or specific character types</li>
-            <li>Complex matching rules</li>
-          </ul>
-        </div>
-
-        <div style="padding: 12px; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border);">
-          <p style="font-size: 10px; color: var(--text-muted); margin: 0;"><strong>💡 Tip:</strong> If you just need to match exact text, you don't need regex - use "Match Whole Word Only" instead. Regex is for complex patterns.</p>
-        </div>
-      </div>
-
+      <div id="regexExplanationBody" class="rule-modal-body rh-body"></div>
       <div class="rule-modal-footer">
-        <button id="closeRegexExplanationBtn" class="rule-btn rule-btn-cancel">Close</button>
+        <button type="button" id="closeRegexExplanationBtn" class="rule-btn rule-btn-cancel" data-i18n="btnClose">Close</button>
       </div>
     </div>
   </div>
 
   <!-- Whole Word Explanation Modal -->
-  <div id="wholeWordExplanationModal" class="rule-modal" style="display: none;">
+  <div id="wholeWordExplanationModal" class="rule-modal rh-modal" style="display: none;">
     <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content" style="max-width: 600px;">
+    <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="wholeWordExplanationTitle">
       <div class="rule-modal-header">
-        <h2>What is "Match Whole Word Only"?</h2>
-        <button id="closeWholeWordExplanation" class="rule-modal-close">
-          <svg width="16" height="16" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-          </svg>
-        </button>
+        <h2 id="wholeWordExplanationTitle" data-i18n="rhWhatIsWholeWord">What is “Whole word”?</h2>
+        <button type="button" id="closeWholeWordExplanation" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
       </div>
-
-      <div class="rule-modal-body">
-        <p style="font-size: 12px; color: var(--text-muted); margin: 0 0 16px 0;">
-          "Whole Word Only" means the pattern must be a complete word surrounded by boundaries (spaces, punctuation, start/end of text). It prevents partial matches.
-        </p>
-
-        <h3 style="margin: 0 0 12px 0; color: var(--text-primary); font-size: 13px; font-weight: 600;">Example with Cookie Name "_abck":</h3>
-        <div style="margin-bottom: 16px;">
-          <table style="font-size: 11px; width: 100%; border-collapse: collapse;">
-            <tr style="background: var(--bg-secondary);">
-              <td style="padding: 8px; border: 1px solid var(--border);">Text Found</td>
-              <td style="padding: 8px; border: 1px solid var(--border);">Matches?</td>
-              <td style="padding: 8px; border: 1px solid var(--border);">Reason</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px; border: 1px solid var(--border);">_abck</td>
-              <td style="padding: 8px; border: 1px solid var(--border); color: #10b981;">✓ Yes</td>
-              <td style="padding: 8px; border: 1px solid var(--border);">Exact match, surrounded by boundaries</td>
-            </tr>
-            <tr style="background: var(--bg-secondary);">
-              <td style="padding: 8px; border: 1px solid var(--border);">test_abck</td>
-              <td style="padding: 8px; border: 1px solid var(--border); color: #ef4444;">✗ No</td>
-              <td style="padding: 8px; border: 1px solid var(--border);">Connected to "test", not a complete word</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px; border: 1px solid var(--border);">_abckMore</td>
-              <td style="padding: 8px; border: 1px solid var(--border); color: #ef4444;">✗ No</td>
-              <td style="padding: 8px; border: 1px solid var(--border);">Connected to "More", not complete word</td>
-            </tr>
-          </table>
-        </div>
-
-        <div style="margin-bottom: 16px; padding: 12px; background: rgba(16,185,129,0.08); border-left: 3px solid #10b981; border-radius: 4px;">
-          <p style="font-size: 11px; color: var(--text-primary); margin: 0 0 6px 0; font-weight: 500;">Best for matching:</p>
-          <ul style="font-size: 10px; color: var(--text-muted); margin: 0; padding-left: 20px;">
-            <li>Exact cookie names</li>
-            <li>Specific header names</li>
-            <li>Complete class or function names</li>
-          </ul>
-        </div>
-
-        <div style="padding: 12px; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border);">
-          <p style="font-size: 10px; color: var(--text-muted); margin: 0;"><strong>💡 Tip:</strong> Without this option, searching for "_abck" might match "_abckMore", "_abckValue", and other variations.</p>
-        </div>
-      </div>
-
+      <div id="wholeWordExplanationBody" class="rule-modal-body rh-body"></div>
       <div class="rule-modal-footer">
-        <button id="closeWholeWordExplanationBtn" class="rule-btn rule-btn-cancel">Close</button>
+        <button type="button" id="closeWholeWordExplanationBtn" class="rule-btn rule-btn-cancel" data-i18n="btnClose">Close</button>
       </div>
     </div>
   </div>
 
   <!-- Case Sensitive Explanation Modal -->
-  <div id="caseSensitiveExplanationModal" class="rule-modal" style="display: none;">
+  <div id="caseSensitiveExplanationModal" class="rule-modal rh-modal" style="display: none;">
     <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content" style="max-width: 600px;">
+    <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="caseSensitiveExplanationTitle">
       <div class="rule-modal-header">
-        <h2>What is "Case Sensitive"?</h2>
-        <button id="closeCaseSensitiveExplanation" class="rule-modal-close">
-          <svg width="16" height="16" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-          </svg>
-        </button>
+        <h2 id="caseSensitiveExplanationTitle" data-i18n="rhWhatIsCase">What is “Case sensitive”?</h2>
+        <button type="button" id="closeCaseSensitiveExplanation" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
       </div>
-
-      <div class="rule-modal-body">
-        <p style="font-size: 12px; color: var(--text-muted); margin: 0 0 16px 0;">
-          "Case Sensitive" means uppercase (A, B, C...) and lowercase (a, b, c...) letters are treated as different. When disabled, it ignores case differences.
-        </p>
-
-        <h3 style="margin: 0 0 12px 0; color: var(--text-primary); font-size: 13px; font-weight: 600;">Example with Cookie Name "Akamai":</h3>
-        <div style="margin-bottom: 16px;">
-          <table style="font-size: 11px; width: 100%; border-collapse: collapse;">
-            <tr style="background: var(--bg-secondary);">
-              <td style="padding: 8px; border: 1px solid var(--border);">Text Found</td>
-              <td style="padding: 8px; border: 1px solid var(--border);">With Case Sensitive</td>
-              <td style="padding: 8px; border: 1px solid var(--border);">Without Case Sensitive</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px; border: 1px solid var(--border);">Akamai</td>
-              <td style="padding: 8px; border: 1px solid var(--border); color: #10b981;">✓ Match</td>
-              <td style="padding: 8px; border: 1px solid var(--border); color: #10b981;">✓ Match</td>
-            </tr>
-            <tr style="background: var(--bg-secondary);">
-              <td style="padding: 8px; border: 1px solid var(--border);">akamai</td>
-              <td style="padding: 8px; border: 1px solid var(--border); color: #ef4444;">✗ No match</td>
-              <td style="padding: 8px; border: 1px solid var(--border); color: #10b981;">✓ Match</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px; border: 1px solid var(--border);">AKAMAI</td>
-              <td style="padding: 8px; border: 1px solid var(--border); color: #ef4444;">✗ No match</td>
-              <td style="padding: 8px; border: 1px solid var(--border); color: #10b981;">✓ Match</td>
-            </tr>
-          </table>
-        </div>
-
-        <div style="margin-bottom: 16px; padding: 12px; background: rgba(239,68,68,0.08); border-left: 3px solid #ef4444; border-radius: 4px;">
-          <p style="font-size: 11px; color: var(--text-primary); margin: 0 0 6px 0; font-weight: 500;">Best for detecting:</p>
-          <ul style="font-size: 10px; color: var(--text-muted); margin: 0; padding-left: 20px;">
-            <li>Specific browser headers (often case-sensitive)</li>
-            <li>Cookie names with exact capitalization</li>
-            <li>JavaScript property names</li>
-          </ul>
-        </div>
-
-        <div style="padding: 12px; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border);">
-          <p style="font-size: 10px; color: var(--text-muted); margin: 0;"><strong>⚠️ Important:</strong> Most browser headers and cookies ARE case-sensitive, so enable this option for accurate detection.</p>
-        </div>
-      </div>
-
+      <div id="caseSensitiveExplanationBody" class="rule-modal-body rh-body"></div>
       <div class="rule-modal-footer">
-        <button id="closeCaseSensitiveExplanationBtn" class="rule-btn rule-btn-cancel">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Condition Helper Modal (for WINDOW properties) -->
-  <div id="conditionHelperModal" class="rule-modal" style="display: none;">
-    <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content" style="max-width: 600px;">
-      <div class="rule-modal-header">
-        <h2>Window Property Condition Helper</h2>
-        <button id="closeConditionHelper" class="rule-modal-close">
-          <svg width="16" height="16" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-          </svg>
-        </button>
-      </div>
-
-      <div class="rule-modal-body">
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
-          Select a condition to check for the window property. Click to use.
-        </p>
-
-        <div class="dom-templates">
-          <!-- Type Checks -->
-          <div style="margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
-            <div style="font-weight: 600; font-size: 11px; margin-bottom: 12px; color: var(--text-secondary);">Type Checks:</div>
-          </div>
-
-          <div class="condition-option" data-condition="typeof object">
-            <div class="template-code">typeof object</div>
-            <div class="template-description">Property is an object (not null)</div>
-          </div>
-
-          <div class="condition-option" data-condition="typeof function">
-            <div class="template-code">typeof function</div>
-            <div class="template-description">Property is a function</div>
-          </div>
-
-          <div class="condition-option" data-condition="typeof string">
-            <div class="template-code">typeof string</div>
-            <div class="template-description">Property is a string</div>
-          </div>
-
-          <div class="condition-option" data-condition="typeof number">
-            <div class="template-code">typeof number</div>
-            <div class="template-description">Property is a number</div>
-          </div>
-
-          <div class="condition-option" data-condition="typeof boolean">
-            <div class="template-code">typeof boolean</div>
-            <div class="template-description">Property is a boolean</div>
-          </div>
-
-          <!-- Existence Checks -->
-          <div style="margin: 16px 0; border-top: 1px solid var(--border); padding-top: 16px;">
-            <div style="font-weight: 600; font-size: 11px; margin-bottom: 12px; color: var(--text-secondary);">Existence Checks:</div>
-          </div>
-
-          <div class="condition-option" data-condition="truthy">
-            <div class="template-code">truthy</div>
-            <div class="template-description">Property exists and is truthy (most common)</div>
-          </div>
-
-          <div class="condition-option" data-condition="falsy">
-            <div class="template-code">falsy</div>
-            <div class="template-description">Property is falsy (false, 0, null, undefined, '')</div>
-          </div>
-
-          <div class="condition-option" data-condition="!== undefined">
-            <div class="template-code">!== undefined</div>
-            <div class="template-description">Property is defined (not undefined)</div>
-          </div>
-
-          <div class="condition-option" data-condition="=== undefined">
-            <div class="template-code">=== undefined</div>
-            <div class="template-description">Property is undefined</div>
-          </div>
-
-          <div class="condition-option" data-condition="!== null">
-            <div class="template-code">!== null</div>
-            <div class="template-description">Property is not null</div>
-          </div>
-
-          <div class="condition-option" data-condition="=== null">
-            <div class="template-code">=== null</div>
-            <div class="template-description">Property is null</div>
-          </div>
-
-          <!-- Array Check -->
-          <div style="margin: 16px 0; border-top: 1px solid var(--border); padding-top: 16px;">
-            <div style="font-weight: 600; font-size: 11px; margin-bottom: 12px; color: var(--text-secondary);">Special Checks:</div>
-          </div>
-
-          <div class="condition-option" data-condition="array">
-            <div class="template-code">array</div>
-            <div class="template-description">Property is an array</div>
-          </div>
-
-          <div class="condition-option" data-condition="non-empty array">
-            <div class="template-code">non-empty array</div>
-            <div class="template-description">Property is an array with items</div>
-          </div>
-
-          <div class="condition-option" data-condition="empty array">
-            <div class="template-code">empty array</div>
-            <div class="template-description">Property is an empty array</div>
-          </div>
-
-          <div class="condition-option" data-condition="has keys">
-            <div class="template-code">has keys</div>
-            <div class="template-description">Object has at least one key</div>
-          </div>
-
-          <div class="condition-option" data-condition="empty object">
-            <div class="template-code">empty object</div>
-            <div class="template-description">Object has no keys</div>
-          </div>
-
-          <!-- Numeric Comparisons -->
-          <div style="margin: 16px 0; border-top: 1px solid var(--border); padding-top: 16px;">
-            <div style="font-weight: 600; font-size: 11px; margin-bottom: 12px; color: var(--text-secondary);">Numeric Comparisons:</div>
-          </div>
-
-          <div class="condition-option" data-condition="> 0">
-            <div class="template-code">> 0</div>
-            <div class="template-description">Number greater than 0</div>
-          </div>
-
-          <div class="condition-option" data-condition=">= 0">
-            <div class="template-code">>= 0</div>
-            <div class="template-description">Number greater than or equal to 0</div>
-          </div>
-
-          <div class="condition-option" data-condition="=== 0">
-            <div class="template-code">=== 0</div>
-            <div class="template-description">Number equals 0</div>
-          </div>
-
-          <div class="condition-option" data-condition="> 1">
-            <div class="template-code">> 1</div>
-            <div class="template-description">Number greater than 1</div>
-          </div>
-
-          <div class="condition-option" data-condition=">= 1">
-            <div class="template-code">>= 1</div>
-            <div class="template-description">Number greater than or equal to 1</div>
-          </div>
-
-          <!-- String Checks -->
-          <div style="margin: 16px 0; border-top: 1px solid var(--border); padding-top: 16px;">
-            <div style="font-weight: 600; font-size: 11px; margin-bottom: 12px; color: var(--text-secondary);">String Checks:</div>
-          </div>
-
-          <div class="condition-option" data-condition="length > 0">
-            <div class="template-code">length > 0</div>
-            <div class="template-description">String has content (not empty)</div>
-          </div>
-
-          <div class="condition-option" data-condition="length === 0">
-            <div class="template-code">length === 0</div>
-            <div class="template-description">String is empty</div>
-          </div>
-
-          <!-- Boolean Checks -->
-          <div style="margin: 16px 0; border-top: 1px solid var(--border); padding-top: 16px;">
-            <div style="font-weight: 600; font-size: 11px; margin-bottom: 12px; color: var(--text-secondary);">Boolean Checks:</div>
-          </div>
-
-          <div class="condition-option" data-condition="=== true">
-            <div class="template-code">=== true</div>
-            <div class="template-description">Property is exactly true</div>
-          </div>
-
-          <div class="condition-option" data-condition="=== false">
-            <div class="template-code">=== false</div>
-            <div class="template-description">Property is exactly false</div>
-          </div>
-        </div>
-
-        <div style="margin-top: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border);">
-          <div style="font-weight: 600; font-size: 11px; margin-bottom: 8px; color: var(--text-primary);">Examples:</div>
-          <div style="font-size: 10px; color: var(--text-muted); line-height: 1.8;">
-            <strong>bmak</strong> → <code>typeof object</code> (Akamai Bot Manager object)<br>
-            <strong>grecaptcha.ready</strong> → <code>typeof function</code> (reCAPTCHA ready function)<br>
-            <strong>__xr_bmobdb</strong> → <code>typeof object</code> (Shape Security object)<br>
-            <strong>_Incapsula_API</strong> → <code>truthy</code> (Imperva/Incapsula exists)
-          </div>
-        </div>
-      </div>
-
-      <div class="rule-modal-footer">
-        <button id="closeConditionHelperBtn" class="rule-btn rule-btn-cancel">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Network Request Configuration Modal -->
-  <div id="networkRequestModal" class="rule-modal" style="display: none;">
-    <div class="rule-modal-content" style="max-width: 600px;">
-      <div class="rule-modal-header">
-        <h3>Configure Network Request Detection</h3>
-        <button class="rule-modal-close" id="networkRequestModalClose">&times;</button>
-      </div>
-
-      <div class="rule-modal-body">
-        <div class="network-form-group">
-          <label class="network-form-label">URL Pattern</label>
-          <input type="text" id="networkUrl" class="network-form-input" placeholder="e.g., /api/verify or challenge">
-          <div class="network-checkbox-group">
-            <label><input type="checkbox" id="networkUrlRegex"> Regex</label>
-            <label><input type="checkbox" id="networkUrlWholeWord"> Whole Word</label>
-            <label><input type="checkbox" id="networkUrlCaseSensitive"> Case Sensitive</label>
-          </div>
-        </div>
-
-        <div class="network-form-group">
-          <label class="network-form-label">HTTP Method</label>
-          <select id="networkMethod" class="network-form-input">
-            <option value="">Any</option>
-            <option value="GET">GET</option>
-            <option value="POST">POST</option>
-            <option value="PUT">PUT</option>
-            <option value="PATCH">PATCH</option>
-            <option value="DELETE">DELETE</option>
-          </select>
-          <div class="network-checkbox-group">
-            <label><input type="checkbox" id="networkMethodRegex"> Regex</label>
-            <label><input type="checkbox" id="networkMethodCaseSensitive"> Case Sensitive</label>
-          </div>
-        </div>
-
-        <div class="network-form-group">
-          <label class="network-form-label">Body Content (for POST/PUT/PATCH)</label>
-          <input type="text" id="networkBody" class="network-form-input" placeholder="e.g., sensor_data or challenge_token">
-          <div class="network-checkbox-group">
-            <label><input type="checkbox" id="networkBodyRegex"> Regex</label>
-            <label><input type="checkbox" id="networkBodyWholeWord"> Whole Word</label>
-            <label><input type="checkbox" id="networkBodyCaseSensitive"> Case Sensitive</label>
-          </div>
-        </div>
-
-        <div class="network-form-group">
-          <label class="network-form-label">Confidence (%)</label>
-          <input type="number" id="networkConfidence" class="network-form-input" min="0" max="100" value="85">
-        </div>
-
-        <div class="network-form-group">
-          <label class="network-form-label">Description</label>
-          <input type="text" id="networkDescription" class="network-form-input" placeholder="e.g., Akamai sensor data POST">
-        </div>
-      </div>
-
-      <div class="rule-modal-footer">
-        <button id="networkRequestSave" class="rule-btn rule-btn-primary">Save</button>
-        <button id="networkRequestCancel" class="rule-btn rule-btn-cancel">Cancel</button>
+        <button type="button" id="closeCaseSensitiveExplanationBtn" class="rule-btn rule-btn-cancel" data-i18n="btnClose">Close</button>
       </div>
     </div>
   </div>
 
   <!-- Method Help Modal -->
-  <div id="methodHelpModal" class="rule-modal" style="display: none;">
+  <div id="methodHelpModal" class="rule-modal rh-modal" style="display: none;">
     <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content" style="max-width: 600px;">
+    <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="methodHelpTitle">
       <div class="rule-modal-header">
-        <h2 id="methodHelpTitle">Help & Documentation</h2>
-        <button id="closeMethodHelp" class="rule-modal-close">
-          <svg width="16" height="16" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-          </svg>
-        </button>
+        <h2 id="methodHelpTitle" data-i18n="detectionMethodTitle">Detection Method</h2>
+        <button type="button" id="closeMethodHelp" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
       </div>
-
-      <div class="rule-modal-body" id="methodHelpContent" style="line-height: 1.6;">
+      <div class="rule-modal-body rh-body" id="methodHelpContent">
         <!-- Help content will be dynamically inserted here -->
       </div>
-    </div>
-  </div>
-
-  <!-- Whole Word Helper Modal (2-Step) -->
-  <div id="wholeWordHelperModal" class="rule-modal" style="display: none;">
-    <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content">
-      <div class="rule-modal-header">
-        <h2>Whole Word Matcher</h2>
-        <button id="closeWholeWordHelper" class="rule-modal-close">
-          <svg width="16" height="16" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-          </svg>
-        </button>
-      </div>
-
-      <div class="rule-modal-body">
-        <!-- Step Indicators -->
-        <div class="dom-helper-steps two-steps" data-progress="1">
-          <div class="dom-step active" id="wholeWordStep1">
-            <div class="dom-step-number"><span>1</span></div>
-            <div class="dom-step-label">What do you need?</div>
-          </div>
-          <div class="dom-step" id="wholeWordStep2">
-            <div class="dom-step-number"><span>2</span></div>
-            <div class="dom-step-label">View Examples</div>
-          </div>
-        </div>
-
-        <!-- Contextual Tip -->
-        <div class="step-contextual-tip" style="border-color: rgba(16, 185, 129, 0.2); background: rgba(16, 185, 129, 0.08);">
-          <svg class="tip-icon" viewBox="0 0 24 24" fill="#10b981">
-            <path d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,22H14A1,1 0 0,0 15,21V20H9V21Z"/>
-          </svg>
-          <div class="tip-content">
-            <strong>Tip:</strong> Whole word matching prevents partial matches. "test" won't match "testing" or "attest".
-          </div>
-        </div>
-
-        <!-- Step 1: Keyword Input -->
-        <div class="dom-step-content">
-          <h4 style="margin-top: 0; color: var(--text-primary); font-size: 14px; font-weight: 600;">
-            What pattern do you want to match?
-          </h4>
-          <input type="text" id="wholeWordKeywordInput"
-                 placeholder="e.g., cookie name, header name, exact match"
-                 autocomplete="off">
-        </div>
-
-        <!-- Step 2: Examples -->
-        <div class="dom-suggestions-section" style="margin-top: 20px;">
-          <h4 style="color: var(--text-primary); font-size: 14px; font-weight: 600; margin-bottom: 12px;">
-            How It Works
-          </h4>
-          <div id="wholeWordExamples" class="dom-templates">
-            <div class="suggestions-empty-state">
-              <svg class="empty-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
-              </svg>
-              <div class="empty-title">Start typing to see examples</div>
-              <div class="empty-hint">We'll show how whole word matching affects your pattern</div>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-top: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border);">
-          <p style="font-size: 11px; color: var(--text-primary); margin: 0 0 6px 0; font-weight: 600;">About Whole Word:</p>
-          <p style="font-size: 10px; color: var(--text-muted); margin: 0;">Matches only when the text is surrounded by word boundaries (spaces, punctuation, start/end of text). Prevents partial matches.</p>
-        </div>
+      <div class="rule-modal-footer">
+        <button type="button" id="closeMethodHelpBtn" class="rule-btn rule-btn-cancel" data-i18n="btnClose">Close</button>
       </div>
     </div>
   </div>
 
-  <!-- Case Sensitive Helper Modal (2-Step) -->
-  <div id="caseSensitiveHelperModal" class="rule-modal" style="display: none;">
+  <!-- Whole Word Helper Modal -->
+  <div id="wholeWordHelperModal" class="rule-modal rh-modal" style="display: none;">
     <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content">
+    <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="wholeWordHelperTitle">
       <div class="rule-modal-header">
-        <h2>Case Sensitive Matcher</h2>
-        <button id="closeCaseSensitiveHelper" class="rule-modal-close">
-          <svg width="16" height="16" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-          </svg>
-        </button>
+        <h2 id="wholeWordHelperTitle" data-i18n="rulesPatternWholeWord">Whole Word</h2>
+        <button type="button" id="closeWholeWordHelper" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
       </div>
-
-      <div class="rule-modal-body">
-        <!-- Step Indicators -->
-        <div class="dom-helper-steps two-steps" data-progress="1">
-          <div class="dom-step active" id="caseSensitiveStep1">
-            <div class="dom-step-number"><span>1</span></div>
-            <div class="dom-step-label">What do you need?</div>
+      <div class="rh-toolbar">
+        <label class="rh-search">
+          <svg class="rh-search-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="text" id="wholeWordKeywordInput" class="rh-search-input is-mono" placeholder="Type a value to test" data-i18n-placeholder="rhSearchSample" aria-label="Type a value to test" data-i18n-aria-label="rhSearchSample" autocomplete="off" spellcheck="false">
+        </label>
+      </div>
+      <div class="rule-modal-body rh-body">
+        <p class="rh-note" data-i18n="rhWwIntro">Matches only when the text stands alone, not as part of a longer word.</p>
+        <div class="rh-section">
+          <div class="rh-section-head" id="wholeWordExamplesHead">
+            <span class="rh-section-title"></span>
+            <span class="rh-section-count"></span>
           </div>
-          <div class="dom-step" id="caseSensitiveStep2">
-            <div class="dom-step-number"><span>2</span></div>
-            <div class="dom-step-label">View Examples</div>
+          <div id="wholeWordExamples" class="rh-list"></div>
+        </div>
+      </div>
+      <div class="rule-modal-footer">
+        <button type="button" id="closeWholeWordHelperBtn" class="rule-btn rule-btn-cancel" data-i18n="btnClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Case Sensitive Helper Modal -->
+  <div id="caseSensitiveHelperModal" class="rule-modal rh-modal" style="display: none;">
+    <div class="rule-modal-backdrop"></div>
+    <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="caseSensitiveHelperTitle">
+      <div class="rule-modal-header">
+        <h2 id="caseSensitiveHelperTitle" data-i18n="rulesPatternCaseSensitive">Case Sensitive</h2>
+        <button type="button" id="closeCaseSensitiveHelper" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
+      </div>
+      <div class="rh-toolbar">
+        <label class="rh-search">
+          <svg class="rh-search-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="text" id="caseSensitiveKeywordInput" class="rh-search-input is-mono" placeholder="Type a value to test" data-i18n-placeholder="rhSearchSample" aria-label="Type a value to test" data-i18n-aria-label="rhSearchSample" autocomplete="off" spellcheck="false">
+        </label>
+      </div>
+      <div class="rule-modal-body rh-body">
+        <p class="rh-note" data-i18n="rhCsIntro">When on, uppercase and lowercase letters count as different.</p>
+        <div class="rh-section">
+          <div class="rh-section-head" id="caseSensitiveExamplesHead">
+            <span class="rh-section-title"></span>
+            <span class="rh-section-count"></span>
           </div>
+          <div id="caseSensitiveExamples" class="rh-stack"></div>
         </div>
-
-        <!-- Contextual Tip -->
-        <div class="step-contextual-tip" style="border-color: rgba(239, 68, 68, 0.2); background: rgba(239, 68, 68, 0.08);">
-          <svg class="tip-icon" viewBox="0 0 24 24" fill="#ef4444">
-            <path d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,22H14A1,1 0 0,0 15,21V20H9V21Z"/>
-          </svg>
-          <div class="tip-content">
-            <strong>Tip:</strong> Case sensitive means "Test", "test", and "TEST" are all different. Enable for exact matching.
-          </div>
-        </div>
-
-        <!-- Step 1: Keyword Input -->
-        <div class="dom-step-content">
-          <h4 style="margin-top: 0; color: var(--text-primary); font-size: 14px; font-weight: 600;">
-            What pattern are you matching?
-          </h4>
-          <input type="text" id="caseSensitiveKeywordInput"
-                 placeholder="e.g., cookie name, header, class name"
-                 autocomplete="off">
-        </div>
-
-        <!-- Step 2: Examples -->
-        <div class="dom-suggestions-section" style="margin-top: 20px;">
-          <h4 style="color: var(--text-primary); font-size: 14px; font-weight: 600; margin-bottom: 12px;">
-            Case Sensitivity Examples
-          </h4>
-          <div id="caseSensitiveExamples" class="dom-templates">
-            <div class="suggestions-empty-state">
-              <svg class="empty-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M2,4V7H7V19H10V7H15V4H2M21,9H12V12H15V19H18V12H21V9Z"/>
-              </svg>
-              <div class="empty-title">Start typing to see examples</div>
-              <div class="empty-hint">We'll show how case sensitivity affects your pattern</div>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-top: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border);">
-          <p style="font-size: 11px; color: var(--text-primary); margin: 0 0 6px 0; font-weight: 600;">About Case Sensitivity:</p>
-          <p style="font-size: 10px; color: var(--text-muted); margin: 0;">When enabled, "Test", "test", and "TEST" are treated as different. When disabled, they all match.</p>
-        </div>
+      </div>
+      <div class="rule-modal-footer">
+        <button type="button" id="closeCaseSensitiveHelperBtn" class="rule-btn rule-btn-cancel" data-i18n="btnClose">Close</button>
       </div>
     </div>
   </div>

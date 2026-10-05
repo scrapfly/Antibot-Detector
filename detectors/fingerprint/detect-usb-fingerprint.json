@@ -5,66 +5,28 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2025-01-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/USB_API",
   "icon": "usb_fingerprint.png",
-  "description": "WebUSB API access for detecting connected USB devices and device enumeration",
+  "description": "WebUSB enumeration and device identity access, also used by legitimate device applications",
   "detection": {
     "js_hooks": [
-      {
-        "description": "Gets list of connected USB devices",
-        "enabled": true,
-        "confidence": 80,
-        "target": "USB.getDevices"
-      },
-      {
-        "description": "Requests user to select USB device",
-        "enabled": true,
-        "confidence": 80,
-        "target": "USB.requestDevice"
-      }
-    ],
-    "window": [
-      {
-        "path": "navigator.usb",
-        "description": "WebUSB API access point",
-        "condition": "typeof object"
-      },
-      {
-        "path": "navigator.usb.getDevices",
-        "description": "USB device enumeration method",
-        "condition": "typeof function"
-      }
+      { "id": "usb-enumeration", "description": "Requests previously authorized USB devices; results unobserved", "enabled": true, "confidence": 20, "standalone": true, "target": "USB.prototype.getDevices", "optional": true, "windowPath": "navigator.usb" },
+      { "id": "usb-request", "description": "Requests a USB device selection; permission outcome unobserved", "enabled": true, "confidence": 5, "standalone": true, "target": "USB.prototype.requestDevice", "optional": true, "windowPath": "navigator.usb" },
+      { "id": "usb-vendor", "description": "Reads a USB device vendor identifier", "enabled": true, "confidence": 10, "standalone": true, "target": "USBDevice.prototype.vendorId", "optional": true },
+      { "id": "usb-product", "description": "Reads a USB device product identifier", "enabled": true, "confidence": 10, "standalone": true, "target": "USBDevice.prototype.productId", "optional": true },
+      { "id": "usb-serial", "description": "Reads a USB device serial number; returned value unobserved", "enabled": true, "confidence": 25, "standalone": true, "target": "USBDevice.prototype.serialNumber", "optional": true }
     ],
     "content": [
-      {
-        "text": "navigator.usb",
-        "scope": "scripts",
-        "description": "WebUSB API usage",
-        "confidence": 50,
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "text": "getDevices",
-        "scope": "scripts",
-        "description": "USB device enumeration",
-        "confidence": 50,
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "text": "requestDevice",
-        "scope": "scripts",
-        "description": "USB device request in scripts",
-        "confidence": 50,
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      }
+      { "id": "usb-source", "text": "navigator.usb", "scope": "scripts", "checkScripts": true, "standalone": true, "description": "Script reference to navigator.usb; usage unconfirmed", "confidence": 10, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
+      { "id": "usb-enumeration-source", "text": "getDevices", "scope": "scripts", "checkScripts": true, "standalone": true, "description": "Script reference to getDevices; API and usage unconfirmed", "confidence": 5, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
+      { "id": "usb-request-source", "text": "requestDevice", "scope": "scripts", "checkScripts": true, "standalone": true, "description": "Script reference to requestDevice; API and usage unconfirmed", "confidence": 5, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true }
     ]
-  }
+  },
+  "combinations": [
+    { "id": "usb-device-model", "name": "USB enumeration with vendor and product identity reads", "confidence": 30, "when": { "all": [{ "pattern": "usb-enumeration" }, { "pattern": "usb-vendor" }, { "pattern": "usb-product" }] } },
+    { "id": "usb-device-serial", "name": "USB enumeration with serial number access", "confidence": 40, "when": { "all": [{ "pattern": "usb-enumeration" }, { "pattern": "usb-serial" }] } },
+    { "id": "usb-device-profile", "name": "USB enumeration with model and serial identity reads", "confidence": 50, "when": { "all": [{ "pattern": "usb-enumeration" }, { "pattern": "usb-vendor" }, { "pattern": "usb-product" }, { "pattern": "usb-serial" }] } }
+  ]
 }

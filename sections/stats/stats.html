@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scrapfly: history statistics</title>
+  <link rel="icon" href="../../icons/icon32.png">
+  <link rel="stylesheet" href="../../modules/styles/common.css">
+  <link rel="stylesheet" href="../../modules/styles/stats.css">
+</head>
+<body class="stats-page">
+  <header class="stats-header">
+    <div class="stats-header-inner">
+      <img class="stats-logo" src="../../icons/icon48.png" alt="" width="32" height="32">
+      <div class="stats-heading">
+        <h1 data-i18n="settingsHistoryStatsTitle">History statistics</h1>
+        <p class="stats-subtitle" id="statsSubtitle" data-i18n="statsPrivacyNote">Computed locally from your detection history. Nothing leaves your browser.</p>
+      </div>
+      <div class="stats-header-actions">
+        <div class="stats-range" role="group" aria-label="Time range" data-i18n-aria-label="statsRangeLabel">
+          <button type="button" class="stats-range-btn" data-days="7" data-i18n="statsRange7">7 days</button>
+          <button type="button" class="stats-range-btn active" data-days="30" data-i18n="statsRange30">30 days</button>
+          <button type="button" class="stats-range-btn" data-days="90" data-i18n="statsRange90">90 days</button>
+          <button type="button" class="stats-range-btn" data-days="0" data-i18n="statsRangeAll">All</button>
+        </div>
+        <div class="stats-export-actions">
+          <button type="button" class="stats-export-btn" data-export="csv" disabled><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 15v5h16v-5"/></svg><span data-i18n="statsExportCSV">Export CSV</span></button>
+          <button type="button" class="stats-export-btn" data-export="json" disabled><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 15v5h16v-5"/></svg><span data-i18n="statsExportJSON">Export JSON</span></button>
+        </div>
+      </div>
+    </div>
+    <nav class="stats-section-nav" role="tablist" aria-label="Statistics sections" data-i18n-aria-label="statsSectionsLabel">
+      <button type="button" class="stats-section-btn active" id="stats-tab-overview" role="tab" aria-selected="true" aria-controls="stats-panel-overview" data-section="overview" data-i18n="statsSectionOverview">Overview</button>
+      <button type="button" class="stats-section-btn" id="stats-tab-activity" role="tab" tabindex="-1" aria-selected="false" aria-controls="stats-panel-activity" data-section="activity" data-i18n="statsSectionActivity">Activity</button>
+      <button type="button" class="stats-section-btn" id="stats-tab-protections" role="tab" tabindex="-1" aria-selected="false" aria-controls="stats-panel-protections" data-section="protections" data-i18n="statsSectionProtections">Protections</button>
+      <button type="button" class="stats-section-btn" id="stats-tab-domains" role="tab" tabindex="-1" aria-selected="false" aria-controls="stats-panel-domains" data-section="domains" data-i18n="statsSectionDomains">Domains</button>
+      <button type="button" class="stats-section-btn" id="stats-tab-confidence" role="tab" tabindex="-1" aria-selected="false" aria-controls="stats-panel-confidence" data-section="confidence" data-i18n="statsSectionConfidence">Confidence</button>
+    </nav>
+  </header>
+
+  <main class="stats-main">
+    <p class="stats-selection-note" data-i18n="statsSelectionNote">Charts and exports use the selected date range. History entries represent saved detections, not every browser visit.</p>
+    <p class="stats-status" id="statsStatus" role="status" aria-live="polite" hidden></p>
+    <section class="stats-empty" id="statsEmpty" hidden>
+      <div class="stats-empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10m5 10V4m6 16v-7m5 7V7M2 22h20"/></svg></div>
+      <h2 id="statsEmptyTitle" data-i18n="statsEmptyTitle">No history yet</h2>
+      <p id="statsEmptyDesc" data-i18n="statsEmptyDesc">Statistics appear here once pages with detections are saved to the history.</p>
+    </section>
+    <div id="statsContent" hidden>
+      <section class="stats-kpis" aria-label="Totals" data-i18n-aria-label="statsUiTotals">
+        <div class="stats-kpi"><div class="stats-kpi-label" data-i18n="statsEntries">History entries</div><div class="stats-kpi-value" id="kpiEntries">0</div><div class="stats-kpi-sub" id="kpiEntriesSub"></div></div>
+        <div class="stats-kpi"><div class="stats-kpi-label" data-i18n="statsUniqueDomains">Unique domains</div><div class="stats-kpi-value" id="kpiDomains">0</div><div class="stats-kpi-sub" id="kpiDomainsSub"></div></div>
+        <div class="stats-kpi"><div class="stats-kpi-label" data-i18n="statsDetections">Detections</div><div class="stats-kpi-value" id="kpiDetections">0</div><div class="stats-kpi-sub" id="kpiDetectionsSub"></div></div>
+        <div class="stats-kpi"><div class="stats-kpi-label" data-i18n="statsDistinctDetectors">Distinct protections</div><div class="stats-kpi-value" id="kpiDetectors">0</div><div class="stats-kpi-sub" id="kpiDetectorsSub"></div></div>
+      </section>
+      <p class="stats-card-note" id="statsTimelineLimit" hidden></p>
+
+      <section class="stats-panel" id="stats-panel-overview" role="tabpanel" aria-labelledby="stats-tab-overview" tabindex="0">
+        <div class="stats-insights">
+          <div class="stats-insight"><span data-i18n="statsDetectionRate">Entries with detections</span><strong id="insightRate">0%</strong></div>
+          <div class="stats-insight"><span data-i18n="statsActiveDays">Active days</span><strong id="insightDays">0</strong></div>
+          <div class="stats-insight"><span data-i18n="statsAverageConfidence">Average confidence</span><strong id="insightConfidence"></strong></div>
+        </div>
+        <div class="stats-grid">
+          <section class="stats-card stats-card--wide"><div class="stats-card-head"><h2 data-i18n="statsOverTime">Detections over time</h2><span class="stats-card-meta" id="timelineMeta"></span></div><div class="stats-chart" id="statsTimeline"></div></section>
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsByCategory">By category</h2><span class="stats-card-meta" data-i18n="statsDetectionsUnit">detections</span></div><div class="stats-chart" id="statsCategories"></div></section>
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsByDifficulty">By difficulty</h2><span class="stats-card-meta" data-i18n="statsPagesUnit">pages</span></div><div class="stats-chart" id="statsDifficulty"></div></section>
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsTopProtections">Most detected protections</h2><span class="stats-card-meta" data-i18n="statsPagesUnit">pages</span></div><ol class="stats-bars" id="statsTopDetectors"></ol></section>
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsTopDomains">Top domains</h2><span class="stats-card-meta" data-i18n="statsVisitsUnit">visits</span></div><ol class="stats-bars" id="statsTopDomains"></ol></section>
+        </div>
+      </section>
+
+      <section class="stats-panel" id="stats-panel-activity" role="tabpanel" aria-labelledby="stats-tab-activity" tabindex="0" hidden>
+        <div class="stats-section-intro"><h2 data-i18n="statsSectionActivity">Activity</h2><p data-i18n="statsLocalTimeNote">Dates and hours use your local time zone.</p></div>
+        <div class="stats-grid">
+          <section class="stats-card stats-card--wide"><div class="stats-card-head"><h2 data-i18n="statsDailyVisits">Daily history entries</h2></div><div class="stats-chart" id="statsActivityTrend"></div></section>
+          <section class="stats-card stats-card--wide"><div class="stats-card-head"><h2 data-i18n="statsActivityCalendar">Activity calendar</h2></div><div class="stats-chart" id="statsHeatmap"></div><p class="stats-card-note" data-i18n="statsActivityCalendarHint">Each square represents one local calendar day. Darker blue means more saved entries.</p></section>
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsHourlyActivity">Activity by hour</h2></div><div class="stats-chart" id="statsHourly"></div></section>
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsWeekdayActivity">Activity by weekday</h2></div><div class="stats-chart" id="statsWeekdays"></div></section>
+        </div>
+      </section>
+
+      <section class="stats-panel" id="stats-panel-protections" role="tabpanel" aria-labelledby="stats-tab-protections" tabindex="0" hidden>
+        <div class="stats-section-intro"><h2 data-i18n="statsSectionProtections">Protections</h2></div>
+        <div class="stats-grid">
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsProtectionRanking">Protection ranking</h2><span class="stats-card-meta" data-i18n="statsPagesUnit">pages</span></div><div class="stats-chart" id="statsProtectionRanking"></div></section>
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsCategoryOverlap">Categories found together</h2></div><div class="stats-chart" id="statsCategoryOverlap"></div><p class="stats-card-note" data-i18n="statsCategoryOverlapHint">Number of history entries with both categories. Diagonal cells show entries with that category.</p></section>
+          <section class="stats-card stats-card--wide"><div class="stats-card-head"><h2 data-i18n="statsCategoryTrend">Categories over time</h2></div><div class="stats-chart" id="statsCategoryTrend"></div><div class="stats-series-legend" id="statsCategoryLegend"></div></section>
+          <section class="stats-card stats-card--wide"><div class="stats-card-head"><h2 data-i18n="statsProtectionDetails">All protections</h2></div><div class="stats-table-wrap" id="statsProtectionTable"></div><div class="stats-table-footer"><span id="statsProtectionCount"></span><button type="button" class="stats-table-more" id="statsProtectionMore" data-i18n="statsTableMore" hidden>Show more</button></div></section>
+        </div>
+      </section>
+
+      <section class="stats-panel" id="stats-panel-domains" role="tabpanel" aria-labelledby="stats-tab-domains" tabindex="0" hidden>
+        <div class="stats-section-intro"><h2 data-i18n="statsSectionDomains">Domains</h2></div>
+        <div class="stats-grid">
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsDomainRanking">Domain ranking</h2><span class="stats-card-meta" data-i18n="statsVisitsUnit">visits</span></div><div class="stats-chart" id="statsDomainRanking"></div></section>
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsDomainMap">Visits and detections</h2></div><div class="stats-chart" id="statsDomainScatter"></div><p class="stats-card-note" data-i18n="statsDomainMapHint">Each point is a domain. Larger points have more distinct protections.</p></section>
+          <section class="stats-card stats-card--wide"><div class="stats-card-head"><h2 data-i18n="statsDomainDetails">All domains</h2></div>
+            <div class="stats-table-toolbar"><input type="search" class="stats-search" id="statsDomainSearch" aria-label="Search domains" data-i18n-aria-label="statsDomainSearch" placeholder="Search domains..." data-i18n-placeholder="statsDomainSearch"><select class="stats-sort" id="statsDomainSort" aria-label="Sort domains" data-i18n-aria-label="statsDomainSortLabel"><option value="visits" data-i18n="statsSortVisits">Most visits</option><option value="detections" data-i18n="statsSortDetections">Most detections</option><option value="confidence" data-i18n="statsSortConfidence">Highest confidence</option><option value="name" data-i18n="statsSortName">Domain name</option></select></div>
+            <div class="stats-table-wrap" id="statsDomainTable"></div><div class="stats-table-footer"><span id="statsDomainCount"></span><button type="button" class="stats-table-more" id="statsDomainMore" data-i18n="statsTableMore" hidden>Show more</button></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="stats-panel" id="stats-panel-confidence" role="tabpanel" aria-labelledby="stats-tab-confidence" tabindex="0" hidden>
+        <div class="stats-section-intro"><h2 data-i18n="statsSectionConfidence">Confidence</h2><p data-i18n="statsConfidenceNote">Confidence describes the strength of saved detection evidence, not proof of fingerprinting or an active challenge.</p></div>
+        <div class="stats-grid">
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsConfidenceDistribution">Confidence distribution</h2></div><div class="stats-chart" id="statsConfidenceHistogram"></div><p class="stats-card-note" id="statsConfidenceKnown"></p></section>
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsCategoryConfidence">Confidence by category</h2></div><div class="stats-chart" id="statsCategoryConfidence"></div></section>
+          <section class="stats-card stats-card--wide"><div class="stats-card-head"><h2 data-i18n="statsConfidenceTrend">Confidence over time</h2></div><div class="stats-chart" id="statsConfidenceTrend"></div></section>
+        </div>
+      </section>
+    </div>
+    <p class="stats-export-note" id="statsExportScope"></p>
+    <p class="stats-export-note" data-i18n="statsExportPrivacy">Exports contain domains and detection summaries, not cookies, page contents or URL parameters.</p>
+  </main>
+  <footer class="stats-footer"><span data-i18n="poweredBy">Powered by</span> <a href="https://scrapfly.io" target="_blank" rel="noopener noreferrer">Scrapfly</a></footer>
+  <div class="stats-tooltip" id="statsTooltip" role="tooltip" hidden></div>
+  <script src="../../modules/core/logger.js"></script>
+  <script src="../../modules/core/storage-manager.js"></script>
+  <script src="../../modules/core/i18n.js"></script>
+  <script src="../../modules/ui/tooltip.js"></script>
+  <script src="../../utils/detection-utils.js"></script>
+  <script src="history-stats.js"></script>
+  <script src="stats-charts.js"></script>
+  <script src="stats-export.js"></script>
+  <script src="stats.js"></script>
+</body>
+</html>

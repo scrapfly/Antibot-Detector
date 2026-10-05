@@ -21,9 +21,10 @@ function handleCloudflareMessage(request, sender, sendResponse) {
                     if (typeof showNotification === 'function') {
                         Logger.network('[Cloudflare] Showing analyzing notification before reload...');
                         await showNotification(request.tabId, {
+                            module: 'Cloudflare',
                             type: 'loading',
-                            title: 'Analyzing Cloudflare Scripts',
-                            message: 'Please wait while we collect script URLs...',
+                            title: pageText('pageNoticeAnalyzingScriptsFmt', 'Analyzing {0} Scripts', 'Cloudflare'),
+                            message: pageText('pageNoticeCollectingScripts', 'Please wait while we collect script URLs...'),
                             duration: 15000
                         });
                         Logger.network('[Cloudflare] Pre-reload notification shown successfully');

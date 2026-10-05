@@ -43,11 +43,11 @@ ReCaptchaAdvanced.prototype.clickRecaptcha = async function() {
                             grecaptcha.execute();
                             return { success: true, method: 'grecaptcha-execute' };
                         } catch (e) {
-                            return { success: false, error: 'grecaptcha.execute() failed: ' + e.message };
+                            return { success: false, errorKey: 'executeFailed', errorDetail: e.message, error: 'grecaptcha.execute() failed: ' + e.message };
                         }
                     }
 
-                    return { success: false, error: 'No reCAPTCHA elements found' };
+                    return { success: false, errorKey: 'noElements', error: 'No reCAPTCHA elements found' };
                 }
             });
 
@@ -60,7 +60,7 @@ ReCaptchaAdvanced.prototype.clickRecaptcha = async function() {
             }
         } catch (error) {
             Logger.error('NETWORK', '[ReCAPTCHA] Failed to click reCAPTCHA:', error);
-            NotificationHelper.error('Failed to click: ' + error.message);
+            NotificationHelper.error(recaptchaText('advRecaptchaFailedClickFmt', 'Failed to click: {0}', error.message));
         }
     };
 
@@ -108,7 +108,7 @@ ReCaptchaAdvanced.prototype.extractSiteKey = async function() {
                         }
                     }
 
-                    return { success: false, error: 'No sitekey found' };
+                    return { success: false, errorKey: 'noSiteKey', error: 'No sitekey found' };
                 }
             });
 
@@ -121,14 +121,16 @@ ReCaptchaAdvanced.prototype.extractSiteKey = async function() {
                     this.displaySiteKeyModal(result.sitekey);
                 } else {
                     Logger.network('[ReCAPTCHA] No sitekey found:', result.error);
-                    NotificationHelper.error(result.error);
+                    NotificationHelper.error(result.errorKey === 'noSiteKey'
+                        ? recaptchaText('advRecaptchaNoSiteKey', 'No sitekey found')
+                        : result.error);
                 }
             } else {
                 Logger.network('[ReCAPTCHA] No results from extract script');
             }
         } catch (error) {
             Logger.error('NETWORK', '[ReCAPTCHA] Failed to extract sitekey:', error);
-            NotificationHelper.error('Failed to extract: ' + error.message);
+            NotificationHelper.error(recaptchaText('advCommonFailedExtractFmt', 'Failed to extract: {0}', error.message));
         }
     };
 
@@ -248,12 +250,12 @@ ReCaptchaAdvanced.prototype.captureCallback = async function() {
                     if (hasClients || hasDomCallbacks || hasScriptCallbacks) {
                         this.displayCallbackModal(result);
                     } else {
-                        NotificationHelper.info('No reCAPTCHA callbacks found on this page. Make sure reCAPTCHA is loaded.');
+                        NotificationHelper.info(recaptchaText('advRecaptchaNoCallbacksFound', 'No reCAPTCHA callbacks found on this page. Make sure reCAPTCHA is loaded.'));
                     }
                 }
             }
         } catch (error) {
             Logger.error('NETWORK', '[ReCAPTCHA] Failed to capture callback:', error);
-            NotificationHelper.error('Failed to capture callback: ' + error.message);
+            NotificationHelper.error(recaptchaText('advRecaptchaFailedCaptureCallbackFmt', 'Failed to capture callback: {0}', error.message));
         }
     };

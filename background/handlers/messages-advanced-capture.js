@@ -19,8 +19,7 @@ function buildAdvancedCaptureRegistryMap(handlers, messageTypes) {
             messageKeys: [
                 messageTypes.RECAPTCHA_START_CAPTURE,
                 messageTypes.RECAPTCHA_STOP_CAPTURE,
-                messageTypes.RECAPTCHA_GET_CAPTURE_STATE,
-                messageTypes.RECAPTCHA_GET_CAPTURE_RESULTS
+                messageTypes.RECAPTCHA_GET_CAPTURE_STATE
             ]
         },
         {
@@ -31,7 +30,6 @@ function buildAdvancedCaptureRegistryMap(handlers, messageTypes) {
                 messageTypes.AKAMAI_GET_CAPTURE_STATE,
                 messageTypes.AKAMAI_CAPTURE_COMPLETED,
                 messageTypes.AKAMAI_EXTRACT_SENSOR,
-                messageTypes.AKAMAI_EXTRACTION_COMPLETED,
                 messageTypes.AKAMAI_SHOW_ANALYZING_NOTIFICATION,
                 messageTypes.AKAMAI_SHOW_EXTRACTING_NOTIFICATION
             ]
@@ -55,8 +53,7 @@ function buildAdvancedCaptureRegistryMap(handlers, messageTypes) {
                 messageTypes.SHAPESECURITY_GET_CAPTURE_STATE,
                 messageTypes.SHAPESECURITY_CHECK_VERSION,
                 messageTypes.SHAPESECURITY_START_EXTRACTION,
-                messageTypes.SHAPESECURITY_SHOW_ANALYZING_NOTIFICATION,
-                messageTypes.SHAPESECURITY_EXTRACTION_COMPLETED
+                messageTypes.SHAPESECURITY_SHOW_ANALYZING_NOTIFICATION
             ]
         },
         {

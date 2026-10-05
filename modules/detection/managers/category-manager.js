@@ -39,7 +39,8 @@ class CategoryManager {
                     'detect-funcaptcha',
                     'detect-aliexpress',
                     'detect-friendlycaptcha',
-                    'detect-captchaeu'
+                    'detect-captchaeu',
+                    'detect-turnstile'
                 ]
             },
             fingerprint: {
@@ -399,12 +400,42 @@ class CategoryManager {
     }
 
     /**
+     * Badge colours explicitly saved from the settings modal, read raw from
+     * storage (not merged with defaults), or null when none were saved.
+     * @returns {Promise<Object|null>} {low, medium, high}
+     */
+    static async getSavedBadgeColors() {
+        try {
+            const result = await chrome.storage.local.get(['scrapfly_settings']);
+            const raw = result.scrapfly_settings;
+            const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+            const colors = (parsed?.settings || parsed)?.badgeColors;
+            if (!colors || typeof colors !== 'object') return null;
+            const valid = (v) => typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v);
+            if (![colors.low, colors.medium, colors.high].some(valid)) return null;
+            return {
+                low: valid(colors.low) ? colors.low : BADGE.COLORS.LOW,
+                medium: valid(colors.medium) ? colors.medium : BADGE.COLORS.MEDIUM,
+                high: valid(colors.high) ? colors.high : BADGE.COLORS.HIGH
+            };
+        } catch (error) {
+            return null;
+        }
+    }
+
+    /**
      * Get badge colors from CategoryManager instance or storage
      * @param {CategoryManager} [categoryManagerInstance] - Optional CategoryManager instance
      * @returns {Promise<Object>} Badge colors {low, medium, high}
      */
     static async getBadgeColors(categoryManagerInstance = null) {
         try {
+            // Colours the user saved in Settings > General > Badge Colors win over
+            // the index.json defaults; without this the setting never reached the
+            // toolbar badge.
+            const saved = await CategoryManager.getSavedBadgeColors();
+            if (saved) return saved;
+
             if (categoryManagerInstance && categoryManagerInstance.initialized) {
                 return {
                     low: categoryManagerInstance.getBadgeColor('low'),

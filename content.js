@@ -14,22 +14,15 @@ var spaUrlChangeTimeout = spaUrlChangeTimeout || null;
 var detectionFinalized = detectionFinalized || false; // Flag to suppress late events after onDetection
 var hooksMonitoringComplete = hooksMonitoringComplete || false;
 
-const SCRAPFLY_BRIDGE_TOKEN_FIELD = '__scrapflyBridgeToken';
-const SCRAPFLY_BRIDGE_INIT_EVENT = 'scrapfly-bridge-init';
-const SCRAPFLY_ISOLATED_TO_MAIN_EVENT = 'scrapfly-isolated-bridge-message';
-const SCRAPFLY_MAIN_TO_ISOLATED_EVENT = 'scrapfly-main-bridge-message';
-const SCRAPFLY_ALLOWED_MAIN_MESSAGE_TYPES = new Set([
-    'HOOK_FAILURE_REPORT',
-    'HOOK_TAMPERING_DETECTED',
-    'HOOK_RECOVERY_RESULT',
-    'WINDOW_DETECTIONS',
-    'SCRAPFLY_DEBUG_LOG',
-    'SCRAPFLY_LOG',
-    'JS_HOOK_DETECTION',
-    'JS_HOOKS_COMPLETE',
-    'WINDOW_PROPS_COMPLETE',
-    'MAIN_WORLD_LOG'
-]);
+// Bridge protocol: modules/core/bridge-protocol.js (loaded first in this content script)
+const SCRAPFLY_PROTOCOL = globalThis.ScrapflyBridgeProtocol;
+const BRIDGE_TYPES = SCRAPFLY_PROTOCOL.MESSAGE_TYPES;
+const CACHE_HIT_FLAG = SCRAPFLY_PROTOCOL.GLOBALS.CACHE_HIT_EARLY_EXIT; // this world's own flag, same name as MAIN's
+const SCRAPFLY_BRIDGE_TOKEN_FIELD = SCRAPFLY_PROTOCOL.FIELDS.TOKEN;
+const SCRAPFLY_BRIDGE_INIT_EVENT = SCRAPFLY_PROTOCOL.EVENTS.BRIDGE_INIT;
+const SCRAPFLY_ISOLATED_TO_MAIN_EVENT = SCRAPFLY_PROTOCOL.EVENTS.ISOLATED_TO_MAIN;
+const SCRAPFLY_MAIN_TO_ISOLATED_EVENT = SCRAPFLY_PROTOCOL.EVENTS.MAIN_TO_ISOLATED;
+const SCRAPFLY_ALLOWED_MAIN_MESSAGE_TYPES = new Set(SCRAPFLY_PROTOCOL.TO_ISOLATED_TYPES);
 
 var scrapflyBridgeToken = scrapflyBridgeToken || createScrapflyBridgeToken();
 
@@ -64,10 +57,11 @@ function sendToMainWorld(message) {
 
 function initializeMainWorldBridge() {
     try {
+        // The MAIN world knows nothing but this event's name: it adopts the whole
+        // bridge protocol, the token and its early bind shims from this detail
+        // (fired before any page script runs).
         window.dispatchEvent(new CustomEvent(SCRAPFLY_BRIDGE_INIT_EVENT, {
-            detail: {
-                [SCRAPFLY_BRIDGE_TOKEN_FIELD]: scrapflyBridgeToken
-            }
+            detail: demMainWorldBootstrapDetail(scrapflyBridgeToken)
         }));
     } catch (error) {
         Logger.debug('CONTENT', '[bridge] Failed to initialize MAIN world bridge', error);
@@ -105,13 +99,13 @@ async function installJSHooks() {
 }
 
 async function rearmHooksForNewDetectionIfNeeded() {
-    if (!detectionFinalized && !hooksMonitoringComplete && window.__scrapflyCacheHitEarlyExit !== true) {
+    if (!detectionFinalized && !hooksMonitoringComplete && window[CACHE_HIT_FLAG] !== true) {
         return;
     }
 
     detectionFinalized = false;
     hooksMonitoringComplete = false;
-    window.__scrapflyCacheHitEarlyExit = false;
+    window[CACHE_HIT_FLAG] = false;
     initializeMainWorldBridge();
     try {
         await installJSHooks();
@@ -235,7 +229,6 @@ async function notifyPageLoad(triggerSource = 'page_load') {
  * Delegates to Utils.collectAndSendData()
  */
 async function collectAndSendData() {
-    Logger.debug('CONTENT', '[collectAndSendData] Called');
     if (typeof Utils === 'undefined') {
         if (typeof Logger !== 'undefined') {
             Logger.debug('CONTENT', '[collectAndSendData] Utils not loaded, skipping');
@@ -243,7 +236,6 @@ async function collectAndSendData() {
         return;
     }
     await rearmHooksForNewDetectionIfNeeded();
-    Logger.debug('CONTENT', '[collectAndSendData] Delegating to Utils');
     return Utils.collectAndSendData({
         detectionEngine: detectionEngine,
         isExtensionContextValid: isExtensionContextValid,
@@ -256,7 +248,7 @@ async function collectAndSendData() {
  * OPTIMIZED 2.3: Consolidated event listeners with debouncing
  */
 function setupDetectionTriggers() {
-    Logger.content('Setting up detection triggers...');
+    Logger.debug('CONTENT', 'Setting up detection triggers');
 
     // Notify page load AFTER all resources load (background checks cache first)
     // Use 'load' event instead of 'DOMContentLoaded' to ensure async scripts (like reCAPTCHA) are loaded
@@ -283,7 +275,7 @@ function setupDetectionTriggers() {
             // Debounce URL changes (utils.js has 2000ms debounce)
             if (spaUrlChangeTimeout) clearTimeout(spaUrlChangeTimeout);
             spaUrlChangeTimeout = setTimeout(() => {
-                Logger.content('URL changed, notifying with url_change trigger...');
+                Logger.debug('CONTENT', 'URL changed, rescanning');
                 notifyPageLoad('url_change');
                 spaUrlChangeTimeout = null;
             }, 100);
@@ -324,11 +316,11 @@ function setupDetectionTriggers() {
                 return false;
             }
 
-            Logger.content('Received message', { type: request.type });
+            // Progress messages are covered by the JS API event lines
+            if (request.type !== 'DETECTION_PROGRESS') Logger.debug('CONTENT', `Message: ${request.type}`);
 
             if (request.type === 'REQUEST_PAGE_DATA') {
                 // Background requests data collection (cache miss)
-                Logger.content('REQUEST_PAGE_DATA received - starting collection');
 
                 // JS API: Notify page that detection is starting (cache miss)
                 dispatchJsApiEvent('onStart', {
@@ -350,7 +342,6 @@ function setupDetectionTriggers() {
                         }
                     }, 500);
                 } else {
-                    Logger.debug('CONTENT', '[init] Utils loaded, collecting data');
                     collectAndSendData();
                 }
 
@@ -394,7 +385,7 @@ function setupDetectionTriggers() {
                 // Detection completed - dispatch JS API event
                 detectionFinalized = true;
                 hooksMonitoringComplete = true;
-                Logger.content('[Content] Received DETECTION_COMPLETE from background', {
+                Logger.debug('CONTENT', 'Scan complete', {
                     url: request.url,
                     detectionCount: request.detectionCount
                 });
@@ -405,12 +396,10 @@ function setupDetectionTriggers() {
                     timestamp: request.timestamp || new Date().toISOString(),
                     fromCache: request.fromCache === true,
                     cacheScope: request.cacheScope
-                }).then(() => {
-                    Logger.content('[Content] dispatchJsApiEvent completed successfully');
                 }).catch(e => Logger.error('CONTENT', 'Failed to dispatch detection event', e));
 
                 // Stop window property polling - detection is finalized, late results won't update anything
-                sendToMainWorld({ type: 'STOP_WINDOW_POLLING', reason: 'detection_complete' });
+                sendToMainWorld({ type: BRIDGE_TYPES.STOP_WINDOW_POLLING, reason: SCRAPFLY_PROTOCOL.CONTROL_REASONS.DETECTION_COMPLETE });
 
                 sendResponse({ status: 'event_dispatched' });
             } else if (request.type === 'DETECTION_PROGRESS') {
@@ -433,33 +422,11 @@ function setupDetectionTriggers() {
                     timestamp: request.timestamp || new Date().toISOString()
                 }).catch(e => Logger.error('CONTENT', 'Failed to dispatch error event', e));
                 sendResponse({ status: 'error_event_dispatched' });
-            } else if (request.type === 'UPDATE_CAPTURE_STEP') {
-                const notif = document.getElementById('scrapfly-capture-notification');
-                if (notif) {
-                    notif.innerHTML = `
-                        <style>
-                            @keyframes slideIn {
-                                from { transform: translateX(400px); opacity: 0; }
-                                to { transform: translateX(0); opacity: 1; }
-                            }
-                        </style>
-                        <div style="font-weight: 600; font-size: 16px; margin-bottom: 8px;">
-                            reCAPTCHA Capture - Step ${FormatUtils.escapeHtml(String(request.step))}
-                        </div>
-                        <div style="opacity: 0.9;">
-                            ${FormatUtils.escapeHtml(String(request.message))}
-                        </div>
-                        <div id="scrapfly-timer" style="margin-top: 12px; font-size: 12px; opacity: 0.8; font-weight: 600;">
-                            Capturing...
-                        </div>
-                    `;
-                }
-                sendResponse({ status: 'updated' });
-            } else if (request.type === 'CACHE_HIT_DISABLE_MONITORING') {
+            } else if (request.type === BRIDGE_TYPES.CACHE_HIT_DISABLE_MONITORING) {
                 // Cache hit - disable hooks and window properties monitoring
                 sendToMainWorld({
-                    type: 'DISABLE_MONITORING',
-                    reason: 'cache_hit',
+                    type: BRIDGE_TYPES.DISABLE_MONITORING,
+                    reason: SCRAPFLY_PROTOCOL.CONTROL_REASONS.CACHE_HIT,
                     url: request.url
                 });
                 sendResponse({ status: 'disabled' });
@@ -470,14 +437,13 @@ function setupDetectionTriggers() {
         });
     }
 
-    Logger.content('Detection triggers setup complete');
 }
 
 /**
  * Initialize content script
  */
 async function initialize() {
-    Logger.content('Initializing on', { url: window.location.href });
+    Logger.debug('CONTENT', `Init: ${window.location.href}`);
 
     // Check context before any operations
     if (!isExtensionContextValid()) {
@@ -488,7 +454,7 @@ async function initialize() {
 
     // Don't run on extension pages or chrome:// URLs
     if (!Utils.isValidContentScriptUrl(window.location.href)) {
-        Logger.content('Skipping initialization on browser page');
+        Logger.debug('CONTENT', 'Browser page, not scanned');
         return;
     }
 
@@ -538,7 +504,7 @@ async function initialize() {
                     .reduce((sum, category) => sum + Object.keys(category).length, 0);
 
                 if (detectorCount > 0) {
-                    Logger.content(`Detectors loaded - smart data collection enabled (${detectorCount} detectors)`);
+                    Logger.debug('CONTENT', `${detectorCount} detectors loaded`);
 
                     // Set detectors in detection engine to enable smart data collection
                     detectionEngine.setDetectors(detectorsResponse.detectors);
@@ -588,7 +554,6 @@ async function initialize() {
     // Note: JS hooks are installed by install-hooks.js at document_start (before this script runs)
 
     // Early cache check - skip all detection work if cached
-    Logger.cache('Checking cache before starting detection work...');
     try {
         const cacheCheckResponse = await chrome.runtime.sendMessage({
             type: 'CHECK_CACHE_EARLY',
@@ -596,14 +561,14 @@ async function initialize() {
         });
 
         if (cacheCheckResponse?.cacheHit) {
-            Logger.cache('CACHE HIT - skipping all detection work, returning cached detections immediately');
+            Logger.content(`Cached result for ${Logger.hostOf(window.location.href)}: no scan needed`);
 
             // Set flag to prevent hook installation (ISOLATED world)
-            window.__scrapflyCacheHitEarlyExit = true;
+            window[CACHE_HIT_FLAG] = true;
 
             // Notify MAIN world about cache hit so hooks stop firing
             sendToMainWorld({
-                type: 'SCRAPFLY_CACHE_HIT',
+                type: BRIDGE_TYPES.CACHE_HIT,
                 timestamp: Date.now()
             });
 
@@ -614,7 +579,6 @@ async function initialize() {
             // JS API: Dispatch detection event immediately with cached data
             const cachedData = cacheCheckResponse.detectionData;
             if (cachedData) {
-                Logger.cache('Dispatching JS API event with cached detection data');
                 dispatchJsApiEvent('onDetection', {
                     url: window.location.href,
                     detections: cachedData.detectionResults || [],
@@ -641,10 +605,9 @@ async function initialize() {
             setupDetectionTriggers();
 
             // Exit initialization - don't run detection work
-            Logger.cache('Content script initialization complete (cache hit path)');
             return;
         } else {
-            Logger.cache('CACHE MISS - proceeding with full detection');
+            Logger.debug('CACHE', 'No cached result, scanning');
         }
     } catch (error) {
         Logger.error('CACHE', 'Error during cache check, proceeding with detection', error);
@@ -673,7 +636,6 @@ async function initialize() {
                         Logger.error('CONTENT', '[init] Failed to notify background', chrome.runtime.lastError);
                     }
                 } else {
-                    Logger.content('Successfully notified background of readiness');
                 }
             });
         } catch (error) {
@@ -695,7 +657,7 @@ async function initialize() {
 function waitForUtilsAndInitialize() {
     if (typeof Utils !== 'undefined') {
         if (typeof Logger !== 'undefined') {
-            Logger.content('Utils loaded, initializing...');
+            Logger.debug('CONTENT', 'Utils loaded, initializing');
         }
         initialize();
     } else {
@@ -711,19 +673,20 @@ const hookBatcher = DetectionEngineManager.createHookBatcher(chrome);
 
 // Listen for JS Hook detections from MAIN world script
 // Delegate to DetectionEngineManager.handleHookMessage()
-const DEBUG_LOG_RATE_WINDOW_MS = 1000;
-const DEBUG_LOG_MAX_PER_WINDOW = 20;
+// Relay cap for MAIN-world debug logs: the same LOG_* keys the MAIN world
+// throttles with, from the config last sent to it (modules/core/hooks-config.js).
 let debugLogWindowStart = Date.now();
 let debugLogCount = 0;
 
 function shouldForwardDebugLog() {
+    const config = DetectionEngineManager.lastHooksConfig || HooksConfig.defaults;
     const now = Date.now();
-    if (now - debugLogWindowStart >= DEBUG_LOG_RATE_WINDOW_MS) {
+    if (now - debugLogWindowStart >= config.LOG_RATE_WINDOW_MS) {
         debugLogWindowStart = now;
         debugLogCount = 0;
     }
     debugLogCount += 1;
-    return debugLogCount <= DEBUG_LOG_MAX_PER_WINDOW;
+    return debugLogCount <= config.LOG_MAX_PER_WINDOW;
 }
 
 window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
@@ -733,15 +696,15 @@ window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
     if (!data) return;
 
     // Stop propagation for hook detections to prevent page scripts from seeing them
-    if (data.type === 'JS_HOOK_DETECTION') {
+    if (data.type === BRIDGE_TYPES.JS_HOOK_DETECTION) {
         event.stopImmediatePropagation?.();
     }
 
     // Forward hook failure reports from HookResilienceManager
-    if (data.type === 'HOOK_FAILURE_REPORT') {
+    if (data.type === BRIDGE_TYPES.HOOK_FAILURE_REPORT) {
         try {
             chrome.runtime.sendMessage({
-                type: 'HOOK_FAILURE_REPORT',
+                type: BRIDGE_TYPES.HOOK_FAILURE_REPORT,
                 target: data.target,
                 failureType: data.failureType,
                 message: data.message,
@@ -753,41 +716,11 @@ window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
         return;
     }
 
-    // Forward hook tampering detection
-    if (data.type === 'HOOK_TAMPERING_DETECTED') {
-        try {
-            chrome.runtime.sendMessage({
-                type: 'HOOK_TAMPERING_DETECTED',
-                target: data.target,
-                timestamp: data.timestamp
-            }).catch(() => {});
-        } catch (e) {
-            // Extension context invalidated - silently ignore
-        }
-        return;
-    }
-
-    // Forward hook recovery results
-    if (data.type === 'HOOK_RECOVERY_RESULT') {
-        try {
-            chrome.runtime.sendMessage({
-                type: 'HOOK_RECOVERY_RESULT',
-                target: data.target,
-                success: data.success,
-                error: data.error,
-                timestamp: data.timestamp
-            }).catch(() => {});
-        } catch (e) {
-            // Extension context invalidated - silently ignore
-        }
-        return;
-    }
-
     // Forward window property detections from WindowPropertyTracker
-    if (data.type === 'WINDOW_DETECTIONS') {
+    if (data.type === BRIDGE_TYPES.WINDOW_DETECTIONS) {
         try {
             chrome.runtime.sendMessage({
-                type: 'WINDOW_DETECTIONS',
+                type: BRIDGE_TYPES.WINDOW_DETECTIONS,
                 detections: data.detections,
                 timestamp: data.timestamp
             }).catch(() => {});
@@ -798,13 +731,13 @@ window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
     }
 
     // Forward debug logs from MAIN world to background service worker
-    if (data.type === 'SCRAPFLY_DEBUG_LOG') {
+    if (data.type === BRIDGE_TYPES.DEBUG_LOG) {
         if (!shouldForwardDebugLog()) {
             return;
         }
         try {
             chrome.runtime.sendMessage({
-                type: 'SCRAPFLY_DEBUG_LOG',
+                type: BRIDGE_TYPES.DEBUG_LOG,
                 level: data.level,
                 message: data.message,
                 source: data.source,
@@ -816,21 +749,8 @@ window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
         return;
     }
 
-    // Forward centralized logs from MAIN world Logger to background
-    if (data.type === 'SCRAPFLY_LOG') {
-        try {
-            chrome.runtime.sendMessage({
-                type: 'LOG',
-                log: data.log
-            }).catch(() => {});
-        } catch (e) {
-            // Extension context invalidated - silently ignore
-        }
-        return;
-    }
-
     // Dispatch JS API events for completion signals (before handleHookMessage sends to background with retry)
-    if (data.type === 'JS_HOOKS_COMPLETE') {
+    if (data.type === BRIDGE_TYPES.JS_HOOKS_COMPLETE) {
         hooksMonitoringComplete = true;
         if (!detectionFinalized) {
             const hooksTs = (typeof data.timestamp === 'number')
@@ -849,7 +769,7 @@ window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
         }
     }
 
-    if (data.type === 'WINDOW_PROPS_COMPLETE') {
+    if (data.type === BRIDGE_TYPES.WINDOW_PROPS_COMPLETE) {
         if (!detectionFinalized) {
             const windowTs = (typeof data.timestamp === 'number')
                 ? new Date(data.timestamp).toISOString()
@@ -884,7 +804,7 @@ window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
     // IMPORTANT: Always install hooks at document_start for correctness.
     // Cache hits are handled asynchronously (background discards batches + disables monitoring),
     // and relying on sessionStorage can go stale (manual cache clear, settings changes).
-    window.__scrapflyCacheHitEarlyExit = false;
+    window[CACHE_HIT_FLAG] = false;
     initializeMainWorldBridge();
 
     // Install hooks immediately without async storage checks (cache/enabled checked after)
@@ -893,7 +813,6 @@ window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
 
     // Test Logger (with safety check)
     if (typeof Logger !== 'undefined') {
-        Logger.content('Logger initialized in CONTENT (ISOLATED) context');
     }
 
     // Use flag to prevent duplicate triggers
@@ -902,7 +821,7 @@ window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
         if (hookStartTriggered) return;
         hookStartTriggered = true;
         sendToMainWorld({
-            type: 'SCRAPFLY_PAGE_READY'
+            type: BRIDGE_TYPES.PAGE_READY
         });
     };
 

@@ -3,6 +3,7 @@
  * Extracted from message-router switch cases for maintainability.
  */
 function registerDetectionHandlers(registry, context) {
+    const BRIDGE_TYPES = globalThis.ScrapflyBridgeProtocol.MESSAGE_TYPES;
     void context;
 
     const handle_page_load_notification = function({ request, sender, sendResponse, context }) {
@@ -11,7 +12,7 @@ function registerDetectionHandlers(registry, context) {
         // Clear interrupted marker on new page load
         if (sender.tab?.id) {
             if (interruptedDetections.has(sender.tab.id)) {
-                Logger.background(`[Background] Clearing interrupted state for tab ${sender.tab.id} (new page load)`);
+                Logger.debug('SCAN', `Tab ${sender.tab.id}: new page load clears the interrupted scan`);
                 interruptedDetections.delete(sender.tab.id);
             }
         }
@@ -44,29 +45,9 @@ function registerDetectionHandlers(registry, context) {
         void context;
 
         (async () => {
-            const debugState = {};
-            const debugMode = await ensureDebugMode(debugState);
-            if (debugMode) {
-                Logger.debug('BACKGROUND', '[DETECTION_DATA] Received', { tabId: sender.tab?.id, keys: Object.keys(request) });
-            }
-            const pageData = request.data;
-            if (debugMode) {
-                Logger.debug('BACKGROUND', '[DETECTION_DATA] Page data', {
-                    cookies: pageData?.cookies?.length || 0,
-                    headers: pageData?.headers ? Object.keys(pageData.headers).length : 0,
-                    scripts: pageData?.scripts?.length || 0,
-                    dom: pageData?.dom?.length || 0,
-                    url: pageData?.url
-                });
-            }
+            Logger.debug('SCAN', `Page data from tab ${sender.tab?.id}`);
             try {
-                if (debugMode) {
-                    Logger.debug('BACKGROUND', '[DETECTION_DATA] Processing...');
-                }
                 await processDetectionData(request, sender);
-                if (debugMode) {
-                    Logger.debug('BACKGROUND', '[DETECTION_DATA] Processing complete');
-                }
                 sendResponse({ status: 'received', tabId: sender.tab?.id });
             } catch (error) {
                 Logger.error('BACKGROUND', '[DetectionData] ERROR in processDetectionData:', error);
@@ -97,7 +78,7 @@ function registerDetectionHandlers(registry, context) {
     const handle_content_script_ready = function({ request, sender, sendResponse, context }) {
         void context;
 
-        Logger.background(`Scrapfly Background: Content script ready on ${request.url}`);
+        Logger.debug('SCAN', `Content script ready: ${request.url}`);
         sendResponse({ status: 'acknowledged' });
     };
     registry['CONTENT_SCRIPT_READY'] = handle_content_script_ready;
@@ -118,7 +99,7 @@ function registerDetectionHandlers(registry, context) {
 
                 if (targetTabId) {
                     if (targetTabId === currentActiveTab && interruptedDetections.has(targetTabId)) {
-                        Logger.background(`[GET_DETECTION_DATA] Clearing interrupted state for current tab ${targetTabId} (user viewing popup)`);
+                        Logger.debug('BACKGROUND', `[GET_DETECTION_DATA] Clearing interrupted state for current tab ${targetTabId} (user viewing popup)`);
                         interruptedDetections.delete(targetTabId);
                     }
 
@@ -128,7 +109,7 @@ function registerDetectionHandlers(registry, context) {
 
                     // Completed data wins over stale interrupted markers
                     if (data && interruptedDetections.has(targetTabId)) {
-                        Logger.background(`[GET_DETECTION_DATA] Clearing interrupted state for tab ${targetTabId} (has cached completed data)`);
+                        Logger.debug('BACKGROUND', `[GET_DETECTION_DATA] Clearing interrupted state for tab ${targetTabId} (has cached completed data)`);
                         interruptedDetections.delete(targetTabId);
                     }
 
@@ -148,7 +129,7 @@ function registerDetectionHandlers(registry, context) {
                         let activeDetection = activeDetections.get(targetTabId);
                         if (activeDetection?.pendingRequest &&
                             Date.now() - activeDetection.startTime > Constants.REQUEST_DETECTION_PENDING_TIMEOUT) {
-                            Logger.background(`[GET_DETECTION_DATA] Clearing stale pending request for tab ${targetTabId}`);
+                            Logger.debug('BACKGROUND', `[GET_DETECTION_DATA] Clearing stale pending request for tab ${targetTabId}`);
                             activeDetections.delete(targetTabId);
                             activeDetection = null;
                         }
@@ -167,18 +148,18 @@ function registerDetectionHandlers(registry, context) {
                             try {
                                 badgeText = await chrome.action.getBadgeText({ tabId: targetTabId });
                             } catch (badgeError) {
-                                Logger.background(`[GET_DETECTION_DATA] Failed to read badge text for tab ${targetTabId}:`, badgeError.message);
+                                Logger.debug('BACKGROUND', `[GET_DETECTION_DATA] Failed to read badge text for tab ${targetTabId}:`, badgeError.message);
                             }
                             const trimmed = badgeText ? badgeText.trim() : '';
                             const isLoadingBadge = isLoadingBadgeText(trimmed);
 
                             // Clear stale loading badge for idle tab
                             if (isLoadingBadge) {
-                                Logger.background(`[GET_DETECTION_DATA] Clearing stale loading badge for idle tab ${targetTabId}`);
+                                Logger.debug('BACKGROUND', `[GET_DETECTION_DATA] Clearing stale loading badge for idle tab ${targetTabId}`);
                                 try {
                                     await chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: targetTabId });
                                 } catch (badgeClearError) {
-                                    Logger.background(`[GET_DETECTION_DATA] Failed to clear stale loading badge for tab ${targetTabId}:`, badgeClearError.message);
+                                    Logger.debug('BACKGROUND', `[GET_DETECTION_DATA] Failed to clear stale loading badge for tab ${targetTabId}:`, badgeClearError.message);
                                 }
                             }
 
@@ -192,7 +173,7 @@ function registerDetectionHandlers(registry, context) {
                                 const trimmed = badgeText ? badgeText.trim() : '';
                                 const isNumericBadge = /^\d+\+?$/.test(trimmed);
                                 if (isNumericBadge) {
-                                    Logger.background(`[GET_DETECTION_DATA] Clearing stale numeric badge '${trimmed}' for idle tab ${targetTabId}`);
+                                    Logger.debug('BACKGROUND', `[GET_DETECTION_DATA] Clearing stale numeric badge '${trimmed}' for idle tab ${targetTabId}`);
                                     await chrome.action.setBadgeText({ text: '', tabId: targetTabId });
                                 }
                             } catch (e) {
@@ -271,7 +252,6 @@ function registerDetectionHandlers(registry, context) {
 
                     // Early exit if tab is using cache
                     if (tabsUsingCache.has(tabId)) {
-                        Logger.background(`[Background] JS Hooks - Tab ${tabId} using cache - discarding hooks immediately`);
                         return; // Skip all processing for cached tabs
                     }
 
@@ -293,30 +273,21 @@ function registerDetectionHandlers(registry, context) {
                         state.usedCache = true;
 
                         batchProcessingFlags.set(tabId, false);
-                        Logger.background(`[Batch Flag] SET to FALSE (cache hit) for tab ${tabId}`);
                         return; // Don't process hooks - we have cached results
                     }
 
                     // Mark batch processing as active to prevent finalization race
                     const previousFlag = batchProcessingFlags.get(tabId);
                     batchProcessingFlags.set(tabId, true);
-                    Logger.background(`[hookBatch] Batch processing started for tab ${tabId}`);
-
-                    Logger.background(`[Background] JS Hook batch from tab ${tabId}: ${detections.length} hooks`);
-
-                    Logger.background(`[Background] JS Hooks details:`);
-                    detections.forEach(hookData => {
-                        const det = hookData.detection;
-                        const isInlineHook = det.detectorId && det.detectorId.startsWith('inline-hook-');
-                        Logger.background(`[Background]   - ${det.detectorName} (ID: ${det.detectorId}) [${isInlineHook ? 'INLINE' : 'DYNAMIC'}]: ${det.hook.target}`);
-                    });
+                    Logger.debug('HOOKS', `Tab ${tabId}: ${detections.length} hook hits`,
+                        detections.map(h => `${h.detection?.detectorName}: ${h.detection?.hook?.target}`));
                     await ensureDetectorManagerInitialized();
 
                     // Record batch arrival time for deterministic finalization
                     state.lastHookBatchTime = Date.now();
 
                     if (state.url !== url) {
-                        Logger.background(`[Background] URL changed during JS hooks for tab ${tabId}: ${url} → ${state.url} - skipping hooks`);
+                        Logger.debug('HOOKS', `Tab ${tabId} navigated; hook hits dropped`);
                         return;
                     }
                     for (const hookData of detections) {
@@ -349,6 +320,7 @@ function registerDetectionHandlers(registry, context) {
                                     icon: fullDetector.icon,
                                     color: fullDetector.color,
                                     description: fullDetector.description,
+                                    author: fullDetector.author,
                                     difficulty: difficulty
                                 },
                                 category: normalizedCategory,
@@ -376,14 +348,12 @@ function registerDetectionHandlers(registry, context) {
                         detector.confidence = Math.max(...detector.matches.map(m => m.confidence || 0));
                     }
 
-                    Logger.background(`[Background] Processed ${detections.length} hooks in batch for tab ${tabId}`);
 
                 } catch (error) {
                     Logger.error('BACKGROUND', '[Background] ERROR handling JS hook batch:', error);
                 } finally {
                     if (tabId) {
                         batchProcessingFlags.set(tabId, false);
-                        Logger.background(`[hookBatch] Batch complete for tab ${tabId}, allowing finalization`);
                         checkAndFinalizeDetection(tabId);
                     }
                 }
@@ -391,7 +361,7 @@ function registerDetectionHandlers(registry, context) {
             return false; // No response needed for batches
 
     };
-    registry['JS_HOOK_DETECTION_BATCH'] = handle_js_hook_detection_batch;
+    registry[BRIDGE_TYPES.JS_HOOK_DETECTION_BATCH] = handle_js_hook_detection_batch;
 
     const handle_window_detections = function({ request, sender, sendResponse, context }) {
         void context;
@@ -407,7 +377,6 @@ function registerDetectionHandlers(registry, context) {
                 const tabId = sender.tab.id;
 
                 if (tabsUsingCache.has(tabId)) {
-                    Logger.background(`[Background] Window Detections - Tab ${tabId} using cache - discarding properties immediately`);
                     return;
                 }
 
@@ -428,15 +397,9 @@ function registerDetectionHandlers(registry, context) {
                     return;
                 }
 
-                Logger.background(`[Background] Window property detections from tab ${tabId}: ${detections.length} properties in ${executionTime}ms`);
-
                 if (detections.length > 0) {
-                    Logger.background(`[Background] Window property details:`);
-                    detections.forEach(det => {
-                        Logger.background(`[Background]   - ${det.detectorName} (${det.detectorId}): window.${det.property.path}`);
-                    });
-                } else {
-                    Logger.background(`[Background] No window properties detected (none matched conditions)`);
+                    Logger.debug('SCAN', `Tab ${tabId}: ${detections.length} window properties`,
+                        detections.map(det => `${det.detectorName}: window.${det.property?.path}`));
                 }
 
                 // Validate state
@@ -446,12 +409,11 @@ function registerDetectionHandlers(registry, context) {
                 }
 
                 if (state.url !== url) {
-                    Logger.background(`[Background] URL changed during window props for tab ${tabId}: ${url} → ${state.url} - skipping window props`);
+                    Logger.debug('SCAN', `Tab ${tabId} navigated; window properties dropped`);
                     return;
                 }
 
                 if (!Array.isArray(state.mainData)) {
-                    Logger.background('[Background] Initializing mainData array for tab', tabId);
                     state.mainData = [];
                 }
 
@@ -486,6 +448,7 @@ function registerDetectionHandlers(registry, context) {
                                 icon: fullDetector?.icon,
                                 color: fullDetector?.color,
                                 description: fullDetector?.description,
+                                author: fullDetector?.author,
                                 difficulty: difficulty
                             }
                         };
@@ -513,13 +476,10 @@ function registerDetectionHandlers(registry, context) {
                         if (!detectionObj.detectionMethods.includes('window')) {
                             detectionObj.detectionMethods.push('window');
                         }
-                        Logger.background(`[Background] Added window property: ${detection.property.path} for ${detection.detectorName}`);
                     }
 
                     detectionObj.confidence = Math.max(...detectionObj.matches.map(m => m.confidence || 0));
                 }
-
-                Logger.background(`[Background] Processed ${detections.length} window properties for tab ${tabId}`);
 
             } catch (error) {
                 Logger.error('BACKGROUND', '[Background] ERROR handling window property detections:', error);
@@ -527,7 +487,7 @@ function registerDetectionHandlers(registry, context) {
         })();
         return false; // No response needed
     };
-    registry['WINDOW_DETECTIONS'] = handle_window_detections;
+    registry[BRIDGE_TYPES.WINDOW_DETECTIONS] = handle_window_detections;
 
     const handle_window_props_complete = function({ request, sender, sendResponse, context }) {
         void context;
@@ -543,19 +503,11 @@ function registerDetectionHandlers(registry, context) {
                 const tabId = sender.tab.id;
 
                 if (tabsUsingCache.has(tabId)) {
-                    Logger.background(`[Background] Window Props - Tab ${tabId} using cache - discarding signal`);
                     sendResponse({ status: 'cached', message: 'Tab using cached detection' });
                     return;
                 }
 
                 const url = request.url;
-
-                Logger.background(`[WINDOW_PROPS_COMPLETE] Signal received for tab ${tabId}`, {
-                    detected: request.detectedCount,
-                    checked: request.totalChecked,
-                    elapsed: request.elapsedMs,
-                    reason: request.reason
-                });
 
                 const state = getOrCreateDetectionState(tabId, url);
 
@@ -582,11 +534,14 @@ function registerDetectionHandlers(registry, context) {
                 }
 
                 state.windowPropertiesComplete = true;
+                state.windowStats = {
+                    detected: request.detectedCount, checked: request.totalChecked,
+                    elapsedMs: request.elapsedMs, reason: request.reason
+                };
 
                 // Skip progress updates after finalization (onDetection already fired)
                 if (!state.finalized) {
                     markMethodComplete(tabId, 'windowProperties');
-                        Logger.background(`[WINDOW_PROPS_COMPLETE] Marked complete, checking finalization`);
                     checkAndFinalizeDetection(tabId);
                 }
 
@@ -598,7 +553,7 @@ function registerDetectionHandlers(registry, context) {
         })();
         return true; // Async response
     };
-    registry['WINDOW_PROPS_COMPLETE'] = handle_window_props_complete;
+    registry[BRIDGE_TYPES.WINDOW_PROPS_COMPLETE] = handle_window_props_complete;
 
     const handle_js_hooks_complete = function({ request, sender, sendResponse, context }) {
         void context;
@@ -613,13 +568,6 @@ function registerDetectionHandlers(registry, context) {
 
                     const tabId = sender.tab.id;
                     const url = request.url;
-
-                    Logger.background(`[JS_HOOKS_COMPLETE] Signal received for tab ${tabId}`, {
-                        totalDetections: request.totalDetections,
-                        uniqueHooks: request.uniqueHooks,
-                        elapsed: request.completionTime,
-                        reason: request.completionReason
-                    });
 
                     const state = getOrCreateDetectionState(tabId, url);
 
@@ -649,18 +597,12 @@ function registerDetectionHandlers(registry, context) {
                     state.hooksCompletionReason = request.completionReason || state.hooksCompletionReason || null;
                     state.hooksCompletionTime = request.completionTime || state.hooksCompletionTime || null;
                     state.hooksUninstallStats = request.uninstallStats || state.hooksUninstallStats || null;
-
-                    const debugMode = await ensureDebugMode(state);
-                    if (debugMode && request.uninstallStats) {
-                        Logger.background(`[Background] Hook uninstall stats:`, request.uninstallStats);
-                    }
+                    state.hooksFired = typeof request.totalDetections === 'number' ? request.totalDetections : state.hooksFired;
 
                     if (!state.finalized) {
                         markMethodComplete(tabId, 'jsHooks');
 
-                        Logger.background(`[Background] Hooks marked complete`);
-                        Logger.background(`[Background] Current completion status: ${state.completedMethods.size}/7 methods`);
-                        Logger.background(`[Background] Completed methods: ${Array.from(state.completedMethods).join(', ')}`);
+                        Logger.debug('SCAN', `Tab ${tabId}: hooks done, ${state.completedMethods.size}/7 methods`);
 
                         checkAndFinalizeDetection(tabId);
                     }
@@ -682,7 +624,7 @@ function registerDetectionHandlers(registry, context) {
             })();
             return true; // Async response
     };
-    registry['JS_HOOKS_COMPLETE'] = handle_js_hooks_complete;
+    registry[BRIDGE_TYPES.JS_HOOKS_COMPLETE] = handle_js_hooks_complete;
 
     const handle_get_detectors = function({ request, sender, sendResponse, context }) {
         void context;
@@ -691,7 +633,6 @@ function registerDetectionHandlers(registry, context) {
         (async () => {
             try {
                 const startTime = Date.now();
-                Logger.background('[Background] GET_DETECTORS request received');
                 let retries = Constants.DETECTOR_LOAD_MAX_RETRIES;
                 const maxRetries = retries;
 
@@ -707,8 +648,7 @@ function registerDetectionHandlers(registry, context) {
                             sum + Object.keys(cat).length, 0
                         );
                         const attempts = maxRetries - retries + 1;
-                        Logger.background(`[Background] Detectors loaded successfully in ${elapsed}ms (${attempts} attempts)`);
-                        Logger.background(`[Background] Sending ${detectorCount} detectors across ${Object.keys(allDetectors).length} categories`);
+                        Logger.debug('DETECTOR', `Sent ${detectorCount} detectors to a page (${elapsed}ms, ${attempts} attempts)`);
 
                         sendResponse({
                             detectors: allDetectors
@@ -761,7 +701,7 @@ function registerDetectionHandlers(registry, context) {
 
                     if ((maxRetries - retries) % 5 === 0 && retries < maxRetries) {
                         const progress = Math.round(((maxRetries - retries) / maxRetries) * 100);
-                        Logger.background(`[Background] Progress: ${progress}% (waiting for JSON files to load...)`);
+                        Logger.debug('DETECTOR', `Waiting for detector files: ${progress}%`);
                     }
 
                     retries--;

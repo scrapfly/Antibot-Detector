@@ -5,42 +5,90 @@
   "enabled": true,
   "category": "ANTIBOT",
   "difficulty": "Medium",
-  "lastUpdated": "2024-10-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-05",
+  "version": "2.0.0",
   "website": "https://ocule.io/",
   "icon": "custom.png",
-  "description": "Ocule bot detection with advanced obfuscation and VM-based protection",
+  "description": "Legacy Ocule bot protection. Ocule joined hCaptcha and its loader host no longer resolves, so only old cached pages still reference it.",
   "detection": {
-    "content": [],
     "url": [
       {
-        "confidence": 100,
-        "description": "Ocule proxy script delivery",
-        "text": "proxy.ocule.co.uk/script.js",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "ocule-proxy-script",
+        "confidence": 40,
+        "description": "Legacy Ocule loader script (host no longer resolves)",
+        "text": "^https://proxy\\.ocule\\.co\\.uk/script\\.js(?:[?#]|$)",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "confidence": 95,
-        "description": "Ocule domain",
-        "text": "ocule.co.uk",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
-      },
-      {
-        "confidence": 75,
-        "description": "Ocule reference in URL",
-        "text": "ocule",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "ocule-host",
+        "confidence": 20,
+        "standalone": false,
+        "description": "Other requests to the legacy ocule.co.uk host (not the loader)",
+        "text": "^https://(?!proxy\\.)(?:[a-z0-9-]{1,63}\\.){0,4}ocule\\.co\\.uk/",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       }
     ],
-    "window": []
-  }
+    "content": [
+      {
+        "id": "ocule-reference",
+        "confidence": 5,
+        "description": "Reference to the legacy Ocule host",
+        "text": "ocule.co.uk",
+        "textCaseSensitive": false,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "ocule-loader-host",
+      "name": "Legacy loader with other Ocule traffic",
+      "confidence": 60,
+      "when": {
+        "all": [
+          {
+            "pattern": "ocule-proxy-script"
+          },
+          {
+            "pattern": "ocule-host"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ocule-loader-reference",
+      "name": "Legacy loader referenced in page scripts",
+      "confidence": 50,
+      "when": {
+        "all": [
+          {
+            "pattern": "ocule-proxy-script"
+          },
+          {
+            "pattern": "ocule-reference"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ocule-host-reference",
+      "name": "Legacy Ocule host traffic and reference",
+      "confidence": 40,
+      "when": {
+        "all": [
+          {
+            "pattern": "ocule-host"
+          },
+          {
+            "pattern": "ocule-reference"
+          }
+        ]
+      }
+    }
+  ]
 }

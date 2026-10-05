@@ -1,5 +1,105 @@
 // Hook management and batching for DetectionEngineManager
 
+// Bridge protocol: modules/core/bridge-protocol.js (loaded before this file in every context)
+const DEH_TYPES = globalThis.ScrapflyBridgeProtocol.MESSAGE_TYPES;
+const DEH_CACHE_HIT_FLAG = globalThis.ScrapflyBridgeProtocol.GLOBALS.CACHE_HIT_EARLY_EXIT;
+
+// Usual live instance of a Web API interface, used by the MAIN world as `this`
+// when page code calls a hooked method or getter unbound
+// (const { getBattery } = navigator). A detector hook's own windowPath wins;
+// this table covers hooks without one (older stored detectors, user rules).
+const DEH_HOOK_CONTEXT_PATHS = Object.freeze({
+    Navigator: Object.freeze(['navigator']),
+    NavigatorUAData: Object.freeze(['navigator.userAgentData']),
+    MediaDevices: Object.freeze(['navigator.mediaDevices']),
+    Performance: Object.freeze(['performance']),
+    Screen: Object.freeze(['screen']),
+    History: Object.freeze(['history']),
+    Location: Object.freeze(['location']),
+    Document: Object.freeze(['document']),
+    HTMLDocument: Object.freeze(['document']),
+    Storage: Object.freeze(['localStorage', 'sessionStorage'])
+});
+
+/**
+ * Candidate `this` paths for a js_hooks entry, in the order the MAIN world tries
+ * them: the detector's windowPath, then the target interface's instance.
+ * @param {{target: string, windowPath?: string}} hook
+ * @returns {string[]}
+ */
+function demHookContextPaths(hook) {
+    const paths = [];
+    if (typeof hook?.windowPath === 'string' && hook.windowPath) paths.push(hook.windowPath);
+    const match = typeof hook?.target === 'string' ? /^([A-Za-z_$][\w$]*)\.prototype\./.exec(hook.target) : null;
+    if (match && Object.prototype.hasOwnProperty.call(DEH_HOOK_CONTEXT_PATHS, match[1])) {
+        paths.push(...DEH_HOOK_CONTEXT_PATHS[match[1]]);
+    }
+    return paths;
+}
+
+// Entry types Chromium only serves through PerformanceObserver. For these,
+// performance.getEntriesByType() returns an empty list and logs "Deprecated API
+// for given entry type." against the top JS frame. With the hook installed that
+// frame is the MAIN-world wrapper, so the page's own warning lands on the
+// extension's error page. The wrapper passes '' instead: Chromium returns the
+// same empty list for an unknown type without a warning, and still runs its own
+// receiver check, so calls on a non-Performance object throw exactly as before.
+const DEH_OBSERVER_ONLY_ENTRY_TYPES = Object.freeze([
+    'longtask', 'event', 'element', 'layout-shift', 'largest-contentful-paint',
+    'interaction-contentful-paint', 'container', 'scroll'
+]);
+
+const DEH_HOOK_ARG_SUBSTITUTIONS = Object.freeze({
+    'Performance.prototype.getEntriesByType': Object.freeze({
+        index: 0, values: DEH_OBSERVER_ONLY_ENTRY_TYPES, replacement: ''
+    })
+});
+
+/**
+ * Argument the MAIN-world wrapper swaps before the native call:
+ * { index, values, replacement } (string argument `index` found in `values`
+ * becomes `replacement`), or null when the target has none.
+ * @param {{target: string}} hook
+ * @returns {{index: number, values: string[], replacement: string}|null}
+ */
+function demHookArgSubstitution(hook) {
+    const target = typeof hook?.target === 'string' ? hook.target : '';
+    if (!Object.prototype.hasOwnProperty.call(DEH_HOOK_ARG_SUBSTITUTIONS, target)) return null;
+    const spec = DEH_HOOK_ARG_SUBSTITUTIONS[target];
+    return { index: spec.index, values: [...spec.values], replacement: spec.replacement };
+}
+
+// Methods the MAIN world shims at document_start so page code can call them
+// unbound (const { getBattery } = navigator; getBattery()) without the native
+// illegal-invocation TypeError. Each falls back to its interface's usual
+// instance (DEH_HOOK_CONTEXT_PATHS).
+const DEH_EARLY_BIND_SHIM_TARGETS = Object.freeze([
+    'Navigator.prototype.getBattery',
+    'MediaDevices.prototype.enumerateDevices'
+]);
+
+/** Early bind shims as the MAIN world installs them: [{ target, contextPaths }] */
+function demEarlyBindShims() {
+    return DEH_EARLY_BIND_SHIM_TARGETS.map(target => ({ target, contextPaths: demHookContextPaths({ target }) }));
+}
+
+/**
+ * Detail of the bridge bootstrap event (EVENTS.BRIDGE_INIT) content.js fires at
+ * document_start: everything the MAIN world needs before its first install
+ * event, adopted once and frozen there.
+ * @param {string} token - this page's bridge token
+ */
+function demMainWorldBootstrapDetail(token) {
+    const protocol = globalThis.ScrapflyBridgeProtocol;
+    return {
+        protocol,
+        [protocol.FIELDS.TOKEN]: token,
+        bindShims: demEarlyBindShims(),
+        // modules/detection/window-condition-grammar.js, for the MAIN-world evaluator
+        conditionGrammar: globalThis.ScrapflyWindowConditionGrammar
+    };
+}
+
 function demCreateHookBatcher(chrome) {
     // Adaptive batching; adjusts window based on detection frequency
     let hookBatch = [];
@@ -62,7 +162,7 @@ function demCreateHookBatcher(chrome) {
         // Send batched detections (try-catch for context errors)
         try {
             chrome.runtime.sendMessage({
-                type: 'JS_HOOK_DETECTION_BATCH',
+                type: DEH_TYPES.JS_HOOK_DETECTION_BATCH,
                 detections: deduplicatedHooks,
                 timestamp: Date.now()
             }).catch((error) => {
@@ -127,26 +227,9 @@ function demHandleHookMessage(event, chrome, hookBatcher) {
 
     const data = event.data;
 
-    // Forward logs from MAIN world to service worker via debug system
-    if (data && data.type === 'MAIN_WORLD_LOG') {
-        if (chrome.runtime?.id) {
-            chrome.runtime.sendMessage({
-                type: 'DEBUG_LOG',
-                context: 'MAIN_WORLD',
-                level: data.level,
-                args: data.args,
-                timestamp: data.timestamp
-            }).catch((error) => {
-                // Expected: Background may not be ready
-                Logger.hooks('[MAIN_WORLD] Failed to forward log to background:', error.message);
-            });
-        }
-        return true;
-    }
-
-    if (data && data.type === 'JS_HOOK_DETECTION') {
+    if (data && data.type === DEH_TYPES.JS_HOOK_DETECTION) {
         // Defensive check
-        if (window.__scrapflyCacheHitEarlyExit) {
+        if (window[DEH_CACHE_HIT_FLAG]) {
             Logger.debug('CONTENT', '[handleHookMessage] Hook detection received despite cache hit, ignoring');
             return true;
         }
@@ -159,9 +242,9 @@ function demHandleHookMessage(event, chrome, hookBatcher) {
         return true;
     }
 
-    if (data && data.type === 'WINDOW_DETECTIONS') {
+    if (data && data.type === DEH_TYPES.WINDOW_DETECTIONS) {
         // Defensive check
-        if (window.__scrapflyCacheHitEarlyExit) {
+        if (window[DEH_CACHE_HIT_FLAG]) {
             Logger.debug('CONTENT', '[handleHookMessage] Window detections received despite cache hit, ignoring');
             return true;
         }
@@ -175,7 +258,7 @@ function demHandleHookMessage(event, chrome, hookBatcher) {
         }
 
         chrome.runtime.sendMessage({
-            type: 'WINDOW_DETECTIONS',
+            type: DEH_TYPES.WINDOW_DETECTIONS,
             detections: detections,
             timestamp: data.timestamp,
             executionTime: data.elapsedMs
@@ -187,7 +270,7 @@ function demHandleHookMessage(event, chrome, hookBatcher) {
         return true;
     }
 
-    if (data && data.type === 'WINDOW_PROPS_COMPLETE') {
+    if (data && data.type === DEH_TYPES.WINDOW_PROPS_COMPLETE) {
         (async () => {
             const sendCompletion = async () => {
                 const MAX_ATTEMPTS = 3;
@@ -200,7 +283,7 @@ function demHandleHookMessage(event, chrome, hookBatcher) {
 
                     try {
                         await chrome.runtime.sendMessage({
-                            type: 'WINDOW_PROPS_COMPLETE',
+                            type: DEH_TYPES.WINDOW_PROPS_COMPLETE,
                             url: data.url,
                             timestamp: data.timestamp,
                             detectedCount: data.detectedCount
@@ -221,7 +304,7 @@ function demHandleHookMessage(event, chrome, hookBatcher) {
         return true;
     }
 
-    if (data && data.type === 'JS_HOOKS_COMPLETE') {
+    if (data && data.type === DEH_TYPES.JS_HOOKS_COMPLETE) {
         // Flush pending hooks before sending completion to prevent race condition
         (async () => {
             if (hookBatcher.getTimeout()) {
@@ -241,7 +324,7 @@ function demHandleHookMessage(event, chrome, hookBatcher) {
 
                     try {
                         await chrome.runtime.sendMessage({
-                            type: 'JS_HOOKS_COMPLETE',
+                            type: DEH_TYPES.JS_HOOKS_COMPLETE,
                             url: data.url,
                             timestamp: data.timestamp,
                             totalDetections: data.totalDetections,
@@ -250,7 +333,7 @@ function demHandleHookMessage(event, chrome, hookBatcher) {
                             completionTime: data.completionTime,
                             uninstallStats: data.uninstallStats
                         });
-                        Logger.detection(`[Content Script] Completion signal sent successfully on attempt ${attempt}`);
+                        Logger.debug('DETECTION', `Hooks completion sent (attempt ${attempt})`);
                         return;
                     } catch (error) {
                         Logger.error('DETECTION', `[Content Script] Failed to send completion signal (attempt ${attempt}):`, error);

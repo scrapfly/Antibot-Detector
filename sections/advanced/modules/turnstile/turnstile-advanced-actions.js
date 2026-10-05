@@ -19,7 +19,7 @@ TurnstileAdvanced.prototype.checkCookies = async function() {
             this.displayCookiesModal(cfClearanceCookie);
         } catch (error) {
             Logger.error('NETWORK', '[Turnstile] Failed to check cookies:', error);
-            NotificationHelper.error('Failed to check cookies: ' + error.message);
+            NotificationHelper.error(this._txt('advCommonFailedCheckCookiesFmt', 'Failed to check cookies: {0}', error.message));
         }
     };
 
@@ -48,9 +48,10 @@ TurnstileAdvanced.prototype.analyzeScripts = async function() {
             });
 
             if (response && response.status === 'started') {
-                NotificationHelper.info('Deleting cf_clearance cookie... Page will reload');
+                NotificationHelper.info(this._txt('advAwswafDeletingCookieFmt', 'Deleting {0} cookie... Page will reload', 'cf_clearance'));
 
-                setTimeout(async () => {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                {
                     try {
                         const cookies = await chrome.cookies.getAll({
                             url: this.tabInfo.url,
@@ -74,13 +75,13 @@ TurnstileAdvanced.prototype.analyzeScripts = async function() {
                     }
 
                     await chrome.tabs.reload(this.tabInfo.id);
-                }, 500);
+                }
             } else {
                 chrome.runtime.onMessage.removeListener(analysisListener);
-                NotificationHelper.error('Failed to start analysis');
+                NotificationHelper.error(this._txt('advCommonFailedStartAnalysis', 'Failed to start analysis'));
             }
         } catch (error) {
             Logger.error('NETWORK', '[Turnstile] Failed to analyze scripts:', error);
-            NotificationHelper.error('Failed to analyze scripts: ' + error.message);
+            NotificationHelper.error(this._txt('advCommonFailedAnalyzeScriptsFmt', 'Failed to analyze scripts: {0}', error.message));
         }
     };

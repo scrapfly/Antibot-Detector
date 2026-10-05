@@ -53,13 +53,16 @@ Rules.prototype.openEditModal = function(detector, category, detectorName, isNew
     };
 
     // Set dynamic title based on whether it's a new detector
+    // One format key per action ("Add {0}" / "Edit {0}") so every language can
+    // order the words itself. A new detector has no stored name yet: it shows
+    // the default name in the UI language, like the name field below.
     const _t = (typeof I18n !== 'undefined') ? I18n : null;
-    const actionKey = this.currentEditDetector.isNew ? 'btnAdd' : 'ruleModalActionEdit';
-    const fallback = this.currentEditDetector.isNew ? 'Add' : 'Edit';
-    const action = (_t && _t.get(actionKey)) || fallback;
+    const shownName = this.getEditorDetectorName(detectorWithDetection) || detectorName;
+    const titleKey = this.currentEditDetector.isNew ? 'rulesUiAddDetectorTitleFmt' : 'rulesUiEditDetectorTitleFmt';
+    const titleFallback = this.currentEditDetector.isNew ? `Add ${shownName}` : `Edit ${shownName}`;
     const actionEl = document.querySelector('#editRuleModalAction');
     const nameEl = document.querySelector('#editRuleModalName');
-    if (actionEl) actionEl.textContent = `${action} ${detectorWithDetection.displayName || detectorName}`;
+    if (actionEl) actionEl.textContent = (_t && _t.format(titleKey, shownName)) || titleFallback;
     if (nameEl) {
       nameEl.textContent = (_t && typeof _t.tr === 'function')
         ? _t.tr('rulesModalDetectorLabel', 'Detection Rule')
@@ -76,6 +79,22 @@ Rules.prototype.openEditModal = function(detector, category, detectorName, isNew
     // Show modal
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    // Start every open at the top (the body kept the previous rule's scroll)
+    const modalBody = modal.querySelector('.rule-modal-body');
+    if (modalBody) modalBody.scrollTop = 0;
+  };
+
+/**
+ * Name shown in the editor (title and name field): the stored name, with the
+ * legacy English default and a new detector's missing name both shown as the
+ * default name in the UI language.
+ * @param {object} detector - Detector being edited
+ * @returns {string}
+ */
+Rules.prototype.getEditorDetectorName = function(detector) {
+    const stored = detector?.name || detector?.displayName || '';
+    if (stored) return this.getDetectorDisplayName(stored);
+    return this.currentEditDetector?.isNew ? this.getDefaultDetectorName() : '';
   };
 
 Rules.prototype.closeEditModal = function() {
@@ -97,11 +116,11 @@ Rules.prototype.populateModalData = function(detector) {
     const category = this.currentEditDetector?.category || detector.category || 'antibot';
 
     if (nameInput) {
-      nameInput.value = detector.name || detector.displayName || '';
+      nameInput.value = this.getEditorDetectorName(detector);
     }
 
     if (categorySelect) {
-      Logger.ui('Setting category:', category); // Debug log
+      Logger.debug('UI', 'Setting category:', category); // Debug log
       categorySelect.value = category;
     }
 
@@ -122,6 +141,8 @@ Rules.prototype.populateModalData = function(detector) {
     }
 
     if (iconImg) {
+      iconImg.alt = (typeof I18n !== 'undefined' && I18n.get('ruleFieldIcon')) || 'Icon';
+
       // Default Scrapfly icon fallback
       const scrapflyIcon = chrome.runtime.getURL('icons/icon128.png');
       const currentIconContainer = iconImg.parentElement;
@@ -194,28 +215,25 @@ Rules.prototype.populateModalData = function(detector) {
       }
     }
 
-    // Populate author field
+    // Populate author field (editable for every detector). Official (shipped)
+    // detectors show their author; custom rules can't use the reserved name,
+    // so a legacy "scrapfly" default starts empty.
     const authorInput = document.querySelector('#detectorAuthorInput');
-    const authorHelp = document.querySelector('#authorHelp');
+    const isOfficial = !this.currentEditDetector?.isNew && DetectionUtils.isOfficialDetector(detector);
+    if (this.currentEditDetector) this.currentEditDetector.isOfficial = isOfficial;
+    this.clearAuthorError();
 
     if (authorInput) {
-      // Set value (default to 'scrapfly' for new detectors)
-      authorInput.value = detector.author || 'scrapfly';
-      // Always allow editing author
-      authorInput.removeAttribute('readonly');
-      authorInput.classList.remove('readonly-field');
-      if (authorHelp) {
-        authorHelp.textContent = (_t && typeof _t.tr === 'function')
-          ? _t.tr('rulesAuthorHelpHint', 'Who created this detector')
-          : 'Who created this detector';
-      }
+      const author = typeof detector.author === 'string' ? detector.author.trim() : '';
+      authorInput.value = (!isOfficial && DetectionUtils.isReservedAuthor(author)) ? '' : author;
+      authorInput.oninput = () => this.clearAuthorError();
     }
 
     // Set badge color using CategoryManager (colors come from Settings, not detector objects)
     if (this.colorManager && this.categoryManager) {
       const category = this.currentEditDetector?.category || 'antibot';
       const colorToSet = this.categoryManager.getCategoryColor(category) || '#3b82f6'; // Default to blue if no color
-      Logger.ui('Loading category color:', detector.name, 'Category:', category, 'Color:', colorToSet);
+      Logger.debug('UI', 'Loading category color:', detector.name, 'Category:', category, 'Color:', colorToSet);
       this.colorManager.setColor(colorToSet);
 
       // If it's a custom color, make sure it's stored on the rainbow picker
@@ -228,6 +246,34 @@ Rules.prototype.populateModalData = function(detector) {
       }
     }
 
-    // Populate detection methods
+    // Populate detection methods, then the combinations that refer to them
     this.populateDetectionMethods(detector);
+    this.initCombinationsEditor(detector);
+  };
+
+Rules.prototype.clearAuthorError = function() {
+    const authorInput = document.querySelector('#detectorAuthorInput');
+    const authorError = document.querySelector('#detectorAuthorError');
+    if (authorInput) {
+      authorInput.classList.remove('form-input-invalid');
+      authorInput.removeAttribute('aria-invalid');
+    }
+    if (authorError) {
+      authorError.textContent = '';
+      authorError.hidden = true;
+    }
+  };
+
+Rules.prototype.showAuthorError = function(message) {
+    const authorInput = document.querySelector('#detectorAuthorInput');
+    const authorError = document.querySelector('#detectorAuthorError');
+    if (authorInput) {
+      authorInput.classList.add('form-input-invalid');
+      authorInput.setAttribute('aria-invalid', 'true');
+      authorInput.focus();
+    }
+    if (authorError) {
+      authorError.textContent = message;
+      authorError.hidden = false;
+    }
   };

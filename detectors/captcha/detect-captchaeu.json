@@ -5,106 +5,134 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "High",
-  "lastUpdated": "2024-10-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-04",
+  "version": "1.2.0",
   "website": "https://captcha.eu/",
   "icon": "custom.png",
   "description": "European GDPR-compliant CAPTCHA service with invisible protection and widget modes",
   "detection": {
     "url": [
       {
-        "confidence": 100,
-        "description": "Captcha.eu domain",
-        "text": "captcha.eu",
-        "textRegex": false,
+        "id": "captchaeu-sdk-url",
+        "confidence": 50,
+        "description": "Documented Captcha.eu SDK resource",
+        "text": "^https://www\\.captcha\\.eu/sdk\\.js(?:[?#].*)?$",
+        "textRegex": true,
         "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
+        "textCaseSensitive": true,
+        "textScope": "all",
+        "standalone": true
       },
       {
-        "confidence": 100,
-        "description": "Captcha.eu API endpoint",
-        "text": "/api/captcha",
-        "textRegex": false,
+        "id": "captchaeu-challenge-request",
+        "confidence": 50,
+        "description": "Challenge or validation request the KROT SDK sends to the Captcha.eu host",
+        "text": "^https://www\\.captcha\\.eu/(?:challenge|validate)(?:[?#]|$)",
+        "textRegex": true,
         "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
-      },
-      {
-        "confidence": 90,
-        "description": "Captcha.eu reference in URL",
-        "text": "captchaeu",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
+        "textCaseSensitive": true,
+        "textScope": "all",
+        "standalone": true
       }
     ],
     "content": [
       {
-        "confidence": 50,
-        "description": "Captcha.eu main object",
-        "text": "CaptchaEU",
+        "id": "captchaeu-krot-reference",
+        "confidence": 10,
+        "description": "Documented KROT SDK identifier reference in script source only",
+        "text": "KROT",
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "description": "Captcha.eu reference",
-        "text": "captchaeu",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "description": "Captcha.eu widget reference",
-        "text": "captcha.eu/widget",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
       }
     ],
     "dom": [
       {
-        "selector": ".captchaeu-widget",
-        "confidence": 100,
-        "description": "Captcha.eu widget container",
+        "id": "captchaeu-solution-field",
+        "selector": "input[type='hidden'][name='captcha_at_solution']",
+        "confidence": 40,
+        "description": "Documented interceptForm hidden solution field, not proof of a solved challenge",
         "selectorRegex": false,
         "selectorWholeWord": false,
-        "selectorCaseSensitive": false
-      },
-      {
-        "selector": "iframe[src*='captcha.eu']",
-        "confidence": 100,
-        "description": "Captcha.eu iframe",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
-      },
-      {
-        "selector": "div[data-captchaeu-sitekey]",
-        "confidence": 100,
-        "description": "Captcha.eu widget with sitekey",
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
+        "selectorCaseSensitive": true,
+        "standalone": true
       }
     ],
     "window": [
       {
-        "path": "CaptchaEU",
-        "condition": "typeof object",
-        "confidence": 100,
-        "description": "Captcha.eu main object"
+        "id": "captchaeu-krot-setup",
+        "path": "KROT.setup",
+        "condition": "typeof function",
+        "confidence": 40,
+        "description": "Documented KROT setup API presence, not execution",
+        "standalone": true
       },
       {
-        "path": "CaptchaEU.render",
+        "id": "captchaeu-krot-get-solution",
+        "path": "KROT.getSolution",
         "condition": "typeof function",
-        "confidence": 100,
-        "description": "Captcha.eu render function"
+        "confidence": 40,
+        "description": "Documented KROT solution API presence, not execution",
+        "standalone": true
+      },
+      {
+        "id": "captchaeu-krot-intercept-form",
+        "path": "KROT.interceptForm",
+        "condition": "typeof function",
+        "confidence": 40,
+        "description": "Documented KROT form API presence, not execution",
+        "standalone": true
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "captchaeu-sdk-runtime",
+      "name": "SDK resource with compatible runtime API",
+      "when": { "all": [
+        { "pattern": "captchaeu-sdk-url" },
+        { "any": [
+          { "pattern": "captchaeu-krot-setup" },
+          { "pattern": "captchaeu-krot-get-solution" },
+          { "pattern": "captchaeu-krot-intercept-form" }
+        ] }
+      ] },
+      "confidence": 70
+    },
+    {
+      "id": "captchaeu-sdk-challenge",
+      "name": "SDK resource and a Captcha.eu challenge request",
+      "when": { "all": [
+        { "pattern": "captchaeu-sdk-url" },
+        { "pattern": "captchaeu-challenge-request" }
+      ] },
+      "confidence": 75
+    },
+    {
+      "id": "captchaeu-sdk-form",
+      "name": "SDK resource with documented form integration markup",
+      "when": { "all": [
+        { "pattern": "captchaeu-sdk-url" },
+        { "pattern": "captchaeu-solution-field" }
+      ] },
+      "confidence": 80
+    },
+    {
+      "id": "captchaeu-sdk-form-runtime",
+      "name": "SDK resource, form markup and compatible runtime API",
+      "when": { "all": [
+        { "pattern": "captchaeu-sdk-url" },
+        { "pattern": "captchaeu-solution-field" },
+        { "any": [
+          { "pattern": "captchaeu-krot-setup" },
+          { "pattern": "captchaeu-krot-get-solution" },
+          { "pattern": "captchaeu-krot-intercept-form" }
+        ] }
+      ] },
+      "confidence": 95
+    }
+  ]
 }

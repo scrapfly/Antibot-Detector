@@ -1,6 +1,84 @@
 {
+  "advToolReloadScriptsHint": { "message": "重新加载页面以分析防护脚本" },
+  "advToolResetScriptsHint": { "message": "重置防护 Cookie 并重新加载页面以分析脚本" },
+  "advToolReloadVersionHint": { "message": "重新加载页面以检测防护版本" },
+  "advToolCaptureResetHint": { "message": "重置防护 Cookie 并开始记录" },
+  "advToolCookiesHint": { "message": "检查此防护使用的 Cookie" },
+  "advToolVersionHint": { "message": "查看可用的版本信息" },
+  "advToolSiteKeyHint": { "message": "查找此页面上的 CAPTCHA 站点密钥" },
+  "advToolSelectorHint": { "message": "查找 CAPTCHA 组件的选择器" },
+  "advToolCallbackHint": { "message": "检查 CAPTCHA 回调函数" },
+  "advToolSensorHint": { "message": "重置防护 Cookie 并重新加载页面以记录传感器数据" },
+  "advToolCaptureHint": { "message": "记录此页面的数据" },
+  "advToolStopCaptureHint": { "message": "停止记录此页面的数据" },
+  "advToolWorking": { "message": "处理中…" },
+  "advToolActionFailedFmt": { "message": "无法完成此操作：{0}", "description": "Advanced tool action failure. {0} = error details" },
+  "statsChartPrevious": { "message": "图表上一页" },
+  "statsChartNext": { "message": "图表下一页" },
+  "statsChartPage": { "message": "第 {0} 页，共 {1} 页" },
+  "statsChartShowing": { "message": "显示第 {0}–{1} 项，共 {2} 项" },
+  "statsSectionsLabel": { "message": "统计分区" },
+  "statsSectionOverview": { "message": "概览" },
+  "statsSectionActivity": { "message": "活动" },
+  "statsSectionProtections": { "message": "防护措施" },
+  "statsSectionDomains": { "message": "域名" },
+  "statsSectionConfidence": { "message": "置信度" },
+  "statsExportCSV": { "message": "导出 CSV" },
+  "statsExportJSON": { "message": "导出 JSON" },
+  "statsExportPrivacy": { "message": "导出内容包含域名和检测摘要，不包含 Cookie、页面内容或 URL 参数。" },
+  "statsExportScopeFmt": { "message": "导出所选时间范围：{0} 条记录" },
+  "statsExportStartedFmt": { "message": "下载已开始：{0}" },
+  "statsExportFailed": { "message": "无法导出数据。请重试。" },
+  "statsLoadFailed": { "message": "无法加载历史记录。请重新加载此页面。" },
+  "statsRangeEmptyTitle": { "message": "此时间范围内没有记录" },
+  "statsRangeEmptyDesc": { "message": "请选择更长的日期范围，以查看已保存的历史记录。" },
+  "statsDetectionRate": { "message": "包含检测结果的记录" },
+  "statsActiveDays": { "message": "活跃天数" },
+  "statsAverageConfidence": { "message": "平均置信度" },
+  "statsDailyVisits": { "message": "每日历史记录" },
+  "statsActivityCalendar": { "message": "活动日历" },
+  "statsActivityCalendarHint": { "message": "每个方格代表本地日历中的一天。蓝色越深，表示保存的记录越多。" },
+  "statsHourlyActivity": { "message": "按小时统计活动" },
+  "statsWeekdayActivity": { "message": "按星期统计活动" },
+  "statsLocalTimeNote": { "message": "日期和小时使用您的本地时区。" },
+  "statsTimelineLimitFmt": { "message": "显示最近 {0} 天。汇总和导出包含所选时间范围内的全部记录。" },
+  "statsProtectionRanking": { "message": "防护措施排名" },
+  "statsCategoryTrend": { "message": "类别随时间的变化" },
+  "statsCategoryOverlap": { "message": "同时检测到的类别" },
+  "statsCategoryOverlapHint": { "message": "同时包含两个类别的历史记录数量。对角线单元格显示包含该类别的记录。" },
+  "statsProtectionDetails": { "message": "所有防护措施" },
+  "statsDomainRanking": { "message": "域名排名" },
+  "statsDomainMap": { "message": "访问与检测" },
+  "statsDomainMapHint": { "message": "每个点代表一个域名。点越大，表示不同的防护措施越多。" },
+  "statsDomainDetails": { "message": "所有域名" },
+  "statsDomainSearch": { "message": "搜索域名..." },
+  "statsDomainSortLabel": { "message": "域名排序" },
+  "statsSortVisits": { "message": "访问最多" },
+  "statsSortDetections": { "message": "检测最多" },
+  "statsSortConfidence": { "message": "置信度最高" },
+  "statsSortName": { "message": "域名名称" },
+  "statsConfidenceDistribution": { "message": "置信度分布" },
+  "statsConfidenceTrend": { "message": "置信度随时间的变化" },
+  "statsCategoryConfidence": { "message": "各类别的置信度" },
+  "statsConfidenceNote": { "message": "置信度描述已保存检测证据的强度，并不能证明存在指纹识别或正在进行的验证挑战。" },
+  "statsConfidenceKnownFmt": { "message": "{0} 项检测有置信度值；{1} 项没有有效评分。" },
+  "statsProtectionColumn": { "message": "防护措施" },
+  "statsCategoryColumn": { "message": "类别" },
+  "statsDomainColumn": { "message": "域名" },
+  "statsTableCountFmt": { "message": "{0} 行，共 {1} 行" },
+  "statsTableMore": { "message": "显示更多" },
+  "statsNoMatchingDomains": { "message": "没有与搜索条件匹配的域名。" },
+  "statsSelectionNote": { "message": "图表和导出使用所选日期范围。历史记录代表已保存的检测结果，而非每一次浏览器访问。" },
   "extensionName": {
     "message": "Scrapfly:反机器人检测器"
+  },
+  "headerBrandName": {
+    "message": "ScrapFly:反机器人检测器",
+    "description": "Brand + product name shown in the popup header (extensionName with the ScrapFly logo capitalisation; the manifest/store name stays extensionName)"
+  },
+  "headerBrandSuffix": {
+    "message": ":反机器人检测器",
+    "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
   "extensionDescription": {
     "message": "检测网站上的验证码、反机器人系统和指纹识别技术"
@@ -29,14 +107,17 @@
   "analyzingPage": {
     "message": "正在分析页面"
   },
+  "detectionScanningTitle": {
+    "message": "正在扫描此页面"
+  },
+  "detectionScanningDescription": {
+    "message": "正在查找防护信号。"
+  },
+  "detectionScanningHint": {
+    "message": "扫描完成后，结果将在此处显示。"
+  },
   "actionRemoveFromBlacklist": {
     "message": "从黑名单中移除"
-  },
-  "advancedDomainBlacklisted": {
-    "message": "此域名的高级工具已禁用"
-  },
-  "blacklistManageHint": {
-    "message": "或前往“设置 → 检测 → 黑名单域”进行管理。"
   },
   "statDetections": {
     "message": "检测数"
@@ -137,9 +218,6 @@
   "rulesUpdateTitle": {
     "message": "检查检测器更新"
   },
-  "rulesClearTitle": {
-    "message": "清除所有规则"
-  },
   "rulesAddTitle": {
     "message": "添加新检测器"
   },
@@ -222,7 +300,7 @@
     "message": "调试模式"
   },
   "settingsCardDebugDesc": {
-    "message": "启用控制台日志记录以进行调试"
+    "message": "在 Service Worker 控制台中为每个扫描的页面输出一份易读的报告"
   },
   "settingsRowLogCollector": {
     "message": "日志收集器"
@@ -320,6 +398,9 @@
   "advancedEmptyCapturesHint": {
     "message": "使用“工具”选项卡从检测到的系统中捕获数据"
   },
+  "advancedCapturesStoredNote": {
+    "message": "捕获内容会保存 30 分钟"
+  },
   "advancedNoResultsTitle": {
     "message": "未找到捕获"
   },
@@ -360,7 +441,7 @@
     "message": "捕获的数据会暂时存储 (30 分钟),并具有完整的导出功能"
   },
   "advancedFooterHint": {
-    "message": "结果在 30 分钟后过期,以确保数据新鲜"
+    "message": "采集数据保留30分钟。"
   },
   "settings": {
     "message": "设置"
@@ -407,24 +488,6 @@
   "timeDaysAgoLongFmt": {
     "message": "{0} 天前"
   },
-  "timeOneWeekAgo": {
-    "message": "1 周前"
-  },
-  "timeWeeksAgoFmt": {
-    "message": "{0} 周前"
-  },
-  "timeOneMonthAgo": {
-    "message": "1 个月前"
-  },
-  "timeMonthsAgoFmt": {
-    "message": "{0} 个月前"
-  },
-  "timeOneYearAgo": {
-    "message": "1 年前"
-  },
-  "timeYearsAgoFmt": {
-    "message": "{0} 年前"
-  },
   "btnCancelSettings": {
     "message": "取消"
   },
@@ -445,6 +508,33 @@
   },
   "tagColors": {
     "message": "标签颜色"
+  },
+  "colorPickerTitle": {
+    "message": "颜色选择器"
+  },
+  "colorPickerArea": {
+    "message": "饱和度和亮度"
+  },
+  "colorPickerSaturation": {
+    "message": "饱和度"
+  },
+  "colorPickerBrightness": {
+    "message": "亮度"
+  },
+  "colorPickerHue": {
+    "message": "色相"
+  },
+  "colorPickerRed": {
+    "message": "红"
+  },
+  "colorPickerGreen": {
+    "message": "绿"
+  },
+  "colorPickerBlue": {
+    "message": "蓝"
+  },
+  "colorPickerPresets": {
+    "message": "预设颜色"
   },
   "cacheConfiguration": {
     "message": "缓存配置"
@@ -475,6 +565,14 @@
   },
   "ruleMethodSettings": {
     "message": "检测方法设置"
+  },
+  "methodSettingsTitleFmt": {
+    "message": "{0} · 设置：{1}",
+    "description": "Method Settings modal title. {0} = detector name, {1} = readable detection method name (e.g. Headers)"
+  },
+  "methodSettingsTitleNoDetectorFmt": {
+    "message": "设置：{0}",
+    "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
   },
   "ruleConfidenceLevel": {
     "message": "置信度"
@@ -559,9 +657,6 @@
   },
   "unknownDetection": {
     "message": "未知检测"
-  },
-  "matchSingular": {
-    "message": "项匹配"
   },
   "matchPlural": {
     "message": "项匹配"
@@ -707,15 +802,6 @@
   "failedSaveSettingsFmt": {
     "message": "保存设置失败:{0}"
   },
-  "settingsResetToast": {
-    "message": "设置已重置"
-  },
-  "dataClearedReloadNotice": {
-    "message": "所有数据已成功清除!扩展程序将重新加载。"
-  },
-  "failedClearDataFmt": {
-    "message": "清除数据失败:{0}"
-  },
   "failedExportLogs": {
     "message": "导出日志失败"
   },
@@ -764,8 +850,8 @@
   "importDetectorsTitle": {
     "message": "导入检测器"
   },
-  "importMergeQuestion": {
-    "message": "是否要与现有检测器合并?"
+  "importDetectorsModeMessage": {
+    "message": "“合并”会将导入的检测器添加到现有检测器中。<br>“全部替换”会先删除你的自定义检测器,内置检测器保留。"
   },
   "mergeOption": {
     "message": "合并"
@@ -790,9 +876,6 @@
   },
   "detectorDeletedFmt": {
     "message": "已删除 \"{0}\""
-  },
-  "allDetectorsCleared": {
-    "message": "所有检测器已清除"
   },
   "failedClearDetectors": {
     "message": "清除检测器失败"
@@ -842,29 +925,11 @@
   "importHistoryTitle": {
     "message": "导入历史记录"
   },
-  "importHistoryMessageFmt": {
-    "message": "导入 {0} 条历史记录?当前历史记录有 {1} 条。"
-  },
   "replaceOption": {
     "message": "替换"
   },
-  "settingsResetTitle": {
-    "message": "重置设置"
-  },
-  "settingsResetMessage": {
-    "message": "确定要将所有设置重置为默认值吗?此操作无法撤销。"
-  },
-  "btnReset": {
-    "message": "重置"
-  },
-  "clearAllDataTitle": {
-    "message": "清除所有数据"
-  },
-  "clearAllDataMessage": {
-    "message": "确定要清除扩展程序的所有数据吗?此操作将移除:<br><br>• 所有检测历史记录<br>• 所有检测器规则<br>• 所有设置<br><br>此操作无法撤销!"
-  },
-  "clearEverythingBtn": {
-    "message": "全部清除"
+  "importHistoryModeMessageFmt": {
+    "message": "导入 {0} 条历史记录?当前历史记录有 {1} 条。<br>“合并”会添加新记录,“替换”会先删除当前历史记录。"
   },
   "clearLogsTitle": {
     "message": "清除日志"
@@ -889,15 +954,6 @@
   },
   "updateServiceNotAvailable": {
     "message": "更新服务不可用"
-  },
-  "clearAllDetectorsTitle": {
-    "message": "清除所有检测器"
-  },
-  "clearAllDetectorsMessage": {
-    "message": "此操作将移除所有检测器。确定要继续吗?"
-  },
-  "clearingAllDetectors": {
-    "message": "正在清除所有检测器..."
   },
   "deleteDetectorTitle": {
     "message": "删除检测器"
@@ -974,6 +1030,57 @@
   "settingsContentTypeDesc": {
     "message": "HTTP 内容类型标头"
   },
+  "webhookCtHintJson": {
+    "message": "以 JSON 发送模板，变量已填充。"
+  },
+  "webhookCtHintForm": {
+    "message": "模板字段以 key=value 键值对发送；嵌套字段为 detections[0][name]。"
+  },
+  "webhookCtHintMultipart": {
+    "message": "模板字段以 form-data 分段发送；boundary 由浏览器设置。"
+  },
+  "webhookCtHintText": {
+    "message": "按原样发送模板文本，变量已填充。"
+  },
+  "webhookCtHintXml": {
+    "message": "模板字段以 <webhook> XML 文档发送；检测结果为重复元素。"
+  },
+  "webhookCtHintCsv": {
+    "message": "一行表头，然后每个检测结果一行，并重复页面字段。"
+  },
+  "webhookCtHintNdjson": {
+    "message": "每行一个 JSON 对象：每个检测结果一行，并附带页面字段。"
+  },
+  "webhookCtHintCustom": {
+    "message": "自定义 Content-Type（type/subtype）；请求体以 JSON 发送。"
+  },
+  "webhookCtCustom": {
+    "message": "自定义"
+  },
+  "webhookCtCustomLabel": {
+    "message": "自定义 Content-Type"
+  },
+  "webhookCtInvalid": {
+    "message": "请输入 type/subtype，例如 application/vnd.example+json"
+  },
+  "webhookAddHeader": {
+    "message": "添加请求头"
+  },
+  "webhookNoHeaders": {
+    "message": "未配置自定义请求头"
+  },
+  "webhookHeaderName": {
+    "message": "请求头名称"
+  },
+  "webhookHeaderValue": {
+    "message": "请求头值"
+  },
+  "webhookRemoveHeader": {
+    "message": "移除请求头"
+  },
+  "webhookSending": {
+    "message": "正在发送..."
+  },
   "settingsCustomHeaders": {
     "message": "自定义标头"
   },
@@ -984,7 +1091,58 @@
     "message": "负载模板"
   },
   "settingsPayloadTemplateDesc": {
-    "message": "可使用变量:<SITEURL>、<HOSTNAME>、<TITLE>、<FAVICON>、<DETECTIONS>、<TIMESTAMP>、<DETECTION_COUNT>、<CATEGORIES>"
+    "message": "每次 webhook 发送的请求体。点击变量即可插入。"
+  },
+  "webhookVarsTitle": {
+    "message": "模板变量"
+  },
+  "webhookVarsIntro": {
+    "message": "发送 webhook 时替换为页面的值。"
+  },
+  "webhookVarsInsertLabel": {
+    "message": "插入变量"
+  },
+  "webhookVarsInsertFmt": {
+    "message": "插入 {0}"
+  },
+  "webhookVarsCopyFmt": {
+    "message": "复制 {0}"
+  },
+  "webhookVarsExample": {
+    "message": "示例"
+  },
+  "webhookVarSiteUrl": {
+    "message": "页面完整 URL"
+  },
+  "webhookVarHostname": {
+    "message": "页面主机名"
+  },
+  "webhookVarTitle": {
+    "message": "页面标题"
+  },
+  "webhookVarFavicon": {
+    "message": "网站图标 URL"
+  },
+  "webhookVarDetections": {
+    "message": "检测结果（JSON 数组）"
+  },
+  "webhookVarTimestamp": {
+    "message": "检测时间（ISO 8601）"
+  },
+  "webhookVarDetectionCount": {
+    "message": "检测数量"
+  },
+  "webhookVarCategories": {
+    "message": "检测到的类别，以逗号分隔"
+  },
+  "webhookJsonValid": {
+    "message": "JSON 有效"
+  },
+  "webhookJsonInvalidFmt": {
+    "message": "JSON 无效（第 {0} 行）"
+  },
+  "webhookResetTemplate": {
+    "message": "重置模板"
   },
   "settingsTestWebhook": {
     "message": "测试 Webhook"
@@ -1005,10 +1163,7 @@
     "message": "历史记录上限"
   },
   "settingsHistoryLimitNote": {
-    "message": "(0 = 无限制)"
-  },
-  "settingsAutoClearDays": {
-    "message": "自动清除(天)"
+    "message": "(0 = 安全上限 1,000 条)"
   },
   "settingsExportFormat": {
     "message": "导出格式"
@@ -1125,7 +1280,7 @@
     "message": "导出历史"
   },
   "settingsAvailableEvents": {
-    "message": "可用事件:"
+    "message": "可用事件"
   },
   "settingsApiEventReady": {
     "message": "扩展程序已加载并初始化"
@@ -1149,7 +1304,7 @@
     "message": "检测发生错误"
   },
   "settingsUsageExample": {
-    "message": "使用示例:"
+    "message": "使用示例"
   },
   "detectionDisabledForDomain": {
     "message": "已为此域名禁用检测"
@@ -1202,6 +1357,9 @@
   "detectionTitleBlockDomain": {
     "message": "屏蔽此域名"
   },
+  "detectionStatSite": {
+    "message": "网站"
+  },
   "detectionStatDetections": {
     "message": "检测数"
   },
@@ -1234,9 +1392,6 @@
   },
   "detectionModalDifficulty": {
     "message": "难度"
-  },
-  "detectionModalMatchesFound": {
-    "message": "发现的匹配项"
   },
   "detectionModalAuthor": {
     "message": "作者"
@@ -1421,44 +1576,11 @@
   "rulesDomSelectorHelper": {
     "message": "DOM 选择器助手"
   },
-  "rulesStartTypingSuggestions": {
-    "message": "开始输入以查看建议"
-  },
   "rulesUseSelectorBtn": {
     "message": "使用选择器"
   },
   "rulesWindowPropertiesHelper": {
     "message": "窗口属性助手"
-  },
-  "rulesStepEnterKeyword": {
-    "message": "输入关键字"
-  },
-  "rulesStepChooseProperty": {
-    "message": "选择属性"
-  },
-  "rulesStepSelectCondition": {
-    "message": "选择条件"
-  },
-  "rulesConditionExists": {
-    "message": "存在"
-  },
-  "rulesConditionGroupType": {
-    "message": "类型"
-  },
-  "rulesTypeofObject": {
-    "message": "对象"
-  },
-  "rulesTypeofFunction": {
-    "message": "函数"
-  },
-  "rulesTypeofString": {
-    "message": "字符串"
-  },
-  "rulesTypeofNumber": {
-    "message": "数字"
-  },
-  "rulesTypeofBoolean": {
-    "message": "布尔值"
   },
   "notifConfirmTitleDefault": {
     "message": "确认"
@@ -1468,12 +1590,6 @@
   },
   "notifLoadingDefault": {
     "message": "加载中..."
-  },
-  "helperPatternStartTypingSuggestions": {
-    "message": "在上方开始输入以查看建议..."
-  },
-  "helperPatternStartTypingExamples": {
-    "message": "在上方开始输入以查看示例..."
   },
   "helpJsHooksTitle": {
     "message": "JavaScript 钩子检测"
@@ -1587,13 +1703,10 @@
     "message": "点击上方的“开始捕获”以开始捕获 {0} 数据"
   },
   "advancedToolsHeading": {
-    "message": "高级检测工具"
+    "message": "采集工具"
   },
   "advancedToolsSubtitle": {
-    "message": "捕获并分析保护系统"
-  },
-  "advancedToolsHelpTitle": {
-    "message": "帮助"
+    "message": "选择防护系统以打开其工具。"
   },
   "advancedToolsStepSelect": {
     "message": "选择检测"
@@ -1601,11 +1714,8 @@
   "advancedToolsChooseDetection": {
     "message": "选择一个检测..."
   },
-  "advancedToolsStepLoadUse": {
-    "message": "加载并使用工具"
-  },
   "advancedToolsLoadTools": {
-    "message": "加载工具"
+    "message": "打开工具"
   },
   "advancedToolsClearAll": {
     "message": "全部清除"
@@ -1631,9 +1741,6 @@
   "settingsLanguageAuto": {
     "message": "使用浏览器语言"
   },
-  "copiedJsonNotification": {
-    "message": "已复制 JSON"
-  },
   "detectionEmptyTitle": {
     "message": "未检测到任何内容"
   },
@@ -1658,19 +1765,2158 @@
   "rulesModalDetectorLabel": {
     "message": "检测规则"
   },
-  "rulesAuthorHelpHint": {
-    "message": "谁创建了此检测器"
+  "rulesMoreActions": {
+    "message": "更多操作"
   },
-  "rulesWindowConditionExamplesTitle": {
-    "message": "Window 条件示例"
+  "advancedToolsNoDetections": {
+    "message": "此页面没有受支持的检测"
   },
-  "rulesWindowConditionExamplesHint": {
-    "message": "点击示例以使用:"
+  "advancedToolsEmptyTitle": {
+    "message": "暂无可用工具"
   },
-  "rulesBtnNextFmt": {
-    "message": "下一步：{0}"
+  "advancedToolsEmptyDesc": {
+    "message": "此页面未发现受支持的防护。一旦检测到，工具会自动显示在这里。"
   },
-  "rulesUsePropertyBtn": {
-    "message": "使用属性"
+  "advancedToolsSupportedLabel": {
+    "message": "支持的防护"
+  },
+  "advancedToolsOpenHistoryFmt": {
+    "message": "查看捕获历史（{0}）"
+  },
+  "detectionMethodJsHooks": {
+    "message": "JavaScript 钩子"
+  },
+  "detectionMethodContent": {
+    "message": "内容"
+  },
+  "detectionMethodWindow": {
+    "message": "窗口属性"
+  },
+  "detectionMethodDom": {
+    "message": "Dom"
+  },
+  "detectionMethodHeaders": {
+    "message": "请求头"
+  },
+  "detectionMethodCookies": {
+    "message": "Cookie"
+  },
+  "detectionMethodUrl": {
+    "message": "Url"
+  },
+  "detectionMethodPayload": {
+    "message": "负载"
+  },
+  "detectionEnableBtn": {
+    "message": "启用检测"
+  },
+  "historyMoreActions": {
+    "message": "更多操作"
+  },
+  "historyCopyEntryTitle": {
+    "message": "复制数据"
+  },
+  "settingsHistoryAutoDelete": {
+    "message": "自动删除"
+  },
+  "settingsHistoryAutoDeleteDesc": {
+    "message": "定期删除旧的历史记录条目。"
+  },
+  "settingsHistoryAutoDeleteOlderThan": {
+    "message": "删除早于以下时间的条目"
+  },
+  "settingsCacheDurationRangeFmt": {
+    "message": "允许范围：1–{0} {1}。更长的时间请选择更大的单位。"
+  },
+  "settingsCacheDurationRangeMaxFmt": {
+    "message": "允许范围：1–{0} {1}。"
+  },
+  "settingsCacheDurationUnitNote": {
+    "message": "每月按 30 天计算；每年按 365 天计算。"
+  },
+  "timeUnitMonths": {
+    "message": "月"
+  },
+  "timeUnitYears": {
+    "message": "年"
+  },
+  "settingsHistoryStatsTitle": {
+    "message": "历史统计"
+  },
+  "settingsHistoryStatsDesc": {
+    "message": "查看根据检测历史在本地计算的私密统计数据。"
+  },
+  "settingsOpenStats": {
+    "message": "打开统计"
+  },
+  "settingsExportedToast": {
+    "message": "设置已导出"
+  },
+  "settingsExportFailedToast": {
+    "message": "导出设置失败"
+  },
+  "settingsImportedToast": {
+    "message": "设置已导入"
+  },
+  "settingsImportFailedToast": {
+    "message": "导入设置失败：文件无效"
+  },
+  "statsPrivacyNote": {
+    "message": "根据检测历史在本地计算，数据不会离开浏览器。"
+  },
+  "statsSubtitleFmt": {
+    "message": "根据 {0} 条历史记录在本地计算，数据不会离开浏览器。"
+  },
+  "statsRangeLabel": {
+    "message": "时间范围"
+  },
+  "statsRange7": {
+    "message": "7 天"
+  },
+  "statsRange30": {
+    "message": "30 天"
+  },
+  "statsRange90": {
+    "message": "90 天"
+  },
+  "statsRangeAll": {
+    "message": "全部"
+  },
+  "statsEmptyTitle": {
+    "message": "暂无历史记录"
+  },
+  "statsEmptyDesc": {
+    "message": "将含有检测结果的页面保存到历史后，统计数据会显示在这里。"
+  },
+  "statsEntries": {
+    "message": "历史条目"
+  },
+  "statsUniqueDomains": {
+    "message": "唯一域名"
+  },
+  "statsDetections": {
+    "message": "检测"
+  },
+  "statsDistinctDetectors": {
+    "message": "不同的防护系统"
+  },
+  "statsOverTime": {
+    "message": "检测随时间变化"
+  },
+  "statsTopProtections": {
+    "message": "检测最多的防护系统"
+  },
+  "statsTopDomains": {
+    "message": "热门域名"
+  },
+  "statsByCategory": {
+    "message": "按类别"
+  },
+  "statsByDifficulty": {
+    "message": "按难度"
+  },
+  "statsPagesUnit": {
+    "message": "页面"
+  },
+  "statsVisitsUnit": {
+    "message": "访问"
+  },
+  "statsDetectionsUnit": {
+    "message": "检测"
+  },
+  "statsCategoryOther": {
+    "message": "其他"
+  },
+  "statsDifficultyNone": {
+    "message": "无检测"
+  },
+  "statsNoData": {
+    "message": "此时间范围内没有数据"
+  },
+  "statsTipPagesFmt": {
+    "message": "{0} 个页面"
+  },
+  "statsTipDomainsFmt": {
+    "message": "{0} 个域名"
+  },
+  "statsTipVisitsFmt": {
+    "message": "{0} 次访问"
+  },
+  "statsTipDetectionsFmt": {
+    "message": "{0} 次检测"
+  },
+  "historyCategoryShareFmt": {
+    "message": "{1} 项中的 {0} 项 · {2}%"
+  },
+  "statsTipEntriesFmt": {
+    "message": "{0} 条记录"
+  },
+  "statsWithDetectionsFmt": {
+    "message": "{0} 条含检测"
+  },
+  "statsVisitsPerDomainFmt": {
+    "message": "每个域名 {0} 次访问"
+  },
+  "statsPerEntryFmt": {
+    "message": "每条 {0}"
+  },
+  "statsAvgConfidenceFmt": {
+    "message": "平均置信度 {0}%"
+  },
+  "statsTimelineMetaFmt": {
+    "message": "{0} 次检测 · {1} 天"
+  },
+  "deleteOfficialDetectorNote": {
+    "message": "这是 Scrapfly 官方检测器。更新不会将其恢复；可在 … 菜单中使用“恢复官方检测器”找回。"
+  },
+  "restoreOfficialDetectors": {
+    "message": "恢复官方检测器"
+  },
+  "officialDetectorsRestoredFmt": {
+    "message": "已恢复 {0} 个官方检测器"
+  },
+  "noOfficialDetectorsToRestore": {
+    "message": "没有已删除的官方检测器"
+  },
+  "failedRestoreOfficialDetectors": {
+    "message": "无法恢复官方检测器"
+  },
+  "authorReservedError": {
+    "message": "“Scrapfly”仅供官方检测器使用，请使用其他作者名称。"
+  },
+  "ruleFieldAuthorPlaceholder": {
+    "message": "你的名字"
+  },
+  "clearCustomDetectorsTitle": {
+    "message": "清除自定义检测器"
+  },
+  "clearCustomDetectorsMessage": {
+    "message": "这将删除你所有的自定义检测器。Scrapfly 官方检测器会保留（你可以停用它们）。确定吗？"
+  },
+  "clearingCustomDetectors": {
+    "message": "正在清除自定义检测器..."
+  },
+  "customDetectorsClearedFmt": {
+    "message": "已删除 {0} 个自定义检测器"
+  },
+  "noCustomDetectorsToClear": {
+    "message": "没有可清除的自定义检测器"
+  },
+  "rhSuggestions": {
+    "message": "建议"
+  },
+  "rhResults": {
+    "message": "结果"
+  },
+  "rhCustomChip": {
+    "message": "自定义"
+  },
+  "rhUseAsTyped": {
+    "message": "按输入原样使用"
+  },
+  "rhNoResultsFmt": {
+    "message": "没有与“{0}”匹配的结果"
+  },
+  "rhNoResultsHint": {
+    "message": "你仍可将其用作自定义值。"
+  },
+  "rhPreview": {
+    "message": "预览"
+  },
+  "rhSearchWindow": {
+    "message": "搜索属性，例如 webdriver、chrome、cdc_"
+  },
+  "rhSearchDom": {
+    "message": "搜索选择器，例如 captcha、iframe"
+  },
+  "rhSearchRegex": {
+    "message": "要匹配的文本，例如 bm_ 或 token"
+  },
+  "rhSearchSample": {
+    "message": "输入要测试的值"
+  },
+  "rhCondition": {
+    "message": "条件"
+  },
+  "rhConditionInvalid": {
+    "message": "未知条件"
+  },
+  "rhAddProperty": {
+    "message": "添加属性"
+  },
+  "rhChipAutomation": {
+    "message": "自动化"
+  },
+  "rhCondGroupType": {
+    "message": "类型"
+  },
+  "rhCondGroupExistence": {
+    "message": "存在性"
+  },
+  "rhCondGroupCollections": {
+    "message": "集合"
+  },
+  "rhCondGroupNumeric": {
+    "message": "数值"
+  },
+  "rhCondGroupString": {
+    "message": "字符串"
+  },
+  "rhCondGroupBoolean": {
+    "message": "布尔值"
+  },
+  "rhCondGroupCustom": {
+    "message": "当前值"
+  },
+  "rhCondTypeObject": {
+    "message": "是对象"
+  },
+  "rhCondTypeFunction": {
+    "message": "是函数"
+  },
+  "rhCondTypeString": {
+    "message": "是字符串"
+  },
+  "rhCondTypeNumber": {
+    "message": "是数字"
+  },
+  "rhCondTypeBoolean": {
+    "message": "是布尔值"
+  },
+  "rhCondTypeSymbol": {
+    "message": "是 Symbol"
+  },
+  "rhCondTypeBigint": {
+    "message": "是 BigInt"
+  },
+  "rhCondExists": {
+    "message": "在页面上存在"
+  },
+  "rhCondTruthy": {
+    "message": "为真值 (truthy)"
+  },
+  "rhCondFalsy": {
+    "message": "为假值 (空、0、false 或 null)"
+  },
+  "rhCondNotUndefined": {
+    "message": "不是 undefined"
+  },
+  "rhCondUndefined": {
+    "message": "是 undefined (不存在)"
+  },
+  "rhCondNotNull": {
+    "message": "不是 null"
+  },
+  "rhCondNull": {
+    "message": "是 null"
+  },
+  "rhCondArray": {
+    "message": "是数组"
+  },
+  "rhCondNonEmptyArray": {
+    "message": "是非空数组"
+  },
+  "rhCondEmptyArray": {
+    "message": "是空数组"
+  },
+  "rhCondHasLength": {
+    "message": "有长度"
+  },
+  "rhCondHasKeys": {
+    "message": "是有键的对象"
+  },
+  "rhCondEmptyObject": {
+    "message": "是空对象"
+  },
+  "rhCondGt0": {
+    "message": "大于 0"
+  },
+  "rhCondGte0": {
+    "message": "大于或等于 0"
+  },
+  "rhCondEq0": {
+    "message": "等于 0"
+  },
+  "rhCondNe0": {
+    "message": "不等于 0"
+  },
+  "rhCondGt1": {
+    "message": "大于 1"
+  },
+  "rhCondGte1": {
+    "message": "大于或等于 1"
+  },
+  "rhCondLenGt0": {
+    "message": "不为空"
+  },
+  "rhCondLenEq0": {
+    "message": "为空"
+  },
+  "rhCondTrue": {
+    "message": "为 true"
+  },
+  "rhCondFalse": {
+    "message": "为 false"
+  },
+  "rhWindowIntro": {
+    "message": "检查页面上的 JavaScript 全局变量 (window.…)。先选一个变量，再选它必须满足的条件。"
+  },
+  "rhWindowSentenceFmt": {
+    "message": "匹配 {0} {1} 的页面"
+  },
+  "rhChipTemplate": {
+    "message": "模板"
+  },
+  "rhDomClass": {
+    "message": "类"
+  },
+  "rhDomId": {
+    "message": "ID"
+  },
+  "rhDomData": {
+    "message": "data 属性"
+  },
+  "rhDomClassContains": {
+    "message": "类名包含"
+  },
+  "rhDomIdContains": {
+    "message": "ID 包含"
+  },
+  "rhDomTag": {
+    "message": "HTML 标签"
+  },
+  "rhDomAttr": {
+    "message": "具有属性"
+  },
+  "rhDomIframe": {
+    "message": "iframe URL 包含"
+  },
+  "rhDomTitle": {
+    "message": "标题包含"
+  },
+  "rhDomAlt": {
+    "message": "替代文本包含"
+  },
+  "rhDomCamel": {
+    "message": "camelCase 类名"
+  },
+  "rhRegexTitle": {
+    "message": "正则表达式助手"
+  },
+  "rhUsePattern": {
+    "message": "使用该模式"
+  },
+  "rhRegexStartsFmt": {
+    "message": "以“{0}”开头"
+  },
+  "rhRegexEndsFmt": {
+    "message": "以“{0}”结尾"
+  },
+  "rhRegexContainsFmt": {
+    "message": "任意位置包含“{0}”"
+  },
+  "rhRegexWordFmt": {
+    "message": "完整单词“{0}”"
+  },
+  "rhRegexOrFmt": {
+    "message": "“{0}”或其他选项"
+  },
+  "rhRegexStartsMoreFmt": {
+    "message": "以“{0}”开头且后面还有文本"
+  },
+  "rhRegexEitherFmt": {
+    "message": "“{0}”或“{1}”"
+  },
+  "rhExamplesForFmt": {
+    "message": "“{0}”的示例"
+  },
+  "rhExamples": {
+    "message": "示例"
+  },
+  "rhHowMatchesFmt": {
+    "message": "“{0}”的匹配方式"
+  },
+  "rhQuickRef": {
+    "message": "速查"
+  },
+  "rhRefAny": {
+    "message": "任意字符"
+  },
+  "rhRefZeroMore": {
+    "message": "0 次或多次"
+  },
+  "rhRefOneMore": {
+    "message": "1 次或多次"
+  },
+  "rhRefOptional": {
+    "message": "可选"
+  },
+  "rhRefStart": {
+    "message": "开头"
+  },
+  "rhRefEnd": {
+    "message": "结尾"
+  },
+  "rhRefDigit": {
+    "message": "数字"
+  },
+  "rhRefWord": {
+    "message": "字母、数字或 _"
+  },
+  "rhRefSpace": {
+    "message": "空白字符"
+  },
+  "rhRefOr": {
+    "message": "a 或 b"
+  },
+  "rhMatch": {
+    "message": "匹配"
+  },
+  "rhNoMatch": {
+    "message": "不匹配"
+  },
+  "rhWwIntro": {
+    "message": "仅当文本单独出现、而非较长单词的一部分时才匹配。"
+  },
+  "rhWwExact": {
+    "message": "完全相同的单词"
+  },
+  "rhWwJoinedBefore": {
+    "message": "与前面的文本相连"
+  },
+  "rhWwJoinedAfter": {
+    "message": "与后面的文本相连"
+  },
+  "rhWwSpaces": {
+    "message": "以空格分隔"
+  },
+  "rhCsIntro": {
+    "message": "开启后，大写和小写字母视为不同。"
+  },
+  "rhCsOnTitle": {
+    "message": "区分大小写：开启"
+  },
+  "rhCsOffTitle": {
+    "message": "区分大小写：关闭"
+  },
+  "rhWhatIsRegex": {
+    "message": "什么是正则表达式？"
+  },
+  "rhWhatIsWholeWord": {
+    "message": "什么是“全字匹配”？"
+  },
+  "rhWhatIsCase": {
+    "message": "什么是“区分大小写”？"
+  },
+  "rhRegexIntro": {
+    "message": "正则表达式（regex）按模式而非精确字符来匹配文本。"
+  },
+  "rhWhenToUse": {
+    "message": "何时使用"
+  },
+  "rhRegexUse1": {
+    "message": "以特定内容开头或结尾的文本"
+  },
+  "rhRegexUse2": {
+    "message": "一次匹配多种变体（使用 |）"
+  },
+  "rhRegexUse3": {
+    "message": "数字或特定类型的字符"
+  },
+  "rhRegexTip": {
+    "message": "匹配精确文本无需正则，请改用“全字匹配”。"
+  },
+  "rhBestFor": {
+    "message": "最适合"
+  },
+  "rhWwUse1": {
+    "message": "精确的 Cookie 名称"
+  },
+  "rhWwUse2": {
+    "message": "特定的请求头名称"
+  },
+  "rhWwUse3": {
+    "message": "完整的类名或函数名"
+  },
+  "rhCsUse1": {
+    "message": "大小写固定的请求头和 Cookie"
+  },
+  "rhCsUse2": {
+    "message": "JavaScript 属性名"
+  },
+  "settingsApiEventsDesc": {
+    "message": "扩展在页面上派发的事件"
+  },
+  "settingsApiUsageDesc": {
+    "message": "在你自己的脚本中监听这些事件"
+  },
+  "settingsApiCopyCode": {
+    "message": "复制代码"
+  },
+  "settingsApiCodeCopied": {
+    "message": "代码已复制"
+  },
+  "settingsApiEventCopyTitle": {
+    "message": "复制事件名称"
+  },
+  "advCommonClickToCopy": {
+    "message": "点击复制"
+  },
+  "advCommonClickToCopyFull": {
+    "message": "点击复制完整值"
+  },
+  "advCommonDomainLabel": {
+    "message": "域名:"
+  },
+  "advCommonCopy": {
+    "message": "复制"
+  },
+  "advCommonPage": {
+    "message": "页面"
+  },
+  "advCommonExportCode": {
+    "message": "导出代码"
+  },
+  "advCommonUrlCopied": {
+    "message": "已复制 URL"
+  },
+  "advCommonCaptured": {
+    "message": "捕获时间"
+  },
+  "advCommonScript": {
+    "message": "脚本"
+  },
+  "advCommonUrl": {
+    "message": "URL"
+  },
+  "advCommonScriptUrl": {
+    "message": "脚本 URL:"
+  },
+  "advCommonNoCaptureData": {
+    "message": "没有可用的捕获数据"
+  },
+  "advCommonFailedCheckCookiesFmt": {
+    "message": "无法检查 Cookie:{0}"
+  },
+  "advCommonFailedAnalyzeScriptsFmt": {
+    "message": "无法分析脚本:{0}"
+  },
+  "advCommonFailedStartAnalysis": {
+    "message": "无法开始分析"
+  },
+  "advCommonFailedCheckVersionFmt": {
+    "message": "无法检查版本:{0}"
+  },
+  "advCommonFailedExtractFmt": {
+    "message": "提取失败:{0}"
+  },
+  "advCommonFailedStartExtractionFmt": {
+    "message": "无法开始提取:{0}"
+  },
+  "advCommonFailedOpenExportFmt": {
+    "message": "无法打开导出窗口:{0}"
+  },
+  "advCommonNoScriptsToExport": {
+    "message": "没有可导出的脚本"
+  },
+  "advCommonCookiesTitleFmt": {
+    "message": "{0} Cookie"
+  },
+  "advCommonNoCookiesFmt": {
+    "message": "未找到 {0} Cookie"
+  },
+  "advCommonScriptsTitleFmt": {
+    "message": "{0} 脚本 ({1})"
+  },
+  "advCommonAnalyzingReloadFmt": {
+    "message": "正在分析 {0} 脚本… 页面将重新加载"
+  },
+  "advCommonCodeGenUnavailable": {
+    "message": "无法生成代码"
+  },
+  "advCommonCodeGenTitle": {
+    "message": "脚本解析代码生成器"
+  },
+  "advCommonExportOptions": {
+    "message": "导出选项"
+  },
+  "advCommonAllTypes": {
+    "message": "所有类型"
+  },
+  "advCommonFoundScriptsFmt": {
+    "message": "找到 {0} 个相关脚本"
+  },
+  "advCommonScriptAnalysis": {
+    "message": "脚本分析"
+  },
+  "advCommonTotalScripts": {
+    "message": "脚本总数:"
+  },
+  "advCommonProtectionLevel": {
+    "message": "保护级别:"
+  },
+  "advCommonCookiesFound": {
+    "message": "找到的 Cookie:"
+  },
+  "advCommonSiteKey": {
+    "message": "站点密钥"
+  },
+  "advCommonWebsiteUrl": {
+    "message": "网站 URL"
+  },
+  "advCommonSiteUrl": {
+    "message": "站点 URL"
+  },
+  "advCommonApiDomain": {
+    "message": "API 域名"
+  },
+  "advCommonFound": {
+    "message": "已找到"
+  },
+  "advCommonNotFound": {
+    "message": "未找到"
+  },
+  "advCommonRequired": {
+    "message": "需要"
+  },
+  "advCommonYes": {
+    "message": "是"
+  },
+  "advCommonEnterprise": {
+    "message": "企业版"
+  },
+  "advCommonStandard": {
+    "message": "标准"
+  },
+  "advCommonNone": {
+    "message": "无"
+  },
+  "advCodeDescBrowserParseFmt": {
+    "message": "用于拦截并解析 {0} 脚本的浏览器控制台代码"
+  },
+  "advCodeDescBrowserFetchFmt": {
+    "message": "用于获取 {0} 脚本的浏览器控制台代码"
+  },
+  "advCodeDescPythonBs": {
+    "message": "使用 requests 和 BeautifulSoup 的 Python 脚本"
+  },
+  "advCodeDescPython": {
+    "message": "使用 requests 库的 Python 脚本"
+  },
+  "advCodeDescNodeCheerio": {
+    "message": "使用 axios 和 cheerio 的 Node.js 脚本"
+  },
+  "advCodeDescNode": {
+    "message": "使用 axios 的 Node.js 脚本"
+  },
+  "advCodeDescPhpDom": {
+    "message": "使用 cURL 和 DOMDocument 的 PHP 脚本"
+  },
+  "advCodeDescPhp": {
+    "message": "使用 cURL 的 PHP 脚本"
+  },
+  "advCodeDescCsharpHap": {
+    "message": "使用 HttpClient 和 HtmlAgilityPack 的 C#"
+  },
+  "advCodeDescCsharp": {
+    "message": "使用 HttpClient 的 C#"
+  },
+  "advCodeDescGoQuery": {
+    "message": "使用 net/http 和 goquery 的 Go"
+  },
+  "advCodeDescGo": {
+    "message": "使用 net/http 的 Go"
+  },
+  "pageNoticeCaptureActive": {
+    "message": "正在捕获"
+  },
+  "pageNoticeReloadToCapture": {
+    "message": "重新加载页面以开始捕获。"
+  },
+  "pageNoticeEndsInFmt": {
+    "message": "{0} 秒后结束"
+  },
+  "pageNoticeRecaptchaStepReload": {
+    "message": "重新加载此页面"
+  },
+  "pageNoticeRecaptchaStepSolve": {
+    "message": "完成或点击 reCAPTCHA"
+  },
+  "pageNoticeRecaptchaStepWait": {
+    "message": "等待“捕获完成”"
+  },
+  "pageNoticeMonitoringStartedFmt": {
+    "message": "已开始监控 {0}"
+  },
+  "pageNoticeCollectingScripts": {
+    "message": "正在收集脚本 URL,请稍候…"
+  },
+  "pageNoticeAnalyzingScriptsFmt": {
+    "message": "正在分析 {0} 脚本"
+  },
+  "pageNoticeCaptureCompleted": {
+    "message": "捕获完成"
+  },
+  "pageNoticePageLoading": {
+    "message": "页面加载中"
+  },
+  "pageNoticeWaitForLoad": {
+    "message": "请等待页面完全加载…"
+  },
+  "advAkamaiNotDetectedToast": {
+    "message": "此页面未检测到 Akamai。缺少 _abck Cookie。"
+  },
+  "advAkamaiCaptureSuccess": {
+    "message": "已成功捕获 Akamai 数据!"
+  },
+  "advAkamaiCaptureStopped": {
+    "message": "已停止捕获"
+  },
+  "advAkamaiStopCaptureFailedFmt": {
+    "message": "无法停止捕获:{0}"
+  },
+  "advAkamaiReloadingToAnalyze": {
+    "message": "正在重新加载页面以分析 Akamai 数据…"
+  },
+  "advAkamaiAnalyzeFailedFmt": {
+    "message": "无法分析内容:{0}"
+  },
+  "advAkamaiNoAbckCookie": {
+    "message": "未找到 _abck Cookie"
+  },
+  "advAkamaiProcessFailedFmt": {
+    "message": "无法处理数据:{0}"
+  },
+  "advAkamaiExtractingSensor": {
+    "message": "正在提取传感器信息…"
+  },
+  "advAkamaiExtractSensorFailedFmt": {
+    "message": "无法提取传感器信息:{0}"
+  },
+  "advAkamaiNoticeNotDetectedTitle": {
+    "message": "未检测到 Akamai"
+  },
+  "advAkamaiNoticeNoAbck": {
+    "message": "此页面上没有 _abck Cookie。"
+  },
+  "advAkamaiNoticeNotActive": {
+    "message": "此处未启用 Akamai Bot Manager。"
+  },
+  "advAkamaiNoticeReloadToMonitor": {
+    "message": "重新加载页面以开始监控传感器数据和请求详情"
+  },
+  "advAkamaiNoticeSensorCaptured": {
+    "message": "已成功捕获 Akamai sensor_data"
+  },
+  "advAkamaiNoticeExtractingTitle": {
+    "message": "正在提取 Akamai 传感器数据"
+  },
+  "advAkamaiNoticeWaitingSensor": {
+    "message": "正在等待捕获传感器信息…"
+  },
+  "advAkamaiNoticeAnalyzingTitle": {
+    "message": "正在分析 Akamai 内容"
+  },
+  "advAkamaiNoticeScanning": {
+    "message": "正在扫描页面中的脚本和模式…"
+  },
+  "advAkamaiNoticeExtractingSensorTitle": {
+    "message": "正在提取传感器数据"
+  },
+  "advAkamaiNoticeCapturingSensor": {
+    "message": "正在捕获 Akamai 传感器信息…"
+  },
+  "advAkamaiLevelAdvancedSbsd": {
+    "message": "高级 (SBSD)"
+  },
+  "advAkamaiLevelBasic": {
+    "message": "基础"
+  },
+  "advAkamaiLevelEasy": {
+    "message": "简单"
+  },
+  "advAkamaiAbckLevelLabel": {
+    "message": "_abck 级别:"
+  },
+  "advAkamaiAnalysisTitle": {
+    "message": "Akamai 分析"
+  },
+  "advAkamaiScriptsLabel": {
+    "message": "Akamai 脚本:"
+  },
+  "advAkamaiScriptsHeading": {
+    "message": "Akamai 脚本"
+  },
+  "advAkamaiSensorDataUrlScript": {
+    "message": "传感器数据 URL 脚本"
+  },
+  "advAkamaiPixelHtmlVar": {
+    "message": "Pixel HTML 变量:"
+  },
+  "advAkamaiPixelChallengeUrls": {
+    "message": "Pixel 挑战 URL:"
+  },
+  "advAkamaiPostUrl": {
+    "message": "POST URL:"
+  },
+  "advAkamaiPixelScriptVar": {
+    "message": "Pixel 脚本变量:"
+  },
+  "advAkamaiSbsdScriptUrl": {
+    "message": "SBSD 脚本 URL"
+  },
+  "advAkamaiSensorDataUrls": {
+    "message": "传感器数据 URL"
+  },
+  "advAkamaiEndpoint": {
+    "message": "Akamai 端点"
+  },
+  "advAkamaiTypeSensor": {
+    "message": "传感器"
+  },
+  "advAkamaiExtractedSensorTitle": {
+    "message": "已提取的传感器信息"
+  },
+  "advAkamaiSensorDataCharsFmt": {
+    "message": "传感器数据 ({0} 个字符)"
+  },
+  "advAkamaiSensorDataNotCaptured": {
+    "message": "传感器数据 (未捕获)"
+  },
+  "advAkamaiNoSensorData": {
+    "message": "未捕获到传感器数据"
+  },
+  "advAkamaiSbsdDataCharsFmt": {
+    "message": "SBSD 数据 ({0} 个字符)"
+  },
+  "advAkamaiSensorScriptUrl": {
+    "message": "传感器脚本 URL"
+  },
+  "advAkamaiCopyAllJson": {
+    "message": "将所有数据复制为 JSON"
+  },
+  "advAkamaiExtractSensorBtn": {
+    "message": "提取传感器信息"
+  },
+  "advAkamaiAbckLevel": {
+    "message": "ABCK 级别"
+  },
+  "advAkamaiAbckCookie": {
+    "message": "ABCK Cookie"
+  },
+  "advAkamaiVersionLabel": {
+    "message": "Akamai 版本"
+  },
+  "advAkamaiChallengeRequirements": {
+    "message": "所需挑战"
+  },
+  "advAkamaiSbsdChallenge": {
+    "message": "SBSD 挑战"
+  },
+  "advAkamaiSecCptChallenge": {
+    "message": "sec_cpt 挑战"
+  },
+  "advAkamaiPixelChallenge": {
+    "message": "Pixel 挑战"
+  },
+  "advImpervaEnableExtractionFailed": {
+    "message": "无法启用提取模式。请查看后台控制台了解详情。"
+  },
+  "advImpervaSessionCookies": {
+    "message": "会话 Cookie"
+  },
+  "advImpervaSecurityComponents": {
+    "message": "安全组件"
+  },
+  "advImpervaCookieCountFmt": {
+    "message": "Cookie:{0}"
+  },
+  "advImpervaResourceDetection": {
+    "message": "资源检测"
+  },
+  "advImpervaResourceUrls": {
+    "message": "资源 URL"
+  },
+  "advImpervaInterrogationUrls": {
+    "message": "询问 URL"
+  },
+  "advImpervaAnalysisTitle": {
+    "message": "Imperva 分析"
+  },
+  "advImpervaSensorUrl": {
+    "message": "传感器 URL:"
+  },
+  "advImpervaScriptsHeading": {
+    "message": "Imperva 脚本"
+  },
+  "advImpervaScriptTypeFmt": {
+    "message": "{0} 脚本"
+  },
+  "advImpervaSensorPath": {
+    "message": "传感器路径:"
+  },
+  "advImpervaNoScripts": {
+    "message": "未检测到脚本"
+  },
+  "advImpervaMayNotBePresent": {
+    "message": "此页面可能没有 Imperva"
+  },
+  "advImpervaTypeOnlyFmt": {
+    "message": "仅 {0}"
+  },
+  "advImpervaLevelAdvanced": {
+    "message": "高级 (reese84 + utmvc)"
+  },
+  "advImpervaLevelBasicSession": {
+    "message": "基础 (会话)"
+  },
+  "advImpervaNoticeReloadToMonitor": {
+    "message": "重新加载页面以开始监控 Imperva 请求和 Cookie"
+  },
+  "advImpervaNoticeCapturedItemsFmt": {
+    "message": "已捕获 Imperva 数据 (项目数:{0})"
+  },
+  "advImpervaNoticeCaptureComplete": {
+    "message": "Imperva 捕获完成"
+  },
+  "advImpervaNoticeSensorCaptured": {
+    "message": "已成功捕获传感器数据"
+  },
+  "advImpervaNoticeExtractingTitle": {
+    "message": "正在提取 Imperva 脚本"
+  },
+  "advImpervaNoticeMonitoringChallenge": {
+    "message": "正在监控挑战和解答数据…"
+  },
+  "advRecaptchaCallbackTool": {
+    "message": "reCAPTCHA 回调"
+  },
+  "advRecaptchaSelectorDetection": {
+    "message": "选择器检测"
+  },
+  "advRecaptchaMethod": {
+    "message": "方法"
+  },
+  "advRecaptchaSelector": {
+    "message": "选择器"
+  },
+  "advRecaptchaSelectorCopied": {
+    "message": "已将选择器复制到剪贴板!"
+  },
+  "advRecaptchaNoElements": {
+    "message": "未找到 reCAPTCHA 元素"
+  },
+  "advRecaptchaExecuteFailedFmt": {
+    "message": "grecaptcha.execute() 失败:{0}"
+  },
+  "advRecaptchaNoSiteKey": {
+    "message": "未找到站点密钥"
+  },
+  "advRecaptchaExtractedSiteKey": {
+    "message": "提取的站点密钥"
+  },
+  "advRecaptchaSiteKeyCopied": {
+    "message": "已将站点密钥复制到剪贴板!"
+  },
+  "advRecaptchaSiteKeyCopiedShort": {
+    "message": "已复制站点密钥"
+  },
+  "advRecaptchaCallbacksTitle": {
+    "message": "reCAPTCHA 回调"
+  },
+  "advRecaptchaClientsTitle": {
+    "message": "reCAPTCHA 客户端"
+  },
+  "advRecaptchaClientIdFmt": {
+    "message": "客户端 ID:{0}"
+  },
+  "advRecaptchaCopiedToClipboard": {
+    "message": "已复制到剪贴板!"
+  },
+  "advRecaptchaCallbackFunction": {
+    "message": "回调函数"
+  },
+  "advRecaptchaCallbackPath": {
+    "message": "回调路径"
+  },
+  "advRecaptchaNoCallback": {
+    "message": "未定义回调"
+  },
+  "advRecaptchaDomCallbacks": {
+    "message": "DOM 回调"
+  },
+  "advRecaptchaScriptCallbacks": {
+    "message": "脚本回调"
+  },
+  "advRecaptchaCallbackExamples": {
+    "message": "回调使用示例"
+  },
+  "advRecaptchaInvisible": {
+    "message": "隐形"
+  },
+  "advRecaptchaAction": {
+    "message": "操作"
+  },
+  "advRecaptchaVersionCopied": {
+    "message": "已复制版本"
+  },
+  "advRecaptchaActionCopied": {
+    "message": "已复制操作"
+  },
+  "advRecaptchaApiDomainCopied": {
+    "message": "已复制 API 域名"
+  },
+  "advRecaptchaRequiredCookie": {
+    "message": "必需的 Cookie"
+  },
+  "advRecaptchaCookieCopied": {
+    "message": "已复制 Cookie"
+  },
+  "advRecaptchaFeaturesDetected": {
+    "message": "检测到的特性"
+  },
+  "advRecaptchaSParamRequired": {
+    "message": "需要 S 参数"
+  },
+  "advRecaptchaHasSession": {
+    "message": "含会话"
+  },
+  "advRecaptchaCapturedLabel": {
+    "message": "捕获时间:"
+  },
+  "advRecaptchaFailedClickFmt": {
+    "message": "点击失败:{0}"
+  },
+  "advRecaptchaNoCallbacksFound": {
+    "message": "此页面上未找到 reCAPTCHA 回调。请确认 reCAPTCHA 已加载。"
+  },
+  "advRecaptchaFailedCaptureCallbackFmt": {
+    "message": "捕获回调失败:{0}"
+  },
+  "pageNoticeRecaptchaReloadAndSolve": {
+    "message": "重新加载页面并完成 reCAPTCHA 验证以开始监控"
+  },
+  "pageNoticeRecaptchaPageReady": {
+    "message": "页面已就绪"
+  },
+  "pageNoticeRecaptchaSolveNow": {
+    "message": "现在完成 reCAPTCHA 验证以捕获数据"
+  },
+  "pageNoticeRecaptchaDecodedFmt": {
+    "message": "已捕获并解码的请求:{0}"
+  },
+  "pageNoticeRecaptchaNoRequests": {
+    "message": "未捕获到 reCAPTCHA 请求"
+  },
+  "pageNoticeRecaptchaSeen": {
+    "message": "已检测到 reCAPTCHA"
+  },
+  "pageNoticeRecaptchaSolveToFinish": {
+    "message": "完成验证，捕获会自动结束"
+  },
+  "pageNoticeRecaptchaTriggerNow": {
+    "message": "现在触发或点击 reCAPTCHA"
+  },
+  "advShapeCookieLabel": {
+    "message": "Cookie"
+  },
+  "advShapeHeadersLabel": {
+    "message": "请求头"
+  },
+  "advShapeVersionTitle": {
+    "message": "Shape Security 版本"
+  },
+  "advShapeHeaderPattern": {
+    "message": "请求头模式"
+  },
+  "advShapeHeaderPatterns": {
+    "message": "请求头模式"
+  },
+  "advShapeCookieTitle": {
+    "message": "Shape Cookie"
+  },
+  "advShapeMaxAgeInfoFmt": {
+    "message": "Max-Age:{0} 秒(50 年)"
+  },
+  "advShapeAnalysisTitle": {
+    "message": "Shape Security 分析"
+  },
+  "advShapeInitJsScriptsLabel": {
+    "message": "Init.js 脚本:"
+  },
+  "advShapeSeedScriptsLabel": {
+    "message": "带 seed 的脚本:"
+  },
+  "advShapeScriptsHeading": {
+    "message": "Shape Security 脚本"
+  },
+  "advShapeInitJsScript": {
+    "message": "Init.js 脚本"
+  },
+  "advShapeInitJsScripts": {
+    "message": "Init.js 脚本"
+  },
+  "advShapeSeedScript": {
+    "message": "带 seed 的脚本"
+  },
+  "advShapeSeedScripts": {
+    "message": "带 seed 的脚本"
+  },
+  "advShapeNoActiveTab": {
+    "message": "未找到活动标签页"
+  },
+  "advShapeErrorFmt": {
+    "message": "错误:{0}"
+  },
+  "advShapeDetectedVersion": {
+    "message": "检测到的版本:"
+  },
+  "advShapeCaptureRequirements": {
+    "message": "捕获要求"
+  },
+  "advShapeCookieAndHeaders": {
+    "message": "Cookie + 请求头"
+  },
+  "advShapeNoticeExtractingScripts": {
+    "message": "正在提取 Shape Security 脚本"
+  },
+  "advShapeNoticeReloadToMonitor": {
+    "message": "重新加载页面以开始监控 Shape Security 请求头和 Cookie"
+  },
+  "advShapeNoticeWaitBeforeActions": {
+    "message": "请等待页面完全加载后再执行操作…"
+  },
+  "advShapeNoticeMonitoringActiveFmt": {
+    "message": "监控中 ({0})"
+  },
+  "advShapeNoticeTriggerCookie": {
+    "message": "执行操作以触发 Cookie"
+  },
+  "advShapeNoticeTriggerHeadersCookie": {
+    "message": "执行操作以触发请求头和 Cookie"
+  },
+  "advShapeNoticeTimeoutFmt": {
+    "message": "超时 ({2}) - Cookie:{0},请求头:{1}"
+  },
+  "advShapeNoticeV1SummaryFmt": {
+    "message": "{0} - Cookie:{1}"
+  },
+  "advShapeNoticeV2SummaryFmt": {
+    "message": "{0} - Cookie:{1} | 请求头:{2}"
+  },
+  "advShapeNoticeCapturedFmt": {
+    "message": "已捕获 - Cookie:{0},请求头:{1}"
+  },
+  "advHcaptchaDetectionTitle": {
+    "message": "hCaptcha 检测"
+  },
+  "advHcaptchaNotDetected": {
+    "message": "未检测到 hCaptcha。请在加载 hCaptcha 后重新加载页面。"
+  },
+  "advHcaptchaVersionTitle": {
+    "message": "hCaptcha 版本"
+  },
+  "advHcaptchaEnterpriseMode": {
+    "message": "Enterprise 模式"
+  },
+  "advHcaptchaNo": {
+    "message": "否"
+  },
+  "advHcaptchaNoHistory": {
+    "message": "暂无捕获历史"
+  },
+  "advHcaptchaNotAvailable": {
+    "message": "无"
+  },
+  "advHcaptchaScriptNumberFmt": {
+    "message": "脚本 {0}"
+  },
+  "advHcaptchaCheckingVersionReload": {
+    "message": "正在检查 hCaptcha 版本…页面将重新加载"
+  },
+  "advHcaptchaVersionTimeout": {
+    "message": "hCaptcha 版本检测超时"
+  },
+  "advHcaptchaFailedStartVersionCheck": {
+    "message": "无法开始版本检查"
+  },
+  "advHcaptchaNoticeReloadToMonitor": {
+    "message": "重新加载页面以开始监控 hCaptcha 请求"
+  },
+  "advHcaptchaNoticeCaptured": {
+    "message": "已成功捕获 hCaptcha 数据"
+  },
+  "advHcaptchaNoticeCheckingVersion": {
+    "message": "正在检查 hCaptcha 版本"
+  },
+  "advHcaptchaNoticeAnalyzingPage": {
+    "message": "正在分析页面,请稍候…"
+  },
+  "advAwswafNoScripts": {
+    "message": "未找到 AWS WAF 脚本"
+  },
+  "advAwswafDeleteCookieHint": {
+    "message": "删除 aws-waf-token Cookie 并重新加载以触发挑战"
+  },
+  "advAwswafTypeChallenge": {
+    "message": "挑战"
+  },
+  "advAwswafClickToCopyUrl": {
+    "message": "点击复制 URL"
+  },
+  "advAwswafFetchCodeTitle": {
+    "message": "AWS WAF 脚本获取代码"
+  },
+  "advAwswafScriptsLabel": {
+    "message": "AWS WAF 脚本"
+  },
+  "advAwswafChallengeScript": {
+    "message": "挑战脚本"
+  },
+  "advAwswafApiScript": {
+    "message": "API 脚本 (jsapi.js)"
+  },
+  "advAwswafProblemEndpoint": {
+    "message": "问题端点"
+  },
+  "advAwswafApiKey": {
+    "message": "API 密钥"
+  },
+  "advAwswafApiKeyCopied": {
+    "message": "已复制 API 密钥"
+  },
+  "advAwswafToken": {
+    "message": "AWS WAF 令牌"
+  },
+  "advAwswafTokenCopied": {
+    "message": "已复制令牌"
+  },
+  "advAwswafDetectionIndicators": {
+    "message": "检测指标"
+  },
+  "advAwswafStatus405": {
+    "message": "状态 405"
+  },
+  "advAwswafDetected": {
+    "message": "已检测到"
+  },
+  "advAwswafChallengeEndpoint": {
+    "message": "挑战端点"
+  },
+  "advAwswafDeletingCookieFmt": {
+    "message": "正在删除 {0} Cookie… 页面将重新加载"
+  },
+  "advCloudflareExtractedSiteKey": {
+    "message": "已提取的 Site Key"
+  },
+  "advCloudflareTypeLabel": {
+    "message": "类型"
+  },
+  "advCloudflareSiteKeyClickToCopy": {
+    "message": "Site Key（点击复制）"
+  },
+  "advCloudflareSiteKeyCopied": {
+    "message": "已复制 Site Key"
+  },
+  "advCloudflareSitekeyLabel": {
+    "message": "Sitekey:"
+  },
+  "advCloudflareUrlLabel": {
+    "message": "URL:"
+  },
+  "advCloudflareTypeChallenge": {
+    "message": "挑战"
+  },
+  "advCloudflareTypeAnalytics": {
+    "message": "分析"
+  },
+  "advCloudflareTypeBotManagement": {
+    "message": "机器人管理"
+  },
+  "advCloudflareCheckingVersion": {
+    "message": "正在检查 Cloudflare 版本… 页面将重新加载"
+  },
+  "advCloudflareSiteKeyExtracted": {
+    "message": "已成功提取 Site Key"
+  },
+  "advCloudflareNoSitekey": {
+    "message": "页面上未找到 sitekey"
+  },
+  "advCloudflareFailedExtractSitekey": {
+    "message": "无法提取 sitekey"
+  },
+  "advDatadomeCookieCopied": {
+    "message": "已复制 Cookie"
+  },
+  "advFuncaptchaPublicKey": {
+    "message": "公钥"
+  },
+  "advFuncaptchaUserAgent": {
+    "message": "用户代理"
+  },
+  "advFuncaptchaBdaLabel": {
+    "message": "BDA（浏览器数据数组）"
+  },
+  "advFuncaptchaBlobData": {
+    "message": "Blob 数据"
+  },
+  "advFuncaptchaBlobDataNotCaptured": {
+    "message": "Blob 数据（未捕获）"
+  },
+  "advFuncaptchaStatus": {
+    "message": "状态"
+  },
+  "advFuncaptchaNotCaptured": {
+    "message": "未捕获"
+  },
+  "advFuncaptchaReloadToMonitor": {
+    "message": "重新加载页面以开始监控，并触发 FunCaptcha 挑战（超时 60 秒）"
+  },
+  "advFuncaptchaPageLoadingMsg": {
+    "message": "页面正在加载，请稍候…"
+  },
+  "advFuncaptchaCapturedTitle": {
+    "message": "已成功捕获 FunCaptcha"
+  },
+  "advFuncaptchaCapturedCountFmt": {
+    "message": "已捕获的挑战：{0}"
+  },
+  "advFuncaptchaCaptureTimeout": {
+    "message": "捕获超时"
+  },
+  "advFuncaptchaNoChallenge": {
+    "message": "未检测到 FunCaptcha 挑战（超时 60 秒）"
+  },
+  "advGeetestSourceInlineScript": {
+    "message": "内联脚本"
+  },
+  "advGeetestSourceDomAttribute": {
+    "message": "DOM 属性"
+  },
+  "advGeetestSourceScriptUrl": {
+    "message": "脚本 URL"
+  },
+  "advGeetestSourceJsonConfig": {
+    "message": "JSON 配置"
+  },
+  "advGeetestSourceLabel": {
+    "message": "来源："
+  },
+  "advGeetestExtractedCaptchaId": {
+    "message": "已提取的 captchaId"
+  },
+  "advGeetestClickToCopyCaptchaId": {
+    "message": "点击复制 captchaId"
+  },
+  "advGeetestProductLabel": {
+    "message": "产品："
+  },
+  "advGeetestScriptSnippet": {
+    "message": "脚本片段"
+  },
+  "advGeetestExportParsingCode": {
+    "message": "导出解析代码"
+  },
+  "advGeetestErrorFmt": {
+    "message": "错误：{0}"
+  },
+  "advGeetestDetectedVersionFmt": {
+    "message": "已检测到：Geetest {0}"
+  },
+  "advGeetestNoVersion": {
+    "message": "未检测到 Geetest 版本"
+  },
+  "advGeetestParsingCodeCopied": {
+    "message": "解析代码已复制到剪贴板！"
+  },
+  "advGeetestTabNotFound": {
+    "message": "未找到标签页"
+  },
+  "advGeetestNoScriptsFound": {
+    "message": "未找到 Geetest 脚本"
+  },
+  "advGeetestDetectingVersion": {
+    "message": "正在检测 Geetest 版本…"
+  },
+  "advGeetestReloadCheckVersion": {
+    "message": "正在重新加载页面以检查版本"
+  },
+  "advGeetestAnalyzingScripts": {
+    "message": "正在分析脚本…"
+  },
+  "advGeetestReloadExtractScripts": {
+    "message": "正在重新加载页面以提取脚本"
+  },
+  "advPanelToolsNameFmt": {
+    "message": "{0} 工具"
+  },
+  "advPanelErrorLoadingTools": {
+    "message": "加载高级工具时出错"
+  },
+  "advPanelCheckConsole": {
+    "message": "请查看控制台了解详情"
+  },
+  "advPanelSelectDetectionFirst": {
+    "message": "请先选择一个检测"
+  },
+  "advPanelErrorLoadingCapturesFmt": {
+    "message": "加载捕获时出错：{0}"
+  },
+  "advPanelCurrentSiteFmt": {
+    "message": "当前网站 ({0})"
+  },
+  "advPanelNoResultsText": {
+    "message": "请尝试调整筛选条件或搜索词来查找捕获。"
+  },
+  "advPanelNoUrl": {
+    "message": "无 URL"
+  },
+  "advPanelView": {
+    "message": "查看"
+  },
+  "advPanelBtnOk": {
+    "message": "确定"
+  },
+  "advPanelConfirmAction": {
+    "message": "确认操作"
+  },
+  "advPanelBtnConfirm": {
+    "message": "确认"
+  },
+  "advPanelCopiedToClipboard": {
+    "message": "已复制到剪贴板"
+  },
+  "advPanelToolsLoadedFmt": {
+    "message": "已加载 {0} 工具"
+  },
+  "advPanelCookiesFoundFmt": {
+    "message": "找到 {0}/{1} 个 Cookie"
+  },
+  "advPanelScriptsFoundFmt": {
+    "message": "找到的脚本：{0}"
+  },
+  "advPanelNoScriptsFmt": {
+    "message": "未找到 {0} 脚本"
+  },
+  "advPanelVersionDetectedFmt": {
+    "message": "检测到 {0} 版本：{1}"
+  },
+  "advPanelNoVersionFmt": {
+    "message": "未检测到 {0} 版本"
+  },
+  "advPanelUnknownError": {
+    "message": "未知错误"
+  },
+  "advPanelFailedStartCaptureFmt": {
+    "message": "无法开始捕获：{0}"
+  },
+  "advPanelFailedStopCaptureFmt": {
+    "message": "无法停止捕获：{0}"
+  },
+  "advPanelCaptureCountFmt": {
+    "message": "捕获：{0}"
+  },
+  "advPanelClearCapturedDataTitle": {
+    "message": "清除所有已捕获数据"
+  },
+  "advPanelNotAvailable": {
+    "message": "不适用"
+  },
+  "advPanelHistoryClearedFmt": {
+    "message": "已清除 {0} 捕获历史"
+  },
+  "advPanelFailedClearHistory": {
+    "message": "清除历史记录失败"
+  },
+  "advPanelCapturesPaginationFmt": {
+    "message": "显示第 {0}-{1} 条，共 {2} 条捕获"
+  },
+  "rulesUiNewDetectorName": {
+    "message": "新检测器"
+  },
+  "rulesUiAddDetectorTitleFmt": {
+    "message": "添加 {0}"
+  },
+  "rulesUiEditDetectorTitleFmt": {
+    "message": "编辑 {0}"
+  },
+  "rulesUiScrapflyIconAlt": {
+    "message": "Scrapfly 图标"
+  },
+  "rulesUiDetectorIconAltFmt": {
+    "message": "{0} 图标"
+  },
+  "rulesUiChangeIcon": {
+    "message": "更改图标"
+  },
+  "rulesUiChangeDetectorIcon": {
+    "message": "更改检测器图标"
+  },
+  "rulesUiCustomColor": {
+    "message": "自定义颜色"
+  },
+  "iconPickerTitle": {
+    "message": "选择图标"
+  },
+  "iconPickerDefault": {
+    "message": "默认"
+  },
+  "iconPickerUploadCustom": {
+    "message": "上传自定义图标"
+  },
+  "iconPickerFileTooLarge": {
+    "message": "图标文件必须小于 100 KB"
+  },
+  "rulesUiHelpJsHooks": {
+    "message": "什么是 JS 钩子？"
+  },
+  "rulesUiHelpWindow": {
+    "message": "什么是窗口属性？"
+  },
+  "rulesUiHelpUrl": {
+    "message": "什么是 URL 检测？"
+  },
+  "rulesUiHelpHeader": {
+    "message": "什么是请求头检测？"
+  },
+  "rulesUiHelpCookie": {
+    "message": "什么是 Cookie 检测？"
+  },
+  "rulesUiHelpContent": {
+    "message": "什么是内容检测？"
+  },
+  "rulesUiHelpDom": {
+    "message": "什么是 DOM 检测？"
+  },
+  "rulesUiHelpPayload": {
+    "message": "什么是负载检测？"
+  },
+  "rulesUiHelpGeneric": {
+    "message": "这是什么检测方法？"
+  },
+  "rulesUiValueOptionalPlaceholder": {
+    "message": "值（可选）"
+  },
+  "rulesUiDomSelectorPlaceholder": {
+    "message": "CSS 选择器（例如 .class、#id、[attr]）"
+  },
+  "rulesUiContentTextPlaceholder": {
+    "message": "要搜索的文本或单词"
+  },
+  "rulesUiUrlPatternPlaceholder": {
+    "message": "URL 模式"
+  },
+  "rulesUiJsHookTargetPlaceholder": {
+    "message": "JS 钩子目标（例如 navigator.webdriver）"
+  },
+  "rulesUiWindowPathPlaceholder": {
+    "message": "window 路径（例如 grecaptcha、_cf_chl_opt）"
+  },
+  "rulesUiWindowConditionPlaceholder": {
+    "message": "条件（例如 typeof object、typeof function）"
+  },
+  "rulesUiCookieNamePlaceholder": {
+    "message": "Cookie 名称（例如 __cf_bm、session_id）"
+  },
+  "rulesUiCookieValuePlaceholder": {
+    "message": "Cookie 值模式（可选）"
+  },
+  "rulesUiPayloadTextPlaceholder": {
+    "message": "文本（例如 sensor_data、challenge_token）"
+  },
+  "rulesUiPayloadUrlPlaceholder": {
+    "message": "/api/verify 或 challenge.php"
+  },
+  "rulesUiNameSettings": {
+    "message": "名称设置"
+  },
+  "rulesUiNameSettingsConfidenceFmt": {
+    "message": "名称设置（置信度：{0}%）"
+  },
+  "rulesUiValueSettings": {
+    "message": "值设置"
+  },
+  "rulesUiDeleteMethod": {
+    "message": "删除模式"
+  },
+  "rulesUiClearValue": {
+    "message": "清除值"
+  },
+  "rulesUiAddValue": {
+    "message": "添加值"
+  },
+  "rulesUiPageOfFmt": {
+    "message": "第 {0} / {1} 页"
+  },
+  "rulesUiCompleteEmptyPattern": {
+    "message": "请先填写当前的空模式，再添加新的模式。"
+  },
+  "rulesUiFillRequiredPatterns": {
+    "message": "保存前请填写所有必填的模式字段。"
+  },
+  "rulesUiEnterMethodTypePrompt": {
+    "message": "输入检测方法类型（例如 HEADERS、CONTENT、URLs）："
+  },
+  "rulesUiMethodFallback": {
+    "message": "方法"
+  },
+  "rulesUiUrlScopeHint": {
+    "message": "页面 = 当前 URL | 脚本 = 页面 + 脚本 | 全部 = 所有请求"
+  },
+  "rulesUiLeaveEmptyAnyUrl": {
+    "message": "留空则匹配任意 URL"
+  },
+  "ruleExampleMatches": {
+    "message": "✓ 匹配："
+  },
+  "ruleExampleWont": {
+    "message": "× 不匹配："
+  },
+  "ruleExampleWontMatch": {
+    "message": "× 不匹配："
+  },
+  "ruleExampleLiteralTextOnly": {
+    "message": "仅限字面文本"
+  },
+  "ruleExampleExactCase": {
+    "message": "（大小写一致）"
+  },
+  "ruleExampleAlone": {
+    "message": "（单独出现）"
+  },
+  "ruleConditionGroupOther": {
+    "message": "其他"
+  },
+  "clipboardUrlFmt": {
+    "message": "URL:{0}"
+  },
+  "clipboardHostFmt": {
+    "message": "主机:{0}"
+  },
+  "clipboardTitleFmt": {
+    "message": "标题:{0}"
+  },
+  "clipboardTimestampFmt": {
+    "message": "时间:{0}"
+  },
+  "clipboardSecuritySystemFmt": {
+    "message": "安全系统:{0}"
+  },
+  "clipboardCategoryFmt": {
+    "message": "类别:{0}"
+  },
+  "clipboardConfidenceFmt": {
+    "message": "置信度:{0}%"
+  },
+  "clipboardDetectionMethodsFmt": {
+    "message": "检测方法:{0}"
+  },
+  "clipboardDetectionMethodsHeading": {
+    "message": "检测方法:"
+  },
+  "clipboardDetectionsCountFmt": {
+    "message": "检测数:{0}"
+  },
+  "clipboardDetectionsListFmt": {
+    "message": "检测结果({0}):"
+  },
+  "clipboardDifficultyFmt": {
+    "message": "难度:{0}"
+  },
+  "clipboardCacheScopeFmt": {
+    "message": "缓存范围:{0}"
+  },
+  "clipboardCacheExpirationFmt": {
+    "message": "缓存过期时间:{0}"
+  },
+  "clipboardMethodsFmt": {
+    "message": "方法:{0}"
+  },
+  "clipboardCopyFailed": {
+    "message": "复制到剪贴板失败"
+  },
+  "detectionUiCopyUrl": {
+    "message": "复制 URL"
+  },
+  "detectionUiCopyUrlFmt": {
+    "message": "复制 URL:{0}"
+  },
+  "detectionUiCopyCategory": {
+    "message": "复制类别"
+  },
+  "detectionUiCopyCategoryFmt": {
+    "message": "复制类别:{0}"
+  },
+  "detectionUiCopyMethod": {
+    "message": "复制方法"
+  },
+  "detectionUiCopyMethodFmt": {
+    "message": "复制方法:{0}"
+  },
+  "detectionUiCopyValue": {
+    "message": "复制值"
+  },
+  "detectionUiCopyValueFmt": {
+    "message": "复制值:{0}"
+  },
+  "detectionUiDurYearsFmt": {
+    "message": "{0}年"
+  },
+  "detectionUiDurMonthsFmt": {
+    "message": "{0}个月"
+  },
+  "detectionUiDurDaysFmt": {
+    "message": "{0}天"
+  },
+  "detectionUiDurHoursFmt": {
+    "message": "{0}小时"
+  },
+  "detectionUiDurMinutesFmt": {
+    "message": "{0}分钟"
+  },
+  "detectionUiDurPairFmt": {
+    "message": "{0}{1}"
+  },
+  "detectionUiDurUnderMinute": {
+    "message": "不到1分钟"
+  },
+  "detectionUiNoDescription": {
+    "message": "此检测没有提供更多详细信息。"
+  },
+  "detectionUiNoMethodsRecorded": {
+    "message": "此检测器未记录任何检测方法。"
+  },
+  "detectionUiUnknownMethod": {
+    "message": "未知方法"
+  },
+  "detectionUiUnknownValue": {
+    "message": "未知"
+  },
+  "historyUiUntitled": {
+    "message": "无标题"
+  },
+  "historyUiNoDetectionMethods": {
+    "message": "没有检测方法"
+  },
+  "historyUiInvalidFileFormat": {
+    "message": "历史记录文件格式无效"
+  },
+  "popupUiLogoAlt": {
+    "message": "Scrapfly 机器人"
+  },
+  "popupUiEnableFailedFmt": {
+    "message": "启用扩展失败:{0}"
+  },
+  "popupUiDisableFailedFmt": {
+    "message": "停用扩展失败:{0}"
+  },
+  "popupUiNativeErrorFmt": {
+    "message": "错误:{0}"
+  },
+  "settingsUiBlacklistEmpty": {
+    "message": "黑名单中没有域名"
+  },
+  "settingsUiBlacklistNoMatches": {
+    "message": "没有与搜索匹配的域名"
+  },
+  "settingsUiChecking": {
+    "message": "正在检查..."
+  },
+  "settingsUiErrHistoryLimit": {
+    "message": "历史记录上限必须介于 0(不限)到 10000 之间"
+  },
+  "settingsUiErrCacheDurationFmt": {
+    "message": "缓存时长必须介于 1 到 {0} 之间({1})"
+  },
+  "settingsUiErrAutoDeleteDays": {
+    "message": "自动删除天数必须介于 1 到 3650 之间"
+  },
+  "settingsUiErrDuplicateDuration": {
+    "message": "重复时长必须介于 1 到 999 之间"
+  },
+  "settingsUiExportJson": {
+    "message": "导出 JSON"
+  },
+  "settingsUiExportText": {
+    "message": "导出文本"
+  },
+  "settingsUiLogsText": {
+    "message": "文本"
+  },
+  "settingsUiIncompatibleCountFmt": {
+    "message": "需要更新版本扩展的检测器更新:{0}"
+  },
+  "settingsUiNeedsExtVersionFmt": {
+    "message": "v{0}(需要扩展 v{1})"
+  },
+  "statsUiTotals": {
+    "message": "总计"
+  },
+  "ruleSectionCombinations": {
+    "message": "组合"
+  },
+  "combinationsHint": {
+    "message": "选择模式，然后选择必须匹配的数量。"
+  },
+  "combinationsEmpty": {
+    "message": "还没有组合。"
+  },
+  "combinationAdd": {
+    "message": "添加组合"
+  },
+  "combinationDefaultNameFmt": {
+    "message": "组合 {0}"
+  },
+  "combinationConfidence": {
+    "message": "匹配时的置信度"
+  },
+  "combinationConfidenceFromPatterns": {
+    "message": "留空则使用所匹配模式的置信度"
+  },
+  "combinationDelete": {
+    "message": "删除组合"
+  },
+  "combinationDeleteConfirmFmt": {
+    "message": "删除组合“{0}”？其模式仍保留在规则中。"
+  },
+  "combinationNotTitle": {
+    "message": "不能匹配"
+  },
+  "combinationNot": {
+    "message": "非"
+  },
+  "combinationRemove": {
+    "message": "移除"
+  },
+  "combinationEmptyPattern": {
+    "message": "(空模式)"
+  },
+  "combinationAnyOfMethodFmt": {
+    "message": "任意{0}模式"
+  },
+  "combinationGroupEmpty": {
+    "message": "在下方添加模式"
+  },
+  "combinationAddPattern": {
+    "message": "添加模式"
+  },
+  "combinationAnyPattern": {
+    "message": "任意模式"
+  },
+  "combinationPreviewAnd": {
+    "message": "且"
+  },
+  "combinationPreviewOr": {
+    "message": "或"
+  },
+  "combinationPreviewNot": {
+    "message": "非"
+  },
+  "combinationPreviewEmpty": {
+    "message": "添加模式来构建此组合"
+  },
+  "combinationInvalid": {
+    "message": "选择必须匹配的模式，并检查最少匹配数。"
+  },
+  "combinationStrict": {
+    "message": "严格"
+  },
+  "combinationStrictTitle": {
+    "message": "严格：此模式不会单独触发检测器，仅在组合中生效"
+  },
+  "patternCombinationsOnlyBadge": {
+    "message": "仅组合"
+  },
+  "detectionModalCombinations": {
+    "message": "匹配的组合"
+  },
+  "combinationNoPatterns": {
+    "message": "未添加模式"
+  },
+  "combinationJoinTitle": {
+    "message": "在“且”和“或”之间切换"
+  },
+  "combinationPickHint": {
+    "message": "勾选要添加的模式"
+  },
+  "combinationAddSelectedFmt": {
+    "message": "添加已选的 {0} 个"
+  },
+  "combinationEditConditions": {
+    "message": "编辑条件"
+  },
+  "combinationRequireTogether": {
+    "message": "仅在组合中使用模式"
+  },
+  "combinationRequireHint": {
+    "message": "适用于此规则中所有引用这些模式的地方。"
+  },
+  "combinationAutoConfidence": {
+    "message": "自动"
+  },
+  "combinationMatchAll": {
+    "message": "所有条件都匹配"
+  },
+  "combinationMatchAny": {
+    "message": "任一条件匹配"
+  },
+  "combinationMatchAtLeast": {
+    "message": "至少…个条件匹配"
+  },
+  "combinationDetectWhen": {
+    "message": "检测条件"
+  },
+  "combinationGroupExcluded": {
+    "message": "这些条件不得匹配。"
+  },
+  "combinationMinimum": {
+    "message": "最少匹配数"
+  },
+  "combinationMatchState": {
+    "message": "模式条件"
+  },
+  "combinationMatches": {
+    "message": "匹配"
+  },
+  "combinationDoesNotMatch": {
+    "message": "不匹配"
+  },
+  "combinationAtLeastSummaryFmt": {
+    "message": "至少 {0} 个条件匹配"
+  },
+  "combinationChoosePatterns": {
+    "message": "选择模式"
+  },
+  "combinationSummaryAll": {
+    "message": "所有必要条件都匹配时进行检测。"
+  },
+  "combinationSummaryAny": {
+    "message": "至少一个条件匹配时进行检测。"
+  },
+  "combinationSummaryMinimumFmt": {
+    "message": "{1} 个条件中至少 {0} 个匹配时进行检测。"
+  },
+  "combinationSummaryExcluded": {
+    "message": "排除的模式不得匹配。"
+  },
+  "combinationDecreaseMinimum": {
+    "message": "减少最少匹配数"
+  },
+  "combinationIncreaseMinimum": {
+    "message": "增加最少匹配数"
+  },
+  "detectionTipDetections": {
+    "message": "此页面检测到的防护数量。"
+  },
+  "detectionTipConfidence": {
+    "message": "已检测防护的平均置信度。"
+  },
+  "detectionTipDifficulty": {
+    "message": "绕过已检测防护的预估难度。"
+  },
+  "detectionTipCacheScope": {
+    "message": "哪些页面可以复用这些缓存的检测结果。"
+  },
+  "detectionTipCacheExpiration": {
+    "message": "这些缓存的检测结果过期前的剩余时间。"
+  },
+  "tipCachedAt": {
+    "message": "保存于"
+  },
+  "tipConfidenceAverageFmt": {
+    "message": "{0} 项检测的平均值，范围 {1}% 至 {2}%"
+  },
+  "tipConfidenceFromCombinations": {
+    "message": "来自匹配的组合"
+  },
+  "tipConfidenceFromSignals": {
+    "message": "由最强的单个信号决定分数"
+  },
+  "tipCountShareFmt": {
+    "message": "{0} · {1}%"
+  },
+  "tipCustomDetector": {
+    "message": "自定义检测器"
+  },
+  "tipDifficultyFromCategoryFmt": {
+    "message": "{0} 的默认值"
+  },
+  "tipDifficultyFromRule": {
+    "message": "由此检测器设定"
+  },
+  "tipDifficultyHardestFmt": {
+    "message": "由 {0} 决定"
+  },
+  "tipDifficultyManyFmt": {
+    "message": "因 {0} 项防护同时存在而提高"
+  },
+  "tipLastUpdated": {
+    "message": "更新于"
+  },
+  "tipMethodContent": {
+    "message": "页面或其脚本中的文本匹配。"
+  },
+  "tipMethodCookie": {
+    "message": "此网站的 Cookie 匹配。"
+  },
+  "tipMethodDom": {
+    "message": "页面元素匹配。"
+  },
+  "tipMethodHeader": {
+    "message": "网站返回的响应头匹配。"
+  },
+  "tipMethodJsHooks": {
+    "message": "页面调用了此检测器监视的浏览器 API。"
+  },
+  "tipMethodPayload": {
+    "message": "页面在请求中发送的数据匹配。"
+  },
+  "tipMethodUrl": {
+    "message": "页面或其请求匹配了已知地址。"
+  },
+  "tipMethodWindow": {
+    "message": "页面的全局 JavaScript 对象匹配。"
+  },
+  "tipMoreFmt": {
+    "message": "另外 {0} 项"
+  },
+  "tipOfficialDetector": {
+    "message": "Scrapfly 官方检测器"
+  },
+  "tipScopeDomain": {
+    "message": "此域名下的所有页面都会复用结果。"
+  },
+  "tipScopeFullUrl": {
+    "message": "仅此完整 URL（含查询参数）会复用结果。"
+  },
+  "tipScopePath": {
+    "message": "无论查询参数如何，此路径都会复用结果。"
+  },
+  "tipStatsActiveDays": {
+    "message": "至少保存了一个页面的天数。"
+  },
+  "tipStatsDetections": {
+    "message": "所有已保存页面中发现的防护（含重复）。"
+  },
+  "tipStatsDetectors": {
+    "message": "出现过的不同防护，每种只计一次。"
+  },
+  "tipStatsDomains": {
+    "message": "已保存页面中的不同网站。"
+  },
+  "tipStatsEntries": {
+    "message": "此时间范围内保存到历史记录的页面。"
+  },
+  "tipStatsRateFmt": {
+    "message": "{1} 条中的 {0} 条"
+  },
+  "tipPatterns": {
+    "message": "模式"
+  },
+  "settingsRowVerboseLogs": {
+    "message": "详细日志"
+  },
+  "settingsRowVerboseLogsTip": {
+    "message": "除每页一份报告外，还记录每条规则、钩子和消息"
   }
 }

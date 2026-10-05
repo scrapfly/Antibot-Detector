@@ -50,8 +50,8 @@ DataDomeAdvanced.prototype.displayCookiesModal = function(dataDomeCookie) {
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">DataDome Cookies</h3>
-                    <button class="advanced-modal-close-btn">×</button>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${this._txt('advCommonCookiesTitleFmt', '{0} Cookies', 'DataDome')}</h3>
+                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
                 </div>
 
                 ${this.buildCookieStatusSummary(cookieFound, 1)}
@@ -59,25 +59,25 @@ DataDomeAdvanced.prototype.displayCookiesModal = function(dataDomeCookie) {
                 ${dataDomeCookie ? `
                     <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <div class="copy-value" data-copy="datadome" style="font-weight: 500; color: var(--text-primary); font-family: monospace; cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="Click to copy">datadome</div>
+                            <div class="copy-value" data-copy="datadome" style="font-weight: 500; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">datadome</div>
                             <div style="display: flex; gap: 6px;">
                                 ${dataDomeCookie.secure ? '<span style="font-size: 10px; background: var(--success); color: white; padding: 2px 6px; border-radius: 3px;">SECURE</span>' : ''}
                                 ${dataDomeCookie.httpOnly ? '<span style="font-size: 10px; background: var(--bg-primary); color: var(--text-primary); padding: 2px 6px; border-radius: 3px;">HTTP</span>' : ''}
                             </div>
                         </div>
-                        <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(dataDomeCookie.value)}" style="font-size: 11px; color: var(--text-secondary); word-break: break-all; font-family: monospace; background: var(--bg-primary); padding: 8px; border-radius: 4px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s;" title="Click to copy full value">${AdvancedUtils.escapeHtml(dataDomeCookie.value.substring(0, 60))}${dataDomeCookie.value.length > 60 ? '...' : ''}</div>
-                        <div style="font-size: 11px; color: var(--text-muted);">Domain: ${AdvancedUtils.escapeHtml(dataDomeCookie.domain)}</div>
+                        <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(dataDomeCookie.value)}" style="font-size: 11px; color: var(--text-secondary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s;" title="${this._txt('advCommonClickToCopyFull', 'Click to copy full value')}">${AdvancedUtils.escapeHtml(dataDomeCookie.value.substring(0, 60))}${dataDomeCookie.value.length > 60 ? '...' : ''}</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">${this._txt('advCommonDomainLabel', 'Domain:')} ${AdvancedUtils.escapeHtml(dataDomeCookie.domain)}</div>
                     </div>
                 ` : `
                     <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
                         <div style="font-size: 48px; margin-bottom: 12px;"></div>
-                        <div style="font-size: 14px;">No DataDome cookies found</div>
+                        <div style="font-size: 14px;">${this._txt('advCommonNoCookiesFmt', 'No {0} cookies found', 'DataDome')}</div>
                     </div>
                 `}
             </div>
         `;
 
-        this.bindCopyValueHandlers(modal, { defaultMessage: 'Cookie copied' });
+        this.bindCopyValueHandlers(modal, { defaultMessage: this._txt('advDatadomeCookieCopied', 'Cookie copied') });
         this.bindModalClose(modal);
         this.showToolModal(modal);
     };
@@ -96,8 +96,8 @@ DataDomeAdvanced.prototype.displayAnalysisModal = function(data) {
         modal.innerHTML = `
             <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">DataDome Scripts (${scripts.length})</h3>
-                    <button class="advanced-modal-close-btn">×</button>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${this._txt('advCommonScriptsTitleFmt', '{0} Scripts ({1})', 'DataDome', scripts.length)}</h3>
+                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 12px;">
@@ -107,11 +107,11 @@ DataDomeAdvanced.prototype.displayAnalysisModal = function(data) {
                         return `
                             <div style="background: var(--bg-tertiary); padding: 14px; border-radius: 6px;">
                                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                    <span style="font-weight: 500;">Script ${idx + 1}</span>
+                                    <span style="font-weight: 500;">${this._txt('advCommonScript', 'Script')} ${idx + 1}</span>
                                     <span style="background: ${typeColor}; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 500;">${typeLabel}</span>
                                 </div>
-                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">URL</div>
-                                <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(script.url)}" style="font-size: 12px; color: var(--text-primary); word-break: break-all; font-family: monospace; background: var(--bg-primary); padding: 8px; border-radius: 4px; cursor: pointer; transition: background 0.2s;" title="Click to copy">${AdvancedUtils.escapeHtml(script.url)}</div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">${this._txt('advCommonUrl', 'URL')}</div>
+                                <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(script.url)}" style="font-size: 12px; color: var(--text-primary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; cursor: pointer; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">${AdvancedUtils.escapeHtml(script.url)}</div>
                             </div>
                         `;
                     }).join('')}
@@ -119,13 +119,13 @@ DataDomeAdvanced.prototype.displayAnalysisModal = function(data) {
 
                 ${scripts.length > 0 ? `
                     <button class="modal-export-code-btn" style="margin-top: 16px; width: 100%; padding: 10px; background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                        <span>Export Code</span>
+                        <span>${this._txt('advCommonExportCode', 'Export Code')}</span>
                     </button>
                 ` : ''}
             </div>
         `;
 
-        this.bindCopyValueHandlers(modal, { defaultMessage: 'URL copied' });
+        this.bindCopyValueHandlers(modal, { defaultMessage: this._txt('advCommonUrlCopied', 'URL copied') });
         this.bindModalClose(modal);
 
         // Export Code button
@@ -136,7 +136,7 @@ DataDomeAdvanced.prototype.displayAnalysisModal = function(data) {
 
                 if (scripts.length === 0) {
                     Logger.error('NETWORK', '[DataDome] No scripts to export!');
-                    NotificationHelper.warning('No scripts available to export');
+                    NotificationHelper.warning(this._txt('advCommonNoScriptsToExport', 'No scripts available to export'));
                     return;
                 }
 
@@ -146,7 +146,7 @@ DataDomeAdvanced.prototype.displayAnalysisModal = function(data) {
                     Logger.network('[DataDome] displayExportCodeModal called successfully');
                 } catch (error) {
                     Logger.error('NETWORK', '[DataDome] Error calling displayExportCodeModal:', error);
-                    NotificationHelper.error('Failed to open export modal: ' + error.message);
+                    NotificationHelper.error(this._txt('advCommonFailedOpenExportFmt', 'Failed to open export modal: {0}', error.message));
                 }
             });
             Logger.network('[DataDome] Click listener added successfully');
@@ -163,72 +163,9 @@ DataDomeAdvanced.prototype.displayAnalysisModal = function(data) {
      * Display export code modal with multi-language support
      */
 DataDomeAdvanced.prototype.displayExportCodeModal = function(scripts) {
-        const modal = this.createToolModal({ zIndex: 10001 });
-
-        const languages = ['JavaScript', 'Python', 'Node.js', 'PHP', 'C#', 'Go'];
-
-        modal.innerHTML = `
-            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 700px; max-height: 80vh; overflow-y: auto; width: 95%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">Export Code</h3>
-                    <button class="advanced-modal-close-btn">×</button>
-                </div>
-
-                <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
-                    ${languages.map(lang => `
-                        <button class="lang-tab-btn" data-lang="${lang}" style="padding: 8px 12px; border: none; background: var(--bg-tertiary); color: var(--text-primary); border-radius: 4px; cursor: pointer; font-size: 12px; transition: all 0.2s; ${lang === 'JavaScript' ? 'background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%); color: white;' : ''}">
-                            ${lang}
-                        </button>
-                    `).join('')}
-                </div>
-
-                <div class="code-container" style="background: var(--bg-primary); border-radius: 6px; padding: 14px; overflow-x: auto; margin-bottom: 12px;">
-                    <pre style="margin: 0; font-family: monospace; font-size: 12px; color: var(--text-primary); white-space: pre-wrap; word-wrap: break-word;"><code id="codeContent"></code></pre>
-                </div>
-
-                <button class="copy-code-btn" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">
-                    Copy Code
-                </button>
-            </div>
-        `;
-
-        this.showToolModal(modal);
-
-        // Language tab switching
-        const tabs = modal.querySelectorAll('.lang-tab-btn');
-        const codeContent = modal.querySelector('#codeContent');
-
-        const updateCode = (language) => {
-            const code = this.generateDataDomeParsingCode(scripts, language);
-            codeContent.textContent = code;
-
-            // Update tab styles
-            tabs.forEach(tab => {
-                if (tab.getAttribute('data-lang') === language) {
-                    tab.style.background = 'linear-gradient(135deg, #22C55E 0%, #16A34A 100%)';
-                    tab.style.color = 'white';
-                } else {
-                    tab.style.background = 'var(--bg-tertiary)';
-                    tab.style.color = 'var(--text-primary)';
-                }
-            });
-        };
-
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                updateCode(tab.getAttribute('data-lang'));
-            });
+        return AdvancedCodeDialog.open(this, {
+            title: this._txt('advCommonExportCode', 'Export Code'),
+            languages: ['JavaScript', 'Python', 'Node.js', 'PHP', 'C#', 'Go'].map(label => ({ id: label, label })),
+            getCode: (type, language) => this.generateDataDomeParsingCode(scripts, language)
         });
-
-        // Copy button
-        const copyBtn = modal.querySelector('.copy-code-btn');
-        copyBtn.addEventListener('click', () => {
-            const code = codeContent.textContent;
-            AdvancedUtils.copyToClipboard(code, copyBtn, { notificationMessage: 'Code copied' });
-        });
-
-        this.bindModalClose(modal);
-
-        // Load default code
-        updateCode('JavaScript');
     };

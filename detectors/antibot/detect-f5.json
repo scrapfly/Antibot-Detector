@@ -5,47 +5,69 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2024-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-05",
+  "version": "2.0.0",
   "website": "https://www.f5.com/",
   "icon": "f5_official.png",
   "description": "F5 BIG-IP Application Security Manager (ASM) - Web application firewall and bot protection",
   "detection": {
     "cookie": [
       {
-        "name": "^TS[a-zA-Z0-9]+$",
+        "id": "ts-asm-cookie",
+        "name": "^TS01[0-9a-f]{6,8}(?:_[0-9]+)?$",
         "nameRegex": true,
-        "confidence": 100,
-        "description": "F5 BIG-IP session persistence cookies",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "value": "^01[0-9a-f]{40,}$",
+        "valueRegex": true,
+        "valueCaseSensitive": true,
+        "confidence": 55,
+        "description": "BIG-IP ASM session cookie (TS01xxxxxx) with its 01-prefixed value",
         "nameScope": "all",
         "valueScope": "all"
       },
       {
-        "name": "^BIGipServer.*",
+        "id": "ts-legacy-cookie",
+        "name": "^TS[0-9a-f]{8}(?:_[0-9]+)?$",
         "nameRegex": true,
-        "confidence": 60,
-        "description": "F5 BIG-IP load balancer cookies",
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "confidence": 20,
+        "standalone": false,
+        "description": "Older BIG-IP ASM TSxxxxxxxx cookie name (also matches TS01 names)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "bigip-server-cookie",
+        "name": "^BIGipServer[A-Za-z0-9_.~-]+$",
+        "nameRegex": true,
+        "confidence": 40,
+        "standalone": false,
+        "description": "BIG-IP LTM persistence cookie (load balancer, not WAF)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "f5-avr-cookie",
+        "name": "^f5avr[0-9a-z_]+$",
+        "nameRegex": true,
+        "confidence": 30,
+        "standalone": false,
+        "description": "BIG-IP AVR analytics cookie",
         "nameScope": "all",
         "valueScope": "all"
       }
     ],
-    "header": [],
-    "url": [],
-    "content": [],
-    "dom": [],
-    "window": []
+    "content": [
+      {
+        "id": "asm-support-id",
+        "confidence": 30,
+        "standalone": false,
+        "description": "BIG-IP ASM block page support ID",
+        "text": "Your support ID is:? ?[0-9]{15,20}",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ]
   },
   "notes": {
     "detection_tips": [
@@ -54,5 +76,76 @@
       "F5 ASM often modifies response headers",
       "Look for encoded values in cookies starting with 'TS'"
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "f5-asm-ltm",
+      "name": "ASM cookie behind a BIG-IP load balancer",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "ts-asm-cookie"
+              },
+              {
+                "pattern": "ts-legacy-cookie"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "bigip-server-cookie"
+              },
+              {
+                "pattern": "f5-avr-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "f5-asm-block",
+      "name": "ASM block page",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "asm-support-id"
+          },
+          {
+            "any": [
+              {
+                "pattern": "ts-asm-cookie"
+              },
+              {
+                "pattern": "ts-legacy-cookie"
+              },
+              {
+                "pattern": "bigip-server-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "f5-asm-avr",
+      "name": "ASM cookie with BIG-IP analytics",
+      "confidence": 80,
+      "when": {
+        "all": [
+          {
+            "pattern": "ts-asm-cookie"
+          },
+          {
+            "pattern": "f5-avr-cookie"
+          }
+        ]
+      }
+    }
+  ]
 }

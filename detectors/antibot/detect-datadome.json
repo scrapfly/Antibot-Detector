@@ -5,47 +5,228 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2024-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-05",
+  "version": "2.0.0",
   "website": "https://datadome.co/",
   "icon": "datadome_official.png",
   "description": "Real-time bot protection with machine learning-based detection",
   "detection": {
     "cookie": [
       {
+        "id": "datadome-cookie",
         "name": "^datadome$",
-        "confidence": 100,
-        "description": "Main DataDome tracking cookie",
         "nameRegex": true,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "confidence": 85,
+        "description": "DataDome session cookie",
         "nameScope": "all",
         "valueScope": "all"
       }
     ],
     "header": [
       {
+        "id": "datadome-cid-header",
         "name": "^x-datadome-cid$",
-        "confidence": 100,
-        "description": "DataDome client ID header",
         "nameRegex": true,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "confidence": 90,
+        "description": "DataDome client ID response header",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "datadome-protected-header",
+        "name": "^x-datadome$",
+        "nameRegex": true,
+        "value": "^protected$",
+        "valueRegex": true,
+        "confidence": 90,
+        "description": "DataDome protection response header",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "datadome-server-header",
+        "name": "^server$",
+        "nameRegex": true,
+        "value": "^DataDome$",
+        "valueRegex": true,
+        "confidence": 85,
+        "description": "Response served by DataDome itself (block or challenge page)",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "datadome-dd-b-header",
+        "name": "^x-dd-b$",
+        "nameRegex": true,
+        "confidence": 40,
+        "standalone": false,
+        "description": "DataDome block-type header on challenge responses",
         "nameScope": "response",
         "valueScope": "response"
       }
     ],
-    "url": [],
-    "content": [],
-    "dom": [],
-    "window": []
-  }
+    "url": [
+      {
+        "id": "datadome-tag",
+        "confidence": 75,
+        "description": "Official DataDome JavaScript tag or its collection endpoint",
+        "text": "^https://(?:js|api-js)\\.datadome\\.co/(?:tags\\.js|js/)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "datadome-captcha",
+        "confidence": 80,
+        "description": "DataDome challenge or CAPTCHA delivery host",
+        "text": "^https://(?:geo|ct|c|t)\\.captcha-delivery\\.com/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "datadome-first-party-tag",
+        "confidence": 30,
+        "standalone": false,
+        "description": "First-party tags.js or js/ collection path; the name is generic, corroboration only",
+        "text": "^https?://[^/?#]+/(?:tags\\.js|js/)(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "ddjskey-reference",
+        "confidence": 25,
+        "description": "Integration snippet setting window.ddjskey",
+        "text": "ddjskey",
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      },
+      {
+        "id": "datadome-block-page",
+        "confidence": 30,
+        "standalone": false,
+        "description": "DataDome block page bootstrap (var dd={'rt':...})",
+        "text": "var dd={'rt':",
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ],
+    "window": [
+      {
+        "id": "ddjskey-variable",
+        "path": "ddjskey",
+        "condition": "typeof string",
+        "confidence": 60,
+        "description": "DataDome JS key set by the integration snippet"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "datadome-tag-session",
+      "name": "DataDome tag with its session cookie",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "datadome-tag"
+              },
+              {
+                "pattern": "ddjskey-variable"
+              },
+              {
+                "pattern": "ddjskey-reference"
+              }
+            ]
+          },
+          {
+            "pattern": "datadome-cookie"
+          }
+        ]
+      }
+    },
+    {
+      "id": "datadome-protected-response",
+      "name": "DataDome response headers with its cookie",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "datadome-cid-header"
+              },
+              {
+                "pattern": "datadome-protected-header"
+              },
+              {
+                "pattern": "datadome-server-header"
+              }
+            ]
+          },
+          {
+            "pattern": "datadome-cookie"
+          }
+        ]
+      }
+    },
+    {
+      "id": "datadome-first-party",
+      "name": "First-party DataDome tag with its JS key",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "pattern": "datadome-first-party-tag"
+          },
+          {
+            "any": [
+              {
+                "pattern": "ddjskey-variable"
+              },
+              {
+                "pattern": "ddjskey-reference"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "datadome-block-page",
+      "name": "DataDome block page",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "datadome-block-page"
+          },
+          {
+            "any": [
+              {
+                "pattern": "datadome-cid-header"
+              },
+              {
+                "pattern": "datadome-dd-b-header"
+              },
+              {
+                "pattern": "datadome-captcha"
+              },
+              {
+                "pattern": "datadome-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

@@ -18,7 +18,7 @@
  * Display rules (main entry point)
  */
 Rules.prototype.displayRules = async function() {
-  Logger.ui('displayRules called');
+  Logger.debug('UI', 'displayRules called');
 
   if (!this.initialized) {
     await this.initialize();
@@ -32,7 +32,7 @@ Rules.prototype.displayRules = async function() {
     return;
   }
 
-  Logger.ui('Rules list found:', rulesList);
+  Logger.debug('UI', 'Rules list found:', rulesList);
 
   const detectors = this.detectorManager.getAllDetectors();
 
@@ -57,7 +57,8 @@ Rules.prototype.displayRules = async function() {
     for (const [detectorName, detector] of Object.entries(categoryDetectors)) {
       const detectorWithDefaults = {
         ...detector,
-        displayName: detector.name || detectorName,
+        // The legacy English default name shows in the UI language
+        displayName: this.getDetectorDisplayName(detector.name) || detectorName,
         detection: detector.detection || {
           urls: [],
           headers: [],
@@ -96,6 +97,13 @@ Rules.prototype.displayRules = async function() {
     return aName.localeCompare(bName);
   });
 
+  // Keep the text in the search box applied after a delete / restore / clear
+  const query = document.querySelector('#rulesSearch')?.value || '';
+  if (query.trim() && typeof this.handleSearch === 'function') {
+    this.handleSearch(query);
+    return;
+  }
+
   this.filteredDetectors = [...this.allDetectors];
 
   if (this.paginationManager) {
@@ -117,6 +125,13 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
 
   let rulesHtml = '';
 
+  const _t = (typeof I18n !== 'undefined') ? I18n : null;
+  const _tr = (key, fallback) => (_t && _t.get(key)) || fallback;
+  const editTitle = FormatUtils.escapeAttr(_tr('ruleModalActionEdit', 'Edit'));
+  const moreTitle = FormatUtils.escapeAttr(_tr('rulesMoreActions', 'More actions'));
+  const deleteLabel = FormatUtils.escapeHtml(_tr('btnDelete', 'Delete'));
+  const deleteTitle = FormatUtils.escapeAttr(_tr('deleteDetectorTitle', 'Delete detector'));
+
   detectors.forEach(({ category, detectorName, detector }) => {
     const detectorIcon = this.getDetectorIcon(detector, category);
     const categoryInfo = this.categoryManager.getCategoryInfo(category);
@@ -124,20 +139,41 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
 
     const detectionMethods = this.getDetectionMethods(detector);
     const formattedLastUpdated = this.formatLastUpdated(detector.lastUpdated);
-    const categoryMethod = this.getCategoryMethod(category);
+    const categoryLabel = this.getCategoryLabel(category);
 
     const catHex = categoryColor.replace('#', '');
     const catR = parseInt(catHex.substring(0, 2), 16);
     const catG = parseInt(catHex.substring(2, 4), 16);
     const catB = parseInt(catHex.substring(4, 6), 16);
 
-    const categoryBadge = `<span class="method-tag" style="background: rgba(${catR}, ${catG}, ${catB}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${catR}, ${catG}, ${catB}, 0.35);">${categoryMethod}</span>`;
-
-    const detectorBadge = `<span class="method-tag" style="background: rgba(${catR}, ${catG}, ${catB}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${catR}, ${catG}, ${catB}, 0.35);">${FormatUtils.escapeHtml(detector.displayName)}</span>`;
-
-    const topBadges = `${categoryBadge}${detectorBadge}`;
+    const categoryBadge = `<span class="method-tag category-tag" style="background: rgba(${catR}, ${catG}, ${catB}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${catR}, ${catG}, ${catB}, 0.48);">${FormatUtils.escapeHtml(categoryLabel)}</span>`;
 
     const isDisabled = detector.enabled === false;
+    const authorText = typeof detector.author === 'string' ? detector.author.trim() : '';
+    const versionAuthor = FormatUtils.escapeHtml(detector.version || '1.0') +
+      (authorText ? ` | ${FormatUtils.escapeHtml(authorText)}` : '');
+    // Hover tips on the footer: version/author with official or custom, and the full update date
+    const official = typeof DetectionUtils !== 'undefined' && DetectionUtils.isOfficialDetector
+      && DetectionUtils.isOfficialDetector({ id: detector.id || detectorName, author: authorText });
+    const methodLists = Object.values(detector.detection || {}).filter(rules => Array.isArray(rules) && rules.length > 0);
+    const patternCount = methodLists.reduce((sum, rules) => sum + rules.length, 0);
+    const comboCount = Array.isArray(detector.combinations) ? detector.combinations.length : 0;
+    const versionTip = FormatUtils.tipAttrs(
+      `${_tr('ruleFieldVersion', 'Version')} ${detector.version || '1.0'}${authorText ? ` \u00b7 ${authorText}` : ''}`,
+      official ? _tr('tipOfficialDetector', 'Official Scrapfly detector') : _tr('tipCustomDetector', 'Custom detector'),
+      [
+        { label: _tr('ruleSectionDetectionMethods', 'Detection Methods'), value: String(methodLists.length) },
+        { label: _tr('tipPatterns', 'Patterns'), value: String(patternCount) },
+        ...(comboCount ? [{ label: _tr('ruleSectionCombinations', 'Combinations'), value: String(comboCount) }] : [])
+      ]);
+    const updatedTip = FormatUtils.tipAttrs(_tr('tipLastUpdated', 'Updated'),
+      detector.lastUpdated ? String(detector.lastUpdated).slice(0, 10) : '');
+    const deleteItem = `<button class="rules-menu-item rules-menu-item-danger delete-btn" role="menuitem" title="${deleteTitle}">
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
+                      </svg>
+                      <span>${deleteLabel}</span>
+                    </button>`;
     rulesHtml += `
       <div class="detector-card ${isDisabled ? 'detector-disabled' : ''}" data-detector-id="${FormatUtils.escapeAttr(detectorName)}" data-category="${FormatUtils.escapeAttr(category)}">
         <div class="detector-header">
@@ -146,20 +182,26 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
             <div class="detector-name-row">
               <div class="detector-name">${FormatUtils.escapeHtml(detector.displayName)}</div>
               <div class="detector-actions" data-stop-propagation="true">
-                <button class="edit-btn" title="Edit Detector" data-detector-id="${FormatUtils.escapeAttr(detectorName)}" data-category="${FormatUtils.escapeAttr(category)}">
-                  <svg width="14" height="14" viewBox="0 0 24 24">
-                    <path d="M3,17.25V21h3.75L17.81,9.94l-3.75-3.75L3,17.25zM20.71,7.04c0.39-0.39,0.39-1.02,0-1.41l-2.34-2.34c-0.39-0.39-1.02-0.39-1.41,0l-1.83,1.83l3.75,3.75L20.71,7.04z" fill="currentColor"/>
+                <button type="button" class="edit-btn" title="${editTitle}" aria-label="${editTitle}" data-detector-id="${FormatUtils.escapeAttr(detectorName)}" data-category="${FormatUtils.escapeAttr(category)}">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <path d="M16.25 4.25a2.47 2.47 0 0 1 3.5 3.5L8 19.5l-4.5 1 1-4.5Z"/>
+                    <path d="m14.75 5.75 3.5 3.5"/>
                   </svg>
                 </button>
-                <button class="delete-btn" title="Delete Detector">
-                  <svg width="14" height="14" viewBox="0 0 24 24">
-                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
-                  </svg>
-                </button>
+                <div class="rules-menu">
+                  <button class="rules-menu-trigger detector-more-btn" aria-haspopup="menu" aria-expanded="false" title="${moreTitle}" aria-label="${moreTitle}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M6,10.25A1.75,1.75 0 1,1 6,13.75A1.75,1.75 0 1,1 6,10.25M12,10.25A1.75,1.75 0 1,1 12,13.75A1.75,1.75 0 1,1 12,10.25M18,10.25A1.75,1.75 0 1,1 18,13.75A1.75,1.75 0 1,1 18,10.25Z" fill="currentColor"/>
+                    </svg>
+                  </button>
+                  <div class="rules-menu-list" role="menu">
+                    ${deleteItem}
+                  </div>
+                </div>
               </div>
             </div>
             <div class="detection-methods">
-              ${topBadges}
+              ${categoryBadge}
             </div>
           </div>
         </div>
@@ -169,13 +211,9 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
           </div>
           <div class="scripts-info">
             <div class="scripts-info-left">
-              <div class="last-updated">
-                <span class="last-updated-value">${formattedLastUpdated}</span>
-              </div>
-              <div class="detector-author">
-                <span class="version-author">${FormatUtils.escapeHtml(detector.version || '1.0')} | ${FormatUtils.escapeHtml(detector.author || 'scrapfly')}</span>
-                ${(detector.author || 'scrapfly').toLowerCase() === 'scrapfly' ? '<i class="fas fa-check-circle verified-badge" title="Official Scrapfly detector"></i>' : ''}
-              </div>
+              <span class="last-updated-value" ${updatedTip}>${formattedLastUpdated}</span>
+              <span class="scripts-info-sep" aria-hidden="true">&bull;</span>
+              <span class="version-author" ${versionTip}>${versionAuthor}</span>
             </div>
             <label class="toggle-switch-small" data-stop-propagation="true">
               <input type="checkbox" class="detector-toggle"
@@ -215,7 +253,10 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
  * @param {Array} detectors - Array of detectors for current page
  */
 Rules.prototype.setupDetectorCardListeners = function(detectors) {
-  const detectorCards = document.querySelectorAll('.detector-card');
+  const rulesList = document.querySelector('#rulesList');
+  if (!rulesList) return;
+
+  const detectorCards = rulesList.querySelectorAll('.detector-card');
   detectorCards.forEach((card, index) => {
     if (detectors[index]) {
       const { category, detectorName, detector } = detectors[index];
@@ -240,7 +281,7 @@ Rules.prototype.setupDetectorCardListeners = function(detectors) {
     }
   });
 
-  const editButtons = document.querySelectorAll('.edit-btn');
+  const editButtons = rulesList.querySelectorAll('.edit-btn');
   editButtons.forEach((btn, index) => {
     if (detectors[index]) {
       const { category, detectorName, detector } = detectors[index];
@@ -261,12 +302,13 @@ Rules.prototype.setupDetectorCardListeners = function(detectors) {
     }
   });
 
-  const deleteButtons = document.querySelectorAll('.delete-btn');
+  const deleteButtons = rulesList.querySelectorAll('.delete-btn');
   deleteButtons.forEach((btn, index) => {
     if (detectors[index]) {
       const { category, detectorName, detector } = detectors[index];
       btn.addEventListener('click', async (e) => {
         e.stopPropagation();
+        if (btn.getAttribute('aria-disabled') === 'true') return;
         await this.handleDeleteDetector(category, detectorName, detector.displayName || detectorName);
       });
     }

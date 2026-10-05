@@ -48,10 +48,10 @@ GeetestAdvanced.prototype.displayScriptsModal = function(scripts) {
 
             // Format source label
             const sourceLabels = {
-                'inline-script': 'Inline Script',
-                'dom-attribute': 'DOM Attribute',
-                'script-url': 'Script URL',
-                'json-config': 'JSON Config'
+                'inline-script': this._txt('advGeetestSourceInlineScript', 'Inline Script'),
+                'dom-attribute': this._txt('advGeetestSourceDomAttribute', 'DOM Attribute'),
+                'script-url': this._txt('advGeetestSourceScriptUrl', 'Script URL'),
+                'json-config': this._txt('advGeetestSourceJsonConfig', 'JSON Config')
             };
             const sourceLabel = sourceLabels[script.source] || script.source;
             const sourceColor = {
@@ -64,12 +64,12 @@ GeetestAdvanced.prototype.displayScriptsModal = function(scripts) {
             return `
                 <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <div style="color: var(--text-secondary); font-size: 12px; font-weight: 600;">Script ${idx + 1}</div>
+                        <div style="color: var(--text-secondary); font-size: 12px; font-weight: 600;">${this._txt('advCommonScript', 'Script')} ${idx + 1}</div>
                         ${versionBadge}
                     </div>
 
                     <div style="margin-bottom: 12px; padding: 8px; background: var(--bg-primary); border-radius: 4px; border-left: 3px solid ${sourceColor};">
-                        <span style="color: var(--text-secondary); font-size: 11px; font-weight: 500;">Source: </span>
+                        <span style="color: var(--text-secondary); font-size: 11px; font-weight: 500;">${this._txt('advGeetestSourceLabel', 'Source:')} </span>
                         <span style="color: ${sourceColor}; font-size: 11px; font-weight: 600;">${sourceLabel}</span>
                         ${script.element ? ` <span style="color: var(--text-secondary); font-size: 10px;">(&lt;${script.element}&gt;)</span>` : ''}
                         ${script.url ? `<div style="margin-top: 4px; font-size: 10px; color: var(--text-secondary); word-break: break-all;">${AdvancedUtils.escapeHtml(script.url)}</div>` : ''}
@@ -77,18 +77,18 @@ GeetestAdvanced.prototype.displayScriptsModal = function(scripts) {
 
                     ${isV4 ? `
                         <div style="margin-bottom: 12px;">
-                            <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">Extracted captchaId</div>
-                            <div class="clickable-copy-value" data-copy="${script.captchaId}" data-copy-message="Value copied" style="background: var(--bg-primary); padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px; color: var(--success); cursor: pointer; word-break: break-all; border: 1px solid var(--border); transition: all 0.2s;" title="Click to copy captchaId">
+                            <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">${this._txt('advGeetestExtractedCaptchaId', 'Extracted captchaId')}</div>
+                            <div class="clickable-copy-value" data-copy="${script.captchaId}" data-copy-message="${this._txt('advValueCopied', 'Value copied')}" style="background: var(--bg-primary); padding: 10px; border-radius: 6px; font-family: var(--font-mono); font-size: 12px; color: var(--success); cursor: pointer; word-break: break-all; border: 1px solid var(--border); transition: all 0.2s;" title="${this._txt('advGeetestClickToCopyCaptchaId', 'Click to copy captchaId')}">
                                 ${script.captchaId}
                             </div>
-                            ${script.product ? `<div style="margin-top: 8px; color: var(--text-secondary); font-size: 11px;">Product: <span style="color: var(--text-primary); font-weight: 500;">${FormatUtils.escapeHtml(script.product)}</span></div>` : ''}
+                            ${script.product ? `<div style="margin-top: 8px; color: var(--text-secondary); font-size: 11px;">${this._txt('advGeetestProductLabel', 'Product:')} <span style="color: var(--text-primary); font-weight: 500;">${FormatUtils.escapeHtml(script.product)}</span></div>` : ''}
                         </div>
                     ` : `
                         <div style="margin-bottom: 12px;">
                             ${script.gt ? `
                                 <div style="margin-bottom: 8px;">
                                     <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 4px; font-weight: 600;">gt</div>
-                                    <div class="clickable-copy-value" data-copy="${script.gt}" data-copy-message="Value copied" style="background: var(--bg-primary); padding: 8px; border-radius: 4px; font-family: monospace; font-size: 11px; color: var(--accent); cursor: pointer; word-break: break-all;" title="Click to copy">
+                                    <div class="clickable-copy-value" data-copy="${script.gt}" data-copy-message="${this._txt('advValueCopied', 'Value copied')}" style="background: var(--bg-primary); padding: 8px; border-radius: 4px; font-family: var(--font-mono); font-size: 11px; color: var(--accent); cursor: pointer; word-break: break-all;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">
                                         ${script.gt}
                                     </div>
                                 </div>
@@ -96,7 +96,7 @@ GeetestAdvanced.prototype.displayScriptsModal = function(scripts) {
                             ${script.challenge ? `
                                 <div>
                                     <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 4px; font-weight: 600;">challenge</div>
-                                    <div class="clickable-copy-value" data-copy="${script.challenge}" data-copy-message="Value copied" style="background: var(--bg-primary); padding: 8px; border-radius: 4px; font-family: monospace; font-size: 11px; color: var(--accent); cursor: pointer; word-break: break-all;" title="Click to copy">
+                                    <div class="clickable-copy-value" data-copy="${script.challenge}" data-copy-message="${this._txt('advValueCopied', 'Value copied')}" style="background: var(--bg-primary); padding: 8px; border-radius: 4px; font-family: var(--font-mono); font-size: 11px; color: var(--accent); cursor: pointer; word-break: break-all;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">
                                         ${script.challenge}
                                     </div>
                                 </div>
@@ -105,8 +105,8 @@ GeetestAdvanced.prototype.displayScriptsModal = function(scripts) {
                     `}
 
                     <div style="margin-top: 12px;">
-                        <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 6px; font-weight: 600;">Script Snippet</div>
-                        <div style="background: var(--bg-primary); border-radius: 4px; padding: 10px; font-family: monospace; font-size: 10px; color: var(--text-primary); max-height: 120px; overflow-y: auto; word-break: break-all; white-space: pre-wrap; border: 1px solid var(--border);">
+                        <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 6px; font-weight: 600;">${this._txt('advGeetestScriptSnippet', 'Script Snippet')}</div>
+                        <div style="background: var(--bg-primary); border-radius: 4px; padding: 10px; font-family: var(--font-mono); font-size: 10px; color: var(--text-primary); max-height: 120px; overflow-y: auto; word-break: break-all; white-space: pre-wrap; border: 1px solid var(--border);">
 ${AdvancedUtils.escapeHtml(script.snippet)}
                         </div>
                     </div>
@@ -119,8 +119,8 @@ ${AdvancedUtils.escapeHtml(script.snippet)}
         modal.innerHTML = `
             <div class="advanced-modal-container" style="max-width: 600px;">
                 <div style="flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🟣 Geetest Scripts (${scripts.length})</h3>
-                    <button class="advanced-modal-close-btn">×</button>
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">🟣 ${this._txt('advCommonScriptsTitleFmt', '{0} Scripts ({1})', 'Geetest', scripts.length)}</h3>
+                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
                 </div>
                 <div style="flex: 1; overflow-y: auto; padding-right: 8px;">
                     ${scriptItems}
@@ -129,14 +129,14 @@ ${AdvancedUtils.escapeHtml(script.snippet)}
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
                             <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M10,19L12,15H9V10H15V15L13,19H10Z"/>
                         </svg>
-                        Export Parsing Code
+                        ${this._txt('advGeetestExportParsingCode', 'Export Parsing Code')}
                     </button>
                 </div>
             </div>
         `;
 
         this.bindModalClose(modal);
-        this.bindCopyValueHandlers(modal, { defaultMessage: 'Value copied' });
+        this.bindCopyValueHandlers(modal, { defaultMessage: this._txt('advValueCopied', 'Value copied') });
         this.showToolModal(modal);
 
         document.addEventListener('keydown', (e) => {

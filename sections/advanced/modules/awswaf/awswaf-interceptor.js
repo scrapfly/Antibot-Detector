@@ -138,9 +138,10 @@ function handleAwsWafMessage(message, sender, sendResponse, captureState) {
           if (typeof showNotification === 'function') {
             Logger.network('[AwsWaf] Showing analyzing notification before reload...');
             await showNotification(message.tabId, {
+              module: 'AWS WAF',
               type: 'loading',
-              title: 'Analyzing AWS WAF Scripts',
-              message: 'Please wait while we collect script URLs...',
+              title: pageText('pageNoticeAnalyzingScriptsFmt', 'Analyzing {0} Scripts', 'AWS WAF'),
+              message: pageText('pageNoticeCollectingScripts', 'Please wait while we collect script URLs...'),
               duration: 15000 // Longer duration to persist through reload
             });
             Logger.network('[AwsWaf] Pre-reload notification shown successfully');

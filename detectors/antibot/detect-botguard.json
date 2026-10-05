@@ -5,18 +5,128 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2025-01-08 00:00:00",
-  "version": "1.1",
+  "lastUpdated": "2026-10-05",
+  "version": "2.0.0",
   "website": "https://developers.google.com/recaptcha",
   "icon": "custom.png",
   "description": "Google's proprietary bot detection system used in reCAPTCHA, YouTube, and other Google services",
   "detection": {
-    "cookie": [
+    "url": [
+      {
+        "id": "botguard-interpreter",
+        "confidence": 75,
+        "description": "BotGuard interpreter script (//www.google.com/js/th/<hash>.js)",
+        "text": "^https://www\\.google\\.com/js/th/[A-Za-z0-9_-]{30,60}\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      },
+      {
+        "id": "waa-create",
+        "confidence": 80,
+        "description": "Web Anti-Abuse (BotGuard) attestation RPC",
+        "text": "^https://jnn-pa\\.googleapis\\.com/\\$rpc/google\\.internal\\.waa\\.v1\\.Waa/(?:Create|GenerateIT)(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      }
     ],
-    "header": [],
-    "url": [],
-    "content": [],
-    "window": [],
-    "dom": []
-  }
+    "content": [
+      {
+        "id": "bg-challenge-reference",
+        "confidence": 10,
+        "description": "BotGuard challenge config key in page data",
+        "text": "bgChallenge",
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      },
+      {
+        "id": "bg-interpreter-reference",
+        "confidence": 10,
+        "standalone": false,
+        "description": "BotGuard interpreter URL key",
+        "text": "interpreterUrl",
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ],
+    "window": [
+      {
+        "id": "trayride-object",
+        "path": "trayride",
+        "condition": "exists",
+        "confidence": 50,
+        "standalone": false,
+        "description": "BotGuard VM global (globalName from bgChallenge)"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "botguard-attested",
+      "name": "Interpreter loaded and attestation sent",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "botguard-interpreter"
+          },
+          {
+            "pattern": "waa-create"
+          }
+        ]
+      }
+    },
+    {
+      "id": "botguard-challenge-config",
+      "name": "Interpreter with its challenge config",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "pattern": "botguard-interpreter"
+          },
+          {
+            "any": [
+              {
+                "pattern": "bg-challenge-reference"
+              },
+              {
+                "pattern": "bg-interpreter-reference"
+              },
+              {
+                "pattern": "trayride-object"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "botguard-runtime",
+      "name": "Attestation RPC with the BotGuard VM",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "pattern": "waa-create"
+          },
+          {
+            "any": [
+              {
+                "pattern": "trayride-object"
+              },
+              {
+                "pattern": "bg-challenge-reference"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

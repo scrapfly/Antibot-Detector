@@ -82,7 +82,7 @@ function checkAndFinalizeDetection(tabId) {
         const timeSinceStart = Date.now() - (currentState.startTime || 0);
         if (currentState.startTime && timeSinceStart < Constants.MIN_DETECTION_TIME && !currentState.hooksComplete) {
             const remainingMs = Constants.MIN_DETECTION_TIME - timeSinceStart;
-            Logger.background(`[Finalize] Waiting ${remainingMs}ms for minimum detection time (hooks not complete yet)`);
+            Logger.debug('SCAN', `Waiting ${remainingMs}ms for the minimum scan time`);
             const newTimeout = setTimeout(() => checkAndFinalizeDetection(tabId), remainingMs);
             finalizationDebounce.set(tabId, newTimeout);
             return;
@@ -104,13 +104,8 @@ function checkAndFinalizeDetection(tabId) {
         if (shouldFinalize) {
             const now = Date.now();
             const hooksDeadline = await ensureHooksDeadline(currentState);
-            const debugMode = await ensureDebugMode(currentState);
 
             if (!currentState.hooksComplete && !currentState.usedCache && now < hooksDeadline) {
-                if (debugMode) {
-                    const remaining = hooksDeadline - now;
-                    Logger.debug('BACKGROUND', `[checkAndFinalize] Deferring for hooks: ${remaining}ms until deadline`);
-                }
                 const remainingMs = hooksDeadline - now;
                 const delay = Math.min(remainingMs, 500);
                 const newTimeout = setTimeout(() => checkAndFinalizeDetection(tabId), delay);
@@ -124,9 +119,7 @@ function checkAndFinalizeDetection(tabId) {
                 currentState.hooksCompletionReason = currentState.hooksCompletionReason || 'deadline_timeout';
                 currentState.hooksCompletionTime = currentState.hooksCompletionTime || (now - (currentState.startTime || now));
                 markMethodComplete(tabId, 'jsHooks');
-                if (debugMode) {
-                    Logger.debug('BACKGROUND', `[checkAndFinalize] Hooks deadline reached, marking jsHooks complete`);
-                }
+                Logger.debug('SCAN', `Tab ${tabId}: hooks deadline reached`);
             }
 
             // Send final update - use actual completed count for accurate badge
@@ -161,6 +154,19 @@ function checkAndFinalizeDetection(tabId) {
     finalizationDebounce.set(tabId, timeout);
 }
 
+/**
+ * Final say for detectors that use combinations: score the merged matches
+ * (page, hooks, window properties) and drop the ones that do not hold.
+ * Every other detection passes through unchanged.
+ */
+function rescoreCombinations(detection) {
+    if (typeof DetectionCombinations === 'undefined') return !detection?.partial;
+    const id = detection?.detector?.id || detection?.id;
+    const definition = id && detectorManager?.findDetectorById ? detectorManager.findDetectorById(id) : null;
+    if (!definition) return !detection?.partial;
+    return DetectionCombinations.rescore(definition, detection);
+}
+
 async function finalizeDetection(tabId, state) {
     // Prevent progress updates from overriding the final badge
     state.finalized = true;
@@ -174,7 +180,7 @@ async function finalizeDetection(tabId, state) {
     if (state.interrupted || interruptedDetections.has(tabId)) {
         detectionStates.delete(tabId);
         activeDetections.delete(tabId);
-        Logger.background(`[Finalize] Detection interrupted for tab ${tabId}, cleaned up state`);
+        Logger.debug('SCAN', `Tab ${tabId}: scan interrupted, state cleared`);
         return;
     }
 
@@ -211,7 +217,7 @@ async function finalizeDetection(tabId, state) {
         }
     }
 
-    let finalResults = Array.from(mergedDetections.values());
+    let finalResults = Array.from(mergedDetections.values()).filter(rescoreCombinations);
     const normalizedFavicon = UrlUtils.normalizeFaviconForStorage(state.favicon, state.url);
 
     // Store to cache
@@ -226,7 +232,7 @@ async function finalizeDetection(tabId, state) {
 
     if (preservedExistingCache && storedDataWithExpiry.detectionResults?.length > 0) {
         finalResults = storedDataWithExpiry.detectionResults;
-        Logger.background(`[Finalize] Preserved existing positive cache for tab ${tabId}; suppressing empty re-detection result`);
+        Logger.detection(`${Logger.hostOf(state.url)}: rescan found nothing, kept the cached detections`);
     }
 
     // Update state with expiry info for immediate popup queries
@@ -236,15 +242,24 @@ async function finalizeDetection(tabId, state) {
         state.favicon = storedDataWithExpiry.favicon;
     }
 
+    // One readable block per page in Debug mode (replaces the per-step lines)
+    if (typeof ScanReport !== 'undefined') {
+        ScanReport.log(state.url, finalResults, state);
+    }
+
     // Update badge with appropriate color
     await setBadgeForDetections(tabId, state.url, finalResults);
 
-    // Notify popup
+    // Notify popup (with the cache fields it shows: expiry, scope, favicon)
     chrome.runtime.sendMessage({
         type: 'NEW_DETECTION_DATA',
         tabId: tabId,
         url: state.url,
-        detectionResults: finalResults
+        detectionResults: finalResults,
+        expiry: storedDataWithExpiry?.expiry,
+        timestamp: storedDataWithExpiry?.timestamp,
+        cacheScope: storedDataWithExpiry?.cacheScope,
+        favicon: storedDataWithExpiry?.favicon
     }).catch(() => {
         // Expected: Popup may not be open
     });
@@ -260,7 +275,7 @@ async function finalizeDetection(tabId, state) {
         });
     } catch (error) {
         // Expected: Tab may have been closed or content script not ready
-        Logger.background(`[Finalize] Could not notify content script for JS API: ${error.message}`);
+        Logger.debug('SCAN', `Tab ${tabId} closed before the JS API event: ${error.message}`);
     }
 
     // Save complete detections (includes hooks/fingerprints) to history
@@ -469,15 +484,6 @@ async function processDetectionData(message, sender) {
             sameSite: cookie.sameSite
         }));
 
-        // Log enhancement details
-        if (typeof Logger !== 'undefined') {
-            Logger.cache(`Enhanced cookie collection via chrome.cookies API`, {
-                documentCookies: pageData.cookies?.length || 0,
-                allCookies: pageData.allCookies.length,
-                httpOnlyCount: pageData.allCookies.filter(c => c.httpOnly).length,
-                secureCount: pageData.allCookies.filter(c => c.secure).length
-            });
-        }
     } catch (error) {
         if (typeof Logger !== 'undefined') {
             Logger.error('CACHE', 'Failed to get cookies via chrome.cookies API', error);
@@ -501,82 +507,59 @@ async function processDetectionData(message, sender) {
         try {
             const startTime = Date.now();
 
-            // LOG: Show all network URLs being passed to detection
-            if (pageData.networkUrls && pageData.networkUrls.length > 0) {
-                Logger.background(`[Network URLs] Passing ${pageData.networkUrls.length} URLs to detection engine:`);
-                pageData.networkUrls.forEach((urlObj, index) => {
-                    Logger.background(`  ${index + 1}. ${urlObj.url} | Type: ${urlObj.type} | Method: ${urlObj.method}`);
-                });
-            } else {
-                Logger.background(`[Network URLs] No network URLs available for detection!`);
-            }
-
-            const detectionPromise = Promise.resolve(detectionEngine.detectOnPage(pageData));
+            // Partly matched combinations are kept; finalize decides them
+            // once hooks and window properties have arrived
+            const detectionPromise = Promise.resolve(detectionEngine.detectOnPage(pageData, { includePartial: true }));
             const timeoutPromise = new Promise((_, reject) =>
                 setTimeout(() => reject(new Error('Detection timeout')), Constants.DETECTION_TIMEOUT)
             );
             detectionResults = await Promise.race([detectionPromise, timeoutPromise]);
 
             const elapsed = Date.now() - startTime;
-            Logger.background(`[processDetectionData] Main detection completed in ${elapsed}ms: ${detectionResults.length} detectors found`);
+            Logger.debug('SCAN', `Matched in ${elapsed}ms: ${detectionResults.length} hits before hooks and window checks`);
 
             // Mark each main detection method complete
             const mainMethods = ['cookies', 'headers', 'url', 'dom', 'payload'];
             for (const method of mainMethods) {
                 markMethodComplete(tabId, method);
             }
-            Logger.background(`[processDetectionData] Main methods marked complete for tab ${tabId}`);
-
-            // Log what was detected
-            if (detectionResults.length > 0) {
-                detectionResults.forEach(det => {
-                    const methods = det.matches?.map(m => m.type).filter((v, i, a) => a.indexOf(v) === i) || [];
-                    Logger.background(`[processDetectionData]   - ${det.detector?.name}: ${methods.join(', ')} (${det.matches?.length || 0} matches)`);
-                });
-            }
         } catch (error) {
             const errorType = error.message.includes('timeout') ? 'TIMEOUT' : 'ERROR';
-            Logger.error('BACKGROUND', `[processDetectionData] Main detection ${errorType} for tab ${tabId}:`, error.message);
-            Logger.error('BACKGROUND', `[processDetectionData] Stack:`, error.stack);
-            Logger.error('BACKGROUND', `[processDetectionData] Continuing with empty results - only window props and hooks will be preserved`);
+            Logger.error('SCAN', `Matching ${errorType === 'TIMEOUT' ? 'timed out' : 'failed'} on ${Logger.hostOf(pageData.url)}; keeping hook and window results only`, error);
             detectionResults = []; // Continue with empty results - JS hooks and window props will still be preserved
         }
-
-        Logger.background(`Scrapfly Background: Detected ${detectionResults.length} security systems via main detection`);
 
         // Check if detection was aborted (tab switch occurred)
         const detectionInfo = activeDetections.get(tabId);
         if (detectionInfo && detectionInfo.abortController.signal.aborted) {
-            Logger.background(`[Detection] Detection for tab ${tabId} was aborted - skipping result storage`);
+            Logger.debug('SCAN', `Tab ${tabId}: scan aborted, results dropped`);
             return; // Don't store results or finalize
         }
 
         // Also check if tab is marked as interrupted
         if (interruptedDetections.has(tabId)) {
-            Logger.background(`[Detection] Detection for tab ${tabId} is interrupted - skipping result storage`);
+            Logger.debug('SCAN', `Tab ${tabId}: scan interrupted, results dropped`);
             return; // Don't store results or finalize
         }
 
         // Store main detection and check if ready to finalize
-        Logger.background(`[processDetectionData] Getting/creating state for tab ${tabId}`);
         const state = getOrCreateDetectionState(tabId, pageData.url);
+        // Counts and timing for the scan report (background/scan-report.js)
+        state.stats = {
+            ...(detectionEngine.lastStats || {}),
+            cookies: (pageData.allCookies || pageData.cookies || []).length,
+            headers: Object.keys(pageData.responseHeaders || pageData.headers || {}).length,
+            collectMs: typeof pageData.collectMs === 'number' ? pageData.collectMs : undefined
+        };
 
         // Store tabTitle in state for use when saving to history
         if (!state.tabTitle && pageData.tabTitle) {
             state.tabTitle = pageData.tabTitle;
-            Logger.background(`[processDetectionData] Stored tabTitle in state: "${state.tabTitle}"`);
         }
-
-        Logger.background(`[processDetectionData] Current state before storing:`, {
-            completedMethods: Array.from(state.completedMethods || []),
-            completedCount: state.completedMethods?.size || 0,
-            url: state.url,
-            tabTitle: state.tabTitle
-        });
 
         // URL validation: Ensure URL hasn't changed during detection
         if (state.url !== pageData.url) {
-            Logger.background(`[Detection] URL changed during detection for tab ${tabId}: ${pageData.url} → ${state.url} - skipping result storage`);
+            Logger.debug('SCAN', `Tab ${tabId} navigated during the scan (${pageData.url} → ${state.url}); results dropped`);
             return; // Don't store results for the wrong URL
         }
 
@@ -630,20 +613,16 @@ async function processDetectionData(message, sender) {
         state.mainData = Array.from(existingDetections.values());
         state.mainComplete = true;
 
-        Logger.background(`[processDetectionData] Main detection complete: ${detectionResults.length} detectors`);
-
         // Final badge is set in finalizeDetection() after cache write
 
         // 5s safety timeout to force finalization if signals are stuck
         setTimeout(async () => {
             const currentState = detectionStates.get(tabId);
             if (!currentState) {
-                Logger.background(`[5s Safety Timeout] Tab ${tabId} state already cleaned up`);
                 return;
             }
 
             if (currentState.finalized) {
-                Logger.background(`[5s Safety Timeout] Tab ${tabId} already finalized, no action needed`);
                 return;
             }
 
@@ -684,7 +663,7 @@ async function processDetectionData(message, sender) {
             // Check if detection data is already stored
             const storedData = await DetectionEngineManager.getStoredDetection(currentState.url);
             if (storedData) {
-                Logger.background(`[5s safety] Detection already stored for tab ${tabId}, finalizing`);
+                Logger.debug('SCAN', `Safety timeout: finalizing tab ${tabId}`);
                 await finalizeDetection(tabId, currentState);
                 return;
             }
@@ -701,20 +680,9 @@ async function processDetectionData(message, sender) {
         // Check if all methods are done
         checkAndFinalizeDetection(tabId);
 
-        Logger.detection('[processDetectionData] Skipping early history save - will save complete data during finalization');
     } catch (error) {
-        Logger.error('BACKGROUND', 'Scrapfly Background: Error running detection:', error);
+        Logger.error('SCAN', `Scan failed on ${Logger.hostOf(pageData?.url)}`, error);
     }
-
-    Logger.background(`Scrapfly Background: Processed detection data for tab ${tabId}`, {
-        url: pageData.url,
-        cookies: pageData.cookies.length,
-        content: pageData.content?.length || 0,
-        externalContent: pageData.externalContent?.length || 0,
-        dom: pageData.dom.length,
-        headers: Object.keys(pageData.headers || {}).length,
-        detections: detectionResults.length
-    });
 
     // Defer popup notification until finalization with complete results
 

@@ -15,9 +15,10 @@ function handleTurnstileMessage(request, sender, sendResponse) {
                 try {
                     if (typeof showNotification === 'function') {
                         await showNotification(request.tabId, {
+                            module: 'Turnstile',
                             type: 'loading',
-                            title: 'Analyzing Turnstile Scripts',
-                            message: 'Please wait while we collect script URLs...',
+                            title: pageText('pageNoticeAnalyzingScriptsFmt', 'Analyzing {0} Scripts', 'Turnstile'),
+                            message: pageText('pageNoticeCollectingScripts', 'Please wait while we collect script URLs...'),
                             duration: 15000
                         });
                     }

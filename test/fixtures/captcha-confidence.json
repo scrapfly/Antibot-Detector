@@ -1,0 +1,94 @@
+{
+  "detect-aliexpress": {
+    "aliexpress-punish-route": { "url": "https://www.aliexpress.com/_____tmd_____/punish" },
+    "aliexpress-punish-data": { "url": "https://www.aliexpress.com/_____tmd_____/punish?x5secdata=sample" },
+    "aliexpress-punish-step": { "url": "https://www.aliexpress.com/_____tmd_____/punish?x5step=1" },
+    "aliexpress-punish-script-url": { "url": "https://g.alicdn.com/bsop-static/sufei-punish/0.1.114/build/punishpage.min.js" },
+    "aliexpress-source-x5secdata": { "source": "const parameter = 'x5secdata';" }
+  },
+  "detect-captchaeu": {
+    "captchaeu-sdk-url": { "url": "https://www.captcha.eu/sdk.js" },
+    "captchaeu-challenge-request": { "url": "https://www.captcha.eu/challenge?publicSecret=x" },
+    "captchaeu-krot-reference": { "source": "KROT.setup({});" },
+    "captchaeu-solution-field": { "dom": { "tagName": "input", "attributes": { "type": "hidden", "name": "captcha_at_solution" } } },
+    "captchaeu-krot-setup": { "runtimeType": "function" },
+    "captchaeu-krot-get-solution": { "runtimeType": "function" },
+    "captchaeu-krot-intercept-form": { "runtimeType": "function" }
+  },
+  "detect-friendlycaptcha": {
+    "frc-v1-sdk-url": { "url": "https://cdn.jsdelivr.net/npm/friendly-challenge@0.9.19/widget.module.min.js" },
+    "frc-v2-sdk-url": { "url": "https://cdn.jsdelivr.net/npm/@friendlycaptcha/sdk@0.1.36/site.min.js" },
+    "frc-v1-puzzle-url": { "url": "https://api.friendlycaptcha.com/api/v1/puzzle?sitekey=x" },
+    "frc-v2-captcha-url": { "url": "https://global.frcapi.com/api/v2/captcha" },
+    "frc-v1-script-reference": { "source": "new friendlyChallenge.WidgetInstance(element);" },
+    "frc-v2-script-reference": { "source": "new FriendlyCaptchaSDK();" },
+    "frc-container": { "dom": { "tagName": "div", "class": "frc-captcha", "attributes": { "class": "frc-captcha" } } },
+    "frc-configured-widget": { "dom": { "tagName": "div", "class": "frc-captcha", "attributes": { "class": "frc-captcha", "data-sitekey": "sitekey" } } },
+    "frc-v1-solution-field": { "dom": { "tagName": "input", "attributes": { "type": "hidden", "name": "frc-captcha-solution" } } },
+    "frc-v2-response-field": { "dom": { "tagName": "input", "attributes": { "type": "hidden", "name": "frc-captcha-response" } } },
+    "frc-v1-widget-constructor": { "runtimeType": "function" }
+  },
+  "detect-funcaptcha": {
+    "arkose-client-api": { "url": "https://client-api.arkoselabs.com/v2/ABC-123/api.js" },
+    "funcaptcha-legacy-api": { "url": "https://api.funcaptcha.com/fc/api/nojs/" },
+    "arkose-enforcement-frame": { "url": "https://client-api.arkoselabs.com/v2/4.5.0/enforcement.6a42ce4b02e195996302a5c519bb8c52.html" },
+    "arkose-session-request": { "url": "https://client-api.arkoselabs.com/fc/gt2/public_key/476068BF-9607-4799-B53D-966BE98E2B81" },
+    "funcaptcha-source-reference": { "source": "const provider = 'funcaptcha';" },
+    "funcaptcha-container": { "dom": { "tagName": "div", "id": "FunCaptcha", "attributes": { "id": "FunCaptcha" } } },
+    "funcaptcha-challenge-frame": { "dom": { "tagName": "iframe", "src": "https://client-api.arkoselabs.com/fc/challenge", "attributes": { "src": "https://client-api.arkoselabs.com/fc/challenge" } } }
+  },
+  "detect-geetest": {
+    "geetest-v3-resource": { "url": "https://static.geetest.com/static/js/gt.0.5.0.js" },
+    "geetest-v3-api": { "url": "https://api.geetest.com/gettype.php?gt=x" },
+    "geetest-v4-resource": { "url": "https://static.geetest.com/v4/gt4.js" },
+    "geetest-v4-api": { "url": "https://gcaptcha4.geetest.com/load?captcha_id=x" },
+    "geetest-v3-init-reference": { "source": "initGeetest({});" },
+    "geetest-v4-init-reference": { "source": "initGeetest4({});" },
+    "geetest-v3-widget": { "dom": { "tagName": "div", "class": "geetest_holder geetest_wind geetest_fallback geetest_ready", "attributes": { "class": "geetest_holder geetest_wind geetest_fallback geetest_ready" } } },
+    "geetest-v4-widget": { "dom": { "tagName": "div", "class": "geetest_captcha_dee95b24 geetest_captcha geetest_float", "attributes": { "class": "geetest_captcha_dee95b24 geetest_captcha geetest_float" } } },
+    "geetest-v3-init-runtime": { "runtimeType": "function" },
+    "geetest-v4-init-runtime": { "runtimeType": "function" }
+  },
+  "detect-hcaptcha": {
+    "hcaptcha-api-resource": { "url": "https://js.hcaptcha.com/1/api.js?render=explicit" },
+    "hcaptcha-challenge-api": { "url": "https://api.hcaptcha.com/checksiteconfig?v=05219f0822161da4c4a6f3aed6bf6d6fae1ba8e1&host=example.com&sitekey=10000000-ffff-ffff-ffff-000000000001" },
+    "hcaptcha-script-reference": { "source": "hcaptcha.render(element);" },
+    "hcaptcha-configured-widget": { "dom": { "tagName": "div", "class": "h-captcha", "attributes": { "class": "h-captcha", "data-sitekey": "10000000-ffff-ffff-ffff-000000000001" } } },
+    "hcaptcha-widget-frame": { "dom": { "tagName": "iframe", "src": "https://newassets.hcaptcha.com/captcha/v1/test/static/hcaptcha.html", "attributes": { "src": "https://newassets.hcaptcha.com/captcha/v1/test/static/hcaptcha.html" } } },
+    "hcaptcha-runtime-object": { "runtimeType": "object" },
+    "hcaptcha-runtime-render": { "runtimeType": "function" },
+    "hcaptcha-runtime-execute": { "runtimeType": "function" }
+  },
+  "detect-qcloud": {
+    "qcloud-sdk": { "url": "https://turing.captcha.qcloud.com/TCaptcha.js" },
+    "qcloud-prehandle": { "url": "https://turing.captcha.qcloud.com/cap_union_prehandle?aid=2046626881&protocol=https&clientype=2" },
+    "qcloud-constructor-reference": { "source": "new TencentCaptcha('appid', callback);" },
+    "qcloud-sdk-reference": { "source": "const sdk = 'TCaptcha.js';" },
+    "qcloud-challenge-frame": { "dom": { "tagName": "iframe", "src": "https://turing.captcha.qcloud.com/template/placeholder_v2.html", "attributes": { "src": "https://turing.captcha.qcloud.com/template/placeholder_v2.html" } } },
+    "qcloud-constructor": { "runtimeType": "function" }
+  },
+  "detect-recaptcha": {
+    "google-sdk": { "url": "https://www.google.com/recaptcha/api.js" },
+    "configured-sdk": { "url": "https://www.google.com/recaptcha/api.js?render=6Lc_test-123" },
+    "configured-enterprise-sdk": { "url": "https://www.google.com/recaptcha/enterprise.js?render=6Lc_test-123" },
+    "google-runtime": { "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMzwgr6KUGswGxeS/recaptcha__en.js" },
+    "google-frame-request": { "url": "https://www.google.com/recaptcha/api2/anchor?ar=1&k=6Lc_test&co=aHR0cHM6Ly9leGFtcGxlLnRlc3Q6NDQz&hl=en&size=invisible" },
+    "grecaptcha-reference": { "source": "grecaptcha.render(element);" },
+    "widget-reference": { "source": "const widgetClass = 'g-recaptcha';" },
+    "configured-widget": { "dom": { "tagName": "div", "class": "g-recaptcha", "attributes": { "class": "g-recaptcha", "data-sitekey": "6Lc_test" } } },
+    "google-frame": { "dom": { "tagName": "iframe", "src": "https://www.google.com/recaptcha/api2/anchor?k=6Lc_test", "attributes": { "src": "https://www.google.com/recaptcha/api2/anchor?k=6Lc_test" } } },
+    "standard-render-api": { "runtimeType": "function" },
+    "standard-execute-api": { "runtimeType": "function" },
+    "enterprise-render-api": { "runtimeType": "function" },
+    "enterprise-execute-api": { "runtimeType": "function" }
+  },
+  "detect-turnstile": {
+    "turnstile-api-resource": { "url": "https://challenges.cloudflare.com/turnstile/v0/api.js?compat=recaptcha" },
+    "turnstile-widget-frame-url": { "url": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/if/ov2/av0/rcv/abc12/0x4AAAAAAAtest/light/fbE/new/normal/auto/" },
+    "turnstile-script-reference": { "source": "turnstile.render('#widget', { sitekey: key });" },
+    "turnstile-configured-widget": { "dom": { "tagName": "div", "class": "cf-turnstile", "attributes": { "class": "cf-turnstile", "data-sitekey": "1x00000000000000000000AA" } } },
+    "turnstile-response-field": { "dom": { "tagName": "input", "attributes": { "type": "hidden", "name": "cf-turnstile-response" } } },
+    "turnstile-runtime-render": { "runtimeType": "function" },
+    "turnstile-runtime-execute": { "runtimeType": "function" }
+  }
+}

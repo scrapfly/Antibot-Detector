@@ -82,7 +82,7 @@ jobs:
             -x ".git/*" ".github/*" ".claude/*" "artifact/*" \
             "CHANGELOG.md" "README.md" "LICENSE" ".gitignore" \
             "CLAUDE.md" "AGENTS.md" "MEMORY.md" \
-            "docs/*" "assets/*" "scripts/*" \
+            "docs/*" "assets/store-screenshots/*" "scripts/*" \
             "test/*" "plans/*" "node_modules/*" "logs/*" \
             "package.json" "package-lock.json" "*.test.js"
 
@@ -122,15 +122,23 @@ jobs:
           echo >> /tmp/CHANGELOG.md
 
           if [ -f CHANGELOG.md ]; then
-            pattern="^##[[:space:]]*${TAG}([[:space:]]|$)"
+            # Keep a Changelog headings ("## [2.8] - 2026-10-05") and the older "## v2.7" style.
+            VER="${TAG#v}"
+            VER_RE="${VER//./[.]}"
+            pattern="^##[[:space:]]*([[]${VER_RE}[]]|v${VER_RE})([[:space:]]|$)"
 
             awk -v pat="$pattern" '
-              $0 ~ pat {flag=1; next}           # start AFTER the "## vX.Y" line
-              /^##[[:space:]]*v[0-9]/ && flag { # stop at next "## v..." heading
-                flag=0
-              }
-              flag                              # print while flag == 1
-            ' CHANGELOG.md >> /tmp/CHANGELOG.md || echo "Changelog section not found." >> /tmp/CHANGELOG.md
+              $0 ~ pat {flag=1; next}                       # start AFTER the version heading
+              flag && /^##[[:space:]]*(\[|v[0-9])/ {flag=0} # stop at the next version heading
+              flag && /^\[[^]]+\]:[[:space:]]*http/ {flag=0} # or at the compare-link footer
+              flag                                          # print while flag == 1
+            ' CHANGELOG.md > /tmp/SECTION.md
+
+            if grep -q '[^[:space:]]' /tmp/SECTION.md; then
+              cat /tmp/SECTION.md >> /tmp/CHANGELOG.md
+            else
+              echo "Changelog section not found." >> /tmp/CHANGELOG.md
+            fi
           else
             PREV_TAG=$(git describe --tags --abbrev=0 "${TAG}^" 2>/dev/null || echo "")
             if [ -n "$PREV_TAG" ]; then

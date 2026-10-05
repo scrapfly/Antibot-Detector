@@ -1,0 +1,98 @@
+/* Popup-only layout. The header stays outside the single main scrollport.
+   Do not load this stylesheet in the full-page statistics dashboard. */
+#app > .main {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+/* A tab is natural-height content, never another viewport. Its minimum
+   fills the main scrollport so loading and paused states remain centered. */
+#app > .main > .tab-content {
+  flex: 0 0 auto;
+  height: auto;
+  min-height: 100%;
+  max-height: none;
+  overflow: visible;
+  padding-bottom: 12px;
+}
+
+/* Primary paginated tabs end flush with the scrollport. Other tabs retain
+   their content spacing, and footer visibility remains runtime-controlled. */
+#app > .main > #detectionTab,
+#app > .main > #historyTab,
+#app > .main > #rulesTab {
+  padding-bottom: 0;
+}
+
+/* Release only main-tab layout wrappers. Modal bodies, textareas, code,
+   menus and capture detail viewers keep their independent scrolling. */
+#app > .main > #detectionTab > #detectionResults,
+#app > .main > #detectionTab > #detectionResults > #resultsList,
+#app > .main > #historyTab > .history-list,
+#app > .main > #rulesTab > .rules-list,
+#app > .main > #advancedTab > #advancedContent {
+  flex: 0 0 auto;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+  scrollbar-gutter: auto;
+}
+
+/* Detection results fill the tab, so a short last page still ends with its
+   pagination at the bottom of the popup instead of right under the cards. */
+#app > .main > #detectionTab > #detectionResults {
+  flex: 1 0 auto;
+}
+
+/* Let the no-tools screen use the tab's spare height without changing the
+   natural-height layout of available tools or the capture-history view. */
+#app > .main > #advancedTab > #advancedContent.is-no-tools:not(.is-captures-view) {
+  flex: 1 0 auto;
+  /* Balance the shared tab's 2px top inset against its 12px bottom inset. */
+  padding-top: 10px;
+}
+
+#app > .main > #advancedTab > #advancedContent.is-no-tools:not(.is-captures-view) > #toolsPanel.active {
+  padding: 0;
+}
+
+#app > .main > #advancedTab > #advancedContent.is-no-tools:not(.is-captures-view) > #toolsPanel.active > .captcha-tools-section--empty > .advanced-no-tools {
+  padding: 12px 0;
+}
+
+/* Center empty history below its sub-tabs, not populated capture controls. */
+#app > .main > #advancedTab > #advancedContent.is-captures-view.is-capture-history-empty {
+  flex: 1 0 auto;
+}
+
+/* Keep primary page controls available even while their preceding cards scroll.
+   Sticky positioning retains their normal flow space, so the last card can
+   scroll fully above the footer. Never target helper or modal pagination. */
+#app > .main > #detectionTab > #detectionResults > #detectionPagination,
+#app > .main > #historyTab > #historyPagination,
+#app > .main > #rulesTab > #rulesPagination {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  flex-shrink: 0;
+  background: var(--bg-secondary);
+  box-shadow: 0 -6px 0 var(--bg-primary);
+}
+
+/* Do not allow an oversized state card to shrink or clip its recovery action.
+   The tab fills the viewport, and these states consume its spare space. */
+#app > .main > #detectionTab > .loading-state,
+#app > .main > .tab-content > .empty-state--centered,
+#app > .main > #advancedTab > .advanced-loading {
+  flex: 1 0 auto;
+}
+
+/* Advanced navigation belongs to the scrolling tab content, not a second
+   sticky header overlaying the capture controls. */
+#app > .main > #advancedTab > #advancedContent > .advanced-sub-tabs {
+  position: static;
+}

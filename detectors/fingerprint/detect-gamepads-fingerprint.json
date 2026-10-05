@@ -5,62 +5,111 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2025-01-21",
-  "version": "1.0",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API",
   "icon": "gamepads_fingerprint.png",
-  "description": "Gamepads API for detecting connected input devices and device capabilities",
+  "description": "Gamepad enumeration and device identity or control-layout reads; ordinary games can produce the same evidence",
   "detection": {
     "js_hooks": [
       {
-        "description": "Gets connected gamepad devices",
+        "id": "js_hooks-1",
+        "description": "Requests connected gamepads; returned devices and caller intent are unknown",
         "enabled": true,
-        "confidence": 80,
+        "standalone": true,
+        "confidence": 20,
         "target": "Navigator.prototype.getGamepads"
       },
       {
-        "description": "Listens for gamepad connection events",
+        "id": "hook-gamepad-id",
+        "description": "Reads a gamepad device identifier",
         "enabled": true,
-        "confidence": 75,
-        "target": "EventTarget.prototype.addEventListener",
-        "windowPath": "Window"
-      }
-    ],
-    "window": [
+        "standalone": true,
+        "confidence": 15,
+        "target": "Gamepad.prototype.id"
+      },
       {
-        "path": "navigator.getGamepads",
-        "description": "Gamepads API access point",
-        "condition": "typeof function"
+        "id": "hook-gamepad-mapping",
+        "description": "Reads a gamepad control-mapping classification",
+        "enabled": true,
+        "standalone": true,
+        "confidence": 10,
+        "target": "Gamepad.prototype.mapping"
+      },
+      {
+        "id": "hook-gamepad-axes",
+        "description": "Reads gamepad axes; values and array length are not observed",
+        "enabled": true,
+        "standalone": true,
+        "confidence": 5,
+        "target": "Gamepad.prototype.axes"
+      },
+      {
+        "id": "hook-gamepad-buttons",
+        "description": "Reads gamepad buttons; values and array length are not observed",
+        "enabled": true,
+        "standalone": true,
+        "confidence": 5,
+        "target": "Gamepad.prototype.buttons"
       }
     ],
     "content": [
       {
+        "id": "content-1",
         "text": "getGamepads",
         "scope": "scripts",
-        "description": "Gamepad detection in scripts",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to getGamepads (usage and intent unconfirmed)",
+        "confidence": 10,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true
       },
       {
+        "id": "content-2",
         "text": "gamepadconnected",
         "scope": "scripts",
-        "description": "Gamepad connection event listeners",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to gamepadconnected (usage and intent unconfirmed)",
+        "confidence": 5,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true
       },
       {
+        "id": "content-3",
         "text": "Gamepad",
         "scope": "scripts",
-        "description": "Gamepad interface usage",
-        "confidence": 50,
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to Gamepad (usage and intent unconfirmed)",
+        "confidence": 5,
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "gamepad-enumeration-identity",
+      "name": "Gamepad enumeration and identifier access",
+      "confidence": 30,
+      "when": { "all": [{ "pattern": "js_hooks-1" }, { "pattern": "hook-gamepad-id" }] }
+    },
+    {
+      "id": "gamepad-identity-mapping",
+      "name": "Gamepad enumeration, identifier and mapping access",
+      "confidence": 35,
+      "when": { "all": [{ "pattern": "js_hooks-1" }, { "pattern": "hook-gamepad-id" }, { "pattern": "hook-gamepad-mapping" }] }
+    },
+    {
+      "id": "gamepad-identity-controls",
+      "name": "Gamepad identity, mapping and control-array access",
+      "confidence": 45,
+      "when": { "all": [{ "pattern": "js_hooks-1" }, { "pattern": "hook-gamepad-id" }, { "pattern": "hook-gamepad-mapping" }, { "pattern": "hook-gamepad-axes" }, { "pattern": "hook-gamepad-buttons" }] }
+    }
+  ]
 }

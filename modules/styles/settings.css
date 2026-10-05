@@ -6,163 +6,6 @@
   to { transform: rotate(360deg); }
 }
 
-/* Modal Header (uses base-modal-content from popup.css) */
-.base-modal-content .modal-header {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 14px 24px;
-  flex-shrink: 0;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.base-modal-content .header-content {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  flex: 1;
-  min-width: 0;
-  margin-bottom: 0;
-}
-
-.base-modal-content .header-content h2 {
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.25;
-  margin: 0;
-  color: var(--text-primary);
-}
-
-.base-modal-content .modal-subtitle {
-  font-size: 11px;
-  line-height: 1.35;
-  color: var(--text-muted);
-  margin: 0;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  max-width: 100%;
-}
-
-/* .close-btn base styles now in common.css */
-/* Settings-specific sizing (layout handled by .modal-header flex row) */
-.close-btn {
-  width: 26px;
-  height: 26px;
-}
-
-/* Tab Navigation — 400px popup: IT/DE/FR labels overflow; thin neutral scrollbar (not accent) */
-.settings-tabs {
-  display: flex;
-  gap: 0;
-  padding: 0 2px;
-  background: var(--bg-secondary);
-  overflow-x: auto;
-  overflow-y: hidden;
-  flex-shrink: 0;
-  min-height: 34px;
-  align-items: flex-end;
-  width: 100%;
-  box-sizing: border-box;
-  justify-content: flex-start;
-  border-bottom: 1px solid var(--border);
-  scroll-snap-type: x proximity;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border-light) var(--bg-secondary);
-}
-
-.settings-tabs::-webkit-scrollbar {
-  height: 4px;
-}
-
-.settings-tabs::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-}
-
-.settings-tabs::-webkit-scrollbar-thumb {
-  background: var(--border-light);
-  border-radius: 2px;
-}
-
-.settings-tabs::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
-}
-
-.settings-tab-btn {
-  padding: 6px 7px 5px;
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  border-radius: 0;
-  color: var(--text-secondary);
-  font-size: 10px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
-  white-space: nowrap;
-  flex: 0 0 auto;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  margin-bottom: -1px;
-  scroll-snap-align: start;
-}
-
-.settings-tab-btn:hover {
-  color: var(--text-primary);
-  background: var(--bg-tertiary);
-}
-
-.settings-tab-btn.active {
-  background: transparent;
-  color: var(--accent);
-  font-weight: 600;
-  border-bottom-color: var(--accent);
-}
-
-.settings-tab-btn.active svg {
-  color: var(--accent);
-}
-
-.settings-tab-btn svg {
-  width: 11px;
-  height: 11px;
-  flex-shrink: 0;
-}
-
-/* Tab Content */
-.settings-tab-content {
-  display: none;
-  max-width: 100%;
-  box-sizing: border-box;
-  overflow: hidden;
-  min-height: 360px;  /* Ensure consistent height across all tabs */
-}
-
-.settings-tab-content[data-tab-content="general"] {
-  overflow: visible;
-}
-
-.settings-tab-content.active {
-  display: block;
-  animation: fadeIn 0.3s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .modal-body {
   padding: 16px 20px;
   flex: 1 1 auto;
@@ -351,7 +194,7 @@
 
 .color-hex-display {
   font-size: 13px;
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   color: var(--text-secondary);
   padding: 6px 10px;
   background: var(--bg-tertiary);
@@ -488,25 +331,6 @@ input[type="file"] {
   flex-shrink: 0;
 }
 
-.notification-close {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  font-size: 16px;
-  padding: 4px;
-  border-radius: 4px;
-  transition: all 0.2s;
-  flex-shrink: 0;
-}
-
-.notification-close:hover {
-  background: var(--danger);
-  border-color: var(--danger);
-  color: white;
-  transform: scale(1.05);
-}
-
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -610,80 +434,6 @@ input[type="file"] {
   box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
 }
 
-/* Data Tab Icon Buttons */
-.data-actions-row {
-  display: flex;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.data-icon-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.2s;
-  padding: 0;
-  border: none;
-}
-
-.data-icon-btn:hover {
-  transform: scale(1.1);
-}
-
-.data-icon-btn:active {
-  transform: scale(0.95);
-}
-
-.data-icon-btn svg {
-  width: 16px;
-  height: 16px;
-}
-
-/* Export button - Gray */
-.data-icon-btn.data-export-btn {
-  background: rgba(148, 163, 184, 0.18);
-  border: 1px solid rgba(148, 163, 184, 0.32);
-  color: #d1d5db;
-}
-
-.data-icon-btn.data-export-btn svg,
-.data-icon-btn.data-export-btn svg path {
-  color: #d1d5db;
-  fill: #d1d5db;
-}
-
-.data-icon-btn.data-export-btn:hover {
-  background: rgba(148, 163, 184, 0.28);
-}
-
-.data-icon-btn.data-export-btn:hover svg,
-.data-icon-btn.data-export-btn:hover svg path {
-  color: #f8fafc;
-  fill: #f8fafc;
-}
-
-/* Import button - Blue */
-.data-icon-btn.data-import-btn {
-  background: var(--accent);
-  border: 1px solid var(--accent);
-  color: #ffffff;
-}
-
-.data-icon-btn.data-import-btn svg,
-.data-icon-btn.data-import-btn svg path {
-  color: #ffffff;
-  fill: #ffffff;
-}
-
-.data-icon-btn.data-import-btn:hover {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
-}
-
 /* Global box-sizing now in common.css */
 
 .modal-content *,
@@ -725,7 +475,7 @@ input[type="file"] {
 }
 
 .api-event-item code {
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   font-size: 12px;
   color: var(--accent);
   background: var(--bg-tertiary);
@@ -757,7 +507,7 @@ input[type="file"] {
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 12px;
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   color: var(--text-primary);
   overflow-x: auto;
@@ -797,7 +547,7 @@ input[type="file"] {
   background: var(--bg-primary);
   padding: 2px 6px;
   border-radius: 3px;
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   color: var(--accent);
   margin: 0 2px;
@@ -889,242 +639,9 @@ input[type="file"] {
   font-weight: 600;
 }
 
-/* Legacy select colors (fallback) */
-select.method-get {
-  color: var(--green);
-}
-
-select.method-post {
-  color: var(--purple-light);
-}
-
-select.method-put {
-  color: var(--purple-light);
-}
-
-select.method-patch {
-  color: var(--purple-light);
-}
-
-select.method-delete {
-  color: var(--danger);
-}
-
 /* Blacklist remove button hover - CSP compliant */
-.remove-blacklist-btn:hover {
+.remove-blacklist-btn:not(.state-card-enable-btn):hover {
   color: var(--danger) !important;
-}
-
-/* ============================================
-   SETTINGS CARDS - Clean Card-Based Layout
-   ============================================ */
-
-.settings-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  margin-bottom: 12px;
-  overflow: visible;
-}
-
-.settings-card:last-child {
-  margin-bottom: 0;
-}
-
-/* Card Header - Title with inline toggle */
-.settings-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px;
-  gap: 12px;
-}
-
-/* Static header - no toggle switch, just icon + title */
-.settings-card-header--static {
-  justify-content: flex-start;
-  padding: 12px 16px;
-}
-
-.settings-card-header--static .settings-card-title h4 {
-  font-size: 12px;
-}
-
-.settings-card-title {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-width: 0;
-}
-
-.settings-card-title h4 {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.settings-card-title h4 svg {
-  width: 16px;
-  height: 16px;
-  color: var(--accent);
-  flex-shrink: 0;
-}
-
-.settings-card-title p {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin: 3px 0 0 0;
-  line-height: 1.3;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
-
-/* Card Body - Additional options */
-.settings-card-body {
-  display: flex;
-  flex-direction: column;
-  padding: 0 16px 14px 16px;
-  border-top: 1px solid var(--border);
-}
-
-.settings-card-body--no-border {
-  border-top: none;
-  padding-top: 0;
-}
-
-/* Setting row — title on top, control(s) below */
-.setting-row {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  padding: 12px 0;
-  gap: 8px;
-}
-
-.setting-row > .setting-row-label {
-  flex: none;
-  width: 100%;
-  min-width: 0;
-}
-
-.setting-row > select,
-.setting-row > input.input-field,
-.setting-row > .input-field,
-.setting-row > .select-field,
-.setting-row > .settings-info-badge {
-  width: 100%;
-  max-width: 100%;
-  align-self: stretch;
-}
-
-.setting-row > .switch {
-  flex: 0 0 auto;
-  align-self: flex-start;
-}
-
-.setting-row > button,
-.setting-row > .action-btn {
-  flex: 0 0 auto;
-  align-self: flex-start;
-  width: auto;
-}
-
-.setting-row > div {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-}
-
-.setting-row-controls {
-  display: flex;
-  gap: 6px;
-  width: 100%;
-  align-items: center;
-}
-
-.setting-row-controls .input-field,
-.setting-row-controls .select-field {
-  flex: 1;
-  min-width: 0;
-  max-width: none;
-}
-
-.setting-row > .data-actions-row {
-  width: 100%;
-}
-
-.setting-row .select-field,
-.setting-row .input-field {
-  min-width: 0;
-  max-width: 100%;
-}
-
-.setting-group .select-field,
-.setting-group .input-field {
-  min-width: 0;
-  max-width: 100%;
-}
-
-.setting-row:first-child {
-  padding-top: 12px;
-}
-
-.setting-row:last-child {
-  padding-bottom: 0;
-}
-
-.setting-row + .setting-row {
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.setting-row-label {
-  font-size: 12px;
-  color: var(--text-secondary);
-  flex: none;
-  min-width: 0;
-  white-space: normal;
-  line-height: 1.4;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
-
-.setting-row-label strong {
-  color: var(--text-primary);
-  font-weight: 500;
-}
-
-.setting-row-last-check-time {
-  color: var(--accent);
-  font-weight: 500;
-}
-
-/* Settings Card Group - For grouping related cards */
-.settings-card-group {
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border);
-}
-
-.settings-card-group:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.settings-card-group-title {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 10px;
-  padding-left: 2px;
-  display: flex;
-  align-items: center;
 }
 
 /* Compact Switch - Smaller toggle for cards */
@@ -1174,7 +691,6 @@ select.method-delete {
   border-radius: 4px;
   font-size: 11px;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.02em;
   line-height: 1.2;
   text-align: center;
@@ -1297,4 +813,1700 @@ select.method-delete {
   color: var(--text-muted);
   flex-shrink: 0;
   font-size: 10px;
+}
+/* ============================================
+   SETTINGS MODAL (2.8 LAYOUT)
+   Everything below is scoped to #settingsModal so the generic classes
+   above (.action-btn, .modal-body, .select-field, ...) keep their look in
+   the other sections that share them. Sizes are measured against the 2.8
+   screenshots at the 400x580 popup size.
+   ============================================ */
+#settingsModal {
+  --settings-border: #4b4b4b;
+  --settings-card-bg: #323232;
+  --settings-strip-bg: #313131;
+  --settings-text: #e0e0e0;
+  --settings-text-dim: #b3b3b3;
+  --settings-input-bg: #2d2d2d;
+  --settings-divider: rgba(255, 255, 255, 0.05);
+}
+
+/* Buttons use the popup's Segoe UI stack; text inputs and selects keep the
+   browser's default control font (Arial), exactly as the 2.8 screenshots show. */
+#settingsModal button,
+#settingsModal textarea {
+  font-family: inherit;
+}
+
+#settingsModal input,
+#settingsModal select {
+  font-family: inherit;
+}
+
+/* 2.8 number fields have no spin-button slot, so their value stays centred */
+#settingsModal input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+#settingsModal input[type="number"]::-webkit-inner-spin-button,
+#settingsModal input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#settingsModal .base-modal-content {
+  width: 376px;
+  max-width: calc(100% - 24px);
+  height: 552px;
+  max-height: calc(100% - 28px);
+  background: var(--bg-secondary);
+  border: 1px solid var(--settings-border);
+  border-radius: 12px;
+}
+
+/* ---------- Header ---------- */
+#settingsModal .modal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 12px 8px 14px;
+  border-bottom: 1px solid var(--settings-border);
+  flex-shrink: 0;
+}
+
+#settingsModal .header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+#settingsModal .header-content h2 {
+  margin: 0;
+  font-size: var(--modal-title-size);
+  font-weight: var(--modal-title-weight);
+  line-height: var(--modal-title-line);
+  color: var(--text-primary);
+}
+
+#settingsModal .modal-subtitle {
+  margin: 1px 0 0 0;
+  font-size: 11px;
+  line-height: 15px;
+  color: var(--settings-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Sub-tabs: four equal buttons, icon above label ---------- */
+#settingsModal .settings-tabs {
+  display: flex;
+  gap: 3px;
+  padding: 3px 6px;
+  background: var(--settings-strip-bg);
+  border-top: 1px solid var(--settings-border);
+  border-bottom: 1px solid var(--settings-border);
+  flex-shrink: 0;
+}
+
+#settingsModal .settings-tab-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 0 4px 1px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: var(--settings-text);
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+#settingsModal .settings-tab-btn span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#settingsModal .settings-tab-btn svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  color: currentColor;
+}
+
+#settingsModal .settings-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+}
+
+#settingsModal .settings-tab-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+#settingsModal .settings-tab-btn.active {
+  background: rgba(59, 130, 246, 0.115);
+  border-color: rgba(59, 130, 246, 0.34);
+  color: #60a5fa;
+}
+
+#settingsModal .settings-tab-btn.active svg {
+  color: var(--accent);
+}
+
+/* ---------- Body ---------- */
+#settingsModal .modal-body {
+  flex: 1 1 auto;
+  height: auto;
+  max-height: none;
+  min-height: 0;
+  width: auto;
+  max-width: none;
+  margin-right: 2px;
+  padding: 0 12px 14px 12px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: auto;
+  scrollbar-color: auto;
+}
+
+#settingsModal .modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+#settingsModal .modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#settingsModal .modal-body::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+/* Small accent arrows at both ends of the track, as in 2.8 */
+#settingsModal .modal-body::-webkit-scrollbar-button:single-button:vertical {
+  display: block;
+  height: 12px;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-size: 6px 5px;
+}
+
+#settingsModal .modal-body::-webkit-scrollbar-button:single-button:vertical:decrement {
+  background-position: center 2px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5' viewBox='0 0 6 5'%3E%3Cpath d='M3 0.5L6 4.5H0Z' fill='%233b82f6'/%3E%3C/svg%3E");
+}
+
+#settingsModal .modal-body::-webkit-scrollbar-button:single-button:vertical:increment {
+  background-position: center 4px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5' viewBox='0 0 6 5'%3E%3Cpath d='M0 0.5H6L3 4.5Z' fill='%233b82f6'/%3E%3C/svg%3E");
+}
+
+#settingsModal .settings-tab-content {
+  display: none;
+  min-height: 0;
+  overflow: visible;
+}
+
+#settingsModal .settings-tab-content.active {
+  display: block;
+  animation: none;
+}
+
+/* ---------- Sections ---------- */
+#settingsModal .settings-card-group {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+#settingsModal .settings-card-group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 6px 1.5px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--settings-text);
+}
+
+#settingsModal .settings-card-group + .settings-card-group > .settings-card-group-title {
+  margin-top: 14px;
+}
+
+/* "EXPORT & IMPORT" header with a hairline running to the right edge */
+#settingsModal .settings-card-group-title--rule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  margin: -1px 4px 0 0;
+  background: var(--settings-border);
+}
+
+/* ---------- Cards ---------- */
+#settingsModal .settings-card {
+  background: var(--settings-card-bg);
+  border: 1px solid var(--settings-border);
+  border-radius: 8px;
+  margin: 0 2px 0 0;
+  overflow: visible;
+}
+
+#settingsModal .settings-card + .settings-card,
+#settingsModal .settings-card + .webhook-settings-container {
+  margin-top: 10px;
+}
+
+/* Divider row: icon + bold title + muted description, control on the right */
+#settingsModal .settings-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 11px 9.4px 11px;
+}
+
+#settingsModal .settings-row + .settings-row,
+#settingsModal .settings-row + .settings-card-body,
+#settingsModal .settings-card-body + .settings-card-body {
+  border-top: 1px solid var(--settings-border);
+}
+
+#settingsModal .settings-row-text {
+  flex: 1;
+  min-width: 0;
+  max-width: 228px;
+  margin-right: auto;
+}
+
+#settingsModal .settings-row-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 2px;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 15px;
+  color: #ffffff;
+}
+
+#settingsModal .settings-row-title svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  align-self: center;
+  color: var(--accent);
+}
+
+#settingsModal .settings-row-desc {
+  margin: 0;
+  font-size: 11px;
+  line-height: 14.5px;
+  color: var(--settings-text-dim);
+  overflow-wrap: anywhere;
+}
+
+#settingsModal .settings-row > .switch {
+  flex-shrink: 0;
+}
+
+/* Static card head: icon + title, divider below (Cache / History settings) */
+#settingsModal .settings-card-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 49px;
+  padding: 0 11px 2px;
+  border-bottom: 1px solid var(--settings-border);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+#settingsModal .settings-card-head svg {
+  position: relative;
+  top: 1px;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--accent);
+}
+
+/* Card body: stacked setting rows separated by hairlines */
+#settingsModal .settings-card-body {
+  display: flex;
+  flex-direction: column;
+  padding: 0 11px 9px;
+}
+
+#settingsModal .setting-row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 8px 0 8px;
+}
+
+#settingsModal .setting-row + .setting-row,
+#settingsModal .setting-row + .duplicate-info-box {
+  border-top: 1px solid var(--settings-divider);
+}
+
+#settingsModal .setting-row--inline {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+#settingsModal .setting-row-label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 15px;
+  color: var(--settings-text);
+  overflow-wrap: anywhere;
+}
+
+#settingsModal .setting-row:not(.setting-row--inline) > .setting-row-label {
+  margin-bottom: 8px;
+}
+
+#settingsModal .setting-row-note {
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--settings-text-dim);
+}
+
+#settingsModal .setting-row-desc {
+  margin: -5px 0 8px 0;
+  font-size: 9.5px;
+  line-height: 13px;
+  color: var(--settings-text-dim);
+}
+
+#settingsModal .setting-row > .switch {
+  align-self: flex-start;
+}
+
+#settingsModal .setting-row--inline > .switch {
+  align-self: center;
+}
+
+#settingsModal .setting-row-muted {
+  color: var(--settings-text-dim);
+}
+
+#settingsModal .setting-row-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+#settingsModal .setting-row-help {
+  margin-top: 5px;
+  font-size: 10.5px;
+  line-height: 14px;
+  color: var(--settings-text-dim);
+}
+
+/* Highlighted sub-row: "Delete items older than [30] Days" */
+#settingsModal .setting-row--sub {
+  padding: 8px 0;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+#settingsModal .setting-row-controls--days {
+  width: auto;
+  flex-shrink: 0;
+  gap: 7px;
+  position: relative;
+  top: 1px;
+  left: -2px;
+}
+
+#settingsModal .setting-row-unit {
+  width: 47px;
+  font-size: 9.5px;
+  line-height: 13px;
+  color: var(--settings-text-dim);
+}
+
+/* ---------- Form controls ---------- */
+#settingsModal .input-field,
+#settingsModal .select-field,
+#settingsModal .textarea-field {
+  min-width: 0;
+  max-width: none;
+  background: var(--settings-input-bg);
+  border: 1px solid var(--settings-border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+#settingsModal .input-field {
+  height: 30px;
+  padding: 0 10px;
+}
+
+#settingsModal .setting-row--inline > .input-field,
+#settingsModal .setting-row--inline > .select-field {
+  flex: 0 0 156px;
+  width: 156px;
+}
+
+#settingsModal .input-field--short {
+  flex: 0 0 64px;
+  width: 64px;
+  height: 30px;
+  text-align: center;
+}
+
+#settingsModal .input-field--center {
+  width: 72px;
+  height: 30px;
+  text-align: center;
+}
+
+#settingsModal .select-field {
+  height: 36px;
+  padding: 0 26px 0 15px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1.2 1.5L5 5.3l3.8-3.8' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 3px center;
+  cursor: pointer;
+}
+
+#settingsModal .setting-row-controls .select-field {
+  flex: 1;
+}
+
+#settingsModal .setting-row > .select-field {
+  width: 100%;
+}
+
+#settingsModal .setting-row--inline > .select-field {
+  height: 36px;
+}
+
+#settingsModal .select-field option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+#settingsModal .input-field:focus,
+#settingsModal .select-field:focus,
+#settingsModal .textarea-field:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+#settingsModal .textarea-field {
+  width: 100%;
+  padding: 8px 10px;
+  font-weight: 400;
+}
+
+#settingsModal .textarea-field--mono {
+  font-family: var(--font-mono);
+}
+
+/* Compact toggle 36x20 (knob 16px) */
+#settingsModal .switch-sm {
+  width: 36px;
+  height: 20px;
+}
+
+#settingsModal .switch-sm .slider {
+  background: #3d3d3d;
+  border-radius: 10px;
+}
+
+#settingsModal .switch-sm .slider:before {
+  width: 16px;
+  height: 16px;
+  left: 2px;
+  bottom: 2px;
+  background: #e0e0e0;
+}
+
+#settingsModal .switch-sm input:checked + .slider {
+  background: var(--accent);
+}
+
+#settingsModal .switch-sm input:checked + .slider:before {
+  transform: translateX(16px);
+  background: #ffffff;
+}
+
+#settingsModal .switch input:focus-visible + .slider {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Buttons inside the modal ---------- */
+#settingsModal .action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  background: var(--settings-input-bg);
+  border: 1px solid var(--settings-border);
+  border-radius: 6px;
+  color: var(--settings-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#settingsModal .action-btn:hover {
+  background: #353535;
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+#settingsModal .action-btn-block {
+  display: flex;
+  width: 100%;
+}
+
+#settingsModal .action-btn-sm {
+  height: 30px;
+  padding: 0 12px;
+  font-size: 12px;
+}
+
+#settingsModal .action-btn-danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+}
+
+#settingsModal .action-btn-warning {
+  margin-top: 8px;
+  background: linear-gradient(135deg, var(--warning) 0%, var(--warning-dark) 100%);
+  border-color: transparent;
+  color: #ffffff;
+}
+
+#settingsModal .settings-action-row {
+  display: flex;
+  gap: 8px;
+  padding: 0 0 11px 0;
+}
+
+#settingsModal .settings-action-row .action-btn {
+  flex: 1;
+}
+
+/* ---------- Blacklist card ---------- */
+#settingsModal .settings-card-body--blacklist {
+  gap: 10px;
+  padding: 0 11px 11px;
+}
+
+#settingsModal .settings-card-body--blacklist .action-btn-block {
+  height: 36px;
+  margin-top: 0;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+#settingsModal .blacklist-search-container .input-field {
+  width: 100%;
+  height: 32px;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+/* ---------- Color rows ---------- */
+#settingsModal .settings-card--colors {
+  padding: 12px 11px 4px;
+}
+
+#settingsModal .color-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0;
+}
+
+#settingsModal .color-row + .color-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+#settingsModal .color-row-label {
+  flex: 1;
+  font-size: 13px;
+  color: var(--settings-text);
+}
+
+#settingsModal .color-picker-container {
+  gap: 8px;
+  margin-left: auto;
+}
+
+#settingsModal .color-field {
+  width: 46px;
+  height: 36px;
+  padding: 3px;
+  background: #171718;
+  border: 1px solid #353535;
+  border-radius: 7px;
+}
+
+#settingsModal .color-hex-display {
+  min-width: 75px;
+  height: 32px;
+  padding: 0 8px;
+  background: #3d3d3d;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 28px;
+  text-align: center;
+  color: var(--settings-text);
+}
+
+/* ---------- JS API / Webhook containers ---------- */
+#settingsModal .api-info-box {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+#settingsModal .webhook-settings-container {
+  background: var(--settings-card-bg);
+  border-color: var(--settings-border);
+  margin: 10px 2px 0 1px;
+}
+
+#settingsModal .webhook-settings-container .input-field,
+#settingsModal .webhook-settings-container .select-field {
+  width: 100%;
+}
+
+/* Webhook HTTP method: segmented radio group — five methods on one row,
+   "Custom" full width below (reveals the custom-method input). Selected
+   state matches the active Settings sub-tab: accent tint + accent border. */
+#settingsModal .webhook-method-group {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+#settingsModal .webhook-method-group .http-method-badge {
+  height: 29px;
+  padding: 0 4px;
+  background: var(--settings-input-bg);
+  border: 1px solid var(--settings-border);
+  border-radius: 6px;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+#settingsModal .webhook-method-group .http-method-badge.webhook-method-custom {
+  grid-column: 1 / -1;
+}
+
+#settingsModal .webhook-method-group .method-badge-content {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--settings-text-dim);
+  white-space: nowrap;
+}
+
+#settingsModal .webhook-method-group .webhook-method-custom .method-badge-content {
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+#settingsModal .webhook-method-group .method-text {
+  letter-spacing: 0;
+}
+
+#settingsModal .webhook-method-group .http-method-badge:hover {
+  background: #333333;
+  border-color: #5a5a5a;
+}
+
+#settingsModal .webhook-method-group .http-method-badge:hover .method-badge-content {
+  color: var(--text-primary);
+}
+
+#settingsModal .webhook-method-group .http-method-badge.checked,
+#settingsModal .webhook-method-group .http-method-badge:has(input:checked) {
+  background: rgba(59, 130, 246, 0.115);
+  border-color: var(--accent);
+}
+
+#settingsModal .webhook-method-group .http-method-badge.checked .method-badge-content,
+#settingsModal .webhook-method-group .http-method-badge:has(input:checked) .method-badge-content {
+  color: #ffffff;
+}
+
+#settingsModal .webhook-method-group .http-method-badge:has(input:focus-visible) {
+  box-shadow: 0 0 0 2px var(--settings-card-bg), 0 0 0 4px var(--accent-light);
+}
+
+#settingsModal .webhook-custom-method {
+  width: 100%;
+  margin-top: 6px;
+}
+
+#settingsModal .webhook-custom-method .input-field {
+  font-family: var(--font-mono);
+}
+
+/* Content-Type: custom type/subtype input, validation message and the
+   one-line hint describing the body for the chosen type */
+#settingsModal .webhook-custom-ct {
+  width: 100%;
+  margin-top: 6px;
+}
+
+#settingsModal .webhook-custom-ct .input-field {
+  font-family: var(--font-mono);
+}
+
+#settingsModal .webhook-custom-ct .input-field[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+#settingsModal .webhook-field-error {
+  margin: 4px 0 0;
+  font-size: 11px;
+  line-height: 15px;
+  color: var(--danger-light);
+}
+
+#settingsModal .webhook-ct-hint {
+  margin: 6px 0 0;
+  font-size: 11px;
+  line-height: 15px;
+  color: var(--settings-text-dim);
+}
+
+/* Payload template: title row with the "?" help button (same chrome as the
+   rule editor's method help), variable chips, JSON status and reset */
+#settingsModal .webhook-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#settingsModal .webhook-help-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  background: #3d3d3d;
+  border: 1px solid var(--settings-border);
+  border-radius: 6px;
+  color: var(--settings-text);
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+#settingsModal .webhook-help-btn:hover {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+#settingsModal .webhook-help-btn:focus-visible,
+#settingsModal .webhook-var-chip:focus-visible,
+#settingsModal .webhook-link-btn:focus-visible,
+#settingsModal .webhook-vars-copy:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--settings-card-bg), 0 0 0 4px var(--accent-light);
+}
+
+#settingsModal .webhook-var-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  width: 100%;
+  margin: 8px 0 6px;
+}
+
+#settingsModal .webhook-var-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 6px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(96, 165, 250, 0.28);
+  border-radius: 5px;
+  color: #93c5fd;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+#settingsModal button.webhook-var-chip:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+#settingsModal .webhook-var-chip--static {
+  height: 20px;
+  cursor: default;
+}
+
+#settingsModal #webhookPayload {
+  min-height: 112px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+#settingsModal #webhookPayload[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+#settingsModal .webhook-payload-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 22px;
+  margin-top: 5px;
+}
+
+#settingsModal .webhook-json-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 15px;
+}
+
+#settingsModal .webhook-json-status[hidden] {
+  display: none;
+}
+
+#settingsModal .webhook-json-status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+#settingsModal .webhook-json-status.is-valid {
+  color: var(--success-light);
+}
+
+#settingsModal .webhook-json-status.is-invalid {
+  color: var(--danger-light);
+}
+
+#settingsModal .webhook-link-btn {
+  margin-left: auto;
+  padding: 3px 8px;
+  background: none;
+  border: 1px solid var(--settings-border);
+  border-radius: 6px;
+  color: var(--settings-text);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#settingsModal .webhook-link-btn:hover {
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+/* Variables help: compact modal inside Settings, pinned header */
+#settingsModal .webhook-vars-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 12px;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 12px;
+}
+
+#settingsModal .webhook-vars-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--settings-border);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+#settingsModal .webhook-vars-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  min-height: var(--modal-header-min-height);
+  padding: var(--modal-header-padding);
+  border-bottom: 1px solid var(--settings-border);
+}
+
+#settingsModal .webhook-vars-header h3 {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--modal-title-size);
+  font-weight: var(--modal-title-weight);
+  line-height: var(--modal-title-line);
+  color: var(--text-primary);
+}
+
+#settingsModal .webhook-vars-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 10px 12px 12px;
+}
+
+#settingsModal .webhook-vars-intro {
+  margin: 0 0 8px;
+  font-size: 11px;
+  line-height: 15px;
+  color: var(--settings-text-dim);
+}
+
+#settingsModal .webhook-vars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#settingsModal .webhook-vars-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px 6px 8px;
+  background: var(--settings-card-bg);
+  border: 1px solid var(--settings-border);
+  border-radius: 8px;
+}
+
+#settingsModal .webhook-vars-row-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+#settingsModal .webhook-vars-row-top {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 7px;
+  min-width: 0;
+}
+
+#settingsModal .webhook-vars-desc {
+  font-size: 11.5px;
+  line-height: 15px;
+  color: var(--settings-text);
+}
+
+#settingsModal .webhook-vars-example {
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 14px;
+  color: var(--settings-text-dim);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#settingsModal .webhook-vars-example-label {
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+#settingsModal .webhook-vars-copy {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: #3d3d3d;
+  border: 1px solid var(--settings-border);
+  border-radius: 6px;
+  color: var(--settings-text);
+  cursor: pointer;
+}
+
+#settingsModal .webhook-vars-copy:hover {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+#settingsModal .webhook-headers-empty {
+  padding: 8px;
+  font-size: 12px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+#settingsModal .webhook-url-hint-example {
+  margin-top: 6px;
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+#settingsModal .duplicate-info-box {
+  margin: 0 0 3px 0;
+  padding: 12px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* ---------- Data tab: statistics card ---------- */
+#settingsModal .settings-card--stats {
+  margin-top: 10px;
+  background: #313131;
+  overflow: hidden;
+}
+
+#settingsModal .settings-stats-head {
+  padding: 9px 12px 10px 12px;
+  background: #353535;
+  border-bottom: 2px solid var(--settings-border);
+}
+
+#settingsModal .settings-stats-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 17px;
+  color: #ffffff;
+}
+
+/* The description sits in the icon column's indent, as in 2.8 */
+#settingsModal .settings-stats-desc {
+  margin: 1px 0 0 38px;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--settings-text-dim);
+}
+
+#settingsModal .settings-stats-body {
+  padding: 10px 10px 18px 10px;
+}
+
+#settingsModal .action-btn-outline {
+  height: 37px;
+  background: var(--settings-input-bg);
+  border-color: var(--settings-border);
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--settings-text);
+}
+
+/* ---------- Data tab: data management card ---------- */
+#settingsModal .settings-card--data {
+  background: #313131;
+  overflow: hidden;
+}
+
+#settingsModal .data-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px 10px 12px;
+  background: #353535;
+  border-bottom: 2px solid var(--settings-border);
+}
+
+#settingsModal .data-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  background: #353c46;
+  border: 1px solid #425a79;
+  border-radius: 7px;
+  color: #93c5fd;
+}
+
+#settingsModal .data-card-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+#settingsModal .data-card-head-text {
+  flex: 1;
+  min-width: 0;
+}
+
+#settingsModal .data-card-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 28px;
+  color: #ffffff;
+}
+
+#settingsModal .data-card-desc {
+  margin: 4px 0 0 0;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--settings-text-dim);
+}
+
+#settingsModal .data-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 10px 10px 10px;
+}
+
+#settingsModal .data-item {
+  padding: 9px 10px 10px;
+  background: #363636;
+  border: 1px solid #474747;
+  border-radius: 8px;
+}
+
+#settingsModal .data-item-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#settingsModal .data-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  background: #363b43;
+  border: 1px solid #3e5068;
+  border-radius: 7px;
+  color: #93c5fd;
+}
+
+#settingsModal .data-item-icon svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* Calendar is drawn on a 12px pixel grid so its 1px frame stays crisp */
+#settingsModal .data-item-icon svg.data-item-icon-cal {
+  position: relative;
+  left: 1px;
+  width: 12px;
+  height: 12px;
+}
+
+#settingsModal .data-item-text {
+  flex: 1;
+  min-width: 0;
+}
+
+#settingsModal .data-item-title {
+  margin: -1px 0 0 1px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 15px;
+  color: #ffffff;
+}
+
+#settingsModal .data-item-desc {
+  margin: 1px 0 -1px 1px;
+  font-size: 9.5px;
+  line-height: 13px;
+  color: var(--settings-text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#settingsModal .data-item-format {
+  flex-shrink: 0;
+  align-self: center;
+  min-width: 32px;
+  height: 21px;
+  margin: 0 48px 0 0;
+  padding: 0 5px;
+  text-align: center;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 4px;
+  background: rgba(59, 130, 246, 0.07);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 19px;
+  letter-spacing: 0;
+  color: var(--settings-text-dim);
+}
+
+#settingsModal .data-item-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+#settingsModal .data-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 40px;
+  border-radius: 7px;
+  font-size: 10.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+#settingsModal .data-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+#settingsModal .data-btn span {
+  position: relative;
+  top: -1px;
+}
+
+#settingsModal .data-export-btn {
+  background: #363b43;
+  border: 1px solid #435b7a;
+  color: #bfdbfe;
+}
+
+#settingsModal .data-export-btn:hover {
+  background: rgba(59, 130, 246, 0.14);
+}
+
+#settingsModal .data-import-btn {
+  background: #285bcb;
+  border: 1px solid #4582e3;
+  color: #ffffff;
+  box-shadow: 0 6px 12px rgba(40, 91, 203, 0.12);
+}
+
+#settingsModal .data-import-btn:hover {
+  background: var(--accent);
+}
+
+/* ---------- Footer ---------- */
+#settingsModal .modal-footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 48px;
+  padding: 0 12px 0 12px;
+  border-top: 1px solid var(--settings-border);
+  flex-shrink: 0;
+}
+
+#settingsModal .powered-by {
+  position: relative;
+  top: -1px;
+  font-size: 10.75px;
+  color: var(--settings-text-dim);
+  text-align: left;
+  white-space: nowrap;
+}
+
+#settingsModal .powered-by a {
+  color: var(--accent);
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+#settingsModal .modal-footer-buttons {
+  display: flex;
+  gap: 6px;
+  width: auto;
+}
+
+#settingsModal .modal-footer-buttons .primary-btn,
+#settingsModal .modal-footer-buttons .secondary-btn {
+  height: 30px;
+  padding: 0 9px 2px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+#settingsModal .modal-footer-buttons .secondary-btn {
+  padding: 0 9px 2px 11px;
+  background: #3d3d3d;
+  border: 1px solid var(--settings-border);
+  color: var(--settings-text);
+}
+
+/* History card: the export-format select and the card's bottom edge sit one
+   pixel lower than the generic rows in 2.8 */
+#settingsModal .settings-card-body--history {
+  padding-bottom: 10px;
+}
+
+#settingsModal .settings-card-body--history #exportFormat {
+  position: relative;
+  top: 1px;
+}
+
+#settingsModal .setting-row--sub.is-disabled {
+  opacity: 0.5;
+}
+
+#settingsModal .setting-row-help p + p {
+  margin-top: 2px;
+}
+
+#settingsModal .setting-row--sub + .setting-row {
+  border-top: none;
+}
+
+#settingsModal .settings-row--head .settings-row-text {
+  max-width: none;
+}
+
+#settingsModal .setting-row--toggle {
+  padding: 8.5px 0;
+}
+
+#settingsModal .setting-row--limit {
+  padding: 8px 0;
+}
+
+#settingsModal .setting-row--switch-below {
+  padding: 8px 0 7px;
+}
+
+#settingsModal .setting-row--switch-below > .setting-row-desc {
+  margin-bottom: 7px;
+}
+
+#settingsModal .settings-card-group-title--rule {
+  gap: 1px;
+  margin-left: 2.5px;
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
+
+#settingsModal .data-export-btn svg {
+  color: #d1d5db;
+}
+
+#settingsModal .setting-row--toggle:last-child {
+  padding-bottom: 8.5px;
+}
+
+#settingsModal .settings-card-group + .settings-card-group > .settings-card-group-title--rule {
+  margin-top: 12px;
+}
+
+#settingsModal .settings-row--auto-update {
+  padding-bottom: 9px;
+}
+
+/* Per-row text metrics measured on the 2.8 screenshots (the two-line
+   descriptions land on different pixel rows in each card) */
+#settingsModal .settings-row--notifications {
+  padding-bottom: 10.4px;
+}
+
+#settingsModal .settings-row--notifications .settings-row-desc {
+  line-height: 14px;
+}
+
+#settingsModal .settings-row--auto-update .settings-row-desc {
+  position: relative;
+  top: -0.5px;
+  line-height: 15px;
+}
+
+#settingsModal .settings-row--auto-update > .switch {
+  margin-top: 1px;
+}
+
+/* The 2.8 bell sits one pixel above the other row icons */
+#settingsModal .settings-row-title .settings-icon-bell {
+  transform: translateY(-1px);
+}
+
+/* 2.8 swatches carry a faint light rim */
+#settingsModal .color-field::-webkit-color-swatch {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+}
+
+#settingsModal .api-info-title {
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+#settingsModal .api-event-item code {
+  font-size: 11px;
+}
+
+#settingsModal .api-event-item span {
+  font-size: 11px;
+}
+
+#settingsModal .duplicate-info-box strong {
+  font-size: 12px;
+}
+
+/* ---------- JS API collapsible rows (Eventos disponibles / Ejemplo de uso) ----------
+   Two rows inside the JS API card, split by a divider: icon tile, title + one-line
+   description, optional count chip, chevron button. Collapsed by default. */
+#settingsModal .api-collapsible + .api-collapsible {
+  border-top: 1px solid var(--border);
+}
+
+#settingsModal .api-collapsible-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  padding: 9px 0;
+  background: none;
+  border: none;
+  color: var(--settings-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+#settingsModal .api-collapsible-header:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+#settingsModal .api-collapsible-icon {
+  flex: 0 0 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  color: var(--accent-light);
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+#settingsModal .api-collapsible-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+#settingsModal .api-collapsible-header .api-info-title {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--settings-text);
+}
+
+#settingsModal .api-collapsible-desc {
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--settings-text-dim);
+}
+
+#settingsModal .api-collapsible-count {
+  flex: 0 0 auto;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #262626;
+  color: var(--settings-text);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+}
+
+#settingsModal .api-collapsible-count:empty {
+  display: none;
+}
+
+#settingsModal .api-collapsible-toggle {
+  flex: 0 0 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: #363636;
+  border: 1px solid var(--border);
+  color: #e0e0e0;
+  transition: background 0.14s ease, border-color 0.14s ease;
+}
+
+#settingsModal .api-collapsible-header:hover .api-collapsible-toggle {
+  background: #3f3f3f;
+  border-color: #5a5a5a;
+}
+
+#settingsModal .api-collapsible-chevron {
+  transition: transform 0.15s ease;
+}
+
+#settingsModal .api-collapsible-header[aria-expanded="true"] .api-collapsible-chevron {
+  transform: rotate(180deg);
+}
+
+#settingsModal .api-collapsible-body {
+  padding: 0 0 10px 38px;
+}
+
+#settingsModal .api-collapsible-body[hidden] {
+  display: none;
+}
+
+#settingsModal .api-event-item {
+  cursor: default;
+}
+
+#settingsModal .api-event-item code {
+  cursor: copy;
+}
+
+#settingsModal .api-usage-example {
+  margin: 0;
+  padding: 0;
+}
+
+/* Usage code block with an explicit copy button */
+#settingsModal .api-code-block {
+  position: relative;
+}
+
+#settingsModal .api-code-copy {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #363636;
+  color: #e0e0e0;
+  font: 600 11px/1 var(--font-sans);
+  cursor: pointer;
+  transition: background 0.14s ease, border-color 0.14s ease;
+}
+
+#settingsModal .api-code-copy:hover {
+  background: #3f3f3f;
+  border-color: #5a5a5a;
+}
+
+#settingsModal .api-code-copy:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Usage code: IBM Plex Mono, break only at spaces, scroll sideways for long tokens */
+#settingsModal .api-usage-example pre {
+  margin: 0;
+  padding: 36px 10px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.55;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #262626;
+  white-space: pre-wrap;
+  word-wrap: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+  overflow-x: auto;
+  cursor: text;
+}
+
+#settingsModal .api-usage-example pre::-webkit-scrollbar {
+  height: 6px;
+}
+
+#settingsModal .api-usage-example pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#settingsModal .api-usage-example pre::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+#settingsModal .api-usage-example pre::-webkit-scrollbar-thumb:hover {
+  background: #6b6b6b;
 }

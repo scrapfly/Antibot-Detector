@@ -148,6 +148,29 @@ SettingsUI._applyLanguagePickerFlag = function(slotEl, locale) {
 
 
 
+// BCP 47 tag of an option's own language ('zh_CN' -> 'zh-CN'); '' for 'auto',
+// whose label is written in the UI language. Lets CSS pick the right Han
+// glyph forms for the language names.
+SettingsUI._languageTag = function(option) {
+
+  return option && option.value !== 'auto' ? option.value.replace('_', '-') : '';
+
+};
+
+
+
+SettingsUI._setLanguageTag = function(el, option) {
+
+  const tag = SettingsUI._languageTag(option);
+
+  if (tag) el.setAttribute('lang', tag);
+
+  else el.removeAttribute('lang');
+
+};
+
+
+
 SettingsUI._findLanguageOption = function(value) {
 
   return SettingsUI.LANGUAGE_OPTIONS.find((opt) => opt.value === value)
@@ -158,45 +181,33 @@ SettingsUI._findLanguageOption = function(value) {
 
 
 
-SettingsUI.refreshLanguagePickerLabels = function() {
+// Option matching the browser UI language (used to label the 'auto' choice).
 
-  const menu = document.querySelector('#languagePickerMenu');
+SettingsUI._resolveAutoLanguageOption = function() {
 
-  if (!menu) return;
+  let ui = '';
 
+  try {
 
+    ui = (chrome.i18n && chrome.i18n.getUILanguage && chrome.i18n.getUILanguage()) || '';
 
-  menu.querySelectorAll('.language-picker-option').forEach((el) => {
+  } catch (_) {
 
-    const option = SettingsUI._findLanguageOption(el.dataset.value);
-
-    const labelEl = el.querySelector('.language-picker-option-label');
-
-    const flagSlot = el.querySelector('.language-picker-flag-slot');
-
-    if (labelEl) {
-
-      labelEl.textContent = SettingsUI._languageOptionLabel(option);
-
-    }
-
-    if (flagSlot) {
-
-      SettingsUI._applyLanguagePickerFlag(flagSlot, option.value);
-
-    }
-
-  });
-
-
-
-  const hidden = document.querySelector('#languageOverride');
-
-  if (hidden) {
-
-    SettingsUI.setLanguagePickerValue(hidden.value || 'auto');
+    ui = '';
 
   }
+
+  const normalized = String(ui).replace('-', '_');
+
+  const base = normalized.split('_')[0];
+
+  return SettingsUI.LANGUAGE_OPTIONS.find((opt) => opt.value === normalized)
+
+    || SettingsUI.LANGUAGE_OPTIONS.find((opt) => opt.value === base)
+
+    || SettingsUI.LANGUAGE_OPTIONS.find((opt) => opt.value !== 'auto' && opt.value.split('_')[0] === base)
+
+    || SettingsUI._findLanguageOption('en');
 
 };
 
@@ -224,13 +235,31 @@ SettingsUI.setLanguagePickerValue = function(value) {
 
   const option = SettingsUI._findLanguageOption(choice);
 
+  // The compact 2.8 trigger shows a flag + language name even when following
+
+  // the browser: 'auto' displays the language the browser resolves to, and
+
+  // the menu keeps "Use browser language" as the selected entry.
+
+  const shown = choice === 'auto' ? SettingsUI._resolveAutoLanguageOption() : option;
 
 
-  SettingsUI._applyLanguagePickerFlag(flagSlot, option.value);
+
+  SettingsUI._applyLanguagePickerFlag(flagSlot, shown.value);
 
   if (labelEl) {
 
-    labelEl.textContent = SettingsUI._languageOptionLabel(option);
+    labelEl.textContent = SettingsUI._languageOptionLabel(shown);
+
+    SettingsUI._setLanguageTag(labelEl, shown);
+
+  }
+
+  const trigger = document.querySelector('#languagePickerTrigger');
+
+  if (trigger) {
+
+    trigger.title = SettingsUI._languageOptionLabel(option);
 
   }
 
@@ -258,7 +287,7 @@ SettingsUI._syncLanguagePickerOpenState = function() {
 
   const picker = document.querySelector('#languagePicker');
 
-  const card = document.querySelector('.settings-card--language');
+  const card = document.querySelector('.settings-row--language');
 
   const isOpen = picker && picker.classList.contains('open');
 
@@ -360,38 +389,43 @@ SettingsUI._applyLanguageChoice = async function(choice) {
 
 
 
-  if (typeof I18n !== 'undefined') {
+  // Sections build most of their text in JS, so a partial refresh leaves
 
-    try {
+  // it in the old language: reload the popup and reopen Settings.
 
-      await I18n.loadOverride(choice === 'auto' ? null : choice);
+  SettingsUI.reloadForLanguageChange();
 
-      I18n.apply(document);
+};
 
-      if (typeof SettingsUI.applyCategoryColorLabels === 'function') {
 
-        SettingsUI.applyCategoryColorLabels();
 
-      }
+// Reload the popup after a language change, remembering the main tab and
 
-      if (typeof SettingsUI.syncColorRowBadges === 'function') {
+// the Settings sub-tab so ScrapflyPopup.restoreAfterLanguageChange() can
 
-        SettingsUI.syncColorRowBadges();
+// bring the user back to where they were.
 
-      }
+SettingsUI.RELOAD_STATE_KEY = 'scrapfly_reopen_after_language';
 
-      SettingsUI.refreshLanguagePickerLabels();
 
-      const detection = window.popupInstance?.detection;
-      if (detection && typeof detection.refreshDetectionStateI18n === 'function') {
-        detection.refreshDetectionStateI18n();
-      } else if (detection && typeof detection.refreshEmptyStateI18n === 'function') {
-        detection.refreshEmptyStateI18n();
-      }
 
-    } catch (_) { /* best-effort */ }
+SettingsUI.reloadForLanguageChange = function() {
 
-  }
+  try {
+
+    const activeSettingsTab = document.querySelector('.settings-tab-btn.active');
+
+    sessionStorage.setItem(SettingsUI.RELOAD_STATE_KEY, JSON.stringify({
+
+      tab: (window.popupInstance && window.popupInstance.currentTab) || null,
+
+      settingsTab: activeSettingsTab ? activeSettingsTab.getAttribute('data-settings-tab') : null
+
+    }));
+
+  } catch (_) { /* sessionStorage unavailable: the popup opens on its default tab */ }
+
+  location.reload();
 
 };
 
@@ -423,7 +457,7 @@ SettingsUI.initLanguagePicker = function() {
 
       ${SettingsUI._languageFlagMarkup(option)}
 
-      <span class="language-picker-option-label">${FormatUtils.escapeHtml(label)}</span>
+      <span class="language-picker-option-label"${SettingsUI._languageTag(option) ? ` lang="${SettingsUI._languageTag(option)}"` : ''}>${FormatUtils.escapeHtml(label)}</span>
 
     </li>`;
 

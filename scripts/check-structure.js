@@ -93,7 +93,7 @@ for (const file of cssFiles()) {
         if (braceIdx === -1) continue;
         const selector = block.slice(0, braceIdx);
         const body = block.slice(braceIdx);
-        const isCloseButton = /close-btn|modal-close/.test(selector);
+        const isCloseButton = /btn-close|close-btn|modal-close/.test(selector);
         const isAbsolute = /position\s*:\s*absolute/.test(body);
         if (isCloseButton && isAbsolute) {
             problems.push(`${path.relative(repoRoot, file)}: "${selector.trim()}" is position:absolute — modal close buttons must be flex siblings (see common.css canonical pattern).`);

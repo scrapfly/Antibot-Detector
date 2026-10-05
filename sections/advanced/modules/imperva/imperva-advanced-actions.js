@@ -50,7 +50,7 @@ ImpervaAdvanced.prototype.checkCookies = async function() {
             this.displayCookiesModal(cookies, { hasReese84, hasUtmvc, incapSes, nlbi, visid }, protectionLevel);
         } catch (error) {
             Logger.error('NETWORK', '[IMPERVA] Failed to check cookies:', error);
-            NotificationHelper.error('Failed to check cookies: ' + error.message);
+            NotificationHelper.error(ImpervaAdvanced.fmt('advCommonFailedCheckCookiesFmt', 'Failed to check cookies: {0}', error.message));
         }
     };
 
@@ -134,14 +134,14 @@ ImpervaAdvanced.prototype.extractScripts = async function() {
                 Logger.error('NETWORK', '[IMPERVA-EXTRACT] Invalid response from background');
                 Logger.error('NETWORK', '[IMPERVA-EXTRACT] Expected: { status: "success" }');
                 Logger.error('NETWORK', '[IMPERVA-EXTRACT] Received:', JSON.stringify(response));
-                throw new Error(response?.error || 'Failed to enable extraction mode. Check background console for details.');
+                throw new Error(response?.error || ImpervaAdvanced.tr('advImpervaEnableExtractionFailed', 'Failed to enable extraction mode. Check background console for details.'));
             }
 
             Logger.network('[IMPERVA-EXTRACT] ========== EXTRACTION STARTED ==========');
         } catch (error) {
             Logger.error('NETWORK', '[IMPERVA-EXTRACT] Failed to start extraction:', error);
             Logger.error('NETWORK', '[IMPERVA-EXTRACT] Error stack:', error.stack);
-            NotificationHelper.error('Failed to start extraction: ' + error.message);
+            NotificationHelper.error(ImpervaAdvanced.fmt('advCommonFailedStartExtractionFmt', 'Failed to start extraction: {0}', error.message));
         }
     };
 

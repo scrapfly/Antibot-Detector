@@ -5,116 +5,122 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "High",
-  "lastUpdated": "2024-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-04",
+  "version": "1.2.0",
   "website": "https://www.hcaptcha.com/",
   "icon": "hcaptcha_official.png",
   "description": "Privacy-focused CAPTCHA service that rewards websites",
   "detection": {
     "url": [
       {
-        "confidence": 100,
-        "description": "hCaptcha domain",
-        "text": "hcaptcha.com",
-        "textRegex": false,
+        "id": "hcaptcha-api-resource",
+        "confidence": 60,
+        "description": "Official hCaptcha JavaScript API resource, including the legacy hcaptcha.com/1 path",
+        "text": "^https://(?:js\\.)?hcaptcha\\.com/1/api\\.js(?:[?#]|$)",
+        "textRegex": true,
         "textWholeWord": false,
-        "textCaseSensitive": false,
+        "textCaseSensitive": true,
         "textScope": "all"
       },
       {
-        "confidence": 100,
-        "description": "Site configuration check",
-        "text": "/checksiteconfig",
-        "textRegex": false,
+        "id": "hcaptcha-challenge-api",
+        "confidence": 50,
+        "description": "Site configuration or challenge request to the hCaptcha API hosts hard-coded in the SDK",
+        "text": "^https://api2?\\.hcaptcha\\.com/(?:checksiteconfig|getcaptcha)(?:[/?#]|$)",
+        "textRegex": true,
         "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
-      },
-      {
-        "confidence": 100,
-        "description": "Captcha retrieval endpoint",
-        "text": "/getcaptcha",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
+        "textCaseSensitive": true,
         "textScope": "all"
       }
     ],
     "content": [
       {
-        "confidence": 50,
-        "description": "hCaptcha object",
+        "id": "hcaptcha-script-reference",
+        "confidence": 10,
+        "description": "Script reference to hcaptcha; integration and execution unconfirmed",
         "text": "hcaptcha",
         "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "description": "hCaptcha container class",
-        "text": "h-captcha",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "text": "hcaptcha.render",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
-      },
-      {
-        "confidence": 50,
-        "text": "hcaptcha.execute",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
       }
     ],
     "dom": [
       {
-        "selector": ".h-captcha",
-        "confidence": 100,
-        "description": "hCaptcha container",
+        "id": "hcaptcha-configured-widget",
+        "selector": ".h-captcha[data-sitekey]",
+        "confidence": 40,
+        "description": "Marked hCaptcha widget with a sitekey attribute; value validity unconfirmed",
         "selectorRegex": false,
         "selectorWholeWord": false,
-        "selectorCaseSensitive": false
+        "selectorCaseSensitive": true
       },
       {
-        "selector": "[data-hcaptcha-sitekey]",
-        "confidence": 100,
+        "id": "hcaptcha-widget-frame",
+        "selector": "iframe[src^='https://newassets.hcaptcha.com/captcha/v1/'], iframe[src^='https://assets.hcaptcha.com/captcha/v1/']",
+        "confidence": 60,
+        "description": "hCaptcha widget frame resource presence; visibility and completion unconfirmed",
         "selectorRegex": false,
         "selectorWholeWord": false,
-        "selectorCaseSensitive": false
-      },
-      {
-        "selector": "iframe[src*='hcaptcha.com']",
-        "confidence": 100,
-        "selectorRegex": false,
-        "selectorWholeWord": false,
-        "selectorCaseSensitive": false
+        "selectorCaseSensitive": true
       }
     ],
     "window": [
       {
+        "id": "hcaptcha-runtime-object",
         "path": "hcaptcha",
         "condition": "typeof object",
-        "confidence": 100,
-        "description": "hCaptcha main object"
+        "confidence": 20,
+        "description": "hCaptcha runtime namespace presence, not execution"
       },
       {
+        "id": "hcaptcha-runtime-render",
         "path": "hcaptcha.render",
         "condition": "typeof function",
-        "confidence": 100,
-        "description": "hCaptcha render function"
+        "confidence": 30,
+        "description": "Documented hCaptcha render API presence, not execution"
       },
       {
+        "id": "hcaptcha-runtime-execute",
         "path": "hcaptcha.execute",
         "condition": "typeof function",
-        "confidence": 100,
-        "description": "hCaptcha execute function"
+        "confidence": 30,
+        "description": "Documented hCaptcha execute API presence, not execution"
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "hcaptcha-resource-configured",
+      "name": "Official API resource and marked widget presence",
+      "when": { "all": [{ "pattern": "hcaptcha-api-resource" }, { "pattern": "hcaptcha-configured-widget" }] },
+      "confidence": 75
+    },
+    {
+      "id": "hcaptcha-resource-challenge",
+      "name": "Official API resource and a request to the hCaptcha challenge API",
+      "when": { "all": [{ "pattern": "hcaptcha-api-resource" }, { "pattern": "hcaptcha-challenge-api" }] },
+      "confidence": 80
+    },
+    {
+      "id": "hcaptcha-resource-widget-runtime",
+      "name": "Official API resource, marked widget and compatible runtime API presence",
+      "when": { "all": [{ "pattern": "hcaptcha-api-resource" }, { "pattern": "hcaptcha-configured-widget" }, { "any": [{ "pattern": "hcaptcha-runtime-render" }, { "pattern": "hcaptcha-runtime-execute" }] }] },
+      "confidence": 85
+    },
+    {
+      "id": "hcaptcha-resource-frame-runtime",
+      "name": "Official API resource, widget frame and compatible runtime API",
+      "when": { "all": [{ "pattern": "hcaptcha-api-resource" }, { "pattern": "hcaptcha-widget-frame" }, { "any": [{ "pattern": "hcaptcha-runtime-render" }, { "pattern": "hcaptcha-runtime-execute" }] }] },
+      "confidence": 90
+    },
+    {
+      "id": "hcaptcha-complete-integration",
+      "name": "Official API resource, marked widget, frame and compatible runtime API presence",
+      "when": { "all": [{ "pattern": "hcaptcha-api-resource" }, { "pattern": "hcaptcha-configured-widget" }, { "pattern": "hcaptcha-widget-frame" }, { "any": [{ "pattern": "hcaptcha-runtime-render" }, { "pattern": "hcaptcha-runtime-execute" }] }] },
+      "confidence": 95
+    }
+  ]
 }

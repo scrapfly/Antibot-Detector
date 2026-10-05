@@ -13,67 +13,149 @@
   padding-bottom: 0;
 }
 
-/* History Header */
-.history-header {
+/* History Header: full-width search + square "…" menu button */
+#historyTab .history-header {
   flex-shrink: 0;
+  display: block;
+  margin: 10px 0 12px;
+}
+
+.history-toolbar {
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  align-items: flex-end;
   gap: 6px;
-  margin-bottom: 6px;
 }
 
-.history-header .action-buttons {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 6px;
-  width: 100%;
-  margin: 6px 0 0;
-}
-
-.history-header .search-container {
+#historyTab .history-header .search-container {
   position: relative;
-  width: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
 }
 
-.history-header .search-input {
+#historyTab .history-header .search-input {
+  display: block;
   width: 100%;
-  padding: 14px;
-  font-size: 13px;
-  border: 2px solid var(--border);
-  border-radius: 10px;
+  height: 34px;
+  padding: 0 11px;
+  font-family: inherit;
+  font-size: 11.5px;
+  border: 1px solid #4b4b4b;
+  border-radius: 8px;
   background: var(--bg-secondary);
   color: var(--text-primary);
-  transition: all 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.history-header .search-input:focus {
+#historyTab .history-header .search-input::placeholder {
+  color: var(--text-secondary);
+  font-size: inherit;
+}
+
+#historyTab .history-header .search-input:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
 }
 
-.history-header .action-buttons button {
-  display: inline-flex;
+/* Square icon buttons (toolbar "…", card copy / "…") */
+.history-square-btn,
+.history-item-action-btn {
+  display: flex;
   align-items: center;
   justify-content: center;
-  height: 32px;
+  flex-shrink: 0;
+  padding: 0;
+  border: 1px solid #4b4b4b;
   border-radius: 7px;
-  font-size: 11px;
-  font-weight: 600;
+  color: #e0e0e0;
   cursor: pointer;
-  transition: all 0.2s ease;
-  padding: 0 10px;
-  gap: 6px;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
 
-/* Button colors inherit from rules.css global styles */
+.history-menu-btn {
+  width: 32px;
+  height: 32px;
+  background: #242424;
+}
 
-/* History List */
-.history-list {
+.history-menu-btn:hover,
+.history-menu-btn.active {
+  background: var(--bg-secondary);
+  border-color: var(--border-light);
+  color: var(--text-primary);
+}
+
+/* Dropdown menus (fixed so the scrolling list never clips them) */
+.history-menu {
+  position: fixed;
+  z-index: 900;
+  min-width: 170px;
+  padding: 4px;
+  background: var(--bg-secondary);
+  border: 1px solid #4b4b4b;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1px;
+}
+
+.history-menu[hidden] {
+  display: none;
+}
+
+.history-menu-item {
+  display: flex;
+  font-family: inherit;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 10px;
+  background: none;
+  border: none;
+  border-radius: 5px;
+  color: #e0e0e0;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.history-menu-item svg {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+.history-menu-item:hover,
+.history-menu-item:focus-visible {
+  outline: none;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.history-menu-item-danger,
+.history-menu-item-danger svg {
+  color: var(--danger-light);
+}
+
+.history-menu-item-danger:hover,
+.history-menu-item-danger:focus-visible {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger-lightest);
+}
+
+.history-menu-separator {
+  height: 1px;
+  margin: 3px 4px;
+  background: #404040;
+}
+
+/* History List */
+#historyTab .history-list {
+  display: flex;
+  flex-direction: column;
   flex: 1 1 auto;
   overflow-y: auto;
   min-height: 0;
@@ -86,382 +168,283 @@
   display: none; /* Chrome/Safari */
 }
 
-/* Pagination base styles now in common.css */
-
+/* Pagination base styles in common.css; 2.8 look: inline blue numbers, 28px page box */
 #historyTab .pagination {
   margin-top: 2px;
   padding: 5px 8px;
+  border-color: #4b4b4b;
 }
 
+#historyTab .pagination-info {
+  display: block;
+  font-size: 11.5px;
+  color: #e0e0e0;
+  font-weight: 600;
+}
+
+#historyTab .pagination-info .pagination-count {
+  min-width: 0;
+  padding: 0;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+#historyTab .pagination-controls {
+  gap: 6px;
+}
+
+#historyTab .page-info {
+  gap: 4px;
+  font-size: 11.5px;
+  color: #e0e0e0;
+  font-weight: 600;
+}
+
+#historyTab .page-input {
+  width: 28px;
+  height: 32px;
+  border-color: #4b4b4b;
+  color: var(--accent);
+}
+
+#historyTab .total-pages {
+  min-width: 40px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+#historyTab .pagination-btn {
+  border-color: #464646;
+  color: #e0e0e0;
+}
+
+#historyTab .pagination-btn:disabled {
+  opacity: 0.65;
+}
+
+/* ============================================
+   History card (v2.8 redesign)
+   Row 1: favicon tile, title + "domain • time", difficulty pill, "…"
+   Row 2: detector icons on the left, detections / confidence on the right
+   The difficulty colour lives in the pill text only (no side rail).
+   ============================================ */
 .history-item {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 8px;
+  gap: 10px;
   background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 16px;
+  border: 1px solid #424242;
+  border-radius: 10px;
+  padding: 10px;
   cursor: pointer;
-  transition: all 0.2s;
-  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  flex-shrink: 0;
+  margin-bottom: 8px;
 }
 
+/* The list is switched to display:block while rendering, so cards space themselves */
 .history-item:last-child {
   margin-bottom: 0;
 }
 
-/* History-tab scoped: match the Rules card's blue-accent hover so selection is obvious */
 #historyTab .history-item:hover {
-  background: var(--bg-secondary);
+  background: #313131;
   border-color: var(--accent);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
-  transform: translateY(-2px);
 }
 
 .history-item-top {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.history-favicon-tile {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #242424;
+  border: 1px solid #404040;
+  border-radius: 7px;
+}
+
+#historyTab .history-favicon {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  object-fit: contain;
 }
 
 .history-item-content {
   flex: 1;
   min-width: 0;
-}
-
-.history-item-right {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  flex-shrink: 0;
+  gap: 2px;
 }
 
-.history-item-bottom {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
+.history-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.history-item-actions {
+.history-subline {
   display: flex;
   align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-  margin-top: 4px;
+  gap: 5px;
+  min-width: 0;
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--text-secondary);
 }
 
+#historyTab .history-url {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-subline-dot {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-size: 9px;
+}
+
+.history-timestamp {
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--text-secondary);
+}
+
+/* Difficulty: plain coloured text, same red / amber / green as the Detection tab */
+.history-difficulty-pill {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 14px;
+  white-space: nowrap;
+}
+
+/* Card difficulty shares its level colours with Detection (common.css). */
+.history-difficulty-pill.diff-metric {
+  font-weight: 600;
+}
+
+/* Square icon buttons (toolbar "…", card "…", modal copy) */
 .history-item-action-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 28px;
   height: 28px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-  padding: 0;
-  border: none;
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-secondary);
 }
 
 .history-item-action-btn svg {
-  width: 14px;
-  height: 14px;
   flex-shrink: 0;
 }
 
-/* Clear cache button - Detection-style amber */
-.history-item-action-btn.history-clear-cache-btn {
-  background: rgba(245, 158, 11, 0.2);
-  border: 1px solid rgba(245, 158, 11, 0.35);
-  color: #fcd34d;
-}
-
-.history-item-action-btn.history-clear-cache-btn svg,
-.history-item-action-btn.history-clear-cache-btn svg path {
-  color: #fcd34d;
-  stroke: currentColor;
-  fill: none;
-}
-
-.history-item-action-btn.history-clear-cache-btn:hover {
-  background: rgba(245, 158, 11, 0.32);
-  color: #fde68a;
-}
-
-.history-item-action-btn.history-clear-cache-btn:hover svg,
-.history-item-action-btn.history-clear-cache-btn:hover svg path {
-  color: #fde68a;
-  stroke: currentColor;
-  fill: none;
-}
-
-/* Copy button - Detection-style blue */
-.history-item-action-btn.history-copy-btn {
-  background: rgba(59, 130, 246, 0.15);
-  border: none;
-  color: var(--accent);
-}
-
-.history-item-action-btn.history-copy-btn svg,
-.history-item-action-btn.history-copy-btn svg path {
-  color: var(--accent);
-  fill: var(--accent);
-}
-
-/* Export button - Gray outlined (like Delete style) */
-.history-item-action-btn.history-export-btn {
-  background: rgba(148, 163, 184, 0.2);
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  color: #cbd5e1;
-}
-
-.history-item-action-btn.history-export-btn svg,
-.history-item-action-btn.history-export-btn svg path {
-  color: #cbd5e1;
-  fill: #cbd5e1;
-}
-
-/* Blacklist button - Detection-style red */
-.history-item-action-btn.history-blacklist-btn {
-  background: rgba(239, 68, 68, 0.2);
-  border: 1px solid rgba(239, 68, 68, 0.35);
-  color: var(--danger-light);
-}
-
-.history-item-action-btn.history-blacklist-btn svg,
-.history-item-action-btn.history-blacklist-btn svg path {
-  color: var(--danger-light);
-  stroke: currentColor;
-  fill: none;
-}
-
-/* Delete button - Red */
-.history-item-action-btn.history-delete-btn {
-  background: rgba(239, 68, 68, 0.2);
-  border: 1px solid rgba(239, 68, 68, 0.35);
-  color: var(--danger-light);
-}
-
-.history-item-action-btn.history-delete-btn svg,
-.history-item-action-btn.history-delete-btn svg path {
-  color: var(--danger-light);
-  fill: var(--danger-light);
-}
-
-.history-item-action-btn:hover {
-  transform: scale(1.05);
-}
-
-.history-item-action-btn.history-copy-btn:hover {
-  background: var(--accent);
-  color: #fff;
-}
-
-.history-item-action-btn.history-copy-btn:hover svg,
-.history-item-action-btn.history-copy-btn:hover svg path {
-  color: #fff;
-  fill: #fff;
-}
-
-.history-item-action-btn.history-export-btn:hover {
-  background: rgba(148, 163, 184, 0.32);
-}
-
-.history-item-action-btn.history-export-btn:hover svg,
-.history-item-action-btn.history-export-btn:hover svg path {
-  color: #f1f5f9;
-  fill: #f1f5f9;
-}
-
-.history-item-action-btn.history-blacklist-btn:hover {
-  background: rgba(239, 68, 68, 0.32);
-  color: var(--danger-lightest);
-}
-
-.history-item-action-btn.history-blacklist-btn:hover svg,
-.history-item-action-btn.history-blacklist-btn:hover svg path {
-  color: var(--danger-lightest);
-  stroke: currentColor;
-  fill: none;
-}
-
-.history-item-action-btn.history-delete-btn:hover {
-  background: rgba(239, 68, 68, 0.32);
-  color: var(--danger-lightest);
-}
-
-.history-item-action-btn.history-delete-btn:hover svg,
-.history-item-action-btn.history-delete-btn:hover svg path {
-  color: var(--danger-lightest);
-  fill: var(--danger-lightest);
+.history-item-action-btn:hover,
+.history-item-action-btn.active {
+  background: var(--bg-tertiary);
+  border-color: var(--border-light);
+  color: var(--text-primary);
 }
 
 .history-item-action-btn:active {
   transform: scale(0.95);
 }
 
-.history-timestamp {
-  font-size: 11px;
-  color: var(--accent);
-  opacity: 0.85;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.history-header-info {
+.history-item-bottom {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 6px;
-}
-
-.history-favicon {
-  width: 18px;
-  height: 18px;
-  border-radius: 3px;
-  flex-shrink: 0;
-}
-
-.history-url {
-  font-size: 12px;
-  color: var(--text-muted);
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  line-height: 1.4;
-}
-
-.history-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 8px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  line-height: 1.4;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding-top: 9px;
+  border-top: 1px solid #3a3a3a;
 }
 
 .history-detections {
   display: flex;
   align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-  row-gap: 6px;
+  gap: 4px;
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .history-detection-tag {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 5px 12px;
-  border-radius: 14px;
-  font-size: 10px;
+  flex-shrink: 0;
+  height: 26px;
+  padding: 0 7px;
+  border-radius: 6px;
+  font-size: 10.5px;
   font-weight: 700;
-  border: 1px solid rgba(0, 0, 0, 0.3) !important;
-  max-width: none;
+  border: 1px solid #444 !important;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
-  background: none;
-  outline: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.12);
-  transition: all 0.2s ease;
-  position: relative;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  letter-spacing: 0.3px;
-}
-
-.history-detection-tag::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  pointer-events: none;
-}
-
-.history-detection-tag:not(.more-detections):hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.15);
+  background: #262626;
+  color: var(--text-secondary);
+  transition: background 0.15s, border-color 0.15s;
 }
 
 .history-detection-tag.more-detections {
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
-  border: 1px solid var(--border) !important;
-  font-weight: 600;
+  min-width: 26px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  text-shadow: none;
-  padding: 0 12px;
-  font-size: 11px;
-  letter-spacing: 0.2px;
-  height: 32px;
-  min-height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-}
-
-.history-detection-tag.more-detections::before {
-  display: none;
 }
 
 .history-detection-tag.more-detections:hover {
-  transform: scale(1.08);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
   background: var(--bg-tertiary);
   color: var(--text-primary);
 }
 
-.history-detection-tag.more-detections:active {
-  transform: scale(0.98);
-}
-
-/* Icon-based badge styles */
 .history-detection-tag.icon-badge {
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
+  width: 26px;
+  min-width: 26px;
   padding: 0;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border) !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   overflow: visible;
 }
 
-.history-detection-tag.icon-badge::before {
-  display: none;
-}
-
 .history-detection-tag.icon-badge:hover {
-  transform: scale(1.08);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
-  z-index: 10;
-  background: var(--bg-tertiary);
+  border-color: var(--border-light) !important;
 }
 
+/* Official vendor logos fill a white rounded plate */
 .history-detection-tag.icon-badge .detection-icon {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  box-sizing: border-box;
   object-fit: contain;
+  background: #fff;
   border-radius: 4px;
 }
 
-/* Fingerprint icons in history card badges */
+/* Scrapfly fallback mark for detectors without a vendor logo */
+.history-detection-tag.icon-badge .detection-icon--default {
+  background: transparent;
+  border-radius: 0;
+}
+
 .history-detection-tag.icon-badge .detection-icon-svg {
   width: 100%;
   height: 100%;
@@ -471,25 +454,45 @@
   justify-content: center;
 }
 
-/* .fingerprint-icon gradient now in common.css */
-
-.history-detection-tag.icon-badge .fingerprint-icon svg {
-  width: 18px;
-  height: 18px;
-}
-
+.history-detection-tag.icon-badge .fingerprint-icon svg,
 .history-detection-tag.icon-badge .history-fingerprint-image {
-  width: 18px;
-  height: 18px;
+  width: 15px;
+  height: 15px;
 }
 
-/* Override badge background for fingerprint badges */
-.history-detection-tag.icon-badge.fingerprint-badge {
-  background: var(--bg-secondary);
-  border-color: var(--border) !important;
+/* Detections count, average confidence and difficulty, in the subline after the domain */
+.history-metrics {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
-/* History Detail Modal */
+.history-metric {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.history-metric svg {
+  width: 12px;
+  height: 12px;
+  color: var(--text-secondary);
+}
+
+.history-metric[class*="tone-"],
+.history-metric[class*="tone-"] svg {
+  color: var(--tone);
+}
+
+/* ============================================
+   History detail modal (v2.8 redesign)
+   ============================================ */
 .history-modal {
   display: none;
   position: fixed;
@@ -504,11 +507,8 @@
 
 .history-modal-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(2px);
   z-index: 1;
   pointer-events: auto;
@@ -516,13 +516,14 @@
 
 .history-modal-container {
   position: relative;
-  width: 90%;
-  max-width: 520px;
-  max-height: 85%;
+  width: calc(100% - 24px);
+  max-width: 376px;
+  height: 540px;
+  max-height: calc(100% - 24px);
   background: var(--bg-secondary);
-  border: 1px solid var(--border);
+  border: 1px solid #4b4b4b;
   border-radius: 12px;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -530,32 +531,42 @@
   pointer-events: auto;
 }
 
+/* Header and summary never scroll; only .history-modal-content does */
 .history-modal-header {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg-secondary);
+  gap: 10px;
+  min-height: var(--modal-header-min-height);
+  padding: 12px 12px 12px 14px;
+  border-bottom: 1px solid #3a3a3a;
 }
 
 .history-modal-title-section {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex: 1;
   min-width: 0;
-  padding-right: 8px;
+}
+
+.history-modal-favicon-tile {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #242424;
+  border: 1px solid #404040;
+  border-radius: 8px;
 }
 
 .history-modal-favicon {
-  width: 32px;
-  height: 32px;
-  padding: 6px;
-  border-radius: 10px;
-  flex-shrink: 0;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
   object-fit: contain;
 }
 
@@ -565,235 +576,303 @@
 }
 
 .history-modal-title-info h3 {
-  margin: 0 0 4px 0;
-  font-size: 14px;
+  margin: 0 0 2px;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 17px;
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.history-modal-url {
+.history-modal-subline {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
   font-size: 11px;
-  color: var(--accent);
+  line-height: 14px;
+}
+
+.history-modal-url {
+  min-width: 0;
+  color: var(--accent-light);
   text-decoration: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: block;
 }
 
 .history-modal-url:hover {
   text-decoration: underline;
 }
 
-/* .history-modal-close now in common.css */
-
-/* Modal Meta Bar - Dark Theme - Compact Layout */
-.history-modal-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px 16px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  font-size: 12px;
+.history-modal-timestamp {
+  flex-shrink: 0;
   color: var(--text-secondary);
-  border-radius: 8px;
-  margin: 12px 16px;
+  white-space: nowrap;
+  cursor: default;
 }
 
-/* Base row styling */
-.history-modal-meta-row {
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-/* Row 1: Timestamp - left aligned */
-.history-modal-meta-row.timestamp-row {
-  justify-content: flex-start;
-}
-
-/* Row 2: Category badges - left aligned, can wrap */
-.history-modal-meta-row.categories-row {
-  justify-content: flex-start;
-}
-
-.history-modal-meta-row.categories-row > div {
-  width: 100%;
-}
-
-/* Row 2 (stats): same alignment as badges, but hosts 4-tile stats grid */
-.history-modal-meta-row.stats-row {
-  justify-content: flex-start;
-}
-
-.history-modal-meta-row.stats-row > div {
-  width: 100%;
-}
-
-.history-modal-meta-row.stats-row .history-stats-line {
-  width: 100%;
-}
-
-
-/* Category breakdown badges in modal meta */
-.history-modal-category-breakdown {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-  row-gap: 6px;
-}
-
-.history-modal-category-badge {
+.history-modal-header-actions {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 10px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-primary);
+  flex-shrink: 0;
 }
 
-.history-modal-category-badge svg {
-  display: none;
-}
-
-/* Anti-Bot badge - Orange */
-.history-modal-category-badge.antibot {
-  background: rgba(255, 87, 51, 0.15);
-  border-color: rgba(255, 87, 51, 0.4);
-  color: #FF5733;
-}
-
-.history-modal-category-badge.antibot svg {
-  stroke: #FF5733;
-}
-
-/* Captcha badge - Cyan */
-.history-modal-category-badge.captcha {
-  background: rgba(51, 195, 255, 0.15);
-  border-color: rgba(51, 195, 255, 0.4);
-  color: #33C3FF;
-}
-
-.history-modal-category-badge.captcha svg {
-  stroke: #33C3FF;
-}
-
-/* Fingerprint badge - Blue */
-.history-modal-category-badge.fingerprint {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.4);
-  color: var(--accent);
-}
-
-.history-modal-category-badge.fingerprint svg {
-  stroke: var(--accent);
-}
-
-/* Timestamp display */
-.history-modal-timestamp {
+.history-modal-header-actions .history-item-action-btn {
   display: flex;
   align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid #4b4b4b;
+  border-radius: 7px;
+  background: #363636;
+  color: #e0e0e0;
+  cursor: pointer;
+}
+
+.history-modal-header-actions .history-item-action-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* Summary: three metric tiles, then a category bar with legend + cache scope */
+.history-modal-summary {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.hm-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 6px;
-  font-size: 11px;
-  color: var(--text-muted);
 }
 
-.history-modal-timestamp .time-ago {
+.hm-metric {
+  min-width: 0;
+  padding: 7px 9px 8px;
+  background: #262626;
+  border: 1px solid #404040;
+  border-radius: 8px;
+}
+
+.hm-metric-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  line-height: 12px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
   color: var(--text-secondary);
-  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.history-modal-timestamp .time-full {
-  color: var(--text-muted);
-  font-size: 10px;
+.hm-metric-value {
+  margin-top: 3px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+.hm-metric-value[class*="tone-"] {
+  color: var(--tone);
+}
+
+/* Difficulty uses the Detection-tab colours */
+.hm-metric-difficulty .hm-metric-value.tone-red { color: var(--danger); }
+.hm-metric-difficulty .hm-metric-value.tone-amber { color: var(--warning); }
+.hm-metric-difficulty .hm-metric-value.tone-green { color: var(--green); }
+
+.hm-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.hm-bar {
+  display: flex;
+  gap: 2px;
+  height: 6px;
+  border-radius: 3px;
+  background: #262626;
+}
+
+/* Segments carry the bar's rounded ends; a taller invisible hit area makes
+   them easy to hover for the category tooltip */
+.hm-bar-seg {
+  position: relative;
+  min-width: 4px;
+  cursor: default;
+  transition: filter 0.12s ease;
+}
+
+.hm-bar-seg:first-child { border-radius: 3px 0 0 3px; }
+.hm-bar-seg:last-child { border-radius: 0 3px 3px 0; }
+.hm-bar-seg:only-child { border-radius: 3px; }
+
+.hm-bar-seg::after {
+  content: '';
+  position: absolute;
+  inset: -7px 0;
+}
+
+.hm-bar-seg:hover {
+  filter: brightness(1.25);
+}
+
+.cat-antibot { --cat: #ff5733; }
+.cat-captcha { --cat: #33c3ff; }
+.cat-fingerprint { --cat: var(--accent-light); }
+.cat-other { --cat: #8b8b8b; }
+
+.hm-bar-seg,
+.hm-dot {
+  background: var(--cat);
+}
+
+.hm-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.hm-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.hm-legend-item b {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.hm-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+}
+
+.hm-legend-scope {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  white-space: nowrap;
+  color: var(--purple-light);
+  font-weight: 600;
+}
+
+.hm-legend-scope svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Scrolling detection list */
 .history-modal-content {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
-  padding: 16px 20px;
-  background: var(--bg-secondary);
-  height: 400px;
-  max-height: 400px;
+  padding: 10px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
-
-/* history-modal-content scrollbar inherited from common.css */
 
 .history-modal-detection-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 12px;
-  margin-bottom: 8px;
-  transition: all 0.2s;
+  flex-shrink: 0;
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 9px;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
-.history-modal-detection-card:last-child {
-  margin-bottom: 0;
+.history-modal-detection-card.has-methods:hover,
+.history-modal-detection-card.expanded {
+  border-color: var(--accent);
 }
 
-.history-modal-detection-card.has-methods .history-modal-detection-header {
-  cursor: pointer;
-  transition: all 0.2s;
-  padding: 2px;
-  margin: -2px;
-  border-radius: 6px;
-}
-
-.history-modal-detection-card.has-methods .history-modal-detection-header:hover {
-  background: none;
-}
-
-.history-modal-detection-card.has-methods:hover {
-  border-color: var(--border-light);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.history-modal-detection-card.expanded {
+  background: #2d2d2d;
 }
 
 .history-modal-detection-header {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 8px 10px;
+  user-select: none;
+  outline: none;
 }
 
-.history-modal-detection-header > .modal-detector-icon {
-  width: 28px;
-  height: 28px;
-  padding: 4px;
-  object-fit: contain;
-  border-radius: 6px;
+.history-modal-detection-card.has-methods .history-modal-detection-header {
+  cursor: pointer;
+}
+
+.history-modal-detection-header:focus-visible {
+  box-shadow: inset 0 0 0 2px rgba(59, 130, 246, 0.5);
+  border-radius: 9px;
+}
+
+/* Icon tile tinted by category */
+.history-modal-detection-icon {
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-}
-
-/* Fingerprint SVG icons in modal cards */
-.history-modal-detection-header .modal-detector-icon-svg {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
-  flex-shrink: 0;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--cat) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cat) 28%, transparent);
 }
 
-/* .fingerprint-icon style now in common.css */
+.history-modal-detection-icon.icon-antibot { --cat: #ff5733; }
+.history-modal-detection-icon.icon-captcha { --cat: #33c3ff; }
+.history-modal-detection-icon.icon-fingerprint { --cat: #60a5fa; }
+.history-modal-detection-icon.icon-other { --cat: #8b8b8b; }
 
-.history-modal-detection-header .fingerprint-icon svg {
-  width: 16px;
-  height: 16px;
+.history-modal-detection-icon > .modal-detector-icon {
+  width: 22px;
+  height: 22px;
+  padding: 2px;
+  object-fit: contain;
+  border-radius: 5px;
+  background: #fff;
 }
 
-.history-modal-detection-header .history-modal-fingerprint-image {
+.history-modal-detection-icon > .modal-detector-icon--default {
+  background: transparent;
+  padding: 0;
+}
+
+.history-modal-detection-icon .modal-detector-icon-svg {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.history-modal-detection-icon .fingerprint-icon svg,
+.history-modal-detection-icon .history-modal-fingerprint-image {
   width: 16px;
   height: 16px;
 }
@@ -806,80 +885,94 @@
   min-width: 0;
 }
 
-.history-modal-detection-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
-  line-height: 1.2;
+.history-modal-detection-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
 }
 
-/* Right side container for confidence and expand icon */
+.history-modal-detection-name {
+  min-width: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.history-modal-detection-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.history-modal-detection-chips:empty {
+  display: none;
+}
+
+/* Category: small text tag next to the name; method chips below stay outlined */
+.history-modal-badge {
+  flex-shrink: 0;
+  font-size: 9.5px;
+  font-weight: 700;
+  line-height: 12px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: var(--cat);
+}
+
+.history-modal-method-type-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.history-modal-method-type-overflow {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: #4b4b4b;
+  font-weight: 500;
+}
+
+/* Right side: confidence value over a thin bar, then the chevron */
 .history-modal-detection-right {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-left: auto;
+  gap: 8px;
   flex-shrink: 0;
 }
 
-.history-modal-badge {
-  padding: 3px 8px;
+.history-modal-expand-btn {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   border-radius: 6px;
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  white-space: nowrap;
-  border: none;
+  color: var(--text-secondary);
 }
 
-.history-modal-confidence {
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
-  min-width: 48px;
-  text-align: center;
-  transition: all 0.2s ease;
+.history-modal-expand-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.history-modal-detection-card.has-methods:hover .history-modal-expand-btn,
+.history-modal-detection-card.expanded .history-modal-expand-btn {
   background: var(--bg-tertiary);
   color: var(--text-primary);
-  border: 1px solid var(--border);
 }
 
-.history-modal-confidence.confidence-high {
-  background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
-  color: white;
-  box-shadow: 0 1px 2px rgba(16, 185, 129, 0.3);
-  border-color: transparent;
-}
-
-.history-modal-confidence.confidence-medium {
-  background: linear-gradient(135deg, var(--warning) 0%, var(--warning-dark) 100%);
-  color: white;
-  box-shadow: 0 1px 2px rgba(245, 158, 11, 0.3);
-  border-color: transparent;
-}
-
-.history-modal-confidence.confidence-low {
-  background: linear-gradient(135deg, var(--danger) 0%, var(--danger-dark) 100%);
-  color: white;
-  box-shadow: 0 1px 2px rgba(239, 68, 68, 0.3);
-  border-color: transparent;
-}
-
-.history-modal-expand-icon {
-  padding: 4px 8px;
-  font-size: 10px;
-  transition: transform 0.2s;
-  color: var(--text-secondary);
-  flex-shrink: 0;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-}
-
-.history-modal-detection-card.expanded .history-modal-expand-icon {
+.history-modal-detection-card.expanded .history-modal-expand-btn svg {
   transform: rotate(180deg);
 }
 
@@ -887,165 +980,107 @@
 .history-modal-detection-details {
   display: none;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
+  gap: 7px;
+  margin: 0 10px 10px;
+  padding-top: 9px;
+  border-top: 1px solid #3a3a3a;
 }
 
 .history-modal-detection-card.expanded .history-modal-detection-details {
   display: flex;
 }
 
-/* Meta row with category, match count, method types */
-.history-modal-detection-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.history-modal-meta-separator {
-  color: var(--text-muted);
-  font-size: 12px;
-}
-
 .history-modal-match-count {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.history-modal-method-types {
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.history-modal-method-type-badge {
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 9px;
-  font-weight: 600;
+  font-size: 9.5px;
+  font-weight: 700;
+  line-height: 12px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
-  line-height: 1.2;
-  border: 1px solid transparent;
-  background: var(--bg-secondary);
   color: var(--text-secondary);
 }
 
-.history-modal-method-type-overflow {
-  background: var(--bg-tertiary);
-  color: var(--text-secondary);
-  border-color: var(--border);
-}
-
-/* Methods list inside details */
 .history-modal-detection-methods {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
+/* Method row: chip and confidence on top, the value full width below */
 .history-modal-method-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "chip pill"
+    "value value";
   align-items: center;
-  gap: 6px;
-  padding: 6px 8px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-left: 3px solid transparent;
-  border-radius: 6px;
-  transition: all 0.2s;
+  gap: 5px;
+  padding: 6px 7px 7px;
+  background: #242424;
+  border: 1px solid #3d3d3d;
+  border-radius: 7px;
+  transition: border-color 0.15s ease, background 0.15s ease;
   cursor: pointer;
   width: 100%;
   box-sizing: border-box;
 }
 
 .history-modal-method-item:hover {
-  background: var(--bg-secondary);
-  border-left-color: var(--accent);
-  border-color: var(--border);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+  border-color: var(--accent);
 }
 
 .history-modal-method-badge {
-  padding: 3px 7px;
+  display: block;
+  height: 18px;
+  line-height: 16px;
+  padding: 0 6px;
   border-radius: 4px;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  flex-shrink: 0;
+  white-space: nowrap;
   border: 1px solid transparent;
-}
-
-.history-modal-method-value {
-  flex: 1;
-  font-size: 10.5px;
-  color: var(--text-primary);
-  font-family: 'Monaco', 'Courier New', monospace;
-  background: var(--bg-primary);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 4px 6px;
-  margin: 0;
-  min-width: 0;
+  grid-area: chip;
+  justify-self: start;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  line-height: 1.4;
-  display: inline-flex;
-  align-items: center;
 }
 
-.history-modal-method-item:hover .history-modal-method-value {
-  border-color: var(--accent);
-  background: var(--bg-secondary);
+.history-modal-method-value {
+  grid-area: value;
+  min-width: 0;
+  max-width: 100%;
+  height: 22px;
+  padding: 0 6px;
+  margin: 0;
+  display: block;
+  line-height: 20px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #e0e0e0;
+  background: var(--bg-primary);
+  border: 1px solid #3d3d3d;
+  border-radius: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .history-modal-method-item.copy-feedback {
-  background: rgba(16, 185, 129, 0.25);
+  background: rgba(16, 185, 129, 0.15);
   border-color: rgba(16, 185, 129, 0.6);
-  border-left-color: var(--success);
 }
 
 .history-modal-method-item.copy-feedback .history-modal-method-value {
   color: var(--success-light);
   font-weight: 600;
   border-color: rgba(16, 185, 129, 0.6);
-  background: rgba(16, 185, 129, 0.2);
+  background: rgba(16, 185, 129, 0.15);
 }
 
+/* Per-match confidence: dial + % (FormatUtils.confidenceHtml) */
 .history-modal-method-confidence {
-  padding: 2px 6px;
-  border-radius: 12px;
-  font-size: 9px;
-  font-weight: 700;
-  flex-shrink: 0;
-  min-width: 34px;
-  text-align: center;
-}
-
-.history-modal-method-confidence.confidence-high {
-  background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
-  color: white;
-  box-shadow: 0 1px 2px rgba(16, 185, 129, 0.3);
-}
-
-.history-modal-method-confidence.confidence-medium {
-  background: linear-gradient(135deg, var(--warning) 0%, var(--warning-dark) 100%);
-  color: white;
-  box-shadow: 0 1px 2px rgba(245, 158, 11, 0.3);
-}
-
-.history-modal-method-confidence.confidence-low {
-  background: linear-gradient(135deg, var(--danger) 0%, var(--danger-dark) 100%);
-  color: white;
-  box-shadow: 0 1px 2px rgba(239, 68, 68, 0.3);
+  grid-area: pill;
+  justify-self: end;
 }
 
 .history-modal-empty,
@@ -1056,78 +1091,135 @@
   font-size: 12px;
 }
 
-/* History Stats Line */
+/* History Stats: one bordered block, 2x2 grid split by 1px dividers */
 .history-stats-line {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 6px;
+  grid-template-columns: calc(50% - 1px) minmax(0, 1fr); /* odd pixel goes to the right column */
+  gap: 1px;
   width: 100%;
   align-self: stretch;
+  background: #404040;
+  border: 1px solid #424242;
+  border-radius: 7px;
+  overflow: hidden;
 }
 
 .history-stat-inline {
   display: flex;
   align-items: center;
-  width: 100%;
-  padding: 6px 8px;
-  background: var(--bg-tertiary);
-  border-radius: 7px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  gap: 6px;
+  min-width: 0;
+  height: 41px;
+  padding: 0 9px;
+  background: #323232;
+  gap: 7px;
+}
+
+/* Second row is 1px taller, as in the 2.8 layout: the icon centres in the full
+   row while the text keeps row one's vertical phase */
+.history-stat-inline:nth-child(n+3) {
+  height: 42px;
+}
+
+.history-stat-inline:nth-child(n+3) .history-stat-content {
+  margin-top: -1px;
 }
 
 .history-stat-icon {
   width: 20px;
   height: 20px;
-  border-radius: 5px;
+  flex-shrink: 0;
+  border-radius: 5.5px;
+  border: 1px solid var(--tone-border);
+  background: var(--tone-bg);
+  color: var(--tone);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .history-stat-icon svg {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
 }
 
 .history-stat-content {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  min-width: 0;
 }
 
 .history-stat-label {
-  font-size: 9px;
-  font-weight: 600;
-  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 700;
+  color: #e0e0e0;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .history-stat-value {
-  font-size: 12px;
+  margin-top: -1px;
+  font-size: 12.5px;
+  line-height: 16px;
   font-weight: 700;
   color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Stat-specific colors */
-.history-stat-detections .history-stat-icon {
-  color: var(--accent);
-  background: rgba(59, 130, 246, 0.15);
+.history-stat-value[class*="tone-"] {
+  color: var(--tone);
 }
 
-.history-stat-confidence .history-stat-icon {
-  color: var(--green);
-  background: rgba(34, 197, 94, 0.15);
+/* Difficulty value uses the same colors as the Detection tab (DetectionUtils.getDifficultyInfo) */
+.history-stat-difficulty .history-stat-value.tone-red,
+#difficultyLevel.tone-red,
+#detectionModalDifficulty.tone-red {
+  color: var(--danger);
 }
 
-.history-stat-difficulty .history-stat-icon {
+.history-stat-difficulty .history-stat-value.tone-amber,
+#difficultyLevel.tone-amber,
+#detectionModalDifficulty.tone-amber {
   color: var(--warning);
-  background: rgba(245, 158, 11, 0.15);
 }
 
-.history-stat-cache-scope .history-stat-icon {
-  color: var(--purple);
-  background: rgba(139, 92, 246, 0.15);
+.history-stat-difficulty .history-stat-value.tone-green,
+#difficultyLevel.tone-green,
+#detectionModalDifficulty.tone-green {
+  color: var(--green);
 }
 
+/* Stat tones: icon square tint + border, and the coloured value */
+.tone-blue {
+  --tone: var(--accent-light);
+  --tone-bg: rgba(59, 130, 246, 0.125);
+  --tone-border: rgba(96, 165, 250, 0.24);
+}
+
+.tone-amber {
+  --tone: var(--warning-light);
+  --tone-bg: rgba(245, 158, 11, 0.125);
+  --tone-border: rgba(251, 191, 36, 0.24);
+}
+
+.tone-red {
+  --tone: var(--danger-light);
+  --tone-bg: rgba(239, 68, 68, 0.125);
+  --tone-border: rgba(252, 165, 165, 0.24);
+}
+
+.tone-green {
+  --tone: var(--success-light);
+  --tone-bg: rgba(16, 185, 129, 0.125);
+  --tone-border: rgba(52, 211, 153, 0.24);
+}
+
+.tone-purple {
+  --tone: var(--purple-light);
+  --tone-bg: rgba(139, 92, 246, 0.125);
+  --tone-border: rgba(167, 139, 250, 0.24);
+}

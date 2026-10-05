@@ -5,29 +5,104 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-02-04",
-  "version": "1.0.1",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "icon": "font_fingerprint.png",
+  "description": "Font-set access, availability checks and text measurements; installed-font collection is unconfirmed",
   "detection": {
     "js_hooks": [
       {
-        "description": "Measures text dimensions to detect installed fonts",
+        "description": "Measures text dimensions; installed-font enumeration is unconfirmed",
         "enabled": true,
-        "confidence": 100,
-        "target": "CanvasRenderingContext2D.prototype.measureText"
+        "confidence": 10,
+        "target": "CanvasRenderingContext2D.prototype.measureText",
+        "id": "font-measure",
+        "standalone": true
       },
       {
-        "description": "Accesses FontFaceSet for font enumeration",
+        "description": "Accesses the document font set; access alone does not enumerate installed fonts",
         "enabled": true,
-        "confidence": 85,
-        "target": "Document.prototype.fonts"
+        "confidence": 10,
+        "target": "Document.prototype.fonts",
+        "id": "font-set",
+        "standalone": true
       },
       {
-        "description": "Reads text width for font fingerprinting",
+        "description": "Reads measured text width; ordinary text layout uses this metric",
         "enabled": true,
-        "confidence": 85,
-        "target": "TextMetrics.prototype.width"
+        "confidence": 10,
+        "target": "TextMetrics.prototype.width",
+        "id": "font-width",
+        "standalone": true
+      },
+      {
+        "id": "font-check",
+        "description": "Checks font loading availability; font names, results and repetition are unknown",
+        "enabled": true,
+        "confidence": 15,
+        "standalone": true,
+        "target": "FontFaceSet.prototype.check"
+      },
+      {
+        "id": "font-entries",
+        "description": "Requests font-set entries; these are document fonts, not the full installed-font inventory",
+        "enabled": true,
+        "confidence": 15,
+        "standalone": true,
+        "target": "FontFaceSet.prototype.entries"
+      }
+    ],
+    "content": [
+      {
+        "id": "font-measure-source",
+        "text": "measureText",
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to text measurement; execution is unconfirmed",
+        "confidence": 10,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true
+      },
+      {
+        "id": "font-set-source",
+        "text": "document.fonts",
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true,
+        "description": "Script reference to the document font set; execution is unconfirmed",
+        "confidence": 10,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "font-source-profile",
+      "name": "Font-set and text measurement script references",
+      "confidence": 15,
+      "when": { "all": [{ "pattern": "font-set-source" }, { "pattern": "font-measure-source" }] }
+    },
+    {
+      "id": "font-availability-metrics",
+      "name": "Font availability checks and measured text width",
+      "confidence": 30,
+      "when": { "all": [{ "pattern": "font-check" }, { "pattern": "font-measure" }, { "pattern": "font-width" }] }
+    },
+    {
+      "id": "font-profile",
+      "name": "Font access and text metrics",
+      "confidence": 40,
+      "when": { "all": [{ "pattern": "font-set" }, { "pattern": "font-measure" }, { "pattern": "font-width" }] }
+    },
+    {
+      "id": "font-set-inspection-metrics",
+      "name": "Font-set iteration, availability checks and text metrics",
+      "confidence": 55,
+      "when": { "all": [{ "pattern": "font-entries" }, { "pattern": "font-check" }, { "pattern": "font-measure" }, { "pattern": "font-width" }] }
+    }
+  ]
 }

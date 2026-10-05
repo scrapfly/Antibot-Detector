@@ -7,77 +7,93 @@
     return;
   }
 
-  // Suppression depth key shared with content-main-world.js
-  const HOOK_SUPPRESSION_DEPTH_KEY = '__scrapflyHookSuppressionDepth';
+  // Frozen enum whose values are its own key names (internal state only)
+  function keyed(shape) {
+    const out = {};
+    for (const key of Object.keys(shape)) out[key] = key;
+    return Object.freeze(out);
+  }
 
   /**
    * Property States
    */
-  const PropertyState = {
-    PENDING: 'pending',           // Not yet checked
-    PATH_NOT_FOUND: 'path_not_found',  // Parent path doesn't exist (retry)
-    PROPERTY_ABSENT: 'property_absent', // Property doesn't exist on object (may appear later)
-    DETECTED: 'detected',         // Property found and condition met
-    NOT_MATCHED: 'not_matched',   // Property found but condition not met
-    ERROR: 'error',               // Non-recoverable error
-    ABANDONED: 'abandoned'        // Max retries exceeded
-  };
+  const PropertyState = keyed({
+    PENDING: null,          // Not yet checked
+    PATH_NOT_FOUND: null,   // Parent path doesn't exist (retry)
+    PROPERTY_ABSENT: null,  // Property doesn't exist on object (may appear later)
+    DETECTED: null,         // Property found and condition met
+    NOT_MATCHED: null,      // Property found but condition not met
+    ERROR: null,            // Non-recoverable error
+    ABANDONED: null         // Max retries exceeded
+  });
+
+  // States that never change again
+  const TERMINAL_STATES = new Set([PropertyState.DETECTED, PropertyState.ERROR, PropertyState.ABANDONED]);
+
+  // What walking a property path found
+  const Lookup = keyed({
+    FOUND: null,
+    PARENT_NULL: null,       // an intermediate value is null/undefined
+    PATH_NOT_FOUND: null,    // an intermediate property is missing
+    PROPERTY_ABSENT: null,   // the final property is missing
+    GETTER_ERROR: null       // a getter (or `in` on a primitive) threw
+  });
 
   /**
-   * Polling Phases - Adaptive timing based on script loading patterns
+   * Polling phases and retry backoffs from the tuning config the ISOLATED world
+   * resolves (modules/core/hooks-config.js, WINDOW_* keys). This module holds no
+   * timing values of its own.
    */
-  const DEFAULT_POLLING_PHASES = {
-    EARLY: {
-      name: 'EARLY',
-      duration: 2000,    // First 2 seconds
-      interval: 100,     // Fast polling for immediate properties
-      description: 'Fast polling for immediately available properties'
-    },
-    NORMAL: {
-      name: 'NORMAL',
-      duration: 8000,    // 2-10 seconds
-      interval: 200,     // Typical script loading
-      description: 'Normal polling for script-loaded properties'
-    },
-    LATE: {
-      name: 'LATE',
-      duration: 20000,   // 10-30 seconds
-      interval: 500,     // Lazy-loaded scripts
-      description: 'Slow polling for lazy-loaded properties'
-    },
-    FINAL: {
-      name: 'FINAL',
-      duration: 30000,   // 30-60 seconds
-      interval: 1000,    // Very late properties
-      description: 'Final polling for extremely late properties'
-    }
-  };
+  function phasesFromConfig(config) {
+    const byName = {
+      EARLY: { duration: config.WINDOW_PHASE_EARLY_MS, interval: config.WINDOW_PHASE_EARLY_INTERVAL_MS },
+      NORMAL: { duration: config.WINDOW_PHASE_NORMAL_MS, interval: config.WINDOW_PHASE_NORMAL_INTERVAL_MS },
+      LATE: { duration: config.WINDOW_PHASE_LATE_MS, interval: config.WINDOW_PHASE_LATE_INTERVAL_MS },
+      FINAL: { duration: config.WINDOW_PHASE_FINAL_MS, interval: config.WINDOW_PHASE_FINAL_INTERVAL_MS }
+    };
+    // In order; each phase lasts until `endsAt` ms after polling started
+    let endsAt = 0;
+    return Object.entries(byName).map(([name, phase]) => {
+      endsAt += phase.duration;
+      return Object.freeze({ name, interval: phase.interval, endsAt });
+    });
+  }
 
-  /**
-   * Retry Configuration
-   */
-  const DEFAULT_RETRY_CONFIG = {
-    // Linear backoff for missing paths (may appear as scripts load)
-    pathNotFound: {
-      maxRetries: 100,       // Many retries since paths can appear late
-      baseDelay: 100,        // Start at 100ms
-      maxDelay: 1000         // Cap at 1 second
-    },
-    // Exponential backoff for getter errors (usually temporary)
-    getterError: {
-      maxRetries: 10,        // Fewer retries for errors
-      baseDelay: 50,
-      multiplier: 1.5,
-      maxDelay: 2000
-    },
-    // Property absent (not an error, just doesn't exist yet)
-    propertyAbsent: {
-      maxRetries: 50,        // Moderate retries
-      baseDelay: 200
-    }
-  };
+  function retryFromConfig(config) {
+    const linear = (base, max) => (retry) => Math.min(base + retry * config.WINDOW_RETRY_STEP_MS, max);
+    return {
+      // Linear backoff: missing parent paths may appear as scripts load
+      pathNotFound: {
+        maxRetries: config.WINDOW_RETRY_PATH_MAX,
+        delay: linear(config.WINDOW_RETRY_PATH_BASE_MS, config.WINDOW_RETRY_PATH_MAX_DELAY_MS)
+      },
+      // Exponential backoff: getter errors are usually temporary
+      getterError: {
+        maxRetries: config.WINDOW_RETRY_GETTER_MAX,
+        delay: (retry) => Math.min(
+          config.WINDOW_RETRY_GETTER_BASE_MS * Math.pow(config.WINDOW_RETRY_GETTER_MULTIPLIER, retry - 1),
+          config.WINDOW_RETRY_GETTER_MAX_DELAY_MS
+        )
+      },
+      // Linear backoff: property absent (or condition not met) may change later
+      propertyAbsent: {
+        maxRetries: config.WINDOW_RETRY_ABSENT_MAX,
+        delay: linear(config.WINDOW_RETRY_ABSENT_BASE_MS, config.WINDOW_RETRY_ABSENT_MAX_DELAY_MS)
+      }
+    };
+  }
 
-  const cloneConfig = (obj) => JSON.parse(JSON.stringify(obj));
+  function createStats() {
+    return {
+      totalProperties: 0,
+      detected: 0,
+      notMatched: 0,
+      errors: 0,
+      abandoned: 0,
+      totalChecks: 0,
+      phaseTransitions: 0
+    };
+  }
 
   /**
    * WindowPropertyTracker - Manages reliable window property detection
@@ -100,34 +116,23 @@
       this.postMessageToIsolated = null;
 
       // Statistics
-      this.stats = {
-        totalProperties: 0,
-        detected: 0,
-        notMatched: 0,
-        errors: 0,
-        abandoned: 0,
-        totalChecks: 0,
-        phaseTransitions: 0
-      };
+      this.stats = createStats();
 
       // Debug mode
       this.debugMode = false;
 
-      // Configurable polling + retry settings
-      this.pollingPhases = cloneConfig(DEFAULT_POLLING_PHASES);
-      this.retryConfig = cloneConfig(DEFAULT_RETRY_CONFIG);
-    }
+      // Bridge protocol (message types, reasons, shared global keys, log labels,
+      // report placeholders, path syntax), handed over by content-main-world.js in initialize()
+      this.protocol = null;
+      // Tuning config (modules/core/hooks-config.js), also from initialize()
+      this.config = null;
+      // Condition evaluator (window-condition-language.js), captured by
+      // content-main-world.js before any page script, also from initialize()
+      this.conditionLanguage = null;
 
-    _createStats() {
-      return {
-        totalProperties: 0,
-        detected: 0,
-        notMatched: 0,
-        errors: 0,
-        abandoned: 0,
-        totalChecks: 0,
-        phaseTransitions: 0
-      };
+      // Polling phases (ordered) + retry policies, built from the config passed to initialize()
+      this.pollingPhases = null;
+      this.retryConfig = null;
     }
 
     reset() {
@@ -144,9 +149,10 @@
       this.onDetection = null;
       this.onComplete = null;
       this.postMessageToIsolated = null;
-      this.stats = this._createStats();
-      this.pollingPhases = cloneConfig(DEFAULT_POLLING_PHASES);
-      this.retryConfig = cloneConfig(DEFAULT_RETRY_CONFIG);
+      this.stats = createStats();
+      this.pollingPhases = null;
+      this.retryConfig = null;
+      this.config = null;
     }
 
     /**
@@ -162,6 +168,13 @@
         ? options.postMessageToIsolated
         : null;
       this.debugMode = options.debugMode || false;
+      this.protocol = options.protocol || null;
+      this.config = options.config || null;
+      this.conditionLanguage = options.conditionLanguage || null;
+      if (options.config) {
+        this.pollingPhases = phasesFromConfig(options.config);
+        this.retryConfig = retryFromConfig(options.config);
+      }
       // Initialize tracking state for each property
       for (const propDef of propertyDefinitions) {
         if (!propDef.path) continue;
@@ -182,7 +195,7 @@
     }
 
     _postToIsolated(message) {
-      if (typeof this.postMessageToIsolated !== 'function') {
+      if (typeof this.postMessageToIsolated !== 'function' || !this.protocol) {
         return false;
       }
       return this.postMessageToIsolated(message);
@@ -192,11 +205,16 @@
      * Start adaptive polling
      */
     startPolling() {
-      if (this.isPolling) return;
+      if (this.isPolling || !this.protocol) return;
 
       this.isPolling = true;
       this.phaseStartTime = Date.now();
-      this.currentPhase = this.pollingPhases.EARLY;
+      if (!this.pollingPhases || !this.retryConfig) {
+        // Never invent timings: without a config there is nothing to poll with
+        this._completePolling(this.protocol.COMPLETION_REASONS.WINDOW.NO_CONFIG);
+        return;
+      }
+      this.currentPhase = this.pollingPhases[0];
 
       this._log(`Starting adaptive polling in ${this.currentPhase.name} phase`);
       this._scheduleNextPoll();
@@ -219,22 +237,17 @@
         this.stats.phaseTransitions++;
       }
 
-      // Check if we've exceeded total duration
-      const totalDuration = this.pollingPhases.EARLY.duration +
-                           this.pollingPhases.NORMAL.duration +
-                           this.pollingPhases.LATE.duration +
-                           this.pollingPhases.FINAL.duration;
-
-      if (elapsed >= totalDuration) {
+      // Check if we've exceeded total duration (the end of the last phase)
+      if (elapsed >= this.pollingPhases[this.pollingPhases.length - 1].endsAt) {
         this._log(`Polling complete after ${elapsed}ms (max duration reached)`);
-        this._completePolling('max_duration');
+        this._completePolling(this.protocol.COMPLETION_REASONS.WINDOW.MAX_DURATION);
         return;
       }
 
       // Check if all properties are in terminal state
       if (this._allPropertiesTerminal()) {
         this._log(`Polling complete after ${elapsed}ms (all properties terminal)`);
-        this._completePolling('all_terminal');
+        this._completePolling(this.protocol.COMPLETION_REASONS.WINDOW.ALL_TERMINAL);
         return;
       }
 
@@ -248,18 +261,11 @@
     /**
      * Determine which polling phase based on elapsed time
      * @param {number} elapsed - Milliseconds since polling started
-     * @returns {Object} Current phase
+     * @returns {Object} Current phase (the last one once all have elapsed)
      */
     _determinePhase(elapsed) {
-      if (elapsed < this.pollingPhases.EARLY.duration) {
-        return this.pollingPhases.EARLY;
-      } else if (elapsed < this.pollingPhases.EARLY.duration + this.pollingPhases.NORMAL.duration) {
-        return this.pollingPhases.NORMAL;
-      } else if (elapsed < this.pollingPhases.EARLY.duration + this.pollingPhases.NORMAL.duration + this.pollingPhases.LATE.duration) {
-        return this.pollingPhases.LATE;
-      } else {
-        return this.pollingPhases.FINAL;
-      }
+      return this.pollingPhases.find(phase => elapsed < phase.endsAt) ||
+        this.pollingPhases[this.pollingPhases.length - 1];
     }
 
     /**
@@ -270,7 +276,7 @@
 
       for (const [path, trackingData] of this.properties.entries()) {
         // Skip terminal states
-        if (this._isTerminalState(trackingData.state)) continue;
+        if (TERMINAL_STATES.has(trackingData.state)) continue;
 
         // Skip if not ready for retry
         if (now < trackingData.nextRetryTime) continue;
@@ -292,43 +298,54 @@
       this.stats.totalChecks++;
 
       try {
-        // Navigate to property
         const result = this._navigateToProperty(path);
 
-        if (result.error) {
-          this._handlePropertyError(path, trackingData, result.error, result.errorType);
-          return;
-        }
-
-        if (!result.found) {
-          this._handlePropertyNotFound(path, trackingData, result.reason);
-          return;
+        switch (result.lookup) {
+          case Lookup.GETTER_ERROR:
+            // Getter errors might be temporary (e.g., cross-origin); the state is left as it was
+            trackingData.lastError = result.error;
+            this._scheduleRetry(path, trackingData, this.retryConfig.getterError);
+            return;
+          case Lookup.PATH_NOT_FOUND:
+            trackingData.state = PropertyState.PATH_NOT_FOUND;
+            this._scheduleRetry(path, trackingData, this.retryConfig.pathNotFound);
+            return;
+          case Lookup.PARENT_NULL:
+          case Lookup.PROPERTY_ABSENT:
+            trackingData.state = PropertyState.PROPERTY_ABSENT;
+            this._scheduleRetry(path, trackingData, this.retryConfig.propertyAbsent);
+            return;
+          default:
+            break;
         }
 
         // Property exists, check condition
-        const conditionMet = this._checkCondition(result.value, trackingData.definition);
-
-        if (conditionMet) {
+        if (this._checkCondition(result.value, trackingData.definition)) {
           this._handlePropertyDetected(path, trackingData, result.value);
         } else {
           trackingData.state = PropertyState.NOT_MATCHED;
           // Keep checking - condition might become true later
-          this._scheduleRetry(path, trackingData, 'propertyAbsent');
+          this._scheduleRetry(path, trackingData, this.retryConfig.propertyAbsent);
         }
       } catch (error) {
-        this._handlePropertyError(path, trackingData, error.message, 'exception');
+        // Non-recoverable error
+        trackingData.lastError = error.message;
+        trackingData.state = PropertyState.ERROR;
+        this.stats.errors++;
+        this._log(`Error checking ${path}: ${error.message}`);
       }
     }
 
     /**
      * Navigate to a property path and return its value
      * @param {string} path - Property path (e.g., "navigator.brave")
-     * @returns {Object} { found: boolean, value: any, error: string, errorType: string, reason: string }
+     * @returns {{lookup: string, value?: any, error?: string}}
      */
     _navigateToProperty(path) {
-      const parts = path.split('.');
+      const parts = path.split(this.protocol.MAIN_WORLD.PATH_SEPARATOR);
       let obj = window;
-      let traversedPath = 'window';
+      // Suppression depth shared with content-main-world.js
+      const HOOK_SUPPRESSION_DEPTH_KEY = this.protocol.GLOBALS.HOOK_SUPPRESSION_DEPTH;
 
       const prevSuppressionDepth = typeof window[HOOK_SUPPRESSION_DEPTH_KEY] === 'number'
         ? window[HOOK_SUPPRESSION_DEPTH_KEY]
@@ -338,52 +355,26 @@
       try {
         for (let i = 0; i < parts.length; i++) {
           const part = parts[i];
-          traversedPath += `.${part}`;
 
           if (obj == null) {
-            return {
-              found: false,
-              reason: `Parent path null at ${traversedPath}`,
-              errorType: 'path_null'
-            };
+            return { lookup: Lookup.PARENT_NULL };
           }
 
           try {
             // Check if property exists
             if (!(part in obj)) {
-              if (i < parts.length - 1) {
-                // Intermediate path missing
-                return {
-                  found: false,
-                  reason: `Path not found: ${traversedPath}`,
-                  errorType: 'path_not_found'
-                };
-              } else {
-                // Final property missing
-                return {
-                  found: false,
-                  reason: `Property absent: ${traversedPath}`,
-                  errorType: 'property_absent'
-                };
-              }
+              const isLast = i === parts.length - 1;
+              return { lookup: isLast ? Lookup.PROPERTY_ABSENT : Lookup.PATH_NOT_FOUND };
             }
 
             // Access the property (might throw for getters)
             obj = obj[part];
           } catch (e) {
-            return {
-              found: false,
-              error: e.message,
-              errorType: 'getter_error',
-              reason: `Getter error at ${traversedPath}: ${e.message}`
-            };
+            return { lookup: Lookup.GETTER_ERROR, error: e.message };
           }
         }
 
-        return {
-          found: true,
-          value: obj
-        };
+        return { lookup: Lookup.FOUND, value: obj };
       } finally {
         window[HOOK_SUPPRESSION_DEPTH_KEY] = prevSuppressionDepth;
       }
@@ -396,12 +387,10 @@
      * @returns {boolean} True if condition is met
      */
     _checkCondition(value, definition) {
-      const condition = definition.condition || 'truthy';
-
-      // Shared, safe condition language (no eval).
-      const lang = globalThis.ScrapflyWindowConditionLanguage;
+      // Shared, safe condition language (no eval); it owns what an empty condition means.
+      const lang = this.conditionLanguage;
       if (lang && typeof lang.evaluate === 'function') {
-        return lang.evaluate(value, condition);
+        return lang.evaluate(value, definition.condition);
       }
 
       // Fallback: default to truthy
@@ -415,16 +404,18 @@
       trackingData.state = PropertyState.DETECTED;
       this.stats.detected++;
 
+      const REPORTED = this.protocol.REPORTED_VALUE;
       const detection = {
         detectorId: trackingData.definition.detectorId,
         detectorName: trackingData.definition.detectorName,
         category: trackingData.definition.category,
         property: {
           path: path,
-          actualType: value === null ? 'null' : typeof value,
-          actualValue: typeof value === 'object' ? '[object]' : String(value).substring(0, 100),
-          condition: trackingData.definition.condition || 'truthy',
-          confidence: trackingData.definition.confidence || 80,
+          actualType: value === null ? REPORTED.NULL_TYPE : typeof value,
+          actualValue: typeof value === 'object' ? REPORTED.OBJECT : String(value).substring(0, this.config.REPORTED_VALUE_MAX_CHARS),
+          condition: trackingData.definition.condition || this.conditionLanguage?.DEFAULT_CONDITION,
+          // Filled by the engine from the detector (or its default) before install
+          confidence: trackingData.definition.confidence,
           description: trackingData.definition.description
         }
       };
@@ -437,70 +428,19 @@
     }
 
     /**
-     * Handle property not found
+     * Schedule a retry for a property under one of this.retryConfig's policies
      */
-    _handlePropertyNotFound(path, trackingData, reason) {
-      const errorType = reason.includes('Path not found') ? 'path_not_found' : 'property_absent';
-
-      if (errorType === 'path_not_found') {
-        trackingData.state = PropertyState.PATH_NOT_FOUND;
-        this._scheduleRetry(path, trackingData, 'pathNotFound');
-      } else {
-        trackingData.state = PropertyState.PROPERTY_ABSENT;
-        this._scheduleRetry(path, trackingData, 'propertyAbsent');
-      }
-    }
-
-    /**
-     * Handle property access error
-     */
-    _handlePropertyError(path, trackingData, error, errorType) {
-      trackingData.lastError = error;
-
-      if (errorType === 'getter_error') {
-        // Getter errors might be temporary (e.g., cross-origin)
-        this._scheduleRetry(path, trackingData, 'getterError');
-      } else {
-        // Non-recoverable error
-        trackingData.state = PropertyState.ERROR;
-        this.stats.errors++;
-        this._log(`Error checking ${path}: ${error}`);
-      }
-    }
-
-    /**
-     * Schedule a retry for a property
-     */
-    _scheduleRetry(path, trackingData, retryType) {
-      const config = this.retryConfig[retryType];
-      if (!config) return;
-
+    _scheduleRetry(path, trackingData, policy) {
       trackingData.retryCount++;
 
-      if (trackingData.retryCount > config.maxRetries) {
+      if (trackingData.retryCount > policy.maxRetries) {
         trackingData.state = PropertyState.ABANDONED;
         this.stats.abandoned++;
         this._log(`Abandoned ${path} after ${trackingData.retryCount} retries`);
         return;
       }
 
-      // Calculate delay based on retry type
-      let delay;
-      if (retryType === 'getterError') {
-        // Exponential backoff
-        delay = Math.min(
-          config.baseDelay * Math.pow(config.multiplier, trackingData.retryCount - 1),
-          config.maxDelay
-        );
-      } else {
-        // Linear backoff for path/property not found
-        delay = Math.min(
-          config.baseDelay + (trackingData.retryCount * 50),
-          config.maxDelay || config.baseDelay * 10
-        );
-      }
-
-      trackingData.nextRetryTime = Date.now() + delay;
+      trackingData.nextRetryTime = Date.now() + policy.delay(trackingData.retryCount);
     }
 
     /**
@@ -508,22 +448,11 @@
      */
     _allPropertiesTerminal() {
       for (const trackingData of this.properties.values()) {
-        if (!this._isTerminalState(trackingData.state)) {
+        if (!TERMINAL_STATES.has(trackingData.state)) {
           return false;
         }
       }
       return true;
-    }
-
-    /**
-     * Check if a state is terminal (won't change)
-     */
-    _isTerminalState(state) {
-      return [
-        PropertyState.DETECTED,
-        PropertyState.ERROR,
-        PropertyState.ABANDONED
-      ].includes(state);
     }
 
     /**
@@ -554,7 +483,7 @@
       }
 
       this._postToIsolated({
-        type: 'WINDOW_PROPS_COMPLETE',
+        type: this.protocol.MESSAGE_TYPES.WINDOW_PROPS_COMPLETE,
         url: window.location.href,
         timestamp: Date.now(),
         detectedCount: this.stats.detected,
@@ -581,27 +510,17 @@
     /**
      * Log helper (only logs if debugMode is enabled)
      */
-    _log(message, data = null) {
-      if (!this.debugMode) return;
+    _log(message) {
+      if (!this.debugMode || !this.protocol) return;
 
-      const logMsg = `[WindowPropertyTracker] ${message}`;
-      if (data) {
-        this._postToIsolated({
-          type: 'SCRAPFLY_DEBUG_LOG',
-          level: 'log',
-          message: `${logMsg} ${JSON.stringify(data)}`,
-          source: 'window-property-tracker',
-          timestamp: Date.now()
-        });
-      } else {
-        this._postToIsolated({
-          type: 'SCRAPFLY_DEBUG_LOG',
-          level: 'log',
-          message: logMsg,
-          source: 'window-property-tracker',
-          timestamp: Date.now()
-        });
-      }
+      const LOG = this.protocol.LOG;
+      this._postToIsolated({
+        type: this.protocol.MESSAGE_TYPES.DEBUG_LOG,
+        level: LOG.LEVELS.LOG,
+        message: [LOG.PREFIXES.WINDOW_TRACKER, message].join(' '),
+        source: LOG.SOURCES.WINDOW_TRACKER,
+        timestamp: Date.now()
+      });
     }
   }
 

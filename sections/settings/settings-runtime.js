@@ -11,7 +11,7 @@ SettingsRuntime.loadToggleState = async function(toggle) {
       const result = await chrome.storage.local.get(['scrapfly_enabled']);
       const isEnabled = result.scrapfly_enabled !== false; // Default to true
       toggle.checked = isEnabled;
-      Logger.ui('Toggle state loaded:', isEnabled);
+      Logger.debug('UI', 'Toggle state loaded:', isEnabled);
     } catch (error) {
       Logger.error('UI', 'Failed to load toggle state:', error);
       toggle.checked = true; // Default to enabled on error
@@ -58,18 +58,21 @@ SettingsRuntime.handleEnableToggle = async function(enabled, context = null) {
               continue;
             }
             try {
+              if (await Utils.isUrlBlacklisted(tab.url)) {
+                await setPausedIcon(tab.id, true);
+                await setBadgeTextColor(tab.id, true);
+                await Promise.all([
+                  chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId: tab.id }),
+                  chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tab.id })
+                ]);
+                continue;
+              }
+              await setPausedIcon(tab.id, false);
               const storedData = await context.DetectionEngineManager.getStoredDetection(tab.url);
               if (storedData && storedData.detectionCount > 0) {
                 const detections = Array.isArray(storedData.detectionResults) ? storedData.detectionResults : [];
-                let color;
-                if (detections.length > 0) {
-                  const avgConfidence = DetectionUtils.computeAverageConfidence(detections);
-                  const difficulty = DetectionUtils.getDifficultyLevel(detections, avgConfidence);
-                  color = difficulty === 'High' ? badgeColors.high :
-                         difficulty === 'Medium' ? badgeColors.medium : badgeColors.low;
-                } else {
-                  color = storedData.detectionCount >= 3 ? badgeColors.medium : badgeColors.low;
-                }
+                const color = DetectionUtils.getBadgeColor(detections, badgeColors);
+                await setBadgeTextColor(tab.id, false, color);
                 chrome.action.setBadgeText({ text: storedData.detectionCount.toString(), tabId: tab.id }).catch(() => {});
                 chrome.action.setBadgeBackgroundColor({ color, tabId: tab.id }).catch(() => {});
               } else {
@@ -83,11 +86,13 @@ SettingsRuntime.handleEnableToggle = async function(enabled, context = null) {
       } else {
         const tabs = await chrome.tabs.query({});
         for (const tab of tabs) {
+          await setPausedIcon(tab.id, false);
+          await setBadgeTextColor(tab.id, false, BADGE.COLORS.DISABLED);
           chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tab.id }).catch((error) => {
-            Logger.ui(`[Settings] Failed to set disabled badge for tab ${tab.id}:`, error.message);
+            Logger.debug('UI', `[Settings] Failed to set disabled badge for tab ${tab.id}:`, error.message);
           });
           chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tab.id }).catch((error) => {
-            Logger.ui(`[Settings] Failed to set badge color for tab ${tab.id}:`, error.message);
+            Logger.debug('UI', `[Settings] Failed to set badge color for tab ${tab.id}:`, error.message);
           });
         }
       }
@@ -105,10 +110,36 @@ SettingsRuntime.handleSettingsUpdated = async function(context, sendResponse) {
         await categoryManager.loadFromStorage();
       }
 
+      // The blacklist may have changed in Settings: resync the paused icon so an
+      // unblocked tab drops the pause tile right away (and a newly blocked one gets
+      // it). Badge text follows on the next detection or page load.
+      await SettingsRuntime.syncPausedIcons();
+
       sendResponse({ status: 'success' });
     } catch (error) {
       Logger.error('UI', 'Failed to handle settings update:', error);
       sendResponse({ status: 'error', error: error.message });
+    }
+};
+
+SettingsRuntime.syncPausedIcons = async function() {
+    try {
+      const { scrapfly_enabled: enabled } = await chrome.storage.local.get('scrapfly_enabled');
+      const tabs = await chrome.tabs.query({});
+      for (const tab of tabs) {
+        if (!tab.url || !/^https?:/i.test(tab.url)) continue;
+        const paused = enabled !== false && await Utils.isUrlBlacklisted(tab.url);
+        await setPausedIcon(tab.id, paused);
+        if (paused) {
+          await setBadgeTextColor(tab.id, true);
+          await Promise.all([
+            chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId: tab.id }),
+            chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tab.id })
+          ]).catch(() => {});
+        }
+      }
+    } catch (error) {
+      Logger.warn('UI', '[Settings] Paused icon sync failed:', error);
     }
 };
 
@@ -170,28 +201,23 @@ SettingsRuntime._buildWebhookContext = function(pageData, detectionResults) {
         favicon: hostname ? UrlUtils.getFaviconUrl(hostname, 64) : '',
         timestamp: new Date().toISOString(),
         detectionCount: detectionResults.length,
-        categories: [...new Set(detectionResults.map(d => d.category))].join(',')
+        categories: [...new Set(detectionResults.map(d => d.category))].join(','),
+        detections: detectionResults
     };
 };
 
-// Substitutes <SITEURL>, <HOSTNAME>, etc. tokens into a template string.
-// Pass encode=true for URL-component contexts.
+// Substitutes <SITEURL>, <HOSTNAME>, etc. tokens (WebhookBody.VARIABLES) into a
+// template string. Pass encode=true for URL-component contexts.
 SettingsRuntime._substituteWebhookTokens = function(template, ctx, { encode = false } = {}) {
-    const e = encode ? encodeURIComponent : (v) => v;
-    return template
-        .replace(/<SITEURL>/g, e(ctx.url))
-        .replace(/<HOSTNAME>/g, e(ctx.hostname))
-        .replace(/<TITLE>/g, e(ctx.title))
-        .replace(/<FAVICON>/g, e(ctx.favicon))
-        .replace(/<TIMESTAMP>/g, e(ctx.timestamp))
-        .replace(/<DETECTION_COUNT>/g, String(ctx.detectionCount))
-        .replace(/<CATEGORIES>/g, e(ctx.categories));
+    return WebhookBody.substitute(template, ctx, encode ? 'url' : 'header');
 };
 
-SettingsRuntime._buildWebhookHeaders = function(webhook, method, ctx) {
+// `contentType` is the header the body builder chose (null for multipart:
+// fetch adds it with the boundary).
+SettingsRuntime._buildWebhookHeaders = function(webhook, method, ctx, contentType) {
     const headers = {};
-    if (method !== 'GET') {
-        headers['Content-Type'] = webhook.webhookContentType || 'application/json';
+    if (method !== 'GET' && contentType) {
+        headers['Content-Type'] = contentType;
     }
     for (const header of (webhook.webhookHeaders || [])) {
         // Strip everything outside the RFC 7230 token charset (incl. CR/LF and
@@ -204,21 +230,9 @@ SettingsRuntime._buildWebhookHeaders = function(webhook, method, ctx) {
     return headers;
 };
 
+// Body + Content-Type for the saved webhookContentType (see WebhookBody.build).
 SettingsRuntime._buildWebhookBody = function(webhook, detectionResults, ctx) {
-    const template = (webhook.webhookPayload || '').trim();
-    if (!template) {
-        return JSON.stringify({
-            url: ctx.url,
-            hostname: ctx.hostname,
-            title: ctx.title,
-            favicon: ctx.favicon,
-            detections: detectionResults,
-            timestamp: ctx.timestamp,
-            count: ctx.detectionCount
-        });
-    }
-    return SettingsRuntime._substituteWebhookTokens(template, ctx)
-        .replace(/<DETECTIONS>/g, JSON.stringify(detectionResults));
+    return WebhookBody.build(webhook.webhookContentType, webhook.webhookPayload, { ...ctx, detections: detectionResults });
 };
 
 SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults) {
@@ -242,21 +256,23 @@ SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults
         const processedUrl = SettingsRuntime._substituteWebhookTokens(webhook.webhookUrl, ctx, { encode: true });
         redactedUrl = SettingsRuntime._redactUrlForLog(processedUrl);
 
+        const built = method !== 'GET' ? SettingsRuntime._buildWebhookBody(webhook, detectionResults, ctx) : null;
         const fetchOptions = {
             method,
-            headers: SettingsRuntime._buildWebhookHeaders(webhook, method, ctx),
+            headers: SettingsRuntime._buildWebhookHeaders(webhook, method, ctx, built && built.contentType),
             redirect: 'error',
             credentials: 'omit',
             referrerPolicy: 'no-referrer'
         };
-        if (method !== 'GET') {
-            fetchOptions.body = SettingsRuntime._buildWebhookBody(webhook, detectionResults, ctx);
+        if (built) {
+            fetchOptions.body = built.body;
         }
 
         Logger.network('Sending webhook request:', {
             url: redactedUrl,
             method: fetchOptions.method,
-            bodyLength: fetchOptions.body?.length || 0
+            bodyType: built ? built.kind : 'none',
+            bodyLength: typeof fetchOptions.body === 'string' ? fetchOptions.body.length : 0
         });
 
         const response = await fetch(processedUrl, fetchOptions);
@@ -285,13 +301,11 @@ SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults
 
 SettingsRuntime.dispatchJsApiEvent = async function(eventName, data = {}) {
     try {
-      Logger.ui(`[Settings] dispatchJsApiEvent called: ${eventName}`);
-
       const settings = await Utils.getSettings();
       const jsApiEnabled = settings.jsApi?.enableJsApi ?? true;
 
       if (!jsApiEnabled) {
-        Logger.ui(`JS API: Disabled in settings, skipping ${eventName} event`);
+        Logger.debug('UI', `JS API off, ${eventName} not sent`);
         return false;
       }
 
@@ -302,10 +316,9 @@ SettingsRuntime.dispatchJsApiEvent = async function(eventName, data = {}) {
         timestamp: data.timestamp || new Date().toISOString()
       };
 
-      Logger.ui(`[Settings] Sending JS API event to MAIN world: scrapfly:${eventName}`);
       const bridge = typeof window !== 'undefined' ? window.ScrapflyBridge : null;
       const message = {
-        type: 'SCRAPFLY_JS_API_EVENT',
+        type: globalThis.ScrapflyBridgeProtocol.MESSAGE_TYPES.JS_API_EVENT,
         eventName: eventName,
         detail: eventData
       };
@@ -317,7 +330,7 @@ SettingsRuntime.dispatchJsApiEvent = async function(eventName, data = {}) {
         return false;
       }
 
-      Logger.ui(`JS API: Sent ${eventName} event to MAIN world`, data);
+      Logger.debug('UI', `JS API event: ${eventName}`);
       return true;
 
     } catch (error) {

@@ -48,7 +48,7 @@ function demAnalyzeUsedMethods() {
     this.analyzedMethodsCache = usedMethods;
     this.analyzedMethodsCacheTime = now;
 
-    Logger.detection('[C.1] Detection methods analysis:', usedMethods);
+    Logger.debug('DETECTION', 'Methods in use:', Object.keys(usedMethods).filter(k => usedMethods[k]));
     return usedMethods;
 }
 
@@ -110,5 +110,5 @@ function demPrecomputePriorities() {
     priorities.sort((a, b) => b.priority - a.priority);
     this.precomputedPriorities = priorities;
 
-    Logger.detection(`[Phase 1 Optimization] Pre-computed priorities for ${priorities.length} detectors`);
+    Logger.debug('DETECTION', `Ordered ${priorities.length} detectors`);
 }

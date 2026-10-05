@@ -5,109 +5,213 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2024-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-05",
+  "version": "2.0.0",
   "website": "https://aws.amazon.com/waf/",
   "icon": "aws_official.png",
   "description": "Amazon Web Services Web Application Firewall with bot control",
   "detection": {
     "cookie": [
       {
-        "name": "aws-waf-token",
-        "confidence": 100,
-        "description": "AWS WAF session token",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
-        "nameScope": "all",
-        "valueScope": "all"
-      },
-      {
-        "name": "awswaf*",
-        "confidence": 100,
-        "description": "AWS WAF cookies",
-        "nameRegex": false,
-        "nameWholeWord": false,
-        "nameCaseSensitive": false,
-        "value": "",
-        "valueRegex": false,
-        "valueWholeWord": false,
-        "valueCaseSensitive": false,
+        "id": "aws-waf-token-cookie",
+        "name": "^aws-waf-token$",
+        "nameRegex": true,
+        "confidence": 85,
+        "description": "AWS WAF token cookie set after a challenge",
         "nameScope": "all",
         "valueScope": "all"
       }
     ],
-    "header": [],
+    "header": [
+      {
+        "id": "waf-action-header",
+        "name": "^x-amzn-waf-action$",
+        "nameRegex": true,
+        "value": "^(?:challenge|captcha)$",
+        "valueRegex": true,
+        "confidence": 90,
+        "description": "AWS WAF challenge or captcha action header",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "waf-challenge-id-header",
+        "name": "^x-amzn-waf-challenge-id$",
+        "nameRegex": true,
+        "confidence": 40,
+        "standalone": false,
+        "description": "AWS WAF challenge id header",
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
     "url": [
       {
-        "confidence": 100,
-        "description": "AWS WAF challenge script",
-        "text": "/challenge.js",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
-      },
-      {
+        "id": "token-host-script",
         "confidence": 85,
-        "description": "AWS WAF in URL",
-        "text": "awswaf",
-        "textRegex": false,
-        "textWholeWord": false,
+        "description": "Integration SDK from the regional token.awswaf.com host",
+        "text": "^https://[0-9a-f]{8,16}\\.[0-9a-f]{6,12}\\.[a-z]{2}-[a-z]+-[0-9]\\.token\\.awswaf\\.com/[0-9a-f]{8,16}/[0-9a-f]{8,16}/[0-9a-f]{8,16}/(?:challenge|captcha|jsapi)\\.js(?:[?#]|$)",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "confidence": 90,
-        "description": "",
-        "text": "/verify",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "token-host-endpoint",
+        "confidence": 60,
+        "standalone": false,
+        "description": "Any request to the regional token.awswaf.com host (inputs, verify, telemetry)",
+        "text": "^https://[0-9a-f]{8,16}\\.[0-9a-f]{6,12}\\.[a-z]{2}-[a-z]+-[0-9]\\.token\\.awswaf\\.com/(?:[0-9a-f]{8,16}/){3}(?:inputs|verify|telemetry|voucher|mp_verify)(?:[?#/]|$)",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
-        "confidence": 90,
-        "description": "AWS WAF captcha endpoint",
-        "text": "/inputs?client=browser",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false,
-        "textScope": "all"
-      },
-      {
-        "confidence": 90,
-        "description": "AWS WAF telemetry endpoint",
-        "text": "/telemetry",
-        "textRegex": false,
-        "textWholeWord": false,
+        "id": "captcha-host",
+        "confidence": 80,
+        "description": "AWS WAF CAPTCHA host",
+        "text": "^https://[0-9a-f]{8,16}\\.[0-9a-f]{6,12}\\.[a-z]{2}-[a-z]+-[0-9]\\.captcha\\.awswaf\\.com/",
+        "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       }
     ],
     "content": [
       {
-        "confidence": 50,
-        "description": "AWS WAF challenge script",
-        "text": "challenge.js",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "id": "goku-props-reference",
+        "confidence": 15,
+        "standalone": false,
+        "description": "Challenge page bootstrap variable (window.gokuProps)",
+        "text": "gokuProps",
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
       },
       {
-        "confidence": 50,
-        "description": "AWS WAF reference",
-        "text": "awswaf",
-        "textRegex": false,
-        "textWholeWord": false,
-        "textCaseSensitive": false
+        "id": "aws-waf-integration-reference",
+        "confidence": 10,
+        "description": "Integration SDK namespace reference",
+        "text": "AwsWafIntegration",
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
       }
     ],
-    "dom": [],
-    "window": []
-  }
+    "window": [
+      {
+        "id": "aws-waf-integration-object",
+        "path": "AwsWafIntegration",
+        "condition": "typeof object",
+        "confidence": 75,
+        "description": "AWS WAF Integration SDK object"
+      },
+      {
+        "id": "goku-props-object",
+        "path": "gokuProps",
+        "condition": "typeof object",
+        "confidence": 70,
+        "description": "Challenge page bootstrap object (gokuProps)"
+      },
+      {
+        "id": "cookie-domain-list",
+        "path": "awsWafCookieDomainList",
+        "condition": "exists",
+        "confidence": 30,
+        "standalone": false,
+        "description": "Token cookie domain list for the Integration SDK"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "aws-waf-challenge-page",
+      "name": "Challenge response with its bootstrap",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "waf-action-header"
+              },
+              {
+                "pattern": "waf-challenge-id-header"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "goku-props-object"
+              },
+              {
+                "pattern": "goku-props-reference"
+              },
+              {
+                "pattern": "token-host-script"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "aws-waf-sdk-session",
+      "name": "Integration SDK with token traffic or cookie",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "token-host-script"
+              },
+              {
+                "pattern": "aws-waf-integration-object"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "aws-waf-token-cookie"
+              },
+              {
+                "pattern": "token-host-endpoint"
+              },
+              {
+                "pattern": "cookie-domain-list"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "aws-waf-token",
+      "name": "Token cookie with SDK reference",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "pattern": "aws-waf-token-cookie"
+          },
+          {
+            "any": [
+              {
+                "pattern": "aws-waf-integration-reference"
+              },
+              {
+                "pattern": "goku-props-reference"
+              },
+              {
+                "pattern": "cookie-domain-list"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

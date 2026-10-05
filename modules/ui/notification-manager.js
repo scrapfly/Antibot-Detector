@@ -79,7 +79,8 @@ class NotificationManager {
       showProgress: true,
       closeable: true,
       micro: false,
-      icon: this.getIcon(type)
+      // Toasts are text only (2.8); callers may still pass an icon (e.g. the loading spinner)
+      icon: null
     };
 
     const settings = { ...defaults, ...options };
@@ -117,7 +118,8 @@ class NotificationManager {
       return existingToast.id;
     }
 
-    const toastId = `toast-${Date.now()}`;
+    // Unique even for toasts shown in the same millisecond (ids drive removal)
+    const toastId = `toast-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
     let timeoutId = null;
 
     // Create toast element
@@ -129,10 +131,12 @@ class NotificationManager {
     const content = document.createElement('div');
     content.className = 'notification-toast-content';
 
-    const icon = document.createElement('span');
-    icon.className = 'notification-icon';
-    this.setIconContent(icon, settings.icon);
-    content.appendChild(icon);
+    if (settings.icon) {
+      const icon = document.createElement('span');
+      icon.className = 'notification-icon';
+      this.setIconContent(icon, settings.icon);
+      content.appendChild(icon);
+    }
 
     const body = document.createElement('div');
     body.className = 'notification-body';
@@ -143,11 +147,7 @@ class NotificationManager {
     content.appendChild(body);
 
     if (settings.closeable) {
-      const closeButton = document.createElement('button');
-      closeButton.className = 'notification-close';
-      closeButton.type = 'button';
-      closeButton.setAttribute('aria-label', 'Close notification');
-      closeButton.textContent = '\u00d7';
+      const closeButton = CloseButton.create({ className: 'notification-close', small: true });
       content.appendChild(closeButton);
     }
 
@@ -280,11 +280,108 @@ class NotificationManager {
   }
 
   /**
-   * Show confirmation dialog
+   * Map a dialog's options to its tone: 'warning' (amber), 'danger' (red) or
+   * 'info' (blue). An explicit `tone` wins; otherwise it follows `type`.
+   * @param {Object} settings - Normalised confirm options
+   * @returns {'warning'|'danger'|'info'}
+   */
+  confirmTone(settings) {
+    const tones = new Set(['warning', 'danger', 'info']);
+    if (tones.has(settings.tone)) return settings.tone;
+    if (settings.type === 'danger' || settings.type === 'error') return 'danger';
+    if (settings.type === 'warning') return 'warning';
+    return 'info';
+  }
+
+  /**
+   * Show confirmation dialog — the 2.8 modal look: header with a tone-tinted
+   * icon tile, left-aligned title and the shared .btn-close; body text;
+   * footer with Cancel + primary right-aligned side by side.
+   *
+   * Keyboard: Escape cancels; Enter activates the focused button, and
+   * confirms when focus is anywhere else in the dialog. Tab is trapped in
+   * the dialog. Focus starts on the primary button, or on Cancel for
+   * danger dialogs so a stray Enter never destroys anything.
+   *
+   * A yes/no dialog cannot offer two different actions: its Cancel is also
+   * what ✕, Escape and the backdrop return. Use choose() when the dialog
+   * needs more than one action besides Cancel (e.g. merge vs replace).
+   *
    * @param {Object} options - Dialog options
+   * @param {string} [options.title]
+   * @param {string} [options.message] - Plain text; `<br>` becomes a line break
+   * @param {string} [options.confirmText]
+   * @param {string} [options.cancelText]
+   * @param {string} [options.type] - info | warning | danger (legacy; drives the tone)
+   * @param {string} [options.tone] - warning | danger | info (overrides type)
+   * @param {boolean} [options.showIcon]
+   * @param {string} [options.icon] - SVG markup replacing the tone icon
+   * @param {boolean} [options.emphasizeAction] - accepted for compatibility;
+   *   the primary colour now always follows the tone
    * @returns {Promise<boolean>} User's choice
    */
   confirm(options = {}) {
+    const settings = this.dialogSettings(options);
+    const tone = this.confirmTone(settings);
+    return this.openDialog(settings, tone, {
+      buttons: [
+        { value: false, text: settings.cancelText, className: 'notification-btn-cancel' },
+        { value: true, text: settings.confirmText, className: `notification-btn-confirm notification-btn-${tone}` }
+      ],
+      cancelValue: false,
+      enterValue: true,
+      focusValue: tone === 'danger' ? false : true
+    });
+  }
+
+  /**
+   * Show a dialog offering several actions plus Cancel — same look as
+   * confirm(). Resolves to the clicked action's `value`; Cancel, ✕, Escape
+   * and a backdrop click all resolve to `cancelValue` ('cancel'), so a
+   * dismissal can never pick an action.
+   *
+   * Enter activates the focused button. With focus anywhere else it picks
+   * `defaultValue` when one is given, otherwise it does nothing. Focus starts
+   * on the `defaultValue` action, or on Cancel.
+   *
+   * @param {Object} options - Same fields as confirm(), plus:
+   * @param {Array<{value: string, text: string, tone?: string, primary?: boolean}>} options.actions
+   *   Buttons after Cancel, in footer order. `primary` fills the button with
+   *   its tone; a non-primary 'danger' action gets the outlined danger style.
+   * @param {string} [options.defaultValue] - Action Enter picks; never a danger one
+   * @param {string} [options.cancelValue='cancel']
+   * @returns {Promise<string>} The chosen action value, or cancelValue
+   */
+  choose(options = {}) {
+    const settings = this.dialogSettings(options);
+    const tone = this.confirmTone(settings);
+    const cancelValue = options.cancelValue !== undefined ? options.cancelValue : 'cancel';
+    const actions = Array.isArray(options.actions) ? options.actions : [];
+    const buttons = [{ value: cancelValue, text: settings.cancelText, className: 'notification-btn-cancel' }];
+    for (const action of actions) {
+      const actionTone = this.confirmTone({ tone: action.tone, type: action.tone || settings.type });
+      let className = 'notification-btn-cancel';
+      if (action.primary) className = `notification-btn-confirm notification-btn-${actionTone}`;
+      else if (actionTone === 'danger') className = 'notification-btn-destructive';
+      buttons.push({ value: action.value, text: action.text, className });
+    }
+    const safeDefault = actions.some(a => a.value === options.defaultValue && a.tone !== 'danger')
+      ? options.defaultValue
+      : undefined;
+    return this.openDialog(settings, tone, {
+      buttons,
+      cancelValue,
+      enterValue: safeDefault,
+      focusValue: safeDefault !== undefined ? safeDefault : cancelValue
+    });
+  }
+
+  /**
+   * Fill confirm()/choose() options with the localised defaults.
+   * @param {Object} options
+   * @returns {Object}
+   */
+  dialogSettings(options) {
     if (!this.initialized) this.initialize();
 
     const _t = (typeof I18n !== 'undefined') ? I18n : null;
@@ -294,6 +391,7 @@ class NotificationManager {
       confirmText: (_t && _t.get('notifConfirmTitleDefault')) || 'Confirm',
       cancelText: (_t && _t.get('btnCancel')) || 'Cancel',
       type: 'info',
+      tone: null,
       showIcon: true,
       icon: null,
       emphasizeAction: false
@@ -301,82 +399,157 @@ class NotificationManager {
 
     const settings = { ...defaults, ...options };
     settings.type = this.normalizeType(settings.type);
+    return settings;
+  }
+
+  /**
+   * Build, show and wire a modal dialog. Resolves with the value of the
+   * button the user activated, or `cancelValue` for ✕, Escape and the
+   * backdrop.
+   * @param {Object} settings - From dialogSettings()
+   * @param {'warning'|'danger'|'info'} tone
+   * @param {Object} spec
+   * @param {Array<{value: *, text: string, className: string}>} spec.buttons - Footer order
+   * @param {*} spec.cancelValue
+   * @param {*} [spec.enterValue] - Enter with focus off the buttons; undefined = ignore
+   * @param {*} spec.focusValue - Button focused on open
+   * @returns {Promise<*>}
+   */
+  openDialog(settings, tone, spec) {
     if (!settings.icon) {
-      settings.icon = this.getIcon(settings.type === 'danger' ? 'error' : settings.type);
+      settings.icon = this.getIcon(tone === 'danger' ? 'error' : tone);
     }
 
     return new Promise((resolve) => {
-      const dialogId = `confirm-${Date.now()}`;
+      const dialogId = `confirm-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+      const previousFocus = document.activeElement;
 
-      // Create backdrop
       const backdrop = document.createElement('div');
       backdrop.className = 'notification-backdrop';
       backdrop.setAttribute('data-show', 'false');
 
-      // Create dialog
       const dialog = document.createElement('div');
       dialog.id = dialogId;
-      const emphasisClass = settings.emphasizeAction ? ' notification-confirm-emphasis' : '';
-      dialog.className = `notification-confirm notification-confirm-${settings.type}${emphasisClass}`;
+      dialog.className = `notification-confirm notification-confirm-${settings.type} notification-confirm--${tone}`;
       dialog.setAttribute('data-show', 'false');
+      dialog.setAttribute('role', tone === 'info' ? 'dialog' : 'alertdialog');
+      dialog.setAttribute('aria-modal', 'true');
+      dialog.setAttribute('aria-labelledby', `${dialogId}-title`);
+      dialog.setAttribute('aria-describedby', `${dialogId}-message`);
 
-      const content = document.createElement('div');
-      content.className = 'notification-confirm-content';
+      // Header: icon tile + title + close
+      const header = document.createElement('div');
+      header.className = 'notification-confirm-header';
 
       if (settings.showIcon) {
-        const icon = document.createElement('div');
+        const icon = document.createElement('span');
         icon.className = 'notification-confirm-icon';
+        icon.setAttribute('aria-hidden', 'true');
         this.setIconContent(icon, settings.icon);
-        content.appendChild(icon);
+        header.appendChild(icon);
       }
 
       const title = document.createElement('h3');
       title.className = 'notification-confirm-title';
+      title.id = `${dialogId}-title`;
       title.textContent = this.normalizeText(settings.title);
-      content.appendChild(title);
+      header.appendChild(title);
 
+      const closeButton = (typeof CloseButton !== 'undefined' && CloseButton.create)
+        ? CloseButton.create({ className: 'notification-confirm-close' })
+        : null;
+      if (closeButton) header.appendChild(closeButton);
+
+      // Body: plain text; translated messages use <br> for line breaks
+      const body = document.createElement('div');
+      body.className = 'notification-confirm-body';
       const message = document.createElement('p');
       message.className = 'notification-confirm-message';
-      message.textContent = this.normalizeText(settings.message);
-      content.appendChild(message);
+      message.id = `${dialogId}-message`;
+      message.textContent = this.normalizeText(settings.message).replace(/<br\s*\/?>/gi, '\n');
+      body.appendChild(message);
 
-      const buttons = document.createElement('div');
-      buttons.className = 'notification-confirm-buttons';
+      // Footer: secondary Cancel first, actions right-aligned after it
+      const footer = document.createElement('div');
+      footer.className = 'notification-confirm-footer notification-confirm-buttons';
 
-      const confirmButton = document.createElement('button');
-      confirmButton.className = `notification-btn notification-btn-confirm notification-btn-${settings.type}`;
-      confirmButton.type = 'button';
-      confirmButton.textContent = this.normalizeText(settings.confirmText);
-      buttons.appendChild(confirmButton);
+      const buttons = spec.buttons.map(({ value, text, className }) => {
+        const button = document.createElement('button');
+        button.className = `notification-btn ${className}`;
+        button.type = 'button';
+        button.textContent = this.normalizeText(text);
+        footer.appendChild(button);
+        return { value, button };
+      });
+      const buttonFor = (value) => {
+        const match = buttons.find(entry => entry.value === value);
+        return (match || buttons[0]).button;
+      };
+      const focusStart = () => buttonFor(spec.focusValue).focus({ preventScroll: true });
 
-      const cancelButton = document.createElement('button');
-      cancelButton.className = 'notification-btn notification-btn-cancel';
-      cancelButton.type = 'button';
-      cancelButton.textContent = this.normalizeText(settings.cancelText);
-      buttons.appendChild(cancelButton);
+      dialog.appendChild(header);
+      dialog.appendChild(body);
+      dialog.appendChild(footer);
 
-      content.appendChild(buttons);
-      dialog.appendChild(content);
-
-      // Add to body
       document.body.appendChild(backdrop);
       document.body.appendChild(dialog);
 
-      // Trigger reflow
+      // Trigger reflow so the entry transition runs
       backdrop.offsetHeight;
       dialog.offsetHeight;
 
-      // Show with animation
       requestAnimationFrame(() => {
         backdrop.setAttribute('data-show', 'true');
         dialog.setAttribute('data-show', 'true');
       });
 
-      // Setup event handlers
-      const confirmBtn = dialog.querySelector('.notification-btn-confirm');
-      const cancelBtn = dialog.querySelector('.notification-btn-cancel');
+      // Safe default: destructive dialogs start on Cancel
+      focusStart();
 
-      const cleanup = () => {
+      let settled = false;
+      const focusables = () => Array.from(dialog.querySelectorAll('button:not([disabled])'));
+
+      const onKeyDown = (event) => {
+        // Only the top-most dialog reacts
+        const open = document.querySelectorAll('.notification-confirm[data-open="true"]');
+        if (open[open.length - 1] !== dialog) return;
+
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          finish(spec.cancelValue);
+        } else if (event.key === 'Enter') {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          const active = document.activeElement;
+          const focused = buttons.find(entry => entry.button === active);
+          if (focused) finish(focused.value);
+          else if (active === closeButton) finish(spec.cancelValue);
+          else if (spec.enterValue !== undefined) finish(spec.enterValue);
+        } else if (event.key === 'Tab') {
+          const items = focusables();
+          if (!items.length) return;
+          const index = items.indexOf(document.activeElement);
+          let next;
+          if (index === -1) next = event.shiftKey ? items[items.length - 1] : items[0];
+          else next = items[(index + (event.shiftKey ? -1 : 1) + items.length) % items.length];
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          next.focus();
+        }
+      };
+
+      // Keep focus inside the dialog if something outside grabs it
+      const onFocusIn = (event) => {
+        if (!dialog.contains(event.target)) focusStart();
+      };
+
+      const finish = (value) => {
+        if (settled) return;
+        settled = true;
+        window.removeEventListener('keydown', onKeyDown, true);
+        document.removeEventListener('focusin', onFocusIn, true);
+        dialog.removeAttribute('data-open');
         backdrop.setAttribute('data-show', 'false');
         dialog.setAttribute('data-show', 'false');
 
@@ -384,22 +557,22 @@ class NotificationManager {
           backdrop.remove();
           dialog.remove();
         }, Constants.NOTIFICATION_FADE_MS);
+
+        if (previousFocus && typeof previousFocus.focus === 'function' && document.contains(previousFocus)) {
+          previousFocus.focus({ preventScroll: true });
+        }
+        resolve(value);
       };
 
-      confirmBtn.addEventListener('click', () => {
-        cleanup();
-        resolve(true);
-      });
+      dialog.setAttribute('data-open', 'true');
+      window.addEventListener('keydown', onKeyDown, true);
+      document.addEventListener('focusin', onFocusIn, true);
 
-      cancelBtn.addEventListener('click', () => {
-        cleanup();
-        resolve(false);
-      });
-
-      backdrop.addEventListener('click', () => {
-        cleanup();
-        resolve(false);
-      });
+      for (const { value, button } of buttons) {
+        button.addEventListener('click', () => finish(value));
+      }
+      if (closeButton) closeButton.addEventListener('click', () => finish(spec.cancelValue));
+      backdrop.addEventListener('click', () => finish(spec.cancelValue));
     });
   }
 
@@ -518,7 +691,47 @@ const NotificationHelper = {
       return await notificationManager.confirm(options);
     }
     // Fallback to native confirm
-    return confirm(options.message || 'Are you sure?');
+    return confirm(options.message || ((typeof I18n !== 'undefined' && I18n.get('notifConfirmMessageDefault')) || 'Are you sure?'));
+  },
+
+  /**
+   * Several-action dialog (always shown). Without the dialog UI there is no
+   * safe way to offer more than yes/no, so it resolves to the cancel value.
+   */
+  async choose(options = {}) {
+    if (notificationManager && typeof notificationManager.choose === 'function') {
+      return await notificationManager.choose(options);
+    }
+    return options.cancelValue !== undefined ? options.cancelValue : 'cancel';
+  },
+
+  /**
+   * Ask how to import data that would change what is already stored.
+   * Buttons: Cancel · Replace (danger, explicit click only) · Merge.
+   * Cancel, ✕, Escape and the backdrop all resolve to 'cancel' — a
+   * dismissal never replaces anything.
+   * @param {Object} options
+   * @param {string} options.title
+   * @param {string} options.message
+   * @param {string} [options.replaceText] - Replace label (default: localised "Replace")
+   * @returns {Promise<'merge'|'replace'|'cancel'>}
+   */
+  async chooseImportMode(options = {}) {
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
+    const tr = (key, fallback) => (t && t.get(key)) || fallback;
+    const choice = await this.choose({
+      title: options.title,
+      message: options.message,
+      type: 'info',
+      cancelText: tr('btnCancel', 'Cancel'),
+      actions: [
+        { value: 'replace', text: options.replaceText || tr('replaceOption', 'Replace'), tone: 'danger' },
+        { value: 'merge', text: tr('mergeOption', 'Merge'), tone: 'info', primary: true }
+      ],
+      defaultValue: 'merge',
+      cancelValue: 'cancel'
+    });
+    return choice === 'merge' || choice === 'replace' ? choice : 'cancel';
   },
 
   /**
@@ -541,7 +754,7 @@ const NotificationHelper = {
     if (notificationManager && typeof notificationManager.error === 'function') {
       return notificationManager.error(message, options);
     }
-    alert('Error: ' + message);
+    alert((typeof I18n !== 'undefined' && I18n.format('popupUiNativeErrorFmt', message)) || ('Error: ' + message));
   },
 
   /**

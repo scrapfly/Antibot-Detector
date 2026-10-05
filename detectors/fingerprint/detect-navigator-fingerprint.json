@@ -5,61 +5,187 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2025-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator",
   "icon": "navigator_fingerprint.png",
-  "description": "Browser navigator object fingerprinting to identify user agent, platform, language, and hardware details",
+  "description": "Observed browser identity, language, automation, and device capability reads with graded profile evidence",
   "detection": {
     "js_hooks": [
       {
         "description": "Reads browser user agent string",
         "enabled": true,
-        "confidence": 80,
-        "target": "Navigator.prototype.userAgent"
+        "confidence": 10,
+        "target": "Navigator.prototype.userAgent",
+        "id": "navigator-agent",
+        "standalone": true
       },
       {
         "description": "Reads operating system platform",
         "enabled": true,
-        "confidence": 80,
-        "target": "Navigator.prototype.platform"
+        "confidence": 15,
+        "target": "Navigator.prototype.platform",
+        "id": "navigator-platform",
+        "standalone": true
       },
       {
-        "description": "Detects automated browsing (Selenium, Puppeteer)",
+        "description": "Reads the browser automation indicator",
         "enabled": true,
-        "confidence": 80,
-        "target": "Navigator.prototype.webdriver"
+        "confidence": 20,
+        "target": "Navigator.prototype.webdriver",
+        "id": "navigator-automation",
+        "standalone": true
       },
       {
         "description": "Reads browser product name",
         "enabled": false,
-        "confidence": 70,
-        "target": "Navigator.prototype.product"
+        "confidence": 5,
+        "target": "Navigator.prototype.product",
+        "id": "navigator-product",
+        "standalone": false
       },
       {
         "description": "Reads browser language preferences",
         "enabled": true,
-        "confidence": 80,
-        "target": "Navigator.prototype.languages"
+        "confidence": 10,
+        "target": "Navigator.prototype.languages",
+        "id": "navigator-languages",
+        "standalone": true
       },
       {
-        "description": "Reads CPU core count",
+        "description": "Reads the reported logical CPU count",
         "enabled": true,
-        "confidence": 80,
-        "target": "Navigator.prototype.hardwareConcurrency"
+        "confidence": 20,
+        "target": "Navigator.prototype.hardwareConcurrency",
+        "id": "navigator-cpu",
+        "standalone": true
       },
       {
-        "description": "Reads device memory (RAM) in GB",
+        "description": "Reads the reported approximate device memory",
         "enabled": true,
-        "confidence": 80,
-        "target": "Navigator.prototype.deviceMemory"
+        "confidence": 25,
+        "target": "Navigator.prototype.deviceMemory",
+        "id": "navigator-memory",
+        "standalone": true
       },
       {
-        "description": "Reads high entropy user agent client hints",
+        "description": "Requests high entropy user agent client hints (returned values unobserved)",
         "enabled": true,
-        "confidence": 80,
-        "target": "NavigatorUAData.prototype.getHighEntropyValues"
+        "confidence": 30,
+        "target": "NavigatorUAData.prototype.getHighEntropyValues",
+        "id": "navigator-hints",
+        "standalone": true
+      }
+    ],
+    "content": [
+      {
+        "id": "navigator-agent-script",
+        "text": "navigator.userAgent",
+        "scope": "scripts",
+        "checkScripts": true,
+        "description": "Script reference to navigator.userAgent (usage and intent unconfirmed)",
+        "confidence": 10,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": false,
+        "standalone": true
+      },
+      {
+        "id": "navigator-automation-script",
+        "text": "navigator.webdriver",
+        "scope": "scripts",
+        "checkScripts": true,
+        "description": "Script reference to navigator.webdriver (usage and intent unconfirmed)",
+        "confidence": 10,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": false,
+        "standalone": true
+      },
+      {
+        "id": "navigator-hints-script",
+        "text": "getHighEntropyValues",
+        "scope": "scripts",
+        "checkScripts": true,
+        "description": "Script reference to getHighEntropyValues (usage and intent unconfirmed)",
+        "confidence": 10,
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": false,
+        "standalone": true
       }
     ]
-  }
+  },
+  "combinations": [
+    {
+      "id": "navigator-script-profile",
+      "name": "Multiple navigator API references in scripts",
+      "confidence": 15,
+      "when": {
+        "atLeast": 2,
+        "of": [
+          { "pattern": "navigator-agent-script" },
+          { "pattern": "navigator-automation-script" },
+          { "pattern": "navigator-hints-script" }
+        ]
+      }
+    },
+    {
+      "id": "navigator-browser-profile",
+      "name": "Browser identity and language preference reads",
+      "confidence": 30,
+      "when": {
+        "all": [
+          { "pattern": "navigator-languages" },
+          { "any": [ { "pattern": "navigator-agent" }, { "pattern": "navigator-platform" } ] }
+        ]
+      }
+    },
+    {
+      "id": "navigator-hardware-profile",
+      "name": "CPU and memory capability reads",
+      "confidence": 50,
+      "when": {
+        "all": [ { "pattern": "navigator-cpu" }, { "pattern": "navigator-memory" } ]
+      }
+    },
+    {
+      "id": "navigator-device-profile",
+      "name": "Client hints request and CPU and memory capability reads",
+      "confidence": 60,
+      "when": {
+        "all": [
+          { "pattern": "navigator-hints" },
+          { "pattern": "navigator-cpu" },
+          { "pattern": "navigator-memory" }
+        ]
+      }
+    },
+    {
+      "id": "navigator-profile",
+      "name": "Automation indicator read, client hints request, and device capability read",
+      "confidence": 65,
+      "when": {
+        "all": [
+          { "pattern": "navigator-automation" },
+          { "pattern": "navigator-hints" },
+          { "any": [ { "pattern": "navigator-cpu" }, { "pattern": "navigator-memory" } ] }
+        ]
+      }
+    },
+    {
+      "id": "navigator-full-profile",
+      "name": "Automation, client hints, compute capabilities, and language preference reads",
+      "confidence": 75,
+      "when": {
+        "all": [
+          { "pattern": "navigator-automation" },
+          { "pattern": "navigator-hints" },
+          { "pattern": "navigator-cpu" },
+          { "pattern": "navigator-memory" },
+          { "pattern": "navigator-languages" }
+        ]
+      }
+    }
+  ]
 }

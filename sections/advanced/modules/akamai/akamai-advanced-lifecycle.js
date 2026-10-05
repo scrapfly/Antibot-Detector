@@ -3,23 +3,8 @@
      * Update capture button state
      * Override from BaseAdvancedModule to add custom styling
      */
-AkamaiAdvanced.prototype.updateCaptureButtonState = function(isCapturing) {
-        const btn = document.querySelector('#akamaiStartCapture');
-        if (!btn) return;
-
-        const label = btn.querySelector('.tool-btn-label');
-        if (!label) return;
-
-        const tr = (key, fallback) => (
-            typeof I18n !== 'undefined' ? I18n.tr(key, fallback) : fallback
-        );
-        if (isCapturing) {
-            label.textContent = tr('btnStopCapturing', 'Stop Capturing');
-            btn.style.background = 'var(--danger)';
-        } else {
-            label.textContent = tr('btnStartCapturing', 'Start Capturing');
-            btn.style.background = '';
-        }
+AkamaiAdvanced.prototype.updateCaptureButtonState = function(isCapturing, confirmed = true) {
+        BaseAdvancedModule.prototype.updateCaptureButtonState.call(this, isCapturing, confirmed);
     };
 
     /**
@@ -54,50 +39,16 @@ AkamaiAdvanced.prototype.beforeCapture = async function() {
             Logger.network('[Akamai] No _abck cookie found - Akamai not detected on this page');
 
             // Show error notifications
-            NotificationHelper.error('No Akamai detected on this page. The _abck cookie is not present.');
+            const tr = AkamaiAdvanced.tr;
+            NotificationHelper.error(tr('advAkamaiNotDetectedToast', 'No Akamai detected on this page. The _abck cookie is not present.'));
 
-            // Show error notification using standard pattern
-            await chrome.scripting.executeScript({
-                target: { tabId: this.tabInfo.id },
-                func: () => {
-                    // Cleanup old notifications
-                    const allNotifs = document.querySelectorAll('[id^="scrapfly-capture-notification"]');
-                    allNotifs.forEach(n => n.remove());
-                    const oldStyles = document.querySelectorAll('style[data-scrapfly-notification]');
-                    oldStyles.forEach(s => s.remove());
-
-                    const notif = document.createElement('div');
-                    notif.id = `scrapfly-capture-notification-${Date.now()}`;
-                    notif.style.cssText = `
-                        position: fixed !important; top: 20px !important; right: 20px !important;
-                        background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%) !important;
-                        color: white !important; padding: 20px 24px !important; border-radius: 12px !important;
-                        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important; z-index: 2147483647 !important;
-                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-                        min-width: 320px !important;
-                    `;
-
-                    const styleTag = document.createElement('style');
-                    styleTag.setAttribute('data-scrapfly-notification', 'true');
-                    styleTag.textContent = `
-                        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-                        @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(400px); opacity: 0; } }
-                    `;
-                    document.head.appendChild(styleTag);
-
-                    notif.innerHTML = `
-                        <div style="font-weight: 600; font-size: 16px; margin-bottom: 8px;">No Akamai Detected</div>
-                        <div style="opacity: 0.9; font-size: 14px;">The _abck cookie is not present on this page.</div>
-                        <div style="opacity: 0.8; font-size: 12px; margin-top: 8px;">Akamai Bot Manager is not active here.</div>
-                    `;
-                    notif.style.animation = 'slideIn 0.3s ease-out';
-                    document.body.appendChild(notif);
-
-                    setTimeout(() => {
-                        notif.style.animation = 'slideOut 0.3s ease-in';
-                        setTimeout(() => notif.remove(), 300);
-                    }, 5000);
-                }
+            // Shared Scrapfly notice: what was checked, and what to do instead
+            await BaseInterceptorHelpers.showNotification(this.tabInfo.id, {
+                type: 'error',
+                module: 'Akamai',
+                title: tr('advAkamaiNoticeNotDetectedTitle', 'No Akamai Detected'),
+                message: `${tr('advAkamaiNoticeNoAbck', 'The _abck cookie is not present on this page.')} ${tr('advAkamaiNoticeNotActive', 'Akamai Bot Manager is not active here.')}`,
+                duration: 7000
             });
 
             return false; // Cancel capture
@@ -151,6 +102,9 @@ AkamaiAdvanced.prototype.stopCapturing = async function() {
                 tabId: this.tabInfo.id
             });
 
+            if (!response || !['stopped', 'not_capturing'].includes(response.status)) {
+                throw new Error((response && response.error) || BaseAdvancedModule._tr('advPanelNotAvailable', 'No confirmed response'));
+            }
             this.updateCaptureButtonState(false);
 
             // Notifications are now handled by BaseInterceptorHelpers, no cleanup needed
@@ -158,12 +112,12 @@ AkamaiAdvanced.prototype.stopCapturing = async function() {
             if (response && response.results && response.results.sensorData) {
                 // Capture completed successfully
                 await this.processCapturedData(response.results);
-                NotificationHelper.success('Akamai data captured successfully!');
+                NotificationHelper.success(AkamaiAdvanced.tr('advAkamaiCaptureSuccess', 'Akamai data captured successfully!'));
             } else {
-                NotificationHelper.info('Capture stopped');
+                NotificationHelper.info(AkamaiAdvanced.tr('advAkamaiCaptureStopped', 'Capture stopped'));
             }
         } catch (error) {
             Logger.error('NETWORK', 'Failed to stop capturing:', error);
-            NotificationHelper.error('Failed to stop capturing: ' + error.message);
+            NotificationHelper.error(AkamaiAdvanced.fmt('advAkamaiStopCaptureFailedFmt', 'Failed to stop capturing: {0}', error.message));
         }
     };

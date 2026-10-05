@@ -118,7 +118,7 @@ Scrapfly Anti-bot Detector is a Manifest V3 Chrome extension that helps security
 - **Cache Duration**: Set detection cache expiry (1-24 hours)
 - **History Limit**: Control max history items (10-500)
 - **URL Blacklist**: Exclude specific domains from detection
-- **Debug Mode**: Enable verbose logging to Service Worker console
+- **Debug Mode**: One readable report per scanned page in the Service Worker console. **Verbose logs** adds every step.
 - **Auto-cleanup**: Automatic history expiration
 
 ## Architecture
@@ -240,7 +240,7 @@ core/
 - **Modular Sections**: Each UI section is self-contained (JS + HTML + CSS)
 - **JSON-Driven Detectors**: All detection rules stored in JSON for easy updates
 - **LRU Caching**: Pattern cache, URL hash cache for performance
-- **Centralized Logging**: All logs routed to Service Worker console via Logger module
+- **Centralized Logging**: One-line entries from every context in the Service Worker console via the Logger module, with a per-page scan report
 - **CSP Compliance**: Event delegation instead of inline handlers
 
 

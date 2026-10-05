@@ -1,7 +1,7 @@
 /* Design tokens and global reset now in common.css */
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-sans);
   background: var(--bg-primary);
   color: var(--text-primary);
   width: 400px;
@@ -21,7 +21,7 @@ body {
 .header {
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border);
-  padding: 16px;
+  padding: 11px 14px 10px;
   flex-shrink: 0;
   max-height: 200px;
 }
@@ -30,95 +30,88 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .logo {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 9px;
 }
 
 .logo-icon-wrapper {
   position: relative;
-  width: 32px;
-  height: 32px;
+  width: 29px;
+  height: 29px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  transition: transform 0.25s ease;
   cursor: default;
-  margin-top: 3px;
-}
-
-.logo-icon-wrapper::after {
-  content: "";
-  position: absolute;
-  inset: -6px;
-  border-radius: 16px;
-  background: radial-gradient(circle at 50% 45%, rgba(59, 130, 246, 0.45) 0%, rgba(59, 130, 246, 0.18) 45%, rgba(37, 99, 235, 0.05) 70%, transparent 100%);
-  opacity: 0;
-  transform: scale(0.92);
-  transition: opacity 0.28s ease, transform 0.28s ease;
-  pointer-events: none;
-  filter: blur(0.2px);
+  margin-top: 4px;
 }
 
 .logo-icon {
   display: block;
-  width: 32px;
-  height: 32px;
+  width: 29px;
+  height: 29px;
   border-radius: 6px;
-  transition: transform 0.25s ease, filter 0.25s ease;
-}
-
-.logo-icon-wrapper:hover {
-  transform: translateY(-1px) scale(1.06);
-}
-
-.logo-icon-wrapper:hover::after {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.logo-icon-wrapper:hover .logo-icon {
-  transform: scale(1.08);
-  filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.55));
 }
 
 .logo-text {
   display: flex;
   flex-direction: column;
+  padding-top: 2px;
 }
 
 #appBrand {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
+  line-height: 1.25;
   color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Official ScrapFly lettering (outlined from the logo, incl. the detached F
+   bars). viewBox is the glyph box with a 0.05 pad; 1.255px per unit puts the
+   flat cap height (8.9u) on IBM Plex Sans' 16px cap height, and the
+   baseline (2.725u above the viewBox bottom) on the text baseline. */
+#appBrand .brand-wordmark {
+  display: inline-block;
+  width: 62.23px;
+  height: 14.89px;
+  vertical-align: -3.44px;
+  overflow: visible;
+}
+
+.logo,
+.logo-text {
+  min-width: 0;
 }
 
 .app-version {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 400;
-  color: var(--text-muted);
-  margin-top: 2px;
-  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin-top: 1px;
+  letter-spacing: 0.2px;
 }
 
 .header-controls {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: 3px;
+  gap: 8px;
+  margin-top: 4px;
 }
 
 /* Main Toggle Switch */
 .toggle-switch {
   position: relative;
   display: inline-block;
-  width: 34px;
-  height: 18px;
+  width: 38px;
+  height: 22px;
   flex-shrink: 0;
 }
 
@@ -154,8 +147,8 @@ body {
 .toggle-slider:before {
   position: absolute;
   content: "";
-  height: 14px;
-  width: 14px;
+  height: 16px;
+  width: 16px;
   left: 2px;
   top: 50%;
   transform: translateY(-50%);
@@ -178,7 +171,7 @@ body {
 .settings-btn {
   background: none;
   border: none;
-  color: var(--text-secondary);
+  color: #e0e0e0;
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
@@ -195,10 +188,14 @@ body {
   color: var(--text-primary);
 }
 
-/* Tabs Navigation */
+/* Tabs Navigation — v2.8: segmented strip inside a bordered container */
 .tabs-nav {
   display: flex;
-  gap: 2px;
+  gap: 3px;
+  padding: 3px;
+  background: #323232;
+  border: 1px solid var(--border);
+  border-radius: 10px;
 }
 
 .tab-btn {
@@ -207,20 +204,30 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 10px 8px;
+  height: 40px;
+  padding: 0 4px;
   background: none;
-  border: none;
-  color: var(--text-muted);
+  border: 1px solid transparent;
+  color: #e0e0e0;
   cursor: pointer;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 500;
+  border-radius: 7px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
   transition: all 0.2s;
 }
 
+/* Labels sit 1px up and 1px towards the icon, as in the 2.8 screenshots */
+.tab-btn span {
+  position: relative;
+  top: -1px;
+  left: -1px;
+}
+
 .tab-btn:hover {
-  background: var(--bg-tertiary);
-  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
 }
 
 /* Keyboard-only focus indicator (avoids ring on mouse click) */
@@ -240,8 +247,9 @@ body {
 }
 
 .tab-btn.active {
-  background: var(--accent);
-  color: white;
+  background: rgba(59, 130, 246, 0.16);
+  border-color: rgba(59, 130, 246, 0.37);
+  color: #bfdbfe;
 }
 
 .tab-btn svg {
@@ -249,13 +257,9 @@ body {
   height: 14px;
 }
 
-/* Tab icon colors - neutral gray, white when active */
+/* Tab icons follow the label colour (light, or blue when active) */
 .tab-btn svg {
-  color: var(--text-secondary);
-}
-
-.tab-btn.active svg {
-  color: white;
+  color: currentColor;
 }
 
 /* Main Content */
@@ -306,10 +310,6 @@ body {
   animation: pulse 2s ease-in-out infinite;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
 
 /* Empty State */
 .empty-state {
@@ -364,20 +364,6 @@ body {
   gap: 8px;
 }
 
-#detectionLabel {
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.count-badge {
-  background: var(--accent);
-  color: white;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
 /* Stats Grid */
 .detection-overview {
   margin-top: 12px;
@@ -430,42 +416,13 @@ body {
   margin-bottom: 4px;
 }
 
-/* History */
-.history-header {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.history-header .search-container {
-  position: relative;
-  width: 100%;
-}
-
-.history-header .search-input {
-  width: 100%;
-  padding: 14px;
-  font-size: 13px;
-  border: 2px solid var(--border);
-  border-radius: 10px;
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  transition: all 0.2s;
-}
-
-.history-header .search-input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
-}
-
+/* History list/card base — also used by the Advanced tab's capture history;
+   the History tab's own styles live in history.css */
 .history-list {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
-
 
 .history-item {
   position: relative;
@@ -483,77 +440,6 @@ body {
 .history-item:hover {
   background: var(--bg-tertiary);
   border-color: var(--border-light);
-}
-
-.history-header-info {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 2px;
-}
-
-.history-favicon {
-  width: 16px;
-  height: 16px;
-  min-width: 16px;
-  max-width: 16px;
-  max-height: 16px;
-  border-radius: 2px;
-  flex-shrink: 0;
-  object-fit: cover;
-  overflow: hidden;
-  display: block;
-}
-
-.history-url {
-  font-size: 10px;
-  color: var(--text-muted);
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.history-timestamp {
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
-  font-size: 10px;
-  color: var(--accent);
-}
-
-.history-title {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 4px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-
-.history-detections {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-wrap: nowrap;
-  overflow: hidden;
-}
-
-.history-detection-tag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 3px 8px;
-  border-radius: 999px;
-  font-size: 10px;
-  font-weight: 600;
-  border: 1px solid transparent;
-  max-width: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* Modal */
@@ -600,8 +486,6 @@ body {
   font-size: 14px;
   color: var(--text-muted);
 }
-
-/* .close-btn now in common.css */
 
 .modal-body {
   padding: 20px 24px;

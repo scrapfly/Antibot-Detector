@@ -89,6 +89,7 @@ function registerSettingsHandlers(registry, context) {
                         Logger.background(`[Background] Badge updated with cached data: ${storedData.detectionCount} detections (scope change)`);
                     } else {
                         await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tab.id });
+                        await setBadgeTextColor(tab.id, false, BADGE.COLORS.CLEARED);
                         await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEARED, tabId: tab.id });
                         Logger.background('[Background] Badge: cleared state - no cached data with new scope');
                     }

@@ -5,55 +5,33 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2025-01-15",
-  "version": "1.0",
+  "lastUpdated": "2026-10-03",
+  "version": "1.2.0",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Media_Capabilities_API",
   "icon": "media_fingerprint.png",
-  "description": "Media device, battery, voice synthesis, and plugin/mimetype enumeration fingerprinting",
+  "description": "Battery, speech voice, plugin, MIME and codec API access; ordinary media use remains possible",
   "detection": {
     "js_hooks": [
-      {
-        "description": "Accesses battery information for hardware fingerprinting",
-        "enabled": true,
-        "confidence": 65,
-        "target": "Navigator.prototype.getBattery"
-      },
-      {
-        "description": "Enumerates available voice options",
-        "enabled": true,
-        "confidence": 80,
-        "target": "window.speechSynthesis"
-      },
-      {
-        "description": "Counts supported MIME types",
-        "enabled": true,
-        "confidence": 80,
-        "target": "MimeTypeArray.prototype.length"
-      },
-      {
-        "description": "Reads MIME type descriptions",
-        "enabled": false,
-        "confidence": 75,
-        "target": "MimeType.prototype.description"
-      },
-      {
-        "description": "Counts installed browser plugins",
-        "enabled": true,
-        "confidence": 80,
-        "target": "PluginArray.prototype.length"
-      },
-      {
-        "description": "Reads plugin descriptions",
-        "enabled": false,
-        "confidence": 75,
-        "target": "Plugin.prototype.description"
-      },
-      {
-        "description": "Detects supported media codecs",
-        "enabled": true,
-        "confidence": 80,
-        "target": "HTMLMediaElement.prototype.canPlayType"
-      }
+      { "id": "media-battery", "description": "Requests battery information", "enabled": true, "confidence": 15, "target": "Navigator.prototype.getBattery", "standalone": true },
+      { "id": "media-speech", "description": "Enumerates speech synthesis voices", "enabled": true, "confidence": 20, "target": "SpeechSynthesis.prototype.getVoices", "standalone": true },
+      { "id": "media-mimes", "description": "Reads supported MIME type count", "enabled": true, "confidence": 15, "target": "MimeTypeArray.prototype.length", "standalone": true },
+      { "id": "media-mime-description", "description": "Reads MIME type descriptions", "enabled": false, "confidence": 20, "target": "MimeType.prototype.description", "standalone": false },
+      { "id": "media-plugins", "description": "Reads browser plugin count", "enabled": true, "confidence": 15, "target": "PluginArray.prototype.length", "standalone": true },
+      { "id": "media-plugin-description", "description": "Reads plugin descriptions", "enabled": false, "confidence": 20, "target": "Plugin.prototype.description", "standalone": false },
+      { "id": "media-codecs", "description": "Checks media codec support", "enabled": true, "confidence": 10, "target": "HTMLMediaElement.prototype.canPlayType", "standalone": true }
+    ],
+    "content": [
+      { "id": "media-battery-script", "text": "getBattery", "description": "Script reference to battery access; execution unconfirmed", "confidence": 10, "standalone": true, "scope": "scripts", "checkScripts": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
+      { "id": "media-speech-script", "text": "getVoices", "description": "Script reference to voice enumeration; execution unconfirmed", "confidence": 10, "standalone": true, "scope": "scripts", "checkScripts": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
+      { "id": "media-mimes-script", "text": "navigator.mimeTypes", "description": "Script reference to MIME types; execution unconfirmed", "confidence": 10, "standalone": true, "scope": "scripts", "checkScripts": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
+      { "id": "media-plugins-script", "text": "navigator.plugins", "description": "Script reference to plugins; execution unconfirmed", "confidence": 10, "standalone": true, "scope": "scripts", "checkScripts": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
+      { "id": "media-codecs-script", "text": "canPlayType", "description": "Script reference to codec checks; execution unconfirmed", "confidence": 10, "standalone": true, "scope": "scripts", "checkScripts": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true }
     ]
-  }
+  },
+  "combinations": [
+    { "id": "media-enumeration", "name": "Voice enumeration with plugin or MIME count access", "confidence": 30, "when": { "all": [ { "pattern": "media-speech" }, { "any": [ { "pattern": "media-plugins" }, { "pattern": "media-mimes" } ] } ] } },
+    { "id": "media-profile", "name": "Plugin, MIME and codec profile", "confidence": 35, "when": { "all": [ { "pattern": "media-mimes" }, { "pattern": "media-plugins" }, { "pattern": "media-codecs" } ] } },
+    { "id": "media-voice-codec-profile", "name": "Voice enumeration, codec checks and plugin or MIME counts", "confidence": 45, "when": { "all": [ { "pattern": "media-speech" }, { "pattern": "media-codecs" }, { "any": [ { "pattern": "media-mimes" }, { "pattern": "media-plugins" } ] } ] } },
+    { "id": "media-broad-profile", "name": "Battery access with voice, codec and plugin or MIME observations", "confidence": 55, "when": { "all": [ { "pattern": "media-battery" }, { "pattern": "media-speech" }, { "pattern": "media-codecs" }, { "any": [ { "pattern": "media-mimes" }, { "pattern": "media-plugins" } ] } ] } }
+  ]
 }

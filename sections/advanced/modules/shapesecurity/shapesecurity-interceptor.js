@@ -68,9 +68,10 @@ function shapeSecurityHandleMessage(request, sendResponse, captureState, extract
                     if (typeof showNotification === 'function') {
                         Logger.network('[ShapeSecurity] Showing analyzing notification before reload...');
                         await showNotification(request.tabId, {
+                            module: 'Shape Security',
                             type: 'loading',
-                            title: 'Extracting Shape Security Scripts',
-                            message: 'Please wait while we collect script URLs...',
+                            title: pageText('advShapeNoticeExtractingScripts', 'Extracting Shape Security Scripts'),
+                            message: pageText('pageNoticeCollectingScripts', 'Please wait while we collect script URLs...'),
                             duration: 15000 // Longer duration to persist through reload
                         });
                         Logger.network('[ShapeSecurity] Pre-reload notification shown successfully');
@@ -84,10 +85,6 @@ function shapeSecurityHandleMessage(request, sendResponse, captureState, extract
                 }
             })();
             return true; // Async response
-
-        case 'SHAPESECURITY_EXTRACTION_COMPLETED':
-            handleShapeSecurityExtractionCompleted(request, null, sendResponse);
-            return true;
 
         case 'SHAPESECURITY_CHECK_VERSION':
             handleShapeSecurityCheckVersion(request, null, sendResponse);
@@ -226,17 +223,19 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
     // Show in-page notification
     if (typeof showCaptureStarted === 'function') {
         await showCaptureStarted(tabId, {
-            title: 'Shape Security Monitoring Started',
-            message: 'Reload the page to begin monitoring Shape Security headers and cookies',
+            module: 'Shape Security',
+            title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'Shape Security'),
+            message: pageText('advShapeNoticeReloadToMonitor', 'Reload the page to begin monitoring Shape Security headers and cookies'),
             duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
             Logger.error('NETWORK', '[ShapeSecurity] Failed to show notification:', err);
         });
     } else if (showNotification) {
         await showNotification(tabId, {
+            module: 'Shape Security',
             type: 'capture',
-            title: 'Shape Security Monitoring Started',
-            message: 'Reload the page to begin monitoring Shape Security headers and cookies',
+            title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'Shape Security'),
+            message: pageText('advShapeNoticeReloadToMonitor', 'Reload the page to begin monitoring Shape Security headers and cookies'),
             duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
             Logger.error('NETWORK', '[ShapeSecurity] Failed to show notification:', err);
@@ -251,9 +250,10 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
             // Show loading warning immediately
             if (showNotification) {
                 showNotification(tabId, {
+                    module: 'Shape Security',
                     type: 'warning',
-                    title: 'Page Loading',
-                    message: 'Please wait for the page to fully load before performing actions...',
+                    title: pageText('pageNoticePageLoading', 'Page Loading'),
+                    message: pageText('advShapeNoticeWaitBeforeActions', 'Please wait for the page to fully load before performing actions...'),
                     duration: 5000
                 }).catch(err => {
                     Logger.error('NETWORK', '[ShapeSecurity] Failed to show loading warning:', err);
@@ -314,81 +314,17 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                 if (showNotification) {
                     Logger.network(`[ShapeSecurity] Showing notification for version: ${version}`);
 
-                    // Show notification with timer using chrome.scripting
+                    // Shared Scrapfly notice with a 60s countdown
                     try {
-                        await chrome.scripting.executeScript({
-                            target: { tabId: tabId },
-                            args: [version], // Pass version as argument
-                            func: (version) => {
-                                // Cleanup old notifications
-                                const allNotifs = document.querySelectorAll('[id^="scrapfly-capture-notification"]');
-                                allNotifs.forEach(n => n.remove());
-                                const oldStyles = document.querySelectorAll('style[data-scrapfly-notification]');
-                                oldStyles.forEach(s => s.remove());
-                                if (window.scrapflyTimerInterval) {
-                                    clearInterval(window.scrapflyTimerInterval);
-                                    window.scrapflyTimerInterval = null;
-                                }
-
-                                requestAnimationFrame(() => {
-                                    setTimeout(() => {
-                                        const notif = document.createElement('div');
-                                        notif.id = `scrapfly-capture-notification-${Date.now()}`;
-                                        notif.style.cssText = `
-                                            position: fixed !important;
-                                            top: 20px !important;
-                                            right: 20px !important;
-                                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-                                            color: white !important;
-                                            padding: 20px 24px !important;
-                                            border-radius: 12px !important;
-                                            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
-                                            z-index: 2147483647 !important;
-                                            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-                                            font-size: 14px !important;
-                                            min-width: 320px !important;
-                                        `;
-
-                                        const styleTag = document.createElement('style');
-                                        styleTag.setAttribute('data-scrapfly-notification', 'true');
-                                        styleTag.textContent = `
-                                            @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-                                        `;
-                                        document.head.appendChild(styleTag);
-
-                                        // Version-specific notification message
-                                        const message = version === 'v1'
-                                            ? 'Perform actions to trigger cookie'
-                                            : 'Perform actions to trigger headers + cookie';
-
-                                        notif.innerHTML = `
-                                            <div style="font-weight: 600; font-size: 16px; margin-bottom: 6px;">
-                                                Monitoring Active (${version.toUpperCase()}) <span id="scrapfly-timer">60s</span>
-                                            </div>
-                                            <div style="opacity: 0.9;">
-                                                ${message}
-                                            </div>
-                                        `;
-                                        notif.style.animation = 'slideIn 0.3s ease-out';
-                                        document.body.appendChild(notif);
-
-                                        // Start countdown timer from 60 to 0
-                                        let seconds = 60;
-                                        window.scrapflyTimerInterval = setInterval(() => {
-                                            seconds--;
-                                            const timerEl = document.getElementById('scrapfly-timer');
-                                            if (timerEl) {
-                                                timerEl.textContent = `${seconds}s`;
-                                            }
-                                            // Stop at 0
-                                            if (seconds <= 0 && window.scrapflyTimerInterval) {
-                                                clearInterval(window.scrapflyTimerInterval);
-                                                window.scrapflyTimerInterval = null;
-                                            }
-                                        }, 1000);
-                                    }, 100);
-                                });
-                            }
+                        await showNotification(tabId, {
+                            type: 'capture',
+                            module: 'Shape Security',
+                            title: pageText('advShapeNoticeMonitoringActiveFmt', 'Monitoring Active ({0})', version.toUpperCase()),
+                            message: version === 'v1'
+                                ? pageText('advShapeNoticeTriggerCookie', 'Perform actions to trigger cookie')
+                                : pageText('advShapeNoticeTriggerHeadersCookie', 'Perform actions to trigger headers + cookie'),
+                            countdown: Math.round(Constants.CAPTURE_AUTO_STOP_TIMEOUT / 1000),
+                            duration: 0
                         });
                     } catch (err) {
                         Logger.error('NETWORK', '[ShapeSecurity] Failed to show monitoring notification with timer:', err);
@@ -472,9 +408,12 @@ async function autoStopCapture(tabId, reason = 'complete') {
                     clearInterval(window.scrapflyTimerInterval);
                     window.scrapflyTimerInterval = null;
                 }
-                // Remove notification
-                const allNotifs = document.querySelectorAll('[id^="scrapfly-capture-notification"]');
-                allNotifs.forEach(n => n.remove());
+                if (window.__scrapflyNoticeTick) {
+                    clearInterval(window.__scrapflyNoticeTick);
+                    window.__scrapflyNoticeTick = null;
+                }
+                // Remove notification (shared notice and legacy ones)
+                document.querySelectorAll('#scrapfly-page-notice, [id^="scrapfly-capture-notification"]').forEach(n => n.remove());
             }
         });
     } catch (err) {
@@ -508,21 +447,23 @@ async function autoStopCapture(tabId, reason = 'complete') {
             const headerCount = capturedData.headers.length;
             const version = capturedData.version || 'v2';
 
+            const cookieName = capturedData.cookie ? capturedData.cookie.name : pageText('advCommonNone', 'None');
             let message;
             if (reason === 'timeout') {
-                message = `Timeout: ${cookieCount} cookie, ${headerCount} headers captured (${version.toUpperCase()})`;
+                message = pageText('advShapeNoticeTimeoutFmt', 'Timeout ({2}) - cookies: {0}, headers: {1}', cookieCount, headerCount, version.toUpperCase());
             } else {
                 // Version-specific success message
                 if (version === 'v1') {
-                    message = `${version.toUpperCase()} - Cookie: ${capturedData.cookie ? capturedData.cookie.name : 'None'}`;
+                    message = pageText('advShapeNoticeV1SummaryFmt', '{0} - Cookie: {1}', version.toUpperCase(), cookieName);
                 } else {
-                    message = `${version.toUpperCase()} - Cookie: ${capturedData.cookie ? capturedData.cookie.name : 'None'} | Headers: ${headerCount}`;
+                    message = pageText('advShapeNoticeV2SummaryFmt', '{0} - Cookie: {1} | Headers: {2}', version.toUpperCase(), cookieName, headerCount);
                 }
             }
 
             await showNotification(tabId, {
+                module: 'Shape Security',
                 type: 'success',
-                title: 'Capture Completed',
+                title: pageText('pageNoticeCaptureCompleted', 'Capture Completed'),
                 message: message,
                 duration: 5000
             }).catch(err => {
@@ -583,9 +524,10 @@ function handleShapeSecurityStopCapture(message, sender, sendResponse) {
                 const headerCount = capturedData.headers.length;
 
                 await showNotification(tabId, {
+                    module: 'Shape Security',
                     type: 'success',
-                    title: 'Capture Completed',
-                    message: `Captured: ${cookieCount} cookie, ${headerCount} headers`,
+                    title: pageText('pageNoticeCaptureCompleted', 'Capture Completed'),
+                    message: pageText('advShapeNoticeCapturedFmt', 'Captured - cookies: {0}, headers: {1}', cookieCount, headerCount),
                     duration: 5000
                 }).catch(err => {
                     Logger.error('NETWORK', '[ShapeSecurity] Failed to show completion notification:', err);

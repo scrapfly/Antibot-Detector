@@ -75,8 +75,9 @@ async function funcaptchaStartCapture(tabId) {
     if (typeof showCaptureStarted === 'function') {
         try {
             await showCaptureStarted(tabId, {
-                title: 'FunCaptcha Monitoring Started',
-                message: 'Reload the page to begin monitoring and trigger a FunCaptcha challenge (60s timeout)',
+                module: 'FunCaptcha',
+                title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'FunCaptcha'),
+                message: pageText('advFuncaptchaReloadToMonitor', 'Reload the page to begin monitoring and trigger a FunCaptcha challenge (60s timeout)'),
                 duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
             });
         } catch (error) {
@@ -85,9 +86,10 @@ async function funcaptchaStartCapture(tabId) {
     } else if (typeof showNotification === 'function') {
         try {
             await showNotification(tabId, {
+                module: 'FunCaptcha',
                 type: 'loading',
-                title: 'FunCaptcha Monitoring Started',
-                message: 'Reload the page to begin monitoring and trigger a FunCaptcha challenge (60s timeout)',
+                title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'FunCaptcha'),
+                message: pageText('advFuncaptchaReloadToMonitor', 'Reload the page to begin monitoring and trigger a FunCaptcha challenge (60s timeout)'),
                 duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
             });
         } catch (error) {
@@ -112,9 +114,10 @@ async function funcaptchaStartCapture(tabId) {
             Logger.network('[FunCaptcha] Page navigation detected, updating notification');
             if (typeof showNotification === 'function') {
                 showNotification(tabId, {
+                    module: 'FunCaptcha',
                     type: 'info',
-                    title: 'Page Loading',
-                    message: 'Page is loading, please wait...',
+                    title: pageText('pageNoticePageLoading', 'Page Loading'),
+                    message: pageText('advFuncaptchaPageLoadingMsg', 'Page is loading, please wait...'),
                     duration: 5000
                 }).catch(() => {});
             }
@@ -271,16 +274,18 @@ async function funcaptchaStopCapture(tabId, reason = 'manual') {
         try {
             if (reason === 'captured' && state.capturedData.length > 0) {
                 await showNotification(tabId, {
+                    module: 'FunCaptcha',
                     type: 'success',
-                    title: 'FunCaptcha Captured Successfully',
-                    message: `Captured ${state.capturedData.length} challenge(s)`,
+                    title: pageText('advFuncaptchaCapturedTitle', 'FunCaptcha Captured Successfully'),
+                    message: pageText('advFuncaptchaCapturedCountFmt', 'Challenges captured: {0}', state.capturedData.length),
                     duration: 5000
                 });
             } else if (reason === 'timeout') {
                 await showNotification(tabId, {
+                    module: 'FunCaptcha',
                     type: 'warning',
-                    title: 'Capture Timeout',
-                    message: 'No FunCaptcha challenge detected (60s timeout)',
+                    title: pageText('advFuncaptchaCaptureTimeout', 'Capture Timeout'),
+                    message: pageText('advFuncaptchaNoChallenge', 'No FunCaptcha challenge detected (60s timeout)'),
                     duration: 5000
                 });
             }
@@ -374,9 +379,10 @@ function handleFunCaptchaMessage(request, sendResponse, captureState) {
                 try {
                     if (typeof showNotification === 'function') {
                         await showNotification(request.tabId, {
+                            module: 'FunCaptcha',
                             type: 'loading',
-                            title: 'Analyzing FunCaptcha Scripts',
-                            message: 'Please wait while we collect script URLs...',
+                            title: pageText('pageNoticeAnalyzingScriptsFmt', 'Analyzing {0} Scripts', 'FunCaptcha'),
+                            message: pageText('pageNoticeCollectingScripts', 'Please wait while we collect script URLs...'),
                             duration: 15000
                         });
                     }

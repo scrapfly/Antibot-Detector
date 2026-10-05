@@ -38,9 +38,10 @@ async function handleGeetestCheckVersion(message, sender, sendResponse) {
         // Show loading notification
         if (showNotification) {
             await showNotification(tabId, {
+                module: 'Geetest',
                 type: 'loading',
-                title: 'Detecting Geetest Version...',
-                message: 'Reloading page to check version',
+                title: pageText('advGeetestDetectingVersion', 'Detecting Geetest Version...'),
+                message: pageText('advGeetestReloadCheckVersion', 'Reloading page to check version'),
                 duration: 5000
             }).catch(() => {});
         }
@@ -105,9 +106,10 @@ async function handleGeetestAnalyzeScripts(message, sender, sendResponse) {
         // Show loading notification
         if (showNotification) {
             await showNotification(tabId, {
+                module: 'Geetest',
                 type: 'loading',
-                title: 'Analyzing Scripts...',
-                message: 'Reloading page to extract scripts',
+                title: pageText('advGeetestAnalyzingScripts', 'Analyzing Scripts...'),
+                message: pageText('advGeetestReloadExtractScripts', 'Reloading page to extract scripts'),
                 duration: 5000
             }).catch(() => {});
         }

@@ -25,7 +25,7 @@ function demExtractCookies() {
 
     // Log all collected cookies - visible in Service Worker console
     if (typeof Logger !== 'undefined') {
-        Logger.cache(`Collected ${cookies.length} cookies from page`, {
+        Logger.debug('DETECTION', `Read ${cookies.length} page cookies`, {
             cookies: cookies.map(c => c.name)
         });
     }
@@ -34,11 +34,24 @@ function demExtractCookies() {
 }
 
 
+// JavaScript MIME essences from the MIME Sniffing standard, including legacy
+// aliases still accepted by classic script elements. Data blocks are not code.
+function demIsJavaScriptMimeType(value) {
+    const essence = String(value || '').split(';', 1)[0].trim().toLowerCase();
+    return /^(?:application\/(?:x-)?(?:ecmascript|javascript)|text\/(?:ecmascript|javascript(?:1\.[0-5])?|jscript|livescript|x-(?:ecmascript|javascript)))$/.test(essence);
+}
+
+function demIsJavaScriptElement(script) {
+    const type = String(script.type || '').trim().toLowerCase();
+    return !type || type === 'module' || demIsJavaScriptMimeType(type);
+}
+
 function demExtractScriptElements() {
     const scripts = [];
     const scriptElements = document.querySelectorAll('script');
 
     scriptElements.forEach((script) => {
+        if (!demIsJavaScriptElement(script)) return;
         // External scripts
         if (script.src) {
             const content = (script.textContent || script.innerHTML || '').trim();
@@ -60,7 +73,7 @@ function demExtractScriptElements() {
         }
     });
 
-    Logger.detection(`DetectionEngineManager: Found ${scripts.length} script elements`);
+    Logger.debug('DETECTION', `Read ${scripts.length} script elements`);
     return scripts;
 }
 
@@ -71,6 +84,16 @@ function demExtractDOM() {
 
     // Use NodeFilter to skip irrelevant elements (20-30% faster)
     const relevantTags = new Set(['iframe', 'form', 'div', 'meta', 'script', 'noscript', 'canvas']);
+    const configuredSelectors = Object.values(this.detectors || {}).flatMap(category =>
+        Object.values(category).filter(detector => detector.enabled !== false).flatMap(detector =>
+            (detector.detection?.dom || []).map(rule => demParseDOMSelector(rule.selector)).filter(Boolean)));
+    const configuredGroups = configuredSelectors.flat();
+    const groupsByTag = new Map();
+    const extraAttributes = new Set(configuredGroups.flatMap(group =>
+        group.tokens.map(token => token.attribute)));
+    // Capture selector metadata, never input values or generated response tokens.
+    extraAttributes.delete('value');
+    const attributesFor = element => this.getElementAttributes(element, extraAttributes);
 
     const walker = document.createTreeWalker(
         document.body || document.documentElement,
@@ -83,6 +106,31 @@ function demExtractDOM() {
                         node.hasAttribute('data-captcha') ||
                         node.hasAttribute('data-callback')) {
                         return NodeFilter.FILTER_ACCEPT;
+                    }
+                    // Most nodes cannot match a configured widget. Check cheap
+                    // tag/identity/presence requirements before allocating records.
+                    let classTokens;
+                    let nodeId;
+                    let groups = groupsByTag.get(tagName);
+                    if (!groups) {
+                        groups = configuredGroups.filter(group => !group.tag || group.tag === '*' || group.tag === tagName);
+                        groupsByTag.set(tagName, groups);
+                    }
+                    const possibleMatch = groups.some(group => group.tokens.every(token => {
+                        if (token.attribute === 'class' && token.operator === '~=' && !token.insensitive) {
+                            classTokens ??= (node.getAttribute('class') || '').split(/[\t\n\f\r ]+/);
+                            return classTokens.includes(token.value);
+                        }
+                        if (token.attribute === 'id' && token.operator === '=' && !token.insensitive) {
+                            nodeId ??= node.getAttribute('id');
+                            return nodeId === token.value;
+                        }
+                        return node.hasAttribute(token.attribute);
+                    }));
+                    if (possibleMatch) {
+                        const candidate = { selector: tagName, id: node.getAttribute('id') || '',
+                            class: node.getAttribute('class') || '', attributes: attributesFor(node) };
+                        if (demMatchDOMGroups(groups, candidate)) return NodeFilter.FILTER_ACCEPT;
                     }
                     return NodeFilter.FILTER_SKIP;
                 }
@@ -102,7 +150,9 @@ function demExtractDOM() {
         if (!relevantTags.has(tagName)) {
             domData.push({
                 selector: tagName,
-                attributes: this.getElementAttributes(element)
+                id: element.getAttribute('id') || '',
+                class: element.getAttribute('class') || '',
+                attributes: attributesFor(element)
             });
             continue; // Skip switch statement
         }
@@ -114,7 +164,7 @@ function demExtractDOM() {
                     domData.push({
                         selector: 'iframe',
                         src: src,
-                        attributes: this.getElementAttributes(element)
+                        attributes: attributesFor(element)
                     });
                 }
                 break;
@@ -126,7 +176,7 @@ function demExtractDOM() {
                     action: element.getAttribute('action') || '',
                     id: element.getAttribute('id') || '',
                     class: element.getAttribute('class') || '',
-                    attributes: this.getElementAttributes(element)
+                    attributes: attributesFor(element)
                 });
                 break;
             }
@@ -134,11 +184,14 @@ function demExtractDOM() {
             case 'div': {
                 const id = element.getAttribute('id') || '';
                 const className = element.getAttribute('class') || '';
-                if (id || className) {
+                // Keep its attributes too: [data-sitekey] / [data-callback] usually sit on a div
+                const attributes = attributesFor(element);
+                if (id || className || Object.keys(attributes).length > 0) {
                     domData.push({
                         selector: 'div',
                         id: id,
-                        class: className
+                        class: className,
+                        attributes
                     });
                 }
                 break;
@@ -162,7 +215,8 @@ function demExtractDOM() {
                 if (src) {
                     domData.push({
                         selector: 'script',
-                        src: src
+                        src: src,
+                        attributes: attributesFor(element)
                     });
                 }
                 break;
@@ -192,17 +246,19 @@ function demExtractDOM() {
     }
 
     const extractTime = Date.now() - startTime;
-    Logger.detection(`[8C: DOM Batching] Walked ${nodeCount} nodes in ${extractTime}ms, collected ${domData.length} elements`);
+    Logger.debug('DETECTION', `Walked ${nodeCount} DOM nodes in ${extractTime}ms, kept ${domData.length}`);
 
     return domData;
 }
 
 
-function demGetElementAttributes(element) {
+function demGetElementAttributes(element, extraAttributes = []) {
     if (!element) return {};
 
     const attributes = {};
-    const relevantAttrs = ['id', 'class', 'src', 'href', 'action', 'data-sitekey', 'data-callback'];
+    const relevantAttrs = new Set(['id', 'class', 'src', 'href', 'action', 'type', 'name',
+        'data-sitekey', 'data-callback', ...extraAttributes]);
+    relevantAttrs.delete('value');
 
     relevantAttrs.forEach(attr => {
         if (element.hasAttribute(attr)) {

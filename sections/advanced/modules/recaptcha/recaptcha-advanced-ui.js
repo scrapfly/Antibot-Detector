@@ -23,7 +23,7 @@ ReCaptchaAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'recaptchaCallback',
-                label: 'reCAPTCHA callback',
+                label: recaptchaText('advRecaptchaCallbackTool', 'reCAPTCHA callback'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M17.45,15.18L22,7.31V19L17.45,15.18M1,3.24L3.77,6L5.55,7.78L16.78,19C16.84,19 16.89,19.05 16.95,19.06L19,21.07L20.59,19.48L2.59,1.48L1,3.24M8,8.97L8.02,5H17.64L15.27,9.45L8,8.97M12.65,12.74L18.13,18.23L15.76,22H8L10.14,17.94L12.65,12.74Z"/>
@@ -55,30 +55,9 @@ ReCaptchaAdvanced.prototype.setupToolListeners = function() {
         Logger.network('[ReCAPTCHA] this.startCapturing exists:', typeof this.startCapturing);
 
         this.bindToolActions([
-            { id: 'recaptchaClick', method: () => {
-                Logger.network('[ReCAPTCHA] Click button pressed!');
-                try {
-                    this.clickRecaptcha();
-                } catch (e) {
-                    Logger.error('NETWORK', '[ReCAPTCHA] Error in clickRecaptcha:', e);
-                }
-            }},
-            { id: 'recaptchaExtract', method: () => {
-                Logger.network('[ReCAPTCHA] Extract button pressed!');
-                try {
-                    this.extractSiteKey();
-                } catch (e) {
-                    Logger.error('NETWORK', '[ReCAPTCHA] Error in extractSiteKey:', e);
-                }
-            }},
-            { id: 'recaptchaCallback', method: () => {
-                Logger.network('[ReCAPTCHA] Callback button pressed!');
-                try {
-                    this.captureCallback();
-                } catch (e) {
-                    Logger.error('NETWORK', '[ReCAPTCHA] Error in captureCallback:', e);
-                }
-            }},
+            { id: 'recaptchaClick', method: () => this.clickRecaptcha() },
+            { id: 'recaptchaExtract', method: () => this.extractSiteKey() },
+            { id: 'recaptchaCallback', method: () => this.captureCallback() },
             { id: 'recaptchaStartCapture', method: () => this.startCapturing() }
         ]);
 
@@ -97,49 +76,23 @@ ReCaptchaAdvanced.prototype.setupToolListeners = function() {
      */
 ReCaptchaAdvanced.prototype.displaySelectorModal = function(result) {
         Logger.network('[ReCAPTCHA] displaySelectorModal called with:', result);
-        const modal = this.createToolModal({ width: '95%' });
-        modal.classList.add('advanced-modal-overlay');
-
-        modal.innerHTML = `
-            <div class="advanced-modal-container" style="background: var(--bg-secondary, #2a2a2a); border-radius: 8px; padding: 24px; max-width: 600px; width: 95%;">
-                <div class="advanced-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                    <h3 style="margin: 0; color: var(--text-primary, #fff); font-size: 16px; font-weight: 600;">Selector Detection</h3>
-                    <button class="advanced-modal-close-btn">×</button>
-                </div>
-                <div class="advanced-modal-body">
-                    ${result.success ? `
-                        <div class="advanced-modal-section" style="margin-bottom: 20px;">
-                            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">Method</div>
-                            <div style="color: var(--text-primary, #fff); font-size: 13px; padding: 10px; background: var(--bg-tertiary, #1a1a1a); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1);">${result.method}</div>
-                        </div>
-                        ${result.selector ? `
-                            <div class="advanced-modal-section">
-                                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">Selector</div>
-                                <code class="clickable-copy-value" data-copy="${result.selector}" data-copy-message="Selector copied to clipboard!" style="display: block; background: var(--bg-tertiary, #1a1a1a); padding: 14px; border-radius: 6px; color: var(--success, #4ade80); font-family: monospace; word-break: break-all; font-size: 13px; line-height: 1.5; cursor: pointer; transition: all 0.2s; user-select: text; border: 1px solid rgba(255, 255, 255, 0.1);">${result.selector}</code>
-                            </div>
-                        ` : ''}
-                    ` : `
-                        <div class="advanced-modal-section">
-                            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">Error</div>
-                            <div style="color: var(--error, #ef4444); font-size: 13px; padding: 10px; background: var(--bg-tertiary, #1a1a1a); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1);">${result.error}</div>
-                        </div>
-                    `}
-                </div>
-            </div>
-        `;
-
-        this.bindCopyValueHandlers(modal, { defaultMessage: 'Selector copied to clipboard!' });
-        this.bindModalClose(modal);
-        this.showToolModal(modal);
-
-        // Add hover effect
-        modal.querySelectorAll('.clickable-copy-value').forEach(element => {
-            element.addEventListener('mouseenter', () => {
-                element.style.background = 'rgba(255, 255, 255, 0.08)';
-            });
-            element.addEventListener('mouseleave', () => {
-                element.style.background = 'var(--bg-tertiary)';
-            });
+        const K = BaseAdvancedModule;
+        let errorText = result.error;
+        if (result.errorKey === 'noElements') {
+            errorText = recaptchaText('advRecaptchaNoElements', 'No reCAPTCHA elements found');
+        } else if (result.errorKey === 'executeFailed') {
+            errorText = recaptchaText('advRecaptchaExecuteFailedFmt', 'grecaptcha.execute() failed: {0}', result.errorDetail || '');
+        }
+        const body = result.success
+            ? K.kitField(recaptchaText('advRecaptchaMethod', 'Method'), result.method, { mono: false })
+              + K.kitField(recaptchaText('advRecaptchaSelector', 'Selector'), result.selector, { wrap: true })
+            : K.kitNote(errorText || '', 'error');
+        this.openKitModal({
+            title: recaptchaText('advRecaptchaSelectorDetection', 'Selector Detection'),
+            subtitle: 'reCAPTCHA',
+            iconSvg: ReCaptchaAdvanced.KIT_ICONS.selector,
+            body,
+            copiedMessage: recaptchaText('advRecaptchaSelectorCopied', 'Selector copied to clipboard!')
         });
     };
 
@@ -149,213 +102,78 @@ ReCaptchaAdvanced.prototype.displaySelectorModal = function(result) {
      */
 ReCaptchaAdvanced.prototype.displaySiteKeyModal = function(sitekey) {
         Logger.network('[ReCAPTCHA] displaySiteKeyModal called with:', sitekey);
-        const modal = this.createToolModal({ width: '95%' });
-        modal.classList.add('recaptcha-modal-overlay');
-
-        modal.innerHTML = `
-            <div class="recaptcha-modal" style="background: var(--bg-secondary, #2a2a2a); border-radius: 8px; padding: 24px; max-width: 600px; width: 95%;">
-                <div class="recaptcha-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="margin: 0; color: var(--text-primary, #fff); font-size: 16px;">Extracted SiteKey</h3>
-                    <button class="advanced-modal-close-btn">×</button>
-                </div>
-                <div class="recaptcha-modal-content">
-                    <div class="sitekey-display" style="display: flex; flex-direction: column; gap: 14px;">
-                        <code class="sitekey-code clickable-copy-value" data-copy="${sitekey}" data-copy-message="SiteKey copied to clipboard!" style="display: block; background: var(--bg-tertiary, #1a1a1a); padding: 14px; border-radius: 6px; color: var(--success, #4ade80); font-family: monospace; word-break: break-all; font-size: 13px; line-height: 1.5; cursor: pointer; transition: all 0.2s; user-select: text;">${FormatUtils.escapeHtml(sitekey)}</code>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        this.bindCopyValueHandlers(modal, { defaultMessage: 'SiteKey copied to clipboard!' });
-        this.bindModalClose(modal);
-        this.showToolModal(modal);
-
-        // Add hover effect
-        modal.querySelectorAll('.clickable-copy-value').forEach(element => {
-            element.addEventListener('mouseenter', () => {
-                element.style.background = 'rgba(255, 255, 255, 0.08)';
-            });
-            element.addEventListener('mouseleave', () => {
-                element.style.background = 'var(--bg-tertiary)';
-            });
+        this.openKitModal({
+            title: recaptchaText('advRecaptchaExtractedSiteKey', 'Extracted SiteKey'),
+            subtitle: 'reCAPTCHA',
+            iconSvg: ReCaptchaAdvanced.KIT_ICONS.key,
+            body: BaseAdvancedModule.kitField(recaptchaText('advCommonSiteKey', 'Site Key'), sitekey, { wrap: true }),
+            copiedMessage: recaptchaText('advRecaptchaSiteKeyCopied', 'SiteKey copied to clipboard!')
         });
     };
 
 
     /**
-     * Display callback functions modal
+     * Display callback functions modal: one card per grecaptcha client
+     * (version, site key, callback name and path), then the callbacks found
+     * in the DOM and in scripts, then a ready-to-adapt example.
      */
 ReCaptchaAdvanced.prototype.displayCallbackModal = function(data) {
         Logger.network('[ReCAPTCHA] displayCallbackModal called with:', data);
-        const modal = this.createToolModal();
-        modal.classList.add('recaptcha-modal-overlay');
+        const K = BaseAdvancedModule;
+        const { clients = [], domCallbacks = [], scriptCallbacks = [] } = data || {};
 
-        const { clients = [], domCallbacks = [], scriptCallbacks = [] } = data;
-        const hasClients = clients.length > 0;
-        const hasDomCallbacks = domCallbacks.length > 0;
-        const hasScriptCallbacks = scriptCallbacks.length > 0;
+        const clientCards = clients.map((client) => K.kitCard(
+            K.kitField(recaptchaText('advCommonSiteKey', 'Site Key'), client.sitekey)
+            + (client.callback
+                ? K.kitField(recaptchaText('advRecaptchaCallbackFunction', 'Callback Function'), client.callback)
+                  + K.kitField(recaptchaText('advRecaptchaCallbackPath', 'Callback Path'), client.callbackPath)
+                : K.kitNote(recaptchaText('advRecaptchaNoCallback', 'No callback defined')))
+            + K.kitField(recaptchaText('advCommonPage', 'Page'), client.pageurl, { mono: false }),
+            K.kitChip(client.version || 'V2', client.version === 'V3' ? 'purple' : 'blue')
+            + K.kitChip(recaptchaText('advRecaptchaClientIdFmt', 'Client ID: {0}', client.id), 'neutral')
+        )).join('');
 
-        modal.innerHTML = `
-            <div class="recaptcha-modal" style="background: var(--bg-secondary, #2a2a2a); border-radius: 8px; padding: 24px; max-width: 650px; width: 95%; max-height: 85vh; overflow-y: auto;">
-                <div class="recaptcha-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                    <h3 style="margin: 0; color: var(--text-primary, #fff); font-size: 16px; font-weight: 600;">reCAPTCHA Callbacks</h3>
-                    <button class="advanced-modal-close-btn">×</button>
-                </div>
-                <div class="recaptcha-modal-content" style="display: flex; flex-direction: column; gap: 24px;">
+        const list = (items) => items.map(cb => K.kitField(recaptchaText('advRecaptchaCallbackFunction', 'Callback Function'), cb)).join('');
 
-                    ${hasClients ? `
-                    <!-- reCAPTCHA Clients Section -->
-                    <div class="clients-section">
-                        <h4 style="margin: 0 0 16px 0; color: var(--text-primary, #fff); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent);">reCAPTCHA Clients</h4>
-                        <div style="display: flex; flex-direction: column; gap: 14px;">
-                            ${clients.map(client => `
-                                <div class="client-card" style="background: var(--bg-tertiary, #1a1a1a); border-radius: 6px; padding: 16px; border: 1px solid rgba(255, 255, 255, 0.1);">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <span style="background: ${client.version === 'V3' ? '#8b5cf6' : '#3b82f6'}; color: white; padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: 700;">
-                                                ${client.version}
-                                            </span>
-                                            <span style="color: var(--text-secondary); font-size: 12px;">Client ID: ${client.id}</span>
-                                        </div>
-                                    </div>
+        // One example, for the first callback found anywhere
+        const exampleName = (clients.find(c => c.callback) || {}).callback || domCallbacks[0] || scriptCallbacks[0] || '';
+        const example = exampleName ? `// reCAPTCHA calls ${exampleName}(token) once it is solved.
+// Call it yourself with a solved token to submit the form the same way:
+${exampleName}(token);
 
-                                    ${client.sitekey ? `
-                                    <div style="margin-bottom: 12px;">
-                                        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">SiteKey</div>
-                                        <code class="callback-value-clickable" data-copy="${client.sitekey}" data-copy-message="Copied to clipboard!" style="color: var(--success, #4ade80); font-size: 12px; font-family: monospace; background: var(--bg-primary); padding: 8px 10px; border-radius: 4px; display: block; overflow-x: auto; border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; transition: all 0.2s; user-select: text;">${FormatUtils.escapeHtml(client.sitekey)}</code>
-                                    </div>
-                                    ` : ''}
-
-                                    ${client.callback ? `
-                                    <div style="margin-bottom: 12px;">
-                                        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">Callback Function</div>
-                                        <code class="callback-value-clickable" data-copy="${client.callback}" data-copy-message="Copied to clipboard!" style="color: var(--success, #4ade80); font-size: 12px; font-family: monospace; background: var(--bg-primary); padding: 8px 10px; border-radius: 4px; display: block; border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; transition: all 0.2s; user-select: text;">${client.callback}</code>
-                                    </div>
-
-                                    <div style="margin-bottom: 12px;">
-                                        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">Callback Path</div>
-                                        <code class="callback-value-clickable" data-copy="${client.callbackPath}" data-copy-message="Copied to clipboard!" style="color: var(--text-secondary); font-size: 11px; font-family: monospace; background: var(--bg-primary); padding: 8px 10px; border-radius: 4px; display: block; overflow-x: auto; white-space: nowrap; border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; transition: all 0.2s; user-select: text;">${client.callbackPath}</code>
-                                    </div>
-                                    ` : `
-                                    <div style="padding: 10px; background: var(--bg-secondary); border-radius: 4px; font-size: 12px; color: var(--text-secondary);">
-                                        No callback defined
-                                    </div>
-                                    `}
-
-                                    ${client.pageurl ? `
-                                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.05); font-size: 11px; color: var(--text-secondary);">
-                                        ${client.pageurl}
-                                    </div>
-                                    ` : ''}
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                    ` : ''}
-
-                    ${hasDomCallbacks ? `
-                    <!-- DOM Callbacks Section -->
-                    <div class="dom-callbacks-section">
-                        <h4 style="margin: 0 0 16px 0; color: var(--text-primary, #fff); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent);">DOM Callbacks</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            ${domCallbacks.map(cb => `
-                                <code class="callback-value-clickable" data-copy="${cb}" data-copy-message="Copied to clipboard!" style="color: var(--success, #4ade80); font-family: monospace; font-size: 12px; padding: 12px; background: var(--bg-tertiary, #1a1a1a); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); display: block; overflow-x: auto; cursor: pointer; transition: all 0.2s; user-select: text;">${cb}</code>
-                            `).join('')}
-                        </div>
-                    </div>
-                    ` : ''}
-
-                    ${hasScriptCallbacks ? `
-                    <!-- Script Callbacks Section -->
-                    <div class="script-callbacks-section">
-                        <h4 style="margin: 0 0 16px 0; color: var(--text-primary, #fff); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent);">Script Callbacks</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            ${scriptCallbacks.map(cb => `
-                                <code class="callback-value-clickable" data-copy="${cb}" data-copy-message="Copied to clipboard!" style="color: var(--success, #4ade80); font-family: monospace; font-size: 12px; padding: 12px; background: var(--bg-tertiary, #1a1a1a); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); display: block; overflow-x: auto; cursor: pointer; transition: all 0.2s; user-select: text;">${cb}</code>
-                            `).join('')}
-                        </div>
-                    </div>
-                    ` : ''}
-
-                    ${hasDomCallbacks ? `
-                    <!-- DOM Callbacks Usage Examples -->
-                    <div class="usage-examples-section" style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 24px;">
-                        <h4 style="margin: 0 0 16px 0; color: var(--text-primary, #fff); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent);">Callback Usage Examples</h4>
-                        ${domCallbacks.map(cb => `
-                        <div style="margin-bottom: 16px;">
-                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">Using callback: <code style="background: var(--bg-tertiary); padding: 2px 6px; border-radius: 3px; color: var(--success)">${cb}</code></div>
-                            <code style="color: var(--success, #4ade80); font-family: monospace; font-size: 11px; padding: 12px; background: var(--bg-primary); border-radius: 4px; display: block; overflow-x: auto; border: 1px solid rgba(255, 255, 255, 0.05); line-height: 1.6; white-space: pre-wrap; word-break: break-word;">// When reCAPTCHA loads, this callback is called
-function ${cb}(token) {
-  Logger.network('reCAPTCHA token:', token);
-
-  // NOTE: Endpoint and method may vary - change to match your backend
+// Or define it before the widget loads to receive the token:
+window.${exampleName} = function (token) {
+  // Endpoint and payload depend on the site: adapt them
   fetch('/verify-captcha', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token: token })
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      Logger.network('Verification successful!');
-    }
+    body: JSON.stringify({ token })
   });
-}</code>
-                        </div>
-                        `).join('')}
-                    </div>
-                    ` : ''}
+};` : '';
 
-                    ${hasScriptCallbacks && !hasDomCallbacks ? `
-                    <!-- Script Callbacks Usage Examples -->
-                    <div class="usage-examples-section" style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 24px;">
-                        <h4 style="margin: 0 0 16px 0; color: var(--text-primary, #fff); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent);">Callback Usage Examples</h4>
-                        ${scriptCallbacks.map(cb => `
-                        <div style="margin-bottom: 16px;">
-                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">Using callback: <code style="background: var(--bg-tertiary); padding: 2px 6px; border-radius: 3px; color: var(--success)">${cb}</code></div>
-                            <code style="color: var(--success, #4ade80); font-family: monospace; font-size: 11px; padding: 12px; background: var(--bg-primary); border-radius: 4px; display: block; overflow-x: auto; border: 1px solid rgba(255, 255, 255, 0.05); line-height: 1.6; white-space: pre-wrap; word-break: break-word;">// When reCAPTCHA completes, this callback is invoked
-function ${cb}(token) {
-  Logger.network('reCAPTCHA token:', token);
+        const empty = !clients.length && !domCallbacks.length && !scriptCallbacks.length;
+        const body = empty
+            ? K.kitNote(recaptchaText('advRecaptchaNoCallbacksFound', 'No reCAPTCHA clients or callbacks were found on this page.'))
+            : K.kitSection(recaptchaText('advRecaptchaClientsTitle', 'reCAPTCHA Clients'), clientCards, clients.length || '')
+              + K.kitSection(recaptchaText('advRecaptchaDomCallbacks', 'DOM Callbacks'), list(domCallbacks), domCallbacks.length || '')
+              + K.kitSection(recaptchaText('advRecaptchaScriptCallbacks', 'Script Callbacks'), list(scriptCallbacks), scriptCallbacks.length || '')
+              + K.kitSection(recaptchaText('advRecaptchaCallbackExamples', 'Callback Usage Examples'), K.kitCode(exampleName, example));
 
-  // NOTE: Endpoint and method may vary - change to match your backend
-  fetch('/verify-captcha', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token: token })
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      Logger.network('Verification successful!');
-    }
-  });
-}</code>
-                        </div>
-                        `).join('')}
-                    </div>
-                    ` : ''}
-
-                </div>
-            </div>
-        `;
-
-        this.bindCopyValueHandlers(modal, {
-            defaultMessage: 'Copied to clipboard!',
-            selector: '.callback-value-clickable[data-copy]'
-        });
-        this.bindModalClose(modal);
-        this.showToolModal(modal);
-
-        // Add hover effect
-        modal.querySelectorAll('.callback-value-clickable').forEach(element => {
-            element.addEventListener('mouseenter', () => {
-                element.style.background = 'rgba(255, 255, 255, 0.08)';
-            });
-            element.addEventListener('mouseleave', () => {
-                element.style.background = 'var(--bg-primary)';
-            });
+        this.openKitModal({
+            title: recaptchaText('advRecaptchaCallbacksTitle', 'reCAPTCHA Callbacks'),
+            subtitle: (clients[0] && clients[0].pageurl) || '',
+            iconSvg: ReCaptchaAdvanced.KIT_ICONS.callback,
+            body,
+            copiedMessage: recaptchaText('advRecaptchaCopiedToClipboard', 'Copied to clipboard!')
         });
     };
+
+/** Header icons for the reCAPTCHA result dialogs (stroke icons, 24px grid). */
+ReCaptchaAdvanced.KIT_ICONS = {
+    selector: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7 17 2.5-7.5L20 10z"/></svg>',
+    key: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2L20 3M16 7l3 3M14 9l2 2"/></svg>',
+    callback: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>'
+};
 
 
     /**
@@ -369,13 +187,14 @@ ReCaptchaAdvanced.prototype.renderCaptureHistoryItems = function(items) {
             const timeAgo = this.getTimeAgo(timestamp);
             const faviconUrl = UrlUtils.resolveDisplayFavicon(item.favicon, item.url || hostname);
 
-            let versionDisplay = version;
+            const versionParts = [version];
             if (isEnterprise) {
-                versionDisplay += ' Enterprise';
+                versionParts.push(recaptchaText('advCommonEnterprise', 'Enterprise'));
             }
             if (version === 'v2' && isInvisible) {
-                versionDisplay += ' Invisible';
+                versionParts.push(recaptchaText('advRecaptchaInvisible', 'Invisible'));
             }
+            const versionDisplay = versionParts.join(' ');
 
             return `
                 <div class="capture-card" data-capture-id="${item.id}">
@@ -387,7 +206,7 @@ ReCaptchaAdvanced.prototype.renderCaptureHistoryItems = function(items) {
                                 <span class="capture-time">${timeAgo}</span>
                             </div>
                             <div class="capture-type-row">
-                                <span class="capture-type-label">Version</span>
+                                <span class="capture-type-label">${recaptchaText('ruleFieldVersion', 'Version')}</span>
                                 <span class="capture-type-value">${versionDisplay}</span>
                             </div>
                         </div>
@@ -411,22 +230,24 @@ ReCaptchaAdvanced.prototype.renderCaptureHistoryItems = function(items) {
      */
 ReCaptchaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
         if (!capture || !capture.captureData) {
-            return '<div class="advanced-modal-section"><span class="advanced-modal-error">No capture data available</span></div>';
+            return `<div class="advanced-modal-section"><span class="advanced-modal-error">${recaptchaText('advCommonNoCaptureData', 'No capture data available')}</span></div>`;
         }
 
         const data = capture.captureData;
         const siteUrl = AdvancedUtils.escapeHtml(data.siteUrl || capture.url || '');
-        const timestamp = new Date(capture.timestamp).toLocaleString();
+        const timestamp = recaptchaDateTime(capture.timestamp);
+        const clickToCopy = AdvancedUtils.escapeHtml(recaptchaText('advCommonClickToCopy', 'Click to copy'));
+        const copiedAttr = (key, fallback) => AdvancedUtils.escapeHtml(recaptchaText(key, fallback));
 
         // Transform version display: v2 -> reCAPTCHA v2, v3 -> reCAPTCHA v3
         const versionDisplay = data.version ? `reCAPTCHA ${data.version}` : null;
 
         // Build features list (only show true/yes features)
         let features = [];
-        if (data.isEnterprise) features.push('Enterprise');
-        if (data.isInvisible) features.push('Invisible');
-        if (data.isSRequired) features.push('S Parameter Required');
-        if (data.hasSession) features.push('Has Session');
+        if (data.isEnterprise) features.push(recaptchaText('advCommonEnterprise', 'Enterprise'));
+        if (data.isInvisible) features.push(recaptchaText('advRecaptchaInvisible', 'Invisible'));
+        if (data.isSRequired) features.push(recaptchaText('advRecaptchaSParamRequired', 'S Parameter Required'));
+        if (data.hasSession) features.push(recaptchaText('advRecaptchaHasSession', 'Has Session'));
 
         return `
             <div style="display: flex; flex-direction: column; gap: 14px;">
@@ -434,14 +255,14 @@ ReCaptchaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
                 <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
                     ${versionDisplay ? `
                     <div>
-                        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">Version</div>
-                        <div class="copy-value" style="color: #4ade80; font-family: monospace; font-size: 12px; font-weight: 600;" data-copy="${AdvancedUtils.escapeHtml(data.version)}" data-copy-message="Version copied" title="Click to copy">${AdvancedUtils.escapeHtml(versionDisplay)}</div>
+                        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">${recaptchaText('ruleFieldVersion', 'Version')}</div>
+                        <div class="copy-value" style="color: #4ade80; font-family: var(--font-mono); font-size: 12px; font-weight: 600;" data-copy="${AdvancedUtils.escapeHtml(data.version)}" data-copy-message="${copiedAttr('advRecaptchaVersionCopied', 'Version copied')}" title="${clickToCopy}">${AdvancedUtils.escapeHtml(versionDisplay)}</div>
                     </div>
                     ` : ''}
                     ${data.action ? `
                     <div>
-                        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">Action</div>
-                        <div class="copy-value" style="color: #4ade80; font-family: monospace; font-size: 12px; word-break: break-all;" data-copy="${AdvancedUtils.escapeHtml(data.action)}" data-copy-message="Action copied" title="Click to copy">${AdvancedUtils.escapeHtml(data.action)}</div>
+                        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">${recaptchaText('advRecaptchaAction', 'Action')}</div>
+                        <div class="copy-value" style="color: #4ade80; font-family: var(--font-mono); font-size: 12px; word-break: break-all;" data-copy="${AdvancedUtils.escapeHtml(data.action)}" data-copy-message="${copiedAttr('advRecaptchaActionCopied', 'Action copied')}" title="${clickToCopy}">${AdvancedUtils.escapeHtml(data.action)}</div>
                     </div>
                     ` : ''}
                 </div>
@@ -449,8 +270,8 @@ ReCaptchaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
                 <!-- Site Key Card -->
                 ${data.siteKey ? `
                 <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
-                    <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">Site Key</div>
-                    <div class="copy-value" style="color: #4ade80; font-family: monospace; font-size: 12px; word-break: break-all; padding: 8px;" data-copy="${AdvancedUtils.escapeHtml(data.siteKey)}" data-copy-message="Site Key copied" title="Click to copy">${AdvancedUtils.escapeHtml(data.siteKey)}</div>
+                    <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">${recaptchaText('advCommonSiteKey', 'Site Key')}</div>
+                    <div class="copy-value" style="color: #4ade80; font-family: var(--font-mono); font-size: 12px; word-break: break-all; padding: 8px;" data-copy="${AdvancedUtils.escapeHtml(data.siteKey)}" data-copy-message="${copiedAttr('advRecaptchaSiteKeyCopiedShort', 'Site Key copied')}" title="${clickToCopy}">${AdvancedUtils.escapeHtml(data.siteKey)}</div>
                 </div>
                 ` : ''}
 
@@ -459,14 +280,14 @@ ReCaptchaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
                 <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px; display: grid; grid-template-columns: ${data.apiDomain && data.requiredCookie ? '1fr 1fr' : '1fr'}; gap: 14px;">
                     ${data.apiDomain ? `
                     <div>
-                        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">API Domain</div>
-                        <div class="copy-value" style="color: #4ade80; font-family: monospace; font-size: 12px; word-break: break-all;" data-copy="${AdvancedUtils.escapeHtml(data.apiDomain)}" data-copy-message="API Domain copied" title="Click to copy">${AdvancedUtils.escapeHtml(data.apiDomain)}</div>
+                        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">${recaptchaText('advCommonApiDomain', 'API Domain')}</div>
+                        <div class="copy-value" style="color: #4ade80; font-family: var(--font-mono); font-size: 12px; word-break: break-all;" data-copy="${AdvancedUtils.escapeHtml(data.apiDomain)}" data-copy-message="${copiedAttr('advRecaptchaApiDomainCopied', 'API Domain copied')}" title="${clickToCopy}">${AdvancedUtils.escapeHtml(data.apiDomain)}</div>
                     </div>
                     ` : ''}
                     ${data.requiredCookie ? `
                     <div>
-                        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">Required Cookie</div>
-                        <div class="copy-value" style="color: #4ade80; font-family: monospace; font-size: 12px; word-break: break-all;" data-copy="${AdvancedUtils.escapeHtml(data.requiredCookie)}" data-copy-message="Cookie copied" title="Click to copy">${AdvancedUtils.escapeHtml(data.requiredCookie)}</div>
+                        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">${recaptchaText('advRecaptchaRequiredCookie', 'Required Cookie')}</div>
+                        <div class="copy-value" style="color: #4ade80; font-family: var(--font-mono); font-size: 12px; word-break: break-all;" data-copy="${AdvancedUtils.escapeHtml(data.requiredCookie)}" data-copy-message="${copiedAttr('advRecaptchaCookieCopied', 'Cookie copied')}" title="${clickToCopy}">${AdvancedUtils.escapeHtml(data.requiredCookie)}</div>
                     </div>
                     ` : ''}
                 </div>
@@ -475,7 +296,7 @@ ReCaptchaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
                 <!-- Features Card (only if features exist) -->
                 ${features.length > 0 ? `
                 <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
-                    <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 10px;">Features Detected</div>
+                    <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 10px;">${recaptchaText('advRecaptchaFeaturesDetected', 'Features Detected')}</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         ${features.map(f => `<span style="background: rgba(74, 222, 128, 0.15); color: #4ade80; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600;">${f}</span>`).join('')}
                     </div>
@@ -484,13 +305,13 @@ ReCaptchaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
 
                 <!-- Site URL Card -->
                 <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
-                    <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">Site URL</div>
-                    <div class="copy-value" style="color: #60a5fa; font-size: 12px; word-break: break-all; padding: 8px;" data-copy="${siteUrl}" data-copy-message="URL copied" title="Click to copy">${FormatUtils.escapeHtml(siteUrl)}</div>
+                    <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">${recaptchaText('advCommonSiteUrl', 'Site URL')}</div>
+                    <div class="copy-value" style="color: #60a5fa; font-size: 12px; word-break: break-all; padding: 8px;" data-copy="${siteUrl}" data-copy-message="${copiedAttr('advCommonUrlCopied', 'URL copied')}" title="${clickToCopy}">${FormatUtils.escapeHtml(siteUrl)}</div>
                 </div>
 
                 <!-- Metadata Card -->
                 <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 14px;">
-                    <div style="font-size: 10px; color: var(--text-secondary);">Captured: <span style="color: var(--text-primary); font-weight: 600;">${timestamp}</span></div>
+                    <div style="font-size: 10px; color: var(--text-secondary);">${recaptchaText('advRecaptchaCapturedLabel', 'Captured:')} <span style="color: var(--text-primary); font-weight: 600;">${timestamp}</span></div>
                 </div>
             </div>
         `;
