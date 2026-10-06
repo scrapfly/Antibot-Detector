@@ -2,6 +2,8 @@ class DetectorManager {
     static DETECTOR_ID_PREFIX = 'detect-';
     // Official detector IDs the user deleted; Update skips them until restored
     static DELETED_OFFICIAL_KEY = 'scrapfly_deleted_official_detectors';
+    // Official detector IDs installed by Rules → Update that this build does not bundle
+    static REMOTE_OFFICIAL_KEY = 'scrapfly_remote_official_ids';
     constructor(categoryManager) {
         this.categoryManager = categoryManager || new CategoryManager();
         this.detectors = {};
@@ -22,6 +24,65 @@ class DetectorManager {
             return detectorId;
         }
         return `${DetectorManager.DETECTOR_ID_PREFIX}${detectorId}`;
+    }
+
+    // Fields that describe the user's relationship to a detector rather than the
+    // detector itself; never part of an official snapshot
+    static USER_EDIT_FIELDS = ['userModified', 'officialSnapshot', 'dismissedVersion', 'displayName', '_searchStrings'];
+
+    /**
+     * A clean deep copy of a detector, without editor/UI-only fields.
+     * @param {object} detector
+     * @returns {object}
+     */
+    static cleanDetectorCopy(detector) {
+        const copy = JSON.parse(JSON.stringify(detector || {}));
+        for (const field of DetectorManager.USER_EDIT_FIELDS) delete copy[field];
+        return copy;
+    }
+
+    /**
+     * Record that the user edited an official detector. The version stays the
+     * official one (so updates keep comparing against what Scrapfly shipped)
+     * and the first official copy is kept for "Reset to official".
+     * @param {object} edited - The detector about to be saved
+     * @param {object} original - The detector as it was before this edit
+     */
+    static markUserEdited(edited, original) {
+        if (!edited || !original) return edited;
+        edited.officialSnapshot = original.userModified && original.officialSnapshot
+            ? original.officialSnapshot
+            : DetectorManager.cleanDetectorCopy(original);
+        edited.version = edited.officialSnapshot.version || original.version;
+        edited.userModified = true;
+        return edited;
+    }
+
+    /**
+     * The official copy of an edited detector, keeping the user's on/off and
+     * difficulty choices. Null when there is nothing to restore.
+     * @param {object} detector
+     * @returns {object|null}
+     */
+    static officialVersionOf(detector) {
+        if (!detector?.userModified || !detector.officialSnapshot) return null;
+        const restored = DetectorManager.cleanDetectorCopy(detector.officialSnapshot);
+        if (typeof detector.enabled === 'boolean') restored.enabled = detector.enabled;
+        if (detector.difficulty !== undefined) restored.difficulty = detector.difficulty;
+        return restored;
+    }
+
+    /**
+     * Next version of a custom detector after an edit: a semver patch bump
+     * ("1.0" -> "1.0.1", "1.2.9" -> "1.2.10"). Never goes backwards.
+     * @param {string} version
+     * @returns {string}
+     */
+    static bumpVersion(version) {
+        const parts = String(version || '1.0.0').split('.').map(n => parseInt(n, 10) || 0);
+        while (parts.length < 3) parts.push(0);
+        parts[parts.length - 1] += 1;
+        return parts.join('.');
     }
 
     // Convert category name to display format
@@ -110,6 +171,34 @@ class DetectorManager {
 
                 if (changed) {
                     Logger.debug('DETECTOR', `[normalizeDetectorSchema] Applied DataDome fixups (${source})`);
+                }
+            }
+
+            // Shape Security: the dynamic header patterns shipped unanchored in
+            // v2.1 (x-[a-z0-9]{8}-c …), so any header whose name merely
+            // contained such a substring matched — x-datadome-cid matched
+            // x-[a-z0-9]{8}-c and showed up as a Shape detection at 95%
+            // (GitHub issue #4). Packaged files are anchored since v2.2, but
+            // detectors persist in storage across updates, so stored copies
+            // still carry the loose patterns. Anchor them.
+            if (detectorData.id === 'detect-shapesecurity') {
+                // The literal v2.1 pattern text: x-[a-z0-9]{8}-<one letter>
+                const legacyDynamic = /^x-\[a-z0-9\]\{8\}-[a-z]$/;
+
+                let changed = false;
+                if (Array.isArray(detection.header)) {
+                    for (const rule of detection.header) {
+                        if (!rule || typeof rule.name !== 'string') continue;
+                        const name = rule.name.trim();
+                        if (legacyDynamic.test(name)) {
+                            rule.name = `^${name}$`;
+                            changed = true;
+                        }
+                    }
+                }
+
+                if (changed) {
+                    Logger.debug('DETECTOR', `[normalizeDetectorSchema] Anchored legacy Shape header patterns (${source})`);
                 }
             }
         } catch (e) {
@@ -696,6 +785,13 @@ class DetectorManager {
         if (ids.length === 0 && typeof CategoryManager !== 'undefined' && typeof CategoryManager.getPackagedFallbackIndex === 'function') {
             ids = collect(CategoryManager.getPackagedFallbackIndex());
         }
+        // Official detectors that arrived through Rules → Update after this
+        // build shipped are official too, not custom
+        try {
+            const stored = await chrome.storage.local.get(DetectorManager.REMOTE_OFFICIAL_KEY);
+            const remoteIds = stored[DetectorManager.REMOTE_OFFICIAL_KEY];
+            if (Array.isArray(remoteIds)) ids.push(...remoteIds.filter(id => typeof id === 'string'));
+        } catch (_) { /* bundled IDs only */ }
         DetectionUtils.setOfficialDetectorIds(ids);
     }
 

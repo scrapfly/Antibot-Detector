@@ -49,7 +49,10 @@ Rules.prototype.openEditModal = function(detector, category, detectorName, isNew
       detector: detectorWithDetection,
       category,
       detectorName,
-      isNew: isNew
+      isNew: isNew,
+      // The rule as it was before this edit: becomes the official snapshot
+      // when an official detector is edited (the editor's copy is shallow)
+      original: isNew || typeof DetectorManager === 'undefined' ? null : DetectorManager.cleanDetectorCopy(detector)
     };
 
     // Set dynamic title based on whether it's a new detector

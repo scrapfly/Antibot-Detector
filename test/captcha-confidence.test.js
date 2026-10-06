@@ -173,13 +173,15 @@ test('combination AST rejects malformed and unreachable alternatives', () => {
     assert.throws(() => validate(node, new Set(['a']), 'invalid'));
   }
 });
-test('all nine definitions have explicit IDs, conservative standalone evidence and three graded combinations', () => {
-  assert.deepEqual(Object.keys(captcha).sort(), ['detect-aliexpress', 'detect-captchaeu', 'detect-friendlycaptcha',
-    'detect-funcaptcha', 'detect-geetest', 'detect-hcaptcha', 'detect-qcloud', 'detect-recaptcha', 'detect-turnstile']);
+test('all sixteen definitions have explicit IDs, conservative standalone evidence and three graded combinations', () => {
+  assert.deepEqual(Object.keys(captcha).sort(), ['detect-aliexpress', 'detect-aliyun', 'detect-captchaeu', 'detect-capy',
+    'detect-dingxiang', 'detect-friendlycaptcha', 'detect-funcaptcha', 'detect-geetest', 'detect-hcaptcha',
+    'detect-mtcaptcha', 'detect-qcloud', 'detect-recaptcha', 'detect-shumei', 'detect-smartcaptcha',
+    'detect-turnstile', 'detect-yidun']);
   for (const detector of Object.values(captcha)) {
     // Semver: bump the minor version whenever rules change, so Rules → Update offers it
     assert.match(detector.version, /^1\.\d+\.\d+$/, detector.id);
-    assert.match(detector.lastUpdated, /^2026-10-0[34]$/, detector.id);
+    assert.match(detector.lastUpdated, /^2026-10-0[3-6]$/, detector.id);
     const rules = patterns(detector);
     const ids = new Set(rules.map(rule => rule.id));
     assert.equal(ids.size, rules.length, `${detector.id}: duplicate IDs`);

@@ -18,7 +18,16 @@
         "detect-meetrics",
         "detect-ocule",
         "detect-cheq",
-        "detect-kasada"
+        "detect-kasada",
+        "detect-anubis",
+        "detect-aliyunwaf",
+        "detect-jiasule",
+        "detect-ruishu",
+        "detect-fingerprintjs",
+        "detect-netacea",
+        "detect-azurefrontdoor",
+        "detect-yundun",
+        "detect-radware"
     ]
 },
 "captcha": {
@@ -32,7 +41,14 @@
         "detect-aliexpress",
         "detect-friendlycaptcha",
         "detect-captchaeu",
-        "detect-turnstile"
+        "detect-turnstile",
+        "detect-yidun",
+        "detect-aliyun",
+        "detect-smartcaptcha",
+        "detect-dingxiang",
+        "detect-capy",
+        "detect-shumei",
+        "detect-mtcaptcha"
     ]
 },
 "fingerprint": {

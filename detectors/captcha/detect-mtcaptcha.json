@@ -1,0 +1,127 @@
+{
+  "id": "detect-mtcaptcha",
+  "name": "MTCaptcha",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-06",
+  "version": "1.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.mtcaptcha.com/",
+  "icon": "mtcaptcha_official.png",
+  "description": "MTCaptcha widget with meta-tag or JavaScript sitekey configuration, used for accessibility-focused and enterprise sign-in flows",
+  "detection": {
+    "url": [
+      {
+        "id": "mtcaptcha-sdk-resource",
+        "confidence": 60,
+        "description": "Official MTCaptcha widget script on the vendor client host",
+        "text": "^https://service2?\\.mtcaptcha\\.com/mtcv1/client/mtcaptcha2?\\.min\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": true,
+        "textScope": "all",
+        "standalone": true
+      },
+      {
+        "id": "mtcaptcha-challenge-api",
+        "confidence": 55,
+        "description": "MTCaptcha challenge request",
+        "text": "^https://service2?\\.mtcaptcha\\.com/mtcv1/api/getchallenge\\.json\\?",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": true
+      }
+    ],
+    "content": [
+      {
+        "id": "mtcaptcha-config-reference",
+        "confidence": 10,
+        "description": "Script reference to the MTCaptcha sitekey configuration; integration and execution unconfirmed",
+        "text": "mtcaptchaConfig",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
+      }
+    ],
+    "dom": [
+      {
+        "id": "mtcaptcha-widget",
+        "selector": ".mtcaptcha",
+        "confidence": 40,
+        "description": "Documented MTCaptcha widget container class",
+        "standalone": true
+      }
+    ],
+    "window": [
+      {
+        "id": "mtcaptcha-config",
+        "path": "mtcaptchaConfig",
+        "condition": "typeof object",
+        "confidence": 40,
+        "description": "MTCaptcha sitekey configuration object presence",
+        "standalone": true
+      },
+      {
+        "id": "mtcaptcha-render-api",
+        "path": "mtcaptcha.renderUI",
+        "condition": "typeof function",
+        "confidence": 30,
+        "description": "MTCaptcha render API",
+        "standalone": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "mtcaptcha-sdk-widget",
+      "name": "Official widget script and container",
+      "when": {
+        "all": [
+          { "pattern": "mtcaptcha-sdk-resource" },
+          { "pattern": "mtcaptcha-widget" }
+        ]
+      },
+      "confidence": 80
+    },
+    {
+      "id": "mtcaptcha-sdk-config",
+      "name": "Official widget script and configuration object",
+      "when": {
+        "all": [
+          { "pattern": "mtcaptcha-sdk-resource" },
+          { "pattern": "mtcaptcha-config" }
+        ]
+      },
+      "confidence": 85
+    },
+    {
+      "id": "mtcaptcha-sdk-challenge",
+      "name": "SDK requesting a challenge",
+      "confidence": 90,
+      "when": {
+        "all": [
+          { "pattern": "mtcaptcha-sdk-resource" },
+          { "pattern": "mtcaptcha-challenge-api" }
+        ]
+      }
+    },
+    {
+      "id": "mtcaptcha-complete-integration",
+      "name": "Official widget script, container and configuration object",
+      "when": {
+        "all": [
+          { "pattern": "mtcaptcha-sdk-resource" },
+          { "pattern": "mtcaptcha-widget" },
+          { "pattern": "mtcaptcha-config" }
+        ]
+      },
+      "confidence": 95
+    }
+  ]
+}

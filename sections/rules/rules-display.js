@@ -168,6 +168,18 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
       ]);
     const updatedTip = FormatUtils.tipAttrs(_tr('tipLastUpdated', 'Updated'),
       detector.lastUpdated ? String(detector.lastUpdated).slice(0, 10) : '');
+    // An official rule the user changed: marked on the card, and the menu
+    // can put the official version back
+    const edited = !!(detector.userModified && detector.officialSnapshot);
+    const editedBadge = edited
+      ? `<span class="method-tag rule-edited-tag" ${FormatUtils.tipAttrs(_tr('ruleEditedTag', 'Edited'), _tr('tipRuleEdited', 'You edited this official rule. Updates ask before replacing your changes.'))}>${FormatUtils.escapeHtml(_tr('ruleEditedTag', 'Edited'))}</span>`
+      : '';
+    const resetItem = edited
+      ? `<button class="rules-menu-item reset-official-btn" role="menuitem" data-detector-id="${FormatUtils.escapeAttr(detectorName)}" data-category="${FormatUtils.escapeAttr(category)}">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+                      <span>${FormatUtils.escapeHtml(_tr('resetToOfficial', 'Reset to official'))}</span>
+                    </button>`
+      : '';
     const deleteItem = `<button class="rules-menu-item rules-menu-item-danger delete-btn" role="menuitem" title="${deleteTitle}">
                       <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="currentColor"/>
@@ -195,6 +207,7 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
                     </svg>
                   </button>
                   <div class="rules-menu-list" role="menu">
+                    ${resetItem}
                     ${deleteItem}
                   </div>
                 </div>
@@ -202,6 +215,7 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
             </div>
             <div class="detection-methods">
               ${categoryBadge}
+              ${editedBadge}
             </div>
           </div>
         </div>
@@ -300,6 +314,16 @@ Rules.prototype.setupDetectorCardListeners = function(detectors) {
         this.openEditModal(detectorToEdit, category, detectorName, false);
       });
     }
+  });
+
+  rulesList.querySelectorAll('.reset-official-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const category = btn.dataset.category;
+      const detectorName = btn.dataset.detectorId;
+      const entry = detectors.find(d => d.category === category && d.detectorName === detectorName);
+      await this.handleResetToOfficial(category, detectorName, entry?.detector?.displayName || detectorName);
+    });
   });
 
   const deleteButtons = rulesList.querySelectorAll('.delete-btn');

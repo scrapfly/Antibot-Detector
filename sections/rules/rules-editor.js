@@ -252,15 +252,15 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                 data-name-scope="${nameScope}"
                 data-value-scope="${valueScope}"
                 data-text-scope="${textScope}"
-                data-payload-url-pattern="${payloadUrlPattern}"
+                data-payload-url-pattern="${FormatUtils.escapeAttr(payloadUrlPattern)}"
                 data-payload-url-regex="${payloadUrlRegex}"
                 data-payload-url-case-sensitive="${payloadUrlCaseSensitive}"
-                data-payload-methods="${payloadMethods}">
+                data-payload-methods="${FormatUtils.escapeAttr(payloadMethods)}">
                 <div class="method-item-content">
                   <div class="method-item-inputs">
                     <div class="input-with-indicators">
                       <div class="input-row">
-                        <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="${name}" data-method-key="${methodType}" data-item-index="${index}">
+                        <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="${FormatUtils.escapeAttr(name)}" data-method-key="${methodType}" data-item-index="${index}">
                         ${methodType === 'dom' ? `<button class="dom-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesDomSelectorHelper', 'DOM Selector Helper'))}" data-input-index="${index}">?</button>` : ''}
                         ${methodType === 'window' ? `<button class="window-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesWindowPropertiesHelper', 'Window Properties Helper'))}" data-input-index="${index}">?</button>` : ''}
                         <div class="field-actions" data-field-type="name">
@@ -287,7 +287,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                       <div class="input-row">
                         ${methodType === 'window'
                           ? windowConditionDropdown
-                          : `<input type="text" class="method-input method-value" placeholder="${valuePlaceholder}" value="${value}" data-method-key="${methodType}" data-item-index="${index}">`
+                          : `<input type="text" class="method-input method-value" placeholder="${valuePlaceholder}" value="${FormatUtils.escapeAttr(value)}" data-method-key="${methodType}" data-item-index="${index}">`
                         }
                         ${showValueActions ? `
                         <div class="field-actions" data-field-type="value">
@@ -997,9 +997,56 @@ Rules.prototype.nextPatternId = function(methodType) {
     return `${methodType}-${n}`;
   };
 
+// Rule fields the editor form shows and writes, per method type. Anything
+// else on a rule (descriptions of single-input rows, js_hooks optional and
+// windowPath, a content textScope, fields added by newer versions) is not on
+// the form, so saving keeps it from the stored rule instead of dropping it.
+const RULE_FIELDS_FROM_FORM = {
+  common: ['id', 'confidence', 'standalone', 'checkScripts'],
+  header: ['name', 'value', 'nameRegex', 'nameWholeWord', 'nameCaseSensitive', 'valueRegex', 'valueWholeWord', 'valueCaseSensitive', 'nameScope', 'valueScope'],
+  cookie: ['name', 'value', 'nameRegex', 'nameWholeWord', 'nameCaseSensitive', 'valueRegex', 'valueWholeWord', 'valueCaseSensitive', 'nameScope', 'valueScope'],
+  url: ['text', 'textRegex', 'textWholeWord', 'textCaseSensitive', 'textScope'],
+  content: ['text', 'textRegex', 'textWholeWord', 'textCaseSensitive'],
+  payload: ['text', 'textRegex', 'textWholeWord', 'textCaseSensitive', 'urlPattern', 'urlRegex', 'urlCaseSensitive', 'methods'],
+  dom: ['selector', 'selectorRegex', 'selectorWholeWord', 'selectorCaseSensitive'],
+  js_hooks: ['target'],
+  window: ['path', 'condition']
+};
+
+/**
+ * The saved rule: the stored rule's own fields, overridden by what the form
+ * manages. A field the form manages but left unset (an unticked option) is
+ * removed; fields the form never shows are kept as they were.
+ */
+function mergeRuleWithForm(original, fromForm, methodType, formHasDescription) {
+  if (!original) return fromForm;
+  const managed = new Set([...RULE_FIELDS_FROM_FORM.common, ...(RULE_FIELDS_FROM_FORM[methodType] || [])]);
+  if (formHasDescription) managed.add('description');
+  const merged = {};
+  for (const [key, val] of Object.entries(original)) {
+    if (!managed.has(key)) merged[key] = val;
+  }
+  // "Only check scripts" is stored as scope: "scripts" in shipped rules and as
+  // checkScripts by the editor: keep the scope while the option stays on
+  if (methodType === 'content' && merged.scope === 'scripts' && fromForm.checkScripts !== true) delete merged.scope;
+  return { ...merged, ...fromForm };
+}
+
 Rules.prototype._collectDetectionFromForm = function() {
     const methodsContainer = document.querySelector('#detectionMethodsContainer');
     if (!methodsContainer) return {};
+
+    // Stored rules by the same id the rows carry (data-pattern-id)
+    const storedDetector = this.currentEditDetector?.isNew ? null : this.currentEditDetector?.original;
+    const storedRule = (methodType, patternId) => {
+      const rules = storedDetector?.detection?.[methodType];
+      if (!Array.isArray(rules) || !patternId) return null;
+      return rules.find((rule, index) => {
+        const id = ((typeof DetectionCombinations !== 'undefined') && DetectionCombinations.idOf(storedDetector, rule))
+          || `${methodType}-${index + 1}`;
+        return id === patternId;
+      }) || null;
+    };
 
     const detectionMethods = {};
     const methodSections = methodsContainer.querySelectorAll('.method-section');
@@ -1099,7 +1146,8 @@ Rules.prototype._collectDetectionFromForm = function() {
           if (item.dataset.patternId) methodData.id = item.dataset.patternId;
           if (item.dataset.standalone === 'false') methodData.standalone = false;
 
-          methods.push(methodData);
+          const original = storedRule(methodType, item.dataset.patternId);
+          methods.push(mergeRuleWithForm(original, methodData, methodType, Boolean(valueInput) && methodType !== 'header' && methodType !== 'cookie' && methodType !== 'window'));
         }
       });
 
@@ -1244,15 +1292,29 @@ Rules.prototype.saveRule = function() {
 
       this.currentEditDetector.detector.lastUpdated = timestamp;
 
-      // Auto-increment version
       if (this.currentEditDetector.isNew) {
         this.currentEditDetector.detector.version = '1.0';
       } else {
-        const currentVersion = this.currentEditDetector.detector.version || '1.0';
-        const versionNum = parseFloat(currentVersion) || 1.0;
-        const newVersion = (versionNum + 0.1).toFixed(1);
-        this.currentEditDetector.detector.version = newVersion;
-        Logger.debug('UI', `Version incremented: ${currentVersion} → ${newVersion}`);
+        const original = this.currentEditDetector.original || {};
+        // The original object carries the user-edit fields cleanDetectorCopy
+        // drops; read them from the stored detector
+        const stored = this.detectorManager?.getDetector(this.currentEditDetector.category, this.currentEditDetector.detectorName) || {};
+        if (DetectionUtils.isOfficialDetector({ ...original, id: original.id || this.currentEditDetector.detectorName })) {
+          // Official rule: keep the official version so updates still compare
+          // against what Scrapfly shipped, and remember the original so an
+          // update asks first and "Reset to official" can restore it
+          DetectorManager.markUserEdited(this.currentEditDetector.detector, {
+            ...original,
+            userModified: stored.userModified,
+            officialSnapshot: stored.officialSnapshot,
+            dismissedVersion: stored.dismissedVersion
+          });
+        } else {
+          const currentVersion = this.currentEditDetector.detector.version || '1.0';
+          const newVersion = DetectorManager.bumpVersion(currentVersion);
+          this.currentEditDetector.detector.version = newVersion;
+          Logger.debug('UI', `Version incremented: ${currentVersion} → ${newVersion}`);
+        }
       }
     } else {
       Logger.debug('UI', 'No changes detected, version and timestamp unchanged');

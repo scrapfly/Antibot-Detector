@@ -34,6 +34,7 @@
       "cacheDuration": 12,
       "cacheUnit": "hours",
       "cacheScope": "domain",
+      "categoryOrder": ["antibot", "captcha", "fingerprint"],
       "blacklistedDomains": [],
       "hooksConfig": {}
     },

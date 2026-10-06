@@ -175,8 +175,25 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     }
     if (namespace === 'local' && changes.scrapfly_settings) {
         refreshHooksConfig();
+        // Turning auto-update on/off or changing its interval takes effect now,
+        // not at the next browser start. Other settings writes (including the
+        // update check's own timestamp) must not reset the alarm.
+        if (updateScheduleOf(changes.scrapfly_settings.oldValue) !== updateScheduleOf(changes.scrapfly_settings.newValue)) {
+            UpdateManager.scheduleCheck();
+        }
     }
 });
+
+// "autoUpdate|interval" from a stored scrapfly_settings value ({ settings } as JSON)
+function updateScheduleOf(stored) {
+    try {
+        const parsed = typeof stored === 'string' ? JSON.parse(stored) : stored;
+        const updates = (parsed && (parsed.settings || parsed).updates) || {};
+        return `${updates.autoUpdate === true}|${updates.checkIntervalHours || ''}`;
+    } catch (_) {
+        return '';
+    }
+}
 
 // ─── Detection State Constants & Helpers ────────────────────────────────────
 

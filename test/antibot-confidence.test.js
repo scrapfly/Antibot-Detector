@@ -52,16 +52,17 @@ function witnesses(node) {
 
 /** A page carrying the live witnesses of the given pattern ids */
 function pageFor(detector, ids) {
-  const page = { url: 'https://example.test/', content: [], dom: [], headers: {}, allCookies: [], networkUrls: [], payloads: [] };
+  const page = { url: 'https://example.test/', content: [], dom: [], headers: {}, allCookies: [], responseCookies: [], networkUrls: [], payloads: [] };
   const windowIds = [];
   for (const id of new Set(ids)) {
     const fx = fixtures[detector.id][id];
     assert.ok(fx, `${detector.id}/${id}: fixture required`);
     if (fx.cookie) page.allCookies.push({ name: fx.cookie[0], value: fx.cookie[1] });
+    else if (fx.setCookie) page.responseCookies.push({ name: fx.setCookie[0], value: fx.setCookie[1] });
     else if (fx.header) page.headers[fx.header[0]] = fx.header[1];
     else if (fx.url) page.networkUrls.push({ url: fx.url, type: 'script', method: 'GET' });
     else if (fx.source) page.content.push({ type: 'inline', content: fx.source });
-    else if (fx.dom) page.dom.push({ ...fx.dom, selector: fx.dom.tagName, id: '', class: fx.dom.attributes.class || '', src: fx.dom.attributes.src });
+    else if (fx.dom) page.dom.push({ ...fx.dom, selector: fx.dom.tagName, id: fx.dom.attributes.id || '', class: fx.dom.attributes.class || '', src: fx.dom.attributes.src });
     else if (fx.payload) page.payloads.push({ ...fx.payload, type: 'text' });
     else if (fx.runtimeType) windowIds.push(id);
     else throw new Error(`${detector.id}/${id}: unknown fixture kind`);
@@ -85,10 +86,12 @@ function detect(detector, { page, windowIds = [] }) {
 }
 const matched = (detector, result, id) => result.matches.some(m => Array.from(Combinations.matchPatternIds(detector, m)).includes(id));
 
-test('sixteen anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
-  assert.deepEqual(Object.keys(antibot).sort(), ['detect-akamai', 'detect-aws-waf', 'detect-botguard', 'detect-cheq',
-    'detect-cloudflare', 'detect-datadome', 'detect-f5', 'detect-incapsula', 'detect-kasada', 'detect-meetrics',
-    'detect-ocule', 'detect-perimeterx', 'detect-reblaze', 'detect-shapesecurity', 'detect-sucuri', 'detect-threatmetrix']);
+test('twenty-five anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
+  assert.deepEqual(Object.keys(antibot).sort(), ['detect-akamai', 'detect-aliyunwaf', 'detect-anubis', 'detect-aws-waf',
+    'detect-azurefrontdoor', 'detect-botguard', 'detect-cheq', 'detect-cloudflare', 'detect-datadome', 'detect-f5',
+    'detect-fingerprintjs', 'detect-incapsula', 'detect-jiasule', 'detect-kasada', 'detect-meetrics', 'detect-netacea',
+    'detect-ocule', 'detect-perimeterx', 'detect-radware', 'detect-reblaze', 'detect-ruishu', 'detect-shapesecurity',
+    'detect-sucuri', 'detect-threatmetrix', 'detect-yundun']);
   for (const d of Object.values(definitions)) {
     const raw = antibot[d.id].__raw;
     assert.equal(raw.split('\n').length - 1, (raw.match(/\r\n/g) || []).length, `${d.id}: CRLF throughout`);
@@ -182,7 +185,16 @@ const benign = {
   'detect-reblaze': { cookies: ['rbz_theme'] },
   'detect-shapesecurity': { headers: { 'x-datadome-cid': 'AHrl', 'x-amzn-waf-action': 'challenge', 'x-frame-options': 'DENY' }, urls: ['https://example.test/app.js?seed=42'], cookies: ['Ad34bsY56'] },
   'detect-sucuri': { sources: ["var plugin = 'sucuri-scanner';"] },
-  'detect-threatmetrix': { urls: ['https://example.test/api?org_id=123'] }
+  'detect-threatmetrix': { urls: ['https://example.test/api?org_id=123'] },
+  'detect-aliyunwaf': { cookies: ['acw_tc'] },
+  'detect-anubis': { urls: ['https://example.test/anubis/'], cookies: ['anubis_auth'] },
+  'detect-azurefrontdoor': { headers: { 'x-cache': 'HIT' } },
+  'detect-fingerprintjs': { sources: ['var fp = window.FingerprintJs;'] },
+  'detect-jiasule': { cookies: ['jsl_session'] },
+  'detect-netacea': { cookies: ['mitata'] },
+  'detect-radware': { sources: ["var plugin = 'radware';"] },
+  'detect-ruishu': { cookies: ['ssxmod_itn'] },
+  'detect-yundun': { headers: { 'x-cache': 'HIT from cloudfront', server: 'nginx' }, cookies: ['yd_session'] }
 };
 test('benign lookalikes from real pages identify no anti-bot vendor', () => {
   for (const [id, b] of Object.entries(benign)) {

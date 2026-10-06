@@ -1,0 +1,152 @@
+{
+  "id": "detect-ruishu",
+  "name": "Ruishu",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "High",
+  "lastUpdated": "2026-10-06",
+  "version": "2.1.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.riversecurity.com/",
+  "icon": "ruishu_official.png",
+  "description": "River Security (Ruishu) dynamic-cookie bot gate, generation-based and heavily obfuscated, common on Chinese banks and government sites",
+  "detection": {
+    "cookie": [
+      {
+        "id": "fssbbi-cookie",
+        "name": "^FSSBBIl1UgzbN7N80[TS]$",
+        "nameRegex": true,
+        "confidence": 70,
+        "description": "Ruishu static-cookie generator family (generation 4 name family)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "waf-ci-cookie",
+        "name": "^waf_ci",
+        "nameRegex": true,
+        "confidence": 45,
+        "standalone": false,
+        "description": "Ruishu WAF challenge-index cookie",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "dynamic-cookie-s",
+        "name": "^[A-Za-z0-9]{12}[SO]$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 30,
+        "standalone": false,
+        "description": "Current-generation Ruishu server cookie: a random 13-character name ending in S (O on some deployments), set with the 412 challenge page",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "dynamic-cookie-t",
+        "name": "^[A-Za-z0-9]{12}[TP]$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 30,
+        "standalone": false,
+        "description": "Current-generation Ruishu client cookie: the same kind of name ending in T (P on some deployments), written by the challenge script before it reloads",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "dom": [
+      {
+        "id": "challenge-script-marker",
+        "selector": "script[r=\"m\"]",
+        "confidence": 60,
+        "description": "Ruishu challenge page: every script tag carries the r=\"m\" marker attribute"
+      }
+    ],
+    "window": [
+      {
+        "id": "ts-global",
+        "path": "$_ts",
+        "condition": "typeof object",
+        "confidence": 70,
+        "description": "Ruishu challenge state object defined by the obfuscated challenge script"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "ruishu-challenge-page",
+      "name": "Challenge-page script marker with a Ruishu cookie",
+      "confidence": 90,
+      "when": {
+        "all": [
+          { "pattern": "challenge-script-marker" },
+          {
+            "any": [
+              { "pattern": "dynamic-cookie-s" },
+              { "pattern": "dynamic-cookie-t" },
+              { "pattern": "fssbbi-cookie" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ruishu-challenge-state",
+      "name": "Challenge state object with a Ruishu cookie",
+      "confidence": 90,
+      "when": {
+        "all": [
+          { "pattern": "ts-global" },
+          {
+            "any": [
+              { "pattern": "dynamic-cookie-s" },
+              { "pattern": "dynamic-cookie-t" },
+              { "pattern": "fssbbi-cookie" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ruishu-cookie-pair",
+      "name": "Server and client challenge cookies left after the challenge passed",
+      "confidence": 85,
+      "when": {
+        "all": [
+          { "pattern": "dynamic-cookie-s" },
+          { "pattern": "dynamic-cookie-t" }
+        ]
+      }
+    },
+    {
+      "id": "ruishu-session-cookies",
+      "name": "Static-cookie family with the challenge-index cookie",
+      "confidence": 75,
+      "when": {
+        "all": [
+          { "pattern": "fssbbi-cookie" },
+          { "pattern": "waf-ci-cookie" }
+        ]
+      }
+    },
+    {
+      "id": "ruishu-complete-profile",
+      "name": "Challenge state, script marker and a Ruishu cookie",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "ts-global" },
+          { "pattern": "challenge-script-marker" },
+          {
+            "any": [
+              { "pattern": "dynamic-cookie-s" },
+              { "pattern": "dynamic-cookie-t" },
+              { "pattern": "fssbbi-cookie" }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

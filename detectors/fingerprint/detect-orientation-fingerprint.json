@@ -7,6 +7,7 @@
   "difficulty": "Low",
   "lastUpdated": "2026-10-03",
   "version": "1.2.0",
+  "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent",
   "icon": "orientation_fingerprint.png",
   "description": "Script references to orientation and motion APIs; sensor collection and fingerprinting intent are unconfirmed",

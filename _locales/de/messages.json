@@ -3367,6 +3367,12 @@
   "iconPickerFileTooLarge": {
     "message": "Die Symboldatei muss kleiner als 100 KB sein"
   },
+  "iconPickerNoResults": {
+    "message": "Keine Symbole für deine Suche"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "Symbole suchen…"
+  },
   "rulesUiHelpJsHooks": {
     "message": "Was sind JS-Hooks?"
   },
@@ -3918,5 +3924,50 @@
   },
   "settingsRowVerboseLogsTip": {
     "message": "Protokolliert auch jede Regel, jeden Hook und jede Nachricht, nicht nur einen Bericht pro Seite"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "Update für eine von dir bearbeitete Regel"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "„{0}“ hat eine neue offizielle Version ({1}). Du hast diese Regel bearbeitet: Die neue Version ersetzt deine Änderungen."
+  },
+  "btnDecideLater": {
+    "message": "Später entscheiden"
+  },
+  "btnKeepMyEdits": {
+    "message": "Meine Änderungen behalten"
+  },
+  "btnUseNewVersion": {
+    "message": "Neue Version verwenden"
+  },
+  "resetToOfficial": {
+    "message": "Auf offizielle Version zurücksetzen"
+  },
+  "resetToOfficialTitle": {
+    "message": "Auf die offizielle Version zurücksetzen"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "Deine Änderungen an „{0}“ verwerfen und die offizielle Scrapfly-Version wiederherstellen?"
+  },
+  "ruleResetToOfficial": {
+    "message": "Regel auf die offizielle Version zurückgesetzt"
+  },
+  "ruleEditedTag": {
+    "message": "Bearbeitet"
+  },
+  "tipRuleEdited": {
+    "message": "Du hast diese offizielle Regel bearbeitet. Updates fragen, bevor sie deine Änderungen ersetzen."
+  },
+  "settingsGroupDetectionsList": {
+    "message": "Erkennungsliste"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "Reihenfolge der Kategorien"
+  },
+  "settingsCategoryOrderLabel": {
+    "message": "Zuerst anzeigen"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "Reihenfolge der Kategorien in der Erkennungsliste. Innerhalb einer Kategorie steht die höchste Konfidenz zuerst."
   }
 }

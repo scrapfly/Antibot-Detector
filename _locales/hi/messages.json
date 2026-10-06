@@ -3367,6 +3367,12 @@
   "iconPickerFileTooLarge": {
     "message": "आइकन फ़ाइल 100 KB से छोटी होनी चाहिए"
   },
+  "iconPickerNoResults": {
+    "message": "आपकी खोज से कोई आइकन मेल नहीं खाता"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "आइकन खोजें…"
+  },
   "rulesUiHelpJsHooks": {
     "message": "JS हुक क्या हैं?"
   },
@@ -3918,5 +3924,50 @@
   },
   "settingsRowVerboseLogsTip": {
     "message": "हर पेज की एक रिपोर्ट के साथ हर नियम, हुक और संदेश भी लॉग करें"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "आपके द्वारा संपादित नियम का अपडेट"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "\"{0}\" का नया आधिकारिक संस्करण ({1}) उपलब्ध है। आपने यह नियम संपादित किया था: नया संस्करण आपके बदलावों को बदल देगा।"
+  },
+  "btnDecideLater": {
+    "message": "बाद में तय करें"
+  },
+  "btnKeepMyEdits": {
+    "message": "मेरे बदलाव रखें"
+  },
+  "btnUseNewVersion": {
+    "message": "नया संस्करण उपयोग करें"
+  },
+  "resetToOfficial": {
+    "message": "आधिकारिक पर रीसेट करें"
+  },
+  "resetToOfficialTitle": {
+    "message": "आधिकारिक संस्करण पर रीसेट करें"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "\"{0}\" में अपने बदलाव हटाकर Scrapfly का आधिकारिक संस्करण वापस लाएँ?"
+  },
+  "ruleResetToOfficial": {
+    "message": "नियम आधिकारिक संस्करण पर वापस लाया गया"
+  },
+  "ruleEditedTag": {
+    "message": "संपादित"
+  },
+  "tipRuleEdited": {
+    "message": "आपने यह आधिकारिक नियम संपादित किया है। अपडेट आपके बदलाव बदलने से पहले पूछेंगे।"
+  },
+  "settingsGroupDetectionsList": {
+    "message": "पहचान सूची"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "श्रेणियों का क्रम"
+  },
+  "settingsCategoryOrderLabel": {
+    "message": "पहले दिखाएँ"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "पहचान सूची में श्रेणियों का क्रम। एक श्रेणी के भीतर सबसे अधिक भरोसे वाला परिणाम पहले आता है।"
   }
 }

@@ -7,6 +7,7 @@
   "difficulty": "Medium",
   "lastUpdated": "2026-10-05",
   "version": "2.0.0",
+  "minExtensionVersion": "2.8",
   "website": "https://www.meetrics.com/en/",
   "icon": "custom.png",
   "description": "Legacy Meetrics ad-fraud and viewability tag. Its mxcdn.net host is parked, so only old integrations still reference it.",

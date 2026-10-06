@@ -329,7 +329,7 @@
   white-space: nowrap;
   font-size: 11px;
   line-height: 14px;
-  color: var(--text-secondary);
+  color: var(--accent);
 }
 
 /* Difficulty: plain coloured text, same red / amber / green as the Detection tab */
@@ -610,7 +610,7 @@
 
 .history-modal-timestamp {
   flex-shrink: 0;
-  color: var(--text-secondary);
+  color: var(--accent);
   white-space: nowrap;
   cursor: default;
 }

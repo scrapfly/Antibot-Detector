@@ -348,6 +348,11 @@ function enrichPageDataWithTabInfo(pageData, tab) {
 
     return {
         ...pageData,
+        // The content script does not send a hostname, and processDetectionData
+        // only attaches the stored response headers, request headers and
+        // Set-Cookie data when their URL contains it: without this every
+        // header and response-cookie rule silently never matched.
+        hostname: pageData.hostname || UrlUtils.getHostnameFromUrl(tab.url || pageData.url),
         tabId: tab.id,
         tabUrl: tab.url,
         tabTitle: tab.title,

@@ -1,0 +1,129 @@
+{
+  "id": "detect-shumei",
+  "name": "Shumei Captcha",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "difficulty": "High",
+  "lastUpdated": "2026-10-06",
+  "version": "1.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.ishumei.com/product/captcha",
+  "icon": "shumei_official.png",
+  "description": "Shumei (数美) intelligent captcha with obfuscated SDK and encrypted parameters, used on Chinese finance and live-streaming sites",
+  "detection": {
+    "url": [
+      {
+        "id": "shumei-sdk-resource",
+        "confidence": 60,
+        "description": "Official Shumei captcha SDK (smcp.min.js) on the fengkongcloud CDN",
+        "text": "^https://castatic\\.fengkongcloud\\.(?:cn|com)/[^?#]*smcp\\.min\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": true,
+        "textScope": "all",
+        "standalone": true
+      },
+      {
+        "id": "shumei-core-resource",
+        "confidence": 50,
+        "description": "Versioned Shumei captcha core",
+        "text": "^https://castatic\\.fengkongcloud\\.(?:cn|com)/pr/auto-build/v[0-9.]+-\\d+/captcha-sdk\\.min\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": true
+      },
+      {
+        "id": "shumei-captcha-api",
+        "confidence": 55,
+        "description": "Shumei captcha configuration, registration and verification API",
+        "text": "^https://captcha1?\\.fengkongcloud\\.(?:cn|com)/ca/v[12]/(?:conf|register|verify|fverify)(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": true
+      }
+    ],
+    "content": [
+      {
+        "id": "shumei-init-reference",
+        "confidence": 10,
+        "description": "Script reference to the Shumei captcha bootstrap; integration and execution unconfirmed",
+        "text": "initSMCaptcha",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
+      }
+    ],
+    "window": [
+      {
+        "id": "shumei-init-api",
+        "path": "initSMCaptcha",
+        "condition": "typeof function",
+        "confidence": 45,
+        "description": "Shumei captcha bootstrap API presence, not execution",
+        "standalone": true
+      }
+    ],
+    "dom": [
+      {
+        "id": "shumei-widget",
+        "selector": ".shumei_captcha",
+        "confidence": 40,
+        "description": "Rendered Shumei captcha widget",
+        "standalone": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "shumei-sdk-reference",
+      "name": "Loader with an init reference",
+      "confidence": 70,
+      "when": {
+        "all": [
+          { "pattern": "shumei-sdk-resource" },
+          { "pattern": "shumei-init-reference" }
+        ]
+      }
+    },
+    {
+      "id": "shumei-sdk-runtime",
+      "name": "Loader with the init API",
+      "confidence": 85,
+      "when": {
+        "all": [
+          { "pattern": "shumei-sdk-resource" },
+          { "pattern": "shumei-init-api" }
+        ]
+      }
+    },
+    {
+      "id": "shumei-sdk-captcha-api",
+      "name": "Loader calling the captcha API",
+      "confidence": 90,
+      "when": {
+        "all": [
+          { "pattern": "shumei-sdk-resource" },
+          { "pattern": "shumei-captcha-api" }
+        ]
+      }
+    },
+    {
+      "id": "shumei-complete-integration",
+      "name": "Loader, captcha API and rendered widget",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "shumei-sdk-resource" },
+          { "pattern": "shumei-captcha-api" },
+          { "pattern": "shumei-widget" }
+        ]
+      }
+    }
+  ]
+}

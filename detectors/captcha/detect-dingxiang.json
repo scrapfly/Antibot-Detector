@@ -1,0 +1,145 @@
+{
+  "id": "detect-dingxiang",
+  "name": "Dingxiang Captcha",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-06",
+  "version": "1.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.dingxiang-inc.com/business/captcha",
+  "icon": "dingxiang_official.png",
+  "description": "Dingxiang (顶象) device fingerprint captcha with slider and swipe challenges, common on Chinese login and payment flows",
+  "detection": {
+    "url": [
+      {
+        "id": "dingxiang-sdk-resource",
+        "confidence": 60,
+        "description": "Official Dingxiang captcha UI SDK on the vendor CDN",
+        "text": "^https://cdn\\.dingxiang-inc\\.com/(?:ctu-group/)?captcha-ui/",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": true,
+        "textScope": "all",
+        "standalone": true
+      },
+      {
+        "id": "dingxiang-engine-resource",
+        "confidence": 50,
+        "description": "Versioned Dingxiang captcha engine",
+        "text": "^https://cdn\\.dingxiang-inc\\.com/ctu-group/captcha-js/\\d+\\.\\d+\\.\\d+/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": true
+      },
+      {
+        "id": "dingxiang-captcha-api",
+        "confidence": 55,
+        "description": "Dingxiang captcha challenge API",
+        "text": "^https://cap\\.dingxiang-inc\\.com/api/(?:a|v1)(?:[?#/]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": true
+      }
+    ],
+    "content": [
+      {
+        "id": "dingxiang-constructor-reference",
+        "confidence": 10,
+        "description": "Script reference to the Dingxiang captcha constructor; integration and execution unconfirmed",
+        "text": "_dx.Captcha",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
+      }
+    ],
+    "dom": [
+      {
+        "id": "dingxiang-widget",
+        "selector": ".dx_captcha",
+        "confidence": 40,
+        "description": "Rendered Dingxiang captcha widget",
+        "standalone": true
+      }
+    ],
+    "window": [
+      {
+        "id": "dingxiang-constructor",
+        "path": "_dx.Captcha",
+        "condition": "typeof function",
+        "confidence": 45,
+        "description": "Dingxiang captcha constructor presence, not execution",
+        "standalone": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "dingxiang-widget-constructor",
+      "name": "Rendered widget with the captcha constructor",
+      "confidence": 75,
+      "when": {
+        "all": [
+          { "pattern": "dingxiang-widget" },
+          { "pattern": "dingxiang-constructor" }
+        ]
+      }
+    },
+    {
+      "id": "dingxiang-sdk-widget",
+      "name": "UI SDK with the rendered widget",
+      "confidence": 85,
+      "when": {
+        "all": [
+          { "pattern": "dingxiang-sdk-resource" },
+          { "pattern": "dingxiang-widget" }
+        ]
+      }
+    },
+    {
+      "id": "dingxiang-sdk-constructor",
+      "name": "UI SDK with the captcha constructor",
+      "confidence": 85,
+      "when": {
+        "all": [
+          { "pattern": "dingxiang-sdk-resource" },
+          { "pattern": "dingxiang-constructor" }
+        ]
+      }
+    },
+    {
+      "id": "dingxiang-sdk-captcha-api",
+      "name": "UI SDK calling the challenge API",
+      "confidence": 90,
+      "when": {
+        "all": [
+          { "pattern": "dingxiang-sdk-resource" },
+          { "pattern": "dingxiang-captcha-api" }
+        ]
+      }
+    },
+    {
+      "id": "dingxiang-complete-integration",
+      "name": "UI SDK, challenge API and widget or constructor",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "dingxiang-sdk-resource" },
+          { "pattern": "dingxiang-captcha-api" },
+          {
+            "any": [
+              { "pattern": "dingxiang-widget" },
+              { "pattern": "dingxiang-constructor" }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

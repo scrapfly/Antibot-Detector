@@ -3367,6 +3367,12 @@
   "iconPickerFileTooLarge": {
     "message": "Le fichier de l’icône doit faire moins de 100 Ko"
   },
+  "iconPickerNoResults": {
+    "message": "Aucune icône ne correspond à votre recherche"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "Rechercher des icônes…"
+  },
   "rulesUiHelpJsHooks": {
     "message": "Que sont les intercepteurs JS ?"
   },
@@ -3918,5 +3924,50 @@
   },
   "settingsRowVerboseLogsTip": {
     "message": "Journalise aussi chaque règle, hook et message, pas seulement un rapport par page"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "Mise à jour d’une règle que vous avez modifiée"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "« {0} » a une nouvelle version officielle ({1}). Vous avez modifié cette règle : la nouvelle version remplace vos changements."
+  },
+  "btnDecideLater": {
+    "message": "Décider plus tard"
+  },
+  "btnKeepMyEdits": {
+    "message": "Garder mes modifications"
+  },
+  "btnUseNewVersion": {
+    "message": "Utiliser la nouvelle version"
+  },
+  "resetToOfficial": {
+    "message": "Rétablir la version officielle"
+  },
+  "resetToOfficialTitle": {
+    "message": "Rétablir la version officielle"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "Abandonner vos modifications de « {0} » et rétablir la version officielle de Scrapfly ?"
+  },
+  "ruleResetToOfficial": {
+    "message": "Règle rétablie à la version officielle"
+  },
+  "ruleEditedTag": {
+    "message": "Modifiée"
+  },
+  "tipRuleEdited": {
+    "message": "Vous avez modifié cette règle officielle. Les mises à jour demandent avant de remplacer vos changements."
+  },
+  "settingsGroupDetectionsList": {
+    "message": "Liste des détections"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "Ordre des catégories"
+  },
+  "settingsCategoryOrderLabel": {
+    "message": "Afficher d’abord"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "Ordre des catégories dans la liste Détection. Dans une catégorie, la confiance la plus élevée vient en premier."
   }
 }

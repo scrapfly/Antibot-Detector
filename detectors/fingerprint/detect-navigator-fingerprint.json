@@ -7,6 +7,7 @@
   "difficulty": "Low",
   "lastUpdated": "2026-10-03",
   "version": "1.2.0",
+  "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator",
   "icon": "navigator_fingerprint.png",
   "description": "Observed browser identity, language, automation, and device capability reads with graded profile evidence",

@@ -399,6 +399,28 @@
           </div>
         </div>
 
+        <!-- Detections list Group -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title" data-i18n="settingsGroupDetectionsList">Detections list</div>
+
+          <div class="settings-card">
+            <div class="settings-card-head">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3,13H15V11H3M3,6V8H21V6M3,18H9V16H3V18Z"/></svg>
+              <span data-i18n="settingsCardCategoryOrder">Category order</span>
+            </div>
+            <div class="settings-card-body">
+              <div class="setting-row">
+                <label class="setting-row-label" for="categoryOrder" data-i18n="settingsCategoryOrderLabel">Show first</label>
+                <!-- Options are filled with the translated category names (SettingsUI.populateCategoryOrder) -->
+                <select id="categoryOrder" class="select-field"></select>
+                <div class="setting-row-help">
+                  <p data-i18n="settingsCategoryOrderHelp">Order of the categories in the Detection list. Within a category, the highest confidence comes first.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Blacklisted Domains Group -->
         <div class="settings-card-group">
           <div class="settings-card-group-title" data-i18n="blacklistedDomains">Blacklisted Domains</div>

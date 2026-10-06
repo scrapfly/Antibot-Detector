@@ -1,0 +1,179 @@
+{
+  "id": "detect-aliyunwaf",
+  "name": "Alibaba Cloud WAF",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-06",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.alibabacloud.com/product/waf",
+  "icon": "aliyunwaf_official.png",
+  "description": "Alibaba Cloud Web Application Firewall with JavaScript challenge cookies in front of Chinese and global sites",
+  "detection": {
+    "cookie": [
+      {
+        "id": "acw-sc-v2-cookie",
+        "name": "^acw_sc__v2$",
+        "nameRegex": true,
+        "confidence": 75,
+        "description": "Alibaba Cloud WAF JavaScript-challenge clearance cookie",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "acw-tc-cookie",
+        "name": "^acw_tc$",
+        "nameRegex": true,
+        "confidence": 40,
+        "standalone": false,
+        "description": "Alibaba Cloud WAF load-balancing session cookie",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "cdn-sec-tc-cookie",
+        "name": "^cdn_sec_tc$",
+        "nameRegex": true,
+        "confidence": 35,
+        "standalone": false,
+        "description": "Alibaba CDN security session cookie",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "ssxmod-cookie",
+        "name": "^ssxmod_itna2?$",
+        "nameRegex": true,
+        "confidence": 45,
+        "standalone": false,
+        "description": "Alibaba Cloud bot-protection cookie written by its JavaScript next to acw_tc (seen with the acw_sc__v2 challenge)",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "url": [
+      {
+        "id": "aliyunwaf-error-host",
+        "confidence": 55,
+        "description": "Block-page help resources on the Aliyun Yundun errors host",
+        "text": "^https://errors\\.aliyundun\\.(?:com|net)/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "block-page-image-cn",
+        "confidence": 70,
+        "description": "Banner image of the Alibaba Cloud WAF 405 block page (Chinese UI)",
+        "text": "^https://errors\\.aliyun\\.com/images/TB15QGaHpXXXXXOaXXXXia39XXX-660-117\\.png(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "block-page-image-en",
+        "confidence": 70,
+        "description": "Banner image of the Alibaba Cloud WAF 405 block page (English UI)",
+        "text": "^https://g\\.alicdn\\.com/sd-base/static/[^/?#]+/image/405\\.png(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "dom": [
+      {
+        "id": "block-traceid-tips",
+        "selector": "#block_traceid_tips",
+        "confidence": 45,
+        "standalone": false,
+        "description": "Trace-id line of the Alibaba Cloud WAF block page"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "aliyunwaf-edge-cookies",
+      "name": "Paired WAF edge session cookies",
+      "confidence": 70,
+      "when": {
+        "all": [
+          { "pattern": "acw-tc-cookie" },
+          { "pattern": "cdn-sec-tc-cookie" }
+        ]
+      }
+    },
+    {
+      "id": "aliyunwaf-bot-cookies",
+      "name": "Alibaba bot-protection cookie with the edge cookie",
+      "confidence": 80,
+      "when": {
+        "all": [
+          { "pattern": "ssxmod-cookie" },
+          { "pattern": "acw-tc-cookie" }
+        ]
+      }
+    },
+    {
+      "id": "aliyunwaf-js-challenge-passed",
+      "name": "Challenge clearance cookie with an edge session cookie",
+      "confidence": 90,
+      "when": {
+        "all": [
+          { "pattern": "acw-sc-v2-cookie" },
+          {
+            "any": [
+              { "pattern": "acw-tc-cookie" },
+              { "pattern": "cdn-sec-tc-cookie" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "aliyunwaf-block-error-page",
+      "name": "Error-host resource with a WAF session cookie",
+      "confidence": 85,
+      "when": {
+        "all": [
+          { "pattern": "aliyunwaf-error-host" },
+          {
+            "any": [
+              { "pattern": "acw-sc-v2-cookie" },
+              { "pattern": "acw-tc-cookie" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "aliyunwaf-405-block-page",
+      "name": "WAF 405 block page banner with its trace-id line",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "any": [
+              { "pattern": "block-page-image-cn" },
+              { "pattern": "block-page-image-en" }
+            ]
+          },
+          { "pattern": "block-traceid-tips" }
+        ]
+      }
+    },
+    {
+      "id": "aliyunwaf-complete-profile",
+      "name": "Clearance cookie, session cookie and error-host resource",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "acw-sc-v2-cookie" },
+          { "pattern": "acw-tc-cookie" },
+          { "pattern": "aliyunwaf-error-host" }
+        ]
+      }
+    }
+  ]
+}

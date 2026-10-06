@@ -1,0 +1,240 @@
+{
+  "id": "detect-fingerprintjs",
+  "name": "FingerprintJS",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-06",
+  "version": "2.1.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://fingerprint.com/",
+  "icon": "fingerprintjs_official.png",
+  "description": "FingerprintJS device fingerprinting library (OSS and Pro agent) used for bot detection and identification",
+  "detection": {
+    "url": [
+      {
+        "id": "fpcdn-pro-script",
+        "confidence": 60,
+        "description": "FingerprintJS Pro agent loader (v3/v4) on the vendor fpcdn.io host",
+        "text": "^https://(?:[a-z0-9-]+\\.){0,2}fpcdn\\.io/v[34](?:[/?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "openfpcdn-oss-script",
+        "confidence": 55,
+        "description": "FingerprintJS open-source library on the vendor openfpcdn.io host",
+        "text": "^https://openfpcdn\\.io/fingerprintjs/v3/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "fpnpmcdn-loader",
+        "confidence": 60,
+        "description": "FingerprintJS Pro agent loader fetched by the npm package from fpnpmcdn.net",
+        "text": "^https://fpnpmcdn\\.net/v[34]/[A-Za-z0-9]+/loader_v\\d+\\.\\d+\\.\\d+\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "fpjs-api-host",
+        "confidence": 60,
+        "description": "FingerprintJS Pro identification API on the vendor api.fpjs.io host (global or regional)",
+        "text": "^https://(?:[a-z0-9-]+\\.)?api\\.fpjs\\.(?:io|sh|pro)(?:[/?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "fpjs-proxied-ci-param",
+        "confidence": 30,
+        "standalone": false,
+        "description": "Pro agent request through a first-party proxy, recognisable by its ci=js/<version> client parameter",
+        "text": "^https?://[^/?#]+/[^?#]*\\?(?:[^#]*&)?ci=jsl?/[34]\\.\\d+\\.\\d+(?:[&#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "fp-esm-bundle",
+        "confidence": 50,
+        "description": "Open-source library bundled from the npm package: bundlers keep its fp.esm file name (e.g. fingerprint.com's own demo)",
+        "text": "^https?://[^/?#]+/(?:[^?#]*/)?fp\\.esm(?:\\.[A-Za-z0-9_-]{6,})?\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "oss-npm-monitoring",
+        "confidence": 55,
+        "description": "OSS npm package monitoring ping on the vendor m1.openfpcdn.io host",
+        "text": "^https://m1\\.openfpcdn\\.io/fingerprintjs/v\\d+/npm-monitoring$",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "fpjs-proxy-endpoint",
+        "confidence": 25,
+        "standalone": false,
+        "description": "First-party Pro proxy endpoint forwarding agent traffic to FingerprintJS",
+        "text": "^https?://[^/?#]+/fpjs/api(?:[/?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "window": [
+      {
+        "id": "fingerprintjs-object",
+        "path": "FingerprintJS",
+        "condition": "typeof object",
+        "confidence": 45,
+        "description": "FingerprintJS agent global object"
+      },
+      {
+        "id": "fpjs-pvid",
+        "path": "__fpjs_pvid",
+        "condition": "typeof string",
+        "confidence": 40,
+        "description": "Page-visit id the FingerprintJS Pro agent stores on window"
+      }
+    ],
+    "content": [
+      {
+        "id": "fingerprintjs-reference",
+        "confidence": 10,
+        "description": "Script reference to the FingerprintJS agent global",
+        "text": "FingerprintJS",
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "fingerprintjs-pro-sdk",
+      "name": "Pro agent loader with the agent global",
+      "confidence": 80,
+      "when": {
+        "all": [
+          { "pattern": "fpcdn-pro-script" },
+          { "pattern": "fingerprintjs-object" }
+        ]
+      }
+    },
+    {
+      "id": "fingerprintjs-oss-sdk",
+      "name": "Open-source library with the agent global",
+      "confidence": 75,
+      "when": {
+        "all": [
+          { "pattern": "openfpcdn-oss-script" },
+          { "pattern": "fingerprintjs-object" }
+        ]
+      }
+    },
+    {
+      "id": "fingerprintjs-proxied-agent",
+      "name": "First-party proxy endpoint with agent evidence",
+      "confidence": 85,
+      "when": {
+        "all": [
+          { "pattern": "fpjs-proxy-endpoint" },
+          {
+            "any": [
+              { "pattern": "fingerprintjs-object" },
+              { "pattern": "fingerprintjs-reference" },
+              { "pattern": "fpjs-pvid" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "fingerprintjs-bundled-oss",
+      "name": "Bundled npm library with agent evidence",
+      "confidence": 75,
+      "when": {
+        "all": [
+          { "pattern": "fp-esm-bundle" },
+          {
+            "any": [
+              { "pattern": "fingerprintjs-object" },
+              { "pattern": "fingerprintjs-reference" },
+              { "pattern": "oss-npm-monitoring" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "fingerprintjs-default-endpoint-agent",
+      "name": "Pro agent calling the vendor API with agent evidence",
+      "confidence": 85,
+      "when": {
+        "all": [
+          { "pattern": "fpjs-api-host" },
+          {
+            "any": [
+              { "pattern": "fingerprintjs-object" },
+              { "pattern": "fingerprintjs-reference" },
+              { "pattern": "fpjs-pvid" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "fingerprintjs-npm-pro-agent",
+      "name": "npm Pro loader with calls to the vendor API",
+      "confidence": 85,
+      "when": {
+        "all": [
+          { "pattern": "fpnpmcdn-loader" },
+          { "pattern": "fpjs-api-host" }
+        ]
+      }
+    },
+    {
+      "id": "fingerprintjs-cdn-pro-agent",
+      "name": "CDN Pro loader with the agent's page-visit id",
+      "confidence": 80,
+      "when": {
+        "all": [
+          { "pattern": "fpcdn-pro-script" },
+          { "pattern": "fpjs-pvid" }
+        ]
+      }
+    },
+    {
+      "id": "fingerprintjs-proxied-pro-agent",
+      "name": "First-party proxied Pro agent with its page-visit id",
+      "confidence": 80,
+      "when": {
+        "all": [
+          { "pattern": "fpjs-proxied-ci-param" },
+          { "pattern": "fpjs-pvid" }
+        ]
+      }
+    },
+    {
+      "id": "fingerprintjs-complete-integration",
+      "name": "Pro agent loader, agent global and script reference",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "fpcdn-pro-script" },
+          { "pattern": "fingerprintjs-object" },
+          { "pattern": "fingerprintjs-reference" }
+        ]
+      }
+    }
+  ]
+}

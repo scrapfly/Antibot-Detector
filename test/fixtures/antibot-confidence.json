@@ -597,5 +597,346 @@
   "tmx-tags": {
    "url": "https://h.online-metrix.net/fp/tags.js?org_id=k8vif92e&session_id=abc123"
   }
+ },
+ "detect-anubis": {
+  "anubis-auth-cookie": {
+   "cookie": [
+    "techaro.lol-anubis-auth",
+    "eyJhbGciOiJFZERTQSJ9.sample.jwt"
+   ]
+  },
+  "anubis-endpoint-resource": {
+   "url": "https://anubis.techaro.nl/.within.website/x/cmd/anubis/api/pass-challenge"
+  },
+  "anubis-challenge-script": {
+   "dom": {
+    "tagName": "script",
+    "attributes": {
+     "src": "/.within.website/x/cmd/anubis/static/js/main.mjs?cacheBuster=1.27.0"
+    }
+   }
+  },
+  "anubis-static-image": {
+   "dom": {
+    "tagName": "img",
+    "attributes": {
+     "src": "/.within.website/x/cmd/anubis/static/img/pensive.webp?cacheBuster=1.27.0"
+    }
+   }
+  },
+  "anubis-progress-bar": {
+   "dom": {
+    "tagName": "div",
+    "attributes": {
+     "class": "bar-inner"
+    }
+   }
+  },
+  "anubis-verification-cookie": {
+   "setCookie": [
+    "techaro.lol-anubis-cookie-verification-347ddb4a",
+    "exampleValue"
+   ]
+  }
+ },
+ "detect-aliyunwaf": {
+  "acw-sc-v2-cookie": {
+   "cookie": [
+    "acw_sc__v2",
+    "7d8f9e0a1b2c3d4e5f60718293a4b5c6"
+   ]
+  },
+  "acw-tc-cookie": {
+   "cookie": [
+    "acw_tc",
+    "6cd99a2f8b0d4e7fa8c0b1d2e3f4a5b6"
+   ]
+  },
+  "cdn-sec-tc-cookie": {
+   "cookie": [
+    "cdn_sec_tc",
+    "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6"
+   ]
+  },
+  "aliyunwaf-error-host": {
+   "url": "https://errors.aliyundun.com/help/"
+  },
+  "block-page-image-cn": {
+   "url": "https://errors.aliyun.com/images/TB15QGaHpXXXXXOaXXXXia39XXX-660-117.png"
+  },
+  "block-page-image-en": {
+   "url": "https://g.alicdn.com/sd-base/static/1.0.5/image/405.png"
+  },
+  "block-traceid-tips": {
+   "dom": {
+    "tagName": "div",
+    "attributes": {
+     "id": "block_traceid_tips"
+    }
+   }
+  },
+  "ssxmod-cookie": {
+   "cookie": [
+    "ssxmod_itna",
+    "exampleValue"
+   ]
+  }
+ },
+ "detect-jiasule": {
+  "jsl-clearance-cookie": {
+   "cookie": [
+    "__jsl_clearance_s",
+    "1736123456.123.0.oGmFq2YyVJ2l0Q9z8xK7"
+   ]
+  },
+  "jsluid-cookie": {
+   "cookie": [
+    "__jsluid_s",
+    "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6"
+   ]
+  },
+  "jsl-tracking-cookie": {
+   "cookie": [
+    "jsl_tracking",
+    "1"
+   ]
+  },
+  "jiasule-waf-server": {
+   "header": [
+    "server",
+    "jiasule-waf"
+   ]
+  },
+  "jiasule-static-reference": {
+   "source": "script.src = 'https://static.jiasule.com/static/js/challenge.js';"
+  },
+  "chuangyu-portal-reference": {
+   "source": "var portal = 'https://www.365cyd.com/portal';"
+  },
+  "x-via-jsl-header": {
+   "header": [
+    "x-via-jsl",
+    "1a2b3c4,-"
+   ]
+  }
+ },
+ "detect-ruishu": {
+  "fssbbi-cookie": {
+   "cookie": [
+    "FSSBBIl1UgzbN7N80T",
+    "xQIL1UgzbN7N80TSl5YqO=AxYDDeIpwDdxD"
+   ]
+  },
+  "waf-ci-cookie": {
+   "cookie": [
+    "waf_ci",
+    "a1b2c3d4e5f6"
+   ]
+  },
+  "dynamic-cookie-s": {
+   "setCookie": [
+    "NfBCSins2OywS",
+    "60t8X9exampleValue"
+   ]
+  },
+  "dynamic-cookie-t": {
+   "cookie": [
+    "NfBCSins2OywT",
+    "0zKkexampleValue"
+   ]
+  },
+  "challenge-script-marker": {
+   "dom": {
+    "tagName": "script",
+    "attributes": {
+     "src": "/fpqQrgG7L6po/eaKJbLE9bqof.e17ed02.js",
+     "r": "m"
+    }
+   }
+  },
+  "ts-global": {
+   "runtimeType": "object"
+  }
+ },
+ "detect-fingerprintjs": {
+  "fpcdn-pro-script": {
+   "url": "https://fpcdn.io/v4/abc123DEF456"
+  },
+  "openfpcdn-oss-script": {
+   "url": "https://openfpcdn.io/fingerprintjs/v3/iife.min.js"
+  },
+  "fp-esm-bundle": {
+   "url": "https://fingerprint.com/_astro/fp.esm.igOf38FS.js?dpl=dpl_Gvyz2LLeSchmoL49X6HbJAy6nLEj"
+  },
+  "oss-npm-monitoring": {
+   "url": "https://m1.openfpcdn.io/fingerprintjs/v3/npm-monitoring"
+  },
+  "fpjs-proxy-endpoint": {
+   "url": "https://example.test/fpjs/api?token=abc123"
+  },
+  "fingerprintjs-object": {
+   "runtimeType": "object"
+  },
+  "fingerprintjs-reference": {
+   "source": "const fpPromise = FingerprintJS.load({ monitoring: false });"
+  },
+  "fpnpmcdn-loader": {
+   "url": "https://fpnpmcdn.net/v3/abc123DEF456/loader_v3.11.9.js"
+  },
+  "fpjs-api-host": {
+   "url": "https://api.fpjs.io/?ci=js/3.12.15&q=abc123DEF456"
+  },
+  "fpjs-proxied-ci-param": {
+   "url": "https://demo.fingerprint.com/r4a0Rd2Xs?region=us&ci=js/4.1.5&q=abc123DEF456"
+  },
+  "fpjs-pvid": {
+   "runtimeType": "string"
+  }
+ },
+ "detect-netacea": {
+  "mitata-request-cookie": {
+   "cookie": [
+    "_mitata",
+    "c3RhcnRfdGltZV9zdGFtcA=="
+   ]
+  },
+  "mitata-response-cookie": {
+   "setCookie": [
+    "_mitata",
+    "c3RhcnRfdGltZV9zdGFtcA=="
+   ]
+  },
+  "mitatacaptcha-cookie": {
+   "cookie": [
+    "_mitatacaptcha",
+    "Y2FwdGNoYV90b2tlbg=="
+   ]
+  },
+  "netacea-captcha-verify": {
+   "url": "https://shop.example.co.uk/AtaVerifyCaptcha"
+  }
+ },
+ "detect-azurefrontdoor": {
+  "azure-ref-header": {
+   "header": [
+    "x-azure-ref",
+    "0zcHsXQAAAABkDj0kDrYB0TJsDw6YzJHnRE9HMDMxMDA2OGQ1YzEwMw=="
+   ]
+  },
+  "azure-cache-header": {
+   "header": [
+    "x-cache",
+    "TCP_HIT"
+   ]
+  },
+  "azurefd-host-resource": {
+   "url": "https://myapp-hgbydvawc9hxc0bh.z01.azurefd.net/index.html"
+  },
+  "azure-purgeid-header": {
+   "header": [
+    "x-fd-int-roxy-purgeid",
+    "0"
+   ]
+  }
+ },
+ "detect-yundun": {
+  "yundun-server-header": {
+   "header": [
+    "server",
+    "YUNDUN"
+   ]
+  },
+  "yundun-cache-header": {
+   "header": [
+    "x-cache",
+    "YUNDUN"
+   ]
+  },
+  "yundun-cookie": {
+   "cookie": [
+    "yd_cookie",
+    "a1b2c3d4e5f6a7b8"
+   ]
+  },
+  "yundun-static-resource": {
+   "url": "https://www.yundun.com/static/js/fingerprint1.js"
+  },
+  "server-waf-header": {
+   "header": [
+    "server",
+    "WAF"
+   ]
+  },
+  "x-cache-bypass-header": {
+   "header": [
+    "x-cache",
+    "BYPASS"
+   ]
+  },
+  "bc-bot-cookie": {
+   "cookie": [
+    "bc_bot_session",
+    "exampleValue"
+   ]
+  },
+  "waf-captcha-marker-cookie": {
+   "cookie": [
+    "waf_captcha_marker",
+    "exampleValue"
+   ]
+  },
+  "https-waf-cookie": {
+   "cookie": [
+    "https_waf_cookie",
+    "exampleValue"
+   ]
+  },
+  "bs-captcha-script": {
+   "url": "https://blog.csdn.net/cdn_cgi_bs_captcha/static/js/waf_captcha_embedded_bs_v6.3.0805.js"
+  }
+ },
+ "detect-radware": {
+  "radware-compstate-header": {
+   "header": [
+    "x-sl-compstate",
+    "Deny"
+   ]
+  },
+  "radware-cloudwebsec-reference": {
+   "source": "window.location.href = 'https://CloudWebSec.radware.com/block';"
+  },
+  "radware-block-message": {
+   "source": "document.title = 'Unauthorized Request Blocked';"
+  },
+  "radware-rdwr-server": {
+   "header": [
+    "server",
+    "rdwr"
+   ]
+  },
+  "radware-uzm-cookie": {
+   "setCookie": [
+    "__uzma",
+    "exampleValue"
+   ]
+  },
+  "radware-uzm-js-cookie": {
+   "cookie": [
+    "__uzmaj0",
+    "exampleValue"
+   ]
+  },
+  "radware-stormcaster-script": {
+   "url": "https://dpd-business.at/18f5227b-e27b-445a-a53f-f845fbe69b40/stormcaster.js"
+  },
+  "radware-validate-host": {
+   "url": "https://validate.perfdrive.com/example/captcha?ssa=example"
+  },
+  "radware-ssjs-connector": {
+   "runtimeType": "object"
+  },
+  "radware-dbm-variable": {
+   "runtimeType": "string"
+  }
  }
 }

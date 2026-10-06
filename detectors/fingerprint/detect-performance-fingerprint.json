@@ -7,6 +7,7 @@
   "difficulty": "Low",
   "lastUpdated": "2026-10-03",
   "version": "1.2.0",
+  "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Performance",
   "icon": "performance_fingerprint.png",
   "description": "Performance timing, entry enumeration and memory reads; ordinary monitoring also matches and fingerprinting intent is unconfirmed",

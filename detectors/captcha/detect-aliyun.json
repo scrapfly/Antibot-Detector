@@ -1,0 +1,167 @@
+{
+  "id": "detect-aliyun",
+  "name": "Aliyun Captcha 2.0",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-06",
+  "version": "1.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.alibabacloud.com/product/captcha",
+  "icon": "aliyun_official.png",
+  "description": "Alibaba Cloud's current captcha widget served from alicdn, distinct from the older AliExpress punish challenge",
+  "detection": {
+    "url": [
+      {
+        "id": "aliyun-sdk-resource",
+        "confidence": 60,
+        "description": "Official Aliyun Captcha 2.0 SDK on the alicdn captcha-frontend path",
+        "text": "^https://o\\.alicdn\\.com/captcha-frontend/aliyunCaptcha/AliyunCaptcha\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": true,
+        "textScope": "all",
+        "standalone": true
+      },
+      {
+        "id": "aliyun-legacy-nc-resource",
+        "confidence": 40,
+        "description": "Legacy NoCaptcha-era Aliyun captcha asset under the alicdn sd/ncpc path",
+        "text": "^https://[a-z0-9-]+\\.alicdn\\.com/sd/ncpc/",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": true,
+        "textScope": "all",
+        "standalone": true
+      },
+      {
+        "id": "aliyun-dynamic-resource",
+        "confidence": 55,
+        "description": "Versioned Aliyun Captcha runtime scripts (also loaded when the site bundles the loader)",
+        "text": "^https://g\\.alicdn\\.com/captcha-frontend/(?:dynamicJS|FeiLin)/\\d+\\.\\d+\\.\\d+/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": true
+      },
+      {
+        "id": "aliyun-captcha-api",
+        "confidence": 50,
+        "description": "Aliyun Captcha 2.0 verification API (per-account prefix)",
+        "text": "^https://[a-z0-9]{4,12}\\.captcha-open\\.aliyuncs\\.com/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": true
+      }
+    ],
+    "content": [
+      {
+        "id": "aliyun-init-reference",
+        "confidence": 10,
+        "description": "Script reference to the Aliyun captcha bootstrap; integration and execution unconfirmed",
+        "text": "initAliyunCaptcha",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
+      }
+    ],
+    "dom": [
+      {
+        "id": "aliyun-widget-element",
+        "selector": "#aliyunCaptcha-window-popup, #aliyunCaptcha-sliding-wrapper, #aliyunCaptcha-mask",
+        "confidence": 40,
+        "description": "Rendered Aliyun Captcha 2.0 popup or slider",
+        "standalone": true
+      }
+    ],
+    "window": [
+      {
+        "id": "aliyun-init-api",
+        "path": "initAliyunCaptcha",
+        "condition": "typeof function",
+        "confidence": 45,
+        "description": "Aliyun captcha bootstrap API presence, not execution",
+        "standalone": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "aliyun-legacy-runtime",
+      "name": "Legacy NoCaptcha asset with the init API",
+      "confidence": 70,
+      "when": {
+        "all": [
+          { "pattern": "aliyun-legacy-nc-resource" },
+          { "pattern": "aliyun-init-api" }
+        ]
+      }
+    },
+    {
+      "id": "aliyun-init-dynamic",
+      "name": "Init API with the captcha runtime scripts",
+      "confidence": 75,
+      "when": {
+        "all": [
+          { "pattern": "aliyun-init-api" },
+          { "pattern": "aliyun-dynamic-resource" }
+        ]
+      }
+    },
+    {
+      "id": "aliyun-sdk-widget",
+      "name": "Loader with the rendered widget",
+      "confidence": 80,
+      "when": {
+        "all": [
+          { "pattern": "aliyun-sdk-resource" },
+          { "pattern": "aliyun-widget-element" }
+        ]
+      }
+    },
+    {
+      "id": "aliyun-sdk-runtime",
+      "name": "Loader with the init API",
+      "confidence": 85,
+      "when": {
+        "all": [
+          { "pattern": "aliyun-sdk-resource" },
+          { "pattern": "aliyun-init-api" }
+        ]
+      }
+    },
+    {
+      "id": "aliyun-dynamic-api",
+      "name": "Captcha runtime calling the verification API",
+      "confidence": 90,
+      "when": {
+        "all": [
+          { "pattern": "aliyun-dynamic-resource" },
+          { "pattern": "aliyun-captcha-api" }
+        ]
+      }
+    },
+    {
+      "id": "aliyun-complete-integration",
+      "name": "Captcha scripts, verification API and rendered widget",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              { "pattern": "aliyun-sdk-resource" },
+              { "pattern": "aliyun-dynamic-resource" }
+            ]
+          },
+          { "pattern": "aliyun-captcha-api" },
+          { "pattern": "aliyun-widget-element" }
+        ]
+      }
+    }
+  ]
+}

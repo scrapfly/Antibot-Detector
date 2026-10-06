@@ -37,6 +37,28 @@ class DetectionUtils {
     return author.trim().toLowerCase() === DetectionUtils.OFFICIAL_AUTHOR.toLowerCase();
   }
 
+  /** Category order of the Detection list (Settings → Detection → Category order) */
+  static DEFAULT_CATEGORY_ORDER = ['antibot', 'captcha', 'fingerprint'];
+
+  /**
+   * A saved category order as a complete order of the three categories:
+   * unknown or repeated entries are dropped and missing categories are
+   * appended in their default position.
+   * @param {Array<string>|string} order - array, or comma-separated string
+   * @returns {string[]}
+   */
+  static normalizeCategoryOrder(order) {
+    const list = Array.isArray(order) ? order : String(order || '').split(',');
+    const known = DetectionUtils.DEFAULT_CATEGORY_ORDER;
+    const out = [];
+    for (const raw of list) {
+      const category = String(raw || '').trim().toLowerCase().replace(/^anti-bot$/, 'antibot').replace(/^fingerprinting$/, 'fingerprint');
+      if (known.includes(category) && !out.includes(category)) out.push(category);
+    }
+    for (const category of known) if (!out.includes(category)) out.push(category);
+    return out;
+  }
+
   /**
    * An official detector is one Scrapfly ships: its author is "Scrapfly" AND
    * its ID is one of the detectors bundled in detectors/index.json. The author

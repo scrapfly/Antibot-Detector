@@ -7,6 +7,7 @@
   "difficulty": "Low",
   "lastUpdated": "2026-10-03",
   "version": "1.2.0",
+  "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API",
   "icon": "indexeddb_fingerprint.png",
   "description": "IndexedDB access and database enumeration signals. Ordinary application storage is common, so evidence strengths remain low and do not establish fingerprinting intent.",

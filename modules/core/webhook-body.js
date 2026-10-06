@@ -44,11 +44,39 @@
     { token: '<DETECTIONS>', key: 'detections', kind: 'json', descKey: 'webhookVarDetections', desc: 'Detections as a JSON array', sample: null },
     { token: '<TIMESTAMP>', key: 'timestamp', kind: 'string', descKey: 'webhookVarTimestamp', desc: 'Time of the detection (ISO 8601)', sample: '2026-01-01T12:00:00.000Z' },
     { token: '<DETECTION_COUNT>', key: 'detectionCount', kind: 'number', descKey: 'webhookVarDetectionCount', desc: 'Number of detections', sample: 1 },
-    { token: '<CATEGORIES>', key: 'categories', kind: 'string', descKey: 'webhookVarCategories', desc: 'Detected categories, comma-separated', sample: 'Anti-Bot' }
+    { token: '<CATEGORIES>', key: 'categories', kind: 'string', descKey: 'webhookVarCategories', desc: 'Detected categories, comma-separated', sample: 'antibot' }
   ]);
 
+  // One detection exactly as the engine emits it (runDetector + detectOnPage),
+  // so the Settings test payload matches what a naturally triggered event
+  // sends: field names, structure and value formatting (GitHub issue #5).
   const SAMPLE_DETECTIONS = Object.freeze([
-    Object.freeze({ id: 'test-detector', name: 'Test Detector', category: 'Anti-Bot', confidence: 95, color: '#F48120', methods: Object.freeze(['dom', 'cookie']) })
+    Object.freeze({
+      detected: true,
+      confidence: 85,
+      difficulty: 'Medium',
+      matches: Object.freeze([
+        Object.freeze({
+          type: 'url',
+          pattern: '/cdn-cgi/challenge-platform/',
+          value: '/cdn-cgi/challenge-platform/',
+          fullUrl: 'https://example.com/cdn-cgi/challenge-platform/h/g/orchestrate/chl_page/v1/abc123',
+          confidence: 85,
+          patternId: 'challenge-orchestrator',
+          description: 'Challenge page orchestrator under /cdn-cgi/challenge-platform/'
+        })
+      ]),
+      detectionMethods: Object.freeze(['url']),
+      category: 'antibot',
+      detector: Object.freeze({
+        name: 'Cloudflare Bot Management',
+        icon: 'cloudflare_official.png',
+        id: 'detect-cloudflare',
+        description: 'AI-powered bot detection and mitigation with global CDN integration',
+        author: 'Scrapfly',
+        difficulty: 'Medium'
+      })
+    })
   ]);
 
   const DEFAULT_TEMPLATE = '{"url": "<SITEURL>", "hostname": "<HOSTNAME>", "title": "<TITLE>", "favicon": "<FAVICON>", "detections": <DETECTIONS>, "timestamp": "<TIMESTAMP>", "count": <DETECTION_COUNT>, "categories": "<CATEGORIES>"}';
@@ -97,7 +125,12 @@
   function sampleContext() {
     const ctx = {};
     for (const v of VARIABLES) ctx[v.key] = v.sample;
-    ctx.detections = SAMPLE_DETECTIONS.map(d => ({ ...d, methods: [...d.methods] }));
+    ctx.detections = SAMPLE_DETECTIONS.map(d => ({
+      ...d,
+      matches: d.matches.map(m => ({ ...m })),
+      detectionMethods: [...d.detectionMethods],
+      detector: { ...d.detector }
+    }));
     ctx.detectionCount = ctx.detections.length;
     return ctx;
   }

@@ -1,0 +1,114 @@
+{
+  "id": "detect-anubis",
+  "name": "Anubis",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Low",
+  "lastUpdated": "2026-10-06",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://anubis.techaro.nl/",
+  "icon": "anubis_official.png",
+  "description": "Proof-of-work anti-AI-crawler gate widely deployed on open-source and community sites",
+  "detection": {
+    "cookie": [
+      {
+        "id": "anubis-auth-cookie",
+        "name": "^(?:[\\w.-]+-)?anubis-auth(?:-[0-9a-f]{6,16})?$",
+        "nameRegex": true,
+        "confidence": 70,
+        "description": "Signed JWT cookie issued after a passed proof-of-work challenge (bare or policy-prefixed name)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "anubis-verification-cookie",
+        "name": "^(?:[\\w.-]+-)?anubis-cookie-verification(?:-[0-9a-f]{6,16})?$",
+        "nameRegex": true,
+        "confidence": 60,
+        "description": "Anubis cookie-verification cookie set with the challenge (some deployments add a hash suffix)",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "url": [
+      {
+        "id": "anubis-endpoint-resource",
+        "confidence": 60,
+        "description": "Anubis command endpoint serving challenge scripts, images and the pass-challenge API",
+        "text": "^https?://[^/?#]+/\\.within\\.website/x/(?:cmd/)?anubis/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "dom": [
+      {
+        "id": "anubis-challenge-script",
+        "selector": "script[src*=\".within.website/x/cmd/anubis/\"]",
+        "confidence": 55,
+        "description": "Anubis main challenge module loaded from the command endpoint"
+      },
+      {
+        "id": "anubis-static-image",
+        "selector": "img[src*=\".within.website/x/cmd/anubis/\"]",
+        "confidence": 45,
+        "description": "Anubis mascot image (pensive/happy/reject) loaded from the command endpoint"
+      },
+      {
+        "id": "anubis-progress-bar",
+        "selector": ".bar-inner",
+        "confidence": 30,
+        "standalone": false,
+        "description": "Proof-of-work progress bar inner element on the challenge page"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "anubis-challenge-page",
+      "name": "Challenge page script and mascot image",
+      "confidence": 75,
+      "when": {
+        "all": [
+          { "pattern": "anubis-challenge-script" },
+          {
+            "any": [
+              { "pattern": "anubis-static-image" },
+              { "pattern": "anubis-progress-bar" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "anubis-passed-challenge",
+      "name": "Auth cookie with a command endpoint request",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "any": [
+              { "pattern": "anubis-auth-cookie" },
+              { "pattern": "anubis-verification-cookie" }
+            ]
+          },
+          { "pattern": "anubis-endpoint-resource" }
+        ]
+      }
+    },
+    {
+      "id": "anubis-verified-session",
+      "name": "Auth cookie, challenge script and command endpoint",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "anubis-auth-cookie" },
+          { "pattern": "anubis-challenge-script" },
+          { "pattern": "anubis-endpoint-resource" }
+        ]
+      }
+    }
+  ]
+}

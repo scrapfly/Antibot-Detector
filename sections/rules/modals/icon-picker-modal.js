@@ -65,6 +65,22 @@ Rules.prototype.openIconPicker = function() {
     'recaptcha_official.png',
     'shape_security_official.png',
     'sucuri_official.png',
+    'aliyun_official.png',
+    'aliyunwaf_official.png',
+    'anubis_official.png',
+    'azurefrontdoor_official.png',
+    'capy_official.png',
+    'dingxiang_official.png',
+    'fingerprintjs_official.png',
+    'jiasule_official.png',
+    'mtcaptcha_official.png',
+    'netacea_official.png',
+    'radware_official.png',
+    'ruishu_official.png',
+    'shumei_official.png',
+    'smartcaptcha_official.png',
+    'yidun_official.png',
+    'yundun_official.png',
     // Fingerprint icons
     'audio_fingerprint.png',
     'battery_fingerprint.png',
@@ -103,6 +119,10 @@ Rules.prototype.openIconPicker = function() {
           <h2>${_tr('iconPickerTitle', 'Choose Icon')}</h2>
           ${CloseButton.html({ className: 'icon-picker-close' })}
         </div>
+        <div class="icon-picker-search">
+          <svg class="icon-picker-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="iconPickerSearchInput" class="icon-picker-search-input" placeholder="${_tr('iconPickerSearchPlaceholder', 'Search icons…')}" aria-label="${_tr('iconPickerSearchPlaceholder', 'Search icons…')}" autocomplete="off" spellcheck="false">
+        </div>
         <div class="icon-picker-body rule-modal-body">
           <div class="icon-grid">
             ${[
@@ -115,6 +135,7 @@ Rules.prototype.openIconPicker = function() {
               </div>
             `).join('')}
           </div>
+          <p class="icon-picker-no-results" id="iconPickerNoResults" hidden>${_tr('iconPickerNoResults', 'No icons match your search')}</p>
         </div>
         <div class="icon-picker-footer rule-modal-footer">
           <button id="uploadCustomIcon" class="icon-picker-upload-btn" type="button">
@@ -166,6 +187,25 @@ Rules.prototype.openIconPicker = function() {
       closeModal();
     });
   });
+
+  // Search box: filter the grid live by icon label or file name
+  const searchInput = modalContainer.querySelector('#iconPickerSearchInput');
+  const noResultsNote = modalContainer.querySelector('#iconPickerNoResults');
+  if (searchInput && noResultsNote) {
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.trim().toLowerCase();
+      let visible = 0;
+      iconOptions.forEach(option => {
+        const label = (option.querySelector('.icon-option-label')?.textContent || '').toLowerCase();
+        const name = (option.dataset.icon || '').toLowerCase();
+        const matches = !query || label.includes(query) || name.includes(query);
+        option.classList.toggle('is-filtered', !matches);
+        if (matches) visible++;
+      });
+      noResultsNote.hidden = visible !== 0;
+    });
+    searchInput.focus();
+  }
 
   // Upload custom icon button
   const uploadBtn = modalContainer.querySelector('#uploadCustomIcon');
