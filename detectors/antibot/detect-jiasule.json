@@ -1,0 +1,138 @@
+{
+  "id": "detect-jiasule",
+  "name": "Jiasule (Chuangyu Shield)",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-06",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.jiasule.com/",
+  "icon": "jiasule_official.png",
+  "description": "Knownsec Jiasule / Chuangyu Shield anti-bot gate common on Chinese community and government sites",
+  "detection": {
+    "cookie": [
+      {
+        "id": "jsl-clearance-cookie",
+        "name": "^__jsl_clearance_s$",
+        "nameRegex": true,
+        "confidence": 75,
+        "description": "Jiasule JavaScript-challenge clearance cookie",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "jsluid-cookie",
+        "name": "^__jsluid_s?$",
+        "nameRegex": true,
+        "confidence": 60,
+        "description": "Jiasule visitor id cookie set on first request",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "jsl-tracking-cookie",
+        "name": "^jsl_tracking",
+        "nameRegex": true,
+        "confidence": 40,
+        "standalone": false,
+        "description": "Jiasule tracking cookie set alongside the challenge cookies",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "header": [
+      {
+        "id": "x-via-jsl-header",
+        "name": "^x-via-jsl$",
+        "nameRegex": true,
+        "value": "^[0-9a-f]{7},",
+        "valueRegex": true,
+        "confidence": 75,
+        "description": "X-Via-JSL edge header sent by the Jiasule / Chuangyu Shield edge on every protected response",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "jiasule-waf-server",
+        "name": "^server$",
+        "nameRegex": true,
+        "value": "^jiasule-waf$",
+        "valueRegex": true,
+        "confidence": 70,
+        "description": "Server header identifying the Jiasule WAF edge (legacy; current edges send nginx or no Server)",
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
+    "content": [
+      {
+        "id": "jiasule-static-reference",
+        "confidence": 15,
+        "standalone": false,
+        "description": "Script reference to Jiasule static challenge assets",
+        "text": "static.jiasule.com",
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      },
+      {
+        "id": "chuangyu-portal-reference",
+        "confidence": 15,
+        "standalone": false,
+        "description": "Script reference to the Chuangyu (365cyd) customer portal host",
+        "text": "365cyd.com",
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "jiasule-clearance-session",
+      "name": "Clearance cookie with the visitor id cookie",
+      "confidence": 85,
+      "when": {
+        "all": [
+          { "pattern": "jsl-clearance-cookie" },
+          { "pattern": "jsluid-cookie" }
+        ]
+      }
+    },
+    {
+      "id": "jiasule-waf-edge",
+      "name": "Jiasule edge header with a Jiasule session cookie",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "any": [
+              { "pattern": "x-via-jsl-header" },
+              { "pattern": "jiasule-waf-server" }
+            ]
+          },
+          {
+            "any": [
+              { "pattern": "jsluid-cookie" },
+              { "pattern": "jsl-tracking-cookie" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "jiasule-complete-profile",
+      "name": "Edge header, visitor id and passed JS challenge",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "x-via-jsl-header" },
+          { "pattern": "jsluid-cookie" },
+          { "pattern": "jsl-clearance-cookie" }
+        ]
+      }
+    }
+  ]
+}

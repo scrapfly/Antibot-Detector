@@ -4,6 +4,8 @@ class Detection {
     this.detectionEngine = detectionEngine;
     this.currentResults = [];
     this.searchQuery = '';
+    // Settings → Detection → Category order
+    this.categoryOrder = ['antibot', 'captcha', 'fingerprint'];
     this.initialized = false;
     this.initializingPromise = null;
     this.htmlLoaded = false;
@@ -381,6 +383,20 @@ class Detection {
   getFilteredResults(...args) {
     return DetectionUI.getFilteredResults.apply(this, args);
   }
+  /**
+   * Use a saved category order; with `rerender`, re-sort the visible list
+   * when it changed.
+   */
+  applyCategoryOrder(order, { rerender = false } = {}) {
+    const next = DetectionUtils.normalizeCategoryOrder(order);
+    const changed = next.join(',') !== this.categoryOrder.join(',');
+    this.categoryOrder = next;
+    if (rerender && changed && this.paginationManager && this.currentResults?.length) {
+      const items = this.searchQuery ? this.getFilteredResults() : this.sortDetectionsByCategory(this.currentResults);
+      this.paginationManager.setItems(items);
+    }
+  }
+
   sortDetectionsByCategory(...args) {
     return DetectionUI.sortDetectionsByCategory.apply(this, args);
   }
@@ -413,9 +429,19 @@ class Detection {
       try {
         const settings = await Utils.getSettings();
         this.debugMode = settings.debugMode || false;
+        this.applyCategoryOrder(settings.detection?.categoryOrder);
       } catch (e) {
         this.debugMode = false;
       }
+
+      // A new category order saved in Settings re-sorts the open list
+      chrome.storage.onChanged.addListener(async (changes, area) => {
+        if (area !== 'local' || !changes.scrapfly_settings) return;
+        try {
+          const settings = await Utils.getSettings();
+          this.applyCategoryOrder(settings.detection?.categoryOrder, { rerender: true });
+        } catch (_) { /* keep the current order */ }
+      });
 
       // Expose copy function globally for onclick handlers
       window.scrapflyDetection = this;
@@ -433,10 +459,11 @@ class Detection {
    */
   setupPagination() {
     this.paginationManager = new PaginationManager('detectionPagination', {
+      // Fixed two cards per page (operator request). DetectionUI.measurePageStarts
+      // can instead fit as many cards as the list height allows: pass it as
+      // pageSizer to go back to that.
       itemsPerPage: 2,
       showWhenEmpty: true,
-      // Pages hold as many whole cards as fit the list height (see measurePageStarts)
-      pageSizer: (items) => DetectionUI.measurePageStarts.call(this, items),
       onPageChange: (page, items) => {
         this.renderDetectionsPage(items);
       }

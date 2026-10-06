@@ -7,6 +7,7 @@
   "difficulty": "High",
   "lastUpdated": "2026-10-04",
   "version": "1.2.0",
+  "minExtensionVersion": "2.8",
   "website": "https://www.geetest.com/",
   "icon": "geetest_official.png",
   "description": "AI-powered behavioral CAPTCHA with slide verification",

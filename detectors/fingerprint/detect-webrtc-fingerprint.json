@@ -7,6 +7,7 @@
   "difficulty": "Low",
   "lastUpdated": "2026-10-03",
   "version": "1.2.0",
+  "minExtensionVersion": "2.8",
   "icon": "webrtc_fingerprint.png",
   "description": "WebRTC setup, device enumeration and candidate address access; communication use remains possible",
   "detection": {

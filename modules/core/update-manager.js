@@ -99,8 +99,9 @@ class UpdateManager {
             // Fetch remote index
             const remoteIndex = await this.fetchRemoteIndex();
             if (!remoteIndex) {
-                // Clear any stale pending updates since we can't reach the server
-                await chrome.storage.local.remove(this.STORAGE_KEYS.PENDING_UPDATES);
+                // Clear stale GitHub updates since we can't reach the server;
+                // bundled ones do not depend on it
+                await this.setPendingUpdates((await this.getPendingUpdates()).filter(u => u.source === 'bundled'));
                 Logger.storage('UpdateManager: Cleared pending updates due to fetch failure');
                 return { available: false, updates: [], incompatibleCount: 0, error: 'Failed to fetch remote index' };
             }
@@ -108,20 +109,27 @@ class UpdateManager {
             // Compare with local detectors (returns { updates, incompatibleUpdates })
             // Add 30-second timeout to prevent hanging on slow networks
             const comparePromise = this.compareVersions(remoteIndex);
-            const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('Update check timed out')), Constants.UPDATE_CHECK_TIMEOUT)
-            );
-            const { updates, incompatibleUpdates } = await Promise.race([comparePromise, timeoutPromise]);
+            let timeoutId;
+            const timeoutPromise = new Promise((_, reject) => {
+                timeoutId = setTimeout(() => reject(new Error('Update check timed out')), Constants.UPDATE_CHECK_TIMEOUT);
+            });
+            let compared;
+            try {
+                compared = await Promise.race([comparePromise, timeoutPromise]);
+            } finally {
+                clearTimeout(timeoutId);
+            }
+            const { updates, incompatibleUpdates } = compared;
 
             // Update last check timestamp
             await this.updateLastCheckTimestamp();
 
-            // Store pending updates for later application (only compatible ones)
-            if (updates.length > 0) {
-                await chrome.storage.local.set({
-                    [this.STORAGE_KEYS.PENDING_UPDATES]: updates
-                });
-            }
+            // The pending list is exactly this check's result: an empty check
+            // must not leave the badge showing updates from an older one.
+            // Bundled updates (queued on extension update) are not on GitHub,
+            // so they stay until applied or dismissed.
+            const bundledPending = (await this.getPendingUpdates()).filter(u => u.source === 'bundled');
+            await this.setPendingUpdates(this.mergeUpdateLists(bundledPending, updates));
 
             Logger.storage(`UpdateManager: Found ${updates.length} compatible updates, ${incompatibleUpdates.length} incompatible`);
             return {
@@ -180,86 +188,185 @@ class UpdateManager {
         const updates = [];
         const incompatibleUpdates = [];
 
-        try {
-            // Get local detectors from storage
-            // Storage format (stringified JSON): { detectors: { antibot: {...}, captcha: {...} }, totalCount: N }
-            const result = await chrome.storage.local.get('scrapfly_detectors');
-            const storageData = await StorageManager.normalizeStoredValue('scrapfly_detectors', result.scrapfly_detectors) || {};
-            const localDetectors = storageData.detectors || {};
-            // Official detectors the user deleted stay deleted: never offered as "new"
-            const deletedRes = await chrome.storage.local.get('scrapfly_deleted_official_detectors');
-            const deletedOfficial = new Set(Array.isArray(deletedRes.scrapfly_deleted_official_detectors) ? deletedRes.scrapfly_deleted_official_detectors : []);
+        // Errors propagate: a check that could not compare is a failed check,
+        // never "all detectors are up to date"
+        const localDetectors = await this.loadStoredDetectors();
+        const deletedOfficial = await this.getDeletedOfficialIds();
 
-            // Collect all detector fetch promises for parallel execution
-            const fetchPromises = [];
+        // Collect all detector fetch promises for parallel execution
+        const fetchPromises = [];
 
-            // Iterate through remote categories to build fetch list
-            for (const [category, categoryData] of Object.entries(remoteIndex)) {
-                // Skip non-detector entries
-                if (!categoryData.detectors || !Array.isArray(categoryData.detectors)) {
-                    continue;
-                }
-
-                for (const detectorId of categoryData.detectors) {
-                    if (deletedOfficial.has(detectorId) && !localDetectors[category]?.[detectorId]) continue;
-                    fetchPromises.push(
-                        this.fetchRemoteDetector(category, detectorId)
-                            .then(remoteDetector => ({ category, detectorId, remoteDetector }))
-                    );
-                }
+        // Iterate through remote categories to build fetch list
+        for (const [category, categoryData] of Object.entries(remoteIndex)) {
+            // Skip non-detector entries
+            if (!categoryData.detectors || !Array.isArray(categoryData.detectors)) {
+                continue;
             }
 
-            // Fetch all detectors in parallel (much faster than sequential)
-            const fetchResults = await Promise.all(fetchPromises);
-
-            // Process results
-            for (const { category, detectorId, remoteDetector } of fetchResults) {
-                if (!remoteDetector) continue;
-
-                const remoteVersion = remoteDetector.version || '0.0';
-
-                // Get local version
-                const localDetector = localDetectors[category]?.[detectorId];
-                const localVersion = localDetector?.version || '0.0';
-
-                // Compare versions
-                if (this.isNewerVersion(remoteVersion, localVersion)) {
-                    const updateInfo = {
-                        id: detectorId,
-                        category: category,
-                        name: remoteDetector.name || detectorId,
-                        localVersion,
-                        remoteVersion,
-                        minExtensionVersion: remoteDetector.minExtensionVersion || '1.0',
-                        isNew: !localDetector
-                    };
-
-                    // Check extension compatibility
-                    if (this.isCompatibleWithExtension(remoteDetector)) {
-                        updates.push(updateInfo);
-                        Logger.storage(`UpdateManager: Update available for ${detectorId}: ${localVersion} -> ${remoteVersion}`);
-                    } else {
-                        incompatibleUpdates.push(updateInfo);
-                        Logger.warn('STORAGE', `UpdateManager: ${detectorId} v${remoteVersion} requires extension v${remoteDetector.minExtensionVersion}, current: v${this.getExtensionVersion()}`);
-                    }
-                }
+            for (const detectorId of categoryData.detectors) {
+                // Official detectors the user deleted stay deleted: never offered as "new"
+                if (deletedOfficial.has(detectorId) && !localDetectors[category]?.[detectorId]) continue;
+                fetchPromises.push(
+                    this.fetchRemoteDetector(category, detectorId)
+                        .then(remoteDetector => ({ category, detectorId, remoteDetector }))
+                );
             }
+        }
 
-            // Store incompatible updates for UI display
-            if (incompatibleUpdates.length > 0) {
-                await chrome.storage.local.set({
-                    [this.STORAGE_KEYS.INCOMPATIBLE_UPDATES]: incompatibleUpdates
-                });
+        // Fetch all detectors in parallel (much faster than sequential)
+        const fetchResults = await Promise.all(fetchPromises);
+        if (fetchResults.length > 0 && fetchResults.every(r => !r.remoteDetector)) {
+            throw new Error('Could not fetch any detector from the update server');
+        }
+
+        for (const { category, detectorId, remoteDetector } of fetchResults) {
+            if (!remoteDetector) continue;
+
+            const localDetector = localDetectors[category]?.[detectorId];
+            const updateInfo = this.describeUpdate(category, detectorId, remoteDetector, localDetector);
+            if (!updateInfo) continue;
+
+            // Check extension compatibility
+            if (this.isCompatibleWithExtension(remoteDetector)) {
+                updates.push(updateInfo);
+                Logger.storage(`UpdateManager: Update available for ${detectorId}: ${updateInfo.localVersion} -> ${updateInfo.remoteVersion}`);
             } else {
-                // Clear any stale incompatible updates
-                await chrome.storage.local.remove(this.STORAGE_KEYS.INCOMPATIBLE_UPDATES);
+                incompatibleUpdates.push(updateInfo);
+                Logger.warn('STORAGE', `UpdateManager: ${detectorId} v${updateInfo.remoteVersion} requires extension v${remoteDetector.minExtensionVersion}, current: v${this.getExtensionVersion()}`);
             }
+        }
 
-        } catch (error) {
-            Logger.error('STORAGE', 'UpdateManager: Error comparing versions', error);
+        // Store incompatible updates for UI display
+        if (incompatibleUpdates.length > 0) {
+            await chrome.storage.local.set({
+                [this.STORAGE_KEYS.INCOMPATIBLE_UPDATES]: incompatibleUpdates
+            });
+        } else {
+            // Clear any stale incompatible updates
+            await chrome.storage.local.remove(this.STORAGE_KEYS.INCOMPATIBLE_UPDATES);
         }
 
         return { updates, incompatibleUpdates };
+    }
+
+    /**
+     * The version an update is compared against. An edited official detector
+     * keeps the official version it was edited from.
+     * @param {object|undefined} localDetector
+     * @returns {string}
+     */
+    static localVersionOf(localDetector) {
+        if (!localDetector) return '0.0';
+        if (localDetector.userModified && localDetector.officialSnapshot?.version) {
+            return localDetector.officialSnapshot.version;
+        }
+        return localDetector.version || '0.0';
+    }
+
+    /**
+     * Pending-update entry for an incoming detector, or null when it is not an
+     * update: not newer than the local copy, or a version the user already
+     * declined for their edited copy ("Keep my edits").
+     */
+    static describeUpdate(category, detectorId, incoming, localDetector, source = 'remote') {
+        const remoteVersion = incoming.version || '0.0';
+        const localVersion = this.localVersionOf(localDetector);
+        if (!this.isNewerVersion(remoteVersion, localVersion)) return null;
+        if (localDetector?.userModified && localDetector.dismissedVersion
+            && !this.isNewerVersion(remoteVersion, localDetector.dismissedVersion)) {
+            return null;
+        }
+        const entry = {
+            id: detectorId,
+            category,
+            name: incoming.name || detectorId,
+            localVersion,
+            remoteVersion,
+            minExtensionVersion: incoming.minExtensionVersion || '1.0',
+            isNew: !localDetector,
+            userModified: !!localDetector?.userModified
+        };
+        if (source !== 'remote') entry.source = source;
+        return entry;
+    }
+
+    /** Stored detectors as { category: { id: detector } } */
+    static async loadStoredDetectors() {
+        // Storage format (stringified JSON): { detectors: { antibot: {...}, captcha: {...} }, totalCount: N }
+        const result = await chrome.storage.local.get('scrapfly_detectors');
+        const storageData = await StorageManager.normalizeStoredValue('scrapfly_detectors', result.scrapfly_detectors) || {};
+        return storageData.detectors || {};
+    }
+
+    static async saveStoredDetectors(detectors) {
+        let totalCount = 0;
+        for (const category of Object.values(detectors)) {
+            totalCount += Object.keys(category || {}).length;
+        }
+        await StorageManager.saveToStorage('scrapfly_detectors', {
+            detectors,
+            totalCount
+        }, { wrapMetadata: true });
+    }
+
+    static async getDeletedOfficialIds() {
+        const deletedRes = await chrome.storage.local.get('scrapfly_deleted_official_detectors');
+        return new Set(Array.isArray(deletedRes.scrapfly_deleted_official_detectors) ? deletedRes.scrapfly_deleted_official_detectors : []);
+    }
+
+    static async getPendingUpdates() {
+        const result = await chrome.storage.local.get(this.STORAGE_KEYS.PENDING_UPDATES);
+        const pending = result[this.STORAGE_KEYS.PENDING_UPDATES];
+        return Array.isArray(pending) ? pending : [];
+    }
+
+    static async setPendingUpdates(updates) {
+        if (updates.length > 0) {
+            await chrome.storage.local.set({ [this.STORAGE_KEYS.PENDING_UPDATES]: updates });
+        } else {
+            await chrome.storage.local.remove(this.STORAGE_KEYS.PENDING_UPDATES);
+        }
+    }
+
+    /** Union of two pending lists by detector; the newer incoming version wins */
+    static mergeUpdateLists(base, extra) {
+        const byKey = new Map();
+        for (const update of [...base, ...extra]) {
+            const key = `${update.category}/${update.id}`;
+            const existing = byKey.get(key);
+            if (!existing || this.isNewerVersion(update.remoteVersion, existing.remoteVersion)) {
+                byKey.set(key, update);
+            }
+        }
+        return [...byKey.values()];
+    }
+
+    /**
+     * Put one incoming official detector in place of the local copy, keeping
+     * the user's on/off and difficulty choices.
+     */
+    static installDetector(detectors, category, detectorId, incoming) {
+        const localDetector = detectors[category]?.[detectorId];
+        if (localDetector && typeof localDetector.enabled === 'boolean') {
+            incoming.enabled = localDetector.enabled;
+        }
+        if (localDetector && localDetector.difficulty !== undefined) {
+            incoming.difficulty = localDetector.difficulty;
+        }
+        if (!detectors[category]) {
+            detectors[category] = {};
+        }
+        detectors[category][detectorId] = incoming;
+    }
+
+    /** Remember official detectors installed by an update, so they count as official */
+    static async rememberOfficialIds(ids) {
+        if (ids.length === 0) return;
+        const key = 'scrapfly_remote_official_ids';
+        const stored = await chrome.storage.local.get(key);
+        const known = new Set(Array.isArray(stored[key]) ? stored[key] : []);
+        for (const id of ids) known.add(id);
+        await chrome.storage.local.set({ [key]: [...known] });
     }
 
     /**
@@ -294,91 +401,235 @@ class UpdateManager {
     }
 
     /**
-     * Apply pending updates - download and merge detectors
-     * @returns {Promise<{success: boolean, count: number, error: string|null}>}
+     * A detector file shipped inside this extension build.
+     * @returns {Promise<Object|null>}
      */
-    static async applyUpdates() {
+    static async fetchBundledDetector(category, detectorId) {
+        try {
+            const response = await fetch(chrome.runtime.getURL(`detectors/${category}/${detectorId}.json`));
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return await response.json();
+        } catch (error) {
+            Logger.debug('STORAGE', `UpdateManager: Could not read bundled ${detectorId}`, error.message);
+            return null;
+        }
+    }
+
+    static fetchUpdateSource(update) {
+        return update.source === 'bundled'
+            ? this.fetchBundledDetector(update.category, update.id)
+            : this.fetchRemoteDetector(update.category, update.id);
+    }
+
+    /**
+     * Apply pending updates - download and merge detectors.
+     *
+     * A detector the user edited is never replaced silently: it stays pending
+     * and is returned in `needsDecision`, unless the user chose "Use new
+     * version" for it (`overwriteModified` with its id in `ids`).
+     *
+     * @param {Object} [options]
+     * @param {string[]} [options.ids] - Apply only these detector IDs
+     * @param {boolean} [options.overwriteModified=false] - Replace edited detectors too
+     * @returns {Promise<{success: boolean, count: number, failed: number, needsDecision: Array, error: string|null}>}
+     */
+    static async applyUpdates({ ids = null, overwriteModified = false } = {}) {
         try {
             Logger.storage('UpdateManager: Applying pending updates...');
 
-            // Get pending updates
-            const result = await chrome.storage.local.get(this.STORAGE_KEYS.PENDING_UPDATES);
-            const pendingUpdates = result[this.STORAGE_KEYS.PENDING_UPDATES] || [];
+            const pendingUpdates = await this.getPendingUpdates();
+            const selected = ids ? pendingUpdates.filter(u => ids.includes(u.id)) : pendingUpdates;
+            const untouched = ids ? pendingUpdates.filter(u => !ids.includes(u.id)) : [];
 
-            if (pendingUpdates.length === 0) {
-                return { success: true, count: 0, error: null };
+            if (selected.length === 0) {
+                return { success: true, count: 0, failed: 0, needsDecision: untouched.filter(u => u.userModified), error: null };
             }
 
-            // Get current detectors
-            // Storage format (stringified JSON): { detectors: { antibot: {...}, captcha: {...} }, totalCount: N }
-            const detectorResult = await chrome.storage.local.get('scrapfly_detectors');
-            const storageData = await StorageManager.normalizeStoredValue('scrapfly_detectors', detectorResult.scrapfly_detectors) || {};
-            const detectors = storageData.detectors || {};
+            // Re-read the local copies now: the user may have edited, deleted
+            // or updated a detector since the check that queued these entries
+            const detectors = await this.loadStoredDetectors();
+            const deletedOfficial = await this.getDeletedOfficialIds();
 
             let updatedCount = 0;
             let failedCount = 0;
+            const keepPending = [];
+            const installedNew = [];
 
-            const deletedRes = await chrome.storage.local.get('scrapfly_deleted_official_detectors');
-            const deletedOfficial = new Set(Array.isArray(deletedRes.scrapfly_deleted_official_detectors) ? deletedRes.scrapfly_deleted_official_detectors : []);
-
-            for (const update of pendingUpdates) {
+            for (const update of selected) {
                 if (deletedOfficial.has(update.id) && !detectors[update.category]?.[update.id]) continue;
                 try {
-                    // Fetch the full detector data
-                    const remoteDetector = await this.fetchRemoteDetector(update.category, update.id);
-                    if (!remoteDetector) {
+                    const incoming = await this.fetchUpdateSource(update);
+                    if (!incoming) {
                         failedCount++;
+                        keepPending.push(update);
                         Logger.warn('STORAGE', `UpdateManager: Failed to fetch ${update.category}/${update.id}`);
                         continue;
                     }
 
-                    // Preserve user settings (enabled/disabled state)
                     const localDetector = detectors[update.category]?.[update.id];
-                    if (localDetector && typeof localDetector.enabled === 'boolean') {
-                        remoteDetector.enabled = localDetector.enabled;
-                    }
-                    if (localDetector && localDetector.difficulty !== undefined) {
-                        remoteDetector.difficulty = localDetector.difficulty;
+                    const current = this.describeUpdate(update.category, update.id, incoming, localDetector, update.source);
+                    if (!current) continue; // no longer an update: drop it
+
+                    if (current.userModified && !overwriteModified) {
+                        keepPending.push(current);
+                        continue;
                     }
 
-                    // Ensure category exists
-                    if (!detectors[update.category]) {
-                        detectors[update.category] = {};
-                    }
-
-                    // Update detector
-                    detectors[update.category][update.id] = remoteDetector;
+                    this.installDetector(detectors, update.category, update.id, incoming);
+                    if (current.isNew) installedNew.push(update.id);
                     updatedCount++;
-
-                    Logger.storage(`UpdateManager: Updated ${update.id} to v${update.remoteVersion}`);
+                    Logger.storage(`UpdateManager: Updated ${update.id} to v${current.remoteVersion}`);
 
                 } catch (error) {
+                    keepPending.push(update);
                     Logger.error('STORAGE', `UpdateManager: Failed to update ${update.id}`, error);
                 }
             }
 
-            // Save updated detectors (preserve storage structure, stringify for consistency)
-            // Recalculate totalCount
-            let totalCount = 0;
-            for (const category of Object.values(detectors)) {
-                totalCount += Object.keys(category).length;
+            if (updatedCount > 0) {
+                await this.saveStoredDetectors(detectors);
+                await this.rememberOfficialIds(installedNew);
             }
 
-            await StorageManager.saveToStorage('scrapfly_detectors', {
-                detectors,
-                totalCount
-            }, { wrapMetadata: true });
+            const remaining = [...untouched, ...keepPending];
+            await this.setPendingUpdates(remaining);
 
-            // Clear pending updates
-            await chrome.storage.local.remove(this.STORAGE_KEYS.PENDING_UPDATES);
+            if (updatedCount > 0) {
+                await this.notifyDetectorsChanged();
+            }
 
-            Logger.storage(`UpdateManager: Applied ${updatedCount} updates, ${failedCount} failed`);
-            return { success: true, count: updatedCount, failed: failedCount, error: null };
+            Logger.storage(`UpdateManager: Applied ${updatedCount} updates, ${failedCount} failed, ${remaining.length} pending`);
+            return {
+                success: true,
+                count: updatedCount,
+                failed: failedCount,
+                needsDecision: remaining.filter(u => u.userModified),
+                error: null
+            };
 
         } catch (error) {
             Logger.error('STORAGE', 'UpdateManager: Error applying updates', error);
-            return { success: false, count: 0, error: error.message };
+            return { success: false, count: 0, failed: 0, needsDecision: [], error: error.message };
         }
+    }
+
+    /**
+     * "Keep my edits": stop offering these pending versions for the user's
+     * edited detectors. A later, newer official version is offered again.
+     * @param {string[]} ids
+     * @returns {Promise<number>} Number of detectors kept
+     */
+    static async keepUserEdits(ids) {
+        if (!Array.isArray(ids) || ids.length === 0) return 0;
+        const pendingUpdates = await this.getPendingUpdates();
+        const detectors = await this.loadStoredDetectors();
+        let kept = 0;
+        for (const update of pendingUpdates) {
+            if (!ids.includes(update.id)) continue;
+            const localDetector = detectors[update.category]?.[update.id];
+            if (!localDetector) continue;
+            localDetector.dismissedVersion = update.remoteVersion;
+            kept++;
+        }
+        if (kept > 0) await this.saveStoredDetectors(detectors);
+        await this.setPendingUpdates(pendingUpdates.filter(u => !ids.includes(u.id)));
+        return kept;
+    }
+
+    /**
+     * Make the running detection use what is now in storage. In the service
+     * worker this reloads its DetectorManager directly (a worker cannot
+     * message itself); elsewhere it asks the worker to reload.
+     */
+    static async notifyDetectorsChanged() {
+        try {
+            const inWorker = typeof window === 'undefined';
+            // eslint-disable-next-line no-undef
+            if (inWorker && typeof detectorManager !== 'undefined' && detectorManager) {
+                if (typeof DetectionEngineManager !== 'undefined' && DetectionEngineManager.patternCache) {
+                    DetectionEngineManager.patternCache.clear();
+                }
+                // eslint-disable-next-line no-undef
+                detectorManager.initialized = false;
+                // eslint-disable-next-line no-undef
+                await detectorManager.initialize();
+                return;
+            }
+            if (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.sendMessage === 'function') {
+                chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, () => {
+                    void chrome.runtime.lastError;
+                });
+            }
+        } catch (error) {
+            Logger.warn('STORAGE', 'UpdateManager: Could not reload detectors after update', error);
+        }
+    }
+
+    /**
+     * Automatic update: check, then install everything the user did not edit.
+     * Edited detectors stay pending for the Rules tab to ask about.
+     */
+    static async runAutoUpdate() {
+        const result = await this.checkForUpdates(false);
+        if (result.available) {
+            const applied = await this.applyUpdates();
+            Logger.background(`Auto-update: installed ${applied.count}, ${applied.needsDecision.length} edited rules waiting for a decision`);
+        }
+        return result;
+    }
+
+    /**
+     * After the extension itself is installed or updated: bring the detectors
+     * bundled with this build into storage. Storage is only seeded from the
+     * bundle on first install, so without this an extension update never
+     * delivers new or improved shipped detectors.
+     *
+     * Missing detectors are added (unless the user deleted them), newer ones
+     * replace unedited copies, and newer versions of edited copies are queued
+     * as pending updates so the user decides.
+     * @returns {Promise<{installed: number, pending: number}>}
+     */
+    static async mergeBundledDetectors() {
+        let index;
+        try {
+            const response = await fetch(chrome.runtime.getURL('detectors/index.json'));
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            index = await response.json();
+        } catch (error) {
+            Logger.warn('STORAGE', 'UpdateManager: Could not read the bundled detector index', error);
+            return { installed: 0, pending: 0 };
+        }
+
+        const detectors = await this.loadStoredDetectors();
+        if (Object.keys(detectors).length === 0) return { installed: 0, pending: 0 }; // first install seeds itself
+        const deletedOfficial = await this.getDeletedOfficialIds();
+        const queued = [];
+        let installed = 0;
+
+        for (const [category, categoryData] of Object.entries(index)) {
+            if (!categoryData || !Array.isArray(categoryData.detectors)) continue;
+            for (const detectorId of categoryData.detectors) {
+                const localDetector = detectors[category]?.[detectorId];
+                if (deletedOfficial.has(detectorId) && !localDetector) continue;
+                const bundled = await this.fetchBundledDetector(category, detectorId);
+                if (!bundled) continue;
+                const update = this.describeUpdate(category, detectorId, bundled, localDetector, 'bundled');
+                if (!update) continue;
+                if (update.userModified) {
+                    queued.push(update);
+                    continue;
+                }
+                this.installDetector(detectors, category, detectorId, bundled);
+                installed++;
+            }
+        }
+
+        if (installed > 0) await this.saveStoredDetectors(detectors);
+        if (queued.length > 0) {
+            await this.setPendingUpdates(this.mergeUpdateLists(await this.getPendingUpdates(), queued));
+        }
+        Logger.storage(`UpdateManager: Bundled detectors merged: ${installed} installed, ${queued.length} edited rules pending`);
+        return { installed, pending: queued.length };
     }
 
     /**
@@ -461,7 +712,7 @@ class UpdateManager {
                 Logger.background('Auto-update enabled, checking for detector updates...');
                 setTimeout(async () => {
                     try {
-                        await this.checkForUpdates(false);
+                        await this.runAutoUpdate();
                         Logger.background('Update check completed');
                     } catch (error) {
                         Logger.warn('BACKGROUND', 'Failed to check for updates:', error);
@@ -472,7 +723,8 @@ class UpdateManager {
             } else {
                 Logger.background('Auto-update disabled, skipping update check');
                 chrome.alarms.clear(this.ALARM_NAME);
-                await this.clearPendingUpdates();
+                // Edited rules waiting for a decision after an extension update stay
+                await this.setPendingUpdates((await this.getPendingUpdates()).filter(u => u.source === 'bundled'));
             }
         } catch (error) {
             Logger.warn('BACKGROUND', 'Failed to schedule update check:', error);
@@ -500,7 +752,7 @@ class UpdateManager {
                 try {
                     const settings = await Utils.getSettings();
                     if (settings.updates?.autoUpdate) {
-                        await this.checkForUpdates(false);
+                        await this.runAutoUpdate();
                         Logger.background('Periodic update check completed');
                     }
                 } catch (error) {

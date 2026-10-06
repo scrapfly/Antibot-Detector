@@ -1,0 +1,205 @@
+{
+  "id": "detect-yundun",
+  "name": "Yundun Cloud WAF",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-06",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.yundun.com/",
+  "icon": "yundun_official.png",
+  "description": "Yundun cloud WAF (Shanghai Yundun, sharing its edge with Baishan Cloud): bot-check cookies, Server: WAF and a first-party captcha script; common on Chinese sites such as CSDN",
+  "detection": {
+    "header": [
+      {
+        "id": "yundun-server-header",
+        "name": "^server$",
+        "nameRegex": true,
+        "value": "^YUNDUN",
+        "valueRegex": true,
+        "confidence": 70,
+        "description": "Server header carrying the Yundun edge signature (legacy edges)",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "yundun-cache-header",
+        "name": "^x-cache$",
+        "nameRegex": true,
+        "value": "^YUNDUN",
+        "valueRegex": true,
+        "confidence": 55,
+        "description": "Cache header carrying the Yundun edge signature (legacy edges)",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "server-waf-header",
+        "name": "^server$",
+        "nameRegex": true,
+        "value": "^WAF$",
+        "valueRegex": true,
+        "confidence": 35,
+        "standalone": false,
+        "description": "Server: WAF sent by the current Yundun edge",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "x-cache-bypass-header",
+        "name": "^x-cache$",
+        "nameRegex": true,
+        "value": "^BYPASS$",
+        "valueRegex": true,
+        "confidence": 25,
+        "standalone": false,
+        "description": "X-Cache: BYPASS on dynamic responses through the Yundun edge (shared with other CDNs)",
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
+    "cookie": [
+      {
+        "id": "yundun-cookie",
+        "name": "^yd_cookie$",
+        "nameRegex": true,
+        "confidence": 50,
+        "description": "Yundun session cookie",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "bc-bot-cookie",
+        "name": "^bc_bot_(?:session|token|rules|score|fp)$",
+        "nameRegex": true,
+        "confidence": 60,
+        "description": "Yundun bot-check cookie family (bc_bot_session, _token, _rules, _score, _fp)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "waf-captcha-marker-cookie",
+        "name": "^waf_captcha_marker$",
+        "nameRegex": true,
+        "confidence": 60,
+        "description": "Yundun WAF captcha marker cookie",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "https-waf-cookie",
+        "name": "^https_waf_cookie$",
+        "nameRegex": true,
+        "confidence": 40,
+        "standalone": false,
+        "description": "Yundun WAF session cookie",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "url": [
+      {
+        "id": "yundun-static-resource",
+        "confidence": 50,
+        "description": "Challenge or fingerprint helper resource on the vendor www.yundun.com host",
+        "text": "^https://www\\.yundun\\.com/(?:static/js/|yd[-_]http[-_]error)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "bs-captcha-script",
+        "confidence": 75,
+        "description": "First-party Yundun WAF captcha script (cdn_cgi_bs_captcha)",
+        "text": "^https?://[^/?#]+/cdn_cgi_bs_captcha/static/js/waf_captcha_embedded_bs_v[0-9.]+\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "yundun-response-signature",
+      "name": "Server and cache headers both carrying the edge signature",
+      "confidence": 85,
+      "when": {
+        "all": [
+          { "pattern": "yundun-server-header" },
+          { "pattern": "yundun-cache-header" }
+        ]
+      }
+    },
+    {
+      "id": "yundun-session-cookie",
+      "name": "Session cookie with a Yundun response header",
+      "confidence": 80,
+      "when": {
+        "all": [
+          { "pattern": "yundun-cookie" },
+          {
+            "any": [
+              { "pattern": "yundun-server-header" },
+              { "pattern": "yundun-cache-header" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "yundun-complete-profile",
+      "name": "Both response headers plus the session cookie",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "yundun-server-header" },
+          { "pattern": "yundun-cache-header" },
+          { "pattern": "yundun-cookie" }
+        ]
+      }
+    },
+    {
+      "id": "yundun-waf-edge",
+      "name": "Server: WAF and X-Cache: BYPASS with the WAF session cookie",
+      "confidence": 80,
+      "when": {
+        "all": [
+          { "pattern": "server-waf-header" },
+          { "pattern": "x-cache-bypass-header" },
+          { "pattern": "https-waf-cookie" }
+        ]
+      }
+    },
+    {
+      "id": "yundun-captcha-session",
+      "name": "First-party captcha script with a Yundun cookie",
+      "confidence": 90,
+      "when": {
+        "all": [
+          { "pattern": "bs-captcha-script" },
+          {
+            "any": [
+              { "pattern": "bc-bot-cookie" },
+              { "pattern": "waf-captcha-marker-cookie" },
+              { "pattern": "https-waf-cookie" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "yundun-bot-check-profile",
+      "name": "Bot-check and captcha-marker cookies behind the WAF edge",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "bc-bot-cookie" },
+          { "pattern": "waf-captcha-marker-cookie" },
+          { "pattern": "server-waf-header" }
+        ]
+      }
+    }
+  ]
+}

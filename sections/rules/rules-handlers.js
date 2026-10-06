@@ -135,20 +135,26 @@ Rules.prototype.handleCheckUpdates = async function() {
     try {
       const result = await UpdateManager.applyUpdates();
 
-      if (result.success && result.count > 0) {
-        this.updateUpdatesBadge(0);
+      if (!result.success) {
+        if (typeof NotificationHelper !== 'undefined') {
+          NotificationHelper.error(_tr('errorApplyingUpdates', 'Error applying updates'));
+        }
+      } else if (result.count > 0) {
+        await this.reloadDetectorsFromStorage();
         if (typeof NotificationHelper !== 'undefined') {
           NotificationHelper.success(_fmt('detectorsUpdatedFmt', `${result.count} detectors updated`, result.count));
         }
-        await this.displayRules();
-      } else if (result.failed > 0 && result.count === 0) {
-        this.updateUpdatesBadge(0);
+      } else if (result.failed > 0) {
         if (typeof NotificationHelper !== 'undefined') {
           NotificationHelper.warning(_tr('couldNotFetchUpdates', 'Could not fetch updates from server'));
         }
-      } else {
-        this.updateUpdatesBadge(0);
       }
+
+      // Rules the user edited are never replaced without asking
+      if (result.success && result.needsDecision.length > 0) {
+        await this.resolveEditedRuleUpdates(result.needsDecision);
+      }
+      this.updateUpdatesBadge(await UpdateManager.getPendingUpdatesCount());
     } catch (error) {
       Logger.error('UI', 'Error applying updates', error);
       if (typeof NotificationHelper !== 'undefined') {
@@ -186,6 +192,103 @@ Rules.prototype.handleCheckUpdates = async function() {
     } finally {
       btn.classList.remove('checking');
     }
+  }
+};
+
+/**
+ * Re-read every detector from storage into this popup's manager and redraw.
+ * Needed after anything else wrote storage (an update): the manager saves its
+ * whole in-memory set, so a stale copy would undo that write on the next edit.
+ */
+Rules.prototype.reloadDetectorsFromStorage = async function() {
+  if (this.detectorManager) {
+    this.detectorManager.initialized = false;
+    await this.detectorManager.initialize();
+  }
+  await this.displayRules();
+};
+
+/**
+ * Ask, one rule at a time, what to do with an official update for a rule the
+ * user edited: keep their edits (that version is not offered again), take the
+ * new version (their edits are replaced), or decide later (stays pending).
+ * @param {Array<{id: string, name: string, remoteVersion: string}>} updates
+ */
+Rules.prototype.resolveEditedRuleUpdates = async function(updates) {
+  const t = (typeof I18n !== 'undefined') ? I18n : null;
+  const _tr = (key, fallback) => (t && t.get(key)) || fallback;
+  const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
+
+  const keep = [];
+  const replace = [];
+  for (const update of updates) {
+    // Dialog text is set as textContent: plain strings, no escaping
+    const name = update.name || update.id;
+    const version = update.remoteVersion;
+    const choice = await NotificationHelper.choose({
+      title: _tr('editedRuleUpdateTitle', 'Update for a rule you edited'),
+      message: _fmt('editedRuleUpdateMessageFmt',
+        `"${name}" has a new official version (${version}). You edited this rule: the new version replaces your changes.`,
+        name, version),
+      cancelText: _tr('btnDecideLater', 'Decide later'),
+      tone: 'warning',
+      actions: [
+        { value: 'keep', text: _tr('btnKeepMyEdits', 'Keep my edits') },
+        { value: 'replace', text: _tr('btnUseNewVersion', 'Use new version'), tone: 'warning', primary: true }
+      ],
+      defaultValue: 'keep'
+    });
+    if (choice === 'keep') keep.push(update.id);
+    else if (choice === 'replace') replace.push(update.id);
+  }
+
+  if (keep.length > 0) {
+    await UpdateManager.keepUserEdits(keep);
+  }
+  if (replace.length > 0) {
+    const result = await UpdateManager.applyUpdates({ ids: replace, overwriteModified: true });
+    if (result.success && result.count > 0) {
+      NotificationHelper.success(_fmt('detectorsUpdatedFmt', `${result.count} detectors updated`, result.count));
+    } else if (!result.success || result.failed > 0) {
+      NotificationHelper.warning(_tr('couldNotFetchUpdates', 'Could not fetch updates from server'));
+    }
+  }
+  if (keep.length > 0 || replace.length > 0) {
+    await this.reloadDetectorsFromStorage();
+  }
+};
+
+/**
+ * Discard the user's edits to an official rule and restore the official copy
+ */
+Rules.prototype.handleResetToOfficial = async function(category, detectorName, displayName) {
+  const t = (typeof I18n !== 'undefined') ? I18n : null;
+  const _tr = (key, fallback) => (t && t.get(key)) || fallback;
+  const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
+
+  const current = this.detectorManager.getDetector(category, detectorName);
+  const restored = DetectorManager.officialVersionOf(current);
+  if (!restored) return;
+
+  const name = displayName || detectorName;
+  const confirmed = await NotificationHelper.confirm({
+    title: _tr('resetToOfficialTitle', 'Reset to the official version'),
+    message: _fmt('resetToOfficialMessageFmt', `Discard your edits to "${name}" and restore the official Scrapfly version?`, name),
+    confirmText: _tr('resetToOfficial', 'Reset to official'),
+    cancelText: _tr('btnCancel', 'Cancel'),
+    tone: 'warning'
+  });
+  if (!confirmed) return;
+
+  try {
+    this.detectorManager.detectors[category][detectorName] = restored;
+    await this.detectorManager.saveDetectorsToStorage();
+    chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, () => { void chrome.runtime.lastError; });
+    NotificationHelper.success(_tr('ruleResetToOfficial', 'Rule restored to the official version'));
+    await this.displayRules();
+  } catch (error) {
+    Logger.error('UI', 'Failed to reset detector to official:', error);
+    NotificationHelper.error(_tr('errorApplyingUpdates', 'Error applying updates'));
   }
 };
 

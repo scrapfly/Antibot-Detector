@@ -7,6 +7,7 @@
   "difficulty": "Low",
   "lastUpdated": "2026-10-03",
   "version": "1.2.0",
+  "minExtensionVersion": "2.8",
   "website": "https://en.wikipedia.org/wiki/Canvas_fingerprinting",
   "icon": "canvas_fingerprint.png",
   "description": "Canvas text, geometry and readback API profiles; fingerprinting intent is not confirmed by API calls alone",

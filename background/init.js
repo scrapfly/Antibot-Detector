@@ -90,6 +90,14 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
     if (details.reason === 'install' || details.reason === 'update') {
         await initialize(details.reason, details.previousVersion);
+        // Storage is only seeded from the bundled detectors on first install:
+        // bring this build's new and updated detectors to existing installs
+        try {
+            const merged = await UpdateManager.mergeBundledDetectors();
+            if (merged.installed > 0) await UpdateManager.notifyDetectorsChanged();
+        } catch (error) {
+            Logger.warn('BACKGROUND', '[init] Could not merge bundled detectors:', error);
+        }
         // Check for detector updates after installation/update
         UpdateManager.scheduleCheck();
     }

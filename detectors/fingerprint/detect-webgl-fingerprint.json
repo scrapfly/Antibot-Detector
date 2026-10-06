@@ -7,6 +7,7 @@
   "difficulty": "Low",
   "lastUpdated": "2026-10-03",
   "version": "1.2.0",
+  "minExtensionVersion": "2.8",
   "website": "https://en.wikipedia.org/wiki/WebGL",
   "icon": "webgl_fingerprint.png",
   "description": "WebGL capability queries and pixel readback, also used by graphics applications",

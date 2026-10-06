@@ -3586,6 +3586,14 @@
   "iconPickerFileTooLarge": {
     "message": "Icon file size must be less than 100KB"
   },
+  "iconPickerNoResults": {
+    "message": "No icons match your search",
+    "description": "Icon picker: shown when the search box matches no icon"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "Search icons…",
+    "description": "Icon picker: search box placeholder"
+  },
   "rulesUiHelpJsHooks": {
     "message": "What are JS hooks?"
   },
@@ -4213,5 +4221,50 @@
   },
   "settingsRowVerboseLogsTip": {
     "message": "Also log every rule, hook and message, not just one report per page"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "Update for a rule you edited"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "\"{0}\" has a new official version ({1}). You edited this rule: the new version replaces your changes."
+  },
+  "btnDecideLater": {
+    "message": "Decide later"
+  },
+  "btnKeepMyEdits": {
+    "message": "Keep my edits"
+  },
+  "btnUseNewVersion": {
+    "message": "Use new version"
+  },
+  "resetToOfficial": {
+    "message": "Reset to official"
+  },
+  "resetToOfficialTitle": {
+    "message": "Reset to the official version"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "Discard your edits to \"{0}\" and restore the official Scrapfly version?"
+  },
+  "ruleResetToOfficial": {
+    "message": "Rule restored to the official version"
+  },
+  "ruleEditedTag": {
+    "message": "Edited"
+  },
+  "tipRuleEdited": {
+    "message": "You edited this official rule. Updates ask before replacing your changes."
+  },
+  "settingsGroupDetectionsList": {
+    "message": "Detections list"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "Category order"
+  },
+  "settingsCategoryOrderLabel": {
+    "message": "Show first"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "Order of the categories in the Detection list. Within a category, the highest confidence comes first."
   }
 }

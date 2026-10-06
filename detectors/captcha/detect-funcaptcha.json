@@ -7,6 +7,7 @@
   "difficulty": "High",
   "lastUpdated": "2026-10-04",
   "version": "1.2.0",
+  "minExtensionVersion": "2.8",
   "website": "https://www.arkoselabs.com/",
   "icon": "funcaptcha_official.png",
   "description": "Interactive game-based CAPTCHA by Arkose Labs",

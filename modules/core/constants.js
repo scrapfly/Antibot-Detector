@@ -40,7 +40,7 @@ const Constants = Object.freeze({
     // ─── Performance Limits ────────────────────────────────────────────────────
     COOKIE_VALUE_MAX_LENGTH: 100,          // cookie value substring limit
     MAX_PAYLOADS_PER_TAB: 50,              // payload capture limit
-    MAX_NETWORK_URLS_PER_TAB: 200,         // network URL capture limit
+    MAX_NETWORK_URLS_PER_TAB: 1000,        // network URL capture limit (unique URLs; low-value types dropped first)
 
     // ─── Tab Management ────────────────────────────────────────────────────────
     RECENTLY_CLEARED_TAB_TIMEOUT: 10000,   // 10 sec (standardized)

@@ -571,7 +571,8 @@
   /* Filled pages scroll by their last card: reserve the scrollbar so cards keep
      one width (and height) whether or not the page scrolls */
   scrollbar-gutter: stable;
-  padding: 10px 8px 8px;
+  /* No side inset: cards line up with the summary block and search box */
+  padding: 10px 0 8px;
   margin-bottom: 0;
   flex: 1 1 auto;
   min-height: 0;
@@ -1460,10 +1461,16 @@
   display: none;
 }
 
+/* Bare states render the logo at the Detection tab's size everywhere (2.8) */
 .state-card--bare .state-card-icon {
-  width: 64px;
-  height: 64px;
-  margin-bottom: 11px;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 20px;
+}
+
+.state-card--bare .state-card-logo {
+  width: 72px;
+  height: 72px;
 }
 
 .state-card--orange.state-card--bare .state-card-logo {
@@ -1627,16 +1634,6 @@
 /* Roomier Detection states, without changing Advanced cards or the scan screen. */
 #detectionTab .state-card {
   max-width: 360px;
-}
-
-#detectionTab .state-card--bare .state-card-icon,
-#detectionTab .state-card--bare .state-card-logo {
-  width: 72px;
-  height: 72px;
-}
-
-#detectionTab .state-card--bare .state-card-icon {
-  margin-bottom: 20px;
 }
 
 #detectionTab .state-card .state-card-title {

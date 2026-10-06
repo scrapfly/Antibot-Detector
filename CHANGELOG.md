@@ -5,7 +5,33 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
-## [Unreleased]
+## [2.8.1] - 2026-10-06
+
+### Added
+
+- Seven CAPTCHA detectors: NetEase Yidun, Aliyun, Yandex SmartCaptcha, Dingxiang, Capy, Shumei and MTCaptcha, each with its official vendor logo.
+- Nine anti-bot detectors: Anubis, Alibaba Cloud WAF, Jiasule, Ruishu, FingerprintJS, Netacea, Azure Front Door, Yundun and Radware, each with its official vendor logo.
+- FingerprintJS also recognises sites that bundle the library themselves or report to Fingerprint's API, as fingerprint.com does.
+- Rules → Choose Icon: a search box filters the icons as you type.
+- Settings → Detection → Category order: choose which categories the Detection list shows first (for example captchas before anti-bots).
+
+### Changed
+
+- Detection: the results list shows two detections per page, with cards as wide as the summary above them.
+- Rules you edited are no longer overwritten by updates: Update asks per rule (keep your edits or use the new version), and edited rules are marked with a reset option.
+- Automatic updates now install new detector versions themselves, and turning them on or changing the interval takes effect immediately.
+
+### Fixed
+
+- Rules based on response headers, request headers or Set-Cookie never matched on real pages (for example Cloudflare's server header or Sucuri's headers); they now work.
+- On busy pages, scripts loaded early (where most protection SDKs load) could be dropped before detection ran, so their URL rules missed.
+- Only the first payload rule of a detector could match a request (Akamai has three); every payload rule now counts.
+- Saving a rule in the editor dropped options it does not show (rule descriptions, hook options) and broke selectors containing quotes.
+- Detector updates now take effect right away instead of after a browser restart, and editing a rule just after updating no longer undoes the update.
+- Updating the extension now delivers its new and improved detectors to existing installs, not only to new ones.
+- A failed update check is reported as an error instead of "All detectors are up to date".
+- DataDome's response header could be reported as a Shape Security detection on installations upgraded from very old versions.
+- The Settings webhook test now sends detections in exactly the format of real triggered events, so it reliably validates integrations.
 
 ## [2.8] - 2026-10-05
 
@@ -158,7 +184,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
-[Unreleased]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8...HEAD
+[2.8.1]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8...v2.8.1
 [2.8]: https://github.com/scrapfly/Antibot-Detector/compare/v2.7...v2.8
 [2.7]: https://github.com/scrapfly/Antibot-Detector/compare/v2.6...v2.7
 [2.6]: https://github.com/scrapfly/Antibot-Detector/compare/v2.5...v2.6

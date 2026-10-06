@@ -1084,8 +1084,8 @@ class DetectionEngineManager {
                         // Mark this pattern as matched to prevent duplicates
                         // Use same key as check above (description or text)
                         matchedPatterns.add(patternKey);
-
-                        break; // Found match, no need to check this pattern again
+                        // No break: it left the loop over *all* payload rules, so
+                        // only the first rule could ever match a given request
                     }
                 }
             }
@@ -1276,7 +1276,7 @@ class DetectionEngineManager {
         }
 
         const detections = [];
-        const { url = '', content = [], dom = [], cookies = [], headers = {}, pageHTML = '', externalContent = [], jsHooks = [], payload, payloads, networkUrls = [], allCookies = [], responseCookies = [] } = pageData;
+        const { url = '', content = [], dom = [], cookies = [], headers = {}, requestHeaders = {}, pageHTML = '', externalContent = [], jsHooks = [], payload, payloads, networkUrls = [], allCookies = [], responseCookies = [] } = pageData;
 
         const cookiesToMatch = allCookies.length > 0 ? allCookies : cookies;
 
@@ -1305,7 +1305,8 @@ class DetectionEngineManager {
         const EARLY_EXIT_COUNT = 3;
 
         for (const { category, detectorName, detector } of detectorPriorities) {
-            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, pageHTML, externalContent, payload, payloads, networkUrls, allCookies, responseCookies });
+            // requestHeaders: request-scope header rules read them (they were dropped here before)
+            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, requestHeaders, pageHTML, externalContent, payload, payloads, networkUrls, allCookies, responseCookies });
             if (detection.detected || detection.partial) {
                 const detectionObj = {
                     ...detection,

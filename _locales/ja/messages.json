@@ -3367,6 +3367,12 @@
   "iconPickerFileTooLarge": {
     "message": "アイコンファイルは 100 KB 未満にしてください"
   },
+  "iconPickerNoResults": {
+    "message": "一致するアイコンがありません"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "アイコンを検索…"
+  },
   "rulesUiHelpJsHooks": {
     "message": "JS フックとは?"
   },
@@ -3918,5 +3924,50 @@
   },
   "settingsRowVerboseLogsTip": {
     "message": "ページごとのレポートに加えて、ルール・フック・メッセージもすべて記録します"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "編集したルールの更新"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "「{0}」に新しい公式バージョン（{1}）があります。このルールは編集済みのため、新しいバージョンにすると変更内容は置き換えられます。"
+  },
+  "btnDecideLater": {
+    "message": "後で決める"
+  },
+  "btnKeepMyEdits": {
+    "message": "自分の変更を保持"
+  },
+  "btnUseNewVersion": {
+    "message": "新しいバージョンを使う"
+  },
+  "resetToOfficial": {
+    "message": "公式版に戻す"
+  },
+  "resetToOfficialTitle": {
+    "message": "公式バージョンに戻す"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "「{0}」への変更を破棄して、Scrapfly の公式バージョンに戻しますか？"
+  },
+  "ruleResetToOfficial": {
+    "message": "ルールを公式バージョンに戻しました"
+  },
+  "ruleEditedTag": {
+    "message": "編集済み"
+  },
+  "tipRuleEdited": {
+    "message": "この公式ルールは編集済みです。更新で変更を置き換える前に確認します。"
+  },
+  "settingsGroupDetectionsList": {
+    "message": "検出リスト"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "カテゴリの順序"
+  },
+  "settingsCategoryOrderLabel": {
+    "message": "先に表示"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "検出リストでのカテゴリの並び順。同じカテゴリ内では信頼度の高いものが先に表示されます。"
   }
 }

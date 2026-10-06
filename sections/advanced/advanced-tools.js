@@ -170,7 +170,7 @@ Advanced.prototype.renderNoToolsState = function(tr) {
           <div class="advanced-no-tools" id="advancedNoTools">
             <div class="state-card state-card--bare advanced-no-tools-card">
               <div class="state-card-icon">
-                <img src="icons/icon48.png" alt="" width="64" height="64" class="state-card-logo">
+                <img src="icons/icon48.png" alt="" width="72" height="72" class="state-card-logo">
               </div>
               <h3 class="state-card-title">${esc(tr('advancedToolsEmptyTitle', 'No tools available'))}</h3>
               <p class="state-card-description">${esc(tr('advancedToolsEmptyDesc', 'No supported protection was found on this page. Tools appear here automatically when one is detected.'))}</p>

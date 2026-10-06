@@ -90,5 +90,62 @@
     "turnstile-response-field": { "dom": { "tagName": "input", "attributes": { "type": "hidden", "name": "cf-turnstile-response" } } },
     "turnstile-runtime-render": { "runtimeType": "function" },
     "turnstile-runtime-execute": { "runtimeType": "function" }
+  },
+  "detect-yidun": {
+    "yidun-sdk-resource": { "url": "https://cstaticdun.126.net/load.min.js" },
+    "yidun-init-reference": { "source": "initNECaptcha({ captchaId: 'afd2c6af233e4d2685g90f38e56c11ff', element: '#captcha' });" },
+    "yidun-widget": { "dom": { "tagName": "div", "class": "yidun_intellisense yidun_intellisense--light", "attributes": { "class": "yidun_intellisense yidun_intellisense--light" } } },
+    "yidun-init-api": { "runtimeType": "function" },
+    "yidun-core-resource": { "url": "https://cstaticdun.126.net/2.28.5/core-optimi.m25b40.v2.28.5.min.js?v=2985490" },
+    "yidun-captcha-api": { "url": "https://c.dun.163.com/api/v2/getconf?referer=https%3A%2F%2Fdun.163.com%2Ftrial%2Fsense&id=74b1d03fcaf944b4aa3a862b2a1893e1" }
+  },
+  "detect-aliyun": {
+    "aliyun-sdk-resource": { "url": "https://o.alicdn.com/captcha-frontend/aliyunCaptcha/AliyunCaptcha.js" },
+    "aliyun-legacy-nc-resource": { "url": "https://g.alicdn.com/sd/ncpc/aliyun-captcha/0.1.4/index.js" },
+    "aliyun-init-reference": { "source": "initAliyunCaptcha({ SceneId: '1x00000000000000000000', mode: 'popup', captchaVerifyCallback: verify });" },
+    "aliyun-widget-element": { "dom": { "tagName": "div", "id": "aliyunCaptcha-window-popup", "attributes": { "id": "aliyunCaptcha-window-popup" } } },
+    "aliyun-init-api": { "runtimeType": "function" },
+    "aliyun-dynamic-resource": { "url": "https://g.alicdn.com/captcha-frontend/dynamicJS/3.29.0/sg.1.8f2a1c.js" },
+    "aliyun-captcha-api": { "url": "https://yv82ry.captcha-open.aliyuncs.com/" }
+  },
+  "detect-smartcaptcha": {
+    "smartcaptcha-sdk-resource": { "url": "https://smartcaptcha.yandexcloud.net/captcha.js" },
+    "smartcaptcha-script-reference": { "source": "smartCaptcha.render('#container', { sitekey: 'ysc1_sample0000000000000000000000000000000000000' });" },
+    "smartcaptcha-configured-widget": { "dom": { "tagName": "div", "class": "smart-captcha", "attributes": { "class": "smart-captcha", "data-sitekey": "ysc1_sample" } } },
+    "smartcaptcha-runtime": { "runtimeType": "function" },
+    "smartcaptcha-check-endpoint": { "url": "https://smartcaptcha.yandexcloud.net/check?host=example.com&sitekey=ysc1_example" }
+  },
+  "detect-dingxiang": {
+    "dingxiang-sdk-resource": { "url": "https://cdn.dingxiang-inc.com/ctu-group/captcha-ui/v5/index.js" },
+    "dingxiang-constructor-reference": { "source": "const captcha = new _dx.Captcha('#captcha-box', { appId: '17842e30be0c8a2f34cdd05b8f9f104e' });" },
+    "dingxiang-widget": { "dom": { "tagName": "div", "class": "dx_captcha dx_captcha_oneclick", "attributes": { "class": "dx_captcha dx_captcha_oneclick" } } },
+    "dingxiang-constructor": { "runtimeType": "function" },
+    "dingxiang-engine-resource": { "url": "https://cdn.dingxiang-inc.com/ctu-group/captcha-js/5.1.53/oneclick-Captcha-js.js" },
+    "dingxiang-captcha-api": { "url": "https://cap.dingxiang-inc.com/api/a?w=380&ak=example&jsv=5.1.53" }
+  },
+  "detect-capy": {
+    "capy-sdk-resource": { "url": "https://jp.api.capy.me/puzzle/get_js/?k=PUZZLE_Example0123456789" },
+    "capy-parameter-reference": { "source": "const fields = { capy_challengekey: challengeKey, capy_answer: answer };" },
+    "capy-wrapper": { "dom": { "tagName": "div", "id": "capy-wrapper", "attributes": { "id": "capy-wrapper" } } },
+    "capy-captcha": { "dom": { "tagName": "div", "id": "capy-captcha", "attributes": { "id": "capy-captcha" } } },
+    "capy-image-resource": { "url": "https://jp.api.capy.me/puzzle/get_image/?captcha_key=PUZZLE_Example&challenge_key=abc123" },
+    "capy-challenge-input": { "dom": { "tagName": "input", "attributes": { "type": "hidden", "name": "capy_challengekey" } } },
+    "capy-runtime": { "runtimeType": "function" }
+  },
+  "detect-shumei": {
+    "shumei-sdk-resource": { "url": "https://castatic.fengkongcloud.cn/pr/v1.0.4/smcp.min.js" },
+    "shumei-init-reference": { "source": "initSMCaptcha({ organization: 'RdIl6VxE', channel: 'DEFAULT', appId: 'default' });" },
+    "shumei-init-api": { "runtimeType": "function" },
+    "shumei-core-resource": { "url": "https://castatic.fengkongcloud.cn/pr/auto-build/v1.0.4-208/captcha-sdk.min.js" },
+    "shumei-captcha-api": { "url": "https://captcha1.fengkongcloud.cn/ca/v1/register?organization=example&appId=default" },
+    "shumei-widget": { "dom": { "tagName": "div", "class": "shumei_captcha shumei_captcha_wrapper", "attributes": { "class": "shumei_captcha shumei_captcha_wrapper" } } }
+  },
+  "detect-mtcaptcha": {
+    "mtcaptcha-sdk-resource": { "url": "https://service.mtcaptcha.com/mtcv1/client/mtcaptcha.min.js" },
+    "mtcaptcha-config-reference": { "source": "var mtcaptchaConfig = { sitekey: 'MTCaptcha-demo-site-key' };" },
+    "mtcaptcha-widget": { "dom": { "tagName": "div", "class": "mtcaptcha", "attributes": { "class": "mtcaptcha" } } },
+    "mtcaptcha-config": { "runtimeType": "object" },
+    "mtcaptcha-render-api": { "runtimeType": "function" },
+    "mtcaptcha-challenge-api": { "url": "https://service.mtcaptcha.com/mtcv1/api/getchallenge.json?sk=MTPublic-example&bd=example.com" }
   }
 }

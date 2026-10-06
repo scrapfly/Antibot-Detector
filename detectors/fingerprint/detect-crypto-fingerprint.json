@@ -7,6 +7,7 @@
   "difficulty": "Low",
   "lastUpdated": "2026-10-03",
   "version": "1.2.0",
+  "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API",
   "icon": "crypto_fingerprint.png",
   "description": "Web Crypto API references and random-value or digest calls; fingerprinting inputs and intent are unconfirmed",

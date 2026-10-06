@@ -1,0 +1,111 @@
+{
+  "id": "detect-azurefrontdoor",
+  "name": "Azure Front Door",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Low",
+  "lastUpdated": "2026-10-06",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://azure.microsoft.com/products/frontdoor",
+  "icon": "azurefrontdoor_official.png",
+  "description": "Microsoft Azure Front Door CDN and WAF edge; the WAF is usually enabled but not guaranteed by the platform alone",
+  "detection": {
+    "header": [
+      {
+        "id": "azure-ref-header",
+        "name": "^x-azure-ref$",
+        "nameRegex": true,
+        "confidence": 55,
+        "description": "Azure Front Door request reference header on every edge response",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "azure-cache-header",
+        "name": "^x-cache$",
+        "nameRegex": true,
+        "value": "^(?:TCP_(?:HIT|MISS|REMOTE_HIT)|CONFIG_NOCACHE|PRIVATE_NOSTORE|UNCACHEABLE)$",
+        "valueRegex": true,
+        "confidence": 35,
+        "standalone": false,
+        "description": "Azure Front Door cache status values in X-Cache (generic HIT/MISS from other CDNs do not count)",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "azure-purgeid-header",
+        "name": "^x-fd-int-roxy-purgeid$",
+        "nameRegex": true,
+        "confidence": 60,
+        "description": "Internal Front Door purge-id header on cached responses",
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
+    "url": [
+      {
+        "id": "azurefd-host-resource",
+        "confidence": 55,
+        "description": "Resource served from an azurefd.net Front Door endpoint host",
+        "text": "^https://[^/?#]+\\.azurefd\\.net(?:[/?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "frontdoor-response-headers",
+      "name": "Front Door reference header with the edge cache header",
+      "confidence": 75,
+      "when": {
+        "all": [
+          { "pattern": "azure-ref-header" },
+          { "pattern": "azure-cache-header" }
+        ]
+      }
+    },
+    {
+      "id": "frontdoor-purge-ref",
+      "name": "Front Door reference with its purge-id header",
+      "confidence": 85,
+      "when": {
+        "all": [
+          { "pattern": "azure-ref-header" },
+          { "pattern": "azure-purgeid-header" }
+        ]
+      }
+    },
+    {
+      "id": "frontdoor-host-session",
+      "name": "Front Door endpoint host with an edge response header",
+      "confidence": 80,
+      "when": {
+        "all": [
+          { "pattern": "azurefd-host-resource" },
+          {
+            "any": [
+              { "pattern": "azure-ref-header" },
+              { "pattern": "azure-cache-header" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "frontdoor-complete-profile",
+      "name": "Front Door reference header, cache header and endpoint host",
+      "confidence": 90,
+      "when": {
+        "all": [
+          { "pattern": "azure-ref-header" },
+          { "pattern": "azure-cache-header" },
+          { "pattern": "azurefd-host-resource" }
+        ]
+      }
+    }
+  ]
+}

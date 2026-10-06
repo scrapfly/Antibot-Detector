@@ -7,6 +7,7 @@
   "difficulty": "Low",
   "lastUpdated": "2026-10-03",
   "version": "1.2.0",
+  "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API",
   "icon": "battery_fingerprint.png",
   "description": "Battery API references, calls and property reads; fingerprinting intent and returned values are unconfirmed",

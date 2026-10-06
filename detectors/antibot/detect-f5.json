@@ -7,6 +7,7 @@
   "difficulty": "Medium",
   "lastUpdated": "2026-10-05",
   "version": "2.0.0",
+  "minExtensionVersion": "2.8",
   "website": "https://www.f5.com/",
   "icon": "f5_official.png",
   "description": "F5 BIG-IP Application Security Manager (ASM) - Web application firewall and bot protection",

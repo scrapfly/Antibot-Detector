@@ -1323,12 +1323,18 @@ DetectionUI.getFilteredResults = function() {
 };
 
 DetectionUI.sortDetectionsByCategory = function(detections) {
+    // Settings → Detection → Category order (default anti-bot, captcha, fingerprint)
+    const order = Array.isArray(this?.categoryOrder) ? this.categoryOrder : ['antibot', 'captcha', 'fingerprint'];
+    const rank = (category) => {
+      const index = order.indexOf(category);
+      return index === -1 ? 999 : index + 1;
+    };
     const categoryPriority = {
-      'antibot': 1,
-      'anti-bot': 1,
-      'captcha': 2,
-      'fingerprint': 3,
-      'fingerprinting': 3
+      'antibot': rank('antibot'),
+      'anti-bot': rank('antibot'),
+      'captcha': rank('captcha'),
+      'fingerprint': rank('fingerprint'),
+      'fingerprinting': rank('fingerprint')
     };
 
     return [...detections].sort((a, b) => {

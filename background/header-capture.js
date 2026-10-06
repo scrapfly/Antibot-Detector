@@ -16,6 +16,27 @@ function safeWebRequestListener(fn) {
     };
 }
 
+// Request types that carry vendor SDKs and challenge/API calls. When a tab's
+// list is full, other entries (images, pings, frames…) are dropped first.
+const NETWORK_URL_KEEP_TYPES = new Set(['main_frame', 'script', 'xmlhttprequest', 'fetch', 'websocket']);
+
+/**
+ * Add one request to a tab's URL list. Repeats of the same URL and method are
+ * stored once (trackers fire the same beacon dozens of times), and at the cap
+ * the oldest low-value entry goes first: security SDKs load early, so a plain
+ * first-in-first-out cap evicted exactly the scripts URL rules look for.
+ * @returns {Array} the same list
+ */
+function recordNetworkUrl(list, entry, cap) {
+    if (list.some(item => item.url === entry.url && item.method === entry.method)) return list;
+    list.push(entry);
+    if (list.length > cap) {
+        const dropAt = list.findIndex(item => !NETWORK_URL_KEEP_TYPES.has(item.type));
+        list.splice(dropAt === -1 ? 0 : dropAt, 1);
+    }
+    return list;
+}
+
 function setupHeaderCapture() {
     // Listen for response headers
     chrome.webRequest.onHeadersReceived.addListener(
@@ -67,7 +88,10 @@ function setupHeaderCapture() {
             }
         }),
         { urls: ["<all_urls>"] },
-        ["responseHeaders"]
+        // Chrome hides Set-Cookie from webRequest unless extraHeaders is
+        // requested: without it the Set-Cookie parsing above never ran and
+        // response-scope cookie rules could not match
+        ["responseHeaders", "extraHeaders"]
     );
 
     // Listen for request headers
@@ -99,7 +123,8 @@ function setupHeaderCapture() {
             }
         }),
         { urls: ["<all_urls>"] },
-        ["requestHeaders"]
+        // extraHeaders exposes the Cookie request header as well
+        ["requestHeaders", "extraHeaders"]
     );
 
     // Listen for request payloads (POST/PUT/PATCH/DELETE bodies)
@@ -187,19 +212,13 @@ function setupHeaderCapture() {
             // websocket/image/ping/main_frame/sub_frame (beacons can be images/pings).
             if (details.type === 'font' || details.type === 'media' || details.type === 'stylesheet') return;
 
-            let networkUrls = networkUrlsStore.get(details.tabId) || [];
-
-            networkUrls.push({
+            const networkUrls = networkUrlsStore.get(details.tabId) || [];
+            recordNetworkUrl(networkUrls, {
                 url: details.url,
                 type: details.type,        // 'main_frame', 'sub_frame', 'script', 'xhr', 'fetch', etc.
                 method: details.method,     // 'GET', 'POST', etc.
                 timestamp: Date.now()
-            });
-
-            if (networkUrls.length > Constants.MAX_NETWORK_URLS_PER_TAB) {
-                networkUrls.shift();
-            }
-
+            }, Constants.MAX_NETWORK_URLS_PER_TAB);
             networkUrlsStore.set(details.tabId, networkUrls);
         }),
         { urls: ["<all_urls>"] }

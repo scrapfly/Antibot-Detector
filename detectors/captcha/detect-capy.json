@@ -1,0 +1,138 @@
+{
+  "id": "detect-capy",
+  "name": "Capy Puzzle Captcha",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-06",
+  "version": "1.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://corp.capy.me/",
+  "icon": "capy_official.png",
+  "description": "Capy's sliding puzzle captcha deployed on Japanese e-commerce and login pages",
+  "detection": {
+    "url": [
+      {
+        "id": "capy-sdk-resource",
+        "confidence": 60,
+        "description": "Capy puzzle widget loader on the Japanese API host",
+        "text": "^https://(?:jp\\.api|www)\\.capy\\.me/puzzle/get_js/\\?k=PUZZLE_",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": true,
+        "textScope": "all",
+        "standalone": true
+      },
+      {
+        "id": "capy-image-resource",
+        "confidence": 50,
+        "description": "Capy puzzle image request",
+        "text": "^https://jp\\.api\\.capy\\.me/puzzle/get_image/\\?",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": true
+      }
+    ],
+    "content": [
+      {
+        "id": "capy-parameter-reference",
+        "confidence": 10,
+        "description": "Script reference to the Capy challenge key parameter; integration and execution unconfirmed",
+        "text": "capy_challengekey",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
+      }
+    ],
+    "dom": [
+      {
+        "id": "capy-wrapper",
+        "selector": "#capy-wrapper",
+        "confidence": 35,
+        "description": "Documented Capy wrapper element",
+        "standalone": true
+      },
+      {
+        "id": "capy-captcha",
+        "selector": "#capy-captcha",
+        "confidence": 35,
+        "description": "Documented Capy widget element",
+        "standalone": true
+      },
+      {
+        "id": "capy-challenge-input",
+        "selector": "input[name=\"capy_challengekey\"]",
+        "confidence": 35,
+        "description": "Hidden challenge-key input the Capy SDK adds",
+        "standalone": true
+      }
+    ],
+    "window": [
+      {
+        "id": "capy-runtime",
+        "path": "puzzleApp.loadPuzzleImage",
+        "condition": "typeof function",
+        "confidence": 35,
+        "description": "Capy puzzle runtime",
+        "standalone": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "capy-sdk-widget",
+      "name": "Loader with the Capy widget",
+      "confidence": 80,
+      "when": {
+        "all": [
+          { "pattern": "capy-sdk-resource" },
+          { "pattern": "capy-captcha" }
+        ]
+      }
+    },
+    {
+      "id": "capy-sdk-runtime",
+      "name": "Loader with the puzzle runtime",
+      "confidence": 85,
+      "when": {
+        "all": [
+          { "pattern": "capy-sdk-resource" },
+          { "pattern": "capy-runtime" }
+        ]
+      }
+    },
+    {
+      "id": "capy-sdk-image",
+      "name": "Loader fetching a puzzle image",
+      "confidence": 90,
+      "when": {
+        "all": [
+          { "pattern": "capy-sdk-resource" },
+          { "pattern": "capy-image-resource" }
+        ]
+      }
+    },
+    {
+      "id": "capy-complete-integration",
+      "name": "Loader, puzzle image and widget",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "capy-sdk-resource" },
+          { "pattern": "capy-image-resource" },
+          {
+            "any": [
+              { "pattern": "capy-captcha" },
+              { "pattern": "capy-challenge-input" }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

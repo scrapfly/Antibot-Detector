@@ -395,6 +395,8 @@ SettingsUI.updateSettingsUI = function() {
         Logger.debug('UI', 'Cache scope loaded:', this.settings.detection.cacheScope);
       }
 
+      SettingsUI.populateCategoryOrder(this.settings.detection.categoryOrder);
+
       // Values saved before the per-unit ranges existed (e.g. 48 hours) are
       // shown and kept in their equivalent in-range form (2 days), so saving
       // never fails on a pre-existing setting.
@@ -612,6 +614,8 @@ SettingsUI.getSettingsFromUI = function() {
       cacheDuration: parseInt(document.querySelector('#cacheDuration')?.value ?? this.settings.detection?.cacheDuration ?? 12),
       cacheUnit: document.querySelector('#cacheUnit')?.value ?? this.settings.detection?.cacheUnit ?? 'hours',
       cacheScope: document.querySelector('#cacheScope')?.value ?? this.settings.detection?.cacheScope ?? 'domain',
+      categoryOrder: DetectionUtils.normalizeCategoryOrder(document.querySelector('#categoryOrder')?.value
+        ?? this.settings.detection?.categoryOrder),
       blacklistedDomains: this.settings.detection?.blacklistedDomains || [], // This is managed separately by the blacklist UI
       hooksConfig: this.settings.detection?.hooksConfig || {}
     };
@@ -976,6 +980,32 @@ SettingsUI.openHistoryStats = function() {
       Logger.error('UI', 'Failed to open history statistics:', error);
       window.open(url, '_blank', 'noopener');
     }
+};
+
+/**
+ * Fill Settings → Detection → Category order with every order of the three
+ * categories ("Anti-bot → Captcha → Fingerprint", …) and select the saved one.
+ * @param {Array<string>} savedOrder
+ */
+SettingsUI.populateCategoryOrder = function(savedOrder) {
+  const select = document.querySelector('#categoryOrder');
+  if (!select) return;
+  const _t = (typeof I18n !== 'undefined') ? I18n : null;
+  const label = {
+    antibot: (_t && _t.get('categoryAntibot')) || 'Anti-bot',
+    captcha: (_t && _t.get('categoryCaptcha')) || 'Captcha',
+    fingerprint: (_t && _t.get('categoryFingerprint')) || 'Fingerprint'
+  };
+  const permutations = (list) => (list.length <= 1 ? [list]
+    : list.flatMap((first, i) => permutations([...list.slice(0, i), ...list.slice(i + 1)]).map(rest => [first, ...rest])));
+
+  select.replaceChildren(...permutations(DetectionUtils.DEFAULT_CATEGORY_ORDER).map(order => {
+    const option = document.createElement('option');
+    option.value = order.join(',');
+    option.textContent = order.map(category => label[category]).join(' → ');
+    return option;
+  }));
+  select.value = DetectionUtils.normalizeCategoryOrder(savedOrder).join(',');
 };
 
 if (typeof self !== 'undefined') {

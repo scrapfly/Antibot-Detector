@@ -3367,6 +3367,12 @@
   "iconPickerFileTooLarge": {
     "message": "يجب أن يكون حجم ملف الأيقونة أقل من 100 كيلوبايت"
   },
+  "iconPickerNoResults": {
+    "message": "لا توجد أيقونات مطابقة لبحثك"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "البحث عن أيقونات…"
+  },
   "rulesUiHelpJsHooks": {
     "message": "ما خطافات JS؟"
   },
@@ -3918,5 +3924,50 @@
   },
   "settingsRowVerboseLogsTip": {
     "message": "سجّل أيضًا كل قاعدة وخطاف ورسالة، وليس تقريرًا واحدًا لكل صفحة فقط"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "تحديث لقاعدة قمت بتعديلها"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "يتوفر إصدار رسمي جديد ({1}) من \"{0}\". لقد عدّلت هذه القاعدة: سيحل الإصدار الجديد محل تغييراتك."
+  },
+  "btnDecideLater": {
+    "message": "القرار لاحقًا"
+  },
+  "btnKeepMyEdits": {
+    "message": "الاحتفاظ بتعديلاتي"
+  },
+  "btnUseNewVersion": {
+    "message": "استخدام الإصدار الجديد"
+  },
+  "resetToOfficial": {
+    "message": "إعادة إلى الرسمي"
+  },
+  "resetToOfficialTitle": {
+    "message": "الإعادة إلى الإصدار الرسمي"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "هل تريد تجاهل تعديلاتك على \"{0}\" واستعادة إصدار Scrapfly الرسمي؟"
+  },
+  "ruleResetToOfficial": {
+    "message": "تمت إعادة القاعدة إلى الإصدار الرسمي"
+  },
+  "ruleEditedTag": {
+    "message": "معدّلة"
+  },
+  "tipRuleEdited": {
+    "message": "لقد عدّلت هذه القاعدة الرسمية. ستسألك التحديثات قبل استبدال تغييراتك."
+  },
+  "settingsGroupDetectionsList": {
+    "message": "قائمة الاكتشافات"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "ترتيب الفئات"
+  },
+  "settingsCategoryOrderLabel": {
+    "message": "اعرض أولاً"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "ترتيب الفئات في قائمة الاكتشاف. داخل كل فئة تأتي النتيجة الأعلى ثقة أولاً."
   }
 }

@@ -7,6 +7,7 @@
   "difficulty": "Low",
   "lastUpdated": "2026-10-03",
   "version": "1.2.0",
+  "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Media_Capabilities_API",
   "icon": "media_fingerprint.png",
   "description": "Battery, speech voice, plugin, MIME and codec API access; ordinary media use remains possible",

@@ -3367,6 +3367,12 @@
   "iconPickerFileTooLarge": {
     "message": "图标文件必须小于 100 KB"
   },
+  "iconPickerNoResults": {
+    "message": "没有匹配的图标"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "搜索图标…"
+  },
   "rulesUiHelpJsHooks": {
     "message": "什么是 JS 钩子？"
   },
@@ -3918,5 +3924,50 @@
   },
   "settingsRowVerboseLogsTip": {
     "message": "除每页一份报告外，还记录每条规则、钩子和消息"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "你编辑过的规则有更新"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "“{0}”有新的官方版本（{1}）。你编辑过此规则：新版本会替换你的修改。"
+  },
+  "btnDecideLater": {
+    "message": "稍后决定"
+  },
+  "btnKeepMyEdits": {
+    "message": "保留我的修改"
+  },
+  "btnUseNewVersion": {
+    "message": "使用新版本"
+  },
+  "resetToOfficial": {
+    "message": "恢复为官方版本"
+  },
+  "resetToOfficialTitle": {
+    "message": "恢复为官方版本"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "放弃对“{0}”的修改并恢复 Scrapfly 官方版本？"
+  },
+  "ruleResetToOfficial": {
+    "message": "规则已恢复为官方版本"
+  },
+  "ruleEditedTag": {
+    "message": "已编辑"
+  },
+  "tipRuleEdited": {
+    "message": "你编辑过此官方规则。更新在替换你的修改前会先询问。"
+  },
+  "settingsGroupDetectionsList": {
+    "message": "检测列表"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "类别顺序"
+  },
+  "settingsCategoryOrderLabel": {
+    "message": "优先显示"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "检测列表中类别的顺序。同一类别内，置信度最高的排在前面。"
   }
 }

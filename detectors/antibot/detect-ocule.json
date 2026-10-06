@@ -7,6 +7,7 @@
   "difficulty": "Medium",
   "lastUpdated": "2026-10-05",
   "version": "2.0.0",
+  "minExtensionVersion": "2.8",
   "website": "https://ocule.io/",
   "icon": "custom.png",
   "description": "Legacy Ocule bot protection. Ocule joined hCaptcha and its loader host no longer resolves, so only old cached pages still reference it.",

@@ -1,0 +1,209 @@
+{
+  "id": "detect-radware",
+  "name": "Radware Bot Manager",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "High",
+  "lastUpdated": "2026-10-06",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.radware.com/products/bot-manager/",
+  "icon": "radware_official.png",
+  "description": "Radware Bot Manager (formerly ShieldSquare) and Radware Cloud WAF: __uzm cookies, stormcaster.js, the validate.perfdrive.com captcha and the Cloud WAF block page",
+  "detection": {
+    "header": [
+      {
+        "id": "radware-compstate-header",
+        "name": "^x-sl-compstate$",
+        "nameRegex": true,
+        "confidence": 60,
+        "description": "Radware SecureLink component-state response header",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "radware-rdwr-server",
+        "name": "^server$",
+        "nameRegex": true,
+        "value": "^rdwr$",
+        "valueRegex": true,
+        "confidence": 70,
+        "description": "Server: rdwr sent by the Radware edge",
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
+    "content": [
+      {
+        "id": "radware-cloudwebsec-reference",
+        "confidence": 20,
+        "standalone": false,
+        "description": "Script reference to the CloudWebSec vendor portal host",
+        "text": "CloudWebSec.radware.com",
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      },
+      {
+        "id": "radware-block-message",
+        "confidence": 20,
+        "standalone": false,
+        "description": "Script reference to the Radware block-page message",
+        "text": "Unauthorized Request Blocked",
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ],
+    "cookie": [
+      {
+        "id": "radware-uzm-cookie",
+        "name": "^__uzm[a-f]$",
+        "nameRegex": true,
+        "confidence": 70,
+        "description": "Radware Bot Manager session cookies (__uzma … __uzmf)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "radware-uzm-js-cookie",
+        "name": "^(?:__uzm[a-z]j\\d|__ssuzjsr\\d|uzmxj?)$",
+        "nameRegex": true,
+        "confidence": 40,
+        "standalone": false,
+        "description": "Radware Bot Manager cookies written by its JavaScript",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "url": [
+      {
+        "id": "radware-stormcaster-script",
+        "confidence": 80,
+        "description": "First-party Radware Bot Manager script (stormcaster.js)",
+        "text": "^https?://[^/?#]+/(?:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|advanced(?:/ie)?)/stormcaster(?:v\\d+)?\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "radware-validate-host",
+        "confidence": 85,
+        "description": "Radware Bot Manager captcha / validation host",
+        "text": "^https://validate\\.perfdrive\\.com/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "window": [
+      {
+        "id": "radware-ssjs-connector",
+        "path": "SSJSConnectorObj",
+        "condition": "typeof object",
+        "confidence": 70,
+        "description": "Radware Bot Manager JavaScript connector object"
+      },
+      {
+        "id": "radware-dbm-variable",
+        "path": "__uzdbm_1",
+        "condition": "typeof string",
+        "confidence": 40,
+        "standalone": false,
+        "description": "Radware Bot Manager device-binding variable"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "radware-block-page",
+      "name": "Block-page message with the vendor portal reference",
+      "confidence": 70,
+      "when": {
+        "all": [
+          { "pattern": "radware-cloudwebsec-reference" },
+          { "pattern": "radware-block-message" }
+        ]
+      }
+    },
+    {
+      "id": "radware-waf-signature",
+      "name": "Component-state header with block-page evidence",
+      "confidence": 80,
+      "when": {
+        "all": [
+          { "pattern": "radware-compstate-header" },
+          {
+            "any": [
+              { "pattern": "radware-cloudwebsec-reference" },
+              { "pattern": "radware-block-message" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "radware-complete-profile",
+      "name": "Component-state header with both block-page signals",
+      "confidence": 90,
+      "when": {
+        "all": [
+          { "pattern": "radware-compstate-header" },
+          { "pattern": "radware-cloudwebsec-reference" },
+          { "pattern": "radware-block-message" }
+        ]
+      }
+    },
+    {
+      "id": "radware-bot-manager-session",
+      "name": "Bot Manager cookies with its first-party script",
+      "confidence": 90,
+      "when": {
+        "all": [
+          { "pattern": "radware-uzm-cookie" },
+          { "pattern": "radware-stormcaster-script" }
+        ]
+      }
+    },
+    {
+      "id": "radware-connector-profile",
+      "name": "Bot Manager cookies, script and connector object",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "radware-uzm-cookie" },
+          { "pattern": "radware-stormcaster-script" },
+          { "pattern": "radware-ssjs-connector" }
+        ]
+      }
+    },
+    {
+      "id": "radware-captcha",
+      "name": "Bot Manager captcha host with its session cookies",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "radware-validate-host" },
+          { "pattern": "radware-uzm-cookie" }
+        ]
+      }
+    },
+    {
+      "id": "radware-edge-session",
+      "name": "Radware edge server with Bot Manager cookies",
+      "confidence": 85,
+      "when": {
+        "all": [
+          { "pattern": "radware-rdwr-server" },
+          {
+            "any": [
+              { "pattern": "radware-uzm-cookie" },
+              { "pattern": "radware-uzm-js-cookie" }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

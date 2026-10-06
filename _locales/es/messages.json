@@ -3367,6 +3367,12 @@
   "iconPickerFileTooLarge": {
     "message": "El archivo del icono debe pesar menos de 100 KB"
   },
+  "iconPickerNoResults": {
+    "message": "Ningún icono coincide con tu búsqueda"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "Buscar iconos…"
+  },
   "rulesUiHelpJsHooks": {
     "message": "¿Qué son los interceptores de JS?"
   },
@@ -3918,5 +3924,50 @@
   },
   "settingsRowVerboseLogsTip": {
     "message": "Registra también cada regla, hook y mensaje, no solo un informe por página"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "Actualización de una regla que editaste"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "\"{0}\" tiene una nueva versión oficial ({1}). Editaste esta regla: la nueva versión reemplaza tus cambios."
+  },
+  "btnDecideLater": {
+    "message": "Decidir después"
+  },
+  "btnKeepMyEdits": {
+    "message": "Conservar mis cambios"
+  },
+  "btnUseNewVersion": {
+    "message": "Usar la nueva versión"
+  },
+  "resetToOfficial": {
+    "message": "Restablecer la oficial"
+  },
+  "resetToOfficialTitle": {
+    "message": "Restablecer la versión oficial"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "¿Descartar tus cambios en \"{0}\" y restaurar la versión oficial de Scrapfly?"
+  },
+  "ruleResetToOfficial": {
+    "message": "Regla restablecida a la versión oficial"
+  },
+  "ruleEditedTag": {
+    "message": "Editada"
+  },
+  "tipRuleEdited": {
+    "message": "Editaste esta regla oficial. Las actualizaciones preguntan antes de reemplazar tus cambios."
+  },
+  "settingsGroupDetectionsList": {
+    "message": "Lista de detecciones"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "Orden de categorías"
+  },
+  "settingsCategoryOrderLabel": {
+    "message": "Mostrar primero"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "Orden de las categorías en la lista de Detección. Dentro de cada categoría, primero la de mayor confianza."
   }
 }

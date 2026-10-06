@@ -97,6 +97,37 @@ test('template validation reports the line of a JSON error after substitution', 
   assert.strictEqual(bad.line, 4);
 });
 
+// The Settings "Test" button sends sampleContext(); a naturally triggered
+// event sends the engine's detection objects. The two must agree, or the
+// test cannot validate a real integration (GitHub issue #5).
+test('the sample detections use the schema of real triggered detections', () => {
+  const sample = WB.sampleContext().detections[0];
+
+  // Same fields as runDetector/detectOnPage emit — and none of the old
+  // ad-hoc ones (id/name/color/methods at the top level)
+  assert.deepStrictEqual(
+    Object.keys(sample).sort(),
+    ['category', 'confidence', 'detected', 'detectionMethods', 'detector', 'difficulty', 'matches']
+  );
+  assert.deepStrictEqual(
+    Object.keys(sample.detector).sort(),
+    ['author', 'description', 'difficulty', 'icon', 'id', 'name']
+  );
+  assert.deepStrictEqual(
+    Object.keys(sample.matches[0]).sort(),
+    ['confidence', 'description', 'fullUrl', 'pattern', 'patternId', 'type', 'value']
+  );
+  assert.strictEqual(sample.detected, true);
+  assert.strictEqual(sample.category, 'antibot');
+  assert.ok(Array.isArray(sample.detectionMethods) && sample.detectionMethods.every(t => typeof t === 'string'));
+
+  // A JSON body built from the sample carries that schema verbatim
+  const body = JSON.parse(WB.build('application/json', '', WB.sampleContext()).body);
+  assert.deepStrictEqual(body.detections[0], sample);
+  // categories are the raw detection categories, as the sender joins them
+  assert.strictEqual(WB.sampleContext().categories, 'antibot');
+});
+
 // ---------------------------------------------------------------- form + multipart
 test('form-urlencoded flattens nested values in bracket notation and encodes them', () => {
   const pairs = WB.flattenPairs({ a: { b: 1, c: [true, null] }, empty: [], none: {}, s: 'x y&z' });

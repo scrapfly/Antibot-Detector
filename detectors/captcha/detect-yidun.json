@@ -1,0 +1,140 @@
+{
+  "id": "detect-yidun",
+  "name": "NetEase Yidun",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "difficulty": "High",
+  "lastUpdated": "2026-10-06",
+  "version": "1.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://dun.163.com/product/captcha",
+  "icon": "yidun_official.png",
+  "description": "NetEase Yidun intelligent captcha (slider, space reasoning and icon picking) widely used across Chinese sites",
+  "detection": {
+    "url": [
+      {
+        "id": "yidun-sdk-resource",
+        "confidence": 60,
+        "description": "NetEase Yidun captcha loader on its static CDN",
+        "text": "^https://cstaticdun\\.126\\.net/load\\.min\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": true,
+        "textScope": "all",
+        "standalone": true
+      },
+      {
+        "id": "yidun-core-resource",
+        "confidence": 50,
+        "description": "Versioned Yidun captcha core script",
+        "text": "^https://cstaticdun\\.126\\.net/\\d+\\.\\d+\\.\\d+/core[a-z-]*\\.[a-z0-9]+\\.v[0-9.]+\\.min\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": true
+      },
+      {
+        "id": "yidun-captcha-api",
+        "confidence": 55,
+        "description": "Yidun captcha configuration and challenge API",
+        "text": "^https://c(?:-v6)?\\.dun\\.163(?:yun)?\\.com/api/v[23]/(?:getconf|get|check)(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": true
+      }
+    ],
+    "content": [
+      {
+        "id": "yidun-init-reference",
+        "confidence": 10,
+        "description": "Script reference to the Yidun bootstrap; integration and execution unconfirmed",
+        "text": "initNECaptcha",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
+      }
+    ],
+    "dom": [
+      {
+        "id": "yidun-widget",
+        "selector": ".yidun_intellisense, .yidun_classic-container, .yidun_popup, .yidun_panel",
+        "confidence": 40,
+        "description": "Rendered Yidun captcha widget (intelligent, classic or popup mode)",
+        "standalone": true
+      }
+    ],
+    "window": [
+      {
+        "id": "yidun-init-api",
+        "path": "initNECaptcha",
+        "condition": "typeof function",
+        "confidence": 45,
+        "description": "Yidun captcha bootstrap API presence, not execution",
+        "standalone": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "yidun-sdk-reference",
+      "name": "Loader with an init reference",
+      "confidence": 65,
+      "when": {
+        "all": [
+          { "pattern": "yidun-sdk-resource" },
+          { "pattern": "yidun-init-reference" }
+        ]
+      }
+    },
+    {
+      "id": "yidun-sdk-widget",
+      "name": "Loader with the rendered widget",
+      "confidence": 80,
+      "when": {
+        "all": [
+          { "pattern": "yidun-sdk-resource" },
+          { "pattern": "yidun-widget" }
+        ]
+      }
+    },
+    {
+      "id": "yidun-sdk-runtime",
+      "name": "Loader with the init API",
+      "confidence": 85,
+      "when": {
+        "all": [
+          { "pattern": "yidun-sdk-resource" },
+          { "pattern": "yidun-init-api" }
+        ]
+      }
+    },
+    {
+      "id": "yidun-sdk-captcha-api",
+      "name": "Loader calling the captcha API",
+      "confidence": 90,
+      "when": {
+        "all": [
+          { "pattern": "yidun-sdk-resource" },
+          { "pattern": "yidun-captcha-api" }
+        ]
+      }
+    },
+    {
+      "id": "yidun-complete-integration",
+      "name": "Loader, captcha API and rendered widget",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "yidun-sdk-resource" },
+          { "pattern": "yidun-captcha-api" },
+          { "pattern": "yidun-widget" }
+        ]
+      }
+    }
+  ]
+}

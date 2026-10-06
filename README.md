@@ -5,7 +5,7 @@
 ![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)
 ![Manifest V3](https://img.shields.io/badge/Manifest-V3-green?style=for-the-badge)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![Version](https://img.shields.io/badge/Version-2.8-blue?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-2.8.1-blue?style=for-the-badge)
 
 <br>
 
@@ -26,8 +26,8 @@
 
 Scrapfly Anti-bot Detector is a Manifest V3 Chrome extension that helps security researchers, web developers, and bot detection enthusiasts identify and analyze:
 
-- **CAPTCHAs**: reCAPTCHA, hCaptcha, FunCaptcha, GeeTest, Cloudflare Turnstile
-- **Anti-bot systems**: Cloudflare, Akamai, DataDome, PerimeterX, Shape Security, AWS WAF, Imperva, Kasada, and more
+- **CAPTCHAs**: reCAPTCHA, hCaptcha, FunCaptcha, GeeTest, Cloudflare Turnstile, NetEase Yidun, Aliyun, Yandex SmartCaptcha, Dingxiang, Capy, Shumei, MTCaptcha, and more
+- **Anti-bot systems**: Cloudflare, Akamai, DataDome, PerimeterX, Shape Security, AWS WAF, Imperva, Kasada, Radware, Netacea, Anubis, Azure Front Door, FingerprintJS, Alibaba Cloud WAF, Jiasule, Ruishu, Yundun, and more
 - **Fingerprinting techniques**: Canvas, WebGL, Audio, Font, WebRTC, Performance, Navigator, Storage, and other browser fingerprinting methods
 
 <div align="center">
@@ -145,6 +145,15 @@ npm run check:syntax      # node --check across all .js files
 npm run check:structure   # HTML tag balance, JSON validity, modal-header pattern
 npm run check:locale      # _locales/* key parity across all languages
 npm test                  # node:test unit suite
+```
+
+Browser checks run the real extension in Chromium (not part of `verify`; they need Playwright: `npm i --no-save playwright && npx playwright install chromium`):
+
+```bash
+npm run e2e:methods    # every detection method (URL, cookies, headers, content, DOM, window, payload, hooks)
+npm run e2e:settings   # every per-rule setting (scope, regex, whole word, case, payload filters)
+npm run e2e:editor     # rule editor saves settings and keeps every rule field
+npm run e2e:updater    # Rules → Update against a local copy of the detector repository
 ```
 
 Unit tests live in `test/` and run on Node's built-in test runner (zero dependencies). They cover the pattern cache, the window-condition language and Rules-UI fallback parity, the TTL map, confidence scoring, detection-engine storage locking, the worker keepalive, and detection-UI state transitions. CI runs `npm run verify` on every push.

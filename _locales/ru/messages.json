@@ -3367,6 +3367,12 @@
   "iconPickerFileTooLarge": {
     "message": "Файл значка должен быть меньше 100 КБ"
   },
+  "iconPickerNoResults": {
+    "message": "Нет значков по вашему запросу"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "Поиск значков…"
+  },
   "rulesUiHelpJsHooks": {
     "message": "Что такое перехватчики JS?"
   },
@@ -3918,5 +3924,50 @@
   },
   "settingsRowVerboseLogsTip": {
     "message": "Записывать также каждое правило, хук и сообщение, а не только отчёт по странице"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "Обновление изменённого вами правила"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "Для «{0}» вышла новая официальная версия ({1}). Вы изменяли это правило: новая версия заменит ваши изменения."
+  },
+  "btnDecideLater": {
+    "message": "Решить позже"
+  },
+  "btnKeepMyEdits": {
+    "message": "Оставить мои изменения"
+  },
+  "btnUseNewVersion": {
+    "message": "Использовать новую версию"
+  },
+  "resetToOfficial": {
+    "message": "Вернуть официальную"
+  },
+  "resetToOfficialTitle": {
+    "message": "Вернуть официальную версию"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "Отменить ваши изменения в «{0}» и вернуть официальную версию Scrapfly?"
+  },
+  "ruleResetToOfficial": {
+    "message": "Правило возвращено к официальной версии"
+  },
+  "ruleEditedTag": {
+    "message": "Изменено"
+  },
+  "tipRuleEdited": {
+    "message": "Вы изменили это официальное правило. Перед заменой ваших изменений обновление спросит вас."
+  },
+  "settingsGroupDetectionsList": {
+    "message": "Список обнаружений"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "Порядок категорий"
+  },
+  "settingsCategoryOrderLabel": {
+    "message": "Показывать первыми"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "Порядок категорий в списке обнаружений. Внутри категории сначала идут результаты с наибольшей уверенностью."
   }
 }

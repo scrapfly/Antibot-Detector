@@ -7,6 +7,7 @@
   "difficulty": "Medium",
   "lastUpdated": "2026-10-05",
   "version": "2.0.0",
+  "minExtensionVersion": "2.8",
   "website": "https://sucuri.net/",
   "icon": "sucuri_official.png",
   "description": "Sucuri Website Security Platform with WAF and bot protection",
