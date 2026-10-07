@@ -41,6 +41,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Fingerprint detection now catches what pages do in their first moments and inside hidden iframes; on CreepJS, Canvas, Font and WebGL score much higher.
 - Pages where only fingerprinting was found no longer show an empty result.
 - History no longer shows an image the page merely preloads as the site's icon, and a site icon that fails to load on the Detection tab shows the logo.
+- Detector updates now bring new difficulty ratings, both from Rules → Update and when the extension updates; a difficulty you set yourself in the editor is kept.
 - Settings → Detection: with cache scope "Path" or "Full URL", other pages of the same site are now scanned instead of showing the first page's result.
 - Detection: "Upload detections" and "Copy overview" now give the address of the page you are on, not the first page scanned on that site.
 - The Scrapfly logo is sharp again on high-resolution screens (popup header, empty states, Advanced, History, Stats, and in place of a missing site icon).

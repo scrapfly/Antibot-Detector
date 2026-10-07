@@ -350,8 +350,11 @@ class UpdateManager {
         if (localDetector && typeof localDetector.enabled === 'boolean') {
             incoming.enabled = localDetector.enabled;
         }
-        if (localDetector && localDetector.difficulty !== undefined) {
+        // A difficulty the user picked stays; otherwise the update's rating
+        // applies, so a detector Scrapfly re-rates changes for everyone
+        if (localDetector?.difficultyChosen && localDetector.difficulty !== undefined) {
             incoming.difficulty = localDetector.difficulty;
+            incoming.difficultyChosen = true;
         }
         if (!detectors[category]) {
             detectors[category] = {};
@@ -579,6 +582,52 @@ class UpdateManager {
     }
 
     /**
+     * Difficulty of each detector Scrapfly re-rated in 2.8.2, as shipped
+     * before it. Builds before 2.8.2 kept every stored difficulty through
+     * updates and did not record which ones the user picked; a stored copy
+     * still on this rating is Scrapfly's old one, not the user's.
+     */
+    static DIFFICULTY_BEFORE_2_8_2 = {
+        'detect-aliexpress': 'High',
+        'detect-aliyun': 'Medium',
+        'detect-aliyunwaf': 'Medium',
+        'detect-canvas-fingerprint': 'Low',
+        'detect-captchaeu': 'High',
+        'detect-capy': 'Medium',
+        'detect-dingxiang': 'Medium',
+        'detect-fingerprintjs': 'Medium',
+        'detect-friendlycaptcha': 'High',
+        'detect-geetest': 'High',
+        'detect-jiasule': 'Medium',
+        'detect-mtcaptcha': 'Medium',
+        'detect-ocule': 'Medium',
+        'detect-qcloud': 'High',
+        'detect-radware': 'High',
+        'detect-reblaze': 'Medium',
+        'detect-recaptcha': 'High',
+        'detect-ruishu': 'High',
+        'detect-shumei': 'High',
+        'detect-sucuri': 'Medium',
+        'detect-turnstile': 'High',
+        'detect-yidun': 'High',
+        'detect-yundun': 'Medium'
+    };
+
+    /**
+     * Record a difficulty the user picked in a build that did not record it:
+     * any rating Scrapfly never shipped for this detector (the bundled one,
+     * the one before 2.8.2, the official one an edit started from).
+     * @returns {boolean} true when the flag was set
+     */
+    static markChosenDifficulty(localDetector, official, detectorId) {
+        if (!localDetector || localDetector.difficultyChosen || localDetector.difficulty === undefined) return false;
+        const shipped = [official?.difficulty, UpdateManager.DIFFICULTY_BEFORE_2_8_2[detectorId], localDetector.officialSnapshot?.difficulty];
+        if (shipped.includes(localDetector.difficulty)) return false;
+        localDetector.difficultyChosen = true;
+        return true;
+    }
+
+    /**
      * After the extension itself is installed or updated: bring the detectors
      * bundled with this build into storage. Storage is only seeded from the
      * bundle on first install, so without this an extension update never
@@ -586,8 +635,11 @@ class UpdateManager {
      *
      * Missing detectors are added (unless the user deleted them), newer ones
      * replace unedited copies, and newer versions of edited copies are queued
-     * as pending updates so the user decides.
-     * @returns {Promise<{installed: number, pending: number}>}
+     * as pending updates so the user decides. An unedited copy at the bundled
+     * version that still has Scrapfly's previous difficulty takes the new one
+     * (it may have come from GitHub through an older build that kept every
+     * difficulty); a difficulty the user picked is kept.
+     * @returns {Promise<{installed: number, pending: number, rerated: number}>}
      */
     static async mergeBundledDetectors() {
         let index;
@@ -597,14 +649,16 @@ class UpdateManager {
             index = await response.json();
         } catch (error) {
             Logger.warn('STORAGE', 'UpdateManager: Could not read the bundled detector index', error);
-            return { installed: 0, pending: 0 };
+            return { installed: 0, pending: 0, rerated: 0 };
         }
 
         const detectors = await this.loadStoredDetectors();
-        if (Object.keys(detectors).length === 0) return { installed: 0, pending: 0 }; // first install seeds itself
+        if (Object.keys(detectors).length === 0) return { installed: 0, pending: 0, rerated: 0 }; // first install seeds itself
         const deletedOfficial = await this.getDeletedOfficialIds();
         const queued = [];
         let installed = 0;
+        let rerated = 0;
+        let changed = false;
 
         for (const [category, categoryData] of Object.entries(index)) {
             if (!categoryData || !Array.isArray(categoryData.detectors)) continue;
@@ -613,8 +667,18 @@ class UpdateManager {
                 if (deletedOfficial.has(detectorId) && !localDetector) continue;
                 const bundled = await this.fetchBundledDetector(category, detectorId);
                 if (!bundled) continue;
+                if (this.markChosenDifficulty(localDetector, bundled, detectorId)) changed = true;
                 const update = this.describeUpdate(category, detectorId, bundled, localDetector, 'bundled');
-                if (!update) continue;
+                if (!update) {
+                    if (localDetector && !localDetector.userModified && !localDetector.difficultyChosen
+                        && bundled.difficulty !== undefined && localDetector.difficulty !== bundled.difficulty
+                        && !this.isNewerVersion(bundled.version || '0.0', this.localVersionOf(localDetector))
+                        && !this.isNewerVersion(this.localVersionOf(localDetector), bundled.version || '0.0')) {
+                        localDetector.difficulty = bundled.difficulty;
+                        rerated++;
+                    }
+                    continue;
+                }
                 if (update.userModified) {
                     queued.push(update);
                     continue;
@@ -624,12 +688,12 @@ class UpdateManager {
             }
         }
 
-        if (installed > 0) await this.saveStoredDetectors(detectors);
+        if (installed > 0 || rerated > 0 || changed) await this.saveStoredDetectors(detectors);
         if (queued.length > 0) {
             await this.setPendingUpdates(this.mergeUpdateLists(await this.getPendingUpdates(), queued));
         }
-        Logger.storage(`UpdateManager: Bundled detectors merged: ${installed} installed, ${queued.length} edited rules pending`);
-        return { installed, pending: queued.length };
+        Logger.storage(`UpdateManager: Bundled detectors merged: ${installed} installed, ${rerated} re-rated, ${queued.length} edited rules pending`);
+        return { installed, pending: queued.length, rerated };
     }
 
     /**

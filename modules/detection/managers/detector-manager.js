@@ -27,8 +27,27 @@ class DetectorManager {
     }
 
     // Fields that describe the user's relationship to a detector rather than the
-    // detector itself; never part of an official snapshot
-    static USER_EDIT_FIELDS = ['userModified', 'officialSnapshot', 'dismissedVersion', 'displayName', '_searchStrings'];
+    // detector itself; never part of an official snapshot. `difficultyChosen`:
+    // the user picked this difficulty, so updates keep it (UpdateManager)
+    static USER_EDIT_FIELDS = ['userModified', 'officialSnapshot', 'dismissedVersion', 'difficultyChosen', 'displayName', '_searchStrings'];
+
+    /**
+     * Save a difficulty from the rule editor. One the user changes is theirs
+     * and detector updates keep it; one left as it was keeps following
+     * Scrapfly's rating.
+     * @param {object} detector - The detector being saved
+     * @param {object|null} original - The detector as the editor opened it (null for a new one)
+     * @param {string} difficulty - The difficulty to save
+     * @returns {object} detector
+     */
+    static applyDifficultyChoice(detector, original, difficulty) {
+        if (!detector) return detector;
+        if (original && original.difficulty !== undefined && difficulty !== original.difficulty) {
+            detector.difficultyChosen = true;
+        }
+        detector.difficulty = difficulty;
+        return detector;
+    }
 
     /**
      * A clean deep copy of a detector, without editor/UI-only fields.
@@ -69,6 +88,7 @@ class DetectorManager {
         const restored = DetectorManager.cleanDetectorCopy(detector.officialSnapshot);
         if (typeof detector.enabled === 'boolean') restored.enabled = detector.enabled;
         if (detector.difficulty !== undefined) restored.difficulty = detector.difficulty;
+        if (detector.difficultyChosen) restored.difficultyChosen = true;
         return restored;
     }
 

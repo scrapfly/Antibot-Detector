@@ -216,7 +216,7 @@ test('an extension update brings new and newer bundled detectors to an existing 
   });
 
   const merged = await UM.mergeBundledDetectors();
-  assert.deepStrictEqual(plain(merged), { installed: 2, pending: 1 });
+  assert.deepStrictEqual(plain(merged), { installed: 2, pending: 1, rerated: 0 });
   assert.strictEqual(stored(local)['detect-akamai'].version, '2.1.0');
   assert.strictEqual(stored(local)['detect-akamai'].enabled, false, 'user toggle kept');
   assert.ok(stored(local)['detect-fresh'], 'new bundled detector added');
@@ -233,4 +233,106 @@ test('an extension update brings new and newer bundled detectors to an existing 
   const result = await UM.applyUpdates({ ids: ['detect-cloudflare'], overwriteModified: true });
   assert.strictEqual(result.count, 1);
   assert.strictEqual(stored(local)['detect-cloudflare'].version, '1.1.0');
+});
+
+// --------------------------------------------------------------- difficulty
+// Scrapfly's ratings must reach installed copies; a difficulty the user
+// picked in the editor must not be overwritten (BYT-1623).
+test('an update applies Scrapfly\'s new difficulty unless the user picked one', async () => {
+  const local = { scrapfly_detectors: { detectors: { antibot: {
+    'detect-akamai': official('detect-akamai', '2.0.0', { difficulty: 'High' }),
+    'detect-cloudflare': official('detect-cloudflare', '1.0.0', { difficulty: 'High', difficultyChosen: true, enabled: false })
+  } } } };
+  const { UM } = load(local, { remote: {
+    'detect-akamai': official('detect-akamai', '2.0.1', { difficulty: 'Low' }),
+    'detect-cloudflare': official('detect-cloudflare', '1.0.1', { difficulty: 'Low' })
+  } });
+  UM.fetchRemoteIndex = async () => index;
+  await UM.checkForUpdates(true);
+  const result = await UM.applyUpdates();
+  assert.strictEqual(result.count, 2);
+  assert.strictEqual(stored(local)['detect-akamai'].difficulty, 'Low', 'the new rating reaches an unedited copy');
+  assert.strictEqual(stored(local)['detect-akamai'].difficultyChosen, undefined);
+  assert.strictEqual(stored(local)['detect-cloudflare'].difficulty, 'High', 'the user\'s pick stays');
+  assert.strictEqual(stored(local)['detect-cloudflare'].difficultyChosen, true);
+  assert.strictEqual(stored(local)['detect-cloudflare'].enabled, false);
+  assert.strictEqual(stored(local)['detect-cloudflare'].version, '1.0.1');
+});
+
+test('after an extension update, copies still on the pre-2.8.2 rating take the new one; picked ones stay', async () => {
+  const before = (id, version, difficulty, extra = {}) => official(id, version, { difficulty, ...extra });
+  const local = { scrapfly_detectors: { detectors: { antibot: {
+    // Already took 2.0.1 from GitHub through 2.8.1, which kept the old rating
+    'detect-radware': before('detect-radware', '2.0.1', 'High'),
+    // Older than the bundle, still on the old rating
+    'detect-jiasule': before('detect-jiasule', '2.0.0', 'Medium'),
+    // The user had picked High: never shipped for Reblaze (Medium before, Low now)
+    'detect-reblaze': before('detect-reblaze', '2.0.1', 'High'),
+    // Not re-rated, but the user changed it
+    'detect-akamai': before('detect-akamai', '2.0.0', 'Low'),
+    // Not re-rated, untouched
+    'detect-datadome': before('detect-datadome', '2.0.0', 'Medium'),
+    // Edited by the user: the decision stays with them
+    'detect-sucuri': DetectorManager.markUserEdited(
+      { ...before('detect-sucuri', '2.0.0', 'Medium'), detection: { cookie: [{ name: 'mine' }] } },
+      before('detect-sucuri', '2.0.0', 'Medium'))
+  } } } };
+  const ids = Object.keys(local.scrapfly_detectors.detectors.antibot);
+  const shipped = {
+    'detect-radware': ['2.0.1', 'Low'], 'detect-jiasule': ['2.0.1', 'Low'], 'detect-reblaze': ['2.0.1', 'Low'],
+    'detect-akamai': ['2.0.0', 'Medium'], 'detect-datadome': ['2.0.0', 'Medium'], 'detect-sucuri': ['2.0.1', 'Low']
+  };
+  const bundled = Object.fromEntries(ids.map(id => [`ext://detectors/antibot/${id}.json`, before(id, shipped[id][0], shipped[id][1])]));
+  const { UM } = load(local, { bundledIndex: { antibot: { detectors: ids } }, bundled });
+
+  const merged = await UM.mergeBundledDetectors();
+  assert.deepStrictEqual(plain(merged), { installed: 1, pending: 1, rerated: 1 });
+  const s = stored(local);
+  assert.deepStrictEqual([s['detect-radware'].version, s['detect-radware'].difficulty], ['2.0.1', 'Low'], 'same version, old rating: re-rated');
+  assert.deepStrictEqual([s['detect-jiasule'].version, s['detect-jiasule'].difficulty], ['2.0.1', 'Low'], 'newer bundle installed with its rating');
+  assert.deepStrictEqual([s['detect-reblaze'].difficulty, s['detect-reblaze'].difficultyChosen], ['High', true], 'a rating never shipped is the user\'s');
+  assert.deepStrictEqual([s['detect-akamai'].difficulty, s['detect-akamai'].difficultyChosen], ['Low', true]);
+  assert.deepStrictEqual([s['detect-datadome'].difficulty, s['detect-datadome'].difficultyChosen], ['Medium', undefined]);
+  assert.deepStrictEqual([s['detect-sucuri'].difficulty, s['detect-sucuri'].userModified], ['Medium', true], 'edited rule untouched, update pending');
+
+  // A second run (next extension update) changes nothing more
+  assert.deepStrictEqual(plain(await UM.mergeBundledDetectors()), { installed: 0, pending: 1, rerated: 0 });
+  // Later GitHub updates keep the picked ratings and follow Scrapfly's for the rest
+  UM.fetchRemoteIndex = async () => ({ antibot: { detectors: ['detect-akamai', 'detect-radware'] } });
+  UM.fetchRemoteDetector = async (_c, id) => before(id, id === 'detect-akamai' ? '2.0.1' : '2.0.2', 'High');
+  await UM.checkForUpdates(true);
+  await UM.applyUpdates();
+  assert.strictEqual(stored(local)['detect-akamai'].difficulty, 'Low', 'picked rating survives a GitHub update');
+  assert.strictEqual(stored(local)['detect-radware'].difficulty, 'High', 'a later re-rating by Scrapfly applies');
+});
+
+test('the rule editor records a changed difficulty as the user\'s choice', () => {
+  const original = official('detect-akamai', '2.0.0', { difficulty: 'Medium' });
+  const same = DetectorManager.applyDifficultyChoice({ ...original }, DetectorManager.cleanDetectorCopy(original), 'Medium');
+  assert.strictEqual(same.difficultyChosen, undefined, 'saving without changing it keeps following Scrapfly');
+  const picked = DetectorManager.applyDifficultyChoice({ ...original }, DetectorManager.cleanDetectorCopy(original), 'High');
+  assert.deepStrictEqual([picked.difficulty, picked.difficultyChosen], ['High', true]);
+  const fresh = DetectorManager.applyDifficultyChoice({ id: 'mine' }, null, 'Low');
+  assert.deepStrictEqual([fresh.difficulty, fresh.difficultyChosen], ['Low', undefined], 'a new custom rule has no official rating to follow');
+  // Never part of an official snapshot; "Reset to official" keeps the choice
+  assert.ok(!('difficultyChosen' in DetectorManager.cleanDetectorCopy(picked)));
+  const edited = DetectorManager.markUserEdited({ ...picked, detection: { cookie: [{ name: 'mine' }] } }, original);
+  assert.ok(!('difficultyChosen' in edited.officialSnapshot));
+  const reset = DetectorManager.officialVersionOf(edited);
+  assert.deepStrictEqual([reset.difficulty, reset.difficultyChosen], ['High', true]);
+});
+
+test('the pre-2.8.2 ratings table only lists shipped detectors that were re-rated', () => {
+  const { UM } = load({});
+  const index = JSON.parse(fs.readFileSync(path.join(root, 'detectors/index.json'), 'utf8'));
+  const where = {};
+  for (const [category, entry] of Object.entries(index)) for (const id of entry.detectors || []) where[id] = category;
+  const table = plain(UM.DIFFICULTY_BEFORE_2_8_2);
+  assert.strictEqual(Object.keys(table).length, 23);
+  for (const [id, previous] of Object.entries(table)) {
+    assert.ok(where[id], `${id} is a shipped detector`);
+    assert.ok(['Low', 'Medium', 'High'].includes(previous), id);
+    const current = JSON.parse(fs.readFileSync(path.join(root, 'detectors', where[id], `${id}.json`), 'utf8')).difficulty;
+    assert.notStrictEqual(current, previous, `${id}: listed as re-rated but still ${current}`);
+  }
 });
