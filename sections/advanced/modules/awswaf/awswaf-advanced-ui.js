@@ -40,58 +40,6 @@ AwsWafAdvanced.prototype.setupToolListeners = function() {
 
 
     /**
-     * Display cookies in a modal (Akamai-style)
-     */
-AwsWafAdvanced.prototype.displayCookiesModal = function(awsWafToken) {
-        const modal = this.createToolModal();
-
-        const cookieFound = awsWafToken ? 1 : 0;
-
-        modal.innerHTML = `
-            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${this._txt('advCommonCookiesTitleFmt', '{0} Cookies', 'AWS WAF')}</h3>
-                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
-                </div>
-
-                ${this.buildCookieStatusSummary(cookieFound, 1)}
-
-                ${awsWafToken ? `
-                    <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <div class="copy-value" data-copy="aws-waf-token" style="font-weight: 500; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">aws-waf-token</div>
-                            <div style="display: flex; gap: 6px;">
-                                ${awsWafToken.secure ? '<span style="font-size: 10px; background: var(--success); color: white; padding: 2px 6px; border-radius: 3px;">SECURE</span>' : ''}
-                                ${awsWafToken.httpOnly ? '<span style="font-size: 10px; background: var(--bg-primary); color: var(--text-primary); padding: 2px 6px; border-radius: 3px;">HTTP</span>' : ''}
-                            </div>
-                        </div>
-                        <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(awsWafToken.value)}" style="font-size: 11px; color: var(--text-secondary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s;" title="${this._txt('advCommonClickToCopyFull', 'Click to copy full value')}">${awsWafToken.value.substring(0, 60)}${awsWafToken.value.length > 60 ? '...' : ''}</div>
-                        <div style="font-size: 11px; color: var(--text-muted);">${this._txt('advCommonDomainLabel', 'Domain:')} ${awsWafToken.domain}</div>
-                    </div>
-                ` : `
-                    <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
-                        <div style="font-size: 14px;">${this._txt('advCommonNoCookiesFmt', 'No {0} cookies found', 'AWS WAF')}</div>
-                    </div>
-                `}
-            </div>
-        `;
-
-        this.bindCopyValueHandlers(modal, { defaultMessage: this._txt('advValueCopied', 'Value copied') });
-        modal.querySelectorAll('.copy-value').forEach(element => {
-            element.addEventListener('mouseenter', () => {
-                element.style.background = 'rgba(255, 255, 255, 0.1)';
-            });
-
-            element.addEventListener('mouseleave', () => {
-                element.style.background = '';
-            });
-        });
-        this.bindModalClose(modal);
-        this.showToolModal(modal);
-    };
-
-
-    /**
      * Display script analysis results in modal (simplified - only challenge.js and captcha.js)
      */
 AwsWafAdvanced.prototype.displayAnalysisModal = function(data) {

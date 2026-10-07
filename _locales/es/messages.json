@@ -602,28 +602,28 @@
     "message": "1 semana"
   },
   "methodLabelUrl": {
-    "message": "URL"
+    "message": "Url"
   },
   "methodLabelHeader": {
-    "message": "HEADER"
+    "message": "Cabeceras"
   },
   "methodLabelCookie": {
-    "message": "COOKIE"
+    "message": "Cookies"
   },
   "methodLabelContent": {
-    "message": "CONTENT"
+    "message": "Contenido"
   },
   "methodLabelDom": {
-    "message": "DOM"
+    "message": "Dom"
   },
   "methodLabelJsHooks": {
-    "message": "JS HOOKS"
+    "message": "Hooks JS"
   },
   "methodLabelWindow": {
-    "message": "WINDOW"
+    "message": "Ventana"
   },
   "methodLabelPayload": {
-    "message": "PAYLOAD"
+    "message": "Carga útil"
   },
   "methodOnePattern": {
     "message": "1 patrón"
@@ -1336,9 +1336,6 @@
   "pasteConfirmTitle": {
     "message": "¿Subir detecciones?"
   },
-  "pasteConfirmMsg": {
-    "message": "Esto sube un resumen de las detecciones de esta página a un paste público (dpaste.com, no listado, caduca en 30 días). Cualquiera con el enlace puede verlo. No se incluyen la cadena de consulta de la URL ni los valores de cookies/cabeceras."
-  },
   "pasteConfirmBtn": {
     "message": "Subir"
   },
@@ -1493,7 +1490,7 @@
     "message": "Solo comprobar scripts"
   },
   "rulesOnlyCheckScriptsHint": {
-    "message": "Restringe la búsqueda solo a código JavaScript y URLs de scripts"
+    "message": "Busca solo en código JavaScript (scripts en línea y cargados), no en el texto de la página ni en nombres de archivo"
   },
   "rulesScopeSettingsTitle": {
     "message": "Ajustes de ámbito"
@@ -1622,7 +1619,7 @@
     "message": "Coincide URLs de recursos cargados (scripts, imágenes, peticiones de red) con patrones."
   },
   "helpUrlWarning": {
-    "message": "Los patrones distinguen mayúsculas por defecto. Activa la opción URL distingue mayúsculas si necesitas coincidencia insensible."
+    "message": "Los patrones no distinguen mayúsculas a menos que actives «Distingue mayúsculas». Un patrón demasiado general también coincide con recursos ajenos, así que hazlo específico."
   },
   "helpUrlTip": {
     "message": "Usa la opción Regex para patrones avanzados como /\\/v\\d+\\/challenge/."
@@ -2362,9 +2359,6 @@
   "advCommonClickToCopy": {
     "message": "Haz clic para copiar"
   },
-  "advCommonClickToCopyFull": {
-    "message": "Haz clic para copiar el valor completo"
-  },
   "advCommonDomainLabel": {
     "message": "Dominio:"
   },
@@ -2935,9 +2929,6 @@
   "advShapeCookieTitle": {
     "message": "Cookie de Shape"
   },
-  "advShapeMaxAgeInfoFmt": {
-    "message": "Max-Age: {0} segundos (50 años)"
-  },
   "advShapeAnalysisTitle": {
     "message": "Análisis de Shape Security"
   },
@@ -3106,14 +3097,8 @@
   "advAwswafDeletingCookieFmt": {
     "message": "Eliminando la cookie {0}… La página se recargará"
   },
-  "advCloudflareExtractedSiteKey": {
-    "message": "Site Key extraída"
-  },
   "advCloudflareTypeLabel": {
     "message": "Tipo"
-  },
-  "advCloudflareSiteKeyClickToCopy": {
-    "message": "Site Key (haz clic para copiar)"
   },
   "advCloudflareSiteKeyCopied": {
     "message": "Site Key copiada"
@@ -3136,17 +3121,11 @@
   "advCloudflareCheckingVersion": {
     "message": "Comprobando la versión de Cloudflare… La página se recargará"
   },
-  "advCloudflareSiteKeyExtracted": {
-    "message": "Site Key extraída correctamente"
-  },
   "advCloudflareNoSitekey": {
     "message": "No se encontró ninguna sitekey en la página"
   },
   "advCloudflareFailedExtractSitekey": {
     "message": "No se pudo extraer la sitekey"
-  },
-  "advDatadomeCookieCopied": {
-    "message": "Cookie copiada"
   },
   "advFuncaptchaPublicKey": {
     "message": "Clave pública"
@@ -3496,9 +3475,6 @@
   "clipboardUrlFmt": {
     "message": "URL: {0}"
   },
-  "clipboardHostFmt": {
-    "message": "Host: {0}"
-  },
   "clipboardTitleFmt": {
     "message": "Título: {0}"
   },
@@ -3520,23 +3496,14 @@
   "clipboardDetectionMethodsHeading": {
     "message": "Métodos de detección:"
   },
-  "clipboardDetectionsCountFmt": {
-    "message": "Detecciones: {0}"
-  },
   "clipboardDetectionsListFmt": {
     "message": "Detecciones ({0}):"
   },
   "clipboardDifficultyFmt": {
     "message": "Dificultad: {0}"
   },
-  "clipboardCacheScopeFmt": {
-    "message": "Ámbito de caché: {0}"
-  },
   "clipboardCacheExpirationFmt": {
     "message": "Caducidad de caché: {0}"
-  },
-  "clipboardMethodsFmt": {
-    "message": "Métodos: {0}"
   },
   "clipboardCopyFailed": {
     "message": "No se pudo copiar al portapapeles"
@@ -3969,5 +3936,286 @@
   },
   "settingsCategoryOrderHelp": {
     "message": "Orden de las categorías en la lista de Detección. Dentro de cada categoría, primero la de mayor confianza."
+  },
+  "settingsCardShareUploads": {
+    "message": "Subidas para compartir"
+  },
+  "settingsShareDestination": {
+    "message": "Destino de la subida"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "Adónde envía el resumen Detección → Subir detecciones y de dónde obtiene el enlace para compartir."
+  },
+  "settingsShareService": {
+    "message": "Servicio"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com (sin cuenta)"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org (sin cuenta)"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs (sin cuenta)"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin (clave API)"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist (token)"
+  },
+  "shareProviderCustom": {
+    "message": "Servidor propio"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "Borrar tras (días)"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "Borrar tras"
+  },
+  "shareExpire10M": {
+    "message": "10 minutos"
+  },
+  "shareExpire1H": {
+    "message": "1 hora"
+  },
+  "shareExpire1D": {
+    "message": "1 día"
+  },
+  "shareExpire1W": {
+    "message": "1 semana"
+  },
+  "shareExpire2W": {
+    "message": "2 semanas"
+  },
+  "shareExpire30D": {
+    "message": "30 días"
+  },
+  "shareExpire1M": {
+    "message": "1 mes"
+  },
+  "shareExpire6M": {
+    "message": "6 meses"
+  },
+  "shareExpire1Y": {
+    "message": "1 año"
+  },
+  "shareExpireOnetime": {
+    "message": "Tras la primera vista"
+  },
+  "shareExpireNever": {
+    "message": "Nunca"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "paste.rs no permite elegir caducidad: el contenido se queda hasta que el servicio lo borre."
+  },
+  "settingsSharePastebinKey": {
+    "message": "Clave API de Pastebin"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "Tu clave de desarrollador de pastebin.com/doc_api. Las subidas no aparecen en listados públicos."
+  },
+  "settingsShareSecretNote": {
+    "message": "Se guarda solo en este navegador y no se incluye al exportar los ajustes."
+  },
+  "settingsShareGithubToken": {
+    "message": "Token de GitHub"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "Un token con permiso de Gists. Las subidas son gists secretos y no caducan; bórralos en GitHub."
+  },
+  "settingsShareCustomUrl": {
+    "message": "URL del servidor"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "HTTPS en un host público. Puede contener <EXPIRY_DAYS>."
+  },
+  "settingsShareCustomBody": {
+    "message": "Formato del cuerpo"
+  },
+  "shareBodyForm": {
+    "message": "Campo de formulario"
+  },
+  "shareBodyJson": {
+    "message": "Plantilla JSON"
+  },
+  "shareBodyRaw": {
+    "message": "Texto sin formato"
+  },
+  "settingsShareCustomField": {
+    "message": "Nombre del campo"
+  },
+  "settingsShareCustomJson": {
+    "message": "Plantilla JSON"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "Variables: <CONTENT_JSON>, <TITLE_JSON>, <EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "Uno por línea como Nombre: valor, por ejemplo Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "Enlace para compartir desde"
+  },
+  "shareLinkBody": {
+    "message": "Cuerpo de la respuesta (URL)"
+  },
+  "shareLinkJson": {
+    "message": "Campo JSON"
+  },
+  "shareLinkLocation": {
+    "message": "Cabecera Location"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "Ruta del campo JSON"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "Se envía como expiry_days en formularios y como <EXPIRY_DAYS>; tu servidor decide qué hacer con él."
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "Configura primero {0} en Ajustes → Detección → Subidas para compartir"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "Se subirá un resumen de las detecciones de esta página a {0} ({1}). Cualquiera con el enlace podrá verlo. No se incluyen los parámetros de la URL ni los valores de cookies o cabeceras."
+  },
+  "shareExpiryDaysFmt": {
+    "message": "se borra tras {0} días"
+  },
+  "shareExpiryAfterFmt": {
+    "message": "se borra tras {0}"
+  },
+  "shareExpiryOnetime": {
+    "message": "se borra tras la primera vista"
+  },
+  "shareExpiryService": {
+    "message": "se conserva hasta que el servicio lo borre"
+  },
+  "shareExpiryNever": {
+    "message": "no caduca"
+  },
+  "pasteUnsafeUrl": {
+    "message": "El servidor propio debe ser una dirección HTTPS en un host público"
+  },
+  "pasteBadLink": {
+    "message": "el servicio no devolvió un enlace HTTPS válido"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "Error al subir: {0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "Servidor de subida propio: usa una dirección HTTPS en un host público"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "Servidor de subida propio: la plantilla JSON no es JSON válido"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "{0} rechazó la clave o el token (incorrecto o caducado)"
+  },
+  "pasteGistPermission": {
+    "message": "el token de GitHub necesita el permiso Gists (lectura y escritura)"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "No hay ninguna clave de Turnstile en esta página"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "Claves de sitio de Turnstile"
+  },
+  "advTurnstileReloadingScripts": {
+    "message": "Recargando la página para recoger los scripts de Turnstile"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "Herramientas avanzadas"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "Qué protecciones tienen herramientas"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "Mostrar herramientas por encima de esta confianza (%)"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "Avanzado muestra una protección solo si su confianza supera este valor. Con 0 se muestran todas las protecciones detectadas."
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "La confianza de las herramientas avanzadas debe estar entre 0 y 99"
+  },
+  "advCommonValue": {
+    "message": "Valor"
+  },
+  "advCookiePath": {
+    "message": "Ruta"
+  },
+  "advCookieExpires": {
+    "message": "Caduca"
+  },
+  "advCookieSession": {
+    "message": "Sesión (se borra al cerrar el navegador)"
+  },
+  "advCookieNotFound": {
+    "message": "No encontradas"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "¿Restaurar los detectores oficiales?"
+  },
+  "restoreOfficialDetectorsConfirmMsg": {
+    "message": "Se vuelven a instalar los detectores oficiales que borraste, con la versión incluida en la extensión. Tus detectores propios y los cambios en otras reglas no se tocan."
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "Restaurar"
+  },
+  "advancedFilterTool": {
+    "message": "Herramienta"
+  },
+  "advancedFilterAllTools": {
+    "message": "Todas las herramientas"
+  },
+  "advFilterKindCapture": {
+    "message": "Capturas"
+  },
+  "advFilterKindOther": {
+    "message": "Otras herramientas"
+  },
+  "scrapflyExportTitle": {
+    "message": "Extraer con Scrapfly",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "Código para extraer esta página con el Unblocker",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "Obtén esta página con la API de Scrapfly y el Unblocker activado. Elige por sí mismo el navegador, los proxies y las cabeceras, y no cuesta nada extra si el sitio no bloquea.",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "Detectado en esta página",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "Lenguaje del código",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "Esta página tiene un CAPTCHA: el Unblocker lo evita o lo resuelve para devolver la página, pero no rellena CAPTCHAs de formularios.",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportKeyNote": {
+    "message": "El código lee tu clave de API de SCRAPFLY_API_KEY.",
+    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  },
+  "scrapflyExportGetKey": {
+    "message": "Obtener una clave de API",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "Abrir playground",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "Código copiado",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "Abre una página web para extraerla con Scrapfly",
+    "description": "Toast when the tab is not a web page"
   }
 }

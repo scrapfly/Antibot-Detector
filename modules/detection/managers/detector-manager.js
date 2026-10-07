@@ -851,18 +851,31 @@ class DetectorManager {
     async restoreOfficialDetectors() {
         const deleted = await DetectorManager.getDeletedOfficialIds();
         if (deleted.length === 0) return 0;
-        const categories = this.categoryManager.getAllCategories();
+        // The packaged list of official detectors, also when categories are not loaded
+        let categories = this.categoryManager?.getAllCategories?.();
+        if (!categories || Object.keys(categories).length === 0) {
+            const response = await fetch(chrome.runtime.getURL('detectors/index.json'));
+            categories = await response.json();
+        }
+        const failed = [];
         let restored = 0;
         for (const [categoryName, categoryData] of Object.entries(categories || {})) {
             const ids = Array.isArray(categoryData?.detectors) ? categoryData.detectors : [];
             for (const id of ids) {
                 if (!deleted.includes(id) || this.detectors[categoryName]?.[id]) continue;
                 if (!this.detectors[categoryName]) this.detectors[categoryName] = {};
-                await this.loadDetectorFile(categoryName, id);
+                // One unreadable file must not stop the others
+                try {
+                    await this.loadDetectorFile(categoryName, id);
+                } catch (error) {
+                    Logger.warn('DETECTOR', 'Could not restore official detector', { id, error: error?.message });
+                }
                 if (this.detectors[categoryName][id]) restored++;
+                else failed.push(id);
             }
         }
-        await chrome.storage.local.set({ [DetectorManager.DELETED_OFFICIAL_KEY]: [] });
+        // Keep the ones that did not come back, so a later restore retries them
+        await chrome.storage.local.set({ [DetectorManager.DELETED_OFFICIAL_KEY]: failed });
         if (restored > 0) await this.saveDetectorsToStorage();
         return restored;
     }

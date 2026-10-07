@@ -570,6 +570,16 @@ class Detection {
       });
     }
 
+    // Setup Scrape with Scrapfly button: this page as code with the Unblocker on
+    const scrapflyExportBtn = document.querySelector('#scrapflyExportBtn');
+    if (scrapflyExportBtn) {
+      scrapflyExportBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const pageUrl = await DetectionActions.currentPageUrl();
+        ScrapflyExport.open({ url: pageUrl, detections: this.currentResults });
+      });
+    }
+
     // Setup add to blacklist button
     const addToBlacklistBtn = document.querySelector('#addToBlacklistBtn');
     if (addToBlacklistBtn) {

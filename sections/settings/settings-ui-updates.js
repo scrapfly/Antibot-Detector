@@ -10,7 +10,7 @@ SettingsUI.handleSaveSettings = async function() {
   try {
     Logger.debug('UI', 'Getting settings from UI...');
     const newSettings = this.getSettingsFromUI();
-    Logger.debug('UI', 'Settings from UI:', newSettings);
+    Logger.debug('UI', 'Settings from UI:', SettingsUI.withoutShareSecrets(newSettings));
 
     Logger.debug('UI', 'Validating settings...');
     const validation = this.validateSettings(newSettings);
@@ -26,7 +26,7 @@ SettingsUI.handleSaveSettings = async function() {
 
     Logger.debug('UI', 'Merging settings...');
     this.settings = this.deepMerge(this.settings, newSettings);
-    Logger.debug('UI', 'Settings merged:', this.settings);
+    Logger.debug('UI', 'Settings merged:', SettingsUI.withoutShareSecrets(this.settings));
 
     Logger.debug('UI', 'Saving settings to storage...');
     await this.saveSettings();

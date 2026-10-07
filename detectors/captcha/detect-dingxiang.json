@@ -4,7 +4,7 @@
   "author": "Scrapfly",
   "enabled": true,
   "category": "CAPTCHA",
-  "difficulty": "Medium",
+  "difficulty": "Low",
   "lastUpdated": "2026-10-06",
   "version": "1.0.0",
   "minExtensionVersion": "2.8",

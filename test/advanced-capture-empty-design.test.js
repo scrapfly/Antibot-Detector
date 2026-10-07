@@ -15,7 +15,7 @@ function rule(selector, source = css) {
 
 test('empty history uses the shared Scrapfly card and decorative brand tile', () => {
   assert.match(html, /id="captureEmptyState" class="advanced-history-empty state-card state-card--blue"/);
-  assert.match(html, /class="advanced-history-empty-icon" aria-hidden="true">\s*<img src="icons\/icon48.png" alt="" width="48" height="48"/);
+  assert.match(html, /class="advanced-history-empty-icon" aria-hidden="true">\s*<img src="icons\/icon128.png" alt="" width="48" height="48"/);
   for (const key of ['advancedEmptyCapturesTitle', 'advancedEmptyCapturesHint',
     'advancedToolsLoadTools', 'advancedFooterHint']) assert.match(html, new RegExp(`data-i18n="${key}"`));
   assert.match(html, /type="button" id="captureOpenToolsBtn"/);

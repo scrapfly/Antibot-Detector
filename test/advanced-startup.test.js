@@ -5,7 +5,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const read = file => fs.readFileSync(path.join(__dirname, '..', file), 'utf8');
 
-function load(response) {
+function load(response, settings) {
   const reveals = [];
   const classes = new Set();
   const panel = { innerHTML: '' };
@@ -26,6 +26,7 @@ function load(response) {
       requests.push(message); callback(typeof response === 'function' ? response(requests.length) : response);
     } } },
     setTimeout: (callback, delay) => { if (delay === 500) { retries.push(delay); queueMicrotask(callback); } return 1; }, clearTimeout() {} };
+  if (settings !== undefined) context.Utils = { getSettings: async () => settings };
   vm.createContext(context);
   for (const file of ['advanced.js', 'advanced-runtime.js', 'advanced-tools.js']) vm.runInContext(read(`sections/advanced/${file}`), context);
   const advanced = new context.window.Advanced({ initialized: true }, { currentResults: [] });
@@ -51,7 +52,7 @@ test('Advanced never reveals its toolbar over an empty panel while detections ar
 });
 
 test('Advanced reads completed detections from the background response envelope', async () => {
-  const detection = { detector: { id: 'detect-akamai', name: 'Akamai' } };
+  const detection = { detector: { id: 'detect-akamai', name: 'Akamai' }, confidence: 90 };
   const { advanced, requests, retries } = load({ status: 'ok', data: { detectionResults: [detection] } });
   const modules = await advanced.getDetectionModules();
   assert.equal(modules.length, 1);
@@ -71,7 +72,7 @@ test('Advanced accepts a completed empty result without delaying it with retries
 });
 
 test('pending detection still retries and displays a subsequent supported result', async () => {
-  const detection = { detector: { id: 'detect-recaptcha', name: 'reCAPTCHA' } };
+  const detection = { detector: { id: 'detect-recaptcha', name: 'reCAPTCHA' }, confidence: 90 };
   const { advanced, requests, retries } = load(attempt => attempt === 1
     ? { status: 'pending', data: null }
     : { status: 'ok', data: { detectionResults: [detection] } });
@@ -82,7 +83,7 @@ test('pending detection still retries and displays a subsequent supported result
 });
 
 test('legacy array responses remain supported', async () => {
-  const detection = { detector: { id: 'detect-akamai', name: 'Akamai' } };
+  const detection = { detector: { id: 'detect-akamai', name: 'Akamai' }, confidence: 90 };
   const { advanced, requests } = load({ data: [detection] });
   assert.equal((await advanced.getDetectionModules()).length, 1);
   assert.equal(requests.length, 1);
@@ -105,4 +106,23 @@ test('render errors leave a visible error state and stop the loader', async () =
   assert.equal(elements['#advancedLoadingState'].style.display, 'none');
   assert.equal(elements['#noAdvancedState'].style.display, 'flex');
   assert.match(elements['#noAdvancedState'].innerHTML, /Error loading Advanced tools/);
+});
+
+test('a protection gets tools only above 50% confidence', async () => {
+  const at = (id, confidence) => ({ detector: { id, name: id }, confidence });
+  const { advanced } = load({ status: 'ok', data: { detectionResults: [
+    at('detect-turnstile', 10), at('detect-recaptcha', 50), at('detect-cloudflare', 51), at('detect-akamai', 95), at('detect-hcaptcha')
+  ] } });
+  const ids = [...(await advanced.getDetectionModules()).map(m => m.detection.detector.id)];
+  assert.deepEqual(ids, ['detect-cloudflare', 'detect-akamai']);
+});
+
+test('the threshold follows Settings → Detection → Advanced tools; invalid values keep 50', async () => {
+  const at = (id, confidence) => ({ detector: { id, name: id }, confidence });
+  const data = { detectionResults: [at('detect-turnstile', 10), at('detect-recaptcha', 50), at('detect-akamai', 95)] };
+  const ids = async (settings) => [...(await load({ status: 'ok', data }, settings).advanced.getDetectionModules()).map(m => m.detection.detector.id)];
+  assert.deepEqual(await ids({ detection: { advancedToolsMinConfidence: 0 } }), ['detect-turnstile', 'detect-recaptcha', 'detect-akamai']);
+  assert.deepEqual(await ids({ detection: { advancedToolsMinConfidence: 90 } }), ['detect-akamai']);
+  assert.deepEqual(await ids({ detection: { advancedToolsMinConfidence: 'x' } }), ['detect-akamai']);
+  assert.deepEqual(await ids({}), ['detect-akamai']);
 });

@@ -266,7 +266,7 @@ DetectionUI.showEmptyState = function(options = {}) {
     const interruptedState = document.querySelector('#interruptedState');
 
     if (emptyStateIcon) {
-      emptyStateIcon.src = chrome.runtime.getURL('icons/icon48.png');
+      emptyStateIcon.src = chrome.runtime.getURL('icons/icon128.png');
       emptyStateIcon.alt = 'Scrapfly';
     }
 
@@ -525,6 +525,12 @@ DetectionUI.updateUrlDisplay = function(options = {}) {
       return;
     }
 
+    // An icon that fails to load shows the extension logo instead
+    siteFavicon.onerror = () => {
+      siteFavicon.onerror = null;
+      siteFavicon.src = UrlUtils.getDefaultFaviconUrl();
+    };
+
     // Try to get URL from various sources
     let url = '';
     let favicon = '';
@@ -588,7 +594,7 @@ DetectionUI.updateUrlDisplay = function(options = {}) {
               siteFavicon.src = `${urlObj.origin}/favicon.ico`;
             } catch (e) {
               // Use default icon
-              siteFavicon.src = 'icons/icon16.png';
+              siteFavicon.src = UrlUtils.getDefaultFaviconUrl();
             }
           }
         });

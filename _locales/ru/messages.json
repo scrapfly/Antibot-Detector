@@ -602,28 +602,28 @@
     "message": "1 неделя"
   },
   "methodLabelUrl": {
-    "message": "URL"
+    "message": "Url"
   },
   "methodLabelHeader": {
-    "message": "HEADER"
+    "message": "Заголовки"
   },
   "methodLabelCookie": {
-    "message": "COOKIE"
+    "message": "Файлы cookie"
   },
   "methodLabelContent": {
-    "message": "CONTENT"
+    "message": "Содержимое"
   },
   "methodLabelDom": {
-    "message": "DOM"
+    "message": "Dom"
   },
   "methodLabelJsHooks": {
-    "message": "JS HOOKS"
+    "message": "JS-хуки"
   },
   "methodLabelWindow": {
-    "message": "WINDOW"
+    "message": "Окно"
   },
   "methodLabelPayload": {
-    "message": "PAYLOAD"
+    "message": "Полезная нагрузка"
   },
   "methodOnePattern": {
     "message": "1 шаблон"
@@ -1336,9 +1336,6 @@
   "pasteConfirmTitle": {
     "message": "Загрузить обнаружения?"
   },
-  "pasteConfirmMsg": {
-    "message": "Это загрузит сводку обнаружений этой страницы в публичную вставку (dpaste.com, не в списке, истекает через 30 дней). Любой, у кого есть ссылка, может её просмотреть. Строка запроса URL и значения cookie/заголовков не включаются."
-  },
   "pasteConfirmBtn": {
     "message": "Загрузить"
   },
@@ -1493,7 +1490,7 @@
     "message": "Проверять только скрипты"
   },
   "rulesOnlyCheckScriptsHint": {
-    "message": "Ограничить поиск только кодом JavaScript и URL-адресами скриптов"
+    "message": "Искать только в коде JavaScript (встроенные и загруженные скрипты), а не в тексте страницы или именах файлов"
   },
   "rulesScopeSettingsTitle": {
     "message": "Настройки области"
@@ -1622,7 +1619,7 @@
     "message": "Сопоставляет URL загружаемых ресурсов (скрипты, изображения, сетевые запросы) с шаблонами."
   },
   "helpUrlWarning": {
-    "message": "По умолчанию шаблоны учитывают регистр. Отключите параметр «URL с учётом регистра», если требуется сопоставление без учёта регистра."
+    "message": "Шаблоны не учитывают регистр, пока не включён параметр «С учётом регистра». Слишком общий шаблон совпадёт и с посторонними ресурсами, поэтому делайте его точным."
   },
   "helpUrlTip": {
     "message": "Используйте параметр Regex для сложных шаблонов вроде /\\/v\\d+\\/challenge/."
@@ -2362,9 +2359,6 @@
   "advCommonClickToCopy": {
     "message": "Нажмите, чтобы скопировать"
   },
-  "advCommonClickToCopyFull": {
-    "message": "Нажмите, чтобы скопировать полное значение"
-  },
   "advCommonDomainLabel": {
     "message": "Домен:"
   },
@@ -2935,9 +2929,6 @@
   "advShapeCookieTitle": {
     "message": "Cookie Shape"
   },
-  "advShapeMaxAgeInfoFmt": {
-    "message": "Max-Age: {0} с (50 лет)"
-  },
   "advShapeAnalysisTitle": {
     "message": "Анализ Shape Security"
   },
@@ -3106,14 +3097,8 @@
   "advAwswafDeletingCookieFmt": {
     "message": "Удаление куки {0}… Страница будет перезагружена"
   },
-  "advCloudflareExtractedSiteKey": {
-    "message": "Извлечённый Site Key"
-  },
   "advCloudflareTypeLabel": {
     "message": "Тип"
-  },
-  "advCloudflareSiteKeyClickToCopy": {
-    "message": "Site Key (нажмите, чтобы скопировать)"
   },
   "advCloudflareSiteKeyCopied": {
     "message": "Site Key скопирован"
@@ -3136,17 +3121,11 @@
   "advCloudflareCheckingVersion": {
     "message": "Проверка версии Cloudflare… Страница будет перезагружена"
   },
-  "advCloudflareSiteKeyExtracted": {
-    "message": "Site Key успешно извлечён"
-  },
   "advCloudflareNoSitekey": {
     "message": "Sitekey на странице не найден"
   },
   "advCloudflareFailedExtractSitekey": {
     "message": "Не удалось извлечь sitekey"
-  },
-  "advDatadomeCookieCopied": {
-    "message": "Куки скопированы"
   },
   "advFuncaptchaPublicKey": {
     "message": "Публичный ключ"
@@ -3496,9 +3475,6 @@
   "clipboardUrlFmt": {
     "message": "URL: {0}"
   },
-  "clipboardHostFmt": {
-    "message": "Хост: {0}"
-  },
   "clipboardTitleFmt": {
     "message": "Заголовок: {0}"
   },
@@ -3520,23 +3496,14 @@
   "clipboardDetectionMethodsHeading": {
     "message": "Методы обнаружения:"
   },
-  "clipboardDetectionsCountFmt": {
-    "message": "Обнаружения: {0}"
-  },
   "clipboardDetectionsListFmt": {
     "message": "Обнаружения ({0}):"
   },
   "clipboardDifficultyFmt": {
     "message": "Сложность: {0}"
   },
-  "clipboardCacheScopeFmt": {
-    "message": "Область кэша: {0}"
-  },
   "clipboardCacheExpirationFmt": {
     "message": "Срок действия кэша: {0}"
-  },
-  "clipboardMethodsFmt": {
-    "message": "Методы: {0}"
   },
   "clipboardCopyFailed": {
     "message": "Не удалось скопировать в буфер обмена"
@@ -3969,5 +3936,286 @@
   },
   "settingsCategoryOrderHelp": {
     "message": "Порядок категорий в списке обнаружений. Внутри категории сначала идут результаты с наибольшей уверенностью."
+  },
+  "settingsCardShareUploads": {
+    "message": "Загрузки для обмена"
+  },
+  "settingsShareDestination": {
+    "message": "Куда загружать"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "Куда «Обнаружение → Загрузить обнаружения» отправляет сводку и откуда берёт ссылку."
+  },
+  "settingsShareService": {
+    "message": "Сервис"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com (без аккаунта)"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org (без аккаунта)"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs (без аккаунта)"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin (ключ API)"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist (токен)"
+  },
+  "shareProviderCustom": {
+    "message": "Свой сервер"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "Удалить через (дней)"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "Удалить через"
+  },
+  "shareExpire10M": {
+    "message": "10 минут"
+  },
+  "shareExpire1H": {
+    "message": "1 час"
+  },
+  "shareExpire1D": {
+    "message": "1 день"
+  },
+  "shareExpire1W": {
+    "message": "1 неделя"
+  },
+  "shareExpire2W": {
+    "message": "2 недели"
+  },
+  "shareExpire30D": {
+    "message": "30 дней"
+  },
+  "shareExpire1M": {
+    "message": "1 месяц"
+  },
+  "shareExpire6M": {
+    "message": "6 месяцев"
+  },
+  "shareExpire1Y": {
+    "message": "1 год"
+  },
+  "shareExpireOnetime": {
+    "message": "После первого просмотра"
+  },
+  "shareExpireNever": {
+    "message": "Никогда"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "У paste.rs нет срока хранения: запись остаётся, пока сервис её не удалит."
+  },
+  "settingsSharePastebinKey": {
+    "message": "Ключ API Pastebin"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "Ваш ключ разработчика с pastebin.com/doc_api. Записи не попадают в публичные списки."
+  },
+  "settingsShareSecretNote": {
+    "message": "Хранится только в этом браузере и не попадает в экспорт настроек."
+  },
+  "settingsShareGithubToken": {
+    "message": "Токен GitHub"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "Токен с правом Gists. Загрузки — секретные gist без срока хранения; удаляйте их на GitHub."
+  },
+  "settingsShareCustomUrl": {
+    "message": "URL сервера"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "HTTPS на публичном хосте. Может содержать <EXPIRY_DAYS>."
+  },
+  "settingsShareCustomBody": {
+    "message": "Формат тела"
+  },
+  "shareBodyForm": {
+    "message": "Поле формы"
+  },
+  "shareBodyJson": {
+    "message": "Шаблон JSON"
+  },
+  "shareBodyRaw": {
+    "message": "Простой текст"
+  },
+  "settingsShareCustomField": {
+    "message": "Имя поля"
+  },
+  "settingsShareCustomJson": {
+    "message": "Шаблон JSON"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "Переменные: <CONTENT_JSON>, <TITLE_JSON>, <EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "По одному в строке: Имя: значение, например Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "Ссылка из"
+  },
+  "shareLinkBody": {
+    "message": "Тело ответа (URL)"
+  },
+  "shareLinkJson": {
+    "message": "Поле JSON"
+  },
+  "shareLinkLocation": {
+    "message": "Заголовок Location"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "Путь к полю JSON"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "Передаётся как expiry_days в формах и как <EXPIRY_DAYS>; что с ним делать, решает ваш сервер."
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "Сначала настройте {0} в Настройки → Обнаружение → Загрузки для обмена"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "Сводка обнаружений этой страницы будет загружена в {0} ({1}). Её увидит любой, у кого есть ссылка. Параметры URL и значения cookie и заголовков не включаются."
+  },
+  "shareExpiryDaysFmt": {
+    "message": "удаляется через {0} дн."
+  },
+  "shareExpiryAfterFmt": {
+    "message": "удаляется через {0}"
+  },
+  "shareExpiryOnetime": {
+    "message": "удаляется после первого просмотра"
+  },
+  "shareExpiryService": {
+    "message": "хранится, пока сервис не удалит"
+  },
+  "shareExpiryNever": {
+    "message": "без срока хранения"
+  },
+  "pasteUnsafeUrl": {
+    "message": "Свой сервер должен быть HTTPS-адресом на публичном хосте"
+  },
+  "pasteBadLink": {
+    "message": "сервис не вернул корректную HTTPS-ссылку"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "Не удалось загрузить: {0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "Свой сервер загрузки: укажите HTTPS-адрес на публичном хосте"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "Свой сервер загрузки: шаблон JSON некорректен"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "{0} отклонил ключ или токен (неверный или истёк)"
+  },
+  "pasteGistPermission": {
+    "message": "токену GitHub нужно право Gists (чтение и запись)"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "На этой странице нет ключа сайта Turnstile"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "Ключи сайта Turnstile"
+  },
+  "advTurnstileReloadingScripts": {
+    "message": "Перезагрузка страницы для сбора скриптов Turnstile"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "Расширенные инструменты"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "Для каких защит есть инструменты"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "Показывать инструменты выше этой уверенности (%)"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "Раздел «Расширенные» показывает защиту, только если её уверенность выше этого значения. 0 — показывать все обнаруженные."
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "Уверенность для расширенных инструментов должна быть от 0 до 99"
+  },
+  "advCommonValue": {
+    "message": "Значение"
+  },
+  "advCookiePath": {
+    "message": "Путь"
+  },
+  "advCookieExpires": {
+    "message": "Истекает"
+  },
+  "advCookieSession": {
+    "message": "Сеанс (удаляется при закрытии браузера)"
+  },
+  "advCookieNotFound": {
+    "message": "Не найдены"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "Восстановить официальные детекторы?"
+  },
+  "restoreOfficialDetectorsConfirmMsg": {
+    "message": "Удалённые официальные детекторы будут установлены заново в версии из расширения. Ваши детекторы и изменения в других правилах не затрагиваются."
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "Восстановить"
+  },
+  "advancedFilterTool": {
+    "message": "Инструмент"
+  },
+  "advancedFilterAllTools": {
+    "message": "Все инструменты"
+  },
+  "advFilterKindCapture": {
+    "message": "Захваты"
+  },
+  "advFilterKindOther": {
+    "message": "Другие инструменты"
+  },
+  "scrapflyExportTitle": {
+    "message": "Скрапинг через Scrapfly",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "Код для скрапинга этой страницы с Unblocker",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "Получите эту страницу через API Scrapfly с включённым Unblocker. Он сам выбирает браузер, прокси и заголовки и ничего не стоит сверх обычного, если сайт не блокирует.",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "Обнаружено на этой странице",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "Язык кода",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "На этой странице есть CAPTCHA: Unblocker обходит или решает её, чтобы вернуть страницу, но не заполняет CAPTCHA в формах.",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportKeyNote": {
+    "message": "Код берёт ваш API-ключ из SCRAPFLY_API_KEY.",
+    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  },
+  "scrapflyExportGetKey": {
+    "message": "Получить API-ключ",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "Открыть Playground",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "Код скопирован",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "Откройте веб-страницу, чтобы скрапить её через Scrapfly",
+    "description": "Toast when the tab is not a web page"
   }
 }

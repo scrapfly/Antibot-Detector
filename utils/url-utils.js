@@ -312,14 +312,32 @@ class UrlUtils {
   }
 
   /**
-   * Get default favicon URL (extension icon)
+   * The icon a page declares for itself: the first <link> whose rel is
+   * "icon" (also "shortcut icon", "alternate icon"), else an Apple touch
+   * icon. No other link counts, whatever its type: a rel="preload" PNG is a
+   * page image, and Safari's mask-icon is a one-colour silhouette.
+   * @param {Document} doc
+   * @returns {string} Absolute icon URL, or '' when the page declares none
+   */
+  static findPageIconHref(doc) {
+    if (!doc || typeof doc.querySelectorAll !== 'function') return '';
+    const links = Array.from(doc.querySelectorAll('link[rel][href]'));
+    const relTokens = link => String(link.getAttribute('rel') || '').toLowerCase().split(/\s+/);
+    const firstWith = (...tokens) => links.find(link => link.href && relTokens(link).some(token => tokens.includes(token)));
+    const icon = firstWith('icon') || firstWith('apple-touch-icon', 'apple-touch-icon-precomposed');
+    return icon ? String(icon.href) : '';
+  }
+
+  /**
+   * Get default favicon URL (extension icon). The 48 px icon stays sharp in
+   * the 16 px favicon slots on high-resolution screens.
    * @returns {string} Default favicon URL
    */
   static getDefaultFaviconUrl() {
     try {
-      return chrome.runtime.getURL('icons/icon16.png');
+      return chrome.runtime.getURL('icons/icon48.png');
     } catch (error) {
-      return 'icons/icon16.png';
+      return 'icons/icon48.png';
     }
   }
 

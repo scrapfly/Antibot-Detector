@@ -163,12 +163,16 @@ const MUST_NOT = ALL_IDS.filter(id => id.startsWith('n-'));
   await admin.close();
   await sleep(1500);
 
-  async function run(url) {
+  // prime: set the probe cookie on the host first. Never for the clean page,
+  // whose host must carry no signal at all (the cookie would be one)
+  async function run(url, { prime = true } = {}) {
     const page = await ctx.newPage();
     // Prime the cookie on another page (cache is keyed by full URL), so the
     // page under test gets a fresh detection whose own request carries it
-    await page.goto(new URL('/prime', url).href, { waitUntil: 'domcontentloaded' });
-    await sleep(1500);
+    if (prime) {
+      await page.goto(new URL('/prime', url).href, { waitUntil: 'domcontentloaded' });
+      await sleep(1500);
+    }
     // A second navigation in the same tab sometimes never reports its load
     // events to Playwright (seen without the extension too): wait for the
     // response to commit, then give the page a fixed time to run
@@ -208,7 +212,7 @@ const MUST_NOT = ALL_IDS.filter(id => id.startsWith('n-'));
     if (bad) fail++;
     console.log(`  ${bad ? 'FAIL' : 'PASS'}  ${id.padEnd(22)} ${bad ? 'matched but must not (setting ignored)' : 'correctly not matched'}`);
   }
-  const clean = await run(`http://localhost:${port}/clean`);
+  const clean = await run(`http://localhost:${port}/clean`, { prime: false });
   const cleanProbe = clean.find(d => d.name === 'Settings Probe');
     const cleanOk = !cleanProbe;
   if (!cleanOk) fail++;

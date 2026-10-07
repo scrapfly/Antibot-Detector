@@ -83,6 +83,134 @@ function demEarlyBindShims() {
     return DEH_EARLY_BIND_SHIM_TARGETS.map(target => ({ target, contextPaths: demHookContextPaths({ target }) }));
 }
 
+// Hook targets the MAIN world records from document_start. The hook definitions
+// arrive with the first install event, which waits on storage, so a page that
+// fingerprints in its first moments (inline scripts, an early bundle) ran before
+// any hook existed. Every enabled js_hooks target of the bundled detectors.
+// BEGIN generated: node scripts/gen-early-hook-targets.js
+const DEH_EARLY_HOOK_TARGETS = Object.freeze([
+    'AnalyserNode.prototype.getFloatFrequencyData',
+    'AudioBuffer.prototype.copyFromChannel',
+    'AudioBuffer.prototype.getChannelData',
+    'BaseAudioContext.prototype.createDynamicsCompressor',
+    'BaseAudioContext.prototype.createOscillator',
+    'BatteryManager.prototype.charging',
+    'BatteryManager.prototype.chargingTime',
+    'BatteryManager.prototype.dischargingTime',
+    'BatteryManager.prototype.level',
+    'CSSStyleDeclaration.prototype.getPropertyPriority',
+    'CSSStyleDeclaration.prototype.getPropertyValue',
+    'CSSStyleDeclaration.prototype.item',
+    'CanvasRenderingContext2D.prototype.fillText',
+    'CanvasRenderingContext2D.prototype.getImageData',
+    'CanvasRenderingContext2D.prototype.isPointInPath',
+    'CanvasRenderingContext2D.prototype.measureText',
+    'CanvasRenderingContext2D.prototype.strokeText',
+    'Clipboard.prototype.read',
+    'Clipboard.prototype.readText',
+    'Clipboard.prototype.write',
+    'Clipboard.prototype.writeText',
+    'Crypto.prototype.getRandomValues',
+    'Date.prototype.getTimezoneOffset',
+    'Document.prototype.fonts',
+    'FontFaceSet.prototype.check',
+    'FontFaceSet.prototype.entries',
+    'Gamepad.prototype.axes',
+    'Gamepad.prototype.buttons',
+    'Gamepad.prototype.id',
+    'Gamepad.prototype.mapping',
+    'Geolocation.prototype.getCurrentPosition',
+    'Geolocation.prototype.watchPosition',
+    'GeolocationCoordinates.prototype.altitude',
+    'GeolocationCoordinates.prototype.heading',
+    'GeolocationCoordinates.prototype.latitude',
+    'GeolocationCoordinates.prototype.longitude',
+    'GeolocationCoordinates.prototype.speed',
+    'HTMLCanvasElement.prototype.toBlob',
+    'HTMLCanvasElement.prototype.toDataURL',
+    'HTMLMediaElement.prototype.canPlayType',
+    'IDBDatabase.prototype.transaction',
+    'IDBFactory.prototype.databases',
+    'IDBFactory.prototype.open',
+    'Intl.Collator.prototype.compare',
+    'Intl.DateTimeFormat.prototype.resolvedOptions',
+    'MediaDevices.prototype.enumerateDevices',
+    'MimeTypeArray.prototype.length',
+    'Navigator.prototype.deviceMemory',
+    'Navigator.prototype.getBattery',
+    'Navigator.prototype.getGamepads',
+    'Navigator.prototype.hardwareConcurrency',
+    'Navigator.prototype.languages',
+    'Navigator.prototype.maxTouchPoints',
+    'Navigator.prototype.platform',
+    'Navigator.prototype.userAgent',
+    'Navigator.prototype.webdriver',
+    'NavigatorUAData.prototype.getHighEntropyValues',
+    'OfflineAudioContext.prototype.startRendering',
+    'OffscreenCanvas.prototype.getContext',
+    'Performance.prototype.getEntriesByType',
+    'Performance.prototype.memory',
+    'Performance.prototype.now',
+    'PluginArray.prototype.length',
+    'RTCIceCandidate.prototype.address',
+    'RTCPeerConnection.prototype.createDataChannel',
+    'RTCPeerConnection.prototype.createOffer',
+    'Screen.prototype.availHeight',
+    'Screen.prototype.colorDepth',
+    'Screen.prototype.height',
+    'Screen.prototype.width',
+    'SpeechSynthesis.prototype.getVoices',
+    'Storage.prototype.clear',
+    'Storage.prototype.getItem',
+    'Storage.prototype.key',
+    'Storage.prototype.setItem',
+    'SubtleCrypto.prototype.digest',
+    'TextMetrics.prototype.width',
+    'USB.prototype.getDevices',
+    'USB.prototype.requestDevice',
+    'USBDevice.prototype.productId',
+    'USBDevice.prototype.serialNumber',
+    'USBDevice.prototype.vendorId',
+    'WebGL2RenderingContext.prototype.getExtension',
+    'WebGL2RenderingContext.prototype.getParameter',
+    'WebGL2RenderingContext.prototype.getShaderPrecisionFormat',
+    'WebGL2RenderingContext.prototype.getSupportedExtensions',
+    'WebGL2RenderingContext.prototype.readPixels',
+    'WebGLRenderingContext.prototype.getExtension',
+    'WebGLRenderingContext.prototype.getParameter',
+    'WebGLRenderingContext.prototype.getShaderPrecisionFormat',
+    'WebGLRenderingContext.prototype.getSupportedExtensions',
+    'WebGLRenderingContext.prototype.readPixels',
+    'window.devicePixelRatio'
+]);
+// END generated
+
+// Members that hand the page a child window. Fingerprinting scripts create a
+// same-origin iframe to call pristine APIs from it; the MAIN world wraps the
+// hook targets inside a child window when the page first reaches it here.
+// viewProperty: the member returns a document, whose window is that property.
+const DEH_CHILD_WINDOW_ACCESSORS = Object.freeze([
+    Object.freeze({ target: 'HTMLIFrameElement.prototype.contentWindow' }),
+    Object.freeze({ target: 'HTMLIFrameElement.prototype.contentDocument', viewProperty: 'defaultView' }),
+    Object.freeze({ target: 'HTMLFrameElement.prototype.contentWindow' }),
+    Object.freeze({ target: 'HTMLFrameElement.prototype.contentDocument', viewProperty: 'defaultView' }),
+    Object.freeze({ target: 'HTMLObjectElement.prototype.contentWindow' }),
+    Object.freeze({ target: 'HTMLObjectElement.prototype.contentDocument', viewProperty: 'defaultView' })
+]);
+
+// Early recorders are removed after this long even if no install event arrives
+// (the install event normally retires them within tens of milliseconds)
+const DEH_EARLY_RECORD_MAX_MS = 15000;
+
+/** Early hook recording as the MAIN world installs it from the bootstrap */
+function demEarlyHooks() {
+    return {
+        targets: DEH_EARLY_HOOK_TARGETS.map(target => ({ target, contextPaths: demHookContextPaths({ target }) })),
+        childWindowAccessors: DEH_CHILD_WINDOW_ACCESSORS.map(spec => ({ ...spec })),
+        maxMs: DEH_EARLY_RECORD_MAX_MS
+    };
+}
+
 /**
  * Detail of the bridge bootstrap event (EVENTS.BRIDGE_INIT) content.js fires at
  * document_start: everything the MAIN world needs before its first install
@@ -95,6 +223,7 @@ function demMainWorldBootstrapDetail(token) {
         protocol,
         [protocol.FIELDS.TOKEN]: token,
         bindShims: demEarlyBindShims(),
+        earlyHooks: demEarlyHooks(),
         // modules/detection/window-condition-grammar.js, for the MAIN-world evaluator
         conditionGrammar: globalThis.ScrapflyWindowConditionGrammar
     };

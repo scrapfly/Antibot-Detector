@@ -167,7 +167,11 @@ class I18n {
         scope.querySelectorAll('[data-i18n]').forEach((el) => {
             const key = el.getAttribute('data-i18n');
             const value = I18n.get(key);
-            if (value) el.textContent = value;
+            if (!value) return;
+            // An option with an icon keeps it: the text goes into its label
+            const label = el.querySelector?.(':scope > .opt-label');
+            if (label) label.textContent = value;
+            else el.textContent = value;
         });
 
         // data-i18n-fmt="key" data-i18n-args="a,b,c" → I18n.format(key, a, b, c)

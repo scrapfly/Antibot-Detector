@@ -197,7 +197,7 @@ Rules.prototype.getMethodHelpContent = function(methodType) {
     'url': {
       title: _tr('helpUrlTitle', 'URL Pattern Detection'),
       description: _tr('helpUrlDescription', 'Matches URLs of loaded resources (scripts, images, stylesheets, XHR requests). Detects CDN URLs, API endpoints, and third-party domains used by anti-bot services.'),
-      warning: _tr('helpUrlWarning', 'URL detection triggers on any matching resource. Use specific patterns to avoid false positives.'),
+      warning: _tr('helpUrlWarning', 'Patterns ignore upper and lower case unless you turn on Case sensitive. A pattern that is too general also matches unrelated resources, so keep it specific.'),
       tip: _tr('helpUrlTip', 'Enable "Regex" for flexible pattern matching (e.g., <code>cdn\\.example\\.com/.*\\.js</code>). Use "Whole Word" to match exact domains.')
     },
     'header': {

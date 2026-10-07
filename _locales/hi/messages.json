@@ -602,28 +602,28 @@
     "message": "1 सप्ताह"
   },
   "methodLabelUrl": {
-    "message": "URL"
+    "message": "Url"
   },
   "methodLabelHeader": {
-    "message": "HEADER"
+    "message": "हेडर"
   },
   "methodLabelCookie": {
-    "message": "COOKIE"
+    "message": "कुकीज़"
   },
   "methodLabelContent": {
-    "message": "CONTENT"
+    "message": "सामग्री"
   },
   "methodLabelDom": {
-    "message": "DOM"
+    "message": "Dom"
   },
   "methodLabelJsHooks": {
-    "message": "JS HOOKS"
+    "message": "JS हुक"
   },
   "methodLabelWindow": {
-    "message": "WINDOW"
+    "message": "विंडो"
   },
   "methodLabelPayload": {
-    "message": "PAYLOAD"
+    "message": "पेलोड"
   },
   "methodOnePattern": {
     "message": "1 पैटर्न"
@@ -1336,9 +1336,6 @@
   "pasteConfirmTitle": {
     "message": "पहचान अपलोड करें?"
   },
-  "pasteConfirmMsg": {
-    "message": "यह इस पृष्ठ की पहचान का सारांश एक सार्वजनिक पेस्ट (dpaste.com, असूचीबद्ध, 30 दिनों में समाप्त) पर अपलोड करता है। लिंक वाला कोई भी इसे देख सकता है। URL क्वेरी स्ट्रिंग और कुकी/हेडर मान शामिल नहीं हैं।"
-  },
   "pasteConfirmBtn": {
     "message": "अपलोड करें"
   },
@@ -1493,7 +1490,7 @@
     "message": "केवल स्क्रिप्ट जाँचें"
   },
   "rulesOnlyCheckScriptsHint": {
-    "message": "खोज को केवल JavaScript कोड और स्क्रिप्ट URL तक सीमित करें"
+    "message": "केवल JavaScript कोड (इनलाइन और लोड की गई स्क्रिप्ट) में खोजें, पेज टेक्स्ट या फ़ाइल नामों में नहीं"
   },
   "rulesScopeSettingsTitle": {
     "message": "स्कोप सेटिंग्स"
@@ -1622,7 +1619,7 @@
     "message": "लोड किए गए संसाधनों (स्क्रिप्ट, इमेज, नेटवर्क रिक्वेस्ट) के URL को पैटर्न के साथ मिलाता है।"
   },
   "helpUrlWarning": {
-    "message": "पैटर्न डिफ़ॉल्ट रूप से केस-संवेदी होते हैं। यदि आपको केस-असंवेदी मिलान चाहिए तो URL केस संवेदी विकल्प को टॉगल करें।"
+    "message": "जब तक आप \"केस संवेदी\" चालू नहीं करते, पैटर्न बड़े और छोटे अक्षरों में फ़र्क नहीं करते। बहुत सामान्य पैटर्न असंबंधित संसाधनों से भी मेल खाता है, इसलिए उसे सटीक रखें।"
   },
   "helpUrlTip": {
     "message": "/\\/v\\d+\\/challenge/ जैसे उन्नत पैटर्न के लिए Regex विकल्प का उपयोग करें।"
@@ -2362,9 +2359,6 @@
   "advCommonClickToCopy": {
     "message": "कॉपी करने के लिए क्लिक करें"
   },
-  "advCommonClickToCopyFull": {
-    "message": "पूरा मान कॉपी करने के लिए क्लिक करें"
-  },
   "advCommonDomainLabel": {
     "message": "डोमेन:"
   },
@@ -2935,9 +2929,6 @@
   "advShapeCookieTitle": {
     "message": "Shape कुकी"
   },
-  "advShapeMaxAgeInfoFmt": {
-    "message": "Max-Age: {0} सेकंड (50 वर्ष)"
-  },
   "advShapeAnalysisTitle": {
     "message": "Shape Security विश्लेषण"
   },
@@ -3106,14 +3097,8 @@
   "advAwswafDeletingCookieFmt": {
     "message": "{0} कुकी हटाई जा रही है… पेज फिर से लोड होगा"
   },
-  "advCloudflareExtractedSiteKey": {
-    "message": "निकाली गई Site Key"
-  },
   "advCloudflareTypeLabel": {
     "message": "प्रकार"
-  },
-  "advCloudflareSiteKeyClickToCopy": {
-    "message": "Site Key (कॉपी करने के लिए क्लिक करें)"
   },
   "advCloudflareSiteKeyCopied": {
     "message": "Site Key कॉपी हो गई"
@@ -3136,17 +3121,11 @@
   "advCloudflareCheckingVersion": {
     "message": "Cloudflare संस्करण जाँचा जा रहा है… पेज फिर से लोड होगा"
   },
-  "advCloudflareSiteKeyExtracted": {
-    "message": "Site Key सफलतापूर्वक निकाली गई"
-  },
   "advCloudflareNoSitekey": {
     "message": "पेज पर कोई sitekey नहीं मिली"
   },
   "advCloudflareFailedExtractSitekey": {
     "message": "sitekey नहीं निकाली जा सकी"
-  },
-  "advDatadomeCookieCopied": {
-    "message": "कुकी कॉपी हो गई"
   },
   "advFuncaptchaPublicKey": {
     "message": "सार्वजनिक कुंजी"
@@ -3496,9 +3475,6 @@
   "clipboardUrlFmt": {
     "message": "URL: {0}"
   },
-  "clipboardHostFmt": {
-    "message": "होस्ट: {0}"
-  },
   "clipboardTitleFmt": {
     "message": "शीर्षक: {0}"
   },
@@ -3520,23 +3496,14 @@
   "clipboardDetectionMethodsHeading": {
     "message": "जांच विधियां:"
   },
-  "clipboardDetectionsCountFmt": {
-    "message": "पहचान: {0}"
-  },
   "clipboardDetectionsListFmt": {
     "message": "पहचान ({0}):"
   },
   "clipboardDifficultyFmt": {
     "message": "कठिनाई: {0}"
   },
-  "clipboardCacheScopeFmt": {
-    "message": "कैश दायरा: {0}"
-  },
   "clipboardCacheExpirationFmt": {
     "message": "कैश समाप्ति: {0}"
-  },
-  "clipboardMethodsFmt": {
-    "message": "विधियां: {0}"
   },
   "clipboardCopyFailed": {
     "message": "क्लिपबोर्ड पर कॉपी करने में विफल"
@@ -3969,5 +3936,286 @@
   },
   "settingsCategoryOrderHelp": {
     "message": "पहचान सूची में श्रेणियों का क्रम। एक श्रेणी के भीतर सबसे अधिक भरोसे वाला परिणाम पहले आता है।"
+  },
+  "settingsCardShareUploads": {
+    "message": "शेयर अपलोड"
+  },
+  "settingsShareDestination": {
+    "message": "अपलोड गंतव्य"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "जहाँ पहचान → पहचान अपलोड करें सारांश भेजता है और शेयर लिंक लेता है।"
+  },
+  "settingsShareService": {
+    "message": "सेवा"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com (बिना खाते)"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org (बिना खाते)"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs (बिना खाते)"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin (API कुंजी)"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist (टोकन)"
+  },
+  "shareProviderCustom": {
+    "message": "कस्टम सर्वर"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "इतने दिन बाद हटाएँ"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "इसके बाद हटाएँ"
+  },
+  "shareExpire10M": {
+    "message": "10 मिनट"
+  },
+  "shareExpire1H": {
+    "message": "1 घंटा"
+  },
+  "shareExpire1D": {
+    "message": "1 दिन"
+  },
+  "shareExpire1W": {
+    "message": "1 सप्ताह"
+  },
+  "shareExpire2W": {
+    "message": "2 सप्ताह"
+  },
+  "shareExpire30D": {
+    "message": "30 दिन"
+  },
+  "shareExpire1M": {
+    "message": "1 महीना"
+  },
+  "shareExpire6M": {
+    "message": "6 महीने"
+  },
+  "shareExpire1Y": {
+    "message": "1 वर्ष"
+  },
+  "shareExpireOnetime": {
+    "message": "पहली बार देखने के बाद"
+  },
+  "shareExpireNever": {
+    "message": "कभी नहीं"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "paste.rs में समाप्ति विकल्प नहीं है: सेवा हटाने तक पेस्ट बना रहता है।"
+  },
+  "settingsSharePastebinKey": {
+    "message": "Pastebin API कुंजी"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "pastebin.com/doc_api से आपकी डेवलपर कुंजी। पेस्ट सूची में नहीं दिखते।"
+  },
+  "settingsShareSecretNote": {
+    "message": "केवल इसी ब्राउज़र में सहेजा जाता है और सेटिंग निर्यात में शामिल नहीं होता।"
+  },
+  "settingsShareGithubToken": {
+    "message": "GitHub टोकन"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "Gists अनुमति वाला टोकन। अपलोड गुप्त gist होते हैं और समाप्त नहीं होते; उन्हें GitHub पर हटाएँ।"
+  },
+  "settingsShareCustomUrl": {
+    "message": "सर्वर URL"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "सार्वजनिक होस्ट पर HTTPS। इसमें <EXPIRY_DAYS> हो सकता है।"
+  },
+  "settingsShareCustomBody": {
+    "message": "बॉडी फ़ॉर्मैट"
+  },
+  "shareBodyForm": {
+    "message": "फ़ॉर्म फ़ील्ड"
+  },
+  "shareBodyJson": {
+    "message": "JSON टेम्पलेट"
+  },
+  "shareBodyRaw": {
+    "message": "सादा टेक्स्ट"
+  },
+  "settingsShareCustomField": {
+    "message": "फ़ील्ड का नाम"
+  },
+  "settingsShareCustomJson": {
+    "message": "JSON टेम्पलेट"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "वेरिएबल: <CONTENT_JSON>, <TITLE_JSON>, <EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "हर पंक्ति में एक, नाम: मान के रूप में, जैसे Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "शेयर लिंक कहाँ से"
+  },
+  "shareLinkBody": {
+    "message": "रिस्पॉन्स बॉडी (URL)"
+  },
+  "shareLinkJson": {
+    "message": "JSON फ़ील्ड"
+  },
+  "shareLinkLocation": {
+    "message": "Location हेडर"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "JSON फ़ील्ड पाथ"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "फ़ॉर्म में expiry_days और <EXPIRY_DAYS> के रूप में भेजा जाता है; आपका सर्वर तय करता है कि क्या करना है।"
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "पहले सेटिंग → पहचान → शेयर अपलोड में {0} सेट करें"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "इस पेज की पहचानों का सारांश {0} पर अपलोड होगा ({1})। लिंक वाला कोई भी इसे देख सकता है। URL क्वेरी और कुकी/हेडर मान शामिल नहीं हैं।"
+  },
+  "shareExpiryDaysFmt": {
+    "message": "{0} दिन बाद हटेगा"
+  },
+  "shareExpiryAfterFmt": {
+    "message": "{0} बाद हटेगा"
+  },
+  "shareExpiryOnetime": {
+    "message": "पहली बार देखने के बाद हटेगा"
+  },
+  "shareExpiryService": {
+    "message": "सेवा हटाने तक रहेगा"
+  },
+  "shareExpiryNever": {
+    "message": "समाप्त नहीं होता"
+  },
+  "pasteUnsafeUrl": {
+    "message": "कस्टम सर्वर सार्वजनिक होस्ट पर HTTPS पता होना चाहिए"
+  },
+  "pasteBadLink": {
+    "message": "सेवा ने मान्य HTTPS लिंक नहीं दिया"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "अपलोड विफल: {0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "कस्टम अपलोड सर्वर: सार्वजनिक होस्ट पर HTTPS पता उपयोग करें"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "कस्टम अपलोड सर्वर: JSON टेम्पलेट मान्य JSON नहीं है"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "{0} ने कुंजी या टोकन अस्वीकार किया (गलत या समाप्त)"
+  },
+  "pasteGistPermission": {
+    "message": "GitHub टोकन को Gists अनुमति (पढ़ना और लिखना) चाहिए"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "इस पेज पर कोई Turnstile साइट कुंजी नहीं है"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "Turnstile साइट कुंजियाँ"
+  },
+  "advTurnstileReloadingScripts": {
+    "message": "Turnstile स्क्रिप्ट एकत्र करने के लिए पेज फिर से लोड हो रहा है"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "उन्नत टूल"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "किन सुरक्षाओं के लिए टूल"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "इस विश्वास से ऊपर टूल दिखाएँ (%)"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "उन्नत में कोई सुरक्षा तभी दिखती है जब उसका विश्वास इस मान से ऊपर हो। 0 पर सभी पहचानी गई सुरक्षाएँ दिखती हैं।"
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "उन्नत टूल का विश्वास 0 और 99 के बीच होना चाहिए"
+  },
+  "advCommonValue": {
+    "message": "मान"
+  },
+  "advCookiePath": {
+    "message": "पाथ"
+  },
+  "advCookieExpires": {
+    "message": "समाप्ति"
+  },
+  "advCookieSession": {
+    "message": "सत्र (ब्राउज़र बंद होने पर हट जाता है)"
+  },
+  "advCookieNotFound": {
+    "message": "नहीं मिलीं"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "आधिकारिक डिटेक्टर बहाल करें?"
+  },
+  "restoreOfficialDetectorsConfirmMsg": {
+    "message": "आपके हटाए गए आधिकारिक डिटेक्टर एक्सटेंशन में शामिल संस्करण से फिर से इंस्टॉल होते हैं। आपके अपने डिटेक्टर और अन्य नियमों में किए बदलाव नहीं बदलते।"
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "बहाल करें"
+  },
+  "advancedFilterTool": {
+    "message": "टूल"
+  },
+  "advancedFilterAllTools": {
+    "message": "सभी टूल"
+  },
+  "advFilterKindCapture": {
+    "message": "कैप्चर"
+  },
+  "advFilterKindOther": {
+    "message": "अन्य टूल"
+  },
+  "scrapflyExportTitle": {
+    "message": "Scrapfly से स्क्रैप करें",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "Unblocker के साथ इस पेज को स्क्रैप करने का कोड",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "Unblocker चालू करके Scrapfly API से यह पेज प्राप्त करें। यह ब्राउज़र, प्रॉक्सी और हेडर खुद चुनता है, और साइट ब्लॉक न करे तो कोई अतिरिक्त शुल्क नहीं लगता।",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "इस पेज पर मिला",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "कोड की भाषा",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "इस पेज पर CAPTCHA है: Unblocker पेज लौटाने के लिए उसे टालता या हल करता है, लेकिन फ़ॉर्म के CAPTCHA नहीं भरता।",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportKeyNote": {
+    "message": "कोड आपकी API कुंजी SCRAPFLY_API_KEY से पढ़ता है।",
+    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  },
+  "scrapflyExportGetKey": {
+    "message": "API कुंजी पाएं",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "Playground खोलें",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "कोड कॉपी हो गया",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "Scrapfly से स्क्रैप करने के लिए कोई वेब पेज खोलें",
+    "description": "Toast when the tab is not a web page"
   }
 }

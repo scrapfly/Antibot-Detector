@@ -375,16 +375,11 @@ DetectionActions.refreshAnalysis = async function() {
     }
 };
 
-// Keyless, unlisted paste endpoint — no API key, link-only (anyone with the URL).
-DetectionActions.PASTE_ENDPOINT = 'https://dpaste.com/api/v2/';
 DetectionActions.PASTE_BANNER = [
   '============================================',
   'Made by Scrapfly.io',
   '============================================'
 ].join('\n');
-
-// Host the paste URL must belong to before we ever hand it to the browser.
-DetectionActions.PASTE_URL_PREFIX = 'https://dpaste.com/';
 
 /**
  * Strip query string + fragment from a URL — those can carry OAuth codes,
@@ -405,15 +400,23 @@ DetectionActions._sanitizeUrlForPaste = function(raw) {
  * Build the paste body: the Scrapfly banner, a blank line, then the
  * detections serialized as pretty JSON. Emits only non-sensitive metadata —
  * never raw cookie/header values (those live in match.value).
+ * @param {string} [pageUrl] the page the user is on (DetectionActions.currentPageUrl)
  * @returns {{ content: string, count: number }}
  */
-DetectionActions.buildDetectionsPasteContent = function() {
+DetectionActions.buildDetectionsPasteContent = function(pageUrl) {
     const detections = Array.isArray(this.currentResults) ? this.currentResults : [];
 
+    // The page the user is on, not the cached entry's URL: under the Domain
+    // cache scope every page of a site shares the first scanned page's entry
     const siteUrlNode = document.querySelector('#siteUrl');
-    const rawUrl = (this.cacheMetadata?.url || siteUrlNode?.title || '').trim();
-    const host = (siteUrlNode?.textContent || '').trim();
+    const rawUrl = (pageUrl || this.cacheMetadata?.url || siteUrlNode?.title || '').trim();
     const safeUrl = DetectionActions._sanitizeUrlForPaste(rawUrl);
+    let host = (siteUrlNode?.textContent || '').trim();
+    try {
+      if (safeUrl) host = new URL(safeUrl).hostname;
+    } catch (e) {
+      // keep the displayed host
+    }
 
     const avgConfidence = DetectionUtils.computeAverageConfidence(detections);
     const { difficulty } = this.getDifficultyInfo(detections, avgConfidence);
@@ -457,6 +460,47 @@ DetectionActions.buildDetectionsPasteContent = function() {
  * user a shareable link (copied to clipboard + opened in a new tab). Asks for
  * confirmation first, since the paste is publicly readable.
  */
+// URL of the tab the popup reports on; '' when it cannot be read
+DetectionActions.currentPageUrl = async function() {
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      return (tab?.url || '').trim();
+    } catch (e) {
+      return '';
+    }
+};
+
+// How long the chosen service keeps the upload, in the UI language
+DetectionActions.describeShareExpiry = function(expiry) {
+    const tr = detectionActionsTr;
+    const fmt = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+    const PASTEBIN = { '10M': ['shareExpire10M', '10 minutes'], '1H': ['shareExpire1H', '1 hour'], '1D': ['shareExpire1D', '1 day'],
+      '1W': ['shareExpire1W', '1 week'], '2W': ['shareExpire2W', '2 weeks'], '1M': ['shareExpire1M', '1 month'],
+      '6M': ['shareExpire6M', '6 months'], '1Y': ['shareExpire1Y', '1 year'] };
+    const SECONDS = { 3600: ['shareExpire1H', '1 hour'], 86400: ['shareExpire1D', '1 day'],
+      604800: ['shareExpire1W', '1 week'], 2592000: ['shareExpire30D', '30 days'] };
+    switch (expiry?.kind) {
+      case 'days': return fmt('shareExpiryDaysFmt', `deleted after ${expiry.days} days`, expiry.days);
+      case 'seconds': {
+        const [key, fallback] = SECONDS[expiry.seconds] || ['shareExpire30D', '30 days'];
+        return fmt('shareExpiryAfterFmt', `deleted after ${fallback}`, tr(key, fallback));
+      }
+      case 'pastebin': {
+        const [key, fallback] = PASTEBIN[expiry.code] || ['shareExpire1M', '1 month'];
+        return fmt('shareExpiryAfterFmt', `deleted after ${fallback}`, tr(key, fallback));
+      }
+      case 'onetime': return tr('shareExpiryOnetime', 'deleted after the first view');
+      case 'service': return tr('shareExpiryService', 'kept until the service removes it');
+      default: return tr('shareExpiryNever', 'does not expire');
+    }
+};
+
+/**
+ * Upload the current detections with the service chosen in Settings →
+ * Detection → Share uploads and hand the user a shareable link (copied to
+ * clipboard + opened in a new tab). Asks for confirmation first, since anyone
+ * with the link can read it.
+ */
 DetectionActions.uploadDetectionsToPaste = async function() {
     const btn = document.querySelector('#uploadPasteBtn');
 
@@ -465,9 +509,24 @@ DetectionActions.uploadDetectionsToPaste = async function() {
       return;
     }
 
+    let shareSettings = {};
+    try {
+      shareSettings = (await Utils.getSettings())?.share || {};
+    } catch (e) {
+      shareSettings = {};
+    }
+    const target = ShareProviders.describe(shareSettings);
+    if (target.missing) {
+      NotificationHelper.warning(FormatUtils.t('pasteNeedsSetupFmt',
+        `Set up ${target.name} in Settings → Detection → Share uploads first`, target.name));
+      return;
+    }
+
     const confirmed = await NotificationHelper.confirm({
       title: detectionActionsTr('pasteConfirmTitle', 'Upload detections?'),
-      message: detectionActionsTr('pasteConfirmMsg', 'This uploads a summary of this page’s detections to a public paste (dpaste.com, unlisted, expires in 30 days). Anyone with the link can view it. The URL query string and cookie/header values are not included.'),
+      message: FormatUtils.t('pasteConfirmMsgFmt',
+        `This uploads a summary of this page’s detections to ${target.name} (${DetectionActions.describeShareExpiry(target.expiry)}). Anyone with the link can view it. The URL query string and cookie/header values are not included.`,
+        target.name, DetectionActions.describeShareExpiry(target.expiry)),
       confirmText: detectionActionsTr('pasteConfirmBtn', 'Upload'),
       cancelText: detectionActionsTr('btnCancel', 'Cancel'),
       type: 'warning',
@@ -479,38 +538,13 @@ DetectionActions.uploadDetectionsToPaste = async function() {
     if (btn) btn.disabled = true;
 
     try {
-      const { content } = DetectionActions.buildDetectionsPasteContent.call(this);
-
-      const body = new URLSearchParams();
-      body.set('content', content);
-      body.set('syntax', 'json');
-      body.set('title', 'Scrapfly detections');
-      body.set('expiry_days', '30');
-
-      const resp = await fetch(DetectionActions.PASTE_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: body.toString(),
-        credentials: 'omit',
-        redirect: 'error',
-        referrerPolicy: 'no-referrer'
+      const pageUrl = await DetectionActions.currentPageUrl();
+      const { content } = DetectionActions.buildDetectionsPasteContent.call(this, pageUrl);
+      // The link is checked against the service before it is copied or opened
+      const pasteUrl = await ShareProviders.upload(content, shareSettings, {
+        fetch: (...args) => fetch(...args),
+        isUrlSafe: typeof SettingsRuntime !== 'undefined' ? SettingsRuntime._isWebhookUrlSafe : null
       });
-
-      if (!resp.ok) {
-        throw new Error(`Paste service responded ${resp.status}`);
-      }
-
-      // dpaste returns the snippet URL in the body (sometimes quoted); the
-      // Location header is the fallback.
-      const raw = (await resp.text()).trim().replace(/^["']|["']$/g, '');
-      const fromBody = /^https?:\/\//i.test(raw) ? raw : '';
-      const pasteUrl = fromBody || (resp.headers.get('Location') || '');
-
-      // Pin to the known paste host before opening — never hand an arbitrary
-      // network-returned URL to chrome.tabs.create.
-      if (pasteUrl.slice(0, DetectionActions.PASTE_URL_PREFIX.length).toLowerCase() !== DetectionActions.PASTE_URL_PREFIX) {
-        throw new Error('Paste service returned an unexpected URL');
-      }
 
       await FormatUtils.copyToClipboard(pasteUrl, {
         notify: false,
@@ -524,8 +558,20 @@ DetectionActions.uploadDetectionsToPaste = async function() {
         Logger.debug('UI', 'Could not open paste tab:', openErr);
       }
     } catch (error) {
-      Logger.error('UI', 'Failed to upload detections to paste:', error);
-      NotificationHelper.error(detectionActionsTr('pasteUploadFailedToast', 'Upload failed'));
+      // Never log the request: it can carry the user's key or token
+      Logger.error('UI', `Upload to ${target.name} failed: ${error?.code || 'network'} ${error?.code === 'provider' ? error.message : ''}`.trim());
+      const detail = error?.code === 'auth'
+        ? FormatUtils.t('pasteAuthFailedFmt', `${target.name} rejected the key or token (wrong or expired)`, target.name)
+        : error?.code === 'permission'
+          ? detectionActionsTr('pasteGistPermission', 'the GitHub token needs the Gists permission (Read and write)')
+          : error?.code === 'unsafe-url'
+        ? detectionActionsTr('pasteUnsafeUrl', 'The custom server must be an HTTPS address on a public host')
+        : error?.code === 'bad-link'
+          ? detectionActionsTr('pasteBadLink', 'the service did not return a valid HTTPS link')
+          : (error?.code === 'provider' || error?.code === 'http') ? error.message : '';
+      NotificationHelper.error(detail
+        ? FormatUtils.t('pasteUploadFailedFmt', `Upload failed: ${detail}`, detail)
+        : detectionActionsTr('pasteUploadFailedToast', 'Upload failed'));
     } finally {
       if (btn) btn.disabled = false;
     }

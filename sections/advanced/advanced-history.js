@@ -126,6 +126,7 @@ Advanced.prototype.renderUnifiedCaptureHistory = async function() {
       this.captureFilters = {
         site: 'current',
         module: 'all',
+        tool: 'all',
         search: ''
       };
     }
@@ -172,6 +173,8 @@ Advanced.prototype.renderUnifiedCaptureHistory = async function() {
       if (shell) shell.style.display = 'flex';
       if (emptyState) emptyState.style.display = 'none';
       this.updateSiteFilterOptions(allCaptures, currentSite);
+      this.updateModuleFilterOptions(allCaptures);
+      this.updateToolFilterOptions(allCaptures);
       this.setupCaptureHistoryListeners();
 
       // Filters must work even when this is the first history view.
@@ -231,6 +234,11 @@ Advanced.prototype.applyFilters = function(captures, currentSite) {
       filtered = filtered.filter(c => c.moduleId === this.captureFilters.module);
     }
 
+    // Tool filter: captures, or one kind of tool result
+    if (this.captureFilters.tool && this.captureFilters.tool !== 'all') {
+      filtered = filtered.filter(c => Advanced.captureKind(c) === this.captureFilters.tool);
+    }
+
     // Search filter
     if (this.captureFilters.search) {
       const query = this.captureFilters.search.toLowerCase();
@@ -275,6 +283,66 @@ Advanced.prototype.updateSiteFilterOptions = function(captures, currentSite) {
     `;
 
     siteFilter.innerHTML = optionsHtml;
+  };
+
+
+  /**
+   * What an entry is: a capture, or the result of one kind of tool button
+   * (same kinds as the tool cards: cookies, sitekey, selector, scripts…)
+   */
+Advanced.TOOL_KINDS = {
+    capture: ['advFilterKindCapture', 'Captures'],
+    cookies: ['btnCheckCookies', 'Check Cookies'],
+    sitekey: ['btnExtractSiteKey', 'Extract Site Key'],
+    selector: ['btnObtainSelector', 'Obtain selector'],
+    callback: ['advRecaptchaCallbackTool', 'reCAPTCHA callback'],
+    scripts: ['btnAnalyzeScripts', 'Analyze Scripts'],
+    version: ['btnCheckVersion', 'Check Version'],
+    sensor: ['advAkamaiExtractSensorBtn', 'Extract Sensor Information'],
+    inspect: ['advFilterKindOther', 'Other tools']
+  };
+
+Advanced.captureKind = function(capture) {
+    const tool = capture?.data?.tool;
+    if (!tool) return 'capture';
+    return BaseAdvancedModule.prototype.resolveToolAction({ id: String(tool) });
+  };
+
+Advanced.prototype.updateToolFilterOptions = function(captures) {
+    const toolFilter = document.querySelector('#captureToolFilter');
+    if (!toolFilter) return;
+    const esc = FormatUtils.escapeHtml;
+    const present = new Set(captures.map(capture => Advanced.captureKind(capture)));
+    if (this.captureFilters.tool !== 'all' && !present.has(this.captureFilters.tool)) {
+      this.captureFilters.tool = 'all';
+    }
+    const options = Object.keys(Advanced.TOOL_KINDS).filter(kind => present.has(kind));
+    toolFilter.innerHTML = `<option value="all">${esc(_advHistoryTr('advancedFilterAllTools', 'All tools'))}</option>`
+      + options.map(kind => `<option value="${kind}">${esc(_advHistoryTr(...Advanced.TOOL_KINDS[kind]))}</option>`).join('');
+    toolFilter.value = this.captureFilters.tool;
+  };
+
+
+  /**
+   * Module filter: one option per vendor that has saved history, by the same
+   * ids the captures are stored under; keeps the current choice when present
+   * @param {Array} captures - All captures
+   */
+Advanced.prototype.updateModuleFilterOptions = function(captures) {
+    const moduleFilter = document.querySelector('#captureModuleFilter');
+    if (!moduleFilter) return;
+    const esc = FormatUtils.escapeHtml;
+    const modules = new Map();
+    for (const capture of captures) {
+      if (capture.moduleId && !modules.has(capture.moduleId)) modules.set(capture.moduleId, capture.moduleName || capture.moduleId);
+    }
+    if (this.captureFilters.module !== 'all' && !modules.has(this.captureFilters.module)) {
+      this.captureFilters.module = 'all';
+    }
+    const options = [...modules.entries()].sort((a, b) => String(a[1]).localeCompare(String(b[1])));
+    moduleFilter.innerHTML = `<option value="all">${esc(_advHistoryTr('advancedFilterAllModules', 'All Modules'))}</option>`
+      + options.map(([id, name]) => `<option value="${FormatUtils.escapeAttr(id)}">${esc(name)}</option>`).join('');
+    moduleFilter.value = this.captureFilters.module;
   };
 
 
@@ -392,6 +460,7 @@ Advanced.prototype.renderCaptureCards = function(captures, container) {
           </div>
           <div class="capture-card-foot">
             <span class="capture-module-badge ${moduleClass}">${moduleName}</span>
+            ${capture.data && capture.data.tool && capture.data.label ? `<span class="capture-tool-label">${FormatUtils.escapeHtml(capture.data.label)}</span>` : ''}
             <span class="capture-size">${size}</span>
             <span class="capture-card-open">${FormatUtils.escapeHtml(viewLabel)}
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
@@ -528,7 +597,14 @@ Advanced.prototype.viewCaptureDetails = async function(moduleId, captureId) {
         return;
       }
 
-      if (typeof moduleInstance.renderCaptureDetailsContent === 'function' && typeof moduleInstance.displayCaptureDetailsModal === 'function') {
+      const savedData = captureData.data !== undefined ? captureData.data : captureData.captureData;
+      if (savedData && savedData.kind === 'cookies' && typeof moduleInstance.showSavedCookieResults === 'function') {
+        // A "Check cookies" result: the same dialog the tool showed, with full values
+        moduleInstance.showSavedCookieResults(captureData);
+      } else if (savedData && savedData.tool && Array.isArray(savedData.lines) && typeof moduleInstance.renderToolResultContent === 'function') {
+        // A tool button's result (BaseAdvancedModule.recordToolDialog), not a capture
+        moduleInstance.displayCaptureDetailsModal(captureData.id, moduleInstance.renderToolResultContent(captureData));
+      } else if (typeof moduleInstance.renderCaptureDetailsContent === 'function' && typeof moduleInstance.displayCaptureDetailsModal === 'function') {
         // Transform capture data to match module expectations
         // Storage format: { id, timestamp, url, data, expiresAt }
         // Module expects: { timestamp, url, captureData, ... }
@@ -656,80 +732,20 @@ Advanced.prototype.exportCaptures = async function() {
 
 
   /**
-   * Show warning confirmation modal
+   * Ask before a destructive action, in the popup's shared dialog
+   * (NotificationHelper.confirm): red action, focus starts on Cancel
    * @param {string} message - Confirmation message
-   * @param {string} title - Modal title
+   * @param {string} [title] - Dialog title
+   * @param {string} [confirmText] - Label of the destructive button
    * @returns {Promise<boolean>} True if confirmed, false if cancelled
    */
-Advanced.prototype.showWarningConfirmation = function(message, title) {
-    const modalTitle = title || _advHistoryTr('notifConfirmTitleDefault', 'Confirm');
-    const acceptLabel = _advHistoryTr('advPanelBtnOk', 'OK');
-    const cancelLabel = _advHistoryTr('btnCancel', 'Cancel');
-    return new Promise((resolve) => {
-      // Create modal HTML
-      const modalHtml = `
-        <div class="confirmation-modal-overlay" id="confirmationModalOverlay">
-          <div class="confirmation-modal">
-            <div class="confirmation-modal-header">
-              <div class="confirmation-modal-icon"></div>
-              <h3 class="confirmation-modal-title">${modalTitle}</h3>
-            </div>
-            <div class="confirmation-modal-content">
-              <p class="confirmation-modal-message">${message}</p>
-            </div>
-            <div class="confirmation-modal-footer">
-              <button class="confirmation-modal-btn confirmation-modal-btn-danger" id="confirmAcceptBtn">
-                ${acceptLabel}
-              </button>
-              <button class="confirmation-modal-btn confirmation-modal-btn-cancel" id="confirmCancelBtn">
-                ${cancelLabel}
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      // Add modal to document
-      document.body.insertAdjacentHTML('beforeend', modalHtml);
-
-      const overlay = document.getElementById('confirmationModalOverlay');
-      const cancelBtn = document.getElementById('confirmCancelBtn');
-      const acceptBtn = document.getElementById('confirmAcceptBtn');
-
-      // Handle cancel
-      const handleCancel = () => {
-        overlay.remove();
-        resolve(false);
-      };
-
-      // Handle accept
-      const handleAccept = () => {
-        overlay.remove();
-        resolve(true);
-      };
-
-      // Click handlers
-      cancelBtn.addEventListener('click', handleCancel);
-      acceptBtn.addEventListener('click', handleAccept);
-
-      // Click on overlay background to cancel
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) {
-          handleCancel();
-        }
-      });
-
-      // ESC key to cancel
-      const handleEscape = (e) => {
-        if (e.key === 'Escape') {
-          document.removeEventListener('keydown', handleEscape);
-          handleCancel();
-        }
-      };
-      document.addEventListener('keydown', handleEscape);
-
-      // Focus accept button
-      setTimeout(() => acceptBtn.focus(), 0);
+Advanced.prototype.showWarningConfirmation = function(message, title, confirmText) {
+    return NotificationHelper.confirm({
+      title: title || _advHistoryTr('notifConfirmTitleDefault', 'Confirm'),
+      message,
+      confirmText: confirmText || _advHistoryTr('advPanelBtnOk', 'OK'),
+      cancelText: _advHistoryTr('btnCancel', 'Cancel'),
+      type: 'danger'
     });
   };
 
@@ -742,7 +758,9 @@ Advanced.prototype.clearAllCaptures = async function() {
     const _trCA = (key, fallback) => (_tCA && _tCA.get(key)) || fallback;
     try {
       const confirmed = await this.showWarningConfirmation(
-        _trCA('clearAllCapturesConfirm', 'Are you sure you want to delete all captures? This cannot be undone.')
+        _trCA('clearAllCapturesConfirm', 'Are you sure you want to delete all captures? This cannot be undone.'),
+        _trCA('advConfirmClearAllTitle', 'Clear All Captured Data?'),
+        _trCA('btnClearData', 'Clear Data')
       );
       if (!confirmed) return;
 
@@ -766,10 +784,13 @@ Advanced.prototype.resetAllFilters = async function() {
     this.captureFilters = {
       site: 'current',
       module: 'all',
+      tool: 'all',
       search: ''
     };
 
     // Update UI
+    const toolFilter = document.querySelector('#captureToolFilter');
+    if (toolFilter) toolFilter.value = 'all';
     const siteFilter = document.querySelector('#captureSiteFilter');
     const moduleFilter = document.querySelector('#captureModuleFilter');
     const searchInput = document.querySelector('#captureSearchInput');
@@ -825,6 +846,17 @@ Advanced.prototype.setupCaptureHistoryListeners = function() {
       moduleFilter.addEventListener('change', this._moduleFilterHandler);
     }
 
+    // Tool filter
+    const toolFilter = document.querySelector('#captureToolFilter');
+    if (toolFilter) {
+      toolFilter.removeEventListener('change', this._toolFilterHandler);
+      this._toolFilterHandler = (e) => {
+        this.captureFilters.tool = e.target.value;
+        this.renderUnifiedCaptureHistory();
+      };
+      toolFilter.addEventListener('change', this._toolFilterHandler);
+    }
+
     // Search input (with debounce)
     const searchInput = document.querySelector('#captureSearchInput');
     if (searchInput) {
@@ -849,6 +881,8 @@ Advanced.prototype.setupCaptureHistoryListeners = function() {
    * @returns {string} Module display name
    */
 Advanced.prototype.getModuleName = function(moduleId) {
-    const moduleInfo = Advanced.AVAILABLE_MODULES[moduleId];
+    // History buckets use imperva / awswaf; the module registry incapsula / aws-waf
+    const registryId = moduleId === 'imperva' ? 'incapsula' : moduleId === 'awswaf' ? 'aws-waf' : moduleId;
+    const moduleInfo = Advanced.AVAILABLE_MODULES[registryId];
     return moduleInfo ? moduleInfo.productName : moduleId;
   };

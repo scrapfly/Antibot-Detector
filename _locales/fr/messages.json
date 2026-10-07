@@ -602,28 +602,28 @@
     "message": "1 semaine"
   },
   "methodLabelUrl": {
-    "message": "URL"
+    "message": "Url"
   },
   "methodLabelHeader": {
-    "message": "HEADER"
+    "message": "En-têtes"
   },
   "methodLabelCookie": {
-    "message": "COOKIE"
+    "message": "Cookies"
   },
   "methodLabelContent": {
-    "message": "CONTENT"
+    "message": "Contenu"
   },
   "methodLabelDom": {
-    "message": "DOM"
+    "message": "Dom"
   },
   "methodLabelJsHooks": {
-    "message": "JS HOOKS"
+    "message": "Hooks JS"
   },
   "methodLabelWindow": {
-    "message": "WINDOW"
+    "message": "Fenêtre"
   },
   "methodLabelPayload": {
-    "message": "PAYLOAD"
+    "message": "Charge utile"
   },
   "methodOnePattern": {
     "message": "1 motif"
@@ -1336,9 +1336,6 @@
   "pasteConfirmTitle": {
     "message": "Téléverser les détections ?"
   },
-  "pasteConfirmMsg": {
-    "message": "Ceci téléverse un résumé des détections de cette page vers un paste public (dpaste.com, non répertorié, expire dans 30 jours). Toute personne disposant du lien peut le consulter. La chaîne de requête de l’URL et les valeurs des cookies/en-têtes ne sont pas incluses."
-  },
   "pasteConfirmBtn": {
     "message": "Téléverser"
   },
@@ -1493,7 +1490,7 @@
     "message": "Vérifier uniquement les scripts"
   },
   "rulesOnlyCheckScriptsHint": {
-    "message": "Limiter la recherche au code JavaScript et aux URL de scripts uniquement"
+    "message": "Chercher uniquement dans le code JavaScript (scripts intégrés et chargés), pas dans le texte de la page ni les noms de fichier"
   },
   "rulesScopeSettingsTitle": {
     "message": "Paramètres de portée"
@@ -1622,7 +1619,7 @@
     "message": "Compare les URL des ressources chargées (scripts, images, requêtes réseau) à des motifs."
   },
   "helpUrlWarning": {
-    "message": "Les motifs sont sensibles à la casse par défaut. Activez l'option URL sensible à la casse si vous avez besoin d'une correspondance insensible à la casse."
+    "message": "Les motifs ignorent les majuscules et minuscules, sauf si vous activez « Sensible à la casse ». Un motif trop général correspond aussi à des ressources sans rapport : restez précis."
   },
   "helpUrlTip": {
     "message": "Utilisez l'option Regex pour des motifs avancés comme /\\/v\\d+\\/challenge/."
@@ -2362,9 +2359,6 @@
   "advCommonClickToCopy": {
     "message": "Cliquer pour copier"
   },
-  "advCommonClickToCopyFull": {
-    "message": "Cliquer pour copier la valeur complète"
-  },
   "advCommonDomainLabel": {
     "message": "Domaine :"
   },
@@ -2935,9 +2929,6 @@
   "advShapeCookieTitle": {
     "message": "Cookie Shape"
   },
-  "advShapeMaxAgeInfoFmt": {
-    "message": "Max-Age : {0} secondes (50 ans)"
-  },
   "advShapeAnalysisTitle": {
     "message": "Analyse Shape Security"
   },
@@ -3106,14 +3097,8 @@
   "advAwswafDeletingCookieFmt": {
     "message": "Suppression du cookie {0}… La page va se recharger"
   },
-  "advCloudflareExtractedSiteKey": {
-    "message": "Site Key extraite"
-  },
   "advCloudflareTypeLabel": {
     "message": "Type"
-  },
-  "advCloudflareSiteKeyClickToCopy": {
-    "message": "Site Key (cliquer pour copier)"
   },
   "advCloudflareSiteKeyCopied": {
     "message": "Site Key copiée"
@@ -3136,17 +3121,11 @@
   "advCloudflareCheckingVersion": {
     "message": "Vérification de la version de Cloudflare… La page va se recharger"
   },
-  "advCloudflareSiteKeyExtracted": {
-    "message": "Site Key extraite avec succès"
-  },
   "advCloudflareNoSitekey": {
     "message": "Aucune sitekey trouvée sur la page"
   },
   "advCloudflareFailedExtractSitekey": {
     "message": "Impossible d'extraire la sitekey"
-  },
-  "advDatadomeCookieCopied": {
-    "message": "Cookie copié"
   },
   "advFuncaptchaPublicKey": {
     "message": "Clé publique"
@@ -3496,9 +3475,6 @@
   "clipboardUrlFmt": {
     "message": "URL : {0}"
   },
-  "clipboardHostFmt": {
-    "message": "Hôte : {0}"
-  },
   "clipboardTitleFmt": {
     "message": "Titre : {0}"
   },
@@ -3520,23 +3496,14 @@
   "clipboardDetectionMethodsHeading": {
     "message": "Méthodes de détection :"
   },
-  "clipboardDetectionsCountFmt": {
-    "message": "Détections : {0}"
-  },
   "clipboardDetectionsListFmt": {
     "message": "Détections ({0}) :"
   },
   "clipboardDifficultyFmt": {
     "message": "Difficulté : {0}"
   },
-  "clipboardCacheScopeFmt": {
-    "message": "Portée du cache : {0}"
-  },
   "clipboardCacheExpirationFmt": {
     "message": "Expiration du cache : {0}"
-  },
-  "clipboardMethodsFmt": {
-    "message": "Méthodes : {0}"
   },
   "clipboardCopyFailed": {
     "message": "Échec de la copie dans le presse-papiers"
@@ -3969,5 +3936,286 @@
   },
   "settingsCategoryOrderHelp": {
     "message": "Ordre des catégories dans la liste Détection. Dans une catégorie, la confiance la plus élevée vient en premier."
+  },
+  "settingsCardShareUploads": {
+    "message": "Envois à partager"
+  },
+  "settingsShareDestination": {
+    "message": "Destination de l’envoi"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "Où Détection → Envoyer les détections envoie le résumé et obtient le lien de partage."
+  },
+  "settingsShareService": {
+    "message": "Service"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com (sans compte)"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org (sans compte)"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs (sans compte)"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin (clé API)"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist (jeton)"
+  },
+  "shareProviderCustom": {
+    "message": "Serveur personnalisé"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "Supprimer après (jours)"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "Supprimer après"
+  },
+  "shareExpire10M": {
+    "message": "10 minutes"
+  },
+  "shareExpire1H": {
+    "message": "1 heure"
+  },
+  "shareExpire1D": {
+    "message": "1 jour"
+  },
+  "shareExpire1W": {
+    "message": "1 semaine"
+  },
+  "shareExpire2W": {
+    "message": "2 semaines"
+  },
+  "shareExpire30D": {
+    "message": "30 jours"
+  },
+  "shareExpire1M": {
+    "message": "1 mois"
+  },
+  "shareExpire6M": {
+    "message": "6 mois"
+  },
+  "shareExpire1Y": {
+    "message": "1 an"
+  },
+  "shareExpireOnetime": {
+    "message": "Après la première consultation"
+  },
+  "shareExpireNever": {
+    "message": "Jamais"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "paste.rs ne propose pas d’expiration : le contenu reste jusqu’à ce que le service le supprime."
+  },
+  "settingsSharePastebinKey": {
+    "message": "Clé API Pastebin"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "Votre clé développeur sur pastebin.com/doc_api. Les envois ne sont pas répertoriés."
+  },
+  "settingsShareSecretNote": {
+    "message": "Stocké uniquement dans ce navigateur et exclu des exports de paramètres."
+  },
+  "settingsShareGithubToken": {
+    "message": "Jeton GitHub"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "Un jeton avec la permission Gists. Les envois sont des gists secrets sans expiration ; supprimez-les sur GitHub."
+  },
+  "settingsShareCustomUrl": {
+    "message": "URL du serveur"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "HTTPS sur un hôte public. Peut contenir <EXPIRY_DAYS>."
+  },
+  "settingsShareCustomBody": {
+    "message": "Format du corps"
+  },
+  "shareBodyForm": {
+    "message": "Champ de formulaire"
+  },
+  "shareBodyJson": {
+    "message": "Modèle JSON"
+  },
+  "shareBodyRaw": {
+    "message": "Texte brut"
+  },
+  "settingsShareCustomField": {
+    "message": "Nom du champ"
+  },
+  "settingsShareCustomJson": {
+    "message": "Modèle JSON"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "Variables : <CONTENT_JSON>, <TITLE_JSON>, <EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "Un par ligne sous la forme Nom : valeur, par exemple Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "Lien de partage depuis"
+  },
+  "shareLinkBody": {
+    "message": "Corps de la réponse (URL)"
+  },
+  "shareLinkJson": {
+    "message": "Champ JSON"
+  },
+  "shareLinkLocation": {
+    "message": "En-tête Location"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "Chemin du champ JSON"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "Envoyé comme expiry_days dans les formulaires et comme <EXPIRY_DAYS> ; votre serveur décide quoi en faire."
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "Configurez d’abord {0} dans Paramètres → Détection → Envois à partager"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "Un résumé des détections de cette page sera envoyé vers {0} ({1}). Toute personne disposant du lien pourra le voir. Les paramètres d’URL et les valeurs des cookies et en-têtes ne sont pas inclus."
+  },
+  "shareExpiryDaysFmt": {
+    "message": "supprimé après {0} jours"
+  },
+  "shareExpiryAfterFmt": {
+    "message": "supprimé après {0}"
+  },
+  "shareExpiryOnetime": {
+    "message": "supprimé après la première consultation"
+  },
+  "shareExpiryService": {
+    "message": "conservé jusqu’à suppression par le service"
+  },
+  "shareExpiryNever": {
+    "message": "n’expire pas"
+  },
+  "pasteUnsafeUrl": {
+    "message": "Le serveur personnalisé doit être une adresse HTTPS sur un hôte public"
+  },
+  "pasteBadLink": {
+    "message": "le service n’a pas renvoyé de lien HTTPS valide"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "Échec de l’envoi : {0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "Serveur d’envoi personnalisé : utilisez une adresse HTTPS sur un hôte public"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "Serveur d’envoi personnalisé : le modèle JSON n’est pas un JSON valide"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "{0} a refusé la clé ou le jeton (incorrect ou expiré)"
+  },
+  "pasteGistPermission": {
+    "message": "le jeton GitHub doit avoir la permission Gists (lecture et écriture)"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "Aucune clé de site Turnstile sur cette page"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "Clés de site Turnstile"
+  },
+  "advTurnstileReloadingScripts": {
+    "message": "Rechargement de la page pour collecter les scripts Turnstile"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "Outils avancés"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "Protections qui ont des outils"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "Afficher les outils au-dessus de cette confiance (%)"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "Avancé n’affiche une protection que si sa confiance dépasse cette valeur. 0 affiche toutes les protections détectées."
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "La confiance des outils avancés doit être comprise entre 0 et 99"
+  },
+  "advCommonValue": {
+    "message": "Valeur"
+  },
+  "advCookiePath": {
+    "message": "Chemin"
+  },
+  "advCookieExpires": {
+    "message": "Expire"
+  },
+  "advCookieSession": {
+    "message": "Session (supprimé à la fermeture du navigateur)"
+  },
+  "advCookieNotFound": {
+    "message": "Introuvables"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "Restaurer les détecteurs officiels ?"
+  },
+  "restoreOfficialDetectorsConfirmMsg": {
+    "message": "Les détecteurs officiels supprimés sont réinstallés dans la version incluse dans l’extension. Vos propres détecteurs et vos modifications d’autres règles ne changent pas."
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "Restaurer"
+  },
+  "advancedFilterTool": {
+    "message": "Outil"
+  },
+  "advancedFilterAllTools": {
+    "message": "Tous les outils"
+  },
+  "advFilterKindCapture": {
+    "message": "Captures"
+  },
+  "advFilterKindOther": {
+    "message": "Autres outils"
+  },
+  "scrapflyExportTitle": {
+    "message": "Scraper avec Scrapfly",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "Code pour scraper cette page avec l'Unblocker",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "Récupérez cette page via l'API de Scrapfly avec l'Unblocker activé. Il choisit lui-même le navigateur, les proxys et les en-têtes, et ne coûte rien de plus quand le site ne bloque pas.",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "Détecté sur cette page",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "Langage du code",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "Cette page a un CAPTCHA : l'Unblocker l'évite ou le résout pour renvoyer la page, mais ne remplit pas les CAPTCHA des formulaires.",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportKeyNote": {
+    "message": "Le code lit votre clé d'API dans SCRAPFLY_API_KEY.",
+    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  },
+  "scrapflyExportGetKey": {
+    "message": "Obtenir une clé d'API",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "Ouvrir le playground",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "Code copié",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "Ouvrez une page web pour la scraper avec Scrapfly",
+    "description": "Toast when the tab is not a web page"
   }
 }

@@ -268,7 +268,7 @@
 
 /* Header actions: tinted squares that lift 1px on hover and press to 95%
    (press rule in common.css). One tone each: upload green, clear amber,
-   copy blue, blacklist red. */
+   copy purple, Scrapfly blue, blacklist red. */
 .url-action-btn {
   border: 1px solid var(--act-border);
   background: var(--act-bg);
@@ -302,11 +302,11 @@
 }
 
 .url-action-btn.copy-overview-btn {
-  --act-bg: rgba(59, 130, 246, 0.2);
-  --act-bg-hover: rgba(59, 130, 246, 0.32);
-  --act-border: rgba(59, 130, 246, 0.35);
-  --act-fg: var(--accent-light);
-  --act-fg-hover: #bfdbfe;
+  --act-bg: rgba(139, 92, 246, 0.2);
+  --act-bg-hover: rgba(139, 92, 246, 0.32);
+  --act-border: rgba(139, 92, 246, 0.35);
+  --act-fg: var(--purple-light);
+  --act-fg-hover: #ddd6fe;
 }
 
 .url-action-btn.blacklist-btn {
@@ -315,6 +315,20 @@
   --act-border: rgba(239, 68, 68, 0.35);
   --act-fg: var(--danger-light);
   --act-fg-hover: var(--danger-lightest);
+}
+
+/* Scrape with Scrapfly: the Scrapfly logo on blue */
+.url-action-btn .scrapfly-export-btn-logo {
+  width: 16px;
+  height: 16px;
+}
+
+.url-action-btn.scrapfly-export-btn {
+  --act-bg: rgba(59, 130, 246, 0.2);
+  --act-bg-hover: rgba(59, 130, 246, 0.32);
+  --act-border: rgba(59, 130, 246, 0.35);
+  --act-fg: var(--accent-light);
+  --act-fg-hover: #bfdbfe;
 }
 
 .url-action-btn.upload-paste-btn:disabled {

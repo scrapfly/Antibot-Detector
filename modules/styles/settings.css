@@ -639,9 +639,30 @@ input[type="file"] {
   font-weight: 600;
 }
 
-/* Blacklist remove button hover - CSP compliant */
-.remove-blacklist-btn:not(.state-card-enable-btn):hover {
-  color: var(--danger) !important;
+/* Delete-row buttons (blacklist domain, webhook header): quiet outline trash,
+   red only on hover, like the rule editor and History cards */
+.remove-blacklist-btn:not(.state-card-enable-btn),
+.remove-webhook-header-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.remove-blacklist-btn:not(.state-card-enable-btn):hover,
+.remove-webhook-header-btn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.45);
+  color: var(--danger-light);
 }
 
 /* Compact Switch - Smaller toggle for cards */
@@ -1173,6 +1194,21 @@ input[type="file"] {
   justify-content: space-between;
   gap: 12px;
   padding: 8px 0;
+}
+
+/* A button beside a label keeps its label on one line; the text wraps
+   instead (Settings → General → "Last check" + "Check now" in Spanish) */
+#settingsModal .setting-row--inline > .setting-row-label {
+  min-width: 0;
+}
+
+#settingsModal .setting-row--inline > .action-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+#settingsModal #lastUpdateCheckTime {
+  white-space: nowrap;
 }
 
 #settingsModal .setting-row-label {
@@ -2162,42 +2198,68 @@ input[type="file"] {
   flex-shrink: 0;
 }
 
+/* The credit gives way to the buttons: with a long translation of "Save
+   Settings" it wraps onto two lines instead of pushing Cancel out */
 #settingsModal .powered-by {
   position: relative;
   top: -1px;
+  min-width: 0;
   font-size: 10.75px;
+  line-height: 1.3;
   color: var(--settings-text-dim);
   text-align: left;
-  white-space: nowrap;
 }
 
 #settingsModal .powered-by a {
   color: var(--accent);
   font-size: 10.5px;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 #settingsModal .modal-footer-buttons {
   display: flex;
-  gap: 6px;
+  flex-shrink: 0;
+  gap: 8px;
   width: auto;
 }
 
+/* Same look as every dialog footer (--modal-btn-* in common.css) */
 #settingsModal .modal-footer-buttons .primary-btn,
 #settingsModal .modal-footer-buttons .secondary-btn {
-  height: 30px;
-  padding: 0 9px 2px;
-  border-radius: 6px;
-  font-size: 10.5px;
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--modal-btn-min-width);
+  height: var(--modal-btn-height);
+  padding: var(--modal-btn-padding);
+  border-radius: var(--modal-btn-radius);
+  font-family: inherit;
+  font-size: var(--modal-btn-font-size);
+  font-weight: var(--modal-btn-font-weight);
+  line-height: 1;
   white-space: nowrap;
 }
 
+#settingsModal .modal-footer-buttons .primary-btn {
+  border: 1px solid var(--accent);
+  box-shadow: var(--modal-btn-primary-shadow);
+}
+
+#settingsModal .modal-footer-buttons .primary-btn:hover {
+  border-color: var(--accent-hover);
+}
+
 #settingsModal .modal-footer-buttons .secondary-btn {
-  padding: 0 9px 2px 11px;
-  background: #3d3d3d;
-  border: 1px solid var(--settings-border);
-  color: var(--settings-text);
+  background: transparent;
+  border: 1px solid var(--modal-btn-quiet-border);
+  color: var(--modal-btn-quiet-text);
+}
+
+#settingsModal .modal-footer-buttons .secondary-btn:hover {
+  background: var(--modal-btn-quiet-bg-hover);
+  border-color: var(--modal-btn-quiet-border-hover);
+  color: var(--text-primary);
 }
 
 /* History card: the export-format select and the card's bottom edge sit one
@@ -2430,6 +2492,11 @@ input[type="file"] {
   display: none;
 }
 
+/* The usage code panel uses the card's full width, not the title's indent */
+#settingsModal .api-usage-example .api-collapsible-body {
+  padding: 0 0 4px;
+}
+
 #settingsModal .api-event-item {
   cursor: default;
 }
@@ -2444,31 +2511,50 @@ input[type="file"] {
 }
 
 /* Usage code block with an explicit copy button */
+/* Usage code: a code panel with its own header (language + copy), lines kept
+   whole and scrolled sideways if ever too long */
 #settingsModal .api-code-block {
-  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #1f1f1f;
+  overflow: hidden;
+}
+
+#settingsModal .api-code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 6px 6px 10px;
+  border-bottom: 1px solid var(--border);
+  background: #262626;
+}
+
+#settingsModal .api-code-lang {
+  font: 600 10px/1 var(--font-sans);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 #settingsModal .api-code-copy {
-  position: absolute;
-  top: 6px;
-  right: 6px;
   display: inline-flex;
   align-items: center;
   gap: 5px;
   height: 24px;
   padding: 0 8px;
   border-radius: 6px;
-  border: 1px solid var(--border);
-  background: #363636;
-  color: #e0e0e0;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
   font: 600 11px/1 var(--font-sans);
   cursor: pointer;
-  transition: background 0.14s ease, border-color 0.14s ease;
 }
 
 #settingsModal .api-code-copy:hover {
-  background: #3f3f3f;
-  border-color: #5a5a5a;
+  background: #363636;
+  border-color: var(--border-light, #5a5a5a);
+  color: var(--text-primary);
 }
 
 #settingsModal .api-code-copy:focus-visible {
@@ -2476,23 +2562,32 @@ input[type="file"] {
   outline-offset: 2px;
 }
 
-/* Usage code: IBM Plex Mono, break only at spaces, scroll sideways for long tokens */
 #settingsModal .api-usage-example pre {
   margin: 0;
-  padding: 36px 10px 10px;
+  padding: 10px 12px;
   font-family: var(--font-mono);
   font-size: 11px;
-  line-height: 1.55;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: #262626;
-  white-space: pre-wrap;
-  word-wrap: normal;
-  overflow-wrap: normal;
-  word-break: normal;
+  line-height: 1.6;
+  color: #d4d4d4;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  white-space: pre;
   overflow-x: auto;
   cursor: text;
+  tab-size: 2;
 }
+
+#settingsModal .api-usage-example pre code {
+  font: inherit;
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+#settingsModal .api-usage-example .tok-k { color: #c586c0; }
+#settingsModal .api-usage-example .tok-s { color: #9cdcfe; }
+#settingsModal .api-usage-example .tok-f { color: #dcdcaa; }
 
 #settingsModal .api-usage-example pre::-webkit-scrollbar {
   height: 6px;
@@ -2509,4 +2604,22 @@ input[type="file"] {
 
 #settingsModal .api-usage-example pre::-webkit-scrollbar-thumb:hover {
   background: #6b6b6b;
+}
+
+/* Settings → Detection → Share uploads: only the chosen service's panel and
+   the custom-server fields its body format and link source use */
+.share-provider-panel[hidden],
+.share-provider-panel [hidden] {
+  display: none !important;
+}
+
+.share-provider-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.share-provider-panel .setting-row > .input-field,
+.share-provider-panel .setting-row > .textarea-field {
+  width: 100%;
+  max-width: 100%;
 }

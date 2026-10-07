@@ -182,3 +182,14 @@ test('minimum-match arrow buttons step the saved count and respect both limits',
   act('threshold-decrease', { kind: 'click' });
   assert.equal(rules.buildCombinationsForSave().combinations[0].when.atLeast, 1);
 });
+
+test('opening a rule shows every combination collapsed; one card opens when toggled', () => {
+  const detector = base({ all: [{ pattern: 'a' }, { pattern: 'b' }] });
+  detector.combinations.push({ id: 'c2', name: 'Second', confidence: 70, when: { all: [{ pattern: 'c' }] } });
+  const { rules, container, act } = editor(detector);
+  assert.ok(rules.combinationsModel.every(combo => !rules.isComboOpen(combo)));
+  assert.equal((container.innerHTML.match(/class="combo-card collapsed"/g) || []).length, 2);
+  act('toggle-card', { kind: 'click' });
+  assert.equal(rules.isComboOpen(rules.combinationsModel[0]), true);
+  assert.equal(rules.isComboOpen(rules.combinationsModel[1]), false);
+});

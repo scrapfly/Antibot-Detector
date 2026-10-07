@@ -602,28 +602,28 @@
     "message": "1 週間"
   },
   "methodLabelUrl": {
-    "message": "URL"
+    "message": "Url"
   },
   "methodLabelHeader": {
-    "message": "HEADER"
+    "message": "ヘッダー"
   },
   "methodLabelCookie": {
-    "message": "COOKIE"
+    "message": "Cookie"
   },
   "methodLabelContent": {
-    "message": "CONTENT"
+    "message": "コンテンツ"
   },
   "methodLabelDom": {
-    "message": "DOM"
+    "message": "Dom"
   },
   "methodLabelJsHooks": {
-    "message": "JS HOOKS"
+    "message": "JSフック"
   },
   "methodLabelWindow": {
-    "message": "WINDOW"
+    "message": "ウィンドウ"
   },
   "methodLabelPayload": {
-    "message": "PAYLOAD"
+    "message": "ペイロード"
   },
   "methodOnePattern": {
     "message": "1 パターン"
@@ -1336,9 +1336,6 @@
   "pasteConfirmTitle": {
     "message": "検出結果をアップロードしますか？"
   },
-  "pasteConfirmMsg": {
-    "message": "このページの検出結果の概要を公開ペースト（dpaste.com、非公開リスト、30日で期限切れ）にアップロードします。リンクを知っている人は誰でも閲覧できます。URLのクエリ文字列やCookie/ヘッダーの値は含まれません。"
-  },
   "pasteConfirmBtn": {
     "message": "アップロード"
   },
@@ -1493,7 +1490,7 @@
     "message": "スクリプトのみチェック"
   },
   "rulesOnlyCheckScriptsHint": {
-    "message": "検索をJavaScriptコードとスクリプトURLのみに制限します"
+    "message": "JavaScriptコード（インラインおよび読み込まれたスクリプト）のみを検索し、ページのテキストやファイル名は対象外です"
   },
   "rulesScopeSettingsTitle": {
     "message": "スコープ設定"
@@ -1622,7 +1619,7 @@
     "message": "読み込まれたリソース(スクリプト、画像、ネットワークリクエスト)のURLをパターンと照合します。"
   },
   "helpUrlWarning": {
-    "message": "パターンはデフォルトで大文字小文字を区別します。大文字小文字を区別しないマッチングが必要な場合は、URL大文字小文字を区別オプションを切り替えてください。"
+    "message": "「大文字小文字を区別」をオンにしない限り、パターンは大文字と小文字を区別しません。一般的すぎるパターンは無関係なリソースにも一致するため、具体的にしてください。"
   },
   "helpUrlTip": {
     "message": "/\\/v\\d+\\/challenge/ のような高度なパターンには、Regexオプションを使用してください。"
@@ -2362,9 +2359,6 @@
   "advCommonClickToCopy": {
     "message": "クリックしてコピー"
   },
-  "advCommonClickToCopyFull": {
-    "message": "クリックして値全体をコピー"
-  },
   "advCommonDomainLabel": {
     "message": "ドメイン:"
   },
@@ -2935,9 +2929,6 @@
   "advShapeCookieTitle": {
     "message": "Shape のCookie"
   },
-  "advShapeMaxAgeInfoFmt": {
-    "message": "Max-Age: {0} 秒 (50 年)"
-  },
   "advShapeAnalysisTitle": {
     "message": "Shape Security の分析"
   },
@@ -3106,14 +3097,8 @@
   "advAwswafDeletingCookieFmt": {
     "message": "Cookie {0} を削除しています… ページを再読み込みします"
   },
-  "advCloudflareExtractedSiteKey": {
-    "message": "抽出した Site Key"
-  },
   "advCloudflareTypeLabel": {
     "message": "種類"
-  },
-  "advCloudflareSiteKeyClickToCopy": {
-    "message": "Site Key（クリックしてコピー）"
   },
   "advCloudflareSiteKeyCopied": {
     "message": "Site Key をコピーしました"
@@ -3136,17 +3121,11 @@
   "advCloudflareCheckingVersion": {
     "message": "Cloudflare のバージョンを確認しています… ページを再読み込みします"
   },
-  "advCloudflareSiteKeyExtracted": {
-    "message": "Site Key を抽出しました"
-  },
   "advCloudflareNoSitekey": {
     "message": "ページに sitekey が見つかりません"
   },
   "advCloudflareFailedExtractSitekey": {
     "message": "sitekey を抽出できませんでした"
-  },
-  "advDatadomeCookieCopied": {
-    "message": "Cookieをコピーしました"
   },
   "advFuncaptchaPublicKey": {
     "message": "公開キー"
@@ -3496,9 +3475,6 @@
   "clipboardUrlFmt": {
     "message": "URL: {0}"
   },
-  "clipboardHostFmt": {
-    "message": "ホスト: {0}"
-  },
   "clipboardTitleFmt": {
     "message": "タイトル: {0}"
   },
@@ -3520,23 +3496,14 @@
   "clipboardDetectionMethodsHeading": {
     "message": "検出方法:"
   },
-  "clipboardDetectionsCountFmt": {
-    "message": "検出数: {0}"
-  },
   "clipboardDetectionsListFmt": {
     "message": "検出 ({0}件):"
   },
   "clipboardDifficultyFmt": {
     "message": "難易度: {0}"
   },
-  "clipboardCacheScopeFmt": {
-    "message": "キャッシュ範囲: {0}"
-  },
   "clipboardCacheExpirationFmt": {
     "message": "キャッシュ有効期限: {0}"
-  },
-  "clipboardMethodsFmt": {
-    "message": "方法: {0}"
   },
   "clipboardCopyFailed": {
     "message": "クリップボードへのコピーに失敗しました"
@@ -3969,5 +3936,286 @@
   },
   "settingsCategoryOrderHelp": {
     "message": "検出リストでのカテゴリの並び順。同じカテゴリ内では信頼度の高いものが先に表示されます。"
+  },
+  "settingsCardShareUploads": {
+    "message": "共有アップロード"
+  },
+  "settingsShareDestination": {
+    "message": "アップロード先"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "「検出 → 検出結果をアップロード」が概要を送信し、共有リンクを受け取る先です。"
+  },
+  "settingsShareService": {
+    "message": "サービス"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com（アカウント不要）"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org（アカウント不要）"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs（アカウント不要）"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin（APIキー）"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist（トークン）"
+  },
+  "shareProviderCustom": {
+    "message": "カスタムサーバー"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "削除までの日数"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "削除まで"
+  },
+  "shareExpire10M": {
+    "message": "10分"
+  },
+  "shareExpire1H": {
+    "message": "1時間"
+  },
+  "shareExpire1D": {
+    "message": "1日"
+  },
+  "shareExpire1W": {
+    "message": "1週間"
+  },
+  "shareExpire2W": {
+    "message": "2週間"
+  },
+  "shareExpire30D": {
+    "message": "30日"
+  },
+  "shareExpire1M": {
+    "message": "1か月"
+  },
+  "shareExpire6M": {
+    "message": "6か月"
+  },
+  "shareExpire1Y": {
+    "message": "1年"
+  },
+  "shareExpireOnetime": {
+    "message": "初回表示後"
+  },
+  "shareExpireNever": {
+    "message": "削除しない"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "paste.rs には有効期限の設定がありません。サービスが削除するまで残ります。"
+  },
+  "settingsSharePastebinKey": {
+    "message": "Pastebin APIキー"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "pastebin.com/doc_api の開発者キー。アップロードは非公開リスト（unlisted）になります。"
+  },
+  "settingsShareSecretNote": {
+    "message": "このブラウザーにのみ保存され、設定のエクスポートには含まれません。"
+  },
+  "settingsShareGithubToken": {
+    "message": "GitHubトークン"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "Gists 権限のあるトークン。アップロードはシークレット Gist で期限はありません。GitHub で削除してください。"
+  },
+  "settingsShareCustomUrl": {
+    "message": "サーバーURL"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "公開ホストの HTTPS。<EXPIRY_DAYS> を含められます。"
+  },
+  "settingsShareCustomBody": {
+    "message": "本文の形式"
+  },
+  "shareBodyForm": {
+    "message": "フォームフィールド"
+  },
+  "shareBodyJson": {
+    "message": "JSONテンプレート"
+  },
+  "shareBodyRaw": {
+    "message": "プレーンテキスト"
+  },
+  "settingsShareCustomField": {
+    "message": "フィールド名"
+  },
+  "settingsShareCustomJson": {
+    "message": "JSONテンプレート"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "変数: <CONTENT_JSON>, <TITLE_JSON>, <EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "1行に1つ「名前: 値」の形式。例: Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "共有リンクの取得元"
+  },
+  "shareLinkBody": {
+    "message": "レスポンス本文（URL）"
+  },
+  "shareLinkJson": {
+    "message": "JSONフィールド"
+  },
+  "shareLinkLocation": {
+    "message": "Location ヘッダー"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "JSONフィールドのパス"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "フォームでは expiry_days、<EXPIRY_DAYS> として送信されます。扱いはサーバー次第です。"
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "先に 設定 → 検出 → 共有アップロード で {0} を設定してください"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "このページの検出結果の概要を {0} にアップロードします（{1}）。リンクを知っている人は誰でも閲覧できます。URL のクエリ文字列や Cookie・ヘッダーの値は含まれません。"
+  },
+  "shareExpiryDaysFmt": {
+    "message": "{0}日後に削除"
+  },
+  "shareExpiryAfterFmt": {
+    "message": "{0}後に削除"
+  },
+  "shareExpiryOnetime": {
+    "message": "初回表示後に削除"
+  },
+  "shareExpiryService": {
+    "message": "サービスが削除するまで保持"
+  },
+  "shareExpiryNever": {
+    "message": "期限なし"
+  },
+  "pasteUnsafeUrl": {
+    "message": "カスタムサーバーは公開ホストの HTTPS アドレスである必要があります"
+  },
+  "pasteBadLink": {
+    "message": "サービスが有効な HTTPS リンクを返しませんでした"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "アップロード失敗: {0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "カスタムアップロードサーバー: 公開ホストの HTTPS アドレスを使用してください"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "カスタムアップロードサーバー: JSON テンプレートが正しい JSON ではありません"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "{0} がキーまたはトークンを拒否しました（誤りか期限切れ）"
+  },
+  "pasteGistPermission": {
+    "message": "GitHub トークンに Gists 権限（読み取りと書き込み）が必要です"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "このページに Turnstile のサイトキーはありません"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "Turnstile サイトキー"
+  },
+  "advTurnstileReloadingScripts": {
+    "message": "Turnstile のスクリプトを収集するためにページを再読み込みしています"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "高度なツール"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "ツールを表示する保護"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "この信頼度を超えたらツールを表示（%）"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "「高度」には信頼度がこの値を超えた保護だけが表示されます。0 にすると検出されたすべてを表示します。"
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "高度なツールの信頼度は 0〜99 で指定してください"
+  },
+  "advCommonValue": {
+    "message": "値"
+  },
+  "advCookiePath": {
+    "message": "パス"
+  },
+  "advCookieExpires": {
+    "message": "有効期限"
+  },
+  "advCookieSession": {
+    "message": "セッション（ブラウザーを閉じると削除）"
+  },
+  "advCookieNotFound": {
+    "message": "見つからない"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "公式の検出器を復元しますか？"
+  },
+  "restoreOfficialDetectorsConfirmMsg": {
+    "message": "削除した公式の検出器を、拡張機能に含まれるバージョンで再インストールします。独自の検出器や他のルールの編集は変わりません。"
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "復元"
+  },
+  "advancedFilterTool": {
+    "message": "ツール"
+  },
+  "advancedFilterAllTools": {
+    "message": "すべてのツール"
+  },
+  "advFilterKindCapture": {
+    "message": "キャプチャ"
+  },
+  "advFilterKindOther": {
+    "message": "その他のツール"
+  },
+  "scrapflyExportTitle": {
+    "message": "Scrapfly でスクレイピング",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "Unblocker でこのページをスクレイピングするコード",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "Unblocker を有効にして、Scrapfly の API 経由でこのページを取得します。ブラウザ、プロキシ、ヘッダーは自動で選ばれ、サイトがブロックしない場合は追加料金がかかりません。",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "このページで検出",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "コードの言語",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "このページには CAPTCHA があります。Unblocker はページを返すために CAPTCHA を回避または解決しますが、フォームの CAPTCHA は入力しません。",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportKeyNote": {
+    "message": "コードは SCRAPFLY_API_KEY から API キーを読み込みます。",
+    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  },
+  "scrapflyExportGetKey": {
+    "message": "API キーを取得",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "Playground を開く",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "コードをコピーしました",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "Scrapfly でスクレイピングするには Web ページを開いてください",
+    "description": "Toast when the tab is not a web page"
   }
 }

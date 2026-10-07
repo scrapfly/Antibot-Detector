@@ -268,8 +268,22 @@ Advanced.prototype.getCurrentDetections = async function() {
    * Get available detection modules for current detections
    * @returns {Array} Array of {detection, module} objects
    */
+// A protection gets tools only above this confidence (percent): Settings →
+// Detection → Advanced tools, this value when unset or invalid
+Advanced.MIN_TOOL_CONFIDENCE = 50;
+
+Advanced.readMinToolConfidence = async function() {
+    try {
+      const value = Number((await Utils.getSettings())?.detection?.advancedToolsMinConfidence);
+      return Number.isInteger(value) && value >= 0 && value <= 99 ? value : Advanced.MIN_TOOL_CONFIDENCE;
+    } catch (e) {
+      return Advanced.MIN_TOOL_CONFIDENCE;
+    }
+};
+
 Advanced.prototype.getDetectionModules = async function() {
     const detections = await this.getCurrentDetections();
+    const minConfidence = await Advanced.readMinToolConfidence();
     const availableTools = [];
 
     Logger.debug('UI', '[Advanced] CHECKING AVAILABLE MODULES');
@@ -290,7 +304,12 @@ Advanced.prototype.getDetectionModules = async function() {
         hasModule: hasModule ? 'YES' : 'NO'
       });
 
-      if (detectorId && Advanced.AVAILABLE_MODULES[detectorId]) {
+      // Only protections the page most likely runs: a 10% script reference
+      // (a page that merely names a vendor) gets no tools
+      const confidence = Number(detection.confidence) || 0;
+      if (detectorId && Advanced.AVAILABLE_MODULES[detectorId] && confidence <= minConfidence) {
+        Logger.debug('UI', `[Advanced]   → "${detectorName}" at ${confidence}% is not above ${minConfidence}%, no tools`);
+      } else if (detectorId && Advanced.AVAILABLE_MODULES[detectorId]) {
         Logger.debug('UI', `[Advanced]   → Adding "${detectorName}" to available tools`);
         availableTools.push({
           detection,

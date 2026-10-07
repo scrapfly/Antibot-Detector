@@ -1,6 +1,6 @@
 {
   "name": "scrapfly-extension",
-  "version": "2.8.1",
+  "version": "2.8.2",
   "private": true,
   "description": "Scrapfly MV3 extension — verification scripts (no build step, no runtime dependencies).",
   "scripts": {
@@ -12,6 +12,7 @@
     "e2e:updater": "node scripts/e2e-updater.js",
     "e2e:methods": "node scripts/e2e-methods.js",
     "e2e:settings": "node scripts/e2e-settings.js",
-    "e2e:editor": "node scripts/e2e-editor.js"
+    "e2e:editor": "node scripts/e2e-editor.js",
+    "e2e:live": "node scripts/e2e-live.js"
   }
 }

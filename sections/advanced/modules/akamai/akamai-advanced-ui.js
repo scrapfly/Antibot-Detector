@@ -88,99 +88,23 @@ AkamaiAdvanced.prototype.checkCookies = async function() {
                 NotificationHelper.info(AdvancedUtils.notifications.checkCookies.none('Akamai'));
             }
 
-            this.displayCookiesModal(foundCookies, akamaiCookies);
+            const tr = AkamaiAdvanced.tr;
+            const levelText = {
+                'Advanced (SBSD)': tr('advAkamaiLevelAdvancedSbsd', 'Advanced (SBSD)'),
+                'Standard': tr('advCommonStandard', 'Standard'),
+                'Basic': tr('advAkamaiLevelBasic', 'Basic'),
+                'None': tr('advCommonNone', 'None')
+            }[protectionLevel] || protectionLevel;
+            const facts = [{ label: tr('advCommonProtectionLevel', 'Protection Level:'), value: levelText }];
+            if (akamaiCookies._abck) {
+                facts.push({ label: tr('advAkamaiAbckLevelLabel', '_abck level:'),
+                    value: akamaiCookies._abck.value.includes('~0~') ? tr('advAkamaiLevelEasy', 'Easy') : tr('advCommonStandard', 'Standard') });
+            }
+            this.showCookieResults({ vendor: 'Akamai', expected: Object.keys(akamaiCookies), cookies: Object.values(akamaiCookies).filter(Boolean), facts });
         } catch (error) {
             Logger.error('NETWORK', 'Failed to check Akamai cookies:', error);
             NotificationHelper.error(AkamaiAdvanced.fmt('advCommonFailedCheckCookiesFmt', 'Failed to check cookies: {0}', error.message));
         }
-    };
-
-
-
-    /**
-     * Display cookies in a modal
-     */
-AkamaiAdvanced.prototype.displayCookiesModal = function(foundCookies, allCookies) {
-        const modal = this.createToolModal();
-        const tr = AkamaiAdvanced.tr;
-        const fmt = AkamaiAdvanced.fmt;
-
-        const hasAbck = allCookies._abck;
-        const hasBmSz = allCookies.bm_sz;
-        const hasSbsd = allCookies.sbsd || allCookies.sbsd_o;
-
-        // Check _abck level
-        const isEasyMode = hasAbck && allCookies._abck.value.includes('~0~');
-
-        let protectionLevel = tr('advCommonNone', 'None');
-        if (hasAbck && hasBmSz && hasSbsd) {
-            protectionLevel = tr('advAkamaiLevelAdvancedSbsd', 'Advanced (SBSD)');
-        } else if (hasAbck && hasBmSz) {
-            protectionLevel = tr('advCommonStandard', 'Standard');
-        } else if (hasAbck) {
-            protectionLevel = tr('advAkamaiLevelBasic', 'Basic');
-        }
-
-        modal.innerHTML = `
-            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${fmt('advCommonCookiesTitleFmt', '{0} Cookies', 'Akamai')}</h3>
-                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
-                </div>
-
-                <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 16px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">${tr('advCommonProtectionLevel', 'Protection Level:')}</span>
-                        <span style="color: var(--text-primary); font-weight: 500;">${protectionLevel}</span>
-                    </div>
-                    ${hasAbck ? `
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                            <span style="color: var(--text-secondary); font-size: 13px;">${tr('advAkamaiAbckLevelLabel', '_abck level:')}</span>
-                            <span style="color: ${isEasyMode ? 'var(--success)' : 'var(--text-primary)'}; font-weight: 500;">${isEasyMode ? tr('advAkamaiLevelEasy', 'Easy') : tr('advCommonStandard', 'Standard')}</span>
-                        </div>
-                    ` : ''}
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">${tr('advCommonCookiesFound', 'Cookies Found:')}</span>
-                        <span style="color: var(--text-primary); font-weight: 500;">${foundCookies.length}/7</span>
-                    </div>
-                </div>
-
-                ${foundCookies.length === 0 ? `
-                    <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
-                        <div style="font-size: 48px; margin-bottom: 12px;"></div>
-                        <div style="font-size: 14px;">${fmt('advCommonNoCookiesFmt', 'No {0} cookies found', 'Akamai')}</div>
-                    </div>
-                ` : `
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        ${foundCookies.map(cookie => `
-                            <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <div class="copy-value" data-copy="${cookie.name}" style="font-weight: 500; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="${tr('advCommonClickToCopy', 'Click to copy')}">${FormatUtils.escapeHtml(cookie.name)}</div>
-                                    <div style="display: flex; gap: 6px;">
-                                        ${cookie.secure ? '<span style="font-size: 10px; background: var(--success); color: white; padding: 2px 6px; border-radius: 3px;">SECURE</span>' : ''}
-                                        ${cookie.httpOnly ? '<span style="font-size: 10px; background: var(--bg-primary); color: var(--text-primary); padding: 2px 6px; border-radius: 3px;">HTTP</span>' : ''}
-                                    </div>
-                                </div>
-                                <div class="copy-value" data-copy="${cookie.value}" style="font-size: 11px; color: var(--text-secondary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s;" title="${tr('advCommonClickToCopyFull', 'Click to copy full value')}">${cookie.value.substring(0, 60)}${cookie.value.length > 60 ? '...' : ''}</div>
-                                <div style="font-size: 11px; color: var(--text-muted);">${tr('advCommonDomainLabel', 'Domain:')} ${cookie.domain}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `}
-            </div>
-        `;
-
-        this.bindModalClose(modal);
-        this.bindCopyValueHandlers(modal, { defaultMessage: tr('advValueCopied', 'Value copied') });
-        modal.querySelectorAll('.copy-value').forEach(element => {
-            element.addEventListener('mouseenter', () => {
-                element.style.background = 'rgba(255, 255, 255, 0.1)';
-            });
-            element.addEventListener('mouseleave', () => {
-                element.style.background = '';
-            });
-        });
-        this.showToolModal(modal);
     };
 
 

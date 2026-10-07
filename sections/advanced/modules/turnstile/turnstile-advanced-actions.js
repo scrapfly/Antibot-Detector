@@ -1,25 +1,17 @@
-TurnstileAdvanced.prototype.checkCookies = async function() {
-        Logger.network('[Turnstile] ========== CHECK COOKIES ==========');
+TurnstileAdvanced.prototype.extractSiteKey = async function() {
         try {
-            if (!this.tabInfo || !this.tabInfo.url) {
+            if (!this.tabInfo || !this.tabInfo.id) {
                 throw new Error('Tab information not available');
             }
-
-            const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
-            const cfClearanceCookie = cookies.find(c => c.name === 'cf_clearance');
-
-            const foundCount = cfClearanceCookie ? 1 : 0;
-
-            if (foundCount > 0) {
-                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(foundCount, 1));
-            } else {
-                NotificationHelper.info(AdvancedUtils.notifications.checkCookies.none('Turnstile'));
+            const keys = await TurnstileSiteKeys.extract(this.tabInfo.id);
+            if (keys.length === 0) {
+                NotificationHelper.error(this._txt('advTurnstileNoSiteKey', 'No Turnstile site key on this page'));
+                return;
             }
-
-            this.displayCookiesModal(cfClearanceCookie);
+            this.displaySiteKeysModal(keys);
         } catch (error) {
-            Logger.error('NETWORK', '[Turnstile] Failed to check cookies:', error);
-            NotificationHelper.error(this._txt('advCommonFailedCheckCookiesFmt', 'Failed to check cookies: {0}', error.message));
+            Logger.error('NETWORK', '[Turnstile] Failed to extract the site key:', error);
+            NotificationHelper.error(this._txt('advCommonFailedExtractFmt', 'Failed to extract: {0}', error.message));
         }
     };
 
@@ -48,34 +40,19 @@ TurnstileAdvanced.prototype.analyzeScripts = async function() {
             });
 
             if (response && response.status === 'started') {
-                NotificationHelper.info(this._txt('advAwswafDeletingCookieFmt', 'Deleting {0} cookie... Page will reload', 'cf_clearance'));
-
+                // Turnstile sets no cookies: a plain reload is enough to see its scripts load
+                NotificationHelper.info(this._txt('advTurnstileReloadingScripts', 'Reloading the page to collect the Turnstile scripts'));
+                // Same short wait as the other vendors before the reload
                 await new Promise(resolve => setTimeout(resolve, 500));
-                {
-                    try {
-                        const cookies = await chrome.cookies.getAll({
-                            url: this.tabInfo.url,
-                            name: 'cf_clearance'
-                        });
-
-                        for (const cookie of cookies) {
-                            await chrome.cookies.remove({
-                                url: this.tabInfo.url,
-                                name: cookie.name
-                            });
-                        }
-
-                        await AdvancedUtils.sendMessage({
-                            type: 'TURNSTILE_SHOW_ANALYZING_NOTIFICATION',
-                            tabId: this.tabInfo.id
-                        });
-
-                    } catch (cookieError) {
-                        Logger.error('NETWORK', '[Turnstile] Failed to delete cookies:', cookieError);
-                    }
-
-                    await chrome.tabs.reload(this.tabInfo.id);
+                try {
+                    await AdvancedUtils.sendMessage({
+                        type: 'TURNSTILE_SHOW_ANALYZING_NOTIFICATION',
+                        tabId: this.tabInfo.id
+                    });
+                } catch (noticeError) {
+                    Logger.debug('NETWORK', '[Turnstile] Page notice not shown:', noticeError);
                 }
+                await chrome.tabs.reload(this.tabInfo.id);
             } else {
                 chrome.runtime.onMessage.removeListener(analysisListener);
                 NotificationHelper.error(this._txt('advCommonFailedStartAnalysis', 'Failed to start analysis'));
