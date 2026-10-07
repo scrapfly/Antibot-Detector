@@ -22,7 +22,7 @@ DataDomeAdvanced.prototype.checkCookies = async function() {
             }
 
             // Display modal with cookie details
-            this.displayCookiesModal(dataDomeCookie);
+            this.showCookieResults({ vendor: 'DataDome', expected: ['datadome'], cookies: [dataDomeCookie].filter(Boolean) });
         } catch (error) {
             Logger.error('NETWORK', '[DataDome] Failed to check cookies:', error);
             NotificationHelper.error(this._txt('advCommonFailedCheckCookiesFmt', 'Failed to check cookies: {0}', error.message));

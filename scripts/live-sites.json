@@ -1,0 +1,514 @@
+{
+  "sites": [
+    {
+      "url": "https://www.akamai.com/",
+      "expect": [
+        {
+          "detector": "detect-akamai",
+          "min": 80
+        }
+      ],
+      "note": "vendor site, Bot Manager on it",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.nike.com/",
+      "expect": [
+        {
+          "detector": "detect-akamai",
+          "min": 80
+        }
+      ],
+      "note": "Akamai Bot Manager customer",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://discord.com/",
+      "expect": [
+        {
+          "detector": "detect-cloudflare",
+          "min": 60
+        }
+      ],
+      "note": "Cloudflare Bot Management customer",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.cloudflare.com/",
+      "expect": [
+        {
+          "detector": "detect-cloudflare",
+          "min": 40
+        }
+      ],
+      "note": "vendor site, no challenge: weak signals only",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.o2.co.uk/",
+      "expect": [
+        {
+          "detector": "detect-aws-waf",
+          "min": 80
+        }
+      ],
+      "note": "AWS WAF customer",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "expect": [
+        {
+          "detector": "detect-botguard",
+          "min": 80
+        }
+      ],
+      "note": "YouTube player runs BotGuard (WAA)",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.dmv.ca.gov/",
+      "expect": [
+        {
+          "detector": "detect-f5",
+          "min": 50
+        }
+      ],
+      "note": "BIG-IP ASM TS01 cookie",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.target.com/",
+      "expect": [
+        {
+          "detector": "detect-shapesecurity",
+          "min": 80
+        }
+      ],
+      "note": "Shape seeded script + ssx.mod.js (also PerimeterX)",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://datadome.co/",
+      "expect": [
+        {
+          "detector": "detect-datadome",
+          "min": 80
+        }
+      ],
+      "note": "vendor site",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.leboncoin.fr/",
+      "expect": [
+        {
+          "detector": "detect-datadome",
+          "min": 80
+        }
+      ],
+      "note": "DataDome customer",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.imperva.com/",
+      "expect": [
+        {
+          "detector": "detect-incapsula",
+          "min": 80
+        }
+      ],
+      "note": "vendor site",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.zillow.com/",
+      "expect": [
+        {
+          "detector": "detect-perimeterx",
+          "min": 80
+        }
+      ],
+      "note": "HUMAN/PerimeterX customer (block page)",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.walmart.com/",
+      "expect": [
+        {
+          "detector": "detect-perimeterx",
+          "min": 80
+        }
+      ],
+      "note": "HUMAN/PerimeterX customer",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://sucuri.net/",
+      "expect": [
+        {
+          "detector": "detect-sucuri",
+          "min": 80
+        }
+      ],
+      "note": "vendor site",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.reblaze.com/",
+      "expect": [
+        {
+          "detector": "detect-reblaze",
+          "min": 80
+        }
+      ],
+      "note": "vendor site",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://cheq.ai/",
+      "expect": [
+        {
+          "detector": "detect-cheq",
+          "min": 80
+        }
+      ],
+      "note": "vendor site",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.realestate.com.au/",
+      "expect": [
+        {
+          "detector": "detect-kasada",
+          "min": 80
+        }
+      ],
+      "note": "Kasada customer",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.hyatt.com/",
+      "expect": [
+        {
+          "detector": "detect-kasada",
+          "min": 80
+        }
+      ],
+      "note": "Kasada customer",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://git.kernel.org/",
+      "expect": [
+        {
+          "detector": "detect-anubis",
+          "min": 80
+        }
+      ],
+      "note": "Anubis",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.samr.gov.cn/",
+      "expect": [
+        {
+          "detector": "detect-jiasule",
+          "min": 80
+        }
+      ],
+      "note": "Jiasule",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.nmpa.gov.cn/",
+      "expect": [
+        {
+          "detector": "detect-ruishu",
+          "min": 80
+        }
+      ],
+      "note": "Ruishu",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.mexc.co/",
+      "expect": [
+        {
+          "detector": "detect-fingerprintjs",
+          "min": 80
+        }
+      ],
+      "note": "FingerprintJS Pro customer; the page fires load after about 10 s",
+      "waitMs": 25000
+    },
+    {
+      "url": "https://fingerprint.com/",
+      "expect": [
+        {
+          "detector": "detect-fingerprintjs",
+          "min": 80
+        }
+      ],
+      "note": "vendor site",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.bosch.com/",
+      "expect": [
+        {
+          "detector": "detect-azurefrontdoor",
+          "min": 80
+        }
+      ],
+      "note": "Azure Front Door",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.csdn.net/",
+      "expect": [
+        {
+          "detector": "detect-yundun",
+          "min": 80
+        }
+      ],
+      "note": "Yundun",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.biu.ac.il/",
+      "expect": [
+        {
+          "detector": "detect-radware",
+          "min": 80
+        }
+      ],
+      "note": "Radware Bot Manager",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.ebay.com/",
+      "expect": [
+        {
+          "detector": "detect-radware",
+          "min": 60
+        }
+      ],
+      "note": "Radware Bot Manager customer",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.google.com/recaptcha/api2/demo",
+      "expect": [
+        {
+          "detector": "detect-recaptcha",
+          "min": 80
+        }
+      ],
+      "note": "official demo",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://2captcha.com/demo/recaptcha-v3",
+      "expect": [
+        {
+          "detector": "detect-recaptcha",
+          "min": 70
+        }
+      ],
+      "note": "reCAPTCHA v3 demo",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://accounts.hcaptcha.com/demo",
+      "expect": [
+        {
+          "detector": "detect-hcaptcha",
+          "min": 80
+        }
+      ],
+      "note": "official demo",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.geetest.com/en/adaptive-captcha-demo",
+      "expect": [
+        {
+          "detector": "detect-geetest",
+          "min": 80
+        }
+      ],
+      "note": "official demo",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://2captcha.com/demo/geetest-v4",
+      "expect": [
+        {
+          "detector": "detect-geetest",
+          "min": 60
+        }
+      ],
+      "note": "GeeTest v4 demo",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://2captcha.com/demo/cloudflare-turnstile",
+      "expect": [
+        {
+          "detector": "detect-turnstile",
+          "min": 75
+        }
+      ],
+      "note": "Turnstile demo",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://2captcha.com/demo/mtcaptcha",
+      "expect": [
+        {
+          "detector": "detect-mtcaptcha",
+          "min": 80
+        }
+      ],
+      "note": "MTCaptcha demo",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.captcha.eu/",
+      "expect": [
+        {
+          "detector": "detect-captchaeu",
+          "min": 60
+        }
+      ],
+      "note": "vendor site",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://dun.163.com/trial/sense",
+      "expect": [
+        {
+          "detector": "detect-yidun",
+          "min": 80
+        }
+      ],
+      "note": "official demo",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.zhihu.com/",
+      "expect": [
+        {
+          "detector": "detect-yidun",
+          "min": 80
+        }
+      ],
+      "note": "NetEase Yidun customer",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://smartcaptcha.yandexcloud.net/demo",
+      "expect": [
+        {
+          "detector": "detect-smartcaptcha",
+          "min": 80
+        }
+      ],
+      "note": "official demo",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://www.dingxiang-inc.com/business/captcha",
+      "expect": [
+        {
+          "detector": "detect-dingxiang",
+          "min": 80
+        }
+      ],
+      "note": "vendor demo; the page fires load after about 30 s",
+      "waitMs": 45000
+    },
+    {
+      "url": "https://www.ishumei.com/trial/captcha.html",
+      "expect": [
+        {
+          "detector": "detect-shumei",
+          "min": 80
+        }
+      ],
+      "note": "official demo",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://signup.live.com/",
+      "expect": [
+        {
+          "detector": "detect-perimeterx",
+          "min": 75
+        }
+      ],
+      "note": "Microsoft sign-up runs HUMAN from hsprotect.net",
+      "waitMs": 20000
+    },
+    {
+      "url": "https://cloud.tencent.com/product/captcha",
+      "expect": [
+        {
+          "detector": "detect-qcloud",
+          "min": 60
+        }
+      ],
+      "note": "official product page loads TJCaptcha.js",
+      "waitMs": 15000
+    },
+    {
+      "url": "https://www.capy.me/account/signin",
+      "expect": [
+        {
+          "detector": "detect-capy",
+          "min": 80
+        }
+      ],
+      "note": "Capy puzzle on the vendor sign-in",
+      "waitMs": 12000
+    },
+    {
+      "url": "https://developer.friendlycaptcha.com/playground",
+      "expect": [
+        {
+          "detector": "detect-friendlycaptcha",
+          "min": 15
+        }
+      ],
+      "note": "playground: only the widget container until you interact",
+      "waitMs": 15000
+    },
+    {
+      "url": "https://example.com/",
+      "expect": [],
+      "note": "clean page: no anti-bot or CAPTCHA",
+      "waitMs": 12000,
+      "forbid": [
+        "detect-meetrics",
+        "detect-ocule",
+        "detect-cloudflare",
+        "detect-akamai",
+        "detect-recaptcha",
+        "detect-hcaptcha"
+      ]
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Web_browser",
+      "expect": [],
+      "note": "clean page (hCaptcha 10% reference is real: ConfirmEdit config)",
+      "waitMs": 12000,
+      "forbid": [
+        "detect-meetrics",
+        "detect-ocule",
+        "detect-recaptcha",
+        "detect-cloudflare"
+      ]
+    }
+  ]
+}

@@ -602,28 +602,28 @@
     "message": "1 周"
   },
   "methodLabelUrl": {
-    "message": "URL"
+    "message": "Url"
   },
   "methodLabelHeader": {
-    "message": "HEADER"
+    "message": "请求头"
   },
   "methodLabelCookie": {
-    "message": "COOKIE"
+    "message": "Cookie"
   },
   "methodLabelContent": {
-    "message": "CONTENT"
+    "message": "内容"
   },
   "methodLabelDom": {
-    "message": "DOM"
+    "message": "Dom"
   },
   "methodLabelJsHooks": {
-    "message": "JS HOOKS"
+    "message": "JS 钩子"
   },
   "methodLabelWindow": {
-    "message": "WINDOW"
+    "message": "窗口"
   },
   "methodLabelPayload": {
-    "message": "PAYLOAD"
+    "message": "负载"
   },
   "methodOnePattern": {
     "message": "1 个模式"
@@ -1336,9 +1336,6 @@
   "pasteConfirmTitle": {
     "message": "上传检测结果？"
   },
-  "pasteConfirmMsg": {
-    "message": "这会将此页面的检测摘要上传到公开粘贴（dpaste.com，未列出，30 天后过期）。任何拥有链接的人都可以查看。不包含 URL 查询字符串和 Cookie/标头值。"
-  },
   "pasteConfirmBtn": {
     "message": "上传"
   },
@@ -1493,7 +1490,7 @@
     "message": "仅检查脚本"
   },
   "rulesOnlyCheckScriptsHint": {
-    "message": "仅在 JavaScript 代码和脚本 URL 中进行搜索"
+    "message": "仅在 JavaScript 代码（内联和加载的脚本）中搜索，不包括页面文本或文件名"
   },
   "rulesScopeSettingsTitle": {
     "message": "范围设置"
@@ -1622,7 +1619,7 @@
     "message": "将已加载资源(脚本、图片、网络请求)的 URL 与模式进行匹配。"
   },
   "helpUrlWarning": {
-    "message": "模式默认区分大小写。如需不区分大小写的匹配,请切换“URL 区分大小写”选项。"
+    "message": "除非开启“区分大小写”，否则模式不区分大小写。过于宽泛的模式也会匹配无关资源，请尽量具体。"
   },
   "helpUrlTip": {
     "message": "对于 /\\/v\\d+\\/challenge/ 这类高级模式,请使用 Regex 选项。"
@@ -2362,9 +2359,6 @@
   "advCommonClickToCopy": {
     "message": "点击复制"
   },
-  "advCommonClickToCopyFull": {
-    "message": "点击复制完整值"
-  },
   "advCommonDomainLabel": {
     "message": "域名:"
   },
@@ -2935,9 +2929,6 @@
   "advShapeCookieTitle": {
     "message": "Shape Cookie"
   },
-  "advShapeMaxAgeInfoFmt": {
-    "message": "Max-Age:{0} 秒(50 年)"
-  },
   "advShapeAnalysisTitle": {
     "message": "Shape Security 分析"
   },
@@ -3106,14 +3097,8 @@
   "advAwswafDeletingCookieFmt": {
     "message": "正在删除 {0} Cookie… 页面将重新加载"
   },
-  "advCloudflareExtractedSiteKey": {
-    "message": "已提取的 Site Key"
-  },
   "advCloudflareTypeLabel": {
     "message": "类型"
-  },
-  "advCloudflareSiteKeyClickToCopy": {
-    "message": "Site Key（点击复制）"
   },
   "advCloudflareSiteKeyCopied": {
     "message": "已复制 Site Key"
@@ -3136,17 +3121,11 @@
   "advCloudflareCheckingVersion": {
     "message": "正在检查 Cloudflare 版本… 页面将重新加载"
   },
-  "advCloudflareSiteKeyExtracted": {
-    "message": "已成功提取 Site Key"
-  },
   "advCloudflareNoSitekey": {
     "message": "页面上未找到 sitekey"
   },
   "advCloudflareFailedExtractSitekey": {
     "message": "无法提取 sitekey"
-  },
-  "advDatadomeCookieCopied": {
-    "message": "已复制 Cookie"
   },
   "advFuncaptchaPublicKey": {
     "message": "公钥"
@@ -3496,9 +3475,6 @@
   "clipboardUrlFmt": {
     "message": "URL:{0}"
   },
-  "clipboardHostFmt": {
-    "message": "主机:{0}"
-  },
   "clipboardTitleFmt": {
     "message": "标题:{0}"
   },
@@ -3520,23 +3496,14 @@
   "clipboardDetectionMethodsHeading": {
     "message": "检测方法:"
   },
-  "clipboardDetectionsCountFmt": {
-    "message": "检测数:{0}"
-  },
   "clipboardDetectionsListFmt": {
     "message": "检测结果({0}):"
   },
   "clipboardDifficultyFmt": {
     "message": "难度:{0}"
   },
-  "clipboardCacheScopeFmt": {
-    "message": "缓存范围:{0}"
-  },
   "clipboardCacheExpirationFmt": {
     "message": "缓存过期时间:{0}"
-  },
-  "clipboardMethodsFmt": {
-    "message": "方法:{0}"
   },
   "clipboardCopyFailed": {
     "message": "复制到剪贴板失败"
@@ -3969,5 +3936,286 @@
   },
   "settingsCategoryOrderHelp": {
     "message": "检测列表中类别的顺序。同一类别内，置信度最高的排在前面。"
+  },
+  "settingsCardShareUploads": {
+    "message": "分享上传"
+  },
+  "settingsShareDestination": {
+    "message": "上传目标"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "“检测 → 上传检测结果”发送摘要并获取分享链接的位置。"
+  },
+  "settingsShareService": {
+    "message": "服务"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com（无需账号）"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org（无需账号）"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs（无需账号）"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin（API 密钥）"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist（令牌）"
+  },
+  "shareProviderCustom": {
+    "message": "自定义服务器"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "删除时间（天）"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "删除时间"
+  },
+  "shareExpire10M": {
+    "message": "10 分钟"
+  },
+  "shareExpire1H": {
+    "message": "1 小时"
+  },
+  "shareExpire1D": {
+    "message": "1 天"
+  },
+  "shareExpire1W": {
+    "message": "1 周"
+  },
+  "shareExpire2W": {
+    "message": "2 周"
+  },
+  "shareExpire30D": {
+    "message": "30 天"
+  },
+  "shareExpire1M": {
+    "message": "1 个月"
+  },
+  "shareExpire6M": {
+    "message": "6 个月"
+  },
+  "shareExpire1Y": {
+    "message": "1 年"
+  },
+  "shareExpireOnetime": {
+    "message": "首次查看后"
+  },
+  "shareExpireNever": {
+    "message": "永不"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "paste.rs 不支持设置过期：内容会保留到服务删除为止。"
+  },
+  "settingsSharePastebinKey": {
+    "message": "Pastebin API 密钥"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "你在 pastebin.com/doc_api 获取的开发者密钥。上传内容不公开列出。"
+  },
+  "settingsShareSecretNote": {
+    "message": "仅保存在此浏览器中，不包含在设置导出中。"
+  },
+  "settingsShareGithubToken": {
+    "message": "GitHub 令牌"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "具有 Gists 权限的令牌。上传为私密 Gist 且不会过期；请在 GitHub 上删除。"
+  },
+  "settingsShareCustomUrl": {
+    "message": "服务器 URL"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "公共主机上的 HTTPS。可包含 <EXPIRY_DAYS>。"
+  },
+  "settingsShareCustomBody": {
+    "message": "正文格式"
+  },
+  "shareBodyForm": {
+    "message": "表单字段"
+  },
+  "shareBodyJson": {
+    "message": "JSON 模板"
+  },
+  "shareBodyRaw": {
+    "message": "纯文本"
+  },
+  "settingsShareCustomField": {
+    "message": "字段名"
+  },
+  "settingsShareCustomJson": {
+    "message": "JSON 模板"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "变量：<CONTENT_JSON>、<TITLE_JSON>、<EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "每行一个，格式为 名称: 值，例如 Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "分享链接来源"
+  },
+  "shareLinkBody": {
+    "message": "响应正文（URL）"
+  },
+  "shareLinkJson": {
+    "message": "JSON 字段"
+  },
+  "shareLinkLocation": {
+    "message": "Location 响应头"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "JSON 字段路径"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "在表单中作为 expiry_days 发送，也可用 <EXPIRY_DAYS>；如何处理由你的服务器决定。"
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "请先在 设置 → 检测 → 分享上传 中配置 {0}"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "将把此页面检测结果的摘要上传到 {0}（{1}）。任何拥有链接的人都能查看。不包含 URL 查询参数以及 Cookie/请求头的值。"
+  },
+  "shareExpiryDaysFmt": {
+    "message": "{0} 天后删除"
+  },
+  "shareExpiryAfterFmt": {
+    "message": "{0}后删除"
+  },
+  "shareExpiryOnetime": {
+    "message": "首次查看后删除"
+  },
+  "shareExpiryService": {
+    "message": "保留到服务删除为止"
+  },
+  "shareExpiryNever": {
+    "message": "不会过期"
+  },
+  "pasteUnsafeUrl": {
+    "message": "自定义服务器必须是公共主机上的 HTTPS 地址"
+  },
+  "pasteBadLink": {
+    "message": "服务未返回有效的 HTTPS 链接"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "上传失败：{0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "自定义上传服务器：请使用公共主机上的 HTTPS 地址"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "自定义上传服务器：JSON 模板不是有效的 JSON"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "{0} 拒绝了密钥或令牌（错误或已过期）"
+  },
+  "pasteGistPermission": {
+    "message": "GitHub 令牌需要 Gists 权限（读写）"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "此页面没有 Turnstile 站点密钥"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "Turnstile 站点密钥"
+  },
+  "advTurnstileReloadingScripts": {
+    "message": "正在重新加载页面以收集 Turnstile 脚本"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "高级工具"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "哪些防护显示工具"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "置信度高于此值时显示工具（%）"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "“高级”只列出置信度高于此值的防护。设为 0 则列出所有检测到的防护。"
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "高级工具的置信度必须在 0 到 99 之间"
+  },
+  "advCommonValue": {
+    "message": "值"
+  },
+  "advCookiePath": {
+    "message": "路径"
+  },
+  "advCookieExpires": {
+    "message": "过期时间"
+  },
+  "advCookieSession": {
+    "message": "会话（关闭浏览器时删除）"
+  },
+  "advCookieNotFound": {
+    "message": "未找到"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "恢复官方检测器？"
+  },
+  "restoreOfficialDetectorsConfirmMsg": {
+    "message": "你删除的官方检测器会以扩展自带的版本重新安装。你自己的检测器和对其他规则的修改不受影响。"
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "恢复"
+  },
+  "advancedFilterTool": {
+    "message": "工具"
+  },
+  "advancedFilterAllTools": {
+    "message": "所有工具"
+  },
+  "advFilterKindCapture": {
+    "message": "捕获"
+  },
+  "advFilterKindOther": {
+    "message": "其他工具"
+  },
+  "scrapflyExportTitle": {
+    "message": "用 Scrapfly 抓取",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "用 Unblocker 抓取此页面的代码",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "通过 Scrapfly API 并开启 Unblocker 获取此页面。它会自行选择浏览器、代理和请求头，网站未拦截时不额外收费。",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "在此页面检测到",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "代码语言",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "此页面有 CAPTCHA：Unblocker 会绕过或破解它以返回页面，但不会填写表单中的 CAPTCHA。",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportKeyNote": {
+    "message": "代码从 SCRAPFLY_API_KEY 读取你的 API 密钥。",
+    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  },
+  "scrapflyExportGetKey": {
+    "message": "获取 API 密钥",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "打开 Playground",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "代码已复制",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "请先打开一个网页，再用 Scrapfly 抓取",
+    "description": "Toast when the tab is not a web page"
   }
 }

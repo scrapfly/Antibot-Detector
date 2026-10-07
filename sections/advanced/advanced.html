@@ -1,7 +1,7 @@
 <!-- Advanced Tab Template -->
 <div id="advancedLoadingState" class="advanced-loading" role="status">
   <div class="advanced-loading-content">
-    <img src="icons/icon48.png" alt="" width="64" height="64" class="state-card-logo">
+    <img src="icons/icon128.png" alt="" width="64" height="64" class="state-card-logo">
     <span data-i18n="notifLoadingDefault">Loading...</span>
     <div class="advanced-loading-track" aria-hidden="true"><span></span></div>
   </div>
@@ -9,7 +9,7 @@
 <div id="noAdvancedState" class="empty-state empty-state--centered" style="display: none;">
   <div class="state-card state-card--blue state-card--bare">
     <div class="state-card-icon">
-      <img src="icons/icon48.png" alt="Scrapfly" width="72" height="72" class="state-card-logo">
+      <img src="icons/icon128.png" alt="Scrapfly" width="72" height="72" class="state-card-logo">
     </div>
     <h3 class="state-card-title" data-i18n="advancedToolsTitle">Advanced Capture Tools</h3>
     <p class="state-card-description" data-i18n="advancedToolsDescription">Extract cookies, tokens, and sitekeys from detected protection systems</p>
@@ -80,13 +80,17 @@
 
           <label class="history-v2-field">
             <span class="history-v2-label" data-i18n="advancedFilterModule">Module</span>
+            <!-- One option per vendor saved in history (Advanced.updateModuleFilterOptions) -->
             <select id="captureModuleFilter" class="history-v2-select">
               <option value="all" data-i18n="advancedFilterAllModules">All Modules</option>
-              <option value="recaptcha">reCAPTCHA</option>
-              <option value="akamai">Akamai</option>
-              <option value="incapsula">Imperva</option>
-              <option value="shapesecurity">Shape Security</option>
-              <option value="aws-waf">AWS WAF</option>
+            </select>
+          </label>
+
+          <label class="history-v2-field history-v2-field--wide">
+            <span class="history-v2-label" data-i18n="advancedFilterTool">Tool</span>
+            <!-- Captures and one option per tool type saved in history (Advanced.updateToolFilterOptions) -->
+            <select id="captureToolFilter" class="history-v2-select">
+              <option value="all" data-i18n="advancedFilterAllTools">All tools</option>
             </select>
           </label>
 
@@ -123,7 +127,7 @@
 
     <div id="captureEmptyState" class="advanced-history-empty state-card state-card--blue" style="display: none;">
       <div class="advanced-history-empty-icon" aria-hidden="true">
-        <img src="icons/icon48.png" alt="" width="48" height="48" class="state-card-logo">
+        <img src="icons/icon128.png" alt="" width="48" height="48" class="state-card-logo">
       </div>
       <div class="advanced-history-empty-copy">
         <h3 data-i18n="advancedEmptyCapturesTitle">No captures yet</h3>

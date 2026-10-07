@@ -550,6 +550,19 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
     document.body.style.overflow = 'hidden';
   };
 
+// Hover text for the short setting badges next to a pattern (RX / WW / CS)
+Rules.INDICATOR_TITLES = {
+  RX: ['rulesPatternRegex', 'Regular expression (Regex)'],
+  WW: ['rulesPatternWholeWord', 'Whole word'],
+  CS: ['rulesPatternCaseSensitive', 'Case sensitive']
+};
+
+Rules.indicatorBadge = function(ind) {
+  const [key, fallback] = Rules.INDICATOR_TITLES[ind] || [null, ind];
+  const title = key && typeof I18n !== 'undefined' && I18n.tr ? I18n.tr(key, fallback) : fallback;
+  return `<span class="indicator-badge" data-type="${ind}" title="${FormatUtils.escapeAttr(title)}" aria-label="${FormatUtils.escapeAttr(title)}">${ind}</span>`;
+};
+
 Rules.prototype.updateMethodIndicators = function(methodItem) {
     const nameInput = methodItem.querySelector('.method-input.method-name');
     const valueInput = methodItem.querySelector('.method-input.method-value');
@@ -573,9 +586,7 @@ Rules.prototype.updateMethodIndicators = function(methodItem) {
           if (methodItem.dataset.nameCase === 'true') indicators.push('CS');
         }
 
-        nameIndicator.innerHTML = indicators.map(ind =>
-          `<span class="indicator-badge" data-type="${ind}">${ind}</span>`
-        ).join('');
+        nameIndicator.innerHTML = indicators.map(ind => Rules.indicatorBadge(ind)).join('');
         if (methodItem.dataset.standalone === 'false') {
           const label = (typeof I18n !== 'undefined' && I18n.tr) ? I18n.tr('patternCombinationsOnlyBadge', 'Combinations only') : 'Combinations only';
           nameIndicator.insertAdjacentHTML('beforeend',
@@ -603,9 +614,7 @@ Rules.prototype.updateMethodIndicators = function(methodItem) {
           if (methodItem.dataset.valueCase === 'true') indicators.push('CS');
         }
 
-        valueIndicator.innerHTML = indicators.map(ind =>
-          `<span class="indicator-badge" data-type="${ind}">${ind}</span>`
-        ).join('');
+        valueIndicator.innerHTML = indicators.map(ind => Rules.indicatorBadge(ind)).join('');
       }
     }
   };

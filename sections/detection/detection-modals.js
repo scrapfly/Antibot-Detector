@@ -35,80 +35,12 @@ DetectionModals.copyDetection = function(indexOrDetection, triggerElement = null
     });
 };
 
+// Copies exactly what "Upload detections" uploads: the Scrapfly banner and
+// the JSON summary (URL without its query string, no cookie or header values)
 DetectionModals.copyDetectionOverview = async function() {
-    const detections = Array.isArray(this.currentResults) ? this.currentResults : [];
-    const totalDetections = detections.length;
-
-    const avgConfidence = DetectionUtils.computeAverageConfidence(detections);
-    const { difficulty } = this.getDifficultyInfo(detections, avgConfidence);
-
-    const siteUrlNode = document.querySelector('#siteUrl');
-    let url = (this.cacheMetadata?.url || siteUrlNode?.title || '').trim();
-    const host = (siteUrlNode?.textContent || '').trim();
-
-    if (!url) {
-      try {
-        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        url = (tab?.url || '').trim();
-      } catch {
-        // ignore
-      }
-    }
-
-    const cacheScope = (document.querySelector('#cacheScopeDisplay')?.textContent || '').trim();
-    const cacheExpiry = (document.querySelector('#cacheExpiry')?.textContent || '').trim();
-
-    const formatMethodCounts = (detection) => {
-      const matches = Array.isArray(detection?.matches) ? detection.matches : [];
-      if (matches.length === 0) return '';
-
-      const methodCounts = new Map();
-      for (const match of matches) {
-        const type = match?.type;
-        if (!type) continue;
-        methodCounts.set(type, (methodCounts.get(type) || 0) + 1);
-      }
-
-      if (methodCounts.size === 0) return '';
-
-      return Array.from(methodCounts.entries()).map(([type, count]) => {
-        const label = String(type).replace(/_/g, ' ').toUpperCase();
-        return count > 1 ? `${label} (${count})` : label;
-      }).join(', ');
-    };
-
-    const sortedDetections = this.sortDetectionsByCategory(detections);
-
-    let text = '';
-    text += _dmText('clipboardUrlFmt', 'URL: {0}', url || host || _dmUnknown()) + '\n';
-    if (url && host && url !== host) {
-      text += _dmText('clipboardHostFmt', 'Host: {0}', host) + '\n';
-    }
-    text += _dmText('clipboardDetectionsCountFmt', 'Detections: {0}', totalDetections) + '\n';
-    text += _dmText('clipboardConfidenceFmt', 'Confidence: {0}%', avgConfidence) + '\n';
-    text += _dmText('clipboardDifficultyFmt', 'Difficulty: {0}', _dmDifficulty(difficulty)) + '\n';
-    if (cacheScope && cacheScope !== '-') text += _dmText('clipboardCacheScopeFmt', 'Cache Scope: {0}', cacheScope) + '\n';
-    if (cacheExpiry && cacheExpiry !== '-') text += _dmText('clipboardCacheExpirationFmt', 'Cache Expiration: {0}', cacheExpiry) + '\n';
-
-    if (sortedDetections.length > 0) {
-      text += '\n' + _dmText('clipboardDetectionsListFmt', 'Detections ({0}):', sortedDetections.length) + '\n';
-      text += `${'-'.repeat(50)}\n\n`;
-
-      sortedDetections.forEach((detection, index) => {
-        const name = detection?.detector?.name || detection?.detector || detection?.name || _dmUnknown();
-        const category = detection?.category || detection?.detector?.category || '';
-        const confidence = detection?.confidence || 0;
-        const methods = formatMethodCounts(detection);
-
-        text += `${index + 1}. ${name}\n`;
-        if (category) text += '   ' + _dmText('clipboardCategoryFmt', 'Category: {0}', category) + '\n';
-        text += '   ' + _dmText('clipboardConfidenceFmt', 'Confidence: {0}%', confidence) + '\n';
-        if (methods) text += '   ' + _dmText('clipboardMethodsFmt', 'Methods: {0}', methods) + '\n';
-        text += '\n';
-      });
-    }
-
-    await FormatUtils.copyToClipboard(text.trim());
+    const pageUrl = await DetectionActions.currentPageUrl();
+    const { content } = DetectionActions.buildDetectionsPasteContent.call(this, pageUrl);
+    await FormatUtils.copyToClipboard(content.trim());
 };
 
 DetectionModals.copyMethodValue = function(value, type, triggerElement = null) {

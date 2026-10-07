@@ -337,7 +337,8 @@ function registerDetectionHandlers(registry, context) {
                             pattern: detection.hook.target,
                             value: detection.hook.target.split('.').pop(),
                             confidence: detection.hook.confidence,
-                            description: detection.hook.description
+                            description: detection.hook.description,
+                            ...(detection.hook.id ? { patternId: detection.hook.id } : {})
                         };
 
                         const isDuplicate = detector.matches.some(m => m.pattern === newMatch.pattern);

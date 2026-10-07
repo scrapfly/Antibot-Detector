@@ -740,8 +740,8 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg-tertiary);
+  border: 1px solid transparent;
+  background: transparent;
   color: var(--text-secondary);
   font-size: 16px;
   cursor: pointer;
@@ -752,10 +752,9 @@
 }
 
 .clear-history-btn:hover {
-  background: var(--danger);
-  border-color: var(--danger);
-  color: white;
-  transform: scale(1.05);
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.45);
+  color: var(--danger-light);
 }
 
 .empty-icon {
@@ -2047,22 +2046,7 @@
   }
 }
 
-/* Confirmation Modal - Warning Style */
-.confirmation-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(2px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  animation: fadeIn 0.2s ease-in-out;
-}
-
+/* Entry animations of the Advanced modals */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -2070,16 +2054,6 @@
   to {
     opacity: 1;
   }
-}
-
-.confirmation-modal {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.2s ease-in-out;
 }
 
 @keyframes slideUp {
@@ -2091,97 +2065,6 @@
     transform: translateY(0);
     opacity: 1;
   }
-}
-
-.confirmation-modal-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 20px;
-  border-bottom: 1px solid var(--border);
-}
-
-.confirmation-modal-icon {
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  background: rgba(239, 68, 68, 0.1);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--danger);
-  font-size: 16px;
-}
-
-.confirmation-modal-title {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.confirmation-modal-content {
-  padding: 20px;
-}
-
-.confirmation-modal-message {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--text-secondary);
-}
-
-.confirmation-modal-footer {
-  display: flex;
-  gap: 10px;
-  padding: 16px 20px;
-  border-top: 1px solid var(--border);
-  justify-content: flex-end;
-}
-
-.confirmation-modal-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.confirmation-modal-btn-cancel {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  border-color: var(--border);
-}
-
-.confirmation-modal-btn-cancel:hover {
-  background: var(--bg-tertiary);
-  border-color: var(--text-muted);
-}
-
-.confirmation-modal-btn-cancel:active {
-  transform: scale(0.98);
-}
-
-.confirmation-modal-btn-danger {
-  background: var(--danger);
-  color: white;
-  border-color: var(--danger);
-}
-
-.confirmation-modal-btn-danger:hover {
-  background: var(--danger-dark);
-  border-color: var(--danger-dark);
-}
-
-.confirmation-modal-btn-danger:active {
-  transform: scale(0.98);
 }
 
 .detection-tools-panel-animated { margin: 0; padding: 0; }
@@ -2440,9 +2323,17 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  /* A long option (e.g. "Current site (a-long-domain…)") must not widen its column */
+  min-width: 0;
 }
 
-.history-v2-field--search {
+.history-v2-field > .history-v2-select {
+  width: 100%;
+  min-width: 0;
+}
+
+.history-v2-field--search,
+.history-v2-field--wide {
   grid-column: 1 / -1;
 }
 
@@ -2905,6 +2796,158 @@
   border-color: rgba(239, 68, 68, 0.4);
   background: rgba(239, 68, 68, 0.08);
   color: var(--danger-light);
+}
+
+.adv-kit-note--warning {
+  border-style: solid;
+  border-color: rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.08);
+  color: #fcd34d;
+}
+
+.adv-kit-code pre {
+  tab-size: 4;
+}
+
+/* Scrape with Scrapfly (sections/detection/scrapfly-export.js): language
+   tabs over the kit code block, then the notes and two links */
+.scrapfly-export-intro {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.scrapfly-export-code {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Code keeps its lines: long ones scroll sideways instead of breaking words */
+.scrapfly-export-panel .adv-kit-code pre {
+  max-height: 200px;
+  white-space: pre;
+  overflow-wrap: normal;
+}
+
+.adv-kit-header-icon .scrapfly-export-logo {
+  width: 20px;
+  height: 20px;
+}
+
+.advanced-tool-icon .advanced-tool-logo {
+  width: 20px;
+  height: 20px;
+}
+
+.scrapfly-export-detected {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.scrapfly-export-detected-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.scrapfly-export-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.scrapfly-export-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+  height: 26px;
+  padding: 0 9px 0 5px;
+  border: 1px solid #3d3d3d;
+  border-radius: 7px;
+  background: #262626;
+  color: var(--text-primary);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.scrapfly-export-chip img {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  object-fit: contain;
+  background: #fff;
+}
+
+.scrapfly-export-chip span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scrapfly-export-chip--more {
+  padding: 0 9px;
+  color: var(--text-secondary);
+}
+
+.scrapfly-export-tabs {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid #3d3d3d;
+  border-radius: 8px;
+  background: var(--bg-primary);
+}
+
+.scrapfly-export-tab {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 26px;
+  padding: 0 6px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.scrapfly-export-tab:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.scrapfly-export-tab[aria-selected="true"] {
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(59, 130, 246, 0.45);
+  color: #bfdbfe;
+}
+
+.scrapfly-export-tab:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 1px;
+}
+
+.scrapfly-export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.scrapfly-export-actions .rule-btn {
+  text-decoration: none;
 }
 
 /* Shared Tools action rows: readable copy, semantic outlines, and quiet states. */
@@ -3561,4 +3604,20 @@
   background-repeat: no-repeat;
   background-position: right 10px center;
   text-overflow: ellipsis;
+}
+
+/* History card: which tool button produced a saved result */
+.capture-tool-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Cookie check: names of the expected cookies that were not found */
+.adv-kit-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }

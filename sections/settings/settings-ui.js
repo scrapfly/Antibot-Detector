@@ -230,7 +230,7 @@ SettingsUI.saveSettings = async function(options = {}) {
         Utils.applyDebugMode(this.settings);
       }
 
-      Logger.debug('UI', 'Settings saved:', this.settings);
+      Logger.debug('UI', 'Settings saved:', SettingsUI.withoutShareSecrets(this.settings));
 
       const newCacheScope = this.settings.cacheScope || this.settings.detection?.cacheScope || 'domain';
       const cacheScopeChanged = oldCacheScope && oldCacheScope !== newCacheScope;
@@ -396,6 +396,11 @@ SettingsUI.updateSettingsUI = function() {
       }
 
       SettingsUI.populateCategoryOrder(this.settings.detection.categoryOrder);
+
+      const minToolConfidence = document.querySelector('#advancedToolsMinConfidence');
+      if (minToolConfidence) {
+        minToolConfidence.value = this.settings.detection.advancedToolsMinConfidence ?? 50;
+      }
 
       // Values saved before the per-unit ranges existed (e.g. 48 hours) are
       // shown and kept in their equivalent in-range form (2 days), so saving
@@ -566,6 +571,10 @@ SettingsUI.updateSettingsUI = function() {
       void SettingsUI.updateIncompatibleUpdatesDisplay.call(this);
     }
 
+    if (typeof SettingsUI.populateShareUI === 'function') {
+      SettingsUI.populateShareUI.call(this);
+    }
+
 };
 
 SettingsUI.getSettingsFromUI = function() {
@@ -616,6 +625,8 @@ SettingsUI.getSettingsFromUI = function() {
       cacheScope: document.querySelector('#cacheScope')?.value ?? this.settings.detection?.cacheScope ?? 'domain',
       categoryOrder: DetectionUtils.normalizeCategoryOrder(document.querySelector('#categoryOrder')?.value
         ?? this.settings.detection?.categoryOrder),
+      advancedToolsMinConfidence: parseInt(document.querySelector('#advancedToolsMinConfidence')?.value
+        ?? this.settings.detection?.advancedToolsMinConfidence ?? 50),
       blacklistedDomains: this.settings.detection?.blacklistedDomains || [], // This is managed separately by the blacklist UI
       hooksConfig: this.settings.detection?.hooksConfig || {}
     };
@@ -636,6 +647,11 @@ SettingsUI.getSettingsFromUI = function() {
       webhookPayload: document.querySelector('#webhookPayload')?.value ?? this.settings.webhook?.webhookPayload ?? '',
       webhookHeaders: this.settings.webhook?.webhookHeaders || []
     };
+
+    // Share uploads (Detection → Upload detections)
+    if (typeof SettingsUI.readShareFromUI === 'function') {
+      settings.share = SettingsUI.readShareFromUI.call(this);
+    }
 
     // ========== HISTORY TAB ==========
     settings.history = {
@@ -698,6 +714,17 @@ SettingsUI.validateSettings = function(settings) {
       if (!Number.isFinite(days) || days < 1 || days > 3650) {
         errors.push(text('settingsUiErrAutoDeleteDays', 'Auto-delete days must be between 1 and 3650'));
       }
+    }
+
+    if (settings.detection && settings.detection.advancedToolsMinConfidence !== undefined) {
+      const value = settings.detection.advancedToolsMinConfidence;
+      if (!Number.isInteger(value) || value < 0 || value > 99) {
+        errors.push(text('settingsUiErrAdvancedToolsMinConfidence', 'Advanced tools confidence must be between 0 and 99'));
+      }
+    }
+
+    if (typeof SettingsUI.validateShareSettings === 'function') {
+      errors.push(...SettingsUI.validateShareSettings(settings.share, text));
     }
 
     if (settings.duplicatePrevention && settings.duplicatePrevention.duplicateDuration !== undefined) {
@@ -926,6 +953,9 @@ SettingsUI.setupEventListeners = function() {
     }
     if (typeof SettingsUI._setupWebhookListeners === 'function') {
       SettingsUI._setupWebhookListeners.call(this);
+    }
+    if (typeof SettingsUI._setupShareListeners === 'function') {
+      SettingsUI._setupShareListeners.call(this);
     }
 
     this.setupColorPagination();

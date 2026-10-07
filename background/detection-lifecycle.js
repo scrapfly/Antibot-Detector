@@ -523,11 +523,6 @@ async function processDetectionData(message, sender) {
             const elapsed = Date.now() - startTime;
             Logger.debug('SCAN', `Matched in ${elapsed}ms: ${detectionResults.length} hits before hooks and window checks`);
 
-            // Mark each main detection method complete
-            const mainMethods = ['cookies', 'headers', 'url', 'dom', 'payload'];
-            for (const method of mainMethods) {
-                markMethodComplete(tabId, method);
-            }
         } catch (error) {
             const errorType = error.message.includes('timeout') ? 'TIMEOUT' : 'ERROR';
             Logger.error('SCAN', `Matching ${errorType === 'TIMEOUT' ? 'timed out' : 'failed'} on ${Logger.hostOf(pageData.url)}; keeping hook and window results only`, error);
@@ -617,6 +612,14 @@ async function processDetectionData(message, sender) {
         // Update state.mainData with merged results
         state.mainData = Array.from(existingDetections.values());
         state.mainComplete = true;
+
+        // Mark the main methods complete only now that the state exists: when
+        // the page data arrived before any hook report there was no state yet,
+        // the marks were dropped, and the 5 s safety below (which needs them)
+        // never finalized the page, so it showed no results at all
+        for (const method of ['cookies', 'headers', 'url', 'dom', 'payload']) {
+            markMethodComplete(tabId, method);
+        }
 
         // Final badge is set in finalizeDetection() after cache write
 

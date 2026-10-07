@@ -56,10 +56,8 @@ SettingsUI.renderWebhookHeadersUI = function() {
       <div class="webhook-header-item" data-index="${index}" style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
         <input type="text" class="webhook-header-name input-field" placeholder="${nameLabel}" aria-label="${nameLabel}" value="${this.escapeHtml(header.name || '')}" style="flex: 1; font-size: 13px; padding: 8px;">
         <input type="text" class="webhook-header-value input-field" placeholder="${valueLabel}" aria-label="${valueLabel}" value="${this.escapeHtml(header.value || '')}" style="flex: 2; font-size: 13px; padding: 8px;">
-        <button type="button" class="remove-webhook-header-btn" data-index="${index}" title="${removeLabel}" aria-label="${removeLabel}" style="background: none; border: none; color: #ef4444; cursor: pointer; padding: 6px; display: flex; align-items: center;">
-          <svg width="16" height="16" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-          </svg>
+        <button type="button" class="remove-webhook-header-btn" data-index="${index}" title="${removeLabel}" aria-label="${removeLabel}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
         </button>
       </div>
     `).join('');

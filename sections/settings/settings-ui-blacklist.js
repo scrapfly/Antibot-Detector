@@ -58,10 +58,8 @@ SettingsUI.renderBlacklistUI = function() {
     const html = currentDomains.map(domain => `
       <div class="blacklist-item" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; background: var(--bg-tertiary); border-radius: 4px; margin-bottom: 4px;">
         <span style="font-size: 12px; line-height: 14px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${FormatUtils.escapeHtml(domain)}</span>
-        <button class="remove-blacklist-btn" data-domain="${FormatUtils.escapeAttr(domain)}" title="${removeLabel}" aria-label="${removeLabel}" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; transition: color 0.2s; flex-shrink: 0; margin-left: 8px;">
-          <svg width="14" height="14" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
-          </svg>
+        <button class="remove-blacklist-btn" data-domain="${FormatUtils.escapeAttr(domain)}" title="${removeLabel}" aria-label="${removeLabel}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
         </button>
       </div>
     `).join('');

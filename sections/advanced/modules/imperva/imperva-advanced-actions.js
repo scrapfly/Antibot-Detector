@@ -47,7 +47,15 @@ ImpervaAdvanced.prototype.checkCookies = async function() {
                 NotificationHelper.info(AdvancedUtils.notifications.checkCookies.none('Imperva'));
             }
 
-            this.displayCookiesModal(cookies, { hasReese84, hasUtmvc, incapSes, nlbi, visid }, protectionLevel);
+            const tr = ImpervaAdvanced.tr;
+            const levelText = {
+                'None': tr('advCommonNone', 'None'),
+                'Advanced (reese84 + utmvc)': tr('advImpervaLevelAdvanced', 'Advanced (reese84 + utmvc)'),
+                'Standard': tr('advCommonStandard', 'Standard'),
+                'Basic (Session)': tr('advImpervaLevelBasicSession', 'Basic (Session)')
+            }[protectionLevel] || protectionLevel;
+            this.showCookieResults({ vendor: 'Imperva', expected: ['reese84', 'utmvc', 'incap_ses_*', 'nlbi_*', 'visid_incap_*'], cookies,
+                facts: [{ label: tr('advCommonProtectionLevel', 'Protection Level:'), value: levelText }] });
         } catch (error) {
             Logger.error('NETWORK', '[IMPERVA] Failed to check cookies:', error);
             NotificationHelper.error(ImpervaAdvanced.fmt('advCommonFailedCheckCookiesFmt', 'Failed to check cookies: {0}', error.message));

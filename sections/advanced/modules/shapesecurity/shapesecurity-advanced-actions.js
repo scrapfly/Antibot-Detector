@@ -188,7 +188,8 @@ ShapeSecurityAdvanced.prototype.checkCookies = async function() {
             }
 
             // Display modal with cookie details immediately
-            this.displayCookieResults(shapeCookie);
+            // Its name is random (8 characters): one expected cookie, no fixed name to list
+            this.showCookieResults({ vendor: 'Shape Security', cookies: [shapeCookie].filter(Boolean), total: 1 });
 
         } catch (error) {
             Logger.error('NETWORK', '[ShapeSecurity] Check cookies error:', error);

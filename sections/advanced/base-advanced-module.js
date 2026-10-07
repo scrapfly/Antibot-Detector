@@ -32,6 +32,12 @@ class BaseAdvancedModule {
         'turnstile': 'Turnstile'
     };
 
+    /** Modules whose protection is a CAPTCHA (Scrape with Scrapfly adds a note) */
+    static CAPTCHA_MODULES = ['funcaptcha', 'geetest', 'hcaptcha', 'recaptcha', 'turnstile'];
+
+    /** Tool id suffix of the "Scrape with Scrapfly" card every protection gets */
+    static SCRAPFLY_TOOL_SUFFIX = 'ScrapeWithScrapfly';
+
     /**
      * i18n lookup with an inline English fallback.
      * @param {string} key
@@ -269,6 +275,7 @@ class BaseAdvancedModule {
     /** Stable action IDs, not translated labels, determine presentation. */
     resolveToolAction(tool = {}) {
         const id = typeof tool.id === 'string' ? tool.id.toLowerCase() : '';
+        if (id.endsWith(BaseAdvancedModule.SCRAPFLY_TOOL_SUFFIX.toLowerCase())) return 'scrapfly';
         if (tool.kind === 'capture' || id.endsWith('startcapture')) return 'capture';
         if (id.endsWith('checkcookies')) return 'cookies';
         if (id.endsWith('extractsensor')) return 'sensor';
@@ -296,11 +303,12 @@ class BaseAdvancedModule {
             selector: ['advToolSelectorHint', 'Find a selector for the CAPTCHA widget'],
             callback: ['advToolCallbackHint', 'Inspect CAPTCHA callbacks'],
             sensor: ['advToolSensorHint', 'Reset protection cookies and reload to record sensor data'],
+            scrapfly: ['scrapflyExportHint', 'Code to scrape this page with the Unblocker'],
             capture: stopping
                 ? ['advToolStopCaptureHint', 'Stop recording data from this page']
                 : ['advToolCaptureHint', 'Record data from this page']
         };
-        if (action === 'scripts' && ['awswaf', 'imperva', 'turnstile'].includes(this.moduleName)) {
+        if (action === 'scripts' && ['awswaf', 'imperva'].includes(this.moduleName)) {
             hints.scripts = ['advToolResetScriptsHint', 'Reset protection cookies and reload to analyze scripts'];
         }
         if (action === 'version' && ['cloudflare', 'hcaptcha', 'geetest'].includes(this.moduleName)) {
@@ -315,6 +323,8 @@ class BaseAdvancedModule {
 
     /** All action glyphs share an outline vocabulary and are decorative. */
     static toolIcon(action) {
+        // Scrape with Scrapfly carries the Scrapfly logo instead of a glyph
+        if (action === 'scrapfly') return ScrapflyExport.logoHtml('advanced-tool-logo');
         const shapes = {
             cookies: '<path d="M21 12a9 9 0 1 1-9-9 4 4 0 0 0 4 4 4 4 0 0 0 5 5Z"/><circle cx="8" cy="9" r=".8"/><circle cx="8" cy="15" r=".8"/><circle cx="14" cy="14" r=".8"/>',
             scripts: '<path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-14-2 18"/>',
@@ -345,8 +355,10 @@ class BaseAdvancedModule {
     renderToolGrid(tools = [], options = {}) {
         const esc = FormatUtils.escapeHtml;
         const extraClass = options.className ? ` ${FormatUtils.escapeAttr(options.className)}` : '';
-        // The capture action is always the last row, for every vendor
-        const ordered = BaseAdvancedModule.captureLast(tools, tool => this.resolveToolAction(tool));
+        // Every protection also gets "Scrape with Scrapfly"; the capture
+        // action is always the last row, for every vendor
+        const withScrapfly = [...(Array.isArray(tools) ? tools : []), this.scrapflyTool()];
+        const ordered = BaseAdvancedModule.captureLast(withScrapfly, tool => this.resolveToolAction(tool));
         const items = ordered.map(tool => {
             const action = this.resolveToolAction(tool);
             const capture = action === 'capture';
@@ -368,11 +380,37 @@ class BaseAdvancedModule {
         return `<div class="advanced-tool-grid${extraClass}">${items}</div>`;
     }
 
+    /** The shared "Scrape with Scrapfly" card (dialog: ScrapflyExport) */
+    scrapflyTool() {
+        return {
+            id: `${this.moduleName}${BaseAdvancedModule.SCRAPFLY_TOOL_SUFFIX}`,
+            label: BaseAdvancedModule._tr('scrapflyExportTitle', 'Scrape with Scrapfly')
+        };
+    }
+
+    /** This page as Scrapfly code with the Unblocker on, for this protection */
+    openScrapflyExport() {
+        const detection = this.detection || {};
+        const isCaptcha = BaseAdvancedModule.CAPTCHA_MODULES.includes(this.moduleName);
+        ScrapflyExport.open({
+            url: this.tabInfo?.url || '',
+            detections: [{
+                ...detection,
+                name: detection.name || detection.detector?.name || this.displayName,
+                category: detection.category || detection.detector?.category || (isCaptcha ? 'CAPTCHA' : 'Anti-Bot')
+            }]
+        });
+    }
+
     /** Bind each node once and wait for the actual vendor action to finish. */
     bindToolActions(actions = []) {
         if (!this.toolActionBindings) this.toolActionBindings = new WeakMap();
         if (!this.pendingToolActions) this.pendingToolActions = new Set();
-        actions.forEach(({ id, handler, method }) => {
+        const scrapfly = this.scrapflyTool();
+        const all = actions.some(action => action && action.id === scrapfly.id)
+            ? actions
+            : [...actions, { id: scrapfly.id, method: () => this.openScrapflyExport() }];
+        all.forEach(({ id, handler, method }) => {
             const fn = typeof handler === 'function' ? handler : method;
             if (!id || typeof fn !== 'function') return;
             const btn = document.querySelector(`#${id}`);
@@ -382,6 +420,12 @@ class BaseAdvancedModule {
             const listener = async event => {
                 if (btn.disabled || this.pendingToolActions.has(id)) return;
                 this.pendingToolActions.add(id);
+                // The result dialog this click opens (now or after a reload) goes to History
+                this._lastTool = {
+                    id,
+                    label: (btn.querySelector('.advanced-tool-label')?.textContent || id).trim(),
+                    action: btn.dataset?.toolAction || ''
+                };
                 const hint = btn.querySelector('.advanced-tool-hint');
                 const originalHint = hint ? hint.textContent : '';
                 btn.disabled = true;
@@ -425,7 +469,7 @@ class BaseAdvancedModule {
      * @param {string} [opts.copiedMessage]
      * @returns {HTMLElement} the overlay
      */
-    openKitModal({ title, subtitle = '', iconSvg = '', body = '', copiedMessage } = {}) {
+    openKitModal({ title, subtitle = '', iconSvg = '', body = '', copiedMessage, record = true } = {}) {
         const esc = FormatUtils.escapeHtml;
         const overlay = document.createElement('div');
         overlay.className = 'adv-kit-overlay';
@@ -461,6 +505,7 @@ class BaseAdvancedModule {
             selector: '[data-copy]'
         });
         document.body.appendChild(overlay);
+        if (record) this.recordToolDialog(overlay);
         requestAnimationFrame(() => overlay.classList.add('show'));
         return overlay;
     }
@@ -578,6 +623,7 @@ class BaseAdvancedModule {
         if (!modal.parentNode) {
             document.body.appendChild(modal);
         }
+        this.recordToolDialog(modal);
         setTimeout(() => {
             modal.style.opacity = '1';
         }, 10);
@@ -654,21 +700,98 @@ class BaseAdvancedModule {
         });
     }
 
+    // ========================================================================
+    // COOKIE RESULTS (every vendor's "Check cookies")
+    // ========================================================================
+
+    /** A chrome.cookies cookie as kept in history: everything the dialog shows */
+    static cookieRecord(cookie) {
+        return {
+            name: String(cookie.name || ''),
+            value: String(cookie.value || ''),
+            domain: cookie.domain || '',
+            path: cookie.path || '',
+            expires: Number.isFinite(cookie.expirationDate) ? Math.round(cookie.expirationDate * 1000) : null,
+            secure: cookie.secure === true,
+            httpOnly: cookie.httpOnly === true,
+            sameSite: cookie.sameSite && cookie.sameSite !== 'unspecified' ? String(cookie.sameSite) : ''
+        };
+    }
+
+    /** Dialog body for a cookie check: count, level, one card per cookie, the missing ones */
+    static cookieResultsBody(result) {
+        const K = BaseAdvancedModule;
+        const tr = K._tr;
+        const uiLocale = (typeof I18n !== 'undefined' && typeof I18n.locale === 'function') ? I18n.locale() : undefined;
+        const when = (ms) => {
+            try { return new Date(ms).toLocaleString(uiLocale); } catch (_) { return new Date(ms).toLocaleString(); }
+        };
+        const cookies = Array.isArray(result.cookies) ? result.cookies : [];
+        const missing = Array.isArray(result.missing) ? result.missing : [];
+        const summary = K.kitCard(
+            K.kitField(tr('advCommonCookiesFound', 'Cookies Found:').replace(/:\s*$/, ''), `${cookies.length}/${result.total || cookies.length}`, { mono: false })
+            + (Array.isArray(result.facts) ? result.facts : []).map(fact => K.kitField(String(fact.label || '').replace(/:\s*$/, ''), fact.value, { mono: false })).join('')
+        );
+        const cards = cookies.map(cookie => K.kitCard(
+            K.kitField(tr('advCommonValue', 'Value'), cookie.value, { wrap: true })
+            + K.kitField(tr('advCommonDomainLabel', 'Domain:').replace(/:\s*$/, ''), cookie.domain)
+            + K.kitField(tr('advCookiePath', 'Path'), cookie.path)
+            + K.kitField(tr('advCookieExpires', 'Expires'), cookie.expires ? when(cookie.expires) : tr('advCookieSession', 'Session (deleted when the browser closes)'), { mono: false }),
+            K.kitChip(cookie.name, 'blue')
+            + (cookie.secure ? K.kitChip('Secure', 'green') : '')
+            + (cookie.httpOnly ? K.kitChip('HttpOnly', 'purple') : '')
+            + (cookie.sameSite ? K.kitChip(`SameSite=${cookie.sameSite}`, 'neutral') : '')
+        )).join('');
+        const absent = missing.length
+            ? K.kitSection(tr('advCookieNotFound', 'Not found'), `<div class="adv-kit-chips">${missing.map(name => K.kitChip(name, 'neutral')).join('')}</div>`, missing.length)
+            : '';
+        const none = cookies.length ? '' : K.kitNote(BaseAdvancedModule._fmt('advCommonNoCookiesFmt', `No ${result.vendor} cookies found`, result.vendor));
+        return summary + cards + none + absent;
+    }
+
     /**
-     * Build the standard "cookies found" summary row.
-     * @param {number} foundCount
-     * @param {number} totalCount
-     * @returns {string}
+     * Show a vendor's cookie check and keep it in Advanced → History as data
+     * (full values), so the history entry opens this same dialog.
+     * @param {object} opts
+     * @param {string} opts.vendor - product name for the title
+     * @param {string[]} opts.expected - cookie names (or patterns such as incap_ses_*) the vendor sets
+     * @param {chrome.cookies.Cookie[]} opts.cookies - the ones found
+     * @param {Array<{label: string, value: string}>} [opts.facts] - vendor readings such as the protection level, translated
      */
-    buildCookieStatusSummary(foundCount, totalCount) {
-        return `
-            <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 16px;">
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--text-secondary); font-size: 13px;">${BaseAdvancedModule._tr('advCommonCookiesFound', 'Cookies Found:')}</span>
-                    <span style="color: var(--text-primary); font-weight: 500;">${foundCount}/${totalCount}</span>
-                </div>
-            </div>
-        `;
+    showCookieResults({ vendor, expected = [], cookies = [], facts = [], total = null }) {
+        const records = cookies.map(cookie => BaseAdvancedModule.cookieRecord(cookie));
+        const matches = (pattern, name) => pattern.endsWith('*') ? name.startsWith(pattern.slice(0, -1)) : name === pattern;
+        const missing = expected.filter(pattern => !records.some(cookie => matches(pattern, cookie.name)));
+        const result = { kind: 'cookies', vendor, total: Number.isInteger(total) ? total : Math.max(expected.length, records.length), facts, cookies: records, missing };
+        const title = BaseAdvancedModule._fmt('advCommonCookiesTitleFmt', `${vendor} Cookies`, vendor);
+        this.openKitModal({
+            title,
+            subtitle: `${records.length}/${result.total}`,
+            iconSvg: BaseAdvancedModule.COOKIE_ICON,
+            body: BaseAdvancedModule.cookieResultsBody(result),
+            copiedMessage: BaseAdvancedModule._tr('copiedNotification', 'Copied'),
+            record: false
+        });
+        const tool = this._lastTool;
+        void this.saveToolResult({ ...result, tool: tool?.id || `${this.moduleName}CheckCookies`, label: tool?.label || title, title });
+    }
+
+    /** Advanced → History: reopen a saved cookie check with its page and time */
+    showSavedCookieResults(capture) {
+        const data = capture?.data || capture?.captureData || {};
+        const K = BaseAdvancedModule;
+        const uiLocale = (typeof I18n !== 'undefined' && typeof I18n.locale === 'function') ? I18n.locale() : undefined;
+        let when = '';
+        try { when = new Date(capture.timestamp).toLocaleString(uiLocale); } catch (_) { when = new Date(capture.timestamp).toLocaleString(); }
+        this.openKitModal({
+            title: data.title || K._fmt('advCommonCookiesTitleFmt', `${data.vendor} Cookies`, data.vendor),
+            subtitle: when,
+            iconSvg: BaseAdvancedModule.COOKIE_ICON,
+            body: K.kitCard(K.kitField(K._tr('advCommonPage', 'Page'), capture.url, { mono: false, wrap: true }))
+                + BaseAdvancedModule.cookieResultsBody(data),
+            copiedMessage: K._tr('copiedNotification', 'Copied'),
+            record: false
+        });
     }
 
     // ========================================================================
@@ -728,9 +851,7 @@ class BaseAdvancedModule {
                         <span class="history-count">${BaseAdvancedModule._fmt('advPanelCaptureCountFmt', `Captures: ${history.length}`, history.length)}</span>
                         ${history.length > 0 ? `
                             <button class="clear-history-btn" id="clear${this.moduleName.charAt(0).toUpperCase() + this.moduleName.slice(1)}History" title="${FormatUtils.escapeHtml(BaseAdvancedModule._tr('advPanelClearCapturedDataTitle', 'Clear all captured data'))}" aria-label="${FormatUtils.escapeHtml(BaseAdvancedModule._tr('advPanelClearCapturedDataTitle', 'Clear all captured data'))}">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
-                                </svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
                             </button>
                         ` : ''}
                     </div>
@@ -922,6 +1043,77 @@ class BaseAdvancedModule {
 
         // Re-setup event listeners for the new page
         this.setupExpandListeners();
+    }
+
+    /**
+     * Keep a tool's result in Advanced → History, the same way a capture is
+     * kept (30 minutes). The module's renderCaptureDetailsContent shows it.
+     * @param {object} data - what the tool found, with a `tool` name
+     * @returns {Promise<object|null>} the stored entry, or null on failure
+     */
+    /**
+     * Save a tool's result dialog to Advanced → History: its title and text,
+     * without its buttons. Captures save their own data, so a dialog opened by
+     * Start capture is skipped; each dialog is saved once.
+     * @param {HTMLElement} root - the dialog, already in the document
+     */
+    recordToolDialog(root) {
+        const tool = this._lastTool;
+        if (!tool || tool.action === 'capture' || !root || typeof root.querySelector !== 'function') return;
+        if (!this._recordedDialogs) this._recordedDialogs = new WeakSet();
+        if (this._recordedDialogs.has(root)) return;
+        this._recordedDialogs.add(root);
+        try {
+            const title = (root.querySelector('.adv-kit-title, h3')?.textContent || '').trim();
+            const buttonText = new Set(Array.from(root.querySelectorAll('button'))
+                .filter(button => !button.classList.contains('adv-kit-value'))
+                .map(button => (button.innerText || button.textContent || '').trim())
+                .filter(Boolean));
+            const lines = String(root.innerText || root.textContent || '').split('\n')
+                .map(line => line.trim())
+                .filter(line => line && line !== title && !buttonText.has(line));
+            if (lines.length === 0) return;
+            void this.saveToolResult({ tool: tool.id, label: tool.label, title, lines: lines.slice(0, 400) });
+        } catch (error) {
+            Logger.error('UI', `[${this.moduleName}] Could not read the tool result for history:`, error);
+        }
+    }
+
+    /**
+     * History details for a saved tool result (recordToolDialog): the tool,
+     * what its dialog showed, then the page and time
+     */
+    renderToolResultContent(capture) {
+        const data = capture?.data || capture?.captureData || {};
+        const esc = AdvancedUtils.escapeHtml;
+        return `
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">${esc(data.label || data.tool || '')}</label>
+                ${data.title ? `<div class="advanced-modal-info-value" style="margin-bottom: 6px;">${esc(data.title)}</div>` : ''}
+                <pre class="advanced-modal-code-block" style="white-space: pre-wrap; word-break: break-word; margin: 0;">${esc((data.lines || []).join('\n'))}</pre>
+            </div>
+        ` + BaseAdvancedModule.prototype.renderCaptureDetailsContent.call(this, capture);
+    }
+
+    async saveToolResult(data) {
+        try {
+            const url = this.tabInfo?.url || '';
+            const hostname = url ? new URL(url).hostname : '';
+            const favicon = UrlUtils.normalizeFaviconForStorage(this.tabInfo?.favIconUrl, url || hostname);
+            const timestamp = Date.now();
+            return await AdvancedHistoryStore.appendCapture(this.moduleName, {
+                id: `${this.moduleName}_${data?.tool || 'tool'}_${timestamp}`,
+                timestamp,
+                url,
+                hostname,
+                favicon,
+                data,
+                captureData: data
+            }, { expiryMinutes: 30 });
+        } catch (error) {
+            Logger.error('UI', `[${this.moduleName}] Could not save the tool result to history:`, error);
+            return null;
+        }
     }
 
     /**
@@ -1192,6 +1384,8 @@ class BaseAdvancedModule {
     }
 
 }
+
+BaseAdvancedModule.COOKIE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.5A9 9 0 1 1 11.5 3a4 4 0 0 0 5 5 4 4 0 0 0 4.5 4.5z"/><circle cx="8.5" cy="11.5" r="1"/><circle cx="12" cy="16" r="1"/><circle cx="15.5" cy="13" r="1"/></svg>';
 
 if (typeof window !== 'undefined') {
     window.BaseAdvancedModule = BaseAdvancedModule;

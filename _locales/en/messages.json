@@ -604,28 +604,28 @@
     "message": "1 week"
   },
   "methodLabelUrl": {
-    "message": "URL"
+    "message": "Url"
   },
   "methodLabelHeader": {
-    "message": "HEADER"
+    "message": "Headers"
   },
   "methodLabelCookie": {
-    "message": "COOKIE"
+    "message": "Cookies"
   },
   "methodLabelContent": {
-    "message": "CONTENT"
+    "message": "Content"
   },
   "methodLabelDom": {
-    "message": "DOM"
+    "message": "Dom"
   },
   "methodLabelJsHooks": {
-    "message": "JS HOOKS"
+    "message": "JS hooks"
   },
   "methodLabelWindow": {
-    "message": "WINDOW"
+    "message": "Window"
   },
   "methodLabelPayload": {
-    "message": "PAYLOAD"
+    "message": "Payload"
   },
   "methodOnePattern": {
     "message": "1 pattern"
@@ -1340,9 +1340,6 @@
   "pasteConfirmTitle": {
     "message": "Upload detections?"
   },
-  "pasteConfirmMsg": {
-    "message": "This uploads a summary of this page’s detections to a public paste (dpaste.com, unlisted, expires in 30 days). Anyone with the link can view it. The URL query string and cookie/header values are not included."
-  },
   "pasteConfirmBtn": {
     "message": "Upload"
   },
@@ -1497,7 +1494,7 @@
     "message": "Only check scripts"
   },
   "rulesOnlyCheckScriptsHint": {
-    "message": "Restrict search to JavaScript code and script URLs only"
+    "message": "Search only JavaScript code (inline and loaded scripts), not page text or file names"
   },
   "rulesScopeSettingsTitle": {
     "message": "Scope Settings"
@@ -1626,7 +1623,7 @@
     "message": "Matches URLs of loaded resources (scripts, images, network requests) against patterns."
   },
   "helpUrlWarning": {
-    "message": "Patterns are case-sensitive by default. Toggle the URL Case Sensitive option if you need case-insensitive matching."
+    "message": "Patterns ignore upper and lower case unless you turn on Case sensitive. A pattern that is too general also matches unrelated resources, so keep it specific."
   },
   "helpUrlTip": {
     "message": "Use the Regex option for advanced patterns like /\\/v\\d+\\/challenge/."
@@ -2366,9 +2363,6 @@
   "advCommonClickToCopy": {
     "message": "Click to copy"
   },
-  "advCommonClickToCopyFull": {
-    "message": "Click to copy full value"
-  },
   "advCommonDomainLabel": {
     "message": "Domain:",
     "description": "Label before a cookie domain"
@@ -3049,10 +3043,6 @@
     "message": "Shape Cookie",
     "description": "Label: the Shape Security cookie name"
   },
-  "advShapeMaxAgeInfoFmt": {
-    "message": "Max-Age: {0} seconds (50 years)",
-    "description": "{0} = number of seconds. Keep \"Max-Age\" (cookie attribute name)."
-  },
   "advShapeAnalysisTitle": {
     "message": "Shape Security Analysis",
     "description": "Modal title"
@@ -3262,16 +3252,9 @@
     "message": "Deleting {0} cookie... Page will reload",
     "description": "Toast (AWS WAF and Turnstile). {0} = cookie name (aws-waf-token, cf_clearance)"
   },
-  "advCloudflareExtractedSiteKey": {
-    "message": "Extracted Site Key",
-    "description": "Modal title"
-  },
   "advCloudflareTypeLabel": {
     "message": "Type",
     "description": "Label: kind of Cloudflare protection (Turnstile, Challenge…)"
-  },
-  "advCloudflareSiteKeyClickToCopy": {
-    "message": "Site Key (Click to copy)"
   },
   "advCloudflareSiteKeyCopied": {
     "message": "Site Key copied"
@@ -3300,17 +3283,11 @@
     "message": "Checking Cloudflare version... Page will reload",
     "description": "Toast"
   },
-  "advCloudflareSiteKeyExtracted": {
-    "message": "Site Key extracted successfully"
-  },
   "advCloudflareNoSitekey": {
     "message": "No sitekey found on page"
   },
   "advCloudflareFailedExtractSitekey": {
     "message": "Failed to extract sitekey"
-  },
-  "advDatadomeCookieCopied": {
-    "message": "Cookie copied"
   },
   "advFuncaptchaPublicKey": {
     "message": "Public Key",
@@ -3746,10 +3723,6 @@
     "message": "URL: {0}",
     "description": "Line of a copied text report. {0} = page URL"
   },
-  "clipboardHostFmt": {
-    "message": "Host: {0}",
-    "description": "Line of a copied text report. {0} = host name"
-  },
   "clipboardTitleFmt": {
     "message": "Title: {0}",
     "description": "Line of a copied text report. {0} = page title"
@@ -3778,10 +3751,6 @@
     "message": "Detection Methods:",
     "description": "Heading in a copied text report, followed by one method per line"
   },
-  "clipboardDetectionsCountFmt": {
-    "message": "Detections: {0}",
-    "description": "Line of a copied text report. {0} = number of detections"
-  },
   "clipboardDetectionsListFmt": {
     "message": "Detections ({0}):",
     "description": "Heading in a copied text report, followed by the numbered list. {0} = number of detections"
@@ -3790,17 +3759,9 @@
     "message": "Difficulty: {0}",
     "description": "Line of a copied text report. {0} = Low / Medium / High (already translated)"
   },
-  "clipboardCacheScopeFmt": {
-    "message": "Cache Scope: {0}",
-    "description": "Line of a copied text report. {0} = Domain / Path / Full URL (already translated)"
-  },
   "clipboardCacheExpirationFmt": {
     "message": "Cache Expiration: {0}",
     "description": "Line of a copied text report. {0} = remaining time such as \"3h 5m\""
-  },
-  "clipboardMethodsFmt": {
-    "message": "Methods: {0}",
-    "description": "Line of a copied text report. {0} = method names with counts"
   },
   "clipboardCopyFailed": {
     "message": "Failed to copy to clipboard"
@@ -4266,5 +4227,286 @@
   },
   "settingsCategoryOrderHelp": {
     "message": "Order of the categories in the Detection list. Within a category, the highest confidence comes first."
+  },
+  "settingsCardShareUploads": {
+    "message": "Share uploads"
+  },
+  "settingsShareDestination": {
+    "message": "Upload destination"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "Where Detection → Upload detections sends the summary and gets its share link."
+  },
+  "settingsShareService": {
+    "message": "Service"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com (no account)"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org (no account)"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs (no account)"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin (API key)"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist (token)"
+  },
+  "shareProviderCustom": {
+    "message": "Custom server"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "Delete after (days)"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "Delete after"
+  },
+  "shareExpire10M": {
+    "message": "10 minutes"
+  },
+  "shareExpire1H": {
+    "message": "1 hour"
+  },
+  "shareExpire1D": {
+    "message": "1 day"
+  },
+  "shareExpire1W": {
+    "message": "1 week"
+  },
+  "shareExpire2W": {
+    "message": "2 weeks"
+  },
+  "shareExpire30D": {
+    "message": "30 days"
+  },
+  "shareExpire1M": {
+    "message": "1 month"
+  },
+  "shareExpire6M": {
+    "message": "6 months"
+  },
+  "shareExpire1Y": {
+    "message": "1 year"
+  },
+  "shareExpireOnetime": {
+    "message": "After the first view"
+  },
+  "shareExpireNever": {
+    "message": "Never"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "paste.rs has no expiry option: the paste stays until the service removes it."
+  },
+  "settingsSharePastebinKey": {
+    "message": "Pastebin API key"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "Your developer key from pastebin.com/doc_api. Pastes are unlisted."
+  },
+  "settingsShareSecretNote": {
+    "message": "Stored only in this browser and left out of settings exports."
+  },
+  "settingsShareGithubToken": {
+    "message": "GitHub token"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "A token with the Gists permission. Uploads are secret gists and do not expire; delete them on GitHub."
+  },
+  "settingsShareCustomUrl": {
+    "message": "Server URL"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "HTTPS on a public host. Can contain <EXPIRY_DAYS>."
+  },
+  "settingsShareCustomBody": {
+    "message": "Body format"
+  },
+  "shareBodyForm": {
+    "message": "Form field"
+  },
+  "shareBodyJson": {
+    "message": "JSON template"
+  },
+  "shareBodyRaw": {
+    "message": "Raw text"
+  },
+  "settingsShareCustomField": {
+    "message": "Form field name"
+  },
+  "settingsShareCustomJson": {
+    "message": "JSON template"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "Variables: <CONTENT_JSON>, <TITLE_JSON>, <EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "One per line as Name: value, for example Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "Share link from"
+  },
+  "shareLinkBody": {
+    "message": "Response body (plain URL)"
+  },
+  "shareLinkJson": {
+    "message": "JSON field"
+  },
+  "shareLinkLocation": {
+    "message": "Location header"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "JSON field path"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "Sent as expiry_days in form bodies and as <EXPIRY_DAYS>; your server decides what to do with it."
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "Set up {0} in Settings → Detection → Share uploads first"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "This uploads a summary of this page’s detections to {0} ({1}). Anyone with the link can view it. The URL query string and cookie/header values are not included."
+  },
+  "shareExpiryDaysFmt": {
+    "message": "deleted after {0} days"
+  },
+  "shareExpiryAfterFmt": {
+    "message": "deleted after {0}"
+  },
+  "shareExpiryOnetime": {
+    "message": "deleted after the first view"
+  },
+  "shareExpiryService": {
+    "message": "kept until the service removes it"
+  },
+  "shareExpiryNever": {
+    "message": "does not expire"
+  },
+  "pasteUnsafeUrl": {
+    "message": "The custom server must be an HTTPS address on a public host"
+  },
+  "pasteBadLink": {
+    "message": "the service did not return a valid HTTPS link"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "Upload failed: {0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "Custom upload server: use an HTTPS address on a public host"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "Custom upload server: the JSON template is not valid JSON"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "{0} rejected the key or token (wrong or expired)"
+  },
+  "pasteGistPermission": {
+    "message": "the GitHub token needs the Gists permission (Read and write)"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "No Turnstile site key on this page"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "Turnstile site keys"
+  },
+  "advTurnstileReloadingScripts": {
+    "message": "Reloading the page to collect the Turnstile scripts"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "Advanced tools"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "Which protections get tools"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "Show tools above this confidence (%)"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "Advanced lists a protection only when its confidence is above this value. 0 lists every detected protection."
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "Advanced tools confidence must be between 0 and 99"
+  },
+  "advCommonValue": {
+    "message": "Value"
+  },
+  "advCookiePath": {
+    "message": "Path"
+  },
+  "advCookieExpires": {
+    "message": "Expires"
+  },
+  "advCookieSession": {
+    "message": "Session (deleted when the browser closes)"
+  },
+  "advCookieNotFound": {
+    "message": "Not found"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "Restore official detectors?"
+  },
+  "restoreOfficialDetectorsConfirmMsg": {
+    "message": "The official detectors you deleted are installed again from the version included in the extension. Your own detectors and your edits to other rules are not changed."
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "Restore"
+  },
+  "advancedFilterTool": {
+    "message": "Tool"
+  },
+  "advancedFilterAllTools": {
+    "message": "All tools"
+  },
+  "advFilterKindCapture": {
+    "message": "Captures"
+  },
+  "advFilterKindOther": {
+    "message": "Other tools"
+  },
+  "scrapflyExportTitle": {
+    "message": "Scrape with Scrapfly",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "Code to scrape this page with the Unblocker",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "Fetch this page through Scrapfly's API with the Unblocker on. It picks the browser, proxies and headers by itself, and costs nothing extra when the site doesn't block.",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "Detected on this page",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "Code language",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "This page has a CAPTCHA: the Unblocker avoids or solves it to return the page, but it doesn't fill in CAPTCHAs on forms.",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportKeyNote": {
+    "message": "The code reads your API key from SCRAPFLY_API_KEY.",
+    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  },
+  "scrapflyExportGetKey": {
+    "message": "Get an API key",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "Open playground",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "Code copied",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "Open a web page to scrape it with Scrapfly",
+    "description": "Toast when the tab is not a web page"
   }
 }

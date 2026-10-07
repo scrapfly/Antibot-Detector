@@ -356,6 +356,22 @@ code, kbd, pre, samp {
   --modal-title-size: 15px;
   --modal-title-weight: 600;
   --modal-title-line: 20px;
+
+  /* Footer buttons of every dialog (confirmations, Settings, the rule editor
+     and its helpers). Cancel is a quiet outline so the action reads first;
+     the minimum width keeps a short action ("OK", "Upload") from being the
+     smaller of the two. */
+  --modal-btn-height: 30px;
+  --modal-btn-min-width: 76px;
+  --modal-btn-padding: 0 14px;
+  --modal-btn-radius: 6px;
+  --modal-btn-font-size: 12px;
+  --modal-btn-font-weight: 600;
+  --modal-btn-quiet-text: #c8c8c8;
+  --modal-btn-quiet-border: rgba(255, 255, 255, 0.14);
+  --modal-btn-quiet-border-hover: rgba(255, 255, 255, 0.28);
+  --modal-btn-quiet-bg-hover: rgba(255, 255, 255, 0.06);
+  --modal-btn-primary-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
 .btn-close {
@@ -995,3 +1011,117 @@ input:checked + .slider:before {
 .ui-tip .cat-captcha { --cat: #33c3ff; }
 .ui-tip .cat-fingerprint { --cat: var(--accent-light); }
 .ui-tip .cat-other { --cat: #8b8b8b; }
+
+/* ============================================
+   DROPDOWN LISTS
+   The open list of every <select> uses the extension theme instead of the
+   system's white-and-blue list (Chrome 135+, customizable select). Each select
+   keeps its own arrow and closed look; older Chrome shows the native list.
+   ============================================ */
+@supports (appearance: base-select) {
+  /* !important: section styles set appearance: none to draw their own arrow,
+     which would otherwise keep the native list */
+  select:not([multiple]),
+  select:not([multiple])::picker(select) {
+    appearance: base-select !important;
+  }
+
+  select:not([multiple])::picker-icon {
+    display: none;
+  }
+
+  /* The native control centred its text; in this mode a block select does not */
+  select:not([multiple]) {
+    align-content: center;
+    align-items: center;
+  }
+
+  select:not([multiple])::picker(select) {
+    margin-top: 4px;
+    padding: 4px;
+    min-width: anchor-size(width);
+    max-height: 280px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light, var(--border));
+    border-radius: 8px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+    color: var(--text-primary);
+  }
+
+  select:not([multiple]) option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 30px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  /* !important: section rules paint every option the same colour */
+  select:not([multiple]) option:hover,
+  select:not([multiple]) option:focus-visible {
+    background: var(--bg-tertiary) !important;
+    outline: none;
+  }
+
+  select:not([multiple]) option:checked {
+    background: rgba(59, 130, 246, 0.16) !important;
+    color: var(--accent-light, var(--accent)) !important;
+    font-weight: 600;
+  }
+
+  /* The selected option is marked by its colour, not a checkmark column */
+  select:not([multiple]) option::checkmark {
+    display: none;
+  }
+
+  select:not([multiple]) option:disabled {
+    color: var(--text-muted);
+    cursor: default;
+  }
+
+  /* Scope dropdowns show an icon per choice, also in the closed box */
+  select > button.select-button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: inherit;
+  }
+
+  select selectedcontent {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  select selectedcontent .opt-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* Option icon (customizable select); older Chrome drops it from the markup */
+.opt-icon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--text-secondary);
+}
+
+option:checked .opt-icon {
+  color: inherit;
+}

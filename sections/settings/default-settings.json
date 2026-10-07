@@ -35,6 +35,7 @@
       "cacheUnit": "hours",
       "cacheScope": "domain",
       "categoryOrder": ["antibot", "captcha", "fingerprint"],
+      "advancedToolsMinConfidence": 50,
       "blacklistedDomains": [],
       "hooksConfig": {}
     },
@@ -51,6 +52,24 @@
       "webhookContentType": "application/json",
       "webhookPayload": "{\"url\": \"<SITEURL>\", \"hostname\": \"<HOSTNAME>\", \"title\": \"<TITLE>\", \"favicon\": \"<FAVICON>\", \"detections\": <DETECTIONS>, \"timestamp\": \"<TIMESTAMP>\", \"count\": <DETECTION_COUNT>, \"categories\": \"<CATEGORIES>\"}",
       "webhookHeaders": []
+    },
+
+    "share": {
+      "provider": "dpaste_com",
+      "dpasteComDays": 30,
+      "dpasteOrgExpires": "2592000",
+      "pastebinKey": "",
+      "pastebinExpire": "1M",
+      "githubToken": "",
+      "customUrl": "",
+      "customMethod": "POST",
+      "customBodyFormat": "form",
+      "customFieldName": "content",
+      "customJsonTemplate": "{\"content\": <CONTENT_JSON>, \"title\": <TITLE_JSON>, \"expiry_days\": <EXPIRY_DAYS>}",
+      "customHeaders": "",
+      "customLinkFrom": "body",
+      "customLinkJsonPath": "url",
+      "customExpiryDays": 30
     },
 
     "history": {

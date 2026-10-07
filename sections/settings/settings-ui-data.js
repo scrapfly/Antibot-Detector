@@ -25,7 +25,8 @@ SettingsUI.exportSettingsFile = async function() {
       const exportData = {
         version: chrome.runtime.getManifest().version,
         timestamp: new Date().toISOString(),
-        settings: this.settings,
+        // Share-service keys and tokens stay in this browser
+        settings: SettingsUI.withoutShareSecrets(this.settings),
         languageOverride: langResult.scrapfly_language_override || 'auto'
       };
       const date = new Date().toISOString().split('T')[0];

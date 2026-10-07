@@ -1,13 +1,8 @@
 TurnstileAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {
-                id: 'turnstileCheckCookies',
-                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckCookies')) || 'Check Cookies'),
-                iconSvg: `
-                    <svg width="20" height="20" viewBox="0 0 24 24">
-                        <path d="M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A9,9 0 0,0 21,12A9,9 0 0,0 12,3M9,8A1.5,1.5 0 0,1 10.5,9.5A1.5,1.5 0 0,1 9,11A1.5,1.5 0 0,1 7.5,9.5A1.5,1.5 0 0,1 9,8M16.5,9.5A1.5,1.5 0 0,1 15,11A1.5,1.5 0 0,1 13.5,9.5A1.5,1.5 0 0,1 15,8A1.5,1.5 0 0,1 16.5,9.5M9,15A1.5,1.5 0 0,1 10.5,16.5A1.5,1.5 0 0,1 9,18A1.5,1.5 0 0,1 7.5,16.5A1.5,1.5 0 0,1 9,15M15,14A1.5,1.5 0 0,1 16.5,15.5A1.5,1.5 0 0,1 15,17A1.5,1.5 0 0,1 13.5,15.5A1.5,1.5 0 0,1 15,14Z"/>
-                    </svg>
-                `
+                id: 'turnstileExtractSiteKey',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnExtractSiteKey')) || 'Extract Site Key')
             },
             {
                 id: 'turnstileAnalyzeScripts',
@@ -25,50 +20,29 @@ TurnstileAdvanced.prototype.renderTools = function() {
 TurnstileAdvanced.prototype.setupToolListeners = function() {
         Logger.network('[Turnstile] Setting up tool listeners...');
         this.bindToolActions([
-            { id: 'turnstileCheckCookies', handler: () => this.checkCookies() },
+            { id: 'turnstileExtractSiteKey', handler: () => this.extractSiteKey() },
             { id: 'turnstileAnalyzeScripts', handler: () => this.analyzeScripts() }
         ]);
     };
 
 
-TurnstileAdvanced.prototype.displayCookiesModal = function(cfClearanceCookie) {
-        const modal = this.createToolModal();
+// One card per key: the site key and the page it is on. Shared with
+// Advanced → Cloudflare.
+TurnstileAdvanced.KEY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2L20 3M16 7l3 3M14 9l2 2"/></svg>';
 
-        const foundCount = cfClearanceCookie ? 1 : 0;
-
-        modal.innerHTML = `
-            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${this._txt('advCommonCookiesTitleFmt', '{0} Cookies', 'Turnstile')}</h3>
-                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
-                </div>
-
-                ${this.buildCookieStatusSummary(foundCount, 1)}
-
-                ${cfClearanceCookie ? `
-                    <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <div class="copy-value" data-copy="cf_clearance" style="font-weight: 500; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">cf_clearance</div>
-                            <div style="display: flex; gap: 6px;">
-                                ${cfClearanceCookie.secure ? '<span style="font-size: 10px; background: var(--success); color: white; padding: 2px 6px; border-radius: 3px;">SECURE</span>' : ''}
-                                ${cfClearanceCookie.httpOnly ? '<span style="font-size: 10px; background: var(--bg-primary); color: var(--text-primary); padding: 2px 6px; border-radius: 3px;">HTTP</span>' : ''}
-                            </div>
-                        </div>
-                        <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(cfClearanceCookie.value)}" style="font-size: 11px; color: var(--text-secondary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">${cfClearanceCookie.value.substring(0, 60)}${cfClearanceCookie.value.length > 60 ? '...' : ''}</div>
-                        <div style="font-size: 11px; color: var(--text-muted);">${this._txt('advCommonDomainLabel', 'Domain:')} ${cfClearanceCookie.domain}</div>
-                    </div>
-                ` : `
-                    <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
-                        <div style="font-size: 48px; margin-bottom: 12px;"></div>
-                        <div style="font-size: 14px;">${this._txt('advCommonNoCookiesFmt', 'No {0} cookies found', 'Turnstile')}</div>
-                    </div>
-                `}
-            </div>
-        `;
-
-        this.bindCopyValueHandlers(modal, { defaultMessage: this._txt('copiedNotification', 'Copied') });
-        this.bindModalClose(modal);
-        this.showToolModal(modal);
+TurnstileAdvanced.prototype.displaySiteKeysModal = function(keys) {
+        const K = BaseAdvancedModule;
+        const cards = keys.map(key => K.kitCard(
+            K.kitField(this._txt('advCommonSiteKey', 'Site Key'), key.sitekey, { wrap: true })
+            + K.kitField(this._txt('advCommonPage', 'Page'), key.pageUrl, { mono: false, wrap: true })
+        )).join('');
+        this.openKitModal({
+            title: this._txt('advTurnstileSiteKeysTitle', 'Turnstile site keys'),
+            subtitle: keys.length === 1 ? keys[0].sitekey : String(keys.length),
+            iconSvg: TurnstileAdvanced.KEY_ICON,
+            body: cards,
+            copiedMessage: this._txt('advCloudflareSiteKeyCopied', 'Site Key copied')
+        });
     };
 
 

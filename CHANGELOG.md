@@ -5,6 +5,52 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [Unreleased]
+
+## [2.8.2] - 2026-10-07
+
+### Added
+
+- Settings → Detection → Share uploads: choose where "Upload detections" sends the summary (dpaste.com, dpaste.org, paste.rs, Pastebin, GitHub Gist or your own server) and when it is deleted.
+- Advanced → Cloudflare Turnstile: "Extract Site Key" shows every Turnstile site key on the page and the page it is on.
+- Scrape with Scrapfly (Detection button, and a card in every protection's Advanced tools): ready-to-copy code in Python, Node.js, cURL, CLI, Go or Rust that fetches the page with Scrapfly's Unblocker.
+- Advanced → History also keeps what each tool button found (cookies, scripts, site keys, versions, selectors), named after the tool, for 30 minutes.
+
+### Changed
+
+- Difficulty ratings revised: reCAPTCHA and AliExpress are now Medium, Ocule and Canvas fingerprinting High, and 19 other CAPTCHAs and anti-bot systems Low.
+- PerimeterX (HUMAN) is also recognised when served from hsprotect.net, as on Microsoft account sign-up.
+- Detection: "Copy overview" copies the same summary that "Upload detections" shares.
+- Settings → General → Tag colors: the tag names are written like the categories (Dom, Headers, Cookies) and follow the chosen language.
+- Rules editor: combinations open collapsed instead of the first one always expanded; pattern settings and delete buttons use quiet outline icons, and the RX / WW / CS badges explain themselves on hover.
+- Advanced: only protections detected above 50% confidence get tools, so a page that merely mentions a vendor no longer lists it; change the limit in Settings → Detection → Advanced tools.
+- Advanced → Check cookies (every vendor): one clear view with each cookie's full value, domain, path, expiry and flags, plus the expected cookies that were missing; history entries reopen it.
+- Dropdowns open as a dark list in the extension style instead of the system list; scope choices (cache, duplicates, URL, request/response) show an icon.
+- Delete buttons across the popup (patterns, combinations, blacklist, webhook headers, history, logs) use the same outline trash that turns red on hover.
+- Confirmations, Settings and the rule editor share one button style with a quiet outlined Cancel; clearing Advanced captures now asks in the same dialog.
+- Settings → JS API: the usage example is a code panel with a copy button that no longer covers the code, and every line fits.
+- Rules: the "Only check scripts" help now says what it does: it searches JavaScript code only, not page text or file names.
+
+### Removed
+
+- Advanced → Cloudflare Turnstile: removed "Check cookies" (Turnstile sets none); "Analyze scripts" no longer deletes the Cloudflare cookie.
+- Advanced → Cloudflare: removed the "Check Version" action.
+
+### Fixed
+
+- Fingerprint detection now catches what pages do in their first moments and inside hidden iframes; on CreepJS, Canvas, Font and WebGL score much higher.
+- Pages where only fingerprinting was found no longer show an empty result.
+- History no longer shows an image the page merely preloads as the site's icon, and a site icon that fails to load on the Detection tab shows the logo.
+- Settings → Detection: with cache scope "Path" or "Full URL", other pages of the same site are now scanned instead of showing the first page's result.
+- Detection: "Upload detections" and "Copy overview" now give the address of the page you are on, not the first page scanned on that site.
+- The Scrapfly logo is sharp again on high-resolution screens (popup header, empty states, Advanced, History, Stats, and in place of a missing site icon).
+- Advanced → Cloudflare: "Extract Site Key" no longer picks up reCAPTCHA or hCaptcha keys and finds keys of widgets rendered from script.
+- Advanced → History: the module filter lists every vendor with saved entries (Imperva and AWS WAF filtering works again), and a new Tool filter shows only captures or one kind of tool result (cookies, site keys, selectors…).
+- Settings → General → Detector updates: "Check now" no longer breaks onto two lines, and "Update Extension" opens the extension's real store page.
+- Rules → Restore official detectors asks before running, keeps going when one detector cannot be restored, and says why if it fails.
+- Rules → URL help: the warning said patterns match case by default; they ignore case unless "Case sensitive" is on.
+- Rules: a regex with "Case sensitive" off no longer changes meaning when it uses \D, \S, \W or \B.
+
 ## [2.8.1] - 2026-10-06
 
 ### Added
@@ -184,6 +230,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[Unreleased]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.2...HEAD
+[2.8.2]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.1...v2.8.2
 [2.8.1]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8...v2.8.1
 [2.8]: https://github.com/scrapfly/Antibot-Detector/compare/v2.7...v2.8
 [2.7]: https://github.com/scrapfly/Antibot-Detector/compare/v2.6...v2.7

@@ -59,7 +59,7 @@ Rules.prototype.initCombinationsEditor = function(detector) {
       when: Rules.comboGroupKey(Rules.comboUnwrap(when).node) ? when : { all: [when] }
     };
   });
-  if (this.combinationsModel.length) this.setComboOpen(this.combinationsModel[0], true);
+  // Every combination starts collapsed; only one added with + Add opens
   this.bindCombinationsEditor();
   this.renderCombinations();
   this.currentEditDetector.originalCombinations = this.buildCombinationsForSave(null, { validate: false }).combinations;
@@ -336,7 +336,7 @@ Rules.prototype.renderCombinations = function({ focusPicker = false } = {}) {
             aria-label="${FormatUtils.escapeAttr(combosText('ruleFieldName', 'Name'))}">
           <button type="button" class="combo-summary-count" data-combo-action="toggle-card" aria-expanded="${open}">${FormatUtils.escapeHtml(this.comboPatternCountText(combo))} · ${FormatUtils.escapeHtml(modeText)}</button>
         </div>
-        <button type="button" class="combo-remove" data-combo-action="delete-combo" aria-label="${FormatUtils.escapeAttr(combosText('combinationDelete', 'Delete combination'))}" title="${FormatUtils.escapeAttr(combosText('combinationDelete', 'Delete combination'))}">×</button>
+        <button type="button" class="combo-remove" data-combo-action="delete-combo" aria-label="${FormatUtils.escapeAttr(combosText('combinationDelete', 'Delete combination'))}" title="${FormatUtils.escapeAttr(combosText('combinationDelete', 'Delete combination'))}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
       </div>
       <div class="combo-body">
         ${this.renderComboGroup(combo.when, '', index, options, labels)}

@@ -172,7 +172,7 @@ class History {
         <div class="history-item" data-history-id="${item.id}">
           <div class="history-item-top">
             <span class="history-favicon-tile">
-              <img src="${faviconSrc}" alt="" class="history-favicon" data-fallback="${chrome.runtime.getURL('icons/icon16.png')}">
+              <img src="${faviconSrc}" alt="" class="history-favicon" data-fallback="${UrlUtils.getDefaultFaviconUrl()}">
             </span>
             <div class="history-item-content">
               <div class="history-title" title="${safeTitle}">${safeTitle}</div>
@@ -370,13 +370,13 @@ class History {
         }
       } else {
         // Fallback: Use Scrapfly icon for all detectors without official icons
-        const scrapflyIconUrl = chrome.runtime.getURL('icons/icon32.png');
+        const scrapflyIconUrl = chrome.runtime.getURL('icons/icon128.png');
         if (isFingerprintCategory) {
           iconHtml = `<div class="detection-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${scrapflyIconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--default history-fingerprint-image"></div>`;
           isFingerprint = true;
         } else {
           // No vendor logo: the Scrapfly mark sits bare on the chip (no white plate)
-          iconHtml = `<img src="${chrome.runtime.getURL('icons/icon48.png')}" alt="${safeName}" class="detection-icon detection-icon--default">`;
+          iconHtml = `<img src="${chrome.runtime.getURL('icons/icon128.png')}" alt="${safeName}" class="detection-icon detection-icon--default">`;
         }
       }
 
@@ -729,7 +729,7 @@ class History {
       const faviconUrl = UrlUtils.resolveDisplayFavicon(historyItem.favicon, historyItem.url || historyItem.hostname);
       favicon.src = faviconUrl;
       favicon.onerror = () => {
-        favicon.src = chrome.runtime.getURL('icons/icon16.png');
+        favicon.src = UrlUtils.getDefaultFaviconUrl();
       };
     }
     if (title) {
@@ -1065,7 +1065,7 @@ class History {
             : `<img src="${iconUrl}" alt="${safeName}" class="modal-detector-icon">`;
         }
       } else {
-        const scrapflyIconUrl = chrome.runtime.getURL('icons/icon32.png');
+        const scrapflyIconUrl = chrome.runtime.getURL('icons/icon128.png');
         detectorIconHtml = isFingerprintCategory
           ? `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${scrapflyIconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--default history-modal-fingerprint-image"></div>`
           : `<img src="${scrapflyIconUrl}" alt="${safeName}" class="modal-detector-icon modal-detector-icon--default">`;

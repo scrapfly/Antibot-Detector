@@ -63,7 +63,8 @@ function makeInterfaces(ILLEGAL) {
 
 // illegal: the brand-check message this fake browser throws; noNavigator: no
 // Navigator interface at all (the MAIN world must then use the protocol fallback)
-function createPage({ href = 'https://example.test/', illegal = ILLEGAL, noNavigator = false } = {}) {
+// globals: extra page globals present before the MAIN-world scripts load
+function createPage({ href = 'https://example.test/', illegal = ILLEGAL, noNavigator = false, globals = {} } = {}) {
   const target = new EventTarget();
   const posted = [];
   const context = vm.createContext({
@@ -83,7 +84,7 @@ function createPage({ href = 'https://example.test/', illegal = ILLEGAL, noNavig
     // The page's navigator object still exists; only the interface object is missing
     delete interfaces.Navigator;
   }
-  Object.assign(context, interfaces);
+  Object.assign(context, interfaces, globals);
 
   for (const file of MAIN_FILES) {
     vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), context, { filename: path.join(root, file) });

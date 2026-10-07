@@ -60,9 +60,10 @@ function demMatchPattern(text, pattern, options = {}, preparedLower) {
 
     let result = false;
 
-    // Regex matching
+    // Regex matching. The compiled regex carries the case flag itself: the
+    // pattern is never lowercased, which would turn \D \S \W \B into \d \s \w \b
     if (regex) {
-        const compiledRegex = DetectionEngineManager.patternCache.getCompiledPattern(patternToMatch, { regex: true, caseSensitive });
+        const compiledRegex = DetectionEngineManager.patternCache.getCompiledPattern(pattern, { regex: true, caseSensitive });
         if (compiledRegex) {
             try {
                 result = compiledRegex.test(textToSearch);
@@ -108,7 +109,8 @@ function demMatchPatternWithCapture(text, pattern, options = {}) {
         const patternToMatch = caseSensitive ? pattern : pattern.toLowerCase();
 
         if (regex) {
-            const compiledRegex = DetectionEngineManager.patternCache.getCompiledPattern(patternToMatch, { regex: true, caseSensitive });
+            // Unlowercased pattern: the compiled regex carries the case flag
+            const compiledRegex = DetectionEngineManager.patternCache.getCompiledPattern(pattern, { regex: true, caseSensitive });
             if (!compiledRegex) return null;
             const result = text.match(compiledRegex);
             return (result && result.length) ? result[0] : null;

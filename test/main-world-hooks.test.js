@@ -8,9 +8,15 @@ const FAST = { ACTIVITY_TIMEOUT_MS: 250, MAX_DETECTION_MS: 1000, MIN_MONITOR_MS:
 const T = P.MESSAGE_TYPES;
 const R = P.HOOK_FAILURE_REASONS;
 
-function bootstrapped() {
+// Without early recording unless asked: these tests pin the install path itself
+function withoutEarlyHooks(detail) {
+  delete detail.earlyHooks;
+  return detail;
+}
+
+function bootstrapped({ early = false } = {}) {
   const page = createPage();
-  page.bootstrap(bootstrapDetail(TOKEN));
+  page.bootstrap(early ? bootstrapDetail(TOKEN) : withoutEarlyHooks(bootstrapDetail(TOKEN)));
   return page;
 }
 
@@ -136,7 +142,7 @@ test('Debug mode without Verbose logs sends no routine MAIN-world traces', async
 test('the engine-sent bind shims are active right after the bootstrap', () => {
   const page = createPage();
   assert.throws(() => page.run('const g = navigator.getBattery; g()'), /Illegal invocation/);
-  page.bootstrap(bootstrapDetail(TOKEN));
+  page.bootstrap(withoutEarlyHooks(bootstrapDetail(TOKEN)));
   assert.strictEqual(page.run('const g1 = navigator.getBattery; g1()'), 'battery');
   assert.strictEqual(page.run('const g2 = navigator.mediaDevices.enumerateDevices; g2()'), 'devices');
   assert.strictEqual(page.run('navigator.getBattery.call(navigator)'), 'battery');
@@ -370,4 +376,151 @@ test('the engine has no substitution for other targets, and bad specs are ignore
   ] }));
   assert.deepStrictEqual(page.run('performance.getEntriesByType("longtask")'), []);
   assert.deepStrictEqual(page.context.performanceWarnings, ['longtask'], 'invalid spec: native call unchanged');
+});
+
+// Early recording: calls before the install event and calls inside child windows
+
+test('calls made before the install event are reported once the hooks install', async () => {
+  const page = bootstrapped({ early: true });
+  const recorder = page.run('Navigator.prototype.getBattery');
+  // Looks native and behaves natively while recording
+  assert.strictEqual(recorder.name, 'getBattery');
+  assert.strictEqual(page.run('Object.prototype.hasOwnProperty.call(Navigator.prototype.getBattery, "prototype")'), false);
+  assert.strictEqual(page.run('navigator.getBattery()'), 'battery');
+  assert.strictEqual(page.run('navigator.hardwareConcurrency'), 8);
+  assert.throws(() => page.run('Object.getOwnPropertyDescriptor(Navigator.prototype, "userAgent").get.call({})'), /Illegal invocation/);
+  assert.deepStrictEqual(page.ofType(T.JS_HOOK_DETECTION), [], 'nothing reported before the install');
+
+  page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: [
+    detector('a', ['Navigator.prototype.getBattery', 'Navigator.prototype.userAgent']),
+    detector('b', ['Navigator.prototype.hardwareConcurrency'])
+  ] }));
+  const fired = page.ofType(T.JS_HOOK_DETECTION).map(m => `${m.detection.detectorId}>${m.detection.hook.target}`).sort();
+  assert.deepStrictEqual(fired, ['a>Navigator.prototype.getBattery', 'b>Navigator.prototype.hardwareConcurrency'],
+    'only targets that were called successfully');
+  assert.notStrictEqual(page.run('Navigator.prototype.getBattery'), recorder, 'recorder removed');
+
+  // A recorder the page kept routes later calls to the install
+  page.run('navigator.userAgent');
+  assert.ok(page.ofType(T.JS_HOOK_DETECTION).some(m => m.detection.hook.target === 'Navigator.prototype.userAgent'));
+  await sleep(700);
+  assert.ok(page.ofType(T.JS_HOOKS_COMPLETE)[0], 'completion sent');
+});
+
+test('early recorders are removed even if no install event comes', async () => {
+  const page = createPage();
+  const original = page.run('Object.getOwnPropertyDescriptor(Navigator.prototype, "hardwareConcurrency").get');
+  const detail = bootstrapDetail(TOKEN);
+  detail.earlyHooks.maxMs = 50;
+  page.bootstrap(detail);
+  assert.notStrictEqual(page.run('Object.getOwnPropertyDescriptor(Navigator.prototype, "hardwareConcurrency").get'), original);
+  await sleep(120);
+  assert.strictEqual(page.run('Object.getOwnPropertyDescriptor(Navigator.prototype, "hardwareConcurrency").get'), original);
+});
+
+test('a page replacement of a recorded API is kept when the recorders are removed', () => {
+  const page = bootstrapped({ early: true });
+  page.run('Navigator.prototype.getBattery = function mine() { return "page"; }');
+  page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: [] }));
+  assert.strictEqual(page.run('navigator.getBattery()'), 'page');
+});
+
+test('a malformed early-hooks spec installs no recorders', () => {
+  const page = createPage();
+  const getter = 'Object.getOwnPropertyDescriptor(Navigator.prototype, "hardwareConcurrency").get';
+  const original = page.run(getter);
+  const detail = bootstrapDetail(TOKEN);
+  detail.earlyHooks.maxMs = 'soon';
+  page.bootstrap(detail);
+  assert.strictEqual(page.run(getter), original);
+  // The bind shims still install
+  assert.strictEqual(page.run('Navigator.prototype.getBattery')[P.MAIN_WORLD.BIND_SHIM_MARKER], true);
+});
+
+// A fake same-origin child window, reached through a frame element's contentWindow
+function addChildFrame(page) {
+  page.run(`
+    var child = { document: {} };
+    child.window = child;
+    child.Navigator = function Navigator() {};
+    Object.defineProperty(child.Navigator.prototype, 'hardwareConcurrency', { get() { return 4; }, configurable: true });
+    child.navigator = Object.create(child.Navigator.prototype);
+    child.HTMLIFrameElement = function HTMLIFrameElement() {};
+    var frame = typeof HTMLIFrameElement === 'function' ? Object.create(HTMLIFrameElement.prototype) : null;
+  `);
+}
+
+test('calls inside a same-origin child window are reported, before and after the install', () => {
+  const page = createPage();
+  page.run(`
+    function HTMLIFrameElement() {}
+    Object.defineProperty(HTMLIFrameElement.prototype, 'contentWindow', { get() { return child; }, configurable: true });
+    Object.defineProperty(HTMLIFrameElement.prototype, 'contentDocument', { get() { return child.document; }, configurable: true });
+  `);
+  addChildFrame(page);
+  page.bootstrap(bootstrapDetail(TOKEN));
+  assert.strictEqual(page.run('Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, "contentWindow").get.name'), 'get');
+  // Before the install: the child call is recorded
+  assert.strictEqual(page.run('frame.contentWindow.navigator.hardwareConcurrency'), 4);
+  page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: [
+    detector('a', ['Navigator.prototype.hardwareConcurrency']),
+    detector('b', ['Navigator.prototype.getBattery'])
+  ] }));
+  let fired = page.ofType(T.JS_HOOK_DETECTION).map(m => m.detection.detectorId);
+  assert.deepStrictEqual(fired, ['a']);
+  // After the install: the child's own getBattery is not hooked here, but its
+  // hardwareConcurrency recorder reports through the current install (already fired)
+  page.run('frame.contentWindow.navigator.hardwareConcurrency');
+  fired = page.ofType(T.JS_HOOK_DETECTION).map(m => m.detection.detectorId);
+  assert.deepStrictEqual(fired, ['a'], 'one-shot per detector');
+});
+
+test('a child window reached after the install reports through the install', () => {
+  const page = createPage();
+  page.run(`
+    function HTMLIFrameElement() {}
+    Object.defineProperty(HTMLIFrameElement.prototype, 'contentDocument', { get() { return child.document; }, configurable: true });
+  `);
+  addChildFrame(page);
+  page.run('child.document.defaultView = child');
+  page.bootstrap(bootstrapDetail(TOKEN));
+  page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: [detector('a', ['Navigator.prototype.hardwareConcurrency'])] }));
+  assert.deepStrictEqual(page.ofType(T.JS_HOOK_DETECTION), []);
+  assert.strictEqual(page.run('frame.contentDocument.defaultView.navigator.hardwareConcurrency'), 4);
+  assert.deepStrictEqual(page.ofType(T.JS_HOOK_DETECTION).map(m => m.detection.detectorId), ['a']);
+});
+
+test('a cross-origin child window is skipped without breaking the accessor', () => {
+  const page = createPage();
+  page.run(`
+    function HTMLIFrameElement() {}
+    var foreign = new Proxy({}, { get() { throw new Error('SecurityError'); } });
+    Object.defineProperty(HTMLIFrameElement.prototype, 'contentWindow', { get() { return foreign; }, configurable: true });
+    var frame = Object.create(HTMLIFrameElement.prototype);
+  `);
+  page.bootstrap(bootstrapDetail(TOKEN));
+  assert.strictEqual(page.run('frame.contentWindow === foreign'), true);
+});
+
+test('a frame reached by index is instrumented when the DOM changes', () => {
+  const observers = [];
+  class FakeMutationObserver {
+    constructor(callback) { this.callback = callback; observers.push(this); }
+    observe(node, options) { this.node = node; this.options = options; }
+  }
+  const page = createPage({ globals: { MutationObserver: FakeMutationObserver } });
+  addChildFrame(page);
+  page.bootstrap(bootstrapDetail(TOKEN));
+  assert.strictEqual(observers.length, 1, 'the page document is watched');
+  assert.deepStrictEqual({ ...observers[0].options }, { childList: true, subtree: true });
+  // The page inserts a frame and reaches it as window[0], never through an accessor
+  page.run('window[0] = child; window.length = 1;');
+  observers[0].callback([]);
+  assert.strictEqual(observers.length, 2, 'the child document is watched too');
+  assert.strictEqual(page.run('window[0].navigator.hardwareConcurrency'), 4);
+  page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: [detector('a', ['Navigator.prototype.hardwareConcurrency'])] }));
+  assert.deepStrictEqual(page.ofType(T.JS_HOOK_DETECTION).map(m => m.detection.detectorId), ['a']);
+  // Seen again: not wrapped twice
+  observers[0].callback([]);
+  assert.strictEqual(observers.length, 2);
 });

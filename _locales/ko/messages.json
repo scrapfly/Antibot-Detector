@@ -602,28 +602,28 @@
     "message": "1주"
   },
   "methodLabelUrl": {
-    "message": "URL"
+    "message": "Url"
   },
   "methodLabelHeader": {
-    "message": "HEADER"
+    "message": "헤더"
   },
   "methodLabelCookie": {
-    "message": "COOKIE"
+    "message": "쿠키"
   },
   "methodLabelContent": {
-    "message": "CONTENT"
+    "message": "콘텐츠"
   },
   "methodLabelDom": {
-    "message": "DOM"
+    "message": "Dom"
   },
   "methodLabelJsHooks": {
-    "message": "JS HOOKS"
+    "message": "JS 후크"
   },
   "methodLabelWindow": {
-    "message": "WINDOW"
+    "message": "창"
   },
   "methodLabelPayload": {
-    "message": "PAYLOAD"
+    "message": "페이로드"
   },
   "methodOnePattern": {
     "message": "1 패턴"
@@ -1336,9 +1336,6 @@
   "pasteConfirmTitle": {
     "message": "탐지 결과를 업로드할까요?"
   },
-  "pasteConfirmMsg": {
-    "message": "이 페이지의 탐지 요약을 공개 페이스트(dpaste.com, 비공개 목록, 30일 후 만료)에 업로드합니다. 링크가 있는 누구나 볼 수 있습니다. URL 쿼리 문자열과 쿠키/헤더 값은 포함되지 않습니다."
-  },
   "pasteConfirmBtn": {
     "message": "업로드"
   },
@@ -1493,7 +1490,7 @@
     "message": "스크립트만 확인"
   },
   "rulesOnlyCheckScriptsHint": {
-    "message": "검색을 JavaScript 코드 및 스크립트 URL로만 제한합니다"
+    "message": "JavaScript 코드(인라인 및 로드된 스크립트)만 검색하며 페이지 텍스트나 파일 이름은 제외합니다"
   },
   "rulesScopeSettingsTitle": {
     "message": "범위 설정"
@@ -1622,7 +1619,7 @@
     "message": "로드된 리소스(스크립트, 이미지, 네트워크 요청)의 URL을 패턴과 일치시킵니다."
   },
   "helpUrlWarning": {
-    "message": "패턴은 기본적으로 대/소문자를 구분합니다. 대/소문자를 구분하지 않는 매칭이 필요한 경우 URL 대/소문자 구분 옵션을 전환하세요."
+    "message": "\"대/소문자 구분\"을 켜지 않으면 패턴은 대소문자를 구분하지 않습니다. 너무 일반적인 패턴은 관계없는 리소스와도 일치하므로 구체적으로 작성하세요."
   },
   "helpUrlTip": {
     "message": "/\\/v\\d+\\/challenge/와 같은 고급 패턴에는 Regex 옵션을 사용하세요."
@@ -2362,9 +2359,6 @@
   "advCommonClickToCopy": {
     "message": "클릭하여 복사"
   },
-  "advCommonClickToCopyFull": {
-    "message": "클릭하여 전체 값 복사"
-  },
   "advCommonDomainLabel": {
     "message": "도메인:"
   },
@@ -2935,9 +2929,6 @@
   "advShapeCookieTitle": {
     "message": "Shape 쿠키"
   },
-  "advShapeMaxAgeInfoFmt": {
-    "message": "Max-Age: {0}초 (50년)"
-  },
   "advShapeAnalysisTitle": {
     "message": "Shape Security 분석"
   },
@@ -3106,14 +3097,8 @@
   "advAwswafDeletingCookieFmt": {
     "message": "{0} 쿠키를 삭제하는 중… 페이지가 새로고침됩니다"
   },
-  "advCloudflareExtractedSiteKey": {
-    "message": "추출된 Site Key"
-  },
   "advCloudflareTypeLabel": {
     "message": "유형"
-  },
-  "advCloudflareSiteKeyClickToCopy": {
-    "message": "Site Key (클릭하여 복사)"
   },
   "advCloudflareSiteKeyCopied": {
     "message": "Site Key가 복사되었습니다"
@@ -3136,17 +3121,11 @@
   "advCloudflareCheckingVersion": {
     "message": "Cloudflare 버전을 확인하는 중… 페이지가 새로고침됩니다"
   },
-  "advCloudflareSiteKeyExtracted": {
-    "message": "Site Key를 추출했습니다"
-  },
   "advCloudflareNoSitekey": {
     "message": "페이지에서 sitekey를 찾을 수 없습니다"
   },
   "advCloudflareFailedExtractSitekey": {
     "message": "sitekey를 추출하지 못했습니다"
-  },
-  "advDatadomeCookieCopied": {
-    "message": "쿠키가 복사되었습니다"
   },
   "advFuncaptchaPublicKey": {
     "message": "공개 키"
@@ -3496,9 +3475,6 @@
   "clipboardUrlFmt": {
     "message": "URL: {0}"
   },
-  "clipboardHostFmt": {
-    "message": "호스트: {0}"
-  },
   "clipboardTitleFmt": {
     "message": "제목: {0}"
   },
@@ -3520,23 +3496,14 @@
   "clipboardDetectionMethodsHeading": {
     "message": "탐지 방법:"
   },
-  "clipboardDetectionsCountFmt": {
-    "message": "탐지 수: {0}"
-  },
   "clipboardDetectionsListFmt": {
     "message": "탐지 ({0}건):"
   },
   "clipboardDifficultyFmt": {
     "message": "난이도: {0}"
   },
-  "clipboardCacheScopeFmt": {
-    "message": "캐시 범위: {0}"
-  },
   "clipboardCacheExpirationFmt": {
     "message": "캐시 만료: {0}"
-  },
-  "clipboardMethodsFmt": {
-    "message": "방법: {0}"
   },
   "clipboardCopyFailed": {
     "message": "클립보드에 복사하지 못했습니다"
@@ -3969,5 +3936,286 @@
   },
   "settingsCategoryOrderHelp": {
     "message": "탐지 목록의 카테고리 순서입니다. 같은 카테고리 안에서는 신뢰도가 높은 항목이 먼저 표시됩니다."
+  },
+  "settingsCardShareUploads": {
+    "message": "공유 업로드"
+  },
+  "settingsShareDestination": {
+    "message": "업로드 대상"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "감지 → 감지 결과 업로드가 요약을 보내고 공유 링크를 받는 곳입니다."
+  },
+  "settingsShareService": {
+    "message": "서비스"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com (계정 불필요)"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org (계정 불필요)"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs (계정 불필요)"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin (API 키)"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist (토큰)"
+  },
+  "shareProviderCustom": {
+    "message": "사용자 서버"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "삭제까지(일)"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "삭제 시점"
+  },
+  "shareExpire10M": {
+    "message": "10분"
+  },
+  "shareExpire1H": {
+    "message": "1시간"
+  },
+  "shareExpire1D": {
+    "message": "1일"
+  },
+  "shareExpire1W": {
+    "message": "1주"
+  },
+  "shareExpire2W": {
+    "message": "2주"
+  },
+  "shareExpire30D": {
+    "message": "30일"
+  },
+  "shareExpire1M": {
+    "message": "1개월"
+  },
+  "shareExpire6M": {
+    "message": "6개월"
+  },
+  "shareExpire1Y": {
+    "message": "1년"
+  },
+  "shareExpireOnetime": {
+    "message": "처음 열람 후"
+  },
+  "shareExpireNever": {
+    "message": "삭제 안 함"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "paste.rs에는 만료 옵션이 없습니다. 서비스가 삭제할 때까지 남습니다."
+  },
+  "settingsSharePastebinKey": {
+    "message": "Pastebin API 키"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "pastebin.com/doc_api의 개발자 키입니다. 업로드는 목록에 표시되지 않습니다."
+  },
+  "settingsShareSecretNote": {
+    "message": "이 브라우저에만 저장되며 설정 내보내기에는 포함되지 않습니다."
+  },
+  "settingsShareGithubToken": {
+    "message": "GitHub 토큰"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "Gists 권한이 있는 토큰입니다. 업로드는 비밀 Gist이며 만료되지 않으니 GitHub에서 삭제하세요."
+  },
+  "settingsShareCustomUrl": {
+    "message": "서버 URL"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "공개 호스트의 HTTPS. <EXPIRY_DAYS>를 넣을 수 있습니다."
+  },
+  "settingsShareCustomBody": {
+    "message": "본문 형식"
+  },
+  "shareBodyForm": {
+    "message": "폼 필드"
+  },
+  "shareBodyJson": {
+    "message": "JSON 템플릿"
+  },
+  "shareBodyRaw": {
+    "message": "원시 텍스트"
+  },
+  "settingsShareCustomField": {
+    "message": "필드 이름"
+  },
+  "settingsShareCustomJson": {
+    "message": "JSON 템플릿"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "변수: <CONTENT_JSON>, <TITLE_JSON>, <EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "한 줄에 하나씩 이름: 값 형식, 예: Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "공유 링크 위치"
+  },
+  "shareLinkBody": {
+    "message": "응답 본문(URL)"
+  },
+  "shareLinkJson": {
+    "message": "JSON 필드"
+  },
+  "shareLinkLocation": {
+    "message": "Location 헤더"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "JSON 필드 경로"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "폼에서는 expiry_days로, 그리고 <EXPIRY_DAYS>로 전송되며 처리는 서버가 결정합니다."
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "먼저 설정 → 감지 → 공유 업로드에서 {0}을(를) 설정하세요"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "이 페이지의 감지 요약을 {0}에 업로드합니다({1}). 링크가 있는 누구나 볼 수 있습니다. URL 쿼리 문자열과 쿠키/헤더 값은 포함되지 않습니다."
+  },
+  "shareExpiryDaysFmt": {
+    "message": "{0}일 후 삭제"
+  },
+  "shareExpiryAfterFmt": {
+    "message": "{0} 후 삭제"
+  },
+  "shareExpiryOnetime": {
+    "message": "처음 열람 후 삭제"
+  },
+  "shareExpiryService": {
+    "message": "서비스가 삭제할 때까지 유지"
+  },
+  "shareExpiryNever": {
+    "message": "만료되지 않음"
+  },
+  "pasteUnsafeUrl": {
+    "message": "사용자 서버는 공개 호스트의 HTTPS 주소여야 합니다"
+  },
+  "pasteBadLink": {
+    "message": "서비스가 유효한 HTTPS 링크를 반환하지 않았습니다"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "업로드 실패: {0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "사용자 업로드 서버: 공개 호스트의 HTTPS 주소를 사용하세요"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "사용자 업로드 서버: JSON 템플릿이 올바른 JSON이 아닙니다"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "{0}에서 키 또는 토큰을 거부했습니다(잘못되었거나 만료됨)"
+  },
+  "pasteGistPermission": {
+    "message": "GitHub 토큰에 Gists 권한(읽기 및 쓰기)이 필요합니다"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "이 페이지에 Turnstile 사이트 키가 없습니다"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "Turnstile 사이트 키"
+  },
+  "advTurnstileReloadingScripts": {
+    "message": "Turnstile 스크립트를 수집하기 위해 페이지를 새로고침합니다"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "고급 도구"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "도구를 표시할 보호"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "이 신뢰도 초과 시 도구 표시(%)"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "고급에는 신뢰도가 이 값을 넘는 보호만 표시됩니다. 0이면 감지된 모든 보호를 표시합니다."
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "고급 도구 신뢰도는 0에서 99 사이여야 합니다"
+  },
+  "advCommonValue": {
+    "message": "값"
+  },
+  "advCookiePath": {
+    "message": "경로"
+  },
+  "advCookieExpires": {
+    "message": "만료"
+  },
+  "advCookieSession": {
+    "message": "세션(브라우저를 닫으면 삭제)"
+  },
+  "advCookieNotFound": {
+    "message": "찾을 수 없음"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "공식 탐지기를 복원할까요?"
+  },
+  "restoreOfficialDetectorsConfirmMsg": {
+    "message": "삭제한 공식 탐지기를 확장 프로그램에 포함된 버전으로 다시 설치합니다. 직접 만든 탐지기와 다른 규칙의 수정 내용은 바뀌지 않습니다."
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "복원"
+  },
+  "advancedFilterTool": {
+    "message": "도구"
+  },
+  "advancedFilterAllTools": {
+    "message": "모든 도구"
+  },
+  "advFilterKindCapture": {
+    "message": "캡처"
+  },
+  "advFilterKindOther": {
+    "message": "기타 도구"
+  },
+  "scrapflyExportTitle": {
+    "message": "Scrapfly로 스크래핑",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "Unblocker로 이 페이지를 스크래핑하는 코드",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "Unblocker를 켠 상태로 Scrapfly API를 통해 이 페이지를 가져옵니다. 브라우저, 프록시, 헤더를 알아서 고르며, 사이트가 차단하지 않으면 추가 비용이 없습니다.",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "이 페이지에서 감지됨",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "코드 언어",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "이 페이지에는 CAPTCHA가 있습니다. Unblocker는 페이지를 가져오기 위해 CAPTCHA를 피하거나 풀지만, 양식의 CAPTCHA는 입력하지 않습니다.",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportKeyNote": {
+    "message": "코드는 SCRAPFLY_API_KEY에서 API 키를 읽습니다.",
+    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  },
+  "scrapflyExportGetKey": {
+    "message": "API 키 받기",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "Playground 열기",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "코드를 복사했습니다",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "Scrapfly로 스크래핑하려면 웹 페이지를 여세요",
+    "description": "Toast when the tab is not a web page"
   }
 }

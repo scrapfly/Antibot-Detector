@@ -20,7 +20,8 @@ CloudflareAdvanced.prototype.checkCookies = async function() {
                 NotificationHelper.info(AdvancedUtils.notifications.checkCookies.none('Cloudflare'));
             }
 
-            this.displayCookiesModal(cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie, cfuvIdCookie);
+            this.showCookieResults({ vendor: 'Cloudflare', expected: ['__cf_bm', 'cf_bm', 'cf_clearance', '_cfuvid'],
+                cookies: [cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie, cfuvIdCookie].filter(Boolean) });
         } catch (error) {
             Logger.error('NETWORK', '[Cloudflare] Failed to check cookies:', error);
             NotificationHelper.error(this._txt('advCommonFailedCheckCookiesFmt', 'Failed to check cookies: {0}', error.message));
@@ -55,99 +56,20 @@ CloudflareAdvanced.prototype.checkVersion = async function() {
 
 
 CloudflareAdvanced.prototype.extractSiteKey = async function() {
-        Logger.network('[Cloudflare] ========== EXTRACT SITE KEY ==========');
+        // Cloudflare's CAPTCHA is Turnstile: same keys, same dialog as Advanced → Turnstile
         try {
             if (!this.tabInfo || !this.tabInfo.id) {
                 throw new Error('Tab information not available');
             }
-
-            const results = await chrome.scripting.executeScript({
-                target: { tabId: this.tabInfo.id },
-                world: 'MAIN',
-                func: () => {
-                    const extractors = [
-                        // Check window.turnstile for Turnstile sitekey
-                        () => {
-                            if (window.turnstile && typeof window.turnstile.render === 'function') {
-                                // Try to get sitekey from data attributes
-                                const elem = document.querySelector('[data-sitekey]');
-                                if (elem) {
-                                    return { sitekey: elem.getAttribute('data-sitekey'), type: 'Turnstile' };
-                                }
-                            }
-                            return null;
-                        },
-                        // Check for data-sitekey attribute
-                        () => {
-                            const elem = document.querySelector('[data-sitekey]');
-                            if (elem) {
-                                const sitekey = elem.getAttribute('data-sitekey');
-                                if (sitekey) {
-                                    return { sitekey: sitekey, type: 'Turnstile' };
-                                }
-                            }
-                            return null;
-                        },
-                        // Check iframe src for sitekey parameter
-                        () => {
-                            const iframe = document.querySelector('iframe[src*="turnstile"]');
-                            if (iframe) {
-                                const match = iframe.src.match(/[?&]sitekey=([^&]+)/);
-                                if (match) {
-                                    return { sitekey: match[1], type: 'Turnstile' };
-                                }
-                            }
-                            return null;
-                        },
-                        // Check script content for sitekey pattern
-                        () => {
-                            const scripts = Array.from(document.querySelectorAll('script'));
-                            for (const script of scripts) {
-                                const content = script.textContent;
-                                // Look for sitekey patterns in script content
-                                const matches = [
-                                    content.match(/sitekey[':"\s]+['"]?([a-zA-Z0-9_\-]{20,})['"]?/),
-                                    content.match(/["']sitekey["']\s*:\s*["']([a-zA-Z0-9_\-]{20,})["']/),
-                                    content.match(/data-sitekey=["']([a-zA-Z0-9_\-]{20,})["']/),
-                                ];
-                                for (const match of matches) {
-                                    if (match && match[1]) {
-                                        return { sitekey: match[1], type: 'Turnstile' };
-                                    }
-                                }
-                            }
-                            return null;
-                        }
-                    ];
-
-                    for (const extractor of extractors) {
-                        const result = extractor();
-                        if (result) {
-                            return { success: true, ...result };
-                        }
-                    }
-
-                    return { success: false, error: 'No sitekey found on page' };
-                }
-            });
-
-            Logger.network('[Cloudflare] Extract script results:', results);
-            if (results && results[0] && results[0].result) {
-                const result = results[0].result;
-                if (result.success) {
-                    this.displaySiteKeyModal(result.sitekey, result.type);
-                    NotificationHelper.success(this._txt('advCloudflareSiteKeyExtracted', 'Site Key extracted successfully'));
-                } else {
-                    NotificationHelper.error(result.error === 'No sitekey found on page'
-                        ? this._txt('advCloudflareNoSitekey', 'No sitekey found on page')
-                        : result.error);
-                }
-            } else {
-                NotificationHelper.error(this._txt('advCloudflareFailedExtractSitekey', 'Failed to extract sitekey'));
+            const keys = await TurnstileSiteKeys.extract(this.tabInfo.id);
+            if (keys.length === 0) {
+                NotificationHelper.error(this._txt('advCloudflareNoSitekey', 'No sitekey found on page'));
+                return;
             }
+            TurnstileAdvanced.prototype.displaySiteKeysModal.call(this, keys);
         } catch (error) {
-            Logger.error('NETWORK', '[Cloudflare] Failed to extract sitekey:', error);
-            NotificationHelper.error(this._txt('advCommonFailedExtractFmt', 'Failed to extract: {0}', error.message));
+            Logger.error('NETWORK', '[Cloudflare] Failed to extract the site key:', error);
+            NotificationHelper.error(this._txt('advCloudflareFailedExtractSitekey', 'Failed to extract sitekey'));
         }
     };
 

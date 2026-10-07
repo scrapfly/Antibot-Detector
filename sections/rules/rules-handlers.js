@@ -362,6 +362,15 @@ Rules.prototype.handleRestoreOfficial = async function() {
   const t = (typeof I18n !== 'undefined') ? I18n : null;
   const _tr = (key, fallback) => (t && t.get(key)) || fallback;
   const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
+  const confirmed = await NotificationHelper.confirm({
+    title: _tr('restoreOfficialDetectorsConfirmTitle', 'Restore official detectors?'),
+    message: _tr('restoreOfficialDetectorsConfirmMsg', 'The official detectors you deleted are installed again from the version included in the extension. Your own detectors and your edits to other rules are not changed.'),
+    confirmText: _tr('restoreOfficialDetectorsConfirmBtn', 'Restore'),
+    cancelText: _tr('btnCancel', 'Cancel'),
+    type: 'warning',
+    tone: 'warning'
+  });
+  if (!confirmed) return;
   try {
     const restored = await this.detectorManager.restoreOfficialDetectors();
     if (restored > 0) {
@@ -373,7 +382,9 @@ Rules.prototype.handleRestoreOfficial = async function() {
     }
   } catch (error) {
     Logger.error('UI', 'Failed to restore official detectors:', error);
-    NotificationHelper.error(_tr('failedRestoreOfficialDetectors', 'Failed to restore official detectors'));
+    // Say why, so a failure can be reported and fixed
+    const reason = error && error.message ? error.message : String(error);
+    NotificationHelper.error(`${_tr('failedRestoreOfficialDetectors', 'Failed to restore official detectors')}: ${reason}`);
   }
 };
 

@@ -121,7 +121,9 @@ async function checkCookies(tabUrl, config) {
                     domain: cookie.domain,
                     secure: cookie.secure,
                     httpOnly: cookie.httpOnly,
-                    path: cookie.path
+                    path: cookie.path,
+                    expirationDate: cookie.expirationDate,
+                    sameSite: cookie.sameSite
                 };
 
                 // Optionally include value

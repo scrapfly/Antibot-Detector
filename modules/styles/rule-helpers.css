@@ -80,47 +80,7 @@
   border-radius: 0 0 12px 12px;
 }
 
-.rh-modal .rule-btn {
-  height: 30px;
-  padding: 0 12px 1px;
-  border-radius: 6px;
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 700;
-  white-space: nowrap;
-  transform: none;
-}
-
-.rh-modal .rule-btn-save {
-  background: var(--accent);
-  border: 1px solid var(--accent);
-  color: #ffffff;
-  box-shadow: none;
-}
-
-.rh-modal .rule-btn-save:hover:not(:disabled) {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
-  box-shadow: none;
-  transform: none;
-}
-
-.rh-modal .rule-btn-save:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.rh-modal .rule-btn-cancel {
-  background: #3d3d3d;
-  border: 1px solid var(--rh-border);
-  color: var(--rh-text);
-}
-
-.rh-modal .rule-btn-cancel:hover {
-  background: #464646;
-  color: #ffffff;
-}
-
+/* Footer buttons: .rule-btn (rules.css), the shared dialog look */
 .rh-modal .rule-btn:focus-visible {
   outline: 2px solid var(--accent-light);
   outline-offset: 1px;

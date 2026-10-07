@@ -602,28 +602,28 @@
     "message": "أسبوع"
   },
   "methodLabelUrl": {
-    "message": "URL"
+    "message": "Url"
   },
   "methodLabelHeader": {
-    "message": "HEADER"
+    "message": "الترويسات"
   },
   "methodLabelCookie": {
-    "message": "COOKIE"
+    "message": "ملفات تعريف الارتباط"
   },
   "methodLabelContent": {
-    "message": "CONTENT"
+    "message": "المحتوى"
   },
   "methodLabelDom": {
-    "message": "DOM"
+    "message": "Dom"
   },
   "methodLabelJsHooks": {
-    "message": "JS HOOKS"
+    "message": "خطافات JS"
   },
   "methodLabelWindow": {
-    "message": "WINDOW"
+    "message": "النافذة"
   },
   "methodLabelPayload": {
-    "message": "PAYLOAD"
+    "message": "الحمولة"
   },
   "methodOnePattern": {
     "message": "نمط واحد"
@@ -1336,9 +1336,6 @@
   "pasteConfirmTitle": {
     "message": "رفع الاكتشافات؟"
   },
-  "pasteConfirmMsg": {
-    "message": "يؤدي هذا إلى رفع ملخص لاكتشافات هذه الصفحة إلى لصق عام (dpaste.com، غير مُدرَج، تنتهي صلاحيته خلال 30 يومًا). يمكن لأي شخص لديه الرابط عرضه. لا يتم تضمين سلسلة استعلام URL أو قيم ملفات تعريف الارتباط/الترويسات."
-  },
   "pasteConfirmBtn": {
     "message": "رفع"
   },
@@ -1493,7 +1490,7 @@
     "message": "فحص النصوص البرمجية فقط"
   },
   "rulesOnlyCheckScriptsHint": {
-    "message": "تقييد البحث على شفرة JavaScript وعناوين URL للنصوص البرمجية فقط"
+    "message": "تقييد البحث على شفرة JavaScript فقط (السكربتات المضمّنة والمحمّلة)، دون نص الصفحة أو أسماء الملفات"
   },
   "rulesScopeSettingsTitle": {
     "message": "إعدادات النطاق"
@@ -1622,7 +1619,7 @@
     "message": "يطابق عناوين URL للموارد المُحمَّلة (النصوص البرمجية والصور وطلبات الشبكة) مع الأنماط."
   },
   "helpUrlWarning": {
-    "message": "الأنماط حساسة لحالة الأحرف افتراضيًا. بدِّل خيار حساسية URL لحالة الأحرف إذا كنت بحاجة إلى مطابقة غير حساسة لحالة الأحرف."
+    "message": "تتجاهل الأنماط حالة الأحرف ما لم تفعّل «حساس لحالة الأحرف». النمط العام جدًا يطابق موارد غير ذات صلة أيضًا، لذا اجعله محددًا."
   },
   "helpUrlTip": {
     "message": "استخدم خيار Regex للأنماط المتقدمة مثل /\\/v\\d+\\/challenge/."
@@ -2362,9 +2359,6 @@
   "advCommonClickToCopy": {
     "message": "انقر للنسخ"
   },
-  "advCommonClickToCopyFull": {
-    "message": "انقر لنسخ القيمة كاملة"
-  },
   "advCommonDomainLabel": {
     "message": "النطاق:"
   },
@@ -2935,9 +2929,6 @@
   "advShapeCookieTitle": {
     "message": "ملف تعريف ارتباط Shape"
   },
-  "advShapeMaxAgeInfoFmt": {
-    "message": "Max-Age: {0} ثانية (50 عامًا)"
-  },
   "advShapeAnalysisTitle": {
     "message": "تحليل Shape Security"
   },
@@ -3106,14 +3097,8 @@
   "advAwswafDeletingCookieFmt": {
     "message": "جارٍ حذف ملف تعريف الارتباط {0}… ستُعاد تحميل الصفحة"
   },
-  "advCloudflareExtractedSiteKey": {
-    "message": "Site Key المستخرج"
-  },
   "advCloudflareTypeLabel": {
     "message": "النوع"
-  },
-  "advCloudflareSiteKeyClickToCopy": {
-    "message": "Site Key (انقر للنسخ)"
   },
   "advCloudflareSiteKeyCopied": {
     "message": "تم نسخ Site Key"
@@ -3136,17 +3121,11 @@
   "advCloudflareCheckingVersion": {
     "message": "جارٍ فحص إصدار Cloudflare… ستُعاد تحميل الصفحة"
   },
-  "advCloudflareSiteKeyExtracted": {
-    "message": "تم استخراج Site Key بنجاح"
-  },
   "advCloudflareNoSitekey": {
     "message": "لم يتم العثور على sitekey في الصفحة"
   },
   "advCloudflareFailedExtractSitekey": {
     "message": "تعذّر استخراج sitekey"
-  },
-  "advDatadomeCookieCopied": {
-    "message": "تم نسخ ملف تعريف الارتباط"
   },
   "advFuncaptchaPublicKey": {
     "message": "المفتاح العام"
@@ -3496,9 +3475,6 @@
   "clipboardUrlFmt": {
     "message": "الرابط: {0}"
   },
-  "clipboardHostFmt": {
-    "message": "المضيف: {0}"
-  },
   "clipboardTitleFmt": {
     "message": "العنوان: {0}"
   },
@@ -3520,23 +3496,14 @@
   "clipboardDetectionMethodsHeading": {
     "message": "طرق الكشف:"
   },
-  "clipboardDetectionsCountFmt": {
-    "message": "عمليات الكشف: {0}"
-  },
   "clipboardDetectionsListFmt": {
     "message": "عمليات الكشف ({0}):"
   },
   "clipboardDifficultyFmt": {
     "message": "الصعوبة: {0}"
   },
-  "clipboardCacheScopeFmt": {
-    "message": "نطاق التخزين المؤقت: {0}"
-  },
   "clipboardCacheExpirationFmt": {
     "message": "انتهاء صلاحية التخزين المؤقت: {0}"
-  },
-  "clipboardMethodsFmt": {
-    "message": "الطرق: {0}"
   },
   "clipboardCopyFailed": {
     "message": "تعذَّر النسخ إلى الحافظة"
@@ -3969,5 +3936,286 @@
   },
   "settingsCategoryOrderHelp": {
     "message": "ترتيب الفئات في قائمة الاكتشاف. داخل كل فئة تأتي النتيجة الأعلى ثقة أولاً."
+  },
+  "settingsCardShareUploads": {
+    "message": "رفع للمشاركة"
+  },
+  "settingsShareDestination": {
+    "message": "وجهة الرفع"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "المكان الذي يرسل إليه «الاكتشاف ← رفع الاكتشافات» الملخص ويحصل منه على رابط المشاركة."
+  },
+  "settingsShareService": {
+    "message": "الخدمة"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com (بدون حساب)"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org (بدون حساب)"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs (بدون حساب)"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin (مفتاح API)"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist (رمز)"
+  },
+  "shareProviderCustom": {
+    "message": "خادم مخصص"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "الحذف بعد (أيام)"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "الحذف بعد"
+  },
+  "shareExpire10M": {
+    "message": "10 دقائق"
+  },
+  "shareExpire1H": {
+    "message": "ساعة واحدة"
+  },
+  "shareExpire1D": {
+    "message": "يوم واحد"
+  },
+  "shareExpire1W": {
+    "message": "أسبوع واحد"
+  },
+  "shareExpire2W": {
+    "message": "أسبوعان"
+  },
+  "shareExpire30D": {
+    "message": "30 يومًا"
+  },
+  "shareExpire1M": {
+    "message": "شهر واحد"
+  },
+  "shareExpire6M": {
+    "message": "6 أشهر"
+  },
+  "shareExpire1Y": {
+    "message": "سنة واحدة"
+  },
+  "shareExpireOnetime": {
+    "message": "بعد أول عرض"
+  },
+  "shareExpireNever": {
+    "message": "أبدًا"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "لا يوفر paste.rs خيار انتهاء الصلاحية: يبقى المحتوى حتى تحذفه الخدمة."
+  },
+  "settingsSharePastebinKey": {
+    "message": "مفتاح Pastebin API"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "مفتاح المطوّر من pastebin.com/doc_api. لا تظهر المرفوعات في القوائم العامة."
+  },
+  "settingsShareSecretNote": {
+    "message": "يُحفظ في هذا المتصفح فقط ولا يُضمَّن في تصدير الإعدادات."
+  },
+  "settingsShareGithubToken": {
+    "message": "رمز GitHub"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "رمز بصلاحية Gists. المرفوعات gists سرية لا تنتهي صلاحيتها؛ احذفها من GitHub."
+  },
+  "settingsShareCustomUrl": {
+    "message": "عنوان URL للخادم"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "HTTPS على مضيف عام. يمكن أن يحتوي على <EXPIRY_DAYS>."
+  },
+  "settingsShareCustomBody": {
+    "message": "تنسيق المحتوى"
+  },
+  "shareBodyForm": {
+    "message": "حقل نموذج"
+  },
+  "shareBodyJson": {
+    "message": "قالب JSON"
+  },
+  "shareBodyRaw": {
+    "message": "نص خام"
+  },
+  "settingsShareCustomField": {
+    "message": "اسم الحقل"
+  },
+  "settingsShareCustomJson": {
+    "message": "قالب JSON"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "المتغيرات: <CONTENT_JSON>، <TITLE_JSON>، <EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "واحد في كل سطر بصيغة الاسم: القيمة، مثل Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "رابط المشاركة من"
+  },
+  "shareLinkBody": {
+    "message": "نص الاستجابة (URL)"
+  },
+  "shareLinkJson": {
+    "message": "حقل JSON"
+  },
+  "shareLinkLocation": {
+    "message": "ترويسة Location"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "مسار حقل JSON"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "يُرسل كـ expiry_days في النماذج وكـ <EXPIRY_DAYS>؛ ويقرر خادمك كيفية التعامل معه."
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "اضبط {0} أولًا في الإعدادات ← الاكتشاف ← رفع للمشاركة"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "سيُرفع ملخص اكتشافات هذه الصفحة إلى {0} ({1}). يمكن لأي شخص لديه الرابط عرضه. لا تُضمَّن معاملات عنوان URL ولا قيم ملفات تعريف الارتباط أو الترويسات."
+  },
+  "shareExpiryDaysFmt": {
+    "message": "يُحذف بعد {0} يومًا"
+  },
+  "shareExpiryAfterFmt": {
+    "message": "يُحذف بعد {0}"
+  },
+  "shareExpiryOnetime": {
+    "message": "يُحذف بعد أول عرض"
+  },
+  "shareExpiryService": {
+    "message": "يبقى حتى تحذفه الخدمة"
+  },
+  "shareExpiryNever": {
+    "message": "لا تنتهي صلاحيته"
+  },
+  "pasteUnsafeUrl": {
+    "message": "يجب أن يكون الخادم المخصص عنوان HTTPS على مضيف عام"
+  },
+  "pasteBadLink": {
+    "message": "لم تُرجع الخدمة رابط HTTPS صالحًا"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "فشل الرفع: {0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "خادم الرفع المخصص: استخدم عنوان HTTPS على مضيف عام"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "خادم الرفع المخصص: قالب JSON ليس JSON صالحًا"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "رفض {0} المفتاح أو الرمز (غير صحيح أو منتهي الصلاحية)"
+  },
+  "pasteGistPermission": {
+    "message": "يحتاج رمز GitHub إلى صلاحية Gists (قراءة وكتابة)"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "لا يوجد مفتاح موقع Turnstile في هذه الصفحة"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "مفاتيح موقع Turnstile"
+  },
+  "advTurnstileReloadingScripts": {
+    "message": "جارٍ إعادة تحميل الصفحة لجمع سكربتات Turnstile"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "الأدوات المتقدمة"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "الحمايات التي تظهر لها أدوات"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "إظهار الأدوات فوق هذه الثقة (%)"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "يعرض قسم «متقدم» الحماية فقط عندما تتجاوز ثقتها هذه القيمة. القيمة 0 تعرض كل الحمايات المكتشفة."
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "يجب أن تكون ثقة الأدوات المتقدمة بين 0 و99"
+  },
+  "advCommonValue": {
+    "message": "القيمة"
+  },
+  "advCookiePath": {
+    "message": "المسار"
+  },
+  "advCookieExpires": {
+    "message": "تنتهي"
+  },
+  "advCookieSession": {
+    "message": "جلسة (يُحذف عند إغلاق المتصفح)"
+  },
+  "advCookieNotFound": {
+    "message": "غير موجودة"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "استعادة أدوات الكشف الرسمية؟"
+  },
+  "restoreOfficialDetectorsConfirmMsg": {
+    "message": "تُثبَّت أدوات الكشف الرسمية التي حذفتها من جديد بالإصدار المضمّن في الإضافة. لا تتغير أدواتك الخاصة ولا تعديلاتك على القواعد الأخرى."
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "استعادة"
+  },
+  "advancedFilterTool": {
+    "message": "الأداة"
+  },
+  "advancedFilterAllTools": {
+    "message": "كل الأدوات"
+  },
+  "advFilterKindCapture": {
+    "message": "الالتقاطات"
+  },
+  "advFilterKindOther": {
+    "message": "أدوات أخرى"
+  },
+  "scrapflyExportTitle": {
+    "message": "الاستخراج باستخدام Scrapfly",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "رمز لاستخراج هذه الصفحة باستخدام Unblocker",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "اجلب هذه الصفحة عبر واجهة Scrapfly البرمجية مع تفعيل Unblocker. يختار المتصفح والوكلاء والترويسات بنفسه، ولا يكلّف شيئًا إضافيًا عندما لا يحظر الموقع.",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "تم اكتشافه في هذه الصفحة",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "لغة الرمز",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "تحتوي هذه الصفحة على CAPTCHA: يتجنبها Unblocker أو يحلّها لإرجاع الصفحة، لكنه لا يملأ اختبارات CAPTCHA في النماذج.",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportKeyNote": {
+    "message": "يقرأ الرمز مفتاح API الخاص بك من SCRAPFLY_API_KEY.",
+    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  },
+  "scrapflyExportGetKey": {
+    "message": "احصل على مفتاح API",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "فتح Playground",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "تم نسخ الرمز",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "افتح صفحة ويب لاستخراجها باستخدام Scrapfly",
+    "description": "Toast when the tab is not a web page"
   }
 }

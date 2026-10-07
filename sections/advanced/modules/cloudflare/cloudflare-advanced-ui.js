@@ -1,15 +1,6 @@
 CloudflareAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {
-                id: 'cloudflareCheckVersion',
-                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckVersion')) || 'Check Version'),
-                iconSvg: `
-                    <svg width="20" height="20" viewBox="0 0 24 24">
-                        <path d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12.5,7H11V13L16.2,16.2L17.2,15.2L12.5,12.2V7Z"/>
-                    </svg>
-                `
-            },
-            {
                 id: 'cloudflareCheckCookies',
                 label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckCookies')) || 'Check Cookies'),
                 iconSvg: `
@@ -58,133 +49,13 @@ CloudflareAdvanced.prototype.cloudflareTypeLabel = function(type) {
 CloudflareAdvanced.prototype.setupToolListeners = function() {
         Logger.network('[Cloudflare] Setting up tool listeners...');
         this.bindToolActions([
-            { id: 'cloudflareCheckVersion', handler: () => this.checkVersion() },
             { id: 'cloudflareCheckCookies', handler: () => this.checkCookies() },
             { id: 'cloudflareExtractSiteKey', handler: () => this.extractSiteKey() },
             { id: 'cloudflareAnalyzeScripts', handler: () => this.analyzeScripts() }
         ]);
-        Logger.network('[Cloudflare] Added listener to Check Version button');
         Logger.network('[Cloudflare] Added listener to Check Cookies button');
         Logger.network('[Cloudflare] Added listener to Extract Site Key button');
         Logger.network('[Cloudflare] Added listener to Analyze Scripts button');
-    };
-
-
-CloudflareAdvanced.prototype.displayCookiesModal = function(cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie, cfuvIdCookie) {
-        const modal = this.createToolModal();
-
-        const foundCount = [cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie, cfuvIdCookie].filter(Boolean).length;
-
-        modal.innerHTML = `
-            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${this._txt('advCommonCookiesTitleFmt', '{0} Cookies', 'Cloudflare')}</h3>
-                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
-                </div>
-
-                ${this.buildCookieStatusSummary(foundCount, 4)}
-
-                <div style="display: flex; flex-direction: column; gap: 12px;">
-                    ${cfUnderscoreBmCookie ? `
-                        <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <div class="copy-value" data-copy="__cf_bm" style="font-weight: 500; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">__cf_bm</div>
-                                <div style="display: flex; gap: 6px;">
-                                    ${cfUnderscoreBmCookie.secure ? '<span style="font-size: 10px; background: var(--success); color: white; padding: 2px 6px; border-radius: 3px;">SECURE</span>' : ''}
-                                    ${cfUnderscoreBmCookie.httpOnly ? '<span style="font-size: 10px; background: var(--bg-primary); color: var(--text-primary); padding: 2px 6px; border-radius: 3px;">HTTP</span>' : ''}
-                                </div>
-                            </div>
-                            <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(cfUnderscoreBmCookie.value)}" style="font-size: 11px; color: var(--text-secondary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">${cfUnderscoreBmCookie.value.substring(0, 60)}${cfUnderscoreBmCookie.value.length > 60 ? '...' : ''}</div>
-                            <div style="font-size: 11px; color: var(--text-muted);">${this._txt('advCommonDomainLabel', 'Domain:')} ${cfUnderscoreBmCookie.domain}</div>
-                        </div>
-                    ` : ''}
-
-                    ${cfBmCookie ? `
-                        <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <div class="copy-value" data-copy="cf_bm" style="font-weight: 500; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">cf_bm</div>
-                                <div style="display: flex; gap: 6px;">
-                                    ${cfBmCookie.secure ? '<span style="font-size: 10px; background: var(--success); color: white; padding: 2px 6px; border-radius: 3px;">SECURE</span>' : ''}
-                                    ${cfBmCookie.httpOnly ? '<span style="font-size: 10px; background: var(--bg-primary); color: var(--text-primary); padding: 2px 6px; border-radius: 3px;">HTTP</span>' : ''}
-                                </div>
-                            </div>
-                            <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(cfBmCookie.value)}" style="font-size: 11px; color: var(--text-secondary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">${cfBmCookie.value.substring(0, 60)}${cfBmCookie.value.length > 60 ? '...' : ''}</div>
-                            <div style="font-size: 11px; color: var(--text-muted);">${this._txt('advCommonDomainLabel', 'Domain:')} ${cfBmCookie.domain}</div>
-                        </div>
-                    ` : ''}
-
-                    ${cfClearanceCookie ? `
-                        <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <div class="copy-value" data-copy="cf_clearance" style="font-weight: 500; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">cf_clearance</div>
-                                <div style="display: flex; gap: 6px;">
-                                    ${cfClearanceCookie.secure ? '<span style="font-size: 10px; background: var(--success); color: white; padding: 2px 6px; border-radius: 3px;">SECURE</span>' : ''}
-                                    ${cfClearanceCookie.httpOnly ? '<span style="font-size: 10px; background: var(--bg-primary); color: var(--text-primary); padding: 2px 6px; border-radius: 3px;">HTTP</span>' : ''}
-                                </div>
-                            </div>
-                            <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(cfClearanceCookie.value)}" style="font-size: 11px; color: var(--text-secondary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">${cfClearanceCookie.value.substring(0, 60)}${cfClearanceCookie.value.length > 60 ? '...' : ''}</div>
-                            <div style="font-size: 11px; color: var(--text-muted);">${this._txt('advCommonDomainLabel', 'Domain:')} ${cfClearanceCookie.domain}</div>
-                        </div>
-                    ` : ''}
-
-                    ${cfuvIdCookie ? `
-                        <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <div class="copy-value" data-copy="_cfuvid" style="font-weight: 500; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; padding: 4px; border-radius: 3px; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">_cfuvid</div>
-                                <div style="display: flex; gap: 6px;">
-                                    ${cfuvIdCookie.secure ? '<span style="font-size: 10px; background: var(--success); color: white; padding: 2px 6px; border-radius: 3px;">SECURE</span>' : ''}
-                                    ${cfuvIdCookie.httpOnly ? '<span style="font-size: 10px; background: var(--bg-primary); color: var(--text-primary); padding: 2px 6px; border-radius: 3px;">HTTP</span>' : ''}
-                                </div>
-                            </div>
-                            <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(cfuvIdCookie.value)}" style="font-size: 11px; color: var(--text-secondary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">${cfuvIdCookie.value.substring(0, 60)}${cfuvIdCookie.value.length > 60 ? '...' : ''}</div>
-                            <div style="font-size: 11px; color: var(--text-muted);">${this._txt('advCommonDomainLabel', 'Domain:')} ${cfuvIdCookie.domain}</div>
-                        </div>
-                    ` : ''}
-
-                    ${foundCount === 0 ? `
-                        <div style="text-align: center; padding: 32px 16px; opacity: 0.7;">
-                            <div style="font-size: 48px; margin-bottom: 12px;"></div>
-                            <div style="font-size: 14px;">${this._txt('advCommonNoCookiesFmt', 'No {0} cookies found', 'Cloudflare')}</div>
-                        </div>
-                    ` : ''}
-                </div>
-            </div>
-        `;
-
-        this.bindCopyValueHandlers(modal, { defaultMessage: this._txt('copiedNotification', 'Copied') });
-        this.bindModalClose(modal);
-        this.showToolModal(modal);
-    };
-
-
-CloudflareAdvanced.prototype.displaySiteKeyModal = function(sitekey, type = 'Unknown') {
-        const modal = this.createToolModal();
-
-        const typeColor = type === 'Turnstile' ? '#0074BF' : '#6366F1';
-        const siteKeyDisplay = sitekey || 'N/A';
-
-        modal.innerHTML = `
-            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${this._txt('advCloudflareExtractedSiteKey', 'Extracted Site Key')}</h3>
-                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
-                </div>
-
-                <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 6px; margin-bottom: 16px;">
-                    <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">${this._txt('advCloudflareTypeLabel', 'Type')}</div>
-                    <div style="background: linear-gradient(135deg, ${typeColor} 0%, ${typeColor}dd 100%); color: white; padding: 8px 12px; border-radius: 6px; font-weight: 500; font-size: 14px; display: inline-block;">${this.cloudflareTypeLabel(type)}</div>
-                </div>
-
-                <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
-                    <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">${this._txt('advCloudflareSiteKeyClickToCopy', 'Site Key (Click to copy)')}</div>
-                    <div class="copy-value" data-copy="${siteKeyDisplay}" style="font-size: 12px; color: var(--text-primary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 12px; border-radius: 4px; cursor: pointer; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">${FormatUtils.escapeHtml(siteKeyDisplay)}</div>
-                </div>
-            </div>
-        `;
-
-        this.bindCopyValueHandlers(modal, { defaultMessage: this._txt('advCloudflareSiteKeyCopied', 'Site Key copied') });
-        this.bindModalClose(modal);
-        this.showToolModal(modal);
     };
 
 

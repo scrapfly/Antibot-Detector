@@ -107,6 +107,21 @@ test('restoreOfficialDetectors reloads deleted official detectors and forgets th
   assert.strictEqual(await dm.restoreOfficialDetectors(), 0);
 });
 
+test('restoreOfficialDetectors restores the others when one fails, and keeps the failed one to retry', async () => {
+  const dm = makeManager();
+  dm.categoryManager = { getAllCategories: () => ({ antibot: { detectors: ['detect-akamai', 'detect-f5'] } }) };
+  dm.detectors.antibot['detect-f5'] = { id: 'detect-f5', name: 'F5', author: 'Scrapfly', enabled: true, detection: {} };
+  await dm.deleteDetector('antibot', 'detect-akamai');
+  await dm.deleteDetector('antibot', 'detect-f5');
+  dm.loadDetectorFile = async (cat, id) => {
+    if (id === 'detect-akamai') throw new Error('broken file');
+    dm.detectors[cat][id] = { id, name: 'F5', author: 'Scrapfly', enabled: true, detection: {} };
+  };
+  assert.strictEqual(await dm.restoreOfficialDetectors(), 1);
+  assert.ok(dm.detectors.antibot['detect-f5']);
+  assert.deepStrictEqual(await DetectorManager.getDeletedOfficialIds(), ['detect-akamai']);
+});
+
 test('deleteDetector removes custom detectors, including ones spoofing the Scrapfly author', async () => {
   const dm = makeManager();
   assert.deepStrictEqual(await dm.deleteDetector('antibot', 'detect-my-rule'), { deleted: true, official: false, reason: null });

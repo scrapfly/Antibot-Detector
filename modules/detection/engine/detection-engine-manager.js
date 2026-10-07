@@ -323,24 +323,8 @@ class DetectionEngineManager {
         } else {
         }
 
-        let favicon = '';
-        const faviconSelectors = [
-            'link[rel="icon"]',
-            'link[rel="shortcut icon"]',
-            'link[rel="apple-touch-icon"]',
-            'link[rel="apple-touch-icon-precomposed"]',
-            'link[type="image/x-icon"]',
-            'link[type="image/png"]',
-            'link[rel*="icon"]'
-        ];
-
-        for (const selector of faviconSelectors) {
-            const link = document.querySelector(selector);
-            if (link && link.href) {
-                favicon = link.href;
-                break;
-            }
-        }
+        // The page's own icon link; the background prefers Chrome's tab favicon
+        const favicon = UrlUtils.findPageIconHref(document);
 
         // Get JS Hook detections from storage
         let jsHooks = [];
@@ -1475,7 +1459,11 @@ class DetectionEngineManager {
                 return stored;
             };
 
-            const scopesToTry = [cacheScope, ...['domain', 'path', 'full'].filter(scope => scope !== cacheScope)];
+            // Reuse only entries at least as specific as the setting: under
+            // "Path" or "Full URL" another page of the same site is a cache
+            // miss and gets its own scan
+            const SCOPES_BY_SPECIFICITY = ['domain', 'path', 'full'];
+            const scopesToTry = SCOPES_BY_SPECIFICITY.slice(Math.max(0, SCOPES_BY_SPECIFICITY.indexOf(cacheScope)));
             let scopeFallback = null;
             for (const scope of scopesToTry) {
                 const urlHash = UrlUtils.hashUrl(url, scope);
@@ -1497,9 +1485,12 @@ class DetectionEngineManager {
                 }
             }
 
+            // www.example.com and example.com are one site, but only under the
+            // "Domain" scope
             const requestedHostname = UrlUtils.getHostnameFromUrl(url);
             let hostnameFallback = null;
             for (const [key, stored] of Object.entries(storage)) {
+                if (cacheScope !== 'domain') break;
                 if (!stored) continue;
                 if (Date.now() >= stored.expiry) {
                     expiredKeys.push(key);
@@ -1676,7 +1667,9 @@ class DetectionEngineManager {
                         value: m.value || m.pattern || m.name || m.selector,
                         confidence: m.confidence,
                         description: m.description,
-                        fullUrl: m.fullUrl
+                        fullUrl: m.fullUrl,
+                        // Which rule matched: lets the detail view and checks trace a match to its rule
+                        ...(m.patternId ? { patternId: m.patternId } : {})
                     })) || []
                 };
             });

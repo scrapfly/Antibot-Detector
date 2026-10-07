@@ -77,7 +77,8 @@ for (const vendor of Object.keys(vendors)) {
     await flush();
     assert.equal(settled, false, 'reload promise must remain part of the action');
     assert.equal(f.calls.filter(([kind]) => kind === 'reload').length, 1);
-    const resetName = { awswaf: 'aws-waf-token', turnstile: 'cf_clearance' }[vendor];
+    // Turnstile sets no cookies: its analysis only reloads
+    const resetName = { awswaf: 'aws-waf-token' }[vendor];
     const removals = f.calls.filter(([kind]) => kind === 'remove');
     assert.equal(removals.length, resetName ? 1 : 0);
     if (resetName) {

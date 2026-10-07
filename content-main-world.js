@@ -154,6 +154,16 @@
       bindShims = [];
     }
     installEarlyBindShims(bindShims.filter(isBindShimSpec));
+    // After the shims, so a recorder calls through the shim
+    let earlyHooks = null;
+    try {
+      earlyHooks = detail.earlyHooks ? JSON.parse(JSON.stringify(detail.earlyHooks)) : null;
+    } catch (e) {
+      earlyHooks = null;
+    }
+    if (isEarlyHooksSpec(earlyHooks)) {
+      installEarlyHooks(earlyHooks);
+    }
     // The condition evaluator copies and freezes the grammar; first one wins
     if (conditionLanguage) {
       conditionLanguage.configure(detail.conditionGrammar);
@@ -377,6 +387,257 @@
       }
     }
   };
+
+  // A non-`.prototype.` function target that owns a real prototype object is a
+  // constructor/namespace (Intl.DateTimeFormat, DeviceMotionEvent, …). Wrapping it
+  // as a plain function would silently drop its static methods (e.g.
+  // Intl.DateTimeFormat.supportedLocalesOf) and break `new`/subclassing, which
+  // crashes strict apps during init. We refuse to hook these.
+  // "X.prototype.y": a segment other than the first and the last is `prototype`
+  function isPrototypeMemberTarget(target) {
+    return target.split(PATH_SEPARATOR).slice(1, -1).includes('prototype');
+  }
+
+  function isConstructorLikeTarget(fn) {
+    try {
+      const protoDesc = Object.getOwnPropertyDescriptor(fn, 'prototype');
+      return !!(protoDesc && protoDesc.value && typeof protoDesc.value === 'object');
+    } catch (e) {
+      return true; // conservative: if unsure, don't wrap
+    }
+  }
+
+// Early hook recording. Hook definitions arrive with the first install event,
+  // which waits on storage, so calls a page makes in its first moments would be
+  // missed. From the bootstrap (before any page script) every target the engine
+  // lists (demEarlyHooks in detection-engine-hooks.js) is wrapped by a recorder
+  // that only notes the call; the install event puts the APIs back and reports
+  // the noted targets through the real hooks. Same-origin child windows (blank
+  // iframes, where content scripts do not run and fingerprinting scripts like
+  // to call pristine APIs) get recorders when the page first reaches them;
+  // their calls are reported through the current install.
+  let earlyTargets = [];
+  const earlyRecorders = new Map(); // target -> {obj, propertyName, originalDescriptor, replacement}
+  let earlyCalls = null;            // targets called before the install event
+  let earlyRetireTimer = null;
+  let activeHookReporter = null;    // the current install's reporter, for calls after it
+  const instrumentedDocuments = new WeakSet();
+  // Taken before any page script can replace it
+  const NativeMutationObserver = typeof window.MutationObserver === 'function' ? window.MutationObserver : null;
+
+  function isEarlyHooksSpec(spec) {
+    return !!spec && Array.isArray(spec.targets) && Array.isArray(spec.childWindowAccessors) &&
+      Number.isFinite(spec.maxMs) && spec.maxMs > 0;
+  }
+
+  function resolvePathFrom(root, parts) {
+    try {
+      return parts.reduce((parent, part) => parent?.[part], root) ?? null;
+    } catch (e) {
+      return null; // a cross-origin window throws on any property
+    }
+  }
+
+  // Same name, length, source text and prototype as the native member
+  function disguiseAs(wrapper, original) {
+    try {
+      Object.defineProperties(wrapper, {
+        name: { value: original.name, writable: false, enumerable: false, configurable: true },
+        length: { value: original.length, writable: false, enumerable: false, configurable: true },
+        toString: {
+          value: function toString() {
+            return Function.prototype.toString.call(original);
+          },
+          writable: true,
+          configurable: true
+        }
+      });
+      Object.setPrototypeOf(wrapper, Object.getPrototypeOf(original));
+    } catch (e) {
+      // Disguise failed, the wrapper still works
+    }
+    return wrapper;
+  }
+
+  function noteHookCall(target) {
+    if (isHookReportingSuppressed()) return;
+    if (earlyCalls) {
+      earlyCalls.add(target);
+    } else if (activeHookReporter) {
+      activeHookReporter(target);
+    }
+  }
+
+  // A method definition (no own prototype, not constructible) that calls the
+  // native member exactly as the page did and notes the target only on success
+  function createRecorder(original, target, propertyName) {
+    const { [propertyName]: recorder } = {
+      [propertyName](...args) {
+        const result = Reflect.apply(original, this, args);
+        try {
+          noteHookCall(target);
+        } catch (e) {
+          // Recording must never break the page API
+        }
+        return result;
+      }
+    };
+    return disguiseAs(recorder, original);
+  }
+
+  // Wrap `target` (resolved from `root`) with a recorder; null when it cannot be
+  function wrapWithRecorder(root, target) {
+    const parts = target.split(PATH_SEPARATOR);
+    const propertyName = parts.pop();
+    if (parts.length === 0) return null;
+    const obj = resolvePathFrom(root, parts);
+    if (!obj || (typeof obj !== 'object' && typeof obj !== 'function')) return null;
+    const originalDescriptor = Object.getOwnPropertyDescriptor(obj, propertyName);
+    if (!originalDescriptor || !originalDescriptor.configurable) return null;
+    let replacement;
+    if (typeof originalDescriptor.get === 'function' && !originalDescriptor.value) {
+      replacement = { ...originalDescriptor, get: createRecorder(originalDescriptor.get, target, propertyName) };
+    } else if (typeof originalDescriptor.value === 'function') {
+      if (!isPrototypeMemberTarget(target) && isConstructorLikeTarget(originalDescriptor.value)) return null;
+      replacement = { ...originalDescriptor, value: createRecorder(originalDescriptor.value, target, propertyName) };
+    } else {
+      return null;
+    }
+    Object.defineProperty(obj, propertyName, replacement);
+    return { obj, propertyName, originalDescriptor, replacement };
+  }
+
+  // Recorders on a child window's own interfaces, plus its own frame accessors
+  // (nested frames). Cross-origin windows throw on access and are skipped.
+  function instrumentChild(win, accessors) {
+    if (!win || win === window) return;
+    let doc;
+    try {
+      doc = win.document;
+    } catch (e) {
+      return;
+    }
+    // Keyed by document: a frame keeps its window object across navigations
+    if (!doc || instrumentedDocuments.has(doc)) return;
+    instrumentedDocuments.add(doc);
+    for (const { target } of earlyTargets) {
+      try {
+        wrapWithRecorder(win, target);
+      } catch (e) {
+        // Not hookable in this window
+      }
+    }
+    installChildWindowAccessors(win, accessors);
+    watchFrames(win, doc, accessors);
+    instrumentFramesOf(win, accessors);
+  }
+
+  // Frames reached by index (window[n]) never pass an accessor: instrument
+  // every same-origin frame of `win` that is not yet (nested ones through
+  // instrumentChild)
+  function instrumentFramesOf(win, accessors) {
+    let count = 0;
+    try {
+      count = win.length;
+    } catch (e) {
+      return;
+    }
+    for (let i = 0; i < count; i++) {
+      let child = null;
+      try {
+        child = win[i];
+      } catch (e) {
+        child = null;
+      }
+      instrumentChild(child, accessors);
+    }
+  }
+
+  // New frames appear with DOM insertions; the observer runs before the
+  // inserting script's next task, early enough for fingerprinting that starts
+  // after an await or a timer
+  function watchFrames(win, doc, accessors) {
+    if (!NativeMutationObserver) return;
+    try {
+      const observer = new NativeMutationObserver(() => instrumentFramesOf(win, accessors));
+      observer.observe(doc, { childList: true, subtree: true });
+    } catch (e) {
+      // No frame watching in this document
+    }
+  }
+
+  function installChildWindowAccessors(root, accessors) {
+    for (const spec of accessors) {
+      try {
+        const parts = spec.target.split(PATH_SEPARATOR);
+        const propertyName = parts.pop();
+        const obj = resolvePathFrom(root, parts);
+        const descriptor = obj && Object.getOwnPropertyDescriptor(obj, propertyName);
+        if (!descriptor || typeof descriptor.get !== 'function' || !descriptor.configurable) continue;
+        const original = descriptor.get;
+        const viewProperty = typeof spec.viewProperty === 'string' && spec.viewProperty ? spec.viewProperty : null;
+        const { [propertyName]: getter } = {
+          [propertyName](...args) {
+            const result = Reflect.apply(original, this, args);
+            try {
+              instrumentChild(viewProperty ? result?.[viewProperty] : result, accessors);
+            } catch (e) {
+              // Instrumentation must never break the page
+            }
+            return result;
+          }
+        };
+        Object.defineProperty(obj, propertyName, { ...descriptor, get: disguiseAs(getter, original) });
+      } catch (e) {
+        // Accessor missing in this browser
+      }
+    }
+  }
+
+  function installEarlyHooks(spec) {
+    earlyTargets = spec.targets.filter(t => t && typeof t.target === 'string' && t.target);
+    const accessors = spec.childWindowAccessors.filter(a => a && typeof a.target === 'string' && a.target);
+    earlyCalls = new Set();
+    for (const { target } of earlyTargets) {
+      try {
+        const wrapped = wrapWithRecorder(window, target);
+        if (wrapped) earlyRecorders.set(target, wrapped);
+      } catch (e) {
+        // Not hookable here; the real hook reports why
+      }
+    }
+    installChildWindowAccessors(window, accessors);
+    watchFrames(window, document, accessors);
+    // If no install event comes, do not leave the recorders in place
+    earlyRetireTimer = setTimeout(restoreEarlyRecorders, spec.maxMs);
+  }
+
+  // Put the APIs back (unless the page replaced them since); a captured
+  // recorder keeps working and routes its calls to the current install
+  function restoreEarlyRecorders() {
+    if (earlyRetireTimer) {
+      clearTimeout(earlyRetireTimer);
+      earlyRetireTimer = null;
+    }
+    for (const { obj, propertyName, originalDescriptor, replacement } of earlyRecorders.values()) {
+      try {
+        const current = Object.getOwnPropertyDescriptor(obj, propertyName);
+        if (current && current.get === replacement.get && current.value === replacement.value) {
+          Object.defineProperty(obj, propertyName, originalDescriptor);
+        }
+      } catch (e) {
+        // Stays a recorder
+      }
+    }
+    earlyRecorders.clear();
+  }
+
+  // The targets called before the first install event; recording stops here
+  function takeEarlyCalls() {
+    const calls = earlyCalls ? Array.from(earlyCalls) : [];
+    earlyCalls = null;
+    return calls;
+  }
 
   // Uninstall failure tracking (module scope for cross-function access)
   const uninstallStats = {
@@ -669,6 +930,8 @@
     if (event.detail?.[FIELDS.TOKEN] !== bridgeToken) {
       return;
     }
+    // The real hooks resolve the APIs next: take the early recorders off first
+    restoreEarlyRecorders();
 
     const now = Date.now();
     if (activeHooksConfig && now - lastHooksInstallAt < activeHooksConfig.INSTALL_DEBOUNCE_MS) {
@@ -680,6 +943,8 @@
     if (shouldSkipDueToCacheHit()) {
       return;
     }
+
+    const earlyCalled = takeEarlyCalls();
 
     // Reset module state for SPA navigation (prevents memory leaks)
     resetModuleState();
@@ -976,6 +1241,13 @@
       }
     }
 
+    // Calls from early recorders the page kept and from child windows
+    activeHookReporter = (hookTarget) => {
+      if (installedHooks.has(hookTarget) && !exhaustedHooks.has(hookTarget)) {
+        reportHookDetectionsForTarget(hookTarget);
+      }
+    };
+
     const stealthDescriptors = {
       name: { writable: false, enumerable: false, configurable: true },
       length: { writable: false, enumerable: false, configurable: true },
@@ -1068,25 +1340,6 @@
       }
 
       return wrapper;
-    }
-
-    // A non-`.prototype.` function target that owns a real prototype object is a
-    // constructor/namespace (Intl.DateTimeFormat, DeviceMotionEvent, …). Wrapping it
-    // as a plain function would silently drop its static methods (e.g.
-    // Intl.DateTimeFormat.supportedLocalesOf) and break `new`/subclassing, which
-    // crashes strict apps during init. We refuse to hook these.
-    // "X.prototype.y": a segment other than the first and the last is `prototype`
-    function isPrototypeMemberTarget(target) {
-      return target.split(PATH_SEPARATOR).slice(1, -1).includes('prototype');
-    }
-
-    function isConstructorLikeTarget(fn) {
-      try {
-        const protoDesc = Object.getOwnPropertyDescriptor(fn, 'prototype');
-        return !!(protoDesc && protoDesc.value && typeof protoDesc.value === 'object');
-      } catch (e) {
-        return true; // conservative: if unsure, don't wrap
-      }
     }
 
     function installHook(detectorId, detectorName, category, hook) {
@@ -1239,6 +1492,14 @@
     logDebug(`Hooks installed: ${installed.size} targets (${successCount} ok, ${expectedFailed.length} optional APIs missing${failed.length ? `, ${failed.length} failed` : ''})${hasHooksConfig ? `; watching up to ${activeHooksConfig.MAX_DETECTION_MS}ms, idle ${activeHooksConfig.ACTIVITY_TIMEOUT_MS}ms, min ${minMonitorMs}ms` : ''}`);
     if (failed.length > 0) {
       logWarn(`Hooks failed (${failed.length}): ${failed.join(', ')}`, failureReasons);
+    }
+
+    // Calls the page made before this event, now reported through the real hooks
+    for (const hookTarget of earlyCalled) {
+      activeHookReporter(hookTarget);
+    }
+    if (earlyCalled.length > 0) {
+      logDebug(`Early calls before install: ${earlyCalled.join(', ')}`);
     }
 
     // Save original hooks list since they're uninstalled when they fire
