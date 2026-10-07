@@ -94,7 +94,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
         // bring this build's new and updated detectors to existing installs
         try {
             const merged = await UpdateManager.mergeBundledDetectors();
-            if (merged.installed > 0) await UpdateManager.notifyDetectorsChanged();
+            if (merged.installed > 0 || merged.rerated > 0) await UpdateManager.notifyDetectorsChanged();
         } catch (error) {
             Logger.warn('BACKGROUND', '[init] Could not merge bundled detectors:', error);
         }

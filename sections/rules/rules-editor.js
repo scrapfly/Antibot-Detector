@@ -1215,7 +1215,9 @@ Rules.prototype.saveRule = function() {
       const defaultDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.defaultDifficultyForCategory === 'function')
         ? DetectionUtils.defaultDifficultyForCategory(this.currentEditDetector.category || this.currentEditDetector.detector.category)
         : 'Medium';
-      this.currentEditDetector.detector.difficulty = normalizedDifficulty || defaultDifficulty;
+      // A difficulty changed here is the user's and survives detector updates
+      DetectorManager.applyDifficultyChoice(this.currentEditDetector.detector,
+        this.currentEditDetector.original, normalizedDifficulty || defaultDifficulty);
     }
 
     // Every detector's author is editable; custom ones may not claim "Scrapfly"
