@@ -130,12 +130,6 @@ test("a combination's own confidence overrides the patterns' score", () => {
   assert.strictEqual(C.score(none, [m('cookie', 'cookie-1', 30)]).confidence, 30);
 });
 
-test('describe() renders the rule as one line of text', () => {
-  const d = detector({ combinations: [] });
-  const text = C.describe(d, { any: [{ all: [{ pattern: 'url-2' }, { not: { pattern: 'cookie-1' } }] }, { method: 'header' }] });
-  assert.match(text, /^\(url .+ AND NOT cookie .+\) OR Any header pattern$/);
-});
-
 test("matches that made a combination fire show the combination's confidence", () => {
   const d = detector({ combinations: [{ id: 'c1', confidence: 100, when: { all: [{ pattern: 'cookie-1' }, { not: { pattern: 'header-1' } }] } }] });
   const r = C.score(d, [m('cookie', 'cookie-1', 50), m('url', 'url-2', 40)]);

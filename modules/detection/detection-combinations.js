@@ -350,42 +350,6 @@
     return node;
   }
 
-  /**
-   * One-line text for a combination rule, e.g. "Dom [data-sitekey] AND NOT Url /x".
-   * @param {object} detector - Detector (to name the patterns)
-   * @param {object} node - combination.when
-   * @param {object} [words] - { and, or, not, any: (method) => text, method: (method) => label }
-   */
-  function describe(detector, node, words = {}) {
-    const and = words.and || 'AND', or = words.or || 'OR', not = words.not || 'NOT';
-    const label = words.method || ((m) => m);
-    const any = words.any || ((m) => `Any ${label(m)} pattern`);
-    const byId = new Map();
-    for (const p of listPatterns(detector)) byId.set(p.id, p);
-    const leaf = (n) => {
-      if (typeof n.method === 'string') return any(n.method);
-      const p = byId.get(n.pattern);
-      if (!p) return n.pattern;
-      const field = KEY_FIELD[p.method];
-      const key = String(p.pattern[field] ?? n.pattern);
-      const value = (p.method === 'cookie' || p.method === 'header') && p.pattern.value ? ` = ${p.pattern.value}` : '';
-      return `${label(p.method)} ${key}${value}`;
-    };
-    const walk = (n, top) => {
-      if (!n || typeof n !== 'object') return '';
-      if (n.not) return `${not} ${walk(n.not, false)}`;
-      if (typeof n.pattern === 'string' || typeof n.method === 'string') return leaf(n);
-      if (Array.isArray(n.all)) return n.all.map(c => walk(c, false)).join(` ${and} `);
-      if (Array.isArray(n.any)) {
-        const parts = n.any.map(c => (Array.isArray(c.all) && c.all.length > 1 ? `(${walk(c, false)})` : walk(c, false)));
-        return parts.join(` ${or} `);
-      }
-      if (Array.isArray(n.of)) return `${n.atLeast}× (${n.of.map(c => walk(c, false)).join(', ')})`;
-      return '';
-    };
-    return walk(node, true);
-  }
-
   /** Is a condition node true for the patterns and methods seen? */
   function evaluate(node, seen) {
     const s = seen || {};
@@ -407,7 +371,7 @@
   const api = Object.freeze({
     METHODS, methodOf, defaultId, patternIds, idOf, listPatterns, applies,
     hasCombinations, matchPatternIds, hasPositive, everyBranchPositive, isSatisfied, score, rescore,
-    references, dropPattern, describe, evaluate, seenFromFound, foundFromMatches
+    references, dropPattern, evaluate, seenFromFound, foundFromMatches
   });
 
   root.DetectionCombinations = api;
