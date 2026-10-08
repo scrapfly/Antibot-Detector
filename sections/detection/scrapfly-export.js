@@ -57,16 +57,18 @@ ScrapflyExport.fileAndRun = function(language, product) {
 };
 
 // Options that rewrite the code. The first value of each is the API default
-// and adds nothing to the code; the Unblocker, JavaScript rendering and the
-// Captcha Solver are on unless the user turns them off.
+// and adds nothing to the code; the Unblocker, JavaScript rendering, the
+// Captcha Solver and residential proxies are on unless the user changes them.
 ScrapflyExport.FORMATS = ['raw', 'markdown', 'text'];
-ScrapflyExport.PROXY_POOLS = ['public_datacenter_pool', 'public_residential_pool'];
-// Cloud Browser names its pools differently and starts on residential: the
-// docs say most anti-bot protections need it
+// Residential first: anti-bot protections pass far more often on it. The
+// API's own default is datacenter, so residential is always written out.
+ScrapflyExport.PROXY_POOLS = ['public_residential_pool', 'public_datacenter_pool'];
+ScrapflyExport.API_DEFAULT_PROXY_POOL = 'public_datacenter_pool';
+// Cloud Browser names its pools differently; residential first here too
 ScrapflyExport.BROWSER_PROXY_POOLS = ['residential', 'datacenter'];
 // ISO 3166-1 alpha-2, lower case as the API takes them; '' = any country
 ScrapflyExport.COUNTRIES = ['', 'us', 'gb', 'ca', 'de', 'fr', 'es', 'it', 'nl', 'br', 'mx', 'jp', 'kr', 'in', 'au'];
-ScrapflyExport.DEFAULT_OPTIONS = Object.freeze({ product: 'scrape', solveCaptcha: true, unblocker: true, format: 'raw', renderJs: true, proxyPool: 'public_datacenter_pool', browserProxyPool: 'residential', country: '' });
+ScrapflyExport.DEFAULT_OPTIONS = Object.freeze({ product: 'scrape', solveCaptcha: true, unblocker: true, format: 'raw', renderJs: true, proxyPool: 'public_residential_pool', browserProxyPool: 'residential', country: '' });
 
 /** Options with every unknown or missing value replaced by its default */
 ScrapflyExport.normalizeOptions = function(raw) {
@@ -180,7 +182,7 @@ ScrapflyExport.snippet = function(language, url, names = [], options = {}) {
   const set = {
     unblocker: o.unblocker,
     renderJs: o.renderJs,
-    proxyPool: o.proxyPool !== d.proxyPool ? o.proxyPool : '',
+    proxyPool: o.proxyPool !== ScrapflyExport.API_DEFAULT_PROXY_POOL ? o.proxyPool : '',
     country: o.country,
     format: o.format !== d.format ? o.format : ''
   };
