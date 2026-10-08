@@ -41,13 +41,23 @@ const base = when => ({ detection: { url: [{ id: 'a', name: '/a', confidence: 30
   combinations: [{ id: 'c1', name: 'Grouped rule', confidence: 65, when }] });
 const matches = ids => ids.map(patternId => ({ type: 'url', patternId, confidence: 40 }));
 
-test('opening and saving every shipped fingerprint rule keeps its condition tree', () => {
-  const dir = path.join(__dirname, '../detectors/fingerprint');
-  for (const file of fs.readdirSync(dir).filter(file => file.endsWith('.json'))) {
-    const detector = JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8'));
-    const { rules } = editor(detector);
-    assert.deepEqual(plain(rules.buildCombinationsForSave().combinations), detector.combinations || [], file);
+test('opening and saving every shipped rule keeps its combinations and pattern flags', () => {
+  let count = 0;
+  for (const category of ['antibot', 'captcha', 'fingerprint']) {
+    const dir = path.join(__dirname, '../detectors', category);
+    for (const file of fs.readdirSync(dir).filter(file => file.endsWith('.json'))) {
+      const detector = JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8'));
+      const { rules, options } = editor(detector);
+      const before = options.map(p => p.strict);
+      rules.setComboOpen(rules.combinationsModel[0], true);
+      rules.renderCombinations();
+      assert.deepEqual(plain(rules.buildCombinationsForSave().combinations), detector.combinations || [], file);
+      assert.deepEqual(options.map(p => p.strict), before, `${file}: opening never changes "only count together"`);
+      assert.deepEqual(rules.currentEditDetector.originalCombinations, rules.buildCombinationsForSave(null, { validate: false }).combinations, `${file}: a no-op save is a no-op`);
+      count++;
+    }
   }
+  assert.equal(count, 62);
 });
 
 test('renaming preserves nested alternatives, exclusions and thresholds without mutating the source', () => {
@@ -99,75 +109,11 @@ test('nested pattern exclusions save as NOT and block matching pages', () => {
   assert.equal(C.score({ ...base(), combinations }, matches(['a', 'b'])).detected, false);
 });
 
-test('require control applies to method references and shared patterns, including newly selected patterns', () => {
-  const detector = base({ all: [{ pattern: 'a' }] });
-  detector.detection.url.forEach(p => { p.standalone = true; });
-  detector.combinations.push({ id: 'c2', name: 'Shared', when: { all: [{ pattern: 'a' }] } });
-  const { rules, options, act } = editor(detector);
-  act('require', { checked: true });
-  assert.equal(options[0].strict, true);
-  assert.equal(rules.comboRequiresTogether(rules.combinationsModel[1]), true);
-  rules.addComboItems(rules.combinationsModel[0], ['pattern:b']);
-  assert.equal(options[1].strict, true);
-  rules.addComboItems(rules.combinationsModel[0], ['method:url']);
-  assert.equal(options.every(p => p.strict), true);
-  act('require', { checked: false });
-  assert.equal(options.every(p => !p.strict), true);
-});
-
-test('new empty combinations require picked patterns by default and retain full ids', () => {
-  const { rules, options } = editor(base({ all: [] }), [{ id: 'api:with:colons', method: 'url', label: '/a', strict: false }]);
-  const combo = rules.combinationsModel[0];
-  combo.requireNew = true;
-  rules.addComboItems(combo, ['pattern:api:with:colons', 'pattern:api:with:colons']);
-  assert.deepEqual(plain(combo.when), { all: [{ pattern: 'api:with:colons' }] });
-  assert.equal(options[0].strict, true);
-});
-
-test('removing a pattern releases it only when unused elsewhere', () => {
-  const { rules, options, act } = editor(base({ all: [{ pattern: 'a' }, { any: [{ pattern: 'a' }, { pattern: 'b' }] }] }));
-  act('remove', { path: '1', item: 1, kind: 'click' });
-  assert.deepEqual(plain(rules.combinationsModel[0].when), { all: [{ pattern: 'a' }, { any: [{ pattern: 'a' }] }] });
-  assert.equal(options.find(p => p.id === 'a').strict, true);
-  assert.equal(options.find(p => p.id === 'b').strict, false);
-});
-
 test('deleted patterns are pruned without flattening surviving nested groups or lowering thresholds', () => {
   const { rules } = editor(base({ all: [{ pattern: 'a' }, { atLeast: 2, of: [{ pattern: 'b' }, { pattern: 'c' }] }] }));
   const saved = rules.buildCombinationsForSave({ url: [{ id: 'a' }, { id: 'b' }] });
   assert.deepEqual(plain(saved.combinations[0].when), { all: [{ pattern: 'a' }, { atLeast: 2, of: [{ pattern: 'b' }] }] });
   assert.equal(saved.invalidIndex, 0, 'impossible thresholds must be reported instead of weakened');
-});
-
-test('empty groups, exclusion-only OR branches and impossible thresholds cannot be saved', () => {
-  for (const when of [{ all: [] }, { all: [{ pattern: 'a' }, { any: [] }] },
-    { any: [{ pattern: 'a' }, { not: { pattern: 'b' } }] },
-    { of: [{ pattern: 'a' }, { not: { pattern: 'b' } }], atLeast: 2 },
-    { of: [{ pattern: 'a' }, { pattern: 'b' }], atLeast: 1.5 }]) {
-    assert.equal(editor(base(when)).rules.buildCombinationsForSave().invalidIndex, 0, JSON.stringify(when));
-  }
-});
-
-test('condition rendering escapes pattern labels and gives controls readable accessible names', () => {
-  const { rules, container } = editor(base({ all: [{ pattern: 'a' }] }), [{ id: 'a', method: 'url', label: '<script>"long API name"</script>', strict: true }]);
-  rules.setComboOpen(rules.combinationsModel[0], true);
-  rules.renderCombinations();
-  assert.ok(container.innerHTML.includes('&lt;script>'));
-  assert.ok(!container.innerHTML.includes('<script>'));
-  assert.ok(container.innerHTML.includes('All conditions match'));
-  assert.ok(container.innerHTML.includes('Does not match'));
-  assert.ok(container.innerHTML.includes('Use patterns only in combinations'));
-  assert.ok(container.innerHTML.includes('aria-label="Pattern condition"'));
-  assert.ok(!container.innerHTML.includes('combo-strict'));
-});
-
-
-test('builder hides group controls and explains minimum matches in one short sentence', () => {
-  const { rules, container } = editor(base({ atLeast: 2, of: [{ pattern: 'a' }, { pattern: 'b' }, { pattern: 'c' }] }));
-  assert.equal(rules.describeCombo(rules.combinationsModel[0]), 'Detect when at least 2 of 3 conditions match.');
-  assert.ok(!container.innerHTML.includes('Add group'));
-  assert.ok(!container.innerHTML.includes('How this combination works'));
-  assert.ok(!container.innerHTML.includes('data-combo-action="add-group"'));
 });
 
 test('minimum-match arrow buttons step the saved count and respect both limits', () => {
@@ -192,4 +138,140 @@ test('opening a rule shows every combination collapsed; one card opens when togg
   act('toggle-card', { kind: 'click' });
   assert.equal(rules.isComboOpen(rules.combinationsModel[0]), true);
   assert.equal(rules.isComboOpen(rules.combinationsModel[1]), false);
+});
+
+// Redesign (2.8.3): descriptions first, editable groups, plain sentences, and
+// "only count together" never changes behind the user's back.
+
+test('"only count together" changes only when ticked, for method rows and shared patterns too', () => {
+  const detector = base({ all: [{ pattern: 'a' }] });
+  detector.detection.url.forEach(p => { p.standalone = true; });
+  detector.combinations.push({ id: 'c2', name: 'Shared', when: { all: [{ pattern: 'a' }] } });
+  const { rules, options, act } = editor(detector);
+  rules.addComboItems(rules.combinationsModel[0], ['pattern:b']);
+  assert.equal(options.find(p => p.id === 'b').strict, false, 'adding a pattern leaves its flag alone');
+  act('require', { checked: true });
+  assert.deepEqual(options.map(p => [p.id, p.strict]), [['a', true], ['b', true], ['c', false]]);
+  assert.equal(rules.comboRequiresTogether(rules.combinationsModel[1]), true, 'the flag is shared by the whole rule');
+  rules.addComboItems(rules.combinationsModel[0], ['method:url']);
+  act('require', { checked: false });
+  assert.equal(options.every(p => !p.strict), true);
+});
+
+test('new combinations keep full ids and add each pattern once', () => {
+  const { rules, options } = editor(base({ all: [] }), [{ id: 'api:with:colons', method: 'url', label: '/a', strict: false }]);
+  const combo = rules.combinationsModel[0];
+  rules.addComboItems(combo, ['pattern:api:with:colons', 'pattern:api:with:colons']);
+  assert.deepEqual(plain(combo.when), { all: [{ pattern: 'api:with:colons' }] });
+  assert.equal(options[0].strict, false);
+});
+
+test('removing rows or a whole combination never makes a weak pattern detect on its own', () => {
+  const { rules, options, act } = editor(base({ all: [{ pattern: 'a' }, { any: [{ pattern: 'a' }, { pattern: 'b' }] }] }));
+  act('remove', { path: '1', item: 1, kind: 'click' });
+  assert.deepEqual(plain(rules.combinationsModel[0].when), { all: [{ pattern: 'a' }, { any: [{ pattern: 'a' }] }] });
+  assert.deepEqual(options.map(p => p.strict), [true, true, true], 'b stays combination-only');
+  rules.currentEditDetector = rules._comboModelOwner;
+  assert.equal(rules.isComboPatternUnused('b'), true, 'its row says it is in no combination');
+  assert.equal(rules.isComboPatternUnused('a'), false);
+});
+
+test('an emptied group is dropped on save; empty, NOT-only and impossible trees are refused with a reason', () => {
+  const emptied = editor(base({ all: [{ pattern: 'a' }, { any: [{ pattern: 'b' }] }] }));
+  emptied.act('remove', { path: '1', item: 0, kind: 'click' });
+  const saved = emptied.rules.buildCombinationsForSave();
+  assert.equal(saved.invalidIndex, -1);
+  assert.deepEqual(plain(saved.combinations[0].when), { all: [{ pattern: 'a' }] });
+  const cases = [
+    [{ all: [] }, /at least one pattern that must be found/],
+    [{ all: [{ not: { pattern: 'a' } }] }, /at least one pattern that must be found/],
+    [{ any: [{ pattern: 'a' }, { not: { pattern: 'b' } }] }, /One of these/],
+    [{ of: [{ pattern: 'a' }, { not: { pattern: 'b' } }], atLeast: 2 }, /At least 2/],
+    [{ of: [{ pattern: 'a' }, { pattern: 'b' }], atLeast: 1.5 }, /At least 1\.5/]
+  ];
+  for (const [when, reason] of cases) {
+    const result = editor(base(when)).rules.buildCombinationsForSave();
+    assert.equal(result.invalidIndex, 0, JSON.stringify(when));
+    assert.match(result.invalidMessage, reason, JSON.stringify(when));
+  }
+});
+
+test('groups: add a "one of" group with its picker, change its mode, delete it', () => {
+  const { rules, act, container } = editor(base({ all: [{ pattern: 'a' }] }));
+  rules.setComboOpen(rules.combinationsModel[0], true);
+  act('add-group', { kind: 'click' });
+  assert.deepEqual(plain(rules.combinationsModel[0].when), { all: [{ pattern: 'a' }, { any: [] }] });
+  assert.equal(rules._comboPickerPath, '1', 'the new group opens its picker');
+  assert.match(container.innerHTML, /data-path="1" role="group"/);
+  rules.addComboItems(rules.combinationsModel[0], ['pattern:b', 'pattern:c'], '1');
+  act('mode', { path: '1', value: 'of' });
+  assert.deepEqual(plain(rules.combinationsModel[0].when.all[1]), { of: [{ pattern: 'b' }, { pattern: 'c' }], atLeast: 2 });
+  act('threshold-decrease', { path: '1', kind: 'click' });
+  assert.equal(rules.combinationsModel[0].when.all[1].atLeast, 1);
+  const saved = rules.buildCombinationsForSave().combinations;
+  assert.equal(C.score({ ...base(), combinations: saved }, matches(['a', 'c'])).detected, true);
+  assert.equal(C.score({ ...base(), combinations: saved }, matches(['b', 'c'])).detected, false);
+  act('delete-group', { path: '1', kind: 'click' });
+  assert.deepEqual(plain(rules.combinationsModel[0].when), { all: [{ pattern: 'a' }] });
+});
+
+test('"at least" counts only rows that must be found, and drops when a row becomes "must not be found"', () => {
+  const { rules, act } = editor(base({ atLeast: 3, of: [{ pattern: 'a' }, { pattern: 'b' }, { pattern: 'c' }] }));
+  act('presence', { item: 2, value: 'absent' });
+  assert.equal(rules.combinationsModel[0].when.atLeast, 2);
+  act('threshold', { value: '3' });
+  assert.equal(rules.combinationsModel[0].when.atLeast, 2, 'the NOT row does not count');
+  assert.equal(rules.buildCombinationsForSave().invalidIndex, -1);
+});
+
+test('rows show the stored description first, but not after the pattern text was edited', () => {
+  const detector = base({ all: [{ pattern: 'a' }, { pattern: 'b' }] });
+  detector.detection.url[0].text = '/a'; detector.detection.url[0].description = 'Official SDK <script>';
+  detector.detection.url[1].text = '/b'; detector.detection.url[1].description = 'Old description';
+  const { rules, container } = editor(detector, [
+    { id: 'a', method: 'url', label: '/a', strict: true, confidence: 50 },
+    { id: 'b', method: 'url', label: '/b-edited', strict: false, confidence: 40 },
+    { id: 'c', method: 'url', label: '/c', strict: false, confidence: 30 }]);
+  rules.setComboOpen(rules.combinationsModel[0], true);
+  rules.renderCombinations();
+  const html = container.innerHTML;
+  assert.match(html, /<span class="combo-item-desc" dir="auto">Official SDK &lt;script><\/span><\/p><span class="combo-leaf-text" dir="ltr" title="\/a">\/a<\/span>/);
+  assert.ok(!html.includes('Old description'), 'an edited pattern shows its new text, not the old description');
+  assert.match(html, /<span class="combo-leaf-text is-main" dir="ltr" title="\/b-edited">\/b-edited<\/span>/);
+  assert.match(html, /class="combo-item-tag">Combinations only</);
+  assert.ok(!html.includes('<script>'));
+});
+
+test('the card says when it fires, in plain sentences', () => {
+  const sentences = (when, confidence = 65, opts) => {
+    const detector = base(when);
+    detector.combinations[0].confidence = confidence;
+    const { rules } = editor(detector, opts);
+    return rules.describeCombo(rules.combinationsModel[0]);
+  };
+  assert.equal(sentences({ all: [{ pattern: 'a' }, { pattern: 'b' }] }), 'Fires when all 2 conditions are met. Confidence: 65%.');
+  assert.equal(sentences({ atLeast: 2, of: [{ pattern: 'a' }, { pattern: 'b' }, { pattern: 'c' }] }), 'Fires when at least 2 of these 3 conditions are met. Confidence: 65%.');
+  assert.equal(sentences({ any: [{ pattern: 'a' }, { pattern: 'b' }] }, null), 'Fires when any one of these 2 conditions is met. Confidence: Auto, up to 40%.');
+  assert.equal(sentences({ all: [{ pattern: 'a' }, { any: [{ pattern: 'b' }, { pattern: 'c' }] }, { not: { pattern: 'c' } }] }),
+    'Fires when all 3 conditions are met. Confidence: 65%. A group counts as one condition. It does not fire if a “Must not be found” pattern is present.');
+  const loose = [{ id: 'a', method: 'url', label: '/a', strict: false, confidence: 30 }, { id: 'b', method: 'url', label: '/b', strict: true, confidence: 40 }];
+  assert.match(sentences({ all: [{ pattern: 'a' }, { pattern: 'b' }] }, 65, loose), /also detect on their own/);
+  assert.equal(sentences({ all: [] }), 'Add patterns to build this combination');
+});
+
+test('the builder offers group controls with readable, unique names', () => {
+  const { rules, container } = editor(base({ all: [{ pattern: 'a' }, { any: [{ pattern: 'b' }, { pattern: 'c' }] }, { atLeast: 1, of: [{ pattern: 'a' }, { pattern: 'b' }] }] }));
+  rules.setComboOpen(rules.combinationsModel[0], true);
+  rules.renderCombinations();
+  const html = container.innerHTML;
+  assert.match(html, /data-combo-action="add-group">\+ Add “one of” group/);
+  assert.equal((html.match(/data-combo-action="delete-group"/g) || []).length, 2);
+  assert.match(html, /<option value="all" selected>all of these are found<\/option>/);
+  assert.match(html, /<option value="any" selected>One of these<\/option>/);
+  assert.match(html, /aria-label="Pattern condition"/);
+  assert.match(html, /Must not be found/);
+  assert.match(html, /These patterns only count together/);
+  const ids = [...html.matchAll(/ id="([^"]+)"/g)].map(m => m[1]);
+  assert.deepEqual(ids, [...new Set(ids)], 'no duplicate ids once groups have their own controls');
+  for (const [, id] of html.matchAll(/aria-labelledby="([^"]+)"/g)) assert.ok(ids.includes(id), id);
 });

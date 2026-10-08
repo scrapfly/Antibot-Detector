@@ -1168,11 +1168,11 @@ Rules.prototype.saveRule = function() {
       return;
     }
 
-    // Combinations: each needs something that must match; references to
-    // patterns that are not saved (empty rows) are dropped
+    // Combinations: each needs something that must be found; references to
+    // patterns that are not saved (empty rows) and emptied groups are dropped
     const combinationResult = this.buildCombinationsForSave(this._collectDetectionFromForm());
     if (combinationResult.invalidIndex >= 0) {
-      this.reportInvalidCombination(combinationResult.invalidIndex);
+      this.reportInvalidCombination(combinationResult.invalidIndex, combinationResult.invalidMessage);
       return;
     }
 

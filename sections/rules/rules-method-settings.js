@@ -588,9 +588,17 @@ Rules.prototype.updateMethodIndicators = function(methodItem) {
 
         nameIndicator.innerHTML = indicators.map(ind => Rules.indicatorBadge(ind)).join('');
         if (methodItem.dataset.standalone === 'false') {
-          const label = (typeof I18n !== 'undefined' && I18n.tr) ? I18n.tr('patternCombinationsOnlyBadge', 'Combinations only') : 'Combinations only';
-          nameIndicator.insertAdjacentHTML('beforeend',
-            `<span class="indicator-badge indicator-badge-combo" data-type="COMBO">${FormatUtils.escapeHtml(label)}</span>`);
+          const tr = (key, fallback) => ((typeof I18n !== 'undefined' && I18n.tr) ? I18n.tr(key, fallback) : fallback);
+          const id = methodItem.dataset.patternId;
+          // Combination-only but used by no combination: it never detects, so offer to let it count alone
+          if (typeof this.isComboPatternUnused === 'function' && this.isComboPatternUnused(id)) {
+            nameIndicator.insertAdjacentHTML('beforeend',
+              `<button type="button" class="indicator-badge indicator-badge-unused" data-type="UNUSED" data-pattern-release="${FormatUtils.escapeAttr(id)}"
+                title="${FormatUtils.escapeAttr(tr('patternUnusedTip', 'No combination uses it, so it never detects. Click to let it count on its own.'))}">${FormatUtils.escapeHtml(tr('patternUnusedBadge', 'Not in any combination'))}</button>`);
+          } else {
+            nameIndicator.insertAdjacentHTML('beforeend',
+              `<span class="indicator-badge indicator-badge-combo" data-type="COMBO">${FormatUtils.escapeHtml(tr('patternCombinationsOnlyBadge', 'Combinations only'))}</span>`);
+          }
         }
       }
     }

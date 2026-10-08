@@ -3956,10 +3956,57 @@
 .combo-leaf-text {
   white-space: normal;
   overflow-wrap: anywhere;
-  color: var(--text-primary);
+  color: var(--text-secondary);
   font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1.45;
+  /* Long regexes: two lines here, the whole pattern on hover */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.combo-item-line {
+  margin: 0;
+  min-width: 0;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.combo-item-line > .combo-chip {
+  display: inline-block;
+  margin-inline-end: 6px;
+  vertical-align: 1px;
+}
+
+.combo-item-line > .combo-leaf-text.is-main {
+  display: inline;
+  -webkit-line-clamp: unset;
+}
+
+/* A pattern without a description shows its own text as the main line */
+.combo-leaf-text.is-main {
+  color: var(--text-primary);
   font-size: 12px;
   line-height: 1.5;
+}
+
+.combo-item-desc {
+  color: var(--text-primary);
+  font-size: 12.5px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.combo-item-tag {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent-light);
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .combo-remove {
@@ -4008,17 +4055,38 @@
   background: rgba(59,130,246,0.15);
 }
 
-.combo-alternatives {
+.combo-subgroup {
   padding: 8px;
+  border: 1px solid var(--re-border, var(--border));
+  border-inline-start: 3px solid rgba(59, 130, 246, 0.55);
   border-radius: 6px;
-  background: var(--bg-primary);
+  background: rgba(255, 255, 255, 0.025);
 }
 
-.combo-alternative-hint {
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: 11px;
-  line-height: 1.5;
+.combo-subgroup.is-not {
+  border-inline-start-color: var(--danger);
+}
+
+.combo-group-nested .combo-group-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.combo-group-nested .combo-group-head > select {
+  flex: 1 1 auto;
+  min-height: 30px;
+  font-weight: 600;
+}
+
+.combo-group-nested .combo-group-head .combo-threshold {
+  flex: 1 1 100%;
+  order: 3;
+}
+
+.combo-group-nested .combo-group-head .combo-delete-group {
+  margin-inline-start: auto;
 }
 
 .combo-threshold {
@@ -4277,11 +4345,30 @@
 .combo-picker-text {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   white-space: normal;
   overflow-wrap: anywhere;
+  text-align: start;
+}
+
+.combo-picker-desc {
+  color: var(--text-primary);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.combo-picker-raw {
+  color: var(--text-secondary);
   font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1.4;
+}
+
+.combo-picker-raw.is-main {
+  color: var(--text-primary);
   font-size: 11px;
-  line-height: 1.5;
 }
 
 .combo-picker-pattern[hidden], .combo-picker-method[hidden] {
@@ -4309,4 +4396,50 @@
 .indicator-badge-combo {
   background: rgba(59, 130, 246, 0.15);
   color: var(--accent-light);
+}
+
+/* Combination-only pattern that no combination uses: it never detects. Click lets it count alone. */
+.indicator-badge-unused {
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  background: rgba(245, 158, 11, 0.14);
+  color: #fcd34d;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.indicator-badge-unused:hover {
+  background: rgba(245, 158, 11, 0.26);
+}
+
+.indicator-badge-unused:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* Score of a combination in its header: "90%" or "Auto" */
+.combo-summary-confidence {
+  flex-shrink: 0;
+  align-self: center;
+  padding: 2px 7px;
+  border: 1px solid var(--re-border, var(--border));
+  border-radius: 999px;
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.combo-summary-confidence.is-auto {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.combo-group-actions .combo-add-group {
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+.combo-confidence-input {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
