@@ -97,36 +97,6 @@ Rules.prototype.handleExportDetector = function(category, detectorName, displayN
   NotificationHelper.success(FormatUtils.t('detectorExportedFmt', 'Exported {0}', displayName));
 };
 
-/**
- * A card's "Import": add the detectors in a file (one or a few) to yours.
- * Always a merge: nothing is removed, so there is no Replace question.
- */
-Rules.prototype.handleImportDetectorsFile = function() {
-  const t = (typeof I18n !== 'undefined') ? I18n : null;
-  const _tr = (key, fallback) => (t && t.get(key)) || fallback;
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = '.json,application/json';
-  input.addEventListener('change', async () => {
-    const file = input.files && input.files[0];
-    if (!file) return;
-    try {
-      const data = JSON.parse(await file.text());
-      const success = await this.detectorManager.importDetectors(data, true);
-      if (!success) {
-        NotificationHelper.error(_tr('failedImportDetectors', 'Failed to import detectors. Check the file format.'));
-        return;
-      }
-      chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, () => { void chrome.runtime.lastError; });
-      NotificationHelper.success(_tr('detectorsImported', 'Detectors imported'));
-      this.displayRules();
-    } catch (error) {
-      NotificationHelper.error(FormatUtils.t('errorReadingFileFmt', 'Error reading file: ' + error.message, error.message));
-    }
-  }, { once: true });
-  input.click();
-};
-
 // ============================================
 // Update Management Handlers
 // ============================================

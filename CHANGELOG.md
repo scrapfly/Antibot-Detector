@@ -11,7 +11,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Added
 
-- Rules: each card's "⋯" menu can export just that detector, or import detectors from a file without replacing yours.
+- Rules: each card's "⋯" menu can export just that detector.
 - History: each card has a Scrapfly button that opens Scrape with Scrapfly for that page.
 
 ### Changed
