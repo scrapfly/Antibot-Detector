@@ -4246,6 +4246,12 @@
   "scrapflyExportRenderJsCost": {
     "message": "+5 クレジット"
   },
+  "scrapflyExportStepSettings": {
+    "message": "設定を選ぶ"
+  },
+  "scrapflyExportStepCode": {
+    "message": "コードをコピー"
+  },
   "scrapflyExportStepKey": {
     "message": "API キーを設定"
   },

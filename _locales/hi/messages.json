@@ -4246,6 +4246,12 @@
   "scrapflyExportRenderJsCost": {
     "message": "+5 क्रेडिट"
   },
+  "scrapflyExportStepSettings": {
+    "message": "अपनी सेटिंग चुनें"
+  },
+  "scrapflyExportStepCode": {
+    "message": "कोड कॉपी करें"
+  },
   "scrapflyExportStepKey": {
     "message": "अपनी API कुंजी सेट करें"
   },

@@ -4246,6 +4246,12 @@
   "scrapflyExportRenderJsCost": {
     "message": "+5 أرصدة"
   },
+  "scrapflyExportStepSettings": {
+    "message": "اختر إعداداتك"
+  },
+  "scrapflyExportStepCode": {
+    "message": "انسخ الكود"
+  },
   "scrapflyExportStepKey": {
     "message": "عيّن مفتاح API"
   },

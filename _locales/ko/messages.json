@@ -4246,6 +4246,12 @@
   "scrapflyExportRenderJsCost": {
     "message": "+5 크레딧"
   },
+  "scrapflyExportStepSettings": {
+    "message": "설정 선택"
+  },
+  "scrapflyExportStepCode": {
+    "message": "코드 복사"
+  },
   "scrapflyExportStepKey": {
     "message": "API 키 설정"
   },

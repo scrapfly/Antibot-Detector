@@ -4246,6 +4246,12 @@
   "scrapflyExportRenderJsCost": {
     "message": "+5 créditos"
   },
+  "scrapflyExportStepSettings": {
+    "message": "Escolha suas opções"
+  },
+  "scrapflyExportStepCode": {
+    "message": "Copie o código"
+  },
   "scrapflyExportStepKey": {
     "message": "Defina sua chave de API"
   },

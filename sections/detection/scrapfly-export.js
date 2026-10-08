@@ -435,9 +435,8 @@ ScrapflyExport.logoHtml = function(className = 'scrapfly-export-logo') {
 };
 
 /**
- * Open the dialog: what was detected, the options, the key command, one tab
- * per language over a single code block that follows the options, the run
- * command,
+ * Open the dialog: what was detected, then four numbered steps (settings,
+ * API key, the code with one tab per language, the run command),
  * a CAPTCHA note when the page has one, and links to get a key and to the
  * playground.
  * @param {object} options
@@ -466,10 +465,10 @@ ScrapflyExport.open = function({ url, detections = [] } = {}) {
   const copyLabel = tr('advCommonCopy', 'Copy');
   const copyIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>';
   const aiIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>';
+  const stepHead = (n, label) => `<div class="scrapfly-export-step-head"><span class="scrapfly-export-step-n">${n}</span><span class="scrapfly-export-step-label">${esc(label)}</span></div>`;
   const step = (n, label, cls) => `
       <div class="scrapfly-export-step ${cls}">
-        <span class="scrapfly-export-step-n">${n}</span>
-        <span class="scrapfly-export-step-label">${esc(label)}</span>
+        ${stepHead(n, label)}
         <button type="button" class="scrapfly-export-step-cmd" data-copy="" data-copy-message="${attr(tr('advPanelCopiedToClipboard', 'Copied to clipboard'))}" title="${attr(tr('advCommonClickToCopy', 'Click to copy'))}">
           <code></code>${copyIcon}
         </button>
@@ -482,11 +481,15 @@ ScrapflyExport.open = function({ url, detections = [] } = {}) {
     <p class="scrapfly-export-intro">${esc(tr('scrapflyExportIntro',
       "Fetch this page through Scrapfly's API with the Unblocker on. It picks the browser, proxies and headers by itself, and costs nothing extra when the site doesn't block."))}</p>
     ${ScrapflyExport.detectedRow(protections, tr('scrapflyExportDetected', 'Detected on this page'))}
-    ${ScrapflyExport.optionsHtml(options, tr)}
-    <div class="scrapfly-export-steps is-before">
-      ${step(1, tr('scrapflyExportStepKey', 'Set your API key'), 'is-key')}
+    <div class="scrapfly-export-steps">
+      ${stepHead(1, tr('scrapflyExportStepSettings', 'Choose your settings'))}
+      ${ScrapflyExport.optionsHtml(options, tr)}
+    </div>
+    <div class="scrapfly-export-steps">
+      ${step(2, tr('scrapflyExportStepKey', 'Set your API key'), 'is-key')}
     </div>
     <div class="scrapfly-export-code">
+      ${stepHead(3, tr('scrapflyExportStepCode', 'Copy the code'))}
       <div class="scrapfly-export-tabs" role="tablist" aria-label="${attr(tr('scrapflyExportLanguages', 'Code language'))}">${tabs}</div>
       <div class="scrapfly-export-panel" role="tabpanel" id="scrapflyExportPanel" aria-labelledby="scrapflyExportTab-${selected}">
         <div class="scrapfly-export-code-head">
@@ -500,7 +503,7 @@ ScrapflyExport.open = function({ url, detections = [] } = {}) {
       </div>
     </div>
     <div class="scrapfly-export-steps is-after">
-      ${step(2, tr('scrapflyExportStepRun', 'Run it'), 'is-run')}
+      ${step(4, tr('scrapflyExportStepRun', 'Run it'), 'is-run')}
     </div>
     ${captchaNote}
     <div class="scrapfly-export-actions">
@@ -543,8 +546,7 @@ ScrapflyExport.open = function({ url, detections = [] } = {}) {
     };
     setCmd('.scrapfly-export-step.is-key', ScrapflyExport.keyCommand(platform));
     setCmd('.scrapfly-export-step.is-run', language.run);
-    // Without a run command the code is the command: no numbers, no step 2
-    overlay.querySelector('.scrapfly-export-steps.is-before').classList.toggle('is-single', !language.run);
+    // Without a run command the code is the command: no step 4
     overlay.querySelector('.scrapfly-export-steps.is-after').hidden = !language.run;
   };
   ScrapflyExport.bindTabs(overlay, (id) => {
@@ -596,7 +598,6 @@ ScrapflyExport.optionsHtml = function(options, tr) {
   )).join('');
   return `
     <section class="scrapfly-export-options" aria-label="${attr(tr('scrapflyExportOptions', 'Options'))}">
-      <span class="scrapfly-export-detected-label">${esc(tr('scrapflyExportOptions', 'Options'))}</span>
       ${toggle('unblocker', tr('scrapflyExportUnblocker', 'Unblocker'), tr('scrapflyExportUnblockerHint', 'Anti-bot bypass'))}
       ${segmented('format', tr('scrapflyExportFormat', 'Output'), [['raw', 'HTML'], ['markdown', 'Markdown'], ['text', tr('scrapflyExportFormatText', 'Text')]])}
       ${segmented('proxyPool', tr('scrapflyExportProxy', 'Proxies'), [['public_datacenter_pool', tr('scrapflyExportProxyDatacenter', 'Datacenter')], ['public_residential_pool', tr('scrapflyExportProxyResidential', 'Residential')]])}

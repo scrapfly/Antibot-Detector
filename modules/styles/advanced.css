@@ -3303,7 +3303,7 @@
   color: #bbf7d0;
 }
 
-/* Two copyable commands: set the key (above the code), run the file (below) */
+/* Numbered steps: 1 settings, 2 key command, 3 code, 4 run command */
 .scrapfly-export-steps {
   display: flex;
   flex-direction: column;
@@ -3315,12 +3315,15 @@
 }
 
 .scrapfly-export-step {
-  display: grid;
-  grid-template-columns: 18px minmax(0, 1fr);
-  grid-template-rows: auto auto;
-  column-gap: 8px;
-  row-gap: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.scrapfly-export-step-head {
+  display: flex;
   align-items: center;
+  gap: 8px;
 }
 
 .scrapfly-export-step[hidden] {
@@ -3340,17 +3343,13 @@
   font-weight: 700;
 }
 
-.scrapfly-export-steps.is-single .scrapfly-export-step-n {
-  visibility: hidden;
-}
-
 .scrapfly-export-step-label {
   font-size: 12px;
-  color: var(--text-secondary);
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .scrapfly-export-step-cmd {
-  grid-column: 2;
   display: flex;
   align-items: center;
   justify-content: space-between;

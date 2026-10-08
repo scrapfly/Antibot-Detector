@@ -4246,6 +4246,12 @@
   "scrapflyExportRenderJsCost": {
     "message": "+5 积分"
   },
+  "scrapflyExportStepSettings": {
+    "message": "选择设置"
+  },
+  "scrapflyExportStepCode": {
+    "message": "复制代码"
+  },
   "scrapflyExportStepKey": {
     "message": "设置 API 密钥"
   },
