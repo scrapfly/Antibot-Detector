@@ -216,7 +216,7 @@
     "message": "浏览网站时,检测历史记录将显示在此处。"
   },
   "rulesUpdateTitle": {
-    "message": "检查检测器更新"
+    "message": "从 Scrapfly 最新发布版本安装规则更新"
   },
   "rulesAddTitle": {
     "message": "添加新检测器"
@@ -841,12 +841,6 @@
   "webhookTestFailedFmt": {
     "message": "Webhook 测试失败:{0}"
   },
-  "foundDetectorUpdatesAvailableFmt": {
-    "message": "发现 {0} 个可用的检测器更新!"
-  },
-  "allDetectorsUpToDate": {
-    "message": "所有检测器均为最新版本。"
-  },
   "importDetectorsTitle": {
     "message": "导入检测器"
   },
@@ -862,6 +856,9 @@
   "detectorsImported": {
     "message": "检测器已导入"
   },
+  "detectorExportedFmt": {
+    "message": "已导出 {0}"
+  },
   "failedImportDetectors": {
     "message": "导入检测器失败。请检查文件格式。"
   },
@@ -870,9 +867,6 @@
   },
   "detectorsUpdatedFmt": {
     "message": "已更新 {0} 个检测器"
-  },
-  "updatesAvailableClickToApplyFmt": {
-    "message": "有 {0} 项更新可用 - 再次点击以应用"
   },
   "detectorDeletedFmt": {
     "message": "已删除 \"{0}\""
@@ -885,9 +879,6 @@
   },
   "textWordMatching": {
     "message": "文本/单词匹配"
-  },
-  "domSelectorMatching": {
-    "message": "DOM 选择器匹配"
   },
   "payloadTextMatching": {
     "message": "负载文本匹配"
@@ -942,6 +933,30 @@
   },
   "couldNotFetchUpdates": {
     "message": "无法从服务器获取更新"
+  },
+  "updateResultInstalledFmt": {
+    "message": "已从发布版本 {0} 更新规则：{1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "所有规则均已与发布版本 {0} 保持一致。"
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "需要扩展 {0} 或更高版本：{1}。Chrome 更新扩展后将自动安装。"
+  },
+  "updateResultFailedFmt": {
+    "message": "无法下载：{0}。请稍后重试。"
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "你编辑过的规则正在“规则 → 更新”中等待你的决定：{0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "无法连接 GitHub 检查规则更新。"
+  },
+  "updateErrorNoRelease": {
+    "message": "在 GitHub 上未找到已发布的 Scrapfly 版本。"
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub 正在限制更新检查。请在 {0} 分钟后重试。"
   },
   "errorApplyingUpdates": {
     "message": "应用更新时出错"
@@ -1588,114 +1603,6 @@
   "notifLoadingDefault": {
     "message": "加载中..."
   },
-  "helpJsHooksTitle": {
-    "message": "JavaScript 钩子检测"
-  },
-  "helpJsHooksDescription": {
-    "message": "钩子用于拦截浏览器 API 调用(Canvas、Audio、WebGL 等),以便在页面访问这些 API 时实时检测反爬虫指纹识别代码。"
-  },
-  "helpJsHooksWarning": {
-    "message": "钩子必须在 document_start 阶段、任何页面脚本运行之前安装,否则页面可能在我们的垫片就位前保存原始 API 的引用。"
-  },
-  "helpJsHooksTip": {
-    "message": "添加类似 CanvasRenderingContext2D.prototype.getImageData 的目标以检测 canvas 指纹识别。"
-  },
-  "helpWindowTitle": {
-    "message": "窗口属性检测"
-  },
-  "helpWindowDescription": {
-    "message": "检测反爬虫脚本添加到 window 全局对象上的 JavaScript 对象和属性。"
-  },
-  "helpWindowWarning": {
-    "message": "部分反爬虫脚本使用不可枚举的 Symbol() 键,这类属性较难检测。"
-  },
-  "helpWindowTip": {
-    "message": "使用 typeof object 或 exists 等条件来匹配属性类型。"
-  },
-  "helpUrlTitle": {
-    "message": "URL 模式检测"
-  },
-  "helpUrlDescription": {
-    "message": "将已加载资源(脚本、图片、网络请求)的 URL 与模式进行匹配。"
-  },
-  "helpUrlWarning": {
-    "message": "除非开启“区分大小写”，否则模式不区分大小写。过于宽泛的模式也会匹配无关资源，请尽量具体。"
-  },
-  "helpUrlTip": {
-    "message": "对于 /\\/v\\d+\\/challenge/ 这类高级模式,请使用 Regex 选项。"
-  },
-  "helpHeaderTitle": {
-    "message": "HTTP 标头检测"
-  },
-  "helpHeaderDescription": {
-    "message": "检测反爬虫中间件设置的 HTTP 请求和响应标头。"
-  },
-  "helpHeaderWarning": {
-    "message": "部分标头仅出现在初始请求中,请确保您的范围包含“请求”。"
-  },
-  "helpHeaderTip": {
-    "message": "常见目标:x-akamai-bot-manager-token、cf-ray、x-shape-version。"
-  },
-  "helpCookieTitle": {
-    "message": "Cookie 检测"
-  },
-  "helpCookieDescription": {
-    "message": "检测由反爬虫挑战设置的 Cookie。匹配 Cookie 名称(可选地匹配值模式)。"
-  },
-  "helpCookieWarning": {
-    "message": "带有随机后缀的 Cookie 名称(例如 _abck-xyz123)需要使用正则表达式模式,而非字面名称。"
-  },
-  "helpCookieTip": {
-    "message": "对精确名称匹配使用“全字匹配”,对于 ^datadome- 这类前缀模式则使用 Regex。"
-  },
-  "helpContentTitle": {
-    "message": "页面内容检测"
-  },
-  "helpContentDescription": {
-    "message": "在页面 HTML 和内联 script 标签中搜索文本模式。"
-  },
-  "helpContentWarning": {
-    "message": "在大型页面上进行全页扫描可能较慢。如果特征位于 JS 代码中,请限制为“仅检查脚本”。"
-  },
-  "helpContentTip": {
-    "message": "使用“全字匹配”可避免来自更大单词内子串的误报。"
-  },
-  "helpDomTitle": {
-    "message": "DOM 选择器检测"
-  },
-  "helpDomDescription": {
-    "message": "使用 CSS 选择器检测 HTML 元素。当 DOM 中存在匹配元素时触发。"
-  },
-  "helpDomWarning": {
-    "message": "选择器仅匹配渲染到实际 DOM 中的元素,而不包括 iframe 或 shadow root 内的元素。"
-  },
-  "helpDomTip": {
-    "message": "使用 div#cf-challenge[data-ray] 这类具体选择器而非通用选择器,可减少误报。"
-  },
-  "helpPayloadTitle": {
-    "message": "请求负载检测"
-  },
-  "helpPayloadDescription": {
-    "message": "监控所有 HTTP POST/PUT/PATCH 请求正文中的文本模式。"
-  },
-  "helpPayloadWarning": {
-    "message": "负载监控仅对扩展程序可拦截的请求生效(不支持加密正文或不透明的二进制对象)。"
-  },
-  "helpPayloadTip": {
-    "message": "结合“URL 模式”将匹配限制在特定端点。"
-  },
-  "helpWarningLabel": {
-    "message": "警告:"
-  },
-  "helpTipLabel": {
-    "message": "提示:"
-  },
-  "detectionMethodTitle": {
-    "message": "检测方法"
-  },
-  "noHelpContentAvailable": {
-    "message": "此方法类型暂无可用的帮助内容。"
-  },
   "advNoCapturesHintFmt": {
     "message": "点击上方的“开始捕获”以开始捕获 {0} 数据"
   },
@@ -2026,12 +1933,6 @@
   "rhSearchDom": {
     "message": "搜索选择器，例如 captcha、iframe"
   },
-  "rhSearchRegex": {
-    "message": "要匹配的文本，例如 bm_ 或 token"
-  },
-  "rhSearchSample": {
-    "message": "输入要测试的值"
-  },
   "rhCondition": {
     "message": "条件"
   },
@@ -2155,9 +2056,6 @@
   "rhCondFalse": {
     "message": "为 false"
   },
-  "rhWindowIntro": {
-    "message": "检查页面上的 JavaScript 全局变量 (window.…)。先选一个变量，再选它必须满足的条件。"
-  },
   "rhWindowSentenceFmt": {
     "message": "匹配 {0} {1} 的页面"
   },
@@ -2197,45 +2095,6 @@
   "rhDomCamel": {
     "message": "camelCase 类名"
   },
-  "rhRegexTitle": {
-    "message": "正则表达式助手"
-  },
-  "rhUsePattern": {
-    "message": "使用该模式"
-  },
-  "rhRegexStartsFmt": {
-    "message": "以“{0}”开头"
-  },
-  "rhRegexEndsFmt": {
-    "message": "以“{0}”结尾"
-  },
-  "rhRegexContainsFmt": {
-    "message": "任意位置包含“{0}”"
-  },
-  "rhRegexWordFmt": {
-    "message": "完整单词“{0}”"
-  },
-  "rhRegexOrFmt": {
-    "message": "“{0}”或其他选项"
-  },
-  "rhRegexStartsMoreFmt": {
-    "message": "以“{0}”开头且后面还有文本"
-  },
-  "rhRegexEitherFmt": {
-    "message": "“{0}”或“{1}”"
-  },
-  "rhExamplesForFmt": {
-    "message": "“{0}”的示例"
-  },
-  "rhExamples": {
-    "message": "示例"
-  },
-  "rhHowMatchesFmt": {
-    "message": "“{0}”的匹配方式"
-  },
-  "rhQuickRef": {
-    "message": "速查"
-  },
   "rhRefAny": {
     "message": "任意字符"
   },
@@ -2272,74 +2131,302 @@
   "rhNoMatch": {
     "message": "不匹配"
   },
-  "rhWwIntro": {
-    "message": "仅当文本单独出现、而非较长单词的一部分时才匹配。"
+  "ptTitle": {
+    "message": "测试模式"
   },
-  "rhWwExact": {
-    "message": "完全相同的单词"
+  "ptTitleFmt": {
+    "message": "测试模式 · {0}"
   },
-  "rhWwJoinedBefore": {
-    "message": "与前面的文本相连"
+  "ptKindUrl": {
+    "message": "URL"
   },
-  "rhWwJoinedAfter": {
-    "message": "与后面的文本相连"
+  "ptKindContent": {
+    "message": "页面内容"
   },
-  "rhWwSpaces": {
-    "message": "以空格分隔"
+  "ptKindCookieName": {
+    "message": "Cookie 名称"
   },
-  "rhCsIntro": {
-    "message": "开启后，大写和小写字母视为不同。"
+  "ptKindCookieValue": {
+    "message": "Cookie 值"
   },
-  "rhCsOnTitle": {
-    "message": "区分大小写：开启"
+  "ptKindHeaderName": {
+    "message": "标头名称"
   },
-  "rhCsOffTitle": {
-    "message": "区分大小写：关闭"
+  "ptKindHeaderValue": {
+    "message": "标头值"
   },
-  "rhWhatIsRegex": {
-    "message": "什么是正则表达式？"
+  "ptKindPayloadText": {
+    "message": "请求正文"
   },
-  "rhWhatIsWholeWord": {
-    "message": "什么是“全字匹配”？"
+  "ptKindPayloadUrl": {
+    "message": "请求 URL"
   },
-  "rhWhatIsCase": {
-    "message": "什么是“区分大小写”？"
+  "ptPatternLabel": {
+    "message": "模式"
   },
-  "rhRegexIntro": {
-    "message": "正则表达式（regex）按模式而非精确字符来匹配文本。"
+  "ptOptionsLabel": {
+    "message": "匹配选项"
   },
-  "rhWhenToUse": {
-    "message": "何时使用"
+  "ptOptRegex": {
+    "message": "Regex"
   },
-  "rhRegexUse1": {
-    "message": "以特定内容开头或结尾的文本"
+  "ptTryOn": {
+    "message": "测试文本"
   },
-  "rhRegexUse2": {
-    "message": "一次匹配多种变体（使用 |）"
+  "ptExamplesBtn": {
+    "message": "示例"
   },
-  "rhRegexUse3": {
-    "message": "数字或特定类型的字符"
+  "ptSamplesPlaceholder": {
+    "message": "每行一个：URL、Cookie 名称……"
   },
-  "rhRegexTip": {
-    "message": "匹配精确文本无需正则，请改用“全字匹配”。"
+  "ptNoSamples": {
+    "message": "在上方输入或粘贴文本（每行一个），即可查看是否匹配。"
   },
-  "rhBestFor": {
-    "message": "最适合"
+  "ptCheatTitle": {
+    "message": "正则速查表"
   },
-  "rhWwUse1": {
-    "message": "精确的 Cookie 名称"
+  "ptCheatNote": {
+    "message": "编写模式时两端不要加 /。重复中嵌套重复（如 (a+)+）会被拒绝，因为它可能让页面卡死。"
   },
-  "rhWwUse2": {
-    "message": "特定的请求头名称"
+  "ptApply": {
+    "message": "应用"
   },
-  "rhWwUse3": {
-    "message": "完整的类名或函数名"
+  "ptTestBtn": {
+    "message": "测试"
   },
-  "rhCsUse1": {
-    "message": "大小写固定的请求头和 Cookie"
+  "ptTestTitle": {
+    "message": "用示例文本测试模式"
   },
-  "rhCsUse2": {
-    "message": "JavaScript 属性名"
+  "ptNoPattern": {
+    "message": "尚无模式"
+  },
+  "ptHintRegex": {
+    "message": "例如 ^bm_ 或 \\d+ 这样的模式，两端不加 /"
+  },
+  "ptHintWholeWord": {
+    "message": "跳过较长单词中的匹配：_abck 匹配，test_abck 不匹配"
+  },
+  "ptHintCase": {
+    "message": "Akamai 将不再匹配 akamai"
+  },
+  "ptSaysEmpty": {
+    "message": "输入模式即可查看它匹配什么。"
+  },
+  "ptSaysRegex": {
+    "message": "匹配正则表达式能找到匹配项的文本。"
+  },
+  "ptSaysWordFmt": {
+    "message": "以全字方式匹配“{0}”，不匹配较长单词中的部分。"
+  },
+  "ptSaysWildcardFmt": {
+    "message": "匹配类似“{0}”的名称，其中 * 代表任意文本。"
+  },
+  "ptSaysPrefixFmt": {
+    "message": "匹配以“{0}”开头的名称。"
+  },
+  "ptSaysContainsFmt": {
+    "message": "匹配包含“{0}”的文本。"
+  },
+  "ptCaseExact": {
+    "message": "大小写必须完全一致。"
+  },
+  "ptCaseIgnored": {
+    "message": "不区分大小写。"
+  },
+  "ptNoteInvalidFmt": {
+    "message": "此正则表达式无效，因此永远不会匹配：{0}"
+  },
+  "ptNoteRejected": {
+    "message": "此正则表达式可能让页面卡死（重复中嵌套重复，或超过 1000 个字符），检测会拒绝它，因此永远不会匹配。"
+  },
+  "ptNoteSlashes": {
+    "message": "去掉两端的 /：它们会被当作文本的一部分来查找。"
+  },
+  "ptNoteLooksRegex": {
+    "message": "这看起来像正则表达式：请开启 Regex，否则其中的符号会按普通文本查找。"
+  },
+  "ptNoteWordIgnored": {
+    "message": "开启 Regex 时，“全字匹配”不生效。"
+  },
+  "ptNoteHeaderCase": {
+    "message": "标头名称以小写存储，因此开启“区分大小写”时此模式永远不会匹配。"
+  },
+  "ptNoteWordEdges": {
+    "message": "此模式以符号开头或结尾，因此“全字匹配”要求该符号旁边紧挨着字母、数字或 _。"
+  },
+  "rhRefDot": {
+    "message": "真正的点"
+  },
+  "rhRefSet": {
+    "message": "a、b、c 之一"
+  },
+  "rhRefCount": {
+    "message": "2 到 5 次"
+  },
+  "mhExamplesTitle": {
+    "message": "Scrapfly 规则中的示例"
+  },
+  "mhHowTitle": {
+    "message": "匹配方式"
+  },
+  "mhWriteTitle": {
+    "message": "可以写什么"
+  },
+  "mhLimitsTitle": {
+    "message": "须知"
+  },
+  "mhUrlIntro": {
+    "message": "检查页面地址以及页面请求的 URL：脚本、XHR 和 fetch 调用、图片、框架和 ping。"
+  },
+  "mhUrlHow1": {
+    "message": "未开启 Regex 时，URL 包含该文本即匹配，不区分大小写。检查的是完整 URL，包括查询字符串。"
+  },
+  "mhUrlHow2": {
+    "message": "开启 Regex 时，去掉两端的 /，并把点写成 `\\.`，例如 `^https://js\\.example\\.com/`。"
+  },
+  "mhUrlHow3": {
+    "message": "URL 范围：“页面”只检查页面地址，“脚本”加上脚本来源，“全部”（默认）加上所有请求。"
+  },
+  "mhUrlLimit1": {
+    "message": "不记录字体、媒体和样式表请求。"
+  },
+  "mhUrlLimit2": {
+    "message": "只计入扫描前发出的请求；扫描在页面加载完成后运行。"
+  },
+  "mhHeaderIntro": {
+    "message": "检查页面自身请求和响应的标头，不包括脚本、XHR 调用或框架的标头。"
+  },
+  "mhHeaderHow1": {
+    "message": "标头名称按小写比较，普通文本表示“包含”：`server` 也会匹配 `server-timing`。如需精确名称，请使用 Regex `^server$`。"
+  },
+  "mhHeaderHow2": {
+    "message": "值在同名标头上检查；留空则接受任意值。"
+  },
+  "mhHeaderHow3": {
+    "message": "“响应”范围（默认）指网站发送的标头；“请求”指浏览器发送的标头。"
+  },
+  "mhHeaderLimit1": {
+    "message": "开启“区分大小写”时，请用小写书写标头名称。"
+  },
+  "mhHeaderLimit2": {
+    "message": "不重新加载就更改地址的页面，会在没有标头的情况下重新扫描。"
+  },
+  "mhCookieIntro": {
+    "message": "按名称（可选按值）检查页面的 Cookie，包括 HttpOnly 和 Secure Cookie。"
+  },
+  "mhCookieHow1": {
+    "message": "普通名称按前缀匹配：`_abck` 也会匹配 `_abck_2`。"
+  },
+  "mhCookieHow2": {
+    "message": "`*` 代表任意文本：`bm_*` 匹配 `bm_sz` 和 `bm_sv`。"
+  },
+  "mhCookieHow3": {
+    "message": "如需精确名称，请开启 Regex 并写成 `^name$`。值包含该文本即匹配。"
+  },
+  "mhCookieLimit1": {
+    "message": "“请求”范围（默认）读取浏览器为该页面保存的 Cookie；“响应”读取页面响应设置的 Cookie。"
+  },
+  "mhCookieLimit2": {
+    "message": "看不到其他网站的 Cookie（例如供应商框架中的）。过长的值会截断为 100 个字符。"
+  },
+  "mhContentIntro": {
+    "message": "搜索页面文本：body 的 HTML、内联脚本，以及页面加载的脚本和样式表文件。"
+  },
+  "mhContentHow1": {
+    "message": "普通文本只要被包含即匹配，不区分大小写。"
+  },
+  "mhContentHow2": {
+    "message": "“全字匹配”会跳过较长单词中的匹配；模式两端必须是字母、数字或 _。"
+  },
+  "mhContentHow3": {
+    "message": "“仅检查脚本”只搜索内联脚本（含 head）和 JavaScript 文件，不搜索 HTML 和 CSS。"
+  },
+  "mhContentLimit1": {
+    "message": "网站不允许其他来源读取（CORS）或超过 5 MB 的文件会被跳过。"
+  },
+  "mhContentLimit2": {
+    "message": "不搜索框架或 Worker 中的代码，也不搜索扫描后加载的代码。"
+  },
+  "mhDomIntro": {
+    "message": "页面加载完成后，用 CSS 选择器在页面 body 中查找元素。"
+  },
+  "mhDomHow1": {
+    "message": "标签、`.class`、`#id` 或 `[attribute]`，单独或组合使用：`.g-recaptcha[data-sitekey]`。"
+  },
+  "mhDomHow2": {
+    "message": "属性测试 `=`、`^=`、`$=`、`*=`、`~=` 和 `|=`；在 `]` 前加 ` i` 可忽略大小写。"
+  },
+  "mhDomHow3": {
+    "message": "用逗号分隔的多个选择器：任意一个匹配即可。"
+  },
+  "mhDomLimit1": {
+    "message": "不支持以下写法，规则将永远不会匹配：各部分之间的空格或 `>`、`:伪类`以及转义。"
+  },
+  "mhDomLimit2": {
+    "message": "不搜索 head、框架和 shadow root。不读取 `value` 属性；其他属性按前 100 个字符比较。"
+  },
+  "mhWindowIntro": {
+    "message": "检查页面定义的 JavaScript 全局变量，例如 `grecaptcha.render`。"
+  },
+  "mhWindowHow1": {
+    "message": "从 `window` 开始、用点分隔的路径：`KPSDK` 或 `grecaptcha.render`。"
+  },
+  "mhWindowHow2": {
+    "message": "条件，例如 `exists`、`typeof function`、`truthy`、`=== true`、`length > 0` 或 `has keys`。留空表示 truthy。"
+  },
+  "mhWindowHow3": {
+    "message": "检测无法理解的条件永远不会匹配，因此请从列表中选择。"
+  },
+  "mhWindowLimit1": {
+    "message": "只在页面加载后的最初几秒内检查；之后才创建的全局变量会被漏掉。"
+  },
+  "mhWindowLimit2": {
+    "message": "以 Symbol 命名的属性无法写成路径。"
+  },
+  "mhJsHooksOnlyFingerprint": {
+    "message": "只有指纹识别规则使用钩子：反机器人和验证码规则会忽略它们。"
+  },
+  "mhJsHooksIntro": {
+    "message": "记录页面调用浏览器 API 的情况，例如 `HTMLCanvasElement.prototype.toDataURL`，这是指纹识别的迹象。"
+  },
+  "mhJsHooksHow1": {
+    "message": "方法或 getter 的完整路径：`Navigator.prototype.webdriver`，而不是 `navigator.webdriver`。"
+  },
+  "mhJsHooksHow2": {
+    "message": "任何调用都会计入；不检查参数和结果，所以钩子只说明 API 被使用过，不说明原因。"
+  },
+  "mhJsHooksLimit1": {
+    "message": "只计入页面加载后最初几秒内的调用（最多 8 秒）。"
+  },
+  "mhJsHooksLimit2": {
+    "message": "看不到 Worker 或框架中的调用，同站框架中的内置目标除外。"
+  },
+  "mhPayloadIntro": {
+    "message": "搜索页面从任意框架发出的 POST、PUT、PATCH 和 DELETE 请求的正文。"
+  },
+  "mhPayloadHow1": {
+    "message": "普通文本只要被正文包含即匹配，不区分大小写。表单数据按 `name=value&…` 读取。"
+  },
+  "mhPayloadHow2": {
+    "message": "请求 URL（可选）和 HTTP 方法可将范围限定为匹配的请求。"
+  },
+  "mhPayloadLimit1": {
+    "message": "只计入扫描前发送的请求，每页最多 50 个。"
+  },
+  "mhPayloadLimit2": {
+    "message": "不读取 WebSocket 消息。"
+  },
+  "domCardTitle": {
+    "message": "CSS 选择器"
+  },
+  "domCardBrowse": {
+    "message": "浏览"
+  },
+  "domCardHint": {
+    "message": "标签、.class、#id 或 [attribute] 条件，单独或组合使用。不支持各部分之间的空格或 >。"
+  },
+  "windowCardTitle": {
+    "message": "窗口属性"
   },
   "settingsApiEventsDesc": {
     "message": "扩展在页面上派发的事件"
@@ -3392,7 +3479,7 @@
     "message": "URL 模式"
   },
   "rulesUiJsHookTargetPlaceholder": {
-    "message": "JS 钩子目标（例如 navigator.webdriver）"
+    "message": "JS 钩子目标（例如 Navigator.prototype.webdriver）"
   },
   "rulesUiWindowPathPlaceholder": {
     "message": "window 路径（例如 grecaptcha、_cf_chl_opt）"
@@ -3450,24 +3537,6 @@
   },
   "rulesUiLeaveEmptyAnyUrl": {
     "message": "留空则匹配任意 URL"
-  },
-  "ruleExampleMatches": {
-    "message": "✓ 匹配："
-  },
-  "ruleExampleWont": {
-    "message": "× 不匹配："
-  },
-  "ruleExampleWontMatch": {
-    "message": "× 不匹配："
-  },
-  "ruleExampleLiteralTextOnly": {
-    "message": "仅限字面文本"
-  },
-  "ruleExampleExactCase": {
-    "message": "（大小写一致）"
-  },
-  "ruleExampleAlone": {
-    "message": "（单独出现）"
   },
   "ruleConditionGroupOther": {
     "message": "其他"
@@ -3629,7 +3698,127 @@
     "message": "组合"
   },
   "combinationsHint": {
-    "message": "选择模式，然后选择必须匹配的数量。"
+    "message": "组合仅在多个模式同时被找到时才检测此防护。适用于单独太弱的模式。"
+  },
+  "detectionModalCombinationsHint": {
+    "message": "每个组合仅在其信号同时出现时触发；以下是它在此页面上找到的内容。"
+  },
+  "combinationFoundTogether": {
+    "message": "在此页面上同时找到："
+  },
+  "combinationNotPresent": {
+    "message": "不存在"
+  },
+  "combinationFound": {
+    "message": "已找到"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "此规则在扫描后已更改或删除，因此仅显示名称和分数。"
+  },
+  "historyMatchedDetections": {
+    "message": "匹配的检测"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "此次扫描保存于条件保留功能之前，因此仅显示名称和分数。"
+  },
+  "combinationMustNotBeFound": {
+    "message": "必须未找到"
+  },
+  "combinationMustBeFound": {
+    "message": "必须找到"
+  },
+  "combinationAutoTip": {
+    "message": "自动：触发它的模式中最高的置信度"
+  },
+  "combinationSetsScore": {
+    "message": "决定检测分数"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "请至少添加一个必须找到的模式。"
+  },
+  "combinationInvalidOneOf": {
+    "message": "“以下任一项”列表的每个选项都需要一个必须找到的模式。"
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "“至少 {0} 项”需要 {0} 个必须找到的模式。"
+  },
+  "combinationSentenceOne": {
+    "message": "满足此条件时触发。"
+  },
+  "combinationSentenceAllFmt": {
+    "message": "满足全部 {0} 个条件时触发。"
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "满足这 {0} 个条件中任意一个时触发。"
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "满足这 {1} 个条件中至少 {0} 个时触发。"
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "置信度：{0}%。"
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "置信度：自动，最高 {0}%。"
+  },
+  "combinationSentenceGroup": {
+    "message": "一个组算作一个条件。"
+  },
+  "combinationSentenceNot": {
+    "message": "出现“必须未找到”的模式时不会触发。"
+  },
+  "combinationSentenceAlone": {
+    "message": "未标记“仅组合”的模式也会单独检测，使用各自的置信度。"
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "找到时的置信度"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "留空为自动：找到的模式中最高的置信度。"
+  },
+  "combinationOnlyTogether": {
+    "message": "这些模式仅在一起时计数"
+  },
+  "combinationOnlyTogetherHint": {
+    "message": "单独时不检测任何内容。适用于此规则所有组合中的这些模式。"
+  },
+  "combinationOnlyTogetherMixed": {
+    "message": "其中一些模式也会单独计数。勾选后它们都只在组合中计数。"
+  },
+  "combinationModeAny": {
+    "message": "以下任一项"
+  },
+  "combinationModeAll": {
+    "message": "以下全部"
+  },
+  "combinationModeAtLeast": {
+    "message": "以下至少…项"
+  },
+  "combinationModeRootAll": {
+    "message": "以下全部找到"
+  },
+  "combinationModeRootAny": {
+    "message": "找到以下任一项"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "找到以下至少…项"
+  },
+  "combinationGroupMode": {
+    "message": "组"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "向此组添加模式"
+  },
+  "combinationDeleteGroup": {
+    "message": "删除组"
+  },
+  "combinationAddGroup": {
+    "message": "添加“任一项”组"
+  },
+  "patternUnusedBadge": {
+    "message": "不在任何组合中"
+  },
+  "patternUnusedTip": {
+    "message": "没有组合使用它，所以它永远不会检测。点击让它单独计数。"
   },
   "combinationsEmpty": {
     "message": "还没有组合。"
@@ -3640,23 +3829,11 @@
   "combinationDefaultNameFmt": {
     "message": "组合 {0}"
   },
-  "combinationConfidence": {
-    "message": "匹配时的置信度"
-  },
-  "combinationConfidenceFromPatterns": {
-    "message": "留空则使用所匹配模式的置信度"
-  },
   "combinationDelete": {
     "message": "删除组合"
   },
   "combinationDeleteConfirmFmt": {
     "message": "删除组合“{0}”？其模式仍保留在规则中。"
-  },
-  "combinationNotTitle": {
-    "message": "不能匹配"
-  },
-  "combinationNot": {
-    "message": "非"
   },
   "combinationRemove": {
     "message": "移除"
@@ -3676,26 +3853,8 @@
   "combinationAnyPattern": {
     "message": "任意模式"
   },
-  "combinationPreviewAnd": {
-    "message": "且"
-  },
-  "combinationPreviewOr": {
-    "message": "或"
-  },
-  "combinationPreviewNot": {
-    "message": "非"
-  },
   "combinationPreviewEmpty": {
     "message": "添加模式来构建此组合"
-  },
-  "combinationInvalid": {
-    "message": "选择必须匹配的模式，并检查最少匹配数。"
-  },
-  "combinationStrict": {
-    "message": "严格"
-  },
-  "combinationStrictTitle": {
-    "message": "严格：此模式不会单独触发检测器，仅在组合中生效"
   },
   "patternCombinationsOnlyBadge": {
     "message": "仅组合"
@@ -3706,9 +3865,6 @@
   "combinationNoPatterns": {
     "message": "未添加模式"
   },
-  "combinationJoinTitle": {
-    "message": "在“且”和“或”之间切换"
-  },
   "combinationPickHint": {
     "message": "勾选要添加的模式"
   },
@@ -3718,23 +3874,8 @@
   "combinationEditConditions": {
     "message": "编辑条件"
   },
-  "combinationRequireTogether": {
-    "message": "仅在组合中使用模式"
-  },
-  "combinationRequireHint": {
-    "message": "适用于此规则中所有引用这些模式的地方。"
-  },
   "combinationAutoConfidence": {
     "message": "自动"
-  },
-  "combinationMatchAll": {
-    "message": "所有条件都匹配"
-  },
-  "combinationMatchAny": {
-    "message": "任一条件匹配"
-  },
-  "combinationMatchAtLeast": {
-    "message": "至少…个条件匹配"
   },
   "combinationDetectWhen": {
     "message": "检测条件"
@@ -3748,29 +3889,8 @@
   "combinationMatchState": {
     "message": "模式条件"
   },
-  "combinationMatches": {
-    "message": "匹配"
-  },
-  "combinationDoesNotMatch": {
-    "message": "不匹配"
-  },
-  "combinationAtLeastSummaryFmt": {
-    "message": "至少 {0} 个条件匹配"
-  },
   "combinationChoosePatterns": {
     "message": "选择模式"
-  },
-  "combinationSummaryAll": {
-    "message": "所有必要条件都匹配时进行检测。"
-  },
-  "combinationSummaryAny": {
-    "message": "至少一个条件匹配时进行检测。"
-  },
-  "combinationSummaryMinimumFmt": {
-    "message": "{1} 个条件中至少 {0} 个匹配时进行检测。"
-  },
-  "combinationSummaryExcluded": {
-    "message": "排除的模式不得匹配。"
   },
   "combinationDecreaseMinimum": {
     "message": "减少最少匹配数"
@@ -4198,9 +4318,77 @@
     "message": "此页面有 CAPTCHA：Unblocker 会绕过或破解它以返回页面，但不会填写表单中的 CAPTCHA。",
     "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
   },
-  "scrapflyExportKeyNote": {
-    "message": "代码从 SCRAPFLY_API_KEY 读取你的 API 密钥。",
-    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  "scrapflyExportOptions": {
+    "message": "选项"
+  },
+  "scrapflyExportProduct": {
+    "message": "使用"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "解决验证码"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "按成功次数计费"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "请使用 Cloud Browser 来解决。"
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "在 Scrapfly 的 Cloud Browser 中打开此页面并用 Playwright 控制。Captcha Solver 会在 Turnstile、reCAPTCHA、GeeTest 等出现时自动解决；失败不收费。"
+  },
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "绕过反机器人"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "复制给 AI"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "将页面、防护、你的设置和代码复制为一条消息，供 ChatGPT、Claude 或任何 AI 助手使用"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "已复制：粘贴到你的 AI 助手中"
+  },
+  "scrapflyExportFormat": {
+    "message": "输出"
+  },
+  "scrapflyExportFormatText": {
+    "message": "文本"
+  },
+  "scrapflyExportProxy": {
+    "message": "代理"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "数据中心"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "住宅"
+  },
+  "scrapflyExportCountry": {
+    "message": "国家/地区"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "任意"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "渲染 JavaScript"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 积分"
+  },
+  "scrapflyExportStepSettings": {
+    "message": "选择设置"
+  },
+  "scrapflyExportStepCode": {
+    "message": "复制代码"
+  },
+  "scrapflyExportStepKey": {
+    "message": "设置 API 密钥"
+  },
+  "scrapflyExportStepRun": {
+    "message": "运行"
   },
   "scrapflyExportGetKey": {
     "message": "获取 API 密钥",

@@ -142,8 +142,14 @@
   "bg-interpreter-reference": {
    "source": "var c={interpreterUrl:'//www.google.com/js/th/x.js'};"
   },
+  "botguard-bg-interpreter": {
+   "url": "https://www.google.com/js/bg/SYNG8zW0Zes93gNdjc4lkEI9bQFK2y5p30k40W8Svdo.js"
+  },
   "botguard-interpreter": {
    "url": "https://www.google.com/js/th/4IhPP34OrBw1XG3wWs6LNYyZaw07wNamlDlDq221_w0.js"
+  },
+  "gmail-waa": {
+   "url": "https://mail.google.com/mail/u/0/waa"
   },
   "trayride-object": {
    "runtimeType": "object"

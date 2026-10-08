@@ -117,7 +117,9 @@ SettingsUI.handleCheckUpdatesNow = async function() {
       throw new Error(_tr('updateServiceNotAvailable', 'Update service not available'));
     }
 
-    const result = await UpdateManager.checkForUpdates(true);
+    // Same as Rules → Update: check the latest release and install; rules the
+    // user edited stay pending for the Rules tab to ask about
+    const result = await UpdateManager.checkAndInstall();
 
     if (lastCheckSpan) {
       const settings = await Utils.getSettings();
@@ -127,28 +129,13 @@ SettingsUI.handleCheckUpdatesNow = async function() {
         : _tr('timeJustNow', 'Just now');
     }
 
-    const pendingCount = await UpdateManager.getPendingUpdatesCount();
-
-    if (result.error) {
-      NotificationHelper.error(_tr('failedCheckForUpdates', 'Failed to check for updates'));
-    } else if (pendingCount > 0) {
-      NotificationHelper.success(
-        _fmt('foundDetectorUpdatesAvailableFmt', `Found ${pendingCount} detector updates available!`, pendingCount)
-      );
-    } else {
-      NotificationHelper.info(_tr('allDetectorsUpToDate', 'All detectors are up to date.'));
-    }
-
-    const incompatibleCount = await UpdateManager.getIncompatibleUpdatesCount();
-    if (incompatibleCount > 0) {
-      const msg = FormatUtils.t('settingsUiIncompatibleCountFmt',
-        'Detector updates that need a newer extension version: {0}', incompatibleCount);
-      NotificationHelper.warning(msg, { duration: 8000 });
+    for (const message of UpdateManager.resultMessages(result, { t: FormatUtils.t, list: FormatUtils.formatList, mentionEdited: true })) {
+      NotificationHelper[message.type](message.text, message.type === 'success' ? {} : { duration: 8000 });
     }
 
     await this.updateIncompatibleUpdatesDisplay();
 
-    Logger.debug('UI', 'Update check completed:', { pendingCount, incompatibleCount, result });
+    Logger.debug('UI', 'Update check completed:', result);
 
   } catch (error) {
     Logger.error('UI', 'Failed to check for updates:', error);

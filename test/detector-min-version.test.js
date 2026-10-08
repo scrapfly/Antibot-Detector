@@ -3,11 +3,12 @@ const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
 
-// Rules → Update serves detectors/ from GitHub main to every installed
-// version. Detectors in the 2.8 format (combinations, standalone:false weak
-// signals) misfire on the 2.7 engine, which scores each signal alone; the
-// 2.7 updater skips files whose minExtensionVersion is newer than itself.
-// Every detector must therefore declare at least 2.8 (BYT-1593).
+// Rules → Update serves detectors/ to every installed version: 2.8.3 and
+// later from the latest GitHub release, older builds from main. Detectors in
+// the 2.8 format (combinations, standalone:false weak signals) misfire on the
+// 2.7 engine, which scores each signal alone; the 2.7 updater skips files
+// whose minExtensionVersion is newer than itself. Every detector must
+// therefore declare at least 2.8 (BYT-1593).
 
 const root = path.join(__dirname, '..');
 const index = JSON.parse(fs.readFileSync(path.join(root, 'detectors/index.json'), 'utf8'));

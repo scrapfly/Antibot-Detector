@@ -6,7 +6,16 @@
  *    regex / whole word / case / scripts-only / payload filters with real
  *    clicks, save, and check the stored rule and the reopened window.
  * 2. Nothing lost on save: open every shipped detector in the editor, save
- *    without changes, and diff every rule field and combination.
+ *    without changes, and diff every rule field and combination (key order
+ *    inside a combination does not count).
+ * 3. Combination groups: add a "one of" group to a reCAPTCHA combination,
+ *    save, delete it and check the combination is back as shipped; change a
+ *    group's mode and back; delete a group and check it is gone.
+ * 4. Help: Test pattern opens with the pattern and options being edited,
+ *    matches like detection, and its Apply only lands with the settings'
+ *    Apply (Cancel keeps the rule); the DOM and Window settings' "Browse"
+ *    work the same way; every method's "?" opens its cheat sheet with real
+ *    examples.
  *
  * Not part of `npm run verify`: it needs Playwright and its Chromium.
  *   npm i --no-save playwright && npx playwright install chromium
@@ -25,6 +34,9 @@ const os = require('os');
 
 const REPO = path.resolve(process.argv[2] || path.join(__dirname, '..'));
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+// JSON with sorted object keys: the editor writes id, name, confidence, when
+const canon = (value) => JSON.stringify(value, (key, v) => (v && typeof v === 'object' && !Array.isArray(v)
+  ? Object.fromEntries(Object.keys(v).sort().map(k => [k, v[k]])) : v));
 let failures = 0;
 const report = (ok, line) => { if (!ok) failures++; console.log(`${ok ? 'PASS' : 'FAIL'}  ${line}`); };
 
@@ -166,8 +178,255 @@ const CASES = [
           }
         }
       }
-      if (JSON.stringify(before.combinations || []) !== JSON.stringify(after.combinations || [])) diffs.push('combinations changed');
+      if (canon(before.combinations || []) !== canon(after.combinations || [])) diffs.push('combinations changed');
       report(diffs.length === 0, `${id}` + (diffs.length ? `\n      ${diffs.slice(0, 6).join('\n      ')}${diffs.length > 6 ? `\n      … ${diffs.length - 6} more` : ''}` : ''));
+    }
+  }
+
+  // ---------------------------------------------- 3. combination groups
+  console.log('\nCombination groups');
+  {
+    const id = 'detect-recaptcha';
+    const combos = (await stored('captcha', id)).combinations;
+    const index = combos.findIndex(c => c.id === 'sdk-widget-api');
+    const shipped = combos[index];
+    const groupPath = String(shipped.when.all.findIndex(node => Array.isArray(node.any)));
+    const card = `#combinationsContainer .combo-card[data-combo="${index}"]`;
+    const group = `${card} .combo-group[data-path="${groupPath}"]`;
+    const reopen = async () => { await openEditor(id, 'reCAPTCHA'); await click(`${card} .combo-toggle`); };
+
+    // A new "one of" group with two patterns, saved and then removed again
+    await reopen();
+    await click(`${card} [data-combo-action="add-group"]`);
+    await sleep(300);
+    report(await p.evaluate(() => document.activeElement?.classList.contains('combo-picker-search')), 'adding a group opens its picker with the search focused');
+    const newPath = String(shipped.when.all.length);
+    for (const pick of ['configured-sdk', 'configured-enterprise-sdk']) await click(`${card} .combo-picker [data-value="pattern:${pick}"]`);
+    await click(`${card} .combo-picker-add`);
+    await sleep(300);
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const added = (await stored('captcha', id)).combinations.find(c => c.id === shipped.id);
+    report(canon(added?.when) === canon({ all: [...shipped.when.all, { any: [{ pattern: 'configured-sdk' }, { pattern: 'configured-enterprise-sdk' }] }] }), 'the new group is saved');
+    await reopen();
+    await click(`${card} .combo-group[data-path="${newPath}"] [data-combo-action="delete-group"]`);
+    await sleep(300);
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const removed = (await stored('captcha', id)).combinations.find(c => c.id === shipped.id);
+    report(canon(removed?.when) === canon(shipped.when), 'deleting it gives the combination as shipped');
+
+    await reopen();
+    await p.selectOption(`${group} select[data-combo-action="mode"]`, 'all');
+    await sleep(300);
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const changed = (await stored('captcha', id)).combinations.find(c => c.id === shipped.id);
+    report(Array.isArray(changed?.when?.all?.[Number(groupPath)]?.all), 'the group saved as "All of these"');
+
+    await reopen();
+    await p.selectOption(`${group} select[data-combo-action="mode"]`, 'any');
+    await sleep(300);
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const restored = (await stored('captcha', id)).combinations.find(c => c.id === shipped.id);
+    report(canon(restored?.when) === canon(shipped.when), 'switching back gives the combination as shipped');
+
+    await reopen();
+    await click(`${group} [data-combo-action="delete-group"]`);
+    await sleep(300);
+    const focused = await p.evaluate(() => document.activeElement?.dataset?.comboAction === 'open-picker');
+    report(focused, 'deleting a group moves focus to "+ Add pattern"');
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const deleted = (await stored('captcha', id)).combinations.find(c => c.id === shipped.id);
+    const expected = { all: shipped.when.all.filter((_, i) => i !== Number(groupPath)) };
+    report(canon(deleted?.when) === canon(expected), 'the group is gone from the saved combination');
+  }
+
+  // ------------------------------------------------------------- 4. help
+  console.log('\nHelp: Test pattern, DOM selector card, method help');
+  {
+    const cookieRule = async () => (await stored('antibot', 'detect-akamai')).detection.cookie.find(r => r.id === 'abck-sensor-cookie');
+    const shipped = await cookieRule();
+    const rowIndex = async () => p.evaluate(() => [...document.querySelectorAll('#editRuleModal .method-section[data-method-type="cookie"] .method-item')]
+      .findIndex(item => item.dataset.patternId === 'abck-sensor-cookie'));
+    const openCookieSettings = async () => {
+      await openEditor('detect-akamai', 'Akamai');
+      const section = '#editRuleModal .method-section[data-method-type="cookie"]';
+      await p.evaluate((sel) => document.querySelector(sel)?.classList.remove('collapsed'), section);
+      const index = await rowIndex();
+      await p.evaluate(([sel, i]) => {
+        const items = document.querySelectorAll(`${sel} .method-item`);
+        items[i].querySelector('.field-actions[data-field-type="name"] .method-action-btn.settings').click();
+      }, [section, index]);
+      await p.waitForSelector('#methodSettingsModal', { state: 'visible' });
+      await sleep(300);
+    };
+
+    await openCookieSettings();
+    await click('[data-pattern-test="name"]');
+    await p.waitForSelector('#patternTesterModal', { state: 'visible' });
+    await sleep(300);
+    const opened = await p.evaluate(() => ({
+      title: document.querySelector('#patternTesterTitle').textContent,
+      pattern: document.querySelector('#ptPattern').value,
+      says: document.querySelector('#ptSays').textContent,
+      results: [...document.querySelectorAll('#ptResults .pt-result')].map(r => [r.querySelector('.pt-sample').textContent, r.classList.contains('is-match')])
+    }));
+    report(/Cookie name/.test(opened.title) && opened.pattern === shipped.name, `the tester opens on the pattern being edited — ${opened.title}: ${opened.pattern}`);
+    const expected = JSON.stringify([['_abck', true], ['x_abck', false], ['_abck_2', true], ['_ABCK', true]]);
+    report(JSON.stringify(opened.results) === expected && /start with/.test(opened.says),
+      `a plain cookie name matches as a prefix, like detection — ${JSON.stringify(opened.results)}`);
+
+    await p.fill('#ptPattern', '^_abck$');
+    await click('#patternTesterModal .pt-option[data-option="regex"]');
+    await sleep(200);
+    const asRegex = await p.$$eval('#ptResults .pt-result', rows => rows.map(r => r.classList.contains('is-match')));
+    report(JSON.stringify(asRegex) === JSON.stringify([true, false, false, true]), `with Regex ^_abck$ only the exact name matches — ${JSON.stringify(asRegex)}`);
+    await click('#applyPatternTester');
+    await sleep(300);
+    const handedBack = await p.evaluate(() => ({ regex: document.querySelector('#nameRegex').checked, preview: document.querySelector('[data-pattern-preview="name"]').textContent }));
+    report(handedBack.regex && handedBack.preview === '^_abck$', 'Apply hands the pattern and Regex back to the settings');
+
+    await click('#cancelMethodSettings');
+    await sleep(300);
+    const rowAfterCancel = await p.evaluate(() => document.querySelector('#editRuleModal .method-section[data-method-type="cookie"] .method-item[data-pattern-id="abck-sensor-cookie"] .method-input.method-name').value);
+    report(rowAfterCancel === shipped.name, 'Cancel in the settings keeps the rule as it was');
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const afterCancel = await cookieRule();
+    report(afterCancel.name === shipped.name && afterCancel.nameRegex === shipped.nameRegex, 'and nothing changed in storage');
+
+    await openCookieSettings();
+    await click('[data-pattern-test="name"]');
+    await p.waitForSelector('#patternTesterModal', { state: 'visible' });
+    await p.fill('#ptPattern', '^_abck$');
+    await click('#patternTesterModal .pt-option[data-option="regex"]');
+    await click('#applyPatternTester');
+    await sleep(200);
+    await click('#saveMethodSettings');
+    await sleep(300);
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const applied = await cookieRule();
+    report(applied.name === '^_abck$' && applied.nameRegex === true, `Apply in the settings saves it — ${applied.name}, regex ${applied.nameRegex}`);
+
+    // DOM: the selector helper lives in the settings ("Browse")
+    const domRule = async () => (await stored('captcha', 'detect-recaptcha')).detection.dom.find(r => r.id === 'configured-widget');
+    const domShipped = await domRule();
+    const openDomSettings = async () => {
+      await openEditor('detect-recaptcha', 'reCAPTCHA');
+      await openSettings('dom', 'name');
+    };
+    await openDomSettings();
+    const domCard = await p.evaluate(() => ({
+      card: getComputedStyle(document.querySelector('#domSelectorGroup')).display !== 'none',
+      options: getComputedStyle(document.querySelector('#nameFieldOptionsGroup')).display !== 'none',
+      rowHelper: !!document.querySelector('#editRuleModal .dom-helper-btn')
+    }));
+    report(domCard.card && !domCard.options && !domCard.rowHelper, 'DOM settings show the CSS selector card, no Regex / Whole word / Case, no "?" on the row');
+    // Pick a selector other than the current one (the list opens on its page)
+    const pickOther = async () => {
+      await click('[data-dom-browse]');
+      await p.waitForSelector('#domHelperModal', { state: 'visible' });
+      await p.evaluate((current) => {
+        const rows = [...document.querySelectorAll('#domSuggestions .rh-row')];
+        (rows.find(r => r.querySelector('.rh-row-value').textContent.trim() !== current) || rows[0]).click();
+      }, domShipped.selector);
+      return p.$eval('#domPreviewContent', el => el.textContent.trim());
+    };
+    const picked = await pickOther();
+    report(picked && picked !== domShipped.selector, `the helper opened from the settings picks another selector — ${picked}`);
+    await click('#useDomSelector');
+    await sleep(200);
+    await click('#cancelMethodSettings');
+    await sleep(200);
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    report((await domRule()).selector === domShipped.selector, 'a picked selector is dropped by Cancel');
+    await openDomSettings();
+    const pickedAgain = await pickOther();
+    await click('#useDomSelector');
+    await sleep(200);
+    await click('#saveMethodSettings');
+    await sleep(200);
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    report((await domRule()).selector === pickedAgain, `and saved by Apply — ${pickedAgain}`);
+
+    // Window: the property helper lives in the settings too (property + condition)
+    const winRule = async () => (await stored('captcha', 'detect-recaptcha')).detection.window.find(r => r.id === 'standard-render-api');
+    const winShipped = await winRule();
+    const openWindowSettings = async () => {
+      await openEditor('detect-recaptcha', 'reCAPTCHA');
+      const section = '#editRuleModal .method-section[data-method-type="window"]';
+      await p.evaluate((sel) => document.querySelector(sel)?.classList.remove('collapsed'), section);
+      await p.evaluate((sel) => document.querySelector(`${sel} .method-item[data-pattern-id="standard-render-api"] .field-actions[data-field-type="name"] .method-action-btn.settings`).click(), section);
+      await p.waitForSelector('#methodSettingsModal', { state: 'visible' });
+      await sleep(300);
+    };
+    const pickWindow = async () => {
+      await click('[data-window-browse]');
+      await p.waitForSelector('#windowHelperModal', { state: 'visible' });
+      await p.fill('#windowKeywordInput', '__nightmare');
+      await sleep(200);
+      await p.keyboard.press('Enter');
+      await sleep(200);
+      await p.selectOption('#windowConditionSelect', 'truthy');
+      await click('#useWindowProperty');
+      await sleep(200);
+    };
+    await openWindowSettings();
+    const winCard = await p.evaluate(() => ({
+      card: getComputedStyle(document.querySelector('#windowPropertyGroup')).display !== 'none',
+      preview: document.querySelector('[data-pattern-preview="window"]').textContent,
+      says: document.querySelector('[data-pattern-says="window"]').textContent,
+      rowHelper: !!document.querySelector('#editRuleModal .window-helper-btn')
+    }));
+    report(winCard.card && winCard.preview === winShipped.path && /window\.grecaptcha\.render/.test(winCard.says) && !winCard.rowHelper,
+      `Window settings show the property card, no "?" on the row — ${winCard.says}`);
+    await pickWindow();
+    const winPending = await p.evaluate(() => ({
+      preview: document.querySelector('[data-pattern-preview="window"]').textContent,
+      says: document.querySelector('[data-pattern-says="window"]').textContent
+    }));
+    report(winPending.preview === '__nightmare' && /__nightmare/.test(winPending.says), `the picked property shows in the card — ${winPending.says}`);
+    await click('#cancelMethodSettings');
+    await sleep(200);
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const winAfterCancel = await winRule();
+    report(winAfterCancel?.path === winShipped.path && winAfterCancel?.condition === winShipped.condition, 'a picked property is dropped by Cancel');
+    await openWindowSettings();
+    await pickWindow();
+    await click('#saveMethodSettings');
+    await sleep(200);
+    const rowShows = await p.evaluate(() => document.querySelector('#editRuleModal .method-item[data-pattern-id="standard-render-api"] .condition-selected-text')?.textContent);
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const winApplied = await winRule();
+    report(winApplied?.path === '__nightmare' && winApplied?.condition === 'truthy' && rowShows === 'truthy',
+      `and saved by Apply, with the row's condition updated — ${winApplied?.path} ${winApplied?.condition}`);
+
+    // Method help: a cheat sheet per method, closed by Escape, one blur
+    await openEditor('detect-recaptcha', 'reCAPTCHA');
+    for (const method of ['url', 'header', 'cookie', 'content', 'dom', 'js_hooks', 'window', 'payload']) {
+      await click(`#editRuleModal .method-section[data-method-type="${method}"] .method-help-btn`);
+      await p.waitForSelector('#methodHelpModal', { state: 'visible' });
+      const help = await p.evaluate(() => ({
+        title: document.querySelector('#methodHelpTitle').textContent,
+        examples: document.querySelectorAll('#methodHelpContent .mh-examples .rh-row').length,
+        sections: document.querySelectorAll('#methodHelpContent .rh-section').length,
+        footer: !!document.querySelector('#methodHelpModal .rule-modal-footer'),
+        editorBlur: getComputedStyle(document.querySelector('#editRuleModal .rule-modal-backdrop')).display
+      }));
+      await p.keyboard.press('Escape');
+      await sleep(200);
+      const closed = await p.evaluate(() => getComputedStyle(document.querySelector('#methodHelpModal')).display === 'none'
+        && getComputedStyle(document.querySelector('#editRuleModal .rule-modal-backdrop')).display !== 'none');
+      report(help.title && help.examples >= 3 && help.sections === 3 && !help.footer && help.editorBlur === 'none' && closed,
+        `${method}: "${help.title}", ${help.examples} real examples, Escape closes it`);
     }
   }
 

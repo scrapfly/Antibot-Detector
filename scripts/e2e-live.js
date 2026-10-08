@@ -6,10 +6,11 @@
  *   { "url": "...", "expect": [{ "detector": "detect-x", "min": 80 }],
  *     "forbid": ["detect-y"], "waitMs": 12000, "note": "why this site" }
  *
- * For every site it prints what the extension detected (confidence and the
- * rule ids that matched), checks expect/forbid, and on a miss prints what the
- * page really loaded (script/XHR URLs, cookies, response headers, globals) so
- * the rule can be fixed. Full results go to --out (JSON).
+ * For every site it prints what the extension detected (confidence, the rule
+ * ids that matched and the combinations that fired), checks expect/forbid,
+ * and on a miss prints what the page really loaded (script/XHR URLs, cookies,
+ * response headers, globals) so the rule can be fixed. Full results go to
+ * --out (JSON).
  *
  *   npm run e2e:live                              all sites
  *   npm run e2e:live -- --only=datadome           sites whose url/expect matches
@@ -118,7 +119,8 @@ const sites = JSON.parse(fs.readFileSync(SITES_FILE, 'utf8')).sites
         name: d.detector?.name || d.name,
         category: String(d.category || '').toLowerCase(),
         confidence: d.confidence,
-        rules: [...new Set((d.matches || []).map(m => m.patternId || `${m.type}:${m.pattern || m.value || '?'}`))]
+        rules: [...new Set((d.matches || []).map(m => m.patternId || `${m.type}:${m.pattern || m.value || '?'}`))],
+        combinations: (d.combinations || []).map(c => ({ id: c.id, confidence: c.confidence }))
       }))).catch(() => []);
       await popup.close();
     }
@@ -148,7 +150,8 @@ const sites = JSON.parse(fs.readFileSync(SITES_FILE, 'utf8')).sites
     console.log(`\n${ok ? 'PASS' : 'FAIL'}  ${site.url}  [${signals.status.join(',')}]${loadError ? '  ' + loadError : ''}${site.note ? '  — ' + site.note : ''}`);
     for (const c of checks) console.log(`      ${c.ok ? 'ok ' : 'NO '} ${c.text}`);
     for (const d of detections.filter(x => x.category !== 'fingerprint' || opt.fingerprint)) {
-      console.log(`      ${String(d.confidence).padStart(3)}% ${d.name}  <- ${d.rules.join(', ')}`);
+      console.log(`      ${String(d.confidence).padStart(3)}% ${d.name}  <- ${d.rules.join(', ')}`
+        + (d.combinations?.length ? `  [combinations: ${d.combinations.map(c => `${c.id} ${c.confidence}%`).join(', ')}]` : ''));
     }
     const fp = detections.filter(x => x.category === 'fingerprint');
     if (fp.length && !opt.fingerprint) console.log(`      fingerprint: ${fp.map(d => `${d.name.replace(' Fingerprint', '')} ${d.confidence}`).join(', ')}`);

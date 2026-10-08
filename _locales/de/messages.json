@@ -216,7 +216,7 @@
     "message": "Der Erkennungsverlauf wird hier angezeigt, während du im Web surfst."
   },
   "rulesUpdateTitle": {
-    "message": "Nach Detektor-Updates suchen"
+    "message": "Regel-Updates aus dem neuesten Scrapfly-Release installieren"
   },
   "rulesAddTitle": {
     "message": "Neuen Detektor hinzufügen"
@@ -841,12 +841,6 @@
   "webhookTestFailedFmt": {
     "message": "Webhook-Test fehlgeschlagen: {0}"
   },
-  "foundDetectorUpdatesAvailableFmt": {
-    "message": "{0} Detektor-Updates verfügbar!"
-  },
-  "allDetectorsUpToDate": {
-    "message": "Alle Detektoren sind auf dem neuesten Stand."
-  },
   "importDetectorsTitle": {
     "message": "Detektoren importieren"
   },
@@ -862,6 +856,9 @@
   "detectorsImported": {
     "message": "Detektoren importiert"
   },
+  "detectorExportedFmt": {
+    "message": "{0} exportiert"
+  },
   "failedImportDetectors": {
     "message": "Detektoren konnten nicht importiert werden. Bitte das Dateiformat prüfen."
   },
@@ -870,9 +867,6 @@
   },
   "detectorsUpdatedFmt": {
     "message": "{0} Detektoren aktualisiert"
-  },
-  "updatesAvailableClickToApplyFmt": {
-    "message": "{0} Updates verfügbar – erneut klicken, um sie anzuwenden"
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" gelöscht"
@@ -885,9 +879,6 @@
   },
   "textWordMatching": {
     "message": "Text-/Wortabgleich"
-  },
-  "domSelectorMatching": {
-    "message": "DOM-Selektor-Abgleich"
   },
   "payloadTextMatching": {
     "message": "Nutzlast-Textabgleich"
@@ -942,6 +933,30 @@
   },
   "couldNotFetchUpdates": {
     "message": "Updates konnten nicht vom Server abgerufen werden"
+  },
+  "updateResultInstalledFmt": {
+    "message": "Regeln aus Release {0} aktualisiert: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "Alle Regeln sind auf dem Stand von Release {0}."
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "Warten auf Erweiterung {0} oder neuer: {1}. Sie werden installiert, sobald Chrome die Erweiterung aktualisiert."
+  },
+  "updateResultFailedFmt": {
+    "message": "Download nicht möglich: {0}. Versuchen Sie es später erneut."
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "Von Ihnen bearbeitete Regeln warten auf Ihre Entscheidung unter Regeln → Aktualisieren: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "GitHub ist nicht erreichbar, Regel-Updates können nicht geprüft werden."
+  },
+  "updateErrorNoRelease": {
+    "message": "Auf GitHub wurde kein veröffentlichtes Scrapfly-Release gefunden."
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub begrenzt die Update-Prüfungen. Versuchen Sie es in {0} Min. erneut."
   },
   "errorApplyingUpdates": {
     "message": "Fehler beim Anwenden der Updates"
@@ -1588,114 +1603,6 @@
   "notifLoadingDefault": {
     "message": "Wird geladen..."
   },
-  "helpJsHooksTitle": {
-    "message": "Erkennung über JavaScript-Hooks"
-  },
-  "helpJsHooksDescription": {
-    "message": "Hooks fangen Browser-API-Aufrufe ab (Canvas, Audio, WebGL usw.), um Anti-Bot-Fingerprinting-Code in Echtzeit zu erkennen, sobald die Seite auf diese APIs zugreift."
-  },
-  "helpJsHooksWarning": {
-    "message": "Hooks müssen bei document_start installiert werden, bevor ein Seitenskript ausgeführt wird – andernfalls kann die Seite Referenzen auf die ursprünglichen APIs speichern, bevor unser Shim aktiv ist."
-  },
-  "helpJsHooksTip": {
-    "message": "Fügen Sie ein Ziel wie CanvasRenderingContext2D.prototype.getImageData hinzu, um Canvas-Fingerprinting zu erkennen."
-  },
-  "helpWindowTitle": {
-    "message": "Erkennung über Window-Eigenschaften"
-  },
-  "helpWindowDescription": {
-    "message": "Erkennt JavaScript-Objekte und -Eigenschaften, die von Anti-Bot-Skripten zum globalen Window-Objekt hinzugefügt werden."
-  },
-  "helpWindowWarning": {
-    "message": "Einige Anti-Bot-Skripte verwenden Symbol()-Schlüssel, die nicht aufzählbar sind – diese sind schwerer zu erkennen."
-  },
-  "helpWindowTip": {
-    "message": "Verwenden Sie Bedingungen wie typeof object oder exists, um den Eigenschaftstyp abzugleichen."
-  },
-  "helpUrlTitle": {
-    "message": "Erkennung über URL-Muster"
-  },
-  "helpUrlDescription": {
-    "message": "Gleicht URLs geladener Ressourcen (Skripte, Bilder, Netzwerkanfragen) mit Mustern ab."
-  },
-  "helpUrlWarning": {
-    "message": "Muster ignorieren Groß- und Kleinschreibung, solange „Groß-/Kleinschreibung beachten“ aus ist. Ein zu allgemeines Muster trifft auch fremde Ressourcen – formulieren Sie es genau."
-  },
-  "helpUrlTip": {
-    "message": "Verwenden Sie die Regex-Option für komplexe Muster wie /\\/v\\d+\\/challenge/."
-  },
-  "helpHeaderTitle": {
-    "message": "Erkennung über HTTP-Header"
-  },
-  "helpHeaderDescription": {
-    "message": "Erkennt HTTP-Request- und -Response-Header, die von Anti-Bot-Middleware gesetzt werden."
-  },
-  "helpHeaderWarning": {
-    "message": "Einige Header sind nur in der ursprünglichen Anfrage vorhanden – stellen Sie sicher, dass Ihr Bereich \"Anfrage\" einschließt."
-  },
-  "helpHeaderTip": {
-    "message": "Häufige Ziele: x-akamai-bot-manager-token, cf-ray, x-shape-version."
-  },
-  "helpCookieTitle": {
-    "message": "Erkennung über Cookies"
-  },
-  "helpCookieDescription": {
-    "message": "Erkennt Cookies, die von Anti-Bot-Challenges gesetzt werden. Gleicht den Cookie-Namen (und optional das Wertmuster) ab."
-  },
-  "helpCookieWarning": {
-    "message": "Cookie-Namen mit zufälligen Suffixen (z. B. _abck-xyz123) erfordern ein Regex-Muster anstelle eines wörtlichen Namens."
-  },
-  "helpCookieTip": {
-    "message": "Verwenden Sie \"Ganzes Wort\" für exakte Namensübereinstimmungen oder \"Regex\" für Präfixmuster wie ^datadome-."
-  },
-  "helpContentTitle": {
-    "message": "Erkennung über Seiteninhalte"
-  },
-  "helpContentDescription": {
-    "message": "Sucht nach Textmustern im HTML der Seite und in Inline-Skript-Tags."
-  },
-  "helpContentWarning": {
-    "message": "Das Scannen der gesamten Seite kann bei großen Seiten langsam sein. Beschränken Sie es auf \"Nur Skripte prüfen\", wenn die Signatur im JS-Code liegt."
-  },
-  "helpContentTip": {
-    "message": "Verwenden Sie \"Ganzes Wort\", um Fehlalarme durch Teilzeichenfolgen innerhalb längerer Wörter zu vermeiden."
-  },
-  "helpDomTitle": {
-    "message": "Erkennung über DOM-Selektoren"
-  },
-  "helpDomDescription": {
-    "message": "Erkennt HTML-Elemente über CSS-Selektoren. Wird ausgelöst, wenn das übereinstimmende Element im DOM vorhanden ist."
-  },
-  "helpDomWarning": {
-    "message": "Selektoren stimmen nur mit Elementen überein, die in das tatsächliche DOM gerendert wurden – nicht mit solchen innerhalb von iframes oder Shadow Roots."
-  },
-  "helpDomTip": {
-    "message": "Verwenden Sie spezifische Selektoren wie div#cf-challenge[data-ray] anstelle von generischen, um Fehlalarme zu reduzieren."
-  },
-  "helpPayloadTitle": {
-    "message": "Erkennung über Anfrage-Nutzlast"
-  },
-  "helpPayloadDescription": {
-    "message": "Überwacht alle HTTP-POST/PUT/PATCH-Anfrage-Bodies auf Textmuster."
-  },
-  "helpPayloadWarning": {
-    "message": "Die Nutzlast-Überwachung funktioniert nur für Anfragen, die unsere Erweiterung abfangen kann (keine verschlüsselten Bodies, keine undurchsichtigen Blobs)."
-  },
-  "helpPayloadTip": {
-    "message": "Kombinieren Sie dies mit einem URL-Muster, um den Abgleich auf bestimmte Endpunkte zu beschränken."
-  },
-  "helpWarningLabel": {
-    "message": "Warnung:"
-  },
-  "helpTipLabel": {
-    "message": "Tipp:"
-  },
-  "detectionMethodTitle": {
-    "message": "Erkennungsmethode"
-  },
-  "noHelpContentAvailable": {
-    "message": "Für diesen Methodentyp ist keine Hilfe verfügbar."
-  },
   "advNoCapturesHintFmt": {
     "message": "Klicken Sie oben auf \"Aufzeichnung starten\", um mit der Erfassung von {0}-Daten zu beginnen"
   },
@@ -2026,12 +1933,6 @@
   "rhSearchDom": {
     "message": "Selektoren suchen, z. B. captcha, iframe"
   },
-  "rhSearchRegex": {
-    "message": "Zu suchender Text, z. B. bm_ oder token"
-  },
-  "rhSearchSample": {
-    "message": "Wert zum Testen eingeben"
-  },
   "rhCondition": {
     "message": "Bedingung"
   },
@@ -2155,9 +2056,6 @@
   "rhCondFalse": {
     "message": "ist false"
   },
-  "rhWindowIntro": {
-    "message": "Prüft eine globale JavaScript-Variable auf der Seite (window.…). Wähle eine und dann, was sie sein muss."
-  },
   "rhWindowSentenceFmt": {
     "message": "Trifft auf Seiten zu, auf denen {0} {1}"
   },
@@ -2197,45 +2095,6 @@
   "rhDomCamel": {
     "message": "camelCase-Klasse"
   },
-  "rhRegexTitle": {
-    "message": "Regex-Assistent"
-  },
-  "rhUsePattern": {
-    "message": "Muster verwenden"
-  },
-  "rhRegexStartsFmt": {
-    "message": "Beginnt mit „{0}“"
-  },
-  "rhRegexEndsFmt": {
-    "message": "Endet mit „{0}“"
-  },
-  "rhRegexContainsFmt": {
-    "message": "Enthält „{0}“ an beliebiger Stelle"
-  },
-  "rhRegexWordFmt": {
-    "message": "Ganzes Wort „{0}“"
-  },
-  "rhRegexOrFmt": {
-    "message": "„{0}“ oder eine Alternative"
-  },
-  "rhRegexStartsMoreFmt": {
-    "message": "Beginnt mit „{0}“, gefolgt von weiterem Text"
-  },
-  "rhRegexEitherFmt": {
-    "message": "„{0}“ oder „{1}“"
-  },
-  "rhExamplesForFmt": {
-    "message": "Beispiele für „{0}“"
-  },
-  "rhExamples": {
-    "message": "Beispiele"
-  },
-  "rhHowMatchesFmt": {
-    "message": "So wird „{0}“ gefunden"
-  },
-  "rhQuickRef": {
-    "message": "Kurzreferenz"
-  },
   "rhRefAny": {
     "message": "beliebiges Zeichen"
   },
@@ -2272,74 +2131,302 @@
   "rhNoMatch": {
     "message": "Kein Treffer"
   },
-  "rhWwIntro": {
-    "message": "Trifft nur, wenn der Text allein steht und nicht Teil eines längeren Wortes ist."
+  "ptTitle": {
+    "message": "Muster testen"
   },
-  "rhWwExact": {
-    "message": "Exaktes Wort"
+  "ptTitleFmt": {
+    "message": "Muster testen · {0}"
   },
-  "rhWwJoinedBefore": {
-    "message": "Mit dem Text davor verbunden"
+  "ptKindUrl": {
+    "message": "URL"
   },
-  "rhWwJoinedAfter": {
-    "message": "Mit dem Text danach verbunden"
+  "ptKindContent": {
+    "message": "Seiteninhalt"
   },
-  "rhWwSpaces": {
-    "message": "Durch Leerzeichen getrennt"
+  "ptKindCookieName": {
+    "message": "Cookie-Name"
   },
-  "rhCsIntro": {
-    "message": "Wenn aktiv, gelten Groß- und Kleinbuchstaben als verschieden."
+  "ptKindCookieValue": {
+    "message": "Cookie-Wert"
   },
-  "rhCsOnTitle": {
-    "message": "Mit Groß-/Kleinschreibung an"
+  "ptKindHeaderName": {
+    "message": "Header-Name"
   },
-  "rhCsOffTitle": {
-    "message": "Mit Groß-/Kleinschreibung aus"
+  "ptKindHeaderValue": {
+    "message": "Header-Wert"
   },
-  "rhWhatIsRegex": {
-    "message": "Was ist ein regulärer Ausdruck?"
+  "ptKindPayloadText": {
+    "message": "Anfrageinhalt"
   },
-  "rhWhatIsWholeWord": {
-    "message": "Was bedeutet „Ganzes Wort“?"
+  "ptKindPayloadUrl": {
+    "message": "Anfrage-URL"
   },
-  "rhWhatIsCase": {
-    "message": "Was bedeutet „Groß-/Kleinschreibung“?"
+  "ptPatternLabel": {
+    "message": "Muster"
   },
-  "rhRegexIntro": {
-    "message": "Ein regulärer Ausdruck (Regex) findet Text über ein Muster statt über exakte Zeichen."
+  "ptOptionsLabel": {
+    "message": "Vergleichsoptionen"
   },
-  "rhWhenToUse": {
-    "message": "Wann verwenden"
+  "ptOptRegex": {
+    "message": "Regex"
   },
-  "rhRegexUse1": {
-    "message": "Text, der mit etwas Bestimmtem beginnt oder endet"
+  "ptTryOn": {
+    "message": "Ausprobieren mit"
   },
-  "rhRegexUse2": {
-    "message": "Mehrere Varianten auf einmal (mit |)"
+  "ptExamplesBtn": {
+    "message": "Beispiele"
   },
-  "rhRegexUse3": {
-    "message": "Zahlen oder bestimmte Zeichenarten"
+  "ptSamplesPlaceholder": {
+    "message": "Eins pro Zeile: eine URL, ein Cookie-Name…"
   },
-  "rhRegexTip": {
-    "message": "Für exakten Text brauchen Sie kein Regex: Verwenden Sie „Ganzes Wort“."
+  "ptNoSamples": {
+    "message": "Geben Sie oben Text ein, eins pro Zeile, um zu sehen, ob er passt."
   },
-  "rhBestFor": {
-    "message": "Ideal für"
+  "ptCheatTitle": {
+    "message": "Regex-Spickzettel"
   },
-  "rhWwUse1": {
-    "message": "Exakte Cookie-Namen"
+  "ptCheatNote": {
+    "message": "Schreiben Sie das Muster ohne / drumherum. Eine Wiederholung in einer Wiederholung wie (a+)+ wird abgelehnt, weil sie Seiten einfrieren könnte."
   },
-  "rhWwUse2": {
-    "message": "Bestimmte Header-Namen"
+  "ptApply": {
+    "message": "Übernehmen"
   },
-  "rhWwUse3": {
-    "message": "Vollständige Klassen- oder Funktionsnamen"
+  "ptTestBtn": {
+    "message": "Testen"
   },
-  "rhCsUse1": {
-    "message": "Header und Cookies mit exakter Schreibweise"
+  "ptTestTitle": {
+    "message": "Muster an Beispieltext ausprobieren"
   },
-  "rhCsUse2": {
-    "message": "JavaScript-Eigenschaftsnamen"
+  "ptNoPattern": {
+    "message": "Noch kein Muster"
+  },
+  "ptHintRegex": {
+    "message": "Ein Muster wie ^bm_ oder \\d+, ohne / drumherum"
+  },
+  "ptHintWholeWord": {
+    "message": "Überspringt Treffer in einem längeren Wort: _abck, nicht test_abck"
+  },
+  "ptHintCase": {
+    "message": "Akamai passt nicht mehr auf akamai"
+  },
+  "ptSaysEmpty": {
+    "message": "Geben Sie ein Muster ein, um zu sehen, worauf es passt."
+  },
+  "ptSaysRegex": {
+    "message": "Passt auf Text, in dem der Regex einen Treffer findet."
+  },
+  "ptSaysWordFmt": {
+    "message": "Passt auf „{0}“ als ganzes Wort, nicht innerhalb eines längeren Wortes."
+  },
+  "ptSaysWildcardFmt": {
+    "message": "Passt auf Namen wie „{0}“, wobei * für beliebigen Text steht."
+  },
+  "ptSaysPrefixFmt": {
+    "message": "Passt auf Namen, die mit „{0}“ beginnen."
+  },
+  "ptSaysContainsFmt": {
+    "message": "Passt auf Text, der „{0}“ enthält."
+  },
+  "ptCaseExact": {
+    "message": "Groß- und Kleinschreibung müssen genau übereinstimmen."
+  },
+  "ptCaseIgnored": {
+    "message": "Groß- und Kleinschreibung werden gleich behandelt."
+  },
+  "ptNoteInvalidFmt": {
+    "message": "Dieser Regex ist ungültig und passt daher nie: {0}"
+  },
+  "ptNoteRejected": {
+    "message": "Die Erkennung lehnt diesen Regex ab, weil er Seiten einfrieren könnte (eine Wiederholung in einer Wiederholung oder über 1000 Zeichen), daher passt er nie."
+  },
+  "ptNoteSlashes": {
+    "message": "Lassen Sie die / an beiden Enden weg, denn sie werden als Teil des Textes gesucht."
+  },
+  "ptNoteLooksRegex": {
+    "message": "Das sieht wie ein Regex aus: Schalten Sie Regex ein, sonst werden seine Zeichen als normaler Text gesucht."
+  },
+  "ptNoteWordIgnored": {
+    "message": "„Ganzes Wort“ wird ignoriert, solange Regex eingeschaltet ist."
+  },
+  "ptNoteHeaderCase": {
+    "message": "Header-Namen werden kleingeschrieben gespeichert. Mit „Groß-/Kleinschreibung beachten“ passt dieses Muster daher nie."
+  },
+  "ptNoteWordEdges": {
+    "message": "Dieses Muster beginnt oder endet mit einem Symbol, daher braucht „Ganzes Wort“ direkt neben diesem Symbol einen Buchstaben, eine Ziffer oder _."
+  },
+  "rhRefDot": {
+    "message": "ein echter Punkt"
+  },
+  "rhRefSet": {
+    "message": "eines von a, b, c"
+  },
+  "rhRefCount": {
+    "message": "2- bis 5-mal"
+  },
+  "mhExamplesTitle": {
+    "message": "In den Regeln von Scrapfly"
+  },
+  "mhHowTitle": {
+    "message": "So wird verglichen"
+  },
+  "mhWriteTitle": {
+    "message": "Was Sie schreiben können"
+  },
+  "mhLimitsTitle": {
+    "message": "Gut zu wissen"
+  },
+  "mhUrlIntro": {
+    "message": "Prüft die Adresse der Seite und die URLs, die die Seite anfragt: Skripte, XHR- und fetch-Aufrufe, Bilder, Frames und Pings."
+  },
+  "mhUrlHow1": {
+    "message": "Ohne Regex muss die URL den Text enthalten, ohne Rücksicht auf Groß- und Kleinschreibung. Die ganze URL zählt, samt Query-String."
+  },
+  "mhUrlHow2": {
+    "message": "Lassen Sie bei Regex die / an beiden Enden weg und schreiben Sie Punkte als `\\.`, wie in `^https://js\\.example\\.com/`."
+  },
+  "mhUrlHow3": {
+    "message": "URL-Bereich: Seite prüft nur die Adresse der Seite, Skripte ergänzt die Skriptquellen, Alle (Standard) ergänzt jede Anfrage."
+  },
+  "mhUrlLimit1": {
+    "message": "Anfragen für Schriftarten, Medien und Stylesheets werden nicht aufgezeichnet."
+  },
+  "mhUrlLimit2": {
+    "message": "Nur Anfragen vor dem Scan zählen; der Scan läuft, sobald die Seite geladen ist."
+  },
+  "mhHeaderIntro": {
+    "message": "Prüft die Header der eigenen Anfrage und Antwort der Seite, nicht die von Skripten, XHR-Aufrufen oder Frames."
+  },
+  "mhHeaderHow1": {
+    "message": "Header-Namen werden kleingeschrieben verglichen, und normaler Text bedeutet „enthält“: `server` passt auch auf `server-timing`. Für einen exakten Namen verwenden Sie Regex `^server$`."
+  },
+  "mhHeaderHow2": {
+    "message": "Der Wert wird am Header mit diesem Namen geprüft; lassen Sie ihn leer, um jeden Wert zu akzeptieren."
+  },
+  "mhHeaderHow3": {
+    "message": "Bereich Antwort (Standard) bedeutet von der Website gesendete Header; Anfrage bedeutet vom Browser gesendete Header."
+  },
+  "mhHeaderLimit1": {
+    "message": "Schreiben Sie Header-Namen mit „Groß-/Kleinschreibung beachten“ in Kleinbuchstaben."
+  },
+  "mhHeaderLimit2": {
+    "message": "Seiten, die ihre Adresse ohne Neuladen ändern, werden ohne Header erneut gescannt."
+  },
+  "mhCookieIntro": {
+    "message": "Prüft die Cookies der Seite nach Name und optional Wert, einschließlich HttpOnly- und Secure-Cookies."
+  },
+  "mhCookieHow1": {
+    "message": "Ein normaler Name passt als Präfix: `_abck` passt auch auf `_abck_2`."
+  },
+  "mhCookieHow2": {
+    "message": "`*` steht für beliebigen Text: `bm_*` passt auf `bm_sz` und `bm_sv`."
+  },
+  "mhCookieHow3": {
+    "message": "Für einen exakten Namen schalten Sie Regex ein und schreiben `^name$`. Der Wert passt, wenn er den Text enthält."
+  },
+  "mhCookieLimit1": {
+    "message": "Bereich Anfrage (Standard) liest die Cookies des Browsers für die Seite; Antwort liest die Cookies, die die Antwort der Seite setzt."
+  },
+  "mhCookieLimit2": {
+    "message": "Cookies anderer Websites, etwa im Frame eines Anbieters, werden nicht gesehen. Lange Werte werden auf 100 Zeichen gekürzt."
+  },
+  "mhContentIntro": {
+    "message": "Durchsucht den Text der Seite: das HTML ihres Body, ihre Inline-Skripte und die Skript- und Stylesheet-Dateien, die sie lädt."
+  },
+  "mhContentHow1": {
+    "message": "Normaler Text passt, wenn der Text ihn enthält, ohne Rücksicht auf Groß- und Kleinschreibung."
+  },
+  "mhContentHow2": {
+    "message": "„Ganzes Wort“ überspringt Treffer in einem längeren Wort; es braucht einen Buchstaben, eine Ziffer oder _ an beiden Enden des Musters."
+  },
+  "mhContentHow3": {
+    "message": "„Nur Skripte prüfen“ durchsucht nur Inline-Skripte (auch im Head) und JavaScript-Dateien, ohne HTML und CSS."
+  },
+  "mhContentLimit1": {
+    "message": "Dateien, die die Website anderen Ursprüngen nicht zu lesen erlaubt (CORS), oder über 5 MB werden übersprungen."
+  },
+  "mhContentLimit2": {
+    "message": "Code in Frames oder Workern und nach dem Scan geladener Code werden nicht durchsucht."
+  },
+  "mhDomIntro": {
+    "message": "Sucht mit einem CSS-Selektor nach einem Element im Body der Seite, sobald die Seite geladen ist."
+  },
+  "mhDomHow1": {
+    "message": "Ein Tag, `.klasse`, `#id` oder `[attribut]`, einzeln oder kombiniert: `.g-recaptcha[data-sitekey]`."
+  },
+  "mhDomHow2": {
+    "message": "Attributtests `=`, `^=`, `$=`, `*=`, `~=` und `|=`; fügen Sie ` i` vor `]` hinzu, um Groß- und Kleinschreibung zu ignorieren."
+  },
+  "mhDomHow3": {
+    "message": "Mehrere Selektoren durch Kommas getrennt: Einer davon muss passen."
+  },
+  "mhDomLimit1": {
+    "message": "Nicht unterstützt, die Regel passt dann nie: Leerzeichen oder `>` zwischen Teilen, `:Pseudoklassen` und Escapes."
+  },
+  "mhDomLimit2": {
+    "message": "Head, Frames und Shadow Roots werden nicht durchsucht. Das Attribut `value` wird nicht gelesen; andere Attribute werden anhand ihrer ersten 100 Zeichen verglichen."
+  },
+  "mhWindowIntro": {
+    "message": "Prüft eine globale JavaScript-Variable, die die Seite definiert, etwa `grecaptcha.render`."
+  },
+  "mhWindowHow1": {
+    "message": "Der Pfad ab `window`, durch Punkte getrennt: `KPSDK` oder `grecaptcha.render`."
+  },
+  "mhWindowHow2": {
+    "message": "Eine Bedingung wie `exists`, `typeof function`, `truthy`, `=== true`, `length > 0` oder `has keys`. Leer bedeutet truthy."
+  },
+  "mhWindowHow3": {
+    "message": "Eine Bedingung, die die Erkennung nicht versteht, passt nie; wählen Sie daher eine aus der Liste."
+  },
+  "mhWindowLimit1": {
+    "message": "Wird in den ersten Sekunden nach dem Laden der Seite geprüft; später erstellte globale Variablen werden verpasst."
+  },
+  "mhWindowLimit2": {
+    "message": "Eigenschaften mit einem Symbol als Namen lassen sich nicht als Pfad schreiben."
+  },
+  "mhJsHooksOnlyFingerprint": {
+    "message": "Nur Fingerprint-Regeln nutzen Hooks: Anti-Bot- und Captcha-Regeln ignorieren sie."
+  },
+  "mhJsHooksIntro": {
+    "message": "Zeichnet auf, wenn die Seite eine Browser-API aufruft, etwa `HTMLCanvasElement.prototype.toDataURL`, ein Zeichen für Fingerprinting."
+  },
+  "mhJsHooksHow1": {
+    "message": "Der vollständige Pfad zu einer Methode oder einem Getter: `Navigator.prototype.webdriver`, nicht `navigator.webdriver`."
+  },
+  "mhJsHooksHow2": {
+    "message": "Jeder Aufruf zählt; Argumente und Ergebnis werden nicht geprüft, ein Hook zeigt also, dass eine API genutzt wurde, nicht wozu."
+  },
+  "mhJsHooksLimit1": {
+    "message": "Aufrufe zählen in den ersten Sekunden nach dem Laden der Seite (höchstens 8 Sekunden)."
+  },
+  "mhJsHooksLimit2": {
+    "message": "Aufrufe in Workern oder Frames werden nicht gesehen, außer eingebauten Zielen in Frames derselben Website."
+  },
+  "mhPayloadIntro": {
+    "message": "Durchsucht den Inhalt der POST-, PUT-, PATCH- und DELETE-Anfragen, die die Seite sendet, aus jedem Frame."
+  },
+  "mhPayloadHow1": {
+    "message": "Normaler Text passt, wenn der Inhalt ihn enthält, ohne Rücksicht auf Groß- und Kleinschreibung. Formulardaten werden als `name=wert&…` gelesen."
+  },
+  "mhPayloadHow2": {
+    "message": "Die Anfrage-URL (optional) und die HTTP-Methode beschränken die Suche auf passende Anfragen."
+  },
+  "mhPayloadLimit1": {
+    "message": "Nur Anfragen vor dem Scan zählen, bis zu 50 pro Seite."
+  },
+  "mhPayloadLimit2": {
+    "message": "WebSocket-Nachrichten werden nicht gelesen."
+  },
+  "domCardTitle": {
+    "message": "CSS-Selektor"
+  },
+  "domCardBrowse": {
+    "message": "Durchsuchen"
+  },
+  "domCardHint": {
+    "message": "Ein Tag, .klasse, #id oder ein [attribut]-Test, einzeln oder kombiniert. Leerzeichen oder > zwischen Teilen werden nicht unterstützt."
+  },
+  "windowCardTitle": {
+    "message": "Window-Eigenschaft"
   },
   "settingsApiEventsDesc": {
     "message": "Ereignisse, die die Erweiterung auf der Seite auslöst"
@@ -3392,7 +3479,7 @@
     "message": "URL-Muster"
   },
   "rulesUiJsHookTargetPlaceholder": {
-    "message": "Ziel des JS-Hooks (z. B. navigator.webdriver)"
+    "message": "Ziel des JS-Hooks (z. B. Navigator.prototype.webdriver)"
   },
   "rulesUiWindowPathPlaceholder": {
     "message": "Window-Pfad (z. B. grecaptcha, _cf_chl_opt)"
@@ -3450,24 +3537,6 @@
   },
   "rulesUiLeaveEmptyAnyUrl": {
     "message": "Leer lassen, um jede URL zu erfassen"
-  },
-  "ruleExampleMatches": {
-    "message": "✓ Trifft zu:"
-  },
-  "ruleExampleWont": {
-    "message": "× Nicht:"
-  },
-  "ruleExampleWontMatch": {
-    "message": "× Trifft nicht zu:"
-  },
-  "ruleExampleLiteralTextOnly": {
-    "message": "nur wörtlicher Text"
-  },
-  "ruleExampleExactCase": {
-    "message": "(exakte Schreibweise)"
-  },
-  "ruleExampleAlone": {
-    "message": "(alleinstehend)"
   },
   "ruleConditionGroupOther": {
     "message": "Weitere"
@@ -3629,7 +3698,127 @@
     "message": "Kombinationen"
   },
   "combinationsHint": {
-    "message": "Wähle Muster und dann die Anzahl der erforderlichen Treffer."
+    "message": "Eine Kombination erkennt diesen Schutz nur, wenn mehrere Muster zusammen gefunden werden. Für Muster, die allein zu schwach sind."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "Jede Kombination greift nur, wenn ihre Signale zusammen auftreten; hier steht, was sie auf dieser Seite gefunden hat."
+  },
+  "combinationFoundTogether": {
+    "message": "Zusammen auf dieser Seite gefunden:"
+  },
+  "combinationNotPresent": {
+    "message": "Nicht vorhanden"
+  },
+  "combinationFound": {
+    "message": "Gefunden"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "Diese Regel wurde nach dem Scan geändert oder entfernt, daher werden nur Name und Wert angezeigt."
+  },
+  "historyMatchedDetections": {
+    "message": "Zutreffende Erkennungen"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "Dieser Scan wurde gespeichert, bevor Bedingungen erhalten blieben; daher werden nur Namen und Werte angezeigt."
+  },
+  "combinationMustNotBeFound": {
+    "message": "Darf nicht gefunden werden"
+  },
+  "combinationMustBeFound": {
+    "message": "Muss gefunden werden"
+  },
+  "combinationAutoTip": {
+    "message": "Auto: die höchste Konfidenz der Muster, die sie ausgelöst haben"
+  },
+  "combinationSetsScore": {
+    "message": "Bestimmt den Erkennungswert"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "Mindestens ein Muster hinzufügen, das gefunden werden muss."
+  },
+  "combinationInvalidOneOf": {
+    "message": "Eine Liste „Eines davon“ braucht in jeder Option ein Muster, das gefunden werden muss."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "„Mindestens {0}“ braucht {0} Muster, die gefunden werden müssen."
+  },
+  "combinationSentenceOne": {
+    "message": "Greift, wenn diese Bedingung erfüllt ist."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "Greift, wenn alle {0} Bedingungen erfüllt sind."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "Greift, wenn eine dieser {0} Bedingungen erfüllt ist."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "Greift, wenn mindestens {0} dieser {1} Bedingungen erfüllt sind."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "Konfidenz: {0} %."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "Konfidenz: Auto, bis {0} %."
+  },
+  "combinationSentenceGroup": {
+    "message": "Eine Gruppe zählt als eine Bedingung."
+  },
+  "combinationSentenceNot": {
+    "message": "Sie greift nicht, wenn ein Muster mit „Darf nicht gefunden werden“ vorhanden ist."
+  },
+  "combinationSentenceAlone": {
+    "message": "Muster ohne „Nur Kombinationen“ erkennen auch allein, mit ihrer eigenen Konfidenz."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "Konfidenz bei Fund"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "Leer lassen für Auto: die höchste Konfidenz der gefundenen Muster."
+  },
+  "combinationOnlyTogether": {
+    "message": "Diese Muster zählen nur zusammen"
+  },
+  "combinationOnlyTogetherHint": {
+    "message": "Allein erkennen sie nichts. Gilt für diese Muster in jeder Kombination dieser Regel."
+  },
+  "combinationOnlyTogetherMixed": {
+    "message": "Einige dieser Muster zählen auch allein. Anhaken, damit alle nur in Kombinationen zählen."
+  },
+  "combinationModeAny": {
+    "message": "Eines davon"
+  },
+  "combinationModeAll": {
+    "message": "Alle davon"
+  },
+  "combinationModeAtLeast": {
+    "message": "Mindestens … davon"
+  },
+  "combinationModeRootAll": {
+    "message": "alle diese gefunden werden"
+  },
+  "combinationModeRootAny": {
+    "message": "eines davon gefunden wird"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "mindestens … davon gefunden werden"
+  },
+  "combinationGroupMode": {
+    "message": "Gruppe"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "Dieser Gruppe ein Muster hinzufügen"
+  },
+  "combinationDeleteGroup": {
+    "message": "Gruppe löschen"
+  },
+  "combinationAddGroup": {
+    "message": "Gruppe „eines davon“ hinzufügen"
+  },
+  "patternUnusedBadge": {
+    "message": "In keiner Kombination"
+  },
+  "patternUnusedTip": {
+    "message": "Keine Kombination nutzt es, daher erkennt es nie etwas. Klicken, damit es allein zählt."
   },
   "combinationsEmpty": {
     "message": "Noch keine Kombinationen."
@@ -3640,23 +3829,11 @@
   "combinationDefaultNameFmt": {
     "message": "Kombination {0}"
   },
-  "combinationConfidence": {
-    "message": "Konfidenz bei Treffer"
-  },
-  "combinationConfidenceFromPatterns": {
-    "message": "Leer lassen, um die Konfidenz der passenden Muster zu verwenden"
-  },
   "combinationDelete": {
     "message": "Kombination löschen"
   },
   "combinationDeleteConfirmFmt": {
     "message": "Kombination „{0}“ löschen? Ihre Muster bleiben in der Regel."
-  },
-  "combinationNotTitle": {
-    "message": "Darf NICHT zutreffen"
-  },
-  "combinationNot": {
-    "message": "NICHT"
   },
   "combinationRemove": {
     "message": "Entfernen"
@@ -3676,26 +3853,8 @@
   "combinationAnyPattern": {
     "message": "beliebiges Muster"
   },
-  "combinationPreviewAnd": {
-    "message": "UND"
-  },
-  "combinationPreviewOr": {
-    "message": "ODER"
-  },
-  "combinationPreviewNot": {
-    "message": "NICHT"
-  },
   "combinationPreviewEmpty": {
     "message": "Muster hinzufügen, um diese Kombination zu bauen"
-  },
-  "combinationInvalid": {
-    "message": "Wähle Muster, die zutreffen müssen, und prüfe die Mindestanzahl der Treffer."
-  },
-  "combinationStrict": {
-    "message": "Strikt"
-  },
-  "combinationStrictTitle": {
-    "message": "Strikt: Dieses Muster löst den Detektor nicht allein aus, nur innerhalb von Kombinationen"
   },
   "patternCombinationsOnlyBadge": {
     "message": "Nur Kombinationen"
@@ -3706,9 +3865,6 @@
   "combinationNoPatterns": {
     "message": "Keine Muster hinzugefügt"
   },
-  "combinationJoinTitle": {
-    "message": "Zwischen UND und ODER wechseln"
-  },
   "combinationPickHint": {
     "message": "Muster zum Hinzufügen ankreuzen"
   },
@@ -3718,23 +3874,8 @@
   "combinationEditConditions": {
     "message": "Bedingungen bearbeiten"
   },
-  "combinationRequireTogether": {
-    "message": "Muster nur in Kombinationen verwenden"
-  },
-  "combinationRequireHint": {
-    "message": "Gilt für diese Muster überall in dieser Regel."
-  },
   "combinationAutoConfidence": {
     "message": "Auto"
-  },
-  "combinationMatchAll": {
-    "message": "Alle Bedingungen treffen zu"
-  },
-  "combinationMatchAny": {
-    "message": "Eine beliebige Bedingung trifft zu"
-  },
-  "combinationMatchAtLeast": {
-    "message": "Mindestens… treffen zu"
   },
   "combinationDetectWhen": {
     "message": "Erkennen, wenn"
@@ -3748,29 +3889,8 @@
   "combinationMatchState": {
     "message": "Musterbedingung"
   },
-  "combinationMatches": {
-    "message": "Trifft zu"
-  },
-  "combinationDoesNotMatch": {
-    "message": "Trifft nicht zu"
-  },
-  "combinationAtLeastSummaryFmt": {
-    "message": "Mindestens {0} Bedingungen treffen zu"
-  },
   "combinationChoosePatterns": {
     "message": "Muster auswählen"
-  },
-  "combinationSummaryAll": {
-    "message": "Erkennen, wenn alle erforderlichen Bedingungen zutreffen."
-  },
-  "combinationSummaryAny": {
-    "message": "Erkennen, wenn mindestens eine Bedingung zutrifft."
-  },
-  "combinationSummaryMinimumFmt": {
-    "message": "Erkennen, wenn mindestens {0} von {1} Bedingungen zutreffen."
-  },
-  "combinationSummaryExcluded": {
-    "message": "Ausgeschlossene Muster dürfen nicht zutreffen."
   },
   "combinationDecreaseMinimum": {
     "message": "Mindestanzahl der Treffer verringern"
@@ -4198,9 +4318,77 @@
     "message": "Diese Seite hat ein CAPTCHA: Der Unblocker umgeht oder löst es, um die Seite zu liefern, füllt aber keine CAPTCHAs in Formularen aus.",
     "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
   },
-  "scrapflyExportKeyNote": {
-    "message": "Der Code liest Ihren API-Schlüssel aus SCRAPFLY_API_KEY.",
-    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  "scrapflyExportOptions": {
+    "message": "Optionen"
+  },
+  "scrapflyExportProduct": {
+    "message": "Nutzen"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "CAPTCHAs lösen"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "Bezahlt pro Lösung"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "Nutze Cloud Browser, um sie zu lösen."
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "Öffne diese Seite in Scrapflys Cloud Browser und steuere sie mit Playwright. Der Captcha Solver löst Turnstile, reCAPTCHA, GeeTest und mehr, sobald sie erscheinen; fehlgeschlagene Versuche kosten nichts."
+  },
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "Umgeht Anti-Bot-Schutz"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "Für KI kopieren"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "Kopiert die Seite, ihren Schutz, deine Einstellungen und den Code als eine Nachricht für ChatGPT, Claude oder jeden KI-Assistenten"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "Kopiert: in deinen KI-Assistenten einfügen"
+  },
+  "scrapflyExportFormat": {
+    "message": "Ausgabe"
+  },
+  "scrapflyExportFormatText": {
+    "message": "Text"
+  },
+  "scrapflyExportProxy": {
+    "message": "Proxys"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "Rechenzentrum"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "Privat"
+  },
+  "scrapflyExportCountry": {
+    "message": "Land"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "Beliebig"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "JavaScript ausführen"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 Credits"
+  },
+  "scrapflyExportStepSettings": {
+    "message": "Einstellungen wählen"
+  },
+  "scrapflyExportStepCode": {
+    "message": "Code kopieren"
+  },
+  "scrapflyExportStepKey": {
+    "message": "API-Schlüssel setzen"
+  },
+  "scrapflyExportStepRun": {
+    "message": "Ausführen"
   },
   "scrapflyExportGetKey": {
     "message": "API-Schlüssel holen",

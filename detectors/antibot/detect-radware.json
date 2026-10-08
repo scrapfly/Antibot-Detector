@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "2.0.1",
+  "lastUpdated": "2026-10-08",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.radware.com/products/bot-manager/",
   "icon": "radware_official.png",
@@ -110,7 +110,6 @@
         "path": "__uzdbm_1",
         "condition": "typeof string",
         "confidence": 40,
-        "standalone": false,
         "description": "Radware Bot Manager device-binding variable"
       }
     ]

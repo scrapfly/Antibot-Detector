@@ -97,6 +97,8 @@
    */
   async initialize() {
     await this.loadHTML();
+    // The History badge follows every change to the saved captures
+    if (typeof this.setupCaptureHistoryWatcher === 'function') this.setupCaptureHistoryWatcher();
     Logger.debug('UI', 'Advanced section initialized');
   }
 

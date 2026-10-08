@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "High",
-  "lastUpdated": "2026-10-05",
-  "version": "2.0.0",
+  "lastUpdated": "2026-10-08",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://developers.google.com/recaptcha",
   "icon": "custom.png",
@@ -23,10 +23,28 @@
         "textScope": "all"
       },
       {
+        "id": "botguard-bg-interpreter",
+        "confidence": 75,
+        "description": "BotGuard interpreter script (//www.google.com/js/bg/<hash>.js), as on Gmail",
+        "text": "^https://www\\.google\\.com/js/bg/[A-Za-z0-9_-]{30,60}\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      },
+      {
         "id": "waa-create",
         "confidence": 80,
         "description": "Web Anti-Abuse (BotGuard) attestation RPC",
         "text": "^https://jnn-pa\\.googleapis\\.com/\\$rpc/google\\.internal\\.waa\\.v1\\.Waa/(?:Create|GenerateIT)(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      },
+      {
+        "id": "gmail-waa",
+        "confidence": 80,
+        "description": "Gmail's Web Anti-Abuse (BotGuard) endpoint (/mail/u/<account>/waa)",
+        "text": "^https://mail\\.google\\.com/mail/u/\\d+/waa(?:[/?#]|$)",
         "textRegex": true,
         "textCaseSensitive": true,
         "textScope": "all"
@@ -74,10 +92,24 @@
       "when": {
         "all": [
           {
-            "pattern": "botguard-interpreter"
+            "any": [
+              {
+                "pattern": "botguard-interpreter"
+              },
+              {
+                "pattern": "botguard-bg-interpreter"
+              }
+            ]
           },
           {
-            "pattern": "waa-create"
+            "any": [
+              {
+                "pattern": "waa-create"
+              },
+              {
+                "pattern": "gmail-waa"
+              }
+            ]
           }
         ]
       }
@@ -89,7 +121,14 @@
       "when": {
         "all": [
           {
-            "pattern": "botguard-interpreter"
+            "any": [
+              {
+                "pattern": "botguard-interpreter"
+              },
+              {
+                "pattern": "botguard-bg-interpreter"
+              }
+            ]
           },
           {
             "any": [
@@ -114,7 +153,14 @@
       "when": {
         "all": [
           {
-            "pattern": "waa-create"
+            "any": [
+              {
+                "pattern": "waa-create"
+              },
+              {
+                "pattern": "gmail-waa"
+              }
+            ]
           },
           {
             "any": [

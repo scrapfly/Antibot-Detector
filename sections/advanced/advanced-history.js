@@ -62,6 +62,28 @@ Advanced.prototype.updateCaptureCountBadge = async function() {
 
 
   /**
+   * Keep the History badge in step with what is saved. A tool result
+   * (Extract SiteKey, Obtain Selector…) is written straight to the store, so
+   * the count used to change only when the History tab was opened. Any change
+   * to the stored capture history (a tool result, a background capture, a
+   * delete, an expiry) now refreshes it. Bound once.
+   */
+Advanced.prototype.setupCaptureHistoryWatcher = function() {
+    if (this._captureHistoryWatcher || typeof chrome === 'undefined' || !chrome.storage?.onChanged) return;
+    const key = (typeof AdvancedHistoryStore !== 'undefined' && AdvancedHistoryStore.STORAGE_KEY) || 'scrapfly_advanced_history';
+    let timer = null;
+    this._captureHistoryWatcher = (changes, area) => {
+      if (area !== 'local' || !changes || !changes[key]) return;
+      // One refresh for a burst of writes; the refresh's own expiry clean-up
+      // only writes when something expired, so it cannot loop
+      clearTimeout(timer);
+      timer = setTimeout(() => { void this.updateCaptureCountBadge(); }, 150);
+    };
+    chrome.storage.onChanged.addListener(this._captureHistoryWatcher);
+  };
+
+
+  /**
    * Clean expired captures from history (30 minute expiry)
    * Automatically removes captures that have passed their expiration time
    */

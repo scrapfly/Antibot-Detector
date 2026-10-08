@@ -216,7 +216,7 @@
     "message": "ウェブサイトを閲覧すると、検出履歴がここに表示されます。"
   },
   "rulesUpdateTitle": {
-    "message": "検出器の更新を確認"
+    "message": "Scrapfly の最新リリースからルールの更新をインストール"
   },
   "rulesAddTitle": {
     "message": "新しい検出器を追加"
@@ -841,12 +841,6 @@
   "webhookTestFailedFmt": {
     "message": "Webhookテストに失敗しました: {0}"
   },
-  "foundDetectorUpdatesAvailableFmt": {
-    "message": "{0}件のディテクター更新が利用可能です!"
-  },
-  "allDetectorsUpToDate": {
-    "message": "すべてのディテクターは最新です。"
-  },
   "importDetectorsTitle": {
     "message": "ディテクターをインポート"
   },
@@ -862,6 +856,9 @@
   "detectorsImported": {
     "message": "ディテクターをインポートしました"
   },
+  "detectorExportedFmt": {
+    "message": "{0} をエクスポートしました"
+  },
   "failedImportDetectors": {
     "message": "ディテクターのインポートに失敗しました。ファイル形式を確認してください。"
   },
@@ -870,9 +867,6 @@
   },
   "detectorsUpdatedFmt": {
     "message": "{0}件のディテクターを更新しました"
-  },
-  "updatesAvailableClickToApplyFmt": {
-    "message": "{0}件の更新が利用可能 - もう一度クリックして適用"
   },
   "detectorDeletedFmt": {
     "message": "「{0}」を削除しました"
@@ -885,9 +879,6 @@
   },
   "textWordMatching": {
     "message": "テキスト/単語マッチング"
-  },
-  "domSelectorMatching": {
-    "message": "DOMセレクタマッチング"
   },
   "payloadTextMatching": {
     "message": "ペイロードテキストマッチング"
@@ -942,6 +933,30 @@
   },
   "couldNotFetchUpdates": {
     "message": "サーバーから更新を取得できませんでした"
+  },
+  "updateResultInstalledFmt": {
+    "message": "リリース {0} からルールを更新しました: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "すべてのルールはリリース {0} の最新状態です。"
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "拡張機能 {0} 以降が必要です: {1}。Chrome が拡張機能を更新するとインストールされます。"
+  },
+  "updateResultFailedFmt": {
+    "message": "ダウンロードできませんでした: {0}。後でもう一度お試しください。"
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "編集したルールが「ルール」→「更新」で判断を待っています: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "ルールの更新を確認するために GitHub に接続できませんでした。"
+  },
+  "updateErrorNoRelease": {
+    "message": "GitHub に公開済みの Scrapfly リリースが見つかりませんでした。"
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub が更新の確認を制限しています。{0} 分後にもう一度お試しください。"
   },
   "errorApplyingUpdates": {
     "message": "更新の適用エラー"
@@ -1588,114 +1603,6 @@
   "notifLoadingDefault": {
     "message": "読み込み中..."
   },
-  "helpJsHooksTitle": {
-    "message": "JavaScriptフック検出"
-  },
-  "helpJsHooksDescription": {
-    "message": "フックはブラウザのAPI呼び出し(Canvas、Audio、WebGLなど)をインターセプトし、ページがそれらのAPIにアクセスするタイミングでアンチボットのフィンガープリントコードをリアルタイムに検出します。"
-  },
-  "helpJsHooksWarning": {
-    "message": "フックはページスクリプトが実行される前に document_start でインストールする必要があります。さもないと、シムが設置される前にページが元のAPIへの参照を保存してしまう可能性があります。"
-  },
-  "helpJsHooksTip": {
-    "message": "Canvasフィンガープリンティングを検出するには、CanvasRenderingContext2D.prototype.getImageData のようなターゲットを追加します。"
-  },
-  "helpWindowTitle": {
-    "message": "Windowプロパティ検出"
-  },
-  "helpWindowDescription": {
-    "message": "アンチボットスクリプトによって window グローバルに追加されたJavaScriptオブジェクトおよびプロパティを検出します。"
-  },
-  "helpWindowWarning": {
-    "message": "一部のアンチボットスクリプトは列挙不可能な Symbol() キーを使用するため、検出が難しくなります。"
-  },
-  "helpWindowTip": {
-    "message": "プロパティの型と一致させるには、typeof object や exists などの条件を使用してください。"
-  },
-  "helpUrlTitle": {
-    "message": "URLパターン検出"
-  },
-  "helpUrlDescription": {
-    "message": "読み込まれたリソース(スクリプト、画像、ネットワークリクエスト)のURLをパターンと照合します。"
-  },
-  "helpUrlWarning": {
-    "message": "「大文字小文字を区別」をオンにしない限り、パターンは大文字と小文字を区別しません。一般的すぎるパターンは無関係なリソースにも一致するため、具体的にしてください。"
-  },
-  "helpUrlTip": {
-    "message": "/\\/v\\d+\\/challenge/ のような高度なパターンには、Regexオプションを使用してください。"
-  },
-  "helpHeaderTitle": {
-    "message": "HTTPヘッダー検出"
-  },
-  "helpHeaderDescription": {
-    "message": "アンチボットのミドルウェアが設定するHTTPリクエストおよびレスポンスヘッダーを検出します。"
-  },
-  "helpHeaderWarning": {
-    "message": "一部のヘッダーは初回のリクエストにのみ存在します。スコープにリクエストが含まれていることを確認してください。"
-  },
-  "helpHeaderTip": {
-    "message": "一般的なターゲット: x-akamai-bot-manager-token、cf-ray、x-shape-version。"
-  },
-  "helpCookieTitle": {
-    "message": "Cookie検出"
-  },
-  "helpCookieDescription": {
-    "message": "アンチボットチャレンジが設定するCookieを検出します。Cookie名(および必要に応じて値のパターン)を照合します。"
-  },
-  "helpCookieWarning": {
-    "message": "ランダムなサフィックスを持つCookie名(例: _abck-xyz123)には、リテラル名ではなく正規表現パターンが必要です。"
-  },
-  "helpCookieTip": {
-    "message": "完全な名前一致には単語単位を、^datadome- のような接頭辞パターンには Regex を使用してください。"
-  },
-  "helpContentTitle": {
-    "message": "ページコンテンツ検出"
-  },
-  "helpContentDescription": {
-    "message": "ページのHTMLとインラインスクリプトタグ内のテキストパターンを検索します。"
-  },
-  "helpContentWarning": {
-    "message": "大きなページでは全ページスキャンが遅くなる可能性があります。シグネチャがJSコード内にある場合は、スクリプトのみチェックに制限してください。"
-  },
-  "helpContentTip": {
-    "message": "より大きな単語内の部分文字列による誤検出を避けるため、単語単位を使用してください。"
-  },
-  "helpDomTitle": {
-    "message": "DOMセレクタ検出"
-  },
-  "helpDomDescription": {
-    "message": "CSSセレクタを使用してHTML要素を検出します。一致する要素がDOM内に存在するときに発火します。"
-  },
-  "helpDomWarning": {
-    "message": "セレクタは実際のDOMにレンダリングされた要素にのみ一致します。iframe や shadow root の内部の要素には一致しません。"
-  },
-  "helpDomTip": {
-    "message": "誤検出を減らすため、汎用的なものではなく、div#cf-challenge[data-ray] のような具体的なセレクタを使用してください。"
-  },
-  "helpPayloadTitle": {
-    "message": "リクエストペイロード検出"
-  },
-  "helpPayloadDescription": {
-    "message": "すべてのHTTP POST/PUT/PATCHリクエストのボディに対してテキストパターンを監視します。"
-  },
-  "helpPayloadWarning": {
-    "message": "ペイロード監視は、本拡張機能がインターセプト可能なリクエストでのみ動作します(暗号化されたボディや不透明なBLOBは対象外)。"
-  },
-  "helpPayloadTip": {
-    "message": "特定のエンドポイントにマッチングを限定するには、URLパターンと組み合わせてください。"
-  },
-  "helpWarningLabel": {
-    "message": "警告:"
-  },
-  "helpTipLabel": {
-    "message": "ヒント:"
-  },
-  "detectionMethodTitle": {
-    "message": "検出メソッド"
-  },
-  "noHelpContentAvailable": {
-    "message": "このメソッドタイプに利用可能なヘルプコンテンツはありません。"
-  },
   "advNoCapturesHintFmt": {
     "message": "{0}のデータのキャプチャを開始するには、上の「キャプチャ開始」をクリックしてください"
   },
@@ -2026,12 +1933,6 @@
   "rhSearchDom": {
     "message": "セレクターを検索（例: captcha, iframe）"
   },
-  "rhSearchRegex": {
-    "message": "一致させる文字列（例: bm_, token）"
-  },
-  "rhSearchSample": {
-    "message": "テストする値を入力"
-  },
   "rhCondition": {
     "message": "条件"
   },
@@ -2155,9 +2056,6 @@
   "rhCondFalse": {
     "message": "が false"
   },
-  "rhWindowIntro": {
-    "message": "ページ上の JavaScript グローバル変数 (window.…) をチェックします。変数を選び、満たすべき条件を選んでください。"
-  },
   "rhWindowSentenceFmt": {
     "message": "{0} {1} ページに一致"
   },
@@ -2197,45 +2095,6 @@
   "rhDomCamel": {
     "message": "camelCase クラス"
   },
-  "rhRegexTitle": {
-    "message": "正規表現ヘルパー"
-  },
-  "rhUsePattern": {
-    "message": "パターンを使用"
-  },
-  "rhRegexStartsFmt": {
-    "message": "「{0}」で始まる"
-  },
-  "rhRegexEndsFmt": {
-    "message": "「{0}」で終わる"
-  },
-  "rhRegexContainsFmt": {
-    "message": "どこかに「{0}」を含む"
-  },
-  "rhRegexWordFmt": {
-    "message": "単語「{0}」全体"
-  },
-  "rhRegexOrFmt": {
-    "message": "「{0}」または別の候補"
-  },
-  "rhRegexStartsMoreFmt": {
-    "message": "「{0}」で始まり、続きがある"
-  },
-  "rhRegexEitherFmt": {
-    "message": "「{0}」または「{1}」"
-  },
-  "rhExamplesForFmt": {
-    "message": "「{0}」の例"
-  },
-  "rhExamples": {
-    "message": "例"
-  },
-  "rhHowMatchesFmt": {
-    "message": "「{0}」の一致のしかた"
-  },
-  "rhQuickRef": {
-    "message": "クイックリファレンス"
-  },
   "rhRefAny": {
     "message": "任意の1文字"
   },
@@ -2272,74 +2131,302 @@
   "rhNoMatch": {
     "message": "不一致"
   },
-  "rhWwIntro": {
-    "message": "テキストが単独で現れる場合のみ一致し、長い単語の一部では一致しません。"
+  "ptTitle": {
+    "message": "パターンをテスト"
   },
-  "rhWwExact": {
-    "message": "完全一致の単語"
+  "ptTitleFmt": {
+    "message": "パターンをテスト · {0}"
   },
-  "rhWwJoinedBefore": {
-    "message": "前の文字列とつながっている"
+  "ptKindUrl": {
+    "message": "URL"
   },
-  "rhWwJoinedAfter": {
-    "message": "後ろの文字列とつながっている"
+  "ptKindContent": {
+    "message": "ページの内容"
   },
-  "rhWwSpaces": {
-    "message": "スペースで区切られている"
+  "ptKindCookieName": {
+    "message": "Cookie 名"
   },
-  "rhCsIntro": {
-    "message": "オンにすると、大文字と小文字を区別します。"
+  "ptKindCookieValue": {
+    "message": "Cookie の値"
   },
-  "rhCsOnTitle": {
-    "message": "大文字小文字の区別: オン"
+  "ptKindHeaderName": {
+    "message": "ヘッダー名"
   },
-  "rhCsOffTitle": {
-    "message": "大文字小文字の区別: オフ"
+  "ptKindHeaderValue": {
+    "message": "ヘッダーの値"
   },
-  "rhWhatIsRegex": {
-    "message": "正規表現とは？"
+  "ptKindPayloadText": {
+    "message": "リクエスト本文"
   },
-  "rhWhatIsWholeWord": {
-    "message": "「単語全体」とは？"
+  "ptKindPayloadUrl": {
+    "message": "リクエスト URL"
   },
-  "rhWhatIsCase": {
-    "message": "「大文字小文字を区別」とは？"
+  "ptPatternLabel": {
+    "message": "パターン"
   },
-  "rhRegexIntro": {
-    "message": "正規表現（regex）は、完全一致ではなくパターンでテキストを照合します。"
+  "ptOptionsLabel": {
+    "message": "照合オプション"
   },
-  "rhWhenToUse": {
-    "message": "使う場面"
+  "ptOptRegex": {
+    "message": "Regex"
   },
-  "rhRegexUse1": {
-    "message": "特定の文字列で始まる・終わるテキスト"
+  "ptTryOn": {
+    "message": "試すテキスト"
   },
-  "rhRegexUse2": {
-    "message": "複数のバリエーションを一度に（| を使用）"
+  "ptExamplesBtn": {
+    "message": "例"
   },
-  "rhRegexUse3": {
-    "message": "数字や特定の種類の文字"
+  "ptSamplesPlaceholder": {
+    "message": "1 行に 1 つ: URL、Cookie 名など"
   },
-  "rhRegexTip": {
-    "message": "完全一致なら正規表現は不要です。「単語全体」を使ってください。"
+  "ptNoSamples": {
+    "message": "上にテキストを 1 行に 1 つずつ入力または貼り付けると、一致するかどうかが表示されます。"
   },
-  "rhBestFor": {
-    "message": "おすすめの用途"
+  "ptCheatTitle": {
+    "message": "正規表現チートシート"
   },
-  "rhWwUse1": {
-    "message": "正確な Cookie 名"
+  "ptCheatNote": {
+    "message": "パターンは前後に / を付けずに書きます。(a+)+ のような繰り返しの中の繰り返しは、ページを止めるおそれがあるため拒否されます。"
   },
-  "rhWwUse2": {
-    "message": "特定のヘッダー名"
+  "ptApply": {
+    "message": "適用"
   },
-  "rhWwUse3": {
-    "message": "クラス名や関数名全体"
+  "ptTestBtn": {
+    "message": "テスト"
   },
-  "rhCsUse1": {
-    "message": "大文字小文字が決まっているヘッダーや Cookie"
+  "ptTestTitle": {
+    "message": "サンプルテキストでパターンを試す"
   },
-  "rhCsUse2": {
-    "message": "JavaScript のプロパティ名"
+  "ptNoPattern": {
+    "message": "まだパターンがありません"
+  },
+  "ptHintRegex": {
+    "message": "^bm_ や \\d+ のようなパターン。前後に / は付けません"
+  },
+  "ptHintWholeWord": {
+    "message": "長い単語の中では一致しません: _abck は一致、test_abck は不一致"
+  },
+  "ptHintCase": {
+    "message": "Akamai が akamai に一致しなくなります"
+  },
+  "ptSaysEmpty": {
+    "message": "パターンを入力すると、何に一致するかが表示されます。"
+  },
+  "ptSaysRegex": {
+    "message": "正規表現が一致を見つけたテキストに一致します。"
+  },
+  "ptSaysWordFmt": {
+    "message": "「{0}」に単語単位で一致し、長い単語の中では一致しません。"
+  },
+  "ptSaysWildcardFmt": {
+    "message": "「{0}」のような名前に一致します (* は任意のテキスト)。"
+  },
+  "ptSaysPrefixFmt": {
+    "message": "「{0}」で始まる名前に一致します。"
+  },
+  "ptSaysContainsFmt": {
+    "message": "「{0}」を含むテキストに一致します。"
+  },
+  "ptCaseExact": {
+    "message": "大文字と小文字は完全に一致する必要があります。"
+  },
+  "ptCaseIgnored": {
+    "message": "大文字と小文字は区別しません。"
+  },
+  "ptNoteInvalidFmt": {
+    "message": "この正規表現は無効なため、一致することはありません: {0}"
+  },
+  "ptNoteRejected": {
+    "message": "この正規表現はページを止めるおそれがあるため (繰り返しの中の繰り返し、または 1000 文字超)、検出で拒否され、一致することはありません。"
+  },
+  "ptNoteSlashes": {
+    "message": "両端の / は外してください。テキストの一部として検索されます。"
+  },
+  "ptNoteLooksRegex": {
+    "message": "正規表現のようです。Regex をオンにしてください。オフのままだと記号は通常のテキストとして検索されます。"
+  },
+  "ptNoteWordIgnored": {
+    "message": "Regex がオンの間、「単語単位」は無視されます。"
+  },
+  "ptNoteHeaderCase": {
+    "message": "ヘッダー名は小文字で保存されるため、「大文字小文字を区別」がオンだとこのパターンは一致しません。"
+  },
+  "ptNoteWordEdges": {
+    "message": "このパターンは記号で始まるか終わるため、「単語単位」ではその記号のすぐ隣に英数字か _ が必要です。"
+  },
+  "rhRefDot": {
+    "message": "本当のドット"
+  },
+  "rhRefSet": {
+    "message": "a、b、c のいずれか"
+  },
+  "rhRefCount": {
+    "message": "2〜5 回"
+  },
+  "mhExamplesTitle": {
+    "message": "Scrapfly のルールの例"
+  },
+  "mhHowTitle": {
+    "message": "照合のしかた"
+  },
+  "mhWriteTitle": {
+    "message": "書けるもの"
+  },
+  "mhLimitsTitle": {
+    "message": "知っておくこと"
+  },
+  "mhUrlIntro": {
+    "message": "ページのアドレスと、ページがリクエストする URL (スクリプト、XHR や fetch の呼び出し、画像、フレーム、ping) を調べます。"
+  },
+  "mhUrlHow1": {
+    "message": "Regex なしでは、URL にテキストが含まれていれば一致します (大文字小文字は区別しません)。クエリ文字列を含む URL 全体が対象です。"
+  },
+  "mhUrlHow2": {
+    "message": "Regex では両端の / を外し、ドットは `\\.` と書きます。例: `^https://js\\.example\\.com/`"
+  },
+  "mhUrlHow3": {
+    "message": "URL の範囲: 「ページ」はページのアドレスのみ、「スクリプト」はスクリプトの読み込み元も、「すべて」(デフォルト) はすべてのリクエストを調べます。"
+  },
+  "mhUrlLimit1": {
+    "message": "フォント、メディア、スタイルシートのリクエストは記録されません。"
+  },
+  "mhUrlLimit2": {
+    "message": "スキャン前に行われたリクエストだけが対象です。スキャンはページの読み込み後に行われます。"
+  },
+  "mhHeaderIntro": {
+    "message": "ページ自身のリクエストとレスポンスのヘッダーを調べます。スクリプト、XHR、フレームのヘッダーは対象外です。"
+  },
+  "mhHeaderHow1": {
+    "message": "ヘッダー名は小文字で比較され、通常のテキストは「含む」を意味します。`server` は `server-timing` にも一致します。完全一致には Regex で `^server$` を使います。"
+  },
+  "mhHeaderHow2": {
+    "message": "値はその名前のヘッダーで確認されます。空にするとどの値でも一致します。"
+  },
+  "mhHeaderHow3": {
+    "message": "範囲「レスポンス」(デフォルト) はサイトが送ったヘッダー、「リクエスト」はブラウザーが送ったヘッダーです。"
+  },
+  "mhHeaderLimit1": {
+    "message": "「大文字小文字を区別」がオンのときは、ヘッダー名を小文字で書いてください。"
+  },
+  "mhHeaderLimit2": {
+    "message": "再読み込みせずにアドレスが変わるページは、ヘッダーなしで再スキャンされます。"
+  },
+  "mhCookieIntro": {
+    "message": "ページの Cookie を名前と、必要なら値で調べます。HttpOnly や Secure の Cookie も対象です。"
+  },
+  "mhCookieHow1": {
+    "message": "通常の名前は前方一致です: `_abck` は `_abck_2` にも一致します。"
+  },
+  "mhCookieHow2": {
+    "message": "`*` は任意のテキストを表します: `bm_*` は `bm_sz` や `bm_sv` に一致します。"
+  },
+  "mhCookieHow3": {
+    "message": "名前を完全一致させるには、Regex をオンにして `^name$` と書きます。値はテキストを含めば一致します。"
+  },
+  "mhCookieLimit1": {
+    "message": "範囲「リクエスト」(デフォルト) はページに対するブラウザーの Cookie を、「レスポンス」はページのレスポンスが設定する Cookie を読みます。"
+  },
+  "mhCookieLimit2": {
+    "message": "ベンダーのフレームなど、他のサイトの Cookie は見えません。長い値は 100 文字で切り詰められます。"
+  },
+  "mhContentIntro": {
+    "message": "ページのテキスト (body の HTML、インラインスクリプト、読み込まれるスクリプトとスタイルシートのファイル) を検索します。"
+  },
+  "mhContentHow1": {
+    "message": "通常のテキストは、テキストに含まれていれば一致します (大文字小文字は区別しません)。"
+  },
+  "mhContentHow2": {
+    "message": "「単語単位」は長い単語の中の一致を除外します。パターンの両端に英数字か _ が必要です。"
+  },
+  "mhContentHow3": {
+    "message": "「スクリプトのみチェック」は、インラインスクリプト (head を含む) と JavaScript ファイルだけを検索し、HTML や CSS は対象外です。"
+  },
+  "mhContentLimit1": {
+    "message": "他のオリジンからの読み取りをサイトが許可していないファイル (CORS) や 5 MB を超えるファイルはスキップされます。"
+  },
+  "mhContentLimit2": {
+    "message": "フレームやワーカー内のコード、スキャン後に読み込まれたコードは検索されません。"
+  },
+  "mhDomIntro": {
+    "message": "ページの読み込み後、CSS セレクターで body 内の要素を探します。"
+  },
+  "mhDomHow1": {
+    "message": "タグ、`.class`、`#id`、`[attribute]` を単独または組み合わせて使います: `.g-recaptcha[data-sitekey]`"
+  },
+  "mhDomHow2": {
+    "message": "属性の比較 `=`、`^=`、`$=`、`*=`、`~=`、`|=`。大文字小文字を区別しないには `]` の前に ` i` を付けます。"
+  },
+  "mhDomHow3": {
+    "message": "カンマで区切った複数のセレクター: どれか 1 つが一致すれば一致です。"
+  },
+  "mhDomLimit1": {
+    "message": "次はサポートされず、ルールは一致しません: パーツ間の空白や `>`、`:疑似クラス`、エスケープ。"
+  },
+  "mhDomLimit2": {
+    "message": "head、フレーム、shadow root は検索されません。`value` 属性は読まれず、その他の属性は先頭 100 文字で比較されます。"
+  },
+  "mhWindowIntro": {
+    "message": "ページが定義する JavaScript のグローバル変数 (例: `grecaptcha.render`) を調べます。"
+  },
+  "mhWindowHow1": {
+    "message": "`window` からのドット区切りのパス: `KPSDK` や `grecaptcha.render`"
+  },
+  "mhWindowHow2": {
+    "message": "`exists`、`typeof function`、`truthy`、`=== true`、`length > 0`、`has keys` などの条件。空の場合は truthy です。"
+  },
+  "mhWindowHow3": {
+    "message": "検出が理解できない条件は一致しないため、リストから選んでください。"
+  },
+  "mhWindowLimit1": {
+    "message": "ページの読み込み後、最初の数秒間だけ調べます。後から作られたグローバル変数は検出されません。"
+  },
+  "mhWindowLimit2": {
+    "message": "Symbol で名前を付けたプロパティはパスとして書けません。"
+  },
+  "mhJsHooksOnlyFingerprint": {
+    "message": "フックを使うのはフィンガープリントのルールだけです。アンチボットや Captcha のルールでは無視されます。"
+  },
+  "mhJsHooksIntro": {
+    "message": "ページがブラウザー API (例: `HTMLCanvasElement.prototype.toDataURL`) を呼び出したことを記録します。フィンガープリンティングの兆候です。"
+  },
+  "mhJsHooksHow1": {
+    "message": "メソッドまたはゲッターへの完全なパス: `navigator.webdriver` ではなく `Navigator.prototype.webdriver`"
+  },
+  "mhJsHooksHow2": {
+    "message": "どの呼び出しも数えられ、引数や結果は確認されません。フックは API が使われたことを示しますが、目的まではわかりません。"
+  },
+  "mhJsHooksLimit1": {
+    "message": "ページの読み込み後、最初の数秒間 (最大 8 秒) の呼び出しが対象です。"
+  },
+  "mhJsHooksLimit2": {
+    "message": "ワーカーやフレーム内の呼び出しは見えません (同じサイトのフレームにある組み込み対象を除く)。"
+  },
+  "mhPayloadIntro": {
+    "message": "ページが送信する POST、PUT、PATCH、DELETE リクエストの本文を、どのフレームからでも検索します。"
+  },
+  "mhPayloadHow1": {
+    "message": "通常のテキストは、本文に含まれていれば一致します (大文字小文字は区別しません)。フォームデータは `name=value&…` として読まれます。"
+  },
+  "mhPayloadHow2": {
+    "message": "リクエスト URL (任意) と HTTP メソッドで、対象を一致するリクエストに絞り込めます。"
+  },
+  "mhPayloadLimit1": {
+    "message": "スキャン前に送信されたリクエストだけが対象で、1 ページあたり最大 50 件です。"
+  },
+  "mhPayloadLimit2": {
+    "message": "WebSocket のメッセージは読まれません。"
+  },
+  "domCardTitle": {
+    "message": "CSS セレクター"
+  },
+  "domCardBrowse": {
+    "message": "一覧から選ぶ"
+  },
+  "domCardHint": {
+    "message": "タグ、.class、#id、[attribute] の条件を単独または組み合わせて使います。パーツ間の空白や > はサポートされません。"
+  },
+  "windowCardTitle": {
+    "message": "ウィンドウのプロパティ"
   },
   "settingsApiEventsDesc": {
     "message": "拡張機能がページに送信するイベント"
@@ -3392,7 +3479,7 @@
     "message": "URL パターン"
   },
   "rulesUiJsHookTargetPlaceholder": {
-    "message": "JS フックの対象 (例: navigator.webdriver)"
+    "message": "JS フックの対象 (例: Navigator.prototype.webdriver)"
   },
   "rulesUiWindowPathPlaceholder": {
     "message": "window のパス (例: grecaptcha, _cf_chl_opt)"
@@ -3450,24 +3537,6 @@
   },
   "rulesUiLeaveEmptyAnyUrl": {
     "message": "空欄にするとすべての URL に一致します"
-  },
-  "ruleExampleMatches": {
-    "message": "✓ 一致:"
-  },
-  "ruleExampleWont": {
-    "message": "× 不一致:"
-  },
-  "ruleExampleWontMatch": {
-    "message": "× 一致しない:"
-  },
-  "ruleExampleLiteralTextOnly": {
-    "message": "リテラル文字列のみ"
-  },
-  "ruleExampleExactCase": {
-    "message": "(大文字小文字が一致)"
-  },
-  "ruleExampleAlone": {
-    "message": "(単独)"
   },
   "ruleConditionGroupOther": {
     "message": "その他"
@@ -3629,7 +3698,127 @@
     "message": "組み合わせ"
   },
   "combinationsHint": {
-    "message": "パターンを選び、一致が必要な数を指定します。"
+    "message": "組み合わせは、複数のパターンが一緒に見つかったときだけこの保護を検出します。単独では弱いパターンに使います。"
+  },
+  "detectionModalCombinationsHint": {
+    "message": "各組み合わせは、そのシグナルが一緒に現れたときだけ発動します。このページで見つかったものを示します。"
+  },
+  "combinationFoundTogether": {
+    "message": "このページで同時に見つかったもの："
+  },
+  "combinationNotPresent": {
+    "message": "存在しない"
+  },
+  "combinationFound": {
+    "message": "検出"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "このルールは検査後に変更または削除されたため、名前とスコアのみ表示します。"
+  },
+  "historyMatchedDetections": {
+    "message": "一致した検出"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "この検査は条件を保存する前に保存されたため、名前とスコアのみ表示します。"
+  },
+  "combinationMustNotBeFound": {
+    "message": "見つかってはならない"
+  },
+  "combinationMustBeFound": {
+    "message": "見つかる必要がある"
+  },
+  "combinationAutoTip": {
+    "message": "自動：一致させたパターンのうち最も高い信頼度"
+  },
+  "combinationSetsScore": {
+    "message": "検出スコアを決定"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "見つかる必要があるパターンを 1 つ以上追加してください。"
+  },
+  "combinationInvalidOneOf": {
+    "message": "「次のいずれか」リストには、各選択肢に見つかる必要があるパターンが必要です。"
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "「少なくとも {0}」には見つかる必要があるパターンが {0} 個必要です。"
+  },
+  "combinationSentenceOne": {
+    "message": "この条件を満たすと発動します。"
+  },
+  "combinationSentenceAllFmt": {
+    "message": "{0} 個の条件をすべて満たすと発動します。"
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "{0} 個の条件のいずれかを満たすと発動します。"
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "{1} 個の条件のうち少なくとも {0} 個を満たすと発動します。"
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "信頼度：{0}%。"
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "信頼度：自動（最大 {0}%）。"
+  },
+  "combinationSentenceGroup": {
+    "message": "グループは 1 つの条件として数えます。"
+  },
+  "combinationSentenceNot": {
+    "message": "「見つかってはならない」パターンがあると発動しません。"
+  },
+  "combinationSentenceAlone": {
+    "message": "「組み合わせのみ」でないパターンは、単独でも各自の信頼度で検出します。"
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "見つかったときの信頼度"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "空欄で自動：見つかったパターンのうち最も高い信頼度。"
+  },
+  "combinationOnlyTogether": {
+    "message": "これらのパターンは組み合わせでのみ有効"
+  },
+  "combinationOnlyTogetherHint": {
+    "message": "単独では何も検出しません。このルールのすべての組み合わせでこれらのパターンに適用されます。"
+  },
+  "combinationOnlyTogetherMixed": {
+    "message": "一部のパターンは単独でも有効です。チェックするとすべて組み合わせのみになります。"
+  },
+  "combinationModeAny": {
+    "message": "次のいずれか"
+  },
+  "combinationModeAll": {
+    "message": "次のすべて"
+  },
+  "combinationModeAtLeast": {
+    "message": "次のうち少なくとも…"
+  },
+  "combinationModeRootAll": {
+    "message": "次のすべてが見つかる"
+  },
+  "combinationModeRootAny": {
+    "message": "次のいずれかが見つかる"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "次のうち少なくとも…が見つかる"
+  },
+  "combinationGroupMode": {
+    "message": "グループ"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "このグループにパターンを追加"
+  },
+  "combinationDeleteGroup": {
+    "message": "グループを削除"
+  },
+  "combinationAddGroup": {
+    "message": "「いずれか」グループを追加"
+  },
+  "patternUnusedBadge": {
+    "message": "どの組み合わせにもない"
+  },
+  "patternUnusedTip": {
+    "message": "どの組み合わせにも使われていないため、検出しません。クリックすると単独で有効になります。"
   },
   "combinationsEmpty": {
     "message": "組み合わせはまだありません。"
@@ -3640,23 +3829,11 @@
   "combinationDefaultNameFmt": {
     "message": "組み合わせ {0}"
   },
-  "combinationConfidence": {
-    "message": "一致したときの信頼度"
-  },
-  "combinationConfidenceFromPatterns": {
-    "message": "空欄にすると、一致したパターンの信頼度を使います"
-  },
   "combinationDelete": {
     "message": "組み合わせを削除"
   },
   "combinationDeleteConfirmFmt": {
     "message": "組み合わせ「{0}」を削除しますか？パターンはルールに残ります。"
-  },
-  "combinationNotTitle": {
-    "message": "一致してはならない"
-  },
-  "combinationNot": {
-    "message": "NOT"
   },
   "combinationRemove": {
     "message": "削除"
@@ -3676,26 +3853,8 @@
   "combinationAnyPattern": {
     "message": "任意のパターン"
   },
-  "combinationPreviewAnd": {
-    "message": "かつ"
-  },
-  "combinationPreviewOr": {
-    "message": "または"
-  },
-  "combinationPreviewNot": {
-    "message": "NOT"
-  },
   "combinationPreviewEmpty": {
     "message": "パターンを追加して組み合わせを作成"
-  },
-  "combinationInvalid": {
-    "message": "一致が必要なパターンを選び、最小一致数を確認してください。"
-  },
-  "combinationStrict": {
-    "message": "厳格"
-  },
-  "combinationStrictTitle": {
-    "message": "厳格: このパターンは単独では検出器を発動せず、組み合わせの中でのみ有効です"
   },
   "patternCombinationsOnlyBadge": {
     "message": "組み合わせのみ"
@@ -3706,9 +3865,6 @@
   "combinationNoPatterns": {
     "message": "パターンが追加されていません"
   },
-  "combinationJoinTitle": {
-    "message": "かつ / または を切り替え"
-  },
   "combinationPickHint": {
     "message": "追加するパターンにチェック"
   },
@@ -3718,23 +3874,8 @@
   "combinationEditConditions": {
     "message": "条件を編集"
   },
-  "combinationRequireTogether": {
-    "message": "パターンを組み合わせでのみ使用"
-  },
-  "combinationRequireHint": {
-    "message": "このルール全体で、これらのパターンに適用されます。"
-  },
   "combinationAutoConfidence": {
     "message": "自動"
-  },
-  "combinationMatchAll": {
-    "message": "すべての条件が一致"
-  },
-  "combinationMatchAny": {
-    "message": "いずれかの条件が一致"
-  },
-  "combinationMatchAtLeast": {
-    "message": "少なくとも…が一致"
   },
   "combinationDetectWhen": {
     "message": "検出条件"
@@ -3748,29 +3889,8 @@
   "combinationMatchState": {
     "message": "パターンの条件"
   },
-  "combinationMatches": {
-    "message": "一致する"
-  },
-  "combinationDoesNotMatch": {
-    "message": "一致しない"
-  },
-  "combinationAtLeastSummaryFmt": {
-    "message": "少なくとも {0} 個の条件が一致"
-  },
   "combinationChoosePatterns": {
     "message": "パターンを選択"
-  },
-  "combinationSummaryAll": {
-    "message": "必要なすべての条件が一致したときに検出します。"
-  },
-  "combinationSummaryAny": {
-    "message": "少なくとも1つの条件が一致したときに検出します。"
-  },
-  "combinationSummaryMinimumFmt": {
-    "message": "{1} 個の条件のうち少なくとも {0} 個が一致したときに検出します。"
-  },
-  "combinationSummaryExcluded": {
-    "message": "除外したパターンは一致してはいけません。"
   },
   "combinationDecreaseMinimum": {
     "message": "最小一致数を減らす"
@@ -4198,9 +4318,77 @@
     "message": "このページには CAPTCHA があります。Unblocker はページを返すために CAPTCHA を回避または解決しますが、フォームの CAPTCHA は入力しません。",
     "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
   },
-  "scrapflyExportKeyNote": {
-    "message": "コードは SCRAPFLY_API_KEY から API キーを読み込みます。",
-    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  "scrapflyExportOptions": {
+    "message": "オプション"
+  },
+  "scrapflyExportProduct": {
+    "message": "使用"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "CAPTCHA を解決"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "解決ごとに課金"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "解決するには Cloud Browser を使ってください。"
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "このページを Scrapfly の Cloud Browser で開き、Playwright で操作します。Captcha Solver が Turnstile、reCAPTCHA、GeeTest などを表示されたときに解決します。失敗した解決は無料です。"
+  },
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "アンチボット回避"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "AI 用にコピー"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "ページ、保護の種類、設定、コードを 1 つのメッセージにまとめて ChatGPT や Claude などの AI アシスタント用にコピーします"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "コピーしました：AI アシスタントに貼り付けてください"
+  },
+  "scrapflyExportFormat": {
+    "message": "出力"
+  },
+  "scrapflyExportFormatText": {
+    "message": "テキスト"
+  },
+  "scrapflyExportProxy": {
+    "message": "プロキシ"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "データセンター"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "住宅用"
+  },
+  "scrapflyExportCountry": {
+    "message": "国"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "指定なし"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "JavaScript を実行"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 クレジット"
+  },
+  "scrapflyExportStepSettings": {
+    "message": "設定を選ぶ"
+  },
+  "scrapflyExportStepCode": {
+    "message": "コードをコピー"
+  },
+  "scrapflyExportStepKey": {
+    "message": "API キーを設定"
+  },
+  "scrapflyExportStepRun": {
+    "message": "実行"
   },
   "scrapflyExportGetKey": {
     "message": "API キーを取得",

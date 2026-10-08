@@ -127,6 +127,23 @@ class FormatUtils {
   }
 
   /**
+   * Join names as one list in the UI language ("A, B and C", "A、B和C"),
+   * or with commas when Intl or the UI locale is unavailable.
+   * @param {string[]} items
+   * @returns {string}
+   */
+  static formatList(items) {
+    const values = (Array.isArray(items) ? items : []).map(String);
+    const locale = FormatUtils.uiLocale();
+    if (locale && typeof Intl !== 'undefined' && typeof Intl.ListFormat === 'function') {
+      try {
+        return new Intl.ListFormat(locale, { style: 'long', type: 'conjunction' }).format(values);
+      } catch (_) { /* fall through */ }
+    }
+    return values.join(', ');
+  }
+
+  /**
    * Format a date and time in the UI language (falls back to the runtime's
    * default toLocaleString when the UI locale is unavailable).
    * @param {number|Date} value

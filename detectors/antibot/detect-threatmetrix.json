@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "ANTIBOT",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-05",
-  "version": "2.0.0",
+  "lastUpdated": "2026-10-08",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.threatmetrix.com/",
   "icon": "custom.png",
@@ -127,21 +127,21 @@
       }
     },
     {
-      "id": "tmx-first-party-runtime",
-      "name": "First-party tag with ThreatMetrix resources or flag",
-      "confidence": 80,
+      "id": "tmx-resource-runtime",
+      "name": "Profiling resource with its runtime",
+      "confidence": 85,
       "when": {
         "all": [
           {
-            "pattern": "tmx-first-party-tags"
+            "pattern": "tmx-check"
           },
           {
             "any": [
               {
-                "pattern": "tmx-check"
+                "pattern": "tmx-profiling-flag"
               },
               {
-                "pattern": "tmx-profiling-flag"
+                "pattern": "tmx-page-fingerprint"
               }
             ]
           }

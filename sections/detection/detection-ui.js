@@ -894,10 +894,12 @@ DetectionUI.buildDetectionCardHtml = function(detection, index, isSingleResult =
     const matchList = Array.isArray(detection.matches) ? detection.matches : [];
     const combos = Array.isArray(detection.combinations) ? detection.combinations : [];
     const confidenceRows = combos.length
-      ? combos.slice(0, 3).map(combo => ({
-        label: combo.name || FormatUtils.t('combinationDefaultNameFmt', 'Combination {0}', 1),
-        value: `${Math.round(Number(combo.confidence) || 0)}%`, tone: FormatUtils.confidenceTone(combo.confidence)
-      }))
+      ? combos.map((combo, index) => ({ combo, index }))
+        .sort((a, b) => ((Number(b.combo.confidence) || 0) - (Number(a.combo.confidence) || 0)) || (a.index - b.index))
+        .slice(0, 3).map(({ combo, index }) => ({
+          label: combo.name || FormatUtils.t('combinationDefaultNameFmt', 'Combination {0}', index + 1),
+          value: `${Math.round(Number(combo.confidence) || 0)}%`, tone: FormatUtils.confidenceTone(combo.confidence)
+        }))
       : matchList.slice().sort((a, b) => (Number(b.baseConfidence ?? b.confidence) || 0) - (Number(a.baseConfidence ?? a.confidence) || 0))
         .slice(0, 3).map(match => ({
           label: DetectionUI.getMethodLabel(String(match.type || 'unknown').toLowerCase()),

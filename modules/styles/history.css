@@ -370,6 +370,23 @@
   transform: scale(0.95);
 }
 
+/* Scrape with Scrapfly on a card: the Scrapfly logo on blue, beside "…" */
+.history-scrapfly-btn {
+  margin-inline-end: 2px;
+  background: rgba(59, 130, 246, 0.16);
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+.history-scrapfly-btn:hover {
+  background: rgba(59, 130, 246, 0.3);
+  border-color: rgba(59, 130, 246, 0.55);
+}
+
+.history-scrapfly-logo {
+  width: 15px;
+  height: 15px;
+}
+
 .history-item-bottom {
   display: flex;
   align-items: center;
@@ -988,6 +1005,22 @@
 
 .history-modal-detection-card.expanded .history-modal-detection-details {
   display: flex;
+}
+
+/* Matched combinations above the methods (cards: detection.css .match-combo-*) */
+.history-modal-combos {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.history-modal-combos-title {
+  font-size: 9.5px;
+  font-weight: 700;
+  line-height: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
 }
 
 .history-modal-match-count {

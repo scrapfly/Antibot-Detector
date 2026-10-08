@@ -126,6 +126,8 @@ Rules.prototype.populateModalData = function(detector) {
       Logger.debug('UI', 'Setting category:', category); // Debug log
       categorySelect.value = category;
     }
+    // Category-dependent hints in the editor (JS hooks: Fingerprint rules only)
+    document.querySelector('#editRuleModal')?.setAttribute('data-category', String(category).toLowerCase());
 
     if (difficultySelect) {
       const normalizedDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.normalizeDifficulty === 'function')

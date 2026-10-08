@@ -5,8 +5,11 @@
  * Compliant with Chrome Web Store policies (JSON = data, not code).
  */
 class UpdateManager {
-    // Remote repository URL for detector files
-    static REMOTE_BASE_URL = 'https://raw.githubusercontent.com/scrapfly/Antibot-Detector/main/detectors';
+    // Rules ship with GitHub releases: an update reads detectors/ at the tag of
+    // the latest published release, so a merge to main reaches nobody until a
+    // release is published (builds before 2.8.3 read main)
+    static RELEASES_URL = 'https://api.github.com/repos/scrapfly/Antibot-Detector/releases/latest';
+    static RAW_URL = 'https://raw.githubusercontent.com/scrapfly/Antibot-Detector';
 
     // Fetch timeout in milliseconds
     static FETCH_TIMEOUT = Constants.UPDATE_FETCH_TIMEOUT;
@@ -41,13 +44,15 @@ class UpdateManager {
     }
 
     /**
-     * Get incompatible updates from storage
+     * Updates from the last check that need a newer extension than the one
+     * running (entries the installed extension now satisfies are left out)
      * @returns {Promise<Array>} List of incompatible detector updates
      */
     static async getIncompatibleUpdates() {
         try {
             const result = await chrome.storage.local.get(this.STORAGE_KEYS.INCOMPATIBLE_UPDATES);
-            return result[this.STORAGE_KEYS.INCOMPATIBLE_UPDATES] || [];
+            const updates = result[this.STORAGE_KEYS.INCOMPATIBLE_UPDATES];
+            return Array.isArray(updates) ? updates.filter(u => !this.isCompatibleWithExtension(u)) : [];
         } catch (error) {
             Logger.warn('STORAGE', '[UpdateManager] Failed to read incompatible updates:', error);
             return [];
@@ -69,11 +74,17 @@ class UpdateManager {
     }
 
     /**
-     * Check for detector updates from remote server
+     * Check for detector updates in the latest GitHub release
      * @param {boolean} force - Force check regardless of interval
-     * @returns {Promise<{available: boolean, updates: Array, incompatibleCount: number, error: string|null}>}
+     * @returns {Promise<{available: boolean, updates: Array, incompatibleUpdates: Array, incompatibleCount: number,
+     *   failed: Array, release: string|null, error: string|null, errorCode: string|null, retryAt: number|null}>}
+     *   errorCode: 'unreachable' | 'rate_limited' (retryAt in ms) | 'no_release' | 'failed'
      */
     static async checkForUpdates(force = false) {
+        const outcome = (fields = {}) => ({
+            available: false, updates: [], incompatibleUpdates: [], incompatibleCount: 0, failed: [],
+            release: null, error: null, errorCode: null, retryAt: null, ...fields
+        });
         try {
             Logger.storage('UpdateManager: Checking for updates...');
 
@@ -82,7 +93,7 @@ class UpdateManager {
                 const settings = await Utils.getSettings();
                 if (!settings.updates?.autoUpdate) {
                     Logger.storage('UpdateManager: Auto-update disabled, skipping');
-                    return { available: false, updates: [], incompatibleCount: 0, error: null };
+                    return outcome();
                 }
 
                 // Check interval
@@ -92,26 +103,31 @@ class UpdateManager {
 
                 if (now - lastCheck < intervalMs) {
                     Logger.storage('UpdateManager: Too soon to check again');
-                    return { available: false, updates: [], incompatibleCount: 0, error: null };
+                    return outcome();
                 }
             }
 
-            // Fetch remote index
-            const remoteIndex = await this.fetchRemoteIndex();
-            if (!remoteIndex) {
+            // The latest release and its detector index
+            let release;
+            let remoteIndex;
+            try {
+                release = await this.fetchLatestRelease();
+                remoteIndex = await this.fetchRemoteIndex(release.tag);
+                if (!remoteIndex) throw Object.assign(new Error(`Could not read the detector index of ${release.tag}`), { code: 'unreachable' });
+            } catch (error) {
                 // Clear stale GitHub updates since we can't reach the server;
                 // bundled ones do not depend on it
                 await this.setPendingUpdates((await this.getPendingUpdates()).filter(u => u.source === 'bundled'));
-                Logger.storage('UpdateManager: Cleared pending updates due to fetch failure');
-                return { available: false, updates: [], incompatibleCount: 0, error: 'Failed to fetch remote index' };
+                Logger.storage(`UpdateManager: Cleared pending updates, release not readable: ${error.message}`);
+                return outcome({ error: error.message, errorCode: error.code || 'unreachable', retryAt: error.retryAt || null });
             }
 
-            // Compare with local detectors (returns { updates, incompatibleUpdates })
+            // Compare with local detectors (returns { updates, incompatibleUpdates, failed })
             // Add 30-second timeout to prevent hanging on slow networks
-            const comparePromise = this.compareVersions(remoteIndex);
+            const comparePromise = this.compareVersions(remoteIndex, release.tag);
             let timeoutId;
             const timeoutPromise = new Promise((_, reject) => {
-                timeoutId = setTimeout(() => reject(new Error('Update check timed out')), Constants.UPDATE_CHECK_TIMEOUT);
+                timeoutId = setTimeout(() => reject(Object.assign(new Error('Update check timed out'), { code: 'unreachable' })), Constants.UPDATE_CHECK_TIMEOUT);
             });
             let compared;
             try {
@@ -119,7 +135,7 @@ class UpdateManager {
             } finally {
                 clearTimeout(timeoutId);
             }
-            const { updates, incompatibleUpdates } = compared;
+            const { updates, incompatibleUpdates, failed } = compared;
 
             // Update last check timestamp
             await this.updateLastCheckTimestamp();
@@ -131,30 +147,83 @@ class UpdateManager {
             const bundledPending = (await this.getPendingUpdates()).filter(u => u.source === 'bundled');
             await this.setPendingUpdates(this.mergeUpdateLists(bundledPending, updates));
 
-            Logger.storage(`UpdateManager: Found ${updates.length} compatible updates, ${incompatibleUpdates.length} incompatible`);
-            return {
+            Logger.storage(`UpdateManager: ${release.tag}: ${updates.length} compatible updates, ${incompatibleUpdates.length} incompatible, ${failed.length} not downloaded`);
+            return outcome({
                 available: updates.length > 0,
                 updates,
+                incompatibleUpdates,
                 incompatibleCount: incompatibleUpdates.length,
-                error: null
-            };
+                failed,
+                release: release.tag
+            });
 
         } catch (error) {
             Logger.error('STORAGE', 'UpdateManager: Error checking for updates', error);
-            return { available: false, updates: [], incompatibleCount: 0, error: error.message };
+            return outcome({ error: error.message, errorCode: error.code || 'failed' });
         }
     }
 
     /**
-     * Fetch remote index.json from GitHub
+     * The latest published release on GitHub.
+     * @returns {Promise<{tag: string}>}
+     * @throws {Error} with `code` 'unreachable', 'no_release' or 'rate_limited'
+     *   (then `retryAt`, ms epoch, when GitHub says)
+     */
+    static async fetchLatestRelease() {
+        const fail = (code, message, extra = {}) => Object.assign(new Error(message), { code }, extra);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), this.FETCH_TIMEOUT);
+        let response;
+        try {
+            response = await fetch(this.RELEASES_URL, {
+                signal: controller.signal,
+                cache: 'no-store',
+                headers: { Accept: 'application/vnd.github+json' }
+            });
+        } catch (error) {
+            throw fail('unreachable', error.name === 'AbortError' ? 'GitHub did not answer in time' : `GitHub is not reachable: ${error.message}`);
+        } finally {
+            clearTimeout(timeoutId);
+        }
+
+        const header = (name) => (response.headers && typeof response.headers.get === 'function' ? response.headers.get(name) : null);
+        if (response.status === 429 || (response.status === 403 && header('x-ratelimit-remaining') === '0')) {
+            const reset = Number(header('x-ratelimit-reset')) * 1000;
+            const after = Number(header('retry-after')) * 1000;
+            const retryAt = reset > 0 ? reset : (after > 0 ? Date.now() + after : null);
+            throw fail('rate_limited', 'GitHub rate limit reached', { retryAt });
+        }
+        if (response.status === 404) throw fail('no_release', 'No published release on GitHub');
+        if (!response.ok) throw fail('unreachable', `GitHub answered HTTP ${response.status}`);
+
+        let data;
+        try {
+            data = await response.json();
+        } catch (_) {
+            throw fail('unreachable', 'GitHub sent an unreadable answer');
+        }
+        const tag = typeof data?.tag_name === 'string' ? data.tag_name.trim() : '';
+        if (!/^[A-Za-z0-9._-]{1,64}$/.test(tag)) throw fail('no_release', 'The latest release has no usable tag');
+        Logger.storage(`UpdateManager: Latest release ${tag}`);
+        return { tag };
+    }
+
+    /** Raw URL of detectors/ at a release tag */
+    static remoteBaseUrl(tag) {
+        return `${this.RAW_URL}/${encodeURIComponent(tag)}/detectors`;
+    }
+
+    /**
+     * Fetch index.json of a release from GitHub
+     * @param {string} tag - Release tag
      * @returns {Promise<Object|null>}
      */
-    static async fetchRemoteIndex() {
+    static async fetchRemoteIndex(tag) {
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), this.FETCH_TIMEOUT);
 
-            const response = await fetch(`${this.REMOTE_BASE_URL}/index.json`, {
+            const response = await fetch(`${this.remoteBaseUrl(tag)}/index.json`, {
                 signal: controller.signal,
                 cache: 'no-store'
             });
@@ -182,11 +251,14 @@ class UpdateManager {
     /**
      * Compare local detector versions with remote
      * @param {Object} remoteIndex - Remote index.json content
-     * @returns {Promise<{updates: Array, incompatibleUpdates: Array}>} Compatible and incompatible updates
+     * @param {string} tag - Release the index comes from; each entry records it
+     * @returns {Promise<{updates: Array, incompatibleUpdates: Array, failed: Array}>} Compatible and
+     *   incompatible updates, and the detectors that could not be downloaded ({ id, category, name })
      */
-    static async compareVersions(remoteIndex) {
+    static async compareVersions(remoteIndex, tag) {
         const updates = [];
         const incompatibleUpdates = [];
+        const failed = [];
 
         // Errors propagate: a check that could not compare is a failed check,
         // never "all detectors are up to date"
@@ -207,7 +279,7 @@ class UpdateManager {
                 // Official detectors the user deleted stay deleted: never offered as "new"
                 if (deletedOfficial.has(detectorId) && !localDetectors[category]?.[detectorId]) continue;
                 fetchPromises.push(
-                    this.fetchRemoteDetector(category, detectorId)
+                    this.fetchRemoteDetector(category, detectorId, tag)
                         .then(remoteDetector => ({ category, detectorId, remoteDetector }))
                 );
             }
@@ -216,15 +288,19 @@ class UpdateManager {
         // Fetch all detectors in parallel (much faster than sequential)
         const fetchResults = await Promise.all(fetchPromises);
         if (fetchResults.length > 0 && fetchResults.every(r => !r.remoteDetector)) {
-            throw new Error('Could not fetch any detector from the update server');
+            throw Object.assign(new Error('Could not fetch any detector from the update server'), { code: 'unreachable' });
         }
 
         for (const { category, detectorId, remoteDetector } of fetchResults) {
-            if (!remoteDetector) continue;
-
             const localDetector = localDetectors[category]?.[detectorId];
+            if (!remoteDetector) {
+                failed.push({ id: detectorId, category, name: localDetector?.name || detectorId });
+                continue;
+            }
+
             const updateInfo = this.describeUpdate(category, detectorId, remoteDetector, localDetector);
             if (!updateInfo) continue;
+            if (tag) updateInfo.tag = tag;
 
             // Check extension compatibility
             if (this.isCompatibleWithExtension(remoteDetector)) {
@@ -246,7 +322,7 @@ class UpdateManager {
             await chrome.storage.local.remove(this.STORAGE_KEYS.INCOMPATIBLE_UPDATES);
         }
 
-        return { updates, incompatibleUpdates };
+        return { updates, incompatibleUpdates, failed };
     }
 
     /**
@@ -373,17 +449,20 @@ class UpdateManager {
     }
 
     /**
-     * Fetch a specific detector JSON from remote
+     * Fetch a specific detector JSON from a release
      * @param {string} category - Detector category (antibot, captcha, fingerprint)
      * @param {string} detectorId - Detector ID (e.g., detect-akamai)
+     * @param {string} tag - Release tag (entries queued before 2.8.3 have none:
+     *   they stay pending until the next check replaces them)
      * @returns {Promise<Object|null>}
      */
-    static async fetchRemoteDetector(category, detectorId) {
+    static async fetchRemoteDetector(category, detectorId, tag) {
+        if (!tag) return null;
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), this.FETCH_TIMEOUT);
 
-            const url = `${this.REMOTE_BASE_URL}/${category}/${detectorId}.json`;
+            const url = `${this.remoteBaseUrl(tag)}/${category}/${detectorId}.json`;
             const response = await fetch(url, {
                 signal: controller.signal,
                 cache: 'no-store'
@@ -421,7 +500,7 @@ class UpdateManager {
     static fetchUpdateSource(update) {
         return update.source === 'bundled'
             ? this.fetchBundledDetector(update.category, update.id)
-            : this.fetchRemoteDetector(update.category, update.id);
+            : this.fetchRemoteDetector(update.category, update.id, update.tag);
     }
 
     /**
@@ -434,7 +513,8 @@ class UpdateManager {
      * @param {Object} [options]
      * @param {string[]} [options.ids] - Apply only these detector IDs
      * @param {boolean} [options.overwriteModified=false] - Replace edited detectors too
-     * @returns {Promise<{success: boolean, count: number, failed: number, needsDecision: Array, error: string|null}>}
+     * @returns {Promise<{success: boolean, count: number, installed: Array, failed: number, failedUpdates: Array,
+     *   needsDecision: Array, error: string|null}>} installed: { id, name, remoteVersion, isNew }
      */
     static async applyUpdates({ ids = null, overwriteModified = false } = {}) {
         try {
@@ -445,7 +525,7 @@ class UpdateManager {
             const untouched = ids ? pendingUpdates.filter(u => !ids.includes(u.id)) : [];
 
             if (selected.length === 0) {
-                return { success: true, count: 0, failed: 0, needsDecision: untouched.filter(u => u.userModified), error: null };
+                return { success: true, count: 0, installed: [], failed: 0, failedUpdates: [], needsDecision: untouched.filter(u => u.userModified), error: null };
             }
 
             // Re-read the local copies now: the user may have edited, deleted
@@ -453,8 +533,8 @@ class UpdateManager {
             const detectors = await this.loadStoredDetectors();
             const deletedOfficial = await this.getDeletedOfficialIds();
 
-            let updatedCount = 0;
-            let failedCount = 0;
+            const installed = [];
+            const failedUpdates = [];
             const keepPending = [];
             const installedNew = [];
 
@@ -463,7 +543,7 @@ class UpdateManager {
                 try {
                     const incoming = await this.fetchUpdateSource(update);
                     if (!incoming) {
-                        failedCount++;
+                        failedUpdates.push(update);
                         keepPending.push(update);
                         Logger.warn('STORAGE', `UpdateManager: Failed to fetch ${update.category}/${update.id}`);
                         continue;
@@ -472,6 +552,7 @@ class UpdateManager {
                     const localDetector = detectors[update.category]?.[update.id];
                     const current = this.describeUpdate(update.category, update.id, incoming, localDetector, update.source);
                     if (!current) continue; // no longer an update: drop it
+                    if (update.tag) current.tag = update.tag;
 
                     if (current.userModified && !overwriteModified) {
                         keepPending.push(current);
@@ -480,14 +561,17 @@ class UpdateManager {
 
                     this.installDetector(detectors, update.category, update.id, incoming);
                     if (current.isNew) installedNew.push(update.id);
-                    updatedCount++;
+                    installed.push({ id: update.id, name: current.name, remoteVersion: current.remoteVersion, isNew: current.isNew });
                     Logger.storage(`UpdateManager: Updated ${update.id} to v${current.remoteVersion}`);
 
                 } catch (error) {
+                    failedUpdates.push(update);
                     keepPending.push(update);
                     Logger.error('STORAGE', `UpdateManager: Failed to update ${update.id}`, error);
                 }
             }
+            const updatedCount = installed.length;
+            const failedCount = failedUpdates.length;
 
             if (updatedCount > 0) {
                 await this.saveStoredDetectors(detectors);
@@ -505,15 +589,97 @@ class UpdateManager {
             return {
                 success: true,
                 count: updatedCount,
+                installed,
                 failed: failedCount,
+                failedUpdates,
                 needsDecision: remaining.filter(u => u.userModified),
                 error: null
             };
 
         } catch (error) {
             Logger.error('STORAGE', 'UpdateManager: Error applying updates', error);
-            return { success: false, count: 0, failed: 0, needsDecision: [], error: error.message };
+            return { success: false, count: 0, installed: [], failed: 0, failedUpdates: [], needsDecision: [], error: error.message };
         }
+    }
+
+    /**
+     * Rules → Update and Settings → Check now, in one step: check the latest
+     * release, then install every update the user did not edit. Rules the
+     * user edited come back in `needsDecision` for the caller to ask about.
+     * @returns {Promise<{release: string|null, installed: Array, failed: Array, needsDecision: Array,
+     *   incompatible: Array, error: string|null, errorCode: string|null, retryAt: number|null}>}
+     */
+    static async checkAndInstall() {
+        const check = await this.checkForUpdates(true);
+        const result = {
+            release: check.release,
+            installed: [],
+            failed: check.failed || [],
+            needsDecision: [],
+            incompatible: check.incompatibleUpdates || [],
+            error: check.error,
+            errorCode: check.errorCode || null,
+            retryAt: check.retryAt || null
+        };
+        if (check.error || (await this.getPendingUpdatesCount()) === 0) return result;
+
+        const applied = await this.applyUpdates();
+        if (!applied.success) return { ...result, error: applied.error, errorCode: 'failed' };
+        const failedIds = new Set(result.failed.map(f => f.id));
+        result.installed = applied.installed;
+        result.failed = [...result.failed, ...applied.failedUpdates.filter(f => !failedIds.has(f.id))];
+        result.needsDecision = applied.needsDecision;
+        return result;
+    }
+
+    /**
+     * The short summary of a checkAndInstall() result, as toasts.
+     * @param {Object} result - From checkAndInstall()
+     * @param {Object} [options]
+     * @param {Function} [options.t] - (key, fallback, ...args) → text, e.g. FormatUtils.t
+     * @param {Function} [options.list] - (names) → one localized list, e.g. FormatUtils.formatList
+     * @param {boolean} [options.mentionEdited] - Say that edited rules wait in Rules (Settings has no dialog)
+     * @returns {Array<{type: 'success'|'warning'|'error'|'info', text: string}>}
+     */
+    static resultMessages(result, { t, list, mentionEdited = false } = {}) {
+        const tr = t || ((key, fallback, ...args) => args.reduce((text, arg, i) => text.split(`{${i}}`).join(String(arg)), fallback));
+        const join = list || (names => names.join(', '));
+        // Up to five names, otherwise the count
+        const names = (items) => (items.length <= 5 ? join(items.map(u => u.name || u.id)) : String(items.length));
+
+        if (result.error) {
+            if (result.errorCode === 'rate_limited') {
+                const minutes = result.retryAt ? Math.max(1, Math.ceil((result.retryAt - Date.now()) / 60000)) : 60;
+                return [{ type: 'error', text: tr('updateErrorRateLimitedFmt', 'GitHub is limiting update checks. Try again in {0} min.', minutes) }];
+            }
+            if (result.errorCode === 'no_release') {
+                return [{ type: 'error', text: tr('updateErrorNoRelease', 'No published Scrapfly release was found on GitHub.') }];
+            }
+            if (result.errorCode === 'unreachable') {
+                return [{ type: 'error', text: tr('updateErrorUnreachable', 'Could not reach GitHub to check for rule updates.') }];
+            }
+            return [{ type: 'error', text: tr('failedCheckForUpdatesFmt', 'Failed to check for updates: {0}', result.error) }];
+        }
+
+        const messages = [];
+        if (result.installed.length > 0) {
+            messages.push({ type: 'success', text: tr('updateResultInstalledFmt', 'Rules updated from release {0}: {1}', result.release, names(result.installed)) });
+        } else if (result.needsDecision.length === 0 && result.incompatible.length === 0 && result.failed.length === 0) {
+            messages.push({ type: 'success', text: tr('updateResultUpToDateFmt', 'All rules are up to date with release {0}.', result.release) });
+        }
+        if (result.incompatible.length > 0) {
+            const version = result.incompatible.map(u => u.minExtensionVersion || '1.0')
+                .reduce((max, v) => (this.isNewerVersion(v, max) ? v : max));
+            messages.push({ type: 'warning', text: tr('updateResultNeedsExtensionFmt',
+                'Waiting for extension {0} or newer: {1}. They install once Chrome updates the extension.', version, names(result.incompatible)) });
+        }
+        if (result.failed.length > 0) {
+            messages.push({ type: 'warning', text: tr('updateResultFailedFmt', 'Could not download: {0}. Try again later.', names(result.failed)) });
+        }
+        if (mentionEdited && result.needsDecision.length > 0) {
+            messages.push({ type: 'info', text: tr('updateResultEditedWaitingFmt', 'Rules you edited wait for your decision in Rules → Update: {0}', names(result.needsDecision)) });
+        }
+        return messages;
     }
 
     /**

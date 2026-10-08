@@ -145,6 +145,8 @@ class History {
     const t = (typeof I18n !== 'undefined') ? I18n : null;
     const _tr = (key, fallback) => (t && t.get(key)) || fallback;
     const moreLabel = FormatUtils.escapeHtml(_tr('historyMoreActions', 'More actions'));
+    const scrapflyLabel = FormatUtils.escapeHtml(_tr('scrapflyExportTitle', 'Scrape with Scrapfly'));
+    const scrapflyLogo = (typeof ScrapflyExport !== 'undefined') ? ScrapflyExport.logoHtml('history-scrapfly-logo') : '';
     const untitledLabel = _tr('historyUiUntitled', 'Untitled');
     const unknownLabel = _tr('timeUnknown', 'Unknown');
 
@@ -191,6 +193,7 @@ class History {
                 </span>
               </div>
             </div>
+            ${scrapflyLogo && ScrapflyExport.targetUrl(item.url) ? `<button class="history-item-action-btn history-scrapfly-btn" data-action="scrapfly" title="${scrapflyLabel}" aria-label="${scrapflyLabel}">${scrapflyLogo}</button>` : ''}
             <button class="history-item-action-btn history-more-btn" data-action="menu" title="${moreLabel}" aria-label="${moreLabel}" aria-haspopup="menu" aria-expanded="false">
               <svg width="14" height="4" viewBox="0 0 14 4" aria-hidden="true">
                 <circle cx="1.8" cy="2" r="1.2" fill="currentColor"/>
@@ -663,10 +666,31 @@ class History {
   }
 
   /**
+   * History keeps detections without icons: take them from the installed
+   * detectors (by id, else by category and name, as the cards do)
+   * @param {Array<object>} detections
+   * @returns {Array<object>}
+   */
+  withDetectorIcons(detections) {
+    const dm = this.detectorManager;
+    if (!dm) return detections;
+    const categories = { 'anti-bot': 'antibot', antibot: 'antibot', captcha: 'captcha', fingerprint: 'fingerprint' };
+    return detections.map(detection => {
+      const name = detection?.detector?.name || detection?.name;
+      const rawCategory = String(detection?.category || detection?.detector?.category || '');
+      const category = categories[rawCategory.toLowerCase()] || rawCategory.toLowerCase().replace(/[^a-z]/g, '');
+      const found = (detection?.detector?.id && dm.findDetectorById?.(detection.detector.id))
+        || (name && category && dm.getDetectorByName?.(category, name));
+      if (!found) return detection;
+      return { ...detection, detector: { ...(detection.detector || {}), name, icon: found.icon, customIcon: found.customIcon } };
+    });
+  }
+
+  /**
    * Setup click handlers for history items
    */
   setupHistoryItemHandlers() {
-    // Card buttons: copy acts directly, "…" opens the shared per-entry menu
+    // Card buttons: copy and Scrapfly act directly, "…" opens the shared per-entry menu
     document.querySelectorAll('#historyList .history-item-action-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -679,6 +703,9 @@ class History {
 
         if (action === 'copy') {
           this.copyHistoryItem(item);
+        } else if (action === 'scrapfly') {
+          this.closeMenus();
+          ScrapflyExport.open({ url: item.url, detections: this.withDetectorIcons(item.detections || []) });
         } else if (action === 'menu') {
           const menu = document.querySelector('#historyItemMenu');
           if (this._openMenu && this._openMenu.anchor === e.currentTarget) {
@@ -1046,9 +1073,12 @@ class History {
       const confidence = Math.round(Number(detection.confidence) || 0);
       const hasMethods = detection.matches && detection.matches.length > 0;
 
+      // The rule as loaded now: by id first (names can change), then by name
       let detectorObj = null;
-      if (this.detectorManager && category && rawName) {
-        detectorObj = this.detectorManager.getDetectorByName(category, name);
+      if (this.detectorManager) {
+        const id = detection.detector && typeof detection.detector === 'object' ? detection.detector.id : '';
+        detectorObj = (id && this.detectorManager.findDetectorById?.(id))
+          || (category && rawName ? this.detectorManager.getDetectorByName(category, name) : null);
       }
       const isFingerprintCategory = catClass === 'fingerprint';
 
@@ -1072,6 +1102,7 @@ class History {
       }
 
       const methodsHtml = this.renderDetectionMethods(detection.matches || []);
+      const combinationsHtml = this.renderHistoryCombinations(detection, detectorObj, index);
       const matchCount = detection.matches?.length || 0;
       const methodTypeBadges = this.renderMethodTypeBadges(detection.matches || []);
       const expandLabel = FormatUtils.escapeAttr(_tr('detectionModalDetectionMethods', 'Detection methods'));
@@ -1098,7 +1129,8 @@ class History {
           </div>
           ${hasMethods ? `
             <div class="history-modal-detection-details">
-              <div class="history-modal-match-count">${matchCount === 1 ? _tr('historyOneMatch', '1 match') : _fmt('historyMatchCountFmt', `${matchCount} matches`, matchCount)}</div>
+              ${combinationsHtml}
+              <div class="history-modal-match-count">${FormatUtils.escapeHtml(_tr('historyMatchedDetections', 'Matched detections'))}</div>
               <div class="history-modal-detection-methods">
                 ${methodsHtml}
               </div>
@@ -1107,6 +1139,43 @@ class History {
         </div>
       `;
     }).join('');
+  }
+
+  /**
+   * Matched combinations of one detection as checklists (CombinationChecklist),
+   * rebuilt from the rule as it is now. Popup only: the worker never renders History.
+   */
+  renderHistoryCombinations(detection, definition, index) {
+    const combos = Array.isArray(detection.combinations) ? detection.combinations : [];
+    if (!combos.length || typeof CombinationChecklist === 'undefined') return '';
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
+    const title = (t && t.get('detectionModalCombinations')) || 'Matched combinations';
+    const cards = CombinationChecklist.build({
+      combinations: combos,
+      definition,
+      found: detection.comboFound,
+      matches: Array.isArray(detection.matches) ? detection.matches : [],
+      detectionConfidence: detection.confidence,
+      // Slim entries keep a rule key instead of the rule; a full detection carries its own
+      fromHistory: !combos.some(combo => combo && combo.when)
+    });
+    // Entries saved before checklists: say it once, not on every card
+    const notSaved = cards.some(card => card.unavailable === 'notSaved')
+      ? `<p class="match-combo-hint" dir="auto">${FormatUtils.escapeHtml((t && t.get('combinationDetailsNotSavedAll')) || 'This scan was saved before conditions were kept, so only names and scores are shown.')}</p>`
+      : '';
+    return `<div class="history-modal-combos">
+      <div class="history-modal-combos-title">${FormatUtils.escapeHtml(title)}</div>
+      ${notSaved}
+      <div class="match-combo-list">${CombinationChecklist.renderHtml(cards, this.historyChecklistOptions(`hist-combo-${index}`))}</div>
+    </div>`;
+  }
+
+  historyChecklistOptions(idPrefix) {
+    return {
+      idPrefix,
+      methodLabel: (m) => this.getMethodLabel(m),
+      confidenceHtml: (value, cls, tip) => FormatUtils.confidenceHtml(value, cls, tip)
+    };
   }
 
   /**

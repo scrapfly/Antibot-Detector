@@ -7,6 +7,42 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [Unreleased]
 
+## [2.8.3] - 2026-10-08
+
+### Added
+
+- Rules: each card's "⋯" menu can export just that detector.
+- History: each card has a Scrapfly button that opens Scrape with Scrapfly for that page.
+
+### Changed
+
+- Scrape with Scrapfly: turn the Unblocker and JavaScript rendering (both on by default) on or off, and pick output, proxies (residential by default) and country; the code updates as you pick.
+- Scrape with Scrapfly: Copy for AI copies the page, its protections, your settings and the code as one message ready for an AI assistant.
+- Scrape with Scrapfly: pages with a CAPTCHA now get Cloud Browser code with the Captcha Solver, which solves CAPTCHAs on forms and waits for each solve before reading the page; switch back to the Scrape API anytime.
+- Scrape with Scrapfly: the dialog is laid out as four numbered steps, from settings to running the code.
+- Detection details: each matched combination says in plain words what it found on the page, and marks the one that set the score.
+- History details: matched combinations are shown too, and the list of matches is titled "Matched detections".
+- Rules editor: combinations show each pattern's description first, and "one of" groups can be added, changed and deleted.
+- Rules editor: one Test pattern dialog replaces the six Regex, Whole word and Case sensitive helpers; it opens with your pattern and tests sample text exactly as detection does.
+- Rules editor: each detection method's "?" explains what it checks, how it matches and its limits, with examples from Scrapfly's own rules; several old texts were wrong.
+- Rules editor: the DOM selector and Window property helpers open from each pattern's settings, show more suggestions per page, and the settings button is blue.
+- JS API: matched combinations list which of their patterns were found.
+- Detectors: ThreatMetrix, AWS WAF, Cloudflare, Screen and IndexedDB combinations now score above their single signals; three unused Jiasule and Radware signals count alone.
+- Google BotGuard is also recognised on Gmail, from its /waa requests and the /js/bg/ interpreter script.
+- Rules → Update installs the latest Scrapfly release in one click and lists what changed; Settings → Check now does the same.
+- Rules that need a newer extension are no longer offered as updates; the Rules tab says which extension version they wait for.
+
+### Fixed
+
+- Rules editor: saving no longer fails after emptying a group, and removing a condition no longer lets weak patterns detect on their own.
+- Advanced: the History count goes up as soon as a tool saves a result, instead of only when the History tab is opened.
+- F5: the "ASM cookie with BIG-IP analytics" combination now shows; before, the load-balancer combination always took its place.
+- Detection: pages that never finish loading are now scanned after a short wait instead of never showing a result.
+- Rules → Update no longer says everything is up to date when some rules failed to download, and explains GitHub outages and rate limits.
+- Rules editor: a regex or selector picked in a helper no longer stays when you cancel the pattern settings.
+- Rules editor: JS hooks now say they only work in Fingerprint rules, and DOM selectors no longer offer Regex, Whole word and Case sensitive, which detection ignores.
+- Dropdown lists scroll with the extension's thin scrollbar instead of the system bar with arrows.
+
 ## [2.8.2] - 2026-10-07
 
 ### Added
@@ -231,7 +267,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
-[Unreleased]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.2...HEAD
+[Unreleased]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.3...HEAD
+[2.8.3]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.2...v2.8.3
 [2.8.2]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.1...v2.8.2
 [2.8.1]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8...v2.8.1
 [2.8]: https://github.com/scrapfly/Antibot-Detector/compare/v2.7...v2.8

@@ -223,8 +223,7 @@ DetectionModals.renderDetectionModalContent = function(detection) {
       const matches = Array.isArray(detection.matches) ? detection.matches : [];
       const scoreOf = (match) => Math.round(Number(match.baseConfidence ?? match.confidence) || 0);
       const rows = combos.length
-        ? combos.slice(0, 4).map(combo => ({ label: combo.name || _dmText('combinationDefaultNameFmt', 'Combination {0}', 1),
-          value: `${Math.round(Number(combo.confidence) || 0)}%`, tone: FormatUtils.confidenceTone(combo.confidence) }))
+        ? DetectionModals.combinationTipRows(combos, 4)
         : matches.slice().sort((a, b) => scoreOf(b) - scoreOf(a)).slice(0, 4).map(match => ({
           label: (typeof DetectionUI !== 'undefined' ? DetectionUI.getMethodLabel(String(match.type || 'unknown').toLowerCase()) : match.type),
           value: `${scoreOf(match)}%`, tone: FormatUtils.confidenceTone(scoreOf(match)) }));
@@ -302,12 +301,11 @@ DetectionModals.renderDetectionModalContent = function(detection) {
     }
 
     // Combinations of the detector that matched (see DetectionCombinations),
-    // shown like the method rows: chip, the rule as text, confidence
+    // each as a checklist of what it looks for (CombinationChecklist)
     if (this.modalElements.combinations && this.modalElements.combinationsSection) {
       const matched = Array.isArray(detection.combinations) ? detection.combinations : [];
       this.modalElements.combinationsSection.hidden = matched.length === 0;
-      this.modalElements.combinations.innerHTML = DetectionModals.getCombinationRows.call(this, detection, matched);
-      DetectionModals.attachCombinationCopyHandlers.call(this);
+      DetectionModals.renderCombinations.call(this, detection, matched);
     }
 
     if (this.modalElements.methods) {
@@ -335,44 +333,41 @@ DetectionModals.findDetectorDefinition = function(detection) {
     return detection?.detector || null;
 };
 
-/** Rows for matched combinations, in the method-card layout. */
-DetectionModals.getCombinationRows = function(detection, matched) {
-    const definition = DetectionModals.findDetectorDefinition.call(this, detection) || {};
-    const label = (m) => (typeof DetectionUI !== 'undefined' ? DetectionUI.getMethodLabel(m) : m);
-    const words = {
-      and: _dmText('combinationPreviewAnd', 'AND'),
-      or: _dmText('combinationPreviewOr', 'OR'),
-      not: _dmText('combinationPreviewNot', 'NOT'),
-      method: label,
-      any: (m) => (typeof I18n !== 'undefined' && I18n.format('combinationAnyOfMethodFmt', label(m))) || `Any ${label(m)} pattern`
+/** Method labels and the confidence look for combination checklists. */
+DetectionModals.checklistOptions = function(idPrefix) {
+    return {
+      idPrefix,
+      methodLabel: (m) => (typeof DetectionUI !== 'undefined' ? DetectionUI.getMethodLabel(m) : m),
+      confidenceHtml: (value, cls, tip) => FormatUtils.confidenceHtml(value, cls, tip)
     };
-    const clickToCopy = FormatUtils.escapeAttr(_dmText('advCommonClickToCopy', 'Click to copy'));
-    return matched.map((combo, i) => {
-      const name = combo.name || (typeof I18n !== 'undefined' && I18n.format('combinationDefaultNameFmt', String(i + 1))) || `Combination ${i + 1}`;
-      const chip = FormatUtils.escapeHtml(name);
-      const confidence = Math.round(Number(combo.confidence) || 0);
-      const rule = (combo.when && typeof DetectionCombinations !== 'undefined')
-        ? DetectionCombinations.describe(definition, combo.when, words)
-        : (combo.name || '');
-      const text = rule || name;
-      return `
-        <div class="method-item-card method-combination" data-copy-value="${encodeURIComponent(text)}" title="${clickToCopy}">
-          <span class="method-type-badge method-type-badge--combination" title="${FormatUtils.escapeAttr(name)}">${chip}</span>
-          <button type="button" class="method-value-btn" title="${FormatUtils.escapeAttr(text)}">${FormatUtils.escapeHtml(text)}</button>
-          ${FormatUtils.confidenceHtml(confidence, 'method-confidence')}
-        </div>`;
-    }).join('');
 };
 
-DetectionModals.attachCombinationCopyHandlers = function() {
-    document.querySelectorAll('#detectionModalCombinations .method-item-card').forEach(card => {
-      const value = decodeURIComponent(card.getAttribute('data-copy-value') || '');
-      const button = card.querySelector('.method-value-btn');
-      card.addEventListener('click', () => {
-        if (!value) return;
-        FormatUtils.copyToClipboard(value, { element: button || card });
-      });
+/** Matched combinations as checklists (CombinationChecklist). */
+DetectionModals.renderCombinations = function(detection, matched) {
+    const list = this.modalElements.combinations;
+    if (typeof CombinationChecklist === 'undefined') {
+      list.textContent = '';
+      return;
+    }
+    const cards = CombinationChecklist.build({
+      combinations: matched,
+      definition: DetectionModals.findDetectorDefinition.call(this, detection),
+      matches: Array.isArray(detection.matches) ? detection.matches : [],
+      detectionConfidence: detection.confidence
     });
+    list.innerHTML = CombinationChecklist.renderHtml(cards, DetectionModals.checklistOptions.call(this, 'det-combo'));
+};
+
+/** Tooltip rows for the combinations behind a score: highest first, unnamed ones numbered in rule order. */
+DetectionModals.combinationTipRows = function(combos, limit) {
+    return combos.map((combo, index) => ({ combo, index }))
+      .sort((a, b) => ((Number(b.combo.confidence) || 0) - (Number(a.combo.confidence) || 0)) || (a.index - b.index))
+      .slice(0, limit)
+      .map(({ combo, index }) => ({
+        label: combo.name || _dmText('combinationDefaultNameFmt', 'Combination {0}', index + 1),
+        value: `${Math.round(Number(combo.confidence) || 0)}%`,
+        tone: FormatUtils.confidenceTone(combo.confidence)
+      }));
 };
 
 DetectionModals.attachModalMethodHandlers = function() {

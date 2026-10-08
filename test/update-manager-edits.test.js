@@ -50,6 +50,9 @@ function load(local, { remote = {}, bundled = {}, bundledIndex = null } = {}) {
   vm.createContext(ctx);
   vm.runInContext(fs.readFileSync(path.join(root, 'modules/core/update-manager.js'), 'utf8'), ctx);
   const UM = ctx.UpdateManager;
+  // GitHub stand-in: the latest release and its index (tests may override)
+  UM.fetchLatestRelease = async () => ({ tag: 'v9.9.9' });
+  UM.fetchRemoteIndex = async () => index;
   UM.fetchRemoteDetector = async (_cat, id) => (remote[id] ? JSON.parse(JSON.stringify(remote[id])) : null);
   return { UM, messages };
 }

@@ -1,5 +1,7 @@
 // Turnstile site keys on the inspected tab, for Advanced → Turnstile and
-// Advanced → Cloudflare "Extract Site Key". A key is found in the widget's
+// Advanced → Cloudflare "Extract Site Key" (kept with the Cloudflare tools:
+// Turnstile is Cloudflare's; the Turnstile module loads it from here too).
+// A key is found in the widget's
 // data-sitekey (implicit rendering), in the challenge iframe URL (the iframe
 // sits in a closed shadow root, but its request is in the page's resource
 // timing) or in an inline turnstile.render({ sitekey }) call. Every frame is

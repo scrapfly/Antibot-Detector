@@ -6,8 +6,8 @@
  * selector templates generated from the typed keyword, plus the typed value
  * as a custom selector) -> preview -> "Use selector".
  *
- * Also owns the delegated click handling of the "?" helper buttons that the
- * rule editor renders next to DOM / WINDOW inputs.
+ * Opened from the CSS selector card of a DOM rule's settings ("Browse"): the
+ * picked selector goes back to that dialog and is saved by its Apply.
  *
  * Dependencies: rules.js, helpers/helper-kit.js
  */
@@ -36,22 +36,12 @@ Rules.prototype.setupDomHelperModal = function() {
     RuleHelperKit.onEscape('#domHelperModal', () => this.closeDomHelperModal());
   }
 
-  // "?" helper buttons in the rule editor (event delegation).
-  document.addEventListener('click', (e) => {
-    const openers = [
-      ['.dom-helper-btn', (item, index) => this.openDomHelperModal(item, index)],
-      ['.window-helper-btn', (item, index) => this.openWindowHelperModal(item, index)],
-      ['.condition-helper-btn', (item, index) => this.openConditionHelperModal(item, index)]
-    ];
-    for (const [selector, open] of openers) {
-      const button = e.target.closest(selector);
-      if (!button) continue;
-      e.stopPropagation();
-      const methodItem = button.closest('.method-item');
-      if (methodItem) open(methodItem, button.dataset.inputIndex);
-      return;
-    }
+  // "Browse" in the CSS selector card of the DOM settings
+  document.querySelector('[data-dom-browse]')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (this.currentMethodItem) this.openDomHelperModal(this.currentMethodItem, 0, { fromSettings: true });
   });
+
 };
 
 /** Selectors used by the loaded detectors (detector name + category chip). */
@@ -177,12 +167,15 @@ Rules.prototype.updateDomSelectorPreview = function() {
   if (useBtn) useBtn.disabled = !selector;
 };
 
-Rules.prototype.openDomHelperModal = function(methodItem, inputIndex) {
+Rules.prototype.openDomHelperModal = function(methodItem, inputIndex, options = {}) {
   const modal = document.querySelector('#domHelperModal');
   if (!modal) return;
 
   this.currentDomMethodItem = methodItem;
-  const currentValue = (methodItem?.querySelector('.method-input.method-name')?.value || '').trim();
+  this._domHelperFromSettings = !!options.fromSettings;
+  const currentValue = (this._domHelperFromSettings
+    ? this.getSettingsPatternText('name')
+    : (methodItem?.querySelector('.method-input.method-name')?.value || '')).trim();
 
   const state = this._domHelperState || (this._domHelperState = { selector: '', catalog: [] });
   state.catalog = this.getDomSelectorCatalog();
@@ -194,10 +187,13 @@ Rules.prototype.openDomHelperModal = function(methodItem, inputIndex) {
   this.displayDomSuggestions('');
   this.updateDomSelectorPreview();
 
-  // Hide parent modal backdrop to prevent blur stacking
-  const editBackdrop = document.querySelector('#editRuleModal .rule-modal-backdrop');
-  if (editBackdrop) editBackdrop.style.display = 'none';
+  // Hide the parent dialog's backdrop to prevent blur stacking
+  this._domHelperParentBackdrop = document.querySelector(this._domHelperFromSettings
+    ? '#methodSettingsModal .rule-modal-backdrop'
+    : '#editRuleModal .rule-modal-backdrop');
+  if (this._domHelperParentBackdrop) this._domHelperParentBackdrop.style.display = 'none';
 
+  this._domHelperPreviousOverflow = document.body.style.overflow;
   modal.style.display = 'flex';
   document.body.style.overflow = 'hidden';
 
@@ -215,7 +211,11 @@ Rules.prototype.useDomSelector = function(selectorValue) {
     return;
   }
 
-  if (this.currentDomMethodItem) {
+  if (this._domHelperFromSettings) {
+    // Written to the rule by the settings dialog's Apply (saveMethodSettings)
+    this._pendingPatternText = { ...(this._pendingPatternText || {}), name: selector };
+    this.refreshSettingsPatternCards?.();
+  } else if (this.currentDomMethodItem) {
     const nameInput = this.currentDomMethodItem.querySelector('.method-input.method-name');
     if (nameInput) {
       nameInput.value = selector;
@@ -230,10 +230,12 @@ Rules.prototype.closeDomHelperModal = function() {
   const modal = document.querySelector('#domHelperModal');
   if (!modal) return;
   modal.style.display = 'none';
-  document.body.style.overflow = '';
+  document.body.style.overflow = this._domHelperPreviousOverflow || '';
   this.currentDomMethodItem = null;
 
-  // Restore parent modal backdrop
-  const editBackdrop = document.querySelector('#editRuleModal .rule-modal-backdrop');
-  if (editBackdrop) editBackdrop.style.display = '';
+  // Restore the parent dialog's backdrop
+  if (this._domHelperParentBackdrop) this._domHelperParentBackdrop.style.display = '';
+  this._domHelperParentBackdrop = null;
+  if (this._domHelperFromSettings) document.querySelector('[data-dom-browse]')?.focus();
+  this._domHelperFromSettings = false;
 };

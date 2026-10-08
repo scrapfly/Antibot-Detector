@@ -341,6 +341,8 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
     // Store reference to current method item and field type
     this.currentMethodItem = methodItem;
     this.currentFieldType = fieldType;
+    // Pattern text changed in the Test pattern dialog, written on Apply only
+    this._pendingPatternText = null;
 
     // Determine method type from the method item
     const methodKey = this.getMethodItemType(methodItem);
@@ -500,13 +502,22 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
       payloadScopeGroup.style.display = isPayload ? 'block' : 'none';
     }
 
+    // DOM rules: the selector and its helper (no Regex / Whole word / Case sensitive)
+    const domSelectorGroup = document.querySelector('#domSelectorGroup');
+    if (domSelectorGroup) domSelectorGroup.style.display = methodKey === 'dom' ? 'block' : 'none';
+    // WINDOW rules: the property, its condition and the window property helper
+    const windowPropertyGroup = document.querySelector('#windowPropertyGroup');
+    if (windowPropertyGroup) windowPropertyGroup.style.display = methodKey === 'window' ? 'block' : 'none';
+
     // Get field option groups
     const nameFieldGroup = document.querySelector('#nameFieldOptionsGroup');
     const valueFieldGroup = document.querySelector('#valueFieldOptionsGroup');
     const patternOptionsTitle = document.querySelector('#patternOptionsTitle');
 
-    // JS Hooks and Window have no pattern options — only show confidence
-    const noPatternOptions = methodKey === 'js_hooks' || methodKey === 'window';
+    // JS Hooks and Window have no pattern options — only show confidence.
+    // DOM selectors have none either: detection ignores Regex / Whole word /
+    // Case sensitive there (stored flags are kept, so saving changes nothing)
+    const noPatternOptions = methodKey === 'js_hooks' || methodKey === 'window' || methodKey === 'dom';
 
     // Show/hide field groups based on which field's settings button was clicked
     if (noPatternOptions) {
@@ -529,8 +540,6 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
           patternOptionsTitle.textContent = _trMS('urlPatternMatching', 'URL Pattern Matching');
         } else if (methodKey === 'content') {
           patternOptionsTitle.textContent = _trMS('textWordMatching', 'Text/Word Matching');
-        } else if (methodKey === 'dom') {
-          patternOptionsTitle.textContent = _trMS('domSelectorMatching', 'DOM Selector Matching');
         } else if (methodKey === 'payload') {
           patternOptionsTitle.textContent = _trMS('payloadTextMatching', 'Payload Text Matching');
         } else {
@@ -538,6 +547,8 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
         }
       }
     }
+
+    this.refreshSettingsPatternCards?.();
 
     // Hide entire Edit modal while Method Settings is open
     const editModal = document.querySelector('#editRuleModal');
@@ -579,8 +590,10 @@ Rules.prototype.updateMethodIndicators = function(methodItem) {
         const hasSettings = methodItem.dataset.nameRegex === 'true' ||
           methodItem.dataset.nameWholeword === 'true' ||
           methodItem.dataset.nameCase === 'true';
+        // Detection ignores these options on DOM selectors
+        const optionsApply = this.getMethodItemType(methodItem) !== 'dom';
 
-        if (hasValue || hasSettings) {
+        if (optionsApply && (hasValue || hasSettings)) {
           if (methodItem.dataset.nameRegex === 'true') indicators.push('RX');
           if (methodItem.dataset.nameWholeword === 'true') indicators.push('WW');
           if (methodItem.dataset.nameCase === 'true') indicators.push('CS');
@@ -588,9 +601,17 @@ Rules.prototype.updateMethodIndicators = function(methodItem) {
 
         nameIndicator.innerHTML = indicators.map(ind => Rules.indicatorBadge(ind)).join('');
         if (methodItem.dataset.standalone === 'false') {
-          const label = (typeof I18n !== 'undefined' && I18n.tr) ? I18n.tr('patternCombinationsOnlyBadge', 'Combinations only') : 'Combinations only';
-          nameIndicator.insertAdjacentHTML('beforeend',
-            `<span class="indicator-badge indicator-badge-combo" data-type="COMBO">${FormatUtils.escapeHtml(label)}</span>`);
+          const tr = (key, fallback) => ((typeof I18n !== 'undefined' && I18n.tr) ? I18n.tr(key, fallback) : fallback);
+          const id = methodItem.dataset.patternId;
+          // Combination-only but used by no combination: it never detects, so offer to let it count alone
+          if (typeof this.isComboPatternUnused === 'function' && this.isComboPatternUnused(id)) {
+            nameIndicator.insertAdjacentHTML('beforeend',
+              `<button type="button" class="indicator-badge indicator-badge-unused" data-type="UNUSED" data-pattern-release="${FormatUtils.escapeAttr(id)}"
+                title="${FormatUtils.escapeAttr(tr('patternUnusedTip', 'No combination uses it, so it never detects. Click to let it count on its own.'))}">${FormatUtils.escapeHtml(tr('patternUnusedBadge', 'Not in any combination'))}</button>`);
+          } else {
+            nameIndicator.insertAdjacentHTML('beforeend',
+              `<span class="indicator-badge indicator-badge-combo" data-type="COMBO">${FormatUtils.escapeHtml(tr('patternCombinationsOnlyBadge', 'Combinations only'))}</span>`);
+          }
         }
       }
     }
@@ -631,11 +652,15 @@ Rules.prototype.closeMethodSettingsModal = function() {
       modal.style.display = 'none';
       document.body.style.overflow = '';
       this.currentMethodItem = null;
+      this._pendingPatternText = null;
     }
   };
 
 Rules.prototype.saveMethodSettings = function() {
     if (!this.currentMethodItem) return;
+
+    // Pattern text applied in the Test pattern dialog
+    this.commitPendingPatternText?.();
 
     // Get values from modal
     const confidence = parseInt(document.querySelector('#confidenceSlider')?.value || '100', 10);
@@ -706,7 +731,7 @@ Rules.prototype.saveMethodSettings = function() {
     const valueSettingsBtn = this.currentMethodItem.querySelector('.field-actions[data-field-type="value"] .method-action-btn.settings');
 
     // Check if name or value have custom settings
-    const hasNameCustomSettings = nameRegex || nameWholeWord || nameCaseSensitive ||
+    const hasNameCustomSettings = (methodType !== 'dom' && (nameRegex || nameWholeWord || nameCaseSensitive)) ||
       (methodType === 'content' && checkScripts === true);
     const hasValueCustomSettings = valueRegex || valueWholeWord || valueCaseSensitive;
 

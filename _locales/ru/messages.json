@@ -216,7 +216,7 @@
     "message": "История обнаружений появится здесь по мере просмотра сайтов."
   },
   "rulesUpdateTitle": {
-    "message": "Проверить обновления детекторов"
+    "message": "Установить обновления правил из последнего релиза Scrapfly"
   },
   "rulesAddTitle": {
     "message": "Добавить новый детектор"
@@ -841,12 +841,6 @@
   "webhookTestFailedFmt": {
     "message": "Проверка вебхука не удалась: {0}"
   },
-  "foundDetectorUpdatesAvailableFmt": {
-    "message": "Найдено доступных обновлений детекторов: {0}!"
-  },
-  "allDetectorsUpToDate": {
-    "message": "Все детекторы актуальны."
-  },
   "importDetectorsTitle": {
     "message": "Импорт детекторов"
   },
@@ -862,6 +856,9 @@
   "detectorsImported": {
     "message": "Детекторы импортированы"
   },
+  "detectorExportedFmt": {
+    "message": "{0}: экспортировано"
+  },
   "failedImportDetectors": {
     "message": "Не удалось импортировать детекторы. Проверьте формат файла."
   },
@@ -870,9 +867,6 @@
   },
   "detectorsUpdatedFmt": {
     "message": "Обновлено детекторов: {0}"
-  },
-  "updatesAvailableClickToApplyFmt": {
-    "message": "Доступно обновлений: {0} — нажмите ещё раз, чтобы применить"
   },
   "detectorDeletedFmt": {
     "message": "Удалён \"{0}\""
@@ -885,9 +879,6 @@
   },
   "textWordMatching": {
     "message": "Сопоставление текста/слов"
-  },
-  "domSelectorMatching": {
-    "message": "Сопоставление DOM-селекторов"
   },
   "payloadTextMatching": {
     "message": "Сопоставление текста полезной нагрузки"
@@ -942,6 +933,30 @@
   },
   "couldNotFetchUpdates": {
     "message": "Не удалось получить обновления с сервера"
+  },
+  "updateResultInstalledFmt": {
+    "message": "Правила обновлены из релиза {0}: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "Все правила соответствуют релизу {0}."
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "Ожидают расширения версии {0} или новее: {1}. Они установятся, когда Chrome обновит расширение."
+  },
+  "updateResultFailedFmt": {
+    "message": "Не удалось загрузить: {0}. Повторите попытку позже."
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "Изменённые вами правила ждут вашего решения в разделе Правила → Обновить: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "Не удалось связаться с GitHub для проверки обновлений правил."
+  },
+  "updateErrorNoRelease": {
+    "message": "На GitHub не найдено опубликованного релиза Scrapfly."
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub ограничивает проверки обновлений. Повторите через {0} мин."
   },
   "errorApplyingUpdates": {
     "message": "Ошибка применения обновлений"
@@ -1588,114 +1603,6 @@
   "notifLoadingDefault": {
     "message": "Загрузка..."
   },
-  "helpJsHooksTitle": {
-    "message": "Обнаружение через JavaScript-хуки"
-  },
-  "helpJsHooksDescription": {
-    "message": "Хуки перехватывают вызовы браузерных API (Canvas, Audio, WebGL и др.), чтобы в реальном времени обнаруживать код фингерпринтинга анти-бот систем при обращении страницы к этим API."
-  },
-  "helpJsHooksWarning": {
-    "message": "Хуки должны устанавливаться на document_start до запуска любого скрипта страницы — иначе страница может сохранить ссылки на оригинальные API до установки нашей обёртки."
-  },
-  "helpJsHooksTip": {
-    "message": "Добавьте цель вроде CanvasRenderingContext2D.prototype.getImageData для обнаружения canvas-фингерпринтинга."
-  },
-  "helpWindowTitle": {
-    "message": "Обнаружение через свойства window"
-  },
-  "helpWindowDescription": {
-    "message": "Обнаруживает JavaScript-объекты и свойства, добавляемые в глобальный объект window скриптами анти-бот систем."
-  },
-  "helpWindowWarning": {
-    "message": "Некоторые анти-бот скрипты используют ключи Symbol(), которые не перечисляются — их сложнее обнаружить."
-  },
-  "helpWindowTip": {
-    "message": "Используйте условия вроде typeof object или exists для сопоставления по типу свойства."
-  },
-  "helpUrlTitle": {
-    "message": "Обнаружение по шаблону URL"
-  },
-  "helpUrlDescription": {
-    "message": "Сопоставляет URL загружаемых ресурсов (скрипты, изображения, сетевые запросы) с шаблонами."
-  },
-  "helpUrlWarning": {
-    "message": "Шаблоны не учитывают регистр, пока не включён параметр «С учётом регистра». Слишком общий шаблон совпадёт и с посторонними ресурсами, поэтому делайте его точным."
-  },
-  "helpUrlTip": {
-    "message": "Используйте параметр Regex для сложных шаблонов вроде /\\/v\\d+\\/challenge/."
-  },
-  "helpHeaderTitle": {
-    "message": "Обнаружение по HTTP-заголовкам"
-  },
-  "helpHeaderDescription": {
-    "message": "Обнаруживает заголовки HTTP-запросов и ответов, устанавливаемые промежуточным ПО анти-бот систем."
-  },
-  "helpHeaderWarning": {
-    "message": "Некоторые заголовки присутствуют только в первоначальном запросе — убедитесь, что область включает «Запрос»."
-  },
-  "helpHeaderTip": {
-    "message": "Типичные цели: x-akamai-bot-manager-token, cf-ray, x-shape-version."
-  },
-  "helpCookieTitle": {
-    "message": "Обнаружение по куки"
-  },
-  "helpCookieDescription": {
-    "message": "Обнаруживает куки, устанавливаемые проверками анти-бот систем. Сопоставляет имя куки (и при необходимости шаблон значения)."
-  },
-  "helpCookieWarning": {
-    "message": "Для имён куки со случайными суффиксами (например, _abck-xyz123) нужен regex-шаблон, а не буквальное имя."
-  },
-  "helpCookieTip": {
-    "message": "Используйте «Целое слово» для точного совпадения имени или Regex для шаблонов с префиксом вроде ^datadome-."
-  },
-  "helpContentTitle": {
-    "message": "Обнаружение по содержимому страницы"
-  },
-  "helpContentDescription": {
-    "message": "Ищет текстовые шаблоны внутри HTML страницы и встроенных тегов script."
-  },
-  "helpContentWarning": {
-    "message": "Сканирование всей страницы может быть медленным на больших страницах. Ограничьте «Проверять только скрипты», если сигнатура находится в JS-коде."
-  },
-  "helpContentTip": {
-    "message": "Используйте «Целое слово», чтобы избежать ложных срабатываний на подстроках внутри более длинных слов."
-  },
-  "helpDomTitle": {
-    "message": "Обнаружение по DOM-селекторам"
-  },
-  "helpDomDescription": {
-    "message": "Обнаруживает HTML-элементы с помощью CSS-селекторов. Срабатывает, когда соответствующий элемент присутствует в DOM."
-  },
-  "helpDomWarning": {
-    "message": "Селекторы сопоставляются только с элементами, отрисованными в фактическом DOM, — не с теми, что внутри iframe или shadow root."
-  },
-  "helpDomTip": {
-    "message": "Используйте специфичные селекторы вроде div#cf-challenge[data-ray], а не общие, чтобы снизить число ложных срабатываний."
-  },
-  "helpPayloadTitle": {
-    "message": "Обнаружение по полезной нагрузке запроса"
-  },
-  "helpPayloadDescription": {
-    "message": "Отслеживает тела всех HTTP-запросов POST/PUT/PATCH на наличие текстовых шаблонов."
-  },
-  "helpPayloadWarning": {
-    "message": "Отслеживание полезной нагрузки работает только для запросов, которые расширение может перехватить (без зашифрованных тел, без непрозрачных blob-объектов)."
-  },
-  "helpPayloadTip": {
-    "message": "Сочетайте с шаблоном URL, чтобы ограничить сопоставление конкретными конечными точками."
-  },
-  "helpWarningLabel": {
-    "message": "Предупреждение:"
-  },
-  "helpTipLabel": {
-    "message": "Совет:"
-  },
-  "detectionMethodTitle": {
-    "message": "Метод обнаружения"
-  },
-  "noHelpContentAvailable": {
-    "message": "Справка для этого типа метода недоступна."
-  },
   "advNoCapturesHintFmt": {
     "message": "Нажмите «Начать захват» выше, чтобы начать захват данных {0}"
   },
@@ -2026,12 +1933,6 @@
   "rhSearchDom": {
     "message": "Поиск селекторов, напр. captcha, iframe"
   },
-  "rhSearchRegex": {
-    "message": "Текст для поиска, напр. bm_ или token"
-  },
-  "rhSearchSample": {
-    "message": "Введите значение для проверки"
-  },
   "rhCondition": {
     "message": "Условие"
   },
@@ -2155,9 +2056,6 @@
   "rhCondFalse": {
     "message": "равно false"
   },
-  "rhWindowIntro": {
-    "message": "Проверяет глобальную переменную JavaScript на странице (window.…). Выберите её, затем каким должно быть значение."
-  },
   "rhWindowSentenceFmt": {
     "message": "Срабатывает на страницах, где {0} {1}"
   },
@@ -2197,45 +2095,6 @@
   "rhDomCamel": {
     "message": "Класс в camelCase"
   },
-  "rhRegexTitle": {
-    "message": "Помощник regex"
-  },
-  "rhUsePattern": {
-    "message": "Использовать шаблон"
-  },
-  "rhRegexStartsFmt": {
-    "message": "Начинается с «{0}»"
-  },
-  "rhRegexEndsFmt": {
-    "message": "Заканчивается на «{0}»"
-  },
-  "rhRegexContainsFmt": {
-    "message": "Содержит «{0}» в любом месте"
-  },
-  "rhRegexWordFmt": {
-    "message": "Целое слово «{0}»"
-  },
-  "rhRegexOrFmt": {
-    "message": "«{0}» или другой вариант"
-  },
-  "rhRegexStartsMoreFmt": {
-    "message": "Начинается с «{0}», далее другой текст"
-  },
-  "rhRegexEitherFmt": {
-    "message": "«{0}» или «{1}»"
-  },
-  "rhExamplesForFmt": {
-    "message": "Примеры для «{0}»"
-  },
-  "rhExamples": {
-    "message": "Примеры"
-  },
-  "rhHowMatchesFmt": {
-    "message": "Как совпадает «{0}»"
-  },
-  "rhQuickRef": {
-    "message": "Краткая справка"
-  },
   "rhRefAny": {
     "message": "любой символ"
   },
@@ -2272,74 +2131,302 @@
   "rhNoMatch": {
     "message": "Нет совпадения"
   },
-  "rhWwIntro": {
-    "message": "Совпадает, только если текст стоит отдельно, а не внутри более длинного слова."
+  "ptTitle": {
+    "message": "Проверка шаблона"
   },
-  "rhWwExact": {
-    "message": "Точное слово"
+  "ptTitleFmt": {
+    "message": "Проверка шаблона · {0}"
   },
-  "rhWwJoinedBefore": {
-    "message": "Слито с текстом перед ним"
+  "ptKindUrl": {
+    "message": "URL"
   },
-  "rhWwJoinedAfter": {
-    "message": "Слито с текстом после него"
+  "ptKindContent": {
+    "message": "Содержимое страницы"
   },
-  "rhWwSpaces": {
-    "message": "Отделено пробелами"
+  "ptKindCookieName": {
+    "message": "Имя cookie"
   },
-  "rhCsIntro": {
-    "message": "Если включено, заглавные и строчные буквы различаются."
+  "ptKindCookieValue": {
+    "message": "Значение cookie"
   },
-  "rhCsOnTitle": {
-    "message": "С учётом регистра"
+  "ptKindHeaderName": {
+    "message": "Имя заголовка"
   },
-  "rhCsOffTitle": {
-    "message": "Без учёта регистра"
+  "ptKindHeaderValue": {
+    "message": "Значение заголовка"
   },
-  "rhWhatIsRegex": {
-    "message": "Что такое регулярное выражение?"
+  "ptKindPayloadText": {
+    "message": "Тело запроса"
   },
-  "rhWhatIsWholeWord": {
-    "message": "Что такое «Целое слово»?"
+  "ptKindPayloadUrl": {
+    "message": "URL запроса"
   },
-  "rhWhatIsCase": {
-    "message": "Что такое «Учёт регистра»?"
+  "ptPatternLabel": {
+    "message": "Шаблон"
   },
-  "rhRegexIntro": {
-    "message": "Регулярное выражение (regex) ищет текст по шаблону, а не по точным символам."
+  "ptOptionsLabel": {
+    "message": "Параметры совпадения"
   },
-  "rhWhenToUse": {
-    "message": "Когда использовать"
+  "ptOptRegex": {
+    "message": "Regex"
   },
-  "rhRegexUse1": {
-    "message": "Текст, который начинается или заканчивается чем-то определённым"
+  "ptTryOn": {
+    "message": "Проверить на"
   },
-  "rhRegexUse2": {
-    "message": "Несколько вариантов сразу (через |)"
+  "ptExamplesBtn": {
+    "message": "Примеры"
   },
-  "rhRegexUse3": {
-    "message": "Числа или определённые типы символов"
+  "ptSamplesPlaceholder": {
+    "message": "По одному в строке: URL, имя cookie…"
   },
-  "rhRegexTip": {
-    "message": "Для точного текста regex не нужен: используйте «Целое слово»."
+  "ptNoSamples": {
+    "message": "Введите или вставьте текст выше, по одному в строке, чтобы увидеть, совпадает ли он."
   },
-  "rhBestFor": {
-    "message": "Лучше всего для"
+  "ptCheatTitle": {
+    "message": "Шпаргалка по regex"
   },
-  "rhWwUse1": {
-    "message": "Точные имена cookie"
+  "ptCheatNote": {
+    "message": "Пишите шаблон без / вокруг. Повтор внутри повтора, например (a+)+, отклоняется, потому что может подвесить страницу."
   },
-  "rhWwUse2": {
-    "message": "Конкретные имена заголовков"
+  "ptApply": {
+    "message": "Применить"
   },
-  "rhWwUse3": {
-    "message": "Полные имена классов или функций"
+  "ptTestBtn": {
+    "message": "Проверить"
   },
-  "rhCsUse1": {
-    "message": "Заголовки и cookie с точным регистром"
+  "ptTestTitle": {
+    "message": "Проверить шаблон на примере текста"
   },
-  "rhCsUse2": {
-    "message": "Имена свойств JavaScript"
+  "ptNoPattern": {
+    "message": "Шаблона пока нет"
+  },
+  "ptHintRegex": {
+    "message": "Шаблон вроде ^bm_ или \\d+, без / вокруг"
+  },
+  "ptHintWholeWord": {
+    "message": "Пропускает совпадения внутри более длинного слова: _abck, но не test_abck"
+  },
+  "ptHintCase": {
+    "message": "Akamai больше не совпадает с akamai"
+  },
+  "ptSaysEmpty": {
+    "message": "Введите шаблон, чтобы увидеть, с чем он совпадает."
+  },
+  "ptSaysRegex": {
+    "message": "Совпадает с текстом, в котором regex находит совпадение."
+  },
+  "ptSaysWordFmt": {
+    "message": "Совпадает с «{0}» как с целым словом, но не внутри более длинного слова."
+  },
+  "ptSaysWildcardFmt": {
+    "message": "Совпадает с именами вроде «{0}», где * означает любой текст."
+  },
+  "ptSaysPrefixFmt": {
+    "message": "Совпадает с именами, которые начинаются с «{0}»."
+  },
+  "ptSaysContainsFmt": {
+    "message": "Совпадает с текстом, который содержит «{0}»."
+  },
+  "ptCaseExact": {
+    "message": "Регистр букв должен совпадать точно."
+  },
+  "ptCaseIgnored": {
+    "message": "Прописные и строчные буквы не различаются."
+  },
+  "ptNoteInvalidFmt": {
+    "message": "Этот regex некорректен, поэтому никогда не совпадает: {0}"
+  },
+  "ptNoteRejected": {
+    "message": "Обнаружение отклоняет этот regex, потому что он может подвесить страницу (повтор внутри повтора или более 1000 символов), поэтому он никогда не совпадает."
+  },
+  "ptNoteSlashes": {
+    "message": "Уберите / с обоих концов: они ищутся как часть текста."
+  },
+  "ptNoteLooksRegex": {
+    "message": "Похоже на regex: включите Regex, иначе его символы ищутся как обычный текст."
+  },
+  "ptNoteWordIgnored": {
+    "message": "«Целое слово» не действует, пока включён Regex."
+  },
+  "ptNoteHeaderCase": {
+    "message": "Имена заголовков хранятся в нижнем регистре, поэтому с включённым «С учётом регистра» этот шаблон никогда не совпадёт."
+  },
+  "ptNoteWordEdges": {
+    "message": "Шаблон начинается или заканчивается символом, поэтому для «Целого слова» сразу рядом с этим символом нужна буква, цифра или _."
+  },
+  "rhRefDot": {
+    "message": "настоящая точка"
+  },
+  "rhRefSet": {
+    "message": "один из a, b, c"
+  },
+  "rhRefCount": {
+    "message": "от 2 до 5 раз"
+  },
+  "mhExamplesTitle": {
+    "message": "В правилах Scrapfly"
+  },
+  "mhHowTitle": {
+    "message": "Как ищется совпадение"
+  },
+  "mhWriteTitle": {
+    "message": "Что можно написать"
+  },
+  "mhLimitsTitle": {
+    "message": "Полезно знать"
+  },
+  "mhUrlIntro": {
+    "message": "Проверяет адрес страницы и URL, которые она запрашивает: скрипты, вызовы XHR и fetch, изображения, фреймы и пинги."
+  },
+  "mhUrlHow1": {
+    "message": "Без Regex URL должен содержать текст, регистр не учитывается. Учитывается весь URL вместе со строкой запроса."
+  },
+  "mhUrlHow2": {
+    "message": "С Regex уберите / с обоих концов и пишите точки как `\\.`, например `^https://js\\.example\\.com/`."
+  },
+  "mhUrlHow3": {
+    "message": "Область URL: «Страница» проверяет только адрес страницы, «Скрипты» добавляет источники скриптов, «Все» (по умолчанию) добавляет каждый запрос."
+  },
+  "mhUrlLimit1": {
+    "message": "Запросы шрифтов, медиа и таблиц стилей не записываются."
+  },
+  "mhUrlLimit2": {
+    "message": "Учитываются только запросы до сканирования; сканирование запускается после загрузки страницы."
+  },
+  "mhHeaderIntro": {
+    "message": "Проверяет заголовки запроса и ответа самой страницы, но не скриптов, вызовов XHR или фреймов."
+  },
+  "mhHeaderHow1": {
+    "message": "Имена заголовков сравниваются в нижнем регистре, а обычный текст означает «содержит»: `server` совпадает и с `server-timing`. Для точного имени используйте Regex `^server$`."
+  },
+  "mhHeaderHow2": {
+    "message": "Значение проверяется у заголовка с этим именем; оставьте его пустым, чтобы принимать любое значение."
+  },
+  "mhHeaderHow3": {
+    "message": "Область «Ответ» (по умолчанию) — заголовки, отправленные сайтом; «Запрос» — заголовки, отправленные браузером."
+  },
+  "mhHeaderLimit1": {
+    "message": "С включённым «С учётом регистра» пишите имена заголовков в нижнем регистре."
+  },
+  "mhHeaderLimit2": {
+    "message": "Страницы, которые меняют адрес без перезагрузки, сканируются повторно без заголовков."
+  },
+  "mhCookieIntro": {
+    "message": "Проверяет cookie страницы по имени и при необходимости по значению, включая HttpOnly и Secure."
+  },
+  "mhCookieHow1": {
+    "message": "Обычное имя совпадает как префикс: `_abck` совпадает и с `_abck_2`."
+  },
+  "mhCookieHow2": {
+    "message": "`*` означает любой текст: `bm_*` совпадает с `bm_sz` и `bm_sv`."
+  },
+  "mhCookieHow3": {
+    "message": "Для точного имени включите Regex и напишите `^имя$`. Значение совпадает, если содержит текст."
+  },
+  "mhCookieLimit1": {
+    "message": "Область «Запрос» (по умолчанию) читает cookie браузера для страницы; «Ответ» читает cookie, которые устанавливает ответ страницы."
+  },
+  "mhCookieLimit2": {
+    "message": "Cookie других сайтов, например во фрейме поставщика, не видны. Длинные значения обрезаются до 100 символов."
+  },
+  "mhContentIntro": {
+    "message": "Ищет в тексте страницы: в HTML её body, во встроенных скриптах и в загружаемых файлах скриптов и стилей."
+  },
+  "mhContentHow1": {
+    "message": "Обычный текст совпадает, если текст его содержит; регистр не учитывается."
+  },
+  "mhContentHow2": {
+    "message": "«Целое слово» пропускает совпадения внутри более длинного слова; на обоих концах шаблона нужна буква, цифра или _."
+  },
+  "mhContentHow3": {
+    "message": "«Проверять только скрипты» ищет только во встроенных скриптах (включая head) и файлах JavaScript, без HTML и CSS."
+  },
+  "mhContentLimit1": {
+    "message": "Файлы, которые сайт не разрешает читать другим источникам (CORS), или больше 5 МБ пропускаются."
+  },
+  "mhContentLimit2": {
+    "message": "Код во фреймах или воркерах, а также загруженный после сканирования, не просматривается."
+  },
+  "mhDomIntro": {
+    "message": "Ищет элемент в body страницы по CSS-селектору после загрузки страницы."
+  },
+  "mhDomHow1": {
+    "message": "Тег, `.класс`, `#id` или `[атрибут]`, по отдельности или вместе: `.g-recaptcha[data-sitekey]`."
+  },
+  "mhDomHow2": {
+    "message": "Проверки атрибутов `=`, `^=`, `$=`, `*=`, `~=` и `|=`; добавьте ` i` перед `]`, чтобы не учитывать регистр."
+  },
+  "mhDomHow3": {
+    "message": "Несколько селекторов через запятую: достаточно совпадения любого из них."
+  },
+  "mhDomLimit1": {
+    "message": "Не поддерживаются, и правило никогда не совпадёт: пробелы или `>` между частями, `:псевдоклассы` и экранирование."
+  },
+  "mhDomLimit2": {
+    "message": "Head, фреймы и shadow root не просматриваются. Атрибут `value` не читается; остальные сравниваются по первым 100 символам."
+  },
+  "mhWindowIntro": {
+    "message": "Проверяет глобальную переменную JavaScript, которую определяет страница, например `grecaptcha.render`."
+  },
+  "mhWindowHow1": {
+    "message": "Путь от `window` через точку: `KPSDK` или `grecaptcha.render`."
+  },
+  "mhWindowHow2": {
+    "message": "Условие вроде `exists`, `typeof function`, `truthy`, `=== true`, `length > 0` или `has keys`. Пустое означает truthy."
+  },
+  "mhWindowHow3": {
+    "message": "Условие, которое обнаружение не понимает, никогда не совпадает, поэтому выбирайте его из списка."
+  },
+  "mhWindowLimit1": {
+    "message": "Проверяется в первые секунды после загрузки страницы; глобальные переменные, созданные позже, пропускаются."
+  },
+  "mhWindowLimit2": {
+    "message": "Свойства с именем-Symbol нельзя записать как путь."
+  },
+  "mhJsHooksOnlyFingerprint": {
+    "message": "Перехватчики используют только правила категории «Отпечаток»: правила «Анти-бот» и «Captcha» их игнорируют."
+  },
+  "mhJsHooksIntro": {
+    "message": "Записывает, когда страница вызывает API браузера, например `HTMLCanvasElement.prototype.toDataURL`, — признак снятия отпечатка."
+  },
+  "mhJsHooksHow1": {
+    "message": "Полный путь к методу или геттеру: `Navigator.prototype.webdriver`, а не `navigator.webdriver`."
+  },
+  "mhJsHooksHow2": {
+    "message": "Учитывается любой вызов; аргументы и результат не проверяются, поэтому перехватчик показывает, что API использовался, но не зачем."
+  },
+  "mhJsHooksLimit1": {
+    "message": "Вызовы учитываются в первые секунды после загрузки страницы (не более 8 секунд)."
+  },
+  "mhJsHooksLimit2": {
+    "message": "Вызовы в воркерах или фреймах не видны, кроме встроенных целей во фреймах того же сайта."
+  },
+  "mhPayloadIntro": {
+    "message": "Ищет в телах запросов POST, PUT, PATCH и DELETE, которые отправляет страница, из любого фрейма."
+  },
+  "mhPayloadHow1": {
+    "message": "Обычный текст совпадает, если тело его содержит; регистр не учитывается. Данные форм читаются как `имя=значение&…`."
+  },
+  "mhPayloadHow2": {
+    "message": "URL запроса (необязательно) и HTTP-метод ограничивают поиск подходящими запросами."
+  },
+  "mhPayloadLimit1": {
+    "message": "Учитываются только запросы, отправленные до сканирования, не более 50 на страницу."
+  },
+  "mhPayloadLimit2": {
+    "message": "Сообщения WebSocket не читаются."
+  },
+  "domCardTitle": {
+    "message": "CSS-селектор"
+  },
+  "domCardBrowse": {
+    "message": "Обзор"
+  },
+  "domCardHint": {
+    "message": "Тег, .класс, #id или проверка [атрибута], по отдельности или вместе. Пробелы или > между частями не поддерживаются."
+  },
+  "windowCardTitle": {
+    "message": "Свойство окна"
   },
   "settingsApiEventsDesc": {
     "message": "События, которые расширение отправляет на страницу"
@@ -3392,7 +3479,7 @@
     "message": "Шаблон URL"
   },
   "rulesUiJsHookTargetPlaceholder": {
-    "message": "Цель перехватчика JS (напр. navigator.webdriver)"
+    "message": "Цель перехватчика JS (напр. Navigator.prototype.webdriver)"
   },
   "rulesUiWindowPathPlaceholder": {
     "message": "Путь в window (напр. grecaptcha, _cf_chl_opt)"
@@ -3450,24 +3537,6 @@
   },
   "rulesUiLeaveEmptyAnyUrl": {
     "message": "Оставьте пустым, чтобы подходил любой URL"
-  },
-  "ruleExampleMatches": {
-    "message": "✓ Совпадает:"
-  },
-  "ruleExampleWont": {
-    "message": "× Нет:"
-  },
-  "ruleExampleWontMatch": {
-    "message": "× Не совпадает:"
-  },
-  "ruleExampleLiteralTextOnly": {
-    "message": "только буквальный текст"
-  },
-  "ruleExampleExactCase": {
-    "message": "(точный регистр)"
-  },
-  "ruleExampleAlone": {
-    "message": "(отдельно)"
   },
   "ruleConditionGroupOther": {
     "message": "Другие"
@@ -3629,7 +3698,127 @@
     "message": "Комбинации"
   },
   "combinationsHint": {
-    "message": "Выберите шаблоны и сколько из них должны совпадать."
+    "message": "Комбинация обнаруживает эту защиту, только когда несколько шаблонов найдены вместе. Используйте её для шаблонов, слишком слабых по отдельности."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "Каждая комбинация срабатывает, только когда её сигналы встречаются вместе; вот что она нашла на этой странице."
+  },
+  "combinationFoundTogether": {
+    "message": "Найдено вместе на этой странице:"
+  },
+  "combinationNotPresent": {
+    "message": "Отсутствует"
+  },
+  "combinationFound": {
+    "message": "Найдено"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "Это правило изменили или удалили после проверки, поэтому показаны только название и оценка."
+  },
+  "historyMatchedDetections": {
+    "message": "Совпавшие обнаружения"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "Эта проверка сохранена до того, как стали сохраняться условия, поэтому показаны только названия и оценки."
+  },
+  "combinationMustNotBeFound": {
+    "message": "Не должно быть найдено"
+  },
+  "combinationMustBeFound": {
+    "message": "Должно быть найдено"
+  },
+  "combinationAutoTip": {
+    "message": "Авто: наибольшая уверенность среди шаблонов, вызвавших срабатывание"
+  },
+  "combinationSetsScore": {
+    "message": "Задаёт оценку обнаружения"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "Добавьте хотя бы один шаблон, который должен быть найден."
+  },
+  "combinationInvalidOneOf": {
+    "message": "Списку «Одно из этих» в каждом варианте нужен шаблон, который должен быть найден."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "Для «Хотя бы {0}» нужно {0} шаблонов, которые должны быть найдены."
+  },
+  "combinationSentenceOne": {
+    "message": "Срабатывает, когда выполнено это условие."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "Срабатывает, когда выполнены все условия ({0})."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "Срабатывает, когда выполнено любое из этих условий ({0})."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "Срабатывает, когда выполнено хотя бы {0} из {1} условий."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "Уверенность: {0}%."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "Уверенность: Авто, до {0}%."
+  },
+  "combinationSentenceGroup": {
+    "message": "Группа считается одним условием."
+  },
+  "combinationSentenceNot": {
+    "message": "Не срабатывает, если есть шаблон «Не должно быть найдено»."
+  },
+  "combinationSentenceAlone": {
+    "message": "Шаблоны без пометки «Только комбинации» срабатывают и сами по себе, со своей уверенностью."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "Уверенность при обнаружении"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "Оставьте пустым для «Авто»: наибольшая уверенность найденных шаблонов."
+  },
+  "combinationOnlyTogether": {
+    "message": "Эти шаблоны учитываются только вместе"
+  },
+  "combinationOnlyTogetherHint": {
+    "message": "Сами по себе они ничего не обнаруживают. Действует для этих шаблонов во всех комбинациях правила."
+  },
+  "combinationOnlyTogetherMixed": {
+    "message": "Некоторые из этих шаблонов учитываются и сами по себе. Отметьте, чтобы все учитывались только в комбинациях."
+  },
+  "combinationModeAny": {
+    "message": "Одно из этих"
+  },
+  "combinationModeAll": {
+    "message": "Всё это"
+  },
+  "combinationModeAtLeast": {
+    "message": "Хотя бы… из этих"
+  },
+  "combinationModeRootAll": {
+    "message": "найдено всё это"
+  },
+  "combinationModeRootAny": {
+    "message": "найдено одно из этих"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "найдено хотя бы… из этих"
+  },
+  "combinationGroupMode": {
+    "message": "Группа"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "Добавьте шаблон в эту группу"
+  },
+  "combinationDeleteGroup": {
+    "message": "Удалить группу"
+  },
+  "combinationAddGroup": {
+    "message": "Добавить группу «одно из»"
+  },
+  "patternUnusedBadge": {
+    "message": "Ни в одной комбинации"
+  },
+  "patternUnusedTip": {
+    "message": "Его не использует ни одна комбинация, поэтому он ничего не обнаруживает. Нажмите, чтобы он учитывался сам по себе."
   },
   "combinationsEmpty": {
     "message": "Комбинаций пока нет."
@@ -3640,23 +3829,11 @@
   "combinationDefaultNameFmt": {
     "message": "Комбинация {0}"
   },
-  "combinationConfidence": {
-    "message": "Уверенность при совпадении"
-  },
-  "combinationConfidenceFromPatterns": {
-    "message": "Оставьте пустым, чтобы взять уверенность совпавших шаблонов"
-  },
   "combinationDelete": {
     "message": "Удалить комбинацию"
   },
   "combinationDeleteConfirmFmt": {
     "message": "Удалить комбинацию «{0}»? Её шаблоны останутся в правиле."
-  },
-  "combinationNotTitle": {
-    "message": "НЕ должно совпадать"
-  },
-  "combinationNot": {
-    "message": "НЕ"
   },
   "combinationRemove": {
     "message": "Убрать"
@@ -3676,26 +3853,8 @@
   "combinationAnyPattern": {
     "message": "любой шаблон"
   },
-  "combinationPreviewAnd": {
-    "message": "И"
-  },
-  "combinationPreviewOr": {
-    "message": "ИЛИ"
-  },
-  "combinationPreviewNot": {
-    "message": "НЕ"
-  },
   "combinationPreviewEmpty": {
     "message": "Добавьте шаблоны, чтобы собрать комбинацию"
-  },
-  "combinationInvalid": {
-    "message": "Выберите шаблоны, которые должны совпадать, и проверьте минимальное число совпадений."
-  },
-  "combinationStrict": {
-    "message": "Строго"
-  },
-  "combinationStrictTitle": {
-    "message": "Строго: этот шаблон не срабатывает сам по себе, только внутри комбинаций"
   },
   "patternCombinationsOnlyBadge": {
     "message": "Только комбинации"
@@ -3706,9 +3865,6 @@
   "combinationNoPatterns": {
     "message": "Шаблоны не добавлены"
   },
-  "combinationJoinTitle": {
-    "message": "Переключить И / ИЛИ"
-  },
   "combinationPickHint": {
     "message": "Отметьте шаблоны для добавления"
   },
@@ -3718,23 +3874,8 @@
   "combinationEditConditions": {
     "message": "Изменить условия"
   },
-  "combinationRequireTogether": {
-    "message": "Использовать шаблоны только в комбинациях"
-  },
-  "combinationRequireHint": {
-    "message": "Применяется к этим шаблонам во всём правиле."
-  },
   "combinationAutoConfidence": {
     "message": "Авто"
-  },
-  "combinationMatchAll": {
-    "message": "Все условия совпадают"
-  },
-  "combinationMatchAny": {
-    "message": "Любое условие совпадает"
-  },
-  "combinationMatchAtLeast": {
-    "message": "Совпадает не менее…"
   },
   "combinationDetectWhen": {
     "message": "Обнаруживать, когда"
@@ -3748,29 +3889,8 @@
   "combinationMatchState": {
     "message": "Условие шаблона"
   },
-  "combinationMatches": {
-    "message": "Совпадает"
-  },
-  "combinationDoesNotMatch": {
-    "message": "Не совпадает"
-  },
-  "combinationAtLeastSummaryFmt": {
-    "message": "Совпадает не менее {0} условий"
-  },
   "combinationChoosePatterns": {
     "message": "Выбрать шаблоны"
-  },
-  "combinationSummaryAll": {
-    "message": "Обнаруживать, когда совпадают все необходимые условия."
-  },
-  "combinationSummaryAny": {
-    "message": "Обнаруживать, когда совпадает хотя бы одно условие."
-  },
-  "combinationSummaryMinimumFmt": {
-    "message": "Обнаруживать, когда совпадает не менее {0} из {1} условий."
-  },
-  "combinationSummaryExcluded": {
-    "message": "Исключённые шаблоны не должны совпадать."
   },
   "combinationDecreaseMinimum": {
     "message": "Уменьшить минимум совпадений"
@@ -4198,9 +4318,77 @@
     "message": "На этой странице есть CAPTCHA: Unblocker обходит или решает её, чтобы вернуть страницу, но не заполняет CAPTCHA в формах.",
     "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
   },
-  "scrapflyExportKeyNote": {
-    "message": "Код берёт ваш API-ключ из SCRAPFLY_API_KEY.",
-    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  "scrapflyExportOptions": {
+    "message": "Параметры"
+  },
+  "scrapflyExportProduct": {
+    "message": "Использовать"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "Решать CAPTCHA"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "Оплата за решение"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "Чтобы решать их, используйте Cloud Browser."
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "Откройте страницу в Cloud Browser от Scrapfly и управляйте ею через Playwright. Captcha Solver решает Turnstile, reCAPTCHA, GeeTest и другие по мере появления; неудачные попытки бесплатны."
+  },
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "Обход антиботов"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "Копировать для ИИ"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "Копирует страницу, её защиту, ваши настройки и код одним сообщением для ChatGPT, Claude или любого ИИ-помощника"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "Скопировано: вставьте в ИИ-помощника"
+  },
+  "scrapflyExportFormat": {
+    "message": "Формат"
+  },
+  "scrapflyExportFormatText": {
+    "message": "Текст"
+  },
+  "scrapflyExportProxy": {
+    "message": "Прокси"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "Дата-центр"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "Резидентные"
+  },
+  "scrapflyExportCountry": {
+    "message": "Страна"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "Любая"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "Выполнять JavaScript"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 кредитов"
+  },
+  "scrapflyExportStepSettings": {
+    "message": "Выберите параметры"
+  },
+  "scrapflyExportStepCode": {
+    "message": "Скопируйте код"
+  },
+  "scrapflyExportStepKey": {
+    "message": "Задайте API-ключ"
+  },
+  "scrapflyExportStepRun": {
+    "message": "Запустите"
   },
   "scrapflyExportGetKey": {
     "message": "Получить API-ключ",

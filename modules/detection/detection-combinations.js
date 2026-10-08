@@ -19,6 +19,8 @@
  * A satisfied combination scores its own `confidence` when the rule sets one
  * (1-100); without it, the highest confidence of the patterns that made it
  * true (each pattern's own confidence from its settings). NOT rows add nothing.
+ * It also lists in `found` which of the patterns it refers to were seen (and
+ * `method:<name>` for method rows), so the popup can show it as a checklist.
  *
  * A detector with neither combinations nor such patterns is untouched: every
  * match counts on its own and the confidence is the highest one, as before.
@@ -163,6 +165,36 @@
     return hasPositive(node);
   }
 
+  /** Pattern ids and methods seen in a list of matches. */
+  function seenIn(detector, matches) {
+    const seen = { patterns: new Set(), methods: new Set() };
+    for (const match of (Array.isArray(matches) ? matches : [])) {
+      const method = methodOf(match && match.type);
+      if (method) seen.methods.add(method);
+      matchPatternIds(detector, match).forEach(id => seen.patterns.add(id));
+    }
+    return seen;
+  }
+
+  /**
+   * What a combination refers to that was seen: its pattern ids, then
+   * `method:<name>` for method rows, in the order the rule lists them. NOT
+   * rows and branches that did not hold are included, so the checklist can
+   * show every row.
+   */
+  function foundIn(when, seen) {
+    const refs = references(when);
+    return [
+      ...[...refs.patterns].filter(id => seen.patterns.has(id)),
+      ...[...refs.methods].filter(m => seen.methods.has(m)).map(m => `method:${m}`)
+    ];
+  }
+
+  /** `found` for a detection cached before combinations recorded it. */
+  function foundFromMatches(detector, combination, matches) {
+    return foundIn(combination && combination.when, seenIn(detector, matches));
+  }
+
   /** Is this combination true for the matches seen? A pure NOT never is. */
   function isSatisfied(combination, seen) {
     if (!combination || !hasPositive(combination.when)) return false;
@@ -208,7 +240,7 @@
 
   /**
    * Score a detector against its matches.
-   * @returns {{detected:boolean, confidence:number, combinations:Array<{id,name,confidence}>}}
+   * @returns {{detected:boolean, confidence:number, combinations:Array<{id,name,confidence,when,found}>}}
    */
   /** A match's own confidence, before any combination raised it. */
   function baseConfidence(match) {
@@ -251,7 +283,7 @@
         const raw = Number.isFinite(own) && own > 0 ? own : combinationConfidence(combination.when, seen, best);
         const c = Math.max(0, Math.min(100, Math.round(raw)));
         satisfied.push({ id: combination.id, name: combination.name || '', confidence: c, when: combination.when,
-          made: contributors(combination.when, seen) });
+          found: foundIn(combination.when, seen), made: contributors(combination.when, seen) });
         confidence = Math.max(confidence, c);
       }
     }
@@ -318,46 +350,59 @@
     return node;
   }
 
+  /** Is a condition node true for the patterns and methods seen? */
+  function evaluate(node, seen) {
+    const s = seen || {};
+    const asSet = (v) => (v instanceof Set ? v : new Set(Array.isArray(v) ? v : []));
+    return evalNode(node, { patterns: asSet(s.patterns), methods: asSet(s.methods) });
+  }
+
   /**
-   * One-line text for a combination rule, e.g. "Dom [data-sitekey] AND NOT Url /x".
-   * @param {object} detector - Detector (to name the patterns)
-   * @param {object} node - combination.when
-   * @param {object} [words] - { and, or, not, any: (method) => text, method: (method) => label }
+   * Short key of a condition tree: FNV-1a over its JSON with sorted keys.
+   * History stores it to tell whether a rule changed since the scan.
    */
-  function describe(detector, node, words = {}) {
-    const and = words.and || 'AND', or = words.or || 'OR', not = words.not || 'NOT';
-    const label = words.method || ((m) => m);
-    const any = words.any || ((m) => `Any ${label(m)} pattern`);
-    const byId = new Map();
-    for (const p of listPatterns(detector)) byId.set(p.id, p);
-    const leaf = (n) => {
-      if (typeof n.method === 'string') return any(n.method);
-      const p = byId.get(n.pattern);
-      if (!p) return n.pattern;
-      const field = KEY_FIELD[p.method];
-      const key = String(p.pattern[field] ?? n.pattern);
-      const value = (p.method === 'cookie' || p.method === 'header') && p.pattern.value ? ` = ${p.pattern.value}` : '';
-      return `${label(p.method)} ${key}${value}`;
+  function treeKey(node) {
+    const canon = (n) => {
+      if (Array.isArray(n)) return `[${n.map(canon).join(',')}]`;
+      if (n && typeof n === 'object') return `{${Object.keys(n).sort().map(k => `${JSON.stringify(k)}:${canon(n[k])}`).join(',')}}`;
+      return JSON.stringify(n === undefined ? null : n);
     };
-    const walk = (n, top) => {
-      if (!n || typeof n !== 'object') return '';
-      if (n.not) return `${not} ${walk(n.not, false)}`;
-      if (typeof n.pattern === 'string' || typeof n.method === 'string') return leaf(n);
-      if (Array.isArray(n.all)) return n.all.map(c => walk(c, false)).join(` ${and} `);
-      if (Array.isArray(n.any)) {
-        const parts = n.any.map(c => (Array.isArray(c.all) && c.all.length > 1 ? `(${walk(c, false)})` : walk(c, false)));
-        return parts.join(` ${or} `);
-      }
-      if (Array.isArray(n.of)) return `${n.atLeast}× (${n.of.map(c => walk(c, false)).join(', ')})`;
-      return '';
-    };
-    return walk(node, true);
+    const text = canon(node);
+    let hash = 0x811c9dc5;
+    for (let i = 0; i < text.length; i++) {
+      hash ^= text.charCodeAt(i);
+      hash = Math.imul(hash, 0x01000193) >>> 0;
+    }
+    return hash.toString(36);
+  }
+
+  /**
+   * Rows a satisfied tree must have found: those reached through "all" only
+   * (not inside an OR, an at-least or a NOT). History stores just the rest.
+   */
+  function mustHaveFound(node, out = []) {
+    if (!node || typeof node !== 'object') return out;
+    if (typeof node.pattern === 'string') out.push(node.pattern);
+    else if (typeof node.method === 'string') out.push(`method:${node.method}`);
+    else if (Array.isArray(node.all)) node.all.forEach(child => mustHaveFound(child, out));
+    return out;
+  }
+
+  /** `seen` sets from a `found` list: pattern ids and `method:<name>` entries. */
+  function seenFromFound(found) {
+    const seen = { patterns: new Set(), methods: new Set() };
+    for (const item of (Array.isArray(found) ? found : [])) {
+      if (typeof item !== 'string') continue;
+      if (item.startsWith('method:')) seen.methods.add(item.slice(7));
+      else seen.patterns.add(item);
+    }
+    return seen;
   }
 
   const api = Object.freeze({
     METHODS, methodOf, defaultId, patternIds, idOf, listPatterns, applies,
     hasCombinations, matchPatternIds, hasPositive, everyBranchPositive, isSatisfied, score, rescore,
-    references, dropPattern, describe
+    references, dropPattern, evaluate, seenFromFound, foundFromMatches, treeKey, mustHaveFound
   });
 
   root.DetectionCombinations = api;

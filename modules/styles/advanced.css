@@ -2824,12 +2824,110 @@
   gap: 6px;
 }
 
-/* Code keeps its lines: long ones scroll sideways instead of breaking words */
-.scrapfly-export-panel .adv-kit-code pre {
-  max-height: 200px;
-  white-space: pre;
-  overflow-wrap: normal;
+/* One code block under the tabs: file name + Copy on top, coloured code that
+   keeps its lines (long ones scroll sideways) */
+.scrapfly-export-panel {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #3d3d3d;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-primary);
 }
+
+.scrapfly-export-code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 6px 5px 10px;
+  background: #242424;
+  border-bottom: 1px solid #333;
+}
+
+.scrapfly-export-file {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.scrapfly-export-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 10px;
+  border: 1px solid rgba(139, 92, 246, 0.55);
+  border-radius: 6px;
+  background: rgba(139, 92, 246, 0.16);
+  color: #ddd6fe;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.scrapfly-export-copy:hover {
+  background: #8b5cf6;
+  border-color: #8b5cf6;
+  color: #fff;
+}
+
+.scrapfly-export-copy.copy-feedback-active {
+  background: rgba(34, 197, 94, 0.18);
+  border-color: rgba(34, 197, 94, 0.55);
+  color: #bbf7d0;
+}
+
+.scrapfly-export-pre {
+  margin: 0;
+  padding: 10px 12px;
+  max-height: 210px;
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: #d4d4d4;
+  white-space: pre;
+  tab-size: 4;
+  scrollbar-width: thin;
+  scrollbar-color: #4b4b4b transparent;
+}
+
+.scrapfly-export-pre:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: -2px;
+}
+
+.scrapfly-export-pre::-webkit-scrollbar,
+.scrapfly-export-modal .adv-kit-body::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrapfly-export-pre::-webkit-scrollbar-track,
+.scrapfly-export-modal .adv-kit-body::-webkit-scrollbar-track,
+.scrapfly-export-pre::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.scrapfly-export-pre::-webkit-scrollbar-thumb,
+.scrapfly-export-modal .adv-kit-body::-webkit-scrollbar-thumb {
+  background: #4b4b4b;
+  border-radius: 3px;
+}
+
+.scrapfly-export-pre::-webkit-scrollbar-thumb:hover,
+.scrapfly-export-modal .adv-kit-body::-webkit-scrollbar-thumb:hover {
+  background: #6b6b6b;
+}
+
+.sfx-comment { color: #7d8590; font-style: italic; }
+.sfx-string { color: #a5d6a7; }
+.sfx-keyword { color: #c4b5fd; }
+.sfx-literal { color: #fdba74; }
+.sfx-flag { color: #93c5fd; }
 
 .adv-kit-header-icon .scrapfly-export-logo {
   width: 20px;
@@ -2948,6 +3046,342 @@
 
 .scrapfly-export-actions .rule-btn {
   text-decoration: none;
+}
+
+/* Rows, tabs and texts of the other product (Scrape API / Cloud Browser) */
+.scrapfly-export-modal [hidden] {
+  display: none !important;
+}
+
+/* Scrape with Scrapfly options: one row per option, label left, control right */
+.scrapfly-export-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 10px 11px 12px;
+  border: 1px solid #3d3d3d;
+  border-radius: 8px;
+  background: #242424;
+}
+
+
+
+.scrapfly-export-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 26px;
+}
+
+.scrapfly-export-option-label {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.scrapfly-export-seg {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid #3d3d3d;
+  border-radius: 7px;
+  background: var(--bg-primary);
+}
+
+.scrapfly-export-seg-btn {
+  height: 22px;
+  padding: 0 9px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.scrapfly-export-seg-btn:hover {
+  color: var(--text-primary);
+}
+
+.scrapfly-export-seg-btn[aria-checked="true"] {
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(59, 130, 246, 0.45);
+  color: #bfdbfe;
+}
+
+.scrapfly-export-seg-btn:focus-visible,
+.scrapfly-export-dd-btn:focus-visible,
+.scrapfly-export-copy-ai:focus-visible,
+.scrapfly-export-copy:focus-visible,
+.scrapfly-export-switch:focus-visible,
+.scrapfly-export-step-cmd:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 1px;
+}
+
+
+
+.scrapfly-export-toggle-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scrapfly-export-cost {
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+
+
+
+
+
+/* Same look as the Rules card toggle (rules.css .toggle-switch-small) */
+.scrapfly-export-switch {
+  appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 44px;
+  height: 22px;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background-color: var(--bg-tertiary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.scrapfly-export-switch::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background-color: var(--text-muted);
+  transform: translateY(-50%);
+  transition: all 0.3s ease;
+}
+
+.scrapfly-export-switch:checked {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.scrapfly-export-switch:checked::before {
+  background-color: #fff;
+  transform: translateX(21px) translateY(-50%);
+}
+
+/* Country: a button and a styled list instead of the system dropdown */
+.scrapfly-export-dd-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 130px;
+  max-width: 180px;
+  height: 26px;
+  padding: 0 9px;
+  border: 1px solid #3d3d3d;
+  border-radius: 7px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.scrapfly-export-dd-btn span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scrapfly-export-dd-btn svg {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.15s;
+}
+
+.scrapfly-export-dd-btn:hover,
+.scrapfly-export-dd-btn[aria-expanded="true"] {
+  border-color: rgba(59, 130, 246, 0.55);
+}
+
+.scrapfly-export-dd-btn[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.scrapfly-export-dd-list {
+  position: fixed;
+  z-index: 10050;
+  max-height: 200px;
+  margin: 0;
+  padding: 4px;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid #4b4b4b;
+  border-radius: 8px;
+  background: #262626;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
+  outline: none;
+  scrollbar-width: thin;
+  scrollbar-color: #4b4b4b transparent;
+}
+
+.scrapfly-export-dd-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrapfly-export-dd-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrapfly-export-dd-list::-webkit-scrollbar-thumb {
+  background: #4b4b4b;
+  border-radius: 3px;
+}
+
+.scrapfly-export-dd-item {
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.scrapfly-export-dd-item.is-active {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+}
+
+.scrapfly-export-dd-item[aria-selected="true"] {
+  background: rgba(59, 130, 246, 0.18);
+  color: #bfdbfe;
+  font-weight: 600;
+}
+
+/* Copy for AI (blue) next to Copy (purple) */
+.scrapfly-export-copy-group {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.scrapfly-export-copy-ai {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 10px;
+  border: 1px solid rgba(59, 130, 246, 0.55);
+  border-radius: 6px;
+  background: rgba(59, 130, 246, 0.16);
+  color: #bfdbfe;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.scrapfly-export-copy-ai:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.scrapfly-export-copy-ai.copy-feedback-active {
+  background: rgba(34, 197, 94, 0.18);
+  border-color: rgba(34, 197, 94, 0.55);
+  color: #bbf7d0;
+}
+
+/* Numbered steps: 1 settings, 2 key command, 3 code, 4 run command */
+.scrapfly-export-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.scrapfly-export-steps[hidden] {
+  display: none;
+}
+
+.scrapfly-export-step {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.scrapfly-export-step-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scrapfly-export-step[hidden] {
+  display: none;
+}
+
+.scrapfly-export-step-n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.18);
+  color: #bfdbfe;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.scrapfly-export-step-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.scrapfly-export-step-cmd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  padding: 6px 8px 6px 10px;
+  border: 1px solid #3d3d3d;
+  border-radius: 7px;
+  background: var(--bg-primary);
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: start;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.scrapfly-export-step-cmd code {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #d4d4d4;
+}
+
+.scrapfly-export-step-cmd:hover {
+  border-color: rgba(139, 92, 246, 0.55);
+  color: #ddd6fe;
 }
 
 /* Shared Tools action rows: readable copy, semantic outlines, and quiet states. */

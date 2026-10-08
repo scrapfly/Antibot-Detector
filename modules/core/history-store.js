@@ -28,6 +28,13 @@
   // settings use the rest. About 1,000 typical slim entries fit.
   const MAX_BYTES = 6 * 1024 * 1024;
   const MAX_VALUE_LENGTH = 300;
+  // Found rows kept per detection for the combination checklist (ids are ~22 characters)
+  const MAX_COMBO_FOUND = 32;
+  const MAX_ID_LENGTH = 80;
+
+  // The combination engine (loaded in the worker and the popup; required in Node tests)
+  const combinationsEngine = () => root.DetectionCombinations
+    || (typeof module !== 'undefined' && typeof require === 'function' ? require('../detection/detection-combinations.js') : null);
 
   // Optional async function the worker registers to free space elsewhere
   // (the detection cache, which rebuilds itself) before history entries go.
@@ -110,11 +117,31 @@
       if (detection[key] !== undefined && detection[key] !== null) out[key] = detection[key];
     }
     if (Array.isArray(detection.combinations) && detection.combinations.length) {
-      out.combinations = detection.combinations.map(combo => ({
-        ...(combo && combo.id ? { id: combo.id } : {}),
-        ...(combo && combo.name ? { name: combo.name } : {}),
-        ...(combo && Number.isFinite(combo.confidence) ? { confidence: combo.confidence } : {})
-      }));
+      // History shows each combination as a checklist read from the rule as it
+      // is now: per combination its id, score and a key of its rule (h), and
+      // per detection the found rows the rule alone does not imply. The name
+      // comes from the rule; it is kept only when the rule cannot be found by id.
+      const engine = combinationsEngine();
+      const extra = new Set((Array.isArray(detection.comboFound) ? detection.comboFound : []).filter(item => typeof item === 'string'));
+      out.combinations = detection.combinations.map(combo => {
+        if (!combo || typeof combo !== 'object') return {};
+        const fromScan = engine && combo.id && combo.when && typeof combo.when === 'object';
+        const kept = {};
+        if (combo.id) kept.id = combo.id;
+        if (combo.name && !fromScan) kept.name = combo.name;
+        if (Number.isFinite(combo.confidence)) kept.confidence = combo.confidence;
+        if (fromScan) {
+          kept.h = engine.treeKey(combo.when);
+          const implied = new Set(engine.mustHaveFound(combo.when));
+          for (const item of (Array.isArray(combo.found) ? combo.found : [])) {
+            if (typeof item === 'string' && !implied.has(item)) extra.add(item);
+          }
+        } else if (typeof combo.h === 'string') {
+          kept.h = combo.h;
+        }
+        return kept;
+      });
+      if (extra.size) out.comboFound = [...extra].slice(0, MAX_COMBO_FOUND).map(item => item.slice(0, MAX_ID_LENGTH));
     }
     if (Array.isArray(detection.matches)) out.matches = detection.matches.map(slimMatch).filter(Boolean);
     return out;

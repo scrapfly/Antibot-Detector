@@ -59,6 +59,16 @@ test('shared Advanced code dialog loads after its base and before every generato
   }
 });
 
+test('Turnstile site keys live with the Cloudflare tools and load before both of their users', () => {
+  const list = popupScripts();
+  const helper = 'sections/advanced/modules/cloudflare/turnstile-sitekeys.js';
+  assert.ok(indexIn(list, helper) >= 0, `${helper} is registered`);
+  for (const user of ['sections/advanced/modules/cloudflare/cloudflare-advanced-actions.js',
+    'sections/advanced/modules/turnstile/turnstile-advanced-actions.js']) {
+    assert.ok(indexIn(list, helper) < indexIn(list, user), `${helper} before ${user}`);
+  }
+});
+
 test('HistoryStore loads before its users in both contexts', () => {
   const sw = workerImports();
   const store = 'modules/core/history-store.js';
@@ -69,6 +79,18 @@ test('HistoryStore loads before its users in both contexts', () => {
   for (const user of ['sections/history/history.js', 'sections/settings/settings-ui-data.js']) {
     assert.ok(indexIn(popup, store) >= 0 && indexIn(popup, store) < indexIn(popup, user), `popup: ${store} before ${user}`);
   }
+});
+
+test('the combination checklist loads after the engine and before Detection and History, popup only', () => {
+  const popup = popupScripts();
+  const checklist = 'modules/ui/combination-checklist.js';
+  assert.ok(indexIn(popup, checklist) >= 0, 'registered in the popup');
+  assert.ok(indexIn(popup, 'modules/detection/detection-combinations.js') < indexIn(popup, checklist));
+  for (const user of ['sections/history/history.js', 'sections/detection/detection-modals.js']) {
+    assert.ok(indexIn(popup, checklist) < indexIn(popup, user), `${checklist} before ${user}`);
+  }
+  // history.js also runs in the service worker, which must not load the renderer
+  assert.strictEqual(indexIn(workerImports(), checklist), -1);
 });
 
 test('nothing in the popup or settings writes scrapfly_history directly', () => {

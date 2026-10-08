@@ -1169,52 +1169,43 @@
 
 /* "Mostrando 1-2 de 16": light bold text with the numbers inline in blue */
 #detectionTab .pagination-info,
-#detectionTab .page-info,
-.rh-pagination .pagination-info,
-.rh-pagination .page-info {
+#detectionTab .page-info {
   color: #e0e0e0;
   font-size: 11.5px;
   font-weight: 600;
 }
 
-#detectionTab .pagination-info,
-.rh-pagination .pagination-info {
+#detectionTab .pagination-info {
   gap: 0;
   white-space: pre;
 }
 
-#detectionTab .pagination-info .pagination-count,
-.rh-pagination .pagination-info .pagination-count {
+#detectionTab .pagination-info .pagination-count {
   min-width: 0;
   padding: 0;
 }
 
-#detectionTab .page-info,
-.rh-pagination .page-info {
+#detectionTab .page-info {
   gap: 4px;
 }
 
-#detectionTab .page-info .total-pages,
-.rh-pagination .page-info .total-pages {
+#detectionTab .page-info .total-pages {
   position: relative;
   left: 1px;
   min-width: 38px;
 }
 
 /* Light arrows; the disabled one stays readable instead of fading into the bar */
-#detectionTab .pagination-btn,
-.rh-pagination .pagination-btn {
+#detectionTab .pagination-btn {
   color: #e0e0e0;
 }
 
-#detectionTab .pagination-btn:disabled,
-.rh-pagination .pagination-btn:disabled {
+#detectionTab .pagination-btn:disabled {
   opacity: 0.65;
 }
 
 /* The page label sits a little closer to the prev button than the total does to next */
-#detectionTab .pagination-btn-prev,
-.rh-pagination .pagination-btn-prev {
+#detectionTab .pagination-btn-prev {
   margin-right: -2px;
 }
 
@@ -1794,14 +1785,128 @@
   transform: translate(50%, 50%);
 }
 
-/* Matched combinations in the detection modal: method-row layout, purple tag */
-.method-type-badge--combination {
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-transform: none;
-  background: rgba(168, 85, 247, 0.15);
-  color: #c084fc;
-  border: 1px solid rgba(168, 85, 247, 0.3);
+/* Matched combinations (modules/ui/combination-checklist.js), in Detection
+   and History details: one card per combination, a checklist of what it
+   looks for. Logical properties so it mirrors in right-to-left languages. */
+.match-combo-hint {
+  margin: 0 0 0 1.5px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+.match-combo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.match-combo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 9px 10px 8px;
+  background: #323232;
+  border: 1px solid #474747;
+  border-radius: 8px;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.match-combo.sets-score {
+  border-color: rgba(59, 130, 246, 0.55);
+}
+
+.match-combo-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.match-combo-name {
+  margin: 0;
+  min-width: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.match-combo-confidence {
+  flex-shrink: 0;
+}
+
+.match-combo-score {
+  margin: -2px 0 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #93c5fd;
+}
+
+.match-combo-lead {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.match-combo-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.match-combo-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.match-combo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 14px;
+  height: 17px;
+  color: var(--success-light);
+}
+
+.match-combo-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.match-combo-text.is-raw {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #d4d4d4;
+}
+
+.match-combo-not {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* A pattern without a description: its method before the raw text */
+.match-combo-method {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.match-combo-unavailable {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--text-secondary);
 }

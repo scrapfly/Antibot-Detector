@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-05",
-  "version": "2.0.0",
+  "lastUpdated": "2026-10-08",
+  "version": "2.0.1",
   "minExtensionVersion": "2.8",
   "website": "https://www.cloudflare.com/products/bot-management/",
   "icon": "cloudflare_official.png",
@@ -186,7 +186,7 @@
     {
       "id": "cloudflare-challenge-host",
       "name": "Challenge host request on a Cloudflare zone with a challenge signal",
-      "confidence": 80,
+      "confidence": 90,
       "when": {
         "all": [
           {

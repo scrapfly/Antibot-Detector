@@ -153,7 +153,7 @@ class Rules {
 
   /**
    * Setup the "more" (…) menus: the toolbar menu holding Import/Export/Clear
-   * and the per-card menu holding Delete. Listens in the capture phase because
+   * and the per-card menu (Export, Reset, Delete). Listens in the capture phase because
    * card actions stop click propagation before it reaches the document.
    */
   setupMenuListeners() {

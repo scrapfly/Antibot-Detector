@@ -216,7 +216,7 @@
     "message": "O histórico de detecção aparecerá aqui conforme você navegar."
   },
   "rulesUpdateTitle": {
-    "message": "Verificar atualizações de detectores"
+    "message": "Instalar atualizações de regras da versão mais recente da Scrapfly"
   },
   "rulesAddTitle": {
     "message": "Adicionar novo detector"
@@ -841,12 +841,6 @@
   "webhookTestFailedFmt": {
     "message": "Falha no teste do webhook: {0}"
   },
-  "foundDetectorUpdatesAvailableFmt": {
-    "message": "Encontradas {0} atualizações de detectores disponíveis!"
-  },
-  "allDetectorsUpToDate": {
-    "message": "Todos os detectores estão atualizados."
-  },
   "importDetectorsTitle": {
     "message": "Importar detectores"
   },
@@ -862,6 +856,9 @@
   "detectorsImported": {
     "message": "Detectores importados"
   },
+  "detectorExportedFmt": {
+    "message": "{0} exportado"
+  },
   "failedImportDetectors": {
     "message": "Falha ao importar detectores. Verifique o formato do arquivo."
   },
@@ -870,9 +867,6 @@
   },
   "detectorsUpdatedFmt": {
     "message": "{0} detectores atualizados"
-  },
-  "updatesAvailableClickToApplyFmt": {
-    "message": "{0} atualizações disponíveis - clique novamente para aplicar"
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" excluído"
@@ -885,9 +879,6 @@
   },
   "textWordMatching": {
     "message": "Correspondência de texto/palavra"
-  },
-  "domSelectorMatching": {
-    "message": "Correspondência de seletor DOM"
   },
   "payloadTextMatching": {
     "message": "Correspondência de texto na carga útil"
@@ -942,6 +933,30 @@
   },
   "couldNotFetchUpdates": {
     "message": "Não foi possível buscar atualizações do servidor"
+  },
+  "updateResultInstalledFmt": {
+    "message": "Regras atualizadas da versão {0}: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "Todas as regras estão em dia com a versão {0}."
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "Aguardando a extensão {0} ou mais recente: {1}. Elas serão instaladas quando o Chrome atualizar a extensão."
+  },
+  "updateResultFailedFmt": {
+    "message": "Não foi possível baixar: {0}. Tente novamente mais tarde."
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "As regras que você editou aguardam sua decisão em Regras → Atualizar: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "Não foi possível acessar o GitHub para verificar atualizações de regras."
+  },
+  "updateErrorNoRelease": {
+    "message": "Nenhuma versão publicada da Scrapfly foi encontrada no GitHub."
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "O GitHub está limitando as verificações de atualização. Tente novamente em {0} min."
   },
   "errorApplyingUpdates": {
     "message": "Erro ao aplicar atualizações"
@@ -1588,114 +1603,6 @@
   "notifLoadingDefault": {
     "message": "Carregando..."
   },
-  "helpJsHooksTitle": {
-    "message": "Detecção por JavaScript Hooks"
-  },
-  "helpJsHooksDescription": {
-    "message": "Os hooks interceptam chamadas de APIs do navegador (Canvas, Audio, WebGL, etc.) para detectar código de fingerprinting anti-bot em tempo real, conforme a página acessa essas APIs."
-  },
-  "helpJsHooksWarning": {
-    "message": "Os hooks precisam ser instalados em document_start antes que qualquer script da página seja executado — caso contrário, a página pode salvar referências às APIs originais antes que nosso shim esteja em vigor."
-  },
-  "helpJsHooksTip": {
-    "message": "Adicione um alvo como CanvasRenderingContext2D.prototype.getImageData para detectar fingerprinting de canvas."
-  },
-  "helpWindowTitle": {
-    "message": "Detecção de propriedades de window"
-  },
-  "helpWindowDescription": {
-    "message": "Detecta objetos e propriedades JavaScript adicionadas ao objeto global window por scripts anti-bot."
-  },
-  "helpWindowWarning": {
-    "message": "Alguns scripts anti-bot usam chaves Symbol() que não são enumeráveis — essas são mais difíceis de detectar."
-  },
-  "helpWindowTip": {
-    "message": "Use condições como typeof object ou exists para verificar o tipo da propriedade."
-  },
-  "helpUrlTitle": {
-    "message": "Detecção por padrão de URL"
-  },
-  "helpUrlDescription": {
-    "message": "Compara URLs de recursos carregados (scripts, imagens, requisições de rede) com padrões."
-  },
-  "helpUrlWarning": {
-    "message": "Os padrões ignoram maiúsculas e minúsculas, a menos que você ative “Diferenciar maiúsculas de minúsculas”. Um padrão muito genérico também encontra recursos sem relação, então seja específico."
-  },
-  "helpUrlTip": {
-    "message": "Use a opção Regex para padrões avançados como /\\/v\\d+\\/challenge/."
-  },
-  "helpHeaderTitle": {
-    "message": "Detecção por cabeçalhos HTTP"
-  },
-  "helpHeaderDescription": {
-    "message": "Detecta cabeçalhos HTTP de requisição e resposta definidos por middlewares anti-bot."
-  },
-  "helpHeaderWarning": {
-    "message": "Alguns cabeçalhos só estão presentes na requisição inicial — certifique-se de que seu escopo inclua Requisição."
-  },
-  "helpHeaderTip": {
-    "message": "Alvos comuns: x-akamai-bot-manager-token, cf-ray, x-shape-version."
-  },
-  "helpCookieTitle": {
-    "message": "Detecção por cookies"
-  },
-  "helpCookieDescription": {
-    "message": "Detecta cookies definidos por desafios anti-bot. Verifica o nome do cookie (e, opcionalmente, o padrão do valor)."
-  },
-  "helpCookieWarning": {
-    "message": "Nomes de cookies com sufixos aleatórios (ex.: _abck-xyz123) precisam de um padrão regex, não de um nome literal."
-  },
-  "helpCookieTip": {
-    "message": "Use \"Palavra inteira\" para correspondências de nome exato, ou Regex para padrões de prefixo como ^datadome-."
-  },
-  "helpContentTitle": {
-    "message": "Detecção por conteúdo da página"
-  },
-  "helpContentDescription": {
-    "message": "Pesquisa padrões de texto dentro do HTML da página e em tags de script inline."
-  },
-  "helpContentWarning": {
-    "message": "A varredura de página inteira pode ser lenta em páginas grandes. Restrinja a \"Verificar apenas scripts\" se a assinatura estiver em código JS."
-  },
-  "helpContentTip": {
-    "message": "Use \"Palavra inteira\" para evitar falsos positivos de substrings dentro de palavras maiores."
-  },
-  "helpDomTitle": {
-    "message": "Detecção por seletor DOM"
-  },
-  "helpDomDescription": {
-    "message": "Detecta elementos HTML usando seletores CSS. É disparado quando o elemento correspondente está presente no DOM."
-  },
-  "helpDomWarning": {
-    "message": "Os seletores só correspondem a elementos renderizados no DOM real — não àqueles dentro de iframes ou shadow roots."
-  },
-  "helpDomTip": {
-    "message": "Use seletores específicos como div#cf-challenge[data-ray] em vez de genéricos para reduzir falsos positivos."
-  },
-  "helpPayloadTitle": {
-    "message": "Detecção por carga útil da requisição"
-  },
-  "helpPayloadDescription": {
-    "message": "Monitora todos os corpos de requisições HTTP POST/PUT/PATCH em busca de padrões de texto."
-  },
-  "helpPayloadWarning": {
-    "message": "O monitoramento da carga útil só funciona para requisições que nossa extensão consegue interceptar (sem corpos criptografados, sem blobs opacos)."
-  },
-  "helpPayloadTip": {
-    "message": "Combine com \"Padrão de URL\" para limitar a correspondência a endpoints específicos."
-  },
-  "helpWarningLabel": {
-    "message": "Aviso:"
-  },
-  "helpTipLabel": {
-    "message": "Dica:"
-  },
-  "detectionMethodTitle": {
-    "message": "Método de detecção"
-  },
-  "noHelpContentAvailable": {
-    "message": "Nenhum conteúdo de ajuda disponível para este tipo de método."
-  },
   "advNoCapturesHintFmt": {
     "message": "Clique em \"Iniciar captura\" acima para começar a capturar dados de {0}"
   },
@@ -2026,12 +1933,6 @@
   "rhSearchDom": {
     "message": "Buscar seletores, ex.: captcha, iframe"
   },
-  "rhSearchRegex": {
-    "message": "Texto a encontrar, ex.: bm_ ou token"
-  },
-  "rhSearchSample": {
-    "message": "Digite um valor para testar"
-  },
   "rhCondition": {
     "message": "Condição"
   },
@@ -2155,9 +2056,6 @@
   "rhCondFalse": {
     "message": "é false"
   },
-  "rhWindowIntro": {
-    "message": "Verifica uma variável global JavaScript na página (window.…). Escolha uma e depois o que ela deve ser."
-  },
   "rhWindowSentenceFmt": {
     "message": "Detecta páginas onde {0} {1}"
   },
@@ -2197,45 +2095,6 @@
   "rhDomCamel": {
     "message": "Classe em camelCase"
   },
-  "rhRegexTitle": {
-    "message": "Assistente de regex"
-  },
-  "rhUsePattern": {
-    "message": "Usar padrão"
-  },
-  "rhRegexStartsFmt": {
-    "message": "Começa com “{0}”"
-  },
-  "rhRegexEndsFmt": {
-    "message": "Termina com “{0}”"
-  },
-  "rhRegexContainsFmt": {
-    "message": "Contém “{0}” em qualquer parte"
-  },
-  "rhRegexWordFmt": {
-    "message": "Palavra inteira “{0}”"
-  },
-  "rhRegexOrFmt": {
-    "message": "“{0}” ou outra opção"
-  },
-  "rhRegexStartsMoreFmt": {
-    "message": "Começa com “{0}” seguido de mais texto"
-  },
-  "rhRegexEitherFmt": {
-    "message": "“{0}” ou “{1}”"
-  },
-  "rhExamplesForFmt": {
-    "message": "Exemplos para “{0}”"
-  },
-  "rhExamples": {
-    "message": "Exemplos"
-  },
-  "rhHowMatchesFmt": {
-    "message": "Como “{0}” corresponde"
-  },
-  "rhQuickRef": {
-    "message": "Referência rápida"
-  },
   "rhRefAny": {
     "message": "qualquer caractere"
   },
@@ -2272,74 +2131,302 @@
   "rhNoMatch": {
     "message": "Não corresponde"
   },
-  "rhWwIntro": {
-    "message": "Só corresponde quando o texto aparece sozinho, não como parte de uma palavra maior."
+  "ptTitle": {
+    "message": "Testar padrão"
   },
-  "rhWwExact": {
-    "message": "Palavra exata"
+  "ptTitleFmt": {
+    "message": "Testar padrão · {0}"
   },
-  "rhWwJoinedBefore": {
-    "message": "Unido ao texto anterior"
+  "ptKindUrl": {
+    "message": "URL"
   },
-  "rhWwJoinedAfter": {
-    "message": "Unido ao texto seguinte"
+  "ptKindContent": {
+    "message": "Conteúdo da página"
   },
-  "rhWwSpaces": {
-    "message": "Separado por espaços"
+  "ptKindCookieName": {
+    "message": "Nome do cookie"
   },
-  "rhCsIntro": {
-    "message": "Quando ativado, maiúsculas e minúsculas contam como diferentes."
+  "ptKindCookieValue": {
+    "message": "Valor do cookie"
   },
-  "rhCsOnTitle": {
-    "message": "Com diferenciação de maiúsculas ativada"
+  "ptKindHeaderName": {
+    "message": "Nome do cabeçalho"
   },
-  "rhCsOffTitle": {
-    "message": "Com diferenciação de maiúsculas desativada"
+  "ptKindHeaderValue": {
+    "message": "Valor do cabeçalho"
   },
-  "rhWhatIsRegex": {
-    "message": "O que é uma expressão regular?"
+  "ptKindPayloadText": {
+    "message": "Corpo da requisição"
   },
-  "rhWhatIsWholeWord": {
-    "message": "O que é “Palavra inteira”?"
+  "ptKindPayloadUrl": {
+    "message": "URL da requisição"
   },
-  "rhWhatIsCase": {
-    "message": "O que é “Diferenciar maiúsculas”?"
+  "ptPatternLabel": {
+    "message": "Padrão"
   },
-  "rhRegexIntro": {
-    "message": "Uma expressão regular (regex) encontra texto por padrão em vez de caracteres exatos."
+  "ptOptionsLabel": {
+    "message": "Opções de correspondência"
   },
-  "rhWhenToUse": {
-    "message": "Quando usar"
+  "ptOptRegex": {
+    "message": "Regex"
   },
-  "rhRegexUse1": {
-    "message": "Texto que começa ou termina com algo específico"
+  "ptTryOn": {
+    "message": "Testar em"
   },
-  "rhRegexUse2": {
-    "message": "Várias variações de uma vez (com |)"
+  "ptExamplesBtn": {
+    "message": "Exemplos"
   },
-  "rhRegexUse3": {
-    "message": "Números ou tipos específicos de caracteres"
+  "ptSamplesPlaceholder": {
+    "message": "Um por linha: uma URL, um nome de cookie…"
   },
-  "rhRegexTip": {
-    "message": "Para texto exato você não precisa de regex: use “Palavra inteira”."
+  "ptNoSamples": {
+    "message": "Digite ou cole um texto acima, um por linha, para ver se corresponde."
   },
-  "rhBestFor": {
-    "message": "Ideal para"
+  "ptCheatTitle": {
+    "message": "Guia rápido de regex"
   },
-  "rhWwUse1": {
-    "message": "Nomes exatos de cookies"
+  "ptCheatNote": {
+    "message": "Escreva o padrão sem / em volta. Uma repetição dentro de outra, como (a+)+, é recusada porque poderia travar as páginas."
   },
-  "rhWwUse2": {
-    "message": "Nomes de cabeçalhos específicos"
+  "ptApply": {
+    "message": "Aplicar"
   },
-  "rhWwUse3": {
-    "message": "Nomes completos de classes ou funções"
+  "ptTestBtn": {
+    "message": "Testar"
   },
-  "rhCsUse1": {
-    "message": "Cabeçalhos e cookies com capitalização exata"
+  "ptTestTitle": {
+    "message": "Testar o padrão em um texto de exemplo"
   },
-  "rhCsUse2": {
-    "message": "Nomes de propriedades JavaScript"
+  "ptNoPattern": {
+    "message": "Nenhum padrão ainda"
+  },
+  "ptHintRegex": {
+    "message": "Um padrão como ^bm_ ou \\d+, sem / em volta"
+  },
+  "ptHintWholeWord": {
+    "message": "Ignora correspondências dentro de uma palavra mais longa: _abck, não test_abck"
+  },
+  "ptHintCase": {
+    "message": "Akamai deixa de corresponder a akamai"
+  },
+  "ptSaysEmpty": {
+    "message": "Digite um padrão para ver com o que ele corresponde."
+  },
+  "ptSaysRegex": {
+    "message": "Corresponde ao texto em que a regex encontra uma correspondência."
+  },
+  "ptSaysWordFmt": {
+    "message": "Corresponde a “{0}” como palavra inteira, não dentro de uma palavra mais longa."
+  },
+  "ptSaysWildcardFmt": {
+    "message": "Corresponde a nomes como “{0}”, em que * representa qualquer texto."
+  },
+  "ptSaysPrefixFmt": {
+    "message": "Corresponde a nomes que começam com “{0}”."
+  },
+  "ptSaysContainsFmt": {
+    "message": "Corresponde ao texto que contém “{0}”."
+  },
+  "ptCaseExact": {
+    "message": "Maiúsculas e minúsculas precisam corresponder exatamente."
+  },
+  "ptCaseIgnored": {
+    "message": "Maiúsculas e minúsculas são tratadas da mesma forma."
+  },
+  "ptNoteInvalidFmt": {
+    "message": "Esta regex não é válida, então nunca corresponde: {0}"
+  },
+  "ptNoteRejected": {
+    "message": "A detecção recusa esta regex porque ela poderia travar as páginas (uma repetição dentro de outra, ou mais de 1000 caracteres), então ela nunca corresponde."
+  },
+  "ptNoteSlashes": {
+    "message": "Tire as / das duas pontas: elas são buscadas como parte do texto."
+  },
+  "ptNoteLooksRegex": {
+    "message": "Isso parece uma regex: ative Regex; caso contrário, os símbolos são buscados como texto comum."
+  },
+  "ptNoteWordIgnored": {
+    "message": "Palavra inteira é ignorada enquanto Regex está ativado."
+  },
+  "ptNoteHeaderCase": {
+    "message": "Os nomes de cabeçalho são guardados em minúsculas, então com Diferenciar maiúsculas de minúsculas ativado este padrão nunca corresponde."
+  },
+  "ptNoteWordEdges": {
+    "message": "Este padrão começa ou termina com um símbolo, então Palavra inteira precisa de uma letra, um dígito ou _ logo ao lado desse símbolo."
+  },
+  "rhRefDot": {
+    "message": "um ponto de verdade"
+  },
+  "rhRefSet": {
+    "message": "um de a, b, c"
+  },
+  "rhRefCount": {
+    "message": "de 2 a 5 vezes"
+  },
+  "mhExamplesTitle": {
+    "message": "Nas regras da Scrapfly"
+  },
+  "mhHowTitle": {
+    "message": "Como corresponde"
+  },
+  "mhWriteTitle": {
+    "message": "O que você pode escrever"
+  },
+  "mhLimitsTitle": {
+    "message": "Bom saber"
+  },
+  "mhUrlIntro": {
+    "message": "Verifica o endereço da página e as URLs que ela solicita: scripts, chamadas XHR e fetch, imagens, frames e pings."
+  },
+  "mhUrlHow1": {
+    "message": "Sem Regex, a URL precisa conter o texto, sem diferenciar maiúsculas. A URL inteira conta, inclusive a query string."
+  },
+  "mhUrlHow2": {
+    "message": "Com Regex, tire as / das duas pontas e escreva os pontos como `\\.`, como em `^https://js\\.example\\.com/`."
+  },
+  "mhUrlHow3": {
+    "message": "Escopo da URL: Página verifica só o endereço da página, Scripts adiciona as fontes dos scripts, Todos (padrão) adiciona todas as requisições."
+  },
+  "mhUrlLimit1": {
+    "message": "Requisições de fontes, mídia e folhas de estilo não são registradas."
+  },
+  "mhUrlLimit2": {
+    "message": "Só contam as requisições feitas antes da varredura, que roda quando a página termina de carregar."
+  },
+  "mhHeaderIntro": {
+    "message": "Verifica os cabeçalhos da requisição e da resposta da própria página, não os de scripts, chamadas XHR ou frames."
+  },
+  "mhHeaderHow1": {
+    "message": "Os nomes de cabeçalho são comparados em minúsculas, e texto comum significa “contém”: `server` também corresponde a `server-timing`. Para um nome exato, use Regex `^server$`."
+  },
+  "mhHeaderHow2": {
+    "message": "O valor é verificado no cabeçalho com esse nome; deixe-o vazio para aceitar qualquer valor."
+  },
+  "mhHeaderHow3": {
+    "message": "Escopo Resposta (padrão): cabeçalhos que o site enviou; Requisição: cabeçalhos que o navegador enviou."
+  },
+  "mhHeaderLimit1": {
+    "message": "Com Diferenciar maiúsculas de minúsculas ativado, escreva os nomes de cabeçalho em minúsculas."
+  },
+  "mhHeaderLimit2": {
+    "message": "Páginas que mudam de endereço sem recarregar são varridas de novo sem cabeçalhos."
+  },
+  "mhCookieIntro": {
+    "message": "Verifica os cookies da página pelo nome e, opcionalmente, pelo valor, inclusive os HttpOnly e Secure."
+  },
+  "mhCookieHow1": {
+    "message": "Um nome comum corresponde como prefixo: `_abck` também corresponde a `_abck_2`."
+  },
+  "mhCookieHow2": {
+    "message": "`*` representa qualquer texto: `bm_*` corresponde a `bm_sz` e `bm_sv`."
+  },
+  "mhCookieHow3": {
+    "message": "Para um nome exato, ative Regex e escreva `^nome$`. O valor corresponde quando contém o texto."
+  },
+  "mhCookieLimit1": {
+    "message": "O escopo Requisição (padrão) lê os cookies do navegador para a página; Resposta lê os cookies definidos pela resposta da página."
+  },
+  "mhCookieLimit2": {
+    "message": "Cookies de outros sites, como o frame de um fornecedor, não são vistos. Valores longos são cortados em 100 caracteres."
+  },
+  "mhContentIntro": {
+    "message": "Busca no texto da página: o HTML do body, os scripts embutidos e os arquivos de script e de estilo que ela carrega."
+  },
+  "mhContentHow1": {
+    "message": "Texto comum corresponde quando o texto o contém, sem diferenciar maiúsculas."
+  },
+  "mhContentHow2": {
+    "message": "Palavra inteira ignora correspondências dentro de uma palavra mais longa; precisa de uma letra, um dígito ou _ nas duas pontas do padrão."
+  },
+  "mhContentHow3": {
+    "message": "“Verificar apenas scripts” busca só em scripts embutidos (inclusive no head) e arquivos JavaScript, sem HTML nem CSS."
+  },
+  "mhContentLimit1": {
+    "message": "Arquivos que o site não deixa outras origens lerem (CORS), ou com mais de 5 MB, são ignorados."
+  },
+  "mhContentLimit2": {
+    "message": "Código dentro de frames ou workers, ou carregado depois da varredura, não é buscado."
+  },
+  "mhDomIntro": {
+    "message": "Procura um elemento no body da página com um seletor CSS, quando a página termina de carregar."
+  },
+  "mhDomHow1": {
+    "message": "Uma tag, `.classe`, `#id` ou `[atributo]`, sozinho ou combinado: `.g-recaptcha[data-sitekey]`."
+  },
+  "mhDomHow2": {
+    "message": "Testes de atributo `=`, `^=`, `$=`, `*=`, `~=` e `|=`; adicione ` i` antes de `]` para ignorar maiúsculas."
+  },
+  "mhDomHow3": {
+    "message": "Vários seletores separados por vírgulas: basta um deles corresponder."
+  },
+  "mhDomLimit1": {
+    "message": "Não suportados, e a regra nunca corresponde: espaços ou `>` entre as partes, `:pseudo-classes` e escapes."
+  },
+  "mhDomLimit2": {
+    "message": "O head, os frames e os shadow roots não são buscados. O atributo `value` não é lido; os outros são comparados nos primeiros 100 caracteres."
+  },
+  "mhWindowIntro": {
+    "message": "Verifica uma variável global de JavaScript que a página define, como `grecaptcha.render`."
+  },
+  "mhWindowHow1": {
+    "message": "O caminho a partir de `window`, separado por pontos: `KPSDK` ou `grecaptcha.render`."
+  },
+  "mhWindowHow2": {
+    "message": "Uma condição como `exists`, `typeof function`, `truthy`, `=== true`, `length > 0` ou `has keys`. Vazia significa truthy."
+  },
+  "mhWindowHow3": {
+    "message": "Uma condição que a detecção não entende nunca corresponde, então escolha uma da lista."
+  },
+  "mhWindowLimit1": {
+    "message": "Verificado nos primeiros segundos depois que a página carrega; variáveis globais criadas depois não são vistas."
+  },
+  "mhWindowLimit2": {
+    "message": "Propriedades nomeadas com um Symbol não podem ser escritas como caminho."
+  },
+  "mhJsHooksOnlyFingerprint": {
+    "message": "Só as regras Fingerprint usam interceptadores: as regras Anti-bot e Captcha os ignoram."
+  },
+  "mhJsHooksIntro": {
+    "message": "Registra quando a página chama uma API do navegador, como `HTMLCanvasElement.prototype.toDataURL`, um sinal de fingerprinting."
+  },
+  "mhJsHooksHow1": {
+    "message": "O caminho completo para um método ou getter: `Navigator.prototype.webdriver`, não `navigator.webdriver`."
+  },
+  "mhJsHooksHow2": {
+    "message": "Qualquer chamada conta; os argumentos e o resultado não são verificados, então um interceptador mostra que uma API foi usada, não por quê."
+  },
+  "mhJsHooksLimit1": {
+    "message": "As chamadas contam nos primeiros segundos depois que a página carrega (no máximo 8 segundos)."
+  },
+  "mhJsHooksLimit2": {
+    "message": "Chamadas em workers ou frames não são vistas, exceto os alvos embutidos em frames do mesmo site."
+  },
+  "mhPayloadIntro": {
+    "message": "Busca no corpo das requisições POST, PUT, PATCH e DELETE que a página envia, de qualquer frame."
+  },
+  "mhPayloadHow1": {
+    "message": "Texto comum corresponde quando o corpo o contém, sem diferenciar maiúsculas. Dados de formulário são lidos como `nome=valor&…`."
+  },
+  "mhPayloadHow2": {
+    "message": "A URL da requisição (opcional) e o método HTTP limitam a busca às requisições que correspondem."
+  },
+  "mhPayloadLimit1": {
+    "message": "Só contam as requisições enviadas antes da varredura, até 50 por página."
+  },
+  "mhPayloadLimit2": {
+    "message": "Mensagens de WebSocket não são lidas."
+  },
+  "domCardTitle": {
+    "message": "Seletor CSS"
+  },
+  "domCardBrowse": {
+    "message": "Explorar"
+  },
+  "domCardHint": {
+    "message": "Uma tag, .classe, #id ou um teste de [atributo], sozinho ou combinado. Espaços ou > entre as partes não são suportados."
+  },
+  "windowCardTitle": {
+    "message": "Propriedade da janela"
   },
   "settingsApiEventsDesc": {
     "message": "Eventos que a extensão dispara na página"
@@ -3392,7 +3479,7 @@
     "message": "Padrão de URL"
   },
   "rulesUiJsHookTargetPlaceholder": {
-    "message": "Alvo do interceptador JS (ex.: navigator.webdriver)"
+    "message": "Alvo do interceptador JS (ex.: Navigator.prototype.webdriver)"
   },
   "rulesUiWindowPathPlaceholder": {
     "message": "Caminho em window (ex.: grecaptcha, _cf_chl_opt)"
@@ -3450,24 +3537,6 @@
   },
   "rulesUiLeaveEmptyAnyUrl": {
     "message": "Deixe vazio para corresponder a qualquer URL"
-  },
-  "ruleExampleMatches": {
-    "message": "✓ Corresponde:"
-  },
-  "ruleExampleWont": {
-    "message": "× Não:"
-  },
-  "ruleExampleWontMatch": {
-    "message": "× Não corresponde:"
-  },
-  "ruleExampleLiteralTextOnly": {
-    "message": "apenas texto literal"
-  },
-  "ruleExampleExactCase": {
-    "message": "(mesmas maiúsculas)"
-  },
-  "ruleExampleAlone": {
-    "message": "(sozinha)"
   },
   "ruleConditionGroupOther": {
     "message": "Outras"
@@ -3629,7 +3698,127 @@
     "message": "Combinações"
   },
   "combinationsHint": {
-    "message": "Escolha os padrões e quantos devem corresponder."
+    "message": "Uma combinação só detecta esta proteção quando vários padrões são encontrados juntos. Use para padrões fracos demais sozinhos."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "Cada combinação só dispara quando seus sinais aparecem juntos; veja o que ela encontrou nesta página."
+  },
+  "combinationFoundTogether": {
+    "message": "Encontrados juntos nesta página:"
+  },
+  "combinationNotPresent": {
+    "message": "Ausente"
+  },
+  "combinationFound": {
+    "message": "Encontrado"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "Esta regra foi alterada ou removida depois da análise, então só o nome e a pontuação são exibidos."
+  },
+  "historyMatchedDetections": {
+    "message": "Detecções correspondentes"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "Esta análise foi salva antes de as condições serem guardadas, então só nomes e pontuações são exibidos."
+  },
+  "combinationMustNotBeFound": {
+    "message": "Não deve ser encontrado"
+  },
+  "combinationMustBeFound": {
+    "message": "Deve ser encontrado"
+  },
+  "combinationAutoTip": {
+    "message": "Auto: a maior confiança dos padrões que a acionaram"
+  },
+  "combinationSetsScore": {
+    "message": "Define a pontuação da detecção"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "Adicione pelo menos um padrão que deve ser encontrado."
+  },
+  "combinationInvalidOneOf": {
+    "message": "Uma lista “Um destes” precisa, em cada opção, de um padrão que deve ser encontrado."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "“Pelo menos {0}” precisa de {0} padrões que devem ser encontrados."
+  },
+  "combinationSentenceOne": {
+    "message": "Dispara quando esta condição é atendida."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "Dispara quando todas as {0} condições são atendidas."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "Dispara quando qualquer uma destas {0} condições é atendida."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "Dispara quando pelo menos {0} destas {1} condições são atendidas."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "Confiança: {0}%."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "Confiança: Auto, até {0}%."
+  },
+  "combinationSentenceGroup": {
+    "message": "Um grupo conta como uma condição."
+  },
+  "combinationSentenceNot": {
+    "message": "Não dispara se houver um padrão marcado “Não deve ser encontrado”."
+  },
+  "combinationSentenceAlone": {
+    "message": "Padrões sem a marca “Só combinações” também detectam sozinhos, com a própria confiança."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "Confiança quando encontrado"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "Deixe vazio para Auto: a maior confiança dos padrões encontrados."
+  },
+  "combinationOnlyTogether": {
+    "message": "Estes padrões só contam juntos"
+  },
+  "combinationOnlyTogetherHint": {
+    "message": "Sozinhos, não detectam nada. Vale para estes padrões em todas as combinações desta regra."
+  },
+  "combinationOnlyTogetherMixed": {
+    "message": "Alguns destes padrões também contam sozinhos. Marque para que todos contem só em combinações."
+  },
+  "combinationModeAny": {
+    "message": "Um destes"
+  },
+  "combinationModeAll": {
+    "message": "Todos estes"
+  },
+  "combinationModeAtLeast": {
+    "message": "Pelo menos… destes"
+  },
+  "combinationModeRootAll": {
+    "message": "todos estes são encontrados"
+  },
+  "combinationModeRootAny": {
+    "message": "um destes é encontrado"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "pelo menos… destes são encontrados"
+  },
+  "combinationGroupMode": {
+    "message": "Grupo"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "Adicione um padrão a este grupo"
+  },
+  "combinationDeleteGroup": {
+    "message": "Excluir grupo"
+  },
+  "combinationAddGroup": {
+    "message": "Adicionar grupo “um de”"
+  },
+  "patternUnusedBadge": {
+    "message": "Em nenhuma combinação"
+  },
+  "patternUnusedTip": {
+    "message": "Nenhuma combinação o usa, então ele nunca detecta. Clique para que conte sozinho."
   },
   "combinationsEmpty": {
     "message": "Nenhuma combinação ainda."
@@ -3640,23 +3829,11 @@
   "combinationDefaultNameFmt": {
     "message": "Combinação {0}"
   },
-  "combinationConfidence": {
-    "message": "Confiança quando corresponde"
-  },
-  "combinationConfidenceFromPatterns": {
-    "message": "Deixe vazio para usar a confiança dos padrões que correspondem"
-  },
   "combinationDelete": {
     "message": "Excluir combinação"
   },
   "combinationDeleteConfirmFmt": {
     "message": "Excluir a combinação \"{0}\"? Os padrões continuam na regra."
-  },
-  "combinationNotTitle": {
-    "message": "NÃO deve corresponder"
-  },
-  "combinationNot": {
-    "message": "NÃO"
   },
   "combinationRemove": {
     "message": "Remover"
@@ -3676,26 +3853,8 @@
   "combinationAnyPattern": {
     "message": "qualquer padrão"
   },
-  "combinationPreviewAnd": {
-    "message": "E"
-  },
-  "combinationPreviewOr": {
-    "message": "OU"
-  },
-  "combinationPreviewNot": {
-    "message": "NÃO"
-  },
   "combinationPreviewEmpty": {
     "message": "Adicione padrões para montar esta combinação"
-  },
-  "combinationInvalid": {
-    "message": "Escolha os padrões que devem corresponder e confira o mínimo de correspondências."
-  },
-  "combinationStrict": {
-    "message": "Estrito"
-  },
-  "combinationStrictTitle": {
-    "message": "Estrito: este padrão não aciona o detector sozinho, apenas dentro de combinações"
   },
   "patternCombinationsOnlyBadge": {
     "message": "Só combinações"
@@ -3706,9 +3865,6 @@
   "combinationNoPatterns": {
     "message": "Nenhum padrão adicionado"
   },
-  "combinationJoinTitle": {
-    "message": "Alternar entre E e OU"
-  },
   "combinationPickHint": {
     "message": "Marque os padrões para adicionar"
   },
@@ -3718,23 +3874,8 @@
   "combinationEditConditions": {
     "message": "Editar condições"
   },
-  "combinationRequireTogether": {
-    "message": "Usar padrões apenas em combinações"
-  },
-  "combinationRequireHint": {
-    "message": "Aplica-se a estes padrões em toda esta regra."
-  },
   "combinationAutoConfidence": {
     "message": "Auto"
-  },
-  "combinationMatchAll": {
-    "message": "Todas as condições correspondem"
-  },
-  "combinationMatchAny": {
-    "message": "Qualquer condição corresponde"
-  },
-  "combinationMatchAtLeast": {
-    "message": "Pelo menos… correspondem"
   },
   "combinationDetectWhen": {
     "message": "Detectar quando"
@@ -3748,29 +3889,8 @@
   "combinationMatchState": {
     "message": "Condição do padrão"
   },
-  "combinationMatches": {
-    "message": "Corresponde"
-  },
-  "combinationDoesNotMatch": {
-    "message": "Não corresponde"
-  },
-  "combinationAtLeastSummaryFmt": {
-    "message": "Pelo menos {0} condições correspondem"
-  },
   "combinationChoosePatterns": {
     "message": "Escolher padrões"
-  },
-  "combinationSummaryAll": {
-    "message": "Detectar quando todas as condições necessárias correspondem."
-  },
-  "combinationSummaryAny": {
-    "message": "Detectar quando pelo menos uma condição corresponde."
-  },
-  "combinationSummaryMinimumFmt": {
-    "message": "Detectar quando pelo menos {0} de {1} condições correspondem."
-  },
-  "combinationSummaryExcluded": {
-    "message": "Os padrões excluídos não devem corresponder."
   },
   "combinationDecreaseMinimum": {
     "message": "Diminuir o mínimo de correspondências"
@@ -4198,9 +4318,77 @@
     "message": "Esta página tem um CAPTCHA: o Unblocker o evita ou resolve para retornar a página, mas não preenche CAPTCHAs de formulários.",
     "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
   },
-  "scrapflyExportKeyNote": {
-    "message": "O código lê sua chave de API de SCRAPFLY_API_KEY.",
-    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  "scrapflyExportOptions": {
+    "message": "Opções"
+  },
+  "scrapflyExportProduct": {
+    "message": "Usar"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "Resolver CAPTCHAs"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "Pago por resolução"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "Use o Cloud Browser para resolvê-los."
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "Abra esta página no Cloud Browser da Scrapfly e controle-a com Playwright. O Captcha Solver resolve Turnstile, reCAPTCHA, GeeTest e outros quando aparecem; tentativas que falham não custam nada."
+  },
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "Contorna anti-bots"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "Copiar para IA"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "Copia a página, o que a protege, suas opções e o código em uma só mensagem para ChatGPT, Claude ou qualquer assistente de IA"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "Copiado: cole no seu assistente de IA"
+  },
+  "scrapflyExportFormat": {
+    "message": "Saída"
+  },
+  "scrapflyExportFormatText": {
+    "message": "Texto"
+  },
+  "scrapflyExportProxy": {
+    "message": "Proxies"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "Data center"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "Residenciais"
+  },
+  "scrapflyExportCountry": {
+    "message": "País"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "Qualquer"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "Executar JavaScript"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 créditos"
+  },
+  "scrapflyExportStepSettings": {
+    "message": "Escolha suas opções"
+  },
+  "scrapflyExportStepCode": {
+    "message": "Copie o código"
+  },
+  "scrapflyExportStepKey": {
+    "message": "Defina sua chave de API"
+  },
+  "scrapflyExportStepRun": {
+    "message": "Execute"
   },
   "scrapflyExportGetKey": {
     "message": "Obter uma chave de API",

@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-03",
-  "version": "1.2.0",
+  "lastUpdated": "2026-10-08",
+  "version": "1.2.1",
   "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API",
   "icon": "indexeddb_fingerprint.png",
@@ -81,7 +81,7 @@
     {
       "id": "indexeddb-source-access",
       "name": "Database access and enumeration references",
-      "confidence": 10,
+      "confidence": 15,
       "when": { "all": [{ "pattern": "content-1" }, { "pattern": "content-database-enumeration" }] }
     },
     {
