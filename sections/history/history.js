@@ -1161,7 +1161,7 @@ class History {
     });
     // Entries saved before checklists: say it once, not on every card
     const notSaved = cards.some(card => card.unavailable === 'notSaved')
-      ? `<p class="match-combo-hint">${FormatUtils.escapeHtml((t && t.get('combinationDetailsNotSavedAll')) || 'This scan was saved before conditions were kept, so only names and scores are shown.')}</p>`
+      ? `<p class="match-combo-hint" dir="auto">${FormatUtils.escapeHtml((t && t.get('combinationDetailsNotSavedAll')) || 'This scan was saved before conditions were kept, so only names and scores are shown.')}</p>`
       : '';
     return `<div class="history-modal-combos">
       <div class="history-modal-combos-title">${FormatUtils.escapeHtml(title)}</div>

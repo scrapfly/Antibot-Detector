@@ -244,17 +244,17 @@
           ${confidence(card.confidence, card)}
         </div>`;
       const score = card.setsScore
-        ? `<p class="match-combo-score"><span aria-hidden="true">★</span> ${esc(tr('combinationSetsScore', 'Sets the detection score'))}</p>`
+        ? `<p class="match-combo-score" dir="auto"><span aria-hidden="true">★</span> ${esc(tr('combinationSetsScore', 'Sets the detection score'))}</p>`
         : '';
       let body;
       if (card.unavailable === 'notSaved') {
         body = '';
       } else if (card.unavailable || !card.tree) {
-        body = `<p class="match-combo-unavailable">${esc(unavailableText(card))}</p>`;
+        body = `<p class="match-combo-unavailable" dir="auto">${esc(unavailableText(card))}</p>`;
       } else {
         const { found, absent } = foundRows(card.tree);
         const leadId = nextId();
-        body = `<p class="match-combo-lead" id="${leadId}">${esc(tr('combinationFoundTogether', 'Found together on this page:'))}</p>
+        body = `<p class="match-combo-lead" id="${leadId}" dir="auto">${esc(tr('combinationFoundTogether', 'Found together on this page:'))}</p>
           <ul class="match-combo-rows" aria-labelledby="${leadId}">${found.map(item => rowHtml(item, options, false)).join('')}${absent.map(item => rowHtml(item, options, true)).join('')}</ul>`;
       }
       return `<article class="match-combo${card.setsScore ? ' sets-score' : ''}" data-combo-id="${esc(card.id)}">${head}${score}${body}</article>`;
