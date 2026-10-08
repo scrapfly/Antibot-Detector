@@ -243,6 +243,47 @@ async function collectAndSendData() {
     });
 }
 
+// Some pages never fire load: a request that never finishes (scanned this long
+// after DOMContentLoaded), or a script that blocks the parser, as on samr.gov.cn
+// (scanned with what has loaded this long after the page started)
+const PAGE_LOAD_FALLBACK_MS = 10000;
+const PAGE_PARSE_FALLBACK_MS = 20000;
+
+/**
+ * Run callback once the page has loaded: on the load event,
+ * PAGE_LOAD_FALLBACK_MS after DOMContentLoaded when load has not come by then,
+ * or PAGE_PARSE_FALLBACK_MS from now when the page is still being parsed.
+ * @param {Function} callback - Called exactly once
+ */
+function onPageLoaded(callback) {
+    if (document.readyState === 'complete') {
+        callback();
+        return;
+    }
+    let done = false;
+    const timers = [];
+    const run = () => {
+        if (done) return;
+        done = true;
+        timers.forEach(timer => clearTimeout(timer));
+        window.removeEventListener('load', run);
+        document.removeEventListener('DOMContentLoaded', armAfterParse);
+        callback();
+    };
+    const armAfterParse = () => {
+        if (!done) timers.push(setTimeout(run, PAGE_LOAD_FALLBACK_MS));
+    };
+    window.addEventListener('load', run, { once: true });
+    if (document.readyState === 'interactive') {
+        armAfterParse();
+    } else {
+        document.addEventListener('DOMContentLoaded', armAfterParse, { once: true });
+        timers.push(setTimeout(() => {
+            if (document.readyState === 'loading') run();
+        }, PAGE_PARSE_FALLBACK_MS));
+    }
+}
+
 /**
  * Setup detection triggers
  * OPTIMIZED 2.3: Consolidated event listeners with debouncing
@@ -256,11 +297,9 @@ function setupDetectionTriggers() {
         // Page already fully loaded, notify immediately
         setTimeout(notifyPageLoad, 100);
     } else {
-        // Wait for all external resources to load
-        window.addEventListener('load', () => {
-            // Add small delay to ensure scripts have executed
-            setTimeout(notifyPageLoad, 200);
-        }, { once: true });
+        // Wait for all external resources to load (or the fallback, see onPageLoaded);
+        // add small delay to ensure scripts have executed
+        onPageLoaded(() => setTimeout(notifyPageLoad, 200));
     }
 
     // Debounced SPA URL change detection
@@ -825,12 +864,9 @@ window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
         });
     };
 
-    if (document.readyState === 'complete') {
-        triggerHookStart();
-    } else {
-        // Use load event - most reliable for ensuring page is ready
-        window.addEventListener('load', triggerHookStart, { once: true });
-    }
+    // Load event - most reliable for ensuring page is ready (with the fallback for
+    // pages whose load never fires)
+    onPageLoaded(triggerHookStart);
 })();
 
 // Check if script is already initialized to prevent duplicates

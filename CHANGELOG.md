@@ -31,6 +31,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules editor: saving no longer fails after emptying a group, and removing a condition no longer lets weak patterns detect on their own.
 - Advanced: the History count goes up as soon as a tool saves a result, instead of only when the History tab is opened.
 - F5: the "ASM cookie with BIG-IP analytics" combination now shows; before, the load-balancer combination always took its place.
+- Detection: pages that never finish loading are now scanned after a short wait instead of never showing a result.
 
 ## [2.8.2] - 2026-10-07
 
