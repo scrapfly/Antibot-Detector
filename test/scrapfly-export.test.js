@@ -240,7 +240,7 @@ test('Copy for AI: one message with the page, protections, settings, code and do
 // Solver (docs checked 2026-10-08); only Python, Node.js and the raw address.
 test('Cloud Browser mode: Playwright code with solve_captcha, only the languages that have it', () => {
   assert.deepEqual(ScrapflyExport.languagesFor('browser').map(l => l.id), ['python', 'node', 'wss']);
-  const o = { product: 'browser', proxyPool: 'public_residential_pool', country: 'us' };
+  const o = { product: 'browser', country: 'us' };
   const python = ScrapflyExport.snippet('python', URL_PLAIN, [], o);
   assert.match(python, /^from scrapfly import BrowserConfig, ScrapflyClient$/m);
   assert.match(python, /^ws_url = client\.cloud_browser\(BrowserConfig\($/m);
@@ -257,7 +257,9 @@ test('Cloud Browser mode: Playwright code with solve_captcha, only the languages
   assert.match(wss, /^echo "wss:\/\/browser\.scrapfly\.io\?api_key=\$SCRAPFLY_API_KEY&proxy_pool=residential&country=us&solve_captcha=true"$/m);
   for (const id of ['curl', 'cli', 'go', 'rust']) assert.equal(ScrapflyExport.snippet(id, URL_PLAIN, [], o), '', id);
   assert.equal(ScrapflyExport.snippet('wss', URL_PLAIN), '', 'no URL tab for the Scrape API');
-  const off = ScrapflyExport.snippet('python', URL_PLAIN, [], { product: 'browser', solveCaptcha: false });
+  assert.ok(!ScrapflyExport.snippet('python', URL_PLAIN, [], { product: 'browser', proxyPool: 'public_datacenter_pool' }).includes('"datacenter"'),
+    'Cloud Browser keeps its own proxy choice, residential by default');
+  const off = ScrapflyExport.snippet('python', URL_PLAIN, [], { product: 'browser', solveCaptcha: false, browserProxyPool: 'datacenter' });
   assert.ok(!off.includes('solve_captcha') && off.includes('proxy_pool="datacenter"'));
   assert.deepEqual(ScrapflyExport.fileAndRun('python', 'browser'), { file: 'browser.py', run: 'python browser.py' });
   const ai = ScrapflyExport.aiPrompt({ language: 'node', url: URL_PLAIN, options: o });

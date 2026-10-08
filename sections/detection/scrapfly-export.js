@@ -61,9 +61,12 @@ ScrapflyExport.fileAndRun = function(language, product) {
 // Captcha Solver are on unless the user turns them off.
 ScrapflyExport.FORMATS = ['raw', 'markdown', 'text'];
 ScrapflyExport.PROXY_POOLS = ['public_datacenter_pool', 'public_residential_pool'];
+// Cloud Browser names its pools differently and starts on residential: the
+// docs say most anti-bot protections need it
+ScrapflyExport.BROWSER_PROXY_POOLS = ['residential', 'datacenter'];
 // ISO 3166-1 alpha-2, lower case as the API takes them; '' = any country
 ScrapflyExport.COUNTRIES = ['', 'us', 'gb', 'ca', 'de', 'fr', 'es', 'it', 'nl', 'br', 'mx', 'jp', 'kr', 'in', 'au'];
-ScrapflyExport.DEFAULT_OPTIONS = Object.freeze({ product: 'scrape', solveCaptcha: true, unblocker: true, format: 'raw', renderJs: true, proxyPool: 'public_datacenter_pool', country: '' });
+ScrapflyExport.DEFAULT_OPTIONS = Object.freeze({ product: 'scrape', solveCaptcha: true, unblocker: true, format: 'raw', renderJs: true, proxyPool: 'public_datacenter_pool', browserProxyPool: 'residential', country: '' });
 
 /** Options with every unknown or missing value replaced by its default */
 ScrapflyExport.normalizeOptions = function(raw) {
@@ -77,6 +80,7 @@ ScrapflyExport.normalizeOptions = function(raw) {
     format: pick(ScrapflyExport.FORMATS, value.format, d.format),
     renderJs: value.renderJs !== false,
     proxyPool: pick(ScrapflyExport.PROXY_POOLS, value.proxyPool, d.proxyPool),
+    browserProxyPool: pick(ScrapflyExport.BROWSER_PROXY_POOLS, value.browserProxyPool, d.browserProxyPool),
     country: pick(ScrapflyExport.COUNTRIES, value.country, d.country)
   };
 };
@@ -340,7 +344,7 @@ ScrapflyExport.aiPrompt = function({ language, url, protections = [], options = 
   const found = (protections || []).map(p => `- ${oneLine(p.name)} (${p.kind || 'anti-bot'})`);
   const formats = { raw: 'raw HTML', markdown: 'Markdown', text: 'plain text' };
   const proxies = [
-    o.proxyPool === 'public_residential_pool' ? 'residential proxies' : 'datacenter proxies',
+    (browser ? o.browserProxyPool === 'residential' : o.proxyPool === 'public_residential_pool') ? 'residential proxies' : 'datacenter proxies',
     o.country ? `proxy country: ${o.country.toUpperCase()}` : 'any proxy country'
   ];
   const settings = browser
@@ -387,7 +391,7 @@ ScrapflyExport.browserSnippet = function(language, url, names, options) {
   const o = ScrapflyExport.normalizeOptions({ ...options, product: 'browser' });
   const q = scrapflyQuote;
   const detected = (prefix) => ScrapflyExport.detectedComment(names, prefix) || null;
-  const pool = o.proxyPool === 'public_residential_pool' ? 'residential' : 'datacenter';
+  const pool = o.browserProxyPool;
   switch (language) {
     case 'python':
       return scrapflyLines(
@@ -728,7 +732,8 @@ ScrapflyExport.optionsHtml = function(options, tr) {
       ${toggle('solveCaptcha', tr('scrapflyExportSolveCaptcha', 'Solve CAPTCHAs'), tr('scrapflyExportSolveCaptchaHint', 'Paid per solve'), 'browser')}
       ${toggle('unblocker', tr('scrapflyExportUnblocker', 'Unblocker'), tr('scrapflyExportUnblockerHint', 'Anti-bot bypass'), 'scrape')}
       ${segmented('format', tr('scrapflyExportFormat', 'Output'), [['raw', 'HTML'], ['markdown', 'Markdown'], ['text', tr('scrapflyExportFormatText', 'Text')]], 'scrape')}
-      ${segmented('proxyPool', tr('scrapflyExportProxy', 'Proxies'), [['public_datacenter_pool', tr('scrapflyExportProxyDatacenter', 'Datacenter')], ['public_residential_pool', tr('scrapflyExportProxyResidential', 'Residential')]])}
+      ${segmented('proxyPool', tr('scrapflyExportProxy', 'Proxies'), [['public_datacenter_pool', tr('scrapflyExportProxyDatacenter', 'Datacenter')], ['public_residential_pool', tr('scrapflyExportProxyResidential', 'Residential')]], 'scrape')}
+      ${segmented('browserProxyPool', tr('scrapflyExportProxy', 'Proxies'), [['datacenter', tr('scrapflyExportProxyDatacenter', 'Datacenter')], ['residential', tr('scrapflyExportProxyResidential', 'Residential')]], 'browser')}
       <div class="scrapfly-export-option">
         <span class="scrapfly-export-option-label" id="scrapflyExportCountryLabel">${esc(tr('scrapflyExportCountry', 'Country'))}</span>
         <div class="scrapfly-export-dd" data-option="country" data-value="${attr(o.country)}">
