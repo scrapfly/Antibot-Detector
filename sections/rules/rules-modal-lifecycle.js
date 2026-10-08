@@ -24,6 +24,8 @@ class RulesModalLifecycle {
       if (parent) parent.style.display = 'none';
     }
 
+    // Restored on close: a dialog stacked over another must not unlock the page under it
+    this.previousOverflow = document.body.style.overflow;
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
     this.onOpen?.();
@@ -34,7 +36,7 @@ class RulesModalLifecycle {
     if (!modal) return;
 
     modal.style.display = 'none';
-    document.body.style.overflow = '';
+    document.body.style.overflow = this.previousOverflow || '';
 
     if (this.hideParentOnOpen) {
       const parent = document.querySelector(this.parentBackdropSelector);

@@ -880,9 +880,6 @@
   "textWordMatching": {
     "message": "Corrispondenza testo/parola"
   },
-  "domSelectorMatching": {
-    "message": "Corrispondenza selettore DOM"
-  },
   "payloadTextMatching": {
     "message": "Corrispondenza testo payload"
   },
@@ -1606,114 +1603,6 @@
   "notifLoadingDefault": {
     "message": "Caricamento..."
   },
-  "helpJsHooksTitle": {
-    "message": "Rilevamento tramite hook JavaScript"
-  },
-  "helpJsHooksDescription": {
-    "message": "Gli hook intercettano le chiamate alle API del browser (Canvas, Audio, WebGL, ecc.) per rilevare in tempo reale il codice di fingerprinting anti-bot quando la pagina accede a tali API."
-  },
-  "helpJsHooksWarning": {
-    "message": "Gli hook devono essere installati a document_start prima dell'esecuzione di qualsiasi script della pagina — altrimenti la pagina può salvare riferimenti alle API originali prima che il nostro shim sia attivo."
-  },
-  "helpJsHooksTip": {
-    "message": "Aggiungi un target come CanvasRenderingContext2D.prototype.getImageData per rilevare il fingerprinting del canvas."
-  },
-  "helpWindowTitle": {
-    "message": "Rilevamento proprietà window"
-  },
-  "helpWindowDescription": {
-    "message": "Rileva oggetti e proprietà JavaScript aggiunti all'oggetto globale window dagli script anti-bot."
-  },
-  "helpWindowWarning": {
-    "message": "Alcuni script anti-bot usano chiavi Symbol() che non sono enumerabili — queste sono più difficili da rilevare."
-  },
-  "helpWindowTip": {
-    "message": "Usa condizioni come typeof object o exists per verificare il tipo della proprietà."
-  },
-  "helpUrlTitle": {
-    "message": "Rilevamento tramite pattern URL"
-  },
-  "helpUrlDescription": {
-    "message": "Confronta gli URL delle risorse caricate (script, immagini, richieste di rete) con i pattern."
-  },
-  "helpUrlWarning": {
-    "message": "I pattern ignorano maiuscole e minuscole se non attivi «Sensibile a maiuscole/minuscole». Un pattern troppo generico trova anche risorse estranee, quindi rendilo specifico."
-  },
-  "helpUrlTip": {
-    "message": "Usa l'opzione Regex per pattern avanzati come /\\/v\\d+\\/challenge/."
-  },
-  "helpHeaderTitle": {
-    "message": "Rilevamento delle intestazioni HTTP"
-  },
-  "helpHeaderDescription": {
-    "message": "Rileva le intestazioni delle richieste e risposte HTTP impostate dai middleware anti-bot."
-  },
-  "helpHeaderWarning": {
-    "message": "Alcune intestazioni sono presenti solo nella richiesta iniziale — assicurati che il tuo ambito includa Richiesta."
-  },
-  "helpHeaderTip": {
-    "message": "Target comuni: x-akamai-bot-manager-token, cf-ray, x-shape-version."
-  },
-  "helpCookieTitle": {
-    "message": "Rilevamento dei cookie"
-  },
-  "helpCookieDescription": {
-    "message": "Rileva i cookie impostati dalle challenge anti-bot. Confronta il nome del cookie (e facoltativamente il pattern del valore)."
-  },
-  "helpCookieWarning": {
-    "message": "I nomi di cookie con suffissi casuali (es. _abck-xyz123) richiedono un pattern regex, non un nome letterale."
-  },
-  "helpCookieTip": {
-    "message": "Usa Parola intera per corrispondenze esatte di nome, oppure Regex per pattern di prefisso come ^datadome-."
-  },
-  "helpContentTitle": {
-    "message": "Rilevamento dei contenuti della pagina"
-  },
-  "helpContentDescription": {
-    "message": "Cerca pattern di testo all'interno dell'HTML della pagina e nei tag script inline."
-  },
-  "helpContentWarning": {
-    "message": "La scansione completa della pagina può essere lenta su pagine grandi. Limita a Controlla solo gli script se la firma è nel codice JS."
-  },
-  "helpContentTip": {
-    "message": "Usa Parola intera per evitare falsi positivi da sottostringhe all'interno di parole più lunghe."
-  },
-  "helpDomTitle": {
-    "message": "Rilevamento tramite selettore DOM"
-  },
-  "helpDomDescription": {
-    "message": "Rileva elementi HTML usando selettori CSS. Si attiva quando l'elemento corrispondente è presente nel DOM."
-  },
-  "helpDomWarning": {
-    "message": "I selettori corrispondono solo agli elementi resi nel DOM effettivo — non a quelli all'interno di iframe o shadow root."
-  },
-  "helpDomTip": {
-    "message": "Usa selettori specifici come div#cf-challenge[data-ray] invece di quelli generici per ridurre i falsi positivi."
-  },
-  "helpPayloadTitle": {
-    "message": "Rilevamento del payload delle richieste"
-  },
-  "helpPayloadDescription": {
-    "message": "Monitora i corpi di tutte le richieste HTTP POST/PUT/PATCH alla ricerca di pattern di testo."
-  },
-  "helpPayloadWarning": {
-    "message": "Il monitoraggio del payload funziona solo per le richieste che la nostra estensione può intercettare (nessun corpo cifrato, nessun blob opaco)."
-  },
-  "helpPayloadTip": {
-    "message": "Combinalo con Pattern URL per limitare la corrispondenza a endpoint specifici."
-  },
-  "helpWarningLabel": {
-    "message": "Attenzione:"
-  },
-  "helpTipLabel": {
-    "message": "Suggerimento:"
-  },
-  "detectionMethodTitle": {
-    "message": "Metodo di rilevamento"
-  },
-  "noHelpContentAvailable": {
-    "message": "Nessun contenuto di aiuto disponibile per questo tipo di metodo."
-  },
   "advNoCapturesHintFmt": {
     "message": "Fai clic su \"Avvia cattura\" qui sopra per iniziare a catturare i dati {0}"
   },
@@ -2044,12 +1933,6 @@
   "rhSearchDom": {
     "message": "Cerca selettori, es. captcha, iframe"
   },
-  "rhSearchRegex": {
-    "message": "Testo da cercare, es. bm_ o token"
-  },
-  "rhSearchSample": {
-    "message": "Digita un valore da provare"
-  },
   "rhCondition": {
     "message": "Condizione"
   },
@@ -2173,9 +2056,6 @@
   "rhCondFalse": {
     "message": "è false"
   },
-  "rhWindowIntro": {
-    "message": "Controlla una variabile globale JavaScript nella pagina (window.…). Scegline una, poi cosa deve essere."
-  },
   "rhWindowSentenceFmt": {
     "message": "Rileva le pagine in cui {0} {1}"
   },
@@ -2215,45 +2095,6 @@
   "rhDomCamel": {
     "message": "Classe in camelCase"
   },
-  "rhRegexTitle": {
-    "message": "Assistente regex"
-  },
-  "rhUsePattern": {
-    "message": "Usa pattern"
-  },
-  "rhRegexStartsFmt": {
-    "message": "Inizia con “{0}”"
-  },
-  "rhRegexEndsFmt": {
-    "message": "Termina con “{0}”"
-  },
-  "rhRegexContainsFmt": {
-    "message": "Contiene “{0}” in qualsiasi punto"
-  },
-  "rhRegexWordFmt": {
-    "message": "Parola intera “{0}”"
-  },
-  "rhRegexOrFmt": {
-    "message": "“{0}” o un’altra opzione"
-  },
-  "rhRegexStartsMoreFmt": {
-    "message": "Inizia con “{0}” seguito da altro testo"
-  },
-  "rhRegexEitherFmt": {
-    "message": "“{0}” o “{1}”"
-  },
-  "rhExamplesForFmt": {
-    "message": "Esempi per “{0}”"
-  },
-  "rhExamples": {
-    "message": "Esempi"
-  },
-  "rhHowMatchesFmt": {
-    "message": "Come corrisponde “{0}”"
-  },
-  "rhQuickRef": {
-    "message": "Riferimento rapido"
-  },
   "rhRefAny": {
     "message": "qualsiasi carattere"
   },
@@ -2290,74 +2131,299 @@
   "rhNoMatch": {
     "message": "Non corrisponde"
   },
-  "rhWwIntro": {
-    "message": "Corrisponde solo quando il testo è isolato, non parte di una parola più lunga."
+  "ptTitle": {
+    "message": "Prova il pattern"
   },
-  "rhWwExact": {
-    "message": "Parola esatta"
+  "ptTitleFmt": {
+    "message": "Prova il pattern · {0}"
   },
-  "rhWwJoinedBefore": {
-    "message": "Unito al testo precedente"
+  "ptKindUrl": {
+    "message": "URL"
   },
-  "rhWwJoinedAfter": {
-    "message": "Unito al testo successivo"
+  "ptKindContent": {
+    "message": "Contenuto della pagina"
   },
-  "rhWwSpaces": {
-    "message": "Separato da spazi"
+  "ptKindCookieName": {
+    "message": "Nome del cookie"
   },
-  "rhCsIntro": {
-    "message": "Se attivo, maiuscole e minuscole sono considerate diverse."
+  "ptKindCookieValue": {
+    "message": "Valore del cookie"
   },
-  "rhCsOnTitle": {
-    "message": "Con distinzione maiuscole attiva"
+  "ptKindHeaderName": {
+    "message": "Nome dell’intestazione"
   },
-  "rhCsOffTitle": {
-    "message": "Con distinzione maiuscole disattiva"
+  "ptKindHeaderValue": {
+    "message": "Valore dell’intestazione"
   },
-  "rhWhatIsRegex": {
-    "message": "Cos’è un’espressione regolare?"
+  "ptKindPayloadText": {
+    "message": "Corpo della richiesta"
   },
-  "rhWhatIsWholeWord": {
-    "message": "Cos’è “Parola intera”?"
+  "ptKindPayloadUrl": {
+    "message": "URL della richiesta"
   },
-  "rhWhatIsCase": {
-    "message": "Cos’è “Distingui maiuscole”?"
+  "ptPatternLabel": {
+    "message": "Pattern"
   },
-  "rhRegexIntro": {
-    "message": "Un’espressione regolare (regex) trova il testo tramite un pattern invece che per caratteri esatti."
+  "ptOptionsLabel": {
+    "message": "Opzioni di corrispondenza"
   },
-  "rhWhenToUse": {
-    "message": "Quando usarla"
+  "ptOptRegex": {
+    "message": "Regex"
   },
-  "rhRegexUse1": {
-    "message": "Testo che inizia o finisce in un modo preciso"
+  "ptTryOn": {
+    "message": "Provalo su"
   },
-  "rhRegexUse2": {
-    "message": "Più varianti insieme (con |)"
+  "ptExamplesBtn": {
+    "message": "Esempi"
   },
-  "rhRegexUse3": {
-    "message": "Numeri o tipi di caratteri specifici"
+  "ptSamplesPlaceholder": {
+    "message": "Uno per riga: un URL, un nome di cookie…"
   },
-  "rhRegexTip": {
-    "message": "Per il testo esatto non serve la regex: usa “Parola intera”."
+  "ptNoSamples": {
+    "message": "Scrivi o incolla del testo qui sopra, uno per riga, per vedere se corrisponde."
   },
-  "rhBestFor": {
-    "message": "Ideale per"
+  "ptCheatTitle": {
+    "message": "Promemoria regex"
   },
-  "rhWwUse1": {
-    "message": "Nomi di cookie esatti"
+  "ptCheatNote": {
+    "message": "Scrivi il pattern senza / intorno. Una ripetizione dentro una ripetizione, come (a+)+, viene rifiutata perché potrebbe bloccare le pagine."
   },
-  "rhWwUse2": {
-    "message": "Nomi di header specifici"
+  "ptApply": {
+    "message": "Applica"
   },
-  "rhWwUse3": {
-    "message": "Nomi completi di classi o funzioni"
+  "ptTestBtn": {
+    "message": "Prova"
   },
-  "rhCsUse1": {
-    "message": "Header e cookie con maiuscole esatte"
+  "ptTestTitle": {
+    "message": "Prova il pattern su un testo di esempio"
   },
-  "rhCsUse2": {
-    "message": "Nomi di proprietà JavaScript"
+  "ptNoPattern": {
+    "message": "Ancora nessun pattern"
+  },
+  "ptHintRegex": {
+    "message": "Un pattern come ^bm_ o \\d+, senza / intorno"
+  },
+  "ptHintWholeWord": {
+    "message": "Salta le corrispondenze dentro una parola più lunga: _abck, non test_abck"
+  },
+  "ptHintCase": {
+    "message": "Akamai non corrisponde più ad akamai"
+  },
+  "ptSaysEmpty": {
+    "message": "Scrivi un pattern per vedere a cosa corrisponde."
+  },
+  "ptSaysRegex": {
+    "message": "Corrisponde al testo in cui la regex trova una corrispondenza."
+  },
+  "ptSaysWordFmt": {
+    "message": "Corrisponde a “{0}” come parola intera, non dentro una parola più lunga."
+  },
+  "ptSaysWildcardFmt": {
+    "message": "Corrisponde a nomi come “{0}”, dove * sta per qualsiasi testo."
+  },
+  "ptSaysPrefixFmt": {
+    "message": "Corrisponde ai nomi che iniziano con “{0}”."
+  },
+  "ptSaysContainsFmt": {
+    "message": "Corrisponde al testo che contiene “{0}”."
+  },
+  "ptCaseExact": {
+    "message": "Maiuscole e minuscole devono corrispondere esattamente."
+  },
+  "ptCaseIgnored": {
+    "message": "Maiuscole e minuscole sono trattate allo stesso modo."
+  },
+  "ptNoteInvalidFmt": {
+    "message": "Questa regex non è valida, quindi non corrisponde mai: {0}"
+  },
+  "ptNoteRejected": {
+    "message": "Il rilevamento rifiuta questa regex perché potrebbe bloccare le pagine (una ripetizione dentro una ripetizione, o oltre 1000 caratteri), quindi non corrisponde mai."
+  },
+  "ptNoteSlashes": {
+    "message": "Togli le / alle due estremità: vengono cercate come parte del testo."
+  },
+  "ptNoteLooksRegex": {
+    "message": "Sembra una regex: attiva Regex, altrimenti i suoi simboli vengono cercati come testo normale."
+  },
+  "ptNoteWordIgnored": {
+    "message": "Parola intera viene ignorata finché Regex è attivo."
+  },
+  "ptNoteHeaderCase": {
+    "message": "I nomi delle intestazioni sono salvati in minuscolo, quindi con Sensibile a maiuscole/minuscole attivo questo pattern non corrisponde mai."
+  },
+  "ptNoteWordEdges": {
+    "message": "Questo pattern inizia o finisce con un simbolo, quindi Parola intera richiede una lettera, una cifra o _ subito accanto a quel simbolo."
+  },
+  "rhRefDot": {
+    "message": "un punto vero"
+  },
+  "rhRefSet": {
+    "message": "uno tra a, b, c"
+  },
+  "rhRefCount": {
+    "message": "da 2 a 5 volte"
+  },
+  "mhExamplesTitle": {
+    "message": "Nelle regole di Scrapfly"
+  },
+  "mhHowTitle": {
+    "message": "Come corrisponde"
+  },
+  "mhWriteTitle": {
+    "message": "Cosa puoi scrivere"
+  },
+  "mhLimitsTitle": {
+    "message": "Buono a sapersi"
+  },
+  "mhUrlIntro": {
+    "message": "Controlla l’indirizzo della pagina e gli URL che la pagina richiede: script, chiamate XHR e fetch, immagini, frame e ping."
+  },
+  "mhUrlHow1": {
+    "message": "Senza Regex, l’URL deve contenere il testo, senza distinguere maiuscole e minuscole. Conta l’intero URL, query string compresa."
+  },
+  "mhUrlHow2": {
+    "message": "Con Regex, togli le / alle due estremità e scrivi i punti come `\\.`, come in `^https://js\\.example\\.com/`."
+  },
+  "mhUrlHow3": {
+    "message": "Ambito URL: Pagina controlla solo l’indirizzo della pagina, Script aggiunge le sorgenti degli script, Tutti (predefinito) aggiunge ogni richiesta."
+  },
+  "mhUrlLimit1": {
+    "message": "Le richieste di font, media e fogli di stile non vengono registrate."
+  },
+  "mhUrlLimit2": {
+    "message": "Contano solo le richieste fatte prima della scansione, che parte quando la pagina è caricata."
+  },
+  "mhHeaderIntro": {
+    "message": "Controlla le intestazioni della richiesta e della risposta della pagina stessa, non quelle di script, chiamate XHR o frame."
+  },
+  "mhHeaderHow1": {
+    "message": "I nomi delle intestazioni sono confrontati in minuscolo, e il testo normale significa “contiene”: `server` corrisponde anche a `server-timing`. Per un nome esatto, usa Regex `^server$`."
+  },
+  "mhHeaderHow2": {
+    "message": "Il valore viene controllato sull’intestazione con quel nome; lascialo vuoto per accettare qualsiasi valore."
+  },
+  "mhHeaderHow3": {
+    "message": "Ambito Risposta (predefinito): intestazioni inviate dal sito; Richiesta: intestazioni inviate dal browser."
+  },
+  "mhHeaderLimit1": {
+    "message": "Con Sensibile a maiuscole/minuscole attivo, scrivi i nomi delle intestazioni in minuscolo."
+  },
+  "mhHeaderLimit2": {
+    "message": "Le pagine che cambiano indirizzo senza ricaricare vengono analizzate di nuovo senza intestazioni."
+  },
+  "mhCookieIntro": {
+    "message": "Controlla i cookie della pagina per nome e, facoltativamente, per valore, inclusi quelli HttpOnly e Secure."
+  },
+  "mhCookieHow1": {
+    "message": "Un nome semplice corrisponde come prefisso: `_abck` corrisponde anche a `_abck_2`."
+  },
+  "mhCookieHow2": {
+    "message": "`*` sta per qualsiasi testo: `bm_*` corrisponde a `bm_sz` e `bm_sv`."
+  },
+  "mhCookieHow3": {
+    "message": "Per un nome esatto, attiva Regex e scrivi `^nome$`. Il valore corrisponde quando contiene il testo."
+  },
+  "mhCookieLimit1": {
+    "message": "L’ambito Richiesta (predefinito) legge i cookie del browser per la pagina; Risposta legge i cookie impostati dalla risposta della pagina."
+  },
+  "mhCookieLimit2": {
+    "message": "I cookie di altri siti, come il frame di un fornitore, non sono visibili. I valori lunghi vengono tagliati a 100 caratteri."
+  },
+  "mhContentIntro": {
+    "message": "Cerca nel testo della pagina: l’HTML del suo body, i suoi script inline e i file di script e fogli di stile che carica."
+  },
+  "mhContentHow1": {
+    "message": "Il testo normale corrisponde quando il testo lo contiene, senza distinguere maiuscole e minuscole."
+  },
+  "mhContentHow2": {
+    "message": "Parola intera salta le corrispondenze dentro una parola più lunga; richiede una lettera, una cifra o _ a entrambe le estremità del pattern."
+  },
+  "mhContentHow3": {
+    "message": "“Controlla solo gli script” cerca solo negli script inline (head compreso) e nei file JavaScript, senza HTML né CSS."
+  },
+  "mhContentLimit1": {
+    "message": "I file che il sito non lascia leggere ad altre origini (CORS), o oltre 5 MB, vengono saltati."
+  },
+  "mhContentLimit2": {
+    "message": "Il codice dentro frame o worker, o caricato dopo la scansione, non viene cercato."
+  },
+  "mhDomIntro": {
+    "message": "Cerca un elemento nel body della pagina con un selettore CSS, quando la pagina è caricata."
+  },
+  "mhDomHow1": {
+    "message": "Un tag, `.classe`, `#id` o `[attributo]`, da solo o combinato: `.g-recaptcha[data-sitekey]`."
+  },
+  "mhDomHow2": {
+    "message": "Test sugli attributi `=`, `^=`, `$=`, `*=`, `~=` e `|=`; aggiungi ` i` prima di `]` per ignorare maiuscole e minuscole."
+  },
+  "mhDomHow3": {
+    "message": "Più selettori separati da virgole: basta che ne corrisponda uno."
+  },
+  "mhDomLimit1": {
+    "message": "Non supportati, e la regola non corrisponde mai: spazi o `>` tra le parti, `:pseudo-classi` ed escape."
+  },
+  "mhDomLimit2": {
+    "message": "Head, frame e shadow root non vengono cercati. L’attributo `value` non viene letto; gli altri sono confrontati sui primi 100 caratteri."
+  },
+  "mhWindowIntro": {
+    "message": "Controlla una variabile globale JavaScript definita dalla pagina, come `grecaptcha.render`."
+  },
+  "mhWindowHow1": {
+    "message": "Il percorso da `window`, separato da punti: `KPSDK` o `grecaptcha.render`."
+  },
+  "mhWindowHow2": {
+    "message": "Una condizione come `exists`, `typeof function`, `truthy`, `=== true`, `length > 0` o `has keys`. Vuota significa truthy."
+  },
+  "mhWindowHow3": {
+    "message": "Una condizione che il rilevamento non capisce non corrisponde mai, quindi scegline una dall’elenco."
+  },
+  "mhWindowLimit1": {
+    "message": "Controllato nei primi secondi dopo il caricamento della pagina; le variabili globali create dopo non vengono viste."
+  },
+  "mhWindowLimit2": {
+    "message": "Le proprietà con un nome Symbol non si possono scrivere come percorso."
+  },
+  "mhJsHooksOnlyFingerprint": {
+    "message": "Solo le regole Fingerprint usano gli intercettori: le regole Anti-bot e Captcha li ignorano."
+  },
+  "mhJsHooksIntro": {
+    "message": "Registra quando la pagina chiama un’API del browser, come `HTMLCanvasElement.prototype.toDataURL`, un segno di fingerprinting."
+  },
+  "mhJsHooksHow1": {
+    "message": "Il percorso completo di un metodo o di un getter: `Navigator.prototype.webdriver`, non `navigator.webdriver`."
+  },
+  "mhJsHooksHow2": {
+    "message": "Conta qualsiasi chiamata; argomenti e risultato non vengono controllati, quindi un intercettore mostra che un’API è stata usata, non perché."
+  },
+  "mhJsHooksLimit1": {
+    "message": "Le chiamate contano nei primi secondi dopo il caricamento della pagina (al massimo 8 secondi)."
+  },
+  "mhJsHooksLimit2": {
+    "message": "Le chiamate in worker o frame non vengono viste, tranne i target integrati nei frame dello stesso sito."
+  },
+  "mhPayloadIntro": {
+    "message": "Cerca nel corpo delle richieste POST, PUT, PATCH e DELETE inviate dalla pagina, da qualsiasi frame."
+  },
+  "mhPayloadHow1": {
+    "message": "Il testo normale corrisponde quando il corpo lo contiene, senza distinguere maiuscole e minuscole. I dati dei moduli si leggono come `nome=valore&…`."
+  },
+  "mhPayloadHow2": {
+    "message": "L’URL della richiesta (facoltativo) e il metodo HTTP limitano la ricerca alle richieste corrispondenti."
+  },
+  "mhPayloadLimit1": {
+    "message": "Contano solo le richieste inviate prima della scansione, fino a 50 per pagina."
+  },
+  "mhPayloadLimit2": {
+    "message": "I messaggi WebSocket non vengono letti."
+  },
+  "domCardTitle": {
+    "message": "Selettore CSS"
+  },
+  "domCardBrowse": {
+    "message": "Sfoglia"
+  },
+  "domCardHint": {
+    "message": "Un tag, .classe, #id o un test su [attributo], da solo o combinato. Spazi o > tra le parti non sono supportati."
   },
   "settingsApiEventsDesc": {
     "message": "Eventi che l'estensione invia alla pagina"
@@ -3410,7 +3476,7 @@
     "message": "Pattern URL"
   },
   "rulesUiJsHookTargetPlaceholder": {
-    "message": "Destinazione dell’intercettore JS (es. navigator.webdriver)"
+    "message": "Destinazione dell’intercettore JS (es. Navigator.prototype.webdriver)"
   },
   "rulesUiWindowPathPlaceholder": {
     "message": "Percorso in window (es. grecaptcha, _cf_chl_opt)"
@@ -3468,24 +3534,6 @@
   },
   "rulesUiLeaveEmptyAnyUrl": {
     "message": "Lascia vuoto per qualsiasi URL"
-  },
-  "ruleExampleMatches": {
-    "message": "✓ Corrisponde:"
-  },
-  "ruleExampleWont": {
-    "message": "× No:"
-  },
-  "ruleExampleWontMatch": {
-    "message": "× Non corrisponde:"
-  },
-  "ruleExampleLiteralTextOnly": {
-    "message": "solo testo letterale"
-  },
-  "ruleExampleExactCase": {
-    "message": "(maiuscole esatte)"
-  },
-  "ruleExampleAlone": {
-    "message": "(da sola)"
   },
   "ruleConditionGroupOther": {
     "message": "Altre"

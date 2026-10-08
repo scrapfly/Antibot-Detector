@@ -1,8 +1,7 @@
 /* ============================================
    RULE HELPER MODALS (.rh-modal)
    One shared look for every helper opened from the rule editor: window
-   property, DOM selector, regex, whole word, case sensitive, the
-   "What is ...?" explanations and the detection method help.
+   property, DOM selector, Test pattern and the detection method help.
 
    Structure (sections/rules/rules.html):
      .rule-modal.rh-modal
@@ -114,13 +113,26 @@
   color: var(--rh-text-dim);
 }
 
-/* Method help is short prose: let it size to its content */
+/* Method help sizes to its content (no footer: ✕, Esc or a click outside closes it) */
 #methodHelpModal .rule-modal-content {
   height: auto;
 }
 
 #methodHelpModal .rule-modal-body.rh-body {
   flex: 0 1 auto;
+  gap: 14px;
+  padding-bottom: 14px;
+}
+
+#methodHelpModal .mh-intro {
+  margin: 0 1px;
+  font-size: 12.5px;
+  line-height: 18px;
+  color: var(--rh-text);
+}
+
+#methodHelpModal .rh-bullets {
+  padding: 9px 11px 9px 12px;
 }
 
 /* ---------- Pagination: the shared .pagination bar (common.css, 2.8 look
@@ -680,4 +692,305 @@
 
 .rh-status.is-invalid::before {
   content: '\00D7';
+}
+
+/* ---------- Test pattern (helpers/pattern-tester.js) ---------- */
+.pt-body {
+  gap: 10px;
+}
+
+/* The pattern: one line of text, wrapped so a long regex is shown whole */
+.pt-input {
+  display: block;
+  width: 100%;
+  min-height: 32px;
+  padding: 6px 9px;
+  resize: none;
+  overflow: hidden;
+  background: var(--rh-field-bg);
+  border: 1px solid var(--rh-border);
+  border-radius: 6px;
+  color: var(--rh-text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 18px;
+  word-break: break-all;
+  outline: none;
+  box-shadow: none;
+}
+
+.pt-input:hover:not(:focus) {
+  border-color: var(--rh-border-hover);
+}
+
+.pt-input:focus {
+  border-color: var(--accent);
+}
+
+.pt-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pt-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  background: var(--rh-field-bg);
+  border: 1px solid var(--rh-border);
+  border-radius: 999px;
+  color: var(--rh-text-dim);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+
+/* A check box drawn in the chip: the state is shown by shape, not colour only */
+.pt-option::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border: 1.5px solid currentColor;
+  border-radius: 3px;
+}
+
+.pt-option:hover {
+  border-color: var(--rh-border-hover);
+  color: var(--rh-text);
+}
+
+.pt-option[aria-pressed="true"] {
+  background: rgba(59, 130, 246, 0.16);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.pt-option[aria-pressed="true"]::before {
+  background: var(--accent-light) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath d='M1.3 4.2l1.8 1.8 3.6-3.9' fill='none' stroke='%23111827' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 8px no-repeat;
+  border-color: var(--accent-light);
+}
+
+.pt-option[hidden] {
+  display: none;
+}
+
+.pt-option:focus-visible,
+.pt-link:focus-visible,
+.pt-cheat summary:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 1px;
+}
+
+.pt-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pt-notes:empty {
+  display: none;
+}
+
+.pt-note {
+  margin: 0;
+  padding: 6px 9px;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 6px;
+  background: rgba(59, 130, 246, 0.08);
+  font-size: 11.5px;
+  line-height: 15px;
+  color: var(--rh-text-dim);
+  overflow-wrap: anywhere;
+}
+
+.pt-note.tone-warning {
+  border-color: rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.08);
+  color: #fcd34d;
+}
+
+.pt-note.tone-danger {
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.08);
+  color: #fca5a5;
+}
+
+.pt-link {
+  flex-shrink: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--accent-light);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.pt-link:hover {
+  text-decoration: underline;
+}
+
+.pt-samples {
+  display: block;
+  width: 100%;
+  min-height: 76px;
+  padding: 7px 9px;
+  resize: vertical;
+  background: var(--rh-field-bg);
+  border: 1px solid var(--rh-border);
+  border-radius: 6px;
+  color: var(--rh-text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 17px;
+  outline: none;
+  box-shadow: none;
+}
+
+.pt-samples::placeholder {
+  font-family: var(--font-sans);
+  color: var(--rh-text-muted);
+}
+
+.pt-samples:hover:not(:focus) {
+  border-color: var(--rh-border-hover);
+}
+
+.pt-samples:focus {
+  border-color: var(--accent);
+}
+
+.pt-results {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pt-result {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  padding: 5px 8px;
+  background: var(--rh-card-bg);
+  border: 1px solid var(--rh-border);
+  border-radius: 6px;
+}
+
+.pt-result .rh-chip {
+  margin-top: 1px;
+}
+
+.pt-result.is-empty {
+  display: block;
+  background: none;
+  border-style: dashed;
+  font-size: 11.5px;
+  line-height: 15px;
+  color: var(--rh-text-muted);
+}
+
+.rh-modal code.pt-sample {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--rh-text);
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+
+.pt-sample mark {
+  padding: 0 1px;
+  border-radius: 3px;
+  background: rgba(16, 185, 129, 0.28);
+  color: #ffffff;
+}
+
+.pt-cheat {
+  padding: 0 11px;
+  background: var(--rh-card-bg);
+  border: 1px solid var(--rh-border);
+  border-radius: 8px;
+}
+
+.pt-cheat summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+  list-style: none;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--rh-text-dim);
+  cursor: pointer;
+}
+
+.pt-cheat summary::-webkit-details-marker {
+  display: none;
+}
+
+.pt-cheat summary::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+
+.pt-cheat[open] summary::before {
+  transform: rotate(45deg);
+}
+
+.pt-cheat .rh-ref {
+  margin-bottom: 8px;
+}
+
+.pt-cheat-note {
+  margin: 0 0 10px;
+  font-size: 11px;
+  line-height: 15px;
+  color: var(--rh-text-muted);
+}
+
+/* ---------- DOM and Window helpers: one-line rows, so a page holds 6+ ---------- */
+#domHelperModal .rh-row,
+#windowHelperModal .rh-row {
+  min-height: 32px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#domHelperModal .rh-row-main,
+#windowHelperModal .rh-row-main {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 8px;
+}
+
+#domHelperModal .rh-row-value,
+#windowHelperModal .rh-row-value {
+  flex: 0 1 auto;
+  max-width: 64%;
+}
+
+#domHelperModal .rh-row-desc,
+#windowHelperModal .rh-row-desc {
+  flex: 1 1 auto;
+  min-width: 0;
 }

@@ -150,17 +150,6 @@ Rules.prototype.getWindowPropertyCatalog = function() {
 };
 
 // ============================================
-// Condition helper (kept entry point): opens the property helper with the
-// item's current property preselected and focuses the condition picker.
-// ============================================
-
-Rules.prototype.openConditionHelperModal = function(methodItem, inputIndex) {
-  this.openWindowHelperModal(methodItem, inputIndex);
-  const select = document.querySelector('#windowConditionSelect');
-  if (select && this._windowHelperState?.property) select.focus();
-};
-
-// ============================================
 // Window Helper Modal
 // ============================================
 

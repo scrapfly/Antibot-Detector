@@ -1,7 +1,6 @@
 /**
  * RuleHelperKit - the shared building blocks of every rule helper modal
- * (window property, DOM selector, regex, whole word, case sensitive and the
- * "What is ...?" explanations).
+ * (window property, DOM selector, Test pattern and the method help).
  *
  * Every helper is one compact screen: a pinned search bar, a list of compact
  * rows (mono value + short description + outlined chip), paginated with the

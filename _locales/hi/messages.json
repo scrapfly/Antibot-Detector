@@ -880,9 +880,6 @@
   "textWordMatching": {
     "message": "टेक्स्ट/शब्द मिलान"
   },
-  "domSelectorMatching": {
-    "message": "DOM सेलेक्टर मिलान"
-  },
   "payloadTextMatching": {
     "message": "पेलोड टेक्स्ट मिलान"
   },
@@ -1606,114 +1603,6 @@
   "notifLoadingDefault": {
     "message": "लोड हो रहा है..."
   },
-  "helpJsHooksTitle": {
-    "message": "JavaScript हुक्स डिटेक्शन"
-  },
-  "helpJsHooksDescription": {
-    "message": "हुक्स ब्राउज़र API कॉल्स (Canvas, Audio, WebGL, आदि) को इंटरसेप्ट करते हैं ताकि पेज द्वारा उन APIs को एक्सेस करते समय एंटी-बॉट फ़िंगरप्रिंटिंग कोड को रीयल-टाइम में डिटेक्ट किया जा सके।"
-  },
-  "helpJsHooksWarning": {
-    "message": "हुक्स को किसी भी पेज स्क्रिप्ट के चलने से पहले document_start पर इंस्टॉल होना चाहिए — अन्यथा पेज हमारे शिम के मौजूद होने से पहले मूल APIs के संदर्भ सहेज सकता है।"
-  },
-  "helpJsHooksTip": {
-    "message": "Canvas फ़िंगरप्रिंटिंग डिटेक्ट करने के लिए CanvasRenderingContext2D.prototype.getImageData जैसा टारगेट जोड़ें।"
-  },
-  "helpWindowTitle": {
-    "message": "विंडो प्रॉपर्टीज़ डिटेक्शन"
-  },
-  "helpWindowDescription": {
-    "message": "एंटी-बॉट स्क्रिप्ट्स द्वारा विंडो ग्लोबल में जोड़े गए JavaScript ऑब्जेक्ट्स और प्रॉपर्टीज़ डिटेक्ट करता है।"
-  },
-  "helpWindowWarning": {
-    "message": "कुछ एंटी-बॉट स्क्रिप्ट्स Symbol() कीज़ का उपयोग करती हैं जो enumerable नहीं होतीं — उन्हें डिटेक्ट करना कठिन है।"
-  },
-  "helpWindowTip": {
-    "message": "प्रॉपर्टी प्रकार के साथ मिलान करने के लिए typeof object या exists जैसी शर्तों का उपयोग करें।"
-  },
-  "helpUrlTitle": {
-    "message": "URL पैटर्न डिटेक्शन"
-  },
-  "helpUrlDescription": {
-    "message": "लोड किए गए संसाधनों (स्क्रिप्ट, इमेज, नेटवर्क रिक्वेस्ट) के URL को पैटर्न के साथ मिलाता है।"
-  },
-  "helpUrlWarning": {
-    "message": "जब तक आप \"केस संवेदी\" चालू नहीं करते, पैटर्न बड़े और छोटे अक्षरों में फ़र्क नहीं करते। बहुत सामान्य पैटर्न असंबंधित संसाधनों से भी मेल खाता है, इसलिए उसे सटीक रखें।"
-  },
-  "helpUrlTip": {
-    "message": "/\\/v\\d+\\/challenge/ जैसे उन्नत पैटर्न के लिए Regex विकल्प का उपयोग करें।"
-  },
-  "helpHeaderTitle": {
-    "message": "HTTP हेडर डिटेक्शन"
-  },
-  "helpHeaderDescription": {
-    "message": "एंटी-बॉट मिडलवेयर द्वारा सेट किए गए HTTP रिक्वेस्ट और रिस्पॉन्स हेडर डिटेक्ट करता है।"
-  },
-  "helpHeaderWarning": {
-    "message": "कुछ हेडर केवल आरंभिक रिक्वेस्ट पर ही मौजूद होते हैं — सुनिश्चित करें कि आपके स्कोप में रिक्वेस्ट शामिल है।"
-  },
-  "helpHeaderTip": {
-    "message": "सामान्य टारगेट: x-akamai-bot-manager-token, cf-ray, x-shape-version।"
-  },
-  "helpCookieTitle": {
-    "message": "कुकी डिटेक्शन"
-  },
-  "helpCookieDescription": {
-    "message": "एंटी-बॉट चैलेंजों द्वारा सेट की गई कुकीज़ डिटेक्ट करता है। कुकी नाम (और वैकल्पिक रूप से मान पैटर्न) के साथ मिलान करता है।"
-  },
-  "helpCookieWarning": {
-    "message": "रैंडम सफ़िक्स वाली कुकी नामों (जैसे _abck-xyz123) के लिए लिटरल नाम नहीं बल्कि regex पैटर्न की ज़रूरत होती है।"
-  },
-  "helpCookieTip": {
-    "message": "सटीक-नाम मिलान के लिए पूरा शब्द, या ^datadome- जैसे प्रीफ़िक्स पैटर्न के लिए Regex का उपयोग करें।"
-  },
-  "helpContentTitle": {
-    "message": "पेज सामग्री डिटेक्शन"
-  },
-  "helpContentDescription": {
-    "message": "पेज HTML और इनलाइन स्क्रिप्ट टैग के अंदर टेक्स्ट पैटर्न खोजता है।"
-  },
-  "helpContentWarning": {
-    "message": "बड़े पेजों पर पूर्ण-पेज स्कैनिंग धीमी हो सकती है। यदि सिग्नेचर JS कोड में है तो केवल स्क्रिप्ट जाँचें तक सीमित करें।"
-  },
-  "helpContentTip": {
-    "message": "बड़े शब्दों के अंदर सबस्ट्रिंग से होने वाले फॉल्स पॉज़िटिव से बचने के लिए पूरा शब्द का उपयोग करें।"
-  },
-  "helpDomTitle": {
-    "message": "DOM सेलेक्टर डिटेक्शन"
-  },
-  "helpDomDescription": {
-    "message": "CSS सेलेक्टर का उपयोग करके HTML एलिमेंट्स डिटेक्ट करता है। DOM में मिलान करने वाला एलिमेंट मौजूद होने पर ट्रिगर होता है।"
-  },
-  "helpDomWarning": {
-    "message": "सेलेक्टर केवल वास्तविक DOM में रेंडर किए गए एलिमेंट्स से मिलान करते हैं — iframes या shadow roots के अंदर वालों से नहीं।"
-  },
-  "helpDomTip": {
-    "message": "फॉल्स पॉज़िटिव कम करने के लिए सामान्य सेलेक्टरों के बजाय div#cf-challenge[data-ray] जैसे विशिष्ट सेलेक्टरों का उपयोग करें।"
-  },
-  "helpPayloadTitle": {
-    "message": "रिक्वेस्ट पेलोड डिटेक्शन"
-  },
-  "helpPayloadDescription": {
-    "message": "टेक्स्ट पैटर्न के लिए सभी HTTP POST/PUT/PATCH रिक्वेस्ट बॉडी की निगरानी करता है।"
-  },
-  "helpPayloadWarning": {
-    "message": "पेलोड निगरानी केवल उन रिक्वेस्ट्स के लिए काम करती है जिन्हें हमारा एक्सटेंशन इंटरसेप्ट कर सकता है (कोई एन्क्रिप्टेड बॉडी नहीं, कोई अपारदर्शी ब्लॉब नहीं)।"
-  },
-  "helpPayloadTip": {
-    "message": "विशिष्ट एंडपॉइंट्स तक मिलान सीमित करने के लिए URL पैटर्न के साथ संयोजित करें।"
-  },
-  "helpWarningLabel": {
-    "message": "चेतावनी:"
-  },
-  "helpTipLabel": {
-    "message": "सुझाव:"
-  },
-  "detectionMethodTitle": {
-    "message": "डिटेक्शन विधि"
-  },
-  "noHelpContentAvailable": {
-    "message": "इस विधि प्रकार के लिए कोई सहायता सामग्री उपलब्ध नहीं है।"
-  },
   "advNoCapturesHintFmt": {
     "message": "{0} डेटा कैप्चर करना शुरू करने के लिए ऊपर \"कैप्चरिंग शुरू करें\" पर क्लिक करें"
   },
@@ -2044,12 +1933,6 @@
   "rhSearchDom": {
     "message": "सेलेक्टर खोजें, जैसे captcha, iframe"
   },
-  "rhSearchRegex": {
-    "message": "मिलान करने वाला टेक्स्ट, जैसे bm_ या token"
-  },
-  "rhSearchSample": {
-    "message": "परीक्षण के लिए मान लिखें"
-  },
   "rhCondition": {
     "message": "शर्त"
   },
@@ -2173,9 +2056,6 @@
   "rhCondFalse": {
     "message": "false है"
   },
-  "rhWindowIntro": {
-    "message": "पेज पर एक JavaScript ग्लोबल (window.…) जाँचता है। एक चुनें, फिर चुनें कि वह क्या होना चाहिए।"
-  },
   "rhWindowSentenceFmt": {
     "message": "उन पेजों से मेल खाता है जहाँ {0} {1}"
   },
@@ -2215,45 +2095,6 @@
   "rhDomCamel": {
     "message": "camelCase क्लास"
   },
-  "rhRegexTitle": {
-    "message": "Regex सहायक"
-  },
-  "rhUsePattern": {
-    "message": "पैटर्न उपयोग करें"
-  },
-  "rhRegexStartsFmt": {
-    "message": "“{0}” से शुरू होता है"
-  },
-  "rhRegexEndsFmt": {
-    "message": "“{0}” पर खत्म होता है"
-  },
-  "rhRegexContainsFmt": {
-    "message": "कहीं भी “{0}” शामिल है"
-  },
-  "rhRegexWordFmt": {
-    "message": "पूरा शब्द “{0}”"
-  },
-  "rhRegexOrFmt": {
-    "message": "“{0}” या कोई अन्य विकल्प"
-  },
-  "rhRegexStartsMoreFmt": {
-    "message": "“{0}” से शुरू और आगे और टेक्स्ट"
-  },
-  "rhRegexEitherFmt": {
-    "message": "“{0}” या “{1}”"
-  },
-  "rhExamplesForFmt": {
-    "message": "“{0}” के उदाहरण"
-  },
-  "rhExamples": {
-    "message": "उदाहरण"
-  },
-  "rhHowMatchesFmt": {
-    "message": "“{0}” कैसे मिलान होता है"
-  },
-  "rhQuickRef": {
-    "message": "त्वरित संदर्भ"
-  },
   "rhRefAny": {
     "message": "कोई भी अक्षर"
   },
@@ -2290,74 +2131,299 @@
   "rhNoMatch": {
     "message": "मिलान नहीं"
   },
-  "rhWwIntro": {
-    "message": "केवल तब मिलान होता है जब टेक्स्ट अकेला हो, किसी लंबे शब्द का हिस्सा न हो।"
+  "ptTitle": {
+    "message": "पैटर्न जाँचें"
   },
-  "rhWwExact": {
-    "message": "सटीक शब्द"
+  "ptTitleFmt": {
+    "message": "पैटर्न जाँचें · {0}"
   },
-  "rhWwJoinedBefore": {
-    "message": "पहले वाले टेक्स्ट से जुड़ा"
+  "ptKindUrl": {
+    "message": "URL"
   },
-  "rhWwJoinedAfter": {
-    "message": "बाद वाले टेक्स्ट से जुड़ा"
+  "ptKindContent": {
+    "message": "पेज की सामग्री"
   },
-  "rhWwSpaces": {
-    "message": "स्पेस से अलग"
+  "ptKindCookieName": {
+    "message": "कुकी का नाम"
   },
-  "rhCsIntro": {
-    "message": "चालू होने पर बड़े और छोटे अक्षर अलग माने जाते हैं।"
+  "ptKindCookieValue": {
+    "message": "कुकी का मान"
   },
-  "rhCsOnTitle": {
-    "message": "केस सेंसिटिव चालू होने पर"
+  "ptKindHeaderName": {
+    "message": "हेडर का नाम"
   },
-  "rhCsOffTitle": {
-    "message": "केस सेंसिटिव बंद होने पर"
+  "ptKindHeaderValue": {
+    "message": "हेडर का मान"
   },
-  "rhWhatIsRegex": {
-    "message": "रेगुलर एक्सप्रेशन क्या है?"
+  "ptKindPayloadText": {
+    "message": "रिक्वेस्ट बॉडी"
   },
-  "rhWhatIsWholeWord": {
-    "message": "“पूरा शब्द” क्या है?"
+  "ptKindPayloadUrl": {
+    "message": "रिक्वेस्ट URL"
   },
-  "rhWhatIsCase": {
-    "message": "“केस सेंसिटिव” क्या है?"
+  "ptPatternLabel": {
+    "message": "पैटर्न"
   },
-  "rhRegexIntro": {
-    "message": "रेगुलर एक्सप्रेशन (regex) सटीक अक्षरों के बजाय पैटर्न से टेक्स्ट मिलाता है।"
+  "ptOptionsLabel": {
+    "message": "मिलान विकल्प"
   },
-  "rhWhenToUse": {
-    "message": "कब उपयोग करें"
+  "ptOptRegex": {
+    "message": "Regex"
   },
-  "rhRegexUse1": {
-    "message": "ऐसा टेक्स्ट जो किसी खास चीज़ से शुरू या खत्म हो"
+  "ptTryOn": {
+    "message": "इस पर आज़माएँ"
   },
-  "rhRegexUse2": {
-    "message": "एक साथ कई रूप (| के साथ)"
+  "ptExamplesBtn": {
+    "message": "उदाहरण"
   },
-  "rhRegexUse3": {
-    "message": "संख्याएँ या खास तरह के अक्षर"
+  "ptSamplesPlaceholder": {
+    "message": "हर पंक्ति में एक: कोई URL, कोई कुकी नाम…"
   },
-  "rhRegexTip": {
-    "message": "सटीक टेक्स्ट के लिए regex की ज़रूरत नहीं: “पूरा शब्द” का उपयोग करें।"
+  "ptNoSamples": {
+    "message": "ऊपर टेक्स्ट लिखें या चिपकाएँ, हर पंक्ति में एक, ताकि दिखे कि वह मेल खाता है या नहीं।"
   },
-  "rhBestFor": {
-    "message": "इसके लिए सबसे अच्छा"
+  "ptCheatTitle": {
+    "message": "Regex संक्षिप्त गाइड"
   },
-  "rhWwUse1": {
-    "message": "सटीक कुकी नाम"
+  "ptCheatNote": {
+    "message": "पैटर्न के आसपास / लगाए बिना लिखें। दोहराव के भीतर दोहराव, जैसे (a+)+, अस्वीकार किया जाता है क्योंकि इससे पेज अटक सकते हैं।"
   },
-  "rhWwUse2": {
-    "message": "खास हेडर नाम"
+  "ptApply": {
+    "message": "लागू करें"
   },
-  "rhWwUse3": {
-    "message": "पूरे क्लास या फ़ंक्शन नाम"
+  "ptTestBtn": {
+    "message": "जाँचें"
   },
-  "rhCsUse1": {
-    "message": "सटीक केस वाले हेडर और कुकी"
+  "ptTestTitle": {
+    "message": "पैटर्न को उदाहरण टेक्स्ट पर आज़माएँ"
   },
-  "rhCsUse2": {
-    "message": "JavaScript प्रॉपर्टी नाम"
+  "ptNoPattern": {
+    "message": "अभी कोई पैटर्न नहीं"
+  },
+  "ptHintRegex": {
+    "message": "^bm_ या \\d+ जैसा पैटर्न, आसपास / के बिना"
+  },
+  "ptHintWholeWord": {
+    "message": "लंबे शब्द के भीतर के मिलान छोड़ देता है: _abck हाँ, test_abck नहीं"
+  },
+  "ptHintCase": {
+    "message": "Akamai अब akamai से मेल नहीं खाता"
+  },
+  "ptSaysEmpty": {
+    "message": "पैटर्न लिखें, ताकि दिखे कि वह किससे मेल खाता है।"
+  },
+  "ptSaysRegex": {
+    "message": "उस टेक्स्ट से मेल खाता है जिसमें regex को मिलान मिलता है।"
+  },
+  "ptSaysWordFmt": {
+    "message": "“{0}” से पूरे शब्द के रूप में मेल खाता है, किसी लंबे शब्द के भीतर नहीं।"
+  },
+  "ptSaysWildcardFmt": {
+    "message": "“{0}” जैसे नामों से मेल खाता है, जहाँ * का अर्थ कोई भी टेक्स्ट है।"
+  },
+  "ptSaysPrefixFmt": {
+    "message": "उन नामों से मेल खाता है जो “{0}” से शुरू होते हैं।"
+  },
+  "ptSaysContainsFmt": {
+    "message": "उस टेक्स्ट से मेल खाता है जिसमें “{0}” हो।"
+  },
+  "ptCaseExact": {
+    "message": "बड़े और छोटे अक्षर ठीक-ठीक मेल खाने चाहिए।"
+  },
+  "ptCaseIgnored": {
+    "message": "बड़े और छोटे अक्षर एक जैसे माने जाते हैं।"
+  },
+  "ptNoteInvalidFmt": {
+    "message": "यह regex मान्य नहीं है, इसलिए कभी मेल नहीं खाता: {0}"
+  },
+  "ptNoteRejected": {
+    "message": "डिटेक्शन इस regex को अस्वीकार करता है क्योंकि इससे पेज अटक सकते हैं (दोहराव के भीतर दोहराव, या 1000 से अधिक अक्षर), इसलिए यह कभी मेल नहीं खाता।"
+  },
+  "ptNoteSlashes": {
+    "message": "दोनों सिरों के / हटाएँ: उन्हें टेक्स्ट के हिस्से के रूप में खोजा जाता है।"
+  },
+  "ptNoteLooksRegex": {
+    "message": "यह regex जैसा दिखता है: Regex चालू करें, वरना इसके चिह्न सामान्य टेक्स्ट की तरह खोजे जाते हैं।"
+  },
+  "ptNoteWordIgnored": {
+    "message": "Regex चालू रहने तक पूरा शब्द लागू नहीं होता।"
+  },
+  "ptNoteHeaderCase": {
+    "message": "हेडर के नाम छोटे अक्षरों में सहेजे जाते हैं, इसलिए केस संवेदी चालू होने पर यह पैटर्न कभी मेल नहीं खाता।"
+  },
+  "ptNoteWordEdges": {
+    "message": "यह पैटर्न किसी चिह्न से शुरू या खत्म होता है, इसलिए पूरा शब्द के लिए उस चिह्न के ठीक बगल में कोई अक्षर, अंक या _ चाहिए।"
+  },
+  "rhRefDot": {
+    "message": "असली बिंदु"
+  },
+  "rhRefSet": {
+    "message": "a, b, c में से एक"
+  },
+  "rhRefCount": {
+    "message": "2 से 5 बार"
+  },
+  "mhExamplesTitle": {
+    "message": "Scrapfly के नियमों में"
+  },
+  "mhHowTitle": {
+    "message": "मिलान कैसे होता है"
+  },
+  "mhWriteTitle": {
+    "message": "आप क्या लिख सकते हैं"
+  },
+  "mhLimitsTitle": {
+    "message": "जानने योग्य बातें"
+  },
+  "mhUrlIntro": {
+    "message": "पेज का पता और पेज जिन URL का अनुरोध करता है, उन्हें जाँचता है: स्क्रिप्ट, XHR और fetch कॉल, इमेज, फ़्रेम और पिंग।"
+  },
+  "mhUrlHow1": {
+    "message": "Regex के बिना, URL में टेक्स्ट होना चाहिए, केस की परवाह किए बिना। पूरा URL गिना जाता है, क्वेरी स्ट्रिंग सहित।"
+  },
+  "mhUrlHow2": {
+    "message": "Regex के साथ, दोनों सिरों के / हटाएँ और बिंदु को `\\.` लिखें, जैसे `^https://js\\.example\\.com/`।"
+  },
+  "mhUrlHow3": {
+    "message": "URL स्कोप: पेज केवल पेज का पता जाँचता है, स्क्रिप्ट स्क्रिप्ट के स्रोत भी जोड़ता है, सभी (डिफ़ॉल्ट) हर अनुरोध जोड़ता है।"
+  },
+  "mhUrlLimit1": {
+    "message": "फ़ॉन्ट, मीडिया और स्टाइलशीट के अनुरोध रिकॉर्ड नहीं होते।"
+  },
+  "mhUrlLimit2": {
+    "message": "केवल स्कैन से पहले किए गए अनुरोध गिने जाते हैं; स्कैन पेज लोड होने के बाद चलता है।"
+  },
+  "mhHeaderIntro": {
+    "message": "पेज के अपने अनुरोध और रिस्पॉन्स के हेडर जाँचता है, स्क्रिप्ट, XHR कॉल या फ़्रेम के नहीं।"
+  },
+  "mhHeaderHow1": {
+    "message": "हेडर के नाम छोटे अक्षरों में तुलना किए जाते हैं, और सामान्य टेक्स्ट का अर्थ “शामिल है” है: `server` भी `server-timing` से मेल खाता है। सटीक नाम के लिए Regex `^server$` उपयोग करें।"
+  },
+  "mhHeaderHow2": {
+    "message": "मान उसी नाम वाले हेडर पर जाँचा जाता है; कोई भी मान स्वीकार करने के लिए उसे खाली छोड़ें।"
+  },
+  "mhHeaderHow3": {
+    "message": "रिस्पॉन्स स्कोप (डिफ़ॉल्ट) यानी साइट द्वारा भेजे गए हेडर; रिक्वेस्ट यानी ब्राउज़र द्वारा भेजे गए हेडर।"
+  },
+  "mhHeaderLimit1": {
+    "message": "केस संवेदी चालू होने पर हेडर के नाम छोटे अक्षरों में लिखें।"
+  },
+  "mhHeaderLimit2": {
+    "message": "बिना रीलोड के पता बदलने वाले पेज बिना हेडर के फिर से स्कैन होते हैं।"
+  },
+  "mhCookieIntro": {
+    "message": "पेज की कुकी को नाम से और ज़रूरत हो तो मान से जाँचता है, HttpOnly और Secure कुकी सहित।"
+  },
+  "mhCookieHow1": {
+    "message": "सामान्य नाम उपसर्ग के रूप में मेल खाता है: `_abck` भी `_abck_2` से मेल खाता है।"
+  },
+  "mhCookieHow2": {
+    "message": "`*` का अर्थ कोई भी टेक्स्ट है: `bm_*` `bm_sz` और `bm_sv` से मेल खाता है।"
+  },
+  "mhCookieHow3": {
+    "message": "सटीक नाम के लिए Regex चालू करें और `^name$` लिखें। मान तब मेल खाता है जब उसमें टेक्स्ट हो।"
+  },
+  "mhCookieLimit1": {
+    "message": "रिक्वेस्ट स्कोप (डिफ़ॉल्ट) पेज के लिए ब्राउज़र की कुकी पढ़ता है; रिस्पॉन्स वे कुकी पढ़ता है जिन्हें पेज का रिस्पॉन्स सेट करता है।"
+  },
+  "mhCookieLimit2": {
+    "message": "दूसरी साइटों की कुकी, जैसे किसी विक्रेता के फ़्रेम की, नहीं दिखतीं। लंबे मान 100 अक्षरों पर काट दिए जाते हैं।"
+  },
+  "mhContentIntro": {
+    "message": "पेज के टेक्स्ट में खोजता है: उसके body का HTML, इनलाइन स्क्रिप्ट, और उसके द्वारा लोड की गई स्क्रिप्ट व स्टाइलशीट फ़ाइलें।"
+  },
+  "mhContentHow1": {
+    "message": "सामान्य टेक्स्ट तब मेल खाता है जब वह टेक्स्ट में हो, केस की परवाह किए बिना।"
+  },
+  "mhContentHow2": {
+    "message": "पूरा शब्द लंबे शब्द के भीतर के मिलान छोड़ देता है; पैटर्न के दोनों सिरों पर कोई अक्षर, अंक या _ चाहिए।"
+  },
+  "mhContentHow3": {
+    "message": "“केवल स्क्रिप्ट जाँचें” केवल इनलाइन स्क्रिप्ट (head सहित) और JavaScript फ़ाइलों में खोजता है, HTML या CSS में नहीं।"
+  },
+  "mhContentLimit1": {
+    "message": "जिन फ़ाइलों को साइट दूसरे ऑरिजिन को पढ़ने नहीं देती (CORS), या जो 5 MB से बड़ी हैं, वे छोड़ दी जाती हैं।"
+  },
+  "mhContentLimit2": {
+    "message": "फ़्रेम या वर्कर के भीतर का कोड, या स्कैन के बाद लोड हुआ कोड, नहीं खोजा जाता।"
+  },
+  "mhDomIntro": {
+    "message": "पेज लोड होने के बाद CSS सिलेक्टर से पेज के body में कोई एलिमेंट खोजता है।"
+  },
+  "mhDomHow1": {
+    "message": "कोई टैग, `.class`, `#id` या `[attribute]`, अकेले या मिलाकर: `.g-recaptcha[data-sitekey]`।"
+  },
+  "mhDomHow2": {
+    "message": "ऐट्रिब्यूट जाँच `=`, `^=`, `$=`, `*=`, `~=` और `|=`; केस अनदेखा करने के लिए `]` से पहले ` i` जोड़ें।"
+  },
+  "mhDomHow3": {
+    "message": "कॉमा से अलग किए गए कई सिलेक्टर: इनमें से कोई भी मेल खाए तो काफ़ी है।"
+  },
+  "mhDomLimit1": {
+    "message": "समर्थित नहीं, इसलिए नियम कभी मेल नहीं खाता: हिस्सों के बीच स्पेस या `>`, `:pseudo-classes` और एस्केप।"
+  },
+  "mhDomLimit2": {
+    "message": "head, फ़्रेम और shadow root में नहीं खोजा जाता। `value` ऐट्रिब्यूट नहीं पढ़ा जाता; बाकी ऐट्रिब्यूट उनके पहले 100 अक्षरों पर तुलना किए जाते हैं।"
+  },
+  "mhWindowIntro": {
+    "message": "पेज द्वारा परिभाषित JavaScript ग्लोबल जाँचता है, जैसे `grecaptcha.render`।"
+  },
+  "mhWindowHow1": {
+    "message": "`window` से, बिंदुओं से अलग किया गया पथ: `KPSDK` या `grecaptcha.render`।"
+  },
+  "mhWindowHow2": {
+    "message": "कोई शर्त, जैसे `exists`, `typeof function`, `truthy`, `=== true`, `length > 0` या `has keys`। खाली का अर्थ truthy है।"
+  },
+  "mhWindowHow3": {
+    "message": "जिस शर्त को डिटेक्शन नहीं समझता, वह कभी मेल नहीं खाती, इसलिए सूची से चुनें।"
+  },
+  "mhWindowLimit1": {
+    "message": "पेज लोड होने के बाद पहले कुछ सेकंड जाँचा जाता है; बाद में बने ग्लोबल छूट जाते हैं।"
+  },
+  "mhWindowLimit2": {
+    "message": "Symbol नाम वाली प्रॉपर्टी को पथ के रूप में नहीं लिखा जा सकता।"
+  },
+  "mhJsHooksOnlyFingerprint": {
+    "message": "हुक केवल फ़िंगरप्रिंट नियम उपयोग करते हैं: एंटी-बॉट और Captcha नियम उन्हें अनदेखा करते हैं।"
+  },
+  "mhJsHooksIntro": {
+    "message": "रिकॉर्ड करता है कि पेज कब कोई ब्राउज़र API कॉल करता है, जैसे `HTMLCanvasElement.prototype.toDataURL`, जो फ़िंगरप्रिंटिंग का संकेत है।"
+  },
+  "mhJsHooksHow1": {
+    "message": "किसी मेथड या getter का पूरा पथ: `Navigator.prototype.webdriver`, न कि `navigator.webdriver`।"
+  },
+  "mhJsHooksHow2": {
+    "message": "हर कॉल गिनी जाती है; उसके आर्ग्युमेंट और नतीजे नहीं जाँचे जाते, इसलिए हुक दिखाता है कि API उपयोग हुआ, यह नहीं कि क्यों।"
+  },
+  "mhJsHooksLimit1": {
+    "message": "पेज लोड होने के बाद पहले कुछ सेकंड (अधिकतम 8 सेकंड) की कॉल गिनी जाती हैं।"
+  },
+  "mhJsHooksLimit2": {
+    "message": "वर्कर या फ़्रेम के भीतर की कॉल नहीं दिखतीं, सिवाय उसी साइट के फ़्रेम में बिल्ट-इन लक्ष्यों के।"
+  },
+  "mhPayloadIntro": {
+    "message": "पेज द्वारा किसी भी फ़्रेम से भेजे गए POST, PUT, PATCH और DELETE अनुरोधों की बॉडी में खोजता है।"
+  },
+  "mhPayloadHow1": {
+    "message": "सामान्य टेक्स्ट तब मेल खाता है जब वह बॉडी में हो, केस की परवाह किए बिना। फ़ॉर्म डेटा `name=value&…` के रूप में पढ़ा जाता है।"
+  },
+  "mhPayloadHow2": {
+    "message": "रिक्वेस्ट URL (वैकल्पिक) और HTTP मेथड इसे मेल खाने वाले अनुरोधों तक सीमित करते हैं।"
+  },
+  "mhPayloadLimit1": {
+    "message": "केवल स्कैन से पहले भेजे गए अनुरोध गिने जाते हैं, प्रति पेज अधिकतम 50।"
+  },
+  "mhPayloadLimit2": {
+    "message": "WebSocket संदेश नहीं पढ़े जाते।"
+  },
+  "domCardTitle": {
+    "message": "CSS सिलेक्टर"
+  },
+  "domCardBrowse": {
+    "message": "ब्राउज़ करें"
+  },
+  "domCardHint": {
+    "message": "कोई टैग, .class, #id या [attribute] जाँच, अकेले या मिलाकर। हिस्सों के बीच स्पेस या > समर्थित नहीं हैं।"
   },
   "settingsApiEventsDesc": {
     "message": "एक्सटेंशन पेज पर भेजे जाने वाले इवेंट"
@@ -3410,7 +3476,7 @@
     "message": "URL पैटर्न"
   },
   "rulesUiJsHookTargetPlaceholder": {
-    "message": "JS हुक लक्ष्य (जैसे navigator.webdriver)"
+    "message": "JS हुक लक्ष्य (जैसे Navigator.prototype.webdriver)"
   },
   "rulesUiWindowPathPlaceholder": {
     "message": "window पथ (जैसे grecaptcha, _cf_chl_opt)"
@@ -3468,24 +3534,6 @@
   },
   "rulesUiLeaveEmptyAnyUrl": {
     "message": "किसी भी URL से मिलान के लिए खाली छोड़ें"
-  },
-  "ruleExampleMatches": {
-    "message": "✓ मिलान:"
-  },
-  "ruleExampleWont": {
-    "message": "× नहीं:"
-  },
-  "ruleExampleWontMatch": {
-    "message": "× मिलान नहीं:"
-  },
-  "ruleExampleLiteralTextOnly": {
-    "message": "केवल शाब्दिक टेक्स्ट"
-  },
-  "ruleExampleExactCase": {
-    "message": "(सटीक केस)"
-  },
-  "ruleExampleAlone": {
-    "message": "(अकेले)"
   },
   "ruleConditionGroupOther": {
     "message": "अन्य"

@@ -433,8 +433,9 @@
             <div class="setting-option payload-url-pattern-option">
               <div class="option-content">
                 <span class="setting-label" data-i18n="rulesUrlPatternOptional">URL Pattern (optional)</span>
-                <div class="option-examples" data-i18n="rulesUiLeaveEmptyAnyUrl">Leave empty to match any URL</div>
+                <p class="option-hint" data-i18n="rulesUiLeaveEmptyAnyUrl">Leave empty to match any URL</p>
               </div>
+              <button type="button" class="ms-test-btn" data-pattern-test="payloadUrl" title="Try the pattern on sample text" data-i18n-title="ptTestTitle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2v7.31L4.5 18A2 2 0 0 0 6.27 21h11.46a2 2 0 0 0 1.77-3L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg><span data-i18n="ptTestBtn">Test</span></button>
             </div>
             <input
               type="text"
@@ -442,21 +443,15 @@
               class="method-input payload-url-input"
               placeholder="/api/verify or challenge.php"
               data-i18n-placeholder="rulesUiPayloadUrlPlaceholder"
+              dir="ltr"
             >
+            <p class="ms-pattern-says" data-pattern-says="payloadUrl" role="status" dir="auto"></p>
 
             <!-- URL Regex Toggle -->
             <div class="setting-option">
               <div class="option-content">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span class="setting-label" data-i18n="rulesUrlRegex">URL Regular Expression (Regex)</span>
-                  <button id="payloadUrlRegexHelperBtn" class="regex-helper-btn" title="Regex helper" data-i18n-title="rhRegexTitle">?</button>
-                  <button id="payloadUrlRegexExplanationBtn" class="explanation-helper-btn" title="What is a regular expression?" data-i18n-title="rhWhatIsRegex"><svg class="explanation-helper-icon" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><circle cx="8" cy="3.4" r="1.7" fill="currentColor"/><rect x="6.5" y="6.4" width="3" height="8" rx="1.2" fill="currentColor"/></svg></button>
-                </div>
-                <div class="option-examples">
-                  <span class="example-match" data-i18n="ruleExampleMatches">✓ Matches:</span> /api/(verify|check)
-                  <span class="example-separator">|</span>
-                  <span class="example-nomatch" data-i18n="ruleExampleWont">× Won't:</span> <span data-i18n="ruleExampleLiteralTextOnly">literal text only</span>
-                </div>
+                <span class="setting-label" data-i18n="rulesUrlRegex">URL Regular Expression (Regex)</span>
+                <p class="option-hint" data-i18n="ptHintRegex">A pattern such as ^bm_ or \d+, without / around it</p>
               </div>
               <label class="toggle-switch" for="payloadUrlRegex">
                 <input type="checkbox" id="payloadUrlRegex" class="toggle-input">
@@ -467,16 +462,8 @@
             <!-- URL Case Sensitive Toggle -->
             <div class="setting-option">
               <div class="option-content">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span class="setting-label" data-i18n="rulesUrlCaseSensitive">URL Case Sensitive</span>
-                  <button id="payloadUrlCaseHelperBtn" class="pattern-helper-btn" title="Case Sensitive" data-i18n-title="rulesPatternCaseSensitive">?</button>
-                  <button id="payloadUrlCaseExplanationBtn" class="explanation-helper-btn" title="What is “Case sensitive”?" data-i18n-title="rhWhatIsCase"><svg class="explanation-helper-icon" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><circle cx="8" cy="3.4" r="1.7" fill="currentColor"/><rect x="6.5" y="6.4" width="3" height="8" rx="1.2" fill="currentColor"/></svg></button>
-                </div>
-                <div class="option-examples">
-                  <span class="example-match" data-i18n="ruleExampleMatches">✓ Matches:</span> /API/Verify <span data-i18n="ruleExampleExactCase">(exact case)</span>
-                  <span class="example-separator">|</span>
-                  <span class="example-nomatch" data-i18n="ruleExampleWont">× Won't:</span> /api/verify
-                </div>
+                <span class="setting-label" data-i18n="rulesUrlCaseSensitive">URL Case Sensitive</span>
+                <p class="option-hint" data-i18n="ptHintCase">Akamai no longer matches akamai</p>
               </div>
               <label class="toggle-switch" for="payloadUrlCaseSensitive">
                 <input type="checkbox" id="payloadUrlCaseSensitive" class="toggle-input">
@@ -488,7 +475,7 @@
             <div class="setting-option payload-http-method-option">
               <div class="option-content" style="margin-bottom: 12px;">
                 <span class="setting-label" data-i18n="rulesHttpMethodSelect">HTTP Method (select one)</span>
-                <div class="option-examples" data-i18n="rulesHttpMethodFilterHint">Filter by request method (optional)</div>
+                <p class="option-hint" data-i18n="rulesHttpMethodFilterHint">Filter by request method (optional)</p>
               </div>
               <div class="http-method-badges-grid">
                 <!-- Any -->
@@ -551,6 +538,23 @@
           </div>
         </div>
 
+        <!-- CSS Selector Card (DOM rules only): the selector and the DOM selector helper -->
+        <div class="modal-card" id="domSelectorGroup" style="display: none;">
+          <div class="modal-card-header">
+            <span class="card-icon icon-settings">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/><path d="M9 12h6M12 9v6"/></svg>
+            </span>
+            <h3 data-i18n="domCardTitle">CSS selector</h3>
+            <button type="button" class="ms-test-btn" data-dom-browse title="DOM Selector Helper" data-i18n-title="rulesDomSelectorHelper"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg><span data-i18n="domCardBrowse">Browse</span></button>
+          </div>
+          <div class="modal-card-body">
+            <div class="ms-pattern-summary">
+              <code class="ms-pattern" data-pattern-preview="dom" dir="ltr"></code>
+              <p class="ms-pattern-says" data-i18n="domCardHint">A tag, .class, #id or [attribute] test, alone or combined. Spaces or &gt; between parts are not supported.</p>
+            </div>
+          </div>
+        </div>
+
         <!-- Pattern Matching Settings Card (Name Field) -->
         <div class="modal-card" id="nameFieldOptionsGroup">
           <div class="modal-card-header">
@@ -560,21 +564,18 @@
               </svg>
             </span>
             <h3 id="patternOptionsTitle" data-i18n="rulesPatternMatchingOptions">Pattern Matching Options</h3>
+            <button type="button" class="ms-test-btn" data-pattern-test="name" title="Try the pattern on sample text" data-i18n-title="ptTestTitle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2v7.31L4.5 18A2 2 0 0 0 6.27 21h11.46a2 2 0 0 0 1.77-3L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg><span data-i18n="ptTestBtn">Test</span></button>
           </div>
           <div class="modal-card-body">
+            <div class="ms-pattern-summary">
+              <code class="ms-pattern" data-pattern-preview="name" dir="ltr"></code>
+              <p class="ms-pattern-says" data-pattern-says="name" role="status" dir="auto"></p>
+            </div>
             <div class="settings-options">
               <div class="setting-option">
                 <div class="option-content">
-                  <div class="setting-label-row">
-                    <span class="setting-label" data-i18n="rulesPatternRegex">Regular Expression (Regex)</span>
-                    <button id="regexHelperBtn" class="regex-helper-btn" title="Regex helper" data-i18n-title="rhRegexTitle">?</button>
-                    <button id="regexExplanationBtn" class="explanation-helper-btn" title="What is a regular expression?" data-i18n-title="rhWhatIsRegex"><svg class="explanation-helper-icon" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><circle cx="8" cy="3.4" r="1.7" fill="currentColor"/><rect x="6.5" y="6.4" width="3" height="8" rx="1.2" fill="currentColor"/></svg></button>
-                  </div>
-                  <div class="option-examples" id="nameRegexExamples">
-                    <span class="example-match" data-i18n="ruleExampleMatches">✓ Matches:</span> _ab.*, _abck$, ^bm_
-                    <span class="example-separator">|</span>
-                    <span class="example-nomatch" data-i18n="ruleExampleWontMatch">× Won't match:</span> <span data-i18n="ruleExampleLiteralTextOnly">literal text only</span>
-                  </div>
+                  <span class="setting-label" data-i18n="rulesPatternRegex">Regular Expression (Regex)</span>
+                  <p class="option-hint" data-i18n="ptHintRegex">A pattern such as ^bm_ or \d+, without / around it</p>
                 </div>
                 <label class="toggle-switch" for="nameRegex">
                   <input type="checkbox" id="nameRegex" class="toggle-input">
@@ -583,16 +584,8 @@
               </div>
               <div class="setting-option">
                 <div class="option-content">
-                  <div class="setting-label-row">
-                    <span class="setting-label" data-i18n="rulesPatternWholeWord">Whole Word</span>
-                    <button id="wholeWordHelperBtn" class="pattern-helper-btn" title="Whole Word" data-i18n-title="rulesPatternWholeWord">?</button>
-                    <button id="wholeWordExplanationBtn" class="explanation-helper-btn" title="What is “Whole word”?" data-i18n-title="rhWhatIsWholeWord"><svg class="explanation-helper-icon" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><circle cx="8" cy="3.4" r="1.7" fill="currentColor"/><rect x="6.5" y="6.4" width="3" height="8" rx="1.2" fill="currentColor"/></svg></button>
-                  </div>
-                  <div class="option-examples" id="nameWholeWordExamples">
-                    <span class="example-match" data-i18n="ruleExampleMatches">✓ Matches:</span> _abck <span data-i18n="ruleExampleAlone">(alone)</span>
-                    <span class="example-separator">|</span>
-                    <span class="example-nomatch" data-i18n="ruleExampleWontMatch">× Won't match:</span> test_abck, _abckTest
-                  </div>
+                  <span class="setting-label" data-i18n="rulesPatternWholeWord">Whole Word</span>
+                  <p class="option-hint" data-i18n="ptHintWholeWord">Skips matches inside a longer word: _abck, not test_abck</p>
                 </div>
                 <label class="toggle-switch" for="nameWholeWord">
                   <input type="checkbox" id="nameWholeWord" class="toggle-input">
@@ -601,16 +594,8 @@
               </div>
               <div class="setting-option">
                 <div class="option-content">
-                  <div class="setting-label-row">
-                    <span class="setting-label" data-i18n="rulesPatternCaseSensitive">Case Sensitive</span>
-                    <button id="caseSensitiveHelperBtn" class="pattern-helper-btn" title="Case Sensitive" data-i18n-title="rulesPatternCaseSensitive">?</button>
-                    <button id="caseSensitiveExplanationBtn" class="explanation-helper-btn" title="What is “Case sensitive”?" data-i18n-title="rhWhatIsCase"><svg class="explanation-helper-icon" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><circle cx="8" cy="3.4" r="1.7" fill="currentColor"/><rect x="6.5" y="6.4" width="3" height="8" rx="1.2" fill="currentColor"/></svg></button>
-                  </div>
-                  <div class="option-examples" id="nameCaseExamples">
-                    <span class="example-match" data-i18n="ruleExampleMatches">✓ Matches:</span> Test <span data-i18n="ruleExampleExactCase">(exact case)</span>
-                    <span class="example-separator">|</span>
-                    <span class="example-nomatch" data-i18n="ruleExampleWontMatch">× Won't match:</span> test, TEST
-                  </div>
+                  <span class="setting-label" data-i18n="rulesPatternCaseSensitive">Case Sensitive</span>
+                  <p class="option-hint" data-i18n="ptHintCase">Akamai no longer matches akamai</p>
                 </div>
                 <label class="toggle-switch" for="nameCaseSensitive">
                   <input type="checkbox" id="nameCaseSensitive" class="toggle-input">
@@ -630,16 +615,18 @@
               </svg>
             </span>
             <h3 data-i18n="rulesValueFieldOptions">Value Field Options</h3>
+            <button type="button" class="ms-test-btn" data-pattern-test="value" title="Try the pattern on sample text" data-i18n-title="ptTestTitle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 2v7.31L4.5 18A2 2 0 0 0 6.27 21h11.46a2 2 0 0 0 1.77-3L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg><span data-i18n="ptTestBtn">Test</span></button>
           </div>
           <div class="modal-card-body">
+            <div class="ms-pattern-summary">
+              <code class="ms-pattern" data-pattern-preview="value" dir="ltr"></code>
+              <p class="ms-pattern-says" data-pattern-says="value" role="status" dir="auto"></p>
+            </div>
             <div class="settings-options">
               <div class="setting-option">
                 <div class="option-content">
-                  <div class="setting-label-row">
-                    <span class="setting-label" data-i18n="rulesPatternRegex">Regular Expression (Regex)</span>
-                    <button id="regexHelperBtnValue" class="regex-helper-btn" title="Regex helper" data-i18n-title="rhRegexTitle">?</button>
-                    <button id="regexExplanationBtnValue" class="explanation-helper-btn" title="What is a regular expression?" data-i18n-title="rhWhatIsRegex"><svg class="explanation-helper-icon" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><circle cx="8" cy="3.4" r="1.7" fill="currentColor"/><rect x="6.5" y="6.4" width="3" height="8" rx="1.2" fill="currentColor"/></svg></button>
-                  </div>
+                  <span class="setting-label" data-i18n="rulesPatternRegex">Regular Expression (Regex)</span>
+                  <p class="option-hint" data-i18n="ptHintRegex">A pattern such as ^bm_ or \d+, without / around it</p>
                 </div>
                 <label class="toggle-switch" for="valueRegex">
                   <input type="checkbox" id="valueRegex" class="toggle-input">
@@ -648,11 +635,8 @@
               </div>
               <div class="setting-option">
                 <div class="option-content">
-                  <div class="setting-label-row">
-                    <span class="setting-label" data-i18n="rulesPatternWholeWord">Whole Word</span>
-                    <button id="wholeWordHelperBtnValue" class="pattern-helper-btn" title="Whole Word" data-i18n-title="rulesPatternWholeWord">?</button>
-                    <button id="wholeWordExplanationBtnValue" class="explanation-helper-btn" title="What is “Whole word”?" data-i18n-title="rhWhatIsWholeWord"><svg class="explanation-helper-icon" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><circle cx="8" cy="3.4" r="1.7" fill="currentColor"/><rect x="6.5" y="6.4" width="3" height="8" rx="1.2" fill="currentColor"/></svg></button>
-                  </div>
+                  <span class="setting-label" data-i18n="rulesPatternWholeWord">Whole Word</span>
+                  <p class="option-hint" data-i18n="ptHintWholeWord">Skips matches inside a longer word: _abck, not test_abck</p>
                 </div>
                 <label class="toggle-switch" for="valueWholeWord">
                   <input type="checkbox" id="valueWholeWord" class="toggle-input">
@@ -661,11 +645,8 @@
               </div>
               <div class="setting-option">
                 <div class="option-content">
-                  <div class="setting-label-row">
-                    <span class="setting-label" data-i18n="rulesPatternCaseSensitive">Case Sensitive</span>
-                    <button id="caseSensitiveHelperBtnValue" class="pattern-helper-btn" title="Case Sensitive" data-i18n-title="rulesPatternCaseSensitive">?</button>
-                    <button id="caseSensitiveExplanationBtnValue" class="explanation-helper-btn" title="What is “Case sensitive”?" data-i18n-title="rhWhatIsCase"><svg class="explanation-helper-icon" viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><circle cx="8" cy="3.4" r="1.7" fill="currentColor"/><rect x="6.5" y="6.4" width="3" height="8" rx="1.2" fill="currentColor"/></svg></button>
-                  </div>
+                  <span class="setting-label" data-i18n="rulesPatternCaseSensitive">Case Sensitive</span>
+                  <p class="option-hint" data-i18n="ptHintCase">Akamai no longer matches akamai</p>
                 </div>
                 <label class="toggle-switch" for="valueCaseSensitive">
                   <input type="checkbox" id="valueCaseSensitive" class="toggle-input">
@@ -746,7 +727,6 @@
         <button type="button" id="closeWindowHelper" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
       </div>
       <div class="rh-toolbar">
-        <p class="rh-intro" data-i18n="rhWindowIntro">Checks a JavaScript global on the page (window.…). Pick one, then choose what it must be.</p>
         <label class="rh-search">
           <svg class="rh-search-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
           <input type="text" id="windowKeywordInput" class="rh-search-input" placeholder="Search properties, e.g. webdriver, chrome, cdc_" data-i18n-placeholder="rhSearchWindow" aria-label="Search properties, e.g. webdriver, chrome, cdc_" data-i18n-aria-label="rhSearchWindow" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="windowSuggestions">
@@ -797,180 +777,56 @@
     </div>
   </div>
 
-  <!-- Regex Helper Modal -->
-  <div id="regexHelperModal" class="rule-modal rh-modal" style="display: none;">
-    <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="regexHelperTitle">
-      <div class="rule-modal-header">
-        <h2 id="regexHelperTitle" data-i18n="rhRegexTitle">Regex helper</h2>
-        <button type="button" id="closeRegexHelper" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
-      </div>
-      <div class="rh-toolbar">
-        <label class="rh-search">
-          <svg class="rh-search-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          <input type="text" id="regexKeywordInput" class="rh-search-input is-mono" placeholder="Text to match, e.g. bm_ or token" data-i18n-placeholder="rhSearchRegex" aria-label="Text to match, e.g. bm_ or token" data-i18n-aria-label="rhSearchRegex" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="regexSuggestions">
-        </label>
-      </div>
-      <div class="rule-modal-body rh-body">
-        <div class="rh-section">
-          <div class="rh-section-head" id="regexSuggestionsHead">
-            <span class="rh-section-title"></span>
-            <span class="rh-section-count"></span>
-          </div>
-          <div id="regexSuggestions" class="rh-list"></div>
-        </div>
-        <div class="rh-section">
-          <div class="rh-section-head"><span class="rh-section-title" data-i18n="rhQuickRef">Quick reference</span></div>
-          <div id="regexQuickRef" class="rh-card"></div>
-        </div>
-      </div>
-      <div id="regexSuggestionsPagination" class="pagination rh-pagination" style="display: none;">
-        <div class="pagination-info"></div>
-        <div class="pagination-controls">
-          <button type="button" class="pagination-btn pagination-btn-prev" disabled title="Previous" aria-label="Previous" data-i18n-title="paginationPrev" data-i18n-aria-label="paginationPrev">
-            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/></svg>
-          </button>
-          <div class="page-info">
-            <span data-i18n="paginationPage">Page</span>
-            <input type="text" class="page-input" value="1" inputmode="numeric" aria-label="Page" data-i18n-aria-label="paginationPage">
-            <span data-i18n="paginationOf">of</span>
-            <span class="total-pages">1</span>
-          </div>
-          <button type="button" class="pagination-btn pagination-btn-next" disabled title="Next" aria-label="Next" data-i18n-title="paginationNext" data-i18n-aria-label="paginationNext">
-            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/></svg>
-          </button>
-        </div>
-      </div>
-      <div id="regexPreviewSection" class="rh-dock" hidden>
-        <span class="rh-field-label" data-i18n="rhPreview">Preview</span>
-        <code id="regexPreviewContent" class="rh-code"></code>
-      </div>
-      <div class="rule-modal-footer">
-        <span class="rh-kbd" aria-hidden="true"><kbd>↑</kbd><kbd>↓</kbd><kbd><svg class="rh-kbd-icon" viewBox="0 0 12 12" width="10" height="10" fill="none" aria-hidden="true" focusable="false"><path d="M10 2.5V6.5H2.5M2.5 6.5L5 4M2.5 6.5L5 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></kbd><kbd>Esc</kbd></span>
-        <button type="button" id="closeRegexHelperBtn" class="rule-btn rule-btn-cancel" data-i18n="btnCancel">Cancel</button>
-        <button type="button" id="useRegexPattern" class="rule-btn rule-btn-save" data-i18n="rhUsePattern" disabled>Use pattern</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Regex Explanation Modal (What is Regex?) -->
-  <div id="regexExplanationModal" class="rule-modal rh-modal" style="display: none;">
-    <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="regexExplanationTitle">
-      <div class="rule-modal-header">
-        <h2 id="regexExplanationTitle" data-i18n="rhWhatIsRegex">What is a regular expression?</h2>
-        <button type="button" id="closeRegexExplanation" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
-      </div>
-      <div id="regexExplanationBody" class="rule-modal-body rh-body"></div>
-      <div class="rule-modal-footer">
-        <button type="button" id="closeRegexExplanationBtn" class="rule-btn rule-btn-cancel" data-i18n="btnClose">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Whole Word Explanation Modal -->
-  <div id="wholeWordExplanationModal" class="rule-modal rh-modal" style="display: none;">
-    <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="wholeWordExplanationTitle">
-      <div class="rule-modal-header">
-        <h2 id="wholeWordExplanationTitle" data-i18n="rhWhatIsWholeWord">What is “Whole word”?</h2>
-        <button type="button" id="closeWholeWordExplanation" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
-      </div>
-      <div id="wholeWordExplanationBody" class="rule-modal-body rh-body"></div>
-      <div class="rule-modal-footer">
-        <button type="button" id="closeWholeWordExplanationBtn" class="rule-btn rule-btn-cancel" data-i18n="btnClose">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Case Sensitive Explanation Modal -->
-  <div id="caseSensitiveExplanationModal" class="rule-modal rh-modal" style="display: none;">
-    <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="caseSensitiveExplanationTitle">
-      <div class="rule-modal-header">
-        <h2 id="caseSensitiveExplanationTitle" data-i18n="rhWhatIsCase">What is “Case sensitive”?</h2>
-        <button type="button" id="closeCaseSensitiveExplanation" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
-      </div>
-      <div id="caseSensitiveExplanationBody" class="rule-modal-body rh-body"></div>
-      <div class="rule-modal-footer">
-        <button type="button" id="closeCaseSensitiveExplanationBtn" class="rule-btn rule-btn-cancel" data-i18n="btnClose">Close</button>
-      </div>
-    </div>
-  </div>
-
   <!-- Method Help Modal -->
   <div id="methodHelpModal" class="rule-modal rh-modal" style="display: none;">
     <div class="rule-modal-backdrop"></div>
     <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="methodHelpTitle">
       <div class="rule-modal-header">
-        <h2 id="methodHelpTitle" data-i18n="detectionMethodTitle">Detection Method</h2>
+        <h2 id="methodHelpTitle"></h2>
         <button type="button" id="closeMethodHelp" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
       </div>
-      <div class="rule-modal-body rh-body" id="methodHelpContent">
-        <!-- Help content will be dynamically inserted here -->
+      <div class="rule-modal-body rh-body" id="methodHelpContent"></div>
+    </div>
+  </div>
+
+  <!-- Test Pattern Modal (helpers/pattern-tester.js) -->
+  <div id="patternTesterModal" class="rule-modal rh-modal" style="display: none;">
+    <div class="rule-modal-backdrop"></div>
+    <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="patternTesterTitle">
+      <div class="rule-modal-header">
+        <h2 id="patternTesterTitle" data-i18n="ptTitle">Test pattern</h2>
+        <button type="button" id="closePatternTester" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
+      </div>
+      <div class="rule-modal-body rh-body pt-body">
+        <div class="rh-field">
+          <label class="rh-field-label" for="ptPattern" data-i18n="ptPatternLabel">Pattern</label>
+          <textarea id="ptPattern" class="pt-input" rows="1" dir="ltr" autocomplete="off" spellcheck="false"></textarea>
+        </div>
+        <div class="pt-options" role="group" aria-label="Matching options" data-i18n-aria-label="ptOptionsLabel">
+          <button type="button" class="pt-option" data-option="regex" aria-pressed="false" data-i18n="ptOptRegex">Regex</button>
+          <button type="button" class="pt-option" data-option="wholeWord" aria-pressed="false" data-i18n="rulesPatternWholeWord">Whole Word</button>
+          <button type="button" class="pt-option" data-option="caseSensitive" aria-pressed="false" data-i18n="rulesPatternCaseSensitive">Case Sensitive</button>
+        </div>
+        <p id="ptSays" class="rh-sentence" role="status" dir="auto"></p>
+        <div id="ptNotes" class="pt-notes"></div>
+        <div class="rh-section">
+          <div class="rh-section-head">
+            <label class="rh-section-title" for="ptSamples" data-i18n="ptTryOn">Try it on</label>
+            <button type="button" id="ptResetSamples" class="pt-link" data-i18n="ptExamplesBtn">Examples</button>
+          </div>
+          <textarea id="ptSamples" class="pt-samples" rows="4" dir="ltr" spellcheck="false" placeholder="One per line: a URL, a cookie name…" data-i18n-placeholder="ptSamplesPlaceholder"></textarea>
+          <ul id="ptResults" class="pt-results" aria-live="polite"></ul>
+        </div>
+        <details id="ptCheatSheet" class="pt-cheat">
+          <summary data-i18n="ptCheatTitle">Regex cheat sheet</summary>
+          <dl id="ptCheatList" class="rh-ref"></dl>
+          <p class="pt-cheat-note" data-i18n="ptCheatNote">Write the pattern without / around it. A repeat inside a repeat, such as (a+)+, is rejected because it could freeze pages.</p>
+        </details>
       </div>
       <div class="rule-modal-footer">
-        <button type="button" id="closeMethodHelpBtn" class="rule-btn rule-btn-cancel" data-i18n="btnClose">Close</button>
+        <button type="button" id="cancelPatternTester" class="rule-btn rule-btn-cancel" data-i18n="btnCancel">Cancel</button>
+        <button type="button" id="applyPatternTester" class="rule-btn rule-btn-save" data-i18n="ptApply">Apply</button>
       </div>
     </div>
   </div>
 
-  <!-- Whole Word Helper Modal -->
-  <div id="wholeWordHelperModal" class="rule-modal rh-modal" style="display: none;">
-    <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="wholeWordHelperTitle">
-      <div class="rule-modal-header">
-        <h2 id="wholeWordHelperTitle" data-i18n="rulesPatternWholeWord">Whole Word</h2>
-        <button type="button" id="closeWholeWordHelper" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
-      </div>
-      <div class="rh-toolbar">
-        <label class="rh-search">
-          <svg class="rh-search-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          <input type="text" id="wholeWordKeywordInput" class="rh-search-input is-mono" placeholder="Type a value to test" data-i18n-placeholder="rhSearchSample" aria-label="Type a value to test" data-i18n-aria-label="rhSearchSample" autocomplete="off" spellcheck="false">
-        </label>
-      </div>
-      <div class="rule-modal-body rh-body">
-        <p class="rh-note" data-i18n="rhWwIntro">Matches only when the text stands alone, not as part of a longer word.</p>
-        <div class="rh-section">
-          <div class="rh-section-head" id="wholeWordExamplesHead">
-            <span class="rh-section-title"></span>
-            <span class="rh-section-count"></span>
-          </div>
-          <div id="wholeWordExamples" class="rh-list"></div>
-        </div>
-      </div>
-      <div class="rule-modal-footer">
-        <button type="button" id="closeWholeWordHelperBtn" class="rule-btn rule-btn-cancel" data-i18n="btnClose">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Case Sensitive Helper Modal -->
-  <div id="caseSensitiveHelperModal" class="rule-modal rh-modal" style="display: none;">
-    <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="caseSensitiveHelperTitle">
-      <div class="rule-modal-header">
-        <h2 id="caseSensitiveHelperTitle" data-i18n="rulesPatternCaseSensitive">Case Sensitive</h2>
-        <button type="button" id="closeCaseSensitiveHelper" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
-      </div>
-      <div class="rh-toolbar">
-        <label class="rh-search">
-          <svg class="rh-search-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          <input type="text" id="caseSensitiveKeywordInput" class="rh-search-input is-mono" placeholder="Type a value to test" data-i18n-placeholder="rhSearchSample" aria-label="Type a value to test" data-i18n-aria-label="rhSearchSample" autocomplete="off" spellcheck="false">
-        </label>
-      </div>
-      <div class="rule-modal-body rh-body">
-        <p class="rh-note" data-i18n="rhCsIntro">When on, uppercase and lowercase letters count as different.</p>
-        <div class="rh-section">
-          <div class="rh-section-head" id="caseSensitiveExamplesHead">
-            <span class="rh-section-title"></span>
-            <span class="rh-section-count"></span>
-          </div>
-          <div id="caseSensitiveExamples" class="rh-stack"></div>
-        </div>
-      </div>
-      <div class="rule-modal-footer">
-        <button type="button" id="closeCaseSensitiveHelperBtn" class="rule-btn rule-btn-cancel" data-i18n="btnClose">Close</button>
-      </div>
-    </div>
-  </div>

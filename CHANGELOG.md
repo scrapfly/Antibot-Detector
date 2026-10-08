@@ -23,6 +23,9 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection details: each matched combination says in plain words what it found on the page, and marks the one that set the score.
 - History details: matched combinations are shown too, and the list of matches is titled "Matched detections".
 - Rules editor: combinations show each pattern's description first, and "one of" groups can be added, changed and deleted.
+- Rules editor: one Test pattern dialog replaces the six Regex, Whole word and Case sensitive helpers; it opens with your pattern and tests sample text exactly as detection does.
+- Rules editor: each detection method's "?" explains what it checks, how it matches and its limits, with examples from Scrapfly's own rules; several old texts were wrong.
+- Rules editor: the DOM selector helper is in each DOM pattern's settings, the DOM and Window helpers show more suggestions per page, and the settings button is blue.
 - JS API: matched combinations list which of their patterns were found.
 - Detectors: ThreatMetrix, AWS WAF, Cloudflare, Screen and IndexedDB combinations now score above their single signals; three unused Jiasule and Radware signals count alone.
 - Google BotGuard is also recognised on Gmail, from its /waa requests and the /js/bg/ interpreter script.
@@ -36,6 +39,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - F5: the "ASM cookie with BIG-IP analytics" combination now shows; before, the load-balancer combination always took its place.
 - Detection: pages that never finish loading are now scanned after a short wait instead of never showing a result.
 - Rules → Update no longer says everything is up to date when some rules failed to download, and explains GitHub outages and rate limits.
+- Rules editor: a regex or selector picked in a helper no longer stays when you cancel the pattern settings.
+- Rules editor: JS hooks now say they only work in Fingerprint rules, and DOM selectors no longer offer Regex, Whole word and Case sensitive, which detection ignores.
 
 ## [2.8.2] - 2026-10-07
 

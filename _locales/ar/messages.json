@@ -880,9 +880,6 @@
   "textWordMatching": {
     "message": "مطابقة النص/الكلمة"
   },
-  "domSelectorMatching": {
-    "message": "مطابقة محدِّدات DOM"
-  },
   "payloadTextMatching": {
     "message": "مطابقة نص الحمولة"
   },
@@ -1606,114 +1603,6 @@
   "notifLoadingDefault": {
     "message": "جارٍ التحميل..."
   },
-  "helpJsHooksTitle": {
-    "message": "اكتشاف خطافات JavaScript"
-  },
-  "helpJsHooksDescription": {
-    "message": "تعترض الخطافات استدعاءات API للمتصفح (Canvas، Audio، WebGL، إلخ.) لاكتشاف شفرة بصمة الجهاز المضادة للبوتات في الوقت الفعلي عند وصول الصفحة إلى تلك الواجهات."
-  },
-  "helpJsHooksWarning": {
-    "message": "يجب تثبيت الخطافات عند document_start قبل تشغيل أي نص برمجي للصفحة — وإلا قد تحفظ الصفحة مراجع إلى واجهات API الأصلية قبل أن يتم تركيب الـ shim الخاص بنا."
-  },
-  "helpJsHooksTip": {
-    "message": "أضف هدفًا مثل CanvasRenderingContext2D.prototype.getImageData لاكتشاف بصمة Canvas."
-  },
-  "helpWindowTitle": {
-    "message": "اكتشاف خصائص النافذة"
-  },
-  "helpWindowDescription": {
-    "message": "يكتشف كائنات وخصائص JavaScript التي تُضاف إلى كائن النافذة العام بواسطة النصوص البرمجية المضادة للبوتات."
-  },
-  "helpWindowWarning": {
-    "message": "تستخدم بعض النصوص البرمجية المضادة للبوتات مفاتيح Symbol() غير قابلة للتعداد — وهي أصعب في الاكتشاف."
-  },
-  "helpWindowTip": {
-    "message": "استخدم شروطًا مثل typeof object أو exists للمطابقة مع نوع الخاصية."
-  },
-  "helpUrlTitle": {
-    "message": "اكتشاف نمط URL"
-  },
-  "helpUrlDescription": {
-    "message": "يطابق عناوين URL للموارد المُحمَّلة (النصوص البرمجية والصور وطلبات الشبكة) مع الأنماط."
-  },
-  "helpUrlWarning": {
-    "message": "تتجاهل الأنماط حالة الأحرف ما لم تفعّل «حساس لحالة الأحرف». النمط العام جدًا يطابق موارد غير ذات صلة أيضًا، لذا اجعله محددًا."
-  },
-  "helpUrlTip": {
-    "message": "استخدم خيار Regex للأنماط المتقدمة مثل /\\/v\\d+\\/challenge/."
-  },
-  "helpHeaderTitle": {
-    "message": "اكتشاف ترويسات HTTP"
-  },
-  "helpHeaderDescription": {
-    "message": "يكتشف ترويسات طلب واستجابة HTTP التي تضعها برمجيات مكافحة البوتات الوسيطة."
-  },
-  "helpHeaderWarning": {
-    "message": "بعض الترويسات تظهر فقط في الطلب الأولي — تأكد من أن نطاقك يتضمن الطلب."
-  },
-  "helpHeaderTip": {
-    "message": "أهداف شائعة: x-akamai-bot-manager-token، cf-ray، x-shape-version."
-  },
-  "helpCookieTitle": {
-    "message": "اكتشاف الكوكيز"
-  },
-  "helpCookieDescription": {
-    "message": "يكتشف الكوكيز التي تضعها تحديات مكافحة البوتات. يطابق اسم الكوكي (واختياريًا نمط القيمة)."
-  },
-  "helpCookieWarning": {
-    "message": "أسماء الكوكيز ذات اللواحق العشوائية (مثل _abck-xyz123) تحتاج إلى نمط regex وليس اسمًا حرفيًا."
-  },
-  "helpCookieTip": {
-    "message": "استخدم الكلمة كاملة للمطابقات بالاسم الدقيق، أو Regex لأنماط البادئات مثل ^datadome-."
-  },
-  "helpContentTitle": {
-    "message": "اكتشاف محتوى الصفحة"
-  },
-  "helpContentDescription": {
-    "message": "يبحث عن أنماط نصية داخل HTML الصفحة ووسوم النصوص البرمجية المضمَّنة."
-  },
-  "helpContentWarning": {
-    "message": "قد يكون فحص الصفحة الكاملة بطيئًا في الصفحات الكبيرة. قيِّد الفحص إلى النصوص البرمجية فقط إذا كان التوقيع في شفرة JS."
-  },
-  "helpContentTip": {
-    "message": "استخدم الكلمة كاملة لتجنب الإيجابيات الخاطئة من السلاسل الفرعية داخل كلمات أكبر."
-  },
-  "helpDomTitle": {
-    "message": "اكتشاف محدِّد DOM"
-  },
-  "helpDomDescription": {
-    "message": "يكتشف عناصر HTML باستخدام محدِّدات CSS. يتم تشغيله عندما يكون العنصر المطابق موجودًا في DOM."
-  },
-  "helpDomWarning": {
-    "message": "تطابق المحدِّدات العناصر المعروضة في DOM الفعلي فقط — وليس تلك الموجودة داخل iframes أو shadow roots."
-  },
-  "helpDomTip": {
-    "message": "استخدم محدِّدات محددة مثل div#cf-challenge[data-ray] بدلاً من المحدِّدات العامة لتقليل الإيجابيات الخاطئة."
-  },
-  "helpPayloadTitle": {
-    "message": "اكتشاف حمولة الطلب"
-  },
-  "helpPayloadDescription": {
-    "message": "يراقب جميع نصوص طلبات HTTP POST/PUT/PATCH بحثًا عن الأنماط النصية."
-  },
-  "helpPayloadWarning": {
-    "message": "تعمل مراقبة الحمولة فقط للطلبات التي يمكن لإضافتنا اعتراضها (لا أجسام مشفرة، لا كائنات blob غامضة)."
-  },
-  "helpPayloadTip": {
-    "message": "ادمجها مع نمط URL لقصر المطابقة على نقاط نهاية محددة."
-  },
-  "helpWarningLabel": {
-    "message": "تحذير:"
-  },
-  "helpTipLabel": {
-    "message": "نصيحة:"
-  },
-  "detectionMethodTitle": {
-    "message": "طريقة الاكتشاف"
-  },
-  "noHelpContentAvailable": {
-    "message": "لا يتوفر محتوى مساعدة لهذا النوع من الطرق."
-  },
   "advNoCapturesHintFmt": {
     "message": "انقر على \"بدء الالتقاط\" في الأعلى لبدء التقاط بيانات {0}"
   },
@@ -2044,12 +1933,6 @@
   "rhSearchDom": {
     "message": "ابحث عن المحددات، مثل captcha وiframe"
   },
-  "rhSearchRegex": {
-    "message": "النص المطلوب مطابقته، مثل bm_ أو token"
-  },
-  "rhSearchSample": {
-    "message": "اكتب قيمة لاختبارها"
-  },
   "rhCondition": {
     "message": "الشرط"
   },
@@ -2173,9 +2056,6 @@
   "rhCondFalse": {
     "message": "يساوي false"
   },
-  "rhWindowIntro": {
-    "message": "يفحص متغيرًا عامًا في JavaScript على الصفحة (window.…). اختر متغيرًا ثم الشرط الذي يجب أن يحققه."
-  },
   "rhWindowSentenceFmt": {
     "message": "يطابق الصفحات التي يكون فيها {0}: {1}"
   },
@@ -2215,45 +2095,6 @@
   "rhDomCamel": {
     "message": "فئة camelCase"
   },
-  "rhRegexTitle": {
-    "message": "مساعد التعبيرات النمطية"
-  },
-  "rhUsePattern": {
-    "message": "استخدام النمط"
-  },
-  "rhRegexStartsFmt": {
-    "message": "يبدأ بـ “{0}”"
-  },
-  "rhRegexEndsFmt": {
-    "message": "ينتهي بـ “{0}”"
-  },
-  "rhRegexContainsFmt": {
-    "message": "يحتوي على “{0}” في أي موضع"
-  },
-  "rhRegexWordFmt": {
-    "message": "الكلمة الكاملة “{0}”"
-  },
-  "rhRegexOrFmt": {
-    "message": "“{0}” أو خيار آخر"
-  },
-  "rhRegexStartsMoreFmt": {
-    "message": "يبدأ بـ “{0}” ويليه نص إضافي"
-  },
-  "rhRegexEitherFmt": {
-    "message": "“{0}” أو “{1}”"
-  },
-  "rhExamplesForFmt": {
-    "message": "أمثلة لـ “{0}”"
-  },
-  "rhExamples": {
-    "message": "أمثلة"
-  },
-  "rhHowMatchesFmt": {
-    "message": "كيف تتم مطابقة “{0}”"
-  },
-  "rhQuickRef": {
-    "message": "مرجع سريع"
-  },
   "rhRefAny": {
     "message": "أي حرف"
   },
@@ -2290,74 +2131,299 @@
   "rhNoMatch": {
     "message": "غير مطابق"
   },
-  "rhWwIntro": {
-    "message": "يطابق فقط عندما يكون النص منفردًا وليس جزءًا من كلمة أطول."
+  "ptTitle": {
+    "message": "اختبار النمط"
   },
-  "rhWwExact": {
-    "message": "كلمة مطابقة تمامًا"
+  "ptTitleFmt": {
+    "message": "اختبار النمط · {0}"
   },
-  "rhWwJoinedBefore": {
-    "message": "متصل بالنص السابق"
+  "ptKindUrl": {
+    "message": "URL"
   },
-  "rhWwJoinedAfter": {
-    "message": "متصل بالنص اللاحق"
+  "ptKindContent": {
+    "message": "محتوى الصفحة"
   },
-  "rhWwSpaces": {
-    "message": "مفصول بمسافات"
+  "ptKindCookieName": {
+    "message": "اسم ملف تعريف الارتباط"
   },
-  "rhCsIntro": {
-    "message": "عند التفعيل، تُعد الأحرف الكبيرة والصغيرة مختلفة."
+  "ptKindCookieValue": {
+    "message": "قيمة ملف تعريف الارتباط"
   },
-  "rhCsOnTitle": {
-    "message": "مع تفعيل حساسية الأحرف"
+  "ptKindHeaderName": {
+    "message": "اسم الترويسة"
   },
-  "rhCsOffTitle": {
-    "message": "مع تعطيل حساسية الأحرف"
+  "ptKindHeaderValue": {
+    "message": "قيمة الترويسة"
   },
-  "rhWhatIsRegex": {
-    "message": "ما التعبير النمطي؟"
+  "ptKindPayloadText": {
+    "message": "نص الطلب"
   },
-  "rhWhatIsWholeWord": {
-    "message": "ما “الكلمة الكاملة”؟"
+  "ptKindPayloadUrl": {
+    "message": "عنوان URL للطلب"
   },
-  "rhWhatIsCase": {
-    "message": "ما “حساسية حالة الأحرف”؟"
+  "ptPatternLabel": {
+    "message": "النمط"
   },
-  "rhRegexIntro": {
-    "message": "يطابق التعبير النمطي (regex) النص وفق نمط بدلًا من أحرف مطابقة تمامًا."
+  "ptOptionsLabel": {
+    "message": "خيارات المطابقة"
   },
-  "rhWhenToUse": {
-    "message": "متى تستخدمه"
+  "ptOptRegex": {
+    "message": "Regex"
   },
-  "rhRegexUse1": {
-    "message": "نص يبدأ أو ينتهي بشيء محدد"
+  "ptTryOn": {
+    "message": "جرّبه على"
   },
-  "rhRegexUse2": {
-    "message": "عدة صيغ في آن واحد (باستخدام |)"
+  "ptExamplesBtn": {
+    "message": "أمثلة"
   },
-  "rhRegexUse3": {
-    "message": "أرقام أو أنواع محددة من الأحرف"
+  "ptSamplesPlaceholder": {
+    "message": "واحد في كل سطر: عنوان URL، اسم ملف تعريف ارتباط…"
   },
-  "rhRegexTip": {
-    "message": "لمطابقة نص محدد لا تحتاج إلى regex: استخدم “الكلمة الكاملة”."
+  "ptNoSamples": {
+    "message": "اكتب نصًا أو الصقه أعلاه، واحدًا في كل سطر، لترى هل يطابق."
   },
-  "rhBestFor": {
-    "message": "الأنسب لـ"
+  "ptCheatTitle": {
+    "message": "ملخص سريع للتعبيرات المنتظمة"
   },
-  "rhWwUse1": {
-    "message": "أسماء ملفات تعريف الارتباط الدقيقة"
+  "ptCheatNote": {
+    "message": "اكتب النمط دون / حوله. التكرار داخل تكرار، مثل (a+)+، يُرفض لأنه قد يجمّد الصفحات."
   },
-  "rhWwUse2": {
-    "message": "أسماء ترويسات محددة"
+  "ptApply": {
+    "message": "تطبيق"
   },
-  "rhWwUse3": {
-    "message": "أسماء الفئات أو الدوال الكاملة"
+  "ptTestBtn": {
+    "message": "اختبار"
   },
-  "rhCsUse1": {
-    "message": "ترويسات وملفات تعريف ارتباط بحالة أحرف دقيقة"
+  "ptTestTitle": {
+    "message": "جرّب النمط على نص مثال"
   },
-  "rhCsUse2": {
-    "message": "أسماء خصائص JavaScript"
+  "ptNoPattern": {
+    "message": "لا يوجد نمط بعد"
+  },
+  "ptHintRegex": {
+    "message": "نمط مثل ^bm_ أو \\d+، دون / حوله"
+  },
+  "ptHintWholeWord": {
+    "message": "يتجاهل المطابقات داخل كلمة أطول: _abck نعم، test_abck لا"
+  },
+  "ptHintCase": {
+    "message": "لم يعد Akamai يطابق akamai"
+  },
+  "ptSaysEmpty": {
+    "message": "اكتب نمطًا لترى ما يطابقه."
+  },
+  "ptSaysRegex": {
+    "message": "يطابق النص الذي يجد فيه التعبير المنتظم مطابقة."
+  },
+  "ptSaysWordFmt": {
+    "message": "يطابق “{0}” ككلمة كاملة، لا داخل كلمة أطول."
+  },
+  "ptSaysWildcardFmt": {
+    "message": "يطابق أسماء مثل “{0}”، حيث تعني * أي نص."
+  },
+  "ptSaysPrefixFmt": {
+    "message": "يطابق الأسماء التي تبدأ بـ “{0}”."
+  },
+  "ptSaysContainsFmt": {
+    "message": "يطابق النص الذي يحتوي على “{0}”."
+  },
+  "ptCaseExact": {
+    "message": "يجب أن تتطابق الأحرف الكبيرة والصغيرة تمامًا."
+  },
+  "ptCaseIgnored": {
+    "message": "تُعامل الأحرف الكبيرة والصغيرة بالطريقة نفسها."
+  },
+  "ptNoteInvalidFmt": {
+    "message": "هذا التعبير المنتظم غير صالح، لذا لا يطابق أبدًا: {0}"
+  },
+  "ptNoteRejected": {
+    "message": "يرفض الكشف هذا التعبير المنتظم لأنه قد يجمّد الصفحات (تكرار داخل تكرار، أو أكثر من 1000 حرف)، لذا لا يطابق أبدًا."
+  },
+  "ptNoteSlashes": {
+    "message": "احذف / من الطرفين: يُبحث عنهما كجزء من النص."
+  },
+  "ptNoteLooksRegex": {
+    "message": "يبدو هذا تعبيرًا منتظمًا: فعّل Regex، وإلا فسيُبحث عن رموزه كنص عادي."
+  },
+  "ptNoteWordIgnored": {
+    "message": "يُتجاهل خيار الكلمة الكاملة ما دام Regex مفعّلًا."
+  },
+  "ptNoteHeaderCase": {
+    "message": "تُحفظ أسماء الترويسات بأحرف صغيرة، لذا مع تفعيل حساس لحالة الأحرف لن يطابق هذا النمط أبدًا."
+  },
+  "ptNoteWordEdges": {
+    "message": "يبدأ هذا النمط أو ينتهي برمز، لذا يحتاج خيار الكلمة الكاملة إلى حرف أو رقم أو _ بجانب ذلك الرمز مباشرة."
+  },
+  "rhRefDot": {
+    "message": "نقطة فعلية"
+  },
+  "rhRefSet": {
+    "message": "واحد من a أو b أو c"
+  },
+  "rhRefCount": {
+    "message": "من 2 إلى 5 مرات"
+  },
+  "mhExamplesTitle": {
+    "message": "في قواعد Scrapfly"
+  },
+  "mhHowTitle": {
+    "message": "كيف تتم المطابقة"
+  },
+  "mhWriteTitle": {
+    "message": "ما يمكنك كتابته"
+  },
+  "mhLimitsTitle": {
+    "message": "من المفيد معرفته"
+  },
+  "mhUrlIntro": {
+    "message": "يفحص عنوان الصفحة وعناوين URL التي تطلبها الصفحة: النصوص البرمجية، واستدعاءات XHR وfetch، والصور، والإطارات، وطلبات ping."
+  },
+  "mhUrlHow1": {
+    "message": "دون Regex، يجب أن يحتوي عنوان URL على النص، دون تمييز حالة الأحرف. يُحتسب العنوان كاملًا، بما فيه سلسلة الاستعلام."
+  },
+  "mhUrlHow2": {
+    "message": "مع Regex، احذف / من الطرفين واكتب النقاط بالشكل `\\.`، كما في `^https://js\\.example\\.com/`."
+  },
+  "mhUrlHow3": {
+    "message": "نطاق URL: “الصفحة” يفحص عنوان الصفحة فقط، و“النصوص البرمجية” يضيف مصادر النصوص البرمجية، و“الكل” (افتراضي) يضيف كل طلب."
+  },
+  "mhUrlLimit1": {
+    "message": "لا تُسجّل طلبات الخطوط والوسائط وأوراق الأنماط."
+  },
+  "mhUrlLimit2": {
+    "message": "تُحتسب الطلبات المرسلة قبل الفحص فقط؛ ويبدأ الفحص بعد تحميل الصفحة."
+  },
+  "mhHeaderIntro": {
+    "message": "يفحص ترويسات طلب الصفحة نفسها واستجابتها، لا ترويسات النصوص البرمجية أو استدعاءات XHR أو الإطارات."
+  },
+  "mhHeaderHow1": {
+    "message": "تُقارن أسماء الترويسات بأحرف صغيرة، والنص العادي يعني “يحتوي على”: `server` يطابق أيضًا `server-timing`. للاسم الدقيق استخدم Regex `^server$`."
+  },
+  "mhHeaderHow2": {
+    "message": "تُفحص القيمة في الترويسة التي تحمل ذلك الاسم؛ اتركها فارغة لقبول أي قيمة."
+  },
+  "mhHeaderHow3": {
+    "message": "نطاق “الاستجابة” (افتراضي) يعني الترويسات التي أرسلها الموقع؛ و“الطلب” يعني الترويسات التي أرسلها المتصفح."
+  },
+  "mhHeaderLimit1": {
+    "message": "مع تفعيل حساس لحالة الأحرف، اكتب أسماء الترويسات بأحرف صغيرة."
+  },
+  "mhHeaderLimit2": {
+    "message": "الصفحات التي تغيّر عنوانها دون إعادة تحميل يُعاد فحصها دون ترويسات."
+  },
+  "mhCookieIntro": {
+    "message": "يفحص ملفات تعريف الارتباط في الصفحة بالاسم، وبالقيمة اختياريًا، بما فيها ملفات HttpOnly وSecure."
+  },
+  "mhCookieHow1": {
+    "message": "الاسم العادي يطابق كبادئة: `_abck` يطابق أيضًا `_abck_2`."
+  },
+  "mhCookieHow2": {
+    "message": "`*` تعني أي نص: `bm_*` يطابق `bm_sz` و`bm_sv`."
+  },
+  "mhCookieHow3": {
+    "message": "للاسم الدقيق، فعّل Regex واكتب `^name$`. تطابق القيمة عندما تحتوي على النص."
+  },
+  "mhCookieLimit1": {
+    "message": "نطاق “الطلب” (افتراضي) يقرأ ملفات تعريف الارتباط في المتصفح للصفحة؛ و“الاستجابة” يقرأ الملفات التي تعيّنها استجابة الصفحة."
+  },
+  "mhCookieLimit2": {
+    "message": "لا تُرى ملفات تعريف الارتباط الخاصة بمواقع أخرى، مثل إطار أحد المورّدين. تُقص القيم الطويلة إلى 100 حرف."
+  },
+  "mhContentIntro": {
+    "message": "يبحث في نص الصفحة: HTML الخاص بـ body، والنصوص البرمجية المضمّنة، وملفات النصوص البرمجية وأوراق الأنماط التي تحمّلها."
+  },
+  "mhContentHow1": {
+    "message": "يطابق النص العادي عندما يحتويه النص، دون تمييز حالة الأحرف."
+  },
+  "mhContentHow2": {
+    "message": "الكلمة الكاملة تتجاهل المطابقات داخل كلمة أطول؛ وتحتاج إلى حرف أو رقم أو _ في طرفي النمط."
+  },
+  "mhContentHow3": {
+    "message": "“فحص النصوص البرمجية فقط” يبحث في النصوص البرمجية المضمّنة (بما فيها head) وملفات JavaScript فقط، دون HTML أو CSS."
+  },
+  "mhContentLimit1": {
+    "message": "تُتخطّى الملفات التي لا يسمح الموقع لمصادر أخرى بقراءتها (CORS) أو التي تتجاوز 5 MB."
+  },
+  "mhContentLimit2": {
+    "message": "لا يُبحث في الشيفرة داخل الإطارات أو الـ workers، ولا في الشيفرة المحمّلة بعد الفحص."
+  },
+  "mhDomIntro": {
+    "message": "يبحث عن عنصر في body الصفحة بمحدد CSS، بعد تحميل الصفحة."
+  },
+  "mhDomHow1": {
+    "message": "وسم أو `.class` أو `#id` أو `[attribute]`، منفردًا أو مجتمعًا: `.g-recaptcha[data-sitekey]`."
+  },
+  "mhDomHow2": {
+    "message": "اختبارات السمات `=` و`^=` و`$=` و`*=` و`~=` و`|=`؛ أضف ` i` قبل `]` لتجاهل حالة الأحرف."
+  },
+  "mhDomHow3": {
+    "message": "عدة محددات مفصولة بفواصل: يكفي أن يطابق أحدها."
+  },
+  "mhDomLimit1": {
+    "message": "غير مدعوم، فلا تطابق القاعدة أبدًا: المسافات أو `>` بين الأجزاء، و`:pseudo-classes`، والتهريب."
+  },
+  "mhDomLimit2": {
+    "message": "لا يُبحث في head والإطارات وshadow root. لا تُقرأ السمة `value`؛ وتُقارن السمات الأخرى بأول 100 حرف منها."
+  },
+  "mhWindowIntro": {
+    "message": "يفحص متغيرًا عامًا في JavaScript تعرّفه الصفحة، مثل `grecaptcha.render`."
+  },
+  "mhWindowHow1": {
+    "message": "المسار من `window` مفصولًا بنقاط: `KPSDK` أو `grecaptcha.render`."
+  },
+  "mhWindowHow2": {
+    "message": "شرط مثل `exists` أو `typeof function` أو `truthy` أو `=== true` أو `length > 0` أو `has keys`. الفراغ يعني truthy."
+  },
+  "mhWindowHow3": {
+    "message": "الشرط الذي لا يفهمه الكشف لا يطابق أبدًا، لذا اختر شرطًا من القائمة."
+  },
+  "mhWindowLimit1": {
+    "message": "يُفحص خلال الثواني الأولى بعد تحميل الصفحة؛ وتفوته المتغيرات العامة التي تُنشأ لاحقًا."
+  },
+  "mhWindowLimit2": {
+    "message": "لا يمكن كتابة الخصائص المسماة بـ Symbol كمسار."
+  },
+  "mhJsHooksOnlyFingerprint": {
+    "message": "قواعد البصمة وحدها تستخدم الخطافات: قواعد مكافحة الروبوتات وCaptcha تتجاهلها."
+  },
+  "mhJsHooksIntro": {
+    "message": "يسجّل استدعاء الصفحة لواجهة برمجة في المتصفح، مثل `HTMLCanvasElement.prototype.toDataURL`، وهي علامة على أخذ البصمة."
+  },
+  "mhJsHooksHow1": {
+    "message": "المسار الكامل إلى دالة أو getter: `Navigator.prototype.webdriver`، لا `navigator.webdriver`."
+  },
+  "mhJsHooksHow2": {
+    "message": "يُحتسب أي استدعاء؛ ولا تُفحص وسائطه ونتيجته، لذا يُظهر الخطاف أن واجهة برمجة استُخدمت، لا سبب ذلك."
+  },
+  "mhJsHooksLimit1": {
+    "message": "تُحتسب الاستدعاءات خلال الثواني الأولى بعد تحميل الصفحة (8 ثوانٍ كحد أقصى)."
+  },
+  "mhJsHooksLimit2": {
+    "message": "لا تُرى الاستدعاءات داخل الـ workers أو الإطارات، باستثناء الأهداف المضمّنة في إطارات الموقع نفسه."
+  },
+  "mhPayloadIntro": {
+    "message": "يبحث في نصوص طلبات POST وPUT وPATCH وDELETE التي ترسلها الصفحة، من أي إطار."
+  },
+  "mhPayloadHow1": {
+    "message": "يطابق النص العادي عندما يحتويه نص الطلب، دون تمييز حالة الأحرف. تُقرأ بيانات النماذج بالشكل `name=value&…`."
+  },
+  "mhPayloadHow2": {
+    "message": "عنوان URL للطلب (اختياري) وطريقة HTTP يقصران البحث على الطلبات المطابقة."
+  },
+  "mhPayloadLimit1": {
+    "message": "تُحتسب الطلبات المرسلة قبل الفحص فقط، حتى 50 لكل صفحة."
+  },
+  "mhPayloadLimit2": {
+    "message": "لا تُقرأ رسائل WebSocket."
+  },
+  "domCardTitle": {
+    "message": "محدد CSS"
+  },
+  "domCardBrowse": {
+    "message": "استعراض"
+  },
+  "domCardHint": {
+    "message": "وسم أو .class أو #id أو اختبار [attribute]، منفردًا أو مجتمعًا. المسافات أو > بين الأجزاء غير مدعومة."
   },
   "settingsApiEventsDesc": {
     "message": "الأحداث التي ترسلها الإضافة إلى الصفحة"
@@ -3410,7 +3476,7 @@
     "message": "نمط URL"
   },
   "rulesUiJsHookTargetPlaceholder": {
-    "message": "هدف خطاف JS (مثل navigator.webdriver)"
+    "message": "هدف خطاف JS (مثل Navigator.prototype.webdriver)"
   },
   "rulesUiWindowPathPlaceholder": {
     "message": "مسار window (مثل grecaptcha أو _cf_chl_opt)"
@@ -3468,24 +3534,6 @@
   },
   "rulesUiLeaveEmptyAnyUrl": {
     "message": "اتركه فارغًا لمطابقة أي URL"
-  },
-  "ruleExampleMatches": {
-    "message": "✓ يطابق:"
-  },
-  "ruleExampleWont": {
-    "message": "× لا يطابق:"
-  },
-  "ruleExampleWontMatch": {
-    "message": "× لا يطابق:"
-  },
-  "ruleExampleLiteralTextOnly": {
-    "message": "نص حرفي فقط"
-  },
-  "ruleExampleExactCase": {
-    "message": "(حالة الأحرف نفسها)"
-  },
-  "ruleExampleAlone": {
-    "message": "(منفردة)"
   },
   "ruleConditionGroupOther": {
     "message": "أخرى"

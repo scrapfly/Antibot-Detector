@@ -52,7 +52,7 @@ Rules.prototype.getMethodInputPlaceholders = function(methodType) {
     if (methodType === 'dom') name = rulesEditorText('rulesUiDomSelectorPlaceholder', 'CSS Selector (e.g., .class, #id, [attr])');
     else if (methodType === 'content') name = rulesEditorText('rulesUiContentTextPlaceholder', 'Text/Word to search');
     else if (methodType === 'url' || methodType === 'urls') name = rulesEditorText('rulesUiUrlPatternPlaceholder', 'URL Pattern');
-    else if (methodType === 'js_hooks') name = rulesEditorText('rulesUiJsHookTargetPlaceholder', 'JS Hook Target (e.g., navigator.webdriver)');
+    else if (methodType === 'js_hooks') name = rulesEditorText('rulesUiJsHookTargetPlaceholder', 'JS Hook Target (e.g., Navigator.prototype.webdriver)');
     else if (methodType === 'window') {
       name = rulesEditorText('rulesUiWindowPathPlaceholder', 'Window Path (e.g., grecaptcha, _cf_chl_opt)');
       value = rulesEditorText('rulesUiWindowConditionPlaceholder', 'Condition (e.g., typeof object, typeof function)');
@@ -122,10 +122,12 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                 <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" fill="currentColor"/>
               </svg>
               ${this.renderMethodChip(methodType, 'method-title')}
+              ${methodType === 'js_hooks' ? `<span class="method-scope-tag" role="img" title="${rulesEditorText('mhJsHooksOnlyFingerprint', 'Only Fingerprint rules use hooks: anti-bot and CAPTCHA rules ignore them.')}" aria-label="${rulesEditorText('mhJsHooksOnlyFingerprint', 'Only Fingerprint rules use hooks: anti-bot and CAPTCHA rules ignore them.')}">!</span>` : ''}
             </div>
             <span class="method-pattern-count">${patternCountText}</span>
             ${methodHelper}
           </div>
+          ${methodType === 'js_hooks' ? `<p class="method-scope-note">${rulesEditorText('mhJsHooksOnlyFingerprint', 'Only Fingerprint rules use hooks: anti-bot and CAPTCHA rules ignore them.')}</p>` : ''}
           <div class="method-search-row">
             <input
               type="text"
@@ -225,7 +227,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
 
             const { name: inputPlaceholder, value: valuePlaceholder } = this.getMethodInputPlaceholders(methodType);
 
-            const hasNameCustomSettings = nameRegex || nameWholeWord || nameCaseSensitive ||
+            const hasNameCustomSettings = (methodType !== 'dom' && (nameRegex || nameWholeWord || nameCaseSensitive)) ||
                                           (methodType === 'content' && checkScripts === true);
             const hasValueCustomSettings = valueRegex || valueWholeWord || valueCaseSensitive;
 
@@ -261,7 +263,6 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                     <div class="input-with-indicators">
                       <div class="input-row">
                         <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="${FormatUtils.escapeAttr(name)}" data-method-key="${methodType}" data-item-index="${index}">
-                        ${methodType === 'dom' ? `<button class="dom-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesDomSelectorHelper', 'DOM Selector Helper'))}" data-input-index="${index}">?</button>` : ''}
                         ${methodType === 'window' ? `<button class="window-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesWindowPropertiesHelper', 'Window Properties Helper'))}" data-input-index="${index}">?</button>` : ''}
                         <div class="field-actions" data-field-type="name">
                           ${showNameSettings ? `
@@ -762,7 +763,6 @@ Rules.prototype.addNewMethodItem = function(button) {
             <div class="input-with-indicators">
               <div class="input-row">
                 <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="" data-method-key="${methodKey}" data-item-index="${itemIndex}">
-                ${isDom ? `<button class="dom-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesDomSelectorHelper', 'DOM Selector Helper'))}" data-input-index="${itemIndex}">?</button>` : ''}
                 ${isWindow ? `<button class="window-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesWindowPropertiesHelper', 'Window Properties Helper'))}" data-input-index="${itemIndex}">?</button>` : ''}
                 <div class="field-actions" data-field-type="name">
                   ${showNameSettings ? `
@@ -872,7 +872,6 @@ Rules.prototype.addNewMethodSection = function() {
                 <div class="input-with-indicators">
                   <div class="input-row">
                     <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="" data-method-key="${methodKey}" data-item-index="new">
-                    ${isDom ? `<button class="dom-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesDomSelectorHelper', 'DOM Selector Helper'))}" data-input-index="new">?</button>` : ''}
                     ${isWindow ? `<button class="window-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesWindowPropertiesHelper', 'Window Properties Helper'))}" data-input-index="new">?</button>` : ''}
                     <div class="field-actions" data-field-type="name">
                       ${showNameSettings ? `

@@ -867,13 +867,6 @@
   white-space: normal;
 }
 
-/* Setting Label Row with Helper Buttons */
-.setting-label-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 /* ============================================
    Modern Form Field Styles
    ============================================ */
@@ -2201,38 +2194,6 @@
   margin-bottom: 2px;
 }
 
-/* Example Hints */
-.option-examples {
-  margin-top: 6px;
-  padding: 8px 10px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font-size: 11px;
-  line-height: 1.4;
-  display: none;
-}
-
-.toggle-input:checked ~ .option-content .option-examples {
-  display: block;
-  animation: slideDown 0.3s ease;
-}
-
-.example-match {
-  color: var(--success);
-  font-weight: 500;
-}
-
-.example-nomatch {
-  color: var(--danger);
-  font-weight: 500;
-}
-
-.example-separator {
-  color: var(--text-muted);
-  margin: 0 8px;
-}
-
 /* Canvas Color Picker Modal Styles */
 .canvas-color-modal {
   width: auto;
@@ -2415,34 +2376,6 @@
 
 /* Remove old color-actions styles as buttons are now in footer */
 
-/* DOM Helper Button */
-.dom-helper-btn {
-  padding: 0;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-left: 0;
-  margin-top: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  flex-shrink: 0;
-  align-self: center;
-  box-sizing: border-box;
-}
-
-.dom-helper-btn:hover {
-  background: var(--accent-hover);
-  transform: none;
-}
-
 /* Window Helper Button */
 .window-helper-btn {
   padding: 0;
@@ -2469,124 +2402,6 @@
 .window-helper-btn:hover {
   background: var(--accent-hover);
   transform: none;
-}
-
-/* Condition Helper Button (for WINDOW methods) */
-.condition-helper-btn {
-  padding: 0;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-left: 0;
-  margin-top: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  flex-shrink: 0;
-  align-self: center;
-  box-sizing: border-box;
-}
-
-.condition-helper-btn:hover {
-  background: var(--accent-hover);
-  transform: none;
-}
-
-/* Regex Helper Button */
-.regex-helper-btn {
-  padding: 2px 6px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 3px;
-  font-size: 11px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 20px;
-  height: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  vertical-align: middle;
-}
-
-.regex-helper-btn:hover {
-  background: var(--accent-hover);
-  transform: scale(1.15);
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
-}
-
-.regex-helper-btn:active {
-  transform: scale(0.95);
-}
-
-/* Pattern Helper Buttons (Whole Word, Case Sensitive) */
-.pattern-helper-btn {
-  padding: 2px 6px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 3px;
-  font-size: 11px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 20px;
-  height: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  vertical-align: middle;
-}
-
-.pattern-helper-btn:hover {
-  background: var(--accent-hover);
-  transform: scale(1.15);
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
-}
-
-.pattern-helper-btn:active {
-  transform: scale(0.95);
-}
-
-/* Explanation Helper Buttons (Info icons) */
-.explanation-helper-btn {
-  padding: 2px 6px;
-  background: var(--success);
-  color: white;
-  border: none;
-  border-radius: 3px;
-  font-size: 11px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 20px;
-  height: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  vertical-align: middle;
-}
-
-.explanation-helper-btn:hover {
-  background: var(--success-dark);
-  transform: scale(1.15);
-  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
-}
-
-.explanation-helper-btn:active {
-  transform: scale(0.95);
 }
 
 /* Condition Option (for WINDOW property conditions) */
@@ -3438,7 +3253,6 @@
 }
 
 #editRuleModal .method-help-btn,
-#editRuleModal .dom-helper-btn,
 #editRuleModal .window-helper-btn,
 #editRuleModal .method-action-btn,
 #editRuleModal .method-pagination-btn {
@@ -3468,12 +3282,18 @@
   height: 24px;
 }
 
-/* Pattern row actions: quiet outline icons like the History cards; colour only on hover */
+/* Pattern row actions: quiet outline icons like the History cards. Settings
+   is blue (it opens the pattern's options and helpers), filled when the
+   pattern has custom settings; delete turns red only on hover */
 #editRuleModal .method-action-btn {
   background: transparent;
   border-color: transparent;
   border-radius: 7px;
   color: var(--text-secondary);
+}
+
+#editRuleModal .method-action-btn.settings {
+  color: var(--accent-light);
 }
 
 #editRuleModal .method-action-btn.settings.has-custom-settings {
@@ -3483,7 +3303,6 @@
 }
 
 #editRuleModal .method-help-btn:hover,
-#editRuleModal .dom-helper-btn:hover,
 #editRuleModal .window-helper-btn:hover,
 #editRuleModal .method-pagination-btn:hover:not(:disabled) {
   background: rgba(59, 130, 246, 0.14);
@@ -3492,9 +3311,9 @@
 }
 
 #editRuleModal .method-action-btn.settings:hover {
-  background: var(--bg-tertiary);
-  border-color: var(--border-light);
-  color: var(--text-primary);
+  background: rgba(59, 130, 246, 0.14);
+  border-color: rgba(59, 130, 246, 0.45);
+  color: #ffffff;
 }
 
 #editRuleModal .method-action-btn.delete:hover {
@@ -3678,40 +3497,124 @@
   box-shadow: none;
 }
 
-/* ? / i helpers: small square icon buttons with a coloured glyph */
-#methodSettingsModal .regex-helper-btn,
-#methodSettingsModal .pattern-helper-btn,
-#methodSettingsModal .explanation-helper-btn {
-  width: 22px;
-  min-width: 22px;
-  height: 22px;
-  padding: 0;
+/* Test pattern button in a pattern card header (helpers/pattern-tester.js) */
+#methodSettingsModal .ms-test-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  height: 26px;
+  margin-inline-start: auto;
+  padding: 0 9px;
   background: var(--re-btn-bg);
   border: 1px solid var(--re-border);
-  border-radius: 5px;
+  border-radius: 6px;
   color: var(--accent-light);
-  box-shadow: none;
-  transform: none;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
-#methodSettingsModal .explanation-helper-btn {
-  color: var(--success-light);
-}
-
-#methodSettingsModal .regex-helper-btn:hover,
-#methodSettingsModal .pattern-helper-btn:hover,
-#methodSettingsModal .explanation-helper-btn:hover {
+#methodSettingsModal .ms-test-btn:hover {
   background: rgba(59, 130, 246, 0.14);
   border-color: var(--accent);
   color: #ffffff;
-  box-shadow: none;
-  transform: none;
 }
 
-#methodSettingsModal .option-examples {
+#methodSettingsModal .ms-test-btn:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 1px;
+}
+
+#methodSettingsModal .payload-url-pattern-option {
+  align-items: center;
+}
+
+/* The pattern a card's options apply to, and what it matches in plain words */
+#methodSettingsModal .ms-pattern-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0 0 8px;
+}
+
+#methodSettingsModal .ms-pattern {
+  display: block;
+  padding: 6px 9px;
   background: var(--re-field-bg);
-  border-color: var(--re-border);
+  border: 1px solid var(--re-border);
+  border-radius: 6px;
   font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--re-text);
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#methodSettingsModal .ms-pattern.is-empty {
+  font-family: inherit;
+  font-style: italic;
+  color: var(--re-text-dim);
+}
+
+#methodSettingsModal .ms-pattern.is-pending {
+  border-color: rgba(59, 130, 246, 0.6);
+}
+
+#methodSettingsModal .ms-pattern-says {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 15px;
+  color: var(--re-text-dim);
+}
+
+#methodSettingsModal .payload-url-input + .ms-pattern-says {
+  margin: -2px 2px 2px;
+}
+
+#methodSettingsModal .ms-pattern-says:empty {
+  display: none;
+}
+
+/* JS hooks section of a non-Fingerprint rule: detection ignores it there.
+   "!" next to the chip, the sentence at the top of the opened section */
+#editRuleModal .method-scope-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(245, 158, 11, 0.55);
+  border-radius: 50%;
+  color: var(--warning-light);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: help;
+}
+
+#editRuleModal .method-scope-note {
+  margin: 0 0 8px;
+  padding: 6px 9px;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.08);
+  font-size: 11.5px;
+  line-height: 15px;
+  color: #fcd34d;
+}
+
+#editRuleModal .method-section.collapsed .method-scope-note,
+#editRuleModal[data-category="fingerprint"] .method-scope-tag,
+#editRuleModal[data-category="fingerprint"] .method-scope-note {
+  display: none;
 }
 
 #methodSettingsModal .confidence-display {

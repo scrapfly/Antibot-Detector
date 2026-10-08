@@ -880,9 +880,6 @@
   "textWordMatching": {
     "message": "Correspondance de texte/mot"
   },
-  "domSelectorMatching": {
-    "message": "Correspondance de sélecteur DOM"
-  },
   "payloadTextMatching": {
     "message": "Correspondance de texte de charge utile"
   },
@@ -1606,114 +1603,6 @@
   "notifLoadingDefault": {
     "message": "Chargement..."
   },
-  "helpJsHooksTitle": {
-    "message": "Détection par hooks JavaScript"
-  },
-  "helpJsHooksDescription": {
-    "message": "Les hooks interceptent les appels d'API du navigateur (Canvas, Audio, WebGL, etc.) pour détecter en temps réel le code d'empreinte anti-bot lorsque la page accède à ces API."
-  },
-  "helpJsHooksWarning": {
-    "message": "Les hooks doivent être installés à document_start avant l'exécution de tout script de la page — sinon, la page peut sauvegarder des références aux API originales avant que notre shim ne soit en place."
-  },
-  "helpJsHooksTip": {
-    "message": "Ajoutez une cible comme CanvasRenderingContext2D.prototype.getImageData pour détecter l'empreinte canvas."
-  },
-  "helpWindowTitle": {
-    "message": "Détection des propriétés de la fenêtre"
-  },
-  "helpWindowDescription": {
-    "message": "Détecte les objets et propriétés JavaScript ajoutés à l'objet global window par les scripts anti-bot."
-  },
-  "helpWindowWarning": {
-    "message": "Certains scripts anti-bot utilisent des clés Symbol() qui ne sont pas énumérables — elles sont plus difficiles à détecter."
-  },
-  "helpWindowTip": {
-    "message": "Utilisez des conditions comme typeof object ou exists pour faire correspondre le type de propriété."
-  },
-  "helpUrlTitle": {
-    "message": "Détection par motif d'URL"
-  },
-  "helpUrlDescription": {
-    "message": "Compare les URL des ressources chargées (scripts, images, requêtes réseau) à des motifs."
-  },
-  "helpUrlWarning": {
-    "message": "Les motifs ignorent les majuscules et minuscules, sauf si vous activez « Sensible à la casse ». Un motif trop général correspond aussi à des ressources sans rapport : restez précis."
-  },
-  "helpUrlTip": {
-    "message": "Utilisez l'option Regex pour des motifs avancés comme /\\/v\\d+\\/challenge/."
-  },
-  "helpHeaderTitle": {
-    "message": "Détection des en-têtes HTTP"
-  },
-  "helpHeaderDescription": {
-    "message": "Détecte les en-têtes de requête et de réponse HTTP définis par les middlewares anti-bot."
-  },
-  "helpHeaderWarning": {
-    "message": "Certains en-têtes ne sont présents que sur la requête initiale — assurez-vous que votre portée inclut Requête."
-  },
-  "helpHeaderTip": {
-    "message": "Cibles courantes : x-akamai-bot-manager-token, cf-ray, x-shape-version."
-  },
-  "helpCookieTitle": {
-    "message": "Détection des cookies"
-  },
-  "helpCookieDescription": {
-    "message": "Détecte les cookies définis par les défis anti-bot. Correspond au nom du cookie (et éventuellement au motif de valeur)."
-  },
-  "helpCookieWarning": {
-    "message": "Les noms de cookies avec des suffixes aléatoires (par ex. _abck-xyz123) nécessitent un motif regex, et non un nom littéral."
-  },
-  "helpCookieTip": {
-    "message": "Utilisez Mot entier pour les correspondances exactes de nom, ou Regex pour les motifs de préfixe comme ^datadome-."
-  },
-  "helpContentTitle": {
-    "message": "Détection du contenu de la page"
-  },
-  "helpContentDescription": {
-    "message": "Recherche des motifs de texte à l'intérieur du HTML de la page et des balises de script en ligne."
-  },
-  "helpContentWarning": {
-    "message": "L'analyse complète de la page peut être lente sur les grandes pages. Restreignez à Vérifier uniquement les scripts si la signature est dans le code JS."
-  },
-  "helpContentTip": {
-    "message": "Utilisez Mot entier pour éviter les faux positifs dus à des sous-chaînes à l'intérieur de mots plus longs."
-  },
-  "helpDomTitle": {
-    "message": "Détection par sélecteur DOM"
-  },
-  "helpDomDescription": {
-    "message": "Détecte les éléments HTML à l'aide de sélecteurs CSS. Se déclenche lorsque l'élément correspondant est présent dans le DOM."
-  },
-  "helpDomWarning": {
-    "message": "Les sélecteurs ne correspondent qu'aux éléments rendus dans le DOM réel — pas à ceux situés dans des iframes ou des shadow roots."
-  },
-  "helpDomTip": {
-    "message": "Utilisez des sélecteurs spécifiques comme div#cf-challenge[data-ray] plutôt que des sélecteurs génériques pour réduire les faux positifs."
-  },
-  "helpPayloadTitle": {
-    "message": "Détection de la charge utile des requêtes"
-  },
-  "helpPayloadDescription": {
-    "message": "Surveille tous les corps de requêtes HTTP POST/PUT/PATCH à la recherche de motifs de texte."
-  },
-  "helpPayloadWarning": {
-    "message": "La surveillance de la charge utile ne fonctionne que pour les requêtes que notre extension peut intercepter (pas de corps chiffrés, pas de blobs opaques)."
-  },
-  "helpPayloadTip": {
-    "message": "Combinez avec Motif d'URL pour limiter la correspondance à des points de terminaison spécifiques."
-  },
-  "helpWarningLabel": {
-    "message": "Avertissement :"
-  },
-  "helpTipLabel": {
-    "message": "Astuce :"
-  },
-  "detectionMethodTitle": {
-    "message": "Méthode de détection"
-  },
-  "noHelpContentAvailable": {
-    "message": "Aucun contenu d'aide disponible pour ce type de méthode."
-  },
   "advNoCapturesHintFmt": {
     "message": "Cliquez sur « Démarrer la capture » ci-dessus pour commencer à capturer les données {0}"
   },
@@ -2044,12 +1933,6 @@
   "rhSearchDom": {
     "message": "Rechercher des sélecteurs, ex. captcha, iframe"
   },
-  "rhSearchRegex": {
-    "message": "Texte à trouver, ex. bm_ ou token"
-  },
-  "rhSearchSample": {
-    "message": "Saisissez une valeur à tester"
-  },
   "rhCondition": {
     "message": "Condition"
   },
@@ -2173,9 +2056,6 @@
   "rhCondFalse": {
     "message": "est false"
   },
-  "rhWindowIntro": {
-    "message": "Vérifie une variable globale JavaScript de la page (window.…). Choisissez-en une, puis ce qu'elle doit être."
-  },
   "rhWindowSentenceFmt": {
     "message": "Détecte les pages où {0} {1}"
   },
@@ -2215,45 +2095,6 @@
   "rhDomCamel": {
     "message": "Classe en camelCase"
   },
-  "rhRegexTitle": {
-    "message": "Assistant regex"
-  },
-  "rhUsePattern": {
-    "message": "Utiliser le motif"
-  },
-  "rhRegexStartsFmt": {
-    "message": "Commence par « {0} »"
-  },
-  "rhRegexEndsFmt": {
-    "message": "Se termine par « {0} »"
-  },
-  "rhRegexContainsFmt": {
-    "message": "Contient « {0} » n’importe où"
-  },
-  "rhRegexWordFmt": {
-    "message": "Mot entier « {0} »"
-  },
-  "rhRegexOrFmt": {
-    "message": "« {0} » ou une autre option"
-  },
-  "rhRegexStartsMoreFmt": {
-    "message": "Commence par « {0} » suivi d’autre texte"
-  },
-  "rhRegexEitherFmt": {
-    "message": "« {0} » ou « {1} »"
-  },
-  "rhExamplesForFmt": {
-    "message": "Exemples pour « {0} »"
-  },
-  "rhExamples": {
-    "message": "Exemples"
-  },
-  "rhHowMatchesFmt": {
-    "message": "Comment « {0} » correspond"
-  },
-  "rhQuickRef": {
-    "message": "Aide-mémoire"
-  },
   "rhRefAny": {
     "message": "n’importe quel caractère"
   },
@@ -2290,74 +2131,299 @@
   "rhNoMatch": {
     "message": "Ne correspond pas"
   },
-  "rhWwIntro": {
-    "message": "Ne correspond que si le texte est isolé, pas au sein d’un mot plus long."
+  "ptTitle": {
+    "message": "Tester le motif"
   },
-  "rhWwExact": {
-    "message": "Mot exact"
+  "ptTitleFmt": {
+    "message": "Tester le motif · {0}"
   },
-  "rhWwJoinedBefore": {
-    "message": "Collé au texte qui précède"
+  "ptKindUrl": {
+    "message": "URL"
   },
-  "rhWwJoinedAfter": {
-    "message": "Collé au texte qui suit"
+  "ptKindContent": {
+    "message": "Contenu de la page"
   },
-  "rhWwSpaces": {
-    "message": "Séparé par des espaces"
+  "ptKindCookieName": {
+    "message": "Nom du cookie"
   },
-  "rhCsIntro": {
-    "message": "Activé, majuscules et minuscules sont considérées comme différentes."
+  "ptKindCookieValue": {
+    "message": "Valeur du cookie"
   },
-  "rhCsOnTitle": {
-    "message": "Respect de la casse activé"
+  "ptKindHeaderName": {
+    "message": "Nom de l’en-tête"
   },
-  "rhCsOffTitle": {
-    "message": "Respect de la casse désactivé"
+  "ptKindHeaderValue": {
+    "message": "Valeur de l’en-tête"
   },
-  "rhWhatIsRegex": {
-    "message": "Qu’est-ce qu’une expression régulière ?"
+  "ptKindPayloadText": {
+    "message": "Corps de la requête"
   },
-  "rhWhatIsWholeWord": {
-    "message": "Qu’est-ce que « Mot entier » ?"
+  "ptKindPayloadUrl": {
+    "message": "URL de la requête"
   },
-  "rhWhatIsCase": {
-    "message": "Qu’est-ce que « Respect de la casse » ?"
+  "ptPatternLabel": {
+    "message": "Motif"
   },
-  "rhRegexIntro": {
-    "message": "Une expression régulière (regex) trouve du texte par motif plutôt que par caractères exacts."
+  "ptOptionsLabel": {
+    "message": "Options de correspondance"
   },
-  "rhWhenToUse": {
-    "message": "Quand l’utiliser"
+  "ptOptRegex": {
+    "message": "Regex"
   },
-  "rhRegexUse1": {
-    "message": "Un texte qui commence ou finit par quelque chose de précis"
+  "ptTryOn": {
+    "message": "Essayer sur"
   },
-  "rhRegexUse2": {
-    "message": "Plusieurs variantes à la fois (avec |)"
+  "ptExamplesBtn": {
+    "message": "Exemples"
   },
-  "rhRegexUse3": {
-    "message": "Des nombres ou des types de caractères précis"
+  "ptSamplesPlaceholder": {
+    "message": "Un par ligne : une URL, un nom de cookie…"
   },
-  "rhRegexTip": {
-    "message": "Pour un texte exact, pas besoin de regex : utilisez « Mot entier »."
+  "ptNoSamples": {
+    "message": "Saisissez ou collez du texte ci-dessus, un par ligne, pour voir s’il correspond."
   },
-  "rhBestFor": {
-    "message": "Idéal pour"
+  "ptCheatTitle": {
+    "message": "Aide-mémoire regex"
   },
-  "rhWwUse1": {
-    "message": "Noms de cookies exacts"
+  "ptCheatNote": {
+    "message": "Écrivez le motif sans / autour. Une répétition dans une répétition, comme (a+)+, est refusée car elle pourrait bloquer les pages."
   },
-  "rhWwUse2": {
-    "message": "Noms d’en-têtes précis"
+  "ptApply": {
+    "message": "Appliquer"
   },
-  "rhWwUse3": {
-    "message": "Noms complets de classes ou de fonctions"
+  "ptTestBtn": {
+    "message": "Tester"
   },
-  "rhCsUse1": {
-    "message": "En-têtes et cookies avec la casse exacte"
+  "ptTestTitle": {
+    "message": "Essayer le motif sur un texte d’exemple"
   },
-  "rhCsUse2": {
-    "message": "Noms de propriétés JavaScript"
+  "ptNoPattern": {
+    "message": "Pas encore de motif"
+  },
+  "ptHintRegex": {
+    "message": "Un motif comme ^bm_ ou \\d+, sans / autour"
+  },
+  "ptHintWholeWord": {
+    "message": "Ignore les correspondances à l’intérieur d’un mot plus long : _abck, pas test_abck"
+  },
+  "ptHintCase": {
+    "message": "Akamai ne correspond plus à akamai"
+  },
+  "ptSaysEmpty": {
+    "message": "Saisissez un motif pour voir ce qu’il trouve."
+  },
+  "ptSaysRegex": {
+    "message": "Correspond au texte où la regex trouve une correspondance."
+  },
+  "ptSaysWordFmt": {
+    "message": "Correspond à « {0} » comme mot entier, pas à l’intérieur d’un mot plus long."
+  },
+  "ptSaysWildcardFmt": {
+    "message": "Correspond aux noms comme « {0} », où * remplace n’importe quel texte."
+  },
+  "ptSaysPrefixFmt": {
+    "message": "Correspond aux noms qui commencent par « {0} »."
+  },
+  "ptSaysContainsFmt": {
+    "message": "Correspond au texte qui contient « {0} »."
+  },
+  "ptCaseExact": {
+    "message": "Les majuscules et les minuscules doivent correspondre exactement."
+  },
+  "ptCaseIgnored": {
+    "message": "Les majuscules et les minuscules sont traitées de la même façon."
+  },
+  "ptNoteInvalidFmt": {
+    "message": "Cette regex n’est pas valide, elle ne correspond donc jamais : {0}"
+  },
+  "ptNoteRejected": {
+    "message": "La détection refuse cette regex car elle pourrait bloquer les pages (une répétition dans une répétition, ou plus de 1000 caractères) ; elle ne correspond donc jamais."
+  },
+  "ptNoteSlashes": {
+    "message": "Retirez les / aux deux extrémités : elles sont recherchées comme partie du texte."
+  },
+  "ptNoteLooksRegex": {
+    "message": "Cela ressemble à une regex : activez Regex, sinon ses symboles sont recherchés comme du texte normal."
+  },
+  "ptNoteWordIgnored": {
+    "message": "Mot entier est ignoré tant que Regex est activé."
+  },
+  "ptNoteHeaderCase": {
+    "message": "Les noms d’en-tête sont enregistrés en minuscules : avec Sensible à la casse activé, ce motif ne correspond jamais."
+  },
+  "ptNoteWordEdges": {
+    "message": "Ce motif commence ou finit par un symbole : Mot entier exige une lettre, un chiffre ou _ juste à côté de ce symbole."
+  },
+  "rhRefDot": {
+    "message": "un vrai point"
+  },
+  "rhRefSet": {
+    "message": "un parmi a, b, c"
+  },
+  "rhRefCount": {
+    "message": "de 2 à 5 fois"
+  },
+  "mhExamplesTitle": {
+    "message": "Dans les règles de Scrapfly"
+  },
+  "mhHowTitle": {
+    "message": "Comment la correspondance se fait"
+  },
+  "mhWriteTitle": {
+    "message": "Ce que vous pouvez écrire"
+  },
+  "mhLimitsTitle": {
+    "message": "Bon à savoir"
+  },
+  "mhUrlIntro": {
+    "message": "Vérifie l’adresse de la page et les URL qu’elle demande : scripts, appels XHR et fetch, images, frames et pings."
+  },
+  "mhUrlHow1": {
+    "message": "Sans Regex, l’URL doit contenir le texte, sans tenir compte de la casse. L’URL entière compte, chaîne de requête comprise."
+  },
+  "mhUrlHow2": {
+    "message": "Avec Regex, retirez les / aux deux extrémités et écrivez les points `\\.`, comme dans `^https://js\\.example\\.com/`."
+  },
+  "mhUrlHow3": {
+    "message": "Portée de l’URL : Page vérifie seulement l’adresse de la page, Scripts ajoute les sources des scripts, Toutes (par défaut) ajoute toutes les requêtes."
+  },
+  "mhUrlLimit1": {
+    "message": "Les requêtes de polices, de médias et de feuilles de style ne sont pas enregistrées."
+  },
+  "mhUrlLimit2": {
+    "message": "Seules les requêtes faites avant l’analyse comptent ; l’analyse se lance une fois la page chargée."
+  },
+  "mhHeaderIntro": {
+    "message": "Vérifie les en-têtes de la requête et de la réponse de la page elle-même, pas ceux des scripts, des appels XHR ou des frames."
+  },
+  "mhHeaderHow1": {
+    "message": "Les noms d’en-tête sont comparés en minuscules, et un texte simple signifie « contient » : `server` correspond aussi à `server-timing`. Pour un nom exact, utilisez Regex `^server$`."
+  },
+  "mhHeaderHow2": {
+    "message": "La valeur est vérifiée sur l’en-tête de ce nom ; laissez-la vide pour accepter n’importe quelle valeur."
+  },
+  "mhHeaderHow3": {
+    "message": "Portée Réponse (par défaut) : en-têtes envoyés par le site ; Requête : en-têtes envoyés par le navigateur."
+  },
+  "mhHeaderLimit1": {
+    "message": "Avec Sensible à la casse activé, écrivez les noms d’en-tête en minuscules."
+  },
+  "mhHeaderLimit2": {
+    "message": "Les pages qui changent d’adresse sans rechargement sont réanalysées sans en-têtes."
+  },
+  "mhCookieIntro": {
+    "message": "Vérifie les cookies de la page par nom et, si besoin, par valeur, y compris les cookies HttpOnly et Secure."
+  },
+  "mhCookieHow1": {
+    "message": "Un nom simple correspond comme préfixe : `_abck` correspond aussi à `_abck_2`."
+  },
+  "mhCookieHow2": {
+    "message": "`*` remplace n’importe quel texte : `bm_*` correspond à `bm_sz` et `bm_sv`."
+  },
+  "mhCookieHow3": {
+    "message": "Pour un nom exact, activez Regex et écrivez `^nom$`. La valeur correspond quand elle contient le texte."
+  },
+  "mhCookieLimit1": {
+    "message": "La portée Requête (par défaut) lit les cookies du navigateur pour la page ; Réponse lit les cookies définis par la réponse de la page."
+  },
+  "mhCookieLimit2": {
+    "message": "Les cookies d’autres sites, comme la frame d’un fournisseur, ne sont pas vus. Les valeurs longues sont coupées à 100 caractères."
+  },
+  "mhContentIntro": {
+    "message": "Cherche dans le texte de la page : le HTML de son body, ses scripts intégrés et les fichiers de scripts et de styles qu’elle charge."
+  },
+  "mhContentHow1": {
+    "message": "Un texte simple correspond quand le texte le contient, sans tenir compte de la casse."
+  },
+  "mhContentHow2": {
+    "message": "Mot entier ignore les correspondances à l’intérieur d’un mot plus long ; il faut une lettre, un chiffre ou _ aux deux extrémités du motif."
+  },
+  "mhContentHow3": {
+    "message": "« Vérifier uniquement les scripts » cherche seulement dans les scripts intégrés (head compris) et les fichiers JavaScript, sans HTML ni CSS."
+  },
+  "mhContentLimit1": {
+    "message": "Les fichiers que le site ne laisse pas lire par d’autres origines (CORS), ou de plus de 5 Mo, sont ignorés."
+  },
+  "mhContentLimit2": {
+    "message": "Le code dans des frames ou des workers, ou chargé après l’analyse, n’est pas parcouru."
+  },
+  "mhDomIntro": {
+    "message": "Cherche un élément dans le body de la page avec un sélecteur CSS, une fois la page chargée."
+  },
+  "mhDomHow1": {
+    "message": "Une balise, `.classe`, `#id` ou `[attribut]`, seul ou combiné : `.g-recaptcha[data-sitekey]`."
+  },
+  "mhDomHow2": {
+    "message": "Tests d’attribut `=`, `^=`, `$=`, `*=`, `~=` et `|=` ; ajoutez ` i` avant `]` pour ignorer la casse."
+  },
+  "mhDomHow3": {
+    "message": "Plusieurs sélecteurs séparés par des virgules : il suffit que l’un d’eux corresponde."
+  },
+  "mhDomLimit1": {
+    "message": "Non pris en charge, la règle ne correspond alors jamais : espaces ou `>` entre les parties, `:pseudo-classes` et échappements."
+  },
+  "mhDomLimit2": {
+    "message": "Le head, les frames et les shadow roots ne sont pas parcourus. L’attribut `value` n’est pas lu ; les autres sont comparés sur leurs 100 premiers caractères."
+  },
+  "mhWindowIntro": {
+    "message": "Vérifie une variable globale JavaScript définie par la page, comme `grecaptcha.render`."
+  },
+  "mhWindowHow1": {
+    "message": "Le chemin depuis `window`, séparé par des points : `KPSDK` ou `grecaptcha.render`."
+  },
+  "mhWindowHow2": {
+    "message": "Une condition comme `exists`, `typeof function`, `truthy`, `=== true`, `length > 0` ou `has keys`. Vide signifie truthy."
+  },
+  "mhWindowHow3": {
+    "message": "Une condition que la détection ne comprend pas ne correspond jamais : choisissez-en une dans la liste."
+  },
+  "mhWindowLimit1": {
+    "message": "Vérifié pendant les premières secondes après le chargement de la page ; les variables globales créées plus tard ne sont pas vues."
+  },
+  "mhWindowLimit2": {
+    "message": "Les propriétés nommées par un Symbol ne peuvent pas s’écrire comme chemin."
+  },
+  "mhJsHooksOnlyFingerprint": {
+    "message": "Seules les règles de la catégorie Empreinte utilisent les intercepteurs : les règles Anti-bot et Captcha les ignorent."
+  },
+  "mhJsHooksIntro": {
+    "message": "Enregistre quand la page appelle une API du navigateur, comme `HTMLCanvasElement.prototype.toDataURL`, signe de prise d’empreinte."
+  },
+  "mhJsHooksHow1": {
+    "message": "Le chemin complet vers une méthode ou un getter : `Navigator.prototype.webdriver`, pas `navigator.webdriver`."
+  },
+  "mhJsHooksHow2": {
+    "message": "Tout appel compte ; ses arguments et son résultat ne sont pas vérifiés : un intercepteur montre qu’une API a été utilisée, pas pourquoi."
+  },
+  "mhJsHooksLimit1": {
+    "message": "Les appels comptent pendant les premières secondes après le chargement de la page (8 secondes au plus)."
+  },
+  "mhJsHooksLimit2": {
+    "message": "Les appels dans les workers ou les frames ne sont pas vus, sauf les cibles intégrées dans les frames du même site."
+  },
+  "mhPayloadIntro": {
+    "message": "Cherche dans le corps des requêtes POST, PUT, PATCH et DELETE envoyées par la page, depuis n’importe quelle frame."
+  },
+  "mhPayloadHow1": {
+    "message": "Un texte simple correspond quand le corps le contient, sans tenir compte de la casse. Les données de formulaire sont lues comme `nom=valeur&…`."
+  },
+  "mhPayloadHow2": {
+    "message": "L’URL de la requête (facultative) et la méthode HTTP limitent la recherche aux requêtes correspondantes."
+  },
+  "mhPayloadLimit1": {
+    "message": "Seules les requêtes envoyées avant l’analyse comptent, jusqu’à 50 par page."
+  },
+  "mhPayloadLimit2": {
+    "message": "Les messages WebSocket ne sont pas lus."
+  },
+  "domCardTitle": {
+    "message": "Sélecteur CSS"
+  },
+  "domCardBrowse": {
+    "message": "Parcourir"
+  },
+  "domCardHint": {
+    "message": "Une balise, .classe, #id ou un test d’[attribut], seul ou combiné. Les espaces ou > entre les parties ne sont pas pris en charge."
   },
   "settingsApiEventsDesc": {
     "message": "Événements que l'extension émet sur la page"
@@ -3410,7 +3476,7 @@
     "message": "Motif d’URL"
   },
   "rulesUiJsHookTargetPlaceholder": {
-    "message": "Cible de l’intercepteur JS (ex. navigator.webdriver)"
+    "message": "Cible de l’intercepteur JS (ex. Navigator.prototype.webdriver)"
   },
   "rulesUiWindowPathPlaceholder": {
     "message": "Chemin dans window (ex. grecaptcha, _cf_chl_opt)"
@@ -3468,24 +3534,6 @@
   },
   "rulesUiLeaveEmptyAnyUrl": {
     "message": "Laissez vide pour accepter toutes les URL"
-  },
-  "ruleExampleMatches": {
-    "message": "✓ Correspond :"
-  },
-  "ruleExampleWont": {
-    "message": "× Non :"
-  },
-  "ruleExampleWontMatch": {
-    "message": "× Ne correspond pas :"
-  },
-  "ruleExampleLiteralTextOnly": {
-    "message": "texte littéral uniquement"
-  },
-  "ruleExampleExactCase": {
-    "message": "(casse exacte)"
-  },
-  "ruleExampleAlone": {
-    "message": "(seul)"
   },
   "ruleConditionGroupOther": {
     "message": "Autres"

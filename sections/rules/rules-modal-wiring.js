@@ -30,6 +30,7 @@ Rules.prototype.setupModalEventListeners = function() {
     if (categorySelect) {
       categorySelect.addEventListener('change', (e) => {
         const isFingerprint = e.target.value.toLowerCase() === 'fingerprint';
+        document.querySelector('#editRuleModal')?.setAttribute('data-category', e.target.value.toLowerCase());
         document.querySelectorAll('.current-icon, .icon-preview').forEach(currentIconContainer => {
           if (isFingerprint) {
             currentIconContainer.classList.add('fingerprint-icon');
@@ -79,9 +80,6 @@ Rules.prototype.setupModalEventListeners = function() {
     this.setupMethodSettingsModal();
     this.setupDomHelperModal();
     this.setupWindowHelperModal();
-    this.setupRegexHelperModal();
-    this.setupWholeWordHelperModal();
-    this.setupCaseSensitiveHelperModal();
-    this.setupExplanationModals();
+    this.setupPatternTesterModal();
     this.setupMethodHelpModal();
   };
