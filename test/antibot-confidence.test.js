@@ -172,7 +172,8 @@ for (const d of Object.values(definitions)) {
 const benign = {
   'detect-akamai': { headers: { server: 'AkamaiGHost' }, cookies: ['AKA_A2', 'bm_s'], urls: ['https://github.com/a/b/blob/main/src/x', 'https://example.test/akamai/13/x.js'] },
   'detect-aws-waf': { urls: ['https://example.test/static/challenge.js', 'https://example.test/api/verify', 'https://example.test/telemetry', 'https://example.test/inputs?client=browser'] },
-  'detect-botguard': { urls: ['https://www.google.com/recaptcha/api.js', 'https://www.google.com/js/bg/abc.js'], sources: ["var mode = 'botguard';"] },
+  'detect-botguard': { urls: ['https://www.google.com/recaptcha/api.js', 'https://www.google.com/js/bg/abc.js',
+    'https://mail.google.com/mail/u/0/', 'https://mail.google.com/mail/u/0/?view=waa', 'https://mail.google.com/mail/u/0/waaffle'], sources: ["var mode = 'botguard';"] },
   'detect-cheq': { sources: ["var cheque = 'cheq';"], urls: ['https://example.test/cheq.js'] },
   'detect-cloudflare': { headers: { server: 'cloudflare', 'cf-ray': '8c1-AMS' }, urls: ['https://example.test/cdn-cgi/l/email-protection', 'https://challenges.cloudflare.com/turnstile/v0/api.js'] },
   'detect-datadome': { urls: ['https://example.test/tags.js', 'https://example.test/js/'], sources: ["var dd = {};"] },

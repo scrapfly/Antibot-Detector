@@ -25,6 +25,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules editor: combinations show each pattern's description first, and "one of" groups can be added, changed and deleted.
 - JS API: matched combinations list which of their patterns were found.
 - Detectors: ThreatMetrix, AWS WAF, Cloudflare, Screen and IndexedDB combinations now score above their single signals; three unused Jiasule and Radware signals count alone.
+- Google BotGuard is also recognised on Gmail, from its /waa requests and the /js/bg/ interpreter script.
 - Rules → Update installs the latest Scrapfly release in one click and lists what changed; Settings → Check now does the same.
 - Rules that need a newer extension are no longer offered as updates; the Rules tab says which extension version they wait for.
 
