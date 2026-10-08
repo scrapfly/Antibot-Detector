@@ -216,7 +216,7 @@
     "message": "浏览网站时,检测历史记录将显示在此处。"
   },
   "rulesUpdateTitle": {
-    "message": "检查检测器更新"
+    "message": "从 Scrapfly 最新发布版本安装规则更新"
   },
   "rulesAddTitle": {
     "message": "添加新检测器"
@@ -841,12 +841,6 @@
   "webhookTestFailedFmt": {
     "message": "Webhook 测试失败:{0}"
   },
-  "foundDetectorUpdatesAvailableFmt": {
-    "message": "发现 {0} 个可用的检测器更新!"
-  },
-  "allDetectorsUpToDate": {
-    "message": "所有检测器均为最新版本。"
-  },
   "importDetectorsTitle": {
     "message": "导入检测器"
   },
@@ -873,9 +867,6 @@
   },
   "detectorsUpdatedFmt": {
     "message": "已更新 {0} 个检测器"
-  },
-  "updatesAvailableClickToApplyFmt": {
-    "message": "有 {0} 项更新可用 - 再次点击以应用"
   },
   "detectorDeletedFmt": {
     "message": "已删除 \"{0}\""
@@ -945,6 +936,30 @@
   },
   "couldNotFetchUpdates": {
     "message": "无法从服务器获取更新"
+  },
+  "updateResultInstalledFmt": {
+    "message": "已从发布版本 {0} 更新规则：{1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "所有规则均已与发布版本 {0} 保持一致。"
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "需要扩展 {0} 或更高版本：{1}。Chrome 更新扩展后将自动安装。"
+  },
+  "updateResultFailedFmt": {
+    "message": "无法下载：{0}。请稍后重试。"
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "你编辑过的规则正在“规则 → 更新”中等待你的决定：{0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "无法连接 GitHub 检查规则更新。"
+  },
+  "updateErrorNoRelease": {
+    "message": "在 GitHub 上未找到已发布的 Scrapfly 版本。"
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub 正在限制更新检查。请在 {0} 分钟后重试。"
   },
   "errorApplyingUpdates": {
     "message": "应用更新时出错"

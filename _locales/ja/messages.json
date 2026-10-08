@@ -216,7 +216,7 @@
     "message": "ウェブサイトを閲覧すると、検出履歴がここに表示されます。"
   },
   "rulesUpdateTitle": {
-    "message": "検出器の更新を確認"
+    "message": "Scrapfly の最新リリースからルールの更新をインストール"
   },
   "rulesAddTitle": {
     "message": "新しい検出器を追加"
@@ -841,12 +841,6 @@
   "webhookTestFailedFmt": {
     "message": "Webhookテストに失敗しました: {0}"
   },
-  "foundDetectorUpdatesAvailableFmt": {
-    "message": "{0}件のディテクター更新が利用可能です!"
-  },
-  "allDetectorsUpToDate": {
-    "message": "すべてのディテクターは最新です。"
-  },
   "importDetectorsTitle": {
     "message": "ディテクターをインポート"
   },
@@ -873,9 +867,6 @@
   },
   "detectorsUpdatedFmt": {
     "message": "{0}件のディテクターを更新しました"
-  },
-  "updatesAvailableClickToApplyFmt": {
-    "message": "{0}件の更新が利用可能 - もう一度クリックして適用"
   },
   "detectorDeletedFmt": {
     "message": "「{0}」を削除しました"
@@ -945,6 +936,30 @@
   },
   "couldNotFetchUpdates": {
     "message": "サーバーから更新を取得できませんでした"
+  },
+  "updateResultInstalledFmt": {
+    "message": "リリース {0} からルールを更新しました: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "すべてのルールはリリース {0} の最新状態です。"
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "拡張機能 {0} 以降が必要です: {1}。Chrome が拡張機能を更新するとインストールされます。"
+  },
+  "updateResultFailedFmt": {
+    "message": "ダウンロードできませんでした: {0}。後でもう一度お試しください。"
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "編集したルールが「ルール」→「更新」で判断を待っています: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "ルールの更新を確認するために GitHub に接続できませんでした。"
+  },
+  "updateErrorNoRelease": {
+    "message": "GitHub に公開済みの Scrapfly リリースが見つかりませんでした。"
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub が更新の確認を制限しています。{0} 分後にもう一度お試しください。"
   },
   "errorApplyingUpdates": {
     "message": "更新の適用エラー"

@@ -216,7 +216,7 @@
     "message": "जैसे ही आप वेबसाइटों को ब्राउज़ करेंगे, जांच इतिहास यहां दिखाई देगा।"
   },
   "rulesUpdateTitle": {
-    "message": "डिटेक्टर अद्यतन की जांच करें"
+    "message": "Scrapfly की नवीनतम रिलीज़ से नियम अपडेट इंस्टॉल करें"
   },
   "rulesAddTitle": {
     "message": "नया डिटेक्टर जोड़ें"
@@ -841,12 +841,6 @@
   "webhookTestFailedFmt": {
     "message": "Webhook परीक्षण विफल: {0}"
   },
-  "foundDetectorUpdatesAvailableFmt": {
-    "message": "{0} डिटेक्टर अपडेट उपलब्ध मिले!"
-  },
-  "allDetectorsUpToDate": {
-    "message": "सभी डिटेक्टर अद्यतित हैं।"
-  },
   "importDetectorsTitle": {
     "message": "डिटेक्टर इम्पोर्ट करें"
   },
@@ -873,9 +867,6 @@
   },
   "detectorsUpdatedFmt": {
     "message": "{0} डिटेक्टर अपडेट किए गए"
-  },
-  "updatesAvailableClickToApplyFmt": {
-    "message": "{0} अपडेट उपलब्ध - लागू करने के लिए फिर से क्लिक करें"
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" हटा दिया गया"
@@ -945,6 +936,30 @@
   },
   "couldNotFetchUpdates": {
     "message": "सर्वर से अपडेट प्राप्त नहीं हो सके"
+  },
+  "updateResultInstalledFmt": {
+    "message": "रिलीज़ {0} से नियम अपडेट किए गए: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "सभी नियम रिलीज़ {0} के अनुसार अप-टू-डेट हैं।"
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "एक्सटेंशन {0} या उससे नए संस्करण की प्रतीक्षा: {1}। Chrome के एक्सटेंशन अपडेट करते ही ये इंस्टॉल हो जाएँगे।"
+  },
+  "updateResultFailedFmt": {
+    "message": "डाउनलोड नहीं हो सका: {0}। बाद में फिर से कोशिश करें।"
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "आपके संपादित नियम नियम → अद्यतन में आपके निर्णय की प्रतीक्षा कर रहे हैं: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "नियम अपडेट जाँचने के लिए GitHub से कनेक्ट नहीं हो सका।"
+  },
+  "updateErrorNoRelease": {
+    "message": "GitHub पर Scrapfly की कोई प्रकाशित रिलीज़ नहीं मिली।"
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub अपडेट जाँच सीमित कर रहा है। {0} मिनट बाद फिर से कोशिश करें।"
   },
   "errorApplyingUpdates": {
     "message": "अपडेट लागू करने में त्रुटि"

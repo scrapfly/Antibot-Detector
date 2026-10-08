@@ -216,7 +216,7 @@
     "message": "Der Erkennungsverlauf wird hier angezeigt, während du im Web surfst."
   },
   "rulesUpdateTitle": {
-    "message": "Nach Detektor-Updates suchen"
+    "message": "Regel-Updates aus dem neuesten Scrapfly-Release installieren"
   },
   "rulesAddTitle": {
     "message": "Neuen Detektor hinzufügen"
@@ -841,12 +841,6 @@
   "webhookTestFailedFmt": {
     "message": "Webhook-Test fehlgeschlagen: {0}"
   },
-  "foundDetectorUpdatesAvailableFmt": {
-    "message": "{0} Detektor-Updates verfügbar!"
-  },
-  "allDetectorsUpToDate": {
-    "message": "Alle Detektoren sind auf dem neuesten Stand."
-  },
   "importDetectorsTitle": {
     "message": "Detektoren importieren"
   },
@@ -873,9 +867,6 @@
   },
   "detectorsUpdatedFmt": {
     "message": "{0} Detektoren aktualisiert"
-  },
-  "updatesAvailableClickToApplyFmt": {
-    "message": "{0} Updates verfügbar – erneut klicken, um sie anzuwenden"
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" gelöscht"
@@ -945,6 +936,30 @@
   },
   "couldNotFetchUpdates": {
     "message": "Updates konnten nicht vom Server abgerufen werden"
+  },
+  "updateResultInstalledFmt": {
+    "message": "Regeln aus Release {0} aktualisiert: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "Alle Regeln sind auf dem Stand von Release {0}."
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "Warten auf Erweiterung {0} oder neuer: {1}. Sie werden installiert, sobald Chrome die Erweiterung aktualisiert."
+  },
+  "updateResultFailedFmt": {
+    "message": "Download nicht möglich: {0}. Versuche es später erneut."
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "Von dir bearbeitete Regeln warten auf deine Entscheidung unter Regeln → Aktualisieren: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "GitHub ist nicht erreichbar, Regel-Updates können nicht geprüft werden."
+  },
+  "updateErrorNoRelease": {
+    "message": "Auf GitHub wurde kein veröffentlichtes Scrapfly-Release gefunden."
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub begrenzt die Update-Prüfungen. Versuche es in {0} Min. erneut."
   },
   "errorApplyingUpdates": {
     "message": "Fehler beim Anwenden der Updates"

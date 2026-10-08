@@ -116,6 +116,46 @@
   flex-shrink: 0;
 }
 
+/* Rule updates waiting for a newer extension, under the toolbar */
+.rules-ext-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 7px;
+  background: rgba(245, 158, 11, 0.08);
+  color: #fcd34d;
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.rules-ext-notice[hidden] {
+  display: none;
+}
+
+.rules-ext-notice svg {
+  flex-shrink: 0;
+  margin-block-start: 2px;
+}
+
+.rules-ext-notice-text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rules-ext-notice-link {
+  flex-shrink: 0;
+  color: var(--warning-light);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.rules-ext-notice-link:hover {
+  color: white;
+}
+
 /* Square "more" (…) buttons: toolbar and detector card */
 .rules-more-btn,
 .detector-more-btn {

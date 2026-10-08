@@ -218,7 +218,7 @@
     "message": "Detection history will appear here as you browse websites."
   },
   "rulesUpdateTitle": {
-    "message": "Check for detector updates"
+    "message": "Install rule updates from the latest Scrapfly release"
   },
   "rulesAddTitle": {
     "message": "Add New Detector"
@@ -843,12 +843,6 @@
   "webhookTestFailedFmt": {
     "message": "Webhook test failed: {0}"
   },
-  "foundDetectorUpdatesAvailableFmt": {
-    "message": "Found {0} detector updates available!"
-  },
-  "allDetectorsUpToDate": {
-    "message": "All detectors are up to date."
-  },
   "importDetectorsTitle": {
     "message": "Import Detectors"
   },
@@ -876,9 +870,6 @@
   },
   "detectorsUpdatedFmt": {
     "message": "{0} detectors updated"
-  },
-  "updatesAvailableClickToApplyFmt": {
-    "message": "{0} updates available - click again to apply"
   },
   "detectorDeletedFmt": {
     "message": "Deleted \"{0}\""
@@ -949,6 +940,30 @@
   },
   "couldNotFetchUpdates": {
     "message": "Could not fetch updates from server"
+  },
+  "updateResultInstalledFmt": {
+    "message": "Rules updated from release {0}: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "All rules are up to date with release {0}."
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "Waiting for extension {0} or newer: {1}. They install once Chrome updates the extension."
+  },
+  "updateResultFailedFmt": {
+    "message": "Could not download: {0}. Try again later."
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "Rules you edited wait for your decision in Rules → Update: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "Could not reach GitHub to check for rule updates."
+  },
+  "updateErrorNoRelease": {
+    "message": "No published Scrapfly release was found on GitHub."
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub is limiting update checks. Try again in {0} min."
   },
   "errorApplyingUpdates": {
     "message": "Error applying updates"

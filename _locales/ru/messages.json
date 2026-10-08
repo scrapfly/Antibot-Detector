@@ -216,7 +216,7 @@
     "message": "История обнаружений появится здесь по мере просмотра сайтов."
   },
   "rulesUpdateTitle": {
-    "message": "Проверить обновления детекторов"
+    "message": "Установить обновления правил из последнего релиза Scrapfly"
   },
   "rulesAddTitle": {
     "message": "Добавить новый детектор"
@@ -841,12 +841,6 @@
   "webhookTestFailedFmt": {
     "message": "Проверка вебхука не удалась: {0}"
   },
-  "foundDetectorUpdatesAvailableFmt": {
-    "message": "Найдено доступных обновлений детекторов: {0}!"
-  },
-  "allDetectorsUpToDate": {
-    "message": "Все детекторы актуальны."
-  },
   "importDetectorsTitle": {
     "message": "Импорт детекторов"
   },
@@ -873,9 +867,6 @@
   },
   "detectorsUpdatedFmt": {
     "message": "Обновлено детекторов: {0}"
-  },
-  "updatesAvailableClickToApplyFmt": {
-    "message": "Доступно обновлений: {0} — нажмите ещё раз, чтобы применить"
   },
   "detectorDeletedFmt": {
     "message": "Удалён \"{0}\""
@@ -945,6 +936,30 @@
   },
   "couldNotFetchUpdates": {
     "message": "Не удалось получить обновления с сервера"
+  },
+  "updateResultInstalledFmt": {
+    "message": "Правила обновлены из релиза {0}: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "Все правила соответствуют релизу {0}."
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "Ожидают расширения версии {0} или новее: {1}. Они установятся, когда Chrome обновит расширение."
+  },
+  "updateResultFailedFmt": {
+    "message": "Не удалось загрузить: {0}. Повторите попытку позже."
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "Изменённые вами правила ждут вашего решения в разделе Правила → Обновить: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "Не удалось связаться с GitHub для проверки обновлений правил."
+  },
+  "updateErrorNoRelease": {
+    "message": "На GitHub не найдено опубликованного релиза Scrapfly."
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub ограничивает проверки обновлений. Повторите через {0} мин."
   },
   "errorApplyingUpdates": {
     "message": "Ошибка применения обновлений"

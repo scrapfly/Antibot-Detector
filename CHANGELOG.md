@@ -25,6 +25,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules editor: combinations show each pattern's description first, and "one of" groups can be added, changed and deleted.
 - JS API: matched combinations list which of their patterns were found.
 - Detectors: ThreatMetrix, AWS WAF, Cloudflare, Screen and IndexedDB combinations now score above their single signals; three unused Jiasule and Radware signals count alone.
+- Rules → Update installs the latest Scrapfly release in one click and lists what changed; Settings → Check now does the same.
+- Rules that need a newer extension are no longer offered as updates; the Rules tab says which extension version they wait for.
 
 ### Fixed
 
@@ -32,6 +34,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Advanced: the History count goes up as soon as a tool saves a result, instead of only when the History tab is opened.
 - F5: the "ASM cookie with BIG-IP analytics" combination now shows; before, the load-balancer combination always took its place.
 - Detection: pages that never finish loading are now scanned after a short wait instead of never showing a result.
+- Rules → Update no longer says everything is up to date when some rules failed to download, and explains GitHub outages and rate limits.
 
 ## [2.8.2] - 2026-10-07
 

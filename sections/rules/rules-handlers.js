@@ -114,6 +114,7 @@ Rules.prototype.checkPendingUpdates = async function() {
     // Get stored pending updates count and show badge
     const count = await UpdateManager.getPendingUpdatesCount();
     this.updateUpdatesBadge(count);
+    this.renderExtensionNotice(await UpdateManager.getIncompatibleUpdates());
   } catch (error) {
     Logger.error('UI', 'Error checking pending updates', error);
     this.updateUpdatesBadge(0);
@@ -121,96 +122,69 @@ Rules.prototype.checkPendingUpdates = async function() {
 };
 
 /**
- * Handle Update button click
- * If updates are pending, apply them. Otherwise check for new updates.
+ * Handle Update button click: one click checks the latest release, installs
+ * every update to a rule the user did not edit, says what happened, then asks
+ * about the edited ones. Rules that need a newer extension are not updates
+ * yet: they are named, and wait in the notice under the toolbar.
  */
 Rules.prototype.handleCheckUpdates = async function() {
   const btn = document.querySelector('#checkUpdatesBtn');
-  const btnText = document.querySelector('#checkUpdatesBtnText');
 
   if (!btn) {
     Logger.debug('UI', 'Update button not found');
     return;
   }
-
-  const t = (typeof I18n !== 'undefined') ? I18n : null;
-  const _tr = (key, fallback) => (t && t.get(key)) || fallback;
-  const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
+  if (btn.classList.contains('checking')) return;
 
   if (typeof UpdateManager === 'undefined') {
     Logger.warn('UI', '[Rules] UpdateManager not available');
     if (typeof NotificationHelper !== 'undefined') {
-      NotificationHelper.error(_tr('updateServiceNotAvailable', 'Update service not available'));
+      NotificationHelper.error(FormatUtils.t('updateServiceNotAvailable', 'Update service not available'));
     }
     return;
   }
 
-  const pendingCount = await UpdateManager.getPendingUpdatesCount();
-
-  if (pendingCount > 0) {
-    btn.classList.add('checking');
-
-    try {
-      const result = await UpdateManager.applyUpdates();
-
-      if (!result.success) {
-        if (typeof NotificationHelper !== 'undefined') {
-          NotificationHelper.error(_tr('errorApplyingUpdates', 'Error applying updates'));
-        }
-      } else if (result.count > 0) {
-        await this.reloadDetectorsFromStorage();
-        if (typeof NotificationHelper !== 'undefined') {
-          NotificationHelper.success(_fmt('detectorsUpdatedFmt', `${result.count} detectors updated`, result.count));
-        }
-      } else if (result.failed > 0) {
-        if (typeof NotificationHelper !== 'undefined') {
-          NotificationHelper.warning(_tr('couldNotFetchUpdates', 'Could not fetch updates from server'));
-        }
-      }
-
-      // Rules the user edited are never replaced without asking
-      if (result.success && result.needsDecision.length > 0) {
-        await this.resolveEditedRuleUpdates(result.needsDecision);
-      }
-      this.updateUpdatesBadge(await UpdateManager.getPendingUpdatesCount());
-    } catch (error) {
-      Logger.error('UI', 'Error applying updates', error);
-      if (typeof NotificationHelper !== 'undefined') {
-        NotificationHelper.error(_tr('errorApplyingUpdates', 'Error applying updates'));
-      }
-    } finally {
-      btn.classList.remove('checking');
+  btn.classList.add('checking');
+  try {
+    const result = await UpdateManager.checkAndInstall();
+    if (result.installed.length > 0) {
+      await this.reloadDetectorsFromStorage();
     }
-  } else {
-    btn.classList.add('checking');
-
-    try {
-      const result = await UpdateManager.checkForUpdates(true);
-
-      if (result.error) {
-        if (typeof NotificationHelper !== 'undefined') {
-          NotificationHelper.error(_tr('failedCheckForUpdates', 'Failed to check for updates'));
-        }
-      } else if (result.available && result.updates.length > 0) {
-        this.updateUpdatesBadge(result.updates.length);
-        if (typeof NotificationHelper !== 'undefined') {
-          NotificationHelper.info(_fmt('updatesAvailableClickToApplyFmt', `${result.updates.length} updates available - click again to apply`, result.updates.length));
-        }
-      } else {
-        this.updateUpdatesBadge(0);
-        if (typeof NotificationHelper !== 'undefined') {
-          NotificationHelper.success(_tr('allDetectorsUpToDate', 'All detectors are up to date'));
-        }
-      }
-    } catch (error) {
-      Logger.error('UI', 'Error checking for updates', error);
-      if (typeof NotificationHelper !== 'undefined') {
-        NotificationHelper.error(_tr('errorCheckingForUpdates', 'Error checking for updates'));
-      }
-    } finally {
-      btn.classList.remove('checking');
+    for (const message of UpdateManager.resultMessages(result, { t: FormatUtils.t, list: FormatUtils.formatList })) {
+      NotificationHelper[message.type](message.text, message.type === 'success' ? {} : { duration: 8000 });
     }
+
+    // Rules the user edited are never replaced without asking
+    if (result.needsDecision.length > 0) {
+      await this.resolveEditedRuleUpdates(result.needsDecision);
+    }
+    this.updateUpdatesBadge(await UpdateManager.getPendingUpdatesCount());
+    this.renderExtensionNotice(await UpdateManager.getIncompatibleUpdates());
+  } catch (error) {
+    Logger.error('UI', 'Error updating rules', error);
+    NotificationHelper.error(FormatUtils.t('errorCheckingForUpdates', 'Error checking for updates'));
+  } finally {
+    btn.classList.remove('checking');
   }
+};
+
+/**
+ * Show or hide the notice for rule updates that need a newer extension
+ * @param {Array<{id: string, name: string, minExtensionVersion: string}>} updates
+ */
+Rules.prototype.renderExtensionNotice = function(updates) {
+  const notice = document.querySelector('#rulesExtensionNotice');
+  if (!notice) return;
+  const list = Array.isArray(updates) ? updates : [];
+  if (list.length === 0) {
+    notice.hidden = true;
+    return;
+  }
+  const [message] = UpdateManager.resultMessages(
+    { error: null, release: null, installed: [], needsDecision: [], failed: [], incompatible: list },
+    { t: FormatUtils.t, list: FormatUtils.formatList });
+  notice.querySelector('.rules-ext-notice-text').textContent = message.text;
+  notice.hidden = false;
 };
 
 /**

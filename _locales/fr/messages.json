@@ -216,7 +216,7 @@
     "message": "L'historique de détection apparaîtra ici au fur et à mesure de votre navigation."
   },
   "rulesUpdateTitle": {
-    "message": "Vérifier les mises à jour des détecteurs"
+    "message": "Installer les mises à jour des règles depuis la dernière version de Scrapfly"
   },
   "rulesAddTitle": {
     "message": "Ajouter un nouveau détecteur"
@@ -841,12 +841,6 @@
   "webhookTestFailedFmt": {
     "message": "Échec du test du webhook : {0}"
   },
-  "foundDetectorUpdatesAvailableFmt": {
-    "message": "{0} mises à jour de détecteurs disponibles !"
-  },
-  "allDetectorsUpToDate": {
-    "message": "Tous les détecteurs sont à jour."
-  },
   "importDetectorsTitle": {
     "message": "Importer des détecteurs"
   },
@@ -873,9 +867,6 @@
   },
   "detectorsUpdatedFmt": {
     "message": "{0} détecteurs mis à jour"
-  },
-  "updatesAvailableClickToApplyFmt": {
-    "message": "{0} mises à jour disponibles - cliquez à nouveau pour les appliquer"
   },
   "detectorDeletedFmt": {
     "message": "« {0} » supprimé"
@@ -945,6 +936,30 @@
   },
   "couldNotFetchUpdates": {
     "message": "Impossible de récupérer les mises à jour depuis le serveur"
+  },
+  "updateResultInstalledFmt": {
+    "message": "Règles mises à jour depuis la version {0} : {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "Toutes les règles sont à jour avec la version {0}."
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "En attente de l'extension {0} ou plus récente : {1}. Elles s'installeront dès que Chrome aura mis à jour l'extension."
+  },
+  "updateResultFailedFmt": {
+    "message": "Téléchargement impossible : {0}. Réessayez plus tard."
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "Les règles que vous avez modifiées attendent votre décision dans Règles → Mettre à jour : {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "Impossible de joindre GitHub pour vérifier les mises à jour des règles."
+  },
+  "updateErrorNoRelease": {
+    "message": "Aucune version publiée de Scrapfly n'a été trouvée sur GitHub."
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub limite les vérifications de mises à jour. Réessayez dans {0} min."
   },
   "errorApplyingUpdates": {
     "message": "Erreur lors de l'application des mises à jour"

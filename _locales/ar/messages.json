@@ -216,7 +216,7 @@
     "message": "سيظهر سجل الكشف هنا أثناء تصفحك للمواقع."
   },
   "rulesUpdateTitle": {
-    "message": "البحث عن تحديثات الكواشف"
+    "message": "تثبيت تحديثات القواعد من أحدث إصدار من Scrapfly"
   },
   "rulesAddTitle": {
     "message": "إضافة كاشف جديد"
@@ -841,12 +841,6 @@
   "webhookTestFailedFmt": {
     "message": "فشل اختبار الـ webhook: {0}"
   },
-  "foundDetectorUpdatesAvailableFmt": {
-    "message": "تم العثور على {0} من تحديثات الكواشف المتاحة!"
-  },
-  "allDetectorsUpToDate": {
-    "message": "جميع الكواشف محدَّثة."
-  },
   "importDetectorsTitle": {
     "message": "استيراد الكواشف"
   },
@@ -873,9 +867,6 @@
   },
   "detectorsUpdatedFmt": {
     "message": "تم تحديث {0} من الكواشف"
-  },
-  "updatesAvailableClickToApplyFmt": {
-    "message": "{0} من التحديثات المتاحة - انقر مجددًا للتطبيق"
   },
   "detectorDeletedFmt": {
     "message": "تم حذف \"{0}\""
@@ -945,6 +936,30 @@
   },
   "couldNotFetchUpdates": {
     "message": "تعذَّر جلب التحديثات من الخادم"
+  },
+  "updateResultInstalledFmt": {
+    "message": "تم تحديث القواعد من الإصدار {0}: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "جميع القواعد محدَّثة وفق الإصدار {0}."
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "بانتظار الإضافة {0} أو أحدث: {1}. ستُثبَّت بعد أن يحدِّث Chrome الإضافة."
+  },
+  "updateResultFailedFmt": {
+    "message": "تعذَّر التنزيل: {0}. حاول مرة أخرى لاحقًا."
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "القواعد التي عدّلتها بانتظار قرارك في القواعد ← تحديث: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "تعذَّر الوصول إلى GitHub للتحقق من تحديثات القواعد."
+  },
+  "updateErrorNoRelease": {
+    "message": "لم يُعثر على إصدار منشور من Scrapfly على GitHub."
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "يحدّ GitHub من عمليات التحقق من التحديثات. حاول مرة أخرى بعد {0} دقيقة."
   },
   "errorApplyingUpdates": {
     "message": "خطأ في تطبيق التحديثات"
