@@ -28,6 +28,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Fixed
 
 - Rules editor: saving no longer fails after emptying a group, and removing a condition no longer lets weak patterns detect on their own.
+- Advanced: the History count goes up as soon as a tool saves a result, instead of only when the History tab is opened.
 
 ## [2.8.2] - 2026-10-07
 

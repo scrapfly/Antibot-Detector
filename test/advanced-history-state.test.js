@@ -114,3 +114,48 @@ test('returning to empty capture history hides any stale pagination', async () =
   assert.equal(elements['#captureGrid'].innerHTML, '');
   assert.equal(elements['#captureSiteFilter'].value, '', 'empty styling must not mutate filters');
 });
+
+test('the History badge follows saved captures without opening the History tab', async () => {
+  const listeners = [];
+  const badge = node();
+  const context = { window: {}, URL, Logger: { ui() {}, debug() {}, error(error) { throw error; } },
+    FormatUtils: require('../utils/format-utils'),
+    AdvancedHistoryStore: { STORAGE_KEY: 'scrapfly_advanced_history', load: async () => saved },
+    chrome: { storage: { onChanged: { addListener: (fn) => listeners.push(fn) } } },
+    document: { querySelector: selector => (selector === '#captureCountBadge' ? badge : null) },
+    setTimeout, clearTimeout };
+  let saved = { recaptcha: [{ id: 'a', timestamp: Date.now(), url: 'https://example.test/' }] };
+  vm.createContext(context);
+  for (const file of ['advanced.js', 'advanced-history.js']) {
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced', file), 'utf8'), context);
+  }
+  const advanced = new context.window.Advanced({}, {});
+  advanced.cleanExpiredCaptureData = async () => {};
+  advanced.getCurrentSite = async () => 'example.test';
+  advanced.setupCaptureHistoryWatcher();
+  advanced.setupCaptureHistoryWatcher();
+  assert.equal(listeners.length, 1, 'bound once');
+  const wait = () => new Promise(resolve => setTimeout(resolve, 220));
+
+  // A tool result is saved (as saveToolResult does): the badge goes up by itself
+  saved = { recaptcha: [...saved.recaptcha, { id: 'b', timestamp: Date.now(), url: 'https://example.test/x' }] };
+  listeners[0]({ scrapfly_advanced_history: { newValue: saved } }, 'local');
+  await wait();
+  assert.equal(badge.textContent, 2);
+  assert.equal(badge.style.display, 'inline-block');
+
+  // Unrelated keys, other storage areas and bursts do not cause extra refreshes
+  let refreshes = 0;
+  const original = advanced.updateCaptureCountBadge.bind(advanced);
+  advanced.updateCaptureCountBadge = async () => { refreshes++; return original(); };
+  listeners[0]({ scrapfly_settings: {} }, 'local');
+  listeners[0]({ scrapfly_advanced_history: {} }, 'sync');
+  for (let i = 0; i < 5; i++) listeners[0]({ scrapfly_advanced_history: {} }, 'local');
+  await wait();
+  assert.equal(refreshes, 1, 'one refresh for a burst of writes');
+
+  saved = {};
+  listeners[0]({ scrapfly_advanced_history: {} }, 'local');
+  await wait();
+  assert.equal(badge.style.display, 'none', 'cleared history hides the badge');
+});
