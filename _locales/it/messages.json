@@ -3632,7 +3632,127 @@
     "message": "Combinazioni"
   },
   "combinationsHint": {
-    "message": "Scegli i modelli e quanti devono corrispondere."
+    "message": "Una combinazione rileva questa protezione solo quando più pattern vengono trovati insieme. Usala per pattern troppo deboli da soli."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "Ogni combinazione si attiva solo quando i suoi segnali compaiono insieme; ecco cosa ha trovato in questa pagina."
+  },
+  "combinationFoundTogether": {
+    "message": "Trovati insieme in questa pagina:"
+  },
+  "combinationNotPresent": {
+    "message": "Non presente"
+  },
+  "combinationFound": {
+    "message": "Trovato"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "Questa regola è stata modificata o rimossa dopo l’analisi, quindi vengono mostrati solo nome e punteggio."
+  },
+  "historyMatchedDetections": {
+    "message": "Rilevamenti corrispondenti"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "Questa analisi è stata salvata prima che le condizioni venissero conservate, quindi vengono mostrati solo nomi e punteggi."
+  },
+  "combinationMustNotBeFound": {
+    "message": "Non deve essere trovato"
+  },
+  "combinationMustBeFound": {
+    "message": "Deve essere trovato"
+  },
+  "combinationAutoTip": {
+    "message": "Auto: la confidenza più alta dei pattern che l’hanno attivata"
+  },
+  "combinationSetsScore": {
+    "message": "Determina il punteggio del rilevamento"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "Aggiungi almeno un pattern che deve essere trovato."
+  },
+  "combinationInvalidOneOf": {
+    "message": "Un elenco «Uno di questi» richiede in ogni opzione un pattern che deve essere trovato."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "«Almeno {0}» richiede {0} pattern che devono essere trovati."
+  },
+  "combinationSentenceOne": {
+    "message": "Si attiva quando questa condizione è soddisfatta."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "Si attiva quando tutte le {0} condizioni sono soddisfatte."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "Si attiva quando una qualsiasi di queste {0} condizioni è soddisfatta."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "Si attiva quando almeno {0} di queste {1} condizioni sono soddisfatte."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "Confidenza: {0}%."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "Confidenza: Auto, fino al {0}%."
+  },
+  "combinationSentenceGroup": {
+    "message": "Un gruppo conta come una condizione."
+  },
+  "combinationSentenceNot": {
+    "message": "Non si attiva se è presente un pattern «Non deve essere trovato»."
+  },
+  "combinationSentenceAlone": {
+    "message": "I pattern senza «Solo combinazioni» rilevano anche da soli, con la propria confidenza."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "Confidenza quando trovato"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "Lascia vuoto per Auto: la confidenza più alta dei pattern trovati."
+  },
+  "combinationOnlyTogether": {
+    "message": "Questi pattern contano solo insieme"
+  },
+  "combinationOnlyTogetherHint": {
+    "message": "Da soli non rilevano nulla. Vale per questi pattern in tutte le combinazioni di questa regola."
+  },
+  "combinationOnlyTogetherMixed": {
+    "message": "Alcuni di questi pattern contano anche da soli. Spunta per farli contare tutti solo nelle combinazioni."
+  },
+  "combinationModeAny": {
+    "message": "Uno di questi"
+  },
+  "combinationModeAll": {
+    "message": "Tutti questi"
+  },
+  "combinationModeAtLeast": {
+    "message": "Almeno… di questi"
+  },
+  "combinationModeRootAll": {
+    "message": "vengono trovati tutti questi"
+  },
+  "combinationModeRootAny": {
+    "message": "viene trovato uno di questi"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "vengono trovati almeno… di questi"
+  },
+  "combinationGroupMode": {
+    "message": "Gruppo"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "Aggiungi un pattern a questo gruppo"
+  },
+  "combinationDeleteGroup": {
+    "message": "Elimina gruppo"
+  },
+  "combinationAddGroup": {
+    "message": "Aggiungi gruppo «uno di»"
+  },
+  "patternUnusedBadge": {
+    "message": "In nessuna combinazione"
+  },
+  "patternUnusedTip": {
+    "message": "Nessuna combinazione lo usa, quindi non rileva mai. Fai clic per farlo contare da solo."
   },
   "combinationsEmpty": {
     "message": "Ancora nessuna combinazione."
@@ -3643,23 +3763,11 @@
   "combinationDefaultNameFmt": {
     "message": "Combinazione {0}"
   },
-  "combinationConfidence": {
-    "message": "Confidenza quando corrisponde"
-  },
-  "combinationConfidenceFromPatterns": {
-    "message": "Lascia vuoto per usare la confidenza dei pattern che corrispondono"
-  },
   "combinationDelete": {
     "message": "Elimina combinazione"
   },
   "combinationDeleteConfirmFmt": {
     "message": "Eliminare la combinazione «{0}»? I suoi pattern restano nella regola."
-  },
-  "combinationNotTitle": {
-    "message": "NON deve corrispondere"
-  },
-  "combinationNot": {
-    "message": "NON"
   },
   "combinationRemove": {
     "message": "Rimuovi"
@@ -3679,26 +3787,8 @@
   "combinationAnyPattern": {
     "message": "qualsiasi pattern"
   },
-  "combinationPreviewAnd": {
-    "message": "E"
-  },
-  "combinationPreviewOr": {
-    "message": "O"
-  },
-  "combinationPreviewNot": {
-    "message": "NON"
-  },
   "combinationPreviewEmpty": {
     "message": "Aggiungi pattern per creare questa combinazione"
-  },
-  "combinationInvalid": {
-    "message": "Scegli i modelli che devono corrispondere e controlla il numero minimo di corrispondenze."
-  },
-  "combinationStrict": {
-    "message": "Rigoroso"
-  },
-  "combinationStrictTitle": {
-    "message": "Rigoroso: questo pattern non attiva il rilevatore da solo, solo all'interno delle combinazioni"
   },
   "patternCombinationsOnlyBadge": {
     "message": "Solo combinazioni"
@@ -3709,9 +3799,6 @@
   "combinationNoPatterns": {
     "message": "Nessun pattern aggiunto"
   },
-  "combinationJoinTitle": {
-    "message": "Passa tra E e O"
-  },
   "combinationPickHint": {
     "message": "Seleziona i pattern da aggiungere"
   },
@@ -3721,23 +3808,8 @@
   "combinationEditConditions": {
     "message": "Modifica condizioni"
   },
-  "combinationRequireTogether": {
-    "message": "Usa i modelli solo nelle combinazioni"
-  },
-  "combinationRequireHint": {
-    "message": "Si applica a questi modelli in tutta la regola."
-  },
   "combinationAutoConfidence": {
     "message": "Auto"
-  },
-  "combinationMatchAll": {
-    "message": "Tutte le condizioni corrispondono"
-  },
-  "combinationMatchAny": {
-    "message": "Una qualsiasi condizione corrisponde"
-  },
-  "combinationMatchAtLeast": {
-    "message": "Almeno… corrispondono"
   },
   "combinationDetectWhen": {
     "message": "Rileva quando"
@@ -3751,29 +3823,8 @@
   "combinationMatchState": {
     "message": "Condizione del modello"
   },
-  "combinationMatches": {
-    "message": "Corrisponde"
-  },
-  "combinationDoesNotMatch": {
-    "message": "Non corrisponde"
-  },
-  "combinationAtLeastSummaryFmt": {
-    "message": "Almeno {0} condizioni corrispondono"
-  },
   "combinationChoosePatterns": {
     "message": "Scegli modelli"
-  },
-  "combinationSummaryAll": {
-    "message": "Rileva quando tutte le condizioni richieste corrispondono."
-  },
-  "combinationSummaryAny": {
-    "message": "Rileva quando almeno una condizione corrisponde."
-  },
-  "combinationSummaryMinimumFmt": {
-    "message": "Rileva quando almeno {0} condizioni su {1} corrispondono."
-  },
-  "combinationSummaryExcluded": {
-    "message": "I modelli esclusi non devono corrispondere."
   },
   "combinationDecreaseMinimum": {
     "message": "Riduci le corrispondenze minime"

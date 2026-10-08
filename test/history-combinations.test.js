@@ -56,16 +56,15 @@ test('a saved scan shows its checklist in History details, above the methods', (
     combinations: scored.combinations, matches: scored.matches
   }] });
   const history = historyWith(context, { 'detect-recaptcha': definition });
-  history._historyComboCards = new Map();
   const html = history.renderDetectionDetails(entry.detections);
   const combos = html.indexOf('history-modal-combos');
   const methods = html.indexOf('history-modal-detection-methods');
   assert.ok(combos > 0 && combos < methods, 'checklist above the methods');
   assert.match(html, /Official SDK, configured widget and compatible API/);
   assert.match(html, /Sets the detection score/);
-  assert.strictEqual((html.match(/aria-label="Found"><svg/g) || []).length, 4, 'SDK, widget, the group and the render API');
-  assert.match(html, /aria-label="Not found"><svg[^]*?<\/span>[\s\S]*?Execute API/);
-  assert.strictEqual(history._historyComboCards.get('0').length, 1);
+  assert.strictEqual((html.match(/aria-label="Found"><svg/g) || []).length, 3, 'SDK, widget and the render API');
+  assert.ok(!html.includes('Execute API'), 'the alternative that was not needed is not listed');
+  assert.ok(!/match-combo-copy/.test(html), 'no Copy button');
 });
 
 test('after the rule was edited, History shows only the name and score', () => {
@@ -77,4 +76,15 @@ test('after the rule was edited, History shows only the name and score', () => {
   const html = historyWith(context, { 'detect-recaptcha': edited }).renderDetectionDetails(stored);
   assert.match(html, /This rule changed or was removed after the scan/);
   assert.ok(!/match-combo-rows/.test(html));
+});
+
+test('an entry saved before checklists says so once, and lists names and scores', () => {
+  const context = loadHistory();
+  const stored = [{ detector: { id: 'detect-recaptcha', name: 'Google reCAPTCHA' }, category: 'CAPTCHA', confidence: 90,
+    combinations: [{ id: 'a', name: 'First', confidence: 90 }, { id: 'b', name: 'Second', confidence: 70 }, { id: 'c', name: 'Third', confidence: 60 }],
+    matches: [{ type: 'url', confidence: 50 }] }];
+  const html = historyWith(context, { 'detect-recaptcha': definition }).renderDetectionDetails(stored);
+  assert.strictEqual((html.match(/saved before conditions were kept/g) || []).length, 1);
+  for (const name of ['First', 'Second', 'Third']) assert.ok(html.includes(name), name);
+  assert.match(html, /class="history-modal-match-count">Matched detections</);
 });

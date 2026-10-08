@@ -3632,7 +3632,127 @@
     "message": "التركيبات"
   },
   "combinationsHint": {
-    "message": "اختر الأنماط ثم حدد عدد الأنماط التي يجب أن تتطابق."
+    "message": "لا تكشف التركيبة هذه الحماية إلا عند العثور على عدة أنماط معًا. استخدمها للأنماط الضعيفة بمفردها."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "لا تعمل أي تركيبة إلا عند ظهور إشاراتها معًا؛ وهذا ما وجدته في هذه الصفحة."
+  },
+  "combinationFoundTogether": {
+    "message": "وُجدت معًا في هذه الصفحة:"
+  },
+  "combinationNotPresent": {
+    "message": "غير موجود"
+  },
+  "combinationFound": {
+    "message": "موجود"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "تغيّرت هذه القاعدة أو حُذفت بعد الفحص، لذا يظهر اسمها ونتيجتها فقط."
+  },
+  "historyMatchedDetections": {
+    "message": "عمليات الكشف المتطابقة"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "حُفظ هذا الفحص قبل الاحتفاظ بالشروط، لذا تظهر الأسماء والنتائج فقط."
+  },
+  "combinationMustNotBeFound": {
+    "message": "يجب ألا يوجد"
+  },
+  "combinationMustBeFound": {
+    "message": "يجب أن يوجد"
+  },
+  "combinationAutoTip": {
+    "message": "تلقائي: أعلى ثقة بين الأنماط التي فعّلتها"
+  },
+  "combinationSetsScore": {
+    "message": "يحدد نتيجة الكشف"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "أضف نمطًا واحدًا على الأقل يجب أن يوجد."
+  },
+  "combinationInvalidOneOf": {
+    "message": "تحتاج قائمة «واحد مما يلي» في كل خيار إلى نمط يجب أن يوجد."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "يحتاج «{0} على الأقل» إلى {0} أنماط يجب أن توجد."
+  },
+  "combinationSentenceOne": {
+    "message": "تعمل عند تحقق هذا الشرط."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "تعمل عند تحقق الشروط الـ{0} كلها."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "تعمل عند تحقق أي شرط من هذه الشروط الـ{0}."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "تعمل عند تحقق {0} على الأقل من هذه الشروط الـ{1}."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "الثقة: {0}%."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "الثقة: تلقائي، حتى {0}%."
+  },
+  "combinationSentenceGroup": {
+    "message": "تُحسب المجموعة شرطًا واحدًا."
+  },
+  "combinationSentenceNot": {
+    "message": "لا تعمل إذا وُجد نمط «يجب ألا يوجد»."
+  },
+  "combinationSentenceAlone": {
+    "message": "الأنماط غير المعلَّمة «تركيبات فقط» تكشف بمفردها أيضًا، بثقتها الخاصة."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "الثقة عند العثور"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "اتركه فارغًا للوضع التلقائي: أعلى ثقة بين الأنماط الموجودة."
+  },
+  "combinationOnlyTogether": {
+    "message": "هذه الأنماط لا تُحتسب إلا معًا"
+  },
+  "combinationOnlyTogetherHint": {
+    "message": "لا تكشف شيئًا بمفردها. ينطبق على هذه الأنماط في كل تركيبات هذه القاعدة."
+  },
+  "combinationOnlyTogetherMixed": {
+    "message": "بعض هذه الأنماط يُحتسب بمفرده أيضًا. حدّد المربع لتُحتسب كلها في التركيبات فقط."
+  },
+  "combinationModeAny": {
+    "message": "واحد مما يلي"
+  },
+  "combinationModeAll": {
+    "message": "كل ما يلي"
+  },
+  "combinationModeAtLeast": {
+    "message": "… على الأقل مما يلي"
+  },
+  "combinationModeRootAll": {
+    "message": "يوجد كل ما يلي"
+  },
+  "combinationModeRootAny": {
+    "message": "يوجد واحد مما يلي"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "يوجد … على الأقل مما يلي"
+  },
+  "combinationGroupMode": {
+    "message": "مجموعة"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "أضف نمطًا إلى هذه المجموعة"
+  },
+  "combinationDeleteGroup": {
+    "message": "حذف المجموعة"
+  },
+  "combinationAddGroup": {
+    "message": "إضافة مجموعة «واحد من»"
+  },
+  "patternUnusedBadge": {
+    "message": "ليس في أي تركيبة"
+  },
+  "patternUnusedTip": {
+    "message": "لا تستخدمه أي تركيبة، لذا لا يكشف أبدًا. انقر ليُحتسب بمفرده."
   },
   "combinationsEmpty": {
     "message": "لا توجد تركيبات بعد."
@@ -3643,23 +3763,11 @@
   "combinationDefaultNameFmt": {
     "message": "التركيبة {0}"
   },
-  "combinationConfidence": {
-    "message": "الثقة عند التطابق"
-  },
-  "combinationConfidenceFromPatterns": {
-    "message": "اتركه فارغًا لاستخدام ثقة الأنماط المطابقة"
-  },
   "combinationDelete": {
     "message": "حذف التركيبة"
   },
   "combinationDeleteConfirmFmt": {
     "message": "حذف التركيبة \"{0}\"؟ تبقى أنماطها في القاعدة."
-  },
-  "combinationNotTitle": {
-    "message": "يجب ألّا يتطابق"
-  },
-  "combinationNot": {
-    "message": "ليس"
   },
   "combinationRemove": {
     "message": "إزالة"
@@ -3679,26 +3787,8 @@
   "combinationAnyPattern": {
     "message": "أي نمط"
   },
-  "combinationPreviewAnd": {
-    "message": "و"
-  },
-  "combinationPreviewOr": {
-    "message": "أو"
-  },
-  "combinationPreviewNot": {
-    "message": "ليس"
-  },
   "combinationPreviewEmpty": {
     "message": "أضف أنماطًا لبناء هذه التركيبة"
-  },
-  "combinationInvalid": {
-    "message": "اختر الأنماط التي يجب أن تتطابق وتحقق من الحد الأدنى للتطابقات."
-  },
-  "combinationStrict": {
-    "message": "صارم"
-  },
-  "combinationStrictTitle": {
-    "message": "صارم: هذا النمط لا يُفعّل الكاشف بمفرده، بل داخل التركيبات فقط"
   },
   "patternCombinationsOnlyBadge": {
     "message": "تركيبات فقط"
@@ -3709,9 +3799,6 @@
   "combinationNoPatterns": {
     "message": "لم تتم إضافة أنماط"
   },
-  "combinationJoinTitle": {
-    "message": "التبديل بين و / أو"
-  },
   "combinationPickHint": {
     "message": "حدّد الأنماط لإضافتها"
   },
@@ -3721,23 +3808,8 @@
   "combinationEditConditions": {
     "message": "تعديل الشروط"
   },
-  "combinationRequireTogether": {
-    "message": "استخدام الأنماط في التركيبات فقط"
-  },
-  "combinationRequireHint": {
-    "message": "ينطبق على هذه الأنماط في جميع أجزاء هذه القاعدة."
-  },
   "combinationAutoConfidence": {
     "message": "تلقائي"
-  },
-  "combinationMatchAll": {
-    "message": "تطابق جميع الشروط"
-  },
-  "combinationMatchAny": {
-    "message": "تطابق أي شرط"
-  },
-  "combinationMatchAtLeast": {
-    "message": "تطابق على الأقل…"
   },
   "combinationDetectWhen": {
     "message": "الكشف عندما"
@@ -3751,29 +3823,8 @@
   "combinationMatchState": {
     "message": "شرط النمط"
   },
-  "combinationMatches": {
-    "message": "يتطابق"
-  },
-  "combinationDoesNotMatch": {
-    "message": "لا يتطابق"
-  },
-  "combinationAtLeastSummaryFmt": {
-    "message": "تطابق {0} شروط على الأقل"
-  },
   "combinationChoosePatterns": {
     "message": "اختيار الأنماط"
-  },
-  "combinationSummaryAll": {
-    "message": "الكشف عندما تتطابق جميع الشروط المطلوبة."
-  },
-  "combinationSummaryAny": {
-    "message": "الكشف عندما يتطابق شرط واحد على الأقل."
-  },
-  "combinationSummaryMinimumFmt": {
-    "message": "الكشف عندما يتطابق {0} من أصل {1} شروط على الأقل."
-  },
-  "combinationSummaryExcluded": {
-    "message": "يجب ألا تتطابق الأنماط المستبعدة."
   },
   "combinationDecreaseMinimum": {
     "message": "تقليل الحد الأدنى للتطابقات"

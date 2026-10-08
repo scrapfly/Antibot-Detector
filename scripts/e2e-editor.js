@@ -9,8 +9,8 @@
  *    without changes, and diff every rule field and combination (key order
  *    inside a combination does not count).
  * 3. Combination groups: add a "one of" group to a reCAPTCHA combination,
- *    change its mode, save and check the stored tree; delete it, save, and
- *    check the combination is back as shipped.
+ *    save, delete it and check the combination is back as shipped; change a
+ *    group's mode and back; delete a group and check it is gone.
  *
  * Not part of `npm run verify`: it needs Playwright and its Chromium.
  *   npm i --no-save playwright && npx playwright install chromium
@@ -182,36 +182,61 @@ const CASES = [
   console.log('\nCombination groups');
   {
     const id = 'detect-recaptcha';
-    const card = '#combinationsContainer .combo-card[data-combo="0"]';
-    const shipped = (await stored('captcha', id)).combinations[0];
-    await openEditor(id, 'reCAPTCHA');
-    await click(`${card} .combo-toggle`);
+    const combos = (await stored('captcha', id)).combinations;
+    const index = combos.findIndex(c => c.id === 'sdk-widget-api');
+    const shipped = combos[index];
+    const groupPath = String(shipped.when.all.findIndex(node => Array.isArray(node.any)));
+    const card = `#combinationsContainer .combo-card[data-combo="${index}"]`;
+    const group = `${card} .combo-group[data-path="${groupPath}"]`;
+    const reopen = async () => { await openEditor(id, 'reCAPTCHA'); await click(`${card} .combo-toggle`); };
+
+    // A new "one of" group with two patterns, saved and then removed again
+    await reopen();
     await click(`${card} [data-combo-action="add-group"]`);
     await sleep(300);
-    const focused = await p.evaluate(() => document.activeElement?.classList.contains('combo-picker-search'));
-    report(focused, 'adding a group opens its picker with the search focused');
-    for (const pick of ['standard-render-api', 'standard-execute-api']) await click(`${card} .combo-picker [data-value="pattern:${pick}"]`);
+    report(await p.evaluate(() => document.activeElement?.classList.contains('combo-picker-search')), 'adding a group opens its picker with the search focused');
+    const newPath = String(shipped.when.all.length);
+    for (const pick of ['configured-sdk', 'configured-enterprise-sdk']) await click(`${card} .combo-picker [data-value="pattern:${pick}"]`);
     await click(`${card} .combo-picker-add`);
     await sleep(300);
-    const groupPath = String(shipped.when.all.length);
-    await p.selectOption(`${card} .combo-group[data-path="${groupPath}"] select[data-combo-action="mode"]`, 'all');
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const added = (await stored('captcha', id)).combinations.find(c => c.id === shipped.id);
+    report(canon(added?.when) === canon({ all: [...shipped.when.all, { any: [{ pattern: 'configured-sdk' }, { pattern: 'configured-enterprise-sdk' }] }] }), 'the new group is saved');
+    await reopen();
+    await click(`${card} .combo-group[data-path="${newPath}"] [data-combo-action="delete-group"]`);
     await sleep(300);
     await click('#saveRuleEdit');
     await sleep(1500);
-    const withGroup = (await stored('captcha', id)).combinations.find(c => c.id === shipped.id);
-    const expected = { all: [...shipped.when.all, { all: [{ pattern: 'standard-render-api' }, { pattern: 'standard-execute-api' }] }] };
-    report(canon(withGroup?.when) === canon(expected), `group saved as ${JSON.stringify(withGroup?.when)}`);
+    const removed = (await stored('captcha', id)).combinations.find(c => c.id === shipped.id);
+    report(canon(removed?.when) === canon(shipped.when), 'deleting it gives the combination as shipped');
 
-    await openEditor(id, 'reCAPTCHA');
-    await click(`${card} .combo-toggle`);
-    await click(`${card} .combo-group[data-path="${groupPath}"] [data-combo-action="delete-group"]`);
+    await reopen();
+    await p.selectOption(`${group} select[data-combo-action="mode"]`, 'all');
     await sleep(300);
-    const focusedAfterDelete = await p.evaluate(() => document.activeElement?.dataset?.comboAction === 'add-group');
-    report(focusedAfterDelete, 'deleting a group moves focus to "Add group"');
     await click('#saveRuleEdit');
     await sleep(1500);
-    const back = (await stored('captcha', id)).combinations.find(c => c.id === shipped.id);
-    report(canon(back?.when) === canon(shipped.when), 'after deleting the group the combination is back as shipped');
+    const changed = (await stored('captcha', id)).combinations.find(c => c.id === shipped.id);
+    report(Array.isArray(changed?.when?.all?.[Number(groupPath)]?.all), 'the group saved as "All of these"');
+
+    await reopen();
+    await p.selectOption(`${group} select[data-combo-action="mode"]`, 'any');
+    await sleep(300);
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const restored = (await stored('captcha', id)).combinations.find(c => c.id === shipped.id);
+    report(canon(restored?.when) === canon(shipped.when), 'switching back gives the combination as shipped');
+
+    await reopen();
+    await click(`${group} [data-combo-action="delete-group"]`);
+    await sleep(300);
+    const focused = await p.evaluate(() => document.activeElement?.dataset?.comboAction === 'open-picker');
+    report(focused, 'deleting a group moves focus to "+ Add pattern"');
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const deleted = (await stored('captcha', id)).combinations.find(c => c.id === shipped.id);
+    const expected = { all: shipped.when.all.filter((_, i) => i !== Number(groupPath)) };
+    report(canon(deleted?.when) === canon(expected), 'the group is gone from the saved combination');
   }
 
   console.log(`\nRESULT ${failures ? failures + ' FAILED' : 'ALL PASS'}`);

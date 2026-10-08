@@ -3632,7 +3632,127 @@
     "message": "Combinações"
   },
   "combinationsHint": {
-    "message": "Escolha os padrões e quantos devem corresponder."
+    "message": "Uma combinação só detecta esta proteção quando vários padrões são encontrados juntos. Use para padrões fracos demais sozinhos."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "Cada combinação só dispara quando seus sinais aparecem juntos; veja o que ela encontrou nesta página."
+  },
+  "combinationFoundTogether": {
+    "message": "Encontrados juntos nesta página:"
+  },
+  "combinationNotPresent": {
+    "message": "Ausente"
+  },
+  "combinationFound": {
+    "message": "Encontrado"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "Esta regra foi alterada ou removida depois da análise, então só o nome e a pontuação são exibidos."
+  },
+  "historyMatchedDetections": {
+    "message": "Detecções correspondentes"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "Esta análise foi salva antes de as condições serem guardadas, então só nomes e pontuações são exibidos."
+  },
+  "combinationMustNotBeFound": {
+    "message": "Não deve ser encontrado"
+  },
+  "combinationMustBeFound": {
+    "message": "Deve ser encontrado"
+  },
+  "combinationAutoTip": {
+    "message": "Auto: a maior confiança dos padrões que a acionaram"
+  },
+  "combinationSetsScore": {
+    "message": "Define a pontuação da detecção"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "Adicione pelo menos um padrão que deve ser encontrado."
+  },
+  "combinationInvalidOneOf": {
+    "message": "Uma lista “Um destes” precisa, em cada opção, de um padrão que deve ser encontrado."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "“Pelo menos {0}” precisa de {0} padrões que devem ser encontrados."
+  },
+  "combinationSentenceOne": {
+    "message": "Dispara quando esta condição é atendida."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "Dispara quando todas as {0} condições são atendidas."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "Dispara quando qualquer uma destas {0} condições é atendida."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "Dispara quando pelo menos {0} destas {1} condições são atendidas."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "Confiança: {0}%."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "Confiança: Auto, até {0}%."
+  },
+  "combinationSentenceGroup": {
+    "message": "Um grupo conta como uma condição."
+  },
+  "combinationSentenceNot": {
+    "message": "Não dispara se houver um padrão marcado “Não deve ser encontrado”."
+  },
+  "combinationSentenceAlone": {
+    "message": "Padrões sem a marca “Só combinações” também detectam sozinhos, com a própria confiança."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "Confiança quando encontrado"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "Deixe vazio para Auto: a maior confiança dos padrões encontrados."
+  },
+  "combinationOnlyTogether": {
+    "message": "Estes padrões só contam juntos"
+  },
+  "combinationOnlyTogetherHint": {
+    "message": "Sozinhos, não detectam nada. Vale para estes padrões em todas as combinações desta regra."
+  },
+  "combinationOnlyTogetherMixed": {
+    "message": "Alguns destes padrões também contam sozinhos. Marque para que todos contem só em combinações."
+  },
+  "combinationModeAny": {
+    "message": "Um destes"
+  },
+  "combinationModeAll": {
+    "message": "Todos estes"
+  },
+  "combinationModeAtLeast": {
+    "message": "Pelo menos… destes"
+  },
+  "combinationModeRootAll": {
+    "message": "todos estes são encontrados"
+  },
+  "combinationModeRootAny": {
+    "message": "um destes é encontrado"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "pelo menos… destes são encontrados"
+  },
+  "combinationGroupMode": {
+    "message": "Grupo"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "Adicione um padrão a este grupo"
+  },
+  "combinationDeleteGroup": {
+    "message": "Excluir grupo"
+  },
+  "combinationAddGroup": {
+    "message": "Adicionar grupo “um de”"
+  },
+  "patternUnusedBadge": {
+    "message": "Em nenhuma combinação"
+  },
+  "patternUnusedTip": {
+    "message": "Nenhuma combinação o usa, então ele nunca detecta. Clique para que conte sozinho."
   },
   "combinationsEmpty": {
     "message": "Nenhuma combinação ainda."
@@ -3643,23 +3763,11 @@
   "combinationDefaultNameFmt": {
     "message": "Combinação {0}"
   },
-  "combinationConfidence": {
-    "message": "Confiança quando corresponde"
-  },
-  "combinationConfidenceFromPatterns": {
-    "message": "Deixe vazio para usar a confiança dos padrões que correspondem"
-  },
   "combinationDelete": {
     "message": "Excluir combinação"
   },
   "combinationDeleteConfirmFmt": {
     "message": "Excluir a combinação \"{0}\"? Os padrões continuam na regra."
-  },
-  "combinationNotTitle": {
-    "message": "NÃO deve corresponder"
-  },
-  "combinationNot": {
-    "message": "NÃO"
   },
   "combinationRemove": {
     "message": "Remover"
@@ -3679,26 +3787,8 @@
   "combinationAnyPattern": {
     "message": "qualquer padrão"
   },
-  "combinationPreviewAnd": {
-    "message": "E"
-  },
-  "combinationPreviewOr": {
-    "message": "OU"
-  },
-  "combinationPreviewNot": {
-    "message": "NÃO"
-  },
   "combinationPreviewEmpty": {
     "message": "Adicione padrões para montar esta combinação"
-  },
-  "combinationInvalid": {
-    "message": "Escolha os padrões que devem corresponder e confira o mínimo de correspondências."
-  },
-  "combinationStrict": {
-    "message": "Estrito"
-  },
-  "combinationStrictTitle": {
-    "message": "Estrito: este padrão não aciona o detector sozinho, apenas dentro de combinações"
   },
   "patternCombinationsOnlyBadge": {
     "message": "Só combinações"
@@ -3709,9 +3799,6 @@
   "combinationNoPatterns": {
     "message": "Nenhum padrão adicionado"
   },
-  "combinationJoinTitle": {
-    "message": "Alternar entre E e OU"
-  },
   "combinationPickHint": {
     "message": "Marque os padrões para adicionar"
   },
@@ -3721,23 +3808,8 @@
   "combinationEditConditions": {
     "message": "Editar condições"
   },
-  "combinationRequireTogether": {
-    "message": "Usar padrões apenas em combinações"
-  },
-  "combinationRequireHint": {
-    "message": "Aplica-se a estes padrões em toda esta regra."
-  },
   "combinationAutoConfidence": {
     "message": "Auto"
-  },
-  "combinationMatchAll": {
-    "message": "Todas as condições correspondem"
-  },
-  "combinationMatchAny": {
-    "message": "Qualquer condição corresponde"
-  },
-  "combinationMatchAtLeast": {
-    "message": "Pelo menos… correspondem"
   },
   "combinationDetectWhen": {
     "message": "Detectar quando"
@@ -3751,29 +3823,8 @@
   "combinationMatchState": {
     "message": "Condição do padrão"
   },
-  "combinationMatches": {
-    "message": "Corresponde"
-  },
-  "combinationDoesNotMatch": {
-    "message": "Não corresponde"
-  },
-  "combinationAtLeastSummaryFmt": {
-    "message": "Pelo menos {0} condições correspondem"
-  },
   "combinationChoosePatterns": {
     "message": "Escolher padrões"
-  },
-  "combinationSummaryAll": {
-    "message": "Detectar quando todas as condições necessárias correspondem."
-  },
-  "combinationSummaryAny": {
-    "message": "Detectar quando pelo menos uma condição corresponde."
-  },
-  "combinationSummaryMinimumFmt": {
-    "message": "Detectar quando pelo menos {0} de {1} condições correspondem."
-  },
-  "combinationSummaryExcluded": {
-    "message": "Os padrões excluídos não devem corresponder."
   },
   "combinationDecreaseMinimum": {
     "message": "Diminuir o mínimo de correspondências"

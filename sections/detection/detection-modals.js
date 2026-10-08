@@ -333,49 +333,29 @@ DetectionModals.findDetectorDefinition = function(detection) {
     return detection?.detector || null;
 };
 
-/** Method label and colour for combination checklists, as the method chips show them. */
+/** Method labels and the confidence look for combination checklists. */
 DetectionModals.checklistOptions = function(idPrefix) {
-    const categoryManager = this.detectorManager?.categoryManager;
     return {
       idPrefix,
       methodLabel: (m) => (typeof DetectionUI !== 'undefined' ? DetectionUI.getMethodLabel(m) : m),
-      tagColor: (m) => {
-        const color = categoryManager?.getTagColor?.(m);
-        return color && color !== '#666666' ? color : '';
-      },
       confidenceHtml: (value, cls, tip) => FormatUtils.confidenceHtml(value, cls, tip)
     };
 };
 
-/**
- * Matched combinations as checklists. Copy buttons share one listener on the
- * list (bound once) and read the cards of the last render.
- */
+/** Matched combinations as checklists (CombinationChecklist). */
 DetectionModals.renderCombinations = function(detection, matched) {
     const list = this.modalElements.combinations;
     if (typeof CombinationChecklist === 'undefined') {
       list.textContent = '';
       return;
     }
-    const definition = DetectionModals.findDetectorDefinition.call(this, detection);
-    const options = DetectionModals.checklistOptions.call(this, 'det-combo');
-    this._combinationCards = CombinationChecklist.build({
+    const cards = CombinationChecklist.build({
       combinations: matched,
-      definition,
+      definition: DetectionModals.findDetectorDefinition.call(this, detection),
       matches: Array.isArray(detection.matches) ? detection.matches : [],
       detectionConfidence: detection.confidence
     });
-    list.innerHTML = CombinationChecklist.renderHtml(this._combinationCards, options);
-    if (!list.dataset.copyBound) {
-      list.dataset.copyBound = 'true';
-      list.addEventListener('click', (event) => {
-        const button = event.target.closest('.match-combo-copy');
-        const card = button && this._combinationCards?.[Number(button.dataset.comboIndex)];
-        if (!card) return;
-        event.stopPropagation();
-        FormatUtils.copyToClipboard(CombinationChecklist.copyText(card, DetectionModals.checklistOptions.call(this)), { element: button });
-      });
-    }
+    list.innerHTML = CombinationChecklist.renderHtml(cards, DetectionModals.checklistOptions.call(this, 'det-combo'));
 };
 
 /** Tooltip rows for the combinations behind a score: highest first, unnamed ones numbered in rule order. */

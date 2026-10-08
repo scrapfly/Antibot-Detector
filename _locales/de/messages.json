@@ -3632,7 +3632,127 @@
     "message": "Kombinationen"
   },
   "combinationsHint": {
-    "message": "Wähle Muster und dann die Anzahl der erforderlichen Treffer."
+    "message": "Eine Kombination erkennt diesen Schutz nur, wenn mehrere Muster zusammen gefunden werden. Für Muster, die allein zu schwach sind."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "Jede Kombination greift nur, wenn ihre Signale zusammen auftreten; hier steht, was sie auf dieser Seite gefunden hat."
+  },
+  "combinationFoundTogether": {
+    "message": "Zusammen auf dieser Seite gefunden:"
+  },
+  "combinationNotPresent": {
+    "message": "Nicht vorhanden"
+  },
+  "combinationFound": {
+    "message": "Gefunden"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "Diese Regel wurde nach dem Scan geändert oder entfernt, daher werden nur Name und Wert angezeigt."
+  },
+  "historyMatchedDetections": {
+    "message": "Zutreffende Erkennungen"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "Dieser Scan wurde gespeichert, bevor Bedingungen erhalten blieben; daher werden nur Namen und Werte angezeigt."
+  },
+  "combinationMustNotBeFound": {
+    "message": "Darf nicht gefunden werden"
+  },
+  "combinationMustBeFound": {
+    "message": "Muss gefunden werden"
+  },
+  "combinationAutoTip": {
+    "message": "Auto: die höchste Konfidenz der Muster, die sie ausgelöst haben"
+  },
+  "combinationSetsScore": {
+    "message": "Bestimmt den Erkennungswert"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "Mindestens ein Muster hinzufügen, das gefunden werden muss."
+  },
+  "combinationInvalidOneOf": {
+    "message": "Eine Liste „Eines davon“ braucht in jeder Option ein Muster, das gefunden werden muss."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "„Mindestens {0}“ braucht {0} Muster, die gefunden werden müssen."
+  },
+  "combinationSentenceOne": {
+    "message": "Greift, wenn diese Bedingung erfüllt ist."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "Greift, wenn alle {0} Bedingungen erfüllt sind."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "Greift, wenn eine dieser {0} Bedingungen erfüllt ist."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "Greift, wenn mindestens {0} dieser {1} Bedingungen erfüllt sind."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "Konfidenz: {0} %."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "Konfidenz: Auto, bis {0} %."
+  },
+  "combinationSentenceGroup": {
+    "message": "Eine Gruppe zählt als eine Bedingung."
+  },
+  "combinationSentenceNot": {
+    "message": "Sie greift nicht, wenn ein Muster mit „Darf nicht gefunden werden“ vorhanden ist."
+  },
+  "combinationSentenceAlone": {
+    "message": "Muster ohne „Nur Kombinationen“ erkennen auch allein, mit ihrer eigenen Konfidenz."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "Konfidenz bei Fund"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "Leer lassen für Auto: die höchste Konfidenz der gefundenen Muster."
+  },
+  "combinationOnlyTogether": {
+    "message": "Diese Muster zählen nur zusammen"
+  },
+  "combinationOnlyTogetherHint": {
+    "message": "Allein erkennen sie nichts. Gilt für diese Muster in jeder Kombination dieser Regel."
+  },
+  "combinationOnlyTogetherMixed": {
+    "message": "Einige dieser Muster zählen auch allein. Anhaken, damit alle nur in Kombinationen zählen."
+  },
+  "combinationModeAny": {
+    "message": "Eines davon"
+  },
+  "combinationModeAll": {
+    "message": "Alle davon"
+  },
+  "combinationModeAtLeast": {
+    "message": "Mindestens … davon"
+  },
+  "combinationModeRootAll": {
+    "message": "alle diese gefunden werden"
+  },
+  "combinationModeRootAny": {
+    "message": "eines davon gefunden wird"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "mindestens … davon gefunden werden"
+  },
+  "combinationGroupMode": {
+    "message": "Gruppe"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "Dieser Gruppe ein Muster hinzufügen"
+  },
+  "combinationDeleteGroup": {
+    "message": "Gruppe löschen"
+  },
+  "combinationAddGroup": {
+    "message": "Gruppe „eines davon“ hinzufügen"
+  },
+  "patternUnusedBadge": {
+    "message": "In keiner Kombination"
+  },
+  "patternUnusedTip": {
+    "message": "Keine Kombination nutzt es, daher erkennt es nie etwas. Klicken, damit es allein zählt."
   },
   "combinationsEmpty": {
     "message": "Noch keine Kombinationen."
@@ -3643,23 +3763,11 @@
   "combinationDefaultNameFmt": {
     "message": "Kombination {0}"
   },
-  "combinationConfidence": {
-    "message": "Konfidenz bei Treffer"
-  },
-  "combinationConfidenceFromPatterns": {
-    "message": "Leer lassen, um die Konfidenz der passenden Muster zu verwenden"
-  },
   "combinationDelete": {
     "message": "Kombination löschen"
   },
   "combinationDeleteConfirmFmt": {
     "message": "Kombination „{0}“ löschen? Ihre Muster bleiben in der Regel."
-  },
-  "combinationNotTitle": {
-    "message": "Darf NICHT zutreffen"
-  },
-  "combinationNot": {
-    "message": "NICHT"
   },
   "combinationRemove": {
     "message": "Entfernen"
@@ -3679,26 +3787,8 @@
   "combinationAnyPattern": {
     "message": "beliebiges Muster"
   },
-  "combinationPreviewAnd": {
-    "message": "UND"
-  },
-  "combinationPreviewOr": {
-    "message": "ODER"
-  },
-  "combinationPreviewNot": {
-    "message": "NICHT"
-  },
   "combinationPreviewEmpty": {
     "message": "Muster hinzufügen, um diese Kombination zu bauen"
-  },
-  "combinationInvalid": {
-    "message": "Wähle Muster, die zutreffen müssen, und prüfe die Mindestanzahl der Treffer."
-  },
-  "combinationStrict": {
-    "message": "Strikt"
-  },
-  "combinationStrictTitle": {
-    "message": "Strikt: Dieses Muster löst den Detektor nicht allein aus, nur innerhalb von Kombinationen"
   },
   "patternCombinationsOnlyBadge": {
     "message": "Nur Kombinationen"
@@ -3709,9 +3799,6 @@
   "combinationNoPatterns": {
     "message": "Keine Muster hinzugefügt"
   },
-  "combinationJoinTitle": {
-    "message": "Zwischen UND und ODER wechseln"
-  },
   "combinationPickHint": {
     "message": "Muster zum Hinzufügen ankreuzen"
   },
@@ -3721,23 +3808,8 @@
   "combinationEditConditions": {
     "message": "Bedingungen bearbeiten"
   },
-  "combinationRequireTogether": {
-    "message": "Muster nur in Kombinationen verwenden"
-  },
-  "combinationRequireHint": {
-    "message": "Gilt für diese Muster überall in dieser Regel."
-  },
   "combinationAutoConfidence": {
     "message": "Auto"
-  },
-  "combinationMatchAll": {
-    "message": "Alle Bedingungen treffen zu"
-  },
-  "combinationMatchAny": {
-    "message": "Eine beliebige Bedingung trifft zu"
-  },
-  "combinationMatchAtLeast": {
-    "message": "Mindestens… treffen zu"
   },
   "combinationDetectWhen": {
     "message": "Erkennen, wenn"
@@ -3751,29 +3823,8 @@
   "combinationMatchState": {
     "message": "Musterbedingung"
   },
-  "combinationMatches": {
-    "message": "Trifft zu"
-  },
-  "combinationDoesNotMatch": {
-    "message": "Trifft nicht zu"
-  },
-  "combinationAtLeastSummaryFmt": {
-    "message": "Mindestens {0} Bedingungen treffen zu"
-  },
   "combinationChoosePatterns": {
     "message": "Muster auswählen"
-  },
-  "combinationSummaryAll": {
-    "message": "Erkennen, wenn alle erforderlichen Bedingungen zutreffen."
-  },
-  "combinationSummaryAny": {
-    "message": "Erkennen, wenn mindestens eine Bedingung zutrifft."
-  },
-  "combinationSummaryMinimumFmt": {
-    "message": "Erkennen, wenn mindestens {0} von {1} Bedingungen zutreffen."
-  },
-  "combinationSummaryExcluded": {
-    "message": "Ausgeschlossene Muster dürfen nicht zutreffen."
   },
   "combinationDecreaseMinimum": {
     "message": "Mindestanzahl der Treffer verringern"

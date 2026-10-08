@@ -4,8 +4,8 @@
  *
  * Each row shows the pattern's own description first (from the stored rule,
  * while its text is unchanged) and the raw pattern under it; groups can be
- * added at the top level, changed and deleted; a sentence says when the
- * combination fires. "These patterns only count together" sets the
+ * added at the top level, changed, filled from their own picker and deleted;
+ * a sentence says when the combination fires. "These patterns only count together" sets the
  * patterns' standalone flag, which is shared by the whole rule; it never
  * changes on its own when rows are added or removed.
  */
@@ -329,7 +329,7 @@ Rules.prototype.handleCombinationAction = function(event, kind) {
     parent[parentKey].splice(childIndex, 1);
     this.clampComboThresholds(combo);
     this._comboPickerOpen = null;
-    focus = `.combo-card[data-combo="${index}"] [data-combo-action="add-group"]`;
+    focus = `.combo-card[data-combo="${index}"] .combo-group[data-path=""] > .combo-group-actions [data-combo-action="open-picker"]`;
   } else if (action === 'mode' && children) {
     const next = el.value;
     if (!['all', 'any', 'of'].includes(next)) return;

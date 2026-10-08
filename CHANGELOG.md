@@ -20,6 +20,14 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Scrape with Scrapfly: Copy for AI copies the page, its protections, your settings and the code as one message ready for an AI assistant.
 - Scrape with Scrapfly: pages with a CAPTCHA now get Cloud Browser code with the Captcha Solver, which solves CAPTCHAs on forms; switch back to the Scrape API anytime.
 - Scrape with Scrapfly: the dialog is laid out as four numbered steps, from settings to running the code.
+- Detection details: each matched combination says in plain words what it found on the page, and marks the one that set the score.
+- History details: matched combinations are shown too, and the list of matches is titled "Matched detections".
+- Rules editor: combinations show each pattern's description first, and "one of" groups can be added, changed and deleted.
+- JS API: matched combinations list which of their patterns were found.
+
+### Fixed
+
+- Rules editor: saving no longer fails after emptying a group, and removing a condition no longer lets weak patterns detect on their own.
 
 ## [2.8.2] - 2026-10-07
 

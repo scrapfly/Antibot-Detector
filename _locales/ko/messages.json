@@ -3632,7 +3632,127 @@
     "message": "조합"
   },
   "combinationsHint": {
-    "message": "패턴을 선택하고 몇 개가 일치해야 하는지 정하세요."
+    "message": "조합은 여러 패턴이 함께 발견될 때만 이 보호를 감지합니다. 단독으로는 약한 패턴에 사용하세요."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "각 조합은 신호가 함께 나타날 때만 발동합니다. 이 페이지에서 찾은 항목입니다."
+  },
+  "combinationFoundTogether": {
+    "message": "이 페이지에서 함께 발견됨:"
+  },
+  "combinationNotPresent": {
+    "message": "없음"
+  },
+  "combinationFound": {
+    "message": "발견됨"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "이 규칙은 검사 후 변경되거나 삭제되어 이름과 점수만 표시합니다."
+  },
+  "historyMatchedDetections": {
+    "message": "일치한 감지"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "이 검사는 조건을 저장하기 전에 저장되어 이름과 점수만 표시합니다."
+  },
+  "combinationMustNotBeFound": {
+    "message": "발견되면 안 됨"
+  },
+  "combinationMustBeFound": {
+    "message": "발견되어야 함"
+  },
+  "combinationAutoTip": {
+    "message": "자동: 조합을 발동시킨 패턴 중 가장 높은 신뢰도"
+  },
+  "combinationSetsScore": {
+    "message": "감지 점수를 결정함"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "발견되어야 하는 패턴을 하나 이상 추가하세요."
+  },
+  "combinationInvalidOneOf": {
+    "message": "“다음 중 하나” 목록은 각 옵션에 발견되어야 하는 패턴이 필요합니다."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "“최소 {0}”에는 발견되어야 하는 패턴이 {0}개 필요합니다."
+  },
+  "combinationSentenceOne": {
+    "message": "이 조건을 충족하면 발동합니다."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "{0}개 조건을 모두 충족하면 발동합니다."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "이 {0}개 조건 중 하나라도 충족하면 발동합니다."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "이 {1}개 조건 중 최소 {0}개를 충족하면 발동합니다."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "신뢰도: {0}%."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "신뢰도: 자동, 최대 {0}%."
+  },
+  "combinationSentenceGroup": {
+    "message": "그룹은 하나의 조건으로 계산합니다."
+  },
+  "combinationSentenceNot": {
+    "message": "“발견되면 안 됨” 패턴이 있으면 발동하지 않습니다."
+  },
+  "combinationSentenceAlone": {
+    "message": "“조합 전용” 표시가 없는 패턴은 각자의 신뢰도로 단독으로도 감지합니다."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "발견 시 신뢰도"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "비워 두면 자동: 발견된 패턴 중 가장 높은 신뢰도."
+  },
+  "combinationOnlyTogether": {
+    "message": "이 패턴들은 함께일 때만 계산"
+  },
+  "combinationOnlyTogetherHint": {
+    "message": "단독으로는 아무것도 감지하지 않습니다. 이 규칙의 모든 조합에서 이 패턴들에 적용됩니다."
+  },
+  "combinationOnlyTogetherMixed": {
+    "message": "일부 패턴은 단독으로도 계산됩니다. 체크하면 모두 조합에서만 계산됩니다."
+  },
+  "combinationModeAny": {
+    "message": "다음 중 하나"
+  },
+  "combinationModeAll": {
+    "message": "다음 모두"
+  },
+  "combinationModeAtLeast": {
+    "message": "다음 중 최소…"
+  },
+  "combinationModeRootAll": {
+    "message": "다음이 모두 발견됨"
+  },
+  "combinationModeRootAny": {
+    "message": "다음 중 하나가 발견됨"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "다음 중 최소…가 발견됨"
+  },
+  "combinationGroupMode": {
+    "message": "그룹"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "이 그룹에 패턴 추가"
+  },
+  "combinationDeleteGroup": {
+    "message": "그룹 삭제"
+  },
+  "combinationAddGroup": {
+    "message": "“다음 중 하나” 그룹 추가"
+  },
+  "patternUnusedBadge": {
+    "message": "어떤 조합에도 없음"
+  },
+  "patternUnusedTip": {
+    "message": "사용하는 조합이 없어 감지하지 않습니다. 클릭하면 단독으로 계산됩니다."
   },
   "combinationsEmpty": {
     "message": "아직 조합이 없습니다."
@@ -3643,23 +3763,11 @@
   "combinationDefaultNameFmt": {
     "message": "조합 {0}"
   },
-  "combinationConfidence": {
-    "message": "일치할 때의 신뢰도"
-  },
-  "combinationConfidenceFromPatterns": {
-    "message": "비워 두면 일치하는 패턴의 신뢰도를 사용합니다"
-  },
   "combinationDelete": {
     "message": "조합 삭제"
   },
   "combinationDeleteConfirmFmt": {
     "message": "조합 \"{0}\"을(를) 삭제할까요? 패턴은 규칙에 남습니다."
-  },
-  "combinationNotTitle": {
-    "message": "일치하면 안 됨"
-  },
-  "combinationNot": {
-    "message": "NOT"
   },
   "combinationRemove": {
     "message": "제거"
@@ -3679,26 +3787,8 @@
   "combinationAnyPattern": {
     "message": "아무 패턴"
   },
-  "combinationPreviewAnd": {
-    "message": "그리고"
-  },
-  "combinationPreviewOr": {
-    "message": "또는"
-  },
-  "combinationPreviewNot": {
-    "message": "NOT"
-  },
   "combinationPreviewEmpty": {
     "message": "패턴을 추가해 조합을 만드세요"
-  },
-  "combinationInvalid": {
-    "message": "일치해야 하는 패턴을 선택하고 최소 일치 수를 확인하세요."
-  },
-  "combinationStrict": {
-    "message": "엄격"
-  },
-  "combinationStrictTitle": {
-    "message": "엄격: 이 패턴은 단독으로 탐지기를 작동시키지 않고 조합 안에서만 작동합니다"
   },
   "patternCombinationsOnlyBadge": {
     "message": "조합 전용"
@@ -3709,9 +3799,6 @@
   "combinationNoPatterns": {
     "message": "추가된 패턴 없음"
   },
-  "combinationJoinTitle": {
-    "message": "그리고 / 또는 전환"
-  },
   "combinationPickHint": {
     "message": "추가할 패턴을 선택하세요"
   },
@@ -3721,23 +3808,8 @@
   "combinationEditConditions": {
     "message": "조건 편집"
   },
-  "combinationRequireTogether": {
-    "message": "패턴을 조합에서만 사용"
-  },
-  "combinationRequireHint": {
-    "message": "이 규칙 전체에서 해당 패턴에 적용됩니다."
-  },
   "combinationAutoConfidence": {
     "message": "자동"
-  },
-  "combinationMatchAll": {
-    "message": "모든 조건이 일치"
-  },
-  "combinationMatchAny": {
-    "message": "하나 이상의 조건이 일치"
-  },
-  "combinationMatchAtLeast": {
-    "message": "최소…개 일치"
   },
   "combinationDetectWhen": {
     "message": "감지 조건"
@@ -3751,29 +3823,8 @@
   "combinationMatchState": {
     "message": "패턴 조건"
   },
-  "combinationMatches": {
-    "message": "일치함"
-  },
-  "combinationDoesNotMatch": {
-    "message": "일치하지 않음"
-  },
-  "combinationAtLeastSummaryFmt": {
-    "message": "최소 {0}개 조건이 일치"
-  },
   "combinationChoosePatterns": {
     "message": "패턴 선택"
-  },
-  "combinationSummaryAll": {
-    "message": "필수 조건이 모두 일치하면 감지합니다."
-  },
-  "combinationSummaryAny": {
-    "message": "하나 이상의 조건이 일치하면 감지합니다."
-  },
-  "combinationSummaryMinimumFmt": {
-    "message": "{1}개 조건 중 최소 {0}개가 일치하면 감지합니다."
-  },
-  "combinationSummaryExcluded": {
-    "message": "제외된 패턴은 일치하면 안 됩니다."
   },
   "combinationDecreaseMinimum": {
     "message": "최소 일치 수 줄이기"

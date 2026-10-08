@@ -199,6 +199,8 @@ test('an emptied group is dropped on save; empty, NOT-only and impossible trees 
 test('groups: add a "one of" group with its picker, change its mode, delete it', () => {
   const { rules, act, container } = editor(base({ all: [{ pattern: 'a' }] }));
   rules.setComboOpen(rules.combinationsModel[0], true);
+  rules.renderCombinations();
+  assert.match(container.innerHTML, /data-combo-action="add-group">\+ Add “one of” group/);
   act('add-group', { kind: 'click' });
   assert.deepEqual(plain(rules.combinationsModel[0].when), { all: [{ pattern: 'a' }, { any: [] }] });
   assert.equal(rules._comboPickerPath, '1', 'the new group opens its picker');
@@ -213,6 +215,15 @@ test('groups: add a "one of" group with its picker, change its mode, delete it',
   assert.equal(C.score({ ...base(), combinations: saved }, matches(['b', 'c'])).detected, false);
   act('delete-group', { path: '1', kind: 'click' });
   assert.deepEqual(plain(rules.combinationsModel[0].when), { all: [{ pattern: 'a' }] });
+});
+
+test('an existing group fills from its own picker', () => {
+  const { rules, act } = editor(base({ all: [{ pattern: 'a' }, { any: [{ pattern: 'b' }] }] }));
+  rules.setComboOpen(rules.combinationsModel[0], true);
+  act('open-picker', { path: '1', kind: 'click' });
+  assert.equal(rules._comboPickerPath, '1');
+  rules.addComboItems(rules.combinationsModel[0], ['pattern:c'], '1');
+  assert.deepEqual(plain(rules.combinationsModel[0].when.all[1]), { any: [{ pattern: 'b' }, { pattern: 'c' }] });
 });
 
 test('"at least" counts only rows that must be found, and drops when a row becomes "must not be found"', () => {
@@ -264,7 +275,7 @@ test('the builder offers group controls with readable, unique names', () => {
   rules.setComboOpen(rules.combinationsModel[0], true);
   rules.renderCombinations();
   const html = container.innerHTML;
-  assert.match(html, /data-combo-action="add-group">\+ Add “one of” group/);
+  assert.equal((html.match(/data-combo-action="add-group"/g) || []).length, 1, 'one "Add group" button, at the top level only');
   assert.equal((html.match(/data-combo-action="delete-group"/g) || []).length, 2);
   assert.match(html, /<option value="all" selected>all of these are found<\/option>/);
   assert.match(html, /<option value="any" selected>One of these<\/option>/);

@@ -4,9 +4,9 @@
  * the method and the pattern's own description. Detection and History
  * details both draw it.
  *
- * build() turns combinations into cards, renderHtml() draws them and
- * copyText() gives the same content as text. Popup only: the service worker
- * and pages never load this file (detection-combinations.js is the engine).
+ * build() turns combinations into cards and renderHtml() draws them. Popup
+ * only: the service worker and pages never load this file
+ * (detection-combinations.js is the engine).
  */
 (function initCombinationChecklist(root) {
   'use strict';
@@ -171,110 +171,74 @@
     return null;
   }
 
-  function groupHeading(group, isRoot) {
-    if (group.negative) return tr('combinationNoneOfThese', 'None of these:');
-    if (group.mode === 'of') return fmt('combinationAtLeastOfTheseFmt', 'At least {0} of these:', group.atLeast);
-    if (group.mode === 'any') return tr('combinationOneOfThese', 'One of these:');
-    return isRoot ? tr('combinationAllFound', 'All of these were found:') : tr('combinationAllOfThese', 'All of these:');
-  }
-
-  function markOf(item) {
-    if (item.negative) {
-      return item.met
-        ? { symbol: '✓', cls: 'is-found', label: tr('combinationAbsentAsRequired', 'Not found, as required') }
-        : { symbol: '✕', cls: 'is-blocked', label: tr('combinationFound', 'Found') };
-    }
-    return item.met
-      ? { symbol: '✓', cls: 'is-found', label: tr('combinationFound', 'Found') }
-      : { symbol: '○', cls: 'is-missing', label: tr('combinationNotFound', 'Not found') };
-  }
-
-  function unavailableText(card) {
-    return card.unavailable === 'notSaved'
-      ? tr('combinationDetailsNotSaved', 'Its conditions were not saved with this scan; only its name and score are shown.')
-      : tr('combinationDetailsUnavailable', 'This rule changed or was removed after the scan, so only its name and score are shown.');
-  }
-
-  // Icons for the marks: the ✓ character renders as √ in some UI fonts
-  const MARK_ICONS = {
-    'is-found': '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M3.2 8.4l3 3 6.6-6.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    'is-missing': '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><circle cx="8" cy="8" r="4.6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
-    'is-blocked': '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
-  };
-
-  function hexToRgba(hex, alpha) {
-    const m = /^#?([0-9a-f]{6})$/i.exec(String(hex || '').trim());
-    if (!m) return '';
-    const n = parseInt(m[1], 16);
-    return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
-  }
-
-  function chipHtml(method, options) {
-    const label = (options.methodLabel && options.methodLabel(method)) || method;
-    const color = options.tagColor ? options.tagColor(method) : '';
-    const style = color && hexToRgba(color, 1)
-      ? ` style="color:${esc(color)};background:${esc(hexToRgba(color, 0.15))};border-color:${esc(hexToRgba(color, 0.35))}"`
-      : '';
-    return `<span class="match-combo-chip badge-${esc(method)}"${style}>${esc(label)}</span>`;
-  }
-
-  function leafText(item, options) {
-    if (item.kind === 'method') {
-      const label = (options.methodLabel && options.methodLabel(item.method)) || item.method;
-      return fmt('combinationAnyOfMethodFmt', 'Any {0} pattern', label);
-    }
-    return item.description || item.text;
-  }
-
-  /** The rows of a group; `labelId` names the heading that labels them. */
-  function rowsHtml(group, options, labelId) {
-    const items = group.items.map(item => {
-      const mark = markOf(item);
-      const markHtml = `<span class="match-combo-mark ${mark.cls}" role="img" aria-label="${esc(mark.label)}">${MARK_ICONS[mark.cls]}</span>`;
+  /**
+   * What a fired combination found, flat: every pattern (or method row) that
+   * had to be found and was, in rule order, then the "must not be found" rows
+   * that were indeed absent. Branches that did not hold are skipped, so the
+   * list is exactly the evidence that made it fire.
+   */
+  function foundRows(tree) {
+    const found = [];
+    const absent = [];
+    const seen = new Set();
+    const walk = (item) => {
+      if (!item) return;
       if (item.kind === 'group') {
-        const subId = `${options.idPrefix || 'match-combo'}-${options.nextId()}`;
-        return `<li class="match-combo-row match-combo-sub ${mark.cls}">
-          <div class="match-combo-sub-head">${markHtml}<span class="match-combo-sub-title" id="${subId}">${esc(groupHeading(item, false))}</span></div>
-          ${rowsHtml(item, options, subId)}
-        </li>`;
+        if (item.met) item.items.forEach(walk);
+        return;
       }
-      const text = leafText(item, options);
-      const raw = item.kind === 'pattern' && item.description ? item.text : '';
-      const tip = [raw, item.value && item.value !== raw ? item.value : ''].filter(Boolean);
-      const tipAttrs = tip.length
-        ? ` data-tip="${esc(tip[0])}"${tip[1] ? ` data-tip-detail="${esc(tip[1])}"` : ''}`
-        : '';
-      const plain = item.kind === 'pattern' && !item.description;
-      return `<li class="match-combo-row ${mark.cls}${item.negative ? ' is-not' : ''}"${tipAttrs}>
-        ${markHtml}
-        ${chipHtml(item.method, options)}
-        <span class="match-combo-text${plain ? ' is-raw' : ''}" dir="${plain ? 'ltr' : 'auto'}">${item.negative ? `<span class="match-combo-not">${esc(tr('combinationMustNotBeFound', 'Must not be found'))}:</span> ` : ''}${esc(text)}</span>
-      </li>`;
-    }).join('');
-    return `<ul class="match-combo-rows" role="group" aria-labelledby="${labelId}">${items}</ul>`;
+      if (item.negative) {
+        if (item.met) absent.push(item);
+        return;
+      }
+      const key = `${item.kind}:${item.id || item.method}`;
+      if (item.found && !seen.has(key)) {
+        seen.add(key);
+        found.push(item);
+      }
+    };
+    walk(tree);
+    return { found, absent };
   }
 
-  /** A card's whole checklist: the lead line, then its rows. */
-  function treeHtml(tree, options) {
-    const group = tree.kind === 'group' ? tree : { kind: 'group', mode: 'all', negative: false, items: [tree] };
-    const leadId = `${options.idPrefix || 'match-combo'}-${options.nextId()}`;
-    return `<p class="match-combo-lead" id="${leadId}">${esc(groupHeading(group, true))}</p>${rowsHtml(group, options, leadId)}`;
+  function unavailableText() {
+    return tr('combinationDetailsUnavailable', 'This rule changed or was removed after the scan, so only its name and score are shown.');
+  }
+
+  // Icon for the mark: the ✓ character renders as √ in some UI fonts
+  const FOUND_ICON = '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M3.2 8.4l3 3 6.6-6.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  /** One found signal: its description (or raw text), with method and raw pattern in the tip. */
+  function rowHtml(item, options, negative) {
+    const label = (options.methodLabel && options.methodLabel(item.method)) || item.method;
+    const isMethod = item.kind === 'method';
+    const text = isMethod ? fmt('combinationAnyOfMethodFmt', 'Any {0} pattern', label) : (item.description || item.text);
+    const plain = !isMethod && !item.description;
+    // Tip: method and the pattern as written, then the value seen on the page
+    const tipTitle = [label, !isMethod && item.description ? item.text : ''].filter(Boolean).join(': ');
+    const tipDetail = item.value && item.value !== item.text ? item.value : '';
+    const tip = tipTitle ? ` data-tip="${esc(tipTitle)}"${tipDetail ? ` data-tip-detail="${esc(tipDetail)}"` : ''}` : '';
+    const markLabel = negative ? tr('combinationNotPresent', 'Not present') : tr('combinationFound', 'Found');
+    return `<li class="match-combo-row${negative ? ' is-absent' : ''}"${tip}>
+        <span class="match-combo-mark" role="img" aria-label="${esc(markLabel)}">${FOUND_ICON}</span>
+        <span class="match-combo-text${plain ? ' is-raw' : ''}" dir="${plain ? 'ltr' : 'auto'}">${negative ? `<span class="match-combo-not">${esc(tr('combinationNotPresent', 'Not present'))}:</span> ` : ''}${plain ? `<span class="match-combo-method">${esc(label)}</span> ` : ''}${esc(text)}</span>
+      </li>`;
   }
 
   /**
    * HTML for the cards.
    * @param {Array<object>} cards - from build()
-   * @param {object} [options] - { methodLabel(method), tagColor(method), confidenceHtml(value, cls, tip), idPrefix }
+   * @param {object} [options] - { methodLabel(method), confidenceHtml(value, cls, tip), idPrefix }
    */
   function renderHtml(cards, options = {}) {
     let counter = 0;
-    const opts = { ...options, nextId: () => ++counter };
+    const nextId = () => `${options.idPrefix || 'match-combo'}-${++counter}`;
     const confidence = (value, card) => {
       const tip = card.auto ? { title: tr('combinationAutoTip', 'Auto: the highest confidence of the patterns that made it fire') } : null;
       if (typeof options.confidenceHtml === 'function') return options.confidenceHtml(value, 'match-combo-confidence', tip);
       return `<span class="match-combo-confidence">${esc(value)}%</span>`;
     };
-    return (Array.isArray(cards) ? cards : []).map((card, index) => {
+    return (Array.isArray(cards) ? cards : []).map((card) => {
       const head = `<div class="match-combo-head">
           <h5 class="match-combo-name" dir="auto">${esc(card.name)}</h5>
           ${confidence(card.confidence, card)}
@@ -282,46 +246,22 @@
       const score = card.setsScore
         ? `<p class="match-combo-score"><span aria-hidden="true">★</span> ${esc(tr('combinationSetsScore', 'Sets the detection score'))}</p>`
         : '';
-      const body = card.unavailable || !card.tree
-        ? `<p class="match-combo-unavailable">${esc(unavailableText(card))}</p>`
-        : treeHtml(card.tree, opts);
-      const copy = card.unavailable ? '' : `<div class="match-combo-foot">
-          <button type="button" class="match-combo-copy" data-combo-index="${index}" aria-label="${esc(fmt('combinationCopyFmt', 'Copy “{0}”', card.name))}">${esc(tr('advCommonCopy', 'Copy'))}</button>
-        </div>`;
-      return `<article class="match-combo${card.setsScore ? ' sets-score' : ''}" data-combo-id="${esc(card.id)}">${head}${score}${body}${copy}</article>`;
+      let body;
+      if (card.unavailable === 'notSaved') {
+        body = '';
+      } else if (card.unavailable || !card.tree) {
+        body = `<p class="match-combo-unavailable">${esc(unavailableText(card))}</p>`;
+      } else {
+        const { found, absent } = foundRows(card.tree);
+        const leadId = nextId();
+        body = `<p class="match-combo-lead" id="${leadId}">${esc(tr('combinationFoundTogether', 'Found together on this page:'))}</p>
+          <ul class="match-combo-rows" aria-labelledby="${leadId}">${found.map(item => rowHtml(item, options, false)).join('')}${absent.map(item => rowHtml(item, options, true)).join('')}</ul>`;
+      }
+      return `<article class="match-combo${card.setsScore ? ' sets-score' : ''}" data-combo-id="${esc(card.id)}">${head}${score}${body}</article>`;
     }).join('');
   }
 
-  /** The card as text: name and confidence, then one line per condition. */
-  function copyText(card, options = {}) {
-    if (!card) return '';
-    const lines = [`${card.name} (${card.confidence}%)`];
-    if (card.setsScore) lines.push(tr('combinationSetsScore', 'Sets the detection score'));
-    if (card.unavailable || !card.tree) {
-      lines.push(unavailableText(card));
-      return lines.join('\n');
-    }
-    const label = (method) => (options.methodLabel && options.methodLabel(method)) || method;
-    const walk = (group, depth, isRoot) => {
-      const pad = '  '.repeat(depth);
-      if (isRoot) lines.push(groupHeading(group, true));
-      for (const item of group.items) {
-        const mark = markOf(item).symbol;
-        if (item.kind === 'group') {
-          lines.push(`${pad}${mark} ${groupHeading(item, false)}`);
-          walk(item, depth + 1, false);
-          continue;
-        }
-        const not = item.negative ? `${tr('combinationMustNotBeFound', 'Must not be found')}: ` : '';
-        const raw = item.kind === 'pattern' && item.description && item.text ? ` — ${item.text}` : '';
-        lines.push(`${pad}${mark} ${label(item.method)}: ${not}${leafText(item, options)}${raw}`);
-      }
-    };
-    walk(card.tree.kind === 'group' ? card.tree : { kind: 'group', mode: 'all', negative: false, items: [card.tree] }, 0, true);
-    return lines.join('\n');
-  }
-
-  const api = Object.freeze({ build, renderHtml, copyText, patternText });
+  const api = Object.freeze({ build, renderHtml, foundRows, patternText });
   root.CombinationChecklist = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : (typeof window !== 'undefined' ? window : globalThis));

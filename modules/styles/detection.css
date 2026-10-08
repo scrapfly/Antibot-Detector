@@ -1880,11 +1880,6 @@
   color: var(--text-primary);
 }
 
-.match-combo-row.is-missing > .match-combo-text,
-.match-combo-row.is-missing > .match-combo-chip {
-  opacity: 0.55;
-}
-
 .match-combo-mark {
   display: inline-flex;
   align-items: center;
@@ -1892,21 +1887,7 @@
   flex-shrink: 0;
   width: 14px;
   height: 17px;
-}
-
-.match-combo-mark.is-found { color: var(--success-light); }
-.match-combo-mark.is-missing { color: var(--text-muted); }
-.match-combo-mark.is-blocked { color: var(--danger-light, #f87171); }
-
-.match-combo-chip {
-  flex-shrink: 0;
-  padding: 0 6px;
-  border: 1px solid #4b4b4b;
-  border-radius: 5px;
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 16px;
-  white-space: nowrap;
+  color: var(--success-light);
 }
 
 .match-combo-text {
@@ -1921,30 +1902,15 @@
 }
 
 .match-combo-not {
-  color: var(--danger-light, #f87171);
+  color: var(--text-secondary);
   font-weight: 600;
 }
 
-.match-combo-sub {
-  flex-direction: column;
-  gap: 4px;
-}
-
-.match-combo-sub-head {
-  display: flex;
-  align-items: flex-start;
-  gap: 6px;
-}
-
-.match-combo-sub-title {
-  font-size: 11.5px;
+/* A pattern without a description: its method before the raw text */
+.match-combo-method {
+  font-size: 10.5px;
+  font-weight: 600;
   color: var(--text-secondary);
-}
-
-.match-combo-sub > .match-combo-rows {
-  margin-inline-start: 8px;
-  padding-inline-start: 12px;
-  border-inline-start: 1px solid #4b4b4b;
 }
 
 .match-combo-unavailable {
@@ -1952,33 +1918,4 @@
   font-size: 11.5px;
   line-height: 1.4;
   color: var(--text-secondary);
-}
-
-.match-combo-foot {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.match-combo-copy {
-  height: 22px;
-  padding: 0 9px;
-  border: 1px solid rgba(139, 92, 246, 0.5);
-  border-radius: 6px;
-  background: rgba(139, 92, 246, 0.14);
-  color: #ddd6fe;
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.match-combo-copy:hover {
-  background: #8b5cf6;
-  border-color: #8b5cf6;
-  color: #fff;
-}
-
-.match-combo-copy:focus-visible {
-  outline: 2px solid var(--accent-light);
-  outline-offset: 1px;
 }

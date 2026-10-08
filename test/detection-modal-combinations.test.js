@@ -26,12 +26,6 @@ function fakeList() {
   return {
     innerHTML: '', textContent: '', dataset: {},
     addEventListener(type, fn) { (handlers[type] = handlers[type] || []).push(fn); },
-    click(index) {
-      const button = { dataset: { comboIndex: String(index) } };
-      const event = { target: { closest: (sel) => (sel === '.match-combo-copy' ? button : null) }, stopPropagation() {} };
-      (handlers.click || []).forEach(fn => fn(event));
-      return button;
-    },
     handlerCount: () => (handlers.click || []).length
   };
 }
@@ -55,7 +49,6 @@ function modalThis(list) {
     modalElements: { combinations: list },
     detectorManager: {
       getAllDetectors: () => ({ fingerprint: { 'detect-storage': definition } }),
-      categoryManager: { getTagColor: (m) => (m === 'content' ? '#33FFF3' : '#666666') }
     }
   };
 }
@@ -81,11 +74,10 @@ test('the two storage combinations are told apart: full names, highest first, th
   assert.ok(first > 0 && second > first, 'highest confidence first, names never cut');
   assert.match(html, /class="match-combo sets-score" data-combo-id="calls"/);
   assert.match(html, /Calls Storage\.setItem/);
-  assert.match(html, /color:#33FFF3/i, 'content chips use the method colour');
   assert.ok(!/describe|AND|method-type-badge/.test(html), 'no one-line rule text any more');
 });
 
-test('Copy copies one card as readable text, and the list listener is bound once', () => {
+test('the cards have no Copy button, and a new detection replaces the list', () => {
   const { context, copied } = load();
   const detection = { detector: { id: 'detect-storage' }, confidence: 15, combinations: [
     { id: 'calls', name: 'Storage read and write calls', confidence: 15, when: definition.combinations[1].when, found: ['hook-set', 'hook-get'] }
@@ -93,14 +85,11 @@ test('Copy copies one card as readable text, and the list listener is bound once
   const list = fakeList();
   const self = modalThis(list);
   context.DetectionModals.renderCombinations.call(self, detection, detection.combinations);
-  context.DetectionModals.renderCombinations.call(self, detection, detection.combinations);
-  assert.strictEqual(list.handlerCount(), 1);
-  const button = list.click(0);
-  assert.strictEqual(copied.length, 1);
-  assert.strictEqual(copied[0].element, button);
-  assert.match(copied[0].text, /^Storage read and write calls \(15%\)\nSets the detection score\nAll of these were found:\n✓ js_hooks: Calls Storage\.setItem — Storage\.prototype\.setItem/);
-  list.click(5);
-  assert.strictEqual(copied.length, 1, 'a stale index copies nothing');
+  assert.ok(!/match-combo-copy|>Copy</.test(list.innerHTML));
+  assert.strictEqual(list.handlerCount(), 0, 'no click handling on the list');
+  context.DetectionModals.renderCombinations.call(self, { detector: { id: 'detect-storage' }, confidence: 0 }, []);
+  assert.strictEqual(list.innerHTML, '');
+  assert.deepStrictEqual(copied, []);
 });
 
 test('older cached detections without found still get their checklist from the matches', () => {

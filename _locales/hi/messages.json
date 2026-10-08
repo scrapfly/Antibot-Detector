@@ -3632,7 +3632,127 @@
     "message": "संयोजन"
   },
   "combinationsHint": {
-    "message": "पैटर्न चुनें और तय करें कि कितने मेल खाने चाहिए।"
+    "message": "संयोजन इस सुरक्षा को तभी पहचानता है जब कई पैटर्न साथ मिलें। इसे उन पैटर्न के लिए इस्तेमाल करें जो अकेले कमज़ोर हैं।"
+  },
+  "detectionModalCombinationsHint": {
+    "message": "हर संयोजन तभी चालू होता है जब उसके संकेत साथ दिखें; यह रहा जो उसे इस पेज पर मिला।"
+  },
+  "combinationFoundTogether": {
+    "message": "इस पेज पर एक साथ मिले:"
+  },
+  "combinationNotPresent": {
+    "message": "मौजूद नहीं"
+  },
+  "combinationFound": {
+    "message": "मिला"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "स्कैन के बाद यह नियम बदला या हटाया गया, इसलिए सिर्फ़ नाम और स्कोर दिखाए गए हैं।"
+  },
+  "historyMatchedDetections": {
+    "message": "मिली पहचानें"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "यह स्कैन शर्तें सहेजे जाने से पहले सेव हुआ था, इसलिए सिर्फ़ नाम और स्कोर दिखाए गए हैं।"
+  },
+  "combinationMustNotBeFound": {
+    "message": "नहीं मिलना चाहिए"
+  },
+  "combinationMustBeFound": {
+    "message": "मिलना चाहिए"
+  },
+  "combinationAutoTip": {
+    "message": "स्वतः: इसे चालू करने वाले पैटर्न में सबसे ऊँचा कॉन्फ़िडेंस"
+  },
+  "combinationSetsScore": {
+    "message": "पहचान का स्कोर तय करता है"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "कम से कम एक ऐसा पैटर्न जोड़ें जो मिलना चाहिए।"
+  },
+  "combinationInvalidOneOf": {
+    "message": "“इनमें से एक” सूची के हर विकल्प में एक ऐसा पैटर्न चाहिए जो मिलना चाहिए।"
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "“कम से कम {0}” के लिए {0} ऐसे पैटर्न चाहिए जो मिलने चाहिए।"
+  },
+  "combinationSentenceOne": {
+    "message": "यह शर्त पूरी होने पर चालू होता है।"
+  },
+  "combinationSentenceAllFmt": {
+    "message": "सभी {0} शर्तें पूरी होने पर चालू होता है।"
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "इन {0} शर्तों में से कोई एक पूरी होने पर चालू होता है।"
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "इन {1} शर्तों में से कम से कम {0} पूरी होने पर चालू होता है।"
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "कॉन्फ़िडेंस: {0}%।"
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "कॉन्फ़िडेंस: स्वतः, {0}% तक।"
+  },
+  "combinationSentenceGroup": {
+    "message": "एक समूह एक शर्त गिना जाता है।"
+  },
+  "combinationSentenceNot": {
+    "message": "“नहीं मिलना चाहिए” वाला पैटर्न मौजूद हो तो यह चालू नहीं होता।"
+  },
+  "combinationSentenceAlone": {
+    "message": "जिन पैटर्न पर “केवल संयोजन” नहीं है, वे अपने कॉन्फ़िडेंस से अकेले भी पहचानते हैं।"
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "मिलने पर कॉन्फ़िडेंस"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "स्वतः के लिए खाली छोड़ें: मिले पैटर्न में सबसे ऊँचा कॉन्फ़िडेंस।"
+  },
+  "combinationOnlyTogether": {
+    "message": "ये पैटर्न सिर्फ़ साथ में गिने जाते हैं"
+  },
+  "combinationOnlyTogetherHint": {
+    "message": "अकेले ये कुछ नहीं पहचानते। इस नियम के हर संयोजन में इन पैटर्न पर लागू होता है।"
+  },
+  "combinationOnlyTogetherMixed": {
+    "message": "इनमें से कुछ पैटर्न अकेले भी गिने जाते हैं। सभी को सिर्फ़ संयोजनों में गिनने के लिए टिक करें।"
+  },
+  "combinationModeAny": {
+    "message": "इनमें से एक"
+  },
+  "combinationModeAll": {
+    "message": "ये सभी"
+  },
+  "combinationModeAtLeast": {
+    "message": "इनमें से कम से कम…"
+  },
+  "combinationModeRootAll": {
+    "message": "ये सभी मिलें"
+  },
+  "combinationModeRootAny": {
+    "message": "इनमें से एक मिले"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "इनमें से कम से कम… मिलें"
+  },
+  "combinationGroupMode": {
+    "message": "समूह"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "इस समूह में पैटर्न जोड़ें"
+  },
+  "combinationDeleteGroup": {
+    "message": "समूह हटाएँ"
+  },
+  "combinationAddGroup": {
+    "message": "“इनमें से एक” समूह जोड़ें"
+  },
+  "patternUnusedBadge": {
+    "message": "किसी संयोजन में नहीं"
+  },
+  "patternUnusedTip": {
+    "message": "कोई संयोजन इसे इस्तेमाल नहीं करता, इसलिए यह कभी नहीं पहचानता। अकेले गिनने के लिए क्लिक करें।"
   },
   "combinationsEmpty": {
     "message": "अभी कोई संयोजन नहीं।"
@@ -3643,23 +3763,11 @@
   "combinationDefaultNameFmt": {
     "message": "संयोजन {0}"
   },
-  "combinationConfidence": {
-    "message": "मेल खाने पर कॉन्फ़िडेंस"
-  },
-  "combinationConfidenceFromPatterns": {
-    "message": "खाली छोड़ें ताकि मेल खाने वाले पैटर्न का कॉन्फ़िडेंस इस्तेमाल हो"
-  },
   "combinationDelete": {
     "message": "संयोजन हटाएँ"
   },
   "combinationDeleteConfirmFmt": {
     "message": "संयोजन \"{0}\" हटाएं? इसके पैटर्न नियम में बने रहेंगे।"
-  },
-  "combinationNotTitle": {
-    "message": "मेल नहीं होना चाहिए"
-  },
-  "combinationNot": {
-    "message": "नहीं"
   },
   "combinationRemove": {
     "message": "हटाएँ"
@@ -3679,26 +3787,8 @@
   "combinationAnyPattern": {
     "message": "कोई भी पैटर्न"
   },
-  "combinationPreviewAnd": {
-    "message": "और"
-  },
-  "combinationPreviewOr": {
-    "message": "या"
-  },
-  "combinationPreviewNot": {
-    "message": "नहीं"
-  },
   "combinationPreviewEmpty": {
     "message": "यह संयोजन बनाने के लिए पैटर्न जोड़ें"
-  },
-  "combinationInvalid": {
-    "message": "मेल खाने वाले पैटर्न चुनें और न्यूनतम मिलान की संख्या जाँचें।"
-  },
-  "combinationStrict": {
-    "message": "सख़्त"
-  },
-  "combinationStrictTitle": {
-    "message": "सख़्त: यह पैटर्न अकेले डिटेक्टर को ट्रिगर नहीं करता, केवल संयोजनों के अंदर"
   },
   "patternCombinationsOnlyBadge": {
     "message": "केवल संयोजन"
@@ -3709,9 +3799,6 @@
   "combinationNoPatterns": {
     "message": "कोई पैटर्न नहीं जोड़ा गया"
   },
-  "combinationJoinTitle": {
-    "message": "और / या के बीच बदलें"
-  },
   "combinationPickHint": {
     "message": "जोड़ने के लिए पैटर्न चुनें"
   },
@@ -3721,23 +3808,8 @@
   "combinationEditConditions": {
     "message": "शर्तें संपादित करें"
   },
-  "combinationRequireTogether": {
-    "message": "पैटर्न का उपयोग केवल संयोजनों में करें"
-  },
-  "combinationRequireHint": {
-    "message": "इस नियम में हर जगह इन पैटर्न पर लागू होता है।"
-  },
   "combinationAutoConfidence": {
     "message": "स्वतः"
-  },
-  "combinationMatchAll": {
-    "message": "सभी शर्तें मेल खाती हैं"
-  },
-  "combinationMatchAny": {
-    "message": "कोई भी शर्त मेल खाती है"
-  },
-  "combinationMatchAtLeast": {
-    "message": "कम से कम… मेल खाती हैं"
   },
   "combinationDetectWhen": {
     "message": "इस स्थिति में पहचानें"
@@ -3751,29 +3823,8 @@
   "combinationMatchState": {
     "message": "पैटर्न की शर्त"
   },
-  "combinationMatches": {
-    "message": "मेल खाता है"
-  },
-  "combinationDoesNotMatch": {
-    "message": "मेल नहीं खाता"
-  },
-  "combinationAtLeastSummaryFmt": {
-    "message": "कम से कम {0} शर्तें मेल खाती हैं"
-  },
   "combinationChoosePatterns": {
     "message": "पैटर्न चुनें"
-  },
-  "combinationSummaryAll": {
-    "message": "सभी आवश्यक शर्तें मेल खाने पर पहचानें।"
-  },
-  "combinationSummaryAny": {
-    "message": "कम से कम एक शर्त मेल खाने पर पहचानें।"
-  },
-  "combinationSummaryMinimumFmt": {
-    "message": "{1} में से कम से कम {0} शर्तें मेल खाने पर पहचानें।"
-  },
-  "combinationSummaryExcluded": {
-    "message": "हटाए गए पैटर्न मेल नहीं खाने चाहिए।"
   },
   "combinationDecreaseMinimum": {
     "message": "न्यूनतम मिलान घटाएँ"

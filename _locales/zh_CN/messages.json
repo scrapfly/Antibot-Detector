@@ -3632,7 +3632,127 @@
     "message": "组合"
   },
   "combinationsHint": {
-    "message": "选择模式，然后选择必须匹配的数量。"
+    "message": "组合仅在多个模式同时被找到时才检测此防护。适用于单独太弱的模式。"
+  },
+  "detectionModalCombinationsHint": {
+    "message": "每个组合仅在其信号同时出现时触发；以下是它在此页面上找到的内容。"
+  },
+  "combinationFoundTogether": {
+    "message": "在此页面上同时找到："
+  },
+  "combinationNotPresent": {
+    "message": "不存在"
+  },
+  "combinationFound": {
+    "message": "已找到"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "此规则在扫描后已更改或删除，因此仅显示名称和分数。"
+  },
+  "historyMatchedDetections": {
+    "message": "匹配的检测"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "此次扫描保存于条件保留功能之前，因此仅显示名称和分数。"
+  },
+  "combinationMustNotBeFound": {
+    "message": "必须未找到"
+  },
+  "combinationMustBeFound": {
+    "message": "必须找到"
+  },
+  "combinationAutoTip": {
+    "message": "自动：触发它的模式中最高的置信度"
+  },
+  "combinationSetsScore": {
+    "message": "决定检测分数"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "请至少添加一个必须找到的模式。"
+  },
+  "combinationInvalidOneOf": {
+    "message": "“以下任一项”列表的每个选项都需要一个必须找到的模式。"
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "“至少 {0} 项”需要 {0} 个必须找到的模式。"
+  },
+  "combinationSentenceOne": {
+    "message": "满足此条件时触发。"
+  },
+  "combinationSentenceAllFmt": {
+    "message": "满足全部 {0} 个条件时触发。"
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "满足这 {0} 个条件中任意一个时触发。"
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "满足这 {1} 个条件中至少 {0} 个时触发。"
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "置信度：{0}%。"
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "置信度：自动，最高 {0}%。"
+  },
+  "combinationSentenceGroup": {
+    "message": "一个组算作一个条件。"
+  },
+  "combinationSentenceNot": {
+    "message": "出现“必须未找到”的模式时不会触发。"
+  },
+  "combinationSentenceAlone": {
+    "message": "未标记“仅组合”的模式也会单独检测，使用各自的置信度。"
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "找到时的置信度"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "留空为自动：找到的模式中最高的置信度。"
+  },
+  "combinationOnlyTogether": {
+    "message": "这些模式仅在一起时计数"
+  },
+  "combinationOnlyTogetherHint": {
+    "message": "单独时不检测任何内容。适用于此规则所有组合中的这些模式。"
+  },
+  "combinationOnlyTogetherMixed": {
+    "message": "其中一些模式也会单独计数。勾选后它们都只在组合中计数。"
+  },
+  "combinationModeAny": {
+    "message": "以下任一项"
+  },
+  "combinationModeAll": {
+    "message": "以下全部"
+  },
+  "combinationModeAtLeast": {
+    "message": "以下至少…项"
+  },
+  "combinationModeRootAll": {
+    "message": "以下全部找到"
+  },
+  "combinationModeRootAny": {
+    "message": "找到以下任一项"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "找到以下至少…项"
+  },
+  "combinationGroupMode": {
+    "message": "组"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "向此组添加模式"
+  },
+  "combinationDeleteGroup": {
+    "message": "删除组"
+  },
+  "combinationAddGroup": {
+    "message": "添加“任一项”组"
+  },
+  "patternUnusedBadge": {
+    "message": "不在任何组合中"
+  },
+  "patternUnusedTip": {
+    "message": "没有组合使用它，所以它永远不会检测。点击让它单独计数。"
   },
   "combinationsEmpty": {
     "message": "还没有组合。"
@@ -3643,23 +3763,11 @@
   "combinationDefaultNameFmt": {
     "message": "组合 {0}"
   },
-  "combinationConfidence": {
-    "message": "匹配时的置信度"
-  },
-  "combinationConfidenceFromPatterns": {
-    "message": "留空则使用所匹配模式的置信度"
-  },
   "combinationDelete": {
     "message": "删除组合"
   },
   "combinationDeleteConfirmFmt": {
     "message": "删除组合“{0}”？其模式仍保留在规则中。"
-  },
-  "combinationNotTitle": {
-    "message": "不能匹配"
-  },
-  "combinationNot": {
-    "message": "非"
   },
   "combinationRemove": {
     "message": "移除"
@@ -3679,26 +3787,8 @@
   "combinationAnyPattern": {
     "message": "任意模式"
   },
-  "combinationPreviewAnd": {
-    "message": "且"
-  },
-  "combinationPreviewOr": {
-    "message": "或"
-  },
-  "combinationPreviewNot": {
-    "message": "非"
-  },
   "combinationPreviewEmpty": {
     "message": "添加模式来构建此组合"
-  },
-  "combinationInvalid": {
-    "message": "选择必须匹配的模式，并检查最少匹配数。"
-  },
-  "combinationStrict": {
-    "message": "严格"
-  },
-  "combinationStrictTitle": {
-    "message": "严格：此模式不会单独触发检测器，仅在组合中生效"
   },
   "patternCombinationsOnlyBadge": {
     "message": "仅组合"
@@ -3709,9 +3799,6 @@
   "combinationNoPatterns": {
     "message": "未添加模式"
   },
-  "combinationJoinTitle": {
-    "message": "在“且”和“或”之间切换"
-  },
   "combinationPickHint": {
     "message": "勾选要添加的模式"
   },
@@ -3721,23 +3808,8 @@
   "combinationEditConditions": {
     "message": "编辑条件"
   },
-  "combinationRequireTogether": {
-    "message": "仅在组合中使用模式"
-  },
-  "combinationRequireHint": {
-    "message": "适用于此规则中所有引用这些模式的地方。"
-  },
   "combinationAutoConfidence": {
     "message": "自动"
-  },
-  "combinationMatchAll": {
-    "message": "所有条件都匹配"
-  },
-  "combinationMatchAny": {
-    "message": "任一条件匹配"
-  },
-  "combinationMatchAtLeast": {
-    "message": "至少…个条件匹配"
   },
   "combinationDetectWhen": {
     "message": "检测条件"
@@ -3751,29 +3823,8 @@
   "combinationMatchState": {
     "message": "模式条件"
   },
-  "combinationMatches": {
-    "message": "匹配"
-  },
-  "combinationDoesNotMatch": {
-    "message": "不匹配"
-  },
-  "combinationAtLeastSummaryFmt": {
-    "message": "至少 {0} 个条件匹配"
-  },
   "combinationChoosePatterns": {
     "message": "选择模式"
-  },
-  "combinationSummaryAll": {
-    "message": "所有必要条件都匹配时进行检测。"
-  },
-  "combinationSummaryAny": {
-    "message": "至少一个条件匹配时进行检测。"
-  },
-  "combinationSummaryMinimumFmt": {
-    "message": "{1} 个条件中至少 {0} 个匹配时进行检测。"
-  },
-  "combinationSummaryExcluded": {
-    "message": "排除的模式不得匹配。"
   },
   "combinationDecreaseMinimum": {
     "message": "减少最少匹配数"

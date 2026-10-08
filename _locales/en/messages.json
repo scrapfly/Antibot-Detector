@@ -3923,7 +3923,127 @@
     "message": "Combinations"
   },
   "combinationsHint": {
-    "message": "Choose patterns, then choose how many must match."
+    "message": "A combination detects this protection only when several patterns are found together. Use it for patterns too weak on their own."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "Each combination fires only when its signals appear together; here is what it found on this page."
+  },
+  "combinationFoundTogether": {
+    "message": "Found together on this page:"
+  },
+  "combinationNotPresent": {
+    "message": "Not present"
+  },
+  "combinationFound": {
+    "message": "Found"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "This rule changed or was removed after the scan, so only its name and score are shown."
+  },
+  "historyMatchedDetections": {
+    "message": "Matched detections"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "This scan was saved before conditions were kept, so only names and scores are shown."
+  },
+  "combinationMustNotBeFound": {
+    "message": "Must not be found"
+  },
+  "combinationMustBeFound": {
+    "message": "Must be found"
+  },
+  "combinationAutoTip": {
+    "message": "Auto: the highest confidence of the patterns that made it fire"
+  },
+  "combinationSetsScore": {
+    "message": "Sets the detection score"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "Add at least one pattern that must be found."
+  },
+  "combinationInvalidOneOf": {
+    "message": "A “One of these” list needs a pattern that must be found in each option."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "“At least {0}” needs {0} patterns that must be found."
+  },
+  "combinationSentenceOne": {
+    "message": "Fires when this condition is met."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "Fires when all {0} conditions are met."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "Fires when any one of these {0} conditions is met."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "Fires when at least {0} of these {1} conditions are met."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "Confidence: {0}%."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "Confidence: Auto, up to {0}%."
+  },
+  "combinationSentenceGroup": {
+    "message": "A group counts as one condition."
+  },
+  "combinationSentenceNot": {
+    "message": "It does not fire if a “Must not be found” pattern is present."
+  },
+  "combinationSentenceAlone": {
+    "message": "Patterns not marked “Combinations only” also detect on their own, at their own confidence."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "Confidence when found"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "Leave empty for Auto: the highest confidence of the patterns found."
+  },
+  "combinationOnlyTogether": {
+    "message": "These patterns only count together"
+  },
+  "combinationOnlyTogetherHint": {
+    "message": "On their own they detect nothing. Applies to these patterns in every combination of this rule."
+  },
+  "combinationOnlyTogetherMixed": {
+    "message": "Some of these patterns also count on their own. Tick to make them all count only in combinations."
+  },
+  "combinationModeAny": {
+    "message": "One of these"
+  },
+  "combinationModeAll": {
+    "message": "All of these"
+  },
+  "combinationModeAtLeast": {
+    "message": "At least… of these"
+  },
+  "combinationModeRootAll": {
+    "message": "all of these are found"
+  },
+  "combinationModeRootAny": {
+    "message": "one of these is found"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "at least… of these are found"
+  },
+  "combinationGroupMode": {
+    "message": "Group"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "Add a pattern to this group"
+  },
+  "combinationDeleteGroup": {
+    "message": "Delete group"
+  },
+  "combinationAddGroup": {
+    "message": "Add “one of” group"
+  },
+  "patternUnusedBadge": {
+    "message": "Not in any combination"
+  },
+  "patternUnusedTip": {
+    "message": "No combination uses it, so it never detects. Click to let it count on its own."
   },
   "combinationsEmpty": {
     "message": "No combinations yet."
@@ -3934,23 +4054,11 @@
   "combinationDefaultNameFmt": {
     "message": "Combination {0}"
   },
-  "combinationConfidence": {
-    "message": "Confidence when it matches"
-  },
-  "combinationConfidenceFromPatterns": {
-    "message": "Leave empty to use the confidence of the patterns that match"
-  },
   "combinationDelete": {
     "message": "Delete combination"
   },
   "combinationDeleteConfirmFmt": {
     "message": "Delete the combination \"{0}\"? Its patterns stay in the rule."
-  },
-  "combinationNotTitle": {
-    "message": "Must NOT match"
-  },
-  "combinationNot": {
-    "message": "NOT"
   },
   "combinationRemove": {
     "message": "Remove"
@@ -3970,26 +4078,8 @@
   "combinationAnyPattern": {
     "message": "any pattern"
   },
-  "combinationPreviewAnd": {
-    "message": "AND"
-  },
-  "combinationPreviewOr": {
-    "message": "OR"
-  },
-  "combinationPreviewNot": {
-    "message": "NOT"
-  },
   "combinationPreviewEmpty": {
     "message": "Add patterns to build this combination"
-  },
-  "combinationInvalid": {
-    "message": "Choose patterns that must match and check the minimum match count."
-  },
-  "combinationStrict": {
-    "message": "Strict"
-  },
-  "combinationStrictTitle": {
-    "message": "Strict: this pattern does not fire the detector on its own, only inside combinations"
   },
   "patternCombinationsOnlyBadge": {
     "message": "Combinations only"
@@ -4000,9 +4090,6 @@
   "combinationNoPatterns": {
     "message": "No patterns added"
   },
-  "combinationJoinTitle": {
-    "message": "Switch between AND and OR"
-  },
   "combinationPickHint": {
     "message": "Tick the patterns to add"
   },
@@ -4012,23 +4099,8 @@
   "combinationEditConditions": {
     "message": "Edit conditions"
   },
-  "combinationRequireTogether": {
-    "message": "Use patterns only in combinations"
-  },
-  "combinationRequireHint": {
-    "message": "Applies to these patterns everywhere in this rule."
-  },
   "combinationAutoConfidence": {
     "message": "Auto"
-  },
-  "combinationMatchAll": {
-    "message": "All conditions match"
-  },
-  "combinationMatchAny": {
-    "message": "Any condition matches"
-  },
-  "combinationMatchAtLeast": {
-    "message": "At least… match"
   },
   "combinationDetectWhen": {
     "message": "Detect when"
@@ -4042,29 +4114,8 @@
   "combinationMatchState": {
     "message": "Pattern condition"
   },
-  "combinationMatches": {
-    "message": "Matches"
-  },
-  "combinationDoesNotMatch": {
-    "message": "Does not match"
-  },
-  "combinationAtLeastSummaryFmt": {
-    "message": "At least {0} conditions match"
-  },
   "combinationChoosePatterns": {
     "message": "Choose patterns"
-  },
-  "combinationSummaryAll": {
-    "message": "Detect when all required conditions match."
-  },
-  "combinationSummaryAny": {
-    "message": "Detect when at least one condition matches."
-  },
-  "combinationSummaryMinimumFmt": {
-    "message": "Detect when at least {0} of {1} conditions match."
-  },
-  "combinationSummaryExcluded": {
-    "message": "Excluded patterns must be absent."
   },
   "combinationDecreaseMinimum": {
     "message": "Decrease minimum matches"

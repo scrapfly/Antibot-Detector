@@ -3632,7 +3632,127 @@
     "message": "Комбинации"
   },
   "combinationsHint": {
-    "message": "Выберите шаблоны и сколько из них должны совпадать."
+    "message": "Комбинация обнаруживает эту защиту, только когда несколько шаблонов найдены вместе. Используйте её для шаблонов, слишком слабых по отдельности."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "Каждая комбинация срабатывает, только когда её сигналы встречаются вместе; вот что она нашла на этой странице."
+  },
+  "combinationFoundTogether": {
+    "message": "Найдено вместе на этой странице:"
+  },
+  "combinationNotPresent": {
+    "message": "Отсутствует"
+  },
+  "combinationFound": {
+    "message": "Найдено"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "Это правило изменили или удалили после проверки, поэтому показаны только название и оценка."
+  },
+  "historyMatchedDetections": {
+    "message": "Совпавшие обнаружения"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "Эта проверка сохранена до того, как стали сохраняться условия, поэтому показаны только названия и оценки."
+  },
+  "combinationMustNotBeFound": {
+    "message": "Не должно быть найдено"
+  },
+  "combinationMustBeFound": {
+    "message": "Должно быть найдено"
+  },
+  "combinationAutoTip": {
+    "message": "Авто: наибольшая уверенность среди шаблонов, вызвавших срабатывание"
+  },
+  "combinationSetsScore": {
+    "message": "Задаёт оценку обнаружения"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "Добавьте хотя бы один шаблон, который должен быть найден."
+  },
+  "combinationInvalidOneOf": {
+    "message": "Списку «Одно из этих» в каждом варианте нужен шаблон, который должен быть найден."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "Для «Хотя бы {0}» нужно {0} шаблонов, которые должны быть найдены."
+  },
+  "combinationSentenceOne": {
+    "message": "Срабатывает, когда выполнено это условие."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "Срабатывает, когда выполнены все условия ({0})."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "Срабатывает, когда выполнено любое из этих условий ({0})."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "Срабатывает, когда выполнено хотя бы {0} из {1} условий."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "Уверенность: {0}%."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "Уверенность: Авто, до {0}%."
+  },
+  "combinationSentenceGroup": {
+    "message": "Группа считается одним условием."
+  },
+  "combinationSentenceNot": {
+    "message": "Не срабатывает, если есть шаблон «Не должно быть найдено»."
+  },
+  "combinationSentenceAlone": {
+    "message": "Шаблоны без пометки «Только комбинации» срабатывают и сами по себе, со своей уверенностью."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "Уверенность при обнаружении"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "Оставьте пустым для «Авто»: наибольшая уверенность найденных шаблонов."
+  },
+  "combinationOnlyTogether": {
+    "message": "Эти шаблоны учитываются только вместе"
+  },
+  "combinationOnlyTogetherHint": {
+    "message": "Сами по себе они ничего не обнаруживают. Действует для этих шаблонов во всех комбинациях правила."
+  },
+  "combinationOnlyTogetherMixed": {
+    "message": "Некоторые из этих шаблонов учитываются и сами по себе. Отметьте, чтобы все учитывались только в комбинациях."
+  },
+  "combinationModeAny": {
+    "message": "Одно из этих"
+  },
+  "combinationModeAll": {
+    "message": "Всё это"
+  },
+  "combinationModeAtLeast": {
+    "message": "Хотя бы… из этих"
+  },
+  "combinationModeRootAll": {
+    "message": "найдено всё это"
+  },
+  "combinationModeRootAny": {
+    "message": "найдено одно из этих"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "найдено хотя бы… из этих"
+  },
+  "combinationGroupMode": {
+    "message": "Группа"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "Добавьте шаблон в эту группу"
+  },
+  "combinationDeleteGroup": {
+    "message": "Удалить группу"
+  },
+  "combinationAddGroup": {
+    "message": "Добавить группу «одно из»"
+  },
+  "patternUnusedBadge": {
+    "message": "Ни в одной комбинации"
+  },
+  "patternUnusedTip": {
+    "message": "Его не использует ни одна комбинация, поэтому он ничего не обнаруживает. Нажмите, чтобы он учитывался сам по себе."
   },
   "combinationsEmpty": {
     "message": "Комбинаций пока нет."
@@ -3643,23 +3763,11 @@
   "combinationDefaultNameFmt": {
     "message": "Комбинация {0}"
   },
-  "combinationConfidence": {
-    "message": "Уверенность при совпадении"
-  },
-  "combinationConfidenceFromPatterns": {
-    "message": "Оставьте пустым, чтобы взять уверенность совпавших шаблонов"
-  },
   "combinationDelete": {
     "message": "Удалить комбинацию"
   },
   "combinationDeleteConfirmFmt": {
     "message": "Удалить комбинацию «{0}»? Её шаблоны останутся в правиле."
-  },
-  "combinationNotTitle": {
-    "message": "НЕ должно совпадать"
-  },
-  "combinationNot": {
-    "message": "НЕ"
   },
   "combinationRemove": {
     "message": "Убрать"
@@ -3679,26 +3787,8 @@
   "combinationAnyPattern": {
     "message": "любой шаблон"
   },
-  "combinationPreviewAnd": {
-    "message": "И"
-  },
-  "combinationPreviewOr": {
-    "message": "ИЛИ"
-  },
-  "combinationPreviewNot": {
-    "message": "НЕ"
-  },
   "combinationPreviewEmpty": {
     "message": "Добавьте шаблоны, чтобы собрать комбинацию"
-  },
-  "combinationInvalid": {
-    "message": "Выберите шаблоны, которые должны совпадать, и проверьте минимальное число совпадений."
-  },
-  "combinationStrict": {
-    "message": "Строго"
-  },
-  "combinationStrictTitle": {
-    "message": "Строго: этот шаблон не срабатывает сам по себе, только внутри комбинаций"
   },
   "patternCombinationsOnlyBadge": {
     "message": "Только комбинации"
@@ -3709,9 +3799,6 @@
   "combinationNoPatterns": {
     "message": "Шаблоны не добавлены"
   },
-  "combinationJoinTitle": {
-    "message": "Переключить И / ИЛИ"
-  },
   "combinationPickHint": {
     "message": "Отметьте шаблоны для добавления"
   },
@@ -3721,23 +3808,8 @@
   "combinationEditConditions": {
     "message": "Изменить условия"
   },
-  "combinationRequireTogether": {
-    "message": "Использовать шаблоны только в комбинациях"
-  },
-  "combinationRequireHint": {
-    "message": "Применяется к этим шаблонам во всём правиле."
-  },
   "combinationAutoConfidence": {
     "message": "Авто"
-  },
-  "combinationMatchAll": {
-    "message": "Все условия совпадают"
-  },
-  "combinationMatchAny": {
-    "message": "Любое условие совпадает"
-  },
-  "combinationMatchAtLeast": {
-    "message": "Совпадает не менее…"
   },
   "combinationDetectWhen": {
     "message": "Обнаруживать, когда"
@@ -3751,29 +3823,8 @@
   "combinationMatchState": {
     "message": "Условие шаблона"
   },
-  "combinationMatches": {
-    "message": "Совпадает"
-  },
-  "combinationDoesNotMatch": {
-    "message": "Не совпадает"
-  },
-  "combinationAtLeastSummaryFmt": {
-    "message": "Совпадает не менее {0} условий"
-  },
   "combinationChoosePatterns": {
     "message": "Выбрать шаблоны"
-  },
-  "combinationSummaryAll": {
-    "message": "Обнаруживать, когда совпадают все необходимые условия."
-  },
-  "combinationSummaryAny": {
-    "message": "Обнаруживать, когда совпадает хотя бы одно условие."
-  },
-  "combinationSummaryMinimumFmt": {
-    "message": "Обнаруживать, когда совпадает не менее {0} из {1} условий."
-  },
-  "combinationSummaryExcluded": {
-    "message": "Исключённые шаблоны не должны совпадать."
   },
   "combinationDecreaseMinimum": {
     "message": "Уменьшить минимум совпадений"

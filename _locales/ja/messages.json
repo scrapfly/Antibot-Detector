@@ -3632,7 +3632,127 @@
     "message": "組み合わせ"
   },
   "combinationsHint": {
-    "message": "パターンを選び、一致が必要な数を指定します。"
+    "message": "組み合わせは、複数のパターンが一緒に見つかったときだけこの保護を検出します。単独では弱いパターンに使います。"
+  },
+  "detectionModalCombinationsHint": {
+    "message": "各組み合わせは、そのシグナルが一緒に現れたときだけ発動します。このページで見つかったものを示します。"
+  },
+  "combinationFoundTogether": {
+    "message": "このページで同時に見つかったもの："
+  },
+  "combinationNotPresent": {
+    "message": "存在しない"
+  },
+  "combinationFound": {
+    "message": "検出"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "このルールは検査後に変更または削除されたため、名前とスコアのみ表示します。"
+  },
+  "historyMatchedDetections": {
+    "message": "一致した検出"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "この検査は条件を保存する前に保存されたため、名前とスコアのみ表示します。"
+  },
+  "combinationMustNotBeFound": {
+    "message": "見つかってはならない"
+  },
+  "combinationMustBeFound": {
+    "message": "見つかる必要がある"
+  },
+  "combinationAutoTip": {
+    "message": "自動：一致させたパターンのうち最も高い信頼度"
+  },
+  "combinationSetsScore": {
+    "message": "検出スコアを決定"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "見つかる必要があるパターンを 1 つ以上追加してください。"
+  },
+  "combinationInvalidOneOf": {
+    "message": "「次のいずれか」リストには、各選択肢に見つかる必要があるパターンが必要です。"
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "「少なくとも {0}」には見つかる必要があるパターンが {0} 個必要です。"
+  },
+  "combinationSentenceOne": {
+    "message": "この条件を満たすと発動します。"
+  },
+  "combinationSentenceAllFmt": {
+    "message": "{0} 個の条件をすべて満たすと発動します。"
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "{0} 個の条件のいずれかを満たすと発動します。"
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "{1} 個の条件のうち少なくとも {0} 個を満たすと発動します。"
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "信頼度：{0}%。"
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "信頼度：自動（最大 {0}%）。"
+  },
+  "combinationSentenceGroup": {
+    "message": "グループは 1 つの条件として数えます。"
+  },
+  "combinationSentenceNot": {
+    "message": "「見つかってはならない」パターンがあると発動しません。"
+  },
+  "combinationSentenceAlone": {
+    "message": "「組み合わせのみ」でないパターンは、単独でも各自の信頼度で検出します。"
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "見つかったときの信頼度"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "空欄で自動：見つかったパターンのうち最も高い信頼度。"
+  },
+  "combinationOnlyTogether": {
+    "message": "これらのパターンは組み合わせでのみ有効"
+  },
+  "combinationOnlyTogetherHint": {
+    "message": "単独では何も検出しません。このルールのすべての組み合わせでこれらのパターンに適用されます。"
+  },
+  "combinationOnlyTogetherMixed": {
+    "message": "一部のパターンは単独でも有効です。チェックするとすべて組み合わせのみになります。"
+  },
+  "combinationModeAny": {
+    "message": "次のいずれか"
+  },
+  "combinationModeAll": {
+    "message": "次のすべて"
+  },
+  "combinationModeAtLeast": {
+    "message": "次のうち少なくとも…"
+  },
+  "combinationModeRootAll": {
+    "message": "次のすべてが見つかる"
+  },
+  "combinationModeRootAny": {
+    "message": "次のいずれかが見つかる"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "次のうち少なくとも…が見つかる"
+  },
+  "combinationGroupMode": {
+    "message": "グループ"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "このグループにパターンを追加"
+  },
+  "combinationDeleteGroup": {
+    "message": "グループを削除"
+  },
+  "combinationAddGroup": {
+    "message": "「いずれか」グループを追加"
+  },
+  "patternUnusedBadge": {
+    "message": "どの組み合わせにもない"
+  },
+  "patternUnusedTip": {
+    "message": "どの組み合わせにも使われていないため、検出しません。クリックすると単独で有効になります。"
   },
   "combinationsEmpty": {
     "message": "組み合わせはまだありません。"
@@ -3643,23 +3763,11 @@
   "combinationDefaultNameFmt": {
     "message": "組み合わせ {0}"
   },
-  "combinationConfidence": {
-    "message": "一致したときの信頼度"
-  },
-  "combinationConfidenceFromPatterns": {
-    "message": "空欄にすると、一致したパターンの信頼度を使います"
-  },
   "combinationDelete": {
     "message": "組み合わせを削除"
   },
   "combinationDeleteConfirmFmt": {
     "message": "組み合わせ「{0}」を削除しますか？パターンはルールに残ります。"
-  },
-  "combinationNotTitle": {
-    "message": "一致してはならない"
-  },
-  "combinationNot": {
-    "message": "NOT"
   },
   "combinationRemove": {
     "message": "削除"
@@ -3679,26 +3787,8 @@
   "combinationAnyPattern": {
     "message": "任意のパターン"
   },
-  "combinationPreviewAnd": {
-    "message": "かつ"
-  },
-  "combinationPreviewOr": {
-    "message": "または"
-  },
-  "combinationPreviewNot": {
-    "message": "NOT"
-  },
   "combinationPreviewEmpty": {
     "message": "パターンを追加して組み合わせを作成"
-  },
-  "combinationInvalid": {
-    "message": "一致が必要なパターンを選び、最小一致数を確認してください。"
-  },
-  "combinationStrict": {
-    "message": "厳格"
-  },
-  "combinationStrictTitle": {
-    "message": "厳格: このパターンは単独では検出器を発動せず、組み合わせの中でのみ有効です"
   },
   "patternCombinationsOnlyBadge": {
     "message": "組み合わせのみ"
@@ -3709,9 +3799,6 @@
   "combinationNoPatterns": {
     "message": "パターンが追加されていません"
   },
-  "combinationJoinTitle": {
-    "message": "かつ / または を切り替え"
-  },
   "combinationPickHint": {
     "message": "追加するパターンにチェック"
   },
@@ -3721,23 +3808,8 @@
   "combinationEditConditions": {
     "message": "条件を編集"
   },
-  "combinationRequireTogether": {
-    "message": "パターンを組み合わせでのみ使用"
-  },
-  "combinationRequireHint": {
-    "message": "このルール全体で、これらのパターンに適用されます。"
-  },
   "combinationAutoConfidence": {
     "message": "自動"
-  },
-  "combinationMatchAll": {
-    "message": "すべての条件が一致"
-  },
-  "combinationMatchAny": {
-    "message": "いずれかの条件が一致"
-  },
-  "combinationMatchAtLeast": {
-    "message": "少なくとも…が一致"
   },
   "combinationDetectWhen": {
     "message": "検出条件"
@@ -3751,29 +3823,8 @@
   "combinationMatchState": {
     "message": "パターンの条件"
   },
-  "combinationMatches": {
-    "message": "一致する"
-  },
-  "combinationDoesNotMatch": {
-    "message": "一致しない"
-  },
-  "combinationAtLeastSummaryFmt": {
-    "message": "少なくとも {0} 個の条件が一致"
-  },
   "combinationChoosePatterns": {
     "message": "パターンを選択"
-  },
-  "combinationSummaryAll": {
-    "message": "必要なすべての条件が一致したときに検出します。"
-  },
-  "combinationSummaryAny": {
-    "message": "少なくとも1つの条件が一致したときに検出します。"
-  },
-  "combinationSummaryMinimumFmt": {
-    "message": "{1} 個の条件のうち少なくとも {0} 個が一致したときに検出します。"
-  },
-  "combinationSummaryExcluded": {
-    "message": "除外したパターンは一致してはいけません。"
   },
   "combinationDecreaseMinimum": {
     "message": "最小一致数を減らす"

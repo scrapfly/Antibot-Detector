@@ -49,7 +49,7 @@ test('every tie is marked, and nothing is marked when a single pattern scored hi
   assert.deepStrictEqual(CC.build({ combinations: combos, definition, detectionConfidence: 95 }).map(c => c.setsScore), [false, false]);
 });
 
-test('rows: ✓ found / ○ not found, descriptions first, groups with their own heading', () => {
+test('the tree keeps every row; the card lists only what was found, flat and in rule order', () => {
   const result = scored();
   const [card] = CC.build({ combinations: result.combinations, definition, matches, detectionConfidence: 90 });
   assert.strictEqual(card.tree.mode, 'all');
@@ -58,34 +58,25 @@ test('rows: ✓ found / ○ not found, descriptions first, groups with their own
   assert.strictEqual(widget.description, 'Widget with a site key');
   assert.deepStrictEqual([group.kind, group.mode, group.met], ['group', 'any', true]);
   assert.deepStrictEqual(group.items.map(i => [i.id, i.found]), [['render', true], ['execute', false]]);
-  assert.strictEqual(group.items[1].description, '', 'no description: the row shows the raw pattern');
-  assert.strictEqual(group.items[1].text, 'x.execute');
-
-  const text = CC.copyText(card, { methodLabel: label });
-  assert.strictEqual(text, [
-    'SDK, widget and an API (90%)',
-    'Sets the detection score',
-    'All of these were found:',
-    '✓ URL: Official SDK script — ^https://cdn\\.x/sdk\\.js',
-    '✓ DOM: Widget with a site key — .x-widget[data-key]',
-    '✓ One of these:',
-    '  ✓ Window: Render API — x.render',
-    '  ○ Window: x.execute'
-  ].join('\n'));
+  // Shown: the three signals found together; the alternative that was not needed is not
+  assert.deepStrictEqual(CC.foundRows(card.tree).found.map(i => i.id), ['sdk', 'widget', 'render']);
+  const html = CC.renderHtml([card], { methodLabel: label });
+  const order = ['SDK, widget and an API', 'Sets the detection score', 'Found together on this page:', 'Official SDK script',
+    'Widget with a site key', 'Render API'].map(text => html.indexOf(text));
+  assert.ok(order.every((at, i) => at > 0 && (i === 0 || at > order[i - 1])), order.join(','));
+  assert.ok(!html.includes('x.execute'), 'an unneeded alternative is not listed');
+  assert.ok(!/One of these|All of these|At least/.test(html), 'no group headings');
 });
 
-test('HTML: full name, marks with labels, the raw pattern and matched value as the tip', () => {
+test('HTML: full name, a found mark with a label, method and raw pattern in the tip, no chips or Copy', () => {
   const result = scored();
   const html = CC.renderHtml(CC.build({ combinations: result.combinations, definition, matches, detectionConfidence: 90 }), { methodLabel: label });
   assert.match(html, /<h5 class="match-combo-name" dir="auto">SDK, widget and an API<\/h5>/);
   assert.match(html, /★<\/span> Sets the detection score/);
   assert.match(html, /role="img" aria-label="Found"><svg/);
-  assert.match(html, /role="img" aria-label="Not found"><svg/);
-  assert.match(html, /data-tip="\^https:\/\/cdn\\\.x\/sdk\\\.js" data-tip-detail="https:\/\/cdn\.x\/sdk\.js\?v=2"/);
-  assert.match(html, /<span class="match-combo-text is-raw" dir="ltr">x\.execute<\/span>/);
-  assert.match(html, /aria-labelledby="match-combo-\d+"/);
-  assert.match(html, /data-combo-index="0" aria-label="Copy “SDK, widget and an API”"/);
-  // Every aria-labelledby points at a heading that exists
+  assert.ok(!html.includes('aria-label="Not found"'));
+  assert.match(html, /data-tip="URL: \^https:\/\/cdn\\\.x\/sdk\\\.js" data-tip-detail="https:\/\/cdn\.x\/sdk\.js\?v=2"/);
+  assert.ok(!/match-combo-chip|match-combo-copy|>Copy</.test(html), 'no method chips, no Copy button');
   for (const [, id] of html.matchAll(/aria-labelledby="([^"]+)"/g)) assert.ok(html.includes(`id="${id}"`), id);
 });
 
@@ -95,14 +86,15 @@ test('at least N, NOT rows and method rows read in plain words', () => {
     { id: 'm', name: 'Min', confidence: 50, when: { atLeast: 2, of: [{ pattern: 'sdk' }, { pattern: 'widget' }, { pattern: 'session' }] }, found: ['sdk', 'widget'] }
   ];
   const cards = CC.build({ combinations: combos, definition, detectionConfidence: 60 });
-  const text = cards.map(c => CC.copyText(c, { methodLabel: label })).join('\n\n');
-  assert.match(text, /^✓ Cookie: Must not be found: Session cookie — x_sess = \^\[0-9a-f\]\{32\}\$$/m);
-  assert.match(text, /^✓ DOM: Any DOM pattern$/m);
-  assert.match(text, /^At least 2 of these:$/m);
-  assert.match(text, /^○ Cookie: Session cookie/m);
+  const [not, min] = cards;
+  assert.deepStrictEqual(not.tree.items.map(i => [i.kind, i.negative, i.found, i.met]),
+    [['pattern', false, true, true], ['pattern', true, false, true], ['method', false, true, true]]);
+  assert.deepStrictEqual(CC.foundRows(not.tree).absent.map(i => i.id), ['session'], 'absent as required');
+  assert.deepStrictEqual(CC.foundRows(min.tree).found.map(i => i.id), ['sdk', 'widget']);
   const html = CC.renderHtml(cards, { methodLabel: label });
-  assert.match(html, /aria-label="Not found, as required"/);
-  assert.match(html, /class="match-combo-not">Must not be found:</);
+  assert.match(html, /class="match-combo-row is-absent"[\s\S]*?class="match-combo-not">Not present:<\/span> Session cookie/);
+  assert.match(html, /aria-label="Not present"/);
+  assert.match(html, />Any DOM pattern</);
 });
 
 test('descriptions fall back to the match, then the pattern id', () => {
@@ -140,14 +132,15 @@ test('History: an edited, removed or older entry shows only its name and score, 
   const [changed] = CC.build({ combinations: stored, definition: edited, found: [], fromHistory: true });
   assert.deepStrictEqual([changed.name, changed.unavailable, changed.tree], ['Renamed', 'changed', null]);
   assert.match(CC.renderHtml([changed]), /This rule changed or was removed after the scan, so only its name and score are shown\./);
-  assert.ok(!CC.renderHtml([changed]).includes('match-combo-copy'), 'nothing to copy but the name');
 
   const [removed] = CC.build({ combinations: [{ id: 'gone-combo', confidence: 60, h: 'abc' }], definition, fromHistory: true });
   assert.deepStrictEqual([removed.name, removed.unavailable], ['gone-combo', 'changed'], 'the id stands in for a lost name');
 
   const [old] = CC.build({ combinations: [{ id: 'api', name: 'Saved name', confidence: 90 }], definition, fromHistory: true });
   assert.deepStrictEqual([old.name, old.unavailable], ['Saved name', 'notSaved']);
-  assert.strictEqual(CC.copyText(old), 'Saved name (90%)\nIts conditions were not saved with this scan; only its name and score are shown.');
+  const oldHtml = CC.renderHtml([old]);
+  assert.match(oldHtml, /Saved name[\s\S]*90%/);
+  assert.ok(!oldHtml.includes('match-combo-unavailable'), 'History says why once, above the list');
 });
 
 test('combinations without a name get a numbered one, and junk input is skipped', () => {
@@ -155,7 +148,6 @@ test('combinations without a name get a numbered one, and junk input is skipped'
   assert.deepStrictEqual(cards.map(c => c.name), ['Combination 1']);
   assert.deepStrictEqual(CC.build({}), []);
   assert.strictEqual(CC.renderHtml(null), '');
-  assert.strictEqual(CC.copyText(null), '');
 });
 
 test('pattern text shows cookie and header values', () => {
