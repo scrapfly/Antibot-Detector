@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "2.0.1",
+  "lastUpdated": "2026-10-08",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.jiasule.com/",
   "icon": "jiasule_official.png",
@@ -70,7 +70,6 @@
       {
         "id": "jiasule-static-reference",
         "confidence": 15,
-        "standalone": false,
         "description": "Script reference to Jiasule static challenge assets",
         "text": "static.jiasule.com",
         "textCaseSensitive": true,
@@ -80,7 +79,6 @@
       {
         "id": "chuangyu-portal-reference",
         "confidence": 15,
-        "standalone": false,
         "description": "Script reference to the Chuangyu (365cyd) customer portal host",
         "text": "365cyd.com",
         "textCaseSensitive": true,

@@ -24,11 +24,13 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - History details: matched combinations are shown too, and the list of matches is titled "Matched detections".
 - Rules editor: combinations show each pattern's description first, and "one of" groups can be added, changed and deleted.
 - JS API: matched combinations list which of their patterns were found.
+- Detectors: ThreatMetrix, AWS WAF, Cloudflare, Screen and IndexedDB combinations now score above their single signals; three unused Jiasule and Radware signals count alone.
 
 ### Fixed
 
 - Rules editor: saving no longer fails after emptying a group, and removing a condition no longer lets weak patterns detect on their own.
 - Advanced: the History count goes up as soon as a tool saves a result, instead of only when the History tab is opened.
+- F5: the "ASM cookie with BIG-IP analytics" combination now shows; before, the load-balancer combination always took its place.
 
 ## [2.8.2] - 2026-10-07
 

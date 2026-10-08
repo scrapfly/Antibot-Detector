@@ -144,9 +144,10 @@ function expectedConfidence(detector, matches) {
 test('all 21 fingerprint definitions have multiple graded, reachable combinations and low single signals', () => {
   assert.equal(Object.keys(fingerprint).length, 21);
   for (const detector of Object.values(fingerprint)) {
-    // 1.2.0 of 2026-10-03; Canvas got 1.2.1 on 2026-10-07 (difficulty Low → High)
+    // 1.2.0 of 2026-10-03; Canvas got 1.2.1 on 2026-10-07 (difficulty Low → High),
+    // Screen and IndexedDB on 2026-10-08 (one combination re-rated)
     assert.match(detector.version, /^1\.2\.[01]$/, detector.id);
-    assert.match(detector.lastUpdated, /^2026-10-0[37]$/, detector.id);
+    assert.match(detector.lastUpdated, /^2026-10-0[378]$/, detector.id);
     const rules = patterns(detector);
     const ids = new Set(rules.map(rule => rule.id));
     assert.equal(ids.size, rules.length, `${detector.id}: duplicate pattern ids`);

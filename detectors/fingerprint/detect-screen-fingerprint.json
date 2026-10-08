@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-03",
-  "version": "1.2.0",
+  "lastUpdated": "2026-10-08",
+  "version": "1.2.1",
   "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Screen",
   "icon": "screen_fingerprint.png",
@@ -32,7 +32,7 @@
     { "id": "screen-source-profile", "name": "Script references geometry, color depth and pixel ratio", "confidence": 15, "when": { "all": [ { "any": [ { "pattern": "screen-width-source" }, { "pattern": "screen-height-source" }, { "pattern": "screen-available-source" } ] }, { "pattern": "screen-color-source" }, { "pattern": "screen-pixel-ratio-source" } ] } },
     { "id": "screen-scaled-geometry", "name": "Reads screen geometry and pixel ratio", "confidence": 25, "when": { "all": [ { "any": [ { "pattern": "screen-width" }, { "pattern": "screen-height" }, { "pattern": "screen-available" } ] }, { "pattern": "screen-pixel-ratio" } ] } },
     { "id": "screen-color-geometry", "name": "Reads screen geometry and color depth", "confidence": 35, "when": { "all": [ { "any": [ { "pattern": "screen-width" }, { "pattern": "screen-height" }, { "pattern": "screen-available" } ] }, { "pattern": "screen-color" } ] } },
-    { "id": "screen-profile", "name": "Screen dimensions and color profile", "confidence": 35, "when": { "all": [ { "pattern": "screen-width" }, { "pattern": "screen-height" }, { "pattern": "screen-color" } ] } },
+    { "id": "screen-profile", "name": "Screen dimensions and color profile", "confidence": 40, "when": { "all": [ { "pattern": "screen-width" }, { "pattern": "screen-height" }, { "pattern": "screen-color" } ] } },
     { "id": "screen-display-profile", "name": "Reads screen geometry, color depth and pixel ratio", "confidence": 50, "when": { "all": [ { "any": [ { "pattern": "screen-width" }, { "pattern": "screen-height" }, { "pattern": "screen-available" } ] }, { "pattern": "screen-color" }, { "pattern": "screen-pixel-ratio" } ] } }
   ]
 }
