@@ -18,7 +18,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 - Scrape with Scrapfly: turn the Unblocker and JavaScript rendering (both on by default) on or off, and pick output, proxies (residential by default) and country; the code updates as you pick.
 - Scrape with Scrapfly: Copy for AI copies the page, its protections, your settings and the code as one message ready for an AI assistant.
-- Scrape with Scrapfly: pages with a CAPTCHA now get Cloud Browser code with the Captcha Solver, which solves CAPTCHAs on forms; switch back to the Scrape API anytime.
+- Scrape with Scrapfly: pages with a CAPTCHA now get Cloud Browser code with the Captcha Solver, which solves CAPTCHAs on forms and waits for each solve before reading the page; switch back to the Scrape API anytime.
 - Scrape with Scrapfly: the dialog is laid out as four numbered steps, from settings to running the code.
 - Detection details: each matched combination says in plain words what it found on the page, and marks the one that set the score.
 - History details: matched combinations are shown too, and the list of matches is titled "Matched detections".

@@ -414,8 +414,33 @@ ScrapflyExport.browserSnippet = function(language, url, names, options) {
         '    browser = p.chromium.connect_over_cdp(ws_url)',
         '    context = browser.contexts[0]',
         '    page = context.pages[0] if context.pages else context.new_page()',
+        ...(o.solveCaptcha ? [
+          '    # The browser solves CAPTCHAs by itself; its events say when it is done',
+          '    cdp = context.new_cdp_session(page)',
+          '    pending = set()',
+          '',
+          '    def detected(event):',
+          '        pending.add(event["detectionId"])',
+          '',
+          '    def finished(event):',
+          '        pending.discard(event["detectionId"])',
+          '        if event.get("errorMessage"):',
+          '            print("CAPTCHA not solved:", event["errorMessage"])',
+          '',
+          '    cdp.on("Antibot.captchaDetected", detected)',
+          '    cdp.on("Antibot.captchaSolved", finished)',
+          '    cdp.on("Antibot.captchaError", finished)',
+          ''
+        ] : []),
         `    page.goto(${q.json(url)})`,
         '    page.wait_for_load_state("networkidle")',
+        ...(o.solveCaptcha ? [
+          '    page.wait_for_timeout(3000)  # a CAPTCHA can appear after the page settles',
+          '    for _ in range(240):  # one is being solved: wait up to 2 minutes',
+          '        if not pending:',
+          '            break',
+          '        page.wait_for_timeout(500)'
+        ] : []),
         '    print(page.content())',
         '    browser.close()'
       );
@@ -436,8 +461,24 @@ ScrapflyExport.browserSnippet = function(language, url, names, options) {
         'const browser = await chromium.connectOverCDP(wsUrl);',
         'const context = browser.contexts()[0];',
         'const page = context.pages()[0] ?? await context.newPage();',
+        ...(o.solveCaptcha ? [
+          '// The browser solves CAPTCHAs by itself; its events say when it is done',
+          'const cdp = await context.newCDPSession(page);',
+          'const pending = new Set();',
+          "cdp.on('Antibot.captchaDetected', (event) => pending.add(event.detectionId));",
+          "cdp.on('Antibot.captchaSolved', (event) => pending.delete(event.detectionId));",
+          "cdp.on('Antibot.captchaError', (event) => {",
+          '  pending.delete(event.detectionId);',
+          "  console.error('CAPTCHA not solved:', event.errorMessage);",
+          '});',
+          ''
+        ] : []),
         `await page.goto(${q.json(url)});`,
         "await page.waitForLoadState('networkidle');",
+        ...(o.solveCaptcha ? [
+          'await page.waitForTimeout(3000); // a CAPTCHA can appear after the page settles',
+          'for (let i = 0; i < 240 && pending.size > 0; i++) await page.waitForTimeout(500); // one is being solved: up to 2 minutes'
+        ] : []),
         'console.log(await page.content());',
         'await browser.close();'
       );
@@ -446,6 +487,7 @@ ScrapflyExport.browserSnippet = function(language, url, names, options) {
       return scrapflyLines(
         '# Prints the address for Puppeteer, Selenium or any CDP client,',
         `# then open ${url.replace(/[\r\n]+/g, ' ')}`,
+        o.solveCaptcha ? '# CAPTCHAs are solved by the browser: wait for its Antibot.captchaSolved event' : null,
         detected('#'),
         `echo "${ScrapflyExport.BROWSER_HOST}?${params.join('&')}"`
       );

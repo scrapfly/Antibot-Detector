@@ -264,6 +264,21 @@ test('Cloud Browser mode: Playwright code with solve_captcha, only the languages
     'Cloud Browser keeps its own proxy choice, residential by default');
   const off = ScrapflyExport.snippet('python', URL_PLAIN, [], { product: 'browser', solveCaptcha: false, browserProxyPool: 'datacenter' });
   assert.ok(!off.includes('solve_captcha') && off.includes('proxy_pool="datacenter"'));
+  // A solve takes up to about a minute: the code waits for the solver's events before reading the page
+  assert.match(python, /cdp\.on\("Antibot\.captchaDetected", detected\)/);
+  assert.match(python, /cdp\.on\("Antibot\.captchaSolved", finished\)/);
+  assert.match(python, /cdp\.on\("Antibot\.captchaError", finished\)/);
+  assert.match(python, /print\("CAPTCHA not solved:", event\["errorMessage"\]\)/);
+  assert.ok(python.indexOf('new_cdp_session') < python.indexOf('page.goto('), 'listening starts before the page loads');
+  assert.ok(python.indexOf('if not pending:') < python.indexOf('print(page.content())'), 'the page is read after the solve');
+  assert.match(node, /cdp\.on\('Antibot\.captchaSolved', \(event\) => pending\.delete\(event\.detectionId\)\);/);
+  assert.match(node, /for \(let i = 0; i < 240 && pending\.size > 0; i\+\+\) await page\.waitForTimeout\(500\);/);
+  assert.ok(node.indexOf('newCDPSession') < node.indexOf('page.goto('));
+  assert.match(wss, /wait for its Antibot\.captchaSolved event/);
+  for (const id of ['python', 'node']) {
+    const plain = ScrapflyExport.snippet(id, URL_PLAIN, [], { product: 'browser', solveCaptcha: false });
+    assert.ok(!/Antibot|pending/.test(plain), `${id}: no solver waiting when Solve CAPTCHAs is off`);
+  }
   assert.deepEqual(ScrapflyExport.fileAndRun('python', 'browser'), { file: 'browser.py', run: 'python browser.py' });
   const ai = ScrapflyExport.aiPrompt({ language: 'node', url: URL_PLAIN, options: o });
   assert.match(ai, /Captcha Solver on \(solve_captcha=true/);
