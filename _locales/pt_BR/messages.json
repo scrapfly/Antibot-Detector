@@ -862,6 +862,9 @@
   "detectorsImported": {
     "message": "Detectores importados"
   },
+  "detectorExportedFmt": {
+    "message": "{0} exportado"
+  },
   "failedImportDetectors": {
     "message": "Falha ao importar detectores. Verifique o formato do arquivo."
   },
@@ -4198,9 +4201,44 @@
     "message": "Esta página tem um CAPTCHA: o Unblocker o evita ou resolve para retornar a página, mas não preenche CAPTCHAs de formulários.",
     "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
   },
-  "scrapflyExportKeyNote": {
-    "message": "O código lê sua chave de API de SCRAPFLY_API_KEY.",
-    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  "scrapflyExportOptions": {
+    "message": "Opções"
+  },
+  "scrapflyExportUnblockerOn": {
+    "message": "Unblocker ativado"
+  },
+  "scrapflyExportFormat": {
+    "message": "Saída"
+  },
+  "scrapflyExportFormatText": {
+    "message": "Texto"
+  },
+  "scrapflyExportProxy": {
+    "message": "Proxies"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "Data center"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "Residenciais"
+  },
+  "scrapflyExportCountry": {
+    "message": "País"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "Qualquer"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "Executar JavaScript"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 créditos"
+  },
+  "scrapflyExportStepKey": {
+    "message": "Defina sua chave de API"
+  },
+  "scrapflyExportStepRun": {
+    "message": "Execute"
   },
   "scrapflyExportGetKey": {
     "message": "Obter uma chave de API",

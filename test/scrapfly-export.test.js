@@ -19,6 +19,7 @@ const readBack = {
     .replace(/\\u\{([0-9a-f]+)\}/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
     .replace(/\\(["\\])/g, '$1'),
   cli: (code) => unquoteShell(code.match(/^scrapfly scrape ('(?:[^']|'\\'')*') --unblocker$/m)[1]),
+  cliMulti: (code) => unquoteShell(code.match(/^scrapfly scrape ('(?:[^']|'\\'')*') \\$/m)[1]),
   curl: (code) => unquoteShell(code.match(/--data-urlencode ('url=(?:[^']|'\\'')*') \\$/m)[1]).slice('url='.length)
 };
 function unquoteShell(quoted) {
@@ -121,5 +122,72 @@ test('logos: an uploaded image, the bundled icon, or the Scrapfly logo', () => {
       [{ name: 'DataDome', iconUrl: 'chrome-extension://id/detectors/icons/datadome_official.png' }]);
   } finally {
     delete global.chrome;
+  }
+});
+
+// Options: each one rewrites the code with the SDK's own name for it (checked
+// against the published packages on 2026-10-08); defaults add nothing.
+const ALL = { format: 'markdown', renderJs: true, proxyPool: 'public_residential_pool', country: 'gb' };
+
+test('options use each SDK\'s own names, and defaults add nothing', () => {
+  const expected = {
+    python: ['render_js=True,', 'proxy_pool="public_residential_pool",', 'country="gb",', 'format="markdown",'],
+    node: ['render_js: true,', 'proxy_pool: "public_residential_pool",', 'country: "gb",', 'format: "markdown",'],
+    curl: ['-d render_js=true', '-d proxy_pool=public_residential_pool', '-d country=gb', '-d format=markdown'],
+    cli: ['--render-js', '--proxy-pool public_residential_pool', '--country gb', '--format markdown'],
+    go: ['RenderJS:  true,', 'ProxyPool: scrapfly.PublicResidentialPool,', 'Country:   "gb",', 'Format:    scrapfly.FormatMarkdown,'],
+    rust: ['.render_js(true)', '.proxy_pool(ProxyPool::PublicResidentialPool)', '.country("gb")', '.format(Format::Markdown)']
+  };
+  for (const { id } of ScrapflyExport.LANGUAGES) {
+    const code = ScrapflyExport.snippet(id, URL_PLAIN, [], ALL);
+    for (const part of expected[id]) assert.ok(code.includes(part), `${id}: ${part}`);
+    assert.equal(readBack[id === 'cli' ? 'cliMulti' : id](code), URL_PLAIN, id);
+    const plain = ScrapflyExport.snippet(id, URL_PLAIN, [], ScrapflyExport.DEFAULT_OPTIONS);
+    assert.equal(plain, ScrapflyExport.snippet(id, URL_PLAIN), `${id}: defaults change nothing`);
+    for (const part of expected[id]) assert.ok(!plain.includes(part), `${id}: no ${part} by default`);
+  }
+  assert.match(ScrapflyExport.snippet('rust', URL_PLAIN, [], ALL), /^use scrapfly_sdk::\{Client, Format, ProxyPool, ScrapeConfig\};$/m);
+  assert.match(ScrapflyExport.snippet('go', URL_PLAIN, [], { format: 'text' }), /Format: +scrapfly\.FormatText,/);
+  assert.match(ScrapflyExport.snippet('rust', URL_PLAIN, [], { format: 'text' }), /\.format\(Format::Text\)/);
+});
+
+test('shell code keeps every line continued and none dangling', () => {
+  for (const id of ['curl', 'cli']) {
+    const lines = ScrapflyExport.snippet(id, URL_PLAIN, [], ALL).split('\n').filter(l => !l.startsWith('#'));
+    lines.slice(0, -1).forEach(line => assert.ok(line.endsWith(' \\'), `${id}: ${line}`));
+    assert.ok(!lines[lines.length - 1].endsWith('\\'), `${id}: last line`);
+  }
+});
+
+test('unknown option values fall back to the defaults', () => {
+  assert.deepEqual(ScrapflyExport.normalizeOptions(null), { ...ScrapflyExport.DEFAULT_OPTIONS });
+  assert.deepEqual(ScrapflyExport.normalizeOptions({ format: 'pdf', renderJs: 'yes', proxyPool: 'tor', country: 'zz"; rm' }),
+    { ...ScrapflyExport.DEFAULT_OPTIONS });
+  const code = ScrapflyExport.snippet('curl', URL_PLAIN, [], { country: "us' && rm -rf ~" });
+  assert.ok(!code.includes('country'), 'a value off the list never reaches the code');
+});
+
+test('highlighting only wraps the code in spans: the text stays the same', () => {
+  const unescape = (html) => html.replace(/<span class="sfx-[a-z]+">|<\/span>/g, '')
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+  for (const { id } of ScrapflyExport.LANGUAGES) {
+    const code = ScrapflyExport.snippet(id, 'https://x.example/<img src=x onerror=alert(1)>', ['<b>Evil</b>'], ALL);
+    const html = ScrapflyExport.highlight(code, id);
+    assert.equal(unescape(html), code, id);
+    assert.ok(!/<(?!\/?span\b)/.test(html), `${id}: no tag but span`);
+  }
+  assert.match(ScrapflyExport.highlight('import os  # note', 'python'), /<span class="sfx-keyword">import<\/span> os  <span class="sfx-comment"># note<\/span>/);
+  assert.match(ScrapflyExport.highlight('const a = "x"; // c', 'node'), /<span class="sfx-string">&quot;x&quot;<\/span>; <span class="sfx-comment">\/\/ c<\/span>/);
+  assert.match(ScrapflyExport.highlight('#[tokio::main]', 'rust'), /^#\[tokio::main\]$/, 'Rust attributes are not comments');
+});
+
+test('the key command matches the shell of the computer', () => {
+  assert.equal(ScrapflyExport.keyCommand('Windows'), '$env:SCRAPFLY_API_KEY="YOUR_API_KEY"');
+  assert.equal(ScrapflyExport.keyCommand('Win32'), '$env:SCRAPFLY_API_KEY="YOUR_API_KEY"');
+  assert.equal(ScrapflyExport.keyCommand('macOS'), 'export SCRAPFLY_API_KEY="YOUR_API_KEY"');
+  assert.equal(ScrapflyExport.keyCommand(''), 'export SCRAPFLY_API_KEY="YOUR_API_KEY"');
+  for (const { id, file, run } of ScrapflyExport.LANGUAGES) {
+    assert.ok(file, id);
+    assert.equal(typeof run, 'string', id);
   }
 });

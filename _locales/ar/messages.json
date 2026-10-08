@@ -862,6 +862,9 @@
   "detectorsImported": {
     "message": "تم استيراد الكواشف"
   },
+  "detectorExportedFmt": {
+    "message": "تم تصدير {0}"
+  },
   "failedImportDetectors": {
     "message": "تعذَّر استيراد الكواشف. تحقق من تنسيق الملف."
   },
@@ -4198,9 +4201,44 @@
     "message": "تحتوي هذه الصفحة على CAPTCHA: يتجنبها Unblocker أو يحلّها لإرجاع الصفحة، لكنه لا يملأ اختبارات CAPTCHA في النماذج.",
     "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
   },
-  "scrapflyExportKeyNote": {
-    "message": "يقرأ الرمز مفتاح API الخاص بك من SCRAPFLY_API_KEY.",
-    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  "scrapflyExportOptions": {
+    "message": "الخيارات"
+  },
+  "scrapflyExportUnblockerOn": {
+    "message": "Unblocker مفعّل"
+  },
+  "scrapflyExportFormat": {
+    "message": "المخرجات"
+  },
+  "scrapflyExportFormatText": {
+    "message": "نص"
+  },
+  "scrapflyExportProxy": {
+    "message": "البروكسي"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "مركز بيانات"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "سكني"
+  },
+  "scrapflyExportCountry": {
+    "message": "الدولة"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "أي دولة"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "تشغيل JavaScript"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 أرصدة"
+  },
+  "scrapflyExportStepKey": {
+    "message": "عيّن مفتاح API"
+  },
+  "scrapflyExportStepRun": {
+    "message": "شغّله"
   },
   "scrapflyExportGetKey": {
     "message": "احصل على مفتاح API",

@@ -935,6 +935,21 @@ class DetectorManager {
     }
 
     /**
+     * Export one detector, in the same file format as exportDetectors so
+     * Rules → Import (or a card's Import) reads it back.
+     * @param {string} category
+     * @param {string} detectorId
+     * @returns {{version: string, exportedAt: string, detectors: object}|null}
+     */
+    exportDetector(category, detectorId) {
+        const detector = this.detectors?.[category]?.[detectorId];
+        if (!detector) return null;
+        const copy = JSON.parse(JSON.stringify(detector));
+        delete copy._searchStrings;
+        return { version: '1.0', exportedAt: new Date().toISOString(), detectors: { [category]: { [detectorId]: copy } } };
+    }
+
+    /**
      * Import detectors from an exported file ({detectors: {category: {id: detector}}}
      * or the bare category map). Official detectors are never removed or
      * overwritten by an import - only their enabled state is taken from the

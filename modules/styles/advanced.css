@@ -2824,12 +2824,110 @@
   gap: 6px;
 }
 
-/* Code keeps its lines: long ones scroll sideways instead of breaking words */
-.scrapfly-export-panel .adv-kit-code pre {
-  max-height: 200px;
-  white-space: pre;
-  overflow-wrap: normal;
+/* One code block under the tabs: file name + Copy on top, coloured code that
+   keeps its lines (long ones scroll sideways) */
+.scrapfly-export-panel {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #3d3d3d;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-primary);
 }
+
+.scrapfly-export-code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 6px 5px 10px;
+  background: #242424;
+  border-bottom: 1px solid #333;
+}
+
+.scrapfly-export-file {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.scrapfly-export-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 10px;
+  border: 1px solid rgba(139, 92, 246, 0.55);
+  border-radius: 6px;
+  background: rgba(139, 92, 246, 0.16);
+  color: #ddd6fe;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.scrapfly-export-copy:hover {
+  background: #8b5cf6;
+  border-color: #8b5cf6;
+  color: #fff;
+}
+
+.scrapfly-export-copy.copy-feedback-active {
+  background: rgba(34, 197, 94, 0.18);
+  border-color: rgba(34, 197, 94, 0.55);
+  color: #bbf7d0;
+}
+
+.scrapfly-export-pre {
+  margin: 0;
+  padding: 10px 12px;
+  max-height: 210px;
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: #d4d4d4;
+  white-space: pre;
+  tab-size: 4;
+  scrollbar-width: thin;
+  scrollbar-color: #4b4b4b transparent;
+}
+
+.scrapfly-export-pre:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: -2px;
+}
+
+.scrapfly-export-pre::-webkit-scrollbar,
+.scrapfly-export-modal .adv-kit-body::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrapfly-export-pre::-webkit-scrollbar-track,
+.scrapfly-export-modal .adv-kit-body::-webkit-scrollbar-track,
+.scrapfly-export-pre::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.scrapfly-export-pre::-webkit-scrollbar-thumb,
+.scrapfly-export-modal .adv-kit-body::-webkit-scrollbar-thumb {
+  background: #4b4b4b;
+  border-radius: 3px;
+}
+
+.scrapfly-export-pre::-webkit-scrollbar-thumb:hover,
+.scrapfly-export-modal .adv-kit-body::-webkit-scrollbar-thumb:hover {
+  background: #6b6b6b;
+}
+
+.sfx-comment { color: #7d8590; font-style: italic; }
+.sfx-string { color: #a5d6a7; }
+.sfx-keyword { color: #c4b5fd; }
+.sfx-literal { color: #fdba74; }
+.sfx-flag { color: #93c5fd; }
 
 .adv-kit-header-icon .scrapfly-export-logo {
   width: 20px;
@@ -2948,6 +3046,239 @@
 
 .scrapfly-export-actions .rule-btn {
   text-decoration: none;
+}
+
+/* Scrape with Scrapfly options: one row per option, label left, control right */
+.scrapfly-export-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 10px 11px 12px;
+  border: 1px solid #3d3d3d;
+  border-radius: 8px;
+  background: #242424;
+}
+
+.scrapfly-export-options-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.scrapfly-export-unblocker {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 20px;
+  padding: 0 8px;
+  border: 1px solid rgba(34, 197, 94, 0.45);
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.12);
+  color: #86efac;
+  font-size: 10.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.scrapfly-export-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 26px;
+}
+
+.scrapfly-export-option-label {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.scrapfly-export-seg {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid #3d3d3d;
+  border-radius: 7px;
+  background: var(--bg-primary);
+}
+
+.scrapfly-export-seg-btn {
+  height: 22px;
+  padding: 0 9px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.scrapfly-export-seg-btn:hover {
+  color: var(--text-primary);
+}
+
+.scrapfly-export-seg-btn[aria-checked="true"] {
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(59, 130, 246, 0.45);
+  color: #bfdbfe;
+}
+
+.scrapfly-export-seg-btn:focus-visible,
+.scrapfly-export-select:focus-visible,
+.scrapfly-export-switch:focus-visible,
+.scrapfly-export-step-cmd:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 1px;
+}
+
+.scrapfly-export-select {
+  appearance: none;
+  min-width: 120px;
+  max-width: 170px;
+  height: 26px;
+  padding-block: 0;
+  padding-inline: 9px 26px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23a3a3a3' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+  background-color: var(--bg-primary);
+  border: 1px solid #3d3d3d;
+  border-radius: 7px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 11.5px;
+  cursor: pointer;
+}
+
+[dir="rtl"] .scrapfly-export-select {
+  background-position: left 9px center;
+}
+
+.scrapfly-export-toggle-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scrapfly-export-cost {
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.scrapfly-export-switch {
+  appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  width: 30px;
+  height: 17px;
+  margin: 0;
+  border-radius: 999px;
+  background: #4b4b4b;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.scrapfly-export-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  inset-inline-start: 2px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.15s;
+}
+
+.scrapfly-export-switch:checked {
+  background: var(--accent);
+}
+
+.scrapfly-export-switch:checked::after {
+  transform: translateX(13px);
+}
+
+[dir="rtl"] .scrapfly-export-switch:checked::after {
+  transform: translateX(-13px);
+}
+
+/* Two copyable commands: set the key, run the file */
+.scrapfly-export-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.scrapfly-export-step {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 8px;
+  row-gap: 4px;
+  align-items: center;
+}
+
+.scrapfly-export-step[hidden] {
+  display: none;
+}
+
+.scrapfly-export-step-n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.18);
+  color: #bfdbfe;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.scrapfly-export-steps.is-single .scrapfly-export-step-n {
+  visibility: hidden;
+}
+
+.scrapfly-export-step-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.scrapfly-export-step-cmd {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  padding: 6px 8px 6px 10px;
+  border: 1px solid #3d3d3d;
+  border-radius: 7px;
+  background: var(--bg-primary);
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: start;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.scrapfly-export-step-cmd code {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #d4d4d4;
+}
+
+.scrapfly-export-step-cmd:hover {
+  border-color: rgba(139, 92, 246, 0.55);
+  color: #ddd6fe;
 }
 
 /* Shared Tools action rows: readable copy, semantic outlines, and quiet states. */

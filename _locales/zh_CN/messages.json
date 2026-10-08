@@ -862,6 +862,9 @@
   "detectorsImported": {
     "message": "检测器已导入"
   },
+  "detectorExportedFmt": {
+    "message": "已导出 {0}"
+  },
   "failedImportDetectors": {
     "message": "导入检测器失败。请检查文件格式。"
   },
@@ -4198,9 +4201,44 @@
     "message": "此页面有 CAPTCHA：Unblocker 会绕过或破解它以返回页面，但不会填写表单中的 CAPTCHA。",
     "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
   },
-  "scrapflyExportKeyNote": {
-    "message": "代码从 SCRAPFLY_API_KEY 读取你的 API 密钥。",
-    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  "scrapflyExportOptions": {
+    "message": "选项"
+  },
+  "scrapflyExportUnblockerOn": {
+    "message": "Unblocker 已开启"
+  },
+  "scrapflyExportFormat": {
+    "message": "输出"
+  },
+  "scrapflyExportFormatText": {
+    "message": "文本"
+  },
+  "scrapflyExportProxy": {
+    "message": "代理"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "数据中心"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "住宅"
+  },
+  "scrapflyExportCountry": {
+    "message": "国家/地区"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "任意"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "渲染 JavaScript"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 积分"
+  },
+  "scrapflyExportStepKey": {
+    "message": "设置 API 密钥"
+  },
+  "scrapflyExportStepRun": {
+    "message": "运行"
   },
   "scrapflyExportGetKey": {
     "message": "获取 API 密钥",

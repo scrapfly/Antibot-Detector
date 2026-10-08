@@ -131,6 +131,8 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
   const moreTitle = FormatUtils.escapeAttr(_tr('rulesMoreActions', 'More actions'));
   const deleteLabel = FormatUtils.escapeHtml(_tr('btnDelete', 'Delete'));
   const deleteTitle = FormatUtils.escapeAttr(_tr('deleteDetectorTitle', 'Delete detector'));
+  const exportLabel = FormatUtils.escapeHtml(_tr('btnExport', 'Export'));
+  const importLabel = FormatUtils.escapeHtml(_tr('btnImport', 'Import'));
 
   detectors.forEach(({ category, detectorName, detector }) => {
     const detectorIcon = this.getDetectorIcon(detector, category);
@@ -180,6 +182,14 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
                       <span>${FormatUtils.escapeHtml(_tr('resetToOfficial', 'Reset to official'))}</span>
                     </button>`
       : '';
+    const fileItems = `<button class="rules-menu-item export-detector-btn" role="menuitem" data-detector-id="${FormatUtils.escapeAttr(detectorName)}" data-category="${FormatUtils.escapeAttr(category)}">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+                      <span>${exportLabel}</span>
+                    </button>
+                    <button class="rules-menu-item import-detector-btn" role="menuitem">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M5 21h14"/></svg>
+                      <span>${importLabel}</span>
+                    </button>`;
     const deleteItem = `<button class="rules-menu-item rules-menu-item-danger delete-btn" role="menuitem" title="${deleteTitle}">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
                       <span>${deleteLabel}</span>
@@ -205,6 +215,7 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
                     </svg>
                   </button>
                   <div class="rules-menu-list" role="menu">
+                    ${fileItems}
                     ${resetItem}
                     ${deleteItem}
                   </div>
@@ -321,6 +332,23 @@ Rules.prototype.setupDetectorCardListeners = function(detectors) {
       const detectorName = btn.dataset.detectorId;
       const entry = detectors.find(d => d.category === category && d.detectorName === detectorName);
       await this.handleResetToOfficial(category, detectorName, entry?.detector?.displayName || detectorName);
+    });
+  });
+
+  rulesList.querySelectorAll('.export-detector-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const category = btn.dataset.category;
+      const detectorName = btn.dataset.detectorId;
+      const entry = detectors.find(d => d.category === category && d.detectorName === detectorName);
+      this.handleExportDetector(category, detectorName, entry?.detector?.displayName || detectorName);
+    });
+  });
+
+  rulesList.querySelectorAll('.import-detector-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.handleImportDetectorsFile();
     });
   });
 

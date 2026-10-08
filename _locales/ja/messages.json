@@ -862,6 +862,9 @@
   "detectorsImported": {
     "message": "ディテクターをインポートしました"
   },
+  "detectorExportedFmt": {
+    "message": "{0} をエクスポートしました"
+  },
   "failedImportDetectors": {
     "message": "ディテクターのインポートに失敗しました。ファイル形式を確認してください。"
   },
@@ -4198,9 +4201,44 @@
     "message": "このページには CAPTCHA があります。Unblocker はページを返すために CAPTCHA を回避または解決しますが、フォームの CAPTCHA は入力しません。",
     "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
   },
-  "scrapflyExportKeyNote": {
-    "message": "コードは SCRAPFLY_API_KEY から API キーを読み込みます。",
-    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  "scrapflyExportOptions": {
+    "message": "オプション"
+  },
+  "scrapflyExportUnblockerOn": {
+    "message": "Unblocker 有効"
+  },
+  "scrapflyExportFormat": {
+    "message": "出力"
+  },
+  "scrapflyExportFormatText": {
+    "message": "テキスト"
+  },
+  "scrapflyExportProxy": {
+    "message": "プロキシ"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "データセンター"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "住宅用"
+  },
+  "scrapflyExportCountry": {
+    "message": "国"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "指定なし"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "JavaScript を実行"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 クレジット"
+  },
+  "scrapflyExportStepKey": {
+    "message": "API キーを設定"
+  },
+  "scrapflyExportStepRun": {
+    "message": "実行"
   },
   "scrapflyExportGetKey": {
     "message": "API キーを取得",

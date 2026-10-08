@@ -862,6 +862,9 @@
   "detectorsImported": {
     "message": "Детекторы импортированы"
   },
+  "detectorExportedFmt": {
+    "message": "{0}: экспортировано"
+  },
   "failedImportDetectors": {
     "message": "Не удалось импортировать детекторы. Проверьте формат файла."
   },
@@ -4198,9 +4201,44 @@
     "message": "На этой странице есть CAPTCHA: Unblocker обходит или решает её, чтобы вернуть страницу, но не заполняет CAPTCHA в формах.",
     "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
   },
-  "scrapflyExportKeyNote": {
-    "message": "Код берёт ваш API-ключ из SCRAPFLY_API_KEY.",
-    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  "scrapflyExportOptions": {
+    "message": "Параметры"
+  },
+  "scrapflyExportUnblockerOn": {
+    "message": "Unblocker включён"
+  },
+  "scrapflyExportFormat": {
+    "message": "Формат"
+  },
+  "scrapflyExportFormatText": {
+    "message": "Текст"
+  },
+  "scrapflyExportProxy": {
+    "message": "Прокси"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "Дата-центр"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "Резидентные"
+  },
+  "scrapflyExportCountry": {
+    "message": "Страна"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "Любая"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "Выполнять JavaScript"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 кредитов"
+  },
+  "scrapflyExportStepKey": {
+    "message": "Задайте API-ключ"
+  },
+  "scrapflyExportStepRun": {
+    "message": "Запустите"
   },
   "scrapflyExportGetKey": {
     "message": "Получить API-ключ",

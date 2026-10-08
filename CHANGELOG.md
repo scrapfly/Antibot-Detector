@@ -7,6 +7,16 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [Unreleased]
 
+## [2.8.3] - 2026-10-08
+
+### Added
+
+- Rules: each card's "⋯" menu can export just that detector, or import detectors from a file without replacing yours.
+
+### Changed
+
+- Scrape with Scrapfly: choose output format, proxies, country and JavaScript rendering; the code updates as you pick, with colours and copyable key and run commands.
+
 ## [2.8.2] - 2026-10-07
 
 ### Added
@@ -231,7 +241,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
-[Unreleased]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.2...HEAD
+[Unreleased]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.3...HEAD
+[2.8.3]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.2...v2.8.3
 [2.8.2]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.1...v2.8.2
 [2.8.1]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8...v2.8.1
 [2.8]: https://github.com/scrapfly/Antibot-Detector/compare/v2.7...v2.8

@@ -7,8 +7,9 @@
 //
 // The snippets follow the published SDKs (checked 2026-10-07): PyPI and npm
 // scrapfly-sdk 0.12.0, go-scrapfly v1.6.0, the scrapfly-sdk crate 0.5.1 and
-// scrapfly-cli v0.4.0. "unblocker" is the current name of the option; "asp"
-// is its old alias and must not be sent as well.
+// scrapfly-cli v0.4.0; the options were checked again on 2026-10-08.
+// "unblocker" is the current name of the option; "asp" is its old alias and
+// must not be sent as well.
 
 const ScrapflyExport = {};
 
@@ -16,17 +17,41 @@ ScrapflyExport.API_URL = 'https://api.scrapfly.io/scrape';
 ScrapflyExport.PLAYGROUND_URL = 'https://scrapfly.io/dashboard/playground/web-scraper';
 ScrapflyExport.REGISTER_URL = 'https://scrapfly.io/register';
 ScrapflyExport.LANGUAGE_STORAGE_KEY = 'scrapflyExportLanguage';
+ScrapflyExport.OPTIONS_STORAGE_KEY = 'scrapflyExportOptions';
 ScrapflyExport.MAX_NAMES = 4;
 
-// Tab order. Labels are language and tool names, not translated
+// Tab order. Labels are language and tool names, not translated. `file` is
+// where the code goes and `run` the command that runs it ('' = paste it in a
+// terminal as it is).
 ScrapflyExport.LANGUAGES = [
-  { id: 'python', label: 'Python' },
-  { id: 'node', label: 'Node.js' },
-  { id: 'curl', label: 'cURL' },
-  { id: 'cli', label: 'CLI' },
-  { id: 'go', label: 'Go' },
-  { id: 'rust', label: 'Rust' }
+  { id: 'python', label: 'Python', file: 'scrape.py', run: 'python scrape.py' },
+  { id: 'node', label: 'Node.js', file: 'scrape.mjs', run: 'node scrape.mjs' },
+  { id: 'curl', label: 'cURL', file: 'Terminal', run: '' },
+  { id: 'cli', label: 'CLI', file: 'Terminal', run: '' },
+  { id: 'go', label: 'Go', file: 'main.go', run: 'go mod init scrape && go mod tidy && go run .' },
+  { id: 'rust', label: 'Rust', file: 'src/main.rs', run: 'cargo run' }
 ];
+
+// Options that rewrite the code. The first value of each is the API default
+// and adds nothing to the code.
+ScrapflyExport.FORMATS = ['raw', 'markdown', 'text'];
+ScrapflyExport.PROXY_POOLS = ['public_datacenter_pool', 'public_residential_pool'];
+// ISO 3166-1 alpha-2, lower case as the API takes them; '' = any country
+ScrapflyExport.COUNTRIES = ['', 'us', 'gb', 'ca', 'de', 'fr', 'es', 'it', 'nl', 'br', 'mx', 'jp', 'kr', 'in', 'au'];
+ScrapflyExport.DEFAULT_OPTIONS = Object.freeze({ format: 'raw', renderJs: false, proxyPool: 'public_datacenter_pool', country: '' });
+
+/** Options with every unknown or missing value replaced by its default */
+ScrapflyExport.normalizeOptions = function(raw) {
+  const value = raw && typeof raw === 'object' ? raw : {};
+  const pick = (list, v, fallback) => (list.includes(v) ? v : fallback);
+  const d = ScrapflyExport.DEFAULT_OPTIONS;
+  return {
+    format: pick(ScrapflyExport.FORMATS, value.format, d.format),
+    renderJs: value.renderJs === true,
+    proxyPool: pick(ScrapflyExport.PROXY_POOLS, value.proxyPool, d.proxyPool),
+    country: pick(ScrapflyExport.COUNTRIES, value.country, d.country)
+  };
+};
 
 /** The page address to scrape, or '' when the tab is not a web page */
 ScrapflyExport.targetUrl = function(raw) {
@@ -109,10 +134,23 @@ const scrapflyLines = (...lines) => lines.filter(line => line !== null).join('\n
  * @param {string} language - id from ScrapflyExport.LANGUAGES
  * @param {string} url - http(s) page address (ScrapflyExport.targetUrl)
  * @param {string[]} [names] - detected protections, for a comment
+ * @param {object} [options] - format, renderJs, proxyPool, country (defaults add nothing)
  * @returns {string}
  */
-ScrapflyExport.snippet = function(language, url, names = []) {
+ScrapflyExport.snippet = function(language, url, names = [], options = {}) {
   const detected = (prefix) => ScrapflyExport.detectedComment(names, prefix) || null;
+  const o = ScrapflyExport.normalizeOptions(options);
+  const d = ScrapflyExport.DEFAULT_OPTIONS;
+  const set = {
+    renderJs: o.renderJs,
+    proxyPool: o.proxyPool !== d.proxyPool ? o.proxyPool : '',
+    country: o.country,
+    format: o.format !== d.format ? o.format : ''
+  };
+  const residential = set.proxyPool === 'public_residential_pool';
+  const goFormat = { markdown: 'FormatMarkdown', text: 'FormatText' };
+  const rustFormat = { markdown: 'Markdown', text: 'Text' };
+  const q = scrapflyQuote;
   switch (language) {
     case 'python':
       return scrapflyLines(
@@ -123,8 +161,12 @@ ScrapflyExport.snippet = function(language, url, names = []) {
         '',
         'client = ScrapflyClient(key=os.environ["SCRAPFLY_API_KEY"])',
         'result = client.scrape(ScrapeConfig(',
-        `    url=${scrapflyQuote.json(url)},`,
+        `    url=${q.json(url)},`,
         '    unblocker=True,  # anti-bot bypass',
+        set.renderJs ? '    render_js=True,' : null,
+        set.proxyPool ? `    proxy_pool=${q.json(set.proxyPool)},` : null,
+        set.country ? `    country=${q.json(set.country)},` : null,
+        set.format ? `    format=${q.json(set.format)},` : null,
         '))',
         'print(result.content)'
       );
@@ -136,26 +178,48 @@ ScrapflyExport.snippet = function(language, url, names = []) {
         '',
         'const client = new ScrapflyClient({ key: process.env.SCRAPFLY_API_KEY });',
         'const result = await client.scrape(new ScrapeConfig({',
-        `  url: ${scrapflyQuote.json(url)},`,
+        `  url: ${q.json(url)},`,
         '  unblocker: true, // anti-bot bypass',
+        set.renderJs ? '  render_js: true,' : null,
+        set.proxyPool ? `  proxy_pool: ${q.json(set.proxyPool)},` : null,
+        set.country ? `  country: ${q.json(set.country)},` : null,
+        set.format ? `  format: ${q.json(set.format)},` : null,
         '}));',
         'console.log(result.result.content);'
       );
-    case 'curl':
-      return scrapflyLines(
-        detected('#'),
-        `curl -G ${ScrapflyExport.API_URL} \\`,
-        '  --data-urlencode "key=$SCRAPFLY_API_KEY" \\',
-        `  --data-urlencode ${scrapflyQuote.shell(`url=${url}`)} \\`,
-        '  -d unblocker=true'
-      );
-    case 'cli':
+    case 'curl': {
+      const args = [
+        `curl -G ${ScrapflyExport.API_URL}`,
+        '  --data-urlencode "key=$SCRAPFLY_API_KEY"',
+        `  --data-urlencode ${q.shell(`url=${url}`)}`,
+        '  -d unblocker=true',
+        set.renderJs ? '  -d render_js=true' : null,
+        set.proxyPool ? `  -d proxy_pool=${set.proxyPool}` : null,
+        set.country ? `  -d country=${set.country}` : null,
+        set.format ? `  -d format=${set.format}` : null
+      ].filter(Boolean);
+      return scrapflyLines(detected('#'), args.join(' \\\n'));
+    }
+    case 'cli': {
+      const flags = [
+        '--unblocker',
+        set.renderJs ? '--render-js' : null,
+        set.proxyPool ? `--proxy-pool ${set.proxyPool}` : null,
+        set.country ? `--country ${set.country}` : null,
+        set.format ? `--format ${set.format}` : null
+      ].filter(Boolean);
+      const command = flags.length === 1
+        ? `scrapfly scrape ${q.shell(url)} --unblocker`
+        : [`scrapfly scrape ${q.shell(url)}`, ...flags.map(f => `  ${f}`)].join(' \\\n');
       return scrapflyLines(
         '# https://github.com/scrapfly/scrapfly-cli/releases (reads SCRAPFLY_API_KEY)',
         detected('#'),
-        `scrapfly scrape ${scrapflyQuote.shell(url)} --unblocker`
+        command
       );
-    case 'go':
+    }
+    case 'go': {
+      // gofmt lines the values up after the longest key ("Unblocker:", "ProxyPool:")
+      const field = (key, value) => `\t\t${`${key}:`.padEnd(11)}${value},`;
       return scrapflyLines(
         '// go get github.com/scrapfly/go-scrapfly',
         detected('//'),
@@ -175,8 +239,12 @@ ScrapflyExport.snippet = function(language, url, names = []) {
         '\t\tlog.Fatal(err)',
         '\t}',
         '\tresult, err := client.Scrape(&scrapfly.ScrapeConfig{',
-        `\t\tURL:       ${scrapflyQuote.json(url)},`,
-        '\t\tUnblocker: scrapfly.BoolPtr(true), // anti-bot bypass',
+        field('URL', q.json(url)),
+        `${field('Unblocker', 'scrapfly.BoolPtr(true)')} // anti-bot bypass`,
+        set.renderJs ? field('RenderJS', 'true') : null,
+        set.proxyPool ? field('ProxyPool', residential ? 'scrapfly.PublicResidentialPool' : 'scrapfly.PublicDataCenterPool') : null,
+        set.country ? field('Country', q.json(set.country)) : null,
+        set.format ? field('Format', `scrapfly.${goFormat[set.format]}`) : null,
         '\t})',
         '\tif err != nil {',
         '\t\tlog.Fatal(err)',
@@ -184,27 +252,99 @@ ScrapflyExport.snippet = function(language, url, names = []) {
         '\tfmt.Println(result.Result.Content)',
         '}'
       );
-    case 'rust':
+    }
+    case 'rust': {
+      const imports = ['Client', set.format ? 'Format' : null, set.proxyPool ? 'ProxyPool' : null, 'ScrapeConfig'].filter(Boolean);
       return scrapflyLines(
         '// cargo add scrapfly-sdk && cargo add tokio --features full',
         detected('//'),
-        'use scrapfly_sdk::{Client, ScrapeConfig};',
+        `use scrapfly_sdk::{${imports.join(', ')}};`,
         '',
         '#[tokio::main]',
         'async fn main() -> Result<(), Box<dyn std::error::Error>> {',
         '    let client = Client::builder()',
         '        .api_key(std::env::var("SCRAPFLY_API_KEY")?)',
         '        .build()?;',
-        `    let config = ScrapeConfig::builder(${scrapflyQuote.rust(url)})`,
+        `    let config = ScrapeConfig::builder(${q.rust(url)})`,
         '        .unblocker(true) // anti-bot bypass',
+        set.renderJs ? '        .render_js(true)' : null,
+        set.proxyPool ? `        .proxy_pool(ProxyPool::${residential ? 'PublicResidentialPool' : 'PublicDatacenterPool'})` : null,
+        set.country ? `        .country(${q.rust(set.country)})` : null,
+        set.format ? `        .format(Format::${rustFormat[set.format]})` : null,
         '        .build()?;',
         '    let result = client.scrape(&config).await?;',
         '    println!("{}", result.result.content);',
         '    Ok(())',
         '}'
       );
+    }
     default:
       return '';
+  }
+};
+
+// Syntax colours: comments, strings, keywords and literals. The output is the
+// code escaped, plus <span> wrappers only.
+const SCRAPFLY_KEYWORDS = {
+  python: ['import', 'from', 'as', 'def', 'return', 'print'],
+  node: ['import', 'from', 'const', 'await', 'new', 'async', 'return'],
+  go: ['package', 'import', 'func', 'if', 'return', 'var'],
+  rust: ['use', 'async', 'fn', 'let', 'await', 'mut', 'pub'],
+  curl: ['curl'],
+  cli: ['scrapfly']
+};
+const SCRAPFLY_LITERALS = ['True', 'False', 'None', 'true', 'false', 'nil', 'Ok'];
+
+/**
+ * @param {string} code
+ * @param {string} language - id from ScrapflyExport.LANGUAGES
+ * @returns {string} HTML
+ */
+ScrapflyExport.highlight = function(code, language) {
+  const esc = (text) => String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const comment = ['python', 'curl', 'cli'].includes(language) ? '#[^\n]*' : '//[^\n]*';
+  const token = new RegExp(`(${comment})|("(?:[^"\\\\\\n]|\\\\.)*"|'(?:[^'\\\\\\n]|\\\\.)*')|(--?[a-z][a-z-]*)|([A-Za-z_][A-Za-z0-9_]*)|(\\d+)`, 'g');
+  const keywords = SCRAPFLY_KEYWORDS[language] || [];
+  const shell = language === 'curl' || language === 'cli';
+  let html = '';
+  let last = 0;
+  const wrap = (cls, text) => `<span class="sfx-${cls}">${esc(text)}</span>`;
+  for (const match of String(code).matchAll(token)) {
+    const [text, isComment, isString, isFlag, word, number] = match;
+    html += esc(code.slice(last, match.index));
+    last = match.index + text.length;
+    if (isComment) html += wrap('comment', text);
+    else if (isString) html += wrap('string', text);
+    else if (isFlag) html += shell ? wrap('flag', text) : esc(text);
+    else if (word && keywords.includes(word)) html += wrap('keyword', text);
+    else if (word && SCRAPFLY_LITERALS.includes(word)) html += wrap('literal', text);
+    else if (number) html += wrap('literal', text);
+    else html += esc(text);
+  }
+  return html + esc(String(code).slice(last));
+};
+
+/** Command that puts the key in SCRAPFLY_API_KEY for this session */
+ScrapflyExport.keyCommand = function(platform) {
+  return /win/i.test(String(platform || ''))
+    ? '$env:SCRAPFLY_API_KEY="YOUR_API_KEY"'
+    : 'export SCRAPFLY_API_KEY="YOUR_API_KEY"';
+};
+
+/** Options the user picked last time (kept in this browser only) */
+ScrapflyExport.savedOptions = function() {
+  try {
+    return ScrapflyExport.normalizeOptions(JSON.parse(localStorage.getItem(ScrapflyExport.OPTIONS_STORAGE_KEY) || 'null'));
+  } catch (e) {
+    return ScrapflyExport.normalizeOptions(null);
+  }
+};
+
+ScrapflyExport.saveOptions = function(options) {
+  try {
+    localStorage.setItem(ScrapflyExport.OPTIONS_STORAGE_KEY, JSON.stringify(ScrapflyExport.normalizeOptions(options)));
+  } catch (e) {
+    // storage unavailable
   }
 };
 
@@ -234,9 +374,10 @@ ScrapflyExport.logoHtml = function(className = 'scrapfly-export-logo') {
 };
 
 /**
- * Open the dialog: one tab per language, each with its own Copy button, the
- * API key note, a CAPTCHA note when the page has one, and links to get a key
- * and to the playground.
+ * Open the dialog: what was detected, the options, one tab per language over
+ * a single code block that follows the options, the two commands to run it,
+ * a CAPTCHA note when the page has one, and links to get a key and to the
+ * playground.
  * @param {object} options
  * @param {string} options.url - the page address
  * @param {Array<object>} [options.detections] - what was detected on it
@@ -253,18 +394,23 @@ ScrapflyExport.open = function({ url, detections = [] } = {}) {
   const esc = FormatUtils.escapeHtml;
   const attr = FormatUtils.escapeAttr;
   const protections = ScrapflyExport.protections(detections);
-  const names = protections.map(p => p.name);
   const selected = ScrapflyExport.preferredLanguage();
+  const options = ScrapflyExport.savedOptions();
   const tabs = ScrapflyExport.LANGUAGES.map(({ id, label }) => {
     const on = id === selected;
     return `<button type="button" class="scrapfly-export-tab" role="tab" id="scrapflyExportTab-${id}" data-language="${id}"`
-      + ` aria-controls="scrapflyExportPanel-${id}" aria-selected="${on}" tabindex="${on ? 0 : -1}">${esc(label)}</button>`;
+      + ` aria-controls="scrapflyExportPanel" aria-selected="${on}" tabindex="${on ? 0 : -1}">${esc(label)}</button>`;
   }).join('');
-  const panels = ScrapflyExport.LANGUAGES.map(({ id, label }) => (
-    `<div class="scrapfly-export-panel" role="tabpanel" id="scrapflyExportPanel-${id}" aria-labelledby="scrapflyExportTab-${id}"${id === selected ? '' : ' hidden'}>`
-    + BaseAdvancedModule.kitCode(label, ScrapflyExport.snippet(id, target, names))
-    + '</div>'
-  )).join('');
+  const copyLabel = tr('advCommonCopy', 'Copy');
+  const copyIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>';
+  const step = (n, label, cls) => `
+      <div class="scrapfly-export-step ${cls}">
+        <span class="scrapfly-export-step-n">${n}</span>
+        <span class="scrapfly-export-step-label">${esc(label)}</span>
+        <button type="button" class="scrapfly-export-step-cmd" data-copy="" data-copy-message="${attr(tr('advPanelCopiedToClipboard', 'Copied to clipboard'))}" title="${attr(tr('advCommonClickToCopy', 'Click to copy'))}">
+          <code></code>${copyIcon}
+        </button>
+      </div>`;
   const captchaNote = ScrapflyExport.hasCaptcha(detections)
     ? BaseAdvancedModule.kitNote(tr('scrapflyExportCaptchaNote',
       "This page has a CAPTCHA: the Unblocker avoids or solves it to return the page, but it doesn't fill in CAPTCHAs on forms."), 'warning')
@@ -273,12 +419,22 @@ ScrapflyExport.open = function({ url, detections = [] } = {}) {
     <p class="scrapfly-export-intro">${esc(tr('scrapflyExportIntro',
       "Fetch this page through Scrapfly's API with the Unblocker on. It picks the browser, proxies and headers by itself, and costs nothing extra when the site doesn't block."))}</p>
     ${ScrapflyExport.detectedRow(protections, tr('scrapflyExportDetected', 'Detected on this page'))}
+    ${ScrapflyExport.optionsHtml(options, tr)}
     <div class="scrapfly-export-code">
       <div class="scrapfly-export-tabs" role="tablist" aria-label="${attr(tr('scrapflyExportLanguages', 'Code language'))}">${tabs}</div>
-      ${panels}
+      <div class="scrapfly-export-panel" role="tabpanel" id="scrapflyExportPanel" aria-labelledby="scrapflyExportTab-${selected}">
+        <div class="scrapfly-export-code-head">
+          <span class="scrapfly-export-file"></span>
+          <button type="button" class="scrapfly-export-copy" data-copy="">${copyIcon}<span>${esc(copyLabel)}</span></button>
+        </div>
+        <pre class="scrapfly-export-pre" tabindex="0"><code></code></pre>
+      </div>
+    </div>
+    <div class="scrapfly-export-steps">
+      ${step(1, tr('scrapflyExportStepKey', 'Set your API key'), 'is-key')}
+      ${step(2, tr('scrapflyExportStepRun', 'Run it'), 'is-run')}
     </div>
     ${captchaNote}
-    ${BaseAdvancedModule.kitNote(tr('scrapflyExportKeyNote', 'The code reads your API key from SCRAPFLY_API_KEY.'))}
     <div class="scrapfly-export-actions">
       <a class="rule-btn rule-btn-cancel" href="${attr(ScrapflyExport.REGISTER_URL)}" target="_blank" rel="noopener noreferrer">${esc(tr('scrapflyExportGetKey', 'Get an API key'))}</a>
       <a class="rule-btn rule-btn-save" href="${attr(ScrapflyExport.PLAYGROUND_URL)}" target="_blank" rel="noopener noreferrer">${esc(tr('scrapflyExportPlayground', 'Open playground'))}</a>
@@ -298,8 +454,124 @@ ScrapflyExport.open = function({ url, detections = [] } = {}) {
     copiedMessage: tr('scrapflyExportCopied', 'Code copied'),
     record: false
   });
-  ScrapflyExport.bindTabs(overlay);
+  overlay.querySelector('.adv-kit-modal').classList.add('scrapfly-export-modal');
+
+  const state = { language: selected, options };
+  const platform = (typeof navigator !== 'undefined') ? (navigator.userAgentData?.platform || navigator.platform || '') : '';
+  const render = () => {
+    const language = ScrapflyExport.LANGUAGES.find(l => l.id === state.language) || ScrapflyExport.LANGUAGES[0];
+    const code = ScrapflyExport.snippet(language.id, target, protections.map(p => p.name), state.options);
+    overlay.querySelector('.scrapfly-export-pre code').innerHTML = ScrapflyExport.highlight(code, language.id);
+    overlay.querySelector('.scrapfly-export-copy').setAttribute('data-copy', code);
+    overlay.querySelector('.scrapfly-export-file').textContent = language.file;
+    overlay.querySelector('.scrapfly-export-panel').setAttribute('aria-labelledby', `scrapflyExportTab-${language.id}`);
+    const setCmd = (selector, command) => {
+      const row = overlay.querySelector(selector);
+      row.hidden = !command;
+      row.querySelector('.scrapfly-export-step-cmd').setAttribute('data-copy', command);
+      row.querySelector('code').textContent = command;
+    };
+    setCmd('.scrapfly-export-step.is-key', ScrapflyExport.keyCommand(platform));
+    setCmd('.scrapfly-export-step.is-run', language.run);
+    // Without a run command the code is the command: number only the key step
+    overlay.querySelector('.scrapfly-export-steps').classList.toggle('is-single', !language.run);
+  };
+  ScrapflyExport.bindTabs(overlay, (id) => {
+    state.language = id;
+    render();
+  });
+  ScrapflyExport.bindOptions(overlay, (next) => {
+    state.options = next;
+    ScrapflyExport.saveOptions(next);
+    render();
+  });
+  render();
   return overlay;
+};
+
+/** Localized country name, or the code when the browser has no names */
+const scrapflyCountryName = (code) => {
+  try {
+    const locale = (typeof FormatUtils !== 'undefined' && FormatUtils.uiLocale && FormatUtils.uiLocale()) || undefined;
+    return new Intl.DisplayNames(locale ? [locale] : [], { type: 'region' }).of(code.toUpperCase()) || code.toUpperCase();
+  } catch (e) {
+    return code.toUpperCase();
+  }
+};
+
+/** The options card: output format, proxies, country and JavaScript rendering */
+ScrapflyExport.optionsHtml = function(options, tr) {
+  const esc = FormatUtils.escapeHtml;
+  const attr = FormatUtils.escapeAttr;
+  const o = ScrapflyExport.normalizeOptions(options);
+  const segmented = (name, label, choices) => `
+      <div class="scrapfly-export-option">
+        <span class="scrapfly-export-option-label" id="scrapflyExportOpt-${name}">${esc(label)}</span>
+        <div class="scrapfly-export-seg" role="radiogroup" aria-labelledby="scrapflyExportOpt-${name}" data-option="${name}">
+          ${choices.map(([value, text]) => `<button type="button" role="radio" class="scrapfly-export-seg-btn" data-value="${attr(value)}" aria-checked="${o[name] === value}" tabindex="${o[name] === value ? 0 : -1}">${esc(text)}</button>`).join('')}
+        </div>
+      </div>`;
+  const countries = ScrapflyExport.COUNTRIES
+    .map(code => [code, code ? scrapflyCountryName(code) : tr('scrapflyExportCountryAny', 'Any')])
+    .map(([code, name]) => `<option value="${attr(code)}"${o.country === code ? ' selected' : ''}>${esc(name)}</option>`).join('');
+  return `
+    <section class="scrapfly-export-options" aria-label="${attr(tr('scrapflyExportOptions', 'Options'))}">
+      <div class="scrapfly-export-options-head">
+        <span class="scrapfly-export-detected-label">${esc(tr('scrapflyExportOptions', 'Options'))}</span>
+        <span class="scrapfly-export-unblocker"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>${esc(tr('scrapflyExportUnblockerOn', 'Unblocker on'))}</span>
+      </div>
+      ${segmented('format', tr('scrapflyExportFormat', 'Output'), [['raw', 'HTML'], ['markdown', 'Markdown'], ['text', tr('scrapflyExportFormatText', 'Text')]])}
+      ${segmented('proxyPool', tr('scrapflyExportProxy', 'Proxies'), [['public_datacenter_pool', tr('scrapflyExportProxyDatacenter', 'Datacenter')], ['public_residential_pool', tr('scrapflyExportProxyResidential', 'Residential')]])}
+      <div class="scrapfly-export-option">
+        <label class="scrapfly-export-option-label" for="scrapflyExportCountry">${esc(tr('scrapflyExportCountry', 'Country'))}</label>
+        <select class="scrapfly-export-select" id="scrapflyExportCountry" data-option="country">${countries}</select>
+      </div>
+      <div class="scrapfly-export-option">
+        <label class="scrapfly-export-option-label" for="scrapflyExportRenderJs">${esc(tr('scrapflyExportRenderJs', 'Render JavaScript'))}</label>
+        <span class="scrapfly-export-toggle-wrap">
+          <span class="scrapfly-export-cost">${esc(tr('scrapflyExportRenderJsCost', '+5 credits'))}</span>
+          <input type="checkbox" role="switch" class="scrapfly-export-switch" id="scrapflyExportRenderJs" data-option="renderJs"${o.renderJs ? ' checked' : ''}>
+        </span>
+      </div>
+    </section>`;
+};
+
+/** Options change the code at once; `onChange` gets the full option set */
+ScrapflyExport.bindOptions = function(root, onChange) {
+  const read = () => {
+    const value = {};
+    root.querySelectorAll('.scrapfly-export-seg').forEach(group => {
+      const on = group.querySelector('[aria-checked="true"]');
+      value[group.dataset.option] = on ? on.dataset.value : '';
+    });
+    value.country = root.querySelector('[data-option="country"]').value;
+    value.renderJs = root.querySelector('[data-option="renderJs"]').checked;
+    return ScrapflyExport.normalizeOptions(value);
+  };
+  root.querySelectorAll('.scrapfly-export-seg').forEach(group => {
+    const buttons = Array.from(group.querySelectorAll('.scrapfly-export-seg-btn'));
+    const choose = (button, focus) => {
+      for (const b of buttons) {
+        b.setAttribute('aria-checked', String(b === button));
+        b.tabIndex = b === button ? 0 : -1;
+      }
+      if (focus) button.focus();
+      onChange(read());
+    };
+    const forward = getComputedStyle(root).direction === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+    buttons.forEach((button, index) => {
+      button.addEventListener('click', () => choose(button, false));
+      button.addEventListener('keydown', (event) => {
+        const stepKey = event.key === forward || event.key === 'ArrowDown' ? 1
+          : (event.key === 'ArrowLeft' || event.key === 'ArrowRight' || event.key === 'ArrowUp') ? -1 : 0;
+        if (!stepKey) return;
+        event.preventDefault();
+        choose(buttons[(index + stepKey + buttons.length) % buttons.length], true);
+      });
+    });
+  });
+  root.querySelector('[data-option="country"]').addEventListener('change', () => onChange(read()));
+  root.querySelector('[data-option="renderJs"]').addEventListener('change', () => onChange(read()));
 };
 
 /** Each detected protection with its logo, like the History cards (max 6 + "+N") */
@@ -315,19 +587,18 @@ ScrapflyExport.detectedRow = function(protections, label) {
     + `<div class="scrapfly-export-chips">${shown}${more}</div></div>`;
 };
 
-/** Tabs: click or arrow keys switch the visible snippet; the choice is remembered */
-ScrapflyExport.bindTabs = function(root) {
+/** Tabs: click or arrow keys switch the language; the choice is remembered */
+ScrapflyExport.bindTabs = function(root, onSelect) {
   const tabs = Array.from(root.querySelectorAll('.scrapfly-export-tab'));
   const select = (tab, focus) => {
     for (const other of tabs) {
       const on = other === tab;
       other.setAttribute('aria-selected', String(on));
       other.tabIndex = on ? 0 : -1;
-      const panel = root.querySelector(`#${other.getAttribute('aria-controls')}`);
-      if (panel) panel.hidden = !on;
     }
     if (focus) tab.focus();
     ScrapflyExport.rememberLanguage(tab.dataset.language);
+    if (onSelect) onSelect(tab.dataset.language);
   };
   // In a right-to-left language the next tab is on the left
   const forward = getComputedStyle(root).direction === 'rtl' ? 'ArrowLeft' : 'ArrowRight';

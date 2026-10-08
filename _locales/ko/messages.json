@@ -862,6 +862,9 @@
   "detectorsImported": {
     "message": "감지기를 가져왔습니다"
   },
+  "detectorExportedFmt": {
+    "message": "{0} 내보냄"
+  },
   "failedImportDetectors": {
     "message": "감지기를 가져오지 못했습니다. 파일 형식을 확인하세요."
   },
@@ -4198,9 +4201,44 @@
     "message": "이 페이지에는 CAPTCHA가 있습니다. Unblocker는 페이지를 가져오기 위해 CAPTCHA를 피하거나 풀지만, 양식의 CAPTCHA는 입력하지 않습니다.",
     "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
   },
-  "scrapflyExportKeyNote": {
-    "message": "코드는 SCRAPFLY_API_KEY에서 API 키를 읽습니다.",
-    "description": "Scrape with Scrapfly dialog: where the code reads the API key (SCRAPFLY_API_KEY stays as is)"
+  "scrapflyExportOptions": {
+    "message": "옵션"
+  },
+  "scrapflyExportUnblockerOn": {
+    "message": "Unblocker 켜짐"
+  },
+  "scrapflyExportFormat": {
+    "message": "출력"
+  },
+  "scrapflyExportFormatText": {
+    "message": "텍스트"
+  },
+  "scrapflyExportProxy": {
+    "message": "프록시"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "데이터센터"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "주거용"
+  },
+  "scrapflyExportCountry": {
+    "message": "국가"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "모두"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "JavaScript 실행"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 크레딧"
+  },
+  "scrapflyExportStepKey": {
+    "message": "API 키 설정"
+  },
+  "scrapflyExportStepRun": {
+    "message": "실행"
   },
   "scrapflyExportGetKey": {
     "message": "API 키 받기",
