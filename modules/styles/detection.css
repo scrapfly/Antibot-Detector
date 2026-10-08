@@ -1794,14 +1794,190 @@
   transform: translate(50%, 50%);
 }
 
-/* Matched combinations in the detection modal: method-row layout, purple tag */
-.method-type-badge--combination {
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+/* Matched combinations (modules/ui/combination-checklist.js), in Detection
+   and History details: one card per combination, a checklist of what it
+   looks for. Logical properties so it mirrors in right-to-left languages. */
+.match-combo-hint {
+  margin: 0 0 0 1.5px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+.match-combo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.match-combo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 9px 10px 8px;
+  background: #323232;
+  border: 1px solid #474747;
+  border-radius: 8px;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.match-combo.sets-score {
+  border-color: rgba(59, 130, 246, 0.55);
+}
+
+.match-combo-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.match-combo-name {
+  margin: 0;
+  min-width: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.match-combo-confidence {
+  flex-shrink: 0;
+}
+
+.match-combo-score {
+  margin: -2px 0 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #93c5fd;
+}
+
+.match-combo-lead {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.match-combo-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.match-combo-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.match-combo-row.is-missing > .match-combo-text,
+.match-combo-row.is-missing > .match-combo-chip {
+  opacity: 0.55;
+}
+
+.match-combo-mark {
+  flex-shrink: 0;
+  width: 14px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.match-combo-mark.is-found { color: var(--success-light); }
+.match-combo-mark.is-missing { color: var(--text-muted); }
+.match-combo-mark.is-blocked { color: var(--danger-light, #f87171); }
+
+.match-combo-chip {
+  flex-shrink: 0;
+  padding: 0 6px;
+  border: 1px solid #4b4b4b;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
   white-space: nowrap;
-  text-transform: none;
-  background: rgba(168, 85, 247, 0.15);
-  color: #c084fc;
-  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.match-combo-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.match-combo-text.is-raw {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #d4d4d4;
+}
+
+.match-combo-not {
+  color: var(--danger-light, #f87171);
+  font-weight: 600;
+}
+
+.match-combo-sub {
+  flex-direction: column;
+  gap: 4px;
+}
+
+.match-combo-sub-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.match-combo-sub-title {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+
+.match-combo-sub > .match-combo-rows {
+  margin-inline-start: 8px;
+  padding-inline-start: 12px;
+  border-inline-start: 1px solid #4b4b4b;
+}
+
+.match-combo-unavailable {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+.match-combo-foot {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.match-combo-copy {
+  height: 22px;
+  padding: 0 9px;
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  border-radius: 6px;
+  background: rgba(139, 92, 246, 0.14);
+  color: #ddd6fe;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.match-combo-copy:hover {
+  background: #8b5cf6;
+  border-color: #8b5cf6;
+  color: #fff;
+}
+
+.match-combo-copy:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 1px;
 }

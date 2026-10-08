@@ -71,6 +71,18 @@ test('HistoryStore loads before its users in both contexts', () => {
   }
 });
 
+test('the combination checklist loads after the engine and before Detection and History, popup only', () => {
+  const popup = popupScripts();
+  const checklist = 'modules/ui/combination-checklist.js';
+  assert.ok(indexIn(popup, checklist) >= 0, 'registered in the popup');
+  assert.ok(indexIn(popup, 'modules/detection/detection-combinations.js') < indexIn(popup, checklist));
+  for (const user of ['sections/history/history.js', 'sections/detection/detection-modals.js']) {
+    assert.ok(indexIn(popup, checklist) < indexIn(popup, user), `${checklist} before ${user}`);
+  }
+  // history.js also runs in the service worker, which must not load the renderer
+  assert.strictEqual(indexIn(workerImports(), checklist), -1);
+});
+
 test('nothing in the popup or settings writes scrapfly_history directly', () => {
   const offenders = [];
   const walk = (dir) => fs.readdirSync(path.join(root, dir), { withFileTypes: true })
