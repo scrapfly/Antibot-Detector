@@ -435,8 +435,9 @@ ScrapflyExport.logoHtml = function(className = 'scrapfly-export-logo') {
 };
 
 /**
- * Open the dialog: what was detected, the options, one tab per language over
- * a single code block that follows the options, the two commands to run it,
+ * Open the dialog: what was detected, the options, the key command, one tab
+ * per language over a single code block that follows the options, the run
+ * command,
  * a CAPTCHA note when the page has one, and links to get a key and to the
  * playground.
  * @param {object} options
@@ -482,6 +483,9 @@ ScrapflyExport.open = function({ url, detections = [] } = {}) {
       "Fetch this page through Scrapfly's API with the Unblocker on. It picks the browser, proxies and headers by itself, and costs nothing extra when the site doesn't block."))}</p>
     ${ScrapflyExport.detectedRow(protections, tr('scrapflyExportDetected', 'Detected on this page'))}
     ${ScrapflyExport.optionsHtml(options, tr)}
+    <div class="scrapfly-export-steps is-before">
+      ${step(1, tr('scrapflyExportStepKey', 'Set your API key'), 'is-key')}
+    </div>
     <div class="scrapfly-export-code">
       <div class="scrapfly-export-tabs" role="tablist" aria-label="${attr(tr('scrapflyExportLanguages', 'Code language'))}">${tabs}</div>
       <div class="scrapfly-export-panel" role="tabpanel" id="scrapflyExportPanel" aria-labelledby="scrapflyExportTab-${selected}">
@@ -495,8 +499,7 @@ ScrapflyExport.open = function({ url, detections = [] } = {}) {
         <pre class="scrapfly-export-pre" tabindex="0"><code></code></pre>
       </div>
     </div>
-    <div class="scrapfly-export-steps">
-      ${step(1, tr('scrapflyExportStepKey', 'Set your API key'), 'is-key')}
+    <div class="scrapfly-export-steps is-after">
       ${step(2, tr('scrapflyExportStepRun', 'Run it'), 'is-run')}
     </div>
     ${captchaNote}
@@ -540,8 +543,9 @@ ScrapflyExport.open = function({ url, detections = [] } = {}) {
     };
     setCmd('.scrapfly-export-step.is-key', ScrapflyExport.keyCommand(platform));
     setCmd('.scrapfly-export-step.is-run', language.run);
-    // Without a run command the code is the command: number only the key step
-    overlay.querySelector('.scrapfly-export-steps').classList.toggle('is-single', !language.run);
+    // Without a run command the code is the command: no numbers, no step 2
+    overlay.querySelector('.scrapfly-export-steps.is-before').classList.toggle('is-single', !language.run);
+    overlay.querySelector('.scrapfly-export-steps.is-after').hidden = !language.run;
   };
   ScrapflyExport.bindTabs(overlay, (id) => {
     state.language = id;

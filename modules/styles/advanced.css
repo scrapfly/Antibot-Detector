@@ -3303,11 +3303,15 @@
   color: #bbf7d0;
 }
 
-/* Two copyable commands: set the key, run the file */
+/* Two copyable commands: set the key (above the code), run the file (below) */
 .scrapfly-export-steps {
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.scrapfly-export-steps[hidden] {
+  display: none;
 }
 
 .scrapfly-export-step {
