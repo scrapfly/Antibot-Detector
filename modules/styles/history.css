@@ -370,6 +370,23 @@
   transform: scale(0.95);
 }
 
+/* Scrape with Scrapfly on a card: the Scrapfly logo on blue, beside "…" */
+.history-scrapfly-btn {
+  margin-inline-end: 2px;
+  background: rgba(59, 130, 246, 0.16);
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+.history-scrapfly-btn:hover {
+  background: rgba(59, 130, 246, 0.3);
+  border-color: rgba(59, 130, 246, 0.55);
+}
+
+.history-scrapfly-logo {
+  width: 15px;
+  height: 15px;
+}
+
 .history-item-bottom {
   display: flex;
   align-items: center;

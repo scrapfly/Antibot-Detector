@@ -4204,8 +4204,20 @@
   "scrapflyExportOptions": {
     "message": "オプション"
   },
-  "scrapflyExportUnblockerOn": {
-    "message": "Unblocker 有効"
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "アンチボット回避"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "AI 用にコピー"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "ページ、保護の種類、設定、コードを 1 つのメッセージにまとめて ChatGPT や Claude などの AI アシスタント用にコピーします"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "コピーしました：AI アシスタントに貼り付けてください"
   },
   "scrapflyExportFormat": {
     "message": "出力"

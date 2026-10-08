@@ -12,10 +12,12 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Added
 
 - Rules: each card's "⋯" menu can export just that detector, or import detectors from a file without replacing yours.
+- History: each card has a Scrapfly button that opens Scrape with Scrapfly for that page.
 
 ### Changed
 
-- Scrape with Scrapfly: choose output format, proxies, country and JavaScript rendering; the code updates as you pick, with colours and copyable key and run commands.
+- Scrape with Scrapfly: turn the Unblocker and JavaScript rendering (both on by default) on or off, and pick output, proxies and country; the code updates as you pick.
+- Scrape with Scrapfly: Copy for AI copies the page, its protections, your settings and the code as one message ready for an AI assistant.
 
 ## [2.8.2] - 2026-10-07
 

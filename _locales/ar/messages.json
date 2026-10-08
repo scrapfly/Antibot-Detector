@@ -4204,8 +4204,20 @@
   "scrapflyExportOptions": {
     "message": "الخيارات"
   },
-  "scrapflyExportUnblockerOn": {
-    "message": "Unblocker مفعّل"
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "تجاوز مكافحة الروبوتات"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "نسخ للذكاء الاصطناعي"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "ينسخ الصفحة وما يحميها وإعداداتك والكود في رسالة واحدة لـ ChatGPT أو Claude أو أي مساعد ذكاء اصطناعي"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "تم النسخ: الصقه في مساعد الذكاء الاصطناعي"
   },
   "scrapflyExportFormat": {
     "message": "المخرجات"

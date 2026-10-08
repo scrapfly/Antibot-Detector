@@ -4204,8 +4204,20 @@
   "scrapflyExportOptions": {
     "message": "विकल्प"
   },
-  "scrapflyExportUnblockerOn": {
-    "message": "Unblocker चालू"
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "एंटी-बॉट बायपास"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "AI के लिए कॉपी करें"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "पेज, उसकी सुरक्षा, आपकी सेटिंग और कोड को ChatGPT, Claude या किसी भी AI सहायक के लिए एक संदेश के रूप में कॉपी करता है"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "कॉपी हो गया: इसे अपने AI सहायक में चिपकाएँ"
   },
   "scrapflyExportFormat": {
     "message": "आउटपुट"

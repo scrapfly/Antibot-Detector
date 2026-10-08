@@ -4204,8 +4204,20 @@
   "scrapflyExportOptions": {
     "message": "옵션"
   },
-  "scrapflyExportUnblockerOn": {
-    "message": "Unblocker 켜짐"
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "안티봇 우회"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "AI용으로 복사"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "페이지, 보호 기술, 설정, 코드를 ChatGPT, Claude 등 AI 어시스턴트용 메시지 하나로 복사합니다"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "복사됨: AI 어시스턴트에 붙여넣으세요"
   },
   "scrapflyExportFormat": {
     "message": "출력"

@@ -4204,8 +4204,20 @@
   "scrapflyExportOptions": {
     "message": "选项"
   },
-  "scrapflyExportUnblockerOn": {
-    "message": "Unblocker 已开启"
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "绕过反机器人"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "复制给 AI"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "将页面、防护、你的设置和代码复制为一条消息，供 ChatGPT、Claude 或任何 AI 助手使用"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "已复制：粘贴到你的 AI 助手中"
   },
   "scrapflyExportFormat": {
     "message": "输出"

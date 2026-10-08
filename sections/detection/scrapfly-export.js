@@ -16,6 +16,9 @@ const ScrapflyExport = {};
 ScrapflyExport.API_URL = 'https://api.scrapfly.io/scrape';
 ScrapflyExport.PLAYGROUND_URL = 'https://scrapfly.io/dashboard/playground/web-scraper';
 ScrapflyExport.REGISTER_URL = 'https://scrapfly.io/register';
+// Docs index written for AI tools, and the Unblocker page (checked 2026-10-08)
+ScrapflyExport.AI_DOCS_URL = 'https://scrapfly.io/llms.txt';
+ScrapflyExport.UNBLOCKER_DOCS_URL = 'https://scrapfly.io/docs/scrape-api/unblocker';
 ScrapflyExport.LANGUAGE_STORAGE_KEY = 'scrapflyExportLanguage';
 ScrapflyExport.OPTIONS_STORAGE_KEY = 'scrapflyExportOptions';
 ScrapflyExport.MAX_NAMES = 4;
@@ -33,12 +36,13 @@ ScrapflyExport.LANGUAGES = [
 ];
 
 // Options that rewrite the code. The first value of each is the API default
-// and adds nothing to the code.
+// and adds nothing to the code; the Unblocker and JavaScript rendering are on
+// unless the user turns them off.
 ScrapflyExport.FORMATS = ['raw', 'markdown', 'text'];
 ScrapflyExport.PROXY_POOLS = ['public_datacenter_pool', 'public_residential_pool'];
 // ISO 3166-1 alpha-2, lower case as the API takes them; '' = any country
 ScrapflyExport.COUNTRIES = ['', 'us', 'gb', 'ca', 'de', 'fr', 'es', 'it', 'nl', 'br', 'mx', 'jp', 'kr', 'in', 'au'];
-ScrapflyExport.DEFAULT_OPTIONS = Object.freeze({ format: 'raw', renderJs: false, proxyPool: 'public_datacenter_pool', country: '' });
+ScrapflyExport.DEFAULT_OPTIONS = Object.freeze({ unblocker: true, format: 'raw', renderJs: true, proxyPool: 'public_datacenter_pool', country: '' });
 
 /** Options with every unknown or missing value replaced by its default */
 ScrapflyExport.normalizeOptions = function(raw) {
@@ -46,8 +50,9 @@ ScrapflyExport.normalizeOptions = function(raw) {
   const pick = (list, v, fallback) => (list.includes(v) ? v : fallback);
   const d = ScrapflyExport.DEFAULT_OPTIONS;
   return {
+    unblocker: value.unblocker !== false,
     format: pick(ScrapflyExport.FORMATS, value.format, d.format),
-    renderJs: value.renderJs === true,
+    renderJs: value.renderJs !== false,
     proxyPool: pick(ScrapflyExport.PROXY_POOLS, value.proxyPool, d.proxyPool),
     country: pick(ScrapflyExport.COUNTRIES, value.country, d.country)
   };
@@ -85,7 +90,7 @@ ScrapflyExport.iconUrl = function(detection) {
  * Anti-bot and CAPTCHA protections, strongest first, one per name.
  * Fingerprinting techniques are left out: they are signals, not products
  * the Unblocker gets past.
- * @returns {Array<{name: string, iconUrl: string}>}
+ * @returns {Array<{name: string, iconUrl: string, kind: string}>}
  */
 ScrapflyExport.protections = function(detections) {
   const list = (Array.isArray(detections) ? detections : []).filter(d => d && !/fingerprint/i.test(scrapflyCategoryOf(d)));
@@ -93,7 +98,9 @@ ScrapflyExport.protections = function(detections) {
   const found = [];
   for (const detection of sorted) {
     const name = String(detection.detector?.name || detection.name || '').trim();
-    if (name && !found.some(p => p.name === name)) found.push({ name, iconUrl: ScrapflyExport.iconUrl(detection) });
+    if (name && !found.some(p => p.name === name)) {
+      found.push({ name, iconUrl: ScrapflyExport.iconUrl(detection), kind: /captcha/i.test(scrapflyCategoryOf(detection)) ? 'CAPTCHA' : 'anti-bot' });
+    }
   }
   return found;
 };
@@ -142,6 +149,7 @@ ScrapflyExport.snippet = function(language, url, names = [], options = {}) {
   const o = ScrapflyExport.normalizeOptions(options);
   const d = ScrapflyExport.DEFAULT_OPTIONS;
   const set = {
+    unblocker: o.unblocker,
     renderJs: o.renderJs,
     proxyPool: o.proxyPool !== d.proxyPool ? o.proxyPool : '',
     country: o.country,
@@ -162,7 +170,7 @@ ScrapflyExport.snippet = function(language, url, names = [], options = {}) {
         'client = ScrapflyClient(key=os.environ["SCRAPFLY_API_KEY"])',
         'result = client.scrape(ScrapeConfig(',
         `    url=${q.json(url)},`,
-        '    unblocker=True,  # anti-bot bypass',
+        set.unblocker ? '    unblocker=True,  # anti-bot bypass' : null,
         set.renderJs ? '    render_js=True,' : null,
         set.proxyPool ? `    proxy_pool=${q.json(set.proxyPool)},` : null,
         set.country ? `    country=${q.json(set.country)},` : null,
@@ -179,7 +187,7 @@ ScrapflyExport.snippet = function(language, url, names = [], options = {}) {
         'const client = new ScrapflyClient({ key: process.env.SCRAPFLY_API_KEY });',
         'const result = await client.scrape(new ScrapeConfig({',
         `  url: ${q.json(url)},`,
-        '  unblocker: true, // anti-bot bypass',
+        set.unblocker ? '  unblocker: true, // anti-bot bypass' : null,
         set.renderJs ? '  render_js: true,' : null,
         set.proxyPool ? `  proxy_pool: ${q.json(set.proxyPool)},` : null,
         set.country ? `  country: ${q.json(set.country)},` : null,
@@ -192,7 +200,7 @@ ScrapflyExport.snippet = function(language, url, names = [], options = {}) {
         `curl -G ${ScrapflyExport.API_URL}`,
         '  --data-urlencode "key=$SCRAPFLY_API_KEY"',
         `  --data-urlencode ${q.shell(`url=${url}`)}`,
-        '  -d unblocker=true',
+        set.unblocker ? '  -d unblocker=true' : null,
         set.renderJs ? '  -d render_js=true' : null,
         set.proxyPool ? `  -d proxy_pool=${set.proxyPool}` : null,
         set.country ? `  -d country=${set.country}` : null,
@@ -202,14 +210,14 @@ ScrapflyExport.snippet = function(language, url, names = [], options = {}) {
     }
     case 'cli': {
       const flags = [
-        '--unblocker',
+        set.unblocker ? '--unblocker' : null,
         set.renderJs ? '--render-js' : null,
         set.proxyPool ? `--proxy-pool ${set.proxyPool}` : null,
         set.country ? `--country ${set.country}` : null,
         set.format ? `--format ${set.format}` : null
       ].filter(Boolean);
-      const command = flags.length === 1
-        ? `scrapfly scrape ${q.shell(url)} --unblocker`
+      const command = flags.length <= 1
+        ? [`scrapfly scrape ${q.shell(url)}`, ...flags].join(' ')
         : [`scrapfly scrape ${q.shell(url)}`, ...flags.map(f => `  ${f}`)].join(' \\\n');
       return scrapflyLines(
         '# https://github.com/scrapfly/scrapfly-cli/releases (reads SCRAPFLY_API_KEY)',
@@ -218,8 +226,16 @@ ScrapflyExport.snippet = function(language, url, names = [], options = {}) {
       );
     }
     case 'go': {
-      // gofmt lines the values up after the longest key ("Unblocker:", "ProxyPool:")
-      const field = (key, value) => `\t\t${`${key}:`.padEnd(11)}${value},`;
+      // gofmt lines the values up one space after the longest key
+      const fields = [
+        ['URL', q.json(url)],
+        set.unblocker ? ['Unblocker', 'scrapfly.BoolPtr(true)', ' // anti-bot bypass'] : null,
+        set.renderJs ? ['RenderJS', 'true'] : null,
+        set.proxyPool ? ['ProxyPool', residential ? 'scrapfly.PublicResidentialPool' : 'scrapfly.PublicDataCenterPool'] : null,
+        set.country ? ['Country', q.json(set.country)] : null,
+        set.format ? ['Format', `scrapfly.${goFormat[set.format]}`] : null
+      ].filter(Boolean);
+      const width = Math.max(...fields.map(([key]) => key.length)) + 2;
       return scrapflyLines(
         '// go get github.com/scrapfly/go-scrapfly',
         detected('//'),
@@ -239,12 +255,7 @@ ScrapflyExport.snippet = function(language, url, names = [], options = {}) {
         '\t\tlog.Fatal(err)',
         '\t}',
         '\tresult, err := client.Scrape(&scrapfly.ScrapeConfig{',
-        field('URL', q.json(url)),
-        `${field('Unblocker', 'scrapfly.BoolPtr(true)')} // anti-bot bypass`,
-        set.renderJs ? field('RenderJS', 'true') : null,
-        set.proxyPool ? field('ProxyPool', residential ? 'scrapfly.PublicResidentialPool' : 'scrapfly.PublicDataCenterPool') : null,
-        set.country ? field('Country', q.json(set.country)) : null,
-        set.format ? field('Format', `scrapfly.${goFormat[set.format]}`) : null,
+        ...fields.map(([key, value, comment = '']) => `\t\t${`${key}:`.padEnd(width)}${value},${comment}`),
         '\t})',
         '\tif err != nil {',
         '\t\tlog.Fatal(err)',
@@ -266,7 +277,7 @@ ScrapflyExport.snippet = function(language, url, names = [], options = {}) {
         '        .api_key(std::env::var("SCRAPFLY_API_KEY")?)',
         '        .build()?;',
         `    let config = ScrapeConfig::builder(${q.rust(url)})`,
-        '        .unblocker(true) // anti-bot bypass',
+        set.unblocker ? '        .unblocker(true) // anti-bot bypass' : null,
         set.renderJs ? '        .render_js(true)' : null,
         set.proxyPool ? `        .proxy_pool(ProxyPool::${residential ? 'PublicResidentialPool' : 'PublicDatacenterPool'})` : null,
         set.country ? `        .country(${q.rust(set.country)})` : null,
@@ -281,6 +292,56 @@ ScrapflyExport.snippet = function(language, url, names = [], options = {}) {
     default:
       return '';
   }
+};
+
+/**
+ * Everything an AI assistant needs to help with this scrape, ready to paste:
+ * the page, what protects it, the chosen settings, the code and the docs.
+ * Written in English on purpose: it is read by a model, not shown in the UI.
+ * @param {object} args
+ * @param {string} args.language - id from ScrapflyExport.LANGUAGES
+ * @param {string} args.url
+ * @param {Array<{name: string, kind: string}>} [args.protections]
+ * @param {object} [args.options]
+ * @returns {string}
+ */
+ScrapflyExport.aiPrompt = function({ language, url, protections = [], options = {} }) {
+  const lang = ScrapflyExport.LANGUAGES.find(l => l.id === language) || ScrapflyExport.LANGUAGES[0];
+  const o = ScrapflyExport.normalizeOptions(options);
+  const code = ScrapflyExport.snippet(lang.id, url, (protections || []).map(p => p.name), o);
+  const oneLine = (text) => String(text).replace(/[\r\n]+/g, ' ');
+  const found = (protections || []).map(p => `- ${oneLine(p.name)} (${p.kind || 'anti-bot'})`);
+  const formats = { raw: 'raw HTML', markdown: 'Markdown', text: 'plain text' };
+  const settings = [
+    o.unblocker ? 'Unblocker on (Scrapfly\'s anti-bot bypass)' : 'Unblocker off',
+    `output: ${formats[o.format]}`,
+    o.proxyPool === 'public_residential_pool' ? 'residential proxies' : 'datacenter proxies',
+    o.country ? `proxy country: ${o.country.toUpperCase()}` : 'any proxy country',
+    o.renderJs ? 'JavaScript rendering on' : 'JavaScript rendering off'
+  ];
+  const fence = lang.id === 'curl' || lang.id === 'cli' ? 'bash' : (lang.id === 'node' ? 'javascript' : lang.id);
+  const steps = [`1. Set the API key: ${ScrapflyExport.keyCommand('')}`];
+  steps.push(lang.run ? `2. Save the code as ${lang.file} and run: ${lang.run}` : '2. Paste the code in a terminal.');
+  return [
+    'I want to scrape a web page with the Scrapfly Web Scraping API. Help me get this working and extend it.',
+    '',
+    `Page: ${oneLine(url)}`,
+    found.length ? 'Protections detected on the page (by the Scrapfly Detector browser extension):' : 'No anti-bot or CAPTCHA protection was detected on the page.',
+    ...found,
+    `Settings: ${settings.join(', ')}.`,
+    '',
+    `Starter code (${lang.label}):`,
+    '```' + fence,
+    code,
+    '```',
+    '',
+    'To run it:',
+    ...steps,
+    '',
+    'Scrapfly docs for AI assistants: ' + ScrapflyExport.AI_DOCS_URL,
+    'Unblocker docs: ' + ScrapflyExport.UNBLOCKER_DOCS_URL,
+    'Never put the API key in the code: keep reading it from SCRAPFLY_API_KEY.'
+  ].join('\n');
 };
 
 // Syntax colours: comments, strings, keywords and literals. The output is the
@@ -403,6 +464,7 @@ ScrapflyExport.open = function({ url, detections = [] } = {}) {
   }).join('');
   const copyLabel = tr('advCommonCopy', 'Copy');
   const copyIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>';
+  const aiIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>';
   const step = (n, label, cls) => `
       <div class="scrapfly-export-step ${cls}">
         <span class="scrapfly-export-step-n">${n}</span>
@@ -425,7 +487,10 @@ ScrapflyExport.open = function({ url, detections = [] } = {}) {
       <div class="scrapfly-export-panel" role="tabpanel" id="scrapflyExportPanel" aria-labelledby="scrapflyExportTab-${selected}">
         <div class="scrapfly-export-code-head">
           <span class="scrapfly-export-file"></span>
-          <button type="button" class="scrapfly-export-copy" data-copy="">${copyIcon}<span>${esc(copyLabel)}</span></button>
+          <span class="scrapfly-export-copy-group">
+            <button type="button" class="scrapfly-export-copy-ai" data-copy="" data-copy-message="${attr(tr('scrapflyExportAiCopied', 'Copied: paste it into your AI assistant'))}" title="${attr(tr('scrapflyExportCopyAiTitle', 'Copies the page, what protects it, your settings and the code as one message for ChatGPT, Claude or any AI assistant'))}">${aiIcon}<span>${esc(tr('scrapflyExportCopyAi', 'Copy for AI'))}</span></button>
+            <button type="button" class="scrapfly-export-copy" data-copy="">${copyIcon}<span>${esc(copyLabel)}</span></button>
+          </span>
         </div>
         <pre class="scrapfly-export-pre" tabindex="0"><code></code></pre>
       </div>
@@ -463,6 +528,8 @@ ScrapflyExport.open = function({ url, detections = [] } = {}) {
     const code = ScrapflyExport.snippet(language.id, target, protections.map(p => p.name), state.options);
     overlay.querySelector('.scrapfly-export-pre code').innerHTML = ScrapflyExport.highlight(code, language.id);
     overlay.querySelector('.scrapfly-export-copy').setAttribute('data-copy', code);
+    overlay.querySelector('.scrapfly-export-copy-ai').setAttribute('data-copy',
+      ScrapflyExport.aiPrompt({ language: language.id, url: target, protections, options: state.options }));
     overlay.querySelector('.scrapfly-export-file').textContent = language.file;
     overlay.querySelector('.scrapfly-export-panel').setAttribute('aria-labelledby', `scrapflyExportTab-${language.id}`);
     const setCmd = (selector, command) => {
@@ -511,28 +578,35 @@ ScrapflyExport.optionsHtml = function(options, tr) {
           ${choices.map(([value, text]) => `<button type="button" role="radio" class="scrapfly-export-seg-btn" data-value="${attr(value)}" aria-checked="${o[name] === value}" tabindex="${o[name] === value ? 0 : -1}">${esc(text)}</button>`).join('')}
         </div>
       </div>`;
-  const countries = ScrapflyExport.COUNTRIES
-    .map(code => [code, code ? scrapflyCountryName(code) : tr('scrapflyExportCountryAny', 'Any')])
-    .map(([code, name]) => `<option value="${attr(code)}"${o.country === code ? ' selected' : ''}>${esc(name)}</option>`).join('');
+  const toggle = (name, label, hint) => `
+      <div class="scrapfly-export-option">
+        <label class="scrapfly-export-option-label" for="scrapflyExportOpt-${name}">${esc(label)}</label>
+        <span class="scrapfly-export-toggle-wrap">
+          ${hint ? `<span class="scrapfly-export-cost">${esc(hint)}</span>` : ''}
+          <input type="checkbox" role="switch" class="scrapfly-export-switch" id="scrapflyExportOpt-${name}" data-option="${name}"${o[name] ? ' checked' : ''}>
+        </span>
+      </div>`;
+  const countryLabel = (code) => (code ? scrapflyCountryName(code) : tr('scrapflyExportCountryAny', 'Any'));
+  const countries = ScrapflyExport.COUNTRIES.map(code => (
+    `<li role="option" class="scrapfly-export-dd-item" id="scrapflyExportCountry-${code || 'any'}" data-value="${attr(code)}" aria-selected="${o.country === code}">${esc(countryLabel(code))}</li>`
+  )).join('');
   return `
     <section class="scrapfly-export-options" aria-label="${attr(tr('scrapflyExportOptions', 'Options'))}">
-      <div class="scrapfly-export-options-head">
-        <span class="scrapfly-export-detected-label">${esc(tr('scrapflyExportOptions', 'Options'))}</span>
-        <span class="scrapfly-export-unblocker"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>${esc(tr('scrapflyExportUnblockerOn', 'Unblocker on'))}</span>
-      </div>
+      <span class="scrapfly-export-detected-label">${esc(tr('scrapflyExportOptions', 'Options'))}</span>
+      ${toggle('unblocker', tr('scrapflyExportUnblocker', 'Unblocker'), tr('scrapflyExportUnblockerHint', 'Anti-bot bypass'))}
       ${segmented('format', tr('scrapflyExportFormat', 'Output'), [['raw', 'HTML'], ['markdown', 'Markdown'], ['text', tr('scrapflyExportFormatText', 'Text')]])}
       ${segmented('proxyPool', tr('scrapflyExportProxy', 'Proxies'), [['public_datacenter_pool', tr('scrapflyExportProxyDatacenter', 'Datacenter')], ['public_residential_pool', tr('scrapflyExportProxyResidential', 'Residential')]])}
       <div class="scrapfly-export-option">
-        <label class="scrapfly-export-option-label" for="scrapflyExportCountry">${esc(tr('scrapflyExportCountry', 'Country'))}</label>
-        <select class="scrapfly-export-select" id="scrapflyExportCountry" data-option="country">${countries}</select>
+        <span class="scrapfly-export-option-label" id="scrapflyExportCountryLabel">${esc(tr('scrapflyExportCountry', 'Country'))}</span>
+        <div class="scrapfly-export-dd" data-option="country" data-value="${attr(o.country)}">
+          <button type="button" class="scrapfly-export-dd-btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="scrapflyExportCountryLabel scrapflyExportCountryValue">
+            <span id="scrapflyExportCountryValue">${esc(countryLabel(o.country))}</span>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <ul class="scrapfly-export-dd-list" role="listbox" tabindex="-1" aria-labelledby="scrapflyExportCountryLabel" hidden>${countries}</ul>
+        </div>
       </div>
-      <div class="scrapfly-export-option">
-        <label class="scrapfly-export-option-label" for="scrapflyExportRenderJs">${esc(tr('scrapflyExportRenderJs', 'Render JavaScript'))}</label>
-        <span class="scrapfly-export-toggle-wrap">
-          <span class="scrapfly-export-cost">${esc(tr('scrapflyExportRenderJsCost', '+5 credits'))}</span>
-          <input type="checkbox" role="switch" class="scrapfly-export-switch" id="scrapflyExportRenderJs" data-option="renderJs"${o.renderJs ? ' checked' : ''}>
-        </span>
-      </div>
+      ${toggle('renderJs', tr('scrapflyExportRenderJs', 'Render JavaScript'), tr('scrapflyExportRenderJsCost', '+5 credits'))}
     </section>`;
 };
 
@@ -544,7 +618,8 @@ ScrapflyExport.bindOptions = function(root, onChange) {
       const on = group.querySelector('[aria-checked="true"]');
       value[group.dataset.option] = on ? on.dataset.value : '';
     });
-    value.country = root.querySelector('[data-option="country"]').value;
+    value.country = root.querySelector('[data-option="country"]').dataset.value;
+    value.unblocker = root.querySelector('[data-option="unblocker"]').checked;
     value.renderJs = root.querySelector('[data-option="renderJs"]').checked;
     return ScrapflyExport.normalizeOptions(value);
   };
@@ -570,8 +645,93 @@ ScrapflyExport.bindOptions = function(root, onChange) {
       });
     });
   });
-  root.querySelector('[data-option="country"]').addEventListener('change', () => onChange(read()));
-  root.querySelector('[data-option="renderJs"]').addEventListener('change', () => onChange(read()));
+  ScrapflyExport.bindDropdown(root.querySelector('.scrapfly-export-dd'), () => onChange(read()));
+  for (const name of ['unblocker', 'renderJs']) {
+    root.querySelector(`[data-option="${name}"]`).addEventListener('change', () => onChange(read()));
+  }
+};
+
+/**
+ * The country list: a button that opens a styled listbox (a native <select>
+ * opens the system list, white and with a wide scrollbar). Arrow keys, Home,
+ * End, Enter and Escape work as in a select; Escape closes only the list.
+ */
+ScrapflyExport.bindDropdown = function(dd, onChange) {
+  const button = dd.querySelector('.scrapfly-export-dd-btn');
+  const list = dd.querySelector('.scrapfly-export-dd-list');
+  const items = Array.from(list.querySelectorAll('[role="option"]'));
+  let active = -1;
+  const setActive = (index) => {
+    active = Math.max(0, Math.min(items.length - 1, index));
+    items.forEach((item, i) => item.classList.toggle('is-active', i === active));
+    list.setAttribute('aria-activedescendant', items[active].id);
+    items[active].scrollIntoView({ block: 'nearest' });
+  };
+  const onOutside = (event) => { if (!dd.contains(event.target)) close(false); };
+  const onKey = (event) => {
+    if (event.key === 'Escape' || event.key === 'Tab') {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      close(event.key === 'Escape');
+    }
+  };
+  const open = () => {
+    list.hidden = false;
+    button.setAttribute('aria-expanded', 'true');
+    // Fixed position so the dialog's scroll area never cuts the list off
+    const rect = button.getBoundingClientRect();
+    const height = list.offsetHeight;
+    const below = window.innerHeight - rect.bottom - 8;
+    list.style.minWidth = `${rect.width}px`;
+    list.style.top = `${below >= height || below >= rect.top ? rect.bottom + 4 : rect.top - 4 - height}px`;
+    list.style.left = `${Math.max(8, Math.min(rect.right - list.offsetWidth, window.innerWidth - list.offsetWidth - 8))}px`;
+    setActive(Math.max(0, items.findIndex(i => i.getAttribute('aria-selected') === 'true')));
+    list.focus();
+    // Window capture runs before the dialog's own Escape handler on document
+    window.addEventListener('keydown', onKey, true);
+    document.addEventListener('pointerdown', onOutside, true);
+    dd.closest('.adv-kit-body')?.addEventListener('scroll', closeOnScroll, { once: true });
+  };
+  const closeOnScroll = () => close(false);
+  const close = (focusButton) => {
+    if (list.hidden) return;
+    list.hidden = true;
+    button.setAttribute('aria-expanded', 'false');
+    window.removeEventListener('keydown', onKey, true);
+    document.removeEventListener('pointerdown', onOutside, true);
+    dd.closest('.adv-kit-body')?.removeEventListener('scroll', closeOnScroll);
+    if (focusButton) button.focus();
+  };
+  const choose = (item) => {
+    for (const other of items) other.setAttribute('aria-selected', String(other === item));
+    dd.dataset.value = item.dataset.value;
+    button.querySelector('span').textContent = item.textContent;
+    close(true);
+    onChange();
+  };
+  button.addEventListener('click', () => (list.hidden ? open() : close(true)));
+  button.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      open();
+    }
+  });
+  items.forEach((item, index) => {
+    item.addEventListener('click', () => choose(item));
+    item.addEventListener('mousemove', () => { if (active !== index) setActive(index); });
+  });
+  list.addEventListener('keydown', (event) => {
+    const moves = { ArrowDown: active + 1, ArrowUp: active - 1, Home: 0, End: items.length - 1, PageDown: active + 6, PageUp: active - 6 };
+    if (event.key in moves) {
+      event.preventDefault();
+      setActive(moves[event.key]);
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      choose(items[active]);
+    }
+  });
 };
 
 /** Each detected protection with its logo, like the History cards (max 6 + "+N") */

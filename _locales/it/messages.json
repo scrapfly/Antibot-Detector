@@ -4204,8 +4204,20 @@
   "scrapflyExportOptions": {
     "message": "Opzioni"
   },
-  "scrapflyExportUnblockerOn": {
-    "message": "Unblocker attivo"
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "Aggira gli anti-bot"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "Copia per l’IA"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "Copia la pagina, le sue protezioni, le tue opzioni e il codice in un unico messaggio per ChatGPT, Claude o qualsiasi assistente IA"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "Copiato: incollalo nel tuo assistente IA"
   },
   "scrapflyExportFormat": {
     "message": "Output"
