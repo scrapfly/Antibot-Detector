@@ -1,7 +1,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert');
 const vm = require('node:vm');
-const TurnstileSiteKeys = require('../sections/advanced/turnstile-sitekeys.js');
+const TurnstileSiteKeys = require('../sections/advanced/modules/cloudflare/turnstile-sitekeys.js');
 
 // Advanced → Turnstile / Cloudflare "Extract Site Key": the probe runs in each
 // frame of the page; here it runs against a fake document.
