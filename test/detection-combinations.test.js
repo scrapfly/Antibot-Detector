@@ -152,3 +152,50 @@ test("matches that made a combination fire show the combination's confidence", (
   assert.strictEqual(broken.matches[0].confidence, 50);
   assert.strictEqual(broken.matches[0].baseConfidence, undefined);
 });
+
+// The popup shows each fired combination as a checklist, so a satisfied
+// combination lists in `found` what it refers to that was seen.
+test('a fired combination lists what was found, including rows of failed OR branches', () => {
+  const d = detector({ combinations: [{ id: 'c1', name: 'n', when: { all: [
+    { pattern: 'url-1' },
+    { any: [{ pattern: 'cookie-1' }, { pattern: 'cookie-2' }] },
+    { not: { pattern: 'header-1' } }
+  ] } }] });
+  const [combo] = C.score(d, [m('url', 'url-1', 40), m('cookie', 'cookie-2', 20)]).combinations;
+  assert.deepStrictEqual(combo.found, ['url-1', 'cookie-2'], 'cookie-1 was not seen, the NOT row is absent');
+  assert.strictEqual(combo.made, undefined, 'engine bookkeeping stays internal');
+});
+
+test('found covers NOT rows that were seen, method rows, and hooks without a patternId', () => {
+  const d = detector({ combinations: [
+    { id: 'c1', when: { any: [{ all: [{ pattern: 'url-1' }, { pattern: 'js_hooks-1' }] }, { all: [{ pattern: 'cookie-1' }, { not: { pattern: 'header-1' } }] }] } },
+    { id: 'c2', when: { all: [{ method: 'cookie' }, { pattern: 'url-1' }] } }
+  ] });
+  const hook = { type: 'js_hooks', pattern: 'navigator.webdriver', confidence: 50 };
+  const result = C.score(d, [m('url', 'url-1', 40), hook, m('cookie', 'cookie-1', 30), m('header', 'header-1', 10)]);
+  const byId = Object.fromEntries(result.combinations.map(c => [c.id, c.found]));
+  assert.deepStrictEqual(byId.c1, ['url-1', 'js_hooks-1', 'cookie-1', 'header-1'], 'the seen NOT row is listed too');
+  assert.deepStrictEqual(byId.c2, ['url-1', 'method:cookie']);
+});
+
+test('found survives rescore and matches what foundFromMatches derives from the matches', () => {
+  const d = detector({ combinations: [{ id: 'c1', name: 'n', when: { all: [{ pattern: 'url-1' }, { any: [{ pattern: 'cookie-1' }, { pattern: 'js_hooks-1' }] }] } }] });
+  const hook = { type: 'js_hooks', pattern: 'navigator.webdriver', confidence: 50 };
+  const detection = { detected: false, confidence: 0, matches: [m('url', 'url-1', 40), hook] };
+  C.rescore(d, detection);
+  C.rescore(d, detection);
+  assert.deepStrictEqual(detection.combinations[0].found, ['url-1', 'js_hooks-1']);
+  assert.deepStrictEqual(C.foundFromMatches(d, d.combinations[0], detection.matches), ['url-1', 'js_hooks-1']);
+  assert.deepStrictEqual(C.foundFromMatches(d, d.combinations[0], []), []);
+  assert.deepStrictEqual(C.foundFromMatches(d, null, detection.matches), []);
+});
+
+test('evaluate answers a condition tree from found lists, sets or arrays', () => {
+  const when = { all: [{ pattern: 'a' }, { any: [{ pattern: 'b' }, { method: 'cookie' }] }, { not: { pattern: 'z' } }] };
+  assert.strictEqual(C.evaluate(when, C.seenFromFound(['a', 'method:cookie'])), true);
+  assert.strictEqual(C.evaluate(when, C.seenFromFound(['a', 'method:cookie', 'z'])), false, 'a NOT row that was seen breaks it');
+  assert.strictEqual(C.evaluate(when, { patterns: ['a', 'b'] }), true);
+  assert.strictEqual(C.evaluate(when, null), false);
+  assert.strictEqual(C.evaluate({ atLeast: 2, of: [{ pattern: 'a' }, { pattern: 'b' }, { pattern: 'c' }] }, { patterns: new Set(['a', 'c']) }), true);
+  assert.deepStrictEqual(C.seenFromFound(['x', 'method:url', 3, null]), { patterns: new Set(['x']), methods: new Set(['url']) });
+});

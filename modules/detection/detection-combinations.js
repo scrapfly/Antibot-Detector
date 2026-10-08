@@ -19,6 +19,8 @@
  * A satisfied combination scores its own `confidence` when the rule sets one
  * (1-100); without it, the highest confidence of the patterns that made it
  * true (each pattern's own confidence from its settings). NOT rows add nothing.
+ * It also lists in `found` which of the patterns it refers to were seen (and
+ * `method:<name>` for method rows), so the popup can show it as a checklist.
  *
  * A detector with neither combinations nor such patterns is untouched: every
  * match counts on its own and the confidence is the highest one, as before.
@@ -163,6 +165,36 @@
     return hasPositive(node);
   }
 
+  /** Pattern ids and methods seen in a list of matches. */
+  function seenIn(detector, matches) {
+    const seen = { patterns: new Set(), methods: new Set() };
+    for (const match of (Array.isArray(matches) ? matches : [])) {
+      const method = methodOf(match && match.type);
+      if (method) seen.methods.add(method);
+      matchPatternIds(detector, match).forEach(id => seen.patterns.add(id));
+    }
+    return seen;
+  }
+
+  /**
+   * What a combination refers to that was seen: its pattern ids, then
+   * `method:<name>` for method rows, in the order the rule lists them. NOT
+   * rows and branches that did not hold are included, so the checklist can
+   * show every row.
+   */
+  function foundIn(when, seen) {
+    const refs = references(when);
+    return [
+      ...[...refs.patterns].filter(id => seen.patterns.has(id)),
+      ...[...refs.methods].filter(m => seen.methods.has(m)).map(m => `method:${m}`)
+    ];
+  }
+
+  /** `found` for a detection cached before combinations recorded it. */
+  function foundFromMatches(detector, combination, matches) {
+    return foundIn(combination && combination.when, seenIn(detector, matches));
+  }
+
   /** Is this combination true for the matches seen? A pure NOT never is. */
   function isSatisfied(combination, seen) {
     if (!combination || !hasPositive(combination.when)) return false;
@@ -208,7 +240,7 @@
 
   /**
    * Score a detector against its matches.
-   * @returns {{detected:boolean, confidence:number, combinations:Array<{id,name,confidence}>}}
+   * @returns {{detected:boolean, confidence:number, combinations:Array<{id,name,confidence,when,found}>}}
    */
   /** A match's own confidence, before any combination raised it. */
   function baseConfidence(match) {
@@ -251,7 +283,7 @@
         const raw = Number.isFinite(own) && own > 0 ? own : combinationConfidence(combination.when, seen, best);
         const c = Math.max(0, Math.min(100, Math.round(raw)));
         satisfied.push({ id: combination.id, name: combination.name || '', confidence: c, when: combination.when,
-          made: contributors(combination.when, seen) });
+          found: foundIn(combination.when, seen), made: contributors(combination.when, seen) });
         confidence = Math.max(confidence, c);
       }
     }
@@ -354,10 +386,28 @@
     return walk(node, true);
   }
 
+  /** Is a condition node true for the patterns and methods seen? */
+  function evaluate(node, seen) {
+    const s = seen || {};
+    const asSet = (v) => (v instanceof Set ? v : new Set(Array.isArray(v) ? v : []));
+    return evalNode(node, { patterns: asSet(s.patterns), methods: asSet(s.methods) });
+  }
+
+  /** `seen` sets from a `found` list: pattern ids and `method:<name>` entries. */
+  function seenFromFound(found) {
+    const seen = { patterns: new Set(), methods: new Set() };
+    for (const item of (Array.isArray(found) ? found : [])) {
+      if (typeof item !== 'string') continue;
+      if (item.startsWith('method:')) seen.methods.add(item.slice(7));
+      else seen.patterns.add(item);
+    }
+    return seen;
+  }
+
   const api = Object.freeze({
     METHODS, methodOf, defaultId, patternIds, idOf, listPatterns, applies,
     hasCombinations, matchPatternIds, hasPositive, everyBranchPositive, isSatisfied, score, rescore,
-    references, dropPattern, describe
+    references, dropPattern, describe, evaluate, seenFromFound, foundFromMatches
   });
 
   root.DetectionCombinations = api;
