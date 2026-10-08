@@ -6,7 +6,11 @@
  *    regex / whole word / case / scripts-only / payload filters with real
  *    clicks, save, and check the stored rule and the reopened window.
  * 2. Nothing lost on save: open every shipped detector in the editor, save
- *    without changes, and diff every rule field and combination.
+ *    without changes, and diff every rule field and combination (key order
+ *    inside a combination does not count).
+ * 3. Combination groups: add a "one of" group to a reCAPTCHA combination,
+ *    change its mode, save and check the stored tree; delete it, save, and
+ *    check the combination is back as shipped.
  *
  * Not part of `npm run verify`: it needs Playwright and its Chromium.
  *   npm i --no-save playwright && npx playwright install chromium
@@ -25,6 +29,9 @@ const os = require('os');
 
 const REPO = path.resolve(process.argv[2] || path.join(__dirname, '..'));
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+// JSON with sorted object keys: the editor writes id, name, confidence, when
+const canon = (value) => JSON.stringify(value, (key, v) => (v && typeof v === 'object' && !Array.isArray(v)
+  ? Object.fromEntries(Object.keys(v).sort().map(k => [k, v[k]])) : v));
 let failures = 0;
 const report = (ok, line) => { if (!ok) failures++; console.log(`${ok ? 'PASS' : 'FAIL'}  ${line}`); };
 
@@ -166,9 +173,45 @@ const CASES = [
           }
         }
       }
-      if (JSON.stringify(before.combinations || []) !== JSON.stringify(after.combinations || [])) diffs.push('combinations changed');
+      if (canon(before.combinations || []) !== canon(after.combinations || [])) diffs.push('combinations changed');
       report(diffs.length === 0, `${id}` + (diffs.length ? `\n      ${diffs.slice(0, 6).join('\n      ')}${diffs.length > 6 ? `\n      … ${diffs.length - 6} more` : ''}` : ''));
     }
+  }
+
+  // ---------------------------------------------- 3. combination groups
+  console.log('\nCombination groups');
+  {
+    const id = 'detect-recaptcha';
+    const card = '#combinationsContainer .combo-card[data-combo="0"]';
+    const shipped = (await stored('captcha', id)).combinations[0];
+    await openEditor(id, 'reCAPTCHA');
+    await click(`${card} .combo-toggle`);
+    await click(`${card} [data-combo-action="add-group"]`);
+    await sleep(300);
+    const focused = await p.evaluate(() => document.activeElement?.classList.contains('combo-picker-search'));
+    report(focused, 'adding a group opens its picker with the search focused');
+    for (const pick of ['standard-render-api', 'standard-execute-api']) await click(`${card} .combo-picker [data-value="pattern:${pick}"]`);
+    await click(`${card} .combo-picker-add`);
+    await sleep(300);
+    const groupPath = String(shipped.when.all.length);
+    await p.selectOption(`${card} .combo-group[data-path="${groupPath}"] select[data-combo-action="mode"]`, 'all');
+    await sleep(300);
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const withGroup = (await stored('captcha', id)).combinations.find(c => c.id === shipped.id);
+    const expected = { all: [...shipped.when.all, { all: [{ pattern: 'standard-render-api' }, { pattern: 'standard-execute-api' }] }] };
+    report(canon(withGroup?.when) === canon(expected), `group saved as ${JSON.stringify(withGroup?.when)}`);
+
+    await openEditor(id, 'reCAPTCHA');
+    await click(`${card} .combo-toggle`);
+    await click(`${card} .combo-group[data-path="${groupPath}"] [data-combo-action="delete-group"]`);
+    await sleep(300);
+    const focusedAfterDelete = await p.evaluate(() => document.activeElement?.dataset?.comboAction === 'add-group');
+    report(focusedAfterDelete, 'deleting a group moves focus to "Add group"');
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const back = (await stored('captcha', id)).combinations.find(c => c.id === shipped.id);
+    report(canon(back?.when) === canon(shipped.when), 'after deleting the group the combination is back as shipped');
   }
 
   console.log(`\nRESULT ${failures ? failures + ' FAILED' : 'ALL PASS'}`);
