@@ -9,7 +9,7 @@
          .rule-modal-header          pinned: title + .btn-close
          .rh-toolbar                 pinned: search field with icon
          .rule-modal-body.rh-body    the only scrolling area
-           .rh-section > .rh-section-head + .rh-list > .rh-row ...
+           .rh-section > .rh-section-head (+ .rh-pager) + .rh-list > .rh-row ...
          .rh-dock                    pinned: condition picker / preview
          .rule-modal-footer          pinned: secondary + primary button
 
@@ -135,29 +135,89 @@
   padding: 9px 11px 9px 12px;
 }
 
-/* ---------- Pagination: the shared .pagination bar (common.css, 2.8 look
-   from detection.css), pinned between the list and the dock/footer ---------- */
-.rh-modal .rh-pagination {
-  width: auto;
-  margin: 0 10px 8px;
-  padding: 5px 6px 5px 8px;
+/* ---------- Pager: "‹ 1/13 ›" in the list's head, beside the count, so the
+   condition / preview dock sits right under the rows ---------- */
+.rh-section-head:has(.rh-pager) {
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 24px;
 }
 
-/* The modal is narrower than the Detection tab: slightly smaller square
-   controls and a page total as wide as its digits, so "Showing 13-16 of 67"
-   is never cut off */
-.rh-modal .rh-pagination .pagination-controls {
-  gap: 4px;
+.rh-section-head:has(.rh-pager) .rh-section-count {
+  margin-inline-start: auto;
 }
 
-.rh-modal .rh-pagination .pagination-btn,
-.rh-modal .rh-pagination .page-input {
-  width: 30px;
-  height: 30px;
+.rh-pager {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
 }
 
-.rh-modal .rh-pagination .page-info .total-pages {
-  min-width: 20px;
+.rh-pager-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: var(--rh-field-bg);
+  border: 1px solid var(--rh-border);
+  border-radius: 6px;
+  color: var(--rh-text-dim);
+  cursor: pointer;
+  transition: border-color 0.12s ease, color 0.12s ease;
+}
+
+.rh-pager-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.rh-pager-btn:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 1px;
+}
+
+.rh-pager-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.rh-pager-pages {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--rh-text-muted);
+}
+
+.rh-pager .page-input {
+  width: 24px;
+  height: 22px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: var(--accent-light);
+  font: inherit;
+  text-align: center;
+  outline: none;
+}
+
+.rh-pager .page-input:hover:not(:focus) {
+  border-color: var(--rh-border);
+}
+
+.rh-pager .page-input:focus {
+  border-color: var(--accent);
+}
+
+/* The global .total-pages box (40px) is for the big pagination bar */
+.rh-pager .total-pages {
+  display: inline;
+  min-width: 0;
 }
 
 /* ---------- Search toolbar ---------- */

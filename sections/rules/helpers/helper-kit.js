@@ -3,9 +3,10 @@
  * (window property, DOM selector, Test pattern and the method help).
  *
  * Every helper is one compact screen: a pinned search bar, a list of compact
- * rows (mono value + short description + outlined chip), paginated with the
- * extension's pagination bar when it does not fit, an optional pinned "dock"
- * (condition picker / preview) and a pinned footer.
+ * rows (mono value + short description + outlined chip), paged with a small
+ * "‹ 1/13 ›" pager in the list's head when it does not fit, an optional
+ * pinned "dock" (condition picker / preview) right under the list and a
+ * pinned footer.
  * The markup lives in sections/rules/rules.html (class `rh-modal`), the look
  * in modules/styles/rule-helpers.css, and this file owns the behaviour that
  * all of them share: ranking, row rendering, keyboard navigation, the empty /
@@ -104,10 +105,11 @@
    * Enter on the already-selected row applies it), click selects and
    * double-click applies. Rows with `static: true` are display-only.
    *
-   * Pagination: when the modal holds a `#<listId>Pagination` bar (the shared
-   * .pagination markup), the list is paged with PaginationManager. A page
-   * holds as many rows as fit the list area without scrolling, recomputed
-   * when the area resizes; the bar is hidden when everything fits. Custom
+   * Pagination: when the modal holds a `#<listId>Pagination` pager (prev /
+   * page input / total / next, read by PaginationManager), the list is paged.
+   * A page holds as many rows as fit the list area without scrolling,
+   * recomputed when the area resizes; the pager is hidden when everything
+   * fits. A pager in the list's head takes no room from the rows. Custom
    * (typed-value) rows are pinned below the page rows on every page. ↑/↓
    * roll over to the previous/next page at the edges, PageUp/PageDown switch
    * pages, and a new render (e.g. typing in the search) starts on page 1 —
@@ -194,6 +196,8 @@
 
     barHeight() {
       const bar = this.paginationEl;
+      // In the list's head (beside the count): it never takes room from the rows
+      if (bar.closest('.rh-section-head')) return 0;
       const previous = bar.style.display;
       bar.style.display = 'flex';
       const style = getComputedStyle(bar);

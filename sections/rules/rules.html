@@ -702,25 +702,13 @@
           <div class="rh-section-head" id="domSuggestionsHead">
             <span class="rh-section-title"></span>
             <span class="rh-section-count"></span>
+            <div id="domSuggestionsPagination" class="rh-pager" style="display: none;">
+              <button type="button" class="rh-pager-btn pagination-btn-prev" disabled title="Previous" aria-label="Previous" data-i18n-title="paginationPrev" data-i18n-aria-label="paginationPrev"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/></svg></button>
+              <span class="rh-pager-pages"><input type="text" class="page-input" value="1" inputmode="numeric" aria-label="Page" data-i18n-aria-label="paginationPage"><span aria-hidden="true">/</span><span class="total-pages">1</span></span>
+              <button type="button" class="rh-pager-btn pagination-btn-next" disabled title="Next" aria-label="Next" data-i18n-title="paginationNext" data-i18n-aria-label="paginationNext"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/></svg></button>
+            </div>
           </div>
           <div id="domSuggestions" class="rh-list"></div>
-        </div>
-      </div>
-      <div id="domSuggestionsPagination" class="pagination rh-pagination" style="display: none;">
-        <div class="pagination-info"></div>
-        <div class="pagination-controls">
-          <button type="button" class="pagination-btn pagination-btn-prev" disabled title="Previous" aria-label="Previous" data-i18n-title="paginationPrev" data-i18n-aria-label="paginationPrev">
-            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/></svg>
-          </button>
-          <div class="page-info">
-            <span data-i18n="paginationPage">Page</span>
-            <input type="text" class="page-input" value="1" inputmode="numeric" aria-label="Page" data-i18n-aria-label="paginationPage">
-            <span data-i18n="paginationOf">of</span>
-            <span class="total-pages">1</span>
-          </div>
-          <button type="button" class="pagination-btn pagination-btn-next" disabled title="Next" aria-label="Next" data-i18n-title="paginationNext" data-i18n-aria-label="paginationNext">
-            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/></svg>
-          </button>
         </div>
       </div>
       <div id="domPreviewSection" class="rh-dock" hidden>
@@ -755,28 +743,16 @@
           <div class="rh-section-head" id="windowSuggestionsHead">
             <span class="rh-section-title"></span>
             <span class="rh-section-count"></span>
+            <div id="windowSuggestionsPagination" class="rh-pager" style="display: none;">
+              <button type="button" class="rh-pager-btn pagination-btn-prev" disabled title="Previous" aria-label="Previous" data-i18n-title="paginationPrev" data-i18n-aria-label="paginationPrev"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/></svg></button>
+              <span class="rh-pager-pages"><input type="text" class="page-input" value="1" inputmode="numeric" aria-label="Page" data-i18n-aria-label="paginationPage"><span aria-hidden="true">/</span><span class="total-pages">1</span></span>
+              <button type="button" class="rh-pager-btn pagination-btn-next" disabled title="Next" aria-label="Next" data-i18n-title="paginationNext" data-i18n-aria-label="paginationNext"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/></svg></button>
+            </div>
           </div>
           <div id="windowSuggestions" class="rh-list"></div>
         </div>
         <!-- Selected property (kept id: read by useWindowProperty / preview) -->
         <input type="hidden" id="windowCustomInput" value="">
-      </div>
-      <div id="windowSuggestionsPagination" class="pagination rh-pagination" style="display: none;">
-        <div class="pagination-info"></div>
-        <div class="pagination-controls">
-          <button type="button" class="pagination-btn pagination-btn-prev" disabled title="Previous" aria-label="Previous" data-i18n-title="paginationPrev" data-i18n-aria-label="paginationPrev">
-            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/></svg>
-          </button>
-          <div class="page-info">
-            <span data-i18n="paginationPage">Page</span>
-            <input type="text" class="page-input" value="1" inputmode="numeric" aria-label="Page" data-i18n-aria-label="paginationPage">
-            <span data-i18n="paginationOf">of</span>
-            <span class="total-pages">1</span>
-          </div>
-          <button type="button" class="pagination-btn pagination-btn-next" disabled title="Next" aria-label="Next" data-i18n-title="paginationNext" data-i18n-aria-label="paginationNext">
-            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/></svg>
-          </button>
-        </div>
       </div>
       <div id="windowConditionSection" class="rh-dock" hidden>
         <div class="rh-field">
