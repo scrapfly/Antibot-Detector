@@ -2425,6 +2425,9 @@
   "domCardHint": {
     "message": "कोई टैग, .class, #id या [attribute] जाँच, अकेले या मिलाकर। हिस्सों के बीच स्पेस या > समर्थित नहीं हैं।"
   },
+  "windowCardTitle": {
+    "message": "विंडो गुण"
+  },
   "settingsApiEventsDesc": {
     "message": "एक्सटेंशन पेज पर भेजे जाने वाले इवेंट"
   },

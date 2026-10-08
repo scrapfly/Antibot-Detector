@@ -2425,6 +2425,9 @@
   "domCardHint": {
     "message": "Uma tag, .classe, #id ou um teste de [atributo], sozinho ou combinado. Espaços ou > entre as partes não são suportados."
   },
+  "windowCardTitle": {
+    "message": "Propriedade da janela"
+  },
   "settingsApiEventsDesc": {
     "message": "Eventos que a extensão dispara na página"
   },

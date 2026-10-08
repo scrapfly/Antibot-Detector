@@ -2425,6 +2425,9 @@
   "domCardHint": {
     "message": "タグ、.class、#id、[attribute] の条件を単独または組み合わせて使います。パーツ間の空白や > はサポートされません。"
   },
+  "windowCardTitle": {
+    "message": "ウィンドウのプロパティ"
+  },
   "settingsApiEventsDesc": {
     "message": "拡張機能がページに送信するイベント"
   },

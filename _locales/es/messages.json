@@ -2425,6 +2425,9 @@
   "domCardHint": {
     "message": "Una etiqueta, .clase, #id o una prueba de [atributo], sola o combinada. No se admiten espacios ni > entre partes."
   },
+  "windowCardTitle": {
+    "message": "Propiedad de la ventana"
+  },
   "settingsApiEventsDesc": {
     "message": "Eventos que la extensión emite en la página"
   },

@@ -2425,6 +2425,9 @@
   "domCardHint": {
     "message": "标签、.class、#id 或 [attribute] 条件，单独或组合使用。不支持各部分之间的空格或 >。"
   },
+  "windowCardTitle": {
+    "message": "窗口属性"
+  },
   "settingsApiEventsDesc": {
     "message": "扩展在页面上派发的事件"
   },

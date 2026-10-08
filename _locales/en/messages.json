@@ -2429,6 +2429,9 @@
   "domCardHint": {
     "message": "A tag, .class, #id or [attribute] test, alone or combined. Spaces or > between parts are not supported."
   },
+  "windowCardTitle": {
+    "message": "Window property"
+  },
   "settingsApiEventsDesc": {
     "message": "Events the extension dispatches on the page"
   },

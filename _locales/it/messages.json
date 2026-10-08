@@ -2425,6 +2425,9 @@
   "domCardHint": {
     "message": "Un tag, .classe, #id o un test su [attributo], da solo o combinato. Spazi o > tra le parti non sono supportati."
   },
+  "windowCardTitle": {
+    "message": "Proprietà della finestra"
+  },
   "settingsApiEventsDesc": {
     "message": "Eventi che l'estensione invia alla pagina"
   },

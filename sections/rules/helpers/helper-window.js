@@ -6,6 +6,8 @@
  * automation markers, filtered as you type, with the typed value usable as a
  * custom property) -> inline condition picker using the canonical presets of
  * window-condition-language.js with a live preview -> "Add property".
+ * Opened from the Window property card of a WINDOW rule's settings ("Browse"):
+ * the property and condition go back to that dialog, saved by its Apply.
  *
  * Dependencies: rules.js, helpers/helper-kit.js, rules-condition-ui.js
  */
@@ -190,6 +192,12 @@ Rules.prototype.setupWindowHelperModal = function() {
   });
 
   RuleHelperKit.onEscape('#windowHelperModal', () => this.closeWindowHelperModal());
+
+  // "Browse" in the Window property card of the WINDOW settings
+  document.querySelector('[data-window-browse]')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (this.currentMethodItem) this.openWindowHelperModal(this.currentMethodItem, 0, { fromSettings: true });
+  });
 };
 
 /**
@@ -331,14 +339,20 @@ Rules.prototype.updateWindowRulePreview = function() {
   if (useBtn) useBtn.disabled = !valid;
 };
 
-Rules.prototype.openWindowHelperModal = function(methodItem, inputIndex) {
+Rules.prototype.openWindowHelperModal = function(methodItem, inputIndex, options = {}) {
   const modal = document.querySelector('#windowHelperModal');
   if (!modal) return;
 
   this.currentWindowMethodItem = methodItem;
+  this._windowHelperFromSettings = !!options.fromSettings;
 
-  const currentProperty = (methodItem?.querySelector('.method-input.method-name')?.value || '').trim();
-  const currentCondition = (methodItem?.querySelector('.method-input.method-value')?.value || '').trim();
+  // From the settings: what that dialog shows (a pick not applied yet included)
+  const currentProperty = (this._windowHelperFromSettings
+    ? this.getSettingsPatternText('name')
+    : (methodItem?.querySelector('.method-input.method-name')?.value || '')).trim();
+  const currentCondition = (this._windowHelperFromSettings
+    ? this.getSettingsPatternText('value')
+    : (methodItem?.querySelector('.method-input.method-value')?.value || '')).trim();
 
   const state = this._windowHelperState || (this._windowHelperState = { property: '', catalog: [] });
   state.catalog = this.getWindowPropertyCatalog();
@@ -354,10 +368,13 @@ Rules.prototype.openWindowHelperModal = function(methodItem, inputIndex) {
   this.displayWindowSuggestions('');
   this.updateWindowRulePreview();
 
-  // Hide parent modal backdrop to prevent blur stacking
-  const editBackdrop = document.querySelector('#editRuleModal .rule-modal-backdrop');
-  if (editBackdrop) editBackdrop.style.display = 'none';
+  // Hide the parent dialog's backdrop to prevent blur stacking
+  this._windowHelperParentBackdrop = document.querySelector(this._windowHelperFromSettings
+    ? '#methodSettingsModal .rule-modal-backdrop'
+    : '#editRuleModal .rule-modal-backdrop');
+  if (this._windowHelperParentBackdrop) this._windowHelperParentBackdrop.style.display = 'none';
 
+  this._windowHelperPreviousOverflow = document.body.style.overflow;
   modal.style.display = 'flex';
   document.body.style.overflow = 'hidden';
 
@@ -378,7 +395,11 @@ Rules.prototype.useWindowProperty = function() {
     return;
   }
 
-  if (this.currentWindowMethodItem) {
+  if (this._windowHelperFromSettings) {
+    // Written to the rule by the settings dialog's Apply (saveMethodSettings)
+    this._pendingPatternText = { ...(this._pendingPatternText || {}), name: property, value: condition };
+    this.refreshSettingsPatternCards?.();
+  } else if (this.currentWindowMethodItem) {
     const nameInput = this.currentWindowMethodItem.querySelector('.method-input.method-name');
     const valueInput = this.currentWindowMethodItem.querySelector('.method-input.method-value');
 
@@ -399,10 +420,12 @@ Rules.prototype.closeWindowHelperModal = function() {
   const modal = document.querySelector('#windowHelperModal');
   if (!modal) return;
   modal.style.display = 'none';
-  document.body.style.overflow = '';
+  document.body.style.overflow = this._windowHelperPreviousOverflow || '';
   this.currentWindowMethodItem = null;
 
-  // Restore parent modal backdrop
-  const editBackdrop = document.querySelector('#editRuleModal .rule-modal-backdrop');
-  if (editBackdrop) editBackdrop.style.display = '';
+  // Restore the parent dialog's backdrop
+  if (this._windowHelperParentBackdrop) this._windowHelperParentBackdrop.style.display = '';
+  this._windowHelperParentBackdrop = null;
+  if (this._windowHelperFromSettings) document.querySelector('[data-window-browse]')?.focus();
+  this._windowHelperFromSettings = false;
 };

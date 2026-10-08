@@ -505,6 +505,9 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
     // DOM rules: the selector and its helper (no Regex / Whole word / Case sensitive)
     const domSelectorGroup = document.querySelector('#domSelectorGroup');
     if (domSelectorGroup) domSelectorGroup.style.display = methodKey === 'dom' ? 'block' : 'none';
+    // WINDOW rules: the property, its condition and the window property helper
+    const windowPropertyGroup = document.querySelector('#windowPropertyGroup');
+    if (windowPropertyGroup) windowPropertyGroup.style.display = methodKey === 'window' ? 'block' : 'none';
 
     // Get field option groups
     const nameFieldGroup = document.querySelector('#nameFieldOptionsGroup');

@@ -2425,6 +2425,9 @@
   "domCardHint": {
     "message": "Une balise, .classe, #id ou un test d’[attribut], seul ou combiné. Les espaces ou > entre les parties ne sont pas pris en charge."
   },
+  "windowCardTitle": {
+    "message": "Propriété de la fenêtre"
+  },
   "settingsApiEventsDesc": {
     "message": "Événements que l'extension émet sur la page"
   },

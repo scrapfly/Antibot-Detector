@@ -2425,6 +2425,9 @@
   "domCardHint": {
     "message": "태그, .class, #id 또는 [attribute] 조건을 단독으로 또는 조합해서 씁니다. 부분 사이의 공백이나 >는 지원되지 않습니다."
   },
+  "windowCardTitle": {
+    "message": "창 속성"
+  },
   "settingsApiEventsDesc": {
     "message": "확장 프로그램이 페이지에 보내는 이벤트"
   },

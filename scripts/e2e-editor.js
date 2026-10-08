@@ -13,8 +13,9 @@
  *    group's mode and back; delete a group and check it is gone.
  * 4. Help: Test pattern opens with the pattern and options being edited,
  *    matches like detection, and its Apply only lands with the settings'
- *    Apply (Cancel keeps the rule); the DOM settings' "Browse" works the
- *    same way; every method's "?" opens its cheat sheet with real examples.
+ *    Apply (Cancel keeps the rule); the DOM and Window settings' "Browse"
+ *    work the same way; every method's "?" opens its cheat sheet with real
+ *    examples.
  *
  * Not part of `npm run verify`: it needs Playwright and its Chromium.
  *   npm i --no-save playwright && npx playwright install chromium
@@ -353,6 +354,60 @@ const CASES = [
     await click('#saveRuleEdit');
     await sleep(1500);
     report((await domRule()).selector === pickedAgain, `and saved by Apply — ${pickedAgain}`);
+
+    // Window: the property helper lives in the settings too (property + condition)
+    const winRule = async () => (await stored('captcha', 'detect-recaptcha')).detection.window.find(r => r.id === 'standard-render-api');
+    const winShipped = await winRule();
+    const openWindowSettings = async () => {
+      await openEditor('detect-recaptcha', 'reCAPTCHA');
+      const section = '#editRuleModal .method-section[data-method-type="window"]';
+      await p.evaluate((sel) => document.querySelector(sel)?.classList.remove('collapsed'), section);
+      await p.evaluate((sel) => document.querySelector(`${sel} .method-item[data-pattern-id="standard-render-api"] .field-actions[data-field-type="name"] .method-action-btn.settings`).click(), section);
+      await p.waitForSelector('#methodSettingsModal', { state: 'visible' });
+      await sleep(300);
+    };
+    const pickWindow = async () => {
+      await click('[data-window-browse]');
+      await p.waitForSelector('#windowHelperModal', { state: 'visible' });
+      await p.fill('#windowKeywordInput', '__nightmare');
+      await sleep(200);
+      await p.keyboard.press('Enter');
+      await sleep(200);
+      await p.selectOption('#windowConditionSelect', 'truthy');
+      await click('#useWindowProperty');
+      await sleep(200);
+    };
+    await openWindowSettings();
+    const winCard = await p.evaluate(() => ({
+      card: getComputedStyle(document.querySelector('#windowPropertyGroup')).display !== 'none',
+      preview: document.querySelector('[data-pattern-preview="window"]').textContent,
+      says: document.querySelector('[data-pattern-says="window"]').textContent,
+      rowHelper: !!document.querySelector('#editRuleModal .window-helper-btn')
+    }));
+    report(winCard.card && winCard.preview === winShipped.path && /window\.grecaptcha\.render/.test(winCard.says) && !winCard.rowHelper,
+      `Window settings show the property card, no "?" on the row — ${winCard.says}`);
+    await pickWindow();
+    const winPending = await p.evaluate(() => ({
+      preview: document.querySelector('[data-pattern-preview="window"]').textContent,
+      says: document.querySelector('[data-pattern-says="window"]').textContent
+    }));
+    report(winPending.preview === '__nightmare' && /__nightmare/.test(winPending.says), `the picked property shows in the card — ${winPending.says}`);
+    await click('#cancelMethodSettings');
+    await sleep(200);
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const winAfterCancel = await winRule();
+    report(winAfterCancel?.path === winShipped.path && winAfterCancel?.condition === winShipped.condition, 'a picked property is dropped by Cancel');
+    await openWindowSettings();
+    await pickWindow();
+    await click('#saveMethodSettings');
+    await sleep(200);
+    const rowShows = await p.evaluate(() => document.querySelector('#editRuleModal .method-item[data-pattern-id="standard-render-api"] .condition-selected-text')?.textContent);
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const winApplied = await winRule();
+    report(winApplied?.path === '__nightmare' && winApplied?.condition === 'truthy' && rowShows === 'truthy',
+      `and saved by Apply, with the row's condition updated — ${winApplied?.path} ${winApplied?.condition}`);
 
     // Method help: a cheat sheet per method, closed by Escape, one blur
     await openEditor('detect-recaptcha', 'reCAPTCHA');

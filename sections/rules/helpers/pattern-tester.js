@@ -258,19 +258,28 @@ if (typeof Rules !== 'undefined') {
    */
   Rules.prototype.refreshSettingsPatternCards = function() {
     if (!this.currentMethodItem) return;
-    for (const field of ['name', 'value', 'payloadUrl', 'dom']) {
-      // 'dom' is the CSS selector card: the name field of a DOM rule, no options
-      const kind = field === 'dom' ? null : this.getSettingsPatternKind(field);
-      const text = this.getSettingsPatternText(field === 'dom' ? 'name' : field);
+    for (const field of ['name', 'value', 'payloadUrl', 'dom', 'window']) {
+      // 'dom' and 'window' are the CSS selector and Window property cards:
+      // the name field of a DOM / WINDOW rule, no matching options
+      const card = field === 'dom' || field === 'window';
+      const kind = card ? null : this.getSettingsPatternKind(field);
+      const text = this.getSettingsPatternText(card ? 'name' : field);
       const preview = document.querySelector(`[data-pattern-preview="${field}"]`);
       if (preview) {
         preview.textContent = text || RuleHelperKit.tr('ptNoPattern', 'No pattern yet');
         preview.classList.toggle('is-empty', !text);
         preview.title = text;
-        preview.classList.toggle('is-pending', !!(this._pendingPatternText && (field === 'dom' ? 'name' : field) in this._pendingPatternText));
+        preview.classList.toggle('is-pending', !!(this._pendingPatternText && (card ? 'name' : field) in this._pendingPatternText));
       }
       const says = document.querySelector(`[data-pattern-says="${field}"]`);
-      if (says) {
+      if (says && field === 'window') {
+        // "Matches pages where window.grecaptcha.render is a function"
+        const condition = this.getSettingsPatternText('value') || 'exists';
+        const label = typeof this.windowConditionLabel === 'function' ? this.windowConditionLabel(condition) : condition;
+        says.textContent = text
+          ? RuleHelperKit.fmt('rhWindowSentenceFmt', 'Matches pages where {0} {1}', `window.${text.replace(/^window\./, '')}`, label)
+          : '';
+      } else if (says) {
         says.textContent = kind && text
           ? PatternTester.describe(kind, text, this.getSettingsPatternOptions(field)).map(ptText).join(' ')
           : '';
@@ -478,5 +487,7 @@ if (typeof Rules !== 'undefined') {
       input.value = text;
       input.dispatchEvent(new Event('input', { bubbles: true }));
     }
+    // A Window rule's condition lives in the row's dropdown (hidden input + label)
+    this.syncInlineConditionDropdown?.(this.currentMethodItem);
   };
 }

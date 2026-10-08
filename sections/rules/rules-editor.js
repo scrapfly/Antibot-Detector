@@ -263,7 +263,6 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                     <div class="input-with-indicators">
                       <div class="input-row">
                         <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="${FormatUtils.escapeAttr(name)}" data-method-key="${methodType}" data-item-index="${index}">
-                        ${methodType === 'window' ? `<button class="window-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesWindowPropertiesHelper', 'Window Properties Helper'))}" data-input-index="${index}">?</button>` : ''}
                         <div class="field-actions" data-field-type="name">
                           ${showNameSettings ? `
                           <button class="method-action-btn settings ${hasNameCustomSettings ? 'has-custom-settings' : ''}" title="${rowTexts.nameSettings}">
@@ -730,7 +729,6 @@ Rules.prototype.addNewMethodItem = function(button) {
     const itemIndex = `new-${Date.now()}`;
     const singleInputTypes = ['url', 'content', 'dom', 'js_hooks', 'payload'];
     const isSingleInput = singleInputTypes.includes(methodKey);
-    const isDom = methodKey === 'dom';
     const isWindow = methodKey === 'window';
 
     const { name: inputPlaceholder, value: valuePlaceholder } = this.getMethodInputPlaceholders(methodKey);
@@ -763,7 +761,6 @@ Rules.prototype.addNewMethodItem = function(button) {
             <div class="input-with-indicators">
               <div class="input-row">
                 <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="" data-method-key="${methodKey}" data-item-index="${itemIndex}">
-                ${isWindow ? `<button class="window-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesWindowPropertiesHelper', 'Window Properties Helper'))}" data-input-index="${itemIndex}">?</button>` : ''}
                 <div class="field-actions" data-field-type="name">
                   ${showNameSettings ? `
                   <button class="method-action-btn settings" title="${rowTexts.nameSettings}">
@@ -834,7 +831,6 @@ Rules.prototype.addNewMethodSection = function() {
     const methodKey = methodType.toLowerCase();
     const singleInputTypes = ['url', 'content', 'dom', 'js_hooks', 'payload'];
     const isSingleInput = singleInputTypes.includes(methodKey);
-    const isDom = methodKey === 'dom';
     const isWindow = methodKey === 'window';
 
     const { name: inputPlaceholder, value: valuePlaceholder } = this.getMethodInputPlaceholders(methodKey);
@@ -872,7 +868,6 @@ Rules.prototype.addNewMethodSection = function() {
                 <div class="input-with-indicators">
                   <div class="input-row">
                     <input type="text" class="method-input method-name" placeholder="${inputPlaceholder}" value="" data-method-key="${methodKey}" data-item-index="new">
-                    ${isWindow ? `<button class="window-helper-btn" title="${FormatUtils.escapeHtml(RuleHelperKit.tr('rulesWindowPropertiesHelper', 'Window Properties Helper'))}" data-input-index="new">?</button>` : ''}
                     <div class="field-actions" data-field-type="name">
                       ${showNameSettings ? `
                       <button class="method-action-btn settings" title="${rowTexts.nameSettings}">

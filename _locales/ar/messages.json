@@ -2425,6 +2425,9 @@
   "domCardHint": {
     "message": "وسم أو .class أو #id أو اختبار [attribute]، منفردًا أو مجتمعًا. المسافات أو > بين الأجزاء غير مدعومة."
   },
+  "windowCardTitle": {
+    "message": "خاصية النافذة"
+  },
   "settingsApiEventsDesc": {
     "message": "الأحداث التي ترسلها الإضافة إلى الصفحة"
   },

@@ -8,8 +8,6 @@
  *
  * Opened from the CSS selector card of a DOM rule's settings ("Browse"): the
  * picked selector goes back to that dialog and is saved by its Apply.
- * Also owns the delegated click handling of the "?" helper button that the
- * rule editor renders next to WINDOW inputs.
  *
  * Dependencies: rules.js, helpers/helper-kit.js
  */
@@ -44,20 +42,6 @@ Rules.prototype.setupDomHelperModal = function() {
     if (this.currentMethodItem) this.openDomHelperModal(this.currentMethodItem, 0, { fromSettings: true });
   });
 
-  // "?" helper buttons in the rule editor (event delegation).
-  document.addEventListener('click', (e) => {
-    const openers = [
-      ['.window-helper-btn', (item, index) => this.openWindowHelperModal(item, index)]
-    ];
-    for (const [selector, open] of openers) {
-      const button = e.target.closest(selector);
-      if (!button) continue;
-      e.stopPropagation();
-      const methodItem = button.closest('.method-item');
-      if (methodItem) open(methodItem, button.dataset.inputIndex);
-      return;
-    }
-  });
 };
 
 /** Selectors used by the loaded detectors (detector name + category chip). */

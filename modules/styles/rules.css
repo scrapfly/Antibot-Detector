@@ -2376,34 +2376,6 @@
 
 /* Remove old color-actions styles as buttons are now in footer */
 
-/* Window Helper Button */
-.window-helper-btn {
-  padding: 0;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-left: 0;
-  margin-top: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  flex-shrink: 0;
-  align-self: center;
-  box-sizing: border-box;
-}
-
-.window-helper-btn:hover {
-  background: var(--accent-hover);
-  transform: none;
-}
-
 /* Condition Option (for WINDOW property conditions) */
 .condition-option {
   padding: 10px 12px;
@@ -3253,7 +3225,6 @@
 }
 
 #editRuleModal .method-help-btn,
-#editRuleModal .window-helper-btn,
 #editRuleModal .method-action-btn,
 #editRuleModal .method-pagination-btn {
   width: 28px;
@@ -3303,7 +3274,6 @@
 }
 
 #editRuleModal .method-help-btn:hover,
-#editRuleModal .window-helper-btn:hover,
 #editRuleModal .method-pagination-btn:hover:not(:disabled) {
   background: rgba(59, 130, 246, 0.14);
   border-color: var(--accent);

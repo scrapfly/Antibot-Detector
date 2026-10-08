@@ -2425,6 +2425,9 @@
   "domCardHint": {
     "message": "Ein Tag, .klasse, #id oder ein [attribut]-Test, einzeln oder kombiniert. Leerzeichen oder > zwischen Teilen werden nicht unterstützt."
   },
+  "windowCardTitle": {
+    "message": "Window-Eigenschaft"
+  },
   "settingsApiEventsDesc": {
     "message": "Ereignisse, die die Erweiterung auf der Seite auslöst"
   },
