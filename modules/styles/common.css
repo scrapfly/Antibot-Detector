@@ -1048,6 +1048,27 @@ input:checked + .slider:before {
     color: var(--text-primary);
   }
 
+  /* The open list is a pseudo-element, so the global ::-webkit-scrollbar rules
+     miss it and it showed the system bar with arrow buttons. Same 6px accent
+     bar as the rest of the popup. (No scrollbar-color here: Chrome would use it
+     instead of these rules and draw the arrows again.) */
+  select:not([multiple])::picker(select)::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  select:not([multiple])::picker(select)::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  select:not([multiple])::picker(select)::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 3px;
+  }
+
+  select:not([multiple])::picker(select)::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-light);
+  }
+
   select:not([multiple]) option {
     display: flex;
     align-items: center;

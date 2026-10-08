@@ -41,6 +41,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules → Update no longer says everything is up to date when some rules failed to download, and explains GitHub outages and rate limits.
 - Rules editor: a regex or selector picked in a helper no longer stays when you cancel the pattern settings.
 - Rules editor: JS hooks now say they only work in Fingerprint rules, and DOM selectors no longer offer Regex, Whole word and Case sensitive, which detection ignores.
+- Dropdown lists scroll with the extension's thin scrollbar instead of the system bar with arrows.
 
 ## [2.8.2] - 2026-10-07
 
