@@ -136,6 +136,9 @@ const server = http.createServer((req, res) => {
   const popup = await ctx.newPage();
   const openRules = async () => {
     await popup.goto(`chrome-extension://${extId}/popup.html`);
+    // The tabs only switch once the popup has started (a click before that is lost)
+    await popup.waitForFunction(() => window.popupInstance, null, { timeout: 15000 });
+    await sleep(500);
     await popup.click('.tab-btn[data-tab="rules"]');
     await popup.waitForSelector('#checkUpdatesBtn');
     await sleep(600);
