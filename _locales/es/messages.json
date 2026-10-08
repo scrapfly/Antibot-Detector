@@ -4204,6 +4204,21 @@
   "scrapflyExportOptions": {
     "message": "Opciones"
   },
+  "scrapflyExportProduct": {
+    "message": "Usar"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "Resolver CAPTCHAs"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "Se paga por resolución"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "Usa Cloud Browser para resolverlos."
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "Abre esta página en el Cloud Browser de Scrapfly y contrólala con Playwright. El Captcha Solver resuelve Turnstile, reCAPTCHA, GeeTest y más cuando aparecen; los intentos fallidos no cuestan nada."
+  },
   "scrapflyExportUnblocker": {
     "message": "Unblocker"
   },

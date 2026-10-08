@@ -4204,6 +4204,21 @@
   "scrapflyExportOptions": {
     "message": "विकल्प"
   },
+  "scrapflyExportProduct": {
+    "message": "उपयोग करें"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "CAPTCHA हल करें"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "हर हल का भुगतान"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "इन्हें हल करने के लिए Cloud Browser का उपयोग करें।"
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "इस पेज को Scrapfly के Cloud Browser में खोलें और Playwright से चलाएँ। Captcha Solver Turnstile, reCAPTCHA, GeeTest और अन्य को दिखते ही हल करता है; असफल प्रयास मुफ़्त हैं।"
+  },
   "scrapflyExportUnblocker": {
     "message": "Unblocker"
   },

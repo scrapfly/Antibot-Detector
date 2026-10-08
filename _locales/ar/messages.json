@@ -4204,6 +4204,21 @@
   "scrapflyExportOptions": {
     "message": "الخيارات"
   },
+  "scrapflyExportProduct": {
+    "message": "استخدم"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "حل اختبارات CAPTCHA"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "الدفع لكل حل"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "استخدم Cloud Browser لحلها."
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "افتح هذه الصفحة في Cloud Browser من Scrapfly وتحكم بها عبر Playwright. يحل Captcha Solver اختبارات Turnstile وreCAPTCHA وGeeTest وغيرها عند ظهورها، والمحاولات الفاشلة مجانية."
+  },
   "scrapflyExportUnblocker": {
     "message": "Unblocker"
   },

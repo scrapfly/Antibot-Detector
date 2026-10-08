@@ -4204,6 +4204,21 @@
   "scrapflyExportOptions": {
     "message": "옵션"
   },
+  "scrapflyExportProduct": {
+    "message": "사용"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "CAPTCHA 풀기"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "풀 때마다 과금"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "풀려면 Cloud Browser를 사용하세요."
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "이 페이지를 Scrapfly Cloud Browser에서 열고 Playwright로 조작합니다. Captcha Solver가 Turnstile, reCAPTCHA, GeeTest 등이 나타나면 풀어 줍니다. 실패한 시도는 무료입니다."
+  },
   "scrapflyExportUnblocker": {
     "message": "Unblocker"
   },

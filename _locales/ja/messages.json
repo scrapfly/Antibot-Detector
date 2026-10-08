@@ -4204,6 +4204,21 @@
   "scrapflyExportOptions": {
     "message": "オプション"
   },
+  "scrapflyExportProduct": {
+    "message": "使用"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "CAPTCHA を解決"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "解決ごとに課金"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "解決するには Cloud Browser を使ってください。"
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "このページを Scrapfly の Cloud Browser で開き、Playwright で操作します。Captcha Solver が Turnstile、reCAPTCHA、GeeTest などを表示されたときに解決します。失敗した解決は無料です。"
+  },
   "scrapflyExportUnblocker": {
     "message": "Unblocker"
   },

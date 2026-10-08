@@ -4204,6 +4204,21 @@
   "scrapflyExportOptions": {
     "message": "选项"
   },
+  "scrapflyExportProduct": {
+    "message": "使用"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "解决验证码"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "按成功次数计费"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "请使用 Cloud Browser 来解决。"
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "在 Scrapfly 的 Cloud Browser 中打开此页面并用 Playwright 控制。Captcha Solver 会在 Turnstile、reCAPTCHA、GeeTest 等出现时自动解决；失败不收费。"
+  },
   "scrapflyExportUnblocker": {
     "message": "Unblocker"
   },

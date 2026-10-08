@@ -3048,6 +3048,11 @@
   text-decoration: none;
 }
 
+/* Rows, tabs and texts of the other product (Scrape API / Cloud Browser) */
+.scrapfly-export-modal [hidden] {
+  display: none !important;
+}
+
 /* Scrape with Scrapfly options: one row per option, label left, control right */
 .scrapfly-export-options {
   display: flex;
