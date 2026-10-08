@@ -110,7 +110,7 @@ test('older cached detections without found still get their checklist from the m
     combinations: [{ id: 'refs', name: 'Storage read and write references', confidence: 10, when: definition.combinations[0].when }] };
   const list = fakeList();
   context.DetectionModals.renderCombinations.call(modalThis(list), detection, detection.combinations);
-  assert.strictEqual((list.innerHTML.match(/aria-label="Found">✓/g) || []).length, 2);
+  assert.strictEqual((list.innerHTML.match(/aria-label="Found"><svg/g) || []).length, 2);
 });
 
 test('the confidence tooltip lists combinations by confidence and numbers unnamed ones in rule order', () => {

@@ -195,6 +195,13 @@
       : tr('combinationDetailsUnavailable', 'This rule changed or was removed after the scan, so only its name and score are shown.');
   }
 
+  // Icons for the marks: the ✓ character renders as √ in some UI fonts
+  const MARK_ICONS = {
+    'is-found': '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M3.2 8.4l3 3 6.6-6.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    'is-missing': '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><circle cx="8" cy="8" r="4.6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+    'is-blocked': '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+  };
+
   function hexToRgba(hex, alpha) {
     const m = /^#?([0-9a-f]{6})$/i.exec(String(hex || '').trim());
     if (!m) return '';
@@ -223,7 +230,7 @@
   function rowsHtml(group, options, labelId) {
     const items = group.items.map(item => {
       const mark = markOf(item);
-      const markHtml = `<span class="match-combo-mark ${mark.cls}" role="img" aria-label="${esc(mark.label)}">${mark.symbol}</span>`;
+      const markHtml = `<span class="match-combo-mark ${mark.cls}" role="img" aria-label="${esc(mark.label)}">${MARK_ICONS[mark.cls]}</span>`;
       if (item.kind === 'group') {
         const subId = `${options.idPrefix || 'match-combo'}-${options.nextId()}`;
         return `<li class="match-combo-row match-combo-sub ${mark.cls}">

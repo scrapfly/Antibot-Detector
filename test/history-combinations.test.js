@@ -63,8 +63,8 @@ test('a saved scan shows its checklist in History details, above the methods', (
   assert.ok(combos > 0 && combos < methods, 'checklist above the methods');
   assert.match(html, /Official SDK, configured widget and compatible API/);
   assert.match(html, /Sets the detection score/);
-  assert.strictEqual((html.match(/aria-label="Found">✓/g) || []).length, 4, 'SDK, widget, the group and the render API');
-  assert.match(html, /aria-label="Not found">○<\/span>[\s\S]*?Execute API/);
+  assert.strictEqual((html.match(/aria-label="Found"><svg/g) || []).length, 4, 'SDK, widget, the group and the render API');
+  assert.match(html, /aria-label="Not found"><svg[^]*?<\/span>[\s\S]*?Execute API/);
   assert.strictEqual(history._historyComboCards.get('0').length, 1);
 });
 

@@ -79,8 +79,8 @@ test('HTML: full name, marks with labels, the raw pattern and matched value as t
   const html = CC.renderHtml(CC.build({ combinations: result.combinations, definition, matches, detectionConfidence: 90 }), { methodLabel: label });
   assert.match(html, /<h5 class="match-combo-name" dir="auto">SDK, widget and an API<\/h5>/);
   assert.match(html, /★<\/span> Sets the detection score/);
-  assert.match(html, /role="img" aria-label="Found">✓</);
-  assert.match(html, /role="img" aria-label="Not found">○</);
+  assert.match(html, /role="img" aria-label="Found"><svg/);
+  assert.match(html, /role="img" aria-label="Not found"><svg/);
   assert.match(html, /data-tip="\^https:\/\/cdn\\\.x\/sdk\\\.js" data-tip-detail="https:\/\/cdn\.x\/sdk\.js\?v=2"/);
   assert.match(html, /<span class="match-combo-text is-raw" dir="ltr">x\.execute<\/span>/);
   assert.match(html, /aria-labelledby="match-combo-\d+"/);

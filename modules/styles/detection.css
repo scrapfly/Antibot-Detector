@@ -1886,11 +1886,12 @@
 }
 
 .match-combo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
   width: 14px;
-  font-weight: 700;
-  text-align: center;
-  line-height: 1.4;
+  height: 17px;
 }
 
 .match-combo-mark.is-found { color: var(--success-light); }
