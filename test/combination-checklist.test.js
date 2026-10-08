@@ -122,18 +122,32 @@ test('names and descriptions are escaped and kept on one line', () => {
   assert.strictEqual(cards[0].name, 'A <script> B');
 });
 
-test('History: the tree comes from the rule by id; a changed or missing rule shows only name and score', () => {
-  const slim = [{ id: 'api', name: 'SDK, widget and an API', confidence: 90 }, { id: 'pair', name: 'SDK and widget', confidence: 70 }, { id: 'deleted', name: 'Gone', confidence: 60 }];
-  const cards = CC.build({ combinations: slim, definition, found: ['sdk', 'widget', 'render'], detectionConfidence: 90, checkRule: true });
-  assert.deepStrictEqual(cards.map(c => [c.id, c.unavailable]), [['api', false], ['pair', false], ['deleted', true]]);
-  assert.deepStrictEqual(cards[0].tree.items[2].items.map(i => i.found), [true, false]);
-  // The rule was edited after the scan: what was found then no longer satisfies it
-  const edited = { ...definition, combinations: [{ id: 'api', name: 'x', confidence: 90, when: { all: [{ pattern: 'sdk' }, { pattern: 'session' }] } }] };
-  const [stale] = CC.build({ combinations: slim.slice(0, 1), definition: edited, found: ['sdk', 'widget', 'render'], checkRule: true });
-  assert.strictEqual(stale.unavailable, true);
-  assert.match(CC.renderHtml([stale]), /This rule changed after the scan; only its name and score are shown\./);
-  assert.ok(!CC.renderHtml([stale]).includes('match-combo-copy'), 'nothing to copy but the name');
-  assert.strictEqual(CC.copyText(stale), 'SDK, widget and an API (90%)\nThis rule changed after the scan; only its name and score are shown.');
+test('History: the tree comes from the rule by id and its key; implied rows are not stored', () => {
+  const key = (id) => DetectionCombinations.treeKey(definition.combinations.find(c => c.id === id).when);
+  // As history-store keeps them: id, score, rule key; the name comes from the rule
+  const slim = [{ id: 'api', confidence: 90, h: key('api') }, { id: 'pair', confidence: 70, h: key('pair') }];
+  const cards = CC.build({ combinations: slim, definition, found: ['render'], detectionConfidence: 90, fromHistory: true });
+  assert.deepStrictEqual(cards.map(c => [c.id, c.name, c.unavailable]), [['api', 'SDK, widget and an API', ''], ['pair', 'SDK and widget', '']]);
+  const [sdk, widget, group] = cards[0].tree.items;
+  assert.deepStrictEqual([sdk.found, widget.found], [true, true], 'rows every match must have had are implied');
+  assert.deepStrictEqual(group.items.map(i => i.found), [true, false], 'only the OR row is stored');
+  assert.strictEqual(cards[0].setsScore, true);
+});
+
+test('History: an edited, removed or older entry shows only its name and score, with the reason', () => {
+  const edited = { ...definition, combinations: [{ id: 'api', name: 'Renamed', confidence: 90, when: { all: [{ pattern: 'sdk' }, { pattern: 'session' }] } }] };
+  const stored = [{ id: 'api', confidence: 90, h: DetectionCombinations.treeKey(definition.combinations[1].when) }];
+  const [changed] = CC.build({ combinations: stored, definition: edited, found: [], fromHistory: true });
+  assert.deepStrictEqual([changed.name, changed.unavailable, changed.tree], ['Renamed', 'changed', null]);
+  assert.match(CC.renderHtml([changed]), /This rule changed or was removed after the scan, so only its name and score are shown\./);
+  assert.ok(!CC.renderHtml([changed]).includes('match-combo-copy'), 'nothing to copy but the name');
+
+  const [removed] = CC.build({ combinations: [{ id: 'gone-combo', confidence: 60, h: 'abc' }], definition, fromHistory: true });
+  assert.deepStrictEqual([removed.name, removed.unavailable], ['gone-combo', 'changed'], 'the id stands in for a lost name');
+
+  const [old] = CC.build({ combinations: [{ id: 'api', name: 'Saved name', confidence: 90 }], definition, fromHistory: true });
+  assert.deepStrictEqual([old.name, old.unavailable], ['Saved name', 'notSaved']);
+  assert.strictEqual(CC.copyText(old), 'Saved name (90%)\nIts conditions were not saved with this scan; only its name and score are shown.');
 });
 
 test('combinations without a name get a numbered one, and junk input is skipped', () => {

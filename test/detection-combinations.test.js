@@ -193,3 +193,20 @@ test('evaluate answers a condition tree from found lists, sets or arrays', () =>
   assert.strictEqual(C.evaluate({ atLeast: 2, of: [{ pattern: 'a' }, { pattern: 'b' }, { pattern: 'c' }] }, { patterns: new Set(['a', 'c']) }), true);
   assert.deepStrictEqual(C.seenFromFound(['x', 'method:url', 3, null]), { patterns: new Set(['x']), methods: new Set(['url']) });
 });
+
+test('treeKey changes with the rule but not with key order', () => {
+  const a = { all: [{ pattern: 'x' }, { atLeast: 2, of: [{ pattern: 'y' }, { pattern: 'z' }, { pattern: 'w' }] }] };
+  const reordered = { all: [{ pattern: 'x' }, { of: [{ pattern: 'y' }, { pattern: 'z' }, { pattern: 'w' }], atLeast: 2 }] };
+  assert.strictEqual(C.treeKey(a), C.treeKey(reordered));
+  assert.notStrictEqual(C.treeKey(a), C.treeKey({ all: [{ pattern: 'x' }, { atLeast: 1, of: [{ pattern: 'y' }, { pattern: 'z' }, { pattern: 'w' }] }] }));
+  assert.notStrictEqual(C.treeKey(a), C.treeKey({ all: [{ pattern: 'x' }] }));
+  assert.match(C.treeKey(a), /^[0-9a-z]{1,7}$/);
+});
+
+test('mustHaveFound lists only rows reached through "all"', () => {
+  const when = { all: [{ pattern: 'a' }, { method: 'cookie' }, { any: [{ pattern: 'b' }, { pattern: 'c' }] },
+    { all: [{ pattern: 'd' }] }, { not: { pattern: 'e' } }, { atLeast: 1, of: [{ pattern: 'f' }] }] };
+  assert.deepStrictEqual(C.mustHaveFound(when), ['a', 'method:cookie', 'd']);
+  assert.deepStrictEqual(C.mustHaveFound({ any: [{ pattern: 'a' }] }), []);
+  assert.deepStrictEqual(C.mustHaveFound(null), []);
+});

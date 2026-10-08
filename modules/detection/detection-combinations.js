@@ -357,6 +357,37 @@
     return evalNode(node, { patterns: asSet(s.patterns), methods: asSet(s.methods) });
   }
 
+  /**
+   * Short key of a condition tree: FNV-1a over its JSON with sorted keys.
+   * History stores it to tell whether a rule changed since the scan.
+   */
+  function treeKey(node) {
+    const canon = (n) => {
+      if (Array.isArray(n)) return `[${n.map(canon).join(',')}]`;
+      if (n && typeof n === 'object') return `{${Object.keys(n).sort().map(k => `${JSON.stringify(k)}:${canon(n[k])}`).join(',')}}`;
+      return JSON.stringify(n === undefined ? null : n);
+    };
+    const text = canon(node);
+    let hash = 0x811c9dc5;
+    for (let i = 0; i < text.length; i++) {
+      hash ^= text.charCodeAt(i);
+      hash = Math.imul(hash, 0x01000193) >>> 0;
+    }
+    return hash.toString(36);
+  }
+
+  /**
+   * Rows a satisfied tree must have found: those reached through "all" only
+   * (not inside an OR, an at-least or a NOT). History stores just the rest.
+   */
+  function mustHaveFound(node, out = []) {
+    if (!node || typeof node !== 'object') return out;
+    if (typeof node.pattern === 'string') out.push(node.pattern);
+    else if (typeof node.method === 'string') out.push(`method:${node.method}`);
+    else if (Array.isArray(node.all)) node.all.forEach(child => mustHaveFound(child, out));
+    return out;
+  }
+
   /** `seen` sets from a `found` list: pattern ids and `method:<name>` entries. */
   function seenFromFound(found) {
     const seen = { patterns: new Set(), methods: new Set() };
@@ -371,7 +402,7 @@
   const api = Object.freeze({
     METHODS, methodOf, defaultId, patternIds, idOf, listPatterns, applies,
     hasCombinations, matchPatternIds, hasPositive, everyBranchPositive, isSatisfied, score, rescore,
-    references, dropPattern, evaluate, seenFromFound, foundFromMatches
+    references, dropPattern, evaluate, seenFromFound, foundFromMatches, treeKey, mustHaveFound
   });
 
   root.DetectionCombinations = api;

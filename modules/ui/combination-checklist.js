@@ -54,9 +54,10 @@
    * @param {Array<object>} input.combinations - {id, name, confidence, when?, found?}
    * @param {object} [input.definition] - the detector as loaded now (patterns, combinations)
    * @param {Array<object>} [input.matches] - the detection's matches (Detection details)
-   * @param {Array<string>} [input.found] - what was found, for combinations without their own list (History)
+   * @param {Array<string>} [input.found] - History: the stored found rows the rule does not imply
    * @param {number} [input.detectionConfidence] - the detection's score
-   * @param {boolean} [input.checkRule] - History: show only the name when the rule changed since the scan
+   * @param {boolean} [input.fromHistory] - History entry: the tree comes from the rule by id and
+   *   its key (h) must still match, otherwise only the name and score are shown
    * @returns {Array<object>} cards, highest confidence first
    */
   function build(input = {}) {
@@ -83,32 +84,48 @@
       .filter(combo => combo && typeof combo === 'object')
       .map((combo, index) => {
         const defined = combo.id ? definedCombos.get(combo.id) : null;
-        const when = combo.when || defined?.when || null;
         const confidence = Math.max(0, Math.min(100, Math.round(Number(combo.confidence) || 0)));
         const card = {
           id: combo.id || '',
-          name: oneLine(combo.name) || fmt('combinationDefaultNameFmt', 'Combination {0}', index + 1),
+          // History may have lost the name with the rule: its id says more than a number
+          name: oneLine(combo.name) || oneLine(defined?.name)
+            || (input.fromHistory && combo.id) || fmt('combinationDefaultNameFmt', 'Combination {0}', index + 1),
           confidence,
           auto: Boolean(defined) && !(Number(defined.confidence) > 0),
           setsScore: false,
           order: index,
           tree: null,
-          unavailable: false
+          unavailable: ''
         };
-        if (!when || !C) {
-          card.unavailable = true;
+        if (!C) {
+          card.unavailable = 'changed';
           return card;
         }
-        const found = Array.isArray(combo.found) ? combo.found
-          : (Array.isArray(input.found) ? input.found
-            : (definition ? C.foundFromMatches(definition, { when }, matches) : []));
-        const seen = C.seenFromFound(found);
-        // A rule edited since the scan may no longer hold for what was found then
-        if (input.checkRule && !C.evaluate(when, seen)) {
-          card.unavailable = true;
-          return card;
+        let when = combo.when || null;
+        let found;
+        if (input.fromHistory) {
+          // Saved before checklists: nothing to rebuild it from
+          if (typeof combo.h !== 'string') {
+            card.unavailable = 'notSaved';
+            return card;
+          }
+          // The rule was edited or removed since the scan
+          if (!defined || !defined.when || C.treeKey(defined.when) !== combo.h) {
+            card.unavailable = 'changed';
+            return card;
+          }
+          when = defined.when;
+          found = [...(Array.isArray(input.found) ? input.found : []), ...C.mustHaveFound(when)];
+        } else {
+          when = when || defined?.when || null;
+          if (!when) {
+            card.unavailable = 'changed';
+            return card;
+          }
+          found = Array.isArray(combo.found) ? combo.found
+            : (definition ? C.foundFromMatches(definition, { when }, matches) : []);
         }
-        card.tree = node(when, false, seen, patterns, matchesById, C);
+        card.tree = node(when, false, C.seenFromFound(found), patterns, matchesById, C);
         return card;
       });
 
@@ -170,6 +187,12 @@
     return item.met
       ? { symbol: '✓', cls: 'is-found', label: tr('combinationFound', 'Found') }
       : { symbol: '○', cls: 'is-missing', label: tr('combinationNotFound', 'Not found') };
+  }
+
+  function unavailableText(card) {
+    return card.unavailable === 'notSaved'
+      ? tr('combinationDetailsNotSaved', 'Its conditions were not saved with this scan; only its name and score are shown.')
+      : tr('combinationDetailsUnavailable', 'This rule changed or was removed after the scan, so only its name and score are shown.');
   }
 
   function hexToRgba(hex, alpha) {
@@ -253,7 +276,7 @@
         ? `<p class="match-combo-score"><span aria-hidden="true">★</span> ${esc(tr('combinationSetsScore', 'Sets the detection score'))}</p>`
         : '';
       const body = card.unavailable || !card.tree
-        ? `<p class="match-combo-unavailable">${esc(tr('combinationDetailsUnavailable', 'This rule changed after the scan; only its name and score are shown.'))}</p>`
+        ? `<p class="match-combo-unavailable">${esc(unavailableText(card))}</p>`
         : treeHtml(card.tree, opts);
       const copy = card.unavailable ? '' : `<div class="match-combo-foot">
           <button type="button" class="match-combo-copy" data-combo-index="${index}" aria-label="${esc(fmt('combinationCopyFmt', 'Copy “{0}”', card.name))}">${esc(tr('advCommonCopy', 'Copy'))}</button>
@@ -268,7 +291,7 @@
     const lines = [`${card.name} (${card.confidence}%)`];
     if (card.setsScore) lines.push(tr('combinationSetsScore', 'Sets the detection score'));
     if (card.unavailable || !card.tree) {
-      lines.push(tr('combinationDetailsUnavailable', 'This rule changed after the scan; only its name and score are shown.'));
+      lines.push(unavailableText(card));
       return lines.join('\n');
     }
     const label = (method) => (options.methodLabel && options.methodLabel(method)) || method;

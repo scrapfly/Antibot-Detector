@@ -782,7 +782,9 @@ class History {
 
     // Render detections in modal
     if (content) {
+      this._historyComboCards = new Map();
       content.innerHTML = this.renderDetectionDetails(historyItem.detections || []);
+      this.bindHistoryCombinationCopy();
     }
 
     this.attachDetailModalClickHandlers();
@@ -1073,9 +1075,12 @@ class History {
       const confidence = Math.round(Number(detection.confidence) || 0);
       const hasMethods = detection.matches && detection.matches.length > 0;
 
+      // The rule as loaded now: by id first (names can change), then by name
       let detectorObj = null;
-      if (this.detectorManager && category && rawName) {
-        detectorObj = this.detectorManager.getDetectorByName(category, name);
+      if (this.detectorManager) {
+        const id = detection.detector && typeof detection.detector === 'object' ? detection.detector.id : '';
+        detectorObj = (id && this.detectorManager.findDetectorById?.(id))
+          || (category && rawName ? this.detectorManager.getDetectorByName(category, name) : null);
       }
       const isFingerprintCategory = catClass === 'fingerprint';
 
@@ -1099,6 +1104,7 @@ class History {
       }
 
       const methodsHtml = this.renderDetectionMethods(detection.matches || []);
+      const combinationsHtml = this.renderHistoryCombinations(detection, detectorObj, index);
       const matchCount = detection.matches?.length || 0;
       const methodTypeBadges = this.renderMethodTypeBadges(detection.matches || []);
       const expandLabel = FormatUtils.escapeAttr(_tr('detectionModalDetectionMethods', 'Detection methods'));
@@ -1125,6 +1131,7 @@ class History {
           </div>
           ${hasMethods ? `
             <div class="history-modal-detection-details">
+              ${combinationsHtml}
               <div class="history-modal-match-count">${matchCount === 1 ? _tr('historyOneMatch', '1 match') : _fmt('historyMatchCountFmt', `${matchCount} matches`, matchCount)}</div>
               <div class="history-modal-detection-methods">
                 ${methodsHtml}
@@ -1134,6 +1141,62 @@ class History {
         </div>
       `;
     }).join('');
+  }
+
+  /**
+   * Matched combinations of one detection as checklists (CombinationChecklist),
+   * rebuilt from the rule as it is now. Cards are kept per detection index for
+   * the Copy buttons. Popup only: the worker never renders History.
+   */
+  renderHistoryCombinations(detection, definition, index) {
+    const combos = Array.isArray(detection.combinations) ? detection.combinations : [];
+    if (!combos.length || typeof CombinationChecklist === 'undefined') return '';
+    const t = (typeof I18n !== 'undefined') ? I18n : null;
+    const title = (t && t.get('detectionModalCombinations')) || 'Matched combinations';
+    const cards = CombinationChecklist.build({
+      combinations: combos,
+      definition,
+      found: detection.comboFound,
+      matches: Array.isArray(detection.matches) ? detection.matches : [],
+      detectionConfidence: detection.confidence,
+      // Slim entries keep a rule key instead of the rule; a full detection carries its own
+      fromHistory: !combos.some(combo => combo && combo.when)
+    });
+    if (!this._historyComboCards) this._historyComboCards = new Map();
+    this._historyComboCards.set(String(index), cards);
+    return `<div class="history-modal-combos">
+      <div class="history-modal-combos-title">${FormatUtils.escapeHtml(title)}</div>
+      <div class="match-combo-list">${CombinationChecklist.renderHtml(cards, this.historyChecklistOptions(`hist-combo-${index}`))}</div>
+    </div>`;
+  }
+
+  historyChecklistOptions(idPrefix) {
+    const categoryManager = this.detectorManager?.categoryManager;
+    return {
+      idPrefix,
+      methodLabel: (m) => this.getMethodLabel(m),
+      tagColor: (m) => {
+        const color = categoryManager?.getTagColor?.(m);
+        return color && color !== '#666666' ? color : '';
+      },
+      confidenceHtml: (value, cls, tip) => FormatUtils.confidenceHtml(value, cls, tip)
+    };
+  }
+
+  /** One Copy listener for every combination card in the detail modal (bound once). */
+  bindHistoryCombinationCopy() {
+    const content = document.querySelector('#historyModalContent');
+    if (!content || content.dataset.comboCopyBound) return;
+    content.dataset.comboCopyBound = 'true';
+    content.addEventListener('click', (event) => {
+      const button = event.target.closest('.match-combo-copy');
+      if (!button || typeof CombinationChecklist === 'undefined') return;
+      event.stopPropagation();
+      const detectionCard = button.closest('.history-modal-detection-card');
+      const cards = this._historyComboCards?.get(detectionCard?.dataset.detectionIndex || '');
+      const card = cards?.[Number(button.dataset.comboIndex)];
+      if (card) FormatUtils.copyToClipboard(CombinationChecklist.copyText(card, this.historyChecklistOptions()), { element: button });
+    });
   }
 
   /**

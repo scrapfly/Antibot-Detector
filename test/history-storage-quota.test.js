@@ -11,6 +11,7 @@ const vm = require('node:vm');
 // exceeded". History is now written compact, slim and under a byte budget.
 
 const HistoryStore = require('../modules/core/history-store.js');
+const Combos = require('../modules/detection/detection-combinations.js');
 const root = path.join(__dirname, '..');
 
 const QUOTA = 'Resource::kQuotaBytes quota exceeded';
@@ -39,7 +40,7 @@ function fullDetection(i, rich = false) {
     difficulty: 'High',
     category: i % 2 ? 'CAPTCHA' : 'fingerprint',
     detectionMethods: ['url', 'window', 'js_hooks'],
-    combinations: [{ id: 'api-widget', name: 'API and widget', confidence: 85, when: { all: [{ pattern: 'a' }, { pattern: 'b' }] } }],
+    combinations: [{ id: 'api-widget', name: 'API and widget', confidence: 85, when: { all: [{ pattern: 'a' }, { pattern: 'b' }] }, found: ['a', 'b'] }],
     detector: { id: `detect-${i}`, name: `Detector ${i}`, category: 'CAPTCHA', icon: 'recaptcha_official.png',
       description: 'A long rule description that the History views never show '.repeat(3), author: 'Scrapfly', difficulty: 'High' },
     matches
@@ -82,7 +83,9 @@ test('slim entries keep exactly what History, Statistics and exports display', (
   assert.strictEqual(d.category, 'CAPTCHA');
   assert.strictEqual(d.difficulty, 'High');
   assert.strictEqual(d.confidence, 71);
-  assert.deepStrictEqual(d.combinations, [{ id: 'api-widget', name: 'API and widget', confidence: 85 }]);
+  // The checklist is rebuilt from the rule: id, score and a key of the rule; the name comes from the rule
+  assert.deepStrictEqual(d.combinations, [{ id: 'api-widget', confidence: 85, h: Combos.treeKey({ all: [{ pattern: 'a' }, { pattern: 'b' }] }) }]);
+  assert.ok(!('comboFound' in d), 'both rows are implied by the rule');
   // The value each renderer shows (fullUrl > value > name > selector > pattern) survives
   const shown = m => m.fullUrl || m.value || m.name || m.selector || m.pattern;
   entry.detections[1].matches.forEach((match, i) => {
@@ -101,6 +104,67 @@ test('slim entries keep exactly what History, Statistics and exports display', (
   }
   // Idempotent
   assert.deepStrictEqual(HistoryStore.slimEntry(slim), slim);
+});
+
+test('combination checklists keep only the found rows the rule does not imply', () => {
+  const when = { all: [{ pattern: 'sdk' }, { any: [{ pattern: 'render' }, { pattern: 'execute' }] }, { not: { pattern: 'block' } }] };
+  const detection = { confidence: 90, matches: [], combinations: [
+    { id: 'api', name: 'SDK and an API', confidence: 90, when, found: ['sdk', 'render'] },
+    { id: 'pair', name: 'SDK and widget', confidence: 70, when: { all: [{ pattern: 'sdk' }, { pattern: 'widget' }] }, found: ['sdk', 'widget'] }
+  ] };
+  const slim = HistoryStore.slimEntry({ id: 'e', detections: [detection] }).detections[0];
+  assert.deepStrictEqual(slim.combinations, [
+    { id: 'api', confidence: 90, h: Combos.treeKey(when) },
+    { id: 'pair', confidence: 70, h: Combos.treeKey(detection.combinations[1].when) }
+  ]);
+  assert.deepStrictEqual(slim.comboFound, ['render']);
+  assert.deepStrictEqual(HistoryStore.slimEntry({ id: 'e', detections: [slim] }).detections[0], slim, 'idempotent');
+  // Entries saved before checklists keep their name; a combination without an id keeps its name too
+  const old = HistoryStore.slimEntry({ id: 'o', detections: [{ combinations: [{ id: 'x', name: 'Old', confidence: 50 }, { name: 'No id', confidence: 40, when }] }] });
+  assert.deepStrictEqual(old.detections[0].combinations, [{ id: 'x', name: 'Old', confidence: 50 }, { name: 'No id', confidence: 40 }]);
+  // At most 32 stored rows per detection
+  const many = Array.from({ length: 40 }, (_, i) => ({ pattern: `p${i}` }));
+  const wide = HistoryStore.slimEntry({ id: 'w', detections: [{ combinations: [{ id: 'w', confidence: 10, when: { any: many }, found: many.map(m => m.pattern) }] }] });
+  assert.strictEqual(wide.detections[0].comboFound.length, 32);
+});
+
+test('a full 1,000-entry history fits even with the real combination names and ids', async () => {
+  // Every detection carrying one of the shipped combinations: real names average
+  // about 47 characters, far longer than the fixture's. Found: what the rule
+  // requires plus one alternative of each "one of" / "at least" group, as on a
+  // typical page.
+  const typicalFound = (when) => {
+    const out = new Set(Combos.mustHaveFound(when));
+    const walk = (node) => {
+      if (!node || typeof node !== 'object') return;
+      const options = node.any || node.of;
+      if (options) {
+        const count = node.of ? Number(node.atLeast) || 1 : 1;
+        options.slice(0, count).forEach(option => Combos.mustHaveFound(option).forEach(id => out.add(id)));
+      }
+      (node.all || []).forEach(walk);
+    };
+    walk(when);
+    return [...out];
+  };
+  const combos = [];
+  for (const category of ['antibot', 'captcha', 'fingerprint']) {
+    const dir = path.join(root, 'detectors', category);
+    for (const file of fs.readdirSync(dir)) combos.push(...(JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8')).combinations || []));
+  }
+  assert.ok(combos.length > 200);
+  const items = Array.from({ length: 1000 }, (_, i) => {
+    const entry = fullEntry(i, 15);
+    entry.detections.forEach((detection, k) => {
+      const combo = combos[(i * 15 + k) % combos.length];
+      detection.combinations = [{ ...combo, found: typicalFound(combo.when) }];
+    });
+    return entry;
+  });
+  const storage = memoryStorage();
+  const { items: kept } = await HistoryStore.mutate(() => items, storage);
+  assert.strictEqual(kept.length, 1000);
+  assert.ok(storage.store[HistoryStore.STORAGE_KEY].length < HistoryStore.MAX_BYTES);
 });
 
 test('legacy and odd shapes pass through without throwing', () => {
