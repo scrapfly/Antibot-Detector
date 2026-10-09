@@ -491,25 +491,7 @@ async function akamaiStartExtraction(tabId) {
         await chrome.tabs.reload(tabId);
         Logger.network('[AKAMAI-EXTRACT] Page reload initiated');
 
-        // Show analyzing notification while waiting for sensor data
-        try {
-            if (typeof showNotification === 'function') {
-                Logger.network('[AKAMAI-EXTRACT] Showing analyzing notification...');
-                await showNotification(tabId, {
-                    module: 'Akamai',
-                    type: 'loading',
-                    title: pageText('advAkamaiNoticeExtractingTitle', 'Extracting Akamai Sensor Data'),
-                    message: pageText('advAkamaiNoticeWaitingSensor', 'Waiting for sensor information to be captured…'),
-                    duration: 30000 // Longer duration since extraction can take time
-                });
-                Logger.network('[AKAMAI-EXTRACT] Notification shown successfully');
-            } else {
-                Logger.network('[AKAMAI-EXTRACT] showNotification function not available');
-            }
-        } catch (error) {
-            Logger.error('NETWORK', '[AKAMAI-EXTRACT] Error showing notification:', error);
-        }
-
+        // Nothing is drawn on the page while waiting: the popup shows the progress
         Logger.network('[AKAMAI-EXTRACT] ========== WAITING FOR SENSOR DATA ==========');
 
         return { status: 'started' };
@@ -944,56 +926,6 @@ function akamaiHandleMessage(request, sendResponse) {
                     Logger.error('NETWORK', '[AKAMAI-EXTRACT] Error starting extraction:', error);
                     sendResponse({ status: 'error', error: error.message });
                 });
-            return true; // Async response
-
-        case 'AKAMAI_SHOW_ANALYZING_NOTIFICATION':
-            // Show analyzing notification for content analysis
-            (async () => {
-                try {
-                    if (typeof showNotification === 'function') {
-                        Logger.network('[AKAMAI] Showing analyzing notification...');
-                        await showNotification(request.tabId, {
-                            module: 'Akamai',
-                            type: 'loading',
-                            title: pageText('advAkamaiNoticeAnalyzingTitle', 'Analyzing Akamai Content'),
-                            message: pageText('advAkamaiNoticeScanning', 'Scanning page for scripts and patterns…'),
-                            duration: 10000
-                        });
-                        Logger.network('[AKAMAI] Notification shown successfully');
-                    } else {
-                        Logger.network('[AKAMAI] showNotification function not available');
-                    }
-                    sendResponse({ status: 'success' });
-                } catch (error) {
-                    Logger.error('NETWORK', '[AKAMAI] Error showing notification:', error);
-                    sendResponse({ status: 'error', error: error.message });
-                }
-            })();
-            return true; // Async response
-
-        case 'AKAMAI_SHOW_EXTRACTING_NOTIFICATION':
-            // Show extracting notification for sensor extraction
-            (async () => {
-                try {
-                    if (typeof showNotification === 'function') {
-                        Logger.network('[AKAMAI] Showing extracting sensor notification...');
-                        await showNotification(request.tabId, {
-                            module: 'Akamai',
-                            type: 'loading',
-                            title: pageText('advAkamaiNoticeExtractingSensorTitle', 'Extracting Sensor Data'),
-                            message: pageText('advAkamaiNoticeCapturingSensor', 'Capturing Akamai sensor information…'),
-                            duration: 15000 // Longer duration to persist through reload
-                        });
-                        Logger.network('[AKAMAI] Notification shown successfully');
-                    } else {
-                        Logger.network('[AKAMAI] showNotification function not available');
-                    }
-                    sendResponse({ status: 'success' });
-                } catch (error) {
-                    Logger.error('NETWORK', '[AKAMAI] Error showing notification:', error);
-                    sendResponse({ status: 'error', error: error.message });
-                }
-            })();
             return true; // Async response
 
         default:

@@ -67,24 +67,10 @@ DataDomeAdvanced.prototype.analyzeScripts = async function() {
 
                 // Reload page to capture DataDome scripts (keep existing cookie)
                 await new Promise(resolve => setTimeout(resolve, 500));
-                {
-                    try {
-                        Logger.network('[DataDome] Reloading page to capture scripts (keeping datadome cookie)...');
-
-                        // Send message to show analyzing notification right before reload
-                        await AdvancedUtils.sendMessage({
-                            type: 'DATADOME_SHOW_ANALYZING_NOTIFICATION',
-                            tabId: this.tabInfo.id
-                        });
-
-                    } catch (error) {
-                        Logger.error('NETWORK', '[DataDome] Error showing analyzing notification:', error);
-                    }
-
-                    // Reload page - Background's webNavigation listener will capture scripts
-                    // DataDome cookie is preserved, no deletion occurs
-                    await chrome.tabs.reload(this.tabInfo.id);
-                }
+                Logger.network('[DataDome] Reloading page to capture scripts (keeping datadome cookie)...');
+                // Reload page - Background's webNavigation listener will capture scripts
+                // DataDome cookie is preserved, no deletion occurs
+                await chrome.tabs.reload(this.tabInfo.id);
             } else {
                 chrome.runtime.onMessage.removeListener(analysisListener);
                 NotificationHelper.error(this._txt('advCommonFailedStartAnalysis', 'Failed to start analysis'));

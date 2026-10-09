@@ -86,8 +86,8 @@ function detect(detector, { page, windowIds = [] }) {
 }
 const matched = (detector, result, id) => result.matches.some(m => Array.from(Combinations.matchPatternIds(detector, m)).includes(id));
 
-test('twenty-five anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
-  assert.deepEqual(Object.keys(antibot).sort(), ['detect-akamai', 'detect-aliyunwaf', 'detect-anubis', 'detect-aws-waf',
+test('twenty-six anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
+  assert.deepEqual(Object.keys(antibot).sort(), ['detect-akamai', 'detect-aliyunwaf', 'detect-amazon', 'detect-anubis', 'detect-aws-waf',
     'detect-azurefrontdoor', 'detect-botguard', 'detect-cheq', 'detect-cloudflare', 'detect-datadome', 'detect-f5',
     'detect-fingerprintjs', 'detect-incapsula', 'detect-jiasule', 'detect-kasada', 'detect-meetrics', 'detect-netacea',
     'detect-ocule', 'detect-perimeterx', 'detect-radware', 'detect-reblaze', 'detect-ruishu', 'detect-shapesecurity',

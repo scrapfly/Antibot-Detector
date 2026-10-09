@@ -34,6 +34,7 @@
       "cacheDuration": 12,
       "cacheUnit": "hours",
       "cacheScope": "domain",
+      "sortBy": "category",
       "categoryOrder": ["antibot", "captcha", "fingerprint"],
       "advancedToolsMinConfidence": 50,
       "blacklistedDomains": [],

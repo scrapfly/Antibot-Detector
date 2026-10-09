@@ -574,6 +574,15 @@
     "message": "सेटिंग्स: {0}",
     "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
   },
+  "ruleDescriptionTitle": {
+    "message": "विवरण"
+  },
+  "ruleDescriptionPlaceholder": {
+    "message": "इस पैटर्न का अर्थ, जैसे ब्राउज़र की भाषा प्राथमिकताएँ पढ़ता है"
+  },
+  "ruleDescriptionHint": {
+    "message": "यह पैटर्न मिलने पर पहचान विवरण और इतिहास में दिखाया जाता है।"
+  },
   "ruleConfidenceLevel": {
     "message": "विश्वास स्तर"
   },
@@ -1879,9 +1888,6 @@
   "officialDetectorsRestoredFmt": {
     "message": "{0} आधिकारिक डिटेक्टर पुनर्स्थापित किए गए"
   },
-  "noOfficialDetectorsToRestore": {
-    "message": "कोई आधिकारिक डिटेक्टर हटाया नहीं गया"
-  },
   "failedRestoreOfficialDetectors": {
     "message": "आधिकारिक डिटेक्टर पुनर्स्थापित नहीं हो सके"
   },
@@ -2557,9 +2563,6 @@
   "advCommonNotFound": {
     "message": "नहीं मिला"
   },
-  "advCommonRequired": {
-    "message": "आवश्यक"
-  },
   "advCommonYes": {
     "message": "हाँ"
   },
@@ -2629,12 +2632,6 @@
   "pageNoticeMonitoringStartedFmt": {
     "message": "{0} निगरानी शुरू हुई"
   },
-  "pageNoticeCollectingScripts": {
-    "message": "कृपया प्रतीक्षा करें, स्क्रिप्ट URL एकत्र किए जा रहे हैं…"
-  },
-  "pageNoticeAnalyzingScriptsFmt": {
-    "message": "{0} स्क्रिप्ट का विश्लेषण हो रहा है"
-  },
   "pageNoticeCaptureCompleted": {
     "message": "कैप्चर पूरा हुआ"
   },
@@ -2689,24 +2686,6 @@
   "advAkamaiNoticeSensorCaptured": {
     "message": "Akamai sensor_data सफलतापूर्वक कैप्चर हो गया"
   },
-  "advAkamaiNoticeExtractingTitle": {
-    "message": "Akamai सेंसर डेटा निकाला जा रहा है"
-  },
-  "advAkamaiNoticeWaitingSensor": {
-    "message": "सेंसर जानकारी कैप्चर होने की प्रतीक्षा की जा रही है…"
-  },
-  "advAkamaiNoticeAnalyzingTitle": {
-    "message": "Akamai सामग्री का विश्लेषण हो रहा है"
-  },
-  "advAkamaiNoticeScanning": {
-    "message": "पेज में स्क्रिप्ट और पैटर्न खोजे जा रहे हैं…"
-  },
-  "advAkamaiNoticeExtractingSensorTitle": {
-    "message": "सेंसर डेटा निकाला जा रहा है"
-  },
-  "advAkamaiNoticeCapturingSensor": {
-    "message": "Akamai सेंसर जानकारी कैप्चर की जा रही है…"
-  },
   "advAkamaiLevelAdvancedSbsd": {
     "message": "उन्नत (SBSD)"
   },
@@ -2725,17 +2704,11 @@
   "advAkamaiScriptsLabel": {
     "message": "Akamai स्क्रिप्ट:"
   },
-  "advAkamaiScriptsHeading": {
-    "message": "Akamai स्क्रिप्ट"
-  },
   "advAkamaiSensorDataUrlScript": {
     "message": "सेंसर डेटा URL स्क्रिप्ट"
   },
   "advAkamaiPixelHtmlVar": {
     "message": "Pixel HTML वेरिएबल:"
-  },
-  "advAkamaiPixelChallengeUrls": {
-    "message": "Pixel चुनौती URL:"
   },
   "advAkamaiPostUrl": {
     "message": "POST URL:"
@@ -2760,9 +2733,6 @@
   },
   "advAkamaiSensorDataCharsFmt": {
     "message": "सेंसर डेटा ({0} वर्ण)"
-  },
-  "advAkamaiSensorDataNotCaptured": {
-    "message": "सेंसर डेटा (कैप्चर नहीं हुआ)"
   },
   "advAkamaiNoSensorData": {
     "message": "कोई सेंसर डेटा कैप्चर नहीं हुआ"
@@ -2862,12 +2832,6 @@
   },
   "advImpervaNoticeSensorCaptured": {
     "message": "सेंसर डेटा सफलतापूर्वक कैप्चर हो गया"
-  },
-  "advImpervaNoticeExtractingTitle": {
-    "message": "Imperva स्क्रिप्ट निकाली जा रही हैं"
-  },
-  "advImpervaNoticeMonitoringChallenge": {
-    "message": "चुनौती और समाधान डेटा की निगरानी की जा रही है…"
   },
   "advRecaptchaCallbackTool": {
     "message": "reCAPTCHA कॉलबैक"
@@ -3055,9 +3019,6 @@
   "advShapeCookieAndHeaders": {
     "message": "कुकी + हेडर"
   },
-  "advShapeNoticeExtractingScripts": {
-    "message": "Shape Security स्क्रिप्ट निकाली जा रही हैं"
-  },
   "advShapeNoticeReloadToMonitor": {
     "message": "Shape Security हेडर और कुकी की निगरानी शुरू करने के लिए पेज फिर से लोड करें"
   },
@@ -3123,12 +3084,6 @@
   },
   "advHcaptchaNoticeCaptured": {
     "message": "hCaptcha डेटा सफलतापूर्वक कैप्चर हुआ"
-  },
-  "advHcaptchaNoticeCheckingVersion": {
-    "message": "hCaptcha संस्करण जाँचा जा रहा है"
-  },
-  "advHcaptchaNoticeAnalyzingPage": {
-    "message": "कृपया प्रतीक्षा करें, पेज का विश्लेषण हो रहा है…"
   },
   "advAwswafNoScripts": {
     "message": "कोई AWS WAF स्क्रिप्ट नहीं मिली"
@@ -4049,13 +4004,22 @@
     "message": "पहचान सूची"
   },
   "settingsCardCategoryOrder": {
-    "message": "श्रेणियों का क्रम"
-  },
-  "settingsCategoryOrderLabel": {
-    "message": "पहले दिखाएँ"
+    "message": "पहचानों का क्रम"
   },
   "settingsCategoryOrderHelp": {
-    "message": "पहचान सूची में श्रेणियों का क्रम। एक श्रेणी के भीतर सबसे अधिक भरोसे वाला परिणाम पहले आता है।"
+    "message": "पहचान सूची और इतिहास में पहचानों का क्रम। इसे बदलने के लिए कार्ड खींचें; हर श्रेणी में सबसे अधिक भरोसे वाला परिणाम पहले आता है।"
+  },
+  "settingsOrderHighestConfidenceFirst": {
+    "message": "सबसे अधिक भरोसा पहले"
+  },
+  "settingsCategoryOrderCardsLabel": {
+    "message": "श्रेणियों का क्रम"
+  },
+  "settingsMoveUpFmt": {
+    "message": "{0} को ऊपर ले जाएँ"
+  },
+  "settingsMoveDownFmt": {
+    "message": "{0} को नीचे ले जाएँ"
   },
   "settingsCardShareUploads": {
     "message": "शेयर अपलोड"
@@ -4261,6 +4225,9 @@
   "advCommonValue": {
     "message": "मान"
   },
+  "advCommonCharsFmt": {
+    "message": "{0} अक्षर"
+  },
   "advCookiePath": {
     "message": "पाथ"
   },
@@ -4276,8 +4243,41 @@
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "आधिकारिक डिटेक्टर बहाल करें?"
   },
-  "restoreOfficialDetectorsConfirmMsg": {
-    "message": "आपके हटाए गए आधिकारिक डिटेक्टर एक्सटेंशन में शामिल संस्करण से फिर से इंस्टॉल होते हैं। आपके अपने डिटेक्टर और अन्य नियमों में किए बदलाव नहीं बदलते।"
+  "allOfficialDetectorsInstalled": {
+    "message": "सभी आधिकारिक डिटेक्टर इंस्टॉल हैं। पुनर्स्थापित करने को कुछ नहीं है।"
+  },
+  "restoreOfficialChecking": {
+    "message": "GitHub पर नवीनतम रिलीज़ जाँची जा रही है..."
+  },
+  "restoreOfficialFromReleaseFmt": {
+    "message": "GitHub पर रिलीज़ {0} से फिर से इंस्टॉल होंगे: {1}।"
+  },
+  "restoreOfficialOffline": {
+    "message": "GitHub तक नहीं पहुँचा जा सका, इसलिए एक्सटेंशन में शामिल संस्करण उपयोग होगा।"
+  },
+  "restoreOfficialRateLimited": {
+    "message": "GitHub अभी अनुरोध सीमित कर रहा है, इसलिए एक्सटेंशन में शामिल संस्करण उपयोग होगा।"
+  },
+  "restoreOfficialListFmt": {
+    "message": "एक्सटेंशन में शामिल संस्करण से फिर से इंस्टॉल होंगे: {0}।"
+  },
+  "restoreOfficialUpdateOnlyFmt": {
+    "message": "नियम → अद्यतन इन्हें फिर से इंस्टॉल करता है: {0}।"
+  },
+  "restoreOfficialUnchanged": {
+    "message": "आपके अपने डिटेक्टर और अन्य नियमों में किए बदलाव नहीं बदलते।"
+  },
+  "restoreOfficialMoreFmt": {
+    "message": "{0} और"
+  },
+  "restoreOfficialFailedFmt": {
+    "message": "पुनर्स्थापित नहीं हो सका: {0}"
+  },
+  "officialDetectorRestoredFmt": {
+    "message": "{0} पुनर्स्थापित किया गया"
+  },
+  "restoreOfficialRunUpdate": {
+    "message": "बाकी इंस्टॉल करने के लिए नियम → अद्यतन चलाएँ।"
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "बहाल करें"

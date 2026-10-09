@@ -349,6 +349,10 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
     this.updateMethodSettingsTitle(methodKey);
     const isContentMethod = methodKey === 'content';
 
+    // Description shown in detection details and History
+    const descriptionInput = document.querySelector('#methodDescriptionInput');
+    if (descriptionInput) descriptionInput.value = methodItem.dataset.description || '';
+
     // Load current settings from data attributes
     const confidence = methodItem.dataset.confidence || '100';
     const nameRegex = methodItem.dataset.nameRegex === 'true';
@@ -661,6 +665,14 @@ Rules.prototype.saveMethodSettings = function() {
 
     // Pattern text applied in the Test pattern dialog
     this.commitPendingPatternText?.();
+
+    // Description: kept exactly as stored unless it was edited here
+    const descriptionInput = document.querySelector('#methodDescriptionInput');
+    if (descriptionInput) {
+      const typed = descriptionInput.value.replace(/\s+/g, ' ').trim();
+      const stored = this.currentMethodItem.dataset.description || '';
+      if (typed !== stored.replace(/\s+/g, ' ').trim()) this.currentMethodItem.dataset.description = typed;
+    }
 
     // Get values from modal
     const confidence = parseInt(document.querySelector('#confidenceSlider')?.value || '100', 10);

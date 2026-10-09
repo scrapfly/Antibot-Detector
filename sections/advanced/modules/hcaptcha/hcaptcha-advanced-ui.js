@@ -41,54 +41,46 @@ HCaptchaAdvanced.prototype.setupToolListeners = function() {
     };
 
 
+// Header icon of the Check Version dialog (a version tag)
+HCaptchaAdvanced.VERSION_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>';
+
+/**
+ * Check Version result: the mode as a chip, then the version, site key and
+ * page as rows that copy on click. Nothing found: one clear note.
+ */
 HCaptchaAdvanced.prototype.displayVersionModal = function(data) {
-        const { version, isEnterprise, message } = data;
-        const yesText = hcaptchaText('advCommonYes', 'Yes');
-        const noText = hcaptchaText('advHcaptchaNo', 'No');
+        const K = BaseAdvancedModule;
+        const { version, isEnterprise, websiteKey, websiteURL } = data || {};
+        let host = '';
+        try { host = this.tabInfo?.url ? new URL(this.tabInfo.url).hostname : ''; } catch (_) { host = ''; }
 
-        const modal = this.createToolModal();
-
-        if (message || !version) {
-            modal.innerHTML = `
-                <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 24px; max-width: 500px; width: 90%; text-align: center;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${hcaptchaText('advHcaptchaDetectionTitle', 'hCaptcha Detection')}</h3>
-                        ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
-                    </div>
-                    <div style="padding: 32px 16px; opacity: 0.7;">
-                        <div style="font-size: 48px; margin-bottom: 12px;"></div>
-                        <div style="color: var(--text-secondary);">${hcaptchaText('advHcaptchaNotDetected', 'hCaptcha not detected. Please reload the page with hCaptcha loaded.')}</div>
-                    </div>
-                </div>
-            `;
-        } else {
-            modal.innerHTML = `
-                <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 500px; width: 90%;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                        <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${hcaptchaText('advHcaptchaVersionTitle', 'hCaptcha Version')}</h3>
-                        ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
-                    </div>
-
-                    <div style="display: grid; gap: 12px;">
-                        <div style="background: var(--bg-tertiary); padding: 14px; border-radius: 6px;">
-                            <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 6px;">${hcaptchaText('ruleFieldVersion', 'Version')}</div>
-                            <div class="copy-value" data-copy="${version}" style="font-weight: 500; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; background: var(--bg-primary); padding: 8px; border-radius: 4px;">${version}</div>
-                        </div>
-
-                        <div style="background: var(--bg-tertiary); padding: 14px; border-radius: 6px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="color: var(--text-secondary); font-size: 12px;">${hcaptchaText('advHcaptchaEnterpriseMode', 'Enterprise Mode')}</span>
-                                <span style="font-weight: 600; font-size: 18px;">${isEnterprise ? yesText : noText}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
+        if (!version && !websiteKey) {
+            this.openKitModal({
+                title: hcaptchaText('advHcaptchaDetectionTitle', 'hCaptcha Detection'),
+                subtitle: host,
+                iconSvg: HCaptchaAdvanced.VERSION_ICON,
+                body: K.kitNote(hcaptchaText('advHcaptchaNotDetected', 'hCaptcha not detected. Please reload the page with hCaptcha loaded.'))
+            });
+            return;
         }
 
-        this.bindCopyValueHandlers(modal, { defaultMessage: hcaptchaText('copiedNotification', 'Copied') });
-        this.bindModalClose(modal);
-        this.showToolModal(modal);
+        const mode = isEnterprise
+            ? K.kitChip(hcaptchaText('advCommonYes', 'Yes'), 'purple')
+            : K.kitChip(hcaptchaText('advHcaptchaNo', 'No'), 'neutral');
+        const facts = K.kitFacts([
+            { label: hcaptchaText('advHcaptchaEnterpriseMode', 'Enterprise Mode'), value: mode, html: true }
+        ]);
+        const fields = K.kitField(hcaptchaText('ruleFieldVersion', 'Version'), version)
+            + K.kitField(hcaptchaText('advCommonSiteKey', 'Site Key'), websiteKey)
+            + K.kitField(hcaptchaText('advCommonPage', 'Page'), websiteURL, { mono: false, wrap: true });
+
+        this.openKitModal({
+            title: hcaptchaText('advHcaptchaVersionTitle', 'hCaptcha Version'),
+            subtitle: host,
+            iconSvg: HCaptchaAdvanced.VERSION_ICON,
+            body: facts + (fields ? K.kitCard(fields) : ''),
+            copiedMessage: hcaptchaText('copiedNotification', 'Copied')
+        });
     };
 
 

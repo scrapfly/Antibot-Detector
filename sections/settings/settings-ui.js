@@ -395,7 +395,7 @@ SettingsUI.updateSettingsUI = function() {
         Logger.debug('UI', 'Cache scope loaded:', this.settings.detection.cacheScope);
       }
 
-      SettingsUI.populateCategoryOrder(this.settings.detection.categoryOrder);
+      SettingsUI.populateCategoryOrder(this.settings.detection, this.settings.categoryColors);
 
       const minToolConfidence = document.querySelector('#advancedToolsMinConfidence');
       if (minToolConfidence) {
@@ -623,8 +623,10 @@ SettingsUI.getSettingsFromUI = function() {
       cacheDuration: parseInt(document.querySelector('#cacheDuration')?.value ?? this.settings.detection?.cacheDuration ?? 12),
       cacheUnit: document.querySelector('#cacheUnit')?.value ?? this.settings.detection?.cacheUnit ?? 'hours',
       cacheScope: document.querySelector('#cacheScope')?.value ?? this.settings.detection?.cacheScope ?? 'domain',
-      categoryOrder: DetectionUtils.normalizeCategoryOrder(document.querySelector('#categoryOrder')?.value
-        ?? this.settings.detection?.categoryOrder),
+      // "Show first": a category order, or the highest confidence (the
+      // category order is kept for ties and for switching back)
+      ...SettingsUI.readDetectionSort(document.querySelector('#categoryOrder')?.value,
+        document.querySelector('#sortByConfidence')?.checked, this.settings.detection),
       advancedToolsMinConfidence: parseInt(document.querySelector('#advancedToolsMinConfidence')?.value
         ?? this.settings.detection?.advancedToolsMinConfidence ?? 50),
       blacklistedDomains: this.settings.detection?.blacklistedDomains || [], // This is managed separately by the blacklist UI
@@ -1013,29 +1015,127 @@ SettingsUI.openHistoryStats = function() {
 };
 
 /**
- * Fill Settings → Detection → Category order with every order of the three
- * categories ("Anti-bot → Captcha → Fingerprint", …) and select the saved one.
- * @param {Array<string>} savedOrder
+ * Settings → Detection order: the "Highest confidence first" switch and one
+ * card per category, in the saved order. Cards move by dragging or with
+ * their arrow buttons; the order is kept in #categoryOrder until Save.
+ * @param {object} [detectionSettings] - settings.detection
+ * @param {object} [colors] - settings.categoryColors, for the icon on each card
  */
-SettingsUI.populateCategoryOrder = function(savedOrder) {
-  const select = document.querySelector('#categoryOrder');
-  if (!select) return;
+SettingsUI.populateCategoryOrder = function(detectionSettings, colors = {}) {
+  const list = document.querySelector('#categoryOrderList');
+  const hidden = document.querySelector('#categoryOrder');
+  const toggle = document.querySelector('#sortByConfidence');
+  if (!list || !hidden) return;
   const _t = (typeof I18n !== 'undefined') ? I18n : null;
+  const tr = (key, fallback) => (_t && _t.get(key)) || fallback;
   const label = {
-    antibot: (_t && _t.get('categoryAntibot')) || 'Anti-bot',
-    captcha: (_t && _t.get('categoryCaptcha')) || 'Captcha',
-    fingerprint: (_t && _t.get('categoryFingerprint')) || 'Fingerprint'
+    antibot: tr('categoryAntibot', 'Anti-bot'),
+    captcha: tr('categoryCaptcha', 'Captcha'),
+    fingerprint: tr('categoryFingerprint', 'Fingerprint')
   };
-  const permutations = (list) => (list.length <= 1 ? [list]
-    : list.flatMap((first, i) => permutations([...list.slice(0, i), ...list.slice(i + 1)]).map(rest => [first, ...rest])));
+  const dot = {
+    antibot: colors?.antibot || '#FF5733',
+    captcha: colors?.captcha || '#33C3FF',
+    fingerprint: colors?.fingerprint || '#3b82f6'
+  };
+  const sort = DetectionUtils.detectionSortOf(detectionSettings);
+  if (toggle) toggle.checked = sort.sortBy === DetectionUtils.SORT_BY_CONFIDENCE;
 
-  select.replaceChildren(...permutations(DetectionUtils.DEFAULT_CATEGORY_ORDER).map(order => {
-    const option = document.createElement('option');
-    option.value = order.join(',');
-    option.textContent = order.map(category => label[category]).join(' → ');
-    return option;
+  // Icon tile per category, tinted with its colour
+  const icon = {
+    antibot: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>',
+    captcha: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M8 12.5l2.8 2.8L16.5 9"/></svg>',
+    fingerprint: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5a8 8 0 0 1 11 0"/><path d="M5 12a7 7 0 0 1 14 0v1"/><path d="M8.5 20c-.6-1.6-.9-3.4-.9-5.3V12a4.4 4.4 0 0 1 8.8 0v2"/><path d="M12 11.5v3.2c0 2.2.5 4.2 1.4 5.8"/><path d="M16.4 17.5c.2 1 .5 1.9.9 2.7"/></svg>'
+  };
+  const handle = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>';
+  const arrow = (d) => `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+
+  const sync = () => {
+    const items = [...list.querySelectorAll('.category-order-item')];
+    hidden.value = items.map(item => item.dataset.category).join(',');
+    items.forEach((item, i) => {
+      item.querySelector('.category-order-rank').textContent = String(i + 1);
+      item.querySelector('[data-move="-1"]').disabled = i === 0;
+      item.querySelector('[data-move="1"]').disabled = i === items.length - 1;
+    });
+  };
+
+  list.replaceChildren(...sort.categoryOrder.map((category) => {
+    const item = document.createElement('li');
+    item.className = 'category-order-item';
+    item.dataset.category = category;
+    item.draggable = true;
+    item.innerHTML = `
+      <span class="category-order-handle" aria-hidden="true">${handle}</span>
+      <span class="category-order-rank"></span>
+      <span class="category-order-icon" aria-hidden="true">${icon[category]}</span>
+      <span class="category-order-name"></span>
+      <button type="button" class="category-order-move" data-move="-1">${arrow('M6 15l6-6 6 6')}</button>
+      <button type="button" class="category-order-move" data-move="1">${arrow('M6 9l6 6 6-6')}</button>`;
+    item.querySelector('.category-order-icon').style.color = dot[category];
+    item.querySelector('.category-order-name').textContent = label[category];
+    const up = item.querySelector('[data-move="-1"]');
+    const down = item.querySelector('[data-move="1"]');
+    up.setAttribute('aria-label', _t ? (_t.format('settingsMoveUpFmt', label[category]) || `Move ${label[category]} up`) : `Move ${label[category]} up`);
+    down.setAttribute('aria-label', _t ? (_t.format('settingsMoveDownFmt', label[category]) || `Move ${label[category]} down`) : `Move ${label[category]} down`);
+    up.title = up.getAttribute('aria-label');
+    down.title = down.getAttribute('aria-label');
+    return item;
   }));
-  select.value = DetectionUtils.normalizeCategoryOrder(savedOrder).join(',');
+  sync();
+
+  // Bound once: the list element stays, its cards are replaced on every load
+  if (list.dataset.orderReady) return;
+  list.dataset.orderReady = '1';
+  list.addEventListener('click', (event) => {
+    const button = event.target.closest('.category-order-move');
+    if (!button || button.disabled) return;
+    const item = button.closest('.category-order-item');
+    if (button.dataset.move === '-1' && item.previousElementSibling) item.parentNode.insertBefore(item, item.previousElementSibling);
+    if (button.dataset.move === '1' && item.nextElementSibling) item.parentNode.insertBefore(item.nextElementSibling, item);
+    sync();
+    // Keep the keyboard on the card that moved
+    const again = item.querySelector(`[data-move="${button.dataset.move}"]`);
+    (again && !again.disabled ? again : item.querySelector('.category-order-move:not(:disabled)'))?.focus();
+  });
+  let dragged = null;
+  list.addEventListener('dragstart', (event) => {
+    dragged = event.target.closest('.category-order-item');
+    if (!dragged) return;
+    dragged.classList.add('is-dragging');
+    event.dataTransfer.effectAllowed = 'move';
+    try { event.dataTransfer.setData('text/plain', dragged.dataset.category); } catch (_) { /* some browsers need data to start */ }
+  });
+  list.addEventListener('dragover', (event) => {
+    if (!dragged) return;
+    event.preventDefault();
+    const after = [...list.querySelectorAll('.category-order-item:not(.is-dragging)')]
+      .find(item => event.clientY < item.getBoundingClientRect().top + item.offsetHeight / 2);
+    if (after) list.insertBefore(dragged, after); else list.appendChild(dragged);
+    sync();
+  });
+  list.addEventListener('drop', (event) => event.preventDefault());
+  list.addEventListener('dragend', () => {
+    if (dragged) dragged.classList.remove('is-dragging');
+    dragged = null;
+    sync();
+  });
+};
+
+/**
+ * The Detection order choice as settings.detection fields.
+ * @param {string|undefined} orderValue - #categoryOrder ("antibot,captcha,fingerprint"); undefined keeps the saved order
+ * @param {boolean|undefined} byConfidence - the switch; undefined keeps the saved choice
+ * @param {object} [previous] - the saved settings.detection
+ * @returns {{sortBy: string, categoryOrder: string[]}}
+ */
+SettingsUI.readDetectionSort = function(orderValue, byConfidence, previous) {
+  const saved = DetectionUtils.detectionSortOf(previous);
+  const categoryOrder = orderValue ? DetectionUtils.normalizeCategoryOrder(orderValue) : saved.categoryOrder;
+  const sortBy = typeof byConfidence === 'boolean'
+    ? (byConfidence ? DetectionUtils.SORT_BY_CONFIDENCE : 'category')
+    : saved.sortBy;
+  return { sortBy, categoryOrder };
 };
 
 if (typeof self !== 'undefined') {

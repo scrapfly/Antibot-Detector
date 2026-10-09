@@ -574,6 +574,15 @@
     "message": "설정: {0}",
     "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
   },
+  "ruleDescriptionTitle": {
+    "message": "설명"
+  },
+  "ruleDescriptionPlaceholder": {
+    "message": "이 패턴의 의미 (예: 브라우저 언어 설정을 읽음)"
+  },
+  "ruleDescriptionHint": {
+    "message": "이 패턴이 발견되면 탐지 세부 정보와 기록에 표시됩니다."
+  },
   "ruleConfidenceLevel": {
     "message": "신뢰도 수준"
   },
@@ -1879,9 +1888,6 @@
   "officialDetectorsRestoredFmt": {
     "message": "공식 감지기 {0}개를 복원했습니다"
   },
-  "noOfficialDetectorsToRestore": {
-    "message": "삭제된 공식 감지기가 없습니다"
-  },
   "failedRestoreOfficialDetectors": {
     "message": "공식 감지기를 복원하지 못했습니다"
   },
@@ -2557,9 +2563,6 @@
   "advCommonNotFound": {
     "message": "찾을 수 없음"
   },
-  "advCommonRequired": {
-    "message": "필요"
-  },
   "advCommonYes": {
     "message": "예"
   },
@@ -2629,12 +2632,6 @@
   "pageNoticeMonitoringStartedFmt": {
     "message": "{0} 모니터링 시작됨"
   },
-  "pageNoticeCollectingScripts": {
-    "message": "스크립트 URL을 수집하는 중입니다. 잠시 기다려 주세요…"
-  },
-  "pageNoticeAnalyzingScriptsFmt": {
-    "message": "{0} 스크립트 분석 중"
-  },
   "pageNoticeCaptureCompleted": {
     "message": "캡처 완료"
   },
@@ -2689,24 +2686,6 @@
   "advAkamaiNoticeSensorCaptured": {
     "message": "Akamai sensor_data를 캡처했습니다"
   },
-  "advAkamaiNoticeExtractingTitle": {
-    "message": "Akamai 센서 데이터 추출 중"
-  },
-  "advAkamaiNoticeWaitingSensor": {
-    "message": "센서 정보가 캡처되기를 기다리는 중…"
-  },
-  "advAkamaiNoticeAnalyzingTitle": {
-    "message": "Akamai 콘텐츠 분석 중"
-  },
-  "advAkamaiNoticeScanning": {
-    "message": "페이지에서 스크립트와 패턴을 검색하는 중…"
-  },
-  "advAkamaiNoticeExtractingSensorTitle": {
-    "message": "센서 데이터 추출 중"
-  },
-  "advAkamaiNoticeCapturingSensor": {
-    "message": "Akamai 센서 정보를 캡처하는 중…"
-  },
   "advAkamaiLevelAdvancedSbsd": {
     "message": "고급 (SBSD)"
   },
@@ -2725,17 +2704,11 @@
   "advAkamaiScriptsLabel": {
     "message": "Akamai 스크립트:"
   },
-  "advAkamaiScriptsHeading": {
-    "message": "Akamai 스크립트"
-  },
   "advAkamaiSensorDataUrlScript": {
     "message": "센서 데이터 URL 스크립트"
   },
   "advAkamaiPixelHtmlVar": {
     "message": "Pixel HTML 변수:"
-  },
-  "advAkamaiPixelChallengeUrls": {
-    "message": "Pixel 챌린지 URL:"
   },
   "advAkamaiPostUrl": {
     "message": "POST URL:"
@@ -2760,9 +2733,6 @@
   },
   "advAkamaiSensorDataCharsFmt": {
     "message": "센서 데이터 ({0}자)"
-  },
-  "advAkamaiSensorDataNotCaptured": {
-    "message": "센서 데이터 (캡처되지 않음)"
   },
   "advAkamaiNoSensorData": {
     "message": "캡처된 센서 데이터가 없습니다"
@@ -2862,12 +2832,6 @@
   },
   "advImpervaNoticeSensorCaptured": {
     "message": "센서 데이터를 캡처했습니다"
-  },
-  "advImpervaNoticeExtractingTitle": {
-    "message": "Imperva 스크립트 추출 중"
-  },
-  "advImpervaNoticeMonitoringChallenge": {
-    "message": "챌린지 및 솔루션 데이터를 모니터링하는 중…"
   },
   "advRecaptchaCallbackTool": {
     "message": "reCAPTCHA 콜백"
@@ -3055,9 +3019,6 @@
   "advShapeCookieAndHeaders": {
     "message": "쿠키 + 헤더"
   },
-  "advShapeNoticeExtractingScripts": {
-    "message": "Shape Security 스크립트 추출 중"
-  },
   "advShapeNoticeReloadToMonitor": {
     "message": "페이지를 새로고침하면 Shape Security 헤더와 쿠키 모니터링이 시작됩니다"
   },
@@ -3123,12 +3084,6 @@
   },
   "advHcaptchaNoticeCaptured": {
     "message": "hCaptcha 데이터를 캡처했습니다"
-  },
-  "advHcaptchaNoticeCheckingVersion": {
-    "message": "hCaptcha 버전 확인 중"
-  },
-  "advHcaptchaNoticeAnalyzingPage": {
-    "message": "페이지를 분석하는 중입니다. 잠시 기다려 주세요…"
   },
   "advAwswafNoScripts": {
     "message": "AWS WAF 스크립트를 찾을 수 없습니다"
@@ -4049,13 +4004,22 @@
     "message": "탐지 목록"
   },
   "settingsCardCategoryOrder": {
-    "message": "카테고리 순서"
-  },
-  "settingsCategoryOrderLabel": {
-    "message": "먼저 표시"
+    "message": "탐지 순서"
   },
   "settingsCategoryOrderHelp": {
-    "message": "탐지 목록의 카테고리 순서입니다. 같은 카테고리 안에서는 신뢰도가 높은 항목이 먼저 표시됩니다."
+    "message": "탐지 목록과 기록에서의 탐지 순서입니다. 카드를 끌어서 바꾸세요. 같은 카테고리 안에서는 신뢰도가 높은 항목이 먼저 표시됩니다."
+  },
+  "settingsOrderHighestConfidenceFirst": {
+    "message": "신뢰도 높은 순 우선"
+  },
+  "settingsCategoryOrderCardsLabel": {
+    "message": "카테고리 순서"
+  },
+  "settingsMoveUpFmt": {
+    "message": "{0} 위로 이동"
+  },
+  "settingsMoveDownFmt": {
+    "message": "{0} 아래로 이동"
   },
   "settingsCardShareUploads": {
     "message": "공유 업로드"
@@ -4261,6 +4225,9 @@
   "advCommonValue": {
     "message": "값"
   },
+  "advCommonCharsFmt": {
+    "message": "{0}자"
+  },
   "advCookiePath": {
     "message": "경로"
   },
@@ -4276,8 +4243,41 @@
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "공식 탐지기를 복원할까요?"
   },
-  "restoreOfficialDetectorsConfirmMsg": {
-    "message": "삭제한 공식 탐지기를 확장 프로그램에 포함된 버전으로 다시 설치합니다. 직접 만든 탐지기와 다른 규칙의 수정 내용은 바뀌지 않습니다."
+  "allOfficialDetectorsInstalled": {
+    "message": "모든 공식 감지기가 설치되어 있습니다. 복원할 항목이 없습니다."
+  },
+  "restoreOfficialChecking": {
+    "message": "GitHub에서 최신 릴리스를 확인하는 중..."
+  },
+  "restoreOfficialFromReleaseFmt": {
+    "message": "GitHub의 릴리스 {0}에서 다시 설치합니다: {1}."
+  },
+  "restoreOfficialOffline": {
+    "message": "GitHub에 연결할 수 없어 확장 프로그램에 포함된 버전을 사용합니다."
+  },
+  "restoreOfficialRateLimited": {
+    "message": "GitHub가 현재 요청을 제한하고 있어 확장 프로그램에 포함된 버전을 사용합니다."
+  },
+  "restoreOfficialListFmt": {
+    "message": "확장 프로그램에 포함된 버전으로 다시 설치합니다: {0}."
+  },
+  "restoreOfficialUpdateOnlyFmt": {
+    "message": "규칙 → 업데이트에서 다시 설치됩니다: {0}."
+  },
+  "restoreOfficialUnchanged": {
+    "message": "직접 만든 감지기와 다른 규칙의 수정 내용은 바뀌지 않습니다."
+  },
+  "restoreOfficialMoreFmt": {
+    "message": "외 {0}개"
+  },
+  "restoreOfficialFailedFmt": {
+    "message": "복원하지 못했습니다: {0}"
+  },
+  "officialDetectorRestoredFmt": {
+    "message": "{0} 복원됨"
+  },
+  "restoreOfficialRunUpdate": {
+    "message": "나머지는 규칙 → 업데이트를 실행해 설치하세요."
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "복원"

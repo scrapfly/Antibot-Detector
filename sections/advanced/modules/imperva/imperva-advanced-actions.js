@@ -122,14 +122,6 @@ ImpervaAdvanced.prototype.extractScripts = async function() {
 
             if (response && response.status === 'success') {
                 Logger.network('[IMPERVA-EXTRACT] Extraction mode enabled successfully');
-                Logger.network('[IMPERVA-EXTRACT] Step 4: Showing analyzing notification...');
-
-                // Send message to background to show analyzing notification BEFORE reload
-                await this.sendMessage({
-                    type: 'IMPERVA_SHOW_ANALYZING_NOTIFICATION',
-                    tabId: tab.id
-                });
-
                 Logger.network('[IMPERVA-EXTRACT] Step 5: Reloading page...');
 
                 // Reload the page to trigger Imperva scripts

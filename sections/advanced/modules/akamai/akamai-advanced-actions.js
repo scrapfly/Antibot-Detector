@@ -9,12 +9,6 @@ AkamaiAdvanced.prototype.analyzeContent = async function() {
 
             NotificationHelper.info(AkamaiAdvanced.tr('advAkamaiReloadingToAnalyze', 'Reloading page to analyze Akamai data…'));
 
-            // Send message to background to show analyzing notification BEFORE reload
-            await this.sendMessage({
-                type: 'AKAMAI_SHOW_ANALYZING_NOTIFICATION',
-                tabId: this.tabInfo.id
-            });
-
             // Reload the page
             await chrome.tabs.reload(this.tabInfo.id);
 
@@ -1676,13 +1670,8 @@ AkamaiAdvanced.prototype.extractSensorInformation = async function() {
 
             if (response && response.status === 'success') {
                 Logger.network('[AKAMAI-EXTRACT] Extraction mode enabled successfully');
-                Logger.network('[AKAMAI-EXTRACT] Step 6: Showing extracting notification...');
-
-                // Show extracting notification before reload
-                await AdvancedUtils.sendMessage({
-                    type: 'AKAMAI_SHOW_EXTRACTING_NOTIFICATION',
-                    tabId: tab.id
-                });
+                // No notice on the page itself: the popup already says it is
+                // extracting, and the result opens here
 
                 Logger.network('[AKAMAI-EXTRACT] Step 7: Reloading tab to capture sensor data...');
                 await chrome.tabs.reload(tab.id);

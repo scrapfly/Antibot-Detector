@@ -90,12 +90,14 @@ DetectionUI.handleLoadingTimeout = function() {
               if (response?.data?.detectionResults?.length > 0) {
                 // Detection completed! Show results instead of interrupted state
                 if (this.debugMode) Logger.debug('UI', '[Detection] Timeout but results exist - showing results instead of interrupted state');
+                // The tab's own engine and detectors, as every other caller
+                // passes (there are no window.detectionEngine / detectorManager)
                 await Detection.processDetectionData(
                   {
                     detection: this,
-                    detectionEngine: window.detectionEngine,
-                    detectorManager: window.detectorManager,
-                    history: window.History
+                    detectionEngine: this.detectionEngine,
+                    detectorManager: this.detectorManager,
+                    history: this.history
                   },
                   response.data
                 );
@@ -1331,34 +1333,11 @@ DetectionUI.getFilteredResults = function() {
 };
 
 DetectionUI.sortDetectionsByCategory = function(detections) {
-    // Settings → Detection → Category order (default anti-bot, captcha, fingerprint)
-    const order = Array.isArray(this?.categoryOrder) ? this.categoryOrder : ['antibot', 'captcha', 'fingerprint'];
-    const rank = (category) => {
-      const index = order.indexOf(category);
-      return index === -1 ? 999 : index + 1;
-    };
-    const categoryPriority = {
-      'antibot': rank('antibot'),
-      'anti-bot': rank('antibot'),
-      'captcha': rank('captcha'),
-      'fingerprint': rank('fingerprint'),
-      'fingerprinting': rank('fingerprint')
-    };
-
-    return [...detections].sort((a, b) => {
-      const categoryA = (a.category || '').toLowerCase();
-      const categoryB = (b.category || '').toLowerCase();
-
-      const priorityA = categoryPriority[categoryA] || 999;
-      const priorityB = categoryPriority[categoryB] || 999;
-
-      // Sort by priority (lower number = higher priority)
-      if (priorityA !== priorityB) {
-        return priorityA - priorityB;
-      }
-
-      // If same category, sort by confidence (higher first)
-      return (b.confidence || 0) - (a.confidence || 0);
+    // Settings → Detection → Show first: a category order (default anti-bot,
+    // captcha, fingerprint, then confidence) or the highest confidence
+    return DetectionUtils.sortDetections(detections, {
+      sortBy: this?.sortBy,
+      categoryOrder: Array.isArray(this?.categoryOrder) ? this.categoryOrder : undefined
     });
 };
 

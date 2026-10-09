@@ -14,7 +14,7 @@ function loadHistory() {
   const context = vm.createContext({ console, setTimeout, clearTimeout, chrome: { runtime: { getURL: (p) => `chrome-extension://id/${p}` } } });
   context.self = context;
   context.window = context;
-  for (const file of ['utils/format-utils.js', 'modules/detection/detection-combinations.js', 'modules/ui/combination-checklist.js',
+  for (const file of ['utils/format-utils.js', 'utils/detection-utils.js', 'modules/detection/detection-combinations.js', 'modules/ui/combination-checklist.js',
     'modules/core/history-store.js', 'sections/history/history.js']) {
     vm.runInContext(read(file), context, { filename: file });
   }

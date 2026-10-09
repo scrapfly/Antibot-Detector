@@ -257,7 +257,8 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                 data-payload-url-pattern="${FormatUtils.escapeAttr(payloadUrlPattern)}"
                 data-payload-url-regex="${payloadUrlRegex}"
                 data-payload-url-case-sensitive="${payloadUrlCaseSensitive}"
-                data-payload-methods="${FormatUtils.escapeAttr(payloadMethods)}">
+                data-payload-methods="${FormatUtils.escapeAttr(payloadMethods)}"
+                data-description="${FormatUtils.escapeAttr(method.description || '')}">
                 <div class="method-item-content">
                   <div class="method-item-inputs">
                     <div class="input-with-indicators">
@@ -755,7 +756,8 @@ Rules.prototype.addNewMethodItem = function(button) {
         data-payload-url-pattern=""
         data-payload-url-regex="false"
         data-payload-url-case-sensitive="false"
-        data-payload-methods="">
+        data-payload-methods=""
+        data-description="">
         <div class="method-item-content">
           <div class="method-item-inputs">
             <div class="input-with-indicators">
@@ -862,7 +864,8 @@ Rules.prototype.addNewMethodSection = function() {
             data-name-case="false"
             data-value-regex="false"
             data-value-wholeword="false"
-            data-value-case="false">
+            data-value-case="false"
+            data-description="">
             <div class="method-item-content">
               <div class="method-item-inputs">
                 <div class="input-with-indicators">
@@ -1116,8 +1119,17 @@ Rules.prototype._collectDetectionFromForm = function() {
           if (item.dataset.patternId) methodData.id = item.dataset.patternId;
           if (item.dataset.standalone === 'false') methodData.standalone = false;
 
+          // Description (Settings → Description): the text detection details
+          // and History show for this rule; every method type has one
+          const describedOnRow = item.dataset.description !== undefined;
+          if (describedOnRow) {
+            if (item.dataset.description) methodData.description = item.dataset.description;
+            else delete methodData.description;
+          }
+
           const original = storedRule(methodType, item.dataset.patternId);
-          methods.push(mergeRuleWithForm(original, methodData, methodType, Boolean(valueInput) && methodType !== 'header' && methodType !== 'cookie' && methodType !== 'window'));
+          methods.push(mergeRuleWithForm(original, methodData, methodType,
+            describedOnRow || (Boolean(valueInput) && methodType !== 'header' && methodType !== 'cookie' && methodType !== 'window')));
         }
       });
 

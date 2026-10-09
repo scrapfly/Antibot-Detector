@@ -4356,3 +4356,31 @@
   align-items: center;
   gap: 4px;
 }
+
+/* Settings → Description: the text detection details and History show */
+#methodSettingsModal .method-description-input {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  padding: 8px 10px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.4;
+  resize: vertical;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#methodSettingsModal .method-description-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+#methodSettingsModal #descriptionGroup .option-hint {
+  margin: 6px 0 0;
+}

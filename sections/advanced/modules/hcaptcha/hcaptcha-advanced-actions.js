@@ -3,9 +3,12 @@ HCaptchaAdvanced.prototype.checkVersion = async function() {
             if (!this.tabInfo || !this.tabInfo.id) throw new Error('Tab information not available');
 
             // Set up listener for version detection results BEFORE reloading
+            let timeoutId = null;
             const versionListener = (message) => {
                 if (message.type === 'HCAPTCHA_VERSION_RESULT') {
                     Logger.network('[hCaptcha] Version result received:', message.data);
+                    // A result arrived: the timeout must not report a failure later
+                    clearTimeout(timeoutId);
                     this.displayVersionModal(message.data);
                     chrome.runtime.onMessage.removeListener(versionListener);
                 }
@@ -22,19 +25,14 @@ HCaptchaAdvanced.prototype.checkVersion = async function() {
             Logger.network('[hCaptcha] Check version initiated:', response);
 
             if (response && response.status === 'started') {
+                // The popup says what happens; nothing is drawn on the page
                 NotificationHelper.info(hcaptchaText('advHcaptchaCheckingVersionReload', 'Checking hCaptcha version... Page will reload'));
 
-                // Send page notification before reload
-                await AdvancedUtils.sendMessage({
-                    type: 'HCAPTCHA_SHOW_VERSION_NOTIFICATION',
-                    tabId: this.tabInfo.id
-                });
-
-                // Wait briefly then reload the page to trigger hCaptcha loading
+                // Reload the page to trigger hCaptcha loading
                 await chrome.tabs.reload(this.tabInfo.id);
 
                 // Timeout after 15 seconds
-                setTimeout(() => {
+                timeoutId = setTimeout(() => {
                     chrome.runtime.onMessage.removeListener(versionListener);
                     NotificationHelper.error(hcaptchaText('advHcaptchaVersionTimeout', 'hCaptcha version detection timeout'));
                 }, 15000);
@@ -72,14 +70,7 @@ HCaptchaAdvanced.prototype.analyzeScripts = async function() {
                 NotificationHelper.info(hcaptchaText('advCommonAnalyzingReloadFmt', 'Analyzing {0} scripts... Page will reload', 'hCaptcha'));
 
                 await new Promise(resolve => setTimeout(resolve, 500));
-                {
-                    await AdvancedUtils.sendMessage({
-                        type: 'HCAPTCHA_SHOW_ANALYZING_NOTIFICATION',
-                        tabId: this.tabInfo.id
-                    });
-
-                    await chrome.tabs.reload(this.tabInfo.id);
-                }
+                await chrome.tabs.reload(this.tabInfo.id);
             }
         } catch (error) {
             NotificationHelper.error(hcaptchaText('advCommonFailedAnalyzeScriptsFmt', 'Failed to analyze scripts: {0}', error.message));

@@ -2623,3 +2623,113 @@ input[type="file"] {
   width: 100%;
   max-width: 100%;
 }
+
+/* Settings → Detection order: one card per category, dragged or moved with
+   the arrows into the order the Detection list and History use */
+#settingsModal .category-order-list {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#settingsModal .category-order-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 4px 4px 4px 6px;
+  background: var(--settings-input-bg);
+  border: 1px solid var(--settings-border);
+  border-radius: 8px;
+  cursor: grab;
+  user-select: none;
+  transition: border-color 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+}
+
+#settingsModal .category-order-item:hover {
+  border-color: #5a5a5a;
+}
+
+#settingsModal .category-order-item.is-dragging {
+  opacity: 0.55;
+  border-color: var(--accent);
+  border-style: dashed;
+  cursor: grabbing;
+}
+
+#settingsModal .category-order-handle {
+  display: inline-flex;
+  color: var(--settings-text-dim);
+  flex-shrink: 0;
+}
+
+#settingsModal .category-order-rank {
+  min-width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: #3a3a3a;
+  color: var(--settings-text);
+  font-size: 10.5px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+#settingsModal .category-order-icon {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 6px;
+  background: color-mix(in srgb, currentColor 16%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+}
+
+#settingsModal .category-order-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--settings-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#settingsModal .category-order-move {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--settings-text-dim);
+  cursor: pointer;
+}
+
+#settingsModal .category-order-move:hover:not(:disabled) {
+  background: #3a3a3a;
+  border-color: var(--settings-border);
+  color: var(--settings-text);
+}
+
+#settingsModal .category-order-move:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 1px;
+}
+
+#settingsModal .category-order-move:disabled {
+  opacity: 0.3;
+  cursor: default;
+}

@@ -1,0 +1,96 @@
+{
+  "id": "detect-amazon",
+  "name": "Amazon Bot Protection",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "High",
+  "lastUpdated": "2026-10-09",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.amazon.com/",
+  "icon": "amazon_official.png",
+  "description": "Amazon's FWCIM client fingerprinting on its sign-in pages: the form posts an encrypted browser fingerprint in a hidden metadata1 field",
+  "detection": {
+    "dom": [
+      {
+        "id": "metadata1-field",
+        "selector": "input[name=\"metadata1\"]",
+        "confidence": 80,
+        "description": "Hidden metadata1 field of the sign-in form, which carries the encrypted FWCIM fingerprint"
+      }
+    ],
+    "url": [
+      {
+        "id": "fwcim-assets-script",
+        "confidence": 75,
+        "description": "FWCIM fingerprinting bundle loaded on Amazon sign-in pages",
+        "text": "^https://m\\.media-amazon\\.com/images/I/[A-Za-z0-9+%._-]+\\.js\\?AUIClients/FWCIMAssets(?:[#&]|$)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "fwcim-command",
+        "confidence": 30,
+        "standalone": false,
+        "description": "Inline fwcimCmd queue that starts FWCIM profiling of the sign-in form",
+        "text": "fwcimCmd",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "metadata1-with-fwcim-script",
+      "name": "metadata1 field with the FWCIM script loaded",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "metadata1-field"
+          },
+          {
+            "pattern": "fwcim-assets-script"
+          }
+        ]
+      }
+    },
+    {
+      "id": "metadata1-with-fwcim-command",
+      "name": "metadata1 field with FWCIM profiling started",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "pattern": "metadata1-field"
+          },
+          {
+            "pattern": "fwcim-command"
+          }
+        ]
+      }
+    },
+    {
+      "id": "fwcim-script-and-command",
+      "name": "FWCIM script loaded and profiling started",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "pattern": "fwcim-assets-script"
+          },
+          {
+            "pattern": "fwcim-command"
+          }
+        ]
+      }
+    }
+  ]
+}

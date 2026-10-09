@@ -605,44 +605,6 @@ function handleHCaptchaMessage(request, sender, sendResponse, captureState) {
             sendResponse(hcaptchaStartAnalysis(request.tabId, request.url));
             return false;
 
-        case 'HCAPTCHA_SHOW_ANALYZING_NOTIFICATION':
-            (async () => {
-                try {
-                    if (typeof showNotification === 'function') {
-                        await showNotification(request.tabId, {
-                            module: 'hCaptcha',
-                            type: 'loading',
-                            title: pageText('pageNoticeAnalyzingScriptsFmt', 'Analyzing {0} Scripts', 'hCaptcha'),
-                            message: pageText('pageNoticeCollectingScripts', 'Please wait while we collect script URLs...'),
-                            duration: 15000
-                        });
-                    }
-                    sendResponse({ status: 'success' });
-                } catch (error) {
-                    sendResponse({ status: 'error', error: error.message });
-                }
-            })();
-            return true; // Async response
-
-        case 'HCAPTCHA_SHOW_VERSION_NOTIFICATION':
-            (async () => {
-                try {
-                    if (typeof showNotification === 'function') {
-                        await showNotification(request.tabId, {
-                            module: 'hCaptcha',
-                            type: 'loading',
-                            title: pageText('advHcaptchaNoticeCheckingVersion', 'Checking hCaptcha Version'),
-                            message: pageText('advHcaptchaNoticeAnalyzingPage', 'Please wait while we analyze the page...'),
-                            duration: 15000
-                        });
-                    }
-                    sendResponse({ status: 'success' });
-                } catch (error) {
-                    sendResponse({ status: 'error', error: error.message });
-                }
-            })();
-            return true; // Async response
-
         case 'HCAPTCHA_CAPTURE_COMPLETED':
             // NOTE: Capture processing is now handled directly in hcaptcha-interceptor.js
             // This message is only for notifying the popup UI to refresh

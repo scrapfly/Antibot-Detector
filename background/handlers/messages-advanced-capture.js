@@ -29,9 +29,7 @@ function buildAdvancedCaptureRegistryMap(handlers, messageTypes) {
                 messageTypes.AKAMAI_STOP_CAPTURE,
                 messageTypes.AKAMAI_GET_CAPTURE_STATE,
                 messageTypes.AKAMAI_CAPTURE_COMPLETED,
-                messageTypes.AKAMAI_EXTRACT_SENSOR,
-                messageTypes.AKAMAI_SHOW_ANALYZING_NOTIFICATION,
-                messageTypes.AKAMAI_SHOW_EXTRACTING_NOTIFICATION
+                messageTypes.AKAMAI_EXTRACT_SENSOR
             ]
         },
         {
@@ -41,8 +39,7 @@ function buildAdvancedCaptureRegistryMap(handlers, messageTypes) {
                 messageTypes.IMPERVA_STOP_CAPTURE,
                 messageTypes.IMPERVA_EXTRACT_SCRIPTS,
                 messageTypes.IMPERVA_GET_CAPTURE_STATE,
-                messageTypes.IMPERVA_CAPTURE_COMPLETED,
-                messageTypes.IMPERVA_SHOW_ANALYZING_NOTIFICATION
+                messageTypes.IMPERVA_CAPTURE_COMPLETED
             ]
         },
         {
@@ -52,15 +49,13 @@ function buildAdvancedCaptureRegistryMap(handlers, messageTypes) {
                 messageTypes.SHAPESECURITY_STOP_CAPTURE,
                 messageTypes.SHAPESECURITY_GET_CAPTURE_STATE,
                 messageTypes.SHAPESECURITY_CHECK_VERSION,
-                messageTypes.SHAPESECURITY_START_EXTRACTION,
-                messageTypes.SHAPESECURITY_SHOW_ANALYZING_NOTIFICATION
+                messageTypes.SHAPESECURITY_START_EXTRACTION
             ]
         },
         {
             handler: handlers.awswaf,
             messageKeys: [
-                messageTypes.AWSWAF_START_ANALYSIS,
-                messageTypes.AWSWAF_SHOW_ANALYZING_NOTIFICATION
+                messageTypes.AWSWAF_START_ANALYSIS
             ]
         },
         {
@@ -73,30 +68,25 @@ function buildAdvancedCaptureRegistryMap(handlers, messageTypes) {
         {
             handler: handlers.datadome,
             messageKeys: [
-                messageTypes.DATADOME_START_ANALYSIS,
-                messageTypes.DATADOME_SHOW_ANALYZING_NOTIFICATION
+                messageTypes.DATADOME_START_ANALYSIS
             ]
         },
         {
             handler: handlers.cloudflare,
             messageKeys: [
-                messageTypes.CLOUDFLARE_START_ANALYSIS,
-                messageTypes.CLOUDFLARE_SHOW_ANALYZING_NOTIFICATION
+                messageTypes.CLOUDFLARE_START_ANALYSIS
             ]
         },
         {
             handler: handlers.turnstile,
             messageKeys: [
-                messageTypes.TURNSTILE_START_ANALYSIS,
-                messageTypes.TURNSTILE_SHOW_ANALYZING_NOTIFICATION
+                messageTypes.TURNSTILE_START_ANALYSIS
             ]
         },
         {
             handler: handlers.hcaptcha,
             messageKeys: [
                 messageTypes.HCAPTCHA_START_ANALYSIS,
-                messageTypes.HCAPTCHA_SHOW_ANALYZING_NOTIFICATION,
-                messageTypes.HCAPTCHA_SHOW_VERSION_NOTIFICATION,
                 messageTypes.HCAPTCHA_CHECK_VERSION,
                 messageTypes.HCAPTCHA_START_CAPTURE,
                 messageTypes.HCAPTCHA_STOP_CAPTURE,
@@ -108,7 +98,6 @@ function buildAdvancedCaptureRegistryMap(handlers, messageTypes) {
             handler: handlers.funcaptcha,
             messageKeys: [
                 messageTypes.FUNCAPTCHA_START_ANALYSIS,
-                messageTypes.FUNCAPTCHA_SHOW_ANALYZING_NOTIFICATION,
                 messageTypes.FUNCAPTCHA_START_CAPTURE,
                 messageTypes.FUNCAPTCHA_STOP_CAPTURE,
                 messageTypes.FUNCAPTCHA_GET_CAPTURE_STATE,

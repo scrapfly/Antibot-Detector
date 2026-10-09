@@ -576,6 +576,15 @@
     "message": "{0} settings",
     "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
   },
+  "ruleDescriptionTitle": {
+    "message": "Description"
+  },
+  "ruleDescriptionPlaceholder": {
+    "message": "What this pattern means, e.g. Reads browser language preferences"
+  },
+  "ruleDescriptionHint": {
+    "message": "Shown in the detection details and in History when this pattern is found."
+  },
   "ruleConfidenceLevel": {
     "message": "Confidence Level"
   },
@@ -1883,9 +1892,6 @@
   "officialDetectorsRestoredFmt": {
     "message": "{0} official detectors restored"
   },
-  "noOfficialDetectorsToRestore": {
-    "message": "No official detectors were deleted"
-  },
   "failedRestoreOfficialDetectors": {
     "message": "Failed to restore official detectors"
   },
@@ -2578,10 +2584,6 @@
     "message": "Not found",
     "description": "Status value: the item was not found"
   },
-  "advCommonRequired": {
-    "message": "Required",
-    "description": "Status value: the challenge is required"
-  },
   "advCommonYes": {
     "message": "Yes"
   },
@@ -2659,14 +2661,6 @@
     "message": "{0} Monitoring Started",
     "description": "In-page notice title. {0} = anti-bot product name"
   },
-  "pageNoticeCollectingScripts": {
-    "message": "Please wait while we collect script URLs...",
-    "description": "In-page notice"
-  },
-  "pageNoticeAnalyzingScriptsFmt": {
-    "message": "Analyzing {0} Scripts",
-    "description": "In-page notice title. {0} = anti-bot product name"
-  },
   "pageNoticeCaptureCompleted": {
     "message": "Capture Completed",
     "description": "In-page notice title"
@@ -2734,24 +2728,6 @@
     "message": "Akamai sensor_data captured successfully",
     "description": "sensor_data is a technical field name"
   },
-  "advAkamaiNoticeExtractingTitle": {
-    "message": "Extracting Akamai Sensor Data"
-  },
-  "advAkamaiNoticeWaitingSensor": {
-    "message": "Waiting for sensor information to be captured…"
-  },
-  "advAkamaiNoticeAnalyzingTitle": {
-    "message": "Analyzing Akamai Content"
-  },
-  "advAkamaiNoticeScanning": {
-    "message": "Scanning page for scripts and patterns…"
-  },
-  "advAkamaiNoticeExtractingSensorTitle": {
-    "message": "Extracting Sensor Data"
-  },
-  "advAkamaiNoticeCapturingSensor": {
-    "message": "Capturing Akamai sensor information…"
-  },
   "advAkamaiLevelAdvancedSbsd": {
     "message": "Advanced (SBSD)",
     "description": "Protection level value; SBSD is a technical name"
@@ -2775,20 +2751,12 @@
     "message": "Akamai Scripts:",
     "description": "Label followed by a count"
   },
-  "advAkamaiScriptsHeading": {
-    "message": "Akamai Scripts",
-    "description": "Section heading"
-  },
   "advAkamaiSensorDataUrlScript": {
     "message": "Sensor Data URL Script",
     "description": "Heading: the script that holds the sensor-data URL"
   },
   "advAkamaiPixelHtmlVar": {
     "message": "Pixel HTML Variable:",
-    "description": "Pixel is the name of an Akamai challenge"
-  },
-  "advAkamaiPixelChallengeUrls": {
-    "message": "Pixel Challenge URLs:",
     "description": "Pixel is the name of an Akamai challenge"
   },
   "advAkamaiPostUrl": {
@@ -2821,9 +2789,6 @@
   "advAkamaiSensorDataCharsFmt": {
     "message": "Sensor Data ({0} chars)",
     "description": "{0} = number of characters"
-  },
-  "advAkamaiSensorDataNotCaptured": {
-    "message": "Sensor Data (Not captured)"
   },
   "advAkamaiNoSensorData": {
     "message": "No sensor data captured",
@@ -2942,12 +2907,6 @@
   },
   "advImpervaNoticeSensorCaptured": {
     "message": "Sensor data captured successfully"
-  },
-  "advImpervaNoticeExtractingTitle": {
-    "message": "Extracting Imperva Scripts"
-  },
-  "advImpervaNoticeMonitoringChallenge": {
-    "message": "Monitoring for challenge and solution data…"
   },
   "advRecaptchaCallbackTool": {
     "message": "reCAPTCHA callback",
@@ -3180,10 +3139,6 @@
     "message": "Cookie + Headers",
     "description": "What must be captured: the cookie plus the dynamic headers"
   },
-  "advShapeNoticeExtractingScripts": {
-    "message": "Extracting Shape Security Scripts",
-    "description": "In-page notice title"
-  },
   "advShapeNoticeReloadToMonitor": {
     "message": "Reload the page to begin monitoring Shape Security headers and cookies",
     "description": "In-page notice"
@@ -3266,14 +3221,6 @@
   },
   "advHcaptchaNoticeCaptured": {
     "message": "hCaptcha data captured successfully",
-    "description": "In-page notice"
-  },
-  "advHcaptchaNoticeCheckingVersion": {
-    "message": "Checking hCaptcha Version",
-    "description": "In-page notice title"
-  },
-  "advHcaptchaNoticeAnalyzingPage": {
-    "message": "Please wait while we analyze the page...",
     "description": "In-page notice"
   },
   "advAwswafNoScripts": {
@@ -4334,13 +4281,22 @@
     "message": "Detections list"
   },
   "settingsCardCategoryOrder": {
-    "message": "Category order"
-  },
-  "settingsCategoryOrderLabel": {
-    "message": "Show first"
+    "message": "Detection order"
   },
   "settingsCategoryOrderHelp": {
-    "message": "Order of the categories in the Detection list. Within a category, the highest confidence comes first."
+    "message": "Order of detections in the Detection list and in History. Drag the cards to change it; within a category, the highest confidence comes first."
+  },
+  "settingsOrderHighestConfidenceFirst": {
+    "message": "Highest confidence first"
+  },
+  "settingsCategoryOrderCardsLabel": {
+    "message": "Category order"
+  },
+  "settingsMoveUpFmt": {
+    "message": "Move {0} up"
+  },
+  "settingsMoveDownFmt": {
+    "message": "Move {0} down"
   },
   "settingsCardShareUploads": {
     "message": "Share uploads"
@@ -4546,6 +4502,9 @@
   "advCommonValue": {
     "message": "Value"
   },
+  "advCommonCharsFmt": {
+    "message": "{0} chars"
+  },
   "advCookiePath": {
     "message": "Path"
   },
@@ -4561,8 +4520,41 @@
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Restore official detectors?"
   },
-  "restoreOfficialDetectorsConfirmMsg": {
-    "message": "The official detectors you deleted are installed again from the version included in the extension. Your own detectors and your edits to other rules are not changed."
+  "allOfficialDetectorsInstalled": {
+    "message": "All official detectors are installed. There is nothing to restore."
+  },
+  "restoreOfficialChecking": {
+    "message": "Checking the latest release on GitHub..."
+  },
+  "restoreOfficialFromReleaseFmt": {
+    "message": "Installed again from release {0} on GitHub: {1}."
+  },
+  "restoreOfficialOffline": {
+    "message": "GitHub could not be reached, so the version included in the extension is used."
+  },
+  "restoreOfficialRateLimited": {
+    "message": "GitHub is limiting requests right now, so the version included in the extension is used."
+  },
+  "restoreOfficialListFmt": {
+    "message": "Installed again from the version included in the extension: {0}."
+  },
+  "restoreOfficialUpdateOnlyFmt": {
+    "message": "Rules → Update installs these again: {0}."
+  },
+  "restoreOfficialUnchanged": {
+    "message": "Your own detectors and your edits to other rules are not changed."
+  },
+  "restoreOfficialMoreFmt": {
+    "message": "{0} more"
+  },
+  "restoreOfficialFailedFmt": {
+    "message": "Could not restore: {0}"
+  },
+  "officialDetectorRestoredFmt": {
+    "message": "{0} restored"
+  },
+  "restoreOfficialRunUpdate": {
+    "message": "Run Rules → Update to install the rest."
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "Restore"

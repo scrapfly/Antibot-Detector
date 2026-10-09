@@ -59,6 +59,60 @@ class DetectionUtils {
     return out;
   }
 
+  /** Settings → "Show first": highest confidence instead of a category order */
+  static SORT_BY_CONFIDENCE = 'confidence';
+
+  /**
+   * How detections are listed (Detection tab, History), from the saved
+   * settings.detection: by category in `categoryOrder` (default), or by
+   * confidence when `sortBy` is 'confidence'.
+   * @param {object} [detectionSettings] - settings.detection
+   * @returns {{sortBy: ('category'|'confidence'), categoryOrder: string[]}}
+   */
+  static detectionSortOf(detectionSettings) {
+    const saved = detectionSettings || {};
+    return {
+      sortBy: saved.sortBy === DetectionUtils.SORT_BY_CONFIDENCE ? DetectionUtils.SORT_BY_CONFIDENCE : 'category',
+      categoryOrder: DetectionUtils.normalizeCategoryOrder(saved.categoryOrder)
+    };
+  }
+
+  /** 'antibot' | 'captcha' | 'fingerprint' | 'other' for any spelling of a category */
+  static categoryKey(category) {
+    const cat = String(category || '').toLowerCase().replace(/[^a-z]/g, '');
+    if (cat.includes('antibot')) return 'antibot';
+    if (cat.includes('captcha')) return 'captcha';
+    if (cat.includes('fingerprint')) return 'fingerprint';
+    return 'other';
+  }
+
+  /**
+   * A sorted copy of `items`. By category: the chosen category order, then
+   * the highest confidence. By confidence: highest first, ties in category
+   * order. Equal items keep their order.
+   * @param {Array} items
+   * @param {{sortBy?: string, categoryOrder?: string[]}} [sort] - from detectionSortOf()
+   * @param {function(*): {category: string, confidence: number}} [pick] - reads the detection from an item
+   * @returns {Array}
+   */
+  static sortDetections(items, sort = {}, pick = (item) => item) {
+    const order = DetectionUtils.normalizeCategoryOrder(sort.categoryOrder);
+    const rank = (item) => {
+      const index = order.indexOf(DetectionUtils.categoryKey(pick(item)?.category));
+      return index === -1 ? order.length : index;
+    };
+    const confidence = (item) => Number(pick(item)?.confidence) || 0;
+    const byCategory = (a, b) => rank(a) - rank(b);
+    const byConfidence = (a, b) => confidence(b) - confidence(a);
+    const compare = sort.sortBy === DetectionUtils.SORT_BY_CONFIDENCE
+      ? (a, b) => byConfidence(a, b) || byCategory(a, b)
+      : (a, b) => byCategory(a, b) || byConfidence(a, b);
+    return (Array.isArray(items) ? items : [])
+      .map((item, index) => ({ item, index }))
+      .sort((a, b) => compare(a.item, b.item) || (a.index - b.index))
+      .map(entry => entry.item);
+  }
+
   /**
    * An official detector is one Scrapfly ships: its author is "Scrapfly" AND
    * its ID is one of the detectors bundled in detectors/index.json. The author

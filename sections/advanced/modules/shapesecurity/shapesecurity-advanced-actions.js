@@ -252,14 +252,6 @@ ShapeSecurityAdvanced.prototype.extractScripts = async function() {
 
             if (response && response.status === 'success') {
                 Logger.network('[SHAPESECURITY-EXTRACT] Extraction mode enabled successfully');
-                Logger.network('[SHAPESECURITY-EXTRACT] Step 5: Showing analyzing notification...');
-
-                // Show analyzing notification before reload
-                await AdvancedUtils.sendMessage({
-                    type: 'SHAPESECURITY_SHOW_ANALYZING_NOTIFICATION',
-                    tabId: tab.id
-                });
-
                 Logger.network('[SHAPESECURITY-EXTRACT] Step 6: Reloading page...');
 
                 // Reload the page to trigger Shape Security scripts

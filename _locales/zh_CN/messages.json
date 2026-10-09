@@ -574,6 +574,15 @@
     "message": "设置：{0}",
     "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
   },
+  "ruleDescriptionTitle": {
+    "message": "描述"
+  },
+  "ruleDescriptionPlaceholder": {
+    "message": "此模式的含义，例如：读取浏览器语言偏好"
+  },
+  "ruleDescriptionHint": {
+    "message": "找到此模式时，会显示在检测详情和历史记录中。"
+  },
   "ruleConfidenceLevel": {
     "message": "置信度"
   },
@@ -1879,9 +1888,6 @@
   "officialDetectorsRestoredFmt": {
     "message": "已恢复 {0} 个官方检测器"
   },
-  "noOfficialDetectorsToRestore": {
-    "message": "没有已删除的官方检测器"
-  },
   "failedRestoreOfficialDetectors": {
     "message": "无法恢复官方检测器"
   },
@@ -2557,9 +2563,6 @@
   "advCommonNotFound": {
     "message": "未找到"
   },
-  "advCommonRequired": {
-    "message": "需要"
-  },
   "advCommonYes": {
     "message": "是"
   },
@@ -2629,12 +2632,6 @@
   "pageNoticeMonitoringStartedFmt": {
     "message": "已开始监控 {0}"
   },
-  "pageNoticeCollectingScripts": {
-    "message": "正在收集脚本 URL,请稍候…"
-  },
-  "pageNoticeAnalyzingScriptsFmt": {
-    "message": "正在分析 {0} 脚本"
-  },
   "pageNoticeCaptureCompleted": {
     "message": "捕获完成"
   },
@@ -2689,24 +2686,6 @@
   "advAkamaiNoticeSensorCaptured": {
     "message": "已成功捕获 Akamai sensor_data"
   },
-  "advAkamaiNoticeExtractingTitle": {
-    "message": "正在提取 Akamai 传感器数据"
-  },
-  "advAkamaiNoticeWaitingSensor": {
-    "message": "正在等待捕获传感器信息…"
-  },
-  "advAkamaiNoticeAnalyzingTitle": {
-    "message": "正在分析 Akamai 内容"
-  },
-  "advAkamaiNoticeScanning": {
-    "message": "正在扫描页面中的脚本和模式…"
-  },
-  "advAkamaiNoticeExtractingSensorTitle": {
-    "message": "正在提取传感器数据"
-  },
-  "advAkamaiNoticeCapturingSensor": {
-    "message": "正在捕获 Akamai 传感器信息…"
-  },
   "advAkamaiLevelAdvancedSbsd": {
     "message": "高级 (SBSD)"
   },
@@ -2725,17 +2704,11 @@
   "advAkamaiScriptsLabel": {
     "message": "Akamai 脚本:"
   },
-  "advAkamaiScriptsHeading": {
-    "message": "Akamai 脚本"
-  },
   "advAkamaiSensorDataUrlScript": {
     "message": "传感器数据 URL 脚本"
   },
   "advAkamaiPixelHtmlVar": {
     "message": "Pixel HTML 变量:"
-  },
-  "advAkamaiPixelChallengeUrls": {
-    "message": "Pixel 挑战 URL:"
   },
   "advAkamaiPostUrl": {
     "message": "POST URL:"
@@ -2760,9 +2733,6 @@
   },
   "advAkamaiSensorDataCharsFmt": {
     "message": "传感器数据 ({0} 个字符)"
-  },
-  "advAkamaiSensorDataNotCaptured": {
-    "message": "传感器数据 (未捕获)"
   },
   "advAkamaiNoSensorData": {
     "message": "未捕获到传感器数据"
@@ -2862,12 +2832,6 @@
   },
   "advImpervaNoticeSensorCaptured": {
     "message": "已成功捕获传感器数据"
-  },
-  "advImpervaNoticeExtractingTitle": {
-    "message": "正在提取 Imperva 脚本"
-  },
-  "advImpervaNoticeMonitoringChallenge": {
-    "message": "正在监控挑战和解答数据…"
   },
   "advRecaptchaCallbackTool": {
     "message": "reCAPTCHA 回调"
@@ -3055,9 +3019,6 @@
   "advShapeCookieAndHeaders": {
     "message": "Cookie + 请求头"
   },
-  "advShapeNoticeExtractingScripts": {
-    "message": "正在提取 Shape Security 脚本"
-  },
   "advShapeNoticeReloadToMonitor": {
     "message": "重新加载页面以开始监控 Shape Security 请求头和 Cookie"
   },
@@ -3123,12 +3084,6 @@
   },
   "advHcaptchaNoticeCaptured": {
     "message": "已成功捕获 hCaptcha 数据"
-  },
-  "advHcaptchaNoticeCheckingVersion": {
-    "message": "正在检查 hCaptcha 版本"
-  },
-  "advHcaptchaNoticeAnalyzingPage": {
-    "message": "正在分析页面,请稍候…"
   },
   "advAwswafNoScripts": {
     "message": "未找到 AWS WAF 脚本"
@@ -4049,13 +4004,22 @@
     "message": "检测列表"
   },
   "settingsCardCategoryOrder": {
-    "message": "类别顺序"
-  },
-  "settingsCategoryOrderLabel": {
-    "message": "优先显示"
+    "message": "检测排序"
   },
   "settingsCategoryOrderHelp": {
-    "message": "检测列表中类别的顺序。同一类别内，置信度最高的排在前面。"
+    "message": "检测列表和历史记录中检测的顺序。拖动卡片即可调整；同一类别内，置信度最高的排在前面。"
+  },
+  "settingsOrderHighestConfidenceFirst": {
+    "message": "置信度最高的优先"
+  },
+  "settingsCategoryOrderCardsLabel": {
+    "message": "类别顺序"
+  },
+  "settingsMoveUpFmt": {
+    "message": "上移 {0}"
+  },
+  "settingsMoveDownFmt": {
+    "message": "下移 {0}"
   },
   "settingsCardShareUploads": {
     "message": "分享上传"
@@ -4261,6 +4225,9 @@
   "advCommonValue": {
     "message": "值"
   },
+  "advCommonCharsFmt": {
+    "message": "{0} 个字符"
+  },
   "advCookiePath": {
     "message": "路径"
   },
@@ -4276,8 +4243,41 @@
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "恢复官方检测器？"
   },
-  "restoreOfficialDetectorsConfirmMsg": {
-    "message": "你删除的官方检测器会以扩展自带的版本重新安装。你自己的检测器和对其他规则的修改不受影响。"
+  "allOfficialDetectorsInstalled": {
+    "message": "所有官方检测器均已安装，没有需要恢复的内容。"
+  },
+  "restoreOfficialChecking": {
+    "message": "正在检查 GitHub 上的最新版本..."
+  },
+  "restoreOfficialFromReleaseFmt": {
+    "message": "将从 GitHub 上的版本 {0} 重新安装：{1}。"
+  },
+  "restoreOfficialOffline": {
+    "message": "无法连接 GitHub，因此使用扩展自带的版本。"
+  },
+  "restoreOfficialRateLimited": {
+    "message": "GitHub 目前正在限制请求，因此使用扩展自带的版本。"
+  },
+  "restoreOfficialListFmt": {
+    "message": "将以扩展自带的版本重新安装：{0}。"
+  },
+  "restoreOfficialUpdateOnlyFmt": {
+    "message": "“规则 → 更新”会重新安装这些：{0}。"
+  },
+  "restoreOfficialUnchanged": {
+    "message": "你自己的检测器和对其他规则的修改不受影响。"
+  },
+  "restoreOfficialMoreFmt": {
+    "message": "另外 {0} 个"
+  },
+  "restoreOfficialFailedFmt": {
+    "message": "无法恢复：{0}"
+  },
+  "officialDetectorRestoredFmt": {
+    "message": "已恢复 {0}"
+  },
+  "restoreOfficialRunUpdate": {
+    "message": "运行“规则 → 更新”以安装其余检测器。"
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "恢复"

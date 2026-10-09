@@ -26,31 +26,6 @@ function handleDataDomeMessage(request, sender, sendResponse) {
             sendResponse(analysisResult);
             return false; // sync response
 
-        case 'DATADOME_SHOW_ANALYZING_NOTIFICATION':
-            // Show analyzing notification (called right before page reload)
-            (async () => {
-                try {
-                    if (typeof showNotification === 'function') {
-                        Logger.network('[DataDome] Showing analyzing notification before reload...');
-                        await showNotification(request.tabId, {
-                            module: 'DataDome',
-                            type: 'loading',
-                            title: pageText('pageNoticeAnalyzingScriptsFmt', 'Analyzing {0} Scripts', 'DataDome'),
-                            message: pageText('pageNoticeCollectingScripts', 'Please wait while we collect script URLs...'),
-                            duration: 15000 // Longer duration to persist through reload
-                        });
-                        Logger.network('[DataDome] Pre-reload notification shown successfully');
-                    } else {
-                        Logger.network('[DataDome] showNotification function not available');
-                    }
-                    sendResponse({ status: 'success' });
-                } catch (error) {
-                    Logger.error('NETWORK', '[DataDome] Error showing notification:', error);
-                    sendResponse({ status: 'error', error: error.message });
-                }
-            })();
-            return true; // Async response
-
         default:
             return false;
     }
@@ -90,7 +65,7 @@ function datadomeStartAnalysis(tabId, url) {
         if (details.tabId === tabId && details.frameId === 0) {
             Logger.network('[DataDome-Analysis] Page loaded, waiting for all requests to complete...');
 
-            // Note: Notification is shown before page reload via DATADOME_SHOW_ANALYZING_NOTIFICATION
+            // No notice is drawn on the page; the popup shows the progress
             // No need to show it again here
 
             // Wait 5 seconds after page load to ensure all network requests are captured

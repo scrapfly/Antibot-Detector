@@ -294,6 +294,21 @@
       </div>
 
       <div class="rule-modal-body">
+        <!-- Description Card: the text detection details and History show for this pattern -->
+        <div class="modal-card" id="descriptionGroup">
+          <div class="modal-card-header">
+            <span class="card-icon icon-text">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+            </span>
+            <h3><label for="methodDescriptionInput" data-i18n="ruleDescriptionTitle">Description</label></h3>
+          </div>
+          <div class="modal-card-body">
+            <textarea id="methodDescriptionInput" class="method-description-input" rows="2" maxlength="200" dir="auto"
+              placeholder="What this pattern means, e.g. Reads browser language preferences" data-i18n-placeholder="ruleDescriptionPlaceholder"></textarea>
+            <p class="option-hint" data-i18n="ruleDescriptionHint">Shown in the detection details and in History when this pattern is found.</p>
+          </div>
+        </div>
+
         <!-- Confidence Level Card -->
         <div class="modal-card" id="confidenceGroup">
           <div class="modal-card-header">

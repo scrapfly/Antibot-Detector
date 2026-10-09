@@ -61,31 +61,6 @@ function shapeSecurityHandleMessage(request, sendResponse, captureState, extract
             handleShapeSecurityStartExtraction(request, null, sendResponse);
             return false; // Sync response
 
-        case 'SHAPESECURITY_SHOW_ANALYZING_NOTIFICATION':
-            // Show analyzing notification (called right before page reload)
-            (async () => {
-                try {
-                    if (typeof showNotification === 'function') {
-                        Logger.network('[ShapeSecurity] Showing analyzing notification before reload...');
-                        await showNotification(request.tabId, {
-                            module: 'Shape Security',
-                            type: 'loading',
-                            title: pageText('advShapeNoticeExtractingScripts', 'Extracting Shape Security Scripts'),
-                            message: pageText('pageNoticeCollectingScripts', 'Please wait while we collect script URLs...'),
-                            duration: 15000 // Longer duration to persist through reload
-                        });
-                        Logger.network('[ShapeSecurity] Pre-reload notification shown successfully');
-                    } else {
-                        Logger.network('[ShapeSecurity] showNotification function not available');
-                    }
-                    sendResponse({ status: 'success' });
-                } catch (error) {
-                    Logger.error('NETWORK', '[ShapeSecurity] Error showing notification:', error);
-                    sendResponse({ status: 'error', error: error.message });
-                }
-            })();
-            return true; // Async response
-
         case 'SHAPESECURITY_CHECK_VERSION':
             handleShapeSecurityCheckVersion(request, null, sendResponse);
             return true;
@@ -630,7 +605,7 @@ function handleShapeSecurityStartExtraction(message, sender, sendResponse) {
         if (details.tabId === tabId && details.frameId === 0) {
             Logger.network('[ShapeSecurity-EXTRACT] Page loaded, injecting script immediately...');
 
-            // Note: Notification is shown before page reload via SHAPESECURITY_SHOW_ANALYZING_NOTIFICATION
+            // No notice is drawn on the page; the popup shows the progress
             // No need to show it again here
 
             // Function to collect scripts

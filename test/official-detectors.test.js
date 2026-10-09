@@ -27,6 +27,7 @@ global.StorageManager = {
 };
 
 const DetectorManager = require('../modules/detection/managers/detector-manager.js');
+const plain = (value) => JSON.parse(JSON.stringify(value));
 
 const index = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'detectors', 'index.json'), 'utf8'));
 const BUNDLED_IDS = Object.values(index).flatMap(v => (v && Array.isArray(v.detectors)) ? v.detectors : []);
@@ -96,30 +97,108 @@ test('deleteDetector deletes an official detector and remembers it', async () =>
   assert.deepStrictEqual(await DetectorManager.getDeletedOfficialIds(), ['detect-akamai']);
 });
 
+// The packaged index the restore reads ({category: {detectors: [ids]}})
+const packagedIndex = (categories) => ({ getAllCategories: () => categories });
+const loads = (dm, names, fail = []) => async (cat, id) => {
+  if (fail.includes(id)) throw new Error('broken file');
+  dm.detectors[cat][id] = { id, name: names[id] || id, author: 'Scrapfly', enabled: true, detection: {} };
+};
+
 test('restoreOfficialDetectors reloads deleted official detectors and forgets the deletion', async () => {
   const dm = makeManager();
-  dm.categoryManager = { getAllCategories: () => ({ antibot: { detectors: ['detect-akamai'] } }) };
-  dm.loadDetectorFile = async (cat, id) => { dm.detectors[cat][id] = { id, name: 'Akamai', author: 'Scrapfly', enabled: true, detection: {} }; };
+  dm.categoryManager = packagedIndex({ antibot: { detectors: ['detect-akamai'] } });
+  dm.loadDetectorFile = loads(dm, { 'detect-akamai': 'Akamai' });
   await dm.deleteDetector('antibot', 'detect-akamai');
-  assert.strictEqual(await dm.restoreOfficialDetectors(), 1);
+  const result = await dm.restoreOfficialDetectors();
+  assert.deepStrictEqual(plain(result), { restored: [{ id: 'detect-akamai', name: 'Akamai', source: 'package' }], failed: [], updateOnly: [] });
   assert.ok(dm.detectors.antibot['detect-akamai']);
   assert.deepStrictEqual(await DetectorManager.getDeletedOfficialIds(), []);
-  assert.strictEqual(await dm.restoreOfficialDetectors(), 0);
+  assert.deepStrictEqual(plain(await dm.restoreOfficialDetectors()), { restored: [], failed: [], updateOnly: [] });
 });
 
 test('restoreOfficialDetectors restores the others when one fails, and keeps the failed one to retry', async () => {
   const dm = makeManager();
-  dm.categoryManager = { getAllCategories: () => ({ antibot: { detectors: ['detect-akamai', 'detect-f5'] } }) };
+  dm.categoryManager = packagedIndex({ antibot: { detectors: ['detect-akamai', 'detect-f5'] } });
   dm.detectors.antibot['detect-f5'] = { id: 'detect-f5', name: 'F5', author: 'Scrapfly', enabled: true, detection: {} };
   await dm.deleteDetector('antibot', 'detect-akamai');
   await dm.deleteDetector('antibot', 'detect-f5');
-  dm.loadDetectorFile = async (cat, id) => {
-    if (id === 'detect-akamai') throw new Error('broken file');
-    dm.detectors[cat][id] = { id, name: 'F5', author: 'Scrapfly', enabled: true, detection: {} };
-  };
-  assert.strictEqual(await dm.restoreOfficialDetectors(), 1);
+  dm.loadDetectorFile = loads(dm, { 'detect-f5': 'F5' }, ['detect-akamai']);
+  const result = await dm.restoreOfficialDetectors();
+  assert.deepStrictEqual(result.restored.map(d => d.id), ['detect-f5']);
+  assert.deepStrictEqual(plain(result.failed), ['detect-akamai']);
   assert.ok(dm.detectors.antibot['detect-f5']);
   assert.deepStrictEqual(await DetectorManager.getDeletedOfficialIds(), ['detect-akamai']);
+});
+
+test('restore brings back an official detector that is missing without a recorded deletion', async () => {
+  // Builds before 2.8 deleted official detectors without recording it
+  const dm = makeManager();
+  dm.categoryManager = packagedIndex({ antibot: { detectors: ['detect-akamai', 'detect-datadome'] }, captcha: { detectors: ['detect-hcaptcha'] } });
+  dm.loadDetectorFile = loads(dm, { 'detect-datadome': 'DataDome' });
+  const found = await dm.getMissingOfficialDetectors();
+  assert.deepStrictEqual(plain(found.missing.map(d => [d.category, d.id, d.packaged, d.inRelease])), [['antibot', 'detect-datadome', true, false]]);
+  const result = await dm.restoreOfficialDetectors(found);
+  assert.deepStrictEqual(plain(result.restored), [{ id: 'detect-datadome', name: 'DataDome', source: 'package' }]);
+  assert.ok(dm.detectors.antibot['detect-datadome']);
+});
+
+test('a missing detector that fails to load is not recorded as deleted, so Update can still add it', async () => {
+  const dm = makeManager();
+  dm.categoryManager = packagedIndex({ antibot: { detectors: ['detect-datadome'] } });
+  dm.loadDetectorFile = loads(dm, {}, ['detect-datadome']);
+  const result = await dm.restoreOfficialDetectors();
+  assert.deepStrictEqual(plain(result.failed), ['detect-datadome']);
+  assert.deepStrictEqual(await DetectorManager.getDeletedOfficialIds(), []);
+});
+
+test('without a release, a deleted detector only Update provides is un-deleted for Update', async () => {
+  const dm = makeManager();
+  dm.categoryManager = packagedIndex({ antibot: { detectors: ['detect-akamai'] } });
+  let loaded = 0;
+  dm.loadDetectorFile = async () => { loaded++; };
+  await DetectorManager.markOfficialDeleted('detect-new-vendor', true);
+  const found = await dm.getMissingOfficialDetectors();
+  assert.deepStrictEqual(plain(found), { missing: [], updateOnly: ['detect-new-vendor'] });
+  const result = await dm.restoreOfficialDetectors(found);
+  assert.strictEqual(loaded, 0);
+  assert.deepStrictEqual(plain(result.updateOnly), ['detect-new-vendor']);
+  assert.deepStrictEqual(await DetectorManager.getDeletedOfficialIds(), []);
+});
+
+test('with a release, detectors come from GitHub, and the package is the fallback', async () => {
+  const dm = makeManager();
+  dm.categoryManager = packagedIndex({ antibot: { detectors: ['detect-akamai', 'detect-datadome', 'detect-f5'] } });
+  dm.loadDetectorFile = loads(dm, { 'detect-f5': 'F5 (packaged)' });
+  await DetectorManager.markOfficialDeleted('detect-new-vendor', true);
+  await DetectorManager.markOfficialDeleted('detect-akamai', true);
+  delete dm.detectors.antibot['detect-akamai'];
+  const release = { tag: 'v9.9.9', index: {
+    antibot: { detectors: ['detect-akamai', 'detect-datadome', 'detect-f5', 'detect-new-vendor', 'detect-never-installed'] } } };
+  const found = await dm.getMissingOfficialDetectors(release);
+  // A release-only detector the user never had is an update, not a restore
+  assert.deepStrictEqual(found.missing.map(d => d.id).sort(), ['detect-akamai', 'detect-datadome', 'detect-f5', 'detect-new-vendor']);
+  assert.deepStrictEqual(plain(found.updateOnly), []);
+  const fetched = [];
+  const result = await dm.restoreOfficialDetectors(found, {
+    fetchReleased: async (category, id) => {
+      fetched.push(id);
+      if (id === 'detect-f5') return null; // e.g. needs a newer extension
+      return { id, name: `${id} (release)`, author: 'Scrapfly', version: '9.9.9', detection: {} };
+    }
+  });
+  const by = Object.fromEntries(result.restored.map(d => [d.id, d.source]));
+  assert.deepStrictEqual(by, { 'detect-akamai': 'release', 'detect-datadome': 'release', 'detect-f5': 'package', 'detect-new-vendor': 'release' });
+  assert.strictEqual(dm.detectors.antibot['detect-akamai'].version, '9.9.9');
+  assert.strictEqual(dm.detectors.antibot['detect-f5'].name, 'F5 (packaged)');
+  assert.deepStrictEqual(await DetectorManager.getDeletedOfficialIds(), []);
+  // Restored from the release only: remembered as official, like an Update install
+  assert.deepStrictEqual(local[DetectorManager.REMOTE_OFFICIAL_KEY], ['detect-new-vendor']);
+});
+
+test('nothing is missing when every packaged detector is installed', async () => {
+  const dm = makeManager();
+  dm.categoryManager = packagedIndex({ antibot: { detectors: ['detect-akamai'] }, captcha: { detectors: ['detect-hcaptcha'] } });
+  assert.deepStrictEqual(plain(await dm.getMissingOfficialDetectors()), { missing: [], updateOnly: [] });
 });
 
 test('deleteDetector removes custom detectors, including ones spoofing the Scrapfly author', async () => {

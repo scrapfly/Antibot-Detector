@@ -469,6 +469,8 @@ Advanced.prototype.renderCaptureCards = function(captures, container) {
                 <span class="capture-card-host">${FormatUtils.escapeHtml(hostLabel || site)}</span>
                 <span class="capture-card-dot" aria-hidden="true">•</span>
                 <span class="capture-timestamp"${absoluteTime ? ` title="${FormatUtils.escapeHtml(absoluteTime)}"` : ''}>${timestamp}</span>
+                <span class="capture-card-dot" aria-hidden="true">•</span>
+                <span class="capture-size">${size}</span>
               </div>
             </div>
             <div class="capture-card-actions">
@@ -482,8 +484,7 @@ Advanced.prototype.renderCaptureCards = function(captures, container) {
           </div>
           <div class="capture-card-foot">
             <span class="capture-module-badge ${moduleClass}">${moduleName}</span>
-            ${capture.data && capture.data.tool && capture.data.label ? `<span class="capture-tool-label">${FormatUtils.escapeHtml(capture.data.label)}</span>` : ''}
-            <span class="capture-size">${size}</span>
+            ${capture.data && capture.data.tool && capture.data.label ? `<span class="capture-tool-label" title="${FormatUtils.escapeAttr(capture.data.label)}">${FormatUtils.escapeHtml(capture.data.label)}</span>` : ''}
             <span class="capture-card-open">${FormatUtils.escapeHtml(viewLabel)}
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
             </span>

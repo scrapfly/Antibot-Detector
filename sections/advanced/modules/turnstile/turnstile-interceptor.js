@@ -10,24 +10,6 @@ function handleTurnstileMessage(request, sender, sendResponse) {
         case 'TURNSTILE_START_ANALYSIS':
             sendResponse(turnstileStartAnalysis(request.tabId, request.url));
             return false;
-        case 'TURNSTILE_SHOW_ANALYZING_NOTIFICATION':
-            (async () => {
-                try {
-                    if (typeof showNotification === 'function') {
-                        await showNotification(request.tabId, {
-                            module: 'Turnstile',
-                            type: 'loading',
-                            title: pageText('pageNoticeAnalyzingScriptsFmt', 'Analyzing {0} Scripts', 'Turnstile'),
-                            message: pageText('pageNoticeCollectingScripts', 'Please wait while we collect script URLs...'),
-                            duration: 15000
-                        });
-                    }
-                    sendResponse({ status: 'success' });
-                } catch (error) {
-                    sendResponse({ status: 'error', error: error.message });
-                }
-            })();
-            return true;
         default:
             return false;
     }

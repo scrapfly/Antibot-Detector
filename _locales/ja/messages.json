@@ -574,6 +574,15 @@
     "message": "設定: {0}",
     "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
   },
+  "ruleDescriptionTitle": {
+    "message": "説明"
+  },
+  "ruleDescriptionPlaceholder": {
+    "message": "このパターンの意味（例: ブラウザの言語設定を読み取る）"
+  },
+  "ruleDescriptionHint": {
+    "message": "このパターンが見つかったとき、検出の詳細と履歴に表示されます。"
+  },
   "ruleConfidenceLevel": {
     "message": "信頼度"
   },
@@ -1879,9 +1888,6 @@
   "officialDetectorsRestoredFmt": {
     "message": "公式検出器を {0} 件復元しました"
   },
-  "noOfficialDetectorsToRestore": {
-    "message": "削除された公式検出器はありません"
-  },
   "failedRestoreOfficialDetectors": {
     "message": "公式検出器を復元できませんでした"
   },
@@ -2557,9 +2563,6 @@
   "advCommonNotFound": {
     "message": "なし"
   },
-  "advCommonRequired": {
-    "message": "必要"
-  },
   "advCommonYes": {
     "message": "はい"
   },
@@ -2629,12 +2632,6 @@
   "pageNoticeMonitoringStartedFmt": {
     "message": "{0} の監視を開始しました"
   },
-  "pageNoticeCollectingScripts": {
-    "message": "スクリプトURLを収集しています。しばらくお待ちください…"
-  },
-  "pageNoticeAnalyzingScriptsFmt": {
-    "message": "{0} のスクリプトを分析中"
-  },
   "pageNoticeCaptureCompleted": {
     "message": "キャプチャが完了しました"
   },
@@ -2689,24 +2686,6 @@
   "advAkamaiNoticeSensorCaptured": {
     "message": "Akamai の sensor_data をキャプチャしました"
   },
-  "advAkamaiNoticeExtractingTitle": {
-    "message": "Akamai のセンサーデータを抽出中"
-  },
-  "advAkamaiNoticeWaitingSensor": {
-    "message": "センサー情報のキャプチャを待っています…"
-  },
-  "advAkamaiNoticeAnalyzingTitle": {
-    "message": "Akamai のコンテンツを解析中"
-  },
-  "advAkamaiNoticeScanning": {
-    "message": "ページのスクリプトとパターンをスキャンしています…"
-  },
-  "advAkamaiNoticeExtractingSensorTitle": {
-    "message": "センサーデータを抽出中"
-  },
-  "advAkamaiNoticeCapturingSensor": {
-    "message": "Akamai のセンサー情報をキャプチャしています…"
-  },
   "advAkamaiLevelAdvancedSbsd": {
     "message": "高度 (SBSD)"
   },
@@ -2725,17 +2704,11 @@
   "advAkamaiScriptsLabel": {
     "message": "Akamai スクリプト:"
   },
-  "advAkamaiScriptsHeading": {
-    "message": "Akamai スクリプト"
-  },
   "advAkamaiSensorDataUrlScript": {
     "message": "センサーデータ URL のスクリプト"
   },
   "advAkamaiPixelHtmlVar": {
     "message": "Pixel の HTML 変数:"
-  },
-  "advAkamaiPixelChallengeUrls": {
-    "message": "Pixel チャレンジの URL:"
   },
   "advAkamaiPostUrl": {
     "message": "POST URL:"
@@ -2760,9 +2733,6 @@
   },
   "advAkamaiSensorDataCharsFmt": {
     "message": "センサーデータ ({0} 文字)"
-  },
-  "advAkamaiSensorDataNotCaptured": {
-    "message": "センサーデータ (未キャプチャ)"
   },
   "advAkamaiNoSensorData": {
     "message": "センサーデータはキャプチャされていません"
@@ -2862,12 +2832,6 @@
   },
   "advImpervaNoticeSensorCaptured": {
     "message": "センサーデータをキャプチャしました"
-  },
-  "advImpervaNoticeExtractingTitle": {
-    "message": "Imperva のスクリプトを抽出中"
-  },
-  "advImpervaNoticeMonitoringChallenge": {
-    "message": "チャレンジと解答のデータを監視しています…"
   },
   "advRecaptchaCallbackTool": {
     "message": "reCAPTCHA コールバック"
@@ -3055,9 +3019,6 @@
   "advShapeCookieAndHeaders": {
     "message": "Cookie + ヘッダー"
   },
-  "advShapeNoticeExtractingScripts": {
-    "message": "Shape Security のスクリプトを抽出中"
-  },
   "advShapeNoticeReloadToMonitor": {
     "message": "ページを再読み込みすると Shape Security のヘッダーとCookieの監視が始まります"
   },
@@ -3123,12 +3084,6 @@
   },
   "advHcaptchaNoticeCaptured": {
     "message": "hCaptcha のデータをキャプチャしました"
-  },
-  "advHcaptchaNoticeCheckingVersion": {
-    "message": "hCaptcha のバージョンを確認中"
-  },
-  "advHcaptchaNoticeAnalyzingPage": {
-    "message": "ページを分析しています。しばらくお待ちください…"
   },
   "advAwswafNoScripts": {
     "message": "AWS WAF のスクリプトが見つかりません"
@@ -4049,13 +4004,22 @@
     "message": "検出リスト"
   },
   "settingsCardCategoryOrder": {
-    "message": "カテゴリの順序"
-  },
-  "settingsCategoryOrderLabel": {
-    "message": "先に表示"
+    "message": "検出の並び順"
   },
   "settingsCategoryOrderHelp": {
-    "message": "検出リストでのカテゴリの並び順。同じカテゴリ内では信頼度の高いものが先に表示されます。"
+    "message": "検出リストと履歴での検出の並び順。カードをドラッグして変更します。同じカテゴリ内では信頼度の高いものが先に表示されます。"
+  },
+  "settingsOrderHighestConfidenceFirst": {
+    "message": "信頼度の高い順を優先"
+  },
+  "settingsCategoryOrderCardsLabel": {
+    "message": "カテゴリの順序"
+  },
+  "settingsMoveUpFmt": {
+    "message": "{0} を上へ"
+  },
+  "settingsMoveDownFmt": {
+    "message": "{0} を下へ"
   },
   "settingsCardShareUploads": {
     "message": "共有アップロード"
@@ -4261,6 +4225,9 @@
   "advCommonValue": {
     "message": "値"
   },
+  "advCommonCharsFmt": {
+    "message": "{0} 文字"
+  },
   "advCookiePath": {
     "message": "パス"
   },
@@ -4276,8 +4243,41 @@
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "公式の検出器を復元しますか？"
   },
-  "restoreOfficialDetectorsConfirmMsg": {
-    "message": "削除した公式の検出器を、拡張機能に含まれるバージョンで再インストールします。独自の検出器や他のルールの編集は変わりません。"
+  "allOfficialDetectorsInstalled": {
+    "message": "公式検出器はすべてインストール済みです。復元するものはありません。"
+  },
+  "restoreOfficialChecking": {
+    "message": "GitHub の最新リリースを確認しています..."
+  },
+  "restoreOfficialFromReleaseFmt": {
+    "message": "GitHub のリリース {0} から再インストールします: {1}。"
+  },
+  "restoreOfficialOffline": {
+    "message": "GitHub に接続できないため、拡張機能に含まれるバージョンを使用します。"
+  },
+  "restoreOfficialRateLimited": {
+    "message": "GitHub が現在リクエストを制限しているため、拡張機能に含まれるバージョンを使用します。"
+  },
+  "restoreOfficialListFmt": {
+    "message": "拡張機能に含まれるバージョンで再インストールします: {0}。"
+  },
+  "restoreOfficialUpdateOnlyFmt": {
+    "message": "「ルール」→「更新」で再インストールされます: {0}。"
+  },
+  "restoreOfficialUnchanged": {
+    "message": "独自の検出器や他のルールの編集は変わりません。"
+  },
+  "restoreOfficialMoreFmt": {
+    "message": "ほか {0} 件"
+  },
+  "restoreOfficialFailedFmt": {
+    "message": "復元できませんでした: {0}"
+  },
+  "officialDetectorRestoredFmt": {
+    "message": "{0} を復元しました"
+  },
+  "restoreOfficialRunUpdate": {
+    "message": "残りは「ルール」→「更新」でインストールしてください。"
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "復元"

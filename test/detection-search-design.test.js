@@ -28,44 +28,40 @@ test('detection search retains its input identity and localized accessible name'
   }
 });
 
-test('search adds only a decorative icon inside the existing layout container', () => {
-  assert.match(html, /<div class="search-container detection-search">\s*<svg[^>]*class="detection-search-icon"[^>]*aria-hidden="true"[^>]*focusable="false"/);
+test('search is a plain field like Rules and History (no icon)', () => {
+  assert.match(html, /<div class="search-container detection-search">\s*<input[^>]*id="detectionSearch"/);
   assert.match(html, /id="detectionSearch"[^>]*>\s*<\/div>\s*<div id="resultsList"/);
-  assert.match(block('#detectionResults .detection-search-icon'), /pointer-events:\s*none/);
+  assert.doesNotMatch(html, /detection-search-icon/);
 });
 
-test('search styles are detection-scoped, compact and border-box safe at popup width', () => {
+test('search field uses the same look as the Rules and History search', () => {
   const field = block('#detectionResults .detection-search .search-input');
+  const rules = read('modules/styles/rules.css');
+  const rulesField = rules.slice(rules.indexOf('.rules-header .search-input {'), rules.indexOf('}', rules.indexOf('.rules-header .search-input {')));
+  for (const rule of [/height:\s*34px/, /padding:\s*0 11px/, /font-size:\s*11\.5px/, /border:\s*1px solid #4b4b4b/,
+    /border-radius:\s*8px/, /background:\s*var\(--bg-secondary\)/]) {
+    assert.match(field, rule);
+    assert.match(rulesField, rule);
+  }
   assert.match(field, /box-sizing:\s*border-box/);
   assert.match(field, /width:\s*100%/);
-  assert.match(field, /min-width:\s*0/);
-  assert.match(field, /height:\s*34px/);
-  assert.match(field, /font-size:\s*13px/);
-  assert.match(field, /padding-inline:\s*36px 12px/);
-  assert.match(field, /border-radius:\s*8px/);
-  assert.match(block('#detectionResults .detection-search-icon'), /width:\s*16px/);
-  assert.match(block('#detectionResults .detection-search-icon'), /height:\s*16px/);
-  assert.match(field, /border:\s*1px solid var\(--border\)/);
-  assert.match(field, /background:\s*var\(--bg-primary\)/);
-  assert.doesNotMatch(block('#detectionResults .detection-search .search-input::placeholder'), /font-size/);
   assert.match(block('#detectionResults .detection-search'), /flex-shrink:\s*0/);
 });
 
-test('focus gets one calm blue ring without a stacked outline and the icon follows focus', () => {
+test('focus gets one calm blue ring without a stacked outline', () => {
   const focus = block('#detectionResults .detection-search .search-input:focus');
   assert.match(focus, /border-color:\s*var\(--accent\)/);
   assert.match(focus, /outline:\s*none/);
   assert.match(focus, /box-shadow:\s*0 0 0 2px rgba\(59, 130, 246, 0\.12\)/);
-  assert.doesNotMatch(css, /#detectionResults \.detection-search \.search-input:focus-visible\s*\{/);
-  assert.match(block('#detectionResults .detection-search:focus-within .detection-search-icon'), /color:\s*var\(--accent-light\)/);
 });
 
 test('existing input handler still filters and clearing restores all results', () => {
   const source = read('sections/detection/detection.js');
   assert.match(source, /querySelector\('#detectionSearch'\)/);
   assert.match(source, /searchInput\.addEventListener\('input', \(e\) => \{\s*this\.handleSearch\(e\.target\.value\)/);
-  const sandbox = { self: {} };
-  vm.runInNewContext(read('sections/detection/detection-ui.js'), sandbox);
+  const sandbox = vm.createContext({ self: {} });
+  vm.runInContext(read('utils/detection-utils.js'), sandbox);
+  vm.runInContext(read('sections/detection/detection-ui.js'), sandbox);
   const ui = sandbox.self.DetectionUI;
   const results = [{ detector: { name: 'Cloudflare' }, category: 'antibot' }, { detector: { name: 'DataDome' }, category: 'antibot' }];
   let shown;

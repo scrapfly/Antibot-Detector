@@ -574,6 +574,15 @@
     "message": "Настройки: {0}",
     "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
   },
+  "ruleDescriptionTitle": {
+    "message": "Описание"
+  },
+  "ruleDescriptionPlaceholder": {
+    "message": "Что означает этот шаблон, например «Читает языковые настройки браузера»"
+  },
+  "ruleDescriptionHint": {
+    "message": "Показывается в деталях обнаружения и в истории, когда шаблон найден."
+  },
   "ruleConfidenceLevel": {
     "message": "Уровень уверенности"
   },
@@ -1879,9 +1888,6 @@
   "officialDetectorsRestoredFmt": {
     "message": "Восстановлено официальных детекторов: {0}"
   },
-  "noOfficialDetectorsToRestore": {
-    "message": "Официальные детекторы не удалялись"
-  },
   "failedRestoreOfficialDetectors": {
     "message": "Не удалось восстановить официальные детекторы"
   },
@@ -2557,9 +2563,6 @@
   "advCommonNotFound": {
     "message": "Не найдено"
   },
-  "advCommonRequired": {
-    "message": "Требуется"
-  },
   "advCommonYes": {
     "message": "Да"
   },
@@ -2629,12 +2632,6 @@
   "pageNoticeMonitoringStartedFmt": {
     "message": "Мониторинг {0} запущен"
   },
-  "pageNoticeCollectingScripts": {
-    "message": "Подождите, собираем URL скриптов…"
-  },
-  "pageNoticeAnalyzingScriptsFmt": {
-    "message": "Анализ скриптов {0}"
-  },
   "pageNoticeCaptureCompleted": {
     "message": "Захват завершён"
   },
@@ -2689,24 +2686,6 @@
   "advAkamaiNoticeSensorCaptured": {
     "message": "sensor_data Akamai успешно захвачены"
   },
-  "advAkamaiNoticeExtractingTitle": {
-    "message": "Извлечение данных сенсора Akamai"
-  },
-  "advAkamaiNoticeWaitingSensor": {
-    "message": "Ожидание захвата данных сенсора…"
-  },
-  "advAkamaiNoticeAnalyzingTitle": {
-    "message": "Анализ содержимого Akamai"
-  },
-  "advAkamaiNoticeScanning": {
-    "message": "Поиск скриптов и шаблонов на странице…"
-  },
-  "advAkamaiNoticeExtractingSensorTitle": {
-    "message": "Извлечение данных сенсора"
-  },
-  "advAkamaiNoticeCapturingSensor": {
-    "message": "Захват данных сенсора Akamai…"
-  },
   "advAkamaiLevelAdvancedSbsd": {
     "message": "Расширенный (SBSD)"
   },
@@ -2725,17 +2704,11 @@
   "advAkamaiScriptsLabel": {
     "message": "Скрипты Akamai:"
   },
-  "advAkamaiScriptsHeading": {
-    "message": "Скрипты Akamai"
-  },
   "advAkamaiSensorDataUrlScript": {
     "message": "Скрипт URL данных сенсора"
   },
   "advAkamaiPixelHtmlVar": {
     "message": "HTML-переменная Pixel:"
-  },
-  "advAkamaiPixelChallengeUrls": {
-    "message": "URL проверки Pixel:"
   },
   "advAkamaiPostUrl": {
     "message": "URL для POST:"
@@ -2760,9 +2733,6 @@
   },
   "advAkamaiSensorDataCharsFmt": {
     "message": "Данные сенсора (символов: {0})"
-  },
-  "advAkamaiSensorDataNotCaptured": {
-    "message": "Данные сенсора (не захвачены)"
   },
   "advAkamaiNoSensorData": {
     "message": "Данные сенсора не захвачены"
@@ -2862,12 +2832,6 @@
   },
   "advImpervaNoticeSensorCaptured": {
     "message": "Данные сенсора успешно захвачены"
-  },
-  "advImpervaNoticeExtractingTitle": {
-    "message": "Извлечение скриптов Imperva"
-  },
-  "advImpervaNoticeMonitoringChallenge": {
-    "message": "Отслеживание данных проверки и решения…"
   },
   "advRecaptchaCallbackTool": {
     "message": "Callback reCAPTCHA"
@@ -3055,9 +3019,6 @@
   "advShapeCookieAndHeaders": {
     "message": "Cookie + заголовки"
   },
-  "advShapeNoticeExtractingScripts": {
-    "message": "Извлечение скриптов Shape Security"
-  },
   "advShapeNoticeReloadToMonitor": {
     "message": "Перезагрузите страницу, чтобы начать мониторинг заголовков и cookie Shape Security"
   },
@@ -3123,12 +3084,6 @@
   },
   "advHcaptchaNoticeCaptured": {
     "message": "Данные hCaptcha успешно захвачены"
-  },
-  "advHcaptchaNoticeCheckingVersion": {
-    "message": "Проверка версии hCaptcha"
-  },
-  "advHcaptchaNoticeAnalyzingPage": {
-    "message": "Подождите, анализируем страницу…"
   },
   "advAwswafNoScripts": {
     "message": "Скрипты AWS WAF не найдены"
@@ -4049,13 +4004,22 @@
     "message": "Список обнаружений"
   },
   "settingsCardCategoryOrder": {
-    "message": "Порядок категорий"
-  },
-  "settingsCategoryOrderLabel": {
-    "message": "Показывать первыми"
+    "message": "Порядок обнаружений"
   },
   "settingsCategoryOrderHelp": {
-    "message": "Порядок категорий в списке обнаружений. Внутри категории сначала идут результаты с наибольшей уверенностью."
+    "message": "Порядок обнаружений в списке обнаружений и в истории. Перетаскивайте карточки, чтобы изменить его; внутри категории сначала идут результаты с наибольшей уверенностью."
+  },
+  "settingsOrderHighestConfidenceFirst": {
+    "message": "Сначала наибольшая уверенность"
+  },
+  "settingsCategoryOrderCardsLabel": {
+    "message": "Порядок категорий"
+  },
+  "settingsMoveUpFmt": {
+    "message": "Переместить «{0}» выше"
+  },
+  "settingsMoveDownFmt": {
+    "message": "Переместить «{0}» ниже"
   },
   "settingsCardShareUploads": {
     "message": "Загрузки для обмена"
@@ -4261,6 +4225,9 @@
   "advCommonValue": {
     "message": "Значение"
   },
+  "advCommonCharsFmt": {
+    "message": "{0} симв."
+  },
   "advCookiePath": {
     "message": "Путь"
   },
@@ -4276,8 +4243,41 @@
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Восстановить официальные детекторы?"
   },
-  "restoreOfficialDetectorsConfirmMsg": {
-    "message": "Удалённые официальные детекторы будут установлены заново в версии из расширения. Ваши детекторы и изменения в других правилах не затрагиваются."
+  "allOfficialDetectorsInstalled": {
+    "message": "Все официальные детекторы установлены. Восстанавливать нечего."
+  },
+  "restoreOfficialChecking": {
+    "message": "Проверка последней версии на GitHub..."
+  },
+  "restoreOfficialFromReleaseFmt": {
+    "message": "Будут установлены заново из версии {0} на GitHub: {1}."
+  },
+  "restoreOfficialOffline": {
+    "message": "GitHub недоступен, поэтому используется версия из расширения."
+  },
+  "restoreOfficialRateLimited": {
+    "message": "GitHub сейчас ограничивает запросы, поэтому используется версия из расширения."
+  },
+  "restoreOfficialListFmt": {
+    "message": "Будут установлены заново в версии из расширения: {0}."
+  },
+  "restoreOfficialUpdateOnlyFmt": {
+    "message": "Правила → Обновить установит их заново: {0}."
+  },
+  "restoreOfficialUnchanged": {
+    "message": "Ваши детекторы и изменения в других правилах не затрагиваются."
+  },
+  "restoreOfficialMoreFmt": {
+    "message": "ещё {0}"
+  },
+  "restoreOfficialFailedFmt": {
+    "message": "Не удалось восстановить: {0}"
+  },
+  "officialDetectorRestoredFmt": {
+    "message": "Восстановлено: {0}"
+  },
+  "restoreOfficialRunUpdate": {
+    "message": "Запустите Правила → Обновить, чтобы установить остальные."
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "Восстановить"

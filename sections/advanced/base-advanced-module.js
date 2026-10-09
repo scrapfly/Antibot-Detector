@@ -469,7 +469,7 @@ class BaseAdvancedModule {
      * @param {string} [opts.copiedMessage]
      * @returns {HTMLElement} the overlay
      */
-    openKitModal({ title, subtitle = '', iconSvg = '', body = '', copiedMessage, record = true } = {}) {
+    openKitModal({ title, subtitle = '', iconSvg = '', body = '', copiedMessage, record = true, actions = [] } = {}) {
         const esc = FormatUtils.escapeHtml;
         const overlay = document.createElement('div');
         overlay.className = 'adv-kit-overlay';
@@ -484,6 +484,11 @@ class BaseAdvancedModule {
                     ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
                 </div>
                 <div class="adv-kit-body">${body}</div>
+                ${actions.length ? `<div class="adv-kit-footer">${actions.map((action, i) => `
+                    <button type="button" class="adv-kit-btn${action.primary ? ' adv-kit-btn--primary' : ''}" data-kit-action="${i}">
+                        ${action.iconSvg ? `<span class="adv-kit-btn-icon" aria-hidden="true">${action.iconSvg}</span>` : ''}
+                        <span>${esc(action.label)}</span>
+                    </button>`).join('')}</div>` : ''}
             </div>`;
         const close = () => {
             document.removeEventListener('keydown', onKey, true);
@@ -499,6 +504,13 @@ class BaseAdvancedModule {
         };
         overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
         overlay.querySelector('.advanced-modal-close-btn').addEventListener('click', close);
+        overlay.querySelectorAll('[data-kit-action]').forEach((button) => {
+            const action = actions[Number(button.dataset.kitAction)];
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (action && typeof action.onClick === 'function') action.onClick(button, close);
+            });
+        });
         document.addEventListener('keydown', onKey, true);
         this.bindCopyValueHandlers(overlay, {
             defaultMessage: copiedMessage || BaseAdvancedModule._tr('advPanelCopiedToClipboard', 'Copied to clipboard'),
@@ -537,16 +549,18 @@ class BaseAdvancedModule {
      * Label + one-line value that copies on click (the whole row is the button).
      * @param {string} label
      * @param {string} value
-     * @param {object} [opts] - { mono: true, wrap: false }
+     * @param {object} [opts] - { mono: true, wrap: false, clamp: false }
+     *   clamp: wrap to at most three lines and cut with "…" (long cookie
+     *   values); the click still copies the whole value
      */
-    static kitField(label, value, { mono = true, wrap = false } = {}) {
+    static kitField(label, value, { mono = true, wrap = false, clamp = false } = {}) {
         if (value === undefined || value === null || value === '') return '';
         const text = String(value);
         const copy = BaseAdvancedModule._tr('advCommonClickToCopy', 'Click to copy');
         return `
             <div class="adv-kit-field">
                 <span class="adv-kit-label">${FormatUtils.escapeHtml(label)}</span>
-                <button type="button" class="adv-kit-value${mono ? ' is-mono' : ''}${wrap ? ' is-wrap' : ''}" data-copy="${FormatUtils.escapeAttr(text)}" title="${FormatUtils.escapeAttr(copy)}">
+                <button type="button" class="adv-kit-value${mono ? ' is-mono' : ''}${wrap || clamp ? ' is-wrap' : ''}${clamp ? ' is-clamp' : ''}" data-copy="${FormatUtils.escapeAttr(text)}" title="${FormatUtils.escapeAttr(copy)}">
                     <span class="adv-kit-value-text">${FormatUtils.escapeHtml(text)}</span>
                     <svg class="adv-kit-copy-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>
                 </button>
@@ -565,6 +579,21 @@ class BaseAdvancedModule {
                 </div>
                 <pre><code>${FormatUtils.escapeHtml(code)}</code></pre>
             </div>`;
+    }
+
+    /**
+     * Read-only label / value rows (counts, levels): not copyable. `html`
+     * values (kitChip output) are inserted as given; text is escaped.
+     * @param {Array<{label: string, value: (string|number), html?: boolean}>} rows
+     */
+    static kitFacts(rows) {
+        const items = (rows || []).filter(row => row && row.value !== undefined && row.value !== null && row.value !== '');
+        if (!items.length) return '';
+        return `<dl class="adv-kit-facts">${items.map(row => `
+            <div class="adv-kit-fact">
+                <dt>${FormatUtils.escapeHtml(row.label)}</dt>
+                <dd>${row.html ? row.value : FormatUtils.escapeHtml(String(row.value))}</dd>
+            </div>`).join('')}</dl>`;
     }
 
     /** Muted line for "nothing here" / errors inside a section. */
@@ -718,6 +747,17 @@ class BaseAdvancedModule {
         };
     }
 
+    /** "Value", or "Value · 1,024 chars" when the value is long enough to be cut */
+    static cookieValueLabel(value) {
+        const label = BaseAdvancedModule._tr('advCommonValue', 'Value');
+        const length = String(value || '').length;
+        if (length <= 120) return label;
+        const uiLocale = (typeof I18n !== 'undefined' && typeof I18n.locale === 'function') ? I18n.locale() : undefined;
+        let count = String(length);
+        try { count = length.toLocaleString(uiLocale); } catch (_) { /* plain digits */ }
+        return `${label} · ${BaseAdvancedModule._fmt('advCommonCharsFmt', `${count} chars`, count)}`;
+    }
+
     /** Dialog body for a cookie check: count, level, one card per cookie, the missing ones */
     static cookieResultsBody(result) {
         const K = BaseAdvancedModule;
@@ -733,7 +773,7 @@ class BaseAdvancedModule {
             + (Array.isArray(result.facts) ? result.facts : []).map(fact => K.kitField(String(fact.label || '').replace(/:\s*$/, ''), fact.value, { mono: false })).join('')
         );
         const cards = cookies.map(cookie => K.kitCard(
-            K.kitField(tr('advCommonValue', 'Value'), cookie.value, { wrap: true })
+            K.kitField(K.cookieValueLabel(cookie.value), cookie.value, { clamp: true })
             + K.kitField(tr('advCommonDomainLabel', 'Domain:').replace(/:\s*$/, ''), cookie.domain)
             + K.kitField(tr('advCookiePath', 'Path'), cookie.path)
             + K.kitField(tr('advCookieExpires', 'Expires'), cookie.expires ? when(cookie.expires) : tr('advCookieSession', 'Session (deleted when the browser closes)'), { mono: false }),
@@ -1154,82 +1194,15 @@ class BaseAdvancedModule {
      * @param {string} detailsContent - HTML content for modal body (must be pre-sanitized)
      */
     displayCaptureDetailsModal(captureId, detailsContent) {
-        // Create modal overlay
-        const overlay = document.createElement('div');
-        overlay.className = 'advanced-modal-overlay';
-        overlay.style.opacity = '0';
-
-        // Create container
-        const container = document.createElement('div');
-        container.className = 'advanced-modal-container';
-
-        // Create header
-        const header = document.createElement('div');
-        header.className = 'advanced-modal-header';
-
-        const title = document.createElement('h3');
-        title.className = 'advanced-modal-title';
-        const svgNs = 'http://www.w3.org/2000/svg';
-        const titleSvg = document.createElementNS(svgNs, 'svg');
-        titleSvg.setAttribute('width', '16');
-        titleSvg.setAttribute('height', '16');
-        titleSvg.setAttribute('viewBox', '0 0 24 24');
-        titleSvg.setAttribute('fill', 'currentColor');
-        const titlePath = document.createElementNS(svgNs, 'path');
-        titlePath.setAttribute('d', 'M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3Z');
-        titleSvg.appendChild(titlePath);
-        title.appendChild(titleSvg);
-        const titleSpan = document.createElement('span');
         const _tCD = (typeof I18n !== 'undefined') ? I18n : null;
-        titleSpan.textContent = ' ' + ((_tCD && _tCD.get('advCaptureDetails')) || 'Capture Details');
-        title.appendChild(titleSpan);
-
-        const closeBtn = CloseButton.create({ className: 'advanced-modal-close-btn' });
-        closeBtn.onclick = () => overlay.remove();
-
-        header.appendChild(title);
-        header.appendChild(closeBtn);
-
-        // Create body
-        const body = document.createElement('div');
-        body.className = 'advanced-modal-body';
-        body.innerHTML = detailsContent; // Pre-sanitized by renderCaptureDetailsContent()
-
-        // Assemble modal
-        container.appendChild(header);
-        container.appendChild(body);
-        overlay.appendChild(container);
-
-        // Handle click-to-copy for code blocks and stop propagation for container clicks
-        container.addEventListener('click', (e) => {
-            // Handle click-to-copy for code blocks
-            const codeBlock = e.target.closest('.advanced-modal-code-block');
-            if (codeBlock && codeBlock.dataset.copy) {
-                e.stopPropagation();
-                const valueToCopy = codeBlock.dataset.copy;
-                AdvancedUtils.copyToClipboard(valueToCopy, codeBlock, {
-                    notificationMessage: ((typeof I18n !== 'undefined') && I18n.get('advValueCopied')) || 'Value copied'
-                });
-                return;
-            }
-
-            // Stop propagation for all container clicks (prevents overlay background close)
-            e.stopPropagation();
-        });
-
-        // Close modal when clicking overlay background
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                overlay.remove();
-            }
-        });
-
-        // Add to document
-        document.body.appendChild(overlay);
-
-        // Trigger fade-in animation
-        requestAnimationFrame(() => {
-            overlay.style.opacity = '1';
+        // detailsContent is pre-sanitized by renderCaptureDetailsContent(); its
+        // data-copy values copy on click (kit binding)
+        return this.openKitModal({
+            title: (_tCD && _tCD.get('advCaptureDetails')) || 'Capture Details',
+            iconSvg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3Z"/></svg>',
+            body: detailsContent,
+            copiedMessage: (_tCD && _tCD.get('advValueCopied')) || 'Value copied',
+            record: false
         });
     }
 
