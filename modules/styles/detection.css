@@ -525,7 +525,7 @@
   text-overflow: ellipsis;
 }
 
-/* Search Section */
+/* Search Section: same field as Rules and History */
 #detectionResults .detection-search {
   position: relative;
   margin: 6px 0 8px;
@@ -533,47 +533,31 @@
   min-width: 0;
 }
 
-#detectionResults .detection-search-icon {
-  position: absolute;
-  inset-inline-start: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  color: var(--text-muted);
-  pointer-events: none;
-}
-
 #detectionResults .detection-search .search-input {
   box-sizing: border-box;
+  display: block;
   width: 100%;
   min-width: 0;
   height: 34px;
+  padding: 0 11px;
   font-family: inherit;
-  padding-block: 6px;
-  padding-inline: 36px 12px;
-  font-size: 13px;
-  line-height: 20px;
-  border: 1px solid var(--border);
+  font-size: 11.5px;
+  border: 1px solid #4b4b4b;
   border-radius: 8px;
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
   color: var(--text-primary);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 #detectionResults .detection-search .search-input::placeholder {
   color: var(--text-secondary);
-  opacity: 1;
+  font-size: inherit;
 }
 
 #detectionResults .detection-search .search-input:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
-}
-
-#detectionResults .detection-search:focus-within .detection-search-icon {
-  color: var(--accent-light);
 }
 
 /* Results List */

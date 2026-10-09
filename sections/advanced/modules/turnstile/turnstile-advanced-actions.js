@@ -44,14 +44,6 @@ TurnstileAdvanced.prototype.analyzeScripts = async function() {
                 NotificationHelper.info(this._txt('advTurnstileReloadingScripts', 'Reloading the page to collect the Turnstile scripts'));
                 // Same short wait as the other vendors before the reload
                 await new Promise(resolve => setTimeout(resolve, 500));
-                try {
-                    await AdvancedUtils.sendMessage({
-                        type: 'TURNSTILE_SHOW_ANALYZING_NOTIFICATION',
-                        tabId: this.tabInfo.id
-                    });
-                } catch (noticeError) {
-                    Logger.debug('NETWORK', '[Turnstile] Page notice not shown:', noticeError);
-                }
                 await chrome.tabs.reload(this.tabInfo.id);
             } else {
                 chrome.runtime.onMessage.removeListener(analysisListener);

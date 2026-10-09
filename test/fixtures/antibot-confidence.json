@@ -944,5 +944,22 @@
   "radware-dbm-variable": {
    "runtimeType": "string"
   }
+ },
+ "detect-amazon": {
+  "metadata1-field": {
+   "dom": {
+    "tagName": "input",
+    "attributes": {
+     "type": "hidden",
+     "name": "metadata1"
+    }
+   }
+  },
+  "fwcim-assets-script": {
+   "url": "https://m.media-amazon.com/images/I/81eFQKE60AL.js?AUIClients/FWCIMAssets"
+  },
+  "fwcim-command": {
+   "source": "window.fwcimCmd = [['profile', 'signIn']];"
+  }
  }
 }

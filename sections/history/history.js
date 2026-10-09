@@ -285,25 +285,8 @@ class History {
     let tagsHtml = '';
     const maxTags = 4; // 4 icons + "+N" leave room for the detections / confidence metrics
 
-    // Sort detections by priority: Anti-Bot > CAPTCHA > Fingerprinting
-    const categoryPriority = {
-      'Anti-Bot': 1,
-      'antibot': 1,
-      'anti-bot': 1,
-      'CAPTCHA': 2,
-      'captcha': 2,
-      'Fingerprint': 3,
-      'fingerprint': 3,
-      'Fingerprinting': 3
-    };
-
-    const sortedDetections = [...detections].sort((a, b) => {
-      const catA = a.category || '';
-      const catB = b.category || '';
-      const priorityA = categoryPriority[catA] || 999;
-      const priorityB = categoryPriority[catB] || 999;
-      return priorityA - priorityB;
-    });
+    // Same order as the detail dialog and the Detection tab (Settings → Show first)
+    const sortedDetections = DetectionUtils.sortDetections(detections, this.detectionSort);
 
     // Helper function to get category color
     const getCategoryColor = (category) => {
@@ -1052,14 +1035,11 @@ class History {
       if (cat.includes('fingerprint')) return 'fingerprint';
       return 'other';
     };
-    const categoryOrder = { antibot: 0, captcha: 1, fingerprint: 2, other: 3 };
-
-    // Anti-bot first, then captcha, then fingerprint; strongest confidence first in each group.
-    // The original index is kept so data-detection-index still points into the stored array.
-    const ordered = detections
-      .map((detection, index) => ({ detection, index }))
-      .sort((a, b) => (categoryOrder[categoryClass(a.detection.category)] - categoryOrder[categoryClass(b.detection.category)])
-        || ((b.detection.confidence || 0) - (a.detection.confidence || 0)));
+    // Settings → Detection → Show first (category order or highest confidence),
+    // as in the Detection tab. The original index is kept so
+    // data-detection-index still points into the stored array.
+    const ordered = DetectionUtils.sortDetections(
+      detections.map((detection, index) => ({ detection, index })), this.detectionSort, entry => entry.detection);
 
     return ordered.map(({ detection, index }) => {
       const rawName = detection.detector?.name || detection.detector || '';
@@ -1550,6 +1530,7 @@ class History {
         this.historyLimit = 0; // 0 = unlimited
       }
 
+      await this.refreshDetectionSort();
       await this.loadHTML();
       this.setupPagination();
       this.setupEventListeners();
@@ -1573,15 +1554,35 @@ class History {
     }
   }
 
+  /** Settings → Detection → Show first, for the cards and the detail dialog */
+  async refreshDetectionSort() {
+    try {
+      const settings = await Utils.getSettings();
+      this.detectionSort = DetectionUtils.detectionSortOf(settings.detection);
+    } catch (error) {
+      this.detectionSort = DetectionUtils.detectionSortOf();
+    }
+  }
+
   registerSettingsListener() {
     if (this._settingsListenerAttached) return;
     this._settingsListenerAttached = true;
+    // Settings is in this popup: its own SETTINGS_UPDATED message never comes
+    // back here, so a new order is picked up from storage
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area !== 'local' || !changes.scrapfly_settings) return;
+      const before = JSON.stringify(this.detectionSort || null);
+      this.refreshDetectionSort()
+        .then(() => { if (JSON.stringify(this.detectionSort) !== before) this.renderHistory(); })
+        .catch(error => Logger.warn('UI', '[History] Re-sort after settings change failed', error));
+    });
     chrome.runtime.onMessage.addListener((message) => {
       if (!message || message.type !== 'SETTINGS_UPDATED') {
         return;
       }
 
       this.refreshHistoryLimit()
+        .then(() => this.refreshDetectionSort())
         .then(() => this.loadHistoryFromStorage())
         .then(() => this.renderHistory())
         .catch(error => {

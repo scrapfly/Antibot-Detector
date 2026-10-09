@@ -407,15 +407,23 @@
           <div class="settings-card">
             <div class="settings-card-head">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3,13H15V11H3M3,6V8H21V6M3,18H9V16H3V18Z"/></svg>
-              <span data-i18n="settingsCardCategoryOrder">Category order</span>
+              <span data-i18n="settingsCardCategoryOrder">Detection order</span>
             </div>
             <div class="settings-card-body">
+              <div class="setting-row setting-row--inline setting-row--toggle">
+                <label class="setting-row-label" for="sortByConfidence" data-i18n="settingsOrderHighestConfidenceFirst">Highest confidence first</label>
+                <label class="switch switch-sm">
+                  <input type="checkbox" id="sortByConfidence">
+                  <span class="slider"></span>
+                </label>
+              </div>
               <div class="setting-row">
-                <label class="setting-row-label" for="categoryOrder" data-i18n="settingsCategoryOrderLabel">Show first</label>
-                <!-- Options are filled with the translated category names (SettingsUI.populateCategoryOrder) -->
-                <select id="categoryOrder" class="select-field"></select>
+                <span class="setting-row-label" id="categoryOrderLabel" data-i18n="settingsCategoryOrderCardsLabel">Category order</span>
+                <!-- One card per category; drag or use the arrows (SettingsUI.populateCategoryOrder) -->
+                <ol id="categoryOrderList" class="category-order-list" aria-labelledby="categoryOrderLabel"></ol>
+                <input type="hidden" id="categoryOrder">
                 <div class="setting-row-help">
-                  <p data-i18n="settingsCategoryOrderHelp">Order of the categories in the Detection list. Within a category, the highest confidence comes first.</p>
+                  <p data-i18n="settingsCategoryOrderHelp">Order of detections in the Detection list and in History. Drag the cards to change it; within a category, the highest confidence comes first.</p>
                 </div>
               </div>
             </div>

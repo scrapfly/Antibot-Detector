@@ -354,29 +354,115 @@ Rules.prototype.handleRestoreOfficial = async function() {
   const t = (typeof I18n !== 'undefined') ? I18n : null;
   const _tr = (key, fallback) => (t && t.get(key)) || fallback;
   const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
+  const failMessage = (error) => {
+    const reason = error && error.message ? error.message : String(error);
+    return `${_tr('failedRestoreOfficialDetectors', 'Failed to restore official detectors')}: ${reason}`;
+  };
+  // The latest release on GitHub, as Rules → Update uses; without it the
+  // copies included in the extension are used
+  let release = null;
+  let releaseError = null;
+  let found;
+  const releaseCopies = new Map();
+  const loader = NotificationHelper.loading(_tr('restoreOfficialChecking', 'Checking the latest release on GitHub...'));
+  try {
+    try {
+      const { tag } = await UpdateManager.fetchLatestRelease();
+      const index = await UpdateManager.fetchRemoteIndex(tag);
+      if (!index) throw Object.assign(new Error('The release index could not be read'), { code: 'unreachable' });
+      release = { tag, index };
+    } catch (error) {
+      releaseError = error;
+      Logger.warn('UI', 'Restore: latest release not available, using the packaged detectors', error?.message);
+    }
+    found = await this.detectorManager.getMissingOfficialDetectors(release);
+    // Download the release copies now, so the dialog says where each one
+    // really comes from; one that needs a newer extension is left out
+    if (release) {
+      await Promise.all(found.missing.filter(d => d.inRelease).map(async (d) => {
+        const data = await UpdateManager.fetchRemoteDetector(d.category, d.id, release.tag);
+        if (data && UpdateManager.isCompatibleWithExtension(data)) {
+          releaseCopies.set(d.id, data);
+          if (typeof data.name === 'string' && data.name.trim()) d.name = data.name.trim();
+        }
+      }));
+    }
+  } catch (error) {
+    loader.close();
+    Logger.error('UI', 'Failed to list missing official detectors:', error);
+    NotificationHelper.error(failMessage(error));
+    return;
+  }
+  loader.close();
+  // Nothing to bring back: say so instead of asking
+  if (found.missing.length === 0 && found.updateOnly.length === 0) {
+    NotificationHelper.info(_tr('allOfficialDetectorsInstalled', 'All official detectors are installed. There is nothing to restore.'));
+    return;
+  }
+  // Name what comes back and from where, before the user confirms
+  const shortList = (names) => {
+    const max = 8;
+    if (names.length <= max) return FormatUtils.formatList(names);
+    const more = _fmt('restoreOfficialMoreFmt', `${names.length - max} more`, names.length - max);
+    return FormatUtils.formatList([...names.slice(0, max), more]);
+  };
+  // Only in a release copy this extension cannot run: left to Rules → Update,
+  // which offers it once the extension is updated
+  for (const d of found.missing.filter(m => !m.packaged && !releaseCopies.has(m.id))) found.updateOnly.push(d.id);
+  found.missing = found.missing.filter(m => m.packaged || releaseCopies.has(m.id));
+  const fromRelease = found.missing.filter(d => releaseCopies.has(d.id));
+  const fromPackage = found.missing.filter(d => !releaseCopies.has(d.id));
+  const lines = [];
+  if (fromRelease.length > 0) {
+    const names = shortList(fromRelease.map(d => d.name));
+    lines.push(_fmt('restoreOfficialFromReleaseFmt', `Installed again from release ${release.tag} on GitHub: ${names}.`, release.tag, names));
+  }
+  if (fromPackage.length > 0) {
+    const names = shortList(fromPackage.map(d => d.name));
+    lines.push(_fmt('restoreOfficialListFmt', `Installed again from the version included in the extension: ${names}.`, names));
+  }
+  if (found.updateOnly.length > 0) {
+    const names = shortList(found.updateOnly.map(id => DetectorManager.humanizeDetectorName(id)));
+    lines.push(_fmt('restoreOfficialUpdateOnlyFmt', `Rules → Update installs these again: ${names}.`, names));
+  }
+  if (releaseError) {
+    lines.push(releaseError.code === 'rate_limited'
+      ? _tr('restoreOfficialRateLimited', 'GitHub is limiting requests right now, so the version included in the extension is used.')
+      : _tr('restoreOfficialOffline', 'GitHub could not be reached, so the version included in the extension is used.'));
+  }
+  lines.push(_tr('restoreOfficialUnchanged', 'Your own detectors and your edits to other rules are not changed.'));
   const confirmed = await NotificationHelper.confirm({
     title: _tr('restoreOfficialDetectorsConfirmTitle', 'Restore official detectors?'),
-    message: _tr('restoreOfficialDetectorsConfirmMsg', 'The official detectors you deleted are installed again from the version included in the extension. Your own detectors and your edits to other rules are not changed.'),
+    message: lines.join('<br><br>'),
     confirmText: _tr('restoreOfficialDetectorsConfirmBtn', 'Restore'),
     cancelText: _tr('btnCancel', 'Cancel'),
     type: 'warning',
     tone: 'warning'
   });
   if (!confirmed) return;
+  const fetchReleased = async (category, id) => releaseCopies.get(id) || null;
   try {
-    const restored = await this.detectorManager.restoreOfficialDetectors();
-    if (restored > 0) {
+    const { restored, failed, updateOnly } = await this.detectorManager.restoreOfficialDetectors(found, { fetchReleased });
+    if (restored.length > 0) {
       chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, () => {});
-      NotificationHelper.success(_fmt('officialDetectorsRestoredFmt', `${restored} official detectors restored`, restored));
       this.displayRules();
-    } else {
-      NotificationHelper.info(_tr('noOfficialDetectorsToRestore', 'No official detectors were deleted'));
+    }
+    if (failed.length > 0) {
+      NotificationHelper.error(_fmt('restoreOfficialFailedFmt', `Could not restore: ${failed.join(', ')}`,
+        FormatUtils.formatList(failed.map(id => DetectorManager.humanizeDetectorName(id)))));
+    }
+    if (restored.length === 1) {
+      NotificationHelper.success(_fmt('officialDetectorRestoredFmt', `${restored[0].name} restored`, restored[0].name));
+    } else if (restored.length > 1) {
+      NotificationHelper.success(_fmt('officialDetectorsRestoredFmt', `${restored.length} official detectors restored`, restored.length));
+    }
+    if (updateOnly.length > 0) {
+      NotificationHelper.info(_tr('restoreOfficialRunUpdate', 'Run Rules → Update to install the rest.'));
     }
   } catch (error) {
     Logger.error('UI', 'Failed to restore official detectors:', error);
     // Say why, so a failure can be reported and fixed
-    const reason = error && error.message ? error.message : String(error);
-    NotificationHelper.error(`${_tr('failedRestoreOfficialDetectors', 'Failed to restore official detectors')}: ${reason}`);
+    NotificationHelper.error(failMessage(error));
   }
 };
 
@@ -395,7 +481,7 @@ Rules.prototype.handleDeleteDetector = async function(category, detectorName, di
   const confirmed = await NotificationHelper.confirm({
     title: _tr('deleteDetectorTitle', 'Delete Detector'),
     message: isOfficial
-      ? `${baseMessage}<br>${FormatUtils.escapeHtml(_tr('deleteOfficialDetectorNote', 'This is an official Scrapfly detector. Updates will not bring it back; use "Restore official detectors" in the … menu to get it again.'))}`
+      ? `${baseMessage}<br>${_tr('deleteOfficialDetectorNote', 'This is an official Scrapfly detector. Updates will not bring it back; use "Restore official detectors" in the … menu to get it again.')}`
       : baseMessage,
     confirmText: _tr('btnDelete', 'Delete'),
     cancelText: _tr('btnCancel', 'Cancel'),

@@ -574,6 +574,15 @@
     "message": "Configurações: {0}",
     "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
   },
+  "ruleDescriptionTitle": {
+    "message": "Descrição"
+  },
+  "ruleDescriptionPlaceholder": {
+    "message": "O que este padrão significa, ex.: Lê as preferências de idioma do navegador"
+  },
+  "ruleDescriptionHint": {
+    "message": "Exibida nos detalhes da detecção e no Histórico quando este padrão é encontrado."
+  },
   "ruleConfidenceLevel": {
     "message": "Nível de confiança"
   },
@@ -1879,9 +1888,6 @@
   "officialDetectorsRestoredFmt": {
     "message": "{0} detectores oficiais restaurados"
   },
-  "noOfficialDetectorsToRestore": {
-    "message": "Nenhum detector oficial foi excluído"
-  },
   "failedRestoreOfficialDetectors": {
     "message": "Não foi possível restaurar os detectores oficiais"
   },
@@ -2557,9 +2563,6 @@
   "advCommonNotFound": {
     "message": "Não encontrado"
   },
-  "advCommonRequired": {
-    "message": "Obrigatório"
-  },
   "advCommonYes": {
     "message": "Sim"
   },
@@ -2629,12 +2632,6 @@
   "pageNoticeMonitoringStartedFmt": {
     "message": "Monitoramento do {0} iniciado"
   },
-  "pageNoticeCollectingScripts": {
-    "message": "Aguarde enquanto coletamos as URLs dos scripts…"
-  },
-  "pageNoticeAnalyzingScriptsFmt": {
-    "message": "Analisando os scripts do {0}"
-  },
   "pageNoticeCaptureCompleted": {
     "message": "Captura concluída"
   },
@@ -2689,24 +2686,6 @@
   "advAkamaiNoticeSensorCaptured": {
     "message": "sensor_data do Akamai capturado com sucesso"
   },
-  "advAkamaiNoticeExtractingTitle": {
-    "message": "Extraindo dados do sensor do Akamai"
-  },
-  "advAkamaiNoticeWaitingSensor": {
-    "message": "Aguardando a captura das informações do sensor…"
-  },
-  "advAkamaiNoticeAnalyzingTitle": {
-    "message": "Analisando o conteúdo do Akamai"
-  },
-  "advAkamaiNoticeScanning": {
-    "message": "Procurando scripts e padrões na página…"
-  },
-  "advAkamaiNoticeExtractingSensorTitle": {
-    "message": "Extraindo dados do sensor"
-  },
-  "advAkamaiNoticeCapturingSensor": {
-    "message": "Capturando as informações do sensor do Akamai…"
-  },
   "advAkamaiLevelAdvancedSbsd": {
     "message": "Avançado (SBSD)"
   },
@@ -2725,17 +2704,11 @@
   "advAkamaiScriptsLabel": {
     "message": "Scripts do Akamai:"
   },
-  "advAkamaiScriptsHeading": {
-    "message": "Scripts do Akamai"
-  },
   "advAkamaiSensorDataUrlScript": {
     "message": "Script da URL de dados do sensor"
   },
   "advAkamaiPixelHtmlVar": {
     "message": "Variável HTML do Pixel:"
-  },
-  "advAkamaiPixelChallengeUrls": {
-    "message": "URLs do desafio Pixel:"
   },
   "advAkamaiPostUrl": {
     "message": "URL de POST:"
@@ -2760,9 +2733,6 @@
   },
   "advAkamaiSensorDataCharsFmt": {
     "message": "Dados do sensor ({0} caracteres)"
-  },
-  "advAkamaiSensorDataNotCaptured": {
-    "message": "Dados do sensor (não capturados)"
   },
   "advAkamaiNoSensorData": {
     "message": "Nenhum dado do sensor capturado"
@@ -2862,12 +2832,6 @@
   },
   "advImpervaNoticeSensorCaptured": {
     "message": "Dados do sensor capturados com sucesso"
-  },
-  "advImpervaNoticeExtractingTitle": {
-    "message": "Extraindo scripts do Imperva"
-  },
-  "advImpervaNoticeMonitoringChallenge": {
-    "message": "Monitorando os dados do desafio e da solução…"
   },
   "advRecaptchaCallbackTool": {
     "message": "Callback do reCAPTCHA"
@@ -3055,9 +3019,6 @@
   "advShapeCookieAndHeaders": {
     "message": "Cookie + cabeçalhos"
   },
-  "advShapeNoticeExtractingScripts": {
-    "message": "Extraindo os scripts do Shape Security"
-  },
   "advShapeNoticeReloadToMonitor": {
     "message": "Recarregue a página para iniciar o monitoramento dos cabeçalhos e cookies do Shape Security"
   },
@@ -3123,12 +3084,6 @@
   },
   "advHcaptchaNoticeCaptured": {
     "message": "Dados do hCaptcha capturados com sucesso"
-  },
-  "advHcaptchaNoticeCheckingVersion": {
-    "message": "Verificando a versão do hCaptcha"
-  },
-  "advHcaptchaNoticeAnalyzingPage": {
-    "message": "Aguarde enquanto analisamos a página…"
   },
   "advAwswafNoScripts": {
     "message": "Nenhum script do AWS WAF encontrado"
@@ -4049,13 +4004,22 @@
     "message": "Lista de detecções"
   },
   "settingsCardCategoryOrder": {
-    "message": "Ordem das categorias"
-  },
-  "settingsCategoryOrderLabel": {
-    "message": "Mostrar primeiro"
+    "message": "Ordem das detecções"
   },
   "settingsCategoryOrderHelp": {
-    "message": "Ordem das categorias na lista de Detecção. Dentro de cada categoria, a maior confiança vem primeiro."
+    "message": "Ordem das detecções na lista de Detecção e no Histórico. Arraste os cartões para mudar; dentro de cada categoria, a maior confiança vem primeiro."
+  },
+  "settingsOrderHighestConfidenceFirst": {
+    "message": "Maior confiança primeiro"
+  },
+  "settingsCategoryOrderCardsLabel": {
+    "message": "Ordem das categorias"
+  },
+  "settingsMoveUpFmt": {
+    "message": "Mover {0} para cima"
+  },
+  "settingsMoveDownFmt": {
+    "message": "Mover {0} para baixo"
   },
   "settingsCardShareUploads": {
     "message": "Envios para compartilhar"
@@ -4261,6 +4225,9 @@
   "advCommonValue": {
     "message": "Valor"
   },
+  "advCommonCharsFmt": {
+    "message": "{0} caracteres"
+  },
   "advCookiePath": {
     "message": "Caminho"
   },
@@ -4276,8 +4243,41 @@
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Restaurar os detectores oficiais?"
   },
-  "restoreOfficialDetectorsConfirmMsg": {
-    "message": "Os detectores oficiais que você apagou são reinstalados na versão incluída na extensão. Seus próprios detectores e suas edições em outras regras não mudam."
+  "allOfficialDetectorsInstalled": {
+    "message": "Todos os detectores oficiais estão instalados. Não há nada para restaurar."
+  },
+  "restoreOfficialChecking": {
+    "message": "Verificando a versão mais recente no GitHub..."
+  },
+  "restoreOfficialFromReleaseFmt": {
+    "message": "Reinstalados a partir da versão {0} no GitHub: {1}."
+  },
+  "restoreOfficialOffline": {
+    "message": "Não foi possível acessar o GitHub, então a versão incluída na extensão é usada."
+  },
+  "restoreOfficialRateLimited": {
+    "message": "O GitHub está limitando as solicitações agora, então a versão incluída na extensão é usada."
+  },
+  "restoreOfficialListFmt": {
+    "message": "Reinstalados na versão incluída na extensão: {0}."
+  },
+  "restoreOfficialUpdateOnlyFmt": {
+    "message": "Regras → Atualizar reinstala estes: {0}."
+  },
+  "restoreOfficialUnchanged": {
+    "message": "Seus próprios detectores e suas edições em outras regras não mudam."
+  },
+  "restoreOfficialMoreFmt": {
+    "message": "mais {0}"
+  },
+  "restoreOfficialFailedFmt": {
+    "message": "Não foi possível restaurar: {0}"
+  },
+  "officialDetectorRestoredFmt": {
+    "message": "{0} restaurado"
+  },
+  "restoreOfficialRunUpdate": {
+    "message": "Use Regras → Atualizar para instalar o restante."
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "Restaurar"

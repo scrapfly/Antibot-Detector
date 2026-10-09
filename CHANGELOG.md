@@ -7,6 +7,29 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [Unreleased]
 
+## [2.8.4] - 2026-10-09
+
+### Added
+
+- Anti-bot: Amazon Bot Protection, found on Amazon sign-in pages by the hidden metadata1 fingerprint field and the FWCIM scripts.
+
+### Changed
+
+- Rule editor: every pattern's description (the text shown in detection details and History) can be edited in its Settings.
+- Detection: the search field looks the same as in History and Rules.
+- Settings → Detection order: drag the Anti-bot, Captcha and Fingerprint cards to order detections, or list the highest confidence first; History follows it too.
+- Advanced → Akamai: Analyze Scripts, Extract Sensor Information and Capture Details use the cleaner dialog style, with Copy buttons that no longer cover the text.
+- Advanced → History: cards keep the vendor and tool name on one line and show the size next to the time.
+- Advanced → Check Cookies: long cookie values show three lines and their length instead of filling the dialog; clicking still copies the full value.
+- Advanced: Analyze Scripts, Check Version and Akamai Extract Sensor Information no longer show a notice box on the website; progress and results stay in the popup.
+- Advanced → hCaptcha: Check Version shows the version, site key and page as copyable rows, with Enterprise mode as a badge.
+
+### Fixed
+
+- Detection: results that arrive after a slow scan now show instead of failing with an error.
+- Advanced → hCaptcha: Check Version no longer reports a timeout after it already showed the version.
+- Rules: "Restore official detectors" installs missing official detectors from the latest GitHub release (the built-in copy when offline), including ones older versions removed, and lists them first.
+
 ## [2.8.3] - 2026-10-08
 
 ### Added
@@ -267,7 +290,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
-[Unreleased]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.3...HEAD
+[Unreleased]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.4...HEAD
+[2.8.4]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.3...v2.8.4
 [2.8.3]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.2...v2.8.3
 [2.8.2]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.1...v2.8.2
 [2.8.1]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8...v2.8.1

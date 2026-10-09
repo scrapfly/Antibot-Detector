@@ -29,7 +29,7 @@ function fixture() {
     document: { querySelector: selector => selector === '#detectionPagination' ? container : null,
       createElement: element, createTextNode: text => ({ textContent: text }) } };
   vm.createContext(context);
-  for (const file of ['modules/ui/pagination-manager.js', 'sections/detection/detection.js', 'sections/detection/detection-ui.js']) {
+  for (const file of ['utils/detection-utils.js', 'modules/ui/pagination-manager.js', 'sections/detection/detection.js', 'sections/detection/detection-ui.js']) {
     vm.runInContext(fs.readFileSync(path.join(__dirname, '..', file), 'utf8'), context);
   }
   const detection = Object.create(context.window.Detection.prototype);

@@ -864,40 +864,130 @@ class DetectorManager {
     }
 
     /**
-     * Bring back every official detector the user deleted, from the packaged
-     * files, and forget the deletions.
-     * @returns {Promise<number>} Number of detectors restored
+     * The packaged index ({category: {detectors: [ids]}}): the official
+     * detectors this build ships. Read from the extension, not from the stored
+     * categories, which Update and older builds may have changed.
+     * @returns {Promise<object>}
      */
-    async restoreOfficialDetectors() {
-        const deleted = await DetectorManager.getDeletedOfficialIds();
-        if (deleted.length === 0) return 0;
-        // The packaged list of official detectors, also when categories are not loaded
-        let categories = this.categoryManager?.getAllCategories?.();
-        if (!categories || Object.keys(categories).length === 0) {
+    async getPackagedCategories() {
+        try {
             const response = await fetch(chrome.runtime.getURL('detectors/index.json'));
-            categories = await response.json();
+            if (response.ok) return await response.json();
+        } catch (_) { /* fall back to the loaded categories */ }
+        return this.categoryManager?.getAllCategories?.() || {};
+    }
+
+    /** Display name of a packaged detector, or one made from its ID. */
+    static async packagedDetectorName(category, id) {
+        try {
+            const response = await fetch(chrome.runtime.getURL(`detectors/${category}/${id}.json`));
+            if (response.ok) {
+                const data = await response.json();
+                if (data && typeof data.name === 'string' && data.name.trim()) return data.name.trim();
+            }
+        } catch (_) { /* name from the ID */ }
+        return DetectorManager.humanizeDetectorName(id);
+    }
+
+    /**
+     * Official detectors that are not installed.
+     * `missing`: each one to bring back - every packaged detector that is not
+     * installed (deleted now, or by a build before 2.8, which did not record
+     * deletions) and every deleted one the release on GitHub has. `inRelease`
+     * / `packaged` say where it can come from.
+     * `updateOnly`: deleted ones in neither place (no release read), so only
+     * Rules → Update can install them again.
+     * @param {{tag: string, index: object}|null} [release] - Latest release and its index.json
+     * @returns {Promise<{missing: Array<{category: string, id: string, name: string, packaged: boolean,
+     *   inRelease: boolean}>, updateOnly: string[]}>}
+     */
+    async getMissingOfficialDetectors(release = null) {
+        const deleted = await DetectorManager.getDeletedOfficialIds();
+        const idsOf = (index) => {
+            const map = new Map();
+            for (const [category, data] of Object.entries(index || {})) {
+                const ids = Array.isArray(data?.detectors) ? data.detectors : [];
+                for (const id of ids) if (typeof id === 'string' && !map.has(id)) map.set(id, category);
+            }
+            return map;
+        };
+        const packaged = idsOf(await this.getPackagedCategories());
+        const released = idsOf(release?.index);
+        const missing = [];
+        for (const [id, category] of new Map([...released, ...packaged])) {
+            if (this.findDetectorById(id)) continue;
+            // A detector only the release has and the user never had is an
+            // update, not something to restore
+            if (!packaged.has(id) && !deleted.includes(id)) continue;
+            const name = packaged.has(id)
+                ? await DetectorManager.packagedDetectorName(packaged.get(id), id)
+                : DetectorManager.humanizeDetectorName(id);
+            missing.push({ category: released.get(id) || category, id, name, packaged: packaged.has(id), inRelease: released.has(id) });
         }
+        const updateOnly = deleted.filter(id => !packaged.has(id) && !released.has(id) && !this.findDetectorById(id));
+        return { missing, updateOnly };
+    }
+
+    /**
+     * Install again the missing official detectors and forget the deletions.
+     * Each one comes from the release when `fetchReleased` returns it (the
+     * caller leaves out copies that need a newer extension), otherwise from
+     * the packaged file. Deleted detectors that only Update provides are
+     * un-deleted so the next Rules → Update installs them.
+     * @param {{missing: Array, updateOnly: string[]}} [found] - From getMissingOfficialDetectors()
+     * @param {{fetchReleased?: function(string, string): Promise<object|null>}} [options]
+     * @returns {Promise<{restored: Array<{id: string, name: string, source: ('release'|'package')}>,
+     *   failed: string[], updateOnly: string[]}>}
+     */
+    async restoreOfficialDetectors(found, { fetchReleased = null } = {}) {
+        const { missing, updateOnly } = found || await this.getMissingOfficialDetectors();
+        const restored = [];
         const failed = [];
-        let restored = 0;
-        for (const [categoryName, categoryData] of Object.entries(categories || {})) {
-            const ids = Array.isArray(categoryData?.detectors) ? categoryData.detectors : [];
-            for (const id of ids) {
-                if (!deleted.includes(id) || this.detectors[categoryName]?.[id]) continue;
-                if (!this.detectors[categoryName]) this.detectors[categoryName] = {};
-                // One unreadable file must not stop the others
+        const fromReleaseOnly = [];
+        for (const { category, id, name, packaged, inRelease } of missing) {
+            if (this.findDetectorById(id)) continue;
+            if (!this.detectors[category]) this.detectors[category] = {};
+            let source = null;
+            if (inRelease && typeof fetchReleased === 'function') {
                 try {
-                    await this.loadDetectorFile(categoryName, id);
+                    const data = await fetchReleased(category, id);
+                    const normalized = data && DetectorManager.normalizeDetectorSchema(data, { categoryName: category, detectorName: id, source: 'remote' });
+                    if (normalized) {
+                        if (normalized.enabled === undefined) normalized.enabled = true;
+                        this.detectors[category][id] = normalized;
+                        source = 'release';
+                        if (!packaged) fromReleaseOnly.push(id);
+                    }
+                } catch (error) {
+                    Logger.warn('DETECTOR', 'Could not restore official detector from the release', { id, error: error?.message });
+                }
+            }
+            // One unreadable file must not stop the others
+            if (!source && packaged) {
+                try {
+                    await this.loadDetectorFile(category, id);
+                    if (this.detectors[category][id]) source = 'package';
                 } catch (error) {
                     Logger.warn('DETECTOR', 'Could not restore official detector', { id, error: error?.message });
                 }
-                if (this.detectors[categoryName][id]) restored++;
-                else failed.push(id);
             }
+            if (source) restored.push({ id, name: this.detectors[category][id].name || name, source });
+            else failed.push(id);
         }
-        // Keep the ones that did not come back, so a later restore retries them
-        await chrome.storage.local.set({ [DetectorManager.DELETED_OFFICIAL_KEY]: failed });
-        if (restored > 0) await this.saveDetectorsToStorage();
-        return restored;
+        // Deletions that did not come back stay recorded, so a later restore
+        // retries them and Update does not offer them meanwhile
+        const deleted = await DetectorManager.getDeletedOfficialIds();
+        await chrome.storage.local.set({ [DetectorManager.DELETED_OFFICIAL_KEY]: failed.filter(id => deleted.includes(id)) });
+        if (fromReleaseOnly.length > 0) {
+            // Not packaged: official only through the list Update keeps
+            const stored = await chrome.storage.local.get(DetectorManager.REMOTE_OFFICIAL_KEY);
+            const known = new Set(Array.isArray(stored[DetectorManager.REMOTE_OFFICIAL_KEY]) ? stored[DetectorManager.REMOTE_OFFICIAL_KEY] : []);
+            for (const id of fromReleaseOnly) known.add(id);
+            await chrome.storage.local.set({ [DetectorManager.REMOTE_OFFICIAL_KEY]: [...known] });
+            await this.loadOfficialDetectorIds();
+        }
+        if (restored.length > 0) await this.saveDetectorsToStorage();
+        return { restored, failed, updateOnly };
     }
 
     /**

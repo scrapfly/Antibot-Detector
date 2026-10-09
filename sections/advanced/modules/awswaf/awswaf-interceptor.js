@@ -131,31 +131,6 @@ function handleAwsWafMessage(message, sender, sendResponse, captureState) {
       sendResponse(analysisResult);
       return false; // sync response
 
-    case 'AWSWAF_SHOW_ANALYZING_NOTIFICATION':
-      // Show analyzing notification (called right before page reload)
-      (async () => {
-        try {
-          if (typeof showNotification === 'function') {
-            Logger.network('[AwsWaf] Showing analyzing notification before reload...');
-            await showNotification(message.tabId, {
-              module: 'AWS WAF',
-              type: 'loading',
-              title: pageText('pageNoticeAnalyzingScriptsFmt', 'Analyzing {0} Scripts', 'AWS WAF'),
-              message: pageText('pageNoticeCollectingScripts', 'Please wait while we collect script URLs...'),
-              duration: 15000 // Longer duration to persist through reload
-            });
-            Logger.network('[AwsWaf] Pre-reload notification shown successfully');
-          } else {
-            Logger.network('[AwsWaf] showNotification function not available');
-          }
-          sendResponse({ status: 'success' });
-        } catch (error) {
-          Logger.error('NETWORK', '[AwsWaf] Error showing notification:', error);
-          sendResponse({ status: 'error', error: error.message });
-        }
-      })();
-      return true; // Async response
-
     default:
       return false;
   }
@@ -201,7 +176,7 @@ function awsWafStartAnalysis(tabId, url) {
     if (details.tabId === tabId && details.frameId === 0) {
       Logger.network('[AwsWaf-Analysis] Page loaded, waiting for all requests to complete...');
 
-      // Note: Notification is shown before page reload via AWSWAF_SHOW_ANALYZING_NOTIFICATION
+      // No notice is drawn on the page; the popup shows the progress
       // No need to show it again here
 
       // Wait 5 seconds after page load to ensure all network requests are captured

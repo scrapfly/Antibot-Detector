@@ -109,253 +109,75 @@ AkamaiAdvanced.prototype.checkCookies = async function() {
 
 
 
+// Header icons of the Akamai result dialogs
+AkamaiAdvanced.CODE_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.6,16.6L19.2,12L14.6,7.4L16,6L22,12L16,18L14.6,16.6M9.4,16.6L4.8,12L9.4,7.4L8,6L2,12L8,18L9.4,16.6Z"/></svg>';
+AkamaiAdvanced.SENSOR_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22,21H2V3H4V19H6V10H10V19H12V6H16V19H18V14H22V21Z"/></svg>';
+AkamaiAdvanced.COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>';
+
+// "Script URL:" → "Script URL" for a field label
+AkamaiAdvanced.label = (key, fallback) => AkamaiAdvanced.tr(key, fallback).replace(/:\s*$/, '');
+
     /**
-     * Display content analysis in a modal
+     * Analyze Scripts result: counts and level, then each script or URL
+     * Akamai uses, copyable; Export Code in the footer
      */
 AkamaiAdvanced.prototype.displayAnalysisModal = function(analysis) {
-        const modal = this.createToolModal();
+        const K = BaseAdvancedModule;
         const tr = AkamaiAdvanced.tr;
         const fmt = AkamaiAdvanced.fmt;
-
-        const detectedPatterns = Object.entries(analysis.patterns).filter(([key, value]) => value);
+        const label = AkamaiAdvanced.label;
+        const scripts = Array.isArray(analysis.scripts) ? analysis.scripts : [];
+        const sensorUrls = Array.isArray(analysis.sensorDataUrls) ? analysis.sensorDataUrls : [];
+        const sbsdUrls = Array.isArray(analysis.sbsdUrls) ? analysis.sbsdUrls : [];
+        const akamaiCount = scripts.length + sensorUrls.length + (analysis.akamaiScriptPath ? 1 : 0);
         const hasAkamaiCookies = analysis.cookies && (analysis.cookies._abck || analysis.cookies.ak_bmsc || analysis.cookies.bm_sz);
 
-        // Determine mode/version
-        let mode = 'Not Detected';
-        let modeColor = 'var(--text-muted)';
-        if (analysis.isEasyMode) {
-            mode = 'Easy Mode (~0~)';
-            modeColor = 'var(--success)';
-        } else if (analysis.requiresPixel) {
-            mode = 'Pixel Challenge';
-            modeColor = 'var(--danger)';
-        } else if (analysis.requiresSecCpt) {
-            mode = 'sec_cpt Challenge';
-            modeColor = 'var(--danger)';
-        } else if (analysis.requiresSbsd) {
-            mode = 'SBSD Challenge';
-            modeColor = 'var(--danger)';
-        } else if (hasAkamaiCookies) {
-            mode = 'Standard';
-            modeColor = 'var(--text-primary)';
-        }
+        // What the page asks a client to solve
+        let level = '';
+        if (analysis.isEasyMode) level = K.kitChip(tr('advAkamaiLevelEasy', 'Easy'), 'green');
+        else if (analysis.requiresPixel) level = K.kitChip(tr('advAkamaiPixelChallenge', 'Pixel Challenge'), 'red');
+        else if (analysis.requiresSecCpt) level = K.kitChip(tr('advAkamaiSecCptChallenge', 'sec_cpt Challenge'), 'red');
+        else if (analysis.requiresSbsd) level = K.kitChip(tr('advAkamaiSbsdChallenge', 'SBSD Challenge'), 'red');
+        else if (hasAkamaiCookies) level = K.kitChip(tr('advCommonStandard', 'Standard'), 'blue');
 
-        modal.innerHTML = `
-            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 700px; max-height: 80vh; overflow-y: auto; width: 90%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${tr('advAkamaiAnalysisTitle', 'Akamai Analysis')}</h3>
-                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
-                </div>
+        const summary = K.kitFacts([
+            { label: label('advCommonTotalScripts', 'Total Scripts:'), value: analysis.scriptCount },
+            { label: label('advAkamaiScriptsLabel', 'Akamai Scripts:'), value: akamaiCount },
+            { label: label('advCommonProtectionLevel', 'Protection Level:'), value: level, html: true }
+        ]);
+        const scriptUrl = label('advCommonScriptUrl', 'Script URL:');
+        const sensorScript = K.kitSection(tr('advAkamaiSensorDataUrlScript', 'Sensor Data URL Script'),
+            K.kitField(scriptUrl, analysis.akamaiScriptPath, { wrap: true }));
+        const pixelFields = K.kitField(label('advAkamaiPixelHtmlVar', 'Pixel HTML Variable:'), analysis.pixelHtmlVar ? `bazadebezolkohpepadr="${analysis.pixelHtmlVar}"` : '', { wrap: true })
+            + K.kitField(scriptUrl, analysis.pixelScriptUrls?.scriptUrl, { wrap: true })
+            + K.kitField(label('advAkamaiPostUrl', 'POST URL:'), analysis.pixelScriptUrls?.postUrl, { wrap: true })
+            + K.kitField(label('advAkamaiPixelScriptVar', 'Pixel Script Variable:'), analysis.pixelScriptVar, { wrap: true });
+        const pixel = pixelFields ? K.kitSection(tr('advAkamaiPixelChallenge', 'Pixel Challenge'), K.kitCard(pixelFields)) : '';
+        const sbsd = K.kitSection(tr('advAkamaiSbsdScriptUrl', 'SBSD Script URL'),
+            sbsdUrls.map(url => K.kitField(scriptUrl, url, { wrap: true })).join(''), sbsdUrls.length > 1 ? sbsdUrls.length : '');
+        const endpoints = K.kitSection(tr('advAkamaiSensorDataUrls', 'Sensor Data URLs'),
+            sensorUrls.map((url, idx) => K.kitField(`${tr('advAkamaiEndpoint', 'Akamai Endpoint')} ${idx + 1}`, url, { wrap: true })).join(''), sensorUrls.length || '');
 
-                <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 16px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">${tr('advCommonTotalScripts', 'Total Scripts:')}</span>
-                        <span style="color: var(--text-primary); font-weight: 500;">${analysis.scriptCount}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">${tr('advAkamaiScriptsLabel', 'Akamai Scripts:')}</span>
-                        <span style="color: var(--text-primary); font-weight: 500;">${analysis.scripts.length + (analysis.sensorDataUrls?.length || 0) + (analysis.akamaiScriptPath ? 1 : 0)}</span>
-                    </div>
-                </div>
-
-
-
-                ${(analysis.scripts.length > 0 || (analysis.sensorDataUrls && analysis.sensorDataUrls.length > 0) || detectedPatterns.length > 0 || hasAkamaiCookies) ? `
-                    <h4 style="font-size: 13px; color: var(--text-secondary); margin: 16px 0 8px 0; text-transform: uppercase;">${tr('advAkamaiScriptsHeading', 'Akamai Scripts')}</h4>
-                    <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
-                        <!-- Header Section -->
-                        <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 16px;">
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <span style="font-size: 18px;"></span>
-                                <div>
-                                    <div style="color: var(--text-primary); font-size: 14px; font-weight: 600;">${tr('advCommonScriptAnalysis', 'Script Analysis')}</div>
-                                    <div style="color: var(--text-muted); font-size: 11px;">${fmt('advCommonFoundScriptsFmt', 'Found {0} relevant script(s)', analysis.scripts.length + (analysis.sensorDataUrls?.length || 0) + (analysis.akamaiScriptPath ? 1 : 0))}</div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <!-- Challenge Details -->
-                        ${(analysis.akamaiScriptPath || analysis.pixelHtmlVar || analysis.pixelScriptUrls || analysis.pixelScriptVar || (analysis.sbsdUrls && analysis.sbsdUrls.length > 0)) ? `
-                            <div style="border-top: 1px solid var(--border); padding-top: 8px; margin-bottom: 16px;">
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                                    <span style="color: var(--text-secondary); font-size: 12px; font-weight: 500;">${tr('advAkamaiSensorDataUrlScript', 'Sensor Data URL Script')}</span>
-                                </div>
-                                <div style="display: flex; flex-direction: column; gap: 8px;">
-                                    ${analysis.akamaiScriptPath ? `
-                                        <div style="background: var(--bg-primary); padding: 10px; border-radius: 6px; border-left: 3px solid var(--accent);">
-                                            <div style="color: var(--text-secondary); font-size: 10px; margin-bottom: 4px;">${tr('advCommonScriptUrl', 'Script URL:')}</div>
-                                            <div style="font-family: var(--font-mono); color: var(--text-primary); font-size: 11px; background: var(--bg-tertiary); padding: 6px; border-radius: 4px; word-break: break-all;">
-                                                ${analysis.akamaiScriptPath}
-                                            </div>
-                                        </div>
-                                    ` : ''}
-
-                                    ${analysis.pixelHtmlVar ? `
-                                        <div style="background: var(--bg-primary); padding: 10px; border-radius: 6px; border-left: 3px solid var(--danger);">
-                                            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                                                <span style="font-size: 12px;">🎨</span>
-                                                <span style="color: var(--text-secondary); font-size: 10px;">${tr('advAkamaiPixelHtmlVar', 'Pixel HTML Variable:')}</span>
-                                            </div>
-                                            <div style="font-family: var(--font-mono); color: var(--text-primary); font-size: 11px; background: var(--bg-tertiary); padding: 6px; border-radius: 4px;">
-                                                bazadebezolkohpepadr="${analysis.pixelHtmlVar}"
-                                            </div>
-                                        </div>
-                                    ` : ''}
-
-                                    ${analysis.pixelScriptUrls ? `
-                                        <div style="background: var(--bg-primary); padding: 10px; border-radius: 6px; border-left: 3px solid var(--danger);">
-                                            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                                <span style="font-size: 12px;">🎨</span>
-                                                <span style="color: var(--text-secondary); font-size: 10px;">${tr('advAkamaiPixelChallengeUrls', 'Pixel Challenge URLs:')}</span>
-                                            </div>
-                                            <div style="display: flex; flex-direction: column; gap: 4px;">
-                                                <div>
-                                                    <div style="color: var(--text-muted); font-size: 9px;">${tr('advCommonScriptUrl', 'Script URL:')}</div>
-                                                    <div style="font-family: var(--font-mono); color: var(--text-primary); font-size: 10px; background: var(--bg-tertiary); padding: 4px; border-radius: 3px; word-break: break-all;">
-                                                        ${analysis.pixelScriptUrls.scriptUrl}
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <div style="color: var(--text-muted); font-size: 9px;">${tr('advAkamaiPostUrl', 'POST URL:')}</div>
-                                                    <div style="font-family: var(--font-mono); color: var(--text-primary); font-size: 10px; background: var(--bg-tertiary); padding: 4px; border-radius: 3px; word-break: break-all;">
-                                                        ${analysis.pixelScriptUrls.postUrl}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ` : ''}
-
-                                    ${analysis.pixelScriptVar ? `
-                                        <div style="background: var(--bg-primary); padding: 10px; border-radius: 6px; border-left: 3px solid var(--danger);">
-                                            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                                                <span style="font-size: 12px;">🎨</span>
-                                                <span style="color: var(--text-secondary); font-size: 10px;">${tr('advAkamaiPixelScriptVar', 'Pixel Script Variable:')}</span>
-                                            </div>
-                                            <div style="font-family: var(--font-mono); color: var(--text-primary); font-size: 11px; background: var(--bg-tertiary); padding: 6px; border-radius: 4px; word-break: break-all;">
-                                                ${analysis.pixelScriptVar}
-                                            </div>
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            </div>
-                        ` : ''}
-
-                        <!-- SBSD Script URLs -->
-                        ${(analysis.sbsdUrls && analysis.sbsdUrls.length > 0) ? `
-                            <div style="border-top: 1px solid var(--border); padding-top: 16px; margin-bottom: 16px;">
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                                    <span style="color: var(--text-secondary); font-size: 12px; font-weight: 500;">${tr('advAkamaiSbsdScriptUrl', 'SBSD Script URL')}</span>
-                                </div>
-                                <div style="display: flex; flex-direction: column; gap: 8px;">
-                                    ${analysis.sbsdUrls.map(url => `
-                                        <div style="background: var(--bg-primary); padding: 10px; border-radius: 6px; border-left: 3px solid var(--accent);">
-                                            <div style="color: var(--text-secondary); font-size: 10px; margin-bottom: 4px;">${tr('advCommonScriptUrl', 'Script URL:')}</div>
-                                            <div style="font-family: var(--font-mono); color: var(--text-primary); font-size: 11px; background: var(--bg-tertiary); padding: 6px; border-radius: 4px; word-break: break-all;">
-                                                ${url}
-                                            </div>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        ` : ''}
-
-                    </div>
-                ` : ''}
-
-
-                ${analysis.sensorDataUrls && analysis.sensorDataUrls.length > 0 ? `
-                    <h4 style="font-size: 13px; color: var(--text-secondary); margin: 16px 0 8px 0; text-transform: uppercase;">🔗 ${tr('advAkamaiSensorDataUrls', 'Sensor Data URLs')}</h4>
-                    <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
-                        ${analysis.sensorDataUrls.map((url, idx) => `
-                            <div style="background: var(--bg-tertiary); padding: 10px 12px; border-radius: 6px;">
-                                <div style="display: flex; align-items: center; margin-bottom: 4px;">
-                                    <span style="color: var(--text-secondary); font-size: 11px; margin-right: 8px;">${idx + 1}.</span>
-                                    <span style="color: var(--text-primary); font-size: 12px; font-weight: 500;">${tr('advAkamaiEndpoint', 'Akamai Endpoint')}</span>
-                                </div>
-                                <div style="font-family: var(--font-mono); color: var(--text-muted); font-size: 11px; background: var(--bg-primary); padding: 6px; border-radius: 4px; word-break: break-all;">${url}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                ` : ''}
-
-
-                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
-                    <button class="export-scripts-btn modal-export-code-btn">
-                        <span>📤</span>
-                        ${tr('advCommonExportCode', 'Export Code')}
-                    </button>
-                </div>
-            </div>
-        `;
-
-        this.showToolModal(modal);
-        this.bindModalClose(modal);
-
-        // Add language tab handlers
-        const langTabs = modal.querySelectorAll('.lang-tab');
-        const codeContainers = modal.querySelectorAll('.code-container');
-
-        langTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const targetLang = tab.getAttribute('data-lang');
-
-                // Update tab styles
-                langTabs.forEach(t => {
-                    t.style.background = 'var(--bg-secondary)';
-                    t.style.color = 'var(--text-primary)';
-                    t.classList.remove('active');
-                });
-                tab.style.background = 'var(--accent)';
-                tab.style.color = 'white';
-                tab.classList.add('active');
-
-                // Show/hide code containers
-                codeContainers.forEach(container => {
-                    const containerLang = container.getAttribute('data-lang');
-                    container.style.display = containerLang === targetLang ? 'block' : 'none';
-                });
-            });
+        this.openKitModal({
+            title: tr('advAkamaiAnalysisTitle', 'Akamai Analysis'),
+            subtitle: fmt('advCommonFoundScriptsFmt', 'Found {0} relevant script(s)', akamaiCount),
+            iconSvg: AkamaiAdvanced.CODE_ICON,
+            body: summary + sensorScript + pixel + sbsd + endpoints,
+            copiedMessage: tr('advCommonUrlCopied', 'URL copied'),
+            actions: [{
+                label: tr('advCommonExportCode', 'Export Code'),
+                primary: true,
+                iconSvg: AkamaiAdvanced.CODE_ICON,
+                onClick: () => {
+                    // Include both sensorDataUrls and akamaiScriptPath
+                    const allSensorUrls = [...sensorUrls];
+                    if (analysis.akamaiScriptPath && !allSensorUrls.includes(analysis.akamaiScriptPath)) {
+                        allSensorUrls.push(analysis.akamaiScriptPath);
+                    }
+                    this.showScriptParsingModal(scripts, allSensorUrls);
+                }
+            }]
         });
-
-        // Add export scripts button handler
-        const exportScriptsBtn = modal.querySelector('.export-scripts-btn');
-        if (exportScriptsBtn) {
-            exportScriptsBtn.addEventListener('click', () => {
-                // Include both sensorDataUrls and akamaiScriptPath
-                const allSensorUrls = [...(analysis.sensorDataUrls || [])];
-                if (analysis.akamaiScriptPath && !allSensorUrls.includes(analysis.akamaiScriptPath)) {
-                    allSensorUrls.push(analysis.akamaiScriptPath);
-                }
-                this.showScriptParsingModal(analysis.scripts, allSensorUrls);
-            });
-        }
-
-        // Add copy code button handler
-        const copyBtn = modal.querySelector('.copy-parsing-code');
-        if (copyBtn) {
-            copyBtn.addEventListener('click', () => {
-                // Find the currently visible textarea
-                const visibleContainer = modal.querySelector('.code-container[style*="display: block"]') || modal.querySelector('.code-container[data-lang="javascript"]');
-                const textarea = visibleContainer?.querySelector('.parsing-code-area');
-
-                if (textarea) {
-                    textarea.select();
-                    document.execCommand('copy');
-
-                    // Show feedback
-                    const originalText = copyBtn.textContent;
-                    copyBtn.textContent = AkamaiAdvanced.tr('copiedInlineMsg', '✓ Copied!');
-                    copyBtn.style.background = 'var(--success)';
-
-                    setTimeout(() => {
-                        copyBtn.textContent = originalText;
-                        copyBtn.style.background = 'var(--accent)';
-                    }, 2000);
-                }
-            });
-        }
-
     };
 
 
@@ -399,190 +221,49 @@ AkamaiAdvanced.prototype.showScriptParsingModal = function(scripts, sensorDataUr
 
 
     /**
-     * Display extracted sensor data in a modal
+     * Extract Sensor Information result: the sensor (and SBSD) payloads as
+     * code blocks with their own Copy, the script URLs as copyable rows, and
+     * Copy all as JSON in the footer
      */
 AkamaiAdvanced.prototype.displaySensorDataModal = function(data) {
-        const modal = this.createToolModal();
+        const K = BaseAdvancedModule;
         const tr = AkamaiAdvanced.tr;
         const fmt = AkamaiAdvanced.fmt;
-        const copyLabel = tr('advCommonCopy', 'Copy');
-
-        // Extract data values
         const sensorData = data?.sensorData || '';
         const sbsdData = data?.sbsdData || '';
         const sensorScriptUrl = data?.sensorScriptUrl || '';
         const sbsdScriptUrl = data?.sbsdScriptUrl || '';
+        const uiLocale = (typeof I18n !== 'undefined' && typeof I18n.locale === 'function') ? I18n.locale() : undefined;
+        const count = (n) => { try { return n.toLocaleString(uiLocale); } catch (_) { return String(n); } };
 
-        modal.innerHTML = `
-            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 900px; max-height: 90vh; overflow-y: auto; width: 95%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="margin: 0; font-size: 18px; color: var(--text-primary);">${tr('advAkamaiExtractedSensorTitle', 'Extracted Sensor Information')}</h3>
-                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
-                </div>
+        const payloads = (sensorData
+            ? K.kitCode(fmt('advAkamaiSensorDataCharsFmt', 'Sensor Data ({0} chars)', count(sensorData.length)), sensorData)
+            : K.kitNote(tr('advAkamaiNoSensorData', 'No sensor data captured')))
+            + K.kitCode(fmt('advAkamaiSbsdDataCharsFmt', 'SBSD Data ({0} chars)', count(sbsdData.length)), sbsdData);
+        const urlFields = K.kitField(tr('advAkamaiSensorScriptUrl', 'Sensor Script URL'), sensorScriptUrl, { wrap: true })
+            + K.kitField(tr('advAkamaiSbsdScriptUrl', 'SBSD Script URL'), sbsdScriptUrl, { wrap: true });
+        let host = '';
+        try { host = this.tabInfo?.url ? new URL(this.tabInfo.url).hostname : ''; } catch (_) { host = ''; }
 
-                <!-- Sensor Data Input -->
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; color: var(--text-secondary); font-size: 12px; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">
-                        ${sensorData ? fmt('advAkamaiSensorDataCharsFmt', 'Sensor Data ({0} chars)', sensorData.length) : tr('advAkamaiSensorDataNotCaptured', 'Sensor Data (Not captured)')}
-                    </label>
-                    <div style="position: relative;">
-                        <textarea
-                            id="sensorDataInput"
-                            readonly
-                            style="width: 100%; min-height: 120px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; padding: 10px; color: var(--text-primary); font-family: var(--font-mono); font-size: 12px; resize: vertical; cursor: text;"
-                            placeholder="${tr('advAkamaiNoSensorData', 'No sensor data captured')}"
-                        >${AdvancedUtils.escapeHtml(sensorData || '')}</textarea>
-                        ${sensorData ? `
-                        <button
-                            class="copy-sensor-btn"
-                            style="position: absolute; top: 10px; right: 10px; background: var(--primary); color: white; border: none; border-radius: 4px; padding: 6px 12px; font-size: 11px; cursor: pointer;"
-                            data-copy="sensorDataInput"
-                        >${copyLabel}</button>` : ''}
-                    </div>
-                </div>
-
-                ${sbsdData ? `
-                <!-- SBSD Data Input -->
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; color: var(--text-secondary); font-size: 12px; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">
-                        ${fmt('advAkamaiSbsdDataCharsFmt', 'SBSD Data ({0} chars)', sbsdData.length)}
-                    </label>
-                    <div style="position: relative;">
-                        <textarea
-                            id="sbsdDataInput"
-                            readonly
-                            style="width: 100%; min-height: 80px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; padding: 10px; color: var(--text-primary); font-family: var(--font-mono); font-size: 12px; resize: vertical; cursor: text;"
-                        >${AdvancedUtils.escapeHtml(sbsdData)}</textarea>
-                        <button
-                            class="copy-sbsd-btn"
-                            style="position: absolute; top: 10px; right: 10px; background: var(--primary); color: white; border: none; border-radius: 4px; padding: 6px 12px; font-size: 11px; cursor: pointer;"
-                            data-copy="sbsdDataInput"
-                        >${copyLabel}</button>
-                    </div>
-                </div>
-                ` : ''}
-
-                ${sensorScriptUrl ? `
-                <!-- Sensor Script URL Input -->
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; color: var(--text-secondary); font-size: 12px; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">
-                        ${tr('advAkamaiSensorScriptUrl', 'Sensor Script URL')}
-                    </label>
-                    <div style="position: relative;">
-                        <input
-                            id="sensorScriptUrlInput"
-                            type="text"
-                            readonly
-                            value="${sensorScriptUrl}"
-                            style="width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; padding: 10px; color: var(--text-primary); font-family: var(--font-mono); font-size: 12px; cursor: text;"
-                        />
-                        <button
-                            class="copy-sensor-url-btn"
-                            style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: var(--primary); color: white; border: none; border-radius: 4px; padding: 6px 12px; font-size: 11px; cursor: pointer;"
-                            data-copy="sensorScriptUrlInput"
-                        >${copyLabel}</button>
-                    </div>
-                </div>
-                ` : ''}
-
-                ${sbsdScriptUrl ? `
-                <!-- SBSD Script URL Input -->
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; color: var(--text-secondary); font-size: 12px; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">
-                        ${tr('advAkamaiSbsdScriptUrl', 'SBSD Script URL')}
-                    </label>
-                    <div style="position: relative;">
-                        <input
-                            id="sbsdScriptUrlInput"
-                            type="text"
-                            readonly
-                            value="${sbsdScriptUrl}"
-                            style="width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; padding: 10px; color: var(--text-primary); font-family: var(--font-mono); font-size: 12px; cursor: text;"
-                        />
-                        <button
-                            class="copy-sbsd-url-btn"
-                            style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: var(--primary); color: white; border: none; border-radius: 4px; padding: 6px 12px; font-size: 11px; cursor: pointer;"
-                            data-copy="sbsdScriptUrlInput"
-                        >${copyLabel}</button>
-                    </div>
-                </div>
-                ` : ''}
-
-                <!-- Copy All Button -->
-                <div style="text-align: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);">
-                    <button
-                        id="copyAllDataBtn"
-                        class="advanced-modal-action-btn"
-                    >
-                        ${tr('advAkamaiCopyAllJson', 'Copy All Data as JSON')}
-                    </button>
-                </div>
-            </div>
-        `;
-
-        this.showToolModal(modal);
-
-        // Helper function to copy text
-        const copyToClipboard = (text, button) => {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-
-            // Show feedback
-            const originalText = button.textContent;
-            button.textContent = tr('copiedInlineMsg', '✓ Copied!');
-            button.style.background = 'var(--success)';
-
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.style.background = 'var(--primary)';
-            }, 2000);
-        };
-
-        // Individual copy button handlers
-        modal.querySelectorAll('button[data-copy]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const targetId = btn.getAttribute('data-copy');
-                const targetElement = modal.querySelector(`#${targetId}`);
-                if (targetElement) {
-                    copyToClipboard(targetElement.value, btn);
+        this.openKitModal({
+            title: tr('advAkamaiExtractedSensorTitle', 'Extracted Sensor Information'),
+            subtitle: host,
+            iconSvg: AkamaiAdvanced.SENSOR_ICON,
+            body: payloads + (urlFields ? K.kitCard(urlFields) : ''),
+            copiedMessage: tr('copiedNotification', 'Copied'),
+            actions: [{
+                label: tr('advAkamaiCopyAllJson', 'Copy All Data as JSON'),
+                primary: true,
+                iconSvg: AkamaiAdvanced.COPY_ICON,
+                onClick: (button) => {
+                    const allData = { sensorData, sbsdData, sensorScriptUrl, sbsdScriptUrl, timestamp: Date.now() };
+                    AdvancedUtils.copyToClipboard(JSON.stringify(allData, null, 2), button, {
+                        notificationMessage: tr('copiedNotification', 'Copied')
+                    });
                 }
-            });
+            }]
         });
-
-        // Copy all data as JSON
-        const copyAllBtn = modal.querySelector('#copyAllDataBtn');
-        if (copyAllBtn) {
-            copyAllBtn.addEventListener('click', () => {
-                const allData = {
-                    sensorData: sensorData,
-                    sbsdData: sbsdData,
-                    sensorScriptUrl: sensorScriptUrl,
-                    sbsdScriptUrl: sbsdScriptUrl,
-                    timestamp: Date.now()
-                };
-                copyToClipboard(JSON.stringify(allData, null, 2), copyAllBtn);
-            });
-        }
-
-        this.bindModalClose(modal);
-
     };
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -723,55 +404,34 @@ AkamaiAdvanced.prototype.renderCaptureHistoryItems = function(items) {
      * @returns {string} HTML for modal body content
      */
 AkamaiAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
+        const K = BaseAdvancedModule;
         const tr = AkamaiAdvanced.tr;
         if (!capture || !capture.captureData) {
-            return '<div class="advanced-modal-section"><span class="advanced-modal-error">' + tr('advCommonNoCaptureData', 'No capture data available') + '</span></div>';
+            return K.kitNote(tr('advCommonNoCaptureData', 'No capture data available'));
         }
-        const clickToCopy = tr('advCommonClickToCopy', 'Click to copy');
-        const requiredText = tr('advCommonRequired', 'Required');
-
         const data = capture.captureData;
-        const timestamp = new Date(capture.timestamp).toLocaleString();
-        const abckLevel = data.abckCookieLevel === 'easy' ? tr('advAkamaiLevelEasy', 'Easy') : tr('advCommonStandard', 'Standard');
-        const abckLevelClass = data.abckCookieLevel === 'easy' ? 'advanced-modal-success' : '';
+        const uiLocale = (typeof I18n !== 'undefined' && typeof I18n.locale === 'function') ? I18n.locale() : undefined;
+        let when = '';
+        try { when = new Date(capture.timestamp).toLocaleString(uiLocale); } catch (_) { when = new Date(capture.timestamp).toLocaleString(); }
+        const easy = data.abckCookieLevel === 'easy';
+        const challenges = [
+            data.requiresSbsd ? tr('advAkamaiSbsdChallenge', 'SBSD Challenge') : '',
+            data.requiresSecCpt ? tr('advAkamaiSecCptChallenge', 'sec_cpt Challenge') : '',
+            data.requiresPixel ? tr('advAkamaiPixelChallenge', 'Pixel Challenge') : ''
+        ].filter(Boolean);
 
-        return `
-            <div class="advanced-modal-section">
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">${tr('advAkamaiAbckCookie', 'ABCK Cookie')}</span>
-                    <span class="advanced-modal-info-value">${data.abckCookie ? tr('advCommonFound', 'Found') : tr('advCommonNotFound', 'Not found')}</span>
-                </div>
-                ${data.abckCookie ? `
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">${tr('advAkamaiAbckLevel', 'ABCK Level')}</span>
-                    <span class="advanced-modal-info-value ${abckLevelClass} advanced-modal-code-block" data-copy="${abckLevel}" style="cursor: pointer;" title="${clickToCopy}">${abckLevel}</span>
-                </div>
-                ` : ''}
-            </div>
-
-            ${data.akamaiVersion ? `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${tr('advAkamaiVersionLabel', 'Akamai Version')}</label>
-                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(data.akamaiVersion)}" style="cursor: pointer;" title="${clickToCopy}">${AdvancedUtils.escapeHtml(data.akamaiVersion)}</div>
-            </div>
-            ` : ''}
-
-            ${data.requiresSbsd || data.requiresSecCpt || data.requiresPixel ? `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${tr('advAkamaiChallengeRequirements', 'Challenge Requirements')}</label>
-                ${data.requiresSbsd ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">' + tr('advAkamaiSbsdChallenge', 'SBSD Challenge') + '</span><span class="advanced-modal-info-value">' + requiredText + '</span></div>' : ''}
-                ${data.requiresSecCpt ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">' + tr('advAkamaiSecCptChallenge', 'sec_cpt Challenge') + '</span><span class="advanced-modal-info-value">' + requiredText + '</span></div>' : ''}
-                ${data.requiresPixel ? '<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">' + tr('advAkamaiPixelChallenge', 'Pixel Challenge') + '</span><span class="advanced-modal-info-value">' + requiredText + '</span></div>' : ''}
-            </div>
-            ` : ''}
-
-            <div class="advanced-modal-section">
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">${tr('advCommonCaptured', 'Captured')}</span>
-                    <span class="advanced-modal-info-value">${timestamp}</span>
-                </div>
-            </div>
-        `;
+        const facts = K.kitFacts([
+            { label: tr('advAkamaiAbckCookie', 'ABCK Cookie'), html: true,
+                value: data.abckCookie ? K.kitChip(tr('advCommonFound', 'Found'), 'green') : K.kitChip(tr('advCommonNotFound', 'Not found'), 'neutral') },
+            data.abckCookie ? { label: tr('advAkamaiAbckLevel', 'ABCK Level'), html: true,
+                value: K.kitChip(easy ? tr('advAkamaiLevelEasy', 'Easy') : tr('advCommonStandard', 'Standard'), easy ? 'green' : 'blue') } : null,
+            { label: tr('advCommonCaptured', 'Captured'), value: when }
+        ]);
+        const fields = K.kitField(tr('advAkamaiVersionLabel', 'Akamai Version'), data.akamaiVersion)
+            + K.kitField(tr('advCommonPage', 'Page'), capture.url, { mono: false, wrap: true });
+        const required = challenges.length
+            ? K.kitSection(tr('advAkamaiChallengeRequirements', 'Challenge Requirements'),
+                `<div class="adv-kit-chips">${challenges.map(name => K.kitChip(name, 'red')).join('')}</div>`)
+            : '';
+        return facts + (fields ? K.kitCard(fields) : '') + required;
     };
-
-

@@ -27,7 +27,8 @@
         "detect-netacea",
         "detect-azurefrontdoor",
         "detect-yundun",
-        "detect-radware"
+        "detect-radware",
+        "detect-amazon"
     ]
 },
 "captcha": {

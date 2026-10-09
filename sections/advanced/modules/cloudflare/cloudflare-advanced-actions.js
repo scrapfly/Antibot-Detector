@@ -36,14 +36,8 @@ CloudflareAdvanced.prototype.checkVersion = async function() {
                 throw new Error('Tab information not available');
             }
 
-            // Show popup notification
+            // Popup notification only; nothing is drawn on the page
             NotificationHelper.info(this._txt('advCloudflareCheckingVersion', 'Checking Cloudflare version... Page will reload'));
-
-            // Send page notification before reload
-            await AdvancedUtils.sendMessage({
-                type: 'CLOUDFLARE_SHOW_ANALYZING_NOTIFICATION',
-                tabId: this.tabInfo.id
-            });
 
             // Reload page to trigger fresh Cloudflare analysis
             await chrome.tabs.reload(this.tabInfo.id);
@@ -103,18 +97,7 @@ CloudflareAdvanced.prototype.analyzeScripts = async function() {
                 NotificationHelper.info(this._txt('advCommonAnalyzingReloadFmt', 'Analyzing {0} scripts... Page will reload', 'Cloudflare'));
 
                 await new Promise(resolve => setTimeout(resolve, 500));
-                {
-                    try {
-                        await AdvancedUtils.sendMessage({
-                            type: 'CLOUDFLARE_SHOW_ANALYZING_NOTIFICATION',
-                            tabId: this.tabInfo.id
-                        });
-                    } catch (error) {
-                        Logger.error('NETWORK', '[Cloudflare] Failed to show analyzing notification:', error);
-                    }
-
-                    await chrome.tabs.reload(this.tabInfo.id);
-                }
+                await chrome.tabs.reload(this.tabInfo.id);
             } else {
                 chrome.runtime.onMessage.removeListener(analysisListener);
                 NotificationHelper.error(this._txt('advCommonFailedStartAnalysis', 'Failed to start analysis'));

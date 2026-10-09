@@ -87,7 +87,8 @@ for (const vendor of Object.keys(vendors)) {
     }
     const messages = f.calls.filter(([kind]) => kind === 'message').map(([, message]) => message.type);
     assert.equal(messages[0], `${vendor.toUpperCase()}_START_ANALYSIS`);
-    assert.equal(messages[1], `${vendor.toUpperCase()}_SHOW_ANALYZING_NOTIFICATION`);
+    // Analyze Scripts draws nothing on the page: the popup shows the progress
+    assert.equal(messages.some(type => /_SHOW_ANALYZING_NOTIFICATION$/.test(type)), false);
     f.finishReload();
     await action;
     assert.equal(settled, true);

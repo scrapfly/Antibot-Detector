@@ -6,6 +6,7 @@ class Detection {
     this.searchQuery = '';
     // Settings → Detection → Category order
     this.categoryOrder = ['antibot', 'captcha', 'fingerprint'];
+    this.sortBy = 'category';
     this.initialized = false;
     this.initializingPromise = null;
     this.htmlLoaded = false;
@@ -384,13 +385,15 @@ class Detection {
     return DetectionUI.getFilteredResults.apply(this, args);
   }
   /**
-   * Use a saved category order; with `rerender`, re-sort the visible list
-   * when it changed.
+   * Use the saved sort (Settings → Detection → Show first); with `rerender`,
+   * re-sort the visible list when it changed.
+   * @param {object} [detectionSettings] - settings.detection
    */
-  applyCategoryOrder(order, { rerender = false } = {}) {
-    const next = DetectionUtils.normalizeCategoryOrder(order);
-    const changed = next.join(',') !== this.categoryOrder.join(',');
-    this.categoryOrder = next;
+  applyDetectionSort(detectionSettings, { rerender = false } = {}) {
+    const next = DetectionUtils.detectionSortOf(detectionSettings);
+    const changed = next.sortBy !== this.sortBy || next.categoryOrder.join(',') !== this.categoryOrder.join(',');
+    this.sortBy = next.sortBy;
+    this.categoryOrder = next.categoryOrder;
     if (rerender && changed && this.paginationManager && this.currentResults?.length) {
       const items = this.searchQuery ? this.getFilteredResults() : this.sortDetectionsByCategory(this.currentResults);
       this.paginationManager.setItems(items);
@@ -429,17 +432,17 @@ class Detection {
       try {
         const settings = await Utils.getSettings();
         this.debugMode = settings.debugMode || false;
-        this.applyCategoryOrder(settings.detection?.categoryOrder);
+        this.applyDetectionSort(settings.detection);
       } catch (e) {
         this.debugMode = false;
       }
 
-      // A new category order saved in Settings re-sorts the open list
+      // A new order saved in Settings re-sorts the open list
       chrome.storage.onChanged.addListener(async (changes, area) => {
         if (area !== 'local' || !changes.scrapfly_settings) return;
         try {
           const settings = await Utils.getSettings();
-          this.applyCategoryOrder(settings.detection?.categoryOrder, { rerender: true });
+          this.applyDetectionSort(settings.detection, { rerender: true });
         } catch (_) { /* keep the current order */ }
       });
 

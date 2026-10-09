@@ -87,13 +87,6 @@ AwsWafAdvanced.prototype.analyzeScripts = async function() {
                         }
 
                         Logger.network('[AwsWaf] Cookie deletion complete, reloading page...');
-
-                        // Send message to show analyzing notification right before reload
-                        await AdvancedUtils.sendMessage({
-                            type: 'AWSWAF_SHOW_ANALYZING_NOTIFICATION',
-                            tabId: this.tabInfo.id
-                        });
-
                     } catch (cookieError) {
                         Logger.error('NETWORK', '[AwsWaf] Failed to delete cookies:', cookieError);
                     }

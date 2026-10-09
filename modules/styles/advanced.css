@@ -2581,6 +2581,118 @@
   gap: 14px;
 }
 
+/* Fixed footer for a kit dialog's actions (Copy all, Export code): always
+   visible, the body scrolls above it */
+.adv-kit-footer {
+  flex-shrink: 0;
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px 12px;
+  border-top: 1px solid #3a3a3a;
+}
+
+.adv-kit-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid #4b4b4b;
+  background: transparent;
+  color: #e0e0e0;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.adv-kit-btn > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adv-kit-btn:hover {
+  background: #333;
+  border-color: #5a5a5a;
+}
+
+.adv-kit-btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.adv-kit-btn--primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.adv-kit-btn:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 2px;
+}
+
+.adv-kit-btn-icon {
+  display: inline-flex;
+}
+
+.adv-kit-btn-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.adv-kit-btn.copy-feedback-active {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border-color: rgba(16, 185, 129, 0.6) !important;
+  color: var(--success-light) !important;
+}
+
+/* Read-only label / value rows (counts, levels) */
+.adv-kit-facts {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 9px;
+}
+
+.adv-kit-fact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 34px;
+  padding: 6px 10px;
+}
+
+.adv-kit-fact + .adv-kit-fact {
+  border-top: 1px solid #363636;
+}
+
+.adv-kit-fact dt {
+  min-width: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.adv-kit-fact dd {
+  margin: 0;
+  flex-shrink: 0;
+  max-width: 60%;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: end;
+  overflow-wrap: anywhere;
+}
+
 .adv-kit-section {
   display: flex;
   flex-direction: column;
@@ -2703,6 +2815,16 @@
 .adv-kit-value.is-wrap .adv-kit-value-text {
   white-space: normal;
   overflow-wrap: anywhere;
+}
+
+/* Long values (cookies): three lines, then "…"; the click copies all of it */
+.adv-kit-value.is-clamp .adv-kit-value-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  word-break: break-all;
 }
 
 .adv-kit-copy-icon {
@@ -4040,13 +4162,28 @@
   text-overflow: ellipsis;
 }
 
-/* History card: which tool button produced a saved result */
+/* History card: which tool button produced a saved result. The chip and
+   View keep their size; the tool name takes the rest and is cut with "…" */
 .capture-tool-label {
+  flex: 1 1 auto;
+  min-width: 0;
   font-size: 11px;
   color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.capture-card--v28 .capture-module-badge,
+.capture-card--v28 .capture-card-open {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.capture-card--v28 .capture-card-sub .capture-timestamp,
+.capture-card--v28 .capture-card-sub .capture-size {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 /* Cookie check: names of the expected cookies that were not found */
